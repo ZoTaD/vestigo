@@ -153,7 +153,22 @@ function Shell({
    * (`assets.deadlock-api.com/v2/colors`), no de una elección nuestra.
    */
   return (
-    <div className="app" data-theme="codex" data-game={place === "deadlock" ? "deadlock" : undefined}>
+    <div
+      className="app"
+      data-theme="codex"
+      data-game={place === "deadlock" ? "deadlock" : undefined}
+      /**
+       * La home es el único lugar que no es el códex.
+       *
+       * `data-game` re-pinta las variables del códex para un juego; esto hace
+       * otra cosa y por eso es otro atributo: la portada tiene identidad propia
+       * —papel claro, titulares de palo, los juegos entrando a sangre cada uno
+       * con su oscuridad— y vive en `styles/home.css`, una hoja aparte prefijada
+       * con `[data-place="home"]`. Nada de lo que hay acá adentro toca al resto
+       * del sitio, que sigue siendo oro sobre azul medianoche.
+       */
+      data-place={place}
+    >
       <div className="grain" aria-hidden="true" />
 
       <PageMeta route={route} />
@@ -336,6 +351,14 @@ function Shell({
             must post, and by Overwolf's compliance guide. It is not decoration —
             leave the wording alone. */}
         <p className="colophon-legal">{copy.footer.disclaimer}</p>
+
+        {/* El mismo aviso, para el otro dueño. Vivía sólo en el README del repo
+            público mientras el sitio ya publicaba Deadlock y anunciaba Dota 2,
+            que son de Valve; las directrices de contenido de Valve piden lo
+            mismo que las de Riot, así que el pie lo dice en las dos direcciones
+            o no lo dice en ninguna. Va en un párrafo aparte a propósito: la
+            redacción de Riot no se toca. */}
+        <p className="colophon-legal">{copy.footer.disclaimerValve}</p>
 
         <p className="colophon-copyright">
           © {new Date().getFullYear()} {copy.brand}

@@ -1,0 +1,574 @@
+/* ---------------------------------------------------------------------------
+   HOME — la identidad de Vestigo, que no es la de ningún juego.
+
+   **Por qué es una hoja aparte y no más reglas en `codex.css`.** Esa hoja son
+   ~8.400 líneas escritas todas contra `[data-theme="codex"]`, y su trabajo es
+   que un juego pueda repintarla cambiando variables (`[data-game="deadlock"]`).
+   La portada no es un repintado: es otro idioma —papel claro en vez de azul
+   medianoche, palo seco condensado en vez de romana grabada, los juegos
+   entrando a sangre cada uno con su propia oscuridad— y meterlo ahí adentro
+   habría obligado a pelear con cada regla heredada, una por una.
+
+   Todo acá está prefijado con `[data-place="home"]`, que `App.tsx` pone al lado
+   de `data-theme`. Fuera de la portada esta hoja no existe.
+
+   La regla que ordena el resto: **la marca es clara y los juegos son oscuros.**
+   El contraste es el que hace que la identidad de cada juego pegue el salto —
+   TFT en su azul con oro, Deadlock en su negro cálido con ámbar, Dota 2 todavía
+   apagado a propósito.
+--------------------------------------------------------------------------- */
+
+[data-theme="codex"][data-place="home"] {
+  /* El crema es el mismo #f2efe6 que ya usa el códex para sus superficies
+     claras, así que las dos identidades comparten el papel aunque no compartan
+     nada más. */
+  --paper: #f2efe6;
+  --paper-2: #e7e2d4;
+  --ink: #14140f;
+  --ink-soft: #3a382e;
+  --dim: #6b6a5e;
+  --faint: #a5a294;
+  --rule: #d8d3c4;
+
+  /* El oro del home es más oscuro que el del códex: #c9a24a está calibrado
+     sobre azul medianoche y sobre papel se lee amarillo pálido. Éste es el
+     mismo oro en su extremo oscuro, que sobre crema sí tiene contraste. */
+  --gold: #8a6a24;
+  --gold-lit: #b08a35;
+  --gold-dark: #6b511b;
+
+  /* El ancho de la columna de contenido y el aire lateral, en un solo lugar
+     porque los paneles a sangre necesitan saber los dos para volver a alinear
+     su contenido con el resto de la página. */
+  --col: 1400px;
+  --pad: clamp(1rem, 4vw, 4rem);
+  --inset: max(var(--pad), calc((100vw - var(--col)) / 2 + var(--pad)));
+
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Barlow", system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  padding-bottom: 0;
+}
+
+/* El grano del códex está calibrado sobre oscuro; sobre papel se ve como
+   suciedad. La portada no lleva textura. */
+[data-theme="codex"][data-place="home"] .grain {
+  display: none;
+}
+
+/* Barra superior --------------------------------------------------------- */
+
+[data-theme="codex"][data-place="home"] .topbar {
+  padding-bottom: 0.95rem;
+  border-bottom: 2px solid var(--gold);
+  gap: clamp(0.9rem, 3vw, 1.9rem);
+}
+
+[data-theme="codex"][data-place="home"] .topbar-brand {
+  font-family: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  font-weight: 900;
+  font-size: 1.6rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: linear-gradient(175deg, var(--gold-lit) 6%, var(--gold) 60%, var(--gold-dark) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/**
+ * Las pestañas pierden el recuadro y quedan sólo texto, así que la separación
+ * tiene que venir del `gap` y no del relleno de cada una.
+ *
+ * En el códex cada pestaña trae `padding: .35rem .9rem` y el borde de la activa
+ * las separa sola; acá el relleno horizontal se va —el subrayado tiene que
+ * medir lo que mide la palabra, no la caja— y sin subir el `gap` las cuatro se
+ * leen como una sola cadena de letras.
+ */
+[data-theme="codex"][data-place="home"] .topbar-places {
+  gap: clamp(0.9rem, 2.2vw, 1.5rem);
+}
+
+[data-theme="codex"][data-place="home"] .langgroup {
+  display: inline-flex;
+  gap: 0.75rem;
+}
+
+[data-theme="codex"][data-place="home"] .topgame,
+[data-theme="codex"][data-place="home"] .langbtn {
+  font-family: "Barlow", sans-serif;
+  font-weight: 600;
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  border: 0;
+  padding: 0.15rem 0;
+  color: var(--dim);
+}
+
+[data-theme="codex"][data-place="home"] .topgame[data-active="true"],
+[data-theme="codex"][data-place="home"] .langbtn[data-active="true"] {
+  color: var(--ink);
+  border-bottom: 2px solid var(--gold);
+}
+
+[data-theme="codex"][data-place="home"] .topgame.is-soon {
+  color: var(--faint);
+}
+
+[data-theme="codex"][data-place="home"] .topgame-soon {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--dim);
+}
+
+[data-theme="codex"][data-place="home"] .topbar-divider {
+  background: var(--rule);
+}
+
+/* Cabecera ----------------------------------------------------------------- */
+
+[data-theme="codex"][data-place="home"] .masthead {
+  text-align: left;
+  padding-top: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: clamp(2.2rem, 5vw, 3.6rem);
+}
+
+[data-theme="codex"][data-place="home"] .eyebrow {
+  font-family: "Barlow", sans-serif;
+  font-weight: 600;
+  font-size: 0.64rem;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+  margin-bottom: 1.2rem;
+}
+
+/* Las estrellitas del códex flanquean su volanta centrada; acá la volanta es
+   una etiqueta alineada a la izquierda y no lleva ornamento. */
+[data-theme="codex"][data-place="home"] .eyebrow::before,
+[data-theme="codex"][data-place="home"] .eyebrow::after {
+  content: none;
+}
+
+/**
+ * El titular.
+ *
+ * Big Shoulders es angosta y muy alta, así que aguanta un cuerpo enorme sin
+ * salirse de una línea y sin pedir que se achique la medida. El `0.82` de
+ * interlineado es menor que 1 a propósito: a este tamaño las dos líneas tienen
+ * que leerse como un bloque, no como dos renglones.
+ */
+[data-theme="codex"][data-place="home"] .title {
+  font-family: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  font-weight: 900;
+  font-size: clamp(3.2rem, 11vw, 8.3rem);
+  line-height: 0.82;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--ink);
+}
+
+/**
+ * La segunda línea, en contorno.
+ *
+ * Es lo que hace que el titular no sea sólo texto grande: el mismo tipo, el
+ * mismo cuerpo, vaciado. `-webkit-text-stroke` no tiene equivalente estándar
+ * todavía pero lo soportan los tres motores; donde no llegue, el `color`
+ * heredado deja la línea llena, que es un degradado aceptable y no un agujero.
+ */
+[data-theme="codex"][data-place="home"] .title-break {
+  display: block;
+  font-size: 1em;
+  font-weight: 900;
+  letter-spacing: -0.005em;
+  margin-top: 0;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--ink);
+}
+
+[data-theme="codex"][data-place="home"] .home-lede {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+  gap: clamp(1.6rem, 5vw, 3.7rem);
+  align-items: end;
+  margin-top: clamp(1.6rem, 4vw, 2.8rem);
+}
+
+[data-theme="codex"][data-place="home"] .standfirst {
+  max-width: 44ch;
+  margin: 0;
+  font-family: "Barlow", sans-serif;
+  font-size: 1.1rem;
+  font-style: normal;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  opacity: 1;
+}
+
+[data-theme="codex"][data-place="home"] .home-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.4rem, 3vw, 2.4rem);
+  justify-content: flex-end;
+  margin: 0;
+}
+
+/* `column-reverse` y no otro orden en el marcado: en una lista de definiciones
+   el rótulo va antes que el valor, y acá se lee al revés. */
+[data-theme="codex"][data-place="home"] .home-count {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+[data-theme="codex"][data-place="home"] .home-count dd {
+  margin: 0;
+  font-family: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 4.4vw, 3.3rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+[data-theme="codex"][data-place="home"] .home-count dt {
+  margin-top: 0.25rem;
+  font-weight: 600;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* Los juegos --------------------------------------------------------------- */
+
+[data-theme="codex"][data-place="home"] .home-games {
+  margin-top: clamp(2.4rem, 6vw, 3.6rem);
+}
+
+[data-theme="codex"][data-place="home"] .home-games-title {
+  display: flex;
+  align-items: center;
+  gap: 1.05rem;
+  margin: 0 0 1.4rem;
+  font-family: "Barlow", sans-serif;
+  font-weight: 700;
+  font-size: 0.64rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+[data-theme="codex"][data-place="home"] .home-games-title::after {
+  content: "";
+  flex-grow: 1;
+  height: 2px;
+  background: var(--gold);
+}
+
+[data-theme="codex"][data-place="home"] .game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/**
+ * Cada juego, a sangre y en su propia oscuridad.
+ *
+ * `100vw` con el margen negativo es lo que saca al panel de la columna de
+ * 1400px sin tocar el resto del árbol; `.app` ya trae `overflow-x: hidden`, que
+ * es lo que evita que el ancho de la barra de scroll abra un scroll horizontal
+ * de un par de píxeles. El `--inset` vuelve a alinear el contenido del panel
+ * con el de la página, así que el título del juego arranca en la misma vertical
+ * que el titular de arriba.
+ */
+[data-theme="codex"][data-place="home"] .game-panel {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: clamp(1.8rem, 4vw, 2.9rem) var(--inset);
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(1.4rem, 4vw, 2.5rem);
+  align-items: center;
+  border: 0;
+  background: none;
+  opacity: 1;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel-name {
+  margin: 0;
+  font-family: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.6rem, 7vw, 5.9rem);
+  line-height: 0.86;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  max-width: 9ch;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel-note {
+  margin: 1.15rem 0 0;
+  max-width: 42ch;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel-figures {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: clamp(1.2rem, 3vw, 2.1rem);
+  text-align: right;
+}
+
+[data-theme="codex"][data-place="home"] .game-figure {
+  margin: 0;
+}
+
+[data-theme="codex"][data-place="home"] .game-figure b {
+  display: block;
+  font-family: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.8rem, 7.5vw, 6.1rem);
+  line-height: 0.82;
+  font-variant-numeric: tabular-nums;
+}
+
+/* El signo de porcentaje a media altura: la cifra es el dato y la unidad lo
+   acompaña, no compite. */
+[data-theme="codex"][data-place="home"] .game-figure b i {
+  font-style: normal;
+  font-size: 0.5em;
+}
+
+[data-theme="codex"][data-place="home"] .game-figure span {
+  display: block;
+  margin-top: 0.42rem;
+  font-weight: 600;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+[data-theme="codex"][data-place="home"] .game-figure.is-second {
+  padding-bottom: 0.6rem;
+}
+
+[data-theme="codex"][data-place="home"] .game-figure.is-second b {
+  font-size: clamp(1.7rem, 4vw, 3.05rem);
+}
+
+[data-theme="codex"][data-place="home"] .home-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65em;
+  margin-top: 1.4rem;
+  /* 0.85rem y no menos: con la etiqueta a 0.64rem, cualquier cosa por debajo
+     deja el botón en ~41px de alto y el objetivo táctil mínimo es 44. */
+  padding: 0.85rem 1.4rem;
+  font-family: "Barlow", sans-serif;
+  font-weight: 700;
+  font-size: 0.64rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 0;
+  transition: filter 140ms ease;
+}
+
+[data-theme="codex"][data-place="home"] .home-cta:hover {
+  background: none;
+  filter: brightness(1.12);
+}
+
+/* --- TFT: su azul medianoche con oro ------------------------------------- */
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] {
+  background:
+    radial-gradient(ellipse 120% 90% at 12% -20%, #1d2a4d 0%, transparent 62%),
+    linear-gradient(180deg, #0e1528 0%, #080d1a 100%);
+  color: #cfc9b6;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .game-panel-name {
+  background: linear-gradient(175deg, #f0d391 8%, #c9a24a 52%, #8a6a24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .game-figure b {
+  color: #f0d391;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .game-figure.is-second b {
+  color: #e9e0cb;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .game-figure span {
+  color: #9c957f;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .home-cta {
+  background: #c9a24a;
+  color: #080d1a;
+}
+
+/* --- Deadlock: el negro cálido del juego, con su ámbar ------------------- */
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] {
+  background:
+    radial-gradient(ellipse 120% 90% at 12% -20%, #3a2c15 0%, transparent 62%),
+    linear-gradient(180deg, #171b12 0%, #10130d 100%);
+  color: #cbc3ae;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .game-panel-name {
+  color: #e2c391;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .game-figure b {
+  color: #d4860b;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .game-figure.is-second b {
+  color: #ffefd7;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .game-figure span {
+  color: #9c9581;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .home-cta {
+  background: #d4860b;
+  color: #10130d;
+}
+
+/* --- Dota 2: apagado a propósito ----------------------------------------- */
+
+/* El panel se dibuja entero y con la cifra en blanco. Un hueco a propósito dice
+   "todavía no" mejor que una fila con la opacidad bajada, que se lee como un
+   error de carga. */
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="dota"] {
+  background: linear-gradient(180deg, #1c1614 0%, #130f0e 100%);
+  color: #96887f;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="dota"] .game-panel-name {
+  color: transparent;
+  -webkit-text-stroke: 2px #7b4a41;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="dota"] .game-figure b {
+  color: #3a2b27;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="dota"] .game-figure span {
+  color: #6b5b55;
+}
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="dota"] .home-cta {
+  background: none;
+  border: 2px solid #6b3a33;
+  color: #a8443a;
+  /* Los 2px de borde salen del relleno para que mida lo mismo que los otros
+     dos, que no lo llevan. */
+  padding: calc(0.85rem - 2px) calc(1.4rem - 2px);
+  cursor: default;
+}
+
+/* Pie ---------------------------------------------------------------------- */
+
+[data-theme="codex"][data-place="home"] .colophon {
+  margin-top: clamp(2.6rem, 6vw, 3.8rem);
+  padding-top: 1.5rem;
+  border-top: 3px solid var(--ink);
+  text-align: left;
+  color: var(--dim);
+}
+
+[data-theme="codex"][data-place="home"] .colophon-links {
+  justify-content: flex-start;
+  gap: 0.4rem 0.9rem;
+  margin-bottom: 1.3rem;
+}
+
+[data-theme="codex"][data-place="home"] .colophon-link,
+[data-theme="codex"][data-place="home"] a.colophon-link {
+  font-weight: 600;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+[data-theme="codex"][data-place="home"] .colophon-link:hover,
+[data-theme="codex"][data-place="home"] a.colophon-link:hover {
+  color: var(--gold);
+}
+
+[data-theme="codex"][data-place="home"] .colophon-link.is-consent {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+[data-theme="codex"][data-place="home"] .colophon-sep {
+  color: var(--faint);
+}
+
+[data-theme="codex"][data-place="home"] .colophon-note {
+  font-size: 0.62rem;
+  color: var(--faint);
+  text-transform: none;
+}
+
+[data-theme="codex"][data-place="home"] .colophon-sources {
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 72ch;
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+[data-theme="codex"][data-place="home"] .colophon-legal {
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 86ch;
+  font-size: 0.66rem;
+  line-height: 1.7;
+  color: #83806f;
+}
+
+[data-theme="codex"][data-place="home"] .colophon-copyright {
+  font-weight: 600;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* Teléfono ----------------------------------------------------------------- */
+
+@media (max-width: 760px) {
+  /* Con el titular a 11vw las dos columnas de la bajada y las del panel dejan
+     de entrar: por debajo de este ancho todo se apila y las cifras se van a la
+     izquierda con el resto, en vez de quedar colgadas del borde derecho. */
+  [data-theme="codex"][data-place="home"] .home-lede,
+  [data-theme="codex"][data-place="home"] .game-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-theme="codex"][data-place="home"] .home-counts,
+  [data-theme="codex"][data-place="home"] .game-panel-figures {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  [data-theme="codex"][data-place="home"] .game-panel-name {
+    max-width: none;
+  }
+}

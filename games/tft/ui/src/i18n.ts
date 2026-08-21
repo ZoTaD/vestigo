@@ -54,31 +54,41 @@ const EN = {
   },
 
   home: {
-    eyebrow: "Play · Review · Improve",
-    title: "We help you get better",
-    titleBreak: " at the games you play",
+    eyebrow: "Statistics from finished matches",
+    /**
+     * **"Vestigo" is Latin for "I track".** The line says so, which is a better
+     * job for a masthead than promising an improvement: it tells a first-time
+     * visitor what the name means and what the site does to a match, in four
+     * words, and it keeps being true however many games are added under it.
+     *
+     * It is set in two parts because the home prints the second one as an
+     * outline — see `title-break` in `styles/home.css`.
+     */
+    title: "Every match",
+    titleBreak: "leaves a trace",
     lead:
       "Your matches already hold the answer. Vestigo reads them back to you and turns the " +
       "record into something you can act on before the next game.",
-    cards: {
-      metrics: {
-        title: "Metrics that mean something",
-        body:
-          "Not a wall of numbers. The few figures that move where you finish, each one shown " +
-          "against how much evidence is behind it, so a lucky streak never reads as a skill.",
-      },
-      charts: {
-        title: "Charts that answer a question",
-        body:
-          "Where you actually finish, how that shape changes, and which choices sit behind " +
-          "your best and worst games — read at a glance instead of dug out of a table.",
-      },
-      correlations: {
-        title: "Correlations across your history",
-        body:
-          "One match is noise. Across all of them, patterns appear: what you do in the games " +
-          "you win that you stop doing in the games you lose, and what that habit costs you.",
-      },
+    counts: {
+      matches: "matches read",
+      measured: "last measured",
+    },
+    /** How old the freshest measurement is, said in words. */
+    fresh: {
+      today: "today",
+      yesterday: "yesterday",
+      days: (n: number) => `${n} days ago`,
+    },
+    /** The captions under each panel's figures. The figures themselves are
+     *  measured — these only name them. */
+    figures: {
+      placement: (name: string) => `average placement · ${name}`,
+      winRate: (name: string) => `win rate · ${name}`,
+      matchesSet: (set: string) => `matches · set ${set}`,
+      matchesBand: (band: string) => `matches · ${band}`,
+      /** La banda que publica `heroes.json`, que es la que muestra el panel. */
+      topBand: "Phantom+",
+      unmeasured: "not measured yet",
     },
     games: {
       heading: "Where you can use it",
@@ -88,13 +98,8 @@ const EN = {
       deadlock: "Hero and item tier lists, live now.",
       dota: "Not started yet — next on the roadmap after Deadlock.",
     },
-    stance: {
-      title: "Between games, never during one",
-      body:
-        "Everything here is retrospective. Vestigo does not read live game state, does not " +
-        "track or predict opponents, and never suggests an action while a match is running.",
-    },
   },
+
 
   meta: {
     title: "Meta",
@@ -1351,6 +1356,9 @@ const EN = {
       "Vestigo isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot " +
       "Games or anyone officially involved in producing or managing Riot Games properties. Riot " +
       "Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.",
+    disclaimerValve:
+      "Vestigo isn't endorsed by Valve Corporation. Deadlock, Dota 2 and all associated " +
+      "properties are trademarks or registered trademarks of Valve Corporation.",
   },
 
   // Said plainly, and without a pre-ticked box or a greyed-out "decline": the
@@ -1539,31 +1547,29 @@ const ES: typeof EN = {
   },
 
   home: {
-    eyebrow: "Juegas · Revisas · Mejoras",
-    title: "Te ayudamos a mejorar",
-    titleBreak: " en los juegos que juegas",
+    eyebrow: "Estadística de partidas terminadas",
+    /** Ver la nota de la versión en inglés: el lema explica el nombre. */
+    title: "Toda partida",
+    titleBreak: "deja rastro",
     lead:
       "Tus partidas ya tienen la respuesta. Vestigo te las lee de vuelta y convierte el " +
       "historial en algo que puedes usar antes de la próxima.",
-    cards: {
-      metrics: {
-        title: "Métricas que dicen algo",
-        body:
-          "No una pared de números. Las pocas cifras que mueven dónde terminas, cada una " +
-          "mostrada contra cuánta evidencia la respalda, para que una racha no se lea como nivel.",
-      },
-      charts: {
-        title: "Gráficos que responden algo",
-        body:
-          "Dónde terminas realmente, cómo cambia esa forma, y qué decisiones hay detrás de tus " +
-          "mejores y peores partidas — de un vistazo, no escarbando una tabla.",
-      },
-      correlations: {
-        title: "Correlaciones en tu historial",
-        body:
-          "Una partida es ruido. Mirándolas todas juntas aparecen los patrones: qué haces en " +
-          "las que ganas que dejas de hacer en las que pierdes, y cuánto te cuesta esa costumbre.",
-      },
+    counts: {
+      matches: "partidas leídas",
+      measured: "última medición",
+    },
+    fresh: {
+      today: "hoy",
+      yesterday: "ayer",
+      days: (n: number) => `hace ${n} días`,
+    },
+    figures: {
+      placement: (name: string) => `posición media · ${name}`,
+      winRate: (name: string) => `victorias · ${name}`,
+      matchesSet: (set: string) => `partidas · set ${set}`,
+      matchesBand: (band: string) => `partidas · ${band}`,
+      topBand: "Phantom+",
+      unmeasured: "todavía sin medir",
     },
     games: {
       heading: "Dónde puedes usarlo",
@@ -1573,13 +1579,8 @@ const ES: typeof EN = {
       deadlock: "Tier list de héroes e ítems, funcionando ya.",
       dota: "Todavía no arranca — es el próximo en la lista después de Deadlock.",
     },
-    stance: {
-      title: "Entre partidas, nunca durante una",
-      body:
-        "Todo acá es retrospectivo. Vestigo no lee el estado de la partida en vivo, no rastrea " +
-        "ni predice a los rivales, y nunca sugiere una acción mientras hay una partida en curso.",
-    },
   },
+
 
   meta: {
     title: "Composiciones",
@@ -2497,6 +2498,9 @@ const ES: typeof EN = {
       "de Riot Games ni de nadie oficialmente involucrado en la producción o gestión de las " +
       "propiedades de Riot Games. Riot Games y todas sus propiedades asociadas son marcas " +
       "comerciales o marcas registradas de Riot Games, Inc.",
+    disclaimerValve:
+      "Vestigo tampoco está avalado por Valve Corporation. Deadlock, Dota 2 y todas sus " +
+      "propiedades asociadas son marcas comerciales o marcas registradas de Valve Corporation.",
   },
 
   consent: {
