@@ -66,7 +66,7 @@ jobs:
     # Cuarenta deja margen y sigue evitando lo que este número existe para
     # evitar: que un pedido HTTP colgado contra el bucket deje el run vivo las 6
     # horas que da GitHub por defecto.
-    timeout-minutes: 40
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -174,8 +174,27 @@ jobs:
       # catálogo, de donde saca la lista de héroes. Si la API no contesta para
       # algún héroe, ese queda afuera y vuelve en la próxima corrida: el script
       # avisa y sigue, en vez de tirar el archivo entero.
+      # **Una vez por dia, a las 00:30 UTC, y eso se midio el 2026-08-21.**
+      #
+      # Es el paso mas caro de todos por lejos: **26,5 minutos** de los 40 que
+      # duraba el run entero, contra 7 de `build:builds` y 1,4 de la tier list.
+      # Corriendo en cada corrida agotaba el timeout y mataba el run con `report`
+      # y `mastery` sin ejecutar — o sea que el paso mas lento impedia publicar lo
+      # que si estaba listo. Asi murio la primera corrida del repo publico.
+      #
+      # No es calculo, es espera: son 38 pedidos a la API en vivo, uno por heroe,
+      # y desde las IPs compartidas de los runners de GitHub el limite de tasa
+      # pega mucho mas fuerte que desde una maquina propia.
+      #
+      # No pierde nada: el top 100 de cada heroe no cambia de una hora a la otra.
+      # Va a las 00:30, que es la corrida que no tenia ningun paso caro asignado.
       - name: build hero ladder
-        run: npm run build:ladder --prefix games/deadlock/pipeline
+        run: |
+          if [ "$(date -u +%H)" = "00" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            npm run build:ladder --prefix games/deadlock/pipeline
+          else
+            echo "la escalera por heroe corre una vez por dia (00:30 UTC); esta corrida la saltea"
+          fi
 
       # La curva de maestría, **una vez por día y no en cada corrida**.
       #
