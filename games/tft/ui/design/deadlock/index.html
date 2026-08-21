@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadlock · investigación de diseño y maquetas</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --off-black:#10130D;--papel:#171B12;--off-white:#FFEFD7;--amber:#D4860B;
+  --gold-lit:#C6A269;--souls:#70F8C1;--warn:#EE5945;
+  --linea:rgba(255,239,215,.13);--tenue:rgba(255,239,215,.5);
+  --display:"Marcellus SC",Georgia,serif;--texto:"Barlow",system-ui,sans-serif;
+  --angosta:"Barlow Condensed",var(--texto);--mono:"IBM Plex Mono",monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:17px}
+body{margin:0;background:var(--off-black);color:var(--off-white);font-family:var(--texto);
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+.hoja{max-width:980px;margin:0 auto;padding:clamp(2rem,6vw,5rem) clamp(1rem,4vw,2.5rem) 7rem}
+.sello{font-family:var(--angosta);text-transform:uppercase;letter-spacing:.3em;font-size:.7rem;
+  color:var(--amber);margin-bottom:1.2rem}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.04;
+  margin:0 0 1rem}
+.lede{max-width:64ch;color:rgba(255,239,215,.8);margin-bottom:3.4rem}
+.lista{display:grid;gap:1rem}
+a.tarjeta{
+  display:grid;grid-template-columns:auto 1fr;gap:1.4rem;align-items:start;
+  border:1px solid var(--linea);background:var(--papel);padding:1.3rem 1.5rem;
+  text-decoration:none;color:inherit;transition:.18s;
+}
+a.tarjeta:hover{border-color:var(--gold-lit);background:#1D2218;transform:translateX(3px)}
+.n{font-family:var(--display);font-size:2.2rem;line-height:1;color:var(--amber);min-width:1.6ch}
+a.tarjeta h2{font-family:var(--display);font-weight:400;font-size:1.4rem;margin:0 0 .2rem}
+a.tarjeta p{margin:.35rem 0 0;color:var(--tenue);font-size:.95rem;max-width:62ch}
+.meta{font-family:var(--mono);font-size:.72rem;color:var(--gold-lit);margin-top:.7rem;letter-spacing:.02em}
+.aviso{margin-top:3rem;border-left:3px solid var(--amber);background:rgba(212,134,11,.07);
+  padding:1.1rem 1.3rem;font-size:.93rem;max-width:74ch}
+.aviso b{color:var(--gold-lit)}
+code{font-family:var(--mono);font-size:.85em;color:var(--souls)}
+</style>
+</head>
+<body>
+<div class="hoja">
+  <div class="sello">Vestigo · Deadlock · 18 ago 2026</div>
+  <h1>Cómo se ve Deadlock,<br>y tres formas de mostrarlo</h1>
+  <p class="lede">
+    Primero la investigación —de dónde sale cada color, cada fuente y cada asset—, después tres
+    maquetas de la misma pantalla para elegir por comparación y no por descripción. Ninguna es
+    definitiva: son para mirar.
+  </p>
+
+  <div class="lista">
+    <a class="tarjeta" href="./estilo.html">
+      <div class="n">00</div>
+      <div>
+        <h2>El manual de estilo, medido</h2>
+        <p>
+          La paleta con nombre del propio juego, la tipografía real del sitio de Valve y por qué
+          no la podemos usar, el inventario completo de assets con lo que usamos y lo que no, y
+          seis reglas de cómo se ve el juego.
+        </p>
+        <div class="meta">164 colores · 15 assets inventariados · todo verificado contra la fuente</div>
+      </div>
+    </a>
+
+    <a class="tarjeta" href="./mock-1-sala-de-maquinas.html">
+      <div class="n">01</div>
+      <div>
+        <h2>Sala de máquinas</h2>
+        <p>
+          La interfaz del juego llevada a la web. Misma densidad que hoy, pero con el negro
+          cálido de Deadlock, latón en vez de oro azulado, y el color propio de cada héroe como
+          único acento de su tarjeta. El fondo es el truco barato: la tarjeta del héroe
+          desenfocada, 56 KB.
+        </p>
+        <div class="meta">Marcellus SC + Barlow · el cambio más chico · fondo de 56 KB</div>
+      </div>
+    </a>
+
+    <a class="tarjeta" href="./mock-2-cartel.html">
+      <div class="n">02</div>
+      <div>
+        <h2>Cartel</h2>
+        <p>
+          El arte manda. El mejor héroe de la banda ocupa media pantalla con su fondo de
+          pantalla real y su nombre dibujado por el juego en SVG; cada escalón es una tira
+          horizontal de tarjetas grandes. Es la que más se parece al material de Valve y la que
+          más pesa.
+        </p>
+        <div class="meta">Big Shoulders + Archivo · fondo de 1,33 MB · la más vistosa</div>
+      </div>
+    </a>
+
+    <a class="tarjeta" href="./mock-3-ficha-tecnica.html">
+      <div class="n">03</div>
+      <div>
+        <h2>Ficha técnica</h2>
+        <p>
+          La tier list como lo que en realidad es: una escala continua con el 50&nbsp;% de eje,
+          no cinco cajones. Las letras pasan a ser anotaciones al margen y se ve lo que de verdad
+          separan — a veces dos décimas. Casi sin arte y sin fondo: es la más rápida.
+        </p>
+        <div class="meta">Instrument Serif + IBM Plex Mono · sin fondo · la más honesta</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="aviso">
+    <b>Cómo abrirlas.</b> Con el servidor de desarrollo corriendo
+    (<code>npm --prefix games/tft/ui run dev</code>), están en
+    <code>localhost:5173/design/deadlock/</code>. Los archivos viven en
+    <code>games/tft/ui/design/deadlock/</code> y <b>no se publican</b>: Vite sólo compila
+    <code>index.html</code> de la raíz, así que nada de esto llega a producción.
+    Las tres maquetas leen los <b>datos reales</b> de la última corrida —8.232 partidas de la
+    banda Fantasma y arriba— y el arte se referencia del bucket de la API, no se re-aloja.
+  </div>
+</div>
+</body>
+</html>

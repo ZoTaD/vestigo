@@ -1,0 +1,26 @@
+{
+  "name": "deadlock-pipeline",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "build:heroes": "node node_modules/tsx/dist/cli.mjs src/build.ts",
+    "build:items": "node node_modules/tsx/dist/cli.mjs src/items.ts",
+    "build:builds": "node --max-old-space-size=8192 node_modules/tsx/dist/cli.mjs src/builds.ts",
+    "build:ranks": "node node_modules/tsx/dist/cli.mjs src/ranks.ts",
+    "build:report": "node --max-old-space-size=8192 node_modules/tsx/dist/cli.mjs src/report.ts",
+    "build:mastery": "node --max-old-space-size=8192 node_modules/tsx/dist/cli.mjs src/mastery.ts",
+    "catalog": "node node_modules/tsx/dist/cli.mjs src/catalog.ts",
+    "publish:guard": "node node_modules/tsx/dist/cli.mjs src/publish-guard.ts",
+    "build:ladder": "node node_modules/tsx/dist/cli.mjs src/ladder.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "dependencies": {
+    "@duckdb/node-api": "^1.4.4-r.2"
+  }
+}

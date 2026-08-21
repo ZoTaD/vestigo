@@ -1,0 +1,52 @@
+name = "vestigo"
+main = "src/index.ts"
+compatibility_date = "2026-07-01"
+
+# La API publica de Vestigo vive aca desde que se mudo de Supabase: el navegador le
+# pega a https://vestigo.vestigo-gg.workers.dev (ver api.ts y ui/src/api.ts).
+#
+# El dominio propio (vestigo.gg) sigue apuntando a Netlify por DNS de Namecheap, asi
+# que poner la API en vestigo.gg/api pediria mover el DNS entero a Cloudflare. Es
+# trabajo aparte y nada de esto lo necesita.
+workers_dev = true
+
+# El cron de partidas.
+#
+# Cada 2 minutos, y el numero sale de Riot, no de las ganas: la dev key da 100
+# llamadas cada 2 minutos, que es exactamente la ventana de una corrida. Ver
+# CALL_BUDGET en pull.ts para por que el presupuesto es 90 de esas 100.
+#
+# En el plan gratuito esto NO se respetaba —disparaba cada 5 minutos pase lo que
+# pase, medido— y ademas cortaba en 50 subrequests por invocacion. Con el plan pago
+# (desde el 2026-07-29) las dos cosas desaparecieron.
+[triggers]
+crons = []
+
+# **Apagado a proposito el 2026-08-21, hasta que salga el proximo parche.**
+#
+# La razon no es la key ni el costo: es que ingerir sin poder resumir no compra
+# nada. Medido ese dia contra D1: el parche vigente (16.16, desde el 11-ago)
+# tenia 10.701 partidas y 10.690 SIN resumir, sobre 34.600 totales y 24.107 sin
+# resumir. Resumir corre en Actions, y Actions esta frenado desde el 12-ago por
+# haber agotado los 2.000 min/mes gratis: vuelve el 1-sep. Hasta entonces cada
+# partida nueva solo agranda un backlog que nadie puede procesar, a ~14.400 por
+# dia y ~350 MB diarios en una base con 10 GB de techo.
+#
+# El otro efecto es que la dev key deja de vencerse todos los dias en la cara de
+# nadie: sin cron no hay que rotarla hasta que esto se vuelva a prender.
+#
+# **Para volver a prenderlo** —cuando salga el 16.17, para juntar su meta desde
+# el minuto cero, que es como el diseno quiere medir un parche:
+#
+#   1. crons = ["*/2 * * * *"]   (los 2 minutos salen de la cuota de Riot:
+#      100 llamadas por ventana de 2 min, y CALL_BUDGET usa 90 de esas 100)
+#   2. wrangler secret put RIOT_API_KEY   con una key fresca de developer.riotgames.com
+#   3. wrangler deploy
+
+[[d1_databases]]
+binding = "DB"
+database_name = "vestigo"
+database_id = "8c28d04f-e915-4da9-b32d-7ecf60ddb743"
+
+# RIOT_API_KEY y CRON_SECRET NO van aca: son secrets, se cargan con
+# `wrangler secret put <nombre>` y viven en Cloudflare, no en git.

@@ -1,0 +1,68 @@
+# The site lives in a subdirectory of this repo, so Netlify needs to be told
+# where to build from. `publish` is resolved relative to `base`.
+[build]
+  base = "games/tft/ui"
+  command = "npm run build"
+  publish = "dist"
+
+  # Without this line the tier list stops reaching the site.
+  #
+  # When a base directory is set, Netlify's default is to skip the build unless
+  # the push changed something INSIDE it. The daily publish Action commits only
+  # `games/tft/data/*.json`, which lives outside `games/tft/ui` — so every
+  # automatic publication was skipped, silently and with a green Action. Measured
+  # on the first one (commit fb490fa): the site kept serving the previous day's
+  # meta half an hour later.
+  #
+  # The data IS the site: it gets bundled into the JS at build time. So the build
+  # has to watch it too. `:/` makes each path relative to the repo root rather
+  # than to the base directory, which is where this command runs.
+  #
+  # netlify.toml is on the list on purpose: a change to how the site is built
+  # should rebuild it, and it is what makes this very commit deploy.
+  #
+  # Exit 0 means "skip". `git diff --quiet` exits 0 only when nothing changed, so
+  # anything unexpected — an empty $CACHED_COMMIT_REF on a first build, a bad
+  # path — fails the command and builds, which is the safe direction to fail.
+  # `games/deadlock/data` está por la misma razón exacta, y se agregó el
+  # 2026-07-29 junto con la tier list de Deadlock: esos JSON también se empaquetan
+  # dentro del bundle en tiempo de build. Sin esta ruta, la Action que los
+  # actualiza todos los días habría quedado en verde con el sitio sirviendo la
+  # tier list del día que se publicó — el mismo fallo que costó descubrir arriba,
+  # repetido para el segundo juego.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/games/tft/ui :/games/tft/data :/games/deadlock/data :/netlify.toml"
+
+[build.environment]
+  # Pinned so a Netlify default upgrade never changes the build under us.
+  NODE_VERSION = "22"
+
+# Every screen has a real URL now (/en/tft/units/jinx and friends), but the app
+# is still a single HTML file that reads the path at runtime. This hands any
+# path to that file with a 200 rather than a redirect, so the address the
+# visitor asked for is the address they keep — a 301 to "/" would collapse every
+# page we just asked Google to index back into one.
+#
+# Static files that exist on disk (sitemap.xml, robots.txt, riot.txt) are served
+# before this rule is consulted, so they are not swallowed by it.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Las imágenes del catálogo (games/tft/pipeline/src/images.ts) viven bajo
+# /img/set<N>/ con un nombre derivado del hash de su URL de origen. Esa ruta
+# jamás cambia de contenido: un archivo con ese nombre siempre es la misma
+# imagen, y un cambio de set escribe en una carpeta /img/set<N+1>/ nueva en vez
+# de pisar esta. Por eso "immutable" es seguro acá — nada le exige a un
+# visitante volver a pedir un archivo que ya tiene en caché.
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

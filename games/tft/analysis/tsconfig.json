@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    // Deliberately no "types": ["node"]. This package must stay runtime-free so
+    // the same logic runs in the browser, in Deno and in tests.
+    "lib": ["ES2022"]
+  },
+  "include": ["src", "test"]
+}

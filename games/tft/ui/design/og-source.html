@@ -1,0 +1,126 @@
+<!doctype html>
+<!--
+  Source for the Open Graph card. Rendered at 1200x630 and captured to og.png;
+  this file is not shipped. Kept in the repo so the image can be regenerated
+  when the wording or the palette changes, instead of being a mystery binary.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Barlow+Condensed:wght@500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #080d1a;
+        --vellum: #e9e0cb;
+        --vellum-dim: #9c957f;
+        --gold: #c9a24a;
+        --gold-lit: #f0d391;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1200px; height: 630px; overflow: hidden; }
+      body {
+        background: var(--ink);
+        color: var(--vellum);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 92px;
+        position: relative;
+        font-family: "Cormorant Garamond", Georgia, serif;
+      }
+      /* A slow radial lift so the flat navy does not read as a placeholder. */
+      body::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(120% 90% at 12% 0%, rgba(201, 162, 74, 0.16), transparent 58%),
+          radial-gradient(80% 70% at 100% 100%, rgba(201, 162, 74, 0.08), transparent 60%);
+      }
+      .frame {
+        position: absolute;
+        inset: 34px;
+        border: 1px solid rgba(201, 162, 74, 0.34);
+      }
+      .frame::before,
+      .frame::after {
+        content: "";
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        border: 2px solid var(--gold);
+      }
+      .frame::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+      .frame::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+
+      .inner { position: relative; }
+
+      .eyebrow {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 700;
+        font-size: 25px;
+        letter-spacing: 0.42em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 30px;
+      }
+      .brand {
+        font-family: "Cinzel", Georgia, serif;
+        font-weight: 900;
+        font-size: 132px;
+        line-height: 0.94;
+        letter-spacing: 0.03em;
+        color: var(--vellum);
+      }
+      .rule {
+        width: 132px;
+        height: 2px;
+        background: var(--gold);
+        margin: 34px 0 30px;
+      }
+      .lead {
+        font-size: 40px;
+        line-height: 1.34;
+        max-width: 21ch;
+        color: var(--vellum);
+      }
+      .lead em { font-style: italic; color: var(--gold-lit); }
+      .foot {
+        position: absolute;
+        left: 92px;
+        right: 92px;
+        bottom: 68px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 600;
+        font-size: 24px;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: var(--vellum-dim);
+      }
+      .foot strong { color: var(--vellum); font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <div class="frame"></div>
+
+    <div class="inner">
+      <p class="eyebrow">Play · Review · Improve</p>
+      <h1 class="brand">Vestigo</h1>
+      <div class="rule"></div>
+      <p class="lead">Your matches already hold <em>the answer</em>.</p>
+    </div>
+
+    <div class="foot">
+      <span>Teamfight Tactics</span>
+      <span><strong>vestigo.gg</strong></span>
+    </div>
+  </body>
+</html>

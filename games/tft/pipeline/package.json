@@ -1,0 +1,29 @@
+{
+  "name": "tft-pipeline",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "smoke": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/smoke.ts",
+    "pull": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/pull.ts",
+    "build:comps": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/build.ts",
+    "catalog": "node --max-old-space-size=2048 --env-file=.env node_modules/tsx/dist/cli.mjs src/catalog.ts",
+    "images": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/images.ts",
+    "migrate:pg": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/migrate-to-postgres.ts",
+    "summarize": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/summarize-run.ts",
+    "pull:ladder": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/pull-ladder.ts",
+    "pull:all": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/pull.ts all",
+    "compare": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/compare-tiers.ts",
+    "publish:guard": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/publish-guard.ts",
+    "close-set": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/close-set.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1095.0"
+  }
+}

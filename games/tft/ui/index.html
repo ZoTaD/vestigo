@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- English is the default language; App syncs this to a remembered choice. --><html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Google Search Console ownership. Inert: no script, no tracking. Must stay
+         for verification to hold, so it lives in the static head, not PageMeta. -->
+    <meta name="google-site-verification" content="4jK5_InU6h2IIDAW8-Nk8eOG_7uyJlqfL3MbFvKaShM" />
+    <title>Vestigo — Get better at the games you play</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0b1222" />
+    <meta
+      name="description"
+      content="Vestigo reads your finished matches and turns them into something you can act on before the next game: a high-elo meta report, unit and item stats, and analysis of your own history."
+    />
+
+    <!--
+      These are duplicated from PageMeta on purpose, and they are the ones that
+      actually matter for link previews.
+
+      Discord, Twitter, WhatsApp and friends do not run JavaScript: they read the
+      HTML as served and stop. Whatever PageMeta writes on navigation is invisible
+      to them, so without these tags a shared link would preview as a bare
+      rectangle no matter how carefully the app rewrites its head. Google does run
+      JS, which is why per-page titles still reach search.
+
+      Keep them describing the site as a whole — they are what every link shows.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Vestigo" />
+    <meta property="og:title" content="Vestigo — Get better at the games you play" />
+    <meta
+      property="og:description"
+      content="Your matches already hold the answer. Vestigo reads them back to you: a high-elo meta report for Teamfight Tactics, unit and item stats, and analysis of your own history."
+    />
+    <meta property="og:url" content="https://vestigo.gg/en" />
+    <meta property="og:image" content="https://vestigo.gg/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Vestigo — play, review, improve" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vestigo — Get better at the games you play" />
+    <meta
+      name="twitter:description"
+      content="Your matches already hold the answer. Vestigo reads them back to you: a high-elo meta report for Teamfight Tactics, unit and item stats, and analysis of your own history."
+    />
+    <meta name="twitter:image" content="https://vestigo.gg/og.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      Cinco familias, y cada una tiene un trabajo (ver `--font-data` en codex.css):
+      Cinzel titula en TFT, Cormorant es la prosa, Barlow lleva los datos y
+      Barlow Condensed las columnas numéricas angostas.
+
+      **Marcellus SC titula en Deadlock**, y es la única que no sirve a los dos
+      juegos. Es una romana grabada en versalitas: la familia formal del
+      logotipo de Deadlock, que el sitio oficial acompaña con Oracle y Pulp —
+      las dos de licencia paga, así que no son una opción. Cinzel es de la misma
+      escuela pero su versalita es más estrecha y más alta, y al lado del negro
+      cálido del juego se lee como manuscrito en vez de como placa grabada.
+
+      Archivo y Bungee estaban acá desde antes y se sacaron el 2026-08-12: se
+      grepeó el `src/` entero y NO las usaba una sola regla, así que el navegador
+      pedía y parseaba dos familias que nunca iba a pintar. Antes de sumar una
+      familia nueva, buscar si ya hay una cargada que sirva.
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Marcellus+SC&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;700;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

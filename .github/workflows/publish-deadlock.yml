@@ -1,0 +1,273 @@
+name: publish deadlock tier list
+
+# El peso de lo publicado sigue siendo el mismo argumento de siempre: los JSON
+# suman ~257 KB por corrida y las builds se publican de UNA banda. Con las cuatro
+# pesaban 2,2 MB, o sea ~1,6 GB de historia de git al año, y la historia de git
+# no se recorta después. El guardián evita el commit cuando no cambió nada, así
+# que una corrida de más no ensucia el historial, que con esta cadencia es lo
+# que pasa la mayoría de las veces.
+#
+# **Corre cada dos horas, las tres mediciones juntas.**
+#
+# El corpus es ranked-only desde el 2026-07-31 y arranca de cero: la cola
+# rankeada abrió el 30/7 a las 16:19 UTC, así que toda la muestra tiene horas y
+# cada corrida la mejora de verdad. La corrida entera son ~3 minutos.
+#
+# `build:builds` entra en el mismo ritmo mientras el corpus sea chico: los 10-14
+# minutos que costaba eran sobre 79.989 partidas, y hoy son 2.476 y ~1 minuto.
+# Cuando la muestra se recupere el costo vuelve, y ahí hay que sacarlo de acá —
+# está anotado en el paso.
+on:
+  schedule:
+    # **Cuatro por día, y el cálculo de "cada 2 horas" que había acá estaba mal
+    # por un factor de cinco.** Decía ~3 min por corrida; medido el 2026-08-13
+    # sobre 51 corridas exitosas, la media real es **14,4 min**, así que cada 2
+    # horas eran **5.181 min/mes** de los 2.000 que da el plan gratis de un repo
+    # privado. Sumado a TFT (1.138), tests (265) y summarize (101) daban 6.685
+    # min/mes: **3,3 veces el tope**. El 2026-08-12 GitHub dejó de arrancar
+    # jobs por facturación y ninguna tarea programada corrió más.
+    #
+    # Con estas cuatro y `build:builds` detrás de su compuerta (ver el paso), una
+    # corrida normal cuesta ~4 min y el total del repo queda en ~1.750 min/mes.
+    #
+    # **Las horas NO son intercambiables**: los tres pasos caros se prenden por
+    # hora UTC y cada uno tiene la suya, así que cambiar el cron sin mirar los
+    # `if` de abajo los deja sin correr nunca.
+    #   00:30 → corrida limpia    06:30 → mastery
+    #   12:30 → builds            18:30 → report (necesita el builds de las 12:30)
+    #
+    # **No se pierde frescura por bajar de 12 a 4**, y eso está medido: el
+    # snapshot de deadlock-api va unas 4 horas atrasado respecto del reloj (a las
+    # 14:45 UTC su última partida era de las 10:01), así que pedirlo más seguido
+    # traía lo mismo y el guardián frenaba el commit igual.
+    #
+    # **A y media, no en punto, y eso importa.** `publish.yml` corre en punto:
+    # con los dos ahí, ambos terminan cerca y se pelean por el push a `main`. El
+    # reintento de más abajo lo resuelve igual, pero esto hace que la pelea casi
+    # nunca ocurra — y las dos cosas juntas son lo que saca el 40% de corridas en
+    # rojo que se midió el 2026-08-01.
+    - cron: "30 0,6,12,18 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: publish-deadlock
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # El trabajo real son ~2 minutos. Veinte es holgado y lo que evita es que un
+    # pedido HTTP colgado contra el bucket deje el run vivo las 6 horas que da
+    # GitHub por defecto.
+    # El trabajo real pasó de ~2 a ~14 minutos al sumar las builds por héroe.
+    # Cuarenta deja margen y sigue evitando lo que este número existe para
+    # evitar: que un pedido HTTP colgado contra el bucket deje el run vivo las 6
+    # horas que da GitHub por defecto.
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: games/deadlock/pipeline/package-lock.json
+
+      - name: install
+        run: npm ci --prefix games/deadlock/pipeline
+
+      # Lo publicado, guardado antes de pisarlo: es contra esto que compara el
+      # guardián para no commitear un cambio de `generatedAt` y nada más.
+      - name: snapshot
+        run: |
+          mkdir -p "$RUNNER_TEMP/before"
+          cp games/deadlock/data/*.json "$RUNNER_TEMP/before/"
+
+      # El catálogo son nombres e imágenes, y **puede fallar sin romper nada**:
+      # el que ya está commiteado sigue siendo válido, porque un héroe no cambia
+      # de nombre. Por eso este paso sí lleva continue-on-error, al revés que el
+      # `summarize` de TFT — allá el paso ERA la fuente de la tier list y fallar
+      # en silencio la dejaba quieta sin avisar. Acá la fuente es el paso de
+      # abajo, y ese no perdona.
+      - name: catalog
+        continue-on-error: true
+        run: npm run catalog --prefix games/deadlock/pipeline
+
+      # Las tier lists. Si esto falla, falla el run: son los únicos pasos que
+      # producen números, y una falla silenciosa acá dejaría la página congelada
+      # sin que nada lo dijera.
+      - name: build heroes
+        run: npm run build:heroes --prefix games/deadlock/pipeline
+
+      # Los ítems van después de los héroes y no en paralelo: los dos consultan
+      # el mismo snapshot por HTTP, y encimarlos sólo se pelearía por el ancho de
+      # banda para ahorrar los ~10 segundos que tarda éste.
+      #
+      # Depende del paso `catalog` de arriba —de ahí saca qué ítems existen y
+      # cuánto cuestan— y ese paso SÍ perdona fallar. Está bien: si el catálogo
+      # no se pudo bajar, el que ya está commiteado sigue siendo válido, y si
+      # nunca existió este paso corta con un mensaje que lo dice.
+      - name: build items
+        run: npm run build:items --prefix games/deadlock/pipeline
+
+      # Las builds por héroe, que es lo que se despliega al apretar un héroe en
+      # la tier list. Es el paso más caro con diferencia —~10 minutos contra los
+      # ~10 segundos de ítems— y el motivo no es el volumen de partidas: para
+      # parear cada compra contra quien llegó al mismo punto hay que materializar
+      # el estado del jugador en cada muestra, mientras que los otros dos agregan
+      # del lado de DuckDB. Se suman ~4 minutos de pedirle a la API el orden de
+      # habilidades, héroe por héroe.
+      #
+      # **Una vez por día, a las 12:30 UTC. El "ojo cuando la muestra crezca"
+      # que decía este comentario ya pasó.**
+      #
+      # Decía que con el corpus ranked eran ~1 minuto. Medido el 2026-08-13:
+      # **613 s en CI y 14m04s en local** — o sea 10 de los 14,4 minutos que
+      # cuesta una corrida entera, y **3.678 de los 5.181 min/mes** que gastaba
+      # Deadlock corriendo cada 2 horas. Un solo paso era el 55% de la factura de
+      # Actions del repo.
+      #
+      # No pierde nada: las builds salen de una ventana de quince días y no
+      # cambian de una hora a la otra, que es el mismo argumento por el que
+      # `mastery` y `report` ya corrían una vez por día.
+      #
+      # **A las 12 y no a las 06 ni a las 18**: esas dos ya tienen su paso caro, y
+      # `report` —que corre a las 18:30— lee `builds.json` para sacar los pesos
+      # del mecanismo. Con builds a las 12:30 lo lee del mismo día; moviéndolo
+      # después de las 18 usaría el de ayer.
+      #
+      # Sin continue-on-error, como los otros dos que producen números: si falla,
+      # la tarjeta de build queda congelada y nada lo diría. Lo que SÍ perdona
+      # fallar es la API de habilidades, y eso se maneja adentro: si no contesta,
+      # el JSON sale sin `abilityOrder` y la tarjeta no dibuja ese panel.
+      - name: build builds
+        run: |
+          if [ "$(date -u +%H)" = "12" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            npm run build:builds --prefix games/deadlock/pipeline
+          else
+            echo "las builds corren una vez por día (12:30 UTC); esta corrida las saltea"
+          fi
+
+      # La escalera de rangos. Es la medición más barata de las cuatro —una
+      # ventana de tres días sobre una sola partición, segundos— así que va en
+      # cada corrida sin pensarlo.
+      #
+      # Va DESPUÉS de `build:heroes` y no antes: las dos preguntan hasta cuándo
+      # el snapshot sabe de rangos (`windowEnd`), y que la tier list defina ese
+      # techo primero mantiene el orden de siempre. No comparten archivo, así que
+      # el orden es sólo de costo.
+      - name: build ranks
+        run: npm run build:ranks --prefix games/deadlock/pipeline
+
+      # El top 100 de cada héroe, para que el perfil pueda decir "sos el #56 del
+      # mundo con Abrams" sin pedir nada.
+      #
+      # **Es el único paso que le pega a deadlock-api y no al snapshot**: son 38
+      # pedidos, uno por héroe. Ese bucle es correcto ACÁ y sería incorrecto en
+      # el navegador, que es donde se descartó — así lo paga CI una vez cada dos
+      # horas en vez de cada visitante en cada perfil que abre.
+      #
+      # No usa el snapshot, así que no depende de ningún paso anterior salvo el
+      # catálogo, de donde saca la lista de héroes. Si la API no contesta para
+      # algún héroe, ese queda afuera y vuelve en la próxima corrida: el script
+      # avisa y sigue, en vez de tirar el archivo entero.
+      - name: build hero ladder
+        run: npm run build:ladder --prefix games/deadlock/pipeline
+
+      # La curva de maestría, **una vez por día y no en cada corrida**.
+      #
+      # Cuesta ~5,6 minutos porque cuenta la historia entera del snapshot: 97
+      # particiones, de 2025 a hoy. En cada corrida serían ~2.000 minutos de
+      # Actions al mes, que es el presupuesto gratis ENTERO — y no compraría
+      # nada, porque "cuánto premia la experiencia con este héroe" no cambia de
+      # una hora a la otra. Es la misma razón por la que `skillGap` tiene su
+      # propia ventana: hay preguntas de otra velocidad.
+      #
+      # **Va en este workflow y no en uno propio a propósito.** Un tercer
+      # publicador sería un tercero peleando por el push a `main`, que es
+      # exactamente el problema que se arregló el 2026-08-01 (el 40% de las
+      # corridas de TFT moría así). Acá reusa el guardián, el commit y el
+      # reintento de push que ya están abajo.
+      #
+      # El cron dispara a las :30 de cada hora par, así que este `if` lo deja en
+      # una sola: 06:30 UTC. `workflow_dispatch` lo corre siempre, para poder
+      # probarlo a mano sin esperar al día siguiente.
+      # La referencia del informe de partida: qué compraron los que ganaron en
+      # cada situación. **Una vez por día**, por lo mismo que la maestría.
+      #
+      # Cuesta ~5,5 minutos y casi todo es cargar la ventana —632.952 filas de
+      # jugador con sus compras y sus series—, no la medición, que son segundos.
+      # Y no compra nada correrlo más seguido: "qué compra el que gana con este
+      # héroe" no cambia de una hora a la otra. La partida que el visitante abre
+      # sí es del momento, pero ésa la trae el navegador de deadlock-api en vivo.
+      #
+      # **Va DESPUÉS de `build:builds`**, y eso no es de costo: de `builds.json`
+      # saca los pesos del mecanismo con los que arma la nota. Si corriera antes,
+      # usaría los de la corrida anterior.
+      #
+      # A las 18:30 y no a las 06:30 para no encimarlo con la maestría: son dos
+      # pasos de ~5,5 minutos y juntos harían una sola corrida de ~14, que es
+      # acercarse al timeout sin necesidad.
+      - name: build report
+        run: |
+          if [ "$(date -u +%H)" = "18" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            npm run build:report --prefix games/deadlock/pipeline
+          else
+            echo "la referencia del informe corre una vez por día (18:30 UTC); esta corrida la saltea"
+          fi
+
+      - name: build mastery
+        run: |
+          if [ "$(date -u +%H)" = "06" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            npm run build:mastery --prefix games/deadlock/pipeline
+          else
+            echo "la maestría corre una vez por día (06:30 UTC); esta corrida la saltea"
+          fi
+
+      - name: guard
+        id: guard
+        run: |
+          set +e
+          npm run publish:guard --prefix games/deadlock/pipeline -- "$RUNNER_TEMP/before" ../data
+          code=$?
+          set -e
+          if [ "$code" = "3" ]; then echo "publish=no" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ "$code" != "0" ]; then exit "$code"; fi
+          echo "publish=yes" >> "$GITHUB_OUTPUT"
+
+      - name: commit
+        if: steps.guard.outputs.publish == 'yes'
+        run: |
+          git config user.name "vestigo-bot"
+          git config user.email "67348048+ZoTaD@users.noreply.github.com"
+          # El directorio entero y no un patrón: eso es exactamente "lo que el
+          # build escribió acá", sin una segunda lista que mantener al día.
+          git add games/deadlock/data
+          git commit -m "chore: publish the Deadlock tier list measured on today's snapshot"
+          # **El push se reintenta, y ese es el arreglo.**
+          #
+          # Los dos publicadores —TFT y Deadlock— escriben en el mismo `main`, y
+          # entre el checkout y este momento el otro pudo haber pusheado. Sin
+          # esto el push se rechaza y la corrida muere en rojo con todo el
+          # trabajo hecho: medido el 2026-08-01, **6 de las últimas 15 corridas
+          # de TFT fallaron así**, o sea el 40%.
+          #
+          # Se rebasea sobre lo que llegó en vez de forzar. Los dos tocan
+          # directorios distintos —`games/tft/data` y `games/deadlock/data`— así
+          # que el rebase nunca tiene conflicto; lo único que cambia es sobre qué
+          # commit queda apoyado el nuestro. Un `--force` en cambio borraría la
+          # publicación del otro juego sin que nada lo dijera.
+          empujado=0
+          for intento in 1 2 3; do
+            if git push; then empujado=1; break; fi
+            echo "push rechazado (intento $intento): traigo lo que llegó y reintento"
+            git fetch origin "$GITHUB_REF_NAME" || break
+            git rebase "origin/$GITHUB_REF_NAME" || break
+          done
+          if [ "$empujado" != 1 ]; then
+            echo "::error::no se pudo publicar después de 3 intentos"
+            exit 1
+          fi

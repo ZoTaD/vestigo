@@ -1,0 +1,2158 @@
+/* ---------------------------------------------------------------------------
+   Base: reset + structural skeleton. Colour, type and ornament live in
+   codex.css.
+--------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/**
+ * The base every rem in this stylesheet is measured against.
+ *
+ * The theme set 19px on its own container, so inherited text looked right while
+ * every `rem` kept resolving against the browser's 16px root — the whole
+ * stylesheet was written for a 19px base and rendered against 16, which made
+ * all sizing quietly 19% smaller than designed. Headings landed at 9.9px and
+ * explanatory text at 13.6px, well under the ~12px floor where text stops being
+ * comfortable to read.
+ *
+ * Setting it here is the fix rather than a patch: every size, gap and width in
+ * the file keeps its intended proportion, and they were all authored together.
+ */
+html {
+  font-size: 19px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+ul,
+ol,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  text-align: inherit;
+}
+
+.app {
+  min-height: 100%;
+  position: relative;
+  padding: clamp(1.5rem, 4vw, 4rem) clamp(1rem, 4vw, 4rem) 6rem;
+  overflow-x: hidden;
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.masthead {
+  max-width: 1400px;
+  margin: 0 auto clamp(2.5rem, 6vw, 5rem);
+}
+
+.dataset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.25rem, 4vw, 3rem);
+}
+
+.tiers {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 5vw, 3.5rem);
+}
+
+.tier-head {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  margin-bottom: 1.1rem;
+}
+
+.tier-rule {
+  flex: 1;
+  height: 1px;
+}
+
+.comp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.comp {
+  position: relative;
+  animation: comp-in 520ms cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+@keyframes comp-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.comp-summary {
+  width: 100%;
+  display: grid;
+  /* The identity column is sized in rem so it tracks the type it holds: as a
+     fixed 230px it was set against the old base, and once the text grew the
+     comp name wrapped onto two lines and the badges stacked one per row. */
+  grid-template-columns: auto minmax(15.5rem, 1fr) minmax(0, 2.3fr) auto auto;
+  align-items: center;
+  gap: clamp(0.8rem, 1.8vw, 1.6rem);
+  padding: 1rem clamp(0.9rem, 2vw, 1.5rem);
+  cursor: pointer;
+}
+
+.comp-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.comp-name {
+  font-size: 1.45rem;
+  line-height: 1.15;
+  display: block;
+}
+
+.comp-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.badge-plan,
+.badge-level {
+  display: inline-block;
+  padding: 0.22rem 0.6rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* --- Synergies --- */
+.synergies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.1rem;
+}
+
+.synergy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem 0.2rem 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.synergy img {
+  width: 22px;
+  height: 22px;
+}
+
+.synergy b {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.synergy-name {
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.comp-chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 220ms ease;
+  opacity: 0.55;
+}
+
+.comp[data-open="true"] .comp-chevron {
+  transform: rotate(225deg) translateY(-2px);
+}
+
+/* --- Roster --- */
+.roster {
+  display: flex;
+  flex-wrap: wrap;
+  /* Generous gutters: each champion needs to read as its own column, with its
+     items unmistakably attached to it and not to the neighbour. */
+  gap: 1.15rem 1rem;
+}
+
+.unit {
+  width: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.unit-stars {
+  font-size: 1rem;
+  line-height: 1;
+  height: 1.15rem;
+  letter-spacing: 0.06em;
+}
+
+.unit-portrait {
+  width: 62px;
+  height: 62px;
+  object-fit: cover;
+}
+
+.unit-fallback {
+  display: grid;
+  place-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: rgba(128, 128, 128, 0.25);
+}
+
+.unit-name {
+  display: block;
+  max-width: 100%;
+  font-size: 0.88rem;
+  line-height: 1.25;
+  margin-top: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.unit-items {
+  display: flex;
+  gap: 3px;
+  margin-top: 5px;
+  min-height: 22px;
+}
+
+/* --- Item chip + hover card --- */
+.item-chip {
+  position: relative;
+  display: inline-flex;
+}
+
+.item-chip-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.item-chip[data-size="lg"] .item-chip-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.item-pop {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(4px);
+  width: 268px;
+  padding: 0.75rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
+  z-index: 20;
+  text-align: left;
+  white-space: normal;
+}
+
+.item-chip:hover .item-pop {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.pop-head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.pop-head img {
+  width: 34px;
+  height: 34px;
+  flex: none;
+}
+
+.pop-head b {
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.pop-head em {
+  display: block;
+  font-size: 0.72rem;
+  font-style: normal;
+  margin-top: 2px;
+}
+
+.pop-label {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.pop-parts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.pop-part {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+}
+
+.pop-part img {
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+
+.pop-desc {
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+/* --- Stats --- */
+.stats {
+  display: flex;
+  gap: clamp(0.7rem, 1.6vw, 1.5rem);
+  text-align: right;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  min-width: 3.4rem;
+}
+
+.stat-value {
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+}
+
+/* --- Detail --- */
+.comp-detail {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(0, 1.5fr);
+  gap: clamp(1.4rem, 3vw, 3rem);
+  padding: 0 clamp(0.9rem, 2vw, 1.5rem) 1.6rem;
+  animation: detail-in 320ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@keyframes detail-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.detail-heading-spaced {
+  margin-top: 1.8rem;
+}
+
+.detail-note {
+  font-size: 0.85rem;
+  margin: -0.5rem 0 0.8rem;
+}
+
+.plan-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  counter-reset: step;
+}
+
+.plan-steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 1.6rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.plan-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  font-size: 0.8rem;
+}
+
+.item-priority {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.item-priority li {
+  display: grid;
+  grid-template-columns: 1.3rem auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.02rem;
+}
+
+.ip-rank {
+  font-size: 0.9rem;
+}
+
+.ip-name {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+/* The recipe reads as icons, not prose — you scan the carousel for shapes. */
+.ip-parts {
+  grid-column: 3;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.3rem;
+}
+
+.ip-part {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ip-part img {
+  width: 26px;
+  height: 26px;
+}
+
+.ip-plus {
+  font-style: normal;
+  font-size: 0.95rem;
+  opacity: 0.55;
+}
+
+.detail-unit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.detail-unit-list li {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(150px, auto) 3.2rem 1fr;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.92rem;
+}
+
+.du-cost {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  font-size: 0.8rem;
+}
+
+.du-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.du-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.84rem;
+}
+
+.du-item img {
+  width: 22px;
+  height: 22px;
+}
+
+.meter {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  opacity: 0;
+}
+
+.meter-fill {
+  display: block;
+  height: 100%;
+  width: calc(var(--pct) * 100%);
+}
+
+.colophon {
+  max-width: 1400px;
+  margin: clamp(3rem, 8vw, 6rem) auto 0;
+  font-size: 0.82rem;
+}
+
+/* --- Section switcher --- */
+.switcher {
+  display: flex;
+  justify-content: center;
+  /* Five tabs do not fit one phone line at a readable size, and a row that
+     runs off the edge hides whichever section sits last. */
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2.2rem;
+}
+
+.switch {
+  padding: 0.4rem 1.5rem;
+  cursor: pointer;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  /* La pestaña con insignia necesita alinear su texto con ella; las que no la
+     llevan quedan igual que antes porque no tienen un segundo hijo. */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+/* Misma forma que el "Pronto" de Dota 2 en la barra de arriba, un talle abajo:
+   ahí califica un juego entero y acá una pestaña dentro de uno. */
+.switch-beta {
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  padding: 0.1em 0.5em;
+  border-radius: 999px;
+  font-style: normal;
+}
+
+/* --- Rank band picker ---
+   Four options, and on a 375px screen "Diamond / Emerald" cannot share a line
+   with "Silver and below" at a readable size. They wrap rather than shrink. */
+.band-picker {
+  margin-top: 2.1rem;
+  text-align: center;
+}
+
+/* Sits inside the band picker and above it: which game the numbers describe
+   comes before which slice of its players. Its own bottom margin keeps the two
+   labels from reading as one control. */
+.set-picker {
+  margin-bottom: 1.8rem;
+}
+
+.band-label {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  margin-bottom: 0.7rem;
+}
+
+/* Platinum+ stands on its own as the standard; the rest are a filter beside it,
+   split by a thin vertical rule. */
+.band-controls {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.band-primary {
+  padding: 0.45rem 1.4rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.band-divider {
+  width: 1px;
+  align-self: stretch;
+  min-height: 2rem;
+}
+
+.band-select {
+  padding: 0.45rem 2.2rem 0.45rem 1rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+/* Once Platinum+ and the filter stack, the vertical rule between them is a
+   stray tick with nothing beside it. Drop it before that happens. */
+@media (max-width: 460px) {
+  .band-divider {
+    display: none;
+  }
+}
+
+.band-note {
+  max-width: 52ch;
+  margin: 0.9rem auto 0;
+  text-align: center;
+}
+
+/* The warning is the one thing on this page that must not be skimmed past, so
+   it gets a rule of its own rather than blending into the notes around it. */
+.band-warning {
+  max-width: 52ch;
+  margin: 1.1rem auto 0;
+  padding: 0.7rem 1rem;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.band-loading {
+  text-align: center;
+  padding: 3rem 1rem;
+  font-style: italic;
+}
+
+/* Which rank a report was measured against. Always shown, never in fine print:
+   the same board is a mistake in one band and ordinary play in another. */
+.player-band {
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+}
+
+/* --- Copy build code --- (sits in the action bar beside the variant switch) */
+.copy-build {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  cursor: pointer;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* --- Comp variants --- */
+.variant-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.2rem 0.7rem;
+}
+
+.variant-btn {
+  cursor: pointer;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.8rem;
+}
+
+.variant-tier {
+  font-size: 0.72rem;
+}
+
+/* --- Player search --- */
+.player {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.seeker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.9rem;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.seeker-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.seeker-field-region {
+  flex: 0 1 190px;
+}
+
+.seeker-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.seeker-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font: inherit;
+  font-size: 1.05rem;
+}
+
+.seeker-go {
+  padding: 0.72rem 1.9rem;
+  cursor: pointer;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.seeker-go[disabled] {
+  cursor: progress;
+  opacity: 0.55;
+}
+
+.seeker-hint {
+  max-width: 48ch;
+  margin: 0 auto;
+  text-align: center;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.notice {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 1.1rem 1.3rem;
+  text-align: center;
+}
+
+.notice h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.4rem;
+}
+
+.notice p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.notice-raw {
+  margin-top: 0.6rem;
+  font-size: 0.78rem;
+  font-style: italic;
+  opacity: 0.65;
+}
+
+.player-head {
+  text-align: center;
+}
+
+.player-name {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  line-height: 1.1;
+}
+
+.player-tag {
+  font-size: 0.5em;
+  margin-left: 0.4rem;
+}
+
+/* Sized in em so it tracks the name's clamp() instead of fighting it at 375px.
+   display MUST be set: the sheet makes every img a block, which left this one
+   alone on its own line at the far edge of a full-width centred heading. */
+.player-icon {
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 50%;
+  vertical-align: -0.15em;
+  margin-right: 0.45rem;
+}
+
+/* Rank and account level on one line, wrapping rather than overflowing: the
+   longest case is "Gran maestro · 1234 PL" beside a level, and the top bar has
+   already overflowed once at 375px. */
+.player-standing {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  /* Flex no hereda el text-align del contenedor, así que sin esto la línea se
+     va al borde izquierdo mientras el nombre queda centrado. A 375px no se veía
+     porque el contenido ocupaba el ancho entero. */
+  justify-content: center;
+  gap: 0.25rem 0.75rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vellum-dim);
+}
+
+/* The rank is the headline of the pair: it is what the report is measured
+   against, while the level is decoration. */
+.player-rank {
+  color: var(--vellum);
+  font-weight: 600;
+}
+
+.player-level {
+  color: var(--vellum-dim);
+}
+
+.player-meta {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* --- Player profile --- */
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.6rem, 3vw, 2.4rem);
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+}
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.1rem 0.8rem;
+}
+
+.stat-tile-value {
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-tile-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.profile-excluded {
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.profile-block {
+  min-width: 0;
+}
+
+/* Horizontal tallies for comps and champions. */
+.tally-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tally {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(60px, 1.1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.tally-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.tally-label img {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 50%;
+}
+
+.tally-name {
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tally-track {
+  display: block;
+  height: 8px;
+}
+
+.tally-fill {
+  display: block;
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  min-width: 2px;
+}
+
+.tally-figures {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tally-figures b {
+  font-weight: 400;
+  font-size: 0.95rem;
+}
+
+.tally-figures em {
+  font-style: normal;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+
+.tally-unit {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* --- Match rows --- */
+.place-mark {
+  width: 2.6rem;
+  height: 2.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 1.1rem;
+}
+
+/* --- Findings --- */
+.findings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.finding {
+  padding: 0.7rem 0 0.7rem 0.95rem;
+  position: relative;
+}
+
+.finding-tag {
+  display: block;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+.finding-title {
+  font-size: 1.05rem;
+  line-height: 1.25;
+  margin-bottom: 0.28rem;
+}
+
+.finding-detail {
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.finding-evidence {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+/* --- Lobby --- */
+.lobby-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.lobby-list li {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr) minmax(0, 1.3fr);
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.28rem 0;
+  font-size: 0.88rem;
+}
+
+.lobby-name,
+.lobby-comp {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Loading --- */
+.skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.skeleton {
+  height: 104px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.42;
+  }
+}
+
+@media (max-width: 1180px) {
+  .comp-summary {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "rank identity chevron"
+      "roster roster roster"
+      "stats stats stats";
+    row-gap: 1rem;
+  }
+  .comp-rank,
+  .place-mark {
+    grid-area: rank;
+  }
+  .comp-identity {
+    grid-area: identity;
+  }
+  .comp-chevron {
+    grid-area: chevron;
+  }
+  .roster {
+    grid-area: roster;
+  }
+  .stats {
+    grid-area: stats;
+    justify-content: space-between;
+    text-align: left;
+  }
+  .comp-detail {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .synergy-name {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .comp,
+  .comp-detail {
+    animation: none;
+  }
+  * {
+    transition-duration: 1ms !important;
+  }
+}
+
+/* --- Top bar: which game, which language --- */
+.topbar {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 3vw, 2rem);
+  flex-wrap: wrap;
+}
+
+.topbar-games {
+  display: flex;
+  gap: 0.35rem;
+  margin-right: auto;
+}
+
+.topgame {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.topgame-soon {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  padding: 0.1em 0.5em;
+  border-radius: 999px;
+  font-style: normal;
+}
+
+/* El juego anunciado no se puede apretar, y tiene que verse así antes del
+   clic — un rótulo con la misma pinta que sus vecinos invita a un clic que no
+   hace nada. */
+.topgame.is-soon {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.langgroup {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.langbtn {
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+}
+
+/* Announced to screen readers, never painted. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- Home --- */
+.home,
+.deadlock {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: clamp(1rem, 2.5vw, 1.8rem);
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+}
+
+.home-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+}
+
+.home-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: 1.35rem;
+}
+
+.home-card-body {
+  margin: 0;
+  flex: 1;
+}
+
+.home-cta {
+  cursor: pointer;
+  padding: 0.45rem 1.3rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.home-stance,
+.soon-panel {
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+  padding: clamp(1.2rem, 3vw, 2rem);
+  max-width: 62ch;
+}
+
+.home-games-title,
+.home-stance-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.home-stance-body {
+  margin: 0;
+}
+
+/* --- Home: the games strip --- */
+.home-games {
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+}
+
+.game-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.game-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.9rem clamp(0.9rem, 2vw, 1.4rem);
+}
+
+.game-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  min-width: 12rem;
+}
+
+.game-note {
+  flex: 1;
+  min-width: 14rem;
+}
+
+/* --- Placement distribution --- */
+.places {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  /* 2px of surface between adjacent fills, so neighbours never read as one mark. */
+  gap: 2px;
+  align-items: end;
+}
+
+.place {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.3rem;
+  text-align: center;
+}
+
+.place-count {
+  font-size: 0.78rem;
+  min-height: 1em;
+}
+
+.place-track {
+  display: flex;
+  align-items: flex-end;
+  height: 5.5rem;
+}
+
+/* The LP a single match moved, where that is a measured fact. Same polarity
+   pair as the rest of the profile, and it carries its own sign so the colour
+   is never the only thing saying which way it went. */
+.badge-lp {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--chart-bad);
+}
+
+.badge-lp[data-gained="true"] {
+  color: var(--chart-good);
+}
+
+/* ── LP over time ─────────────────────────────────────────────────────────
+   One series, so no legend: the heading names it. The line carries the single
+   accent hue because a trajectory is one entity; only the net figure below
+   takes the good/bad pair, which was re-validated against this theme's real
+   surface (#080d1a): ΔE 19.2 under deuteranopia, both above 3:1. */
+.lp-chart {
+  display: block;
+  width: 100%;
+  height: 68px;
+  margin-top: 0.6rem;
+  overflow: visible;
+}
+
+.lp-line {
+  fill: none;
+  stroke: var(--gold);
+  /* 2px at the rendered size. The viewBox is stretched by preserveAspectRatio,
+     so the stroke is declared in the box's own units and un-stretched by
+     vector-effect, which is what keeps it from going wedge-shaped. */
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.lp-dot {
+  fill: var(--gold-lit);
+  /* A ring of surface around each dot so a point landing on the line still
+     reads as a point. */
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.lp-net {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.5rem;
+  margin-top: 0.7rem;
+  font-size: 1.35rem;
+  color: var(--chart-bad);
+}
+
+.lp-net[data-gained="true"] {
+  color: var(--chart-good);
+}
+
+/* The figure is coloured; the sentence beside it stays in text ink, so the
+   colour never has to be read to know what the number means. */
+.lp-net-since {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--vellum-dim);
+  letter-spacing: 0.02em;
+}
+
+/* Direct labels on the ends only. A number on every point would turn a trend
+   into a table. */
+.lp-ends {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vellum-dim);
+}
+
+.place-fill {
+  display: block;
+  width: 100%;
+  min-height: 2px;
+  /* Rounded only at the data end; the baseline stays square so the zero line
+     reads as a zero line. */
+  border-radius: 4px 4px 0 0;
+}
+
+.place-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+}
+
+/* --- Coach: what the rank above does differently --- */
+.coach {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.coach-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.coach-habit {
+  margin: 0;
+}
+
+/* Three rates on one line, wrapping rather than overflowing. The rank names run
+   long ("Silver and below" against "Platinum / Gold"), so at 375px a row that
+   refused to wrap would push the whole page sideways. */
+.coach-rates {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.3rem;
+}
+
+.coach-rate {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.coach-rate em {
+  font-style: normal;
+  font-size: 0.78rem;
+  color: var(--vellum-dim);
+}
+
+/* The evidence line is meant to be read, so it stays at full contrast and
+   upright: dim italics are what made .detail-note the hardest text on the page. */
+.coach-cost,
+.coach-empty {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--vellum);
+}
+
+.coach-inventory {
+  color: var(--vellum-dim);
+}
+
+/* --- Footer ---
+   One centred column. The links used to be a left-aligned flex row while the
+   paragraphs beside them inherited the theme centring, and the copyright had
+   margin-left:auto pinning it to the far edge — three alignments in one block. */
+.colophon-links {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  margin-bottom: 1.1rem;
+}
+
+.colophon-link {
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+
+.colophon-sources {
+  margin: 0 auto 0.85rem;
+  max-width: 42rem;
+}
+
+.colophon-copyright {
+  margin: 1.3rem 0 0;
+}
+
+/* --- Legal documents --- */
+.legal {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.legal-doc {
+  max-width: 72ch;
+  margin: clamp(1.5rem, 4vw, 2.5rem) auto 0;
+}
+
+.legal-section {
+  margin-bottom: clamp(1.6rem, 4vw, 2.4rem);
+}
+
+.legal-heading {
+  margin: 0 0 0.6rem;
+  font-size: 1.25rem;
+}
+
+.legal-subheading {
+  margin: 1.2rem 0 0.4rem;
+  font-size: 1rem;
+}
+
+.legal-doc p {
+  margin: 0 0 0.8rem;
+  line-height: 1.6;
+}
+
+.legal-doc ul {
+  margin: 0 0 0.9rem;
+  padding-left: 1.2rem;
+  line-height: 1.6;
+}
+
+.legal-doc li {
+  margin-bottom: 0.45rem;
+}
+
+.legal-updated {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+
+/* --- Units page --- */
+.units-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cost-filter {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.cost-chip {
+  cursor: pointer;
+  padding: 0.35rem 0.85rem;
+  min-width: 2.4rem;
+  font-size: 0.8rem;
+}
+
+.unit-sort {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.units-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.unit-summary {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) repeat(3, minmax(3.5rem, auto)) auto;
+  align-items: center;
+  gap: 0.9rem;
+  cursor: pointer;
+  padding: 0.55rem 1rem;
+  text-align: left;
+  background: transparent;
+}
+
+.unit-rank {
+  font-variant-numeric: tabular-nums;
+}
+
+.unit-face {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+/* Reuse the comp portrait's cost colouring, but lay it out as a row chip. */
+.unit-face .unit {
+  flex-direction: row;
+  width: auto;
+  flex: none;
+}
+
+.unit-face .unit-portrait {
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.unit-id {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  min-width: 0;
+}
+
+.unit-headname {
+  font-size: 1.02rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unit-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.unit-cost {
+  width: 1.35rem;
+  height: 1.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  flex: none;
+}
+
+.unit-carry,
+.unit-beststar {
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.45rem;
+  white-space: nowrap;
+}
+
+.unit-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
+.metric-value {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+}
+
+.metric-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.unit-items-list {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.unit-items-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.unit-items-list img {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 3px;
+}
+
+.ui-name {
+  flex: 1;
+}
+
+.ui-games {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+}
+
+.units-updated {
+  text-align: center;
+  margin-top: 1.6rem;
+  font-size: 0.74rem;
+}
+
+/* The metric labels earn their room on desktop; on a phone the numbers carry it. */
+@media (max-width: 640px) {
+  .unit-summary {
+    grid-template-columns: auto minmax(0, 1fr) repeat(3, auto) auto;
+    gap: 0.5rem;
+    padding: 0.55rem 0.6rem;
+  }
+  .metric-label {
+    display: none;
+  }
+  .unit-rank {
+    display: none;
+  }
+}
+
+/* --- Items page (reuses the units-list row) --- */
+.units-controls-end {
+  justify-content: flex-end;
+}
+
+.item-thumb {
+  flex: none;
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.item-thumb img,
+.item-thumb-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.item-thumb-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+.item-recipe {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.item-recipe .item-part {
+  display: inline-flex;
+  align-items: center;
+}
+
+.item-recipe img {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 2px;
+}
+
+.carrier-list {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.carrier-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.carrier-list .unit {
+  flex: none;
+  width: auto;
+  flex-direction: row;
+}
+
+.carrier-list .unit-portrait {
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.carrier-name {
+  flex: 1;
+}
+
+.carrier-figs {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.carrier-figs em {
+  font-style: normal;
+  font-size: 0.78rem;
+}
+
+/* --- Profile: placement timeline --- */
+.timeline {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 4.5rem;
+  overflow-x: auto;
+}
+
+.tl-slot {
+  flex: 1;
+  min-width: 0.7rem;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.tl-bar {
+  width: 100%;
+  min-height: 1rem;
+  border-radius: 3px 3px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.tl-place {
+  font-size: 0.6rem;
+  line-height: 1;
+  padding-top: 0.18rem;
+}
+
+/* --- Ladder --- */
+.ladder-list {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ladder-row {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr) 4.5rem 5rem 3.5rem;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.55rem 1rem;
+}
+
+.ladder-head {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ld-rank {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.ld-player {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ld-player b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ld-tag {
+  font-style: normal;
+  font-size: 0.8rem;
+}
+
+.ld-lp,
+.ld-record,
+.ld-top4 {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .ladder-row {
+    grid-template-columns: 2rem minmax(0, 1fr) 3.5rem 4rem;
+    gap: 0.5rem;
+    padding: 0.55rem 0.5rem;
+  }
+  /* Record is the first thing to go on a phone; LP and Top 4 carry it. */
+  .ld-record {
+    display: none;
+  }
+}
+
+/* --- Player tags --- */
+.ptags {
+  list-style: none;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.7rem;
+}
+
+.ptag {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(201, 162, 74, 0.32);
+  background: rgba(201, 162, 74, 0.05);
+}
+
+.ptag-label {
+  display: block;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-lit);
+  margin-bottom: 0.25rem;
+}
+
+/* The number is the point, not a footnote: it is what lets the reader
+   disagree with the label. */
+.ptag-why {
+  display: block;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--vellum);
+}
+
+/* The two that name something to fix read in the warning colour, so the panel
+   is not a wall of compliments. */
+.ptag[data-tag="chainLosses"],
+.ptag[data-tag="forcer"] {
+  border-color: rgba(194, 80, 76, 0.4);
+  background: rgba(194, 80, 76, 0.06);
+}
+
+.ptag[data-tag="chainLosses"] .ptag-label,
+.ptag[data-tag="forcer"] .ptag-label {
+  color: var(--chart-bad);
+}
+
+/* --- Comp tags --- */
+.badge-tag {
+  padding: 0.16rem 0.55rem;
+  /* Same reasoning as the section headings: uppercase and spaced out, so it
+     needs the extra size to stay readable at a glance. */
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--vellum-dim);
+  color: var(--vellum-dim);
+  cursor: help;
+}
+
+/* Consistent and wins-outright are the two halves of the same question, so they
+   read as a pair rather than as good and bad. */
+.badge-tag[data-tag="highWin"] {
+  border-color: var(--gold);
+  color: var(--gold-lit);
+}
+
+.badge-tag[data-tag="consistent"] {
+  border-color: var(--vellum);
+  color: var(--vellum);
+}
+
+/* A warning about the data, not about the comp: it should read as a caveat. */
+.badge-tag[data-tag="thinData"] {
+  border-style: dashed;
+}
+
+/* --- Carry mark --- */
+/* The carry is where the comp puts its items, which is what makes it the carry.
+   Marked on its own so it no longer depends on stars it may never earn. */
+.unit[data-carry="true"] .unit-portrait {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+
+.unit[data-carry="true"] .unit-name {
+  color: var(--gold-lit);
+}
+
+/* --- What swings this comp --- */
+.swing-list {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.swing-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "unit impact"
+    "split split";
+  gap: 0.15rem 0.75rem;
+  align-items: baseline;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(156, 149, 127, 0.22);
+}
+
+.swing-list li:last-child {
+  border-bottom: 0;
+}
+
+.sw-unit {
+  grid-area: unit;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.86rem;
+  color: var(--vellum);
+}
+
+.sw-unit img {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+}
+
+.sw-impact {
+  grid-area: impact;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--chart-bad);
+}
+
+.swing-list li[data-better="true"] .sw-impact {
+  color: var(--chart-good);
+}
+
+.sw-split {
+  grid-area: split;
+  font-size: 0.72rem;
+  color: var(--vellum-dim);
+}
+
+.sw-split b {
+  color: var(--vellum);
+  font-weight: 600;
+}
+
+/* --- Cookie consent --- */
+.consent {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem 2rem;
+  padding: 1rem clamp(1rem, 4vw, 2.5rem);
+  background: var(--ink);
+  border-top: 1px solid var(--gold);
+}
+
+.consent-text {
+  max-width: 62ch;
+}
+
+.consent-title {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.consent-body {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--vellum);
+}
+
+.consent-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Accept and decline are deliberately identical. Making refusal the quieter
+   button is the usual trick here, and it is what makes the consent invalid. */
+.consent-btn {
+  padding: 0.45rem 1.6rem;
+  cursor: pointer;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--vellum);
+  border: 1px solid var(--vellum);
+}
+
+.consent-btn:hover {
+  background: var(--gold-lit);
+  border-color: var(--gold-lit);
+}
+
+.consent-link,
+.colophon-link.is-consent {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--vellum-dim);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.consent-link:hover,
+.colophon-link.is-consent:hover {
+  color: var(--gold-lit);
+}
+
+@media (max-width: 640px) {
+  .consent {
+    justify-content: flex-start;
+  }
+  .consent-actions {
+    width: 100%;
+  }
+  .consent-btn {
+    flex: 1;
+    text-align: center;
+  }
+}

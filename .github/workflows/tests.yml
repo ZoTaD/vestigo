@@ -1,0 +1,92 @@
+name: tests
+
+# Una corrida programada por día, más cada pull request. **Ya no corre en cada
+# push a main, y eso es un recorte de presupuesto, no de confianza.**
+#
+# Lo que costaba, medido el 2026-08-20 sobre 8 corridas reales: duran entre 77 y
+# 96 segundos (media 86s), y GitHub redondea cada job al minuto siguiente, o sea
+# **2 minutos facturados por corrida**. Con 79 pushes en julio son ~158 min/mes.
+# El comentario viejo del recorte del 13-ago los anotaba en 265; el número real
+# es más chico, pero el problema no cambia: el 2026-08-12 la cuenta agotó los
+# 2.000 minutos gratis del mes y GitHub dejó de arrancar jobs. Vuelven el 1-sep.
+#
+# Con esto tests pasa de ~158 a ~60 min/mes (30 corridas programadas, más las
+# de los PR que aparezcan).
+#
+# **Lo que se pierde**: el rojo dejó de llegar a los 90 segundos de pushear y
+# ahora puede tardar hasta 24 horas. La contraparte es que los tres paquetes
+# corren local con un solo comando y son segundos:
+#
+#   npm test --prefix games/tft/pipeline && npm test --prefix games/tft/analysis \
+#     && npm test --prefix games/tft/ui && npm test --prefix games/deadlock/pipeline
+#
+# **Los commits del bot nunca dispararon esto**, así que no hay nada que filtrar
+# por ahí: GitHub no crea corridas por pushes hechos con el GITHUB_TOKEN (regla
+# anti-recursión). Medido: 220 commits de `games/*/data` desde julio y ninguna
+# corrida de tests salida de ellos.
+on:
+  schedule:
+    # 09:15 UTC = 06:15 en Argentina: el resultado está esperando cuando abrís la
+    # máquina. **La hora no es intercambiable con cualquier otra**: publish.yml
+    # corre en punto cada 4 horas (08:00, 12:00), publish-deadlock a las :30 de
+    # 0/6/12/18 y summarize a las 0/6/12/18 en punto. Las 09:15 es de los pocos
+    # huecos donde esto no compite por un runner con nadie.
+    - cron: "15 9 * * *"
+  pull_request:
+  workflow_dispatch:
+
+# A second push to the same branch makes the first run pointless, so it is
+# cancelled rather than left to burn minutes on a commit nobody will look at.
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 22 rather than the 24 on the dev machine: @types/node is pinned to ^22,
+      # so that is the version this code claims to target. A feature that only
+      # exists in 24 should fail here — that is the job.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: games/*/*/package-lock.json
+
+      # Cuatro paquetes, cuatro instalaciones. `npm ci` y no `npm install` para
+      # que un lockfile que se desfasó del package.json rompa el run en vez de
+      # ser reparado en silencio.
+      #
+      # El de Deadlock no es opcional: la UI importa su tabla de bandas para
+      # compararla contra la copia del navegador, así que sin instalarlo ese test
+      # ni siquiera se puede resolver.
+      - name: install
+        run: |
+          npm ci --prefix games/tft/analysis
+          npm ci --prefix games/tft/pipeline
+          npm ci --prefix games/tft/ui
+          npm ci --prefix games/deadlock/pipeline
+
+      # Named separately so a red check says which package broke without
+      # anyone opening the log.
+      - name: analysis
+        run: npm test --prefix games/tft/analysis
+
+      - name: pipeline
+        run: npm test --prefix games/tft/pipeline
+
+      - name: ui
+        run: npm test --prefix games/tft/ui
+
+      - name: deadlock
+        run: npm test --prefix games/deadlock/pipeline
+
+      # The type check and the bundle, which the test runner never touches.
+      # Vitest transpiles without checking types, so a type error reaches
+      # production through a green test suite unless `tsc -b` runs too — and
+      # that is exactly what `npm run build` does before vite.
+      - name: build
+        run: npm run build --prefix games/tft/ui

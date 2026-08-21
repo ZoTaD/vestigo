@@ -1,0 +1,19 @@
+{
+  "name": "probuilds-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ProBuilds live overlay (ow-electron)",
+  "main": "main.js",
+  "scripts": {
+    "probe": "ow-electron ."
+  },
+  "overwolf": {
+    "packages": [
+      "gep"
+    ]
+  },
+  "devDependencies": {
+    "@overwolf/ow-electron": "^39.8.12",
+    "@overwolf/ow-electron-packages-types": "^1.1.5-2"
+  }
+}

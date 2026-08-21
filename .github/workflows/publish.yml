@@ -1,0 +1,151 @@
+name: publish tier list
+
+# Cada dos horas: la tier list tiene que moverse a medida que entran partidas, no
+# una vez por día. Decisión de ZoTaD del 2026-07-28 — el visitante que vuelve a
+# la tarde tiene que ver algo distinto de lo que vio a la mañana.
+#
+# Lo que se paga, con los números medidos, para que nadie se sorprenda después:
+#
+# - **Historia de git.** Cada corrida reescribe ~2,2 MB de JSON. A diario eran
+#   ~0,8 GB por año; cada dos horas son **~9,6 GB por año**. Lo amortigua la
+#   guarda, que no commitea si lo único que cambió es `generatedAt` — pero
+#   cualquier partida nueva mueve los conteos, así que casi toda corrida escribe.
+#   Si el repo se vuelve incómodo, la salida es podar historia, no publicar menos.
+# - **Minutos de Actions.** 3,2 min de media × 6 por día ≈ 576 min/mes, contra
+#   los 2.000 gratis de un repo privado, y el CI come de la misma bolsa. La
+#   estimación vieja de "~4 min × 12 ≈ 1.460" subestimaba la cadencia real: eran
+#   1.138, y el repo entero gastaba 6.685 hasta que se bloqueó por facturación
+#   el 2026-08-12. Ver el bloque de `schedule`.
+# - **Netlify cancela un deploy si llega otro commit mientras construye.** Con dos
+#   horas de separación y builds de un par de minutos, no se tocan.
+on:
+  schedule:
+    # **Cada 4 horas desde el 2026-08-13, y venía de cada 2.** El repo se pasaba
+    # 3,3 veces de los 2.000 min/mes gratis y GitHub dejó de arrancar jobs por
+    # facturación. Medido sobre 25 corridas exitosas, la media de ésta es 3,2 min
+    # (no los ~4 estimados arriba), así que cada 2 horas eran 1.138 min/mes.
+    # A seis por día son 576, y la tier list sigue moviéndose mientras entran
+    # partidas, que es la razón por la que en su momento dejó de ser diaria.
+    #
+    # El grueso del recorte no salió de acá sino de `publish-deadlock.yml`: ahí
+    # un solo paso (`build:builds`) comía 3.678 min/mes.
+    - cron: "0 */4 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # El trabajo real tarda minutos, así que media hora es holgado. Lo que se evita
+    # es que un pedido HTTP colgado deje el run vivo las 6 horas que da GitHub por
+    # defecto: con `cancel-in-progress: false`, las corridas de los días siguientes
+    # quedarían encoladas detrás.
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: games/tft/*/package-lock.json
+
+      - name: install
+        run: npm ci --prefix games/tft/pipeline
+
+      # Los scripts del pipeline corren con `node --env-file=.env`, que falla si el
+      # archivo no existe. .env está en .gitignore, así que no puede commitearse.
+      #
+      # CLOUDFLARE_API_TOKEN: la base es D1, no Supabase (ver d1.ts). Sólo tiene
+      # permisos de D1 Read/Write sobre la cuenta, nada de Workers ni R2.
+      #
+      # R2_ACCESS_KEY_ID/R2_SECRET_ACCESS_KEY: hacen falta para archivar en R2 antes
+      # de borrar partidas crudas (ver deleteOldRaw en summarize-run.ts) — sin ellas,
+      # el paso `summarize` de abajo falla en cuanto hay algo para archivar, a
+      # propósito: nunca debe borrar sin haber podido subir primero. Y desde que el
+      # resumen vive en R2, también las necesita el paso `build`: sin ellas no hay
+      # comps que publicar, no es un degradado.
+      - name: env
+        run: |
+          printf 'CLOUDFLARE_API_TOKEN=%s\nR2_ACCESS_KEY_ID=%s\nR2_SECRET_ACCESS_KEY=%s\n' \
+            "${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            "${{ secrets.R2_ACCESS_KEY_ID }}" "${{ secrets.R2_SECRET_ACCESS_KEY }}" \
+            > games/tft/pipeline/.env
+
+      # Lo publicado, guardado antes de pisarlo: es contra esto que compara el guardián.
+      - name: snapshot
+        run: |
+          mkdir -p "$RUNNER_TEMP/before"
+          cp games/tft/data/*.json "$RUNNER_TEMP/before/"
+
+      # Resume en contadores las partidas que todavía no lo están, y después borra
+      # las crudas que quedaron fuera de la ventana de retención. Va ANTES del
+      # build porque el build lee lo que este paso escribe.
+      #
+      # Ya NO lleva continue-on-error. Cuando el build leía las crudas, este paso
+      # solo adelantaba trabajo y un fallo suyo no tenía por qué dejar al sitio sin
+      # publicar. Ahora es la fuente: si falla en silencio, la tier list deja de
+      # moverse sin que nada lo diga, que es exactamente la falla que todo este
+      # diseño existe para evitar. Que falle el run cuesta un día de publicación y
+      # manda un mail; que no falle cuesta no enterarse.
+      - name: summarize
+        run: npm run summarize --prefix games/tft/pipeline
+
+      # Las comps salen del resumen **leído de R2** — todas las partidas que pasaron
+      # alguna vez, incluidas las que ya se borraron. units/items/habits y la
+      # calibración salen de la ventana de crudas que sigue en Postgres, porque miden
+      # la mesa entera y no se pueden contar por comp. Dos fuentes y dos muestras
+      # distintas en un mismo build, a propósito.
+      - name: build
+        run: npm run build:comps --prefix games/tft/pipeline -- --from=summary
+
+      - name: guard
+        id: guard
+        run: |
+          set +e
+          npm run publish:guard --prefix games/tft/pipeline -- "$RUNNER_TEMP/before" ../data
+          code=$?
+          set -e
+          if [ "$code" = "3" ]; then echo "publish=no" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ "$code" != "0" ]; then exit "$code"; fi
+          echo "publish=yes" >> "$GITHUB_OUTPUT"
+
+      - name: commit
+        if: steps.guard.outputs.publish == 'yes'
+        run: |
+          git config user.name "vestigo-bot"
+          git config user.email "67348048+ZoTaD@users.noreply.github.com"
+          # El directorio entero y no un patrón de archivos: eso es exactamente "lo
+          # que el build escribió acá", sin una segunda lista que mantener al día.
+          git add games/tft/data
+          git commit -m "chore: publish the tier list measured on today's matches"
+          # **El push se reintenta, y ese es el arreglo.**
+          #
+          # Los dos publicadores —TFT y Deadlock— escriben en el mismo `main`, y
+          # entre el checkout y este momento el otro pudo haber pusheado. Sin
+          # esto el push se rechaza y la corrida muere en rojo con todo el
+          # trabajo hecho: medido el 2026-08-01, **6 de las últimas 15 corridas
+          # de TFT fallaron así**, o sea el 40%.
+          #
+          # Se rebasea sobre lo que llegó en vez de forzar. Los dos tocan
+          # directorios distintos —`games/tft/data` y `games/deadlock/data`— así
+          # que el rebase nunca tiene conflicto; lo único que cambia es sobre qué
+          # commit queda apoyado el nuestro. Un `--force` en cambio borraría la
+          # publicación del otro juego sin que nada lo dijera.
+          empujado=0
+          for intento in 1 2 3; do
+            if git push; then empujado=1; break; fi
+            echo "push rechazado (intento $intento): traigo lo que llegó y reintento"
+            git fetch origin "$GITHUB_REF_NAME" || break
+            git rebase "origin/$GITHUB_REF_NAME" || break
+          done
+          if [ "$empujado" != 1 ]; then
+            echo "::error::no se pudo publicar después de 3 intentos"
+            exit 1
+          fi
