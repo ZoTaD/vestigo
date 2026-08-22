@@ -18,34 +18,48 @@
    apagado a propósito.
 --------------------------------------------------------------------------- */
 
+/**
+ * **Todas las variables de acá van con prefijo `--h-`, y no es cosmético.**
+ *
+ * Se declaran sobre `.app`, que es el ancestro de TODO —incluido el banner de
+ * cookies, que es un componente del códex y se dibuja oscuro también sobre la
+ * portada clara—. La primera versión las llamó `--ink`, `--gold` y `--gold-lit`,
+ * que son exactamente los nombres que usa `codex.css`, así que el banner heredó
+ * la paleta de papel y pintó su título con el oro oscuro (#8a6a24) sobre su
+ * propio fondo negro: **1,4 : 1 de contraste**, ilegible, y en produccion.
+ *
+ * Un nombre de variable que ya existe en el códex es un nombre que se le está
+ * pisando a todo lo que cuelgue de la portada. Si hace falta un color nuevo,
+ * que lleve el prefijo.
+ */
 [data-theme="codex"][data-place="home"] {
   /* El crema es el mismo #f2efe6 que ya usa el códex para sus superficies
      claras, así que las dos identidades comparten el papel aunque no compartan
      nada más. */
-  --paper: #f2efe6;
-  --paper-2: #e7e2d4;
-  --ink: #14140f;
-  --ink-soft: #3a382e;
-  --dim: #6b6a5e;
-  --faint: #a5a294;
-  --rule: #d8d3c4;
+  --h-paper: #f2efe6;
+  --h-paper-2: #e7e2d4;
+  --h-ink: #14140f;
+  --h-ink-soft: #3a382e;
+  --h-dim: #6b6a5e;
+  --h-faint: #a5a294;
+  --h-rule: #d8d3c4;
 
   /* El oro del home es más oscuro que el del códex: #c9a24a está calibrado
      sobre azul medianoche y sobre papel se lee amarillo pálido. Éste es el
      mismo oro en su extremo oscuro, que sobre crema sí tiene contraste. */
-  --gold: #8a6a24;
-  --gold-lit: #b08a35;
-  --gold-dark: #6b511b;
+  --h-gold: #8a6a24;
+  --h-gold-lit: #b08a35;
+  --h-gold-dark: #6b511b;
 
   /* El ancho de la columna de contenido y el aire lateral, en un solo lugar
      porque los paneles a sangre necesitan saber los dos para volver a alinear
      su contenido con el resto de la página. */
-  --col: 1400px;
-  --pad: clamp(1rem, 4vw, 4rem);
-  --inset: max(var(--pad), calc((100vw - var(--col)) / 2 + var(--pad)));
+  --h-col: 1400px;
+  --h-pad: clamp(1rem, 4vw, 4rem);
+  --h-inset: max(var(--h-pad), calc((100vw - var(--h-col)) / 2 + var(--h-pad)));
 
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--h-paper);
+  color: var(--h-ink);
   font-family: "Barlow", system-ui, -apple-system, sans-serif;
   font-size: 1rem;
   padding-bottom: 0;
@@ -61,7 +75,7 @@
 
 [data-theme="codex"][data-place="home"] .topbar {
   padding-bottom: 0.95rem;
-  border-bottom: 2px solid var(--gold);
+  border-bottom: 2px solid var(--h-gold);
   gap: clamp(0.9rem, 3vw, 1.9rem);
 }
 
@@ -72,7 +86,7 @@
   line-height: 1;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  background: linear-gradient(175deg, var(--gold-lit) 6%, var(--gold) 60%, var(--gold-dark) 100%);
+  background: linear-gradient(175deg, var(--h-gold-lit) 6%, var(--h-gold) 60%, var(--h-gold-dark) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -104,27 +118,27 @@
   letter-spacing: 0.16em;
   border: 0;
   padding: 0.15rem 0;
-  color: var(--dim);
+  color: var(--h-dim);
 }
 
 [data-theme="codex"][data-place="home"] .topgame[data-active="true"],
 [data-theme="codex"][data-place="home"] .langbtn[data-active="true"] {
-  color: var(--ink);
-  border-bottom: 2px solid var(--gold);
+  color: var(--h-ink);
+  border-bottom: 2px solid var(--h-gold);
 }
 
 [data-theme="codex"][data-place="home"] .topgame.is-soon {
-  color: var(--faint);
+  color: var(--h-faint);
 }
 
 [data-theme="codex"][data-place="home"] .topgame-soon {
   background: transparent;
-  border: 1px solid var(--rule);
-  color: var(--dim);
+  border: 1px solid var(--h-rule);
+  color: var(--h-dim);
 }
 
 [data-theme="codex"][data-place="home"] .topbar-divider {
-  background: var(--rule);
+  background: var(--h-rule);
 }
 
 /* Cabecera ----------------------------------------------------------------- */
@@ -140,7 +154,7 @@
   font-weight: 600;
   font-size: 0.64rem;
   letter-spacing: 0.28em;
-  color: var(--gold);
+  color: var(--h-gold);
   margin-bottom: 1.2rem;
 }
 
@@ -169,7 +183,7 @@
   background: none;
   -webkit-background-clip: border-box;
   background-clip: border-box;
-  color: var(--ink);
+  color: var(--h-ink);
 }
 
 /**
@@ -187,7 +201,7 @@
   letter-spacing: -0.005em;
   margin-top: 0;
   color: transparent;
-  -webkit-text-stroke: 2px var(--ink);
+  -webkit-text-stroke: 2px var(--h-ink);
 }
 
 [data-theme="codex"][data-place="home"] .home-lede {
@@ -205,7 +219,7 @@
   font-size: 1.1rem;
   font-style: normal;
   line-height: 1.6;
-  color: var(--ink-soft);
+  color: var(--h-ink-soft);
   opacity: 1;
 }
 
@@ -231,7 +245,7 @@
   font-size: clamp(2rem, 4.4vw, 3.3rem);
   line-height: 0.9;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--h-ink);
 }
 
 [data-theme="codex"][data-place="home"] .home-count dt {
@@ -240,7 +254,7 @@
   font-size: 0.58rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--dim);
+  color: var(--h-dim);
 }
 
 /* Los juegos --------------------------------------------------------------- */
@@ -259,14 +273,14 @@
   font-size: 0.64rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--h-gold);
 }
 
 [data-theme="codex"][data-place="home"] .home-games-title::after {
   content: "";
   flex-grow: 1;
   height: 2px;
-  background: var(--gold);
+  background: var(--h-gold);
 }
 
 [data-theme="codex"][data-place="home"] .game-list {
@@ -281,14 +295,14 @@
  * `100vw` con el margen negativo es lo que saca al panel de la columna de
  * 1400px sin tocar el resto del árbol; `.app` ya trae `overflow-x: hidden`, que
  * es lo que evita que el ancho de la barra de scroll abra un scroll horizontal
- * de un par de píxeles. El `--inset` vuelve a alinear el contenido del panel
+ * de un par de píxeles. El `--h-inset` vuelve a alinear el contenido del panel
  * con el de la página, así que el título del juego arranca en la misma vertical
  * que el titular de arriba.
  */
 [data-theme="codex"][data-place="home"] .game-panel {
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  padding: clamp(1.8rem, 4vw, 2.9rem) var(--inset);
+  padding: clamp(1.8rem, 4vw, 2.9rem) var(--h-inset);
   display: grid;
   grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
   gap: clamp(1.4rem, 4vw, 2.5rem);
@@ -485,9 +499,9 @@
 [data-theme="codex"][data-place="home"] .colophon {
   margin-top: clamp(2.6rem, 6vw, 3.8rem);
   padding-top: 1.5rem;
-  border-top: 3px solid var(--ink);
+  border-top: 3px solid var(--h-ink);
   text-align: left;
-  color: var(--dim);
+  color: var(--h-dim);
 }
 
 [data-theme="codex"][data-place="home"] .colophon-links {
@@ -502,26 +516,26 @@
   font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--h-ink);
 }
 
 [data-theme="codex"][data-place="home"] .colophon-link:hover,
 [data-theme="codex"][data-place="home"] a.colophon-link:hover {
-  color: var(--gold);
+  color: var(--h-gold);
 }
 
 [data-theme="codex"][data-place="home"] .colophon-link.is-consent {
-  color: var(--ink);
+  color: var(--h-ink);
   text-decoration: none;
 }
 
 [data-theme="codex"][data-place="home"] .colophon-sep {
-  color: var(--faint);
+  color: var(--h-faint);
 }
 
 [data-theme="codex"][data-place="home"] .colophon-note {
   font-size: 0.62rem;
-  color: var(--faint);
+  color: var(--h-faint);
   text-transform: none;
 }
 
@@ -531,7 +545,7 @@
   max-width: 72ch;
   font-size: 0.7rem;
   line-height: 1.6;
-  color: var(--dim);
+  color: var(--h-dim);
 }
 
 [data-theme="codex"][data-place="home"] .colophon-legal {
@@ -548,7 +562,7 @@
   font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--faint);
+  color: var(--h-faint);
 }
 
 /* Teléfono ----------------------------------------------------------------- */
