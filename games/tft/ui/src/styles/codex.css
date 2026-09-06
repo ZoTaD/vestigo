@@ -8443,3 +8443,204 @@
     --dl-badge-h: 24px;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   COMPAÑEROS Y RIVALES
+   ---------------------------------------------------------------------------
+   Dos tarjetas de la columna lateral con la misma grilla, porque son la misma
+   lectura: una persona, cómo salió, y sobre cuántas partidas.
+
+   **Cada fila es un botón que abre ese perfil.** Es lo que convierte la tarjeta
+   en una puerta en vez de una lista: quien mira "con quién jugás" suele querer
+   ver cómo le va a esa persona, y hasta acá había que copiar el nombre al
+   buscador.
+   --------------------------------------------------------------------------- */
+
+[data-theme="codex"] .dl-peers-note {
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+}
+
+[data-theme="codex"] .dl-peers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+/* El nombre se lleva el sobrante y los dos números quedan fijos: con `auto` en
+   la columna del nombre, un jugador de nombre largo empujaba el récord fuera de
+   la tarjeta.
+
+   **Una sola línea y no dos.** Con las partidas en un segundo renglón la fila
+   medía 67px —335 por tarjeta, 670 por las dos— en una columna donde el alto es
+   el recurso escaso: es la misma cuenta que bajó el historial de 40 filas a 15.
+   En una línea la fila mide ~34px y las dos tarjetas entran en lo que antes
+   ocupaba una. */
+[data-theme="codex"] .dl-peer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.35rem;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-theme="codex"] .dl-peer:hover {
+  background: rgba(201, 162, 74, 0.08);
+  border-color: rgba(201, 162, 74, 0.35);
+}
+
+[data-theme="codex"] .dl-peer img,
+[data-theme="codex"] .dl-peer .dl-peer-face {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+/* El hueco cuando Steam no devolvió el avatar: ocupa el mismo lugar para que la
+   fila no se corra, y no dibuja una silueta que parecería un dato. */
+[data-theme="codex"] .dl-peer .dl-peer-face {
+  background: rgba(233, 224, 203, 0.08);
+}
+
+[data-theme="codex"] .dl-peer-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  color: var(--vellum);
+}
+
+/* El récord va último y contra el borde derecho: es el número que se busca, y
+   así queda en una sola línea vertical que se compara de un vistazo entre
+   filas. */
+[data-theme="codex"] .dl-peer-record {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  justify-self: end;
+}
+
+[data-theme="codex"] .dl-peer-record em {
+  font-style: normal;
+}
+
+/* Los mismos dos colores que la racha y la tira de forma, para que "verde es
+   ganar" signifique lo mismo en toda la columna. */
+[data-theme="codex"] .dl-peer-record .is-win {
+  color: rgb(140, 205, 150);
+}
+
+[data-theme="codex"] .dl-peer-record .is-loss {
+  color: rgb(214, 128, 128);
+}
+
+[data-theme="codex"] .dl-peer-record span {
+  color: var(--vellum-dim);
+}
+
+[data-theme="codex"] .dl-peer-matches {
+  justify-self: end;
+  white-space: nowrap;
+  font-size: 0.7rem;
+  color: var(--vellum-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+   TU CARRERA POR HÉROE
+   ---------------------------------------------------------------------------
+   Cuatro columnas: héroe, partidas, victorias y precisión. La grilla se declara
+   una sola vez en una variable y la usan el encabezado y las filas, que es lo
+   que impide el defecto que ya apareció en el historial — encabezado y fila con
+   grillas distintas, y cada rótulo cayendo sobre la columna de al lado.
+   --------------------------------------------------------------------------- */
+
+[data-theme="codex"] .dl-career-note {
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+}
+
+/* Las tres columnas de números miden 3,6rem y no 3,2: el rótulo más largo en
+   castellano —"Victorias"— pide 64px y a 3,2rem la celda daba 61, así que se
+   recortaba. Se mide contra el idioma más largo de los dos, no contra el
+   inglés, que acá es el corto. */
+[data-theme="codex"] .dl-career-head,
+[data-theme="codex"] .dl-career-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3.6rem 3.6rem 3.6rem;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+[data-theme="codex"] .dl-career-head {
+  padding: 0 0.35rem 0.3rem;
+  border-bottom: 1px solid rgba(233, 224, 203, 0.1);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vellum-dim);
+}
+
+/* Los tres rótulos de números van a la derecha porque sus cifras van a la
+   derecha: un encabezado centrado sobre una columna alineada al borde deja de
+   señalar lo que rotula en cuanto un número cambia de largo. */
+[data-theme="codex"] .dl-career-head span:not(:first-child) {
+  text-align: right;
+}
+
+[data-theme="codex"] .dl-career {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="codex"] .dl-career-row {
+  padding: 0.3rem 0.35rem;
+  border-radius: 4px;
+}
+
+[data-theme="codex"] .dl-career-row:nth-child(odd) {
+  background: rgba(233, 224, 203, 0.03);
+}
+
+[data-theme="codex"] .dl-career-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+[data-theme="codex"] .dl-career-hero img {
+  border-radius: 50%;
+  flex: none;
+}
+
+[data-theme="codex"] .dl-career-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  color: var(--vellum);
+}
+
+[data-theme="codex"] .dl-career-num {
+  text-align: right;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--vellum);
+}

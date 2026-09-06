@@ -777,6 +777,34 @@ const EN = {
         day: (date: string, wins: number, losses: number) =>
           `${date} · ${wins}W ${losses}L`,
       },
+      /**
+       * Compañeros y rivales recurrentes.
+       *
+       * **El texto dice el piso** —dos partidas— porque sin eso la lista parece
+       * "toda la gente con la que jugaste" y en realidad es la que se repite.
+       */
+      peers: {
+        matesTitle: "Teammates",
+        enemiesTitle: "Rivals",
+        matesLead: "Who you've played with at least twice, and how it went.",
+        enemiesLead: "Who you've run into at least twice, and how it went.",
+        matches: (n: string) => `${n} together`,
+        rowTitle: (name: string, matches: number, wins: number, losses: number) =>
+          `${name} · ${matches} matches · ${wins}W ${losses}L`,
+      },
+      /**
+       * La carrera por héroe, que **no sigue al filtro de modo**.
+       *
+       * `lead` es la frase que lo dice. Sin ella, un winrate de carrera debajo
+       * de un perfil filtrado a clasificatorias se lee como el de esa pestaña.
+       */
+      career: {
+        title: "Your heroes",
+        lead: "Your whole career with each hero, not just the matches listed.",
+        cols: { matches: "Games", winRate: "Win", accuracy: "Acc." },
+        record: (wins: number, losses: number) => `${wins}W ${losses}L`,
+        crit: (rate: string) => `${rate} crit shots`,
+      },
       /** El título de una fila del historial: qué son los dos números que van juntos. */
       farmTitle: (lastHits: number, denies: number) => `${lastHits} last hits, ${denies} denies`,
       /** El botón de un héroe en "Most played": filtra el historial a ese héroe. */
@@ -2159,6 +2187,22 @@ const ES: typeof EN = {
         none: "Sin jugar",
         day: (date: string, wins: number, losses: number) =>
           `${date} · ${wins}V ${losses}D`,
+      },
+      peers: {
+        matesTitle: "Compañeros",
+        enemiesTitle: "Rivales",
+        matesLead: "Con quiénes jugaste al menos dos veces, y cómo salió.",
+        enemiesLead: "Con quiénes te cruzaste al menos dos veces, y cómo salió.",
+        matches: (n: string) => `${n} juntas`,
+        rowTitle: (name: string, matches: number, wins: number, losses: number) =>
+          `${name} · ${matches} partidas · ${wins}V ${losses}D`,
+      },
+      career: {
+        title: "Tus héroes",
+        lead: "Tu carrera entera con cada héroe, no sólo las partidas de la lista.",
+        cols: { matches: "Partidas", winRate: "Victorias", accuracy: "Precisión" },
+        record: (wins: number, losses: number) => `${wins}V ${losses}D`,
+        crit: (rate: string) => `${rate} de tiros críticos`,
       },
       farmTitle: (lastHits: number, denies: number) => `${lastHits} golpes, ${denies} denies`,
       filterByHero: (hero: string) => `Filtrar por ${hero}`,

@@ -28,6 +28,10 @@ import RankBadge from "./DeadlockRankBadge";
 import DeadlockStreakForm from "./DeadlockStreakForm";
 import DeadlockActivity from "./DeadlockActivity";
 import DeadlockScopePicker from "./DeadlockScopePicker";
+import DeadlockPeerCard from "./DeadlockPeerCard";
+import { usePeers } from "./deadlockPeers";
+import DeadlockCareerHeroes from "./DeadlockCareerHeroes";
+import { useHeroStats } from "./deadlockHeroStats";
 import {
   metalOf,
   useHeroPlacings,
@@ -413,6 +417,16 @@ export default function DeadlockPlayer({
 
   /** En qué héroes entra al top 100 del mundo. No cuesta ningún pedido. */
   const { placings, world } = useHeroPlacings(id);
+  /**
+   * Con quién jugó y contra quién se cruzó. **Dos pedidos por perfil, no por
+   * modo**: el cruce con el filtro se hace en memoria (ver `peersInScope`).
+   */
+  const { mates, enemies } = usePeers(id);
+  /**
+   * La carrera por héroe. **No sigue al modo** —es la carrera entera, y la
+   * tarjeta lo dice— así que se pide una vez por cuenta y no por click.
+   */
+  const carrera = useHeroStats(id);
   /** El rango partida por partida, para marcar en cuál ascendió. */
   const [pasos, setPasos] = useState<Map<number, RankStep>>(new Map());
 
@@ -813,6 +827,30 @@ export default function DeadlockPlayer({
                 />
               </div>
             )}
+
+            {/* Va después de "Más jugados" porque contesta la misma pregunta con
+                más detalle: cuáles son tus héroes, y qué tan bien te va con
+                cada uno. Los botones de arriba filtran la lista; esta tabla
+                mide la carrera. */}
+            <DeadlockCareerHeroes stats={carrera} />
+
+            {/* Las dos reciben `enModo` y no `filtrado`: son preguntas sobre
+                personas, no sobre un héroe. Filtrar "con quién jugás" por el
+                héroe que se está mirando en la lista contestaría "con quién
+                jugás cuando jugás a Lash", que es otra cosa — el mismo criterio
+                que ya rige la racha y la forma. */}
+            <DeadlockPeerCard
+              kind="mates"
+              peers={mates}
+              rows={enModo}
+              onOpenAccount={onOpenAccount}
+            />
+            <DeadlockPeerCard
+              kind="enemies"
+              peers={enemies}
+              rows={enModo}
+              onOpenAccount={onOpenAccount}
+            />
 
             {/* Cuesta CERO pedidos: agrupa por día el historial que ya está en
                 memoria. Ver `DeadlockActivity`. Sigue al modo como el resto de
