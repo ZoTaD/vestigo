@@ -178,6 +178,14 @@ describe("deltaPoints", () => {
     expect(deltaPoints(undefined, { wr: 0.5, n: 5000 })).toBeUndefined();
     expect(deltaPoints({ wr: 0.5, n: 5000 }, undefined)).toBeUndefined();
   });
+
+  // Y el recíproco: con muestra de los dos lados, "no se movió" es una respuesta
+  // y se publica como 0, no como ausencia. Un consumidor que trate ese cero como
+  // sospechoso está mirando el archivo equivocado: la guarda vive acá.
+  it("devuelve cero, y no ausencia, cuando los dos lados tienen muestra y el mismo winrate", () => {
+    expect(deltaPoints({ wr: 0.5, n: 5000 }, { wr: 0.5, n: 5000 })).toBe(0);
+    expect(deltaPoints({ wr: 0.5004, n: 5000 }, { wr: 0.5, n: 5000 })).toBe(0);
+  });
 });
 
 describe("ratesFrom", () => {

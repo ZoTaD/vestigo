@@ -136,15 +136,25 @@ describe("la tier list publicada", () => {
    * en peligro.
    */
   /**
-   * **Desde el reset del 2026-07-30 la brecha se omite entera**, y eso es lo
-   * correcto: es una resta contra Fantasma+, que quedó en cero partidas porque
-   * el ladder nuevo topea la colocación en Oráculo 6. Un 0 diría "no se mueve";
-   * la ausencia dice "no sé". El día que Fantasma+ junte muestra vuelve sola.
+   * La brecha viaja como número o no viaja: nunca como `null`, y nunca como
+   * algo que no se pueda restar. La ausencia dice "no sé" (a un extremo le falta
+   * muestra y `deltaPoints` calla); el número dice lo que midió.
+   *
+   * **Un 0 exacto es una medición válida, no un invento.** Este test prohibía
+   * el cero con la idea de que Fantasma+ vacío (tras el reset del 2026-07-30)
+   * sólo podía producir ausencia. Eso lo garantiza el pipeline, no este archivo:
+   * desde que Fantasma+ volvió a tener muestra, un héroe con el mismo winrate
+   * arriba y abajo da 0,0 y hacía fallar CI un snapshot de cada cuatro. El test
+   * que distingue "cero medido" de "cero inventado" es el de `deltaPoints` en el
+   * pipeline, que es donde está la información para distinguirlos.
    */
-  it("omite la brecha entera, sin inventar un cero, mientras un extremo esté vacío", () => {
-    const conBrecha = built.filter((h) => h.skillGap !== undefined);
-    expect(conBrecha.every((h) => h.skillGap !== 0)).toBe(true);
-    expect(built.every((h) => h.skillGap === undefined || typeof h.skillGap === "number")).toBe(true);
+  it("publica la brecha como número redondeado o la omite, nunca como null", () => {
+    for (const h of built) {
+      if (h.skillGap === undefined) continue;
+      expect(Number.isFinite(h.skillGap), h.name).toBe(true);
+      expect(Math.round(h.skillGap * 10) / 10, h.name).toBe(h.skillGap);
+    }
+    expect(heroes.heroes.some((h) => (h as { skillGap?: unknown }).skillGap === null)).toBe(false);
   });
 
   /**
