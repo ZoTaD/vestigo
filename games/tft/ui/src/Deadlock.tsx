@@ -1,4 +1,5 @@
 import { useEffect, useRef, type CSSProperties } from "react";
+import SectionHead from "./SectionHead";
 import { useCopy, useLocale, useLang } from "./i18n";
 import { text } from "./catalog";
 import { type DeadlockSection } from "./route";
@@ -401,7 +402,6 @@ export default function Deadlock({
   const meta = useHeroes(band);
 
   const insignia = bandBadge(band);
-  const insigniaPublicada = bandBadge(PUBLISHED_BAND);
   const crest = bandCrest(band);
   const movers = patchMovers(meta?.heroes ?? []);
   const enParches = section === "patches";
@@ -451,77 +451,40 @@ export default function Deadlock({
           derecha. Antes iba todo apilado y la primera fila de héroe arrancaba a
           dos pantallas de scroll: el encabezado editorial es de página de
           aterrizaje, no de una pestaña que se usa. */}
-      <div className="tool-head">
-        <header className="masthead">
-          <p className="eyebrow">{copy.deadlock.eyebrow}</p>
-          <h1 className="title">
-            {enParches ? copy.deadlock.patchPage.title : copy.deadlock.title}
-            <span className="title-break">
-              {enParches ? copy.deadlock.patchPage.titleBreak : copy.deadlock.titleBreak}
+      {/**
+       * Una línea: título a la izquierda, selector de banda a la derecha, y la
+       * ficha técnica de la medición (partidas, ventana, parche) debajo, con
+       * "cómo se mide" plegado. El selector **no va en la pestaña de parches**:
+       * el historial es el mismo para todas las bandas, y un control que no
+       * cambia nada invita a desconfiar de la página.
+       */}
+      <SectionHead
+        eyebrow={copy.deadlock.eyebrow}
+        title={enParches ? copy.deadlock.patchPage.title : copy.deadlock.title}
+        accent={enParches ? copy.deadlock.patchPage.titleBreak : copy.deadlock.titleBreak}
+        lead={[
+          enParches ? copy.deadlock.patchPage.lead : copy.deadlock.lead,
+          !enParches && copy.deadlock.note,
+          meta && ON_FALLBACK_BAND && !enParches
+            ? copy.deadlock.fallback(copy.deadlock.bands[PUBLISHED_BAND])
+            : null,
+        ]}
+        controls={!enParches && picker}
+        meta={
+          meta && (
+            <span className="dl-meta-line">
+              {insignia.img && <img src={insignia.img} alt="" width={18} height={18} />}
+              {meta.file.matches === 0
+                ? copy.deadlock.emptyBand
+                : `${copy.deadlock.sample(
+                    meta.file.matches.toLocaleString(locale),
+                    meta.file.from,
+                    meta.file.to
+                  )} · ${copy.deadlock.patch.since(meta.file.patch.title)}`}
             </span>
-          </h1>
-          <p className="standfirst">
-            {enParches ? copy.deadlock.patchPage.lead : copy.deadlock.lead}
-          </p>
-        </header>
-
-        <div className="tool-controls">
-          {/**
-           * El selector de banda **no va en la pestaña de parches**.
-           *
-           * Lo que esa pestaña muestra hoy es el historial de los últimos doce
-           * parches, que es el mismo para todas las bandas: un control que no
-           * cambia nada de lo que se ve es peor que ningún control, porque
-           * invita a probarlo y a desconfiar de la página cuando no pasa nada.
-           *
-           * Las columnas de ganadores y perdedores SÍ dependen de la banda, y
-           * están vacías hasta que haya un segundo parche ranked que comparar
-           * (ver `patchMovers`). El día que se llenen, el picker vuelve acá.
-           */}
-          {!enParches && picker}
-          {meta && ON_FALLBACK_BAND && !enParches && (
-            /* Mientras lo publicado no sea Fantasma+. Se apaga solo.
-               Tampoco va en parches: explica de qué banda salen los números
-               cuando hay banda que elegir, y ahí no la hay. */
-            <p className="detail-note dl-fallback">
-              {insigniaPublicada.img && (
-                // `.dl-fallback img` fuerza 1.6rem (30,4px con la raíz de 19px):
-                // el atributo tiene que decir lo que el CSS de verdad dibuja para
-                // reservar el espacio correcto y no mentir.
-                <img src={insigniaPublicada.img} alt="" width={30} height={30} />
-              )}
-              <span>{copy.deadlock.fallback(copy.deadlock.bands[PUBLISHED_BAND])}</span>
-            </p>
-          )}
-        </div>
-
-        {/**
-         * De qué está hecha la medición: partidas, ventana, banda y parche.
-         *
-         * **Cruza las dos columnas y va al pie del encabezado**, con una regla
-         * arriba y otra abajo. Antes vivía apretada en la columna derecha,
-         * debajo del selector de banda, donde parecía una nota al pie de ese
-         * control en vez de lo que es: la ficha técnica de todo lo que la página
-         * afirma. Separada por reglas se lee como el pie de imprenta de un
-         * informe, que es exactamente su papel.
-         *
-         * Es una sola línea y no tres notas apiladas: las cuatro que había antes
-         * medían 167px de los 345 del encabezado, y ninguna contesta la pregunta
-         * con la que alguien entra.
-         */}
-        {meta && (
-          <p className="detail-note dl-meta-line">
-            {insignia.img && <img src={insignia.img} alt="" width={18} height={18} />}
-            {meta.file.matches === 0
-              ? copy.deadlock.emptyBand
-              : `${copy.deadlock.sample(
-                  meta.file.matches.toLocaleString(locale),
-                  meta.file.from,
-                  meta.file.to
-                )} · ${copy.deadlock.patch.since(meta.file.patch.title)}`}
-          </p>
-        )}
-      </div>
+          )
+        }
+      />
 
       {!meta ? (
         <p className="detail-note dl-loading">{copy.deadlock.loading}</p>

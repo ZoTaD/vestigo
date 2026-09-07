@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError, fetchMatch, parseRiotId, searchPlayer, type PlayerRef } from "./api";
 import { lastSession, rememberSearch, rememberSession, storedSearch } from "./lastSearch";
+import { takePendingSearch } from "./pendingSearch";
 import { analyzeMatch, buildProfile, type MatchView, type ViewUnit } from "./analyzer";
 import { useBandFile } from "./data";
 import { bandForTier, DEFAULT_BAND } from "./bands";
@@ -193,7 +194,9 @@ export default function PlayerView() {
    */
   const restored = lastSession();
   const remembered = restored ?? storedSearch();
-  const [query, setQuery] = useState(remembered?.query ?? "");
+  // El buscador de la barra superior deja el texto en `pendingSearch`; si hay
+  // uno, gana sobre lo recordado y pre-llena el formulario.
+  const [query, setQuery] = useState(() => takePendingSearch() ?? remembered?.query ?? "");
   const [region, setRegion] = useState(remembered?.region ?? "na1");
   const [status, setStatus] = useState<Status>(restored ? "ready" : "idle");
   const [error, setError] = useState<ApiError | null>(null);

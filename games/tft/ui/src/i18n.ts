@@ -53,6 +53,15 @@ const EN = {
     es: "ES",
   },
 
+  /** La cáscara del rediseño del 2026-09-06: buscador, "cómo se mide", pie. */
+  shell: {
+    search: "Search a player",
+    searchFor: (game: string) => `Search a ${game} player`,
+    how: "How it's measured",
+    menu: "Menu",
+    measuredAt: (when: string) => `Measured ${when}`,
+  },
+
   home: {
     eyebrow: "Statistics from finished matches",
     /**
@@ -1572,6 +1581,14 @@ const ES: typeof EN = {
     label: "Idioma",
     en: "EN",
     es: "ES",
+  },
+
+  shell: {
+    search: "Buscar un jugador",
+    searchFor: (game: string) => `Buscar un jugador de ${game}`,
+    how: "Cómo se mide",
+    menu: "Menú",
+    measuredAt: (when: string) => `Medido ${when}`,
   },
 
   home: {

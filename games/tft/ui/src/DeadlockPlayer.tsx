@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import SectionHead from "./SectionHead";
+import { takePendingSearch } from "./pendingSearch";
 import { useCopy, useLang, useLocale, type Lang } from "./i18n";
 import { text } from "./catalog";
 import {
@@ -506,19 +508,39 @@ export default function DeadlockPlayer({
     };
   }, [id, c.apiDown, c.noAccounts]);
 
-  async function buscar(e: React.FormEvent) {
-    e.preventDefault();
-    if (query.trim().length < 2) return;
+  async function buscarNombre(nombre: string) {
+    if (nombre.trim().length < 2) return;
     setBuscando(true);
     setError(null);
     try {
-      setCuentas(await searchAccounts(query.trim()));
+      setCuentas(await searchAccounts(nombre.trim()));
     } catch {
       setError(c.apiDown);
     } finally {
       setBuscando(false);
     }
   }
+
+  function buscar(e: React.FormEvent) {
+    e.preventDefault();
+    void buscarNombre(query);
+  }
+
+  /**
+   * El buscador de la barra superior deja el nombre en `pendingSearch` y
+   * navega hasta acá; se recoge una sola vez al montar y se busca sin que
+   * haya que apretar el botón otra vez. Sólo cuando la pestaña abre sin cuenta:
+   * con un `accountId` en la URL, el perfil manda.
+   */
+  useEffect(() => {
+    if (id) return;
+    const pendiente = takePendingSearch();
+    if (pendiente) {
+      setQuery(pendiente);
+      void buscarNombre(pendiente);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // El filtro elige sobre el historial entero (hasta 475 filas medidas); el
   // tope de dibujado se aplica después, sobre lo ya elegido.
@@ -592,13 +614,7 @@ export default function DeadlockPlayer({
 
   return (
     <section className="tool">
-      <div className="tool-head">
-        <div>
-          <p className="eyebrow">{copy.deadlock.eyebrow}</p>
-          <h1 className="tool-title">{c.searchTitle}</h1>
-        </div>
-      </div>
-      <p className="detail-note">{c.searchLead}</p>
+      <SectionHead eyebrow={copy.deadlock.eyebrow} title={c.searchTitle} lead={c.searchLead} />
 
       <form className="dl-rep-search" onSubmit={buscar}>
         <input

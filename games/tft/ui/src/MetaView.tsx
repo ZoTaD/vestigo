@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SectionHead from "./SectionHead";
 import { useBandMeta, type Comp, type CompItem, type Dataset } from "./data";
 import { type CompFamily } from "./families";
 import { buildCode, hasBuildCode } from "./buildCode";
@@ -474,12 +475,15 @@ export default function MetaView({
   // because their lists were measured, published and indexed, and throwing that
   // away on the day of a set change would be giving up months of pages.
   const viendo = set === LIVE ? publishedSet() : set;
+  /* La nota del set cambia con el set y tiene que decir "final" y no "viejo":
+     quien cree que la página está rota se va, y quien cree que está viva se
+     lleva números que ya no describen el juego que está jugando. Va en la
+     bajada plegable de la cabecera, junto a la de bandas. */
+  const setNote = set === LIVE ? copy.meta.sets.note : copy.meta.sets.archivedNote(set);
   const setPicker = (
-    <div className="set-picker">
-      <span className="band-label">{copy.meta.sets.label}</span>
+    <label className="field is-select">
+      <span className="field-label">{copy.meta.sets.label}</span>
       <select
-        className="band-select"
-        data-active
         aria-label={copy.meta.sets.label}
         value={viendo}
         onChange={(e) => {
@@ -495,48 +499,32 @@ export default function MetaView({
           </option>
         ))}
       </select>
-      {/* La nota cambia con el set, y tiene que decir "final" y no "viejo": quien
-          cree que la página está rota se va, y quien cree que está viva se lleva
-          números que ya no describen el juego que está jugando. */}
-      <p className="detail-note band-note">
-        {set === LIVE ? copy.meta.sets.note : copy.meta.sets.archivedNote(set)}
-      </p>
-    </div>
+    </label>
   );
 
+  /**
+   * Las bandas como control segmentado, todas a la vista. Antes era un botón
+   * para la banda por defecto y un `<select>` para las otras tres, que escondía
+   * tres de las cuatro opciones detrás de un clic. La nota "cada banda se mide
+   * con sus propias partidas" va en la bajada plegable de la cabecera.
+   */
   const picker = (
-    <div className="band-picker">
+    <>
       {setPicker}
-      <span className="band-label">{copy.meta.bands.label}</span>
-      <div className="band-controls">
-        <button
-          className="band-primary"
-          data-active={band === DEFAULT_BAND}
-          aria-pressed={band === DEFAULT_BAND}
-          onClick={() => onBand(DEFAULT_BAND)}
-        >
-          {copy.meta.bands.names[DEFAULT_BAND]}
-        </button>
-        <span className="band-divider" aria-hidden="true" />
-        <select
-          className="band-select"
-          data-active={band !== DEFAULT_BAND}
-          aria-label={copy.meta.bands.filter}
-          value={band === DEFAULT_BAND ? "" : band}
-          onChange={(e) => {
-            if (e.target.value) onBand(e.target.value as BandId);
-          }}
-        >
-          <option value="">{copy.meta.bands.filter}</option>
-          {BANDS.filter((b) => b.id !== DEFAULT_BAND).map((b) => (
-            <option key={b.id} value={b.id}>
-              {copy.meta.bands.names[b.id]}
-            </option>
-          ))}
-        </select>
+      <div className="seg is-wrap" role="group" aria-label={copy.meta.bands.filter}>
+        {BANDS.map((b) => (
+          <button
+            key={b.id}
+            type="button"
+            data-active={band === b.id}
+            aria-pressed={band === b.id}
+            onClick={() => onBand(b.id)}
+          >
+            {copy.meta.bands.names[b.id]}
+          </button>
+        ))}
       </div>
-      <p className="detail-note band-note">{copy.meta.bands.note}</p>
-    </div>
+    </>
   );
 
   // Nothing of the previous band survives on screen while another loads. Showing
@@ -545,15 +533,14 @@ export default function MetaView({
   if (!meta) {
     return (
       <>
-        <header className="masthead">
-          <h1 className="title">
-            {copy.meta.title}
-            <span className="title-break">{copy.meta.titleBreak}</span>
-          </h1>
-          <p className="standfirst">{copy.meta.standfirst}</p>
-          {picker}
-        </header>
-        <main className="tiers">
+        <SectionHead
+          eyebrow={copy.games.tft}
+          title={copy.meta.title}
+          accent={copy.meta.titleBreak}
+          lead={[copy.meta.standfirst, setNote, copy.meta.bands.note]}
+          controls={picker}
+        />
+        <main className="page">
           <p className="band-loading">{copy.meta.bands.loading}</p>
         </main>
       </>
@@ -567,15 +554,14 @@ export default function MetaView({
   if (dataset.insufficient || comps.length === 0) {
     return (
       <>
-        <header className="masthead">
-          <h1 className="title">
-            {copy.meta.title}
-            <span className="title-break">{copy.meta.titleBreak}</span>
-          </h1>
-          <p className="standfirst">{copy.meta.standfirst}</p>
-          {picker}
-        </header>
-        <main className="tiers">
+        <SectionHead
+          eyebrow={copy.games.tft}
+          title={copy.meta.title}
+          accent={copy.meta.titleBreak}
+          lead={[copy.meta.standfirst, setNote, copy.meta.bands.note]}
+          controls={picker}
+        />
+        <main className="page">
           <p className="band-warning band-empty">
             {copy.meta.bands.empty(dataset.patchLabel || dataset.setLabel)}
           </p>
@@ -596,48 +582,37 @@ export default function MetaView({
 
   return (
     <>
-      <header className="masthead">
-        <h1 className="title">
-          {copy.meta.title}
-          <span className="title-break">{copy.meta.titleBreak}</span>
-        </h1>
-        <p className="standfirst">{copy.meta.standfirst}</p>
+      <SectionHead
+        eyebrow={copy.games.tft}
+        title={copy.meta.title}
+        accent={copy.meta.titleBreak}
+        lead={[
+          copy.meta.standfirst,
+          setNote,
+          copy.meta.bands.note,
+          provisional,
+          mostlyThin(comps) && copy.meta.bands.thin,
+        ]}
+        controls={picker}
+        meta={
+          /* El tamaño de la muestra no se publica: contra competidores que
+             miden en millones informa más al que compite que al que juega. */
+          <>
+            <span>
+              <strong>{comps.length}</strong> {copy.meta.dataset.comps.toLowerCase()}
+            </span>
+            <span>{dataset.setLabel}</span>
+            {dataset.patchLabel && (
+              <span>
+                {copy.meta.dataset.patch} <strong>{dataset.patchLabel}</strong>
+              </span>
+            )}
+            <span>{copy.shell.measuredAt(generated)}</span>
+          </>
+        }
+      />
 
-        {picker}
-
-        {provisional && <p className="band-warning">{provisional}</p>}
-        {mostlyThin(comps) && <p className="band-warning">{copy.meta.bands.thin}</p>}
-
-        <dl className="dataset">
-          <div>
-            <dt>{copy.meta.dataset.comps}</dt>
-            <dd>{comps.length}</dd>
-          </div>
-          {/* El tamaño de la muestra no se publica. Decía cuántas partidas y
-              cuántos tableros hay detrás, y contra competidores que miden en
-              millones ese número informa más al que compite que al que juega.
-              Sigue estando en los archivos de datos, que es donde hace falta:
-              es la entrada del encogimiento y de la etiqueta de muestra fina. */}
-          <div>
-            <dt>{copy.meta.dataset.set}</dt>
-            <dd>{dataset.setLabel}</dd>
-          </div>
-          {/* Which patch these numbers describe. Until now the page never said,
-              and the answer was "seven of them averaged together". */}
-          {dataset.patchLabel && (
-            <div>
-              <dt>{copy.meta.dataset.patch}</dt>
-              <dd>{dataset.patchLabel}</dd>
-            </div>
-          )}
-          <div>
-            <dt>{copy.meta.dataset.updated}</dt>
-            <dd>{generated}</dd>
-          </div>
-        </dl>
-      </header>
-
-      <main className="tiers">
+      <main className="page">
         {tiers.map((group) => (
           <section className="tier-group" key={group.tier} data-tier={group.tier}>
             <div className="tier-head">

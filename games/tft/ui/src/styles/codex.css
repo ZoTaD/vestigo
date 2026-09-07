@@ -34,7 +34,7 @@
     linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 55%, var(--ink) 100%);
   background-attachment: fixed;
   color: var(--vellum);
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--font-text);
   /* The 19px this used to declare now lives on <html> in base.css, where the
      rem units can actually see it. Inheriting keeps the same reading size. */
   font-size: 1rem;
@@ -139,7 +139,7 @@
    * de la misma familia formal que el logotipo de Deadlock, así que la firma de
    * Vestigo se mantiene y el juego no la contradice.
    */
-  font-family: "Barlow", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-text);
   font-size: 0.94rem;
 }
 
@@ -214,7 +214,7 @@
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-card-name {
-  font-family: "Barlow Condensed", "Barlow", sans-serif;
+  font-family: var(--font-data-narrow);
   font-weight: 600;
   font-size: 1.15rem;
   letter-spacing: 0.04em;
@@ -222,7 +222,7 @@
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-card-cost {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-text);
   font-weight: 600;
   font-size: 0.92rem;
 }
@@ -347,7 +347,7 @@
  */
 [data-theme="codex"][data-game="deadlock"] .title,
 [data-theme="codex"][data-game="deadlock"] .tool-head .title {
-  font-family: "Marcellus SC", "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 400;
   letter-spacing: 0.015em;
   /* El degradado se dibuja con `background-clip: text` y `color: transparent`;
@@ -383,14 +383,14 @@
 /* Las pestañas: versalitas condensadas, como los rótulos del juego. Cinzel las
    hacía leer como los títulos de sección de TFT. */
 [data-theme="codex"][data-game="deadlock"] .switch {
-  font-family: "Barlow Condensed", "Barlow", sans-serif;
+  font-family: var(--font-data-narrow);
   font-weight: 600;
   letter-spacing: 0.17em;
   text-transform: uppercase;
 }
 
 [data-theme="codex"][data-game="deadlock"] .tool-head .eyebrow {
-  font-family: "Barlow Condensed", "Barlow", sans-serif;
+  font-family: var(--font-data-narrow);
   font-weight: 600;
   letter-spacing: 0.3em;
   color: var(--dl-amber);
@@ -413,7 +413,7 @@
   padding: 0.5rem 0;
   border-top: 1px solid rgba(198, 162, 105, 0.28);
   border-bottom: 1px solid rgba(198, 162, 105, 0.28);
-  font-family: "Barlow Condensed", "Barlow", sans-serif;
+  font-family: var(--font-data-narrow);
   font-weight: 500;
   font-size: 0.78rem;
   letter-spacing: 0.15em;
@@ -422,7 +422,7 @@
 }
 
 [data-theme="codex"][data-game="deadlock"] .tool-title {
-  font-family: "Marcellus SC", "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(1.5rem, 3.6vw, 2.1rem);
   line-height: 1.05;
@@ -445,7 +445,7 @@
 }
 
 [data-theme="codex"] .eyebrow {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.68rem;
   letter-spacing: 0.42em;
   text-transform: uppercase;
@@ -463,7 +463,7 @@
 }
 
 [data-theme="codex"] .title {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 900;
   /* The floor has to fit the longest single word a title can hold —
      "COMPOSICIONES" cannot break across lines — on the narrowest phone. The
@@ -519,7 +519,7 @@
 }
 
 [data-theme="codex"] .dataset dt {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.58rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -528,7 +528,7 @@
 }
 
 [data-theme="codex"] .dataset dd {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 1.35rem;
   margin-top: 0.35rem;
   color: var(--vellum);
@@ -542,7 +542,7 @@
 }
 
 [data-theme="codex"] .tier-mark {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: 1.5rem;
   width: 3rem;
@@ -565,7 +565,7 @@
 }
 
 [data-theme="codex"] .tier-label {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.95rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -600,7 +600,7 @@
 }
 
 [data-theme="codex"] .comp-rank {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.95rem;
   color: rgba(201, 162, 74, 0.55);
 }
@@ -610,7 +610,7 @@
 }
 
 [data-theme="codex"] .comp-name {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 1.45rem;
   letter-spacing: 0.03em;
@@ -622,7 +622,7 @@
 }
 
 [data-theme="codex"] .comp-plan {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.55rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -722,7 +722,7 @@
 }
 
 [data-theme="codex"] .pop-head b {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold-lit);
 }
 
@@ -737,7 +737,7 @@
 }
 
 [data-theme="codex"] .pop-label {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
 }
 
@@ -768,7 +768,7 @@
 }
 
 [data-theme="codex"] .stat-value {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 1.4rem;
   color: var(--vellum);
 }
@@ -779,7 +779,7 @@
 }
 
 [data-theme="codex"] .stat-label {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   color: var(--gold);
@@ -788,7 +788,7 @@
 
 /* Badges: the strategic headline of the row. */
 [data-theme="codex"] .badge-plan {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 700;
   border: 1px solid rgba(201, 162, 74, 0.55);
   color: var(--gold-lit);
@@ -802,7 +802,7 @@
 }
 
 [data-theme="codex"] .badge-level {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   border: 1px solid rgba(201, 162, 74, 0.28);
   color: var(--vellum-dim);
 }
@@ -825,7 +825,7 @@
 }
 
 [data-theme="codex"] .synergy b {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold-lit);
 }
 
@@ -856,7 +856,7 @@
 }
 
 [data-theme="codex"] .ip-rank {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
   opacity: 0.7;
 }
@@ -904,7 +904,7 @@
 }
 
 [data-theme="codex"] .detail-heading {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   /* Uppercase with this much letter-spacing reads smaller than it measures, so
      a section heading needs more than the body text around it, not less. */
   font-size: 0.74rem;
@@ -919,7 +919,7 @@
 }
 
 [data-theme="codex"] .plan-steps li::before {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
   opacity: 0.7;
 }
@@ -948,7 +948,7 @@
 [data-theme="codex"] .du-cost {
   border: 1px solid rgba(201, 162, 74, 0.4);
   border-radius: 50%;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
 }
 
@@ -967,7 +967,7 @@
 }
 
 [data-theme="codex"] .du-tag {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.5rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1005,7 +1005,7 @@
 }
 
 [data-theme="codex"] .du-freq {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.78rem;
   color: var(--vellum-dim);
   text-align: right;
@@ -1054,12 +1054,12 @@
 }
 
 [data-theme="codex"] .stat-tile-value {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold-lit);
 }
 
 [data-theme="codex"] .stat-tile-label {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
   opacity: 0.85;
 }
@@ -1089,7 +1089,7 @@
 }
 
 [data-theme="codex"] .tally-figures b {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold-lit);
 }
 
@@ -1098,7 +1098,7 @@
 }
 
 [data-theme="codex"] .tally-unit {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
   opacity: 0.6;
 }
@@ -1117,7 +1117,7 @@
 }
 
 [data-theme="codex"] .switch {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum-dim);
   border: 1px solid rgba(201, 162, 74, 0.28);
   background: transparent;
@@ -1138,14 +1138,14 @@
 /* Rank band picker: the same plate as the section tabs, one step quieter, so it
    reads as a setting inside the page rather than as navigation away from it. */
 [data-theme="codex"] .band-label {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
   opacity: 0.8;
 }
 
 /* Platinum+ leads, lit like the active tab: it is the standard the page opens on. */
 [data-theme="codex"] .band-primary {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold-lit);
   border: 1px solid var(--gold);
   background: rgba(201, 162, 74, 0.14);
@@ -1176,7 +1176,7 @@
    it lights up once a filter is actually in effect. */
 [data-theme="codex"] .band-select {
   appearance: none;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum-dim);
   border: 1px solid rgba(201, 162, 74, 0.28);
   background-color: transparent;
@@ -1223,7 +1223,7 @@
 /* The copy-build button is the one real call to action in the panel: it earns a
    filled gold plate, and confirms in place when it has copied. */
 [data-theme="codex"] .copy-build {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--ink-2);
   background: var(--gold);
   border: 1px solid var(--gold);
@@ -1244,7 +1244,7 @@
 /* The variant switch reads as a margin note on the comp, not a second CTA:
    the same plate as the rank tabs, one step quieter. */
 [data-theme="codex"] .variant-btn {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum-dim);
   border: 1px solid rgba(201, 162, 74, 0.3);
   background: transparent;
@@ -1259,7 +1259,7 @@
 /* A tier drop on a variant is the one thing here that must not be missed: it is
    why the variant is a variant and not the lead. Coloured like its own tier. */
 [data-theme="codex"] .variant-tier {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
 }
 
@@ -1279,13 +1279,13 @@
 /* Search plate */
 
 [data-theme="codex"] .seeker-label {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
   opacity: 0.85;
 }
 
 [data-theme="codex"] .seeker-input {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--font-text);
   color: var(--vellum);
   background: rgba(8, 13, 26, 0.72);
   border: 1px solid rgba(201, 162, 74, 0.35);
@@ -1315,7 +1315,7 @@
 }
 
 [data-theme="codex"] .seeker-go {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 700;
   color: var(--gold-lit);
   border: 1px solid var(--gold);
@@ -1339,7 +1339,7 @@
 }
 
 [data-theme="codex"] .notice h3 {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: #e0a09e;
 }
 
@@ -1350,13 +1350,13 @@
 /* Player heading */
 
 [data-theme="codex"] .player-name {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 500;
   color: var(--vellum);
 }
 
 [data-theme="codex"] .player-tag {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
   opacity: 0.75;
 }
@@ -1368,7 +1368,7 @@
 /* The placement medallion echoes the tier mark. */
 
 [data-theme="codex"] .place-mark {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 900;
   color: var(--vellum-dim);
   border: 1px solid rgba(201, 162, 74, 0.3);
@@ -1410,7 +1410,7 @@
 }
 
 [data-theme="codex"] .finding-tag {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum-dim);
 }
 
@@ -1423,7 +1423,7 @@
 }
 
 [data-theme="codex"] .finding-title {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 500;
   color: var(--vellum);
 }
@@ -1449,7 +1449,7 @@
 }
 
 [data-theme="codex"] .lobby-place {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
   opacity: 0.7;
 }
@@ -1476,7 +1476,7 @@
 }
 
 [data-theme="codex"] .topbar-brand {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.82rem;
   letter-spacing: 0.34em;
   text-transform: uppercase;
@@ -1485,7 +1485,7 @@
 
 [data-theme="codex"] .topgame,
 [data-theme="codex"] .langbtn {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   background: transparent;
   border: 1px solid transparent;
   color: var(--vellum-dim);
@@ -1543,7 +1543,7 @@
 [data-theme="codex"] .home-card-title,
 [data-theme="codex"] .home-games-title,
 [data-theme="codex"] .home-stance-title {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold-lit);
   font-weight: 500;
 }
@@ -1560,7 +1560,7 @@
 }
 
 [data-theme="codex"] .home-cta {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   background: transparent;
   border: 1px solid rgba(201, 162, 74, 0.5);
   color: var(--gold-lit);
@@ -1592,7 +1592,7 @@
 }
 
 [data-theme="codex"] .game-name {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold-lit);
 }
 
@@ -1652,18 +1652,18 @@
 }
 
 [data-theme="codex"] .place-count {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold-lit);
 }
 
 [data-theme="codex"] .place-label {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum-dim);
   text-transform: uppercase;
 }
 
 [data-theme="codex"] .coach-habit {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.86rem;
   letter-spacing: 0.06em;
   color: var(--gold-lit);
@@ -1695,7 +1695,7 @@
   border: 0;
   border-bottom: 1px solid rgba(201, 162, 74, 0.45);
   color: var(--gold-lit);
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.74rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1712,7 +1712,7 @@
 }
 
 [data-theme="codex"] .legal-updated {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -1720,7 +1720,7 @@
 
 [data-theme="codex"] .legal-heading,
 [data-theme="codex"] .legal-subheading {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold-lit);
   font-weight: 500;
 }
@@ -1748,7 +1748,7 @@
 }
 
 [data-theme="codex"] .colophon-copyright {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-style: normal;
   font-size: 0.68rem;
   letter-spacing: 0.2em;
@@ -1765,7 +1765,7 @@
 
 [data-theme="codex"] .cost-chip,
 [data-theme="codex"] .unit-sort .seeker-label {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -1798,12 +1798,12 @@
 }
 
 [data-theme="codex"] .unit-rank {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum-dim);
 }
 
 [data-theme="codex"] .unit-headname {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum);
 }
 
@@ -1811,7 +1811,7 @@
 [data-theme="codex"] .unit-cost {
   border: 1px solid rgba(201, 162, 74, 0.4);
   border-radius: 50%;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
 }
 
@@ -1836,7 +1836,7 @@
 }
 
 [data-theme="codex"] .metric-value {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum);
 }
 
@@ -1852,7 +1852,7 @@
 }
 
 [data-theme="codex"] .metric-label {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum-dim);
 }
 
@@ -1865,12 +1865,12 @@
 }
 
 [data-theme="codex"] .ui-games {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum-dim);
 }
 
 [data-theme="codex"] .units-updated {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -1890,12 +1890,12 @@
 }
 
 [data-theme="codex"] .carrier-name {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum);
 }
 
 [data-theme="codex"] .carrier-figs b {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum);
 }
 
@@ -1917,7 +1917,7 @@
 }
 
 [data-theme="codex"] .tl-place {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--ink);
   font-weight: 700;
 }
@@ -1930,17 +1930,17 @@
 }
 
 [data-theme="codex"] .ladder-head {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum-dim);
 }
 
 [data-theme="codex"] .ld-rank {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
 }
 
 [data-theme="codex"] .ld-player b {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--vellum);
 }
 
@@ -1954,7 +1954,7 @@
 }
 
 [data-theme="codex"] .ld-lp {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold-lit);
 }
 
@@ -2109,7 +2109,7 @@
 [data-theme="codex"] .dl-portrait-fallback {
   display: grid;
   place-items: center;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   color: var(--gold);
   font-size: 0.9rem;
   border: 1px solid rgba(201, 162, 74, 0.4);
@@ -2211,7 +2211,7 @@
 
 [data-theme="codex"] .dl-tile-name {
   width: 100%;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   /* 0,54rem = 10,3px. El techo lo pone el nombre más largo medido con canvas:
      "Vagabundo" pide 70px a este tamaño y la caja tiene 74,1. Más grande empieza
      a recortar nombres, que es peor que uno chico. */
@@ -2224,7 +2224,7 @@
 }
 
 [data-theme="codex"] .dl-tile-wr {
-  font-family: "Barlow Condensed", system-ui, sans-serif;
+  font-family: var(--font-data-narrow);
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1;
@@ -2344,7 +2344,7 @@
 }
 
 [data-theme="codex"] .dl-chip {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.56rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2393,7 +2393,7 @@
 }
 
 [data-theme="codex"] .dl-crest-sign {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 1.15rem;
   color: var(--gold);
   line-height: 1;
@@ -2449,7 +2449,7 @@
 }
 
 [data-theme="codex"] .dl-patch-side {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -2491,7 +2491,7 @@
 }
 
 [data-theme="codex"] .dl-mover-rank {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.8rem;
   text-align: center;
   opacity: 0.75;
@@ -2517,7 +2517,7 @@
 }
 
 [data-theme="codex"] .dl-mover-delta {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.82rem;
 }
 
@@ -2767,7 +2767,7 @@
   border-radius: 3px;
   background: none;
   color: var(--vellum-dim);
-  font-family: "Barlow Condensed", system-ui, sans-serif;
+  font-family: var(--font-data-narrow);
   font-size: 0.66rem;
   letter-spacing: 0.04em;
   cursor: pointer;
@@ -2896,7 +2896,7 @@
   display: inline-flex;
   align-items: baseline;
   gap: 0.3rem;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 1.15rem;
   color: var(--gold-lit);
   font-variant-numeric: tabular-nums;
@@ -2934,7 +2934,7 @@
 }
 
 [data-theme="codex"] .dl-item-tier {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.9rem;
   color: var(--vellum-dim);
   text-align: center;
@@ -3086,7 +3086,7 @@
 }
 
 [data-theme="codex"] .dl-chart-title {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -3229,7 +3229,7 @@
 }
 
 [data-theme="codex"] .dl-callout-title {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -3266,7 +3266,7 @@
 }
 
 [data-theme="codex"] .dl-callout-num {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
 }
 
@@ -3297,7 +3297,7 @@
 }
 
 [data-theme="codex"] .dl-heat th {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.6rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -3318,7 +3318,7 @@
   text-align: center;
   padding: 0.42rem 0.2rem;
   border-radius: 2px;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.74rem;
   font-variant-numeric: tabular-nums;
   /* El color lo elige inkOn() por celda: la rampa pasa por un gris medio y
@@ -3445,7 +3445,7 @@
 }
 
 [data-theme="codex"] .dl-detail-kind {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.58rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -3579,7 +3579,7 @@
 
 [data-theme="codex"] .dl-card-name {
   margin: 0;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   /* Mas grande que antes: en la tarjeta del juego el nombre es el titulo de la
      pieza, no una etiqueta. */
   font-size: 1.35rem;
@@ -3593,7 +3593,7 @@
   align-items: center;
   gap: 0.3rem;
   margin: 0.25rem 0 0;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 1.1rem;
   color: #eafff0;
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.6);
@@ -4062,7 +4062,7 @@
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 3px;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.52rem;
   line-height: 1;
@@ -4432,7 +4432,7 @@
   border-radius: 3px;
   background: none;
   color: var(--vellum-dim);
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.78rem;
   letter-spacing: 0.06em;
   cursor: pointer;
@@ -4507,7 +4507,7 @@
   align-items: baseline;
   gap: 0.6rem;
   margin: 0 0 0.55rem;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -4741,7 +4741,7 @@
   border-radius: 0 0 2px 2px;
   background: linear-gradient(180deg, var(--gold-lit), #a8822a);
   color: #170f04;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   /* 0,5rem son 9,5px con la raíz de 19px del tema. Menos que esto no se lee:
      con 0,44rem quedaba en 8,4px y es más chico que el numeral de tier. */
   font-size: 0.5rem;
@@ -4763,7 +4763,7 @@
   position: absolute;
   top: 0.1rem;
   right: 0.2rem;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.55rem;
   letter-spacing: 0.02em;
   color: var(--gold-lit);
@@ -4891,7 +4891,7 @@
   display: flex;
   align-items: baseline;
   gap: 0.3rem;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
   color: var(--vellum-dim);
   font-variant-numeric: tabular-nums;
@@ -5042,7 +5042,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.7rem;
   color: var(--vellum-dim);
   /* El nombre se recorta antes que empujar la columna. */
@@ -5327,7 +5327,7 @@
   padding: 0.09rem 0 0.11rem;
   background: linear-gradient(180deg, var(--gold-lit), #a8822a);
   color: #170f04;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.46rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -5420,7 +5420,7 @@
   height: 1.7rem;
   clip-path: polygon(0 0, 100% 0, 100% 100%);
   background: var(--dl-tier, var(--gold));
-  font-family: "Barlow Condensed", system-ui, sans-serif;
+  font-family: var(--font-data-narrow);
   font-size: 0.62rem;
   font-weight: 800;
   line-height: 1;
@@ -5460,7 +5460,7 @@
 }
 
 [data-theme="codex"] .dl-buy-name-txt {
-  font-family: "Barlow Condensed", system-ui, sans-serif;
+  font-family: var(--font-data-narrow);
   font-size: 0.6rem;
   font-weight: 600;
   line-height: 1.05;
@@ -5483,7 +5483,7 @@
   display: flex;
   align-items: center;
   gap: 0.18rem;
-  font-family: "Barlow Condensed", system-ui, sans-serif;
+  font-family: var(--font-data-narrow);
   font-size: 0.78rem;
   font-weight: 600;
   line-height: 1;
@@ -5916,7 +5916,7 @@
   align-items: center;
   gap: 0.7rem;
   padding: 0 0.6rem 0.35rem;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.58rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -5926,7 +5926,7 @@
 /* El país en dos letras. Ver `countryOf`: la bandera emoji no existe en Windows
    y salía como dos letras sin caja, que se lee como un error de codificación. */
 [data-theme="codex"] .dl-ladder-country {
-  font-family: "Barlow Condensed", system-ui, sans-serif;
+  font-family: var(--font-data-narrow);
   font-size: 0.6rem;
   letter-spacing: 0.06em;
   text-align: center;
@@ -6834,7 +6834,7 @@
    Cinzel NO tiene cifras tabulares —activarlas no cambia un pixel— así que los
    números nunca van en Cinzel. */
 [data-theme="codex"] {
-  --font-data: "Barlow", system-ui, -apple-system, sans-serif;
+  --font-data: var(--font-text);
   --font-data-narrow: "Barlow Condensed", var(--font-data);
 }
 
@@ -7237,7 +7237,7 @@
 }
 
 [data-theme="codex"] .dl-card-title {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.6rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -7271,7 +7271,7 @@
    misma pinta que los que escribe `.dl-card-title`: si uno de los cuatro
    paneles rotula distinto, la columna deja de leerse como una pila. */
 [data-theme="codex"] .dl-profile-aside .dl-rep-form-title {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.6rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -7318,7 +7318,7 @@
    lo alto un 27%. */
 
 [data-theme="codex"] .dl-rank-name {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.92rem;
   color: var(--gold-lit);
   line-height: 1.2;
@@ -7367,7 +7367,7 @@
 }
 
 [data-theme="codex"] .dl-profile-aside .dl-rep-stats dt {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.55rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -7458,7 +7458,7 @@
   background: none;
   border: 1px solid rgba(201, 162, 74, 0.28);
   color: var(--vellum-dim);
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -7601,7 +7601,7 @@
      todavía se ve de qué rango es la insignia. Con 40 tapaba el arte. */
   font-size: 0.6rem;
   font-size: 30cqw;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-style: normal;
   line-height: 1;
@@ -7749,7 +7749,7 @@
 }
 
 [data-theme="codex"] .dl-podium-title {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 1rem;
   color: var(--gold-lit);
   margin: 0;
@@ -7797,7 +7797,7 @@
 }
 
 [data-theme="codex"] .dl-podium-pos {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 1.1rem;
   line-height: 1;
   text-align: center;
@@ -8069,7 +8069,7 @@
 /* "Mundo" en versalitas y chico: la palabra ubica el número, el número es el
    dato. Sin ella, un "#412" al lado de un rango se lee como un subnivel. */
 [data-theme="codex"] .dl-world-tag em {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-style: normal;
   font-size: 0.55rem;
   letter-spacing: 0.12em;
@@ -8090,7 +8090,7 @@
   padding: 0 0.6rem 0.35rem;
   border-bottom: 1px solid rgba(201, 162, 74, 0.18);
   margin-bottom: 0.4rem;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-size: 0.55rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -8175,7 +8175,7 @@
 }
 
 [data-theme="codex"] .dl-rankup em {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-display);
   font-style: normal;
   font-size: 0.5rem;
   letter-spacing: 0.12em;

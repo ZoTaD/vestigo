@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import SectionHead from "./SectionHead";
 
 /**
  * Shared frame for the privacy policy and the terms.
@@ -28,12 +29,16 @@ export function LegalPage({
 }) {
   return (
     <main className="legal" lang="en">
-      <header className="masthead">
-        <p className="eyebrow">Vestigo</p>
-        <h1 className="title">{title}</h1>
-        <p className="standfirst">{intro}</p>
-        <p className="legal-updated">Last updated: {LAST_UPDATED}</p>
-      </header>
+      <SectionHead
+        eyebrow="Vestigo"
+        title={title}
+        meta={
+          <>
+            <span>Last updated: {LAST_UPDATED}</span>
+            <span>{intro}</span>
+          </>
+        }
+      />
 
       <article className="legal-doc">{children}</article>
     </main>

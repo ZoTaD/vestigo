@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import SectionHead from "./SectionHead";
 import { useUnits, unitsDataset, unitCosts, type Unit } from "./unitsData";
 import { units as unitSlugs } from "./slugs";
 import { useCopy, useLocale } from "./i18n";
@@ -170,15 +171,14 @@ export default function UnitsView({
 
   return (
     <>
-      <header className="masthead">
-        <h1 className="title">
-          {copy.units.title}
-          <span className="title-break">{copy.units.titleBreak}</span>
-        </h1>
-        <p className="standfirst">{copy.units.standfirst}</p>
-      </header>
+      <SectionHead
+        eyebrow={copy.games.tft}
+        title={copy.units.title}
+        accent={copy.units.titleBreak}
+        lead={copy.units.standfirst}
+      />
 
-      <main className="tiers">
+      <main className="page">
         <div className="units-controls">
           <div className="cost-filter" role="group" aria-label={copy.units.filter.cost}>
             <button

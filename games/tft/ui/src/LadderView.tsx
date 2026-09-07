@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import SectionHead from "./SectionHead";
 import { fetchLadder, type LadderEntry } from "./api";
 import { useCopy, useLocale } from "./i18n";
 
@@ -35,15 +36,14 @@ export default function LadderView() {
 
   return (
     <>
-      <header className="masthead">
-        <h1 className="title">
-          {copy.ladder.title}
-          <span className="title-break">{copy.ladder.titleBreak}</span>
-        </h1>
-        <p className="standfirst">{copy.ladder.standfirst}</p>
-      </header>
+      <SectionHead
+        eyebrow={copy.games.tft}
+        title={copy.ladder.title}
+        accent={copy.ladder.titleBreak}
+        lead={copy.ladder.standfirst}
+      />
 
-      <main className="tiers">
+      <main className="page">
         <div className="units-controls">
           <div className="cost-filter" role="group" aria-label={copy.ladder.region}>
             {LADDER_REGIONS.map((r) => (

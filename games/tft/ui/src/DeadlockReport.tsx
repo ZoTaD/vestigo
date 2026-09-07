@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import SectionHead from "./SectionHead";
 import { useCopy, useLang, type Lang } from "./i18n";
 import { text } from "./catalog";
 import {
@@ -529,24 +530,24 @@ export default function DeadlockReport({
         ← {lastAccount() === null ? c.backToSearch : c.backToMatches}
       </button>
 
-      <div className="tool-head">
-        <div>
-          <p className="eyebrow">{copy.deadlock.eyebrow}</p>
-          <h1 className="tool-title">{c.reportTitle}</h1>
-        </div>
-        <span className="dl-rep-badge">
-          {rango && (
-            <>
-              {/* Una sola insignia con el numeral encima. La segunda imagen que
-                  iba al lado del nombre era la insignia entera apretada en 18px
-                  — ver `rankOf`. */}
-              <RankBadge badge={match.badge} height={26} eager />
-              {text(rango.name, lang, "")} ·{" "}
-            </>
-          )}
-          {mmss(match.durationS)}
-        </span>
-      </div>
+      <SectionHead
+        eyebrow={copy.deadlock.eyebrow}
+        title={c.reportTitle}
+        controls={
+          <span className="dl-rep-badge">
+            {rango && (
+              <>
+                {/* Una sola insignia con el numeral encima. La segunda imagen
+                    que iba al lado del nombre era la insignia entera apretada
+                    en 18px — ver `rankOf`. */}
+                <RankBadge badge={match.badge} height={26} eager />
+                {text(rango.name, lang, "")} ·{" "}
+              </>
+            )}
+            {mmss(match.durationS)}
+          </span>
+        }
+      />
 
       <div className="dl-rep-board">
         {equipos.map((equipo, t) => (

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import SectionHead from "./SectionHead";
 import { useCopy, useLang, useLocale, type Lang } from "./i18n";
 import { text } from "./catalog";
 import RouteLink from "./RouteLink";
@@ -286,31 +287,19 @@ export default function DeadlockPlayerLadder({
 
   return (
     <main className="deadlock deadlock-ladder">
-      <div className="tool-head">
-        <header className="masthead">
-          <p className="eyebrow">{copy.deadlock.eyebrow}</p>
-          <h1 className="title">
-            {c.title}
-            <span className="title-break">{c.titleBreak}</span>
-          </h1>
-          <p className="standfirst">{c.lead}</p>
-        </header>
-
-        <div className="tool-controls">
-          {/**
-           * **Acá no hay ningún control, y esa es la idea.**
-           *
-           * La pestaña tenía un selector de orden con ganadas, winrate y almas
-           * por partida. "Quién es el mejor" no puede depender de cuál elija el
-           * lector — y dos de las tres contestan mal: por ganadas, el número uno
-           * del mundo tenía 47,4% de victorias. Ahora hay un solo orden y lo que
-           * ocupa este lugar es la explicación de cómo se calcula.
-           */}
-          <p className="detail-note">{c.rankedOnly}</p>
-          <p className="detail-note">{c.howRanked}</p>
-          {ladder && <p className="detail-note">{c.floor(ladder.floor.toLocaleString(locale))}</p>}
-        </div>
-      </div>
+      {/**
+       * **Sin ningún control, y esa es la idea.** La pestaña tenía un selector
+       * de orden con ganadas, winrate y almas por partida; "quién es el mejor"
+       * no puede depender de cuál elija el lector. Hay un solo orden, y cómo se
+       * calcula va en la bajada plegable.
+       */}
+      <SectionHead
+        eyebrow={copy.deadlock.eyebrow}
+        title={c.title}
+        accent={c.titleBreak}
+        lead={[c.lead, c.rankedOnly, c.howRanked]}
+        meta={ladder && <span>{c.floor(ladder.floor.toLocaleString(locale))}</span>}
+      />
 
       <div className="dl-ladder-grid">
         <section className="dl-ladder-main">

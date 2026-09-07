@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Nav, { type Place } from "./Nav";
 import RouteLink from "./RouteLink";
+import SectionHead from "./SectionHead";
 import Home from "./Home";
 import MetaView from "./MetaView";
 import UnitsView from "./UnitsView";
@@ -156,7 +157,7 @@ function Shell({
     <div
       className="app"
       data-theme="codex"
-      data-game={place === "deadlock" ? "deadlock" : undefined}
+      data-game={place === "deadlock" ? "deadlock" : place === "tft" ? "tft" : undefined}
       /**
        * La home es el único lugar que no es el códex.
        *
@@ -184,26 +185,27 @@ function Shell({
           {/* La misma barra que TFT, con las pestañas de este juego. Que sea el
               mismo control y no uno propio es deliberado: quien viene de la otra
               pestaña no tiene que aprender nada nuevo. */}
-          <nav className="switcher" aria-label={copy.games.deadlock}>
-            {DEADLOCK_SECTIONS.map((id) => (
-              <RouteLink
-                className="switch"
-                key={id}
-                to={{ ...route, view: "deadlock", dlSection: id, detail: undefined }}
-                active={route.dlSection === id}
-                onNavigate={navigate}
-              >
-                {copy.deadlock.tabs[id]}
-                {/* El perfil se publicó el 2026-08-11 y sigue creciendo — la
-                    racha, el filtro por héroe y los golpes son de ayer. La
-                    insignia dice que se puede usar y que se va a mover, que es
-                    distinto del "Pronto" de Dota 2: eso anuncia lo que no
-                    existe, esto califica lo que sí. Se saca cuando la pestaña
-                    deje de cambiar. */}
-                {id === "player" && <em className="switch-beta">{copy.games.beta}</em>}
-              </RouteLink>
-            ))}
-          </nav>
+          <div className="subnav-wrap">
+            <nav className="subnav" aria-label={copy.games.deadlock}>
+              {DEADLOCK_SECTIONS.map((id) => (
+                <RouteLink
+                  className="subnav-item"
+                  key={id}
+                  to={{ ...route, view: "deadlock", dlSection: id, detail: undefined }}
+                  active={route.dlSection === id}
+                  onNavigate={navigate}
+                >
+                  {copy.deadlock.tabs[id]}
+                  {/* El perfil se publicó el 2026-08-11 y sigue creciendo. La
+                      insignia dice que se puede usar y que se va a mover, que es
+                      distinto del "Pronto" de Dota 2: eso anuncia lo que no
+                      existe, esto califica lo que sí. Se saca cuando la pestaña
+                      deje de cambiar. */}
+                  {id === "player" && <em className="subnav-beta">{copy.games.beta}</em>}
+                </RouteLink>
+              ))}
+            </nav>
+          </div>
           {route.dlSection === "player" ? (
             <DeadlockPlayer
               accountId={route.detail}
@@ -252,19 +254,21 @@ function Shell({
 
       {place === "tft" && (
         <>
-          <nav className="switcher" aria-label={copy.games.tft}>
-            {SECTIONS.map((id) => (
-              <RouteLink
-                className="switch"
-                key={id}
-                to={{ ...route, view: "tft", section: id, detail: undefined }}
-                active={section === id}
-                onNavigate={navigate}
-              >
-                {copy.sections[id]}
-              </RouteLink>
-            ))}
-          </nav>
+          <div className="subnav-wrap">
+            <nav className="subnav" aria-label={copy.games.tft}>
+              {SECTIONS.map((id) => (
+                <RouteLink
+                  className="subnav-item"
+                  key={id}
+                  to={{ ...route, view: "tft", section: id, detail: undefined }}
+                  active={section === id}
+                  onNavigate={navigate}
+                >
+                  {copy.sections[id]}
+                </RouteLink>
+              ))}
+            </nav>
+          </div>
 
           {section === "meta" && (
             <MetaView
@@ -288,14 +292,13 @@ function Shell({
           {section === "ladder" && <LadderView />}
           {section === "player" && (
             <>
-              <header className="masthead">
-                <h1 className="title">
-                  {copy.player.title}
-                  <span className="title-break">{copy.player.titleBreak}</span>
-                </h1>
-                <p className="standfirst">{copy.player.standfirst}</p>
-              </header>
-              <main className="tiers">
+              <SectionHead
+                eyebrow={copy.games.tft}
+                title={copy.player.title}
+                accent={copy.player.titleBreak}
+                lead={copy.player.standfirst}
+              />
+              <main className="page">
                 <PlayerView />
               </main>
             </>
@@ -305,62 +308,49 @@ function Shell({
 
       {/* One centred column, in the order someone reads it: where to go, where
           the data comes from, the notice Riot requires, then the byline. */}
-      <footer className="colophon">
-        <nav className="colophon-links" aria-label={copy.footer.privacy}>
+      <footer className="foot">
+        <nav className="foot-links" aria-label={copy.footer.privacy}>
           <RouteLink
-            className="colophon-link"
+            className="foot-link"
             to={{ ...route, view: "privacy", detail: undefined }}
             onNavigate={(r) => { navigate(r); window.scrollTo({ top: 0 }); }}
           >
             {copy.footer.privacy}
           </RouteLink>
-          <span className="colophon-sep" aria-hidden="true">
-            ·
-          </span>
           <RouteLink
-            className="colophon-link"
+            className="foot-link"
             to={{ ...route, view: "terms", detail: undefined }}
             onNavigate={(r) => { navigate(r); window.scrollTo({ top: 0 }); }}
           >
             {copy.footer.terms}
           </RouteLink>
           {copy.footer.englishOnly && (
-            <span className="colophon-note">{copy.footer.englishOnly}</span>
+            <span className="foot-note">{copy.footer.englishOnly}</span>
           )}
           {analyticsAvailable() && (
-            <>
-              <span className="colophon-sep" aria-hidden="true">
-                ·
-              </span>
-              <button
-                className="colophon-link is-consent"
-                onClick={() => setReopened(true)}
-              >
-                {copy.consent.settings}
-                {consent && ` — ${consent === "granted" ? copy.consent.on : copy.consent.off}`}
-              </button>
-            </>
+            <button className="foot-link is-consent" onClick={() => setReopened(true)}>
+              {copy.consent.settings}
+              {consent && ` — ${consent === "granted" ? copy.consent.on : copy.consent.off}`}
+            </button>
           )}
         </nav>
 
-        <p className="colophon-sources">
+        <p className="foot-sources">
           {route.view === "deadlock" ? copy.footer.sourcesDeadlock : copy.footer.sources}
         </p>
 
         {/* Required by Riot's General Policies, which every third-party product
             must post, and by Overwolf's compliance guide. It is not decoration —
             leave the wording alone. */}
-        <p className="colophon-legal">{copy.footer.disclaimer}</p>
+        <p className="foot-legal">{copy.footer.disclaimer}</p>
 
-        {/* El mismo aviso, para el otro dueño. Vivía sólo en el README del repo
-            público mientras el sitio ya publicaba Deadlock y anunciaba Dota 2,
-            que son de Valve; las directrices de contenido de Valve piden lo
-            mismo que las de Riot, así que el pie lo dice en las dos direcciones
-            o no lo dice en ninguna. Va en un párrafo aparte a propósito: la
-            redacción de Riot no se toca. */}
-        <p className="colophon-legal">{copy.footer.disclaimerValve}</p>
+        {/* El mismo aviso, para el otro dueño: las directrices de contenido de
+            Valve piden lo mismo que las de Riot, así que el pie lo dice en las
+            dos direcciones o no lo dice en ninguna. Va en un párrafo aparte a
+            propósito: la redacción de Riot no se toca. */}
+        <p className="foot-legal">{copy.footer.disclaimerValve}</p>
 
-        <p className="colophon-copyright">
+        <p className="foot-copy">
           © {new Date().getFullYear()} {copy.brand}
         </p>
       </footer>

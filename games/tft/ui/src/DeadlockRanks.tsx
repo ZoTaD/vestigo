@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SectionHead from "./SectionHead";
 import { useCopy, useLang, useLocale, type Lang } from "./i18n";
 import { text } from "./catalog";
 import { catalog } from "./deadlockData";
@@ -61,23 +62,17 @@ export default function DeadlockRanks() {
     <main className="deadlock">
       {/* Mismo reparto que el resto de las pestañas: lo que explica la página a
           la izquierda, lo que la controla a la derecha. */}
-      <div className="tool-head">
-        <header className="masthead">
-          <p className="eyebrow">{copy.deadlock.eyebrow}</p>
-          <h1 className="title">
-            {t.title}
-            <span className="title-break">{t.titleBreak}</span>
-          </h1>
-          <p className="standfirst">{t.lead}</p>
-        </header>
-
-        <div className="tool-controls">
-          <div className="dl-view-toggle" role="group" aria-label={t.view.players}>
+      <SectionHead
+        eyebrow={copy.deadlock.eyebrow}
+        title={t.title}
+        accent={t.titleBreak}
+        lead={t.lead}
+        controls={
+          <div className="seg" role="group" aria-label={t.view.players}>
             {(["players", "matches"] as RankView[]).map((id) => (
               <button
                 key={id}
                 type="button"
-                className="dl-view-btn"
                 aria-pressed={view === id}
                 onClick={() => setView(id)}
               >
@@ -85,11 +80,13 @@ export default function DeadlockRanks() {
               </button>
             ))}
           </div>
-          <p className="detail-note dl-sample">
+        }
+        meta={
+          <span>
             {file.from} → {file.to}
-          </p>
-        </div>
-      </div>
+          </span>
+        }
+      />
 
       {/* El cartel sólo aplica a la vista por jugador: las partidas traen el
           promedio de la sala, que cubre el 100% de la muestra. */}

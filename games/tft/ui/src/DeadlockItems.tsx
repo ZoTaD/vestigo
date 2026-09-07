@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SectionHead from "./SectionHead";
 import { useCopy, useLocale } from "./i18n";
 import {
   useItems,
@@ -270,32 +271,24 @@ export default function DeadlockItems({
 
   return (
     <main className="deadlock deadlock-items">
-      <div className="tool-head">
-        <header className="masthead">
-          <p className="eyebrow">{copy.deadlock.eyebrow}</p>
-          <h1 className="title">
-            {c.title}
-            <span className="title-break">{c.titleBreak}</span>
-          </h1>
-          <p className="standfirst">{c.lead}</p>
-        </header>
-
-        <div className="tool-controls">{picker}</div>
-
-        {/* La misma ficha de la medición que la tier list de héroes: cruza el
-            ancho al pie del encabezado, entre dos reglas. Eran dos notas
-            apiladas en la columna del selector, donde se leían como una
-            aclaración de ese control y no como de qué está hecha la página. */}
-        {meta && (
-          <p className="detail-note dl-meta-line">
-            {`${copy.deadlock.sample(
-              meta.file.matches.toLocaleString(locale),
-              meta.file.from,
-              meta.file.to
-            )} · ${copy.deadlock.patch.since(meta.file.patch.title)}`}
-          </p>
-        )}
-      </div>
+      <SectionHead
+        eyebrow={copy.deadlock.eyebrow}
+        title={c.title}
+        accent={c.titleBreak}
+        lead={[c.lead, copy.deadlock.note]}
+        controls={picker}
+        meta={
+          meta && (
+            <span className="dl-meta-line">
+              {`${copy.deadlock.sample(
+                meta.file.matches.toLocaleString(locale),
+                meta.file.from,
+                meta.file.to
+              )} · ${copy.deadlock.patch.since(meta.file.patch.title)}`}
+            </span>
+          )
+        }
+      />
 
       {!meta ? (
         <p className="detail-note dl-loading">{c.loading}</p>

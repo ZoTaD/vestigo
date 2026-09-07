@@ -60,7 +60,7 @@
 
   background: var(--h-paper);
   color: var(--h-ink);
-  font-family: "Barlow", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-text);
   font-size: 1rem;
   padding-bottom: 0;
 }
@@ -80,7 +80,7 @@
 }
 
 [data-theme="codex"][data-place="home"] .topbar-brand {
-  font-family: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: 1.6rem;
   line-height: 1;
@@ -112,7 +112,7 @@
 
 [data-theme="codex"][data-place="home"] .topgame,
 [data-theme="codex"][data-place="home"] .langbtn {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-text);
   font-weight: 600;
   font-size: 0.64rem;
   letter-spacing: 0.16em;
@@ -150,7 +150,7 @@
 }
 
 [data-theme="codex"][data-place="home"] .eyebrow {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-text);
   font-weight: 600;
   font-size: 0.64rem;
   letter-spacing: 0.28em;
@@ -174,7 +174,7 @@
  * que leerse como un bloque, no como dos renglones.
  */
 [data-theme="codex"][data-place="home"] .title {
-  font-family: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(3.2rem, 11vw, 8.3rem);
   line-height: 0.82;
@@ -215,7 +215,7 @@
 [data-theme="codex"][data-place="home"] .standfirst {
   max-width: 44ch;
   margin: 0;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-text);
   font-size: 1.1rem;
   font-style: normal;
   line-height: 1.6;
@@ -240,7 +240,7 @@
 
 [data-theme="codex"][data-place="home"] .home-count dd {
   margin: 0;
-  font-family: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  font-family: var(--font-display);
   font-weight: 800;
   font-size: clamp(2rem, 4.4vw, 3.3rem);
   line-height: 0.9;
@@ -268,7 +268,7 @@
   align-items: center;
   gap: 1.05rem;
   margin: 0 0 1.4rem;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-text);
   font-weight: 700;
   font-size: 0.64rem;
   letter-spacing: 0.24em;
@@ -314,7 +314,7 @@
 
 [data-theme="codex"][data-place="home"] .game-panel-name {
   margin: 0;
-  font-family: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(2.6rem, 7vw, 5.9rem);
   line-height: 0.86;
@@ -344,7 +344,7 @@
 
 [data-theme="codex"][data-place="home"] .game-figure b {
   display: block;
-  font-family: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(2.8rem, 7.5vw, 6.1rem);
   line-height: 0.82;
@@ -383,7 +383,7 @@
   /* 0.85rem y no menos: con la etiqueta a 0.64rem, cualquier cosa por debajo
      deja el botón en ~41px de alto y el objetivo táctil mínimo es 44. */
   padding: 0.85rem 1.4rem;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-text);
   font-weight: 700;
   font-size: 0.64rem;
   letter-spacing: 0.2em;

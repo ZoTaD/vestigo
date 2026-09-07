@@ -1,0 +1,116 @@
+/* ---------------------------------------------------------------------------
+   TOKENS — la única hoja que decide colores, tipografía y medidas.
+
+   Rediseño del 2026-09-06 (ver docs/design/2026-09-06-rediseno-plan.md). La
+   regla que ordena todo: **una sola forma para todo el sitio, tres paletas**.
+   Portada, TFT y Deadlock comparten fuentes, espaciados, radios y componentes;
+   lo único que cada lugar re-declara es el color.
+
+   Los nombres viejos del códex (`--ink`, `--vellum`, `--gold`, `--h-*`) siguen
+   existiendo en sus hojas: ~9.000 líneas están escritas contra ellos y se van
+   retirando por fases. Las hojas nuevas (`shell.css`, `primitives.css`) sólo
+   usan los nombres de acá.
+--------------------------------------------------------------------------- */
+
+:root {
+  /* Una sola voz tipográfica, la de la portada: la única identidad que no
+     imita a un juego. Cinzel, Cormorant y Marcellus quedaron sin uso en las
+     hojas (se reemplazaron por estas variables) y salen de index.html en la
+     fase de limpieza. */
+  --font-display: "Big Shoulders Display", "Barlow Condensed", Impact, sans-serif;
+  --font-text: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: var(--font-text);
+  --font-data-narrow: "Barlow Condensed", var(--font-text);
+
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  /* Ancho de columna, aire lateral, ancho del rail y alto de la barra. Están
+     acá porque la cáscara y las páginas los tienen que compartir. */
+  --col: 1400px;
+  --pad: clamp(1rem, 3vw, 2.5rem);
+  --rail: 300px;
+  --top-h: 56px;
+  /* Blanco táctil mínimo (Fitts): ningún control por debajo de esto. */
+  --tap: 44px;
+}
+
+/* TFT: oro sobre medianoche. Es el códex de siempre, con nombres nuevos. */
+[data-theme="codex"] {
+  --bg: #080d1a;
+  --bg-2: #0e1528;
+  --bg-glow: #16203c;
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-2: rgba(255, 255, 255, 0.065);
+  --surface-solid: #111a30;
+  --text: #e9e0cb;
+  --text-dim: #9c957f;
+  --text-faint: #6b665a;
+  --accent: #c9a24a;
+  --accent-lit: #f0d391;
+  --accent-dark: #8a6a24;
+  --accent-rgb: 201, 162, 74;
+  /* El acento raro: aparece poco y siempre significa algo. */
+  --accent-2: #6f8ff5;
+  --good: #6cc98b;
+  --bad: #d9705f;
+  --line: rgba(201, 162, 74, 0.22);
+  --line-strong: rgba(201, 162, 74, 0.5);
+  --on-accent: #0a0d16;
+}
+
+/* Deadlock: latón y ámbar sobre negro cálido. Los valores salen de la paleta
+   con nombre del juego (assets.deadlock-api.com/v2/colors), como antes. */
+[data-theme="codex"][data-game="deadlock"] {
+  --bg: #10130d;
+  --bg-2: #171b12;
+  --bg-glow: #2a2113;
+  --surface: rgba(255, 239, 215, 0.04);
+  --surface-2: rgba(255, 239, 215, 0.075);
+  --surface-solid: #1c2117;
+  --text: #ffefd7;
+  --text-dim: #9c9581;
+  --text-faint: #6d6858;
+  --accent: #c6a269;
+  --accent-lit: #e2c391;
+  --accent-dark: #8a6f3f;
+  --accent-rgb: 198, 162, 105;
+  --accent-2: #d4860b;
+  --good: #70f8c1;
+  --bad: #e0623f;
+  --line: rgba(198, 162, 105, 0.22);
+  --line-strong: rgba(198, 162, 105, 0.5);
+  --on-accent: #10130d;
+}
+
+/* Portada: papel. La marca es clara y los juegos son oscuros; ese contraste es
+   el que hace que cada juego pegue el salto al entrar. */
+[data-theme="codex"][data-place="home"] {
+  --bg: #f2efe6;
+  --bg-2: #e7e2d4;
+  --bg-glow: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #e7e2d4;
+  --surface-solid: #ffffff;
+  --text: #14140f;
+  --text-dim: #6b6a5e;
+  --text-faint: #a5a294;
+  --accent: #8a6a24;
+  --accent-lit: #b08a35;
+  --accent-dark: #6b511b;
+  --accent-rgb: 138, 106, 36;
+  --accent-2: #8a6a24;
+  --good: #2f8a4f;
+  --bad: #b8402e;
+  --line: #d8d3c4;
+  --line-strong: #b8b2a0;
+  --on-accent: #fffaf0;
+}

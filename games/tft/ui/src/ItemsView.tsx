@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import SectionHead from "./SectionHead";
 import { useItems, itemsDataset, type Item } from "./itemsData";
 import { items as itemSlugs } from "./slugs";
 import { useCopy, useLocale } from "./i18n";
@@ -135,15 +136,14 @@ export default function ItemsView({
 
   return (
     <>
-      <header className="masthead">
-        <h1 className="title">
-          {copy.items.title}
-          <span className="title-break">{copy.items.titleBreak}</span>
-        </h1>
-        <p className="standfirst">{copy.items.standfirst}</p>
-      </header>
+      <SectionHead
+        eyebrow={copy.games.tft}
+        title={copy.items.title}
+        accent={copy.items.titleBreak}
+        lead={copy.items.standfirst}
+      />
 
-      <main className="tiers">
+      <main className="page">
         <div className="units-controls units-controls-end">
           <label className="unit-sort">
             <span className="seeker-label">{copy.items.sort.label}</span>
