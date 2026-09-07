@@ -10,14 +10,21 @@
 
 /* Barra superior ------------------------------------------------------------ */
 
+/**
+ * Translúcida a propósito. El fondo de los juegos tiene un resplandor más
+ * claro arriba (`--bg-glow`), y una barra pintada con el negro base se leía
+ * como un bloque oscuro pegado sobre una zona luminosa. Con el 35 % del fondo
+ * y el desenfoque, toma el tono de lo que tiene detrás en cualquier página y
+ * sigue siendo legible cuando el contenido pasa por abajo al scrollear.
+ */
 .top {
   position: sticky;
   top: 0;
   z-index: 60;
-  background: color-mix(in srgb, var(--bg) 86%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 35%, transparent);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
 }
 
 .top-in {
