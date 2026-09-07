@@ -379,3 +379,53 @@
   padding-left: 0;
   padding-right: 0;
 }
+
+/* TFT · controles de Unidades, Ítems y Ladder ----------------------------------- */
+
+.tft-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+}
+
+.tft-controls.is-end {
+  justify-content: flex-end;
+}
+
+/* Una rejilla adentro de otra: la de afuera ya puso el aire lateral. */
+.page .page {
+  padding: 0;
+  margin-top: 0;
+}
+
+/* TFT · Jugador ------------------------------------------------------------------- */
+
+.tft-seeker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.tft-seeker .field {
+  flex: 1 1 14rem;
+  min-height: 44px;
+}
+
+.tft-seeker .field.is-select {
+  flex: 0 1 12rem;
+}
+
+.tft-seeker .btn {
+  min-height: 44px;
+}
+
+[data-theme="codex"] .tft-profile-aside {
+  position: static;
+}
+
+[data-theme="codex"] .tft-profile-aside .player-head {
+  margin: 0;
+}

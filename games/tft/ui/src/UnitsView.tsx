@@ -179,18 +179,15 @@ export default function UnitsView({
       />
 
       <main className="page">
-        <div className="units-controls">
-          <div className="cost-filter" role="group" aria-label={copy.units.filter.cost}>
-            <button
-              className="cost-chip"
-              data-active={cost === null}
-              onClick={() => setCost(null)}
-            >
+        <div className="tft-controls">
+          <div className="chips" role="group" aria-label={copy.units.filter.cost}>
+            <button type="button" className="chip" data-active={cost === null} onClick={() => setCost(null)}>
               {copy.units.filter.all}
             </button>
             {unitCosts.map((c) => (
               <button
-                className="cost-chip"
+                type="button"
+                className="chip"
                 key={c}
                 data-cost={c}
                 data-active={cost === c}
@@ -201,13 +198,9 @@ export default function UnitsView({
             ))}
           </div>
 
-          <label className="unit-sort">
-            <span className="seeker-label">{copy.units.sort.label}</span>
-            <select
-              className="seeker-input seeker-select"
-              value={sort}
-              onChange={(e) => setSort(e.target.value as Sort)}
-            >
+          <label className="field is-select">
+            <span className="field-label">{copy.units.sort.label}</span>
+            <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
               <option value="play">{copy.units.sort.play}</option>
               <option value="placement">{copy.units.sort.placement}</option>
               <option value="impact">{copy.units.sort.impact}</option>

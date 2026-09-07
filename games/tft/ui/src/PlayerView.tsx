@@ -330,16 +330,15 @@ export default function PlayerView() {
   return (
     <section className="player">
       <form
-        className="seeker"
+        className="tft-seeker"
         onSubmit={(e) => {
           e.preventDefault();
           void run(query, region);
         }}
       >
-        <label className="seeker-field">
-          <span className="seeker-label">{copy.player.riotId}</span>
+        <label className="field">
+          <span className="field-label">{copy.player.riotId}</span>
           <input
-            className="seeker-input"
             placeholder={copy.player.riotIdPlaceholder}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -348,13 +347,9 @@ export default function PlayerView() {
           />
         </label>
 
-        <label className="seeker-field seeker-field-region">
-          <span className="seeker-label">{copy.player.region}</span>
-          <select
-            className="seeker-input seeker-select"
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-          >
+        <label className="field is-select">
+          <span className="field-label">{copy.player.region}</span>
+          <select value={region} onChange={(e) => setRegion(e.target.value)}>
             {REGIONS.map((id) => (
               <option value={id} key={id}>
                 {copy.player.regions[id]}
@@ -363,7 +358,7 @@ export default function PlayerView() {
           </select>
         </label>
 
-        <button className="seeker-go" type="submit" disabled={status === "searching"}>
+        <button className="btn" type="submit" disabled={status === "searching"}>
           {status === "searching" ? copy.player.searching : copy.player.search}
         </button>
       </form>
@@ -376,8 +371,13 @@ export default function PlayerView() {
         </div>
       )}
 
+      {/* Dos columnas: la identidad y el panel del perfil en el rail (que en
+          móvil sube arriba), las partidas en la columna principal. */}
+      {(player || views.length > 0) && (
+      <div className="page has-rail tft-profile">
+      <aside className="page-rail is-first tft-profile-aside">
       {player && (
-        <div className="player-head">
+        <div className="box player-head">
           <h2 className="player-name">
             {player.summoner && (
               // Decoration, and it is allowed to fail alone: a broken icon must
@@ -440,13 +440,18 @@ export default function PlayerView() {
       {views.length > 0 && (
         <ProfilePanel profile={buildProfile(views, lang, band, ownBand, lpHistory)} />
       )}
+      </aside>
 
+      <div className="page-main">
       {views.length > 0 && (
         <ol className="comp-list match-list">
           {views.map((v, i) => (
             <MatchRow view={v} rank={i + 1} lpDelta={lpDeltas.get(v.matchId)} key={v.matchId} />
           ))}
         </ol>
+      )}
+      </div>
+      </div>
       )}
 
       {status === "idle" && <p className="seeker-hint">{copy.player.idleHint}</p>}

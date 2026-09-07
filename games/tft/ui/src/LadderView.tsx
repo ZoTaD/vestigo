@@ -44,13 +44,14 @@ export default function LadderView() {
       />
 
       <main className="page">
-        <div className="units-controls">
-          <div className="cost-filter" role="group" aria-label={copy.ladder.region}>
+        <div className="tft-controls">
+          <div className="seg" role="group" aria-label={copy.ladder.region}>
             {LADDER_REGIONS.map((r) => (
               <button
-                className="cost-chip"
+                type="button"
                 key={r}
                 data-active={region === r}
+                aria-pressed={region === r}
                 onClick={() => setRegion(r)}
               >
                 {copy.player.regions[r]}

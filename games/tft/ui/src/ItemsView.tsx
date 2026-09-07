@@ -144,14 +144,10 @@ export default function ItemsView({
       />
 
       <main className="page">
-        <div className="units-controls units-controls-end">
-          <label className="unit-sort">
-            <span className="seeker-label">{copy.items.sort.label}</span>
-            <select
-              className="seeker-input seeker-select"
-              value={sort}
-              onChange={(e) => setSort(e.target.value as Sort)}
-            >
+        <div className="tft-controls is-end">
+          <label className="field is-select">
+            <span className="field-label">{copy.items.sort.label}</span>
+            <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
               <option value="play">{copy.items.sort.play}</option>
               <option value="placement">{copy.items.sort.placement}</option>
               <option value="impact">{copy.items.sort.impact}</option>
