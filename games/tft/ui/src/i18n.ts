@@ -757,6 +757,25 @@ const EN = {
         activity: "Activity",
         placings: "World ranking",
       },
+      /** "Vos contra tu banda": tus promedios contra los de tu banda. */
+      vsBand: {
+        title: "You vs your band",
+        lead: (band: string) =>
+          `Your ranked averages this season against players in ${band} lobbies. The dot is you; the tick is the band's median.`,
+        loading: "Measuring your band…",
+        failed: "Could not measure your band right now.",
+        betterThan: (pct: number) => `better than ${pct}%`,
+        median: (v: string) => `median ${v}`,
+        note: "Percentiles are interpolated from the band's published distribution (DDSketch, ≤1% relative error).",
+        metrics: {
+          net_worth_per_min: "Souls per minute",
+          player_damage_per_min: "Damage per minute",
+          kda: "KDA",
+          last_hits: "Last hits per match",
+          deaths: "Deaths per match",
+          accuracy: "Accuracy",
+        },
+      },
       /**
        * La etiqueta del puesto mundial, al lado del rango.
        *
@@ -2272,6 +2291,24 @@ const ES: typeof EN = {
         heroes: "Más jugados",
         activity: "Actividad",
         placings: "Ranking mundial",
+      },
+      vsBand: {
+        title: "Vos contra tu banda",
+        lead: (band: string) =>
+          `Tus promedios en clasificatorias de esta temporada contra los jugadores de salas ${band}. El punto sos vos; la marca es la mediana de la banda.`,
+        loading: "Midiendo tu banda…",
+        failed: "No se pudo medir tu banda ahora.",
+        betterThan: (pct: number) => `mejor que el ${pct} %`,
+        median: (v: string) => `mediana ${v}`,
+        note: "Los percentiles se interpolan de la distribución publicada de la banda (DDSketch, error relativo ≤ 1 %).",
+        metrics: {
+          net_worth_per_min: "Almas por minuto",
+          player_damage_per_min: "Daño por minuto",
+          kda: "KDA",
+          last_hits: "Golpes por partida",
+          deaths: "Muertes por partida",
+          accuracy: "Precisión",
+        },
       },
       worldTagLabel: "Mundo",
       worldTagTitle: (of: string, min: number) =>

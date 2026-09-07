@@ -500,3 +500,127 @@
 .dl-placing-row[data-metal="bronze"] .dl-placing-place {
   color: #d29a63;
 }
+
+/* La cabecera de columnas de la Escalera: una barra, no una fila más. */
+[data-theme="codex"] .dl-ladder-head {
+  padding: 0.55rem 0.6rem;
+  margin-bottom: 0.35rem;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-text);
+  font-weight: 700;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--text);
+}
+
+/* Deadlock · Jugador · vos contra tu banda ------------------------------------------ */
+
+.dl-vs-lead,
+.dl-vs-note {
+  font-size: 0.74rem;
+}
+
+.dl-vs-rows {
+  list-style: none;
+  margin: 0.4rem 0 0.5rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dl-vs-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "name mine"
+    "track track"
+    "pct median";
+  gap: 0.15rem 0.6rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.dl-vs-rows > li:first-child {
+  border-top: 0;
+}
+
+.dl-vs-name {
+  grid-area: name;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.dl-vs-mine {
+  grid-area: mine;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* La pista: 1 % a la izquierda, 99 % a la derecha; la marca al 50 % es la
+   mediana de la banda y el punto sos vos. Posición sobre un eje común, que es
+   lo que la gente compara con más precisión (Cleveland & McGill). */
+.dl-vs-track {
+  grid-area: track;
+  position: relative;
+  height: 8px;
+  margin: 0.25rem 0;
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+
+.dl-vs-median {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 14px;
+  margin-left: -1px;
+  background: var(--text-dim);
+  border-radius: 1px;
+}
+
+.dl-vs-dot {
+  position: absolute;
+  top: -3px;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: var(--accent-lit);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+
+.dl-vs-track[data-tier="high"] .dl-vs-dot {
+  background: var(--good);
+}
+
+.dl-vs-track[data-tier="low"] .dl-vs-dot {
+  background: var(--bad);
+}
+
+.dl-vs-pct {
+  grid-area: pct;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.dl-vs-pct[data-tier="high"] {
+  color: var(--good);
+}
+
+.dl-vs-pct[data-tier="low"] {
+  color: var(--bad);
+}
+
+.dl-vs-median-value {
+  grid-area: median;
+  justify-self: end;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}

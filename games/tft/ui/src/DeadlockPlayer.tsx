@@ -34,6 +34,7 @@ import DeadlockScopePicker from "./DeadlockScopePicker";
 import DeadlockPeerCard from "./DeadlockPeerCard";
 import { usePeers } from "./deadlockPeers";
 import DeadlockCareerHeroes from "./DeadlockCareerHeroes";
+import DeadlockVsBand from "./DeadlockVsBandCard";
 import { useHeroStats } from "./deadlockHeroStats";
 import {
   metalOf,
@@ -853,6 +854,11 @@ export default function DeadlockPlayer({
                 mundo con Abrams" es más fuerte que "ganaste 2 seguidas", y en el
                 teléfono esta columna es lo primero que se ve. */}
             <HeroPlacings placings={placings} />
+
+            {/* Tus promedios contra tu banda. Va después del ranking mundial y
+                antes de la forma reciente: contesta "¿soy bueno para mi rango?",
+                que es más fuerte que "ganaste 2 seguidas". Sólo con rango. */}
+            <DeadlockVsBand accountId={id} badge={rango?.badge ?? 0} />
 
             {corpus && (
               <div className="dl-card">
