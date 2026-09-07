@@ -13,6 +13,8 @@
  * `parseMatch` lo baja a lo mínimo antes de que nada más lo toque.
  */
 
+import { scoreOf, type RankPoint } from "./deadlockRankHistory";
+
 const API = "https://api.deadlock-api.com/v1";
 
 export type MatchErrorCode = "NOT_FOUND" | "RATE_LIMITED" | "UPSTREAM" | "NETWORK";
@@ -533,55 +535,37 @@ export function summarize(rows: HistoryRow[]): PlayerSummary | null {
 }
 
 /**
- * El rango partida por partida, para marcar en cuál se ascendió.
+ * El rango después de cada clasificatoria de la temporada.
  *
  * **No sale del historial**: `ranked_display_badge` da 0 en las 475 filas
  * medidas. Sale de `players/{id}/mmr-history`, que devuelve una entrada por
  * partida clasificatoria con su `rank` — verificado el 2026-08-13 sobre una
  * cuenta real: 75 entradas en 9,8 KB, y se ven los saltos (111→112→113→114).
+ * Vuelto a medir el 2026-09-07: viene en orden cronológico, y las cuentas de
+ * la cima de la escalera traen 164 y 241 entradas en 22 y 32 KB.
  *
- * Un pedido por perfil, y **puede fallar sin llevarse la página**: sin esto el
- * historial se dibuja igual, sin las marcas de ascenso.
+ * Un pedido por perfil que alimenta dos cosas: las marcas de ascenso del
+ * historial (`rankSteps`) y el gráfico de rango en el tiempo (`trailOf`). Y
+ * **puede fallar sin llevarse la página**: sin esto el historial se dibuja
+ * igual, sin las marcas, y el gráfico no aparece.
  */
-export interface RankStep {
-  matchId: number;
-  /** El badge después de esa partida. */
-  badge: number;
-  /** El badge que traía antes. 0 si es la primera con rango. */
-  previo: number;
-  /** Cuánto se movió respecto de la partida anterior. */
-  delta: number;
-}
-
 interface RawMmrHistory {
   match_id: number;
+  start_time?: number;
   rank?: number;
-  player_score?: number;
 }
 
-export async function fetchRankSteps(accountId: number): Promise<Map<number, RankStep>> {
-  const out = new Map<number, RankStep>();
-  try {
-    const raw = await get<RawMmrHistory[]>(`players/${accountId}/mmr-history`);
-    // Viene de la más vieja a la más nueva, que es lo que hace que el delta se
-    // pueda calcular mirando la anterior.
-    let previo: number | null = null;
-    for (const r of raw) {
-      const badge = r.rank ?? 0;
-      if (badge > 0) {
-        out.set(r.match_id, {
-          matchId: r.match_id,
-          badge,
-          previo: previo ?? 0,
-          delta: previo === null ? 0 : badge - previo,
-        });
-        previo = badge;
-      }
-    }
-  } catch {
-    /* sin marcas de ascenso, pero con historial */
-  }
-  return out;
+export async function fetchMmrHistory(accountId: number): Promise<RankPoint[]> {
+  const raw = await get<RawMmrHistory[]>(`players/${accountId}/mmr-history`);
+  return raw
+    .filter((r) => (r.rank ?? 0) > 0)
+    .map((r) => ({
+      matchId: r.match_id,
+      startTime: r.start_time ?? 0,
+      badge: r.rank ?? 0,
+      score: scoreOf(r.rank ?? 0),
+    }))
+    .sort((a, b) => a.startTime - b.startTime);
 }
 
 /** Una compra: qué, cuándo, y si dejó de estar. */

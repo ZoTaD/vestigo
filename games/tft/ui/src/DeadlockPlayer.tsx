@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SectionHead from "./SectionHead";
 import { takePendingSearch } from "./pendingSearch";
 import { lastProfile, rememberProfile } from "./lastProfile";
@@ -9,7 +9,7 @@ import {
   fetchHistory,
   fetchAccount,
   fetchRank,
-  fetchRankSteps,
+  fetchMmrHistory,
   summarize,
   rankedCorpus,
   scopeCounts,
@@ -23,7 +23,6 @@ import {
   type HistoryRow,
   type PlayerSummary,
   type PlayerRank,
-  type RankStep,
 } from "./deadlockMatch";
 import { useGrades } from "./deadlockGrades";
 import { heroImg, heroName, rankLabel, rankOf } from "./deadlockReportData";
@@ -35,6 +34,8 @@ import DeadlockPeerCard from "./DeadlockPeerCard";
 import { usePeers } from "./deadlockPeers";
 import DeadlockCareerHeroes from "./DeadlockCareerHeroes";
 import DeadlockVsBand from "./DeadlockVsBandCard";
+import DeadlockRankTrail from "./DeadlockRankTrail";
+import { rankSteps, type RankPoint } from "./deadlockRankHistory";
 import { useHeroStats } from "./deadlockHeroStats";
 import {
   metalOf,
@@ -437,7 +438,13 @@ export default function DeadlockPlayer({
    */
   const carrera = useHeroStats(id);
   /** El rango partida por partida, para marcar en cuál ascendió. */
-  const [pasos, setPasos] = useState<Map<number, RankStep>>(new Map());
+  /**
+   * El rango después de cada clasificatoria, un pedido por perfil. De acá salen
+   * las marcas de ascenso del historial Y el gráfico de rango en el tiempo:
+   * los pasos se derivan en memoria, no se piden dos veces.
+   */
+  const [serie, setSerie] = useState<RankPoint[]>([]);
+  const pasos = useMemo(() => rankSteps(serie), [serie]);
 
   useEffect(() => {
     if (!id || !Number.isFinite(id)) {
@@ -509,10 +516,10 @@ export default function DeadlockPlayer({
       () => undefined
     );
     // El rango partida por partida. Falla en silencio: sin esto el historial se
-    // dibuja igual, sólo sin las marcas de ascenso.
-    setPasos(new Map());
-    fetchRankSteps(id).then(
-      (p) => vivo && setPasos(p),
+    // dibuja igual, sólo sin las marcas de ascenso, y el gráfico no aparece.
+    setSerie([]);
+    fetchMmrHistory(id).then(
+      (s) => vivo && setSerie(s),
       () => undefined
     );
     return () => {
@@ -849,6 +856,11 @@ export default function DeadlockPlayer({
                 <Profile account={cuenta} resumen={resumen} rank={rango} rankReady={rangoListo} world={world} />
               </div>
             )}
+
+            {/* Pegado a la ficha porque es su continuación: arriba dice dónde
+                estás, esto dice de dónde venís. Sólo con dos clasificatorias o
+                más; con una no hay línea. */}
+            <DeadlockRankTrail points={serie} />
 
             {/* Va arriba de la forma reciente a propósito: "sos el #56 del
                 mundo con Abrams" es más fuerte que "ganaste 2 seguidas", y en el

@@ -778,6 +778,24 @@ const EN = {
         },
       },
       /**
+       * "Rango en el tiempo": tu rango después de cada clasificatoria. El par
+       * de `profile.lp` de TFT, con el neto en subniveles y no en LP.
+       */
+      rankHistory: {
+        title: "Rank over time",
+        lead: "Your rank after every ranked match this season. Each dot is one match.",
+        net: (n: number) =>
+          n === 0
+            ? "No change"
+            : `${n > 0 ? "+" : "−"}${Math.abs(n)} ${Math.abs(n) === 1 ? "sub-rank" : "sub-ranks"}`,
+        since: (matches: number, day: string) =>
+          `over ${matches} ranked ${matches === 1 ? "match" : "matches"} since ${day}`,
+        /** Sólo cuando el pico quedó atrás: si estás en él, ya se ve. */
+        peak: (rank: string) => `Peak ${rank}`,
+        point: (rank: string, day: string) => `${rank} · ${day}`,
+        alt: (first: string, last: string) => `Rank over time, from ${first} to ${last}.`,
+      },
+      /**
        * La etiqueta del puesto mundial, al lado del rango.
        *
        * `worldTagLabel` es la palabra corta que precede al número: sin ella,
@@ -2310,6 +2328,19 @@ const ES: typeof EN = {
           deaths: "Muertes por partida",
           accuracy: "Precisión",
         },
+      },
+      rankHistory: {
+        title: "Rango en el tiempo",
+        lead: "Tu rango después de cada clasificatoria de esta temporada. Cada punto es una partida.",
+        net: (n: number) =>
+          n === 0
+            ? "Sin cambios"
+            : `${n > 0 ? "+" : "−"}${Math.abs(n)} ${Math.abs(n) === 1 ? "subnivel" : "subniveles"}`,
+        since: (matches: number, day: string) =>
+          `en ${matches} ${matches === 1 ? "clasificatoria" : "clasificatorias"} desde el ${day}`,
+        peak: (rank: string) => `Pico: ${rank}`,
+        point: (rank: string, day: string) => `${rank} · ${day}`,
+        alt: (first: string, last: string) => `Rango en el tiempo, de ${first} a ${last}.`,
       },
       worldTagLabel: "Mundo",
       worldTagTitle: (of: string, min: number) =>

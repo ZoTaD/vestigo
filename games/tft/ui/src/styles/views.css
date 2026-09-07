@@ -380,6 +380,23 @@
   padding-right: 0;
 }
 
+/* El perfil y el informe de partida no son `.deadlock` sino `.tool`, y les
+   pasaba lo mismo al revés: la cabecera con aire y el buscador pegado al borde,
+   17 px a la izquierda del título. Misma regla, mismo contenedor de 1400. */
+[data-theme="codex"] .tool {
+  max-width: var(--col);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--pad);
+  padding-right: var(--pad);
+}
+
+[data-theme="codex"] .tool .sechead,
+[data-theme="codex"] .tool .page {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* TFT · controles de Unidades, Ítems y Ladder ----------------------------------- */
 
 .tft-controls {
@@ -623,4 +640,133 @@
   justify-self: end;
   font-size: 0.7rem;
   color: var(--text-dim);
+}
+
+/* Deadlock · Jugador · rango en el tiempo ------------------------------------------ */
+
+.dl-trail-lead {
+  font-size: 0.74rem;
+}
+
+/* La cifra en el par bueno/malo; la frase de al lado en tinta de texto, para
+   que el color nunca haga falta para saber qué significa el número. */
+.dl-trail-net {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.5rem;
+  margin: 0.5rem 0 0;
+}
+
+.dl-trail-net b {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-trail-net[data-trend="up"] b {
+  color: var(--good);
+}
+
+.dl-trail-net[data-trend="down"] b {
+  color: var(--bad);
+}
+
+.dl-trail-net span {
+  font-size: 0.74rem;
+  color: var(--text-dim);
+}
+
+.dl-trail-plot {
+  position: relative;
+  height: 72px;
+  margin: 0.8rem 0 0.3rem;
+}
+
+.dl-trail-chart {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Una sola serie, un solo color: el acento. El trazo se declara en unidades
+   del viewBox y `vector-effect` lo salva del estirado. */
+.dl-trail-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Donde empieza una división: punteada y en el color de las líneas, no del
+   rango, para que no compita con la serie. */
+.dl-trail-cut {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.dl-trail-cut-label {
+  position: absolute;
+  transform: translateY(-100%);
+  padding-bottom: 2px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  pointer-events: none;
+}
+
+.dl-trail-cut-label[data-side="right"] {
+  right: 0;
+}
+
+.dl-trail-cut-label[data-side="left"] {
+  left: 0;
+}
+
+/* Un anillo de fondo alrededor de cada punto, para que uno que cae sobre la
+   línea siga leyéndose como punto. */
+.dl-trail-dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--accent-lit);
+  box-shadow: 0 0 0 1.5px var(--bg);
+}
+
+.dl-trail-dot.is-end {
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+}
+
+.dl-trail-dot.is-peak {
+  background: var(--text);
+}
+
+/* Rótulos directos en las puntas, y el pico entre las dos si quedó atrás. */
+.dl-trail-ends {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.dl-trail-peak {
+  color: var(--text);
 }
