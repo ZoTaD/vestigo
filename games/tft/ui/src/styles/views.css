@@ -429,3 +429,74 @@
 [data-theme="codex"] .tft-profile-aside .player-head {
   margin: 0;
 }
+
+/* Deadlock · Jugador · ranking mundial por héroe --------------------------------- */
+
+.dl-placing-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dl-placing-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 40px;
+  padding: 0.25rem 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.84rem;
+}
+
+.dl-placing-rows > li:first-child {
+  border-top: 0;
+}
+
+.dl-placing-row img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: var(--surface-2);
+}
+
+.dl-placing-hero {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dl-placing-place {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-placing-place small {
+  font-family: var(--font-text);
+  font-weight: 500;
+  font-size: 0.66rem;
+  color: var(--text-dim);
+  margin-left: 0.1em;
+}
+
+/* El metal, en el número y no en un borde: oro, plata, bronce. */
+.dl-placing-row[data-metal="gold"] .dl-placing-place {
+  color: #f0d391;
+}
+
+.dl-placing-row[data-metal="silver"] .dl-placing-place {
+  color: #d6d6d6;
+}
+
+.dl-placing-row[data-metal="bronze"] .dl-placing-place {
+  color: #d29a63;
+}

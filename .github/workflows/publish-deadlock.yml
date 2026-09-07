@@ -188,12 +188,26 @@ jobs:
       #
       # No pierde nada: el top 100 de cada heroe no cambia de una hora a la otra.
       # Va a las 00:30, que es la corrida que no tenia ningun paso caro asignado.
+      # **La puerta es la edad del archivo, no la hora del reloj.** La versión
+      # anterior corría sólo si `date -u +%H` daba "00", y GitHub retrasa las
+      # corridas programadas: la de las 00:30 arrancaba a las 04:58 o 05:05, así
+      # que la condición no se cumplió ni una vez y el archivo quedó clavado en
+      # el 2026-08-21 durante 17 días. Medido el 2026-09-07: el podio en vivo de
+      # la pestaña decía #1 con Abrams a un jugador que en el perfil ni figuraba.
       - name: build hero ladder
         run: |
-          if [ "$(date -u +%H)" = "00" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/heroLadder.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "la escalera por heroe tiene ${edad_h}h; se regenera"
             npm run build:ladder --prefix games/deadlock/pipeline
           else
-            echo "la escalera por heroe corre una vez por dia (00:30 UTC); esta corrida la saltea"
+            echo "la escalera por heroe tiene ${edad_h}h (< 20); esta corrida la saltea"
           fi
 
       # La curva de maestría, **una vez por día y no en cada corrida**.

@@ -172,13 +172,16 @@ async function topOf(heroId: number): Promise<number[]> {
      * misma regla que el resto del sitio usa para los huecos. Un jugador del que
      * no sabemos el rango no puede encabezar un ranking de rango.
      */
-    .sort(
-      (a, b) =>
-        b.heroRank - a.heroRank ||
-        b.heroScore - a.heroScore ||
-        b.score - a.score ||
-        b.matches - a.matches
-    )
+    /**
+     * **El mismo orden que `byMerit` en `deadlockLadder.ts`**: puntaje del
+     * juego, luego el piso de Wilson, luego partidas. Antes ordenaba primero
+     * por el rango (`heroRank`), que la pestaña no mira: con el rango como
+     * primer criterio, dos jugadores con la misma insignia se ordenaban distinto
+     * acá y en el podio en vivo. Si este orden y el de la pestaña divergen, un
+     * jugador se ve #1 en un lado y #3 en el otro, que es lo que pasó el
+     * 2026-09-07 (agravado porque el archivo llevaba 17 días sin regenerarse).
+     */
+    .sort((a, b) => b.heroScore - a.heroScore || b.score - a.score || b.matches - a.matches)
     .slice(0, TOP)
     .map((r) => r.id);
 }

@@ -319,20 +319,25 @@ function HeroPlacings({ placings }: { placings: HeroPlacing[] }) {
     <div className="dl-card">
       <h2 className="dl-card-title">{c.cards.placings}</h2>
       <p className="detail-note dl-placings-note">{c.placingsLead(placings.length)}</p>
-      <ul className="dl-placings">
+      {/* Filas y no una grilla de retratos con el número encima: "sos el #1 del
+          mundo con Abrams" es una frase, y se lee como tal — héroe, puesto, y
+          de cuántos. Los tres primeros llevan su metal en el número. */}
+      <ol className="dl-placing-rows">
         {placings.map((p) => {
           const n = heroName(p.heroId);
           const nombre = n ? text(n, lang, "") : String(p.heroId);
           return (
-            <li className="dl-placing" key={p.heroId} data-metal={metalOf(p.place) ?? undefined}>
-              <img src={heroImg(p.heroId) ?? ""} alt="" width={40} height={40} loading="lazy" />
-              <span className="dl-placing-num" title={c.placingTitle(nombre, p.place)}>
+            <li className="dl-placing-row" key={p.heroId} data-metal={metalOf(p.place) ?? undefined}>
+              <img src={heroImg(p.heroId) ?? ""} alt="" width={32} height={32} loading="lazy" />
+              <span className="dl-placing-hero">{nombre}</span>
+              <span className="dl-placing-place" title={c.placingTitle(nombre, p.place)}>
                 #{p.place}
+                <small>/100</small>
               </span>
             </li>
           );
         })}
-      </ul>
+      </ol>
     </div>
   );
 }
