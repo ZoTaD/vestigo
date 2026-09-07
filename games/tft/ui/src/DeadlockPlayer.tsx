@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import SectionHead from "./SectionHead";
 import { takePendingSearch } from "./pendingSearch";
+import { rememberProfile } from "./lastProfile";
 import { useCopy, useLang, useLocale, type Lang } from "./i18n";
 import { text } from "./catalog";
 import {
@@ -481,7 +482,12 @@ export default function DeadlockPlayer({
     // La ficha de Steam va aparte y **puede fallar sin llevarse la página**: si
     // no llega, se pierden el avatar y el nombre, no el historial.
     fetchAccount(id).then(
-      (a) => vivo && setCuenta(a),
+      (a) => {
+        if (!vivo) return;
+        setCuenta(a);
+        // Para la portada: "último visto", a un clic.
+        if (a?.name) rememberProfile({ accountId: id, name: a.name });
+      },
       () => undefined
     );
     setRango(null);

@@ -177,7 +177,7 @@ function Shell({
       <Nav active={place} route={route} onNavigate={navigate} />
 
       {place === "home" && (
-        <Home onTft={goSection} onDeadlock={() => goPlace("deadlock")} />
+        <Home route={route} navigate={navigate} />
       )}
 
       {place === "deadlock" && (
