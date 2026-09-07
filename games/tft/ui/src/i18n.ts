@@ -1023,6 +1023,14 @@ const EN = {
         "Season 1 reset every rank on July 30. This is the ladder rebuilding itself, " +
         "day by day — how many players sit at each rank, and where the games are being played.",
       view: { matches: "Matches", players: "Players" },
+      /** "¿Dónde estás vos?": la pregunta que trae a la gente a una página de rangos. */
+      mine: {
+        title: "Where are you?",
+        pick: "Your rank",
+        none: "Pick your rank to see how many players sit below it.",
+        above: (n: string) => `of the ${n} ranked players measured today sit below you`,
+        sub: (tier: string, sub: number) => `${tier} ${sub}`,
+      },
       viewNote: {
         matches: "Where the games are being played, from each lobby's average rank.",
         players: "How many players we have seen at each rank, counted once, at their latest one.",
@@ -1208,6 +1216,8 @@ const EN = {
       /** La base contra la que se resta, dicha en el encabezado del grupo. */
       baseline: (pct: string) => `anything at this price wins ${pct}`,
       slots: { weapon: "Weapon", vitality: "Vitality", spirit: "Spirit" },
+      /** El chip que apaga el filtro por estante. */
+      allSlots: "All",
       /**
        * Qué da el ítem. Son los nombres de las cinco familias, no vocabulario de
        * ítem — el vocabulario sigue bajándose. El ícono es el del propio juego.
@@ -2418,6 +2428,13 @@ const ES: typeof EN = {
         "La Temporada 1 reinició todos los rangos el 30 de julio. Esto es la escalera " +
         "reconstruyéndose, día a día: cuánta gente hay en cada escalón y a qué nivel se juega.",
       view: { matches: "Partidas", players: "Jugadores" },
+      mine: {
+        title: "¿Dónde estás vos?",
+        pick: "Tu rango",
+        none: "Elegí tu rango para ver cuánta gente tenés abajo.",
+        above: (n: string) => `de los ${n} jugadores clasificados medidos hoy están por debajo tuyo`,
+        sub: (tier: string, sub: number) => `${tier} ${sub}`,
+      },
       viewNote: {
         matches: "A qué nivel se están jugando las partidas, según el promedio de cada sala.",
         players: "Cuánta gente vimos en cada rango, contada una sola vez, en el último que le conocemos.",
@@ -2513,6 +2530,7 @@ const ES: typeof EN = {
       costGroup: (cost, n) => `${cost} almas, ${n} objetos`,
       baseline: (pct) => `cualquiera de este precio gana ${pct}`,
       slots: { weapon: "Arma", vitality: "Vitalidad", spirit: "Espíritu" },
+      allSlots: "Todos",
       types: {
         bullet_damage: "Daño de arma",
         tech_damage: "Daño de espíritu",

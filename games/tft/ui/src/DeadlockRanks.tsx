@@ -49,6 +49,8 @@ export default function DeadlockRanks() {
   const locale = useLocale();
   const file = useRanks();
   const [view, setView] = useState<RankView>("players");
+  /** El rango del visitante (badge = rango×10 + subrango), si lo eligió. */
+  const [mine, setMine] = useState<number | null>(null);
 
   const n = (v: number) => v.toLocaleString(locale);
 
@@ -87,6 +89,52 @@ export default function DeadlockRanks() {
           </span>
         }
       />
+
+      {/**
+       * "¿Dónde estás vos?": la pregunta que trae a la gente a una página de
+       * rangos, y la que convierte la distribución en algo para compartir. El
+       * porcentaje sale de los mismos `bins` que dibujan el histograma: cuántos
+       * jugadores clasificados hay por debajo del rango elegido.
+       */}
+      <section className="box dl-mine">
+        <div className="box-head">
+          <h2 className="box-title">{t.mine.title}</h2>
+        </div>
+        <div className="dl-mine-row">
+          <label className="field is-select">
+            <span className="field-label">{t.mine.pick}</span>
+            <select
+              aria-label={t.mine.pick}
+              value={mine ?? ""}
+              onChange={(e) => setMine(e.target.value ? Number(e.target.value) : null)}
+            >
+              <option value="">—</option>
+              {catalog.ranks
+                .filter((r) => r.tier > 0)
+                .flatMap((r) =>
+                  [1, 2, 3, 4, 5, 6].map((sub) => (
+                    <option key={r.tier * 10 + sub} value={r.tier * 10 + sub}>
+                      {t.mine.sub(text(r.name, lang, String(r.tier)), sub)}
+                    </option>
+                  ))
+                )}
+            </select>
+          </label>
+          {mine === null ? (
+            <p className="dl-mine-answer is-empty">{t.mine.none}</p>
+          ) : (
+            (() => {
+              const total = file.bins.reduce((s, b) => s + b.players, 0);
+              const below = file.bins.filter((b) => b.badge < mine).reduce((s, b) => s + b.players, 0);
+              return (
+                <p className="dl-mine-answer">
+                  <b>{pct(total ? below / total : 0)}</b> {t.mine.above(n(total))}
+                </p>
+              );
+            })()
+          )}
+        </div>
+      </section>
 
       {/* El cartel sólo aplica a la vista por jugador: las partidas traen el
           promedio de la sala, que cubre el 100% de la muestra. */}

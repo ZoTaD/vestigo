@@ -250,6 +250,8 @@ export default function DeadlockItems({
    * abiertos también cuando mirás Arcanista.
    */
   const [abiertos, setAbiertos] = useState<Set<number>>(() => new Set(OPEN_COSTS));
+  /** El estante elegido (arma, vitalidad, espíritu), o todos. */
+  const [slot, setSlot] = useState<Slot | null>(null);
   const alternar = (cost: number) =>
     setAbiertos((prev) => {
       const next = new Set(prev);
@@ -306,9 +308,30 @@ export default function DeadlockItems({
          */
         <div className="dl-split">
           <div className="tiers dl-split-list">
+            {/* Todo lo que la lista muestra se puede filtrar (Baymard): el
+                estante de cada ítem ya iba como chip en la fila; acá manda. */}
+            <div className="chips dl-slot-chips" role="group" aria-label={c.allSlots}>
+              <button type="button" className="chip" data-active={slot === null} onClick={() => setSlot(null)}>
+                {c.allSlots}
+              </button>
+              {(["weapon", "vitality", "spirit"] as Slot[]).map((s) => (
+                <button
+                  type="button"
+                  key={s}
+                  className="chip"
+                  data-slot={s}
+                  data-active={slot === s}
+                  onClick={() => setSlot(slot === s ? null : s)}
+                >
+                  <img src={typeIconUrl(s === "weapon" ? "bullet_damage" : s === "vitality" ? "health" : "tech_damage")} alt="" width={18} height={18} />
+                  {c.slots[s]}
+                </button>
+              ))}
+            </div>
+
             {COSTS.map((cost) => {
               const delGrupo = meta.items
-                .filter((i) => i.cost === cost)
+                .filter((i) => i.cost === cost && (slot === null || i.slot === slot))
                 .sort(
                   (a, b) =>
                     TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier) || b.delta - a.delta

@@ -236,6 +236,8 @@ export default function DeadlockPlayerLadder({
   /** El héroe del podio. Arranca en el primero del catálogo, no en ninguno. */
   const [hero, setHero] = useState<number | null>(null);
   const [podio, setPodio] = useState<LadderRow[]>([]);
+  /** Filtro por nombre sobre la tabla ya bajada: cero pedidos. */
+  const [q, setQ] = useState("");
   const [cargandoPodio, setCargandoPodio] = useState(false);
 
   /**
@@ -311,6 +313,16 @@ export default function DeadlockPlayerLadder({
 
           {ladder && !ladder.thin && (
             <>
+              <label className="field dl-ladder-search">
+                <input
+                  type="search"
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder={copy.shell.search}
+                  aria-label={copy.shell.search}
+                  autoComplete="off"
+                />
+              </label>
               <div className="dl-ladder-head">
                 <span className="dl-ladder-pos">{c.cols.rank}</span>
                 <span className="dl-ladder-country" aria-hidden="true" />
@@ -324,7 +336,9 @@ export default function DeadlockPlayerLadder({
                 <span className="dl-ladder-matches">{c.cols.matches}</span>
               </div>
               <ol className="dl-ladder-list">
-                {ladder.rows.map((row) => (
+                {ladder.rows
+                  .filter((row) => !q.trim() || (row.name ?? "").toLowerCase().includes(q.trim().toLowerCase()))
+                  .map((row) => (
                   <LadderRowView
                     key={row.accountId}
                     row={row}
