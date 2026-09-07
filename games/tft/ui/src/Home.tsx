@@ -1,14 +1,10 @@
 import { useState, type FormEvent } from "react";
-import compsJson from "@data/comps.json";
 import heroesJson from "@deadlock/heroes.json";
-import { catalog } from "./catalog";
-import { buildComps } from "./data";
-import { DEFAULT_BAND } from "./bands";
 import { buildHeroes, patchMovers, PUBLISHED_BAND, type Hero } from "./deadlockData";
 import { buildItems as buildDlItems } from "./deadlockItemsData";
-import { buildItems as buildTftItems } from "./itemsData";
-import { comps as compSlugs, items as tftItemSlugs, compName } from "./slugs";
 import { heroes as heroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
+import { text } from "./localized";
+import { tftSummary } from "./tftSummary";
 import { useCopy, useLang, useLocale } from "./i18n";
 import { lastProfile } from "./lastProfile";
 import { storedSearch } from "./lastSearch";
@@ -67,13 +63,10 @@ export default function Home({
   );
 
   /* --- Hoy en el meta: TFT --------------------------------------------- */
-  const comps = buildComps(DEFAULT_BAND, lang);
-  const bestComp = comps[0] ?? null;
-  const tftItems = buildTftItems(lang);
-  const bestTftItem = tftItems.reduce<(typeof tftItems)[number] | null>(
-    (b, i) => (!b || i.delta < b.delta ? i : b),
-    null
-  );
+  // Lo poco de TFT que la portada necesita viene resumido del build
+  // (`tftSummary.ts`): la portada no importa las comps ni el catálogo.
+  const bestComp = tftSummary.best;
+  const bestTftItem = tftSummary.bestItem;
 
   const bandName = copy.deadlock.bands[PUBLISHED_BAND];
 
@@ -95,8 +88,8 @@ export default function Home({
   const lastTft = storedSearch();
 
   /* --- Cifras del pie ---------------------------------------------------- */
-  const matchesRead = compsJson.sampleSize + heroesJson.matches;
-  const measured = [compsJson.generatedAt, heroesJson.generatedAt]
+  const matchesRead = tftSummary.sampleSize + heroesJson.matches;
+  const measured = [tftSummary.generatedAt, heroesJson.generatedAt]
     .map((d) => Date.parse(d))
     .filter((t) => !Number.isNaN(t));
   const days = measured.length
@@ -271,19 +264,19 @@ export default function Home({
             <li className="today-card" data-game="tft">
               <RouteLink
                 className="today-link"
-                to={{ ...route, view: "tft", section: "meta", detail: compSlugs.toSlug.get(bestComp.id) }}
+                to={{ ...route, view: "tft", section: "meta", detail: bestComp.slug }}
                 onNavigate={navigate}
               >
                 <span className="today-kicker">
                   {copy.games.tftShort} · {copy.home.today.bestComp}
                 </span>
                 <span className="today-body">
-                  <span className="today-name">{compName(bestComp)}</span>
+                  <span className="today-name">{text(bestComp.name, lang)}</span>
                 </span>
                 <span className="today-figure">
                   <b>{place(bestComp.avgPlacement)}</b>
                   <small>
-                    {copy.home.today.placement} · {copy.home.today.set(String(catalog.set))}
+                    {copy.home.today.placement} · {copy.home.today.set(tftSummary.set)}
                   </small>
                 </span>
               </RouteLink>
@@ -294,7 +287,7 @@ export default function Home({
             <li className="today-card" data-game="tft">
               <RouteLink
                 className="today-link"
-                to={{ ...route, view: "tft", section: "items", detail: tftItemSlugs.toSlug.get(bestTftItem.id) }}
+                to={{ ...route, view: "tft", section: "items", detail: bestTftItem.slug }}
                 onNavigate={navigate}
               >
                 <span className="today-kicker">
@@ -302,7 +295,7 @@ export default function Home({
                 </span>
                 <span className="today-body">
                   {bestTftItem.img && <img src={bestTftItem.img} alt="" width={48} height={48} loading="lazy" />}
-                  <span className="today-name">{bestTftItem.name}</span>
+                  <span className="today-name">{text(bestTftItem.name, lang)}</span>
                 </span>
                 <span className="today-figure">
                   <b>{place(bestTftItem.avgPlacement)}</b>
@@ -329,7 +322,7 @@ export default function Home({
                   to={{ ...route, view: "tft", section: "meta", detail: undefined }}
                   onNavigate={navigate}
                 >
-                  {copy.home.games.tftCta(String(catalog.set), num(comps.length))}
+                  {copy.home.games.tftCta(tftSummary.set, num(tftSummary.compsCount))}
                   <Arrow />
                 </RouteLink>
                 <RouteLink
@@ -344,11 +337,11 @@ export default function Home({
             <div className="game-panel-figures">
               <p className="game-figure">
                 <b>{bestComp ? place(bestComp.avgPlacement) : "—"}</b>
-                <span>{copy.home.figures.placement(bestComp ? compName(bestComp) : "")}</span>
+                <span>{copy.home.figures.placement(bestComp ? text(bestComp.name, lang) : "")}</span>
               </p>
               <p className="game-figure is-second">
-                <b>{num(compsJson.sampleSize)}</b>
-                <span>{copy.home.figures.matchesSet(String(catalog.set))}</span>
+                <b>{num(tftSummary.sampleSize)}</b>
+                <span>{copy.home.figures.matchesSet(tftSummary.set)}</span>
               </p>
             </div>
           </li>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { catalog } from "./deadlockData";
-import { text, type Localized } from "./catalog";
+import { text, type Localized } from "./localized";
 import type { Lang } from "./i18n";
 import { type Items, type ReportFile } from "./deadlockAdvice";
 

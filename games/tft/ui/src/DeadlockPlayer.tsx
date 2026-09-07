@@ -3,7 +3,7 @@ import SectionHead from "./SectionHead";
 import { takePendingSearch } from "./pendingSearch";
 import { lastProfile, rememberProfile } from "./lastProfile";
 import { useCopy, useLang, useLocale, type Lang } from "./i18n";
-import { text } from "./catalog";
+import { text } from "./localized";
 import {
   searchAccounts,
   fetchHistory,

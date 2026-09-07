@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from "node:url";
 import { devApi } from "./dev-api";
 import { ROBOTS_TXT, sitemapXml, type SitemapData } from "./src/sitemap";
 import { prerenderPages, renderHtml } from "./src/prerender";
-import { parseRoute, type Route } from "./src/route";
+import { parseRoute, slugify, type Route } from "./src/route";
 import { COPY } from "./src/i18n";
 
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
@@ -75,6 +75,61 @@ function seoFiles(): Plugin {
  * el JS y el CSS que carga son los mismos y la app arranca igual. Netlify sirve
  * un archivo real antes de consultar el redirect de SPA.
  */
+/**
+ * `virtual:tft-summary`: lo poco de TFT que la portada necesita, calculado
+ * acá en Node y no importado en el navegador (ver `src/tftSummary.ts`).
+ * Sin `apply`: corre en dev, en build y en vitest, que cargan esta config.
+ */
+function tftSummary(): Plugin {
+  const id = "virtual:tft-summary";
+  const resolved = "\0" + id;
+  const read = (name: string) => JSON.parse(readFileSync(`${dataDir}/${name}`, "utf-8"));
+  return {
+    name: "vestigo-tft-summary",
+    resolveId(source) {
+      return source === id ? resolved : null;
+    },
+    load(source) {
+      if (source !== resolved) return null;
+      const catalog = read("catalog.json");
+      const comps = read("comps.json");
+      const items = read("items.json");
+      type L = { en: string; es: string };
+      const name = (l: L | undefined, fallback: string): L => ({ en: l?.en || fallback, es: l?.es || l?.en || fallback });
+      const strip = (s: string) => s.replace(/^TFT\d+_/, "");
+      const c0 = comps.comps[0];
+      const best = c0
+        ? (() => {
+            const parts: L[] = [name(catalog.traits[c0.trait]?.name, strip(c0.trait))].concat(
+              (c0.carries as string[]).map((cid) => name(catalog.champions[cid]?.name, strip(cid)))
+            );
+            const en = parts.map((p) => p.en).filter(Boolean).join(" ");
+            const es = parts.map((p) => p.es).filter(Boolean).join(" ");
+            return { slug: slugify(en), name: { en, es }, avgPlacement: c0.avgPlacement };
+          })()
+        : null;
+      const i0 = (items.items as { id: string; avgPlacement: number; delta: number }[]).reduce<
+        { id: string; avgPlacement: number; delta: number } | null
+      >((b, i) => (!b || i.delta < b.delta ? i : b), null);
+      const bestItem = i0
+        ? (() => {
+            const n = name(catalog.items[i0.id]?.name, strip(i0.id));
+            return { slug: slugify(n.en), name: n, img: catalog.items[i0.id]?.img ?? "", avgPlacement: i0.avgPlacement, delta: i0.delta };
+          })()
+        : null;
+      const summary = {
+        set: String(catalog.set ?? ""),
+        generatedAt: comps.generatedAt,
+        sampleSize: comps.sampleSize,
+        compsCount: comps.comps.length,
+        best,
+        bestItem,
+      };
+      return `export default ${JSON.stringify(summary)};`;
+    },
+  };
+}
+
 function prerenderRoutes(): Plugin {
   const read = (name: string) => JSON.parse(readFileSync(`${dataDir}/${name}`, "utf-8"));
 
@@ -141,9 +196,9 @@ function prerenderRoutes(): Plugin {
       const t0 = Date.now();
       try {
         const { renderApp } = (await ssr.ssrLoadModule("/src/entry-server.tsx")) as {
-          renderApp: (route: Route) => string;
+          renderApp: (route: Route) => Promise<string>;
         };
-        for (const page of pages) cuerpos.set(page.path, renderApp(parseRoute(page.path)));
+        for (const page of pages) cuerpos.set(page.path, await renderApp(parseRoute(page.path)));
       } finally {
         // Pase lo que pase: un servidor sin cerrar deja el proceso del build vivo.
         await ssr.close();
@@ -187,7 +242,7 @@ function prerenderRoutes(): Plugin {
 export default defineConfig({
   // devApi stands in for the Supabase Edge Function while developing, speaking
   // the same contract so the UI cannot tell them apart.
-  plugins: [react(), devApi(), seoFiles(), prerenderRoutes()],
+  plugins: [react(), devApi(), tftSummary(), seoFiles(), prerenderRoutes()],
   resolve: {
     // The pipeline writes its output to games/tft/data. The UI reads it directly
     // so there is a single source of truth — no copying, no drift.

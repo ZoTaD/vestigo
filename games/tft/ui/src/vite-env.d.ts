@@ -15,3 +15,12 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+/**
+ * El resumen de TFT para la portada, armado en el build por el plugin
+ * `tftSummary()` de `vite.config.ts`. Tipado en `tftSummary.ts`.
+ */
+declare module "virtual:tft-summary" {
+  const summary: unknown;
+  export default summary;
+}

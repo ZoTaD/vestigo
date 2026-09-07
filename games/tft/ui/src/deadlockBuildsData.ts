@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { useLang, type Lang } from "./i18n";
-import { text, type Localized } from "./catalog";
+import { text, type Localized } from "./localized";
 import { catalog, type BandId } from "./deadlockData";
 import type { Item } from "./deadlockItemsData";
 

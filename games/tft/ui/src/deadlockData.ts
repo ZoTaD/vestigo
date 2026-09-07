@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import catalogJson from "@deadlock/catalog.json";
 import heroesJson from "@deadlock/heroes.json";
 import { useLang, type Lang } from "./i18n";
-import { text, type Localized } from "./catalog";
+import { text, type Localized } from "./localized";
 
 /**
  * La capa de datos de Deadlock: la tier list de héroes, por banda y por idioma.

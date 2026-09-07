@@ -3,7 +3,7 @@ import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import SectionHead from "./SectionHead";
 import { useCopy, useLocale, useLang } from "./i18n";
-import { text } from "./catalog";
+import { text } from "./localized";
 import { type DeadlockSection } from "./route";
 import DeadlockBuildCard from "./DeadlockBuildCard";
 import DeadlockMastery from "./DeadlockMastery";

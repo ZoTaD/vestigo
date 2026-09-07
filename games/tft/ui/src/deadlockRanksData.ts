@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { catalog } from "./deadlockData";
 import { ROMAN } from "./deadlockReportData";
-import { text } from "./catalog";
+import { text } from "./localized";
 import type { Lang } from "./i18n";
 
 /**

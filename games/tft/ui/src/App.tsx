@@ -1,13 +1,9 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Nav, { type Place } from "./Nav";
 import RouteLink from "./RouteLink";
 import SectionHead from "./SectionHead";
 import Home from "./Home";
-import MetaView from "./MetaView";
-import UnitsView from "./UnitsView";
-import ItemsView from "./ItemsView";
-import LadderView from "./LadderView";
-import PlayerView from "./PlayerView";
+import { lazyWithPreload } from "./lazyWithPreload";
 import Deadlock from "./Deadlock";
 import DeadlockItems from "./DeadlockItems";
 import DeadlockRanks from "./DeadlockRanks";
@@ -50,6 +46,14 @@ import {
 } from "./route";
 import { DEFAULT_BAND, rememberBand, storedBand } from "./bands";
 import PageMeta from "./PageMeta";
+
+/**
+ * TFT entero, cargado bajo demanda (2026-09-07): sus cinco vistas y sus datos
+ * —casi un megabyte— dejan de viajar a la portada y a Deadlock. El prerender
+ * llama a `preloadAreas()` antes de renderizar (ver `entry-server.tsx`).
+ */
+const TftArea = lazyWithPreload(() => import("./TftArea"));
+export const preloadAreas = (): Promise<void> => TftArea.preload();
 
 /**
  * The shell: where you are, and the disclaimer under everything.
@@ -255,57 +259,9 @@ function Shell({
       {place === "terms" && <Terms />}
 
       {place === "tft" && (
-        <>
-          <div className="subnav-wrap">
-            <nav className="subnav" aria-label={copy.games.tft}>
-              {SECTIONS.map((id) => (
-                <RouteLink
-                  className="subnav-item"
-                  key={id}
-                  to={{ ...route, view: "tft", section: id, detail: undefined }}
-                  active={section === id}
-                  onNavigate={navigate}
-                >
-                  {copy.sections[id]}
-                </RouteLink>
-              ))}
-            </nav>
-          </div>
-
-          {section === "meta" && (
-            <MetaView
-              band={route.band ?? DEFAULT_BAND}
-              // Changing rank drops the open comp: the comp you had expanded
-              // may not exist in the band you just switched to.
-              onBand={(next) => {
-                rememberBand(next);
-                navigate({ ...route, view: "tft", section: "meta", band: next, detail: undefined });
-              }}
-              open={detail}
-              onOpen={(slug) => goDetail("meta", slug)}
-            />
-          )}
-          {section === "units" && (
-            <UnitsView open={detail} onOpen={(slug) => goDetail("units", slug)} />
-          )}
-          {section === "items" && (
-            <ItemsView open={detail} onOpen={(slug) => goDetail("items", slug)} />
-          )}
-          {section === "ladder" && <LadderView />}
-          {section === "player" && (
-            <>
-              <SectionHead
-                eyebrow={copy.games.tft}
-                title={copy.player.title}
-                accent={copy.player.titleBreak}
-                lead={copy.player.standfirst}
-              />
-              <main className="page">
-                <PlayerView />
-              </main>
-            </>
-          )}
-        </>
+        <Suspense fallback={<main className="page" aria-busy="true" />}>
+          <TftArea route={route} navigate={navigate} />
+        </Suspense>
       )}
 
       {/* One centred column, in the order someone reads it: where to go, where

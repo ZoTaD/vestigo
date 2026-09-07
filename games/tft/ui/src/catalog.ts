@@ -13,11 +13,11 @@ import { useLang, type Lang } from "./i18n";
  * the catalog stayed English while the rest of the site switched.
  */
 
-/** A string in every language the site speaks. */
-export interface Localized {
-  en: string;
-  es: string;
-}
+// `Localized` y `text` viven en `localized.ts` desde el 2026-09-07, para que
+// los módulos de Deadlock puedan usarlos sin arrastrar el catálogo de TFT
+// (466 KB) a cada página. Se re-exportan acá para que TFT no cambie.
+import { text, type Localized } from "./localized";
+export { text, type Localized };
 
 export interface CatalogFile {
   set: string;
@@ -31,17 +31,6 @@ export interface CatalogFile {
 }
 
 export const catalog = catalogJson as unknown as CatalogFile;
-
-/**
- * One language out of a translated field.
- *
- * Falls back to English and then to the caller's own fallback — usually the id
- * with its set prefix stripped — so a catalog gap shows a rough name instead of
- * an empty cell.
- */
-export function text(field: Localized | undefined, lang: Lang, fallback = ""): string {
-  return field?.[lang] || field?.en || fallback;
-}
 
 /**
  * Wraps a per-language builder so each language is computed once and reused.

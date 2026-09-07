@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
 import itemsJson from "@deadlock/items.json";
 import { useLang, type Lang } from "./i18n";
-import { text, type Localized } from "./catalog";
+import { text, type Localized } from "./localized";
 import { catalog, PUBLISHED_BAND, type BandId } from "./deadlockData";
 
 /**

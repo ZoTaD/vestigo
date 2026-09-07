@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import SectionHead from "./SectionHead";
 import { useCopy, useLang, useLocale, type Lang } from "./i18n";
-import { text } from "./catalog";
+import { text } from "./localized";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import {

@@ -764,7 +764,8 @@ const EN = {
           `Your ranked averages this season against players in ${band} lobbies. The dot is you; the tick is the band's median.`,
         loading: "Measuring your band…",
         failed: "Could not measure your band right now.",
-        betterThan: (pct: number) => `better than ${pct}%`,
+        /** Por debajo de la mediana se dice al revés: "mejor que el 32 %" suena a elogio y es lo contrario. */
+        betterThan: (pct: number) => (pct >= 50 ? `better than ${pct}%` : `worse than ${100 - pct}%`),
         median: (v: string) => `median ${v}`,
         note: "Percentiles are interpolated from the band's published distribution (DDSketch, ≤1% relative error).",
         metrics: {
@@ -2298,7 +2299,7 @@ const ES: typeof EN = {
           `Tus promedios en clasificatorias de esta temporada contra los jugadores de salas ${band}. El punto sos vos; la marca es la mediana de la banda.`,
         loading: "Midiendo tu banda…",
         failed: "No se pudo medir tu banda ahora.",
-        betterThan: (pct: number) => `mejor que el ${pct} %`,
+        betterThan: (pct: number) => (pct >= 50 ? `mejor que el ${pct} %` : `peor que el ${100 - pct} %`),
         median: (v: string) => `mediana ${v}`,
         note: "Los percentiles se interpolan de la distribución publicada de la banda (DDSketch, error relativo ≤ 1 %).",
         metrics: {

@@ -1,10 +1,7 @@
 import { useEffect } from "react";
 import { useCopy, useLang } from "./i18n";
-import { catalog, text } from "./catalog";
 import { LANGS, SITE_ORIGIN, routeUrl, type Route } from "./route";
-import { units as unitSlugs, items as itemSlugs, compSlugs, compName } from "./slugs";
-import { buildComps } from "./data";
-import { DEFAULT_BAND, type BandId } from "./bands";
+import { tftSummary } from "./tftSummary";
 import { metaFor } from "./prerender";
 import { heroes as dlHeroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
 import { buildHeroes, PUBLISHED_BAND as DL_PUBLISHED_BAND } from "./deadlockData";
@@ -74,7 +71,7 @@ function setAlternates(route: Route) {
 export { titleBand } from "./prerender";
 
 /** The display name behind a detail slug, in the language on screen. */
-function detailName(route: Route, lang: "en" | "es"): string | null {
+function dlDetailName(route: Route, lang: "en" | "es"): string | null {
   if (!route.detail) return null;
   if (route.view === "deadlock") {
     if (route.dlSection === "meta") {
@@ -91,20 +88,6 @@ function detailName(route: Route, lang: "en" | "es"): string | null {
     }
     return null;
   }
-  if (route.section === "units") {
-    const id = unitSlugs.toId.get(route.detail);
-    return id ? text(catalog.champions[id]?.name, lang, route.detail) : null;
-  }
-  if (route.section === "items") {
-    const id = itemSlugs.toId.get(route.detail);
-    return id ? text(catalog.items[id]?.name, lang, route.detail) : null;
-  }
-  if (route.section === "meta") {
-    const band = route.band ?? DEFAULT_BAND;
-    const id = compSlugs(band).toId.get(route.detail);
-    const comp = id ? buildComps(band, lang).find((c) => c.id === id) : undefined;
-    return comp ? compName(comp) : null;
-  }
   return null;
 }
 
@@ -117,7 +100,9 @@ export default function PageMeta({ route }: { route: Route }) {
     // is shared with the build, which writes the same head into static HTML for
     // the scrapers that never run this. Two copies of that chain would be two
     // chances to say different things about the same page.
-    const { title, description } = metaFor(route, lang, catalog.set, detailName(route, lang));
+    let vivo = true;
+    const apply = (detail: string | null) => {
+    const { title, description } = metaFor(route, lang, tftSummary.set, detail);
     const url = routeUrl(route);
 
     document.title = title;
@@ -144,6 +129,20 @@ export default function PageMeta({ route }: { route: Route }) {
     setMeta("name", "twitter:title", title);
     setMeta("name", "twitter:description", description);
     setMeta("name", "twitter:image", `${SITE_ORIGIN}/og.jpg`);
+    };
+    // El nombre del detalle de TFT necesita el catálogo y las comps: se pide
+    // bajo demanda y el título se completa cuando llega. Deadlock es liviano.
+    if (route.view === "tft" && route.detail) {
+      apply(null);
+      void import("./pageMetaTft").then((m) => {
+        if (vivo) apply(m.tftDetailName(route, lang));
+      });
+    } else {
+      apply(dlDetailName(route, lang));
+    }
+    return () => {
+      vivo = false;
+    };
   }, [route, copy, lang]);
 
   return null;
