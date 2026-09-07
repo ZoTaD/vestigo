@@ -628,6 +628,31 @@ const EN = {
 
   deadlock: {
     eyebrow: "Vestigo · Deadlock",
+    /** La página de un héroe, propia desde el rediseño del 2026-09-06. */
+    heroPage: {
+      back: "Back to the tier list",
+      prev: "Previous",
+      next: "Next",
+      rank: (n: string, total: string) => `#${n} of ${total}`,
+      tabs: { build: "Build", skills: "Abilities", buy: "Buy order", counters: "Matchups", mastery: "Mastery" },
+      kpis: { winRate: "Win rate", pickRate: "Pick rate", skillGap: "Skill gap", trend: "Since the patch" },
+    },
+    /** El rail de la tier list: lo que cambió, lo más jugado, el registro. */
+    rail: {
+      movers: "Since the patch",
+      moversLead: "Who moved most, in win-rate points.",
+      moversNone: "No hero moved enough yet to call it a change.",
+      mostPlayed: "Most played",
+      changelog: "Patch log",
+      allPatches: "All patches",
+      legend: "◆ hard · ◇ easy — how much skill pays: win-rate points between the top band and the bottom one.",
+    },
+    next: {
+      label: "Keep reading",
+      items: "Item tier list",
+      profile: "Your profile",
+      topHero: (name: string) => `Why ${name} is S`,
+    },
     title: "Hero",
     titleBreak: " tier list",
     lead:
@@ -2132,6 +2157,29 @@ const ES: typeof EN = {
 
   deadlock: {
     eyebrow: "Vestigo · Deadlock",
+    heroPage: {
+      back: "Volver a la tier list",
+      prev: "Anterior",
+      next: "Siguiente",
+      rank: (n: string, total: string) => `#${n} de ${total}`,
+      tabs: { build: "Build", skills: "Habilidades", buy: "Orden de compra", counters: "Enfrentamientos", mastery: "Maestría" },
+      kpis: { winRate: "Victorias", pickRate: "Uso", skillGap: "Brecha", trend: "Desde el parche" },
+    },
+    rail: {
+      movers: "Desde el parche",
+      moversLead: "Quién se movió más, en puntos de winrate.",
+      moversNone: "Todavía ningún héroe se movió lo suficiente como para llamarlo un cambio.",
+      mostPlayed: "Más jugados",
+      changelog: "Registro de parches",
+      allPatches: "Todos los parches",
+      legend: "◆ difícil · ◇ fácil — cuánto premia saber jugarlo: puntos de winrate entre la banda de arriba y la de abajo.",
+    },
+    next: {
+      label: "Seguir leyendo",
+      items: "Tier list de objetos",
+      profile: "Tu perfil",
+      topHero: (name: string) => `Por qué ${name} es S`,
+    },
     title: "Tier list",
     titleBreak: " de héroes",
     lead:

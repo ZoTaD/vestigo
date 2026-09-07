@@ -238,6 +238,8 @@ function Shell({
             <DeadlockPlayerLadder route={route} navigate={navigate} />
           ) : (
             <Deadlock
+              route={route}
+              navigate={navigate}
               section={route.dlSection}
               band={dlBand}
               picker={dlPicker}

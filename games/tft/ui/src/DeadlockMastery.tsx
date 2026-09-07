@@ -33,7 +33,7 @@ export default function DeadlockMastery({ heroId }: { heroId: number }) {
   const alto = (wr: number) => (techo > piso ? 0.18 + (0.82 * (wr - piso)) / (techo - piso) : 1);
 
   return (
-    <section className="dl-mastery">
+    <section className="dl-mastery" id="dl-mastery">
       <h3 className="dl-mastery-title">{t.title}</h3>
       <p className="detail-note dl-mastery-lead">
         {t.lead(pct(primero.winRate), primero.from, pct(ultimo.winRate), ultimo.from)}

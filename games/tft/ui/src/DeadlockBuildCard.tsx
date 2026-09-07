@@ -218,7 +218,7 @@ function DamageSplit({ build }: { build: BuildView }) {
   const CAP = 28_800;
   return (
     <section className="dl-panel dl-dmg">
-      <h4 className="dl-panel-head">{c.damageSplit}</h4>
+      <h4 className="dl-panel-head" id="dl-build">{c.damageSplit}</h4>
       <ul>
         {filas.map((f) => (
           <li key={f.k} data-kind={f.k}>
@@ -280,7 +280,7 @@ function SkillPath({ build }: { build: BuildView }) {
 
   return (
     <section className="dl-panel dl-path">
-      <h4 className="dl-panel-head">{c.skillPath}</h4>
+      <h4 className="dl-panel-head" id="dl-skills">{c.skillPath}</h4>
       <div className="dl-path-scroll">
         <table className="dl-path-grid">
         <caption className="visually-hidden">{c.skillPathNote}</caption>
@@ -358,7 +358,7 @@ function BuyOrder({ buys }: { buys: BuyView[] }) {
 
   return (
     <section className="dl-panel dl-buyorder">
-      <h4 className="dl-panel-head">{c.buyOrder}</h4>
+      <h4 className="dl-panel-head" id="dl-buy">{c.buyOrder}</h4>
 
       {/* Partido en los tres tramos de la partida en vez de una fila corrida de
           veinte íconos. Con veinte seguidos hay que contar para saber dónde
@@ -642,7 +642,7 @@ export default function DeadlockBuildCard({
             pareja contra cualquiera. */}
         {datos.counters.length > 0 && (
           <section className="dl-panel dl-counters">
-            <h4 className="dl-panel-head">{c.counters}</h4>
+            <h4 className="dl-panel-head" id="dl-counters">{c.counters}</h4>
             <ul className="dl-counter-list">
               {datos.counters.map((x) => (
                 <ConFicha key={x.itemId} item={x} className="dl-counter-item">

@@ -208,15 +208,6 @@
   box-shadow: 0 10px 26px rgba(20, 20, 15, 0.08);
 }
 
-/* Cada tarjeta lleva el color de su juego en el filo de arriba. */
-[data-theme="codex"][data-place="home"] .today-card[data-game="tft"] .today-link {
-  border-top: 3px solid #c9a24a;
-}
-
-[data-theme="codex"][data-place="home"] .today-card[data-game="deadlock"] .today-link {
-  border-top: 3px solid #d4860b;
-}
-
 [data-theme="codex"][data-place="home"] .today-kicker {
   font-weight: 600;
   font-size: 0.6rem;

@@ -1,4 +1,6 @@
-import { useEffect, useRef, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
+import RouteLink from "./RouteLink";
+import type { Route } from "./route";
 import SectionHead from "./SectionHead";
 import { useCopy, useLocale, useLang } from "./i18n";
 import { text } from "./catalog";
@@ -58,19 +60,19 @@ const TIER_ORDER = ["S", "A", "B", "C", "D"];
  */
 function HeroTile({
   hero,
-  open,
-  onToggle,
+  to,
+  onNavigate,
 }: {
   hero: Hero;
-  open: boolean;
-  onToggle: () => void;
+  /** La página del héroe: el tile es un enlace de verdad, no un botón. */
+  to: Route;
+  onNavigate: (route: Route) => void;
 }) {
   const copy = useCopy();
 
   return (
     <li
       className="dl-tile"
-      data-open={open}
       data-thin={hero.thinData === true}
       /**
        * El color propio del héroe, el que usa el juego en su pantalla de
@@ -82,10 +84,10 @@ function HeroTile({
        */
       style={hero.color ? ({ "--dl-hero": hero.color } as CSSProperties) : undefined}
     >
-      <button
+      <RouteLink
         className="dl-tile-btn"
-        onClick={onToggle}
-        aria-expanded={open}
+        to={to}
+        onNavigate={onNavigate}
         aria-label={copy.deadlock.buildCard.toggle(hero.name)}
       >
         <span className="dl-tile-face">
@@ -123,7 +125,7 @@ function HeroTile({
         <span className="dl-tile-name" title={hero.name}>{hero.name}</span>
         <span className="dl-tile-wr">{pct(hero.winRate)}</span>
         <span className="dl-tile-pr">{pct(hero.pickRate)}</span>
-      </button>
+      </RouteLink>
     </li>
   );
 }
@@ -140,7 +142,7 @@ function HeroTile({
  * El enlace sale del propio feed y va al foro oficial. Es la única salida a otro
  * sitio que tiene la página, y es a la fuente.
  */
-function PatchHistory() {
+function PatchHistory({ limit }: { limit?: number } = {}) {
   const copy = useCopy();
   const locale = useLocale();
   const file = usePatches();
@@ -155,7 +157,7 @@ function PatchHistory() {
       <p className="detail-note dl-history-note">{copy.deadlock.patch.nameNote}</p>
 
       <ol className="dl-history-list">
-        {file.patches.map((p, i) => (
+        {file.patches.slice(0, limit ?? file.patches.length).map((p, i) => (
           <li key={p.date} className="dl-history-row" data-current={i === 0 ? "" : undefined}>
             <span className="dl-history-date">{fecha(p.date)}</span>
             <span className="dl-history-name">
@@ -216,129 +218,192 @@ function MoverRow({ hero, rank }: { hero: Hero; rank: number }) {
   );
 }
 
-/**
- * El héroe abierto: su ficha completa y su build.
- *
- * **Es donde vive todo lo que no entra en un tile de 66px** — el puesto, las
- * etiquetas con su texto entero, el pickrate rotulado. Adentro va lo que ya
- * existía en la fila desplegable, sin tocarlo.
- *
- * El `scrollIntoView` es para el teléfono: ahí la banda D se parte en seis
- * renglones y el panel puede abrirse lejos del tile que se apretó. `block:
- * "nearest"` no mueve nada si ya se ve, así que en escritorio no hace nada.
- */
-function HeroPanel({ hero, rank }: { hero: Hero; rank: number }) {
+/** La ruta de la página de un héroe, desde cualquier pestaña. */
+const toHero = (route: Route, h: Hero): Route => ({
+  ...route,
+  view: "deadlock",
+  dlSection: "meta",
+  detail: heroSlugs.toSlug.get(String(h.heroId)),
+});
+
+/** Las cuatro cifras de un héroe, en una fila (Cowan 2001: cuatro, no más). */
+function HeroKpis({ hero }: { hero: Hero }) {
   const copy = useCopy();
-  const caja = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    caja.current?.scrollIntoView({ block: "nearest" });
-  }, []);
-
+  const k = copy.deadlock.heroPage.kpis;
+  const trendKind = hero.trend === undefined ? "" : hero.trend > 0 ? "is-good" : "is-bad";
   return (
-    <div className="dl-band-panel" ref={caja}>
-      <header className="dl-panel-id">
-        <span className="dl-rank">{String(rank).padStart(2, "0")}</span>
-
-        {hero.img && <img className="dl-panel-face" src={hero.img} alt="" width={64} height={64} />}
-
-        <span className="dl-identity">
-          <span className="dl-name">{hero.name}</span>
-          <span className="dl-chips">
-            {hero.difficulty && (
-              <span
-                className="dl-chip"
-                data-kind={hero.difficulty}
-                title={copy.deadlock.why.skillGap(signed(hero.skillGap))}
-              >
-                {copy.deadlock.difficulty[hero.difficulty]}
-              </span>
-            )}
-            {hero.momentum && (
-              <span
-                className="dl-chip"
-                data-kind={hero.momentum}
-                title={copy.deadlock.why.trend(signed(hero.trend))}
-              >
-                <span aria-hidden="true">{hero.momentum === "up" ? "▲" : "▼"}</span>{" "}
-                {copy.deadlock.momentum[hero.momentum]}
-              </span>
-            )}
-            {hero.thinData && (
-              <span className="dl-chip" data-kind="thin" title={copy.deadlock.thinWhy}>
-                {copy.deadlock.thin}
-              </span>
-            )}
-          </span>
-        </span>
-
-        <span className="stats dl-stats">
-          <span className="stat stat-primary">
-            <span className="stat-value">{pct(hero.winRate)}</span>
-            <span className="stat-label">{copy.deadlock.stats.winRate}</span>
-          </span>
-          <span className="stat">
-            <span className="stat-value">{pct(hero.pickRate)}</span>
-            <span className="stat-label">{copy.deadlock.stats.pickRate}</span>
-          </span>
-        </span>
-      </header>
-
-      <DeadlockBuildCard heroId={hero.heroId} heroWinRate={hero.winRate} />
-      <DeadlockMastery heroId={hero.heroId} />
+    <div className="kpis dl-hero-kpis">
+      <div className="kpi is-accent">
+        <span className="kpi-value">{pct(hero.winRate)}</span>
+        <span className="kpi-label">{k.winRate}</span>
+      </div>
+      <div className="kpi">
+        <span className="kpi-value">{pct(hero.pickRate)}</span>
+        <span className="kpi-label">{k.pickRate}</span>
+      </div>
+      <div
+        className="kpi"
+        title={hero.skillGap === undefined ? undefined : copy.deadlock.why.skillGap(signed(hero.skillGap))}
+      >
+        <span className="kpi-value">{hero.skillGap === undefined ? "—" : signed(hero.skillGap)}</span>
+        <span className="kpi-label">{k.skillGap}</span>
+      </div>
+      <div
+        className={`kpi ${trendKind}`}
+        title={hero.trend === undefined ? undefined : copy.deadlock.why.trend(signed(hero.trend))}
+      >
+        <span className="kpi-value">{hero.trend === undefined ? "—" : signed(hero.trend)}</span>
+        <span className="kpi-label">{k.trend}</span>
+      </div>
     </div>
   );
 }
 
 /**
+ * La página de un héroe, propia desde el rediseño del 2026-09-06.
+ *
+ * Antes el detalle se desplegaba debajo de su fila y `/deadlock/viscous`
+ * empezaba con la tier list de los otros 37: quien llegaba desde Google veía
+ * la tier list, no a Viscoso. Ahora: cabecera con cuatro cifras, sub-pestañas
+ * ancladas a las secciones de la build, y al pie el anterior y el siguiente
+ * de la tier list.
+ */
+function HeroPage({
+  hero,
+  heroes,
+  route,
+  navigate,
+  picker,
+  metaLine,
+}: {
+  hero: Hero;
+  heroes: Hero[];
+  route: Route;
+  navigate: (route: Route) => void;
+  picker: React.ReactNode;
+  metaLine: React.ReactNode;
+}) {
+  const copy = useCopy();
+  const hp = copy.deadlock.heroPage;
+  const idx = heroes.indexOf(hero);
+  const prev = idx > 0 ? heroes[idx - 1] : null;
+  const next = idx >= 0 && idx < heroes.length - 1 ? heroes[idx + 1] : null;
+  const back: Route = { ...route, view: "deadlock", dlSection: "meta", detail: undefined };
+
+  return (
+    <main className="deadlock deadlock-hero">
+      <SectionHead
+        eyebrow={
+          <RouteLink className="sechead-back" to={back} onNavigate={navigate}>
+            ← {copy.deadlock.title}
+            {copy.deadlock.titleBreak}
+          </RouteLink>
+        }
+        title={hero.name}
+        accent={hero.tier}
+        controls={picker}
+        meta={metaLine}
+      />
+
+      <div className="page">
+        <header className="box dl-hero-head">
+          {hero.img && <img className="dl-hero-face" src={hero.img} alt="" width={96} height={96} />}
+          <div className="dl-hero-id">
+            <span className="dl-hero-rank">{hp.rank(String(idx + 1), String(heroes.length))}</span>
+            <span className="dl-chips">
+              {hero.difficulty && (
+                <span
+                  className="dl-chip"
+                  data-kind={hero.difficulty}
+                  title={copy.deadlock.why.skillGap(signed(hero.skillGap))}
+                >
+                  {copy.deadlock.difficulty[hero.difficulty]}
+                </span>
+              )}
+              {hero.momentum && (
+                <span
+                  className="dl-chip"
+                  data-kind={hero.momentum}
+                  title={copy.deadlock.why.trend(signed(hero.trend))}
+                >
+                  <span aria-hidden="true">{hero.momentum === "up" ? "▲" : "▼"}</span>{" "}
+                  {copy.deadlock.momentum[hero.momentum]}
+                </span>
+              )}
+              {hero.thinData && (
+                <span className="dl-chip" data-kind="thin" title={copy.deadlock.thinWhy}>
+                  {copy.deadlock.thin}
+                </span>
+              )}
+            </span>
+          </div>
+          <HeroKpis hero={hero} />
+        </header>
+
+        {/* Cinco anclas, fijas al scrollear. Apuntan a los encabezados que la
+            tarjeta de build ya tiene; no reordenan nada. */}
+        <nav className="seg dl-hero-tabs" aria-label={hero.name}>
+          <a href="#dl-build">{hp.tabs.build}</a>
+          <a href="#dl-skills">{hp.tabs.skills}</a>
+          <a href="#dl-buy">{hp.tabs.buy}</a>
+          <a href="#dl-counters">{hp.tabs.counters}</a>
+          <a href="#dl-mastery">{hp.tabs.mastery}</a>
+        </nav>
+
+        <div className="dl-band-panel dl-hero-body">
+          <DeadlockBuildCard heroId={hero.heroId} heroWinRate={hero.winRate} />
+          <DeadlockMastery heroId={hero.heroId} />
+        </div>
+
+        <nav className="next-steps" aria-label={copy.deadlock.next.label}>
+          {prev && (
+            <RouteLink className="next-step" to={toHero(route, prev)} onNavigate={navigate}>
+              <span className="next-step-label">
+                ← {hp.prev} · {prev.tier}
+              </span>
+              <span className="next-step-title">{prev.name}</span>
+            </RouteLink>
+          )}
+          <RouteLink className="next-step" to={back} onNavigate={navigate}>
+            <span className="next-step-label">{copy.deadlock.next.label}</span>
+            <span className="next-step-title">{hp.back}</span>
+          </RouteLink>
+          {next && (
+            <RouteLink className="next-step" to={toHero(route, next)} onNavigate={navigate}>
+              <span className="next-step-label">
+                {hp.next} · {next.tier} →
+              </span>
+              <span className="next-step-title">{next.name}</span>
+            </RouteLink>
+          )}
+        </nav>
+      </div>
+    </main>
+  );
+}
+
+/**
  * Una banda de tier: la letra en un riel a la izquierda y los héroes fluyendo a
- * la derecha.
- *
- * **Ya no se pliega.** Plegar existía porque la página medía cinco pantallas de
- * scroll; con las cinco bandas en ~662px (medido a 1920px, sin ningún panel
- * abierto) no hay nada que esconder, y de paso el motivo por el que el
- * contenido se montaba plegado —que Ctrl+F y Google lo encontraran— se cumple
- * solo.
- *
- * **Medido: a 1400px cada banda entra en un solo renglón de tiles** (la más
- * grande es D, con 16 de los 38 héroes). Eso es lo que deja que el panel se
- * abra "debajo de la banda" y quede pegado al tile que se apretó, sin que
- * ningún JavaScript mida dónde cayó.
+ * la derecha. Ya no se pliega ni despliega nada: cada tile es un enlace a la
+ * página del héroe.
  */
 function TierBand({
   tier,
   heroes,
-  allHeroes,
   crest,
-  abiertoSlug,
-  onHero,
+  route,
+  navigate,
 }: {
   tier: string;
   heroes: Hero[];
-  allHeroes: Hero[];
   crest: ReturnType<typeof bandCrest>;
-  abiertoSlug?: string;
-  onHero: (slug?: string) => void;
+  route: Route;
+  navigate: (route: Route) => void;
 }) {
   const { lang } = useLang();
-  /**
-   * `heroSlugs` sale de la banda PUBLICADA, no de la que se está mirando: un
-   * héroe que trae el archivo de banda actual y falta en el publicado no tiene
-   * slug, así que `toSlug.get(...)` da `undefined`. Sin el `!!slug` de acá,
-   * `undefined === undefined` matchea contra `abiertoSlug` sin abrir (el valor
-   * por defecto, nada abierto) y ese héroe abre su panel solo. `HeroTile` ya
-   * tiene esta misma guarda en su prop `open`; esta búsqueda le faltaba.
-   */
-  const abierto = heroes.find((h) => {
-    const slug = heroSlugs.toSlug.get(String(h.heroId));
-    return !!slug && slug === abiertoSlug;
-  });
 
-  // `data-open` no es decorativo: la banda mide lo que miden sus tiles, y el
-  // panel de build cuelga de ella a `grid-column: 1 / -1`. Sin esta bandera,
-  // abrir un héroe de la C —que tiene dos— metería la build en 260px.
   return (
-    <section className="tier-group dl-band" data-tier={tier} data-open={!!abierto}>
+    <section className="tier-group dl-band" data-tier={tier}>
       <div className="dl-rail">
         <span className="tier-mark">{tier}</span>
         <span className="dl-crest">
@@ -351,50 +416,53 @@ function TierBand({
       </div>
 
       <ol className="dl-tiles">
-        {heroes.map((h) => {
-          const slug = heroSlugs.toSlug.get(String(h.heroId));
-          return (
-            <HeroTile
-              key={h.heroId}
-              hero={h}
-              open={!!slug && slug === abiertoSlug}
-              onToggle={() => onHero(slug === abiertoSlug ? undefined : slug)}
-            />
-          );
-        })}
+        {heroes.map((h) => (
+          <HeroTile key={h.heroId} hero={h} to={toHero(route, h)} onNavigate={navigate} />
+        ))}
       </ol>
-
-      {/* La `key` NO es decorativa ni la pide React: **fuerza el remontaje al
-          cambiar de héroe dentro de la misma banda**. Sin ella React reusa la
-          instancia, y eso rompía dos cosas medidas en teléfono — el
-          `scrollIntoView` del panel no volvía a correr (se abría a 2.408px con
-          la pantalla en 0) y la tarjeta de build conservaba la pestaña elegida
-          para el héroe anterior. */}
-      {abierto && (
-        <HeroPanel key={abierto.heroId} hero={abierto} rank={allHeroes.indexOf(abierto) + 1} />
-      )}
     </section>
   );
 }
 
+/** Una fila del rail: retrato, nombre y una cifra. */
+function RailRow({
+  hero,
+  figure,
+  route,
+  navigate,
+}: {
+  hero: Hero;
+  figure: React.ReactNode;
+  route: Route;
+  navigate: (route: Route) => void;
+}) {
+  return (
+    <li>
+      <RouteLink className="dl-rail-row" to={toHero(route, hero)} onNavigate={navigate}>
+        {hero.img && <img src={hero.img} alt="" width={32} height={32} loading="lazy" />}
+        <span className="dl-rail-name">{hero.name}</span>
+        <span className="dl-rail-figure">{figure}</span>
+      </RouteLink>
+    </li>
+  );
+}
+
 export default function Deadlock({
+  route,
+  navigate,
   section,
   band,
   picker,
   open,
-  onOpen,
 }: {
+  route: Route;
+  navigate: (route: Route) => void;
   section: DeadlockSection;
   band: BandId;
-  /** El selector, dibujado por App para que la banda sobreviva al cambio de pestaña. */
   picker: React.ReactNode;
-  /**
-   * El slug del héroe con la fila abierta, si la URL trae uno. Vive en la
-   * URL y no en estado local, para que un héroe se pueda compartir por
-   * link — mismo criterio que `UnitsView` de TFT.
-   */
+  /** El slug del héroe abierto, si la URL trae uno. */
   open?: string;
-  onOpen: (slug?: string) => void;
+  onOpen?: (slug?: string) => void;
 }) {
   const copy = useCopy();
   const locale = useLocale();
@@ -406,18 +474,50 @@ export default function Deadlock({
   const movers = patchMovers(meta?.heroes ?? []);
   const enParches = section === "patches";
 
+  const metaLine = meta && (
+    <span className="dl-meta-line">
+      {insignia.img && <img src={insignia.img} alt="" width={18} height={18} />}
+      {meta.file.matches === 0
+        ? copy.deadlock.emptyBand
+        : `${copy.deadlock.sample(
+            meta.file.matches.toLocaleString(locale),
+            meta.file.from,
+            meta.file.to
+          )} · ${copy.deadlock.patch.since(meta.file.patch.title)}`}
+    </span>
+  );
+
   /**
-   * La sección de cambios se mudó del meta a su propia pestaña.
-   *
-   * Abajo de la tier list competía con ella por la misma pantalla y obligaba a
-   * scrollear treinta y ocho filas para llegar. Como pestaña contesta su propia
-   * pregunta —"¿qué cambió?"— sin pelear con la de "¿quién es mejor?".
+   * `heroSlugs` sale de la banda PUBLICADA: un héroe que falta en ella no tiene
+   * slug y `toSlug.get` da `undefined`; el `!!slug` evita que
+   * `undefined === undefined` abra un héroe sin que nadie lo pida.
    */
+  const abierto =
+    meta && open
+      ? meta.heroes.find((h) => {
+          const slug = heroSlugs.toSlug.get(String(h.heroId));
+          return !!slug && slug === open;
+        })
+      : undefined;
+
+  if (meta && abierto) {
+    return (
+      <HeroPage
+        hero={abierto}
+        heroes={meta.heroes}
+        route={route}
+        navigate={navigate}
+        picker={picker}
+        metaLine={metaLine}
+      />
+    );
+  }
+
+  const masJugados = meta ? [...meta.heroes].sort((a, b) => b.pickRate - a.pickRate).slice(0, 5) : [];
+  const topS = meta?.heroes[0];
+
   const parches = meta && (
     <section className="dl-patch dl-patch-page">
-      {/* Hasta que haya dos ventanas rankeadas que comparar, esta pestaña vivía
-          de una sola frase. El historial es lo que sí tenemos y es lo que el
-          jugador viene a buscar cuando entra acá. */}
       {movers.up.length + movers.down.length === 0 ? (
         <p className="detail-note">{copy.deadlock.patch.none}</p>
       ) : (
@@ -447,17 +547,9 @@ export default function Deadlock({
 
   return (
     <main className="deadlock deadlock-meta">
-      {/* Lo que explica la página a la izquierda, lo que la controla a la
-          derecha. Antes iba todo apilado y la primera fila de héroe arrancaba a
-          dos pantallas de scroll: el encabezado editorial es de página de
-          aterrizaje, no de una pestaña que se usa. */}
-      {/**
-       * Una línea: título a la izquierda, selector de banda a la derecha, y la
-       * ficha técnica de la medición (partidas, ventana, parche) debajo, con
-       * "cómo se mide" plegado. El selector **no va en la pestaña de parches**:
-       * el historial es el mismo para todas las bandas, y un control que no
-       * cambia nada invita a desconfiar de la página.
-       */}
+      {/* Una línea: título a la izquierda, selector de banda a la derecha, la
+          ficha técnica de la medición debajo. El selector no va en Parches: el
+          historial es el mismo para todas las bandas. */}
       <SectionHead
         eyebrow={copy.deadlock.eyebrow}
         title={enParches ? copy.deadlock.patchPage.title : copy.deadlock.title}
@@ -470,48 +562,128 @@ export default function Deadlock({
             : null,
         ]}
         controls={!enParches && picker}
-        meta={
-          meta && (
-            <span className="dl-meta-line">
-              {insignia.img && <img src={insignia.img} alt="" width={18} height={18} />}
-              {meta.file.matches === 0
-                ? copy.deadlock.emptyBand
-                : `${copy.deadlock.sample(
-                    meta.file.matches.toLocaleString(locale),
-                    meta.file.from,
-                    meta.file.to
-                  )} · ${copy.deadlock.patch.since(meta.file.patch.title)}`}
-            </span>
-          )
-        }
+        meta={metaLine}
       />
 
       {!meta ? (
         <p className="detail-note dl-loading">{copy.deadlock.loading}</p>
       ) : (
-        <div className="tiers dl-bands">
-          {enParches && parches}
+        <div className={enParches ? "page" : "page has-rail"}>
+          <div className="page-main">
+            {enParches ? (
+              parches
+            ) : (
+              <>
+                <div className="dl-bands">
+                  {TIER_ORDER.map((tier) => {
+                    const heroes = meta.heroes.filter((h) => h.tier === tier);
+                    if (heroes.length === 0) return null;
+                    return (
+                      <TierBand
+                        key={tier}
+                        tier={tier}
+                        heroes={heroes}
+                        crest={crest}
+                        route={route}
+                        navigate={navigate}
+                      />
+                    );
+                  })}
+                </div>
 
-          {!enParches &&
-            TIER_ORDER.map((tier) => {
-              const heroes = meta.heroes.filter((h) => h.tier === tier);
-              if (heroes.length === 0) return null;
-              return (
-                <TierBand
-                  key={tier}
-                  tier={tier}
-                  heroes={heroes}
-                  allHeroes={meta.heroes}
-                  crest={crest}
-                  abiertoSlug={open}
-                  onHero={onOpen}
-                />
-              );
-            })}
+                <p className="detail-note dl-legend">{copy.deadlock.rail.legend}</p>
+                <p className="detail-note dl-footnote" lang={lang}>
+                  {copy.deadlock.footnote}
+                </p>
 
-          <p className="detail-note dl-footnote" lang={lang}>
-            {copy.deadlock.footnote}
-          </p>
+                {/* La página termina con un siguiente paso, no con el pie legal. */}
+                <nav className="next-steps" aria-label={copy.deadlock.next.label}>
+                  {topS && (
+                    <RouteLink className="next-step" to={toHero(route, topS)} onNavigate={navigate}>
+                      <span className="next-step-label">{copy.deadlock.next.label}</span>
+                      <span className="next-step-title">{copy.deadlock.next.topHero(topS.name)}</span>
+                    </RouteLink>
+                  )}
+                  <RouteLink
+                    className="next-step"
+                    to={{ ...route, view: "deadlock", dlSection: "items", detail: undefined }}
+                    onNavigate={navigate}
+                  >
+                    <span className="next-step-label">{copy.deadlock.tabs.items}</span>
+                    <span className="next-step-title">{copy.deadlock.next.items}</span>
+                  </RouteLink>
+                  <RouteLink
+                    className="next-step"
+                    to={{ ...route, view: "deadlock", dlSection: "player", detail: undefined }}
+                    onNavigate={navigate}
+                  >
+                    <span className="next-step-label">{copy.deadlock.tabs.player}</span>
+                    <span className="next-step-title">{copy.deadlock.next.profile}</span>
+                  </RouteLink>
+                </nav>
+              </>
+            )}
+          </div>
+
+          {!enParches && (
+            <aside className="page-rail">
+              <section className="box">
+                <div className="box-head">
+                  <h2 className="box-title">{copy.deadlock.rail.movers}</h2>
+                  <p className="box-lead">{copy.deadlock.rail.moversLead}</p>
+                </div>
+                {movers.up.length + movers.down.length === 0 ? (
+                  <p className="box-empty">{copy.deadlock.rail.moversNone}</p>
+                ) : (
+                  <ol className="dl-rail-list">
+                    {movers.up.map((h) => (
+                      <RailRow
+                        key={h.heroId}
+                        hero={h}
+                        route={route}
+                        navigate={navigate}
+                        figure={<span className="delta is-up">▲ {signed(h.trend)}</span>}
+                      />
+                    ))}
+                    {movers.down.map((h) => (
+                      <RailRow
+                        key={h.heroId}
+                        hero={h}
+                        route={route}
+                        navigate={navigate}
+                        figure={<span className="delta is-down">▼ {signed(h.trend)}</span>}
+                      />
+                    ))}
+                  </ol>
+                )}
+              </section>
+
+              <section className="box">
+                <div className="box-head">
+                  <h2 className="box-title">{copy.deadlock.rail.mostPlayed}</h2>
+                </div>
+                <ol className="dl-rail-list">
+                  {masJugados.map((h) => (
+                    <RailRow key={h.heroId} hero={h} route={route} navigate={navigate} figure={pct(h.pickRate)} />
+                  ))}
+                </ol>
+              </section>
+
+              <section className="box dl-rail-log">
+                <div className="box-head">
+                  <h2 className="box-title">{copy.deadlock.rail.changelog}</h2>
+                </div>
+                <PatchHistory limit={5} />
+                <RouteLink
+                  className="dl-rail-more"
+                  to={{ ...route, view: "deadlock", dlSection: "patches", detail: undefined }}
+                  onNavigate={navigate}
+                >
+                  {copy.deadlock.rail.allPatches} →
+                </RouteLink>
+              </section>
+            </aside>
+          )}
         </div>
       )}
     </main>

@@ -1,0 +1,226 @@
+/* ---------------------------------------------------------------------------
+   VISTAS — lo que cada página necesita además de las primitivas.
+
+   Rediseño del 2026-09-06, fases 3 a 6. Cada bloque nombra su página. Sólo
+   tokens: el color lo pone el lugar.
+--------------------------------------------------------------------------- */
+
+/* Deadlock · Héroes (tier list con rail) -------------------------------------- */
+
+.dl-bands {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Las bandas viejas se medían a `max-content` para pegar el panel de build al
+   tile; ya no hay panel, así que ocupan la columna. */
+[data-theme="codex"] .dl-bands .dl-band {
+  width: auto;
+}
+
+.dl-legend {
+  font-size: 0.72rem;
+}
+
+.dl-rail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dl-rail-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 42px;
+  padding: 0.3rem 0;
+  border-top: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.84rem;
+}
+
+.dl-rail-list > li:first-child .dl-rail-row {
+  border-top: 0;
+}
+
+.dl-rail-row:hover .dl-rail-name {
+  color: var(--accent-lit);
+}
+
+.dl-rail-row img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: var(--surface-2);
+}
+
+.dl-rail-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dl-rail-figure {
+  flex: 0 0 auto;
+  font-family: var(--font-data-narrow);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-rail-more {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.dl-rail-more:hover {
+  color: var(--accent-lit);
+}
+
+/* El registro de parches, compacto dentro del rail: sin su título ni su nota
+   (la caja ya los tiene), filas de una línea. */
+.dl-rail-log .dl-history {
+  margin: 0;
+}
+
+.dl-rail-log .dl-patch-side,
+.dl-rail-log .dl-history-note {
+  display: none;
+}
+
+.dl-rail-log .dl-history-list {
+  margin: 0;
+}
+
+[data-theme="codex"] .dl-rail-log .dl-history-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1rem 0.6rem;
+  width: auto;
+  padding: 0.4rem 0;
+  font-size: 0.78rem;
+}
+
+[data-theme="codex"] .dl-rail-log .dl-history-date {
+  flex: 1 1 auto;
+  font-weight: 600;
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-rail-log .dl-history-link {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+}
+
+/* El nombre de la build ("06-30-2026 Update") pasa a segunda línea, en gris. */
+[data-theme="codex"] .dl-rail-log .dl-history-name {
+  flex: 1 1 100%;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+}
+
+/* Los tiles son enlaces ahora: sin el subrayado ni el color de enlace. */
+[data-theme="codex"] .dl-tile-btn,
+[data-theme="codex"] .dl-tile-btn:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Deadlock · página de héroe ----------------------------------------------------- */
+
+.sechead-back {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.sechead-back:hover {
+  color: var(--accent-lit);
+}
+
+.dl-hero-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.6rem 1.3rem;
+  align-items: center;
+}
+
+.dl-hero-face {
+  grid-row: 1 / 3;
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: var(--surface-2);
+}
+
+.dl-hero-id {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+}
+
+.dl-hero-rank {
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.dl-hero-kpis {
+  grid-column: 2;
+}
+
+@media (max-width: 600px) {
+  .dl-hero-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dl-hero-face {
+    grid-row: auto;
+  }
+
+  .dl-hero-kpis {
+    grid-column: 1;
+  }
+}
+
+/* Las anclas, fijas debajo de la barra. `.seg` pone la forma. */
+.dl-hero-tabs {
+  position: sticky;
+  top: calc(var(--top-h) + 0.5rem);
+  z-index: 5;
+  align-self: flex-start;
+  background: var(--bg);
+}
+
+.dl-hero-tabs a {
+  text-decoration: none;
+}
+
+/* Para que un ancla no quede debajo de la barra y las pestañas fijas. */
+.dl-panel-head[id],
+#dl-mastery {
+  scroll-margin-top: calc(var(--top-h) + 4rem);
+}
+
+[data-theme="codex"] .deadlock-hero .dl-band-panel {
+  margin: 0;
+  width: auto;
+}

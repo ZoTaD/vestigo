@@ -13,6 +13,7 @@ import "./styles/home.css";
 // gana la nueva.
 import "./styles/shell.css";
 import "./styles/primitives.css";
+import "./styles/views.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

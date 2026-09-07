@@ -419,14 +419,16 @@
   color: var(--text-dim);
 }
 
-/* Resultado en una fila ----------------------------------------------------------- */
+/* Resultado en una fila -----------------------------------------------------------
+   Un tinte de fondo, no una barra de color en el borde: la fila se lee de un
+   vistazo igual y la página no se llena de rayas. */
 
 .is-win {
-  box-shadow: inset 3px 0 0 var(--good);
+  background: color-mix(in srgb, var(--good) 7%, transparent);
 }
 
 .is-loss {
-  box-shadow: inset 3px 0 0 var(--bad);
+  background: color-mix(in srgb, var(--bad) 7%, transparent);
 }
 
 /* Botones ----------------------------------------------------------------------------- */
