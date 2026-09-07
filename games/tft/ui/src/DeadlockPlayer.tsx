@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SectionHead from "./SectionHead";
 import { takePendingSearch } from "./pendingSearch";
-import { rememberProfile } from "./lastProfile";
+import { lastProfile, rememberProfile } from "./lastProfile";
 import { useCopy, useLang, useLocale, type Lang } from "./i18n";
 import { text } from "./catalog";
 import {
@@ -618,6 +618,8 @@ export default function DeadlockPlayer({
     setVerFilas(HISTORY_PAGE);
   }
 
+  const reciente = lastProfile();
+
   return (
     <section className="tool">
       <SectionHead eyebrow={copy.deadlock.eyebrow} title={c.searchTitle} lead={c.searchLead} />
@@ -634,6 +636,16 @@ export default function DeadlockPlayer({
           {buscando ? c.searching : c.search}
         </button>
       </form>
+
+      {/* Sin búsqueda ni perfil abierto: el último visto, a un clic. */}
+      {!historial && !cuentas && reciente && (
+        <p className="dl-recent">
+          <span className="dl-recent-label">{copy.home.search.lastSeen}</span>
+          <button type="button" className="dl-recent-link" onClick={() => onOpenAccount(reciente.accountId)}>
+            {reciente.name}
+          </button>
+        </p>
+      )}
 
       {error && <p className="dl-fallback">{error}</p>}
 
@@ -665,8 +677,8 @@ export default function DeadlockPlayer({
         porque ahí lo primero que se quiere ver es el rango.
       */}
       {historial && (
-        <div className="dl-profile-grid">
-          <div className="dl-profile-main">
+        <div className="page has-rail dl-profile-grid">
+          <div className="page-main dl-profile-main">
             <h2 className="dl-section-title">{c.history}</h2>
             {/* El filtro va ARRIBA de la lista y no en la ficha lateral: manda
                 sobre las dos columnas, y el lugar donde se ve el efecto más
@@ -692,8 +704,12 @@ export default function DeadlockPlayer({
               <span className="dl-rep-match-rank">{c.histCols.rank}</span>
               <span className="dl-rep-match-result">{c.histCols.result}</span>
               <span className="dl-rep-match-grade">{c.histCols.grade}</span>
-              <span className="dl-rep-match-kda">{c.histCols.kda}</span>
-              <span className="dl-rep-match-farm">{c.histCols.farm}</span>
+              <span className="dl-rep-match-kda" title={c.histColsFull.kda}>
+                {c.histCols.kda}
+              </span>
+              <span className="dl-rep-match-farm" title={c.histColsFull.farm}>
+                {c.histCols.farm}
+              </span>
               <span className="dl-rep-match-num">{c.histCols.souls}</span>
               <span className="dl-rep-match-num">{c.histCols.length}</span>
               <span className="dl-rep-match-date">{c.histCols.when}</span>
@@ -820,7 +836,7 @@ export default function DeadlockPlayer({
             )}
           </div>
 
-          <aside className="dl-profile-aside">
+          <aside className="page-rail is-first dl-profile-aside">
             {resumen && (
               <div className="dl-card">
                 <h2 className="dl-card-title">{c.cards.profile}</h2>

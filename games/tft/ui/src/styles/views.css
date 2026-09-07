@@ -224,3 +224,70 @@
   margin: 0;
   width: auto;
 }
+
+/* Deadlock · Jugador -------------------------------------------------------------- */
+
+/* La ficha vive en el rail, pero el rail NO es fijo acá: son seis cajas y
+   miden más que la pantalla. Fijo, no se podría llegar a la última. */
+[data-theme="codex"] .dl-profile-aside {
+  position: static;
+}
+
+/* El resultado se lee por un tinte de fondo, no por una barra en el borde
+   (pedido de ZoTaD, 2026-09-06). El texto "Victoria/Derrota" también lleva su
+   color, para quien no distingue el tinte. */
+[data-theme="codex"] .dl-rep-match.is-win {
+  border-left: 0;
+  background: color-mix(in srgb, var(--good) 7%, transparent);
+}
+
+[data-theme="codex"] .dl-rep-match.is-loss {
+  border-left: 0;
+  background: color-mix(in srgb, var(--bad) 7%, transparent);
+}
+
+[data-theme="codex"] .dl-rep-match.is-win .dl-rep-match-result {
+  color: var(--good);
+}
+
+[data-theme="codex"] .dl-rep-match.is-loss .dl-rep-match-result {
+  color: var(--bad);
+}
+
+/* Un rótulo abreviado con título completo se marca con puntos: hay algo
+   detrás del hover. */
+[data-theme="codex"] .dl-rep-match-head [title] {
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+
+.dl-recent {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.7rem;
+  margin: 0.6rem 0 0;
+  font-size: 0.84rem;
+}
+
+.dl-recent-label {
+  font-weight: 600;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.dl-recent-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--accent-lit);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 0.2em;
+}

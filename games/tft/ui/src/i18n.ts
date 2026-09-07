@@ -787,6 +787,11 @@ const EN = {
         rank: "Rank",
         when: "When",
       },
+      /** Los mismos rótulos, enteros, para el tooltip de la cabecera. */
+      histColsFull: {
+        kda: "Kills / Deaths / Assists",
+        farm: "Last hits / Denies",
+      },
       rankUp: "Rank up",
       rankUpTitle: (from: string, to: string) => `Rank up in this match: ${from} → ${to}`,
       /**
@@ -2274,6 +2279,10 @@ const ES: typeof EN = {
         length: "Tiempo",
         rank: "Rango",
         when: "Cuándo",
+      },
+      histColsFull: {
+        kda: "Kills / Muertes / Asistencias",
+        farm: "Golpes / Denies",
       },
       rankUp: "Ascenso",
       rankUpTitle: (from: string, to: string) => `Ascenso en esta partida: ${from} → ${to}`,
