@@ -146,6 +146,27 @@ queden sin selector en el DOM (medido con una pasada por cada página);
 
 ---
 
+## 2b. Estado al 2026-09-06, fin del día
+
+Las siete fases se publicaron el mismo día, una por commit:
+
+| Fase | Commit | Qué quedó |
+|---|---|---|
+| 1 | `9d339a5` | tokens, una tipografía, barra con buscador, sub-navegación, `SectionHead`, primitivas, móvil |
+| 2 | `a645117` | portada: buscador, último visto, "Hoy en el meta", CTAs descriptivos |
+| 3 | `e155782` | página propia por héroe, rail en la tier list, seguir leyendo |
+| 4 | `aa934d7` | perfil con la identidad primero, filas por tinte, rótulos completos |
+| 5 | `54e6b95` | chips por estante, "¿dónde estás vos?", buscador y cabecera fija en Escalera |
+| 6 | `f66d0c5` | TFT: controles como chips/seg/campo, perfil en dos columnas |
+| 7 | (este) | fuentes viejas fuera de `index.html`, `theme-color`, este estado |
+
+Lo que quedó fuera y sigue en el diseño: la vista **Tabla** de Héroes (la
+pestaña del 2026-08-13), la sparkline por fila (espera la serie diaria del
+pipeline), los favoritos locales y "desde tu última visita", y los cuadrantes
+con hover del gráfico de Objetos (el gráfico ya trae la leyenda de cuadrantes).
+Pedido de ZoTaD durante la ejecución: **sin bordes de color en tarjetas ni
+barras en filas**; el resultado de una fila es un tinte de fondo.
+
 ## 3. Lo que no cambia
 
 - Los datos, el pipeline, las rutas públicas y los textos de los tests.
