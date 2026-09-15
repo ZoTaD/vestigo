@@ -42,6 +42,39 @@
 # visitor asked for is the address they keep — a 301 to "/" would collapse every
 # page we just asked Google to index back into one.
 #
+# TFT salió del sitio el 2026-09-15 (ver games/tft/ui/src/route.ts). Sus
+# direcciones estaban indexadas y compartidas, así que se contestan con 301 a la
+# portada del mismo idioma: es lo que le dice a Google que las saque del índice,
+# y lo que a un link viejo lo deja en el sitio en vez de en una página vacía.
+#
+# Van ANTES del comodín de abajo: Netlify aplica la primera regla que coincide,
+# y el comodín las serviría con 200. La forma sin barra va aparte porque el
+# splat no la cubre con seguridad. Sin `force`: ya no hay archivo en esas rutas.
+[[redirects]]
+  from = "/en/tft"
+  to = "/en"
+  status = 301
+[[redirects]]
+  from = "/en/tft/*"
+  to = "/en"
+  status = 301
+[[redirects]]
+  from = "/es/tft"
+  to = "/es"
+  status = 301
+[[redirects]]
+  from = "/es/tft/*"
+  to = "/es"
+  status = 301
+[[redirects]]
+  from = "/tft"
+  to = "/en"
+  status = 301
+[[redirects]]
+  from = "/tft/*"
+  to = "/en"
+  status = 301
+
 # Static files that exist on disk (sitemap.xml, robots.txt, riot.txt) are served
 # before this rule is consulted, so they are not swallowed by it.
 [[redirects]]

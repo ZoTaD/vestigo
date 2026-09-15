@@ -16,10 +16,9 @@ export type View = Place | "privacy" | "terms";
  *
  * **El buscador está en todas las páginas** porque buscarse es el caso de uso
  * número uno de un sitio de stats y la competencia entera lo tiene a un tap
- * (op.gg, u.gg, Tracklock, tactics.tools, Dotabuff). Busca en el juego activo;
- * en la portada y en las páginas legales, en Deadlock, que es el que tiene
- * búsqueda por nombre. El texto viaja por `pendingSearch` hasta la pestaña
- * Jugador, que es la que sabe buscar.
+ * (op.gg, u.gg, Tracklock, tactics.tools, Dotabuff). Busca en Deadlock, que
+ * desde el 2026-09-15 es el único juego del sitio (ver `route.ts`). El texto
+ * viaja por `pendingSearch` hasta la pestaña Jugador, que es la que sabe buscar.
  */
 export default function Nav({
   active,
@@ -37,10 +36,7 @@ export default function Nav({
   /** Ir a un lugar es cambiar de vista y cerrar cualquier detalle abierto. */
   const a = (place: Place): Route => ({ ...route, view: place, detail: undefined });
 
-  const searchGame: Game = active === "tft" ? "tft" : "deadlock";
-  const searchLabel = copy.shell.searchFor(
-    searchGame === "tft" ? copy.games.tftShort : copy.games.deadlock
-  );
+  const searchLabel = copy.shell.searchFor(copy.games.deadlock);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -48,11 +44,7 @@ export default function Nav({
     if (!q) return;
     setPendingSearch(q);
     setQuery("");
-    if (searchGame === "tft") {
-      onNavigate({ ...route, view: "tft", section: "player", detail: undefined });
-    } else {
-      onNavigate({ ...route, view: "deadlock", dlSection: "player", detail: undefined });
-    }
+    onNavigate({ ...route, view: "deadlock", dlSection: "player", detail: undefined });
   };
 
   return (
@@ -70,14 +62,6 @@ export default function Nav({
             onNavigate={onNavigate}
           >
             {copy.sections.home}
-          </RouteLink>
-          <RouteLink
-            className="top-place"
-            to={a("tft")}
-            active={active === "tft"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.tftShort}
           </RouteLink>
           <RouteLink
             className="top-place"
@@ -111,7 +95,7 @@ export default function Nav({
               autoComplete="off"
             />
             <span className="top-search-game" aria-hidden="true">
-              {searchGame === "tft" ? copy.games.tftShort : copy.games.deadlock}
+              {copy.games.deadlock}
             </span>
           </label>
         </form>

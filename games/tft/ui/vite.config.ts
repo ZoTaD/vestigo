@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from "node:url";
 import { devApi } from "./dev-api";
 import { ROBOTS_TXT, sitemapXml, type SitemapData } from "./src/sitemap";
 import { prerenderPages, renderHtml } from "./src/prerender";
-import { parseRoute, slugify, type Route } from "./src/route";
+import { parseRoute, type Route } from "./src/route";
 import { COPY } from "./src/i18n";
 
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
@@ -16,40 +16,43 @@ const analysisDir = fileURLToPath(new URL("../analysis/src", import.meta.url));
 const deadlockDir = fileURLToPath(new URL("../../deadlock/data", import.meta.url));
 
 /**
+ * Lo que el sitemap y el prerender necesitan de los JSON de Deadlock. Los dos
+ * plugins leían lo mismo cada uno por su cuenta; desde que TFT salió del sitio
+ * (2026-09-15) es una sola lectura, acá.
+ */
+function readSitemapData(): { data: SitemapData; generatedAt: string } {
+  const readDl = (name: string) => JSON.parse(readFileSync(`${deadlockDir}/${name}`, "utf-8"));
+  const dlCatalog = readDl("catalog.json");
+  const dlHeroesFile = readDl("heroes.json");
+  const dlItemsFile = readDl("items.json");
+  return {
+    data: {
+      dlHeroes: dlCatalog.heroes,
+      dlItems: dlCatalog.items,
+      dlHeroIds: dlHeroesFile.heroes.map((h: { heroId: number }) => String(h.heroId)),
+      dlItemIds: dlItemsFile.items.map((i: { itemId: number }) => String(i.itemId)),
+    },
+    generatedAt: String(dlHeroesFile.generatedAt ?? ""),
+  };
+}
+
+/**
  * Writes robots.txt and sitemap.xml at build time.
  *
  * Generated rather than committed because both describe the catalog, and the
- * catalog is regenerated every set. A sitemap listing champions that no longer
+ * catalog is regenerated every run. A sitemap listing heroes that no longer
  * exist teaches Google that our URLs 404, which is worse than having no sitemap.
  */
 function seoFiles(): Plugin {
-  const read = (name: string) => JSON.parse(readFileSync(`${dataDir}/${name}`, "utf-8"));
-  const readDl = (name: string) => JSON.parse(readFileSync(`${deadlockDir}/${name}`, "utf-8"));
-
   return {
     name: "vestigo-seo-files",
     apply: "build",
     generateBundle() {
-      const catalog = read("catalog.json");
-      const dlCatalog = readDl("catalog.json");
-      const dlHeroesFile = readDl("heroes.json");
-      const dlItemsFile = readDl("items.json");
-      const data: SitemapData = {
-        champions: catalog.champions,
-        traits: catalog.traits,
-        items: catalog.items,
-        comps: read("comps.json").comps,
-        unitIds: read("units.json").units.map((u: { id: string }) => u.id),
-        itemIds: read("items.json").items.map((i: { id: string }) => i.id),
-        dlHeroes: dlCatalog.heroes,
-        dlItems: dlCatalog.items,
-        dlHeroIds: dlHeroesFile.heroes.map((h: { heroId: number }) => String(h.heroId)),
-        dlItemIds: dlItemsFile.items.map((i: { itemId: number }) => String(i.itemId)),
-      };
+      const { data, generatedAt } = readSitemapData();
 
-      // The catalog stamps its own build time; using it rather than "now" keeps
+      // The data stamps its own build time; using it rather than "now" keeps
       // lastmod honest — it is when the data changed, not when we deployed.
-      const lastmod = String(catalog.generatedAt ?? "").slice(0, 10) || undefined;
+      const lastmod = generatedAt.slice(0, 10) || undefined;
 
       this.emitFile({
         type: "asset",
@@ -75,64 +78,7 @@ function seoFiles(): Plugin {
  * el JS y el CSS que carga son los mismos y la app arranca igual. Netlify sirve
  * un archivo real antes de consultar el redirect de SPA.
  */
-/**
- * `virtual:tft-summary`: lo poco de TFT que la portada necesita, calculado
- * acá en Node y no importado en el navegador (ver `src/tftSummary.ts`).
- * Sin `apply`: corre en dev, en build y en vitest, que cargan esta config.
- */
-function tftSummary(): Plugin {
-  const id = "virtual:tft-summary";
-  const resolved = "\0" + id;
-  const read = (name: string) => JSON.parse(readFileSync(`${dataDir}/${name}`, "utf-8"));
-  return {
-    name: "vestigo-tft-summary",
-    resolveId(source) {
-      return source === id ? resolved : null;
-    },
-    load(source) {
-      if (source !== resolved) return null;
-      const catalog = read("catalog.json");
-      const comps = read("comps.json");
-      const items = read("items.json");
-      type L = { en: string; es: string };
-      const name = (l: L | undefined, fallback: string): L => ({ en: l?.en || fallback, es: l?.es || l?.en || fallback });
-      const strip = (s: string) => s.replace(/^TFT\d+_/, "");
-      const c0 = comps.comps[0];
-      const best = c0
-        ? (() => {
-            const parts: L[] = [name(catalog.traits[c0.trait]?.name, strip(c0.trait))].concat(
-              (c0.carries as string[]).map((cid) => name(catalog.champions[cid]?.name, strip(cid)))
-            );
-            const en = parts.map((p) => p.en).filter(Boolean).join(" ");
-            const es = parts.map((p) => p.es).filter(Boolean).join(" ");
-            return { slug: slugify(en), name: { en, es }, avgPlacement: c0.avgPlacement };
-          })()
-        : null;
-      const i0 = (items.items as { id: string; avgPlacement: number; delta: number }[]).reduce<
-        { id: string; avgPlacement: number; delta: number } | null
-      >((b, i) => (!b || i.delta < b.delta ? i : b), null);
-      const bestItem = i0
-        ? (() => {
-            const n = name(catalog.items[i0.id]?.name, strip(i0.id));
-            return { slug: slugify(n.en), name: n, img: catalog.items[i0.id]?.img ?? "", avgPlacement: i0.avgPlacement, delta: i0.delta };
-          })()
-        : null;
-      const summary = {
-        set: String(catalog.set ?? ""),
-        generatedAt: comps.generatedAt,
-        sampleSize: comps.sampleSize,
-        compsCount: comps.comps.length,
-        best,
-        bestItem,
-      };
-      return `export default ${JSON.stringify(summary)};`;
-    },
-  };
-}
-
 function prerenderRoutes(): Plugin {
-  const read = (name: string) => JSON.parse(readFileSync(`${dataDir}/${name}`, "utf-8"));
-
   return {
     name: "vestigo-prerender",
     apply: "build",
@@ -147,25 +93,7 @@ function prerenderRoutes(): Plugin {
       }
       const html = String(entry.source);
 
-      const readDl = (name: string) => JSON.parse(readFileSync(`${deadlockDir}/${name}`, "utf-8"));
-      const catalog = read("catalog.json");
-      const dlCatalog = readDl("catalog.json");
-      const dlHeroesFile = readDl("heroes.json");
-      const dlItemsFile = readDl("items.json");
-      const data: SitemapData = {
-        champions: catalog.champions,
-        traits: catalog.traits,
-        items: catalog.items,
-        comps: read("comps.json").comps,
-        unitIds: read("units.json").units.map((u: { id: string }) => u.id),
-        itemIds: read("items.json").items.map((i: { id: string }) => i.id),
-        dlHeroes: dlCatalog.heroes,
-        dlItems: dlCatalog.items,
-        dlHeroIds: dlHeroesFile.heroes.map((h: { heroId: number }) => String(h.heroId)),
-        dlItemIds: dlItemsFile.items.map((i: { itemId: number }) => String(i.itemId)),
-      };
-
-      const pages = prerenderPages(data, String(catalog.set ?? ""));
+      const pages = prerenderPages(readSitemapData().data);
 
       /**
        * La app renderizada a texto, ruta por ruta.
@@ -215,7 +143,7 @@ function prerenderRoutes(): Plugin {
       if (raiz) entry.source = html.replace('<div id="root"></div>', `<div id="root">${raiz}</div>`);
 
       for (const page of pages) {
-        // "/es/tft/units/lissandra" → "es/tft/units/lissandra.html".
+        // "/es/deadlock/items/basic-magazine" → "es/deadlock/items/basic-magazine.html".
         //
         // Un archivo suelto y NO "<ruta>/index.html": con la forma de carpeta,
         // Netlify responde 301 agregando la barra final, así que cada URL del
@@ -224,8 +152,8 @@ function prerenderRoutes(): Plugin {
         // que es el único lugar donde esto se ve: `vite preview` sirve las dos
         // formas con 200 y no lo habría delatado.
         //
-        // Una sección y sus detalles conviven sin chocar: "units.html" es un
-        // archivo y "units/" una carpeta. La raíz la escribe Vite y no se pisa.
+        // Una sección y sus detalles conviven sin chocar: "items.html" es un
+        // archivo y "items/" una carpeta. La raíz la escribe Vite y no se pisa.
         const clean = page.path.replace(/^\/+|\/+$/g, "");
         if (!clean) continue;
         this.emitFile({
@@ -242,7 +170,7 @@ function prerenderRoutes(): Plugin {
 export default defineConfig({
   // devApi stands in for the Supabase Edge Function while developing, speaking
   // the same contract so the UI cannot tell them apart.
-  plugins: [react(), devApi(), tftSummary(), seoFiles(), prerenderRoutes()],
+  plugins: [react(), devApi(), seoFiles(), prerenderRoutes()],
   resolve: {
     // The pipeline writes its output to games/tft/data. The UI reads it directly
     // so there is a single source of truth — no copying, no drift.

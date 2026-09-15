@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useCopy, useLang } from "./i18n";
 import { LANGS, SITE_ORIGIN, routeUrl, type Route } from "./route";
-import { tftSummary } from "./tftSummary";
 import { metaFor } from "./prerender";
 import { heroes as dlHeroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
 import { buildHeroes, PUBLISHED_BAND as DL_PUBLISHED_BAND } from "./deadlockData";
@@ -65,11 +64,6 @@ function setAlternates(route: Route) {
   add("x-default", routeUrl({ ...route, lang: "en" }));
 }
 
-// Moved to prerender.ts, which the build imports from Node — a component file
-// would drag React and the catalog along with it. Re-exported so the callers
-// and tests that already know it by this address keep working.
-export { titleBand } from "./prerender";
-
 /** The display name behind a detail slug, in the language on screen. */
 function dlDetailName(route: Route, lang: "en" | "es"): string | null {
   if (!route.detail) return null;
@@ -100,9 +94,8 @@ export default function PageMeta({ route }: { route: Route }) {
     // is shared with the build, which writes the same head into static HTML for
     // the scrapers that never run this. Two copies of that chain would be two
     // chances to say different things about the same page.
-    let vivo = true;
     const apply = (detail: string | null) => {
-    const { title, description } = metaFor(route, lang, tftSummary.set, detail);
+    const { title, description } = metaFor(route, lang, detail);
     const url = routeUrl(route);
 
     document.title = title;
@@ -130,19 +123,7 @@ export default function PageMeta({ route }: { route: Route }) {
     setMeta("name", "twitter:description", description);
     setMeta("name", "twitter:image", `${SITE_ORIGIN}/og.jpg`);
     };
-    // El nombre del detalle de TFT necesita el catálogo y las comps: se pide
-    // bajo demanda y el título se completa cuando llega. Deadlock es liviano.
-    if (route.view === "tft" && route.detail) {
-      apply(null);
-      void import("./pageMetaTft").then((m) => {
-        if (vivo) apply(m.tftDetailName(route, lang));
-      });
-    } else {
-      apply(dlDetailName(route, lang));
-    }
-    return () => {
-      vivo = false;
-    };
+    apply(dlDetailName(route, lang));
   }, [route, copy, lang]);
 
   return null;

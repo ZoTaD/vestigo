@@ -1,7 +1,6 @@
 import { COPY, type Lang } from "./i18n";
 import { LANGS, parseRoute, routeUrl, SITE_ORIGIN, type Route } from "./route";
-import { DEFAULT_BAND, type BandId } from "./bands";
-import { detailSlugs, deadlockDetailSlugs, sitemapPaths, type SitemapData } from "./sitemap";
+import { deadlockDetailSlugs, sitemapPaths, type SitemapData } from "./sitemap";
 
 /**
  * El `<head>` de cada página, escrito en el build.
@@ -29,24 +28,6 @@ const say = (loc: Localized | undefined, lang: Lang, fallback: string): string =
   loc?.[lang] || loc?.en || fallback;
 
 /**
- * La banda que titula una página, o null para usar la copia de la sección.
- *
- * La banda por defecto queda excluida a propósito: vive en el `/tft/meta` pelado
- * —la página más valiosa del sitio— y esa tiene que conservar el título apuntado
- * a "tier list" y no uno apuntado a "Master+". La ruta lleva una banda apenas el
- * visitante elige una, así que preguntar sólo si existe retitulaba la página
- * principal, que es exactamente lo que pasó una vez.
- *
- * Vive acá y no en PageMeta.tsx porque el build la necesita desde Node, donde
- * importar un componente de React arrastraría el catálogo entero.
- */
-export function titleBand(route: Route): BandId | null {
-  if (route.view !== "tft" || route.section !== "meta" || route.detail) return null;
-  if (!route.band || route.band === DEFAULT_BAND) return null;
-  return route.band;
-}
-
-/**
  * El título y la descripción de una ruta.
  *
  * Exportada y compartida con `PageMeta.tsx` a propósito: es la cadena de
@@ -54,42 +35,24 @@ export function titleBand(route: Route): BandId | null {
  * garantizar que un día digan cosas distintas. Lo único que cada lado resuelve
  * por su cuenta es `detailName`, porque el navegador lo saca del catálogo vivo
  * y el build de los JSON que tiene en la mano.
+ *
+ * Ya no recibe el número de set: las ramas de TFT (sus pestañas, sus bandas y
+ * el detalle de unidad/ítem/comp) se fueron el 2026-09-15 con el juego, y eran
+ * las únicas que lo usaban. `parseRoute` no produce la vista "tft", así que
+ * ninguna ruta llega acá con ella.
  */
 export function metaFor(
   route: Route,
   lang: Lang,
-  set: string,
   detailName: string | null
 ): { title: string; description: string } {
   const copy = COPY[lang];
   const seo = copy.seo;
-  const banded = titleBand(route);
 
   if (detailName && route.view === "deadlock") {
     return {
       title: seo.deadlock.detail.title(detailName, route.dlSection),
       description: seo.deadlock.detail.description(detailName, route.dlSection),
-    };
-  }
-  if (detailName) {
-    return {
-      title: seo.detail.title(detailName, route.section, set),
-      description: seo.detail.description(detailName, route.section, set),
-    };
-  }
-  if (banded) {
-    // El meta de un rango es su propia página y necesita su propio título, o las
-    // cuatro competirían por un mismo listado con las mismas palabras.
-    const name = copy.meta.bands.names[banded];
-    return {
-      title: seo.tft.metaBand.title(name, set),
-      description: seo.tft.metaBand.description(name, set),
-    };
-  }
-  if (route.view === "tft") {
-    return {
-      title: seo.tft[route.section].title(set),
-      description: seo.tft[route.section].description(set),
     };
   }
   /**
@@ -106,43 +69,23 @@ export function metaFor(
     const page = seo.deadlock[route.dlSection];
     return { title: page.title(), description: page.description() };
   }
-  // Las páginas sin texto atado al set declaran su copia como `() => string`.
-  // Se las llama igual con el set para que todas las ramas se lean iguales;
-  // JavaScript ignora el argumento de más.
-  const page = seo[route.view] as {
-    title: (set: string) => string;
-    description: (set: string) => string;
-  };
-  return { title: page.title(set), description: page.description(set) };
+  // Lo que queda son la portada y las dos páginas legales. El `as` recorta
+  // "tft" del tipo, que sigue en `View` sólo para que su código compile.
+  const page = seo[route.view as "home" | "privacy" | "terms"];
+  return { title: page.title(), description: page.description() };
 }
 
 /**
- * De slug a nombre traducido, para las tres secciones que tienen detalle.
+ * De slug a nombre traducido, para las dos pestañas de Deadlock con detalle.
  *
- * Los slugs salen de `detailSlugs`, que los arma en el mismo orden que los ids,
- * así que emparejarlos por posición es lo que ata un slug a su entidad. Es el
- * mismo emparejamiento que hace la app; `prerender.test.ts` lo compara contra
- * ella para que no puedan separarse.
+ * Los slugs salen de `deadlockDetailSlugs`, que los arma en el mismo orden que
+ * los ids, así que emparejarlos por posición es lo que ata un slug a su
+ * entidad. Es el mismo emparejamiento que hace la app;
+ * `pageMetaDeadlockParity.test.ts` lo compara contra ella para que no puedan
+ * separarse.
  */
 function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
-  const slugs = detailSlugs(data);
   const out: Record<string, string> = {};
-
-  slugs.units.forEach((slug, i) => {
-    const id = data.unitIds[i];
-    out[`units/${slug}`] = say(data.champions[id]?.name as Localized, lang, slug);
-  });
-  slugs.items.forEach((slug, i) => {
-    const id = data.itemIds[i];
-    out[`items/${slug}`] = say(data.items[id]?.name as Localized, lang, slug);
-  });
-  slugs.meta.forEach((slug, i) => {
-    const comp = data.comps[i];
-    if (!comp) return;
-    const trait = say(data.traits[comp.trait]?.name as Localized, lang, "");
-    const carries = comp.carries.map((id) => say(data.champions[id]?.name as Localized, lang, ""));
-    out[`meta/${slug}`] = [trait, ...carries].filter(Boolean).join(" ");
-  });
 
   const dlSlugs = deadlockDetailSlugs(data);
   dlSlugs.heroes.forEach((slug, i) => {
@@ -158,7 +101,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
 }
 
 export interface PrerenderPage {
-  /** La ruta, tal como la pide el visitante: "/es/tft/units/lissandra". */
+  /** La ruta, tal como la pide el visitante: "/es/deadlock/items/basic-magazine". */
   path: string;
   title: string;
   description: string;
@@ -170,7 +113,7 @@ export interface PrerenderPage {
 }
 
 /** Una entrada por cada dirección que el sitemap declara. */
-export function prerenderPages(data: SitemapData, set: string): PrerenderPage[] {
+export function prerenderPages(data: SitemapData): PrerenderPage[] {
   const names: Record<Lang, Record<string, string>> = {
     en: detailNames(data, "en"),
     es: detailNames(data, "es"),
@@ -179,13 +122,10 @@ export function prerenderPages(data: SitemapData, set: string): PrerenderPage[] 
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);
     const lang = route.lang;
-    const detailKey = route.detail
-      ? route.view === "deadlock"
-        ? `dl-${route.dlSection}/${route.detail}`
-        : `${route.section}/${route.detail}`
-      : null;
+    const detailKey =
+      route.detail && route.view === "deadlock" ? `dl-${route.dlSection}/${route.detail}` : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
-    const { title, description } = metaFor(route, lang, set, detail);
+    const { title, description } = metaFor(route, lang, detail);
 
     const alternates = LANGS.map((l) => ({
       hreflang: l as string,

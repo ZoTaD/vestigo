@@ -3,7 +3,7 @@ import { parseRoute, routePath, routeUrl, slugify, type Route } from "../src/rou
 
 describe("slugify", () => {
   it("lowercases and hyphenates", () => {
-    expect(slugify("Miss Fortune")).toBe("miss-fortune");
+    expect(slugify("Basic Magazine")).toBe("basic-magazine");
     expect(slugify("Gargoyle Stoneplate")).toBe("gargoyle-stoneplate");
   });
 
@@ -26,8 +26,8 @@ describe("slugify", () => {
 
 describe("parseRoute", () => {
   it("reads the language from the front of the path", () => {
-    expect(parseRoute("/es/tft/units").lang).toBe("es");
-    expect(parseRoute("/en/tft/units").lang).toBe("en");
+    expect(parseRoute("/es/deadlock/items").lang).toBe("es");
+    expect(parseRoute("/en/deadlock/items").lang).toBe("en");
   });
 
   it("defaults to English, the site's default language", () => {
@@ -39,7 +39,6 @@ describe("parseRoute", () => {
     expect(parseRoute("/en")).toEqual({ lang: "en", view: "home", section: "meta", dlSection: "meta" });
     expect(parseRoute("/es/deadlock")).toMatchObject({ lang: "es", view: "deadlock" });
     expect(parseRoute("/en/privacy")).toMatchObject({ view: "privacy" });
-    expect(parseRoute("/en/tft/items")).toMatchObject({ view: "tft", section: "items" });
   });
 
   /**
@@ -59,112 +58,43 @@ describe("parseRoute", () => {
     });
   });
 
-  /**
-   * `items` existe en los dos juegos y significa cosas distintas: en TFT son los
-   * objetos de TFT y en Deadlock los de la tienda. Que el slug se repita está
-   * bien —cada uno vive bajo su juego— pero son tipos separados, así que conviene
-   * fijar que ninguno se cuela en el otro.
-   */
-  it("mantiene separados los dos /items", () => {
-    expect(parseRoute("/en/deadlock/items")).toMatchObject({ view: "deadlock", dlSection: "items" });
-    expect(parseRoute("/en/tft/items")).toMatchObject({ view: "tft", section: "items" });
-  });
-
   it("una pestaña de Deadlock que no existe cae en el meta, no en una página en blanco", () => {
     expect(parseRoute("/en/deadlock/nada")).toMatchObject({ view: "deadlock", dlSection: "meta" });
   });
 
-  /**
-   * Las pestañas de los dos juegos son conjuntos distintos a propósito. Si
-   * "patches" viviera en el tipo compartido, `/tft/patches` parsearía a una
-   * pestaña que no existe y el sitio contestaría 200 en una URL vacía.
-   */
-  it("no acepta una pestaña de Deadlock en TFT", () => {
-    expect(parseRoute("/en/tft/patches")).toMatchObject({ view: "tft", section: "meta" });
-  });
-
-  it("falls back to the meta tab when /tft carries no section", () => {
-    expect(parseRoute("/en/tft")).toMatchObject({ view: "tft", section: "meta" });
-  });
-
-  it("reads a detail slug", () => {
-    expect(parseRoute("/en/tft/units/jinx")).toMatchObject({
-      view: "tft",
-      section: "units",
-      detail: "jinx",
-    });
-  });
-
-  it("ignores a detail on sections that have no detail pages", () => {
-    expect(parseRoute("/en/tft/ladder/anything").detail).toBeUndefined();
-    expect(parseRoute("/en/tft/player/someone").detail).toBeUndefined();
-  });
-
-  it("still understands paths from before languages were in the URL", () => {
-    // Links shared earlier must not break.
-    expect(parseRoute("/tft/items")).toMatchObject({
-      lang: "en",
-      view: "tft",
-      section: "items",
-    });
-  });
-
   it("shows the site rather than nothing when the path is nonsense", () => {
     expect(parseRoute("/en/wat")).toMatchObject({ view: "home" });
-    expect(parseRoute("/zz/tft")).toMatchObject({ lang: "en", view: "home" });
+    expect(parseRoute("/zz/deadlock")).toMatchObject({ lang: "en", view: "home" });
   });
 });
 
-describe("the rank band in the meta URL", () => {
-  it("reads a band, so each rank's meta is a page of its own", () => {
-    expect(parseRoute("/en/tft/meta/diamond-emerald")).toMatchObject({
-      view: "tft",
-      section: "meta",
-      band: "diamond-emerald",
-      detail: undefined,
-    });
-  });
-
-  it("keeps the comp slug working after a band", () => {
+/**
+ * TFT salió del sitio el 2026-09-15 (ver `route.ts`). Sus direcciones estaban
+ * indexadas y compartidas, así que siguen llegando; en producción las contesta
+ * `netlify.toml` con 301, y en el navegador —un link viejo dentro de la app, o
+ * un `vite preview`— tienen que caer en la portada del idioma que nombran, no
+ * en la vista de TFT ni en una página vacía.
+ */
+describe("las direcciones de TFT ya no llevan a TFT", () => {
+  it("caen en la portada, con el idioma de la URL", () => {
+    expect(parseRoute("/en/tft/units/jinx")).toMatchObject({ lang: "en", view: "home" });
+    expect(parseRoute("/es/tft/meta")).toMatchObject({ lang: "es", view: "home" });
     expect(parseRoute("/es/tft/meta/platinum-gold/sorcerer-zoe")).toMatchObject({
       lang: "es",
-      section: "meta",
-      band: "platinum-gold",
-      detail: "sorcerer-zoe",
+      view: "home",
     });
   });
 
-  // These URLs are in the sitemap and may already be indexed.
-  it("still reads a bare comp slug as a comp, not as a band", () => {
-    expect(parseRoute("/en/tft/meta/sorcerer-zoe")).toMatchObject({
-      section: "meta",
-      band: undefined,
-      detail: "sorcerer-zoe",
-    });
+  it("también las de antes de que el idioma fuera parte de la URL", () => {
+    expect(parseRoute("/tft/items")).toMatchObject({ lang: "en", view: "home" });
+    expect(parseRoute("/tft")).toMatchObject({ lang: "en", view: "home" });
   });
 
-  it("leaves the default band out of the path, so the meta keeps one address", () => {
-    expect(routePath({ lang: "en", view: "tft", section: "meta", dlSection: "meta", band: "global" })).toBe(
-      "/en/tft/meta"
-    );
-  });
-
-  // Apex used to be the default and owned the bare /tft/meta. Now that the
-  // Platinum+ cut is the default, apex is a band like any other and needs its
-  // own address rather than silently resolving to the front page.
-  it("gives apex its own address now that it is not the default", () => {
-    expect(routePath({ lang: "en", view: "tft", section: "meta", dlSection: "meta", band: "apex" })).toBe(
-      "/en/tft/meta/apex"
-    );
-    expect(parseRoute("/en/tft/meta/apex").band).toBe("apex");
-  });
-
-  it("ignores a band on sections that do not have one", () => {
-    expect(parseRoute("/en/tft/units/diamond-emerald")).toMatchObject({
-      section: "units",
-      band: undefined,
-      detail: "diamond-emerald",
-    });
+  it("no dejan un detalle ni una banda colgando en la ruta", () => {
+    const r = parseRoute("/en/tft/meta/apex");
+    expect(r.detail).toBeUndefined();
+    expect(r.band).toBeUndefined();
+    expect(routePath(r)).toBe("/en");
   });
 });
 
@@ -172,8 +102,6 @@ describe("routePath", () => {
   const cases: [Route, string][] = [
     [{ lang: "en", view: "home", section: "meta", dlSection: "meta" }, "/en"],
     [{ lang: "es", view: "home", section: "meta", dlSection: "meta" }, "/es"],
-    [{ lang: "en", view: "tft", section: "meta", dlSection: "meta" }, "/en/tft/meta"],
-    [{ lang: "es", view: "tft", section: "units", dlSection: "meta" }, "/es/tft/units"],
     [{ lang: "en", view: "deadlock", section: "meta", dlSection: "meta" }, "/en/deadlock"],
     [
       { lang: "en", view: "deadlock", section: "meta", dlSection: "items" },
@@ -188,15 +116,7 @@ describe("routePath", () => {
       "/en/deadlock/patches",
     ],
     [{ lang: "en", view: "terms", section: "meta", dlSection: "meta" }, "/en/terms"],
-    [{ lang: "en", view: "tft", section: "units", dlSection: "meta", detail: "jinx" }, "/en/tft/units/jinx"],
-    [
-      { lang: "es", view: "tft", section: "meta", dlSection: "meta", band: "silver-below" },
-      "/es/tft/meta/silver-below",
-    ],
-    [
-      { lang: "en", view: "tft", section: "meta", dlSection: "meta", band: "platinum-gold", detail: "sorcerer-zoe" },
-      "/en/tft/meta/platinum-gold/sorcerer-zoe",
-    ],
+    [{ lang: "en", view: "privacy", section: "meta", dlSection: "meta" }, "/en/privacy"],
   ];
 
   it.each(cases)("builds %o", (route, expected) => {
@@ -215,8 +135,8 @@ describe("routePath", () => {
 
 describe("routeUrl", () => {
   it("builds the absolute URL canonical and hreflang need", () => {
-    expect(routeUrl({ lang: "es", view: "tft", section: "items", dlSection: "meta" })).toBe(
-      "https://vestigo.gg/es/tft/items"
+    expect(routeUrl({ lang: "es", view: "deadlock", section: "meta", dlSection: "items" })).toBe(
+      "https://vestigo.gg/es/deadlock/items"
     );
   });
 });

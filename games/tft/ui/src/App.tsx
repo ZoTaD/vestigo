@@ -1,9 +1,8 @@
-import { Suspense, useEffect, useState } from "react";
-import Nav, { type Place } from "./Nav";
+import { useEffect, useState } from "react";
+import Nav from "./Nav";
 import RouteLink from "./RouteLink";
 import SectionHead from "./SectionHead";
 import Home from "./Home";
-import { lazyWithPreload } from "./lazyWithPreload";
 import Deadlock from "./Deadlock";
 import DeadlockItems from "./DeadlockItems";
 import DeadlockRanks from "./DeadlockRanks";
@@ -36,24 +35,18 @@ import {
 } from "./i18n";
 import {
   LANGS,
-  SECTIONS,
   DEADLOCK_SECTIONS,
   parseRoute,
   routePath,
   type Route,
-  type Section,
   type DeadlockSection,
 } from "./route";
-import { DEFAULT_BAND, rememberBand, storedBand } from "./bands";
+import { storedBand } from "./bands";
 import PageMeta from "./PageMeta";
 
-/**
- * TFT entero, cargado bajo demanda (2026-09-07): sus cinco vistas y sus datos
- * —casi un megabyte— dejan de viajar a la portada y a Deadlock. El prerender
- * llama a `preloadAreas()` antes de renderizar (ver `entry-server.tsx`).
- */
-const TftArea = lazyWithPreload(() => import("./TftArea"));
-export const preloadAreas = (): Promise<void> => TftArea.preload();
+// TFT no se monta desde el 2026-09-15: `parseRoute` ya no produce la vista
+// "tft", así que acá no hay nada que dibujar para ella. `TftArea.tsx` y sus
+// vistas siguen en el repo, sin importar, por si el juego vuelve (ver route.ts).
 
 /**
  * The shell: where you are, and the disclaimer under everything.
@@ -74,7 +67,7 @@ function Shell({
   navigate: (next: Route) => void;
 }) {
   const copy = useCopy();
-  const { view: place, section, detail } = route;
+  const { view: place } = route;
   const [consent, setConsent] = useState<Consent | null>(storedConsent);
   // Reopening the notice from the footer is how a decision gets withdrawn,
   // which the GDPR requires to be as easy as giving it.
@@ -95,9 +88,8 @@ function Shell({
   useEffect(() => {
     if (consent !== "granted") return;
     const path = routePath({ ...route, lang: "en" }).replace(/^\/en/, "") || "/";
-    const title = place === "tft" ? `TFT — ${section}${detail ? ` — ${detail}` : ""}` : place;
-    trackPage(path, title);
-  }, [route, consent, place, section, detail]);
+    trackPage(path, place);
+  }, [route, consent, place]);
 
   const decide = (next: Consent) => {
     rememberConsent(next);
@@ -119,21 +111,7 @@ function Shell({
   const [dlBand, setDlBand] = useState<DlBandId>(DL_PUBLISHED_BAND);
   const dlPicker = <DeadlockBandPicker band={dlBand} onChange={setDlBand} />;
 
-  const goPlace = (next: Place) =>
-    navigate({ ...route, view: next, detail: undefined });
-
-  const goSection = (next: Section) =>
-    navigate({ ...route, view: "tft", section: next, detail: undefined });
-
-  // The chosen rank is remembered the way the language is: someone who plays
-  // Gold should not have to re-pick it on every visit. The URL still wins when
-  // it names one, so a shared link opens on the band it was shared from.
-
   /** Opening or closing a detail is a navigation, so it gets its own URL. */
-  const goDetail = (next: Section, slug?: string) =>
-    navigate({ ...route, view: "tft", section: next, detail: slug });
-
-  /** Same idea, for Deadlock's hero and item detail pages. */
   const goDlDetail = (next: DeadlockSection, slug?: string) =>
     navigate({ ...route, view: "deadlock", dlSection: next, detail: slug });
 
@@ -161,7 +139,7 @@ function Shell({
     <div
       className="app"
       data-theme="codex"
-      data-game={place === "deadlock" ? "deadlock" : place === "tft" ? "tft" : undefined}
+      data-game={place === "deadlock" ? "deadlock" : undefined}
       /**
        * La home es el único lugar que no es el códex.
        *
@@ -258,12 +236,6 @@ function Shell({
       {place === "privacy" && <Privacy />}
       {place === "terms" && <Terms />}
 
-      {place === "tft" && (
-        <Suspense fallback={<main className="page" aria-busy="true" />}>
-          <TftArea route={route} navigate={navigate} />
-        </Suspense>
-      )}
-
       {/* One centred column, in the order someone reads it: where to go, where
           the data comes from, the notice Riot requires, then the byline. */}
       <footer className="foot">
@@ -293,9 +265,10 @@ function Shell({
           )}
         </nav>
 
-        <p className="foot-sources">
-          {route.view === "deadlock" ? copy.footer.sourcesDeadlock : copy.footer.sources}
-        </p>
+        {/* Una sola línea de fuentes desde que Deadlock es el único juego: la
+            de Riot/CommunityDragon describía las páginas de TFT, que ya no se
+            sirven. */}
+        <p className="foot-sources">{copy.footer.sourcesDeadlock}</p>
 
         {/* Required by Riot's General Policies, which every third-party product
             must post, and by Overwolf's compliance guide. It is not decoration —

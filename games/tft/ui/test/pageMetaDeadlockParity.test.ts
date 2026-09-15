@@ -22,27 +22,17 @@ import { readFileSync } from "node:fs";
 
 const readDl = (name: string) =>
   JSON.parse(readFileSync(new URL(`../../../deadlock/data/${name}`, import.meta.url), "utf-8"));
-const readTft = (name: string) =>
-  JSON.parse(readFileSync(new URL(`../../data/${name}`, import.meta.url), "utf-8"));
 
-const catalog = readTft("catalog.json");
 const dlCatalog = readDl("catalog.json");
 const dlHeroesFile = readDl("heroes.json");
 const dlItemsFile = readDl("items.json");
 const data: SitemapData = {
-  champions: catalog.champions,
-  traits: catalog.traits,
-  items: catalog.items,
-  comps: readTft("comps.json").comps,
-  unitIds: readTft("units.json").units.map((u: { id: string }) => u.id),
-  itemIds: readTft("items.json").items.map((i: { id: string }) => i.id),
   dlHeroes: dlCatalog.heroes,
   dlItems: dlCatalog.items,
   dlHeroIds: dlHeroesFile.heroes.map((h: { heroId: number }) => String(h.heroId)),
   dlItemIds: dlItemsFile.items.map((i: { itemId: number }) => String(i.itemId)),
 };
-const SET = String(catalog.set ?? "");
-const pages = prerenderPages(data, SET);
+const pages = prerenderPages(data);
 
 /** Lo mismo que hace PageMeta.detailName() para un héroe de Deadlock. */
 function liveHeroName(slug: string, lang: "en" | "es"): string | null {

@@ -3,11 +3,8 @@ import heroesJson from "@deadlock/heroes.json";
 import { buildHeroes, patchMovers, PUBLISHED_BAND, type Hero } from "./deadlockData";
 import { buildItems as buildDlItems } from "./deadlockItemsData";
 import { heroes as heroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
-import { text } from "./localized";
-import { tftSummary } from "./tftSummary";
 import { useCopy, useLang, useLocale } from "./i18n";
 import { lastProfile } from "./lastProfile";
-import { storedSearch } from "./lastSearch";
 import { setPendingSearch } from "./pendingSearch";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
@@ -45,8 +42,6 @@ export default function Home({
   const pct = (x: number) =>
     `${(x * 100).toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
   const pts = (x: number) => x.toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  const place = (x: number) =>
-    x.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   /* --- Hoy en el meta: Deadlock ---------------------------------------- */
   const heroes = buildHeroes(PUBLISHED_BAND, lang);
@@ -62,39 +57,27 @@ export default function Home({
     null
   );
 
-  /* --- Hoy en el meta: TFT --------------------------------------------- */
-  // Lo poco de TFT que la portada necesita viene resumido del build
-  // (`tftSummary.ts`): la portada no importa las comps ni el catálogo.
-  const bestComp = tftSummary.best;
-  const bestTftItem = tftSummary.bestItem;
-
   const bandName = copy.deadlock.bands[PUBLISHED_BAND];
 
   /* --- Buscador ---------------------------------------------------------- */
-  const [game, setGame] = useState<"deadlock" | "tft">("deadlock");
+  // Sólo Deadlock desde el 2026-09-15 (ver `route.ts`): el selector de juego
+  // que había acá se fue con TFT, y vuelve el día que haya un segundo juego.
   const [query, setQuery] = useState("");
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const q = query.trim();
     if (!q) return;
     setPendingSearch(q);
-    navigate(
-      game === "tft"
-        ? { ...route, view: "tft", section: "player", detail: undefined }
-        : { ...route, view: "deadlock", dlSection: "player", detail: undefined }
-    );
+    navigate({ ...route, view: "deadlock", dlSection: "player", detail: undefined });
   };
   const lastDl = lastProfile();
-  const lastTft = storedSearch();
 
   /* --- Cifras del pie ---------------------------------------------------- */
-  const matchesRead = tftSummary.sampleSize + heroesJson.matches;
-  const measured = [tftSummary.generatedAt, heroesJson.generatedAt]
-    .map((d) => Date.parse(d))
-    .filter((t) => !Number.isNaN(t));
-  const days = measured.length
-    ? Math.max(0, Math.floor((Date.now() - Math.max(...measured)) / 86_400_000))
-    : null;
+  const matchesRead = heroesJson.matches;
+  const measuredAt = Date.parse(heroesJson.generatedAt);
+  const days = Number.isNaN(measuredAt)
+    ? null
+    : Math.max(0, Math.floor((Date.now() - measuredAt) / 86_400_000));
   const freshness =
     days === null
       ? "—"
@@ -125,22 +108,14 @@ export default function Home({
 
         <form className="home-search box" onSubmit={submit} role="search">
           <p className="box-title">{copy.home.search.label}</p>
-          <div className="seg home-search-game" role="group" aria-label={copy.home.search.label}>
-            <button type="button" data-active={game === "deadlock"} onClick={() => setGame("deadlock")}>
-              {copy.games.deadlock}
-            </button>
-            <button type="button" data-active={game === "tft"} onClick={() => setGame("tft")}>
-              {copy.games.tftShort}
-            </button>
-          </div>
           <div className="home-search-row">
             <label className="field home-search-field">
               <input
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={copy.home.search.placeholder[game]}
-                aria-label={copy.home.search.placeholder[game]}
+                placeholder={copy.home.search.placeholder.deadlock}
+                aria-label={copy.home.search.placeholder.deadlock}
                 autoComplete="off"
               />
             </label>
@@ -148,27 +123,16 @@ export default function Home({
               {copy.home.search.go}
             </button>
           </div>
-          {(lastDl || lastTft) && (
+          {lastDl && (
             <p className="home-last">
               <span className="home-last-label">{copy.home.search.lastSeen}</span>
-              {lastDl && (
-                <RouteLink
-                  className="home-last-link"
-                  to={{ ...route, view: "deadlock", dlSection: "player", detail: String(lastDl.accountId) }}
-                  onNavigate={navigate}
-                >
-                  {lastDl.name} <small>· {copy.games.deadlock}</small>
-                </RouteLink>
-              )}
-              {lastTft && (
-                <RouteLink
-                  className="home-last-link"
-                  to={{ ...route, view: "tft", section: "player", detail: undefined }}
-                  onNavigate={navigate}
-                >
-                  {lastTft.query} <small>· {copy.games.tftShort}</small>
-                </RouteLink>
-              )}
+              <RouteLink
+                className="home-last-link"
+                to={{ ...route, view: "deadlock", dlSection: "player", detail: String(lastDl.accountId) }}
+                onNavigate={navigate}
+              >
+                {lastDl.name} <small>· {copy.games.deadlock}</small>
+              </RouteLink>
             </p>
           )}
         </form>
@@ -259,51 +223,6 @@ export default function Home({
               </RouteLink>
             </li>
           )}
-
-          {bestComp && (
-            <li className="today-card" data-game="tft">
-              <RouteLink
-                className="today-link"
-                to={{ ...route, view: "tft", section: "meta", detail: bestComp.slug }}
-                onNavigate={navigate}
-              >
-                <span className="today-kicker">
-                  {copy.games.tftShort} · {copy.home.today.bestComp}
-                </span>
-                <span className="today-body">
-                  <span className="today-name">{text(bestComp.name, lang)}</span>
-                </span>
-                <span className="today-figure">
-                  <b>{place(bestComp.avgPlacement)}</b>
-                  <small>
-                    {copy.home.today.placement} · {copy.home.today.set(tftSummary.set)}
-                  </small>
-                </span>
-              </RouteLink>
-            </li>
-          )}
-
-          {bestTftItem && (
-            <li className="today-card" data-game="tft">
-              <RouteLink
-                className="today-link"
-                to={{ ...route, view: "tft", section: "items", detail: bestTftItem.slug }}
-                onNavigate={navigate}
-              >
-                <span className="today-kicker">
-                  {copy.games.tftShort} · {copy.home.today.bestItem}
-                </span>
-                <span className="today-body">
-                  {bestTftItem.img && <img src={bestTftItem.img} alt="" width={48} height={48} loading="lazy" />}
-                  <span className="today-name">{text(bestTftItem.name, lang)}</span>
-                </span>
-                <span className="today-figure">
-                  <b>{place(bestTftItem.avgPlacement)}</b>
-                  <small>{copy.home.today.better(pts(Math.abs(bestTftItem.delta)))}</small>
-                </span>
-              </RouteLink>
-            </li>
-          )}
         </ul>
       </section>
 
@@ -312,40 +231,9 @@ export default function Home({
         <h2 className="home-h2">{copy.home.games.heading}</h2>
 
         <ul className="game-list">
-          <li className="game-panel" data-panel="tft">
-            <div className="game-panel-main">
-              <h3 className="game-panel-name">{copy.games.tft}</h3>
-              <p className="game-panel-note">{copy.home.games.tft}</p>
-              <div className="game-panel-ctas">
-                <RouteLink
-                  className="game-cta"
-                  to={{ ...route, view: "tft", section: "meta", detail: undefined }}
-                  onNavigate={navigate}
-                >
-                  {copy.home.games.tftCta(tftSummary.set, num(tftSummary.compsCount))}
-                  <Arrow />
-                </RouteLink>
-                <RouteLink
-                  className="game-cta is-ghost"
-                  to={{ ...route, view: "tft", section: "player", detail: undefined }}
-                  onNavigate={navigate}
-                >
-                  {copy.home.games.profile}
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{bestComp ? place(bestComp.avgPlacement) : "—"}</b>
-                <span>{copy.home.figures.placement(bestComp ? text(bestComp.name, lang) : "")}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(tftSummary.sampleSize)}</b>
-                <span>{copy.home.figures.matchesSet(tftSummary.set)}</span>
-              </p>
-            </div>
-          </li>
-
+          {/* El panel de TFT que abría esta lista salió el 2026-09-15 (ver
+              `route.ts`). Sus estilos siguen en `home.css` bajo
+              `[data-panel="tft"]`, para el día que vuelva. */}
           <li className="game-panel" data-panel="deadlock">
             <div className="game-panel-main">
               <h3 className="game-panel-name">{copy.games.deadlock}</h3>

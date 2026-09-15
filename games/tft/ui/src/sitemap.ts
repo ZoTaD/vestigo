@@ -1,25 +1,21 @@
-import {
-  LANGS,
-  SECTIONS,
-  DEADLOCK_SECTIONS,
-  SITE_ORIGIN,
-  routePath,
-  slugify,
-  type Section,
-} from "./route";
-import { BANDS, DEFAULT_BAND } from "./bands";
+import { LANGS, DEADLOCK_SECTIONS, SITE_ORIGIN, routePath, slugify } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
  *
  * Written as a pure function over the pipeline's own output rather than a file
- * kept by hand: a set change rewrites the catalog, and a sitemap that still
- * lists last set's champions is worse than none at all.
+ * kept by hand: a catalog change rewrites the data, and a sitemap that still
+ * lists last patch's heroes is worse than none at all.
  *
  * It takes the data as arguments instead of importing it so the build script
- * can call it from Node — where the app's `@data` alias does not exist — while
- * the tests call it with the real files. `sitemap.test.ts` checks the slugs it
- * produces against the ones the running app uses, so the two cannot drift.
+ * can call it from Node — where the app's `@deadlock` alias does not exist —
+ * while the tests call it with the real files. `sitemap.test.ts` checks the
+ * slugs it produces against the ones the running app uses, so the two cannot
+ * drift.
+ *
+ * Las direcciones de TFT (pestañas, bandas, unidades, ítems y comps) salieron
+ * de acá el 2026-09-15 junto con el juego; `netlify.toml` las contesta con 301
+ * a la portada para que Google las saque del índice.
  */
 
 interface Localized {
@@ -27,30 +23,12 @@ interface Localized {
 }
 
 export interface SitemapData {
-  champions: Record<string, { name: Localized }>;
-  traits: Record<string, { name: Localized }>;
-  items: Record<string, { name: Localized }>;
-  /** From comps.json: the shape the meta page is built from. */
-  comps: { signature: string; trait: string; carries: string[] }[];
-  /** From units.json and items.json: which ids actually have a page. */
-  unitIds: string[];
-  itemIds: string[];
   /** Deadlock's catalog: hero and item name, in both languages. */
   dlHeroes: Record<string, { name: Localized }>;
   dlItems: Record<string, { name: Localized }>;
   /** Which heroes/items have data in the published default band. */
   dlHeroIds: string[];
   dlItemIds: string[];
-}
-
-/** The same name the comp shows on screen: defining trait, then carries. */
-function compLabel(
-  comp: { trait: string; carries: string[] },
-  data: SitemapData
-): string {
-  const trait = data.traits[comp.trait]?.name.en ?? "";
-  const carries = comp.carries.map((id) => data.champions[id]?.name.en ?? "");
-  return [trait, ...carries].filter(Boolean).join(" ");
 }
 
 /**
@@ -71,14 +49,6 @@ function uniqueSlugs(names: string[]): string[] {
   return out;
 }
 
-export function detailSlugs(data: SitemapData): Record<"units" | "items" | "meta", string[]> {
-  return {
-    units: uniqueSlugs(data.unitIds.map((id) => data.champions[id]?.name.en ?? id)),
-    items: uniqueSlugs(data.itemIds.map((id) => data.items[id]?.name.en ?? id)),
-    meta: uniqueSlugs(data.comps.map((c) => compLabel(c, data))),
-  };
-}
-
 /** Every hero/item detail slug the Deadlock pages should list. */
 export function deadlockDetailSlugs(data: SitemapData): { heroes: string[]; items: string[] } {
   return {
@@ -89,12 +59,10 @@ export function deadlockDetailSlugs(data: SitemapData): { heroes: string[]; item
 
 /** Every path the site answers, in every language. */
 export function sitemapPaths(data: SitemapData): string[] {
-  const details = detailSlugs(data);
   const paths: string[] = [];
 
-  // Toda ruta se arma con las dos pestañas por defecto y se sobreescribe la que
-  // importa: `dlSection` sólo cambia el camino cuando la vista es Deadlock, y
-  // `section` sólo cuando es TFT.
+  // `Route` sigue llevando la pestaña de TFT aunque el sitio ya no la sirva;
+  // acá va con su valor por defecto y no cambia ningún camino.
   const base = { section: "meta", dlSection: "meta" } as const;
 
   for (const lang of LANGS) {
@@ -116,22 +84,6 @@ export function sitemapPaths(data: SitemapData): string[] {
     }
     for (const slug of deadlockDetailSlugs(data).items) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "items", detail: slug }));
-    }
-
-    for (const section of SECTIONS) {
-      paths.push(routePath({ ...base, lang, view: "tft", section }));
-      for (const detail of details[section as keyof typeof details] ?? []) {
-        paths.push(routePath({ ...base, lang, view: "tft", section, detail }));
-      }
-    }
-
-    // One landing page per rank band. The comps inside a band are deliberately
-    // NOT listed: the same comp under four ranks would be four near-identical
-    // pages competing with each other, which is how a site teaches Google to
-    // ignore it. The default band is already covered by /tft/meta above.
-    for (const band of BANDS) {
-      if (band.id === DEFAULT_BAND) continue;
-      paths.push(routePath({ ...base, lang, view: "tft", section: "meta", band: band.id }));
     }
   }
 

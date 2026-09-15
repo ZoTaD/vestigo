@@ -78,8 +78,19 @@ export interface Route {
 const isLang = (v: string): v is Lang => (LANGS as string[]).includes(v);
 const isSection = (v: string): v is Section => (SECTIONS as string[]).includes(v);
 const isDlSection = (v: string): v is DeadlockSection => (DEADLOCK_ROUTES as string[]).includes(v);
-const isView = (v: string): v is View =>
-  ["home", "tft", "deadlock", "privacy", "terms"].includes(v);
+/**
+ * Las vistas que el sitio **sirve**. `View` sigue incluyendo "tft" para que el
+ * código de TFT compile, pero una URL `/tft/...` ya no llega a él.
+ *
+ * **TFT salió del sitio el 2026-09-15.** Su pipeline está apagada desde el 12
+ * de agosto y el meta que servía era del set 17, parche 16.16: un mes viejo y
+ * presentado como actual. Medido en Analytics del 18-ago al 14-sep, TFT fueron
+ * 40 vistas contra 299 de Deadlock, y ninguna de las siete personas que
+ * entraron volvió por él. Ocultarlo es mejor que servirlo viejo; la pipeline y
+ * las vistas quedan en el repo por si se retoma. Ver
+ * docs/design/2026-09-15-tft-sale-del-sitio.md.
+ */
+const isView = (v: string): v is View => ["home", "deadlock", "privacy", "terms"].includes(v);
 
 /**
  * A name as it appears in a URL: lowercase, ASCII, hyphen-separated.
@@ -119,6 +130,8 @@ export function parseRoute(pathname: string): Route {
 
   const base = { lang, section: DEFAULT_SECTION, dlSection: DEFAULT_DL_SECTION };
   const head = rest[0];
+  // Una `/tft/...` cae acá también: en el navegador termina en la portada, y en
+  // Netlify ni llega, porque `netlify.toml` la redirige con 301 antes.
   if (!head || !isView(head)) return { ...base, view: "home" };
 
   // Deadlock lleva sus propias pestañas, y una que no se reconoce cae en el
