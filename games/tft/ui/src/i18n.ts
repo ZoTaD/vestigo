@@ -1087,6 +1087,8 @@ const EN = {
         "so the top ranks look fuller than they are. This corrects itself as the rest calibrate.",
       players: "players",
       matches: "matches",
+      /** El título de la caja del histograma (dirección A, 2026-09-16). */
+      byRank: "By rank",
       day: "By day",
       empty: "No ranked matches yet.",
       /**
@@ -2524,6 +2526,7 @@ const ES: typeof EN = {
         "que el resto calibra.",
       players: "jugadores",
       matches: "partidas",
+      byRank: "Por rango",
       day: "Por día",
       empty: "Todavía no hay partidas rankeadas.",
       sides: {

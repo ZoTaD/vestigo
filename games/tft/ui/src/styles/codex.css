@@ -3162,37 +3162,12 @@
   outline-offset: -2px;
 }
 
-[data-theme="codex"] .dl-calibrating {
-  border-left: 2px solid var(--oxblood);
-  padding-left: 0.9rem;
-  margin: 0 0 1.4rem;
-  max-width: 62ch;
-}
-
 [data-theme="codex"] .dl-section-title {
   font-size: 1rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gold);
   margin: 2.2rem 0 0.6rem;
-}
-
-/* `.detail-note` trae un `margin-top` NEGATIVO, pensado para que la nota cuelgue
-   del encabezado que tiene arriba. Acá no cuelga de un título sino del rango de
-   fechas, así que se le montaba encima: medido, la nota arrancaba en y=527 con la
-   fecha terminando en y=537. Se corrige localmente y no en la regla global, que
-   está bien donde se usa. */
-[data-theme="codex"] .dl-ladder-wrap > .detail-note {
-  margin-top: 1.2rem;
-}
-
-[data-theme="codex"] .dl-days,
-[data-theme="codex"] .dl-sides-list {
-  list-style: none;
-  margin: 0.8rem 0 0;
-  padding: 0;
-  display: grid;
-  gap: 0.35rem;
 }
 
 /* ---- El histograma de la escalera ----------------------------------------
@@ -3345,99 +3320,8 @@
   font-variant-numeric: tabular-nums;
 }
 
-[data-theme="codex"] .dl-rung-name {
-  font-size: 0.9rem;
-  color: var(--vellum);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-[data-theme="codex"] .dl-day-track {
-  display: block;
-  height: 0.85rem;
-  background: rgba(233, 224, 203, 0.06);
-  border-radius: 1px;
-}
-
-[data-theme="codex"] .dl-day-n {
-  font-variant-numeric: tabular-nums;
-  font-size: 0.85rem;
-  color: var(--vellum-dim);
-  min-width: 5ch;
-  text-align: right;
-}
-
-[data-theme="codex"] .dl-day {
-  display: grid;
-  grid-template-columns: 3.4rem 1fr auto;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-[data-theme="codex"] .dl-day-label {
-  font-variant-numeric: tabular-nums;
-  font-size: 0.85rem;
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .dl-day-bar {
-  display: flex;
-  height: 100%;
-  border-radius: 1px;
-  overflow: hidden;
-}
-
-[data-theme="codex"] .dl-day-seg {
-  display: block;
-  height: 100%;
-}
-
-[data-theme="codex"] .dl-sides-overall {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 1.6rem;
-  margin: 1rem 0 0.4rem;
-}
-
-[data-theme="codex"] .dl-side-big {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-[data-theme="codex"] .dl-side-pct {
-  font-size: 1.8rem;
-  color: var(--gold-lit);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
-[data-theme="codex"] .dl-side-err {
-  font-size: 0.75rem;
-  color: var(--vellum-dim);
-  font-variant-numeric: tabular-nums;
-}
-
-[data-theme="codex"] .dl-side-row {
-  display: grid;
-  grid-template-columns: 8.5rem 1fr auto;
-  align-items: baseline;
-  gap: 0.6rem;
-}
-
-[data-theme="codex"] .dl-side-val {
-  font-variant-numeric: tabular-nums;
-  color: var(--vellum-dim);
-}
-
-/* Sólo se destaca el lado cuando el intervalo no toca el 50%: pintar una
-   diferencia que no se sostiene afirmaría algo que el dato no dice. */
-[data-theme="codex"] .dl-side-val[data-leans="team0"],
-[data-theme="codex"] .dl-side-val[data-leans="team1"] {
-  color: var(--gold-lit);
-}
+/* Las filas por día y la tabla de lados viven en `deadlock.css` desde el
+   2026-09-16 (dirección A). */
 
 @media (max-width: 30rem) {
   [data-theme="codex"] .dl-hist-plot {
@@ -3468,10 +3352,6 @@
      columna. */
   [data-theme="codex"] .dl-hist-name {
     display: none;
-  }
-
-  [data-theme="codex"] .dl-side-row {
-    grid-template-columns: 6rem 1fr auto;
   }
 }
 

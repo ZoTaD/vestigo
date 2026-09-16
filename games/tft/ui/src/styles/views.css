@@ -557,11 +557,6 @@
 
 /* Deadlock · Rangos ----------------------------------------------------------------- */
 
-.dl-mine {
-  max-width: var(--col);
-  margin: 1.1rem auto 0;
-}
-
 .dl-mine-row {
   display: flex;
   flex-wrap: wrap;

@@ -36,7 +36,7 @@ const rankName = (tier: number, lang: Lang): string =>
 function SideNumber({ label, value, se }: { label: string; value: number; se: number }) {
   return (
     <div className="dl-side-big">
-      <span className="stat-label">{label}</span>
+      <span className="dl-side-label">{label}</span>
       <b className="dl-side-pct">{pct(value, 2)}</b>
       <span className="dl-side-err">± {(se * 100).toFixed(2)}</span>
     </div>
@@ -61,7 +61,7 @@ export default function DeadlockRanks() {
   const t = copy.deadlock.ladder;
 
   return (
-    <main className="deadlock">
+    <main className="deadlock deadlock-ranks">
       {/* Mismo reparto que el resto de las pestañas: lo que explica la página a
           la izquierda, lo que la controla a la derecha. */}
       <SectionHead
@@ -96,6 +96,7 @@ export default function DeadlockRanks() {
        * porcentaje sale de los mismos `bins` que dibujan el histograma: cuántos
        * jugadores clasificados hay por debajo del rango elegido.
        */}
+      <div className="page dl-ranks">
       <section className="box dl-mine">
         <div className="box-head">
           <h2 className="box-title">{t.mine.title}</h2>
@@ -139,15 +140,18 @@ export default function DeadlockRanks() {
       {/* El cartel sólo aplica a la vista por jugador: las partidas traen el
           promedio de la sala, que cubre el 100% de la muestra. */}
       {view === "players" && showsCalibrationNotice(file.coverage) && (
-        <p className="detail-note dl-calibrating">
+        <p className="dl-notice">
           {t.calibrating(pct(file.coverage, 1), n(file.accounts.ranked), n(file.accounts.seen))}
         </p>
       )}
 
-      <section className="dl-ladder-wrap">
-        <p className="detail-note">{t.viewNote[view]}</p>
+      <section className="box dl-ladder-wrap">
+        <div className="box-head">
+          <h2 className="box-title">{t.byRank}</h2>
+          <p className="box-lead">{t.viewNote[view]}</p>
+        </div>
         {hist.columns.length === 0 ? (
-          <p className="detail-note">{t.empty}</p>
+          <p className="box-empty">{t.empty}</p>
         ) : (
           <figure className="dl-hist">
             {/* Las columnas y el eje son dos filas flex con el mismo peso total,
@@ -192,9 +196,12 @@ export default function DeadlockRanks() {
         )}
       </section>
 
+      <div className="dl-ranks-pair">
       {dias.length > 0 && (
-        <section className="dl-days-wrap">
-          <h2 className="dl-section-title">{t.day}</h2>
+        <section className="box dl-days-wrap">
+          <div className="box-head">
+            <h2 className="box-title">{t.day}</h2>
+          </div>
           <ol className="dl-days">
             {dias.map((d) => (
               <li key={d.day} className="dl-day">
@@ -218,14 +225,16 @@ export default function DeadlockRanks() {
         </section>
       )}
 
-      <section className="dl-sides">
-        <h2 className="dl-section-title">{t.sides.title}</h2>
-        <p className="detail-note">{t.sides.lead}</p>
+      <section className="box dl-sides">
+        <div className="box-head">
+          <h2 className="box-title">{t.sides.title}</h2>
+          <p className="box-lead">{t.sides.lead}</p>
+        </div>
 
         <div className="dl-sides-overall">
           <SideNumber label={t.sides.team0} value={file.sidesOverall.team0} se={file.sidesOverall.se} />
           <SideNumber label={t.sides.team1} value={1 - file.sidesOverall.team0} se={file.sidesOverall.se} />
-          <span className="detail-note dl-sides-n">
+          <span className="dl-sides-n">
             {n(file.sidesOverall.matches)} {t.matches}
           </span>
         </div>
@@ -233,7 +242,7 @@ export default function DeadlockRanks() {
         {/* Un rango que no llega a la muestra mínima no se dibuja: la ausencia
             dice "no sé", y un punto sobre el 50% diría "acá no pasa nada". */}
         {file.sides.length === 0 ? (
-          <p className="detail-note">{t.sides.thin(n(20000))}</p>
+          <p className="box-empty">{t.sides.thin(n(20000))}</p>
         ) : (
           <ol className="dl-sides-list">
             {[...file.sides].reverse().map((s) => {
@@ -245,20 +254,22 @@ export default function DeadlockRanks() {
                   <span className="dl-side-val" data-leans={lado ?? "even"}>
                     {pct(s.team0, 2)} <span className="dl-side-err">± {(s.se * 100).toFixed(2)}</span>
                   </span>
-                  <span className="detail-note">{n(s.matches)}</span>
+                  <span className="dl-side-n">{n(s.matches)}</span>
                 </li>
               );
             })}
           </ol>
         )}
       </section>
+      </div>
 
       {/* La misma nota que cierra las otras pestañas de Deadlock. Esta página
           nació después y se quedó sin ella, que es justo donde el pie de página
           atribuía todo a Riot. */}
-      <p className="detail-note dl-footnote" lang={lang}>
+      <p className="dl-tier-note" lang={lang}>
         {copy.deadlock.footnote}
       </p>
+      </div>
     </main>
   );
 }
