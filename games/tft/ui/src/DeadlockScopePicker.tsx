@@ -15,8 +15,8 @@ import { MATCH_SCOPES, type MatchScope } from "./deadlockMatch";
  * jugaron nunca un modo. Las que están en cero se deshabilitan en vez de
  * esconderse: que el modo exista y no lo hayas jugado también es información.
  *
- * Hereda `.dl-band-pills` del selector de banda: es el mismo control —una fila
- * de pastillas, todas visibles— y copiar su CSS sería mantener dos.
+ * Es un `.seg`, el mismo control segmentado que elige la banda (dirección A,
+ * 2026-09-16): una elección entre pocas, con la elegida rellena.
  */
 export default function DeadlockScopePicker({
   scope,
@@ -31,13 +31,12 @@ export default function DeadlockScopePicker({
   const c = copy.deadlock.report.scopes;
 
   return (
-    <div className="dl-scope-picker band-controls dl-band-pills" role="group" aria-label={c.label}>
+    <div className="seg is-wrap dl-scope" role="group" aria-label={c.label}>
       {MATCH_SCOPES.map((s) => {
         const n = counts[s];
         return (
           <button
             key={s}
-            className="dl-band-pill dl-scope-pill"
             data-active={scope === s}
             aria-pressed={scope === s}
             disabled={n === 0}

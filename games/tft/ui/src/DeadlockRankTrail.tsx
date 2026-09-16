@@ -85,8 +85,8 @@ export default function DeadlockRankTrail({ points }: { points: RankPoint[] }) {
     Math.abs(leftMean - score) > Math.abs(rightMean - score) ? "left" : "right";
 
   return (
-    <div className="dl-card dl-trail">
-      <h2 className="dl-card-title">{c.title}</h2>
+    <div className="box dl-pcard dl-trail">
+      <h2 className="box-title dl-pcard-title">{c.title}</h2>
       <p className="detail-note dl-trail-lead">{c.lead}</p>
 
       <p className="dl-trail-net" data-trend={trend}>

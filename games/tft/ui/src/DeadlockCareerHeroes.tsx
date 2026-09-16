@@ -32,8 +32,8 @@ export default function DeadlockCareerHeroes({ stats }: { stats: HeroStat[] }) {
   const pct = (x: number) => `${Math.round(x * 100)}%`;
 
   return (
-    <div className="dl-card">
-      <h2 className="dl-card-title">{c.title}</h2>
+    <div className="box dl-pcard">
+      <h2 className="box-title dl-pcard-title">{c.title}</h2>
       {/* La ventana, dicha antes de los números y no después: quien lee "48%"
           debajo de un perfil filtrado a clasificatorias tiene que saber ya que
           ese 48 no es de las clasificatorias. */}

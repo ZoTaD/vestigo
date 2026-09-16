@@ -4519,16 +4519,6 @@
   font-size: 0.75rem;
 }
 
-/* El resultado se lee por el borde de la izquierda, que no depende del idioma
-   y sobrevive a una lista larga mejor que dos palabras repetidas. */
-[data-theme="codex"] .dl-rep-match.is-win {
-  border-left: 3px solid rgba(120, 190, 130, 0.8);
-}
-
-[data-theme="codex"] .dl-rep-match.is-loss {
-  border-left: 3px solid rgba(200, 105, 105, 0.75);
-}
-
 [data-theme="codex"] .dl-rep-face {
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.35);
@@ -5902,23 +5892,8 @@
   gap: 1.1rem;
 }
 
-/* La columna lateral es una pila de tarjetas, y cada una tiene que leerse como
-   una unidad cerrada. El borde es el mismo de las pestañas, un paso más
-   apagado: son paneles dentro de la página, no navegación hacia afuera. */
-[data-theme="codex"] .dl-card {
-  border: 1px solid rgba(201, 162, 74, 0.22);
-  background: rgba(12, 10, 7, 0.28);
-  padding: 0.9rem 1rem;
-}
-
-[data-theme="codex"] .dl-card-title {
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold-lit);
-  margin: 0 0 0.7rem;
-}
+/* Las tarjetas del costado son `.box.dl-pcard` desde el 2026-09-16: ver
+   `deadlock.css`. */
 
 /* --- 4. La ficha del jugador, dentro de la columna lateral -------------------
 
@@ -5940,19 +5915,6 @@
   background: none;
   padding: 0;
   margin: 0;
-}
-
-/* El título de la forma reciente pasa a ser el título de SU tarjeta, con la
-   misma pinta que los que escribe `.dl-card-title`: si uno de los cuatro
-   paneles rotula distinto, la columna deja de leerse como una pila. */
-[data-theme="codex"] .dl-profile-aside .dl-rep-form-title {
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold-lit);
-  display: block;
-  margin: 0 0 0.7rem;
 }
 
 [data-theme="codex"] .dl-profile-id-row {
@@ -6125,28 +6087,6 @@
    cortan la lista de alguna forma: op.gg con "Show more" sobre 20, OpenDota con
    un tope de 20 que enlaza a la pestaña completa, Dotabuff con top-N por módulo.
    Ninguno deja cuarenta filas abiertas, que en nuestra página eran 2.746px. */
-[data-theme="codex"] .dl-more {
-  display: block;
-  width: 100%;
-  margin-top: 0.8rem;
-  padding: 0.6rem;
-  background: none;
-  border: 1px solid rgba(201, 162, 74, 0.28);
-  color: var(--vellum-dim);
-  font-family: var(--font-display);
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
-}
-
-[data-theme="codex"] .dl-more:hover {
-  color: var(--gold-lit);
-  border-color: rgba(201, 162, 74, 0.6);
-  background: rgba(201, 162, 74, 0.08);
-}
-
 /* La fila de partida se empaquetaba a la izquierda y dejaba un hueco muerto a la
    derecha: su `gap` estaba calibrado para los 1.163px de la página de una sola
    columna, y ahora vive en 720. Anclar la fecha a la derecha reparte ese sobrante
@@ -6194,34 +6134,6 @@
    y el estado deshabilitado, que la banda no necesita porque sus cuatro bandas
    existen siempre.
    --------------------------------------------------------------------------- */
-
-[data-theme="codex"] .dl-scope-picker {
-  margin: 0.2rem 0 0.7rem;
-  /* Alineado a la izquierda como todo lo demás de esta columna: `.band-controls`
-     los centra, que sirve en el encabezado de la tier list y acá dejaba las
-     pastillas flotando contra un título y una nota que arrancan al margen. */
-  justify-content: flex-start;
-}
-
-/* El número, un paso por detrás del nombre: es cuántas hay, no qué modo es. */
-[data-theme="codex"] .dl-scope-count {
-  font-style: normal;
-  font-variant-numeric: tabular-nums;
-  font-size: 0.9em;
-  opacity: 0.6;
-}
-
-/* Un modo que la cuenta no jugó **se ve y no se puede apretar**. Esconderlo
-   haría que el filtro cambiara de forma entre jugadores, y que el modo exista y
-   no lo hayas jugado también es información. */
-[data-theme="codex"] .dl-scope-pill:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-
-[data-theme="codex"] .dl-scope-pill:disabled:hover {
-  border-color: rgba(201, 162, 74, 0.35);
-}
 
 /* --- La insignia de rango, con el numeral encima --------------------------- */
 

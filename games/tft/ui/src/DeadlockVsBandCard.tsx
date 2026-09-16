@@ -34,8 +34,8 @@ export default function DeadlockVsBandCard({
       : v.toLocaleString(locale, { maximumFractionDigits: d, minimumFractionDigits: d > 0 ? d : 0 });
 
   return (
-    <div className="dl-card dl-vs">
-      <h2 className="dl-card-title">{c.title}</h2>
+    <div className="box dl-pcard dl-vs">
+      <h2 className="box-title dl-pcard-title">{c.title}</h2>
       {state.status === "loading" && <p className="detail-note">{c.loading}</p>}
       {state.status === "failed" && <p className="detail-note">{c.failed}</p>}
       {state.status === "ready" && (

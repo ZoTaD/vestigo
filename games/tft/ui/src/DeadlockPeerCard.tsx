@@ -48,8 +48,8 @@ export default function DeadlockPeers({
   if (lista.length === 0) return null;
 
   return (
-    <div className="dl-card">
-      <h2 className="dl-card-title">{kind === "mates" ? c.matesTitle : c.enemiesTitle}</h2>
+    <div className="box dl-pcard">
+      <h2 className="box-title dl-pcard-title">{kind === "mates" ? c.matesTitle : c.enemiesTitle}</h2>
       <p className="detail-note dl-peers-note">
         {kind === "mates" ? c.matesLead : c.enemiesLead}
       </p>

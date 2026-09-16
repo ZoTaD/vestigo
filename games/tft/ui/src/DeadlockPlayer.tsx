@@ -318,8 +318,8 @@ function HeroPlacings({ placings }: { placings: HeroPlacing[] }) {
   if (placings.length === 0) return null;
 
   return (
-    <div className="dl-card">
-      <h2 className="dl-card-title">{c.cards.placings}</h2>
+    <div className="box dl-pcard">
+      <h2 className="box-title dl-pcard-title">{c.cards.placings}</h2>
       <p className="detail-note dl-placings-note">{c.placingsLead(placings.length)}</p>
       {/* Filas y no una grilla de retratos con el número encima: "sos el #1 del
           mundo con Abrams" es una frase, y se lee como tal — héroe, puesto, y
@@ -660,9 +660,9 @@ export default function DeadlockPlayer({
         </p>
       )}
 
-      {error && <p className="dl-fallback">{error}</p>}
+      {error && <p className="dl-notice">{error}</p>}
 
-      {cuentas && cuentas.length === 0 && <p className="dl-fallback">{c.noAccounts}</p>}
+      {cuentas && cuentas.length === 0 && <p className="dl-notice">{c.noAccounts}</p>}
 
       {cuentas && cuentas.length > 0 && !historial && (
         <ul className="dl-rep-accounts">
@@ -692,12 +692,15 @@ export default function DeadlockPlayer({
       {historial && (
         <div className="page has-rail dl-profile-grid">
           <div className="page-main dl-profile-main">
-            <h2 className="dl-section-title">{c.history}</h2>
+            <section className="box dl-matches">
+            <div className="box-head">
+              <h2 className="box-title">{c.history}</h2>
+              <span className="box-aside">{c.shown(visibles.length, filtrado.length)}</span>
+            </div>
             {/* El filtro va ARRIBA de la lista y no en la ficha lateral: manda
                 sobre las dos columnas, y el lugar donde se ve el efecto más
                 grande es acá. */}
             <DeadlockScopePicker scope={modo} counts={conteos} onChange={cambiarModo} />
-            <p className="detail-note">{c.shown(visibles.length, filtrado.length)}</p>
 
             {/**
              * **Encabezado de columnas, que la lista no tenía.**
@@ -847,12 +850,13 @@ export default function DeadlockPlayer({
                 {c.showMore}
               </button>
             )}
+            </section>
           </div>
 
           <aside className="page-rail is-first dl-profile-aside">
             {resumen && (
-              <div className="dl-card">
-                <h2 className="dl-card-title">{c.cards.profile}</h2>
+              <div className="box dl-pcard">
+                <h2 className="box-title dl-pcard-title">{c.cards.profile}</h2>
                 <Profile account={cuenta} resumen={resumen} rank={rango} rankReady={rangoListo} world={world} />
               </div>
             )}
@@ -873,14 +877,14 @@ export default function DeadlockPlayer({
             <DeadlockVsBand accountId={id} badge={rango?.badge ?? 0} />
 
             {corpus && (
-              <div className="dl-card">
+              <div className="box dl-pcard">
                 <DeadlockStreakForm corpus={corpus} streak={streak} forma={forma} />
               </div>
             )}
 
             {heroesTop.length > 0 && (
-              <div className="dl-card">
-                <h2 className="dl-card-title">{c.cards.heroes}</h2>
+              <div className="box dl-pcard">
+                <h2 className="box-title dl-pcard-title">{c.cards.heroes}</h2>
                 <TopHeroes
                   heroes={heroesTop}
                   activeHero={heroFiltro}
@@ -917,8 +921,8 @@ export default function DeadlockPlayer({
                 memoria. Ver `DeadlockActivity`. Sigue al modo como el resto de
                 la ficha: si el perfil habla de clasificatorias, el calendario
                 que dice "jugaste" tiene que hablar de las mismas. */}
-            <div className="dl-card">
-              <h2 className="dl-card-title">{c.cards.activity}</h2>
+            <div className="box dl-pcard">
+              <h2 className="box-title dl-pcard-title">{c.cards.activity}</h2>
               <DeadlockActivity rows={enModo} />
             </div>
           </aside>
