@@ -43,6 +43,11 @@
   --pad: clamp(1rem, 3vw, 2.5rem);
   --rail: 300px;
   --top-h: 56px;
+  /* Dónde se pegan los elementos fijos al scrollear (cabeceras de tabla, rail,
+     anclas). Era la altura de la barra, cuando la barra también se quedaba
+     arriba; desde el 2026-09-16 la barra se va con la página y lo fijo se pega
+     al borde de la ventana. */
+  --sticky-top: 0px;
   /* Blanco táctil mínimo (Fitts): ningún control por debajo de esto. */
   --tap: 44px;
 }

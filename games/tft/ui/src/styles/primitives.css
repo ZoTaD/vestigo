@@ -42,7 +42,7 @@
 
 .page-rail {
   position: sticky;
-  top: calc(var(--top-h) + 0.75rem);
+  top: calc(var(--sticky-top) + 0.75rem);
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
@@ -321,7 +321,7 @@
 
 .tbl thead th {
   position: sticky;
-  top: var(--top-h);
+  top: var(--sticky-top);
   z-index: 2;
   background: var(--bg);
   font-weight: 600;

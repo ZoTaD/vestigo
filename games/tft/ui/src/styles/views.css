@@ -442,7 +442,7 @@
 /* Las anclas, fijas debajo de la barra. `.seg` pone la forma. */
 .dl-hero-tabs {
   position: sticky;
-  top: calc(var(--top-h) + 0.5rem);
+  top: calc(var(--sticky-top) + 0.5rem);
   z-index: 5;
   align-self: flex-start;
   background: var(--bg);
@@ -455,7 +455,7 @@
 /* Para que un ancla no quede debajo de la barra y las pestañas fijas. */
 .dl-panel-head[id],
 #dl-mastery {
-  scroll-margin-top: calc(var(--top-h) + 4rem);
+  scroll-margin-top: calc(var(--sticky-top) + 4rem);
 }
 
 [data-theme="codex"] .deadlock-hero .dl-band-panel {

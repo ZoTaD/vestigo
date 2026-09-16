@@ -68,8 +68,15 @@ que reemplazan se borró de `codex.css` (unas 1.700 líneas) en vez de pisarse.
 Piezas nuevas compartidas: `Chevron.tsx` (la flecha de plegar, en SVG) y
 `.dl-notice` (un aviso con tinte).
 
-## Qué queda
+## Cierre (mismo día)
 
-- La página de héroe (build, habilidades, maestría) conserva etiquetas redondas
-  y el aviso `.dl-provisional` con filo.
-- El cartel de cookies usa botones crema.
+- **Página de héroe.** Las etiquetas son el cuadrado de 4 px con tinte, el aviso
+  de que la build cruza un parche es un tinte, el cuerpo es una caja y las
+  variantes de build usan el control segmentado. Los rótulos de panel son los de
+  columna y "qué compra la práctica" lleva el título de 20 px. Los retratos y
+  avatares que quedaban redondos del perfil pasan al radio único.
+- **Aviso de cookies.** Usa la superficie y los botones del sitio. Aceptar y
+  rechazar siguen idénticos, como pide el GDPR.
+- **Barra superior.** Deja de seguir el scroll: queda arriba de la página. Lo
+  que sigue fijo al bajar (cabeceras de tabla, el rail, las anclas del héroe) se
+  pega al borde de la ventana con `--sticky-top`.

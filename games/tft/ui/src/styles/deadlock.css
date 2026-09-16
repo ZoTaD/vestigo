@@ -870,7 +870,7 @@
 
 [data-theme="codex"] .dl-lb-head {
   position: sticky;
-  top: var(--top-h);
+  top: var(--sticky-top);
   z-index: 2;
   padding: 0.55rem 0.1rem;
   border-bottom: 1px solid var(--line-strong);
@@ -1894,4 +1894,181 @@
 
 .dl-rep-measured {
   margin-top: 1rem;
+}
+
+/* Deadlock · Página de héroe ------------------------------------------------ */
+
+/* Las etiquetas (difícil, subiendo, poca muestra): el cuadrado de 4 px con
+   tinte, no una pastilla con borde. */
+[data-theme="codex"] .dl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  font-family: var(--font-text);
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  opacity: 1;
+}
+
+[data-theme="codex"] .dl-chip[data-kind="hard"],
+[data-theme="codex"] .dl-chip[data-kind="up"] {
+  background: rgba(var(--accent-rgb), 0.18);
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-chip[data-kind="thin"] {
+  background: color-mix(in srgb, var(--bad) 14%, transparent);
+  color: var(--bad);
+}
+
+/* El aviso de que la build cruza un parche: tinte, no filo. */
+[data-theme="codex"] .dl-provisional {
+  max-width: none;
+  margin: 0.9rem 0 0;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: rgba(var(--accent-rgb), 0.12);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* El cuerpo de la página es una caja, como el resto de las pestañas. */
+[data-theme="codex"] .deadlock-hero .dl-band-panel {
+  padding: 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+/* Las variantes de build: el control segmentado, con la elegida rellena. La
+   nuestra conserva el borde punteado para leerse distinta antes de abrirla. */
+[data-theme="codex"] .dl-build-tab {
+  align-items: center;
+  min-height: 40px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 0.76rem;
+  letter-spacing: 0.02em;
+}
+
+[data-theme="codex"] .dl-build-tab:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+[data-theme="codex"] .dl-build-tab[data-active="true"],
+[data-theme="codex"] .dl-build-tab.is-reco[data-active="true"] {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+[data-theme="codex"] .dl-build-tab.is-reco {
+  border-color: var(--line-strong);
+}
+
+[data-theme="codex"] .dl-build-reco {
+  font-family: var(--font-text);
+  font-weight: 700;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: inherit;
+}
+
+[data-theme="codex"] .dl-build-reco[data-badge="beta"] {
+  padding: 0.1rem 0.35rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-build-tab[data-active="true"] .dl-build-reco[data-badge="beta"] {
+  background: rgba(0, 0, 0, 0.15);
+  color: inherit;
+}
+
+/* Cada panel de la build: borde de línea y el rótulo como los de columna. */
+[data-theme="codex"] .dl-panel {
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-panel-head {
+  margin: 0 0 0.7rem;
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-phase-head {
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom-color: var(--line);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-dmg-bar,
+[data-theme="codex"] .dl-dmg-fill {
+  border-radius: 2px;
+}
+
+[data-theme="codex"] .dl-dmg-bar {
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-unlock-n {
+  border-radius: var(--radius);
+  border-color: var(--line-strong);
+  background: var(--surface-solid);
+}
+
+/* "Qué compra la práctica": una sección de la caja, con su título de 20 px. */
+[data-theme="codex"] .dl-mastery {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top-color: var(--line);
+}
+
+[data-theme="codex"] .dl-mastery-title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.18rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-lit);
+}
+
+/* Retratos y avatares que quedaban redondos: el radio único. */
+[data-theme="codex"] .dl-rep-avatar,
+[data-theme="codex"] .dl-rep-top-hero img,
+[data-theme="codex"] .dl-peer .dl-peer-face,
+[data-theme="codex"] .dl-career-hero img,
+[data-theme="codex"] .dl-panel-face {
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-placing-num {
+  border-radius: var(--radius);
 }

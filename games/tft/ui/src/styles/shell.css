@@ -11,19 +11,17 @@
 /* Barra superior ------------------------------------------------------------ */
 
 /**
- * Translúcida a propósito. El fondo de los juegos tiene un resplandor más
+ * **Queda arriba de la página y no sigue el scroll** (pedido de ZoTaD,
+ * 2026-09-16). Era `position: sticky` y acompañaba al lector tapando contenido.
+ *
+ * Translúcida a propósito: el fondo de los juegos tiene un resplandor más
  * claro arriba (`--bg-glow`), y una barra pintada con el negro base se leía
- * como un bloque oscuro pegado sobre una zona luminosa. Con el 35 % del fondo
- * y el desenfoque, toma el tono de lo que tiene detrás en cualquier página y
- * sigue siendo legible cuando el contenido pasa por abajo al scrollear.
+ * como un bloque oscuro pegado sobre una zona luminosa.
  */
 .top {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 60;
   background: color-mix(in srgb, var(--bg) 35%, transparent);
-  backdrop-filter: blur(14px) saturate(1.1);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
   border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
 }
 
@@ -518,6 +516,77 @@
 .foot-legal {
   font-size: 0.68rem;
   color: var(--text-faint);
+}
+
+/* Aviso de cookies ----------------------------------------------------------- */
+
+/**
+ * Con las superficies y los botones del sitio (2026-09-16). Aceptar y rechazar
+ * siguen siendo **idénticos**: el mismo tamaño, el mismo peso y el mismo
+ * color. Hacer más discreto el rechazo es lo que invalida el consentimiento.
+ */
+[data-theme="codex"] .consent {
+  gap: 0.9rem 2rem;
+  padding: 1rem var(--pad);
+  background: var(--surface-solid);
+  border-top: 1px solid var(--line-strong);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Sobre el papel de la portada, la sombra del modo oscuro se lee como mancha. */
+[data-theme="codex"][data-place="home"] .consent {
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="codex"] .consent-title {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.18rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .consent-body {
+  font-family: var(--font-text);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+[data-theme="codex"] .consent-btn {
+  min-height: 40px;
+  padding: 0 1.4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+[data-theme="codex"] .consent-btn:hover,
+[data-theme="codex"] .consent-btn:focus-visible {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+[data-theme="codex"] .consent-link {
+  font-family: var(--font-text);
+  font-size: 0.76rem;
+  color: var(--text-dim);
+  text-decoration-color: var(--line-strong);
+}
+
+[data-theme="codex"] .consent-link:hover {
+  color: var(--accent-lit);
 }
 
 .foot-copy {
