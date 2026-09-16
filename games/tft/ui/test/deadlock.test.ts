@@ -4,6 +4,8 @@ import {
   PREFERRED_BAND,
   PUBLISHED_BAND,
   tierOf,
+  tierRange,
+  TIER_CUTS,
   buildHeroes,
   catalog,
   difficultyOf,
@@ -48,6 +50,31 @@ describe("la tabla de bandas no puede divergir del pipeline", () => {
   it("registra los datos bajo la banda que el archivo dice ser", () => {
     expect(PUBLISHED_BAND).toBe((heroes as { band: string }).band);
     expect(BANDS.map((b) => b.id)).toContain(PUBLISHED_BAND);
+  });
+});
+
+/**
+ * La tier list imprime el rango de cada letra al lado de la letra (dirección A,
+ * 2026-09-16). Si los cortes que se muestran no fueran los que se usan para
+ * repartir, la página diría "A · 51,5–53%" con un héroe al 53,2% adentro.
+ */
+describe("tierRange", () => {
+  it("devuelve los mismos cortes que usa tierOf", () => {
+    for (const { tier } of TIER_CUTS) {
+      const { min, max } = tierRange(tier);
+      if (min !== undefined) expect(tierOf(min)).toBe(tier);
+      if (max !== undefined) expect(tierOf(max - 0.0001)).toBe(tier);
+    }
+  });
+
+  it("deja abierto arriba a la S y abajo a la D", () => {
+    expect(tierRange("S")).toEqual({ min: 0.53, max: undefined });
+    expect(tierRange("D")).toEqual({ min: undefined, max: 0.485 });
+    expect(tierRange("A")).toEqual({ min: 0.515, max: 0.53 });
+  });
+
+  it("no inventa un rango para una letra que no existe", () => {
+    expect(tierRange("Z")).toEqual({});
   });
 });
 

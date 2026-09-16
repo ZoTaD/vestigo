@@ -7,20 +7,250 @@
 
 /* Deadlock · Héroes (tier list con rail) -------------------------------------- */
 
+/**
+ * Dirección A del rediseño, 2026-09-16 ("Cuadrícula"). Las reglas:
+ *
+ * - Un solo radio (`--radius`, 4 px en Deadlock): banda, tile, retrato y marca.
+ * - La letra es un bloque rectangular de 88 px con cuántos héroes tiene la
+ *   banda y el rango de winrate que la define.
+ * - El tile mide lo mismo en las cinco bandas (96 px) y dice cuatro cosas:
+ *   retrato, nombre, winrate grande y uso chico.
+ * - Sin filos de color: el color del héroe tiñe el fondo del retrato, nada más.
+ *
+ * Todo va prefijado con `[data-theme="codex"]` porque el códex pinta los
+ * enlaces con `[data-theme="codex"] a`, que le gana a una clase sola.
+ */
 .dl-bands {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.7rem;
 }
 
-/* Las bandas viejas se medían a `max-content` para pegar el panel de build al
-   tile; ya no hay panel, así que ocupan la columna. */
-[data-theme="codex"] .dl-bands .dl-band {
-  width: auto;
+[data-theme="codex"] .dl-tier {
+  display: grid;
+  grid-template-columns: 5.2rem minmax(0, 1fr);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface);
 }
 
-.dl-legend {
-  font-size: 0.72rem;
+[data-theme="codex"] .dl-tier-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  padding: 0.7rem 0.25rem;
+  background: var(--surface-2);
+  border-right: 1px solid var(--line);
+  text-align: center;
+}
+
+[data-theme="codex"] .dl-tier-letter {
+  margin-bottom: 0.25rem;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 2.35rem;
+  line-height: 1;
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-tier-sub {
+  font-family: var(--font-text);
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  color: var(--text-dim);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"] .dl-tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.47rem;
+  align-content: flex-start;
+}
+
+[data-theme="codex"] .dl-tile {
+  width: 5.65rem;
+}
+
+/* Una muestra fina no se esconde, se apaga: sigue siendo un dato, con menos voz. */
+[data-theme="codex"] .dl-tile[data-thin="true"] {
+  opacity: 0.62;
+}
+
+[data-theme="codex"] .dl-tile-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.24rem;
+  padding: 0.47rem 0.24rem 0.6rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: background 140ms ease;
+}
+
+[data-theme="codex"] .dl-tile-btn:hover,
+[data-theme="codex"] .dl-tile-btn:focus-visible {
+  color: var(--text);
+  text-decoration: none;
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-tile-btn:hover .dl-tile-name,
+[data-theme="codex"] .dl-tile-btn:focus-visible .dl-tile-name {
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-tile-face {
+  position: relative;
+  display: block;
+  margin-bottom: 0.12rem;
+}
+
+/* El color del héroe (`--dl-hero`, el de la pantalla de selección del juego)
+   tiñe el fondo del retrato: se nota en los que tienen transparencia y no
+   dibuja ningún filo. Sin color declarado cae al acento del tema. */
+[data-theme="codex"] .dl-tile-face img,
+[data-theme="codex"] .dl-tile-face .dl-portrait-fallback {
+  display: block;
+  width: 3.3rem;
+  height: 3.3rem;
+  border: 0;
+  border-radius: var(--radius);
+  object-fit: cover;
+  background: color-mix(in srgb, var(--dl-hero, var(--accent)) 14%, var(--surface-solid));
+}
+
+/* Las dos marcas son el mismo cuadrado de 16 px, en esquinas opuestas:
+   dificultad arriba a la derecha, tendencia arriba a la izquierda. */
+[data-theme="codex"] .dl-tile-mark,
+[data-theme="codex"] .dl-tile-trend {
+  position: absolute;
+  top: -4px;
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface-solid);
+  cursor: help;
+}
+
+[data-theme="codex"] .dl-tile-mark {
+  right: -4px;
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-tile-mark[data-kind="easy"] {
+  color: var(--accent);
+}
+
+[data-theme="codex"] .dl-tile-trend {
+  left: -4px;
+}
+
+[data-theme="codex"] .dl-tile-trend[data-kind="up"] {
+  color: var(--good);
+}
+
+[data-theme="codex"] .dl-tile-trend[data-kind="down"] {
+  color: var(--bad);
+}
+
+[data-theme="codex"] .dl-tile-name {
+  max-width: 100%;
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 140ms ease;
+}
+
+[data-theme="codex"] .dl-tile-wr {
+  font-family: var(--font-data-narrow);
+  font-weight: 700;
+  font-size: 1.06rem;
+  line-height: 1;
+  color: var(--accent-lit);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"] .dl-tile-pr {
+  font-family: var(--font-data-narrow);
+  font-weight: 500;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* La leyenda y la nota de fuente, en el tamaño chico y alineadas con la lista. */
+.dl-tier-note {
+  margin: 0;
+  max-width: 72ch;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--text-faint);
+}
+
+.dl-bands + .dl-tier-note {
+  margin-top: 0.1rem;
+}
+
+/* En un teléfono de 375 px entran tres héroes por fila: la columna de la letra
+   se angosta y el tile baja a 73 px. Con dos por fila, la A de diez héroes
+   ocupaba dos pantallas. */
+@media (max-width: 600px) {
+  [data-theme="codex"] .dl-tier {
+    grid-template-columns: 3rem minmax(0, 1fr);
+  }
+
+  [data-theme="codex"] .dl-tier-mark {
+    padding: 0.6rem 0.15rem;
+  }
+
+  [data-theme="codex"] .dl-tier-letter {
+    font-size: 1.7rem;
+  }
+
+  [data-theme="codex"] .dl-tier-sub {
+    font-size: 0.55rem;
+    letter-spacing: 0;
+    white-space: normal;
+  }
+
+  [data-theme="codex"] .dl-tiles {
+    padding: 0.5rem;
+    gap: 0.3rem;
+  }
+
+  [data-theme="codex"] .dl-tile {
+    width: 4.3rem;
+  }
+
+  [data-theme="codex"] .dl-tile-btn {
+    padding: 0.4rem 0.15rem 0.5rem;
+  }
+
+  [data-theme="codex"] .dl-tile-face img,
+  [data-theme="codex"] .dl-tile-face .dl-portrait-fallback {
+    width: 2.8rem;
+    height: 2.8rem;
+  }
 }
 
 .dl-rail-list {
@@ -29,32 +259,31 @@
   padding: 0;
   display: flex;
   flex-direction: column;
+  gap: 0.15rem;
 }
 
-.dl-rail-row {
+[data-theme="codex"] .dl-rail-row {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  min-height: 42px;
-  padding: 0.3rem 0;
-  border-top: 1px solid var(--line);
+  min-height: 38px;
   color: var(--text);
   text-decoration: none;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
 }
 
-.dl-rail-list > li:first-child .dl-rail-row {
-  border-top: 0;
+[data-theme="codex"] .dl-rail-row:hover {
+  text-decoration: none;
 }
 
-.dl-rail-row:hover .dl-rail-name {
+[data-theme="codex"] .dl-rail-row:hover .dl-rail-name {
   color: var(--accent-lit);
 }
 
 .dl-rail-row img {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius);
   object-fit: cover;
   background: var(--surface-2);
 }
@@ -71,9 +300,9 @@
 .dl-rail-figure {
   flex: 0 0 auto;
   font-family: var(--font-data-narrow);
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 0.94rem;
+  color: var(--accent-lit);
   font-variant-numeric: tabular-nums;
 }
 
@@ -111,8 +340,24 @@
   align-items: baseline;
   gap: 0.1rem 0.6rem;
   width: auto;
-  padding: 0.4rem 0;
-  font-size: 0.78rem;
+  padding: 0.5rem 0.65rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  font-size: 0.82rem;
+}
+
+/* El vigente se marca con un tinte, no con un filo (la regla de las tarjetas). */
+[data-theme="codex"] .dl-rail-log .dl-history-row[data-current] {
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-rail-log .dl-history-tag {
+  border: 0;
+  padding: 0;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--accent);
 }
 
 [data-theme="codex"] .dl-rail-log .dl-history-date {
@@ -124,20 +369,14 @@
 [data-theme="codex"] .dl-rail-log .dl-history-link {
   flex: 0 0 auto;
   font-size: 0.7rem;
+  color: var(--accent);
 }
 
 /* El nombre de la build ("06-30-2026 Update") pasa a segunda línea, en gris. */
 [data-theme="codex"] .dl-rail-log .dl-history-name {
   flex: 1 1 100%;
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   color: var(--text-dim);
-}
-
-/* Los tiles son enlaces ahora: sin el subrayado ni el color de enlace. */
-[data-theme="codex"] .dl-tile-btn,
-[data-theme="codex"] .dl-tile-btn:hover {
-  text-decoration: none;
-  color: inherit;
 }
 
 /* Deadlock · página de héroe ----------------------------------------------------- */

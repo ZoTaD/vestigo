@@ -162,13 +162,8 @@
    Son las mismas opacidades, sobre el negro de Deadlock.
 --------------------------------------------------------------------------- */
 
-[data-theme="codex"][data-game="deadlock"] .dl-portrait-fallback,
-[data-theme="codex"][data-game="deadlock"] .dl-tile-face .dl-portrait-fallback {
+[data-theme="codex"][data-game="deadlock"] .dl-portrait-fallback {
   background: rgba(16, 19, 13, 0.6);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-tile-trend {
-  background: rgba(16, 19, 13, 0.85);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-chart {
@@ -1987,115 +1982,10 @@
   margin-top: 1rem;
 }
 
-/* El hueco de `.tiers` es de 66,5px: está calibrado para los grupos de comps de
-   TFT, que son bloques altos. Entre bandas de tier —que miden ~124,8px, medido
-   a 1920×950 con las insignias del riel ya achicadas a 1.15rem— son 304px de
-   aire sobre las cinco. La separación la pone `.dl-band` con su propio margen,
-   así que acá el hueco heredado se anula en vez de reducirse. */
-[data-theme="codex"] .dl-bands {
-  gap: 0;
-}
-
-/**
- * La caja de la banda **abraza a sus tiles**, no se estira a lo ancho.
- *
- * Medido a 1600px: con la banda a ancho completo, la S terminaba a los 485px de
- * 1.322 y la C —que tiene dos héroes— dejaba **1.167px de fondo vacío**, o sea el
- * 94% de la caja. Se leía como un layout sin terminar.
- *
- * Con `max-content` el borde derecho de cada banda queda donde terminan sus
- * héroes, y eso además *dice* algo: el ancho de la banda es cuántos héroes tiene.
- * Los bordes izquierdos siguen alineados, así que el 1.º de cada tier se compara
- * en vertical, que es lo que hay que poder hacer.
- */
-[data-theme="codex"] .dl-band {
-  display: grid;
-  grid-template-columns: 4rem 1fr;
-  align-items: stretch;
-  width: max-content;
-  max-width: 100%;
-  border: 1px solid rgba(201, 162, 74, 0.18);
-  border-radius: 3px;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(90deg, rgba(201, 162, 74, 0.05), transparent 30%);
-}
-
-/**
- * La banda con un héroe abierto SÍ ocupa todo el ancho.
- *
- * El panel de build cuelga de la banda con `grid-column: 1 / -1`, así que si la
- * caja midiera lo que miden sus tiles, abrir un héroe de la C metería la build
- * entera en 260px. La bandera la pone React, no `:has()`, para no depender de
- * soporte de navegador en algo que rompe la página entera si falta.
- */
-[data-theme="codex"] .dl-band[data-open="true"] {
-  width: 100%;
-}
-
-[data-theme="codex"] .dl-rail {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.15rem;
-  padding: 0.4rem 0;
-  border-right: 1px solid rgba(201, 162, 74, 0.2);
-}
-
-[data-theme="codex"] .dl-tiles {
-  display: flex;
-  flex-wrap: wrap;
-  /* 0,3rem = 5,7px. Bajó de 0,45 para que el tile pueda crecer sin que la banda
-     D —16 héroes, la más poblada— se parta en dos renglones: con el tile en
-     3,9rem la D pide 1.298px de los 1.324 que hay. */
-  gap: 0.3rem;
-  list-style: none;
-  margin: 0;
-  padding: 0.55rem 0.7rem;
-  /* Sin esto, cada tile hereda el alto de la banda: `.dl-band` es grid con
-     `align-items: stretch` y este flex envolvente lo pasa para abajo por sus
-     propios valores por defecto. El síntoma medido era un tile de 129px
-     donde se esperaban 101. */
-  align-items: flex-start;
-  align-content: flex-start;
-}
-
-/* Ancho FIJO, no elástico. Con `1fr` cada tile crecería con la banda y la D de
-   16 héroes dibujaría tiles de la mitad del tamaño que la C de 2 — las cinco
-   bandas tienen que leerse como la misma cosa. Es el mismo error que ya se pagó
-   con los íconos de la build creciendo a 160px en pantalla ancha. */
-/**
- * Ancho FIJO, no elástico, y el techo lo pone la banda D.
- *
- * Con 16 héroes y 1.324px de zona útil, cada tile no puede pasar de ~77px si la
- * banda tiene que seguir entrando en un renglón —de eso depende que el panel de
- * build se abra pegado al tile—. 3,9rem son 74,1px y dejan 26px de margen.
- *
- * Creció de 3,5rem el 2026-08-12: a 66,5px el nombre del héroe quedaba en 9,9px,
- * más chico que el pickrate que va debajo, o sea la jerarquía al revés.
- */
-[data-theme="codex"] .dl-tile {
-  width: 3.9rem;
-}
-
-[data-theme="codex"] .dl-tile-btn {
-  display: grid;
-  justify-items: center;
-  gap: 0.1rem;
-  width: 100%;
-  padding: 0;
-  background: none;
-  border: 0;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  text-align: center;
-}
-
-/* Una muestra fina no se esconde, se apaga: sigue siendo un dato, con menos voz. */
-[data-theme="codex"] .dl-tile[data-thin="true"] {
-  opacity: 0.62;
-}
+/* La banda de tier y el tile de héroe viven en `views.css` desde el rediseño
+   del 2026-09-16 (dirección A). Lo que había acá —banda a `max-content`, riel
+   con insignias, tiles de 3,9rem con el filo del color del héroe— se borró
+   entero en vez de pisarse regla por regla. */
 
 /* `.dl-portrait-fallback` nació para la fila de héroe, que ya no existe: hoy la
    usa sólo la tier list de ítems (`DeadlockItems.tsx`), así que no se puede
@@ -2115,131 +2005,6 @@
   border: 1px solid rgba(201, 162, 74, 0.4);
   background: rgba(8, 13, 26, 0.6);
   border-radius: 4px;
-}
-
-[data-theme="codex"] .dl-tile-face {
-  position: relative;
-  display: block;
-}
-
-[data-theme="codex"] .dl-tile-face img,
-[data-theme="codex"] .dl-tile-face .dl-portrait-fallback {
-  display: block;
-  /* 3,3rem = 62,7px dentro de un tile de 74,1: el retrato es lo único con lo que
-     se reconoce a un héroe de un vistazo, así que se lleva el espacio que ganó
-     el tile en vez de dejarlo en aire. */
-  width: 3.3rem;
-  height: 3.3rem;
-  border-radius: 4px;
-  object-fit: cover;
-  border: 1px solid rgba(201, 162, 74, 0.4);
-  background: rgba(8, 13, 26, 0.6);
-}
-
-[data-theme="codex"] .dl-tile[data-open="true"] .dl-tile-face img,
-[data-theme="codex"] .dl-tile[data-open="true"] .dl-tile-face .dl-portrait-fallback {
-  border-color: var(--gold-lit);
-  box-shadow: 0 0 0 1px rgba(201, 162, 74, 0.5);
-}
-
-/* ---------------------------------------------------------------------------
-   El color propio de cada héroe, en Deadlock.
-
-   `--dl-hero` lo pone `Deadlock.tsx` desde el catálogo, y es **el color con el
-   que el juego pinta a ese héroe** — el mismo que el jugador ya vio en la
-   pantalla de selección. Sin él, todo cae al oro del tema.
-
-   **Va en el borde y en el resplandor, no en el número.** Es la decisión con
-   filo de acá: los 38 colores van de #FFED79 a #23549D, y los oscuros como
-   McGinnis quedarían en 3,5:1 sobre el negro cálido, o sea texto chico que
-   apenas se lee. El color decora el retrato —donde no hay que leer nada— y el
-   dato se queda en el crema del tema, que contrasta igual para los 38.
---------------------------------------------------------------------------- */
-
-[data-theme="codex"][data-game="deadlock"] .dl-tile {
-  --dl-hero: var(--gold);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-tile-face img,
-[data-theme="codex"][data-game="deadlock"] .dl-tile-face .dl-portrait-fallback {
-  border-color: color-mix(in srgb, var(--dl-hero) 55%, transparent);
-  background: color-mix(in srgb, var(--dl-hero) 12%, rgba(16, 19, 13, 0.75));
-  transition:
-    border-color 0.16s ease,
-    box-shadow 0.16s ease,
-    transform 0.16s cubic-bezier(0.2, 0.9, 0.3, 1.2);
-}
-
-/* Al pasar el mouse el héroe se levanta y prende su propio color: es la única
-   animación de la lista y sirve para saber cuál se va a abrir al hacer clic. */
-[data-theme="codex"][data-game="deadlock"] .dl-tile-btn:hover .dl-tile-face img,
-[data-theme="codex"][data-game="deadlock"] .dl-tile-btn:focus-visible .dl-tile-face img {
-  border-color: var(--dl-hero);
-  box-shadow: 0 0 14px -2px color-mix(in srgb, var(--dl-hero) 70%, transparent);
-  transform: translateY(-2px);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-tile[data-open="true"] .dl-tile-face img,
-[data-theme="codex"][data-game="deadlock"]
-  .dl-tile[data-open="true"]
-  .dl-tile-face
-  .dl-portrait-fallback {
-  border-color: var(--dl-hero);
-  box-shadow:
-    0 0 0 1px var(--dl-hero),
-    0 0 18px -4px color-mix(in srgb, var(--dl-hero) 80%, transparent);
-}
-
-/* Los glifos van en las esquinas del retrato y no debajo: el alto del tile es
-   lo que decide cuántos héroes entran en la pantalla, y una etiqueta no vale
-   una banda entera de scroll. */
-[data-theme="codex"] .dl-tile-mark,
-[data-theme="codex"] .dl-tile-trend {
-  position: absolute;
-  top: -2px;
-  font-size: 0.5rem;
-  line-height: 1;
-  padding: 2px;
-  border-radius: 3px;
-  background: rgba(8, 13, 26, 0.85);
-}
-
-[data-theme="codex"] .dl-tile-mark { left: -2px; color: var(--gold-lit); }
-[data-theme="codex"] .dl-tile-trend { right: -2px; }
-[data-theme="codex"] .dl-tile-trend[data-kind="up"] { color: #7bba1d; }
-[data-theme="codex"] .dl-tile-trend[data-kind="down"] { color: #e0483c; }
-
-[data-theme="codex"] .dl-tile-name {
-  width: 100%;
-  font-family: var(--font-display);
-  /* 0,54rem = 10,3px. El techo lo pone el nombre más largo medido con canvas:
-     "Vagabundo" pide 70px a este tamaño y la caja tiene 74,1. Más grande empieza
-     a recortar nombres, que es peor que uno chico. */
-  font-size: 0.54rem;
-  letter-spacing: 0.02em;
-  color: var(--vellum);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-[data-theme="codex"] .dl-tile-wr {
-  font-family: var(--font-data-narrow);
-  font-size: 0.78rem;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--gold-lit);
-  font-variant-numeric: tabular-nums;
-}
-
-/* El pickrate es el matiz, no la respuesta: va por debajo del nombre en tamaño.
-   Estaba en 0,55rem contra 0,52 del nombre, o sea el segundo número más grande
-   que el nombre del héroe — la jerarquía dada vuelta. */
-[data-theme="codex"] .dl-tile-pr {
-  font-size: 0.48rem;
-  line-height: 1;
-  color: var(--vellum-dim);
-  font-variant-numeric: tabular-nums;
 }
 
 /* El panel cruza las dos columnas de la banda: el riel de la letra es la
@@ -2397,14 +2162,6 @@
   font-size: 1.15rem;
   color: var(--gold);
   line-height: 1;
-}
-
-/* Dentro del riel de la banda las insignias van chicas. La regla general las
-   dibuja a 49px, y una banda de dos rangos pide 101,8px dentro de un riel de
-   76: se salían por los dos costados. */
-[data-theme="codex"] .dl-rail .dl-crest img {
-  width: 1.15rem;
-  height: 1.15rem;
 }
 
 /* Que cambio el parche -----------------------------------------------------

@@ -645,8 +645,12 @@ const EN = {
       mostPlayed: "Most played",
       changelog: "Patch log",
       allPatches: "All patches",
-      legend: "◆ hard · ◇ easy — how much skill pays: win-rate points between the top band and the bottom one.",
+      legend:
+        "Under each hero: win rate, then pick rate. ◆ hard · ◇ easy — how much skill pays: " +
+        "win-rate points between the top band and the bottom one.",
     },
+    /** La columna de la letra, en la tier list (rediseño del 2026-09-16). */
+    tierCount: (n: number) => `${n} ${n === 1 ? "hero" : "heroes"}`,
     next: {
       label: "Keep reading",
       items: "Item tier list",
@@ -665,7 +669,7 @@ const EN = {
      * son los parches del juego, que es la palabra que usa el jugador.
      */
     tabs: {
-      meta: "Meta",
+      meta: "Heroes",
       items: "Items",
       ranks: "Ranks",
       ladder: "Ladder",
@@ -2225,8 +2229,11 @@ const ES: typeof EN = {
       mostPlayed: "Más jugados",
       changelog: "Registro de parches",
       allPatches: "Todos los parches",
-      legend: "◆ difícil · ◇ fácil — cuánto premia saber jugarlo: puntos de winrate entre la banda de arriba y la de abajo.",
+      legend:
+        "Debajo de cada héroe: victorias y uso. ◆ difícil · ◇ fácil — cuánto premia saber " +
+        "jugarlo: puntos de winrate entre la banda de arriba y la de abajo.",
     },
+    tierCount: (n: number) => `${n} ${n === 1 ? "héroe" : "héroes"}`,
     next: {
       label: "Seguir leyendo",
       items: "Tier list de objetos",
@@ -2240,7 +2247,7 @@ const ES: typeof EN = {
       "se jugó cada una. Los héroes se mueven — uno que carga en Fantasma puede ser la peor " +
       "elección debajo de Centinela — así que elige la banda en la que juegas.",
     tabs: {
-      meta: "Meta",
+      meta: "Héroes",
       items: "Objetos",
       ranks: "Rangos",
       ladder: "Escalera",

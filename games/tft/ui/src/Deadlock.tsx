@@ -3,7 +3,6 @@ import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import SectionHead from "./SectionHead";
 import { useCopy, useLocale, useLang } from "./i18n";
-import { text } from "./localized";
 import { type DeadlockSection } from "./route";
 import DeadlockBuildCard from "./DeadlockBuildCard";
 import DeadlockMastery from "./DeadlockMastery";
@@ -13,8 +12,8 @@ import {
   bandBadge,
   PUBLISHED_BAND,
   ON_FALLBACK_BAND,
-  bandCrest,
   patchMovers,
+  tierRange,
   type BandId,
   type Hero,
 } from "./deadlockData";
@@ -46,6 +45,31 @@ const signed = (n: number | undefined): string =>
   n === undefined ? "—" : `${n > 0 ? "+" : n < 0 ? "−" : ""}${Math.abs(n).toFixed(1)}`;
 
 const TIER_ORDER = ["S", "A", "B", "C", "D"];
+
+/**
+ * Las marcas de la esquina del retrato, dibujadas y no escritas: un glifo
+ * (◆ ▲) cambia de tamaño y de peso según la fuente que lo resuelva, y en la
+ * dirección A todas las marcas son el mismo cuadrado de 16 px.
+ */
+function MarkIcon({ kind }: { kind: "hard" | "easy" | "up" | "down" }) {
+  if (kind === "up" || kind === "down") {
+    return (
+      <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true">
+        <path d={kind === "up" ? "M4 1 7.5 7h-7Z" : "M4 7 .5 1h7Z"} fill="currentColor" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true">
+      <path
+        d="M4 .7 7.3 4 4 7.3.7 4Z"
+        fill={kind === "hard" ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+    </svg>
+  );
+}
 
 /**
  * Un héroe dentro de su banda.
@@ -92,7 +116,7 @@ function HeroTile({
       >
         <span className="dl-tile-face">
           {hero.img ? (
-            <img src={hero.img} alt="" loading="lazy" width={57} height={57} />
+            <img src={hero.img} alt="" loading="lazy" width={56} height={56} />
           ) : (
             <span className="dl-portrait-fallback">{hero.name.slice(0, 2)}</span>
           )}
@@ -105,7 +129,7 @@ function HeroTile({
                 signed(hero.skillGap)
               )}`}
             >
-              <span aria-hidden="true">{hero.difficulty === "hard" ? "◆" : "◇"}</span>
+              <MarkIcon kind={hero.difficulty} />
             </span>
           )}
 
@@ -117,7 +141,7 @@ function HeroTile({
                 signed(hero.trend)
               )}`}
             >
-              <span aria-hidden="true">{hero.momentum === "up" ? "▲" : "▼"}</span>
+              <MarkIcon kind={hero.momentum} />
             </span>
           )}
         </span>
@@ -383,36 +407,45 @@ function HeroPage({
 }
 
 /**
- * Una banda de tier: la letra en un riel a la izquierda y los héroes fluyendo a
- * la derecha. Ya no se pliega ni despliega nada: cada tile es un enlace a la
- * página del héroe.
+ * Una banda de tier, dirección A del rediseño (2026-09-16): la letra en un
+ * bloque rectangular a la izquierda, con cuántos héroes tiene y el rango de
+ * winrate que la define; los héroes fluyen a la derecha. Cada tile es un
+ * enlace a la página del héroe.
+ *
+ * La insignia de la banda ya no se repite en cada fila: el selector de arriba
+ * la muestra una vez, y cinco copias de la misma insignia no decían nada nuevo.
  */
 function TierBand({
   tier,
   heroes,
-  crest,
   route,
   navigate,
 }: {
   tier: string;
   heroes: Hero[];
-  crest: ReturnType<typeof bandCrest>;
   route: Route;
   navigate: (route: Route) => void;
 }) {
-  const { lang } = useLang();
+  const copy = useCopy();
+  const locale = useLocale();
+  const { min, max } = tierRange(tier);
+  const n = (x: number) => (x * 100).toLocaleString(locale, { maximumFractionDigits: 1 });
+  const p = (x: number) => `${n(x)}%`;
+  const range =
+    min !== undefined && max !== undefined
+      ? `${n(min)}–${p(max)}`
+      : min !== undefined
+        ? `≥ ${p(min)}`
+        : max !== undefined
+          ? `< ${p(max)}`
+          : "";
 
   return (
-    <section className="tier-group dl-band" data-tier={tier}>
-      <div className="dl-rail">
-        <span className="tier-mark">{tier}</span>
-        <span className="dl-crest">
-          {crest.badges.map((b) => (
-            <img key={b.img} src={b.img} alt={text(b.name, lang)} width={22} height={22} loading="lazy" />
-          ))}
-          {crest.suffix && <span className="dl-crest-sign">{crest.suffix}</span>}
-        </span>
-        <span className="tier-count">{heroes.length}</span>
+    <section className="dl-tier" data-tier={tier} aria-label={`${tier} · ${copy.deadlock.tierCount(heroes.length)}`}>
+      <div className="dl-tier-mark">
+        <span className="dl-tier-letter">{tier}</span>
+        <span className="dl-tier-sub">{copy.deadlock.tierCount(heroes.length)}</span>
+        {range && <span className="dl-tier-sub">{range}</span>}
       </div>
 
       <ol className="dl-tiles">
@@ -470,7 +503,6 @@ export default function Deadlock({
   const meta = useHeroes(band);
 
   const insignia = bandBadge(band);
-  const crest = bandCrest(band);
   const movers = patchMovers(meta?.heroes ?? []);
   const enParches = section === "patches";
 
@@ -583,7 +615,6 @@ export default function Deadlock({
                         key={tier}
                         tier={tier}
                         heroes={heroes}
-                        crest={crest}
                         route={route}
                         navigate={navigate}
                       />
@@ -591,8 +622,8 @@ export default function Deadlock({
                   })}
                 </div>
 
-                <p className="detail-note dl-legend">{copy.deadlock.rail.legend}</p>
-                <p className="detail-note dl-footnote" lang={lang}>
+                <p className="dl-tier-note">{copy.deadlock.rail.legend}</p>
+                <p className="dl-tier-note" lang={lang}>
                   {copy.deadlock.footnote}
                 </p>
 

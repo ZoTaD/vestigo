@@ -210,11 +210,31 @@ export interface Hero extends RawHero {
  * separa a un S de un C.
  */
 export function tierOf(winRate: number): string {
-  if (winRate >= 0.53) return "S";
-  if (winRate >= 0.515) return "A";
-  if (winRate >= 0.5) return "B";
-  if (winRate >= 0.485) return "C";
-  return "D";
+  return TIER_CUTS.find((c) => winRate >= c.min)?.tier ?? "D";
+}
+
+/**
+ * Los cortes de `tierOf`, de arriba hacia abajo. Exportados porque la tier list
+ * los imprime al lado de cada letra (rediseño del 2026-09-16): "S · ≥ 53%" dice
+ * de dónde sale la letra sin abrir "cómo se mide".
+ */
+export const TIER_CUTS: { tier: string; min: number }[] = [
+  { tier: "S", min: 0.53 },
+  { tier: "A", min: 0.515 },
+  { tier: "B", min: 0.5 },
+  { tier: "C", min: 0.485 },
+  { tier: "D", min: -Infinity },
+];
+
+/** El rango de winrate de una letra: `min` abierto en D, `max` abierto en S. */
+export function tierRange(tier: string): { min?: number; max?: number } {
+  const i = TIER_CUTS.findIndex((c) => c.tier === tier);
+  if (i < 0) return {};
+  const min = TIER_CUTS[i].min;
+  return {
+    min: Number.isFinite(min) ? min : undefined,
+    max: i > 0 ? TIER_CUTS[i - 1].min : undefined,
+  };
 }
 
 const files = new Map<BandId, HeroesFile>([[PUBLISHED_BAND, heroesJson as unknown as HeroesFile]]);

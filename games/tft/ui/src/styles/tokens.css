@@ -32,6 +32,10 @@
 
   --radius: 6px;
   --radius-lg: 10px;
+  /* Las pastillas (buscador, "pronto", chips). Es un token y no un 999px
+     escrito a mano para que un lugar pueda decir "acá no hay pastillas":
+     Deadlock lo baja a su radio único desde el 2026-09-16. */
+  --radius-pill: 999px;
 
   /* Ancho de columna, aire lateral, ancho del rail y alto de la barra. Están
      acá porque la cáscara y las páginas los tienen que compartir. */
@@ -89,6 +93,13 @@
   --line: rgba(198, 162, 105, 0.22);
   --line-strong: rgba(198, 162, 105, 0.5);
   --on-accent: #10130d;
+
+  /* Dirección A del rediseño (2026-09-16): **un solo radio en todo Deadlock**.
+     Cajas, controles, retratos y pastillas miden lo mismo, así nada se lee
+     como de otro sitio. Ver docs/design/2026-09-16-deadlock-direccion-a.md. */
+  --radius: 4px;
+  --radius-lg: 4px;
+  --radius-pill: 4px;
 }
 
 /* Portada: papel. La marca es clara y los juegos son oscuros; ese contraste es
