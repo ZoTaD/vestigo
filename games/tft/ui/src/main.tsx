@@ -14,6 +14,9 @@ import "./styles/home.css";
 import "./styles/shell.css";
 import "./styles/primitives.css";
 import "./styles/views.css";
+// Deadlock con la dirección A del rediseño (2026-09-16): cada pestaña reescrita
+// vive acá, y lo que reemplaza se borra de `codex.css` en vez de pisarse.
+import "./styles/deadlock.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

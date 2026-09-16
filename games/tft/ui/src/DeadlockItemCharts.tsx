@@ -161,10 +161,10 @@ export function UsageVsEdge({ scatter, band }: { scatter: Scatter; band: string 
    */
 
   return (
-    <figure className="dl-chart">
-      <figcaption className="dl-chart-head">
-        <h3 className="dl-chart-title">{c.scatter.title}</h3>
-        <p className="detail-note dl-chart-note">{c.scatter.note}</p>
+    <figure className="box dl-chart">
+      <figcaption className="box-head">
+        <h3 className="box-title">{c.scatter.title}</h3>
+        <p className="box-lead">{c.scatter.note}</p>
       </figcaption>
 
       <svg
@@ -240,10 +240,10 @@ export function ShopHeatmap({ cells }: { cells: ShopCell[] }) {
   const at = (cost: number, slot: Slot) => cells.find((x) => x.cost === cost && x.slot === slot);
 
   return (
-    <figure className="dl-chart">
-      <figcaption className="dl-chart-head">
-        <h3 className="dl-chart-title">{c.heatmap.title}</h3>
-        <p className="detail-note dl-chart-note">{c.heatmap.note}</p>
+    <figure className="box dl-chart">
+      <figcaption className="box-head">
+        <h3 className="box-title">{c.heatmap.title}</h3>
+        <p className="box-lead">{c.heatmap.note}</p>
       </figcaption>
 
       {/* Una tabla de verdad y no una grilla de divs: son doce números con dos
@@ -290,12 +290,12 @@ export function ShopHeatmap({ cells }: { cells: ShopCell[] }) {
         </tbody>
       </table>
 
-      <p className="dl-legend">
-        <span className="dl-legend-swatch" style={{ background: NEG }} aria-hidden="true" />
+      <p className="dl-heat-legend">
+        <span className="dl-heat-swatch" style={{ background: NEG }} aria-hidden="true" />
         {c.legend.worse}
-        <span className="dl-legend-swatch" style={{ background: MID }} aria-hidden="true" />
+        <span className="dl-heat-swatch" style={{ background: MID }} aria-hidden="true" />
         {c.legend.par}
-        <span className="dl-legend-swatch" style={{ background: POS }} aria-hidden="true" />
+        <span className="dl-heat-swatch" style={{ background: POS }} aria-hidden="true" />
         {c.legend.better}
       </p>
     </figure>
@@ -318,9 +318,11 @@ export function Callouts({ scatter }: { scatter: Scatter }) {
   const c = copy.deadlock.itemsPage.charts;
 
   const lista = (items: Scatter["sleepers"], kind: "sleeper" | "trap") => (
-    <div className="dl-callout" data-kind={kind}>
-      <h3 className="dl-callout-title">{c.callouts[kind].title}</h3>
-      <p className="detail-note dl-chart-note">{c.callouts[kind].note}</p>
+    <section className="box dl-callout" data-kind={kind}>
+      <div className="box-head">
+        <h3 className="box-title">{c.callouts[kind].title}</h3>
+        <p className="box-lead">{c.callouts[kind].note}</p>
+      </div>
       <ol className="dl-callout-list">
         {items.slice(0, 5).map((p) => (
           <li key={p.itemId}>
@@ -333,7 +335,7 @@ export function Callouts({ scatter }: { scatter: Scatter }) {
           </li>
         ))}
       </ol>
-    </div>
+    </section>
   );
 
   return (

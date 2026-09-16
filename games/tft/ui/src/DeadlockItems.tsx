@@ -1,9 +1,11 @@
 import { useState } from "react";
 import SectionHead from "./SectionHead";
+import Chevron from "./Chevron";
 import { useCopy, useLocale } from "./i18n";
 import {
   useItems,
   typeIconUrl,
+  soulIcon,
   scatterOf,
   shopMap,
   COSTS,
@@ -43,6 +45,15 @@ const delta = (n: number): string => `${n > 0 ? "+" : n < 0 ? "−" : ""}${Math.
 const TIER_ORDER = ["S", "A", "B", "C", "D"];
 
 
+/**
+ * Una fila de objeto, dirección A del rediseño (2026-09-16).
+ *
+ * Una grilla fija —letra, ícono, nombre, tres cifras, flecha— que se alinea
+ * con los rótulos de columna del encabezado del grupo, así las cifras se leen
+ * como tabla y no hace falta repetir "Edge / Win rate / Pick rate" en cada
+ * fila. El estante ya no pinta un filo a la izquierda: va como palabra, en el
+ * color del estante.
+ */
 function ItemRow({
   item,
   base,
@@ -58,82 +69,78 @@ function ItemRow({
 }) {
   const copy = useCopy();
   const c = copy.deadlock.itemsPage;
+  const sign = item.delta > 0 ? "up" : item.delta < 0 ? "down" : "flat";
 
   return (
-    <li className="dl-item" data-thin={item.thinData === true} data-slot={item.slot} data-open={open}>
+    <li className="dl-irow" data-thin={item.thinData === true} data-open={open}>
       <button
-        className="dl-item-open"
+        className="dl-irow-btn"
         onClick={onToggle}
         aria-expanded={open}
         aria-label={c.detail.toggle(item.name)}
       >
-      <span className="dl-item-tier" aria-hidden="true">
-        {item.tier}
-      </span>
+        <span className="dl-irow-tier" aria-hidden="true">
+          {item.tier}
+        </span>
 
-      <span className="dl-item-face">
-        {item.img ? (
-          <img src={item.img} alt="" loading="lazy" width={44} height={44} />
-        ) : (
-          <span className="dl-portrait-fallback">{item.name.slice(0, 2)}</span>
-        )}
-      </span>
+        <span className="dl-irow-face">
+          {item.img ? (
+            <img src={item.img} alt="" loading="lazy" width={40} height={40} />
+          ) : (
+            <span className="dl-portrait-fallback">{item.name.slice(0, 2)}</span>
+          )}
+        </span>
 
-      <span className="dl-identity">
-        <span className="dl-name">{item.name}</span>
-        <span className="dl-chips">
-          <span className="dl-chip" data-kind="slot">
-            {c.slots[item.slot as Slot]}
+        <span className="dl-irow-id">
+          <span className="dl-irow-name">{item.name}</span>
+          <span className="dl-irow-meta">
+            <span className="dl-irow-slot" data-slot={item.slot}>
+              {c.slots[item.slot as Slot]}
+            </span>
+            {/* Qué da el ítem, con el ícono del propio juego. No es el estante:
+                medido, 57 de 156 dan más de un tipo y hay ítems del estante de
+                vitalidad que dan daño de espíritu. */}
+            {item.types.map((t) => (
+              <img
+                key={t}
+                className="dl-type"
+                src={typeIconUrl(t)}
+                alt={c.types[t as keyof typeof c.types] ?? t}
+                title={c.types[t as keyof typeof c.types] ?? t}
+                width={16}
+                height={16}
+                loading="lazy"
+              />
+            ))}
           </span>
-          {/* Qué da el ítem, con el ícono del propio juego. No es el estante:
-              medido, 57 de 156 dan más de un tipo y hay ítems del estante de
-              vitalidad que dan daño de espíritu. */}
-          {item.types.map((t) => (
-            <img
-              key={t}
-              className="dl-type"
-              src={typeIconUrl(t)}
-              alt={c.types[t as keyof typeof c.types] ?? t}
-              title={c.types[t as keyof typeof c.types] ?? t}
-              width={14}
-              height={14}
-              loading="lazy"
-            />
-          ))}
         </span>
-      </span>
 
-      {/* El delta al doble de tamaño y el winrate crudo al lado: el primero es la
-          respuesta y el segundo es de dónde salió. */}
-      <span className="stats dl-stats">
-        <span
-          className="stat stat-primary"
-          data-sign={item.delta > 0 ? "up" : item.delta < 0 ? "down" : "flat"}
-          title={c.deltaWhy(delta(item.delta), pct(base))}
-        >
-          <span className="stat-value">{delta(item.delta)}</span>
-          <span className="stat-label">{c.stats.delta}</span>
+        {/* El rótulo de cada cifra va en el encabezado del grupo; acá queda
+            oculto a la vista y presente para el lector de pantalla, y en
+            teléfono —donde no hay encabezado de columnas— se muestra. */}
+        <span className="dl-irow-nums">
+        <span className="dl-irow-num is-edge" data-sign={sign} title={c.deltaWhy(delta(item.delta), pct(base))}>
+          {delta(item.delta)}
+          <small className="dl-irow-lab">{c.stats.delta}</small>
         </span>
-        <span className="stat">
-          <span className="stat-value">{pct(item.winRateRaw)}</span>
-          <span className="stat-label">{c.stats.winRate}</span>
+        <span className="dl-irow-num">
+          {pct(item.winRateRaw)}
+          <small className="dl-irow-lab">{c.stats.winRate}</small>
         </span>
-        <span className="stat">
-          <span className="stat-value">{pct(item.pickRate)}</span>
-          <span className="stat-label">{c.stats.pickRate}</span>
+        <span className="dl-irow-num is-dim">
+          {pct(item.pickRate)}
+          <small className="dl-irow-lab">{c.stats.pickRate}</small>
         </span>
-      </span>
+        </span>
 
-        <span className="dl-chevron" aria-hidden="true">
-          ▾
-        </span>
+        <Chevron className="dl-irow-chev" />
       </button>
 
       {/* La ficha se monta sólo al abrir. Con 156 filas, montarlas todas sería
           pedir el archivo de fichas en cuanto carga la página, que es
           exactamente lo que este reparto evita. */}
       {open && (
-        <div className="dl-item-fold">
+        <div className="dl-irow-fold">
           <ItemDetailPanel item={item} cost={cost} />
         </div>
       )}
@@ -142,13 +149,13 @@ function ItemRow({
 }
 
 /**
- * Un precio que se abre y se cierra.
+ * Un precio que se abre y se cierra: una caja con el precio, lo que gana el
+ * promedio de ese precio y cuántos objetos hay, y adentro las filas.
  *
  * La animación es `grid-template-rows: 0fr → 1fr` sobre un contenedor con
- * `overflow: hidden`, igual que los tiers de héroes: es la única forma de animar
- * hacia "lo que mida el contenido" sin que JavaScript mida nada. El contenido
- * **se monta siempre**, aunque esté plegado, así Ctrl+F lo encuentra y Google lo
- * indexa.
+ * `overflow: hidden`: es la única forma de animar hacia "lo que mida el
+ * contenido" sin que JavaScript mida nada. El contenido **se monta siempre**,
+ * aunque esté plegado, así Ctrl+F lo encuentra y Google lo indexa.
  */
 function CostGroup({
   cost,
@@ -172,34 +179,36 @@ function CostGroup({
   const locale = useLocale();
   const c = copy.deadlock.itemsPage;
   const precio = cost.toLocaleString(locale);
+  const alma = soulIcon();
 
   return (
-    <section className="tier-group dl-cost" data-cost={cost} data-open={open}>
+    <section className="dl-shelf" data-cost={cost} data-open={open}>
       <button
-        className="tier-head dl-cost-head"
+        className="dl-shelf-head"
         onClick={onToggle}
         aria-expanded={open}
         aria-label={c.costGroup(precio, items.length)}
       >
-        <span className="dl-souls">
-          <span className="dl-souls-mark" aria-hidden="true">
-            ◈
-          </span>
+        <span className="dl-shelf-price">
+          {alma && <img src={alma} alt="" width={18} height={18} />}
           {precio}
         </span>
         {/* La base va en el encabezado y no en una nota al pie: es contra este
             número que se resta cada fila del grupo, así que tiene que estar a la
             vista de las filas que explica. */}
-        <span className="dl-cost-base">{c.baseline(pct(base))}</span>
-        <span className="tier-count">{items.length}</span>
-        <span className="dl-chevron" aria-hidden="true">
-          ▾
-        </span>
+        <span className="dl-shelf-base">{c.baseline(pct(base))}</span>
+        <span className="dl-shelf-count">{c.itemCount(items.length)}</span>
+        <Chevron className="dl-shelf-chev" />
       </button>
 
       <div className="dl-fold">
         <div className="dl-fold-inner">
-          <ol className="dl-list dl-item-list">
+          <div className="dl-irow-cols" aria-hidden="true">
+            <span>{c.stats.delta}</span>
+            <span>{c.stats.winRate}</span>
+            <span>{c.stats.pickRate}</span>
+          </div>
+          <ol className="dl-irows">
             {items.map((i) => {
               const slug = itemSlugs.toSlug.get(String(i.itemId));
               return (
@@ -293,7 +302,7 @@ export default function DeadlockItems({
       />
 
       {!meta ? (
-        <p className="detail-note dl-loading">{c.loading}</p>
+        <p className="dl-loading-note">{c.loading}</p>
       ) : (
         /**
          * Dos columnas: la lista a la izquierda y lo que la resume a la derecha.
@@ -306,8 +315,8 @@ export default function DeadlockItems({
          * La columna derecha es `position: sticky`, así que los gráficos siguen
          * ahí mientras se baja por los 156 ítems.
          */
-        <div className="dl-split">
-          <div className="tiers dl-split-list">
+        <div className="page has-rail dl-items-page">
+          <div className="page-main">
             {/* Todo lo que la lista muestra se puede filtrar (Baymard): el
                 estante de cada ítem ya iba como chip en la fila; acá manda. */}
             <div className="chips dl-slot-chips" role="group" aria-label={c.allSlots}>
@@ -351,10 +360,10 @@ export default function DeadlockItems({
               );
             })}
 
-            <p className="detail-note dl-footnote">{c.footnote}</p>
+            <p className="dl-tier-note">{c.footnote}</p>
           </div>
 
-          <aside className="dl-split-aside" aria-label={c.charts.aside}>
+          <aside className="dl-items-aside" aria-label={c.charts.aside}>
             {scatter && <UsageVsEdge scatter={scatter} band={copy.deadlock.bands[band]} />}
             {scatter && <Callouts scatter={scatter} />}
             <ShopHeatmap cells={celdas} />

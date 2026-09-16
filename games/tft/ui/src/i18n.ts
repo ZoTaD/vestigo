@@ -1255,6 +1255,8 @@ const EN = {
         "cost the same.",
       /** El grupo lleva el precio, que es como el jugador piensa en la tienda. */
       costGroup: (cost: string, n: number) => `${cost} souls, ${n} items`,
+      /** El conteo a la derecha del encabezado del grupo. */
+      itemCount: (n: number) => `${n} ${n === 1 ? "item" : "items"}`,
       /** La base contra la que se resta, dicha en el encabezado del grupo. */
       baseline: (pct: string) => `anything at this price wins ${pct}`,
       slots: { weapon: "Weapon", vitality: "Vitality", spirit: "Spirit" },
@@ -2604,6 +2606,7 @@ const ES: typeof EN = {
         "Uno de 6400 gana más que uno de 800 porque sólo se compra en una partida que ya venía " +
         "larga — así que el número de acá es cuánto le saca cada objeto a los que cuestan lo mismo.",
       costGroup: (cost, n) => `${cost} almas, ${n} objetos`,
+      itemCount: (n: number) => `${n} ${n === 1 ? "objeto" : "objetos"}`,
       baseline: (pct) => `cualquiera de este precio gana ${pct}`,
       slots: { weapon: "Arma", vitality: "Vitalidad", spirit: "Espíritu" },
       allSlots: "Todos",
