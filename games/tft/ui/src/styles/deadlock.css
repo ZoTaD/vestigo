@@ -671,6 +671,14 @@
   color: var(--text-dim);
 }
 
+/* En el teléfono los totales por rango no entran debajo de insignias de 5 px
+   de ancho: quedan en el `title` de cada columna. */
+@media (max-width: 30rem) {
+  [data-theme="codex"] .dl-hist-n {
+    display: none;
+  }
+}
+
 /* Por día: una barra apilada por fila, la fecha y el total a los costados. */
 [data-theme="codex"] .dl-days,
 [data-theme="codex"] .dl-sides-list {
@@ -983,13 +991,26 @@
      jugador se lleva el ancho. */
   [data-theme="codex"] .dl-lb-head,
   [data-theme="codex"] .dl-lb-row {
-    grid-template-columns: 1.5rem minmax(0, 1fr) 1.5rem 2.8rem 3.6rem;
+    grid-template-columns: 1.5rem minmax(0, 1fr) 1.5rem 2.8rem 4.2rem;
     gap: 0.5rem;
   }
 
   [data-theme="codex"] .dl-lb-flag,
   [data-theme="codex"] .dl-lb-rank-name {
     display: none;
+  }
+
+  /* La columna del rango es sólo la insignia: su rótulo no entra y se calla.
+     Los otros dos pueden partirse en dos renglones antes que pisarse. */
+  [data-theme="codex"] .dl-lb-head .dl-lb-rank {
+    visibility: hidden;
+  }
+
+  [data-theme="codex"] .dl-lb-head {
+    align-items: end;
+    font-size: 0.55rem;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
   }
 
   .dl-lb-search {
@@ -1634,4 +1655,243 @@
     width: 30px;
     height: 30px;
   }
+}
+
+/* Deadlock · Informe de partida --------------------------------------------- */
+
+[data-theme="codex"] .dl-rep-back {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  margin: 1.2rem 0 0;
+  padding: 0 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+[data-theme="codex"] .dl-rep-back:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-rep-board {
+  gap: 0.9rem;
+  margin: 1.1rem 0 0.9rem;
+}
+
+.dl-rep-block + .dl-rep-block,
+.dl-rep-block + .dl-tier-note {
+  margin-top: 0.9rem;
+}
+
+/* El bando: el resultado en su color y el nombre al lado, como título de caja. */
+[data-theme="codex"] .dl-rep-team-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin: 0 0 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.18rem;
+  letter-spacing: 0.04em;
+}
+
+[data-theme="codex"] .dl-rep-team-head .is-win {
+  color: var(--good);
+}
+
+[data-theme="codex"] .dl-rep-team-head .is-loss {
+  color: var(--bad);
+}
+
+[data-theme="codex"] .dl-rep-team-name {
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+/* Las filas de jugador: líneas, sin filo de bando (la caja ya lo dice). */
+[data-theme="codex"] .dl-rep-rows {
+  gap: 0;
+}
+
+[data-theme="codex"] .dl-rep-row {
+  min-height: 2.9rem;
+  padding: 0.25rem 0.4rem;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  transition: background 140ms ease;
+}
+
+[data-theme="codex"] .dl-rep-row.is-head {
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: 0.45rem;
+  border-top: 0;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-rep-rows > li:nth-child(2) .dl-rep-row {
+  border-top: 0;
+}
+
+[data-theme="codex"] .dl-rep-row:not(.is-head):hover {
+  background: var(--surface-2);
+}
+
+/* La fila elegida: tinte del acento, sin borde. */
+[data-theme="codex"] .dl-rep-row.is-open {
+  border-radius: var(--radius);
+  background: rgba(var(--accent-rgb), 0.16);
+}
+
+[data-theme="codex"] .dl-rep-row .dl-rep-face {
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-rep-who-name {
+  font-weight: 600;
+}
+
+[data-theme="codex"] .dl-rep-cell.is-num {
+  font-family: var(--font-data-narrow);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* La leyenda del gráfico: el bando va en un cuadradito de color, no en una
+   raya debajo del botón. */
+[data-theme="codex"] .dl-rep-key {
+  gap: 0.35rem;
+  padding: 0.2rem 0.45rem 0.2rem 0.4rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-rep-key::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 2px;
+  background: var(--text-faint);
+}
+
+[data-theme="codex"] .dl-rep-key.is-amber::before {
+  background: var(--accent);
+}
+
+[data-theme="codex"] .dl-rep-key.is-sapphire::before {
+  background: #6aa9d8;
+}
+
+[data-theme="codex"] .dl-rep-key img,
+[data-theme="codex"] .dl-rep-read img {
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-rep-key.is-open {
+  background: rgba(var(--accent-rgb), 0.2);
+}
+
+[data-theme="codex"] .dl-rep-read {
+  border: 0;
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-rep-read.is-open {
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-rep-readout-t,
+[data-theme="codex"] .dl-rep-read-num {
+  font-family: var(--font-data-narrow);
+  font-weight: 700;
+}
+
+/* El veredicto, los consejos y el "nada que decir": tinte, no filo. */
+[data-theme="codex"] .dl-rep-verdict,
+[data-theme="codex"] .dl-rep-finding,
+[data-theme="codex"] .dl-rep-clean {
+  border-left: 0;
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-rep-verdict {
+  background: rgba(var(--accent-rgb), 0.12);
+  font-size: 0.88rem;
+}
+
+[data-theme="codex"] .dl-rep-verdict.is-bad {
+  background: color-mix(in srgb, var(--bad) 13%, transparent);
+}
+
+[data-theme="codex"] .dl-rep-verdict.is-good {
+  background: color-mix(in srgb, var(--good) 11%, transparent);
+}
+
+[data-theme="codex"] .dl-rep-finding {
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-rep-finding p {
+  font-size: 0.88rem;
+}
+
+[data-theme="codex"] .dl-rep-clean {
+  background: color-mix(in srgb, var(--good) 11%, transparent);
+  font-size: 0.88rem;
+}
+
+[data-theme="codex"] .dl-rep-sub {
+  margin: 1.4rem 0 0.6rem;
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-rep-grade-line {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-rep-buy {
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-rep-buy-min {
+  font-family: var(--font-data-narrow);
+  font-weight: 600;
+  font-size: 0.65rem;
+}
+
+.dl-rep-measured {
+  margin-top: 1rem;
 }

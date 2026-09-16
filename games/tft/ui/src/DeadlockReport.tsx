@@ -326,7 +326,7 @@ function SoulsChart({
           se pisan entre sí y con las marcas, y así además se selecciona y la
           agranda el zoom del navegador. */}
       {señalado === null ? (
-        <p className="dl-footnote">
+        <p className="dl-tier-note">
           {c.soulsNote(mmss(match.durationS), Math.round(maxNW).toLocaleString(lang))}
         </p>
       ) : (
@@ -496,19 +496,19 @@ export default function DeadlockReport({
   if (error)
     return (
       <section className="tool">
-        <p className="dl-fallback">{error}</p>
+        <p className="dl-notice">{error}</p>
       </section>
     );
   if (failed)
     return (
       <section className="tool">
-        <p className="dl-fallback">{c.noReference}</p>
+        <p className="dl-notice">{c.noReference}</p>
       </section>
     );
   if (!match || !file)
     return (
       <section className="tool">
-        <p className="dl-loading">{c.loadingMatch}</p>
+        <p className="box-empty">{c.loadingMatch}</p>
       </section>
     );
 
@@ -551,7 +551,7 @@ export default function DeadlockReport({
 
       <div className="dl-rep-board">
         {equipos.map((equipo, t) => (
-          <div className="dl-rep-side" key={t}>
+          <div className="box dl-rep-side" key={t}>
             {/* El resultado, escrito, y el nombre del bando. El borde de color ya
                 dice quién ganó, pero un color solo no lo lee un lector de
                 pantalla ni alguien que no distingue el verde del rojo.
@@ -646,22 +646,28 @@ export default function DeadlockReport({
         ))}
       </div>
 
-      <h2 className="dl-section-title">{c.soulsTitle}</h2>
-      <SoulsChart
-        match={match}
-        selected={elegido}
-        names={names}
-        lang={lang}
-        onPick={setElegido}
-      />
+      <section className="box dl-rep-block">
+        <div className="box-head">
+          <h2 className="box-title">{c.soulsTitle}</h2>
+        </div>
+        <SoulsChart
+          match={match}
+          selected={elegido}
+          names={names}
+          lang={lang}
+          onPick={setElegido}
+        />
+      </section>
 
-      {!jugador && <p className="detail-note">{c.pickPlayer}</p>}
+      {!jugador && <p className="dl-tier-note">{c.pickPlayer}</p>}
 
       {jugador && (
-        <>
-          <h2 className="dl-section-title">
-            {c.you} {nombreHeroe(jugador.heroId)}
-          </h2>
+        <section className="box dl-rep-block">
+          <div className="box-head">
+            <h2 className="box-title">
+              {c.you} {nombreHeroe(jugador.heroId)}
+            </h2>
+          </div>
 
           {nota ? (
             <>
@@ -672,7 +678,7 @@ export default function DeadlockReport({
               <GradeBreakdown grade={nota} hero={nombreHeroe(jugador.heroId)} lang={lang} />
             </>
           ) : (
-            <p className="detail-note">{c.noGrade}</p>
+            <p className="box-empty">{c.noGrade}</p>
           )}
 
           <h3 className="dl-rep-sub">{c.buildTitle}</h3>
@@ -684,13 +690,13 @@ export default function DeadlockReport({
           ) : (
             <Findings list={consejos} lang={lang} />
           )}
-          <p className="dl-footnote">
+          <p className="dl-tier-note dl-rep-measured">
             {c.measured(
               copy.deadlock.bands[file.band as keyof typeof copy.deadlock.bands] ?? file.band,
               file.window.matches.toLocaleString(lang)
             )}
           </p>
-        </>
+        </section>
       )}
     </section>
   );

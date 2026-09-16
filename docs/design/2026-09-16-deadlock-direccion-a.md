@@ -39,10 +39,37 @@ https://claude.ai/artifact/DDcJS7VN3BGgPtnFMNGDSJ (artboards "A · Cuadrícula",
 - En un teléfono de 375 px entran tres héroes por fila.
 - La pestaña se llama "Heroes" / "Héroes" en vez de "Meta".
 
-## Qué cambia en las otras pestañas
+## Las otras pestañas (mismo día)
 
-La cáscara es compartida, así que Objetos, Rangos, Escalera, Parches, Jugador y
-la página de héroe ya tienen las pestañas subrayadas, el selector nuevo y el
-radio único en todo lo que usa los tokens. Lo que cada una tiene escrito a mano
-en `codex.css` (chips redondos, filos de color en las filas de Objetos) se
-rediseña cuando le toque su turno, una pestaña por vez.
+ZoTaD pidió llevar el mismo estilo a Objetos, Rangos, Escalera, Parches y
+Jugador. Los estilos nuevos viven en `styles/deadlock.css`, que carga último; lo
+que reemplazan se borró de `codex.css` (unas 1.900 líneas) en vez de pisarse.
+
+- **Objetos.** Cada precio es una caja con el precio, lo que gana el promedio y
+  el conteo. Las filas usan una grilla fija alineada con rótulos de columna que
+  aparecen una vez por grupo. El estante dejó de ser un filo a la izquierda y es
+  la palabra en su color. Los gráficos del costado son cajas estándar.
+- **Rangos.** Todo en cajas con título: dónde estás vos, por rango, por día y
+  qué lado gana; las dos últimas comparten fila. El aviso de calibración es un
+  tinte, no un filo rojo.
+- **Escalera.** Una tabla dentro de una caja, con el buscador al lado del título
+  y filas separadas por una línea. En el podio el metal va en el color del
+  puesto, no en un filo.
+- **Parches.** Dos cajas: quién se movió (ganadores y perdedores lado a lado) y
+  el historial, con el vigente marcado por tinte.
+- **Jugador.** La lista de partidas en una caja, el filtro de modo como control
+  segmentado, rótulos de columna iguales, la nota como cuadrado con tinte y
+  "mostrar más" como botón secundario. Las tarjetas del costado son
+  `.box.dl-pcard` con título de 20 px.
+- **Informe de partida.** Una caja por bando con el resultado en su color, filas
+  sin filo, la leyenda del gráfico con un cuadradito de color y el veredicto y
+  los consejos con tinte.
+
+Piezas nuevas compartidas: `Chevron.tsx` (la flecha de plegar, en SVG) y
+`.dl-notice` (un aviso con tinte).
+
+## Qué queda
+
+- La página de héroe (build, habilidades, maestría) conserva etiquetas redondas
+  y el aviso `.dl-provisional` con filo.
+- El cartel de cookies usa botones crema.

@@ -2304,33 +2304,6 @@
   margin-bottom: 0.2rem;
 }
 
-[data-theme="codex"] .dl-band-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-[data-theme="codex"] .dl-band-pill {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.28rem 0.5rem;
-  border: 1px solid rgba(201, 162, 74, 0.35);
-  border-radius: 3px;
-  background: none;
-  color: var(--vellum-dim);
-  font-family: var(--font-data-narrow);
-  font-size: 0.66rem;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-}
-
-[data-theme="codex"] .dl-band-pill[data-active="true"] {
-  background: rgba(201, 162, 74, 0.16);
-  border-color: var(--gold-lit);
-  color: var(--vellum);
-}
-
 [data-theme="codex"] .dl-meta-line,
 [data-theme="codex"] .tool-head .dl-fallback {
   display: flex;
@@ -5225,21 +5198,10 @@
   text-transform: uppercase;
   color: var(--vellum-dim);
   cursor: default;
-  /* El mismo borde invisible que llevan las filas de datos: sin esto los
-     rótulos quedan tres píxeles a la izquierda de su columna. */
-  border-left: 3px solid transparent;
 }
 
 [data-theme="codex"] .dl-rep-row.is-head > span + span {
   text-align: right;
-}
-
-[data-theme="codex"] .dl-rep-row.is-win {
-  border-left: 3px solid rgba(120, 190, 130, 0.8);
-}
-
-[data-theme="codex"] .dl-rep-row.is-loss {
-  border-left: 3px solid rgba(200, 105, 105, 0.75);
 }
 
 [data-theme="codex"] .dl-rep-row:not(.is-head):hover {
@@ -5751,29 +5713,6 @@
   [data-theme="codex"] .dataset {
     margin-top: 1.1rem;
   }
-
-  /* El selector de banda, deslizable como las otras dos filas de navegación.
-     Envolver no alcanzaba: "Emissary / Oracle" y "Sentinel and below" son
-     etiquetas que no se pueden partir, y con la base de 19rem las cuatro
-     pastillas piden ~390px contra los 337 que hay. Un riel que se desliza no
-     depende de cuánto mide el texto en el motor que lo dibuje. */
-  [data-theme="codex"] .dl-band-pills {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    justify-content: flex-start;
-    padding-bottom: 0.2rem;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  [data-theme="codex"] .dl-band-pills::-webkit-scrollbar {
-    display: none;
-  }
-
-  [data-theme="codex"] .dl-band-pill {
-    flex: 0 0 auto;
-    white-space: nowrap;
-  }
 }
 
 /* --- El desborde que destapó el layout nuevo --------------------------------
@@ -6126,14 +6065,6 @@
   height: auto;
 }
 
-
-/* --- El filtro de modo del perfil ------------------------------------------
-
-   Hereda `.dl-band-pills` y `.dl-band-pill` del selector de banda: es el mismo
-   control y no merece un segundo CSS. Lo que agrega es el contador de cada modo
-   y el estado deshabilitado, que la banda no necesita porque sus cuatro bandas
-   existen siempre.
-   --------------------------------------------------------------------------- */
 
 /* --- La insignia de rango, con el numeral encima --------------------------- */
 
