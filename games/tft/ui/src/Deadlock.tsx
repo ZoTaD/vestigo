@@ -166,7 +166,7 @@ function HeroTile({
  * El enlace sale del propio feed y va al foro oficial. Es la única salida a otro
  * sitio que tiene la página, y es a la fuente.
  */
-function PatchHistory({ limit }: { limit?: number } = {}) {
+function PatchHistory({ limit, boxed = false }: { limit?: number; boxed?: boolean } = {}) {
   const copy = useCopy();
   const locale = useLocale();
   const file = usePatches();
@@ -176,9 +176,13 @@ function PatchHistory({ limit }: { limit?: number } = {}) {
     new Date(iso).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" });
 
   return (
-    <section className="dl-history">
-      <h2 className="dl-patch-side">{copy.deadlock.patch.history}</h2>
-      <p className="detail-note dl-history-note">{copy.deadlock.patch.nameNote}</p>
+    <section className={boxed ? "box dl-history" : "dl-history"}>
+      {/* En el rail la caja que lo contiene ya tiene título: este encabezado se
+          apaga ahí desde `views.css`. */}
+      <div className="box-head dl-history-head">
+        <h2 className="box-title">{copy.deadlock.patch.history}</h2>
+        <p className="box-lead dl-history-note">{copy.deadlock.patch.nameNote}</p>
+      </div>
 
       <ol className="dl-history-list">
         {file.patches.slice(0, limit ?? file.patches.length).map((p, i) => (
@@ -215,7 +219,7 @@ function MoverRow({ hero, rank }: { hero: Hero; rank: number }) {
   return (
     <li className="dl-mover" data-dir={sube ? "up" : "down"}>
       <span className="dl-mover-rank">{rank}</span>
-      {hero.img && <img className="dl-mover-face" src={hero.img} alt="" width={44} height={44} loading="lazy" />}
+      {hero.img && <img className="dl-mover-face" src={hero.img} alt="" width={40} height={40} loading="lazy" />}
       <span className="dl-mover-id">
         <span className="dl-name">{hero.name}</span>
         <span className="dl-mover-delta">
@@ -224,14 +228,14 @@ function MoverRow({ hero, rank }: { hero: Hero; rank: number }) {
       </span>
       <span className="dl-mover-rates">
         <span className="dl-mover-rate">
-          <span className="stat-label">{copy.deadlock.patch.winRate}</span>
+          <span className="dl-mover-lab">{copy.deadlock.patch.winRate}</span>
           <span>
             {pct(hero.winRateBefore ?? 0)} <span aria-hidden="true">→</span>{" "}
             <b>{pct(hero.winRateRaw)}</b>
           </span>
         </span>
         <span className="dl-mover-rate">
-          <span className="stat-label">{copy.deadlock.patch.pickRate}</span>
+          <span className="dl-mover-lab">{copy.deadlock.patch.pickRate}</span>
           <span>
             {pct(hero.pickRateBefore ?? 0)} <span aria-hidden="true">→</span>{" "}
             <b>{pct(hero.pickRate)}</b>
@@ -549,13 +553,18 @@ export default function Deadlock({
   const topS = meta?.heroes[0];
 
   const parches = meta && (
-    <section className="dl-patch dl-patch-page">
+    <div className="dl-patch-page">
+      <section className="box">
+        <div className="box-head">
+          <h2 className="box-title">{copy.deadlock.rail.movers}</h2>
+          <p className="box-lead">{copy.deadlock.rail.moversLead}</p>
+        </div>
       {movers.up.length + movers.down.length === 0 ? (
-        <p className="detail-note">{copy.deadlock.patch.none}</p>
+        <p className="box-empty">{copy.deadlock.patch.none}</p>
       ) : (
         <div className="dl-patch-cols">
           <div className="dl-patch-col" data-dir="up">
-            <h2 className="dl-patch-side">{copy.deadlock.patch.winners}</h2>
+            <h3 className="dl-patch-side">{copy.deadlock.patch.winners}</h3>
             <ol className="dl-mover-list">
               {movers.up.map((h, i) => (
                 <MoverRow key={h.heroId} hero={h} rank={i + 1} />
@@ -563,7 +572,7 @@ export default function Deadlock({
             </ol>
           </div>
           <div className="dl-patch-col" data-dir="down">
-            <h2 className="dl-patch-side">{copy.deadlock.patch.losers}</h2>
+            <h3 className="dl-patch-side">{copy.deadlock.patch.losers}</h3>
             <ol className="dl-mover-list">
               {movers.down.map((h, i) => (
                 <MoverRow key={h.heroId} hero={h} rank={i + 1} />
@@ -572,9 +581,10 @@ export default function Deadlock({
           </div>
         </div>
       )}
+      </section>
 
-      <PatchHistory />
-    </section>
+      <PatchHistory boxed />
+    </div>
   );
 
   return (

@@ -325,8 +325,7 @@
   margin: 0;
 }
 
-.dl-rail-log .dl-patch-side,
-.dl-rail-log .dl-history-note {
+.dl-rail-log .dl-history-head {
   display: none;
 }
 
