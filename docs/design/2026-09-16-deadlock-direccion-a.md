@@ -43,7 +43,7 @@ https://claude.ai/artifact/DDcJS7VN3BGgPtnFMNGDSJ (artboards "A · Cuadrícula",
 
 ZoTaD pidió llevar el mismo estilo a Objetos, Rangos, Escalera, Parches y
 Jugador. Los estilos nuevos viven en `styles/deadlock.css`, que carga último; lo
-que reemplazan se borró de `codex.css` (unas 1.900 líneas) en vez de pisarse.
+que reemplazan se borró de `codex.css` (unas 1.700 líneas) en vez de pisarse.
 
 - **Objetos.** Cada precio es una caja con el precio, lo que gana el promedio y
   el conteo. Las filas usan una grilla fija alineada con rótulos de columna que
