@@ -817,3 +817,315 @@
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
 }
+
+/* Deadlock · Escalera ------------------------------------------------------- */
+
+/* La tabla del mundo a la izquierda y los podios por héroe a la derecha. */
+.page.has-rail.dl-lb-page {
+  grid-template-columns: minmax(0, 1fr) 21rem;
+}
+
+@media (max-width: 1000px) {
+  .page.has-rail.dl-lb-page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* En el teléfono el podio va primero: la tabla son 50 filas y el héroe es lo
+     que la mayoría viene a mirar. */
+  .dl-lb-aside {
+    order: -1;
+  }
+}
+
+.dl-lb {
+  padding-bottom: 0.4rem;
+}
+
+.dl-lb-top {
+  align-items: center;
+}
+
+/* El buscador, a la derecha del título de la caja. */
+.dl-lb-search {
+  margin-left: auto;
+  width: min(100%, 18rem);
+}
+
+/* Encabezado y fila comparten las columnas, así cada rótulo cae sobre su cifra. */
+[data-theme="codex"] .dl-lb-head,
+[data-theme="codex"] .dl-lb-row {
+  display: grid;
+  grid-template-columns: 2rem 1.4rem minmax(0, 1fr) 9rem 4.2rem 5.2rem;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+[data-theme="codex"] .dl-lb-head {
+  position: sticky;
+  top: var(--top-h);
+  z-index: 2;
+  padding: 0.55rem 0.1rem;
+  border-bottom: 1px solid var(--line-strong);
+  background: var(--surface-solid);
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-lb-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+[data-theme="codex"] .dl-lb-row {
+  min-height: 2.5rem;
+  padding: 0.25rem 0.1rem;
+  border-bottom: 1px solid var(--line);
+  transition: background 140ms ease;
+}
+
+[data-theme="codex"] .dl-lb-list > .dl-lb-row:last-child {
+  border-bottom: 0;
+}
+
+[data-theme="codex"] .dl-lb-row:hover {
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-lb-pos {
+  font-family: var(--font-data-narrow);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"] .dl-lb-flag {
+  display: flex;
+  align-items: center;
+}
+
+[data-theme="codex"] .dl-lb-name,
+[data-theme="codex"] a.dl-lb-name {
+  min-width: 0;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="codex"] a.dl-lb-name:hover {
+  color: var(--accent-lit);
+  text-decoration: none;
+}
+
+[data-theme="codex"] .dl-lb-rank {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+/* La insignia va a 17 px, donde el numeral sería una mancha; el nombre del
+   rango al lado ya lo dice. */
+[data-theme="codex"] .dl-lb-rank .dl-badge-sub {
+  display: none;
+}
+
+[data-theme="codex"] .dl-lb-rank-name {
+  font-size: 0.76rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="codex"] .dl-lb-none {
+  color: var(--text-faint);
+}
+
+[data-theme="codex"] .dl-lb-rating,
+[data-theme="codex"] .dl-lb-wins {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+[data-theme="codex"] .dl-lb-row .dl-lb-rating {
+  font-family: var(--font-data-narrow);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--accent-lit);
+  cursor: help;
+}
+
+[data-theme="codex"] .dl-lb-row .dl-lb-wins {
+  font-family: var(--font-data-narrow);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-lb-wins em,
+[data-theme="codex"] .dl-lb-step-wins em {
+  font-style: normal;
+  color: var(--text-dim);
+}
+
+@media (max-width: 46rem) {
+  /* El país y el nombre del rango se van: queda la insignia, y el nombre del
+     jugador se lleva el ancho. */
+  [data-theme="codex"] .dl-lb-head,
+  [data-theme="codex"] .dl-lb-row {
+    grid-template-columns: 1.5rem minmax(0, 1fr) 1.5rem 2.8rem 3.6rem;
+    gap: 0.5rem;
+  }
+
+  [data-theme="codex"] .dl-lb-flag,
+  [data-theme="codex"] .dl-lb-rank-name {
+    display: none;
+  }
+
+  .dl-lb-search {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+/* Los podios por héroe. */
+.dl-lb-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.dl-lb-aside > .box-head {
+  margin-bottom: 0;
+}
+
+/* La grilla de retratos ES el selector. Apagados hasta que se los elige o se
+   los apunta: con 38 caras a todo color, la elegida no se distingue. */
+[data-theme="codex"] .dl-lb-heroes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.1rem, 1fr));
+  gap: 0.3rem;
+}
+
+[data-theme="codex"] .dl-lb-hero {
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  line-height: 0;
+  cursor: pointer;
+  filter: grayscale(0.6) brightness(0.7);
+  transition: filter 140ms ease, box-shadow 140ms ease;
+}
+
+[data-theme="codex"] .dl-lb-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-lb-hero:hover,
+[data-theme="codex"] .dl-lb-hero:focus-visible {
+  filter: none;
+}
+
+/* La elegida: a color y con el anillo del acento, que es el mismo relleno que
+   marca la opción elegida en los controles segmentados. */
+[data-theme="codex"] .dl-lb-hero[data-active="true"] {
+  filter: none;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+[data-theme="codex"] .dl-lb-podium {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+}
+
+[data-theme="codex"] .dl-lb-podium-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.5rem;
+}
+
+[data-theme="codex"] .dl-lb-podium-face {
+  flex: 0 0 auto;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  object-fit: cover;
+}
+
+[data-theme="codex"] .dl-lb-podium-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.18rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-lb-podium-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Un escalón: el puesto en su metal, el nombre y las ganadas. El metal va en
+   la cifra, no en un filo. */
+[data-theme="codex"] .dl-lb-step {
+  display: grid;
+  grid-template-columns: 1.4rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.4rem;
+  border-top: 1px solid var(--line);
+}
+
+[data-theme="codex"] .dl-lb-podium-list > .dl-lb-step:first-child {
+  border-top: 0;
+}
+
+[data-theme="codex"] .dl-lb-step-pos {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.18rem;
+  line-height: 1;
+  text-align: center;
+}
+
+[data-theme="codex"] .dl-lb-step[data-metal="gold"] .dl-lb-step-pos {
+  color: #e0bd6a;
+}
+
+[data-theme="codex"] .dl-lb-step[data-metal="silver"] .dl-lb-step-pos {
+  color: #c3cbd3;
+}
+
+[data-theme="codex"] .dl-lb-step[data-metal="bronze"] .dl-lb-step-pos {
+  color: #cd9662;
+}
+
+[data-theme="codex"] .dl-lb-step-wins {
+  font-family: var(--font-data-narrow);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"] .dl-lb-step-wins em {
+  margin-left: 0.3em;
+}

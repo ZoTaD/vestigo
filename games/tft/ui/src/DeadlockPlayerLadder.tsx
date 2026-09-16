@@ -89,19 +89,19 @@ function LadderRowView({
   const rango = row.badge ? rankOf(row.badge) : null;
 
   return (
-    <li className="dl-ladder-row">
-      <span className="dl-ladder-pos">{row.rank}</span>
+    <li className="dl-lb-row">
+      <span className="dl-lb-pos">{row.rank}</span>
       {/* La celda del país se dibuja SIEMPRE, aunque esté vacía: la fila es una
           grilla de columnas fijas, y si esta desaparece cuando no hay país —y no
           lo hay en la mitad de los jugadores— la fila queda con un hijo menos y
           todo se corre una columna. */}
-      <span className="dl-ladder-country">
+      <span className="dl-lb-flag">
         <Flag code={row.country} />
       </span>
       {/* Nombre de Steam: texto de terceros, se pinta como texto y nunca con
           `dangerouslySetInnerHTML`. Sin nombre se dibuja el id. */}
       <RouteLink
-        className="dl-ladder-name"
+        className="dl-lb-name"
         to={{ ...route, view: "deadlock", dlSection: "player", detail: String(row.accountId) }}
         onNavigate={navigate}
       >
@@ -114,7 +114,7 @@ function LadderRowView({
        * cruzó contra `players/{id}/rank` y da idéntico—, no el promedio de su
        * equipo que se usaba antes.
        */}
-      <span className="dl-ladder-rank">
+      <span className="dl-lb-rank">
         {rango ? (
           <>
             {/* **Acá el alto es 17 y no 22**: el ancho sale de la proporción del
@@ -126,10 +126,10 @@ function LadderRowView({
                 y acá el "Eternus 4" de al lado ya lo dice con todas las letras.
                 Un numeral ilegible al lado del dato legible no agrega, ensucia. */}
             <RankBadge badge={row.badge!} height={17} />
-            <span className="dl-ladder-rank-name">{rankLabel(rango, lang)}</span>
+            <span className="dl-lb-rank-name">{rankLabel(rango, lang)}</span>
           </>
         ) : (
-          <span className="dl-ladder-rank-none">—</span>
+          <span className="dl-lb-none">—</span>
         )}
       </span>
       {/**
@@ -140,10 +140,10 @@ function LadderRowView({
        * el piso de Wilson sobre sus clasificatorias, y ordena dentro de cada
        * escalón. El winrate crudo viaja en el `title`.
        */}
-      <span className="dl-ladder-value" title={c.ratingTitle((row.winRate * 100).toFixed(1))}>
+      <span className="dl-lb-rating" title={c.ratingTitle((row.winRate * 100).toFixed(1))}>
         {(row.score * 100).toFixed(1)}
       </span>
-      <span className="dl-ladder-matches">
+      <span className="dl-lb-wins">
         {row.wins.toLocaleString(locale)}
         <em>/{row.matches.toLocaleString(locale)}</em>
       </span>
@@ -174,37 +174,34 @@ function Podium({
   const nombre = catalog.heroes[String(hero)]?.name;
 
   return (
-    <div className="dl-podium">
-      <div className="dl-podium-head">
-        <img className="dl-podium-face" src={heroImg(hero) ?? ""} alt="" width={44} height={44} />
-        <h2 className="dl-podium-title">{nombre ? text(nombre, lang, "") : `#${hero}`}</h2>
+    <div className="dl-lb-podium">
+      <div className="dl-lb-podium-head">
+        <img className="dl-lb-podium-face" src={heroImg(hero) ?? ""} alt="" width={40} height={40} />
+        <h3 className="dl-lb-podium-title">{nombre ? text(nombre, lang, "") : `#${hero}`}</h3>
       </div>
 
-      {cargando && <p className="detail-note dl-loading">{c.loading}</p>}
+      {cargando && <p className="box-empty">{c.loading}</p>}
 
       {/* Cero es una respuesta válida: con dos semanas de clasificatorias hay
           héroes que todavía no tienen tres jugadores con partidas suficientes,
           y decirlo es mejor que rellenar el podio con cualquiera. */}
-      {!cargando && rows.length === 0 && <p className="detail-note">{c.noPodium}</p>}
+      {!cargando && rows.length === 0 && <p className="box-empty">{c.noPodium}</p>}
 
       {!cargando && rows.length > 0 && (
-        <ol className="dl-podium-list">
+        <ol className="dl-lb-podium-list">
           {rows.slice(0, PODIUM_SIZE).map((r, i) => (
-            <li className="dl-podium-step" key={r.accountId} data-metal={METALS[i]}>
-              <span className="dl-podium-pos" aria-hidden="true">
+            <li className="dl-lb-step" key={r.accountId} data-metal={METALS[i]}>
+              <span className="dl-lb-step-pos" aria-hidden="true">
                 {i + 1}
               </span>
               <RouteLink
-                className="dl-podium-name"
+                className="dl-lb-name"
                 to={{ ...route, view: "deadlock", dlSection: "player", detail: String(r.accountId) }}
                 onNavigate={navigate}
               >
                 {r.name ?? r.accountId}
               </RouteLink>
-              <span className="dl-podium-flag">
-                <Flag code={r.country} />
-              </span>
-              <span className="dl-podium-value">
+              <span className="dl-lb-step-wins">
                 {c.wins(r.wins.toLocaleString(locale))}
                 <em>{c.of(r.matches.toLocaleString(locale))}</em>
               </span>
@@ -303,17 +300,12 @@ export default function DeadlockPlayerLadder({
         meta={ladder && <span>{c.floor(ladder.floor.toLocaleString(locale))}</span>}
       />
 
-      <div className="dl-ladder-grid">
-        <section className="dl-ladder-main">
-          <h2 className="dl-card-title">{c.worldTitle}</h2>
-
-          {!ladder && !failed && <p className="detail-note dl-loading">{c.loading}</p>}
-          {failed && <p className="dl-fallback">{c.failed}</p>}
-          {ladder && ladder.thin && <p className="dl-fallback">{c.thin}</p>}
-
-          {ladder && !ladder.thin && (
-            <>
-              <label className="field dl-ladder-search">
+      <div className="page has-rail dl-lb-page">
+        <section className="box dl-lb">
+          <div className="box-head dl-lb-top">
+            <h2 className="box-title">{c.worldTitle}</h2>
+            {ladder && !ladder.thin && (
+              <label className="field dl-lb-search">
                 <input
                   type="search"
                   value={q}
@@ -323,19 +315,28 @@ export default function DeadlockPlayerLadder({
                   autoComplete="off"
                 />
               </label>
-              <div className="dl-ladder-head">
-                <span className="dl-ladder-pos">{c.cols.rank}</span>
-                <span className="dl-ladder-country" aria-hidden="true" />
-                <span className="dl-ladder-name">{c.cols.player}</span>
+            )}
+          </div>
+
+          {!ladder && !failed && <p className="box-empty">{c.loading}</p>}
+          {failed && <p className="dl-notice">{c.failed}</p>}
+          {ladder && ladder.thin && <p className="dl-notice">{c.thin}</p>}
+
+          {ladder && !ladder.thin && (
+            <>
+              <div className="dl-lb-head">
+                <span className="dl-lb-pos">{c.cols.rank}</span>
+                <span className="dl-lb-flag" aria-hidden="true" />
+                <span>{c.cols.player}</span>
                 {/* Ahora SÍ lleva encabezado: dejó de ser un adorno que aparecía
                     cuando había dato y pasó a ser la columna que ordena. El
                     rango llega para todos, porque sale del MMR y no del promedio
                     del equipo. */}
-                <span className="dl-ladder-rank">{c.cols.badge}</span>
-                <span className="dl-ladder-value">{c.cols.winRate}</span>
-                <span className="dl-ladder-matches">{c.cols.matches}</span>
+                <span className="dl-lb-rank">{c.cols.badge}</span>
+                <span className="dl-lb-rating">{c.cols.winRate}</span>
+                <span className="dl-lb-wins">{c.cols.matches}</span>
               </div>
-              <ol className="dl-ladder-list">
+              <ol className="dl-lb-list">
                 {ladder.rows
                   .filter((row) => !q.trim() || (row.name ?? "").toLowerCase().includes(q.trim().toLowerCase()))
                   .map((row) => (
@@ -351,18 +352,20 @@ export default function DeadlockPlayerLadder({
           )}
         </section>
 
-        <aside className="dl-ladder-aside">
-          <h2 className="dl-card-title">{c.byHero}</h2>
+        <aside className="box dl-lb-aside">
+          <div className="box-head">
+            <h2 className="box-title">{c.byHero}</h2>
+          </div>
 
           {/* La grilla de héroes ES el control: no hay un `select` además de
               esto, porque dos formas de elegir lo mismo obligan a mantener las
               dos sincronizadas y a que el visitante adivine cuál manda. */}
-          <div className="dl-hero-grid" role="group" aria-label={c.byHero}>
+          <div className="dl-lb-heroes" role="group" aria-label={c.byHero}>
             {heroes.map((h) => (
               <button
                 type="button"
                 key={h.heroId}
-                className="dl-hero-pick"
+                className="dl-lb-hero"
                 data-active={hero === h.heroId}
                 aria-pressed={hero === h.heroId}
                 title={h.name}

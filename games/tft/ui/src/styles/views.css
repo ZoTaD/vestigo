@@ -583,20 +583,6 @@
   vertical-align: -0.08em;
 }
 
-/* Deadlock · Escalera --------------------------------------------------------------- */
-
-[data-theme="codex"] .dl-ladder-head {
-  position: sticky;
-  top: var(--top-h);
-  z-index: 2;
-  background: var(--bg);
-}
-
-.dl-ladder-search {
-  margin: 0 0 0.7rem;
-  max-width: 22rem;
-}
-
 /* Deadlock · alineación ------------------------------------------------------------ */
 
 /* Las pestañas viejas (`.deadlock`) son una columna de 1400 px sin aire
@@ -750,20 +736,6 @@
 
 .dl-placing-row[data-metal="bronze"] .dl-placing-place {
   color: #d29a63;
-}
-
-/* La cabecera de columnas de la Escalera: una barra, no una fila más. */
-[data-theme="codex"] .dl-ladder-head {
-  padding: 0.55rem 0.6rem;
-  margin-bottom: 0.35rem;
-  border-radius: var(--radius);
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--line-strong);
-  font-family: var(--font-text);
-  font-weight: 700;
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  color: var(--text);
 }
 
 /* Deadlock · Jugador · vos contra tu banda ------------------------------------------ */

@@ -4094,8 +4094,7 @@
 [data-theme="codex"] a.topgame,
 [data-theme="codex"] a.langbtn,
 [data-theme="codex"] a.switch,
-[data-theme="codex"] a.colophon-link,
-[data-theme="codex"] a.dl-ladder-name {
+[data-theme="codex"] a.colophon-link {
   text-decoration: none;
   cursor: pointer;
 }
@@ -4961,157 +4960,7 @@
   color: var(--vellum-dim);
 }
 
-/* ── La ladder de jugadores (`/deadlock/ladder`) ──────────────────────────
-   Hereda `.tool-head`, `.band-picker`, `.band-select`, `.detail-note`,
-   `.dl-loading` y `.dl-fallback` de las pestañas hermanas. Nombre de clase a
-   propósito distinto de `.dl-ladder-wrap` (`DeadlockRanks.tsx`, la escalera
-   de RANGOS): son dos páginas distintas que comparten la palabra "ladder" en
-   el diseño — ver el comentario de `playerLadder` en `i18n.ts` — y ningún
-   nombre de acá empieza igual que uno de los suyos.
-
-   La fila del historial (`.dl-rep-match`) es el modelo: mismo fondo, mismo
-   borde, mismo hover. Lo que cambia es que acá sólo el nombre es un enlace de
-   verdad — el resto de la fila no lleva nada que abrir — así que la fila es
-   un `<li>` en grilla y no un `<button>` entero. */
-
-[data-theme="codex"] .dl-ladder-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-top: 0.6rem;
-}
-
-[data-theme="codex"] .dl-ladder-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  flex: 1 1 9rem;
-}
-
-/* Mismo achique que ya lleva `.band-label` sola en esta columna angosta. */
-[data-theme="codex"] .tool-head .dl-ladder-field .band-label {
-  margin-bottom: 0;
-}
-
-[data-theme="codex"] .dl-ladder-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-/* El encabezado y la fila comparten la misma grilla de columnas a propósito:
-   puesto, bandera, nombre, valor, partidas y —al final, como el rango del
-   historial— la insignia. Que compartan el selector es lo que los mantiene
-   alineados si una columna cambia de ancho. */
-[data-theme="codex"] .dl-ladder-head,
-[data-theme="codex"] .dl-ladder-row {
-  display: grid;
-  grid-template-columns: 2.1rem 2rem minmax(6rem, 1fr) 6rem 5rem 2.1rem;
-  align-items: center;
-  gap: 0.7rem;
-}
-
-/**
- * El encabezado comparte la MISMA grilla que la fila.
- *
- * Antes era un contenedor suelto con padding, así que sus rótulos no caían sobre
- * las columnas que rotulaban: en pantalla "GANADAS" y "PARTIDAS" quedaban a la
- * derecha de los números que encabezaban. Una tabla en la que no se puede seguir
- * una columna hacia abajo no es una tabla.
- */
-[data-theme="codex"] .dl-ladder-head {
-  display: grid;
-  grid-template-columns: 2.1rem 2rem minmax(6rem, 1fr) 6rem 5rem 2.1rem;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0 0.6rem 0.35rem;
-  font-family: var(--font-display);
-  font-size: 0.58rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--vellum-dim);
-}
-
-/* El país en dos letras. Ver `countryOf`: la bandera emoji no existe en Windows
-   y salía como dos letras sin caja, que se lee como un error de codificación. */
-[data-theme="codex"] .dl-ladder-country {
-  font-family: var(--font-data-narrow);
-  font-size: 0.6rem;
-  letter-spacing: 0.06em;
-  text-align: center;
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .dl-ladder-row {
-  padding: 0.45rem 0.6rem;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(201, 162, 74, 0.16);
-}
-
-[data-theme="codex"] .dl-ladder-row:hover {
-  border-color: rgba(201, 162, 74, 0.5);
-}
-
-[data-theme="codex"] .dl-ladder-pos {
-  font-variant-numeric: tabular-nums;
-  color: var(--vellum-dim);
-  font-size: 0.8rem;
-}
-
-[data-theme="codex"] .dl-ladder-name {
-  color: var(--vellum);
-  font-size: 0.86rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-[data-theme="codex"] a.dl-ladder-name:hover {
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .dl-ladder-value {
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-  color: var(--gold-lit);
-  font-size: 0.85rem;
-}
-
-[data-theme="codex"] .dl-ladder-matches {
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-  color: var(--vellum-dim);
-  font-size: 0.78rem;
-}
-
-/* La insignia de rango, al final de la fila — mismo lugar que `.dl-rep-rank`
-   en el historial. Sin insignia la columna queda vacía: el ancho de la
-   grilla no depende de cuántos hijos tenga la fila, así que las demás
-   columnas de esa fila siguen alineadas con las de las filas que sí tienen
-   insignia. */
-[data-theme="codex"] .dl-ladder-rank {
-  justify-self: center;
-  object-fit: contain;
-}
-
-/* El numeral se apaga SÓLO acá: la insignia va a 17px, donde el numeral serían
-   6px de mancha, y la celda ya escribe "Eternus 4" al lado. Ver el comentario en
-   `DeadlockPlayerLadder.tsx`. */
-[data-theme="codex"] .dl-ladder-rank .dl-badge-sub {
-  display: none;
-}
-
-@media (max-width: 34rem) {
-  /* Mismo ajuste que `.dl-rep-match` a este ancho: se cede aire entre
-     columnas antes que contenido. La bandera y la insignia se achican, y el
-     nombre se lleva lo que sobra — con puntos suspensivos y no cortado a la
-     mitad, mismo criterio que `.dl-rep-match-hero`. */
-  [data-theme="codex"] .dl-ladder-head,
-  [data-theme="codex"] .dl-ladder-row {
-    grid-template-columns: 1.3rem 1.4rem minmax(3.6rem, 1fr) 3.4rem 2.8rem 1.3rem;
-    gap: 0.4rem;
-  }
-}
+/* La Escalera (`/deadlock/ladder`) vive en `deadlock.css` desde el 2026-09-16. */
 
 /* ── El perfil del jugador ──────────────────────────────────────────────── */
 
@@ -5951,15 +5800,12 @@
    vez de poner `.deadlock *`: el texto explicativo (`.standfirst`,
    `.detail-note`, los consejos del informe) sigue siendo prosa y se queda en
    Cormorant, que es lo que lo separa del dato a simple vista. */
-[data-theme="codex"] .dl-ladder-head,
-[data-theme="codex"] .dl-ladder-row,
 [data-theme="codex"] .dl-rep-stats,
 [data-theme="codex"] .dl-rep-match,
 [data-theme="codex"] .dl-rep-account,
 [data-theme="codex"] .dl-streak,
 [data-theme="codex"] .dl-form,
 [data-theme="codex"] .dl-activity,
-[data-theme="codex"] .dl-list,
 [data-theme="codex"] .dl-rep-profile-rank {
   font-family: var(--font-data);
   font-variant-numeric: tabular-nums;
@@ -5991,8 +5837,6 @@
 /* Las columnas que son números puros se alinean a la derecha: es la convención
    del género, y la razón por la que existen las cifras tabulares. Los dígitos
    quedan uno sobre otro y la columna se compara de un vistazo. */
-[data-theme="codex"] .dl-ladder-value,
-[data-theme="codex"] .dl-ladder-matches,
 [data-theme="codex"] .dl-rep-match-num {
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -6146,14 +5990,6 @@
     margin-top: 1.1rem;
   }
 
-  /* Los dos selectores del ladder, lado a lado. Medido: 337px de ancho útil
-     dividido en dos son 168px por campo, de sobra para "All heroes" y "Wins". */
-  [data-theme="codex"] .dl-ladder-controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-  }
-
   /* El selector de banda, deslizable como las otras dos filas de navegación.
      Envolver no alcanzaba: "Emissary / Oracle" y "Sentinel and below" son
      etiquetas que no se pueden partir, y con la base de 19rem las cuatro
@@ -6176,47 +6012,6 @@
     flex: 0 0 auto;
     white-space: nowrap;
   }
-
-  /* --- La tabla del ladder ---------------------------------------------------
-
-     **`1rem` son 19px, y esa es toda la historia.** La grilla pedía
-     `2.1rem 2rem minmax(6rem,1fr) 6rem 5rem 2.1rem` con `gap: 0.7rem`: sobre una
-     base de 19px eso son 441px de columnas fijas más 66 de separación —**507px
-     mínimos dentro de 337**—, así que la columna de victorias se cortaba por la
-     mitad. Y como `.app` lleva `overflow-x: hidden`, no se podía ni deslizar
-     para llegar a ella: el dato no estaba escondido, estaba amputado.
-
-     Esto ya pasaba antes de este trabajo. No se veía al medir porque el panel de
-     pruebas emula el teléfono con **1rem ≈ 11,8px**, y con esa base las mismas
-     columnas dan 300px y entran. La regla que deja: cuando el móvil y el
-     escritorio discrepan, mirar cuánto vale `rem` antes de buscar otra cosa. */
-  /* Los anchos salen de lo que los números PIDEN, medido por CDP a 375px con la
-     base real de 19px: "1.421" necesita 63px, y la columna de partidas tenía
-     49,4 — recortaba las cuatro cifras. Se le dan 3,4rem a las dos columnas
-     numéricas y la insignia baja a 1,2rem (la trae 1 de cada 12 filas). */
-  [data-theme="codex"] .dl-ladder-head,
-  [data-theme="codex"] .dl-ladder-row {
-    grid-template-columns: 1.4rem minmax(0, 1fr) 3.6rem 3.4rem 1.2rem;
-    gap: 0.4rem;
-    font-size: 0.8rem;
-  }
-
-  /* El país es lo primero que se va: lo trae la mitad de las cuentas y no es por
-     lo que se entra a un ladder. Sigue en el HTML para quien lea con lector de
-     pantalla; deja de ocupar 27px de una pantalla de 375. */
-  [data-theme="codex"] .dl-ladder-country {
-    display: none;
-  }
-
-  [data-theme="codex"] .dl-ladder-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  [data-theme="codex"] .dl-ladder-head {
-    padding-inline: 0.3rem;
-  }
 }
 
 /* --- El desborde que destapó el layout nuevo --------------------------------
@@ -6238,8 +6033,7 @@
    select empuja en cualquier ancho, sólo que arriba de 375px sobra lugar y no
    se nota. */
 [data-theme="codex"] .tool-head > *,
-[data-theme="codex"] .tool-controls,
-[data-theme="codex"] .dl-ladder-field {
+[data-theme="codex"] .tool-controls {
   min-width: 0;
 }
 
@@ -6729,233 +6523,6 @@
   pointer-events: none;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   LA ESCALERA, REDISEÑADA (2026-08-13)
-
-   Dos columnas: la tabla global del mundo a la izquierda, los héroes con su
-   podio a la derecha. Sin filtro de banda —medía el promedio del lobby, no el
-   rango del jugador— y contando sólo clasificatorias desde el reset.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* La columna de controles, como pila con separación propia.
-   `.detail-note` trae `margin-top: -0.5rem` de `base.css` —pensada para ir
-   pegada debajo de un título— y acá sigue a un `<select>`: medido, la nota caía
-   **10px encima del selector** y se leía una sobre otro. Con `flex` y `gap`, la
-   separación la pone el contenedor y ningún margen heredado puede pisarla. */
-[data-theme="codex"] .deadlock-ladder .tool-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-[data-theme="codex"] .deadlock-ladder .tool-controls .detail-note {
-  margin: 0;
-}
-
-/* `.dl-ladder-field` trae `flex: 1 1 9rem` de cuando los dos selectores
-   compartían una FILA y tenían que repartírsela. En esta columna, ese
-   `flex-grow: 1` lo estira: medido, el campo pasaba de 55px a **171** y empujaba
-   las dos notas 130px hacia abajo, dejando un hueco en el medio del encabezado. */
-[data-theme="codex"] .deadlock-ladder .tool-controls .dl-ladder-field {
-  flex: 0 0 auto;
-}
-
-[data-theme="codex"] .dl-ladder-grid {
-  display: grid;
-  gap: 1.6rem;
-  align-items: start;
-  margin-top: 1.2rem;
-}
-
-@media (min-width: 64rem) {
-  [data-theme="codex"] .dl-ladder-grid {
-    /* La tabla manda y se lleva el ancho; la columna de héroes es fija por el
-       mismo motivo que la ficha del perfil: una grilla de retratos a 500px no
-       se lee mejor, sólo se ve más vacía. */
-    grid-template-columns: minmax(0, 1fr) 21rem;
-    gap: 2rem;
-  }
-}
-
-/* En el teléfono el podio va PRIMERO. La tabla global son 50 filas: dejarla
-   arriba obligaría a pasarlas todas para llegar al héroe, que es lo que la
-   mayoría viene a mirar. En escritorio conviven y el orden no importa. */
-@media (max-width: 63.99rem) {
-  [data-theme="codex"] .dl-ladder-aside {
-    order: -1;
-  }
-}
-
-[data-theme="codex"] .dl-ladder-aside {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-  border: 1px solid rgba(201, 162, 74, 0.22);
-  background: rgba(12, 10, 7, 0.28);
-  padding: 0.9rem 1rem;
-}
-
-/* --- La grilla de héroes, que ES el selector -------------------------------- */
-
-[data-theme="codex"] .dl-hero-grid {
-  display: grid;
-  /* `auto-fill` con un mínimo: entran los que entren según el ancho, sin fijar
-     un número de columnas que se rompa en el próximo tamaño de pantalla. */
-  grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
-  gap: 0.3rem;
-}
-
-[data-theme="codex"] .dl-hero-pick {
-  padding: 0;
-  border: 1px solid transparent;
-  background: none;
-  cursor: pointer;
-  line-height: 0;
-  border-radius: 3px;
-  /* El retrato apagado hasta que se lo elige o se lo apunta: con 38 caras a
-     todo color, la elegida no se distingue de las demás. */
-  filter: grayscale(0.55) brightness(0.72);
-  transition: filter 160ms ease, border-color 160ms ease;
-}
-
-[data-theme="codex"] .dl-hero-pick img {
-  width: 100%;
-  height: auto;
-  border-radius: 2px;
-  display: block;
-}
-
-[data-theme="codex"] .dl-hero-pick:hover,
-[data-theme="codex"] .dl-hero-pick:focus-visible {
-  filter: none;
-  border-color: rgba(201, 162, 74, 0.5);
-}
-
-[data-theme="codex"] .dl-hero-pick[data-active="true"] {
-  filter: none;
-  border-color: var(--gold);
-}
-
-/* --- El podio -------------------------------------------------------------- */
-
-[data-theme="codex"] .dl-podium {
-  border-top: 1px solid rgba(201, 162, 74, 0.18);
-  padding-top: 0.9rem;
-}
-
-[data-theme="codex"] .dl-podium-head {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.7rem;
-}
-
-[data-theme="codex"] .dl-podium-face {
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.35);
-  object-fit: cover;
-  flex: 0 0 auto;
-}
-
-[data-theme="codex"] .dl-podium-title {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  color: var(--gold-lit);
-  margin: 0;
-  line-height: 1.15;
-}
-
-[data-theme="codex"] .dl-podium-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-/* Cada escalón: el puesto a la izquierda con su metal, el nombre, la bandera y
-   el número que lo respalda. Es una fila y no un podio dibujado con alturas
-   distintas a propósito — tres cajas de alturas distintas se leen como un
-   gráfico y acá lo que importa es quién es, no cuánto mide la barra. */
-[data-theme="codex"] .dl-podium-step {
-  display: grid;
-  grid-template-columns: 1.5rem minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.5rem;
-  background: rgba(0, 0, 0, 0.22);
-  border-left: 3px solid transparent;
-  font-family: var(--font-data);
-  font-variant-numeric: tabular-nums;
-}
-
-/* Los tres metales. Son decoración con significado —el puesto ya está en el
-   número— así que se aplican al borde y al dígito, no al fondo entero: un
-   bloque dorado detrás de un nombre lo vuelve ilegible. */
-[data-theme="codex"] .dl-podium-step[data-metal="gold"] {
-  border-left-color: #c9a24a;
-}
-
-[data-theme="codex"] .dl-podium-step[data-metal="silver"] {
-  border-left-color: #a8b0b8;
-}
-
-[data-theme="codex"] .dl-podium-step[data-metal="bronze"] {
-  border-left-color: #b07a45;
-}
-
-[data-theme="codex"] .dl-podium-pos {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  line-height: 1;
-  text-align: center;
-}
-
-[data-theme="codex"] .dl-podium-step[data-metal="gold"] .dl-podium-pos {
-  color: #e0bd6a;
-}
-
-[data-theme="codex"] .dl-podium-step[data-metal="silver"] .dl-podium-pos {
-  color: #c3cbd3;
-}
-
-[data-theme="codex"] .dl-podium-step[data-metal="bronze"] .dl-podium-pos {
-  color: #cd9662;
-}
-
-[data-theme="codex"] .dl-podium-name {
-  color: var(--vellum);
-  font-size: 0.85rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-decoration: none;
-}
-
-[data-theme="codex"] .dl-podium-name:hover {
-  color: var(--gold-lit);
-}
-
-/* La bandera va pegada al nombre y no en su propia columna: con tres filas, una
-   columna que está vacía en dos de ellas se ve como una falla de alineación. */
-[data-theme="codex"] .dl-podium-flag {
-  display: none;
-}
-
-[data-theme="codex"] .dl-podium-value {
-  font-size: 0.78rem;
-  color: var(--vellum-dim);
-  text-align: right;
-  white-space: nowrap;
-}
-
-[data-theme="codex"] .dl-podium-value em {
-  font-style: normal;
-  opacity: 0.7;
-  margin-left: 0.3em;
-}
-
 /* --- Las banderas ---------------------------------------------------------- */
 
 /* Imagen y no emoji: los indicadores regionales no tienen fuente en Windows y
@@ -6977,26 +6544,6 @@
   font-size: 0.62rem;
   letter-spacing: 0.06em;
   color: var(--vellum-dim);
-}
-
-/* --- La tabla, ahora dentro de su columna ---------------------------------- */
-
-/* Sin el marco de `.tiers`, que trae un hueco calibrado para las comps de TFT. */
-[data-theme="codex"] .dl-ladder-main .dl-ladder-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-@media (max-width: 46rem) {
-  /* En el teléfono la grilla de héroes puede achicarse un poco más: con 34px
-     mínimos entran 8 por fila en 337px, que es una fila de más que a 40. */
-  [data-theme="codex"] .dl-hero-grid {
-    grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
-  }
 }
 
 /* --- El ranking mundial del perfil -----------------------------------------
@@ -7097,61 +6644,6 @@
 /* La tarjeta necesita aire abajo porque el número se sale del retrato. */
 [data-theme="codex"] .dl-placings {
   padding-bottom: 0.4rem;
-}
-
-/* --- La escalera ordena por el rango del juego (2026-08-13) -----------------
-
-   La columna del rango se movió al cuarto lugar y dejó de ser un ícono suelto:
-   ahora es lo que ORDENA la tabla, así que lleva su nombre al lado y encabezado
-   propio. Las seis columnas se re-repartieron para hacerle lugar.
-   --------------------------------------------------------------------------- */
-
-[data-theme="codex"] .deadlock-ladder .dl-ladder-head,
-[data-theme="codex"] .deadlock-ladder .dl-ladder-row {
-  grid-template-columns: 2.1rem 1.7rem minmax(5rem, 1fr) 8.5rem 3.2rem 4.4rem;
-}
-
-[data-theme="codex"] .deadlock-ladder .dl-ladder-rank {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 0;
-}
-
-[data-theme="codex"] .dl-ladder-rank-name {
-  font-family: var(--font-data);
-  font-size: 0.74rem;
-  color: var(--vellum-dim);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Sin rango: un guión y no un hueco. Un vacío se lee como un dato que falló. */
-[data-theme="codex"] .dl-ladder-rank-none {
-  color: var(--vellum-dim);
-  opacity: 0.5;
-}
-
-/* Las ganadas sobre jugadas: el denominador un paso más apagado, para que el
-   número que importa sea el primero. */
-[data-theme="codex"] .dl-ladder-matches em {
-  font-style: normal;
-  opacity: 0.6;
-}
-
-@media (max-width: 46rem) {
-  /* En el teléfono el nombre del rango se va y queda sólo la insignia: con
-     337px, "Emissary 4" le come el ancho al nombre del jugador, que es lo que
-     de verdad hay que poder leer. */
-  [data-theme="codex"] .deadlock-ladder .dl-ladder-head,
-  [data-theme="codex"] .deadlock-ladder .dl-ladder-row {
-    grid-template-columns: 1.4rem minmax(0, 1fr) 1.6rem 2.6rem 3.4rem;
-  }
-
-  [data-theme="codex"] .dl-ladder-rank-name {
-    display: none;
-  }
 }
 
 /* La etiqueta del puesto mundial, al lado del rango. Va a la derecha de la
