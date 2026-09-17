@@ -1234,13 +1234,6 @@ const EN = {
       foot: (band: string, from: string, to: string) =>
         `${band}, ${from} to ${to}. Each item measured against players who reached the same minute with the same souls and spent them on something else.`,
     },
-    patchPage: {
-      title: "What the patch",
-      titleBreak: " changed",
-      lead:
-        "Every hero that moved when the latest patch landed, measured against the same " +
-        "stretch of the game right before it.",
-    },
     /**
      * La página de ítems no habla de winrate y ésa es la decisión que la copia
      * tiene que transmitir. Un ítem de 6400 gana el 55% de sus partidas y uno de
@@ -1459,7 +1452,6 @@ const EN = {
     sample: (matches: string, from: string, to: string) =>
       `${matches} matches · ${from} to ${to}`,
     patch: {
-      heading: "What the patch changed",
       /** Once the patch has enough games, it is the window: everything is measured since it landed. */
       since: (title: string) => `Measured since ${title}`,
       /**
@@ -1469,15 +1461,9 @@ const EN = {
        */
       includes: (title: string) =>
         `Last 15 days, ${title} included — it will cut to the patch once it has enough games`,
-      winners: "Winners",
-      losers: "Losers",
-      winRate: "Win rate",
-      pickRate: "Pick rate",
-      none: "No hero moved enough yet to call it a change.",
-
       /**
-       * El historial, que es lo que esta pestaña tiene para mostrar hasta que
-       * haya dos ventanas rankeadas que comparar.
+       * El historial del foro. Desde el 2026-09-17 es la hemeroteca debajo de
+       * Vestigo News y la lista corta del rail.
        *
        * **La fecha manda sobre el título, y hay que decirlo**: Valve nombra cada
        * parche por la fecha de la build, así que el que llegó el 28 de julio se
@@ -1618,10 +1604,10 @@ const EN = {
           "behind every win rate so a new account never passes for a veteran.",
       },
       patches: {
-        title: () => "Deadlock Patch Winners and Losers | Vestigo",
+        title: () => "Deadlock Patch Notes, Nerfs and Buffs | Vestigo News",
         description: () =>
-          "Every Deadlock hero the latest patch moved, measured against the same stretch of " +
-          "the game right before it landed.",
+          "Every change in the latest Deadlock patch at a glance: which heroes and items were " +
+          "nerfed or buffed, ability by ability, and what the numbers say since it landed.",
       },
       player: {
         title: () => "Deadlock Match History and Post-Game Report | Vestigo",
@@ -2601,13 +2587,6 @@ const ES: typeof EN = {
       foot: (band, from, to) =>
         `${band}, del ${from} al ${to}. Cada objeto medido contra jugadores que llegaron al mismo minuto con las mismas almas y las gastaron en otra cosa.`,
     },
-    patchPage: {
-      title: "Qué cambió",
-      titleBreak: " el parche",
-      lead:
-        "Todos los héroes que se movieron cuando entró el último parche, medidos contra el " +
-        "mismo tramo de juego justo anterior.",
-    },
     itemsPage: {
       title: "Tier list",
       titleBreak: " de objetos",
@@ -2741,15 +2720,9 @@ const ES: typeof EN = {
     thinWhy: "Muy pocas partidas en este rango para que el porcentaje sea estable.",
     sample: (matches, from, to) => `${matches} partidas · ${from} a ${to}`,
     patch: {
-      heading: "Qué cambió el parche",
       since: (title) => `Medido desde ${title}`,
       includes: (title) =>
         `Últimos 15 días, ${title} incluido — corta en el parche cuando junte partidas suficientes`,
-      winners: "Ganadores",
-      losers: "Perdedores",
-      winRate: "Victorias",
-      pickRate: "Uso",
-      none: "Todavía ningún héroe se movió lo suficiente como para llamarlo un cambio.",
       history: "Historial de parches",
       nameNote:
         "Valve nombra cada parche por la fecha de la build, que no es el día en que salió, así " +
@@ -2884,10 +2857,10 @@ const ES: typeof EN = {
           "costaron las compras al que elijas, medido contra los que ganaron desde la misma situación.",
       },
       patches: {
-        title: () => "Ganadores y perdedores del parche de Deadlock | Vestigo",
+        title: () => "Notas del parche de Deadlock: nerfs y buffs | Vestigo News",
         description: () =>
-          "Todos los héroes de Deadlock que movió el último parche, medidos contra el mismo " +
-          "tramo de juego justo anterior.",
+          "Todos los cambios del último parche de Deadlock de un vistazo: qué héroes y objetos " +
+          "se nerfearon o buffearon, habilidad por habilidad, y qué dicen los números desde que salió.",
       },
       detail: {
         title: (name: string, dlSection: string) =>

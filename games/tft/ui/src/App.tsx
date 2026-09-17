@@ -3,8 +3,9 @@ import Nav from "./Nav";
 import RouteLink from "./RouteLink";
 import SectionHead from "./SectionHead";
 import Home from "./Home";
-import Deadlock from "./Deadlock";
+import Deadlock, { PatchHistory } from "./Deadlock";
 import DeadlockItems from "./DeadlockItems";
+import DeadlockNews from "./DeadlockNews";
 import DeadlockRanks from "./DeadlockRanks";
 import DeadlockPlayerLadder from "./DeadlockPlayerLadder";
 import DeadlockPlayer from "./DeadlockPlayer";
@@ -218,16 +219,17 @@ function Shell({
                filtro que tenía era por promedio del lobby, no por rango del
                jugador — ver el comentario de `DeadlockPlayerLadder`. */
             <DeadlockPlayerLadder route={route} navigate={navigate} />
+          ) : route.dlSection === "patches" ? (
+            /* Vestigo News: una edición por parche, y debajo el historial del
+               foro para los parches que no tienen edición. */
+            <DeadlockNews route={route} navigate={navigate} archive={<PatchHistory boxed />} />
           ) : (
             <Deadlock
               route={route}
               navigate={navigate}
-              section={route.dlSection}
               band={dlBand}
               picker={dlPicker}
-              // Sólo "meta" tiene héroe abierto; "patches" usa el mismo
-              // componente pero no lee `open`.
-              open={route.dlSection === "meta" ? route.detail : undefined}
+              open={route.detail}
               onOpen={(slug) => goDlDetail("meta", slug)}
             />
           )}

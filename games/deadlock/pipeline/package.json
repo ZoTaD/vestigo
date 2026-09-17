@@ -12,7 +12,8 @@
     "build:mastery": "node --max-old-space-size=8192 node_modules/tsx/dist/cli.mjs src/mastery.ts",
     "catalog": "node node_modules/tsx/dist/cli.mjs src/catalog.ts",
     "publish:guard": "node node_modules/tsx/dist/cli.mjs src/publish-guard.ts",
-    "build:ladder": "node node_modules/tsx/dist/cli.mjs src/ladder.ts"
+    "build:ladder": "node node_modules/tsx/dist/cli.mjs src/ladder.ts",
+    "build:news": "node node_modules/tsx/dist/cli.mjs src/news-run.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

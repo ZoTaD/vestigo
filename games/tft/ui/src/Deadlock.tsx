@@ -3,7 +3,6 @@ import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import SectionHead from "./SectionHead";
 import { useCopy, useLocale, useLang } from "./i18n";
-import { type DeadlockSection } from "./route";
 import DeadlockBuildCard from "./DeadlockBuildCard";
 import DeadlockMastery from "./DeadlockMastery";
 import { usePatches } from "./deadlockPatchesData";
@@ -166,7 +165,7 @@ function HeroTile({
  * El enlace sale del propio feed y va al foro oficial. Es la única salida a otro
  * sitio que tiene la página, y es a la fuente.
  */
-function PatchHistory({ limit, boxed = false }: { limit?: number; boxed?: boolean } = {}) {
+export function PatchHistory({ limit, boxed = false }: { limit?: number; boxed?: boolean } = {}) {
   const copy = useCopy();
   const locale = useLocale();
   const file = usePatches();
@@ -201,48 +200,6 @@ function PatchHistory({ limit, boxed = false }: { limit?: number; boxed?: boolea
         ))}
       </ol>
     </section>
-  );
-}
-
-/**
- * Una fila de "qué cambió el parche": el héroe, cuánto se movió, y de dónde a
- * dónde.
- *
- * El "de → a" está porque el delta solo no alcanza: "−4,7" no distingue a un
- * héroe que cayó de 53% a 48% —era el mejor y ahora es del montón— de uno que
- * cayó de 47% a 43%, que ya era malo y ahora es injugable.
- */
-function MoverRow({ hero, rank }: { hero: Hero; rank: number }) {
-  const copy = useCopy();
-  const sube = (hero.trend ?? 0) > 0;
-
-  return (
-    <li className="dl-mover" data-dir={sube ? "up" : "down"}>
-      <span className="dl-mover-rank">{rank}</span>
-      {hero.img && <img className="dl-mover-face" src={hero.img} alt="" width={40} height={40} loading="lazy" />}
-      <span className="dl-mover-id">
-        <span className="dl-name">{hero.name}</span>
-        <span className="dl-mover-delta">
-          {sube ? "▲" : "▼"} {signed(hero.trend)}
-        </span>
-      </span>
-      <span className="dl-mover-rates">
-        <span className="dl-mover-rate">
-          <span className="dl-mover-lab">{copy.deadlock.patch.winRate}</span>
-          <span>
-            {pct(hero.winRateBefore ?? 0)} <span aria-hidden="true">→</span>{" "}
-            <b>{pct(hero.winRateRaw)}</b>
-          </span>
-        </span>
-        <span className="dl-mover-rate">
-          <span className="dl-mover-lab">{copy.deadlock.patch.pickRate}</span>
-          <span>
-            {pct(hero.pickRateBefore ?? 0)} <span aria-hidden="true">→</span>{" "}
-            <b>{pct(hero.pickRate)}</b>
-          </span>
-        </span>
-      </span>
-    </li>
   );
 }
 
@@ -487,14 +444,12 @@ function RailRow({
 export default function Deadlock({
   route,
   navigate,
-  section,
   band,
   picker,
   open,
 }: {
   route: Route;
   navigate: (route: Route) => void;
-  section: DeadlockSection;
   band: BandId;
   picker: React.ReactNode;
   /** El slug del héroe abierto, si la URL trae uno. */
@@ -508,7 +463,6 @@ export default function Deadlock({
 
   const insignia = bandBadge(band);
   const movers = patchMovers(meta?.heroes ?? []);
-  const enParches = section === "patches";
 
   const metaLine = meta && (
     <span className="dl-meta-line">
@@ -556,41 +510,6 @@ export default function Deadlock({
   const masJugados = meta ? [...meta.heroes].sort((a, b) => b.pickRate - a.pickRate).slice(0, 5) : [];
   const topS = meta?.heroes[0];
 
-  const parches = meta && (
-    <div className="dl-patch-page">
-      <section className="box">
-        <div className="box-head">
-          <h2 className="box-title">{copy.deadlock.rail.movers}</h2>
-          <p className="box-lead">{copy.deadlock.rail.moversLead}</p>
-        </div>
-      {movers.up.length + movers.down.length === 0 ? (
-        <p className="box-empty">{copy.deadlock.patch.none}</p>
-      ) : (
-        <div className="dl-patch-cols">
-          <div className="dl-patch-col" data-dir="up">
-            <h3 className="dl-patch-side">{copy.deadlock.patch.winners}</h3>
-            <ol className="dl-mover-list">
-              {movers.up.map((h, i) => (
-                <MoverRow key={h.heroId} hero={h} rank={i + 1} />
-              ))}
-            </ol>
-          </div>
-          <div className="dl-patch-col" data-dir="down">
-            <h3 className="dl-patch-side">{copy.deadlock.patch.losers}</h3>
-            <ol className="dl-mover-list">
-              {movers.down.map((h, i) => (
-                <MoverRow key={h.heroId} hero={h} rank={i + 1} />
-              ))}
-            </ol>
-          </div>
-        </div>
-      )}
-      </section>
-
-      <PatchHistory boxed />
-    </div>
-  );
-
   return (
     <main className="deadlock deadlock-meta">
       {/* Una línea: título a la izquierda, selector de banda a la derecha, la
@@ -598,27 +517,24 @@ export default function Deadlock({
           historial es el mismo para todas las bandas. */}
       <SectionHead
         eyebrow={copy.deadlock.eyebrow}
-        title={enParches ? copy.deadlock.patchPage.title : copy.deadlock.title}
-        accent={enParches ? copy.deadlock.patchPage.titleBreak : copy.deadlock.titleBreak}
+        title={copy.deadlock.title}
+        accent={copy.deadlock.titleBreak}
         lead={[
-          enParches ? copy.deadlock.patchPage.lead : copy.deadlock.lead,
-          !enParches && copy.deadlock.note,
-          meta && ON_FALLBACK_BAND && !enParches
+          copy.deadlock.lead,
+          copy.deadlock.note,
+          meta && ON_FALLBACK_BAND
             ? copy.deadlock.fallback(copy.deadlock.bands[PUBLISHED_BAND])
             : null,
         ]}
-        controls={!enParches && picker}
+        controls={picker}
         meta={metaLine}
       />
 
       {!meta ? (
         <p className="detail-note dl-loading">{copy.deadlock.loading}</p>
       ) : (
-        <div className={enParches ? "page" : "page has-rail"}>
+        <div className="page has-rail">
           <div className="page-main">
-            {enParches ? (
-              parches
-            ) : (
               <>
                 <div className="dl-bands">
                   {TIER_ORDER.map((tier) => {
@@ -667,68 +583,65 @@ export default function Deadlock({
                   </RouteLink>
                 </nav>
               </>
-            )}
           </div>
 
-          {!enParches && (
-            <aside className="page-rail">
-              <section className="box">
-                <div className="box-head">
-                  <h2 className="box-title">{copy.deadlock.rail.movers}</h2>
-                  <p className="box-lead">{copy.deadlock.rail.moversLead}</p>
-                </div>
-                {movers.up.length + movers.down.length === 0 ? (
-                  <p className="box-empty">{copy.deadlock.rail.moversNone}</p>
-                ) : (
-                  <ol className="dl-rail-list">
-                    {movers.up.map((h) => (
-                      <RailRow
-                        key={h.heroId}
-                        hero={h}
-                        route={route}
-                        navigate={navigate}
-                        figure={<span className="delta is-up">▲ {signed(h.trend)}</span>}
-                      />
-                    ))}
-                    {movers.down.map((h) => (
-                      <RailRow
-                        key={h.heroId}
-                        hero={h}
-                        route={route}
-                        navigate={navigate}
-                        figure={<span className="delta is-down">▼ {signed(h.trend)}</span>}
-                      />
-                    ))}
-                  </ol>
-                )}
-              </section>
-
-              <section className="box">
-                <div className="box-head">
-                  <h2 className="box-title">{copy.deadlock.rail.mostPlayed}</h2>
-                </div>
+          <aside className="page-rail">
+            <section className="box">
+              <div className="box-head">
+                <h2 className="box-title">{copy.deadlock.rail.movers}</h2>
+                <p className="box-lead">{copy.deadlock.rail.moversLead}</p>
+              </div>
+              {movers.up.length + movers.down.length === 0 ? (
+                <p className="box-empty">{copy.deadlock.rail.moversNone}</p>
+              ) : (
                 <ol className="dl-rail-list">
-                  {masJugados.map((h) => (
-                    <RailRow key={h.heroId} hero={h} route={route} navigate={navigate} figure={pct(h.pickRate)} />
+                  {movers.up.map((h) => (
+                    <RailRow
+                      key={h.heroId}
+                      hero={h}
+                      route={route}
+                      navigate={navigate}
+                      figure={<span className="delta is-up">▲ {signed(h.trend)}</span>}
+                    />
+                  ))}
+                  {movers.down.map((h) => (
+                    <RailRow
+                      key={h.heroId}
+                      hero={h}
+                      route={route}
+                      navigate={navigate}
+                      figure={<span className="delta is-down">▼ {signed(h.trend)}</span>}
+                    />
                   ))}
                 </ol>
-              </section>
+              )}
+            </section>
 
-              <section className="box dl-rail-log">
-                <div className="box-head">
-                  <h2 className="box-title">{copy.deadlock.rail.changelog}</h2>
-                </div>
-                <PatchHistory limit={5} />
-                <RouteLink
-                  className="dl-rail-more"
-                  to={{ ...route, view: "deadlock", dlSection: "patches", detail: undefined }}
-                  onNavigate={navigate}
-                >
-                  {copy.deadlock.rail.allPatches} →
-                </RouteLink>
-              </section>
-            </aside>
-          )}
+            <section className="box">
+              <div className="box-head">
+                <h2 className="box-title">{copy.deadlock.rail.mostPlayed}</h2>
+              </div>
+              <ol className="dl-rail-list">
+                {masJugados.map((h) => (
+                  <RailRow key={h.heroId} hero={h} route={route} navigate={navigate} figure={pct(h.pickRate)} />
+                ))}
+              </ol>
+            </section>
+
+            <section className="box dl-rail-log">
+              <div className="box-head">
+                <h2 className="box-title">{copy.deadlock.rail.changelog}</h2>
+              </div>
+              <PatchHistory limit={5} />
+              <RouteLink
+                className="dl-rail-more"
+                to={{ ...route, view: "deadlock", dlSection: "patches", detail: undefined }}
+                onNavigate={navigate}
+              >
+                {copy.deadlock.rail.allPatches} →
+              </RouteLink>
+            </section>
+          </aside>
         </div>
       )}
     </main>

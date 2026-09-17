@@ -165,9 +165,15 @@ describe("las páginas de héroe e ítem de Deadlock", () => {
     expect(routePath(parseRoute("/en/deadlock/items"))).toBe("/en/deadlock/items");
   });
 
-  it("ranks y patches no tienen detalle, aunque la URL traiga un segmento de más", () => {
+  it("ranks no tiene detalle, aunque la URL traiga un segmento de más", () => {
     expect(routePath(parseRoute("/en/deadlock/ranks/algo"))).toBe("/en/deadlock/ranks");
-    expect(routePath(parseRoute("/en/deadlock/patches/algo"))).toBe("/en/deadlock/patches");
+  });
+
+  it("patches lleva la fecha de una edición de Vestigo News", () => {
+    const r = parseRoute("/es/deadlock/patches/2026-09-16");
+    expect(r).toMatchObject({ view: "deadlock", dlSection: "patches", detail: "2026-09-16" });
+    expect(routePath(r)).toBe("/es/deadlock/patches/2026-09-16");
+    expect(routePath(parseRoute("/en/deadlock/patches"))).toBe("/en/deadlock/patches");
   });
 
   it("existe en español también", () => {

@@ -102,6 +102,22 @@ jobs:
       - name: build heroes
         run: npm run build:heroes --prefix games/deadlock/pipeline
 
+      # Vestigo News: la edición del periódico del parche vigente (2026-09-17).
+      #
+      # **Va después de `build heroes`** porque la nota de análisis lee
+      # `heroes.json` recién medido. Baja las notas de Steam News y los assets de
+      # deadlock-api (~6 MB por idioma), así que son segundos.
+      #
+      # **Perdona fallar**, al revés que la tier list: si Steam no contesta, la
+      # edición queda como estaba y la tier list se publica igual. Una edición
+      # nueva cambia `data/news.json`, y eso es lo que ve el guardián.
+      #
+      # Sólo sale en inglés. El español es `data/news/<fecha>.es.json`, a mano,
+      # y las correcciones de nerf/buff van en `pipeline/news-overrides/`.
+      - name: build news
+        continue-on-error: true
+        run: npm run build:news --prefix games/deadlock/pipeline
+
       # Los ítems van después de los héroes y no en paralelo: los dos consultan
       # el mismo snapshot por HTTP, y encimarlos sólo se pelearía por el ancho de
       # banda para ahorrar los ~10 segundos que tarda éste.

@@ -50,8 +50,14 @@ export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match"
  * páginas que no existen hasta que alguien las busca.
  */
 export const DL_DETAIL_SECTIONS: DeadlockSection[] = ["meta", "items"];
-/** Las que llevan algo después del nombre de la sección, para parsear la URL. */
-const DL_WITH_DETAIL: DeadlockSection[] = [...DL_DETAIL_SECTIONS, "player", "match"];
+/**
+ * Las que llevan algo después del nombre de la sección, para parsear la URL.
+ *
+ * `patches` lleva la fecha de una edición de Vestigo News
+ * (`/deadlock/patches/2026-09-16`). No está en `DL_DETAIL_SECTIONS` porque las
+ * ediciones salen del índice de noticias, no de los slugs de héroes e ítems.
+ */
+const DL_WITH_DETAIL: DeadlockSection[] = [...DL_DETAIL_SECTIONS, "patches", "player", "match"];
 /** Detail pages exist for the three things people search by name. */
 export const DETAIL_SECTIONS: Section[] = ["units", "items", "meta"];
 
