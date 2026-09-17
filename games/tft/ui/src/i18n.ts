@@ -1433,8 +1433,8 @@ const EN = {
      * que Fantasma+ junte partidas.
      */
     fallback: (shown: string) =>
-      `Deadlock reset every rank on July 30 and placement caps at Oracle 6, so Phantom+ has no ranked ` +
-      `matches yet. Showing ${shown} until it fills up — it switches back on its own.`,
+      `Phantom+ doesn't have enough ranked matches in this window yet. ` +
+      `Showing ${shown} until it fills up — it switches back on its own.`,
     emptyBand: "No ranked matches at this rank yet — every rank was reset on July 30.",
     loading: "Loading this rank's heroes…",
     stats: { winRate: "Win rate", pickRate: "Pick rate" },
@@ -1460,8 +1460,15 @@ const EN = {
       `${matches} matches · ${from} to ${to}`,
     patch: {
       heading: "What the patch changed",
-      /** The patch is the window: everything above is measured since it landed. */
+      /** Once the patch has enough games, it is the window: everything is measured since it landed. */
       since: (title: string) => `Measured since ${title}`,
+      /**
+       * Until then the list measures the last 15 days whole, patch included:
+       * a nerfed hero drifts down as the new games come in, instead of the
+       * list emptying out on patch day.
+       */
+      includes: (title: string) =>
+        `Last 15 days, ${title} included — it will cut to the patch once it has enough games`,
       winners: "Winners",
       losers: "Losers",
       winRate: "Win rate",
@@ -2717,9 +2724,8 @@ const ES: typeof EN = {
     },
     note: "Cada banda se mide con sus propias partidas, no con las de los rangos de arriba.",
     fallback: (shown: string) =>
-      `Deadlock reinició todos los rangos el 30 de julio y la colocación llega hasta Oráculo 6, así que ` +
-      `Fantasma+ todavía no tiene partidas clasificatorias. Se muestra ${shown} hasta que junte muestra; ` +
-      `el cambio ocurre solo.`,
+      `Fantasma+ todavía no tiene partidas clasificatorias suficientes en esta ventana. ` +
+      `Se muestra ${shown} hasta que junte muestra; el cambio ocurre solo.`,
     emptyBand: "Todavía no hay partidas clasificatorias en este rango — se reiniciaron todos el 30 de julio.",
     loading: "Cargando los héroes de este rango…",
     stats: { winRate: "Victorias", pickRate: "Uso" },
@@ -2737,6 +2743,8 @@ const ES: typeof EN = {
     patch: {
       heading: "Qué cambió el parche",
       since: (title) => `Medido desde ${title}`,
+      includes: (title) =>
+        `Últimos 15 días, ${title} incluido — corta en el parche cuando junte partidas suficientes`,
       winners: "Ganadores",
       losers: "Perdedores",
       winRate: "Victorias",

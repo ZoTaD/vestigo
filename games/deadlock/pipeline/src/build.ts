@@ -16,7 +16,7 @@ import {
   retryingOnRewrite,
   PROVISIONAL_MATCHES,
 } from "./snapshot";
-import { fetchPatches, patchWindows, type Patch } from "./patches";
+import { fetchPatches, patchWindows, measureWindow, type Patch } from "./patches";
 
 /**
  * La tier list de héroes de Deadlock, por banda de rango.
@@ -115,6 +115,12 @@ export interface HeroesFile {
    * lo dice en pantalla en vez de hacer pasar una lista de horas por asentada.
    */
   provisional?: boolean;
+  /**
+   * True cuando la ventana incluye partidas de antes del parche: el parche es
+   * nuevo y todavía no junta muestra, así que se miden los últimos quince días
+   * enteros (ver `measureWindow`). La UI lo dice al lado de la lista.
+   */
+  crossesPatch?: boolean;
   /** Partidas distintas de la banda — el denominador del pickRate. */
   matches: number;
   /** Filas jugador-partida, que es sobre lo que se calcula todo lo demás. */
@@ -205,6 +211,8 @@ export interface BandExtras {
   before: Map<number, Rate>;
   /** Partidas distintas de la banda antes del parche, para el uso comparable. */
   matchesBefore: number;
+  /** True si la ventana medida incluye partidas de antes del parche. */
+  crossesPatch?: boolean;
 }
 
 /**
@@ -261,6 +269,7 @@ export function heroesFileFrom(
     band: band.id,
     patch: { date: patch.date, title: patch.title, link: patch.link },
     ...(totals.matches < PROVISIONAL_MATCHES ? { provisional: true } : {}),
+    ...(extra.crossesPatch ? { crossesPatch: true } : {}),
     matches: totals.matches,
     boards: totals.boards,
     from: totals.from,
@@ -310,7 +319,6 @@ async function main() {
   }
   console.log(`  después: ${partsAfter.join(", ")} | antes: ${partsBefore.join(", ") || "—"}`);
 
-  const baseAfter = windowSql(partsAfter, after.from, after.to);
   const baseBefore = partsBefore.length > 0 ? windowSql(partsBefore, before.from, before.to) : null;
 
   const tiersOf = (id: BandId) => BANDS.find((b) => b.id === id)!.tiers.join(", ");
@@ -328,6 +336,9 @@ async function main() {
   // al héroe, no a la banda desde la que se lo mira.
   const t0 = Date.now();
   const baseGap = windowSql(partsGap, desde, hasta);
+  // Los quince días enteros, que también son la ventana de la tier list mientras
+  // el parche no junte muestra (ver `measureWindow` y la nota de la banda).
+  const baseWide = baseGap;
   const arriba = ratesFrom((await rows(winrateSql(baseGap, tiersOf(TOP_BAND)))) as unknown as RawRow[]);
   const abajo = ratesFrom((await rows(winrateSql(baseGap, tiersOf(BOTTOM_BAND)))) as unknown as RawRow[]);
   const skillGap = new Map<number, number | undefined>();
@@ -353,13 +364,27 @@ async function main() {
     const tiers = band.tiers.join(", ");
     const t = Date.now();
 
-    const [tot] = (await rows(totalsSql(baseAfter, tiers))) as unknown as {
+    /**
+     * La ventana de ESTA banda: los últimos quince días hasta que el parche
+     * nuevo junte `PROVISIONAL_MATCHES` partidas en la banda, y desde el parche
+     * a partir de ahí. Se decide por banda porque cada una junta muestra a su
+     * ritmo: Fantasma+ tarda una semana en llegar a lo que las bandas bajas
+     * juntan en tres días.
+     */
+    const [post] = (await rows(`
+      select count(distinct match_id)::BIGINT as matches
+      from (${baseWide}) where tier in (${tiers}) and start_time >= TIMESTAMP '${after.from.slice(0, 19)}'`
+    )) as unknown as { matches: bigint }[];
+    const ventana = measureWindow(patch.date, ahora, MAX_WINDOW_DAYS, Number(post.matches), PROVISIONAL_MATCHES);
+    const base = ventana.sincePatch ? windowSql(partsAfter, after.from, after.to) : baseWide;
+
+    const [tot] = (await rows(totalsSql(base, tiers))) as unknown as {
       matches: bigint;
       boards: bigint;
       from: string;
       to: string;
     }[];
-    const agg = (await rows(winrateSql(baseAfter, tiers))) as unknown as RawRow[];
+    const agg = (await rows(winrateSql(base, tiers))) as unknown as RawRow[];
 
     let before2 = new Map<number, Rate>();
     let matchesBefore = 0;
@@ -375,7 +400,7 @@ async function main() {
         agg,
         band,
         { matches: Number(tot.matches), boards: Number(tot.boards), from: tot.from, to: tot.to },
-        { skillGap, before: before2, matchesBefore },
+        { skillGap, before: before2, matchesBefore, crossesPatch: ventana.crossesPatch },
         patch,
         generatedAt
       ),
@@ -394,7 +419,8 @@ async function main() {
     const conCambio = file.heroes.filter((h) => h.trend !== undefined).length;
     console.log(
       `  ${band.id.padEnd(20)} ${file.heroes.length} héroes (${conCambio} con cambio de parche), ` +
-        `${file.matches.toLocaleString("es")} partidas${file.provisional ? " [PROVISIONAL]" : ""}, ` +
+        `${file.matches.toLocaleString("es")} partidas${file.provisional ? " [PROVISIONAL]" : ""}` +
+        `${file.crossesPatch ? " [15 días, cruza el parche]" : " [desde el parche]"}, ` +
         `${file.from} → ${file.to} (${segundos}s)` +
         `${band.id === defecto ? "  [por defecto]" : ""}`
     );

@@ -519,7 +519,11 @@ export default function Deadlock({
             meta.file.matches.toLocaleString(locale),
             meta.file.from,
             meta.file.to
-          )} · ${copy.deadlock.patch.since(meta.file.patch.title)}`}
+          )} · ${
+            meta.file.crossesPatch
+              ? copy.deadlock.patch.includes(meta.file.patch.title)
+              : copy.deadlock.patch.since(meta.file.patch.title)
+          }`}
     </span>
   );
 

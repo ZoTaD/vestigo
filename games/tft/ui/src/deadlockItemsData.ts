@@ -36,6 +36,8 @@ export interface ItemsFile {
   band: string;
   patch: { date: string; title: string; link: string };
   provisional?: boolean;
+  /** True cuando la ventana incluye partidas de antes del parche (ver `measureWindow`). */
+  crossesPatch?: boolean;
   /** Lo que rinde cada precio. Sin esto el delta no se puede verificar. */
   costBaselines: Record<string, number>;
   matches: number;

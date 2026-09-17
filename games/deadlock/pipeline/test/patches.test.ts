@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { sortPatches, patchWindows } from "../src/patches";
+import { sortPatches, patchWindows, measureWindow } from "../src/patches";
 import { shrinkageFrom, shrink } from "../src/build";
 
 describe("sortPatches", () => {
@@ -90,6 +90,45 @@ describe("patchWindows", () => {
  * uno hay horas de partidas, y ahí el orden crudo es ruido (medido: ±3,5 puntos
  * al 95%, con el top 8 entero cabiendo en 3,8).
  */
+/**
+ * La regla del 2026-09-17: los últimos quince días hasta que el parche nuevo
+ * junte muestra, y recién ahí se corta en él.
+ */
+describe("measureWindow", () => {
+  const now = new Date("2026-09-17T12:00:00Z");
+  const patch = "2026-09-16T22:41:46Z";
+
+  it("recién salido el parche, mide los quince días enteros y avisa que lo cruza", () => {
+    const w = measureWindow(patch, now, 15, 644, 8_000);
+    expect(w.from).toBe("2026-09-02T12:00:00.000Z");
+    expect(w.to).toBe("2026-09-17T12:00:00.000Z");
+    expect(w.sincePatch).toBe(false);
+    expect(w.crossesPatch).toBe(true);
+  });
+
+  it("corta en el parche en cuanto las partidas posteriores llegan al piso", () => {
+    const w = measureWindow(patch, now, 15, 8_000, 8_000);
+    expect(w.from).toBe("2026-09-16T22:41:46.000Z");
+    expect(w.sincePatch).toBe(true);
+    expect(w.crossesPatch).toBe(false);
+  });
+
+  it("con el parche más viejo que la ventana, mide los quince días y no lo cruza", () => {
+    const viejo = "2026-07-28T20:28:07Z";
+    const w = measureWindow(viejo, now, 15, 26_000, 8_000);
+    expect(w.from).toBe("2026-09-02T12:00:00.000Z");
+    expect(w.crossesPatch).toBe(false);
+    // Aunque no juntara muestra (una banda chica), tampoco cruza: ya no está adentro.
+    expect(measureWindow(viejo, now, 15, 100, 8_000).crossesPatch).toBe(false);
+  });
+
+  it("cortado en el parche, sigue topado por los quince días", () => {
+    const w = measureWindow("2026-08-01T00:00:00Z", now, 15, 50_000, 8_000);
+    expect(w.from).toBe("2026-09-02T12:00:00.000Z");
+    expect(w.sincePatch).toBe(true);
+  });
+});
+
 describe("shrinkageFrom / shrink", () => {
   const rate = (wr: number, n: number) => ({ wr, n });
 

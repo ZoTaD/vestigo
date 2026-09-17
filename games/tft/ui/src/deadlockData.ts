@@ -76,6 +76,12 @@ export interface HeroesFile {
   patch: { date: string; title: string; link: string };
   /** True cuando el parche es tan reciente que la muestra todavía es fina. */
   provisional?: boolean;
+  /**
+   * True cuando la ventana incluye partidas de antes del parche: el parche es
+   * nuevo y todavía no junta muestra, así que se miden los últimos quince días
+   * enteros (regla del 2026-09-17, `measureWindow` en la pipeline).
+   */
+  crossesPatch?: boolean;
   matches: number;
   boards: number;
   from: string;

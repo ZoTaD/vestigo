@@ -80,6 +80,47 @@ export async function fetchPatches(url: string = PATCHES_URL): Promise<Patch[]> 
  * el parche**: recién salido mide desde el parche hasta ahora, y a las tres
  * semanas mide los últimos quince, todos posteriores al parche.
  */
+/**
+ * La ventana que mide la tier list, y **cuándo corta en el parche**.
+ *
+ * Hasta el 2026-09-17 cortaba siempre: el día que salía un parche la lista
+ * arrancaba de cero, con cientos de partidas en vez de miles, y Fantasma+
+ * tardaba una semana en volver a ser la banda por defecto. ZoTaD lo vio con el
+ * parche del 16/9 (313 partidas a la mañana) y decidió la regla de acá:
+ *
+ * - **Los últimos `maxDays` días, sin cortar**, mientras el parche nuevo no
+ *   junte `minMatches` partidas. La lista sigue llena y el parche entra de a
+ *   poco; un héroe nerfeado baja a medida que se juega.
+ * - **Corta en el parche** en cuanto las partidas posteriores llegan al piso:
+ *   desde ahí la ventana es la de siempre, los últimos `maxDays` días sin
+ *   cruzarlo.
+ *
+ * El "desde el parche" (`patchWindows`) queda como dato aparte: es la señal
+ * rápida, y se muestra al lado de la lista, no adentro de ella.
+ *
+ * Es la misma regla que `builds.ts` ya aplicaba a las builds, ahora compartida.
+ */
+export function measureWindow(
+  patchDate: string,
+  now: Date,
+  maxDays: number,
+  postPatchMatches: number,
+  minMatches: number
+): { from: string; to: string; sincePatch: boolean; crossesPatch: boolean } {
+  const patch = new Date(patchDate).getTime();
+  const wideFrom = now.getTime() - maxDays * 86_400_000;
+  const sincePatch = postPatchMatches >= minMatches;
+  const from = sincePatch ? Math.max(patch, wideFrom) : wideFrom;
+  return {
+    from: new Date(from).toISOString(),
+    to: now.toISOString(),
+    sincePatch,
+    // Cruza si el parche cae adentro de la ventana y no se cortó en él. Un
+    // parche más viejo que la ventana no la cruza aunque no haya cortado.
+    crossesPatch: !sincePatch && patch > wideFrom && patch < now.getTime(),
+  };
+}
+
 export function patchWindows(
   patchDate: string,
   now: Date,

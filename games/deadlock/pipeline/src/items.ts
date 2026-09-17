@@ -13,7 +13,7 @@ import {
   retryingOnRewrite,
   PROVISIONAL_MATCHES,
 } from "./snapshot";
-import { fetchPatches, patchWindows, type Patch } from "./patches";
+import { fetchPatches, patchWindows, measureWindow, type Patch } from "./patches";
 
 /**
  * La tier list de ítems de Deadlock, medida contra el precio de cada ítem.
@@ -109,6 +109,8 @@ export interface ItemsFile {
   band: string;
   patch: { date: string; title: string; link: string };
   provisional?: boolean;
+  /** True cuando la ventana incluye partidas de antes del parche (ver `measureWindow`). */
+  crossesPatch?: boolean;
   /**
    * Lo que rinde cada precio en esta banda. **Se publica a propósito**: el
    * `delta` es una resta contra estos números, y sin ellos el lector tendría que
@@ -180,7 +182,8 @@ export function itemsFileFrom(
   band: Band,
   totals: { matches: number; boards: number; from: string; to: string },
   patch: Patch,
-  generatedAt: string
+  generatedAt: string,
+  crossesPatch = false
 ): ItemsFile {
   const bases = baselinesFrom(rows);
 
@@ -218,6 +221,7 @@ export function itemsFileFrom(
     band: band.id,
     patch: { date: patch.date, title: patch.title, link: patch.link },
     ...(totals.matches < PROVISIONAL_MATCHES ? { provisional: true } : {}),
+    ...(crossesPatch ? { crossesPatch: true } : {}),
     costBaselines: Object.fromEntries([...bases].map(([cost, base]) => [String(cost), r(base)])),
     matches: totals.matches,
     boards: totals.boards,
@@ -251,7 +255,8 @@ async function main() {
 
   const defecto = publishedDefaultBand();
   const ranges = await partitionRanges(con, partitions);
-  const { after } = patchWindows(patch.date, await windowEnd(con, ranges), MAX_WINDOW_DAYS);
+  const ahora = await windowEnd(con, ranges);
+  const { after } = patchWindows(patch.date, ahora, MAX_WINDOW_DAYS);
   const partsAfter = await bandablePartitions(con, partitionsCovering(ranges, after.from, after.to));
   if (partsAfter.length === 0) {
     throw new Error(
@@ -259,11 +264,16 @@ async function main() {
         "O el parche es de hace minutos, o el snapshot dejó de actualizarse."
     );
   }
-  console.log(`  particiones: ${partsAfter.join(", ")}`);
+  // Los quince días enteros: la ventana mientras el parche no junte muestra
+  // (misma regla que la tier list de héroes, ver `measureWindow`).
+  const wideFrom = new Date(ahora.getTime() - MAX_WINDOW_DAYS * 86_400_000).toISOString();
+  const partsWide = await bandablePartitions(con, partitionsCovering(ranges, wideFrom, ahora.toISOString()));
+  console.log(`  particiones: ${partsWide.join(", ")}`);
 
-  const base = itemsWindowSql(partsAfter, after.from, after.to);
+  const baseAfter = itemsWindowSql(partsAfter, after.from, after.to);
+  const baseWide = itemsWindowSql(partsWide, wideFrom, ahora.toISOString());
 
-  const statsSql = (tiers: string) => `
+  const statsSql = (base: string, tiers: string) => `
     select item_id, count(*)::BIGINT as buys,
            sum(case when won then 1 else 0 end)::BIGINT as wins,
            median(compra_s)::INTEGER as buy_seconds
@@ -273,7 +283,7 @@ async function main() {
     ) where compra_s > 0 and tier in (${tiers}) and item_id in (${ids})
     group by item_id`;
 
-  const totalsSql = (tiers: string) => `
+  const totalsSql = (base: string, tiers: string) => `
     select count(distinct match_id)::BIGINT as matches, count(*)::BIGINT as boards,
            strftime(min(start_time), '%Y-%m-%d') as "from",
            strftime(max(start_time), '%Y-%m-%d') as "to"
@@ -286,10 +296,17 @@ async function main() {
     const tiers = band.tiers.join(", ");
     const t = Date.now();
 
-    const [tot] = (await rows(totalsSql(tiers))) as unknown as {
+    const [post] = (await rows(`
+      select count(distinct match_id)::BIGINT as matches
+      from (${baseWide}) where tier in (${tiers}) and start_time >= TIMESTAMP '${after.from.slice(0, 19)}'`
+    )) as unknown as { matches: bigint }[];
+    const ventana = measureWindow(patch.date, ahora, MAX_WINDOW_DAYS, Number(post.matches), PROVISIONAL_MATCHES);
+    const base = ventana.sincePatch ? baseAfter : baseWide;
+
+    const [tot] = (await rows(totalsSql(base, tiers))) as unknown as {
       matches: bigint; boards: bigint; from: string; to: string;
     }[];
-    const crudas = (await rows(statsSql(tiers))) as unknown as {
+    const crudas = (await rows(statsSql(base, tiers))) as unknown as {
       item_id: number; buys: bigint; wins: bigint; buy_seconds: number;
     }[];
     const agg: RawItemRow[] = crudas.map((x) => ({
@@ -305,7 +322,8 @@ async function main() {
       band,
       { matches: Number(tot.matches), boards: Number(tot.boards), from: tot.from, to: tot.to },
       patch,
-      generatedAt
+      generatedAt,
+      ventana.crossesPatch
     );
     writeFileSync(bandPath(OUT, band.id), JSON.stringify(file));
     // La copia sin sufijo va para la MISMA banda que eligió `build:heroes`. Si
