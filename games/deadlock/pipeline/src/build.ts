@@ -16,7 +16,7 @@ import {
   retryingOnRewrite,
   PROVISIONAL_MATCHES,
 } from "./snapshot";
-import { fetchPatches, patchWindows, measureWindow, type Patch } from "./patches";
+import { fetchPatches, patchWindows, prePatchWeight, type Patch } from "./patches";
 
 /**
  * La tier list de héroes de Deadlock, por banda de rango.
@@ -30,8 +30,10 @@ import { fetchPatches, patchWindows, measureWindow, type Patch } from "./patches
  *
  * ---
  *
- * **La ventana arranca en el último parche, no hace quince días** (desde el
- * 2026-07-29). Medido sobre el parche del día anterior: Mirage pasó de 47,8% a
+ * **La ventana son los últimos quince días, y las partidas de antes del parche
+ * pesan cada vez menos a medida que el parche nuevo junta muestra** (desde el
+ * 2026-09-17, ver `prePatchWeight` y `blendRows`). Antes arrancaba en el
+ * último parche (desde el 2026-07-29). Medido sobre el parche del día anterior: Mirage pasó de 47,8% a
  * 43,2% y Haze de 53,7% a 49,1% de un día para el otro, y seis héroes se movieron
  * 2+ puntos. Una ventana a caballo de un parche promedia dos juegos distintos y
  * publica un número que no describe a ninguno.
@@ -117,10 +119,17 @@ export interface HeroesFile {
   provisional?: boolean;
   /**
    * True cuando la ventana incluye partidas de antes del parche: el parche es
-   * nuevo y todavía no junta muestra, así que se miden los últimos quince días
-   * enteros (ver `measureWindow`). La UI lo dice al lado de la lista.
+   * nuevo y todavía no junta muestra, así que las partidas viejas entran con
+   * un peso que se desvanece (ver `prePatchWeight`). La UI lo dice al lado de
+   * la lista.
    */
   crossesPatch?: boolean;
+  /**
+   * Qué parte de la muestra medida es del parche nuevo, de 0 a 1. Sólo cuando
+   * `crossesPatch`: es lo que la UI muestra como "las partidas del parche ya
+   * pesan el 63%".
+   */
+  patchShare?: number;
   /** Partidas distintas de la banda — el denominador del pickRate. */
   matches: number;
   /** Filas jugador-partida, que es sobre lo que se calcula todo lo demás. */
@@ -135,8 +144,39 @@ const r = (n: number, d = 4): number => Number(n.toFixed(d));
 
 export interface RawRow {
   hero_id: number;
-  matches: bigint;
-  wins: bigint;
+  /** BigInt desde DuckDB; número cuando ya pasó por `blendRows`. */
+  matches: bigint | number;
+  wins: bigint | number;
+}
+
+/**
+ * Las partidas de después del parche con las de antes, éstas pesadas por
+ * `alpha` (ver `prePatchWeight`).
+ *
+ * Con `alpha` = 1 es la ventana entera con todo al mismo peso; con 0 son sólo
+ * las de después. Entre medio, un héroe con 300 partidas nuevas y 3.000 viejas a
+ * `alpha` = 0,5 se mide como 1.800, donde las nuevas son la sexta parte pero
+ * cada una vale el doble. Las partidas se redondean para publicarse como
+ * entero; las victorias se escalan con ellas para que el winrate no cambie.
+ */
+export function blendRows(post: RawRow[], pre: RawRow[], alpha: number): RawRow[] {
+  const byHero = new Map<number, { n: number; w: number }>();
+  const add = (rows: RawRow[], peso: number) => {
+    for (const row of rows) {
+      const cur = byHero.get(row.hero_id) ?? { n: 0, w: 0 };
+      cur.n += Number(row.matches) * peso;
+      cur.w += Number(row.wins) * peso;
+      byHero.set(row.hero_id, cur);
+    }
+  };
+  add(post, 1);
+  if (alpha > 0) add(pre, alpha);
+  return [...byHero.entries()]
+    .filter(([, v]) => v.n > 0)
+    .map(([hero_id, v]) => {
+      const matches = Math.round(v.n);
+      return { hero_id, matches, wins: (v.w / v.n) * matches };
+    });
 }
 
 export interface Rate {
@@ -213,6 +253,14 @@ export interface BandExtras {
   matchesBefore: number;
   /** True si la ventana medida incluye partidas de antes del parche. */
   crossesPatch?: boolean;
+  /** Ver `HeroesFile.patchShare`. */
+  patchShare?: number;
+  /**
+   * Partidas de la banda desde el parche. Es lo que decide `provisional`: con
+   * la mezcla, `totals.matches` está lleno desde el primer día y ya no dice
+   * si el parche juntó muestra. Sin esto, se usa `totals.matches`.
+   */
+  postMatches?: number;
 }
 
 /**
@@ -268,8 +316,9 @@ export function heroesFileFrom(
     generatedAt,
     band: band.id,
     patch: { date: patch.date, title: patch.title, link: patch.link },
-    ...(totals.matches < PROVISIONAL_MATCHES ? { provisional: true } : {}),
+    ...((extra.postMatches ?? totals.matches) < PROVISIONAL_MATCHES ? { provisional: true } : {}),
     ...(extra.crossesPatch ? { crossesPatch: true } : {}),
+    ...(extra.crossesPatch && extra.patchShare !== undefined ? { patchShare: r(extra.patchShare, 3) } : {}),
     matches: totals.matches,
     boards: totals.boards,
     from: totals.from,
@@ -336,9 +385,15 @@ async function main() {
   // al héroe, no a la banda desde la que se lo mira.
   const t0 = Date.now();
   const baseGap = windowSql(partsGap, desde, hasta);
-  // Los quince días enteros, que también son la ventana de la tier list mientras
-  // el parche no junte muestra (ver `measureWindow` y la nota de la banda).
+  // Los quince días enteros, que son la ventana de la tier list: las partidas
+  // de antes del parche entran con un peso que se desvanece (ver la nota de la
+  // banda). `after.from` es el parche cuando cae adentro, y el arranque de la
+  // ventana cuando ya quedó atrás: en ese caso "antes" es vacío.
   const baseWide = baseGap;
+  const corte = after.from.slice(0, 19);
+  const lado = (op: ">=" | "<") => `select * from (${baseWide}) where start_time ${op} TIMESTAMP '${corte}'`;
+  const basePost = lado(">=");
+  const basePre = lado("<");
   const arriba = ratesFrom((await rows(winrateSql(baseGap, tiersOf(TOP_BAND)))) as unknown as RawRow[]);
   const abajo = ratesFrom((await rows(winrateSql(baseGap, tiersOf(BOTTOM_BAND)))) as unknown as RawRow[]);
   const skillGap = new Map<number, number | undefined>();
@@ -365,26 +420,30 @@ async function main() {
     const t = Date.now();
 
     /**
-     * La ventana de ESTA banda: los últimos quince días hasta que el parche
-     * nuevo junte `PROVISIONAL_MATCHES` partidas en la banda, y desde el parche
-     * a partir de ahí. Se decide por banda porque cada una junta muestra a su
-     * ritmo: Fantasma+ tarda una semana en llegar a lo que las bandas bajas
-     * juntan en tres días.
+     * La mezcla de ESTA banda: las partidas desde el parche pesan 1 y las de
+     * antes pesan `alpha`, que baja de 1 a 0 a medida que el parche junta
+     * `PROVISIONAL_MATCHES` partidas en la banda. Se decide por banda porque
+     * cada una junta muestra a su ritmo: Fantasma+ tarda una semana en llegar
+     * a lo que las bandas bajas juntan en tres días.
      */
-    const [post] = (await rows(`
-      select count(distinct match_id)::BIGINT as matches
-      from (${baseWide}) where tier in (${tiers}) and start_time >= TIMESTAMP '${after.from.slice(0, 19)}'`
-    )) as unknown as { matches: bigint }[];
-    const ventana = measureWindow(patch.date, ahora, MAX_WINDOW_DAYS, Number(post.matches), PROVISIONAL_MATCHES);
-    const base = ventana.sincePatch ? windowSql(partsAfter, after.from, after.to) : baseWide;
-
-    const [tot] = (await rows(totalsSql(base, tiers))) as unknown as {
-      matches: bigint;
-      boards: bigint;
-      from: string;
-      to: string;
-    }[];
-    const agg = (await rows(winrateSql(base, tiers))) as unknown as RawRow[];
+    type Tot = { matches: bigint; boards: bigint; from: string | null; to: string | null };
+    const [totPost] = (await rows(totalsSql(basePost, tiers))) as unknown as Tot[];
+    const [totPre] = (await rows(totalsSql(basePre, tiers))) as unknown as Tot[];
+    const postMatches = Number(totPost.matches);
+    const preMatches = Number(totPre.matches);
+    const alpha = prePatchWeight(postMatches, PROVISIONAL_MATCHES);
+    const crossesPatch = alpha > 0 && preMatches > 0;
+    const aggPost = (await rows(winrateSql(basePost, tiers))) as unknown as RawRow[];
+    const aggPre = crossesPatch ? ((await rows(winrateSql(basePre, tiers))) as unknown as RawRow[]) : [];
+    const agg = blendRows(aggPost, aggPre, alpha);
+    const pesadas = postMatches + (crossesPatch ? alpha * preMatches : 0);
+    const tot = {
+      matches: Math.round(pesadas),
+      boards: Math.round(Number(totPost.boards) + (crossesPatch ? alpha * Number(totPre.boards) : 0)),
+      from: (crossesPatch ? totPre.from : totPost.from) ?? totPost.from ?? "",
+      to: totPost.to ?? totPre.to ?? "",
+    };
+    const patchShare = pesadas > 0 ? postMatches / pesadas : 1;
 
     let before2 = new Map<number, Rate>();
     let matchesBefore = 0;
@@ -399,8 +458,8 @@ async function main() {
       file: heroesFileFrom(
         agg,
         band,
-        { matches: Number(tot.matches), boards: Number(tot.boards), from: tot.from, to: tot.to },
-        { skillGap, before: before2, matchesBefore, crossesPatch: ventana.crossesPatch },
+        tot,
+        { skillGap, before: before2, matchesBefore, crossesPatch, patchShare, postMatches },
         patch,
         generatedAt
       ),
@@ -420,7 +479,7 @@ async function main() {
     console.log(
       `  ${band.id.padEnd(20)} ${file.heroes.length} héroes (${conCambio} con cambio de parche), ` +
         `${file.matches.toLocaleString("es")} partidas${file.provisional ? " [PROVISIONAL]" : ""}` +
-        `${file.crossesPatch ? " [15 días, cruza el parche]" : " [desde el parche]"}, ` +
+        `${file.crossesPatch ? ` [15 días, el parche pesa ${Math.round((file.patchShare ?? 0) * 100)}%]` : " [desde el parche]"}, ` +
         `${file.from} → ${file.to} (${segundos}s)` +
         `${band.id === defecto ? "  [por defecto]" : ""}`
     );

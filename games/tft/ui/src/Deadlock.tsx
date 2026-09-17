@@ -475,7 +475,7 @@ export default function Deadlock({
             meta.file.to
           )} · ${
             meta.file.crossesPatch
-              ? copy.deadlock.patch.includes(meta.file.patch.title)
+              ? copy.deadlock.patch.blend(meta.file.patch.title, Math.round((meta.file.patchShare ?? 0) * 100))
               : copy.deadlock.patch.since(meta.file.patch.title)
           }`}
     </span>

@@ -3,7 +3,7 @@ import {
   BANDS, EXCLUSIVE, PREFERRED_BAND, FALLBACK_BAND, MIN_FOR_DEFAULT, defaultBandFor,
   RANKS, tierOfBadge, bandForTier, bandPath,
 } from "../src/bands";
-import { heroesFileFrom, ratesFrom, deltaPoints, type RawRow, type Rate } from "../src/build";
+import { heroesFileFrom, ratesFrom, deltaPoints, blendRows, type RawRow, type Rate } from "../src/build";
 
 describe("los rangos", () => {
   it("son los 12 que tiene el juego", () => {
@@ -312,5 +312,33 @@ describe("heroesFileFrom", () => {
   it("redondea, para que dos corridas del mismo dato den el mismo archivo", () => {
     const f = heroesFileFrom([row(1, 3, 1)], band, totals, vacio, patch, "t");
     expect(String(f.heroes[0].winRate)).toBe("0.3333");
+  });
+});
+
+describe("blendRows", () => {
+  it("con alpha 1 suma las dos ventanas al mismo peso; con 0 sólo cuenta el parche", () => {
+    const post = [row(1, 300, 120)]; // 40% desde el parche
+    const pre = [row(1, 3000, 1650)]; // 55% antes
+    const todo = blendRows(post, pre, 1)[0];
+    expect(todo.matches).toBe(3300);
+    expect(Number(todo.wins) / Number(todo.matches)).toBeCloseTo(1770 / 3300, 6);
+    const solo = blendRows(post, pre, 0)[0];
+    expect(solo.matches).toBe(300);
+    expect(Number(solo.wins)).toBeCloseTo(120, 6);
+  });
+
+  it("a mitad de camino cada partida nueva vale el doble que una vieja", () => {
+    const b = blendRows([row(1, 300, 120)], [row(1, 3000, 1650)], 0.5)[0];
+    expect(b.matches).toBe(1800);
+    // (120 + 0,5·1650) / (300 + 0,5·3000)
+    expect(Number(b.wins) / Number(b.matches)).toBeCloseTo(945 / 1800, 6);
+  });
+
+  it("un héroe que sólo aparece en una de las dos ventanas igual entra", () => {
+    const b = blendRows([row(1, 100, 50)], [row(2, 400, 200)], 0.25);
+    expect(b.map((x) => [x.hero_id, x.matches])).toEqual([
+      [1, 100],
+      [2, 100],
+    ]);
   });
 });

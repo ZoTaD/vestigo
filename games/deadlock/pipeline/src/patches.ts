@@ -137,3 +137,25 @@ export function patchWindows(
     before: { from: new Date(patch.getTime() - ms).toISOString(), to: patch.toISOString() },
   };
 }
+
+/**
+ * Cuánto pesa cada partida de ANTES del parche en la tier list de héroes,
+ * mientras el parche nuevo junta muestra en la banda.
+ *
+ * **Reemplaza el corte seco de `measureWindow` para los héroes** (pedido de
+ * ZoTaD del 2026-09-17, el día del "09-16-2026 Update"). Con el corte, cada
+ * partida vieja pesaba igual que una nueva hasta el día en que el parche
+ * llegaba a `target`, y ese día la lista pegaba un salto. Con esto:
+ *
+ * - recién salido el parche vale 1: la lista se ve como antes, llena;
+ * - a medida que el parche junta partidas baja en línea recta, así que cada
+ *   partida nueva pesa más que una vieja desde la primera hora;
+ * - al llegar a `target` vale 0, que es exactamente "medido desde el parche".
+ *
+ * Los objetos siguen con el corte de `measureWindow`: allá cada objeto se mide
+ * contra su precio y una mezcla de dos parches confundiría esa comparación.
+ */
+export function prePatchWeight(postPatchMatches: number, target: number): number {
+  if (target <= 0) return 0;
+  return Math.min(1, Math.max(0, 1 - postPatchMatches / target));
+}

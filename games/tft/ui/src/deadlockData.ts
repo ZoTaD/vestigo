@@ -78,10 +78,13 @@ export interface HeroesFile {
   provisional?: boolean;
   /**
    * True cuando la ventana incluye partidas de antes del parche: el parche es
-   * nuevo y todavía no junta muestra, así que se miden los últimos quince días
-   * enteros (regla del 2026-09-17, `measureWindow` en la pipeline).
+   * nuevo y todavía no junta muestra, así que las partidas viejas entran con
+   * un peso que se desvanece (regla del 2026-09-17, `prePatchWeight` en la
+   * pipeline).
    */
   crossesPatch?: boolean;
+  /** Qué parte de la muestra es del parche nuevo (0 a 1), sólo mientras cruza. */
+  patchShare?: number;
   matches: number;
   boards: number;
   from: string;

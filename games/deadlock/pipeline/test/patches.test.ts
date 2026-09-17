@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { sortPatches, patchWindows, measureWindow } from "../src/patches";
+import { sortPatches, patchWindows, measureWindow, prePatchWeight } from "../src/patches";
 import { shrinkageFrom, shrink } from "../src/build";
 
 describe("sortPatches", () => {
@@ -171,5 +171,15 @@ describe("shrinkageFrom / shrink", () => {
     const mueve = (n: number) => Math.abs(0.58 - shrink(0.58, n, k));
     expect(mueve(300)).toBeGreaterThan(mueve(1500));
     expect(mueve(1500)).toBeGreaterThan(mueve(20_000));
+  });
+});
+
+describe("prePatchWeight", () => {
+  it("vale 1 recién salido el parche y baja en línea recta hasta 0 al llegar al piso", () => {
+    expect(prePatchWeight(0, 8_000)).toBe(1);
+    expect(prePatchWeight(2_000, 8_000)).toBe(0.75);
+    expect(prePatchWeight(4_000, 8_000)).toBe(0.5);
+    expect(prePatchWeight(8_000, 8_000)).toBe(0);
+    expect(prePatchWeight(50_000, 8_000)).toBe(0);
   });
 });

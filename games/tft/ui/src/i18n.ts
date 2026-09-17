@@ -1455,10 +1455,13 @@ const EN = {
       /** Once the patch has enough games, it is the window: everything is measured since it landed. */
       since: (title: string) => `Measured since ${title}`,
       /**
-       * Until then the list measures the last 15 days whole, patch included:
-       * a nerfed hero drifts down as the new games come in, instead of the
-       * list emptying out on patch day.
+       * Until then the list measures the last 15 days with the older games
+       * fading out as the patch gathers its own: a nerfed hero drifts down from
+       * the first hour instead of the list emptying out on patch day. The
+       * items list still uses a plain cut, so it keeps `includes`.
        */
+      blend: (title: string, share: number) =>
+        `Last 15 days — ${title} games already carry ${share}% of the list, and older games fade out as it gathers sample`,
       includes: (title: string) =>
         `Last 15 days, ${title} included — it will cut to the patch once it has enough games`,
       /**
@@ -2721,6 +2724,8 @@ const ES: typeof EN = {
     sample: (matches, from, to) => `${matches} partidas · ${from} a ${to}`,
     patch: {
       since: (title) => `Medido desde ${title}`,
+      blend: (title, share) =>
+        `Últimos 15 días — las partidas de ${title} ya pesan el ${share}% de la lista, y las anteriores pierden peso a medida que junta muestra`,
       includes: (title) =>
         `Últimos 15 días, ${title} incluido — corta en el parche cuando junte partidas suficientes`,
       history: "Historial de parches",
