@@ -7,7 +7,6 @@ import {
   slugOf,
   type AssetEntry,
   type Edition,
-  type HeroesFile,
   type Overrides,
   type SteamNewsItem,
 } from "./news";
@@ -75,17 +74,16 @@ async function main() {
     assetsEn,
     assetsEs,
     overrides: readJson<Overrides>(`${OVERRIDES_DIR}/${slug}.json`),
-    heroesFile: readJson<HeroesFile>(`${DATA}/heroes.json`),
   });
 
   mkdirSync(NEWS_DIR, { recursive: true });
   writeFileSync(`${NEWS_DIR}/${slug}.json`, JSON.stringify(edition));
   const total = writeIndex();
 
-  const { score, totals, unparsed, analyst } = edition;
+  const { score, totals, unparsed } = edition;
   console.log(
     `${edition.title} (${slug}): ${totals.heroes} héroes, ${totals.items} objetos, ${totals.general} de sistema — ` +
-      `${score.nerf} nerfs, ${score.buff} buffs, ${score.mixed} mixtos. Nota: ${analyst ? analyst.case : "sin datos del parche"}. ` +
+      `${score.nerf} nerfs, ${score.buff} buffs, ${score.mixed} mixtos. ` +
       `Ediciones publicadas: ${total}.`
   );
   const mids = [...edition.heroes.flatMap((h) => h.groups.flatMap((g) => g.lines)), ...edition.items.flatMap((i) => i.lines)]

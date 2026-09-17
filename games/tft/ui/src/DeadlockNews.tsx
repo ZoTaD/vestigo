@@ -11,12 +11,11 @@ import {
   resolveSlug,
   useEdition,
   type Dir,
-  type Edition,
   type NewsLine,
   type Translation,
   type Verdict,
 } from "./deadlockNewsData";
-import { NEWS_COPY, headlineBank, pickFrom, stableVariant, type Fmt } from "./newsCopy";
+import { NEWS_COPY, headlineBank, pickFrom, stableVariant } from "./newsCopy";
 
 /**
  * Vestigo News: la edición de un parche, como periódico.
@@ -76,86 +75,6 @@ const jump = (id: string) => (e: React.MouseEvent) => {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
-function Analyst({ edition, lang, fmt }: { edition: Edition; lang: "en" | "es"; fmt: Fmt }) {
-  const copy = NEWS_COPY[lang];
-  const a = edition.analyst;
-  if (!a) return null;
-  const hero = catalog.heroes[String(a.heroId)];
-  const name = text(hero?.name, lang, "?");
-  const side = a.verdict === "buff" ? "buff" : "nerf";
-  const head = pickFrom(copy.analystHeads[a.case][side], a.variant).replace("{hero}", name);
-  const bars: [string, number | undefined, number][] = [
-    [copy.winRate, a.winRateBefore, a.winRate],
-    [copy.pickRate, undefined, a.pickRate],
-  ];
-  const max = (k: number) => (k === 0 ? 0.6 : Math.max(0.3, a.pickRate * 1.4));
-  const heroName = (id: number) => text(catalog.heroes[String(id)]?.name, lang, "?");
-
-  return (
-    <div className="vn-analyst" style={{ "--hc": hero?.color || FALLBACK_COLOR } as CSSProperties}>
-      {hero?.card && <div className="vn-analyst-art" style={{ backgroundImage: `url(${hero.card})` }} />}
-      <div className="vn-analyst-inner">
-        <div className="vn-lbl vn-analyst-kicker">{copy.analystKicker}</div>
-        <h3 className="vn-gold">{head}</h3>
-        {copy.analystBody(a, name, fmt).map((p) => (
-          <p key={p}>{p}</p>
-        ))}
-        <div className="vn-bars">
-          {bars.map(([label, before, after], k) => (
-            <div key={label} className="vn-lbl vn-bar-row">
-              {label}
-              {before !== undefined && (
-                <div className="vn-pair">
-                  <span>{copy.before}</span>
-                  <div className="vn-track">
-                    <div className="vn-fill" data-kind="before" style={{ width: `${(before / max(k)) * 100}%` }} />
-                  </div>
-                  <b>{fmt.pct(before)}</b>
-                </div>
-              )}
-              <div className="vn-pair">
-                <span>{before !== undefined ? copy.after : a.sincePatch ? copy.sincePatch : copy.window15}</span>
-                <div className="vn-track">
-                  <div
-                    className="vn-fill"
-                    data-kind={a.trend === undefined ? "now" : a.trend < 0 ? "down" : "up"}
-                    style={{ width: `${Math.min(100, (after / max(k)) * 100)}%` }}
-                  />
-                </div>
-                <b>{fmt.pct(after)}</b>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="vn-verdict" data-case={a.case}>
-          {copy.analystVerdict(a)}
-        </div>
-
-        {a.movers.up.length + a.movers.down.length > 0 && (
-          <div className="vn-movers">
-            <div className="vn-lbl vn-analyst-kicker">{copy.movers}</div>
-            {(["up", "down"] as const).map((side) =>
-              a.movers[side].length ? (
-                <div key={side} className="vn-movers-col">
-                  <span className="vn-lbl">{side === "up" ? copy.moversUp : copy.moversDown}</span>
-                  <ol>
-                    {a.movers[side].map((m) => (
-                      <li key={m.heroId}>
-                        <span>{heroName(m.heroId)}</span>
-                        <b data-dir={side}>{fmt.pts(m.trend)}</b>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              ) : null
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export default function DeadlockNews({
   route,
   navigate,
@@ -172,12 +91,7 @@ export default function DeadlockNews({
   const { slug, missing } = resolveSlug(route.detail);
   const loaded = useEdition(slug);
 
-  const fmt: Fmt = {
-    pct: (n) => `${(n * 100).toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`,
-    pts: (n) => `${n > 0 ? "+" : n < 0 ? "−" : ""}${Math.abs(n).toLocaleString(locale, { maximumFractionDigits: 1 })}`,
-    int: (n) => n.toLocaleString(locale),
-    date: (iso) => new Date(iso.length === 10 ? `${iso}T12:00:00Z` : iso).toLocaleDateString(locale, { day: "numeric", month: "long" }),
-  };
+  const shortDate = (iso: string) => new Date(iso).toLocaleDateString(locale, { day: "numeric", month: "long" });
   const longDate = (iso: string) =>
     new Date(iso).toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   const toEdition = (s: string): Route => ({ ...route, view: "deadlock", dlSection: "patches", detail: s });
@@ -314,86 +228,72 @@ export default function DeadlockNews({
           </>
         )}
 
-        <div className="vn-body">
-          <div>
-            <div className="vn-sec">
-              <h2>{copy.heroes}</h2>
-              <small className="vn-lbl">{copy.heroesSub(e.totals.heroes, e.totals.heroLines)}</small>
-            </div>
-            <div className="vn-heroes">
-              {e.heroes.map((h) => {
-                const hero = heroOf(h.heroId);
-                const slug = heroSlugs.toSlug.get(String(h.heroId));
-                const name = heroName(h.heroId);
-                return (
-                  <div
-                    key={h.heroId}
-                    id={`vn-h${h.heroId}`}
-                    className="vn-hero"
-                    style={{ "--hc": hero?.color || FALLBACK_COLOR } as CSSProperties}
-                  >
-                    <div className="vn-hero-top">
-                      <img className="vn-portrait" src={hero?.img} alt="" width={64} height={64} />
-                      <div>
-                        <h3>
-                          {slug ? (
-                            <RouteLink
-                              to={{ ...route, view: "deadlock", dlSection: "meta", detail: slug }}
-                              onNavigate={navigate}
-                            >
-                              {name}
-                            </RouteLink>
-                          ) : (
-                            name
-                          )}
-                        </h3>
-                        <Tag verdict={h.verdict} label={copy.verdict[h.verdict]} />
-                      </div>
-                      <div className="vn-tally">
-                        {h.up > 0 && <div data-dir="up">▲ {h.up}</div>}
-                        {h.down > 0 && <div data-dir="down">▼ {h.down}</div>}
-                      </div>
-                    </div>
-                    {h.groups.map((g) => {
-                      const ab = g.abilityId !== undefined ? e.abilities[String(g.abilityId)] : undefined;
-                      return (
-                        <div key={g.abilityId ?? "base"} className="vn-group">
-                          <div className="vn-ghead">
-                            {ab ? (
-                              <img className="vn-ab" src={ab.img} alt="" width={34} height={34} loading="lazy" />
-                            ) : (
-                              <span className="vn-base" aria-hidden="true">
-                                ◆
-                              </span>
-                            )}
-                            <div>
-                              <b>{ab ? ab.name[lang] : copy.base}</b>
-                              {ab ? (
-                                lang === "es" && ab.name.es !== ab.name.en && <small>{ab.name.en}</small>
-                              ) : (
-                                <small>{copy.baseSub}</small>
-                              )}
-                            </div>
-                          </div>
-                          <Lines lines={g.lines} lang={lang} es={es} />
-                        </div>
-                      );
-                    })}
+        <div className="vn-sec">
+          <h2>{copy.heroes}</h2>
+          <small className="vn-lbl">{copy.heroesSub(e.totals.heroes, e.totals.heroLines)}</small>
+        </div>
+        <div className="vn-heroes">
+          {e.heroes.map((h) => {
+            const hero = heroOf(h.heroId);
+            const slug = heroSlugs.toSlug.get(String(h.heroId));
+            const name = heroName(h.heroId);
+            return (
+              <div
+                key={h.heroId}
+                id={`vn-h${h.heroId}`}
+                className="vn-hero"
+                style={{ "--hc": hero?.color || FALLBACK_COLOR } as CSSProperties}
+              >
+                <div className="vn-hero-top">
+                  <img className="vn-portrait" src={hero?.img} alt="" width={64} height={64} />
+                  <div>
+                    <h3>
+                      {slug ? (
+                        <RouteLink
+                          to={{ ...route, view: "deadlock", dlSection: "meta", detail: slug }}
+                          onNavigate={navigate}
+                        >
+                          {name}
+                        </RouteLink>
+                      ) : (
+                        name
+                      )}
+                    </h3>
+                    <Tag verdict={h.verdict} label={copy.verdict[h.verdict]} />
                   </div>
-                );
-              })}
-            </div>
-          </div>
-          <aside>
-            {e.analyst && (
-              <>
-                <div className="vn-sec">
-                  <h2>{copy.analyst}</h2>
+                  <div className="vn-tally">
+                    {h.up > 0 && <div data-dir="up">▲ {h.up}</div>}
+                    {h.down > 0 && <div data-dir="down">▼ {h.down}</div>}
+                  </div>
                 </div>
-                <Analyst edition={e} lang={lang} fmt={fmt} />
-              </>
-            )}
-          </aside>
+                {h.groups.map((g) => {
+                  const ab = g.abilityId !== undefined ? e.abilities[String(g.abilityId)] : undefined;
+                  return (
+                    <div key={g.abilityId ?? "base"} className="vn-group">
+                      <div className="vn-ghead">
+                        {ab ? (
+                          <img className="vn-ab" src={ab.img} alt="" width={34} height={34} loading="lazy" />
+                        ) : (
+                          <span className="vn-base" aria-hidden="true">
+                            ◆
+                          </span>
+                        )}
+                        <div>
+                          <b>{ab ? ab.name[lang] : copy.base}</b>
+                          {ab ? (
+                            lang === "es" && ab.name.es !== ab.name.en && <small>{ab.name.en}</small>
+                          ) : (
+                            <small>{copy.baseSub}</small>
+                          )}
+                        </div>
+                      </div>
+                      <Lines lines={g.lines} lang={lang} es={es} />
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
 
         {e.items.length > 0 && (
@@ -447,7 +347,7 @@ export default function DeadlockNews({
         <ol className="vn-archive-list">
           {editions.map((x, i) => (
             <li key={x.slug} data-current={x.slug === e.slug ? "" : undefined}>
-              <span className="vn-archive-date">{fmt.date(x.date)}</span>
+              <span className="vn-archive-date">{shortDate(x.date)}</span>
               <RouteLink to={toEdition(x.slug)} onNavigate={navigate} className="vn-archive-link">
                 {(x.slug === e.slug ? headline : x.headline) ??
                   pickFrom(copy.headlines[headlineBank(x.score)], stableVariant(x.slug, 97))}

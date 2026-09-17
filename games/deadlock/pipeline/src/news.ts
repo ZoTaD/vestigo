@@ -67,33 +67,6 @@ export interface Tally {
   fix: number;
 }
 
-export type AnalystCase = "landed" | "shrugged" | "watch";
-
-export interface Mover {
-  heroId: number;
-  trend: number;
-}
-
-export interface Analyst {
-  case: AnalystCase;
-  heroId: number;
-  verdict: Verdict;
-  /** Cuántos cambios recibió el héroe en este parche. */
-  changes: number;
-  /** Qué plantilla de titular usar: estable por edición y héroe. */
-  variant: number;
-  winRate: number;
-  winRateBefore?: number;
-  trend?: number;
-  pickRate: number;
-  matches: number;
-  /** Si los números miden sólo el parche o una ventana que lo cruza. */
-  sincePatch: boolean;
-  from: string;
-  to: string;
-  movers: { up: Mover[]; down: Mover[] };
-}
-
 /**
  * Una edición. **Sin `generatedAt`**: se reescribe en cada corrida mientras el
  * parche está vigente, y una marca de hora haría que cada commit de la tier
@@ -118,7 +91,6 @@ export interface Edition {
   unparsed: NewsLine[];
   abilities: Record<string, Named>;
   itemInfo: Record<string, Named & { slot: string }>;
-  analyst?: Analyst;
 }
 
 export interface Overrides {
@@ -152,18 +124,6 @@ export function isPatchPost(n: SteamNewsItem): boolean {
 export function patchTitle(steamTitle: string): string {
   const m = steamTitle.match(DATE_TOKEN);
   return m ? `${m[0]} Update` : steamTitle;
-}
-
-/**
- * ¿La tier list mide este parche?
- *
- * `heroes.json` lo nombra con el título del foro y Steam con el suyo, y las
- * horas difieren (el foro republicó el del 16/9 dos horas y media después). Lo
- * que coincide siempre es la fecha de build del título.
- */
-export function samePatch(a: string, b: string): boolean {
-  const x = a.match(DATE_TOKEN)?.[0];
-  return !!x && x === b.match(DATE_TOKEN)?.[0];
 }
 
 export const slugOf = (unixSeconds: number): string => new Date(unixSeconds * 1000).toISOString().slice(0, 10);
@@ -293,30 +253,12 @@ export interface AssetEntry {
   item_slot_type?: string | null;
 }
 
-export interface HeroStat {
-  heroId: number;
-  winRate: number;
-  pickRate: number;
-  matches: number;
-  trend?: number;
-  winRateBefore?: number;
-}
-
-export interface HeroesFile {
-  patch: { title: string; date: string };
-  from: string;
-  to: string;
-  crossesPatch?: boolean;
-  heroes: HeroStat[];
-}
-
 export interface EditionInput {
   post: SteamNewsItem;
   heroNames: Record<string, string>;
   assetsEn: AssetEntry[];
   assetsEs: AssetEntry[];
   overrides?: Overrides;
-  heroesFile?: HeroesFile;
 }
 
 const ORDER: Record<Verdict, number> = { nerf: 0, mixed: 1, buff: 2, fix: 3 };
@@ -327,13 +269,6 @@ const tally = (list: { verdict: Verdict }[]): Tally => ({
   mixed: list.filter((x) => x.verdict === "mixed").length,
   fix: list.filter((x) => x.verdict === "fix").length,
 });
-
-/** Un hash chico y estable: la misma edición elige siempre la misma plantilla. */
-export function stableVariant(key: string, n = 6): number {
-  let h = 0;
-  for (const c of key) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  return h % n;
-}
 
 export function buildEdition(input: EditionInput): Edition {
   const { post, heroNames, assetsEn, assetsEs, overrides = {} } = input;
@@ -440,60 +375,6 @@ export function buildEdition(input: EditionInput): Edition {
     unparsed,
     abilities,
     itemInfo,
-    ...(input.heroesFile ? pickAnalyst(slug, post.title, heroList, input.heroesFile) : {}),
-  };
-}
-
-/**
- * El héroe de la nota de análisis, con sus números.
- *
- * **Nunca inventa una cifra.** Si la tier list no mide este parche, no hay
- * nota. Si lo mide pero todavía no hay `trend` (el parche no juntó muestra), el
- * caso es `watch`: el héroe más tocado y su winrate actual, con la ventana
- * declarada, y el sitio dice que falta muestra.
- */
-export function pickAnalyst(slug: string, steamTitle: string, heroes: HeroEntry[], file: HeroesFile): { analyst?: Analyst } {
-  if (!samePatch(steamTitle, file.patch.title)) return {};
-  const stats = new Map(file.heroes.map((h) => [h.heroId, h]));
-  const changed = heroes.filter((h) => (h.verdict === "nerf" || h.verdict === "buff") && stats.has(h.heroId));
-  if (changed.length === 0) return {};
-
-  const withTrend = file.heroes.filter((h) => h.trend !== undefined);
-  const byTrend = [...withTrend].sort((a, b) => b.trend! - a.trend!);
-  const movers = {
-    up: byTrend.filter((h) => h.trend! > 0).slice(0, 5).map((h) => ({ heroId: h.heroId, trend: h.trend! })),
-    down: byTrend.filter((h) => h.trend! < 0).reverse().slice(0, 5).map((h) => ({ heroId: h.heroId, trend: h.trend! })),
-  };
-
-  const measured = changed.filter((h) => stats.get(h.heroId)!.trend !== undefined);
-  let pick: HeroEntry;
-  let kase: AnalystCase;
-  if (measured.length) {
-    pick = measured.reduce((a, b) => (Math.abs(stats.get(b.heroId)!.trend!) > Math.abs(stats.get(a.heroId)!.trend!) ? b : a));
-    const t = stats.get(pick.heroId)!.trend!;
-    kase = (pick.verdict === "nerf") === t < 0 ? "landed" : "shrugged";
-  } else {
-    pick = changed.reduce((a, b) => (b.up + b.down > a.up + a.down ? b : a));
-    kase = "watch";
-  }
-  const s = stats.get(pick.heroId)!;
-  return {
-    analyst: {
-      case: kase,
-      heroId: pick.heroId,
-      verdict: pick.verdict,
-      changes: pick.groups.reduce((n, g) => n + g.lines.length, 0),
-      variant: stableVariant(`${slug}:${pick.heroId}`),
-      winRate: s.winRate,
-      ...(s.winRateBefore !== undefined ? { winRateBefore: s.winRateBefore } : {}),
-      ...(s.trend !== undefined ? { trend: s.trend } : {}),
-      pickRate: s.pickRate,
-      matches: s.matches,
-      sincePatch: !file.crossesPatch,
-      from: file.from,
-      to: file.to,
-      movers,
-    },
   };
 }
 

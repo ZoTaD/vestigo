@@ -34,23 +34,6 @@ export interface Tally {
   fix: number;
 }
 
-export interface Analyst {
-  case: "landed" | "shrugged" | "watch";
-  heroId: number;
-  verdict: Verdict;
-  changes: number;
-  variant: number;
-  winRate: number;
-  winRateBefore?: number;
-  trend?: number;
-  pickRate: number;
-  matches: number;
-  sincePatch: boolean;
-  from: string;
-  to: string;
-  movers: { up: { heroId: number; trend: number }[]; down: { heroId: number; trend: number }[] };
-}
-
 export interface Edition {
   slug: string;
   title: string;
@@ -66,7 +49,6 @@ export interface Edition {
   unparsed: NewsLine[];
   abilities: Record<string, Named>;
   itemInfo: Record<string, Named & { slot: string }>;
-  analyst?: Analyst;
 }
 
 export interface Translation {

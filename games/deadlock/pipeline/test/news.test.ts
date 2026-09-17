@@ -6,13 +6,9 @@ import {
   isPatchPost,
   parseNotes,
   patchTitle,
-  pickAnalyst,
-  samePatch,
   slugOf,
-  stableVariant,
   verdictOf,
   type AssetEntry,
-  type HeroesFile,
   type SteamNewsItem,
 } from "../src/news";
 
@@ -66,11 +62,8 @@ describe("qué noticia es un parche", () => {
     expect(isPatchPost({ ...POST, title: "Deadlock Fall Sale" })).toBe(false);
   });
 
-  it("nombra el parche como el foro y reconoce el mismo parche con otro título", () => {
+  it("nombra el parche como el foro", () => {
     expect(patchTitle(POST.title)).toBe("09-16-2026 Update");
-    expect(samePatch(POST.title, "09-16-2026 Update")).toBe(true);
-    expect(samePatch(POST.title, "08-22-2026 Update")).toBe(false);
-    expect(samePatch("sin fecha", "sin fecha")).toBe(false);
   });
 
   it("usa la fecha de publicación en UTC como dirección", () => {
@@ -191,48 +184,5 @@ describe("buildEdition", () => {
     expect(fixed.general[1].dir).toBe("mid");
     // Sin corrección, menos ralentización cuenta como buff: la regla trata "slow values" como algo donde más es peor.
     expect(e.general[1].dir).toBe("up");
-  });
-});
-
-describe("pickAnalyst", () => {
-  const e = buildEdition({ post: POST, heroNames: HEROES, assetsEn: ASSETS, assetsEs: ASSETS_ES });
-  const file = (heroes: HeroesFile["heroes"], title = "09-16-2026 Update"): HeroesFile => ({
-    patch: { title, date: "2026-09-16T22:41:46Z" },
-    from: "2026-09-02",
-    to: "2026-09-17",
-    crossesPatch: true,
-    heroes,
-  });
-  const base = { winRate: 0.5, pickRate: 0.2, matches: 1000 };
-
-  it("no escribe nota si la tier list mide otro parche", () => {
-    expect(pickAnalyst(e.slug, POST.title, e.heroes, file([{ heroId: 81, ...base }], "08-22-2026 Update"))).toEqual({});
-  });
-
-  it("sin trend, vigila al héroe más tocado y declara la ventana", () => {
-    const { analyst } = pickAnalyst(e.slug, POST.title, e.heroes, file([{ heroId: 81, ...base }, { heroId: 67, ...base }]));
-    expect(analyst).toMatchObject({ case: "watch", heroId: 81, changes: 3, sincePatch: false, matches: 1000 });
-    expect(analyst!.trend).toBeUndefined();
-  });
-
-  it("con trend, elige el mayor movimiento y dice si el cambio pegó", () => {
-    const { analyst } = pickAnalyst(
-      e.slug,
-      POST.title,
-      e.heroes,
-      file([
-        { heroId: 81, ...base, trend: 1.2, winRateBefore: 0.49 },
-        { heroId: 67, ...base, trend: -3.1, winRateBefore: 0.53 },
-      ])
-    );
-    // Paige fue buffeada y bajó: el buff no le alcanzó.
-    expect(analyst).toMatchObject({ case: "shrugged", heroId: 67, trend: -3.1, winRateBefore: 0.53 });
-    expect(analyst!.movers.up).toEqual([{ heroId: 81, trend: 1.2 }]);
-    expect(analyst!.movers.down).toEqual([{ heroId: 67, trend: -3.1 }]);
-  });
-
-  it("la plantilla es estable para la misma edición", () => {
-    expect(stableVariant("2026-09-16:81")).toBe(stableVariant("2026-09-16:81"));
-    expect(stableVariant("x")).toBeLessThan(6);
   });
 });

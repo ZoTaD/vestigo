@@ -19,7 +19,7 @@ compartir en X.
 | Publicación | **Automática y en inglés** con cada parche. **El español se carga a mano**: mientras falte, la edición en español muestra las líneas en inglés y avisa que la traducción está en camino. |
 | Nerf o buff | **Reglas**, más un archivo de correcciones por parche para lo que las reglas no pueden saber ("ahora rebota con Ricochet"). |
 | Titular | Sale de un banco de plantillas según el balance del parche, y se puede fijar a mano por parche. El del 16/9 es **"Thanks Yoshi"**. |
-| Nota de análisis | Sale de **plantillas con los números** del motor. Las plantillas viven en `i18n`, así que la nota sale sola en los dos idiomas. Nunca se inventan cifras: si el parche todavía no juntó muestra, la nota lo dice. |
+| Nota de análisis | **Se sacó el mismo 2026-09-17**, a pedido de ZoTaD, para dar todo el ancho a los cambios de los héroes (tres columnas). Estuvo publicada unas horas. |
 
 ## De dónde salen los datos
 
@@ -36,8 +36,6 @@ compartir en X.
   `/v1/assets/items` de deadlock-api, filtrando `type = ability` por héroe.
 - **Los objetos** salen del mismo endpoint, con `type = upgrade`, y los héroes
   salen de `catalog.json`.
-- **Los números de la nota** salen de `heroes.json`, la banda publicada por
-  defecto.
 
 ## Piezas
 
@@ -51,13 +49,12 @@ compartir en X.
     (cooldown, costo, penalización, reaparición).
   - `compact(line)` convierte "X reduced from A to B" en "X: A → B".
   - `buildEdition(...)` arma la edición: agrupa por héroe y habilidad, da el
-    veredicto de cada héroe y objeto, cuenta los totales y elige el caso de la
-    nota.
+    veredicto de cada héroe y objeto y cuenta los totales.
 - **`src/news-run.ts` es el script de CI** (`npm run build:news`). Baja Steam
   News y los assets, lee las correcciones y escribe
   `data/news/<fecha>.json`, además del índice `data/news.json`.
-  - **Sólo reescribe la edición del parche vigente**, para que su nota mejore a
-    medida que llegan partidas. Las ediciones viejas quedan congeladas.
+  - **Sólo reescribe la edición del parche vigente**, para que tome las
+    correcciones que se carguen a mano. Las ediciones viejas quedan congeladas.
 - **Las correcciones van en `pipeline/news-overrides/<fecha>.json`**, a mano:
   `{ headline?, dirs: { "<línea original>": "up" | "down" | "mid" | "fix" } }`.
 - **El español va en `data/news/<fecha>.es.json`**, a mano. Incluye las
@@ -73,28 +70,15 @@ compartir en X.
 
 - `deadlockNewsData.ts` carga el índice y cada edición a demanda, con
   `import.meta.glob`.
-- `DeadlockNews.tsx` y `styles/news.css` dibujan la edición. Los estilos van
+- `DeadlockNews.tsx`, `newsCopy.ts` y `styles/news.css` dibujan la edición. Los estilos van
   acotados bajo `.vn`.
 - Las fuentes se cargan del bucket de deadlock-api, que responde con
   `Access-Control-Allow-Origin: *`. No se re-alojan, igual que las imágenes
   (ver `catalog.ts`).
 - `route.ts`: `patches` pasa a aceptar un detalle, la fecha de la edición.
-- En la página de Parches, el periódico reemplaza a la caja de "qué cambió".
-  Los ganadores y perdedores desde el parche pasan a la columna del analista, y
-  el historial de parches queda como hemeroteca.
-
-## Nota de análisis: casos
-
-| Caso | Cuándo | Qué muestra |
-|---|---|---|
-| `landed` | Héroe nerfeado que bajó, o buffeado que subió (existe `trend`) | Antes → después, puntos y partidas |
-| `shrugged` | Héroe nerfeado que subió, o buffeado que bajó | Lo mismo, con el titular al revés |
-| `watch` | Todavía no hay `trend` | El héroe con más cambios, su winrate actual, su ventana y una aclaración de que falta muestra |
-
-- **El héroe se elige así:** en `landed` y `shrugged`, el de mayor |trend| entre
-  los nerfeados y buffeados. En `watch`, el de más líneas.
-- **La variante del titular sale de un hash de `fecha + héroe`**, para que no
-  cambie de una corrida a otra.
+- En la página de Parches, el periódico reemplaza a la caja de "qué cambió", y
+  el historial de parches queda como hemeroteca. Los que más suben y bajan
+  desde el parche siguen en el rail de la tier list.
 
 ## Riesgos anotados
 

@@ -161,9 +161,8 @@
 .vn-general li::before { content: counter(vn-g, decimal-leading-zero); font: 700 20px/1 var(--vn-display); color: var(--vn-gold-2); }
 .vn-general .vn-arrow { padding-top: 4px; }
 
-.vn-body { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 30px; align-items: start; }
-.vn-body > aside { position: sticky; top: 16px; }
-.vn-heroes { columns: 2; column-gap: 14px; }
+/* Los héroes ocupan todo el ancho: tres columnas en escritorio. */
+.vn-heroes { columns: 3; column-gap: 14px; }
 .vn-hero {
   break-inside: avoid;
   margin-bottom: 14px;
@@ -208,34 +207,6 @@
 .vn-line { display: flex; gap: 8px; align-items: baseline; font-size: 13.5px; line-height: 1.4; color: var(--vn-ink-soft); padding: 3px 0; }
 .vn-num { font-family: var(--vn-label); font-weight: 600; color: var(--vn-ink); }
 
-/* El analista -------------------------------------------------------------- */
-.vn-analyst { border-radius: 6px; overflow: hidden; background: linear-gradient(180deg, #1c231f, #121714); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(243, 220, 160, 0.1); }
-.vn-analyst-art { height: 250px; background-size: cover; background-position: center 15%; position: relative; }
-.vn-analyst-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--hc) 20%, transparent), rgba(18, 23, 20, 0.1) 40%, #1a211d 100%); }
-.vn-analyst-inner { padding: 0 20px 20px; margin-top: -54px; position: relative; }
-.vn-analyst-kicker { color: var(--vn-gold-2); letter-spacing: 0.24em; }
-.vn-analyst h3 { margin: 8px 0 12px; font: 700 32px/0.98 var(--vn-display); text-transform: uppercase; }
-.vn-analyst p { font-size: 14.5px; line-height: 1.6; color: var(--vn-ink-soft); margin: 0 0 10px; }
-.vn-bars { margin: 14px 0 10px; display: grid; gap: 10px; }
-.vn-bar-row { color: var(--vn-ink-mute); }
-.vn-pair { display: grid; grid-template-columns: 96px 1fr 56px; gap: 8px; align-items: center; margin-top: 6px; }
-.vn-track { height: 8px; border-radius: 999px; background: rgba(236, 223, 196, 0.08); overflow: hidden; }
-.vn-fill { height: 100%; border-radius: 999px; }
-.vn-fill[data-kind="before"] { background: linear-gradient(90deg, #6d6a60, #a39c8a); }
-.vn-fill[data-kind="down"] { background: linear-gradient(90deg, #a8433a, var(--vn-down)); }
-.vn-fill[data-kind="up"] { background: linear-gradient(90deg, #4f8a4b, var(--vn-up)); }
-.vn-fill[data-kind="now"] { background: linear-gradient(90deg, var(--vn-gold-3), var(--vn-gold-1)); }
-.vn-pair b { font: 700 15px/1 var(--vn-label); color: var(--vn-ink); text-align: right; letter-spacing: 0; }
-.vn-verdict { margin-top: 14px; padding: 12px 14px; border-radius: 4px; font: 700 13px/1.25 var(--vn-label); letter-spacing: 0.08em; text-transform: uppercase; }
-.vn-verdict[data-case="landed"] { background: linear-gradient(90deg, rgba(240, 122, 100, 0.2), rgba(240, 122, 100, 0.04)); color: #ffd3c9; }
-.vn-verdict[data-case="shrugged"] { background: linear-gradient(90deg, rgba(143, 212, 138, 0.18), rgba(143, 212, 138, 0.04)); color: #d6f5d3; }
-.vn-verdict[data-case="watch"] { background: linear-gradient(90deg, rgba(217, 196, 143, 0.18), rgba(217, 196, 143, 0.04)); color: #f1e6c6; }
-.vn-movers { margin-top: 18px; display: grid; gap: 10px; }
-.vn-movers-col .vn-lbl { color: var(--vn-ink-mute); }
-.vn-movers ol { list-style: none; margin: 6px 0 0; padding: 0; }
-.vn-movers li { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--vn-hair); font-size: 14px; }
-.vn-movers b { font: 700 14px/1 var(--vn-label); }
-
 /* Objetos ------------------------------------------------------------------ */
 .vn-items { columns: 3; column-gap: 14px; }
 .vn-item {
@@ -270,9 +241,8 @@
 .vn-page > * + * { margin-top: 24px; }
 
 @media (max-width: 1040px) {
-  .vn-front, .vn-body { grid-template-columns: 1fr; }
-  .vn-body > aside { position: static; }
-  .vn-items { columns: 2; }
+  .vn-front { grid-template-columns: 1fr; }
+  .vn-heroes, .vn-items { columns: 2; }
 }
 @media (max-width: 700px) {
   .vn { padding: 22px 16px; }
