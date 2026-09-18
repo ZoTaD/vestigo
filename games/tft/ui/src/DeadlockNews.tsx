@@ -312,7 +312,7 @@ export default function DeadlockNews({
                         {info?.img && <img src={info.img} alt="" width={32} height={32} loading="lazy" />}
                       </div>
                       <div>
-                        <h4>{info ? info.name[lang] : i.itemId}</h4>
+                        <h3>{info ? info.name[lang] : i.itemId}</h3>
                         <Tag verdict={i.verdict} label={copy.verdict[i.verdict]} />
                       </div>
                     </div>
