@@ -97,6 +97,9 @@ export interface LoadedEdition {
 
 const cache = new Map<string, LoadedEdition>();
 
+/** Precarga una edición (el prerender la llama antes de renderizar). */
+export const loadEdition = (slug: string): Promise<LoadedEdition> => load(slug);
+
 async function load(slug: string): Promise<LoadedEdition> {
   const hit = cache.get(slug);
   if (hit) return hit;

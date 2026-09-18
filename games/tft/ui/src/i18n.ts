@@ -1629,12 +1629,22 @@ const EN = {
           "cost the one you pick, measured against the players who won from the same spot.",
       },
       detail: {
+        /**
+         * "Counters" salió del título el 2026-09-18: la página no los tiene
+         * todavía, y prometer en el título lo que la página no da es la clase
+         * de clic que se va a los tres segundos.
+         */
         title: (name: string, dlSection: string) =>
           dlSection === "items"
             ? `${name} — Deadlock Item Stats | Vestigo`
-            : `${name} — Deadlock Build & Counters | Vestigo`,
+            : dlSection === "patches"
+              ? `Deadlock ${name}: Every Nerf, Buff and Change | Vestigo News`
+              : `${name} — Deadlock Build & Win Rate | Vestigo`,
         description: (name: string, dlSection: string) =>
-          dlSection === "items"
+          dlSection === "patches"
+            ? `Every hero and item change in Deadlock's ${name}, ability by ability and marked as ` +
+              "nerf or buff, with the official notes and what the numbers say since it landed."
+            : dlSection === "items"
             ? `How ${name} performs in Deadlock: win rate against its own price, pick rate, ` +
               "and the heroes that carry it best."
             : `How to play ${name} in Deadlock: win rate, pick rate, the recommended build ` +
@@ -2871,9 +2881,14 @@ const ES: typeof EN = {
         title: (name: string, dlSection: string) =>
           dlSection === "items"
             ? `${name} — estadísticas de Deadlock | Vestigo`
-            : `${name} — build y counters de Deadlock | Vestigo`,
+            : dlSection === "patches"
+              ? `Deadlock ${name}: todos los nerfs, buffs y cambios | Vestigo News`
+              : `${name} — build y winrate de Deadlock | Vestigo`,
         description: (name: string, dlSection: string) =>
-          dlSection === "items"
+          dlSection === "patches"
+            ? `Todos los cambios de héroes y objetos del ${name} de Deadlock, habilidad por habilidad ` +
+              "y marcados como nerf o buff, con las notas oficiales y qué dicen los números desde que salió."
+            : dlSection === "items"
             ? `Cómo rinde ${name} en Deadlock: victorias contra su propio precio, uso, y los ` +
               "héroes que mejor lo llevan."
             : `Cómo jugar ${name} en Deadlock: victorias, uso, el orden de compra recomendado ` +

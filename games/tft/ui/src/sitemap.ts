@@ -22,6 +22,17 @@ interface Localized {
   en: string;
 }
 
+/** Una edición de Vestigo News, tal como la lista `data/news.json`. */
+export interface NewsEntry {
+  /** La fecha de publicación, YYYY-MM-DD: es su dirección. */
+  slug: string;
+  /** "09-16-2026 Update". */
+  title: string;
+  date: string;
+  headline?: string;
+  score: { nerf: number; buff: number; mixed: number; fix: number };
+}
+
 export interface SitemapData {
   /** Deadlock's catalog: hero and item name, in both languages. */
   dlHeroes: Record<string, { name: Localized }>;
@@ -29,6 +40,11 @@ export interface SitemapData {
   /** Which heroes/items have data in the published default band. */
   dlHeroIds: string[];
   dlItemIds: string[];
+  /**
+   * Las ediciones de Vestigo News, de la más nueva a la más vieja. Opcional
+   * porque el índice puede no existir todavía en un checkout viejo.
+   */
+  dlNews?: NewsEntry[];
 }
 
 /**
@@ -84,6 +100,12 @@ export function sitemapPaths(data: SitemapData): string[] {
     }
     for (const slug of deadlockDetailSlugs(data).items) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "items", detail: slug }));
+    }
+    // Una página por edición de Vestigo News (2026-09-18). Son las notas de
+    // parche, que es lo que más se busca con fecha de vencimiento: si no están
+    // indexadas la primera semana, no cuentan.
+    for (const e of data.dlNews ?? []) {
+      paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "patches", detail: e.slug }));
     }
   }
 

@@ -4,7 +4,9 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath, URL } from "node:url";
 import { devApi } from "./dev-api";
 import { ROBOTS_TXT, sitemapXml, type SitemapData } from "./src/sitemap";
-import { prerenderPages, renderHtml } from "./src/prerender";
+import { prerenderPages, renderHtml, ogImagePath, stripComments } from "./src/prerender";
+import { renderOg } from "./og/og";
+import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, type Route } from "./src/route";
 import { COPY } from "./src/i18n";
 
@@ -20,20 +22,59 @@ const deadlockDir = fileURLToPath(new URL("../../deadlock/data", import.meta.url
  * plugins leían lo mismo cada uno por su cuenta; desde que TFT salió del sitio
  * (2026-09-15) es una sola lectura, acá.
  */
-function readSitemapData(): { data: SitemapData; generatedAt: string } {
+function readSitemapData(): { data: OgData; generatedAt: string } {
   const readDl = (name: string) => JSON.parse(readFileSync(`${deadlockDir}/${name}`, "utf-8"));
+  const readDlMaybe = (name: string) => {
+    try {
+      return readDl(name);
+    } catch {
+      return null;
+    }
+  };
   const dlCatalog = readDl("catalog.json");
   const dlHeroesFile = readDl("heroes.json");
   const dlItemsFile = readDl("items.json");
+  // Las ediciones de Vestigo News. El índice puede faltar en un checkout
+  // anterior al 2026-09-17; en ese caso simplemente no hay páginas de edición.
+  const news = readDlMaybe("news.json") as { editions: SitemapData["dlNews"] } | null;
+  const dlNews = news?.editions ?? [];
+  const dlEditions: OgData["dlEditions"] = {};
+  for (const e of dlNews) {
+    const ed = readDlMaybe(`news/${e.slug}.json`);
+    if (!ed) continue;
+    dlEditions[e.slug] = {
+      nerfed: (ed.heroes as { heroId: number; verdict: string }[]).filter((h) => h.verdict === "nerf").map((h) => h.heroId),
+      totals: ed.totals,
+    };
+  }
   return {
     data: {
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
       dlHeroIds: dlHeroesFile.heroes.map((h: { heroId: number }) => String(h.heroId)),
       dlItemIds: dlItemsFile.items.map((i: { itemId: number }) => String(i.itemId)),
+      dlNews,
+      dlHeroStats: { band: dlHeroesFile.band, heroes: dlHeroesFile.heroes },
+      dlEditions,
     },
     generatedAt: String(dlHeroesFile.generatedAt ?? ""),
   };
+}
+
+/**
+ * Las imágenes de vista previa que este build llegó a dibujar, por ruta de
+ * página. Las escribe `seoFiles` y las lee `prerenderRoutes`: una página sólo
+ * declara su imagen propia si existe, y si no vuelve a `og.jpg`.
+ */
+const ogDrawn = new Set<string>();
+
+/** Corre `fn` sobre cada elemento con hasta `n` a la vez. */
+async function eachLimit<T>(items: T[], n: number, fn: (t: T) => Promise<void>): Promise<void> {
+  let i = 0;
+  const workers = Array.from({ length: Math.min(n, items.length) }, async () => {
+    while (i < items.length) await fn(items[i++]);
+  });
+  await Promise.all(workers);
 }
 
 /**
@@ -47,7 +88,7 @@ function seoFiles(): Plugin {
   return {
     name: "vestigo-seo-files",
     apply: "build",
-    generateBundle() {
+    async generateBundle() {
       const { data, generatedAt } = readSitemapData();
 
       // The data stamps its own build time; using it rather than "now" keeps
@@ -60,6 +101,29 @@ function seoFiles(): Plugin {
         source: sitemapXml(data, lastmod ?? new Date().toISOString().slice(0, 10)),
       });
       this.emitFile({ type: "asset", fileName: "robots.txt", source: ROBOTS_TXT });
+
+      /**
+       * Las imágenes de vista previa, una por héroe, objeto y edición (ver
+       * `og/og.ts`). Se dibujan acá y no se commitean: son ~400 JPEG que
+       * cambiarían con cada catálogo. Una que falle se anota y su página vuelve
+       * a `og.jpg`; el build no se cae por una carta que no bajó.
+       */
+      const t0 = Date.now();
+      const specs = ogSpecs(data);
+      let failed = 0;
+      await eachLimit(specs, 6, async ({ path, spec }) => {
+        const file = ogImagePath(parseRoute(path), data.dlNews?.[0]?.slug);
+        if (!file) return;
+        try {
+          const source = await renderOg(spec);
+          this.emitFile({ type: "asset", fileName: file.slice(1), source });
+          ogDrawn.add(file);
+        } catch (e) {
+          failed++;
+          this.warn(`og ${path}: ${e instanceof Error ? e.message : String(e)}`);
+        }
+      });
+      this.info?.(`Dibujadas ${ogDrawn.size} imágenes de vista previa${failed ? ` (${failed} fallaron)` : ""} en ${((Date.now() - t0) / 1000).toFixed(1)}s.`);
     },
   };
 }
@@ -91,9 +155,11 @@ function prerenderRoutes(): Plugin {
         this.warn("No se encontró index.html en el bundle: no se prerenderizó ninguna ruta.");
         return;
       }
-      const html = String(entry.source);
+      // Sin los comentarios de index.html: explican decisiones en el repo, pero
+      // salían en cada página servida.
+      const html = stripComments(String(entry.source));
 
-      const pages = prerenderPages(readSitemapData().data);
+      const pages = prerenderPages(readSitemapData().data, (path) => ogDrawn.has(path));
 
       /**
        * La app renderizada a texto, ruta por ruta.
@@ -140,7 +206,9 @@ function prerenderRoutes(): Plugin {
        * `/en`, que es a donde la raíz manda.
        */
       const raiz = cuerpos.get("/en");
-      if (raiz) entry.source = html.replace('<div id="root"></div>', `<div id="root">${raiz}</div>`);
+      const paginaEn = pages.find((p) => p.path === "/en");
+      if (raiz && paginaEn) entry.source = renderHtml(html, paginaEn, BRAND, raiz);
+      else if (raiz) entry.source = html.replace('<div id="root"></div>', `<div id="root">${raiz}</div>`);
 
       for (const page of pages) {
         // "/es/deadlock/items/basic-magazine" → "es/deadlock/items/basic-magazine.html".

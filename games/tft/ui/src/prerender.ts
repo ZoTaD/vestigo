@@ -96,9 +96,107 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     const id = data.dlItemIds[i];
     out[`dl-items/${slug}`] = say(data.dlItems[id]?.name as Localized, lang, slug);
   });
+  for (const e of data.dlNews ?? []) out[`dl-patches/${e.slug}`] = e.title;
 
   return out;
 }
+
+/**
+ * La imagen de vista previa de una ruta.
+ *
+ * Héroes, objetos y ediciones tienen la suya, dibujada en el build
+ * (`og/og.ts`); `/deadlock/patches` a secas lleva la de la última edición,
+ * porque es la URL que se comparte. Todo lo demás usa `og.jpg`. `available`
+ * dice si el build llegó a dibujarla: si no, la página vuelve a la genérica en
+ * vez de apuntar a una imagen que no existe.
+ */
+export function ogImagePath(route: Route, latestEdition?: string): string | null {
+  if (route.view !== "deadlock") return null;
+  const { lang, dlSection, detail } = route;
+  if (dlSection === "meta" && detail) return `/og/${lang}/deadlock/${detail}.jpg`;
+  if (dlSection === "items" && detail) return `/og/${lang}/deadlock/items/${detail}.jpg`;
+  if (dlSection === "patches") {
+    const slug = detail ?? latestEdition;
+    return slug ? `/og/${lang}/deadlock/patches/${slug}.jpg` : null;
+  }
+  return null;
+}
+
+export const DEFAULT_OG = `${SITE_ORIGIN}/og.jpg`;
+
+export function ogImageUrl(route: Route, latestEdition?: string, available: (path: string) => boolean = () => true): string {
+  const path = ogImagePath(route, latestEdition);
+  return path && available(path) ? `${SITE_ORIGIN}${path}` : DEFAULT_OG;
+}
+
+/**
+ * Los datos estructurados de una página (schema.org), como objetos.
+ *
+ * Poco y concreto: `WebSite` en la portada, migas de pan en las páginas de
+ * Deadlock, y `NewsArticle` con fecha en cada edición de Vestigo News, que es
+ * lo que puede llevarla a las noticias de Google. Nada que la página no diga.
+ */
+export function jsonLdFor(
+  route: Route,
+  lang: Lang,
+  page: { title: string; description: string; canonical: string; image: string },
+  data: SitemapData,
+  detailName: string | null
+): object[] {
+  const copy = COPY[lang];
+  const brand = copy.brand;
+  const home = routeUrl({ ...route, view: "home", detail: undefined });
+  const org = { "@type": "Organization", name: brand, url: SITE_ORIGIN };
+  const crumbs = (items: { name: string; url: string }[]) => ({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({ "@type": "ListItem", position: i + 1, name: it.name, item: it.url })),
+  });
+
+  if (route.view === "home") {
+    return [{ "@context": "https://schema.org", "@type": "WebSite", name: brand, url: home, inLanguage: lang }];
+  }
+  if (route.view !== "deadlock") return [];
+
+  const deadlockUrl = routeUrl({ ...route, dlSection: "meta", detail: undefined });
+  const sectionUrl = routeUrl({ ...route, detail: undefined });
+  const sectionName = copy.deadlock.tabs[route.dlSection as keyof typeof copy.deadlock.tabs] ?? route.dlSection;
+  const trail = [{ name: brand, url: home }, { name: "Deadlock", url: deadlockUrl }];
+  if (route.dlSection !== "meta") trail.push({ name: sectionName, url: sectionUrl });
+
+  if (route.dlSection === "patches" && route.detail && detailName) {
+    const edition = data.dlNews?.find((e) => e.slug === route.detail);
+    trail.push({ name: detailName, url: page.canonical });
+    return [
+      crumbs(trail),
+      {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        headline: page.title.replace(/\s*\|.*$/, ""),
+        alternativeHeadline: edition?.headline,
+        description: page.description,
+        image: [page.image],
+        datePublished: edition?.date,
+        dateModified: edition?.date,
+        author: org,
+        publisher: org,
+        mainEntityOfPage: page.canonical,
+        inLanguage: lang,
+        isAccessibleForFree: true,
+        about: { "@type": "VideoGame", name: "Deadlock" },
+      },
+    ];
+  }
+  if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+  return [crumbs(trail)];
+}
+
+/**
+ * El HTML sin comentarios. `index.html` explica sus decisiones en comentarios
+ * largos y eso está bien en el repo, pero salían en cada página servida: eran
+ * bytes que ningún visitante ni rastreador usa.
+ */
+export const stripComments = (html: string): string => html.replace(/<!--[\s\S]*?-->\s*/g, "");
 
 export interface PrerenderPage {
   /** La ruta, tal como la pide el visitante: "/es/deadlock/items/basic-magazine". */
@@ -110,10 +208,20 @@ export interface PrerenderPage {
   alternates: { hreflang: string; href: string }[];
   /** Para og:locale. */
   locale: string;
+  /** La imagen de la vista previa, absoluta. */
+  image: string;
+  /** `article` para las ediciones de Vestigo News, `website` para el resto. */
+  ogType: "website" | "article";
+  /** Fecha de publicación, sólo en las ediciones. */
+  published?: string;
+  jsonLd: object[];
 }
 
+/** Qué imágenes de vista previa existen. Por defecto todas: el build lo acota a las que dibujó. */
+export type OgAvailable = (path: string) => boolean;
+
 /** Una entrada por cada dirección que el sitemap declara. */
-export function prerenderPages(data: SitemapData): PrerenderPage[] {
+export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () => false): PrerenderPage[] {
   const names: Record<Lang, Record<string, string>> = {
     en: detailNames(data, "en"),
     es: detailNames(data, "es"),
@@ -135,13 +243,21 @@ export function prerenderPages(data: SitemapData): PrerenderPage[] {
     // usa la app.
     alternates.push({ hreflang: "x-default", href: routeUrl({ ...route, lang: "en" }) });
 
+    const canonical = routeUrl(route);
+    const image = ogImageUrl(route, data.dlNews?.[0]?.slug, ogAvailable);
+    const isEdition = route.view === "deadlock" && route.dlSection === "patches" && !!route.detail;
+    const edition = isEdition ? data.dlNews?.find((e) => e.slug === route.detail) : undefined;
     return {
       path,
       title,
       description,
-      canonical: routeUrl(route),
+      canonical,
       alternates,
       locale: lang === "es" ? "es_AR" : "en_US",
+      image,
+      ogType: isEdition ? "article" : "website",
+      ...(edition ? { published: edition.date } : {}),
+      jsonLd: jsonLdFor(route, lang, { title, description, canonical, image }, data, detail),
     };
   });
 }
@@ -177,7 +293,8 @@ export function renderHtml(
     ...page.alternates.map(
       (a) => `<link rel="alternate" hreflang="${a.hreflang}" href="${escape(a.href)}" data-vestigo>`
     ),
-    meta("property", "og:type", "website"),
+    meta("property", "og:type", page.ogType),
+    ...(page.published ? [meta("property", "article:published_time", page.published)] : []),
     meta("property", "og:site_name", brand),
     meta("property", "og:locale", page.locale),
     meta("property", "og:title", page.title),
@@ -189,9 +306,16 @@ export function renderHtml(
     // La imagen se vuelve a declarar porque el borrado de abajo se lleva TODAS
     // las og y twitter, incluida esta. Sacarla sin reponerla dejaría la tarjeta
     // sin imagen, que es empeorar justo lo que este archivo viene a arreglar.
-    meta("property", "og:image", `${SITE_ORIGIN}/og.jpg`),
-    meta("name", "twitter:image", `${SITE_ORIGIN}/og.jpg`),
+    meta("property", "og:image", page.image),
+    meta("property", "og:image:width", "1200"),
+    meta("property", "og:image:height", "630"),
+    meta("property", "og:image:alt", page.title),
+    meta("name", "twitter:image", page.image),
   ].join("\n    ");
+  // `</script` adentro del JSON cerraría la etiqueta antes de tiempo.
+  const jsonLd = page.jsonLd.length
+    ? `\n    <script type="application/ld+json">${JSON.stringify(page.jsonLd).replace(/<\//g, "<\\/")}</script>`
+    : "";
 
   return (
     html
@@ -202,7 +326,8 @@ export function renderHtml(
       .replace(/\s*<link rel="canonical"[^>]*>/g, "")
       .replace(/\s*<meta property="og:[^"]+"[^>]*>/g, "")
       .replace(/\s*<meta name="twitter:[^"]+"[^>]*>/g, "")
-      .replace("</head>", `    ${head}\n  </head>`)
+      .replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/g, "")
+      .replace("</head>", `    ${head}${jsonLd}\n  </head>`)
       // El div de montaje deja de estar vacío. Se busca por su id y no por
       // posición: si `index.html` cambiara de forma, esto deja de sustituir y se
       // nota, en vez de escribir el cuerpo en el lugar equivocado.

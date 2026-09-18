@@ -118,8 +118,22 @@ describe("renderHtml", () => {
   it("conserva la imagen de la tarjeta", () => {
     // El borrado se lleva TODAS las og, así que la imagen hay que reponerla; sin
     // esto la tarjeta queda sin imagen y el arreglo sería un empeoramiento.
+    // Sin imágenes dibujadas, es la genérica.
     expect(html).toContain(`property="og:image" content="https://vestigo.gg/og.jpg"`);
     expect(html).toContain(`name="twitter:image" content="https://vestigo.gg/og.jpg"`);
+  });
+
+  it("usa la imagen propia del ítem cuando el build la dibujó", () => {
+    const [conImagen] = prerenderPages(data, () => true).filter((p) => p.path === page.path);
+    const out = renderHtml(base, conImagen, "Vestigo");
+    expect(out).toContain(`property="og:image" content="https://vestigo.gg/og/es/deadlock/items/${itemSlug}.jpg"`);
+    expect(out).toContain('property="og:image:width" content="1200"');
+  });
+
+  it("lleva migas de pan como datos estructurados", () => {
+    expect(html).toContain('<script type="application/ld+json">');
+    expect(html).toContain('"BreadcrumbList"');
+    expect(html.split("application/ld+json").length - 1).toBe(1);
   });
 
   it("escapa las comillas para no romper el atributo", () => {
@@ -143,5 +157,41 @@ describe("las páginas de héroe e ítem de Deadlock", () => {
     expect(itemPage).toBeDefined();
     expect(itemPage?.title).toContain(dlCatalog.items[String(itemId)].name.en);
     expect(itemPage?.title).not.toBe(listPage?.title);
+  });
+});
+
+describe("las ediciones de Vestigo News", () => {
+  const conNews: SitemapData = {
+    ...data,
+    dlNews: [{ slug: "2026-09-16", title: "09-16-2026 Update", date: "2026-09-16T20:16:43.000Z", headline: "Thanks Yoshi", score: { nerf: 7, buff: 10, mixed: 2, fix: 1 } }],
+  };
+  const pagesNews = prerenderPages(conNews, () => true);
+  const edicion = pagesNews.find((p) => p.path === "/en/deadlock/patches/2026-09-16")!;
+  const portada = pagesNews.find((p) => p.path === "/en/deadlock/patches")!;
+
+  it("cada edición tiene su título, su imagen y su fecha", () => {
+    expect(edicion.title).toContain("09-16-2026 Update");
+    expect(edicion.title).toContain("Vestigo News");
+    expect(edicion.image).toBe("https://vestigo.gg/og/en/deadlock/patches/2026-09-16.jpg");
+    expect(edicion.ogType).toBe("article");
+    expect(edicion.published).toBe("2026-09-16T20:16:43.000Z");
+  });
+
+  it("es un NewsArticle con fecha para Google", () => {
+    const article = edicion.jsonLd.find((x) => (x as { "@type": string })["@type"] === "NewsArticle") as Record<string, unknown>;
+    expect(article).toBeDefined();
+    expect(article.datePublished).toBe("2026-09-16T20:16:43.000Z");
+    expect(article.alternativeHeadline).toBe("Thanks Yoshi");
+  });
+
+  it("/deadlock/patches lleva la imagen de la última edición, que es la URL que se comparte", () => {
+    expect(portada.image).toBe("https://vestigo.gg/og/en/deadlock/patches/2026-09-16.jpg");
+    expect(portada.ogType).toBe("website");
+  });
+
+  it("declara la fecha de publicación en el HTML", () => {
+    const html = renderHtml(`<!doctype html><html><head><title>x</title></head><body><div id="root"></div></body></html>`, edicion, "Vestigo");
+    expect(html).toContain('property="article:published_time"');
+    expect(html).toContain('property="og:type" content="article"');
   });
 });

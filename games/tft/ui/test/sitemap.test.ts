@@ -114,3 +114,17 @@ describe("sitemapXml", () => {
     expect(xml).toContain('hreflang="en"');
   });
 });
+
+describe("las ediciones de Vestigo News", () => {
+  const conNews = {
+    ...data,
+    dlNews: [{ slug: "2026-09-16", title: "09-16-2026 Update", date: "2026-09-16T20:16:43.000Z", score: { nerf: 7, buff: 10, mixed: 2, fix: 1 } }],
+  };
+
+  it("entran al sitemap en los dos idiomas, y sin índice no entra ninguna", () => {
+    const paths = sitemapPaths(conNews);
+    expect(paths).toContain("/en/deadlock/patches/2026-09-16");
+    expect(paths).toContain("/es/deadlock/patches/2026-09-16");
+    expect(sitemapPaths(data).some((p) => p.includes("/patches/"))).toBe(false);
+  });
+});

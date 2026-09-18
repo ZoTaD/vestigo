@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useCopy, useLang } from "./i18n";
-import { LANGS, SITE_ORIGIN, routeUrl, type Route } from "./route";
-import { metaFor } from "./prerender";
+import { LANGS, routeUrl, type Route } from "./route";
+import { metaFor, ogImageUrl } from "./prerender";
+import { editions } from "./deadlockNewsData";
 import { heroes as dlHeroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
 import { buildHeroes, PUBLISHED_BAND as DL_PUBLISHED_BAND } from "./deadlockData";
 import { buildItems as buildDlItems } from "./deadlockItemsData";
@@ -80,6 +81,7 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
       const item = buildDlItems(DL_PUBLISHED_BAND, lang).find((i) => String(i.itemId) === id);
       return item?.name ?? null;
     }
+    if (route.dlSection === "patches") return editions.find((e) => e.slug === route.detail)?.title ?? null;
     return null;
   }
   return null;
@@ -114,14 +116,18 @@ export default function PageMeta({ route }: { route: Route }) {
     setMeta("property", "og:title", title);
     setMeta("property", "og:description", description);
     setMeta("property", "og:url", url);
-    setMeta("property", "og:type", "website");
+    const isEdition = route.view === "deadlock" && route.dlSection === "patches" && !!detail;
+    setMeta("property", "og:type", isEdition ? "article" : "website");
     setMeta("property", "og:site_name", copy.brand);
     setMeta("property", "og:locale", lang === "es" ? "es_AR" : "en_US");
-    setMeta("property", "og:image", `${SITE_ORIGIN}/og.jpg`);
+    // La misma imagen que el HTML estático: la del héroe, el objeto o la
+    // edición cuando la tienen (ver `ogImageUrl`), y `og.jpg` para el resto.
+    const image = ogImageUrl(route, editions[0]?.slug);
+    setMeta("property", "og:image", image);
     setMeta("name", "twitter:card", "summary_large_image");
     setMeta("name", "twitter:title", title);
     setMeta("name", "twitter:description", description);
-    setMeta("name", "twitter:image", `${SITE_ORIGIN}/og.jpg`);
+    setMeta("name", "twitter:image", image);
     };
     apply(dlDetailName(route, lang));
   }, [route, copy, lang]);

@@ -51,6 +51,10 @@ let cargado: MasteryFile | null = null;
  * navegador las cachea, pero el módulo se evalúa igual y la primera fila abierta
  * ya pagó el viaje.
  */
+export function loadMastery(): Promise<MasteryFile | null> {
+  return load();
+}
+
 function load(): Promise<MasteryFile | null> {
   pidiendo ??= import("@deadlock/mastery.json")
     .then((m) => {
