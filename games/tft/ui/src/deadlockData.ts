@@ -344,10 +344,20 @@ export function bandRankName(band: BandId, lang: Lang): string {
 }
 
 /** La insignia del rango más bajo de la banda, para dibujar el selector. */
+/**
+ * La insignia de una banda para los lugares donde se dibuja chica (el selector
+ * y la línea de medición, 18-20 px).
+ *
+ * Usa la **versión chica** del primer subrango y no la grande del catálogo:
+ * medido con PageSpeed el 2026-09-18, las cuatro grandes del selector eran
+ * 130 KB (una de 512×404 dibujada a 20 px) y la mitad del peso de imágenes de
+ * la tier list. La grande sigue siendo la del encabezado de tier, donde sí se
+ * mira.
+ */
 export function bandBadge(band: BandId): { img: string; color: string } {
   const tiers = BANDS.find((b) => b.id === band)?.tiers ?? [];
   const rank = catalog.ranks.find((r) => r.tier === Math.min(...tiers));
-  return { img: rank?.img ?? "", color: rank?.color ?? "" };
+  return { img: rank?.subranks?.[0] || rank?.img || "", color: rank?.color ?? "" };
 }
 
 export interface BandCrest {
