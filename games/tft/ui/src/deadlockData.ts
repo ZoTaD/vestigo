@@ -345,19 +345,19 @@ export function bandRankName(band: BandId, lang: Lang): string {
 
 /** La insignia del rango más bajo de la banda, para dibujar el selector. */
 /**
- * La insignia de una banda para los lugares donde se dibuja chica (el selector
- * y la línea de medición, 18-20 px).
+ * La insignia de una banda, para el selector y la línea de medición.
  *
- * Usa la **versión chica** del primer subrango y no la grande del catálogo:
- * medido con PageSpeed el 2026-09-18, las cuatro grandes del selector eran
- * 130 KB (una de 512×404 dibujada a 20 px) y la mitad del peso de imágenes de
- * la tier list. La grande sigue siendo la del encabezado de tier, donde sí se
- * mira.
+ * Es la grande del catálogo (`rank.img`, 15-50 KB) aunque se dibuje a 20 px, y
+ * está verificado que es la opción más liviana: las "chicas" por subrango que
+ * publica deadlock-api pesan 115 KB cada una porque su API sirve el original
+ * sin reducir (medido el 2026-09-18 al intentar cambiarlas; PageSpeed pasó de
+ * 432 a 574 KiB de imágenes de más). La única más liviana es la `chalk`, que
+ * es otra estética. Se referencian del bucket, no se re-alojan.
  */
 export function bandBadge(band: BandId): { img: string; color: string } {
   const tiers = BANDS.find((b) => b.id === band)?.tiers ?? [];
   const rank = catalog.ranks.find((r) => r.tier === Math.min(...tiers));
-  return { img: rank?.subranks?.[0] || rank?.img || "", color: rank?.color ?? "" };
+  return { img: rank?.img ?? "", color: rank?.color ?? "" };
 }
 
 export interface BandCrest {
