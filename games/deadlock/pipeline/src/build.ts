@@ -15,8 +15,10 @@ import {
   MAX_WINDOW_DAYS,
   retryingOnRewrite,
   PROVISIONAL_MATCHES,
+  FROZEN_AFTER_H,
 } from "./snapshot";
 import { fetchPatches, patchWindows, prePatchWeight, type Patch } from "./patches";
+import { fetchLiveCounts, type BandCounts } from "./liveStats";
 
 /**
  * La tier list de héroes de Deadlock, por banda de rango.
@@ -130,6 +132,14 @@ export interface HeroesFile {
    * pesan el 63%".
    */
   patchShare?: number;
+  /**
+   * De dónde salieron las partidas desde el parche. Falta cuando salieron del
+   * snapshot, que es lo normal. `live` cuando el snapshot estaba congelado o
+   * inaccesible y se pidieron a la API en vivo (ver `liveStats.ts`).
+   */
+  postSource?: "live";
+  /** Hasta cuándo llegaba el snapshot cuando se congeló. Sólo con `postSource`. */
+  snapshotUntil?: string;
   /** Partidas distintas de la banda — el denominador del pickRate. */
   matches: number;
   /** Filas jugador-partida, que es sobre lo que se calcula todo lo demás. */
@@ -249,6 +259,13 @@ export function shrink(wr: number, n: number, k: number): number {
 export interface BandExtras {
   skillGap: Map<number, number | undefined>;
   before: Map<number, Rate>;
+  /**
+   * Las partidas desde el parche solas, para el "de → a". Sin esto el cambio
+   * se medía sobre la mezcla, que recién salido el parche es casi toda partidas
+   * viejas: comparaba "antes" contra "antes" y daba cero. Si falta, se usa lo
+   * que se está publicando.
+   */
+  post?: Map<number, Rate>;
   /** Partidas distintas de la banda antes del parche, para el uso comparable. */
   matchesBefore: number;
   /** True si la ventana medida incluye partidas de antes del parche. */
@@ -261,6 +278,8 @@ export interface BandExtras {
    * si el parche juntó muestra. Sin esto, se usa `totals.matches`.
    */
   postMatches?: number;
+  postSource?: "live";
+  snapshotUntil?: string;
 }
 
 /**
@@ -288,7 +307,7 @@ export function heroesFileFrom(
       const matches = Number(row.matches);
       const skillGap = extra.skillGap.get(row.hero_id);
       const antes = extra.before.get(row.hero_id);
-      const trend = deltaPoints(ahora.get(row.hero_id), antes);
+      const trend = deltaPoints((extra.post ?? ahora).get(row.hero_id), antes);
       return {
         heroId: row.hero_id,
         matches,
@@ -319,6 +338,8 @@ export function heroesFileFrom(
     ...((extra.postMatches ?? totals.matches) < PROVISIONAL_MATCHES ? { provisional: true } : {}),
     ...(extra.crossesPatch ? { crossesPatch: true } : {}),
     ...(extra.crossesPatch && extra.patchShare !== undefined ? { patchShare: r(extra.patchShare, 3) } : {}),
+    ...(extra.postSource ? { postSource: extra.postSource } : {}),
+    ...(extra.postSource && extra.snapshotUntil ? { snapshotUntil: extra.snapshotUntil } : {}),
     matches: totals.matches,
     boards: totals.boards,
     from: totals.from,
@@ -331,20 +352,115 @@ export function heroesFileFrom(
 const TOP_BAND: BandId = "phantom-above";
 const BOTTOM_BAND: BandId = "arcanist-below";
 
+interface Window {
+  from: string;
+  to: string;
+}
+
+/**
+ * De dónde salen las partidas.
+ *
+ * Dos fuentes con la misma pregunta —"por héroe, en esta ventana y esta banda,
+ * cuántas partidas y cuántas victorias"— para que `main` elija por ventana y no
+ * por corrida:
+ *
+ * - **El snapshot** (DuckDB sobre el bucket) es la fuente normal: exacto, y el
+ *   mismo del que salen objetos, builds y maestría.
+ * - **La API en vivo** (`liveStats.ts`) entra cuando el snapshot se congela o
+ *   no responde. Desde el 2026-09-19: ese día el snapshot llevaba dos días sin
+ *   partidas con rango y después el host dejó de resolver, y la tier list
+ *   quedó clavada en el día del parche.
+ *
+ * La regla: las partidas **desde el parche** salen del snapshot mientras esté
+ * al día, y de la API en vivo si está congelado. Las de **antes** del parche
+ * salen del snapshot mientras responda —son viejas, ya las tiene— y de la API
+ * sólo si ni siquiera responde. Cada archivo publicado dice de dónde salió.
+ */
+interface Source {
+  name: "snapshot" | "live";
+  counts(window: Window, tiers: number[]): Promise<BandCounts>;
+}
+
+const liveSource: Source = {
+  name: "live",
+  counts: (w, tiers) => fetchLiveCounts(w.from, w.to, tiers),
+};
+
+/**
+ * El snapshot como fuente, o `null` si no se pudo ni listar: DNS caído, bucket
+ * sin responder. En ese caso todo sale de la API en vivo y se avisa.
+ */
+async function openSnapshot(): Promise<{ source: Source; horizon: Date; con: Awaited<ReturnType<typeof connect>>; ranges: Awaited<ReturnType<typeof partitionRanges>> } | null> {
+  try {
+    const partitions = await listPartitions();
+    const con = await connect();
+    const ranges = await partitionRanges(con, partitions);
+    const horizon = await windowEnd(con, ranges);
+    const rows = async (sql: string) => (await con.runAndReadAll(sql)).getRowObjects();
+    const source: Source = {
+      name: "snapshot",
+      async counts(w, tiers) {
+        const parts = await bandablePartitions(con, partitionsCovering(ranges, w.from, w.to));
+        const vacio: BandCounts = { rows: [], matches: 0, boards: 0, from: w.from.slice(0, 10), to: w.to.slice(0, 10) };
+        if (parts.length === 0) return vacio;
+        const base = windowSql(parts, w.from, w.to);
+        const lista = tiers.join(", ");
+        const agg = (await rows(`
+          select hero_id, count(*)::BIGINT as matches,
+                 sum(case when won then 1 else 0 end)::BIGINT as wins
+          from (${base}) where tier in (${lista}) group by hero_id`)) as unknown as RawRow[];
+        const [tot] = (await rows(`
+          select count(distinct match_id)::BIGINT as matches, count(*)::BIGINT as boards,
+                 strftime(min(start_time), '%Y-%m-%d') as "from",
+                 strftime(max(start_time), '%Y-%m-%d') as "to"
+          from (${base}) where tier in (${lista})`)) as unknown as { matches: bigint; boards: bigint; from: string | null; to: string | null }[];
+        return {
+          rows: agg,
+          matches: Number(tot.matches),
+          boards: Number(tot.boards),
+          from: tot.from ?? vacio.from,
+          to: tot.to ?? vacio.to,
+        };
+      },
+    };
+    return { source, horizon, con, ranges };
+  } catch (e) {
+    console.log(`⚠ SNAPSHOT INACCESIBLE (${e instanceof Error ? e.message : String(e)}): todo sale de la API en vivo.`);
+    return null;
+  }
+}
+
 async function main() {
-  const [partitions, patches] = await Promise.all([listPartitions(), fetchPatches()]);
+  const patches = await fetchPatches();
   const patch = patches[0];
   console.log(`último parche: ${patch.date} — ${patch.title}`);
 
-  const con = await connect();
-  const rows = async (sql: string) => (await con.runAndReadAll(sql)).getRowObjects();
-
-  const ranges = await partitionRanges(con, partitions);
-  const ahora = await windowEnd(con, ranges);
+  const snap = await openSnapshot();
+  const reloj = new Date();
+  // Congelado: el horizonte de rango del snapshot quedó más de FROZEN_AFTER_H
+  // horas atrás (`windowEnd` ya lo avisó en el log). Sin snapshot, también.
+  const congelada = !snap || reloj.getTime() - snap.horizon.getTime() >= FROZEN_AFTER_H * 3_600_000;
+  // Con el snapshot al día la ventana termina donde él llega (la última hora
+  // está a medio escribir). Congelado o sin él, termina ahora: las partidas
+  // nuevas las trae la API en vivo.
+  const ahora = congelada ? reloj : snap!.horizon;
+  const postSource: Source = congelada ? liveSource : snap!.source;
+  const pastSource: Source = snap?.source ?? liveSource;
+  if (congelada) {
+    console.log(
+      `  desde el parche: API en vivo${snap ? ` (snapshot congelado en ${snap.horizon.toISOString().slice(0, 16)}Z)` : ""} · ` +
+        `antes del parche: ${pastSource.name}`
+    );
+  }
 
   const { after, before } = patchWindows(patch.date, ahora, MAX_WINDOW_DAYS);
-  const partsAfter = await bandablePartitions(con, partitionsCovering(ranges, after.from, after.to));
-  const partsBefore = await bandablePartitions(con, partitionsCovering(ranges, before.from, before.to));
+  const desde = new Date(ahora.getTime() - MAX_WINDOW_DAYS * 86_400_000).toISOString();
+  const hasta = ahora.toISOString();
+  const wide: Window = { from: desde, to: hasta };
+  const post: Window = { from: after.from, to: hasta };
+  // Lo de antes del parche dentro de la ventana. Vacío si el parche ya quedó
+  // más atrás que los quince días.
+  const pre: Window | null = after.from > desde ? { from: desde, to: after.from } : null;
 
   /**
    * La brecha se mide sobre los últimos quince días **sin mirar el parche**, y
@@ -356,46 +472,14 @@ async function main() {
    * porque le toquen un número. Medirla sobre el día que lleva el parche fue el
    * primer intento y dejó **7 héroes de 38 con muestra**: se perdía casi toda la
    * información por cuidar algo que no estaba en peligro.
+   *
+   * Sale de la fuente "de antes" (el snapshot mientras responda): la brecha no
+   * corre, y así no gasta dos pedidos a la API en vivo por corrida.
    */
-  const desde = new Date(ahora.getTime() - MAX_WINDOW_DAYS * 86_400_000).toISOString();
-  const hasta = ahora.toISOString();
-  const partsGap = await bandablePartitions(con, partitionsCovering(ranges, desde, hasta));
-  if (partsAfter.length === 0) {
-    throw new Error(
-      `el snapshot no tiene ni una partición posterior al parche del ${patch.date}. ` +
-        "O el parche es de hace minutos, o el snapshot dejó de actualizarse."
-    );
-  }
-  console.log(`  después: ${partsAfter.join(", ")} | antes: ${partsBefore.join(", ") || "—"}`);
-
-  const baseBefore = partsBefore.length > 0 ? windowSql(partsBefore, before.from, before.to) : null;
-
-  const tiersOf = (id: BandId) => BANDS.find((b) => b.id === id)!.tiers.join(", ");
-  const winrateSql = (from: string, tiers: string) => `
-    select hero_id, count(*)::BIGINT as matches,
-           sum(case when won then 1 else 0 end)::BIGINT as wins
-    from (${from}) where tier in (${tiers}) group by hero_id`;
-  const totalsSql = (from: string, tiers: string) => `
-    select count(distinct match_id)::BIGINT as matches, count(*)::BIGINT as boards,
-           strftime(min(start_time), '%Y-%m-%d') as "from",
-           strftime(max(start_time), '%Y-%m-%d') as "to"
-    from (${from}) where tier in (${tiers})`;
-
-  // La brecha se mide una sola vez y viaja igual en las cuatro bandas: describe
-  // al héroe, no a la banda desde la que se lo mira.
+  const tiersOf = (id: BandId) => BANDS.find((b) => b.id === id)!.tiers;
   const t0 = Date.now();
-  const baseGap = windowSql(partsGap, desde, hasta);
-  // Los quince días enteros, que son la ventana de la tier list: las partidas
-  // de antes del parche entran con un peso que se desvanece (ver la nota de la
-  // banda). `after.from` es el parche cuando cae adentro, y el arranque de la
-  // ventana cuando ya quedó atrás: en ese caso "antes" es vacío.
-  const baseWide = baseGap;
-  const corte = after.from.slice(0, 19);
-  const lado = (op: ">=" | "<") => `select * from (${baseWide}) where start_time ${op} TIMESTAMP '${corte}'`;
-  const basePost = lado(">=");
-  const basePre = lado("<");
-  const arriba = ratesFrom((await rows(winrateSql(baseGap, tiersOf(TOP_BAND)))) as unknown as RawRow[]);
-  const abajo = ratesFrom((await rows(winrateSql(baseGap, tiersOf(BOTTOM_BAND)))) as unknown as RawRow[]);
+  const arriba = ratesFrom((await pastSource.counts(wide, tiersOf(TOP_BAND))).rows);
+  const abajo = ratesFrom((await pastSource.counts(wide, tiersOf(BOTTOM_BAND))).rows);
   const skillGap = new Map<number, number | undefined>();
   for (const id of arriba.keys()) skillGap.set(id, deltaPoints(arriba.get(id), abajo.get(id)));
   const conBrecha = [...skillGap.values()].filter((v) => v !== undefined).length;
@@ -416,7 +500,6 @@ async function main() {
   // cuál es hasta tenerlas todas medidas.
   const medidas: { band: Band; file: HeroesFile; segundos: string }[] = [];
   for (const band of BANDS) {
-    const tiers = band.tiers.join(", ");
     const t = Date.now();
 
     /**
@@ -426,32 +509,33 @@ async function main() {
      * cada una junta muestra a su ritmo: Fantasma+ tarda una semana en llegar
      * a lo que las bandas bajas juntan en tres días.
      */
-    type Tot = { matches: bigint; boards: bigint; from: string | null; to: string | null };
-    const [totPost] = (await rows(totalsSql(basePost, tiers))) as unknown as Tot[];
-    const [totPre] = (await rows(totalsSql(basePre, tiers))) as unknown as Tot[];
-    const postMatches = Number(totPost.matches);
-    const preMatches = Number(totPre.matches);
+    let postSrc = postSource;
+    let cPost: BandCounts;
+    try {
+      cPost = await postSrc.counts(post, band.tiers);
+    } catch (e) {
+      // La API en vivo no contestó: si hay snapshot, aunque esté congelado,
+      // es mejor que nada. Sin snapshot no hay de dónde sacarlo, y eso sí tira.
+      if (!snap || postSrc.name === "snapshot") throw e;
+      console.log(`  ⚠ ${band.id}: la API en vivo no contestó (${e instanceof Error ? e.message : e}); desde el parche sale del snapshot congelado`);
+      postSrc = snap.source;
+      cPost = await postSrc.counts(post, band.tiers);
+    }
+    const postMatches = cPost.matches;
     const alpha = prePatchWeight(postMatches, PROVISIONAL_MATCHES);
-    const crossesPatch = alpha > 0 && preMatches > 0;
-    const aggPost = (await rows(winrateSql(basePost, tiers))) as unknown as RawRow[];
-    const aggPre = crossesPatch ? ((await rows(winrateSql(basePre, tiers))) as unknown as RawRow[]) : [];
-    const agg = blendRows(aggPost, aggPre, alpha);
-    const pesadas = postMatches + (crossesPatch ? alpha * preMatches : 0);
+    const cPre = pre && alpha > 0 ? await pastSource.counts(pre, band.tiers) : null;
+    const crossesPatch = !!cPre && cPre.matches > 0;
+    const agg = blendRows(cPost.rows, crossesPatch ? cPre!.rows : [], alpha);
+    const pesadas = postMatches + (crossesPatch ? alpha * cPre!.matches : 0);
     const tot = {
       matches: Math.round(pesadas),
-      boards: Math.round(Number(totPost.boards) + (crossesPatch ? alpha * Number(totPre.boards) : 0)),
-      from: (crossesPatch ? totPre.from : totPost.from) ?? totPost.from ?? "",
-      to: totPost.to ?? totPre.to ?? "",
+      boards: Math.round(cPost.boards + (crossesPatch ? alpha * cPre!.boards : 0)),
+      from: crossesPatch ? cPre!.from : cPost.from,
+      to: cPost.to,
     };
     const patchShare = pesadas > 0 ? postMatches / pesadas : 1;
 
-    let before2 = new Map<number, Rate>();
-    let matchesBefore = 0;
-    if (baseBefore) {
-      before2 = ratesFrom((await rows(winrateSql(baseBefore, tiers))) as unknown as RawRow[]);
-      const [tb] = (await rows(totalsSql(baseBefore, tiers))) as unknown as { matches: bigint }[];
-      matchesBefore = Number(tb.matches);
-    }
+    const cBefore = await pastSource.counts(before, band.tiers);
 
     medidas.push({
       band,
@@ -459,7 +543,17 @@ async function main() {
         agg,
         band,
         tot,
-        { skillGap, before: before2, matchesBefore, crossesPatch, patchShare, postMatches },
+        {
+          skillGap,
+          before: ratesFrom(cBefore.rows),
+          matchesBefore: cBefore.matches,
+          post: ratesFrom(cPost.rows),
+          crossesPatch,
+          patchShare,
+          postMatches,
+          ...(postSrc.name === "live" ? { postSource: "live" as const } : {}),
+          ...(postSrc.name === "live" && snap ? { snapshotUntil: snap.horizon.toISOString() } : {}),
+        },
         patch,
         generatedAt
       ),
@@ -479,7 +573,8 @@ async function main() {
     console.log(
       `  ${band.id.padEnd(20)} ${file.heroes.length} héroes (${conCambio} con cambio de parche), ` +
         `${file.matches.toLocaleString("es")} partidas${file.provisional ? " [PROVISIONAL]" : ""}` +
-        `${file.crossesPatch ? ` [15 días, el parche pesa ${Math.round((file.patchShare ?? 0) * 100)}%]` : " [desde el parche]"}, ` +
+        `${file.crossesPatch ? ` [15 días, el parche pesa ${Math.round((file.patchShare ?? 0) * 100)}%]` : " [desde el parche]"}` +
+        `${file.postSource === "live" ? " [parche: API en vivo]" : ""}, ` +
         `${file.from} → ${file.to} (${segundos}s)` +
         `${band.id === defecto ? "  [por defecto]" : ""}`
     );

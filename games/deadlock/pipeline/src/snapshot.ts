@@ -352,7 +352,7 @@ export async function bandablePartitions(
  * hora viva está a medio escribir y nunca llega a la cobertura. Eso no es una
  * anomalía y no merece un renglón en el log de cada corrida.
  */
-const FROZEN_AFTER_H = 6;
+export const FROZEN_AFTER_H = 6;
 
 /**
  * El techo de la ventana: `now`, o el horizonte de rango si se quedó atrás.

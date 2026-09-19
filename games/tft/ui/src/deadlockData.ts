@@ -85,6 +85,14 @@ export interface HeroesFile {
   crossesPatch?: boolean;
   /** Qué parte de la muestra es del parche nuevo (0 a 1), sólo mientras cruza. */
   patchShare?: number;
+  /**
+   * `live` cuando las partidas desde el parche vinieron de la API en vivo
+   * porque el snapshot estaba congelado o caído (desde el 2026-09-19). La
+   * línea de medición lo dice.
+   */
+  postSource?: "live";
+  /** Hasta cuándo llegaba el snapshot cuando se congeló. */
+  snapshotUntil?: string;
   matches: number;
   boards: number;
   from: string;

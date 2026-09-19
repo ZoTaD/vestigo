@@ -342,3 +342,35 @@ describe("blendRows", () => {
     ]);
   });
 });
+
+describe("el cambio del parche se mide sobre las partidas del parche, no sobre la mezcla", () => {
+  const band = BANDS[0];
+  const totals = { matches: 1000, boards: 12000, from: "2026-09-02", to: "2026-09-19" };
+  const patch = { date: "2026-09-16T22:41:46Z", title: "09-16-2026 Update", link: "x" };
+
+  it("usa extra.post para el 'de → a' cuando está", () => {
+    // La mezcla (lo publicado) está al 55% porque casi todo es viejo; desde el
+    // parche el héroe juega al 50%. El cambio real es −5, no 0.
+    const extra = {
+      skillGap: new Map<number, number | undefined>(),
+      before: new Map<number, Rate>([[1, { wr: 0.55, n: 4000 }]]),
+      matchesBefore: 8000,
+      post: new Map<number, Rate>([[1, { wr: 0.5, n: 1500 }]]),
+    };
+    const h = heroesFileFrom([row(1, 5000, 2750)], band, totals, extra, patch, "t").heroes[0];
+    expect(h.trend).toBe(-5);
+  });
+
+  it("publica de dónde salieron las partidas del parche", () => {
+    const extra = {
+      skillGap: new Map<number, number | undefined>(),
+      before: new Map<number, Rate>(),
+      matchesBefore: 0,
+      postSource: "live" as const,
+      snapshotUntil: "2026-09-17T13:00:00.000Z",
+    };
+    const f = heroesFileFrom([row(1, 500, 275)], band, totals, extra, patch, "t");
+    expect(f.postSource).toBe("live");
+    expect(f.snapshotUntil).toBe("2026-09-17T13:00:00.000Z");
+  });
+});

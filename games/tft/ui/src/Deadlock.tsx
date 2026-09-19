@@ -477,6 +477,14 @@ export default function Deadlock({
             meta.file.crossesPatch
               ? copy.deadlock.patch.blend(meta.file.patch.title, Math.round((meta.file.patchShare ?? 0) * 100))
               : copy.deadlock.patch.since(meta.file.patch.title)
+          }${
+            meta.file.postSource === "live"
+              ? ` · ${copy.deadlock.patch.live(
+                  meta.file.snapshotUntil
+                    ? new Date(meta.file.snapshotUntil).toLocaleDateString(locale, { day: "numeric", month: "short" })
+                    : null
+                )}`
+              : ""
           }`}
     </span>
   );

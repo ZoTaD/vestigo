@@ -54,3 +54,32 @@ parches confundiría esa comparación. Las builds también siguen como estaban.
 La bajada de α es lineal porque es la más fácil de explicar. Si con el próximo
 parche se ve que el parche nuevo tarda en mandar, se puede hacer que caiga más
 fuerte al principio (raíz cuadrada: a 2.000 partidas ya pesaría el 50%).
+
+## Añadido 2026-09-19: la API en vivo cuando el snapshot se congela
+
+El snapshot de deadlock-api dejó de traer partidas con rango el 2026-09-17 a
+las 13:00 UTC y dos días después el host ni resolvía. La tier list quedó
+clavada en el día del parche ("el parche pesa el 3%") mientras Celeste, recién
+nerfeada, ya jugaba al 51% en la API en vivo. ZoTaD preguntó si la lista
+estaba colgada, y en lo que importa lo estaba.
+
+**Regla nueva** (`liveStats.ts` y `openSnapshot`/`Source` en `build.ts`):
+
+- Las partidas **desde el parche** salen del snapshot mientras esté al día, y
+  de `/v1/analytics/hero-stats` (la API en vivo, con filtro de insignia por
+  banda) si el snapshot lleva más de 6 horas congelado o no responde.
+- Las de **antes del parche**, y la brecha, salen del snapshot mientras
+  responda —son viejas, ya las tiene— y de la API en vivo sólo si ni siquiera
+  responde.
+- El archivo publica `postSource: "live"` y `snapshotUntil`, y la línea de
+  medición del sitio lo dice.
+- La API cuenta filas jugador-partida; las partidas distintas son la suma
+  dividida 12.
+
+**De paso se corrigió el "de → a":** desde la mezcla, el cambio del parche se
+medía sobre los números publicados (casi todos viejos) y daba cero. Ahora se
+mide sobre las partidas del parche solas (`extra.post`).
+
+**Alcance:** sólo la tier list de héroes. Objetos, builds y maestría necesitan
+las compras y los minutos de cada partida, que sólo están en el snapshot:
+siguen congelados hasta que vuelva.

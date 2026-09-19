@@ -1465,6 +1465,16 @@ const EN = {
       includes: (title: string) =>
         `Last 15 days, ${title} included — it will cut to the patch once it has enough games`,
       /**
+       * The daily snapshot we read stalled (it did on 2026-09-17 for days), so
+       * the games since the patch come from deadlock-api's live API instead.
+       * Said out loud because the numbers keep moving when they otherwise
+       * would have frozen, and someone comparing sources deserves to know.
+       */
+      live: (until: string | null) =>
+        until
+          ? `the match archive has been paused since ${until}, so games since the patch come from the live API`
+          : "the match archive is unavailable, so games since the patch come from the live API",
+      /**
        * El historial del foro. Desde el 2026-09-17 es la hemeroteca debajo de
        * Vestigo News y la lista corta del rail.
        *
@@ -2738,6 +2748,10 @@ const ES: typeof EN = {
         `Últimos 15 días — las partidas de ${title} ya pesan el ${share}% de la lista, y las anteriores pierden peso a medida que junta muestra`,
       includes: (title) =>
         `Últimos 15 días, ${title} incluido — corta en el parche cuando junte partidas suficientes`,
+      live: (until) =>
+        until
+          ? `el archivo de partidas está detenido desde el ${until}, así que las partidas del parche vienen de la API en vivo`
+          : "el archivo de partidas no responde, así que las partidas del parche vienen de la API en vivo",
       history: "Historial de parches",
       nameNote:
         "Valve nombra cada parche por la fecha de la build, que no es el día en que salió, así " +
