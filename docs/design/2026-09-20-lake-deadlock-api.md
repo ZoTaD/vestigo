@@ -63,3 +63,23 @@ Fecha: 2026-09-20.
 - El respaldo con la API en vivo sigue activo por si el lake también se cae.
 - Si deadlock-api publica una dirección nueva, la única constante que hay que
   tocar es `MANIFEST_URL`.
+
+## Costo medido en local (2026-09-21) y qué mirar
+
+| Build | Antes | Con el lake |
+|---|---|---|
+| heroes | ~1,5 min | 3,3 min |
+| items | ~10 s | 53 s |
+| builds | ~10 min | ~25 min |
+| mastery | 5,6 min | 22,7 min de escaneo |
+| report | 5,5 min | 23,4 min de carga |
+
+El motivo es que la partición `EXTRAS` (todos los deltas y residuales, ~30
+archivos de 70-180 MB) se lee entera en cada rama de cada consulta. Las
+corridas programadas reparten los tres pesados en horas distintas, así que
+cada una queda en 30-35 minutos, lejos del timeout de 90. **La corrida manual
+(`workflow_dispatch`) corre los tres juntos y ronda los 80 minutos**: si se
+acerca al timeout, la primera optimización es filtrar los deltas por su `hi`
+(una fila creada antes de `from` no puede haber empezado después), y la
+segunda, materializar los deltas una vez por corrida en una tabla temporal de
+DuckDB en vez de releerlos por rama.
