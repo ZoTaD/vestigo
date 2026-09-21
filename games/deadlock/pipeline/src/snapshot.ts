@@ -35,8 +35,13 @@ const PUBLIC = `${BASE}/public`;
  * que nada fallara, que es la peor forma de romperse.
  */
 export async function listPartitions(): Promise<number[]> {
-  const res = await fetch(`${BASE}/`);
-  if (!res.ok) throw new Error(`el bucket del snapshot contestó ${res.status}`);
+  let res: Response;
+  try {
+    res = await fetch(`${BASE}/`);
+  } catch (e) {
+    throw new SnapshotUnavailable(`el bucket del snapshot no responde (${e instanceof Error ? e.message : String(e)})`);
+  }
+  if (!res.ok) throw new SnapshotUnavailable(`el bucket del snapshot contestó ${res.status}`);
   const xml = await res.text();
   const nums = [...xml.matchAll(/match_player\/match_player_(\d+)\.parquet/g)].map((m) => Number(m[1]));
   if (nums.length === 0) {
@@ -393,6 +398,49 @@ export async function connect(path = ":memory:"): Promise<DuckDBConnection> {
   const con = await db.connect();
   await con.run("install httpfs; load httpfs;");
   return con;
+}
+
+/**
+ * El snapshot no está: DNS caído, bucket sin responder, 5xx.
+ *
+ * Es un error distinto de "la consulta falló" y se trata distinto: el
+ * 2026-09-19 el host del snapshot dejó de resolver y `build:items` tumbó la
+ * corrida entera, así que ni la tier list de héroes —que ya sabía medirse con
+ * la API en vivo— ni el periódico llegaron al sitio durante un día. Un build
+ * que depende del snapshot y no lo encuentra **mantiene lo publicado y deja
+ * seguir la corrida** (ver `runSnapshotBuild`); cualquier otro error sigue
+ * tumbándola, porque ése sí puede ser nuestro.
+ */
+export class SnapshotUnavailable extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "SnapshotUnavailable";
+  }
+}
+
+/** También lo que DuckDB dice cuando no llega al bucket a través de httpfs. */
+export const isSnapshotUnavailable = (e: unknown): boolean =>
+  e instanceof SnapshotUnavailable ||
+  (e instanceof Error &&
+    /fetch failed|ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ECONNRESET|Could not establish connection|Connection error|Failed to (?:open|read) file.*s3-cache|Unable to connect/i.test(e.message));
+
+/**
+ * Corre un build que lee del snapshot, con la política de salida de todos:
+ * reintenta si la partición se reescribió, **sale con 0 y avisa si el snapshot
+ * no está** (lo publicado sigue siendo válido; la página dice hasta cuándo
+ * llega), y sale con 1 ante cualquier otro error.
+ */
+export async function runSnapshotBuild(nombre: string, main: () => Promise<void>): Promise<void> {
+  try {
+    await retryingOnRewrite(main);
+  } catch (e) {
+    if (isSnapshotUnavailable(e)) {
+      console.log(`⚠ ${nombre}: SNAPSHOT INACCESIBLE (${e instanceof Error ? e.message : String(e)}). Se mantiene lo publicado.`);
+      return;
+    }
+    console.error(e instanceof Error ? e.message : e);
+    process.exit(1);
+  }
 }
 
 /** La marca de que el snapshot cambió debajo de una consulta en curso. */

@@ -12,7 +12,7 @@ import {
   partitionUrl,
   partitionsCovering,
   partitionsWithColumn,
-  retryingOnRewrite,
+  runSnapshotBuild,
   windowEnd,
 } from "./snapshot";
 
@@ -469,8 +469,5 @@ async function main() {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   // La partición viva se reescribe cada ~70 minutos; si cambia en el medio,
   // DuckDB aborta por ETag. Reintentar es más honesto que desactivar el chequeo.
-  retryingOnRewrite(main).catch((e) => {
-    console.error(e instanceof Error ? e.message : e);
-    process.exit(1);
-  });
+  runSnapshotBuild("build:ranks", main);
 }

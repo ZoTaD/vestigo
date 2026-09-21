@@ -12,7 +12,7 @@ import {
   partitionRanges,
   partitionUrl,
   partitionsCovering,
-  retryingOnRewrite,
+  runSnapshotBuild,
   windowEnd,
 } from "./snapshot";
 
@@ -255,8 +255,5 @@ async function main() {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  retryingOnRewrite(main).catch((e) => {
-    console.error(e instanceof Error ? e.message : e);
-    process.exit(1);
-  });
+  runSnapshotBuild("build:mastery", main);
 }

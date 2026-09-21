@@ -181,3 +181,15 @@ describe("las particiones se eligen por solapamiento, no por pertenencia", () =>
     expect(partitionsCovering(ranges, "2026-07-28", "2026-07-30")).toEqual([96]);
   });
 });
+
+describe("isSnapshotUnavailable", () => {
+  it("reconoce el bucket caído por DNS, por fetch y por DuckDB, y nada más", async () => {
+    const { isSnapshotUnavailable, SnapshotUnavailable } = await import("../src/snapshot");
+    expect(isSnapshotUnavailable(new SnapshotUnavailable("x"))).toBe(true);
+    expect(isSnapshotUnavailable(new TypeError("fetch failed"))).toBe(true);
+    expect(isSnapshotUnavailable(new Error("getaddrinfo ENOTFOUND s3-cache.deadlock-api.com"))).toBe(true);
+    expect(isSnapshotUnavailable(new Error("IO Error: Could not establish connection error for HTTP HEAD"))).toBe(true);
+    expect(isSnapshotUnavailable(new Error("Binder Error: column tier not found"))).toBe(false);
+    expect(isSnapshotUnavailable(new Error("ETag on reading file changed"))).toBe(false);
+  });
+});

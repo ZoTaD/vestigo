@@ -9,7 +9,7 @@ import {
   PLAYED_MODE,
   PLAYED_GAME_MODE,
   MAX_WINDOW_DAYS,
-  retryingOnRewrite,
+  runSnapshotBuild,
   windowEnd,
   bandablePartitions,
   PROVISIONAL_MATCHES,
@@ -708,8 +708,5 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   // minutos: si la partición cambia en el medio, DuckDB aborta. Reintentar
   // es más honesto que desactivar el chequeo, que dejaría leer mitad de un
   // archivo y mitad de otro sin decir nada.
-  retryingOnRewrite(main).catch((e) => {
-    console.error(e instanceof Error ? e.message : e);
-    process.exit(1);
-  });
+  runSnapshotBuild("build:builds", main);
 }
