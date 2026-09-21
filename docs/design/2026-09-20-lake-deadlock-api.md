@@ -74,12 +74,18 @@ Fecha: 2026-09-20.
 | mastery | 5,6 min | 22,7 min de escaneo |
 | report | 5,5 min | 23,4 min de carga |
 
-El motivo es que la partición `EXTRAS` (todos los deltas y residuales, ~30
-archivos de 70-180 MB) se lee entera en cada rama de cada consulta. Las
+**Medido después (2026-09-21 03:50Z): los deltas NO son el problema.** Los 33
+archivos extra se leen en 2,9 s para la ventana de héroes. Lo lento son las
+**bases**: la partición 105 tarda 27,9 s en la misma consulta (antes 1-2 s),
+porque deadlock-api las escribe como archivos de 5-6 GB con bloques de ~100k
+filas, y DuckDB baja bloques enteros aunque pida seis columnas. Cada build
+relee las mismas bases varias veces (héroes: brecha ×2 y tres ventanas ×4
+bandas). Las
 corridas programadas reparten los tres pesados en horas distintas, así que
 cada una queda en 30-35 minutos, lejos del timeout de 90. **La corrida manual
-(`workflow_dispatch`) corre los tres juntos y ronda los 80 minutos**: si se
-acerca al timeout, la primera optimización es filtrar los deltas por su `hi`
-(una fila creada antes de `from` no puede haber empezado después), y la
-segunda, materializar los deltas una vez por corrida en una tabla temporal de
-DuckDB en vez de releerlos por rama.
+(`workflow_dispatch`) corre los tres juntos y ronda los 80 minutos**: la
+manual se cortó en la maestría a los 90 min (2026-09-21 03:47Z) y el timeout
+pasó a 150. **La optimización que vale la pena es leer cada partición una sola
+vez por proceso**: materializar la ventana (sólo las columnas que ese build
+usa) en una tabla temporal de DuckDB al arrancar y correr todas las consultas
+contra ella. Para héroes bajaría de ~14 lecturas de base a 1.

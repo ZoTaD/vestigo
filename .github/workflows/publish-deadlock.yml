@@ -66,7 +66,14 @@ jobs:
     # Cuarenta deja margen y sigue evitando lo que este número existe para
     # evitar: que un pedido HTTP colgado contra el bucket deje el run vivo las 6
     # horas que da GitHub por defecto.
-    timeout-minutes: 90
+    # **150 desde el 2026-09-21, por el lake nuevo de deadlock-api.** Sus archivos
+    # base son de 5-6 GB con bloques enormes y una partición que antes se leía en
+    # 1-2 s ahora tarda ~28 s; builds, mastery y report pasaron de ~6 a ~25 min
+    # cada uno. Las corridas programadas los reparten por hora y quedan en 30-35
+    # min, pero la manual (workflow_dispatch) corre los tres juntos y con 90 se
+    # cortó en el último paso (2026-09-21 03:47Z). La optimización pendiente es
+    # leer cada partición una sola vez por proceso (docs/design/2026-09-20-lake).
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
 
