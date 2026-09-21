@@ -20,41 +20,109 @@ import { DuckDBInstance, type DuckDBConnection } from "@duckdb/node-api";
  * nuestro: de acá sale el dato crudo, nunca su lectura del juego.
  */
 
-const BASE = "https://s3-cache.deadlock-api.com/db-snapshot";
-const PUBLIC = `${BASE}/public`;
+/**
+ * **El lake de datos de deadlock-api, que reemplazó al snapshot el 2026-09-17.**
+ *
+ * Hasta esa fecha el snapshot era un archivo Parquet por partición en
+ * `s3-cache.deadlock-api.com/db-snapshot`. Ese host dejó de traer partidas con
+ * rango el 17/9 a las 13:00 UTC y el 19/9 desapareció del DNS: deadlock-api lo
+ * retiró al pasar a un **lake en R2** (`data.deadlock-api.com`) que su propia API
+ * usa, descripto por un `manifest.json`. Nadie lo anunció; se encontró leyendo
+ * su código (`services/data_dump`, 2026-09-20).
+ *
+ * La forma nueva, para `match_player`:
+ * - un archivo **base** por partición (`intDiv(match_id, 1000000)`), reconstruido
+ *   cada tanto;
+ * - **deltas** horarios con las filas que todavía no entraron a ninguna base, y
+ *   **residuales** que las juntan. Cubren cualquier partición, así que una
+ *   ventana reciente tiene que leer las bases que toca **más todos los deltas**.
+ * Los nombres de archivo llevan la hora de creación: nunca se reescriben, así
+ * que el reintento por ETag de `retryingOnRewrite` ya no debería dispararse.
+ *
+ * Las columnas son las mismas que antes (mismo ClickHouse detrás): verificado
+ * el 2026-09-20 sobre un delta real, `average_badge`, `items.item_id`,
+ * `stats.time_stamp_s` y compañía con los mismos tipos. `start_time` viene
+ * como TIMESTAMP WITH TIME ZONE, por eso `connect` fija la zona en UTC.
+ */
+const MANIFEST_URL = "https://data.deadlock-api.com/v1/manifest.json";
+
+/** El número de partición con el que se nombran los deltas y residuales juntos. */
+export const EXTRAS = -1;
+
+interface ManifestFile {
+  key: string;
+  kind: "base" | "delta" | "residual" | "snapshot";
+  generation?: number;
+  partition?: number;
+  rows: number;
+  bytes: number;
+  built_at: string;
+}
+
+interface Lake {
+  publicUrl: string;
+  /** Partición → archivos base (normalmente uno). */
+  bases: Map<number, string[]>;
+  /** Deltas y residuales, todos. */
+  extras: string[];
+}
+
+let lake: Lake | null = null;
 
 /**
- * Las particiones de `match_player`, de la más vieja a la más nueva.
+ * Las particiones de `match_player`, de la más vieja a la más nueva, leídas del
+ * manifiesto del lake. Guarda el manifiesto para que `partitionSource` arme las
+ * lecturas: **una corrida entera lee la misma versión**, aunque el lake publique
+ * otra en el medio.
  *
- * Están numeradas y son **cronológicas por `match_id`**: la 96 tiene los últimos
- * días y la 25 tiene 2025. Eso es lo que hace barata la ventana — se consultan
- * las últimas y no las 97.
- *
- * La lista se lee del bucket en vez de escribirse acá porque crece sola: aparece
- * una partición nueva cada pocos días. Un número fijo dejaría de ver lo nuevo sin
- * que nada fallara, que es la peor forma de romperse.
+ * Son cronológicas por `match_id`, así que las últimas cubren los últimos días
+ * y la ventana sigue siendo barata.
  */
 export async function listPartitions(): Promise<number[]> {
   let res: Response;
   try {
-    res = await fetch(`${BASE}/`);
+    res = await fetch(MANIFEST_URL);
   } catch (e) {
-    throw new SnapshotUnavailable(`el bucket del snapshot no responde (${e instanceof Error ? e.message : String(e)})`);
+    throw new SnapshotUnavailable(`el lake no responde (${e instanceof Error ? e.message : String(e)})`);
   }
-  if (!res.ok) throw new SnapshotUnavailable(`el bucket del snapshot contestó ${res.status}`);
-  const xml = await res.text();
-  const nums = [...xml.matchAll(/match_player\/match_player_(\d+)\.parquet/g)].map((m) => Number(m[1]));
-  if (nums.length === 0) {
-    throw new Error(
-      "no encontré ni una partición de match_player en el bucket. " +
-        "O cambió la forma de las claves, o el snapshot dejó de publicarse."
-    );
+  if (!res.ok) throw new SnapshotUnavailable(`el manifiesto del lake contestó ${res.status}`);
+  const manifest = (await res.json()) as {
+    public_url: string;
+    tables: Record<string, { status: string; generation?: number; files: ManifestFile[] }>;
+  };
+  const table = manifest.tables?.match_player;
+  if (!table || !table.files?.length) {
+    throw new SnapshotUnavailable("el manifiesto del lake no trae match_player.");
   }
-  return [...new Set(nums)].sort((a, b) => a - b);
+  const publicUrl = manifest.public_url.replace(/\/$/, "");
+  const url = (k: string) => `${publicUrl}/${k}`;
+  const basesAll = table.files.filter((f) => f.kind === "base" && f.partition !== undefined);
+  // Sólo la generación vigente: una base vieja de la misma partición duplicaría filas.
+  const gen = table.generation ?? Math.max(...basesAll.map((f) => f.generation ?? 0));
+  const bases = new Map<number, string[]>();
+  for (const f of basesAll.filter((f) => (f.generation ?? gen) === gen)) {
+    bases.set(f.partition!, [...(bases.get(f.partition!) ?? []), url(f.key)]);
+  }
+  if (bases.size === 0) throw new SnapshotUnavailable("el manifiesto del lake no trae ninguna base de match_player.");
+  const extras = table.files.filter((f) => f.kind === "delta" || f.kind === "residual").map((f) => url(f.key));
+  lake = { publicUrl, bases, extras };
+  return [...bases.keys()].sort((a, b) => a - b);
 }
 
-/** La URL de lectura de una partición. */
-export const partitionUrl = (n: number): string => `${PUBLIC}/match_player/match_player_${n}.parquet`;
+/**
+ * De dónde lee una partición: sus archivos base, o —para `EXTRAS`— todos los
+ * deltas y residuales. Es una expresión `read_parquet(...)` lista para un
+ * `from`. `union_by_name` porque los deltas pueden tener columnas de más o de
+ * menos entre sí, y `select *` sobre eso fallaría.
+ *
+ * Sin manifiesto cargado (los tests de forma del SQL) devuelve una lectura
+ * simbólica: lo que se prueba ahí son los filtros, no la dirección.
+ */
+export function partitionSource(n: number): string {
+  const files = lake ? (n === EXTRAS ? lake.extras : (lake.bases.get(n) ?? [])) : [`lake://match_player/${n}`];
+  if (files.length === 0) return `read_parquet('lake://match_player/vacio-${n}')`;
+  return `read_parquet([${files.map((f) => `'${f}'`).join(", ")}], union_by_name=true)`;
+}
 
 /**
  * El techo de la ventana, en días.
@@ -102,18 +170,22 @@ export interface PartitionRange {
 export async function partitionRanges(
   con: { runAndReadAll: (sql: string) => Promise<{ getRowObjects: () => unknown[] }> },
   partitions: number[],
-  count = 8
+  count = 10
 ): Promise<PartitionRange[]> {
-  const recientes = partitions.slice(-count);
+  const recientes = partitions.filter((n) => n !== EXTRAS).slice(-count);
   const sql = recientes
     .map(
       (n) => `select ${n} as n,
                      strftime(min(start_time), '%Y-%m-%dT%H:%M:%SZ') as "from",
                      strftime(max(start_time), '%Y-%m-%dT%H:%M:%SZ') as "to"
-              from read_parquet('${partitionUrl(n)}')`
+              from ${partitionSource(n)}`
     )
     .join(" union all ");
   const filas = (await (await con.runAndReadAll(`${sql} order by n`)).getRowObjects()) as PartitionRange[];
+  // Los deltas traen filas de cualquier época (partidas que llegaron tarde), así
+  // que se cuentan como que tocan cualquier ventana: el filtro por start_time de
+  // cada consulta se queda con lo que corresponde.
+  if (lake && lake.extras.length > 0) filas.push({ n: EXTRAS, from: "0000-01-01T00:00:00Z", to: "9999-12-31T23:59:59Z" });
   return filas;
 }
 
@@ -244,7 +316,7 @@ export function rankHoursSql(partitions: number[], from: string): string {
            count(distinct match_id)::BIGINT as matches,
            count(distinct case when ${BADGE} > 0
                           then match_id end)::BIGINT as ranked
-    from read_parquet('${partitionUrl(n)}')
+    from ${partitionSource(n)}
     where match_mode = '${PLAYED_MODE}'
       and game_mode = '${PLAYED_GAME_MODE}'
       and start_time >= TIMESTAMP '${from}'
@@ -300,7 +372,7 @@ export async function partitionsWithColumn(
     partitions.map(async (n) => {
       const filas = (await (
         await con.runAndReadAll(
-          `select count(*)::BIGINT as n from (describe select * from read_parquet('${partitionUrl(n)}'))
+          `select count(*)::BIGINT as n from (describe select * from ${partitionSource(n)})
            where column_name = '${column}'`
         )
       ).getRowObjects()) as { n: bigint }[];
@@ -344,7 +416,7 @@ export async function bandablePartitions(
   const usables = await partitionsWithColumn(con, partitions, "average_badge");
   const fuera = partitions.filter((n) => !usables.includes(n));
   if (fuera.length > 0) {
-    console.log(`  particiones sin average_badge (esquema viejo, sin partidas ranked): ${fuera.join(", ")}`);
+    console.log(`  particiones sin average_badge (esquema viejo, sin partidas ranked; -1 son los deltas): ${fuera.join(", ")}`);
   }
   return usables;
 }
@@ -397,6 +469,10 @@ export async function connect(path = ":memory:"): Promise<DuckDBConnection> {
   const db = await DuckDBInstance.create(path);
   const con = await db.connect();
   await con.run("install httpfs; load httpfs;");
+  // `start_time` del lake es TIMESTAMPTZ y las ventanas se escriben como
+  // TIMESTAMP en UTC: sin esto DuckDB compararía con la zona de la máquina
+  // (UTC−3 acá, UTC en CI) y la ventana correría tres horas según dónde corra.
+  await con.run("set TimeZone = 'UTC';");
   return con;
 }
 
@@ -422,7 +498,7 @@ export class SnapshotUnavailable extends Error {
 export const isSnapshotUnavailable = (e: unknown): boolean =>
   e instanceof SnapshotUnavailable ||
   (e instanceof Error &&
-    /fetch failed|ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ECONNRESET|Could not establish connection|Connection error|Failed to (?:open|read) file.*s3-cache|Unable to connect/i.test(e.message));
+    /fetch failed|ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ECONNRESET|Could not establish connection|Connection error|Failed to (?:open|read) file.*deadlock-api|Unable to connect|HTTP GET error|Could not resolve/i.test(e.message));
 
 /**
  * Corre un build que lee del snapshot, con la política de salida de todos:
@@ -553,7 +629,7 @@ function selectFrom(columns: string, partitions: number[], from: string, to: str
     .map(
       (n) => `
     select ${columns}
-    from read_parquet('${partitionUrl(n)}')
+    from ${partitionSource(n)}
     where match_mode = '${PLAYED_MODE}'
       and game_mode = '${PLAYED_GAME_MODE}'
       and ${BADGE} > 0

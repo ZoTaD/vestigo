@@ -187,9 +187,18 @@ describe("isSnapshotUnavailable", () => {
     const { isSnapshotUnavailable, SnapshotUnavailable } = await import("../src/snapshot");
     expect(isSnapshotUnavailable(new SnapshotUnavailable("x"))).toBe(true);
     expect(isSnapshotUnavailable(new TypeError("fetch failed"))).toBe(true);
-    expect(isSnapshotUnavailable(new Error("getaddrinfo ENOTFOUND s3-cache.deadlock-api.com"))).toBe(true);
+    expect(isSnapshotUnavailable(new Error("getaddrinfo ENOTFOUND data.deadlock-api.com"))).toBe(true);
     expect(isSnapshotUnavailable(new Error("IO Error: Could not establish connection error for HTTP HEAD"))).toBe(true);
     expect(isSnapshotUnavailable(new Error("Binder Error: column tier not found"))).toBe(false);
     expect(isSnapshotUnavailable(new Error("ETag on reading file changed"))).toBe(false);
+  });
+});
+
+describe("el lake: la fuente de cada partición", () => {
+  it("sin manifiesto, arma una lectura simbólica que los tests de forma pueden inspeccionar", async () => {
+    const { partitionSource, EXTRAS } = await import("../src/snapshot");
+    expect(partitionSource(96)).toContain("read_parquet(");
+    expect(partitionSource(96)).toContain("union_by_name=true");
+    expect(partitionSource(EXTRAS)).toContain("read_parquet(");
   });
 });

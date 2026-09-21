@@ -9,7 +9,7 @@ import {
   connect,
   listPartitions,
   partitionRanges,
-  partitionUrl,
+  partitionSource,
   partitionsCovering,
   partitionsWithColumn,
   runSnapshotBuild,
@@ -269,7 +269,7 @@ function windowFrom(parts: number[], conRango: Set<number>, from: string, to: st
     select start_time, strftime(start_time, '%Y-%m-%d') as day, match_id, account_id, won, team,
            ${BADGE} as badge,
            ${conRango.has(n) ? "player_rank_initial_display_rank" : "NULL::INTEGER"} as rango
-    from read_parquet('${partitionUrl(n)}')
+    from ${partitionSource(n)}
     where match_mode = '${PLAYED_MODE}' and game_mode = '${PLAYED_GAME_MODE}'
       and start_time >= TIMESTAMP '${from}' and start_time < TIMESTAMP '${to}'`
     )

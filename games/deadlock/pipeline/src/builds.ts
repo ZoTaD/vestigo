@@ -5,7 +5,7 @@ import {
   listPartitions,
   partitionRanges,
   partitionsCovering,
-  partitionUrl,
+  partitionSource,
   PLAYED_MODE,
   PLAYED_GAME_MODE,
   MAX_WINDOW_DAYS,
@@ -124,7 +124,7 @@ async function main() {
            list_filter("items.imbued_ability_id", x -> x is not null and x <> 0) as imbued,
            "stats.time_stamp_s" as ts, "stats.net_worth" as nw,
            "stats.player_damage" as dmg, "stats.deaths" as deaths
-    from read_parquet('${partitionUrl(n)}')
+    from ${partitionSource(n)}
     where match_mode = '${PLAYED_MODE}' and game_mode = '${PLAYED_GAME_MODE}'
       and ${BADGE} // 10 in (${tiersDefecto})
       and start_time >= TIMESTAMP '${from}' and start_time < TIMESTAMP '${to}'

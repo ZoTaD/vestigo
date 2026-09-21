@@ -10,7 +10,7 @@ import {
   connect,
   listPartitions,
   partitionRanges,
-  partitionUrl,
+  partitionSource,
   partitionsCovering,
   runSnapshotBuild,
   windowEnd,
@@ -147,7 +147,7 @@ const windowWithAccount = (parts: number[], from: string, to: string): string =>
     .map(
       (n) => `
     select account_id, hero_id, won, ${BADGE} // 10 as tier
-    from read_parquet('${partitionUrl(n)}')
+    from ${partitionSource(n)}
     where match_mode = '${PLAYED_MODE}' and game_mode = '${PLAYED_GAME_MODE}'
       and ${BADGE} > 0
       and start_time >= TIMESTAMP '${from}' and start_time < TIMESTAMP '${to}'`
@@ -169,7 +169,7 @@ const historyBefore = (parts: number[], before: string): string =>
     .map(
       (n) => `
     select account_id, hero_id
-    from read_parquet('${partitionUrl(n)}')
+    from ${partitionSource(n)}
     where game_mode = '${PLAYED_GAME_MODE}' and start_time < TIMESTAMP '${before}'`
     )
     .join(" union all ");
