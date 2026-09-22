@@ -28,7 +28,16 @@ import { RANKS } from "./bands";
  * que convenga alojarlas, cambia esta función y nada más.
  */
 
-const ASSETS = "https://assets.deadlock-api.com/v2";
+/**
+ * De dónde se baja el catálogo, en orden.
+ *
+ * **`assets.deadlock-api.com` dejó de resolver el 2026-09-19** y el catálogo
+ * quedó congelado tres días sin que nada lo dijera: el paso perdona fallar (para
+ * no frenar la tier list) y la corrida salía en verde con un `fetch failed`
+ * perdido en el log. `api.deadlock-api.com/v1/assets` sirve lo mismo con la
+ * misma forma (verificado el 2026-09-22 para héroes, rangos e ítems).
+ */
+const ASSET_BASES = ["https://assets.deadlock-api.com/v2", "https://api.deadlock-api.com/v1/assets"];
 /** Donde vive el arte de la tienda, que es de la interfaz y no de los ítems. */
 const SHOP_ART = "https://assets-bucket.deadlock-api.com/assets-api-res/images/shop/catalog";
 const ICON_ART = "https://assets-bucket.deadlock-api.com/assets-api-res/icons";
@@ -381,10 +390,32 @@ export interface Catalog {
 }
 
 async function fetchJson<T>(path: string, lang: string): Promise<T> {
-  const res = await fetch(`${ASSETS}/${path}?language=${lang}`, { redirect: "follow" });
-  if (!res.ok) throw new Error(`la API de assets contestó ${res.status} para ${path} (${lang})`);
-  return (await res.json()) as T;
+  let ultimo = "";
+  for (const base of ASSET_BASES) {
+    try {
+      const res = await fetch(`${base}/${path}?language=${lang}`, {
+        redirect: "follow",
+        signal: AbortSignal.timeout(60_000),
+      });
+      if (res.ok) return (await res.json()) as T;
+      ultimo = `${base} contestó ${res.status}`;
+    } catch (e) {
+      ultimo = `${base}: ${e instanceof Error ? e.message : e}`;
+    }
+  }
+  throw new Error(`no se pudo bajar ${path} (${lang}) de ninguna fuente — ${ultimo}`);
 }
+
+/**
+ * Que una falla se vea en el resumen de la Action y no sólo en el log.
+ *
+ * El paso tiene `continue-on-error` y sale en verde igual: sin esta anotación,
+ * "el catálogo no se actualiza" sólo se descubre mirando fechas.
+ */
+export const avisar = (msg: string) => {
+  console.error(msg);
+  if (process.env.GITHUB_ACTIONS) console.log(`::warning title=Deadlock::${msg.replace(/\s+/g, " ")}`);
+};
 
 /**
  * Los héroes que se pueden jugar de verdad.
@@ -855,7 +886,7 @@ async function main() {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main().catch((e) => {
-    console.error(e instanceof Error ? e.message : e);
+    avisar(`catálogo: ${e instanceof Error ? e.message : e}`);
     process.exit(1);
   });
 }

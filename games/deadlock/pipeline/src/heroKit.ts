@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
-import { isPlayable, parseLoc, unidad, type TextSpan } from "./catalog";
+import { avisar, isPlayable, parseLoc, unidad, type TextSpan } from "./catalog";
 
 /**
  * El kit de cada héroe: sus atributos base, su arma y sus cuatro habilidades,
@@ -498,7 +498,7 @@ async function main() {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main().catch((e) => {
-    console.error(e instanceof Error ? e.message : e);
+    avisar(`kit de héroes: ${e instanceof Error ? e.message : e}`);
     process.exit(1);
   });
 }

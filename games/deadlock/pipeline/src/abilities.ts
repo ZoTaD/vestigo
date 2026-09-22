@@ -299,7 +299,8 @@ export async function fetchBuildAbilityOrder(
   return propio.order.length === 4 ? propio : heroPath;
 }
 
-const HEROES = "https://assets.deadlock-api.com/v2/heroes";
+/** El mismo repliegue que el catálogo: el host de assets dejó de resolver el 2026-09-19. */
+const HEROES = ["https://assets.deadlock-api.com/v2/heroes", "https://api.deadlock-api.com/v1/assets/heroes"];
 
 /**
  * En qué casilla numera el juego a cada habilidad: `signature1` a `signature4`.
@@ -321,7 +322,7 @@ const HEROES = "https://assets.deadlock-api.com/v2/heroes";
  */
 export async function fetchAbilitySlots(): Promise<Map<string, number>> {
   const out = new Map<string, number>();
-  const json = await traer(`${HEROES}?language=english`);
+  const json = (await traer(`${HEROES[0]}?language=english`)) ?? (await traer(`${HEROES[1]}?language=english`));
   if (!Array.isArray(json)) return out;
   for (const hero of json as { items?: Record<string, string> }[]) {
     for (let slot = 1; slot <= 4; slot++) {
