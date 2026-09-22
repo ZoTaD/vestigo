@@ -5,6 +5,7 @@ import SectionHead from "./SectionHead";
 import Home from "./Home";
 import Deadlock, { PatchHistory } from "./Deadlock";
 import DeadlockItems from "./DeadlockItems";
+import DeadlockHeroes from "./DeadlockHeroes";
 import DeadlockNews from "./DeadlockNews";
 import DeadlockRanks from "./DeadlockRanks";
 import DeadlockPlayerLadder from "./DeadlockPlayerLadder";
@@ -208,6 +209,14 @@ function Shell({
               picker={dlPicker}
               open={route.detail}
               onOpen={(slug) => goDlDetail("items", slug)}
+            />
+          ) : route.dlSection === "heroes" ? (
+            <DeadlockHeroes
+              route={route}
+              navigate={navigate}
+              band={dlBand}
+              picker={dlPicker}
+              open={route.detail}
             />
           ) : route.dlSection === "ranks" ? (
             /* Sin `picker`: la escalera es el eje sobre el que se definen las

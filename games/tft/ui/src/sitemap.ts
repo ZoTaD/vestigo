@@ -98,6 +98,10 @@ export function sitemapPaths(data: SitemapData): string[] {
     for (const slug of deadlockDetailSlugs(data).heroes) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "meta", detail: slug }));
     }
+    // La ficha entera de cada héroe, la que se abre desde la pestaña Héroes.
+    for (const slug of deadlockDetailSlugs(data).heroes) {
+      paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "heroes", detail: slug }));
+    }
     for (const slug of deadlockDetailSlugs(data).items) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "items", detail: slug }));
     }

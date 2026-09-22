@@ -446,6 +446,9 @@ const sinEtiquetas = (s: string): string => aplanar(s).trim();
 const aplanar = (s: string): string =>
   s
     .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, "")
+    // Un salto de línea separa dos frases: sin esto "+1 Charge<br>+2s Trail"
+    // quedaba "+1 Charge+2s Trail" (mejoras de Paige, 2026-09-22).
+    .replace(/<br\s*\/?>/gi, " ")
     .replace(/<[^>]*>/g, "")
     .replace(/&nbsp;/g, " ")
     .replace(/\s+/g, " ");
@@ -481,7 +484,16 @@ export function parseLoc(raw: string | undefined, icons?: Map<string, string>): 
     push(aplanar(raw.slice(last, m.index)));
 
     const clases = m[1].split(/\s+/);
-    const texto = aplanar(m[2]).trim();
+    const crudo = aplanar(m[2]);
+    const texto = crudo.trim();
+    /**
+     * El espacio que el juego deja **adentro** del resaltado es el que separa
+     * las palabras: "movimiento<span> durante 4 s</span>" recortado salía
+     * "movimientodurante 4 s". Se saca afuera como texto suelto en vez de
+     * perderlo. Lo agarró la página de Dínamo (2026-09-22).
+     */
+    const antes = texto && /^\s/.test(crudo) && !/\s$/.test(spans[spans.length - 1]?.t ?? " ");
+    if (antes) push(" ");
     const attr = clases.find((c) => c in ATRIBUTOS);
     if (clases.includes("highlight")) push(texto, { hi: true });
     else if (clases.includes("diminish")) push(texto, { dim: true });
@@ -491,6 +503,8 @@ export function parseLoc(raw: string | undefined, icons?: Map<string, string>): 
       push(texto, { attr, icon: key });
     } else push(texto);
     last = m.index + m[0].length;
+    // Lo mismo del otro lado: "<span>+20 m </span>de alcance".
+    if (texto && /\s$/.test(crudo) && /^\S/.test(raw.slice(last))) push(" ");
   }
   push(aplanar(raw.slice(last)));
 

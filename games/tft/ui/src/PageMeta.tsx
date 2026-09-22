@@ -69,7 +69,7 @@ function setAlternates(route: Route) {
 function dlDetailName(route: Route, lang: "en" | "es"): string | null {
   if (!route.detail) return null;
   if (route.view === "deadlock") {
-    if (route.dlSection === "meta") {
+    if (route.dlSection === "meta" || route.dlSection === "heroes") {
       const id = dlHeroSlugs.toId.get(route.detail);
       if (!id) return null;
       const hero = buildHeroes(DL_PUBLISHED_BAND, lang).find((h) => String(h.heroId) === id);

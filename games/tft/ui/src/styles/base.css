@@ -69,10 +69,13 @@ button {
   text-align: inherit;
 }
 
+/* Sin aire arriba: la barra va pegada al borde de la página (ZoTaD,
+   2026-09-22). Ese aire era de cuando la barra estaba fija y ya no lo está
+   desde el 2026-09-16; quedaba una franja vacía arriba de todo. */
 .app {
   min-height: 100%;
   position: relative;
-  padding: clamp(1.5rem, 4vw, 4rem) clamp(1rem, 4vw, 4rem) 6rem;
+  padding: 0 clamp(1rem, 4vw, 4rem) 6rem;
   overflow-x: hidden;
 }
 

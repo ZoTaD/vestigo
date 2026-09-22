@@ -91,6 +91,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   dlSlugs.heroes.forEach((slug, i) => {
     const id = data.dlHeroIds[i];
     out[`dl-meta/${slug}`] = say(data.dlHeroes[id]?.name as Localized, lang, slug);
+    out[`dl-heroes/${slug}`] = out[`dl-meta/${slug}`];
   });
   dlSlugs.items.forEach((slug, i) => {
     const id = data.dlItemIds[i];
@@ -113,7 +114,8 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
 export function ogImagePath(route: Route, latestEdition?: string): string | null {
   if (route.view !== "deadlock") return null;
   const { lang, dlSection, detail } = route;
-  if (dlSection === "meta" && detail) return `/og/${lang}/deadlock/${detail}.jpg`;
+  // Las dos páginas de un héroe comparten su imagen: es el mismo héroe.
+  if ((dlSection === "meta" || dlSection === "heroes") && detail) return `/og/${lang}/deadlock/${detail}.jpg`;
   if (dlSection === "items" && detail) return `/og/${lang}/deadlock/items/${detail}.jpg`;
   if (dlSection === "patches") {
     const slug = detail ?? latestEdition;

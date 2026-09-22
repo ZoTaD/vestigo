@@ -1,0 +1,1610 @@
+/* ---------------------------------------------------------------------------
+   DEADLOCK — pestaña Héroes y página de héroe (2026-09-22).
+
+   La tabla ordenable (`.dl-ht-*`) y la página de cada héroe en la dirección
+   "C · Cartel" (`.dl-hp-*`), con el mismo sistema que el resto de Deadlock
+   (docs/design/2026-09-16-deadlock-direccion-a.md): un solo radio, dos
+   tipografías, sin filos ni barras de color en tarjetas o filas — el color va
+   en la cifra, en un tinte de fondo o en el ícono.
+
+   Carga después de `deadlock.css`.
+--------------------------------------------------------------------------- */
+
+/* ═════════════════════════ La tabla ═════════════════════════ */
+
+/* La tabla entra sin scroll horizontal (pedido de ZoTaD, 2026-09-22): la
+   pestaña usa 1560 px en vez de los 1400 del resto. En una pantalla de 1920
+   eso deja 180 px por lado, lugar para un anuncio vertical de 160. */
+[data-theme="codex"] .deadlock.deadlock-heroes {
+  max-width: 1560px;
+}
+
+[data-theme="codex"] .dl-ht-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  /* Que el foco del teclado (la región es enfocable para desplazarla) se vea. */
+  outline-offset: 2px;
+}
+
+[data-theme="codex"] .dl-ht {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--font-text);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"] .dl-ht th,
+[data-theme="codex"] .dl-ht td {
+  padding: 0 0.4rem;
+  height: 46px;
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--line);
+}
+
+[data-theme="codex"] .dl-ht tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+/* Los rótulos de grupo: una vez arriba, sobre su tramo de columnas. */
+[data-theme="codex"] .dl-ht-groups th {
+  height: 32px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  text-align: center;
+  border-left: 1px solid var(--line);
+}
+
+[data-theme="codex"] .dl-ht-groups th:first-child {
+  border-left: 0;
+}
+
+/* El rótulo puede ir en dos renglones: es lo que más ancho pedía, más que
+   cualquier cifra, y es lo que hacía desbordar la tabla. */
+[data-theme="codex"] .dl-ht-th {
+  height: 50px;
+  vertical-align: bottom;
+  padding-bottom: 0.45rem;
+  white-space: normal;
+  background: var(--surface-solid);
+}
+
+[data-theme="codex"] .dl-ht-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  justify-content: flex-end;
+  min-height: 32px;
+  padding: 0;
+  font: 600 0.6875rem/1.15 var(--font-text);
+  letter-spacing: 0.02em;
+  white-space: normal;
+  text-align: right;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+[data-theme="codex"] .dl-ht-sort:hover,
+[data-theme="codex"] .dl-ht-th[data-sorted] .dl-ht-sort {
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-ht-arrow path {
+  fill: var(--text-faint);
+}
+
+[data-theme="codex"] .dl-ht-arrow path[data-on] {
+  fill: var(--accent);
+}
+
+/* La columna ordenada: el encabezado subrayado como las pestañas, y en cada
+   celda una barra de tinte que dice dónde cae entre el mínimo y el máximo. */
+[data-theme="codex"] .dl-ht-th[data-sorted] {
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+[data-theme="codex"] .dl-ht td[data-sorted] {
+  color: var(--accent-lit);
+  font-weight: 600;
+  background: linear-gradient(
+      to left,
+      rgba(var(--accent-rgb), 0.16) var(--bar, 0%),
+      transparent var(--bar, 0%)
+    )
+    no-repeat;
+}
+
+/* La primera columna queda fija al desplazar la tabla de costado. */
+[data-theme="codex"] .dl-ht-sticky {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--surface-solid);
+}
+
+[data-theme="codex"] .dl-ht .dl-ht-name {
+  text-align: left;
+  padding-left: 0.6rem;
+  min-width: 8.75rem;
+}
+
+[data-theme="codex"] .dl-ht-hero {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+[data-theme="codex"] .dl-ht-hero img {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  object-fit: cover;
+}
+
+[data-theme="codex"] .dl-ht tbody tr:hover > * {
+  background-color: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-ht tbody tr:hover .dl-ht-sticky {
+  background-color: color-mix(in srgb, var(--surface-solid) 88%, var(--text) 12%);
+}
+
+[data-theme="codex"] .dl-ht-hero:hover span {
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-ht-tier {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 0.4rem;
+  border-radius: var(--radius);
+  font: 900 0.75rem/1 var(--font-display);
+  color: var(--on-accent);
+  background: var(--accent);
+  vertical-align: 1px;
+}
+
+[data-theme="codex"] .dl-ht-tier[data-tier="A"] {
+  background: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-ht-tier[data-tier="B"],
+[data-theme="codex"] .dl-ht-tier[data-tier="C"],
+[data-theme="codex"] .dl-ht-tier[data-tier="D"] {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-ht-sub {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+
+/* ═════════════════════════ La página del héroe ═════════════════════════ */
+
+[data-theme="codex"] .dl-hp {
+  --dl-hero: var(--accent);
+  padding-bottom: 3rem;
+}
+
+[data-theme="codex"] .dl-hp-kicker {
+  display: block;
+  font: 600 0.75rem/1.25 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-kicker.is-accent {
+  color: var(--accent-lit);
+  font-family: var(--font-data-narrow);
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+[data-theme="codex"] .dl-hp-h2 {
+  margin: 0.35rem 0 0;
+  font: 900 clamp(2.4rem, 5vw, 4.4rem) / 0.9 var(--font-display);
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-h3 {
+  margin: 0 0 0.6rem;
+  font: 700 1.25rem/1.2 var(--font-text);
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-lead {
+  margin: 0;
+  max-width: 30rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+/* ── Portada ── */
+
+[data-theme="codex"] .dl-hp-banner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 640px;
+  margin-top: 1.1rem;
+  padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1.2rem, 3.5vw, 3rem) 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--bg-2);
+  isolation: isolate;
+}
+
+[data-theme="codex"] .dl-hp-bg {
+  position: absolute;
+  top: -6%;
+  right: -14%;
+  width: 92%;
+  height: auto;
+  z-index: -2;
+  opacity: 0.85;
+}
+
+/* El velo que hace legible el texto sobre el arte: del fondo a la izquierda a
+   transparente a la derecha, y de abajo hacia arriba detrás de las cifras. */
+[data-theme="codex"] .dl-hp-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, var(--bg-2) 24%, color-mix(in srgb, var(--bg-2) 55%, transparent) 50%, transparent 72%),
+    linear-gradient(0deg, var(--bg-2) 0%, transparent 34%);
+}
+
+[data-theme="codex"] .dl-hp-card {
+  position: absolute;
+  right: clamp(1rem, 12%, 12rem);
+  bottom: 118px;
+  width: clamp(220px, 28vw, 380px);
+  height: auto;
+  z-index: -1;
+  /* El retrato del juego viene cortado a pique abajo y a la izquierda: se funde
+     con el fondo por los dos lados en vez de verse pegado. */
+  -webkit-mask-image: linear-gradient(180deg, #000 76%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 16%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(180deg, #000 76%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 16%);
+  mask-composite: intersect;
+}
+
+[data-theme="codex"] .dl-hp-id {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  max-width: 44rem;
+}
+
+[data-theme="codex"] .dl-hp-back {
+  font: 600 0.75rem/1.3 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+[data-theme="codex"] .dl-hp-back:hover {
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-hp-name {
+  /* Aire arriba para la tilde: "DÍNAMO" a 184 px la subía hasta el rótulo. */
+  margin: 0.14em 0 0;
+  font: 900 clamp(4rem, 13vw, 11.5rem) / 0.82 var(--font-display);
+  text-transform: uppercase;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+[data-theme="codex"] .dl-hp-role {
+  margin: 0;
+  font: 700 clamp(1.3rem, 2.4vw, 2rem) / 1.15 var(--font-text);
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-playstyle {
+  margin: 0;
+  max-width: 36rem;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+[data-theme="codex"] .dl-hp-chip {
+  padding: 0.45rem 0.65rem;
+  font: 600 0.8125rem/1 var(--font-text);
+  color: var(--text);
+  background: var(--surface-2);
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-hp-complexity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.6rem;
+  font: 600 0.75rem/1 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-complexity > span[aria-hidden] {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+[data-theme="codex"] .dl-hp-complexity i {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+
+[data-theme="codex"] .dl-hp-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+[data-theme="codex"] .dl-hp-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 1.3rem;
+  font: 700 0.9375rem/1 var(--font-text);
+  color: var(--text);
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  text-decoration: none;
+}
+
+[data-theme="codex"] .dl-hp-btn.is-primary {
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+[data-theme="codex"] .dl-hp-btn:hover {
+  filter: brightness(1.12);
+}
+
+/* Las cifras: la letra de tier en su bloque y cuatro números grandes. */
+[data-theme="codex"] .dl-hp-kpis {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.5rem clamp(1.5rem, 4vw, 3.5rem);
+  margin: 2.5rem 0 0;
+  padding: 1.5rem 0 2rem;
+  border-top: 1px solid var(--line);
+}
+
+[data-theme="codex"] .dl-hp-kpis > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.4rem;
+}
+
+[data-theme="codex"] .dl-hp-kpis dt {
+  font: 600 0.75rem/1.2 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-kpis dd {
+  margin: 0;
+  font: 700 clamp(2.2rem, 4.2vw, 3.5rem) / 1 var(--font-data-narrow);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+[data-theme="codex"] .dl-hp-kpis dd.is-accent {
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-hp-kpis dd[data-sign="up"] {
+  color: var(--good);
+}
+
+[data-theme="codex"] .dl-hp-kpis dd[data-sign="down"] {
+  color: var(--bad);
+}
+
+[data-theme="codex"] .dl-hp-kpis > .dl-hp-tierblock {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius);
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+[data-theme="codex"] .dl-hp-tierblock dd {
+  font: 900 2.75rem/1 var(--font-display);
+  color: inherit;
+}
+
+[data-theme="codex"] .dl-hp-tierblock > span {
+  font: 700 0.625rem/1 var(--font-text);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── Anclas ── */
+
+[data-theme="codex"] .dl-hp-anchors {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem 1.5rem;
+  margin-top: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+[data-theme="codex"] .dl-hp-anchor-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2rem;
+}
+
+[data-theme="codex"] .dl-hp-anchor-links a {
+  padding: 1.1rem 0 1rem;
+  font: 600 0.9375rem/1 var(--font-text);
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+[data-theme="codex"] .dl-hp-anchor-links a:hover {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Bloques ── */
+
+[data-theme="codex"] .dl-hp-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+}
+
+[data-theme="codex"] .dl-hp-block [id^="dl-hp-"],
+[data-theme="codex"] #dl-hp-build {
+  scroll-margin-top: calc(var(--sticky-top) + 1.5rem);
+}
+
+[data-theme="codex"] .dl-hp-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+/* ── Habilidades ── */
+
+[data-theme="codex"] .dl-hp-abilities {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 6vw, 5rem);
+}
+
+[data-theme="codex"] .dl-hp-ability {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+[data-theme="codex"] .dl-hp-ability[data-flip] .dl-hp-ability-media {
+  order: 2;
+}
+
+[data-theme="codex"] .dl-hp-ability-media {
+  position: relative;
+}
+
+[data-theme="codex"] .dl-hp-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--bg-2);
+}
+
+/* Sin clip del juego (los héroes más nuevos): el ícono de la habilidad en
+   grande sobre el color del héroe, que es el de su pantalla de selección. */
+[data-theme="codex"] .dl-hp-video.is-empty {
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--dl-hero) 16%, var(--bg-2));
+}
+
+[data-theme="codex"] .dl-hp-video.is-empty img {
+  width: clamp(88px, 22%, 140px);
+  height: auto;
+  opacity: 0.9;
+}
+
+[data-theme="codex"] .dl-hp-video.is-empty span {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.7rem;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+[data-theme="codex"] .dl-hp-ability-key {
+  position: absolute;
+  left: 1.1rem;
+  bottom: 0.6rem;
+  font: 900 clamp(3.5rem, 7vw, 6rem) / 1 var(--font-display);
+  color: var(--text);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+/* Los íconos de habilidad del juego vienen blancos salvo alguno negro (Pulsación
+   Cinética): se llevan todos al crema del tema para que se lean igual. */
+[data-theme="codex"] .dl-hp .abi,
+[data-theme="codex"] .dl-hp-ability-icon {
+  filter: brightness(0) invert(0.95);
+}
+
+[data-theme="codex"] .dl-hp-ability-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+[data-theme="codex"] .dl-hp-ability-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  font: 600 0.75rem/1.2 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+[data-theme="codex"] .dl-hp-ability-icon {
+  width: 40px;
+  height: 40px;
+}
+
+[data-theme="codex"] .dl-hp-tag {
+  padding: 0.3rem 0.5rem;
+  color: var(--text);
+  background: var(--surface-2);
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-hp-cd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.55rem;
+  font: 700 0.9375rem/1 var(--font-data-narrow);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+  background: var(--surface-2);
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-hp-cd img {
+  width: 14px;
+  height: 14px;
+}
+
+[data-theme="codex"] .dl-hp-ability-name {
+  margin: 0;
+  font: 900 clamp(2.2rem, 4.4vw, 3.75rem) / 0.92 var(--font-display);
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-quip {
+  margin: -0.4rem 0 0;
+  font-style: italic;
+  font-size: 0.9375rem;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+[data-theme="codex"] .dl-hp-desc {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-desc .dl-hi,
+[data-theme="codex"] .dl-hp-upgrades .dl-hi {
+  color: var(--accent-lit);
+  font-weight: 600;
+}
+
+[data-theme="codex"] .dl-hp .dl-attr[data-attr^="Spirit"] {
+  color: #c9a2ff;
+}
+
+[data-theme="codex"] .dl-hp .dl-attr[data-attr*="Weapon"],
+[data-theme="codex"] .dl-hp .dl-attr[data-attr*="FireRate"],
+[data-theme="codex"] .dl-hp .dl-attr[data-attr="BulletResist"] {
+  color: #ffb96b;
+}
+
+[data-theme="codex"] .dl-hp .dl-attr[data-attr="Heal"],
+[data-theme="codex"] .dl-hp .dl-attr[data-attr="Regen"] {
+  color: #8fe39b;
+}
+
+[data-theme="codex"] .dl-hp .dl-attr[data-attr*="MoveSpeed"] {
+  color: #7fe3c0;
+}
+
+[data-theme="codex"] .dl-hp .dl-attr[data-attr="MeleeDamage"] {
+  color: #ff9b8a;
+}
+
+[data-theme="codex"] .dl-hp .dl-attr[data-attr="Slow"],
+[data-theme="codex"] .dl-hp .dl-attr[data-attr="Stun"] {
+  color: #9fc4ff;
+}
+
+[data-theme="codex"] .dl-hp-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+[data-theme="codex"] .dl-hp-group-label {
+  font: 600 0.75rem/1.2 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 0.35rem;
+}
+
+[data-theme="codex"] .dl-hp-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.65rem 0.75rem;
+  background: var(--surface-2);
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-hp-stats.is-basic .dl-hp-stat {
+  background: var(--surface);
+}
+
+[data-theme="codex"] .dl-hp-stat-value {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font: 700 1.25rem/1 var(--font-data-narrow);
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-stat-value img {
+  width: 16px;
+  height: 16px;
+}
+
+[data-theme="codex"] .dl-hp-stat-value small {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-stat-label {
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-stat-spirit {
+  font: 600 0.75rem/1.2 var(--font-text);
+  color: #c9a2ff;
+}
+
+[data-theme="codex"] .dl-hp-upgrades {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"] .dl-hp-upgrades li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-hp-upgrades li:last-child {
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-hp-tier {
+  font: 900 1.125rem/1 var(--font-display);
+  color: var(--accent-lit);
+}
+
+/* El recorrido de puntos. */
+[data-theme="codex"] .dl-hp-path {
+  padding: 1.25rem;
+}
+
+[data-theme="codex"] .dl-hp-path-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+[data-theme="codex"] .dl-hp-path-scroll {
+  overflow-x: auto;
+}
+
+[data-theme="codex"] .dl-hp-path-grid {
+  border-collapse: separate;
+  border-spacing: 4px;
+}
+
+[data-theme="codex"] .dl-hp-path-grid th {
+  padding-right: 0.8rem;
+  text-align: left;
+  font: 600 0.8125rem/1.1 var(--font-text);
+  white-space: nowrap;
+}
+
+[data-theme="codex"] .dl-hp-path-grid th > * {
+  vertical-align: middle;
+}
+
+[data-theme="codex"] .dl-hp-path-grid th img {
+  width: 28px;
+  height: 28px;
+  margin-right: 0.6rem;
+}
+
+[data-theme="codex"] .dl-hp-path-grid td {
+  width: 44px;
+  min-width: 36px;
+  height: 44px;
+  text-align: center;
+  font: 700 0.9375rem/1 var(--font-data-narrow);
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-hp-path-grid td[data-step="unlock"],
+[data-theme="codex"] .dl-hp-legend[data-step="unlock"] {
+  color: var(--accent-lit);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+[data-theme="codex"] .dl-hp-path-grid td[data-step="upgrade"],
+[data-theme="codex"] .dl-hp-legend[data-step="upgrade"] {
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+[data-theme="codex"] .dl-hp-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.9rem 0 0;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-legend {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 0.4rem;
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-hp-legend:first-child {
+  margin-left: 0;
+}
+
+[data-theme="codex"] .dl-hp-note-sep {
+  color: var(--text-faint);
+}
+
+/* ── En números ── */
+
+[data-theme="codex"] .dl-hp-standouts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+[data-theme="codex"] .dl-hp-standout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.6rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-hp-standout-value {
+  font: 900 clamp(3rem, 6vw, 4.5rem) / 0.9 var(--font-display);
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-standout[data-first] .dl-hp-standout-value {
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-hp-standout-label {
+  font: 700 1.125rem/1.2 var(--font-text);
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-standout-read {
+  font-size: 0.9375rem;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-numbers-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+[data-theme="codex"] .dl-hp-numbers-grid > .box,
+[data-theme="codex"] .dl-hp-timeline {
+  padding: 1.25rem;
+}
+
+[data-theme="codex"] .dl-hp-subhead {
+  margin-top: 1.6rem;
+}
+
+[data-theme="codex"] .dl-hp .box-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+[data-theme="codex"] .dl-hp-profile {
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="codex"] .dl-hp-profile-axis,
+[data-theme="codex"] .dl-hp-profile-row {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr) 7.5rem;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+[data-theme="codex"] .dl-hp-profile-axis > span:nth-child(2) {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6875rem;
+  color: var(--text-faint);
+}
+
+[data-theme="codex"] .dl-hp-profile-row {
+  min-height: 36px;
+}
+
+[data-theme="codex"] .dl-hp-profile-label {
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-profile-label::first-letter {
+  text-transform: uppercase;
+}
+
+[data-theme="codex"] .dl-hp-profile-track {
+  position: relative;
+  height: 8px;
+  background: var(--surface-2);
+  border-radius: 2px;
+}
+
+/* La raya del medio: el héroe promedio. */
+[data-theme="codex"] .dl-hp-profile-track::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  bottom: -5px;
+  width: 1px;
+  background: var(--text);
+  opacity: 0.35;
+}
+
+[data-theme="codex"] .dl-hp-profile-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px;
+  background: var(--accent-dark);
+}
+
+[data-theme="codex"] .dl-hp-profile-fill[data-side="up"] {
+  left: 50%;
+  width: calc(var(--p) - 50%);
+  background: var(--accent);
+}
+
+[data-theme="codex"] .dl-hp-profile-fill[data-side="down"] {
+  left: var(--p);
+  width: calc(50% - var(--p));
+}
+
+[data-theme="codex"] .dl-hp-profile-mark {
+  position: absolute;
+  top: 50%;
+  left: var(--p);
+  width: 10px;
+  height: 10px;
+  background: var(--accent-lit);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+[data-theme="codex"] .dl-hp-profile-value {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 0.4rem;
+  font: 700 1rem/1 var(--font-data-narrow);
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-profile-value small {
+  font: 500 0.6875rem/1 var(--font-text);
+  color: var(--text-faint);
+}
+
+/* Por rango. */
+[data-theme="codex"] .dl-hp-bands {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+[data-theme="codex"] .dl-hp-band {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr) 4.2rem;
+  gap: 0.8rem;
+  align-items: center;
+  min-height: 46px;
+}
+
+[data-theme="codex"] .dl-hp-band-name {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.8125rem;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-band-name img {
+  width: 20px;
+  height: 20px;
+}
+
+[data-theme="codex"] .dl-hp-band-name small {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--text-faint);
+}
+
+[data-theme="codex"] .dl-hp-band[data-current] .dl-hp-band-name {
+  color: var(--text);
+  font-weight: 600;
+}
+
+[data-theme="codex"] .dl-hp-band-track {
+  position: relative;
+  height: 10px;
+  background: var(--surface-2);
+  border-radius: 2px;
+}
+
+[data-theme="codex"] .dl-hp-band-track > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--w);
+  border-radius: 2px;
+  background: var(--accent-dark);
+}
+
+[data-theme="codex"] .dl-hp-band[data-current] .dl-hp-band-track > span {
+  background: var(--accent);
+}
+
+[data-theme="codex"] .dl-hp-band-track::after {
+  content: "";
+  position: absolute;
+  left: var(--mid);
+  top: -4px;
+  bottom: -4px;
+  width: 1px;
+  background: var(--text);
+  opacity: 0.5;
+}
+
+[data-theme="codex"] .dl-hp-band-value {
+  text-align: right;
+  font: 700 1.125rem/1 var(--font-data-narrow);
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-band[data-current] .dl-hp-band-value {
+  color: var(--accent-lit);
+}
+
+/* Gráficos. */
+[data-theme="codex"] .dl-hp-chart {
+  width: 100%;
+  margin-top: 0.6rem;
+}
+
+[data-theme="codex"] .dl-hp-chart svg {
+  display: block;
+  overflow: visible;
+}
+
+[data-theme="codex"] .dl-hp-axis {
+  stroke: var(--line);
+  stroke-dasharray: 2 4;
+}
+
+[data-theme="codex"] .dl-hp-axis.is-mid {
+  stroke: var(--line-strong);
+  stroke-dasharray: none;
+}
+
+[data-theme="codex"] .dl-hp-axis.is-dashed {
+  stroke: var(--text);
+  stroke-opacity: 0.45;
+  stroke-dasharray: 3 3;
+}
+
+[data-theme="codex"] .dl-hp-tick {
+  fill: var(--text-dim);
+  font: 500 12px var(--font-data-narrow);
+}
+
+[data-theme="codex"] .dl-hp-tick.is-faint {
+  fill: var(--text-faint);
+  font-family: var(--font-text);
+  font-size: 11px;
+}
+
+[data-theme="codex"] .dl-hp-after {
+  fill: var(--accent);
+  fill-opacity: 0.06;
+}
+
+[data-theme="codex"] .dl-hp-patch {
+  stroke: var(--accent);
+}
+
+[data-theme="codex"] .dl-hp-patch-label {
+  fill: var(--accent-lit);
+  font: 600 12px var(--font-text);
+}
+
+[data-theme="codex"] .dl-hp-avg {
+  stroke: var(--text-dim);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+}
+
+[data-theme="codex"] .dl-hp-avg.is-after {
+  stroke: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-hp-avg-label {
+  fill: var(--text-dim);
+  font: 500 12px var(--font-text);
+  paint-order: stroke;
+  stroke: var(--surface-solid);
+  stroke-width: 4px;
+}
+
+[data-theme="codex"] .dl-hp-avg-label.is-after {
+  fill: var(--accent-lit);
+  font-weight: 600;
+}
+
+[data-theme="codex"] .dl-hp-area {
+  fill: var(--accent);
+  fill-opacity: 0.08;
+}
+
+[data-theme="codex"] .dl-hp-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+[data-theme="codex"] .dl-hp-dot {
+  fill: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-hp-bar {
+  fill: var(--accent-dark);
+}
+
+[data-theme="codex"] .dl-hp-bar.is-top {
+  fill: var(--accent);
+}
+
+[data-theme="codex"] .dl-hp-bar-value {
+  fill: var(--text);
+  font: 700 15px var(--font-data-narrow);
+}
+
+/* ── Enfrentamientos ── */
+
+[data-theme="codex"] .dl-hp-pairs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+[data-theme="codex"] .dl-hp-pairs {
+  padding: 1.25rem;
+}
+
+[data-theme="codex"] .dl-hp-pairs-title {
+  margin: 0 0 0.6rem;
+  font: 600 0.75rem/1.2 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-pairs ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"] .dl-hp-pair {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 56px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+[data-theme="codex"] .dl-hp-pair img {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  object-fit: cover;
+}
+
+[data-theme="codex"] .dl-hp-pair-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+[data-theme="codex"] .dl-hp-pair:hover .dl-hp-pair-name {
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-hp-pair-n {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+[data-theme="codex"] .dl-hp-pair-wr {
+  width: 4rem;
+  text-align: right;
+  font: 700 1.125rem/1 var(--font-data-narrow);
+}
+
+[data-theme="codex"] .dl-hp-pairs[data-kind="hard"] .dl-hp-pair-wr {
+  color: var(--bad);
+}
+
+[data-theme="codex"] .dl-hp-pairs[data-kind="easy"] .dl-hp-pair-wr {
+  color: var(--good);
+}
+
+[data-theme="codex"] .dl-hp-pairs[data-kind="with"] .dl-hp-pair-wr {
+  color: var(--accent-lit);
+}
+
+/* ── Build ── */
+
+[data-theme="codex"] .dl-hp-build {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+[data-theme="codex"] .dl-hp-build-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+[data-theme="codex"] .dl-hp-tl {
+  padding: 1.5rem 2.5rem 1.2rem;
+}
+
+[data-theme="codex"] .dl-hp-tl-track {
+  position: relative;
+  height: calc(var(--lanes) * 84px + 40px);
+}
+
+[data-theme="codex"] .dl-hp-tl-item {
+  position: absolute;
+  left: calc(var(--x) * 100%);
+  top: calc(var(--lane) * 84px);
+  width: 88px;
+  margin-left: -44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  text-align: center;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-tl-item img {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+[data-theme="codex"] .dl-hp-tl-axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 24px;
+  border-top: 1px solid var(--line-strong);
+}
+
+[data-theme="codex"] .dl-hp-tl-axis span {
+  position: absolute;
+  left: calc(var(--x) * 100%);
+  top: 6px;
+  transform: translateX(-50%);
+  font: 500 0.8125rem/1 var(--font-data-narrow);
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-tl-list {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"] .dl-hp-tl-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  font-size: 0.875rem;
+}
+
+[data-theme="codex"] .dl-hp-tl-list img {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+}
+
+[data-theme="codex"] .dl-hp-tl-min {
+  width: 2.5rem;
+  font: 700 1rem/1 var(--font-data-narrow);
+  color: var(--accent-lit);
+}
+
+[data-theme="codex"] .dl-hp .dl-band-panel {
+  margin: 0;
+  width: auto;
+}
+
+/* ── Historia y atributos ── */
+
+[data-theme="codex"] .dl-hp-lore {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+[data-theme="codex"] .dl-hp-lore-text {
+  margin: 1rem 0 0;
+  font-size: 1.1875rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--text);
+  white-space: pre-line;
+}
+
+[data-theme="codex"] .dl-hp-attrs {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+[data-theme="codex"] .dl-hp-attr-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 1.5rem;
+  margin: 0;
+}
+
+[data-theme="codex"] .dl-hp-attr-grid > div {
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--line);
+}
+
+[data-theme="codex"] .dl-hp-attr-grid dt {
+  font: 600 0.6875rem/1.2 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"] .dl-hp-attr-grid dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.5rem;
+  margin: 0.35rem 0 0;
+  font: 700 1.25rem/1.1 var(--font-data-narrow);
+  color: var(--text);
+}
+
+[data-theme="codex"] .dl-hp-attr-grid small {
+  font: 500 0.75rem/1.2 var(--font-text);
+  color: var(--text-faint);
+}
+
+[data-theme="codex"] .dl-hp-next {
+  margin-top: 4rem;
+}
+
+/* ═════════════════════════ Pantallas angostas ═════════════════════════ */
+
+@media (max-width: 1000px) {
+  [data-theme="codex"] .dl-hp-numbers-grid,
+  [data-theme="codex"] .dl-hp-lore {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-theme="codex"] .dl-hp-pairs-grid,
+  [data-theme="codex"] .dl-hp-standouts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 820px) {
+  [data-theme="codex"] .dl-hp-ability {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-theme="codex"] .dl-hp-ability[data-flip] .dl-hp-ability-media {
+    order: 0;
+  }
+
+  [data-theme="codex"] .dl-hp-upgrades {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  /* En el teléfono la columna fija ocupa lo justo: el nombre y un retrato chico. */
+  [data-theme="codex"] .dl-ht .dl-ht-name {
+    min-width: 7.75rem;
+  }
+
+  [data-theme="codex"] .dl-ht-hero {
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  [data-theme="codex"] .dl-ht-hero img {
+    width: 24px;
+    height: 24px;
+  }
+
+  [data-theme="codex"] .dl-hp-banner {
+    min-height: 0;
+    padding-top: 1.25rem;
+  }
+
+  /* El retrato pasa arriba, chico, en vez de pelear con el texto. */
+  [data-theme="codex"] .dl-hp-card {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    order: -1;
+    justify-self: center;
+    width: 190px;
+    margin: -0.5rem 0 -0.75rem;
+  }
+
+  [data-theme="codex"] .dl-hp-bg {
+    width: 180%;
+    right: -60%;
+    top: -4%;
+    opacity: 0.55;
+  }
+
+  [data-theme="codex"] .dl-hp-scrim {
+    background: linear-gradient(0deg, var(--bg-2) 30%, color-mix(in srgb, var(--bg-2) 45%, transparent) 70%);
+  }
+
+  [data-theme="codex"] .dl-hp-kpis {
+    gap: 1.1rem 1.6rem;
+    margin-top: 1.75rem;
+  }
+
+  [data-theme="codex"] .dl-hp-kpis > .dl-hp-tierblock {
+    width: 64px;
+    height: 64px;
+  }
+
+  [data-theme="codex"] .dl-hp-tierblock dd {
+    font-size: 2rem;
+  }
+
+  [data-theme="codex"] .dl-hp-anchor-links {
+    gap: 0 1.2rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    max-width: 100%;
+  }
+
+  [data-theme="codex"] .dl-hp-anchor-links a {
+    white-space: nowrap;
+  }
+
+  [data-theme="codex"] .dl-hp-profile-axis,
+  [data-theme="codex"] .dl-hp-profile-row {
+    grid-template-columns: 6.5rem minmax(0, 1fr) 4.8rem;
+    gap: 0.6rem;
+  }
+
+  [data-theme="codex"] .dl-hp-profile-value small {
+    display: none;
+  }
+
+  [data-theme="codex"] .dl-hp-band {
+    grid-template-columns: 8.5rem minmax(0, 1fr) 3.6rem;
+  }
+
+  [data-theme="codex"] .dl-hp-tl {
+    padding: 1rem;
+  }
+
+  [data-theme="codex"] .dl-hp-tl-track {
+    display: none;
+  }
+
+  [data-theme="codex"] .dl-hp-tl-list {
+    display: block;
+  }
+
+  [data-theme="codex"] .dl-hp-attr-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* El rótulo de la columna de nombres va a la izquierda, como sus celdas. */
+[data-theme="codex"] .dl-ht .dl-ht-name .dl-ht-sort {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+[data-theme="codex"] .dl-ht-arrow {
+  flex-shrink: 0;
+}
+
+[data-theme="codex"] .deadlock-heroes .page {
+  max-width: none;
+}
+
+/* La flecha de orden sólo ocupa lugar en la columna ordenada: en las otras 16
+   eran ~14 px cada una, casi 230 px de tabla para decir "se puede ordenar",
+   que ya lo dicen el cursor y el color al pasar el mouse. */
+[data-theme="codex"] .dl-ht-th:not([data-sorted]) .dl-ht-arrow {
+  display: none;
+}
+
+[data-theme="codex"] .dl-ht-groups th {
+  white-space: normal;
+  line-height: 1.15;
+}
+
+@media (max-width: 1099px) and (min-width: 761px) {
+  [data-theme="codex"] .dl-ht .dl-ht-name {
+    min-width: 8rem;
+  }
+}

@@ -631,11 +631,207 @@ const EN = {
     /** La página de un héroe, propia desde el rediseño del 2026-09-06. */
     heroPage: {
       back: "Back to the tier list",
+      /** El salto a la ficha entera del héroe, en la pestaña Héroes. */
+      full: (name: string) => `All about ${name}`,
       prev: "Previous",
       next: "Next",
       rank: (n: string, total: string) => `#${n} of ${total}`,
       tabs: { build: "Build", skills: "Abilities", buy: "Buy order", counters: "Matchups", mastery: "Mastery" },
       kpis: { winRate: "Win rate", pickRate: "Pick rate", skillGap: "Skill gap", trend: "Since the patch" },
+    },
+    /**
+     * La pestaña Héroes (2026-09-22): los 38 en una tabla con los atributos
+     * base del juego, ordenable por columna. Cada fila abre la página del héroe.
+     */
+    heroes: {
+      title: "Heroes",
+      accent: "side by side",
+      lead:
+        "Every hero's base numbers exactly as the game client ships them — health, speed, weapon, " +
+        "what each boon adds — next to their win rate and pick rate in the rank band you pick. " +
+        "Click a column to sort by it; click a hero to open their page.",
+      source: "Base values: the game client, via deadlock-api. Win rate and pick rate: the tier list.",
+      meta: (n: number, band: string) => `${n} heroes · base values from the game · win rate in ${band}`,
+      loading: "Loading the heroes…",
+      sortBy: (col: string) => `Sort by ${col}`,
+      groups: {
+        play: "In matches",
+        vitality: "Vitality",
+        movement: "Movement",
+        weapon: "Weapon",
+        boon: "Per boon",
+        melee: "Melee",
+      },
+      cols: {
+        name: "Hero",
+        winRate: "Win rate",
+        pickRate: "Pick rate",
+        health: "Health",
+        healthRegen: "Regen",
+        healthPerBoon: "Health",
+        moveSpeed: "Speed",
+        sprintSpeed: "Sprint",
+        stamina: "Stamina",
+        dps: "DPS",
+        sustainedDps: "Sustained",
+        bulletDamage: "Per shot",
+        fireRate: "Shots/s",
+        clip: "Clip",
+        reload: "Reload",
+        bulletPerBoon: "Bullet",
+        spiritPerBoon: "Spirit",
+        heavyMelee: "Heavy",
+      },
+      tips: {
+        winRate: "Share of matches won in the selected band, from the tier list.",
+        pickRate: "Share of matches where someone played the hero, in the selected band.",
+        health: "Base health at the start of the match.",
+        healthRegen: "Health regenerated per second.",
+        healthPerBoon: "Health gained with each boon (level up).",
+        moveSpeed: "Base movement speed, in meters per second.",
+        sprintSpeed: "Extra speed while sprinting, in meters per second.",
+        stamina: "Stamina charges (dashes).",
+        dps: "Weapon damage per second while firing, as the game computes it.",
+        sustainedDps: "Weapon damage per second counting the reload.",
+        bulletDamage: "Damage per shot. Heroes that fire several pellets show the total, with the pellets beside it.",
+        fireRate: "Shots per second.",
+        clip: "Bullets per magazine.",
+        reload: "Seconds to reload. Sorted shortest first.",
+        bulletPerBoon: "Bullet damage gained with each boon.",
+        spiritPerBoon: "Spirit power gained with each boon: what makes abilities hit harder as you level.",
+        heavyMelee: "Damage of the heavy melee attack.",
+      },
+      pellets: (n: number) => `×${n}`,
+      pelletsTip: (n: number, each: string) => `${n} pellets of ${each}`,
+    },
+    /** La página de cada héroe, en la dirección "C · Cartel" elegida el 2026-09-22. */
+    hero: {
+      back: "Heroes",
+      kicker: (rank: number, total: number, band: string) => `#${rank} of ${total} in ${band}`,
+      complexity: "Complexity",
+      complexityTip: (n: number) => `The game rates this hero's complexity at ${n}.`,
+      cta: { kit: "See the kit", build: "Best build" },
+      kpis: {
+        winRate: "Win rate",
+        pickRate: "Pick rate",
+        mastery: "Rewards practice",
+        masteryTip: "Win-rate points between the players with the most matches on the hero and those with the fewest, in this band.",
+        trend: "Since the patch",
+      },
+      anchors: { kit: "Kit", numbers: "Numbers", matchups: "Matchups", build: "Build", lore: "Lore" },
+      kit: {
+        kicker: "The kit",
+        title: "Abilities",
+        lead:
+          "What each ability does, in the game's own words and numbers. T1, T2 and T3 are the " +
+          "three upgrades you buy with ability points.",
+        ability: (n: number) => `Ability ${n}`,
+        ultimate: "Ultimate",
+        passive: "Passive",
+        cooldown: "Cooldown",
+        charges: "Charges",
+        spirit: (x: string) => `+${x} per spirit power`,
+        spiritTip: (x: string) => `The game scales this number by ${x} for every point of spirit power.`,
+        upgrades: "Upgrades",
+        noVideo: "The game has no clip for this ability",
+        order: "What to level first",
+        orderLead: (n: string) => `The most common path in its most played build · ${n} matches`,
+        orderSteps: "Point 1 → 15",
+        unlock: "unlocks",
+        upgrade: "upgrades",
+        loading: "Loading the kit…",
+        missing: "The game has not published this hero's abilities yet.",
+      },
+      numbers: {
+        kicker: "In numbers",
+        title: "How it plays",
+        lead: (band: string, from: string, to: string) =>
+          `Per-match averages in ${band}, ${from} to ${to}, against the other heroes in the same band.`,
+        metrics: {
+          kills: "kills",
+          deaths: "deaths",
+          assists: "assists",
+          netWorth: "souls",
+          playerDamage: "damage to heroes",
+          damageTaken: "damage taken",
+          objectiveDamage: "objective damage",
+          lastHits: "last hits",
+          accuracy: "accuracy",
+        },
+        /** Los mismos, como rótulo de fila. */
+        names: {
+          kills: "Kills",
+          deaths: "Deaths",
+          assists: "Assists",
+          netWorth: "Souls",
+          playerDamage: "Damage to heroes",
+          damageTaken: "Damage taken",
+          objectiveDamage: "Objective damage",
+          lastHits: "Last hits",
+          accuracy: "Accuracy",
+        },
+        perMatch: "per match",
+        above: (p: number) => `More than ${p}% of heroes`,
+        below: (p: number) => `Less than ${p}% of heroes`,
+        profile: "Against the other heroes",
+        profileAxis: { less: "less", avg: "average", more: "more" },
+        avg: "avg.",
+        timeline: "Win rate over time",
+        timelineLead: (band: string) => `${band} · last 30 days`,
+        timelineAria: (name: string) => `${name}'s daily win rate over the last 30 days`,
+        patch: "Patch",
+        before: "before",
+        after: "after",
+        byBand: "By rank",
+        byBandNote: "line = 50%",
+        rankOf: (n: number, total: number) => `#${n} of ${total}`,
+        mastery: "Mastery",
+        masteryAxis: "matches with the hero",
+        masteryAria: (name: string) => `${name}'s win rate by matches played with the hero`,
+        empty: "Not enough matches in this band to compare yet.",
+      },
+      matchups: {
+        kicker: "Matchups",
+        title: "Who to fear",
+        hard: "Struggles against",
+        easy: "Does well against",
+        with: "Best alongside",
+        lead: (min: number, from: string, to: string) =>
+          `Win rate in the matches where each hero was on the other team (or the same one), ${from} to ${to}. Only pairs with ${min}+ matches.`,
+        matches: (n: string) => `${n} m.`,
+        none: "Not enough matches in this band yet.",
+      },
+      build: {
+        kicker: (wr: string, n: string) => `Build · ${wr} in ${n} matches`,
+        title: "Minute by minute",
+        lead: "When each item of the recommended build is finished, on the median.",
+        minute: (m: number) => `${m}′`,
+        full: "The full build",
+      },
+      lore: {
+        kicker: "Lore",
+        base: "Base attributes",
+        weapon: "Weapon",
+        attrs: {
+          health: "Health",
+          healthRegen: "Health regen",
+          moveSpeed: "Move speed",
+          sprintSpeed: "Sprint speed",
+          stamina: "Stamina",
+          melee: "Melee",
+          spiritPerBoon: "Spirit power",
+          bulletDamage: "Bullet damage",
+          fireRate: "Fire rate",
+          dps: "DPS",
+          clip: "Clip",
+          reload: "Reload",
+          magazine: "Damage per clip",
+        },
+        perBoon: (x: string) => `+${x} per boon`,
+        perBoonShort: "per boon",
+        lightHeavy: "light / heavy",
+        withReload: (x: string) => `${x} with reload`,
+      },
     },
     /** El rail de la tier list: lo que cambió, lo más jugado, el registro. */
     rail: {
@@ -669,7 +865,8 @@ const EN = {
      * son los parches del juego, que es la palabra que usa el jugador.
      */
     tabs: {
-      meta: "Heroes",
+      meta: "Tier list",
+      heroes: "Heroes",
       items: "Items",
       ranks: "Ranks",
       ladder: "Ladder",
@@ -1592,6 +1789,12 @@ const EN = {
       },
     },
     deadlock: {
+      heroes: {
+        title: () => "Deadlock Heroes Compared — Health, Weapon and Stats | Vestigo",
+        description: () =>
+          "All Deadlock heroes side by side with the game's own numbers: health, speed, weapon " +
+          "DPS, clip, reload and what each boon adds. Sort by any column.",
+      },
       meta: {
         title: () => "Deadlock Hero Tier List and Win Rates | Vestigo",
         description: () =>
@@ -1649,11 +1852,16 @@ const EN = {
             ? `${name} — Deadlock Item Stats | Vestigo`
             : dlSection === "patches"
               ? `Deadlock ${name}: Every Nerf, Buff and Change | Vestigo News`
-              : `${name} — Deadlock Build & Win Rate | Vestigo`,
+              : dlSection === "heroes"
+                ? `${name} — Deadlock Abilities, Stats and Matchups | Vestigo`
+                : `${name} — Deadlock Build & Win Rate | Vestigo`,
         description: (name: string, dlSection: string) =>
           dlSection === "patches"
             ? `Every hero and item change in Deadlock's ${name}, ability by ability and marked as ` +
               "nerf or buff, with the official notes and what the numbers say since it landed."
+            : dlSection === "heroes"
+            ? `${name} in Deadlock: every ability with the game's numbers and clips, base stats, ` +
+              "who they beat and lose to, and how they play against the other heroes."
             : dlSection === "items"
             ? `How ${name} performs in Deadlock: win rate against its own price, pick rate, ` +
               "and the heroes that carry it best."
@@ -2236,11 +2444,200 @@ const ES: typeof EN = {
     eyebrow: "Vestigo · Deadlock",
     heroPage: {
       back: "Volver a la tier list",
+      full: (name: string) => `Todo sobre ${name}`,
       prev: "Anterior",
       next: "Siguiente",
       rank: (n: string, total: string) => `#${n} de ${total}`,
       tabs: { build: "Build", skills: "Habilidades", buy: "Orden de compra", counters: "Enfrentamientos", mastery: "Maestría" },
       kpis: { winRate: "Victorias", pickRate: "Uso", skillGap: "Brecha", trend: "Desde el parche" },
+    },
+    heroes: {
+      title: "Héroes",
+      accent: "lado a lado",
+      lead:
+        "Los números base de cada héroe tal como los trae el cliente del juego — vida, velocidad, " +
+        "arma, lo que suma cada bendición — al lado de sus victorias y su uso en la banda que " +
+        "elijas. Haz clic en una columna para ordenar; en un héroe para abrir su página.",
+      source: "Valores base: el cliente del juego, vía deadlock-api. Victorias y uso: la tier list.",
+      meta: (n: number, band: string) => `${n} héroes · valores base del juego · victorias en ${band}`,
+      loading: "Cargando los héroes…",
+      sortBy: (col: string) => `Ordenar por ${col}`,
+      groups: {
+        play: "En partidas",
+        vitality: "Vitalidad",
+        movement: "Movimiento",
+        weapon: "Arma",
+        boon: "Por bendición",
+        melee: "Cuerpo a cuerpo",
+      },
+      cols: {
+        name: "Héroe",
+        winRate: "Victorias",
+        pickRate: "Uso",
+        health: "Vida",
+        healthRegen: "Regen.",
+        healthPerBoon: "Vida",
+        moveSpeed: "Velocidad",
+        sprintSpeed: "Esprint",
+        stamina: "Aguante",
+        dps: "DPS",
+        sustainedDps: "Sostenido",
+        bulletDamage: "Por disparo",
+        fireRate: "Disparos/s",
+        clip: "Cargador",
+        reload: "Recarga",
+        bulletPerBoon: "Bala",
+        spiritPerBoon: "Espíritu",
+        heavyMelee: "Pesado",
+      },
+      tips: {
+        winRate: "Porcentaje de partidas ganadas en la banda elegida, de la tier list.",
+        pickRate: "Porcentaje de partidas en las que alguien jugó al héroe, en la banda elegida.",
+        health: "Vida base al empezar la partida.",
+        healthRegen: "Vida que regenera por segundo.",
+        healthPerBoon: "Vida que gana con cada bendición (subida de nivel).",
+        moveSpeed: "Velocidad de movimiento base, en metros por segundo.",
+        sprintSpeed: "Velocidad extra al esprintar, en metros por segundo.",
+        stamina: "Cargas de aguante (impulsos).",
+        dps: "Daño por segundo del arma mientras dispara, como lo calcula el juego.",
+        sustainedDps: "Daño por segundo del arma contando la recarga.",
+        bulletDamage: "Daño por disparo. Los héroes que disparan varios perdigones muestran el total, con los perdigones al lado.",
+        fireRate: "Disparos por segundo.",
+        clip: "Balas por cargador.",
+        reload: "Segundos de recarga. Ordena de la más corta a la más larga.",
+        bulletPerBoon: "Daño de bala que gana con cada bendición.",
+        spiritPerBoon: "Poder espiritual que gana con cada bendición: lo que hace que sus habilidades peguen más al subir de nivel.",
+        heavyMelee: "Daño del ataque cuerpo a cuerpo pesado.",
+      },
+      pellets: (n: number) => `×${n}`,
+      pelletsTip: (n: number, each: string) => `${n} perdigones de ${each}`,
+    },
+    hero: {
+      back: "Héroes",
+      kicker: (rank: number, total: number, band: string) => `#${rank} de ${total} en ${band}`,
+      complexity: "Complejidad",
+      complexityTip: (n: number) => `El juego le pone complejidad ${n} a este héroe.`,
+      cta: { kit: "Ver el kit", build: "La build que más gana" },
+      kpis: {
+        winRate: "Victorias",
+        pickRate: "Uso",
+        mastery: "Premia practicar",
+        masteryTip: "Puntos de victorias entre quienes más partidas tienen con el héroe y quienes menos, en esta banda.",
+        trend: "Desde el parche",
+      },
+      anchors: { kit: "Kit", numbers: "En números", matchups: "Enfrentamientos", build: "Build", lore: "Historia" },
+      kit: {
+        kicker: "El kit",
+        title: "Habilidades",
+        lead:
+          "Qué hace cada habilidad, con las palabras y los números del juego. T1, T2 y T3 son " +
+          "las tres mejoras que se compran con puntos de habilidad.",
+        ability: (n: number) => `Habilidad ${n}`,
+        ultimate: "Definitiva",
+        passive: "Pasiva",
+        cooldown: "Recarga",
+        charges: "Cargas",
+        spirit: (x: string) => `+${x} por poder espiritual`,
+        spiritTip: (x: string) => `El juego suma ${x} a esta cifra por cada punto de poder espiritual.`,
+        upgrades: "Mejoras",
+        noVideo: "El juego no tiene clip de esta habilidad",
+        order: "Qué subir primero",
+        orderLead: (n: string) => `El recorrido más común de su build más jugada · ${n} partidas`,
+        orderSteps: "Punto 1 → 15",
+        unlock: "desbloquea",
+        upgrade: "mejora",
+        loading: "Cargando el kit…",
+        missing: "El juego todavía no publicó las habilidades de este héroe.",
+      },
+      numbers: {
+        kicker: "En números",
+        title: "Cómo juega",
+        lead: (band: string, from: string, to: string) =>
+          `Promedios por partida en ${band}, del ${from} al ${to}, contra los otros héroes de la misma banda.`,
+        metrics: {
+          kills: "bajas",
+          deaths: "muertes",
+          assists: "asistencias",
+          netWorth: "almas",
+          playerDamage: "de daño a héroes",
+          damageTaken: "de daño recibido",
+          objectiveDamage: "de daño a objetivos",
+          lastHits: "últimos golpes",
+          accuracy: "de precisión",
+        },
+        names: {
+          kills: "Bajas",
+          deaths: "Muertes",
+          assists: "Asistencias",
+          netWorth: "Almas",
+          playerDamage: "Daño a héroes",
+          damageTaken: "Daño recibido",
+          objectiveDamage: "Daño a objetivos",
+          lastHits: "Últimos golpes",
+          accuracy: "Precisión",
+        },
+        perMatch: "por partida",
+        above: (p: number) => `Más que el ${p} % de los héroes`,
+        below: (p: number) => `Menos que el ${p} % de los héroes`,
+        profile: "Contra los otros héroes",
+        profileAxis: { less: "menos", avg: "promedio", more: "más" },
+        avg: "prom.",
+        timeline: "Victorias en el tiempo",
+        timelineLead: (band: string) => `${band} · últimos 30 días`,
+        timelineAria: (name: string) => `Victorias diarias de ${name} en los últimos 30 días`,
+        patch: "Parche",
+        before: "antes",
+        after: "después",
+        byBand: "Por rango",
+        byBandNote: "línea = 50 %",
+        rankOf: (n: number, total: number) => `#${n} de ${total}`,
+        mastery: "Maestría",
+        masteryAxis: "partidas con el héroe",
+        masteryAria: (name: string) => `Victorias de ${name} según las partidas jugadas con el héroe`,
+        empty: "Todavía no hay partidas suficientes en esta banda para comparar.",
+      },
+      matchups: {
+        kicker: "Enfrentamientos",
+        title: "A quién temerle",
+        hard: "Le cuesta contra",
+        easy: "Le va bien contra",
+        with: "Mejor junto a",
+        lead: (min: number, from: string, to: string) =>
+          `Victorias en las partidas con cada héroe en el equipo rival (o en el propio), del ${from} al ${to}. Sólo cruces con ${min} partidas o más.`,
+        matches: (n: string) => `${n} p.`,
+        none: "Todavía no hay partidas suficientes en esta banda.",
+      },
+      build: {
+        kicker: (wr: string, n: string) => `Build · ${wr} en ${n} partidas`,
+        title: "Minuto a minuto",
+        lead: "En qué minuto se termina cada objeto de la build recomendada, en la mediana.",
+        minute: (m: number) => `${m}′`,
+        full: "La build completa",
+      },
+      lore: {
+        kicker: "Historia",
+        base: "Atributos base",
+        weapon: "Arma",
+        attrs: {
+          health: "Vida",
+          healthRegen: "Regeneración",
+          moveSpeed: "Velocidad",
+          sprintSpeed: "Esprint",
+          stamina: "Aguante",
+          melee: "Cuerpo a cuerpo",
+          spiritPerBoon: "Poder espiritual",
+          bulletDamage: "Daño por bala",
+          fireRate: "Cadencia",
+          dps: "DPS",
+          clip: "Cargador",
+          reload: "Recarga",
+          magazine: "Daño por cargador",
+        },
+        perBoon: (x: string) => `+${x} por bendición`,
+        perBoonShort: "por bendición",
+        lightHeavy: "ligero / pesado",
+        withReload: (x: string) => `${x} con recarga`,
+      },
     },
     rail: {
       movers: "Desde el parche",
@@ -2267,7 +2664,8 @@ const ES: typeof EN = {
       "se jugó cada una. Los héroes se mueven — uno que carga en Fantasma puede ser la peor " +
       "elección debajo de Centinela — así que elige la banda en la que juegas.",
     tabs: {
-      meta: "Héroes",
+      meta: "Tier list",
+      heroes: "Héroes",
       items: "Objetos",
       ranks: "Rangos",
       ladder: "Escalera",
@@ -2848,6 +3246,12 @@ const ES: typeof EN = {
       },
     },
     deadlock: {
+      heroes: {
+        title: () => "Héroes de Deadlock comparados — vida, arma y atributos | Vestigo",
+        description: () =>
+          "Todos los héroes de Deadlock lado a lado con los números del juego: vida, velocidad, " +
+          "DPS del arma, cargador, recarga y lo que suma cada bendición. Ordena por cualquier columna.",
+      },
       meta: {
         title: () => "Tier list de héroes de Deadlock y porcentajes de victoria | Vestigo",
         description: () =>
@@ -2897,11 +3301,16 @@ const ES: typeof EN = {
             ? `${name} — estadísticas de Deadlock | Vestigo`
             : dlSection === "patches"
               ? `Deadlock ${name}: todos los nerfs, buffs y cambios | Vestigo News`
-              : `${name} — build y winrate de Deadlock | Vestigo`,
+              : dlSection === "heroes"
+                ? `${name} — habilidades, atributos y enfrentamientos de Deadlock | Vestigo`
+                : `${name} — build y winrate de Deadlock | Vestigo`,
         description: (name: string, dlSection: string) =>
           dlSection === "patches"
             ? `Todos los cambios de héroes y objetos del ${name} de Deadlock, habilidad por habilidad ` +
               "y marcados como nerf o buff, con las notas oficiales y qué dicen los números desde que salió."
+            : dlSection === "heroes"
+            ? `${name} en Deadlock: cada habilidad con los números y clips del juego, atributos ` +
+              "base, contra quién gana y pierde, y cómo juega frente a los otros héroes."
             : dlSection === "items"
             ? `Cómo rinde ${name} en Deadlock: victorias contra su propio precio, uso, y los ` +
               "héroes que mejor lo llevan."

@@ -353,6 +353,16 @@ function HeroPage({
             <span className="next-step-label">{copy.deadlock.next.label}</span>
             <span className="next-step-title">{hp.back}</span>
           </RouteLink>
+          {/* La página de la tier list es la build y nada más; kit, números e
+              historia viven en la ficha de la pestaña Héroes. */}
+          <RouteLink
+            className="next-step"
+            to={{ ...route, view: "deadlock", dlSection: "heroes", detail: heroSlugs.toSlug.get(String(hero.heroId)) }}
+            onNavigate={navigate}
+          >
+            <span className="next-step-label">{copy.deadlock.tabs.heroes}</span>
+            <span className="next-step-title">{hp.full(hero.name)}</span>
+          </RouteLink>
           {next && (
             <RouteLink className="next-step" to={toHero(route, next)} onNavigate={navigate}>
               <span className="next-step-label">

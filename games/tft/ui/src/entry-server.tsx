@@ -5,6 +5,9 @@ import { loadBuilds } from "./deadlockBuildsData";
 import { loadMastery } from "./deadlockMasteryData";
 import { loadDetail } from "./deadlockItemsData";
 import { loadEdition, resolveSlug } from "./deadlockNewsData";
+import { loadHeroDetail, loadHeroKit, loadInsights } from "./deadlockHeroKitData";
+import { BANDS, loadBand, PUBLISHED_BAND } from "./deadlockData";
+import { heroes as heroSlugs } from "./deadlockSlugs";
 
 /**
  * El HTML de una ruta, para el prerender del build (ver `vite.config.ts`).
@@ -20,6 +23,20 @@ async function preload(route: Route): Promise<void> {
   if (route.view !== "deadlock") return;
   const quiet = (p: Promise<unknown>) => p.catch(() => undefined);
   if (route.dlSection === "meta" && route.detail) await Promise.all([quiet(loadBuilds()), quiet(loadMastery())]);
+  if (route.dlSection === "heroes" && route.detail) {
+    // La ficha entera: su kit, lo medido en la banda publicada y las cuatro
+    // tier lists, que la sección "Por rango" compara.
+    const id = Number(heroSlugs.toId.get(route.detail));
+    await Promise.all([
+      quiet(loadBuilds()),
+      quiet(loadMastery()),
+      quiet(loadHeroKit()),
+      quiet(loadInsights(PUBLISHED_BAND)),
+      ...(Number.isFinite(id) ? [quiet(loadHeroDetail(id))] : []),
+      ...BANDS.map((b) => quiet(loadBand(b.id))),
+    ]);
+  }
+  if (route.dlSection === "heroes") await quiet(loadHeroKit());
   if (route.dlSection === "items" && route.detail) await quiet(loadDetail());
   if (route.dlSection === "patches") {
     const { slug } = resolveSlug(route.detail);

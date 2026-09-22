@@ -5576,7 +5576,7 @@
    las dos barras entran en una línea sin ayuda. */
 @media (max-width: 46rem) {
   [data-theme="codex"] .app {
-    padding-top: 1rem;
+    padding-top: 0;
   }
 
   /* La barra de juegos: marca a la izquierda, idioma a la derecha, juegos en el

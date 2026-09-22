@@ -109,6 +109,24 @@ jobs:
       - name: build heroes
         run: npm run build:heroes --prefix games/deadlock/pipeline
 
+      # La pestaña Héroes y la página de cada héroe (2026-09-22).
+      #
+      # El kit —atributos base, arma, habilidades, textos— sale de la API de
+      # assets y cambia con los parches, no con las partidas. Lo demás —curva
+      # diaria, promedios por partida, enfrentamientos— sale de la API en vivo y
+      # **va después de `build heroes`** porque mide sobre la misma ventana que
+      # la tier list recién publicada (`heroes.<banda>.json`).
+      #
+      # **Los dos perdonan fallar**: si la API no contesta, queda lo commiteado y
+      # la tier list se publica igual.
+      - name: build hero kit
+        continue-on-error: true
+        run: npm run build:hero-kit --prefix games/deadlock/pipeline
+
+      - name: build hero insights
+        continue-on-error: true
+        run: npm run build:hero-insights --prefix games/deadlock/pipeline
+
       # Vestigo News: la edición del periódico del parche vigente (2026-09-17).
       #
       # **Va después de `build heroes`** porque la nota de análisis lee

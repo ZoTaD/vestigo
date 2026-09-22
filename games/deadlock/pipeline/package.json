@@ -13,7 +13,9 @@
     "catalog": "node node_modules/tsx/dist/cli.mjs src/catalog.ts",
     "publish:guard": "node node_modules/tsx/dist/cli.mjs src/publish-guard.ts",
     "build:ladder": "node node_modules/tsx/dist/cli.mjs src/ladder.ts",
-    "build:news": "node node_modules/tsx/dist/cli.mjs src/news-run.ts"
+    "build:news": "node node_modules/tsx/dist/cli.mjs src/news-run.ts",
+    "build:hero-kit": "node node_modules/tsx/dist/cli.mjs src/heroKit.ts",
+    "build:hero-insights": "node node_modules/tsx/dist/cli.mjs src/heroInsights.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
