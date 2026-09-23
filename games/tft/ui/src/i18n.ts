@@ -1845,7 +1845,8 @@ const EN = {
         /**
          * "Counters" salió del título el 2026-09-18: la página no los tiene
          * todavía, y prometer en el título lo que la página no da es la clase
-         * de clic que se va a los tres segundos.
+         * de clic que se va a los tres segundos. Volvió el 2026-09-22 sólo a
+         * la ficha de Héroes, que ya muestra contra quién pierde cada uno.
          */
         title: (name: string, dlSection: string) =>
           dlSection === "items"
@@ -1853,7 +1854,7 @@ const EN = {
             : dlSection === "patches"
               ? `Deadlock ${name}: Every Nerf, Buff and Change | Vestigo News`
               : dlSection === "heroes"
-                ? `${name} — Deadlock Abilities, Stats and Matchups | Vestigo`
+                ? `${name} — Deadlock Counters, Abilities and Stats | Vestigo`
                 : `${name} — Deadlock Build & Win Rate | Vestigo`,
         description: (name: string, dlSection: string) =>
           dlSection === "patches"
@@ -1861,7 +1862,7 @@ const EN = {
               "nerf or buff, with the official notes and what the numbers say since it landed."
             : dlSection === "heroes"
             ? `${name} in Deadlock: every ability with the game's numbers and clips, base stats, ` +
-              "who they beat and lose to, and how they play against the other heroes."
+              "the heroes that counter them, the ones they beat, and who they pair best with."
             : dlSection === "items"
             ? `How ${name} performs in Deadlock: win rate against its own price, pick rate, ` +
               "and the heroes that carry it best."
@@ -3302,7 +3303,7 @@ const ES: typeof EN = {
             : dlSection === "patches"
               ? `Deadlock ${name}: todos los nerfs, buffs y cambios | Vestigo News`
               : dlSection === "heroes"
-                ? `${name} — habilidades, atributos y enfrentamientos de Deadlock | Vestigo`
+                ? `${name} — counters, habilidades y atributos de Deadlock | Vestigo`
                 : `${name} — build y winrate de Deadlock | Vestigo`,
         description: (name: string, dlSection: string) =>
           dlSection === "patches"
@@ -3310,7 +3311,7 @@ const ES: typeof EN = {
               "y marcados como nerf o buff, con las notas oficiales y qué dicen los números desde que salió."
             : dlSection === "heroes"
             ? `${name} en Deadlock: cada habilidad con los números y clips del juego, atributos ` +
-              "base, contra quién gana y pierde, y cómo juega frente a los otros héroes."
+              "base, sus counters, a quién le gana y con quién combina mejor."
             : dlSection === "items"
             ? `Cómo rinde ${name} en Deadlock: victorias contra su propio precio, uso, y los ` +
               "héroes que mejor lo llevan."
