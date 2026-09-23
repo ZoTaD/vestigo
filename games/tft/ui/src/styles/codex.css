@@ -3935,6 +3935,113 @@
   color: var(--gold-lit);
 }
 
+/* Qué mejorar primero: la respuesta corta arriba de la grilla. Cuatro pasos en
+   fila con una flecha entre cada uno; el puesto va en dorado y grande porque
+   es lo que se lee primero. Sin bordes de color: el fondo lleva un tinte. */
+[data-theme="codex"] .dl-prio {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.2rem 0 0.9rem;
+}
+
+[data-theme="codex"] .dl-prio-label {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vellum-dim);
+}
+
+[data-theme="codex"] .dl-prio-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.35rem 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"] .dl-prio-step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0.45rem 0.7rem 0.45rem 0.55rem;
+  background: rgba(201, 162, 74, 0.08);
+  border-radius: 3px;
+}
+
+/* El primero es el que importa: un tinte más fuerte y nada más. */
+[data-theme="codex"] .dl-prio-step:first-child {
+  background: rgba(201, 162, 74, 0.2);
+}
+
+/* La flecha va en el hueco entre dos pasos, no adentro de la caja. */
+[data-theme="codex"] .dl-prio-step + .dl-prio-step::before {
+  content: "›";
+  position: absolute;
+  left: -0.55rem;
+  top: 50%;
+  transform: translate(-50%, -55%);
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--gold-lit);
+  opacity: 0.55;
+}
+
+[data-theme="codex"] .dl-prio-n {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--gold-lit);
+  min-width: 1.6rem;
+}
+
+[data-theme="codex"] .dl-prio-step img {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 3px;
+  flex: 0 0 auto;
+}
+
+[data-theme="codex"] .dl-prio-name {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  line-height: 1.2;
+  color: var(--vellum);
+  flex: 1 1 auto;
+  min-width: 0;
+  /* Dos renglones antes que cortar el nombre: "Pulsación Ciné…" no se lee. */
+}
+
+/* En teléfono, dos por fila y sin flecha: con cuatro en 340 px los nombres no
+   entran, y una flecha que cae al principio de un renglón no apunta a nada. */
+@media (max-width: 40rem) {
+  [data-theme="codex"] .dl-prio-list {
+    gap: 0.35rem;
+  }
+
+  /* El nombre baja abajo del puesto y el ícono: al lado, "Entanglement"
+     no entraba en la mitad de 340 px y se montaba sobre el paso siguiente. */
+  [data-theme="codex"] .dl-prio-step {
+    flex: 1 1 calc(50% - 0.2rem);
+    flex-wrap: wrap;
+    row-gap: 0.3rem;
+  }
+
+  [data-theme="codex"] .dl-prio-name {
+    flex-basis: 100%;
+  }
+
+  [data-theme="codex"] .dl-prio-step + .dl-prio-step::before {
+    content: none;
+  }
+}
+
 /**
  * En teléfono la grilla deja de apretarse y pasa a scrollear.
  *

@@ -9,6 +9,7 @@ import {
   badgesFor,
   byPhase,
   bySlot,
+  upgradePriority,
   MIN_CONVICCION,
   type BuildItemView,
   type BuyView,
@@ -253,7 +254,7 @@ function DamageSplit({ build }: { build: BuildView }) {
  * no hace falta para leer la grilla: lo que se lee es el orden. Publicar un
  * costo que no puedo verificar sería inventar precisión.
  */
-function SkillPath({ build }: { build: BuildView }) {
+function SkillPath({ build, priority }: { build: BuildView; priority?: boolean }) {
   const copy = useCopy();
   const c = copy.deadlock.buildCard;
   // Ausente cuando la API de orden falló. El panel no está, en vez de dibujar
@@ -281,6 +282,7 @@ function SkillPath({ build }: { build: BuildView }) {
   return (
     <section className="dl-panel dl-path">
       <h4 className="dl-panel-head" id="dl-skills">{c.skillPath}</h4>
+      {priority && <SkillPriority build={build} />}
       <div className="dl-path-scroll">
         <table className="dl-path-grid">
         <caption className="visually-hidden">{c.skillPathNote}</caption>
@@ -331,6 +333,38 @@ function SkillPath({ build }: { build: BuildView }) {
         </table>
       </div>
     </section>
+  );
+}
+
+/**
+ * La respuesta corta de la grilla: a qué habilidad ponerle los puntos primero.
+ *
+ * Va arriba de la grilla y no en su lugar: la grilla sigue siendo el paso a
+ * paso, y ésta es la línea que alguien busca cuando abre la página en medio de
+ * una partida. **Sólo en la página de build de la tier list**, por pedido de
+ * ZoTaD; la ficha de Héroes muestra la misma tarjeta sin ella.
+ */
+function SkillPriority({ build }: { build: BuildView }) {
+  const copy = useCopy();
+  const c = copy.deadlock.buildCard;
+  const orden = upgradePriority(build.abilities, build.path);
+  if (orden.length < 2) return null;
+
+  return (
+    <div className="dl-prio">
+      <span className="dl-prio-label">{c.priority}</span>
+      <ol className="dl-prio-list" aria-label={c.priority}>
+        {orden.map((a, i) => (
+          <li key={a.id} className="dl-prio-step">
+            <span className="dl-prio-n">{c.priorityRank(i + 1)}</span>
+            <img src={a.img} alt="" width={44} height={44} loading="lazy" />
+            {/* Los nombres del catálogo vienen con espacios duros; acá tienen
+                que poder partirse en dos renglones. */}
+            <span className="dl-prio-name">{a.name.replace(/ /g, " ")}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 
@@ -444,8 +478,12 @@ function BuyOrder({ buys }: { buys: BuyView[] }) {
 export default function DeadlockBuildCard({
   heroId,
   heroWinRate,
+  skillPriority,
 }: {
   heroId: number;
+  /** La franja "1º, 2º, 3º, 4º" arriba de la grilla de subida. Sólo la pide
+   *  la página de build de la tier list. */
+  skillPriority?: boolean;
   /** El winrate del héroe, de referencia: 56% no se sabe si es bueno hasta
    *  saber cuánto promedia el héroe. */
   heroWinRate?: number;
@@ -632,7 +670,7 @@ export default function DeadlockBuildCard({
         {/* La grilla va a lo ancho y no en la columna de la izquierda: son
             quince o dieciséis columnas más el nombre de cada habilidad, y en
             220px los nombres se montaban encima de las celdas. */}
-        <SkillPath build={build} />
+        <SkillPath build={build} priority={skillPriority} />
 
         <BuyOrder buys={build.buys} />
 

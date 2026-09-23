@@ -336,7 +336,7 @@ function HeroPage({
         </nav>
 
         <div className="dl-band-panel dl-hero-body">
-          <DeadlockBuildCard heroId={hero.heroId} heroWinRate={hero.winRate} />
+          <DeadlockBuildCard heroId={hero.heroId} heroWinRate={hero.winRate} skillPriority />
           <DeadlockMastery heroId={hero.heroId} />
         </div>
 

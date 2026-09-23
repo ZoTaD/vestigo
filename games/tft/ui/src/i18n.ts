@@ -1372,6 +1372,10 @@ const EN = {
       skillPath: "Skill path",
       skillPathNote: "The order most players level abilities in, step by step.",
       skillStep: (n: number) => `step ${n}`,
+      /* Lo que se completa primero. "Max order" es jerga de LoL que acá no
+         todos traen; "upgrade" es la palabra del juego. */
+      priority: "Upgrade priority",
+      priorityRank: (n: number) => ["1st", "2nd", "3rd", "4th"][n - 1] ?? `${n}th`,
       /* No dice "por escalón": ordenar por precio es cómo está la tienda, no
          cómo compra la gente. Medido: 50 de 57 builds no respetan ese orden. */
       buyOrder: "Buy order",
@@ -2975,6 +2979,8 @@ const ES: typeof EN = {
       skillPath: "Cómo subir las habilidades",
       skillPathNote: "El orden en que la mayoría sube sus habilidades, paso a paso.",
       skillStep: (n) => `paso ${n}`,
+      priority: "Qué mejorar primero",
+      priorityRank: (n) => `${n}º`,
       buyOrder: "En qué orden comprar",
       buyOrderNote:
         "Cada compra en orden, con los componentes — un tier 4 se arma, no se compra. " +
