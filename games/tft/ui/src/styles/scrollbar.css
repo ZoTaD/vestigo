@@ -1,0 +1,77 @@
+/* ---------------------------------------------------------------------------
+   BARRA DE SCROLL — "tinta de cómic" (ZoTaD eligió la B, 2026-09-22).
+
+   La barra es papel con trama de puntos y contorno de tinta, sobre un carril
+   rayado en diagonal: la impresión de cómic de los fondos de los héroes de
+   Deadlock. Vista previa y alternativas en la conversación de ese día.
+
+   **Sólo donde el navegador la dibuja entera, y en ningún otro lado:**
+
+   - Se escribe únicamente con `::-webkit-scrollbar`, que entienden Chrome,
+     Edge, Opera y Safari. **No se usa `scrollbar-color` ni `scrollbar-width`**
+     a propósito: Firefox sólo acepta esos dos colores, y en Chrome 121+
+     declararlos hace que ignore todo el `::-webkit-scrollbar`. Firefox queda
+     con su barra de siempre.
+   - Sólo con mouse (`hover: hover` y `pointer: fine`). En teléfonos y tablets
+     la barra es del sistema, flota sobre el contenido y no se diseña.
+
+   Las barras que ya estaban ocultas (`.subnav`, `.top-places`) siguen
+   ocultas: su regla lleva clase y le gana a esta, que es global.
+--------------------------------------------------------------------------- */
+
+/* La paleta se elige en la raíz porque la barra de la página es de `<html>`,
+   que no ve las variables de `.app`. `:has()` la cambia según el lugar;
+   todos los navegadores que dibujan esta barra lo soportan. */
+:root {
+  /* Códex por defecto (páginas legales): tinta azul noche, papel crema. */
+  --sb-track: #080d1a;
+  --sb-hatch: rgba(233, 224, 203, 0.07);
+  --sb-paper: #e9e0cb;
+  --sb-ink: #080d1a;
+  --sb-hover: #f0d391;
+}
+
+/* Deadlock: el negro cálido y el crema del juego. */
+:root:has(.app[data-game="deadlock"]) {
+  --sb-track: #10130d;
+  --sb-hatch: rgba(255, 239, 215, 0.07);
+  --sb-paper: #ffefd7;
+  --sb-ink: #10130d;
+  --sb-hover: #e2c391;
+}
+
+/* Portada: papel claro, así que se invierte — la barra es de tinta y los
+   puntos y el contorno del color del papel. */
+:root:has(.app[data-place="home"]) {
+  --sb-track: #e7e2d4;
+  --sb-hatch: rgba(20, 20, 15, 0.08);
+  --sb-paper: #14140f;
+  --sb-ink: #e7e2d4;
+  --sb-hover: #8a6a24;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 16px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--sb-track)
+      repeating-linear-gradient(135deg, var(--sb-hatch) 0 2px, transparent 2px 7px);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--sb-paper) radial-gradient(var(--sb-ink) 1.1px, transparent 1.3px) 0 0 / 5px 5px;
+    border: 3px solid var(--sb-ink);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--sb-hover);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--sb-track);
+  }
+}
