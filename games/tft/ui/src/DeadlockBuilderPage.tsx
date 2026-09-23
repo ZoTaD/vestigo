@@ -4,8 +4,24 @@ import { useEffect, useMemo, useState } from "react";
 import { useCopy, useLang, useLocale } from "./i18n";
 import { PUBLISHED_BAND, useHeroes } from "./deadlockData";
 import { useItems, SLOTS, type Item, type Slot } from "./deadlockItemsData";
-import { useHeroBuilds } from "./deadlockBuildsData";
-import { ConFicha } from "./DeadlockBuildCard";
+import { useHeroBuilds, bySlot, byPhase } from "./deadlockBuildsData";
+import { useHeroKit } from "./deadlockHeroKitData";
+import ShopCard, { SHOP } from "./DeadlockShopCard";
+import { GuideEditor, AbilityOrderEditor, StatsPanel, empezarArrastre } from "./DeadlockBuilderEditor";
+import { buildStats } from "./deadlockBuildStats";
+import {
+  addCategory,
+  addToCategory,
+  moveItem,
+  addAbilityPoint,
+  encodeGuide,
+  decodeGuide,
+  encodeAbilityPath,
+  decodeAbilityPath,
+  newCategoryId,
+  GUIDE_DEFAULT_WIDTH,
+  type GuideCategory,
+} from "./deadlockBuildGuide";
 import {
   addItem,
   removeItem,
@@ -32,20 +48,24 @@ import {
  * no ensuciar la tienda), la inversión de almas con la escalera del juego y el
  * parecido con las builds que se miden en la tier list.
  *
- * La build vive en el link (`?b=`), sin cuentas: se arma, se copia y se pega.
+ * Dos modos (pedido de ZoTaD, 2026-09-22): en "Build final" el clic en la
+ * tienda llena las 12 casillas, de las que salen las stats; en "Guía de compra"
+ * llena la categoría elegida del editor de builds, que copia el del juego.
+ * Debajo va el orden de los puntos de habilidad, también como la grilla del
+ * juego.
+ *
+ * Todo vive en el link, sin cuentas: `b=` la build, `g=` la guía y `a=` el
+ * orden de habilidades.
  */
 
-const SHOP = "/deadlock/shop";
 const PRECIOS = [800, 1600, 3200, 6400] as const;
-const ROMANO = ["", "I", "II", "III", "IV"];
 
-const escalonDe = (cost: number): number => PRECIOS.indexOf(cost as (typeof PRECIOS)[number]) + 1;
+type Modo = "build" | "guide";
 
-/** Lee `?b=` sin romper en el prerender, donde no hay `window`. */
-function buildDelLink(): { heroId: number; items: number[] } | null {
+/** Lee el link sin romper en el prerender, donde no hay `window`. */
+function paramsDelLink(): URLSearchParams | null {
   if (typeof window === "undefined") return null;
-  const b = new URLSearchParams(window.location.search).get("b");
-  return b ? decodeBuild(b) : null;
+  return new URLSearchParams(window.location.search);
 }
 
 export default function DeadlockBuilder() {
@@ -63,25 +83,65 @@ export default function DeadlockBuilder() {
   const [verValor, setVerValor] = useState(false);
   const [aviso, setAviso] = useState("");
   const [copiado, setCopiado] = useState(false);
+  const [modo, setModo] = useState<Modo>("build");
+  const [guia, setGuia] = useState<GuideCategory[]>([]);
+  const [activa, setActiva] = useState<string | null>(null);
+  const [senda, setSenda] = useState<number[]>([]);
+  /** El `a=` del link, hasta que se sepa qué habilidades tiene el héroe. */
+  const [sendaPendiente, setSendaPendiente] = useState<string | null>(null);
 
   // El link manda al entrar. Se lee después de montar para que el HTML del
   // prerender (sin build) y el primer dibujo del cliente sean el mismo.
   useEffect(() => {
-    const b = buildDelLink();
-    if (b) {
-      setHeroId(b.heroId);
-      setItems(b.items);
+    const q = paramsDelLink();
+    if (!q) return;
+    const b = q.get("b");
+    const d = b ? decodeBuild(b) : null;
+    if (d) {
+      setHeroId(d.heroId);
+      setItems(d.items);
     }
+    const g = decodeGuide(q.get("g") ?? "");
+    if (g.length > 0) {
+      setGuia(g);
+      setActiva(g[0].id);
+      setModo("guide");
+    }
+    // Sólo si viene: en desarrollo React corre este efecto dos veces, y la
+    // segunda lee el link después de que la sincronización borró `a` (todavía
+    // no había senda). Pisar con null perdía el orden del link.
+    const a = q.get("a");
+    if (a) setSendaPendiente(a);
   }, []);
 
-  // Y la build vuelve al link en cada cambio, sin sumar entradas al historial.
+  const medidas = useHeroBuilds(heroId);
+  const kit = useHeroKit();
+  /** Las cuatro habilidades del héroe, en el orden de las casillas del juego. */
+  const habilidades = useMemo(() => bySlot(medidas?.builds[0]?.abilities ?? []), [medidas]);
+
+  // El orden de habilidades del link se resuelve cuando llegan las habilidades.
+  useEffect(() => {
+    if (sendaPendiente === null || habilidades.length === 0) return;
+    setSenda(decodeAbilityPath(sendaPendiente, (slot) => habilidades[slot - 1]?.id));
+    setSendaPendiente(null);
+  }, [sendaPendiente, habilidades]);
+
+  // Y todo vuelve al link en cada cambio, sin sumar entradas al historial.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
-    if (heroId === null) url.searchParams.delete("b");
-    else url.searchParams.set("b", encodeBuild(heroId, items));
+    const poner = (k: string, v: string | null) => (v ? url.searchParams.set(k, v) : url.searchParams.delete(k));
+    poner("b", heroId === null ? null : encodeBuild(heroId, items));
+    poner("g", guia.length > 0 ? encodeGuide(guia) : null);
+    if (sendaPendiente === null) {
+      const casilla = (id: number) => {
+        const i = habilidades.findIndex((h) => h.id === id);
+        return i >= 0 ? i + 1 : undefined;
+      };
+      poner("a", senda.length > 0 ? encodeAbilityPath(senda, casilla) : null);
+    }
     window.history.replaceState(window.history.state, "", url);
-  }, [heroId, items]);
+  }, [heroId, items, guia, senda, habilidades, sendaPendiente]);
 
   const porId = useMemo(() => new Map((itemsMeta?.items ?? []).map((i) => [i.itemId, i])), [itemsMeta]);
   const lookup = (id: number): BuilderItem | undefined => {
@@ -97,7 +157,6 @@ export default function DeadlockBuilder() {
       : undefined;
   };
 
-  const medidas = useHeroBuilds(heroId);
   const heroes = useMemo(
     () => [...(heroesMeta?.heroes ?? [])].sort((a, b) => a.name.localeCompare(b.name, lang)),
     [heroesMeta, lang]
@@ -125,7 +184,59 @@ export default function DeadlockBuilder() {
 
   const quitar = (id: number) => setItems(removeItem(items, id));
 
+  /** En modo guía, el clic va a la categoría elegida; sin ninguna, crea una. */
+  const agregarAGuia = (id: number) => {
+    let g = guia;
+    let destino = activa && g.some((x) => x.id === activa) ? activa : null;
+    if (!destino) {
+      g = addCategory(g, c.editor.newCategory);
+      destino = g[g.length - 1].id;
+      setActiva(destino);
+    }
+    setGuia(addToCategory(g, destino, id));
+    const cat = g.find((x) => x.id === destino);
+    setAviso(c.addedTo(nombre(id), cat?.name || c.editor.newCategory));
+  };
+
+  const alClicTienda = (id: number) => {
+    if (modo === "guide") agregarAGuia(id);
+    else if (items.includes(id)) quitar(id);
+    else agregar(id);
+  };
+
+  const nuevaCategoria = () => {
+    const g = addCategory(guia, c.editor.newCategory);
+    setGuia(g);
+    setActiva(g[g.length - 1].id);
+    setModo("guide");
+  };
+
+  /** Inicio / Medio / Final con el orden de compra real de la build más jugada. */
+  const masJugada = medidas?.builds[0];
+  const sembrar = masJugada
+    ? () => {
+        const g: GuideCategory[] = byPhase(masJugada.buys).map(({ phase, buys }) => ({
+          id: newCategoryId(),
+          name: copy.deadlock.buildCard.phase[phase],
+          desc: copy.deadlock.buildCard.phaseRange[phase],
+          width: GUIDE_DEFAULT_WIDTH,
+          items: [...new Set(buys.map((b) => b.itemId))],
+        }));
+        setGuia(g);
+        setActiva(g[0]?.id ?? null);
+        setModo("guide");
+      }
+    : undefined;
+
+  const soltarDesdeTienda = (catId: string, itemId: number, index: number) => {
+    const g = addToCategory(guia, catId, itemId);
+    setGuia(moveItem(g, catId, itemId, catId, index));
+    setActiva(catId);
+  };
+
   const inv = investment(items, lookup);
+  const base = heroId !== null ? kit?.heroes[String(heroId)]?.stats : undefined;
+  const stats = base ? buildStats(base, items.map((id) => porId.get(id)?.mods ?? {}), inv) : [];
   const parecidas = (medidas?.builds ?? [])
     .map((b) => ({ b, n: overlap(items, b.items.map((i) => i.itemId)) }))
     .sort((a, b) => b.n - a.n || b.b.matches - a.b.matches);
@@ -165,6 +276,7 @@ export default function DeadlockBuilder() {
                 if (h.heroId !== heroId) {
                   setHeroId(h.heroId);
                   setItems([]);
+                  setSenda([]);
                   setAviso("");
                 }
               }}
@@ -179,6 +291,14 @@ export default function DeadlockBuilder() {
         {/* ── La tienda ─────────────────────────────────────────── */}
         <div className="dl-bd-shop">
           <div className="dl-bd-toolbar">
+            <div className="dl-bd-modes" role="group" aria-label={c.modes.build}>
+              {(["build", "guide"] as const).map((m) => (
+                <button key={m} type="button" aria-pressed={modo === m} onClick={() => setModo(m)}>
+                  {c.modes[m]}
+                </button>
+              ))}
+            </div>
+            <span className="dl-bd-modehint">{c.modeHint[modo]}</span>
             <label className="dl-bd-valuetoggle">
               <input type="checkbox" checked={verValor} onChange={(e) => setVerValor(e.target.checked)} />
               {c.showValue}
@@ -233,8 +353,12 @@ export default function DeadlockBuilder() {
                           upgrade={upgradesOwned(lookup(it.itemId)!, items)}
                           starred={estrella.has(it.itemId) ? c.starred(heroe?.name ?? "") : undefined}
                           showValue={verValor}
-                          onPick={() => (items.includes(it.itemId) ? quitar(it.itemId) : agregar(it.itemId))}
+                          onPick={() => alClicTienda(it.itemId)}
                           upgradeOf={it.upgradesFrom.find((u) => items.includes(u.itemId))?.name}
+                          liProps={{
+                            draggable: true,
+                            onDragStart: (e) => empezarArrastre(e, { from: "shop", itemId: it.itemId }),
+                          }}
                         />
                       ))}
                   </ul>
@@ -319,6 +443,8 @@ export default function DeadlockBuilder() {
           <p className="dl-bd-aviso" aria-live="polite">{aviso}</p>
           {heroId !== null && (
             <>
+              {stats.length > 0 && <StatsPanel rows={stats} />}
+
               <div className="dl-bd-inv">
                 <h3 className="dl-bd-sub">{c.investment}</h3>
                 {SLOTS.map((s) => {
@@ -369,114 +495,34 @@ export default function DeadlockBuilder() {
           )}
         </aside>
       </div>
-    </section>
-  );
-}
 
-/**
- * Una tarjeta de la tienda, como la del juego: el dibujo a todo el ancho, el
- * nombre abajo y las cintas encima.
- *
- * - "ACTIVO" / "IMBUIR" salen del catálogo (`is_active_item` e `imbue` de la API).
- * - La estrella azul marca lo que trae la build más jugada del héroe.
- * - "ADQUIRIDO" cuando ya está en tu build: la tarjeta se apaga, como en el juego.
- * - La cinta "MEJORA" y el brillo cuando comprarla mejora algo que tenés. En
- *   inglés el juego no trae la cinta con texto, así que se escribe con CSS.
- *
- * `compact` es la casilla de la build: un cuadrado con la esquina del color de
- * la categoría y el escalón en romano, como el inventario del juego.
- */
-function ShopCard({
-  item,
-  owned,
-  upgrade,
-  upgradeOf,
-  starred,
-  showValue,
-  compact,
-  label,
-  onPick,
-}: {
-  item: Item;
-  owned?: boolean;
-  upgrade?: boolean;
-  upgradeOf?: string;
-  /** El texto de la estrella; ausente, no hay estrella. */
-  starred?: string;
-  showValue?: boolean;
-  compact?: boolean;
-  label?: string;
-  onPick: () => void;
-}) {
-  const copy = useCopy();
-  const { lang } = useLang();
-  const c = copy.deadlock.builder;
-  const locale = useLocale();
-  const tier = escalonDe(item.cost);
-  const v = Math.round(item.delta * 10) / 10;
-  const valor = (v >= 0 ? "+" : "−") + Math.abs(v).toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-
-  return (
-    <ConFicha
-      item={{ itemId: item.itemId, name: item.name, img: item.img, cost: item.cost, slot: item.slot, tier }}
-      className={compact ? "dl-bd-card is-compact" : "dl-bd-card"}
-      datos={{
-        "data-cat": item.slot,
-        "data-tier": tier,
-        ...(owned && !compact ? { "data-owned": "" } : {}),
-        ...(upgrade && !compact ? { "data-upgrade": "" } : {}),
-      }}
-      cabecera={
-        <>
-          {upgradeOf && <p className="dl-slot-when">{c.upgradesYour(upgradeOf)}</p>}
-          {starred && <p className="dl-slot-when">{starred}</p>}
-          {item.upgradesTo.length > 0 && (
-            <p className="dl-slot-chain">
-              {c.upgradesTo}{" "}
-              {item.upgradesTo.map((u) => (
-                <img key={u.itemId} src={u.img} alt={u.name} title={u.name} width={22} height={22} />
-              ))}
-            </p>
+      {/* ── Debajo: el orden de habilidades y el editor de la guía ── */}
+      {heroId !== null && (
+        <div className="dl-bd-below">
+          {habilidades.length > 0 && (
+            <AbilityOrderEditor
+              abilities={habilidades}
+              path={senda}
+              onChange={setSenda}
+              onAdd={(id) => setSenda(addAbilityPoint(senda, id))}
+              measured={masJugada?.path}
+            />
           )}
-          <p className="dl-slot-when">{c.value(valor)}</p>
-        </>
-      }
-    >
-      <button
-        type="button"
-        className="dl-bd-card-btn"
-        onClick={onPick}
-        aria-label={label ?? (owned ? c.remove(item.name) : c.add(item.name))}
-        aria-pressed={compact ? undefined : !!owned}
-        style={{ backgroundImage: `url(${SHOP}/card_${item.slot}_t${tier}.webp)` }}
-      >
-        <span className="dl-bd-card-art">
-          <img src={item.img} alt="" width={96} height={96} loading="lazy" />
-          {!compact && item.active && <span className="dl-bd-tag">{c.activeTag}</span>}
-          {!compact && item.imbue && <span className="dl-bd-tag is-imbue">{c.imbueTag}</span>}
-        </span>
-        {!compact && <span className="dl-bd-card-name">{item.name}</span>}
-        {compact && <span className="dl-bd-card-tier" aria-hidden="true">{ROMANO[tier]}</span>}
-        {!compact && starred && (
-          <span className="dl-bd-star" aria-hidden="true">
-            <svg viewBox="0 0 16 16" width="10" height="10">
-              <path d="M8 1.2l2 4.3 4.7.5-3.5 3.2 1 4.6L8 11.5 3.8 13.8l1-4.6L1.3 6l4.7-.5z" fill="#fff" />
-            </svg>
-          </span>
-        )}
-        {!compact && owned && <span className="dl-bd-owned" aria-hidden="true">{c.owned}</span>}
-        {!compact && upgrade &&
-          (lang === "es" ? (
-            <img className="dl-bd-upgrade" src={`${SHOP}/upgrade_es.webp`} alt="" width={40} height={39} />
-          ) : (
-            <span className="dl-bd-upgrade is-text" aria-hidden="true">{c.upgradeSticker}</span>
-          ))}
-        {showValue && !compact && (
-          <span className="dl-bd-value" data-sign={v >= 1 ? "up" : v <= -1 ? "down" : "flat"}>
-            {valor}
-          </span>
-        )}
-      </button>
-    </ConFicha>
+          <GuideEditor
+            guide={guia}
+            active={modo === "guide" ? activa : null}
+            porId={porId}
+            onChange={setGuia}
+            onSelect={(id) => {
+              setActiva(id);
+              setModo("guide");
+            }}
+            onAddCategory={nuevaCategoria}
+            onSeed={sembrar}
+            onDropFromShop={soltarDesdeTienda}
+          />
+        </div>
+      )}
+    </section>
   );
 }

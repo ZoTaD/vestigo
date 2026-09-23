@@ -71,12 +71,15 @@ export function ConFicha({
   className,
   datos,
   cabecera,
+  liProps,
   children,
 }: {
   item: ItemRef;
   className: string;
   datos?: Record<string, string | number>;
   cabecera?: React.ReactNode;
+  /** Lo que el `<li>` necesita además: el armador lo usa para arrastrar. */
+  liProps?: React.LiHTMLAttributes<HTMLLIElement>;
   children: React.ReactNode;
 }) {
   const locale = useLocale();
@@ -121,6 +124,7 @@ export function ConFicha({
       ref={caja}
       className={className}
       {...datos}
+      {...liProps}
       onMouseEnter={() => setAbierto(true)}
       onMouseLeave={() => setAbierto(false)}
       onFocus={() => setAbierto(true)}

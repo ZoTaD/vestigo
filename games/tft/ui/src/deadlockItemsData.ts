@@ -61,6 +61,7 @@ interface CatalogItems {
       upgradesFrom?: number[];
       active?: true;
       imbue?: true;
+      mods?: Record<string, number>;
     }
   >;
   /** Los íconos del juego, una vez cada uno. Las stats y los tipos guardan la clave. */
@@ -166,6 +167,8 @@ export interface Item extends RawItem {
   active: boolean;
   /** Se imbuye en una habilidad: la cinta "IMBUIR". */
   imbue: boolean;
+  /** Lo que le suma al héroe sin condiciones, por tipo de modificador del juego. */
+  mods: Record<string, number>;
 }
 
 const files = new Map<BandId, ItemsFile>([[PUBLISHED_BAND, itemsJson as unknown as ItemsFile]]);
@@ -217,6 +220,7 @@ export function buildItems(band: BandId, lang: Lang): Item[] {
       upgradesFrom: resolverIds(entry.upgradesFrom, lang),
       active: entry.active === true,
       imbue: entry.imbue === true,
+      mods: entry.mods ?? {},
       tier: tierOfDelta(i.delta),
     }];
   });

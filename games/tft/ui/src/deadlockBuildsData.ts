@@ -647,6 +647,7 @@ export function asItem(i: ItemRef): Item {
     upgradesFrom: [],
     active: false,
     imbue: false,
+    mods: {},
     tier: "",
   };
 }

@@ -148,6 +148,96 @@ interface RawProperty {
   icon?: string;
   /** La clave con la que el juego la clasifica ("tech_damage", "health"…). */
   css_class?: string;
+  /** Qué stat del héroe modifica (`MODIFIER_VALUE_HEALTH_MAX`…). */
+  provided_property_type?: string;
+  /** `ConditionallyApplied` cuando sólo vale bajo una condición. */
+  usage_flags?: string[];
+  /** El texto de la condición ("within Range"), cuando la hay. */
+  conditional?: string;
+}
+
+/**
+ * Las stats del héroe que el armador de builds calcula, por el tipo con que
+ * el juego declara cada modificador. Se guarda el tipo sin el prefijo
+ * `MODIFIER_VALUE_`.
+ */
+const MODS_DEL_ARMADOR = new Set([
+  "WEAPON_DAMAGE_INCREASE",
+  "FIRE_RATE",
+  "AMMO_CLIP_SIZE_PERCENT",
+  "AMMO_CLIP_SIZE",
+  "RELOAD_SPEED",
+  "BONUS_BULLET_SPEED_PERCENT",
+  "BULLET_LIFESTEAL",
+  "MELEE_DAMAGE_INCREASE",
+  "HEALTH_MAX",
+  "HEALTH_MAX_PERCENT",
+  "BASE_HEALTH_PERCENT",
+  "HEALTH_REGEN_PER_SECOND",
+  "OUT_OF_COMBAT_HEALTH_REGEN",
+  "BULLET_ARMOR_DAMAGE_RESIST",
+  "TECH_RESIST",
+  "MELEE_RESIST",
+  "MOVEMENT_SPEED_MAX",
+  "SPRINT_SPEED_BONUS",
+  "STAMINA",
+  "STATUS_RESISTANCE",
+  "MOVEMENT_SLOW_RESISTANCE",
+  "TECH_POWER",
+  "TECH_POWER_PERCENT",
+  "COOLDOWN_REDUCTION_PERCENTAGE",
+  "TECH_RANGE_PERCENT",
+  "BONUS_ABILITY_DURATION_PERCENTAGE",
+  "TECH_LIFESTEAL",
+]);
+
+/**
+ * Lo que un ítem le suma al héroe siempre, sin condiciones.
+ *
+ * **Sólo cuenta lo que la tarjeta del juego lista en su sección "innate"**, la
+ * línea de stats de arriba. La API no marca como condicional lo que viene con
+ * el activo o con un pasivo: Colossus trae +30% de daño cuerpo a cuerpo que
+ * sólo vale activado, y Spiritual Overflow +25% de cadencia que sólo vale con
+ * la carga llena. Medido el 2026-09-22 leyendo `tooltip_sections`.
+ *
+ * Además se descarta todo lo condicional (`ConditionallyApplied` o con texto de
+ * condición): "+20% de daño a corta distancia" no es daño que el héroe tenga.
+ * También los ceros —el juego declara `WeaponPower = 0` en 173 ítems como
+ * relleno— y los valores sin número.
+ *
+ * **Un tipo por ítem, el de mayor valor absoluto**, en vez de sumar: algunos
+ * ítems declaran el mismo tipo en dos claves (Spiritual Overflow trae
+ * `AbilityLifestealPercentHero` y `BonusSpiritLifesteal`), y sumarlas contaría
+ * doble. Para la reducción de enfriamiento sólo vale la clave genérica: la de
+ * habilidades con cargas no aplica a todas.
+ */
+export function modsDe(
+  props: Record<string, RawProperty>,
+  secciones: RawSection[] = []
+): Record<string, number> {
+  const innatas = new Set(
+    secciones
+      .filter((s) => s.section_type === "innate")
+      .flatMap((s) => s.section_attributes ?? [])
+      .flatMap((a) => [
+        ...(a.properties ?? []),
+        ...(a.elevated_properties ?? []),
+        ...(a.important_properties ?? []),
+        ...(a.important_properties_with_icon ?? []),
+      ])
+  );
+  const out: Record<string, number> = {};
+  for (const [clave, p] of Object.entries(props)) {
+    if (!innatas.has(clave)) continue;
+    const tipo = p.provided_property_type?.replace(/^MODIFIER_VALUE_/, "");
+    if (!tipo || !MODS_DEL_ARMADOR.has(tipo)) continue;
+    if (p.conditional || (p.usage_flags ?? []).includes("ConditionallyApplied")) continue;
+    if (tipo === "COOLDOWN_REDUCTION_PERCENTAGE" && clave !== "CooldownReduction") continue;
+    const v = parseFloat(String(p.value ?? ""));
+    if (!Number.isFinite(v) || v === 0) continue;
+    if (out[tipo] === undefined || Math.abs(v) > Math.abs(out[tipo])) out[tipo] = v;
+  }
+  return out;
 }
 
 /**
@@ -300,6 +390,8 @@ export interface CatalogItem {
   active?: true;
   /** Se imbuye en una habilidad: la cinta violeta "IMBUIR" de la tienda. */
   imbue?: true;
+  /** Lo que le suma al héroe sin condiciones, por tipo (ver `modsDe`). */
+  mods?: Record<string, number>;
 }
 
 /**
@@ -823,6 +915,10 @@ export function buildCatalog(
       })(),
       ...(i.is_active_item ? { active: true as const } : {}),
       ...(i.imbue ? { imbue: true as const } : {}),
+      ...(() => {
+        const mods = modsDe(i.properties ?? {}, i.tooltip_sections ?? []);
+        return Object.keys(mods).length > 0 ? { mods } : {};
+      })(),
     };
   }
 
