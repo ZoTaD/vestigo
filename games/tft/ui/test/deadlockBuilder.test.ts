@@ -7,6 +7,7 @@ import {
   encodeBuild,
   decodeBuild,
   upgradesOwned,
+  ownedWithComponents,
   BUILD_SLOTS,
   type BuilderItem,
 } from "../src/deadlockBuilder";
@@ -45,6 +46,14 @@ describe("addItem", () => {
     expect(addItem([2], 1, look)).toEqual({ items: [2], result: "has-upgrade" });
   });
 
+  it("tampoco si la mejora está dos escalones más arriba", () => {
+    expect(addItem([3], 1, look)).toEqual({ items: [3], result: "has-upgrade" });
+  });
+
+  it("comprar el III con el I en la build consume el I, como el juego", () => {
+    expect(addItem([10, 1], 3, look)).toEqual({ items: [10, 3], result: "upgraded", replaced: 1 });
+  });
+
   it("con doce no entra un decimotercero", () => {
     const llena = Array.from({ length: BUILD_SLOTS }, (_, i) => 100 + i);
     const cat = { ...CAT, ...Object.fromEntries(llena.map((id) => [id, { ...CAT[11], itemId: id }])) };
@@ -53,6 +62,16 @@ describe("addItem", () => {
 
   it("ignora ids que no están en el catálogo", () => {
     expect(addItem([10], 999, look)).toEqual({ items: [10], result: "unknown" });
+  });
+});
+
+describe("ownedWithComponents", () => {
+  it("con un escalón III en la build, el II y el I también quedan adquiridos", () => {
+    expect([...ownedWithComponents([3, 10], look)].sort((a, b) => a - b)).toEqual([1, 2, 3, 10]);
+  });
+
+  it("sin mejoras en la build, sólo lo que está", () => {
+    expect([...ownedWithComponents([1, 10], look)].sort((a, b) => a - b)).toEqual([1, 10]);
   });
 });
 

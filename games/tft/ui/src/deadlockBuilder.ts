@@ -33,12 +33,49 @@ export type AddResult =
   | { items: number[]; result: "upgraded"; replaced: number }
   | { items: number[]; result: "duplicate" | "has-upgrade" | "full" | "unknown" };
 
+/**
+ * Recorre la cadena de mejoras en una dirección, todos los escalones: hacia
+ * abajo (`upgradesFrom`, los componentes) o hacia arriba (`upgradesTo`, en qué
+ * se convierte). Con un visto por si algún día el catálogo trae un ciclo.
+ */
+function cadena(itemId: number, lookup: Lookup, dir: "upgradesFrom" | "upgradesTo"): number[] {
+  const vistos = new Set<number>();
+  const pendientes = [...(lookup(itemId)?.[dir] ?? [])];
+  while (pendientes.length > 0) {
+    const id = pendientes.shift()!;
+    if (vistos.has(id)) continue;
+    vistos.add(id);
+    pendientes.push(...(lookup(id)?.[dir] ?? []));
+  }
+  return [...vistos];
+}
+
+/** Los componentes de un objeto en todos los escalones de abajo (del III: el II y el I). */
+export const componentsOf = (itemId: number, lookup: Lookup): number[] => cadena(itemId, lookup, "upgradesFrom");
+
+/** En qué se puede convertir un objeto, en todos los escalones de arriba. */
+export const upgradesOf = (itemId: number, lookup: Lookup): number[] => cadena(itemId, lookup, "upgradesTo");
+
+/**
+ * Lo que la tienda muestra como ADQUIRIDO: los objetos de la build **y los
+ * componentes que cada uno consumió**, como el juego. Con un objeto de escalón
+ * III, su componente II y el I de ese también salen apagados (lo marcó ZoTaD el
+ * 2026-09-23).
+ */
+export function ownedWithComponents(build: number[], lookup: Lookup): Set<number> {
+  const out = new Set(build);
+  for (const id of build) for (const c of componentsOf(id, lookup)) out.add(c);
+  return out;
+}
+
 export function addItem(build: number[], itemId: number, lookup: Lookup): AddResult {
   const item = lookup(itemId);
   if (!item) return { items: build, result: "unknown" };
   if (build.includes(itemId)) return { items: build, result: "duplicate" };
 
-  const componente = item.upgradesFrom.find((c) => build.includes(c));
+  // Cualquier componente de la cadena, no sólo el del escalón de abajo: con un
+  // I en la build, comprar el III directo lo consume igual que en el juego.
+  const componente = componentsOf(itemId, lookup).find((c) => build.includes(c));
   if (componente !== undefined) {
     return {
       items: build.map((id) => (id === componente ? itemId : id)),
@@ -46,7 +83,7 @@ export function addItem(build: number[], itemId: number, lookup: Lookup): AddRes
       replaced: componente,
     };
   }
-  if (item.upgradesTo.some((u) => build.includes(u))) return { items: build, result: "has-upgrade" };
+  if (upgradesOf(itemId, lookup).some((u) => build.includes(u))) return { items: build, result: "has-upgrade" };
   if (build.length >= BUILD_SLOTS) return { items: build, result: "full" };
   return { items: [...build, itemId], result: "added" };
 }

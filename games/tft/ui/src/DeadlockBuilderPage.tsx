@@ -30,6 +30,7 @@ import {
   encodeBuild,
   decodeBuild,
   upgradesOwned,
+  ownedWithComponents,
   BUILD_SLOTS,
   type BuilderItem,
   type AddResult,
@@ -238,6 +239,8 @@ export default function DeadlockBuilder() {
   };
 
   const inv = investment(items, lookup);
+  // Lo que la tienda apaga: la build y los componentes que consumió cada objeto.
+  const adquiridos = ownedWithComponents(items, lookup);
   const base = heroId !== null ? kit?.heroes[String(heroId)]?.stats : undefined;
   const stats = base ? buildStats(base, items.map((id) => porId.get(id)?.mods ?? {}), inv) : [];
   const parecidas = (medidas?.builds ?? [])
@@ -352,7 +355,10 @@ export default function DeadlockBuilder() {
                         <ShopCard
                           key={it.itemId}
                           item={it}
-                          owned={items.includes(it.itemId)}
+                          owned={adquiridos.has(it.itemId)}
+                          // Un componente apagado por su mejora no se saca con un clic:
+                          // lo dice el nombre accesible en vez de prometer "Quitar".
+                          label={!items.includes(it.itemId) && adquiridos.has(it.itemId) ? `${it.name} — ${c.owned}` : undefined}
                           upgrade={upgradesOwned(lookup(it.itemId)!, items)}
                           starred={estrella.has(it.itemId) ? c.starred(heroe?.name ?? "") : undefined}
                           showValue={verValor}
