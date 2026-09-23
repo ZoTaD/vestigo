@@ -68,21 +68,24 @@ const EN = {
   },
 
   home: {
-    eyebrow: "Statistics from finished matches",
+    eyebrow: "Data, guides and tools",
     /**
      * **"Vestigo" is Latin for "I track".** The line says so, which is a better
      * job for a masthead than promising an improvement: it tells a first-time
-     * visitor what the name means and what the site does to a match, in four
-     * words, and it keeps being true however many games are added under it.
+     * visitor what the name means in four words.
+     *
+     * "Every game" and not "every match" since 2026-09-23: the site stopped being
+     * only match analysis — tier lists, builds, a wiki for Valheim, tools for
+     * Diablo II — and "match" left half of it out. Chosen by ZoTaD.
      *
      * It is set in two parts because the home prints the second one as an
      * outline — see `title-break` in `styles/home.css`.
      */
-    title: "Every match",
+    title: "Every game",
     titleBreak: "leaves a trace",
     lead:
-      "Your matches already hold the answer. Vestigo reads them back to you and turns the " +
-      "record into something you can act on before the next game.",
+      "Tier lists, builds, guides and match analysis, built from each game's own data " +
+      "instead of opinions.",
     counts: {
       matches: "matches read",
       measured: "last measured",
@@ -1880,10 +1883,10 @@ const EN = {
    */
   seo: {
     home: {
-      title: () => "Vestigo — Get better at the games you play",
+      title: () => "Vestigo — Tier lists, builds and data for the games you play",
       description: () =>
-        "Vestigo reads your finished matches and turns them into something you can " +
-        "act on before the next game: meta reports and analysis of your own history.",
+        "Tier lists, builds, guides and match analysis built from each game's own data. " +
+        "Deadlock today; Dota 2, Path of Exile 2, Valheim and Diablo II on the way.",
     },
     tft: {
       meta: {
@@ -2079,13 +2082,13 @@ const ES: typeof EN = {
   },
 
   home: {
-    eyebrow: "Estadística de partidas terminadas",
+    eyebrow: "Datos, guías y herramientas",
     /** Ver la nota de la versión en inglés: el lema explica el nombre. */
-    title: "Toda partida",
+    title: "Todo juego",
     titleBreak: "deja rastro",
     lead:
-      "Tus partidas ya tienen la respuesta. Vestigo te las lee de vuelta y convierte el " +
-      "historial en algo que puedes usar antes de la próxima.",
+      "Tier lists, builds, guías y análisis de partidas, hechos con los datos de cada juego " +
+      "y no con opiniones.",
     counts: {
       matches: "partidas leídas",
       measured: "última medición",
@@ -3480,10 +3483,10 @@ const ES: typeof EN = {
   // competencia, así que vale la pena tratarlos como texto original.
   seo: {
     home: {
-      title: () => "Vestigo — Mejora en los juegos que juegas",
+      title: () => "Vestigo — Tier lists, builds y datos de tus juegos",
       description: () =>
-        "Vestigo lee tus partidas terminadas y las convierte en algo accionable para la " +
-        "próxima: reportes del meta y análisis de tu propio historial.",
+        "Tier lists, builds, guías y análisis de partidas hechos con los datos de cada juego. " +
+        "Deadlock hoy; Dota 2, Path of Exile 2, Valheim y Diablo II en camino.",
     },
     tft: {
       meta: {
