@@ -71,12 +71,15 @@ export default function Nav({
           >
             {copy.games.deadlock}
           </RouteLink>
-          {/* Dota 2 se anuncia, no se enlaza: no existe la ruta, así que un
-              enlace llevaría a un 404 y de paso entraría al sitemap. */}
-          <span className="top-place is-soon" aria-disabled="true">
-            {copy.games.dota}
-            <em className="top-soon">{copy.games.soon}</em>
-          </span>
+          {/* Los juegos que vienen se anuncian, no se enlazan: no existe la
+              ruta, así que un enlace llevaría a un 404 y de paso entraría al
+              sitemap. En el orden de la hoja de ruta (2026-09-23). */}
+          {[copy.games.dota, copy.games.poe2Short, copy.games.valheim, copy.games.diablo2Short].map((nombre) => (
+            <span className="top-place is-soon" aria-disabled="true" key={nombre}>
+              {nombre}
+              <em className="top-soon">{copy.games.soon}</em>
+            </span>
+          ))}
         </span>
 
         <form className="top-search" role="search" onSubmit={submit}>

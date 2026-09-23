@@ -271,24 +271,28 @@ export default function Home({
             </div>
           </li>
 
-          {/* Dota 2 se anuncia, no se enlaza: no existe la ruta todavía. El
-              panel se dibuja igual, con la cifra en blanco, porque un hueco a
-              propósito dice "todavía no" mejor que una fila apagada. */}
-          <li className="game-panel" data-panel="dota" data-soon="true">
-            <div className="game-panel-main">
-              <h3 className="game-panel-name">{copy.games.dota}</h3>
-              <p className="game-panel-note">{copy.home.games.dota}</p>
-              <span className="game-cta" aria-disabled="true">
-                {copy.home.games.soonCta}
-              </span>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b aria-hidden="true">—</b>
-                <span>{copy.home.figures.unmeasured}</span>
-              </p>
-            </div>
-          </li>
+        </ul>
+
+        {/* Los que vienen, en el orden de la hoja de ruta (2026-09-23). Se
+            anuncian y no se enlazan: no existe la ruta todavía. Van chicos y
+            en fila, debajo del que ya existe: cuatro paneles del tamaño del de
+            Deadlock taparían el único juego que se puede usar. */}
+        <h3 className="home-soon-heading">{copy.home.games.soonHeading}</h3>
+        <ul className="game-soon-list">
+          {(
+            [
+              ["dota", copy.games.dota, copy.home.games.dota],
+              ["poe2", copy.games.poe2, copy.home.games.poe2],
+              ["valheim", copy.games.valheim, copy.home.games.valheim],
+              ["diablo2", copy.games.diablo2, copy.home.games.diablo2],
+            ] as const
+          ).map(([id, nombre, nota]) => (
+            <li className="game-soon" data-panel={id} key={id}>
+              <h4 className="game-soon-name">{nombre}</h4>
+              <p className="game-soon-note">{nota}</p>
+              <span className="game-soon-tag">{copy.home.games.soonCta}</span>
+            </li>
+          ))}
         </ul>
       </section>
 

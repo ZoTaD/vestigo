@@ -454,32 +454,111 @@
   color: #e2c391;
 }
 
-/* --- Dota 2: apagado a propósito -------------------------------------------- */
+/* --- Los que vienen: apagados a propósito ----------------------------------
+   Una fila de cuatro, chicos, debajo del juego que ya existe (2026-09-23).
+   Cada uno lleva su color en el fondo y en el trazo del nombre, nunca en un
+   filo: la regla de la casa para tarjetas. El nombre va sólo contorneado, que
+   es lo que dice "todavía no" sin tener que escribirlo dos veces. */
 
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="dota"] {
-  background: linear-gradient(180deg, #1c1614 0%, #130f0e 100%);
-  color: #96887f;
+[data-theme="codex"][data-place="home"] .home-soon-heading {
+  margin: 1.6rem 0 0.7rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
 }
 
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="dota"] .game-panel-name {
+[data-theme="codex"][data-place="home"] .game-soon-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+[data-theme="codex"][data-place="home"] .game-soon {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-height: 9.5rem;
+  padding: 1.1rem 1.1rem 1rem;
+  border-radius: var(--radius);
+  background: var(--soon-bg);
+  color: var(--soon-text);
+}
+
+[data-theme="codex"][data-place="home"] .game-soon-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.55rem;
+  line-height: 0.95;
+  text-transform: uppercase;
   color: transparent;
-  -webkit-text-stroke: 2px #7b4a41;
+  -webkit-text-stroke: 1.5px var(--soon-ink);
 }
 
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="dota"] .game-figure b {
-  color: #3a2b27;
+[data-theme="codex"][data-place="home"] .game-soon-note {
+  margin: 0;
+  flex: 1;
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="dota"] .game-figure span {
-  color: #6b5b55;
+[data-theme="codex"][data-place="home"] .game-soon-tag {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soon-ink);
 }
 
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="dota"] .game-cta {
-  margin-top: 1.2rem;
-  background: none;
-  border-color: #6b3a33;
-  color: #a8443a;
-  cursor: default;
+/* Dota 2: el rojo apagado que ya tenía. */
+[data-theme="codex"][data-place="home"] .game-soon[data-panel="dota"] {
+  --soon-bg: linear-gradient(180deg, #1c1614 0%, #130f0e 100%);
+  --soon-text: #96887f;
+  --soon-ink: #a8443a;
+}
+
+/* Path of Exile 2: el oro viejo de su interfaz. */
+[data-theme="codex"][data-place="home"] .game-soon[data-panel="poe2"] {
+  --soon-bg: linear-gradient(180deg, #1b1712 0%, #110e0a 100%);
+  --soon-text: #968a76;
+  --soon-ink: #b8893d;
+}
+
+/* Valheim: el azul frío del norte. */
+[data-theme="codex"][data-place="home"] .game-soon[data-panel="valheim"] {
+  --soon-bg: linear-gradient(180deg, #131a1d 0%, #0d1215 100%);
+  --soon-text: #869399;
+  --soon-ink: #6f9fae;
+}
+
+/* Diablo II: el carmesí del logo. */
+[data-theme="codex"][data-place="home"] .game-soon[data-panel="diablo2"] {
+  --soon-bg: linear-gradient(180deg, #1c1111 0%, #120b0b 100%);
+  --soon-text: #978080;
+  --soon-ink: #b32a2a;
+}
+
+@media (max-width: 60rem) {
+  [data-theme="codex"][data-place="home"] .game-soon-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 30rem) {
+  [data-theme="codex"][data-place="home"] .game-soon {
+    min-height: 0;
+  }
+
+  [data-theme="codex"][data-place="home"] .game-soon-name {
+    font-size: 1.2rem;
+  }
 }
 
 /* Cifras de confianza, al pie ---------------------------------------------- */
