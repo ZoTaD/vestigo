@@ -3,7 +3,10 @@
  *
  * **La guía es el editor de builds del juego**: categorías con nombre y
  * descripción, cada una con sus objetos en el orden en que se compran, un ancho
- * que se puede cambiar y un orden entre ellas. Un objeto puede estar en varias
+ * y un alto que se pueden cambiar, y un orden entre ellas. El editor es una
+ * grilla de 12 columnas: el ancho son columnas y el alto, filas; los recuadros
+ * se acomodan solos en los huecos (uno alto a la derecha y dos apilados a la
+ * izquierda, como en el juego). Un objeto puede estar en varias
  * categorías (el juego lo permite: "opcionales" repite lo de otra) pero no dos
  * veces en la misma.
  *
@@ -19,8 +22,10 @@ export interface GuideCategory {
   id: string;
   name: string;
   desc: string;
-  /** Ancho del recuadro, en columnas de tarjeta. */
+  /** Ancho del recuadro, en columnas de la grilla del editor (de 12). */
   width: number;
+  /** Alto mínimo del recuadro, en filas de la grilla. Crece si no entra. */
+  height: number;
   items: number[];
 }
 
@@ -30,7 +35,10 @@ export const GUIDE_NAME_MAX = 40;
 export const GUIDE_DESC_MAX = 80;
 export const GUIDE_MIN_WIDTH = 3;
 export const GUIDE_MAX_WIDTH = 12;
-export const GUIDE_DEFAULT_WIDTH = 8;
+export const GUIDE_DEFAULT_WIDTH = 6;
+export const GUIDE_MIN_HEIGHT = 2;
+export const GUIDE_MAX_HEIGHT = 16;
+export const GUIDE_DEFAULT_HEIGHT = 4;
 
 let secuencia = 0;
 /** Un id local, sólo para que React y el editor distingan categorías. */
@@ -42,7 +50,14 @@ export function addCategory(guide: GuideCategory[], name: string, desc = ""): Gu
   if (guide.length >= GUIDE_MAX_CATEGORIES) return guide;
   return [
     ...guide,
-    { id: newCategoryId(), name: name.slice(0, GUIDE_NAME_MAX), desc: desc.slice(0, GUIDE_DESC_MAX), width: GUIDE_DEFAULT_WIDTH, items: [] },
+    {
+      id: newCategoryId(),
+      name: name.slice(0, GUIDE_NAME_MAX),
+      desc: desc.slice(0, GUIDE_DESC_MAX),
+      width: GUIDE_DEFAULT_WIDTH,
+      height: GUIDE_DEFAULT_HEIGHT,
+      items: [],
+    },
   ];
 }
 
@@ -51,7 +66,7 @@ export const removeCategory = (guide: GuideCategory[], id: string): GuideCategor
 export function updateCategory(
   guide: GuideCategory[],
   id: string,
-  cambio: Partial<Pick<GuideCategory, "name" | "desc" | "width">>
+  cambio: Partial<Pick<GuideCategory, "name" | "desc" | "width" | "height">>
 ): GuideCategory[] {
   return guide.map((c) =>
     c.id !== id
@@ -61,6 +76,7 @@ export function updateCategory(
           ...(cambio.name !== undefined ? { name: cambio.name.slice(0, GUIDE_NAME_MAX) } : {}),
           ...(cambio.desc !== undefined ? { desc: cambio.desc.slice(0, GUIDE_DESC_MAX) } : {}),
           ...(cambio.width !== undefined ? { width: clamp(cambio.width, GUIDE_MIN_WIDTH, GUIDE_MAX_WIDTH) } : {}),
+          ...(cambio.height !== undefined ? { height: clamp(cambio.height, GUIDE_MIN_HEIGHT, GUIDE_MAX_HEIGHT) } : {}),
         }
   );
 }
@@ -119,6 +135,16 @@ export function moveItem(
   });
 }
 
+/** Lleva una categoría al lugar de otra (arrastrándola por su barra). */
+export function moveCategoryTo(guide: GuideCategory[], id: string, antesDe: string): GuideCategory[] {
+  if (id === antesDe) return guide;
+  const mover = guide.find((c) => c.id === id);
+  if (!mover || !guide.some((c) => c.id === antesDe)) return guide;
+  const resto = guide.filter((c) => c.id !== id);
+  const i = resto.findIndex((c) => c.id === antesDe);
+  return [...resto.slice(0, i), mover, ...resto.slice(i)];
+}
+
 /* ── Orden de habilidades ──────────────────────────────────────────── */
 
 /** Un desbloqueo y tres mejoras. */
@@ -157,13 +183,14 @@ const des = (s: string) => {
 };
 
 /**
- * `ancho.ids.en.base36_nombre_descripcion`, las categorías separadas por `~`.
+ * `anchoxalto.ids.en.base36_nombre_descripcion`, las categorías separadas por
+ * `~`. Un link viejo sin alto (`8.ids…`) se lee con el alto por defecto.
  * El nombre y la descripción van codificados para que ningún `_`, `~` o `.` que
  * escriba el jugador rompa el formato.
  */
 export function encodeGuide(guide: GuideCategory[]): string {
   return guide
-    .map((c) => [[c.width, ...c.items.map((i) => i.toString(36))].join("."), esc(c.name), esc(c.desc)].join("_"))
+    .map((c) => [[`${c.width}x${c.height}`, ...c.items.map((i) => i.toString(36))].join("."), esc(c.name), esc(c.desc)].join("_"))
     .join("~");
 }
 
@@ -180,12 +207,15 @@ export function decodeGuide(s: string): GuideCategory[] {
       if (Number.isFinite(id) && !items.includes(id)) items.push(id);
       if (items.length >= GUIDE_MAX_ITEMS) break;
     }
-    const w = parseInt(ancho ?? "", 10);
+    const [anchoTxt = "", altoTxt = ""] = (ancho ?? "").split("x");
+    const w = parseInt(anchoTxt, 10);
+    const h = parseInt(altoTxt, 10);
     out.push({
       id: newCategoryId(),
       name: des(nombre).slice(0, GUIDE_NAME_MAX),
       desc: des(desc).slice(0, GUIDE_DESC_MAX),
       width: Number.isFinite(w) ? clamp(w, GUIDE_MIN_WIDTH, GUIDE_MAX_WIDTH) : GUIDE_DEFAULT_WIDTH,
+      height: Number.isFinite(h) ? clamp(h, GUIDE_MIN_HEIGHT, GUIDE_MAX_HEIGHT) : GUIDE_DEFAULT_HEIGHT,
       items,
     });
   }

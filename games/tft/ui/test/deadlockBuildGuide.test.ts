@@ -4,6 +4,7 @@ import {
   removeCategory,
   updateCategory,
   moveCategory,
+  moveCategoryTo,
   addToCategory,
   removeFromCategory,
   moveItem,
@@ -18,7 +19,7 @@ import {
   type GuideCategory,
 } from "../src/deadlockBuildGuide";
 
-const cat = (id: string, items: number[] = [], name = id): GuideCategory => ({ id, name, desc: "", width: 8, items });
+const cat = (id: string, items: number[] = [], name = id): GuideCategory => ({ id, name, desc: "", width: 8, height: 4, items });
 
 describe("categorías", () => {
   it("agrega una categoría vacía al final, recortando el nombre", () => {
@@ -30,8 +31,8 @@ describe("categorías", () => {
 
   it("borra, renombra y limita el ancho", () => {
     let g = [cat("a"), cat("b")];
-    g = updateCategory(g, "a", { name: "sobrevive a línea", width: 99 });
-    expect(g[0]).toMatchObject({ name: "sobrevive a línea", width: GUIDE_MAX_WIDTH });
+    g = updateCategory(g, "a", { name: "sobrevive a línea", width: 99, height: 0 });
+    expect(g[0]).toMatchObject({ name: "sobrevive a línea", width: GUIDE_MAX_WIDTH, height: 2 });
     expect(removeCategory(g, "a").map((c) => c.id)).toEqual(["b"]);
   });
 
@@ -39,6 +40,13 @@ describe("categorías", () => {
     const g = [cat("a"), cat("b"), cat("c")];
     expect(moveCategory(g, "c", -1).map((c) => c.id)).toEqual(["a", "c", "b"]);
     expect(moveCategory(g, "a", -1)).toBe(g);
+  });
+
+  it("lleva una categoría arrastrada al lugar de otra", () => {
+    const g = [cat("a"), cat("b"), cat("c")];
+    expect(moveCategoryTo(g, "c", "a").map((c) => c.id)).toEqual(["c", "a", "b"]);
+    expect(moveCategoryTo(g, "a", "c").map((c) => c.id)).toEqual(["b", "a", "c"]);
+    expect(moveCategoryTo(g, "a", "a")).toBe(g);
   });
 });
 
@@ -78,11 +86,15 @@ describe("objetos en la guía", () => {
 describe("la guía en el link", () => {
   it("ida y vuelta, con caracteres que podrían romper el formato", () => {
     const g: GuideCategory[] = [
-      { id: "x", name: "sobrevive a línea_causa~ 2.0", desc: "que no te toquen la jalea en lane", width: 7, items: [4053935515, 1763073141] },
-      { id: "y", name: "opcionales/late", desc: "", width: 12, items: [] },
+      { id: "x", name: "sobrevive a línea_causa~ 2.0", desc: "que no te toquen la jalea en lane", width: 7, height: 9, items: [4053935515, 1763073141] },
+      { id: "y", name: "opcionales/late", desc: "", width: 12, height: 2, items: [] },
     ];
     const d = decodeGuide(encodeGuide(g));
     expect(d.map(({ id: _id, ...c }) => c)).toEqual(g.map(({ id: _id, ...c }) => c));
+  });
+
+  it("lee links viejos sin alto", () => {
+    expect(decodeGuide("8.b_x_")[0]).toMatchObject({ width: 8, height: 4, items: [11] });
   });
 
   it("no rompe con basura", () => {

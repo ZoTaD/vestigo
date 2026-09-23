@@ -19,7 +19,7 @@ import {
   encodeAbilityPath,
   decodeAbilityPath,
   newCategoryId,
-  GUIDE_DEFAULT_WIDTH,
+  GUIDE_DEFAULT_HEIGHT,
   type GuideCategory,
 } from "./deadlockBuildGuide";
 import {
@@ -215,11 +215,14 @@ export default function DeadlockBuilder() {
   const masJugada = medidas?.builds[0];
   const sembrar = masJugada
     ? () => {
-        const g: GuideCategory[] = byPhase(masJugada.buys).map(({ phase, buys }) => ({
+        // Inicio y medio juego lado a lado, el final a todo el ancho: se ve la
+        // compra entera sin bajar, como un editor del juego bien acomodado.
+        const g: GuideCategory[] = byPhase(masJugada.buys).map(({ phase, buys }, i, todas) => ({
           id: newCategoryId(),
           name: copy.deadlock.buildCard.phase[phase],
           desc: copy.deadlock.buildCard.phaseRange[phase],
-          width: GUIDE_DEFAULT_WIDTH,
+          width: i === todas.length - 1 && todas.length % 2 === 1 ? 12 : 6,
+          height: GUIDE_DEFAULT_HEIGHT,
           items: [...new Set(buys.map((b) => b.itemId))],
         }));
         setGuia(g);

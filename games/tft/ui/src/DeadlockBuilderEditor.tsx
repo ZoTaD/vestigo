@@ -7,6 +7,7 @@ import ShopCard from "./DeadlockShopCard";
 import type { StatGroup, StatRow } from "./deadlockBuildStats";
 import {
   moveCategory,
+  moveCategoryTo,
   moveItem,
   removeCategory,
   removeFromCategory,
@@ -32,6 +33,8 @@ interface Arrastre {
 }
 
 const TIPO_DND = "application/x-vestigo-item";
+/** Arrastrar una categoría entera por su barra, para acomodarla en otro lugar. */
+const TIPO_CAT = "application/x-vestigo-category";
 
 export function leerArrastre(e: React.DragEvent): Arrastre | null {
   try {
@@ -72,6 +75,13 @@ export function GuideEditor({
   const c = copy.deadlock.builder.editor;
 
   const soltar = (e: React.DragEvent, catId: string, index: number) => {
+    const otra = e.dataTransfer.getData(TIPO_CAT);
+    if (otra) {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(moveCategoryTo(guide, otra, catId));
+      return;
+    }
     const a = leerArrastre(e);
     if (!a) return;
     e.preventDefault();
@@ -114,7 +124,7 @@ export function GuideEditor({
               onSelect={() => onSelect(cat.id)}
               onRename={(name) => onChange(updateCategory(guide, cat.id, { name }))}
               onDesc={(desc) => onChange(updateCategory(guide, cat.id, { desc }))}
-              onResize={(width) => onChange(updateCategory(guide, cat.id, { width }))}
+              onResize={(width, height) => onChange(updateCategory(guide, cat.id, { width, height }))}
               onMove={(dir) => onChange(moveCategory(guide, cat.id, dir))}
               onRemove={() => onChange(removeCategory(guide, cat.id))}
               onRemoveItem={(itemId) => onChange(removeFromCategory(guide, cat.id, itemId))}
@@ -150,7 +160,7 @@ function Categoria({
   onSelect: () => void;
   onRename: (s: string) => void;
   onDesc: (s: string) => void;
-  onResize: (w: number) => void;
+  onResize: (w: number, h: number) => void;
   onMove: (dir: -1 | 1) => void;
   onRemove: () => void;
   onRemoveItem: (itemId: number) => void;
@@ -163,18 +173,26 @@ function Categoria({
   const nombre = cat.name || c.newCategory;
 
   /**
-   * El tamaño se cambia arrastrando la esquina, como en el juego, y **salta de
-   * a una columna de tarjeta**: un recuadro que corta una tarjeta al medio no
-   * existe en el juego.
+   * El tamaño se cambia arrastrando la esquina, como en el juego: a lo ancho
+   * salta de a una columna de las 12 del editor, y a lo alto de a una fila.
    */
   const redimensionar = (e: React.PointerEvent<HTMLButtonElement>) => {
     const el = caja.current;
-    if (!el) return;
+    const grilla = el?.parentElement;
+    if (!el || !grilla) return;
     e.preventDefault();
     const x0 = e.clientX;
+    const y0 = e.clientY;
     const w0 = cat.width;
-    const columna = el.getBoundingClientRect().width / Math.max(1, w0);
-    const mover = (ev: PointerEvent) => onResize(w0 + Math.round((ev.clientX - x0) / columna));
+    const h0 = cat.height;
+    const estilo = getComputedStyle(grilla);
+    const hueco = parseFloat(estilo.columnGap) || 0;
+    const columna = (grilla.getBoundingClientRect().width + hueco) / 12;
+    // `grid-auto-rows` computa como "minmax(40.8px, auto)": se toma el primer número.
+    const alto = parseFloat(estilo.gridAutoRows.match(/[\d.]+/)?.[0] ?? "") || 40;
+    const fila = alto + (parseFloat(estilo.rowGap) || 0);
+    const mover = (ev: PointerEvent) =>
+      onResize(w0 + Math.round((ev.clientX - x0) / columna), h0 + Math.round((ev.clientY - y0) / fila));
     const soltar = () => {
       window.removeEventListener("pointermove", mover);
       window.removeEventListener("pointerup", soltar);
@@ -189,7 +207,7 @@ function Categoria({
       className="dl-bd-cat"
       data-active={activa || undefined}
       data-over={sobre || undefined}
-      style={{ "--cols": cat.width } as React.CSSProperties}
+      style={{ gridColumn: `span ${cat.width}`, gridRow: `span ${cat.height}` }}
       onClick={onSelect}
       onDragOver={(e) => {
         e.preventDefault();
@@ -202,6 +220,22 @@ function Categoria({
       }}
     >
       <div className="dl-bd-cat-head">
+        {/* El ícono de mover del editor del juego: se arrastra la categoría
+            entera y se suelta sobre otra para ocupar su lugar. */}
+        <span
+          className="dl-bd-cat-grip"
+          draggable
+          title={c.drag}
+          aria-hidden="true"
+          onDragStart={(e) => {
+            e.dataTransfer.setData(TIPO_CAT, cat.id);
+            e.dataTransfer.effectAllowed = "move";
+          }}
+        >
+          <svg viewBox="0 0 16 16" width="14" height="14">
+            <path d="M8 1l2.2 2.4H8.8V7.2h3.8V5.8L15 8l-2.4 2.2V8.8H8.8v3.8h1.4L8 15l-2.2-2.4h1.4V8.8H3.4v1.4L1 8l2.4-2.2v1.4h3.8V3.4H5.8z" fill="currentColor" />
+          </svg>
+        </span>
         <input
           className="dl-bd-cat-name"
           value={cat.name}
@@ -263,8 +297,10 @@ function Categoria({
         title={c.resize}
         onPointerDown={redimensionar}
         onKeyDown={(e) => {
-          if (e.key === "ArrowRight") onResize(cat.width + 1);
-          if (e.key === "ArrowLeft") onResize(cat.width - 1);
+          if (e.key === "ArrowRight") onResize(cat.width + 1, cat.height);
+          if (e.key === "ArrowLeft") onResize(cat.width - 1, cat.height);
+          if (e.key === "ArrowDown") onResize(cat.width, cat.height + 1);
+          if (e.key === "ArrowUp") onResize(cat.width, cat.height - 1);
         }}
       />
     </div>

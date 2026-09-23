@@ -955,10 +955,13 @@
 
 /* ── Debajo de la tienda ───────────────────────────────────── */
 
+/* El orden de habilidades y el editor, lado a lado (pedido de ZoTaD): así se
+   ven los dos sin bajar. */
 [data-theme="codex"] .dl-bd-below {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   gap: 1.25rem;
+  align-items: start;
   margin-top: 1.5rem;
 }
 
@@ -1043,8 +1046,8 @@
   flex: none;
   display: grid;
   place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
+  width: 1.9rem;
+  height: 1.9rem;
   padding: 0;
   border: 0;
   border-radius: 4px;
@@ -1065,21 +1068,21 @@
   flex: 1;
   display: grid;
   grid-template-columns: repeat(16, minmax(0, 1fr));
-  gap: 0.25rem;
+  gap: 0.15rem;
   min-width: 0;
 }
 
 [data-theme="codex"] .dl-bd-abil-step {
   display: grid;
   place-items: center;
-  height: 1.9rem;
+  height: 1.5rem;
 }
 
 /* El rombo violeta del desbloqueo y la ficha gris con el costo de la mejora,
    como la grilla del juego. */
 [data-theme="codex"] .dl-bd-abil-unlock {
-  width: 1.6rem;
-  height: 1.6rem;
+  width: 1.2rem;
+  height: 1.2rem;
   border-radius: 4px;
   background: #2b2f38;
   position: relative;
@@ -1097,27 +1100,37 @@
 [data-theme="codex"] .dl-bd-abil-up {
   display: inline-flex;
   align-items: center;
-  gap: 0.15rem;
-  padding: 0.15rem 0.35rem;
-  border-radius: 4px;
+  gap: 0.1rem;
+  padding: 0.1rem 0.2rem;
+  border-radius: 3px;
   background: #3a3f4a;
   color: #eee6d6;
   font-family: "VN Retail", var(--font-display);
   font-weight: 700;
-  font-size: 0.78rem;
+  font-size: 0.66rem;
 }
 
 [data-theme="codex"] .dl-bd-abil-up span {
-  font-size: 0.6rem;
+  font-size: 0.5rem;
   color: #c9c1b1;
 }
 
 [data-theme="codex"] .dl-bd-abil .dl-prio-label { color: rgba(244, 236, 220, 0.7); }
 
+[data-theme="codex"] .dl-bd-abil .dl-prio-step {
+  flex: 1 1 calc(50% - 0.6rem);
+  padding: 0.3rem 0.5rem;
+}
+
+[data-theme="codex"] .dl-bd-abil .dl-prio-step + .dl-prio-step::before { content: none; }
+[data-theme="codex"] .dl-bd-abil .dl-prio-n { font-size: 1.05rem; min-width: 1.4rem; }
+[data-theme="codex"] .dl-bd-abil .dl-prio-step img { width: 1.6rem; height: 1.6rem; }
+[data-theme="codex"] .dl-bd-abil .dl-prio-name { font-size: 0.7rem; }
+
 /* ── El editor de la guía: el azul del editor de builds del juego ── */
 
 [data-theme="codex"] .dl-bd-editor {
-  --gcard: 5.4rem;
+  --gcard: 3.7rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -1131,21 +1144,25 @@
   color: rgba(244, 236, 220, 0.8);
 }
 
+/* Doce columnas y filas chicas, y cada recuadro ocupa las que diga su ancho y
+   su alto. `dense` acomoda los chicos en los huecos que deja uno alto, así un
+   recuadro vertical a la derecha convive con dos apilados a la izquierda, como
+   en el editor del juego. Si el contenido no entra, la fila crece. */
 [data-theme="codex"] .dl-bd-cats {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: minmax(2.4rem, auto);
+  grid-auto-flow: row dense;
+  gap: 0.6rem;
 }
 
 /* Cada categoría: un recuadro con la barra oscura del nombre arriba. El ancho
    son `--cols` tarjetas, y la esquina lo cambia. */
 [data-theme="codex"] .dl-bd-cat {
   position: relative;
-  width: calc(var(--cols) * var(--gcard) + (var(--cols) - 1) * 0.45rem + 1.6rem);
-  max-width: 100%;
+  min-width: 0;
   box-sizing: border-box;
-  padding: 0 0.8rem 1rem;
+  padding: 0 0.6rem 0.9rem;
   background: rgba(20, 45, 90, 0.35);
   outline: 2px solid rgba(120, 160, 220, 0.45);
   outline-offset: -2px;
@@ -1164,10 +1181,21 @@
 [data-theme="codex"] .dl-bd-cat-head {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  margin: 0 -0.8rem 0.8rem;
-  padding: 0.45rem 0.8rem;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.45rem;
+  margin: 0 -0.6rem 0.6rem;
+  padding: 0.35rem 0.5rem;
   background: #294f8c;
+}
+
+[data-theme="codex"] .dl-bd-cat-grip {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.4rem;
+  height: 1.4rem;
+  color: rgba(244, 236, 220, 0.75);
+  cursor: grab;
 }
 
 [data-theme="codex"] .dl-bd-cat-name,
@@ -1181,16 +1209,20 @@
   color: #f4ecdc;
 }
 
+/* En un recuadro angosto la nota baja a su propio renglón en vez de comerse
+   el nombre. */
 [data-theme="codex"] .dl-bd-cat-name {
-  flex: 0 1 14rem;
+  flex: 1 1 5rem;
+  min-width: 5.5rem;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 [data-theme="codex"] .dl-bd-cat-desc {
-  flex: 1 1 10rem;
+  order: 3;
+  flex: 1 1 8rem;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: rgba(244, 236, 220, 0.72);
 }
 
@@ -1221,8 +1253,8 @@
 [data-theme="codex"] .dl-bd-cat-tools button {
   display: grid;
   place-items: center;
-  width: 1.9rem;
-  height: 1.9rem;
+  width: 1.6rem;
+  height: 1.6rem;
   padding: 0;
   border: 0;
   border-radius: 3px;
@@ -1235,22 +1267,22 @@
 
 [data-theme="codex"] .dl-bd-cat-empty {
   margin: 0;
-  padding: 1.6rem 0.4rem;
-  font-size: 0.85rem;
+  padding: 0.6rem 0.2rem;
+  font-size: 0.78rem;
   color: rgba(244, 236, 220, 0.7);
 }
 
 [data-theme="codex"] .dl-bd-cat-items {
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--gcard));
-  gap: 0.45rem;
+  gap: 0.35rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-[data-theme="codex"] .dl-bd-cat-items .dl-bd-card-name { font-size: 0.72rem; }
-[data-theme="codex"] .dl-bd-cat-items .dl-bd-tag { font-size: 0.5rem; }
+[data-theme="codex"] .dl-bd-cat-items .dl-bd-card-name { font-size: 0.56rem; }
+[data-theme="codex"] .dl-bd-cat-items .dl-bd-tag { font-size: 0.42rem; }
 
 [data-theme="codex"] .dl-bd-cat-items .dl-bd-card[draggable="true"] { cursor: grab; }
 
@@ -1266,13 +1298,16 @@
   background:
     linear-gradient(135deg, transparent 50%, rgba(244, 236, 220, 0.85) 50%, rgba(244, 236, 220, 0.85) 60%, transparent 60%),
     linear-gradient(135deg, transparent 70%, rgba(244, 236, 220, 0.85) 70%, rgba(244, 236, 220, 0.85) 80%, transparent 80%);
-  cursor: ew-resize;
+  cursor: nwse-resize;
   touch-action: none;
 }
 
+@media (max-width: 70rem) {
+  [data-theme="codex"] .dl-bd-below { grid-template-columns: minmax(0, 1fr); }
+}
+
 @media (max-width: 44rem) {
-  [data-theme="codex"] .dl-bd-editor { --gcard: 4.3rem; }
-  [data-theme="codex"] .dl-bd-cat { width: 100%; }
+  [data-theme="codex"] .dl-bd-cat { grid-column: 1 / -1 !important; }
   [data-theme="codex"] .dl-bd-abil-step { height: 1.5rem; }
   [data-theme="codex"] .dl-bd-abil-up { font-size: 0.6rem; padding: 0.1rem 0.2rem; }
   [data-theme="codex"] .dl-bd-abil-up span { display: none; }
