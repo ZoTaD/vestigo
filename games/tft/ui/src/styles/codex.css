@@ -6967,3 +6967,78 @@
   font-variant-numeric: tabular-nums;
   color: var(--vellum);
 }
+
+/* "Te conviene jugar más" ------------------------------------------------------
+   Tres filas: el héroe con tu récord abajo, y a la derecha la ventaja en
+   puntos, grande, con el winrate de tu rango debajo. La ventaja es lo que se
+   lee primero; el color es del texto, sin filos ni barras. */
+[data-theme="codex"] .dl-fit-lead {
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+}
+
+[data-theme="codex"] .dl-fit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+[data-theme="codex"] .dl-fit-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(233, 224, 203, 0.03);
+}
+
+/* El primero es la respuesta: un tinte más. */
+[data-theme="codex"] .dl-fit-row:first-child {
+  background: rgba(201, 162, 74, 0.12);
+}
+
+[data-theme="codex"] .dl-fit-row img {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+}
+
+[data-theme="codex"] .dl-fit-hero,
+[data-theme="codex"] .dl-fit-edge {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+[data-theme="codex"] .dl-fit-edge {
+  align-items: flex-end;
+}
+
+[data-theme="codex"] .dl-fit-name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--vellum);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-theme="codex"] .dl-fit-you,
+[data-theme="codex"] .dl-fit-band {
+  font-size: 0.72rem;
+  color: var(--vellum-dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+[data-theme="codex"] .dl-fit-pts {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1.05;
+  color: var(--good);
+  font-variant-numeric: tabular-nums;
+}

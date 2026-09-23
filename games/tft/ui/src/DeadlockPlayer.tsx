@@ -33,6 +33,7 @@ import DeadlockScopePicker from "./DeadlockScopePicker";
 import DeadlockPeerCard from "./DeadlockPeerCard";
 import { usePeers } from "./deadlockPeers";
 import DeadlockCareerHeroes from "./DeadlockCareerHeroes";
+import DeadlockHeroFitCard from "./DeadlockHeroFitCard";
 import DeadlockVsBand from "./DeadlockVsBandCard";
 import DeadlockRankTrail from "./DeadlockRankTrail";
 import { rankSteps, type RankPoint } from "./deadlockRankHistory";
@@ -898,6 +899,10 @@ export default function DeadlockPlayer({
                 cada uno. Los botones de arriba filtran la lista; esta tabla
                 mide la carrera. */}
             <DeadlockCareerHeroes stats={carrera} />
+
+            {/* La misma carrera, leída contra tu rango: de "cómo te va con cada
+                héroe" a "con cuál te conviene jugar más". */}
+            <DeadlockHeroFitCard stats={carrera} badge={rango?.badge ?? 0} />
 
             {/* Las dos reciben `enModo` y no `filtrado`: son preguntas sobre
                 personas, no sobre un héroe. Filtrar "con quién jugás" por el

@@ -1110,6 +1110,17 @@ const EN = {
         record: (wins: number, losses: number) => `${wins}W ${losses}L`,
         crit: (rate: string) => `${rate} crit shots`,
       },
+      /** Los héroes con los que te va mejor que a tu rango. Ver `deadlockHeroFit.ts`. */
+      heroFit: {
+        title: "Heroes worth playing more",
+        lead: (band: string, min: number) =>
+          `Where your career win rate beats what each hero gets in ${band} lobbies. Heroes with ${min}+ games; ` +
+          "more games weigh more.",
+        you: (wr: string) => `You: ${wr}`,
+        games: (n: number) => `${n} games`,
+        band: (wr: string) => `vs ${wr} at your rank`,
+        none: "No hero is clearly doing better for you than for your rank yet.",
+      },
       /** El título de una fila del historial: qué son los dos números que van juntos. */
       farmTitle: (lastHits: number, denies: number) => `${lastHits} last hits, ${denies} denies`,
       /** El botón de un héroe en "Most played": filtra el historial a ese héroe. */
@@ -2838,6 +2849,16 @@ const ES: typeof EN = {
         cols: { matches: "Partidas", winRate: "Victorias", accuracy: "Precisión" },
         record: (wins: number, losses: number) => `${wins}V ${losses}D`,
         crit: (rate: string) => `${rate} de tiros críticos`,
+      },
+      heroFit: {
+        title: "Te conviene jugar más",
+        lead: (band: string, min: number) =>
+          `Los héroes con los que tu carrera gana más de lo que gana ese héroe en salas ${band}. ` +
+          `Desde ${min} partidas; las que tienen más partidas pesan más.`,
+        you: (wr: string) => `Vos: ${wr}`,
+        games: (n: number) => `${n} partidas`,
+        band: (wr: string) => `vs ${wr} en tu rango`,
+        none: "Todavía ningún héroe te rinde claramente más que a tu rango.",
       },
       farmTitle: (lastHits: number, denies: number) => `${lastHits} golpes, ${denies} denies`,
       filterByHero: (hero: string) => `Filtrar por ${hero}`,
