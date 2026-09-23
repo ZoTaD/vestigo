@@ -1857,15 +1857,16 @@ const EN = {
 
   // Said plainly, and without a pre-ticked box or a greyed-out "decline": the
   // refusal has to be as easy as the acceptance, or the consent is not consent.
+  //
+  // The provider is named in the Privacy Policy, not here (ZoTaD, 2026-09-23):
+  // informed consent needs the kind of cookie and its purpose, and the link
+  // below carries the rest — which cookies, what reaches Google, for how long.
   consent: {
-    title: "Before you look around",
-    body:
-      "We'd like to use Google Analytics to see which pages people actually use, so we know " +
-      "what to build next. It sets cookies and sends your visit to Google. Decline and none of " +
-      "it loads — the site works exactly the same either way.",
+    title: "Analytics cookies",
+    body: "We use cookies to see which pages get used and what to improve next. If you decline, nothing loads and the site works the same.",
     accept: "Accept",
     decline: "Decline",
-    more: "Read the Privacy Policy",
+    more: "Privacy Policy",
     settings: "Cookies",
     on: "Analytics: on",
     off: "Analytics: off",
@@ -3464,14 +3465,11 @@ const ES: typeof EN = {
   },
 
   consent: {
-    title: "Antes de que mires",
-    body:
-      "Nos gustaría usar Google Analytics para ver qué páginas se usan de verdad y saber qué " +
-      "construir después. Instala cookies y le manda tu visita a Google. Si lo rechazas no se " +
-      "carga nada — el sitio funciona exactamente igual de las dos formas.",
+    title: "Cookies de análisis",
+    body: "Usamos cookies para saber qué páginas se usan y qué conviene mejorar. Si las rechazás, no se carga nada y el sitio funciona igual.",
     accept: "Aceptar",
     decline: "Rechazar",
-    more: "Leer la Política de Privacidad",
+    more: "Política de privacidad",
     settings: "Cookies",
     on: "Analítica: activada",
     off: "Analítica: desactivada",

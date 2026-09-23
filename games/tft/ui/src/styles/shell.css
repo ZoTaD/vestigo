@@ -90,10 +90,11 @@
 }
 
 /* Los cuatro juegos que vienen (2026-09-23) necesitan unos 520 px: entran
-   enteros o no entran. Por debajo de 1200 px se van de la barra, antes de
-   partirse en dos renglones o de empujar el buscador encima del idioma; en la
-   portada siguen anunciados. */
-@media (max-width: 75rem) {
+   enteros o no entran. Medido: el buscador necesita ~270 px y a 1248 px de
+   ancho quedaba en 104, con la etiqueta "Deadlock" encima del texto; recién
+   desde ~1420 px entra todo. Por debajo se van de la barra; en la portada
+   siguen anunciados. */
+@media (max-width: 89rem) {
   .top-place.is-soon {
     display: none;
   }
