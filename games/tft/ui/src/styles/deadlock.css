@@ -44,7 +44,13 @@
   grid-template-rows: 0fr;
 }
 
+/* `position: relative` para que el plegado recorte también a los hijos con
+   `position: absolute` (los rótulos ocultos de cada fila). Sin esto su caja de
+   referencia era `.app`, se escapaban del recorte y colgaban ~2.000 px debajo
+   de la página: `.app` (con `overflow-x: hidden`, o sea caja de scroll) sacaba
+   una segunda barra vertical en Objetos. ZoTaD, 2026-09-22. */
 [data-theme="codex"] .dl-fold-inner {
+  position: relative;
   overflow: hidden;
   min-height: 0;
 }
