@@ -6,6 +6,7 @@ import Home from "./Home";
 import Deadlock, { PatchHistory } from "./Deadlock";
 import DeadlockItems from "./DeadlockItems";
 import DeadlockHeroes from "./DeadlockHeroes";
+import DeadlockBuilder from "./DeadlockBuilderPage";
 import DeadlockNews from "./DeadlockNews";
 import DeadlockRanks from "./DeadlockRanks";
 import DeadlockPlayerLadder from "./DeadlockPlayerLadder";
@@ -218,6 +219,8 @@ function Shell({
               picker={dlPicker}
               open={route.detail}
             />
+          ) : route.dlSection === "builder" ? (
+            <DeadlockBuilder />
           ) : route.dlSection === "ranks" ? (
             /* Sin `picker`: la escalera es el eje sobre el que se definen las
                bandas, así que filtrarla por una no significaría nada. */

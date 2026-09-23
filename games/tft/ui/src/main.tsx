@@ -18,6 +18,7 @@ import "./styles/views.css";
 // vive acá, y lo que reemplaza se borra de `codex.css` en vez de pisarse.
 import "./styles/deadlock.css";
 import "./styles/deadlock-heroes.css";
+import "./styles/deadlock-builder.css";
 import "./styles/scrollbar.css";
 // Vestigo News (2026-09-17): la única página con paleta y fuentes propias, todo bajo `.vn`.
 import "./styles/news.css";

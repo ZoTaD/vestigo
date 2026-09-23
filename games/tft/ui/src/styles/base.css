@@ -76,7 +76,14 @@ button {
   min-height: 100%;
   position: relative;
   padding: 0 clamp(1rem, 4vw, 4rem) 6rem;
-  overflow-x: hidden;
+  /* `clip` y no `hidden` (2026-09-22): `hidden` convertía a `.app` en caja de
+     scroll —el eje vertical computa a `auto`—, y eso rompía todo
+     `position: sticky` adentro (la barra del armador de builds) y ya había
+     sacado una segunda barra vertical en Objetos. `clip` recorta igual sin
+     crear caja de scroll; `flow-root` conserva el contexto de bloque que daba
+     `hidden`, para que ningún margen se escape por arriba. */
+  display: flow-root;
+  overflow-x: clip;
 }
 
 .grain {

@@ -868,6 +868,7 @@ const EN = {
       meta: "Tier list",
       heroes: "Heroes",
       items: "Items",
+      builder: "Build maker",
       ranks: "Ranks",
       ladder: "Ladder",
       patches: "Patches",
@@ -1334,6 +1335,52 @@ const EN = {
      * son **vocabulario nuestro**, no del juego, así que viven acá y no se bajan
      * del catálogo — al revés que los nombres de héroes, ítems y habilidades.
      */
+    /** El armador de builds (`/deadlock/builder`). Ver `DeadlockBuilder.tsx`. */
+    builder: {
+      kicker: "Build maker",
+      title: "Make your build",
+      lead:
+        "Pick a hero and twelve items from the game's own shop. You get the souls, the investment " +
+        "bonus and how close it is to the builds people actually win with.",
+      pickHero: "Pick a hero",
+      shop: "Shop",
+      cats: { weapon: "Weapon", vitality: "Vitality", spirit: "Spirit" },
+      showValue: "Show measured value",
+      valueNote: "The number on each card: win-rate points over what its price usually gives, from the item tier list.",
+      yourBuild: "Your build",
+      slotsUsed: (n: number, max: number) => `${n} / ${max}`,
+      emptySlot: "Empty slot",
+      remove: (item: string) => `Remove ${item}`,
+      add: (item: string) => `Add ${item}`,
+      investment: "Soul investment",
+      damage: { weapon: "weapon damage", vitality: "bonus health", spirit: "spirit power" },
+      next: (souls: string, bonus: string) => `next: ${souls} → ${bonus}`,
+      maxed: "top of the ladder",
+      similar: "Closest measured builds",
+      similarRow: (games: string, wr: string) => `${games} games · ${wr} won`,
+      noSimilar: "Add items to compare with the builds people play.",
+      copyLink: "Copy link",
+      copied: "Copied!",
+      clear: "Clear",
+      loadMostPlayed: "Start from the most played",
+      upgradeSticker: "Upgrade",
+      activeTag: "Active",
+      imbueTag: "Imbue",
+      owned: "Purchased",
+      starred: (hero: string) => `In ${hero}'s most played build`,
+      itemValue: "Item value",
+      upgradesYour: (item: string) => `Upgrades your ${item}`,
+      upgradesTo: "Upgrades into",
+      value: (v: string) => `${v} pts over its price`,
+      status: {
+        added: (item: string) => `${item} added.`,
+        upgraded: (item: string, from: string) => `${from} upgraded to ${item}.`,
+        duplicate: (item: string) => `${item} is already in the build.`,
+        "has-upgrade": (item: string) => `You already have the upgrade of ${item}.`,
+        full: "The build is full: remove an item first.",
+        unknown: "That item is not in the shop.",
+      },
+    },
     buildCard: {
       toggle: (hero: string) => `See what to buy on ${hero}`,
       /**
@@ -1821,6 +1868,12 @@ const EN = {
         description: () =>
           "Which Deadlock items are actually worth their souls. Every item measured against " +
           "what its own price is worth, so a 6400 item is not called good just for being late.",
+      },
+      builder: {
+        title: () => "Deadlock Build Maker — Plan Your Items | Vestigo",
+        description: () =>
+          "Build a Deadlock item build in a copy of the game's shop: souls, investment bonus, upgrades, " +
+          "and how close it is to the builds that win. Share it with a link.",
       },
       ranks: {
         title: () => "Deadlock Rank Distribution — Players by Rank | Vestigo",
@@ -2683,6 +2736,7 @@ const ES: typeof EN = {
       meta: "Tier list",
       heroes: "Héroes",
       items: "Objetos",
+      builder: "Armador",
       ranks: "Rangos",
       ladder: "Escalera",
       patches: "Parches",
@@ -2980,6 +3034,51 @@ const ES: typeof EN = {
         thin: (min) =>
           `Todavía no hay partidas rankeadas suficientes para separarlo por rango — cada uno ` +
           `necesita unas ${min}. Se completa solo a medida que crece el corpus rankeado.`,
+      },
+    },
+    builder: {
+      kicker: "Armador de builds",
+      title: "Armá tu build",
+      lead:
+        "Elegí un héroe y doce objetos de la tienda del juego. Te decimos cuántas almas son, qué " +
+        "bonificación de inversión te dan y cuánto se parece a las builds que ganan de verdad.",
+      pickHero: "Elegí un héroe",
+      shop: "Tienda",
+      cats: { weapon: "Arma", vitality: "Vitalidad", spirit: "Espíritu" },
+      showValue: "Ver valor medido",
+      valueNote: "El número de cada tarjeta: puntos de victoria por encima de lo que suele dar su precio, de la tier list de objetos.",
+      yourBuild: "Tu build",
+      slotsUsed: (n, max) => `${n} / ${max}`,
+      emptySlot: "Casilla vacía",
+      remove: (item) => `Quitar ${item}`,
+      add: (item) => `Agregar ${item}`,
+      investment: "Inversión de almas",
+      damage: { weapon: "daño de arma", vitality: "vida extra", spirit: "poder espiritual" },
+      next: (souls, bonus) => `próximo: ${souls} → ${bonus}`,
+      maxed: "tope de la escalera",
+      similar: "Las builds medidas más parecidas",
+      similarRow: (games, wr) => `${games} partidas · ${wr} ganadas`,
+      noSimilar: "Agregá objetos para compararla con las builds que se juegan.",
+      copyLink: "Copiar link",
+      copied: "¡Copiado!",
+      clear: "Vaciar",
+      loadMostPlayed: "Empezar de la más jugada",
+      upgradeSticker: "Mejora",
+      activeTag: "Activo",
+      imbueTag: "Imbuir",
+      owned: "Adquirido",
+      starred: (hero) => `En la build más jugada de ${hero}`,
+      itemValue: "Valor de los objetos",
+      upgradesYour: (item) => `Mejora tu ${item}`,
+      upgradesTo: "Se mejora a",
+      value: (v) => `${v} pts sobre su precio`,
+      status: {
+        added: (item) => `${item} agregado.`,
+        upgraded: (item, from) => `${from} se mejoró a ${item}.`,
+        duplicate: (item) => `${item} ya está en la build.`,
+        "has-upgrade": (item) => `Ya tenés la mejora de ${item}.`,
+        full: "La build está llena: sacá un objeto primero.",
+        unknown: "Ese objeto no está en la tienda.",
       },
     },
     buildCard: {
@@ -3291,6 +3390,12 @@ const ES: typeof EN = {
         description: () =>
           "Qué objetos de Deadlock valen de verdad sus almas. Cada uno medido contra lo que " +
           "rinde su propio precio, para que uno de 6400 no parezca bueno sólo por ser tardío.",
+      },
+      builder: {
+        title: () => "Armador de builds de Deadlock — planeá tus objetos | Vestigo",
+        description: () =>
+          "Armá una build de Deadlock en una copia de la tienda del juego: almas, bonificación de inversión, " +
+          "mejoras y cuánto se parece a las builds que ganan. Compartila con un link.",
       },
       ranks: {
         title: () => "Distribución de rangos de Deadlock — jugadores por rango | Vestigo",

@@ -196,6 +196,8 @@ interface RawItem {
   shop_image?: string;
   shop_image_webp?: string;
   is_active_item?: boolean;
+  /** Presente cuando el ítem se imbuye en una habilidad ("imbue_active", "imbue_modifier_value"). */
+  imbue?: string;
   /** El nombre interno, que es como los otros ítems lo referencian. */
   class_name?: string;
   /** Los ítems de los que este se construye, por `class_name`. */
@@ -291,6 +293,13 @@ export interface CatalogItem {
    * como "MEJORA DE", y es la relación inversa de `upgradesTo`.
    */
   upgradesFrom?: number[];
+  /**
+   * Se activa con una tecla. La tienda del juego lo marca con la cinta
+   * "ACTIVO" debajo del dibujo, y el armador de builds la copia.
+   */
+  active?: true;
+  /** Se imbuye en una habilidad: la cinta violeta "IMBUIR" de la tienda. */
+  imbue?: true;
 }
 
 /**
@@ -812,6 +821,8 @@ export function buildCatalog(
         );
         return desde.length > 0 ? { upgradesFrom: desde } : {};
       })(),
+      ...(i.is_active_item ? { active: true as const } : {}),
+      ...(i.imbue ? { imbue: true as const } : {}),
     };
   }
 

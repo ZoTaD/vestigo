@@ -24,7 +24,7 @@ export type Section = "meta" | "units" | "items" | "ladder" | "player";
  * `/tft/patches` parsearía a una pestaña que no existe y el sitio contestaría
  * 200 en una URL vacía. Cada juego declara las suyas.
  */
-export type DeadlockSection = "meta" | "heroes" | "items" | "ranks" | "ladder" | "patches" | "player" | "match";
+export type DeadlockSection = "meta" | "heroes" | "items" | "builder" | "ranks" | "ladder" | "patches" | "player" | "match";
 export type View = "home" | "tft" | "deadlock" | "privacy" | "terms";
 
 export const LANGS: Lang[] = ["en", "es"];
@@ -38,7 +38,7 @@ export const SECTIONS: Section[] = ["meta", "units", "items", "ladder", "player"
  * partida); la de Héroes es el héroe entero — kit, números, enfrentamientos,
  * historia. Pedido de ZoTaD: desde la tier list "yo quiero la build nada más".
  */
-export const DEADLOCK_SECTIONS: DeadlockSection[] = ["meta", "heroes", "items", "ranks", "ladder", "patches", "player"];
+export const DEADLOCK_SECTIONS: DeadlockSection[] = ["meta", "heroes", "items", "builder", "ranks", "ladder", "patches", "player"];
 /**
  * Las direcciones válidas, que son **más que las pestañas**.
  *

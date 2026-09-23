@@ -59,6 +59,8 @@ interface CatalogItems {
       types?: string[];
       upgradesTo?: number[];
       upgradesFrom?: number[];
+      active?: true;
+      imbue?: true;
     }
   >;
   /** Los íconos del juego, una vez cada uno. Las stats y los tipos guardan la clave. */
@@ -160,6 +162,10 @@ export interface Item extends RawItem {
   upgradesTo: { itemId: number; name: string; img: string; slot: Slot }[];
   /** Los ítems de los que éste se construye. El juego lo llama "mejora de". */
   upgradesFrom: { itemId: number; name: string; img: string; slot: Slot }[];
+  /** Se activa con una tecla: la cinta "ACTIVO" de la tienda. */
+  active: boolean;
+  /** Se imbuye en una habilidad: la cinta "IMBUIR". */
+  imbue: boolean;
 }
 
 const files = new Map<BandId, ItemsFile>([[PUBLISHED_BAND, itemsJson as unknown as ItemsFile]]);
@@ -209,6 +215,8 @@ export function buildItems(band: BandId, lang: Lang): Item[] {
       types: entry.types ?? [],
       upgradesTo: resolverIds(entry.upgradesTo, lang),
       upgradesFrom: resolverIds(entry.upgradesFrom, lang),
+      active: entry.active === true,
+      imbue: entry.imbue === true,
       tier: tierOfDelta(i.delta),
     }];
   });

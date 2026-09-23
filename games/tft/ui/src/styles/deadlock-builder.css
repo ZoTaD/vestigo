@@ -1,0 +1,849 @@
+/* ---------------------------------------------------------------------------
+   DEADLOCK — Armador de builds (2026-09-22).
+
+   La izquierda es la tienda del juego: el papel de cada categoría
+   (`catalog_shop_category_*_bg`), las pestañas, el reverso de tarjeta por
+   escalón (`card_backer_*_t*`) y los sellos de comprado y "MEJORA", todos
+   sacados del bucket de deadlock-api y achicados a `public/deadlock/shop/`.
+   La derecha es Vestigo: la build, la inversión y el parecido con lo medido.
+
+   Regla de la casa que sigue valiendo acá: sin filos ni barras de color en
+   tarjetas o filas. El color de la tienda está en sus propias texturas.
+--------------------------------------------------------------------------- */
+
+[data-theme="codex"] .deadlock.dl-builder {
+  max-width: 1560px;
+  margin: 0 auto;
+  /* Sin el aire lateral del resto de Deadlock: `.app` ya deja margen, y acá
+     cada píxel de ancho es tamaño de tarjeta en la tienda. */
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 1.5rem;
+  padding-bottom: 3rem;
+}
+
+/* ── Encabezado y héroes ───────────────────────────────────── */
+
+[data-theme="codex"] .dl-bd-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1.5rem 2.5rem;
+  align-items: end;
+  margin-bottom: 1.5rem;
+}
+
+[data-theme="codex"] .dl-bd-kicker {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+[data-theme="codex"] .dl-bd-title {
+  margin: 0.35rem 0 0.6rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4vw, 3.6rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: var(--vellum);
+}
+
+[data-theme="codex"] .dl-bd-lead {
+  margin: 0;
+  max-width: 38rem;
+  color: var(--vellum-dim);
+  line-height: 1.5;
+}
+
+[data-theme="codex"] .dl-bd-heroes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  justify-content: flex-end;
+}
+
+[data-theme="codex"] .dl-bd-hero {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0.15rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 239, 215, 0.05);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+[data-theme="codex"] .dl-bd-hero img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+
+[data-theme="codex"] .dl-bd-hero:hover img,
+[data-theme="codex"] .dl-bd-hero[aria-pressed="true"] img {
+  opacity: 1;
+}
+
+/* El elegido: un tinte de latón detrás, no un aro de color. */
+[data-theme="codex"] .dl-bd-hero[aria-pressed="true"] {
+  background: rgba(198, 162, 105, 0.45);
+}
+
+/* ── Cuerpo: la tienda a la izquierda, la build a la derecha ── */
+
+[data-theme="codex"] .dl-bd-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 19rem;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+/* ── La tienda ─────────────────────────────────────────────── */
+
+[data-theme="codex"] .dl-bd-shop {
+  min-width: 0;
+  container: shop / inline-size;
+}
+
+[data-theme="codex"] .dl-bd-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.4rem;
+}
+
+[data-theme="codex"] .dl-bd-valuetoggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--vellum-dim);
+  cursor: pointer;
+}
+
+[data-theme="codex"] .dl-bd-catalog {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* El lomo con las pestañas. Son las imágenes del juego: la elegida es la
+   larga (95×271) y pega contra el papel; las otras, los cuadrados chicos. */
+[data-theme="codex"] .dl-bd-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 4.2rem;
+  flex: none;
+  padding-top: 0.2rem;
+}
+
+[data-theme="codex"] .dl-bd-tab {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.15s, filter 0.15s;
+}
+
+[data-theme="codex"] .dl-bd-tab img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+[data-theme="codex"] .dl-bd-tab[aria-selected="false"] {
+  width: 88%;
+  margin-left: auto;
+  filter: brightness(0.85);
+}
+
+[data-theme="codex"] .dl-bd-tab[aria-selected="false"]:hover {
+  filter: none;
+  transform: translateX(-3px);
+}
+
+/* ── El papel ──────────────────────────────────────────────────
+   Por defecto (pantalla angosta) los escalones se apilan sobre el papel. Con
+   lugar suficiente, el `@container` de abajo usa el papel ENTERO del juego y
+   pone cada escalón dentro de su recuadro impreso, como la tienda real. */
+
+[data-theme="codex"] .dl-bd-paper {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  container: paper / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding: 1.6rem 0.8rem 1rem;
+  border-radius: 0 4px 4px 4px;
+  background-color: #b9a988;
+  background-size: cover;
+  background-position: center top;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="codex"] .dl-bd-paper[data-cat="weapon"] { background-image: url(/deadlock/shop/bg_weapon.webp); }
+[data-theme="codex"] .dl-bd-paper[data-cat="vitality"] { background-image: url(/deadlock/shop/bg_vitality.webp); }
+[data-theme="codex"] .dl-bd-paper[data-cat="spirit"] { background-image: url(/deadlock/shop/bg_spirit.webp); }
+
+[data-theme="codex"] .dl-bd-tier {
+  position: relative;
+}
+
+/* La etiqueta negra del precio. En el papel entero se ubica encima de la
+   etiqueta impresa; apilado, es una etiqueta propia con la misma forma. */
+[data-theme="codex"] .dl-bd-price {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0 0 0.5rem;
+  padding: 0.15rem 0.6rem 0.15rem 0.45rem;
+  border-radius: 3px;
+  background: #16120f;
+  color: #efe3c6;
+  font-family: "VN Reaver", var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"] .dl-bd-price img {
+  height: 0.95em;
+  width: auto;
+}
+
+[data-theme="codex"] .dl-bd-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.3rem, 1fr));
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Con lugar, el papel del juego y las coordenadas de sus recuadros.
+   Medidas sobre `catalog_shop_bg_*` (1825×1618) con una grilla al 5 %, y
+   verificadas contra capturas de la tienda que pasó ZoTaD el 2026-09-22:
+   arma tiene el escalón III más ancho porque trae 19 objetos. Con tarjetas de
+   7,5 cqw entran justo: 5 columnas en el I, 6 en el II, 7 (arma) o 5 en el
+   III y 4 (arma) o 6 en el IV. */
+@container shop (min-width: 44rem) {
+  /* El papel no pasa del alto de la pantalla: la tienda entera se ve sin
+     bajar, al lado de la build (pedido de ZoTaD, 2026-09-22). */
+  [data-theme="codex"] .dl-bd-catalog {
+    justify-content: center;
+  }
+
+  [data-theme="codex"] .dl-bd-paper {
+    display: block;
+    max-width: calc((100vh - 1.5rem) * 1825 / 1618);
+    aspect-ratio: 1825 / 1618;
+    padding: 0;
+    background-size: 100% 100%;
+  }
+
+  [data-theme="codex"] .dl-bd-paper[data-cat="weapon"] { background-image: url(/deadlock/shop/paper_weapon.webp); }
+  [data-theme="codex"] .dl-bd-paper[data-cat="vitality"] { background-image: url(/deadlock/shop/paper_vitality.webp); }
+  [data-theme="codex"] .dl-bd-paper[data-cat="spirit"] { background-image: url(/deadlock/shop/paper_spirit.webp); }
+
+  /* El escalón no ocupa lugar: su precio y sus tarjetas se ubican solos
+     contra el papel. */
+  [data-theme="codex"] .dl-bd-tier {
+    position: static;
+    display: contents;
+  }
+
+  [data-theme="codex"] .dl-bd-price {
+    position: absolute;
+    left: var(--tx);
+    top: var(--ty);
+    width: var(--tw);
+    height: var(--th);
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    gap: 0.35cqw;
+    background: none;
+    font-size: var(--tf, 2.3cqw);
+    color: #f1e6cb;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  }
+
+  [data-theme="codex"] .dl-bd-cards {
+    position: absolute;
+    left: var(--gx);
+    top: var(--gy);
+    width: var(--gw);
+    grid-template-columns: repeat(auto-fill, 7.5cqw);
+    grid-auto-rows: 11.4cqw;
+    gap: 0.45cqw;
+  }
+
+  /* Las coordenadas, en % del papel. Vitalidad y espíritu comparten diseño. */
+  [data-theme="codex"] .dl-bd-tier[data-tier="1"] { --tx: 3%; --ty: 15.4%; --tw: 7.2%; --th: 3.4%; --tf: 1.9cqw; --gx: 4.5%; --gy: 20.4%; --gw: 40.5%; }
+  [data-theme="codex"] .dl-bd-tier[data-tier="2"] { --tx: 46.6%; --ty: 1.6%; --tw: 9.8%; --th: 4.4%; --tf: 2.5cqw; --gx: 48.5%; --gy: 7.2%; --gw: 48%; }
+  [data-theme="codex"] .dl-bd-tier[data-tier="3"] { --tx: 2.4%; --ty: 50.4%; --tw: 12.2%; --th: 5.2%; --tf: 2.7cqw; --gx: 4.3%; --gy: 57%; --gw: 42%; }
+  [data-theme="codex"] .dl-bd-tier[data-tier="4"] { --tx: 45.9%; --ty: 48.7%; --tw: 13.3%; --th: 5.3%; --tf: 2.7cqw; --gx: 48.8%; --gy: 57.4%; --gw: 48%; }
+
+  [data-theme="codex"] .dl-bd-paper[data-cat="weapon"] .dl-bd-tier[data-tier="3"] { --gw: 56.5%; }
+  [data-theme="codex"] .dl-bd-paper[data-cat="weapon"] .dl-bd-tier[data-tier="4"] { --tx: 62%; --ty: 49.7%; --tw: 13.6%; --th: 5.6%; --gx: 63.6%; --gw: 33%; }
+}
+
+/* ── La tarjeta ────────────────────────────────────────────── */
+
+[data-theme="codex"] .dl-bd-card {
+  position: relative;
+  min-width: 0;
+}
+
+/* Sin relleno: el dibujo va a todo el ancho y el nombre justo abajo, como la
+   tarjeta del juego. El reverso por escalón es la textura de fondo. */
+[data-theme="codex"] .dl-bd-card-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 107 / 165;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background-color: #e6dcc6;
+  background-size: 100% 100%;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 3px 6px rgba(0, 0, 0, 0.25);
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, filter 0.12s;
+}
+
+[data-theme="codex"] .dl-bd-card-btn:hover,
+[data-theme="codex"] .dl-bd-card-btn:focus-visible {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+[data-theme="codex"] .dl-bd-card-art {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  flex: none;
+}
+
+[data-theme="codex"] .dl-bd-card-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+[data-theme="codex"] .dl-bd-card-name {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5%;
+  font-family: "VN Retail", var(--font-display);
+  font-weight: 600;
+  font-size: 0.72rem;
+  line-height: 1.05;
+  text-align: center;
+  color: #2b2419;
+  overflow: hidden;
+}
+
+[data-theme="codex"] .dl-bd-card[data-tier="4"] .dl-bd-card-name {
+  color: #efe6d2;
+}
+
+/* "ACTIVO" e "IMBUIR": la cinta negra (o violeta) al pie del dibujo. */
+[data-theme="codex"] .dl-bd-tag {
+  position: absolute;
+  left: 50%;
+  bottom: 3%;
+  transform: translateX(-50%);
+  padding: 0.12em 0.55em;
+  border-radius: 2px;
+  background: #121010;
+  color: #f4ecdc;
+  font-family: "VN Retail", var(--font-display);
+  font-weight: 700;
+  font-size: 0.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+[data-theme="codex"] .dl-bd-tag.is-imbue {
+  background: #6d3fb0;
+}
+
+/* Con las dos cintas, IMBUIR va arriba de ACTIVO, como en el juego. */
+[data-theme="codex"] .dl-bd-tag + .dl-bd-tag.is-imbue {
+  bottom: calc(3% + 1.5em);
+}
+
+/* La estrella azul del juego, arriba a la izquierda. */
+[data-theme="codex"] .dl-bd-star {
+  position: absolute;
+  left: 3%;
+  top: 2%;
+  display: grid;
+  place-items: center;
+  width: 17%;
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: #3d7be0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="codex"] .dl-bd-star svg {
+  width: 72%;
+  height: 72%;
+}
+
+/* Ya en la build: la tarjeta se lava y lleva "ADQUIRIDO", como en el juego. */
+[data-theme="codex"] .dl-bd-card[data-owned] .dl-bd-card-art img,
+[data-theme="codex"] .dl-bd-card[data-owned] .dl-bd-card-name {
+  opacity: 0.35;
+  filter: grayscale(0.7);
+}
+
+[data-theme="codex"] .dl-bd-owned {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  font-family: "VN Retail", var(--font-display);
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #37c79a;
+  -webkit-text-stroke: 0.6px #0d3a2c;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* "MEJORA": la cinta del juego y el brillo verde agua alrededor. */
+[data-theme="codex"] .dl-bd-card[data-upgrade] .dl-bd-card-btn {
+  box-shadow: 0 0 0 2px #55e0c0, 0 0 12px rgba(85, 224, 192, 0.55);
+}
+
+[data-theme="codex"] .dl-bd-upgrade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 46%;
+  height: auto;
+  pointer-events: none;
+}
+
+[data-theme="codex"] .dl-bd-upgrade.is-text {
+  width: auto;
+  top: 8%;
+  right: -14%;
+  padding: 0.05rem 1rem;
+  background: #2bb596;
+  color: #06221c;
+  font-family: "VN Retail", var(--font-display);
+  font-weight: 700;
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(38deg);
+}
+
+[data-theme="codex"] .dl-bd-value {
+  position: absolute;
+  right: 3%;
+  top: 2%;
+  padding: 0.05rem 0.3rem;
+  border-radius: 2px;
+  background: rgba(16, 19, 13, 0.88);
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--vellum-dim);
+}
+
+[data-theme="codex"] .dl-bd-value[data-sign="up"] { color: var(--dl-souls); }
+[data-theme="codex"] .dl-bd-value[data-sign="down"] { color: #f08a74; }
+
+[data-theme="codex"] .dl-bd-valuenote {
+  margin-top: 0.6rem;
+}
+
+/* ── La build ──────────────────────────────────────────────── */
+
+/* El panel de la build: pegado arriba mientras se recorre la tienda y con
+   scroll propio si no entra, así la tienda y la build se ven a la vez. */
+[data-theme="codex"] .dl-bd-side {
+  position: sticky;
+  top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  max-height: calc(100vh - 1.5rem);
+  overflow-y: auto;
+  padding: 1rem;
+  border-radius: 6px;
+  background: rgba(255, 239, 215, 0.04);
+  scrollbar-width: thin;
+}
+
+[data-theme="codex"] .dl-bd-bar-empty {
+  margin: 0;
+}
+
+[data-theme="codex"] .dl-bd-build-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+[data-theme="codex"] .dl-bd-build-hero {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background: rgba(198, 162, 105, 0.25);
+}
+
+[data-theme="codex"] .dl-bd-build-title {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  color: var(--vellum);
+}
+
+[data-theme="codex"] .dl-bd-build-heroname {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+}
+
+[data-theme="codex"] .dl-bd-count {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--vellum-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Dos filas de seis cuadrados, como el inventario del juego: la build se lee
+   de un vistazo y el nombre queda en la ficha del hover. */
+[data-theme="codex"] .dl-bd-slots {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"] .dl-bd-empty {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background: rgba(255, 239, 215, 0.05);
+}
+
+/* La casilla de la build: un cuadrado claro con la esquina del color de la
+   categoría y el escalón en romano, como el inventario del juego. */
+[data-theme="codex"] .dl-bd-card.is-compact .dl-bd-card-btn {
+  aspect-ratio: 1;
+  background: #ece3cf;
+}
+
+[data-theme="codex"] .dl-bd-card.is-compact .dl-bd-card-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 38%;
+  height: 38%;
+  background: var(--corner);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+[data-theme="codex"] .dl-bd-card.is-compact[data-cat="weapon"] { --corner: #f0a526; }
+[data-theme="codex"] .dl-bd-card.is-compact[data-cat="vitality"] { --corner: #6ccf3d; }
+[data-theme="codex"] .dl-bd-card.is-compact[data-cat="spirit"] { --corner: #b36ff0; }
+
+[data-theme="codex"] .dl-bd-card.is-compact .dl-bd-card-art {
+  height: 100%;
+}
+
+[data-theme="codex"] .dl-bd-card.is-compact .dl-bd-card-tier {
+  position: absolute;
+  top: 1%;
+  right: 5%;
+  font-family: "VN Retail", var(--font-display);
+  font-weight: 700;
+  font-size: 0.55rem;
+  color: #1a1408;
+}
+
+[data-theme="codex"] .dl-bd-aviso {
+  min-height: 1.2em;
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--gold-lit);
+}
+
+/* El valor de lo comprado y las barras verticales, como abajo a la izquierda
+   de la tienda del juego. */
+[data-theme="codex"] .dl-bd-gamebar {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+[data-theme="codex"] .dl-bd-vbars {
+  display: flex;
+  gap: 0.35rem;
+}
+
+[data-theme="codex"] .dl-bd-vbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+[data-theme="codex"] .dl-bd-vbar-track {
+  position: relative;
+  display: block;
+  width: 0.85rem;
+  height: 4.5rem;
+  border-radius: 2px;
+  background: rgba(255, 239, 215, 0.08);
+  overflow: hidden;
+}
+
+[data-theme="codex"] .dl-bd-vbar-track span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bar);
+  transition: height 0.25s ease-out;
+}
+
+[data-theme="codex"] .dl-bd-vbar[data-cat="weapon"] { --bar: var(--dl-weapon); }
+[data-theme="codex"] .dl-bd-vbar[data-cat="vitality"] { --bar: #6ccf3d; }
+[data-theme="codex"] .dl-bd-vbar[data-cat="spirit"] { --bar: var(--dl-spirit); }
+
+[data-theme="codex"] .dl-bd-vbar img {
+  width: 1rem;
+  height: 1rem;
+  filter: invert(0.9);
+}
+
+[data-theme="codex"] .dl-bd-total {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+[data-theme="codex"] .dl-bd-total-n {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: "VN Reaver", var(--font-display);
+  font-weight: 700;
+  font-size: 2.3rem;
+  line-height: 1;
+  color: var(--dl-souls);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"] .dl-bd-total-n img {
+  height: 0.8em;
+  width: auto;
+}
+
+[data-theme="codex"] .dl-bd-total-label {
+  font-family: "VN Retail", var(--font-display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vellum-dim);
+}
+
+[data-theme="codex"] .dl-bd-sub {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vellum-dim);
+}
+
+[data-theme="codex"] .dl-bd-inv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+[data-theme="codex"] .dl-bd-inv-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "name souls bonus"
+    "next next next";
+  gap: 0.2rem 0.6rem;
+  align-items: baseline;
+}
+
+[data-theme="codex"] .dl-bd-inv-name { grid-area: name; font-size: 0.85rem; color: var(--vellum); }
+[data-theme="codex"] .dl-bd-inv-souls { grid-area: souls; font-size: 0.8rem; color: var(--vellum-dim); font-variant-numeric: tabular-nums; }
+[data-theme="codex"] .dl-bd-inv-bonus { grid-area: bonus; font-family: var(--font-display); font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+[data-theme="codex"] .dl-bd-inv-next { grid-area: next; font-size: 0.72rem; color: var(--vellum-dim); }
+
+[data-theme="codex"] .dl-bd-inv-row[data-cat="weapon"] .dl-bd-inv-bonus { color: var(--dl-weapon); }
+[data-theme="codex"] .dl-bd-inv-row[data-cat="vitality"] .dl-bd-inv-bonus { color: var(--dl-vitality); }
+[data-theme="codex"] .dl-bd-inv-row[data-cat="spirit"] .dl-bd-inv-bonus { color: var(--dl-spirit); }
+
+[data-theme="codex"] .dl-bd-similar ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"] .dl-bd-sim {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 4px;
+  background: rgba(255, 239, 215, 0.04);
+}
+
+[data-theme="codex"] .dl-bd-sim:first-child {
+  background: rgba(198, 162, 105, 0.16);
+}
+
+[data-theme="codex"] .dl-bd-sim-n {
+  min-width: 3rem;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--gold-lit);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"] .dl-bd-sim-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+[data-theme="codex"] .dl-bd-sim-name { font-size: 0.85rem; color: var(--vellum); }
+[data-theme="codex"] .dl-bd-sim-meta { font-size: 0.72rem; color: var(--vellum-dim); }
+
+[data-theme="codex"] .dl-bd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+[data-theme="codex"] .dl-bd-primary,
+[data-theme="codex"] .dl-bd-secondary {
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+[data-theme="codex"] .dl-bd-primary {
+  flex: 1 1 100%;
+  background: var(--gold);
+  color: var(--ink);
+}
+
+[data-theme="codex"] .dl-bd-secondary {
+  flex: 1 1 0;
+  background: rgba(255, 239, 215, 0.07);
+  color: var(--vellum);
+}
+
+[data-theme="codex"] .dl-bd-primary:disabled,
+[data-theme="codex"] .dl-bd-secondary:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ── Pantallas angostas ────────────────────────────────────── */
+
+@media (max-width: 70rem) {
+  /* Sin lugar para dos columnas: la build arriba de la tienda, sin pegar. */
+  [data-theme="codex"] .dl-bd-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-theme="codex"] .dl-bd-side {
+    position: static;
+    order: -1;
+    max-height: none;
+    overflow: visible;
+  }
+
+  [data-theme="codex"] .dl-bd-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-theme="codex"] .dl-bd-heroes {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 44rem) {
+  [data-theme="codex"] .dl-bd-paper {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1.2rem 0.8rem;
+  }
+
+  [data-theme="codex"] .dl-bd-tab span {
+    display: none;
+  }
+
+  /* Cuatro tarjetas por fila en vez de dos de 120 px: la tienda entera tiene
+     que poder recorrerse sin scrollear un metro. */
+  [data-theme="codex"] .dl-bd-cards {
+    grid-template-columns: repeat(auto-fill, minmax(3.9rem, 1fr));
+  }
+
+  [data-theme="codex"] .dl-bd-hero {
+    width: 2.3rem;
+    height: 2.3rem;
+  }
+}
+
+/* Las tarjetas del papel entero miden en unidades del papel, para que la
+   tienda escale junta como una imagen. **Va al final a propósito**: dentro del
+   bloque de arriba perdía contra las reglas base de la tarjeta, que vienen
+   después en el archivo y tienen el mismo peso. */
+@container shop (min-width: 44rem) {
+  [data-theme="codex"] .dl-bd-paper .dl-bd-card-name { font-size: 1.15cqw; }
+  [data-theme="codex"] .dl-bd-paper .dl-bd-tag { font-size: 0.78cqw; }
+  [data-theme="codex"] .dl-bd-paper .dl-bd-owned { font-size: 1.1cqw; }
+  [data-theme="codex"] .dl-bd-paper .dl-bd-value { font-size: 0.85cqw; }
+  [data-theme="codex"] .dl-bd-paper .dl-bd-upgrade.is-text { font-size: 0.62cqw; }
+}

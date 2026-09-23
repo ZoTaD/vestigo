@@ -645,6 +645,8 @@ export function asItem(i: ItemRef): Item {
     types: [],
     upgradesTo: [],
     upgradesFrom: [],
+    active: false,
+    imbue: false,
     tier: "",
   };
 }

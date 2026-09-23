@@ -66,7 +66,7 @@ const destinoDelPortal = (): HTMLElement =>
  * `cabecera` es lo que cada lugar agrega arriba de la ficha: la build pone el
  * minuto y la cadena de mejora, los otros dos no ponen nada.
  */
-function ConFicha({
+export function ConFicha({
   item,
   className,
   datos,
