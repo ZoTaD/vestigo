@@ -50,13 +50,26 @@ stock del server. De ahí sólo se reusa la idea de las recetas.
   negro, 16 Llanuras, 32 Tierra de Ceniza, 64 **Norte profundo**, 256 Océano,
   512 Tierras Nubladas.
 
-Pendiente de resolver en el extractor:
+Resuelto al construir el extractor (plan 1, 2026-09-24):
 
-- Algunos aparecedores tienen todos los bits (Carbonizados, Elaking, Jotun en
-  todos los biomas): son eventos o apariciones especiales y hay que filtrarlos.
-- La vegetación de Tierra de Ceniza, Tierras Nubladas y Norte profundo casi no
-  está en la lista principal de `ZoneSystem`: rastrear dónde se define. Lo que
-  no esté en el juego se completa desde la wiki, marcado como tal.
+- Los aparecedores con 7 o más biomas se descartan (`is_everywhere`): son
+  eventos, no hábitats.
+- La vegetación de Tierras Nubladas, Tierra de Ceniza y Norte profundo está en
+  `m_vegetation` de cada `LocationList` (`_LocationList_Mistlands`,
+  `_Ashlands`, `_DeepNorth`), no en la de `ZoneSystem`.
+- Las vetas de cobre y plata sólo tienen un `Destructible`; el mineral lo
+  suelta el prefab fracturado que dejan al romperse (`m_spawnWhenDestroyed`).
+  La madera noble sale de los troncos (`TreeLog`) que deja el árbol.
+- Cultivos desde cada `Plant` (el brote y en qué biomas se planta), la miel
+  desde `Beehive`, los peces desde sus aparecedores, los recolectables y cofres
+  de ubicaciones sin bioma (el juego los ubica por la ubicación). Los cofres que
+  el jugador construye no cuentan como fuente.
+- Los banquetes vienen duplicados con el mismo nombre; el que no tiene fuente
+  toma la del otro (`share_by_name`).
+- Primera corrida: 956 objetos, 429 recetas, 548 piezas, 104 conversiones, 155
+  criaturas, 186 recolectables, 18 cultivos, 3 comerciantes, 1.327 íconos. 22
+  objetos quedan sin "de dónde sale" y se listan en `data/meta.json`
+  (`withoutSource`) para completar después.
 
 ## Las tres partes
 
