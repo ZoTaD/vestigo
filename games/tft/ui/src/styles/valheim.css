@@ -63,20 +63,27 @@
   background: url(/valheim/ui/woodpanel_400_tileable.webp) center / 400px;
   box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.45), 0 6px 18px rgba(0, 0, 0, 0.5);
 }
+/* Las pestañas van enteras (el botón del juego tiene borde en los cuatro lados)
+   y centradas en la tabla; abajo sobra 3px por la sombra de la tabla. Los
+   márgenes automáticos las centran sin cortar la primera cuando no entran. */
 .vh-sub-in {
-  max-width: var(--col); margin: 0 auto; padding: 10px var(--pad) 0;
-  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+  max-width: var(--col); margin: 0 auto; padding: 8px var(--pad) 11px;
+  display: flex; align-items: center; gap: 4px; overflow-x: auto; scrollbar-width: none;
 }
 .vh-sub-in::-webkit-scrollbar { display: none; }
+.vh-sub-in > :first-child { margin-left: auto; }
+.vh-sub-in > :last-child { margin-right: auto; }
 .vh-tab {
-  flex: none; padding: 8px 16px 7px; font: 700 15px var(--vh-sans); color: #e2cda2; text-decoration: none;
-  text-shadow: 0 1px 2px #000; margin-bottom: -1px;
-  border: 10px solid transparent; border-bottom: 0;
-  border-image: url(/valheim/ui/button_tab.webp) 18 fill / 10px 10px 0 / 0 stretch;
+  flex: none; padding: 3px clamp(3px, 0.45vw, 8px); font: 700 13px/1.2 var(--vh-sans); color: #e2cda2; text-decoration: none;
+  text-shadow: 0 1px 2px #000; white-space: nowrap;
+  border: 8px solid transparent;
+  border-image: url(/valheim/ui/button_tab.webp) 16 fill / 8px stretch;
 }
 .vh-tab:hover { border-image-source: url(/valheim/ui/button_tab_hover.webp); color: #fff1cf; }
 .vh-tab[data-active="true"] { border-image-source: url(/valheim/ui/button_tab_selected.webp); color: var(--vh-brass-lt); }
 .vh-tab.is-home { font-family: var(--vh-serif); }
+/* La Crónica no es una pestaña de datos: un poco aparte, al final. */
+.vh-tab.is-news { margin-left: 6px; }
 
 /* ---------- página ---------- */
 .vh-page { max-width: var(--col); margin: 0 auto; padding: 0 var(--pad) 40px; }
@@ -215,6 +222,8 @@ button.vh-chip:hover, a.vh-chip:hover { color: var(--vh-cream); background: rgba
 .vh-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px 34px; }
 .vh-facts { display: flex; gap: 10px 28px; flex-wrap: wrap; color: var(--vh-dim); font-size: 15px; }
 .vh-facts b { color: var(--vh-cream); }
+.vh-facts a { color: inherit; text-decoration: none; }
+.vh-facts a:hover { color: var(--vh-brass-lt); }
 .vh-ings { display: flex; gap: 10px; flex-wrap: wrap; }
 .vh-ing { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 86px; text-align: center; font-size: 12px; line-height: 1.15; color: var(--vh-dim); text-decoration: none; }
 a.vh-ing:hover { color: var(--vh-cream); }
@@ -232,6 +241,23 @@ a.vh-ing:hover { color: var(--vh-cream); }
 .vh-src b, .vh-src a { color: var(--vh-cream); text-decoration: none; }
 .vh-src a:hover { color: var(--vh-brass-lt); }
 .vh-src .vh-src-k { min-width: 110px; color: var(--vh-brass); font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+/* De dónde sale cada ingrediente: el ingrediente a la izquierda, sus fuentes al lado. */
+.vh-ingsrc { display: grid; gap: 8px; }
+.vh-ingsrc-row { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; align-items: start; padding: 8px 10px; background: rgba(0, 0, 0, 0.28); border-radius: 2px; }
+.vh-ingsrc-name { display: flex; align-items: center; gap: 8px; color: var(--vh-cream); text-decoration: none; font-size: 14.5px; line-height: 1.2; }
+a.vh-ingsrc-name:hover { color: var(--vh-brass-lt); }
+.vh-ingsrc .vh-srcs { gap: 6px; padding-top: 8px; }
+.vh-ingsrc .vh-src { font-size: 14px; gap: 8px; }
+.vh-ingsrc .vh-src-k { min-width: 92px; font-size: 11.5px; }
+/* Un paso más atrás (de dónde sale lo crudo): sangrado y más chico, sin filo. */
+.vh-src-sub { display: grid; gap: 4px; margin-left: 18px; }
+.vh-src-sub .vh-src { font-size: 13px; }
+.vh-src-sub .vh-src::before { content: "↳"; color: var(--vh-faint); margin-right: -2px; }
+.vh-more { color: var(--vh-brass); font-size: 13px; text-decoration: none; }
+.vh-more:hover { color: var(--vh-brass-lt); }
+@media (max-width: 560px) { .vh-ingsrc-row { grid-template-columns: 1fr; } .vh-ingsrc .vh-srcs { padding-top: 0; } }
+.vh-procs { display: flex; flex-wrap: wrap; gap: 10px 34px; }
+.vh-proc { gap: 10px; }
 .vh-mosaic { display: flex; flex-wrap: wrap; gap: 6px; }
 .vh-pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 16px; }
 .vh-pager a { color: var(--vh-brass); text-decoration: none; font-size: 14px; }
@@ -277,6 +303,60 @@ a.vh-ing:hover { color: var(--vh-cream); }
 .vh-hit:hover, .vh-hit.is-on { background: rgba(200, 150, 62, 0.14); }
 .vh-hit small { color: var(--vh-faint); font-size: 12px; }
 
+/* ---------- la Crónica: notas de parche (2026-09-24) ---------- */
+.vh-pat { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 20px; align-items: start; }
+.vh-pat-main { min-width: 0; }
+.vh-pat-ed { display: grid; gap: 20px; padding: 0 0 24px; }
+.vh-pat-ed > :not(.vh-pat-hero) { margin-inline: 24px; }
+/* Portada: la imagen del anuncio (o la del bioma de esa época) con el número grande encima. */
+.vh-pat-hero { position: relative; overflow: hidden; background: #0d0906; aspect-ratio: 16 / 5; min-height: 190px; }
+.vh-pat-hero.is-content { aspect-ratio: 16 / 6.5; }
+.vh-pat-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.vh-pat-hero.is-logo .vh-pat-cover { object-fit: contain; padding: 18px 18px 70px; background: radial-gradient(ellipse at center, #1c3140 0%, #0b1218 75%); }
+.vh-pat-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 60px 24px 16px; background: linear-gradient(180deg, transparent, rgba(8, 5, 3, 0.94) 70%); display: grid; gap: 6px; justify-items: start; }
+.vh-pat-cap h2 { margin: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; font: 700 clamp(34px, 5vw, 54px)/1 var(--vh-serif); color: var(--vh-brass-lt); text-shadow: 0 2px 10px #000; }
+.vh-pat-cap h2 small { font-size: 0.5em; color: var(--vh-cream); }
+.vh-pat-cap p { margin: 0; color: var(--vh-dim); font-size: 14px; }
+.vh-pat-cap a { color: var(--vh-brass); text-decoration: none; }
+.vh-pat-cap a:hover { color: var(--vh-brass-lt); }
+.vh-pat-cap .vh-chip { cursor: default; font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+.vh-pat-seals .vh-chip:disabled { opacity: 0.4; cursor: default; }
+/* Los tipos de línea van en el color de la marca, nunca en un filo de la fila. */
+.vh-pat-d i, .vh-pat-mark { font-style: normal; }
+.vh-pat-d.is-new i, .vh-pat-line.is-new .vh-pat-mark { color: #9fd26a; }
+.vh-pat-d.is-mid i, .vh-pat-line.is-mid .vh-pat-mark { color: var(--vh-brass-lt); }
+.vh-pat-d.is-fix i, .vh-pat-line.is-fix .vh-pat-mark { color: #8fb4e6; }
+.vh-pat-d[aria-pressed="true"] i { color: inherit; }
+.vh-pat-warn { margin: 0; padding: 10px 14px; background: rgba(200, 150, 62, 0.1); color: var(--vh-dim); font-size: 14px; border-radius: 2px; }
+.vh-pat-letter p:not(.vh-h2) { margin: 0 0 10px; font: italic 16px/1.55 var(--vh-serif); color: var(--vh-text); max-width: 75ch; }
+.vh-pat-letter details summary { cursor: pointer; color: var(--vh-brass); font-size: 14px; margin-bottom: 10px; }
+.vh-pat-letter details summary:hover { color: var(--vh-brass-lt); }
+.vh-pat-major { margin: 10px 0 0; text-align: center; }
+.vh-pat-major .vh-plate { font-size: 17px; }
+.vh-pat-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.vh-pat-line { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; padding: 5px 8px; font-size: 15px; line-height: 1.45; color: var(--vh-text); border-radius: 2px; }
+.vh-pat-line:hover { background: rgba(200, 150, 62, 0.06); }
+.vh-pat-mark { text-align: center; color: var(--vh-faint); }
+.vh-pat-note { list-style: none; margin: 4px 0; padding: 8px 12px; font-size: 14.5px; line-height: 1.5; color: var(--vh-dim); background: rgba(0, 0, 0, 0.25); border-radius: 2px; }
+.vh-pat-name { display: inline-flex; align-items: center; gap: 4px; vertical-align: -6px; color: var(--vh-cream); font-weight: 700; text-decoration: none; }
+.vh-pat-name:hover { color: var(--vh-brass-lt); }
+.vh-slot.is-xs { width: 24px; height: 24px; }
+.vh-pat-hf { margin-bottom: 6px; background: rgba(0, 0, 0, 0.25); border-radius: 2px; }
+.vh-pat-hf summary { cursor: pointer; display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; color: var(--vh-cream); font-weight: 700; }
+.vh-pat-hf summary small { color: var(--vh-faint); font-weight: 400; }
+.vh-pat-hf > :not(summary) { margin: 0 12px 10px; }
+/* La hemeroteca */
+.vh-pat-archive { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow: auto; scrollbar-width: thin; padding: 14px 12px; }
+.vh-pat-year h3 { margin: 12px 0 4px; font: 700 18px var(--vh-serif); color: var(--vh-cream); }
+.vh-pat-year ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.vh-pat-edlink { display: grid; grid-template-columns: auto 1fr; gap: 0 8px; align-items: baseline; padding: 5px 8px; text-decoration: none; color: var(--vh-dim); border-radius: 2px; }
+.vh-pat-edlink b { color: var(--vh-cream); font-size: 14.5px; }
+.vh-pat-edlink small { justify-self: end; color: var(--vh-faint); font-size: 12px; }
+.vh-pat-edlink em { grid-column: 1 / -1; font: italic 13px var(--vh-serif); color: var(--vh-brass); }
+.vh-pat-edlink:hover { background: rgba(200, 150, 62, 0.1); }
+.vh-pat-edlink[data-active="true"] { background: rgba(200, 150, 62, 0.2); }
+.vh-pat-edlink[data-active="true"] b { color: var(--vh-brass-lt); }
+
 @media (max-width: 900px) {
   .vh-list { grid-template-columns: minmax(0, 1fr); }
   .vh-side { position: static; max-height: none; }
@@ -286,6 +366,10 @@ a.vh-ing:hover { color: var(--vh-cream); }
   .vh-opts.is-col .vh-chip { background: rgba(0, 0, 0, 0.35); padding: 3px 10px; font-size: 13px; }
   .vh-opts.is-col .vh-n { margin-left: 0; }
   .vh-guide { grid-template-columns: 1fr; }
+  .vh-pat { grid-template-columns: minmax(0, 1fr); }
+  .vh-pat-archive { position: static; max-height: 360px; }
+  .vh-pat-ed > :not(.vh-pat-hero) { margin-inline: 14px; }
+  .vh-pat-hero, .vh-pat-hero.is-content { aspect-ratio: auto; min-height: 220px; }
   .vh-hide-m { display: none; }
   .vh-frame { border-width: 18px; border-image-width: 18px; }
   .vh-detail { padding: 16px; }

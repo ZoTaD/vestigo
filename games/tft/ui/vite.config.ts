@@ -107,9 +107,28 @@ function readSitemapData(): { data: OgData; generatedAt: string } {
           editions: p2Patches.editions,
         }
       : undefined;
+  // Valheim: el índice de la sección y las ediciones de la Crónica. Igual que
+  // PoE2, si faltan queda afuera del sitemap en vez de tirar el build.
+  const readVh = (name: string) => {
+    try {
+      return JSON.parse(readFileSync(`${valheimDir}/${name}`, "utf-8"));
+    } catch {
+      return null;
+    }
+  };
+  const vhIndex = readVh("index.json");
+  const vhPatches = readVh("patches/index.json");
+  const vh: SitemapData["vh"] =
+    vhIndex && vhPatches
+      ? {
+          entries: vhIndex.map((e: { slug: string; tab: string; en: string; es: string }) => ({ slug: e.slug, tab: e.tab, en: e.en, es: e.es })),
+          editions: vhPatches.editions,
+        }
+      : undefined;
   return {
     data: {
       p2,
+      vh,
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
       dlHeroIds: dlHeroesFile.heroes.map((h: { heroId: number }) => String(h.heroId)),

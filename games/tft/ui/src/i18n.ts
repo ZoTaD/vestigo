@@ -147,6 +147,11 @@ const EN = {
       tftCta: (set: string, n: string) => `Set ${set} comps · ${n}`,
       deadlockCta: (n: string) => `Hero tier list · ${n}`,
       profile: "Your profile",
+      valheimLive: "Every recipe, food, weapon, piece and creature in Valheim 1.0, where each thing comes from, and every patch.",
+      valheimCta: (n: string) => `Encyclopedia · ${n} entries`,
+      valheimPatches: "Patch notes",
+      valheimEntries: "entries, with official names in English and Spanish",
+      valheimBiomes: "biomes, each with its guide and its boss",
     },
   },
 
@@ -2285,6 +2290,11 @@ const ES: typeof EN = {
       tftCta: (set: string, n: string) => `Comps del set ${set} · ${n}`,
       deadlockCta: (n: string) => `Tier list de héroes · ${n}`,
       profile: "Tu perfil",
+      valheimLive: "Cada receta, comida, arma, pieza y criatura de Valheim 1.0, de dónde sale cada cosa y todos los parches.",
+      valheimCta: (n: string) => `Enciclopedia · ${n} fichas`,
+      valheimPatches: "Parches",
+      valheimEntries: "fichas, con los nombres oficiales en español e inglés",
+      valheimBiomes: "biomas, cada uno con su guía y su jefe",
     },
   },
 

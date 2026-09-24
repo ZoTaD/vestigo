@@ -14,12 +14,15 @@
  */
 
 const KEY = "vestigo.pendingSearch";
+/** Se avisa también por evento: si la pestaña ya está montada no se entera por el montaje. */
+export const PENDING_SEARCH_EVENT = "vestigo:pending-search";
 
 export function setPendingSearch(query: string): void {
   if (typeof sessionStorage === "undefined") return;
   const q = query.trim();
   if (q) sessionStorage.setItem(KEY, q);
   else sessionStorage.removeItem(KEY);
+  if (q && typeof window !== "undefined") queueMicrotask(() => window.dispatchEvent(new Event(PENDING_SEARCH_EVENT)));
 }
 
 /** Devuelve el texto pendiente y lo borra; `null` si no hay ninguno. */

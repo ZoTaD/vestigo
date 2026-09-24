@@ -8,7 +8,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLang } from "./i18n";
 import RouteLink from "./RouteLink";
-import { takePendingSearch } from "./pendingSearch";
+import { PENDING_SEARCH_EVENT, takePendingSearch } from "./pendingSearch";
 import { VALHEIM_TABS, type Route, type ValheimSection, type ValheimTab } from "./route";
 import { useValheimCopy } from "./valheimCopy";
 import { artUrl, fold, iconUrl, loadIndex, peekIndex, tx, type AnyRow, type BiomeRow, type BossRow, type CreatureRow, type IndexEntry, type ItemRow, type PieceRow } from "./valheimData";
@@ -17,11 +17,14 @@ import { useTab, type Nav, type To } from "./ValheimParts";
 import ValheimList from "./ValheimList";
 import ValheimDetail from "./ValheimDetail";
 import { BiomeList, BiomePage, BossList, BossPage, CreaturePage } from "./ValheimGuide";
+import ValheimPatches from "./ValheimPatches";
+import { loadEditions, peekEditions, type EditionMeta } from "./valheimPatchesData";
 
 /** Un ícono representativo por pestaña, para la portada. */
 const TAB_ICON: Record<ValheimTab, string> = {
-  foods: "fishwraps", meads: "mead_health_minor", weapons: "sword_iron", armor: "helmetbronze", tools: "pickaxe_iron",
-  building: "workbench", materials: "copperore", creatures: "trophytroll", biomes: "fermenter", bosses: "trophyeikthyr",
+  foods: "fishwraps", meads: "potion_health_minor", weapons: "swordiron", armor: "helmetbronze", tools: "pickaxe_iron",
+  // El trofeo del troll se llama así adentro del juego.
+  building: "workbench", materials: "copperore", creatures: "trophyfrosttroll", biomes: "fermenter", bosses: "trophyeikthyr",
 };
 
 function useIndex(): IndexEntry[] | null {
@@ -38,10 +41,22 @@ function useIndex(): IndexEntry[] | null {
 function GlobalSearch({ index, to, navigate }: { index: IndexEntry[]; to: To; navigate: Nav }) {
   const t = useValheimCopy();
   const { lang } = useLang();
-  // Lo que se escribió en el buscador de la barra de arriba estando en Valheim.
-  const [q, setQ] = useState(() => (typeof window === "undefined" ? "" : takePendingSearch() ?? ""));
-  const [open, setOpen] = useState(q !== "");
+  const [q, setQ] = useState("");
+  const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
+  // Lo que se escribió en el buscador de la barra de arriba estando en Valheim.
+  // En un efecto y no al crear el estado: React en desarrollo crea el estado dos
+  // veces y la segunda encontraba el texto ya consumido. El evento cubre buscar
+  // de nuevo estando ya en la portada.
+  useEffect(() => {
+    const take = () => {
+      const p = takePendingSearch();
+      if (p) { setQ(p); setOpen(true); }
+    };
+    take();
+    window.addEventListener(PENDING_SEARCH_EVENT, take);
+    return () => window.removeEventListener(PENDING_SEARCH_EVENT, take);
+  }, []);
   const hits = useMemo(() => {
     const f = fold(q.trim());
     if (f.length < 2) return [];
@@ -98,6 +113,13 @@ function Home({ to, navigate }: { to: To; navigate: Nav }) {
   const index = useIndex();
   const biomes = useTab("biomes");
   const bosses = useTab("bosses");
+  const [editions, setEditions] = useState<EditionMeta[] | null>(peekEditions);
+  useEffect(() => {
+    let vivo = true;
+    if (!editions) loadEditions().then((e) => vivo && setEditions(e)).catch(() => undefined);
+    return () => { vivo = false; };
+  }, []);
+  const latest = editions?.[0] ?? null;
   const counts = useMemo(() => {
     const c: Partial<Record<ValheimTab, number>> = {};
     for (const e of index ?? []) c[e.tab] = (c[e.tab] ?? 0) + 1;
@@ -131,6 +153,10 @@ function Home({ to, navigate }: { to: To; navigate: Nav }) {
             <span>{t.tabs[tab]}<small>{counts[tab] ?? ""}</small></span>
           </RouteLink>
         ))}
+        <RouteLink className="vh-box vh-hubcard" to={to("patches")} onNavigate={navigate}>
+          <span className="vh-slot"><img src={iconUrl("sign")} alt="" loading="lazy" width={42} height={42} /></span>
+          <span>{t.pat.tab}<small>{latest ? `${t.pat.latest}: ${latest.version}` : ""}</small></span>
+        </RouteLink>
       </div>
     </>
   );
@@ -179,10 +205,13 @@ export default function Valheim({ route, navigate }: { route: Route; navigate: N
           {VALHEIM_TABS.map((tab) => (
             <RouteLink key={tab} className="vh-tab" to={to(tab)} active={sec === tab} onNavigate={navigate}>{t.tabs[tab]}</RouteLink>
           ))}
+          <RouteLink className="vh-tab is-home is-news" to={to("patches")} active={sec === "patches"} onNavigate={navigate}>{t.pat.tab}</RouteLink>
         </nav>
       </div>
       <main className="vh vh-page">
-        {sec === "home" ? <Home to={to} navigate={navigate} /> : <TabView tab={sec} detail={route.detail} to={to} navigate={navigate} />}
+        {sec === "home" ? <Home to={to} navigate={navigate} />
+          : sec === "patches" ? <ValheimPatches detail={route.detail} to={to} navigate={navigate} />
+          : <TabView tab={sec} detail={route.detail} to={to} navigate={navigate} />}
         <p className="vh-note">{t.fromGame}</p>
       </main>
     </>

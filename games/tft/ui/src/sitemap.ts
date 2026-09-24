@@ -1,4 +1,4 @@
-import { LANGS, DEADLOCK_PAGES, POE2_SECTIONS, SITE_ORIGIN, routePath, slugify } from "./route";
+import { LANGS, DEADLOCK_PAGES, POE2_SECTIONS, SITE_ORIGIN, VALHEIM_TABS, routePath, slugify, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -46,6 +46,16 @@ export interface Poe2SitemapData {
   editions: { slug: string; version: string; date: string; title: { en: string; es: string | null } }[];
 }
 
+/**
+ * Lo que el sitemap necesita de Valheim (2026-09-24): las fichas del índice
+ * de la sección y las ediciones de la Crónica, tal como las escriben
+ * `games/valheim/pipeline/site.py` y `patches.py`.
+ */
+export interface ValheimSitemapData {
+  entries: { slug: string; tab: ValheimTab; en: string; es: string }[];
+  editions: { slug: string; version: string; date: string; title: { en?: string; es?: string } }[];
+}
+
 /** Las categorías de la enciclopedia, en el orden de sus pestañas. */
 export const POE2_CATS = ["gems", "uniques", "bases", "currency"] as const;
 
@@ -63,6 +73,8 @@ export interface SitemapData {
   dlNews?: NewsEntry[];
   /** Path of Exile 2. Opcional por lo mismo que `dlNews`. */
   p2?: Poe2SitemapData;
+  /** Valheim. Opcional por lo mismo. */
+  vh?: ValheimSitemapData;
 }
 
 /**
@@ -141,6 +153,16 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const c of POE2_CATS) if (data.p2.entries.some((e) => e.cat === c)) paths.push(p2("encyclopedia", c));
       for (const e of data.p2.entries) paths.push(p2("encyclopedia", e.id));
       for (const e of data.p2.editions) paths.push(p2("patches", e.slug));
+    }
+
+    // Valheim entero (2026-09-24): la portada, las diez pestañas, cada ficha
+    // (objetos, piezas, criaturas, biomas y jefes) y la Crónica con cada edición.
+    if (data.vh) {
+      paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "home" }));
+      for (const t of VALHEIM_TABS) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: t }));
+      for (const e of data.vh.entries) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: e.tab, detail: e.slug }));
+      paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "patches" }));
+      for (const e of data.vh.editions) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "patches", detail: e.slug }));
     }
   }
 

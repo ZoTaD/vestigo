@@ -6,8 +6,8 @@ import { useLang, type Lang } from "./i18n";
 import RouteLink from "./RouteLink";
 import { useValheimCopy, type ValheimCopy } from "./valheimCopy";
 import type { ListTab } from "./valheimTabs";
-import { clean, tx, type ItemRow, type PieceRow, type Req, type Source, type Use } from "./valheimData";
-import { BiomeTags, FoodBars, Ing, pctChance, range, RefLink, Slot, type Nav, type To } from "./ValheimParts";
+import { clean, tx, type ItemRow, type PieceRow, type Ref, type Req, type Source, type Use } from "./valheimData";
+import { BiomeTags, FoodBars, Ing, pctChance, range, RefLink, Slot, useTab, type Nav, type To } from "./ValheimParts";
 
 function Upgrades({ req, max, t }: { req: Req[]; max: number; t: ValheimCopy }) {
   const { lang } = useLang();
@@ -39,7 +39,8 @@ function SourceLine({ s, to, navigate, t, lang }: { s: Source; to: To; navigate:
       body = <><RefLink r={s.station} to={to} navigate={navigate}>{tx(s.station?.name, lang)}</RefLink>{s.level && s.level > 1 ? ` · ${t.level(s.level)}` : ""}</>;
       break;
     case "convert":
-      body = <><RefLink r={s.ref} to={to} navigate={navigate}>{tx(s.ref?.name, lang)}</RefLink> → <RefLink r={s.station} to={to} navigate={navigate}>{tx(s.station?.name, lang)}</RefLink>{s.time ? ` · ${t.minutes(Math.round(s.time / 60))}` : ""}</>;
+      // Cocinar tarda segundos; fundir y fermentar, minutos.
+      body = <><RefLink r={s.ref} to={to} navigate={navigate}>{tx(s.ref?.name, lang)}</RefLink> → <RefLink r={s.station} to={to} navigate={navigate}>{tx(s.station?.name, lang)}</RefLink>{s.time ? ` · ${s.time < 60 ? `${Math.round(s.time)} s` : t.minutes(Math.round(s.time / 60))}` : ""}</>;
       break;
     case "drop":
       body = <><RefLink r={s.ref} to={to} navigate={navigate}>{tx(s.ref?.name, lang)}</RefLink> <span>{range(s.min ?? 1, s.max ?? 1)}{s.chance != null && s.chance < 1 ? ` · ${pctChance(s.chance)}` : ""}</span></>;
@@ -63,23 +64,94 @@ function SourceLine({ s, to, navigate, t, lang }: { s: Source; to: To; navigate:
   );
 }
 
-/** Las fuentes, sin repetir la misma línea (el juego pone la misma veta varias veces). */
+/**
+ * Las fuentes, sin repetir la misma línea: el juego pone la misma veta varias
+ * veces, o la misma criatura con y sin bioma; se juntan sumando los biomas.
+ */
+function mergeSources(sources: Source[]): Source[] {
+  const byKey = new Map<string, Source>();
+  for (const s of sources) {
+    const k = [s.kind, s.how, s.ref?.slug, s.station?.name.en, tx(s.name, "en"), s.min, s.max, s.chance, s.price].join("|");
+    const prev = byKey.get(k);
+    if (!prev) byKey.set(k, { ...s, biomes: [...(s.biomes ?? [])] });
+    else for (const b of s.biomes ?? []) if (!prev.biomes!.includes(b)) prev.biomes!.push(b);
+  }
+  // Lo que se junta o se cultiva va antes que lo que suelta un bicho: la piedra se mina.
+  const order = ["craft", "convert", "gather", "farm", "drop", "trader"];
+  return [...byKey.values()].sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+}
+
 function Sources({ sources, to, navigate }: { sources: Source[]; to: To; navigate: Nav }) {
   const t = useValheimCopy();
   const { lang } = useLang();
-  const seen = new Set<string>();
-  const uniq = sources.filter((s) => {
-    const k = [s.kind, s.how, s.ref?.slug, s.station?.name.en, tx(s.name, "en"), (s.biomes ?? []).join()].join("|");
-    if (seen.has(k)) return false;
-    seen.add(k);
-    return true;
-  });
-  const order = ["craft", "convert", "drop", "gather", "farm", "trader"];
-  uniq.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+  const uniq = mergeSources(sources);
   return (
     <div>
       <p className="vh-h2">{t.detail.sources}</p>
       {uniq.length === 0 ? <p className="vh-dim">{t.detail.noSources}</p> : <div className="vh-srcs">{uniq.slice(0, 24).map((s, i) => <SourceLine key={i} s={s} to={to} navigate={navigate} t={t} lang={lang} />)}</div>}
+    </div>
+  );
+}
+
+/**
+ * De dónde sale cada ingrediente de la receta (pedido de ZoTaD, 2026-09-24):
+ * las fuentes de la ficha de cada uno, sin tener que abrirla. Los ingredientes
+ * de las comidas están en Materiales y en Comidas (la carne cocida, la miel).
+ */
+function IngredientSources({ req, to, navigate }: { req: Req[]; to: To; navigate: Nav }) {
+  const t = useValheimCopy();
+  const { lang } = useLang();
+  // Se piden sólo las pestañas que aparecen (la Amanita, por ejemplo, está en
+  // Hidromieles); Materiales siempre, porque ahí está lo crudo de lo cocinado.
+  const has = (tab: string) => req.some((q) => q.tab === tab);
+  const materials = useTab("materials");
+  const foods = useTab(has("foods") ? "foods" : null);
+  const meads = useTab(has("meads") ? "meads" : null);
+  const weapons = useTab(has("weapons") ? "weapons" : null);
+  const armor = useTab(has("armor") ? "armor" : null);
+  const tools = useTab(has("tools") ? "tools" : null);
+  const byTab: Partial<Record<string, ItemRow[] | null>> = { materials, foods, meads, weapons, armor, tools };
+  const rowOf = (q: Ref) => (q.tab ? byTab[q.tab] : null)?.find((r) => r.slug === q.slug) ?? null;
+  const MAX = 4;
+  // Lo que se cocina o se funde: abajo, de dónde sale lo crudo (una vez por crudo).
+  const lines = (all: Source[]) => {
+    const seen = new Set<string>();
+    return all.slice(0, MAX).map((s, i) => {
+      const raw = s.kind === "convert" && s.ref?.slug && !seen.has(s.ref.slug) ? (seen.add(s.ref.slug), s.ref) : null;
+      const sub = raw ? mergeSources(rowOf(raw)?.sources ?? []).filter((x) => x.kind !== "convert").slice(0, 2) : [];
+      return (
+        <div key={i} className="vh-srcs">
+          <SourceLine s={s} to={to} navigate={navigate} t={t} lang={lang} />
+          {sub.length > 0 && (
+            <div className="vh-src-sub">
+              {sub.map((x, j) => <SourceLine key={j} s={x} to={to} navigate={navigate} t={t} lang={lang} />)}
+            </div>
+          )}
+        </div>
+      );
+    });
+  };
+  return (
+    <div>
+      <p className="vh-h2">{t.detail.ingSources}</p>
+      <div className="vh-ingsrc">
+        {req.map((q) => {
+          const all = mergeSources(rowOf(q)?.sources ?? []);
+          return (
+            <div key={q.slug ?? q.name.en} className="vh-ingsrc-row">
+              <RefLink r={q} to={to} navigate={navigate} className="vh-ingsrc-name">
+                <Slot icon={q.icon} size="sm" />
+                <span>{tx(q.name, lang)}</span>
+              </RefLink>
+              <div className="vh-srcs">
+                {all.length === 0 ? <span className="vh-dim">{t.detail.noSources}</span>
+                  : lines(all)}
+                {all.length > MAX && <RefLink r={q} to={to} navigate={navigate} className="vh-more">+{all.length - MAX}</RefLink>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -212,6 +284,39 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
               {item && <UsedIn uses={item.usedIn} to={to} navigate={navigate} />}
             </div>
           </div>
+          {piece?.processes && piece.processes.length > 0 && (
+            <div>
+              <p className="vh-h2">{t.detail.processes}</p>
+              <div className="vh-procs">
+                {piece.processes.map((p, i) => (
+                  <div key={i} className="vh-flow vh-proc">
+                    <Ing r={p.from} to={to} navigate={navigate} />
+                    <span className="vh-arrow">→</span>
+                    <Ing r={p.to} qty={p.yield && p.yield > 1 ? `×${p.yield}` : null} to={to} navigate={navigate} />
+                    {p.time ? <span className="vh-dim">{p.time < 60 ? `${Math.round(p.time)} s` : t.minutes(Math.round(p.time / 60))}</span> : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {piece?.crafts && piece.crafts.length > 0 && (
+            <div>
+              <p className="vh-h2">{t.detail.crafts} · {piece.crafts.length}</p>
+              <div className="vh-mosaic">
+                {piece.crafts.map((c) => (
+                  <RefLink key={`${c.tab}/${c.slug}`} r={c} to={to} navigate={navigate} className="vh-slot">
+                    <span title={`${tx(c.name, lang)}${c.level > 1 ? ` · ${t.level(c.level)}` : ""}`} style={{ display: "contents" }}>
+                      {c.icon && <img src={`/valheim/icons/${c.icon}.webp`} alt={tx(c.name, lang)} loading="lazy" width={42} height={42} />}
+                      {c.level > 1 && <span className="vh-qty">{c.level}</span>}
+                    </span>
+                  </RefLink>
+                ))}
+              </div>
+            </div>
+          )}
+          {(item?.chain?.req ?? req).length > 0 && (
+            <IngredientSources req={item?.chain?.req ?? req} to={to} navigate={navigate} />
+          )}
         </div>
       </article>
       <nav className="vh-pager">

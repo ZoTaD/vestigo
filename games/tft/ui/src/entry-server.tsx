@@ -1,6 +1,6 @@
 import { renderToString } from "react-dom/server";
 import App from "./App";
-import { type Route } from "./route";
+import { VALHEIM_TABS, type Route } from "./route";
 import { loadBuilds } from "./deadlockBuildsData";
 import { loadMastery } from "./deadlockMasteryData";
 import { loadDetail } from "./deadlockItemsData";
@@ -11,6 +11,8 @@ import { heroes as heroSlugs } from "./deadlockSlugs";
 import { leagueBySlug, loadEconomy } from "./poe2EconomyData";
 import { isCat, loadCat, loadIndex } from "./poe2EncyclopediaData";
 import { EDITIONS, loadAllEditions, loadEdition as loadP2Edition } from "./poe2PatchesData";
+import { loadIndex as loadVhIndex, loadTab as loadVhTab } from "./valheimData";
+import { loadEdition as loadVhEdition, loadEditions as loadVhEditions } from "./valheimPatchesData";
 
 /**
  * El HTML de una ruta, para el prerender del build (ver `vite.config.ts`).
@@ -25,6 +27,7 @@ import { EDITIONS, loadAllEditions, loadEdition as loadP2Edition } from "./poe2P
 async function preload(route: Route): Promise<void> {
   const quiet = (p: Promise<unknown>) => p.catch(() => undefined);
   if (route.view === "poe2") return preloadPoe2(route, quiet);
+  if (route.view === "valheim") return preloadValheim(route, quiet);
   if (route.view !== "deadlock") return;
   if (route.dlSection === "meta" && route.detail) await Promise.all([quiet(loadBuilds()), quiet(loadMastery())]);
   if (route.dlSection === "heroes" && route.detail) {
@@ -72,6 +75,22 @@ async function preloadPoe2(route: Route, quiet: (p: Promise<unknown>) => Promise
     ...(isCat(cat) && slug ? [quiet(loadAllEditions())] : []),
     ...(cat === "bases" && slug ? [quiet(loadCat("uniques"))] : []),
   ]);
+}
+
+/**
+ * Valheim: todas las pestañas de una vez (~2 MB de JSON que quedan en memoria
+ * para las ~3.400 páginas del build). Una ficha usa su pestaña, la de cada
+ * ingrediente y la de lo que se hace en ella; pedirlas todas es más simple que
+ * adivinar cuáles. Más la Crónica: el índice, la edición y los nombres.
+ */
+async function preloadValheim(route: Route, quiet: (p: Promise<unknown>) => Promise<unknown>): Promise<void> {
+  const tasks = [quiet(loadVhIndex()), quiet(loadVhEditions()), ...VALHEIM_TABS.map((t) => quiet(loadVhTab(t)))];
+  if (route.vhSection === "patches" || route.vhSection === "home") {
+    const eds = await loadVhEditions().catch(() => []);
+    const slug = route.detail ?? eds[0]?.slug;
+    if (slug) tasks.push(quiet(loadVhEdition(slug)));
+  }
+  await Promise.all(tasks);
 }
 
 export async function renderApp(route: Route): Promise<string> {

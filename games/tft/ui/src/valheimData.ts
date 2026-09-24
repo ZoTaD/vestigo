@@ -103,6 +103,10 @@ export interface PieceRow {
   station: Ref | null;
   req: Req[];
   tier: BiomeId | null;
+  /** Lo que procesa esta estación (el molino: cebada → harina de cebada). */
+  processes?: { from: Ref; to: Ref; time: number | null; yield: number | null }[] | null;
+  /** Lo que se fabrica o se construye con esta estación, por nivel. */
+  crafts?: (Ref & { level: number })[] | null;
 }
 
 export interface Drop extends Ref { min: number; max: number; chance: number }

@@ -8,6 +8,10 @@ import { lastProfile } from "./lastProfile";
 import { setPendingSearch } from "./pendingSearch";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
+import vhMeta from "@valheim/meta.json";
+
+/** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
+const VH_ENTRIES = Object.entries(vhMeta.counts).reduce((n, [k, v]) => (k === "biomes" || k === "bosses" ? n : n + v), 0);
 
 /**
  * La portada, desde el rediseño del 2026-09-06.
@@ -271,6 +275,32 @@ export default function Home({
             </div>
           </li>
 
+          {/* Valheim salió de "Pronto" el 2026-09-24: la enciclopedia y la Crónica. */}
+          <li className="game-panel" data-panel="valheim">
+            <div className="game-panel-main">
+              <h3 className="game-panel-name">{copy.games.valheim}</h3>
+              <p className="game-panel-note">{copy.home.games.valheimLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "valheim", vhSection: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.valheimCta(num(VH_ENTRIES))}
+                  <Arrow />
+                </RouteLink>
+                <RouteLink className="game-cta is-ghost" to={{ ...route, view: "valheim", vhSection: "patches", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.valheimPatches}
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(VH_ENTRIES)}</b>
+                <span>{copy.home.games.valheimEntries}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{vhMeta.counts.biomes}</b>
+                <span>{copy.home.games.valheimBiomes}</span>
+              </p>
+            </div>
+          </li>
         </ul>
 
         {/* Los que vienen, en el orden de la hoja de ruta (2026-09-23). Se
@@ -283,7 +313,6 @@ export default function Home({
             [
               ["dota", copy.games.dota, copy.home.games.dota],
               ["poe2", copy.games.poe2, copy.home.games.poe2],
-              ["valheim", copy.games.valheim, copy.home.games.valheim],
               ["diablo2", copy.games.diablo2, copy.home.games.diablo2],
             ] as const
           ).map(([id, nombre, nota]) => (

@@ -88,6 +88,11 @@ export function metaFor(
     const v = VALHEIM_COPY[lang];
     const sec = route.vhSection ?? "home";
     if (sec === "home") return v.seo.home;
+    if (sec === "patches") {
+      if (!route.detail) return { title: v.pat.seoTab, description: v.pat.lede };
+      const version = route.detail.replace(/-/g, ".");
+      return { title: v.pat.seoEdition(detailName ?? version), description: v.pat.seoEditionDesc(version) };
+    }
     const tabName = v.tabs[sec];
     if (route.detail) {
       const name = detailName ?? route.detail;
@@ -127,6 +132,11 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const l of data.p2?.leagues ?? []) out[`p2-economy/${l.slug}`] = l.name;
   for (const e of data.p2?.editions ?? []) out[`p2-patches/${e.slug}`] = e.version;
   for (const e of data.p2?.entries ?? []) out[`p2-encyclopedia/${e.id}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.vh?.entries ?? []) out[`vh-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.vh?.editions ?? []) {
+    const name = (lang === "es" && e.title.es) || e.title.en;
+    out[`vh-patches/${e.slug}`] = name ? `${e.version} — ${name}` : e.version;
+  }
 
   return out;
 }
@@ -199,6 +209,34 @@ export function jsonLdFor(
       if (route.detail.includes("/") && detailName) trail.push({ name: detailName, url: page.canonical });
     } else if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     return trail.length > 2 ? [crumbs(trail)] : [];
+  }
+  if (route.view === "valheim") {
+    // Vestigo › Valheim › pestaña › ficha; las ediciones de la Crónica, además, como noticia.
+    const sec = route.vhSection ?? "home";
+    const v = VALHEIM_COPY[lang];
+    const trail = [{ name: brand, url: home }, { name: "Valheim", url: routeUrl({ ...route, vhSection: "home", detail: undefined }) }];
+    if (sec !== "home") trail.push({ name: sec === "patches" ? v.pat.tab : v.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
+    const ed = sec === "patches" && route.detail ? data.vh?.editions.find((e) => e.slug === route.detail) : undefined;
+    if (ed) {
+      out.push({
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        headline: page.title.replace(/\s*\|.*$/, ""),
+        description: page.description,
+        image: [page.image],
+        datePublished: ed.date,
+        dateModified: ed.date,
+        author: org,
+        publisher: org,
+        mainEntityOfPage: page.canonical,
+        inLanguage: lang,
+        isAccessibleForFree: true,
+        about: { "@type": "VideoGame", name: "Valheim" },
+      });
+    }
+    return out;
   }
   if (route.view !== "deadlock") return [];
 
@@ -280,7 +318,9 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
         ? `dl-${route.dlSection}/${route.detail}`
         : route.view === "poe2"
           ? `p2-${route.p2Section ?? "economy"}/${route.detail}`
-          : null;
+          : route.view === "valheim"
+            ? `vh-${route.vhSection ?? "home"}/${route.detail}`
+            : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
     const { title, description } = metaFor(route, lang, detail);
 
@@ -294,8 +334,9 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
 
     const canonical = routeUrl(route);
     const image = ogImageUrl(route, data.dlNews?.[0]?.slug, ogAvailable);
-    const isEdition = route.view === "deadlock" && route.dlSection === "patches" && !!route.detail;
-    const edition = isEdition ? data.dlNews?.find((e) => e.slug === route.detail) : undefined;
+    const vhEdition = route.view === "valheim" && route.vhSection === "patches" && route.detail ? data.vh?.editions.find((e) => e.slug === route.detail) : undefined;
+    const isEdition = (route.view === "deadlock" && route.dlSection === "patches" && !!route.detail) || !!vhEdition;
+    const edition = vhEdition ?? (isEdition ? data.dlNews?.find((e) => e.slug === route.detail) : undefined);
     return {
       path,
       title,

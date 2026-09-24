@@ -24,6 +24,14 @@ describe("las direcciones de Valheim", () => {
     expect(routePath(r)).toBe("/es/valheim/bosses/eikthyr");
   });
 
+  it("la Crónica y una edición", () => {
+    const r = parseRoute("/es/valheim/patches/1-0-15");
+    expect(r.vhSection).toBe("patches");
+    expect(r.detail).toBe("1-0-15");
+    expect(routePath(r)).toBe("/es/valheim/patches/1-0-15");
+    expect(routePath(parseRoute("/en/valheim/patches"))).toBe("/en/valheim/patches");
+  });
+
   it("una pestaña que no existe cae en la portada", () => {
     expect(parseRoute("/es/valheim/dragones").vhSection).toBe("home");
   });
