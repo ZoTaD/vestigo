@@ -65,7 +65,7 @@ Pendiente de resolver en el extractor:
 Python, se corre a mano:
 
 ```
-games/valheim/.venv/Scripts/python games/valheim/pipeline/extract.py
+cd games/valheim && .venv/Scripts/python -m pipeline.extract
 ```
 
 Escribe:
