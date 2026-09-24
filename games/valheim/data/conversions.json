@@ -1,0 +1,730 @@
+[
+ {
+  "from": "RawMeat",
+  "station": "piece_cookingstation",
+  "time": 25.0,
+  "to": "CookedMeat",
+  "yield": 1
+ },
+ {
+  "from": "NeckTail",
+  "station": "piece_cookingstation",
+  "time": 25.0,
+  "to": "NeckTailGrilled",
+  "yield": 1
+ },
+ {
+  "from": "FishRaw",
+  "station": "piece_cookingstation",
+  "time": 25.0,
+  "to": "FishCooked",
+  "yield": 1
+ },
+ {
+  "from": "DeerMeat",
+  "station": "piece_cookingstation",
+  "time": 25.0,
+  "to": "CookedDeerMeat",
+  "yield": 1
+ },
+ {
+  "from": "WolfMeat",
+  "station": "piece_cookingstation",
+  "time": 25.0,
+  "to": "CookedWolfMeat",
+  "yield": 1
+ },
+ {
+  "from": "ChickenMeat",
+  "station": "piece_cookingstation",
+  "time": 25.0,
+  "to": "CookedChickenMeat",
+  "yield": 1
+ },
+ {
+  "from": "HareMeat",
+  "station": "piece_cookingstation",
+  "time": 25.0,
+  "to": "CookedHareMeat",
+  "yield": 1
+ },
+ {
+  "from": "BjornMeat",
+  "station": "piece_cookingstation",
+  "time": 25.0,
+  "to": "CookedBjornMeat",
+  "yield": 1
+ },
+ {
+  "from": "SerpentMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 60.0,
+  "to": "SerpentMeatCooked",
+  "yield": 1
+ },
+ {
+  "from": "LoxMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 60.0,
+  "to": "CookedLoxMeat",
+  "yield": 1
+ },
+ {
+  "from": "FishRaw",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "FishCooked",
+  "yield": 1
+ },
+ {
+  "from": "RawMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "CookedMeat",
+  "yield": 1
+ },
+ {
+  "from": "NeckTail",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "NeckTailGrilled",
+  "yield": 1
+ },
+ {
+  "from": "DeerMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "CookedDeerMeat",
+  "yield": 1
+ },
+ {
+  "from": "WolfMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "CookedWolfMeat",
+  "yield": 1
+ },
+ {
+  "from": "BugMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 60.0,
+  "to": "CookedBugMeat",
+  "yield": 1
+ },
+ {
+  "from": "ChickenMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "CookedChickenMeat",
+  "yield": 1
+ },
+ {
+  "from": "HareMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "CookedHareMeat",
+  "yield": 1
+ },
+ {
+  "from": "VoltureMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "CookedVoltureMeat",
+  "yield": 1
+ },
+ {
+  "from": "AsksvinMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "CookedAsksvinMeat",
+  "yield": 1
+ },
+ {
+  "from": "BoneMawSerpentMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 60.0,
+  "to": "CookedBoneMawSerpentMeat",
+  "yield": 1
+ },
+ {
+  "from": "BjornMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "CookedBjornMeat",
+  "yield": 1
+ },
+ {
+  "from": "MooseMeat",
+  "station": "piece_cookingstation_iron",
+  "time": 25.0,
+  "to": "CookedMooseMeat",
+  "yield": 1
+ },
+ {
+  "from": "LoxPieUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "LoxPie",
+  "yield": 1
+ },
+ {
+  "from": "BreadDough",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "Bread",
+  "yield": 1
+ },
+ {
+  "from": "FishAndBreadUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "FishAndBread",
+  "yield": 1
+ },
+ {
+  "from": "MeatPlatterUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "MeatPlatter",
+  "yield": 1
+ },
+ {
+  "from": "HoneyGlazedChickenUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "HoneyGlazedChicken",
+  "yield": 1
+ },
+ {
+  "from": "MisthareSupremeUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "MisthareSupreme",
+  "yield": 1
+ },
+ {
+  "from": "MagicallyStuffedShroomUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "MagicallyStuffedShroom",
+  "yield": 1
+ },
+ {
+  "from": "RoastedCrustPieUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "RoastedCrustPie",
+  "yield": 1
+ },
+ {
+  "from": "PiquantPieUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "PiquantPie",
+  "yield": 1
+ },
+ {
+  "from": "VikingCupcakeUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "VikingCupcake",
+  "yield": 1
+ },
+ {
+  "from": "SealBlubber",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "CookedSealBlubber",
+  "yield": 1
+ },
+ {
+  "from": "OvenPancakeUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "OvenPancake",
+  "yield": 1
+ },
+ {
+  "from": "KaleChipsUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "KaleChips",
+  "yield": 1
+ },
+ {
+  "from": "BakedPoteitrUncooked",
+  "station": "piece_oven",
+  "time": 50.0,
+  "to": "BakedPoteitr",
+  "yield": 1
+ },
+ {
+  "from": "SwordGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "SwordGold",
+  "yield": 1
+ },
+ {
+  "from": "AtgeirGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "AtgeirGold",
+  "yield": 1
+ },
+ {
+  "from": "BattleaxeGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "BattleaxeGold",
+  "yield": 1
+ },
+ {
+  "from": "AxeGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "AxeGold",
+  "yield": 1
+ },
+ {
+  "from": "BowGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "BowGold",
+  "yield": 1
+ },
+ {
+  "from": "CrossbowGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "CrossbowGold",
+  "yield": 1
+ },
+ {
+  "from": "FistGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "FistGold",
+  "yield": 1
+ },
+ {
+  "from": "KnifeGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "KnifeGold",
+  "yield": 1
+ },
+ {
+  "from": "SledgeGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "SledgeGold",
+  "yield": 1
+ },
+ {
+  "from": "MaceGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "MaceGold",
+  "yield": 1
+ },
+ {
+  "from": "SpearGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "SpearGold",
+  "yield": 1
+ },
+ {
+  "from": "THSwordGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "THSwordGold",
+  "yield": 1
+ },
+ {
+  "from": "ArmorGoldHeavyChestUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "ArmorDeepNorthHeavyChest",
+  "yield": 1
+ },
+ {
+  "from": "ArmorGoldHeavyLegsUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "ArmorDeepNorthHeavylegs",
+  "yield": 1
+ },
+ {
+  "from": "ArmorGoldHeavyHelmetUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "HelmetDNHeavy",
+  "yield": 1
+ },
+ {
+  "from": "ArmorGoldMediumHelmetUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "HelmetDNMediumHood",
+  "yield": 1
+ },
+ {
+  "from": "ArmorGoldMediumChestUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "ArmorDeepNorthMediumChest",
+  "yield": 1
+ },
+ {
+  "from": "ArmorGoldMediumLegsUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "ArmorDeepNorthMediumlegs",
+  "yield": 1
+ },
+ {
+  "from": "ArmorGoldMageLegsUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "ArmorDeepNorthMagelegs",
+  "yield": 1
+ },
+ {
+  "from": "ArmorGoldMageChestUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "ArmorDeepNorthMageChest",
+  "yield": 1
+ },
+ {
+  "from": "ArmorGoldMageHelmetUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "HelmetDNMage",
+  "yield": 1
+ },
+ {
+  "from": "ShieldBucklerGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "ShieldGoldBuckler",
+  "yield": 1
+ },
+ {
+  "from": "ShieldRoundGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "ShieldGold",
+  "yield": 1
+ },
+ {
+  "from": "ShieldTowerGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "ShieldGoldTower",
+  "yield": 1
+ },
+ {
+  "from": "KeysGoldUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "BloodGoldKey",
+  "yield": 1
+ },
+ {
+  "from": "StaffSpiritCallerUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "StaffSpiritCaller",
+  "yield": 1
+ },
+ {
+  "from": "StaffOrbofAhriUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "StaffOrbofAhri",
+  "yield": 1
+ },
+ {
+  "from": "StaffFrostOrbsUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "StaffFrostOrbs",
+  "yield": 1
+ },
+ {
+  "from": "StaffThunderbloodUncooked",
+  "station": "piece_frostfoundry",
+  "time": 50.0,
+  "to": "StaffThunderBlood",
+  "yield": 1
+ },
+ {
+  "from": "MeadBaseHealthMinor",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadHealthMinor",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseHealthMedium",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadHealthMedium",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseStaminaMinor",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadStaminaMinor",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseStaminaMedium",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadStaminaMedium",
+  "yield": 6
+ },
+ {
+  "from": "MeadBasePoisonResist",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadPoisonResist",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseFrostResist",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadFrostResist",
+  "yield": 6
+ },
+ {
+  "from": "BarleyWineBase",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "BarleyWine",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseTasty",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadTasty",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseHealthMajor",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadHealthMajor",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseStaminaLingering",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadStaminaLingering",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseEitrMinor",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadEitrMinor",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseEitrLingering",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadEitrLingering",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseHealthLingering",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadHealthLingering",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseBzerker",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadBzerker",
+  "yield": 3
+ },
+ {
+  "from": "MeadBaseStrength",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadStrength",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseHasty",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadHasty",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseLightFoot",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadLightfoot",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseSwimmer",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadSwimmer",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseTamer",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadTamer",
+  "yield": 6
+ },
+ {
+  "from": "MeadBaseBugRepellent",
+  "station": "piece_fermenter",
+  "time": 2400.0,
+  "to": "MeadBugRepellent",
+  "yield": 6
+ },
+ {
+  "from": "CopperOre",
+  "station": "piece_smelter",
+  "time": 30.0,
+  "to": "Copper",
+  "yield": 1
+ },
+ {
+  "from": "IronOre",
+  "station": "piece_smelter",
+  "time": 30.0,
+  "to": "Iron",
+  "yield": 1
+ },
+ {
+  "from": "IronScrap",
+  "station": "piece_smelter",
+  "time": 30.0,
+  "to": "Iron",
+  "yield": 1
+ },
+ {
+  "from": "BronzeScrap",
+  "station": "piece_smelter",
+  "time": 30.0,
+  "to": "Bronze",
+  "yield": 1
+ },
+ {
+  "from": "TinOre",
+  "station": "piece_smelter",
+  "time": 30.0,
+  "to": "Tin",
+  "yield": 1
+ },
+ {
+  "from": "SilverOre",
+  "station": "piece_smelter",
+  "time": 30.0,
+  "to": "Silver",
+  "yield": 1
+ },
+ {
+  "from": "CopperScrap",
+  "station": "piece_smelter",
+  "time": 30.0,
+  "to": "Copper",
+  "yield": 1
+ },
+ {
+  "from": "Wood",
+  "station": "piece_charcoalkiln",
+  "time": 15.0,
+  "to": "Coal",
+  "yield": 1
+ },
+ {
+  "from": "FineWood",
+  "station": "piece_charcoalkiln",
+  "time": 15.0,
+  "to": "Coal",
+  "yield": 1
+ },
+ {
+  "from": "RoundLog",
+  "station": "piece_charcoalkiln",
+  "time": 15.0,
+  "to": "Coal",
+  "yield": 1
+ },
+ {
+  "from": "Softtissue",
+  "station": "piece_eitrrefinery",
+  "time": 40.0,
+  "to": "Eitr",
+  "yield": 1
+ },
+ {
+  "from": "Barley",
+  "station": "piece_windmill",
+  "time": 10.0,
+  "to": "BarleyFlour",
+  "yield": 1
+ },
+ {
+  "from": "OatSeeds",
+  "station": "piece_windmill",
+  "time": 10.0,
+  "to": "Oat",
+  "yield": 1
+ },
+ {
+  "from": "Oat",
+  "station": "piece_windmill",
+  "time": 10.0,
+  "to": "OatFlour",
+  "yield": 1
+ },
+ {
+  "from": "FlametalOreNew",
+  "station": "piece_blastfurnace",
+  "time": 30.0,
+  "to": "FlametalNew",
+  "yield": 1
+ },
+ {
+  "from": "BlackMetalScrap",
+  "station": "piece_blastfurnace",
+  "time": 30.0,
+  "to": "BlackMetal",
+  "yield": 1
+ },
+ {
+  "from": "GoldOre",
+  "station": "piece_blastfurnace",
+  "time": 30.0,
+  "to": "Gold",
+  "yield": 1
+ },
+ {
+  "from": "Flax",
+  "station": "piece_spinningwheel",
+  "time": 30.0,
+  "to": "LinenThread",
+  "yield": 1
+ }
+]

@@ -1,0 +1,4318 @@
+{
+ "Abomination": {
+  "biomes": [
+   "swamp"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "TrophyAbomination",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Root",
+    "max": 5,
+    "min": 5,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Guck",
+    "max": 5,
+    "min": 3,
+    "perLevel": false
+   }
+  ],
+  "health": 800.0,
+  "id": "Abomination",
+  "name": {
+   "en": "Abomination",
+   "es": "Abominación"
+  }
+ },
+ "Asksvin": {
+  "biomes": [
+   "ashlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyAsksvin",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "AskBladder",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "AskHide",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "AsksvinMeat",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   }
+  ],
+  "health": 800.0,
+  "id": "Asksvin",
+  "name": {
+   "en": "Asksvin",
+   "es": "Cenicerdo"
+  }
+ },
+ "Asksvin_hatchling": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.2,
+    "item": "AskBladder",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.2,
+    "item": "AskHide",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.2,
+    "item": "AsksvinMeat",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 400.0,
+  "id": "Asksvin_hatchling",
+  "name": {
+   "en": "Asksvin Hatchling",
+   "es": "Cría de cenicerdo"
+  }
+ },
+ "Aspect_Bonemass": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1600.0,
+  "id": "Aspect_Bonemass",
+  "name": {
+   "en": "Aspect of the Writhing Dead",
+   "es": "Aspecto del Muerto Retorcido"
+  }
+ },
+ "Aspect_Eikthyr": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 3000.0,
+  "id": "Aspect_Eikthyr",
+  "name": {
+   "en": "Aspect of the Lightning Stag",
+   "es": "Aspecto del Ciervo del Rayo"
+  }
+ },
+ "Aspect_Elder": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1600.0,
+  "id": "Aspect_Elder",
+  "name": {
+   "en": "Aspect of the Living Forest",
+   "es": "Aspecto del Bosque Viviente"
+  }
+ },
+ "Aspect_Fader": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1700.0,
+  "id": "Aspect_Fader",
+  "name": {
+   "en": "Aspect of the Emerald Flame",
+   "es": "Aspecto de la Llama Esmeralda"
+  }
+ },
+ "Aspect_Moder": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1500.0,
+  "id": "Aspect_Moder",
+  "name": {
+   "en": "Aspect of the Dragon Mother",
+   "es": "Aspecto de la Madre Dragón"
+  }
+ },
+ "Aspect_SeekerQueen": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1700.0,
+  "id": "Aspect_SeekerQueen",
+  "name": {
+   "en": "Aspect of the Crawling Matriarch",
+   "es": "Aspecto de la Matriarca Reptante"
+  }
+ },
+ "Aspect_TentaRoot": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 20.0,
+  "id": "Aspect_TentaRoot",
+  "name": {
+   "en": "Root",
+   "es": "Root"
+  }
+ },
+ "Aspect_Yagluth": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1700.0,
+  "id": "Aspect_Yagluth",
+  "name": {
+   "en": "Aspect of the Twisted Soul",
+   "es": "Aspecto del Alma Retorcida"
+  }
+ },
+ "Barka": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyBarka",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BarkaBranch",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 2200.0,
+  "id": "Barka",
+  "name": {
+   "en": "Barka",
+   "es": "Barka"
+  }
+ },
+ "Bat": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "LeatherScraps",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 10.0,
+  "id": "Bat",
+  "name": {
+   "en": "Bat",
+   "es": "Murciélago"
+  }
+ },
+ "Bat_Swamp": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "LeatherScraps",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 10.0,
+  "id": "Bat_Swamp",
+  "name": {
+   "en": "Bat",
+   "es": "Murciélago"
+  }
+ },
+ "Bjorn": {
+  "biomes": [
+   "blackforest"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "BjornPaw",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BjornMeat",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BjornHide",
+    "max": 5,
+    "min": 4,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyBjorn",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 500.0,
+  "id": "Bjorn",
+  "name": {
+   "en": "Bear",
+   "es": "Bjorn"
+  }
+ },
+ "Bjorn_sleeping": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "BjornPaw",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BjornMeat",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BjornHide",
+    "max": 5,
+    "min": 4,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyBjorn",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 500.0,
+  "id": "Bjorn_sleeping",
+  "name": {
+   "en": "Bear",
+   "es": "Bjorn"
+  }
+ },
+ "Bjorn_spiritcaller": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1500.0,
+  "id": "Bjorn_spiritcaller",
+  "name": {
+   "en": "",
+   "es": ""
+  }
+ },
+ "Blob": {
+  "biomes": [
+   "swamp"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyBlob",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Ooze",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 50.0,
+  "id": "Blob",
+  "name": {
+   "en": "Blob",
+   "es": "Babosa"
+  }
+ },
+ "BlobAspect": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyBlob",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Ooze",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 50.0,
+  "id": "BlobAspect",
+  "name": {
+   "en": "Blob",
+   "es": "Babosa"
+  }
+ },
+ "BlobElite": {
+  "biomes": [
+   "swamp"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Ooze",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 0.33,
+    "item": "IronScrap",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyBlob",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 150.0,
+  "id": "BlobElite",
+  "name": {
+   "en": "Oozer",
+   "es": "Exudador"
+  }
+ },
+ "BlobFrost": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Crystal",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyBlob_Frost",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 50.0,
+  "id": "BlobFrost",
+  "name": {
+   "en": "Frost Blob",
+   "es": "Babosa de hielo"
+  }
+ },
+ "BlobLava": {
+  "biomes": [
+   "ashlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "ProustitePowder",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "SulfurStone",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyBlob_Lava",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 300.0,
+  "id": "BlobLava",
+  "name": {
+   "en": "Lava Blob",
+   "es": "Bola de lava"
+  }
+ },
+ "BlobMork": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyBlob_Morkhalla",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "OozeMork",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 150.0,
+  "id": "BlobMork",
+  "name": {
+   "en": "Shapeless Pulp",
+   "es": "Pulpa informe"
+  }
+ },
+ "BlobMorkMini": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "OozeMork",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 50.0,
+  "id": "BlobMorkMini",
+  "name": {
+   "en": "Tiny Pulp",
+   "es": "Pulpa diminuta"
+  }
+ },
+ "BlobTar": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyGrowth",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Tar",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 100.0,
+  "id": "BlobTar",
+  "name": {
+   "en": "Growth",
+   "es": "Bulto"
+  }
+ },
+ "Boar": {
+  "biomes": [
+   "meadows"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "RawMeat",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "LeatherScraps",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.15,
+    "item": "TrophyBoar",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 10.0,
+  "id": "Boar",
+  "name": {
+   "en": "Boar",
+   "es": "Jabalí"
+  }
+ },
+ "Boar_piggy": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 10.0,
+  "id": "Boar_piggy",
+  "name": {
+   "en": "Piggy",
+   "es": "Cerdito"
+  }
+ },
+ "Boar_spiritcaller": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1000.0,
+  "id": "Boar_spiritcaller",
+  "name": {
+   "en": "",
+   "es": ""
+  }
+ },
+ "BogWitchKvastur": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Wood",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Resin",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "TrophyKvastur",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 700.0,
+  "id": "BogWitchKvastur",
+  "name": {
+   "en": "Kvastur",
+   "es": "Kvastur"
+  }
+ },
+ "Bonemass": {
+  "biomes": [],
+  "boss": true,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyBonemass",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Wishbone",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 5000.0,
+  "id": "Bonemass",
+  "name": {
+   "en": "Bonemass",
+   "es": "Tuétano"
+  }
+ },
+ "BonemawSerpent": {
+  "biomes": [
+   "ashlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.33,
+    "item": "TrophyBonemawSerpent",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneMawSerpentMeat",
+    "max": 8,
+    "min": 6,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BonemawSerpentTooth",
+    "max": 10,
+    "min": 8,
+    "perLevel": true
+   }
+  ],
+  "health": 1100.0,
+  "id": "BonemawSerpent",
+  "name": {
+   "en": "Bonemaw",
+   "es": "Faucesoseas"
+  }
+ },
+ "Charred_Archer": {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "mountain",
+   "plains",
+   "ashlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "CharredBone",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyCharredArcher",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 200.0,
+  "id": "Charred_Archer",
+  "name": {
+   "en": "Charred Marksman",
+   "es": "Arquero carbonizado"
+  }
+ },
+ "Charred_Archer_Fader": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 50.0,
+  "id": "Charred_Archer_Fader",
+  "name": {
+   "en": "Summoned Charred Warrior",
+   "es": "Guerrero carbonizado invocado"
+  }
+ },
+ "Charred_Mage": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "CharredBone",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyCharredMage",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 600.0,
+  "id": "Charred_Mage",
+  "name": {
+   "en": "Charred Warlock",
+   "es": "Brujo carbonizado"
+  }
+ },
+ "Charred_Melee": {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "mountain",
+   "plains",
+   "ashlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "CharredBone",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyCharredMelee",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 600.0,
+  "id": "Charred_Melee",
+  "name": {
+   "en": "Charred Warrior",
+   "es": "Guerrero carbonizado"
+  }
+ },
+ "Charred_Melee_Dyrnwyn": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "DyrnwynHiltFragment",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 2500.0,
+  "id": "Charred_Melee_Dyrnwyn",
+  "name": {
+   "en": "<color=orange>Lord Reto</color>",
+   "es": "Lord Reto"
+  }
+ },
+ "Charred_Melee_Fader": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 50.0,
+  "id": "Charred_Melee_Fader",
+  "name": {
+   "en": "Summoned Charred Warrior",
+   "es": "Guerrero carbonizado invocado"
+  }
+ },
+ "Charred_Twitcher": {
+  "biomes": [
+   "ashlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "CharredBone",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 220.0,
+  "id": "Charred_Twitcher",
+  "name": {
+   "en": "Charred Twitcher",
+   "es": "Crispante carbonizado"
+  }
+ },
+ "Charred_Twitcher_Summoned": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "CharredBone",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 50.0,
+  "id": "Charred_Twitcher_Summoned",
+  "name": {
+   "en": "Summoned Twitcher",
+   "es": "Nervioso invocado"
+  }
+ },
+ "Chicken": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "ChickenMeat",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.5,
+    "item": "Feathers",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 10.0,
+  "id": "Chicken",
+  "name": {
+   "en": "Chicken",
+   "es": "Pollo"
+  }
+ },
+ "Deathsquito": {
+  "biomes": [
+   "plains"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Needle",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyDeathsquito",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 10.0,
+  "id": "Deathsquito",
+  "name": {
+   "en": "Deathsquito",
+   "es": "Muersquito"
+  }
+ },
+ "Deer": {
+  "biomes": [
+   "meadows",
+   "blackforest"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "DeerMeat",
+    "max": 2,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "DeerHide",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.5,
+    "item": "TrophyDeer",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 10.0,
+  "id": "Deer",
+  "name": {
+   "en": "Deer",
+   "es": "Ciervo"
+  }
+ },
+ "Dragon": {
+  "biomes": [],
+  "boss": true,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyDragonQueen",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "DragonTear",
+    "max": 10,
+    "min": 10,
+    "perLevel": false
+   }
+  ],
+  "health": 7500.0,
+  "id": "Dragon",
+  "name": {
+   "en": "Moder",
+   "es": "Moder"
+  }
+ },
+ "Draugr": {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "mountain",
+   "plains"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Entrails",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyDraugr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 100.0,
+  "id": "Draugr",
+  "name": {
+   "en": "Draugr",
+   "es": "Draugr"
+  }
+ },
+ "Draugr_Elite": {
+  "biomes": [
+   "swamp"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Entrails",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyDraugrElite",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 200.0,
+  "id": "Draugr_Elite",
+  "name": {
+   "en": "Draugr Elite",
+   "es": "Draugr Elite"
+  }
+ },
+ "Draugr_Elite_sleeping": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Entrails",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyDraugrElite",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 200.0,
+  "id": "Draugr_Elite_sleeping",
+  "name": {
+   "en": "Draugr Elite",
+   "es": "Draugr Elite"
+  }
+ },
+ "Draugr_Ranged": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Entrails",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyDraugr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 100.0,
+  "id": "Draugr_Ranged",
+  "name": {
+   "en": "Draugr",
+   "es": "Draugr"
+  }
+ },
+ "Draugr_Ranged_sleeping": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Entrails",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyDraugr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 100.0,
+  "id": "Draugr_Ranged_sleeping",
+  "name": {
+   "en": "Draugr",
+   "es": "Draugr"
+  }
+ },
+ "Draugr_sleeping": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Entrails",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyDraugr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 100.0,
+  "id": "Draugr_sleeping",
+  "name": {
+   "en": "Draugr",
+   "es": "Draugr"
+  }
+ },
+ "Dverger": {
+  "biomes": [
+   "mistlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "Softtissue",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "BlackMarble",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Coins",
+    "max": 15,
+    "min": 2,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyDvergr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 350.0,
+  "id": "Dverger",
+  "name": {
+   "en": "Dvergr Rogue",
+   "es": "Pícaro Dvergr"
+  }
+ },
+ "DvergerAshlands": {
+  "biomes": [
+   "ashlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "Softtissue",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "BlackMarble",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Coins",
+    "max": 15,
+    "min": 2,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyDvergr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 1000.0,
+  "id": "DvergerAshlands",
+  "name": {
+   "en": "Dvergr Rogue",
+   "es": "Pícaro Dvergr"
+  }
+ },
+ "DvergerDeepNorth": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Coins",
+    "max": 20,
+    "min": 10,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyDvergr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.1,
+    "item": "AncientGemstoneBlack",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "AncientGemstoneGreen",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "AncientGemstoneOrange",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "AncientGemstonePurple",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 1500.0,
+  "id": "DvergerDeepNorth",
+  "name": {
+   "en": "Imprisoned Dvergr",
+   "es": "Dvergr encarcelado"
+  }
+ },
+ "DvergerMage": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "Softtissue",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "BlackMarble",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Coins",
+    "max": 15,
+    "min": 2,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyDvergr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 350.0,
+  "id": "DvergerMage",
+  "name": {
+   "en": "Dvergr Mage",
+   "es": "Mago Dvergr"
+  }
+ },
+ "DvergerMageFire": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "Softtissue",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "BlackMarble",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Coins",
+    "max": 15,
+    "min": 2,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyDvergr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 350.0,
+  "id": "DvergerMageFire",
+  "name": {
+   "en": "Dvergr Mage",
+   "es": "Mago Dvergr"
+  }
+ },
+ "DvergerMageIce": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "Softtissue",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "BlackMarble",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Coins",
+    "max": 15,
+    "min": 2,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyDvergr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 350.0,
+  "id": "DvergerMageIce",
+  "name": {
+   "en": "Dvergr Mage",
+   "es": "Mago Dvergr"
+  }
+ },
+ "DvergerMageSupport": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "Softtissue",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "BlackMarble",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Coins",
+    "max": 15,
+    "min": 2,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyDvergr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 350.0,
+  "id": "DvergerMageSupport",
+  "name": {
+   "en": "Dvergr Mage",
+   "es": "Mago Dvergr"
+  }
+ },
+ "Eikthyr": {
+  "biomes": [],
+  "boss": true,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyEikthyr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "HardAntler",
+    "max": 3,
+    "min": 3,
+    "perLevel": false
+   }
+  ],
+  "health": 500.0,
+  "id": "Eikthyr",
+  "name": {
+   "en": "Eikthyr",
+   "es": "Eikthyr"
+  }
+ },
+ "Elaking": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "ElakingHairBundle",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyElaking",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.2,
+    "item": "MoldKeys",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 350.0,
+  "id": "Elaking",
+  "name": {
+   "en": "Elaking",
+   "es": "Elaking"
+  }
+ },
+ "ElakingLantern": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "ElakingHairBundle",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyElaking",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 350.0,
+  "id": "ElakingLantern",
+  "name": {
+   "en": "Elaking",
+   "es": "Elaking"
+  }
+ },
+ "ElakingMole": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyMole",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "MoleClaws",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.5,
+    "item": "MoldKeys",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 1400.0,
+  "id": "ElakingMole",
+  "name": {
+   "en": "Eyeless One",
+   "es": "Sin ojos"
+  }
+ },
+ "Fader": {
+  "biomes": [],
+  "boss": true,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyFader",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "FaderDrop",
+    "max": 5,
+    "min": 5,
+    "perLevel": false
+   }
+  ],
+  "health": 25000.0,
+  "id": "Fader",
+  "name": {
+   "en": "Fader",
+   "es": "Fader"
+  }
+ },
+ "FallenValkyrie": {
+  "biomes": [
+   "ashlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "CelestialFeather",
+    "max": 4,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyFallenValkyrie",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 1500.0,
+  "id": "FallenValkyrie",
+  "name": {
+   "en": "Fallen Valkyrie",
+   "es": "Valquiria caída"
+  }
+ },
+ "FallenWarrior": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "OrbFrostFire",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "OrbThunderBlood",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 750.0,
+  "id": "FallenWarrior",
+  "name": {
+   "en": "Fallen Warrior",
+   "es": "Guerrero caído"
+  }
+ },
+ "FallenWarrior (1)": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "OrbFrostFire",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "OrbThunderBlood",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 750.0,
+  "id": "FallenWarrior (1)",
+  "name": {
+   "en": "Fallen Warrior",
+   "es": "Guerrero caído"
+  }
+ },
+ "FallenWarrior (2)": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "OrbFrostFire",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "OrbThunderBlood",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 750.0,
+  "id": "FallenWarrior (2)",
+  "name": {
+   "en": "Fallen Warrior",
+   "es": "Guerrero caído"
+  }
+ },
+ "Fenring": {
+  "biomes": [
+   "mountain"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "WolfFang",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyFenring",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 300.0,
+  "id": "Fenring",
+  "name": {
+   "en": "Fenring",
+   "es": "Fenring"
+  }
+ },
+ "Fenring_Cultist": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "JuteRed",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyCultist",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 200.0,
+  "id": "Fenring_Cultist",
+  "name": {
+   "en": "Cultist",
+   "es": "Cultista"
+  }
+ },
+ "Fenring_Cultist_Hildir": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "chest_hildir2",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "TrophyCultist_Hildir",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 3700.0,
+  "id": "Fenring_Cultist_Hildir",
+  "name": {
+   "en": "<color=orange>Geirrhafa</color>",
+   "es": "<color=orange>Geirrhafa</color>"
+  }
+ },
+ "Fenring_Cultist_Hildir_nochest": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyCultist_Hildir",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 1850.0,
+  "id": "Fenring_Cultist_Hildir_nochest",
+  "name": {
+   "en": "<color=orange>Geirrhafa</color>",
+   "es": "<color=orange>Geirrhafa</color>"
+  }
+ },
+ "FrozenKing": {
+  "biomes": [],
+  "boss": true,
+  "drops": [],
+  "health": 10000.0,
+  "id": "FrozenKing",
+  "name": {
+   "en": "Kall Fimbulbringer",
+   "es": "Kall Fimbulbringer"
+  }
+ },
+ "FrozenKing_p2": {
+  "biomes": [],
+  "boss": true,
+  "drops": [],
+  "health": 7000.0,
+  "id": "FrozenKing_p2",
+  "name": {
+   "en": "Kall Fimbulbringer",
+   "es": "Kall Fimbulbringer"
+  }
+ },
+ "FrozenKing_p3": {
+  "biomes": [],
+  "boss": true,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "FrozenKingDrop",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "CrownJewel",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 30000.0,
+  "id": "FrozenKing_p3",
+  "name": {
+   "en": "Kall Fimbulbringer",
+   "es": "Kall Fimbulbringer"
+  }
+ },
+ "Frysling": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "FrostCore",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 100.0,
+  "id": "Frysling",
+  "name": {
+   "en": "Frysling",
+   "es": "Frysling"
+  }
+ },
+ "Ghost": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Ectoplasm",
+    "max": 5,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyGhost",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 60.0,
+  "id": "Ghost",
+  "name": {
+   "en": "Ghost",
+   "es": "Fantasma"
+  }
+ },
+ "Ghost_Void": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "KnifeVoid",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 600.0,
+  "id": "Ghost_Void",
+  "name": {
+   "en": "The Void",
+   "es": "El Vacío"
+  }
+ },
+ "Ghost_old": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "Ectoplasm",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 60.0,
+  "id": "Ghost_old",
+  "name": {
+   "en": "The Void",
+   "es": "El Vacío"
+  }
+ },
+ "Ghost_sleeping": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Ectoplasm",
+    "max": 5,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyGhost",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 60.0,
+  "id": "Ghost_sleeping",
+  "name": {
+   "en": "Ghost",
+   "es": "Fantasma"
+  }
+ },
+ "Gjall": {
+  "biomes": [
+   "mistlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Bilebag",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.3,
+    "item": "TrophyGjall",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 1500.0,
+  "id": "Gjall",
+  "name": {
+   "en": "Gjall",
+   "es": "Gjall"
+  }
+ },
+ "Goblin": {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "mountain",
+   "plains"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "Coins",
+    "max": 10,
+    "min": 5,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BlackMetalScrap",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyGoblin",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 175.0,
+  "id": "Goblin",
+  "name": {
+   "en": "Fuling",
+   "es": "Fuling"
+  }
+ },
+ "GoblinArcher": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "Coins",
+    "max": 10,
+    "min": 5,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BlackMetalScrap",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyGoblin",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 175.0,
+  "id": "GoblinArcher",
+  "name": {
+   "en": "Fuling",
+   "es": "Fuling"
+  }
+ },
+ "GoblinBrute": {
+  "biomes": [
+   "plains"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Coins",
+    "max": 20,
+    "min": 5,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BlackMetalScrap",
+    "max": 5,
+    "min": 3,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "GoblinTotem",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyGoblinBrute",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 800.0,
+  "id": "GoblinBrute",
+  "name": {
+   "en": "Fuling Berserker",
+   "es": "Fuling berserker"
+  }
+ },
+ "GoblinBruteBros": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyGoblinBruteBrosBrute",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 4200.0,
+  "id": "GoblinBruteBros",
+  "name": {
+   "en": "<color=orange>Zil & Thungr</color>",
+   "es": "<color=orange>Zil y Thungr</color>"
+  }
+ },
+ "GoblinBruteBros_nochest": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyGoblinBruteBrosBrute",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 2100.0,
+  "id": "GoblinBruteBros_nochest",
+  "name": {
+   "en": "<color=orange>Zil & Thungr</color>",
+   "es": "<color=orange>Zil y Thungr</color>"
+  }
+ },
+ "GoblinBrute_Hildir": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "chest_hildir3",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 800.0,
+  "id": "GoblinBrute_Hildir",
+  "name": {
+   "en": "<color=orange>Thungr</color> ",
+   "es": "<color=orange>Thungr</color> "
+  }
+ },
+ "GoblinDeepNorth": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "Coins",
+    "max": 40,
+    "min": 20,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "AncientCoin",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.2,
+    "item": "Lingonberry",
+    "max": 10,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 250.0,
+  "id": "GoblinDeepNorth",
+  "name": {
+   "en": "Captive Fuling",
+   "es": "Fuling cautivo"
+  }
+ },
+ "GoblinKing": {
+  "biomes": [],
+  "boss": true,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyGoblinKing",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "YagluthDrop",
+    "max": 3,
+    "min": 3,
+    "perLevel": false
+   }
+  ],
+  "health": 10000.0,
+  "id": "GoblinKing",
+  "name": {
+   "en": "Yagluth",
+   "es": "Yagluth"
+  }
+ },
+ "GoblinShaman": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.25,
+    "item": "Coins",
+    "max": 40,
+    "min": 20,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BlackMetalScrap",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Pukeberries",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyGoblinShaman",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 100.0,
+  "id": "GoblinShaman",
+  "name": {
+   "en": "Fuling Shaman",
+   "es": "Fuling Chamán"
+  }
+ },
+ "GoblinShaman_Hildir": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "chest_hildir3",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "TrophyGoblinBruteBrosShaman",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 2400.0,
+  "id": "GoblinShaman_Hildir",
+  "name": {
+   "en": "<color=orange>Zil</color> ",
+   "es": "<color=orange>Zil</color> "
+  }
+ },
+ "GoblinShaman_Hildir_nochest": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyGoblinBruteBrosShaman",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 1200.0,
+  "id": "GoblinShaman_Hildir_nochest",
+  "name": {
+   "en": "<color=orange>Zil</color> ",
+   "es": "<color=orange>Zil</color> "
+  }
+ },
+ "Goblin_Gem": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "GemstoneBlue",
+    "max": 4,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "GemstoneGreen",
+    "max": 4,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "GemstoneRed",
+    "max": 4,
+    "min": 2,
+    "perLevel": true
+   }
+  ],
+  "health": 1000.0,
+  "id": "Goblin_Gem",
+  "name": {
+   "en": "Riktig Fuling",
+   "es": "Riktig fuling"
+  }
+ },
+ "Greydwarf": {
+  "biomes": [
+   "meadows",
+   "blackforest"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "GreydwarfEye",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Stone",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Wood",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Resin",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyGreydwarf",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 40.0,
+  "id": "Greydwarf",
+  "name": {
+   "en": "Greydwarf",
+   "es": "Grisucio"
+  }
+ },
+ "Greydwarf_Elite": {
+  "biomes": [
+   "meadows",
+   "blackforest"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "GreydwarfEye",
+    "max": 2,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Stone",
+    "max": 2,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Wood",
+    "max": 5,
+    "min": 3,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Dandelion",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.33,
+    "item": "AncientSeed",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyGreydwarfBrute",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 150.0,
+  "id": "Greydwarf_Elite",
+  "name": {
+   "en": "Greydwarf Brute",
+   "es": "Grisucio Bruto"
+  }
+ },
+ "Greydwarf_Frozen": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "GreydwarfEye",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Wood",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Resin",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyGreydwarf",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Snowball",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Ice",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 100.0,
+  "id": "Greydwarf_Frozen",
+  "name": {
+   "en": "Greydwarf",
+   "es": "Grisucio"
+  }
+ },
+ "Greydwarf_Shaman": {
+  "biomes": [
+   "meadows",
+   "blackforest"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "GreydwarfEye",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Wood",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Resin",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyGreydwarfShaman",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Pukeberries",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 60.0,
+  "id": "Greydwarf_Shaman",
+  "name": {
+   "en": "Greydwarf Shaman",
+   "es": "Grisucio Chamán"
+  }
+ },
+ "Greydwarf_Shaman_Frozen": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "GreydwarfEye",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Wood",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Resin",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyGreydwarfShaman",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Pukeberries",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Ice",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 120.0,
+  "id": "Greydwarf_Shaman_Frozen",
+  "name": {
+   "en": "Greydwarf Shaman",
+   "es": "Grisucio Chamán"
+  }
+ },
+ "Greyling": {
+  "biomes": [
+   "meadows"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Resin",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 20.0,
+  "id": "Greyling",
+  "name": {
+   "en": "Greyling",
+   "es": "Enanillogrís"
+  }
+ },
+ "Hare": {
+  "biomes": [
+   "mistlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "HareMeat",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "ScaleHide",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyHare",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 10.0,
+  "id": "Hare",
+  "name": {
+   "en": "Hare",
+   "es": "Liebre"
+  }
+ },
+ "Hatchling": {
+  "biomes": [
+   "mountain"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyHatchling",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "FreezeGland",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 100.0,
+  "id": "Hatchling",
+  "name": {
+   "en": "Drake",
+   "es": "Draco"
+  }
+ },
+ "Hen": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "ChickenMeat",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Feathers",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 10.0,
+  "id": "Hen",
+  "name": {
+   "en": "Hen",
+   "es": "Gallina"
+  }
+ },
+ "JotunWarrior": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.03,
+    "item": "MoldArmormediumChest",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.03,
+    "item": "MoldArmorMediumHelmet",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.03,
+    "item": "MoldArmorMediumLegs",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.2,
+    "item": "MemorialCoal",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyJotunWarrior",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Leatherstraps",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.03,
+    "item": "MoldArmorGoldLegs",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.03,
+    "item": "MoldArmorGoldChest",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.03,
+    "item": "MoldArmorGoldHelmet",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 1300.0,
+  "id": "JotunWarrior",
+  "name": {
+   "en": "Krigen",
+   "es": "Krigen"
+  }
+ },
+ "JotunWarriorDualWield": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.03,
+    "item": "MoldArmormediumChest",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.03,
+    "item": "MoldArmorMediumHelmet",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.03,
+    "item": "MoldArmorMediumLegs",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.2,
+    "item": "MemorialCoal",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyJotunWarrior",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Leatherstraps",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.03,
+    "item": "MoldArmorGoldLegs",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.03,
+    "item": "MoldArmorGoldChest",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.03,
+    "item": "MoldArmorGoldHelmet",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 1300.0,
+  "id": "JotunWarriorDualWield",
+  "name": {
+   "en": "Krigen",
+   "es": "Krigen"
+  }
+ },
+ "JotunWitch": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "NornThread",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyJotunWitch",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.1,
+    "item": "BloodGoldKey",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "MoldArmorMageChest",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "MoldArmorMageHelmet",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "MoldArmorMageLegs",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 800.0,
+  "id": "JotunWitch",
+  "name": {
+   "en": "Hexen",
+   "es": "Hexen"
+  }
+ },
+ "Leech": {
+  "biomes": [
+   "swamp"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyLeech",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Bloodbag",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 60.0,
+  "id": "Leech",
+  "name": {
+   "en": "Leech",
+   "es": "Sanguijuela"
+  }
+ },
+ "Leech_cave": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyLeech",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Bloodbag",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 60.0,
+  "id": "Leech_cave",
+  "name": {
+   "en": "Leech",
+   "es": "Sanguijuela"
+  }
+ },
+ "Lox": {
+  "biomes": [
+   "plains"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "LoxMeat",
+    "max": 6,
+    "min": 4,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyLox",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "LoxPelt",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   }
+  ],
+  "health": 1000.0,
+  "id": "Lox",
+  "name": {
+   "en": "Lox",
+   "es": "Luey"
+  }
+ },
+ "Lox_Calf": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "LoxMeat",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 100.0,
+  "id": "Lox_Calf",
+  "name": {
+   "en": "Lox Calf",
+   "es": "Cría de luey"
+  }
+ },
+ "Mistile": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1.0,
+  "id": "Mistile",
+  "name": {
+   "en": "Mistile",
+   "es": "Nieblisil"
+  }
+ },
+ "Moose": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "MooseMeat",
+    "max": 6,
+    "min": 4,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyMoose",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "MooseHide",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "MooseSinew",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   }
+  ],
+  "health": 1000.0,
+  "id": "Moose",
+  "name": {
+   "en": "Moose",
+   "es": "Alce"
+  }
+ },
+ "Moose_calf": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1000.0,
+  "id": "Moose_calf",
+  "name": {
+   "en": "Moose Calf",
+   "es": "Cervatillo de alce"
+  }
+ },
+ "Moose_spiritcaller": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 1100.0,
+  "id": "Moose_spiritcaller",
+  "name": {
+   "en": "",
+   "es": ""
+  }
+ },
+ "Morgen": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "MorgenSinew",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.8,
+    "item": "MorgenHeart",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyMorgen",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 1600.0,
+  "id": "Morgen",
+  "name": {
+   "en": "Morgen",
+   "es": "Morgen"
+  }
+ },
+ "Morgen_NonSleeping": {
+  "biomes": [
+   "ashlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "MorgenSinew",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.8,
+    "item": "MorgenHeart",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyMorgen",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 1600.0,
+  "id": "Morgen_NonSleeping",
+  "name": {
+   "en": "Morgen",
+   "es": "Morgen"
+  }
+ },
+ "Neck": {
+  "biomes": [
+   "meadows"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.7,
+    "item": "NeckTail",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyNeck",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 5.0,
+  "id": "Neck",
+  "name": {
+   "en": "Neck",
+   "es": "Nixe"
+  }
+ },
+ "Seal": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "SealHide",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophySeal",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "SealBlubber",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   }
+  ],
+  "health": 400.0,
+  "id": "Seal",
+  "name": {
+   "en": "Seal",
+   "es": "Foca"
+  }
+ },
+ "Seal_Pup": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "SealBlubber",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 200.0,
+  "id": "Seal_Pup",
+  "name": {
+   "en": "Baby Seal",
+   "es": "Cría de foca"
+  }
+ },
+ "Seeker": {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "mountain",
+   "plains",
+   "mistlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "BugMeat",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Carapace",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophySeeker",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 200.0,
+  "id": "Seeker",
+  "name": {
+   "en": "Seeker",
+   "es": "Buscador"
+  }
+ },
+ "SeekerBrood": {
+  "biomes": [
+   "mistlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "RoyalJelly",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 20.0,
+  "id": "SeekerBrood",
+  "name": {
+   "en": "Seeker Brood",
+   "es": "Prole de Buscador"
+  }
+ },
+ "SeekerBrute": {
+  "biomes": [
+   "mistlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "BugMeat",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Carapace",
+    "max": 4,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophySeekerBrute",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Mandible",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 1500.0,
+  "id": "SeekerBrute",
+  "name": {
+   "en": "Seeker Soldier",
+   "es": "Soldado buscador"
+  }
+ },
+ "SeekerQueen": {
+  "biomes": [],
+  "boss": true,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophySeekerQueen",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "QueenDrop",
+    "max": 5,
+    "min": 5,
+    "perLevel": false
+   }
+  ],
+  "health": 12500.0,
+  "id": "SeekerQueen",
+  "name": {
+   "en": "The Queen",
+   "es": "La Reina"
+  }
+ },
+ "Serpent": {
+  "biomes": [
+   "ocean"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.33,
+    "item": "TrophySerpent",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "SerpentMeat",
+    "max": 8,
+    "min": 6,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "SerpentScale",
+    "max": 10,
+    "min": 8,
+    "perLevel": true
+   }
+  ],
+  "health": 400.0,
+  "id": "Serpent",
+  "name": {
+   "en": "Serpent",
+   "es": "Serpiente"
+  }
+ },
+ "ShadowPerson": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [],
+  "health": 750.0,
+  "id": "ShadowPerson",
+  "name": {
+   "en": "Shadow",
+   "es": "Sombra"
+  }
+ },
+ "Skeleton": {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "mountain",
+   "plains"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeleton",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 40.0,
+  "id": "Skeleton",
+  "name": {
+   "en": "Skeleton",
+   "es": "Esqueleto"
+  }
+ },
+ "Skeleton_DeepNorth": {
+  "biomes": [
+   "deepnorth"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeleton",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Ice",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 100.0,
+  "id": "Skeleton_DeepNorth",
+  "name": {
+   "en": "Skeleton",
+   "es": "Esqueleto"
+  }
+ },
+ "Skeleton_Friendly": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 400.0,
+  "id": "Skeleton_Friendly",
+  "name": {
+   "en": "Skelett",
+   "es": "Esquel"
+  }
+ },
+ "Skeleton_Hildir": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "chest_hildir1",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "TrophySkeletonHildir",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 1200.0,
+  "id": "Skeleton_Hildir",
+  "name": {
+   "en": "<color=orange>Brenna</color>",
+   "es": "<color=orange>Brenna</color>"
+  }
+ },
+ "Skeleton_Hildir_nochest": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophySkeletonHildir",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 600.0,
+  "id": "Skeleton_Hildir_nochest",
+  "name": {
+   "en": "<color=orange>Brenna</color>",
+   "es": "<color=orange>Brenna</color>"
+  }
+ },
+ "Skeleton_Meadows": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeleton",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 30.0,
+  "id": "Skeleton_Meadows",
+  "name": {
+   "en": "Skeleton",
+   "es": "Esqueleto"
+  }
+ },
+ "Skeleton_Meadows_noarcher": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeleton",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 30.0,
+  "id": "Skeleton_Meadows_noarcher",
+  "name": {
+   "en": "Skeleton",
+   "es": "Esqueleto"
+  }
+ },
+ "Skeleton_Mountains": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeleton",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 75.0,
+  "id": "Skeleton_Mountains",
+  "name": {
+   "en": "Skeleton",
+   "es": "Esqueleto"
+  }
+ },
+ "Skeleton_Mountains_noarcher": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeleton",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 75.0,
+  "id": "Skeleton_Mountains_noarcher",
+  "name": {
+   "en": "Skeleton",
+   "es": "Esqueleto"
+  }
+ },
+ "Skeleton_NoArcher": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeleton",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 40.0,
+  "id": "Skeleton_NoArcher",
+  "name": {
+   "en": "Skeleton",
+   "es": "Esqueleto"
+  }
+ },
+ "Skeleton_Poison": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeletonPoison",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 3,
+    "min": 3,
+    "perLevel": true
+   }
+  ],
+  "health": 100.0,
+  "id": "Skeleton_Poison",
+  "name": {
+   "en": "Rancid Remains",
+   "es": "Restos rancios"
+  }
+ },
+ "Skeleton_Swamps": {
+  "biomes": [
+   "swamp"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeleton",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 60.0,
+  "id": "Skeleton_Swamps",
+  "name": {
+   "en": "Skeleton",
+   "es": "Esqueleto"
+  }
+ },
+ "Skeleton_Swamps_noarcher": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeleton",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 60.0,
+  "id": "Skeleton_Swamps_noarcher",
+  "name": {
+   "en": "Skeleton",
+   "es": "Esqueleto"
+  }
+ },
+ "Skeleton_aspect": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophySkeleton",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "BoneFragments",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 40.0,
+  "id": "Skeleton_aspect",
+  "name": {
+   "en": "Skeleton",
+   "es": "Esqueleto"
+  }
+ },
+ "StoneGolem": {
+  "biomes": [
+   "mountain"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.05,
+    "item": "TrophySGolem",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Stone",
+    "max": 10,
+    "min": 5,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "Crystal",
+    "max": 12,
+    "min": 8,
+    "perLevel": true
+   }
+  ],
+  "health": 800.0,
+  "id": "StoneGolem",
+  "name": {
+   "en": "Stone Golem",
+   "es": "Gólem de piedra"
+  }
+ },
+ "Surtling": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Coal",
+    "max": 5,
+    "min": 4,
+    "perLevel": true
+   },
+   {
+    "chance": 0.5,
+    "item": "SurtlingCore",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophySurtling",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 20.0,
+  "id": "Surtling",
+  "name": {
+   "en": "Surtling",
+   "es": "Surtling"
+  }
+ },
+ "TentaRoot": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 20.0,
+  "id": "TentaRoot",
+  "name": {
+   "en": "Root",
+   "es": "Root"
+  }
+ },
+ "TentaRoot_wild": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 30.0,
+  "id": "TentaRoot_wild",
+  "name": {
+   "en": "Root",
+   "es": "Root"
+  }
+ },
+ "Tick": {
+  "biomes": [
+   "mistlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "GiantBloodSack",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.05,
+    "item": "TrophyTick",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 50.0,
+  "id": "Tick",
+  "name": {
+   "en": "Tick",
+   "es": "Garrapata"
+  }
+ },
+ "Troll": {
+  "biomes": [
+   "blackforest"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Coins",
+    "max": 30,
+    "min": 20,
+    "perLevel": true
+   },
+   {
+    "chance": 0.5,
+    "item": "TrophyFrostTroll",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "TrollHide",
+    "max": 5,
+    "min": 5,
+    "perLevel": true
+   }
+  ],
+  "health": 600.0,
+  "id": "Troll",
+  "name": {
+   "en": "Troll",
+   "es": "Trol"
+  }
+ },
+ "TrollFrost": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 3000.0,
+  "id": "TrollFrost",
+  "name": {
+   "en": "Gammeltroll",
+   "es": "Gammeltrol"
+  }
+ },
+ "Troll_Summoned": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 2000.0,
+  "id": "Troll_Summoned",
+  "name": {
+   "en": "Summoned Troll",
+   "es": "Trol invocado"
+  }
+ },
+ "Troll_sleeping": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "Coins",
+    "max": 30,
+    "min": 20,
+    "perLevel": true
+   },
+   {
+    "chance": 0.5,
+    "item": "TrophyFrostTroll",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "TrollHide",
+    "max": 5,
+    "min": 5,
+    "perLevel": true
+   }
+  ],
+  "health": 600.0,
+  "id": "Troll_sleeping",
+  "name": {
+   "en": "Troll",
+   "es": "Trol"
+  }
+ },
+ "Ulv": {
+  "biomes": [],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.5,
+    "item": "WolfFang",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.1,
+    "item": "TrophyUlv",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 50.0,
+  "id": "Ulv",
+  "name": {
+   "en": "Ulv",
+   "es": "Ulv"
+  }
+ },
+ "Unbjorn": {
+  "biomes": [
+   "plains"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyBjornUndead",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BjornMeat",
+    "max": 3,
+    "min": 2,
+    "perLevel": true
+   },
+   {
+    "chance": 0.8,
+    "item": "RottenMeat",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "UndeadBjornRibcage",
+    "max": 3,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "BjornHide",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 1200.0,
+  "id": "Unbjorn",
+  "name": {
+   "en": "Vile",
+   "es": "Vil"
+  }
+ },
+ "Volture": {
+  "biomes": [
+   "ashlands"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyVolture",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "VoltureMeat",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "Feathers",
+    "max": 3,
+    "min": 2,
+    "perLevel": false
+   },
+   {
+    "chance": 0.5,
+    "item": "VoltureEgg",
+    "max": 2,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 200.0,
+  "id": "Volture",
+  "name": {
+   "en": "Volture",
+   "es": "Buicán"
+  }
+ },
+ "Wolf": {
+  "biomes": [
+   "mountain"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyWolf",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "WolfMeat",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 1.0,
+    "item": "WolfPelt",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   },
+   {
+    "chance": 0.4,
+    "item": "WolfFang",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 80.0,
+  "id": "Wolf",
+  "name": {
+   "en": "Wolf",
+   "es": "Lobo"
+  }
+ },
+ "Wolf_cub": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 10.0,
+  "id": "Wolf_cub",
+  "name": {
+   "en": "Wolf Cub",
+   "es": "Lobo Cachorrillo"
+  }
+ },
+ "Wolf_spiritcaller": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 800.0,
+  "id": "Wolf_spiritcaller",
+  "name": {
+   "en": "",
+   "es": ""
+  }
+ },
+ "Wraith": {
+  "biomes": [
+   "swamp"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.05,
+    "item": "TrophyWraith",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Chain",
+    "max": 1,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 100.0,
+  "id": "Wraith",
+  "name": {
+   "en": "Wraith",
+   "es": "Espíritu"
+  }
+ },
+ "Writhan": {
+  "biomes": [
+   "swamp"
+  ],
+  "boss": false,
+  "drops": [
+   {
+    "chance": 0.1,
+    "item": "TrophyWrithan",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "WrithanRoots",
+    "max": 2,
+    "min": 1,
+    "perLevel": true
+   }
+  ],
+  "health": 400.0,
+  "id": "Writhan",
+  "name": {
+   "en": "Writhan",
+   "es": "Writhan"
+  }
+ },
+ "gd_king": {
+  "biomes": [],
+  "boss": true,
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyTheElder",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "CryptKey",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 2500.0,
+  "id": "gd_king",
+  "name": {
+   "en": "The Elder",
+   "es": "El Sabio"
+  }
+ },
+ "piece_TrainingDummy": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 2500.0,
+  "id": "piece_TrainingDummy",
+  "name": {
+   "en": "T.W.I.G.",
+   "es": "P. A. L. O."
+  }
+ },
+ "staff_greenroots_tentaroot": {
+  "biomes": [],
+  "boss": false,
+  "drops": [],
+  "health": 250.0,
+  "id": "staff_greenroots_tentaroot",
+  "name": {
+   "en": "Summoned Root",
+   "es": "Raíz invocada"
+  }
+ }
+}

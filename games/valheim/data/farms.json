@@ -1,0 +1,251 @@
+[
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains",
+   "ashlands"
+  ],
+  "id": "sapling_carrot",
+  "item": "Carrot",
+  "name": {
+   "en": "Carrot",
+   "es": "Zanahoria"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "plains",
+   "mistlands",
+   "ashlands"
+  ],
+  "id": "sapling_turnip",
+  "item": "Turnip",
+  "name": {
+   "en": "Turnip",
+   "es": "Nabo"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains",
+   "ashlands"
+  ],
+  "id": "sapling_onion",
+  "item": "Onion",
+  "name": {
+   "en": "Onion",
+   "es": "Cebolla"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains",
+   "ashlands"
+  ],
+  "id": "sapling_seedonion",
+  "item": "OnionSeeds",
+  "name": {
+   "en": "Seed-onion",
+   "es": "Cebolla joven"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "plains",
+   "mistlands",
+   "ashlands"
+  ],
+  "id": "sapling_seedturnip",
+  "item": "TurnipSeeds",
+  "name": {
+   "en": "Seed-turnip",
+   "es": "Semilla de nabo"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains",
+   "ashlands"
+  ],
+  "id": "sapling_seedcarrot",
+  "item": "CarrotSeeds",
+  "name": {
+   "en": "Seed-carrot",
+   "es": "Semilla de zanahoria"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "mountain",
+   "plains",
+   "ocean",
+   "mistlands",
+   "deepnorth"
+  ],
+  "id": "VineGreen_sapling",
+  "item": "Vineberry",
+  "name": {
+   "en": "Ivy",
+   "es": "Hiedra"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "plains",
+   "ocean",
+   "mistlands",
+   "ashlands"
+  ],
+  "id": "VineAsh_sapling",
+  "item": "Vineberry",
+  "name": {
+   "en": "Ashvine",
+   "es": "Enredadera de ceniza"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains",
+   "ashlands"
+  ],
+  "id": "sapling_poteitr",
+  "item": "Poteitr",
+  "name": {
+   "en": "Poteitr",
+   "es": "Poteitr"
+  }
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "id": "sapling_flax",
+  "item": "Flax",
+  "name": {
+   "en": "Flax",
+   "es": "Lino"
+  }
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "id": "sapling_barley",
+  "item": "Barley",
+  "name": {
+   "en": "Barley",
+   "es": "Cebada"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains",
+   "ashlands"
+  ],
+  "id": "sapling_seedkale",
+  "item": "KaleSeeds",
+  "name": {
+   "en": "Seed Kale",
+   "es": "Semilla de col rizada"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains",
+   "ashlands"
+  ],
+  "id": "sapling_Kale",
+  "item": "Kale",
+  "name": {
+   "en": "Kale",
+   "es": "Col rizada"
+  }
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "id": "sapling_magecap",
+  "item": "MushroomMagecap",
+  "name": {
+   "en": "Magecap Primordia",
+   "es": "Galgo de oronja de mago"
+  }
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "id": "sapling_jotunpuffs",
+  "item": "MushroomJotunPuffs",
+  "name": {
+   "en": "Jotun Puffs Primordia",
+   "es": "Galgo de soplo de Jotun"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains",
+   "ashlands"
+  ],
+  "id": "sapling_oat",
+  "item": "OatSeeds",
+  "name": {
+   "en": "Oat Straw",
+   "es": "Paja de avena"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains"
+  ],
+  "id": "piece_beehive",
+  "item": "Honey",
+  "name": {
+   "en": "Beehive",
+   "es": "Colmena"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains"
+  ],
+  "id": "piece_birdnest",
+  "item": "Feathers",
+  "name": {
+   "en": "Birds' Nest",
+   "es": "Nido de pájaros"
+  }
+ }
+]

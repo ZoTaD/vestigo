@@ -1,0 +1,10899 @@
+[
+ {
+  "amount": 1,
+  "item": "MeatPlatterUncooked",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BugMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "LoxMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "HareMeat",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketChitinSwim",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Chitin",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "SerpentScale",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophySerpent",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseEitrMinor",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Sap",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "MushroomJotunPuffs",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "MushroomMagecap",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "FeastDeepNorth_Material",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "CookedMooseMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Poteitr",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "OatFlour",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SpiceDeepNorth",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 20,
+  "item": "FishingBaitCave",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "FishingBait",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyFenring",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "FireworksRocket_Cyan",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "FireworksRocket_White",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "GreydwarfEye",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetCarapace",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 16,
+    "item": "Carapace",
+    "perLevel": 8
+   },
+   {
+    "amount": 3,
+    "item": "ScaleHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Mandible",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "Eitr",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "VikingCupcakeUncooked",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Cloudberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "ChickenEgg",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "BarleyFlour",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Honey",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "MaceBronze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "Bronze",
+    "perLevel": 4
+   },
+   {
+    "amount": 3,
+    "item": "LeatherScraps",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "SwordWood",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "FineWood",
+    "perLevel": 10
+   },
+   {
+    "amount": 2,
+    "item": "RoundLog",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 2,
+  "item": "SeekerAspic",
+  "level": 5,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "BugMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "MushroomMagecap",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "RoyalJelly",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldKnife",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "Gold",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "MoldShieldRound",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldIronTower",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "FineWood",
+    "perLevel": 10
+   },
+   {
+    "amount": 10,
+    "item": "Iron",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "CrossbowArbalest",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Wood",
+    "perLevel": 5
+   },
+   {
+    "amount": 8,
+    "item": "Iron",
+    "perLevel": 4
+   },
+   {
+    "amount": 4,
+    "item": "Root",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SwordGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldSword",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "FistGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "FistGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "CapeWolf",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "WolfPelt",
+    "perLevel": 4
+   },
+   {
+    "amount": 4,
+    "item": "Silver",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "TrophyWolf",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 5,
+  "item": "BombSiege",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "AskHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "SulfurStone",
+    "perLevel": 2
+   },
+   {
+    "amount": 3,
+    "item": "ProustitePowder",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 10,
+  "item": "BombSmoke",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MushroomSmokePuff",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "AskBladder",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketBronzeStamina",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Bronze",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyBjorn",
+    "perLevel": 0
+   },
+   {
+    "amount": 3,
+    "item": "Ruby",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowNeedle",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Needle",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "BattleaxeSkullSplittur",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 30,
+    "item": "Iron",
+    "perLevel": 15
+   },
+   {
+    "amount": 15,
+    "item": "YggdrasilWood",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "Eitr",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "CapeLox",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "LoxPelt",
+    "perLevel": 2
+   },
+   {
+    "amount": 2,
+    "item": "Silver",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorLeatherChest",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "DeerHide",
+    "perLevel": 6
+   },
+   {
+    "amount": 0,
+    "item": "BoneFragments",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "SaddleLox",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 20,
+    "item": "LinenThread",
+    "perLevel": 1
+   },
+   {
+    "amount": 15,
+    "item": "BlackMetal",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "BattleaxeBlackmetal",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "FineWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 30,
+    "item": "BlackMetal",
+    "perLevel": 15
+   },
+   {
+    "amount": 5,
+    "item": "LinenThread",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "Lantern",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Bronze",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SurtlingCore",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Crystal",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SwordGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SwordGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SpearSplitner_Blood",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SpearSplitner",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "FlametalNew",
+    "perLevel": 6
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 3,
+  "item": "Pancakes",
+  "level": 6,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "OatMilk",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "OatFlour",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "ChickenEgg",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Blueberries",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "BombBlob_Frost",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BlobVial",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyHatchling",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Resin",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldWoodTower",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Wood",
+    "perLevel": 5
+   },
+   {
+    "amount": 6,
+    "item": "LeatherScraps",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "BombBlob_Poison",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BlobVial",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyBlob",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Resin",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "SpearSplitner_Nature",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SpearSplitner",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "FlametalNew",
+    "perLevel": 6
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneGreen",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "Cultivator",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "RoundLog",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Bronze",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 3,
+  "item": "ScorchingMedley",
+  "level": 6,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "MushroomJotunPuffs",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Onion",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Fiddleheadfern",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 20,
+  "item": "BoltCarapace",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Carapace",
+    "perLevel": 1
+   },
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "BloodPudding",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Thistle",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Bloodbag",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "BarleyFlour",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "BowDraugrFang",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "ElderBark",
+    "perLevel": 5
+   },
+   {
+    "amount": 20,
+    "item": "Silver",
+    "perLevel": 10
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 10,
+    "item": "Guck",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "AxeBerzerkrNature",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "AxeBerzerkr",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneGreen",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "Torch",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Resin",
+    "perLevel": 1
+   }
+  ],
+  "station": null
+ },
+ {
+  "amount": 20,
+  "item": "TurretBoltWood",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "RoundLog",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_artisanstation"
+ },
+ {
+  "amount": 1,
+  "item": "FeastMistlands_Material",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MisthareSupreme",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "CookedBugMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "YggdrasilPorridge",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SpiceMistlands",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 20,
+  "item": "BronzeNails",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Bronze",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "Club",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 0,
+    "item": "BoneFragments",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": null
+ },
+ {
+  "amount": 4,
+  "item": "KaleChipsUncooked",
+  "level": 6,
+  "requirements": [
+   {
+    "amount": 12,
+    "item": "Kale",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketIronStamina",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Iron",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "WitheredBone",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophySurtling",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "THSwordKrom",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 30,
+    "item": "Iron",
+    "perLevel": 15
+   },
+   {
+    "amount": 20,
+    "item": "Bronze",
+    "perLevel": 10
+   },
+   {
+    "amount": 5,
+    "item": "ScaleHide",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "PiquantPieUncooked",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Vineberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "AsksvinMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "BarleyFlour",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "CrossbowRipperBlood",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "CrossbowRipper",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "FlametalNew",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MaceIron",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Iron",
+    "perLevel": 10
+   },
+   {
+    "amount": 3,
+    "item": "LeatherScraps",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 4,
+  "item": "Sausages",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Entrails",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "RawMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Thistle",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 10,
+  "item": "Snowball",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Ice",
+    "perLevel": 1
+   }
+  ],
+  "station": null
+ },
+ {
+  "amount": 5,
+  "item": "BombOoze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Ooze",
+    "perLevel": 2
+   },
+   {
+    "amount": 3,
+    "item": "Resin",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "MisthareSupremeUncooked",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "HareMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "MushroomJotunPuffs",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Carrot",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "LoxPieUncooked",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Cloudberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "LoxMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "BarleyFlour",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorDeepNorthHeavylegs",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorGoldLegs",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 4,
+    "item": "Leatherstraps",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "DvergrKey",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 9,
+    "item": "DvergrKeyFragment",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseHealthLingering",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Sap",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Vineberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "MushroomSmokePuff",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 20,
+  "item": "BoltBlackmetal",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "BlackMetal",
+    "perLevel": 1
+   },
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldCore",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BlackCore",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SurtlingCore",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "CeramicPlate",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_artisanstation"
+ },
+ {
+  "amount": 1,
+  "item": "THSwordSlayerBlood",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "THSwordSlayer",
+    "perLevel": 0
+   },
+   {
+    "amount": 15,
+    "item": "FlametalNew",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetRoot",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Root",
+    "perLevel": 2
+   },
+   {
+    "amount": 10,
+    "item": "ElderBark",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "LeatherScraps",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "SledgeGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldMace2H",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowCarapace",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Carapace",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   },
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseSwimmer",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Dandelion",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Fish1",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "FreshSeaweed",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "SwordBronze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 8,
+    "item": "Bronze",
+    "perLevel": 4
+   },
+   {
+    "amount": 2,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "BattleaxeCrystal",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 40,
+    "item": "ElderBark",
+    "perLevel": 5
+   },
+   {
+    "amount": 30,
+    "item": "Silver",
+    "perLevel": 15
+   },
+   {
+    "amount": 10,
+    "item": "Crystal",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "OatmealLingonberryJam",
+  "level": 6,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Oat",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Lingonberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "OatMilk",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeSkollAndHati",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "FineWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Iron",
+    "perLevel": 4
+   },
+   {
+    "amount": 10,
+    "item": "BlackMetal",
+    "perLevel": 4
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SmokedFish",
+  "level": 7,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "FishRaw",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Kale",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Poteitr",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "DeerStew",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "CookedDeerMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Blueberries",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Carrot",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "BowAshlandsRoot",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BowAshlands",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneGreen",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorGoldMediumChestUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 12,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmormediumChest",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "ElakingHairBundle",
+    "perLevel": 3
+   },
+   {
+    "amount": 4,
+    "item": "Leatherstraps",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "TankardAnniversary",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Bronze",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "TrollHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Iron",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "StaffSkeleton",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "BoneFragments",
+    "perLevel": 5
+   },
+   {
+    "amount": 16,
+    "item": "Eitr",
+    "perLevel": 8
+   },
+   {
+    "amount": 4,
+    "item": "TrophySkeleton",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorGoldHeavyLegsUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorGoldLegs",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 4,
+    "item": "Leatherstraps",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorGoldMageChestUncooked",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorMageChest",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldBronzeBuckler",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Bronze",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorRagsLegs",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "LeatherScraps",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorAshlandsMediumlegs",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "LinenThread",
+    "perLevel": 10
+   },
+   {
+    "amount": 4,
+    "item": "LoxPelt",
+    "perLevel": 2
+   },
+   {
+    "amount": 10,
+    "item": "AskHide",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorDeepNorthMageChest",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "Gold",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorMageChest",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 20,
+  "item": "FishingBaitPlains",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "FishingBait",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyGoblin",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "MaceGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MaceGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorTrollLeatherChest",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "TrollHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketBlackDamageHealth",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "BlackMetal",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "LoxPelt",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyLox",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "StaffLightning",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Blackwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "FlametalNew",
+    "perLevel": 2
+   },
+   {
+    "amount": 3,
+    "item": "CelestialFeather",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowWood",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "BattleaxeGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldAxe2H",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MushroomOmelette",
+  "level": 5,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "ChickenEgg",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "MushroomJotunPuffs",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "BombBlob_Lava",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BlobVial",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "SulfurStone",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "ProustitePowder",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "WolfMeatSkewer",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "WolfMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Mushroom",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Onion",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "FeastPlains_Material",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "Bread",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "LoxPie",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Cloudberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SpicePlains",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "SpearGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SpearGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "StaffThunderBlood",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Gold",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "ShocklateSmoothie",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Ooze",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Raspberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Blueberries",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "StaffSpiritCaller",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "BarkaBranch",
+    "perLevel": 4
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "TrophyMoose",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "CrossbowRipperLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "CrossbowRipper",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "FlametalNew",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneBlue",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowBronze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Bronze",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorLeatherLegs",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "DeerHide",
+    "perLevel": 6
+   },
+   {
+    "amount": 0,
+    "item": "BoneFragments",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "SpicyMarmalade",
+  "level": 5,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "Vineberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fiddleheadfern",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseEitrLingering",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Sap",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Vineberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "MushroomMagecap",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "FeastAshlands_Material",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "CookedAsksvinMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Vineberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "ScorchingMedley",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SpiceAshlands",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorLoxChest",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "LoxPelt",
+    "perLevel": 6
+   },
+   {
+    "amount": 8,
+    "item": "BoneFragments",
+    "perLevel": 4
+   },
+   {
+    "amount": 2,
+    "item": "Root",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "PickaxeIron",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "RoundLog",
+    "perLevel": 1
+   },
+   {
+    "amount": 20,
+    "item": "Iron",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "CapeDeerHide",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "DeerHide",
+    "perLevel": 4
+   },
+   {
+    "amount": 5,
+    "item": "BoneFragments",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "Shovel",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "FineWood",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "FlametalNew",
+    "perLevel": 10
+   },
+   {
+    "amount": 2,
+    "item": "FaderEmber",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "YggdrasilPorridge",
+  "level": 5,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Sap",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Barley",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "RoyalJelly",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "OvenPancakeUncooked",
+  "level": 6,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MooseMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Poteitr",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Lingonberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "OatFlour",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketIronHealth",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Iron",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "ElderBark",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyLeech",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 5,
+  "item": "BombLava",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "AskHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "AskBladder",
+    "perLevel": 2
+   },
+   {
+    "amount": 3,
+    "item": "ProustitePowder",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorBronzeLegs",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Bronze",
+    "perLevel": 3
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "PulledBear",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "CookedBjornMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Carrot",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Blueberries",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "StaffIceShards",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "YggdrasilWood",
+    "perLevel": 10
+   },
+   {
+    "amount": 4,
+    "item": "FreezeGland",
+    "perLevel": 2
+   },
+   {
+    "amount": 16,
+    "item": "Eitr",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "Bow",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Wood",
+    "perLevel": 5
+   },
+   {
+    "amount": 8,
+    "item": "LeatherScraps",
+    "perLevel": 4
+   },
+   {
+    "amount": 0,
+    "item": "DeerHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorGoldMageHelmetUncooked",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "MooseSinew",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorMageHelmet",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyMoose",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "NornThread",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketBloodGoldHealth",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Gold",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "MoleClaws",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyMoose",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "FistGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "FistGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SpearGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SpearGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SpearChitin",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "FineWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 30,
+    "item": "Chitin",
+    "perLevel": 0
+   },
+   {
+    "amount": 3,
+    "item": "LeatherScraps",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "FeastMeadows_Material",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "CookedDeerMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "CookedMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "Dandelion",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SpiceForests",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorTrollLeatherLegs",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "TrollHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseTamer",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Onion",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Carrot",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "PungentPebbles",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetMage_Ashlands",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 16,
+    "item": "LinenThread",
+    "perLevel": 8
+   },
+   {
+    "amount": 15,
+    "item": "Eitr",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "AskHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "StaffFrostOrbsUncooked",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Ice",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "TrophyJotunWitch",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "MoldStafffrostorbs",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "FishWraps",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "FishCooked",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "BarleyFlour",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorCarapaceLegs",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Carapace",
+    "perLevel": 10
+   },
+   {
+    "amount": 3,
+    "item": "ScaleHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Iron",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "Eitr",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldFlametal",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Blackwood",
+    "perLevel": 10
+   },
+   {
+    "amount": 8,
+    "item": "FlametalNew",
+    "perLevel": 4
+   },
+   {
+    "amount": 2,
+    "item": "AskHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorMageLegs",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "LinenThread",
+    "perLevel": 10
+   },
+   {
+    "amount": 20,
+    "item": "Eitr",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "ScaleHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "SpearBronze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Wood",
+    "perLevel": 3
+   },
+   {
+    "amount": 6,
+    "item": "Bronze",
+    "perLevel": 4
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "AtgeirGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldAtgeir",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MaceEldnerLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MaceEldner",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "FlametalNew",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneBlue",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "StaffGreenRoots",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "Blackwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "Fiddleheadfern",
+    "perLevel": 2
+   },
+   {
+    "amount": 3,
+    "item": "CelestialFeather",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneGreen",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "GrapplingHook",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "YggdrasilWood",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "Eitr",
+    "perLevel": 4
+   },
+   {
+    "amount": 4,
+    "item": "Mandible",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Hook",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "BowAshlandsStorm",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BowAshlands",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneBlue",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetDNMediumHood",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "SealHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorMediumHelmet",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "MooseSinew",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "FishingBaitOcean",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "FishingBait",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophySerpent",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "MechanicalSpring",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Eitr",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Iron",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_artisanstation"
+ },
+ {
+  "amount": 1,
+  "item": "FeastSwamps_Material",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Sausages",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "Bloodbag",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "TurnipStew",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SpiceForests",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 20,
+  "item": "FishingBaitSwamp",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "FishingBait",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyAbomination",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorBerserkerLegs",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "BjornHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 4,
+    "item": "Blueberries",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "HoneyGlazedChickenUncooked",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "ChickenMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "MushroomJotunPuffs",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "SledgeGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SledgeGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "AxeFlint",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "Flint",
+    "perLevel": 3
+   },
+   {
+    "amount": 0,
+    "item": "LeatherScraps",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "CrossbowGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "CrossbowGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SwordGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SwordGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetTrollLeather",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "TrollHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 3,
+    "item": "BoneFragments",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 20,
+  "item": "BoltIron",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Iron",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorGoldHeavyHelmetUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorGoldHelmet",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "MooseHide",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "FireworksRocket_Blue",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "FireworksRocket_White",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Blueberries",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowFrost",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "Obsidian",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "FreezeGland",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseTasty",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Raspberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Blueberries",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "AxeEarly",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Wood",
+    "perLevel": 2
+   },
+   {
+    "amount": 0,
+    "item": "LeatherScraps",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "AxeHead1",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "AxeHead2",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "AxeStone",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "Stone",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": null
+ },
+ {
+  "amount": 2,
+  "item": "WolfJerky",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "WolfMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Honey",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "SpearSplitner_Lightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SpearSplitner",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "FlametalNew",
+    "perLevel": 6
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneBlue",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 5,
+  "item": "Catapult_ammo",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Grausten",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorGoldMediumHelmetUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "SealHide",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorMediumHelmet",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "MooseSinew",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowSilver",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Silver",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldGoldBuckler",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Gold",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "MoldShieldBuckler",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "AtgeirBronze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "Bronze",
+    "perLevel": 4
+   },
+   {
+    "amount": 2,
+    "item": "LeatherScraps",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetMage",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 16,
+    "item": "LinenThread",
+    "perLevel": 8
+   },
+   {
+    "amount": 15,
+    "item": "Eitr",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "Iron",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldGoldTower",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldShieldTower",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Frostwood",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "BoltCharred",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "CharredBone",
+    "perLevel": 1
+   },
+   {
+    "amount": 8,
+    "item": "Blackwood",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "AtgeirBlackmetal",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "FineWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 30,
+    "item": "BlackMetal",
+    "perLevel": 15
+   },
+   {
+    "amount": 5,
+    "item": "LinenThread",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "Hammer",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Stone",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": null
+ },
+ {
+  "amount": 1,
+  "item": "HelmetFishingHat",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Fish1",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish2",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish3",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish4_cave",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish5",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish6",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish7",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish8",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish9",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish10",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish11",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish12",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "SwordSilver",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 40,
+    "item": "Silver",
+    "perLevel": 20
+   },
+   {
+    "amount": 3,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Iron",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeCopper",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "Copper",
+    "perLevel": 4
+   },
+   {
+    "amount": 0,
+    "item": "GreydwarfEye",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 3,
+  "item": "Salad",
+  "level": 5,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "MushroomJotunPuffs",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Onion",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Cloudberry",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 5,
+  "item": "CeramicPlate",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "BlackMarble",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_artisanstation"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldWood",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Wood",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "Resin",
+    "perLevel": 2
+   },
+   {
+    "amount": 4,
+    "item": "LeatherScraps",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 20,
+  "item": "TurretBolt",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "BlackMetal",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_artisanstation"
+ },
+ {
+  "amount": 1,
+  "item": "FeastBlackforest_Material",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "DeerStew",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Thistle",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "QueensJam",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SpiceForests",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "BattleaxeGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldAxe2H",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "OnionSoup",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "Onion",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorGoldMageLegsUncooked",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorMageLegs",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "Tankard",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "FineWood",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Resin",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "MaceNeedle",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "FineWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Iron",
+    "perLevel": 2
+   },
+   {
+    "amount": 5,
+    "item": "Needle",
+    "perLevel": 2
+   },
+   {
+    "amount": 10,
+    "item": "LinenThread",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "CrossbowGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "CrossbowGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetBerserkerHood",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "BjornHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "TrophyBjorn",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "AxeGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldAxe",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "FishRaw",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Fish1",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish2",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish3",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish4_cave",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish5",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish6",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish7",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish8",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish9",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish10",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish11",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fish12",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldCarapaceBuckler",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 16,
+    "item": "Carapace",
+    "perLevel": 8
+   },
+   {
+    "amount": 3,
+    "item": "ScaleHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 10,
+    "item": "Eitr",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "BakedPoteitrUncooked",
+  "level": 7,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SealBlubber",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Kale",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Poteitr",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "OatFlour",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "AxeBerzerkrLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "AxeBerzerkr",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneBlue",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetLeather",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "DeerHide",
+    "perLevel": 6
+   },
+   {
+    "amount": 0,
+    "item": "BoneFragments",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "SledgeGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SledgeGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "FireworksRocket_Green",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "FireworksRocket_White",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Guck",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldBlackmetalTower",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "FineWood",
+    "perLevel": 10
+   },
+   {
+    "amount": 10,
+    "item": "BlackMetal",
+    "perLevel": 4
+   },
+   {
+    "amount": 7,
+    "item": "Chain",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseBzerker",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Mushroom",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "MushroomYellow",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "MushroomBzerker",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "StaffFrostOrbs",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Ice",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "TrophyJotunWitch",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 2,
+  "item": "MooseKebab",
+  "level": 7,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MooseMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Kale",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "OatFlour",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Lingonberry",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetOdin",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "LeatherScraps",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "Coal",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 20,
+  "item": "FishingBaitAshlands",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "FishingBait",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyCharredMelee",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorDeepNorthHeavyChest",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorGoldChest",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 4,
+    "item": "Leatherstraps",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "StaffClusterbomb",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "CharredBone",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "Blackwood",
+    "perLevel": 3
+   },
+   {
+    "amount": 8,
+    "item": "ProustitePowder",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorWolfLegs",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Silver",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "WolfPelt",
+    "perLevel": 2
+   },
+   {
+    "amount": 4,
+    "item": "WolfFang",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldCarapace",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Carapace",
+    "perLevel": 10
+   },
+   {
+    "amount": 3,
+    "item": "ScaleHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 10,
+    "item": "Eitr",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBasePoisonResist",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Thistle",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "NeckTail",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Coal",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorAshlandsMediumChest",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "LinenThread",
+    "perLevel": 10
+   },
+   {
+    "amount": 4,
+    "item": "LoxPelt",
+    "perLevel": 2
+   },
+   {
+    "amount": 10,
+    "item": "AskHide",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "AxeIron",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Iron",
+    "perLevel": 10
+   },
+   {
+    "amount": 2,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "Lingondricka",
+  "level": 6,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Lingonberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Ice",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketScaleStaminaDamage",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Eitr",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "ScaleHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Mandible",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophySeeker",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorBronzeChest",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Bronze",
+    "perLevel": 3
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "PickaxeBlackMetal",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "YggdrasilWood",
+    "perLevel": 1
+   },
+   {
+    "amount": 25,
+    "item": "BlackMetal",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorRootLegs",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Root",
+    "perLevel": 2
+   },
+   {
+    "amount": 10,
+    "item": "ElderBark",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketBronzeHealth",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Bronze",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "AncientSeed",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyGreydwarfShaman",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorBerserkerChest",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "BjornHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 2,
+    "item": "BjornPaw",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "Blueberries",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "SaddleAsksvin",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "FlametalNew",
+    "perLevel": 1
+   },
+   {
+    "amount": 20,
+    "item": "LinenThread",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "MorgenSinew",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "AxeBerzerkrBlood",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "AxeBerzerkr",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorCarapaceChest",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Carapace",
+    "perLevel": 10
+   },
+   {
+    "amount": 3,
+    "item": "ScaleHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Iron",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "Eitr",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "BombBlob_Tar",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BlobVial",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyGrowth",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Tar",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "BlackSoup",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Bloodbag",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Turnip",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "SaddleMoose",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Gold",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "SealHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Frostwood",
+    "perLevel": 1
+   },
+   {
+    "amount": 15,
+    "item": "LinenThread",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorDeepNorthMediumlegs",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 12,
+    "item": "Gold",
+    "perLevel": 6
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorMediumLegs",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "ElakingHairBundle",
+    "perLevel": 4
+   },
+   {
+    "amount": 4,
+    "item": "SealHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 3,
+  "item": "BombBile",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Sap",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Bilebag",
+    "perLevel": 2
+   },
+   {
+    "amount": 3,
+    "item": "Resin",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "CapeAsksvin",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "AskHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 2,
+    "item": "MorgenSinew",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorBerserkerUndeadLegs",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "BjornHide",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "UndeadBjornRibcage",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "LinenThread",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "CapeDeepNorthMage",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "SealHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 2,
+    "item": "NornThread",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Gold",
+    "perLevel": 2
+   },
+   {
+    "amount": 15,
+    "item": "Eitr",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "TankardOdin",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "FineWood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyDeer",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Resin",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorBerserkerUndeadChest",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "BjornHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 3,
+    "item": "UndeadBjornRibcage",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "LinenThread",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorGoldHeavyChestUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorGoldChest",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 4,
+    "item": "Leatherstraps",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SparklingShroomshake",
+  "level": 6,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Sap",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Vineberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "MushroomSmokePuff",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "MushroomMagecap",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "FishAndBreadUncooked",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Fish9",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "BreadDough",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "CrossbowGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldCrossbow",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "BoltBone",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "BoneFragments",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorMageChest_Ashlands",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "LinenThread",
+    "perLevel": 10
+   },
+   {
+    "amount": 20,
+    "item": "Eitr",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "AskHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 20,
+  "item": "FishingBaitForest",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "FishingBait",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyFrostTroll",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketSilverResist",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Silver",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "Crystal",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophySGolem",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorMageChest",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "LinenThread",
+    "perLevel": 10
+   },
+   {
+    "amount": 20,
+    "item": "Eitr",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "Feathers",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "ScaleHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseStrength",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Fish5",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "PowderedDragonEgg",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "Bell",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "BellFragment",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 10,
+  "item": "BombDynamite",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "SealHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "FaderEmber",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "SwordNiedhoggLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SwordNiedhogg",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "FlametalNew",
+    "perLevel": 6
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneBlue",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorPaddedCuirass",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Iron",
+    "perLevel": 3
+   },
+   {
+    "amount": 20,
+    "item": "LinenThread",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketBloodGoldStamina",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Gold",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyJotunWitch",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "TurretBoltBloodgold",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Gold",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_artisanstation"
+ },
+ {
+  "amount": 1,
+  "item": "SpearFlint",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Wood",
+    "perLevel": 3
+   },
+   {
+    "amount": 10,
+    "item": "Flint",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "THSwordGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldSword2H",
+    "perLevel": 0
+   },
+   {
+    "amount": 2,
+    "item": "BarkaBranch",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "THSwordGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "THSwordGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "CrossbowRipperNature",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "CrossbowRipper",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "FlametalNew",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneGreen",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowBloodGold",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Gold",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   },
+   {
+    "amount": 8,
+    "item": "Frostwood",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "AtgeirIron",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 30,
+    "item": "Iron",
+    "perLevel": 15
+   },
+   {
+    "amount": 2,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "BombBlob_Morkhalla",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BlobVial",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyBlob_Morkhalla",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "OozeMork",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldBanded",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "FineWood",
+    "perLevel": 10
+   },
+   {
+    "amount": 8,
+    "item": "Iron",
+    "perLevel": 4
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "FistGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldFistweapon",
+    "perLevel": 0
+   },
+   {
+    "amount": 2,
+    "item": "MoleClaws",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "PickaxeAntler",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Wood",
+    "perLevel": 4
+   },
+   {
+    "amount": 1,
+    "item": "HardAntler",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketBlackStamina",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "BlackMetal",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyGoblinBrute",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "LinenThread",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "THSwordSlayer",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 30,
+    "item": "FlametalNew",
+    "perLevel": 15
+   },
+   {
+    "amount": 5,
+    "item": "AskHide",
+    "perLevel": 5
+   },
+   {
+    "amount": 3,
+    "item": "MorgenSinew",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldSerpentscale",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "FineWood",
+    "perLevel": 10
+   },
+   {
+    "amount": 4,
+    "item": "Iron",
+    "perLevel": 2
+   },
+   {
+    "amount": 8,
+    "item": "SerpentScale",
+    "perLevel": 4
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "BowSpineSnap",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "FineWood",
+    "perLevel": 5
+   },
+   {
+    "amount": 40,
+    "item": "BoneFragments",
+    "perLevel": 20
+   },
+   {
+    "amount": 10,
+    "item": "Eitr",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 2,
+  "item": "BreadDough",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "BarleyFlour",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldTowerGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldShieldTower",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Frostwood",
+    "perLevel": 10
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SpearGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldSpear",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowFire",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 8,
+    "item": "Resin",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "BattleaxeGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BattleaxeGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "CapeFeather",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Feathers",
+    "perLevel": 2
+   },
+   {
+    "amount": 5,
+    "item": "ScaleHide",
+    "perLevel": 5
+   },
+   {
+    "amount": 20,
+    "item": "Eitr",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "OatMilk",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Oat",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Ice",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetCrownofValheim",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Gold",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "CrownJewel",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "BowGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldBow",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "FireworksRocket_Red",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "FireworksRocket_White",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Raspberry",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 4,
+  "item": "QueensJam",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Raspberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 6,
+    "item": "Blueberries",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "FierySvinstew",
+  "level": 5,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "AsksvinMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Vineberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "MushroomSmokePuff",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "THSwordSlayerLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "THSwordSlayer",
+    "perLevel": 0
+   },
+   {
+    "amount": 15,
+    "item": "FlametalNew",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneBlue",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetBronze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Bronze",
+    "perLevel": 3
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetPadded",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Iron",
+    "perLevel": 5
+   },
+   {
+    "amount": 15,
+    "item": "LinenThread",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseHealthMedium",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "Bloodbag",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Raspberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Dandelion",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseHealthMinor",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Blueberries",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Raspberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Dandelion",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseHealthMajor",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "GiantBloodSack",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "RoyalJelly",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "CrossbowRipper",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Blackwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 8,
+    "item": "FlametalNew",
+    "perLevel": 4
+   },
+   {
+    "amount": 2,
+    "item": "MorgenSinew",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "BonemawSerpentTooth",
+    "perLevel": 4
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "KnifeGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SpearWolfFang",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "ElderBark",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "WolfFang",
+    "perLevel": 2
+   },
+   {
+    "amount": 2,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Silver",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "SpearElderbark",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "TrollHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Iron",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "ElderBark",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "StaffSpiritCallerUncooked",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "BarkaBranch",
+    "perLevel": 4
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "TrophyMoose",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "MoldStaffspiritcaller",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "AxeBlackMetal",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "FineWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "BlackMetal",
+    "perLevel": 10
+   },
+   {
+    "amount": 5,
+    "item": "LinenThread",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldFlametalTower",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "Blackwood",
+    "perLevel": 10
+   },
+   {
+    "amount": 10,
+    "item": "FlametalNew",
+    "perLevel": 4
+   },
+   {
+    "amount": 5,
+    "item": "AskHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorFlametalChest",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "FlametalNew",
+    "perLevel": 10
+   },
+   {
+    "amount": 3,
+    "item": "AskHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "CharredBone",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "MorgenHeart",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "StaffThunderbloodUncooked",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Gold",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "MoldStaffthunderblood",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "SmokedMooseMeat",
+  "level": 7,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MooseMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Kale",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetDNHeavy",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorGoldHelmet",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "MooseHide",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "FistBjornClaw",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "BjornHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 2,
+    "item": "BjornPaw",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "LeatherScraps",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 20,
+  "item": "TurretBoltFlametal",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Blackwood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "FlametalNew",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_artisanstation"
+ },
+ {
+  "amount": 1,
+  "item": "MeatballsMashedPoteitr",
+  "level": 7,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MooseMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Lingonberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Poteitr",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "AxeBerzerkr",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "CharredBone",
+    "perLevel": 0
+   },
+   {
+    "amount": 24,
+    "item": "FlametalNew",
+    "perLevel": 15
+   },
+   {
+    "amount": 3,
+    "item": "AskHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "KnifeGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetIron",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Iron",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowObsidian",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "Obsidian",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetLox",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "LoxPelt",
+    "perLevel": 2
+   },
+   {
+    "amount": 4,
+    "item": "BoneFragments",
+    "perLevel": 2
+   },
+   {
+    "amount": 2,
+    "item": "WrithanRoots",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldIronBuckler",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Iron",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "ElderBark",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorDeepNorthMagelegs",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "Gold",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorMageLegs",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 5,
+    "item": "NornThread",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeFlint",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "Flint",
+    "perLevel": 2
+   },
+   {
+    "amount": 2,
+    "item": "LeatherScraps",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetDrake",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Silver",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "WolfPelt",
+    "perLevel": 0
+   },
+   {
+    "amount": 2,
+    "item": "TrophyHatchling",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorDeepNorthMediumChest",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 12,
+    "item": "Gold",
+    "perLevel": 6
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmormediumChest",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "ElakingHairBundle",
+    "perLevel": 4
+   },
+   {
+    "amount": 4,
+    "item": "Leatherstraps",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "Hoe",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Stone",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowCharred",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "CharredBone",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   },
+   {
+    "amount": 8,
+    "item": "Blackwood",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorFenringChest",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "WolfHairBundle",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "WolfPelt",
+    "perLevel": 3
+   },
+   {
+    "amount": 10,
+    "item": "LeatherScraps",
+    "perLevel": 4
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldRoots",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "FineWood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "WrithanRoots",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "MaceEldnerBlood",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MaceEldner",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "FlametalNew",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "CapeDeepNorth",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "MooseHide",
+    "perLevel": 3
+   },
+   {
+    "amount": 2,
+    "item": "MooseSinew",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Gold",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "FeastOceans_Material",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "FishCooked",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "Thistle",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "SerpentMeatCooked",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SpiceOceans",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "SledgeDemolisher",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "YggdrasilWood",
+    "perLevel": 2
+   },
+   {
+    "amount": 20,
+    "item": "Iron",
+    "perLevel": 15
+   },
+   {
+    "amount": 10,
+    "item": "Eitr",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SpearSplitner",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Blackwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 6,
+    "item": "FlametalNew",
+    "perLevel": 6
+   },
+   {
+    "amount": 2,
+    "item": "AskHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "BonemawSerpentTooth",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "AtgeirHimminAfl",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "YggdrasilWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 15,
+    "item": "Eitr",
+    "perLevel": 15
+   },
+   {
+    "amount": 5,
+    "item": "Silver",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "Mandible",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "THSwordSlayerNature",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "THSwordSlayer",
+    "perLevel": 0
+   },
+   {
+    "amount": 15,
+    "item": "FlametalNew",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneGreen",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "BombBlob_PoisonElite",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BlobVial",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "TrophyBlob",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Resin",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldBlackmetal",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "FineWood",
+    "perLevel": 10
+   },
+   {
+    "amount": 8,
+    "item": "BlackMetal",
+    "perLevel": 4
+   },
+   {
+    "amount": 5,
+    "item": "Chain",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "Demister",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Silver",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Wisp",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "MaceGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MaceGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "BowHuntsman",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "FineWood",
+    "perLevel": 5
+   },
+   {
+    "amount": 20,
+    "item": "Iron",
+    "perLevel": 10
+   },
+   {
+    "amount": 10,
+    "item": "Feathers",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "CapeTrollHide",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "TrollHide",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "BoneFragments",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "Bronze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Copper",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Tin",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "SledgeGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldMace2H",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetBerserkerUndead",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "BjornHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "TrophyBjornUndead",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseStaminaLingering",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Sap",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Cloudberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "MushroomJotunPuffs",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "THSwordGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldSword2H",
+    "perLevel": 0
+   },
+   {
+    "amount": 2,
+    "item": "BarkaBranch",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "FireworksRocket_Purple",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "FireworksRocket_White",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Turnip",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "FistGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldFistweapon",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "FistFenrirClaw",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "WolfHairBundle",
+    "perLevel": 1
+   },
+   {
+    "amount": 6,
+    "item": "WolfClaw",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Silver",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldKnife",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SharpeningStone",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Stone",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_stonecutter"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorRagsChest",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "LeatherScraps",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorIronChest",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Iron",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "FeastMountains_Material",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "WolfMeatSkewer",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "OnionSoup",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "Carrot",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SpiceMountains",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "CapeOdin",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "LeatherScraps",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "Coal",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorRootChest",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Root",
+    "perLevel": 2
+   },
+   {
+    "amount": 10,
+    "item": "ElderBark",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "MarinatedGreens",
+  "level": 6,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "Sap",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "MushroomMagecap",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Fiddleheadfern",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "MushroomSmokePuff",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketCarapaceEitr",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Carapace",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "Eitr",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyGjall",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "TurnipStew",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "RawMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Turnip",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowIron",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Iron",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 10,
+  "item": "IronNails",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Iron",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "AxeGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "AxeGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldRoundGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldShieldRound",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 10
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketSilverDamage",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Silver",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "WolfFang",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyFenring",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeBlackMetal",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "FineWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "BlackMetal",
+    "perLevel": 4
+   },
+   {
+    "amount": 5,
+    "item": "LinenThread",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 5,
+  "item": "Bronze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Copper",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Tin",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketFlametalEitr",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "Eitr",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyFallenValkyrie",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldBucklerGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldShieldBuckler",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 10
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "AxeGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldAxe",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorIronLegs",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Iron",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetCelebration",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Bronze",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "BjornHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "AmberPearl",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetDNMage",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "MooseSinew",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorMageHelmet",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyMoose",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "NornThread",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeSilver",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Silver",
+    "perLevel": 5
+   },
+   {
+    "amount": 3,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Iron",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "BowFineWood",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "FineWood",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "RoundLog",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "DeerHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldSilver",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "FineWood",
+    "perLevel": 10
+   },
+   {
+    "amount": 8,
+    "item": "Silver",
+    "perLevel": 4
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "THSwordGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "THSwordGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "BowGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BowGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseStaminaMedium",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Cloudberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "MushroomYellow",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "FishSoup",
+  "level": 7,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "FishRaw",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Kale",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Ice",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeChitin",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "FineWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Chitin",
+    "perLevel": 10
+   },
+   {
+    "amount": 2,
+    "item": "LeatherScraps",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "CookedEgg",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "ChickenEgg",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "StaffRedTroll",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "CharredBone",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "TrophyFrostTroll",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "FlametalNew",
+    "perLevel": 3
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "CarrotSoup",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Mushroom",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Carrot",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 2,
+  "item": "BoarJerky",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "RawMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Honey",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "AtgeirGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "AtgeirGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorLoxLegs",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "LoxPelt",
+    "perLevel": 3
+   },
+   {
+    "amount": 8,
+    "item": "BoneFragments",
+    "perLevel": 4
+   },
+   {
+    "amount": 2,
+    "item": "Root",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "SwordMistwalker",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "FineWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 15,
+    "item": "Iron",
+    "perLevel": 10
+   },
+   {
+    "amount": 10,
+    "item": "Eitr",
+    "perLevel": 5
+   },
+   {
+    "amount": 3,
+    "item": "Wisp",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowPoison",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "Obsidian",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Ooze",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "AxeBronze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 4,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "Bronze",
+    "perLevel": 4
+   },
+   {
+    "amount": 2,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "CapeLinen",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "LinenThread",
+    "perLevel": 4
+   },
+   {
+    "amount": 1,
+    "item": "Silver",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "BowGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BowGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseHasty",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Blueberries",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "CuredSquirrelHamstring",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "SerpentStew",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Mushroom",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "SerpentMeatCooked",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Honey",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "AtgeirGold_BloodLightning",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "AtgeirGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbThunderBlood",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetFenring",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "WolfHairBundle",
+    "perLevel": 5
+   },
+   {
+    "amount": 2,
+    "item": "WolfPelt",
+    "perLevel": 4
+   },
+   {
+    "amount": 1,
+    "item": "TrophyCultist",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "MinceMeatSauce",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "RawMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "NeckTail",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Carrot",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "MaceEldnerNature",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "MaceEldner",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "FlametalNew",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneGreen",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SpearCarapace",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "YggdrasilWood",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "Carapace",
+    "perLevel": 4
+   },
+   {
+    "amount": 2,
+    "item": "Mandible",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "Battleaxe",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 30,
+    "item": "ElderBark",
+    "perLevel": 5
+   },
+   {
+    "amount": 35,
+    "item": "Iron",
+    "perLevel": 15
+   },
+   {
+    "amount": 4,
+    "item": "LeatherScraps",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "StaffShield",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "YggdrasilWood",
+    "perLevel": 10
+   },
+   {
+    "amount": 4,
+    "item": "GiantBloodSack",
+    "perLevel": 2
+   },
+   {
+    "amount": 16,
+    "item": "Eitr",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "FireworksRocket_Yellow",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "FireworksRocket_White",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Dandelion",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "RoastedCrustPieUncooked",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Vineberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "VoltureEgg",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "BarleyFlour",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorGoldMediumLegsUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 12,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldArmorMediumLegs",
+    "perLevel": 0
+   },
+   {
+    "amount": 8,
+    "item": "ElakingHairBundle",
+    "perLevel": 3
+   },
+   {
+    "amount": 4,
+    "item": "SealHide",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "BattleaxeGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BattleaxeGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SealSoup",
+  "level": 7,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "SealBlubber",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Kale",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Ice",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "AtgeirGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldAtgeir",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MaceEldner",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "CharredBone",
+    "perLevel": 5
+   },
+   {
+    "amount": 15,
+    "item": "FlametalNew",
+    "perLevel": 8
+   },
+   {
+    "amount": 5,
+    "item": "SulfurStone",
+    "perLevel": 3
+   },
+   {
+    "amount": 3,
+    "item": "AskHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SledgeIron",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "ElderBark",
+    "perLevel": 2
+   },
+   {
+    "amount": 30,
+    "item": "Iron",
+    "perLevel": 15
+   },
+   {
+    "amount": 4,
+    "item": "YmirRemains",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "TrophyDraugrElite",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "StaffOrbofAhri",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Gold",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "NornThread",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 20,
+  "item": "BoltBloodGold",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "Gold",
+    "perLevel": 1
+   },
+   {
+    "amount": 8,
+    "item": "Frostwood",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "PickaxeBronze",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "RoundLog",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Bronze",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "SwordGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldSword",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorFenringLegs",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "WolfHairBundle",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "WolfPelt",
+    "perLevel": 3
+   },
+   {
+    "amount": 10,
+    "item": "LeatherScraps",
+    "perLevel": 4
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "BowAshlandsBlood",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "BowAshlands",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "TrinketFlametalStaminaHealth",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "SulfurStone",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "MoltenCore",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "TrophyMorgen",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 5,
+  "item": "Catapult_Ammo_BloodGold",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Ice",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Gold",
+    "perLevel": 2
+   },
+   {
+    "amount": 3,
+    "item": "ProustitePowder",
+    "perLevel": 2
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "KnifeButcher",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Wood",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "Tin",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseFrostResist",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Thistle",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Bloodbag",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "GreydwarfEye",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorWolfChest",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Silver",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "WolfPelt",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Chain",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "SpearGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldSpear",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SizzlingBerryBroth",
+  "level": 5,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "Sap",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Fiddleheadfern",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Vineberry",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "MashedMeat",
+  "level": 6,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "AsksvinMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "VoltureMeat",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Fiddleheadfern",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "BowGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldBow",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MaceGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldMace",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "FishingBaitMistlands",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "FishingBait",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyLox",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "SwordNiedhoggBlood",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SwordNiedhogg",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "FlametalNew",
+    "perLevel": 6
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "BowAshlands",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Blackwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 16,
+    "item": "CharredBone",
+    "perLevel": 10
+   },
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "BonemawSerpentTooth",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ShieldBoneTower",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Wood",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "BoneFragments",
+    "perLevel": 5
+   },
+   {
+    "amount": 3,
+    "item": "TrophySkeleton",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader1Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "SwordNiedhogg",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "CharredBone",
+    "perLevel": 0
+   },
+   {
+    "amount": 12,
+    "item": "FlametalNew",
+    "perLevel": 10
+   },
+   {
+    "amount": 2,
+    "item": "AskHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SledgeStagbreaker",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "RoundLog",
+    "perLevel": 5
+   },
+   {
+    "amount": 5,
+    "item": "TrophyDeer",
+    "perLevel": 2
+   },
+   {
+    "amount": 2,
+    "item": "LeatherScraps",
+    "perLevel": 1
+   },
+   {
+    "amount": 0,
+    "item": "BoneFragments",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetFlametal",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 16,
+    "item": "FlametalNew",
+    "perLevel": 8
+   },
+   {
+    "amount": 3,
+    "item": "AskHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "CharredBone",
+    "perLevel": 0
+   },
+   {
+    "amount": 4,
+    "item": "Eitr",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "Eyescream",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "GreydwarfEye",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "FreezeGland",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_cauldron"
+ },
+ {
+  "amount": 1,
+  "item": "StaffOrbofAhriUncooked",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Gold",
+    "perLevel": 5
+   },
+   {
+    "amount": 4,
+    "item": "NornThread",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "MoldStaffOrbofAhri",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "SwordIron",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 20,
+    "item": "Iron",
+    "perLevel": 10
+   },
+   {
+    "amount": 3,
+    "item": "LeatherScraps",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader2Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "StaffFireball",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "YggdrasilWood",
+    "perLevel": 10
+   },
+   {
+    "amount": 4,
+    "item": "SurtlingCore",
+    "perLevel": 2
+   },
+   {
+    "amount": 16,
+    "item": "Eitr",
+    "perLevel": 8
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader5Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "MagicallyStuffedShroomUncooked",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 3,
+    "item": "MushroomMagecap",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "GiantBloodSack",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Turnip",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "CrossbowGold",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "MoldCrossbow",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader7Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "ArrowFlint",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 8,
+    "item": "Wood",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Flint",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "Feathers",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_workbench"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorMageLegs_Ashlands",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "LinenThread",
+    "perLevel": 10
+   },
+   {
+    "amount": 20,
+    "item": "Eitr",
+    "perLevel": 5
+   },
+   {
+    "amount": 10,
+    "item": "AskHide",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_magetable"
+ },
+ {
+  "amount": 1,
+  "item": "Scythe",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "ScytheHandle",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "Silver",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader0Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "AxeGold_FrostFire",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "AxeGold",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "OrbFrostFire",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorPaddedGreaves",
+  "level": 2,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Iron",
+    "perLevel": 3
+   },
+   {
+    "amount": 20,
+    "item": "LinenThread",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseStaminaMinor",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Honey",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Raspberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "MushroomYellow",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "CapeAsh",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 6,
+    "item": "AskHide",
+    "perLevel": 2
+   },
+   {
+    "amount": 2,
+    "item": "MorgenSinew",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "FlametalNew",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "ArmorFlametalLegs",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "FlametalNew",
+    "perLevel": 10
+   },
+   {
+    "amount": 3,
+    "item": "AskHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "CharredBone",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MaceSilver",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "ElderBark",
+    "perLevel": 0
+   },
+   {
+    "amount": 30,
+    "item": "Silver",
+    "perLevel": 15
+   },
+   {
+    "amount": 5,
+    "item": "YmirRemains",
+    "perLevel": 0
+   },
+   {
+    "amount": 5,
+    "item": "FreezeGland",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader3Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "MaceGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "Gold",
+    "perLevel": 15
+   },
+   {
+    "amount": 1,
+    "item": "MoldMace",
+    "perLevel": 0
+   },
+   {
+    "amount": 10,
+    "item": "Frostwood",
+    "perLevel": 3
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseBugRepellent",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Cloudberry",
+    "perLevel": 1
+   },
+   {
+    "amount": 3,
+    "item": "Fish7",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "FragrantBundle",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "BarleyWineBase",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 10,
+    "item": "Barley",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Cloudberry",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "AxeJotunBane",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "YggdrasilWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 15,
+    "item": "Iron",
+    "perLevel": 10
+   },
+   {
+    "amount": 3,
+    "item": "Bilebag",
+    "perLevel": 1
+   },
+   {
+    "amount": 10,
+    "item": "Eitr",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "MeadBaseLightFoot",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "ScaleHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "Feathers",
+    "perLevel": 1
+   },
+   {
+    "amount": 5,
+    "item": "MushroomMagecap",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_meadcauldron"
+ },
+ {
+  "amount": 1,
+  "item": "SwordBlackmetal",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "FineWood",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "BlackMetal",
+    "perLevel": 10
+   },
+   {
+    "amount": 5,
+    "item": "LinenThread",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "FistBjornUndeadClaw",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 2,
+    "item": "BjornHide",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "UndeadBjornRibcage",
+    "perLevel": 1
+   },
+   {
+    "amount": 2,
+    "item": "BlackMetal",
+    "perLevel": 1
+   },
+   {
+    "amount": 4,
+    "item": "LinenThread",
+    "perLevel": 2
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader4Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_forge"
+ },
+ {
+  "amount": 1,
+  "item": "KeysGoldUncooked",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 5,
+    "item": "Gold",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "MoldKeys",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "HelmetAshlandsMediumHood",
+  "level": 3,
+  "requirements": [
+   {
+    "amount": 15,
+    "item": "LinenThread",
+    "perLevel": 10
+   },
+   {
+    "amount": 4,
+    "item": "LoxPelt",
+    "perLevel": 2
+   },
+   {
+    "amount": 10,
+    "item": "AskHide",
+    "perLevel": 5
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Armor",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 20,
+  "item": "FishingBaitDeepNorth",
+  "level": 1,
+  "requirements": [
+   {
+    "amount": 20,
+    "item": "FishingBait",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "TrophyHatchling",
+    "perLevel": 1
+   }
+  ],
+  "station": "piece_preptable"
+ },
+ {
+  "amount": 1,
+  "item": "SwordDyrnwyn",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "DyrnwynHiltFragment",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "DyrnwynBladeFragment",
+    "perLevel": 0
+   },
+   {
+    "amount": 1,
+    "item": "DyrnwynTipFragment",
+    "perLevel": 0
+   },
+   {
+    "amount": 20,
+    "item": "FlametalNew",
+    "perLevel": 10
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneRed",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ },
+ {
+  "amount": 1,
+  "item": "SwordNiedhoggNature",
+  "level": 4,
+  "requirements": [
+   {
+    "amount": 1,
+    "item": "SwordNiedhogg",
+    "perLevel": 0
+   },
+   {
+    "amount": 6,
+    "item": "FlametalNew",
+    "perLevel": 6
+   },
+   {
+    "amount": 1,
+    "item": "GemstoneGreen",
+    "perLevel": 1
+   },
+   {
+    "amount": 1,
+    "item": "Upgrader6Weapon",
+    "perLevel": 0
+   }
+  ],
+  "station": "piece_blackforge"
+ }
+]

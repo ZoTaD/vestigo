@@ -1,0 +1,431 @@
+{
+ "BogWitch": {
+  "id": "BogWitch",
+  "items": [
+   {
+    "item": "CandleWick",
+    "price": 100,
+    "requiredKey": null,
+    "stack": 50
+   },
+   {
+    "item": "ScytheHandle",
+    "price": 200,
+    "requiredKey": "defeated_dragon",
+    "stack": 1
+   },
+   {
+    "item": "MeadTrollPheromones",
+    "price": 110,
+    "requiredKey": null,
+    "stack": 5
+   },
+   {
+    "item": "MushroomBzerker",
+    "price": 85,
+    "requiredKey": "defeated_dragon",
+    "stack": 1
+   },
+   {
+    "item": "FragrantBundle",
+    "price": 140,
+    "requiredKey": "defeated_dragon",
+    "stack": 5
+   },
+   {
+    "item": "FreshSeaweed",
+    "price": 75,
+    "requiredKey": null,
+    "stack": 5
+   },
+   {
+    "item": "CuredSquirrelHamstring",
+    "price": 80,
+    "requiredKey": null,
+    "stack": 5
+   },
+   {
+    "item": "PowderedDragonEgg",
+    "price": 120,
+    "requiredKey": null,
+    "stack": 5
+   },
+   {
+    "item": "PungentPebbles",
+    "price": 125,
+    "requiredKey": null,
+    "stack": 5
+   },
+   {
+    "item": "VineGreenSeeds",
+    "price": 65,
+    "requiredKey": null,
+    "stack": 3
+   },
+   {
+    "item": "Feaster",
+    "price": 140,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "SpiceForests",
+    "price": 120,
+    "requiredKey": "defeated_gdking",
+    "stack": 5
+   },
+   {
+    "item": "SpiceOceans",
+    "price": 130,
+    "requiredKey": "defeated_serpent",
+    "stack": 5
+   },
+   {
+    "item": "SpiceMountains",
+    "price": 140,
+    "requiredKey": "defeated_dragon",
+    "stack": 5
+   },
+   {
+    "item": "SpicePlains",
+    "price": 160,
+    "requiredKey": "defeated_goblinking",
+    "stack": 5
+   },
+   {
+    "item": "SpiceMistlands",
+    "price": 180,
+    "requiredKey": "defeated_queen",
+    "stack": 5
+   },
+   {
+    "item": "SpiceAshlands",
+    "price": 200,
+    "requiredKey": "defeated_fader",
+    "stack": 5
+   },
+   {
+    "item": "SpiceDeepNorth",
+    "price": 220,
+    "requiredKey": "defeated_frozenking_p3",
+    "stack": 5
+   },
+   {
+    "item": "BlobVial",
+    "price": 150,
+    "requiredKey": "defeated_gdking",
+    "stack": 5
+   },
+   {
+    "item": "HelmetRootCrown",
+    "price": 3000,
+    "requiredKey": "defeated_writhan",
+    "stack": 1
+   }
+  ],
+  "name": {
+   "en": "The Bog Witch",
+   "es": "La bruja del pantano"
+  }
+ },
+ "Haldor": {
+  "id": "Haldor",
+  "items": [
+   {
+    "item": "HelmetYule",
+    "price": 100,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "HelmetDverger",
+    "price": 620,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "BeltStrength",
+    "price": 950,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "YmirRemains",
+    "price": 120,
+    "requiredKey": "defeated_gdking",
+    "stack": 1
+   },
+   {
+    "item": "FishingRod",
+    "price": 350,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "FishingBait",
+    "price": 10,
+    "requiredKey": null,
+    "stack": 20
+   },
+   {
+    "item": "Thunderstone",
+    "price": 50,
+    "requiredKey": "defeated_gdking",
+    "stack": 1
+   },
+   {
+    "item": "ChickenEgg",
+    "price": 1500,
+    "requiredKey": "defeated_goblinking",
+    "stack": 1
+   },
+   {
+    "item": "BarrelRings",
+    "price": 100,
+    "requiredKey": null,
+    "stack": 3
+   }
+  ],
+  "name": {
+   "en": "Haldor",
+   "es": "Haldor"
+  }
+ },
+ "Hildir": {
+  "id": "Hildir",
+  "items": [
+   {
+    "item": "ArmorDress2",
+    "price": 450,
+    "requiredKey": "Hildir2",
+    "stack": 1
+   },
+   {
+    "item": "ArmorDress3",
+    "price": 550,
+    "requiredKey": "Hildir3",
+    "stack": 1
+   },
+   {
+    "item": "ArmorDress5",
+    "price": 450,
+    "requiredKey": "Hildir2",
+    "stack": 1
+   },
+   {
+    "item": "ArmorDress6",
+    "price": 550,
+    "requiredKey": "Hildir3",
+    "stack": 1
+   },
+   {
+    "item": "ArmorDress8",
+    "price": 450,
+    "requiredKey": "Hildir2",
+    "stack": 1
+   },
+   {
+    "item": "ArmorDress9",
+    "price": 550,
+    "requiredKey": "Hildir3",
+    "stack": 1
+   },
+   {
+    "item": "ArmorDress10",
+    "price": 250,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "ArmorTunic2",
+    "price": 450,
+    "requiredKey": "Hildir2",
+    "stack": 1
+   },
+   {
+    "item": "ArmorTunic3",
+    "price": 550,
+    "requiredKey": "Hildir3",
+    "stack": 1
+   },
+   {
+    "item": "ArmorTunic5",
+    "price": 450,
+    "requiredKey": "Hildir2",
+    "stack": 1
+   },
+   {
+    "item": "ArmorTunic6",
+    "price": 550,
+    "requiredKey": "Hildir3",
+    "stack": 1
+   },
+   {
+    "item": "ArmorTunic8",
+    "price": 450,
+    "requiredKey": "Hildir2",
+    "stack": 1
+   },
+   {
+    "item": "ArmorTunic9",
+    "price": 550,
+    "requiredKey": "Hildir3",
+    "stack": 1
+   },
+   {
+    "item": "ArmorTunic10",
+    "price": 250,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "ArmorDress1",
+    "price": 350,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "ArmorDress4",
+    "price": 350,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "ArmorDress7",
+    "price": 350,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "ArmorTunic1",
+    "price": 350,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "ArmorTunic4",
+    "price": 350,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "ArmorTunic7",
+    "price": 350,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "ArmorHarvester1",
+    "price": 550,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "ArmorHarvester2",
+    "price": 550,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "HelmetHat1",
+    "price": 200,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "HelmetHat2",
+    "price": 250,
+    "requiredKey": "Hildir2",
+    "stack": 1
+   },
+   {
+    "item": "HelmetHat3",
+    "price": 200,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "HelmetHat4",
+    "price": 250,
+    "requiredKey": "Hildir2",
+    "stack": 1
+   },
+   {
+    "item": "HelmetHat5",
+    "price": 150,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "HelmetHat6",
+    "price": 250,
+    "requiredKey": "Hildir2",
+    "stack": 1
+   },
+   {
+    "item": "HelmetHat7",
+    "price": 300,
+    "requiredKey": "Hildir3",
+    "stack": 1
+   },
+   {
+    "item": "HelmetHat8",
+    "price": 300,
+    "requiredKey": "Hildir3",
+    "stack": 1
+   },
+   {
+    "item": "HelmetHat9",
+    "price": 300,
+    "requiredKey": "Hildir3",
+    "stack": 1
+   },
+   {
+    "item": "HelmetHat10",
+    "price": 150,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "HelmetStrawHat",
+    "price": 300,
+    "requiredKey": "Hildir1",
+    "stack": 1
+   },
+   {
+    "item": "HelmetSweatBand",
+    "price": 175,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "FireworksRocket_White",
+    "price": 50,
+    "requiredKey": "Hildir3",
+    "stack": 1
+   },
+   {
+    "item": "Sparkler",
+    "price": 150,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "Ironpit",
+    "price": 75,
+    "requiredKey": null,
+    "stack": 1
+   },
+   {
+    "item": "BarberKit",
+    "price": 600,
+    "requiredKey": null,
+    "stack": 1
+   }
+  ],
+  "name": {
+   "en": "Hildir",
+   "es": "Hildir"
+  }
+ }
+}

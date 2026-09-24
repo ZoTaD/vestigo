@@ -52,7 +52,7 @@ class Game:
         self._by_go: dict[tuple, list[Comp]] = {}
         self._names: dict[tuple, str | None] = {}
         for o in self.env.objects:
-            if o.type.name in ("MonoBehaviour", "GameObject", "Sprite", "TextAsset"):
+            if o.type.name in ("MonoBehaviour", "GameObject", "Sprite", "TextAsset", "Transform", "RectTransform"):
                 self._objs[(o.assets_file.name.lower(), o.path_id)] = o
 
     def ref(self, file, pptr: dict | None) -> tuple | None:
@@ -90,6 +90,41 @@ class Game:
 
     def comps_on(self, go_key: tuple | None) -> list[Comp]:
         return self._by_go.get(go_key, []) if go_key else []
+
+    def children(self, go_key: tuple | None) -> list[tuple]:
+        """Los GameObjects hijos directos, siguiendo el Transform."""
+        o = self._objs.get(go_key) if go_key else None
+        if o is None or o.type.name != "GameObject":
+            return []
+        out = []
+        for comp in o.read_typetree().get("m_Component", []):
+            t = self._objs.get(self.ref(o.assets_file, comp.get("component")))
+            if t is None or t.type.name not in ("Transform", "RectTransform"):
+                continue
+            for ch in t.read_typetree().get("m_Children", []):
+                ct = self._objs.get(self.ref(t.assets_file, ch))
+                if ct is not None:
+                    go = self.ref(ct.assets_file, ct.read_typetree().get("m_GameObject"))
+                    if go:
+                        out.append(go)
+        return out
+
+    def comps_in_tree(self, go_key: tuple | None, depth: int = 4) -> list[Comp]:
+        """
+        Los componentes de un GameObject y de sus hijos.
+
+        Hace falta porque varios prefabs de la vegetación ponen lo que importa
+        en un hijo: la veta de cobre (`rock4_copper`) tiene el `MineRock5` un
+        nivel más abajo, y sin esto el cobre salía sin fuente.
+        """
+        out, frontier = [], [go_key] if go_key else []
+        for _ in range(depth + 1):
+            nxt = []
+            for g in frontier:
+                out += self.comps_on(g)
+                nxt += self.children(g)
+            frontier = nxt
+        return out
 
     def prefab(self, key: tuple | None) -> str | None:
         if not key:

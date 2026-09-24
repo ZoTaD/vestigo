@@ -1,0 +1,39 @@
+{
+ "counts": {
+  "conversions": 104,
+  "creatures": 155,
+  "farms": 18,
+  "gatherables": 186,
+  "icons": 1327,
+  "items": 956,
+  "pieces": 548,
+  "recipes": 429,
+  "traders": 3
+ },
+ "extractedAt": "2026-09-24T14:00:09Z",
+ "unity": "6000.0.75f1",
+ "withoutSource": [
+  "AsksvinCarrionNeck",
+  "AsksvinCarrionPelvic",
+  "AsksvinCarrionRibcage",
+  "AsksvinCarrionSkull",
+  "BellFragment",
+  "BonemawSerpentScale",
+  "BronzeScrap",
+  "CharredCogwheel",
+  "DvergrKeyFragment",
+  "DvergrNeedle",
+  "FaderEmber",
+  "Fish4_cave",
+  "Flametal",
+  "FlametalOre",
+  "FrozenFuel",
+  "GoldOre",
+  "JuteBlue",
+  "QueenBee",
+  "Sap",
+  "VineberrySeeds",
+  "Wisp",
+  "WolfClaw"
+ ]
+}

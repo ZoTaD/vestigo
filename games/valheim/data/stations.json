@@ -1,0 +1,170 @@
+{
+ "piece_artisanstation": {
+  "icon": "artisanstation",
+  "name": {
+   "en": "Artisan Table",
+   "es": "Mesa de artesanía"
+  }
+ },
+ "piece_bathtub": {
+  "icon": null,
+  "name": {
+   "en": "Hot Tub",
+   "es": "Bañera"
+  }
+ },
+ "piece_blackforge": {
+  "icon": "blackforge",
+  "name": {
+   "en": "Black Forge",
+   "es": "Forja negra"
+  }
+ },
+ "piece_blastfurnace": {
+  "icon": null,
+  "name": {
+   "en": "Blast Furnace",
+   "es": "Gran horno"
+  }
+ },
+ "piece_cauldron": {
+  "icon": "cauldron",
+  "name": {
+   "en": "Cauldron",
+   "es": "Caldero"
+  }
+ },
+ "piece_charcoalkiln": {
+  "icon": null,
+  "name": {
+   "en": "Charcoal Kiln",
+   "es": "Horno de carbón"
+  }
+ },
+ "piece_cookingstation": {
+  "icon": null,
+  "name": {
+   "en": "Cooking Station",
+   "es": "Estación de cocina"
+  }
+ },
+ "piece_cookingstation_iron": {
+  "icon": null,
+  "name": {
+   "en": "Iron Cooking Station",
+   "es": "Estación de cocina de hierro"
+  }
+ },
+ "piece_eitrrefinery": {
+  "icon": null,
+  "name": {
+   "en": "Eitr Refinery",
+   "es": "Refinería de Eitr"
+  }
+ },
+ "piece_fermenter": {
+  "icon": null,
+  "name": {
+   "en": "Fermenter",
+   "es": "Fermentador"
+  }
+ },
+ "piece_forge": {
+  "icon": "forge",
+  "name": {
+   "en": "Forge",
+   "es": "Forja"
+  }
+ },
+ "piece_frostfoundry": {
+  "icon": null,
+  "name": {
+   "en": "Frost Foundry",
+   "es": "Forja de escarcha"
+  }
+ },
+ "piece_frostkiln": {
+  "icon": null,
+  "name": {
+   "en": "Frigid Kiln",
+   "es": "Horno gélido"
+  }
+ },
+ "piece_magetable": {
+  "icon": "magetable",
+  "name": {
+   "en": "Galdr Table",
+   "es": "Mesa de galdr"
+  }
+ },
+ "piece_meadcauldron": {
+  "icon": "meadcauldron",
+  "name": {
+   "en": "Mead Ketill",
+   "es": "Caldero de aguamiel"
+  }
+ },
+ "piece_oven": {
+  "icon": null,
+  "name": {
+   "en": "Stone Oven",
+   "es": "Horno de piedra"
+  }
+ },
+ "piece_preptable": {
+  "icon": "preptable",
+  "name": {
+   "en": "Food Preparation Table",
+   "es": "Mesa para preparación de alimentos"
+  }
+ },
+ "piece_smelter": {
+  "icon": null,
+  "name": {
+   "en": "Smelter",
+   "es": "Horno de fundición"
+  }
+ },
+ "piece_spinningwheel": {
+  "icon": null,
+  "name": {
+   "en": "Spinning Wheel",
+   "es": "Rueca"
+  }
+ },
+ "piece_stonecutter": {
+  "icon": "stonecutter",
+  "name": {
+   "en": "Stonecutter",
+   "es": "Cortapiedras"
+  }
+ },
+ "piece_upgradestation": {
+  "icon": "upgradestation",
+  "name": {
+   "en": "Forge of Potential",
+   "es": "Forja del Potencial"
+  }
+ },
+ "piece_windmill": {
+  "icon": null,
+  "name": {
+   "en": "Windmill",
+   "es": "Molino de viento"
+  }
+ },
+ "piece_workbench": {
+  "icon": "workbench",
+  "name": {
+   "en": "Workbench",
+   "es": "Banco de trabajo"
+  }
+ },
+ "tool_batteringram": {
+  "icon": null,
+  "name": {
+   "en": "Battering Ram",
+   "es": "Ariete"
+  }
+ }
+}

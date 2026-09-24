@@ -1,0 +1,4997 @@
+[
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "ocean",
+   "mistlands",
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "rock4_coast",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "rock4_heath",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "HeathRockPillar",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "rock2_heath",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mountain"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "rock3_mountain",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mountain"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "SilverOre",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "silvervein",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mountain"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "rock1_mountain",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mountain"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "rock2_mountain",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "mountain"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Rock_4",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "swamp"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "IronScrap",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "WitheredBone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.009999999776482582
+    }
+   ]
+  },
+  "id": "mudpile_beacon",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Rock_4_plains",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "mountain"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Rock_3",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "rock4_forest",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "CopperOre",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "rock4_copper",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "TinOre",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "MineRock_Tin",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 2,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Feathers",
+     "max": 2,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "BeechSeeds",
+     "max": 3,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Beech1",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Feathers",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "BirchSeeds",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "FineWood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Birch1",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Feathers",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "BirchSeeds",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "FineWood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Birch1_aut",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Feathers",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "BirchSeeds",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "FineWood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Birch2",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 4,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "Acorn",
+     "max": 3,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "Feathers",
+     "max": 3,
+     "min": 2,
+     "weight": 0.5
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "FineWood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Oak1",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Feathers",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "BirchSeeds",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "FineWood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Birch2_aut",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest",
+   "mountain"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "FirCone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Feathers",
+     "max": 1,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Resin",
+     "max": 1,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "FirTree",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Feathers",
+     "max": 1,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "PineCone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "RoundLog",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pinetree_01",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Resin",
+     "max": 2,
+     "min": 1,
+     "weight": 0.20000000298023224
+    }
+   ]
+  },
+  "id": "Beech_small1",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Resin",
+     "max": 2,
+     "min": 1,
+     "weight": 0.20000000298023224
+    }
+   ]
+  },
+  "id": "Beech_small2",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "Bush02_en",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Cloudberry",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "CloudberryBush",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "swamp"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "FirTree_small_dead",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "swamp"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "ElderBark",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "SwampTree1",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest",
+   "mountain"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "FirCone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "Resin",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    }
+   ]
+  },
+  "id": "FirTree_small",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "FirTree_oldLog",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "stubbe",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "Bush01",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "Bush01_heath",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "swamp",
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "shrub_2_heath",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest",
+   "swamp"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Thistle",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Thistle",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "shrub_2",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Blueberries",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "BlueberryBush",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "BlueberryBush",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Raspberry",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "RaspberryBush",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "RaspberryBush",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Mushroom",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Mushroom",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Dandelion",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Dandelion",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Flint",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Flint",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Branch",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Stone",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "swamp",
+   "mountain"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "StoneRock",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_StoneRock",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Ice",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "ice1",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mountain"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Obsidian",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "MineRock_Obsidian",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "swamp"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "TurnipSeeds",
+     "max": 3,
+     "min": 3,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_SeedTurnip",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "blackforest"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "CarrotSeeds",
+     "max": 3,
+     "min": 3,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_SeedCarrot",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ocean"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Chitin",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Leviathan",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Rock_4_deepnorth",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Rock_3_deepnorth",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Rock_7_deepnorth",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "FirCone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Feathers",
+     "max": 1,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Resin",
+     "max": 1,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "FirConeFrost",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "SnowFirTree",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "FirCone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Feathers",
+     "max": 1,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Resin",
+     "max": 1,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "FirConeFrost",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "SnowFirTree 2",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Feathers",
+     "max": 1,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "PineCone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "Pinetree_Snow",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Feathers",
+     "max": 1,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "PineCone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "Pinetree_Snow_dead",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "SnowFirTree_small",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "stubbe_deepnorth",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "FirTree_oldLog_deepnorth",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Branch_Snow",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Snowball",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Snowball",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Lingonberry",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "LingonberryBush",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "LingonberryBush",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Ice",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Resin",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "FrozenGD",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Ice",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Resin",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "FrozenSkeleton_Pose1",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Ice",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Resin",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "FrozenSkeleton_Pose2",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "Bush01_deepnorth",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "StumpHut",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "StumpHole",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Frostwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "StumpLog",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Ice",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "IceShore_1",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "KaleSeeds",
+     "max": 3,
+     "min": 3,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_SeedKale",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "Grausten",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "cliff_ashlands2",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "Grausten",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "cliff_ashlands3_Arch_1",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "Grausten",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "cliff_ashlands5",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "Grausten",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "cliff_ashlands6",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "Grausten",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "cliff_ashlands4",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Blackwood",
+     "max": 1,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "CharcoalResin",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "AshlandsTree1",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Blackwood",
+     "max": 1,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "CharcoalResin",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "AshlandsTree3",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Blackwood",
+     "max": 1,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "CharcoalResin",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "AshlandsTree6",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "Grausten",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Ashlands_rock2",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Blackwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "AshlandsBranch1",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Blackwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "AshlandsBranch2",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Blackwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "AshlandsBranch3",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Blackwood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "AshlandsBush1",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Charredskull",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Charredskull",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Pot_Shard_Green",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Pot_Shard",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Grausten",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Ashstone",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Pot_Shard_Green",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Bronze",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "Iron",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "Silver",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "MeadHealthMinor",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "MeadStaminaMinor",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "MeadTasty",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    }
+   ]
+  },
+  "id": "ashland_pot2_red",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "ProustitePowder",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "UnstableLavaRock",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "MushroomSmokePuff",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_SmokePuff",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Grausten",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "GraveStone_Broken_World",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Grausten",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Ashlands_ArchRoofDamaged",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Grausten",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Ashlands_Pillar4",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "cliff_mistlands1",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "cliff_mistlands2",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Stone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "rock_mistlands1",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "IronScrap",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "CopperScrap",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "giant_helmet1",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "IronScrap",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "CopperScrap",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "giant_helmet2",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "IronScrap",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "CopperScrap",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "giant_sword1",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "IronScrap",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "CopperScrap",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "giant_sword2",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "BlackMarble",
+     "max": 1,
+     "min": 1,
+     "weight": 0.0
+    }
+   ]
+  },
+  "id": "giant_ribs",
+  "kind": "mine",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 2,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Feathers",
+     "max": 2,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "YggdrasilWood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "YggaShoot1",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 2,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Feathers",
+     "max": 2,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "YggdrasilWood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "YggaShoot2",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Resin",
+     "max": 2,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Feathers",
+     "max": 2,
+     "min": 1,
+     "weight": 0.25
+    },
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "YggdrasilWood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "YggaShoot3",
+  "kind": "tree",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "YggdrasilWood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    }
+   ]
+  },
+  "id": "YggaShoot_small1",
+  "kind": "destructible",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "MushroomMagecap",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Mushroom_Magecap",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "MushroomJotunPuffs",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Mushroom_JotunPuffs",
+  "kind": "pickable",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Lantern",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_DvergrLantern",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Crystal",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_MountainCaveCrystal",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "BoneFragments",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_ForestCryptRemains02",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "BoneFragments",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_ForestCryptRemains01",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Entrails",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_MeatPile",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "BoneFragments",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_ForestCryptRemains03",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "MushroomYellow",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Mushroom_yellow",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "GlowWorm",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_GlowWorm",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "FrostCore",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_FrostCoreHanger",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "RoyalJelly",
+     "max": 5,
+     "min": 5,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_RoyalJelly",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "SulfurStone",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_SulfurRock",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Fiddleheadfern",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Fiddlehead",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Tankard_dvergr",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_DvergrStein",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "SurtlingCore",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_SurtlingCoreStand",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "BlackCore",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_BlackCoreStand",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Tar",
+     "max": 15,
+     "min": 15,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_TarBig",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Tar",
+     "max": 4,
+     "min": 4,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Tar",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "MoltenCore",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_MoltenCoreStand",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "DyrnwynBladeFragment",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Swordpiece2",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "DragonEgg",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_DragonEgg",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "VoltureEgg",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_VoltureEgg",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "BoneFragments",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_ForestCryptRemains04",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "WolfHairBundle",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Hairstrands02",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "IronOre",
+     "max": 6,
+     "min": 6,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Meteorite",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "IronOre",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_BogIronOre",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "WolfHairBundle",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Hairstrands01",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "DyrnwynHiltFragment",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Swordpiece1",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "MushroomBlue",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Mushroom_blue",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Coins",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_DvergrMineTreasure",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "BoneFragments",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_MountainRemains01_buried",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "DyrnwynTipFragment",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Swordpiece3",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "FishingRod",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Pickable_Fishingrod",
+  "kind": "location",
+  "name": null
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "AncientCoin",
+     "max": 55,
+     "min": 11,
+     "weight": 2.0
+    },
+    {
+     "item": "AncientGemstoneBlack",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "AncientGemstoneGreen",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "AncientGemstoneOrange",
+     "max": 1,
+     "min": 1,
+     "weight": 0.4000000059604645
+    },
+    {
+     "item": "AncientGemstonePurple",
+     "max": 1,
+     "min": 1,
+     "weight": 0.30000001192092896
+    },
+    {
+     "item": "Copper",
+     "max": 5,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Bronze",
+     "max": 5,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Tin",
+     "max": 5,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "BlackCore",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "Morkhalla_ChestAncient",
+  "kind": "chest",
+  "name": {
+   "en": "Ancient Chest",
+   "es": "Cofre antiguo"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "AncientCoin",
+     "max": 10,
+     "min": 4,
+     "weight": 1.0
+    },
+    {
+     "item": "MeadStaminaMedium",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MeadHealthMedium",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MeadEitrMinor",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowCharred",
+     "max": 11,
+     "min": 5,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_morkhalla",
+  "kind": "chest",
+  "name": {
+   "en": "Jotun's Chest",
+   "es": "Cofre de jotun"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Obsidian",
+     "max": 9,
+     "min": 3,
+     "weight": 0.5
+    },
+    {
+     "item": "SilverNecklace",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "Ruby",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Coins",
+     "max": 35,
+     "min": 15,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 35,
+     "min": 15,
+     "weight": 1.0
+    },
+    {
+     "item": "Obsidian",
+     "max": 5,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_mountaincave",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Feathers",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 15,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "Amber",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowFlint",
+     "max": 20,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "Torch",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Flint",
+     "max": 4,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "MaceWood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_meadows",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Barley",
+     "max": 4,
+     "min": 2,
+     "weight": 0.5
+    },
+    {
+     "item": "BlackMetalScrap",
+     "max": 5,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "Needle",
+     "max": 5,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 40,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "SharpeningStone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "AtgeirWood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    }
+   ]
+  },
+  "id": "TreasureChest_heath",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "MoldAxe",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "MoldBow",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "MoldMace",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "MoldSword",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "MoldSpear",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "MeadTasty",
+     "max": 5,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "BjornMeat",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Bread",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Onion",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "loot_deepNorth_TimberHall",
+  "kind": "chest",
+  "name": {
+   "en": "Barrel",
+   "es": "Barril"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "ArrowCharred",
+     "max": 11,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "BoltCharred",
+     "max": 11,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 99,
+     "min": 22,
+     "weight": 1.0
+    },
+    {
+     "item": "Torch",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Feathers",
+     "max": 13,
+     "min": 5,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_deepnorth_village",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "SilverNecklace",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldAtgeir",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldAxe",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldAxe2H",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldBow",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldCrossbow",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldFistweapon",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldKnife",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldMace",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldMace2H",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldShieldBuckler",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldShieldRound",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldShieldTower",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldSpear",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldSword",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldSword2H",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldStafffrostorbs",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldStaffOrbofAhri",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldStaffspiritcaller",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MoldStaffthunderblood",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_memorial_buried",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Coins",
+     "max": 100,
+     "min": 50,
+     "weight": 5.0
+    },
+    {
+     "item": "AmberPearl",
+     "max": 10,
+     "min": 1,
+     "weight": 2.0
+    },
+    {
+     "item": "Ruby",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Feathers",
+     "max": 13,
+     "min": 3,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "shipwreck_karve_chest",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Feathers",
+     "max": 10,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowFlint",
+     "max": 10,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "Ruby",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 30,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "Amber",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "SilverNecklace",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    }
+   ]
+  },
+  "id": "TreasureChest_forestcrypt",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Feathers",
+     "max": 4,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowFlint",
+     "max": 10,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 30,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "Amber",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "SpearWood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    }
+   ]
+  },
+  "id": "TreasureChest_blackforest",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "MeadHealthMinor",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MeadStaminaMinor",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "MeadPoisonResist",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Sausages",
+     "max": 6,
+     "min": 3,
+     "weight": 1.0
+    },
+    {
+     "item": "Tankard_dvergr",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "Coins",
+     "max": 66,
+     "min": 33,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 66,
+     "min": 33,
+     "weight": 1.0
+    },
+    {
+     "item": "THSwordWood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "Hook",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "TreasureChest_dvergrtown",
+  "kind": "chest",
+  "name": {
+   "en": "Dvergr Treasure Chest",
+   "es": "Cofre de tesoro dvergr"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "OnionSeeds",
+     "max": 9,
+     "min": 3,
+     "weight": 1.0
+    },
+    {
+     "item": "Amber",
+     "max": 6,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 96,
+     "min": 46,
+     "weight": 1.0
+    },
+    {
+     "item": "AmberPearl",
+     "max": 5,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "Ruby",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Obsidian",
+     "max": 10,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowFrost",
+     "max": 10,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "BattleaxeWood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    }
+   ]
+  },
+  "id": "TreasureChest_mountains",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Feathers",
+     "max": 10,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowObsidian",
+     "max": 10,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "SilverNecklace",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Coins",
+     "max": 99,
+     "min": 66,
+     "weight": 1.0
+    },
+    {
+     "item": "GoblinTotem",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    }
+   ]
+  },
+  "id": "TreasureChest_plains_stone",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "WitheredBone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "ArrowIron",
+     "max": 15,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowPoison",
+     "max": 15,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 60,
+     "min": 20,
+     "weight": 1.0
+    },
+    {
+     "item": "Amber",
+     "max": 5,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "AmberPearl",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Ruby",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Chain",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "ElderBark",
+     "max": 30,
+     "min": 20,
+     "weight": 1.0
+    },
+    {
+     "item": "SledgeWood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "TreasureChest_swamp",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "AmberPearl",
+     "max": 4,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "Chain",
+     "max": 5,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 66,
+     "min": 11,
+     "weight": 1.0
+    },
+    {
+     "item": "ChickenEgg",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "TreasureChest_heath_hildir",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Wood",
+     "max": 30,
+     "min": 10,
+     "weight": 0.5
+    },
+    {
+     "item": "Stone",
+     "max": 30,
+     "min": 10,
+     "weight": 0.5
+    },
+    {
+     "item": "Ruby",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 50,
+     "min": 20,
+     "weight": 1.0
+    },
+    {
+     "item": "DeerHide",
+     "max": 4,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "BoneFragments",
+     "max": 15,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "LeatherScraps",
+     "max": 5,
+     "min": 3,
+     "weight": 1.0
+    },
+    {
+     "item": "SilverNecklace",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    }
+   ]
+  },
+  "id": "TreasureChest_trollcave",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "MoltenCore",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "CharredBone",
+     "max": 12,
+     "min": 3,
+     "weight": 0.5
+    },
+    {
+     "item": "ArrowCarapace",
+     "max": 12,
+     "min": 3,
+     "weight": 0.5
+    },
+    {
+     "item": "Coins",
+     "max": 199,
+     "min": 99,
+     "weight": 0.5
+    },
+    {
+     "item": "Blackwood",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "TreasureChest_ashland_stone",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Coins",
+     "max": 100,
+     "min": 50,
+     "weight": 5.0
+    },
+    {
+     "item": "SilverNecklace",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Feathers",
+     "max": 13,
+     "min": 3,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowCharred",
+     "max": 13,
+     "min": 3,
+     "weight": 0.5
+    },
+    {
+     "item": "BoltCharred",
+     "max": 13,
+     "min": 3,
+     "weight": 0.5
+    },
+    {
+     "item": "AncientGemstoneBlack",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "AncientGemstoneGreen",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "AncientGemstoneOrange",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "AncientGemstonePurple",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    }
+   ]
+  },
+  "id": "shipwreck_vikingship_chest",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "WitheredBone",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "ArrowIron",
+     "max": 15,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowPoison",
+     "max": 15,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 60,
+     "min": 20,
+     "weight": 1.0
+    },
+    {
+     "item": "Amber",
+     "max": 5,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "AmberPearl",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Ruby",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Chain",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "ElderBark",
+     "max": 30,
+     "min": 20,
+     "weight": 1.0
+    },
+    {
+     "item": "IronScrap",
+     "max": 20,
+     "min": 10,
+     "weight": 2.0
+    }
+   ]
+  },
+  "id": "TreasureChest_sunkencrypt",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Coins",
+     "max": 54,
+     "min": 12,
+     "weight": 1.0
+    },
+    {
+     "item": "THSwordWood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "Hook",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "TreasureChest_dvergrtower",
+  "kind": "chest",
+  "name": {
+   "en": "Dvergr Treasure Chest",
+   "es": "Cofre de tesoro dvergr"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Feathers",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 15,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "Amber",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowFlint",
+     "max": 20,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "Torch",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Flint",
+     "max": 4,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "AxeHead1",
+     "max": 1,
+     "min": 1,
+     "weight": 2.0
+    }
+   ]
+  },
+  "id": "TreasureChest_meadows_01",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "GemstoneBlue",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "GemstoneGreen",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "GemstoneRed",
+     "max": 1,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Coins",
+     "max": 500,
+     "min": 200,
+     "weight": 1.0
+    },
+    {
+     "item": "CharredBone",
+     "max": 10,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "Charredskull",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "CelestialFeather",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "MoltenCore",
+     "max": 2,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "FlametalOreNew",
+     "max": 20,
+     "min": 10,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_charredfortress",
+  "kind": "chest",
+  "name": {
+   "en": "Charred Chest",
+   "es": "Cofre carbonizado"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "MaceWood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.10000000149011612
+    },
+    {
+     "item": "Feathers",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Torch",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowFlint",
+     "max": 20,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "LeatherScraps",
+     "max": 3,
+     "min": 2,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_meadows_combat",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "MoldAxe",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "MoldBow",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "MoldMace",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "MoldSword",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "MoldSpear",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "Barley",
+     "max": 10,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "Flax",
+     "max": 10,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "TurnipSeeds",
+     "max": 10,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "CarrotSeeds",
+     "max": 10,
+     "min": 1,
+     "weight": 0.5
+    },
+    {
+     "item": "OatSeeds",
+     "max": 10,
+     "min": 4,
+     "weight": 5.0
+    },
+    {
+     "item": "PoteitrSeeds",
+     "max": 10,
+     "min": 1,
+     "weight": 3.0
+    },
+    {
+     "item": "KaleSeeds",
+     "max": 4,
+     "min": 2,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "loot_deepNorth_Granary",
+  "kind": "chest",
+  "name": {
+   "en": "Barrel",
+   "es": "Barril"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Feathers",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 15,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "Amber",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowFlint",
+     "max": 20,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "Torch",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "Flint",
+     "max": 4,
+     "min": 2,
+     "weight": 1.0
+    },
+    {
+     "item": "AxeHead2",
+     "max": 1,
+     "min": 1,
+     "weight": 2.0
+    }
+   ]
+  },
+  "id": "TreasureChest_meadows_02",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "HildirKey_forestcrypt",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_forestcrypt_hildir",
+  "kind": "chest",
+  "name": {
+   "en": "Dvergr Treasure Chest",
+   "es": "Cofre de tesoro dvergr"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "HildirKey_mountaincave",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_mountaincave_hildir",
+  "kind": "chest",
+  "name": {
+   "en": "Dvergr Treasure Chest",
+   "es": "Cofre de tesoro dvergr"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "HildirKey_plainsfortress",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_plainsfortress_hildir",
+  "kind": "chest",
+  "name": {
+   "en": "Dvergr Treasure Chest",
+   "es": "Cofre de tesoro dvergr"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Feathers",
+     "max": 15,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "ArrowFlint",
+     "max": 10,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 50,
+     "min": 5,
+     "weight": 1.0
+    },
+    {
+     "item": "Amber",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "SilverNecklace",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "TreasureChest_fCrypt",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "ArrowFire",
+     "max": 15,
+     "min": 10,
+     "weight": 1.0
+    },
+    {
+     "item": "Coins",
+     "max": 50,
+     "min": 20,
+     "weight": 1.0
+    },
+    {
+     "item": "Ruby",
+     "max": 3,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "AmberPearl",
+     "max": 2,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "SilverNecklace",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    },
+    {
+     "item": "KnifeWood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    },
+    {
+     "item": "AxeWood",
+     "max": 1,
+     "min": 1,
+     "weight": 0.20000000298023224
+    }
+   ]
+  },
+  "id": "TreasureChest_meadows_buried",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [],
+  "drops": {
+   "items": [
+    {
+     "item": "Coins",
+     "max": 99,
+     "min": 19,
+     "weight": 1.0
+    },
+    {
+     "item": "BoneFragments",
+     "max": 3,
+     "min": 2,
+     "weight": 0.5
+    }
+   ]
+  },
+  "id": "TreasureChest_dvergr_loose_stone",
+  "kind": "chest",
+  "name": {
+   "en": "Chest",
+   "es": "Cofre"
+  }
+ },
+ {
+  "biomes": [
+   "deepnorth"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish10",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish10",
+  "kind": "fish",
+  "name": {
+   "en": "Northern Salmon",
+   "es": "Salmón norteño"
+  }
+ },
+ {
+  "biomes": [
+   "swamp"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish6",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish6",
+  "kind": "fish",
+  "name": {
+   "en": "Giant Herring",
+   "es": "Arenque gigante"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish2",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish2",
+  "kind": "fish",
+  "name": {
+   "en": "Pike",
+   "es": "Lucio"
+  }
+ },
+ {
+  "biomes": [
+   "ashlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish11",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish11",
+  "kind": "fish",
+  "name": {
+   "en": "Magmafish",
+   "es": "Magmapez"
+  }
+ },
+ {
+  "biomes": [
+   "ocean"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish3",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish3",
+  "kind": "fish",
+  "name": {
+   "en": "Tuna",
+   "es": "Atún"
+  }
+ },
+ {
+  "biomes": [
+   "ocean",
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish12",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish12",
+  "kind": "fish",
+  "name": {
+   "en": "Pufferfish",
+   "es": "Pez globo"
+  }
+ },
+ {
+  "biomes": [
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish7",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish7",
+  "kind": "fish",
+  "name": {
+   "en": "Grouper",
+   "es": "Mero"
+  }
+ },
+ {
+  "biomes": [
+   "mistlands"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish9",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish9",
+  "kind": "fish",
+  "name": {
+   "en": "Anglerfish",
+   "es": "Rape"
+  }
+ },
+ {
+  "biomes": [
+   "meadows",
+   "blackforest",
+   "plains"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish1",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish1",
+  "kind": "fish",
+  "name": {
+   "en": "Perch",
+   "es": "Perca"
+  }
+ },
+ {
+  "biomes": [
+   "blackforest"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish5",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish5",
+  "kind": "fish",
+  "name": {
+   "en": "Trollfish",
+   "es": "Pez troll"
+  }
+ },
+ {
+  "biomes": [
+   "ocean"
+  ],
+  "drops": {
+   "items": [
+    {
+     "item": "Fish8",
+     "max": 1,
+     "min": 1,
+     "weight": 1.0
+    }
+   ]
+  },
+  "id": "Fish8",
+  "kind": "fish",
+  "name": {
+   "en": "Coral Cod",
+   "es": "Bacalao de coral"
+  }
+ }
+]

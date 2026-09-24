@@ -1,5 +1,5 @@
 import unittest
-from pipeline.sources import build_sources, build_used_in
+from pipeline.sources import build_sources, build_used_in, share_by_name
 
 RECIPES = [{"item": "CarrotSoup", "amount": 1, "station": "piece_cauldron", "level": 1,
             "requirements": [{"item": "Carrot", "amount": 1, "perLevel": 0}, {"item": "Mushroom", "amount": 3, "perLevel": 0}]}]
@@ -24,6 +24,23 @@ class TestSources(unittest.TestCase):
         self.assertEqual(u["Mushroom"], [{"kind": "recipe", "item": "CarrotSoup", "amount": 3},
                                          {"kind": "piece", "item": "piece_cauldron", "amount": 2}])
         self.assertEqual(u["MeadBaseHealthMinor"], [{"kind": "convert", "item": "MeadHealthMinor", "station": "piece_fermenter"}])
+
+class TestFarmAndShare(unittest.TestCase):
+    def test_cultivo(self):
+        farms = [{"id": "sapling_carrot", "item": "Carrot", "biomes": ["meadows", "blackforest"]}]
+        s = build_sources([], [], {}, [], {}, farms)
+        self.assertEqual(s["Carrot"], [{"kind": "farm", "from": "sapling_carrot", "biomes": ["meadows", "blackforest"]}])
+
+    def test_mismo_nombre_comparte_fuentes(self):
+        # El juego duplica los banquetes: el que se fabrica y el que se come
+        # se llaman igual. El que no tiene fuente toma la del otro.
+        items = {"FeastDeepNorth": {"name": {"en": "Northern Morning Fare"}, "sources": []},
+                 "FeastDeepNorth_Material": {"name": {"en": "Northern Morning Fare"}, "sources": [{"kind": "craft", "station": "piece_preptable"}]},
+                 "Solo": {"name": {"en": "Solo"}, "sources": []}}
+        share_by_name(items)
+        self.assertEqual(items["FeastDeepNorth"]["sources"], [{"kind": "craft", "station": "piece_preptable", "via": "FeastDeepNorth_Material"}])
+        self.assertEqual(items["Solo"]["sources"], [])
+
 
 if __name__ == "__main__":
     unittest.main()

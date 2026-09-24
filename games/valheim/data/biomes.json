@@ -1,0 +1,74 @@
+[
+ {
+  "bit": 1,
+  "id": "meadows",
+  "name": {
+   "en": "Meadows",
+   "es": "Praderas"
+  }
+ },
+ {
+  "bit": 8,
+  "id": "blackforest",
+  "name": {
+   "en": "Black Forest",
+   "es": "Bosque negro"
+  }
+ },
+ {
+  "bit": 2,
+  "id": "swamp",
+  "name": {
+   "en": "Swamp",
+   "es": "Pantano"
+  }
+ },
+ {
+  "bit": 4,
+  "id": "mountain",
+  "name": {
+   "en": "Mountain",
+   "es": "Montaña"
+  }
+ },
+ {
+  "bit": 16,
+  "id": "plains",
+  "name": {
+   "en": "Plains",
+   "es": "Llanuras"
+  }
+ },
+ {
+  "bit": 256,
+  "id": "ocean",
+  "name": {
+   "en": "Ocean",
+   "es": "Océano"
+  }
+ },
+ {
+  "bit": 512,
+  "id": "mistlands",
+  "name": {
+   "en": "Mistlands",
+   "es": "Tierras Nubladas"
+  }
+ },
+ {
+  "bit": 32,
+  "id": "ashlands",
+  "name": {
+   "en": "Ashlands",
+   "es": "Tierra de Ceniza"
+  }
+ },
+ {
+  "bit": 64,
+  "id": "deepnorth",
+  "name": {
+   "en": "Deep North",
+   "es": "Norte profundo"
+  }
+ }
+]
