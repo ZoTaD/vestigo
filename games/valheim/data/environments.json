@@ -1,0 +1,114 @@
+{
+ "ashlands": {
+  "cold": false,
+  "coldAtNight": false,
+  "envs": [
+   "Ashlands_CinderRain",
+   "Ashlands_ashrain",
+   "Ashlands_misty",
+   "Ashlands_storm"
+  ],
+  "freezing": false,
+  "freezingAtNight": false,
+  "wet": false
+ },
+ "blackforest": {
+  "cold": false,
+  "coldAtNight": true,
+  "envs": [
+   "DeepForest Mist",
+   "Misty",
+   "Rain",
+   "ThunderStorm"
+  ],
+  "freezing": false,
+  "freezingAtNight": false,
+  "wet": true
+ },
+ "deepnorth": {
+  "cold": true,
+  "coldAtNight": true,
+  "envs": [
+   "Twilight_Clear",
+   "Twilight_Snow",
+   "Twilight_SnowStorm"
+  ],
+  "freezing": true,
+  "freezingAtNight": true,
+  "wet": false
+ },
+ "meadows": {
+  "cold": false,
+  "coldAtNight": true,
+  "envs": [
+   "Clear",
+   "LightRain",
+   "Misty",
+   "Rain",
+   "ThunderStorm"
+  ],
+  "freezing": false,
+  "freezingAtNight": false,
+  "wet": true
+ },
+ "mistlands": {
+  "cold": false,
+  "coldAtNight": true,
+  "envs": [
+   "Mistlands_clear",
+   "Mistlands_rain",
+   "Mistlands_thunder"
+  ],
+  "freezing": false,
+  "freezingAtNight": false,
+  "wet": true
+ },
+ "mountain": {
+  "cold": false,
+  "coldAtNight": true,
+  "envs": [
+   "Snow",
+   "SnowStorm"
+  ],
+  "freezing": true,
+  "freezingAtNight": false,
+  "wet": false
+ },
+ "ocean": {
+  "cold": false,
+  "coldAtNight": true,
+  "envs": [
+   "Ashlands_SeaStorm",
+   "Clear",
+   "LightRain",
+   "Misty",
+   "Rain",
+   "ThunderStorm"
+  ],
+  "freezing": false,
+  "freezingAtNight": false,
+  "wet": true
+ },
+ "plains": {
+  "cold": false,
+  "coldAtNight": true,
+  "envs": [
+   "Heath clear",
+   "LightRain",
+   "Misty"
+  ],
+  "freezing": false,
+  "freezingAtNight": false,
+  "wet": true
+ },
+ "swamp": {
+  "cold": false,
+  "coldAtNight": true,
+  "envs": [
+   "SwampRain"
+  ],
+  "freezing": false,
+  "freezingAtNight": false,
+  "wet": true
+ }
+}

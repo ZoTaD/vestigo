@@ -27,12 +27,27 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 800.0,
+  "icon": "trophyabomination",
   "id": "Abomination",
+  "immune": [
+   "frost",
+   "poison",
+   "spirit"
+  ],
   "name": {
    "en": "Abomination",
    "es": "Abominación"
-  }
+  },
+  "resist": [
+   "blunt",
+   "pierce"
+  ],
+  "trophy": "TrophyAbomination",
+  "weak": [
+   "fire"
+  ]
  },
  "Asksvin": {
   "biomes": [
@@ -69,12 +84,23 @@
     "perLevel": true
    }
   ],
+  "faction": 4,
   "health": 800.0,
+  "icon": "trophyasksvin",
   "id": "Asksvin",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Asksvin",
    "es": "Cenicerdo"
-  }
+  },
+  "resist": [
+   "fire",
+   "poison"
+  ],
+  "trophy": "TrophyAsksvin",
+  "weak": []
  },
  "Asksvin_hatchling": {
   "biomes": [],
@@ -102,100 +128,198 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 400.0,
+  "icon": null,
   "id": "Asksvin_hatchling",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Asksvin Hatchling",
    "es": "Cría de cenicerdo"
-  }
+  },
+  "resist": [
+   "fire",
+   "poison"
+  ],
+  "trophy": null,
+  "weak": []
  },
  "Aspect_Bonemass": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 8,
   "health": 1600.0,
+  "icon": null,
   "id": "Aspect_Bonemass",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Aspect of the Writhing Dead",
    "es": "Aspecto del Muerto Retorcido"
-  }
+  },
+  "resist": [
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": null,
+  "weak": [
+   "blunt",
+   "frost"
+  ]
  },
  "Aspect_Eikthyr": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 8,
   "health": 3000.0,
+  "icon": null,
   "id": "Aspect_Eikthyr",
+  "immune": [],
   "name": {
    "en": "Aspect of the Lightning Stag",
    "es": "Aspecto del Ciervo del Rayo"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "Aspect_Elder": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 8,
   "health": 1600.0,
+  "icon": null,
   "id": "Aspect_Elder",
+  "immune": [
+   "poison",
+   "spirit"
+  ],
   "name": {
    "en": "Aspect of the Living Forest",
    "es": "Aspecto del Bosque Viviente"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": [
+   "fire"
+  ]
  },
  "Aspect_Fader": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 8,
   "health": 1700.0,
+  "icon": null,
   "id": "Aspect_Fader",
+  "immune": [
+   "fire",
+   "spirit"
+  ],
   "name": {
    "en": "Aspect of the Emerald Flame",
    "es": "Aspecto de la Llama Esmeralda"
-  }
+  },
+  "resist": [
+   "pierce"
+  ],
+  "trophy": null,
+  "weak": []
  },
  "Aspect_Moder": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 8,
   "health": 1500.0,
+  "icon": null,
   "id": "Aspect_Moder",
+  "immune": [
+   "frost",
+   "spirit"
+  ],
   "name": {
    "en": "Aspect of the Dragon Mother",
    "es": "Aspecto de la Madre Dragón"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": [
+   "fire"
+  ]
  },
  "Aspect_SeekerQueen": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 8,
   "health": 1700.0,
+  "icon": null,
   "id": "Aspect_SeekerQueen",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Aspect of the Crawling Matriarch",
    "es": "Aspecto de la Matriarca Reptante"
-  }
+  },
+  "resist": [
+   "pierce"
+  ],
+  "trophy": null,
+  "weak": []
  },
  "Aspect_TentaRoot": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 8,
   "health": 20.0,
+  "icon": null,
   "id": "Aspect_TentaRoot",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Root",
    "es": "Root"
-  }
+  },
+  "resist": [
+   "frost"
+  ],
+  "trophy": null,
+  "weak": [
+   "fire"
+  ]
  },
  "Aspect_Yagluth": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 8,
   "health": 1700.0,
+  "icon": null,
   "id": "Aspect_Yagluth",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Aspect of the Twisted Soul",
    "es": "Aspecto del Alma Retorcida"
-  }
+  },
+  "resist": [
+   "pierce",
+   "fire"
+  ],
+  "trophy": null,
+  "weak": []
  },
  "Barka": {
   "biomes": [
@@ -218,12 +342,29 @@
     "perLevel": false
    }
   ],
+  "faction": 13,
   "health": 2200.0,
+  "icon": "trophybarka",
   "id": "Barka",
+  "immune": [
+   "poison",
+   "spirit"
+  ],
   "name": {
    "en": "Barka",
    "es": "Barka"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce",
+   "frost",
+   "lightning"
+  ],
+  "trophy": "TrophyBarka",
+  "weak": [
+   "fire"
+  ]
  },
  "Bat": {
   "biomes": [],
@@ -237,12 +378,28 @@
     "perLevel": false
    }
   ],
+  "faction": 5,
   "health": 10.0,
+  "icon": null,
   "id": "Bat",
+  "immune": [
+   "frost",
+   "poison"
+  ],
   "name": {
    "en": "Bat",
    "es": "Murciélago"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce"
+  ],
+  "trophy": null,
+  "weak": [
+   "fire",
+   "spirit"
+  ]
  },
  "Bat_Swamp": {
   "biomes": [],
@@ -256,12 +413,28 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 10.0,
+  "icon": null,
   "id": "Bat_Swamp",
+  "immune": [
+   "frost",
+   "poison"
+  ],
   "name": {
    "en": "Bat",
    "es": "Murciélago"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce"
+  ],
+  "trophy": null,
+  "weak": [
+   "fire",
+   "spirit"
+  ]
  },
  "Bjorn": {
   "biomes": [
@@ -298,12 +471,26 @@
     "perLevel": false
    }
   ],
+  "faction": 2,
   "health": 500.0,
+  "icon": "trophybjorn",
   "id": "Bjorn",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Bear",
    "es": "Bjorn"
-  }
+  },
+  "resist": [
+   "blunt",
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophyBjorn",
+  "weak": [
+   "fire"
+  ]
  },
  "Bjorn_sleeping": {
   "biomes": [],
@@ -338,23 +525,51 @@
     "perLevel": false
    }
   ],
+  "faction": 2,
   "health": 500.0,
+  "icon": "trophybjorn",
   "id": "Bjorn_sleeping",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Bear",
    "es": "Bjorn"
-  }
+  },
+  "resist": [
+   "blunt",
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophyBjorn",
+  "weak": [
+   "fire"
+  ]
  },
  "Bjorn_spiritcaller": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 0,
   "health": 1500.0,
+  "icon": null,
   "id": "Bjorn_spiritcaller",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "",
    "es": ""
-  }
+  },
+  "resist": [
+   "blunt",
+   "pierce",
+   "frost"
+  ],
+  "trophy": null,
+  "weak": [
+   "fire"
+  ]
  },
  "Blob": {
   "biomes": [
@@ -377,12 +592,28 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 50.0,
+  "icon": "trophyblob",
   "id": "Blob",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Blob",
    "es": "Babosa"
-  }
+  },
+  "resist": [
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": "TrophyBlob",
+  "weak": [
+   "blunt",
+   "frost",
+   "lightning"
+  ]
  },
  "BlobAspect": {
   "biomes": [],
@@ -403,12 +634,28 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 50.0,
+  "icon": "trophyblob",
   "id": "BlobAspect",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Blob",
    "es": "Babosa"
-  }
+  },
+  "resist": [
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": "TrophyBlob",
+  "weak": [
+   "blunt",
+   "frost",
+   "lightning"
+  ]
  },
  "BlobElite": {
   "biomes": [
@@ -438,12 +685,28 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 150.0,
+  "icon": "trophyblob",
   "id": "BlobElite",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Oozer",
    "es": "Exudador"
-  }
+  },
+  "resist": [
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": "TrophyBlob",
+  "weak": [
+   "blunt",
+   "frost",
+   "lightning"
+  ]
  },
  "BlobFrost": {
   "biomes": [],
@@ -464,12 +727,28 @@
     "perLevel": false
    }
   ],
+  "faction": 5,
   "health": 50.0,
+  "icon": "trophyblob_frost",
   "id": "BlobFrost",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Frost Blob",
    "es": "Babosa de hielo"
-  }
+  },
+  "resist": [
+   "slash",
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophyBlob_Frost",
+  "weak": [
+   "blunt",
+   "fire",
+   "lightning"
+  ]
  },
  "BlobLava": {
   "biomes": [
@@ -499,12 +778,27 @@
     "perLevel": false
    }
   ],
+  "faction": 4,
   "health": 300.0,
+  "icon": "trophyblob_lava",
   "id": "BlobLava",
+  "immune": [
+   "fire"
+  ],
   "name": {
    "en": "Lava Blob",
    "es": "Bola de lava"
-  }
+  },
+  "resist": [
+   "pierce",
+   "poison"
+  ],
+  "trophy": "TrophyBlob_Lava",
+  "weak": [
+   "blunt",
+   "frost",
+   "lightning"
+  ]
  },
  "BlobMork": {
   "biomes": [],
@@ -525,12 +819,28 @@
     "perLevel": false
    }
   ],
+  "faction": 13,
   "health": 150.0,
+  "icon": "trophyblob_morkhalla",
   "id": "BlobMork",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Shapeless Pulp",
    "es": "Pulpa informe"
-  }
+  },
+  "resist": [
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": "TrophyBlob_Morkhalla",
+  "weak": [
+   "blunt",
+   "frost",
+   "lightning"
+  ]
  },
  "BlobMorkMini": {
   "biomes": [],
@@ -544,12 +854,28 @@
     "perLevel": true
    }
   ],
+  "faction": 13,
   "health": 50.0,
+  "icon": null,
   "id": "BlobMorkMini",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Tiny Pulp",
    "es": "Pulpa diminuta"
-  }
+  },
+  "resist": [
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": null,
+  "weak": [
+   "blunt",
+   "frost",
+   "lightning"
+  ]
  },
  "BlobTar": {
   "biomes": [],
@@ -570,12 +896,27 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 100.0,
+  "icon": "trophygrowth",
   "id": "BlobTar",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Growth",
    "es": "Bulto"
-  }
+  },
+  "resist": [
+   "slash",
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophyGrowth",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Boar": {
   "biomes": [
@@ -605,34 +946,58 @@
     "perLevel": false
    }
   ],
+  "faction": 2,
   "health": 10.0,
+  "icon": "trophyboar",
   "id": "Boar",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Boar",
    "es": "Jabalí"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyBoar",
+  "weak": []
  },
  "Boar_piggy": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 2,
   "health": 10.0,
+  "icon": null,
   "id": "Boar_piggy",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Piggy",
    "es": "Cerdito"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "Boar_spiritcaller": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 0,
   "health": 1000.0,
+  "icon": null,
   "id": "Boar_spiritcaller",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "",
    "es": ""
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "BogWitchKvastur": {
   "biomes": [],
@@ -660,12 +1025,23 @@
     "perLevel": false
    }
   ],
+  "faction": 10,
   "health": 700.0,
+  "icon": "kvastur",
   "id": "BogWitchKvastur",
+  "immune": [
+   "poison",
+   "spirit"
+  ],
   "name": {
    "en": "Kvastur",
    "es": "Kvastur"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyKvastur",
+  "weak": [
+   "fire"
+  ]
  },
  "Bonemass": {
   "biomes": [],
@@ -686,12 +1062,27 @@
     "perLevel": false
    }
   ],
+  "faction": 8,
   "health": 5000.0,
+  "icon": "trophybonemass",
   "id": "Bonemass",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Bonemass",
    "es": "Tuétano"
-  }
+  },
+  "resist": [
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": "TrophyBonemass",
+  "weak": [
+   "blunt",
+   "frost"
+  ]
  },
  "BonemawSerpent": {
   "biomes": [
@@ -721,12 +1112,25 @@
     "perLevel": true
    }
   ],
+  "faction": 4,
   "health": 1100.0,
+  "icon": "trophybonemawserpent",
   "id": "BonemawSerpent",
+  "immune": [
+   "fire",
+   "spirit"
+  ],
   "name": {
    "en": "Bonemaw",
    "es": "Faucesoseas"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophyBonemawSerpent",
+  "weak": [
+   "frost"
+  ]
  },
  "Charred_Archer": {
   "biomes": [
@@ -754,23 +1158,49 @@
     "perLevel": false
    }
   ],
+  "faction": 4,
   "health": 200.0,
+  "icon": "trophycharredarcher",
   "id": "Charred_Archer",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Charred Marksman",
    "es": "Arquero carbonizado"
-  }
+  },
+  "resist": [
+   "pierce",
+   "fire"
+  ],
+  "trophy": "TrophyCharredArcher",
+  "weak": [
+   "spirit"
+  ]
  },
  "Charred_Archer_Fader": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 4,
   "health": 50.0,
+  "icon": null,
   "id": "Charred_Archer_Fader",
+  "immune": [
+   "fire",
+   "poison"
+  ],
   "name": {
    "en": "Summoned Charred Warrior",
    "es": "Guerrero carbonizado invocado"
-  }
+  },
+  "resist": [
+   "pierce"
+  ],
+  "trophy": null,
+  "weak": [
+   "spirit"
+  ]
  },
  "Charred_Mage": {
   "biomes": [],
@@ -791,12 +1221,26 @@
     "perLevel": false
    }
   ],
+  "faction": 4,
   "health": 600.0,
+  "icon": "trophycharredmage",
   "id": "Charred_Mage",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Charred Warlock",
    "es": "Brujo carbonizado"
-  }
+  },
+  "resist": [
+   "pierce",
+   "fire",
+   "frost"
+  ],
+  "trophy": "TrophyCharredMage",
+  "weak": [
+   "spirit"
+  ]
  },
  "Charred_Melee": {
   "biomes": [
@@ -824,12 +1268,25 @@
     "perLevel": false
    }
   ],
+  "faction": 4,
   "health": 600.0,
+  "icon": "trophycharredmelee",
   "id": "Charred_Melee",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Charred Warrior",
    "es": "Guerrero carbonizado"
-  }
+  },
+  "resist": [
+   "pierce",
+   "fire"
+  ],
+  "trophy": "TrophyCharredMelee",
+  "weak": [
+   "spirit"
+  ]
  },
  "Charred_Melee_Dyrnwyn": {
   "biomes": [],
@@ -843,23 +1300,50 @@
     "perLevel": false
    }
   ],
+  "faction": 4,
   "health": 2500.0,
+  "icon": null,
   "id": "Charred_Melee_Dyrnwyn",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "<color=orange>Lord Reto</color>",
    "es": "Lord Reto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "fire",
+   "frost"
+  ],
+  "trophy": null,
+  "weak": [
+   "spirit"
+  ]
  },
  "Charred_Melee_Fader": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 4,
   "health": 50.0,
+  "icon": null,
   "id": "Charred_Melee_Fader",
+  "immune": [
+   "fire",
+   "poison"
+  ],
   "name": {
    "en": "Summoned Charred Warrior",
    "es": "Guerrero carbonizado invocado"
-  }
+  },
+  "resist": [
+   "pierce"
+  ],
+  "trophy": null,
+  "weak": [
+   "spirit"
+  ]
  },
  "Charred_Twitcher": {
   "biomes": [
@@ -875,12 +1359,25 @@
     "perLevel": true
    }
   ],
+  "faction": 4,
   "health": 220.0,
+  "icon": null,
   "id": "Charred_Twitcher",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Charred Twitcher",
    "es": "Crispante carbonizado"
-  }
+  },
+  "resist": [
+   "pierce",
+   "fire"
+  ],
+  "trophy": null,
+  "weak": [
+   "spirit"
+  ]
  },
  "Charred_Twitcher_Summoned": {
   "biomes": [],
@@ -894,12 +1391,25 @@
     "perLevel": true
    }
   ],
+  "faction": 4,
   "health": 50.0,
+  "icon": null,
   "id": "Charred_Twitcher_Summoned",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Summoned Twitcher",
    "es": "Nervioso invocado"
-  }
+  },
+  "resist": [
+   "pierce",
+   "fire"
+  ],
+  "trophy": null,
+  "weak": [
+   "spirit"
+  ]
  },
  "Chicken": {
   "biomes": [],
@@ -920,12 +1430,20 @@
     "perLevel": true
    }
   ],
+  "faction": 2,
   "health": 10.0,
+  "icon": null,
   "id": "Chicken",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Chicken",
    "es": "Pollo"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "Deathsquito": {
   "biomes": [
@@ -948,12 +1466,20 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 10.0,
+  "icon": "trophydeathsquito",
   "id": "Deathsquito",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Deathsquito",
    "es": "Muersquito"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyDeathsquito",
+  "weak": []
  },
  "Deer": {
   "biomes": [
@@ -984,12 +1510,20 @@
     "perLevel": false
    }
   ],
+  "faction": 2,
   "health": 10.0,
+  "icon": "trophydeer",
   "id": "Deer",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Deer",
    "es": "Ciervo"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyDeer",
+  "weak": []
  },
  "Dragon": {
   "biomes": [],
@@ -1010,12 +1544,23 @@
     "perLevel": false
    }
   ],
+  "faction": 8,
   "health": 7500.0,
+  "icon": "trophydragonqueen",
   "id": "Dragon",
+  "immune": [
+   "frost",
+   "spirit"
+  ],
   "name": {
    "en": "Moder",
    "es": "Moder"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyDragonQueen",
+  "weak": [
+   "fire"
+  ]
  },
  "Draugr": {
   "biomes": [
@@ -1042,12 +1587,22 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 100.0,
+  "icon": "trophydraugr",
   "id": "Draugr",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Draugr",
    "es": "Draugr"
-  }
+  },
+  "resist": [
+   "fire"
+  ],
+  "trophy": "TrophyDraugr",
+  "weak": []
  },
  "Draugr_Elite": {
   "biomes": [
@@ -1070,12 +1625,22 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 200.0,
+  "icon": "trophydraugrelite",
   "id": "Draugr_Elite",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Draugr Elite",
    "es": "Draugr Elite"
-  }
+  },
+  "resist": [
+   "fire"
+  ],
+  "trophy": "TrophyDraugrElite",
+  "weak": []
  },
  "Draugr_Elite_sleeping": {
   "biomes": [],
@@ -1096,12 +1661,22 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 200.0,
+  "icon": "trophydraugrelite",
   "id": "Draugr_Elite_sleeping",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Draugr Elite",
    "es": "Draugr Elite"
-  }
+  },
+  "resist": [
+   "fire"
+  ],
+  "trophy": "TrophyDraugrElite",
+  "weak": []
  },
  "Draugr_Ranged": {
   "biomes": [],
@@ -1122,12 +1697,22 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 100.0,
+  "icon": "trophydraugr",
   "id": "Draugr_Ranged",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Draugr",
    "es": "Draugr"
-  }
+  },
+  "resist": [
+   "fire"
+  ],
+  "trophy": "TrophyDraugr",
+  "weak": []
  },
  "Draugr_Ranged_sleeping": {
   "biomes": [],
@@ -1148,12 +1733,22 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 100.0,
+  "icon": "trophydraugr",
   "id": "Draugr_Ranged_sleeping",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Draugr",
    "es": "Draugr"
-  }
+  },
+  "resist": [
+   "fire"
+  ],
+  "trophy": "TrophyDraugr",
+  "weak": []
  },
  "Draugr_sleeping": {
   "biomes": [],
@@ -1174,12 +1769,22 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 100.0,
+  "icon": "trophydraugr",
   "id": "Draugr_sleeping",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Draugr",
    "es": "Draugr"
-  }
+  },
+  "resist": [
+   "fire"
+  ],
+  "trophy": "TrophyDraugr",
+  "weak": []
  },
  "Dverger": {
   "biomes": [
@@ -1216,12 +1821,20 @@
     "perLevel": false
    }
   ],
+  "faction": 10,
   "health": 350.0,
+  "icon": "trophydvergr",
   "id": "Dverger",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Dvergr Rogue",
    "es": "Pícaro Dvergr"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyDvergr",
+  "weak": []
  },
  "DvergerAshlands": {
   "biomes": [
@@ -1258,12 +1871,20 @@
     "perLevel": false
    }
   ],
+  "faction": 10,
   "health": 1000.0,
+  "icon": "trophydvergr",
   "id": "DvergerAshlands",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Dvergr Rogue",
    "es": "Pícaro Dvergr"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyDvergr",
+  "weak": []
  },
  "DvergerDeepNorth": {
   "biomes": [],
@@ -1312,12 +1933,20 @@
     "perLevel": true
    }
   ],
+  "faction": 10,
   "health": 1500.0,
+  "icon": "trophydvergr",
   "id": "DvergerDeepNorth",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Imprisoned Dvergr",
    "es": "Dvergr encarcelado"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyDvergr",
+  "weak": []
  },
  "DvergerMage": {
   "biomes": [],
@@ -1352,12 +1981,23 @@
     "perLevel": false
    }
   ],
+  "faction": 10,
   "health": 350.0,
+  "icon": "trophydvergr",
   "id": "DvergerMage",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Dvergr Mage",
    "es": "Mago Dvergr"
-  }
+  },
+  "resist": [
+   "fire",
+   "frost"
+  ],
+  "trophy": "TrophyDvergr",
+  "weak": []
  },
  "DvergerMageFire": {
   "biomes": [],
@@ -1392,12 +2032,23 @@
     "perLevel": false
    }
   ],
+  "faction": 10,
   "health": 350.0,
+  "icon": "trophydvergr",
   "id": "DvergerMageFire",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Dvergr Mage",
    "es": "Mago Dvergr"
-  }
+  },
+  "resist": [
+   "fire",
+   "frost"
+  ],
+  "trophy": "TrophyDvergr",
+  "weak": []
  },
  "DvergerMageIce": {
   "biomes": [],
@@ -1432,12 +2083,23 @@
     "perLevel": false
    }
   ],
+  "faction": 10,
   "health": 350.0,
+  "icon": "trophydvergr",
   "id": "DvergerMageIce",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Dvergr Mage",
    "es": "Mago Dvergr"
-  }
+  },
+  "resist": [
+   "fire",
+   "frost"
+  ],
+  "trophy": "TrophyDvergr",
+  "weak": []
  },
  "DvergerMageSupport": {
   "biomes": [],
@@ -1472,12 +2134,23 @@
     "perLevel": false
    }
   ],
+  "faction": 10,
   "health": 350.0,
+  "icon": "trophydvergr",
   "id": "DvergerMageSupport",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Dvergr Mage",
    "es": "Mago Dvergr"
-  }
+  },
+  "resist": [
+   "fire",
+   "frost"
+  ],
+  "trophy": "TrophyDvergr",
+  "weak": []
  },
  "Eikthyr": {
   "biomes": [],
@@ -1498,12 +2171,18 @@
     "perLevel": false
    }
   ],
+  "faction": 8,
   "health": 500.0,
+  "icon": "trophyeikthyr",
   "id": "Eikthyr",
+  "immune": [],
   "name": {
    "en": "Eikthyr",
    "es": "Eikthyr"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyEikthyr",
+  "weak": []
  },
  "Elaking": {
   "biomes": [
@@ -1533,12 +2212,24 @@
     "perLevel": false
    }
   ],
+  "faction": 13,
   "health": 350.0,
+  "icon": "trophyelaking",
   "id": "Elaking",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Elaking",
    "es": "Elaking"
-  }
+  },
+  "resist": [
+   "frost"
+  ],
+  "trophy": "TrophyElaking",
+  "weak": [
+   "fire"
+  ]
  },
  "ElakingLantern": {
   "biomes": [
@@ -1561,12 +2252,24 @@
     "perLevel": false
    }
   ],
+  "faction": 13,
   "health": 350.0,
+  "icon": "trophyelaking",
   "id": "ElakingLantern",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Elaking",
    "es": "Elaking"
-  }
+  },
+  "resist": [
+   "frost"
+  ],
+  "trophy": "TrophyElaking",
+  "weak": [
+   "fire"
+  ]
  },
  "ElakingMole": {
   "biomes": [],
@@ -1594,12 +2297,22 @@
     "perLevel": false
    }
   ],
+  "faction": 13,
   "health": 1400.0,
+  "icon": "trophymole",
   "id": "ElakingMole",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Eyeless One",
    "es": "Sin ojos"
-  }
+  },
+  "resist": [
+   "frost"
+  ],
+  "trophy": "TrophyMole",
+  "weak": []
  },
  "Fader": {
   "biomes": [],
@@ -1620,12 +2333,23 @@
     "perLevel": false
    }
   ],
+  "faction": 8,
   "health": 25000.0,
+  "icon": "trophyfader",
   "id": "Fader",
+  "immune": [
+   "fire",
+   "spirit"
+  ],
   "name": {
    "en": "Fader",
    "es": "Fader"
-  }
+  },
+  "resist": [
+   "pierce"
+  ],
+  "trophy": "TrophyFader",
+  "weak": []
  },
  "FallenValkyrie": {
   "biomes": [
@@ -1648,12 +2372,24 @@
     "perLevel": false
    }
   ],
+  "faction": 4,
   "health": 1500.0,
+  "icon": "trophyfallenvalkyrie",
   "id": "FallenValkyrie",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Fallen Valkyrie",
    "es": "Valquiria caída"
-  }
+  },
+  "resist": [
+   "fire"
+  ],
+  "trophy": "TrophyFallenValkyrie",
+  "weak": [
+   "spirit"
+  ]
  },
  "FallenWarrior": {
   "biomes": [],
@@ -1674,12 +2410,27 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 750.0,
+  "icon": null,
   "id": "FallenWarrior",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Fallen Warrior",
    "es": "Guerrero caído"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": null,
+  "weak": [
+   "spirit"
+  ]
  },
  "FallenWarrior (1)": {
   "biomes": [],
@@ -1700,12 +2451,27 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 750.0,
+  "icon": null,
   "id": "FallenWarrior (1)",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Fallen Warrior",
    "es": "Guerrero caído"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": null,
+  "weak": [
+   "spirit"
+  ]
  },
  "FallenWarrior (2)": {
   "biomes": [],
@@ -1726,12 +2492,27 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 750.0,
+  "icon": null,
   "id": "FallenWarrior (2)",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Fallen Warrior",
    "es": "Guerrero caído"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": null,
+  "weak": [
+   "spirit"
+  ]
  },
  "Fenring": {
   "biomes": [
@@ -1754,12 +2535,22 @@
     "perLevel": false
    }
   ],
+  "faction": 5,
   "health": 300.0,
+  "icon": "trophyfenring",
   "id": "Fenring",
+  "immune": [],
   "name": {
    "en": "Fenring",
    "es": "Fenring"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophyFenring",
+  "weak": [
+   "fire"
+  ]
  },
  "Fenring_Cultist": {
   "biomes": [],
@@ -1780,12 +2571,22 @@
     "perLevel": false
    }
   ],
+  "faction": 5,
   "health": 200.0,
+  "icon": "trophycultist",
   "id": "Fenring_Cultist",
+  "immune": [
+   "fire"
+  ],
   "name": {
    "en": "Cultist",
    "es": "Cultista"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyCultist",
+  "weak": [
+   "poison"
+  ]
  },
  "Fenring_Cultist_Hildir": {
   "biomes": [],
@@ -1806,12 +2607,22 @@
     "perLevel": false
    }
   ],
+  "faction": 5,
   "health": 3700.0,
+  "icon": "trophycultisthildir",
   "id": "Fenring_Cultist_Hildir",
+  "immune": [
+   "frost"
+  ],
   "name": {
    "en": "<color=orange>Geirrhafa</color>",
    "es": "<color=orange>Geirrhafa</color>"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyCultist_Hildir",
+  "weak": [
+   "fire"
+  ]
  },
  "Fenring_Cultist_Hildir_nochest": {
   "biomes": [],
@@ -1825,34 +2636,72 @@
     "perLevel": false
    }
   ],
+  "faction": 5,
   "health": 1850.0,
+  "icon": "trophycultisthildir",
   "id": "Fenring_Cultist_Hildir_nochest",
+  "immune": [
+   "frost"
+  ],
   "name": {
    "en": "<color=orange>Geirrhafa</color>",
    "es": "<color=orange>Geirrhafa</color>"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyCultist_Hildir",
+  "weak": [
+   "fire"
+  ]
  },
  "FrozenKing": {
   "biomes": [],
   "boss": true,
   "drops": [],
+  "faction": 8,
   "health": 10000.0,
+  "icon": null,
   "id": "FrozenKing",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Kall Fimbulbringer",
    "es": "Kall Fimbulbringer"
-  }
+  },
+  "resist": [
+   "pierce",
+   "fire",
+   "frost",
+   "lightning"
+  ],
+  "trophy": null,
+  "weak": []
  },
  "FrozenKing_p2": {
   "biomes": [],
   "boss": true,
   "drops": [],
+  "faction": 8,
   "health": 7000.0,
+  "icon": null,
   "id": "FrozenKing_p2",
+  "immune": [
+   "blunt",
+   "slash",
+   "pierce",
+   "fire",
+   "frost",
+   "lightning",
+   "poison",
+   "spirit"
+  ],
   "name": {
    "en": "Kall Fimbulbringer",
    "es": "Kall Fimbulbringer"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "FrozenKing_p3": {
   "biomes": [],
@@ -1873,12 +2722,25 @@
     "perLevel": false
    }
   ],
+  "faction": 8,
   "health": 30000.0,
+  "icon": null,
   "id": "FrozenKing_p3",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Kall Fimbulbringer",
    "es": "Kall Fimbulbringer"
-  }
+  },
+  "resist": [
+   "pierce",
+   "fire",
+   "frost",
+   "lightning"
+  ],
+  "trophy": null,
+  "weak": []
  },
  "Frysling": {
   "biomes": [],
@@ -1892,12 +2754,24 @@
     "perLevel": true
    }
   ],
+  "faction": 12,
   "health": 100.0,
+  "icon": null,
   "id": "Frysling",
+  "immune": [
+   "fire",
+   "poison",
+   "spirit"
+  ],
   "name": {
    "en": "Frysling",
    "es": "Frysling"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": [
+   "frost"
+  ]
  },
  "Ghost": {
   "biomes": [],
@@ -1918,12 +2792,26 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 60.0,
+  "icon": "trophyghost",
   "id": "Ghost",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Ghost",
    "es": "Fantasma"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce"
+  ],
+  "trophy": "TrophyGhost",
+  "weak": [
+   "spirit"
+  ]
  },
  "Ghost_Void": {
   "biomes": [],
@@ -1937,12 +2825,26 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 600.0,
+  "icon": null,
   "id": "Ghost_Void",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "The Void",
    "es": "El Vacío"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce"
+  ],
+  "trophy": null,
+  "weak": [
+   "spirit"
+  ]
  },
  "Ghost_old": {
   "biomes": [],
@@ -1956,12 +2858,26 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 60.0,
+  "icon": null,
   "id": "Ghost_old",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "The Void",
    "es": "El Vacío"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce"
+  ],
+  "trophy": null,
+  "weak": [
+   "spirit"
+  ]
  },
  "Ghost_sleeping": {
   "biomes": [],
@@ -1982,12 +2898,26 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 60.0,
+  "icon": "trophyghost",
   "id": "Ghost_sleeping",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Ghost",
    "es": "Fantasma"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce"
+  ],
+  "trophy": "TrophyGhost",
+  "weak": [
+   "spirit"
+  ]
  },
  "Gjall": {
   "biomes": [
@@ -2010,12 +2940,22 @@
     "perLevel": false
    }
   ],
+  "faction": 9,
   "health": 1500.0,
+  "icon": "trophygjall",
   "id": "Gjall",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Gjall",
    "es": "Gjall"
-  }
+  },
+  "resist": [
+   "fire"
+  ],
+  "trophy": "TrophyGjall",
+  "weak": []
  },
  "Goblin": {
   "biomes": [
@@ -2048,12 +2988,20 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 175.0,
+  "icon": "trophygoblin",
   "id": "Goblin",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Fuling",
    "es": "Fuling"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyGoblin",
+  "weak": []
  },
  "GoblinArcher": {
   "biomes": [],
@@ -2081,12 +3029,20 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 175.0,
+  "icon": "trophygoblin",
   "id": "GoblinArcher",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Fuling",
    "es": "Fuling"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyGoblin",
+  "weak": []
  },
  "GoblinBrute": {
   "biomes": [
@@ -2123,12 +3079,20 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 800.0,
+  "icon": "trophygoblinbrute",
   "id": "GoblinBrute",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Fuling Berserker",
    "es": "Fuling berserker"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyGoblinBrute",
+  "weak": []
  },
  "GoblinBruteBros": {
   "biomes": [],
@@ -2142,12 +3106,20 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 4200.0,
+  "icon": "trophygoblinbrutebro",
   "id": "GoblinBruteBros",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "<color=orange>Zil & Thungr</color>",
    "es": "<color=orange>Zil y Thungr</color>"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyGoblinBruteBrosBrute",
+  "weak": []
  },
  "GoblinBruteBros_nochest": {
   "biomes": [],
@@ -2161,12 +3133,20 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 2100.0,
+  "icon": "trophygoblinbrutebro",
   "id": "GoblinBruteBros_nochest",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "<color=orange>Zil & Thungr</color>",
    "es": "<color=orange>Zil y Thungr</color>"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyGoblinBruteBrosBrute",
+  "weak": []
  },
  "GoblinBrute_Hildir": {
   "biomes": [],
@@ -2180,12 +3160,20 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 800.0,
+  "icon": null,
   "id": "GoblinBrute_Hildir",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "<color=orange>Thungr</color> ",
    "es": "<color=orange>Thungr</color> "
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "GoblinDeepNorth": {
   "biomes": [],
@@ -2213,12 +3201,20 @@
     "perLevel": true
    }
   ],
+  "faction": 7,
   "health": 250.0,
+  "icon": null,
   "id": "GoblinDeepNorth",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Captive Fuling",
    "es": "Fuling cautivo"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "GoblinKing": {
   "biomes": [],
@@ -2239,12 +3235,23 @@
     "perLevel": false
    }
   ],
+  "faction": 8,
   "health": 10000.0,
+  "icon": "trophygoblinking",
   "id": "GoblinKing",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Yagluth",
    "es": "Yagluth"
-  }
+  },
+  "resist": [
+   "pierce",
+   "fire"
+  ],
+  "trophy": "TrophyGoblinKing",
+  "weak": []
  },
  "GoblinShaman": {
   "biomes": [],
@@ -2279,12 +3286,20 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 100.0,
+  "icon": "trophygoblinshaman",
   "id": "GoblinShaman",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Fuling Shaman",
    "es": "Fuling Chamán"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyGoblinShaman",
+  "weak": []
  },
  "GoblinShaman_Hildir": {
   "biomes": [],
@@ -2305,12 +3320,20 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 2400.0,
+  "icon": "trophygoblinshamanbro",
   "id": "GoblinShaman_Hildir",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "<color=orange>Zil</color> ",
    "es": "<color=orange>Zil</color> "
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyGoblinBruteBrosShaman",
+  "weak": []
  },
  "GoblinShaman_Hildir_nochest": {
   "biomes": [],
@@ -2324,12 +3347,20 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 1200.0,
+  "icon": "trophygoblinshamanbro",
   "id": "GoblinShaman_Hildir_nochest",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "<color=orange>Zil</color> ",
    "es": "<color=orange>Zil</color> "
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyGoblinBruteBrosShaman",
+  "weak": []
  },
  "Goblin_Gem": {
   "biomes": [],
@@ -2357,12 +3388,20 @@
     "perLevel": true
    }
   ],
+  "faction": 2,
   "health": 1000.0,
+  "icon": null,
   "id": "Goblin_Gem",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Riktig Fuling",
    "es": "Riktig fuling"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "Greydwarf": {
   "biomes": [
@@ -2407,12 +3446,24 @@
     "perLevel": false
    }
   ],
+  "faction": 2,
   "health": 40.0,
+  "icon": "trophygreydwarf",
   "id": "Greydwarf",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Greydwarf",
    "es": "Grisucio"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophyGreydwarf",
+  "weak": [
+   "fire"
+  ]
  },
  "Greydwarf_Elite": {
   "biomes": [
@@ -2464,12 +3515,24 @@
     "perLevel": false
    }
   ],
+  "faction": 2,
   "health": 150.0,
+  "icon": "trophygreydwarfbrute",
   "id": "Greydwarf_Elite",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Greydwarf Brute",
    "es": "Grisucio Bruto"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophyGreydwarfBrute",
+  "weak": [
+   "fire"
+  ]
  },
  "Greydwarf_Frozen": {
   "biomes": [
@@ -2520,12 +3583,24 @@
     "perLevel": true
    }
   ],
+  "faction": 13,
   "health": 100.0,
+  "icon": "trophygreydwarf",
   "id": "Greydwarf_Frozen",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Greydwarf",
    "es": "Grisucio"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophyGreydwarf",
+  "weak": [
+   "fire"
+  ]
  },
  "Greydwarf_Shaman": {
   "biomes": [
@@ -2570,12 +3645,24 @@
     "perLevel": true
    }
   ],
+  "faction": 2,
   "health": 60.0,
+  "icon": "trophygreydwarfshaman",
   "id": "Greydwarf_Shaman",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Greydwarf Shaman",
    "es": "Grisucio Chamán"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophyGreydwarfShaman",
+  "weak": [
+   "fire"
+  ]
  },
  "Greydwarf_Shaman_Frozen": {
   "biomes": [
@@ -2626,12 +3713,24 @@
     "perLevel": true
    }
   ],
+  "faction": 13,
   "health": 120.0,
+  "icon": "trophygreydwarfshaman",
   "id": "Greydwarf_Shaman_Frozen",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Greydwarf Shaman",
    "es": "Grisucio Chamán"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophyGreydwarfShaman",
+  "weak": [
+   "fire"
+  ]
  },
  "Greyling": {
   "biomes": [
@@ -2647,12 +3746,24 @@
     "perLevel": true
    }
   ],
+  "faction": 2,
   "health": 20.0,
+  "icon": null,
   "id": "Greyling",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Greyling",
    "es": "Enanillogrís"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": null,
+  "weak": [
+   "fire"
+  ]
  },
  "Hare": {
   "biomes": [
@@ -2682,12 +3793,20 @@
     "perLevel": false
    }
   ],
+  "faction": 1,
   "health": 10.0,
+  "icon": "trophyhare",
   "id": "Hare",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Hare",
    "es": "Liebre"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyHare",
+  "weak": []
  },
  "Hatchling": {
   "biomes": [
@@ -2710,12 +3829,23 @@
     "perLevel": true
    }
   ],
+  "faction": 5,
   "health": 100.0,
+  "icon": "trophyhatchling",
   "id": "Hatchling",
+  "immune": [
+   "frost",
+   "spirit"
+  ],
   "name": {
    "en": "Drake",
    "es": "Draco"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyHatchling",
+  "weak": [
+   "fire"
+  ]
  },
  "Hen": {
   "biomes": [],
@@ -2736,12 +3866,20 @@
     "perLevel": true
    }
   ],
+  "faction": 2,
   "health": 10.0,
+  "icon": null,
   "id": "Hen",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Hen",
    "es": "Gallina"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "JotunWarrior": {
   "biomes": [
@@ -2813,12 +3951,23 @@
     "perLevel": true
    }
   ],
+  "faction": 13,
   "health": 1300.0,
+  "icon": "trophyjotunwarrior",
   "id": "JotunWarrior",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Krigen",
    "es": "Krigen"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophyJotunWarrior",
+  "weak": []
  },
  "JotunWarriorDualWield": {
   "biomes": [],
@@ -2888,12 +4037,23 @@
     "perLevel": true
    }
   ],
+  "faction": 13,
   "health": 1300.0,
+  "icon": "trophyjotunwarrior",
   "id": "JotunWarriorDualWield",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Krigen",
    "es": "Krigen"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophyJotunWarrior",
+  "weak": []
  },
  "JotunWitch": {
   "biomes": [
@@ -2944,12 +4104,25 @@
     "perLevel": false
    }
   ],
+  "faction": 13,
   "health": 800.0,
+  "icon": "trophyjotunwitch",
   "id": "JotunWitch",
+  "immune": [
+   "poison",
+   "spirit"
+  ],
   "name": {
    "en": "Hexen",
    "es": "Hexen"
-  }
+  },
+  "resist": [
+   "frost"
+  ],
+  "trophy": "TrophyJotunWitch",
+  "weak": [
+   "fire"
+  ]
  },
  "Leech": {
   "biomes": [
@@ -2972,12 +4145,23 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 60.0,
+  "icon": "trophyleech",
   "id": "Leech",
+  "immune": [
+   "fire",
+   "spirit"
+  ],
   "name": {
    "en": "Leech",
    "es": "Sanguijuela"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophyLeech",
+  "weak": []
  },
  "Leech_cave": {
   "biomes": [],
@@ -2998,12 +4182,23 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 60.0,
+  "icon": "trophyleech",
   "id": "Leech_cave",
+  "immune": [
+   "fire",
+   "spirit"
+  ],
   "name": {
    "en": "Leech",
    "es": "Sanguijuela"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophyLeech",
+  "weak": []
  },
  "Lox": {
   "biomes": [
@@ -3033,12 +4228,26 @@
     "perLevel": true
    }
   ],
+  "faction": 7,
   "health": 1000.0,
+  "icon": "trophylox",
   "id": "Lox",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Lox",
    "es": "Luey"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "frost"
+  ],
+  "trophy": "TrophyLox",
+  "weak": [
+   "fire"
+  ]
  },
  "Lox_Calf": {
   "biomes": [],
@@ -3052,23 +4261,45 @@
     "perLevel": false
    }
   ],
+  "faction": 7,
   "health": 100.0,
+  "icon": null,
   "id": "Lox_Calf",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Lox Calf",
    "es": "Cría de luey"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "frost"
+  ],
+  "trophy": null,
+  "weak": [
+   "fire"
+  ]
  },
  "Mistile": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 10,
   "health": 1.0,
+  "icon": null,
   "id": "Mistile",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Mistile",
    "es": "Nieblisil"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "Moose": {
   "biomes": [
@@ -3105,34 +4336,76 @@
     "perLevel": true
    }
   ],
+  "faction": 13,
   "health": 1000.0,
+  "icon": "trophymoose",
   "id": "Moose",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Moose",
    "es": "Alce"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "frost"
+  ],
+  "trophy": "TrophyMoose",
+  "weak": [
+   "fire"
+  ]
  },
  "Moose_calf": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 13,
   "health": 1000.0,
+  "icon": null,
   "id": "Moose_calf",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Moose Calf",
    "es": "Cervatillo de alce"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "frost"
+  ],
+  "trophy": null,
+  "weak": [
+   "fire"
+  ]
  },
  "Moose_spiritcaller": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 0,
   "health": 1100.0,
+  "icon": null,
   "id": "Moose_spiritcaller",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "",
    "es": ""
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "frost"
+  ],
+  "trophy": null,
+  "weak": [
+   "fire"
+  ]
  },
  "Morgen": {
   "biomes": [],
@@ -3160,12 +4433,25 @@
     "perLevel": false
    }
   ],
+  "faction": 4,
   "health": 1600.0,
+  "icon": "trophymorgen",
   "id": "Morgen",
+  "immune": [],
   "name": {
    "en": "Morgen",
    "es": "Morgen"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": "TrophyMorgen",
+  "weak": [
+   "lightning"
+  ]
  },
  "Morgen_NonSleeping": {
   "biomes": [
@@ -3195,12 +4481,25 @@
     "perLevel": false
    }
   ],
+  "faction": 4,
   "health": 1600.0,
+  "icon": "trophymorgen",
   "id": "Morgen_NonSleeping",
+  "immune": [],
   "name": {
    "en": "Morgen",
    "es": "Morgen"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "trophy": "TrophyMorgen",
+  "weak": [
+   "lightning"
+  ]
  },
  "Neck": {
   "biomes": [
@@ -3223,12 +4522,24 @@
     "perLevel": false
    }
   ],
+  "faction": 2,
   "health": 5.0,
+  "icon": "trophyneck",
   "id": "Neck",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Neck",
    "es": "Nixe"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophyNeck",
+  "weak": [
+   "fire"
+  ]
  },
  "Seal": {
   "biomes": [
@@ -3258,12 +4569,22 @@
     "perLevel": true
    }
   ],
+  "faction": 13,
   "health": 400.0,
+  "icon": "trophyseal",
   "id": "Seal",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Seal",
    "es": "Foca"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophySeal",
+  "weak": [
+   "fire"
+  ]
  },
  "Seal_Pup": {
   "biomes": [
@@ -3279,12 +4600,20 @@
     "perLevel": true
    }
   ],
+  "faction": 13,
   "health": 200.0,
+  "icon": null,
   "id": "Seal_Pup",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Baby Seal",
    "es": "Cría de foca"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "Seeker": {
   "biomes": [
@@ -3319,12 +4648,24 @@
     "perLevel": false
    }
   ],
+  "faction": 9,
   "health": 200.0,
+  "icon": "trophyseeker",
   "id": "Seeker",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Seeker",
    "es": "Buscador"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce"
+  ],
+  "trophy": "TrophySeeker",
+  "weak": []
  },
  "SeekerBrood": {
   "biomes": [
@@ -3340,12 +4681,24 @@
     "perLevel": false
    }
   ],
+  "faction": 9,
   "health": 20.0,
+  "icon": null,
   "id": "SeekerBrood",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Seeker Brood",
    "es": "Prole de Buscador"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce"
+  ],
+  "trophy": null,
+  "weak": []
  },
  "SeekerBrute": {
   "biomes": [
@@ -3382,12 +4735,24 @@
     "perLevel": false
    }
   ],
+  "faction": 9,
   "health": 1500.0,
+  "icon": "trophyseekerbrute",
   "id": "SeekerBrute",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Seeker Soldier",
    "es": "Soldado buscador"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce"
+  ],
+  "trophy": "TrophySeekerBrute",
+  "weak": []
  },
  "SeekerQueen": {
   "biomes": [],
@@ -3408,12 +4773,22 @@
     "perLevel": false
    }
   ],
+  "faction": 8,
   "health": 12500.0,
+  "icon": "trophyseekerqueen",
   "id": "SeekerQueen",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "The Queen",
    "es": "La Reina"
-  }
+  },
+  "resist": [
+   "pierce"
+  ],
+  "trophy": "TrophySeekerQueen",
+  "weak": []
  },
  "Serpent": {
   "biomes": [
@@ -3443,12 +4818,25 @@
     "perLevel": true
    }
   ],
+  "faction": 6,
   "health": 400.0,
+  "icon": "trophyserpent",
   "id": "Serpent",
+  "immune": [
+   "fire",
+   "spirit"
+  ],
   "name": {
    "en": "Serpent",
    "es": "Serpiente"
-  }
+  },
+  "resist": [
+   "poison"
+  ],
+  "trophy": "TrophySerpent",
+  "weak": [
+   "frost"
+  ]
  },
  "ShadowPerson": {
   "biomes": [
@@ -3456,12 +4844,18 @@
   ],
   "boss": false,
   "drops": [],
+  "faction": 13,
   "health": 750.0,
+  "icon": null,
   "id": "ShadowPerson",
+  "immune": [],
   "name": {
    "en": "Shadow",
    "es": "Sombra"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "Skeleton": {
   "biomes": [
@@ -3488,12 +4882,26 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 40.0,
+  "icon": "trophyskeleton",
   "id": "Skeleton",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skeleton",
    "es": "Esqueleto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeleton",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_DeepNorth": {
   "biomes": [
@@ -3523,23 +4931,51 @@
     "perLevel": true
    }
   ],
+  "faction": 13,
   "health": 100.0,
+  "icon": "trophyskeleton",
   "id": "Skeleton_DeepNorth",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skeleton",
    "es": "Esqueleto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeleton",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_Friendly": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 0,
   "health": 400.0,
+  "icon": null,
   "id": "Skeleton_Friendly",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skelett",
    "es": "Esquel"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": null,
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_Hildir": {
   "biomes": [],
@@ -3560,12 +4996,26 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 1200.0,
+  "icon": "trophyskeletonhildir",
   "id": "Skeleton_Hildir",
+  "immune": [
+   "fire",
+   "poison"
+  ],
   "name": {
    "en": "<color=orange>Brenna</color>",
    "es": "<color=orange>Brenna</color>"
-  }
+  },
+  "resist": [
+   "pierce"
+  ],
+  "trophy": "TrophySkeletonHildir",
+  "weak": [
+   "blunt",
+   "frost"
+  ]
  },
  "Skeleton_Hildir_nochest": {
   "biomes": [],
@@ -3579,12 +5029,26 @@
     "perLevel": false
    }
   ],
+  "faction": 3,
   "health": 600.0,
+  "icon": "trophyskeletonhildir",
   "id": "Skeleton_Hildir_nochest",
+  "immune": [
+   "fire",
+   "poison"
+  ],
   "name": {
    "en": "<color=orange>Brenna</color>",
    "es": "<color=orange>Brenna</color>"
-  }
+  },
+  "resist": [
+   "pierce"
+  ],
+  "trophy": "TrophySkeletonHildir",
+  "weak": [
+   "blunt",
+   "frost"
+  ]
  },
  "Skeleton_Meadows": {
   "biomes": [],
@@ -3605,12 +5069,26 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 30.0,
+  "icon": "trophyskeleton",
   "id": "Skeleton_Meadows",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skeleton",
    "es": "Esqueleto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeleton",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_Meadows_noarcher": {
   "biomes": [],
@@ -3631,12 +5109,26 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 30.0,
+  "icon": "trophyskeleton",
   "id": "Skeleton_Meadows_noarcher",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skeleton",
    "es": "Esqueleto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeleton",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_Mountains": {
   "biomes": [],
@@ -3657,12 +5149,26 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 75.0,
+  "icon": "trophyskeleton",
   "id": "Skeleton_Mountains",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skeleton",
    "es": "Esqueleto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeleton",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_Mountains_noarcher": {
   "biomes": [],
@@ -3683,12 +5189,26 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 75.0,
+  "icon": "trophyskeleton",
   "id": "Skeleton_Mountains_noarcher",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skeleton",
    "es": "Esqueleto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeleton",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_NoArcher": {
   "biomes": [],
@@ -3709,12 +5229,26 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 40.0,
+  "icon": "trophyskeleton",
   "id": "Skeleton_NoArcher",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skeleton",
    "es": "Esqueleto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeleton",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_Poison": {
   "biomes": [],
@@ -3735,12 +5269,26 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 100.0,
+  "icon": "trophyskeletonpoison",
   "id": "Skeleton_Poison",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Rancid Remains",
    "es": "Restos rancios"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeletonPoison",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_Swamps": {
   "biomes": [
@@ -3763,12 +5311,26 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 60.0,
+  "icon": "trophyskeleton",
   "id": "Skeleton_Swamps",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skeleton",
    "es": "Esqueleto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeleton",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_Swamps_noarcher": {
   "biomes": [],
@@ -3789,12 +5351,26 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 60.0,
+  "icon": "trophyskeleton",
   "id": "Skeleton_Swamps_noarcher",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skeleton",
    "es": "Esqueleto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeleton",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "Skeleton_aspect": {
   "biomes": [],
@@ -3815,12 +5391,26 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 40.0,
+  "icon": "trophyskeleton",
   "id": "Skeleton_aspect",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Skeleton",
    "es": "Esqueleto"
-  }
+  },
+  "resist": [
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophySkeleton",
+  "weak": [
+   "blunt",
+   "fire"
+  ]
  },
  "StoneGolem": {
   "biomes": [
@@ -3850,12 +5440,26 @@
     "perLevel": true
    }
   ],
+  "faction": 2,
   "health": 800.0,
+  "icon": "trophysgolem",
   "id": "StoneGolem",
+  "immune": [
+   "fire",
+   "frost",
+   "poison",
+   "spirit"
+  ],
   "name": {
    "en": "Stone Golem",
    "es": "Gólem de piedra"
-  }
+  },
+  "resist": [
+   "slash",
+   "pierce"
+  ],
+  "trophy": "TrophySGolem",
+  "weak": []
  },
  "Surtling": {
   "biomes": [],
@@ -3883,34 +5487,70 @@
     "perLevel": false
    }
   ],
+  "faction": 4,
   "health": 20.0,
+  "icon": "trophysurtling",
   "id": "Surtling",
+  "immune": [
+   "fire",
+   "poison",
+   "spirit"
+  ],
   "name": {
    "en": "Surtling",
    "es": "Surtling"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophySurtling",
+  "weak": [
+   "frost"
+  ]
  },
  "TentaRoot": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 8,
   "health": 20.0,
+  "icon": null,
   "id": "TentaRoot",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Root",
    "es": "Root"
-  }
+  },
+  "resist": [
+   "frost"
+  ],
+  "trophy": null,
+  "weak": [
+   "fire"
+  ]
  },
  "TentaRoot_wild": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 2,
   "health": 30.0,
+  "icon": null,
   "id": "TentaRoot_wild",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Root",
    "es": "Root"
-  }
+  },
+  "resist": [
+   "frost"
+  ],
+  "trophy": null,
+  "weak": [
+   "fire"
+  ]
  },
  "Tick": {
   "biomes": [
@@ -3933,12 +5573,22 @@
     "perLevel": false
    }
   ],
+  "faction": 9,
   "health": 50.0,
+  "icon": "trophytick",
   "id": "Tick",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Tick",
    "es": "Garrapata"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyTick",
+  "weak": [
+   "pierce"
+  ]
  },
  "Troll": {
   "biomes": [
@@ -3968,34 +5618,73 @@
     "perLevel": true
    }
   ],
+  "faction": 2,
   "health": 600.0,
+  "icon": "trophyfrosttroll",
   "id": "Troll",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Troll",
    "es": "Trol"
-  }
+  },
+  "resist": [
+   "blunt"
+  ],
+  "trophy": "TrophyFrostTroll",
+  "weak": [
+   "pierce"
+  ]
  },
  "TrollFrost": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 13,
   "health": 3000.0,
+  "icon": null,
   "id": "TrollFrost",
+  "immune": [
+   "fire",
+   "spirit"
+  ],
   "name": {
    "en": "Gammeltroll",
    "es": "Gammeltrol"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce",
+   "frost"
+  ],
+  "trophy": null,
+  "weak": []
  },
  "Troll_Summoned": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 11,
   "health": 2000.0,
+  "icon": null,
   "id": "Troll_Summoned",
+  "immune": [
+   "fire",
+   "spirit"
+  ],
   "name": {
    "en": "Summoned Troll",
    "es": "Trol invocado"
-  }
+  },
+  "resist": [
+   "blunt"
+  ],
+  "trophy": null,
+  "weak": [
+   "frost"
+  ]
  },
  "Troll_sleeping": {
   "biomes": [],
@@ -4023,12 +5712,24 @@
     "perLevel": true
    }
   ],
+  "faction": 2,
   "health": 600.0,
+  "icon": "trophyfrosttroll",
   "id": "Troll_sleeping",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Troll",
    "es": "Trol"
-  }
+  },
+  "resist": [
+   "blunt"
+  ],
+  "trophy": "TrophyFrostTroll",
+  "weak": [
+   "pierce"
+  ]
  },
  "Ulv": {
   "biomes": [],
@@ -4049,12 +5750,22 @@
     "perLevel": false
    }
   ],
+  "faction": 5,
   "health": 50.0,
+  "icon": "trophyulv",
   "id": "Ulv",
+  "immune": [],
   "name": {
    "en": "Ulv",
    "es": "Ulv"
-  }
+  },
+  "resist": [
+   "fire"
+  ],
+  "trophy": "TrophyUlv",
+  "weak": [
+   "poison"
+  ]
  },
  "Unbjorn": {
   "biomes": [
@@ -4098,12 +5809,28 @@
     "perLevel": true
    }
   ],
+  "faction": 7,
   "health": 1200.0,
+  "icon": "trophybjornundead",
   "id": "Unbjorn",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Vile",
    "es": "Vil"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce",
+   "frost"
+  ],
+  "trophy": "TrophyBjornUndead",
+  "weak": [
+   "fire",
+   "spirit"
+  ]
  },
  "Volture": {
   "biomes": [
@@ -4140,12 +5867,22 @@
     "perLevel": false
    }
   ],
+  "faction": 4,
   "health": 200.0,
+  "icon": "trophyvolture",
   "id": "Volture",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Volture",
    "es": "Buicán"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyVolture",
+  "weak": [
+   "frost"
+  ]
  },
  "Wolf": {
   "biomes": [
@@ -4182,34 +5919,58 @@
     "perLevel": true
    }
   ],
+  "faction": 5,
   "health": 80.0,
+  "icon": "trophywolf",
   "id": "Wolf",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Wolf",
    "es": "Lobo"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyWolf",
+  "weak": []
  },
  "Wolf_cub": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 5,
   "health": 10.0,
+  "icon": null,
   "id": "Wolf_cub",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "Wolf Cub",
    "es": "Lobo Cachorrillo"
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "Wolf_spiritcaller": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 0,
   "health": 800.0,
+  "icon": null,
   "id": "Wolf_spiritcaller",
+  "immune": [
+   "spirit"
+  ],
   "name": {
    "en": "",
    "es": ""
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "Wraith": {
   "biomes": [
@@ -4232,12 +5993,28 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 100.0,
+  "icon": "trophywraith",
   "id": "Wraith",
+  "immune": [
+   "frost",
+   "poison"
+  ],
   "name": {
    "en": "Wraith",
    "es": "Espíritu"
-  }
+  },
+  "resist": [
+   "blunt",
+   "slash",
+   "pierce"
+  ],
+  "trophy": "TrophyWraith",
+  "weak": [
+   "fire",
+   "spirit"
+  ]
  },
  "Writhan": {
   "biomes": [
@@ -4260,12 +6037,25 @@
     "perLevel": true
    }
   ],
+  "faction": 3,
   "health": 400.0,
+  "icon": "trophywrithan",
   "id": "Writhan",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Writhan",
    "es": "Writhan"
-  }
+  },
+  "resist": [
+   "blunt",
+   "fire"
+  ],
+  "trophy": "TrophyWrithan",
+  "weak": [
+   "slash"
+  ]
  },
  "gd_king": {
   "biomes": [],
@@ -4286,33 +6076,60 @@
     "perLevel": false
    }
   ],
+  "faction": 8,
   "health": 2500.0,
+  "icon": "trophytheelder",
   "id": "gd_king",
+  "immune": [
+   "poison",
+   "spirit"
+  ],
   "name": {
    "en": "The Elder",
    "es": "El Sabio"
-  }
+  },
+  "resist": [],
+  "trophy": "TrophyTheElder",
+  "weak": [
+   "fire"
+  ]
  },
  "piece_TrainingDummy": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 12,
   "health": 2500.0,
+  "icon": null,
   "id": "piece_TrainingDummy",
+  "immune": [],
   "name": {
    "en": "T.W.I.G.",
    "es": "P. A. L. O."
-  }
+  },
+  "resist": [],
+  "trophy": null,
+  "weak": []
  },
  "staff_greenroots_tentaroot": {
   "biomes": [],
   "boss": false,
   "drops": [],
+  "faction": 0,
   "health": 250.0,
+  "icon": null,
   "id": "staff_greenroots_tentaroot",
+  "immune": [
+   "poison"
+  ],
   "name": {
    "en": "Summoned Root",
    "es": "Raíz invocada"
-  }
+  },
+  "resist": [
+   "fire"
+  ],
+  "trophy": null,
+  "weak": []
  }
 }

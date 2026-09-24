@@ -1,0 +1,562 @@
+{
+ "altar": {
+  "label": {
+   "en": "Hugin: Forsaken altars",
+   "es": "Hugin: Altares de los Desterrados"
+  },
+  "text": {
+   "en": "You have found the summoning place of one of the Forsaken. Make the correct offering at their altar and they will come.\r\n\r\nBe wary though, the Forsaken are not easy prey, so craft a wicked weapon, don your finest armour, and eat a hearty meal before engaging them in combat.",
+   "es": "Has encontrado el lugar de invocación de uno de los Desterrados. Aparecerá si haces la ofrenda correcta en el altar.\r\n\r\nPero has de tener muchísimo cuidado, pues no son presas fáciles. Hazte con un arma poderosa, ponte tu mejor armadura y llénate bien el estómago antes de enfrentarte a uno de ellos."
+  },
+  "topic": {
+   "en": "Calling forth the beast",
+   "es": "Invocar a la bestia"
+  }
+ },
+ "artisan_extension": {
+  "label": {
+   "en": "Hugin: Artisan press",
+   "es": "Hugin: prensa artesanal"
+  },
+  "text": {
+   "en": "Now you'll be able to craft ceramic tiles, which have excellent heat insulation.\r\nYou'll need them if you're to travel southwards!",
+   "es": "Ahora podrás fabricar baldosas de cerámica, que tienen un excelente aislamiento térmico.\r\n¡Las necesitarás si vas a viajar hacia el sur!"
+  },
+  "topic": {
+   "en": "A new tool",
+   "es": "Una nueva herramienta"
+  }
+ },
+ "ashlandocean": {
+  "label": {
+   "en": "Hugin: Boiling waters",
+   "es": "Hugin: aguas hirviendo"
+  },
+  "text": {
+   "en": "It seems you have ventured to the boiling waters of the south. As you surely noted, this can be a deadly pursuit.\r\nTo traverse these waters you will need to build something sturdier if you dont want to sleep with the fishes.\r\n",
+   "es": "Parece que te has aventurado a las aguas hirviendo del sur. Como seguramente habrás notado, esta puede ser una búsqueda mortal.\r\nPara atravesar estas aguas necesitarás construir algo más resistente si no quieres dormir con los peces.\r\n"
+  },
+  "topic": {
+   "en": "Ahoy!",
+   "es": "¡Hola!"
+  }
+ },
+ "ashlands": {
+  "label": {
+   "en": "Hugin: Ashlands",
+   "es": "Hugin: Tierras de Ceniza"
+  },
+  "text": {
+   "en": "You have discovered the Ashlands, the very hottest parts of the tenth world.\r\nHere, water boils without a cauldron, and anything flammable can be set alight with just a spark. Be careful!",
+   "es": "Has descubierto las Tierras de Ceniza, las partes más cálidas del décimo mundo.\r\nAquí, el agua hierve sin necesitar un caldero, y cualquier cosa inflamable puede arder con solo una chispa. ¡Ten cuidado!"
+  },
+  "topic": {
+   "en": "Keep a cool head!",
+   "es": "¡Mantén la calma!"
+  }
+ },
+ "batteringram": {
+  "label": {
+   "en": "Hugin: Battering ram",
+   "es": "Hugin: ariete"
+  },
+  "text": {
+   "en": "The enemy fortresses are built from sturdy stuff. You'll need machines like this one if you're to break through their walls.",
+   "es": "Las fortalezas enemigas están construidas con material resistente. Necesitarás máquinas como esta si quieres atravesar sus muros."
+  },
+  "topic": {
+   "en": "A powerful siege engine",
+   "es": "Una potente máquina de asedio"
+  }
+ },
+ "bed": {
+  "label": {
+   "en": "Hugin: Settling in",
+   "es": "Hugin: Asentarse"
+  },
+  "text": {
+   "en": "Sleep the night away in your bed and awaken feeling refreshed and full of energy.\r\n\r\nAnother improvement to your home would be some chests where you can store items. <color=yellow>It is good practice to always have some spare equipment</color>, if something unfortunate should happen to you while exploring...",
+   "es": "Duerme a pierna suelta en la cama y te despertarás con las energías recargadas por completo.\r\n\r\nTambién puedes colocar cofres en casa para guardar objetos y, de paso, mejorar tu morada. <color=yellow>Nunca está de más tener equipo de repuesto</color> por si te ocurre alguna desgracia cuando salgas a explorar..."
+  },
+  "topic": {
+   "en": "A headrest for the weary!",
+   "es": "¡Una cabezadita para los cansados!"
+  }
+ },
+ "blackforest": {
+  "label": {
+   "en": "Hugin: Black Forest",
+   "es": "Hugin: Bosque negro"
+  },
+  "text": {
+   "en": "You have wandered into the Black Forest. This place can be very dangerous for those unprepared for it. Prove your worth by slaying Eikthyr.",
+   "es": "Te has adentrado en el Bosque negro. Este lugar puede ser muy peligroso para quienes no estén preparados... Así que acaba con Eikthyr para demostrar que tienes la fuerza suficiente para acceder."
+  },
+  "topic": {
+   "en": "Turn back! This is a dangerous place",
+   "es": "¡Retrocede! Ese lugar es muy peligroso"
+  }
+ },
+ "bosstrophy": {
+  "label": {
+   "en": "Hugin: Forsaken trophy",
+   "es": "Hugin: Trofeo de los Desterrados"
+  },
+  "text": {
+   "en": "Return to the Sacrificial Stones with your Forsaken trophy and offer it as a sacrifice to make the Gods smile upon you.",
+   "es": "Dirígete a las piedras de sacrificio con el trofeo de los Desterrados y haz una ofrenda con él para que te sonrían los dioses."
+  },
+  "topic": {
+   "en": "Congratulations, warrior!",
+   "es": "¡Mi más sincera enhorabuena!"
+  }
+ },
+ "cold": {
+  "label": {
+   "en": "Hugin: Cold",
+   "es": "Hugin: Frío"
+  },
+  "text": {
+   "en": "When the temperature drops at night, or if you are wet, you will suffer from being cold. This reduces your stamina regeneration.\r\n\r\nSeeking shelter by an open flame is your best option when this happens.",
+   "es": "Cuando la temperatura desciende al caer la noche o si te empapas, empezarás a sufrir por el frío y se reducirá tu regeneración de vigor.\r\n\r\nLo mejor que puedes hacer es cobijarte junto al fuego."
+  },
+  "topic": {
+   "en": "Be wary of the weather",
+   "es": "Ten cuidado con el clima"
+  }
+ },
+ "crypt": {
+  "label": {
+   "en": "Hugin: Dungeons",
+   "es": "Hugin: Mazmorras"
+  },
+  "text": {
+   "en": "Delves and dungeons can be found across the tenth world. They are monuments of the past, and most often filled with the riches of civilizations long lost.\r\n\r\nRemember to bring a light source!",
+   "es": "Hay minas y mazmorras por todo el décimo mundo. Son monumentos del pasado y suelen estar a rebosar de riquezas de las civilizaciones de antaño.\r\n\r\nEso sí, no te olvides de llevar algo de luz."
+  },
+  "topic": {
+   "en": "Treasures lie below",
+   "es": "Los tesoros están en las profundidades"
+  }
+ },
+ "death": {
+  "label": {
+   "en": "Hugin: Death",
+   "es": "Hugin: Muerte"
+  },
+  "text": {
+   "en": "Each time you are struck down, you will <color=yellow\">forget a small part of your abilities and drop your belongings</color> at the site of the accident.\r\n\r\nIf you wish you were home by now I'd recommend <color=yellow\">building a bed</color>, wherever home may be.",
+   "es": "Cada vez que te derroten, <color=yellow\">olvidarás una pequeña parte de tus habilidades y tus pertenencias se quedarán</color> en el lugar del accidente.\r\n\r\nSi desearías estar en casa ahora mismo, te recomiendo que <color=yellow\">construyas una cama</color>, esté donde esté tu hogar."
+  },
+  "topic": {
+   "en": "You suffered a mortal blow!",
+   "es": "¡Te has llevado un golpe mortal!"
+  }
+ },
+ "end_hugin": {
+  "label": {
+   "en": "Hugin: To Valhalla",
+   "es": "Hugin: Hacia Valhalla"
+  },
+  "text": {
+   "en": "Well done, warrior!\r\nAt long last, you have slain all Forsaken and proven yourself worthy. The gates of Valhalla are now open to you – all you need to do is to let the valkyrie carry you there.\r\nBut worry not, you will always be welcome here in the tenth world, should you wish to return.",
+   "es": "¡Bien hecho, guerrero!\r\nPor fin has derrotado a todos los Desterrados y has demostrado ser digno. Las puertas de Valhalla están ahora abiertas para ti; solo necesitas permitir que la valquiria te lleve allí.\r\nPero no te preocupes, siempre serás bienvenido aquí, en el décimo mundo, si deseas regresar."
+  },
+  "topic": {
+   "en": "Journey to Valhalla",
+   "es": "Viaje a Valhalla"
+  }
+ },
+ "end_munin": {
+  "label": {
+   "en": "Munin: Forsaken Defeated",
+   "es": "Munin: Desterrados derrotados"
+  },
+  "text": {
+   "en": "You have fought well, warrior.\r\nThanks to you, the Forsaken are no more, and this world can once again be reunited with the rest of Yggdrasil. But that is a story for another time! For now, you ought to claim your reward in Valhalla, don't you think?",
+   "es": "Has luchado bien, guerrero.\r\nGracias a ti, los Desterrados ya no existen y este mundo puede volver a unirse al resto de Yggdrasil. ¡Pero esa historia es para otro momento! Por ahora, deberías reclamar tu recompensa en Valhalla, ¿no crees?"
+  },
+  "topic": {
+   "en": "And so the saga comes to an end...",
+   "es": "Y así la saga llega a su fin..."
+  }
+ },
+ "food": {
+  "label": {
+   "en": "Hugin: Food",
+   "es": "Hugin: Comida"
+  },
+  "text": {
+   "en": "You have found a snack. Consume it to improve your health and stamina.\r\n\r\nBe aware that before long you will grow hungry again, so try to always have at least a couple of different meals ready.",
+   "es": "Has encontrado un aperitivo, cómetelo para mejorar tanto la salud como el vigor.\r\n\r\nTen en cuenta que, pasado un rato, volverás a tener hambre, por lo que lo ideal es tener al menos un par de comidas distintas preparadas."
+  },
+  "topic": {
+   "en": "A tasty morsel!",
+   "es": "¡A ponerse las botas!"
+  }
+ },
+ "guardstone": {
+  "label": {
+   "en": "Hugin: Ward",
+   "es": "Hugin: Piedra guardiana"
+  },
+  "text": {
+   "en": "The ward emits a strong aura which prevents other vikings from building things. It also locks all doors within its influence.",
+   "es": "La piedra guardiana emite un aura poderosa que impide que los demás vikingos construyan cosas. También cierra las puertas que estén bajo su influencia."
+  },
+  "topic": {
+   "en": "You have built a ward",
+   "es": "Has construido una piedra guardiana"
+  }
+ },
+ "hammer": {
+  "label": {
+   "en": "Hugin: Hammer",
+   "es": "Hugin: Martillo"
+  },
+  "text": {
+   "en": "With this tool you will raise mighty halls and towering fortifications.\r\n\r\nStart by building a <color=yellow>workbench</color>. This in turn will enable you to construct other things.",
+   "es": "Podrás erigir salas enormes y fortificaciones gigantescas con esta herramienta.\r\n\r\nAntes de nada, construye un <color=yellow>banco de trabajo</color> y así podrás fabricar más cosas."
+  },
+  "topic": {
+   "en": "You have crafted a hammer",
+   "es": "Has fabricado un martillo"
+  }
+ },
+ "hoe": {
+  "label": {
+   "en": "Hugin: Hoe",
+   "es": "Hugin: Azada"
+  },
+  "text": {
+   "en": "This tool is used for landscaping. You could say it is the perfect complement to the hammer.\r\n\r\nUse it to clear the ground and manipulate the terrain. It is easier to create buildings on level ground!",
+   "es": "Esta herramienta es la clave de la jardinería y podría decirse que es el complemento perfecto del martillo.\r\n\r\nÚsala para despejar y manipular el terreno. Es mucho más sencillo construir edificios en superficies planas."
+  },
+  "topic": {
+   "en": "You have crafted a hoe",
+   "es": "Has fabricado una azada"
+  }
+ },
+ "hunger": {
+  "label": {
+   "en": "Hugin: Hunger",
+   "es": "Hugin: Hambre"
+  },
+  "text": {
+   "en": "Consuming food is of <color=yellow>utmost importance</color> to a viking warrior, even in the afterlife. Having a full belly both fortifies your health and improves your stamina.\r\n\r\nFood can be found everywhere in the world, and a great deal of it can be prepared at a <color=yellow>cooking station</color>.",
+   "es": "El consumo de alimentos es de <color=yellow>suma importancia</color> para los vikingos, incluso en la otra vida. Si tienes el estómago lleno, tendrás mejor salud y vigor.\r\n\r\nPodrás encontrar comida en cualquier rincón del mundo, y puedes prepararla a tu gusto en la <color=yellow>estación de cocina</color>."
+  },
+  "topic": {
+   "en": "You need sustenance",
+   "es": "Necesitas alimentarte"
+  }
+ },
+ "inventory": {
+  "label": {
+   "en": "Hugin: Inventory",
+   "es": "Hugin: Inventario"
+  },
+  "text": {
+   "en": "Most items must be crafted. However, due to your recent departure from Midgard, you will have to recall the true shape of objects. Just pick things up and it will all come back to you, I'm sure.\r\n\r\nMy lesser brother, Munin, tells me one can fashion a stone axe out of <color=yellow>wood and stone</color>.",
+   "es": "La mayoría de los objetos han de fabricarse. Sin embargo, como acabas de dejar Midgard, aún has de recordar la verdadera forma de muchos de ellos. No me cabe duda de que irás recuperando la memoria a medida que recojas cosas.\r\n\r\nMi hermano pequeño, Munin, me ha dicho que puedes hacer un hacha de piedra con <color=yellow>madera y piedra</color>."
+  },
+  "topic": {
+   "en": "Take stock of your inventory",
+   "es": "Revisa tu inventario"
+  }
+ },
+ "jotuninvasion_hugin": {
+  "label": {
+   "en": "Hugin: Jotun Invasions",
+   "es": "Hugin: Invasiones jotun"
+  },
+  "text": {
+   "en": "\"Beware the approach of the Jotun army. You must meet them at their point of invasion and halt their advances, if you are to ever set the tenth world right...\"",
+   "es": "\"Cuidado con la llegada del ejército de los jotun. Hay que ir a la zona de invasión para combatirlos y detener su avance para restablecer el orden en el décimo mundo...\"."
+  },
+  "topic": {
+   "en": "Strange forces are invading!",
+   "es": "¡Nos invaden fuerzas extrañas!"
+  }
+ },
+ "maptable": {
+  "label": {
+   "en": "Hugin: Cartography table",
+   "es": "Hugin: Mesa de cartografía"
+  },
+  "text": {
+   "en": "With this table you can record and share your explorations of the tenth world. Use the toolbox to record your progress and take a look at this large map to copy what others have explored.",
+   "es": "Con esta mesa puedes anotar y compartir tus exploraciones del 10.º mundo. Usa las herramientas para anotar tus progresos y echa un vistazo a este gran mapa para copiar lo que otros han explorado."
+  },
+  "topic": {
+   "en": "Record your exploration",
+   "es": "Apunta tus exploraciones"
+  }
+ },
+ "mould_hugin": {
+  "label": {
+   "en": "Hugin: Moulds",
+   "es": "Hugin: Moldes"
+  },
+  "text": {
+   "en": "Moulds can yield fascinating results! But it is not enough to merely fill them with materials – they also need to be hardened with the help of extreme temperatures...",
+   "es": "¡Los moldes pueden dar lugar a resultados fascinantes! Pero no basta con llenarlos de material: además, deben endurecerse sometiéndolos a temperaturas extremas..."
+  },
+  "topic": {
+   "en": "You have found a mould!",
+   "es": "¡Has encontrado un molde!"
+  }
+ },
+ "ore": {
+  "label": {
+   "en": "Hugin: Ore",
+   "es": "Hugin: Mena"
+  },
+  "text": {
+   "en": "Raw ore needs to be refined in the <color=yellow>smelter</color> before you can work it at the <color=yellow>forge</color>.\r\n\r\nTo build a smelter you will need <color=yellow>surtling cores</color>. Search for them in the dark places beneath the earth.",
+   "es": "Las menas de minerales en bruto han de refinarse en el <color=yellow>horno de fundición</color> antes de poder usarlas en la <color=yellow>forja</color>.\r\n\r\nPara construir uno de estos hornos necesitarás <color=yellow>corazones de surtling</color>. Los encontrarás en lugares oscuros y subterráneos."
+  },
+  "topic": {
+   "en": "You have found some ore",
+   "es": "Has encontrado una mena"
+  }
+ },
+ "pickaxe": {
+  "label": {
+   "en": "Hugin: Pickaxe",
+   "es": "Hugin: Pico"
+  },
+  "text": {
+   "en": "The black forest is rich in minerals. There you can find copper in the ground and tin lining the ocean shore.\r\n\r\nNow go forth and strike the earth!",
+   "es": "El Bosque negro es rico en minerales y podrás encontrar cobre en el suelo y estaño en la costa.\r\n\r\n¿A qué esperas para ir a picar tierra?"
+  },
+  "topic": {
+   "en": "You have crafted a pickaxe",
+   "es": "Has fabricado un pico"
+  }
+ },
+ "portal": {
+  "label": {
+   "en": "Hugin: Portals",
+   "es": "Hugin: Portales"
+  },
+  "text": {
+   "en": "Portals are great for fast travel between different parts of the world.\r\n\r\nOf course, you need to build one on the other end as well, then give the pair the same name and they will be automatically connected!",
+   "es": "Los portales son muy útiles para viajar entre las distintas partes del mundo.\r\n\r\nTambién tendrás que construir uno en el sitio al que quieras llegar y, si llamas igual a una pareja de ellos, se conectarán automáticamente."
+  },
+  "topic": {
+   "en": "You have built a portal",
+   "es": "Has construido un portal"
+  }
+ },
+ "prison": {
+  "label": {
+   "en": "Hugin: The Prison",
+   "es": "Hugin: La Prisión"
+  },
+  "text": {
+   "en": "Be wary! The being imprisoned beyond this gate is mighty, more so than any other to be found in all of Valheim. You would do well to prepare accordingly before you venture forth to this final foe.",
+   "es": "¡Ten cuidado! El ser encerrado tras esta puerta es poderoso, más que cualquier otra criatura de todo Valheim. Será mejor que te prepares adecuadamente antes de enfrentarte a este enemigo final."
+  },
+  "topic": {
+   "en": "One last trial...",
+   "es": "Una última prueba..."
+  }
+ },
+ "randomevent": {
+  "label": {
+   "en": "Hugin: Invasions",
+   "es": "Hugin: Invasiones"
+  },
+  "text": {
+   "en": "Monsters will lay siege to your camp from time to time. Strength of arms does not guarantee you victory in these situations. Build a strong defense to weather out the storm!",
+   "es": "De vez en cuando, los monstruos asediarán tu campamento. La fuerza de las armas no te garantiza la victoria en estas situaciones, por lo que tendrás que construir una defensa consistente para salir indemne de estas calamidades."
+  },
+  "topic": {
+   "en": "You have been invaded",
+   "es": "Te han invadido"
+  }
+ },
+ "sacrificialblood": {
+  "label": {
+   "en": "Hugin: Kall Fimbulbringer defeated",
+   "es": "Hugin: Kall Fimbulbringer derrotado"
+  },
+  "text": {
+   "en": "Well done, warrior! You have found the sacrificial blood, the final key to restoring this realm. Now the All-Father has one last task for you – prove yourself worthy by journeying back to where it all began!",
+   "es": "¡Bien hecho, guerrero! Has encontrado la sangre sacrificial, la última llave para restaurar este reino. Ahora el Padre de Todo tiene una última tarea para ti: demuestra que eres digno regresando al lugar donde todo comenzó."
+  },
+  "topic": {
+   "en": "It is time...",
+   "es": "Ha llegado la hora..."
+  }
+ },
+ "shield": {
+  "label": {
+   "en": "Hugin: Shield",
+   "es": "Hugin: Escudo"
+  },
+  "text": {
+   "en": "A shield allows you to block incoming damage. \r\nIf your timing is perfect, the enemy may also be <color=yellow>parried</color>. \r\nBe careful though, if you block too many hits you will become <color=yellow>staggered</color>. The amount of damage you can block before becoming staggered depends on your maximum health, so if you plan on tanking a lot of damage you should eat food that increases your health.\r\nHeavier shields will block more damage but will also slow you down.",
+   "es": "El escudo te permite bloquear el daño que recibes. \r\nSi lo usas en el momento adecuado, puedes <color=yellow>rechazar</color> al enemigo. \r\nEn cualquier caso, ten cuidado, si bloqueas demasiados golpes de quedarás <color=yellow>tambaleándote</color>. La cantidad de daño que puedes bloquear antes de empezar a tambalearte depende de tu salud máxima, así que si planeas recibir muchos golpes, deberías comer algo que aumente tu salud.\r\nLos escudos más pesados bloquean más daño, pero también te ralentizan."
+  },
+  "topic": {
+   "en": "You have crafted a shield",
+   "es": "Has fabricado un escudo"
+  }
+ },
+ "shieldgenerator": {
+  "label": {
+   "en": "Hugin: Shield generator",
+   "es": "Hugin: generador de escudo"
+  },
+  "text": {
+   "en": "Kraa! This should keep away whatever the sky might throw at you.",
+   "es": "¡Kraa! Esto debería mantener alejado cualquier cosa que el cielo quiera lanzarte."
+  },
+  "topic": {
+   "en": "Means of protection",
+   "es": "Medios de protección"
+  }
+ },
+ "smelter": {
+  "label": {
+   "en": "Hugin: Smelter",
+   "es": "Hugin: Horno de fundición"
+  },
+  "text": {
+   "en": "Deposit your raw ore in this furnace and it will melt away all impurities, leaving you with a bar of refined metal to work at the forge.\r\n\r\nYou will need <color=yellow>coal</color> to fuel the smelter. Coal can be produced by building a <color=yellow>kiln</color> and loading it with wood.",
+   "es": "Coloca las menas de mineral en bruto en este horno. Se derretirán todas las impurezas y quedará un lingote de metal refinado que podrás utilizar en la forja.\r\n\r\nPara ponerlo en marcha necesitarás <color=yellow>carbón</color>; podrás conseguirlo si construyes un horno de carbón y lo llenas de madera."
+  },
+  "topic": {
+   "en": "You have built a smelter",
+   "es": "Has construido un horno de fundición"
+  }
+ },
+ "start": {
+  "label": {
+   "en": "Hugin: Tip",
+   "es": "Hugin: Consejo."
+  },
+  "text": {
+   "en": "Start tips: try to interact with things in the environment. Some items like stones, branches and pieces of flint can be collected and used for crafting. \r\n\r\nTo open your inventory and crafting screen press $KEY_Inventory.",
+   "es": "Consejos: Intenta interactuar con el entorno. Podrás recoger algunos objetos como las piedras, las ramas o los fragmentos de sílex para elaborar objetos. \r\n\r\nPulsa $KEY_Inventory para abrir el inventario y la pantalla de elaboración."
+  },
+  "topic": {
+   "en": "Welcome to Valheim",
+   "es": "Te damos la bienvenida a Valheim"
+  }
+ },
+ "stemple1": {
+  "label": {
+   "en": "Hugin: Welcome",
+   "es": "Hugin: Bienvenida"
+  },
+  "text": {
+   "en": "I am Hugin, sent here to guide you in your travels.\r\n\r\nThe megaliths surrounding you are the Sacrificial Stones. They represent the Forsaken, which you must slay in order to ascend to Valhalla.",
+   "es": "Soy Hugin, y mi deber es guiarte en tus viajes.\r\n\r\nLos megalitos que te rodean son las piedras de sacrificio, y son la representación de los Desterrados. Debes acabar con ellos para ascender al Valhalla."
+  },
+  "topic": {
+   "en": "Welcome to the tenth world, warrior",
+   "es": "Te doy la bienvenida al décimo mundo"
+  }
+ },
+ "stemple2": {
+  "label": {
+   "en": "Hugin: Vegvisirs",
+   "es": "Hugin: Vegvísires"
+  },
+  "text": {
+   "en": "These magical stones were scattered throughout the lands by Oden as signposts pointing toward the ritual grounds of the Forsaken.\r\n\r\nIf inspected closer, this one will reveal the summoning place of Eikthyr, your <color=yellow>first prey</color>. He is a mighty beast, so you need to properly arm yourself before even attempting to defeat him.",
+   "es": "Son piedras mágicas que repartió Odín por estas tierras y que sirven de indicadores para señalar los lugares en los que están las tierras rituales de los Desterrados.\r\n\r\nSi la miras con atención, esta te revelará el lugar de invocación de Eikthyr, tu <color=yellow>primera presa</color>. Es una bestia muy poderosa, por lo que tendrás que equiparte en condiciones antes de plantarle cara."
+  },
+  "topic": {
+   "en": "This stone is a Vegvisir",
+   "es": "Esta piedra es un Vegvísir"
+  }
+ },
+ "stemple4": {
+  "label": {
+   "en": "Hugin: Eikthyr defeated",
+   "es": "Hugin: Eikthyr ha caído"
+  },
+  "text": {
+   "en": "You have been granted the power of Eikthyr. Use it in times of need.\r\n\r\nYour next target dwells in the black forest. Go there, explore the lands, and uncover their lost treasures and resources.\r\n\r\nThe Elder awaits!",
+   "es": "Has recibido el poder de Eikthyr, así que no dudes en usarlo cuando las cosas se pongan feas.\r\n\r\nTu próxima víctima mora en el Bosque negro. Parte hacia allí, explora las tierras y descubre los tesoros y bienes perdidos.\r\n\r\n¡El Sabio te espera!"
+  },
+  "topic": {
+   "en": "Oden is pleased",
+   "es": "Odín parece satisfecho"
+  }
+ },
+ "trinket": {
+  "label": {
+   "en": "Hugin: Trinkets",
+   "es": "Hugin: abalorios"
+  },
+  "text": {
+   "en": "Kra-kraaa! Warrior, is that a gleaming trinket I see in your grasp? Don it with pride, and let its power course through you as you strike down your foes. Once your adrenaline reaches its peak, you are sure to be rewarded!",
+   "es": "¡Croa-croaaa! Guerrero, ¿eso que veo en tus manos es un abalorio reluciente? ¡Llévalo con orgullo! Deja que su poder fluya por tus venas y derriba a tus enemigos en su nombre. ¡Hazlo y se te recompensará con una furia alimentada por pura adrenalina!"
+  },
+  "topic": {
+   "en": "Adrenaline surges through you!",
+   "es": "¡Te invade la adrenalina!"
+  }
+ },
+ "upgrader_hugin": {
+  "label": {
+   "en": "Hugin: Forge of Potential",
+   "es": "Hugin: Forja del Potencial"
+  },
+  "text": {
+   "en": "Finding this place of ancient power is no easy feat, and those who have done so stand to gain a great deal! A word of warning, however – while the Forge may work brilliantly in your favour, it may just as easily shatter that which you seek to refine...",
+   "es": "Encontrar este lugar de poder ancestral no es tarea fácil, y quienes lo consiguen tienen mucho que ganar. Pero he aquí una advertencia: aunque la Forja puede obrar maravillas a tu favor, también podría hacer añicos aquello que pretendes refinar..."
+  },
+  "topic": {
+   "en": "Hear ye, wanderer!",
+   "es": "¡Oye, tú, errante!"
+  }
+ },
+ "weight": {
+  "label": {
+   "en": "Hugin: Encumberance",
+   "es": "Hugin: Sobrecarga"
+  },
+  "text": {
+   "en": "If you carry too much luggage you will become encumbered, slowing you down and preventing you from regaining your stamina.",
+   "es": "Si llevas demasiado equipaje, tendrás una sobrecarga, por lo que te moverás más despacio y no podrás recuperar vigor."
+  },
+  "topic": {
+   "en": "You need to lighten your load!",
+   "es": "¡Tienes que aligerar un poco la carga!"
+  }
+ },
+ "wishbone": {
+  "label": {
+   "en": "Hugin: Wishbone",
+   "es": "Hugin: Fúrcula"
+  },
+  "text": {
+   "en": "It seems one of the many bones this living ossuary hid in his belly was a Wishbone.\r\n\r\nThis bone contains powerful magic which guides you to things hidden in the earth. It can locate <color=yellow>silver veins</color>, but may also lead you to buried treasure...",
+   "es": "Parece que uno de los muchos huesos que escondía este osario en el estómago era una fúrcula.\r\n\r\nEste hueso contiene una magia poderosísima que te guía hacia las cosas que se encuentran ocultas en la tierra. Puede encontrar filones de plata... e incluso tesoros enterrados."
+  },
+  "topic": {
+   "en": "Bonemass left you a parting gift",
+   "es": "Tuétano te ha dejado un regalo de despedida"
+  }
+ },
+ "workbench": {
+  "label": {
+   "en": "Hugin: Workbench",
+   "es": "Hugin: Banco de trabajo"
+  },
+  "text": {
+   "en": "A workbench allows you to craft <color=yellow>complex items</color> as well as giving you access to lots of more <color=yellow>building pieces</color> to construct with the hammer.",
+   "es": "El banco de trabajo te permite fabricar <color=yellow>objetos complejos</color>, además de darte acceso a muchísimas más <color=yellow>construcciones</color> que podrás erigir con el martillo."
+  },
+  "topic": {
+   "en": "You have built a workbench",
+   "es": "Has construido un banco de trabajo"
+  }
+ }
+}

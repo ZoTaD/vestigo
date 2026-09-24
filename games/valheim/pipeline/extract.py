@@ -38,7 +38,7 @@ from datetime import datetime, timezone
 from .unity import Game
 from .loc import Loc, parse_localization
 from .biomes import BIOMES, BIOME_ORDER, biomes_of, is_everywhere
-from .records import item_record, recipe_record, requirements, drop_table, character_drops, trader_items
+from .records import item_record, recipe_record, requirements, drop_table, character_drops, trader_items, damage_mods
 from .sources import build_sources, build_used_in, share_by_name
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -48,7 +48,22 @@ PUBLIC = os.path.normpath(os.path.join(HERE, "..", "..", "tft", "ui", "public", 
 CLASSES = {"ObjectDB", "ItemDrop", "Recipe", "Piece", "PieceTable", "CraftingStation", "CookingStation",
            "Fermenter", "Smelter", "Humanoid", "Character", "CharacterDrop", "SpawnSystemList", "ZoneSystem",
            "LocationList", "Pickable", "MineRock5", "MineRock", "TreeBase", "DropOnDestroyed", "Trader",
-           "Plant", "Beehive", "TreeLog", "Destructible", "Container"}
+           "Plant", "Beehive", "TreeLog", "Destructible", "Container", "OfferingBowl", "ItemStand", "EnvMan"}
+
+# Los jefes en el orden en que se enfrentan, con su bioma. Es la única tabla
+# escrita a mano del extractor: el juego sabe el bioma del altar por la
+# ubicación, y las ubicaciones se cargan por referencia blanda (SoftRef), que
+# este lector no resuelve. Ocho filas que no cambian entre parches.
+BOSS_BIOME = {"Eikthyr": "meadows", "gd_king": "blackforest", "Bonemass": "swamp", "Dragon": "mountain",
+              "GoblinKing": "plains", "SeekerQueen": "mistlands", "Fader": "ashlands", "FrozenKing": "deepnorth"}
+# Arte de cada jefe: el de los logros del juego (bundle d59cfac).
+BOSS_ART = {"Eikthyr": "eikthyr_sony", "gd_king": "elder_sony", "Bonemass": "bonemass_sony", "Dragon": "moder_sony",
+            "GoblinKing": "yagluth_sony", "SeekerQueen": "queen_sony", "Fader": "fader_sony", "FrozenKing": "frozen_king_sony"}
+# Ilustración de cada bioma (852×480, bundle d59cfac). El Norte profundo no
+# tiene: se usa su logo.
+BIOME_ART = {"biome_meadows": "meadows", "biome_blackforest": "blackforest", "biome_swamp": "swamp",
+             "biome_mountain": "mountain", "biome_heath": "plains", "biome_ocean": "ocean",
+             "biome_mistlands": "mistlands", "biome_ashlands": "ashlands", "Valheim_DeepNorth_Logo": "deepnorth"}
 
 # Personalización (barbas y peinados): son "objetos" para el juego pero no se
 # consiguen ni se usan; eran 114 sin ícono.
@@ -123,6 +138,23 @@ def export_fonts(g: Game) -> int:
             with open(os.path.join(out, f"{f.m_Name}.ttf"), "wb") as fh:
                 fh.write(bytes(f.m_FontData))
     return len(hechas)
+
+
+
+def export_art(g: Game) -> int:
+    """Las ilustraciones de los biomas y el arte de los jefes, para las guías."""
+    out = os.path.join(PUBLIC, "art")
+    os.makedirs(out, exist_ok=True)
+    want = {**{k: f"biome_{v}" for k, v in BIOME_ART.items()}, **{v: f"boss_{k.lower()}" for k, v in BOSS_ART.items()}}
+    n = 0
+    for o in g.ui_sprites():
+        s = o.read()
+        if s.m_Name in want:
+            s.image.save(os.path.join(out, f"{want.pop(s.m_Name)}.webp"), "WEBP", quality=85, method=6)
+            n += 1
+    if want:
+        print("⚠ arte que no apareció:", sorted(want))
+    return n
 
 
 def main() -> None:
@@ -230,9 +262,73 @@ def main() -> None:
             if not prefab or not name or prefab in creatures or prefab == "Player":
                 continue
             drops = next((character_drops(d.tree, g.name_of_in(d.file)) for d in g.comps_on(c.go) if d.cls == "CharacterDrop"), [])
+            drops = [d for d in drops if d["item"] in items]
+            trophy = next((d["item"] for d in drops if items[d["item"]]["itemType"] == 13), None)
             creatures[prefab] = {"id": prefab, "name": name, "health": c.tree.get("m_health"), "boss": bool(c.tree.get("m_boss")),
-                                 "biomes": sorted(spawn_biomes.get(prefab, []), key=lambda b: [x[1] for x in BIOMES].index(b)),
-                                 "drops": [d for d in drops if d["item"] in items]}
+                                 "biomes": sorted(spawn_biomes.get(prefab, []), key=BIOME_ORDER.index),
+                                 "faction": c.tree.get("m_faction"), **damage_mods(c.tree.get("m_damageModifiers", {})),
+                                 "drops": drops, "trophy": trophy, "icon": items[trophy]["icon"] if trophy else None}
+
+    # --- Jefes: el altar dice qué se ofrece y cuántas; el soporte del trofeo,
+    # qué poder deja.
+    powers = {}
+    for c in g.components("ItemStand"):
+        gp = g.ref(c.file, c.tree.get("m_guardianPower"))
+        o = g._objs.get(gp) if gp else None
+        if o is None:
+            continue
+        t = o.read_typetree()
+        for sup in c.tree.get("m_supportedItems", []):
+            tro = g.name_of_in(c.file)(sup)
+            if tro and tro not in powers:
+                powers[tro] = {"name": loc.t(t.get("m_name")), "tooltip": loc.t((t.get("m_tooltip") or "").strip()),
+                               "cooldown": t.get("m_cooldown")}
+    bosses = {}
+    for c in g.components("OfferingBowl"):
+        no = g.name_of_in(c.file)
+        bp = no(c.tree["m_bossPrefab"])
+        if bp not in creatures or bp in bosses:
+            continue
+        cr = creatures[bp]
+        cr["boss"] = True
+        item, amount = no(c.tree["m_bossItem"]), c.tree["m_bossItems"]
+        if not item and c.tree.get("m_useItemStands"):
+            # Moder no se invoca en el altar: se ponen huevos en los soportes
+            # que lo rodean (los que empiezan con `m_itemStandPrefix`).
+            pre = c.tree.get("m_itemStandPrefix") or ""
+            stands = {g.prefab(st.go): st for st in g.components("ItemStand")
+                      if st.file is c.file and (g.prefab(st.go) or "").startswith(pre)}
+            sup = [g.name_of_in(st.file)(x) for st in stands.values() for x in st.tree.get("m_supportedItems", [])]
+            item, amount = (sup[0], len(stands)) if sup else (None, 0)
+        bosses[bp] = {"id": bp, "name": cr["name"], "health": cr["health"], "biome": BOSS_BIOME.get(bp),
+                      "order": list(BOSS_BIOME).index(bp) if bp in BOSS_BIOME else 99,
+                      "summon": {"item": item if item in items else None, "amount": amount, "altar": loc.t(c.tree["m_name"])},
+                      "power": powers.get(cr["trophy"]), "weak": cr["weak"], "resist": cr["resist"], "immune": cr["immune"],
+                      "drops": cr["drops"], "trophy": cr["trophy"], "icon": cr["icon"],
+                      "art": f"boss_{bp.lower()}" if bp in BOSS_ART else None}
+
+    # --- Entornos por bioma: frío, congelante, mojado.
+    env_flags, biome_envs = {}, {}
+    for c in g.components("EnvMan") + g.components("LocationList"):
+        for e in c.tree.get("m_environments", []):
+            env_flags.setdefault(e["m_name"], {k: bool(e.get(f"m_is{k[0].upper()}{k[1:]}")) for k in ("cold", "freezing", "wet", "coldAtNight", "freezingAtNight")})
+        for b in c.tree.get("m_biomes", []) + c.tree.get("m_biomeEnvironments", []):
+            for bid in biomes_of(b["m_biome"]):
+                biome_envs.setdefault(bid, set()).update(x["m_environment"] for x in b.get("m_environments", []))
+    environments = {}
+    for bid, envs in biome_envs.items():
+        flags = [env_flags[e] for e in envs if e in env_flags]
+        environments[bid] = {k: any(f[k] for f in flags) for k in ("cold", "freezing", "wet", "coldAtNight", "freezingAtNight")}
+        environments[bid]["envs"] = sorted(envs)
+
+    # --- Consejos de Hugin y Munin (los cuervos): tema, título y texto oficiales.
+    hugin = {}
+    for key in loc.table:
+        if key.startswith("tutorial_") and key.endswith("_topic"):
+            topic = key[len("tutorial_"):-len("_topic")]
+            text = loc.t(f"tutorial_{topic}_text")
+            if text:
+                hugin[topic] = {"topic": loc.t(key), "label": loc.t(f"tutorial_{topic}_label"), "text": text}
 
     # --- Vegetación → recolectables y minerales
     veg: dict[tuple, int] = {}
@@ -381,10 +477,13 @@ def main() -> None:
     dump("gatherables.json", gatherables)
     dump("traders.json", traders)
     dump("farms.json", farms)
+    dump("bosses.json", sorted(bosses.values(), key=lambda b: b["order"]))
+    dump("environments.json", environments)
+    dump("hugin.json", hugin)
     dump("biomes.json", [{"id": bid, "bit": bit, "name": loc.t(tok)} for bit, bid, tok in BIOMES])
-    n_ui, n_fonts = export_ui(g), export_fonts(g)
+    n_ui, n_fonts, n_art = export_ui(g), export_fonts(g), export_art(g)
     counts = {"items": len(items), "recipes": len(recipes), "pieces": len(pieces), "conversions": len(conversions),
-              "creatures": len(creatures), "gatherables": len(gatherables), "traders": len(traders), "farms": len(farms), "icons": len(icons.done), "ui": n_ui, "fonts": n_fonts}
+              "creatures": len(creatures), "gatherables": len(gatherables), "traders": len(traders), "farms": len(farms), "icons": len(icons.done), "ui": n_ui, "fonts": n_fonts, "art": n_art, "bosses": len(bosses)}
     # Lo que queda sin fuente se publica en meta.json: es la lista de trabajo
     # para completar a mano (o desde la wiki) en la próxima pasada.
     sin_fuente = sorted(pid for pid, it in items.items() if it["kind"] in ("food", "mead", "material") and not it["sources"])

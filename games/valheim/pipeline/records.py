@@ -64,6 +64,7 @@ def item_record(prefab: str, shared: dict, loc: Loc, icon: str | None) -> dict |
         "armorPerLevel": shared.get("m_armorPerLevel") or None,
         "blockPower": shared.get("m_blockPower") or None,
         "setName": shared.get("m_setName") or None,
+        "skill": shared.get("m_skillType", 0),
     }
 
 
@@ -110,3 +111,25 @@ def trader_items(tree: dict, name_of) -> list[dict]:
     return [{"item": name_of(i["m_prefab"]), "stack": i["m_stack"], "price": i["m_price"],
              "requiredKey": i["m_requiredGlobalKey"] or None}
             for i in tree["m_items"] if name_of(i["m_prefab"])]
+
+
+# `HitData.DamageModifier` del juego: 0 normal, 1 resistente, 2 débil, 3 inmune,
+# 4 ignorar, 5 muy resistente, 6 muy débil, 7 levemente resistente, 8
+# levemente débil.
+WEAK, RESIST, IMMUNE = {2, 6, 8}, {1, 5, 7}, {3}
+
+
+def damage_mods(dm: dict) -> dict:
+    """Qué le pega de más y qué de menos a una criatura. Talar y minar no cuentan."""
+    out = {"weak": [], "resist": [], "immune": []}
+    for k, v in dm.items():
+        name = k[2:]
+        if name in ("chop", "pickaxe", "nonPlayer"):
+            continue
+        if v in WEAK:
+            out["weak"].append(name)
+        elif v in RESIST:
+            out["resist"].append(name)
+        elif v in IMMUNE:
+            out["immune"].append(name)
+    return out

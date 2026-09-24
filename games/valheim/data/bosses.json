@@ -1,0 +1,425 @@
+[
+ {
+  "art": "boss_eikthyr",
+  "biome": "meadows",
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyEikthyr",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "HardAntler",
+    "max": 3,
+    "min": 3,
+    "perLevel": false
+   }
+  ],
+  "health": 500.0,
+  "icon": "trophyeikthyr",
+  "id": "Eikthyr",
+  "immune": [],
+  "name": {
+   "en": "Eikthyr",
+   "es": "Eikthyr"
+  },
+  "order": 0,
+  "power": {
+   "cooldown": 1200.0,
+   "name": {
+    "en": "Eikthyr",
+    "es": "Eikthyr"
+   },
+   "tooltip": {
+    "en": "The grace of the mighty stag flows through you. Your ability to move around is improved, be it on land or in water.",
+    "es": "Mejora tu habilidad para correr y saltar."
+   }
+  },
+  "resist": [],
+  "summon": {
+   "altar": {
+    "en": "Mystical Altar",
+    "es": "Altar Místico"
+   },
+   "amount": 2,
+   "item": "TrophyDeer"
+  },
+  "trophy": "TrophyEikthyr",
+  "weak": []
+ },
+ {
+  "art": "boss_gd_king",
+  "biome": "blackforest",
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyTheElder",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "CryptKey",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 2500.0,
+  "icon": "trophytheelder",
+  "id": "gd_king",
+  "immune": [
+   "poison",
+   "spirit"
+  ],
+  "name": {
+   "en": "The Elder",
+   "es": "El Sabio"
+  },
+  "order": 1,
+  "power": {
+   "cooldown": 1200.0,
+   "name": {
+    "en": "The Elder",
+    "es": "El Sabio"
+   },
+   "tooltip": {
+    "en": "The power of the forest invigorates you. You shall gather its bounties faster, just as you shall regain your own vitality should you lose it.",
+    "es": "Cortas más rápido la madera."
+   }
+  },
+  "resist": [],
+  "summon": {
+   "altar": {
+    "en": "Ancient Bowl",
+    "es": "Cuenco milenario"
+   },
+   "amount": 3,
+   "item": "AncientSeed"
+  },
+  "trophy": "TrophyTheElder",
+  "weak": [
+   "fire"
+  ]
+ },
+ {
+  "art": "boss_bonemass",
+  "biome": "swamp",
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyBonemass",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "Wishbone",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
+  "health": 5000.0,
+  "icon": "trophybonemass",
+  "id": "Bonemass",
+  "immune": [
+   "poison"
+  ],
+  "name": {
+   "en": "Bonemass",
+   "es": "Tuétano"
+  },
+  "order": 2,
+  "power": {
+   "cooldown": 1200.0,
+   "name": {
+    "en": "Bonemass",
+    "es": "Tuétano"
+   },
+   "tooltip": {
+    "en": "The mass takes the brunt of your blows. The effort required to raise your shield lessens, and you can withstand harder hits.",
+    "es": "Resistencia contra el daño físico."
+   }
+  },
+  "resist": [
+   "slash",
+   "pierce",
+   "fire"
+  ],
+  "summon": {
+   "altar": {
+    "en": "Boiling Death",
+    "es": "Erradicación de la muerte"
+   },
+   "amount": 10,
+   "item": "WitheredBone"
+  },
+  "trophy": "TrophyBonemass",
+  "weak": [
+   "blunt",
+   "frost"
+  ]
+ },
+ {
+  "art": "boss_dragon",
+  "biome": "mountain",
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyDragonQueen",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "DragonTear",
+    "max": 10,
+    "min": 10,
+    "perLevel": false
+   }
+  ],
+  "health": 7500.0,
+  "icon": "trophydragonqueen",
+  "id": "Dragon",
+  "immune": [
+   "frost",
+   "spirit"
+  ],
+  "name": {
+   "en": "Moder",
+   "es": "Moder"
+  },
+  "order": 3,
+  "power": {
+   "cooldown": 1200.0,
+   "name": {
+    "en": "Moder",
+    "es": "Moder"
+   },
+   "tooltip": {
+    "en": "The dragon's wings urge you on. You shall always have tailwind while sailing, and you shall swiftly carry heavy burdens, even over the coldest mountains.",
+    "es": "Siempre hay viento a favor al navegar."
+   }
+  },
+  "resist": [],
+  "summon": {
+   "altar": {
+    "en": "Sacrificial Altar",
+    "es": "Altar de los sacrificios"
+   },
+   "amount": 3,
+   "item": "DragonEgg"
+  },
+  "trophy": "TrophyDragonQueen",
+  "weak": [
+   "fire"
+  ]
+ },
+ {
+  "art": "boss_goblinking",
+  "biome": "plains",
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyGoblinKing",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "YagluthDrop",
+    "max": 3,
+    "min": 3,
+    "perLevel": false
+   }
+  ],
+  "health": 10000.0,
+  "icon": "trophygoblinking",
+  "id": "GoblinKing",
+  "immune": [
+   "poison"
+  ],
+  "name": {
+   "en": "Yagluth",
+   "es": "Yagluth"
+  },
+  "order": 4,
+  "power": {
+   "cooldown": 1200.0,
+   "name": {
+    "en": "Yagluth",
+    "es": "Yagluth"
+   },
+   "tooltip": {
+    "en": "The fallen king lends you his might. A king must have the power to vanquish his foes, just as he must be able to support his people.",
+    "es": "Resistencia contra el daño mágico y de rayo."
+   }
+  },
+  "resist": [
+   "pierce",
+   "fire"
+  ],
+  "summon": {
+   "altar": {
+    "en": "Mystical Altar",
+    "es": "Altar Místico"
+   },
+   "amount": 3,
+   "item": "GoblinTotem"
+  },
+  "trophy": "TrophyGoblinKing",
+  "weak": []
+ },
+ {
+  "art": "boss_seekerqueen",
+  "biome": "mistlands",
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophySeekerQueen",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "QueenDrop",
+    "max": 5,
+    "min": 5,
+    "perLevel": false
+   }
+  ],
+  "health": 12500.0,
+  "icon": "trophyseekerqueen",
+  "id": "SeekerQueen",
+  "immune": [
+   "spirit"
+  ],
+  "name": {
+   "en": "The Queen",
+   "es": "La Reina"
+  },
+  "order": 5,
+  "power": {
+   "cooldown": 1200.0,
+   "name": {
+    "en": "The Queen",
+    "es": "La Reina"
+   },
+   "tooltip": {
+    "en": "Her Majesty blesses you. In her shadow both stealth and magic may flourish, and no poison shall harm you.",
+    "es": "Minería más rápida y regeneración de Eitr incrementada."
+   }
+  },
+  "resist": [
+   "pierce"
+  ],
+  "summon": {
+   "altar": {
+    "en": "Hive seat",
+    "es": "Asiento de la colmena"
+   },
+   "amount": 3,
+   "item": "TrophySeekerBrute"
+  },
+  "trophy": "TrophySeekerQueen",
+  "weak": []
+ },
+ {
+  "art": "boss_fader",
+  "biome": "ashlands",
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "TrophyFader",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "FaderDrop",
+    "max": 5,
+    "min": 5,
+    "perLevel": false
+   }
+  ],
+  "health": 25000.0,
+  "icon": "trophyfader",
+  "id": "Fader",
+  "immune": [
+   "fire",
+   "spirit"
+  ],
+  "name": {
+   "en": "Fader",
+   "es": "Fader"
+  },
+  "order": 6,
+  "power": {
+   "cooldown": 1200.0,
+   "name": {
+    "en": "Fader",
+    "es": "Potencia de Fader"
+   },
+   "tooltip": {
+    "en": "The Emerald Flame never relents. You shall stand your ground, even when it is aflame, and you shall use all the advantages the battle may offer you.",
+    "es": "Aumenta la fuerza y la velocidad."
+   }
+  },
+  "resist": [
+   "pierce"
+  ],
+  "summon": {
+   "altar": {
+    "en": "Altar of The Emerald Flame",
+    "es": "Altar de la Llama Esmeralda"
+   },
+   "amount": 3,
+   "item": "Bell"
+  },
+  "trophy": "TrophyFader",
+  "weak": []
+ },
+ {
+  "art": "boss_frozenking",
+  "biome": "deepnorth",
+  "drops": [],
+  "health": 10000.0,
+  "icon": null,
+  "id": "FrozenKing",
+  "immune": [
+   "spirit"
+  ],
+  "name": {
+   "en": "Kall Fimbulbringer",
+   "es": "Kall Fimbulbringer"
+  },
+  "order": 7,
+  "power": null,
+  "resist": [
+   "pierce",
+   "fire",
+   "frost",
+   "lightning"
+  ],
+  "summon": {
+   "altar": {
+    "en": "Strange Bowl",
+    "es": "Cuenco extraño"
+   },
+   "amount": 3,
+   "item": "HatefulBlood"
+  },
+  "trophy": null,
+  "weak": []
+ }
+]

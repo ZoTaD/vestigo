@@ -20,6 +20,7 @@
    "es": "Bellotas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -67,6 +68,7 @@
    "es": "Ámbar"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -149,6 +151,7 @@
    "es": "Perla de ámbar"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -219,6 +222,7 @@
    "es": "Moneda antigua"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -267,6 +271,7 @@
    "es": "Draumyx"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -315,6 +320,7 @@
    "es": "Grimvarn"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -363,6 +369,7 @@
    "es": "Solryth"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -411,6 +418,7 @@
    "es": "Veydris"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -459,6 +467,7 @@
    "es": "Semilla milenaria"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -504,6 +513,7 @@
    "es": "Coraza de Ask"
   },
   "setName": "AshlandsMediumArmor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -538,6 +548,7 @@
    "es": "Pantalones de Ask"
   },
   "setName": "AshlandsMediumArmor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -572,6 +583,7 @@
    "es": "Patrones de Bjorn"
   },
   "setName": "berserker_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -606,6 +618,7 @@
    "es": "Taparrabo de Bjorn"
   },
   "setName": "berserker_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -640,6 +653,7 @@
    "es": "Torso de hueso vil"
   },
   "setName": "berserker_armor_undead",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -674,6 +688,7 @@
    "es": "Faldón de hueso vil"
   },
   "setName": "berserker_armor_undead",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -708,6 +723,7 @@
    "es": "Coraza de placas de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -742,6 +758,7 @@
    "es": "Mallas de placas de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -776,6 +793,7 @@
    "es": "Coraza de Caparazón"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -810,6 +828,7 @@
    "es": "Rodilleras de Caparazón"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -844,6 +863,7 @@
    "es": "Coraza del Protector"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -885,6 +905,7 @@
    "es": "Pantalones del Protector"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -926,6 +947,7 @@
    "es": "Túnica del Invocador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -967,6 +989,7 @@
    "es": "Pantalones del Invocador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1008,6 +1031,7 @@
    "es": "Peto de la Vanguardia"
   },
   "setName": "DeepNorthMediumArmor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1049,6 +1073,7 @@
    "es": "Pantalones de la Vanguardia"
   },
   "setName": "DeepNorthMediumArmor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1090,6 +1115,7 @@
    "es": "Vestido sencillo marrón"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1125,6 +1151,7 @@
    "es": "Vestido sencillo natural"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1160,6 +1187,7 @@
    "es": "Vestido marrón con manto"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1195,6 +1223,7 @@
    "es": "Vestido marrón con abalorios"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1230,6 +1259,7 @@
    "es": "Vestido sencillo azul"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1265,6 +1295,7 @@
    "es": "Vestido azul con manto"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1300,6 +1331,7 @@
    "es": "Vestido azul con abalorios"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1335,6 +1367,7 @@
    "es": "Vestido sencillo amarillo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1370,6 +1403,7 @@
    "es": "Vestido amarillo con manto"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1405,6 +1439,7 @@
    "es": "Vestido amarillo con abalorios"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1440,6 +1475,7 @@
    "es": "Pelaje de Fenris"
   },
   "setName": "fenring_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1474,6 +1510,7 @@
    "es": "Mallas de Fenris"
   },
   "setName": "fenring_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1508,6 +1545,7 @@
    "es": "Coraza de llametal"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1542,6 +1580,7 @@
    "es": "Grebas de llametal"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1576,6 +1615,7 @@
    "es": "Pieza fundida: coraza del Protector"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1616,6 +1656,7 @@
    "es": "Pieza fundida: yelmo del Protector"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1656,6 +1697,7 @@
    "es": "Pieza fundida: pantalones del Protector"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1696,6 +1738,7 @@
    "es": "Pieza fundida: túnica del Invocador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1736,6 +1779,7 @@
    "es": "Pieza fundida: tocado del Invocador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1776,6 +1820,7 @@
    "es": "Pieza fundida: pantalones del Invocador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1816,6 +1861,7 @@
    "es": "Pieza fundida: peto de la Vanguardia"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1856,6 +1902,7 @@
    "es": "Pieza fundida: capucha de la Vanguardia"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1896,6 +1943,7 @@
    "es": "Pieza fundida: pantalones de la Vanguardia"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -1936,6 +1984,7 @@
    "es": "Túnica de cosecha"
   },
   "setName": "harvester",
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -1971,6 +2020,7 @@
    "es": "Vestido de cosecha"
   },
   "setName": "harvester",
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2006,6 +2056,7 @@
    "es": "Armadura de escamas de hierro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2040,6 +2091,7 @@
    "es": "Grebas de hierro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2074,6 +2126,7 @@
    "es": "Túnica de cuero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2108,6 +2161,7 @@
    "es": "Pantalones de cuero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2142,6 +2196,7 @@
    "es": "Chaqueta de piel de lox"
   },
   "setName": "lox",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2176,6 +2231,7 @@
    "es": "Pantalones de piel de lox"
   },
   "setName": "lox",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2210,6 +2266,7 @@
    "es": "Túnica tejida en Eitr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2244,6 +2301,7 @@
    "es": "Túnica de Embla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2278,6 +2336,7 @@
    "es": "Pantalones tejidos en Eitr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2312,6 +2371,7 @@
    "es": "Pantalones de Embla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2346,6 +2406,7 @@
    "es": "Gambesón acolchado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2380,6 +2441,7 @@
    "es": "Grebas acolchadas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2414,6 +2476,7 @@
    "es": "Túnica harapienta"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2448,6 +2511,7 @@
    "es": "Pantalones harapientos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2482,6 +2546,7 @@
    "es": "Coraza de raíces"
   },
   "setName": "root_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2516,6 +2581,7 @@
    "es": "Mallas de raíces"
   },
   "setName": "root_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2550,6 +2616,7 @@
    "es": "Túnica de cuero de trol"
   },
   "setName": "troll",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2584,6 +2651,7 @@
    "es": "Pantalones de cuero de trol"
   },
   "setName": "troll",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -2618,6 +2686,7 @@
    "es": "Túnica sencilla azul"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2653,6 +2722,7 @@
    "es": "Túnica sencilla natural"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2688,6 +2758,7 @@
    "es": "Túnica azul con capa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2723,6 +2794,7 @@
    "es": "Túnica azul con abalorios"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2758,6 +2830,7 @@
    "es": "Túnica sencilla roja"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2793,6 +2866,7 @@
    "es": "Túnica roja con capa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2828,6 +2902,7 @@
    "es": "Túnica roja con abalorios"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2863,6 +2938,7 @@
    "es": "Túnica sencilla amarilla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2898,6 +2974,7 @@
    "es": "Túnica amarilla con capa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2933,6 +3010,7 @@
    "es": "Túnica amarilla con abalorios"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -2968,6 +3046,7 @@
    "es": "Pechera de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -3002,6 +3081,7 @@
    "es": "Pantalones de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -3038,6 +3118,7 @@
    "es": "Flecha de oro sanguino"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3074,6 +3155,7 @@
    "es": "Flecha de bronce"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3110,6 +3192,7 @@
    "es": "Flecha de caparazón"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3152,6 +3235,7 @@
    "es": "Flecha carbonizada"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3207,6 +3291,7 @@
    "es": "Flecha ígnea"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3249,6 +3334,7 @@
    "es": "Flecha de sílex"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3328,6 +3414,7 @@
    "es": "Flecha gélida"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3370,6 +3457,7 @@
    "es": "Flecha de hierro"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3418,6 +3506,7 @@
    "es": "Flecha de aguja"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3454,6 +3543,7 @@
    "es": "Flecha de obsidiana"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3497,6 +3587,7 @@
    "es": "Flecha ponzoñosa"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3546,6 +3637,7 @@
    "es": "Flecha de plata"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3584,6 +3676,7 @@
    "es": "Flecha de madera"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 20,
@@ -3618,6 +3711,7 @@
    "es": "Vejiga de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -3675,6 +3769,7 @@
    "es": "Pellejo de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -3832,6 +3927,7 @@
    "es": "Cuello de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [
@@ -3865,6 +3961,7 @@
    "es": "Pelvis de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [
@@ -3898,6 +3995,7 @@
    "es": "Caja torácica de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [
@@ -3931,6 +4029,7 @@
    "es": "Cráneo de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [
@@ -3970,6 +4069,7 @@
    "es": "Huevo de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 20,
   "usedIn": [],
@@ -4003,6 +4103,7 @@
    "es": "Cola de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -4074,6 +4175,7 @@
    "es": "Atgeir de metal negro"
   },
   "setName": null,
+  "skill": 4,
   "sources": [
    {
     "amount": 1,
@@ -4112,6 +4214,7 @@
    "es": "Atgeir de bronce"
   },
   "setName": null,
+  "skill": 4,
   "sources": [
    {
     "amount": 1,
@@ -4150,6 +4253,7 @@
    "es": "Atgeir nord"
   },
   "setName": null,
+  "skill": 4,
   "sources": [
    {
     "amount": 1,
@@ -4202,6 +4306,7 @@
    "es": "Pieza fundida: atgeir nord"
   },
   "setName": null,
+  "skill": 4,
   "sources": [
    {
     "amount": 1,
@@ -4248,6 +4353,7 @@
    "es": "Atgeir de sangre de trueno"
   },
   "setName": null,
+  "skill": 4,
   "sources": [
    {
     "amount": 1,
@@ -4290,6 +4396,7 @@
    "es": "Atgeir de fuego gélido"
   },
   "setName": null,
+  "skill": 4,
   "sources": [
    {
     "amount": 1,
@@ -4329,6 +4436,7 @@
    "es": "Himmin afl"
   },
   "setName": null,
+  "skill": 4,
   "sources": [
    {
     "amount": 1,
@@ -4367,6 +4475,7 @@
    "es": "Atgeir de hierro"
   },
   "setName": null,
+  "skill": 4,
   "sources": [
    {
     "amount": 1,
@@ -4405,6 +4514,7 @@
    "es": "Atgeir de madera"
   },
   "setName": null,
+  "skill": 4,
   "sources": [
    {
     "biomes": [],
@@ -4445,6 +4555,7 @@
    "es": "Hachas berserkir"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4501,6 +4612,7 @@
    "es": "Hachas berserkir sangrantes"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4542,6 +4654,7 @@
    "es": "Hachas berserkir atronadoras"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4583,6 +4696,7 @@
    "es": "Hachas berserkir salvajes"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4623,6 +4737,7 @@
    "es": "Hacha de metal negro"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4663,6 +4778,7 @@
    "es": "Hacha de bronce"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4703,6 +4819,7 @@
    "es": "Hachas antiguas"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4743,6 +4860,7 @@
    "es": "Hacha de sílex"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4783,6 +4901,7 @@
    "es": "Hacha nord"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4835,6 +4954,7 @@
    "es": "Pieza fundida: hacha nord"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4883,6 +5003,7 @@
    "es": "Hacha de sangre de trueno"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4927,6 +5048,7 @@
    "es": "Hacha de fuego gélido"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -4961,6 +5083,7 @@
    "es": "Cabeza de hacha curiosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -5001,6 +5124,7 @@
    "es": "Cabeza de hacha misteriosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -5047,6 +5171,7 @@
    "es": "Hacha de hierro"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -5088,6 +5213,7 @@
    "es": "Ruina de los Jotun"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -5128,6 +5254,7 @@
    "es": "Hacha de piedra"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -5168,6 +5295,7 @@
    "es": "Hacha de madera"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "biomes": [],
@@ -5208,6 +5336,7 @@
    "es": "Poteitr al horno"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BakedPoteitrUncooked",
@@ -5255,6 +5384,7 @@
    "es": "Poteitr sin hornear"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -5295,6 +5425,7 @@
    "es": "Kit de barbería"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -5336,6 +5467,7 @@
    "es": "Rama congelada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -5395,6 +5527,7 @@
    "es": "Cebada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -5468,6 +5601,7 @@
    "es": "Harina de cebada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Barley",
@@ -5539,6 +5673,7 @@
    "es": "Vino de cebada resistente al fuego"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BarleyWineBase",
@@ -5580,6 +5715,7 @@
    "es": "Base de vino de cebada: Resistencia al fuego"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -5620,6 +5756,7 @@
    "es": "Aros de barril"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Haldor",
@@ -5667,6 +5804,7 @@
    "es": "Hacha de guerra"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -5707,6 +5845,7 @@
    "es": "Hacha de batalla de metal negro"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -5748,6 +5887,7 @@
    "es": "Hacha de guerra de cristal"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -5788,6 +5928,7 @@
    "es": "Gran hacha nord"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -5840,6 +5981,7 @@
    "es": "Pieza fundida: gran hacha nord"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -5888,6 +6030,7 @@
    "es": "Gran hacha de sangre de trueno"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -5932,6 +6075,7 @@
    "es": "Gran hacha de fuego gélido"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -5972,6 +6116,7 @@
    "es": "Partecráneos"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -6012,6 +6157,7 @@
    "es": "Hacha de guerra de madera"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "biomes": [],
@@ -6046,6 +6192,7 @@
    "es": "Semillas de haya"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -6088,6 +6235,7 @@
    "es": "Campana"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -6122,6 +6270,7 @@
    "es": "Fragmento de campana"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 9,
   "usedIn": [
@@ -6155,6 +6304,7 @@
    "es": "Megingjord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Haldor",
@@ -6190,6 +6340,7 @@
    "es": "Bolsa de bilis"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -6239,6 +6390,7 @@
    "es": "Semillas de abedul"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -6305,6 +6457,7 @@
    "es": "Piel de Bjorn"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -6418,6 +6571,7 @@
    "es": "Carne de Bjorn"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -6491,6 +6645,7 @@
    "es": "Pata de Bjorn"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -6553,6 +6708,7 @@
    "es": "Núcleo negro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -6614,6 +6770,7 @@
    "es": "Mármol negro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -6838,6 +6995,7 @@
    "es": "Metal negro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BlackMetalScrap",
@@ -6994,6 +7152,7 @@
    "es": "Trozo de metal negro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -7079,6 +7238,7 @@
    "es": "Sopa negra"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -7119,6 +7279,7 @@
    "es": "Madera de ceniza"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -7460,6 +7621,7 @@
    "es": "Frasco con corcho"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -7526,6 +7688,7 @@
    "es": "Llave intrincada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "KeysGoldUncooked",
@@ -7577,6 +7740,7 @@
    "es": "Flan de sangre"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -7617,6 +7781,7 @@
    "es": "Bolsa de sangre"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -7700,6 +7865,7 @@
    "es": "Arándanos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -7823,6 +7989,7 @@
    "es": "Cecina de jabalí"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 2,
@@ -7865,6 +8032,7 @@
    "es": "Virote de metal negro"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 20,
@@ -7901,6 +8069,7 @@
    "es": "Virote de oro sanguino"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 20,
@@ -7937,6 +8106,7 @@
    "es": "Virote de hueso"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 20,
@@ -7973,6 +8143,7 @@
    "es": "Virote de caparazón"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 20,
@@ -8009,6 +8180,7 @@
    "es": "Virote carbonizado"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 20,
@@ -8057,6 +8229,7 @@
    "es": "Virote de hierro"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 20,
@@ -8093,6 +8266,7 @@
    "es": "Bomba de bilis"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 3,
@@ -8129,6 +8303,7 @@
    "es": "Bombabosa: Escarcha"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 1,
@@ -8165,6 +8340,7 @@
    "es": "Bombabosa: Lava"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 1,
@@ -8201,6 +8377,7 @@
    "es": "Bomba pegote: pulpa"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 1,
@@ -8237,6 +8414,7 @@
    "es": "Bombabosa: Veneno"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 1,
@@ -8273,6 +8451,7 @@
    "es": "Bombabosa: Super veneno"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 1,
@@ -8309,6 +8488,7 @@
    "es": "Bombabosa: Brea"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 1,
@@ -8343,6 +8523,7 @@
    "es": "Carga de brasas"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 10,
@@ -8377,6 +8558,7 @@
    "es": "Bomba de basalto"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 5,
@@ -8413,6 +8595,7 @@
    "es": "Bomba de lodo"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 5,
@@ -8447,6 +8630,7 @@
    "es": "Carga explosiva"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 5,
@@ -8483,6 +8667,7 @@
    "es": "Bomba de humo"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 10,
@@ -8517,6 +8702,7 @@
    "es": "Fragmentos de hueso"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -8781,6 +8967,7 @@
    "es": "Carne de faucesoseas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -8825,6 +9012,7 @@
    "es": "Escama de faucesoseas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [],
@@ -8852,6 +9040,7 @@
    "es": "Diente de faucesoseas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -8910,6 +9099,7 @@
    "es": "Arco tosco"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -8949,6 +9139,7 @@
    "es": "Colmillo de ceniza"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9004,6 +9195,7 @@
    "es": "Colmillo de sangre"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9044,6 +9236,7 @@
    "es": "Colmillo de raíz"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9084,6 +9277,7 @@
    "es": "Colmillo de tormenta"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9124,6 +9318,7 @@
    "es": "Colmillo de draugr"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9162,6 +9357,7 @@
    "es": "Arco de madera noble"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9202,6 +9398,7 @@
    "es": "Arco nord"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9254,6 +9451,7 @@
    "es": "Pieza fundida: arco nord"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9302,6 +9500,7 @@
    "es": "Arco de sangre de trueno"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9346,6 +9545,7 @@
    "es": "Arco de fuego gélido"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9384,6 +9584,7 @@
    "es": "Arco de cazador"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9424,6 +9625,7 @@
    "es": "Estallacolumnas"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -9464,6 +9666,7 @@
    "es": "Pan"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BreadDough",
@@ -9522,6 +9725,7 @@
    "es": "Masa de pan"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 2,
@@ -9567,6 +9771,7 @@
    "es": "Bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -9769,6 +9974,7 @@
    "es": "Clavos de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 20,
@@ -9844,6 +10050,7 @@
    "es": "Chatarra de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 30,
   "usedIn": [
@@ -9883,6 +10090,7 @@
    "es": "Carne de buscador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -9952,6 +10160,7 @@
    "es": "Mecha de vela"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -9993,6 +10202,7 @@
    "es": "Capa cinérea"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10027,6 +10237,7 @@
    "es": "Capa de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10061,6 +10272,7 @@
    "es": "Capa de piel de alce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10095,6 +10307,7 @@
    "es": "Capa del Invocador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10129,6 +10342,7 @@
    "es": "Capa de piel de ciervo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10163,6 +10377,7 @@
    "es": "Capa emplumada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10197,6 +10412,7 @@
    "es": "Capa de lino"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10231,6 +10447,7 @@
    "es": "Capa de luey"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10265,6 +10482,7 @@
    "es": "Capa de Odín"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10299,6 +10517,7 @@
    "es": "Capa de piel de trol"
   },
   "setName": "troll",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10333,6 +10552,7 @@
    "es": "Capa de pelo de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10367,6 +10587,7 @@
    "es": "Caparazón"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -10472,6 +10693,7 @@
    "es": "Zanahoria"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -10566,6 +10788,7 @@
    "es": "Semillas de zanahoria"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -10630,6 +10853,7 @@
    "es": "Sopa de zanahoria"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -10670,6 +10894,7 @@
    "es": "Carga de oro sanguino"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 5,
@@ -10704,6 +10929,7 @@
    "es": "Carga de piedras cenicientas"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 5,
@@ -10738,6 +10964,7 @@
    "es": "Pluma celestial"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -10798,6 +11025,7 @@
    "es": "Placa de cerámica"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 5,
@@ -10843,6 +11071,7 @@
    "es": "Cadena"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -10940,6 +11169,7 @@
    "es": "Resina de carbón"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -11008,6 +11238,7 @@
    "es": "Hueso carbonizado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -11170,6 +11401,7 @@
    "es": "Rueda dentada carbonizada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 10,
   "usedIn": [
@@ -11203,6 +11435,7 @@
    "es": "Cráneo carbonizado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -11262,6 +11495,7 @@
    "es": "Huevo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -11330,6 +11564,7 @@
    "es": "Carne de pollo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -11390,6 +11625,7 @@
    "es": "Quitina"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -11448,6 +11684,7 @@
    "es": "Mora de los pantanos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -11554,6 +11791,7 @@
    "es": "Garrote"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -11588,6 +11826,7 @@
    "es": "Carbón"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Wood",
@@ -11706,6 +11945,7 @@
    "es": "Monedas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -12037,6 +12277,7 @@
    "es": "Cola de cenicerdo cocida"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "AsksvinMeat",
@@ -12089,6 +12330,7 @@
    "es": "Carne de bjorn cocinada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BjornMeat",
@@ -12148,6 +12390,7 @@
    "es": "Carne de faucesoseas cocida"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BoneMawSerpentMeat",
@@ -12195,6 +12438,7 @@
    "es": "Carne de buscador cocinada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BugMeat",
@@ -12247,6 +12491,7 @@
    "es": "Carne de pollo cocinada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "ChickenMeat",
@@ -12301,6 +12546,7 @@
    "es": "Carne de ciervo cocinada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "DeerMeat",
@@ -12365,6 +12611,7 @@
    "es": "Huevo cocinado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -12411,6 +12658,7 @@
    "es": "Carne de liebre cocinada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "HareMeat",
@@ -12465,6 +12713,7 @@
    "es": "Carne de luey preparada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "LoxMeat",
@@ -12512,6 +12761,7 @@
    "es": "Carne de jabalí cocinada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "RawMeat",
@@ -12571,6 +12821,7 @@
    "es": "Carne de alce cocinada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MooseMeat",
@@ -12623,6 +12874,7 @@
    "es": "Grasa de foca cocinada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "SealBlubber",
@@ -12670,6 +12922,7 @@
    "es": "Carne de buicán cocinada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "VoltureMeat",
@@ -12717,6 +12970,7 @@
    "es": "Carne de lobo cocinada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "WolfMeat",
@@ -12765,6 +13019,7 @@
    "es": "Cobre"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "CopperOre",
@@ -12924,6 +13179,7 @@
    "es": "Mineral de cobre"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -12966,6 +13222,7 @@
    "es": "Chatarra de cobre"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -13037,6 +13294,7 @@
    "es": "Arbalesta"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 1,
@@ -13077,6 +13335,7 @@
    "es": "Ballesta nord"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 1,
@@ -13129,6 +13388,7 @@
    "es": "Pieza fundida: ballesta nord"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 1,
@@ -13177,6 +13437,7 @@
    "es": "Ballesta de sangre de trueno"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 1,
@@ -13221,6 +13482,7 @@
    "es": "Ballesta de fuego gélido"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 1,
@@ -13260,6 +13522,7 @@
    "es": "Desgarradora"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 1,
@@ -13315,6 +13578,7 @@
    "es": "Desgarradora de heridas"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 1,
@@ -13355,6 +13619,7 @@
    "es": "Desgarradora de las tormentas"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 1,
@@ -13395,6 +13660,7 @@
    "es": "Desgarradora de raíz"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 1,
@@ -13429,6 +13695,7 @@
    "es": "Joya de la corona"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -13471,6 +13738,7 @@
    "es": "Llave de la cripta"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -13507,6 +13775,7 @@
    "es": "Cristal"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -13580,6 +13849,7 @@
    "es": "Cultivador"
   },
   "setName": null,
+  "skill": 106,
   "sources": [
    {
     "amount": 1,
@@ -13614,6 +13884,7 @@
    "es": "Tendón de jarrete de ardilla curado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -13655,6 +13926,7 @@
    "es": "Diente de león"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -13753,6 +14025,7 @@
    "es": "Piel de ciervo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -13940,6 +14213,7 @@
    "es": "Carne de ciervo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -13996,6 +14270,7 @@
    "es": "Cocido de ciervo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -14041,6 +14316,7 @@
    "es": "Luz de Wisp"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -14075,6 +14351,7 @@
    "es": "Huevo de dragón"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -14109,6 +14386,7 @@
    "es": "Lágrima dracónica"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -14151,6 +14429,7 @@
    "es": "Arbalesta"
   },
   "setName": null,
+  "skill": 14,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -14182,6 +14461,7 @@
    "es": "Arbalesta"
   },
   "setName": null,
+  "skill": 14,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -14213,6 +14493,7 @@
    "es": "Arbalesta"
   },
   "setName": null,
+  "skill": 14,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -14244,6 +14525,7 @@
    "es": "Arbalesta"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 1,
@@ -14279,6 +14561,7 @@
    "es": "Rompedor de sellos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -14313,6 +14596,7 @@
    "es": "Fragmento del rompedor de sellos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 9,
   "usedIn": [
@@ -14346,6 +14630,7 @@
    "es": "Extractor Dvergr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 10,
   "usedIn": [
@@ -14379,6 +14664,7 @@
    "es": "Fragmento de espada de Dyrnwyn"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -14419,6 +14705,7 @@
    "es": "Fragmento de empuñadura de Dyrnwyn"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -14467,6 +14754,7 @@
    "es": "Fragmento de punta de Dyrnwyn"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -14507,6 +14795,7 @@
    "es": "Ectoplasma"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -14565,6 +14854,7 @@
    "es": "Eitr refinado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Softtissue",
@@ -14766,6 +15056,7 @@
    "es": "Fardo de pelo de elaking"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -14835,6 +15126,7 @@
    "es": "Corteza ancestral"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -14959,6 +15251,7 @@
    "es": "Vísceras"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -15061,6 +15354,7 @@
    "es": "Heladojo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15101,6 +15395,7 @@
    "es": "Coraza de placas de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15136,6 +15431,7 @@
    "es": "Mallas de placas de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15171,6 +15467,7 @@
    "es": "Pelaje de Fenris"
   },
   "setName": "fenring_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15206,6 +15503,7 @@
    "es": "Mallas de Fenris"
   },
   "setName": "fenring_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15241,6 +15539,7 @@
    "es": "Túnica tejida en Eitr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15276,6 +15575,7 @@
    "es": "Túnica de Embla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -15303,6 +15603,7 @@
    "es": "Pantalones tejidos en Eitr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15338,6 +15639,7 @@
    "es": "Pantalones de Embla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -15365,6 +15667,7 @@
    "es": "Gambesón acolchado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15400,6 +15703,7 @@
    "es": "Grebas acolchadas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15435,6 +15739,7 @@
    "es": "Túnica de cuero de trol"
   },
   "setName": "troll",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15470,6 +15775,7 @@
    "es": "Pantalones de cuero de trol"
   },
   "setName": "troll",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15512,6 +15818,7 @@
    "es": "Hacha de bronce"
   },
   "setName": null,
+  "skill": 7,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -15546,6 +15853,7 @@
    "es": "Hacha de guerra de cristal"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -15587,6 +15895,7 @@
    "es": "Colmillo de draugr"
   },
   "setName": null,
+  "skill": 8,
   "sources": [
    {
     "amount": 1,
@@ -15622,6 +15931,7 @@
    "es": "Capa de lino"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15657,6 +15967,7 @@
    "es": "Capa de piel de trol"
   },
   "setName": "troll",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15692,6 +16003,7 @@
    "es": "Capa de pelo de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15727,6 +16039,7 @@
    "es": "Casco de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -15760,6 +16073,7 @@
    "es": "Cuchillo de plata"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -15801,6 +16115,7 @@
    "es": "Skoll y Hati"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -15836,6 +16151,7 @@
    "es": "Escudo de torre de metal negro"
   },
   "setName": null,
+  "skill": 6,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -15868,6 +16184,7 @@
    "es": "Bastón de Ascuas"
   },
   "setName": null,
+  "skill": 9,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -15900,6 +16217,7 @@
    "es": "Dundr"
   },
   "setName": null,
+  "skill": 9,
   "sources": [
    {
     "amount": 1,
@@ -15939,6 +16257,7 @@
    "es": "Espada de metal negro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -15974,6 +16293,7 @@
    "es": "Reliquia de Fader"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -16016,6 +16336,7 @@
    "es": "Brasas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [
@@ -16057,6 +16378,7 @@
    "es": "Cuenco gourmet de las Tierras de Ceniza"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16092,6 +16414,7 @@
    "es": "Cuenco gourmet de las Tierras de Ceniza"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16135,6 +16458,7 @@
    "es": "Bandeja de bufé del Bosque negro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16170,6 +16494,7 @@
    "es": "Bandeja de bufé del Bosque negro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16213,6 +16538,7 @@
    "es": "Desayuno del norte"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16248,6 +16574,7 @@
    "es": "Desayuno del norte"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16291,6 +16618,7 @@
    "es": "Jabalí de pradera entero asado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16326,6 +16654,7 @@
    "es": "Jabalí de pradera entero asado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16369,6 +16698,7 @@
    "es": "Festín de setas al estilo de las Tierras Nubladas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16404,6 +16734,7 @@
    "es": "Festín de setas al estilo de las Tierras Nubladas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16447,6 +16778,7 @@
    "es": "Guiso vigoroso del leñador de montaña"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16482,6 +16814,7 @@
    "es": "Guiso vigoroso del leñador de montaña"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16525,6 +16858,7 @@
    "es": "Manjar de marinero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16560,6 +16894,7 @@
    "es": "Manjar de marinero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16603,6 +16938,7 @@
    "es": "Pícnic de pastel de las llanuras"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16638,6 +16974,7 @@
    "es": "Pícnic de pastel de las llanuras"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16681,6 +17018,7 @@
    "es": "Delicias del habitante del pantano"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16716,6 +17054,7 @@
    "es": "Delicias del habitante del pantano"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -16756,6 +17095,7 @@
    "es": "Bandeja para servir"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "from": "BogWitch",
@@ -16791,6 +17131,7 @@
    "es": "Plumas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -17168,6 +17509,7 @@
    "es": "Cabeza de violín"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -17244,6 +17586,7 @@
    "es": "Guiso porcino ardiente"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -17284,6 +17627,7 @@
    "es": "Madera noble"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -17793,6 +18137,7 @@
    "es": "Piña de abeto"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -17866,6 +18211,7 @@
    "es": "Cono de leño de construcción"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -17916,6 +18262,7 @@
    "es": "Cohete azul"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -17950,6 +18297,7 @@
    "es": "Cohete cian"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -17984,6 +18332,7 @@
    "es": "Cohete verde"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -18018,6 +18367,7 @@
    "es": "Cohete morado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -18052,6 +18402,7 @@
    "es": "Cohete rojo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -18086,6 +18437,7 @@
    "es": "Cohete básico"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -18152,6 +18504,7 @@
    "es": "Cohete amarillo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -18186,6 +18539,7 @@
    "es": "Perca"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18240,6 +18594,7 @@
    "es": "Salmón norteño"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18287,6 +18642,7 @@
    "es": "Magmapez"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18334,6 +18690,7 @@
    "es": "Pez globo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18382,6 +18739,7 @@
    "es": "Lucio"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18431,6 +18789,7 @@
    "es": "Atún"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18478,6 +18837,7 @@
    "es": "Tetra"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 10,
   "usedIn": [
@@ -18516,6 +18876,7 @@
    "es": "Pez troll"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18568,6 +18929,7 @@
    "es": "Arenque gigante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18615,6 +18977,7 @@
    "es": "Mero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18667,6 +19030,7 @@
    "es": "Bacalao de coral"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18714,6 +19078,7 @@
    "es": "Rape"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -18772,6 +19137,7 @@
    "es": "Pan de pescado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "FishAndBreadUncooked",
@@ -18819,6 +19185,7 @@
    "es": "Pan de pescado sin cocinar"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -18865,6 +19232,7 @@
    "es": "Pescado crudo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -18906,6 +19274,7 @@
    "es": "Pescado cocinado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "FishRaw",
@@ -18970,6 +19339,7 @@
    "es": "Pescado crudo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -19031,6 +19401,7 @@
    "es": "Sopa de pescado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -19077,6 +19448,7 @@
    "es": "Rollitos de pescado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -19117,6 +19489,7 @@
    "es": "Cebo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Haldor",
@@ -19193,6 +19566,7 @@
    "es": "Carnada caliente"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 20,
@@ -19227,6 +19601,7 @@
    "es": "Carnada fría"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 20,
@@ -19261,6 +19636,7 @@
    "es": "Carnada helada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 20,
@@ -19295,6 +19671,7 @@
    "es": "Carnada musgosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 20,
@@ -19329,6 +19706,7 @@
    "es": "Carnada brumosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 20,
@@ -19363,6 +19741,7 @@
    "es": "Carnada pesada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 20,
@@ -19397,6 +19776,7 @@
    "es": "Carnada picosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 20,
@@ -19431,6 +19811,7 @@
    "es": "Carnada apestosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 20,
@@ -19469,6 +19850,7 @@
    "es": "Caña de pescar"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "biomes": [],
@@ -19514,6 +19896,7 @@
    "es": "Garras de Bjorn"
   },
   "setName": null,
+  "skill": 11,
   "sources": [
    {
     "amount": 1,
@@ -19553,6 +19936,7 @@
    "es": "Garras furiosas de hueso vil"
   },
   "setName": null,
+  "skill": 11,
   "sources": [
    {
     "amount": 1,
@@ -19591,6 +19975,7 @@
    "es": "Despellejadores"
   },
   "setName": null,
+  "skill": 11,
   "sources": [
    {
     "amount": 1,
@@ -19629,6 +20014,7 @@
    "es": "Nudillos nord"
   },
   "setName": null,
+  "skill": 11,
   "sources": [
    {
     "amount": 1,
@@ -19681,6 +20067,7 @@
    "es": "Pieza fundida: nudillos nord"
   },
   "setName": null,
+  "skill": 11,
   "sources": [
    {
     "amount": 1,
@@ -19727,6 +20114,7 @@
    "es": "Nudillos de sangre de trueno"
   },
   "setName": null,
+  "skill": 11,
   "sources": [
    {
     "amount": 1,
@@ -19769,6 +20157,7 @@
    "es": "Nudillos de fuego gélido"
   },
   "setName": null,
+  "skill": 11,
   "sources": [
    {
     "amount": 1,
@@ -19803,6 +20192,7 @@
    "es": "Metal antiguo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 30,
   "usedIn": [],
@@ -19830,6 +20220,7 @@
    "es": "Flametal"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "FlametalOreNew",
@@ -20151,6 +20542,7 @@
    "es": "Mineral de metal brillante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 30,
   "usedIn": [],
@@ -20178,6 +20570,7 @@
    "es": "Mineral de llametal"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -20218,6 +20611,7 @@
    "es": "Lino"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -20275,6 +20669,7 @@
    "es": "Sílex"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -20365,6 +20760,7 @@
    "es": "Paquete fragante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -20406,6 +20802,7 @@
    "es": "Glándula congelada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -20465,6 +20862,7 @@
    "es": "Algas frescas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -20506,6 +20904,7 @@
    "es": "Núcleo de escarcha"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -20559,6 +20958,7 @@
    "es": "Leño de construcción"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -21056,6 +21456,7 @@
    "es": "Escarcha líquida"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [],
@@ -21083,6 +21484,7 @@
    "es": "Sangre de sacrificio"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -21119,6 +21521,7 @@
    "es": "Iolita"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -21197,6 +21600,7 @@
    "es": "Jade"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -21280,6 +21684,7 @@
    "es": "Piedra de sangre"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -21383,6 +21788,7 @@
    "es": "Coágulo de sangre"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -21443,6 +21849,7 @@
    "es": "Larva luminosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -21483,6 +21890,7 @@
    "es": "Tótem de fuling"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -21527,6 +21935,7 @@
    "es": "Oro sanguino"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "GoldOre",
@@ -22003,6 +22412,7 @@
    "es": "Tejido petrificado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 30,
   "usedIn": [
@@ -22038,6 +22448,7 @@
    "es": "Gancho de agarre"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 1,
@@ -22072,6 +22483,7 @@
    "es": "Piedra cenicienta"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -22336,6 +22748,7 @@
    "es": "Ojo de grisucio"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -22463,6 +22876,7 @@
    "es": "Viscosidad"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -22522,6 +22936,7 @@
    "es": "Martillo"
   },
   "setName": null,
+  "skill": 107,
   "sources": [
    {
     "amount": 1,
@@ -22556,6 +22971,7 @@
    "es": "Cornamenta dura"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -22604,6 +23020,7 @@
    "es": "Carne de liebre"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -22663,6 +23080,7 @@
    "es": "Sangre maliciosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [],
@@ -22690,6 +23108,7 @@
    "es": "Capucha de Ask"
   },
   "setName": "AshlandsMediumArmor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -22724,6 +23143,7 @@
    "es": "Tocado de Bjorn"
   },
   "setName": "berserker_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -22758,6 +23178,7 @@
    "es": "Mentonera de hueso vil"
   },
   "setName": "berserker_armor_undead",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -22792,6 +23213,7 @@
    "es": "Casco de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -22826,6 +23248,7 @@
    "es": "Casco de Caparazón"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -22860,6 +23283,7 @@
    "es": "Gorra festiva"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -22894,6 +23318,7 @@
    "es": "Corona de Valheim"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -22928,6 +23353,7 @@
    "es": "Yelmo del Protector"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -22969,6 +23395,7 @@
    "es": "Tocado del Invocador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23010,6 +23437,7 @@
    "es": "Capucha de la Vanguardia"
   },
   "setName": "DeepNorthMediumArmor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23051,6 +23479,7 @@
    "es": "Casco dracónico"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23085,6 +23514,7 @@
    "es": "Diadema de Dverger"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Haldor",
@@ -23120,6 +23550,7 @@
    "es": "Capucha de Fenris"
   },
   "setName": "fenring_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23154,6 +23585,7 @@
    "es": "Gorro de pescar"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23188,6 +23620,7 @@
    "es": "Casco de llametal"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23222,6 +23655,7 @@
    "es": "Pañuelo atado azul"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23257,6 +23691,7 @@
    "es": "Gorro sencillo morado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23292,6 +23727,7 @@
    "es": "Pañuelo trenzado verde"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23327,6 +23763,7 @@
    "es": "Gorro de piel marrón"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23362,6 +23799,7 @@
    "es": "Gorro verde extravagante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23397,6 +23835,7 @@
    "es": "Gorro sencillo rojo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23432,6 +23871,7 @@
    "es": "Pañuelo atado amarillo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23467,6 +23907,7 @@
    "es": "Pañuelo trenzado rojo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23502,6 +23943,7 @@
    "es": "Gorro de piel gris"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23537,6 +23979,7 @@
    "es": "Gorro naranja extravagante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23572,6 +24015,7 @@
    "es": "Casco de hierro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23606,6 +24050,7 @@
    "es": "Casco de cuero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23640,6 +24085,7 @@
    "es": "Capucha de piel de lox"
   },
   "setName": "lox",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23674,6 +24120,7 @@
    "es": "Capucha tejida en Eitr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23708,6 +24155,7 @@
    "es": "Capucha de Embla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23742,6 +24190,7 @@
    "es": "Corona estival"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -23769,6 +24218,7 @@
    "es": "Capucha de Odín"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23803,6 +24253,7 @@
    "es": "Casco acolchado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23837,6 +24288,7 @@
    "es": "Sombrero puntiagudo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -23864,6 +24316,7 @@
    "es": "Máscara de raíces"
   },
   "setName": "root_armor",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -23898,6 +24351,7 @@
    "es": "Corona de raíces"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -23933,6 +24387,7 @@
    "es": "Sombrero de paja"
   },
   "setName": "harvester",
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -23968,6 +24423,7 @@
    "es": "Cinta para el pelo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -24003,6 +24459,7 @@
    "es": "Casco de cuero de trol"
   },
   "setName": "troll",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -24037,6 +24494,7 @@
    "es": "Gorro de Navidad"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Haldor",
@@ -24072,6 +24530,7 @@
    "es": "Llave de latón de Hildir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -24106,6 +24565,7 @@
    "es": "Llave de plata de Hildir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -24140,6 +24600,7 @@
    "es": "Llave de bronce de Hildir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -24174,6 +24635,7 @@
    "es": "Azada"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 1,
@@ -24214,6 +24676,7 @@
    "es": "Miel"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -24353,6 +24816,7 @@
    "es": "Pollo glaseado en miel"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "HoneyGlazedChickenUncooked",
@@ -24400,6 +24864,7 @@
    "es": "Pollo glaseado en miel sin cocinar"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -24440,6 +24905,7 @@
    "es": "Gancho"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -24486,6 +24952,7 @@
    "es": "Hielo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -24635,6 +25102,7 @@
    "es": "Hierro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "IronOre",
@@ -25051,6 +25519,7 @@
    "es": "Clavos de hierro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 10,
@@ -25146,6 +25615,7 @@
    "es": "Mineral de hierro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -25192,6 +25662,7 @@
    "es": "Chatarra"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -25282,6 +25753,7 @@
    "es": "Brasero de hierro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -25323,6 +25795,7 @@
    "es": "Yute azul"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [
@@ -25366,6 +25839,7 @@
    "es": "Yute rojo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -25429,6 +25903,7 @@
    "es": "Col rizada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -25514,6 +25989,7 @@
    "es": "Chips de col rizada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "KaleChipsUncooked",
@@ -25561,6 +26037,7 @@
    "es": "Chips de col rizada cruda"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 4,
@@ -25601,6 +26078,7 @@
    "es": "Semillas de col rizada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -25664,6 +26142,7 @@
    "es": "Pieza fundida: llave intrincada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -25710,6 +26189,7 @@
    "es": "Cuchillo de metal negro"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -25746,6 +26226,7 @@
    "es": "Cuchillo de carnicero"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -25786,6 +26267,7 @@
    "es": "Navaja abisal"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -25826,6 +26308,7 @@
    "es": "Cuchillo de cobre"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -25866,6 +26349,7 @@
    "es": "Cuchillo de sílex"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -25906,6 +26390,7 @@
    "es": "Daga nord"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -25958,6 +26443,7 @@
    "es": "Pieza fundida: daga nord"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -26006,6 +26492,7 @@
    "es": "Daga de sangre de trueno"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -26050,6 +26537,7 @@
    "es": "Daga de fuego gélido"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -26091,6 +26579,7 @@
    "es": "Cuchillo de plata"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -26131,6 +26620,7 @@
    "es": "Skoll y Hati"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "amount": 1,
@@ -26171,6 +26661,7 @@
    "es": "Invocador del Vacío"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "biomes": [],
@@ -26213,6 +26704,7 @@
    "es": "Cuchillo de madera"
   },
   "setName": null,
+  "skill": 2,
   "sources": [
    {
     "biomes": [],
@@ -26247,6 +26739,7 @@
    "es": "Linterna dvergr"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -26298,6 +26791,7 @@
    "es": "Farol recuperado"
   },
   "setName": null,
+  "skill": 3,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -26325,6 +26819,7 @@
    "es": "Farol con capucha"
   },
   "setName": null,
+  "skill": 3,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -26352,6 +26847,7 @@
    "es": "Trozos de cuero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -26674,6 +27170,7 @@
    "es": "Correas de cuero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -26751,6 +27248,7 @@
    "es": "Hilo de lino"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Flax",
@@ -26923,6 +27421,7 @@
    "es": "Arándanos rojos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -27004,6 +27503,7 @@
    "es": "Zumo de arándanos rojos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -27050,6 +27550,7 @@
    "es": "Carne de luey"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -27112,6 +27613,7 @@
    "es": "Piel de luey"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -27207,6 +27709,7 @@
    "es": "Pastel de luey"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "LoxPieUncooked",
@@ -27259,6 +27762,7 @@
    "es": "Pastel de luey sin hornear"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -27303,6 +27807,7 @@
    "es": "Maza de bronce"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27341,6 +27846,7 @@
    "es": "Maza de llametal"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27395,6 +27901,7 @@
    "es": "Sanguinaria"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27434,6 +27941,7 @@
    "es": "Estrella de tormenta"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27473,6 +27981,7 @@
    "es": "Klossen"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27511,6 +28020,7 @@
    "es": "Maza nord"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27563,6 +28073,7 @@
    "es": "Pieza fundida: maza nord"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27609,6 +28120,7 @@
    "es": "Maza de sangre de trueno"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27651,6 +28163,7 @@
    "es": "Maza de fuego gélido"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27689,6 +28202,7 @@
    "es": "Maza de hierro"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27728,6 +28242,7 @@
    "es": "Puercoespín"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27768,6 +28283,7 @@
    "es": "Escarchador"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -27806,6 +28322,7 @@
    "es": "Maza de madera"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "biomes": [],
@@ -27852,6 +28369,7 @@
    "es": "Hongos rellenos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MagicallyStuffedShroomUncooked",
@@ -27899,6 +28417,7 @@
    "es": "Hongo relleno sin cocinar"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -27939,6 +28458,7 @@
    "es": "Mandíbula"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -28009,6 +28529,7 @@
    "es": "Verduras marinadas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28055,6 +28576,7 @@
    "es": "Puré de carne"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28095,6 +28617,7 @@
    "es": "Base de hidromiel: fuerza de trol"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28135,6 +28658,7 @@
    "es": "Base de hidromiel: Berserkir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28175,6 +28699,7 @@
    "es": "Malta: Eitr constante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28215,6 +28740,7 @@
    "es": "Malta: Mágica"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28255,6 +28781,7 @@
    "es": "Malta: resistencia al frío"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28295,6 +28822,7 @@
    "es": "Base de hidromiel: Ratatosk"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28335,6 +28863,7 @@
    "es": "Malta: salud constante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28375,6 +28904,7 @@
    "es": "Malta: Extra supersaludable"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28415,6 +28945,7 @@
    "es": "Malta: supersaludable"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28455,6 +28986,7 @@
    "es": "Malta: saludable"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28495,6 +29027,7 @@
    "es": "Base de hidromiel: Pies ligeros"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28535,6 +29068,7 @@
    "es": "Malta: resistencia al veneno"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28575,6 +29109,7 @@
    "es": "Malta: Vigorización constante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28615,6 +29150,7 @@
    "es": "Malta: supervigorizante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28655,6 +29191,7 @@
    "es": "Malta: vigorizante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28695,6 +29232,7 @@
    "es": "Base de hidromiel: Fuerza de trol"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28735,6 +29273,7 @@
    "es": "Base de hidromiel: Vananidir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28775,6 +29314,7 @@
    "es": "Base de hidromiel: susurros salvajes"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28815,6 +29355,7 @@
    "es": "Malta: sabrosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -28855,6 +29396,7 @@
    "es": "Brebaje antipicaduras"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseBugRepellent",
@@ -28896,6 +29438,7 @@
    "es": "Hidromiel berserkir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseBzerker",
@@ -28937,6 +29480,7 @@
    "es": "Hidromiel de Eitr persistente"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseEitrLingering",
@@ -28978,6 +29522,7 @@
    "es": "Hidromiel mágico"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseEitrMinor",
@@ -29025,6 +29570,7 @@
    "es": "Hidromiel resistente a la congelación"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseFrostResist",
@@ -29066,6 +29612,7 @@
    "es": "Tónico de Ratatosk"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseHasty",
@@ -29107,6 +29654,7 @@
    "es": "Hidromiel curativo persistente"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseHealthLingering",
@@ -29148,6 +29696,7 @@
    "es": "Hidromiel extra supersaludable"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseHealthMajor",
@@ -29189,6 +29738,7 @@
    "es": "Hidromiel supersaludable"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseHealthMedium",
@@ -29236,6 +29786,7 @@
    "es": "Hidromiel saludable"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseHealthMinor",
@@ -29291,6 +29842,7 @@
    "es": "Hidromiel de pies ligeros"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseLightFoot",
@@ -29332,6 +29884,7 @@
    "es": "Hidromiel resistente al veneno"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBasePoisonResist",
@@ -29379,6 +29932,7 @@
    "es": "Hidromiel de vigorización constante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseStaminaLingering",
@@ -29420,6 +29974,7 @@
    "es": "Hidromiel supervigorizante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseStaminaMedium",
@@ -29467,6 +30022,7 @@
    "es": "Hidromiel vigorizante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseStaminaMinor",
@@ -29522,6 +30078,7 @@
    "es": "Hidromiel de fuerza de trol"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseStrength",
@@ -29563,6 +30120,7 @@
    "es": "Elixir de Vananidir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseSwimmer",
@@ -29604,6 +30162,7 @@
    "es": "Brebaje de susurros salvajes"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseTamer",
@@ -29645,6 +30204,7 @@
    "es": "Hidromiel sabrosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeadBaseTasty",
@@ -29700,6 +30260,7 @@
    "es": "Poción de amor"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -29747,6 +30308,7 @@
    "es": "Plato de carne"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MeatPlatterUncooked",
@@ -29794,6 +30356,7 @@
    "es": "Plato de carne sin cocinar"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -29840,6 +30403,7 @@
    "es": "Albóndigas con poteitr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -29880,6 +30444,7 @@
    "es": "Resorte mecánico"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -29930,6 +30495,7 @@
    "es": "Carbón memorial"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -29982,6 +30548,7 @@
    "es": "Salsa de carne picada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -30028,6 +30595,7 @@
    "es": "Supremacía de la liebre neblinosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "MisthareSupremeUncooked",
@@ -30080,6 +30648,7 @@
    "es": "Supremacía de la liebre neblinosa sin cocinar"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -30120,6 +30689,7 @@
    "es": "Molde: coraza del Protector"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30177,6 +30747,7 @@
    "es": "Molde: yelmo del Protector"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30234,6 +30805,7 @@
    "es": "Molde: pantalones del Protector"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30291,6 +30863,7 @@
    "es": "Molde: túnica del Invocador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -30340,6 +30913,7 @@
    "es": "Molde: tocado del Invocador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -30389,6 +30963,7 @@
    "es": "Molde: pantalones del Invocador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -30438,6 +31013,7 @@
    "es": "Molde: capucha de la Vanguardia"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30495,6 +31071,7 @@
    "es": "Molde: pantalones de la Vanguardia"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30552,6 +31129,7 @@
    "es": "Molde: peto de la Vanguardia"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30609,6 +31187,7 @@
    "es": "Molde: atgeir nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30654,6 +31233,7 @@
    "es": "Molde: hacha nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30711,6 +31291,7 @@
    "es": "Molde: gran hacha nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30756,6 +31337,7 @@
    "es": "Molde: arco nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30813,6 +31395,7 @@
    "es": "Molde: ballesta nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30858,6 +31441,7 @@
    "es": "Molde: nudillos nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30903,6 +31487,7 @@
    "es": "Molde: llave intrincada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -30955,6 +31540,7 @@
    "es": "Molde: daga nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31000,6 +31586,7 @@
    "es": "Molde: maza nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31057,6 +31644,7 @@
    "es": "Molde: almádena nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31102,6 +31690,7 @@
    "es": "Molde: broquel nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31147,6 +31736,7 @@
    "es": "Molde: escudo nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31192,6 +31782,7 @@
    "es": "Molde: gran escudo nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31237,6 +31828,7 @@
    "es": "Molde: lanza nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31294,6 +31886,7 @@
    "es": "Molde: púa de eco"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31334,6 +31927,7 @@
    "es": "Molde: venganza del norte"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31374,6 +31968,7 @@
    "es": "Molde: invocador de espíritus"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31414,6 +32009,7 @@
    "es": "Molde: golpe de relámpago"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31454,6 +32050,7 @@
    "es": "Molde: espada nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31511,6 +32108,7 @@
    "es": "Molde: espadón nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31556,6 +32154,7 @@
    "es": "Garras largas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31603,6 +32202,7 @@
    "es": "Núcleo fundido"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -31660,6 +32260,7 @@
    "es": "Piel de alce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -31790,6 +32391,7 @@
    "es": "Carne en pan"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 2,
@@ -31836,6 +32438,7 @@
    "es": "Carne de alce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -31900,6 +32503,7 @@
    "es": "Tendón de alce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -31969,6 +32573,7 @@
    "es": "Corazón de Morgen"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -32021,6 +32626,7 @@
    "es": "Tendón de Morgen"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -32104,6 +32710,7 @@
    "es": "Seta"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -32179,6 +32786,7 @@
    "es": "Seta azul"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -32213,6 +32821,7 @@
    "es": "Amanita"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -32265,6 +32874,7 @@
    "es": "Soplo de Jotun"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -32360,6 +32970,7 @@
    "es": "Oronja de los magos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -32455,6 +33066,7 @@
    "es": "Tortilla de hongos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -32501,6 +33113,7 @@
    "es": "Soplahumo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -32574,6 +33187,7 @@
    "es": "Seta amarilla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -32629,6 +33243,7 @@
    "es": "Cola de nixe"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -32694,6 +33309,7 @@
    "es": "Cola de nixe asada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "NeckTail",
@@ -32742,6 +33358,7 @@
    "es": "Aguja"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -32797,6 +33414,7 @@
    "es": "Hilo de Norna"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -32927,6 +33545,7 @@
    "es": "Avena"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "OatSeeds",
@@ -32983,6 +33602,7 @@
    "es": "Harina de avena"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Oat",
@@ -33050,6 +33670,7 @@
    "es": "Leche de avena"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -33100,6 +33721,7 @@
    "es": "Semillas de avena"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -33161,6 +33783,7 @@
    "es": "Gachas de avena"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -33201,6 +33824,7 @@
    "es": "Obsidiana"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -33282,6 +33906,7 @@
    "es": "Cebolla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -33362,6 +33987,7 @@
    "es": "Semillas de cebolla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -33418,6 +34044,7 @@
    "es": "Sopa de cebolla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -33463,6 +34090,7 @@
    "es": "Lodo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -33535,6 +34163,7 @@
    "es": "Pulpa muerta"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -33585,6 +34214,7 @@
    "es": "Esencia de fuego gélido"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -33708,6 +34338,7 @@
    "es": "Esencia de sangre de trueno"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -33837,6 +34468,7 @@
    "es": "Tortita al horno"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "OvenPancakeUncooked",
@@ -33884,6 +34516,7 @@
    "es": "Masa para tortita al horno"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -33930,6 +34563,7 @@
    "es": "Tortitas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 3,
@@ -33973,6 +34607,7 @@
    "es": "Pico de cuernos"
   },
   "setName": null,
+  "skill": 12,
   "sources": [
    {
     "amount": 1,
@@ -34013,6 +34648,7 @@
    "es": "Pico de metal negro"
   },
   "setName": null,
+  "skill": 12,
   "sources": [
    {
     "amount": 1,
@@ -34053,6 +34689,7 @@
    "es": "Pico de bronce"
   },
   "setName": null,
+  "skill": 12,
   "sources": [
    {
     "amount": 1,
@@ -34093,6 +34730,7 @@
    "es": "Pico de hierro"
   },
   "setName": null,
+  "skill": 12,
   "sources": [
    {
     "amount": 1,
@@ -34130,6 +34768,7 @@
    "es": "Pico de piedra"
   },
   "setName": null,
+  "skill": 12,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -34157,6 +34796,7 @@
    "es": "Piña de pino"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -34231,6 +34871,7 @@
    "es": "Pastel picante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "PiquantPieUncooked",
@@ -34278,6 +34919,7 @@
    "es": " Pastel picante crudo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -34318,6 +34960,7 @@
    "es": "Fragmento de olla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -34384,6 +35027,7 @@
    "es": "Poteitr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -34453,6 +35097,7 @@
    "es": "Semilla de poteitr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -34493,6 +35138,7 @@
    "es": "Cáscaras de huevo de dragón en polvo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -34534,6 +35180,7 @@
    "es": "Polvo de proustita"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -34611,6 +35258,7 @@
    "es": "Bayarcadas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -34680,6 +35328,7 @@
    "es": "Carne de oso desmenuzada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -34720,6 +35369,7 @@
    "es": "Guijarros intensos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -34761,6 +35411,7 @@
    "es": "Abeja reina"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 20,
   "usedIn": [
@@ -34794,6 +35445,7 @@
    "es": "Caparazón majestuoso"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -34842,6 +35494,7 @@
    "es": "Mermelada de la reina"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 4,
@@ -34893,6 +35546,7 @@
    "es": "Frambuesas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -35001,6 +35655,7 @@
    "es": "Carne de jabalí"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -35070,6 +35725,7 @@
    "es": "Resina"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -35430,6 +36086,7 @@
    "es": "Pastel de masa asada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "RoastedCrustPieUncooked",
@@ -35477,6 +36134,7 @@
    "es": "Pastel de masa asada crudo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -35517,6 +36175,7 @@
    "es": "Raíz"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -35586,6 +36245,7 @@
    "es": "Carne podrida"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -35630,6 +36290,7 @@
    "es": "Madera resistente"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -35783,6 +36444,7 @@
    "es": "Jalea real"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -35848,6 +36510,7 @@
    "es": "Rubí"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -35935,6 +36598,7 @@
    "es": "Coraza de placas de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -35970,6 +36634,7 @@
    "es": "Mallas de placas de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -35997,6 +36662,7 @@
    "es": "Vestido sencillo marrón"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -36033,6 +36699,7 @@
    "es": "Pelaje de Fenris"
   },
   "setName": "fenring_armor",
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36060,6 +36727,7 @@
    "es": "Mallas de Fenris"
   },
   "setName": "fenring_armor",
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36087,6 +36755,7 @@
    "es": "Pantalones de cuero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36122,6 +36791,7 @@
    "es": "Túnica tejida en Eitr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36157,6 +36827,7 @@
    "es": "Túnica de Embla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36192,6 +36863,7 @@
    "es": "Pantalones tejidos en Eitr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36219,6 +36891,7 @@
    "es": "Pantalones de Embla"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36254,6 +36927,7 @@
    "es": "Gambesón acolchado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36281,6 +36955,7 @@
    "es": "Grebas acolchadas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36308,6 +36983,7 @@
    "es": "Túnica de cuero de trol"
   },
   "setName": "troll",
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36335,6 +37011,7 @@
    "es": "Pantalones de cuero de trol"
   },
   "setName": "troll",
+  "skill": 1,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36362,6 +37039,7 @@
    "es": "Túnica roja con capa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Hildir",
@@ -36404,6 +37082,7 @@
    "es": "Hacha de bronce"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -36446,6 +37125,7 @@
    "es": "Hacha de guerra de cristal"
   },
   "setName": null,
+  "skill": 7,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36479,6 +37159,7 @@
    "es": "Colmillo de draugr"
   },
   "setName": null,
+  "skill": 8,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36506,6 +37187,7 @@
    "es": "Capa de lino"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36541,6 +37223,7 @@
    "es": "Capa de piel de trol"
   },
   "setName": "troll",
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36576,6 +37259,7 @@
    "es": "Capa de pelo de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36611,6 +37295,7 @@
    "es": "Casco de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36653,6 +37338,7 @@
    "es": "Cuchillo de plata"
   },
   "setName": null,
+  "skill": 2,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36686,6 +37372,7 @@
    "es": "Skoll y Hati"
   },
   "setName": null,
+  "skill": 2,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -36713,6 +37400,7 @@
    "es": "Escudo de torre de metal negro"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -36753,6 +37441,7 @@
    "es": "Bastón de Ascuas"
   },
   "setName": null,
+  "skill": 9,
   "sources": [
    {
     "amount": 1,
@@ -36792,6 +37481,7 @@
    "es": "Dundr"
   },
   "setName": null,
+  "skill": 9,
   "sources": [
    {
     "amount": 1,
@@ -36831,6 +37521,7 @@
    "es": "Espada de metal negro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36866,6 +37557,7 @@
    "es": "Silla de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36900,6 +37592,7 @@
    "es": "Silla de montar para luey"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36934,6 +37627,7 @@
    "es": "Silla de alce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -36974,6 +37668,7 @@
    "es": "Ensalada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 3,
@@ -37014,6 +37709,7 @@
    "es": "Savia"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [
@@ -37098,6 +37794,7 @@
    "es": "Salchichas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 4,
@@ -37149,6 +37846,7 @@
    "es": "Piel escamosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -37259,6 +37957,7 @@
    "es": "Mezcla abrasadora"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 3,
@@ -37304,6 +38003,7 @@
    "es": "Guadaña"
   },
   "setName": null,
+  "skill": 106,
   "sources": [
    {
     "amount": 1,
@@ -37338,6 +38038,7 @@
    "es": "Mango de guadaña"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -37385,6 +38086,7 @@
    "es": "Grasa de foca"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -37449,6 +38151,7 @@
    "es": "Piel de foca"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -37534,6 +38237,7 @@
    "es": "Sopa de carne de foca"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -37580,6 +38284,7 @@
    "es": "Espliego de buscador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 2,
@@ -37620,6 +38325,7 @@
    "es": "Carne de serpiente"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -37670,6 +38376,7 @@
    "es": "Carne de serpiente preparada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "SerpentMeat",
@@ -37721,6 +38428,7 @@
    "es": "Escama de serpiente"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -37776,6 +38484,7 @@
    "es": "Cocido de serpiente"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -37816,6 +38525,7 @@
    "es": "Piedra de afilar"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -37862,6 +38572,7 @@
    "es": "Escudo de aros"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -37896,6 +38607,7 @@
    "es": "Escudo de metal negro"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -37930,6 +38642,7 @@
    "es": "Escudo de torre de metal negro"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -37964,6 +38677,7 @@
    "es": "Escudo de torre de hueso"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -37998,6 +38712,7 @@
    "es": "Rodela de bronce"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38032,6 +38747,7 @@
    "es": "Pieza fundida: broquel nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -38072,6 +38788,7 @@
    "es": "Escudo de caparazón"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38106,6 +38823,7 @@
    "es": "Rodela de caparazón"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38140,6 +38858,7 @@
    "es": "Núcleo de escudo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -38180,6 +38899,7 @@
    "es": "Escudo de llametal"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38214,6 +38934,7 @@
    "es": "Escudo de torre de llametal"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38248,6 +38969,7 @@
    "es": "Escudo nord"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38289,6 +39011,7 @@
    "es": "Broquel nord"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38330,6 +39053,7 @@
    "es": "Gran escudo nord"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38371,6 +39095,7 @@
    "es": "Rodela de hierro"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38405,6 +39130,7 @@
    "es": "Escudo de hierro"
   },
   "setName": null,
+  "skill": 6,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -38432,6 +39158,7 @@
    "es": "Escudo de torre de hierro"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38466,6 +39193,7 @@
    "es": "Escudo de caballero SIN USAR"
   },
   "setName": null,
+  "skill": 6,
   "sources": [],
   "stack": 1,
   "usedIn": [],
@@ -38493,6 +39221,7 @@
    "es": "Escudo de raíces"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38527,6 +39256,7 @@
    "es": "Pieza fundida: escudo nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -38567,6 +39297,7 @@
    "es": "Escudo de escamas de serpiente"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38601,6 +39332,7 @@
    "es": "Escudo de plata"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38635,6 +39367,7 @@
    "es": "Pieza fundida: gran escudo nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -38675,6 +39408,7 @@
    "es": "Escudo de madera"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38709,6 +39443,7 @@
    "es": "Escudo de torre de madera"
   },
   "setName": null,
+  "skill": 6,
   "sources": [
    {
     "amount": 1,
@@ -38749,6 +39484,7 @@
    "es": "Batilodo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -38789,6 +39525,7 @@
    "es": "Pala de nieve"
   },
   "setName": null,
+  "skill": 106,
   "sources": [
    {
     "amount": 1,
@@ -38823,6 +39560,7 @@
    "es": "Plata"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "SilverOre",
@@ -38987,6 +39725,7 @@
    "es": "Collar de plata"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -39069,6 +39808,7 @@
    "es": "Mena de plata"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -39117,6 +39857,7 @@
    "es": "Caldo de bayas chisporroteantes"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -39161,6 +39902,7 @@
    "es": "Demoledor"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -39199,6 +39941,7 @@
    "es": "Almádena nord"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -39251,6 +39994,7 @@
    "es": "Pieza fundida: almádena nord"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -39297,6 +40041,7 @@
    "es": "Almádena de sangre de trueno"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -39339,6 +40084,7 @@
    "es": "Almádena de fuego gélido"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -39377,6 +40123,7 @@
    "es": "Mazo de hierro"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -39416,6 +40163,7 @@
    "es": "Quebrantaciervos"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -39454,6 +40202,7 @@
    "es": "Mazo de madera"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "biomes": [],
@@ -39494,6 +40243,7 @@
    "es": "Pescado ahumado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -39540,6 +40290,7 @@
    "es": "Carne de alce ahumada"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -39583,6 +40334,7 @@
    "es": "Bola de nieve"
   },
   "setName": null,
+  "skill": 0,
   "sources": [
    {
     "amount": 10,
@@ -39641,6 +40393,7 @@
    "es": "Tejido suave"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -39727,6 +40480,7 @@
    "es": "Bengala"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "from": "Hildir",
@@ -39768,6 +40522,7 @@
    "es": "Batido de setas espumoso"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -39812,6 +40567,7 @@
    "es": "Lanza de bronce"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -39850,6 +40606,7 @@
    "es": "Lanza de caparazón"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -39886,6 +40643,7 @@
    "es": "Arpón abisal"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -39924,6 +40682,7 @@
    "es": "Lanza de corteza ancestral"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -39962,6 +40721,7 @@
    "es": "Lanza de sílex"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -40000,6 +40760,7 @@
    "es": "Lanza nord"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -40052,6 +40813,7 @@
    "es": "Pieza fundida: lanza nord"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -40098,6 +40860,7 @@
    "es": "Lanza de sangre de trueno"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -40140,6 +40903,7 @@
    "es": "Lanza de fuego gélido"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -40178,6 +40942,7 @@
    "es": "Divisora"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -40232,6 +40997,7 @@
    "es": "Divisora sangrienta"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -40271,6 +41037,7 @@
    "es": "Divisora tempestuosa"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -40310,6 +41077,7 @@
    "es": "Divisora primigenia"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -40348,6 +41116,7 @@
    "es": "Lanza de colmillo"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "amount": 1,
@@ -40386,6 +41155,7 @@
    "es": "Lanza de madera"
   },
   "setName": null,
+  "skill": 5,
   "sources": [
    {
     "biomes": [],
@@ -40420,6 +41190,7 @@
    "es": "Polvo de especias picantes"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -40461,6 +41232,7 @@
    "es": "Condimento de la calabaza"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -40502,6 +41274,7 @@
    "es": "Mezcla de hierbas de los bosques"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -40553,6 +41326,7 @@
    "es": "Hierbas de las colinas ocultas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -40594,6 +41368,7 @@
    "es": "Pimienta en polvo del pico"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -40635,6 +41410,7 @@
    "es": "Hierbas de marinero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -40676,6 +41452,7 @@
    "es": "Cosecha de herbolario de pastizales"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -40723,6 +41500,7 @@
    "es": "Mermelada picante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -40768,6 +41546,7 @@
    "es": "Báculo Fracturador"
   },
   "setName": null,
+  "skill": 9,
   "sources": [
    {
     "amount": 1,
@@ -40807,6 +41586,7 @@
    "es": "Bastón de Ascuas"
   },
   "setName": null,
+  "skill": 9,
   "sources": [
    {
     "amount": 1,
@@ -40841,6 +41621,7 @@
    "es": "Venganza del norte"
   },
   "setName": null,
+  "skill": 10,
   "sources": [
    {
     "amount": 1,
@@ -40882,6 +41663,7 @@
    "es": "Pieza fundida: venganza del norte"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -40928,6 +41710,7 @@
    "es": "Báculo Silvestre"
   },
   "setName": null,
+  "skill": 9,
   "sources": [
    {
     "amount": 1,
@@ -40966,6 +41749,7 @@
    "es": "Bastón de la Ventisca"
   },
   "setName": null,
+  "skill": 9,
   "sources": [
    {
     "amount": 1,
@@ -41004,6 +41788,7 @@
    "es": "Dundr"
   },
   "setName": null,
+  "skill": 9,
   "sources": [
    {
     "amount": 1,
@@ -41038,6 +41823,7 @@
    "es": "Púa de eco"
   },
   "setName": null,
+  "skill": 10,
   "sources": [
    {
     "amount": 1,
@@ -41079,6 +41865,7 @@
    "es": "Pieza fundida: púa de eco"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -41119,6 +41906,7 @@
    "es": "Trollstav"
   },
   "setName": null,
+  "skill": 10,
   "sources": [
    {
     "amount": 1,
@@ -41153,6 +41941,7 @@
    "es": "Báculo de Protección"
   },
   "setName": null,
+  "skill": 10,
   "sources": [
    {
     "amount": 1,
@@ -41187,6 +41976,7 @@
    "es": "Levantamuertos"
   },
   "setName": null,
+  "skill": 10,
   "sources": [
    {
     "amount": 1,
@@ -41221,6 +42011,7 @@
    "es": "Invocador de espíritus"
   },
   "setName": null,
+  "skill": 10,
   "sources": [
    {
     "amount": 1,
@@ -41262,6 +42053,7 @@
    "es": "Pieza fundida: invocador de espíritus"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -41306,6 +42098,7 @@
    "es": "Golpe de relámpago"
   },
   "setName": null,
+  "skill": 9,
   "sources": [
    {
     "amount": 1,
@@ -41347,6 +42140,7 @@
    "es": "Pieza fundida: golpe de relámpago"
   },
   "setName": null,
+  "skill": 7,
   "sources": [
    {
     "amount": 1,
@@ -41387,6 +42181,7 @@
    "es": "Piedra"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -41839,6 +42634,7 @@
    "es": "Roca"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -41884,6 +42680,7 @@
    "es": "Azufre"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -41954,6 +42751,7 @@
    "es": "Corazón de surtling"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -42056,6 +42854,7 @@
    "es": "Espada de metal negro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42094,6 +42893,7 @@
    "es": "Espada de bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42133,6 +42933,7 @@
    "es": "Dyrnwyn"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42171,6 +42972,7 @@
    "es": "Espada nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42223,6 +43025,7 @@
    "es": "Pieza fundida: espada nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42269,6 +43072,7 @@
    "es": "Espada de sangre de trueno"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42311,6 +43115,7 @@
    "es": "Espada de fuego gélido"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42349,6 +43154,7 @@
    "es": "Espada de hierro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42389,6 +43195,7 @@
    "es": "Dyrnwyn"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42430,6 +43237,7 @@
    "es": "Caminante de la Neblina"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42468,6 +43276,7 @@
    "es": "Nidhögg"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42522,6 +43331,7 @@
    "es": "Nidhögg sangrienta"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42561,6 +43371,7 @@
    "es": "Nidhögg atronadora"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42600,6 +43411,7 @@
    "es": "Nidhögg primigenia"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42640,6 +43452,7 @@
    "es": "Espada de plata"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42678,6 +43491,7 @@
    "es": "Espada de madera"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42716,6 +43530,7 @@
    "es": "Espadón nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42768,6 +43583,7 @@
    "es": "Pieza fundida: espadón nord"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42814,6 +43630,7 @@
    "es": "Espadón de sangre de trueno"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42856,6 +43673,7 @@
    "es": "Espadón de fuego gélido"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42894,6 +43712,7 @@
    "es": "Krom"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42932,6 +43751,7 @@
    "es": "Asesina"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -42986,6 +43806,7 @@
    "es": "Asesina brutal"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43025,6 +43846,7 @@
    "es": "Asesina tempestuosa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43064,6 +43886,7 @@
    "es": "Asesina primigenia"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43102,6 +43925,7 @@
    "es": "Espadón de madera"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -43142,6 +43966,7 @@
    "es": "Jarra"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43176,6 +44001,7 @@
    "es": "Cuerno de celebración"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43210,6 +44036,7 @@
    "es": "Cuerno de hidromiel de Odín"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43244,6 +44071,7 @@
    "es": "Jarra dvergr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -43284,6 +44112,7 @@
    "es": "Brea"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -43493,6 +44322,7 @@
    "es": "Cardo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -43581,6 +44411,7 @@
    "es": "Piedra del trueno"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Haldor",
@@ -43622,6 +44453,7 @@
    "es": "Estaño"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "TinOre",
@@ -43694,6 +44526,7 @@
    "es": "Mineral de estaño"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -43739,6 +44572,7 @@
    "es": "Antorcha"
   },
   "setName": null,
+  "skill": 3,
   "sources": [
    {
     "amount": 1,
@@ -43803,6 +44637,7 @@
    "es": "Brazaletes de Valentía"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43837,6 +44672,7 @@
    "es": "Manto de Evasión"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43871,6 +44707,7 @@
    "es": "Degollador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43905,6 +44742,7 @@
    "es": "Corona de bruja"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43939,6 +44777,7 @@
    "es": "Corazón del Bosque"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -43973,6 +44812,7 @@
    "es": "Colgante de Bronce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -44007,6 +44847,7 @@
    "es": "Pendientes Pulsantes"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -44041,6 +44882,7 @@
    "es": "Aletas del Destino"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -44075,6 +44917,7 @@
    "es": "Jörmundling "
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -44109,6 +44952,7 @@
    "es": "Corazón de fuego"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -44143,6 +44987,7 @@
    "es": "Broche de hierro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -44177,6 +45022,7 @@
    "es": "Tobillera"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -44211,6 +45057,7 @@
    "es": "Grillete resonante"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -44245,6 +45092,7 @@
    "es": "Vista de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -44279,6 +45127,7 @@
    "es": "Corazón de cristal"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -44313,6 +45162,7 @@
    "es": "Piel de trol"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44395,6 +45245,7 @@
    "es": "Trofeo de abominación"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44439,6 +45290,7 @@
    "es": "Trofeo de cenicerdo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44483,6 +45335,7 @@
    "es": "Trofeo de barka"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44521,6 +45374,7 @@
    "es": "Trofeo de Bjorn"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44583,6 +45437,7 @@
    "es": "Trofeo vil"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44627,6 +45482,7 @@
    "es": "Trofeo de masa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44694,6 +45550,7 @@
    "es": "Trofeo de pegote de escarcha"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -44730,6 +45587,7 @@
    "es": "Trofeo de pegote de lava"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44768,6 +45626,7 @@
    "es": "Trofeo de pulpa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -44810,6 +45669,7 @@
    "es": "Trofeo de jabalí"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44848,6 +45708,7 @@
    "es": "Trofeo de Tuétano"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -44884,6 +45745,7 @@
    "es": "Trofeo de faucesoseas"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44922,6 +45784,7 @@
    "es": "Trofeo de arquero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -44965,6 +45828,7 @@
    "es": "Trofeo de brujo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45001,6 +45865,7 @@
    "es": "Trofeo de guerrero"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -45055,6 +45920,7 @@
    "es": "Trofeo de cultista"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45097,6 +45963,7 @@
    "es": "Trofeo de Geirrhafa"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45141,6 +46008,7 @@
    "es": "Trofeo de muersquito"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -45179,6 +46047,7 @@
    "es": "Trofeo de ciervo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -45229,6 +46098,7 @@
    "es": "Trofeo de Moder"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45265,6 +46135,7 @@
    "es": "Trofeo de draugr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45331,6 +46202,7 @@
    "es": "Trofeo de draugr de élite"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45383,6 +46255,7 @@
    "es": "Trofeo de draugr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45453,6 +46326,7 @@
    "es": "Trofeo de Dvergr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45541,6 +46415,7 @@
    "es": "Trofeo de Eikthyr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45577,6 +46452,7 @@
    "es": "Trofeo de elaking"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -45625,6 +46501,7 @@
    "es": "Trofeo de Fader"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45661,6 +46538,7 @@
    "es": "Trofeo de valquiria caída"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -45705,6 +46583,7 @@
    "es": "Trofeo de fenring"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -45754,6 +46633,7 @@
    "es": "Trofeo de trol"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -45802,6 +46682,7 @@
    "es": "Trofeo de trol"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -45859,6 +46740,7 @@
    "es": "Trofeo de fantasma"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -45903,6 +46785,7 @@
    "es": "Trofeo de gjall"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -45947,6 +46830,7 @@
    "es": "Trofeo de fuling"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -46002,6 +46886,7 @@
    "es": "Trofeo de fuling berserker"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46046,6 +46931,7 @@
    "es": "Trofeo de Thungr"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -46090,6 +46976,7 @@
    "es": "Trofeo de Zil"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -46134,6 +47021,7 @@
    "es": "Trofeo de Yagluth"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -46170,6 +47058,7 @@
    "es": "Trofeo de fuling chamán"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -46206,6 +47095,7 @@
    "es": "Trofeo de grisucio"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46255,6 +47145,7 @@
    "es": "Trofeo de grisucio bárbaro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46294,6 +47185,7 @@
    "es": "Trofeo del grisucio chamán"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46349,6 +47241,7 @@
    "es": "Trofeo del bulto"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -46391,6 +47284,7 @@
    "es": "Trofeo de liebre"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46429,6 +47323,7 @@
    "es": "Trofeo de draco"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46483,6 +47378,7 @@
    "es": "Trofeo de Krigen"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -46529,6 +47425,7 @@
    "es": "Trofeo de Hexen"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46583,6 +47480,7 @@
    "es": "Kvastur"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -46619,6 +47517,7 @@
    "es": "Trofeo de sanguijuela"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46671,6 +47570,7 @@
    "es": "Trofeo de luey"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46720,6 +47620,7 @@
    "es": "Trofeo de sin ojos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -46756,6 +47657,7 @@
    "es": "Trofeo de alce"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46825,6 +47727,7 @@
    "es": "Trofeo de Morgen"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -46877,6 +47780,7 @@
    "es": "Trofeo de nixe"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46915,6 +47819,7 @@
    "es": "Trofeo de gólem de piedra"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46959,6 +47864,7 @@
    "es": "Trofeo de foca"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -46997,6 +47903,7 @@
    "es": "Trofeo de buscador"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -47046,6 +47953,7 @@
    "es": "Trofeo de buscador soldado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -47084,6 +47992,7 @@
    "es": "Trofeo de La Reina"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -47120,6 +48029,7 @@
    "es": "Trofeo de serpiente"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -47169,6 +48079,7 @@
    "es": "Trofeo de esqueleto"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -47303,6 +48214,7 @@
    "es": "Trofeo de Brenna"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -47347,6 +48259,7 @@
    "es": "Trofeo de restos rancios"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -47383,6 +48296,7 @@
    "es": "Trofeo de surtling"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -47425,6 +48339,7 @@
    "es": "Trofeo del Sabio"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -47461,6 +48376,7 @@
    "es": "Trofeo de garrapata"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -47499,6 +48415,7 @@
    "es": "Trofeo de Ulv"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -47535,6 +48452,7 @@
    "es": "Trofeo de buicán"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -47573,6 +48491,7 @@
    "es": "Trofeo de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -47622,6 +48541,7 @@
    "es": "Trofeo del espectro"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -47660,6 +48580,7 @@
    "es": "Trofeo de writhan"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -47698,6 +48619,7 @@
    "es": "Nabo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -47774,6 +48696,7 @@
    "es": "Semillas de nabo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -47840,6 +48763,7 @@
    "es": "Cocido de nabos"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -47887,6 +48811,7 @@
    "es": "Proyectil de metal negro"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 20,
@@ -47923,6 +48848,7 @@
    "es": "Proyectil de oro sanguino"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 20,
@@ -47959,6 +48885,7 @@
    "es": "Misil de llametal"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 20,
@@ -47995,6 +48922,7 @@
    "es": "Proyectil de madera"
   },
   "setName": null,
+  "skill": 14,
   "sources": [
    {
     "amount": 20,
@@ -48029,6 +48957,7 @@
    "es": "Caja torácica vil"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -48089,6 +49018,7 @@
    "es": "Pan dulce escarchado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "VikingCupcakeUncooked",
@@ -48136,6 +49066,7 @@
    "es": "Pan dulce sin hornear"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -48176,6 +49107,7 @@
    "es": "Semillas de hiedra"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "BogWitch",
@@ -48223,6 +49155,7 @@
    "es": "Racimo de parrabaya"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -48329,6 +49262,7 @@
    "es": "Semillas de enredadera de ceniza"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 100,
   "usedIn": [
@@ -48362,6 +49296,7 @@
    "es": "Ectoplasma"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -48423,6 +49358,7 @@
    "es": "Huevo de buicán"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -48479,6 +49415,7 @@
    "es": "Carne de buicán"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -48528,6 +49465,7 @@
    "es": "Fúrcula"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -48564,6 +49502,7 @@
    "es": "Wisp"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 50,
   "usedIn": [
@@ -48607,6 +49546,7 @@
    "es": "Hueso pálido"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -48661,6 +49601,7 @@
    "es": "Garra de Fenris"
   },
   "setName": null,
+  "skill": 1,
   "sources": [],
   "stack": 20,
   "usedIn": [
@@ -48704,6 +49645,7 @@
    "es": "Colmillo de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -48776,6 +49718,7 @@
    "es": "Pelo de Fenris"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -48843,6 +49786,7 @@
    "es": "Cecina de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 2,
@@ -48889,6 +49833,7 @@
    "es": "Carne de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -48954,6 +49899,7 @@
    "es": "Pincho de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -48999,6 +49945,7 @@
    "es": "Piel de lobo"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -49088,6 +50035,7 @@
    "es": "Madera"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -50186,6 +51134,7 @@
    "es": "Raíces de writhan"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -50240,6 +51189,7 @@
    "es": "Espíritu destrozado"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -50288,6 +51238,7 @@
    "es": "Papilla de Yggdrasil"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "amount": 1,
@@ -50333,6 +51284,7 @@
    "es": "Madera de Yggdrasil"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [
@@ -50514,6 +51466,7 @@
    "es": "Carne de Ymir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "from": "Haldor",
@@ -50560,6 +51513,7 @@
    "es": "Cofre de latón de Hildir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -50596,6 +51550,7 @@
    "es": "Cofre de plata de Hildir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],
@@ -50632,6 +51587,7 @@
    "es": "Cofre de bronce de Hildir"
   },
   "setName": null,
+  "skill": 1,
   "sources": [
    {
     "biomes": [],

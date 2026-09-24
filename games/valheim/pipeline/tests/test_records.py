@@ -1,6 +1,6 @@
 import unittest
 from pipeline.loc import Loc
-from pipeline.records import kind_of, item_record, requirements, recipe_record, drop_table, character_drops, trader_items
+from pipeline.records import damage_mods, kind_of, item_record, requirements, recipe_record, drop_table, character_drops, trader_items
 
 LOC = Loc({"item_carrotsoup": {"en": "Carrot Soup", "es": "Sopa de zanahoria"},
            "item_carrotsoup_description": {"en": "Warm soup.", "es": "Sopa caliente."}})
@@ -76,6 +76,19 @@ class TestDrops(unittest.TestCase):
                          {"m_prefab": {"m_FileID": 2, "m_PathID": 2}, "m_stack": 5, "m_price": 620, "m_requiredGlobalKey": "defeated_bonemass"}]}
         self.assertEqual(trader_items(t, name_of), [{"item": "Carrot", "stack": 1, "price": 100, "requiredKey": None},
                                                     {"item": "Mushroom", "stack": 5, "price": 620, "requiredKey": "defeated_bonemass"}])
+
+class TestDamageMods(unittest.TestCase):
+    def test_troll(self):
+        # Leído del Troll el 2026-09-24. Talar y minar (4 = ignorar) no dicen
+        # nada útil de una criatura y quedan afuera.
+        dm = {"m_blunt": 1, "m_slash": 0, "m_pierce": 2, "m_chop": 4, "m_pickaxe": 4, "m_fire": 0,
+              "m_frost": 0, "m_lightning": 0, "m_poison": 0, "m_spirit": 3, "m_nonPlayer": 0}
+        self.assertEqual(damage_mods(dm), {"weak": ["pierce"], "resist": ["blunt"], "immune": ["spirit"]})
+
+    def test_muy_debil_y_levemente(self):
+        self.assertEqual(damage_mods({"m_fire": 6, "m_frost": 8, "m_poison": 5, "m_spirit": 7}),
+                         {"weak": ["fire", "frost"], "resist": ["poison", "spirit"], "immune": []})
+
 
 if __name__ == "__main__":
     unittest.main()
