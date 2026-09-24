@@ -64,15 +64,12 @@
   box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.45), 0 6px 18px rgba(0, 0, 0, 0.5);
 }
 /* Las pestañas van enteras (el botón del juego tiene borde en los cuatro lados)
-   y centradas en la tabla; abajo sobra 3px por la sombra de la tabla. Los
-   márgenes automáticos las centran sin cortar la primera cuando no entran. */
+   y centradas en la tabla; abajo sobra 3px por la sombra de la tabla. Cuando
+   no entran bajan a otra fila (ZoTaD, 2026-09-24: en el celular se cortaban). */
 .vh-sub-in {
   max-width: var(--col); margin: 0 auto; padding: 8px var(--pad) 11px;
-  display: flex; align-items: center; gap: 4px; overflow-x: auto; scrollbar-width: none;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px;
 }
-.vh-sub-in::-webkit-scrollbar { display: none; }
-.vh-sub-in > :first-child { margin-left: auto; }
-.vh-sub-in > :last-child { margin-right: auto; }
 .vh-tab {
   flex: none; padding: 3px clamp(3px, 0.45vw, 8px); font: 700 13px/1.2 var(--vh-sans); color: #e2cda2; text-decoration: none;
   text-shadow: 0 1px 2px #000; white-space: nowrap;
@@ -84,6 +81,10 @@
 .vh-tab.is-home { font-family: var(--vh-serif); }
 /* La Crónica no es una pestaña de datos: un poco aparte, al final. */
 .vh-tab.is-news { margin-left: 6px; }
+@media (max-width: 640px) {
+  .vh-sub-in { gap: 3px; padding-top: 6px; }
+  .vh-tab.is-news { margin-left: 0; }
+}
 
 /* ---------- página ---------- */
 .vh-page { max-width: var(--col); margin: 0 auto; padding: 0 var(--pad) 40px; }
