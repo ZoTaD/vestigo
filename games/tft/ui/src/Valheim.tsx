@@ -78,7 +78,10 @@ function GlobalSearch({ index, to, navigate }: { index: IndexEntry[]; to: To; na
           {hits.length === 0 && <div className="vh-hit"><span /><span className="vh-dim">{t.noResults}</span></div>}
           {hits.map((h) => (
             <RouteLink key={`${h.tab}/${h.slug}`} className="vh-hit" to={to(h.tab, h.slug)} onNavigate={(r) => { navigate(r); setOpen(false); }}>
-              <span className="vh-slot is-sm">{h.icon && <img src={iconUrl(h.icon)} alt="" loading="lazy" width={30} height={30} />}</span>
+              <span className="vh-slot is-sm">
+                {h.icon ? <img src={iconUrl(h.icon)} alt="" loading="lazy" width={30} height={30} />
+                  : h.art ? <img src={artUrl(h.art)} alt="" loading="lazy" width={30} height={30} style={{ objectFit: "cover", width: "100%", height: "100%" }} /> : null}
+              </span>
               <span>{lang === "es" ? h.es : h.en}<br /><small>{lang === "es" ? h.en : h.es}</small></span>
               <small>{t.tabs[h.tab]}</small>
             </RouteLink>

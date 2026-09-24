@@ -49,6 +49,11 @@ def slugify(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
 
 
+def clean_txt(t: dict) -> dict:
+    """Algunos nombres del juego traen marcas de Unity (`<color=orange>Thungr</color>`)."""
+    return {k: re.sub(r"</?color[^>]*>", "", v).strip() for k, v in t.items()}
+
+
 def load(name):
     with open(os.path.join(DATA, name), encoding="utf-8") as f:
         return json.load(f)
@@ -91,10 +96,28 @@ def main() -> None:
         claim(pid, KIND_TAB[it["kind"]], it["name"], it["icon"])
     for pid, p in sorted(pieces.items(), key=lambda x: x[1]["name"]["en"]):
         claim(f"piece:{pid}", "building", p["name"], p["icon"])
+    # Criaturas que se listan: las que viven en algún bioma, sueltan algo o son
+    # jefes. Las demás (variantes invocadas, crías de prueba, apariciones de
+    # eventos; 19 el 2026-09-24) no tienen nada que mostrar en su ficha.
+    boss_ids0 = {b["id"] for b in bosses}
+    for c in creatures.values():
+        c["name"] = clean_txt(c["name"])
+    creatures = {k: c for k, c in creatures.items() if c["name"]["en"] and (c["biomes"] or c["drops"] or k in boss_ids0)}
+
+    def creature_icon(c):
+        """El trofeo; sin trofeo, lo primero que suelta (la gallina, su carne)."""
+        if c.get("icon"):
+            return c["icon"]
+        for d in c.get("drops", []):
+            ic = (items.get(d["item"]) or {}).get("icon")
+            if ic:
+                return ic
+        return None
+
     for cid, c in sorted(creatures.items(), key=lambda x: x[1]["name"]["en"]):
-        claim(f"creature:{cid}", "creatures", c["name"], c["icon"])
+        claim(f"creature:{cid}", "creatures", c["name"], creature_icon(c))
     for b in bosses:
-        claim(f"boss:{b['id']}", "bosses", b["name"], b["icon"])
+        claim(f"boss:{b['id']}", "bosses", b["name"], creature_icon(b))
     for bit, bid, _ in BIOMES:
         name = next(m["name"] for m in biomes_meta if m["id"] == bid)
         ref[f"biome:{bid}"] = {"slug": bid, "tab": "biomes", "name": name, "icon": None}
@@ -286,7 +309,10 @@ def main() -> None:
     sizes["biomes"] = dump("biomes.json", biome_rows)
     sizes["bosses"] = dump("bosses.json", boss_rows)
     listed = {(t, r["slug"]) for t, rows in tabs.items() for r in rows} | {("biomes", b["slug"]) for b in biome_rows} | {("bosses", b["slug"]) for b in boss_rows}
-    index = [{"slug": r["slug"], "tab": r["tab"], "en": r["name"]["en"], "es": r["name"]["es"], "icon": r["icon"]}
+    # Biomas y jefes no tienen ícono de inventario: el buscador muestra su ilustración.
+    art_of = {("biomes", b["slug"]): b["art"] for b in biome_rows} | {("bosses", b["slug"]): b["art"] for b in boss_rows}
+    index = [{"slug": r["slug"], "tab": r["tab"], "en": r["name"]["en"], "es": r["name"]["es"], "icon": r["icon"],
+              **({"art": art_of[(r["tab"], r["slug"])]} if (r["tab"], r["slug"]) in art_of else {})}
              for r in ref.values() if (r["tab"], r["slug"]) in listed]
     sizes["index"] = dump("index.json", index)
     meta = load("meta.json")

@@ -160,7 +160,8 @@ export interface BiomeRow {
   tips: Tip[];
 }
 
-export interface IndexEntry { slug: string; tab: ValheimTab; en: string; es: string; icon: string | null }
+/** `art`: biomas y jefes, que no tienen ícono de inventario, llevan su ilustración. */
+export interface IndexEntry { slug: string; tab: ValheimTab; en: string; es: string; icon: string | null; art?: string }
 
 export interface TabRows {
   foods: ItemRow[];
