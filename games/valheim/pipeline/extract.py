@@ -82,6 +82,49 @@ class Icons:
         return slug
 
 
+# Los gráficos de interfaz que usa la sección (bundle 9fe0899c). Lista cerrada a
+# propósito: son ~30 de 246 y cada uno que se sume tiene que tener un uso.
+UI_SPRITES = [
+    "woodpanel_crafting", "woodpanel_info", "woodpanel_400_tileable", "woodpanel_512x512", "woodpanel_flik",
+    "woodpanel_trophys", "button", "button_highlight", "button_pressed", "button_disabled", "button_tab",
+    "button_tab_hover", "button_tab_selected", "item_bkg", "item_bkgh", "item_background", "item_background_sunken",
+    "panel_bkg_256", "panel_bkg_128", "panel_border_128", "panel_interior_bkg_128", "panel_separator",
+    "selection_frame", "crafting_panel_bkg", "inv_bkg", "tabletop", "skill_bkg", "chest_bkg", "trophy_board",
+]
+OFL_FONTS = {"AveriaSerifLibre-Regular", "AveriaSerifLibre-Bold", "AveriaSansLibre-Regular", "AveriaSansLibre-Bold"}
+
+
+def export_ui(g: Game) -> int:
+    out = os.path.join(PUBLIC, "ui")
+    os.makedirs(out, exist_ok=True)
+    want, n = set(UI_SPRITES), 0
+    for o in g.ui_sprites():
+        s = o.read()
+        if s.m_Name in want:
+            s.image.save(os.path.join(out, f"{s.m_Name}.webp"), "WEBP", lossless=True)
+            want.discard(s.m_Name)
+            n += 1
+    if want:
+        print("⚠ sprites de interfaz que no aparecieron:", sorted(want))
+    return n
+
+
+def export_fonts(g: Game) -> int:
+    """Sólo Averia (OFL). Norse queda afuera hasta confirmar su licencia."""
+    out = os.path.join(PUBLIC, "fonts")
+    os.makedirs(out, exist_ok=True)
+    hechas = set()
+    for o in g.env.objects:
+        if o.type.name != "Font":
+            continue
+        f = o.read()
+        if f.m_Name in OFL_FONTS and f.m_Name not in hechas and f.m_FontData:
+            hechas.add(f.m_Name)
+            with open(os.path.join(out, f"{f.m_Name}.ttf"), "wb") as fh:
+                fh.write(bytes(f.m_FontData))
+    return len(hechas)
+
+
 def main() -> None:
     t0 = time.time()
     g = Game()
@@ -339,8 +382,9 @@ def main() -> None:
     dump("traders.json", traders)
     dump("farms.json", farms)
     dump("biomes.json", [{"id": bid, "bit": bit, "name": loc.t(tok)} for bit, bid, tok in BIOMES])
+    n_ui, n_fonts = export_ui(g), export_fonts(g)
     counts = {"items": len(items), "recipes": len(recipes), "pieces": len(pieces), "conversions": len(conversions),
-              "creatures": len(creatures), "gatherables": len(gatherables), "traders": len(traders), "farms": len(farms), "icons": len(icons.done)}
+              "creatures": len(creatures), "gatherables": len(gatherables), "traders": len(traders), "farms": len(farms), "icons": len(icons.done), "ui": n_ui, "fonts": n_fonts}
     # Lo que queda sin fuente se publica en meta.json: es la lista de trabajo
     # para completar a mano (o desde la wiki) en la próxima pasada.
     sin_fuente = sorted(pid for pid, it in items.items() if it["kind"] in ("food", "mead", "material") and not it["sources"])

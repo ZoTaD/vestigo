@@ -3,14 +3,16 @@
   "conversions": 104,
   "creatures": 155,
   "farms": 18,
+  "fonts": 4,
   "gatherables": 186,
   "icons": 1327,
   "items": 956,
   "pieces": 548,
   "recipes": 429,
-  "traders": 3
+  "traders": 3,
+  "ui": 29
  },
- "extractedAt": "2026-09-24T14:00:09Z",
+ "extractedAt": "2026-09-24T14:12:07Z",
  "unity": "6000.0.75f1",
  "withoutSource": [
   "AsksvinCarrionNeck",
