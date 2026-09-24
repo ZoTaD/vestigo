@@ -8,6 +8,9 @@ import { loadEdition, resolveSlug } from "./deadlockNewsData";
 import { loadHeroDetail, loadHeroKit, loadInsights } from "./deadlockHeroKitData";
 import { BANDS, loadBand, PUBLISHED_BAND } from "./deadlockData";
 import { heroes as heroSlugs } from "./deadlockSlugs";
+import { leagueBySlug, loadEconomy } from "./poe2EconomyData";
+import { isCat, loadCat, loadIndex } from "./poe2EncyclopediaData";
+import { EDITIONS, loadAllEditions, loadEdition as loadP2Edition } from "./poe2PatchesData";
 
 /**
  * El HTML de una ruta, para el prerender del build (ver `vite.config.ts`).
@@ -20,8 +23,9 @@ import { heroes as heroSlugs } from "./deadlockSlugs";
  * cargado en una caché propia que sus hooks leen en el primer render.
  */
 async function preload(route: Route): Promise<void> {
-  if (route.view !== "deadlock") return;
   const quiet = (p: Promise<unknown>) => p.catch(() => undefined);
+  if (route.view === "poe2") return preloadPoe2(route, quiet);
+  if (route.view !== "deadlock") return;
   if (route.dlSection === "meta" && route.detail) await Promise.all([quiet(loadBuilds()), quiet(loadMastery())]);
   if (route.dlSection === "heroes" && route.detail) {
     // La ficha entera: su kit, lo medido en la banda publicada y las cuatro
@@ -42,6 +46,31 @@ async function preload(route: Route): Promise<void> {
     const { slug } = resolveSlug(route.detail);
     if (slug) await quiet(loadEdition(slug));
   }
+}
+
+/**
+ * Path of Exile 2: lo mismo para sus tres pestañas. La ficha también lleva
+ * "los únicos sobre esta base" y su historial de parches, así que se precargan
+ * esas listas; las ediciones quedan en memoria y la siguiente ficha no las vuelve a pedir.
+ */
+async function preloadPoe2(route: Route, quiet: (p: Promise<unknown>) => Promise<unknown>): Promise<void> {
+  const section = route.p2Section ?? "economy";
+  if (section === "economy") {
+    await quiet(loadEconomy(leagueBySlug(route.detail).slug));
+    return;
+  }
+  if (section === "patches") {
+    const slug = EDITIONS.find((e) => e.slug === route.detail)?.slug ?? EDITIONS[0]?.slug;
+    await Promise.all([quiet(loadIndex()), ...(slug ? [quiet(loadP2Edition(slug))] : [])]);
+    return;
+  }
+  const [cat, slug] = (route.detail ?? "").split("/");
+  await Promise.all([
+    quiet(loadIndex()),
+    ...(isCat(cat) ? [quiet(loadCat(cat))] : []),
+    ...(isCat(cat) && slug ? [quiet(loadAllEditions())] : []),
+    ...(cat === "bases" && slug ? [quiet(loadCat("uniques"))] : []),
+  ]);
 }
 
 export async function renderApp(route: Route): Promise<string> {

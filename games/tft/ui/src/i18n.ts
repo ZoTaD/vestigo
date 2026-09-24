@@ -1952,6 +1952,32 @@ const EN = {
           "Every Path of Exile 2 patch, sorted into buffs, nerfs, fixes and new content, with the " +
           "gems and uniques it touches shown as in the game.",
       },
+      /** Las páginas con detalle: una liga, una categoría, una ficha, una edición. */
+      detail: {
+        league: (name: string) => ({
+          title: `Path of Exile 2 economy in ${name}: currency and unique prices | Vestigo`,
+          description: `What every currency item and unique is worth in the ${name} league of Path of Exile 2, and what is rising, falling and trading most this week.`,
+        }),
+        cat: (cat: string) =>
+          ({
+            gems: { title: "Path of Exile 2 gems: every skill, support and spirit gem | Vestigo", description: "Every skill, support and spirit gem in Path of Exile 2 with the game's own tooltip and its stats at every level." },
+            uniques: { title: "Path of Exile 2 uniques: every unique item and its mods | Vestigo", description: "Every unique item in Path of Exile 2 with its modifiers, base type and what it sells for this league." },
+            bases: { title: "Path of Exile 2 base types: weapons, armour and jewellery | Vestigo", description: "Every weapon, armour, jewellery and flask base in Path of Exile 2 with its properties, requirements and implicits." },
+            currency: { title: "Path of Exile 2 currency: orbs, runes, soul cores and omens | Vestigo", description: "Every currency item in Path of Exile 2 — orbs, runes, soul cores, omens and more — with what it does." },
+          })[cat] ?? { title: "Path of Exile 2 encyclopedia | Vestigo", description: "" },
+        entry: (name: string, cat: string) => {
+          const kind = ({ gems: "gem", uniques: "unique", bases: "base type", currency: "currency" } as Record<string, string>)[cat] ?? "item";
+          const extra = ({ gems: "its stats at every level", uniques: "its modifiers and price", bases: "its properties and the uniques built on it", currency: "what it does" } as Record<string, string>)[cat] ?? "";
+          return {
+            title: `${name} — Path of Exile 2 ${kind} | Vestigo`,
+            description: `${name} in Path of Exile 2: the in-game tooltip, ${extra}, and every patch that changed it.`,
+          };
+        },
+        edition: (version: string) => ({
+          title: `Path of Exile 2 ${version} patch notes | Vestigo`,
+          description: `Every change in Path of Exile 2 patch ${version}: buffs, nerfs, fixes and new content, with each gem and unique shown as in the game.`,
+        }),
+      },
     },
     home: {
       title: () => "Vestigo — Tier lists, builds and data for the games you play",
@@ -3617,6 +3643,31 @@ const ES: typeof EN = {
         description: () =>
           "Cada parche de Path of Exile 2 ordenado en mejoras, nerfeos, arreglos y contenido nuevo, " +
           "con las gemas y los únicos que toca tal como se ven en el juego.",
+      },
+      detail: {
+        league: (name: string) => ({
+          title: `Economía de Path of Exile 2 en ${name}: orbes y únicos | Vestigo`,
+          description: `Cuánto vale cada moneda y cada único en la liga ${name} de Path of Exile 2, y lo que más sube, baja y se comercia esta semana.`,
+        }),
+        cat: (cat: string) =>
+          ({
+            gems: { title: "Gemas de Path of Exile 2: habilidad, apoyo y espíritu | Vestigo", description: "Todas las gemas de habilidad, de apoyo y de espíritu de Path of Exile 2, con el tooltip oficial en español y sus números en cada nivel." },
+            uniques: { title: "Únicos de Path of Exile 2: todos, con sus modificadores | Vestigo", description: "Todos los objetos únicos de Path of Exile 2 con sus modificadores en español, su base y lo que valen esta liga." },
+            bases: { title: "Bases de Path of Exile 2: armas, armaduras y joyería | Vestigo", description: "Todas las bases de armas, armaduras, joyería y frascos de Path of Exile 2 con sus propiedades, requisitos e implícitos." },
+            currency: { title: "Monedas de Path of Exile 2: orbes, runas, núcleos y presagios | Vestigo", description: "Todas las monedas de Path of Exile 2 —orbes, runas, núcleos de alma, presagios y más— con lo que hace cada una." },
+          })[cat] ?? { title: "Enciclopedia de Path of Exile 2 | Vestigo", description: "" },
+        entry: (name: string, cat: string) => {
+          const kind = ({ gems: "gema", uniques: "único", bases: "base", currency: "moneda" } as Record<string, string>)[cat] ?? "objeto";
+          const extra = ({ gems: "sus números en cada nivel", uniques: "sus modificadores y su precio", bases: "sus propiedades y los únicos que la usan", currency: "lo que hace" } as Record<string, string>)[cat] ?? "";
+          return {
+            title: `${name} — ${kind} de Path of Exile 2 | Vestigo`,
+            description: `${name} en Path of Exile 2: el tooltip oficial en español, ${extra} y cada parche que lo cambió.`,
+          };
+        },
+        edition: (version: string) => ({
+          title: `Notas del parche ${version} de Path of Exile 2 | Vestigo`,
+          description: `Todos los cambios del parche ${version} de Path of Exile 2: mejoras, nerfeos, arreglos y lo nuevo, con cada gema y único como en el juego.`,
+        }),
       },
     },
     home: {

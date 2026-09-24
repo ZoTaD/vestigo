@@ -96,16 +96,22 @@ export const BASE_LEAGUES: League[] = LEAGUES.filter((l, i) => LEAGUES.findIndex
 
 const archivos = import.meta.glob<{ default: unknown }>(["@poe2/economy/*.json", "!@poe2/economy/leagues.json"]);
 const pedidos = new Map<string, Promise<Economy>>();
+/** Lo ya cargado, para el primer render (y el prerender del build). */
+const listas = new Map<string, Economy>();
 export function loadEconomy(slug: string): Promise<Economy> {
   let p = pedidos.get(slug);
   if (!p) {
     const key = Object.keys(archivos).find((k) => k.endsWith(`/${slug}.json`));
     if (!key) return Promise.reject(new Error(`sin datos de la liga ${slug}`));
-    p = archivos[key]().then((m) => m.default as Economy);
+    p = archivos[key]().then((m) => {
+      listas.set(slug, m.default as Economy);
+      return m.default as Economy;
+    });
     pedidos.set(slug, p);
   }
   return p;
 }
+export const peekEconomy = (slug: string): Economy | null => listas.get(slug) ?? null;
 
 /** Por debajo de esto un precio no es confiable: casi nadie lo vende. */
 export const isThin = (r: ExchangeRow | UniqueRow): boolean => ("n" in r ? r.n < 10 : r.vol < 1);

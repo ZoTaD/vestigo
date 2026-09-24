@@ -14,6 +14,8 @@ import {
   loadCat,
   loadIndex,
   nameOf,
+  peekCat,
+  peekIndex,
   tx,
   type Base,
   type Cat,
@@ -41,10 +43,10 @@ export default function Poe2Encyclopedia({ route, navigate }: { route: Route; na
   const t = usePoe2Copy().enc;
   const [cat, slug] = (route.detail ?? "").split("/");
   const to = (detail?: string): Route => ({ ...route, view: "poe2", p2Section: "encyclopedia", detail });
-  const [index, setIndex] = useState<IndexEntry[] | null>(null);
+  const [index, setIndex] = useState<IndexEntry[] | null>(peekIndex);
   useEffect(() => {
     let vivo = true;
-    loadIndex().then((i) => vivo && setIndex(i));
+    if (!index) loadIndex().then((i) => vivo && setIndex(i));
     return () => { vivo = false; };
   }, []);
 
@@ -176,13 +178,13 @@ function facetsOf(cat: Cat, rows: Entry[], lang: Lang, t: ReturnType<typeof useP
 function CatList({ cat, to, navigate }: { cat: Cat; to: (d?: string) => Route; navigate: Nav }) {
   const t = usePoe2Copy().enc;
   const { lang } = useLang();
-  const [rows, setRows] = useState<Entry[] | null>(null);
+  const [rows, setRows] = useState<Entry[] | null>(() => peekCat(cat) as Entry[] | null);
   const [q, setQ] = useState("");
   const [pick, setPick] = useState<Record<string, string>>({});
   const [tip, setTip] = useState<{ entry: Entry; x: number; y: number } | null>(null);
   useEffect(() => {
     let vivo = true;
-    setRows(null);
+    setRows(peekCat(cat) as Entry[] | null);
     setPick({});
     setQ("");
     loadCat(cat).then((r) => vivo && setRows(r as Entry[]));
@@ -252,7 +254,7 @@ function CatList({ cat, to, navigate }: { cat: Cat; to: (d?: string) => Route; n
 function Detail({ cat, slug, to, route, navigate }: { cat: Cat; slug: string; to: (d?: string) => Route; route: Route; navigate: Nav }) {
   const t = usePoe2Copy().enc;
   const { lang } = useLang();
-  const [rows, setRows] = useState<Entry[] | null>(null);
+  const [rows, setRows] = useState<Entry[] | null>(() => peekCat(cat) as Entry[] | null);
   const [level, setLevel] = useState(1);
   useEffect(() => {
     let vivo = true;
@@ -409,7 +411,7 @@ function UniquesOnBase({ slug, to, navigate }: { slug: string; to: (d?: string) 
   const t = usePoe2Copy().enc;
   const { lang } = useLang();
   const { bind, node } = useItemTip();
-  const [list, setList] = useState<CatData["uniques"] | null>(null);
+  const [list, setList] = useState<CatData["uniques"] | null>(() => peekCat("uniques")?.filter((x) => x.baseSlug === slug) ?? null);
   useEffect(() => {
     let vivo = true;
     loadCat("uniques").then((u) => vivo && setList(u.filter((x) => x.baseSlug === slug)));

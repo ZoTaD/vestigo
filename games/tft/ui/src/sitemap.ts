@@ -1,4 +1,4 @@
-import { LANGS, DEADLOCK_SECTIONS, SITE_ORIGIN, routePath, slugify } from "./route";
+import { LANGS, DEADLOCK_SECTIONS, POE2_SECTIONS, SITE_ORIGIN, routePath, slugify } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -33,6 +33,22 @@ export interface NewsEntry {
   score: { nerf: number; buff: number; mixed: number; fix: number };
 }
 
+/**
+ * Lo que el sitemap necesita de Path of Exile 2 (2026-09-23): las ligas de la
+ * economía, las fichas de la enciclopedia y las ediciones del diario de
+ * parches, tal como las escriben los pipelines de `games/poe2`.
+ */
+export interface Poe2SitemapData {
+  /** La primera es la de por defecto, que ya es `/poe2` a secas. */
+  leagues: { slug: string; name: string }[];
+  /** Cada ficha, con su id `<cat>/<slug>`, que es su dirección. */
+  entries: { id: string; cat: string; en: string; es: string }[];
+  editions: { slug: string; version: string; date: string; title: { en: string; es: string | null } }[];
+}
+
+/** Las categorías de la enciclopedia, en el orden de sus pestañas. */
+export const POE2_CATS = ["gems", "uniques", "bases", "currency"] as const;
+
 export interface SitemapData {
   /** Deadlock's catalog: hero and item name, in both languages. */
   dlHeroes: Record<string, { name: Localized }>;
@@ -45,6 +61,8 @@ export interface SitemapData {
    * porque el índice puede no existir todavía en un checkout viejo.
    */
   dlNews?: NewsEntry[];
+  /** Path of Exile 2. Opcional por lo mismo que `dlNews`. */
+  p2?: Poe2SitemapData;
 }
 
 /**
@@ -110,6 +128,19 @@ export function sitemapPaths(data: SitemapData): string[] {
     // indexadas la primera semana, no cuentan.
     for (const e of data.dlNews ?? []) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "patches", detail: e.slug }));
+    }
+
+    // Path of Exile 2 entero (2026-09-23): cada pestaña, cada liga de la
+    // economía salvo la de por defecto (que ya es /poe2), cada categoría y cada
+    // ficha de la enciclopedia, y cada edición del diario de parches.
+    if (data.p2) {
+      const p2 = (p2Section: (typeof POE2_SECTIONS)[number], detail?: string) =>
+        routePath({ ...base, lang, view: "poe2", p2Section, detail });
+      for (const s of POE2_SECTIONS) paths.push(p2(s));
+      for (const l of data.p2.leagues.slice(1)) paths.push(p2("economy", l.slug));
+      for (const c of POE2_CATS) if (data.p2.entries.some((e) => e.cat === c)) paths.push(p2("encyclopedia", c));
+      for (const e of data.p2.entries) paths.push(p2("encyclopedia", e.id));
+      for (const e of data.p2.editions) paths.push(p2("patches", e.slug));
     }
   }
 

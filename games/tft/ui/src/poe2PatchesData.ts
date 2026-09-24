@@ -31,17 +31,27 @@ export const EDITIONS: EditionMeta[] = (index as { editions: EditionMeta[] }).ed
 
 const archivos = import.meta.glob<{ default: unknown }>(["@poe2/patches/*.json", "!@poe2/patches/index.json"]);
 const pedidos = new Map<string, Promise<Edition>>();
+/** Lo ya cargado, para el primer render (y el prerender): ver `peekIndex`. */
+const listas = new Map<string, Edition>();
 export function loadEdition(slug: string): Promise<Edition> {
   let p = pedidos.get(slug);
   if (!p) {
     const key = Object.keys(archivos).find((k) => k.endsWith(`/${slug}.json`));
     if (!key) return Promise.reject(new Error(`sin edición ${slug}`));
-    p = archivos[key]().then((m) => m.default as Edition);
+    p = archivos[key]().then((m) => {
+      listas.set(slug, m.default as Edition);
+      return m.default as Edition;
+    });
     pedidos.set(slug, p);
   }
   return p;
 }
 export const loadAllEditions = () => Promise.all(EDITIONS.map((e) => loadEdition(e.slug)));
+export const peekEdition = (slug: string): Edition | null => listas.get(slug) ?? null;
+export function peekAllEditions(): Edition[] | null {
+  const all = EDITIONS.map((e) => listas.get(e.slug));
+  return all.every(Boolean) ? (all as Edition[]) : null;
+}
 
 /** Todas las líneas de una lista, con sus sublíneas, en orden. */
 export function* walk(lines: Line[]): Generator<Line> {

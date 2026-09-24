@@ -1,4 +1,7 @@
-import { Fragment, useCallback, useLayoutEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
+
+// En el prerender no hay ventana: ahí useLayoutEffect sólo avisa, una vez por página.
+const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 import { useLang, type Lang } from "./i18n";
 import { usePoe2Copy, type Poe2Copy } from "./poe2Copy";
 import {
@@ -43,7 +46,7 @@ export function ItemTooltip({
   const t = usePoe2Copy().enc;
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
-  useLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     if (!floating) return;
     const el = ref.current;
     if (!el) return;

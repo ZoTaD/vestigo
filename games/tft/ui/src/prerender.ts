@@ -1,6 +1,7 @@
 import { COPY, type Lang } from "./i18n";
 import { LANGS, parseRoute, routeUrl, SITE_ORIGIN, type Route } from "./route";
 import { deadlockDetailSlugs, sitemapPaths, type SitemapData } from "./sitemap";
+import { POE2_COPY, type Poe2Copy } from "./poe2Copy";
 
 /**
  * El `<head>` de cada página, escrito en el build.
@@ -70,7 +71,16 @@ export function metaFor(
     return { title: page.title(), description: page.description() };
   }
   if (route.view === "poe2") {
-    const page = seo.poe2[route.p2Section ?? "economy"];
+    const section = route.p2Section ?? "economy";
+    const d = seo.poe2.detail;
+    // La categoría de la enciclopedia no necesita nombre: el detalle ya es "gems".
+    if (section === "encyclopedia" && route.detail && !route.detail.includes("/")) return d.cat(route.detail);
+    if (detailName && route.detail) {
+      if (section === "economy") return d.league(detailName);
+      if (section === "patches") return d.edition(detailName);
+      if (section === "encyclopedia") return d.entry(detailName, route.detail.split("/")[0]);
+    }
+    const page = seo.poe2[section];
     return { title: page.title(), description: page.description() };
   }
   // Lo que queda son la portada y las dos páginas legales. El `as` recorta
@@ -102,6 +112,9 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     out[`dl-items/${slug}`] = say(data.dlItems[id]?.name as Localized, lang, slug);
   });
   for (const e of data.dlNews ?? []) out[`dl-patches/${e.slug}`] = e.title;
+  for (const l of data.p2?.leagues ?? []) out[`p2-economy/${l.slug}`] = l.name;
+  for (const e of data.p2?.editions ?? []) out[`p2-patches/${e.slug}`] = e.version;
+  for (const e of data.p2?.entries ?? []) out[`p2-encyclopedia/${e.id}`] = lang === "es" ? e.es || e.en : e.en;
 
   return out;
 }
@@ -161,6 +174,19 @@ export function jsonLdFor(
 
   if (route.view === "home") {
     return [{ "@context": "https://schema.org", "@type": "WebSite", name: brand, url: home, inLanguage: lang }];
+  }
+  if (route.view === "poe2") {
+    // Vestigo › Path of Exile 2 › pestaña › categoría › ficha.
+    const section = route.p2Section ?? "economy";
+    const trail = [{ name: brand, url: home }, { name: "Path of Exile 2", url: routeUrl({ ...route, p2Section: "economy", detail: undefined }) }];
+    if (section !== "economy") trail.push({ name: copy.poe2.tabs[section], url: routeUrl({ ...route, detail: undefined }) });
+    if (section === "encyclopedia" && route.detail) {
+      const cat = route.detail.split("/")[0];
+      const catName = POE2_COPY[lang].enc.cats[cat as keyof Poe2Copy["enc"]["cats"]];
+      if (catName) trail.push({ name: catName, url: routeUrl({ ...route, detail: cat }) });
+      if (route.detail.includes("/") && detailName) trail.push({ name: detailName, url: page.canonical });
+    } else if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    return trail.length > 2 ? [crumbs(trail)] : [];
   }
   if (route.view !== "deadlock") return [];
 
@@ -236,8 +262,13 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);
     const lang = route.lang;
-    const detailKey =
-      route.detail && route.view === "deadlock" ? `dl-${route.dlSection}/${route.detail}` : null;
+    const detailKey = !route.detail
+      ? null
+      : route.view === "deadlock"
+        ? `dl-${route.dlSection}/${route.detail}`
+        : route.view === "poe2"
+          ? `p2-${route.p2Section ?? "economy"}/${route.detail}`
+          : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
     const { title, description } = metaFor(route, lang, detail);
 

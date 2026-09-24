@@ -188,5 +188,7 @@ const ES: typeof EN = {
 };
 
 const P2 = { en: EN, es: ES };
+/** Para el build (migas de pan del prerender), que no puede usar el hook. */
+export const POE2_COPY = P2;
 export const usePoe2Copy = () => P2[useLang().lang];
 export type Poe2Copy = typeof EN;

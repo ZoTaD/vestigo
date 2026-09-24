@@ -108,12 +108,22 @@ export type Entry = Gem | Unique | Base | Currency;
 
 const archivos = import.meta.glob<{ default: unknown }>("@poe2/encyclopedia/*.json");
 const pedidos = new Map<string, Promise<unknown>>();
+/**
+ * Lo ya cargado, para leerlo sin esperar. El prerender del build
+ * (`entry-server.tsx`) precarga lo que usa cada página y los componentes
+ * arrancan con esto: `renderToString` no espera promesas ni corre efectos, y
+ * sin esta caché Google recibía "Abriendo la enciclopedia…".
+ */
+const listos = new Map<string, unknown>();
 function load<T>(name: string): Promise<T> {
   let p = pedidos.get(name);
   if (!p) {
     const key = Object.keys(archivos).find((k) => k.endsWith(`/${name}.json`));
     if (!key) return Promise.reject(new Error(`sin datos: ${name}`));
-    p = archivos[key]().then((m) => m.default);
+    p = archivos[key]().then((m) => {
+      listos.set(name, m.default);
+      return m.default;
+    });
     pedidos.set(name, p);
   }
   return p as Promise<T>;
@@ -122,6 +132,10 @@ function load<T>(name: string): Promise<T> {
 export const loadIndex = () => load<IndexEntry[]>("index");
 export function loadCat<C extends Cat>(cat: C): Promise<CatData[C]> {
   return load<CatData[C]>(cat);
+}
+export const peekIndex = (): IndexEntry[] | null => (listos.get("index") as IndexEntry[] | undefined) ?? null;
+export function peekCat<C extends Cat>(cat: C): CatData[C] | null {
+  return (listos.get(cat) as CatData[C] | undefined) ?? null;
 }
 
 /** Una ficha por su id `<cat>/<slug>`, o null. */

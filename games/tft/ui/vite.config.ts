@@ -84,8 +84,30 @@ function readSitemapData(): { data: OgData; generatedAt: string } {
       totals: ed.totals,
     };
   }
+  // Path of Exile 2: las ligas, las fichas de la enciclopedia y las ediciones
+  // del diario. Si falta alguno (un checkout sin los pipelines corridos), PoE2
+  // queda afuera del sitemap en vez de tirar el build.
+  const readP2 = (name: string) => {
+    try {
+      return JSON.parse(readFileSync(`${poe2Dir}/${name}`, "utf-8"));
+    } catch {
+      return null;
+    }
+  };
+  const p2Leagues = readP2("economy/leagues.json");
+  const p2Index = readP2("encyclopedia/index.json");
+  const p2Patches = readP2("patches/index.json");
+  const p2: SitemapData["p2"] =
+    p2Leagues && p2Index && p2Patches
+      ? {
+          leagues: p2Leagues.leagues.map((l: { slug: string; name: string }) => ({ slug: l.slug, name: l.name })),
+          entries: p2Index.map((e: { id: string; cat: string; en: string; es: string }) => ({ id: e.id, cat: e.cat, en: e.en, es: e.es })),
+          editions: p2Patches.editions,
+        }
+      : undefined;
   return {
     data: {
+      p2,
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
       dlHeroIds: dlHeroesFile.heroes.map((h: { heroId: number }) => String(h.heroId)),

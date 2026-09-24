@@ -313,10 +313,21 @@ def level_lines(stat_set):
     return static, out, len(levels)
 
 
-for gid, g in sorted(skill_gems.items(), key=lambda kv: kv[1]["base_item"]["display_name"]):
+# Una ficha por nombre: el juego trae variantes internas con el mismo nombre
+# (la "Herald of Ash" que da un único, la "Blink" de arena) que para el que
+# busca son la misma gema y para Google serían páginas duplicadas. Se queda la
+# normal: la que se talla (crafting_level > 0) y no viene de un único.
+def _gem_rank(kv):
+    gid, g = kv
+    return (g["base_item"]["display_name"], "Unique" in gid, not g.get("crafting_level"), gid)
+
+
+_seen_gem_names = set()
+for gid, g in sorted(skill_gems.items(), key=_gem_rank):
     en = g["base_item"]["display_name"]
-    if en not in GEM_TRADE or "[DNT" in en:
+    if en not in GEM_TRADE or en.startswith("[") or en in _seen_gem_names:
         continue
+    _seen_gem_names.add(en)
     slug = uniq_slug(seen, slugify(en))
     gem_slug_by_id[g["base_item"]["id"]] = slug
     kind = "support" if g["gem_type"] == "support" else ("spirit" if g["gem_type"] == "spirit" else "active")
@@ -374,6 +385,9 @@ for bid, b in sorted(base_items.items(), key=lambda kv: (kv[1]["item_class"], kv
     cls = b["item_class"]
     if cls not in GROUP_OF or b["name"] not in exists or b.get("release_state") != "released":
         continue
+    # El juego lista algunas bases dos veces (mismo nombre, otro id interno): una sola ficha.
+    if b["name"] in base_by_name:
+        continue
     slug = uniq_slug(seen, slugify(b["name"]))
     pr = b.get("properties") or {}
     props = {}
@@ -420,6 +434,9 @@ for key, u in sorted(uniques.items(), key=lambda kv: kv[1]["name"]):
     en = u["name"]
     if en not in UNIQ_TRADE and en not in eco_rows:
         continue
+    # Variantes del mismo único (otra base, otro dibujo): una sola ficha, la primera.
+    if any(r["en"] == en for r in uniq_out):
+        continue
     slug = uniq_slug(seen, slugify(en))
     e = eco_rows.get(en)
     w, h = u.get("inventory_width", 1), u.get("inventory_height", 1)
@@ -448,7 +465,9 @@ CUR_TRADE = TRADE.get("currency", set())
 aug_by_id = augments
 currency, seen = [], set()
 for bid, b in sorted(base_items.items(), key=lambda kv: kv[1]["name"]):
-    if b["name"] not in CUR_TRADE or b.get("release_state") != "released":
+    if b["name"] not in CUR_TRADE or b.get("release_state") != "released" or b["name"].startswith("["):
+        continue
+    if any(r["en"] == b["name"] for r in currency):
         continue
     slug = uniq_slug(seen, slugify(b["name"]))
     pr = b.get("properties") or {}
@@ -472,6 +491,32 @@ for bid, b in sorted(base_items.items(), key=lambda kv: kv[1]["name"]):
     currency.append(row)
     index.append({"id": f"currency/{slug}", "cat": "currency", "en": row["en"], "es": row["es"], "icon": icon, "sub": b["item_class"]})
 print(f"  {len(currency)} monedas")
+
+
+def disambiguate(rows, cat):
+    """Dos fichas distintas con el mismo nombre en español llevan el inglés al lado.
+
+    La traducción oficial tiene huecos: "Cannibalism I" y "Cannibalism II" son
+    las dos "Canibalismo I", y varias bases "Runeforged" quedan con el nombre de
+    la base común (su buscador de comercio en español tiene el mismo problema).
+    No se inventa una traducción: se agrega el nombre inglés, que no es ambiguo.
+    """
+    by = {}
+    for r in rows:
+        by.setdefault(r["es"], []).append(r)
+    for es, group in by.items():
+        if len(group) > 1 and len({r["en"] for r in group}) > 1:
+            for r in group:
+                if r["es"] != r["en"]:
+                    r["es"] = f"{es} ({r['en']})"
+    names = {f"{cat}/{r['slug']}": r["es"] for r in rows}
+    for e in index:
+        if e["id"] in names:
+            e["es"] = names[e["id"]]
+
+
+for _rows, _cat in ((gems, "gems"), (bases, "bases"), (uniq_out, "uniques"), (currency, "currency")):
+    disambiguate(_rows, _cat)
 
 
 def dump(name, data):

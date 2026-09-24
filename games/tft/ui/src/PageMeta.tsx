@@ -6,6 +6,9 @@ import { editions } from "./deadlockNewsData";
 import { heroes as dlHeroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
 import { buildHeroes, PUBLISHED_BAND as DL_PUBLISHED_BAND } from "./deadlockData";
 import { buildItems as buildDlItems } from "./deadlockItemsData";
+import { LEAGUES } from "./poe2EconomyData";
+import { EDITIONS as P2_EDITIONS } from "./poe2PatchesData";
+import { loadIndex as loadP2Index, peekIndex as peekP2Index } from "./poe2EncyclopediaData";
 
 /**
  * What a search engine and a chat preview see.
@@ -84,6 +87,13 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     if (route.dlSection === "patches") return editions.find((e) => e.slug === route.detail)?.title ?? null;
     return null;
   }
+  if (route.view === "poe2") {
+    const section = route.p2Section ?? "economy";
+    if (section === "economy") return LEAGUES.find((l) => l.slug === route.detail)?.name ?? null;
+    if (section === "patches") return P2_EDITIONS.find((e) => e.slug === route.detail)?.version ?? null;
+    const e = peekP2Index()?.find((x) => x.id === route.detail);
+    return e ? (lang === "es" ? e.es || e.en : e.en) : null;
+  }
   return null;
 }
 
@@ -130,6 +140,14 @@ export default function PageMeta({ route }: { route: Route }) {
     setMeta("name", "twitter:image", image);
     };
     apply(dlDetailName(route, lang));
+    // Una ficha de la enciclopedia de PoE2 saca su nombre del índice, que se
+    // pide aparte: si todavía no llegó, se vuelve a escribir el <head> cuando
+    // llega, así el título no se queda en el genérico de la pestaña.
+    if (route.view === "poe2" && route.p2Section === "encyclopedia" && route.detail?.includes("/") && !peekP2Index()) {
+      let vivo = true;
+      loadP2Index().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
   }, [route, copy, lang]);
 
   return null;

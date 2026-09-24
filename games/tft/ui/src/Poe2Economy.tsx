@@ -3,6 +3,7 @@ import { useCopy, useLang, type Lang } from "./i18n";
 import { takePendingSearch } from "./pendingSearch";
 import {
   loadEconomy,
+  peekEconomy,
   pickCurrency,
   fmtAmount,
   nameOf,
@@ -42,7 +43,7 @@ export default function Poe2Economy({ league: leagueSlug, onLeague }: { league?:
   const t = copy.poe2;
   const { lang } = useLang();
   const league = leagueBySlug(leagueSlug);
-  const [eco, setEco] = useState<Economy | null>(null);
+  const [eco, setEco] = useState<Economy | null>(() => peekEconomy(league.slug));
   const [tabId, setTabId] = useState("Currency");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: "v", dir: -1 });

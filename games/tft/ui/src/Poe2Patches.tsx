@@ -4,12 +4,14 @@ import type { Route } from "./route";
 import RouteLink from "./RouteLink";
 import { usePoe2Copy } from "./poe2Copy";
 import { useItemTip } from "./Poe2Tooltip";
-import { loadIndex, nameOf, type IndexEntry } from "./poe2EncyclopediaData";
+import { loadIndex, nameOf, peekIndex, type IndexEntry } from "./poe2EncyclopediaData";
 import {
   EDITIONS,
   editionRefs,
   loadAllEditions,
   loadEdition,
+  peekAllEditions,
+  peekEdition,
   seriesOf,
   walk,
   type Dir,
@@ -45,8 +47,11 @@ export default function Poe2Patches({ route, navigate }: { route: Route; navigat
   const t = usePoe2Copy().pat;
   const { lang } = useLang();
   const meta = EDITIONS.find((e) => e.slug === route.detail) ?? EDITIONS[0];
-  const [ed, setEd] = useState<Edition | null>(null);
-  const [index, setIndex] = useState<Map<string, IndexEntry> | null>(null);
+  const [ed, setEd] = useState<Edition | null>(() => peekEdition(meta.slug));
+  const [index, setIndex] = useState<Map<string, IndexEntry> | null>(() => {
+    const i = peekIndex();
+    return i ? new Map(i.map((e) => [e.id, e])) : null;
+  });
   const [only, setOnly] = useState<Dir | null>(null);
   useEffect(() => {
     let vivo = true;
@@ -56,7 +61,7 @@ export default function Poe2Patches({ route, navigate }: { route: Route; navigat
   }, [meta.slug]);
   useEffect(() => {
     let vivo = true;
-    loadIndex().then((i) => vivo && setIndex(new Map(i.map((e) => [e.id, e]))));
+    if (!index) loadIndex().then((i) => vivo && setIndex(new Map(i.map((e) => [e.id, e]))));
     return () => { vivo = false; };
   }, []);
   const to = (slug?: string): Route => ({ ...route, view: "poe2", p2Section: "patches", detail: slug });
@@ -269,21 +274,25 @@ function Archive({ current, to, navigate, lang }: { current: string; to: (s?: st
 export function EntryHistory({ id, route, navigate }: { id: string; route: Route; navigate: Nav }) {
   const t = usePoe2Copy();
   const { lang } = useLang();
-  const [hits, setHits] = useState<{ ed: Edition; lines: Line[] }[] | null>(null);
+  const find = (eds: Edition[]) => {
+    const out: { ed: Edition; lines: Line[] }[] = [];
+    for (const ed of eds) {
+      const sections = (lang === "es" && ed.es) || ed.en;
+      const lines: Line[] = [];
+      for (const s of sections) for (const l of walk(s.lines)) if (l.refs?.includes(id)) lines.push(l);
+      if (lines.length) out.push({ ed, lines });
+    }
+    return out;
+  };
+  const [hits, setHits] = useState<{ ed: Edition; lines: Line[] }[] | null>(() => {
+    const eds = peekAllEditions();
+    return eds ? find(eds) : null;
+  });
   useEffect(() => {
     let vivo = true;
-    loadAllEditions().then((eds) => {
-      if (!vivo) return;
-      const out: { ed: Edition; lines: Line[] }[] = [];
-      for (const ed of eds) {
-        const sections = (lang === "es" && ed.es) || ed.en;
-        const lines: Line[] = [];
-        for (const s of sections) for (const l of walk(s.lines)) if (l.refs?.includes(id)) lines.push(l);
-        if (lines.length) out.push({ ed, lines });
-      }
-      setHits(out);
-    });
+    loadAllEditions().then((eds) => vivo && setHits(find(eds)));
     return () => { vivo = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, lang]);
   if (!hits || hits.length === 0) return null;
   return (
