@@ -46,3 +46,7 @@ games/poe2/.cache/
 # PoE2: HTML de los hilos del foro que baja games/poe2/pipeline/patches.mjs
 games/poe2/data/patches/.cache/
 __pycache__/
+
+# Valheim: el entorno de Python del extractor y su caché, locales.
+games/valheim/.venv/
+games/valheim/.cache/
