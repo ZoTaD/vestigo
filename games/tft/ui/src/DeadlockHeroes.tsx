@@ -41,11 +41,17 @@ type Group = "play" | "vitality" | "movement" | "weapon" | "boon" | "melee";
  * dice (el DPS con recarga, la bala por bendición) y después las que menos
  * distinguen a un héroe de otro. En el teléfono no hay forma de que entren y
  * queda el scroll con la columna del héroe fija.
+ *
+ * Desde el 2026-09-24 son 19 (entró "Baneado", 66 px) y cada tramo suelta una
+ * columna más: el DPS sostenido ya no entra en ningún ancho de escritorio, y
+ * los demás tramos se corrieron uno. Medido sin scroll de costado en 1440,
+ * 1380, 1280, 1200, 1140, 1100 y 1024.
  */
 const HIDE_AT: { query: string; keys: SortKey[] }[] = [
-  { query: "(max-width: 1439px) and (min-width: 761px)", keys: ["sustainedDps", "bulletPerBoon"] },
-  { query: "(max-width: 1279px) and (min-width: 761px)", keys: ["healthRegen", "sprintSpeed", "heavyMelee"] },
-  { query: "(max-width: 1099px) and (min-width: 761px)", keys: ["stamina", "healthPerBoon"] },
+  { query: "(min-width: 761px)", keys: ["sustainedDps"] },
+  { query: "(max-width: 1439px) and (min-width: 761px)", keys: ["bulletPerBoon", "healthRegen", "sprintSpeed"] },
+  { query: "(max-width: 1279px) and (min-width: 761px)", keys: ["heavyMelee", "stamina", "healthPerBoon"] },
+  { query: "(max-width: 1139px) and (min-width: 761px)", keys: ["fireRate"] },
 ];
 
 function useHiddenColumns(): Set<SortKey> {
@@ -106,6 +112,7 @@ export default function DeadlockHeroes({
       tier: h.tier,
       winRate: h.winRate,
       pickRate: h.pickRate,
+      banRate: h.banRate,
       stats: kit?.heroes[String(h.heroId)]?.stats,
     }));
   }, [meta, kit]);
@@ -122,6 +129,8 @@ export default function DeadlockHeroes({
       ),
     },
     { key: "pickRate", group: "play", cell: (r) => pct(r.pickRate) },
+    // Sin decimales: la muestra de baneos es de cientos de partidas por banda.
+    { key: "banRate", group: "play", cell: (r) => (r.banRate === undefined ? "—" : `${n(r.banRate * 100)}%`) },
     { key: "health", group: "vitality", cell: (r) => exact(r.stats?.health) },
     { key: "healthRegen", group: "vitality", cell: (r) => exact(r.stats?.healthRegen) },
     { key: "moveSpeed", group: "movement", cell: (r) => exact(r.stats?.moveSpeed) },

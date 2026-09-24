@@ -15,7 +15,8 @@
     "build:ladder": "node node_modules/tsx/dist/cli.mjs src/ladder.ts",
     "build:news": "node node_modules/tsx/dist/cli.mjs src/news-run.ts",
     "build:hero-kit": "node node_modules/tsx/dist/cli.mjs src/heroKit.ts",
-    "build:hero-insights": "node node_modules/tsx/dist/cli.mjs src/heroInsights.ts"
+    "build:hero-insights": "node node_modules/tsx/dist/cli.mjs src/heroInsights.ts",
+    "build:brawl": "node node_modules/tsx/dist/cli.mjs src/brawl.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

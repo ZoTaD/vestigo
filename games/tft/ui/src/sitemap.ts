@@ -1,4 +1,4 @@
-import { LANGS, DEADLOCK_SECTIONS, POE2_SECTIONS, SITE_ORIGIN, routePath, slugify } from "./route";
+import { LANGS, DEADLOCK_PAGES, POE2_SECTIONS, SITE_ORIGIN, routePath, slugify } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -107,7 +107,7 @@ export function sitemapPaths(data: SitemapData): string[] {
 
     // Las pestañas de Deadlock. La de meta sale como /deadlock a secas, que es
     // la URL que ya estaba indexada.
-    for (const dlSection of DEADLOCK_SECTIONS) {
+    for (const dlSection of DEADLOCK_PAGES) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection }));
     }
     // Una página por héroe y por ítem de la banda publicada por defecto. No

@@ -5,10 +5,12 @@ import SectionHead from "./SectionHead";
 import { useCopy, useLocale, useLang } from "./i18n";
 import DeadlockBuildCard from "./DeadlockBuildCard";
 import DeadlockMastery from "./DeadlockMastery";
+import DeadlockModePicker from "./DeadlockModePicker";
 import { usePatches } from "./deadlockPatchesData";
 import {
   useHeroes,
   bandBadge,
+  BRAWL,
   PUBLISHED_BAND,
   ON_FALLBACK_BAND,
   patchMovers,
@@ -215,6 +217,18 @@ const toHero = (route: Route, h: Hero): Route => ({
   detail: heroSlugs.toSlug.get(String(h.heroId)),
 });
 
+/**
+ * Desde Street Brawl, el héroe abre su ficha de la pestaña Héroes y no la
+ * build: la build se mide en clasificatorias, y en un modo de 13 minutos con
+ * objetos propios no es la que conviene.
+ */
+const toHeroSheet = (route: Route, h: Hero): Route => ({
+  ...route,
+  view: "deadlock",
+  dlSection: "heroes",
+  detail: heroSlugs.toSlug.get(String(h.heroId)),
+});
+
 /** Las cuatro cifras de un héroe, en una fila (Cowan 2001: cuatro, no más). */
 function HeroKpis({ hero }: { hero: Hero }) {
   const copy = useCopy();
@@ -395,11 +409,13 @@ function TierBand({
   heroes,
   route,
   navigate,
+  linkTo = toHero,
 }: {
   tier: string;
   heroes: Hero[];
   route: Route;
   navigate: (route: Route) => void;
+  linkTo?: (route: Route, h: Hero) => Route;
 }) {
   const copy = useCopy();
   const locale = useLocale();
@@ -425,7 +441,7 @@ function TierBand({
 
       <ol className="dl-tiles">
         {heroes.map((h) => (
-          <HeroTile key={h.heroId} hero={h} to={toHero(route, h)} onNavigate={navigate} />
+          <HeroTile key={h.heroId} hero={h} to={linkTo(route, h)} onNavigate={navigate} />
         ))}
       </ol>
     </section>
@@ -438,15 +454,17 @@ function RailRow({
   figure,
   route,
   navigate,
+  linkTo = toHero,
 }: {
   hero: Hero;
   figure: React.ReactNode;
   route: Route;
   navigate: (route: Route) => void;
+  linkTo?: (route: Route, h: Hero) => Route;
 }) {
   return (
     <li>
-      <RouteLink className="dl-rail-row" to={toHero(route, hero)} onNavigate={navigate}>
+      <RouteLink className="dl-rail-row" to={linkTo(route, hero)} onNavigate={navigate}>
         {hero.img && <img src={hero.img} alt="" width={32} height={32} loading="lazy" />}
         <span className="dl-rail-name">{hero.name}</span>
         <span className="dl-rail-figure">{figure}</span>
@@ -461,6 +479,7 @@ export default function Deadlock({
   band,
   picker,
   open,
+  brawl = false,
 }: {
   route: Route;
   navigate: (route: Route) => void;
@@ -469,18 +488,25 @@ export default function Deadlock({
   /** El slug del héroe abierto, si la URL trae uno. */
   open?: string;
   onOpen?: (slug?: string) => void;
+  /**
+   * La tier list de Street Brawl (`/deadlock/street-brawl`, 2026-09-24): la
+   * misma página sobre otra lista, sin bandas y sin página de build propia.
+   */
+  brawl?: boolean;
 }) {
   const copy = useCopy();
   const locale = useLocale();
   const { lang } = useLang();
-  const meta = useHeroes(band);
+  const meta = useHeroes(brawl ? BRAWL : band);
+  const linkTo = brawl ? toHeroSheet : toHero;
+  const modes = <DeadlockModePicker route={route} navigate={navigate} brawl={brawl} />;
 
   const insignia = bandBadge(band);
   const movers = patchMovers(meta?.heroes ?? []);
 
   const metaLine = meta && (
     <span className="dl-meta-line">
-      {insignia.img && <img src={insignia.img} alt="" width={18} height={18} />}
+      {!brawl && insignia.img && <img src={insignia.img} alt="" width={18} height={18} />}
       {meta.file.matches === 0
         ? copy.deadlock.emptyBand
         : `${copy.deadlock.sample(
@@ -509,7 +535,7 @@ export default function Deadlock({
    * `undefined === undefined` abra un héroe sin que nadie lo pida.
    */
   const abierto =
-    meta && open
+    meta && open && !brawl
       ? meta.heroes.find((h) => {
           const slug = heroSlugs.toSlug.get(String(h.heroId));
           return !!slug && slug === open;
@@ -531,6 +557,16 @@ export default function Deadlock({
 
   const masJugados = meta ? [...meta.heroes].sort((a, b) => b.pickRate - a.pickRate).slice(0, 5) : [];
   const topS = meta?.heroes[0];
+  // Los baneos sólo existen en clasificatorias, y sólo si la banda llegó al
+  // piso de muestra (ver `bans.ts` en la pipeline).
+  const bans = !brawl ? meta?.file.bans : undefined;
+  const masBaneados =
+    meta && bans
+      ? [...meta.heroes]
+          .filter((h) => (h.banRate ?? 0) > 0)
+          .sort((a, b) => (b.banRate ?? 0) - (a.banRate ?? 0))
+          .slice(0, 5)
+      : [];
 
   return (
     <main className="deadlock deadlock-meta">
@@ -539,16 +575,28 @@ export default function Deadlock({
           historial es el mismo para todas las bandas. */}
       <SectionHead
         eyebrow={copy.deadlock.eyebrow}
-        title={copy.deadlock.title}
-        accent={copy.deadlock.titleBreak}
-        lead={[
-          copy.deadlock.lead,
-          copy.deadlock.note,
-          meta && ON_FALLBACK_BAND
-            ? copy.deadlock.fallback(copy.deadlock.bands[PUBLISHED_BAND])
-            : null,
-        ]}
-        controls={picker}
+        title={brawl ? copy.deadlock.brawl.title : copy.deadlock.title}
+        accent={brawl ? copy.deadlock.brawl.titleBreak : copy.deadlock.titleBreak}
+        lead={
+          brawl
+            ? [copy.deadlock.brawl.lead, copy.deadlock.brawl.note]
+            : [
+                copy.deadlock.lead,
+                copy.deadlock.note,
+                meta && ON_FALLBACK_BAND ? copy.deadlock.fallback(copy.deadlock.bands[PUBLISHED_BAND]) : null,
+              ]
+        }
+        controls={
+          brawl ? (
+            modes
+          ) : (
+            // Uno arriba del otro: en fila le comen el ancho al título.
+            <div className="dl-controls">
+              {modes}
+              {picker}
+            </div>
+          )
+        }
         meta={metaLine}
       />
 
@@ -569,24 +617,34 @@ export default function Deadlock({
                         heroes={heroes}
                         route={route}
                         navigate={navigate}
+                        linkTo={linkTo}
                       />
                     );
                   })}
                 </div>
 
-                <p className="dl-tier-note">{copy.deadlock.rail.legend}</p>
+                <p className="dl-tier-note">{brawl ? copy.deadlock.brawl.legend : copy.deadlock.rail.legend}</p>
                 <p className="dl-tier-note" lang={lang}>
-                  {copy.deadlock.footnote}
+                  {brawl ? copy.deadlock.brawl.footnote : copy.deadlock.footnote}
                 </p>
 
                 {/* La página termina con un siguiente paso, no con el pie legal. */}
                 <nav className="next-steps" aria-label={copy.deadlock.next.label}>
-                  {topS && (
+                  {topS && !brawl && (
                     <RouteLink className="next-step" to={toHero(route, topS)} onNavigate={navigate}>
                       <span className="next-step-label">{copy.deadlock.next.label}</span>
                       <span className="next-step-title">{copy.deadlock.next.topHero(topS.name)}</span>
                     </RouteLink>
                   )}
+                  {/* La otra lista: de Street Brawl a clasificatorias y al revés. */}
+                  <RouteLink
+                    className="next-step"
+                    to={{ ...route, view: "deadlock", dlSection: brawl ? "meta" : "street-brawl", detail: undefined }}
+                    onNavigate={navigate}
+                  >
+                    <span className="next-step-label">{copy.deadlock.mode.label}</span>
+                    <span className="next-step-title">{brawl ? copy.deadlock.next.ranked : copy.deadlock.next.brawl}</span>
+                  </RouteLink>
                   <RouteLink
                     className="next-step"
                     to={{ ...route, view: "deadlock", dlSection: "items", detail: undefined }}
@@ -623,6 +681,7 @@ export default function Deadlock({
                       hero={h}
                       route={route}
                       navigate={navigate}
+                      linkTo={linkTo}
                       figure={<span className="delta is-up">▲ {signed(h.trend)}</span>}
                     />
                   ))}
@@ -632,6 +691,7 @@ export default function Deadlock({
                       hero={h}
                       route={route}
                       navigate={navigate}
+                      linkTo={linkTo}
                       figure={<span className="delta is-down">▼ {signed(h.trend)}</span>}
                     />
                   ))}
@@ -645,10 +705,32 @@ export default function Deadlock({
               </div>
               <ol className="dl-rail-list">
                 {masJugados.map((h) => (
-                  <RailRow key={h.heroId} hero={h} route={route} navigate={navigate} figure={pct(h.pickRate)} />
+                  <RailRow
+                    key={h.heroId}
+                    hero={h}
+                    route={route}
+                    navigate={navigate}
+                    linkTo={linkTo}
+                    figure={pct(h.pickRate)}
+                  />
                 ))}
               </ol>
             </section>
+
+            {bans && masBaneados.length > 0 && (
+              <section className="box">
+                <div className="box-head">
+                  <h2 className="box-title">{copy.deadlock.rail.banned}</h2>
+                  <p className="box-lead">{copy.deadlock.rail.bannedLead(bans.matches.toLocaleString(locale))}</p>
+                </div>
+                <ol className="dl-rail-list">
+                  {/* Sin decimales: con la muestra que hay, 12% y 13% no se distinguen. */}
+                  {masBaneados.map((h) => (
+                    <RailRow key={h.heroId} hero={h} route={route} navigate={navigate} figure={pct(h.banRate ?? 0, 0)} />
+                  ))}
+                </ol>
+              </section>
+            )}
 
             <section className="box dl-rail-log">
               <div className="box-head">

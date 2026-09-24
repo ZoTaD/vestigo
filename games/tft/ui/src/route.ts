@@ -24,7 +24,17 @@ export type Section = "meta" | "units" | "items" | "ladder" | "player";
  * `/tft/patches` parsearía a una pestaña que no existe y el sitio contestaría
  * 200 en una URL vacía. Cada juego declara las suyas.
  */
-export type DeadlockSection = "meta" | "heroes" | "items" | "builder" | "ranks" | "ladder" | "patches" | "player" | "match";
+export type DeadlockSection =
+  | "meta"
+  | "street-brawl"
+  | "heroes"
+  | "items"
+  | "builder"
+  | "ranks"
+  | "ladder"
+  | "patches"
+  | "player"
+  | "match";
 export type View = "home" | "tft" | "deadlock" | "poe2" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
@@ -54,7 +64,15 @@ export const DEADLOCK_SECTIONS: DeadlockSection[] = ["meta", "heroes", "items", 
  * una pestaña que no se puede apretar sin haber buscado antes no es una pestaña.
  * Por eso la lista de parseo y la de dibujo son dos.
  */
-export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match"];
+export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match", "street-brawl"];
+/**
+ * La tier list de Street Brawl (2026-09-24) tiene dirección propia
+ * (`/deadlock/street-brawl`) pero no pestaña: es la misma pestaña Tier list en
+ * otro modo de juego, y se elige con el selector de modo de su cabecera. La
+ * dirección aparte es para que "deadlock street brawl tier list" encuentre una
+ * página que hable de eso y no la lista rankeada.
+ */
+export const DEADLOCK_PAGES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "street-brawl"];
 /** En el orden en que se dibujan las pestañas de PoE2. */
 export const POE2_SECTIONS: Poe2Section[] = ["economy", "encyclopedia", "patches"];
 /**

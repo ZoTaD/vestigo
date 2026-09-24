@@ -680,6 +680,7 @@ const EN = {
         name: "Hero",
         winRate: "Win rate",
         pickRate: "Pick rate",
+        banRate: "Banned",
         health: "Health",
         healthRegen: "Regen",
         healthPerBoon: "Health",
@@ -699,6 +700,9 @@ const EN = {
       tips: {
         winRate: "Share of matches won in the selected band, from the tier list.",
         pickRate: "Share of matches where someone played the hero, in the selected band.",
+        banRate:
+          "Share of ranked matches in the selected band where the hero was banned. Only matches " +
+          "whose demo was analysed carry bans — about one in a hundred — so it has no decimals.",
         health: "Base health at the start of the match.",
         healthRegen: "Health regenerated per second.",
         healthPerBoon: "Health gained with each boon (level up).",
@@ -853,6 +857,15 @@ const EN = {
       moversLead: "Who moved most, in win-rate points.",
       moversNone: "No hero moved enough yet to call it a change.",
       mostPlayed: "Most played",
+      /**
+       * Los baneos (2026-09-24). Sólo en la rankeada: Street Brawl no banea.
+       * La bajada dice de cuántas partidas sale, porque es poca muestra y
+       * viene de las demos analizadas, no de todas.
+       */
+      banned: "Most banned",
+      bannedLead: (matches: string) =>
+        `Share of ranked matches where each hero was banned, out of ${matches} matches with known ` +
+        "bans (last 15 days). Each one bans three heroes.",
       changelog: "Patch log",
       allPatches: "All patches",
       legend:
@@ -866,6 +879,28 @@ const EN = {
       items: "Item tier list",
       profile: "Your profile",
       topHero: (name: string) => `Why ${name} is S`,
+      ranked: "Ranked tier list",
+      brawl: "Street Brawl tier list",
+    },
+    /** Rankeadas o Street Brawl: la cabecera de la tier list elige el modo. */
+    mode: { label: "Game mode", ranked: "Ranked", brawl: "Street Brawl" },
+    /** La tier list de Street Brawl (2026-09-24), `/deadlock/street-brawl`. */
+    brawl: {
+      title: "Street Brawl",
+      titleBreak: " tier list",
+      lead:
+        "Win rates in Street Brawl, the 4v4 mode that lasts about 13 minutes. It has no ranked " +
+        "queue and the game gives its matches no rank, so this is one list for everyone who " +
+        "plays it — there is no band to pick.",
+      note:
+        "It is a different game from ranked: a hero that runs Street Brawl can be average in a " +
+        "full match, which is why it gets a list of its own.",
+      legend:
+        "Under each hero: win rate, then pick rate out of 8 heroes per match. ▲ ▼ moved a point " +
+        "or more since the patch.",
+      footnote:
+        "Deadlock is a Valve game and Vestigo is not affiliated with Valve. Street Brawl matches " +
+        "come from deadlock-api.com's live API; every figure on this page is our own.",
     },
     title: "Hero",
     titleBreak: " tier list",
@@ -889,6 +924,8 @@ const EN = {
       player: "Player",
       /** No se dibuja como pestaña: existe para titular `/deadlock/match/<id>`. */
       match: "Match",
+      /** Tampoco: es la Tier list en otro modo. Titula la miga de pan. */
+      "street-brawl": "Street Brawl",
     },
 
     /**
@@ -2033,6 +2070,12 @@ const EN = {
           "All Deadlock heroes side by side with the game's own numbers: health, speed, weapon " +
           "DPS, clip, reload and what each boon adds. Sort by any column.",
       },
+      "street-brawl": {
+        title: () => "Deadlock Street Brawl Tier List and Win Rates | Vestigo",
+        description: () =>
+          "Which Deadlock heroes win Street Brawl, the 4v4 mode. Win rate and pick rate measured " +
+          "on real Street Brawl matches, with who moved since the patch.",
+      },
       meta: {
         title: () => "Deadlock Hero Tier List and Win Rates | Vestigo",
         description: () =>
@@ -2730,6 +2773,7 @@ const ES: typeof EN = {
         name: "Héroe",
         winRate: "Victorias",
         pickRate: "Uso",
+        banRate: "Baneado",
         health: "Vida",
         healthRegen: "Regen.",
         healthPerBoon: "Vida",
@@ -2749,6 +2793,10 @@ const ES: typeof EN = {
       tips: {
         winRate: "Porcentaje de partidas ganadas en la banda elegida, de la tier list.",
         pickRate: "Porcentaje de partidas en las que alguien jugó al héroe, en la banda elegida.",
+        banRate:
+          "Porcentaje de partidas clasificatorias de la banda elegida en las que lo banearon. Sólo " +
+          "traen baneos las partidas cuya demo se analizó —más o menos una de cada cien—, por eso " +
+          "va sin decimales.",
         health: "Vida base al empezar la partida.",
         healthRegen: "Vida que regenera por segundo.",
         healthPerBoon: "Vida que gana con cada bendición (subida de nivel).",
@@ -2900,6 +2948,10 @@ const ES: typeof EN = {
       moversLead: "Quién se movió más, en puntos de winrate.",
       moversNone: "Todavía ningún héroe se movió lo suficiente como para llamarlo un cambio.",
       mostPlayed: "Más jugados",
+      banned: "Los más baneados",
+      bannedLead: (matches: string) =>
+        `Porcentaje de las partidas clasificatorias en las que banearon a cada héroe, sobre ${matches} ` +
+        "partidas con baneos conocidos (últimos 15 días). En cada una se banean tres héroes.",
       changelog: "Registro de parches",
       allPatches: "Todos los parches",
       legend:
@@ -2912,6 +2964,27 @@ const ES: typeof EN = {
       items: "Tier list de objetos",
       profile: "Tu perfil",
       topHero: (name: string) => `Por qué ${name} es S`,
+      ranked: "Tier list de clasificatorias",
+      brawl: "Tier list de pelea callejera",
+    },
+    mode: { label: "Modo de juego", ranked: "Clasificatorias", brawl: "Pelea callejera" },
+    brawl: {
+      title: "Tier list",
+      titleBreak: " de pelea callejera",
+      lead:
+        "Porcentajes de victoria en la pelea callejera (Street Brawl), el modo 4 contra 4 que dura " +
+        "unos 13 minutos. No tiene cola clasificatoria y el juego no le asigna rango a sus " +
+        "partidas, así que es una sola lista para todos los que la juegan: no hay banda que elegir.",
+      note:
+        "Es otro juego que las clasificatorias: un héroe que arrasa en la pelea callejera puede ser " +
+        "uno más en una partida completa, y por eso tiene su propia lista.",
+      legend:
+        "Debajo de cada héroe: victorias y uso, sobre 8 héroes por partida. ▲ ▼ se movió un " +
+        "punto o más desde el parche.",
+      footnote:
+        "Deadlock es un juego de Valve y Vestigo no está afiliado con Valve. Las partidas de " +
+        "pelea callejera salen de la API en vivo de deadlock-api.com; todos los números de esta " +
+        "página son nuestros.",
     },
     title: "Tier list",
     titleBreak: " de héroes",
@@ -2929,6 +3002,7 @@ const ES: typeof EN = {
       patches: "Parches",
       player: "Jugador",
       match: "Partida",
+      "street-brawl": "Pelea callejera",
     },
 
     report: {
@@ -3721,6 +3795,12 @@ const ES: typeof EN = {
         description: () =>
           "Todos los héroes de Deadlock lado a lado con los números del juego: vida, velocidad, " +
           "DPS del arma, cargador, recarga y lo que suma cada bendición. Ordena por cualquier columna.",
+      },
+      "street-brawl": {
+        title: () => "Tier list de pelea callejera (Street Brawl) de Deadlock | Vestigo",
+        description: () =>
+          "Qué héroes de Deadlock ganan en la pelea callejera, el modo 4 contra 4. Victorias y uso " +
+          "medidos sobre partidas reales de Street Brawl, con quién se movió desde el parche.",
       },
       meta: {
         title: () => "Tier list de héroes de Deadlock y porcentajes de victoria | Vestigo",

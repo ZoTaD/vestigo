@@ -252,6 +252,7 @@ export type SortKey =
   | "name"
   | "winRate"
   | "pickRate"
+  | "banRate"
   | "health"
   | "healthRegen"
   | "healthPerBoon"
@@ -275,6 +276,8 @@ export interface TableRow {
   tier?: string;
   winRate?: number;
   pickRate?: number;
+  /** En qué fracción de las partidas analizadas lo banearon; ver `RawHero.banRate`. */
+  banRate?: number;
   stats?: HeroBaseStats;
 }
 
@@ -289,6 +292,8 @@ export function valueOf(row: TableRow, key: SortKey): number | string | undefine
       return row.winRate;
     case "pickRate":
       return row.pickRate;
+    case "banRate":
+      return row.banRate;
     case "health":
       return s?.health;
     case "healthRegen":

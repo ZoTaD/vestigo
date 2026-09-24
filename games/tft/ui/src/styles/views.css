@@ -203,6 +203,34 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* El modo (clasificatorias / pelea callejera) arriba de la banda, alineados a
+   la derecha como el selector solo: en fila le comían el ancho al título. */
+.dl-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .dl-controls {
+    align-items: flex-start;
+  }
+}
+
+/* En el teléfono el de bandas ocupa el ancho entero; el de modo lo acompaña. */
+@media (max-width: 560px) {
+  .dl-controls {
+    align-items: stretch;
+  }
+
+  .dl-controls > .seg:not(.is-wrap) > * {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+}
+
 /* La leyenda y la nota de fuente, en el tamaño chico y alineadas con la lista. */
 .dl-tier-note {
   margin: 0;

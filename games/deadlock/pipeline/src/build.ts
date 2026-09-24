@@ -16,7 +16,9 @@ import {
   retryingOnRewrite,
   PROVISIONAL_MATCHES,
   FROZEN_AFTER_H,
+  partitionsWithColumn,
 } from "./snapshot";
+import { banRatesFor, bansSql, splitBanRows, type BandBans, type HeroTierBanRow, type TierBanRow } from "./bans";
 import { fetchPatches, patchWindows, prePatchWeight, type Patch } from "./patches";
 import { fetchLiveCounts, type BandCounts } from "./liveStats";
 
@@ -107,6 +109,11 @@ export interface HeroStat {
   pickRateBefore?: number;
   /** True cuando el héroe no llega a `MIN_MATCHES` en esta banda. */
   thinData?: boolean;
+  /**
+   * En qué fracción de las partidas analizadas de la banda estuvo baneado (0 a
+   * 1). Sólo cuando la banda tiene `bans`; ver `bans.ts`.
+   */
+  banRate?: number;
 }
 
 export interface HeroesFile {
@@ -146,6 +153,13 @@ export interface HeroesFile {
   boards: number;
   from: string;
   to: string;
+  /**
+   * La muestra de los baneos: partidas de la banda con los baneos conocidos,
+   * en los últimos quince días. Falta cuando la banda no llega a
+   * `MIN_BAN_MATCHES` o el lake no respondió; entonces ningún héroe trae
+   * `banRate`.
+   */
+  bans?: { matches: number; from: string; to: string };
   heroes: HeroStat[];
 }
 
@@ -280,6 +294,8 @@ export interface BandExtras {
   postMatches?: number;
   postSource?: "live";
   snapshotUntil?: string;
+  /** Los baneos de la banda, si alcanzó la muestra (ver `bans.ts`). */
+  bans?: BandBans & { from: string; to: string };
 }
 
 /**
@@ -291,7 +307,8 @@ export interface BandExtras {
  */
 export function heroesFileFrom(
   rows: RawRow[],
-  band: Band,
+  /** Una banda, o `{ id: "street-brawl" }` para la tier list sin rango. */
+  band: { id: string },
   totals: { matches: number; boards: number; from: string; to: string },
   extra: BandExtras,
   patch: Patch,
@@ -327,6 +344,9 @@ export function heroesFileFrom(
               pickRateBefore: extra.matchesBefore > 0 ? r(antes!.n / extra.matchesBefore) : 0,
             }),
         ...(matches < MIN_MATCHES ? { thinData: true } : {}),
+        // Un héroe que nadie baneó en la muestra vale 0, que es un dato: la
+        // banda sí tiene baneos medidos.
+        ...(extra.bans ? { banRate: r(extra.bans.rates.get(row.hero_id) ?? 0, 3) } : {}),
       };
     })
     .sort((a, b) => b.winRate - a.winRate || b.matches - a.matches);
@@ -344,6 +364,7 @@ export function heroesFileFrom(
     boards: totals.boards,
     from: totals.from,
     to: totals.to,
+    ...(extra.bans ? { bans: { matches: extra.bans.matches, from: extra.bans.from, to: extra.bans.to } } : {}),
     heroes,
   };
 }
@@ -430,6 +451,33 @@ async function openSnapshot(): Promise<{ source: Source; horizon: Date; con: Awa
   }
 }
 
+/**
+ * Los baneos de los últimos quince días, por rango, desde el lake. `null` si
+ * no se pudieron medir: son un agregado de la tier list, no una razón para no
+ * publicarla, así que un error acá se avisa y se sigue.
+ */
+async function measureBans(
+  snap: NonNullable<Awaited<ReturnType<typeof openSnapshot>>>,
+  w: Window
+): Promise<{ tiers: TierBanRow[]; heroes: HeroTierBanRow[]; from: string; to: string } | null> {
+  const t = Date.now();
+  try {
+    const bandables = await bandablePartitions(snap.con, partitionsCovering(snap.ranges, w.from, w.to));
+    const parts = await partitionsWithColumn(snap.con, bandables, "banned_hero_ids");
+    if (parts.length === 0) return null;
+    const rows = (await (await snap.con.runAndReadAll(bansSql(parts, w.from, w.to))).getRowObjects()) as unknown as Parameters<
+      typeof splitBanRows
+    >[0];
+    const { tiers, heroes } = splitBanRows(rows);
+    const conBaneos = tiers.reduce((n, x) => n + x.banned, 0);
+    console.log(`  baneos: ${conBaneos.toLocaleString("es")} partidas con baneos en quince días (${((Date.now() - t) / 1000).toFixed(1)}s)`);
+    return { tiers, heroes, from: w.from.slice(0, 10), to: w.to.slice(0, 10) };
+  } catch (e) {
+    console.log(`  ⚠ baneos: no se pudieron medir (${e instanceof Error ? e.message : String(e)}); la tier list sale sin ellos`);
+    return null;
+  }
+}
+
 async function main() {
   const patches = await fetchPatches();
   const patch = patches[0];
@@ -485,6 +533,8 @@ async function main() {
   const conBrecha = [...skillGap.values()].filter((v) => v !== undefined).length;
   console.log(`  brecha: ${conBrecha} héroes con muestra en los dos extremos (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
 
+  const baneos = snap ? await measureBans(snap, wide) : null;
+
   mkdirSync(OUT_DIR, { recursive: true });
   const generatedAt = new Date().toISOString();
 
@@ -536,6 +586,7 @@ async function main() {
     const patchShare = pesadas > 0 ? postMatches / pesadas : 1;
 
     const cBefore = await pastSource.counts(before, band.tiers);
+    const bansBanda = baneos ? banRatesFor(band.tiers, baneos.tiers, baneos.heroes) : null;
 
     medidas.push({
       band,
@@ -553,6 +604,7 @@ async function main() {
           postMatches,
           ...(postSrc.name === "live" ? { postSource: "live" as const } : {}),
           ...(postSrc.name === "live" && snap ? { snapshotUntil: snap.horizon.toISOString() } : {}),
+          ...(bansBanda && baneos ? { bans: { ...bansBanda, from: baneos.from, to: baneos.to } } : {}),
         },
         patch,
         generatedAt
@@ -574,7 +626,8 @@ async function main() {
       `  ${band.id.padEnd(20)} ${file.heroes.length} héroes (${conCambio} con cambio de parche), ` +
         `${file.matches.toLocaleString("es")} partidas${file.provisional ? " [PROVISIONAL]" : ""}` +
         `${file.crossesPatch ? ` [15 días, el parche pesa ${Math.round((file.patchShare ?? 0) * 100)}%]` : " [desde el parche]"}` +
-        `${file.postSource === "live" ? " [parche: API en vivo]" : ""}, ` +
+        `${file.postSource === "live" ? " [parche: API en vivo]" : ""}` +
+        `${file.bans ? ` [baneos: ${file.bans.matches.toLocaleString("es")}]` : " [sin baneos]"}, ` +
         `${file.from} → ${file.to} (${segundos}s)` +
         `${band.id === defecto ? "  [por defecto]" : ""}`
     );

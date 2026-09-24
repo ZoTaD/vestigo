@@ -119,6 +119,13 @@ jobs:
       #
       # **Los dos perdonan fallar**: si la API no contesta, queda lo commiteado y
       # la tier list se publica igual.
+      # La tier list de Street Brawl (2026-09-24). Sale de la API en vivo, no
+      # del lake: son tres pedidos y un segundo. **Perdona fallar**: si la API
+      # no contesta queda la lista commiteada y la rankeada se publica igual.
+      - name: build brawl
+        continue-on-error: true
+        run: npm run build:brawl --prefix games/deadlock/pipeline
+
       - name: build hero kit
         continue-on-error: true
         run: npm run build:hero-kit --prefix games/deadlock/pipeline

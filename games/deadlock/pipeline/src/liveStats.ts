@@ -27,6 +27,22 @@ import type { RawRow } from "./build";
 const LIVE = "https://api.deadlock-api.com/v1/analytics/hero-stats";
 const PLAYERS_PER_MATCH = 12;
 
+/**
+ * Street Brawl es 4 contra 4: **8 filas por partida, no 12**. Medido sobre el
+ * lake el 2026-09-24: 15.545 partidas de Street Brawl de tres días traen 8
+ * filas cada una. Dividir por 12 publicaría un tercio menos de partidas y un
+ * uso por héroe inflado en la misma proporción.
+ */
+export const BRAWL_PLAYERS_PER_MATCH = 8;
+
+/** Qué juego se le pide a la API. Sin nada es el normal, como antes. */
+export interface LiveQuery {
+  /** `street_brawl` para la pelea callejera; la API asume `normal`. */
+  gameMode?: "street_brawl";
+  /** Filas jugador-partida por partida: 12 en el normal, 8 en Street Brawl. */
+  playersPerMatch?: number;
+}
+
 export interface BandCounts {
   rows: RawRow[];
   /** Partidas distintas de la banda: el denominador del uso. */
@@ -46,25 +62,42 @@ export interface LiveRow {
 const day = (iso: string) => iso.slice(0, 10);
 
 /** Las cuentas de la API, en la forma que consume `blendRows`. */
-export function countsFrom(rows: LiveRow[], from: string, to: string): BandCounts {
+export function countsFrom(
+  rows: LiveRow[],
+  from: string,
+  to: string,
+  playersPerMatch: number = PLAYERS_PER_MATCH
+): BandCounts {
   const boards = rows.reduce((n, r) => n + r.matches, 0);
   return {
     rows: rows.filter((r) => r.matches > 0).map((r) => ({ hero_id: r.hero_id, matches: r.matches, wins: r.wins })),
-    matches: Math.round(boards / PLAYERS_PER_MATCH),
+    matches: Math.round(boards / playersPerMatch),
     boards,
     from: day(from),
     to: day(to),
   };
 }
 
-/** Tira si la API no contesta: quien llama decide si hay otra fuente. */
-export async function fetchLiveCounts(from: string, to: string, tiers: number[]): Promise<BandCounts> {
-  const badge = badgeRange(tiers);
+/**
+ * Tira si la API no contesta: quien llama decide si hay otra fuente.
+ *
+ * `tiers` en `null` es "todas las partidas, sin banda": lo que pide Street
+ * Brawl, que no reparte rango (el lake no le trae insignia a ninguna).
+ */
+export async function fetchLiveCounts(
+  from: string,
+  to: string,
+  tiers: number[] | null,
+  query: LiveQuery = {}
+): Promise<BandCounts> {
   const unix = (iso: string) => Math.floor(Date.parse(iso) / 1000);
-  const url =
-    `${LIVE}?min_unix_timestamp=${unix(from)}&max_unix_timestamp=${unix(to)}` +
-    `&min_average_badge=${badge.min}&max_average_badge=${badge.max}`;
+  let url = `${LIVE}?min_unix_timestamp=${unix(from)}&max_unix_timestamp=${unix(to)}`;
+  if (tiers) {
+    const badge = badgeRange(tiers);
+    url += `&min_average_badge=${badge.min}&max_average_badge=${badge.max}`;
+  }
+  if (query.gameMode) url += `&game_mode=${query.gameMode}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`hero-stats contestó ${res.status}`);
-  return countsFrom((await res.json()) as LiveRow[], from, to);
+  return countsFrom((await res.json()) as LiveRow[], from, to, query.playersPerMatch);
 }

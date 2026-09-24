@@ -21,6 +21,15 @@ import { text, type Localized } from "./localized";
 export type BandId = "phantom-above" | "archon-oracle" | "ritualist-emissary" | "arcanist-below";
 
 /**
+ * La tier list de Street Brawl (2026-09-24): una lista más, sin bandas, porque
+ * ese modo no reparte rango. Se carga como una banda cualquiera para que la
+ * página y la tabla la dibujen con el mismo código.
+ */
+export const BRAWL = "street-brawl";
+/** Qué lista de héroes: una banda de la rankeada, o Street Brawl. */
+export type HeroListId = BandId | typeof BRAWL;
+
+/**
  * La tabla de bandas, copia de la del pipeline
  * (`games/deadlock/pipeline/src/bands.ts`), igual que `bands.ts` copia la de TFT.
  * `test/deadlock.test.ts` la compara contra la del pipeline, así que no pueden
@@ -67,6 +76,13 @@ interface RawHero {
   winRateBefore?: number;
   pickRateBefore?: number;
   thinData?: boolean;
+  /**
+   * En qué fracción de las partidas analizadas de la banda lo banearon (0 a 1),
+   * pesando cada rango por lo que se juega en él. Sólo cuando la banda trae
+   * `bans`: la muestra es chica y sale de las demos que analizó deadlock-api
+   * (ver `bans.ts` en la pipeline).
+   */
+  banRate?: number;
 }
 
 export interface HeroesFile {
@@ -97,6 +113,8 @@ export interface HeroesFile {
   boards: number;
   from: string;
   to: string;
+  /** La muestra de los baneos, si la banda llegó al piso. */
+  bans?: { matches: number; from: string; to: string };
   heroes: RawHero[];
 }
 
@@ -254,16 +272,17 @@ export function tierRange(tier: string): { min?: number; max?: number } {
   };
 }
 
-const files = new Map<BandId, HeroesFile>([[PUBLISHED_BAND, heroesJson as unknown as HeroesFile]]);
+const files = new Map<HeroListId, HeroesFile>([[PUBLISHED_BAND, heroesJson as unknown as HeroesFile]]);
 
 const LOADERS: Record<string, () => Promise<{ default: unknown }>> = {
   "phantom-above": () => import("@deadlock/heroes.phantom-above.json"),
   "archon-oracle": () => import("@deadlock/heroes.archon-oracle.json"),
   "ritualist-emissary": () => import("@deadlock/heroes.ritualist-emissary.json"),
   "arcanist-below": () => import("@deadlock/heroes.arcanist-below.json"),
+  [BRAWL]: () => import("@deadlock/brawl.json"),
 };
 
-export async function loadBand(band: BandId): Promise<void> {
+export async function loadBand(band: HeroListId): Promise<void> {
   if (files.has(band)) return;
   const mod = await LOADERS[band]();
   files.set(band, mod.default as HeroesFile);
@@ -272,7 +291,7 @@ export async function loadBand(band: BandId): Promise<void> {
 const cache = new Map<string, Hero[]>();
 
 /** La tier list de una banda, con todo resuelto al idioma pedido. */
-export function buildHeroes(band: BandId, lang: Lang): Hero[] {
+export function buildHeroes(band: HeroListId, lang: Lang): Hero[] {
   const efectiva = files.has(band) ? band : PUBLISHED_BAND;
   const key = `${efectiva}|${lang}`;
   const hit = cache.get(key);
@@ -299,7 +318,7 @@ export function buildHeroes(band: BandId, lang: Lang): Hero[] {
 }
 
 export interface BandMeta {
-  band: BandId;
+  band: HeroListId;
   heroes: Hero[];
   file: HeroesFile;
 }
@@ -322,7 +341,7 @@ export function patchMovers(heroes: Hero[], top = 5): { up: Hero[]; down: Hero[]
 }
 
 /** La tier list de una banda, o null mientras se está bajando. */
-export function useHeroes(band: BandId): BandMeta | null {
+export function useHeroes(band: HeroListId): BandMeta | null {
   const { lang } = useLang();
   const [, bump] = useReducer((n: number) => n + 1, 0);
 

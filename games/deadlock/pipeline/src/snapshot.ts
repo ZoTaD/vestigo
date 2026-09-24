@@ -33,9 +33,10 @@ import { DuckDBInstance, type DuckDBConnection } from "@duckdb/node-api";
  * La forma nueva, para `match_player`:
  * - un archivo **base** por partición (`intDiv(match_id, 1000000)`), reconstruido
  *   cada tanto;
- * - **deltas** horarios con las filas que todavía no entraron a ninguna base, y
- *   **residuales** que las juntan. Cubren cualquier partición, así que una
- *   ventana reciente tiene que leer las bases que toca **más todos los deltas**.
+ * - **deltas** horarios con las filas que llegaron en esa hora, y
+ *   **residuales** que los juntan. Cubren cualquier partición, así que una
+ *   ventana reciente tiene que leer las bases que toca **más los deltas**,
+ *   menos lo que una base ya consolidó (ver `lakeFrom`).
  * Los nombres de archivo llevan la hora de creación: nunca se reescriben, así
  * que el reintento por ETag de `retryingOnRewrite` ya no debería dispararse.
  *
@@ -49,25 +50,107 @@ const MANIFEST_URL = "https://data.deadlock-api.com/v1/manifest.json";
 /** El número de partición con el que se nombran los deltas y residuales juntos. */
 export const EXTRAS = -1;
 
-interface ManifestFile {
+export interface ManifestFile {
   key: string;
   kind: "base" | "delta" | "residual" | "snapshot";
   generation?: number;
   partition?: number;
+  /** Marca de agua (unix, segundos): la base tiene las filas con marca ≤ `hi`. */
+  hi?: number;
+  /** Deltas y residuales: cuántas filas trae de cada partición. */
+  rows_by_partition?: Record<string, number>;
   rows: number;
   bytes: number;
   built_at: string;
+}
+
+/** Un delta o residual, con las particiones cuyas filas ya están en su base. */
+export interface ExtraFile {
+  url: string;
+  /** Particiones de este archivo que su base ya consolidó: se descartan al leer. */
+  covered: number[];
 }
 
 interface Lake {
   publicUrl: string;
   /** Partición → archivos base (normalmente uno). */
   bases: Map<number, string[]>;
-  /** Deltas y residuales, todos. */
-  extras: string[];
+  /** Deltas y residuales que todavía aportan alguna fila. */
+  extras: ExtraFile[];
 }
 
 let lake: Lake | null = null;
+
+/**
+ * El lake a partir del manifiesto: las bases de la generación vigente y los
+ * deltas y residuales **sin lo que las bases ya consolidaron**.
+ *
+ * **Los deltas no se borran cuando su contenido entra a una base**, y hasta el
+ * 2026-09-24 se leían enteros: medido ese día sobre tres días de partidas, el
+ * 30% de las rankeadas (28.810 de ~95.000) y el 27% de las de Street Brawl
+ * estaban dos veces, una en la base y otra en un delta. El winrate casi no se
+ * mueve —el duplicado pesa igual a ganadores y perdedores—, pero cada conteo de
+ * filas salía inflado: el uso de cada héroe, las partidas de cada banda, las
+ * compras.
+ *
+ * La regla es la del propio lake (`services/data_dump/compaction.rs` en el repo
+ * de deadlock-api): una fila de la partición `p` con marca `t` está en la base
+ * de `p` si `t ≤ base(p).hi`, y si no en exactamente un delta o residual. Los
+ * archivos no traen la marca por fila, pero no hace falta: las bases se
+ * reconstruyen en el borde de un delta horario, así que las filas de `p` en un
+ * archivo están todas en la base cuando `base(p).hi ≥ archivo.hi`, y ninguna
+ * cuando no. Un archivo con todas sus particiones consolidadas ni se lee.
+ */
+export function lakeFrom(manifest: {
+  public_url: string;
+  tables: Record<string, { generation?: number; files: ManifestFile[] }>;
+}): Lake {
+  const table = manifest.tables?.match_player;
+  if (!table || !table.files?.length) {
+    throw new SnapshotUnavailable("el manifiesto del lake no trae match_player.");
+  }
+  const publicUrl = manifest.public_url.replace(/\/$/, "");
+  const url = (k: string) => `${publicUrl}/${k}`;
+  const basesAll = table.files.filter((f) => f.kind === "base" && f.partition !== undefined);
+  // Sólo la generación vigente: una base vieja de la misma partición duplicaría filas.
+  const gen = table.generation ?? Math.max(...basesAll.map((f) => f.generation ?? 0));
+  const bases = new Map<number, string[]>();
+  const baseHi = new Map<number, number>();
+  for (const f of basesAll.filter((f) => (f.generation ?? gen) === gen)) {
+    bases.set(f.partition!, [...(bases.get(f.partition!) ?? []), url(f.key)]);
+    if (f.hi !== undefined) baseHi.set(f.partition!, Math.max(f.hi, baseHi.get(f.partition!) ?? 0));
+  }
+  if (bases.size === 0) throw new SnapshotUnavailable("el manifiesto del lake no trae ninguna base de match_player.");
+  const extras: ExtraFile[] = [];
+  for (const f of table.files) {
+    if (f.kind !== "delta" && f.kind !== "residual") continue;
+    if ((f.generation ?? gen) !== gen) continue;
+    const parts = Object.keys(f.rows_by_partition ?? {}).map(Number);
+    // Sin `hi` o sin el reparto por partición no hay cómo saber qué está
+    // consolidado: se lee entero, que es como se leía antes.
+    const covered =
+      f.hi === undefined ? [] : parts.filter((p) => (baseHi.get(p) ?? -Infinity) >= f.hi!).sort((a, b) => a - b);
+    if (parts.length > 0 && covered.length === parts.length) continue;
+    extras.push({ url: url(f.key), covered });
+  }
+  return { publicUrl, bases, extras };
+}
+
+/**
+ * La lectura de los deltas y residuales, descartando de cada archivo las
+ * particiones que su base ya tiene (ver `lakeFrom`). `filename=true` es lo que
+ * deja saber de qué archivo vino cada fila; se saca antes de devolver.
+ */
+export function extrasSource(extras: ExtraFile[]): string {
+  if (extras.length === 0) return `read_parquet('lake://match_player/vacio-${EXTRAS}')`;
+  const files = extras.map((f) => `'${f.url}'`).join(", ");
+  const read = `read_parquet([${files}], union_by_name=true, filename=true)`;
+  const skip = extras
+    .filter((f) => f.covered.length > 0)
+    .map((f) => `(filename = '${f.url}' and match_id // 1000000 in (${f.covered.join(", ")}))`);
+  const where = skip.length > 0 ? ` where not (${skip.join(" or ")})` : "";
+  return `(select * exclude (filename) from ${read}${where})`;
+}
 
 /**
  * Las particiones de `match_player`, de la más vieja a la más nueva, leídas del
@@ -86,40 +169,22 @@ export async function listPartitions(): Promise<number[]> {
     throw new SnapshotUnavailable(`el lake no responde (${e instanceof Error ? e.message : String(e)})`);
   }
   if (!res.ok) throw new SnapshotUnavailable(`el manifiesto del lake contestó ${res.status}`);
-  const manifest = (await res.json()) as {
-    public_url: string;
-    tables: Record<string, { status: string; generation?: number; files: ManifestFile[] }>;
-  };
-  const table = manifest.tables?.match_player;
-  if (!table || !table.files?.length) {
-    throw new SnapshotUnavailable("el manifiesto del lake no trae match_player.");
-  }
-  const publicUrl = manifest.public_url.replace(/\/$/, "");
-  const url = (k: string) => `${publicUrl}/${k}`;
-  const basesAll = table.files.filter((f) => f.kind === "base" && f.partition !== undefined);
-  // Sólo la generación vigente: una base vieja de la misma partición duplicaría filas.
-  const gen = table.generation ?? Math.max(...basesAll.map((f) => f.generation ?? 0));
-  const bases = new Map<number, string[]>();
-  for (const f of basesAll.filter((f) => (f.generation ?? gen) === gen)) {
-    bases.set(f.partition!, [...(bases.get(f.partition!) ?? []), url(f.key)]);
-  }
-  if (bases.size === 0) throw new SnapshotUnavailable("el manifiesto del lake no trae ninguna base de match_player.");
-  const extras = table.files.filter((f) => f.kind === "delta" || f.kind === "residual").map((f) => url(f.key));
-  lake = { publicUrl, bases, extras };
-  return [...bases.keys()].sort((a, b) => a - b);
+  lake = lakeFrom(await res.json());
+  return [...lake.bases.keys()].sort((a, b) => a - b);
 }
 
 /**
- * De dónde lee una partición: sus archivos base, o —para `EXTRAS`— todos los
- * deltas y residuales. Es una expresión `read_parquet(...)` lista para un
- * `from`. `union_by_name` porque los deltas pueden tener columnas de más o de
+ * De dónde lee una partición: sus archivos base, o —para `EXTRAS`— los deltas
+ * y residuales sin lo ya consolidado (`extrasSource`). Es una expresión lista
+ * para un `from`. `union_by_name` porque los deltas pueden tener columnas de más o de
  * menos entre sí, y `select *` sobre eso fallaría.
  *
  * Sin manifiesto cargado (los tests de forma del SQL) devuelve una lectura
  * simbólica: lo que se prueba ahí son los filtros, no la dirección.
  */
 export function partitionSource(n: number): string {
-  const files = lake ? (n === EXTRAS ? lake.extras : (lake.bases.get(n) ?? [])) : [`lake://match_player/${n}`];
+  if (lake && n === EXTRAS) return extrasSource(lake.extras);
+  const files = lake ? (lake.bases.get(n) ?? []) : [`lake://match_player/${n}`];
   if (files.length === 0) return `read_parquet('lake://match_player/vacio-${n}')`;
   return `read_parquet([${files.map((f) => `'${f}'`).join(", ")}], union_by_name=true)`;
 }
@@ -600,7 +665,15 @@ export function itemsWindowSql(partitions: number[], from: string, to: string): 
 }
 
 /**
- * El tronco común de las dos ventanas: mismas particiones, mismos filtros.
+ * La misma ventana, con los baneos de cada partida (ver `bans.ts`). Una fila
+ * por jugador, como las demás: quien la usa agrupa por `match_id`.
+ */
+export function bansWindowSql(partitions: number[], from: string, to: string): string {
+  return selectFrom(`match_id, ${BADGE} // 10 as tier, banned_hero_ids`, partitions, from, to);
+}
+
+/**
+ * El tronco común de las ventanas: mismas particiones, mismos filtros.
  *
  * **Cada partición nombra sus columnas en vez de pedir `*`, y eso no es estilo.**
  * Las particiones NO comparten esquema: medido el 2026-07-30, la 95 y la 96

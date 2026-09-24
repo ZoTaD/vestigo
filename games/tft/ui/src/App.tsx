@@ -181,7 +181,8 @@ function Shell({
                   className="subnav-item"
                   key={id}
                   to={{ ...route, view: "deadlock", dlSection: id, detail: undefined }}
-                  active={route.dlSection === id}
+                  // Street Brawl es la Tier list en otro modo: la pestaña sigue encendida.
+                  active={route.dlSection === id || (id === "meta" && route.dlSection === "street-brawl")}
                   onNavigate={navigate}
                 >
                   {copy.deadlock.tabs[id]}
@@ -247,6 +248,7 @@ function Shell({
               picker={dlPicker}
               open={route.detail}
               onOpen={(slug) => goDlDetail("meta", slug)}
+              brawl={route.dlSection === "street-brawl"}
             />
           )}
         </>

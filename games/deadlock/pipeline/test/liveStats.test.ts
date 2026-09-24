@@ -23,3 +23,12 @@ describe("countsFrom", () => {
     expect(c.to).toBe("2026-09-19");
   });
 });
+
+describe("countsFrom en Street Brawl", () => {
+  it("cuenta partidas de 8 jugadores, no de 12", async () => {
+    const { BRAWL_PLAYERS_PER_MATCH } = await import("../src/liveStats");
+    const c = countsFrom([{ hero_id: 1, wins: 400, matches: 800 }], "2026-09-20T00:00:00Z", "2026-09-21T00:00:00Z", BRAWL_PLAYERS_PER_MATCH);
+    expect(c.matches).toBe(100);
+    expect(c.boards).toBe(800);
+  });
+});

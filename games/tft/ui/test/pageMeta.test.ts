@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { metaFor } from "../src/prerender";
-import { DEADLOCK_SECTIONS, LANGS, type Route } from "../src/route";
+import { DEADLOCK_PAGES, LANGS, type Route } from "../src/route";
 
 /**
  * Las pestañas de Deadlock son páginas del sitemap, así que necesitan títulos
@@ -12,14 +12,14 @@ import { DEADLOCK_SECTIONS, LANGS, type Route } from "../src/route";
  * perdiendo justo la que le corresponde.
  */
 describe("cada pestaña de Deadlock tiene su propio título", () => {
-  const de = (dlSection: (typeof DEADLOCK_SECTIONS)[number], lang: "en" | "es" = "en") =>
+  const de = (dlSection: (typeof DEADLOCK_PAGES)[number], lang: "en" | "es" = "en") =>
     metaFor({ lang, view: "deadlock", section: "meta", dlSection }, lang, null);
 
   it.each(LANGS)("no repite ni título ni descripción en %s", (lang) => {
-    const titulos = DEADLOCK_SECTIONS.map((s) => de(s, lang).title);
-    const descripciones = DEADLOCK_SECTIONS.map((s) => de(s, lang).description);
-    expect(new Set(titulos).size).toBe(DEADLOCK_SECTIONS.length);
-    expect(new Set(descripciones).size).toBe(DEADLOCK_SECTIONS.length);
+    const titulos = DEADLOCK_PAGES.map((s) => de(s, lang).title);
+    const descripciones = DEADLOCK_PAGES.map((s) => de(s, lang).description);
+    expect(new Set(titulos).size).toBe(DEADLOCK_PAGES.length);
+    expect(new Set(descripciones).size).toBe(DEADLOCK_PAGES.length);
   });
 
   it("le da a la pestaña de objetos las palabras por las que se la busca", () => {

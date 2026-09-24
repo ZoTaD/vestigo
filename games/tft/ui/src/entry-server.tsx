@@ -6,7 +6,7 @@ import { loadMastery } from "./deadlockMasteryData";
 import { loadDetail } from "./deadlockItemsData";
 import { loadEdition, resolveSlug } from "./deadlockNewsData";
 import { loadHeroDetail, loadHeroKit, loadInsights } from "./deadlockHeroKitData";
-import { BANDS, loadBand, PUBLISHED_BAND } from "./deadlockData";
+import { BANDS, BRAWL, loadBand, PUBLISHED_BAND } from "./deadlockData";
 import { heroes as heroSlugs } from "./deadlockSlugs";
 import { leagueBySlug, loadEconomy } from "./poe2EconomyData";
 import { isCat, loadCat, loadIndex } from "./poe2EncyclopediaData";
@@ -41,6 +41,7 @@ async function preload(route: Route): Promise<void> {
     ]);
   }
   if (route.dlSection === "heroes") await quiet(loadHeroKit());
+  if (route.dlSection === "street-brawl") await quiet(loadBand(BRAWL));
   if (route.dlSection === "items" && route.detail) await quiet(loadDetail());
   if (route.dlSection === "patches") {
     const { slug } = resolveSlug(route.detail);

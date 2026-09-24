@@ -1,3 +1,4 @@
+import type { ManifestFile } from "../src/snapshot";
 import { describe, it, expect } from "vitest";
 import {
   windowSql,
@@ -200,5 +201,47 @@ describe("el lake: la fuente de cada partición", () => {
     expect(partitionSource(96)).toContain("read_parquet(");
     expect(partitionSource(96)).toContain("union_by_name=true");
     expect(partitionSource(EXTRAS)).toContain("read_parquet(");
+  });
+});
+
+describe("el lake: lo que una base ya consolidó no se lee dos veces", () => {
+  const files: ManifestFile[] = [
+          { key: "b106", kind: "base", generation: 1, partition: 106, hi: 200, rows: 1, bytes: 1, built_at: "" },
+          { key: "b107", kind: "base", generation: 1, partition: 107, hi: 300, rows: 1, bytes: 1, built_at: "" },
+          // Todo consolidado: 106 y 107 ya llegan hasta 200.
+          { key: "d1", kind: "delta", generation: 1, hi: 200, rows_by_partition: { "106": 5, "107": 9 }, rows: 14, bytes: 1, built_at: "" },
+          // Sólo 107 llega hasta 300: de este archivo se leen las filas de 106.
+          { key: "d2", kind: "delta", generation: 1, hi: 300, rows_by_partition: { "106": 4, "107": 8 }, rows: 12, bytes: 1, built_at: "" },
+          // Más nuevo que todas las bases: se lee entero.
+          { key: "d3", kind: "delta", generation: 1, hi: 400, rows_by_partition: { "107": 7 }, rows: 7, bytes: 1, built_at: "" },
+          // Un residual viejo de una partición sin base reconstruida: entra.
+          { key: "r1", kind: "residual", generation: 1, hi: 150, rows_by_partition: { "69": 3 }, rows: 3, bytes: 1, built_at: "" },
+          // De otra generación: afuera.
+          { key: "d0", kind: "delta", generation: 0, hi: 500, rows_by_partition: { "107": 1 }, rows: 1, bytes: 1, built_at: "" },
+  ];
+  const manifest = { public_url: "https://lake/", tables: { match_player: { generation: 1, files } } };
+
+  it("descarta los archivos consolidados y marca las particiones ya consolidadas de los demás", async () => {
+    const { lakeFrom } = await import("../src/snapshot");
+    const { extras } = lakeFrom(manifest);
+    expect(extras).toEqual([
+      { url: "https://lake/d2", covered: [107] },
+      { url: "https://lake/d3", covered: [] },
+      { url: "https://lake/r1", covered: [] },
+    ]);
+  });
+
+  it("el SQL filtra por archivo y partición, y saca la columna del nombre", async () => {
+    const { lakeFrom, extrasSource } = await import("../src/snapshot");
+    const sql = extrasSource(lakeFrom(manifest).extras);
+    expect(sql).toContain("filename=true");
+    expect(sql).toContain("exclude (filename)");
+    expect(sql).toContain("(filename = 'https://lake/d2' and match_id // 1000000 in (107))");
+    expect(sql).not.toContain("d1");
+  });
+
+  it("sin nada consolidado no agrega filtro", async () => {
+    const { extrasSource } = await import("../src/snapshot");
+    expect(extrasSource([{ url: "u", covered: [] }])).not.toContain("where");
   });
 });
