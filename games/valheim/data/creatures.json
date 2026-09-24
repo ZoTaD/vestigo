@@ -2656,7 +2656,22 @@
  "FrozenKing": {
   "biomes": [],
   "boss": true,
-  "drops": [],
+  "drops": [
+   {
+    "chance": 1.0,
+    "item": "FrozenKingDrop",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   },
+   {
+    "chance": 1.0,
+    "item": "CrownJewel",
+    "max": 1,
+    "min": 1,
+    "perLevel": false
+   }
+  ],
   "faction": 8,
   "health": 10000.0,
   "icon": null,

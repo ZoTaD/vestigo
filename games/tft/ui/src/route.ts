@@ -35,7 +35,7 @@ export type DeadlockSection =
   | "patches"
   | "player"
   | "match";
-export type View = "home" | "tft" | "deadlock" | "poe2" | "privacy" | "terms";
+export type View = "home" | "tft" | "deadlock" | "poe2" | "valheim" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -43,6 +43,14 @@ export type View = "home" | "tft" | "deadlock" | "poe2" | "privacy" | "terms";
  * cada juego declara las suyas y una desconocida cae en la de por defecto.
  */
 export type Poe2Section = "economy" | "encyclopedia" | "patches";
+/**
+ * Las pestañas de Valheim (2026-09-24). "home" es la portada de la sección
+ * (`/valheim` a secas); las demás llevan su nombre en la URL y, opcionalmente,
+ * el slug de una ficha (`/valheim/bosses/eikthyr`).
+ */
+export type ValheimTab = "foods" | "meads" | "weapons" | "armor" | "tools" | "building" | "materials" | "creatures" | "biomes" | "bosses";
+export type ValheimSection = "home" | ValheimTab;
+export const VALHEIM_TABS: ValheimTab[] = ["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "bosses"];
 
 export const LANGS: Lang[] = ["en", "es"];
 export const SECTIONS: Section[] = ["meta", "units", "items", "ladder", "player"];
@@ -110,6 +118,8 @@ export interface Route {
   dlSection: DeadlockSection;
   /** Qué pestaña de PoE2. Opcional: fuera de /poe2 no hace falta, y sin ella es Economía. */
   p2Section?: Poe2Section;
+  /** Qué pestaña de Valheim. Sin ella es la portada de la sección. */
+  vhSection?: ValheimSection;
   /**
    * Which rank band the meta shows. Absent means the default one, which is why
    * apex keeps the plain /tft/meta address it has always had.
@@ -135,7 +145,8 @@ const isDlSection = (v: string): v is DeadlockSection => (DEADLOCK_ROUTES as str
  * docs/design/2026-09-15-tft-sale-del-sitio.md.
  */
 const isP2Section = (v: string): v is Poe2Section => (POE2_SECTIONS as string[]).includes(v);
-const isView = (v: string): v is View => ["home", "deadlock", "poe2", "privacy", "terms"].includes(v);
+const isView = (v: string): v is View => ["home", "deadlock", "poe2", "valheim", "privacy", "terms"].includes(v);
+const isVhTab = (v: string | undefined): v is ValheimTab => !!v && (VALHEIM_TABS as string[]).includes(v);
 
 /**
  * A name as it appears in a URL: lowercase, ASCII, hyphen-separated.
@@ -208,6 +219,11 @@ export function parseRoute(pathname: string): Route {
     return { ...base, view: "poe2", p2Section, detail };
   }
 
+  if (head === "valheim") {
+    if (!isVhTab(rest[1])) return { ...base, view: "valheim", vhSection: "home" };
+    return { ...base, view: "valheim", vhSection: rest[1], detail: rest[2] || undefined };
+  }
+
   if (head !== "tft") return { ...base, view: head };
 
   const section = rest[1] && isSection(rest[1]) ? rest[1] : DEFAULT_SECTION;
@@ -240,6 +256,11 @@ export function routePath(route: Route): string {
     const p2 = route.p2Section ?? DEFAULT_P2_SECTION;
     if (detail) return `/${lang}/poe2/${p2}/${detail}`;
     return p2 === DEFAULT_P2_SECTION ? `/${lang}/poe2` : `/${lang}/poe2/${p2}`;
+  }
+  if (view === "valheim") {
+    const sec = route.vhSection ?? "home";
+    if (sec === "home") return `/${lang}/valheim`;
+    return detail ? `/${lang}/valheim/${sec}/${detail}` : `/${lang}/valheim/${sec}`;
   }
   if (view !== "tft") return `/${lang}/${view}`;
   // The default band is left out entirely so the meta keeps one canonical URL

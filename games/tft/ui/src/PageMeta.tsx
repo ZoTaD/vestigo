@@ -9,6 +9,7 @@ import { buildItems as buildDlItems } from "./deadlockItemsData";
 import { LEAGUES } from "./poe2EconomyData";
 import { EDITIONS as P2_EDITIONS } from "./poe2PatchesData";
 import { loadIndex as loadP2Index, peekIndex as peekP2Index } from "./poe2EncyclopediaData";
+import { loadIndex as loadVhIndex, peekIndex as peekVhIndex } from "./valheimData";
 
 /**
  * What a search engine and a chat preview see.
@@ -94,6 +95,10 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const e = peekP2Index()?.find((x) => x.id === route.detail);
     return e ? (lang === "es" ? e.es || e.en : e.en) : null;
   }
+  if (route.view === "valheim" && route.detail) {
+    const e = peekVhIndex()?.find((x) => x.tab === route.vhSection && x.slug === route.detail);
+    return e ? (lang === "es" ? e.es || e.en : e.en) : null;
+  }
   return null;
 }
 
@@ -146,6 +151,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "poe2" && route.p2Section === "encyclopedia" && route.detail?.includes("/") && !peekP2Index()) {
       let vivo = true;
       loadP2Index().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Igual para una ficha de Valheim: el nombre sale del índice de la sección.
+    if (route.view === "valheim" && route.detail && !peekVhIndex()) {
+      let vivo = true;
+      loadVhIndex().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
   }, [route, copy, lang]);

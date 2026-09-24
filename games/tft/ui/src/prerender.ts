@@ -2,6 +2,7 @@ import { COPY, type Lang } from "./i18n";
 import { LANGS, parseRoute, routeUrl, SITE_ORIGIN, type Route } from "./route";
 import { deadlockDetailSlugs, sitemapPaths, type SitemapData } from "./sitemap";
 import { POE2_COPY, type Poe2Copy } from "./poe2Copy";
+import { VALHEIM_COPY } from "./valheimCopy";
 
 /**
  * El `<head>` de cada página, escrito en el build.
@@ -82,6 +83,17 @@ export function metaFor(
     }
     const page = seo.poe2[section];
     return { title: page.title(), description: page.description() };
+  }
+  if (route.view === "valheim") {
+    const v = VALHEIM_COPY[lang];
+    const sec = route.vhSection ?? "home";
+    if (sec === "home") return v.seo.home;
+    const tabName = v.tabs[sec];
+    if (route.detail) {
+      const name = detailName ?? route.detail;
+      return { title: v.seo.detail(name, tabName), description: v.seo.detailDesc(name) };
+    }
+    return { title: v.seo.tab(tabName), description: v.tabLede[sec] };
   }
   // Lo que queda son la portada y las dos páginas legales. El `as` recorta
   // "tft" del tipo, que sigue en `View` sólo para que su código compile.

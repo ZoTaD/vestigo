@@ -18,6 +18,7 @@ import DeadlockReport from "./DeadlockReport";
 import Poe2Economy from "./Poe2Economy";
 import Poe2Encyclopedia from "./Poe2Encyclopedia";
 import Poe2Patches from "./Poe2Patches";
+import Valheim from "./Valheim";
 import DeadlockBandPicker from "./DeadlockBandPicker";
 import { PUBLISHED_BAND as DL_PUBLISHED_BAND, type BandId as DlBandId } from "./deadlockData";
 import Privacy from "./Privacy";
@@ -146,7 +147,7 @@ function Shell({
     <div
       className="app"
       data-theme="codex"
-      data-game={place === "deadlock" || place === "poe2" ? place : undefined}
+      data-game={place === "deadlock" || place === "poe2" || place === "valheim" ? place : undefined}
       /**
        * La home es el único lugar que no es el códex.
        *
@@ -282,6 +283,7 @@ function Shell({
           )}
         </>
       )}
+      {place === "valheim" && <Valheim route={route} navigate={navigate} />}
       {place === "privacy" && <Privacy />}
       {place === "terms" && <Terms />}
 
@@ -320,7 +322,9 @@ function Shell({
         {/* En PoE2 no se nombra a Valve (no es su juego) ni a los proveedores
             de datos, a pedido de ZoTaD; sí el crédito que pide la licencia de
             la tipografía Fontin. */}
-        <p className="foot-sources">{place === "poe2" ? copy.footer.sourcesPoe2 : copy.footer.sourcesDeadlock}</p>
+        <p className="foot-sources">
+          {place === "poe2" ? copy.footer.sourcesPoe2 : place === "valheim" ? copy.footer.sourcesValheim : copy.footer.sourcesDeadlock}
+        </p>
 
         {/* Required by Riot's General Policies, which every third-party product
             must post, and by Overwolf's compliance guide. It is not decoration —

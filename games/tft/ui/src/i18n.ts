@@ -1928,6 +1928,7 @@ const EN = {
     sourcesDeadlock:
       "Match data from the public deadlock-api.com snapshot · Hero and item art from Valve",
     sourcesPoe2: "Fontin typeface by Jos Buivenga (exljbris)",
+    sourcesValheim: "Data and pictures from the Valheim game files. Averia typeface by Dan Sayers (SIL Open Font License).",
     privacy: "Privacy Policy",
     terms: "Terms of Service",
     // Both documents are English-only, so a Spanish reader deserves fair warning
@@ -3670,6 +3671,7 @@ const ES: typeof EN = {
     sourcesDeadlock:
       "Datos de partidas del snapshot público de deadlock-api.com · Arte de héroes y objetos de Valve",
     sourcesPoe2: "Tipografía Fontin de Jos Buivenga (exljbris)",
+    sourcesValheim: "Datos e imágenes de los archivos del juego Valheim. Tipografía Averia de Dan Sayers (SIL Open Font License).",
     privacy: "Política de Privacidad",
     terms: "Términos del Servicio",
     englishOnly: "(en inglés)",

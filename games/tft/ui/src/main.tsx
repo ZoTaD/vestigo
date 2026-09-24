@@ -27,6 +27,8 @@ import "./styles/news.css";
 // Path of Exile 2 (2026-09-23): la letra y los adornos del juego, todo bajo `.p2`.
 import "./styles/poe2.css";
 import "./styles/poe2-codex.css";
+// Valheim (2026-09-24): la madera, el latón y la letra del juego, todo bajo `.vh`.
+import "./styles/valheim.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

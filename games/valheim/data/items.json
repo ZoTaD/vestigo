@@ -13704,6 +13704,14 @@
     "kind": "drop",
     "max": 1,
     "min": 1
+   },
+   {
+    "biomes": [],
+    "chance": 1.0,
+    "from": "FrozenKing",
+    "kind": "drop",
+    "max": 1,
+    "min": 1
    }
   ],
   "stack": 5,
@@ -21490,6 +21498,14 @@
     "biomes": [],
     "chance": 1.0,
     "from": "FrozenKing_p3",
+    "kind": "drop",
+    "max": 1,
+    "min": 1
+   },
+   {
+    "biomes": [],
+    "chance": 1.0,
+    "from": "FrozenKing",
     "kind": "drop",
     "max": 1,
     "min": 1

@@ -1,0 +1,292 @@
+/* ---------------------------------------------------------------------------
+   VALHEIM (2026-09-24) — la sección con la madera, el latón y la letra del juego.
+
+   La barra de Vestigo de arriba NO se toca: sólo toma los colores de
+   `[data-game="valheim"]` en tokens.css. Todo lo de acá cuelga de `.vh`.
+
+   Los gráficos salen del juego (`games/valheim/pipeline/extract.py`):
+   /valheim/ui/*.webp (paneles, pestañas, casillas), /valheim/art/*.webp (biomas
+   y jefes), /valheim/icons/*.webp (objetos). Dirección: la mezcla de las dos
+   maquetas que eligió ZoTaD — tabla y filtros de la B, ficha con el marco de
+   madera de la A. Pedido del mismo día: que el fondo no sea negro liso.
+--------------------------------------------------------------------------- */
+
+@font-face { font-family: "Averia Serif"; src: url(/valheim/fonts/AveriaSerifLibre-Regular.ttf) format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Averia Serif"; src: url(/valheim/fonts/AveriaSerifLibre-Bold.ttf) format("truetype"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Averia Sans"; src: url(/valheim/fonts/AveriaSansLibre-Regular.ttf) format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Averia Sans"; src: url(/valheim/fonts/AveriaSansLibre-Bold.ttf) format("truetype"); font-weight: 700; font-display: swap; }
+
+/* El fondo: la mesa de madera del juego, oscurecida lo justo para leer encima,
+   con el resplandor de una fogata arriba. */
+[data-theme="codex"][data-game="valheim"] {
+  --ink: #120d09;
+  --ink-2: #0d0906;
+  --vellum: #efe3c8;
+  --vellum-dim: #b3a07e;
+  --gold: #c8963e;
+  --gold-lit: #f2c46f;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(255, 170, 80, 0.2) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(14, 9, 6, 0.72) 0%, rgba(14, 9, 6, 0.86) 60%, rgba(10, 7, 5, 0.92) 100%),
+    url(/valheim/ui/tabletop.webp) center top / 720px repeat,
+    #140e0a;
+  background-attachment: fixed;
+}
+[data-theme="codex"][data-game="valheim"] .grain { opacity: 0.18; }
+:root:has(.app[data-game="valheim"]) {
+  --sb-track: #140e0a;
+  --sb-hatch: rgba(255, 228, 184, 0.07);
+  --sb-paper: #c8963e;
+  --sb-ink: #140e0a;
+  --sb-hover: #f2c46f;
+}
+
+.vh, .vh-sub {
+  --vh-cream: #f3e6c8;
+  --vh-text: #efe3c8;
+  --vh-dim: #b3a07e;
+  --vh-faint: #7d6d52;
+  --vh-brass: #c8963e;
+  --vh-brass-lt: #f2c46f;
+  --vh-line: rgba(200, 150, 62, 0.2);
+  --vh-hp: #d8453a;
+  --vh-st: #e9b83f;
+  --vh-ei: #5d8de0;
+  --vh-serif: "Averia Serif", Georgia, serif;
+  --vh-sans: "Averia Sans", "Averia Serif", system-ui, sans-serif;
+  color: var(--vh-text);
+  font-family: var(--vh-sans);
+}
+
+/* ---------- sub-navegación: las pestañas del juego sobre una tabla de madera ---------- */
+.vh-sub {
+  background: url(/valheim/ui/woodpanel_400_tileable.webp) center / 400px;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.45), 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+.vh-sub-in {
+  max-width: var(--col); margin: 0 auto; padding: 10px var(--pad) 0;
+  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+}
+.vh-sub-in::-webkit-scrollbar { display: none; }
+.vh-tab {
+  flex: none; padding: 8px 16px 7px; font: 700 15px var(--vh-sans); color: #e2cda2; text-decoration: none;
+  text-shadow: 0 1px 2px #000; margin-bottom: -1px;
+  border: 10px solid transparent; border-bottom: 0;
+  border-image: url(/valheim/ui/button_tab.webp) 18 fill / 10px 10px 0 / 0 stretch;
+}
+.vh-tab:hover { border-image-source: url(/valheim/ui/button_tab_hover.webp); color: #fff1cf; }
+.vh-tab[data-active="true"] { border-image-source: url(/valheim/ui/button_tab_selected.webp); color: var(--vh-brass-lt); }
+.vh-tab.is-home { font-family: var(--vh-serif); }
+
+/* ---------- página ---------- */
+.vh-page { max-width: var(--col); margin: 0 auto; padding: 0 var(--pad) 40px; }
+.vh-head { display: flex; align-items: flex-end; gap: 12px 24px; flex-wrap: wrap; margin: 26px 0 18px; }
+.vh-head h1 { margin: 0; font: 700 clamp(30px, 4vw, 42px)/1 var(--vh-serif); color: var(--vh-cream); text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); }
+.vh-head p { margin: 0; color: var(--vh-dim); max-width: 70ch; font-size: 15px; }
+.vh-head .vh-count { margin-left: auto; color: var(--vh-faint); font-size: 14px; }
+.vh-note { color: var(--vh-faint); font-size: 12.5px; margin: 26px 0 0; max-width: 90ch; }
+.vh-loading { color: var(--vh-dim); padding: 60px 0; text-align: center; font-family: var(--vh-serif); }
+
+/* Caja de fondo: el interior oscuro de los paneles del juego. */
+.vh-box {
+  background: linear-gradient(180deg, rgba(28, 19, 12, 0.92), rgba(18, 12, 8, 0.94));
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55), 0 12px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 220, 160, 0.06);
+}
+/* Marco de madera: el panel de crafteo del juego estirado. */
+.vh-frame {
+  border: 30px solid transparent;
+  border-image: url(/valheim/ui/woodpanel_crafting.webp) 60 fill / 30px round;
+  filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.65));
+}
+.vh-frame > .vh-inset {
+  background: rgba(12, 8, 5, 0.8);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6), inset 0 0 26px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 220, 160, 0.12);
+}
+.vh-plate {
+  display: inline-block; padding: 8px 20px; font: 700 20px var(--vh-serif); color: #2b1809;
+  text-shadow: 0 1px 0 rgba(255, 225, 170, 0.45);
+  border: 12px solid transparent; border-image: url(/valheim/ui/woodpanel_info.webp) 40 fill / 12px round;
+}
+.vh-sep { height: 12px; background: url(/valheim/ui/panel_separator.webp) center / 100% 100% no-repeat; opacity: 0.85; border: 0; margin: 4px 0; }
+
+/* ---------- casilla de inventario ---------- */
+.vh-slot {
+  position: relative; display: inline-grid; place-items: center; flex: none;
+  width: 52px; height: 52px; background: url(/valheim/ui/item_bkg.webp) center / 100% 100%;
+}
+.vh-slot img { width: 80%; height: 80%; object-fit: contain; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7)); }
+.vh-slot .vh-qty { position: absolute; right: 4px; bottom: 1px; font: 700 13px var(--vh-sans); color: #fff; text-shadow: 0 0 3px #000, 0 0 3px #000; }
+.vh-slot.is-sm { width: 38px; height: 38px; }
+.vh-slot.is-lg { width: 104px; height: 104px; }
+a.vh-slot:hover { background-image: url(/valheim/ui/item_bkgh.webp); }
+
+/* ---------- chips ---------- */
+.vh-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; font: 13px var(--vh-sans); color: var(--vh-dim);
+  background: rgba(0, 0, 0, 0.35); border-radius: 2px; white-space: nowrap; text-decoration: none; border: 0; cursor: pointer;
+}
+button.vh-chip:hover, a.vh-chip:hover { color: var(--vh-cream); background: rgba(200, 150, 62, 0.14); }
+.vh-chip[aria-pressed="true"], .vh-chip.is-on { color: #1a1008; background: linear-gradient(180deg, var(--vh-brass-lt), var(--vh-brass)); }
+.vh-chip .vh-n { color: inherit; opacity: 0.7; font-size: 11px; }
+.vh-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--bc, #888); box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.45); flex: none; }
+[data-biome="meadows"] { --bc: #9dc15a; } [data-biome="blackforest"] { --bc: #4f8b5a; } [data-biome="swamp"] { --bc: #8f8a4a; }
+[data-biome="mountain"] { --bc: #c9d6e0; } [data-biome="plains"] { --bc: #e2c35d; } [data-biome="ocean"] { --bc: #4f93c7; }
+[data-biome="mistlands"] { --bc: #a58fd6; } [data-biome="ashlands"] { --bc: #e0643b; } [data-biome="deepnorth"] { --bc: #8fd0e8; }
+
+/* ---------- barras de comida (como en el juego) ---------- */
+.vh-bars { display: grid; gap: 6px; }
+.vh-bar { display: grid; grid-template-columns: 84px 1fr 40px; gap: 10px; align-items: center; font-size: 13px; color: var(--vh-dim); }
+.vh-bar-t { display: block; height: 9px; background: rgba(0, 0, 0, 0.55); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+.vh-bar-f { display: block; height: 100%; }
+.vh-bar b { text-align: right; color: var(--vh-cream); }
+.is-hp { background: linear-gradient(180deg, #ef6b5c, var(--vh-hp)); }
+.is-st { background: linear-gradient(180deg, #ffd66b, var(--vh-st)); }
+.is-ei { background: linear-gradient(180deg, #8ab0f0, var(--vh-ei)); }
+.vh-num-hp { color: #ef6b5c; } .vh-num-st { color: #f3c552; } .vh-num-ei { color: #8ab0f0; }
+
+/* ---------- lista con filtros (maqueta B) ---------- */
+.vh-list { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 20px; align-items: start; }
+.vh-list > * { min-width: 0; }
+.vh-side { position: sticky; top: 12px; display: grid; gap: 14px; max-height: calc(100vh - 24px); overflow: auto; scrollbar-width: thin; }
+.vh-side .vh-box { padding: 12px 12px 14px; }
+.vh-side h3 { margin: 0 0 8px; font: 700 11.5px var(--vh-sans); letter-spacing: 0.15em; text-transform: uppercase; color: var(--vh-brass); }
+.vh-input {
+  width: 100%; height: 38px; padding: 0 12px; font: 15px var(--vh-sans); color: var(--vh-cream);
+  background: rgba(0, 0, 0, 0.5); border: 0; box-shadow: inset 0 0 0 1px rgba(200, 150, 62, 0.35); outline: none; border-radius: 2px;
+}
+.vh-input:focus { box-shadow: inset 0 0 0 1px var(--vh-brass-lt); }
+.vh-input::placeholder { color: var(--vh-faint); }
+.vh-opts { display: flex; flex-wrap: wrap; gap: 5px; }
+.vh-opts.is-col { flex-direction: column; flex-wrap: nowrap; gap: 2px; }
+.vh-opts.is-col .vh-chip { justify-content: flex-start; background: transparent; padding: 5px 8px; font-size: 14px; }
+.vh-opts.is-col .vh-chip[aria-pressed="true"] { background: rgba(200, 150, 62, 0.18); color: var(--vh-brass-lt); }
+.vh-opts.is-col .vh-n { margin-left: auto; }
+/* El desplegable de filtros: en escritorio siempre abierto y sin su título. */
+.vh-filters { display: grid; gap: 14px; }
+.vh-filters[open] { display: grid; }
+.vh-filters > summary { display: none; list-style: none; cursor: pointer; padding: 10px 12px; font: 700 13px var(--vh-sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--vh-brass); }
+.vh-filters > summary::-webkit-details-marker { display: none; }
+.vh-filters > summary::after { content: " ▾"; }
+.vh-filters[open] > summary::after { content: " ▴"; }
+.vh-clear { margin-top: 2px; background: none; border: 0; color: var(--vh-brass); font: 13px var(--vh-sans); cursor: pointer; text-align: left; padding: 0; }
+.vh-clear:hover { color: var(--vh-brass-lt); }
+.vh-toggle { display: flex; gap: 8px; align-items: center; font-size: 14px; color: var(--vh-dim); cursor: pointer; }
+
+.vh-table-wrap { overflow-x: auto; }
+.vh-table { width: 100%; border-collapse: collapse; }
+.vh-table th {
+  text-align: left; font: 700 11.5px var(--vh-sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--vh-brass);
+  padding: 12px 10px; background: rgba(10, 7, 5, 0.6); box-shadow: inset 0 -1px 0 var(--vh-line); white-space: nowrap; user-select: none;
+}
+.vh-table th button { all: unset; cursor: pointer; }
+.vh-table th button:hover { color: var(--vh-brass-lt); }
+.vh-table th[aria-sort]:not([aria-sort="none"]) button::after { content: " ▾"; color: var(--vh-dim); }
+.vh-table th[aria-sort="ascending"] button::after { content: " ▴"; }
+.vh-table th.is-r, .vh-table td.is-r { text-align: right; }
+.vh-table td { padding: 5px 10px; border-bottom: 1px solid rgba(0, 0, 0, 0.35); vertical-align: middle; }
+.vh-table tbody tr:hover td { background: rgba(200, 150, 62, 0.07); }
+.vh-table td.is-ic { width: 54px; padding-right: 0; }
+.vh-row-name { color: var(--vh-cream); text-decoration: none; font-size: 15.5px; line-height: 1.2; display: block; }
+.vh-row-name:hover { color: var(--vh-brass-lt); }
+.vh-row-alt { font-size: 11.5px; color: var(--vh-faint); }
+.vh-num { font-weight: 700; font-size: 15px; white-space: nowrap; }
+.vh-mini { display: block; height: 3px; margin-top: 3px; background: rgba(255, 255, 255, 0.06); }
+.vh-mini > i { display: block; height: 100%; }
+.vh-dim { color: var(--vh-dim); font-size: 14px; }
+.vh-nowrap { white-space: nowrap; }
+@media (max-width: 1240px) { .vh-hide-md { display: none; } }
+.vh-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.vh-tags .vh-chip { padding: 1px 7px; font-size: 12px; cursor: default; }
+.vh-empty { padding: 40px; text-align: center; color: var(--vh-faint); }
+.vh-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 6px; padding: 12px; }
+.vh-tile { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; text-align: center; font-size: 12.5px; color: var(--vh-dim); text-decoration: none; border-radius: 2px; }
+.vh-tile:hover { background: rgba(200, 150, 62, 0.1); color: var(--vh-cream); }
+
+/* ---------- ficha (maqueta A) ---------- */
+.vh-back { display: inline-block; margin: 20px 0 8px; color: var(--vh-brass); text-decoration: none; font-size: 14px; }
+.vh-back:hover { color: var(--vh-brass-lt); }
+.vh-detail { display: grid; gap: 18px; padding: 24px 26px; }
+.vh-dhead { display: flex; gap: 20px; align-items: center; }
+.vh-dhead h1 { margin: 0; font: 700 clamp(26px, 3.4vw, 36px)/1.05 var(--vh-serif); color: var(--vh-brass-lt); text-shadow: 0 2px 4px #000; }
+.vh-dhead .vh-alt { margin-top: 6px; color: var(--vh-faint); font-size: 14px; }
+.vh-dhead .vh-tags { margin-top: 10px; }
+.vh-desc { margin: 0; font: italic 16px/1.5 var(--vh-serif); color: var(--vh-text); max-width: 70ch; }
+.vh-h2 { margin: 0 0 10px; font: 700 12.5px var(--vh-sans); letter-spacing: 0.15em; text-transform: uppercase; color: var(--vh-brass); }
+.vh-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px 34px; }
+.vh-facts { display: flex; gap: 10px 28px; flex-wrap: wrap; color: var(--vh-dim); font-size: 15px; }
+.vh-facts b { color: var(--vh-cream); }
+.vh-ings { display: flex; gap: 10px; flex-wrap: wrap; }
+.vh-ing { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 86px; text-align: center; font-size: 12px; line-height: 1.15; color: var(--vh-dim); text-decoration: none; }
+a.vh-ing:hover { color: var(--vh-cream); }
+.vh-flow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.vh-flow .vh-arrow { color: var(--vh-brass); font-size: 22px; }
+.vh-kv { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 4px 20px; }
+.vh-kv div { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px solid rgba(200, 150, 62, 0.14); padding: 4px 0; font-size: 14.5px; color: var(--vh-dim); }
+.vh-kv b { color: var(--vh-cream); }
+.vh-up { width: 100%; border-collapse: collapse; font-size: 14px; }
+.vh-up th { text-align: left; color: var(--vh-brass); font-weight: 700; padding: 6px 8px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+.vh-up td { padding: 6px 8px; border-top: 1px solid rgba(0, 0, 0, 0.35); color: var(--vh-dim); }
+.vh-up td b { color: var(--vh-cream); }
+.vh-srcs { display: grid; gap: 8px; }
+.vh-src { display: flex; align-items: center; gap: 12px; font-size: 14.5px; color: var(--vh-dim); flex-wrap: wrap; }
+.vh-src b, .vh-src a { color: var(--vh-cream); text-decoration: none; }
+.vh-src a:hover { color: var(--vh-brass-lt); }
+.vh-src .vh-src-k { min-width: 110px; color: var(--vh-brass); font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.vh-mosaic { display: flex; flex-wrap: wrap; gap: 6px; }
+.vh-pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 16px; }
+.vh-pager a { color: var(--vh-brass); text-decoration: none; font-size: 14px; }
+.vh-pager a:hover { color: var(--vh-brass-lt); }
+
+/* ---------- guías: biomas y jefes ---------- */
+.vh-hero { position: relative; overflow: hidden; border-radius: 3px; background: #0d0906; }
+.vh-hero img.vh-hero-art { display: block; width: 100%; height: auto; aspect-ratio: 852 / 480; object-fit: cover; }
+.vh-hero.is-logo img.vh-hero-art { object-fit: contain; padding: 30px; background: radial-gradient(ellipse at center, #1c3140 0%, #0b1218 75%); }
+.vh-hero-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 22px 16px; background: linear-gradient(180deg, transparent, rgba(8, 5, 3, 0.92)); }
+.vh-hero-cap h1, .vh-hero-cap h2 { margin: 0; font: 700 clamp(26px, 3.6vw, 40px)/1 var(--vh-serif); color: var(--vh-cream); text-shadow: 0 2px 8px #000; }
+.vh-hero-cap p { margin: 6px 0 0; color: var(--vh-dim); }
+.vh-guide { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; align-items: start; margin-top: 20px; }
+.vh-guide .vh-box { padding: 18px 20px; }
+.vh-warn { display: grid; gap: 8px; }
+.vh-warn p { margin: 0; padding: 10px 12px; background: rgba(0, 0, 0, 0.3); border-radius: 2px; font-size: 14.5px; color: var(--vh-text); }
+.vh-cre { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; padding: 6px 4px; text-decoration: none; color: var(--vh-text); border-radius: 2px; }
+.vh-cre:hover { background: rgba(200, 150, 62, 0.08); }
+.vh-cre small { display: block; color: var(--vh-faint); font-size: 12px; }
+.vh-tip { padding: 12px 14px; background: rgba(0, 0, 0, 0.3); border-radius: 2px; }
+.vh-tip h4 { margin: 0 0 6px; font: 700 15px var(--vh-serif); color: var(--vh-brass-lt); }
+.vh-tip p { margin: 0; font-size: 14px; color: var(--vh-dim); white-space: pre-line; line-height: 1.5; }
+.vh-bossart { display: block; width: 100%; height: auto; max-width: 256px; aspect-ratio: 1; margin: 0 auto; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.7)); }
+.vh-power { padding: 14px 16px; background: rgba(90, 141, 224, 0.1); border-radius: 2px; }
+.vh-power h4 { margin: 0 0 6px; font: 700 17px var(--vh-serif); color: #b9d0ff; }
+.vh-power p { margin: 0; color: var(--vh-text); font-size: 14.5px; white-space: pre-line; }
+
+/* ---------- portada de la sección ---------- */
+.vh-biomes { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.vh-bcard { position: relative; display: block; overflow: hidden; border-radius: 3px; text-decoration: none; background: #0d0906; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5); }
+.vh-bcard img { display: block; width: 100%; height: auto; aspect-ratio: 852 / 480; object-fit: cover; transition: transform 300ms ease; }
+.vh-bcard.is-logo img { object-fit: contain; padding: 18px; background: radial-gradient(ellipse at center, #1c3140 0%, #0b1218 75%); }
+.vh-bcard:hover img { transform: scale(1.04); }
+.vh-bcard span { position: absolute; left: 12px; bottom: 10px; font: 700 20px var(--vh-serif); color: var(--vh-cream); text-shadow: 0 2px 6px #000; }
+.vh-bcard em { position: absolute; left: 12px; top: 10px; font: 700 12px var(--vh-sans); font-style: normal; color: var(--vh-cream); background: rgba(0, 0, 0, 0.55); padding: 2px 7px; border-radius: 2px; }
+.vh-hub { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin-top: 18px; }
+.vh-hubcard { display: flex; gap: 12px; align-items: center; padding: 14px; text-decoration: none; color: var(--vh-cream); font: 700 17px var(--vh-serif); }
+.vh-hubcard:hover { background: rgba(200, 150, 62, 0.12); }
+.vh-hubcard small { display: block; font: 13px var(--vh-sans); color: var(--vh-faint); }
+.vh-search { position: relative; max-width: 520px; flex: 1 1 320px; }
+.vh-hits { position: absolute; z-index: 20; left: 0; right: 0; top: 42px; max-height: 420px; overflow: auto; }
+.vh-hit { display: grid; grid-template-columns: 38px 1fr auto; gap: 10px; align-items: center; padding: 6px 10px; text-decoration: none; color: var(--vh-cream); }
+.vh-hit:hover, .vh-hit.is-on { background: rgba(200, 150, 62, 0.14); }
+.vh-hit small { color: var(--vh-faint); font-size: 12px; }
+
+@media (max-width: 900px) {
+  .vh-list { grid-template-columns: minmax(0, 1fr); }
+  .vh-side { position: static; max-height: none; }
+  .vh-filters > summary { display: block; }
+  /* En el teléfono las listas largas de filtros van en fila, no en columna. */
+  .vh-opts.is-col { flex-direction: row; flex-wrap: wrap; gap: 5px; }
+  .vh-opts.is-col .vh-chip { background: rgba(0, 0, 0, 0.35); padding: 3px 10px; font-size: 13px; }
+  .vh-opts.is-col .vh-n { margin-left: 0; }
+  .vh-guide { grid-template-columns: 1fr; }
+  .vh-hide-m { display: none; }
+  .vh-frame { border-width: 18px; border-image-width: 18px; }
+  .vh-detail { padding: 16px; }
+}

@@ -136,6 +136,34 @@
   --radius-pill: 4px;
 }
 
+/* Valheim (2026-09-24): latón, madera y crema de la interfaz del juego
+   (`woodpanel_*`, `button_tab*`). Como en PoE2, sólo cambian los colores de la
+   cáscara; la letra y los adornos del juego viven en valheim.css. */
+[data-theme="codex"][data-game="valheim"] {
+  --bg: #120d09;
+  --bg-2: #1a130d;
+  --bg-glow: #3a2614;
+  --surface: rgba(255, 228, 184, 0.05);
+  --surface-2: rgba(255, 228, 184, 0.09);
+  --surface-solid: #1b140e;
+  --text: #efe3c8;
+  --text-dim: #b3a07e;
+  --text-faint: #7d6d52;
+  --accent: #c8963e;
+  --accent-lit: #f2c46f;
+  --accent-dark: #8f6a2a;
+  --accent-rgb: 200, 150, 62;
+  --accent-2: #d8453a;
+  --good: #8fbf5a;
+  --bad: #d8453a;
+  --line: rgba(200, 150, 62, 0.24);
+  --line-strong: rgba(200, 150, 62, 0.52);
+  --on-accent: #1a1008;
+  --radius: 3px;
+  --radius-lg: 3px;
+  --radius-pill: 3px;
+}
+
 /* Portada: papel. La marca es clara y los juegos son oscuros; ese contraste es
    el que hace que cada juego pegue el salto al entrar. */
 [data-theme="codex"][data-place="home"] {

@@ -4,7 +4,7 @@ import RouteLink from "./RouteLink";
 import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
 
-export type Game = "tft" | "deadlock" | "poe2";
+export type Game = "tft" | "deadlock" | "poe2" | "valheim";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
 export type Place = "home" | Game;
 /** The legal pages are reachable from the footer and highlight no tab. */
@@ -43,8 +43,16 @@ export default function Nav({
    * viaja igual por `pendingSearch` y lo recoge la pestaña Economía.
    */
   const inPoe2 = active === "poe2";
-  const searchGame = inPoe2 ? copy.games.poe2Short : copy.games.deadlock;
-  const searchLabel = inPoe2 ? copy.shell.searchItemFor(copy.games.poe2) : copy.shell.searchFor(copy.games.deadlock);
+  // Dentro de Valheim también se buscan objetos: el texto lo recoge el buscador
+  // de la portada de la sección.
+  const inValheim = active === "valheim";
+  const itemSearch = inPoe2 || inValheim;
+  const searchGame = inPoe2 ? copy.games.poe2Short : inValheim ? copy.games.valheim : copy.games.deadlock;
+  const searchLabel = inPoe2
+    ? copy.shell.searchItemFor(copy.games.poe2)
+    : inValheim
+      ? copy.shell.searchItemFor(copy.games.valheim)
+      : copy.shell.searchFor(copy.games.deadlock);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -56,7 +64,9 @@ export default function Nav({
       inPoe2
         ? // Se busca en la liga que ya se estaba mirando, no en la de por defecto.
           { ...route, view: "poe2", p2Section: "economy", detail: route.p2Section === "economy" ? route.detail : undefined }
-        : { ...route, view: "deadlock", dlSection: "player", detail: undefined },
+        : inValheim
+          ? { ...route, view: "valheim", vhSection: "home", detail: undefined }
+          : { ...route, view: "deadlock", dlSection: "player", detail: undefined },
     );
   };
 
@@ -92,10 +102,18 @@ export default function Nav({
           >
             {copy.games.poe2Short}
           </RouteLink>
+          <RouteLink
+            className="top-place"
+            to={{ ...a("valheim"), vhSection: "home" }}
+            active={active === "valheim"}
+            onNavigate={onNavigate}
+          >
+            {copy.games.valheim}
+          </RouteLink>
           {/* Los juegos que vienen se anuncian, no se enlazan: no existe la
               ruta, así que un enlace llevaría a un 404 y de paso entraría al
               sitemap. En el orden de la hoja de ruta (2026-09-23). */}
-          {[copy.games.dota, copy.games.valheim, copy.games.diablo2Short].map((nombre) => (
+          {[copy.games.dota, copy.games.diablo2Short].map((nombre) => (
             <span className="top-place is-soon" aria-disabled="true" key={nombre}>
               {nombre}
               <em className="top-soon">{copy.games.soon}</em>
@@ -114,7 +132,7 @@ export default function Nav({
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={inPoe2 ? copy.shell.searchItem : copy.shell.search}
+              placeholder={itemSearch ? copy.shell.searchItem : copy.shell.search}
               aria-label={searchLabel}
               autoComplete="off"
             />

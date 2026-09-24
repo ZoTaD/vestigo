@@ -217,7 +217,7 @@ def main() -> None:
                        "sources": [src(s) for s in items[s_item]["sources"]] if s_item in items else []},
             "drops": [{**ref[d["item"]], "min": d["min"], "max": d["max"], "chance": d["chance"]} for d in b["drops"] if d["item"] in ref],
             "creature": ref.get(f"creature:{b['id']}"),
-            "tips": [hugin[k] for k in HUGIN_ALL_BOSSES + HUGIN_BOSS.get(b["id"], []) if k in hugin],
+            "tips": [hugin[k] for k in dict.fromkeys(HUGIN_ALL_BOSSES + HUGIN_BOSS.get(b["id"], [])) if k in hugin],
         })
 
     # --- Biomas: qué hay, qué conviene llevar y a quién hay que ganarle.

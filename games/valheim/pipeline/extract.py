@@ -299,6 +299,12 @@ def main() -> None:
             continue
         cr = creatures[bp]
         cr["boss"] = True
+        # Kall Fimbulbringer pelea en tres fases (FrozenKing, _p2, _p3) y el
+        # botín lo suelta la última: se toma de la fase que lo tenga.
+        if not cr["drops"]:
+            phase = next((c for k, c in creatures.items() if k.startswith(bp + "_") and c["drops"]), None)
+            if phase:
+                cr["drops"], cr["trophy"], cr["icon"] = phase["drops"], phase["trophy"], phase["icon"]
         item, amount = no(c.tree["m_bossItem"]), c.tree["m_bossItems"]
         if not item and c.tree.get("m_useItemStands"):
             # Moder no se invoca en el altar: se ponen huevos en los soportes
