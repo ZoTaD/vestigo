@@ -122,12 +122,17 @@
 [data-theme="codex"] .dl-tile-face img,
 [data-theme="codex"] .dl-tile-face .dl-portrait-fallback {
   display: block;
-  width: 3.3rem;
-  height: 3.3rem;
+  width: 3.6rem;
+  height: 4.5rem;
   border: 0;
   border-radius: var(--radius);
   object-fit: cover;
-  background: color-mix(in srgb, var(--dl-hero, var(--accent)) 14%, var(--surface-solid));
+  /* El retrato de tarjeta es de medio cuerpo: se encuadra desde arriba para que
+     mande la cara. El fondo lleva el color del héroe, como en la selección. */
+  object-position: 50% 8%;
+  background:
+    radial-gradient(120% 90% at 50% 20%, color-mix(in srgb, var(--dl-hero, var(--accent)) 38%, transparent), transparent 70%),
+    color-mix(in srgb, var(--dl-hero, var(--accent)) 12%, var(--surface-solid));
 }
 
 /* Las dos marcas son el mismo cuadrado de 16 px, en esquinas opuestas:

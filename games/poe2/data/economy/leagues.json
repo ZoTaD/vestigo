@@ -1,0 +1,59 @@
+{
+ "updated": "2026-09-23T22:00:02.405Z",
+ "leagues": [
+  {
+   "id": "Forbidden Rites",
+   "slug": "forbidden-rites",
+   "name": "Forbidden Rites",
+   "hardcore": false,
+   "permanent": false,
+   "updated": "2026-09-23T21:55:29.440Z",
+   "volume": 1233553
+  },
+  {
+   "id": "Runes of Aldur",
+   "slug": "runes-of-aldur",
+   "name": "Runes of Aldur",
+   "hardcore": false,
+   "permanent": false,
+   "updated": "2026-09-23T21:55:50.489Z",
+   "volume": 32744
+  },
+  {
+   "id": "HC Forbidden Rites",
+   "slug": "hc-forbidden-rites",
+   "name": "HC Forbidden Rites",
+   "hardcore": true,
+   "permanent": false,
+   "updated": "2026-09-23T21:56:21.227Z",
+   "volume": 5124
+  },
+  {
+   "id": "HC Runes of Aldur",
+   "slug": "hc-runes-of-aldur",
+   "name": "HC Runes of Aldur",
+   "hardcore": true,
+   "permanent": false,
+   "updated": "2026-09-23T21:56:52.546Z",
+   "volume": 39
+  },
+  {
+   "id": "Standard",
+   "slug": "standard",
+   "name": "Standard",
+   "hardcore": false,
+   "permanent": true,
+   "updated": "2026-09-23T21:57:19.663Z",
+   "volume": 73975
+  },
+  {
+   "id": "Hardcore",
+   "slug": "hardcore",
+   "name": "Hardcore",
+   "hardcore": true,
+   "permanent": true,
+   "updated": "2026-09-23T21:59:48.660Z",
+   "volume": 2
+  }
+ ]
+}

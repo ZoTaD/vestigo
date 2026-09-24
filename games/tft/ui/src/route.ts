@@ -25,7 +25,14 @@ export type Section = "meta" | "units" | "items" | "ladder" | "player";
  * 200 en una URL vacía. Cada juego declara las suyas.
  */
 export type DeadlockSection = "meta" | "heroes" | "items" | "builder" | "ranks" | "ladder" | "patches" | "player" | "match";
-export type View = "home" | "tft" | "deadlock" | "privacy" | "terms";
+export type View = "home" | "tft" | "deadlock" | "poe2" | "privacy" | "terms";
+/**
+ * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
+ * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
+ * parches se suman acá cuando existan. Mismo criterio que `DeadlockSection`:
+ * cada juego declara las suyas y una desconocida cae en la de por defecto.
+ */
+export type Poe2Section = "economy" | "encyclopedia" | "patches";
 
 export const LANGS: Lang[] = ["en", "es"];
 export const SECTIONS: Section[] = ["meta", "units", "items", "ladder", "player"];
@@ -48,6 +55,8 @@ export const DEADLOCK_SECTIONS: DeadlockSection[] = ["meta", "heroes", "items", 
  * Por eso la lista de parseo y la de dibujo son dos.
  */
 export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match"];
+/** En el orden en que se dibujan las pestañas de PoE2. */
+export const POE2_SECTIONS: Poe2Section[] = ["economy", "encyclopedia", "patches"];
 /**
  * Qué pestañas de Deadlock tienen página de detalle **enumerable**. "meta" son
  * héroes, "items" son ítems; rangos y parches no tienen una unidad que abrir.
@@ -72,6 +81,7 @@ export const DETAIL_SECTIONS: Section[] = ["units", "items", "meta"];
 export const DEFAULT_LANG: Lang = "en";
 const DEFAULT_SECTION: Section = "meta";
 const DEFAULT_DL_SECTION: DeadlockSection = "meta";
+const DEFAULT_P2_SECTION: Poe2Section = "economy";
 
 export interface Route {
   lang: Lang;
@@ -80,6 +90,8 @@ export interface Route {
   section: Section;
   /** Which Deadlock tab, con el mismo criterio: se conserva fuera de /deadlock. */
   dlSection: DeadlockSection;
+  /** Qué pestaña de PoE2. Opcional: fuera de /poe2 no hace falta, y sin ella es Economía. */
+  p2Section?: Poe2Section;
   /**
    * Which rank band the meta shows. Absent means the default one, which is why
    * apex keeps the plain /tft/meta address it has always had.
@@ -104,7 +116,8 @@ const isDlSection = (v: string): v is DeadlockSection => (DEADLOCK_ROUTES as str
  * las vistas quedan en el repo por si se retoma. Ver
  * docs/design/2026-09-15-tft-sale-del-sitio.md.
  */
-const isView = (v: string): v is View => ["home", "deadlock", "privacy", "terms"].includes(v);
+const isP2Section = (v: string): v is Poe2Section => (POE2_SECTIONS as string[]).includes(v);
+const isView = (v: string): v is View => ["home", "deadlock", "poe2", "privacy", "terms"].includes(v);
 
 /**
  * A name as it appears in a URL: lowercase, ASCII, hyphen-separated.
@@ -164,6 +177,19 @@ export function parseRoute(pathname: string): Route {
     return { ...base, view: "deadlock", dlSection: DEFAULT_DL_SECTION, detail: maybeSection || undefined };
   }
 
+  // Economía es la de por defecto y se queda con `/poe2` a secas, como el meta
+  // de Deadlock con `/deadlock`.
+  if (head === "poe2") {
+    const p2Section = rest[1] && isP2Section(rest[1]) ? rest[1] : DEFAULT_P2_SECTION;
+    // El detalle depende de la pestaña: en Economía es la liga
+    // (`/poe2/economy/hc-forbidden-rites`), en la Enciclopedia la categoría y la
+    // ficha (`/poe2/encyclopedia/gems/untether`, por eso puede llevar una barra)
+    // y en Parches la edición (`/poe2/patches/0-5-5c`).
+    const depth = p2Section === "encyclopedia" ? 2 : 1;
+    const detail = rest[1] === p2Section && rest[2] ? rest.slice(2, 2 + depth).join("/") : undefined;
+    return { ...base, view: "poe2", p2Section, detail };
+  }
+
   if (head !== "tft") return { ...base, view: head };
 
   const section = rest[1] && isSection(rest[1]) ? rest[1] : DEFAULT_SECTION;
@@ -191,6 +217,11 @@ export function routePath(route: Route): string {
     }
     const dlPath = `/${lang}/deadlock/${dlSection}`;
     return DL_WITH_DETAIL.includes(dlSection) && detail ? `${dlPath}/${detail}` : dlPath;
+  }
+  if (view === "poe2") {
+    const p2 = route.p2Section ?? DEFAULT_P2_SECTION;
+    if (detail) return `/${lang}/poe2/${p2}/${detail}`;
+    return p2 === DEFAULT_P2_SECTION ? `/${lang}/poe2` : `/${lang}/poe2/${p2}`;
   }
   if (view !== "tft") return `/${lang}/${view}`;
   // The default band is left out entirely so the meta keeps one canonical URL

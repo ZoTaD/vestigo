@@ -114,8 +114,12 @@ function HeroTile({
         aria-label={copy.deadlock.buildCard.toggle(hero.name)}
       >
         <span className="dl-tile-face">
-          {hero.img ? (
-            <img src={hero.img} alt="" loading="lazy" width={56} height={56} />
+          {/* El retrato pintado de la tarjeta del juego (`*_card`, el de la
+              pantalla de selección), no el ícono chico con contorno del HUD:
+              pedido de ZoTaD el 2026-09-23 para que la tier list se vea como el
+              juego. Sin tarjeta cae al ícono. */}
+          {hero.card || hero.img ? (
+            <img src={hero.card || hero.img} alt="" loading="lazy" width={58} height={72} />
           ) : (
             <span className="dl-portrait-fallback">{hero.name.slice(0, 2)}</span>
           )}

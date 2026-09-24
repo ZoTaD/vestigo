@@ -27,7 +27,7 @@ describe("la insignia de rango", () => {
         if (!r) continue;
         expect(String(r.sub)).not.toMatch(/https?:/);
         expect(r.roman).not.toMatch(/https?:/);
-        expect(r.img).toMatch(/^https?:/);
+        expect(r.img).toMatch(/^(https?:\/\/|\/deadlock\/game\/)/); // local (/deadlock/game/) o remota
       }
     }
   });

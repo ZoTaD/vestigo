@@ -195,6 +195,16 @@ const resolverIds = (ids: number[] | undefined, lang: Lang) =>
     return e ? [{ itemId: id, name: text(e.name, lang, `#${id}`), img: e.img, slot: e.slot }] : [];
   });
 
+/**
+ * De qué se construye un objeto y en qué se mejora, desde el catálogo. Para las
+ * fichas que se abren con sólo el id (al pasar el mouse): el juego pone las dos
+ * listas al pie de la ficha, "Mejora de" y "Mejora para".
+ */
+export function catalogUpgrades(itemId: number, lang: Lang) {
+  const e = itemCatalog.items[String(itemId)];
+  return { from: resolverIds(e?.upgradesFrom, lang), to: resolverIds(e?.upgradesTo, lang) };
+}
+
 /** La lista de una banda, con todo resuelto al idioma pedido. */
 export function buildItems(band: BandId, lang: Lang): Item[] {
   const efectiva = files.has(band) ? band : PUBLISHED_BAND;

@@ -1,0 +1,243 @@
+{
+ "updated": "2026-09-23T22:41:47.475Z",
+ "editions": [
+  {
+   "version": "0.5.5c",
+   "slug": "0-5-5c",
+   "date": "2026-09-17",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.5c Patch Notes",
+    "es": "Notas del parche 0.5.5c"
+   },
+   "counts": {
+    "lines": 17,
+    "up": 0,
+    "down": 0,
+    "fix": 14,
+    "new": 1
+   }
+  },
+  {
+   "version": "0.5.5b",
+   "slug": "0-5-5b",
+   "date": "2026-09-10",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.5b Patch Notes",
+    "es": "Notas del parche 0.5.5b"
+   },
+   "counts": {
+    "lines": 10,
+    "up": 1,
+    "down": 0,
+    "fix": 7,
+    "new": 0
+   }
+  },
+  {
+   "version": "0.5.5",
+   "slug": "0-5-5",
+   "date": "2026-09-02",
+   "kind": "content",
+   "title": {
+    "en": "0.5.5 Patch Notes",
+    "es": "Actualización de contenido 0.5.5 — Path of Exile 2: Forbidden Rites"
+   },
+   "counts": {
+    "lines": 198,
+    "up": 19,
+    "down": 15,
+    "fix": 68,
+    "new": 6
+   }
+  },
+  {
+   "version": "0.5.4f",
+   "slug": "0-5-4f",
+   "date": "2026-08-12",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.4f Patch Notes",
+    "es": "Notas del parche 0.5.4f"
+   },
+   "counts": {
+    "lines": 11,
+    "up": 0,
+    "down": 0,
+    "fix": 10,
+    "new": 0
+   }
+  },
+  {
+   "version": "0.5.4e",
+   "slug": "0-5-4e",
+   "date": "2026-07-30",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.4e Patch Notes (restartless)",
+    "es": "Notas del parche 0.5.4e"
+   },
+   "counts": {
+    "lines": 5,
+    "up": 1,
+    "down": 1,
+    "fix": 1,
+    "new": 0
+   }
+  },
+  {
+   "version": "0.5.4d",
+   "slug": "0-5-4d",
+   "date": "2026-07-24",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.4d Patch Notes",
+    "es": null
+   },
+   "counts": {
+    "lines": 2,
+    "up": 0,
+    "down": 0,
+    "fix": 0,
+    "new": 0
+   }
+  },
+  {
+   "version": "0.5.4c",
+   "slug": "0-5-4c",
+   "date": "2026-07-16",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.4c Patch Notes",
+    "es": null
+   },
+   "counts": {
+    "lines": 2,
+    "up": 0,
+    "down": 0,
+    "fix": 0,
+    "new": 1
+   }
+  },
+  {
+   "version": "0.5.4b",
+   "slug": "0-5-4b",
+   "date": "2026-07-02",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.4b Patch Notes",
+    "es": "Notas del parche 0.5.4b"
+   },
+   "counts": {
+    "lines": 102,
+    "up": 4,
+    "down": 8,
+    "fix": 57,
+    "new": 5
+   }
+  },
+  {
+   "version": "0.5.4",
+   "slug": "0-5-4",
+   "date": "2026-06-25",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.4 Patch Notes",
+    "es": "Notas del parche 0.5.4"
+   },
+   "counts": {
+    "lines": 59,
+    "up": 3,
+    "down": 4,
+    "fix": 25,
+    "new": 6
+   }
+  },
+  {
+   "version": "0.5.3",
+   "slug": "0-5-3",
+   "date": "2026-06-18",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.3 Patch Notes",
+    "es": "Notas del parche 0.5.3"
+   },
+   "counts": {
+    "lines": 101,
+    "up": 10,
+    "down": 9,
+    "fix": 39,
+    "new": 5
+   }
+  },
+  {
+   "version": "0.5.2",
+   "slug": "0-5-2",
+   "date": "2026-06-11",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.2 Patch Notes",
+    "es": "Notas del parche 0.5.2"
+   },
+   "counts": {
+    "lines": 113,
+    "up": 37,
+    "down": 3,
+    "fix": 50,
+    "new": 5
+   }
+  },
+  {
+   "version": "0.5.1",
+   "slug": "0-5-1",
+   "date": "2026-06-04",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.1 Patch Notes",
+    "es": "Notas del parche 0.5.1"
+   },
+   "counts": {
+    "lines": 109,
+    "up": 7,
+    "down": 13,
+    "fix": 58,
+    "new": 6
+   }
+  },
+  {
+   "version": "0.5.0b",
+   "slug": "0-5-0b",
+   "date": "2026-05-30",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.0b Patch Notes",
+    "es": "Notas del parche 0.5.0b"
+   },
+   "counts": {
+    "lines": 30,
+    "up": 1,
+    "down": 0,
+    "fix": 28,
+    "new": 0
+   }
+  },
+  {
+   "version": "0.5.0",
+   "slug": "0-5-0",
+   "date": "2026-05-21",
+   "kind": "content",
+   "title": {
+    "en": "Content Update 0.5.0 — Path of Exile 2: Return of the Ancients",
+    "es": "Actualización de contenido 0.5.0 — Path of Exile 2: Return of the Ancients"
+   },
+   "counts": {
+    "lines": 904,
+    "up": 123,
+    "down": 161,
+    "fix": 170,
+    "new": 148
+   }
+  }
+ ]
+}

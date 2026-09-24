@@ -1,3 +1,4 @@
+import gameArt from "@deadlock/game-art.json";
 import { useEffect, useReducer } from "react";
 import { useLang, type Lang } from "./i18n";
 import type { BandId } from "./deadlockData";
@@ -418,3 +419,20 @@ export function splitValue(value: string, unit: string): { n: string; u: string 
 
 /** Una cifra del juego con la coma decimal del idioma: "5.5" → "5,5" en español. */
 export const localNumber = (n: string, lang: Lang): string => (lang === "es" ? n.replace(".", ",") : n);
+
+/** Los héroes que tienen arma dibujada en el juego (la escribe game_assets.py). */
+const GUNS = new Set<string>(gameArt.guns);
+
+/**
+ * El arma del héroe, sacada del juego (`panorama/images/heroes/guns/<código>_gun`).
+ *
+ * El código interno del héroe (inferno, gigawatt…) sólo aparece en la ruta de su
+ * retrato, así que el arma se arma desde ahí. Sólo existe para las imágenes
+ * servidas por el sitio (`/deadlock/game/`, ver `games/deadlock/tools/game_assets.py`);
+ * con el retrato remoto devuelve `undefined` y la ficha no muestra arma.
+ */
+export function gunArt(card: string | undefined): string | undefined {
+  const m = card?.match(/^\/deadlock\/game\/images\/heroes\/([a-z_]+)_card\.webp$/);
+  return m && GUNS.has(m[1]) ? `/deadlock/game/images/heroes/guns/${m[1]}_gun.webp` : undefined;
+}
+

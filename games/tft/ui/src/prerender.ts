@@ -69,6 +69,10 @@ export function metaFor(
     const page = seo.deadlock[route.dlSection];
     return { title: page.title(), description: page.description() };
   }
+  if (route.view === "poe2") {
+    const page = seo.poe2[route.p2Section ?? "economy"];
+    return { title: page.title(), description: page.description() };
+  }
   // Lo que queda son la portada y las dos páginas legales. El `as` recorta
   // "tft" del tipo, que sigue en `View` sólo para que su código compile.
   const page = seo[route.view as "home" | "privacy" | "terms"];

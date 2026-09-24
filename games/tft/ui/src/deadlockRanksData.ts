@@ -247,3 +247,15 @@ export function useRanks(): RanksFile | null {
 
   return file;
 }
+
+/**
+ * La insignia dibujada en tiza, la que el juego usa en la pizarra del escondite
+ * (`ranked/badges/rankNN_chalk`). Sólo existe para las imágenes servidas por el
+ * sitio y del rango 1 en adelante; si no, devuelve la insignia de siempre.
+ */
+export function chalkBadge(img: string): string {
+  return /^\/deadlock\/game\/images\/ranks\/rank(0[1-9]|1\d)_lg\.webp$/.test(img)
+    ? img.replace(/_lg\.webp$/, "_chalk.webp")
+    : img;
+}
+

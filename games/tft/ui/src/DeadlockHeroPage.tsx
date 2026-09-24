@@ -15,6 +15,7 @@ import {
   splitValue,
   standouts,
   useHeroDetail,
+  gunArt,
   useHeroKit,
   useInsights,
   type KitAbility,
@@ -24,6 +25,7 @@ import {
   type PairPoint,
   type TextSpan,
 } from "./deadlockHeroKitData";
+import { ItemIcon } from "./DeadlockItemTip";
 
 /**
  * La página de un héroe, dirección "C · Cartel" (elegida por ZoTaD el
@@ -461,9 +463,8 @@ function BuildTimeline({ heroId }: { heroId: number }) {
               key={it.itemId}
               className="dl-hp-tl-item"
               style={{ "--x": x, "--lane": carril } as CSSProperties}
-              title={`${it.name} · ${t.minute(it.minute)}`}
             >
-              <img src={it.img} alt="" width={48} height={48} loading="lazy" />
+              <ItemIcon itemId={it.itemId} img={it.img} size={48} />
               <span>{it.name}</span>
             </div>
           ))}
@@ -479,7 +480,7 @@ function BuildTimeline({ heroId }: { heroId: number }) {
           {items.map((it) => (
             <li key={it.itemId}>
               <span className="dl-hp-tl-min">{t.minute(it.minute)}</span>
-              <img src={it.img} alt="" width={32} height={32} loading="lazy" />
+              <ItemIcon itemId={it.itemId} img={it.img} size={32} />
               <span>{it.name}</span>
             </li>
           ))}
@@ -541,6 +542,7 @@ export default function DeadlockHeroPage({
   const text = detail?.text[lang] ?? detail?.text.en;
   const abilities = detail ? detail.abilities[lang] ?? detail.abilities.en : [];
   const icons = detail?.icons ?? {};
+  const gun = gunArt(detail?.art.card ?? hero.card);
   const idx = heroes.indexOf(hero);
   const prev = idx > 0 ? heroes[idx - 1] : null;
   const next = idx >= 0 && idx < heroes.length - 1 ? heroes[idx + 1] : null;
@@ -785,6 +787,17 @@ export default function DeadlockHeroPage({
             {stats.weapon && (
               <div>
                 <h3 className="dl-hp-h3">{t.lore.weapon}</h3>
+                {gun && (
+                  <img
+                    className="dl-hp-gun"
+                    src={gun}
+                    alt=""
+                    width={600}
+                    height={300}
+                    loading="lazy"
+                    onError={(e) => e.currentTarget.remove()}
+                  />
+                )}
                 <dl className="dl-hp-attr-grid">
                   <Attr
                     label={t.lore.attrs.bulletDamage}

@@ -62,6 +62,8 @@ const EN = {
   shell: {
     search: "Search a player",
     searchFor: (game: string) => `Search a ${game} player`,
+    searchItem: "Search an item",
+    searchItemFor: (game: string) => `Search a ${game} item`,
     how: "How it's measured",
     menu: "Menu",
     measuredAt: (when: string) => `Measured ${when}`,
@@ -1595,6 +1597,8 @@ const EN = {
       slots: { weapon: "Weapon", vitality: "Vitality", spirit: "Spirit" },
       /** El chip que apaga el filtro por estante. */
       allSlots: "All",
+      views: { shop: "Shop", list: "List", label: "View" },
+      shopNote: "Each card shows its tier and its edge over what the same souls would have bought. Hover for the item card; click for its numbers.",
       /**
        * Qué da el ítem. Son los nombres de las cinco familias, no vocabulario de
        * ítem — el vocabulario sigue bajándose. El ícono es el del propio juego.
@@ -1833,6 +1837,51 @@ const EN = {
       "from the public deadlock-api.com snapshot; every figure on this page is our own.",
   },
 
+  /** Path of Exile 2 (2026-09-23): por ahora sólo la pestaña Economía. */
+  poe2: {
+    tabs: { economy: "Economy", encyclopedia: "Encyclopedia", patches: "Patches" },
+    soon: "Soon",
+    league: "League",
+    title: "Economy",
+    lede: "What everything is worth this league, and what is moving this week.",
+    loading: "Loading prices…",
+    loadError: "We couldn't load this league's prices.",
+    empty: "This league has no prices yet.",
+    fewData: "Too little trading in this league to tell.",
+    mode: "Mode",
+    softcore: "Softcore",
+    hardcore: "Hardcore",
+    permanent: "permanent",
+    market: (league: string) => `${league} market`,
+    reference: "Reference currency",
+    perDivine: "per divine",
+    days7: "7 d",
+    rising: "Rising",
+    falling: "Falling",
+    traded: "Most traded",
+    tradedWord: "traded",
+    priceList: "Price list",
+    exchange: "Exchange",
+    uniques: "Uniques",
+    searchTab: "Search this tab… (name, base or modifier)",
+    count: (n: number) => `${n} items`,
+    colItem: "Item",
+    colPrice: "Price",
+    colWeek: "7 days",
+    colChange: "Change",
+    colVolume: "Volume",
+    colListings: "Listings",
+    fewSales: "few sales",
+    priceIn: (league: string) => `Price in ${league}`,
+    reqLevel: "Requires level",
+    corrupted: "Corrupted",
+    listings: (n: string) => `${n} listings`,
+    chaos: "chaos",
+    exalted: "exalted",
+    note: (league: string, date: string) =>
+      `${league} league prices, updated ${date}. "Rising", "Falling" and "Most traded" only count items with at least 5 divines of volume, so things that barely sell don't take over.`,
+  },
+
   footer: {
     sources:
       "Match data from the Riot Games API · Portraits, items and names from CommunityDragon",
@@ -1841,6 +1890,7 @@ const EN = {
     // the wrong source is worse than naming none, so the line follows the game.
     sourcesDeadlock:
       "Match data from the public deadlock-api.com snapshot · Hero and item art from Valve",
+    sourcesPoe2: "Fontin typeface by Jos Buivenga (exljbris)",
     privacy: "Privacy Policy",
     terms: "Terms of Service",
     // Both documents are English-only, so a Spanish reader deserves fair warning
@@ -1883,6 +1933,26 @@ const EN = {
    * Kept near 60 characters: past that Google truncates the title in results.
    */
   seo: {
+    poe2: {
+      economy: {
+        title: () => "Path of Exile 2 economy: currency and unique prices | Vestigo",
+        description: () =>
+          "Divine, chaos and exalted orb rates, and the price of every currency item and unique " +
+          "this league — with what is rising, falling and trading most this week.",
+      },
+      encyclopedia: {
+        title: () => "Path of Exile 2 encyclopedia: gems, uniques, bases and currency | Vestigo",
+        description: () =>
+          "Every skill and support gem, unique, base type and currency item in Path of Exile 2, " +
+          "with the game's own art and tooltips and the stats of each gem at every level.",
+      },
+      patches: {
+        title: () => "Path of Exile 2 patch notes, patch by patch | Vestigo",
+        description: () =>
+          "Every Path of Exile 2 patch, sorted into buffs, nerfs, fixes and new content, with the " +
+          "gems and uniques it touches shown as in the game.",
+      },
+    },
     home: {
       title: () => "Vestigo — Tier lists, builds and data for the games you play",
       description: () =>
@@ -2077,6 +2147,8 @@ const ES: typeof EN = {
   shell: {
     search: "Buscar un jugador",
     searchFor: (game: string) => `Buscar un jugador de ${game}`,
+    searchItem: "Buscar un objeto",
+    searchItemFor: (game: string) => `Buscar un objeto de ${game}`,
     how: "Cómo se mide",
     menu: "Menú",
     measuredAt: (when: string) => `Medido ${when}`,
@@ -3303,6 +3375,8 @@ const ES: typeof EN = {
       baseline: (pct) => `cualquiera de este precio gana ${pct}`,
       slots: { weapon: "Arma", vitality: "Vitalidad", spirit: "Espíritu" },
       allSlots: "Todos",
+      views: { shop: "Tienda", list: "Lista", label: "Vista" },
+      shopNote: "Cada tarjeta lleva su tier y su ventaja contra lo que se habría comprado con las mismas almas. Pasá el mouse para ver la ficha; tocala para ver sus números.",
       types: {
         bullet_damage: "Daño de arma",
         tech_damage: "Daño de espíritu",
@@ -3319,7 +3393,7 @@ const ES: typeof EN = {
         loading: "Cargando…",
         none: "El juego no publica descripción para este objeto.",
         kinds: { active: "Activo", passive: "Pasivo" },
-        upgradesTo: "Mejora a",
+        upgradesTo: "Mejora para",
         upgradesFrom: "Mejora de",
         souls: "almas",
       },
@@ -3446,11 +3520,56 @@ const ES: typeof EN = {
       "página son nuestros.",
   },
 
+  poe2: {
+    tabs: { economy: "Economía", encyclopedia: "Enciclopedia", patches: "Parches" },
+    soon: "Pronto",
+    league: "Liga",
+    title: "Economía",
+    lede: "Qué vale cada cosa en la liga y qué se está moviendo esta semana.",
+    loading: "Cargando precios…",
+    loadError: "No pudimos cargar los precios de esta liga.",
+    empty: "Esta liga todavía no tiene precios.",
+    fewData: "En esta liga se comercia demasiado poco para saberlo.",
+    mode: "Modo",
+    softcore: "Softcore",
+    hardcore: "Hardcore",
+    permanent: "permanente",
+    market: (league: string) => `Mercado de ${league}`,
+    reference: "Moneda de referencia",
+    perDivine: "por divino",
+    days7: "7 d",
+    rising: "Lo que más sube",
+    falling: "Lo que más baja",
+    traded: "Lo más comerciado",
+    tradedWord: "comerciados",
+    priceList: "Lista de precios",
+    exchange: "Intercambio",
+    uniques: "Únicos",
+    searchTab: "Buscar en la pestaña… (nombre, base o modificador)",
+    count: (n: number) => `${n} objetos`,
+    colItem: "Objeto",
+    colPrice: "Precio",
+    colWeek: "7 días",
+    colChange: "Cambio",
+    colVolume: "Volumen",
+    colListings: "Publicaciones",
+    fewSales: "pocas ventas",
+    priceIn: (league: string) => `Precio en ${league}`,
+    reqLevel: "Requiere nivel",
+    corrupted: "Corrompido",
+    listings: (n: string) => `${n} publicaciones`,
+    chaos: "caos",
+    exalted: "exaltados",
+    note: (league: string, date: string) =>
+      `Precios de la liga ${league}, actualizados el ${date}. "Sube", "baja" y "comerciado" cuentan sólo objetos con al menos 5 divinos de volumen, para que no manden los que casi no se venden.`,
+  },
+
   footer: {
     sources:
       "Datos de partidas de la API de Riot Games · Retratos, ítems y nombres de CommunityDragon",
     sourcesDeadlock:
       "Datos de partidas del snapshot público de deadlock-api.com · Arte de héroes y objetos de Valve",
+    sourcesPoe2: "Tipografía Fontin de Jos Buivenga (exljbris)",
     privacy: "Política de Privacidad",
     terms: "Términos del Servicio",
     englishOnly: "(en inglés)",
@@ -3480,6 +3599,26 @@ const ES: typeof EN = {
   // que no siempre coinciden con las del inglés. Es también donde hay menos
   // competencia, así que vale la pena tratarlos como texto original.
   seo: {
+    poe2: {
+      economy: {
+        title: () => "Economía de Path of Exile 2: precios de orbes y únicos | Vestigo",
+        description: () =>
+          "Cuánto vale el divino en caos y exaltados, y el precio de cada moneda y cada único de " +
+          "la liga, con lo que más sube, baja y se comercia esta semana.",
+      },
+      encyclopedia: {
+        title: () => "Enciclopedia de Path of Exile 2: gemas, únicos, bases y monedas | Vestigo",
+        description: () =>
+          "Todas las gemas de habilidad y de apoyo, los únicos, las bases y las monedas de Path of " +
+          "Exile 2, con el arte y los textos oficiales del juego en español y cada gema nivel por nivel.",
+      },
+      patches: {
+        title: () => "Notas de parche de Path of Exile 2, parche por parche | Vestigo",
+        description: () =>
+          "Cada parche de Path of Exile 2 ordenado en mejoras, nerfeos, arreglos y contenido nuevo, " +
+          "con las gemas y los únicos que toca tal como se ven en el juego.",
+      },
+    },
     home: {
       title: () => "Vestigo — Tier lists, builds y datos de tus juegos",
       description: () =>

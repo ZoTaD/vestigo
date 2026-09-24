@@ -29,6 +29,7 @@ export default function ShopCard({
   showValue,
   compact,
   label,
+  grade,
   onPick,
   liProps,
 }: {
@@ -41,6 +42,8 @@ export default function ShopCard({
   showValue?: boolean;
   compact?: boolean;
   label?: string;
+  /** La letra de la tier list de objetos (S, A…), arriba a la izquierda. */
+  grade?: string;
   onPick: () => void;
   /** Para arrastrarla en el editor de la guía. */
   liProps?: React.LiHTMLAttributes<HTMLLIElement>;
@@ -68,14 +71,7 @@ export default function ShopCard({
         <>
           {upgradeOf && <p className="dl-slot-when">{c.upgradesYour(upgradeOf)}</p>}
           {starred && <p className="dl-slot-when">{starred}</p>}
-          {item.upgradesTo.length > 0 && (
-            <p className="dl-slot-chain">
-              {c.upgradesTo}{" "}
-              {item.upgradesTo.map((u) => (
-                <img key={u.itemId} src={u.img} alt={u.name} title={u.name} width={22} height={22} />
-              ))}
-            </p>
-          )}
+          {/* "Mejora para" ya lo dice la ficha del juego, al pie. */}
           <p className="dl-slot-when">{c.value(valor)}</p>
         </>
       }
@@ -109,6 +105,11 @@ export default function ShopCard({
           ) : (
             <span className="dl-bd-upgrade is-text" aria-hidden="true">{c.upgradeSticker}</span>
           ))}
+        {grade && !compact && (
+          <span className="dl-bd-grade" data-grade={grade} aria-hidden="true">
+            {grade}
+          </span>
+        )}
         {showValue && !compact && (
           <span className="dl-bd-value" data-sign={v >= 1 ? "up" : v <= -1 ? "down" : "flat"}>
             {valor}

@@ -5,6 +5,7 @@ import { text } from "./localized";
 import { catalog } from "./deadlockData";
 import {
   dayRows,
+  chalkBadge,
   histogram,
   leansTo,
   showsCalibrationNotice,
@@ -145,7 +146,8 @@ export default function DeadlockRanks() {
         </p>
       )}
 
-      <section className="box dl-ladder-wrap">
+      {/* La pizarra del escondite del juego, donde Deadlock muestra el rango. */}
+      <section className="box dl-ladder-wrap dl-chalkboard">
         <div className="box-head">
           <h2 className="box-title">{t.byRank}</h2>
           <p className="box-lead">{t.viewNote[view]}</p>
@@ -186,7 +188,7 @@ export default function DeadlockRanks() {
             <figcaption className="dl-hist-axis">
               {hist.groups.map((g) => (
                 <span key={g.tier} className="dl-hist-group" style={{ flexGrow: g.span }}>
-                  {g.img && <img className="dl-hist-badge" src={g.img} alt="" width={22} height={22} loading="lazy" />}
+                  {g.img && <img className="dl-hist-badge" src={chalkBadge(g.img)} alt="" width={22} height={22} loading="lazy" />}
                   <span className="dl-hist-name">{g.name}</span>
                   <span className="dl-hist-n">{n(g.value)}</span>
                 </span>

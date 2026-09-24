@@ -1,0 +1,629 @@
+/* ---------------------------------------------------------------------------
+   DEADLOCK CON EL MATERIAL DEL JUEGO (2026-09-23)
+
+   Pedido de ZoTaD: que Deadlock se vea como el juego, igual que PoE2. Todo lo
+   que está acá usa imágenes sacadas del juego instalado con
+   `games/deadlock/tools/game_assets.py` (public/deadlock/game/ui/*). Va en una
+   hoja aparte, cargada después de las demás de Deadlock, para que se pueda leer
+   (o sacar) de una sola vez.
+
+   La dirección A sigue mandando: un solo radio de 4 px y nada de bordes ni
+   barras de color en tarjetas (ver docs/design/2026-09-16-deadlock-direccion-a.md).
+   Las texturas van DEBAJO del color de siempre, nunca como filo.
+--------------------------------------------------------------------------- */
+
+[data-theme="codex"][data-game="deadlock"] {
+  /* El papel manchado de la tienda del juego, apagado casi del todo: se lee
+     como textura de papel viejo, no como imagen. */
+  --dl-paper: url(/deadlock/game/ui/shop-generic.webp);
+  --dl-paper-veil: color-mix(in srgb, var(--surface-solid) 91%, transparent);
+}
+
+/* ---------- cajas, filas de tier, estantes y paneles ---------- */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-tier, .dl-shelf, .dl-panel, .dl-ht-wrap) {
+  background:
+    linear-gradient(var(--dl-paper-veil), var(--dl-paper-veil)),
+    var(--dl-paper) center / cover no-repeat;
+}
+
+/* ---------- ficha de héroe: el arma del juego sobre sus números ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-hp-gun {
+  display: block;
+  width: min(100%, 22rem);
+  height: auto;
+  margin: 0.25rem 0 0.75rem;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.55));
+}
+
+/* ---------- builds: las compras sobre los reversos de tarjeta de la tienda ----------
+   Son las mismas tarjetas por categoría y escalón que usa el armador
+   (`card_<slot>_t<n>`, de `card_backer_*` del juego). Los colores planos de
+   codex.css se habían muestreado de estas mismas tarjetas, así que el tono no
+   cambia: se suman la trama del papel y los bordes gastados. El color sigue
+   debajo por si la imagen tarda. */
+[data-theme="codex"][data-game="deadlock"] .dl-buy-art {
+  background: var(--dl-card-img, none) center / 100% 100% no-repeat, var(--dl-card, #2a2a2a);
+}
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="weapon"][data-tier="1"] { --dl-card-img: url(/deadlock/shop/card_weapon_t1.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="weapon"][data-tier="2"] { --dl-card-img: url(/deadlock/shop/card_weapon_t2.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="weapon"][data-tier="3"] { --dl-card-img: url(/deadlock/shop/card_weapon_t3.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="weapon"][data-tier="4"] { --dl-card-img: url(/deadlock/shop/card_weapon_t4.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="vitality"][data-tier="1"] { --dl-card-img: url(/deadlock/shop/card_vitality_t1.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="vitality"][data-tier="2"] { --dl-card-img: url(/deadlock/shop/card_vitality_t2.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="vitality"][data-tier="3"] { --dl-card-img: url(/deadlock/shop/card_vitality_t3.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="vitality"][data-tier="4"] { --dl-card-img: url(/deadlock/shop/card_vitality_t4.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="spirit"][data-tier="1"] { --dl-card-img: url(/deadlock/shop/card_spirit_t1.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="spirit"][data-tier="2"] { --dl-card-img: url(/deadlock/shop/card_spirit_t2.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="spirit"][data-tier="3"] { --dl-card-img: url(/deadlock/shop/card_spirit_t3.webp); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-buy-art, .dl-itemicon)[data-slot="spirit"][data-tier="4"] { --dl-card-img: url(/deadlock/shop/card_spirit_t4.webp); }
+
+/* ---------- Rangos: la pizarra del escondite ----------
+   El juego muestra el rango del jugador en una pizarra con insignias en tiza
+   (`hideout_rank_blackboard_bg`, `rankNN_chalk`). El gráfico "Por rango" va
+   sobre esa pizarra; las barras conservan el color de cada rango. */
+[data-theme="codex"][data-game="deadlock"] .dl-chalkboard {
+  background:
+    linear-gradient(rgba(18, 20, 20, 0.55), rgba(18, 20, 20, 0.7)),
+    url(/deadlock/game/ui/blackboard.webp) center / cover no-repeat,
+    #1d2020;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-chalkboard :is(.box-title, .dl-hist-name, .dl-hist-max) {
+  color: #eeeae2;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.35);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-chalkboard .dl-hist-badge {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  opacity: 0.92;
+}
+
+/* ---------- Escalera: las medallas de fin de partida del juego en el podio ----------
+   (`post_game/medal_{gold,silver,bronze}`). El número del puesto queda al lado,
+   en el mismo color del metal. */
+[data-theme="codex"][data-game="deadlock"] .dl-lb-step-pos {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-lb-step-pos::before {
+  content: "";
+  width: 18px;
+  height: 20px;
+  background: var(--dl-medal) center / contain no-repeat;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
+}
+[data-theme="codex"][data-game="deadlock"] .dl-lb-step[data-metal="gold"] { --dl-medal: url(/deadlock/game/ui/medal-gold.webp); }
+[data-theme="codex"][data-game="deadlock"] .dl-lb-step[data-metal="silver"] { --dl-medal: url(/deadlock/game/ui/medal-silver.webp); }
+[data-theme="codex"][data-game="deadlock"] .dl-lb-step[data-metal="bronze"] { --dl-medal: url(/deadlock/game/ui/medal-bronze.webp); }
+
+/* ---------- Vestigo News con el material del juego ----------
+   El papel manchado de la tienda debajo de la hoja, los recuadros de papel
+   rasgado de la votación de héroes detrás de los títulos de sección, y el arte
+   de fondo de cada héroe en la cabecera de su recuadro. */
+[data-theme="codex"] .vn {
+  background:
+    radial-gradient(140% 50% at 50% 0%, rgba(243, 220, 160, 0.07), transparent 55%),
+    radial-gradient(90% 40% at 50% 0%, rgba(95, 179, 161, 0.1), transparent 70%),
+    linear-gradient(180deg, rgba(24, 32, 28, 0.9), rgba(15, 21, 18, 0.94)),
+    url(/deadlock/game/ui/shop-generic.webp) center / cover no-repeat,
+    var(--vn-sheet-2);
+}
+[data-theme="codex"] .vn-sec h2 {
+  padding: 9px 26px 5px;
+  background: url(/deadlock/game/ui/backer-box.webp) center / 100% 100% no-repeat;
+}
+[data-theme="codex"] .vn-hero-top {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--hc) 30%, rgba(14, 18, 16, 0.55)) 0%, rgba(14, 18, 16, 0.72) 55%, rgba(14, 18, 16, 0.9) 100%),
+    var(--hbg, none) 70% 30% / cover no-repeat;
+}
+[data-theme="codex"] .vn-portrait {
+  object-position: 50% 10%;
+  background: color-mix(in srgb, var(--hc) 30%, rgba(0, 0, 0, 0.4));
+}
+
+/* ---------- cabecera de cada pestaña: el arte del menú principal del juego ----------
+   (`main_menu/background_gothic`), a la derecha del título y fundido hacia la
+   izquierda y hacia abajo para que nunca compita con el texto ni los controles. */
+[data-theme="codex"][data-game="deadlock"] .sechead {
+  position: relative;
+  isolation: isolate;
+}
+[data-theme="codex"][data-game="deadlock"] .sechead::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -1.4rem 0 -0.6rem 30%;
+  background: url(/deadlock/game/ui/menu-gothic.webp) 70% 38% / cover no-repeat;
+  opacity: 0.32;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 45%), linear-gradient(180deg, transparent, #000 25%, #000 55%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent, #000 45%), linear-gradient(180deg, transparent, #000 25%, #000 55%, transparent);
+  mask-composite: intersect;
+}
+@media (max-width: 760px) {
+  [data-theme="codex"][data-game="deadlock"] .sechead::before { inset-inline-start: 0; opacity: 0.2; }
+}
+
+/* ---------- ícono de objeto con ficha al pasar el mouse (DeadlockItemTip) ---------- */
+[data-theme="codex"] .dl-itemtip {
+  display: inline-flex;
+  cursor: help;
+  border-radius: var(--radius);
+}
+[data-theme="codex"] .dl-itemtip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- la tarjeta del objeto de la tienda del juego (GameCard) ----------
+   Las mismas clases `.dl-bd-card-*` del armador (deadlock-builder.css), sobre un
+   <span> en vez de un botón. El tamaño de letra sale del ancho (en línea), así
+   el nombre escala con la tarjeta. `.is-art` muestra sólo el cuadrado del
+   dibujo, para los lugares donde el nombre ya está al lado. */
+[data-theme="codex"][data-game="deadlock"] .dl-gcard {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  flex: none;
+  vertical-align: middle;
+  aspect-ratio: 107 / 165;
+  border-radius: 3px;
+  overflow: hidden;
+  background-color: #e6dcc6;
+  background-size: 100% 100%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 3px 6px rgba(0, 0, 0, 0.22);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-gcard.is-art {
+  aspect-ratio: 1;
+  background-size: 100% 154%;
+  background-position: top center;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-gcard .dl-bd-card-art img {
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-gcard .dl-bd-card-name {
+  font-size: 1em;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-gcard[data-tier="4"] .dl-bd-card-name {
+  color: #efe6d2;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-gcard .dl-bd-tag {
+  font-size: 0.62em;
+}
+
+/* ---------- la build principal: el dibujo de la tarjeta de la tienda (58 px; el nombre, en la ficha) ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-slots {
+  grid-template-columns: repeat(auto-fill, 58px);
+  gap: 0.5rem;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-slot-btn {
+  border: 0;
+  background: none;
+  border-radius: 3px;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-slot-btn .dl-gcard img {
+  width: 100%;
+  height: 100%;
+}
+/* En la tarjeta del juego el escalón lo dice el papel; el numeral sobra. */
+[data-theme="codex"][data-game="deadlock"] .dl-slot-tier {
+  display: none;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-slot[data-carries] .dl-slot-btn {
+  box-shadow: 0 0 0 2px var(--gold-lit), 0 0 12px rgba(201, 162, 74, 0.35);
+}
+
+/* ---------- orden de compra: la tarjeta del juego en lugar de la réplica ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-buy-game {
+  position: relative;
+  display: block;
+  width: 72px;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-buy-game .dl-gcard {
+  display: flex;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-buy-game .dl-buy-key {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 58px;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-buy-game .dl-buy-up {
+  bottom: auto;
+  top: 2px;
+  left: 4px;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-buy-game[data-key] .dl-gcard {
+  box-shadow: 0 0 0 2px var(--gold-lit), 0 0 10px rgba(201, 162, 74, 0.35);
+}
+
+/* ---------- pestaña Objetos, vista Tienda ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-items-shopview .dl-items-views {
+  margin-bottom: 0.5rem;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-items-shopnote {
+  margin: 0 0 0.8rem;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-items-shop-detail {
+  margin-top: 1rem;
+}
+/* La letra de la tier list, arriba a la izquierda: la misma etiqueta oscura que
+   la ventaja de la derecha (`.dl-bd-value`). */
+[data-theme="codex"] .dl-bd-grade {
+  position: absolute;
+  left: 3%;
+  top: 2%;
+  min-width: 1.4em;
+  padding: 0.05rem 0.25rem;
+  border-radius: 2px;
+  background: rgba(16, 19, 13, 0.88);
+  color: var(--accent-lit);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.62rem;
+  line-height: 1.2;
+  text-align: center;
+}
+[data-theme="codex"] .dl-bd-grade[data-grade="S"] { color: #ffd76a; }
+[data-theme="codex"] .dl-bd-grade[data-grade="D"],
+[data-theme="codex"] .dl-bd-grade[data-grade="F"] { color: #f08a74; }
+@container shop (min-width: 44rem) {
+  [data-theme="codex"] .dl-bd-paper .dl-bd-grade { font-size: 0.85cqw; }
+}
+
+/* ---------- la ficha del objeto: el tooltip del juego, traducido ----------
+   No es una imitación: es la hoja del propio juego
+   (panorama/styles/tooltips/citadel_tooltip_mod_details.vcss, sacada del
+   Deadlock instalado con Source 2 Viewer) pasada de Panorama a CSS web, con sus
+   medidas, sus colores (las constantes de citadel_base_styles: offBlack #10130D,
+   shardColor #99FFD6, courageBrightColor #EC9719, armorColor #00FF99,
+   spiritBrightColor #CE90FF) y sus texturas (catalog_tooltip_header/bg/
+   bg_modifies_*, property_cooldown_large, icon_soul). La letra "sans" del juego
+   es Radiance (fonts.conf). Los comentarios citan el selector del juego. */
+@font-face { font-family: "VN Radiance"; src: url(https://assets-bucket.deadlock-api.com/assets-api-res/fonts/radiance-bold.otf) format("opentype"); font-weight: 700; font-display: swap; }
+
+/* La ficha flotante va sola, sin el marco que la envolvía. */
+[data-theme="codex"][data-game="deadlock"] .dl-slot-pop {
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* #ModTooltipContainer */
+[data-theme="codex"][data-game="deadlock"] .dl-card {
+  width: min(100%, 450px);
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 20px #00000060;
+  font-family: "VN Radiance", var(--font-text);
+  color: #cdcdcd;
+  --dl-cat-color: #c87903; /* .WeaponMod: weaponColorMedium */
+  --dl-mod-bg: url(/deadlock/game/ui/tooltip-mod-bg-weapon.webp);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card[data-slot="vitality"] {
+  --dl-cat-color: #649717; /* .ArmorMod: fortitudeColor */
+  --dl-mod-bg: url(/deadlock/game/ui/tooltip-mod-bg-vitality.webp);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card[data-slot="spirit"] {
+  --dl-cat-color: #8a55b3; /* .TechMod: spiritColor */
+  --dl-mod-bg: url(/deadlock/game/ui/tooltip-mod-bg-spirit.webp);
+}
+
+/* .HeaderContainer (min-height 96px) + #HeaderContents (padding 0 20px) */
+[data-theme="codex"][data-game="deadlock"] .dl-card-head {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 96px;
+  padding: 0 20px;
+  background: var(--card-head) center / cover no-repeat, var(--dl-cat-color);
+}
+/* .ModName: bold 28px, text-shadow 2px 2px 0 #00000030 */
+[data-theme="codex"][data-game="deadlock"] .dl-card-name {
+  margin: 0;
+  font: 700 28px/1.15 "VN Radiance", var(--font-text);
+  letter-spacing: 0;
+  text-transform: none;
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #00000030;
+}
+/* .ModCost (bold 20px shardColor) + .goldIcon (icon_soul con wash-color shardColor, 16×22) */
+[data-theme="codex"][data-game="deadlock"] .dl-card-cost {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  font: 700 20px/1 "VN Radiance", var(--font-text);
+  color: #99ffd6;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-cost img {
+  display: none;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-cost::before {
+  content: "";
+  width: 16px;
+  height: 22px;
+  margin-top: 3px;
+  background: #99ffd6;
+  -webkit-mask: url(/deadlock/game/ui/icon-soul.svg) center / contain no-repeat;
+  mask: url(/deadlock/game/ui/icon-soul.svg) center / contain no-repeat;
+}
+
+/* .AttributesContainer: background-color #000 + textura de la categoría al 80 % */
+[data-theme="codex"][data-game="deadlock"] .dl-card-body {
+  display: block;
+  gap: 0;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1.35;
+  color: #cdcdcd;
+  background: linear-gradient(#00000033, #00000033), var(--card-body) center / cover no-repeat, #000;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-detail-sec {
+  margin: 0;
+}
+/* #AbilityTypeSection: padding 8px 14px 12px 14px */
+[data-theme="codex"][data-game="deadlock"] .dl-detail-block {
+  padding: 0 0 12px;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-detail-block > :not(.dl-card-secline) {
+  margin: 8px 14px 0;
+}
+
+/* .CooldownHeader (32px; offBlack&50, activo &aa, pasivo &90) */
+[data-theme="codex"][data-game="deadlock"] .dl-card-secline {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  height: 32px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  background: #10130d50;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-detail-sec[data-kind="active"] .dl-card-secline { background: #10130daa; }
+[data-theme="codex"][data-game="deadlock"] .dl-detail-sec:is([data-kind="passive"], [data-kind=""]) .dl-card-secline { background: #10130d90; }
+/* .ActivePassiveLabel: bold, margin 0 8px 2px 20px; pasivo: italic semi-bold, opacity .5 */
+[data-theme="codex"][data-game="deadlock"] .dl-card-secline .dl-detail-kind {
+  align-self: center;
+  margin: 0 8px 2px 20px;
+  font: 700 18px/1 "VN Radiance", var(--font-text);
+  letter-spacing: 0;
+  text-transform: none;
+  color: #ffffff;
+  opacity: 1;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-detail-sec:is([data-kind="passive"], [data-kind=""]) .dl-card-secline .dl-detail-kind {
+  font-style: italic;
+  font-weight: 600;
+  opacity: 0.5;
+}
+/* .CooldownContainer: alto completo, offBlack, padding 0 20px; .CooldownImage 22px */
+[data-theme="codex"][data-game="deadlock"] .dl-card-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 100%;
+  margin: 0;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 0;
+  background: #10130d;
+  color: #ffffff;
+  font: 700 18px/1 "VN Radiance", var(--font-text);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-pill img {
+  display: none;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-pill::before {
+  content: "";
+  width: 22px;
+  height: 22px;
+  background: url(/deadlock/game/ui/cooldown.webp) center / 100% 100% no-repeat;
+}
+
+/* .ModInfoLabel: 18px, line-height 135 %, #CDCDCD; .highlight y .diminish */
+[data-theme="codex"][data-game="deadlock"] .dl-detail-text {
+  font-size: 18px;
+  line-height: 1.35;
+  color: #cdcdcd;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-detail-text .dl-hi {
+  font-weight: 600;
+  color: #f8f8f8;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-detail-text .dl-dim {
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  color: #bfbbb090;
+}
+
+/* Sección innata: .StatValue (bold 19px, margin-right 10px) + .AttributeBonusName (18px #CDCDCD) */
+[data-theme="codex"][data-game="deadlock"] .dl-card-stats[data-boxed="false"] {
+  display: block;
+  padding: 0;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-stats[data-boxed="false"] li {
+  display: flex;
+  align-items: baseline;
+  margin: 2px 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-stats[data-boxed="false"] .dl-card-stat-value {
+  margin-right: 10px;
+  font: 700 19px/1.2 "VN Radiance", var(--font-text);
+  color: #ffffff;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-stats[data-boxed="false"] .dl-card-stat-label {
+  font: 400 18px/1.35 "VN Radiance", var(--font-text);
+  color: #cdcdcd;
+}
+
+/* .StatsAppliedBackground (margin-top 15px) + .ImportantStatBox (#00000060, min-height 80px) */
+[data-theme="codex"][data-game="deadlock"] :is(.dl-card-boxes, .dl-card-stats[data-boxed="true"]) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 2px;
+  margin-top: 15px !important;
+  padding: 0;
+}
+[data-theme="codex"][data-game="deadlock"] :is(.dl-card-boxes, .dl-card-stats[data-boxed="true"]) li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  gap: 0;
+  min-height: 80px;
+  padding: 8px 4px;
+  border: 0;
+  border-radius: 0;
+  background: #00000060;
+  text-align: center;
+}
+/* .ImportantStatImage: 20px */
+[data-theme="codex"][data-game="deadlock"] :is(.dl-card-boxes, .dl-card-stats[data-boxed="true"]) .dl-stat-icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0 3px 0 0;
+}
+/* #ImportantStatValue: blanco */
+[data-theme="codex"][data-game="deadlock"] :is(.dl-card-boxes, .dl-card-stats[data-boxed="true"]) .dl-card-stat-value {
+  font: 700 24px/1.1 "VN Radiance", var(--font-text);
+  color: #ffffff;
+}
+/* .ImportantStatType: 16px, centrado; .prop_* le dan el color de su familia */
+[data-theme="codex"][data-game="deadlock"] :is(.dl-card-boxes, .dl-card-stats[data-boxed="true"]) .dl-card-stat-label {
+  flex: 0 0 100%;
+  margin-top: 2px;
+  padding: 0 2px;
+  font: 500 16px/1 "VN Radiance", var(--font-text);
+  color: #ffffff;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-boxes li[data-tone="weapon"] .dl-card-stat-label { color: #ec9719; font-weight: 600; } /* .prop_bullet_damage */
+[data-theme="codex"][data-game="deadlock"] .dl-card-boxes li[data-tone="spirit"] .dl-card-stat-label { color: #ce90ff; font-weight: 600; } /* .prop_tech_damage */
+[data-theme="codex"][data-game="deadlock"] .dl-card-boxes li[data-tone="heal"] .dl-card-stat-label { color: #00ff99; font-weight: 600; }   /* .prop_healing: armorColor */
+
+/* .componentsSection: .componentsLabel + .componentsList + .componentMod */
+[data-theme="codex"][data-game="deadlock"] .dl-card-up {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-up .dl-detail-kind {
+  margin: 0;
+  padding: 4px 10px 2px;
+  font: 700 14px/1.3 "VN Radiance", var(--font-text);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #ffffff50;
+  background: linear-gradient(#10130d80, #10130d80), var(--dl-mod-bg) center / cover no-repeat, #10130d;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-up .dl-detail-kind::after {
+  content: ":";
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-up-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0;
+  padding: 0 5px 5px 10px;
+  background: linear-gradient(#10130d80, #10130d80), var(--dl-mod-bg) center / cover no-repeat, #10130d;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-up-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: 700 14px/1 "VN Radiance", var(--font-text);
+  color: #ffefd7e6;
+}
+/* Lo que agrega Vestigo (minuto de compra, ventaja…), al pie. */
+[data-theme="codex"][data-game="deadlock"] .dl-card-foot {
+  padding: 6px 14px 8px;
+  background: #10130d;
+  font-size: 13px;
+  color: #ffffff80;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-foot p {
+  margin: 0;
+}
+/* El ícono del recuadro va del color de su familia, como la etiqueta. */
+[data-theme="codex"][data-game="deadlock"] .dl-card-boxes li[data-tone="heal"] .dl-stat-icon {
+  filter: brightness(0) saturate(100%) invert(78%) sepia(35%) saturate(820%) hue-rotate(84deg) brightness(98%);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-boxes li[data-tone="spirit"] .dl-stat-icon {
+  filter: brightness(0) saturate(100%) invert(72%) sepia(40%) saturate(1500%) hue-rotate(226deg) brightness(104%);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-boxes li[data-tone="weapon"] .dl-stat-icon {
+  filter: brightness(0) saturate(100%) invert(76%) sepia(47%) saturate(900%) hue-rotate(335deg) brightness(103%);
+}
+
+/* El orden del juego dentro de cada sección: la franja, la descripción, los
+   recuadros grandes (#ImportantAttributeContainer) y abajo, a lo ancho, las
+   stats secundarias (#StatsAppliedContainer). */
+[data-theme="codex"][data-game="deadlock"] .dl-detail-block {
+  display: flex;
+  flex-direction: column;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-detail-block > .dl-card-boxes { order: 2; }
+[data-theme="codex"][data-game="deadlock"] .dl-detail-block > .dl-card-stats[data-boxed="true"] { order: 3; }
+/* #StatsAppliedContainer: fondo #00000066, padding 10px 15px, de a dos por renglón (49 %) */
+[data-theme="codex"][data-game="deadlock"] .dl-card-stats[data-boxed="true"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 2%;
+  margin-top: 15px !important;
+  padding: 10px 15px;
+  background: #00000066;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-stats[data-boxed="true"] li {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 6px;
+  width: 49%;
+  min-height: 0;
+  padding: 2px 0;
+  background: none;
+  text-align: left;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-stats[data-boxed="true"] .dl-card-stat-value {
+  font: 700 19px/1.2 "VN Radiance", var(--font-text);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-stats[data-boxed="true"] .dl-card-stat-label {
+  grid-column: auto;
+  font: 400 15px/1.25 "VN Radiance", var(--font-text);
+  color: #cdcdcd;
+}
+/* Pegada a los recuadros cuando los hay, como en el juego. */
+[data-theme="codex"][data-game="deadlock"] .dl-detail-block:has(> .dl-card-boxes) > .dl-card-stats[data-boxed="true"] {
+  margin-top: 2px !important;
+}
+
+/* .ImportantStatImageValueContainer: el ícono y el número van JUNTOS y
+   centrados; la etiqueta, en su propio renglón (ver la regla de arriba). La
+   grilla de codex.css los separaba cuando la etiqueta era más ancha. */
+[data-theme="codex"][data-game="deadlock"] .dl-card-boxes li > * {
+  grid-area: auto;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-card-boxes .dl-card-stat-value {
+  flex: none;
+  margin: 0;
+}

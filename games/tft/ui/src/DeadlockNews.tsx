@@ -3,6 +3,7 @@ import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import { useLang, useLocale } from "./i18n";
 import { catalog } from "./deadlockData";
+import gameArt from "@deadlock/game-art.json";
 import { heroes as heroSlugs } from "./deadlockSlugs";
 import { text } from "./localized";
 import {
@@ -16,6 +17,7 @@ import {
   type Verdict,
 } from "./deadlockNewsData";
 import { NEWS_COPY, headlineBank, pickFrom, stableVariant } from "./newsCopy";
+import { ItemIcon } from "./DeadlockItemTip";
 
 /**
  * Vestigo News: la edición de un parche, como periódico.
@@ -27,6 +29,9 @@ import { NEWS_COPY, headlineBank, pickFrom, stableVariant } from "./newsCopy";
  *
  * Todo el CSS vive bajo `.vn` en `styles/news.css`.
  */
+
+/** Fondo de arte de cada héroe, sacado del juego (games/deadlock/tools/game_assets.py). */
+const BACKGROUNDS: Record<string, string> = gameArt.backgrounds;
 
 const ARROW: Record<Dir, string> = { up: "▲", down: "▼", mid: "◆", fix: "✚" };
 const VERDICT_DIR: Record<Verdict, Dir> = { nerf: "down", buff: "up", mixed: "mid", fix: "fix" };
@@ -242,10 +247,16 @@ export default function DeadlockNews({
                 key={h.heroId}
                 id={`vn-h${h.heroId}`}
                 className="vn-hero"
-                style={{ "--hc": hero?.color || FALLBACK_COLOR } as CSSProperties}
+                style={
+                  {
+                    "--hc": hero?.color || FALLBACK_COLOR,
+                    // El arte de fondo del héroe (el de su pantalla en el juego), detrás de su nombre.
+                    ...(BACKGROUNDS[String(h.heroId)] ? { "--hbg": `url(${BACKGROUNDS[String(h.heroId)]})` } : {}),
+                  } as CSSProperties
+                }
               >
                 <div className="vn-hero-top">
-                  <img className="vn-portrait" src={hero?.img} alt="" width={64} height={64} />
+                  <img className="vn-portrait" src={hero?.card || hero?.img} alt="" width={64} height={64} />
                   <div>
                     <h3>
                       {slug ? (
@@ -309,7 +320,9 @@ export default function DeadlockNews({
                   <div key={i.itemId} className="vn-item" data-slot={info?.slot}>
                     <div className="vn-ihead">
                       <div className="vn-icon">
-                        {info?.img && <img src={info.img} alt="" width={32} height={32} loading="lazy" />}
+                        {info?.img && (
+                          <ItemIcon itemId={i.itemId} img={info.img} size={32} />
+                        )}
                       </div>
                       <div>
                         <h3>{info ? info.name[lang] : i.itemId}</h3>

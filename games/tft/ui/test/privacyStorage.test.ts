@@ -48,6 +48,7 @@ describe("the privacy policy's account of local storage", () => {
     expect(storageKeys()).toEqual([
       "vestigo.band",
       "vestigo.consent",
+      "vestigo.dlItemsView",
       "vestigo.lang",
       "vestigo.lastPlayer",
     ]);

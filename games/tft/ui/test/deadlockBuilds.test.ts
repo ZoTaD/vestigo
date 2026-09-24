@@ -104,7 +104,7 @@ describe("las builds publicadas", () => {
         expect(e, `ítem ${i.itemId} sin entrada de catálogo`).toBeTruthy();
         expect(e.name.en.length).toBeGreaterThan(0);
         expect(e.name.es.length).toBeGreaterThan(0);
-        expect(e.img).toMatch(/^https:\/\//);
+        expect(e.img).toMatch(/^(https:\/\/|\/deadlock\/game\/)/); // local (/deadlock/game/) o remota
       }
     }
   });
@@ -199,7 +199,7 @@ describe("el orden de habilidades", () => {
       for (const id of b.abilityOrder ?? []) {
         const a = file.abilities[String(id)];
         expect(a, `habilidad ${id} sin ficha`).toBeTruthy();
-        expect(a.img).toMatch(/^https:\/\//);
+        expect(a.img).toMatch(/^(https:\/\/|\/deadlock\/game\/)/); // local (/deadlock/game/) o remota
         expect(a.name.en.length).toBeGreaterThan(0);
       }
     }

@@ -1,5 +1,7 @@
-import { useCopy } from "./i18n";
-import { useItemDetail, iconUrl, cardArt, soulIcon, type Item } from "./deadlockItemsData";
+import type { ReactNode } from "react";
+import { useCopy, useLang } from "./i18n";
+import { useItemDetail, iconUrl, cardArt, soulIcon, catalogUpgrades, type Item } from "./deadlockItemsData";
+import { ItemIcon } from "./DeadlockItemTip";
 
 /**
  * La tarjeta de un ítem, tal como la dibuja el juego.
@@ -17,10 +19,16 @@ import { useItemDetail, iconUrl, cardArt, soulIcon, type Item } from "./deadlock
  * `dangerouslySetInnerHTML`: las descripciones del juego traen `<svg>` e `<img>`
  * incrustados, y eso no vuelve a ser markup en nuestra página.
  */
-export function ItemDetailPanel({ item, cost }: { item: Item; cost: string }) {
+export function ItemDetailPanel({ item, cost, footer }: { item: Item; cost: string; footer?: ReactNode }) {
   const copy = useCopy();
+  const { lang } = useLang();
   const c = copy.deadlock.itemsPage;
   const ficha = useItemDetail(item.itemId);
+  // Las fichas que llegan con sólo el id (al pasar el mouse) no traen sus
+  // mejoras: se completan del catálogo, porque el juego las pone al pie.
+  const cat = catalogUpgrades(item.itemId, lang);
+  const upgradesFrom = item.upgradesFrom.length ? item.upgradesFrom : cat.from;
+  const upgradesTo = item.upgradesTo.length ? item.upgradesTo : cat.to;
 
   if (!ficha) return <p className="detail-note dl-detail-loading">{c.detail.loading}</p>;
 
@@ -57,10 +65,13 @@ export function ItemDetailPanel({ item, cost }: { item: Item; cost: string }) {
               <div className="dl-detail-block" key={j}>
                 {/* El encabezado de la sección y, a su derecha, la pastilla del
                     tiempo de recarga: así lo reparte la tarjeta del juego. */}
-                {(c.detail.kinds[sec.kind as keyof typeof c.detail.kinds] || b.cooldown) && (
+                {(c.detail.kinds[sec.kind as keyof typeof c.detail.kinds] || sec.kind === "" || b.cooldown) && (
                   <div className="dl-card-secline">
                     <h5 className="dl-detail-kind">
-                      {c.detail.kinds[sec.kind as keyof typeof c.detail.kinds] ?? ""}
+                      {/* Una sección sin tipo que no es la innata el juego la
+                          rotula "Pasivo" (Disparo Reparador, entre 16). */}
+                      {c.detail.kinds[sec.kind as keyof typeof c.detail.kinds] ??
+                        (sec.kind === "" ? c.detail.kinds.passive : "")}
                     </h5>
                     {b.cooldown && (
                       <span className="dl-card-pill">
@@ -145,7 +156,7 @@ export function ItemDetailPanel({ item, cost }: { item: Item; cost: string }) {
                 {b.boxed.length > 0 && (
                   <ul className="dl-card-boxes">
                     {b.boxed.map((st, k) => (
-                      <li key={k}>
+                      <li key={k} data-tone={toneOf(st.icon)}>
                         {st.icon && iconUrl(st.icon) && (
                           <img className="dl-stat-icon" src={iconUrl(st.icon)} alt="" width={16} height={16} loading="lazy" />
                         )}
@@ -164,13 +175,13 @@ export function ItemDetailPanel({ item, cost }: { item: Item; cost: string }) {
         ))}
 
         {/* De qué ítems sale éste. El juego lo pone al pie de la tarjeta. */}
-        {item.upgradesFrom.length > 0 && (
+        {upgradesFrom.length > 0 && (
           <section className="dl-card-up">
             <h5 className="dl-detail-kind">{c.detail.upgradesFrom}</h5>
             <ul className="dl-card-up-list">
-              {item.upgradesFrom.map((u) => (
+              {upgradesFrom.map((u) => (
                 <li key={u.itemId} data-slot={u.slot}>
-                  <img src={u.img} alt="" width={26} height={26} loading="lazy" />
+                  <ItemIcon itemId={u.itemId} img={u.img} size={30} tip={false} />
                   <span>{u.name}</span>
                 </li>
               ))}
@@ -179,20 +190,38 @@ export function ItemDetailPanel({ item, cost }: { item: Item; cost: string }) {
         )}
 
         {/* Y qué se construye a partir de él, que es la relación al revés. */}
-        {item.upgradesTo.length > 0 && (
+        {upgradesTo.length > 0 && (
           <section className="dl-card-up">
             <h5 className="dl-detail-kind">{c.detail.upgradesTo}</h5>
             <ul className="dl-card-up-list">
-              {item.upgradesTo.map((u) => (
+              {upgradesTo.map((u) => (
                 <li key={u.itemId} data-slot={u.slot}>
-                  <img src={u.img} alt="" width={26} height={26} loading="lazy" />
+                  <ItemIcon itemId={u.itemId} img={u.img} size={30} tip={false} />
                   <span>{u.name}</span>
                 </li>
               ))}
             </ul>
           </section>
         )}
+
+        {/* Lo que cada lugar del sitio agrega (minuto de compra, ventaja…),
+            al pie y adentro de la ficha: el juego no la envuelve en ningún marco. */}
+        {footer && <div className="dl-card-foot">{footer}</div>}
       </div>
     </div>
   );
 }
+
+/**
+ * El color de la etiqueta de un recuadro, como en la ficha del juego: verde para
+ * lo que cura, violeta para lo espiritual, naranja para el arma. Sale de la
+ * clave del ícono de la stat, que es lo único que dice de qué familia es.
+ */
+function toneOf(icon: string | undefined): string | undefined {
+  if (!icon) return undefined;
+  if (/heal|regen|life|health/i.test(icon)) return "heal";
+  if (/tech|spirit|magic/i.test(icon)) return "spirit";
+  if (/bullet|weapon|fire_rate|ammo|clip|reload|melee/i.test(icon)) return "weapon";
+  return undefined;
+}
+

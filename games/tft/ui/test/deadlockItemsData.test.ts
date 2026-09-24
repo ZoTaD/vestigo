@@ -52,7 +52,7 @@ describe("la lista publicada", () => {
   it("resuelve nombre, imagen y precio del catálogo", () => {
     const uno = built[0];
     expect(uno.name).not.toMatch(/^#/);
-    expect(uno.img).toMatch(/^https?:\/\//);
+    expect(uno.img).toMatch(/^(https?:\/\/|\/deadlock\/game\/)/); // local (/deadlock/game/) o remota
     expect(COSTS).toContain(uno.cost as (typeof COSTS)[number]);
   });
 

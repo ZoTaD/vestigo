@@ -22,6 +22,7 @@ import {
 import { heroImg, heroName, itemOf, items, rankOf, report, useReport } from "./deadlockReportData";
 import RankBadge from "./DeadlockRankBadge";
 import { lastAccount } from "./DeadlockPlayer";
+import { ItemIcon } from "./DeadlockItemTip";
 
 /**
  * El informe de una partida.
@@ -152,18 +153,7 @@ function BuildOrder({ player, lang }: { player: MatchPlayer; lang: Lang }) {
         const vendido = compra.soldS !== 0;
         return (
           <li className={`dl-rep-buy ${vendido ? "is-sold" : ""}`} key={`${compra.itemId}-${compra.buyS}`}>
-            <img
-              src={it?.img ?? ""}
-              alt={it ? text(it.name, lang, "") : ""}
-              title={
-                it
-                  ? `${text(it.name, lang, "")} · ${copy.deadlock.report.boughtAt(min(compra.buyS / 60, lang))}`
-                  : ""
-              }
-              width={40}
-              height={40}
-              loading="lazy"
-            />
+            <ItemIcon itemId={compra.itemId} img={it?.img} size={40} />
             <span className="dl-rep-buy-min">{min(compra.buyS / 60, lang)}′</span>
           </li>
         );
@@ -420,7 +410,9 @@ function Findings({ list, lang }: { list: Finding[]; lang: Lang }) {
         const src = img(f.itemId);
         return (
           <li className="dl-rep-finding" key={`${f.id}-${f.itemId ?? i}`}>
-            {src ? (
+            {src && f.itemId != null ? (
+              <ItemIcon itemId={f.itemId} img={src} size={44} className="dl-rep-finding-icon" />
+            ) : src ? (
               <img className="dl-rep-finding-icon" src={src} alt="" width={44} height={44} loading="lazy" />
             ) : (
               <span className="dl-rep-finding-icon is-empty" aria-hidden="true" />
@@ -625,15 +617,7 @@ export default function DeadlockReport({
                         {keptItems(p, items as Items).map((itemId) => {
                           const it = itemOf(itemId);
                           return (
-                            <img
-                              key={itemId}
-                              src={it?.img ?? ""}
-                              alt=""
-                              title={it ? text(it.name, lang, "") : ""}
-                              width={18}
-                              height={18}
-                              loading="lazy"
-                            />
+                            <ItemIcon key={itemId} itemId={itemId} img={it?.img} size={18} focusable={false} />
                           );
                         })}
                       </span>

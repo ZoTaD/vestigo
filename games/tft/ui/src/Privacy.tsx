@@ -3,8 +3,8 @@ import { CONTACT_EMAIL, LegalPage, Section } from "./Legal";
 /**
  * Every claim here was checked against the code before it was written.
  *
- * The browser stores four keys of its own — vestigo.lang, vestigo.band,
- * the analytics decision and vestigo.lastPlayer — and sets no cookies unless
+ * The browser stores five keys of its own — vestigo.lang, vestigo.band,
+ * the analytics decision, vestigo.lastPlayer and vestigo.dlItemsView — and sets no cookies unless
  * the visitor accepts. Grep for `localStorage` before editing that count: it
  * said "two" for a while after the rank filter shipped, which is exactly the
  * drift this note exists to prevent.
@@ -66,13 +66,14 @@ export default function Privacy() {
 
         <h3 className="legal-subheading">Information stored in your browser</h3>
         <p>
-          Four items of local storage: your language choice, so the site opens in the language
+          Five items of local storage: your language choice, so the site opens in the language
           you picked; the rank filter you last used on the meta list; your answer to the
-          analytics question, so we stop asking; and the last Riot ID you searched, so
-          returning to the player page does not mean typing it again. None of them is sent to
+          analytics question, so we stop asking; the last Riot ID you searched, so
+          returning to the player page does not mean typing it again; and whether you prefer
+          the Deadlock items page as a shop or as a list. None of them is sent to
           us — the Riot ID is stored on your device only, and the searches themselves reach our
           server the same way whether or not it was remembered. Clearing your browser data
-          removes all four.
+          removes all five.
         </p>
         <p>
           Cookies are set only if you accept analytics. In that case Google Analytics sets its

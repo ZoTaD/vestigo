@@ -4,7 +4,7 @@ import RouteLink from "./RouteLink";
 import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
 
-export type Game = "tft" | "deadlock";
+export type Game = "tft" | "deadlock" | "poe2";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
 export type Place = "home" | Game;
 /** The legal pages are reachable from the footer and highlight no tab. */
@@ -36,7 +36,15 @@ export default function Nav({
   /** Ir a un lugar es cambiar de vista y cerrar cualquier detalle abierto. */
   const a = (place: Place): Route => ({ ...route, view: place, detail: undefined });
 
-  const searchLabel = copy.shell.searchFor(copy.games.deadlock);
+  /**
+   * Dentro de PoE2 el buscador busca **objetos**, no jugadores: el juego no
+   * tiene perfiles públicos que abrir, y lo que alguien busca ahí es cuánto
+   * vale lo que acaba de encontrar. Es la misma barra con otro texto; el texto
+   * viaja igual por `pendingSearch` y lo recoge la pestaña Economía.
+   */
+  const inPoe2 = active === "poe2";
+  const searchGame = inPoe2 ? copy.games.poe2Short : copy.games.deadlock;
+  const searchLabel = inPoe2 ? copy.shell.searchItemFor(copy.games.poe2) : copy.shell.searchFor(copy.games.deadlock);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -44,7 +52,12 @@ export default function Nav({
     if (!q) return;
     setPendingSearch(q);
     setQuery("");
-    onNavigate({ ...route, view: "deadlock", dlSection: "player", detail: undefined });
+    onNavigate(
+      inPoe2
+        ? // Se busca en la liga que ya se estaba mirando, no en la de por defecto.
+          { ...route, view: "poe2", p2Section: "economy", detail: route.p2Section === "economy" ? route.detail : undefined }
+        : { ...route, view: "deadlock", dlSection: "player", detail: undefined },
+    );
   };
 
   return (
@@ -71,10 +84,18 @@ export default function Nav({
           >
             {copy.games.deadlock}
           </RouteLink>
+          <RouteLink
+            className="top-place"
+            to={{ ...a("poe2"), p2Section: "economy" }}
+            active={active === "poe2"}
+            onNavigate={onNavigate}
+          >
+            {copy.games.poe2Short}
+          </RouteLink>
           {/* Los juegos que vienen se anuncian, no se enlazan: no existe la
               ruta, así que un enlace llevaría a un 404 y de paso entraría al
               sitemap. En el orden de la hoja de ruta (2026-09-23). */}
-          {[copy.games.dota, copy.games.poe2Short, copy.games.valheim, copy.games.diablo2Short].map((nombre) => (
+          {[copy.games.dota, copy.games.valheim, copy.games.diablo2Short].map((nombre) => (
             <span className="top-place is-soon" aria-disabled="true" key={nombre}>
               {nombre}
               <em className="top-soon">{copy.games.soon}</em>
@@ -93,12 +114,12 @@ export default function Nav({
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={copy.shell.search}
+              placeholder={inPoe2 ? copy.shell.searchItem : copy.shell.search}
               aria-label={searchLabel}
               autoComplete="off"
             />
             <span className="top-search-game" aria-hidden="true">
-              {copy.games.deadlock}
+              {searchGame}
             </span>
           </label>
         </form>

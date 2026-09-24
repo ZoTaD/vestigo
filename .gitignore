@@ -39,3 +39,10 @@ games/tft/supabase/supabase/
 # retratos incrustados pesan más de un mega cada una; lo que hay que conservar
 # de una sesión de diseño es el documento en docs/design, no el andamio.
 .superpowers/
+# PoE2: listas generadas por games/poe2/tools (pesan cientos de MB)
+games/poe2/tools/*.json
+.cache/
+games/poe2/.cache/
+# PoE2: HTML de los hilos del foro que baja games/poe2/pipeline/patches.mjs
+games/poe2/data/patches/.cache/
+__pycache__/

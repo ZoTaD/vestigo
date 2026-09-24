@@ -17,6 +17,8 @@ import { UsageVsEdge, ShopHeatmap, Callouts } from "./DeadlockItemCharts";
 import { ItemDetailPanel } from "./DeadlockItemCard";
 import { type BandId } from "./deadlockData";
 import { items as itemSlugs } from "./deadlockSlugs";
+import { ItemIcon } from "./DeadlockItemTip";
+import DeadlockItemsShop from "./DeadlockItemsShop";
 
 /**
  * La tier list de ítems de Deadlock.
@@ -85,7 +87,7 @@ function ItemRow({
 
         <span className="dl-irow-face">
           {item.img ? (
-            <img src={item.img} alt="" loading="lazy" width={40} height={40} />
+            <ItemIcon itemId={item.itemId} img={item.img} size={40} focusable={false} />
           ) : (
             <span className="dl-portrait-fallback">{item.name.slice(0, 2)}</span>
           )}
@@ -261,6 +263,34 @@ export default function DeadlockItems({
   const [abiertos, setAbiertos] = useState<Set<number>>(() => new Set(OPEN_COSTS));
   /** El estante elegido (arma, vitalidad, espíritu), o todos. */
   const [slot, setSlot] = useState<Slot | null>(null);
+  /**
+   * Tienda (como el juego) o lista. Arranca en la tienda —pedido de ZoTaD del
+   * 2026-09-23: "siempre copiando el juego"— y se recuerda en este navegador.
+   */
+  const [vista, setVista] = useState<"shop" | "list">(() => {
+    try {
+      return localStorage.getItem("vestigo.dlItemsView") === "list" ? "list" : "shop";
+    } catch {
+      return "shop";
+    }
+  });
+  const cambiarVista = (v: "shop" | "list") => {
+    setVista(v);
+    try {
+      localStorage.setItem("vestigo.dlItemsView", v);
+    } catch {
+      /* sin almacenamiento: la elección dura la visita */
+    }
+  };
+  const selector = (
+    <div className="seg dl-items-views" role="group" aria-label={c.views.label}>
+      {(["shop", "list"] as const).map((v) => (
+        <button key={v} type="button" aria-pressed={vista === v} data-active={vista === v} onClick={() => cambiarVista(v)}>
+          {c.views[v]}
+        </button>
+      ))}
+    </div>
+  );
   const alternar = (cost: number) =>
     setAbiertos((prev) => {
       const next = new Set(prev);
@@ -307,6 +337,33 @@ export default function DeadlockItems({
 
       {!meta ? (
         <p className="dl-loading-note">{c.loading}</p>
+      ) : vista === "shop" ? (
+        <div className="dl-items-shopview">
+          {selector}
+          <p className="detail-note dl-items-shopnote">{c.shopNote}</p>
+          <DeadlockItemsShop
+            items={meta.items}
+            openSlug={open}
+            onOpenItem={onOpen}
+            detalle={(() => {
+              const it = open ? meta.items.find((i) => itemSlugs.toSlug.get(String(i.itemId)) === open) : undefined;
+              if (!it) return null;
+              return (
+                <section className="box dl-items-shop-detail">
+                  <ol className="dl-irows">
+                    <ItemRow
+                      item={it}
+                      base={meta.file.costBaselines[String(it.cost)] ?? 0.5}
+                      cost={it.cost.toLocaleString(locale)}
+                      open
+                      onToggle={() => onOpen(undefined)}
+                    />
+                  </ol>
+                </section>
+              );
+            })()}
+          />
+        </div>
       ) : (
         /**
          * Dos columnas: la lista a la izquierda y lo que la resume a la derecha.
@@ -323,6 +380,7 @@ export default function DeadlockItems({
           <div className="page-main">
             {/* Todo lo que la lista muestra se puede filtrar (Baymard): el
                 estante de cada ítem ya iba como chip en la fila; acá manda. */}
+            {selector}
             <div className="chips dl-slot-chips" role="group" aria-label={c.allSlots}>
               <button type="button" className="chip" data-active={slot === null} onClick={() => setSlot(null)}>
                 {c.allSlots}

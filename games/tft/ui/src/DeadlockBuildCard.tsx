@@ -16,6 +16,7 @@ import {
   type BuildView,
   type ItemRef,
 } from "./deadlockBuildsData";
+import { GameCard, ItemIcon } from "./DeadlockItemTip";
 
 /**
  * La tarjeta de build que se despliega al apretar un héroe en la tier list.
@@ -142,8 +143,7 @@ export function ConFicha({
             role="tooltip"
             style={{ top: pos.top, left: pos.left }}
           >
-            {cabecera}
-            <ItemDetailPanel item={asItem(item)} cost={item.cost.toLocaleString(locale)} />
+            <ItemDetailPanel item={asItem(item)} cost={item.cost.toLocaleString(locale)} footer={cabecera} />
           </div>,
           destinoDelPortal()
         )}
@@ -177,7 +177,7 @@ function Slot({ item }: { item: BuildItemView }) {
             <p className="dl-slot-chain">
               {c.upgradedFrom}{" "}
               {item.steps.map((s) => (
-                <img key={s.itemId} src={s.img} alt={s.name} title={s.name} width={22} height={22} />
+                <ItemIcon key={s.itemId} itemId={s.itemId} img={s.img} size={22} tip={false} />
               ))}
             </p>
           )}
@@ -189,7 +189,7 @@ function Slot({ item }: { item: BuildItemView }) {
         // La cinta es decorativa; para quien no la ve, el dato va en el nombre.
         aria-label={item.carries ? `${item.name} — ${c.keyItem}` : item.name}
       >
-        <img src={item.img} alt="" width={48} height={48} loading="lazy" />
+        <ItemIcon itemId={item.itemId} img={item.img} size={58} tip={false} />
         <span className="dl-slot-tier" aria-hidden="true">
           {ROMANO[item.tier] ?? ""}
         </span>
@@ -423,50 +423,23 @@ function BuyOrder({ buys }: { buys: BuyView[] }) {
                   {i.cost.toLocaleString(locale)}
                 </span>
 
-                {/* El color sale de `data-slot` y `data-tier` en CSS, no de un
-                    estilo en línea: son doce combinaciones fijas y tenerlas en la
-                    hoja las deja leerse juntas. */}
-                <span
-                  className="dl-buy-art"
-                  data-slot={i.slot}
-                  data-tier={i.tier}
-                  {...(i.edge !== undefined ? { "data-key": "" } : {})}
-                >
-                  <span className="dl-buy-tier" aria-hidden="true">
-                    {ROMANOS[i.tier ?? 0] ?? ""}
-                  </span>
-                  <img
-                    className="dl-buy-icon"
-                    src={i.img}
-                    alt={i.name}
-                    width={44}
-                    height={44}
-                    loading="lazy"
-                  />
+                {/* La tarjeta de la tienda del juego (GameCard), con la flecha
+                    de mejora y la banda de objeto clave encima. La banda va
+                    ADENTRO de la tarjeta: el alto no cambia y ninguna compra se
+                    corre de lugar. Dice la palabra y no el número; el número
+                    sigue en el hover — una etiqueta sin su dato es una opinión. */}
+                <span className="dl-buy-game" {...(i.edge !== undefined ? { "data-key": "" } : {})}>
+                  <GameCard itemId={i.itemId} img={i.img} width={72} />
                   {i.upgrade && (
                     <span className="dl-buy-up" title={c.upgradeStep} aria-label={c.upgradeStep}>
                       ↑
                     </span>
                   )}
-                  {/* La banda va ADENTRO de la carátula, que tiene `aspect-ratio`
-                      fijo: el alto de la tarjeta no cambia, así que ninguna
-                      compra se mueve de lugar. El espacio se lo cede la franja
-                      del nombre, que es `flex: 1`.
-
-                      Dice la palabra y no el número: "+1.8" obliga a saber qué
-                      escala es y para qué lado es bueno. El número sigue en el
-                      hover — una etiqueta sin su dato es una opinión. */}
                   {i.edge !== undefined && (
                     <span className="dl-buy-key" title={c.carries(i.edge.toFixed(2))}>
                       {c.keyItem}
                     </span>
                   )}
-                  <span className="dl-buy-name">
-                    {/* El texto va en su propio span: la franja centra con flex y
-                        el recorte a dos renglones necesita `-webkit-box`, y las
-                        dos cosas no conviven en el mismo elemento. */}
-                    <span className="dl-buy-name-txt">{i.name}</span>
-                  </span>
                 </span>
               </ConFicha>
             ))}
@@ -599,10 +572,10 @@ export default function DeadlockBuildCard({
               <ul className="dl-reco-swaps">
                 {reco.swaps.map((s) => (
                   <li key={s.in.itemId} className="dl-reco-swap">
-                    <img src={s.out.img} alt="" width={26} height={26} loading="lazy" />
+                    <ItemIcon itemId={s.out.itemId} img={s.out.img} size={26} />
                     <span className="dl-reco-out">{s.out.name}</span>
                     <span className="dl-reco-arrow" aria-hidden="true">→</span>
-                    <img src={s.in.img} alt="" width={26} height={26} loading="lazy" />
+                    <ItemIcon itemId={s.in.itemId} img={s.in.img} size={26} />
                     <span className="dl-reco-in">{s.in.name}</span>
                     {/* El número que respalda cada cambio, al lado del cambio.
                         Una recomendación sin su evidencia es una opinión. */}
@@ -688,7 +661,7 @@ export default function DeadlockBuildCard({
             <ul className="dl-counter-list">
               {datos.counters.map((x) => (
                 <ConFicha key={x.itemId} item={x} className="dl-counter-item">
-                  <img src={x.img} alt="" width={30} height={30} loading="lazy" />
+                  <ItemIcon itemId={x.itemId} img={x.img} size={30} tip={false} />
                   <span className="dl-counter-name">{x.name}</span>
                   <span className="dl-counter-vs">{c.against(x.foes.join(", "))}</span>
                 </ConFicha>

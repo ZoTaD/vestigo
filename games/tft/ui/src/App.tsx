@@ -15,6 +15,9 @@ import DeadlockPlayer from "./DeadlockPlayer";
 // `deadlockMatch.ts`, y en Windows dos archivos que sólo difieren en mayúsculas
 // son el mismo archivo para el compilador.
 import DeadlockReport from "./DeadlockReport";
+import Poe2Economy from "./Poe2Economy";
+import Poe2Encyclopedia from "./Poe2Encyclopedia";
+import Poe2Patches from "./Poe2Patches";
 import DeadlockBandPicker from "./DeadlockBandPicker";
 import { PUBLISHED_BAND as DL_PUBLISHED_BAND, type BandId as DlBandId } from "./deadlockData";
 import Privacy from "./Privacy";
@@ -39,6 +42,7 @@ import {
 import {
   LANGS,
   DEADLOCK_SECTIONS,
+  POE2_SECTIONS,
   parseRoute,
   routePath,
   type Route,
@@ -142,7 +146,7 @@ function Shell({
     <div
       className="app"
       data-theme="codex"
-      data-game={place === "deadlock" ? "deadlock" : undefined}
+      data-game={place === "deadlock" || place === "poe2" ? place : undefined}
       /**
        * La home es el único lugar que no es el códex.
        *
@@ -247,6 +251,35 @@ function Shell({
           )}
         </>
       )}
+      {place === "poe2" && (
+        <>
+          {/* La sub-navegación ya va con la letra del juego: la barra de Vestigo
+              de arriba es la misma de todo el sitio, y el juego empieza acá. */}
+          <div className="p2-sub">
+            <nav className="p2-sub-in" aria-label={copy.games.poe2}>
+              {POE2_SECTIONS.map((id) => (
+                <RouteLink
+                  key={id}
+                  className="p2-sub-item"
+                  to={{ ...route, view: "poe2", p2Section: id, detail: undefined }}
+                  active={(route.p2Section ?? "economy") === id}
+                  onNavigate={navigate}
+                >
+                  {copy.poe2.tabs[id]}
+                </RouteLink>
+              ))}
+            </nav>
+          </div>
+          {(route.p2Section ?? "economy") === "encyclopedia" && <Poe2Encyclopedia route={route} navigate={navigate} />}
+          {route.p2Section === "patches" && <Poe2Patches route={route} navigate={navigate} />}
+          {(route.p2Section ?? "economy") === "economy" && (
+            <Poe2Economy
+              league={route.detail}
+              onLeague={(l) => navigate({ ...route, view: "poe2", p2Section: "economy", detail: l.slug })}
+            />
+          )}
+        </>
+      )}
       {place === "privacy" && <Privacy />}
       {place === "terms" && <Terms />}
 
@@ -282,7 +315,10 @@ function Shell({
         {/* Una sola línea de fuentes desde que Deadlock es el único juego: la
             de Riot/CommunityDragon describía las páginas de TFT, que ya no se
             sirven. */}
-        <p className="foot-sources">{copy.footer.sourcesDeadlock}</p>
+        {/* En PoE2 no se nombra a Valve (no es su juego) ni a los proveedores
+            de datos, a pedido de ZoTaD; sí el crédito que pide la licencia de
+            la tipografía Fontin. */}
+        <p className="foot-sources">{place === "poe2" ? copy.footer.sourcesPoe2 : copy.footer.sourcesDeadlock}</p>
 
         {/* Required by Riot's General Policies, which every third-party product
             must post, and by Overwolf's compliance guide. It is not decoration —

@@ -1,5 +1,6 @@
 import { useCopy, useLocale } from "./i18n";
 import { COSTS, SLOTS, type Item, type Scatter, type ShopCell, type Slot } from "./deadlockItemsData";
+import { ItemIcon } from "./DeadlockItemTip";
 
 /**
  * Los dos gráficos de la tier list de ítems.
@@ -326,7 +327,7 @@ export function Callouts({ scatter }: { scatter: Scatter }) {
       <ol className="dl-callout-list">
         {items.slice(0, 5).map((p) => (
           <li key={p.itemId}>
-            {p.img && <img src={p.img} alt="" width={22} height={22} loading="lazy" />}
+            {p.img && <ItemIcon itemId={p.itemId} img={p.img} size={22} />}
             <span className="dl-callout-name">{p.name}</span>
             <span className="dl-callout-num" data-kind={kind}>
               {signed(p.delta)}

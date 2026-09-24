@@ -183,3 +183,49 @@ describe("las páginas de héroe e ítem de Deadlock", () => {
     );
   });
 });
+
+describe("Path of Exile 2", () => {
+  it("/poe2 es la Economía, sin el nombre de la pestaña en la URL", () => {
+    const r = parseRoute("/es/poe2");
+    expect(r.view).toBe("poe2");
+    expect(r.p2Section).toBe("economy");
+    expect(routePath(r)).toBe("/es/poe2");
+  });
+
+  it("una pestaña desconocida cae en Economía en vez de dar una página vacía", () => {
+    const r = parseRoute("/en/poe2/nada");
+    expect(r.view).toBe("poe2");
+    expect(r.p2Section).toBe("economy");
+    expect(routePath(r)).toBe("/en/poe2");
+  });
+
+  it("cambiar de idioma conserva la página", () => {
+    expect(routePath({ ...parseRoute("/es/poe2"), lang: "en" })).toBe("/en/poe2");
+  });
+
+  it("la liga de la Economía va en la URL y sobrevive al cambio de idioma", () => {
+    const r = parseRoute("/es/poe2/economy/hc-forbidden-rites");
+    expect(r.p2Section).toBe("economy");
+    expect(r.detail).toBe("hc-forbidden-rites");
+    expect(routePath(r)).toBe("/es/poe2/economy/hc-forbidden-rites");
+    expect(routePath({ ...r, lang: "en" })).toBe("/en/poe2/economy/hc-forbidden-rites");
+  });
+
+  it("la enciclopedia lleva categoría y ficha; parches, la edición", () => {
+    const r = parseRoute("/es/poe2/encyclopedia/gems/untether");
+    expect(r.p2Section).toBe("encyclopedia");
+    expect(r.detail).toBe("gems/untether");
+    expect(routePath(r)).toBe("/es/poe2/encyclopedia/gems/untether");
+    expect(parseRoute("/es/poe2/encyclopedia/gems").detail).toBe("gems");
+    expect(routePath(parseRoute("/en/poe2/encyclopedia"))).toBe("/en/poe2/encyclopedia");
+    const p = parseRoute("/es/poe2/patches/0-5-5c/sobra");
+    expect(p.detail).toBe("0-5-5c");
+    expect(routePath(p)).toBe("/es/poe2/patches/0-5-5c");
+  });
+
+  it("una pestaña desconocida no se lleva lo que viene después como liga", () => {
+    const r = parseRoute("/es/poe2/nada/standard");
+    expect(r.detail).toBeUndefined();
+    expect(routePath(r)).toBe("/es/poe2");
+  });
+});

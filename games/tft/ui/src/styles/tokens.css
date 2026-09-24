@@ -107,6 +107,35 @@
   --radius-pill: 4px;
 }
 
+/* Path of Exile 2 (2026-09-23): arena y oro viejo sobre negro, sacados del
+   `:root` de pathofexile2.com (--color-sand*, --color-night*). Sólo cambian los
+   colores de la cáscara —la barra de Vestigo conserva su forma y su letra—; la
+   tipografía y los adornos del juego viven adentro de la sección, en poe2.css. */
+[data-theme="codex"][data-game="poe2"] {
+  --bg: #0b0a08;
+  --bg-2: #121110;
+  --bg-glow: #231b10;
+  --surface: rgba(255, 239, 215, 0.04);
+  --surface-2: rgba(255, 239, 215, 0.075);
+  --surface-solid: #15130f;
+  --text: #ece6da;
+  --text-dim: #9a917f;
+  --text-faint: #6d6858;
+  --accent: #a38d6d;
+  --accent-lit: #dfcf99;
+  --accent-dark: #837053;
+  --accent-rgb: 163, 141, 109;
+  --accent-2: #b68022;
+  --good: #86b560;
+  --bad: #d0503f;
+  --line: rgba(163, 141, 109, 0.22);
+  --line-strong: rgba(163, 141, 109, 0.5);
+  --on-accent: #0b0a08;
+  --radius: 4px;
+  --radius-lg: 4px;
+  --radius-pill: 4px;
+}
+
 /* Portada: papel. La marca es clara y los juegos son oscuros; ese contraste es
    el que hace que cada juego pegue el salto al entrar. */
 [data-theme="codex"][data-place="home"] {

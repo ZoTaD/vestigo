@@ -1,6 +1,6 @@
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath, URL } from "node:url";
 import { devApi } from "./dev-api";
 import { ROBOTS_TXT, sitemapXml, type SitemapData } from "./src/sitemap";
@@ -16,6 +16,43 @@ const BRAND = COPY.en.brand;
 const dataDir = fileURLToPath(new URL("../data", import.meta.url));
 const analysisDir = fileURLToPath(new URL("../analysis/src", import.meta.url));
 const deadlockDir = fileURLToPath(new URL("../../deadlock/data", import.meta.url));
+const poe2Dir = fileURLToPath(new URL("../../poe2/data", import.meta.url));
+
+/**
+ * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.
+ *
+ * Los JSON de la pipeline guardan URLs de `assets-bucket.deadlock-api.com`, que
+ * es una copia de las carpetas del juego y ya se cayó una vez (2026-09-19).
+ * `games/deadlock/tools/game_assets.py` saca esas mismas imágenes del juego
+ * instalado a `public/deadlock/game/` y deja un `manifest.json` (ruta del bucket
+ * → archivo local). Acá, al importar cualquier JSON de `@deadlock`, cada URL del
+ * bucket que tiene copia local se cambia por la local; la que no, queda como
+ * estaba. La pipeline y los componentes no se enteran.
+ */
+function localDeadlockAssets(): Plugin {
+  const BUCKET = "https://assets-bucket.deadlock-api.com/assets-api-res/";
+  const manifestPath = fileURLToPath(new URL("./public/deadlock/game/manifest.json", import.meta.url));
+  const manifest: Record<string, string> = existsSync(manifestPath)
+    ? JSON.parse(readFileSync(manifestPath, "utf-8"))
+    : {};
+  const rx = /https:\/\/assets-bucket\.deadlock-api\.com\/assets-api-res\/[^"\s]+/g;
+  return {
+    name: "vestigo-local-deadlock-assets",
+    enforce: "pre",
+    transform(code, id) {
+      const file = id.split("?")[0].replaceAll("\\", "/");
+      if (!file.endsWith(".json") || !file.startsWith(deadlockDir.replaceAll("\\", "/"))) return null;
+      let n = 0;
+      const out = code.replace(rx, (url) => {
+        const local = manifest[url.slice(BUCKET.length)];
+        if (!local) return url;
+        n++;
+        return `/deadlock/game/${local}`;
+      });
+      return n ? { code: out, map: null } : null;
+    },
+  };
+}
 
 /**
  * Lo que el sitemap y el prerender necesitan de los JSON de Deadlock. Los dos
@@ -238,7 +275,7 @@ function prerenderRoutes(): Plugin {
 export default defineConfig({
   // devApi stands in for the Supabase Edge Function while developing, speaking
   // the same contract so the UI cannot tell them apart.
-  plugins: [react(), devApi(), seoFiles(), prerenderRoutes()],
+  plugins: [localDeadlockAssets(), react(), devApi(), seoFiles(), prerenderRoutes()],
   resolve: {
     // The pipeline writes its output to games/tft/data. The UI reads it directly
     // so there is a single source of truth — no copying, no drift.
@@ -246,7 +283,7 @@ export default defineConfig({
     // @deadlock is the same arrangement for the other game: its pipeline writes
     // to games/deadlock/data and this reads it in place. Un alias por juego y no
     // uno genérico, para que un import diga de cuál de los dos está hablando.
-    alias: { "@data": dataDir, "@analysis": analysisDir, "@deadlock": deadlockDir },
+    alias: { "@data": dataDir, "@analysis": analysisDir, "@deadlock": deadlockDir, "@poe2": poe2Dir },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

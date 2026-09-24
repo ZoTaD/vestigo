@@ -1,0 +1,264 @@
+/* ============================================================
+   PoE2 · Enciclopedia y Diario de parches (2026-09-23)
+   Todo bajo .p2, con las texturas del juego de public/poe2/ui/.
+   Regla de la casa: sin filos ni barras de color en tarjetas; el
+   color va en el texto, la cifra o un tinte de fondo.
+   ============================================================ */
+
+.p2 {
+  --p2-gem: #1ba29b;
+  --p2-normal: #c8c8c8;
+}
+
+/* ---------- tooltip: las rarezas que faltaban ---------- */
+.p2-tt.is-gem {
+  --tt-c: var(--p2-gem);
+  --tt-l: url(/poe2/ui/tt-gem-l.webp); --tt-m: url(/poe2/ui/tt-gem-m.webp); --tt-r: url(/poe2/ui/tt-gem-r.webp);
+  --tt-sep: url(/poe2/ui/sep-gem.webp);
+  --tt-h: 40px;
+}
+.p2-tt.is-normal {
+  --tt-c: var(--p2-normal);
+  --tt-l: url(/poe2/ui/tt-normal-l.webp); --tt-m: url(/poe2/ui/tt-normal-m.webp); --tt-r: url(/poe2/ui/tt-normal-r.webp);
+  --tt-sep: url(/poe2/ui/sep-normal.webp);
+  --tt-h: 40px;
+}
+/* En la ficha el tooltip va quieto, grande, como si el objeto estuviera en la mano. */
+.p2-tt.is-static { position: relative; z-index: 1; pointer-events: auto; width: 100%; max-width: none; font-size: 16px; }
+.p2-tt.is-static .p2-tt-head { font-size: 22px; }
+.p2-tt-tags { color: #8f8f8f; font-size: 14px; }
+.p2-tt-desc { color: var(--p2-gem); font-size: 14px; line-height: 1.4; padding: 0 4px; }
+.p2-tt-flavour { color: var(--p2-unique); font-style: italic; white-space: pre-line; }
+.p2-tt-eff { margin: 4px 0; }
+.p2-tt-eff .p2-tt-k { display: block; font-size: 13px; }
+.p2-tt-body .p2-tt-k.is-small { line-height: 1.35; }
+
+/* ---------- rarezas en nombres ---------- */
+.p2 .is-gem > .p2-enc-name, .p2-enc-hit.is-gem .p2-enc-hit-n, .p2-pat-name.is-gem { color: var(--p2-gem); }
+.p2 .is-unique > .p2-enc-name, .p2-enc-hit.is-unique .p2-enc-hit-n, .p2-pat-name.is-unique { color: var(--p2-unique); }
+.p2 .is-normal > .p2-enc-name, .p2-enc-hit.is-normal .p2-enc-hit-n, .p2-pat-name.is-normal { color: var(--p2-normal); }
+.p2 .is-currency > .p2-enc-name, .p2-enc-hit.is-currency .p2-enc-hit-n, .p2-pat-name.is-currency { color: var(--p2-currency); }
+
+/* ---------- cabecera y buscador ---------- */
+.p2-enc .p2-title { align-items: center; }
+.p2-enc-search { position: relative; margin-left: auto; width: min(360px, 100%); }
+.p2-enc-search .p2-input { width: 100%; }
+.p2-enc-hits {
+  position: absolute; z-index: 60; top: calc(100% + 4px); left: 0; right: 0;
+  background: #0b0a08; box-shadow: 0 0 0 1px var(--p2-line), 0 18px 50px rgba(0, 0, 0, .8);
+  max-height: 420px; overflow: auto;
+}
+.p2-enc-hit { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; padding: 6px 12px; text-decoration: none; }
+.p2-enc-hit:hover, .p2-enc-hit:focus-visible { background: #17130e; outline: none; }
+.p2-enc-hit.is-empty { display: block; color: var(--p2-text-dim); font-style: italic; }
+.p2-enc-hit-ic { width: 36px; height: 36px; display: grid; place-items: center; background: radial-gradient(circle at 50% 45%, var(--p2-cell-2), var(--p2-cell) 75%); }
+.p2-enc-hit-ic img { max-width: 32px; max-height: 32px; }
+.p2-enc-hit-n { font-size: 16px; }
+.p2-enc-hit-c { color: var(--p2-text-dim); font-size: 13px; }
+
+.p2-enc-cats { display: flex; flex-wrap: wrap; gap: 4px; margin: -4px 0 18px; }
+.p2-enc-cats .p2-stab { text-decoration: none; padding: 8px 16px 7px; border-radius: 3px; font-size: 16px; }
+.p2-enc-cats .p2-stab.is-on .p2-stab-note { opacity: .6; }
+
+/* ---------- portada ---------- */
+.p2-enc-home { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.p2-enc-tile { display: block; text-decoration: none; color: inherit; transition: transform .15s; }
+.p2-enc-tile:hover { transform: translateY(-2px); }
+.p2-enc-tile:hover .p2-plate { color: #000; }
+.p2-enc-mosaic {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; padding: 16px 18px 6px;
+}
+.p2-enc-mosaic.is-gems { grid-template-columns: repeat(9, 1fr); }
+.p2-enc-mosaic img {
+  width: 100%; aspect-ratio: 1; object-fit: contain; padding: 4px;
+  background: radial-gradient(circle at 50% 45%, var(--p2-cell-2), var(--p2-cell) 75%);
+}
+.p2-enc-tile-lede { margin: 8px 18px 2px; color: var(--p2-text); }
+.p2-enc-tile-n { margin: 0 18px 16px; color: var(--p2-text-dim); font-size: 14px; }
+
+/* ---------- lista ---------- */
+.p2-enc-facet { padding: 10px 14px 0; }
+.p2-enc-facet .p2-stab { border-radius: 3px; }
+.p2-stab.is-str:not(.is-on) { color: #d1735a; }
+.p2-stab.is-dex:not(.is-on) { color: #7dbb6a; }
+.p2-stab.is-int:not(.is-on) { color: #7a9ce0; }
+.p2-enc-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 6px;
+  padding: 14px;
+}
+.p2-enc-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 6px 10px; text-decoration: none; }
+.p2-enc-card:hover, .p2-enc-card:focus-visible { background: rgba(255, 239, 215, .045); outline: none; }
+/* La casilla del alijo: el azul del juego con el dibujo al centro. */
+.p2-enc-art {
+  width: 100%; height: 112px; display: grid; place-items: center;
+  background: radial-gradient(circle at 50% 45%, var(--p2-cell-2), var(--p2-cell) 75%);
+}
+.p2-enc-art img { max-width: 92%; max-height: 104px; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .7)); }
+.p2-enc-art.is-gem img { max-width: 64px; }
+.p2-enc-name { font-size: 14px; line-height: 1.2; text-align: center; }
+
+/* ---------- ficha ---------- */
+.p2-crumbs { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; margin: 0 0 14px; color: var(--p2-text-dim); font-size: 15px; }
+.p2-crumbs a { color: var(--p2-sand); text-decoration: none; }
+.p2-crumbs a:hover { color: var(--p2-sand-lt); }
+.p2-crumbs b { font-weight: 400; color: var(--p2-text-hi); }
+.p2-enc-cols { display: grid; grid-template-columns: minmax(300px, 440px) 1fr; gap: 22px; align-items: start; }
+.p2-enc-main { display: flex; flex-direction: column; gap: 14px; }
+.p2-enc-side { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.p2-enc-hero {
+  --cell: 64px;
+  align-self: center;
+  width: calc(var(--cw) * var(--cell) + 24px); height: calc(var(--ch) * var(--cell) + 24px);
+  min-width: 112px; min-height: 112px; max-height: 300px;
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 50% 45%, var(--p2-cell-2), var(--p2-cell) 75%);
+  box-shadow: 0 0 0 1px #000, 0 16px 40px rgba(0, 0, 0, .6);
+}
+.p2-enc-hero img { max-width: 100%; max-height: 100%; padding: 10px; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .8)); }
+.p2-enc-hero.is-gem { width: 112px; height: 112px; border-radius: 50%; }
+.p2-enc-hero.is-gem img { width: 76px; padding: 0; }
+.p2-enc-level { display: flex; flex-direction: column; gap: 6px; color: var(--p2-sand); font-size: 15px; }
+.p2-enc-level input { width: 100%; accent-color: var(--p2-gold-2); }
+.p2-lvl { font-size: 14px; }
+.p2-lvl th { font-size: 12px !important; line-height: 1.25; vertical-align: bottom; min-width: 90px; }
+.p2-lvl th:first-child { min-width: 0; }
+.p2-lvl td { font-family: var(--p2-game); white-space: nowrap; color: var(--p2-text-hi); cursor: pointer; }
+.p2-lvl .p2-lvl-n { color: var(--p2-sand); }
+.p2-lvl tr.is-on td { background: rgba(201, 171, 102, .12); color: var(--p2-gold-1); }
+.p2-enc-mini { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px; }
+.p2-enc-minicard { width: 104px; display: flex; flex-direction: column; align-items: center; gap: 5px; text-decoration: none; padding: 6px 4px; }
+.p2-enc-minicard:hover { background: rgba(255, 239, 215, .045); }
+.p2-enc-minicard .p2-enc-art { height: 72px; }
+.p2-enc-minicard .p2-enc-art img { max-height: 66px; }
+.p2-enc-minicard .p2-enc-art.is-gem img { max-width: 48px; }
+.p2-enc-minicard.is-normal { width: auto; padding: 8px 14px; background: rgba(8, 7, 6, .5); }
+.p2-enc-price-in { padding: 14px 18px 16px; display: flex; flex-direction: column; gap: 4px; }
+.p2-enc-link { color: var(--p2-sand); text-decoration: none; margin-top: 6px; }
+.p2-enc-link:hover { color: var(--p2-sand-lt); }
+.p2-enc-hist-list { list-style: none; margin: 0; padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 12px; }
+.p2-enc-hist-v { font: 18px var(--p2-title); color: var(--p2-sand-lt); text-decoration: none; }
+.p2-enc-hist-v:hover { color: var(--p2-gold-1); }
+
+/* ============================================================
+   Diario de parches
+   ============================================================ */
+.p2-pat-cols { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 24px; align-items: start; }
+.p2-pat-ed { display: flex; flex-direction: column; gap: 18px; }
+
+/* La cabecera: el banner de desafíos del juego, con el texto sobre su lado oscuro. */
+.p2-pat-hero {
+  position: relative; aspect-ratio: 1147 / 323; min-height: 200px;
+  background: var(--banner) center / cover no-repeat, #07060a;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+}
+.p2-pat-hero-in {
+  position: absolute; inset: 0; padding: 0 0 0 5.5%;
+  display: flex; flex-direction: column; justify-content: center; gap: 2px;
+  max-width: 62%;
+}
+.p2-pat-kind { color: var(--p2-sand); font-size: 15px; letter-spacing: .08em; }
+.p2-pat-ver {
+  margin: 0; font: 400 clamp(40px, 6vw, 68px)/1 var(--p2-title); letter-spacing: .02em;
+  background: linear-gradient(180deg, #fff6d8 0%, var(--p2-gold-1) 35%, var(--p2-gold-2) 75%, #8d6f33 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .9));
+}
+.p2-pat-title { color: var(--p2-text-hi); font-size: 18px; line-height: 1.25; }
+.p2-pat-date { color: var(--p2-text-dim); font-size: 14px; margin-top: 6px; }
+.p2-pat-date a { color: var(--p2-sand); text-decoration: none; }
+.p2-pat-date a:hover { color: var(--p2-sand-lt); }
+
+/* Los sellos: cuántos cambios de cada tipo, y filtran al tocarlos. */
+.p2-pat-seals { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--p2-line); }
+.p2-pat-seal {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 6px 10px;
+  border: 0; cursor: pointer; color: var(--p2-text-dim); font: 14px var(--p2-game);
+  background: linear-gradient(180deg, rgba(10, 9, 8, .35), rgba(6, 5, 4, .55)), url(/poe2/ui/stone.webp) 0 0 / 173px 173px;
+}
+.p2-pat-seal b { font: 400 26px/1.1 var(--p2-title); color: var(--p2-text-hi); }
+.p2-pat-seal b i { font-style: normal; font-size: 18px; vertical-align: 3px; }
+.p2-pat-seal.is-up b { color: var(--p2-up); }
+.p2-pat-seal.is-down b { color: var(--p2-down); }
+.p2-pat-seal.is-new b { color: var(--p2-gold-2); }
+.p2-pat-seal.is-fix b { color: #8fa3b8; }
+.p2-pat-seal:hover:not(:disabled) { color: var(--p2-sand-lt); }
+.p2-pat-seal.is-on { background: linear-gradient(180deg, rgba(201, 171, 102, .16), rgba(201, 171, 102, .06)), url(/poe2/ui/stone.webp) 0 0 / 173px 173px; color: var(--p2-sand-lt); }
+.p2-pat-seal:disabled { cursor: default; opacity: .45; }
+.p2-pat-warn { margin: 0; color: var(--p2-sand); font-size: 14px; font-style: italic; }
+
+.p2-pat-refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 4px; padding: 12px; }
+.p2-pat-ref { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 2px; text-decoration: none; }
+.p2-pat-ref:hover { background: rgba(255, 239, 215, .045); }
+.p2-pat-ref .p2-enc-art { height: 66px; }
+.p2-pat-ref .p2-enc-art img { max-height: 60px; }
+.p2-pat-ref .p2-enc-art.is-gem img { max-width: 44px; }
+.p2-pat-ref .p2-enc-name { font-size: 13px; }
+
+.p2-pat-lines { list-style: none; margin: 0; padding: 12px 18px 14px; display: flex; flex-direction: column; gap: 7px; }
+.p2-pat-lines.is-kids { padding: 6px 0 0 4px; gap: 5px; }
+.p2-pat-line { display: grid; grid-template-columns: 18px 1fr; column-gap: 8px; line-height: 1.45; }
+.p2-pat-line > .p2-pat-lines { grid-column: 2; }
+.p2-pat-mark { color: var(--p2-text-dim); font-size: 12px; line-height: 1.9; text-align: center; }
+.p2-pat-line.is-up > .p2-pat-mark { color: var(--p2-up); }
+.p2-pat-line.is-down > .p2-pat-mark { color: var(--p2-down); }
+.p2-pat-line.is-new > .p2-pat-mark { color: var(--p2-gold-2); }
+.p2-pat-line.is-fix > .p2-pat-mark { color: #6f8196; }
+.p2-pat-line.is-fix > .p2-pat-text { color: #9a9a9a; }
+.p2-pat-text { color: var(--p2-text); overflow-wrap: anywhere; }
+.p2-pat-name { text-decoration: none; white-space: nowrap; border-bottom: 1px dotted currentColor; }
+.p2-pat-name img { width: 20px; height: 20px; object-fit: contain; vertical-align: -4px; margin-right: 3px; }
+.p2-pat-name:hover { filter: brightness(1.25); }
+
+.p2-pat-hf { padding: 0 18px; border-top: 1px solid #16130f; }
+.p2-pat-hf:first-of-type { border-top: 0; }
+.p2-pat-hf summary { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; cursor: pointer; color: var(--p2-sand-lt); font-size: 16px; }
+.p2-pat-hf summary:hover { color: var(--p2-gold-1); }
+.p2-pat-hf .p2-pat-lines { padding: 0 0 12px; }
+.p2-pat-hf .p2-pat-warn { padding: 0 0 6px; }
+
+/* La hemeroteca: el estandarte de liga del juego con su emblema, y las ediciones debajo. */
+.p2-pat-archive-h { margin: 0 0 10px; font: 400 20px var(--p2-title); color: var(--p2-sand-lt); letter-spacing: .04em; text-align: center; }
+.p2-pat-series { margin-bottom: 22px; }
+.p2-pat-standard {
+  position: relative; margin: 0 auto; width: 220px; aspect-ratio: 372 / 324;
+  background: url(/poe2/ui/league-banner.webp) center top / 100% auto no-repeat;
+  display: flex; flex-direction: column; align-items: center; padding-top: 18px;
+}
+.p2-pat-standard img { width: 92px; height: 92px; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .8)); }
+.p2-pat-standard-v { font: 400 26px/1 var(--p2-title); color: var(--p2-gold-1); text-shadow: 0 2px 4px #000; margin-top: 2px; }
+.p2-pat-standard-n { font-size: 13px; color: #e8d6b8; text-shadow: 0 1px 3px #000; text-align: center; padding: 0 30px; line-height: 1.2; margin-top: 3px; }
+.p2-pat-eds { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 1px; background: var(--p2-line); box-shadow: 0 0 0 1px var(--p2-line); }
+.p2-pat-edlink {
+  display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 10px;
+  padding: 8px 12px; text-decoration: none; background: #0d0c0a; color: var(--p2-text);
+}
+.p2-pat-edlink:hover { background: #15120e; }
+.p2-pat-edlink.is-on { background: rgba(201, 171, 102, .12); }
+.p2-pat-edv { font: 400 18px var(--p2-title); color: var(--p2-sand-lt); }
+.p2-pat-edlink.is-content .p2-pat-edv { color: var(--p2-gold-1); }
+.p2-pat-edd { color: var(--p2-text-dim); font-size: 13px; align-self: center; justify-self: end; }
+.p2-pat-edc { grid-column: 1 / -1; display: flex; gap: 10px; font-size: 12px; }
+.p2-pat-edc i { font-style: normal; }
+.p2-pat-edc .is-up { color: var(--p2-up); }
+.p2-pat-edc .is-down { color: var(--p2-down); }
+.p2-pat-edc .is-new { color: var(--p2-gold-2); }
+
+@media (max-width: 1000px) {
+  .p2-enc-cols, .p2-pat-cols { grid-template-columns: minmax(0, 1fr); }
+  .p2-enc-home { grid-template-columns: 1fr; }
+  .p2-pat-archive { order: 2; }
+}
+@media (max-width: 760px) {
+  .p2-enc-search { width: 100%; margin-left: 0; }
+  .p2-enc-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); padding: 10px; }
+  .p2-enc-art { height: 92px; }
+  .p2-enc-art img { max-height: 86px; }
+  .p2-enc-mosaic, .p2-enc-mosaic.is-gems { grid-template-columns: repeat(6, 1fr); }
+  .p2-pat-seals { grid-template-columns: repeat(3, 1fr); }
+  .p2-pat-hero { aspect-ratio: auto; min-height: 190px; }
+  .p2-pat-hero-in { max-width: 100%; padding: 0 20px; background: linear-gradient(90deg, rgba(7, 6, 10, .85), rgba(7, 6, 10, .4)); }
+  .p2-pat-lines { padding: 10px 12px 12px; }
+}
+
+/* La etiqueta de una variante de la habilidad, como en el tooltip del juego. */
+.p2-tt-set { color: var(--p2-gem); font-size: 14px; margin: 2px 0 1px; }

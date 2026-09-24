@@ -19,9 +19,14 @@ import "./styles/views.css";
 import "./styles/deadlock.css";
 import "./styles/deadlock-heroes.css";
 import "./styles/deadlock-builder.css";
+// El material del juego (papel, tiza, arte de héroes) sobre las hojas de Deadlock, 2026-09-23.
+import "./styles/deadlock-game.css";
 import "./styles/scrollbar.css";
 // Vestigo News (2026-09-17): la única página con paleta y fuentes propias, todo bajo `.vn`.
 import "./styles/news.css";
+// Path of Exile 2 (2026-09-23): la letra y los adornos del juego, todo bajo `.p2`.
+import "./styles/poe2.css";
+import "./styles/poe2-codex.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

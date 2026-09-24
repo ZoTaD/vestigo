@@ -30,7 +30,7 @@
   # actualiza todos los días habría quedado en verde con el sitio sirviendo la
   # tier list del día que se publicó — el mismo fallo que costó descubrir arriba,
   # repetido para el segundo juego.
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/games/tft/ui :/games/tft/data :/games/deadlock/data :/netlify.toml"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/games/tft/ui :/games/tft/data :/games/deadlock/data :/games/poe2/data :/netlify.toml"
 
 [build.environment]
   # Pinned so a Netlify default upgrade never changes the build under us.
