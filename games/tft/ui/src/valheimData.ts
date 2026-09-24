@@ -107,6 +107,10 @@ export interface PieceRow {
   processes?: { from: Ref; to: Ref; time: number | null; yield: number | null }[] | null;
   /** Lo que se fabrica o se construye con esta estación, por nivel. */
   crafts?: (Ref & { level: number })[] | null;
+  /** Las piezas que la suben de nivel puestas cerca, en orden: la i-ésima deja la estación en `level`. */
+  upgrades?: (Ref & { level: number; req: Req[]; station: Ref | null; tier: BiomeId | null })[] | null;
+  /** Si es una mejora: la estación que sube de nivel. */
+  extends?: Ref | null;
 }
 
 export interface Drop extends Ref { min: number; max: number; chance: number }

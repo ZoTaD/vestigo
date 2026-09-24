@@ -229,6 +229,25 @@ def main() -> None:
         if st and st["slug"] and f"piece:{pid}" in ref:
             crafts[st["slug"]].append({**ref[f"piece:{pid}"], "level": 1})
 
+    # Las mejoras de cada estación (pedido de ZoTaD, 2026-09-24): las piezas que
+    # la suben de nivel puestas cerca, cada una +1. Van en el orden de sus ids
+    # (cauldron_ext1_spice, …_ext3_butchertable, …), que es el de progresión
+    # que les dieron los desarrolladores; "piece_magetable_ext" a secas es la 1.
+    def ext_order(pid):
+        m = re.search(r"ext(\d*)", pid)
+        return int(m.group(1) or 1) if m else 99
+
+    def piece_tier(p):
+        return max((t for t in (tier.get(q["item"]) for q in p["requirements"]) if t), key=BIOME_ORDER.index, default=None)
+
+    upgrades = defaultdict(list)
+    for pid, p in pieces.items():
+        st = station_ref(p.get("extends"))
+        if st and st["slug"] and f"piece:{pid}" in ref:
+            upgrades[st["slug"]].append((pid, p))
+    for slug, ups in upgrades.items():
+        ups.sort(key=lambda x: (ext_order(x[0]), x[1]["name"]["en"]))
+
     for pid, p in pieces.items():
         key = f"piece:{pid}"
         cat = (piece_categories.get(p["tool"]) or {}).get(str(p["category"]))
@@ -242,6 +261,12 @@ def main() -> None:
             "tier": max((t for t in (tier.get(q["item"]) for q in p["requirements"]) if t), key=BIOME_ORDER.index, default=None),
             "processes": processes.get(slug) or None,
             "crafts": made or None,
+            # Cada mejora con sus materiales y dónde se hace; la i-ésima deja la
+            # estación en el nivel i + 2 (la estación sola es nivel 1).
+            "upgrades": [{**ref[f"piece:{uid}"], "level": i + 2, "req": req_list(u["requirements"]),
+                          "station": station_ref(u["station"]), "tier": piece_tier(u)}
+                         for i, (uid, u) in enumerate(upgrades.get(slug, []))] or None,
+            "extends": (lambda st: {**st, "slug": st["slug"], "tab": st["tab"]} if st and st["slug"] else None)(station_ref(p.get("extends"))),
         })
 
     boss_ids = {b["id"] for b in bosses}

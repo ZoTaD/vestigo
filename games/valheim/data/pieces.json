@@ -6,6 +6,7 @@
    "en": "Some clothes are just too nice to fold away. Why not put them on display instead?",
    "es": "Algunas prendas son demasiado bonitas para guardarlas. ¿Por qué no exhibirlas?"
   },
+  "extends": null,
   "icon": "armorstand",
   "id": "ArmorStand",
   "name": {
@@ -36,6 +37,7 @@
    "en": "Neither boiled nor mashed nor in a stew. Still delicious though!",
    "es": "Ni hervido, ni triturado, ni en guiso. ¡Pero igualmente delicioso!"
   },
+  "extends": null,
   "icon": "bakedpoteitr",
   "id": "BakedPoteitr",
   "name": {
@@ -58,6 +60,7 @@
    "en": "Fortifies you against fire.",
    "es": "Te protege del fuego."
   },
+  "extends": null,
   "icon": "barleywine",
   "id": "BarleyWine",
   "name": {
@@ -80,6 +83,7 @@
    "en": "This is a force to be reckoned with. Fuel it up and bring it to your enemies' stronghold for a greater chance of success.",
    "es": "Esta es una fuerza a tener en cuenta. Cárgala y llévala a la fortaleza enemiga para aumentar tus posibilidades de éxito."
   },
+  "extends": null,
   "icon": "batteringram",
   "id": "BatteringRam",
   "name": {
@@ -110,6 +114,7 @@
    "en": "A beech yields good old fashioned wood.",
    "es": "Un haya produce madera de toda la vida."
   },
+  "extends": null,
   "icon": "sapling_beech",
   "id": "Beech_Sapling",
   "name": {
@@ -132,6 +137,7 @@
    "en": "A prime source of finewood.",
    "es": "Una fuente principal de madera noble."
   },
+  "extends": null,
   "icon": "sapling_birch",
   "id": "Birch_Sapling",
   "name": {
@@ -154,6 +160,7 @@
    "en": "A perfect balance of sweetness and acidity.",
    "es": "Un equilibrio perfecto entre dulce y ácido."
   },
+  "extends": null,
   "icon": "blacksoup",
   "id": "BlackSoup",
   "name": {
@@ -176,6 +183,7 @@
    "en": "It's bloody tasty.",
    "es": "Está de rechupete."
   },
+  "extends": null,
   "icon": "bloodpudding",
   "id": "BloodPudding",
   "name": {
@@ -198,6 +206,7 @@
    "en": "Tiny but tasty.",
    "es": "Enanos pero sabrosos."
   },
+  "extends": null,
   "icon": "blueberries",
   "id": "Blueberries",
   "name": {
@@ -220,6 +229,7 @@
    "en": "Lean and salty.",
    "es": "Magra y salada."
   },
+  "extends": null,
   "icon": "boarjerky",
   "id": "BoarJerky",
   "name": {
@@ -242,6 +252,7 @@
    "en": "A tasty loaf of bread.",
    "es": "Una hogaza de pan deliciosa."
   },
+  "extends": null,
   "icon": "bread",
   "id": "Bread",
   "name": {
@@ -264,6 +275,7 @@
    "en": "A small but incredibly cosy lightsource.",
    "es": "Una fuente de luz pequeña pero increíblemente acogedora."
   },
+  "extends": null,
   "icon": "candle_resin",
   "id": "Candle_resin",
   "name": {
@@ -290,6 +302,7 @@
    "en": "An orange treat.",
    "es": "Delicia anaranjada."
   },
+  "extends": null,
   "icon": "carrot",
   "id": "Carrot",
   "name": {
@@ -312,6 +325,7 @@
    "en": "A warm tasty soup made of mostly carrots.",
    "es": "Una sopa calentita y sabrosa hecha de zanahorias."
   },
+  "extends": null,
   "icon": "carrotsoup",
   "id": "CarrotSoup",
   "name": {
@@ -334,6 +348,7 @@
    "en": "Convenient when you need to move a lot of resources around.",
    "es": "Práctica cuando necesitas mover muchos recursos."
   },
+  "extends": null,
   "icon": "cart",
   "id": "Cart",
   "name": {
@@ -360,6 +375,7 @@
    "en": "If you can't go through it, perhaps you can go over it...",
    "es": "Si no se puede atravesar, quizá puedas pasar por encima..."
   },
+  "extends": null,
   "icon": "catapult",
   "id": "Catapult",
   "name": {
@@ -390,6 +406,7 @@
    "en": "The gold of the forest.",
    "es": "La ambrosía del bosque."
   },
+  "extends": null,
   "icon": "cloudberry",
   "id": "Cloudberry",
   "name": {
@@ -412,6 +429,7 @@
    "en": "This meat has a potent and mature flavour, but is very tasty when grilled right.",
    "es": "Esta carne tiene un sabor intenso y maduro, pero queda muy sabrosa cuando se prepara correctamente."
   },
+  "extends": null,
   "icon": "asksvin_meat_cooked",
   "id": "CookedAsksvinMeat",
   "name": {
@@ -434,6 +452,7 @@
    "en": "Tastes like victory.",
    "es": "Sabe a victoria."
   },
+  "extends": null,
   "icon": "bjorn_meat",
   "id": "CookedBjornMeat",
   "name": {
@@ -456,6 +475,7 @@
    "en": "The boiling sea did nothing to this meat, but grilling it over the fire has given it a delightful crisp.",
    "es": "El mar hirviendo no le hizo nada a esta carne, pero asarla al fuego le ha dado un delicioso toque crujiente."
   },
+  "extends": null,
   "icon": "bonemawmeatcooked",
   "id": "CookedBoneMawSerpentMeat",
   "name": {
@@ -478,6 +498,7 @@
    "en": "Succulent white meat. A true delicacy.",
    "es": "Suculenta carne blanca, un verdadero manjar."
   },
+  "extends": null,
   "icon": "bugmeat_cooked",
   "id": "CookedBugMeat",
   "name": {
@@ -500,6 +521,7 @@
    "en": "It tastes like chicken.",
    "es": "Sabe a pollo."
   },
+  "extends": null,
   "icon": "chicken_meat_cooked",
   "id": "CookedChickenMeat",
   "name": {
@@ -522,6 +544,7 @@
    "en": "All that running paid off.",
    "es": "Mereció la pena correr tanto."
   },
+  "extends": null,
   "icon": "deer_meat_cooked",
   "id": "CookedDeerMeat",
   "name": {
@@ -544,6 +567,7 @@
    "en": "Sunny side up!",
    "es": "¡Con la yema hacia arriba!"
   },
+  "extends": null,
   "icon": "egg_cooked",
   "id": "CookedEgg",
   "name": {
@@ -566,6 +590,7 @@
    "en": "Stringy but flavorful.",
    "es": "Fibrosa pero llena de sabor."
   },
+  "extends": null,
   "icon": "hare_meat_cooked",
   "id": "CookedHareMeat",
   "name": {
@@ -588,6 +613,7 @@
    "en": "A great hunk of tender meat, food fit for Valhalla!",
    "es": "Un trozo enorme de carne tierna. ¡Es comida digna del Valhalla!"
   },
+  "extends": null,
   "icon": "loxmeat_cooked",
   "id": "CookedLoxMeat",
   "name": {
@@ -610,6 +636,7 @@
    "en": "An earthly taste.",
    "es": "Un sabor muy terrenal."
   },
+  "extends": null,
   "icon": "meat_cooked",
   "id": "CookedMeat",
   "name": {
@@ -632,6 +659,7 @@
    "en": "This meat is lean yet full of flavour.",
    "es": "Esta carne es magra pero llena de sabor."
   },
+  "extends": null,
   "icon": "moose_meat_cooked",
   "id": "CookedMooseMeat",
   "name": {
@@ -654,6 +682,7 @@
    "en": "A chewy meat, with an aftertaste of remorse.",
    "es": "Una carne correosa, con un regusto a remordimiento."
   },
+  "extends": null,
   "icon": "sealblubbercooked",
   "id": "CookedSealBlubber",
   "name": {
@@ -676,6 +705,7 @@
    "en": "A chewy and somewhat dry meat. Some seasoning would probably make it taste better, but it'll fill your stomach regardless.",
    "es": "Una carne correosa y algo seca. Un poco de condimento probablemente le dará mejor sabor, pero de todos modos te llenará el estómago."
   },
+  "extends": null,
   "icon": "volture_meat_cooked",
   "id": "CookedVoltureMeat",
   "name": {
@@ -698,6 +728,7 @@
    "en": "A wild taste.",
    "es": "Un sabor salvaje."
   },
+  "extends": null,
   "icon": "wolf_meat_cooked",
   "id": "CookedWolfMeat",
   "name": {
@@ -720,6 +751,7 @@
    "en": "Fall-apart tender.",
    "es": "Se deshace en la boca."
   },
+  "extends": null,
   "icon": "deerstew",
   "id": "DeerStew",
   "name": {
@@ -742,6 +774,7 @@
    "en": "Crispy cool and creamy.",
    "es": "Fresco y cremoso."
   },
+  "extends": null,
   "icon": "eyescream",
   "id": "Eyescream",
   "name": {
@@ -764,6 +797,7 @@
    "en": "It's hard to tell whether the steam coming off of this dish is because it's freshly cooked or because of the asksvin meat in it. Either way, the spiced meat together with the vineberries and fiddlehead sprouts is so delicious that it doesn't matter!",
    "es": "Es difícil decir si el vapor que sale de este plato se debe a que está recién cocinado o a la carne de serpiente que contiene. Sea como fuere, la carne especiada junto con las parrabayas y los brotes de helecho es tan deliciosa que no importa."
   },
+  "extends": null,
   "icon": "feastashlands",
   "id": "FeastAshlands",
   "name": {
@@ -786,6 +820,7 @@
    "en": "You won't be able to resist this platter of delights from the Black Forest! Venison sirloin steaks are served together with spiced thistles and carrots, and the whole meal is tied together with delicious jams. Just have one more bite!",
    "es": "¡No podrás resistirte a esta fuente de delicias de la Selva Negra! Los filetes de solomillo de venado se sirven junto con cardos y zanahorias especiados, y toda la comida se adereza con deliciosas mermeladas. ¡Venga, solo un mordisco más!"
   },
+  "extends": null,
   "icon": "feastblackforest",
   "id": "FeastBlackforest",
   "name": {
@@ -808,6 +843,7 @@
    "en": "Warming and filling, this meal will sustain you even during the coldest of days. Porridge and pancakes pair well with jams and sausages, making it hard not to come back for a second helping!",
    "es": "Reconfortante y saciante, esta comida te dará energía incluso en los días más fríos. Las gachas y las tortitas combinan bien con mermeladas y salchichas, haciendo difícil no repetir."
   },
+  "extends": null,
   "icon": "feastdeepnorth",
   "id": "FeastDeepNorth",
   "name": {
@@ -830,6 +866,7 @@
    "en": "A boar that has been roasted to perfection, glazed and served atop a bed of greens, with additional cuts of meat on the side. A feast like this is sure to fill your stomach and brighten your day!",
    "es": "Un jabalí asado a la perfección, glaseado con miel dulce y servido sobre una cama de champiñones y frambuesas, con costillas y colas de ciervo como acompañamiento. ¡Un festín como este seguro que te llenará la panza y te alegrará el día!"
   },
+  "extends": null,
   "icon": "feastmeadows",
   "id": "FeastMeadows",
   "name": {
@@ -852,6 +889,7 @@
    "en": "The time has come for mushroom enthusiasts to rejoice! Try different kinds of mushrooms, mushroom marinated seeker meat and mushroom-filled misthare, and don't miss out on the tasty sap dressing.",
    "es": "¡Ha llegado el momento de que los amantes de las setas se alegren! Prueba diferentes tipos de setas, carne de serpiente marinada con setas y liebre neblinosa rellena de setas, y no te pierdas el sabroso aderezo de savia."
   },
+  "extends": null,
   "icon": "feastmistlands",
   "id": "FeastMistlands",
   "name": {
@@ -874,6 +912,7 @@
    "en": "Gather around this steaming pot full of deliciousness and warm yourselves up again after a day out in the cold. The usually tough and chewey wolf meat has become tender enough to practically melt in your mouth, and the onions and carrots are made even tastier with exciting spices.",
    "es": "Reuníos en torno a esta olla humeante llena de delicias y entrad en calor después de un día de frío. La carne de lobo, normalmente dura y correosa, se ha vuelto tan tierna que prácticamente se derrite en la boca, y las cebollas y las zanahorias son aún más sabrosas con especias interesantes."
   },
+  "extends": null,
   "icon": "feastmountains",
   "id": "FeastMountains",
   "name": {
@@ -896,6 +935,7 @@
    "en": "Fish, fish, and more fish! And also serpent meat, cut to look like fish! Explore the flavours of the Ocean, along with some grilled greens for those still practicing their sea legs.",
    "es": "¡Pescado, pescado y más pescado! ¡Y también carne de serpiente, cortada para que parezca pescado! Explora los sabores del océano, junto con algunas verduras de raíz a la parrilla para aquellos que aún están intentando acostumbrarse al mar."
   },
+  "extends": null,
   "icon": "feastocean",
   "id": "FeastOceans",
   "name": {
@@ -918,6 +958,7 @@
    "en": "There's nothing plain about this feast! Enjoy pies and loaves fresh from the oven, both sweet and savoury, and experience the culinary equivalent of a hug.",
    "es": "¡No hay nada banal en este banquete! Disfruta de pasteles y panes recién salidos del horno, tanto dulces como salados, y experimenta el equivalente culinario de un abrazo."
   },
+  "extends": null,
   "icon": "feastplains",
   "id": "FeastPlains",
   "name": {
@@ -940,6 +981,7 @@
    "en": "Who knew that leeches were edible? With the correct preparation (lots of cooking and lots of seasoning) you will be able to serve them in this feast for the culinary brave. For those who have a sensitive stomach, there are also tasty skewers of sausages and turnips on the side.",
    "es": "¿Quién hubiera pensado que las sanguijuelas eran comestibles? Con la preparación adecuada (mucha cocción y muchos condimentos) podrás servirlas en este festín para los más valientes. Para los de estómago delicado, también hay sabrosas brochetas de salchichas y nabos como acompañamiento."
   },
+  "extends": null,
   "icon": "feastswamps",
   "id": "FeastSwamps",
   "name": {
@@ -962,6 +1004,7 @@
    "en": "Veggies with a twist!",
    "es": "¡Verduras con un giro inesperado!"
   },
+  "extends": null,
   "icon": "fiddlehead",
   "id": "Fiddleheadfern",
   "name": {
@@ -984,6 +1027,7 @@
    "en": "This musty stew is a necessity on every adventurer's menu.",
    "es": "Este guiso mohoso es imprescindible en el menú de todo aventurero."
   },
+  "extends": null,
   "icon": "fierysvinstew",
   "id": "FierySvinstew",
   "name": {
@@ -1006,6 +1050,7 @@
    "en": "A pretty tree, all year round.",
    "es": "Un árbol bonito durante todo el año."
   },
+  "extends": null,
   "icon": "sapling_fir",
   "id": "FirTree_Sapling",
   "name": {
@@ -1028,6 +1073,7 @@
    "en": "Though native to the northern regions, this tree can grow in most climates.",
    "es": "Aunque es originario de regiones del norte, este árbol puede crecer en la mayoría de climas."
   },
+  "extends": null,
   "icon": "sapling_fir_big",
   "id": "FirTree_big_Sapling",
   "name": {
@@ -1050,6 +1096,7 @@
    "en": "Bounty from both land and sea.",
    "es": "Un tesoro tanto de tierra como de mar."
   },
+  "extends": null,
   "icon": "fishandbread",
   "id": "FishAndBread",
   "name": {
@@ -1072,6 +1119,7 @@
    "en": "A tasty side of smoked fish.",
    "es": "Una ración deliciosa de pescado ahumado."
   },
+  "extends": null,
   "icon": "fish_cooked",
   "id": "FishCooked",
   "name": {
@@ -1094,6 +1142,7 @@
    "en": "Swimming with flavour!",
    "es": "¡Llena de sabor!"
   },
+  "extends": null,
   "icon": "fishsoup",
   "id": "FishSoup",
   "name": {
@@ -1116,6 +1165,7 @@
    "en": "Bread and fish, what more to wish?",
    "es": "Pan y pescado; no comerlo sería un pecado."
   },
+  "extends": null,
   "icon": "fishwraps",
   "id": "FishWraps",
   "name": {
@@ -1138,6 +1188,7 @@
    "en": "Sweet and tasty.",
    "es": "Dulce y deliciosa."
   },
+  "extends": null,
   "icon": "honey",
   "id": "Honey",
   "name": {
@@ -1160,6 +1211,7 @@
    "en": "Grilled to perfection. Makes both eyes and mouths water.",
    "es": "Asado a la perfección. Hace agua tanto a la boca como a los ojos."
   },
+  "extends": null,
   "icon": "honeyglazedchicken",
   "id": "HoneyGlazedChicken",
   "name": {
@@ -1182,6 +1234,7 @@
    "en": "A versatile leafy green.",
    "es": "Una verdura de hoja verde muy versátil."
   },
+  "extends": null,
   "icon": "kale",
   "id": "Kale",
   "name": {
@@ -1204,6 +1257,7 @@
    "en": "Crispy greens!",
    "es": "¡Verduritas crujientes!"
   },
+  "extends": null,
   "icon": "kalechips",
   "id": "KaleChips",
   "name": {
@@ -1226,6 +1280,7 @@
    "en": "A small and sleek ship, ready to set sail.",
    "es": "Un barco pequeño y elegante, listo para zarpar."
   },
+  "extends": null,
   "icon": "karve",
   "id": "Karve",
   "name": {
@@ -1257,6 +1312,7 @@
   "category": 6,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "lingonberry",
   "id": "Lingonberry",
   "name": {
@@ -1279,6 +1335,7 @@
    "en": "Pairs well with most foods.",
    "es": "Combina bien con la mayoría de comidas."
   },
+  "extends": null,
   "icon": "lingondricka",
   "id": "Lingondricka",
   "name": {
@@ -1301,6 +1358,7 @@
    "en": "Break the crust to release a cloud of fragrant steam. Delicious!",
    "es": "Rompe la corteza y verás cómo sale un vaporcillo aromático. ¡Está de muerte!"
   },
+  "extends": null,
   "icon": "loxpie",
   "id": "LoxPie",
   "name": {
@@ -1323,6 +1381,7 @@
    "en": "Bursting with magical flavour.",
    "es": "A rebosar con sabor mágico."
   },
+  "extends": null,
   "icon": "stuffedmagicshroom",
   "id": "MagicallyStuffedShroom",
   "name": {
@@ -1345,6 +1404,7 @@
    "en": "It's spicy, it's chewy, it's sweet… This mad dish tickles your tongue as well as your mind.",
    "es": "Es picante, correoso, dulce... Este plato disparatado hace cosquillas tanto en la lengua como en la mente."
   },
+  "extends": null,
   "icon": "marinatedgreens",
   "id": "MarinatedGreens",
   "name": {
@@ -1367,6 +1427,7 @@
    "en": "Leftover meat can actually be pretty tasty if you just mash it right!",
    "es": "¡Las sobras de carne puede ser muy sabrosa si las machacas bien!"
   },
+  "extends": null,
   "icon": "mashedmeat",
   "id": "MashedMeat",
   "name": {
@@ -1389,6 +1450,7 @@
    "en": "The perfect drink for a day in the Plains.",
    "es": "La bebida perfecta para un día en las llanuras."
   },
+  "extends": null,
   "icon": "potion_bugrepellent",
   "id": "MeadBugRepellent",
   "name": {
@@ -1411,6 +1473,7 @@
    "en": "Something poisonous stirs within, brewed to the point where its potential can finally be harnessed. But be careful to let the beast out...",
    "es": "Algo venenoso se agita en su interior, fermentado hasta el punto en que su potencial finalmente puede ser aprovechado. Pero cuidado de no liberar a la bestia..."
   },
+  "extends": null,
   "icon": "potion_bzerker",
   "id": "MeadBzerker",
   "name": {
@@ -1433,6 +1496,7 @@
    "en": "Increases eitr regeneration.",
    "es": "Aumenta la regeneración de Eitr."
   },
+  "extends": null,
   "icon": "potion_eitr_lingering",
   "id": "MeadEitrLingering",
   "name": {
@@ -1455,6 +1519,7 @@
    "en": "Restores eitr.",
    "es": "Restaura Eitr."
   },
+  "extends": null,
   "icon": "potion_eitr_minor",
   "id": "MeadEitrMinor",
   "name": {
@@ -1477,6 +1542,7 @@
    "en": "Protects against the cold.",
    "es": "Te protege del frío."
   },
+  "extends": null,
   "icon": "potion_frostresist",
   "id": "MeadFrostResist",
   "name": {
@@ -1499,6 +1565,7 @@
    "en": "The squirrel must be quick on its feet as it runs up and down the trunk of the world tree. Although it no longer visits Valheim, there are still those who remember it...",
    "es": "La ardilla debe ser rápida al recorrer el tronco del árbol del mundo. Aunque ya no visita Valheim, todavía hay quienes la recuerdan..."
   },
+  "extends": null,
   "icon": "potion_hasty",
   "id": "MeadHasty",
   "name": {
@@ -1521,6 +1588,7 @@
    "en": "Increases health regeneration.",
    "es": "Aumenta la regeneración de salud."
   },
+  "extends": null,
   "icon": "potion_health_lingering",
   "id": "MeadHealthLingering",
   "name": {
@@ -1543,6 +1611,7 @@
    "en": "Restores health.",
    "es": "Recupera salud."
   },
+  "extends": null,
   "icon": "potion_health_major",
   "id": "MeadHealthMajor",
   "name": {
@@ -1565,6 +1634,7 @@
    "en": "Restores health.",
    "es": "Recupera salud."
   },
+  "extends": null,
   "icon": "potion_health_medium",
   "id": "MeadHealthMedium",
   "name": {
@@ -1587,6 +1657,7 @@
    "en": "Restores health.",
    "es": "Recupera salud."
   },
+  "extends": null,
   "icon": "potion_health_minor",
   "id": "MeadHealthMinor",
   "name": {
@@ -1609,6 +1680,7 @@
    "en": "This bottle is full, yet it feels like it weighs almost nothing at all.",
    "es": "Esta botella está llena, pero parece que no pesa casi nada."
   },
+  "extends": null,
   "icon": "potion_lightfoot",
   "id": "MeadLightfoot",
   "name": {
@@ -1631,6 +1703,7 @@
    "en": "Fortifies you against poison.",
    "es": "Te protege del veneno."
   },
+  "extends": null,
   "icon": "potion_poisonresist",
   "id": "MeadPoisonResist",
   "name": {
@@ -1653,6 +1726,7 @@
    "en": "Increases stamina regeneration.",
    "es": "Incrementa la regeneración de vigor."
   },
+  "extends": null,
   "icon": "potion_stamina_lingering",
   "id": "MeadStaminaLingering",
   "name": {
@@ -1675,6 +1749,7 @@
    "en": "Restores stamina.",
    "es": "Recupera vigor."
   },
+  "extends": null,
   "icon": "potion_stamina_medium",
   "id": "MeadStaminaMedium",
   "name": {
@@ -1697,6 +1772,7 @@
    "en": "Restores stamina.",
    "es": "Recupera vigor."
   },
+  "extends": null,
   "icon": "potion_stamina_minor",
   "id": "MeadStaminaMinor",
   "name": {
@@ -1719,6 +1795,7 @@
    "en": "What creature can carry more than a troll? Why, a viking with this drink of course!",
    "es": "¿Qué criatura es más fuerte que un trol? ¡Un vikingo con esta bebida, por supuesto!"
   },
+  "extends": null,
   "icon": "potion_strength",
   "id": "MeadStrength",
   "name": {
@@ -1741,6 +1818,7 @@
    "en": "You feel invigorated just by holding this, as the ocean beckons you to come for a swim.",
    "es": "Te sientes vigorizado con solo sostenerlo, mientras el océano te invita a nadar."
   },
+  "extends": null,
   "icon": "potion_swimmer",
   "id": "MeadSwimmer",
   "name": {
@@ -1763,6 +1841,7 @@
    "en": "It smells like a pigsty. Likely the taste won't be much better.",
    "es": "Huele a pocilga. Probablemente el sabor no sea mucho mejor."
   },
+  "extends": null,
   "icon": "potion_tamer",
   "id": "MeadTamer",
   "name": {
@@ -1785,6 +1864,7 @@
    "en": "The nectar of the Gods, divine mead.",
    "es": "El néctar de los dioses; una hidromiel divina."
   },
+  "extends": null,
   "icon": "potion_tasty",
   "id": "MeadTasty",
   "name": {
@@ -1807,6 +1887,7 @@
    "en": "An intense musk permeates the air around this bottle.",
    "es": "El intenso almizcle de una cueva de trol impregna el aire alrededor de esta botella."
   },
+  "extends": null,
   "icon": "potion_pheromones",
   "id": "MeadTrollPheromones",
   "name": {
@@ -1829,6 +1910,7 @@
    "en": "Battle fuel.",
    "es": "Combustible para la batalla."
   },
+  "extends": null,
   "icon": "meatplatter",
   "id": "MeatPlatter",
   "name": {
@@ -1851,6 +1933,7 @@
    "en": "It doesn't get more iconic than this!",
    "es": "¡No hay nada más típico que esto!"
   },
+  "extends": null,
   "icon": "meatballsmashedpoteitr",
   "id": "MeatballsMashedPoteitr",
   "name": {
@@ -1873,6 +1956,7 @@
    "en": "Chunks of goodness in a thick gravy.",
    "es": "Un aderezo espeso y arrebatador."
   },
+  "extends": null,
   "icon": "mincemeatsauce",
   "id": "MinceMeatSauce",
   "name": {
@@ -1895,6 +1979,7 @@
    "en": "One of life's Great Pleasures.",
    "es": "Uno de los mayores placeres de la vida."
   },
+  "extends": null,
   "icon": "mistharesupreme",
   "id": "MisthareSupreme",
   "name": {
@@ -1917,6 +2002,7 @@
    "en": "A convenient meal, often favoured by travelling merchants.",
    "es": "Una comida práctica, a menudo preferida por comerciantes viajeros."
   },
+  "extends": null,
   "icon": "moosekebab",
   "id": "MooseKebab",
   "name": {
@@ -1939,6 +2025,7 @@
    "en": "Bounty of the forest.",
    "es": "El botín del bosque."
   },
+  "extends": null,
   "icon": "mushroom",
   "id": "Mushroom",
   "name": {
@@ -1961,6 +2048,7 @@
    "en": "Some say you can eat everything you find in the forest. That is not the case with this mushroom.",
    "es": "Algunos dicen que todo es comestible en el bosque. No es el caso de esta seta."
   },
+  "extends": null,
   "icon": "mushroombzerker",
   "id": "MushroomBzerker",
   "name": {
@@ -1983,6 +2071,7 @@
    "en": "An invigorating mushroom that can be used for cooking.",
    "es": "Un hongo vigorizante que puede usarse para cocinar."
   },
+  "extends": null,
   "icon": "mushroomjotunpuffs",
   "id": "MushroomJotunPuffs",
   "name": {
@@ -2005,6 +2094,7 @@
    "en": "A mushroom commonly used in a sorcerer's diet.",
    "es": "Un hongo común en la dieta de los hechiceros."
   },
+  "extends": null,
   "icon": "mushroommagecap",
   "id": "MushroomMagecap",
   "name": {
@@ -2027,6 +2117,7 @@
    "en": "A delicious omelette with an earthy aftertaste.",
    "es": "Una deliciosa tortilla con un regusto tosco."
   },
+  "extends": null,
   "icon": "mushroomomelette",
   "id": "MushroomOmelette",
   "name": {
@@ -2049,6 +2140,7 @@
    "en": "Hopefully it tastes better after cooking.",
    "es": "Esperemos que sepa mejor después de cocinarlo."
   },
+  "extends": null,
   "icon": "mushroomsmokepuff",
   "id": "MushroomSmokePuff",
   "name": {
@@ -2071,6 +2163,7 @@
    "en": "An energetic glowing mushroom.",
    "es": "Una seta energética y brillante."
   },
+  "extends": null,
   "icon": "mushroomyellow",
   "id": "MushroomYellow",
   "name": {
@@ -2093,6 +2186,7 @@
    "en": "This savoury, charcoal-grilled meat has a slight aroma of seaweed and grass.",
    "es": "Esta carne a la brasa tan sabrosa tiene un ligero aroma a algas y césped."
   },
+  "extends": null,
   "icon": "necktailgrilled",
   "id": "NeckTailGrilled",
   "name": {
@@ -2115,6 +2209,7 @@
    "en": "With time, this will grow into a large oak.",
    "es": "Con el tiempo, crecerá hasta convertirse en un gran roble."
   },
+  "extends": null,
   "icon": "sapling_oak",
   "id": "Oak_Sapling",
   "name": {
@@ -2137,6 +2232,7 @@
    "en": "Tasty grains, to be used as they are or to be ground into flour.",
    "es": "Granos sabrosos, que pueden usarse tal cual o molerse para hacer harina."
   },
+  "extends": null,
   "icon": "oats",
   "id": "Oat",
   "name": {
@@ -2159,6 +2255,7 @@
    "en": "Tastes like innovation.",
    "es": "Sabe a innovación."
   },
+  "extends": null,
   "icon": "oatmilk",
   "id": "OatMilk",
   "name": {
@@ -2181,6 +2278,7 @@
    "en": "Served with a generous helping of lingonberry jam.",
    "es": "Servidas con una generosa porción de mermelada de arándanos rojos."
   },
+  "extends": null,
   "icon": "oatmeallingonberryjam",
   "id": "OatmealLingonberryJam",
   "name": {
@@ -2203,6 +2301,7 @@
    "en": "A crunchy and spicy taste.",
    "es": "Un sabor crujiente y picante."
   },
+  "extends": null,
   "icon": "onion",
   "id": "Onion",
   "name": {
@@ -2225,6 +2324,7 @@
    "en": "Deliciously rich.",
    "es": "Un deleite para los sentidos."
   },
+  "extends": null,
   "icon": "onionsoup",
   "id": "OnionSoup",
   "name": {
@@ -2247,6 +2347,7 @@
    "en": "Warm and fluffy.",
    "es": "Cálida y esponjosa."
   },
+  "extends": null,
   "icon": "ovenpancake",
   "id": "OvenPancake",
   "name": {
@@ -2269,6 +2370,7 @@
    "en": "Was there ever a more comforting food?",
    "es": "¿Ha habido alguna vez una comida más reconfortante?"
   },
+  "extends": null,
   "icon": "pancakes",
   "id": "Pancakes",
   "name": {
@@ -2291,6 +2393,7 @@
    "en": "Pure flamin' metal.",
    "es": "Metal puro en llamas."
   },
+  "extends": null,
   "icon": "flametal_beam",
   "id": "Piece_flametal_beam",
   "name": {
@@ -2313,6 +2416,7 @@
    "en": "Pure flamin' metal.",
    "es": "Metal puro en llamas."
   },
+  "extends": null,
   "icon": "flametal_pillar",
   "id": "Piece_flametal_pillar",
   "name": {
@@ -2335,6 +2439,7 @@
    "en": "These thin floor tiles are deceptively sturdy.",
    "es": "Estas finas baldosas de suelo son engañosamente resistentes."
   },
+  "extends": null,
   "icon": "grausten_floor_1x1",
   "id": "Piece_grausten_floor_1x1",
   "name": {
@@ -2357,6 +2462,7 @@
    "en": "These thin floor tiles are deceptively sturdy.",
    "es": "Estas finas baldosas de suelo son engañosamente resistentes."
   },
+  "extends": null,
   "icon": "grausten_floor_2x2",
   "id": "Piece_grausten_floor_2x2",
   "name": {
@@ -2379,6 +2485,7 @@
    "en": "These thin floor tiles are deceptively sturdy.",
    "es": "Estas finas baldosas de suelo son engañosamente resistentes."
   },
+  "extends": null,
   "icon": "grausten_floor_4x4",
   "id": "Piece_grausten_floor_4x4",
   "name": {
@@ -2401,6 +2508,7 @@
    "en": "Strong enough to withstand a land of fire.",
    "es": "Lo bastante fuertes como para resistir una tierra de fuego."
   },
+  "extends": null,
   "icon": "grausten_arch_medium",
   "id": "Piece_grausten_pillar_arch",
   "name": {
@@ -2423,6 +2531,7 @@
    "en": "Strong enough to withstand a land of fire.",
    "es": "Lo bastante fuertes como para resistir una tierra de fuego."
   },
+  "extends": null,
   "icon": "grausten_arch_small",
   "id": "Piece_grausten_pillar_arch_small",
   "name": {
@@ -2445,6 +2554,7 @@
    "en": "Strong enough to withstand a land of fire.",
    "es": "Lo bastante fuertes como para resistir una tierra de fuego."
   },
+  "extends": null,
   "icon": "grausten_pillar_medium",
   "id": "Piece_grausten_pillarbase_medium",
   "name": {
@@ -2467,6 +2577,7 @@
    "en": "Strong enough to withstand a land of fire.",
    "es": "Lo bastante fuertes como para resistir una tierra de fuego."
   },
+  "extends": null,
   "icon": "grausten_pillar_small",
   "id": "Piece_grausten_pillarbase_small",
   "name": {
@@ -2489,6 +2600,7 @@
    "en": "Strong enough to withstand a land of fire.",
    "es": "Lo bastante fuertes como para resistir una tierra de fuego."
   },
+  "extends": null,
   "icon": "grausten_pillar_tapered",
   "id": "Piece_grausten_pillarbase_tapered",
   "name": {
@@ -2511,6 +2623,7 @@
    "en": "Strong enough to withstand a land of fire.",
    "es": "Lo bastante fuertes como para resistir una tierra de fuego."
   },
+  "extends": null,
   "icon": "grausten_pillar_tapered_inv",
   "id": "Piece_grausten_pillarbase_tapered_inverted",
   "name": {
@@ -2533,6 +2646,7 @@
    "en": "Strong enough to withstand a land of fire.",
    "es": "Lo bastante fuertes como para resistir una tierra de fuego."
   },
+  "extends": null,
   "icon": "grausten_beam_medium",
   "id": "Piece_grausten_pillarbeam_medium",
   "name": {
@@ -2555,6 +2669,7 @@
    "en": "Strong enough to withstand a land of fire.",
    "es": "Lo bastante fuertes como para resistir una tierra de fuego."
   },
+  "extends": null,
   "icon": "grausten_beam_small",
   "id": "Piece_grausten_pillarbeam_small",
   "name": {
@@ -2577,6 +2692,7 @@
    "en": "Good for getting to higher levels.",
    "es": "Va bien para acceder a niveles superiores."
   },
+  "extends": null,
   "icon": "grausten_ladder",
   "id": "Piece_grausten_stone_ladder",
   "name": {
@@ -2599,6 +2715,7 @@
    "en": "Stone walls inspired by a long-gone civilisation.",
    "es": "Muros de piedra inspirados en una civilización ya desaparecida."
   },
+  "extends": null,
   "icon": "grausten_wall_1x2",
   "id": "Piece_grausten_wall_1x2",
   "name": {
@@ -2621,6 +2738,7 @@
    "en": "Stone walls inspired by a long-gone civilisation.",
    "es": "Muros de piedra inspirados en una civilización ya desaparecida."
   },
+  "extends": null,
   "icon": "grausten_wall_2x2",
   "id": "Piece_grausten_wall_2x2",
   "name": {
@@ -2643,6 +2761,7 @@
    "en": "Stone walls inspired by a long-gone civilisation.",
    "es": "Muros de piedra inspirados en una civilización ya desaparecida."
   },
+  "extends": null,
   "icon": "grausten_wall_4x2",
   "id": "Piece_grausten_wall_4x2",
   "name": {
@@ -2665,6 +2784,7 @@
    "en": "Stone walls inspired by a long-gone civilisation.",
    "es": "Muros de piedra inspirados en una civilización ya desaparecida."
   },
+  "extends": null,
   "icon": "grausten_wall_arch",
   "id": "Piece_grausten_wall_arch",
   "name": {
@@ -2687,6 +2807,7 @@
    "en": "Stone walls inspired by a long-gone civilisation.",
    "es": "Muros de piedra inspirados en una civilización ya desaparecida."
   },
+  "extends": null,
   "icon": "grausten_wall_arch_inv",
   "id": "Piece_grausten_wall_arch_inverted",
   "name": {
@@ -2709,6 +2830,7 @@
    "en": "Stone walls inspired by a long-gone civilisation.",
    "es": "Muros de piedra inspirados en una civilización ya desaparecida."
   },
+  "extends": null,
   "icon": "grausten_window_2x2",
   "id": "Piece_grausten_window_2x2",
   "name": {
@@ -2731,6 +2853,7 @@
    "en": "Stone walls inspired by a long-gone civilisation.",
    "es": "Muros de piedra inspirados en una civilización ya desaparecida."
   },
+  "extends": null,
   "icon": "grausten_window_4x2",
   "id": "Piece_grausten_window_4x2",
   "name": {
@@ -2753,6 +2876,7 @@
    "en": "These tall trees can be chopped down for corewood.",
    "es": "Estos árboles altos pueden talarse para obtener madera de núcleo."
   },
+  "extends": null,
   "icon": "sapling_pine",
   "id": "PineTree_Sapling",
   "name": {
@@ -2775,6 +2899,7 @@
    "en": "It takes some time and effort to make this pie, but the taste is well worth it.",
    "es": "Se necesita algo de tiempo y esfuerzo para preparar este pastel, pero el sabor vale la pena."
   },
+  "extends": null,
   "icon": "piquantpie",
   "id": "PiquantPie",
   "name": {
@@ -2797,6 +2922,7 @@
    "en": "It's just a rock...",
    "es": "Es solo una roca..."
   },
+  "extends": null,
   "icon": "stonerock",
   "id": "Placeable_HardRock",
   "name": {
@@ -2823,6 +2949,7 @@
    "en": "It's a rock.",
    "es": "Es una roca."
   },
+  "extends": null,
   "icon": "stone",
   "id": "Placeable_Stone",
   "name": {
@@ -2845,6 +2972,7 @@
    "en": "The possibilities are practically endless. Who wouldn't want a taste?",
    "es": "Las posibilidades son prácticamente infinitas. ¿Quién no querría probarlo?"
   },
+  "extends": null,
   "icon": "poteitr",
   "id": "Poteitr",
   "name": {
@@ -2867,6 +2995,7 @@
    "en": "Allows the consumer to quickly evacuate any misplaced meal and start anew.",
    "es": "Permite a quien los consume evacuar rápidamente cualquier comida y empezar de nuevo."
   },
+  "extends": null,
   "icon": "pukeberries",
   "id": "Pukeberries",
   "name": {
@@ -2889,6 +3018,7 @@
    "en": "Tender meat cooked for hours upon hours, until it practically falls apart.",
    "es": "Tierna carne cocinada durante horas y horas, hasta que prácticamente se deshace sola."
   },
+  "extends": null,
   "icon": "pulledbear",
   "id": "PulledBear",
   "name": {
@@ -2911,6 +3041,7 @@
    "en": "That classic tasty blend of raspberries and blueberries.",
    "es": "La clásica mezcla de frambuesas y arándanos."
   },
+  "extends": null,
   "icon": "queensjam",
   "id": "QueensJam",
   "name": {
@@ -2933,6 +3064,7 @@
    "en": "It may not look like much, but a raft will get you farther than swimming!",
    "es": "¡Puede que no lo parezca, pero con una balsa llegarás más lejos que a nado!"
   },
+  "extends": null,
   "icon": "raft",
   "id": "Raft",
   "name": {
@@ -2963,6 +3095,7 @@
    "en": "Sweet and delicious.",
    "es": "Dulces y deliciosas."
   },
+  "extends": null,
   "icon": "raspberry",
   "id": "Raspberry",
   "name": {
@@ -2985,6 +3118,7 @@
    "en": "This dessert keeps you going all day long.",
    "es": "Este postre te mantiene en marcha todo el día."
   },
+  "extends": null,
   "icon": "roastedcrustpie",
   "id": "RoastedCrustPie",
   "name": {
@@ -3007,6 +3141,7 @@
    "en": "There are maggots crawling in the meat. It smells awful.",
    "es": "La carne está infestada de gusanos. Apesta."
   },
+  "extends": null,
   "icon": "meat_rotten",
   "id": "RottenMeat",
   "name": {
@@ -3029,6 +3164,7 @@
    "en": "Jelly fit for kings and queens.",
    "es": "Una jalea adecuada para reyes & reinas."
   },
+  "extends": null,
   "icon": "royaljelly",
   "id": "RoyalJelly",
   "name": {
@@ -3051,6 +3187,7 @@
    "en": "Fresh, crisp leaves.",
    "es": "Hojas frescas y crujientes."
   },
+  "extends": null,
   "icon": "salad",
   "id": "Salad",
   "name": {
@@ -3073,6 +3210,7 @@
    "en": "Links of savory, smoked meat.",
    "es": "Tiras de carne ahumada y sabrosa."
   },
+  "extends": null,
   "icon": "sausages",
   "id": "Sausages",
   "name": {
@@ -3095,6 +3233,7 @@
    "en": "A varied diet is important, so why not try this vegetarian option?",
    "es": "Es importante tener una dieta variada, así que ¿por qué no pruebas esta opción vegetariana?"
   },
+  "extends": null,
   "icon": "scorchingmedley",
   "id": "ScorchingMedley",
   "name": {
@@ -3117,6 +3256,7 @@
    "en": "A warm and tasty meal, best enjoyed on a cold day.",
    "es": "Una comida caliente y sabrosa, ideal para un día frío."
   },
+  "extends": null,
   "icon": "sealsoup",
   "id": "SealSoup",
   "name": {
@@ -3139,6 +3279,7 @@
    "en": "A quivering jelly with a taste like gentle electricity.",
    "es": "Una gelatina temblorosa con un sabor eléctrico pero gentil."
   },
+  "extends": null,
   "icon": "seekeraspic",
   "id": "SeekerAspic",
   "name": {
@@ -3161,6 +3302,7 @@
    "en": "A cooked slice of sea serpent. Smells good.",
    "es": "Rodaja cocinada de una serpiente de mar. Huele bien."
   },
+  "extends": null,
   "icon": "serpentmeat_cooked",
   "id": "SerpentMeatCooked",
   "name": {
@@ -3183,6 +3325,7 @@
    "en": "Smells of honey and serpent...",
    "es": "Huele a miel y a serpiente…"
   },
+  "extends": null,
   "icon": "serpentstew",
   "id": "SerpentStew",
   "name": {
@@ -3205,6 +3348,7 @@
    "en": "Wakes you up!",
    "es": "¡Te pone las pilas!"
   },
+  "extends": null,
   "icon": "shocklatesmoothie",
   "id": "ShocklateSmoothie",
   "name": {
@@ -3227,6 +3371,7 @@
    "en": "This soup settles in your stomach with an almost tingly sensation.",
    "es": "Esta sopa se asienta en el estómago con una sensación casi de hormigueo."
   },
+  "extends": null,
   "icon": "sizzlingberrybroth",
   "id": "SizzlingBerryBroth",
   "name": {
@@ -3249,6 +3394,7 @@
    "en": "Fish prepared in the most delicious way.",
    "es": "Pescado preparado de la forma más deliciosa."
   },
+  "extends": null,
   "icon": "smokedfish",
   "id": "SmokedFish",
   "name": {
@@ -3271,6 +3417,7 @@
    "en": "The smoke only adds to the wild flavour.",
    "es": "El ahumado realza aún más su sabor salvaje."
   },
+  "extends": null,
   "icon": "smokedmoose",
   "id": "SmokedMooseMeat",
   "name": {
@@ -3293,6 +3440,7 @@
    "en": "Perhaps it's not the best flavour to start the day with, but it will give you the boost you need.",
    "es": "Quizás no sea el mejor sabor para empezar el día, pero te dará el empujón que necesitas."
   },
+  "extends": null,
   "icon": "sparklingshroomshake",
   "id": "SparklingShroomshake",
   "name": {
@@ -3315,6 +3463,7 @@
    "en": "Sugary honey perfectly balanced with tangy fronds and tart berries.",
    "es": "Miel azucarada perfectamente equilibrada con hojas picantes y bayas ácidas."
   },
+  "extends": null,
   "icon": "fiddleberrysoup",
   "id": "SpicyMarmalade",
   "name": {
@@ -3337,6 +3486,7 @@
    "en": "Nutritious and restorative.",
    "es": "Nutritivo y restaurador."
   },
+  "extends": null,
   "icon": "turnipstew",
   "id": "TurnipStew",
   "name": {
@@ -3359,6 +3509,7 @@
    "en": "A sweet and tasty treat, to celebrate a feat!",
    "es": "¡Un tentempié dulce y sabroso, perfecto para celebrar proezas!"
   },
+  "extends": null,
   "icon": "vikingcupcake",
   "id": "VikingCupcake",
   "name": {
@@ -3381,6 +3532,7 @@
    "en": "A mighty viking ship for sailing to distant shores.",
    "es": "Un poderoso barco vikingo para viajar a tierras lejanas."
   },
+  "extends": null,
   "icon": "longship",
   "id": "VikingShip",
   "name": {
@@ -3415,6 +3567,7 @@
    "en": "A massive ship, sturdy enough to sail on even the most dangerous seas.",
    "es": "Un enorme barco, lo bastante resistente para navegar en los mares más peligrosos."
   },
+  "extends": null,
   "icon": "longship_ashlands",
   "id": "VikingShip_Ashlands",
   "name": {
@@ -3449,6 +3602,7 @@
    "en": "Needs something to cling to.",
    "es": "Necesita algo a lo que agarrarse."
   },
+  "extends": null,
   "icon": "ashvine_sapling",
   "id": "VineAsh_sapling",
   "name": {
@@ -3471,6 +3625,7 @@
    "en": "Needs something to cling to.",
    "es": "Necesita algo a lo que aferrarse."
   },
+  "extends": null,
   "icon": "vinegreen_sapling",
   "id": "VineGreen_sapling",
   "name": {
@@ -3493,6 +3648,7 @@
    "en": "These juicy berries are both sour and sweet.",
    "es": "Estas jugosas bayas son ácidas y dulces a la vez."
   },
+  "extends": null,
   "icon": "vineberry",
   "id": "Vineberry",
   "name": {
@@ -3515,6 +3671,7 @@
    "en": "Chewy and full of flavor.",
    "es": "Fibrosa y llena de sabor."
   },
+  "extends": null,
   "icon": "wolfjerky",
   "id": "WolfJerky",
   "name": {
@@ -3537,6 +3694,7 @@
    "en": "Dripping with taste.",
    "es": "Un sabor que chorrea."
   },
+  "extends": null,
   "icon": "wolf_skewer",
   "id": "WolfMeatSkewer",
   "name": {
@@ -3559,6 +3717,7 @@
    "en": "Made with sap from the great tree. Even a mouthful imparts a warm glow to your whole body.",
    "es": "Hecho con la savia del gran árbol, incluso un bocado imparte un cálido brillo por todo tu cuerpo."
   },
+  "extends": null,
   "icon": "yggdrasilporridge",
   "id": "YggdrasilPorridge",
   "name": {
@@ -3578,6 +3737,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_artisanstation",
   "icon": "artisanextension",
   "id": "artisan_ext1",
   "name": {
@@ -3608,6 +3768,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_arch",
   "id": "ashwood_arch_big",
   "name": {
@@ -3630,6 +3791,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_beam_1m",
   "id": "ashwood_beam_1m",
   "name": {
@@ -3652,6 +3814,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_beam_2m",
   "id": "ashwood_beam_2m",
   "name": {
@@ -3674,6 +3837,7 @@
    "en": "Rest easy on this finely crafted bed, with asksvin hides to insulate you from heat and cold alike.",
    "es": "Descansa tranquilamente en esta cama finamente elaborada, con pieles de cenicerdo que te aíslan tanto del calor como del frío."
   },
+  "extends": null,
   "icon": "ashwood_bed",
   "id": "ashwood_bed",
   "name": {
@@ -3704,6 +3868,7 @@
    "en": "Patterns work great on the floor as well.",
    "es": "Los patrones también funcionan muy bien en el suelo."
   },
+  "extends": null,
   "icon": "ashwood_deco_floor",
   "id": "ashwood_deco_floor",
   "name": {
@@ -3726,6 +3891,7 @@
    "en": "You could watch this pattern for hours...",
    "es": "Podrías mirar este patrón durante horas..."
   },
+  "extends": null,
   "icon": "ashwood_decowall_2x2",
   "id": "ashwood_decowall_2x2",
   "name": {
@@ -3748,6 +3914,7 @@
    "en": "Adds a nice detail to any room.",
    "es": "Añade un bonito detalle a cualquier estancia."
   },
+  "extends": null,
   "icon": "ashwood_decowall_divider",
   "id": "ashwood_decowall_divider",
   "name": {
@@ -3770,6 +3937,7 @@
    "en": "Are you looking out the window or at the window? Nobody needs to know.",
    "es": "¿Estás mirando por la ventana o a la ventana? Nadie tiene por qué saberlo."
   },
+  "extends": null,
   "icon": "ashwood_decowall_tree",
   "id": "ashwood_decowall_tree",
   "name": {
@@ -3792,6 +3960,7 @@
    "en": "The detailed decorations might make you stop and look instead of actually going through.",
    "es": "Las decoraciones detalladas pueden hacer que te detengas a mirar en lugar de pasar."
   },
+  "extends": null,
   "icon": "ashwood_door",
   "id": "ashwood_door",
   "name": {
@@ -3818,6 +3987,7 @@
    "en": "Ashwood floorboards, laid diagonally.",
    "es": "Tablones de madera de ceniza colocados en diagonal."
   },
+  "extends": null,
   "icon": "ashwood_floor_1x1",
   "id": "ashwood_floor_1x1",
   "name": {
@@ -3840,6 +4010,7 @@
    "en": "Ashwood floorboards, laid diagonally.",
    "es": "Tablones de madera de ceniza colocados en diagonal."
   },
+  "extends": null,
   "icon": "ashwood_floor",
   "id": "ashwood_floor_2x2",
   "name": {
@@ -3862,6 +4033,7 @@
    "en": "Both sides of this wall have their own charm. The choice is yours!",
    "es": "Ambos lados de esta pared tienen su propio encanto. ¡La elección es tuya!"
   },
+  "extends": null,
   "icon": "ashwood_halfwall_1x2",
   "id": "ashwood_halfwall_1x2",
   "name": {
@@ -3884,6 +4056,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_pole_1m",
   "id": "ashwood_pole_1m",
   "name": {
@@ -3906,6 +4079,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_pole_2m",
   "id": "ashwood_pole_2m",
   "name": {
@@ -3928,6 +4102,7 @@
    "en": "Both sides of this wall have their own charm. The choice is yours!",
    "es": "Ambos lados de esta pared tienen su propio encanto. ¡La elección es tuya!"
   },
+  "extends": null,
   "icon": "ashwood_quarterwall_1x1",
   "id": "ashwood_quarterwall_1x1",
   "name": {
@@ -3950,6 +4125,7 @@
    "en": "These stairs are sturdier than they might appear.",
    "es": "Estas escaleras son más resistentes de lo que parecen."
   },
+  "extends": null,
   "icon": "ashwood_stair",
   "id": "ashwood_stair",
   "name": {
@@ -3972,6 +4148,7 @@
    "en": "Both sides of this wall have their own charm. The choice is yours!",
    "es": "Ambos lados de esta pared tienen su propio encanto. ¡La elección es tuya!"
   },
+  "extends": null,
   "icon": "ashwood_wall_2x2",
   "id": "ashwood_wall_2x2",
   "name": {
@@ -3994,6 +4171,7 @@
    "en": "Both sides of this wall have their own charm. The choice is yours!",
    "es": "Ambos lados de esta pared tienen su propio encanto. ¡La elección es tuya!"
   },
+  "extends": null,
   "icon": "ashwood_wall_arch",
   "id": "ashwood_wall_arch",
   "name": {
@@ -4016,6 +4194,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_beam_26",
   "id": "ashwood_wall_beam_26",
   "name": {
@@ -4038,6 +4217,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_beam_45",
   "id": "ashwood_wall_beam_45",
   "name": {
@@ -4060,6 +4240,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_beam_67",
   "id": "ashwood_wall_beam_67",
   "name": {
@@ -4082,6 +4263,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_cross_26",
   "id": "ashwood_wall_cross_26",
   "name": {
@@ -4104,6 +4286,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_cross_45",
   "id": "ashwood_wall_cross_45",
   "name": {
@@ -4126,6 +4309,7 @@
    "en": "These supports are always warm to the touch.",
    "es": "Estos soportes siempre están cálidos al tacto."
   },
+  "extends": null,
   "icon": "ashwood_cross_67",
   "id": "ashwood_wall_cross_67",
   "name": {
@@ -4148,6 +4332,7 @@
    "en": "Both sides of this wall have their own charm. The choice is yours!",
    "es": "Ambos lados de esta pared tienen su propio encanto. ¡La elección es tuya!"
   },
+  "extends": null,
   "icon": "ashwood_wall_roof_26",
   "id": "ashwood_wall_roof_26",
   "name": {
@@ -4170,6 +4355,7 @@
    "en": "Both sides of this wall have their own charm. The choice is yours!",
    "es": "Ambos lados de esta pared tienen su propio encanto. ¡La elección es tuya!"
   },
+  "extends": null,
   "icon": "ashwood_wall_roof_26_upsidedown",
   "id": "ashwood_wall_roof_26_upsidedown",
   "name": {
@@ -4192,6 +4378,7 @@
    "en": "Both sides of this wall have their own charm. The choice is yours!",
    "es": "Ambos lados de esta pared tienen su propio encanto. ¡La elección es tuya!"
   },
+  "extends": null,
   "icon": "ashwood_wall_roof_45",
   "id": "ashwood_wall_roof_45",
   "name": {
@@ -4214,6 +4401,7 @@
    "en": "Both sides of this wall have their own charm. The choice is yours!",
    "es": "Ambos lados de esta pared tienen su propio encanto. ¡La elección es tuya!"
   },
+  "extends": null,
   "icon": "ashwood_wall_roof_45_upsidedown",
   "id": "ashwood_wall_roof_45_upsidedown",
   "name": {
@@ -4236,6 +4424,7 @@
    "en": "Both sides of this wall have their own charm. The choice is yours!",
    "es": "Ambos lados de esta pared tienen su propio encanto. ¡La elección es tuya!"
   },
+  "extends": null,
   "icon": "ashwood_wall_roof_67",
   "id": "ashwood_wall_roof_67_a",
   "name": {
@@ -4258,6 +4447,7 @@
    "en": "Both sides of this wall have their own charm. The choice is yours!",
    "es": "Ambos lados de esta pared tienen su propio encanto. ¡La elección es tuya!"
   },
+  "extends": null,
   "icon": "ashwood_wall_roof_67_upsidedown",
   "id": "ashwood_wall_roof_67_upsidedown",
   "name": {
@@ -4280,6 +4470,7 @@
    "en": "Sure to be the envy of all fulings!",
    "es": "¡Seguro que será la envidia de todos los fulings!"
   },
+  "extends": null,
   "icon": "bar_blackmetal_stack",
   "id": "bar_blackmetal_stack",
   "name": {
@@ -4302,6 +4493,7 @@
    "en": "Beautiful, versatile... Now also stackable!",
    "es": "Hermoso, versátil... ¡Y ahora también apilable!"
   },
+  "extends": null,
   "icon": "bar_bronze_stack",
   "id": "bar_bronze_stack",
   "name": {
@@ -4324,6 +4516,7 @@
    "en": "Premium quality copper. Nothing to complain about!",
    "es": "Cobre de calidad prémium. ¡Nada de lo que quejarse!"
   },
+  "extends": null,
   "icon": "bar_copper_stack",
   "id": "bar_copper_stack",
   "name": {
@@ -4346,6 +4539,7 @@
    "en": "The heat is practically radiating from this stack...",
    "es": "El calor prácticamente irradia de este montón..."
   },
+  "extends": null,
   "icon": "bar_flametal_stack",
   "id": "bar_flametal_stack",
   "name": {
@@ -4368,6 +4562,7 @@
    "en": "This metal does have a more sinister air than others, doesn't it?",
    "es": "Este metal tiene un aire más siniestro que otros, ¿verdad?"
   },
+  "extends": null,
   "icon": "bar_gold_stack",
   "id": "bar_gold_stack",
   "name": {
@@ -4390,6 +4585,7 @@
    "en": "If you have iron, you have everything.",
    "es": "Si tienes hierro, lo tienes todo."
   },
+  "extends": null,
   "icon": "bar_iron_stack",
   "id": "bar_iron_stack",
   "name": {
@@ -4412,6 +4608,7 @@
    "en": "A tidy way of displaying your wealth.",
    "es": "Una forma ordenada de mostrar tu riqueza."
   },
+  "extends": null,
   "icon": "bar_silver_stack",
   "id": "bar_silver_stack",
   "name": {
@@ -4434,6 +4631,7 @@
    "en": "You can make a lot of bronze with this...",
    "es": "Con esto puedes hacer mucho bronce..."
   },
+  "extends": null,
   "icon": "bar_tin_stack",
   "id": "bar_tin_stack",
   "name": {
@@ -4456,6 +4654,7 @@
    "en": "When night falls, you'll want somewhere to sleep.",
    "es": "Cuando cae la noche, querrás un lugar donde dormir."
   },
+  "extends": null,
   "icon": "bed",
   "id": "bed",
   "name": {
@@ -4475,6 +4674,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "blackforge",
   "id": "blackforge",
   "name": {
@@ -4502,6 +4702,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_blackforge",
   "icon": "blackforge_ext1",
   "id": "blackforge_ext1",
   "name": {
@@ -4529,6 +4730,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_blackforge",
   "icon": "blackforge_ext2",
   "id": "blackforge_ext2_vise",
   "name": {
@@ -4556,6 +4758,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_blackforge",
   "icon": "blackforge_ext3",
   "id": "blackforge_ext3_metalcutter",
   "name": {
@@ -4587,6 +4790,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_blackforge",
   "icon": "blackforge_ext4",
   "id": "blackforge_ext4_gemcutter",
   "name": {
@@ -4618,6 +4822,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_blackforge",
   "icon": "blackforge_ext5",
   "id": "blackforge_ext5_apron",
   "name": {
@@ -4648,6 +4853,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_1x1",
   "id": "blackmarble_1x1",
   "name": {
@@ -4670,6 +4876,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_2x1x1",
   "id": "blackmarble_2x1x1",
   "name": {
@@ -4692,6 +4899,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_2x2",
   "id": "blackmarble_2x2x2",
   "name": {
@@ -4714,6 +4922,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_arch",
   "id": "blackmarble_arch",
   "name": {
@@ -4736,6 +4945,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_plinth",
   "id": "blackmarble_base_1",
   "name": {
@@ -4758,6 +4968,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_plinth_corner",
   "id": "blackmarble_basecorner",
   "name": {
@@ -4780,6 +4991,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_column_small",
   "id": "blackmarble_column_1",
   "name": {
@@ -4802,6 +5014,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_column_wide",
   "id": "blackmarble_column_2",
   "name": {
@@ -4824,6 +5037,7 @@
    "en": "Dark floors prevent stains.",
    "es": "Los suelos oscuros evitan las manchas."
   },
+  "extends": null,
   "icon": "blackmarble_floor",
   "id": "blackmarble_floor",
   "name": {
@@ -4846,6 +5060,7 @@
    "en": "Dark floors prevent stains.",
    "es": "Los suelos oscuros evitan las manchas."
   },
+  "extends": null,
   "icon": "blackmarble_triangle_floor",
   "id": "blackmarble_floor_triangle",
   "name": {
@@ -4868,6 +5083,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_cornice",
   "id": "blackmarble_out_1",
   "name": {
@@ -4890,6 +5106,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_cornice_corner",
   "id": "blackmarble_outcorner",
   "name": {
@@ -4912,6 +5129,7 @@
    "en": "Perfect for Dvergr inspired construction.",
    "es": "Perfecto para construcciones inspiradas en los dvergr."
   },
+  "extends": null,
   "icon": "marble_pile",
   "id": "blackmarble_pile",
   "name": {
@@ -4934,6 +5152,7 @@
    "en": "Can be used for going both up and down. How convenient!",
    "es": "Se puede usar tanto para subir como para bajar. ¡Qué útil!"
   },
+  "extends": null,
   "icon": "blackmarble_stair",
   "id": "blackmarble_stair",
   "name": {
@@ -4956,6 +5175,7 @@
    "en": "A black marble piece inspired by dwarven architecture. The only limit is your own creativity.",
    "es": "Una pieza de mármol negro inspirada en la arquitectura enana. El único límite es tu creatividad."
   },
+  "extends": null,
   "icon": "blackmarble_tip",
   "id": "blackmarble_tip",
   "name": {
@@ -4978,6 +5198,7 @@
    "en": "No matter what, this stack of wood always feels warm.",
    "es": "Sea como sea, este montón de madera siempre resulta cálido."
   },
+  "extends": null,
   "icon": "blackwood_stack",
   "id": "blackwood_stack",
   "name": {
@@ -5000,6 +5221,7 @@
    "en": "Some metals need higher temperatures to melt.",
    "es": "Algunos metales necesitan temperaturas más altas para fundirse."
   },
+  "extends": null,
   "icon": "blastfurnace",
   "id": "blastfurnace",
   "name": {
@@ -5034,6 +5256,7 @@
    "en": "You never know when these might come in handy!",
    "es": "¡Nunca sabes cuándo te puede venir bien esto!"
   },
+  "extends": null,
   "icon": "bone_stack",
   "id": "bone_stack",
   "name": {
@@ -5056,6 +5279,7 @@
    "en": "For when a regular campfire just isn't impressive enough!",
    "es": "¡Para cuando una hoguera normal no es lo bastante impresionante!"
   },
+  "extends": null,
   "icon": "bonfire",
   "id": "bonfire",
   "name": {
@@ -5087,6 +5311,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_cauldron",
   "icon": "spicerack",
   "id": "cauldron_ext1_spice",
   "name": {
@@ -5122,6 +5347,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_cauldron",
   "icon": "butchertable",
   "id": "cauldron_ext3_butchertable",
   "name": {
@@ -5153,6 +5379,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_cauldron",
   "icon": "potsnpans",
   "id": "cauldron_ext4_pots",
   "name": {
@@ -5184,6 +5411,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_cauldron",
   "icon": "mortarandpestle",
   "id": "cauldron_ext5_mortarandpestle",
   "name": {
@@ -5211,6 +5439,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_cauldron",
   "icon": "rollingpins",
   "id": "cauldron_ext6_rollingpins",
   "name": {
@@ -5238,6 +5467,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_cauldron",
   "icon": "smoker",
   "id": "cauldron_ext7_smoker",
   "name": {
@@ -5264,6 +5494,7 @@
    "en": "Useful for turning any kind of wood into coal.",
    "es": "Útil para convertir cualquier tipo de madera en carbón."
   },
+  "extends": null,
   "icon": "coal_kiln",
   "id": "charcoal_kiln",
   "name": {
@@ -5290,6 +5521,7 @@
    "en": "It never hurts to have a lot of fuel on hand.",
    "es": "Nunca está de más tener mucho combustible a mano."
   },
+  "extends": null,
   "icon": "coal_pile",
   "id": "coal_pile",
   "name": {
@@ -5312,6 +5544,7 @@
    "en": "Beautiful and fragile.",
    "es": "Bonito y frágil."
   },
+  "extends": null,
   "icon": "crystal_wall",
   "id": "crystal_wall_1x1",
   "name": {
@@ -5334,6 +5567,7 @@
    "en": "Make the soil ready for planting.",
    "es": "Prepara la tierra para la siembra."
   },
+  "extends": null,
   "icon": "cultivate_ground",
   "id": "cultivate_v2",
   "name": {
@@ -5351,6 +5585,7 @@
    "en": "Intricate designs run along this support structure.",
    "es": "Diseños intrincados recorren esta estructura de apoyo."
   },
+  "extends": null,
   "icon": "darkwood_arch",
   "id": "darkwood_arch",
   "name": {
@@ -5377,6 +5612,7 @@
    "en": "Intricate designs run along this support structure.",
    "es": "Diseños intrincados recorren esta estructura de apoyo."
   },
+  "extends": null,
   "icon": "darkwood_beam",
   "id": "darkwood_beam",
   "name": {
@@ -5403,6 +5639,7 @@
    "en": "Intricate designs run along this support structure.",
    "es": "Diseños intrincados recorren esta estructura de apoyo."
   },
+  "extends": null,
   "icon": "darkwood_beam4",
   "id": "darkwood_beam4x4",
   "name": {
@@ -5429,6 +5666,7 @@
    "en": "Intricate designs run along this support structure.",
    "es": "Diseños intrincados recorren esta estructura de apoyo."
   },
+  "extends": null,
   "icon": "darkwood_beam_26",
   "id": "darkwood_beam_26",
   "name": {
@@ -5455,6 +5693,7 @@
    "en": "Intricate designs run along this support structure.",
    "es": "Diseños intrincados recorren esta estructura de apoyo."
   },
+  "extends": null,
   "icon": "darkwood_beam_45",
   "id": "darkwood_beam_45",
   "name": {
@@ -5481,6 +5720,7 @@
    "en": "An elegant design for decorating your home, and for keeping prying eyes away.",
    "es": "Un diseño elegante para decorar tu hogar y mantener alejadas las miradas indiscretas."
   },
+  "extends": null,
   "icon": "darkwood_decowall",
   "id": "darkwood_decowall",
   "name": {
@@ -5507,6 +5747,7 @@
    "en": "A fancy and sturdy gate. To use by itself or as part of a pair.",
    "es": "Una verja elegante y resistente. Para usar sola o como parte de un par."
   },
+  "extends": null,
   "icon": "darkwood_gate",
   "id": "darkwood_gate",
   "name": {
@@ -5537,6 +5778,7 @@
    "en": "Intricate designs run along this support structure.",
    "es": "Diseños intrincados recorren esta estructura de apoyo."
   },
+  "extends": null,
   "icon": "darkwood_pole",
   "id": "darkwood_pole",
   "name": {
@@ -5563,6 +5805,7 @@
    "en": "Intricate designs run along this support structure.",
    "es": "Diseños intrincados recorren esta estructura de apoyo."
   },
+  "extends": null,
   "icon": "darkwood_pole4",
   "id": "darkwood_pole4",
   "name": {
@@ -5589,6 +5832,7 @@
    "en": "The ravens are trusted companions of the Allfather, of course you would want one in your home as well.",
    "es": "Los cuervos son compañeros fieles del Padre de Todo, claro que querrías uno en casa."
   },
+  "extends": null,
   "icon": "darkwood_raven",
   "id": "darkwood_raven",
   "name": {
@@ -5615,6 +5859,7 @@
    "en": "This shallow roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado de poca inclinación protege de la lluvia, y además lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_26",
   "id": "darkwood_roof",
   "name": {
@@ -5641,6 +5886,7 @@
    "en": "This steeper roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado más inclinado también protege de la lluvia, y lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_45",
   "id": "darkwood_roof_45",
   "name": {
@@ -5667,6 +5913,7 @@
    "en": "This very steep roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado muy inclinado también protege de la lluvia, y lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_67",
   "id": "darkwood_roof_67",
   "name": {
@@ -5693,6 +5940,7 @@
    "en": "This shallow roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado de poca inclinación protege de la lluvia, y además lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_icorner_26",
   "id": "darkwood_roof_icorner",
   "name": {
@@ -5719,6 +5967,7 @@
    "en": "This steeper roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado más inclinado también protege de la lluvia, y lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_icorner_45",
   "id": "darkwood_roof_icorner_45",
   "name": {
@@ -5745,6 +5994,7 @@
    "en": "This very steep roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado muy inclinado también protege de la lluvia, y lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_icorner_67",
   "id": "darkwood_roof_icorner_67",
   "name": {
@@ -5771,6 +6021,7 @@
    "en": "This shallow roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado de poca inclinación protege de la lluvia, y además lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_ocorner_26",
   "id": "darkwood_roof_ocorner",
   "name": {
@@ -5797,6 +6048,7 @@
    "en": "This steeper roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado más inclinado también protege de la lluvia, y lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_ocorner_45",
   "id": "darkwood_roof_ocorner_45",
   "name": {
@@ -5823,6 +6075,7 @@
    "en": "This very steep roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado muy inclinado también protege de la lluvia, y lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_ocorner_67",
   "id": "darkwood_roof_ocorner_67",
   "name": {
@@ -5849,6 +6102,7 @@
    "en": "This shallow roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado de poca inclinación protege de la lluvia, y además lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_top_26",
   "id": "darkwood_roof_top",
   "name": {
@@ -5875,6 +6129,7 @@
    "en": "This steeper roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado más inclinado también protege de la lluvia, y lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_top_45",
   "id": "darkwood_roof_top_45",
   "name": {
@@ -5901,6 +6156,7 @@
    "en": "This very steep roof is sure to keep the rain out, and look good doing it.",
    "es": "Este tejado muy inclinado también protege de la lluvia, y lo hace con estilo."
   },
+  "extends": null,
   "icon": "darkwood_roof_top_67",
   "id": "darkwood_roof_top_67",
   "name": {
@@ -5927,6 +6183,7 @@
    "en": "Wolves are pack animals, but this one seems happy enough by itself.",
    "es": "Los lobos son animales de manada, pero este parece feliz solo."
   },
+  "extends": null,
   "icon": "darkwood_wolf",
   "id": "darkwood_wolf",
   "name": {
@@ -5953,6 +6210,7 @@
    "en": "This machine will turn soft tissue into the magical substance eitr. The process is quite volatile, however, so stand back!",
    "es": "Esta máquina convierte tejido blando en la sustancia mágica eitr. El proceso es bastante inestable, ¡así que no te acerques!"
   },
+  "extends": null,
   "icon": "refinery",
   "id": "eitrrefinery",
   "name": {
@@ -5991,6 +6249,7 @@
    "en": "Mead needs to sit and ferment for a while, for all its intended properties to emerge.",
    "es": "El hidromiel tiene que fermentar durante un tiempo para desarrollar sus propiedades."
   },
+  "extends": null,
   "icon": "fermenter",
   "id": "fermenter",
   "name": {
@@ -6021,6 +6280,7 @@
    "en": "Useful for cooking, warmth, or just resting for a bit.",
    "es": "Útil para cocinar, calentarse o simplemente descansar un rato."
   },
+  "extends": null,
   "icon": "firepit",
   "id": "fire_pit",
   "name": {
@@ -6047,6 +6307,7 @@
    "en": "If you don't want to place a campfire directly onto the ground, this is a classy alternative.",
    "es": "Si no quieres hacer una hoguera directamente en el suelo, esta es una alternativa elegante."
   },
+  "extends": null,
   "icon": "firepitiron",
   "id": "fire_pit_iron",
   "name": {
@@ -6073,6 +6334,7 @@
    "en": "An impressive way to welcome your friends, or to ward off your foes.",
    "es": "Una forma impresionante de recibir a tus amigos o ahuyentar a tus enemigos."
   },
+  "extends": null,
   "icon": "flametal_gate",
   "id": "flametal_gate",
   "name": {
@@ -6095,6 +6357,7 @@
    "en": "Watch your step!",
    "es": "¡Cuidado con dónde pisas!"
   },
+  "extends": null,
   "icon": "flint_pile",
   "id": "flint_pile",
   "name": {
@@ -6114,6 +6377,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "forge",
   "id": "forge",
   "name": {
@@ -6145,6 +6409,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_forge",
   "icon": "forge_ext1",
   "id": "forge_ext1",
   "name": {
@@ -6172,6 +6437,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_forge",
   "icon": "forge_ext2",
   "id": "forge_ext2",
   "name": {
@@ -6195,6 +6461,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_forge",
   "icon": "forge_ext3",
   "id": "forge_ext3",
   "name": {
@@ -6218,6 +6485,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_forge",
   "icon": "forge_ext4",
   "id": "forge_ext4",
   "name": {
@@ -6241,6 +6509,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_forge",
   "icon": "forge_ext5",
   "id": "forge_ext5",
   "name": {
@@ -6264,6 +6533,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_forge",
   "icon": "forge_ext6",
   "id": "forge_ext6",
   "name": {
@@ -6290,6 +6560,7 @@
    "en": "Grausten, carefully placed into a pile.",
    "es": "Piedra cenicienta cuidadosamente apilada."
   },
+  "extends": null,
   "icon": "grausten_pile",
   "id": "grausten_pile",
   "name": {
@@ -6312,6 +6583,7 @@
    "en": "Emits a magic seal on the nearby surroundings which prevents other players from constructing buildings or opening doors.",
    "es": "Emite un poder mágico que sella los alrededores e impide que los demás jugadores puedan construir edificios o abrir puertas."
   },
+  "extends": null,
   "icon": "guardstone",
   "id": "guard_stone",
   "name": {
@@ -6342,6 +6614,7 @@
    "en": "A central part of any homestead.",
    "es": "Una parte central de cualquier hogar."
   },
+  "extends": null,
   "icon": "hearth",
   "id": "hearth",
   "name": {
@@ -6364,6 +6637,7 @@
    "en": "Reduce, reuse, obliterate.",
    "es": "Reduce, reutiliza, destruye."
   },
+  "extends": null,
   "icon": "incinerator",
   "id": "incinerator",
   "name": {
@@ -6394,6 +6668,7 @@
    "en": "Finely crafted iron bars, sure to be rattle-proof!",
    "es": "¡Barras de hierro de alta calidad a prueba de vibraciones!"
   },
+  "extends": null,
   "icon": "iron_floor_1x1",
   "id": "iron_floor_1x1_v2",
   "name": {
@@ -6416,6 +6691,7 @@
    "en": "Finely crafted iron bars, sure to be rattle-proof!",
    "es": "¡Barras de hierro de alta calidad a prueba de vibraciones!"
   },
+  "extends": null,
   "icon": "iron_floor_2x2",
   "id": "iron_floor_2x2",
   "name": {
@@ -6438,6 +6714,7 @@
    "en": "A very important gate.",
    "es": "Una puerta muy importante."
   },
+  "extends": null,
   "icon": "iron_grate",
   "id": "iron_grate",
   "name": {
@@ -6460,6 +6737,7 @@
    "en": "Finely crafted iron bars, sure to be rattle-proof!",
    "es": "¡Barras de hierro de alta calidad a prueba de vibraciones!"
   },
+  "extends": null,
   "icon": "iron_wall_1x1",
   "id": "iron_wall_1x1",
   "name": {
@@ -6482,6 +6760,7 @@
    "en": "Finely crafted iron bars, sure to be rattle-proof!",
    "es": "¡Barras de hierro de alta calidad a prueba de vibraciones!"
   },
+  "extends": null,
   "icon": "iron_wall_2x2",
   "id": "iron_wall_2x2",
   "name": {
@@ -6504,6 +6783,7 @@
    "en": "Mount items on vertical surfaces with this item stand.",
    "es": "Coloca objetos en superficies verticales con este soporte."
   },
+  "extends": null,
   "icon": "itemstand",
   "id": "itemstand",
   "name": {
@@ -6530,6 +6810,7 @@
    "en": "Place items on horizontal surfaces with this item stand.",
    "es": "Utiliza este soporte para colocar objetos sobre superficies horizontales."
   },
+  "extends": null,
   "icon": "itemstandh",
   "id": "itemstandh",
   "name": {
@@ -6556,6 +6837,7 @@
    "en": "This coarse fabric is excellent for keeping the cold at bay.",
    "es": "Este tejido áspero es excelente para mantener el frío a raya."
   },
+  "extends": null,
   "icon": "jute_carpet",
   "id": "jute_carpet",
   "name": {
@@ -6578,6 +6860,7 @@
    "en": "No matter how misty the air is, this carpet doesn't appear to get damp.",
    "es": "No importa lo denso que sea el aire, esta alfombra no parece humedecerse."
   },
+  "extends": null,
   "icon": "juteblue_carpet",
   "id": "jute_carpet_blue",
   "name": {
@@ -6600,6 +6883,7 @@
    "en": "If the terrain is too lumpy, you can just flatten it.",
    "es": "Si el terreno es demasiado irregular, puedes aplanarlo."
   },
+  "extends": null,
   "icon": "clear_ground",
   "id": "mud_road_v2",
   "name": {
@@ -6617,6 +6901,7 @@
    "en": "Mark out the best way forward.",
    "es": "Marca el mejor camino a seguir."
   },
+  "extends": null,
   "icon": "path",
   "id": "path_v2",
   "name": {
@@ -6634,6 +6919,7 @@
    "en": "A sure mark of civilisation.",
    "es": "Una clara señal de civilización."
   },
+  "extends": null,
   "icon": "paved_road",
   "id": "paved_road_v2",
   "name": {
@@ -6656,6 +6942,7 @@
    "en": "Aim for the center.",
    "es": "Apunta al centro."
   },
+  "extends": null,
   "icon": "archerytarget",
   "id": "piece_ArcheryTarget",
   "name": {
@@ -6682,6 +6969,7 @@
    "en": "Some flowers to brighten up your day!",
    "es": "¡Unas flores para alegrarte el día!"
   },
+  "extends": null,
   "icon": "garlandcelebration",
   "id": "piece_CelebrationGarland",
   "name": {
@@ -6708,6 +6996,7 @@
    "en": "His rage and regret are at war with each other, and their struggle will fuel this fire until the very end.",
    "es": "Su ira y su arrepentimiento están en guerra entre sí, y su lucha alimentará este fuego hasta el final."
   },
+  "extends": null,
   "icon": "eternalpyreicon",
   "id": "piece_EternalPyre",
   "name": {
@@ -6734,6 +7023,7 @@
    "en": "Lends a gentle light to your festivities.",
    "es": "Aporta una luz suave a tus celebraciones."
   },
+  "extends": null,
   "icon": "garlandfairylight",
   "id": "piece_FairylightGarland",
   "name": {
@@ -6760,6 +7050,7 @@
    "en": "This foundry can be used to harden casts into proper items.",
    "es": "Esta fundición puede usarse para endurecer moldes y convertirlos en objetos adecuados."
   },
+  "extends": null,
   "icon": "frostfoundry",
   "id": "piece_FrostFoundry",
   "name": {
@@ -6790,6 +7081,7 @@
    "en": "A strange and chilling process happens within this kiln, to produce a most potent fuel...",
    "es": "Un proceso extraño y escalofriante ocurre dentro de este horno, produciendo un combustible muy potente..."
   },
+  "extends": null,
   "icon": "piece_frostkiln",
   "id": "piece_FrostKiln",
   "name": {
@@ -6820,6 +7112,7 @@
    "en": "It's...hypnotising to look at...",
    "es": "Es... hipnotizante de mirar..."
   },
+  "extends": null,
   "icon": "lavalantern",
   "id": "piece_Lavalantern",
   "name": {
@@ -6847,6 +7140,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "meadcauldron",
   "id": "piece_MeadCauldron",
   "name": {
@@ -6877,6 +7171,7 @@
    "en": "Step close at your own risk!",
    "es": "¡Acércate bajo tu propio riesgo!"
   },
+  "extends": null,
   "icon": "trainingdummy",
   "id": "piece_TrainingDummy",
   "name": {
@@ -6904,6 +7199,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "artisanstation",
   "id": "piece_artisanstation",
   "name": {
@@ -6930,6 +7226,7 @@
    "en": "Gruesome or decorative? That is up to you.",
    "es": "¿Horripilante o decorativo? Eso depende de ti."
   },
+  "extends": null,
   "icon": "asksvinskeleton",
   "id": "piece_asksvinskeleton",
   "name": {
@@ -6968,6 +7265,7 @@
    "en": "A black banner, like the depths of Hel.",
    "es": "Un estandarte negro, como las profundidades de Hel."
   },
+  "extends": null,
   "icon": "banner01",
   "id": "piece_banner01",
   "name": {
@@ -6998,6 +7296,7 @@
    "en": "A blue banner, like the oceans around Midgard.",
    "es": "Un estandarte azul, como los océanos que rodean Midgard."
   },
+  "extends": null,
   "icon": "banner02",
   "id": "piece_banner02",
   "name": {
@@ -7028,6 +7327,7 @@
    "en": "A red striped banner, like a sail for a ship.",
    "es": "Un estandarte a rayas rojas, como la vela de un barco."
   },
+  "extends": null,
   "icon": "banner03",
   "id": "piece_banner03",
   "name": {
@@ -7058,6 +7358,7 @@
    "en": "A red banner, like the blood of Odin's foes.",
    "es": "Un estandarte rojo, como la sangre de los enemigos de Odín."
   },
+  "extends": null,
   "icon": "banner04",
   "id": "piece_banner04",
   "name": {
@@ -7088,6 +7389,7 @@
    "en": "A green banner, like the lush forests of Alfheim.",
    "es": "Un estandarte verde, como los frondosos bosques de Alfheim."
   },
+  "extends": null,
   "icon": "banner05",
   "id": "piece_banner05",
   "name": {
@@ -7118,6 +7420,7 @@
    "en": "A red and blue striped banner, because sometimes you can't pick a colour.",
    "es": "Un estandarte a rayas rojas y azules, porque a veces no se puede elegir un color."
   },
+  "extends": null,
   "icon": "banner06",
   "id": "piece_banner06",
   "name": {
@@ -7156,6 +7459,7 @@
    "en": "A blue striped banner, like a sail for a ship.",
    "es": "Un estandarte azul a rayas, como la vela de un barco."
   },
+  "extends": null,
   "icon": "banner07",
   "id": "piece_banner07",
   "name": {
@@ -7190,6 +7494,7 @@
    "en": "A yellow banner, like the golden fields of Vanaheim.",
    "es": "Un estandarte amarillo, como los campos dorados de Vanaheim."
   },
+  "extends": null,
   "icon": "banner08",
   "id": "piece_banner08",
   "name": {
@@ -7224,6 +7529,7 @@
    "en": "A purple banner, like strange magics.",
    "es": "Un estandarte púrpura, como las magias extrañas."
   },
+  "extends": null,
   "icon": "banner09",
   "id": "piece_banner09",
   "name": {
@@ -7258,6 +7564,7 @@
    "en": "An orange banner, like the fires of Muspelheim.",
    "es": "Un estandarte naranja, como los fuegos de Muspelheim."
   },
+  "extends": null,
   "icon": "banner10",
   "id": "piece_banner10",
   "name": {
@@ -7292,6 +7599,7 @@
    "en": "A white banner, like the snow in Niflheim.",
    "es": "Un estandarte blanco, como la nieve de Niflheim."
   },
+  "extends": null,
   "icon": "banner11",
   "id": "piece_banner11",
   "name": {
@@ -7326,6 +7634,7 @@
    "en": "Helps you stay up to date with the latest viking fashion.",
    "es": "Ayuda a ir siempre a la última moda vikinga."
   },
+  "extends": null,
   "icon": "barberstation",
   "id": "piece_barber",
   "name": {
@@ -7360,6 +7669,7 @@
    "en": "Respectable vikings bathe as often as once per week!",
    "es": "¡Los vikingos respetables se bañan al menos una vez por semana!"
   },
+  "extends": null,
   "icon": "bath",
   "id": "piece_bathtub",
   "name": {
@@ -7394,6 +7704,7 @@
    "en": "Draped in furs, this bed is sure to give you a good night's sleep.",
    "es": "Cubierta con pieles, esta cama te ofrecerá una buena noche de descanso."
   },
+  "extends": null,
   "icon": "bed02",
   "id": "piece_bed02",
   "name": {
@@ -7432,6 +7743,7 @@
    "en": "When they're happy, the bees will produce tasty honey.",
    "es": "Cuando están felices, las abejas producen deliciosa miel."
   },
+  "extends": null,
   "icon": "beehive",
   "id": "piece_beehive",
   "name": {
@@ -7458,6 +7770,7 @@
    "en": "If there is room in your heart, there is room for your butt.",
    "es": "Si hay espacio en tu corazón, hay espacio para tu trasero."
   },
+  "extends": null,
   "icon": "bench01",
   "id": "piece_bench01",
   "name": {
@@ -7480,6 +7793,7 @@
    "en": "A rustic yet comfortable place to sit.",
    "es": "Un lugar rústico pero cómodo donde sentarse."
   },
+  "extends": null,
   "icon": "bench_runed",
   "id": "piece_bench_runed",
   "name": {
@@ -7506,6 +7820,7 @@
    "en": "Healthy and happy birds might shed a feather or two.",
    "es": "Los pájaros sanos y felices podrían soltar alguna que otra pluma."
   },
+  "extends": null,
   "icon": "birdnest",
   "id": "piece_birdnest",
   "name": {
@@ -7536,6 +7851,7 @@
    "en": "Sit with dignity on this bench, finely carved from black marble.",
    "es": "Siéntate con dignidad en este banco, finamente tallado en mármol negro."
   },
+  "extends": null,
   "icon": "bench_blackmarble",
   "id": "piece_blackmarble_bench",
   "name": {
@@ -7562,6 +7878,7 @@
    "en": "Dine like a dwarf at this table!",
    "es": "¡Cena como un enano en esta mesa!"
   },
+  "extends": null,
   "icon": "table_blackmarble",
   "id": "piece_blackmarble_table",
   "name": {
@@ -7588,6 +7905,7 @@
    "en": "A throne carved in authentic dvergr style, yet large enough for a human to sit comfortably upon.",
    "es": "Un trono tallado en auténtico estilo dvergr, pero lo suficientemente grande como para que un humano se siente cómodamente."
   },
+  "extends": null,
   "icon": "throne_blackmarble",
   "id": "piece_blackmarble_throne",
   "name": {
@@ -7622,6 +7940,7 @@
    "en": "This bench has an elegant curve to it, to facilitate conversation.",
    "es": "Este banco tiene una elegante curva para facilitar la conversación."
   },
+  "extends": null,
   "icon": "benchashwood",
   "id": "piece_blackwood_bench01",
   "name": {
@@ -7644,6 +7963,7 @@
    "en": "This throne is sure to invoke respect in friends and foes alike.",
    "es": "Este trono seguro que impondrá respeto tanto en aliados como en enemigos."
   },
+  "extends": null,
   "icon": "throne_bone",
   "id": "piece_bone_throne",
   "name": {
@@ -7678,6 +7998,7 @@
    "en": "If your fire hangs from the ceiling, you can't accidentally stumble into it.",
    "es": "Si tu fuego cuelga del techo, no puedes tropezar accidentalmente con él."
   },
+  "extends": null,
   "icon": "brazierceiling01",
   "id": "piece_brazierceiling01",
   "name": {
@@ -7708,6 +8029,7 @@
    "en": "A classy way to light up the room.",
    "es": "Una forma elegante de iluminar la estancia."
   },
+  "extends": null,
   "icon": "brazierfloor01",
   "id": "piece_brazierfloor01",
   "name": {
@@ -7738,6 +8060,7 @@
    "en": "It's hard to tell whether this flame burns incredibly hot or incredibly cold.",
    "es": "Es difícil saber si esta llama arde increíblemente caliente o increíblemente fría."
   },
+  "extends": null,
   "icon": "brazierfloor02",
   "id": "piece_brazierfloor02",
   "name": {
@@ -7768,6 +8091,7 @@
    "en": "Mark your discoveries on this map and share them with your friends.",
    "es": "Marca tus descubrimientos en este mapa y compártelos con tus amigos."
   },
+  "extends": null,
   "icon": "cartography_table",
   "id": "piece_cartographytable",
   "name": {
@@ -7803,6 +8127,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "cauldron",
   "id": "piece_cauldron",
   "name": {
@@ -7825,6 +8150,7 @@
    "en": "A place to sit.",
    "es": "Un lugar donde sentarse."
   },
+  "extends": null,
   "icon": "chair",
   "id": "piece_chair",
   "name": {
@@ -7847,6 +8173,7 @@
    "en": "Lean back and relax.",
    "es": "Reclínate y relájate."
   },
+  "extends": null,
   "icon": "chair02",
   "id": "piece_chair02",
   "name": {
@@ -7869,6 +8196,7 @@
    "en": "This chair is padded with furs, suitable for esteemed guests.",
    "es": "Esta silla está acolchada con pieles, adecuada para invitados distinguidos."
   },
+  "extends": null,
   "icon": "chair03",
   "id": "piece_chair03",
   "name": {
@@ -7903,6 +8231,7 @@
    "en": "The shape of this chair might be simple, but its decorations are not.",
    "es": "La forma de esta silla puede ser sencilla, pero sus adornos no lo son."
   },
+  "extends": null,
   "icon": "chair_runed",
   "id": "piece_chair_runed",
   "name": {
@@ -7929,6 +8258,7 @@
    "en": "A sturdier chest, with room for more storage.",
    "es": "Un cofre más resistente, con más espacio de almacenamiento."
   },
+  "extends": null,
   "icon": "chest_iron",
   "id": "piece_chest",
   "name": {
@@ -7955,6 +8285,7 @@
    "en": "A barrel is good for storing lots of things, including food and drink.",
    "es": "Un barril es bueno para almacenar muchas cosas, como comida y bebida."
   },
+  "extends": null,
   "icon": "barrel",
   "id": "piece_chest_barrel",
   "name": {
@@ -7981,6 +8312,7 @@
    "en": "The sturdy black metal that holds this chest together lets you put almost anything inside.",
    "es": "El resistente metal negro que mantiene unido este cofre te permite guardar casi cualquier cosa en su interior."
   },
+  "extends": null,
   "icon": "chest_blackmetal",
   "id": "piece_chest_blackmetal",
   "name": {
@@ -8011,6 +8343,7 @@
    "en": "Stone and metal are sure to keep your belongings safe. The charred skulls help too.",
    "es": "La piedra y el metal mantendrán tus pertenencias a salvo. Los cráneos chamuscados también ayudan."
   },
+  "extends": null,
   "icon": "chest_grausten",
   "id": "piece_chest_grausten",
   "name": {
@@ -8041,6 +8374,7 @@
    "en": "Some things you would rather lock away and keep for yourself.",
    "es": "Hay cosas que preferirías guardar bajo llave y mantener para ti."
   },
+  "extends": null,
   "icon": "chest_private",
   "id": "piece_chest_private",
   "name": {
@@ -8067,6 +8401,7 @@
    "en": "What better way to display your wealth than a treasure chest spilling over with gold and jewels?",
    "es": "¿Qué mejor forma de mostrar tu riqueza que un cofre lleno de oro y joyas?"
   },
+  "extends": null,
   "icon": "chest_treasure",
   "id": "piece_chest_treasure",
   "name": {
@@ -8105,6 +8440,7 @@
    "en": "An elegant place for storage.",
    "es": "Un elegante espacio de almacenamiento."
   },
+  "extends": null,
   "icon": "chest_warderobe",
   "id": "piece_chest_warderobe",
   "name": {
@@ -8135,6 +8471,7 @@
    "en": "A good place to store any items you don't need to carry with you.",
    "es": "Un buen lugar para guardar cualquier objeto que no necesites llevar contigo."
   },
+  "extends": null,
   "icon": "chest_wood",
   "id": "piece_chest_wood",
   "name": {
@@ -8157,6 +8494,7 @@
    "en": "Heavy curtains of red jute, excellent for draping.",
    "es": "Pesadas cortinas de yute rojo, excelentes para decorar."
   },
+  "extends": null,
   "icon": "clothdoor",
   "id": "piece_cloth_hanging_door",
   "name": {
@@ -8183,6 +8521,7 @@
    "en": "Blue jute makes any building look official and important.",
    "es": "El yute azul da un aspecto oficial e importante a cualquier edificio."
   },
+  "extends": null,
   "icon": "hanging_cloth_blue1",
   "id": "piece_cloth_hanging_door_blue",
   "name": {
@@ -8209,6 +8548,7 @@
    "en": "Blue jute makes any building look official and important.",
    "es": "El yute azul da un aspecto oficial e importante a cualquier edificio."
   },
+  "extends": null,
   "icon": "hanging_cloth_blue2",
   "id": "piece_cloth_hanging_door_blue2",
   "name": {
@@ -8235,6 +8575,7 @@
    "en": "Perfect for grilling raw meat.",
    "es": "Va genial para asar carne cruda."
   },
+  "extends": null,
   "icon": "cooking_station",
   "id": "piece_cookingstation",
   "name": {
@@ -8257,6 +8598,7 @@
    "en": "Sturdy, with room to cook meat from larger creatures.",
    "es": "Tiene espacio de sobra para cocinar carne de criaturas grandes."
   },
+  "extends": null,
   "icon": "cooking_station_iron",
   "id": "piece_cookingstation_iron",
   "name": {
@@ -8283,6 +8625,7 @@
    "en": "Both a bridge and a gate, how clever!",
    "es": "Tanto un puente como una puerta, ¡qué ingenioso!"
   },
+  "extends": null,
   "icon": "drawbridge",
   "id": "piece_drawbridge",
   "name": {
@@ -8313,6 +8656,7 @@
    "en": "Convenient for crossing chasms, or for keeping enemies out.",
    "es": "Muy práctico para cruzar abismos o mantener alejados a los enemigos."
   },
+  "extends": null,
   "icon": "drawbridge_log",
   "id": "piece_drawbridge_log",
   "name": {
@@ -8343,6 +8687,7 @@
    "en": "A finely wrought lantern, crafted by a true artisan. The wall mount is easy enough to figure out though!",
    "es": "Un farol finamente elaborado por un verdadero artesano. El soporte de pared es bastante intuitivo."
   },
+  "extends": null,
   "icon": "piece_dvergr_lantern",
   "id": "piece_dvergr_lantern",
   "name": {
@@ -8373,6 +8718,7 @@
    "en": "You can build a pole easy enough, but the lantern can only have been made by a true master.",
    "es": "Puedes construir un poste sin problema, pero el farol solo puede hacerlo un auténtico maestro."
   },
+  "extends": null,
   "icon": "piece_dvergr_lantern_pole",
   "id": "piece_dvergr_lantern_pole",
   "name": {
@@ -8403,6 +8749,7 @@
    "en": "Dvergr design is all the rage these days.",
    "es": "El diseño dvergr está muy de moda estos días."
   },
+  "extends": null,
   "icon": "piece_dvergr_metall_wall_2x2",
   "id": "piece_dvergr_metal_wall_2x2",
   "name": {
@@ -8425,6 +8772,7 @@
    "en": "The dvergr know how to keep unwanted visitors away.",
    "es": "Los dvergr saben cómo mantener alejados a los visitantes no deseados."
   },
+  "extends": null,
   "icon": "piece_dvergr_sharpstakes",
   "id": "piece_dvergr_sharpstakes",
   "name": {
@@ -8451,6 +8799,7 @@
    "en": "Up and around it goes!",
    "es": "¡Sube y gira!"
   },
+  "extends": null,
   "icon": "piece_dvergr_spiralstair",
   "id": "piece_dvergr_spiralstair",
   "name": {
@@ -8477,6 +8826,7 @@
    "en": "Up and around it goes!",
    "es": "¡Sube y gira!"
   },
+  "extends": null,
   "icon": "piece_dvergr_spiralstair_right",
   "id": "piece_dvergr_spiralstair_right",
   "name": {
@@ -8503,6 +8853,7 @@
    "en": "Reinforced with metal, this is sure to be a sturdy defence.",
    "es": "Reforzado con metal, esto será una defensa muy resistente."
   },
+  "extends": null,
   "icon": "piece_dvergr_stake_wall",
   "id": "piece_dvergr_stake_wall",
   "name": {
@@ -8529,6 +8880,7 @@
    "en": "A small gift for someone you like.",
    "es": "Un pequeño regalo para alguien que te cae bien."
   },
+  "extends": null,
   "icon": "gift1",
   "id": "piece_gift1",
   "name": {
@@ -8555,6 +8907,7 @@
    "en": "A gift for someone who was nice this year.",
    "es": "Un regalo para alguien que ha sido amable este año."
   },
+  "extends": null,
   "icon": "gift2",
   "id": "piece_gift2",
   "name": {
@@ -8581,6 +8934,7 @@
    "en": "A large gift for someone you appreciate a lot.",
    "es": "Un gran regalo para alguien a quien aprecias mucho."
   },
+  "extends": null,
   "icon": "gift3",
   "id": "piece_gift3",
   "name": {
@@ -8607,6 +8961,7 @@
    "en": "A roof design fit for the mightiest of halls.",
    "es": "Un diseño de tejado digno de los salones más poderosos."
   },
+  "extends": null,
   "icon": "grausten_roof45",
   "id": "piece_grausten_roof_45",
   "name": {
@@ -8629,6 +8984,7 @@
    "en": "A roof design fit for the mightiest of halls.",
    "es": "Un diseño de tejado digno de los salones más poderosos."
   },
+  "extends": null,
   "icon": "grausten_roof45_arch",
   "id": "piece_grausten_roof_45_arch",
   "name": {
@@ -8651,6 +9007,7 @@
    "en": "A roof design fit for the mightiest of halls.",
    "es": "Un diseño de tejado digno de los salones más poderosos."
   },
+  "extends": null,
   "icon": "grausten_roof45_arch_corner",
   "id": "piece_grausten_roof_45_arch_corner",
   "name": {
@@ -8673,6 +9030,7 @@
    "en": "A roof design fit for the mightiest of halls.",
    "es": "Un diseño de tejado digno de los salones más poderosos."
   },
+  "extends": null,
   "icon": "grausten_roof45_arch_corner2",
   "id": "piece_grausten_roof_45_arch_corner2",
   "name": {
@@ -8695,6 +9053,7 @@
    "en": "A roof design fit for the mightiest of halls.",
    "es": "Un diseño de tejado digno de los salones más poderosos."
   },
+  "extends": null,
   "icon": "grausten_roof45_corner",
   "id": "piece_grausten_roof_45_corner",
   "name": {
@@ -8717,6 +9076,7 @@
    "en": "A roof design fit for the mightiest of halls.",
    "es": "Un diseño de tejado digno de los salones más poderosos."
   },
+  "extends": null,
   "icon": "grausten_roof45_corner2",
   "id": "piece_grausten_roof_45_corner2",
   "name": {
@@ -8739,6 +9099,7 @@
    "en": "Just take one step after the other.",
    "es": "Solo da un paso tras otro."
   },
+  "extends": null,
   "icon": "grausten_stair",
   "id": "piece_grausten_stonestair",
   "name": {
@@ -8761,6 +9122,7 @@
    "en": "A sturdy iron torch to light up your surroundings.",
    "es": "Una resistente antorcha de hierro para iluminar tu entorno."
   },
+  "extends": null,
   "icon": "groundtorch",
   "id": "piece_groundtorch",
   "name": {
@@ -8787,6 +9149,7 @@
    "en": "A sturdy iron torch, emitting an eerie blue light.",
    "es": "Una resistente antorcha de hierro que emite una inquietante luz azul."
   },
+  "extends": null,
   "icon": "groundtorch_blue",
   "id": "piece_groundtorch_blue",
   "name": {
@@ -8813,6 +9176,7 @@
    "en": "A sturdy iron torch, burning with a green flame.",
    "es": "Una resistente antorcha de hierro que arde con una llama verde."
   },
+  "extends": null,
   "icon": "groundtorch_green",
   "id": "piece_groundtorch_green",
   "name": {
@@ -8839,6 +9203,7 @@
    "en": "Bind the wisp to a fixed spot, to ensure the place is always free of mist.",
    "es": "Vincula el fuego fatuo a un punto fijo para asegurar que el lugar esté siempre libre de niebla."
   },
+  "extends": null,
   "icon": "groundtorch_mist",
   "id": "piece_groundtorch_mist",
   "name": {
@@ -8865,6 +9230,7 @@
    "en": "A torch to stick in the ground, for when you need your hands free.",
    "es": "Una antorcha para clavar en el suelo, para cuando necesites tener las manos libres."
   },
+  "extends": null,
   "icon": "groundtorch_wood",
   "id": "piece_groundtorch_wood",
   "name": {
@@ -8891,6 +9257,7 @@
    "en": "This dwarven design is excellent for keeping unwanted guests out.",
    "es": "Este diseño enano es excelente para mantener fuera a los invitados no deseados."
   },
+  "extends": null,
   "icon": "hexagonal_gate",
   "id": "piece_hexagonal_door",
   "name": {
@@ -8917,6 +9284,7 @@
    "en": "Aimed in just one direction, the light grows more potent. Convenient for sneak thieves, or those who wish to leave a trail.",
    "es": "Al apuntar en una sola dirección, la luz se vuelve más potente. Práctico para ladrones sigilosos o para quienes quieran dejar un rastro."
   },
+  "extends": null,
   "icon": "lantern_hooded",
   "id": "piece_hoodedlantern",
   "name": {
@@ -8943,6 +9311,7 @@
    "en": "A solid chunk of ice.",
    "es": "Un sólido trozo de hielo."
   },
+  "extends": null,
   "icon": "piece_icecube",
   "id": "piece_icecube",
   "name": {
@@ -8965,6 +9334,7 @@
    "en": "The face carved into this vegetable...is it spooky or friendly?",
    "es": "¿La cara tallada en esta verdura... da miedo o es simpática?"
   },
+  "extends": null,
   "icon": "jackoturnip",
   "id": "piece_jackoturnip",
   "name": {
@@ -8991,6 +9361,7 @@
    "en": "It's nothing fancy, but it's better than sitting on the ground.",
    "es": "No es nada lujoso, pero es mejor que sentarse en el suelo."
   },
+  "extends": null,
   "icon": "bench_log",
   "id": "piece_logbench01",
   "name": {
@@ -9010,6 +9381,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "magetable",
   "id": "piece_magetable",
   "name": {
@@ -9041,6 +9413,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_magetable",
   "icon": "magetable_ext1",
   "id": "piece_magetable_ext",
   "name": {
@@ -9068,6 +9441,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_magetable",
   "icon": "magetable_ext2",
   "id": "piece_magetable_ext2",
   "name": {
@@ -9099,6 +9473,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_magetable",
   "icon": "magetable_ext3",
   "id": "piece_magetable_ext3",
   "name": {
@@ -9130,6 +9505,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_magetable",
   "icon": "magetable_ext4",
   "id": "piece_magetable_ext4",
   "name": {
@@ -9156,6 +9532,7 @@
    "en": "On the longest day of the year, let this monument stretch towards the sun!",
    "es": "En el día más largo del año, deja que este monumento se eleve hacia el sol."
   },
+  "extends": null,
   "icon": "maypole",
   "id": "piece_maypole",
   "name": {
@@ -9186,6 +9563,7 @@
    "en": "You can't help but to feel like there's something romantic about this...",
    "es": "No puedes evitar sentir que tiene algo de romántico..."
   },
+  "extends": null,
   "icon": "mistletoe",
   "id": "piece_mistletoe",
   "name": {
@@ -9212,6 +9590,7 @@
    "en": "Though rustic and sturdy, this throne is well suited even for the most noble of royalty.",
    "es": "Aunque rústico y resistente, este trono es digno incluso de la más noble realeza."
   },
+  "extends": null,
   "icon": "throne_moose",
   "id": "piece_moose_throne",
   "name": {
@@ -9242,6 +9621,7 @@
    "en": "For all your baking needs.",
    "es": "Para todas tus necesidades de repostería."
   },
+  "extends": null,
   "icon": "oven",
   "id": "piece_oven",
   "name": {
@@ -9272,6 +9652,7 @@
    "en": "A piece of ceramic, deep enough to fit a thing or two inside.",
    "es": "Una pieza de cerámica, lo bastante profunda como para guardar varias cosas dentro."
   },
+  "extends": null,
   "icon": "piece_pot1",
   "id": "piece_pot1",
   "name": {
@@ -9298,6 +9679,7 @@
    "en": "A large statement piece of a pot! You could almost fit an entire viking in there.",
    "es": "¡Una gran pieza decorativa de cerámica! Casi podrías meter un vikingo entero ahí dentro."
   },
+  "extends": null,
   "icon": "piece_pot2",
   "id": "piece_pot2",
   "name": {
@@ -9324,6 +9706,7 @@
    "en": "A small piece of earthenware, with room for something inside.",
    "es": "Una pequeña pieza de cerámica, con espacio para algo dentro."
   },
+  "extends": null,
   "icon": "piece_pot3",
   "id": "piece_pot3",
   "name": {
@@ -9347,6 +9730,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "preptable",
   "id": "piece_preptable",
   "name": {
@@ -9377,6 +9761,7 @@
    "en": "<color=yellow>Once a feast has been eaten of, it won't return any resources if dismantled.</color>",
    "es": "<color=yellow>Una vez has comido algo del festín, no devolverá ningún recurso al eliminarse.</color>"
   },
+  "extends": null,
   "icon": "feaster",
   "id": "piece_remove_feaster",
   "name": {
@@ -9391,6 +9776,7 @@
   "category": 100,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "hammer",
   "id": "piece_repair",
   "name": {
@@ -9408,6 +9794,7 @@
    "en": "Extract sap from mysterious branches.",
    "es": "Extrae savia de ramas misteriosas."
   },
+  "extends": null,
   "icon": "sapcollector",
   "id": "piece_sapcollector",
   "name": {
@@ -9438,6 +9825,7 @@
    "en": "If someone comes too close, they'll get poked.",
    "es": "Si alguien se acerca demasiado, se llevará un pinchazo."
   },
+  "extends": null,
   "icon": "sharpstakes",
   "id": "piece_sharpstakes",
   "name": {
@@ -9464,6 +9852,7 @@
    "en": "Creates a shield to protect against weather and incoming projectiles. Fuelled by bones of any kind.",
    "es": "Crea un escudo para proteger contra el clima o proyectiles. Funciona con huesos de cualquier tipo."
   },
+  "extends": null,
   "icon": "shieldgenerator",
   "id": "piece_shieldgenerator",
   "name": {
@@ -9494,6 +9883,7 @@
    "en": "Adds a cosy touch to a wintry landscape.",
    "es": "Aporta un toque acogedor a un paisaje invernal."
   },
+  "extends": null,
   "icon": "snowlantern",
   "id": "piece_snowlantern",
   "name": {
@@ -9516,6 +9906,7 @@
    "en": "This automated machine makes spinning fibres into thread a remarkably quick process.",
    "es": "Esta máquina automatizada convierte fibras en hilo de forma rápida."
   },
+  "extends": null,
   "icon": "spinningwheel",
   "id": "piece_spinningwheel",
   "name": {
@@ -9546,6 +9937,7 @@
    "en": "Good for keeping intruders out.",
    "es": "Va bien para mantener a los intrusos fuera."
   },
+  "extends": null,
   "icon": "blackwood_stakewall",
   "id": "piece_stakewall_blackwood",
   "name": {
@@ -9565,6 +9957,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "stonecutter",
   "id": "piece_stonecutter",
   "name": {
@@ -9595,6 +9988,7 @@
    "en": "A small but sturdy table.",
    "es": "Una mesa pequeña pero resistente."
   },
+  "extends": null,
   "icon": "table",
   "id": "piece_table",
   "name": {
@@ -9617,6 +10011,7 @@
    "en": "This table is perfect for a large feast, with room for many different dishes!",
    "es": "¡Esta mesa es perfecta para un gran banquete, con espacio para muchos platos diferentes!"
   },
+  "extends": null,
   "icon": "table_oak",
   "id": "piece_table_oak",
   "name": {
@@ -9647,6 +10042,7 @@
    "en": "At a round table, no seat is more important than any other.",
    "es": "En una mesa redonda, ningún asiento es más importante que otro."
   },
+  "extends": null,
   "icon": "table_round",
   "id": "piece_table_round",
   "name": {
@@ -9677,6 +10073,7 @@
    "en": "The story carved into this table is excellent to read during long feasts.",
    "es": "La historia tallada en esta mesa es ideal para leer durante largos banquetes."
   },
+  "extends": null,
   "icon": "table_runed",
   "id": "piece_table_runed",
   "name": {
@@ -9707,6 +10104,7 @@
    "en": "A table for more intimate gatherings.",
    "es": "Una mesa para reuniones más íntimas."
   },
+  "extends": null,
   "icon": "table_small_runed",
   "id": "piece_table_runed_small",
   "name": {
@@ -9737,6 +10135,7 @@
    "en": "Perhaps this is what Odin's throne in Valhalla looks like... Either way, it's comfortable!",
    "es": "Quizá así sea el trono de Odín en el Valhalla... En cualquier caso, ¡es cómodo!"
   },
+  "extends": null,
   "icon": "throne01",
   "id": "piece_throne01",
   "name": {
@@ -9763,6 +10162,7 @@
    "en": "A good leader must be firm like stone, yet they also need to know when to be soft like furs...",
    "es": "Un buen líder debe ser firme como la piedra, pero también saber cuándo ser suave como las pieles..."
   },
+  "extends": null,
   "icon": "throne02",
   "id": "piece_throne02",
   "name": {
@@ -9793,6 +10193,7 @@
    "en": "This trap will clamp down on whatever steps on it. Careful!",
    "es": "Esta trampa se cerrará sobre todo lo que la pise. ¡Cuidado!"
   },
+  "extends": null,
   "icon": "trap",
   "id": "piece_trap_troll",
   "name": {
@@ -9823,6 +10224,7 @@
    "en": "Defensive structure that shoots missiles at anything that gets in its way.",
    "es": "Estructura defensiva que dispara proyectiles a lo que sea que esté a su alcance."
   },
+  "extends": null,
   "icon": "turret",
   "id": "piece_turret",
   "name": {
@@ -9853,6 +10255,7 @@
    "en": "Why stick a torch in the ground when you can hang it on your wall?",
    "es": "¿Por qué clavar una antorcha en el suelo cuando puedes colgarla en la pared?"
   },
+  "extends": null,
   "icon": "walltorch",
   "id": "piece_walltorch",
   "name": {
@@ -9883,6 +10286,7 @@
    "en": "Attracts wisps. They mostly come at night... mostly.",
    "es": "Atrae wisps, usualmente llegan de noche... usualmente."
   },
+  "extends": null,
   "icon": "wisplure",
   "id": "piece_wisplure",
   "name": {
@@ -9906,6 +10310,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": null,
   "icon": "workbench",
   "id": "piece_workbench",
   "name": {
@@ -9925,6 +10330,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_workbench",
   "icon": "workbench_ext1",
   "id": "piece_workbench_ext1",
   "name": {
@@ -9948,6 +10354,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_workbench",
   "icon": "workbench_ext2",
   "id": "piece_workbench_ext2",
   "name": {
@@ -9979,6 +10386,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_workbench",
   "icon": "workbench_ext3",
   "id": "piece_workbench_ext3",
   "name": {
@@ -10002,6 +10410,7 @@
   "category": 1,
   "comfort": null,
   "desc": null,
+  "extends": "piece_workbench",
   "icon": "workbench_ext4",
   "id": "piece_workbench_ext4",
   "name": {
@@ -10032,6 +10441,7 @@
    "en": "It's hard to think of anything more festive than a wreath!",
    "es": "¡Es difícil pensar en algo más festivo que una corona vegetal!"
   },
+  "extends": null,
   "icon": "yulecrown",
   "id": "piece_xmascrown",
   "name": {
@@ -10062,6 +10472,7 @@
    "en": "Deck the halls!",
    "es": "¡Decora la casa!"
   },
+  "extends": null,
   "icon": "yulegarland",
   "id": "piece_xmasgarland",
   "name": {
@@ -10088,6 +10499,7 @@
    "en": "This fir tree has been given festive decorative lights.",
    "es": "Este abeto ha sido decorado con luces festivas."
   },
+  "extends": null,
   "icon": "xmastree",
   "id": "piece_xmastree",
   "name": {
@@ -10114,6 +10526,7 @@
    "en": "Adds a rustic touch to any garden.",
    "es": "Aporta un toque rústico a cualquier jardín."
   },
+  "extends": null,
   "icon": "placeablerock1",
   "id": "placeable_bigrock_01",
   "name": {
@@ -10136,6 +10549,7 @@
    "en": "That is a nice boulder.",
    "es": "Es una roca bien bonita."
   },
+  "extends": null,
   "icon": "placeablerock2",
   "id": "placeable_bigrock_02",
   "name": {
@@ -10158,6 +10572,7 @@
    "en": "The powerful energy source lets you pass through even with the most valuable of items.",
    "es": "La poderosa fuente de energía te permite cruzar incluso con los objetos más valiosos."
   },
+  "extends": null,
   "icon": "portal_stone",
   "id": "portal_stone",
   "name": {
@@ -10188,6 +10603,7 @@
    "en": "Connects to another portal with equal or no tag.",
    "es": "Se conecta con otro portal sin nombre o con uno igual."
   },
+  "extends": null,
   "icon": "portal_wood",
   "id": "portal_wood",
   "name": {
@@ -10218,6 +10634,7 @@
    "en": "Fill holes and create elevated platforms.",
    "es": "Rellena agujeros y crea plataformas elevadas."
   },
+  "extends": null,
   "icon": "raise",
   "id": "raise_v2",
   "name": {
@@ -10240,6 +10657,7 @@
    "en": "Restore the ground to its original vegetation.",
    "es": "Restaura el terreno a su vegetación original."
   },
+  "extends": null,
   "icon": "replant",
   "id": "replant_v2",
   "name": {
@@ -10257,6 +10675,7 @@
    "en": "The fur is soft, though the teeth are still sharp.",
    "es": "El pelaje es suave, aunque los dientes siguen siendo afilados."
   },
+  "extends": null,
   "icon": "rug_bjorn",
   "id": "rug_Bjorn",
   "name": {
@@ -10287,6 +10706,7 @@
    "en": "With how lumpy asksvin hide is, it's hard to make anything useful from a single piece. Some assembly is required.",
    "es": "Con lo rugosa que es la piel de cenicerdo, es difícil hacer algo útil con una sola pieza. Requiere algo de montaje."
   },
+  "extends": null,
   "icon": "rug_asksvin",
   "id": "rug_asksvin",
   "name": {
@@ -10309,6 +10729,7 @@
    "en": "Protects your feet from wood splinters.",
    "es": "Protege tus pies de las astillas de madera."
   },
+  "extends": null,
   "icon": "rug_deer",
   "id": "rug_deer",
   "name": {
@@ -10331,6 +10752,7 @@
    "en": "It's incredibly fluffy!",
    "es": "¡Es increíblemente jugosa!"
   },
+  "extends": null,
   "icon": "rug_lox",
   "id": "rug_fur",
   "name": {
@@ -10353,6 +10775,7 @@
    "en": "It's a strange texture, but a very interesting piece of decor.",
    "es": "Tiene una textura extraña, pero es una pieza decorativa muy interesante."
   },
+  "extends": null,
   "icon": "rug_hare",
   "id": "rug_hare",
   "name": {
@@ -10375,6 +10798,7 @@
    "en": "This carpet is neatly sewn together, to ensure a large, soft surface.",
    "es": "Esta alfombra está cuidadosamente cosida para ofrecer una superficie amplia y suave."
   },
+  "extends": null,
   "icon": "rug_moose",
   "id": "rug_moose",
   "name": {
@@ -10397,6 +10821,7 @@
    "en": "This rug is so soft, soft like innocence.",
    "es": "Esta alfombra es tan suave como la inocencia."
   },
+  "extends": null,
   "icon": "rug_seal",
   "id": "rug_seal",
   "name": {
@@ -10419,6 +10844,7 @@
    "en": "Your animals will love this.",
    "es": "A tus animales les encantará."
   },
+  "extends": null,
   "icon": "rug_straw",
   "id": "rug_straw",
   "name": {
@@ -10445,6 +10871,7 @@
    "en": "Warm and cosy, especially up in the mountains.",
    "es": "Cálida y acogedora, especialmente en las montañas."
   },
+  "extends": null,
   "icon": "rug_wolf",
   "id": "rug_wolf",
   "name": {
@@ -10467,6 +10894,7 @@
    "en": "A hardy and nutritious plant.",
    "es": "Una planta resistente y nutritiva."
   },
+  "extends": null,
   "icon": "kale",
   "id": "sapling_Kale",
   "name": {
@@ -10489,6 +10917,7 @@
    "en": "A robust grain that can be ground into flour.",
    "es": "Un grano robusto que puede molerse para obtener harina."
   },
+  "extends": null,
   "icon": "barley",
   "id": "sapling_barley",
   "name": {
@@ -10511,6 +10940,7 @@
    "en": "Can be eaten as is, or used for more advanced cooking.",
    "es": "Se puede comer tal cual o usar en preparaciones más avanzadas."
   },
+  "extends": null,
   "icon": "carrot",
   "id": "sapling_carrot",
   "name": {
@@ -10533,6 +10963,7 @@
    "en": "Pretty flowers with fibres that can be spun into thread.",
    "es": "Hermosas flores con fibras que pueden convertirse en hilo."
   },
+  "extends": null,
   "icon": "flax",
   "id": "sapling_flax",
   "name": {
@@ -10555,6 +10986,7 @@
    "en": "An invigorating mushroom that can be used for cooking.",
    "es": "Un hongo vigorizante que puede usarse para cocinar."
   },
+  "extends": null,
   "icon": "mushroomjotunpuffs",
   "id": "sapling_jotunpuffs",
   "name": {
@@ -10577,6 +11009,7 @@
    "en": "A mushroom commonly used in a sorcerer's diet.",
    "es": "Un hongo común en la dieta de los hechiceros."
   },
+  "extends": null,
   "icon": "mushroommagecap",
   "id": "sapling_magecap",
   "name": {
@@ -10599,6 +11032,7 @@
    "en": "Plant to grow oats.",
    "es": "Plántala para cultivar avena."
   },
+  "extends": null,
   "icon": "oats",
   "id": "sapling_oat",
   "name": {
@@ -10621,6 +11055,7 @@
    "en": "Useful for many cooking recipes.",
    "es": "Útil en muchas recetas de cocina."
   },
+  "extends": null,
   "icon": "onion_sapling",
   "id": "sapling_onion",
   "name": {
@@ -10643,6 +11078,7 @@
    "en": "A potent, otherworldly spud.",
    "es": "Un tubérculo potente y de otro mundo."
   },
+  "extends": null,
   "icon": "poteitr",
   "id": "sapling_poteitr",
   "name": {
@@ -10665,6 +11101,7 @@
    "en": "Plant a carrot to get more seeds",
    "es": "Planta una zanahoria para conseguir más semillas."
   },
+  "extends": null,
   "icon": "seedcarrot",
   "id": "sapling_seedcarrot",
   "name": {
@@ -10687,6 +11124,7 @@
    "en": "Plant kale seeds to get even more seeds.",
    "es": "Planta semillas de col rizada para obtener aún más semillas."
   },
+  "extends": null,
   "icon": "kaleseedling",
   "id": "sapling_seedkale",
   "name": {
@@ -10709,6 +11147,7 @@
    "en": "Plant an onion to get more seeds.",
    "es": "Planta semillas de cebolla para conseguir aún más semillas."
   },
+  "extends": null,
   "icon": "onion_seedling",
   "id": "sapling_seedonion",
   "name": {
@@ -10731,6 +11170,7 @@
    "en": "Plant a turnip to get more seeds",
    "es": "Planta un nabo para conseguir más semillas."
   },
+  "extends": null,
   "icon": "seedturnip",
   "id": "sapling_seedturnip",
   "name": {
@@ -10753,6 +11193,7 @@
    "en": "A hearty vegetable used for cooking.",
    "es": "Una hortaliza sustanciosa usada para cocinar."
   },
+  "extends": null,
   "icon": "turnip",
   "id": "sapling_turnip",
   "name": {
@@ -10775,6 +11216,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_2x1",
   "id": "scale_halfwall_1x2",
   "name": {
@@ -10797,6 +11239,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_1x1",
   "id": "scale_quarterwall_1x1",
   "name": {
@@ -10819,6 +11262,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_2x2",
   "id": "scale_wall_2x2",
   "name": {
@@ -10841,6 +11285,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_26",
   "id": "scale_wall_roof_26",
   "name": {
@@ -10863,6 +11308,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_26_flipped",
   "id": "scale_wall_roof_26_flipped",
   "name": {
@@ -10885,6 +11331,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_26_upsidedown",
   "id": "scale_wall_roof_26_upsidedown",
   "name": {
@@ -10907,6 +11354,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_26_upsidedown_flipped",
   "id": "scale_wall_roof_26_upsidedown_flipped",
   "name": {
@@ -10929,6 +11377,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_45",
   "id": "scale_wall_roof_45",
   "name": {
@@ -10951,6 +11400,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_45_flipped",
   "id": "scale_wall_roof_45_flipped",
   "name": {
@@ -10973,6 +11423,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_45_upsidedown",
   "id": "scale_wall_roof_45_upsidedown",
   "name": {
@@ -10995,6 +11446,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_45_upsidedown_flipped",
   "id": "scale_wall_roof_45_upsidedown_flipped",
   "name": {
@@ -11017,6 +11469,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_67",
   "id": "scale_wall_roof_67",
   "name": {
@@ -11039,6 +11492,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_67_flipped",
   "id": "scale_wall_roof_67_flipped",
   "name": {
@@ -11061,6 +11515,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_67_upsidedown",
   "id": "scale_wall_roof_67_upsidedown",
   "name": {
@@ -11083,6 +11538,7 @@
    "en": "The overlapping wood of these walls provide excellent protection against the elements.",
    "es": "La madera superpuesta de estos muros ofrece una excelente protección contra los elementos."
   },
+  "extends": null,
   "icon": "scale_wall_roof_67_upsidedown_flipped",
   "id": "scale_wall_roof_67_upsidedown_flipped",
   "name": {
@@ -11105,6 +11561,7 @@
    "en": "Disorder is a survivalist's worst enemy. Defend yourself against it by putting up signs.",
    "es": "El desorden es el peor enemigo de un superviviente. Defiéndete colocando señales."
   },
+  "extends": null,
   "icon": "sign",
   "id": "sign",
   "name": {
@@ -11131,6 +11588,7 @@
    "en": "A certain proof of your prowess in combat.",
    "es": "Una prueba clara de tu destreza en combate."
   },
+  "extends": null,
   "icon": "skullpile",
   "id": "skull_pile",
   "name": {
@@ -11153,6 +11611,7 @@
    "en": "Fuel and ore go in, beautiful metal ingots come out.",
    "es": "Entran combustible y mineral y salen preciosos lingotes de metal."
   },
+  "extends": null,
   "icon": "smelter",
   "id": "smelter",
   "name": {
@@ -11179,6 +11638,7 @@
    "en": "Good for keeping intruders out.",
    "es": "Va bien para mantener a los intrusos fuera."
   },
+  "extends": null,
   "icon": "stake_wall",
   "id": "stake_wall",
   "name": {
@@ -11201,6 +11661,7 @@
    "en": "These thick chunks of wood are sure to support your constructions.",
    "es": "Estos gruesos bloques de madera son perfectos para soportar tus construcciones."
   },
+  "extends": null,
   "icon": "stave_beam_26",
   "id": "stave_beam_26",
   "name": {
@@ -11223,6 +11684,7 @@
    "en": "These thick chunks of wood are sure to support your constructions.",
    "es": "Estos gruesos bloques de madera son perfectos para soportar tus construcciones."
   },
+  "extends": null,
   "icon": "stave_beam_2m",
   "id": "stave_beam_2m",
   "name": {
@@ -11245,6 +11707,7 @@
    "en": "These thick chunks of wood are sure to support your constructions.",
    "es": "Estos gruesos bloques de madera son perfectos para soportar tus construcciones."
   },
+  "extends": null,
   "icon": "stave_beam_45",
   "id": "stave_beam_45",
   "name": {
@@ -11267,6 +11730,7 @@
    "en": "These thick chunks of wood are sure to support your constructions.",
    "es": "Estos gruesos bloques de madera son perfectos para soportar tus construcciones."
   },
+  "extends": null,
   "icon": "stave_beam_4m",
   "id": "stave_beam_4m",
   "name": {
@@ -11289,6 +11753,7 @@
    "en": "These thick chunks of wood are sure to support your constructions.",
    "es": "Estos gruesos bloques de madera son perfectos para soportar tus construcciones."
   },
+  "extends": null,
   "icon": "stave_beam_67",
   "id": "stave_beam_67",
   "name": {
@@ -11311,6 +11776,7 @@
    "en": "These supports add a tasteful and decorative touch.",
    "es": "Estos soportes son bonitos y decorativos."
   },
+  "extends": null,
   "icon": "stave_deco_beam_26",
   "id": "stave_deco_beam_26",
   "name": {
@@ -11333,6 +11799,7 @@
    "en": "These supports add a tasteful and decorative touch.",
    "es": "Estos soportes son bonitos y decorativos."
   },
+  "extends": null,
   "icon": "stave_deco_beam_2m",
   "id": "stave_deco_beam_2m",
   "name": {
@@ -11355,6 +11822,7 @@
    "en": "These supports add a tasteful and decorative touch.",
    "es": "Estos soportes son bonitos y decorativos."
   },
+  "extends": null,
   "icon": "stave_deco_beam_45",
   "id": "stave_deco_beam_45",
   "name": {
@@ -11377,6 +11845,7 @@
    "en": "These supports add a tasteful and decorative touch.",
    "es": "Estos soportes son bonitos y decorativos."
   },
+  "extends": null,
   "icon": "stave_deco_beam_67",
   "id": "stave_deco_beam_67",
   "name": {
@@ -11399,6 +11868,7 @@
    "en": "These supports add a tasteful and decorative touch.",
    "es": "Estos soportes son bonitos y decorativos."
   },
+  "extends": null,
   "icon": "stave_deco_pole_2m",
   "id": "stave_deco_pole_2m",
   "name": {
@@ -11421,6 +11891,7 @@
    "en": "This wall won't do much to keep out the cold, but it's very pretty to look at.",
    "es": "Esta pared no hará mucho para mantener el frío a raya, pero es muy bonita."
   },
+  "extends": null,
   "icon": "stave_deco_wall_2x2",
   "id": "stave_deco_wall_2x2",
   "name": {
@@ -11443,6 +11914,7 @@
    "en": "Not quite as glorious as the gates of Valhalla, but awfully close!",
    "es": "Quizá no sea tan gloriosa como las puertas del Valhalla, ¡pero se le acerca bastante!"
   },
+  "extends": null,
   "icon": "stave_gate",
   "id": "stave_gate",
   "name": {
@@ -11469,6 +11941,7 @@
    "en": "These thick chunks of wood are sure to support your constructions.",
    "es": "Estos gruesos bloques de madera son perfectos para soportar tus construcciones."
   },
+  "extends": null,
   "icon": "stave_pole_2m",
   "id": "stave_pole_2m",
   "name": {
@@ -11491,6 +11964,7 @@
    "en": "These thick chunks of wood are sure to support your constructions.",
    "es": "Estos gruesos bloques de madera son perfectos para soportar tus construcciones."
   },
+  "extends": null,
   "icon": "stave_pole_4m",
   "id": "stave_pole_4m",
   "name": {
@@ -11513,6 +11987,7 @@
    "en": "Heavy timber walls are good for keeping out the cold.",
    "es": "Los muros de leño macizo son buenos para mantener el frío a raya."
   },
+  "extends": null,
   "icon": "stave_wall_2x2",
   "id": "stave_wall_2x2",
   "name": {
@@ -11535,6 +12010,7 @@
    "en": "These thick chunks of wood are sure to support your constructions.",
    "es": "Estos gruesos bloques de madera son perfectos para soportar tus construcciones."
   },
+  "extends": null,
   "icon": "stave_cross_26",
   "id": "stave_wall_cross_26",
   "name": {
@@ -11557,6 +12033,7 @@
    "en": "These thick chunks of wood are sure to support your constructions.",
    "es": "Estos gruesos bloques de madera son perfectos para soportar tus construcciones."
   },
+  "extends": null,
   "icon": "stave_cross_45",
   "id": "stave_wall_cross_45",
   "name": {
@@ -11579,6 +12056,7 @@
    "en": "These thick chunks of wood are sure to support your constructions.",
    "es": "Estos gruesos bloques de madera son perfectos para soportar tus construcciones."
   },
+  "extends": null,
   "icon": "stave_cross_67",
   "id": "stave_wall_cross_67",
   "name": {
@@ -11601,6 +12079,7 @@
    "en": "Stable as a rock.",
    "es": "Estable como una roca."
   },
+  "extends": null,
   "icon": "stone_arch",
   "id": "stone_arch",
   "name": {
@@ -11623,6 +12102,7 @@
    "en": "Stones carefully pieced together into a sturdy fence.",
    "es": "Piedras colocadas cuidadosamente para formar una valla resistente."
   },
+  "extends": null,
   "icon": "stone_fence",
   "id": "stone_fence",
   "name": {
@@ -11645,6 +12125,7 @@
    "en": "Best to put a rug on it, or it might get cold!",
    "es": "Mejor ponerle una alfombra, ¡o podría estar frío!"
   },
+  "extends": null,
   "icon": "stone_floor_2x2",
   "id": "stone_floor_2x2",
   "name": {
@@ -11667,6 +12148,7 @@
    "en": "It's a big pile of stone.",
    "es": "Un gran montón de piedra."
   },
+  "extends": null,
   "icon": "stone_pile",
   "id": "stone_pile",
   "name": {
@@ -11689,6 +12171,7 @@
    "en": "Stable as a rock.",
    "es": "Estable como una roca."
   },
+  "extends": null,
   "icon": "stone_pillar",
   "id": "stone_pillar",
   "name": {
@@ -11711,6 +12194,7 @@
    "en": "Useful for getting around in a large fortress.",
    "es": "Útil para moverse en una gran fortaleza."
   },
+  "extends": null,
   "icon": "stone_stair",
   "id": "stone_stair",
   "name": {
@@ -11733,6 +12217,7 @@
    "en": "A roughly hewn block of stone.",
    "es": "Un bloque de piedra toscamente tallado."
   },
+  "extends": null,
   "icon": "stone_wall_1x1",
   "id": "stone_wall_1x1",
   "name": {
@@ -11755,6 +12240,7 @@
    "en": "A roughly hewn block of stone.",
    "es": "Un bloque de piedra toscamente tallado."
   },
+  "extends": null,
   "icon": "stone_wall_2x1",
   "id": "stone_wall_2x1",
   "name": {
@@ -11777,6 +12263,7 @@
    "en": "A roughly hewn block of stone.",
    "es": "Un bloque de piedra toscamente tallado."
   },
+  "extends": null,
   "icon": "stone_wall_4x2",
   "id": "stone_wall_4x2",
   "name": {
@@ -11799,6 +12286,7 @@
    "en": "A small fortune, gleaming and glittering.",
    "es": "Una pequeña fortuna, brillante y reluciente."
   },
+  "extends": null,
   "icon": "treasure_pile",
   "id": "treasure_pile",
   "name": {
@@ -11821,6 +12309,7 @@
    "en": "It's important to keep count of your coins.",
    "es": "Es importante llevar la cuenta de tus monedas."
   },
+  "extends": null,
   "icon": "treasure_stack",
   "id": "treasure_stack",
   "name": {
@@ -11843,6 +12332,7 @@
    "en": "Turns grain into flour. Works best on windy days!",
    "es": "Convierte grano en harina. ¡Funciona mejor en días ventosos!"
   },
+  "extends": null,
   "icon": "windmill",
   "id": "windmill",
   "name": {
@@ -11873,6 +12363,7 @@
    "en": "A sturdy wooden support.",
    "es": "Un soporte de madera resistente."
   },
+  "extends": null,
   "icon": "wood_beam2",
   "id": "wood_beam",
   "name": {
@@ -11895,6 +12386,7 @@
    "en": "A sturdy wooden support.",
    "es": "Un soporte de madera resistente."
   },
+  "extends": null,
   "icon": "wood_beam1",
   "id": "wood_beam_1",
   "name": {
@@ -11917,6 +12409,7 @@
    "en": "A sturdy wooden support.",
    "es": "Un soporte de madera resistente."
   },
+  "extends": null,
   "icon": "wood_beam_26",
   "id": "wood_beam_26",
   "name": {
@@ -11939,6 +12432,7 @@
    "en": "A sturdy wooden support.",
    "es": "Un soporte de madera resistente."
   },
+  "extends": null,
   "icon": "wood_beam_45",
   "id": "wood_beam_45",
   "name": {
@@ -11961,6 +12455,7 @@
    "en": "A sturdy wooden support.",
    "es": "Un soporte de madera resistente."
   },
+  "extends": null,
   "icon": "wood_beam_67",
   "id": "wood_beam_67",
   "name": {
@@ -11983,6 +12478,7 @@
    "en": "A big pile of logs, fresh from the forest.",
    "es": "Un gran montón de troncos recién traídos del bosque."
   },
+  "extends": null,
   "icon": "wood_core_stack",
   "id": "wood_core_stack",
   "name": {
@@ -12005,6 +12501,7 @@
    "en": "A simple door for opening and closing.",
    "es": "Una puerta sencilla para abrir y cerrar."
   },
+  "extends": null,
   "icon": "wood_door",
   "id": "wood_door",
   "name": {
@@ -12027,6 +12524,7 @@
    "en": "Make your home legendary by decorating it with a dragon.",
    "es": "Haz tu hogar legendario decorándolo con un dragón."
   },
+  "extends": null,
   "icon": "wood_dragon1",
   "id": "wood_dragon1",
   "name": {
@@ -12049,6 +12547,7 @@
    "en": "A good fence, for livestock and crops alike!",
    "es": "¡Una buena valla para el ganado y los cultivos!"
   },
+  "extends": null,
   "icon": "wood_fence",
   "id": "wood_fence",
   "name": {
@@ -12071,6 +12570,7 @@
    "en": "A gate is far more practical than jumping over the fence every time.",
    "es": "Una puerta es mucho más práctica que tener que saltar la valla cada vez."
   },
+  "extends": null,
   "icon": "wood_fence_gate",
   "id": "wood_fence_gate",
   "name": {
@@ -12093,6 +12593,7 @@
    "en": "This pile of wood is waiting to be turned into furniture.",
    "es": "Este montón de madera a la espera de ser convertido en muebles."
   },
+  "extends": null,
   "icon": "wood_fine_stack",
   "id": "wood_fine_stack",
   "name": {
@@ -12115,6 +12616,7 @@
    "en": "A solid bit of wooden flooring.",
    "es": "Un sólido suelo de madera."
   },
+  "extends": null,
   "icon": "wood_floor",
   "id": "wood_floor",
   "name": {
@@ -12137,6 +12639,7 @@
    "en": "A solid bit of wooden flooring.",
    "es": "Un sólido suelo de madera."
   },
+  "extends": null,
   "icon": "wood_floor_1x1",
   "id": "wood_floor_1x1",
   "name": {
@@ -12159,6 +12662,7 @@
    "en": "It's as if fresh snow just fell upon it...",
    "es": "Es como si acabara de caer nieve fresca sobre él..."
   },
+  "extends": null,
   "icon": "wood_frost_stack",
   "id": "wood_frost_stack",
   "name": {
@@ -12181,6 +12685,7 @@
    "en": "A simple wooden gate. To use by itself or as part of a pair.",
    "es": "Una verja de madera sencilla. Para usar sola o como parte de un par."
   },
+  "extends": null,
   "icon": "wood_gate",
   "id": "wood_gate",
   "name": {
@@ -12203,6 +12708,7 @@
    "en": "Support your constructions in this rustic style.",
    "es": "Apoya tus construcciones con este estilo rústico."
   },
+  "extends": null,
   "icon": "wood_log_26",
   "id": "wood_log_26",
   "name": {
@@ -12225,6 +12731,7 @@
    "en": "Support your constructions in this rustic style.",
    "es": "Apoya tus construcciones con este estilo rústico."
   },
+  "extends": null,
   "icon": "wood_log_45",
   "id": "wood_log_45",
   "name": {
@@ -12247,6 +12754,7 @@
    "en": "Support your constructions in this rustic style.",
    "es": "Apoya tus construcciones con este estilo rústico."
   },
+  "extends": null,
   "icon": "woodlog_67",
   "id": "wood_log_67",
   "name": {
@@ -12269,6 +12777,7 @@
    "en": "A sturdy wooden support.",
    "es": "Un soporte de madera resistente."
   },
+  "extends": null,
   "icon": "wood_pole",
   "id": "wood_pole",
   "name": {
@@ -12291,6 +12800,7 @@
    "en": "A sturdy wooden support.",
    "es": "Un soporte de madera resistente."
   },
+  "extends": null,
   "icon": "wood_pole2",
   "id": "wood_pole2",
   "name": {
@@ -12313,6 +12823,7 @@
    "en": "Support your constructions in this rustic style.",
    "es": "Apoya tus construcciones con este estilo rústico."
   },
+  "extends": null,
   "icon": "wood_logpole2",
   "id": "wood_pole_log",
   "name": {
@@ -12335,6 +12846,7 @@
    "en": "Support your constructions in this rustic style.",
    "es": "Apoya tus construcciones con este estilo rústico."
   },
+  "extends": null,
   "icon": "wood_logpole4",
   "id": "wood_pole_log_4",
   "name": {
@@ -12357,6 +12869,7 @@
    "en": "A simple roof to keep the rain out, built at a shallow angle.",
    "es": "Un tejado simple para proteger de la lluvia, construido con una inclinación suave."
   },
+  "extends": null,
   "icon": "wood_roof",
   "id": "wood_roof",
   "name": {
@@ -12379,6 +12892,7 @@
    "en": "A simple roof to keep the rain out, with a steeper angle.",
    "es": "Un tejado simple para proteger de la lluvia, con una inclinación más pronunciada."
   },
+  "extends": null,
   "icon": "wood_roof_45",
   "id": "wood_roof_45",
   "name": {
@@ -12401,6 +12915,7 @@
    "en": "A simple roof to keep the rain out, built at a very steep angle.",
    "es": "Un tejado simple para proteger de la lluvia, construido con una inclinación muy pronunciada."
   },
+  "extends": null,
   "icon": "wood_roof_67",
   "id": "wood_roof_67",
   "name": {
@@ -12423,6 +12938,7 @@
    "en": "A simple roof to keep the rain out, built at a shallow angle.",
    "es": "Un tejado simple para proteger de la lluvia, construido con una inclinación suave."
   },
+  "extends": null,
   "icon": "wood_roof_icorner",
   "id": "wood_roof_icorner",
   "name": {
@@ -12445,6 +12961,7 @@
    "en": "A simple roof to keep the rain out, with a steeper angle.",
    "es": "Un tejado simple para proteger de la lluvia, con una inclinación más pronunciada."
   },
+  "extends": null,
   "icon": "wood_roof_icorner_45",
   "id": "wood_roof_icorner_45",
   "name": {
@@ -12467,6 +12984,7 @@
    "en": "A simple roof to keep the rain out, built at a very steep angle.",
    "es": "Un tejado simple para proteger de la lluvia, construido con una inclinación muy pronunciada."
   },
+  "extends": null,
   "icon": "wood_roof_icorner_67",
   "id": "wood_roof_icorner_67",
   "name": {
@@ -12489,6 +13007,7 @@
    "en": "A simple roof to keep the rain out, built at a shallow angle.",
    "es": "Un tejado simple para proteger de la lluvia, construido con una inclinación suave."
   },
+  "extends": null,
   "icon": "wood_roof_ocorner",
   "id": "wood_roof_ocorner",
   "name": {
@@ -12511,6 +13030,7 @@
    "en": "A simple roof to keep the rain out, with a steeper angle.",
    "es": "Un tejado simple para proteger de la lluvia, con una inclinación más pronunciada."
   },
+  "extends": null,
   "icon": "wood_roof_ocorner_45",
   "id": "wood_roof_ocorner_45",
   "name": {
@@ -12533,6 +13053,7 @@
    "en": "A simple roof to keep the rain out, built at a very steep angle.",
    "es": "Un tejado simple para proteger de la lluvia, construido con una inclinación muy pronunciada."
   },
+  "extends": null,
   "icon": "wood_roof_ocorner_67",
   "id": "wood_roof_ocorner_67",
   "name": {
@@ -12555,6 +13076,7 @@
    "en": "A simple roof to keep the rain out, built at a shallow angle.",
    "es": "Un tejado simple para proteger de la lluvia, construido con una inclinación suave."
   },
+  "extends": null,
   "icon": "wood_roof_top",
   "id": "wood_roof_top",
   "name": {
@@ -12577,6 +13099,7 @@
    "en": "A simple roof to keep the rain out, with a steeper angle.",
    "es": "Un tejado simple para proteger de la lluvia, con una inclinación más pronunciada."
   },
+  "extends": null,
   "icon": "wood_roof_top_45",
   "id": "wood_roof_top_45",
   "name": {
@@ -12599,6 +13122,7 @@
    "en": "A simple roof to keep the rain out, built at a very steep angle.",
    "es": "Un tejado simple para proteger de la lluvia, construido con una inclinación muy pronunciada."
   },
+  "extends": null,
   "icon": "wood_roof_top_67",
   "id": "wood_roof_top_67",
   "name": {
@@ -12621,6 +13145,7 @@
    "en": "Put all that hard work on display!",
    "es": "¡Muestra todo ese duro trabajo!"
   },
+  "extends": null,
   "icon": "wood_stack",
   "id": "wood_stack",
   "name": {
@@ -12643,6 +13168,7 @@
    "en": "Good for getting off the ground.",
    "es": "Va bien para elevarse del suelo."
   },
+  "extends": null,
   "icon": "wood_stair",
   "id": "wood_stair",
   "name": {
@@ -12665,6 +13191,7 @@
    "en": "Convenient for climbing higher.",
    "es": "Útil para subir más alto."
   },
+  "extends": null,
   "icon": "wood_ladder",
   "id": "wood_stepladder",
   "name": {
@@ -12687,6 +13214,7 @@
    "en": "Walls are an important part of any house!",
    "es": "¡Las paredes son una parte importante de cualquier casa!"
   },
+  "extends": null,
   "icon": "wood_wall_half",
   "id": "wood_wall_half",
   "name": {
@@ -12709,6 +13237,7 @@
    "en": "Support your constructions in this rustic style.",
    "es": "Apoya tus construcciones con este estilo rústico."
   },
+  "extends": null,
   "icon": "wood_logwall",
   "id": "wood_wall_log",
   "name": {
@@ -12731,6 +13260,7 @@
    "en": "Support your constructions in this rustic style.",
    "es": "Apoya tus construcciones con este estilo rústico."
   },
+  "extends": null,
   "icon": "wood_logwall_4x05",
   "id": "wood_wall_log_4x0.5",
   "name": {
@@ -12753,6 +13283,7 @@
    "en": "Walls are an important part of any house!",
    "es": "¡Las paredes son una parte importante de cualquier casa!"
   },
+  "extends": null,
   "icon": "wood_wall_quarter",
   "id": "wood_wall_quarter",
   "name": {
@@ -12775,6 +13306,7 @@
    "en": "Walls are an important part of any house!",
    "es": "¡Las paredes son una parte importante de cualquier casa!"
   },
+  "extends": null,
   "icon": "wood_wall_roof_45",
   "id": "wood_wall_roof_45",
   "name": {
@@ -12797,6 +13329,7 @@
    "en": "Walls are an important part of any house!",
    "es": "¡Las paredes son una parte importante de cualquier casa!"
   },
+  "extends": null,
   "icon": "wood_wall_roof_45_upsidedown",
   "id": "wood_wall_roof_45_upsidedown",
   "name": {
@@ -12819,6 +13352,7 @@
    "en": "Walls are an important part of any house!",
    "es": "¡Las paredes son una parte importante de cualquier casa!"
   },
+  "extends": null,
   "icon": "wood_wall_roof_67",
   "id": "wood_wall_roof_67_a",
   "name": {
@@ -12841,6 +13375,7 @@
    "en": "Walls are an important part of any house!",
    "es": "¡Las paredes son una parte importante de cualquier casa!"
   },
+  "extends": null,
   "icon": "wood_wall_roof_67_upsidedown",
   "id": "wood_wall_roof_67_upsidedown",
   "name": {
@@ -12863,6 +13398,7 @@
    "en": "Walls are an important part of any house!",
    "es": "¡Las paredes son una parte importante de cualquier casa!"
   },
+  "extends": null,
   "icon": "wood_wall_roof",
   "id": "wood_wall_roof_a",
   "name": {
@@ -12885,6 +13421,7 @@
    "en": "A sturdy wooden support.",
    "es": "Un soporte de madera resistente."
   },
+  "extends": null,
   "icon": "wood_wall_roof_cross",
   "id": "wood_wall_roof_top",
   "name": {
@@ -12907,6 +13444,7 @@
    "en": "A sturdy wooden support.",
    "es": "Un soporte de madera resistente."
   },
+  "extends": null,
   "icon": "wood_wall_roof_cross_45",
   "id": "wood_wall_roof_top_45",
   "name": {
@@ -12929,6 +13467,7 @@
    "en": "A sturdy wooden support.",
    "es": "Un soporte de madera resistente."
   },
+  "extends": null,
   "icon": "wood_wall_roof_cross_67",
   "id": "wood_wall_roof_top_67",
   "name": {
@@ -12951,6 +13490,7 @@
    "en": "Walls are an important part of any house!",
    "es": "¡Las paredes son una parte importante de cualquier casa!"
   },
+  "extends": null,
   "icon": "wood_wall_roof_upsidedown",
   "id": "wood_wall_roof_upsidedown",
   "name": {
@@ -12973,6 +13513,7 @@
    "en": "Open or closed, keep it the way you prefer or switch things up whenever you feel like it!",
    "es": "Abierto o cerrado, déjalo como prefieras o cámbialo cuando te apetezca."
   },
+  "extends": null,
   "icon": "wood_window",
   "id": "wood_window",
   "name": {
@@ -12999,6 +13540,7 @@
    "en": "Fine branches, thrumming with mysterious energy.",
    "es": "Ramas finas, vibrando con energía misteriosa."
   },
+  "extends": null,
   "icon": "wood_yggdrasil_stack",
   "id": "wood_yggdrasil_stack",
   "name": {
@@ -13021,6 +13563,7 @@
    "en": "The strongest support you've ever built.",
    "es": "El soporte más resistente que has construido jamás."
   },
+  "extends": null,
   "icon": "woodiron_beam",
   "id": "woodiron_beam",
   "name": {
@@ -13047,6 +13590,7 @@
    "en": "The strongest support you've ever built.",
    "es": "El soporte más resistente que has construido jamás."
   },
+  "extends": null,
   "icon": "woodiron_beam_26",
   "id": "woodiron_beam_26",
   "name": {
@@ -13073,6 +13617,7 @@
    "en": "The strongest support you've ever built.",
    "es": "El soporte más resistente que has construido jamás."
   },
+  "extends": null,
   "icon": "woodiron_beam_45",
   "id": "woodiron_beam_45",
   "name": {
@@ -13099,6 +13644,7 @@
    "en": "The strongest support you've ever built.",
    "es": "El soporte más resistente que has construido jamás."
   },
+  "extends": null,
   "icon": "woodiron_beam_67",
   "id": "woodiron_beam_67",
   "name": {
@@ -13125,6 +13671,7 @@
    "en": "The strongest support you've ever built.",
    "es": "El soporte más resistente que has construido jamás."
   },
+  "extends": null,
   "icon": "woodiron_pole",
   "id": "woodiron_pole",
   "name": {
@@ -13151,6 +13698,7 @@
    "en": "Walls are an important part of any house!",
    "es": "¡Las paredes son una parte importante de cualquier casa!"
   },
+  "extends": null,
   "icon": "wood_wall",
   "id": "woodwall",
   "name": {

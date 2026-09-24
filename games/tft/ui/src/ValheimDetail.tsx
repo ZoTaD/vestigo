@@ -156,6 +156,66 @@ function IngredientSources({ req, to, navigate }: { req: Req[]; to: To; navigate
   );
 }
 
+/**
+ * Cómo se mejora una estación (pedido de ZoTaD, 2026-09-24): cada pieza que la
+ * sube de nivel, con sus materiales, dónde se hace y lo que ese nivel
+ * desbloquea, para ver qué sigue y qué hay que conseguir.
+ */
+function StationUpgrades({ piece, to, navigate }: { piece: PieceRow; to: To; navigate: Nav }) {
+  const t = useValheimCopy();
+  const { lang } = useLang();
+  const ups = piece.upgrades ?? [];
+  const MAX = 18;
+  return (
+    <div>
+      <p className="vh-h2">{t.detail.upgradeHow} · {ups.length}</p>
+      <p className="vh-dim" style={{ margin: "0 0 10px", fontSize: 13.5 }}>{t.detail.upgradeHint}</p>
+      <div className="vh-ups">
+        {ups.map((u) => {
+          const unlocked = (piece.crafts ?? []).filter((c) => c.level === u.level);
+          return (
+            <div key={u.slug ?? u.name.en} className="vh-upg">
+              <span className="vh-upg-lv">{t.level(u.level)}</span>
+              <div className="vh-upg-main">
+                <RefLink r={u} to={to} navigate={navigate} className="vh-ingsrc-name">
+                  <Slot icon={u.icon} size="sm" />
+                  <span>{tx(u.name, lang)}</span>
+                </RefLink>
+                <div className="vh-upg-req">
+                  {u.req.map((q) => (
+                    <RefLink key={q.slug ?? q.name.en} r={q} to={to} navigate={navigate} className="vh-upg-mat">
+                      <Slot icon={q.icon} qty={q.amount} size="sm" />
+                      <span>{tx(q.name, lang)}</span>
+                    </RefLink>
+                  ))}
+                </div>
+                {u.station && <span className="vh-dim">{t.detail.builtAt} <RefLink r={u.station} to={to} navigate={navigate}>{tx(u.station.name, lang)}</RefLink></span>}
+              </div>
+              <div className="vh-upg-unl">
+                {unlocked.length === 0 ? <span className="vh-dim">{t.detail.nothingNew}</span> : (
+                  <>
+                    <span className="vh-dim">{t.detail.unlocks(unlocked.length)}</span>
+                    <div className="vh-mosaic">
+                      {unlocked.slice(0, MAX).map((c) => (
+                        <RefLink key={`${c.tab}/${c.slug}`} r={c} to={to} navigate={navigate} className="vh-slot is-sm">
+                          <span title={tx(c.name, lang)} style={{ display: "contents" }}>
+                            {c.icon && <img src={`/valheim/icons/${c.icon}.webp`} alt={tx(c.name, lang)} loading="lazy" width={30} height={30} />}
+                          </span>
+                        </RefLink>
+                      ))}
+                      {unlocked.length > MAX && <span className="vh-more">+{unlocked.length - MAX}</span>}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function UsedIn({ uses, to, navigate }: { uses: Use[]; to: To; navigate: Nav }) {
   const t = useValheimCopy();
   const { lang } = useLang();
@@ -207,6 +267,11 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
                 {item?.effect && <span className="vh-chip">{t.effect[item.effect]}</span>}
                 {piece?.tool && <span className="vh-chip">{t.tool[piece.tool] ?? piece.tool}</span>}
                 {piece?.categoryName && <span className="vh-chip">{tx(piece.categoryName, lang)}</span>}
+                {piece?.extends && (
+                  <RefLink r={piece.extends} to={to} navigate={navigate} className="vh-chip is-on">
+                    {t.detail.extendsStation}: {tx(piece.extends.name, lang)} · {t.detail.plusLevel}
+                  </RefLink>
+                )}
               </div>
             </div>
           </header>
@@ -299,6 +364,7 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
               </div>
             </div>
           )}
+          {piece?.upgrades && piece.upgrades.length > 0 && <StationUpgrades piece={piece} to={to} navigate={navigate} />}
           {piece?.crafts && piece.crafts.length > 0 && (
             <div>
               <p className="vh-h2">{t.detail.crafts} · {piece.crafts.length}</p>

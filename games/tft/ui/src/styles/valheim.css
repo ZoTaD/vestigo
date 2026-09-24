@@ -256,6 +256,19 @@ a.vh-ingsrc-name:hover { color: var(--vh-brass-lt); }
 .vh-more { color: var(--vh-brass); font-size: 13px; text-decoration: none; }
 .vh-more:hover { color: var(--vh-brass-lt); }
 @media (max-width: 560px) { .vh-ingsrc-row { grid-template-columns: 1fr; } .vh-ingsrc .vh-srcs { padding-top: 0; } }
+/* Cómo se mejora una estación: nivel, pieza y materiales, y lo que desbloquea. */
+.vh-ups { display: grid; gap: 8px; }
+.vh-upg { display: grid; grid-template-columns: 70px minmax(0, 1.3fr) minmax(0, 1fr); gap: 14px; align-items: start; padding: 10px 12px; background: rgba(0, 0, 0, 0.28); border-radius: 2px; }
+.vh-upg-lv { display: block; font: 700 15px var(--vh-serif); color: var(--vh-brass-lt); padding-top: 9px; white-space: nowrap; }
+.vh-upg-lv::first-letter { text-transform: uppercase; }
+.vh-upg-main { display: grid; gap: 8px; }
+.vh-upg-req { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.vh-upg-mat { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--vh-dim); text-decoration: none; }
+a.vh-upg-mat:hover { color: var(--vh-cream); }
+.vh-upg-main .vh-dim a { color: var(--vh-cream); text-decoration: none; }
+.vh-upg-unl { display: grid; gap: 6px; font-size: 13.5px; }
+.vh-upg-unl .vh-mosaic { gap: 4px; }
+@media (max-width: 760px) { .vh-upg { grid-template-columns: 1fr; gap: 8px; } .vh-upg-lv { padding-top: 0; } }
 .vh-procs { display: flex; flex-wrap: wrap; gap: 10px 34px; }
 .vh-proc { gap: 10px; }
 .vh-mosaic { display: flex; flex-wrap: wrap; gap: 6px; }

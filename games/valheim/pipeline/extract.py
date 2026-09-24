@@ -48,7 +48,8 @@ PUBLIC = os.path.normpath(os.path.join(HERE, "..", "..", "tft", "ui", "public", 
 CLASSES = {"ObjectDB", "ItemDrop", "Recipe", "Piece", "PieceTable", "CraftingStation", "CookingStation",
            "Fermenter", "Smelter", "Humanoid", "Character", "CharacterDrop", "SpawnSystemList", "ZoneSystem",
            "LocationList", "Pickable", "MineRock5", "MineRock", "TreeBase", "DropOnDestroyed", "Trader",
-           "Plant", "Beehive", "TreeLog", "Destructible", "Container", "OfferingBowl", "ItemStand", "EnvMan"}
+           "Plant", "Beehive", "TreeLog", "Destructible", "Container", "OfferingBowl", "ItemStand", "EnvMan",
+           "StationExtension"}
 
 # Los jefes en el orden en que se enfrentan, con su bioma. Es la única tabla
 # escrita a mano del extractor: el juego sabe el bioma del altar por la
@@ -222,6 +223,11 @@ def main() -> None:
             piece_categories[tool] = labels
         for p in t.tree["m_pieces"]:
             go = g.ref(t.file, p)
+            # Las extensiones (especiero, yunques, telar…) suben de nivel la
+            # estación que tengan cerca: cada una suma uno (pedido de ZoTaD,
+            # 2026-09-24: ver en el caldero con qué se mejora).
+            extends = next((station_by_key.get(g.ref(x.file, x.tree.get("m_craftingStation")))
+                            for x in g.comps_on(go) if x.cls == "StationExtension"), None)
             for pc in g.comps_on(go):
                 if pc.cls != "Piece":
                     continue
@@ -235,6 +241,7 @@ def main() -> None:
                     "category": pc.tree["m_category"], "comfort": pc.tree["m_comfort"] or None,
                     "station": station_by_key.get(g.ref(pc.file, pc.tree["m_craftingStation"])),
                     "requirements": [{"item": q["item"], "amount": q["amount"]} for q in requirements(pc.tree["m_resources"], g.name_of_in(pc.file))],
+                    "extends": extends,
                 }
 
     # --- Conversiones (sin repetir la misma estación con el mismo par)
