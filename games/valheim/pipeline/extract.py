@@ -38,7 +38,8 @@ from datetime import datetime, timezone
 from .unity import Game
 from .loc import Loc, parse_localization
 from .biomes import BIOMES, BIOME_ORDER, biomes_of, is_everywhere
-from .records import item_record, recipe_record, requirements, drop_table, character_drops, trader_items, damage_mods
+from .records import (item_record, recipe_record, requirements, drop_table, character_drops, trader_items, damage_mods,
+                      mod_list, spawn_record, status_effect)
 from .sources import build_sources, build_used_in, share_by_name
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -49,7 +50,7 @@ CLASSES = {"ObjectDB", "ItemDrop", "Recipe", "Piece", "PieceTable", "CraftingSta
            "Fermenter", "Smelter", "Humanoid", "Character", "CharacterDrop", "SpawnSystemList", "ZoneSystem",
            "LocationList", "Pickable", "MineRock5", "MineRock", "TreeBase", "DropOnDestroyed", "Trader",
            "Plant", "Beehive", "TreeLog", "Destructible", "Container", "OfferingBowl", "ItemStand", "EnvMan",
-           "StationExtension"}
+           "StationExtension", "Tameable", "Procreation", "MonsterAI", "RandEventSystem"}
 
 # Los jefes en el orden en que se enfrentan, con su bioma. Es la única tabla
 # escrita a mano del extractor: el juego sabe el bioma del altar por la
@@ -210,6 +211,18 @@ def main() -> None:
         if tok not in stations:
             stations[tok] = {"name": loc.t(tok), "icon": icons.save(c.file, c.tree.get("m_icon"))}
 
+    se_cache: dict = {}
+
+    def se_of(file, pptr):
+        """Un efecto de estado referenciado desde un objeto, leído una sola vez."""
+        key = g.ref(file, pptr) if pptr and pptr.get("m_PathID") else None
+        if not key:
+            return None
+        if key not in se_cache:
+            o = g._objs.get(key)
+            se_cache[key] = status_effect(o.read_typetree(), loc) if o is not None else None
+        return se_cache[key]
+
     # --- Objetos
     items = {}
     build_tables = {}   # clave de PieceTable → herramienta
@@ -223,6 +236,23 @@ def main() -> None:
         icon = icons.save(c.file, sh["m_icons"][0]) if sh.get("m_icons") else None
         rec = item_record(prefab, sh, loc, icon)
         if rec:
+            # Lo que hace además de sus números (2026-09-24, pedido de ZoTaD):
+            # el bono de set, el efecto al equiparlo o al tomarlo, las
+            # resistencias y cuánto frena al caminar.
+            effects = {}
+            for field, key in (("m_setStatusEffect", "set"), ("m_equipStatusEffect", "equip"), ("m_consumeStatusEffect", "consume")):
+                se = se_of(c.file, sh.get(field))
+                if se:
+                    effects[key] = se
+            if effects.get("set"):
+                effects["setSize"] = sh.get("m_setSize") or None
+            resist = mod_list(sh.get("m_damageModifiers"))
+            if resist:
+                effects["resist"] = resist
+            if sh.get("m_movementModifier"):
+                effects["move"] = round(sh["m_movementModifier"], 3)
+            if effects:
+                rec["effects"] = effects
             items[prefab] = rec
             bt = g.ref(c.file, sh.get("m_buildPieces"))
             if bt:
@@ -296,12 +326,18 @@ def main() -> None:
     # aparece en ningún lado sin llave.
     spawn_biomes: dict[str, set] = {}
     keyed_biomes: dict[str, set] = {}
+    # Cuándo y cómo aparece cada criatura en el mundo abierto (2026-09-24):
+    # de día o de noche, con qué clima, después de qué jefe, en grupo.
+    spawn_rules: dict[str, list] = {}
     for c in g.components("SpawnSystemList"):
         for s in c.tree["m_spawners"]:
             if not s.get("m_enabled", 1) or is_everywhere(s["m_biome"]):
                 continue
             name = g.prefab(g.ref(c.file, s["m_prefab"]))
             if name:
+                rule = spawn_record(s, biomes_of(s["m_biome"]))
+                if rule not in spawn_rules.setdefault(name, []):
+                    spawn_rules[name].append(rule)
                 keyed = (s.get("m_requiredGlobalKey") or "").startswith("defeated_")
                 (keyed_biomes if keyed else spawn_biomes).setdefault(name, set()).update(biomes_of(s["m_biome"]))
     for name, bs in keyed_biomes.items():
@@ -320,7 +356,44 @@ def main() -> None:
             creatures[prefab] = {"id": prefab, "name": name, "health": c.tree.get("m_health"), "boss": bool(c.tree.get("m_boss")),
                                  "biomes": sorted(spawn_biomes.get(prefab, []), key=BIOME_ORDER.index),
                                  "faction": c.tree.get("m_faction"), **damage_mods(c.tree.get("m_damageModifiers", {})),
-                                 "drops": drops, "trophy": trophy, "icon": items[trophy]["icon"] if trophy else None}
+                                 "drops": drops, "trophy": trophy, "icon": items[trophy]["icon"] if trophy else None,
+                                 "spawns": spawn_rules.get(prefab, [])}
+            # Domesticar y criar (2026-09-24): qué come, cuánto tarda, cuánto le
+            # dura la comida y cuántos caben juntos para criar.
+            comps = {d.cls: d for d in g.comps_on(c.go)}
+            ai, tame, pro = comps.get("MonsterAI"), comps.get("Tameable"), comps.get("Procreation")
+            eats = [x for x in (g.name_of_in(ai.file)(p) for p in ai.tree.get("m_consumeItems", [])) if x in items] if ai else []
+            if eats:
+                creatures[prefab]["eats"] = eats
+            if tame:
+                t = tame.tree
+                saddle = g.name_of_in(tame.file)(t.get("m_saddleItem")) if (t.get("m_saddleItem") or {}).get("m_PathID") else None
+                creatures[prefab]["tame"] = {"time": t.get("m_tamingTime"), "fed": t.get("m_fedDuration"),
+                                             "startsTamed": bool(t.get("m_startsTamed")), "commandable": bool(t.get("m_commandable")),
+                                             "saddle": saddle if saddle in items else None}
+            if pro:
+                t = pro.tree
+                off = g.prefab(g.ref(pro.file, t.get("m_offspring"))) if (t.get("m_offspring") or {}).get("m_PathID") else None
+                creatures[prefab]["breed"] = {"max": t.get("m_maxCreatures"), "love": t.get("m_requiredLovePoints"),
+                                              "pregnancy": t.get("m_pregnancyDuration"), "offspring": off}
+
+    # --- Eventos (2026-09-24): los ataques a la base ("¡El bosque se mueve!"),
+    # con su mensaje, en qué biomas, qué jefe los habilita o los apaga y qué
+    # criaturas trae cada uno.
+    events = []
+    for c in g.components("RandEventSystem"):
+        for e in c.tree.get("m_events", []):
+            if not e.get("m_enabled", 1) or any(x["id"] == e["m_name"] for x in events):
+                continue
+            spawn = []
+            for s in e.get("m_spawn", []):
+                n = g.prefab(g.ref(c.file, s["m_prefab"]))
+                if n and s.get("m_enabled", 1) and n not in spawn:
+                    spawn.append(n)
+            events.append({"id": e["m_name"], "start": loc.t(e.get("m_startMessage")), "end": loc.t(e.get("m_endMessage")),
+                           "biomes": biomes_of(e.get("m_biome", 0)), "duration": e.get("m_duration"),
+                           "requires": list(e.get("m_requiredGlobalKeys") or []), "until": list(e.get("m_notRequiredGlobalKeys") or []),
+                           "spawn": spawn})
 
     # --- Jefes: el altar dice qué se ofrece y cuántas; el soporte del trofeo,
     # qué poder deja.
@@ -579,6 +652,7 @@ def main() -> None:
     dump("conversions.json", conversions)
     dump("stations.json", stations)
     dump("creatures.json", creatures)
+    dump("events.json", events)
     dump("gatherables.json", gatherables)
     dump("traders.json", traders)
     dump("farms.json", farms)

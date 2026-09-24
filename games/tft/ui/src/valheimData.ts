@@ -65,6 +65,10 @@ export interface ItemRow {
   recipe: Recipe | null;
   sources: Source[];
   usedIn: Use[];
+  /** Bono de set, efecto al equipar o al tomar, resistencias y cuánto frena (del juego). */
+  effects?: ItemEffects;
+  /** Las otras piezas del mismo set. */
+  setPieces?: Ref[];
   // Comidas
   food?: { hp: number; st: number; eitr: number; min: number; regen: number };
   focus?: "health" | "stamina" | "eitr" | "balanced";
@@ -142,6 +146,32 @@ export interface PlaceRow extends Place {
   order: number;
 }
 
+/** Un efecto de estado del juego: bono de set, efecto al equipar o al tomar. */
+export interface StatusEffect {
+  name: Txt | null;
+  tooltip: Txt | null;
+  stats: Record<string, unknown> & { skills?: { skill: number; value: number }[]; resist?: Resist[]; damagePct?: Record<string, number> };
+}
+export interface Resist { type: string; mod: string }
+export interface ItemEffects { set?: StatusEffect; setSize?: number | null; equip?: StatusEffect; consume?: StatusEffect; resist?: Resist[]; move?: number }
+
+/** Una regla de aparición del mundo abierto (del juego). */
+export interface SpawnRule {
+  biomes: BiomeId[];
+  day: boolean;
+  night: boolean;
+  group: [number, number];
+  max: number | null;
+  after?: Ref;
+  envs?: string[];
+  forest?: "in" | "out";
+  ocean?: boolean;
+  minAltitude?: number;
+}
+export interface CreatureEvent { name: Txt; biomes: BiomeId[]; after: Ref[]; until: Ref[] }
+export interface Attack { name: Txt; damage: Record<string, number>; group?: Txt; cooldown?: number }
+export interface Advice { en: string[]; es: string[] }
+
 export interface CreatureRow {
   id: string;
   slug: string;
@@ -160,6 +190,12 @@ export interface CreatureRow {
   places?: Ref[];
   /** La misma criatura con otra vida u otro botín (el enanogrís del Norte profundo). */
   variants?: { biomes: BiomeId[]; health: number | null; drops: Drop[] }[];
+  tame?: { time: number | null; fed: number | null; startsTamed: boolean; commandable: boolean; saddle: Ref | null; eats: Ref[] };
+  breed?: { max: number | null; love: number | null; pregnancy: number | null; offspring: Ref | null };
+  spawns?: SpawnRule[];
+  events?: CreatureEvent[];
+  attacks?: Attack[];
+  tips?: Advice | null;
 }
 
 export interface Tip { topic: Txt; label: Txt | null; text: Txt }
@@ -176,6 +212,8 @@ export interface BossRow {
   art: string | null;
   photo?: WikiPhoto | null;
   places?: Ref[];
+  attacks?: Attack[];
+  advice?: Advice | null;
   power: { name: Txt | null; tooltip: Txt | null; cooldown: number | null } | null;
   weak: string[];
   resist: string[];
@@ -203,6 +241,8 @@ export interface BiomeRow {
   plant?: Ref[];
   /** Mazmorras y lugares, de la wiki. */
   places?: Place[];
+  /** Los ataques a la base que pueden pasar en el bioma (del juego). */
+  events?: { name: Txt; after: Ref[]; until: Ref[]; creatures: Ref[] }[];
   foods: (Ref & { food: { hp: number; st: number; eitr: number; min: number; regen: number } })[];
   gear: Record<"weapons" | "armor" | "foods" | "meads", number>;
   boss: (Ref & { art: string | null }) | null;

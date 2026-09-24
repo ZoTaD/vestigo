@@ -8,6 +8,7 @@ import { useValheimCopy, type ValheimCopy } from "./valheimCopy";
 import type { ListTab } from "./valheimTabs";
 import { clean, tx, type ItemRow, type PieceRow, type Ref, type Req, type Source, type Use } from "./valheimData";
 import { BiomeTags, FoodBars, Ing, pctChance, range, RefLink, Slot, useTab, type Nav, type To } from "./ValheimParts";
+import { EffectsBlock } from "./ValheimMore";
 
 function Upgrades({ req, max, t }: { req: Req[]; max: number; t: ValheimCopy }) {
   const { lang } = useLang();
@@ -344,6 +345,7 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
                 </div>
               )}
               {item && recipe && <Upgrades req={recipe.req} max={item.maxQuality ?? 1} t={t} />}
+              {item && <EffectsBlock effects={item.effects} setPieces={item.setPieces} to={to} navigate={navigate} />}
             </div>
 
             <div style={{ display: "grid", gap: 18, alignContent: "start" }}>

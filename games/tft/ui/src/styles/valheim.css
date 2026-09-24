@@ -414,3 +414,16 @@ a.vh-upg-mat:hover { color: var(--vh-cream); }
 
 .vh-note a { color: var(--vh-brass); }
 .vh-note a:hover { color: var(--vh-brass-lt); }
+
+/* Domesticar, aparición, ataques y efectos (2026-09-24). */
+.vh-more { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px 28px; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.vh-lines { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; color: var(--vh-text); }
+.vh-lines li::marker { color: var(--vh-brass); }
+.vh-rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 14px; }
+.vh-rules li { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.vh-effects { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.vh-effect { background: rgba(0, 0, 0, 0.22); border-radius: 3px; padding: 10px 12px; display: grid; gap: 6px; align-content: start; }
+.vh-effect h4 { margin: 0; font: 700 15px var(--vh-serif); color: var(--vh-brass-lt); }
+.vh-effect p { margin: 0; font-size: 13.5px; color: var(--vh-dim); }
+.vh-rules a, .vh-lines a { color: var(--vh-brass-lt); text-decoration: none; }
+.vh-rules a:hover, .vh-lines a:hover { text-decoration: underline; }

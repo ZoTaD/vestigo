@@ -44,6 +44,20 @@
    "blunt",
    "pierce"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophyAbomination",
   "weak": [
    "fire"
@@ -54,6 +68,12 @@
    "ashlands"
   ],
   "boss": false,
+  "breed": {
+   "love": 3,
+   "max": 10,
+   "offspring": "AsksvinEgg",
+   "pregnancy": 60.0
+  },
   "drops": [
    {
     "chance": 0.1,
@@ -84,6 +104,11 @@
     "perLevel": true
    }
   ],
+  "eats": [
+   "Vineberry",
+   "Fiddleheadfern",
+   "MushroomSmokePuff"
+  ],
   "faction": 4,
   "health": 800.0,
   "icon": "trophyasksvin",
@@ -99,6 +124,39 @@
    "fire",
    "poison"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     3
+    ],
+    "max": 2,
+    "night": false
+   },
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": false,
+    "group": [
+     1,
+     3
+    ],
+    "max": 3,
+    "night": true
+   }
+  ],
+  "tame": {
+   "commandable": false,
+   "fed": 600.0,
+   "saddle": "SaddleAsksvin",
+   "startsTamed": false,
+   "time": 1800.0
+  },
   "trophy": "TrophyAsksvin",
   "weak": []
  },
@@ -128,6 +186,11 @@
     "perLevel": true
    }
   ],
+  "eats": [
+   "Cloudberry",
+   "Barley",
+   "Flax"
+  ],
   "faction": 3,
   "health": 400.0,
   "icon": null,
@@ -143,6 +206,7 @@
    "fire",
    "poison"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -166,6 +230,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "blunt",
@@ -186,6 +251,7 @@
    "es": "Aspecto del Ciervo del Rayo"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -206,6 +272,7 @@
    "es": "Aspecto del Bosque Viviente"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "fire"
@@ -230,6 +297,7 @@
   "resist": [
    "pierce"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -250,6 +318,7 @@
    "es": "Aspecto de la Madre Dragón"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "fire"
@@ -273,6 +342,7 @@
   "resist": [
    "pierce"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -294,6 +364,7 @@
   "resist": [
    "frost"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "fire"
@@ -318,6 +389,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -361,6 +433,20 @@
    "frost",
    "lightning"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophyBarka",
   "weak": [
    "fire"
@@ -395,6 +481,7 @@
    "slash",
    "pierce"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "fire",
@@ -430,6 +517,7 @@
    "slash",
    "pierce"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "fire",
@@ -471,6 +559,9 @@
     "perLevel": false
    }
   ],
+  "eats": [
+   "Blueberries"
+  ],
   "faction": 2,
   "health": 500.0,
   "icon": "trophybjorn",
@@ -486,6 +577,32 @@
    "blunt",
    "pierce",
    "frost"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "blackforest"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": false
+   },
+   {
+    "biomes": [
+     "blackforest"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
   ],
   "trophy": "TrophyBjorn",
   "weak": [
@@ -525,6 +642,9 @@
     "perLevel": false
    }
   ],
+  "eats": [
+   "Blueberries"
+  ],
   "faction": 2,
   "health": 500.0,
   "icon": "trophybjorn",
@@ -541,6 +661,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophyBjorn",
   "weak": [
    "fire"
@@ -550,6 +671,9 @@
   "biomes": [],
   "boss": false,
   "drops": [],
+  "eats": [
+   "Blueberries"
+  ],
   "faction": 0,
   "health": 1500.0,
   "icon": null,
@@ -566,6 +690,14 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
+  "tame": {
+   "commandable": false,
+   "fed": 600.0,
+   "saddle": null,
+   "startsTamed": true,
+   "time": 1800.0
+  },
   "trophy": null,
   "weak": [
    "fire"
@@ -607,6 +739,20 @@
    "slash",
    "pierce",
    "fire"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 2,
+    "night": true
+   }
   ],
   "trophy": "TrophyBlob",
   "weak": [
@@ -650,6 +796,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": "TrophyBlob",
   "weak": [
    "blunt",
@@ -701,6 +848,20 @@
    "pierce",
    "fire"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophyBlob",
   "weak": [
    "blunt",
@@ -743,6 +904,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophyBlob_Frost",
   "weak": [
    "blunt",
@@ -793,6 +955,20 @@
    "pierce",
    "poison"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 2,
+    "night": true
+   }
+  ],
   "trophy": "TrophyBlob_Lava",
   "weak": [
    "blunt",
@@ -835,6 +1011,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": "TrophyBlob_Morkhalla",
   "weak": [
    "blunt",
@@ -870,6 +1047,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "blunt",
@@ -912,6 +1090,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophyGrowth",
   "weak": [
    "blunt",
@@ -923,6 +1102,12 @@
    "meadows"
   ],
   "boss": false,
+  "breed": {
+   "love": 3,
+   "max": 5,
+   "offspring": "Boar_piggy",
+   "pregnancy": 60.0
+  },
   "drops": [
    {
     "chance": 1.0,
@@ -946,6 +1131,14 @@
     "perLevel": false
    }
   ],
+  "eats": [
+   "Carrot",
+   "Turnip",
+   "Onion",
+   "Mushroom",
+   "Raspberry",
+   "Blueberries"
+  ],
   "faction": 2,
   "health": 10.0,
   "icon": "trophyboar",
@@ -958,6 +1151,27 @@
    "es": "Jabalí"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "meadows"
+    ],
+    "day": true,
+    "group": [
+     1,
+     3
+    ],
+    "max": 4,
+    "night": true
+   }
+  ],
+  "tame": {
+   "commandable": false,
+   "fed": 600.0,
+   "saddle": null,
+   "startsTamed": false,
+   "time": 1800.0
+  },
   "trophy": "TrophyBoar",
   "weak": []
  },
@@ -977,6 +1191,7 @@
    "es": "Cerdito"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -984,6 +1199,14 @@
   "biomes": [],
   "boss": false,
   "drops": [],
+  "eats": [
+   "Carrot",
+   "Turnip",
+   "Onion",
+   "Mushroom",
+   "Raspberry",
+   "Blueberries"
+  ],
   "faction": 0,
   "health": 1000.0,
   "icon": null,
@@ -996,6 +1219,14 @@
    "es": ""
   },
   "resist": [],
+  "spawns": [],
+  "tame": {
+   "commandable": false,
+   "fed": 600.0,
+   "saddle": null,
+   "startsTamed": true,
+   "time": 1800.0
+  },
   "trophy": null,
   "weak": []
  },
@@ -1038,6 +1269,7 @@
    "es": "Kvastur"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyKvastur",
   "weak": [
    "fire"
@@ -1078,6 +1310,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": "TrophyBonemass",
   "weak": [
    "blunt",
@@ -1127,6 +1360,20 @@
   "resist": [
    "poison"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophyBonemawSerpent",
   "weak": [
    "frost"
@@ -1168,6 +1415,37 @@
    "pierce",
    "fire"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 4,
+    "night": true
+   },
+   {
+    "biomes": [
+     "meadows",
+     "blackforest",
+     "swamp",
+     "mountain",
+     "plains"
+    ],
+    "day": false,
+    "group": [
+     1,
+     3
+    ],
+    "key": "defeated_fader",
+    "max": 3,
+    "night": true
+   }
+  ],
   "trophy": "TrophyCharredArcher",
   "weak": [
    "spirit"
@@ -1192,6 +1470,7 @@
   "resist": [
    "pierce"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "spirit"
@@ -1232,6 +1511,7 @@
    "fire",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophyCharredMage",
   "weak": [
    "spirit"
@@ -1273,6 +1553,37 @@
    "pierce",
    "fire"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 4,
+    "night": true
+   },
+   {
+    "biomes": [
+     "meadows",
+     "blackforest",
+     "swamp",
+     "mountain",
+     "plains"
+    ],
+    "day": false,
+    "group": [
+     1,
+     3
+    ],
+    "key": "defeated_fader",
+    "max": 3,
+    "night": true
+   }
+  ],
   "trophy": "TrophyCharredMelee",
   "weak": [
    "spirit"
@@ -1306,6 +1617,7 @@
    "fire",
    "frost"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "spirit"
@@ -1330,6 +1642,7 @@
   "resist": [
    "pierce"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "spirit"
@@ -1364,6 +1677,32 @@
    "pierce",
    "fire"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": true,
+    "group": [
+     2,
+     4
+    ],
+    "max": 3,
+    "night": false
+   },
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": false,
+    "group": [
+     3,
+     6
+    ],
+    "max": 4,
+    "night": true
+   }
+  ],
   "trophy": null,
   "weak": [
    "spirit"
@@ -1396,6 +1735,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "spirit"
@@ -1432,6 +1772,7 @@
    "es": "Pollo"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -1468,6 +1809,20 @@
    "es": "Muersquito"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "plains"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 3,
+    "night": true
+   }
+  ],
   "trophy": "TrophyDeathsquito",
   "weak": []
  },
@@ -1512,6 +1867,22 @@
    "es": "Ciervo"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "meadows",
+     "blackforest"
+    ],
+    "day": true,
+    "forest": "in",
+    "group": [
+     1,
+     3
+    ],
+    "max": 4,
+    "night": true
+   }
+  ],
   "trophy": "TrophyDeer",
   "weak": []
  },
@@ -1547,6 +1918,7 @@
    "es": "Moder"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyDragonQueen",
   "weak": [
    "fire"
@@ -1587,6 +1959,39 @@
   "resist": [
    "fire"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "meadows",
+     "blackforest",
+     "mountain",
+     "plains"
+    ],
+    "day": false,
+    "envs": [
+     "Misty"
+    ],
+    "group": [
+     1,
+     1
+    ],
+    "key": "defeated_gdking",
+    "max": 1,
+    "night": true
+   },
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 4,
+    "night": true
+   }
+  ],
   "trophy": "TrophyDraugr",
   "weak": []
  },
@@ -1625,6 +2030,20 @@
   "resist": [
    "fire"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophyDraugrElite",
   "weak": []
  },
@@ -1661,6 +2080,7 @@
   "resist": [
    "fire"
   ],
+  "spawns": [],
   "trophy": "TrophyDraugrElite",
   "weak": []
  },
@@ -1697,6 +2117,7 @@
   "resist": [
    "fire"
   ],
+  "spawns": [],
   "trophy": "TrophyDraugr",
   "weak": []
  },
@@ -1733,6 +2154,7 @@
   "resist": [
    "fire"
   ],
+  "spawns": [],
   "trophy": "TrophyDraugr",
   "weak": []
  },
@@ -1769,6 +2191,7 @@
   "resist": [
    "fire"
   ],
+  "spawns": [],
   "trophy": "TrophyDraugr",
   "weak": []
  },
@@ -1819,6 +2242,20 @@
    "es": "Pícaro Dvergr"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "mistlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 2,
+    "night": false
+   }
+  ],
   "trophy": "TrophyDvergr",
   "weak": []
  },
@@ -1869,6 +2306,20 @@
    "es": "Pícaro Dvergr"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 2,
+    "night": false
+   }
+  ],
   "trophy": "TrophyDvergr",
   "weak": []
  },
@@ -1931,6 +2382,7 @@
    "es": "Dvergr encarcelado"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyDvergr",
   "weak": []
  },
@@ -1982,6 +2434,7 @@
    "fire",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophyDvergr",
   "weak": []
  },
@@ -2033,6 +2486,7 @@
    "fire",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophyDvergr",
   "weak": []
  },
@@ -2084,6 +2538,7 @@
    "fire",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophyDvergr",
   "weak": []
  },
@@ -2135,6 +2590,7 @@
    "fire",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophyDvergr",
   "weak": []
  },
@@ -2167,6 +2623,7 @@
    "es": "Eikthyr"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyEikthyr",
   "weak": []
  },
@@ -2212,6 +2669,20 @@
   "resist": [
    "frost"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": false,
+    "group": [
+     2,
+     3
+    ],
+    "max": 2,
+    "night": true
+   }
+  ],
   "trophy": "TrophyElaking",
   "weak": [
    "fire"
@@ -2251,6 +2722,20 @@
   },
   "resist": [
    "frost"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": false,
+    "group": [
+     1,
+     2
+    ],
+    "max": 1,
+    "night": true
+   }
   ],
   "trophy": "TrophyElaking",
   "weak": [
@@ -2297,6 +2782,7 @@
   "resist": [
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophyMole",
   "weak": []
  },
@@ -2334,6 +2820,7 @@
   "resist": [
    "pierce"
   ],
+  "spawns": [],
   "trophy": "TrophyFader",
   "weak": []
  },
@@ -2371,6 +2858,21 @@
   },
   "resist": [
    "fire"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "minAltitude": 15.0,
+    "night": true
+   }
   ],
   "trophy": "TrophyFallenValkyrie",
   "weak": [
@@ -2413,6 +2915,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "spirit"
@@ -2454,6 +2957,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "spirit"
@@ -2495,6 +2999,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "spirit"
@@ -2533,6 +3038,20 @@
   "resist": [
    "poison"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "mountain"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "max": 2,
+    "night": true
+   }
+  ],
   "trophy": "TrophyFenring",
   "weak": [
    "fire"
@@ -2569,6 +3088,7 @@
    "es": "Cultista"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyCultist",
   "weak": [
    "poison"
@@ -2605,6 +3125,7 @@
    "es": "<color=orange>Geirrhafa</color>"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyCultist_Hildir",
   "weak": [
    "fire"
@@ -2634,6 +3155,7 @@
    "es": "<color=orange>Geirrhafa</color>"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyCultist_Hildir",
   "weak": [
    "fire"
@@ -2675,6 +3197,7 @@
    "frost",
    "lightning"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -2701,6 +3224,7 @@
    "es": "Kall Fimbulbringer"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -2740,6 +3264,7 @@
    "frost",
    "lightning"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -2769,6 +3294,7 @@
    "es": "Frysling"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "frost"
@@ -2809,6 +3335,7 @@
    "slash",
    "pierce"
   ],
+  "spawns": [],
   "trophy": "TrophyGhost",
   "weak": [
    "spirit"
@@ -2842,6 +3369,7 @@
    "slash",
    "pierce"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "spirit"
@@ -2875,6 +3403,7 @@
    "slash",
    "pierce"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "spirit"
@@ -2915,6 +3444,7 @@
    "slash",
    "pierce"
   ],
+  "spawns": [],
   "trophy": "TrophyGhost",
   "weak": [
    "spirit"
@@ -2954,6 +3484,32 @@
   },
   "resist": [
    "fire"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "mistlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": false
+   },
+   {
+    "biomes": [
+     "mistlands"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
   ],
   "trophy": "TrophyGjall",
   "weak": []
@@ -2998,6 +3554,47 @@
    "es": "Fuling"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "meadows",
+     "blackforest",
+     "mountain"
+    ],
+    "day": false,
+    "group": [
+     3,
+     3
+    ],
+    "key": "defeated_goblinking",
+    "max": 3,
+    "night": true
+   },
+   {
+    "biomes": [
+     "plains"
+    ],
+    "day": false,
+    "group": [
+     3,
+     5
+    ],
+    "max": 5,
+    "night": true
+   },
+   {
+    "biomes": [
+     "plains"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 2,
+    "night": false
+   }
+  ],
   "trophy": "TrophyGoblin",
   "weak": []
  },
@@ -3039,6 +3636,7 @@
    "es": "Fuling"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyGoblin",
   "weak": []
  },
@@ -3089,6 +3687,20 @@
    "es": "Fuling berserker"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "plains"
+    ],
+    "day": false,
+    "group": [
+     1,
+     2
+    ],
+    "max": 1,
+    "night": false
+   }
+  ],
   "trophy": "TrophyGoblinBrute",
   "weak": []
  },
@@ -3116,6 +3728,7 @@
    "es": "<color=orange>Zil y Thungr</color>"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyGoblinBruteBrosBrute",
   "weak": []
  },
@@ -3143,6 +3756,7 @@
    "es": "<color=orange>Zil y Thungr</color>"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyGoblinBruteBrosBrute",
   "weak": []
  },
@@ -3170,6 +3784,7 @@
    "es": "<color=orange>Thungr</color> "
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -3211,6 +3826,7 @@
    "es": "Fuling cautivo"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -3248,6 +3864,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": "TrophyGoblinKing",
   "weak": []
  },
@@ -3296,6 +3913,7 @@
    "es": "Fuling Chamán"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyGoblinShaman",
   "weak": []
  },
@@ -3330,6 +3948,7 @@
    "es": "<color=orange>Zil</color> "
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyGoblinBruteBrosShaman",
   "weak": []
  },
@@ -3357,6 +3976,7 @@
    "es": "<color=orange>Zil</color> "
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyGoblinBruteBrosShaman",
   "weak": []
  },
@@ -3398,6 +4018,7 @@
    "es": "Riktig fuling"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -3456,6 +4077,59 @@
   },
   "resist": [
    "poison"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "blackforest"
+    ],
+    "day": true,
+    "group": [
+     2,
+     3
+    ],
+    "max": 3,
+    "night": false
+   },
+   {
+    "biomes": [
+     "meadows"
+    ],
+    "day": false,
+    "forest": "in",
+    "group": [
+     2,
+     3
+    ],
+    "key": "defeated_eikthyr",
+    "max": 1,
+    "night": true
+   },
+   {
+    "biomes": [
+     "blackforest"
+    ],
+    "day": false,
+    "group": [
+     3,
+     4
+    ],
+    "max": 6,
+    "night": true
+   },
+   {
+    "biomes": [
+     "meadows"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "key": "defeated_eikthyr",
+    "max": 2,
+    "night": true
+   }
   ],
   "trophy": "TrophyGreydwarf",
   "weak": [
@@ -3525,6 +4199,33 @@
   "resist": [
    "poison"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "blackforest"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   },
+   {
+    "biomes": [
+     "meadows"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "key": "defeated_gdking",
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophyGreydwarfBrute",
   "weak": [
    "fire"
@@ -3593,6 +4294,20 @@
   "resist": [
    "poison"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": true,
+    "group": [
+     2,
+     4
+    ],
+    "max": 5,
+    "night": true
+   }
+  ],
   "trophy": "TrophyGreydwarf",
   "weak": [
    "fire"
@@ -3653,6 +4368,33 @@
   },
   "resist": [
    "poison"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "meadows"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "key": "defeated_gdking",
+    "max": 1,
+    "night": true
+   },
+   {
+    "biomes": [
+     "blackforest"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "max": 2,
+    "night": true
+   }
   ],
   "trophy": "TrophyGreydwarfShaman",
   "weak": [
@@ -3722,6 +4464,20 @@
   "resist": [
    "poison"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": true,
+    "group": [
+     2,
+     4
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophyGreydwarfShaman",
   "weak": [
    "fire"
@@ -3754,6 +4510,21 @@
   },
   "resist": [
    "poison"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "meadows"
+    ],
+    "day": true,
+    "forest": "in",
+    "group": [
+     1,
+     1
+    ],
+    "max": 2,
+    "night": true
+   }
   ],
   "trophy": null,
   "weak": [
@@ -3800,6 +4571,20 @@
    "es": "Liebre"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "mistlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     3
+    ],
+    "max": 10,
+    "night": true
+   }
+  ],
   "trophy": "TrophyHare",
   "weak": []
  },
@@ -3837,6 +4622,21 @@
    "es": "Draco"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "mountain"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 2,
+    "minAltitude": 100.0,
+    "night": true
+   }
+  ],
   "trophy": "TrophyHatchling",
   "weak": [
    "fire"
@@ -3845,6 +4645,12 @@
  "Hen": {
   "biomes": [],
   "boss": false,
+  "breed": {
+   "love": 3,
+   "max": 10,
+   "offspring": "ChickenEgg",
+   "pregnancy": 60.0
+  },
   "drops": [
    {
     "chance": 1.0,
@@ -3861,6 +4667,15 @@
     "perLevel": true
    }
   ],
+  "eats": [
+   "Dandelion",
+   "Barley",
+   "BeechSeeds",
+   "BirchSeeds",
+   "CarrotSeeds",
+   "OnionSeeds",
+   "TurnipSeeds"
+  ],
   "faction": 2,
   "health": 10.0,
   "icon": null,
@@ -3873,6 +4688,14 @@
    "es": "Gallina"
   },
   "resist": [],
+  "spawns": [],
+  "tame": {
+   "commandable": false,
+   "fed": 600.0,
+   "saddle": null,
+   "startsTamed": true,
+   "time": 1800.0
+  },
   "trophy": null,
   "weak": []
  },
@@ -3961,6 +4784,21 @@
    "pierce",
    "frost"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "key": "jotun_killed",
+    "max": 2,
+    "night": false
+   }
+  ],
   "trophy": "TrophyJotunWarrior",
   "weak": []
  },
@@ -4047,6 +4885,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophyJotunWarrior",
   "weak": []
  },
@@ -4114,6 +4953,21 @@
   "resist": [
    "frost"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "key": "jotun_killed",
+    "max": 2,
+    "night": false
+   }
+  ],
   "trophy": "TrophyJotunWitch",
   "weak": [
    "fire"
@@ -4155,6 +5009,20 @@
   "resist": [
    "poison"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 10,
+    "night": true
+   }
+  ],
   "trophy": "TrophyLeech",
   "weak": []
  },
@@ -4192,6 +5060,7 @@
   "resist": [
    "poison"
   ],
+  "spawns": [],
   "trophy": "TrophyLeech",
   "weak": []
  },
@@ -4200,6 +5069,12 @@
    "plains"
   ],
   "boss": false,
+  "breed": {
+   "love": 4,
+   "max": 4,
+   "offspring": "Lox_Calf",
+   "pregnancy": 120.0
+  },
   "drops": [
    {
     "chance": 1.0,
@@ -4223,6 +5098,11 @@
     "perLevel": true
    }
   ],
+  "eats": [
+   "Cloudberry",
+   "Barley",
+   "Flax"
+  ],
   "faction": 7,
   "health": 1000.0,
   "icon": "trophylox",
@@ -4239,6 +5119,27 @@
    "slash",
    "frost"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "plains"
+    ],
+    "day": true,
+    "group": [
+     2,
+     4
+    ],
+    "max": 3,
+    "night": true
+   }
+  ],
+  "tame": {
+   "commandable": false,
+   "fed": 600.0,
+   "saddle": "SaddleLox",
+   "startsTamed": false,
+   "time": 1800.0
+  },
   "trophy": "TrophyLox",
   "weak": [
    "fire"
@@ -4272,6 +5173,7 @@
    "slash",
    "frost"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "fire"
@@ -4293,6 +5195,7 @@
    "es": "Nieblisil"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -4301,6 +5204,12 @@
    "deepnorth"
   ],
   "boss": false,
+  "breed": {
+   "love": 3,
+   "max": 5,
+   "offspring": "Moose_calf",
+   "pregnancy": 60.0
+  },
   "drops": [
    {
     "chance": 1.0,
@@ -4331,6 +5240,9 @@
     "perLevel": true
    }
   ],
+  "eats": [
+   "Lingonberry"
+  ],
   "faction": 13,
   "health": 1000.0,
   "icon": "trophymoose",
@@ -4347,6 +5259,27 @@
    "slash",
    "frost"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 3,
+    "night": true
+   }
+  ],
+  "tame": {
+   "commandable": false,
+   "fed": 600.0,
+   "saddle": "SaddleMoose",
+   "startsTamed": false,
+   "time": 1800.0
+  },
   "trophy": "TrophyMoose",
   "weak": [
    "fire"
@@ -4372,6 +5305,7 @@
    "slash",
    "frost"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "fire"
@@ -4381,6 +5315,9 @@
   "biomes": [],
   "boss": false,
   "drops": [],
+  "eats": [
+   "Lingonberry"
+  ],
   "faction": 0,
   "health": 1100.0,
   "icon": null,
@@ -4397,6 +5334,14 @@
    "slash",
    "frost"
   ],
+  "spawns": [],
+  "tame": {
+   "commandable": false,
+   "fed": 600.0,
+   "saddle": "SaddleMoose",
+   "startsTamed": true,
+   "time": 1800.0
+  },
   "trophy": null,
   "weak": [
    "fire"
@@ -4443,6 +5388,7 @@
    "pierce",
    "fire"
   ],
+  "spawns": [],
   "trophy": "TrophyMorgen",
   "weak": [
    "lightning"
@@ -4491,6 +5437,20 @@
    "pierce",
    "fire"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophyMorgen",
   "weak": [
    "lightning"
@@ -4530,6 +5490,38 @@
   },
   "resist": [
    "poison"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "meadows"
+    ],
+    "day": true,
+    "group": [
+     2,
+     4
+    ],
+    "max": 6,
+    "night": true,
+    "ocean": true
+   },
+   {
+    "biomes": [
+     "meadows"
+    ],
+    "day": true,
+    "envs": [
+     "Rain",
+     "ThunderStorm",
+     "LightRain"
+    ],
+    "group": [
+     2,
+     4
+    ],
+    "max": 8,
+    "night": true
+   }
   ],
   "trophy": "TrophyNeck",
   "weak": [
@@ -4576,6 +5568,20 @@
    "es": "Foca"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 5,
+    "night": true
+   }
+  ],
   "trophy": "TrophySeal",
   "weak": [
    "fire"
@@ -4607,6 +5613,20 @@
    "es": "Cría de foca"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": true,
+    "group": [
+     1,
+     3
+    ],
+    "max": 3,
+    "night": true
+   }
+  ],
   "trophy": null,
   "weak": []
  },
@@ -4654,6 +5674,49 @@
    "slash",
    "pierce"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "mistlands"
+    ],
+    "day": true,
+    "group": [
+     2,
+     3
+    ],
+    "max": 2,
+    "night": false
+   },
+   {
+    "biomes": [
+     "mistlands"
+    ],
+    "day": false,
+    "group": [
+     2,
+     3
+    ],
+    "max": 6,
+    "night": true
+   },
+   {
+    "biomes": [
+     "meadows",
+     "blackforest",
+     "swamp",
+     "mountain",
+     "plains"
+    ],
+    "day": false,
+    "group": [
+     3,
+     3
+    ],
+    "key": "defeated_queen",
+    "max": 2,
+    "night": true
+   }
+  ],
   "trophy": "TrophySeeker",
   "weak": []
  },
@@ -4686,6 +5749,21 @@
    "blunt",
    "slash",
    "pierce"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "mistlands"
+    ],
+    "day": false,
+    "group": [
+     3,
+     3
+    ],
+    "key": "defeated_queen",
+    "max": 5,
+    "night": true
+   }
   ],
   "trophy": null,
   "weak": []
@@ -4741,6 +5819,20 @@
    "slash",
    "pierce"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "mistlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophySeekerBrute",
   "weak": []
  },
@@ -4777,6 +5869,7 @@
   "resist": [
    "pierce"
   ],
+  "spawns": [],
   "trophy": "TrophySeekerQueen",
   "weak": []
  },
@@ -4823,6 +5916,36 @@
   "resist": [
    "poison"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "ocean"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   },
+   {
+    "biomes": [
+     "ocean"
+    ],
+    "day": true,
+    "envs": [
+     "ThunderStorm",
+     "Rain"
+    ],
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophySerpent",
   "weak": [
    "frost"
@@ -4844,6 +5967,21 @@
    "es": "Sombra"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": false,
+    "forest": "in",
+    "group": [
+     2,
+     4
+    ],
+    "max": 5,
+    "night": true
+   }
+  ],
   "trophy": null,
   "weak": []
  },
@@ -4886,6 +6024,25 @@
   "resist": [
    "pierce",
    "frost"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "meadows",
+     "blackforest",
+     "swamp",
+     "mountain",
+     "plains"
+    ],
+    "day": false,
+    "group": [
+     1,
+     3
+    ],
+    "key": "defeated_bonemass",
+    "max": 3,
+    "night": true
+   }
   ],
   "trophy": "TrophySkeleton",
   "weak": [
@@ -4936,6 +6093,20 @@
    "pierce",
    "frost"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "deepnorth"
+    ],
+    "day": true,
+    "group": [
+     2,
+     4
+    ],
+    "max": 5,
+    "night": true
+   }
+  ],
   "trophy": "TrophySkeleton",
   "weak": [
    "blunt",
@@ -4961,6 +6132,14 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
+  "tame": {
+   "commandable": false,
+   "fed": 30.0,
+   "saddle": null,
+   "startsTamed": true,
+   "time": 1800.0
+  },
   "trophy": null,
   "weak": [
    "blunt",
@@ -5001,6 +6180,7 @@
   "resist": [
    "pierce"
   ],
+  "spawns": [],
   "trophy": "TrophySkeletonHildir",
   "weak": [
    "blunt",
@@ -5034,6 +6214,7 @@
   "resist": [
    "pierce"
   ],
+  "spawns": [],
   "trophy": "TrophySkeletonHildir",
   "weak": [
    "blunt",
@@ -5074,6 +6255,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophySkeleton",
   "weak": [
    "blunt",
@@ -5114,6 +6296,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophySkeleton",
   "weak": [
    "blunt",
@@ -5154,6 +6337,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophySkeleton",
   "weak": [
    "blunt",
@@ -5194,6 +6378,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophySkeleton",
   "weak": [
    "blunt",
@@ -5234,6 +6419,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophySkeleton",
   "weak": [
    "blunt",
@@ -5274,6 +6460,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophySkeletonPoison",
   "weak": [
    "blunt",
@@ -5316,6 +6503,20 @@
    "pierce",
    "frost"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "day": true,
+    "group": [
+     2,
+     4
+    ],
+    "max": 4,
+    "night": true
+   }
+  ],
   "trophy": "TrophySkeleton",
   "weak": [
    "blunt",
@@ -5356,6 +6557,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophySkeleton",
   "weak": [
    "blunt",
@@ -5396,6 +6598,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": "TrophySkeleton",
   "weak": [
    "blunt",
@@ -5448,6 +6651,21 @@
    "slash",
    "pierce"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "mountain"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "minAltitude": 120.0,
+    "night": true
+   }
+  ],
   "trophy": "TrophySGolem",
   "weak": []
  },
@@ -5491,6 +6709,7 @@
    "es": "Surtling"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophySurtling",
   "weak": [
    "frost"
@@ -5514,6 +6733,7 @@
   "resist": [
    "frost"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "fire"
@@ -5537,6 +6757,7 @@
   "resist": [
    "frost"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "fire"
@@ -5575,6 +6796,21 @@
    "es": "Garrapata"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "mistlands"
+    ],
+    "day": false,
+    "group": [
+     3,
+     3
+    ],
+    "key": "defeated_queen",
+    "max": 4,
+    "night": true
+   }
+  ],
   "trophy": "TrophyTick",
   "weak": [
    "pierce"
@@ -5622,6 +6858,20 @@
   "resist": [
    "blunt"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "blackforest"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophyFrostTroll",
   "weak": [
    "pierce"
@@ -5649,6 +6899,7 @@
    "pierce",
    "frost"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -5671,6 +6922,7 @@
   "resist": [
    "blunt"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": [
    "frost"
@@ -5716,6 +6968,7 @@
   "resist": [
    "blunt"
   ],
+  "spawns": [],
   "trophy": "TrophyFrostTroll",
   "weak": [
    "pierce"
@@ -5752,6 +7005,7 @@
   "resist": [
    "fire"
   ],
+  "spawns": [],
   "trophy": "TrophyUlv",
   "weak": [
    "poison"
@@ -5799,6 +7053,9 @@
     "perLevel": true
    }
   ],
+  "eats": [
+   "Blueberries"
+  ],
   "faction": 7,
   "health": 1200.0,
   "icon": "trophybjornundead",
@@ -5815,6 +7072,20 @@
    "slash",
    "pierce",
    "frost"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "plains"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
   ],
   "trophy": "TrophyBjornUndead",
   "weak": [
@@ -5869,6 +7140,20 @@
    "es": "Buicán"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 3,
+    "night": true
+   }
+  ],
   "trophy": "TrophyVolture",
   "weak": [
    "frost"
@@ -5879,6 +7164,12 @@
    "mountain"
   ],
   "boss": false,
+  "breed": {
+   "love": 3,
+   "max": 4,
+   "offspring": "Wolf_cub",
+   "pregnancy": 60.0
+  },
   "drops": [
    {
     "chance": 0.1,
@@ -5909,6 +7200,15 @@
     "perLevel": true
    }
   ],
+  "eats": [
+   "NeckTail",
+   "RawMeat",
+   "LoxMeat",
+   "Sausages",
+   "FishRaw",
+   "DeerMeat",
+   "ChickenMeat"
+  ],
   "faction": 5,
   "health": 80.0,
   "icon": "trophywolf",
@@ -5921,6 +7221,39 @@
    "es": "Lobo"
   },
   "resist": [],
+  "spawns": [
+   {
+    "biomes": [
+     "mountain"
+    ],
+    "day": false,
+    "group": [
+     2,
+     4
+    ],
+    "max": 6,
+    "night": true
+   },
+   {
+    "biomes": [
+     "mountain"
+    ],
+    "day": true,
+    "group": [
+     1,
+     2
+    ],
+    "max": 3,
+    "night": false
+   }
+  ],
+  "tame": {
+   "commandable": true,
+   "fed": 600.0,
+   "saddle": null,
+   "startsTamed": false,
+   "time": 1800.0
+  },
   "trophy": "TrophyWolf",
   "weak": []
  },
@@ -5940,13 +7273,29 @@
    "es": "Lobo Cachorrillo"
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
  "Wolf_spiritcaller": {
   "biomes": [],
   "boss": false,
+  "breed": {
+   "love": 3,
+   "max": 4,
+   "offspring": "Wolf_cub",
+   "pregnancy": 60.0
+  },
   "drops": [],
+  "eats": [
+   "NeckTail",
+   "RawMeat",
+   "LoxMeat",
+   "Sausages",
+   "FishRaw",
+   "DeerMeat",
+   "ChickenMeat"
+  ],
   "faction": 0,
   "health": 800.0,
   "icon": null,
@@ -5959,6 +7308,14 @@
    "es": ""
   },
   "resist": [],
+  "spawns": [],
+  "tame": {
+   "commandable": false,
+   "fed": 600.0,
+   "saddle": null,
+   "startsTamed": true,
+   "time": 1800.0
+  },
   "trophy": null,
   "weak": []
  },
@@ -5999,6 +7356,20 @@
    "blunt",
    "slash",
    "pierce"
+  ],
+  "spawns": [
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "day": false,
+    "group": [
+     1,
+     1
+    ],
+    "max": 2,
+    "night": true
+   }
   ],
   "trophy": "TrophyWraith",
   "weak": [
@@ -6042,6 +7413,20 @@
    "blunt",
    "fire"
   ],
+  "spawns": [
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "day": true,
+    "group": [
+     1,
+     1
+    ],
+    "max": 1,
+    "night": true
+   }
+  ],
   "trophy": "TrophyWrithan",
   "weak": [
    "slash"
@@ -6079,6 +7464,7 @@
    "es": "El Sabio"
   },
   "resist": [],
+  "spawns": [],
   "trophy": "TrophyTheElder",
   "weak": [
    "fire"
@@ -6098,6 +7484,7 @@
    "es": "P. A. L. O."
   },
   "resist": [],
+  "spawns": [],
   "trophy": null,
   "weak": []
  },
@@ -6119,6 +7506,7 @@
   "resist": [
    "fire"
   ],
+  "spawns": [],
   "trophy": null,
   "weak": []
  }

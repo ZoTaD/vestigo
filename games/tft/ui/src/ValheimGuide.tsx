@@ -10,6 +10,7 @@ import RouteLink from "./RouteLink";
 import { useValheimCopy } from "./valheimCopy";
 import { artUrl, BIOME_IDS, clean, tx, type BiomeId, type BiomeRow, type BossRow, type CreatureRow, type Place, type PlaceRow, type Ref, type Tip } from "./valheimData";
 import { BiomeTags, Ing, pctChance, range, RefLink, Slot, WikiFigure, type Nav, type To } from "./ValheimParts";
+import { BiomeEvents, FightBlock, SpawnBlock, TameBlock } from "./ValheimMore";
 
 function Tips({ tips }: { tips: Tip[] }) {
   const t = useValheimCopy();
@@ -74,6 +75,9 @@ export function CreaturePage({ row, to, navigate }: { row: CreatureRow; to: To; 
               </div>
             )}
           </div>
+          <FightBlock attacks={row.attacks} advice={row.tips} />
+          <TameBlock row={row} to={to} navigate={navigate} />
+          <SpawnBlock row={row} to={to} navigate={navigate} />
           {(row.variants ?? []).map((v, i) => (
             <div key={i} style={{ marginTop: 18 }}>
               <hr className="vh-sep" />
@@ -204,6 +208,7 @@ export function BiomePage({ row, bosses, to, navigate }: { row: BiomeRow; bosses
             </div>
           </section>
           <BiomeResources row={row} to={to} navigate={navigate} />
+          <BiomeEvents events={row.events ?? []} to={to} navigate={navigate} />
         </div>
         <div style={{ display: "grid", gap: 20 }}>
           {boss && (
@@ -400,6 +405,7 @@ export function BossPage({ row, to, navigate }: { row: BossRow; to: To; navigate
             <div style={{ display: "grid", gap: 18, alignContent: "start" }}>
               {row.art && <img className="vh-bossart" src={artUrl(row.art)} alt={tx(row.name, lang)} width={256} height={256} />}
               {row.photo && <WikiFigure photo={row.photo} alt={tx(row.name, lang)} />}
+              <FightBlock attacks={row.attacks} advice={row.advice} />
               <Tips tips={row.tips} />
             </div>
           </div>

@@ -46,6 +46,12 @@ HUGIN_BOSS = {"Eikthyr": ["altar", "bosstrophy", "stemple4"], "Bonemass": ["wish
               "FrozenKing": ["prison", "sacrificialblood", "end_hugin"]}
 HUGIN_ALL_BOSSES = ["altar", "bosstrophy"]
 
+# La llave global que deja cada jefe al morir: con ella se habilitan (o se
+# apagan) apariciones y eventos. Leídas del juego el 2026-09-24.
+KEY_BOSS = {"defeated_eikthyr": "Eikthyr", "defeated_gdking": "gd_king", "defeated_bonemass": "Bonemass",
+            "defeated_dragon": "Dragon", "defeated_goblinking": "GoblinKing", "defeated_queen": "SeekerQueen",
+            "defeated_fader": "Fader"}
+
 
 def ext_order(pid: str) -> int:
     """El orden de una mejora de estación: el número de su id (cauldron_ext3_… → 3); "…_ext" a secas es 1."""
@@ -90,6 +96,12 @@ def wiki_icon(photo: dict | None) -> str | None:
     return name
 
 
+def clean_se(se: dict) -> dict:
+    """Los textos de un efecto sin las marcas de color de Unity."""
+    return {**se, "name": clean_txt(se["name"]) if se.get("name") else None,
+            "tooltip": clean_txt(se["tooltip"]) if se.get("tooltip") else None}
+
+
 def load(name):
     with open(os.path.join(DATA, name), encoding="utf-8") as f:
         return json.load(f)
@@ -110,6 +122,10 @@ def main() -> None:
     piece_categories = load("piece_categories.json")
     biomes_meta = load("biomes.json")
     fixes.apply(items)
+    # Los eventos, uno por id (el juego tiene dos listas con los mismos).
+    events = list({e["id"]: e for e in (load("events.json") if os.path.exists(os.path.join(DATA, "events.json")) else [])}.values())
+    # Ataques y consejos de cada criatura y jefe (`tips_build.py`), por nombre en inglés.
+    tips = load("tips.json") if os.path.exists(os.path.join(DATA, "tips.json")) else {}
     # Las fotos de la wiki (`wiki_images.py`); sin el archivo, el sitio sale sin fotos.
     wiki_images = load("wiki_images.json") if os.path.exists(os.path.join(DATA, "wiki_images.json")) else {}
     # Por nombre en inglés, y sólo las que ya están bajadas (sin `src`, nada).
@@ -275,9 +291,17 @@ def main() -> None:
             "usedIn": [x for x in (use(u) for u in it["usedIn"]) if x],
         }
 
+    set_members = defaultdict(list)
+    for pid, it in items.items():
+        if it.get("setName") and recipe_by_item.get(pid):
+            set_members[it["setName"]].append(pid)
+
     tabs = defaultdict(list)
     for pid, it in items.items():
         row = base_row(pid, it)
+        if it.get("effects"):
+            # Bono de set, efecto al equipar o al tomar, resistencias y cuánto frena.
+            row["effects"] = {k: (clean_se(v) if isinstance(v, dict) else v) for k, v in it["effects"].items()}
         tab = KIND_TAB[it["kind"]]
         if tab == "foods":
             row.update(food=it["food"], focus=food_focus(it["food"]))
@@ -294,6 +318,8 @@ def main() -> None:
         elif tab == "armor":
             row.update(slot=armor_slot(it["itemType"]), armor=it["armor"], armorPerLevel=it["armorPerLevel"],
                        blockPower=it["blockPower"], setName=it["setName"], maxQuality=it["maxQuality"])
+            if it["setName"]:
+                row["setPieces"] = [ref[o] for o in sorted(set_members.get(it["setName"], [])) if o != pid and o in ref]
         elif tab == "tools":
             low = pid.lower()
             row.update(toolKind="arrow" if "arrow" in low else "bolt" if "bolt" in low else "ammo" if it["kind"] == "ammo" else "tool",
@@ -361,6 +387,59 @@ def main() -> None:
         })
 
     boss_ids = {b["id"] for b in bosses}
+
+    def key_ref(key):
+        """La llave de un jefe ("defeated_bonemass") → su ficha; otras llaves, nada."""
+        bid = KEY_BOSS.get(key or "")
+        return ref.get(f"boss:{bid}") if bid else None
+
+    # Los eventos en que aparece cada criatura (por prefab).
+    events_of = defaultdict(list)
+    for e in events:
+        if not e.get("start"):
+            continue
+        row = {"name": clean_txt(e["start"]), "biomes": e["biomes"],
+               "after": [r for r in (key_ref(k) for k in e["requires"]) if r],
+               "until": [r for r in (key_ref(k) for k in e["until"]) if r]}
+        for pf in e["spawn"]:
+            if row not in events_of[pf]:
+                events_of[pf].append(row)
+
+    def creature_extras(cid, c):
+        """
+        Domesticar, criar, cuándo aparece, eventos, ataques y consejos (pedido de
+        ZoTaD, 2026-09-24). Lo del juego sale de `extract.py`; ataques y consejos,
+        de `tips.json` (redactados a partir de la wiki, con palabras propias).
+        """
+        out = {}
+        eats = [ref[i] for i in c.get("eats", []) if i in ref]
+        if c.get("tame"):
+            t = c["tame"]
+            out["tame"] = {"time": t["time"], "fed": t["fed"], "startsTamed": t["startsTamed"], "commandable": t["commandable"],
+                           "saddle": ref.get(t["saddle"]) if t.get("saddle") else None, "eats": eats}
+        if c.get("breed"):
+            b = c["breed"]
+            out["breed"] = {"max": b["max"], "love": b["love"], "pregnancy": b["pregnancy"],
+                            "offspring": (ref.get(f"creature:{b['offspring']}") or ref.get(b["offspring"])) if b.get("offspring") else None}
+        spawns = []
+        for s in c.get("spawns", []):
+            row = {k: v for k, v in s.items() if k != "key"}
+            if s.get("key"):
+                r = key_ref(s["key"])
+                if not r:
+                    continue  # llaves que no son de un jefe (eventos de Hildir): no se explican bien
+                row["after"] = r
+            spawns.append(row)
+        if spawns:
+            out["spawns"] = spawns
+        if events_of.get(cid):
+            out["events"] = events_of[cid]
+        tp = tips.get(clean_txt(c["name"])["en"])
+        if tp:
+            out["attacks"] = tp.get("attacks") or []
+            out["tips"] = tp.get("tips") or None
+        return out
+
     for cid, c in creatures.items():
         tabs["creatures"].append({
             "id": cid, **ref[f"creature:{cid}"], "health": c["health"], "biomes": c["biomes"], "boss": cid in boss_ids,
@@ -369,6 +448,7 @@ def main() -> None:
             "bossRef": ref.get(f"boss:{cid}"),
             "photo": photo_by_name.get(c["name"]["en"]),
             "gameBiomes": game_biomes.get(cid, []),
+            **creature_extras(cid, c),
         })
 
     # Una ficha por nombre: la criatura base (el id más corto: Greydwarf y no
@@ -392,6 +472,19 @@ def main() -> None:
                 seen.add(sig(r))
                 variants.append({"biomes": r["gameBiomes"], "health": r["health"], "drops": r["drops"]})
         base["variants"] = variants
+        for key in ("spawns", "events"):
+            merged = []
+            for r in rows:
+                for x in r.get(key, []):
+                    if x not in merged:
+                        merged.append(x)
+            if merged:
+                base[key] = merged
+        for key in ("tame", "breed"):
+            if not base.get(key):
+                other = next((r[key] for r in rows if r.get(key)), None)
+                if other:
+                    base[key] = other
         kept_rows.append(base)
     for r in kept_rows:
         r.pop("gameBiomes", None)
@@ -408,6 +501,8 @@ def main() -> None:
             "drops": [{**ref[d["item"]], "min": d["min"], "max": d["max"], "chance": d["chance"]} for d in b["drops"] if d["item"] in ref],
             "creature": ref.get(f"creature:{b['id']}"),
             "tips": [hugin[k] for k in dict.fromkeys(HUGIN_ALL_BOSSES + HUGIN_BOSS.get(b["id"], [])) if k in hugin],
+            "attacks": (tips.get(clean_txt(b["name"])["en"]) or {}).get("attacks") or [],
+            "advice": (tips.get(clean_txt(b["name"])["en"]) or {}).get("tips"),
         })
 
     # --- Biomas: qué hay, qué conviene llevar y a quién hay que ganarle.
@@ -491,6 +586,12 @@ def main() -> None:
             "loot": sorted(loot.values(), key=lambda d: d["name"]["en"]),
             "plant": sorted(plant.values(), key=lambda d: d["name"]["en"]),
             "places": [{k: p[k] for k in ("slug", "tab", "name", "type", "photo", "inhabitants")} for p in place_rows if bid in p["biomes"]],
+            # Los ataques a la base que pueden pasar acá, con quién viene.
+            "events": [{"name": clean_txt(e["start"]), "after": [r for r in (key_ref(k) for k in e["requires"]) if r],
+                        "until": [r for r in (key_ref(k) for k in e["until"]) if r],
+                        "creatures": list({r["slug"]: r for r in (by_name(cre_by_name, creatures[pf]["name"]["en"]) if pf in creatures else None
+                                                                  for pf in e["spawn"]) if r}.values())}
+                       for e in events if e.get("start") and bid in e["biomes"]],
             "foods": [{k: r[k] for k in ("slug", "tab", "name", "icon", "food")} for r in foods[:8]],
             "gear": {t: len([r for r in tabs[t] if r["tier"] == bid]) for t in ("weapons", "armor", "foods", "meads")},
             "boss": {k: boss[k] for k in ("slug", "tab", "name", "icon", "art")} if boss else None,

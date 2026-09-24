@@ -122,6 +122,7 @@ export const FILTERS: Record<ListTab, FilterDef[]> = {
     { key: "type", title: "type", values: (r) => [cr(r).boss ? "boss" : "normal"], text: (v, t) => (v === "boss" ? t.filters.boss : t.filters.normal), order: ["normal", "boss"] },
     biomeFound,
     { key: "weak", title: "weak", values: (r) => cr(r).weak ?? [], text: (v, t) => t.damage[v] ?? v, column: true },
+    { key: "tame", title: "tame", toggle: true, values: (r) => (cr(r).tame ? ["yes"] : []), text: () => "" },
   ],
 };
 

@@ -136,3 +136,82 @@ def damage_mods(dm: dict) -> dict:
         elif v in IMMUNE:
             out["immune"].append(name)
     return out
+
+
+# `HitData.DamageType` del juego: una máscara de bits.
+DAMAGE_BITS = [(1, "blunt"), (2, "slash"), (4, "pierce"), (8, "chop"), (16, "pickaxe"), (32, "fire"),
+               (64, "frost"), (128, "lightning"), (256, "poison"), (512, "spirit")]
+# Los mismos códigos de `HitData.DamageModifier`, con nombre.
+MODIFIER = {1: "resistant", 2: "weak", 3: "immune", 5: "veryResistant", 6: "veryWeak", 7: "slightlyResistant", 8: "slightlyWeak"}
+
+
+def mod_list(mods: list[dict]) -> list[dict]:
+    """`[{m_type, m_modifier}]` (armaduras y efectos) → `[{type, mod}]`, un tipo de daño por fila."""
+    out = []
+    for m in mods or []:
+        mod = MODIFIER.get(m.get("m_modifier"))
+        if not mod:
+            continue
+        for bit, name in DAMAGE_BITS:
+            if m.get("m_type", 0) & bit and name not in ("chop", "pickaxe"):
+                out.append({"type": name, "mod": mod})
+    return out
+
+
+# Lo que un efecto de estado (`SE_Stats`) cambia, con su valor neutro. Lo que
+# queda en su valor neutro no se muestra. Leído del juego el 2026-09-24.
+SE_FIELDS = {
+    "m_healthUpFront": 0, "m_staminaUpFront": 0, "m_eitrUpFront": 0, "m_healthOverTime": 0, "m_staminaOverTime": 0,
+    "m_eitrOverTime": 0, "m_healthRegenMultiplier": 1, "m_staminaRegenMultiplier": 1, "m_eitrRegenMultiplier": 1,
+    "m_addMaxCarryWeight": 0, "m_speedModifier": 0, "m_swimSpeedModifier": 0, "m_runStaminaDrainModifier": 0,
+    "m_jumpStaminaUseModifier": 0, "m_attackStaminaUseModifier": 0, "m_blockStaminaUseModifier": 0,
+    "m_dodgeStaminaUseModifier": 0, "m_swimStaminaUseModifier": 0, "m_sneakStaminaUseModifier": 0,
+    "m_runStaminaUseModifier": 0, "m_homeItemStaminaUseModifier": 0, "m_noiseModifier": 0, "m_stealthModifier": 0,
+    "m_fallDamageModifier": 0, "m_maxMaxFallSpeed": 0, "m_addArmor": 0, "m_staggerModifier": 0,
+    "m_timedBlockBonus": 0, "m_adrenalineModifier": 0, "m_windRunStaminaModifier": 0,
+}
+
+
+def status_effect(tree: dict, loc: Loc) -> dict | None:
+    """
+    Un efecto de estado (bono de set, efecto al equipar, hidromiel): su nombre,
+    el texto del juego y lo que cambia en números. Sin nombre ni texto, nada.
+    """
+    name, tip = loc.t(tree.get("m_name")), loc.t((tree.get("m_tooltip") or "").strip())
+    if not name and not tip:
+        return None
+    stats = {k[2:]: round(v, 3) for k, v in tree.items() if k in SE_FIELDS and isinstance(v, (int, float)) and abs(v - SE_FIELDS[k]) > 1e-6}
+    for key in ("m_skillLevel", "m_skillLevel2"):
+        lvl, mod = tree.get(key), tree.get(key.replace("Level", "LevelModifier"))
+        if lvl and mod:
+            stats.setdefault("skills", []).append({"skill": lvl, "value": round(mod, 2)})
+    pct = {k[2:]: round(v, 3) for k, v in (tree.get("m_percentigeDamageModifiers") or {}).items() if v and k != "m_nonPlayer"}
+    if pct:
+        stats["damagePct"] = pct
+    if tree.get("m_damageModifier", 1) not in (0, 1):
+        stats["damageModifier"] = round(tree["m_damageModifier"], 3)
+    mods = mod_list(tree.get("m_mods"))
+    if mods:
+        stats["resist"] = mods
+    if tree.get("m_ttl"):
+        stats["ttl"] = tree["m_ttl"]
+    return {"name": name, "tooltip": tip, "stats": stats}
+
+
+def spawn_record(s: dict, biomes: list[str]) -> dict:
+    """Una regla de aparición del mundo (`SpawnSystem`): dónde, cuándo y cuántos."""
+    out = {"biomes": biomes, "day": bool(s.get("m_spawnAtDay", 1)), "night": bool(s.get("m_spawnAtNight", 1)),
+           "group": [s.get("m_groupSizeMin", 1), s.get("m_groupSizeMax", 1)], "max": s.get("m_maxSpawned")}
+    if s.get("m_requiredGlobalKey"):
+        out["key"] = s["m_requiredGlobalKey"]
+    if s.get("m_requiredEnvironments"):
+        out["envs"] = list(s["m_requiredEnvironments"])
+    if not s.get("m_outsideForest", 1):
+        out["forest"] = "in"
+    elif not s.get("m_inForest", 1):
+        out["forest"] = "out"
+    if s.get("m_minOceanDepth") or s.get("m_maxOceanDepth"):
+        out["ocean"] = True
+    if s.get("m_minAltitude", 0) > 10:
+        out["minAltitude"] = s["m_minAltitude"]
+    return out

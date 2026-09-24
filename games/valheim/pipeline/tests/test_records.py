@@ -94,3 +94,26 @@ class TestDamageMods(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestEfectos(unittest.TestCase):
+    def test_resistencias_por_bit(self):
+        from pipeline.records import mod_list
+        # Fuego y escarcha (32 + 64) resistentes; talar no cuenta.
+        self.assertEqual(mod_list([{"m_type": 96, "m_modifier": 1}, {"m_type": 8, "m_modifier": 2}]),
+                         [{"type": "fire", "mod": "resistant"}, {"type": "frost", "mod": "resistant"}])
+
+    def test_efecto_solo_lo_que_cambia(self):
+        from pipeline.records import status_effect
+        loc = Loc({"se_x": {"en": "Troll set", "es": "Set de trol"}, "se_x_tip": {"en": "Sneak", "es": "Sigilo"}})
+        se = status_effect({"m_name": "$se_x", "m_tooltip": "$se_x_tip", "m_speedModifier": 0.15, "m_healthRegenMultiplier": 1.0,
+                            "m_skillLevel": 101, "m_skillLevelModifier": 15.0, "m_mods": []}, loc)
+        self.assertEqual(se["name"]["es"], "Set de trol")
+        self.assertEqual(se["stats"], {"speedModifier": 0.15, "skills": [{"skill": 101, "value": 15.0}]})
+
+    def test_aparicion(self):
+        from pipeline.records import spawn_record
+        r = spawn_record({"m_spawnAtDay": 0, "m_spawnAtNight": 1, "m_groupSizeMin": 2, "m_groupSizeMax": 3, "m_maxSpawned": 3,
+                          "m_requiredGlobalKey": "defeated_bonemass", "m_inForest": 1, "m_outsideForest": 0}, ["meadows"])
+        self.assertEqual(r, {"biomes": ["meadows"], "day": False, "night": True, "group": [2, 3], "max": 3,
+                             "key": "defeated_bonemass", "forest": "in"})
