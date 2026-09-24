@@ -17,7 +17,10 @@ Action.
    Antes de `pipeline.site`: refrescar la copia de la wiki
    (`python Desktop/valheim-wiki/dump.py`) y, si hay criaturas o lugares
    nuevos, `.venv/Scripts/python -m pipeline.wiki_images` (fotos de Fandom,
-   CC BY-SA, con su autor en `data/wiki_images.json`). `pipeline.site` toma de
+   CC BY-SA, con su autor en `data/wiki_images.json`). El CDN de Fandom
+   bloquea las descargas por script (Cloudflare): las fotos se bajan con el
+   navegador siguiendo `pipeline/wiki_manual.py` (página → Ctrl+S → importar)
+   y después se corre `pipeline.wiki_images`, que las toma de la copia local. `pipeline.site` toma de
    la wiki dónde vive cada criatura y el bioma de cada comida, y aplica las
    fuentes a mano de `pipeline/fixes.py`. Después,
    `.venv/Scripts/python -m pipeline.wiki_check` lista lo que el sitio todavía

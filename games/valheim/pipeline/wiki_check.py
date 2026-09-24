@@ -9,6 +9,7 @@ la wiki también se equivoca (en la 1.0 se estaba editando), así que lo que se
 decide va a `data/wiki-fixes.json` con su porqué, no se copia a ciegas.
 """
 import json
+import re
 import os
 import sys
 
@@ -45,6 +46,22 @@ def main() -> int:
             say(f"  {c['name']['en']}: sin ficha en la wiki (sitio: {c['biomes']})")
         elif set(w) != set(c["biomes"]):
             say(f"  {c['name']['en']}: {c['biomes']} → {w}")
+
+    say("\n## Criaturas: vida y botín (sitio → ficha de la wiki)")
+    for c in load("creatures.json") + load("bosses.json"):
+        b = wiki.lookup(c["name"]["en"])
+        if not b or "creature" not in b[1]:
+            continue
+        f = b[2]
+        hp = re.search(r"[\d.,]+", f.get("health 0star", "") or f.get("health", ""))
+        if hp and c.get("health") and abs(float(hp.group().replace(",", "")) - c["health"]) > 0.5:
+            say(f"  {c['name']['en']}: vida {c['health']} → {hp.group()}")
+        wd = {wiki.norm(x) for x in wiki.links(f.get("drops", ""))}
+        ours = {wiki.norm(d["name"]["en"]) for d in c.get("drops", [])}
+        fold = lambda s: {x.rstrip("s") for x in s}
+        extra, lack = sorted(fold(ours) - fold(wd)), sorted(fold(wd) - fold(ours))
+        if wd and (extra or lack):
+            say(f"  {c['name']['en']}: botín de más {extra} · falta {lack}")
 
     say("\n## Armaduras: bioma (sitio → tabla Sets de Armor)")
     ab = wiki.armor_biomes()

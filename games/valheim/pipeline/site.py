@@ -65,6 +65,31 @@ def clean_txt(t: dict) -> dict:
     return {k: re.sub(r"</?color[^>]*>", "", v).strip() for k, v in t.items()}
 
 
+PUBLIC = os.path.normpath(os.path.join(DATA, "..", "..", "tft", "ui", "public"))
+
+
+def wiki_icon(photo: dict | None) -> str | None:
+    """
+    Un ícono cuadrado (84 px) sacado de la foto de la wiki, para las criaturas
+    sin trofeo: así se ven en las listas, los biomas y los lugares. Se guarda
+    junto a los íconos del juego como `wiki-<archivo>`.
+    """
+    if not photo or not photo.get("src"):
+        return None
+    src = os.path.join(PUBLIC, photo["src"].lstrip("/"))
+    if not os.path.exists(src):
+        return None
+    name = "wiki-" + os.path.splitext(os.path.basename(src))[0]
+    dest = os.path.join(PUBLIC, "valheim", "icons", name + ".webp")
+    if not os.path.exists(dest) or os.path.getmtime(dest) < os.path.getmtime(src):
+        from PIL import Image
+        im = Image.open(src).convert("RGBA")
+        side = min(im.size)
+        box = ((im.width - side) // 2, (im.height - side) // 2)
+        im.crop((box[0], box[1], box[0] + side, box[1] + side)).resize((84, 84), Image.LANCZOS).save(dest, "WEBP", quality=85)
+    return name
+
+
 def load(name):
     with open(os.path.join(DATA, name), encoding="utf-8") as f:
         return json.load(f)
@@ -87,6 +112,9 @@ def main() -> None:
     fixes.apply(items)
     # Las fotos de la wiki (`wiki_images.py`); sin el archivo, el sitio sale sin fotos.
     wiki_images = load("wiki_images.json") if os.path.exists(os.path.join(DATA, "wiki_images.json")) else {}
+    # Por nombre en inglés, y sólo las que ya están bajadas (sin `src`, nada).
+    photo_by_name = {v["name"]: {k: v[k] for k in ("src", "author", "w", "h") if k in v}
+                     for g in ("creatures", "bosses") for v in wiki_images.get(g, {}).values() if v.get("src") and v.get("name")}
 
     # --- Dónde vive cada criatura (2026-09-24, comparado con la wiki a pedido
     # de ZoTaD). El juego mezcla hábitat con visitas: el esqueleto "vivía" en
@@ -95,6 +123,7 @@ def main() -> None:
     # Manda la ficha de la wiki (`location`) para los biomas de antes de la 1.0;
     # el Norte profundo sale del juego, porque la wiki todavía no lo terminó.
     # Las variantes con el mismo nombre (nueve "Skeleton") son una sola ficha.
+    game_biomes = {k: list(c["biomes"]) for k, c in creatures.items()}
     by_name = defaultdict(set)
     for c in creatures.values():
         by_name[clean_txt(c["name"])["en"]].update(c["biomes"])
@@ -141,13 +170,22 @@ def main() -> None:
     creatures = {k: c for k, c in creatures.items() if c["name"]["en"] and (c["biomes"] or c["drops"] or k in boss_ids0)}
 
     def creature_icon(c):
-        """El trofeo; sin trofeo, lo primero que suelta (la gallina, su carne)."""
+        """
+        La foto de la wiki recortada (`wiki_icon`): ZoTaD quiere ver cómo es cada
+        criatura en todo el sitio (2026-09-24). Sin foto, el trofeo; si no, lo
+        que suelta sólo si se llama igual (la cabeza de Kvastur). Antes caía en
+        lo primero que soltaba y el murciélago salía con trozos de cuero: mejor
+        sin imagen que con una ajena.
+        """
+        ic = wiki_icon(photo_by_name.get(c["name"]["en"]))
+        if ic:
+            return ic
         if c.get("icon"):
             return c["icon"]
         for d in c.get("drops", []):
-            ic = (items.get(d["item"]) or {}).get("icon")
-            if ic:
-                return ic
+            it = items.get(d["item"]) or {}
+            if it.get("icon") and it["name"]["en"] == c["name"]["en"]:
+                return it["icon"]
         return None
 
     for cid, c in sorted(creatures.items(), key=lambda x: x[1]["name"]["en"]):
@@ -329,15 +367,42 @@ def main() -> None:
             "weak": c["weak"], "resist": c["resist"], "immune": c["immune"],
             "drops": [{**ref[d["item"]], "min": d["min"], "max": d["max"], "chance": d["chance"]} for d in c["drops"] if d["item"] in ref],
             "bossRef": ref.get(f"boss:{cid}"),
-            "photo": wiki_images.get("creatures", {}).get(ref[f"creature:{cid}"]["slug"]),
+            "photo": photo_by_name.get(c["name"]["en"]),
+            "gameBiomes": game_biomes.get(cid, []),
         })
+
+    # Una ficha por nombre: la criatura base (el id más corto: Greydwarf y no
+    # Greydwarf_Frozen). Antes ganaba la que más soltaba y el enanogrís de las
+    # Praderas mostraba la vida y el hielo del del Norte profundo (2026-09-24,
+    # comparando con la wiki). Las versiones con otra vida u otro botín quedan
+    # como variantes de la ficha, con el bioma donde aparecen.
+    alias: dict[tuple, str] = {}
+    groups = defaultdict(list)
+    for r in tabs["creatures"]:
+        groups[r["name"]["en"]].append(r)
+    kept_rows = []
+    for rows in groups.values():
+        rows.sort(key=lambda r: (not r["boss"], len(r["id"]), -len(r["drops"]), r["id"]))
+        base = rows[0]
+        sig = lambda r: (r["health"], tuple(sorted(d["slug"] for d in r["drops"])))
+        variants, seen = [], {sig(base)}
+        for r in rows[1:]:
+            alias[("creatures", r["slug"])] = base["slug"]
+            if r["drops"] and sig(r) not in seen:
+                seen.add(sig(r))
+                variants.append({"biomes": r["gameBiomes"], "health": r["health"], "drops": r["drops"]})
+        base["variants"] = variants
+        kept_rows.append(base)
+    for r in kept_rows:
+        r.pop("gameBiomes", None)
+    tabs["creatures"] = kept_rows
 
     boss_rows = []
     for b in bosses:
         s_item = b["summon"]["item"]
         boss_rows.append({
             "id": b["id"], **ref[f"boss:{b['id']}"], "health": b["health"], "biome": b["biome"], "order": b["order"],
-            "art": b["art"], "photo": wiki_images.get("bosses", {}).get(ref[f"boss:{b['id']}"]["slug"]), "power": b["power"], "weak": b["weak"], "resist": b["resist"], "immune": b["immune"],
+            "art": b["art"], "photo": photo_by_name.get(b["name"]["en"]), "power": b["power"], "weak": b["weak"], "resist": b["resist"], "immune": b["immune"],
             "summon": {"item": ref.get(s_item) if s_item else None, "amount": b["summon"]["amount"], "altar": b["summon"]["altar"],
                        "sources": [src(s) for s in items[s_item]["sources"]] if s_item in items else []},
             "drops": [{**ref[d["item"]], "min": d["min"], "max": d["max"], "chance": d["chance"]} for d in b["drops"] if d["item"] in ref],
@@ -433,7 +498,6 @@ def main() -> None:
         })
 
     sizes = {}
-    alias: dict[tuple, str] = {}
     for tab, rows in tabs.items():
         # El juego tiene variantes internas con el mismo nombre (tres "Hacha
         # de bronce", dos "Elaking"): queda la que se puede fabricar o

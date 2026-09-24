@@ -98,7 +98,7 @@ def build(images: dict, creature_ref, item_ref, chest_items) -> list[dict]:
             continue
         kind = loc["type"].lower().strip()
         p = by_title.get(title) or {}
-        photo = {k: p[k] for k in ("src", "file", "page", "author", "w", "h") if k in p} if p.get("src") else None
+        photo = {k: p[k] for k in ("src", "author", "w", "h") if k in p} if p.get("src") else None
 
         def refs(names, fn):
             out, seen = [], set()

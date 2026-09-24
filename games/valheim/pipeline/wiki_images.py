@@ -200,22 +200,25 @@ def image_info(files: list[str]) -> dict[str, dict]:
         chunk = files[i:i + 50]
         params = {"action": "query", "prop": "imageinfo", "iiprop": "url|user|size|mime", "iiurlwidth": WIDTH,
                   "redirects": 1, "titles": "|".join("File:" + f for f in chunk)}
-        back = {"File:" + f: f for f in chunk}  # título final → nombre pedido
+        # Nombre pedido → título final. Al revés no sirve: dos archivos pueden
+        # redirigir al mismo ("Eikthyr Definitive.png" → "Eikthyr.png").
+        final = {f: "File:" + f for f in chunk}
         cont = {}
         # Con miniaturas, la API devuelve de a pocas y sigue con `continue`: sin
         # esto, la mitad de los archivos parecían no existir.
         while True:
             d = api({**params, **cont})
             q = d.get("query", {})
-            for x in q.get("normalized", []) + q.get("redirects", []):
-                back[x["to"]] = back.get(x["from"], x["from"])
+            for key in ("normalized", "redirects"):
+                step = {x["from"]: x["to"] for x in q.get(key, [])}
+                final = {f: step.get(t, t) for f, t in final.items()}
             for p in q.get("pages", {}).values():
                 ii = (p.get("imageinfo") or [None])[0]
                 if ii:
-                    out[back.get(p["title"], p["title"][5:])] = {
-                        "thumb": ii.get("thumburl") or ii["url"], "page": ii["descriptionurl"],
-                        "author": ii.get("user", ""), "ow": ii.get("width"), "oh": ii.get("height"),
-                    }
+                    for f, t in final.items():
+                        if t == p["title"]:
+                            out[f] = {"thumb": ii.get("thumburl") or ii["url"], "page": ii["descriptionurl"],
+                                      "author": ii.get("user", ""), "ow": ii.get("width"), "oh": ii.get("height")}
             time.sleep(0.3)
             if "continue" not in d:
                 break

@@ -119,7 +119,7 @@ export interface Drop extends Ref { min: number; max: number; chance: number }
  * Una foto de la wiki de Fandom (2026-09-24): el juego no trae fotos de
  * criaturas ni de lugares. CC BY-SA 3.0, con su autor y la página del archivo.
  */
-export interface WikiPhoto { src: string; file: string; page: string; author: string | null; w: number; h: number }
+export interface WikiPhoto { src: string; author: string | null; w: number; h: number }
 
 /** Un lugar en la lista de su bioma: la tarjeta que lleva a su ficha. */
 export interface Place extends Ref {
@@ -158,6 +158,8 @@ export interface CreatureRow {
   bossRef: Ref | null;
   photo?: WikiPhoto | null;
   places?: Ref[];
+  /** La misma criatura con otra vida u otro botín (el enanogrís del Norte profundo). */
+  variants?: { biomes: BiomeId[]; health: number | null; drops: Drop[] }[];
 }
 
 export interface Tip { topic: Txt; label: Txt | null; text: Txt }

@@ -74,6 +74,19 @@ export function CreaturePage({ row, to, navigate }: { row: CreatureRow; to: To; 
               </div>
             )}
           </div>
+          {(row.variants ?? []).map((v, i) => (
+            <div key={i} style={{ marginTop: 18 }}>
+              <hr className="vh-sep" />
+              <p className="vh-h2">{t.variant}</p>
+              <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap", marginBottom: 10 }}>
+                {v.biomes.length > 0 && <BiomeTags ids={v.biomes} />}
+                <div className="vh-kv"><div><span>{t.guide.health}</span><b>{v.health ?? "—"}</b></div></div>
+              </div>
+              <div className="vh-ings">
+                {v.drops.map((d) => <Ing key={d.slug ?? d.name.en} r={d} qty={`${range(d.min, d.max)}${d.chance < 1 ? ` · ${pctChance(d.chance)}` : ""}`} to={to} navigate={navigate} />)}
+              </div>
+            </div>
+          ))}
         </div>
       </article>
     </>
