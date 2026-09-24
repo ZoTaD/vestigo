@@ -212,13 +212,36 @@ def main() -> None:
                        biomes=sorted({b for s in it["sources"] for b in s.get("biomes") or []}, key=BIOME_ORDER.index))
         tabs[tab].append(row)
 
+    # Lo que pasa en cada estación (pedido de ZoTaD, 2026-09-24: el molino tiene
+    # que mostrar la cebada): lo que procesa (cebada → harina) y lo que se fabrica
+    # o se construye ahí. Se cuelga de la pieza por el slug de su estación.
+    processes, crafts = defaultdict(list), defaultdict(list)
+    for c in conversions:
+        st = station_ref(c["station"])
+        if st and st["slug"] and c["from"] in ref and c["to"] in ref:
+            processes[st["slug"]].append({"from": ref[c["from"]], "to": ref[c["to"]], "time": c.get("time"), "yield": c.get("yield")})
+    for iid, r in recipe_by_item.items():
+        st = station_ref(r["station"])
+        if st and st["slug"] and iid in ref:
+            crafts[st["slug"]].append({**ref[iid], "level": r["level"]})
+    for pid, p in pieces.items():
+        st = station_ref(p["station"])
+        if st and st["slug"] and f"piece:{pid}" in ref:
+            crafts[st["slug"]].append({**ref[f"piece:{pid}"], "level": 1})
+
     for pid, p in pieces.items():
         key = f"piece:{pid}"
         cat = (piece_categories.get(p["tool"]) or {}).get(str(p["category"]))
+        slug = ref[key]["slug"]
+        seen = set()
+        made = [x for x in sorted(crafts.get(slug, []), key=lambda x: (x["level"], x["name"]["en"]))
+                if not (x["slug"] in seen or seen.add(x["slug"]))]
         tabs["building"].append({
             "id": pid, **ref[key], "desc": p["desc"], "tool": p["tool"], "category": p["category"], "categoryName": cat,
             "comfort": p["comfort"], "station": station_ref(p["station"]), "req": req_list(p["requirements"]),
             "tier": max((t for t in (tier.get(q["item"]) for q in p["requirements"]) if t), key=BIOME_ORDER.index, default=None),
+            "processes": processes.get(slug) or None,
+            "crafts": made or None,
         })
 
     boss_ids = {b["id"] for b in bosses}

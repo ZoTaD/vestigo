@@ -17,6 +17,15 @@ Action.
 5. Revisar `git diff --stat games/valheim/data`, los conteos de `data/meta.json`
    y su lista `withoutSource` (lo que quedó sin "de dónde sale").
 6. Si un campo cambió de nombre: `.venv/Scripts/python -m pipeline.peek <Clase>`.
+7. La Crónica (notas de parche): `.venv/Scripts/python -m pipeline.patches`
+   baja los anuncios de Steam y arma `data/site/patches/`. Va después de
+   `pipeline.site` porque enlaza los nombres con su índice.
+8. El español de la edición nueva: `.venv/Scripts/python -m pipeline.patches --offline --todo <slug>`
+   escribe las líneas que faltan en `data/patches-es/<slug>.todo.json`; se
+   traducen (con los nombres oficiales del índice, así se enlazan), se guardan
+   como `<slug>.json` y se vuelve a correr. Lo que se repite entre parches va
+   en `common.json`. Las líneas "Weapon: Nord Sword" se traducen solas.
+9. Pedir la indexación de la edición nueva (en/es) en Search Console.
 
 Tests: `cd games/valheim && .venv/Scripts/python -m unittest discover -s pipeline/tests -t . -v`.
 
@@ -30,5 +39,8 @@ Tests: `cd games/valheim && .venv/Scripts/python -m unittest discover -s pipelin
 - `../tft/ui/public/valheim/ui/*.webp`: paneles, botones y casillas de la interfaz.
 - `../tft/ui/public/valheim/fonts/`: Averia Serif/Sans Libre (OFL). Norse, la
   de los títulos del juego, queda afuera hasta confirmar su licencia.
+- `data/site/patches/*.json` y `../tft/ui/public/valheim/news/*.webp`: la
+  Crónica, una edición por versión estable (sin "Public Test"), con la portada
+  del anuncio cuando trae imagen.
 
 Diseño: `docs/design/2026-09-24-valheim-enciclopedia.md`.
