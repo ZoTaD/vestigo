@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
 import { devApi } from "./dev-api";
 import { ROBOTS_TXT, sitemapXml, type SitemapData } from "./src/sitemap";
@@ -217,8 +218,8 @@ function seoFiles(): Plugin {
  * con la URL equivocada. Organic Social era 10 de 27 sesiones cuando se midió,
  * o sea el segundo canal del sitio.
  *
- * Corre en `generateBundle` después del de SEO, cuando index.html ya está en el
- * bundle: cada archivo es ese mismo HTML con las etiquetas sustituidas, así que
+ * Corre en `writeBundle`, después del de SEO y con `dist/` ya escrito: cada
+ * archivo es el mismo index.html con las etiquetas sustituidas, así que
  * el JS y el CSS que carga son los mismos y la app arranca igual. Netlify sirve
  * un archivo real antes de consultar el redirect de SPA.
  */
@@ -229,12 +230,21 @@ function prerenderRoutes(): Plugin {
     // Después de vestigo-seo-files, y sobre todo después de que Vite haya
     // emitido index.html: sin él no hay nada que copiar.
     enforce: "post",
-    async generateBundle(_options, bundle) {
+    /**
+     * **Cada página se escribe a disco apenas se renderiza** (2026-09-24). Antes
+     * se juntaban todos los cuerpos en un Map y cada HTML se emitía al bundle:
+     * con Valheim eran 10.766 páginas (242 MB) vivas a la vez, dos veces, y el
+     * build de Netlify se quedó sin memoria (tope de ~2 GB de Node). Por eso
+     * esto corre en `writeBundle`, cuando Vite ya escribió `dist/`, y no en
+     * `generateBundle`.
+     */
+    async writeBundle(options, bundle) {
       const entry = bundle["index.html"];
       if (!entry || entry.type !== "asset") {
         this.warn("No se encontró index.html en el bundle: no se prerenderizó ninguna ruta.");
         return;
       }
+      const outDir = options.dir ?? "dist";
       // Sin los comentarios de index.html: explican decisiones en el repo, pero
       // salían en cada página servida.
       const html = stripComments(String(entry.source));
@@ -266,51 +276,45 @@ function prerenderRoutes(): Plugin {
         logLevel: "error",
       });
 
-      const cuerpos = new Map<string, string>();
       const t0 = Date.now();
+      let escritas = 0;
       try {
         const { renderApp } = (await ssr.ssrLoadModule("/src/entry-server.tsx")) as {
           renderApp: (route: Route) => Promise<string>;
         };
-        for (const page of pages) cuerpos.set(page.path, await renderApp(parseRoute(page.path)));
+        for (const page of pages) {
+          const cuerpo = await renderApp(parseRoute(page.path));
+          const pagina = renderHtml(html, page, BRAND, cuerpo);
+          /**
+           * El `index.html` de la raíz también lleva cuerpo, y es el que más lo
+           * necesita: Netlify lo sirve para el dominio pelado **y como fallback
+           * de cualquier ruta que no tenga archivo propio**. Lleva el de `/en`,
+           * que es a donde la raíz manda.
+           */
+          if (page.path === "/en") writeFileSync(join(outDir, "index.html"), pagina);
+          // "/es/deadlock/items/basic-magazine" → "es/deadlock/items/basic-magazine.html".
+          //
+          // Un archivo suelto y NO "<ruta>/index.html": con la forma de carpeta,
+          // Netlify responde 301 agregando la barra final, así que cada URL del
+          // sitemap redirigía y la canonical apuntaba a una dirección distinta de
+          // la que el servidor entregaba. Verificado contra el sitio desplegado,
+          // que es el único lugar donde esto se ve: `vite preview` sirve las dos
+          // formas con 200 y no lo habría delatado.
+          //
+          // Una sección y sus detalles conviven sin chocar: "items.html" es un
+          // archivo y "items/" una carpeta. La raíz ya la escribió Vite.
+          const clean = page.path.replace(/^\/+|\/+$/g, "");
+          if (!clean) continue;
+          const file = join(outDir, `${clean}.html`);
+          mkdirSync(dirname(file), { recursive: true });
+          writeFileSync(file, pagina);
+          escritas++;
+        }
       } finally {
         // Pase lo que pase: un servidor sin cerrar deja el proceso del build vivo.
         await ssr.close();
       }
-      this.info?.(`Renderizadas ${cuerpos.size} rutas en ${((Date.now() - t0) / 1000).toFixed(1)}s.`);
-
-      /**
-       * El `index.html` de la raíz también lleva cuerpo, y es el que más lo
-       * necesita: Netlify lo sirve para el dominio pelado **y como fallback de
-       * cualquier ruta que no tenga archivo propio**. Se le pone el cuerpo de
-       * `/en`, que es a donde la raíz manda.
-       */
-      const raiz = cuerpos.get("/en");
-      const paginaEn = pages.find((p) => p.path === "/en");
-      if (raiz && paginaEn) entry.source = renderHtml(html, paginaEn, BRAND, raiz);
-      else if (raiz) entry.source = html.replace('<div id="root"></div>', `<div id="root">${raiz}</div>`);
-
-      for (const page of pages) {
-        // "/es/deadlock/items/basic-magazine" → "es/deadlock/items/basic-magazine.html".
-        //
-        // Un archivo suelto y NO "<ruta>/index.html": con la forma de carpeta,
-        // Netlify responde 301 agregando la barra final, así que cada URL del
-        // sitemap redirigía y la canonical apuntaba a una dirección distinta de
-        // la que el servidor entregaba. Verificado contra el sitio desplegado,
-        // que es el único lugar donde esto se ve: `vite preview` sirve las dos
-        // formas con 200 y no lo habría delatado.
-        //
-        // Una sección y sus detalles conviven sin chocar: "items.html" es un
-        // archivo y "items/" una carpeta. La raíz la escribe Vite y no se pisa.
-        const clean = page.path.replace(/^\/+|\/+$/g, "");
-        if (!clean) continue;
-        this.emitFile({
-          type: "asset",
-          fileName: `${clean}.html`,
-          source: renderHtml(html, page, BRAND, cuerpos.get(page.path)),
-        });
-      }
-      this.info?.(`Prerenderizadas ${pages.length} rutas.`);
+      this.info?.(`Prerenderizadas ${escritas} rutas en ${((Date.now() - t0) / 1000).toFixed(1)}s.`);
     },
   };
 }

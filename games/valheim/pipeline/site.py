@@ -331,12 +331,17 @@ def main() -> None:
         sizes[tab] = dump(f"{tab}.json", rows)
     sizes["biomes"] = dump("biomes.json", biome_rows)
     sizes["bosses"] = dump("bosses.json", boss_rows)
-    listed = {(t, r["slug"]) for t, rows in tabs.items() for r in rows} | {("biomes", b["slug"]) for b in biome_rows} | {("bosses", b["slug"]) for b in boss_rows}
+    # El índice sale de las filas publicadas, una entrada por ficha. Antes salía
+    # de `ref`, y `remap` deja las variantes fusionadas (los nueve "Skeleton")
+    # con el slug de la que quedó: el índice las repetía y el build de Netlify
+    # escribía la misma página varias veces (2026-09-24).
     # Biomas y jefes no tienen ícono de inventario: el buscador muestra su ilustración.
-    art_of = {("biomes", b["slug"]): b["art"] for b in biome_rows} | {("bosses", b["slug"]): b["art"] for b in boss_rows}
-    index = [{"slug": r["slug"], "tab": r["tab"], "en": r["name"]["en"], "es": r["name"]["es"], "icon": r["icon"],
-              **({"art": art_of[(r["tab"], r["slug"])]} if (r["tab"], r["slug"]) in art_of else {})}
-             for r in ref.values() if (r["tab"], r["slug"]) in listed]
+    order = {("biomes", b["slug"]): b for b in biome_rows} | {("bosses", b["slug"]): b for b in boss_rows}
+    index = [{"slug": r["slug"], "tab": t, "en": r["name"]["en"], "es": r["name"]["es"], "icon": r.get("icon")}
+             for t, rows in tabs.items() for r in rows]
+    index += [{"slug": b["slug"], "tab": t, "en": b["name"]["en"], "es": b["name"]["es"], "icon": b.get("icon"), "art": b["art"]}
+              for (t, _), b in order.items()]
+    index.sort(key=lambda e: e["en"].lower())
     sizes["index"] = dump("index.json", index)
     meta = load("meta.json")
     dump("meta.json", {"extractedAt": meta["extractedAt"], "counts": {t: len(r) for t, r in tabs.items()} | {"biomes": len(biome_rows), "bosses": len(boss_rows)}})

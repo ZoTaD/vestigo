@@ -166,7 +166,9 @@ export function sitemapPaths(data: SitemapData): string[] {
     }
   }
 
-  return paths;
+  // Sin repetidas: una dirección dos veces es una página escrita dos veces y
+  // una entrada de más en el sitemap (le pasó al índice de Valheim, 2026-09-24).
+  return [...new Set(paths)];
 }
 
 /**
