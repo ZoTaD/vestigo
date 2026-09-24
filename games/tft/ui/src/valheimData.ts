@@ -49,7 +49,7 @@ export interface Source {
   yield?: number | null;
 }
 export interface Use extends Ref { kind: "recipe" | "piece" | "convert"; amount?: number }
-export interface Recipe { station: Ref | null; level: number; amount: number; req: Req[] }
+export interface Recipe { station: Ref | null; level: number; amount: number; req: Req[]; anyOne?: boolean }
 
 export interface ItemRow {
   id: string;
@@ -115,6 +115,33 @@ export interface PieceRow {
 
 export interface Drop extends Ref { min: number; max: number; chance: number }
 
+/**
+ * Una foto de la wiki de Fandom (2026-09-24): el juego no trae fotos de
+ * criaturas ni de lugares. CC BY-SA 3.0, con su autor y la página del archivo.
+ */
+export interface WikiPhoto { src: string; file: string; page: string; author: string | null; w: number; h: number }
+
+/** Un lugar en la lista de su bioma: la tarjeta que lleva a su ficha. */
+export interface Place extends Ref {
+  type: Txt;
+  photo: WikiPhoto | null;
+  inhabitants: Ref[];
+}
+
+/**
+ * La ficha de un lugar (mazmorra, estructura, veta). Qué lugares hay y quién
+ * vive ahí sale de la wiki; el botín de sus cofres, del juego.
+ */
+export interface PlaceRow extends Place {
+  slug: string;
+  tab: "places";
+  kind: string;
+  biomes: BiomeId[];
+  resources: Ref[];
+  loot: Ref[];
+  order: number;
+}
+
 export interface CreatureRow {
   id: string;
   slug: string;
@@ -129,6 +156,8 @@ export interface CreatureRow {
   immune: string[];
   drops: Drop[];
   bossRef: Ref | null;
+  photo?: WikiPhoto | null;
+  places?: Ref[];
 }
 
 export interface Tip { topic: Txt; label: Txt | null; text: Txt }
@@ -143,6 +172,8 @@ export interface BossRow {
   biome: BiomeId | null;
   order: number;
   art: string | null;
+  photo?: WikiPhoto | null;
+  places?: Ref[];
   power: { name: Txt | null; tooltip: Txt | null; cooldown: number | null } | null;
   weak: string[];
   resist: string[];
@@ -168,6 +199,8 @@ export interface BiomeRow {
   loot?: Ref[];
   /** Lo que se puede plantar acá. */
   plant?: Ref[];
+  /** Mazmorras y lugares, de la wiki. */
+  places?: Place[];
   foods: (Ref & { food: { hp: number; st: number; eitr: number; min: number; regen: number } })[];
   gear: Record<"weapons" | "armor" | "foods" | "meads", number>;
   boss: (Ref & { art: string | null }) | null;
@@ -175,7 +208,7 @@ export interface BiomeRow {
 }
 
 /** `art`: biomas y jefes, que no tienen ícono de inventario, llevan su ilustración. */
-export interface IndexEntry { slug: string; tab: ValheimTab; en: string; es: string; icon: string | null; art?: string }
+export interface IndexEntry { slug: string; tab: ValheimTab; en: string; es: string; icon: string | null; art?: string; photo?: string }
 
 export interface TabRows {
   foods: ItemRow[];
@@ -187,6 +220,7 @@ export interface TabRows {
   building: PieceRow[];
   creatures: CreatureRow[];
   biomes: BiomeRow[];
+  places: PlaceRow[];
   bosses: BossRow[];
 }
 export type AnyRow = TabRows[ValheimTab][number];

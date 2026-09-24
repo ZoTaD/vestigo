@@ -49,9 +49,9 @@ export type Poe2Section = "economy" | "encyclopedia" | "patches";
  * el slug de una ficha (`/valheim/bosses/eikthyr`). "patches" es la Crónica
  * (`/valheim/patches/1-0-15`): no es una pestaña de datos del juego.
  */
-export type ValheimTab = "foods" | "meads" | "weapons" | "armor" | "tools" | "building" | "materials" | "creatures" | "biomes" | "bosses";
+export type ValheimTab = "foods" | "meads" | "weapons" | "armor" | "tools" | "building" | "materials" | "creatures" | "biomes" | "places" | "bosses";
 export type ValheimSection = "home" | ValheimTab | "patches";
-export const VALHEIM_TABS: ValheimTab[] = ["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "bosses"];
+export const VALHEIM_TABS: ValheimTab[] = ["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "places", "bosses"];
 
 export const LANGS: Lang[] = ["en", "es"];
 export const SECTIONS: Section[] = ["meta", "units", "items", "ladder", "player"];

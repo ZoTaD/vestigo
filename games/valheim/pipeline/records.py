@@ -89,6 +89,9 @@ def recipe_record(tree: dict, name_of, station_of) -> dict | None:
         "station": station_of(tree["m_craftingStation"]) if tree["m_craftingStation"].get("m_PathID") else None,
         "level": tree["m_minStationLevel"],
         "requirements": requirements(tree["m_resources"], name_of),
+        # El pescado crudo se hace con uno cualquiera de los peces, no con los
+        # doce (2026-09-24: por eso el pescado cocido salía del Norte profundo).
+        "anyOne": bool(tree.get("m_requireOnlyOneIngredient")),
     }
 
 

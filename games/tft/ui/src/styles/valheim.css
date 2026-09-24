@@ -392,3 +392,25 @@ a.vh-upg-mat:hover { color: var(--vh-cream); }
   .vh-frame { border-width: 18px; border-image-width: 18px; }
   .vh-detail { padding: 16px; }
 }
+
+/* Fotos de la wiki (2026-09-24): el crédito va pegado abajo, chico. */
+.vh-photo { margin: 0; display: grid; gap: 4px; }
+.vh-photo img { display: block; width: 100%; height: auto; object-fit: contain; background: rgba(0, 0, 0, 0.35); border-radius: 2px; }
+.vh-photo figcaption { font-size: 11.5px; color: var(--vh-faint); }
+.vh-photo figcaption a { color: inherit; text-decoration: none; }
+.vh-photo figcaption a:hover { color: var(--vh-brass-lt); text-decoration: underline; }
+.vh-photo.is-creature { max-width: 320px; }
+.vh-photo.is-creature img { aspect-ratio: 1; object-fit: contain; }
+/* Lugares del bioma: foto arriba, nombre y quién vive ahí. */
+.vh-places { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.vh-place { display: grid; gap: 8px; align-content: start; text-decoration: none; color: var(--vh-text); padding: 8px; border-radius: 3px; background: rgba(0, 0, 0, 0.18); }
+.vh-place:hover { background: rgba(200, 150, 62, 0.1); }
+.vh-place:hover h4 { color: #fff3d6; }
+.vh-place .vh-photo img { aspect-ratio: 16 / 10; object-fit: cover; }
+.vh-place h4 { margin: 0; font: 700 16px var(--vh-serif); color: var(--vh-brass-lt); }
+.vh-place h4 small { display: block; font: 12px var(--vh-sans); color: var(--vh-faint); letter-spacing: 0.04em; margin-top: 2px; }
+.vh-place-who { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13px; }
+.vh-place-who span { color: var(--vh-dim); }
+
+.vh-note a { color: var(--vh-brass); }
+.vh-note a:hover { color: var(--vh-brass-lt); }

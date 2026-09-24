@@ -54,7 +54,9 @@ class TestRecipe(unittest.TestCase):
         r = recipe_record(tree, name_of, lambda p: "piece_cauldron" if p["m_PathID"] == 77 else None)
         self.assertEqual(r, {"item": "CarrotSoup", "amount": 1, "station": "piece_cauldron", "level": 2,
                              "requirements": [{"item": "Carrot", "amount": 1, "perLevel": 0},
-                                              {"item": "Mushroom", "amount": 3, "perLevel": 1}]})
+                                              {"item": "Mushroom", "amount": 3, "perLevel": 1}], "anyOne": False})
+        # El pescado crudo: uno cualquiera de los peces.
+        self.assertTrue(recipe_record({**tree, "m_requireOnlyOneIngredient": 1}, name_of, lambda p: None)["anyOne"])
 
     def test_deshabilitada(self):
         self.assertIsNone(recipe_record({"m_enabled": 0, "m_item": {"m_PathID": 3}}, name_of, lambda p: None))

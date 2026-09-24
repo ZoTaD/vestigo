@@ -77,6 +77,10 @@ class Tiers:
         if r:
             # La estación suma sólo si algún ingrediente se sabe de dónde sale.
             ings = [self.item(q["item"], seen) for q in r["requirements"]]
+            if r.get("anyOne"):
+                # Con uno cualquiera alcanza (el pescado crudo): el más temprano.
+                known = [t for t in ings if t]
+                ings = [min(known, key=BIOME_ORDER.index)] if known else []
             if any(ings):
                 options.append(self._max(ings + [self.station(r.get("station"), r.get("level", 1), seen)]))
         for s in it["sources"]:

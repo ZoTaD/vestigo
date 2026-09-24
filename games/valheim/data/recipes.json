@@ -1,6 +1,7 @@
 [
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeatPlatterUncooked",
   "level": 1,
   "requirements": [
@@ -24,6 +25,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketChitinSwim",
   "level": 1,
   "requirements": [
@@ -47,6 +49,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseEitrMinor",
   "level": 1,
   "requirements": [
@@ -75,6 +78,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FeastDeepNorth_Material",
   "level": 1,
   "requirements": [
@@ -103,6 +107,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "FishingBaitCave",
   "level": 1,
   "requirements": [
@@ -121,6 +126,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FireworksRocket_Cyan",
   "level": 1,
   "requirements": [
@@ -139,6 +145,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetCarapace",
   "level": 1,
   "requirements": [
@@ -172,6 +179,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "VikingCupcakeUncooked",
   "level": 1,
   "requirements": [
@@ -200,6 +208,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceBronze",
   "level": 1,
   "requirements": [
@@ -228,6 +237,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordWood",
   "level": 1,
   "requirements": [
@@ -256,6 +266,7 @@
  },
  {
   "amount": 2,
+  "anyOne": false,
   "item": "SeekerAspic",
   "level": 5,
   "requirements": [
@@ -279,6 +290,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeGold",
   "level": 4,
   "requirements": [
@@ -307,6 +319,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldGold",
   "level": 4,
   "requirements": [
@@ -335,6 +348,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldIronTower",
   "level": 2,
   "requirements": [
@@ -358,6 +372,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CrossbowArbalest",
   "level": 1,
   "requirements": [
@@ -386,6 +401,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordGold",
   "level": 4,
   "requirements": [
@@ -414,6 +430,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FistGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -442,6 +459,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeWolf",
   "level": 2,
   "requirements": [
@@ -470,6 +488,7 @@
  },
  {
   "amount": 5,
+  "anyOne": false,
   "item": "BombSiege",
   "level": 1,
   "requirements": [
@@ -493,6 +512,7 @@
  },
  {
   "amount": 10,
+  "anyOne": false,
   "item": "BombSmoke",
   "level": 1,
   "requirements": [
@@ -511,6 +531,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketBronzeStamina",
   "level": 1,
   "requirements": [
@@ -534,6 +555,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowNeedle",
   "level": 4,
   "requirements": [
@@ -552,6 +574,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BattleaxeSkullSplittur",
   "level": 1,
   "requirements": [
@@ -580,6 +603,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeLox",
   "level": 2,
   "requirements": [
@@ -603,6 +627,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorLeatherChest",
   "level": 2,
   "requirements": [
@@ -626,6 +651,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SaddleLox",
   "level": 1,
   "requirements": [
@@ -649,6 +675,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BattleaxeBlackmetal",
   "level": 4,
   "requirements": [
@@ -677,6 +704,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Lantern",
   "level": 1,
   "requirements": [
@@ -700,6 +728,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -728,6 +757,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearSplitner_Blood",
   "level": 4,
   "requirements": [
@@ -756,6 +786,7 @@
  },
  {
   "amount": 3,
+  "anyOne": false,
   "item": "Pancakes",
   "level": 6,
   "requirements": [
@@ -784,6 +815,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BombBlob_Frost",
   "level": 1,
   "requirements": [
@@ -807,6 +839,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldWoodTower",
   "level": 1,
   "requirements": [
@@ -830,6 +863,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BombBlob_Poison",
   "level": 1,
   "requirements": [
@@ -853,6 +887,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearSplitner_Nature",
   "level": 4,
   "requirements": [
@@ -881,6 +916,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Cultivator",
   "level": 1,
   "requirements": [
@@ -904,6 +940,7 @@
  },
  {
   "amount": 3,
+  "anyOne": false,
   "item": "ScorchingMedley",
   "level": 6,
   "requirements": [
@@ -927,6 +964,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "BoltCarapace",
   "level": 1,
   "requirements": [
@@ -950,6 +988,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BloodPudding",
   "level": 4,
   "requirements": [
@@ -973,6 +1012,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowDraugrFang",
   "level": 2,
   "requirements": [
@@ -1006,6 +1046,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeBerzerkrNature",
   "level": 4,
   "requirements": [
@@ -1034,6 +1075,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Torch",
   "level": 1,
   "requirements": [
@@ -1052,6 +1094,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "TurretBoltWood",
   "level": 1,
   "requirements": [
@@ -1070,6 +1113,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FeastMistlands_Material",
   "level": 1,
   "requirements": [
@@ -1098,6 +1142,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "BronzeNails",
   "level": 1,
   "requirements": [
@@ -1111,6 +1156,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Club",
   "level": 1,
   "requirements": [
@@ -1134,6 +1180,7 @@
  },
  {
   "amount": 4,
+  "anyOne": false,
   "item": "KaleChipsUncooked",
   "level": 6,
   "requirements": [
@@ -1147,6 +1194,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketIronStamina",
   "level": 1,
   "requirements": [
@@ -1170,6 +1218,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "THSwordKrom",
   "level": 1,
   "requirements": [
@@ -1198,6 +1247,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "PiquantPieUncooked",
   "level": 1,
   "requirements": [
@@ -1221,6 +1271,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CrossbowRipperBlood",
   "level": 4,
   "requirements": [
@@ -1249,6 +1300,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceIron",
   "level": 2,
   "requirements": [
@@ -1277,6 +1329,7 @@
  },
  {
   "amount": 4,
+  "anyOne": false,
   "item": "Sausages",
   "level": 2,
   "requirements": [
@@ -1300,6 +1353,7 @@
  },
  {
   "amount": 10,
+  "anyOne": false,
   "item": "Snowball",
   "level": 1,
   "requirements": [
@@ -1313,6 +1367,7 @@
  },
  {
   "amount": 5,
+  "anyOne": false,
   "item": "BombOoze",
   "level": 1,
   "requirements": [
@@ -1336,6 +1391,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MisthareSupremeUncooked",
   "level": 1,
   "requirements": [
@@ -1359,6 +1415,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "LoxPieUncooked",
   "level": 1,
   "requirements": [
@@ -1382,6 +1439,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorDeepNorthHeavylegs",
   "level": 4,
   "requirements": [
@@ -1415,6 +1473,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "DvergrKey",
   "level": 1,
   "requirements": [
@@ -1428,6 +1487,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseHealthLingering",
   "level": 1,
   "requirements": [
@@ -1451,6 +1511,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "BoltBlackmetal",
   "level": 2,
   "requirements": [
@@ -1474,6 +1535,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldCore",
   "level": 2,
   "requirements": [
@@ -1497,6 +1559,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "THSwordSlayerBlood",
   "level": 4,
   "requirements": [
@@ -1525,6 +1588,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetRoot",
   "level": 2,
   "requirements": [
@@ -1553,6 +1617,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SledgeGoldUncooked",
   "level": 4,
   "requirements": [
@@ -1576,6 +1641,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowCarapace",
   "level": 1,
   "requirements": [
@@ -1599,6 +1665,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseSwimmer",
   "level": 1,
   "requirements": [
@@ -1622,6 +1689,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordBronze",
   "level": 1,
   "requirements": [
@@ -1650,6 +1718,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BattleaxeCrystal",
   "level": 3,
   "requirements": [
@@ -1678,6 +1747,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "OatmealLingonberryJam",
   "level": 6,
   "requirements": [
@@ -1701,6 +1771,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeSkollAndHati",
   "level": 1,
   "requirements": [
@@ -1729,6 +1800,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SmokedFish",
   "level": 7,
   "requirements": [
@@ -1752,6 +1824,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "DeerStew",
   "level": 1,
   "requirements": [
@@ -1775,6 +1848,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowAshlandsRoot",
   "level": 4,
   "requirements": [
@@ -1803,6 +1877,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorGoldMediumChestUncooked",
   "level": 4,
   "requirements": [
@@ -1831,6 +1906,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TankardAnniversary",
   "level": 1,
   "requirements": [
@@ -1854,6 +1930,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffSkeleton",
   "level": 1,
   "requirements": [
@@ -1882,6 +1959,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorGoldHeavyLegsUncooked",
   "level": 4,
   "requirements": [
@@ -1910,6 +1988,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorGoldMageChestUncooked",
   "level": 3,
   "requirements": [
@@ -1938,6 +2017,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldBronzeBuckler",
   "level": 1,
   "requirements": [
@@ -1961,6 +2041,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorRagsLegs",
   "level": 1,
   "requirements": [
@@ -1979,6 +2060,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorAshlandsMediumlegs",
   "level": 3,
   "requirements": [
@@ -2007,6 +2089,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorDeepNorthMageChest",
   "level": 3,
   "requirements": [
@@ -2040,6 +2123,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "FishingBaitPlains",
   "level": 1,
   "requirements": [
@@ -2058,6 +2142,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -2086,6 +2171,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorTrollLeatherChest",
   "level": 2,
   "requirements": [
@@ -2104,6 +2190,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketBlackDamageHealth",
   "level": 1,
   "requirements": [
@@ -2127,6 +2214,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffLightning",
   "level": 2,
   "requirements": [
@@ -2160,6 +2248,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowWood",
   "level": 1,
   "requirements": [
@@ -2173,6 +2262,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BattleaxeGoldUncooked",
   "level": 4,
   "requirements": [
@@ -2196,6 +2286,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MushroomOmelette",
   "level": 5,
   "requirements": [
@@ -2214,6 +2305,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BombBlob_Lava",
   "level": 1,
   "requirements": [
@@ -2237,6 +2329,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "WolfMeatSkewer",
   "level": 3,
   "requirements": [
@@ -2260,6 +2353,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FeastPlains_Material",
   "level": 1,
   "requirements": [
@@ -2288,6 +2382,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -2316,6 +2411,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffThunderBlood",
   "level": 3,
   "requirements": [
@@ -2344,6 +2440,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShocklateSmoothie",
   "level": 2,
   "requirements": [
@@ -2367,6 +2464,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffSpiritCaller",
   "level": 3,
   "requirements": [
@@ -2395,6 +2493,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CrossbowRipperLightning",
   "level": 4,
   "requirements": [
@@ -2423,6 +2522,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowBronze",
   "level": 1,
   "requirements": [
@@ -2446,6 +2546,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorLeatherLegs",
   "level": 2,
   "requirements": [
@@ -2469,6 +2570,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpicyMarmalade",
   "level": 5,
   "requirements": [
@@ -2492,6 +2594,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseEitrLingering",
   "level": 1,
   "requirements": [
@@ -2515,6 +2618,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FeastAshlands_Material",
   "level": 1,
   "requirements": [
@@ -2543,6 +2647,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorLoxChest",
   "level": 2,
   "requirements": [
@@ -2571,6 +2676,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "PickaxeIron",
   "level": 2,
   "requirements": [
@@ -2594,6 +2700,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeDeerHide",
   "level": 2,
   "requirements": [
@@ -2617,6 +2724,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Shovel",
   "level": 3,
   "requirements": [
@@ -2645,6 +2753,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "YggdrasilPorridge",
   "level": 5,
   "requirements": [
@@ -2668,6 +2777,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "OvenPancakeUncooked",
   "level": 6,
   "requirements": [
@@ -2696,6 +2806,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketIronHealth",
   "level": 1,
   "requirements": [
@@ -2719,6 +2830,7 @@
  },
  {
   "amount": 5,
+  "anyOne": false,
   "item": "BombLava",
   "level": 1,
   "requirements": [
@@ -2742,6 +2854,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorBronzeLegs",
   "level": 1,
   "requirements": [
@@ -2765,6 +2878,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "PulledBear",
   "level": 1,
   "requirements": [
@@ -2788,6 +2902,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffIceShards",
   "level": 1,
   "requirements": [
@@ -2816,6 +2931,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Bow",
   "level": 1,
   "requirements": [
@@ -2844,6 +2960,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorGoldMageHelmetUncooked",
   "level": 3,
   "requirements": [
@@ -2872,6 +2989,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketBloodGoldHealth",
   "level": 1,
   "requirements": [
@@ -2895,6 +3013,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FistGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -2923,6 +3042,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -2951,6 +3071,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearChitin",
   "level": 2,
   "requirements": [
@@ -2974,6 +3095,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FeastMeadows_Material",
   "level": 1,
   "requirements": [
@@ -3002,6 +3124,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorTrollLeatherLegs",
   "level": 2,
   "requirements": [
@@ -3020,6 +3143,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseTamer",
   "level": 1,
   "requirements": [
@@ -3043,6 +3167,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetMage_Ashlands",
   "level": 2,
   "requirements": [
@@ -3071,6 +3196,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffFrostOrbsUncooked",
   "level": 3,
   "requirements": [
@@ -3099,6 +3225,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FishWraps",
   "level": 4,
   "requirements": [
@@ -3117,6 +3244,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorCarapaceLegs",
   "level": 1,
   "requirements": [
@@ -3150,6 +3278,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldFlametal",
   "level": 3,
   "requirements": [
@@ -3178,6 +3307,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorMageLegs",
   "level": 1,
   "requirements": [
@@ -3206,6 +3336,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearBronze",
   "level": 1,
   "requirements": [
@@ -3234,6 +3365,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AtgeirGold",
   "level": 4,
   "requirements": [
@@ -3262,6 +3394,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceEldnerLightning",
   "level": 4,
   "requirements": [
@@ -3290,6 +3423,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffGreenRoots",
   "level": 2,
   "requirements": [
@@ -3323,6 +3457,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "GrapplingHook",
   "level": 1,
   "requirements": [
@@ -3351,6 +3486,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowAshlandsStorm",
   "level": 4,
   "requirements": [
@@ -3379,6 +3515,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetDNMediumHood",
   "level": 4,
   "requirements": [
@@ -3412,6 +3549,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "FishingBaitOcean",
   "level": 1,
   "requirements": [
@@ -3430,6 +3568,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MechanicalSpring",
   "level": 1,
   "requirements": [
@@ -3448,6 +3587,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FeastSwamps_Material",
   "level": 1,
   "requirements": [
@@ -3476,6 +3616,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "FishingBaitSwamp",
   "level": 1,
   "requirements": [
@@ -3494,6 +3635,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorBerserkerLegs",
   "level": 2,
   "requirements": [
@@ -3517,6 +3659,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HoneyGlazedChickenUncooked",
   "level": 1,
   "requirements": [
@@ -3540,6 +3683,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SledgeGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -3568,6 +3712,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeFlint",
   "level": 1,
   "requirements": [
@@ -3596,6 +3741,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CrossbowGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -3624,6 +3770,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -3652,6 +3799,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetTrollLeather",
   "level": 2,
   "requirements": [
@@ -3675,6 +3823,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "BoltIron",
   "level": 1,
   "requirements": [
@@ -3698,6 +3847,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorGoldHeavyHelmetUncooked",
   "level": 4,
   "requirements": [
@@ -3721,6 +3871,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FireworksRocket_Blue",
   "level": 1,
   "requirements": [
@@ -3739,6 +3890,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowFrost",
   "level": 4,
   "requirements": [
@@ -3767,6 +3919,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseTasty",
   "level": 1,
   "requirements": [
@@ -3790,6 +3943,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeEarly",
   "level": 1,
   "requirements": [
@@ -3823,6 +3977,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeStone",
   "level": 1,
   "requirements": [
@@ -3846,6 +4001,7 @@
  },
  {
   "amount": 2,
+  "anyOne": false,
   "item": "WolfJerky",
   "level": 3,
   "requirements": [
@@ -3864,6 +4020,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearSplitner_Lightning",
   "level": 4,
   "requirements": [
@@ -3892,6 +4049,7 @@
  },
  {
   "amount": 5,
+  "anyOne": false,
   "item": "Catapult_ammo",
   "level": 1,
   "requirements": [
@@ -3905,6 +4063,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorGoldMediumHelmetUncooked",
   "level": 4,
   "requirements": [
@@ -3933,6 +4092,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowSilver",
   "level": 3,
   "requirements": [
@@ -3956,6 +4116,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldGoldBuckler",
   "level": 4,
   "requirements": [
@@ -3984,6 +4145,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AtgeirBronze",
   "level": 1,
   "requirements": [
@@ -4012,6 +4174,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetMage",
   "level": 1,
   "requirements": [
@@ -4040,6 +4203,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldGoldTower",
   "level": 4,
   "requirements": [
@@ -4068,6 +4232,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "BoltCharred",
   "level": 1,
   "requirements": [
@@ -4091,6 +4256,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AtgeirBlackmetal",
   "level": 4,
   "requirements": [
@@ -4119,6 +4285,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Hammer",
   "level": 1,
   "requirements": [
@@ -4142,6 +4309,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetFishingHat",
   "level": 1,
   "requirements": [
@@ -4215,6 +4383,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordSilver",
   "level": 3,
   "requirements": [
@@ -4248,6 +4417,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeCopper",
   "level": 1,
   "requirements": [
@@ -4276,6 +4446,7 @@
  },
  {
   "amount": 3,
+  "anyOne": false,
   "item": "Salad",
   "level": 5,
   "requirements": [
@@ -4299,6 +4470,7 @@
  },
  {
   "amount": 5,
+  "anyOne": false,
   "item": "CeramicPlate",
   "level": 2,
   "requirements": [
@@ -4312,6 +4484,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldWood",
   "level": 1,
   "requirements": [
@@ -4340,6 +4513,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "TurretBolt",
   "level": 1,
   "requirements": [
@@ -4358,6 +4532,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FeastBlackforest_Material",
   "level": 1,
   "requirements": [
@@ -4386,6 +4561,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BattleaxeGold",
   "level": 4,
   "requirements": [
@@ -4414,6 +4590,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "OnionSoup",
   "level": 2,
   "requirements": [
@@ -4427,6 +4604,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorGoldMageLegsUncooked",
   "level": 3,
   "requirements": [
@@ -4455,6 +4633,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Tankard",
   "level": 1,
   "requirements": [
@@ -4473,6 +4652,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceNeedle",
   "level": 4,
   "requirements": [
@@ -4506,6 +4686,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CrossbowGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -4534,6 +4715,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetBerserkerHood",
   "level": 2,
   "requirements": [
@@ -4557,6 +4739,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeGoldUncooked",
   "level": 4,
   "requirements": [
@@ -4580,6 +4763,7 @@
  },
  {
   "amount": 1,
+  "anyOne": true,
   "item": "FishRaw",
   "level": 1,
   "requirements": [
@@ -4648,6 +4832,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldCarapaceBuckler",
   "level": 1,
   "requirements": [
@@ -4676,6 +4861,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BakedPoteitrUncooked",
   "level": 7,
   "requirements": [
@@ -4704,6 +4890,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeBerzerkrLightning",
   "level": 4,
   "requirements": [
@@ -4732,6 +4919,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetLeather",
   "level": 2,
   "requirements": [
@@ -4755,6 +4943,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SledgeGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -4783,6 +4972,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FireworksRocket_Green",
   "level": 1,
   "requirements": [
@@ -4801,6 +4991,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldBlackmetalTower",
   "level": 3,
   "requirements": [
@@ -4829,6 +5020,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseBzerker",
   "level": 1,
   "requirements": [
@@ -4852,6 +5044,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffFrostOrbs",
   "level": 3,
   "requirements": [
@@ -4880,6 +5073,7 @@
  },
  {
   "amount": 2,
+  "anyOne": false,
   "item": "MooseKebab",
   "level": 7,
   "requirements": [
@@ -4908,6 +5102,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetOdin",
   "level": 1,
   "requirements": [
@@ -4931,6 +5126,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "FishingBaitAshlands",
   "level": 1,
   "requirements": [
@@ -4949,6 +5145,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorDeepNorthHeavyChest",
   "level": 4,
   "requirements": [
@@ -4982,6 +5179,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffClusterbomb",
   "level": 2,
   "requirements": [
@@ -5010,6 +5208,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorWolfLegs",
   "level": 2,
   "requirements": [
@@ -5038,6 +5237,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldCarapace",
   "level": 1,
   "requirements": [
@@ -5066,6 +5266,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBasePoisonResist",
   "level": 1,
   "requirements": [
@@ -5094,6 +5295,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorAshlandsMediumChest",
   "level": 3,
   "requirements": [
@@ -5122,6 +5324,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeIron",
   "level": 2,
   "requirements": [
@@ -5150,6 +5353,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Lingondricka",
   "level": 6,
   "requirements": [
@@ -5168,6 +5372,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketScaleStaminaDamage",
   "level": 1,
   "requirements": [
@@ -5196,6 +5401,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorBronzeChest",
   "level": 1,
   "requirements": [
@@ -5219,6 +5425,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "PickaxeBlackMetal",
   "level": 2,
   "requirements": [
@@ -5242,6 +5449,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorRootLegs",
   "level": 2,
   "requirements": [
@@ -5270,6 +5478,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketBronzeHealth",
   "level": 1,
   "requirements": [
@@ -5293,6 +5502,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorBerserkerChest",
   "level": 2,
   "requirements": [
@@ -5321,6 +5531,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SaddleAsksvin",
   "level": 2,
   "requirements": [
@@ -5344,6 +5555,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeBerzerkrBlood",
   "level": 4,
   "requirements": [
@@ -5372,6 +5584,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorCarapaceChest",
   "level": 1,
   "requirements": [
@@ -5405,6 +5618,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BombBlob_Tar",
   "level": 1,
   "requirements": [
@@ -5428,6 +5642,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BlackSoup",
   "level": 2,
   "requirements": [
@@ -5451,6 +5666,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SaddleMoose",
   "level": 2,
   "requirements": [
@@ -5479,6 +5695,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorDeepNorthMediumlegs",
   "level": 4,
   "requirements": [
@@ -5512,6 +5729,7 @@
  },
  {
   "amount": 3,
+  "anyOne": false,
   "item": "BombBile",
   "level": 1,
   "requirements": [
@@ -5535,6 +5753,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeAsksvin",
   "level": 2,
   "requirements": [
@@ -5558,6 +5777,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorBerserkerUndeadLegs",
   "level": 2,
   "requirements": [
@@ -5586,6 +5806,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeDeepNorthMage",
   "level": 4,
   "requirements": [
@@ -5619,6 +5840,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TankardOdin",
   "level": 1,
   "requirements": [
@@ -5642,6 +5864,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorBerserkerUndeadChest",
   "level": 2,
   "requirements": [
@@ -5670,6 +5893,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorGoldHeavyChestUncooked",
   "level": 4,
   "requirements": [
@@ -5698,6 +5922,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SparklingShroomshake",
   "level": 6,
   "requirements": [
@@ -5726,6 +5951,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FishAndBreadUncooked",
   "level": 1,
   "requirements": [
@@ -5744,6 +5970,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CrossbowGoldUncooked",
   "level": 4,
   "requirements": [
@@ -5767,6 +5994,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "BoltBone",
   "level": 1,
   "requirements": [
@@ -5785,6 +6013,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorMageChest_Ashlands",
   "level": 2,
   "requirements": [
@@ -5818,6 +6047,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "FishingBaitForest",
   "level": 1,
   "requirements": [
@@ -5836,6 +6066,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketSilverResist",
   "level": 1,
   "requirements": [
@@ -5859,6 +6090,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorMageChest",
   "level": 1,
   "requirements": [
@@ -5892,6 +6124,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseStrength",
   "level": 1,
   "requirements": [
@@ -5915,6 +6148,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Bell",
   "level": 1,
   "requirements": [
@@ -5928,6 +6162,7 @@
  },
  {
   "amount": 10,
+  "anyOne": false,
   "item": "BombDynamite",
   "level": 1,
   "requirements": [
@@ -5946,6 +6181,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordNiedhoggLightning",
   "level": 4,
   "requirements": [
@@ -5974,6 +6210,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorPaddedCuirass",
   "level": 2,
   "requirements": [
@@ -5997,6 +6234,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketBloodGoldStamina",
   "level": 1,
   "requirements": [
@@ -6020,6 +6258,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "TurretBoltBloodgold",
   "level": 1,
   "requirements": [
@@ -6038,6 +6277,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearFlint",
   "level": 1,
   "requirements": [
@@ -6066,6 +6306,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "THSwordGoldUncooked",
   "level": 4,
   "requirements": [
@@ -6089,6 +6330,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "THSwordGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -6117,6 +6359,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CrossbowRipperNature",
   "level": 4,
   "requirements": [
@@ -6145,6 +6388,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowBloodGold",
   "level": 1,
   "requirements": [
@@ -6168,6 +6412,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AtgeirIron",
   "level": 2,
   "requirements": [
@@ -6196,6 +6441,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BombBlob_Morkhalla",
   "level": 1,
   "requirements": [
@@ -6219,6 +6465,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldBanded",
   "level": 2,
   "requirements": [
@@ -6242,6 +6489,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FistGoldUncooked",
   "level": 4,
   "requirements": [
@@ -6265,6 +6513,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "PickaxeAntler",
   "level": 1,
   "requirements": [
@@ -6283,6 +6532,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketBlackStamina",
   "level": 1,
   "requirements": [
@@ -6306,6 +6556,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "THSwordSlayer",
   "level": 3,
   "requirements": [
@@ -6334,6 +6585,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldSerpentscale",
   "level": 3,
   "requirements": [
@@ -6362,6 +6614,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowSpineSnap",
   "level": 1,
   "requirements": [
@@ -6390,6 +6643,7 @@
  },
  {
   "amount": 2,
+  "anyOne": false,
   "item": "BreadDough",
   "level": 1,
   "requirements": [
@@ -6403,6 +6657,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldTowerGoldUncooked",
   "level": 4,
   "requirements": [
@@ -6426,6 +6681,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearGold",
   "level": 4,
   "requirements": [
@@ -6454,6 +6710,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowFire",
   "level": 2,
   "requirements": [
@@ -6477,6 +6734,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BattleaxeGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -6505,6 +6763,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeFeather",
   "level": 1,
   "requirements": [
@@ -6533,6 +6792,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "OatMilk",
   "level": 1,
   "requirements": [
@@ -6551,6 +6811,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetCrownofValheim",
   "level": 4,
   "requirements": [
@@ -6569,6 +6830,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowGoldUncooked",
   "level": 4,
   "requirements": [
@@ -6592,6 +6854,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FireworksRocket_Red",
   "level": 1,
   "requirements": [
@@ -6610,6 +6873,7 @@
  },
  {
   "amount": 4,
+  "anyOne": false,
   "item": "QueensJam",
   "level": 1,
   "requirements": [
@@ -6628,6 +6892,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FierySvinstew",
   "level": 5,
   "requirements": [
@@ -6651,6 +6916,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "THSwordSlayerLightning",
   "level": 4,
   "requirements": [
@@ -6679,6 +6945,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetBronze",
   "level": 1,
   "requirements": [
@@ -6702,6 +6969,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetPadded",
   "level": 1,
   "requirements": [
@@ -6725,6 +6993,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseHealthMedium",
   "level": 1,
   "requirements": [
@@ -6753,6 +7022,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseHealthMinor",
   "level": 1,
   "requirements": [
@@ -6781,6 +7051,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseHealthMajor",
   "level": 1,
   "requirements": [
@@ -6804,6 +7075,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CrossbowRipper",
   "level": 3,
   "requirements": [
@@ -6837,6 +7109,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -6865,6 +7138,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearWolfFang",
   "level": 3,
   "requirements": [
@@ -6898,6 +7172,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearElderbark",
   "level": 3,
   "requirements": [
@@ -6926,6 +7201,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffSpiritCallerUncooked",
   "level": 3,
   "requirements": [
@@ -6954,6 +7230,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeBlackMetal",
   "level": 4,
   "requirements": [
@@ -6982,6 +7259,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldFlametalTower",
   "level": 3,
   "requirements": [
@@ -7010,6 +7288,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorFlametalChest",
   "level": 3,
   "requirements": [
@@ -7043,6 +7322,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffThunderbloodUncooked",
   "level": 3,
   "requirements": [
@@ -7071,6 +7351,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SmokedMooseMeat",
   "level": 7,
   "requirements": [
@@ -7089,6 +7370,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetDNHeavy",
   "level": 4,
   "requirements": [
@@ -7112,6 +7394,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FistBjornClaw",
   "level": 2,
   "requirements": [
@@ -7140,6 +7423,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "TurretBoltFlametal",
   "level": 1,
   "requirements": [
@@ -7158,6 +7442,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeatballsMashedPoteitr",
   "level": 7,
   "requirements": [
@@ -7181,6 +7466,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeBerzerkr",
   "level": 3,
   "requirements": [
@@ -7209,6 +7495,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -7237,6 +7524,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetIron",
   "level": 1,
   "requirements": [
@@ -7260,6 +7548,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowObsidian",
   "level": 3,
   "requirements": [
@@ -7283,6 +7572,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetLox",
   "level": 2,
   "requirements": [
@@ -7311,6 +7601,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldIronBuckler",
   "level": 2,
   "requirements": [
@@ -7334,6 +7625,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorDeepNorthMagelegs",
   "level": 3,
   "requirements": [
@@ -7367,6 +7659,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeFlint",
   "level": 1,
   "requirements": [
@@ -7395,6 +7688,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetDrake",
   "level": 1,
   "requirements": [
@@ -7423,6 +7717,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorDeepNorthMediumChest",
   "level": 4,
   "requirements": [
@@ -7456,6 +7751,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Hoe",
   "level": 1,
   "requirements": [
@@ -7479,6 +7775,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowCharred",
   "level": 1,
   "requirements": [
@@ -7502,6 +7799,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorFenringChest",
   "level": 2,
   "requirements": [
@@ -7530,6 +7828,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldRoots",
   "level": 2,
   "requirements": [
@@ -7553,6 +7852,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceEldnerBlood",
   "level": 4,
   "requirements": [
@@ -7581,6 +7881,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeDeepNorth",
   "level": 4,
   "requirements": [
@@ -7609,6 +7910,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FeastOceans_Material",
   "level": 1,
   "requirements": [
@@ -7637,6 +7939,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SledgeDemolisher",
   "level": 1,
   "requirements": [
@@ -7665,6 +7968,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearSplitner",
   "level": 3,
   "requirements": [
@@ -7698,6 +8002,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AtgeirHimminAfl",
   "level": 1,
   "requirements": [
@@ -7731,6 +8036,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "THSwordSlayerNature",
   "level": 4,
   "requirements": [
@@ -7759,6 +8065,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BombBlob_PoisonElite",
   "level": 1,
   "requirements": [
@@ -7782,6 +8089,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldBlackmetal",
   "level": 3,
   "requirements": [
@@ -7810,6 +8118,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Demister",
   "level": 1,
   "requirements": [
@@ -7828,6 +8137,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -7856,6 +8166,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowHuntsman",
   "level": 1,
   "requirements": [
@@ -7889,6 +8200,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeTrollHide",
   "level": 2,
   "requirements": [
@@ -7912,6 +8224,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Bronze",
   "level": 1,
   "requirements": [
@@ -7930,6 +8243,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SledgeGold",
   "level": 4,
   "requirements": [
@@ -7958,6 +8272,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetBerserkerUndead",
   "level": 2,
   "requirements": [
@@ -7981,6 +8296,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseStaminaLingering",
   "level": 1,
   "requirements": [
@@ -8004,6 +8320,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "THSwordGold",
   "level": 4,
   "requirements": [
@@ -8032,6 +8349,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FireworksRocket_Purple",
   "level": 1,
   "requirements": [
@@ -8050,6 +8368,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FistGold",
   "level": 4,
   "requirements": [
@@ -8078,6 +8397,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FistFenrirClaw",
   "level": 3,
   "requirements": [
@@ -8106,6 +8426,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeGoldUncooked",
   "level": 4,
   "requirements": [
@@ -8129,6 +8450,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SharpeningStone",
   "level": 1,
   "requirements": [
@@ -8142,6 +8464,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorRagsChest",
   "level": 1,
   "requirements": [
@@ -8160,6 +8483,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorIronChest",
   "level": 2,
   "requirements": [
@@ -8183,6 +8507,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FeastMountains_Material",
   "level": 1,
   "requirements": [
@@ -8211,6 +8536,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeOdin",
   "level": 1,
   "requirements": [
@@ -8234,6 +8560,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorRootChest",
   "level": 2,
   "requirements": [
@@ -8262,6 +8589,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MarinatedGreens",
   "level": 6,
   "requirements": [
@@ -8290,6 +8618,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketCarapaceEitr",
   "level": 1,
   "requirements": [
@@ -8313,6 +8642,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TurnipStew",
   "level": 2,
   "requirements": [
@@ -8331,6 +8661,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowIron",
   "level": 2,
   "requirements": [
@@ -8354,6 +8685,7 @@
  },
  {
   "amount": 10,
+  "anyOne": false,
   "item": "IronNails",
   "level": 1,
   "requirements": [
@@ -8367,6 +8699,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -8395,6 +8728,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldRoundGoldUncooked",
   "level": 4,
   "requirements": [
@@ -8418,6 +8752,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketSilverDamage",
   "level": 1,
   "requirements": [
@@ -8441,6 +8776,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeBlackMetal",
   "level": 4,
   "requirements": [
@@ -8469,6 +8805,7 @@
  },
  {
   "amount": 5,
+  "anyOne": false,
   "item": "Bronze",
   "level": 1,
   "requirements": [
@@ -8487,6 +8824,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketFlametalEitr",
   "level": 1,
   "requirements": [
@@ -8515,6 +8853,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldBucklerGoldUncooked",
   "level": 4,
   "requirements": [
@@ -8538,6 +8877,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeGold",
   "level": 4,
   "requirements": [
@@ -8566,6 +8906,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorIronLegs",
   "level": 2,
   "requirements": [
@@ -8589,6 +8930,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetCelebration",
   "level": 2,
   "requirements": [
@@ -8622,6 +8964,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetDNMage",
   "level": 3,
   "requirements": [
@@ -8655,6 +8998,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeSilver",
   "level": 3,
   "requirements": [
@@ -8688,6 +9032,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowFineWood",
   "level": 1,
   "requirements": [
@@ -8716,6 +9061,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldSilver",
   "level": 3,
   "requirements": [
@@ -8739,6 +9085,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "THSwordGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -8767,6 +9114,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -8795,6 +9143,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseStaminaMedium",
   "level": 1,
   "requirements": [
@@ -8818,6 +9167,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FishSoup",
   "level": 7,
   "requirements": [
@@ -8841,6 +9191,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeChitin",
   "level": 2,
   "requirements": [
@@ -8869,6 +9220,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CookedEgg",
   "level": 1,
   "requirements": [
@@ -8882,6 +9234,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffRedTroll",
   "level": 2,
   "requirements": [
@@ -8915,6 +9268,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CarrotSoup",
   "level": 1,
   "requirements": [
@@ -8933,6 +9287,7 @@
  },
  {
   "amount": 2,
+  "anyOne": false,
   "item": "BoarJerky",
   "level": 1,
   "requirements": [
@@ -8951,6 +9306,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AtgeirGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -8979,6 +9335,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorLoxLegs",
   "level": 2,
   "requirements": [
@@ -9007,6 +9364,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordMistwalker",
   "level": 1,
   "requirements": [
@@ -9040,6 +9398,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowPoison",
   "level": 3,
   "requirements": [
@@ -9068,6 +9427,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeBronze",
   "level": 1,
   "requirements": [
@@ -9096,6 +9456,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeLinen",
   "level": 2,
   "requirements": [
@@ -9119,6 +9480,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -9147,6 +9509,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseHasty",
   "level": 1,
   "requirements": [
@@ -9170,6 +9533,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SerpentStew",
   "level": 2,
   "requirements": [
@@ -9193,6 +9557,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AtgeirGold_BloodLightning",
   "level": 4,
   "requirements": [
@@ -9221,6 +9586,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetFenring",
   "level": 2,
   "requirements": [
@@ -9249,6 +9615,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MinceMeatSauce",
   "level": 1,
   "requirements": [
@@ -9272,6 +9639,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceEldnerNature",
   "level": 4,
   "requirements": [
@@ -9300,6 +9668,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearCarapace",
   "level": 1,
   "requirements": [
@@ -9328,6 +9697,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Battleaxe",
   "level": 2,
   "requirements": [
@@ -9356,6 +9726,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffShield",
   "level": 1,
   "requirements": [
@@ -9384,6 +9755,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FireworksRocket_Yellow",
   "level": 1,
   "requirements": [
@@ -9402,6 +9774,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "RoastedCrustPieUncooked",
   "level": 1,
   "requirements": [
@@ -9425,6 +9798,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorGoldMediumLegsUncooked",
   "level": 4,
   "requirements": [
@@ -9453,6 +9827,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BattleaxeGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -9481,6 +9856,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SealSoup",
   "level": 7,
   "requirements": [
@@ -9504,6 +9880,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AtgeirGoldUncooked",
   "level": 4,
   "requirements": [
@@ -9527,6 +9904,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceEldner",
   "level": 3,
   "requirements": [
@@ -9560,6 +9938,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SledgeIron",
   "level": 2,
   "requirements": [
@@ -9593,6 +9972,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffOrbofAhri",
   "level": 3,
   "requirements": [
@@ -9621,6 +10001,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "BoltBloodGold",
   "level": 1,
   "requirements": [
@@ -9644,6 +10025,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "PickaxeBronze",
   "level": 1,
   "requirements": [
@@ -9667,6 +10049,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordGoldUncooked",
   "level": 4,
   "requirements": [
@@ -9690,6 +10073,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorFenringLegs",
   "level": 2,
   "requirements": [
@@ -9718,6 +10102,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowAshlandsBlood",
   "level": 4,
   "requirements": [
@@ -9746,6 +10131,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "TrinketFlametalStaminaHealth",
   "level": 1,
   "requirements": [
@@ -9774,6 +10160,7 @@
  },
  {
   "amount": 5,
+  "anyOne": false,
   "item": "Catapult_Ammo_BloodGold",
   "level": 1,
   "requirements": [
@@ -9797,6 +10184,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KnifeButcher",
   "level": 1,
   "requirements": [
@@ -9815,6 +10203,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseFrostResist",
   "level": 1,
   "requirements": [
@@ -9843,6 +10232,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorWolfChest",
   "level": 2,
   "requirements": [
@@ -9871,6 +10261,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SpearGoldUncooked",
   "level": 4,
   "requirements": [
@@ -9894,6 +10285,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SizzlingBerryBroth",
   "level": 5,
   "requirements": [
@@ -9917,6 +10309,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MashedMeat",
   "level": 6,
   "requirements": [
@@ -9940,6 +10333,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowGold",
   "level": 4,
   "requirements": [
@@ -9968,6 +10362,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceGold",
   "level": 4,
   "requirements": [
@@ -9996,6 +10391,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "FishingBaitMistlands",
   "level": 1,
   "requirements": [
@@ -10014,6 +10410,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordNiedhoggBlood",
   "level": 4,
   "requirements": [
@@ -10042,6 +10439,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BowAshlands",
   "level": 3,
   "requirements": [
@@ -10075,6 +10473,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ShieldBoneTower",
   "level": 3,
   "requirements": [
@@ -10103,6 +10502,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordNiedhogg",
   "level": 3,
   "requirements": [
@@ -10131,6 +10531,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SledgeStagbreaker",
   "level": 2,
   "requirements": [
@@ -10164,6 +10565,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetFlametal",
   "level": 3,
   "requirements": [
@@ -10197,6 +10599,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Eyescream",
   "level": 3,
   "requirements": [
@@ -10215,6 +10618,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffOrbofAhriUncooked",
   "level": 3,
   "requirements": [
@@ -10243,6 +10647,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordIron",
   "level": 2,
   "requirements": [
@@ -10271,6 +10676,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "StaffFireball",
   "level": 1,
   "requirements": [
@@ -10299,6 +10705,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MagicallyStuffedShroomUncooked",
   "level": 1,
   "requirements": [
@@ -10322,6 +10729,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CrossbowGold",
   "level": 4,
   "requirements": [
@@ -10350,6 +10758,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "ArrowFlint",
   "level": 2,
   "requirements": [
@@ -10373,6 +10782,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorMageLegs_Ashlands",
   "level": 2,
   "requirements": [
@@ -10401,6 +10811,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "Scythe",
   "level": 2,
   "requirements": [
@@ -10424,6 +10835,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeGold_FrostFire",
   "level": 4,
   "requirements": [
@@ -10452,6 +10864,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorPaddedGreaves",
   "level": 2,
   "requirements": [
@@ -10475,6 +10888,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseStaminaMinor",
   "level": 1,
   "requirements": [
@@ -10498,6 +10912,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "CapeAsh",
   "level": 3,
   "requirements": [
@@ -10526,6 +10941,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "ArmorFlametalLegs",
   "level": 3,
   "requirements": [
@@ -10554,6 +10970,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceSilver",
   "level": 3,
   "requirements": [
@@ -10587,6 +11004,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MaceGoldUncooked",
   "level": 4,
   "requirements": [
@@ -10610,6 +11028,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseBugRepellent",
   "level": 1,
   "requirements": [
@@ -10633,6 +11052,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "BarleyWineBase",
   "level": 1,
   "requirements": [
@@ -10651,6 +11071,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "AxeJotunBane",
   "level": 1,
   "requirements": [
@@ -10684,6 +11105,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "MeadBaseLightFoot",
   "level": 1,
   "requirements": [
@@ -10707,6 +11129,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordBlackmetal",
   "level": 4,
   "requirements": [
@@ -10735,6 +11158,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "FistBjornUndeadClaw",
   "level": 4,
   "requirements": [
@@ -10768,6 +11192,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "KeysGoldUncooked",
   "level": 4,
   "requirements": [
@@ -10786,6 +11211,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "HelmetAshlandsMediumHood",
   "level": 3,
   "requirements": [
@@ -10814,6 +11240,7 @@
  },
  {
   "amount": 20,
+  "anyOne": false,
   "item": "FishingBaitDeepNorth",
   "level": 1,
   "requirements": [
@@ -10832,6 +11259,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordDyrnwyn",
   "level": 4,
   "requirements": [
@@ -10870,6 +11298,7 @@
  },
  {
   "amount": 1,
+  "anyOne": false,
   "item": "SwordNiedhoggNature",
   "level": 4,
   "requirements": [

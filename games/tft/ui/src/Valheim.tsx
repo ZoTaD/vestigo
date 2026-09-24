@@ -11,12 +11,12 @@ import RouteLink from "./RouteLink";
 import { PENDING_SEARCH_EVENT, takePendingSearch } from "./pendingSearch";
 import { VALHEIM_TABS, type Route, type ValheimSection, type ValheimTab } from "./route";
 import { useValheimCopy } from "./valheimCopy";
-import { artUrl, iconUrl, loadIndex, peekIndex, searchIndex, tx, type AnyRow, type BiomeRow, type BossRow, type CreatureRow, type IndexEntry, type ItemRow, type PieceRow } from "./valheimData";
+import { artUrl, iconUrl, loadIndex, peekIndex, searchIndex, tx, type AnyRow, type BiomeRow, type BossRow, type CreatureRow, type IndexEntry, type ItemRow, type PieceRow, type PlaceRow } from "./valheimData";
 import type { ListTab } from "./valheimTabs";
 import { useTab, type Nav, type To } from "./ValheimParts";
 import ValheimList from "./ValheimList";
 import ValheimDetail from "./ValheimDetail";
-import { BiomeList, BiomePage, BossList, BossPage, CreaturePage } from "./ValheimGuide";
+import { BiomeList, BiomePage, BossList, BossPage, CreaturePage, PlaceList, PlacePage } from "./ValheimGuide";
 import ValheimPatches from "./ValheimPatches";
 import { loadEditions, peekEditions, type EditionMeta } from "./valheimPatchesData";
 
@@ -24,7 +24,7 @@ import { loadEditions, peekEditions, type EditionMeta } from "./valheimPatchesDa
 const TAB_ICON: Record<ValheimTab, string> = {
   foods: "fishwraps", meads: "potion_health_minor", weapons: "swordiron", armor: "helmetbronze", tools: "pickaxe_iron",
   // El trofeo del troll se llama así adentro del juego.
-  building: "workbench", materials: "copperore", creatures: "trophyfrosttroll", biomes: "fermenter", bosses: "trophyeikthyr",
+  building: "workbench", materials: "copperore", creatures: "trophyfrosttroll", biomes: "fermenter", places: "cryptkey", bosses: "trophyeikthyr",
 };
 
 function useIndex(): IndexEntry[] | null {
@@ -85,7 +85,7 @@ function GlobalSearch({ index, to, navigate }: { index: IndexEntry[]; to: To; na
             <RouteLink key={`${h.tab}/${h.slug}`} className="vh-hit" to={to(h.tab, h.slug)} onNavigate={(r) => { navigate(r); setOpen(false); }}>
               <span className="vh-slot is-sm">
                 {h.icon ? <img src={iconUrl(h.icon)} alt="" loading="lazy" width={30} height={30} />
-                  : h.art ? <img src={artUrl(h.art)} alt="" loading="lazy" width={30} height={30} style={{ objectFit: "cover", width: "100%", height: "100%" }} /> : null}
+                  : h.art || h.photo ? <img src={h.photo ?? artUrl(h.art)} alt="" loading="lazy" width={30} height={30} style={{ objectFit: "cover", width: "100%", height: "100%" }} /> : null}
               </span>
               <span>{lang === "es" ? h.es : h.en}<br /><small>{lang === "es" ? h.en : h.es}</small></span>
               <small>{t.tabs[h.tab]}</small>
@@ -164,6 +164,12 @@ function TabView({ tab, detail, to, navigate }: { tab: ValheimTab; detail?: stri
     if (detail && !row) return <p className="vh-loading">{t.notFound}</p>;
     return row ? <BiomePage row={row} bosses={bosses as BossRow[]} to={to} navigate={navigate} /> : <BiomeList biomes={list} bosses={bosses as BossRow[]} to={to} navigate={navigate} />;
   }
+  if (tab === "places") {
+    const list = rows as PlaceRow[];
+    const row = detail ? list.find((r) => r.slug === detail) : null;
+    if (detail && !row) return <p className="vh-loading">{t.notFound}</p>;
+    return row ? <PlacePage row={row} to={to} navigate={navigate} /> : <PlaceList places={list} to={to} navigate={navigate} />;
+  }
   if (tab === "bosses") {
     const list = (rows as BossRow[]).slice().sort((a, b) => a.order - b.order);
     const row = detail ? list.find((r) => r.slug === detail) : null;
@@ -203,6 +209,10 @@ export default function Valheim({ route, navigate }: { route: Route; navigate: N
           : sec === "patches" ? <ValheimPatches detail={route.detail} to={to} navigate={navigate} />
           : <TabView tab={sec} detail={route.detail} to={to} navigate={navigate} />}
         <p className="vh-note">{t.fromGame}</p>
+        <p className="vh-note" style={{ marginTop: 6 }}>
+          {t.wikiCredit} <a href="https://valheim.fandom.com/wiki/Valheim_Wiki" target="_blank" rel="noopener">Valheim Wiki (Fandom)</a>,{" "}
+          {t.wikiLicense.split("CC BY-SA 3.0")[0]}<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener license">CC BY-SA 3.0</a>{t.wikiLicense.split("CC BY-SA 3.0")[1]}
+        </p>
       </main>
     </>
   );

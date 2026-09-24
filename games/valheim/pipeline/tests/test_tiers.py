@@ -16,6 +16,7 @@ ITEMS = {
     "Dandelion": {"sources": [{"kind": "gather", "biomes": ["meadows"]}]},
     "OnionSoup": {"sources": [{"kind": "craft"}]},
     "Tea": {"sources": [{"kind": "craft"}]},
+    "FishRaw": {"sources": [{"kind": "craft"}]},
 }
 RECIPES = {
     "Sword": {"station": None, "level": 1, "requirements": [{"item": "Wood"}, {"item": "Silver"}, {"item": "Bronze"}]},
@@ -23,6 +24,8 @@ RECIPES = {
     "OnionSoup": {"station": "piece_cauldron", "level": 2, "requirements": [{"item": "Onion"}]},
     # Sólo diente de león, pero en el caldero nivel 3: la mesa de carnicero es de la Montaña.
     "Tea": {"station": "piece_cauldron", "level": 3, "requirements": [{"item": "Dandelion"}]},
+    # Con uno cualquiera alcanza: gana el más temprano, no el más avanzado.
+    "FishRaw": {"station": None, "level": 1, "anyOne": True, "requirements": [{"item": "Silver"}, {"item": "Wood"}]},
 }
 PIECES = {
     "sapling_onion": {"requirements": [{"item": "OnionSeeds"}], "station": None},
@@ -56,6 +59,9 @@ class TestTier(unittest.TestCase):
 
     def test_cultivo_toma_el_bioma_de_la_semilla(self):
         self.assertEqual(tier("Onion"), "mountain")
+
+    def test_uno_cualquiera_toma_el_mas_temprano(self):
+        self.assertEqual(tier("FishRaw"), "meadows")
 
     def test_la_receta_cuenta_el_nivel_de_estacion(self):
         self.assertEqual(tier("OnionSoup"), "mountain")

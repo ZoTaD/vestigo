@@ -6,7 +6,7 @@ import RouteLink from "./RouteLink";
 import type { Route, ValheimSection, ValheimTab } from "./route";
 import { useLang } from "./i18n";
 import { useValheimCopy } from "./valheimCopy";
-import { iconUrl, loadTab, peekTab, tx, type BiomeId, type Ref, type TabRows } from "./valheimData";
+import { iconUrl, loadTab, peekTab, tx, type BiomeId, type Ref, type TabRows, type WikiPhoto } from "./valheimData";
 
 export type Nav = (route: Route) => void;
 export type To = (section: ValheimSection, detail?: string) => Route;
@@ -97,3 +97,17 @@ export function FoodBars({ food }: { food: { hp: number; st: number; eitr: numbe
 
 export const pctChance = (c: number) => (c >= 1 ? "" : `${Math.round(c * 1000) / 10}%`);
 export const range = (a: number, b: number) => (a === b ? `${a}` : `${a}–${b}`);
+
+/**
+ * Una foto de la wiki. Pedido de ZoTaD (2026-09-24): nada enlaza a la wiki; el
+ * crédito (Valheim Wiki, CC BY-SA 3.0) va en el pie de la página y el autor de
+ * cada foto, al pasar el cursor.
+ */
+export function WikiFigure({ photo, alt, className }: { photo: WikiPhoto; alt: string; className?: string }) {
+  const t = useValheimCopy();
+  return (
+    <figure className={`vh-photo${className ? ` ${className}` : ""}`}>
+      <img src={photo.src} alt={alt} title={t.photoBy(photo.author)} width={photo.w} height={photo.h} loading="lazy" />
+    </figure>
+  );
+}

@@ -12,7 +12,7 @@ import type { ValheimTab } from "./route";
 import type { ValheimCopy } from "./valheimCopy";
 import { BIOME_IDS, fold, stationOf, tx, type AnyRow, type CreatureRow, type ItemRow, type PieceRow, type Txt } from "./valheimData";
 
-export type ListTab = Exclude<ValheimTab, "biomes" | "bosses">;
+export type ListTab = Exclude<ValheimTab, "biomes" | "bosses" | "places">;
 export const LIST_TABS: ListTab[] = ["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures"];
 
 export interface FilterDef {

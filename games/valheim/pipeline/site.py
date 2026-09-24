@@ -16,6 +16,7 @@ import re
 import unicodedata
 from collections import defaultdict
 
+from . import fixes, places, wiki
 from .biomes import BIOMES, BIOME_ORDER
 from .tiers import Tiers, armor_slot, food_focus, mead_effect, weapon_class
 
@@ -83,6 +84,31 @@ def main() -> None:
     bosses, environments, hugin = load("bosses.json"), load("environments.json"), load("hugin.json")
     piece_categories = load("piece_categories.json")
     biomes_meta = load("biomes.json")
+    fixes.apply(items)
+    # Las fotos de la wiki (`wiki_images.py`); sin el archivo, el sitio sale sin fotos.
+    wiki_images = load("wiki_images.json") if os.path.exists(os.path.join(DATA, "wiki_images.json")) else {}
+
+    # --- Dónde vive cada criatura (2026-09-24, comparado con la wiki a pedido
+    # de ZoTaD). El juego mezcla hábitat con visitas: el esqueleto "vivía" en
+    # las Praderas y las Llanuras por un aparecedor nocturno, y los de las
+    # mazmorras (fantasma, surtling, restos rancios) no vivían en ningún lado.
+    # Manda la ficha de la wiki (`location`) para los biomas de antes de la 1.0;
+    # el Norte profundo sale del juego, porque la wiki todavía no lo terminó.
+    # Las variantes con el mismo nombre (nueve "Skeleton") son una sola ficha.
+    by_name = defaultdict(set)
+    for c in creatures.values():
+        by_name[clean_txt(c["name"])["en"]].update(c["biomes"])
+    habitat_by_name = {}
+    for name, game in by_name.items():
+        w = wiki.creature_biomes(name) if name else None
+        hab = set(w) | (game & {"deepnorth"}) if w else game
+        habitat_by_name[name] = sorted(hab, key=BIOME_ORDER.index)
+    for c in creatures.values():
+        c["biomes"] = habitat_by_name.get(clean_txt(c["name"])["en"], c["biomes"])
+    for it in items.values():
+        for s in it["sources"]:
+            if s["kind"] == "drop" and s.get("from") in creatures:
+                s["biomes"] = creatures[s["from"]]["biomes"]
 
     recipe_by_item = {r["item"]: r for r in recipes}
     req_by_item = {r["item"]: r["requirements"] for r in recipes}
@@ -156,6 +182,15 @@ def main() -> None:
     for lst in ups_by_station.values():
         lst.sort(key=lambda x: (ext_order(x), x))
     tiers = Tiers(items, recipe_by_item, conv_from, pieces, station_piece, ups_by_station)
+    # Las comidas: manda la columna "Biome progression" de la tabla de `Food`
+    # de la wiki (el pescado es del Pantano, las serpientes también: hace falta
+    # el asador de hierro). Se fija antes de calcular lo demás, así lo que se
+    # cocina con ellas hereda el bioma corregido.
+    food_tier = wiki.food_biomes()
+    for pid, it in items.items():
+        w = food_tier.get(wiki.norm(it["name"]["en"])) if it["kind"] == "food" else None
+        if w:
+            tiers._memo[pid] = w
     tier = {pid: tiers.item(pid) for pid in items}
     gname = {g["id"]: g.get("name") for g in gatherables}
     fname = {f["id"]: f.get("name") for f in farms}
@@ -172,8 +207,9 @@ def main() -> None:
         elif k == "drop":
             out["ref"] = ref.get(f"creature:{s['from']}")
         elif k == "gather":
-            out["name"] = gname.get(s["from"])
-            out["from"] = s["from"]
+            # Las de `fixes.py` traen el lugar exacto ("Enredadera de ceniza en ruinas carbonizadas").
+            out["name"] = s.get("name") or gname.get(s.get("from"))
+            out["from"] = s.get("from")
         elif k == "farm":
             out["name"] = fname.get(s["from"])
         elif k == "trader":
@@ -196,7 +232,7 @@ def main() -> None:
             "id": pid, **ref[pid], "desc": it["desc"], "tier": tier.get(pid),
             "weight": it["weight"], "stack": it["stack"], "value": it["value"] or None,
             "recipe": {"station": station_ref(r["station"]), "level": r["level"], "amount": r["amount"],
-                       "req": req_list(r["requirements"])} if r else None,
+                       "req": req_list(r["requirements"]), **({"anyOne": True} if r.get("anyOne") else {})} if r else None,
             "sources": [src(s) for s in it["sources"]],
             "usedIn": [x for x in (use(u) for u in it["usedIn"]) if x],
         }
@@ -293,6 +329,7 @@ def main() -> None:
             "weak": c["weak"], "resist": c["resist"], "immune": c["immune"],
             "drops": [{**ref[d["item"]], "min": d["min"], "max": d["max"], "chance": d["chance"]} for d in c["drops"] if d["item"] in ref],
             "bossRef": ref.get(f"boss:{cid}"),
+            "photo": wiki_images.get("creatures", {}).get(ref[f"creature:{cid}"]["slug"]),
         })
 
     boss_rows = []
@@ -300,7 +337,7 @@ def main() -> None:
         s_item = b["summon"]["item"]
         boss_rows.append({
             "id": b["id"], **ref[f"boss:{b['id']}"], "health": b["health"], "biome": b["biome"], "order": b["order"],
-            "art": b["art"], "power": b["power"], "weak": b["weak"], "resist": b["resist"], "immune": b["immune"],
+            "art": b["art"], "photo": wiki_images.get("bosses", {}).get(ref[f"boss:{b['id']}"]["slug"]), "power": b["power"], "weak": b["weak"], "resist": b["resist"], "immune": b["immune"],
             "summon": {"item": ref.get(s_item) if s_item else None, "amount": b["summon"]["amount"], "altar": b["summon"]["altar"],
                        "sources": [src(s) for s in items[s_item]["sources"]] if s_item in items else []},
             "drops": [{**ref[d["item"]], "min": d["min"], "max": d["max"], "chance": d["chance"]} for d in b["drops"] if d["item"] in ref],
@@ -309,6 +346,35 @@ def main() -> None:
         })
 
     # --- Biomas: qué hay, qué conviene llevar y a quién hay que ganarle.
+    # Los lugares (mazmorras, estructuras), con ficha propia en la pestaña
+    # Lugares. Un jefe que vive en un lugar enlaza a su ficha de jefe.
+    cre_by_name, item_by_name = {}, {}
+    for b in boss_rows:
+        cre_by_name.setdefault(wiki.norm(b["name"]["en"]), {k: b[k] for k in ("slug", "tab", "name", "icon")})
+    for c in tabs["creatures"]:
+        cre_by_name.setdefault(wiki.norm(c["name"]["en"]), {k: c[k] for k in ("slug", "tab", "name", "icon")})
+    for pid in items:
+        item_by_name.setdefault(wiki.norm(items[pid]["name"]["en"]), ref[pid])
+
+    def by_name(table, name):
+        n = wiki.norm(name)
+        return table.get(n) or table.get(n.rstrip("s")) or table.get(n + "s")
+
+    chest_drops = defaultdict(list)
+    for g in gatherables:
+        chest_drops[g["id"]] += [ref[d["item"]] for d in g["drops"]["items"] if d["item"] in ref]
+    place_rows = places.build(wiki_images, lambda n: by_name(cre_by_name, n), lambda n: by_name(item_by_name, n),
+                              lambda cid: chest_drops.get(cid, []))
+    tabs["places"] = place_rows
+    # Y al revés: en la ficha de cada criatura y jefe, dónde aparece.
+    lives_in = defaultdict(list)
+    for p in place_rows:
+        for c in p["inhabitants"]:
+            lives_in[(c["tab"], c["slug"])].append({k: p[k] for k in ("slug", "tab", "name")})
+    for c in tabs["creatures"]:
+        c["places"] = lives_in.get(("creatures", c["slug"]), [])
+    for b in boss_rows:
+        b["places"] = lives_in.get(("bosses", b["slug"]), [])
     biome_rows = []
     for bit, bid, _ in BIOMES:
         name = ref[f"biome:{bid}"]["name"]
@@ -328,6 +394,14 @@ def main() -> None:
                     loot.setdefault(d["item"], ref[d["item"]])
                 else:
                     res.setdefault(d["item"], {**ref[d["item"]], "how": set()})["how"].add(g["kind"])
+        # Lo que el juego no ubica y sale de la wiki (`fixes.py`): la parrabaya, la savia.
+        for pid, it in items.items():
+            for s in it["sources"]:
+                if s.get("wiki") and s["kind"] == "gather" and bid in s["biomes"] and pid in ref:
+                    if s["how"] == "chest":
+                        loot.setdefault(pid, ref[pid])
+                    else:
+                        res.setdefault(pid, {**ref[pid], "how": set()})["how"].add(s["how"])
         drops = {}
         for c in crs:
             for d in c["drops"]:
@@ -351,6 +425,7 @@ def main() -> None:
             "creatureDrops": sorted(drops.values(), key=lambda d: d["name"]["en"]),
             "loot": sorted(loot.values(), key=lambda d: d["name"]["en"]),
             "plant": sorted(plant.values(), key=lambda d: d["name"]["en"]),
+            "places": [{k: p[k] for k in ("slug", "tab", "name", "type", "photo", "inhabitants")} for p in place_rows if bid in p["biomes"]],
             "foods": [{k: r[k] for k in ("slug", "tab", "name", "icon", "food")} for r in foods[:8]],
             "gear": {t: len([r for r in tabs[t] if r["tier"] == bid]) for t in ("weapons", "armor", "foods", "meads")},
             "boss": {k: boss[k] for k in ("slug", "tab", "name", "icon", "art")} if boss else None,
@@ -401,7 +476,9 @@ def main() -> None:
     # escribía la misma página varias veces (2026-09-24).
     # Biomas y jefes no tienen ícono de inventario: el buscador muestra su ilustración.
     order = {("biomes", b["slug"]): b for b in biome_rows} | {("bosses", b["slug"]): b for b in boss_rows}
-    index = [{"slug": r["slug"], "tab": t, "en": r["name"]["en"], "es": r["name"]["es"], "icon": r.get("icon")}
+    # Los lugares no tienen ícono: el buscador muestra su foto.
+    index = [{"slug": r["slug"], "tab": t, "en": r["name"]["en"], "es": r["name"]["es"], "icon": r.get("icon"),
+              **({"photo": r["photo"]["src"]} if r.get("photo") else {})}
              for t, rows in tabs.items() for r in rows]
     index += [{"slug": b["slug"], "tab": t, "en": b["name"]["en"], "es": b["name"]["es"], "icon": b.get("icon"), "art": b["art"]}
               for (t, _), b in order.items()]

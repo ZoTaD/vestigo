@@ -1,0 +1,2220 @@
+{
+ "license": "CC BY-SA 3.0",
+ "source": "https://valheim.fandom.com",
+ "creatures": {
+  "abomination": {
+   "name": "Abomination",
+   "src": null,
+   "file": "Abomination.png",
+   "page": "https://valheim.fandom.com/wiki/File:Abomination.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Abomination"
+  },
+  "asksvin": {
+   "name": "Asksvin",
+   "src": null,
+   "file": "Asksvin.png",
+   "page": "https://valheim.fandom.com/wiki/File:Asksvin.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Asksvin"
+  },
+  "asksvin-hatchling": {
+   "name": "Asksvin Hatchling",
+   "src": null
+  },
+  "baby-seal": {
+   "name": "Baby Seal",
+   "src": null
+  },
+  "barka": {
+   "name": "Barka",
+   "src": null,
+   "file": "Barka.png",
+   "page": "https://valheim.fandom.com/wiki/File:Barka.png",
+   "author": "Nathreichean",
+   "wiki": "https://valheim.fandom.com/wiki/Barka"
+  },
+  "bat": {
+   "name": "Bat",
+   "src": null,
+   "file": "Bat.png",
+   "page": "https://valheim.fandom.com/wiki/File:Bat.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Bat"
+  },
+  "bear": {
+   "name": "Bear",
+   "src": null,
+   "file": "Bear.png",
+   "page": "https://valheim.fandom.com/wiki/File:Bear.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Bear"
+  },
+  "blob": {
+   "name": "Blob",
+   "src": null,
+   "file": "Blob.png",
+   "page": "https://valheim.fandom.com/wiki/File:Blob.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Blob"
+  },
+  "boar": {
+   "name": "Boar",
+   "src": null,
+   "file": "Boar.png",
+   "page": "https://valheim.fandom.com/wiki/File:Boar.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Boar"
+  },
+  "bonemass": {
+   "name": "Bonemass",
+   "src": null,
+   "file": "BonemassAltar.png",
+   "page": "https://valheim.fandom.com/wiki/File:BonemassAltar.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Bonemass"
+  },
+  "bonemaw": {
+   "name": "Bonemaw",
+   "src": null,
+   "file": "Bonemaw.png",
+   "page": "https://valheim.fandom.com/wiki/File:Bonemaw.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Bonemaw"
+  },
+  "brenna": {
+   "name": "Brenna",
+   "src": null,
+   "file": "Brenna.png",
+   "page": "https://valheim.fandom.com/wiki/File:Brenna.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Brenna"
+  },
+  "captive-fuling": {
+   "name": "Captive Fuling",
+   "src": null
+  },
+  "charred-marksman": {
+   "name": "Charred Marksman",
+   "src": null,
+   "file": "Charred Marksman.png",
+   "page": "https://valheim.fandom.com/wiki/File:Charred_Marksman.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Charred_Marksman"
+  },
+  "charred-twitcher": {
+   "name": "Charred Twitcher",
+   "src": null,
+   "file": "Charred Twitcher.png",
+   "page": "https://valheim.fandom.com/wiki/File:Charred_Twitcher.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Charred_Twitcher"
+  },
+  "charred-warlock": {
+   "name": "Charred Warlock",
+   "src": null,
+   "file": "Charred Warlock.png",
+   "page": "https://valheim.fandom.com/wiki/File:Charred_Warlock.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Charred_Warlock"
+  },
+  "charred-warrior": {
+   "name": "Charred Warrior",
+   "src": null,
+   "file": "Charred Warrior.png",
+   "page": "https://valheim.fandom.com/wiki/File:Charred_Warrior.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Charred_Warrior"
+  },
+  "chicken": {
+   "name": "Chicken",
+   "src": null,
+   "file": "Chicken.png",
+   "page": "https://valheim.fandom.com/wiki/File:Chicken.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Chicken"
+  },
+  "cultist": {
+   "name": "Cultist",
+   "src": null,
+   "file": "Cultist.png",
+   "page": "https://valheim.fandom.com/wiki/File:Cultist.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Cultist"
+  },
+  "deathsquito": {
+   "name": "Deathsquito",
+   "src": null,
+   "file": "Deathsquito.png",
+   "page": "https://valheim.fandom.com/wiki/File:Deathsquito.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Deathsquito"
+  },
+  "deer": {
+   "name": "Deer",
+   "src": null,
+   "file": "Deer.png",
+   "page": "https://valheim.fandom.com/wiki/File:Deer.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Deer"
+  },
+  "drake": {
+   "name": "Drake",
+   "src": null,
+   "file": "Drake.png",
+   "page": "https://valheim.fandom.com/wiki/File:Drake.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Drake"
+  },
+  "draugr": {
+   "name": "Draugr",
+   "src": null,
+   "file": "Draugr.png",
+   "page": "https://valheim.fandom.com/wiki/File:Draugr.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Draugr"
+  },
+  "draugr-elite": {
+   "name": "Draugr Elite",
+   "src": null,
+   "file": "Draugr Elite.png",
+   "page": "https://valheim.fandom.com/wiki/File:Draugr_Elite.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Draugr_Elite"
+  },
+  "dvergr-mage": {
+   "name": "Dvergr Mage",
+   "src": null,
+   "file": "Dvergr Mage fire.png",
+   "page": "https://valheim.fandom.com/wiki/File:Dvergr_Mage_fire.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Dvergr_Mage"
+  },
+  "dvergr-rogue": {
+   "name": "Dvergr Rogue",
+   "src": null,
+   "file": "Dvergr Rogue.png",
+   "page": "https://valheim.fandom.com/wiki/File:Dvergr_Rogue.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Dvergr_Rogue"
+  },
+  "eikthyr": {
+   "name": "Eikthyr",
+   "src": null,
+   "file": "EikthyrAltar.png",
+   "page": "https://valheim.fandom.com/wiki/File:EikthyrAltar.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Eikthyr"
+  },
+  "elaking": {
+   "name": "Elaking",
+   "src": null
+  },
+  "eyeless-one": {
+   "name": "Eyeless One",
+   "src": null
+  },
+  "fader": {
+   "name": "Fader",
+   "src": null,
+   "file": "Fader.png",
+   "page": "https://valheim.fandom.com/wiki/File:Fader.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Fader"
+  },
+  "fallen-valkyrie": {
+   "name": "Fallen Valkyrie",
+   "src": null,
+   "file": "Fallen Valkyrie.png",
+   "page": "https://valheim.fandom.com/wiki/File:Fallen_Valkyrie.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Fallen_Valkyrie"
+  },
+  "fallen-warrior": {
+   "name": "Fallen Warrior",
+   "src": null
+  },
+  "fenring": {
+   "name": "Fenring",
+   "src": null,
+   "file": "Fenring.png",
+   "page": "https://valheim.fandom.com/wiki/File:Fenring.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Fenring"
+  },
+  "frost-blob": {
+   "name": "Frost Blob",
+   "src": null,
+   "file": "Frost Blob.png",
+   "page": "https://valheim.fandom.com/wiki/File:Frost_Blob.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Frost_Blob"
+  },
+  "frysling": {
+   "name": "Frysling",
+   "src": null
+  },
+  "fuling": {
+   "name": "Fuling",
+   "src": null,
+   "file": "Fuling.png",
+   "page": "https://valheim.fandom.com/wiki/File:Fuling.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Fuling"
+  },
+  "fuling-berserker": {
+   "name": "Fuling Berserker",
+   "src": null,
+   "file": "Fuling Berserker.png",
+   "page": "https://valheim.fandom.com/wiki/File:Fuling_Berserker.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Fuling_Berserker"
+  },
+  "fuling-shaman": {
+   "name": "Fuling Shaman",
+   "src": null,
+   "file": "Fuling Shaman.png",
+   "page": "https://valheim.fandom.com/wiki/File:Fuling_Shaman.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Fuling_Shaman"
+  },
+  "geirrhafa": {
+   "name": "Geirrhafa",
+   "src": null,
+   "file": "Geirrhafa.png",
+   "page": "https://valheim.fandom.com/wiki/File:Geirrhafa.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Geirrhafa"
+  },
+  "ghost": {
+   "name": "Ghost",
+   "src": null,
+   "file": "Ghost.png",
+   "page": "https://valheim.fandom.com/wiki/File:Ghost.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Ghost"
+  },
+  "gjall": {
+   "name": "Gjall",
+   "src": null,
+   "file": "Gjall.png",
+   "page": "https://valheim.fandom.com/wiki/File:Gjall.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Gjall"
+  },
+  "greydwarf-2": {
+   "name": "Greydwarf",
+   "src": null,
+   "file": "Greydwarf.png",
+   "page": "https://valheim.fandom.com/wiki/File:Greydwarf.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Greydwarf"
+  },
+  "greydwarf-brute": {
+   "name": "Greydwarf Brute",
+   "src": null,
+   "file": "Greydwarf Brute.png",
+   "page": "https://valheim.fandom.com/wiki/File:Greydwarf_Brute.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Greydwarf_Brute"
+  },
+  "greydwarf-shaman-2": {
+   "name": "Greydwarf Shaman",
+   "src": null,
+   "file": "Greydwarf Shaman.png",
+   "page": "https://valheim.fandom.com/wiki/File:Greydwarf_Shaman.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Greydwarf_Shaman"
+  },
+  "greyling": {
+   "name": "Greyling",
+   "src": null,
+   "file": "Greyling.png",
+   "page": "https://valheim.fandom.com/wiki/File:Greyling.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Greyling"
+  },
+  "growth": {
+   "name": "Growth",
+   "src": null,
+   "file": "Growth.png",
+   "page": "https://valheim.fandom.com/wiki/File:Growth.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Growth"
+  },
+  "hare": {
+   "name": "Hare",
+   "src": null,
+   "file": "Hare.png",
+   "page": "https://valheim.fandom.com/wiki/File:Hare.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Hare"
+  },
+  "hen": {
+   "name": "Hen",
+   "src": null,
+   "file": "Hen OS.png",
+   "page": "https://valheim.fandom.com/wiki/File:Hen.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Hen"
+  },
+  "hexen": {
+   "name": "Hexen",
+   "src": null
+  },
+  "imprisoned-dvergr": {
+   "name": "Imprisoned Dvergr",
+   "src": null
+  },
+  "kall-fimbulbringer": {
+   "name": "Kall Fimbulbringer",
+   "src": null
+  },
+  "krigen": {
+   "name": "Krigen",
+   "src": null
+  },
+  "kvastur": {
+   "name": "Kvastur",
+   "src": null,
+   "file": "Kvastur.png",
+   "page": "https://valheim.fandom.com/wiki/File:Kvastur.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Kvastur"
+  },
+  "lava-blob": {
+   "name": "Lava Blob",
+   "src": null,
+   "file": "Lava Blob.png",
+   "page": "https://valheim.fandom.com/wiki/File:Lava_Blob.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Lava_Blob"
+  },
+  "leech": {
+   "name": "Leech",
+   "src": null,
+   "file": "Leech.png",
+   "page": "https://valheim.fandom.com/wiki/File:Leech.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Leech"
+  },
+  "lord-reto": {
+   "name": "Lord Reto",
+   "src": null,
+   "file": "Lord Reto.png",
+   "page": "https://valheim.fandom.com/wiki/File:Lord_Reto.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Lord_Reto"
+  },
+  "lox": {
+   "name": "Lox",
+   "src": null,
+   "file": "Lox.png",
+   "page": "https://valheim.fandom.com/wiki/File:Lox.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Lox"
+  },
+  "lox-calf": {
+   "name": "Lox Calf",
+   "src": null
+  },
+  "mistile": {
+   "name": "Mistile",
+   "src": null,
+   "file": "Mistile.png",
+   "page": "https://valheim.fandom.com/wiki/File:Mistile.png",
+   "author": "TehFlatline-fduser",
+   "wiki": "https://valheim.fandom.com/wiki/Mistile"
+  },
+  "moder": {
+   "name": "Moder",
+   "src": null,
+   "file": "Moder.png",
+   "page": "https://valheim.fandom.com/wiki/File:Moder.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Moder"
+  },
+  "moose": {
+   "name": "Moose",
+   "src": null
+  },
+  "morgen": {
+   "name": "Morgen",
+   "src": null,
+   "file": "Morgen.png",
+   "page": "https://valheim.fandom.com/wiki/File:Morgen.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Morgen"
+  },
+  "neck": {
+   "name": "Neck",
+   "src": null,
+   "file": "Neck.png",
+   "page": "https://valheim.fandom.com/wiki/File:Neck.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Neck"
+  },
+  "oozer": {
+   "name": "Oozer",
+   "src": null,
+   "file": "Oozer.png",
+   "page": "https://valheim.fandom.com/wiki/File:Oozer.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Oozer"
+  },
+  "rancid-remains": {
+   "name": "Rancid Remains",
+   "src": null,
+   "file": "Rancid Remains 0star.png",
+   "page": "https://valheim.fandom.com/wiki/File:Rancid_Remains.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Rancid_Remains"
+  },
+  "riktig-fuling": {
+   "name": "Riktig Fuling",
+   "src": null
+  },
+  "seal": {
+   "name": "Seal",
+   "src": null
+  },
+  "seeker": {
+   "name": "Seeker",
+   "src": null,
+   "file": "Seeker.png",
+   "page": "https://valheim.fandom.com/wiki/File:Seeker.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Seeker"
+  },
+  "seeker-brood": {
+   "name": "Seeker Brood",
+   "src": null,
+   "file": "Seeker Brood.png",
+   "page": "https://valheim.fandom.com/wiki/File:Seeker_Brood.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Seeker_Brood"
+  },
+  "seeker-soldier": {
+   "name": "Seeker Soldier",
+   "src": null,
+   "file": "Seeker Soldier.png",
+   "page": "https://valheim.fandom.com/wiki/File:Seeker_Soldier.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Seeker_Soldier"
+  },
+  "serpent": {
+   "name": "Serpent",
+   "src": null,
+   "file": "Serpent.png",
+   "page": "https://valheim.fandom.com/wiki/File:Serpent.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Serpent"
+  },
+  "shadow": {
+   "name": "Shadow",
+   "src": null
+  },
+  "shapeless-pulp": {
+   "name": "Shapeless Pulp",
+   "src": null
+  },
+  "skeleton-2": {
+   "name": "Skeleton",
+   "src": null,
+   "file": "Skeleton.png",
+   "page": "https://valheim.fandom.com/wiki/File:Skeleton.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Skeleton"
+  },
+  "stone-golem": {
+   "name": "Stone Golem",
+   "src": null,
+   "file": "Stone Golem.png",
+   "page": "https://valheim.fandom.com/wiki/File:Stone_Golem.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Stone_Golem"
+  },
+  "summoned-twitcher": {
+   "name": "Summoned Twitcher",
+   "src": null,
+   "file": "Summoned Charred Twitcher.png",
+   "page": "https://valheim.fandom.com/wiki/File:Summoned_Charred_Twitcher.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Summoned_Twitcher"
+  },
+  "surtling": {
+   "name": "Surtling",
+   "src": null,
+   "file": "Surtling.png",
+   "page": "https://valheim.fandom.com/wiki/File:Surtling.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Surtling"
+  },
+  "the-elder": {
+   "name": "The Elder",
+   "src": null,
+   "file": "The Elder.png",
+   "page": "https://valheim.fandom.com/wiki/File:The_Elder.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/The_Elder"
+  },
+  "the-queen": {
+   "name": "The Queen",
+   "src": null,
+   "file": "The Queen.png",
+   "page": "https://valheim.fandom.com/wiki/File:The_Queen.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/The_Queen"
+  },
+  "the-void": {
+   "name": "The Void",
+   "src": null
+  },
+  "thungr": {
+   "name": "Thungr",
+   "src": null,
+   "file": "Thungr.png",
+   "page": "https://valheim.fandom.com/wiki/File:Thungr.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Zil_&_Thungr"
+  },
+  "tick": {
+   "name": "Tick",
+   "src": null,
+   "file": "Tick.png",
+   "page": "https://valheim.fandom.com/wiki/File:Tick.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Tick"
+  },
+  "tiny-pulp": {
+   "name": "Tiny Pulp",
+   "src": null
+  },
+  "troll": {
+   "name": "Troll",
+   "src": null,
+   "file": "Troll.png",
+   "page": "https://valheim.fandom.com/wiki/File:Troll.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Troll"
+  },
+  "ulv": {
+   "name": "Ulv",
+   "src": null,
+   "file": "Ulv.png",
+   "page": "https://valheim.fandom.com/wiki/File:Ulv.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Ulv"
+  },
+  "vile": {
+   "name": "Vile",
+   "src": null,
+   "file": "Vile.png",
+   "page": "https://valheim.fandom.com/wiki/File:Vile.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Vile"
+  },
+  "volture": {
+   "name": "Volture",
+   "src": null,
+   "file": "Volture.png",
+   "page": "https://valheim.fandom.com/wiki/File:Volture.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Volture"
+  },
+  "wolf": {
+   "name": "Wolf",
+   "src": null,
+   "file": "Wolf 0star.png",
+   "page": "https://valheim.fandom.com/wiki/File:Wolf.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Wolf"
+  },
+  "wraith": {
+   "name": "Wraith",
+   "src": null,
+   "file": "Wraith.png",
+   "page": "https://valheim.fandom.com/wiki/File:Wraith.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Wraith"
+  },
+  "writhan": {
+   "name": "Writhan",
+   "src": null
+  },
+  "yagluth": {
+   "name": "Yagluth",
+   "src": null,
+   "file": "Yagluth.png",
+   "page": "https://valheim.fandom.com/wiki/File:Yagluth.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Yagluth"
+  },
+  "zil": {
+   "name": "Zil",
+   "src": null,
+   "file": "Zil.png",
+   "page": "https://valheim.fandom.com/wiki/File:Zil.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Zil_&_Thungr"
+  },
+  "zil-thungr": {
+   "name": "Zil & Thungr",
+   "src": null,
+   "file": "Zil & Thungr.png",
+   "page": "https://valheim.fandom.com/wiki/File:Zil_%26_Thungr.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Zil_&_Thungr"
+  }
+ },
+ "bosses": {
+  "bonemass": {
+   "name": "Bonemass",
+   "src": null,
+   "file": "BonemassAltar.png",
+   "page": "https://valheim.fandom.com/wiki/File:BonemassAltar.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Bonemass"
+  },
+  "eikthyr": {
+   "name": "Eikthyr",
+   "src": null,
+   "file": "EikthyrAltar.png",
+   "page": "https://valheim.fandom.com/wiki/File:EikthyrAltar.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Eikthyr"
+  },
+  "fader": {
+   "name": "Fader",
+   "src": null,
+   "file": "Fader.png",
+   "page": "https://valheim.fandom.com/wiki/File:Fader.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Fader"
+  },
+  "kall-fimbulbringer": {
+   "name": "Kall Fimbulbringer",
+   "src": null
+  },
+  "moder": {
+   "name": "Moder",
+   "src": null,
+   "file": "Moder.png",
+   "page": "https://valheim.fandom.com/wiki/File:Moder.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Moder"
+  },
+  "the-elder": {
+   "name": "The Elder",
+   "src": null,
+   "file": "The Elder.png",
+   "page": "https://valheim.fandom.com/wiki/File:The_Elder.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/The_Elder"
+  },
+  "the-queen": {
+   "name": "The Queen",
+   "src": null,
+   "file": "The Queen.png",
+   "page": "https://valheim.fandom.com/wiki/File:The_Queen.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/The_Queen"
+  },
+  "yagluth": {
+   "name": "Yagluth",
+   "src": null,
+   "file": "Yagluth.png",
+   "page": "https://valheim.fandom.com/wiki/File:Yagluth.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Yagluth"
+  }
+ },
+ "places": {
+  "abandoned-cabin": {
+   "title": "Abandoned Cabin",
+   "type": "Structure",
+   "biomes": [
+    "mountain"
+   ],
+   "inhabitants": [
+    "Skeleton",
+    "Stone Golem"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "mountain",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Abandoned cabins 2.png",
+   "page": "https://valheim.fandom.com/wiki/File:Abandoned_cabins_2.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Abandoned_Cabin"
+  },
+  "abandoned-house": {
+   "title": "Abandoned House",
+   "type": "point of interest",
+   "biomes": [
+    "meadows"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Bee Nest",
+    "Loot chest#Meadows / Black Forest Chest"
+   ],
+   "listed": [
+    {
+     "biome": "meadows",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Abandoned House 10.png",
+   "page": "https://valheim.fandom.com/wiki/File:Abandoned_House_10.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Abandoned_House"
+  },
+  "abandoned-hut": {
+   "title": "Abandoned Hut",
+   "type": "point of interest",
+   "biomes": [
+    "swamp"
+   ],
+   "inhabitants": [
+    "Wraith",
+    "Draugr"
+   ],
+   "resources": [
+    "Loot chest#Black Forest Chest"
+   ],
+   "listed": [
+    {
+     "biome": "swamp",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Abandoned Hut 1.png",
+   "page": "https://valheim.fandom.com/wiki/File:Abandoned_Hut_1.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Abandoned_Hut"
+  },
+  "abandoned-outpost": {
+   "title": "Abandoned Outpost",
+   "type": "structure",
+   "biomes": [],
+   "inhabitants": [
+    "Greydwarf",
+    "Greydwarf shaman",
+    "Greydwarf brute",
+    "Skeleton",
+    "Crow"
+   ],
+   "resources": [
+    "Loot chest#Black Forest Chest",
+    "Loot chest#Black Forest barrel"
+   ],
+   "listed": [
+    {
+     "biome": "blackforest",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Ruin 2.png",
+   "page": "https://valheim.fandom.com/wiki/File:Ruin_2.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Abandoned_Outpost"
+  },
+  "abandoned-village": {
+   "title": "Abandoned Village",
+   "type": "structure",
+   "biomes": [
+    "meadows"
+   ],
+   "inhabitants": [
+    "Boar"
+   ],
+   "resources": [
+    "Meadows chest",
+    "Bee Nest",
+    "Raspberries"
+   ],
+   "listed": [
+    {
+     "biome": "meadows",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Wood Farm.png",
+   "page": "https://valheim.fandom.com/wiki/File:Wood_Farm.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Abandoned_Village"
+  },
+  "ancient-armor": {
+   "title": "Ancient Armor",
+   "type": "Ore Deposit",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Scrap Iron",
+    "Copper Scrap"
+   ],
+   "listed": [
+    {
+     "biome": "mistlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Ancient armor.png",
+   "page": "https://valheim.fandom.com/wiki/File:Ancient_armor.png",
+   "author": "Fistsh",
+   "wiki": "https://valheim.fandom.com/wiki/Ancient_Armor"
+  },
+  "ancient-roots": {
+   "title": "Ancient Roots",
+   "type": "Resource node",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Sap"
+   ],
+   "listed": [],
+   "src": null,
+   "file": "Ancient Roots.png",
+   "page": "https://valheim.fandom.com/wiki/File:Ancient_Roots.png",
+   "author": "Alex 2n",
+   "wiki": "https://valheim.fandom.com/wiki/Ancient_Roots"
+  },
+  "ancient-stone-circle": {
+   "title": "Ancient Stone Circle",
+   "type": "point of interest",
+   "biomes": [
+    "meadows"
+   ],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "meadows",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Ancient stone circle.png",
+   "page": "https://valheim.fandom.com/wiki/File:Ancient_stone_circle.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Ancient_Stone_Circle"
+  },
+  "ancient-sword": {
+   "title": "Ancient Sword",
+   "type": "Ore Deposit",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Scrap Iron",
+    "Copper Scrap"
+   ],
+   "listed": [
+    {
+     "biome": "mistlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Ancient sword.png",
+   "page": "https://valheim.fandom.com/wiki/File:Ancient_sword.png",
+   "author": "Fistsh",
+   "wiki": "https://valheim.fandom.com/wiki/Ancient_Sword"
+  },
+  "ashlands-ruins": {
+   "title": "Ashlands ruins",
+   "type": "Structure",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [
+    "Charred Twitcher",
+    "Morgen"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "ashlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Ashlands-ruins1.jpg",
+   "page": "https://valheim.fandom.com/wiki/File:Ashlands-ruins1.jpg",
+   "author": "Valheimsmort",
+   "wiki": "https://valheim.fandom.com/wiki/Ashlands_ruins"
+  },
+  "bee-nest": {
+   "title": "Bee Nest",
+   "type": "structure",
+   "biomes": [
+    "meadows",
+    "blackforest"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Queen bee",
+    "Honey"
+   ],
+   "listed": [],
+   "src": null,
+   "file": "Bee Nest.png",
+   "page": "https://valheim.fandom.com/wiki/File:Bee_Nest.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Bee_Nest"
+  },
+  "big-rock-clearing": {
+   "title": "Big Rock Clearing",
+   "type": "point of interest",
+   "biomes": [
+    "blackforest"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Mysterious Rock",
+    "Thistle"
+   ],
+   "listed": [
+    {
+     "biome": "blackforest",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Big Rock Clearing.png",
+   "page": "https://valheim.fandom.com/wiki/File:Big_Rock_Clearing.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Big_Rock_Clearing"
+  },
+  "burial-chambers": {
+   "title": "Burial Chambers",
+   "type": "Dungeon",
+   "biomes": [
+    "blackforest"
+   ],
+   "inhabitants": [
+    "Skeleton",
+    "Rancid remains",
+    "Evil bone pile",
+    "Ghost"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "blackforest",
+     "as": "dungeon"
+    }
+   ],
+   "src": null,
+   "file": "BurialChamber.png",
+   "page": "https://valheim.fandom.com/wiki/File:BurialChamber.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Burial_Chambers"
+  },
+  "cairns": {
+   "title": "Cairns",
+   "type": "point of interest",
+   "biomes": [
+    "mountain"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Stone"
+   ],
+   "listed": [
+    {
+     "biome": "mountain",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Cairns 1.png",
+   "page": "https://valheim.fandom.com/wiki/File:Cairns_1.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Cairns"
+  },
+  "charred-fortress": {
+   "title": "Charred Fortress",
+   "type": "Structure",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [
+    "Charred Warrior",
+    "Charred Marksman",
+    "Charred Warlock"
+   ],
+   "resources": [
+    "Loot chest#Charred Fortress Charred Chests",
+    "Bell fragment",
+    "Molten core"
+   ],
+   "listed": [
+    {
+     "biome": "ashlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Charredfortress.png",
+   "page": "https://valheim.fandom.com/wiki/File:Charredfortress.png",
+   "author": "Renato42",
+   "wiki": "https://valheim.fandom.com/wiki/Charred_Fortress"
+  },
+  "charred-ruins": {
+   "title": "Charred Ruins",
+   "type": "Structure",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [
+    "Ash crow"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "ashlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Charred ruins.png",
+   "page": "https://valheim.fandom.com/wiki/File:Charred_ruins.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Charred_Ruins"
+  },
+  "combat-ruin": {
+   "title": "Combat Ruin",
+   "type": "Structure",
+   "biomes": [
+    "meadows"
+   ],
+   "inhabitants": [
+    "Skeleton"
+   ],
+   "resources": [
+    "Bone fragments",
+    "Feathers"
+   ],
+   "listed": [],
+   "src": null,
+   "file": "Combat Ruin.png",
+   "page": "https://valheim.fandom.com/wiki/File:Combat_Ruin.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Combat_Ruin"
+  },
+  "dolmen": {
+   "title": "Dolmen",
+   "type": "Structure",
+   "biomes": [
+    "meadows",
+    "blackforest"
+   ],
+   "inhabitants": [
+    "Skeleton"
+   ],
+   "resources": [
+    "Bone fragments"
+   ],
+   "listed": [
+    {
+     "biome": "blackforest",
+     "as": "structure"
+    },
+    {
+     "biome": "meadows",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Dolmen.png",
+   "page": "https://valheim.fandom.com/wiki/File:Dolmen.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Dolmen"
+  },
+  "drake-nest": {
+   "title": "Drake Nest",
+   "type": "point of interest",
+   "biomes": [
+    "mountain"
+   ],
+   "inhabitants": [
+    "Drake"
+   ],
+   "resources": [
+    "Dragon egg"
+   ],
+   "listed": [
+    {
+     "biome": "mountain",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Drake nest.png",
+   "page": "https://valheim.fandom.com/wiki/File:Drake_nest.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Drake_Nest"
+  },
+  "draugr-village": {
+   "title": "Draugr Village",
+   "type": "poi",
+   "biomes": [
+    "meadows"
+   ],
+   "inhabitants": [
+    "Draugr",
+    "Draugr Elite"
+   ],
+   "resources": [
+    "Meadows chest",
+    "Bee Nest",
+    "Finewood"
+   ],
+   "listed": [
+    {
+     "biome": "meadows",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Valheim meadow draugr village1.png",
+   "page": "https://valheim.fandom.com/wiki/File:Valheim_meadow_draugr_village1.png",
+   "author": "AimBoot",
+   "wiki": "https://valheim.fandom.com/wiki/Draugr_Village"
+  },
+  "dvergr-charred-tower-ruins": {
+   "title": "Dvergr Charred Tower Ruins",
+   "type": "structure",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [
+    "Ashlands Dvergr"
+   ],
+   "resources": [
+    "Dvergr Ashlands crate"
+   ],
+   "listed": [
+    {
+     "biome": "ashlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Dverger Charred tower ruins1.jpg",
+   "page": "https://valheim.fandom.com/wiki/File:Dverger_Charred_tower_ruins1.jpg",
+   "author": "Valheimsmort",
+   "wiki": "https://valheim.fandom.com/wiki/Dvergr_Charred_Tower_Ruins"
+  },
+  "dvergr-excavation-site": {
+   "title": "Dvergr Excavation Site",
+   "type": "Structure",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [
+    "Dvergr rogue",
+    "Dvergr mage",
+    "Seeker"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "mistlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Mistlands Excavation1.png",
+   "page": "https://valheim.fandom.com/wiki/File:Mistlands_Excavation1.png",
+   "author": "Fistsh",
+   "wiki": "https://valheim.fandom.com/wiki/Dvergr_Excavation_Site"
+  },
+  "dvergr-guard-tower": {
+   "title": "Dvergr Guard Tower",
+   "type": "Structure",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [
+    "Dvergr rogue",
+    "Dvergr mage",
+    "Seeker"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "mistlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Mistlands GuardTower2 new.png",
+   "page": "https://valheim.fandom.com/wiki/File:Mistlands_GuardTower2_new.png",
+   "author": "Fistsh",
+   "wiki": "https://valheim.fandom.com/wiki/Dvergr_Guard_Tower"
+  },
+  "dvergr-harbor": {
+   "title": "Dvergr Harbor",
+   "type": "Structure",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [
+    "Dvergr rogue",
+    "Dvergr mage"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "mistlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Mistlands Harbour1.png",
+   "page": "https://valheim.fandom.com/wiki/File:Mistlands_Harbour1.png",
+   "author": "Fistsh",
+   "wiki": "https://valheim.fandom.com/wiki/Dvergr_Harbor"
+  },
+  "dvergr-lighthouse": {
+   "title": "Dvergr Lighthouse",
+   "type": "Structure",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [
+    "Dvergr rogue",
+    "Dvergr mage"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "mistlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Mistlands Lighthouse1 new.png",
+   "page": "https://valheim.fandom.com/wiki/File:Mistlands_Lighthouse1_new.png",
+   "author": "Fistsh",
+   "wiki": "https://valheim.fandom.com/wiki/Dvergr_Lighthouse"
+  },
+  "dvergr-viaduct": {
+   "title": "Dvergr viaduct",
+   "type": "Structure",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "mistlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Dvergr viaduct.png",
+   "page": "https://valheim.fandom.com/wiki/File:Dvergr_viaduct.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Dvergr_viaduct"
+  },
+  "flametal-ore-vein": {
+   "title": "Flametal Ore Vein",
+   "type": "Ore Deposit",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Flametal ore"
+   ],
+   "listed": [
+    {
+     "biome": "ashlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Flametal ore vein.png",
+   "page": "https://valheim.fandom.com/wiki/File:Flametal_ore_vein.png",
+   "author": "Ondar111",
+   "wiki": "https://valheim.fandom.com/wiki/Flametal_Ore_Vein"
+  },
+  "forsaken-altars": {
+   "title": "Forsaken Altars",
+   "type": "Structure",
+   "biomes": [
+    "meadows",
+    "blackforest",
+    "swamp",
+    "mountain",
+    "plains",
+    "mistlands",
+    "ashlands"
+   ],
+   "inhabitants": [
+    "Eikthyr",
+    "The Elder",
+    "Bonemass",
+    "Moder",
+    "Yagluth",
+    "The Queen",
+    "Fader"
+   ],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "ForsakenAltars-Incomplete.png",
+   "page": "https://valheim.fandom.com/wiki/File:ForsakenAltars-Incomplete.png",
+   "author": "Fistsh",
+   "wiki": "https://valheim.fandom.com/wiki/Forsaken_Altars"
+  },
+  "frost-caves": {
+   "title": "Frost Caves",
+   "type": "Dungeon",
+   "biomes": [
+    "mountain"
+   ],
+   "inhabitants": [
+    "Bat",
+    "Ulv",
+    "Cultist",
+    "Stone Golem",
+    "Tetra"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "mountain",
+     "as": "dungeon"
+    }
+   ],
+   "src": null,
+   "file": "FrostCaveExterior2.webp",
+   "page": "https://valheim.fandom.com/wiki/File:FrostCaveExterior2.webp",
+   "author": "AFloridaMan",
+   "wiki": "https://valheim.fandom.com/wiki/Frost_Caves"
+  },
+  "fuling-outpost": {
+   "title": "Fuling Outpost",
+   "type": "point of interest",
+   "biomes": [
+    "plains"
+   ],
+   "inhabitants": [
+    "Fuling"
+   ],
+   "resources": [
+    "Fuling totem",
+    "Loot chest#Plains Chest"
+   ],
+   "listed": [
+    {
+     "biome": "plains",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Fuling Outpost 1.png",
+   "page": "https://valheim.fandom.com/wiki/File:Fuling_Outpost_1.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Fuling_Outpost"
+  },
+  "fuling-ruin": {
+   "title": "Fuling Ruin",
+   "type": "point of interest",
+   "biomes": [
+    "plains"
+   ],
+   "inhabitants": [
+    "Fuling"
+   ],
+   "resources": [
+    "Plains chest"
+   ],
+   "listed": [
+    {
+     "biome": "plains",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Fuling Ruin 2.png",
+   "page": "https://valheim.fandom.com/wiki/File:Fuling_Ruin_2.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Fuling_Ruin"
+  },
+  "fuling-village": {
+   "title": "Fuling Village",
+   "type": "poi",
+   "biomes": [
+    "plains"
+   ],
+   "inhabitants": [
+    "Fuling",
+    "Fuling shaman",
+    "Fuling berserker"
+   ],
+   "resources": [
+    "Barley",
+    "Flax",
+    "Fuling totem"
+   ],
+   "listed": [
+    {
+     "biome": "plains",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Valheim Fuling Village.jpg",
+   "page": "https://valheim.fandom.com/wiki/File:Valheim_Fuling_Village.jpg",
+   "author": "Ryemck93",
+   "wiki": "https://valheim.fandom.com/wiki/Fuling_Village"
+  },
+  "geyser": {
+   "title": "Geyser",
+   "type": "poi",
+   "biomes": [
+    "swamp"
+   ],
+   "inhabitants": [
+    "Surtling"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "swamp",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Fire geyser.png",
+   "page": "https://valheim.fandom.com/wiki/File:Fire_geyser.png",
+   "author": "Entomber",
+   "wiki": "https://valheim.fandom.com/wiki/Geyser"
+  },
+  "giant-remains": {
+   "title": "Giant Remains",
+   "type": "Resource Node",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Soft tissue",
+    "Black marble"
+   ],
+   "listed": [
+    {
+     "biome": "mistlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Giant Remains.png",
+   "page": "https://valheim.fandom.com/wiki/File:Giant_Remains.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Giant_Remains"
+  },
+  "glade": {
+   "title": "Glade",
+   "type": "point of interest",
+   "biomes": [
+    "meadows"
+   ],
+   "inhabitants": [
+    "Greydwarf"
+   ],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "Valheim Glade-1 ver0-79-10.jpg",
+   "page": "https://valheim.fandom.com/wiki/File:Valheim_Glade-1_ver0-79-10.jpg",
+   "author": "Djeeshka",
+   "wiki": "https://valheim.fandom.com/wiki/Glade"
+  },
+  "glowing-metal": {
+   "title": "Glowing metal",
+   "type": "Ore Deposit",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Stone"
+   ],
+   "listed": [],
+   "src": null,
+   "file": "Ashlands3.jpg",
+   "page": "https://valheim.fandom.com/wiki/File:Ashlands3.jpg",
+   "author": "Molvaniaa",
+   "wiki": "https://valheim.fandom.com/wiki/Glowing_metal"
+  },
+  "gucksack": {
+   "title": "Gucksack",
+   "type": "Resource Node",
+   "biomes": [
+    "swamp"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Guck"
+   ],
+   "listed": [],
+   "src": null,
+   "file": "Gucksack.png",
+   "page": "https://valheim.fandom.com/wiki/File:Gucksack.png",
+   "author": "The Cpuman",
+   "wiki": "https://valheim.fandom.com/wiki/Gucksack"
+  },
+  "hidden-forge": {
+   "title": "Hidden Forge",
+   "type": "Structure",
+   "biomes": [
+    "mountain"
+   ],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "Forgeofpotentialinmountain.png",
+   "page": "https://valheim.fandom.com/wiki/File:Forgeofpotentialinmountain.png",
+   "author": "StylizedOctopus281",
+   "wiki": "https://valheim.fandom.com/wiki/Hidden_Forge"
+  },
+  "howling-cavern": {
+   "title": "Howling Cavern",
+   "type": "Dungeon",
+   "biomes": [
+    "mountain"
+   ],
+   "inhabitants": [
+    "Ulv",
+    "Bat",
+    "Geirrhafa"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "mountain",
+     "as": "dungeon"
+    }
+   ],
+   "src": null,
+   "file": "Howling caverns.png",
+   "page": "https://valheim.fandom.com/wiki/File:Howling_caverns.png",
+   "author": "Alex 2n",
+   "wiki": "https://valheim.fandom.com/wiki/Howling_Cavern"
+  },
+  "infested-citadel": {
+   "title": "Infested Citadel",
+   "type": "Boss arena",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [
+    "The Queen",
+    "Seeker",
+    "Seeker Brood"
+   ],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "Infested Citadel.png",
+   "page": "https://valheim.fandom.com/wiki/File:Infested_Citadel.png",
+   "author": "Fistsh",
+   "wiki": "https://valheim.fandom.com/wiki/Infested_Citadel"
+  },
+  "infested-mine": {
+   "title": "Infested Mine",
+   "type": "Dungeon",
+   "biomes": [
+    "mistlands"
+   ],
+   "inhabitants": [
+    "Seeker",
+    "Seeker Brood",
+    "Seeker Soldier",
+    "Tick"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "mistlands",
+     "as": "dungeon"
+    }
+   ],
+   "src": null,
+   "file": "InfestedMine.png",
+   "page": "https://valheim.fandom.com/wiki/File:InfestedMine.png",
+   "author": "Ninacius",
+   "wiki": "https://valheim.fandom.com/wiki/Infested_Mine"
+  },
+  "inverted-tower": {
+   "title": "Inverted Tower",
+   "type": "Structure",
+   "biomes": [
+    "swamp",
+    "mountain"
+   ],
+   "inhabitants": [
+    "Draugr elite"
+   ],
+   "resources": [
+    "Loot chest#Mountain Chest"
+   ],
+   "listed": [
+    {
+     "biome": "mountain",
+     "as": "structure"
+    },
+    {
+     "biome": "swamp",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Swamp Well.png",
+   "page": "https://valheim.fandom.com/wiki/File:Swamp_Well.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Inverted_Tower"
+  },
+  "lava": {
+   "title": "Lava",
+   "type": "poi",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "Ashlands2.png",
+   "page": "https://valheim.fandom.com/wiki/File:Ashlands2.png",
+   "author": "Meller77",
+   "wiki": "https://valheim.fandom.com/wiki/Lava"
+  },
+  "monument-of-torment": {
+   "title": "Monument of Torment",
+   "type": "",
+   "biomes": [],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "ashlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Monument of Torment appearance.png",
+   "page": "https://valheim.fandom.com/wiki/File:Monument_of_Torment_appearance.png",
+   "author": "Renato42",
+   "wiki": "https://valheim.fandom.com/wiki/Monument_of_Torment"
+  },
+  "mountain-grave": {
+   "title": "Mountain grave",
+   "type": "Structure",
+   "biomes": [
+    "mountain"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Bone fragments",
+    "Silver necklace"
+   ],
+   "listed": [
+    {
+     "biome": "mountain",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Mountain grave.png",
+   "page": "https://valheim.fandom.com/wiki/File:Mountain_grave.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Mountain_grave"
+  },
+  "mountain-tower": {
+   "title": "Mountain Tower",
+   "type": "Structure",
+   "biomes": [
+    "mountain"
+   ],
+   "inhabitants": [
+    "Skeleton"
+   ],
+   "resources": [
+    "Mountain chest"
+   ],
+   "listed": [
+    {
+     "biome": "mountain",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Draugr fort.jpg",
+   "page": "https://valheim.fandom.com/wiki/File:Draugr_fort.jpg",
+   "author": "Jaylaxel",
+   "wiki": "https://valheim.fandom.com/wiki/Mountain_Tower"
+  },
+  "muddy-scrap-pile": {
+   "title": "Muddy Scrap Pile",
+   "type": "Ore Deposit",
+   "biomes": [
+    "swamp"
+   ],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "Muddy scrap pile.png",
+   "page": "https://valheim.fandom.com/wiki/File:Muddy_scrap_pile.png",
+   "author": "ErmacLich",
+   "wiki": "https://valheim.fandom.com/wiki/Muddy_Scrap_Pile"
+  },
+  "mysterious-location": {
+   "title": "Mysterious Location",
+   "type": "point of interest",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [
+    "Charred Twitcher",
+    "Charred Warrior",
+    "Charred Marksman",
+    "Charred Warlock",
+    "Lord Reto"
+   ],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "Vegvisir Mysterious location.png",
+   "page": "https://valheim.fandom.com/wiki/File:Vegvisir_Mysterious_location.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Mysterious_Location"
+  },
+  "obsidian-deposit": {
+   "title": "Obsidian Deposit",
+   "type": "Resource Node",
+   "biomes": [
+    "mountain"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Obsidian"
+   ],
+   "listed": [],
+   "src": null,
+   "file": "Obsidian deposit.jpg",
+   "page": "https://valheim.fandom.com/wiki/File:Obsidian_deposit.jpg",
+   "author": "The Cpuman",
+   "wiki": "https://valheim.fandom.com/wiki/Obsidian_Deposit"
+  },
+  "putrid-hole": {
+   "title": "Putrid Hole",
+   "type": "Dungeon",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [
+    "Morgen"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "ashlands",
+     "as": "dungeon"
+    }
+   ],
+   "src": null,
+   "file": "Putrid hole.png",
+   "page": "https://valheim.fandom.com/wiki/File:Putrid_hole.png",
+   "author": "Renato42",
+   "wiki": "https://valheim.fandom.com/wiki/Putrid_Hole"
+  },
+  "sacrificial-stones": {
+   "title": "Sacrificial Stones",
+   "type": "Structure",
+   "biomes": [
+    "meadows"
+   ],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "Sarcrifial Stones.jpg",
+   "page": "https://valheim.fandom.com/wiki/File:Sarcrifial_Stones.jpg",
+   "author": "Schlecktus",
+   "wiki": "https://valheim.fandom.com/wiki/Sacrificial_Stones"
+  },
+  "sealed-tower": {
+   "title": "Sealed Tower",
+   "type": "Dungeon",
+   "biomes": [
+    "plains"
+   ],
+   "inhabitants": [
+    "Fuling",
+    "Fuling shaman",
+    "Zil & Thungr"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "plains",
+     "as": "dungeon"
+    }
+   ],
+   "src": null,
+   "file": "Sealed towers.png",
+   "page": "https://valheim.fandom.com/wiki/File:Sealed_towers.png",
+   "author": "Alex 2n",
+   "wiki": "https://valheim.fandom.com/wiki/Sealed_Tower"
+  },
+  "shipwreck": {
+   "title": "Shipwreck",
+   "type": "Structure",
+   "biomes": [
+    "blackforest",
+    "swamp",
+    "plains"
+   ],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "Shipwreck.png",
+   "page": "https://valheim.fandom.com/wiki/File:Shipwreck.png",
+   "author": "MangoAllergy",
+   "wiki": "https://valheim.fandom.com/wiki/Shipwreck"
+  },
+  "silver-vein": {
+   "title": "Silver Vein",
+   "type": "Ore Deposit",
+   "biomes": [
+    "mountain"
+   ],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "Silver vein.png",
+   "page": "https://valheim.fandom.com/wiki/File:Silver_vein.png",
+   "author": "The Cpuman",
+   "wiki": "https://valheim.fandom.com/wiki/Silver_Vein"
+  },
+  "smouldering-tomb": {
+   "title": "Smouldering Tomb",
+   "type": "Dungeon",
+   "biomes": [
+    "blackforest"
+   ],
+   "inhabitants": [
+    "Skeleton",
+    "Ghost",
+    "Brenna"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "blackforest",
+     "as": "dungeon"
+    }
+   ],
+   "src": null,
+   "file": "Smouldering Tombs Entrance.png",
+   "page": "https://valheim.fandom.com/wiki/File:Smouldering_Tombs_Entrance.png",
+   "author": "SirBowen",
+   "wiki": "https://valheim.fandom.com/wiki/Smouldering_Tomb"
+  },
+  "stonehenge": {
+   "title": "Stonehenge",
+   "type": "Structure",
+   "biomes": [
+    "plains"
+   ],
+   "inhabitants": [
+    "Fuling Berserker",
+    "Fuling"
+   ],
+   "resources": [
+    "Loot chest#Stonehenge Center Chest"
+   ],
+   "listed": [
+    {
+     "biome": "plains",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Stonehenge Definitive.png",
+   "page": "https://valheim.fandom.com/wiki/File:Stonehenge_Definitive.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Stonehenge"
+  },
+  "sulfur-arch": {
+   "title": "Sulfur Arch",
+   "type": "Resource Node",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Sulfur",
+    "Grausten"
+   ],
+   "listed": [
+    {
+     "biome": "ashlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Sulfur arch.png",
+   "page": "https://valheim.fandom.com/wiki/File:Sulfur_arch.png",
+   "author": "Renato42",
+   "wiki": "https://valheim.fandom.com/wiki/Sulfur_Arch"
+  },
+  "sunken-crypts": {
+   "title": "Sunken Crypts",
+   "type": "Dungeon",
+   "biomes": [
+    "swamp"
+   ],
+   "inhabitants": [
+    "Blob",
+    "Body pile",
+    "Draugr",
+    "Draugr Elite"
+   ],
+   "resources": [
+    "Scrap iron",
+    "Leather scraps",
+    "Withered bone"
+   ],
+   "listed": [
+    {
+     "biome": "swamp",
+     "as": "dungeon"
+    }
+   ],
+   "src": null,
+   "file": "SunkenCrypt.png",
+   "page": "https://valheim.fandom.com/wiki/File:SunkenCrypt.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Sunken_Crypts"
+  },
+  "swamp-grave": {
+   "title": "Swamp Grave",
+   "type": "point of interest",
+   "biomes": [
+    "swamp"
+   ],
+   "inhabitants": [
+    "Draugr",
+    "Skeleton"
+   ],
+   "resources": [
+    "Swamp chest"
+   ],
+   "listed": [
+    {
+     "biome": "swamp",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Swamp Grave.png",
+   "page": "https://valheim.fandom.com/wiki/File:Swamp_Grave.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Swamp_Grave"
+  },
+  "swamp-runestone-tower": {
+   "title": "Swamp Runestone Tower",
+   "type": "point of interest",
+   "biomes": [
+    "swamp"
+   ],
+   "inhabitants": [
+    "Draugr",
+    "Draugr elite",
+    "Crow"
+   ],
+   "resources": [
+    "Loot chest#Swamp Chest"
+   ],
+   "listed": [
+    {
+     "biome": "swamp",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Swamp Ruin 1.png",
+   "page": "https://valheim.fandom.com/wiki/File:Swamp_Ruin_1.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Swamp_Runestone_Tower"
+  },
+  "tar-pit": {
+   "title": "Tar Pit",
+   "type": "poi",
+   "biomes": [
+    "plains"
+   ],
+   "inhabitants": [
+    "Growth"
+   ],
+   "resources": [
+    "Tar",
+    "Bone fragments"
+   ],
+   "listed": [
+    {
+     "biome": "plains",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Tarpit.png",
+   "page": "https://valheim.fandom.com/wiki/File:Tarpit.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Tar_Pit"
+  },
+  "tin-deposit": {
+   "title": "Tin Deposit",
+   "type": "Ore Deposit",
+   "biomes": [
+    "blackforest"
+   ],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [],
+   "src": null,
+   "file": "Tin deposit.jpg",
+   "page": "https://valheim.fandom.com/wiki/File:Tin_deposit.jpg",
+   "author": "Araxar",
+   "wiki": "https://valheim.fandom.com/wiki/Tin_Deposit"
+  },
+  "tomb-of-lord-reto": {
+   "title": "Tomb of Lord Reto",
+   "type": "Dungeon",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [
+    "Lord Reto"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "ashlands",
+     "as": "dungeon"
+    }
+   ],
+   "src": null,
+   "file": "Tomb of Lord Reto.png",
+   "page": "https://valheim.fandom.com/wiki/File:Tomb_of_Lord_Reto.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Tomb_of_Lord_Reto"
+  },
+  "troll-cave": {
+   "title": "Troll Cave",
+   "type": "Dungeon",
+   "biomes": [
+    "blackforest"
+   ],
+   "inhabitants": [
+    "Troll"
+   ],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "blackforest",
+     "as": "dungeon"
+    }
+   ],
+   "src": null,
+   "file": "TrollCave.png",
+   "page": "https://valheim.fandom.com/wiki/File:TrollCave.png",
+   "author": "James Hawke",
+   "wiki": "https://valheim.fandom.com/wiki/Troll_Cave"
+  },
+  "unstable-lava-rock": {
+   "title": "Unstable Lava Rock",
+   "type": "Resource Node",
+   "biomes": [
+    "ashlands"
+   ],
+   "inhabitants": [],
+   "resources": [
+    "Proustite powder"
+   ],
+   "listed": [],
+   "src": null,
+   "file": "Unstable lava rock.png",
+   "page": "https://valheim.fandom.com/wiki/File:Unstable_lava_rock.png",
+   "author": "Ondar111",
+   "wiki": "https://valheim.fandom.com/wiki/Unstable_Lava_Rock"
+  },
+  "viking-graveyard": {
+   "title": "Viking Graveyard",
+   "type": "poi",
+   "biomes": [
+    "meadows"
+   ],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "meadows",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Viking Graveyard.png",
+   "page": "https://valheim.fandom.com/wiki/File:Viking_Graveyard.png",
+   "author": "Cuikui",
+   "wiki": "https://valheim.fandom.com/wiki/Viking_Graveyard"
+  },
+  "volture-nest": {
+   "title": "Volture Nest",
+   "type": "",
+   "biomes": [],
+   "inhabitants": [],
+   "resources": [],
+   "listed": [
+    {
+     "biome": "ashlands",
+     "as": "structure"
+    }
+   ],
+   "src": null,
+   "file": "Volturenest.png",
+   "page": "https://valheim.fandom.com/wiki/File:Volturenest.png",
+   "author": "Renato42",
+   "wiki": "https://valheim.fandom.com/wiki/Volture_Nest"
+  }
+ }
+}

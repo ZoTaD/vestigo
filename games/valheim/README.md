@@ -14,6 +14,15 @@ Action.
 3. `cd games/valheim && .venv/Scripts/python -m pipeline.extract` (~4 min).
 4. `.venv/Scripts/python -m pipeline.site` (arma `data/site/`, lo que lee la
    web) y `.venv/Scripts/python -m pipeline.check_links` (tiene que dar 0).
+   Antes de `pipeline.site`: refrescar la copia de la wiki
+   (`python Desktop/valheim-wiki/dump.py`) y, si hay criaturas o lugares
+   nuevos, `.venv/Scripts/python -m pipeline.wiki_images` (fotos de Fandom,
+   CC BY-SA, con su autor en `data/wiki_images.json`). `pipeline.site` toma de
+   la wiki dónde vive cada criatura y el bioma de cada comida, y aplica las
+   fuentes a mano de `pipeline/fixes.py`. Después,
+   `.venv/Scripts/python -m pipeline.wiki_check` lista lo que el sitio todavía
+   dice distinto que la wiki: cada diferencia se revisa (la wiki del Norte
+   profundo está a medio hacer) y lo que haga falta va a `fixes.py` con su porqué.
 5. Revisar `git diff --stat games/valheim/data`, los conteos de `data/meta.json`
    y su lista `withoutSource` (lo que quedó sin "de dónde sale").
 6. Si un campo cambió de nombre: `.venv/Scripts/python -m pipeline.peek <Clase>`.

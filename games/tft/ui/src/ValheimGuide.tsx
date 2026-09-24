@@ -4,11 +4,12 @@
  * con imágenes". Las imágenes son las del juego —la ilustración de cada bioma y
  * el arte de logro de cada jefe—; los consejos, los de Hugin.
  */
+import { useState } from "react";
 import { useLang } from "./i18n";
 import RouteLink from "./RouteLink";
 import { useValheimCopy } from "./valheimCopy";
-import { artUrl, clean, tx, type BiomeRow, type BossRow, type CreatureRow, type Tip } from "./valheimData";
-import { BiomeTags, Ing, pctChance, range, RefLink, Slot, type Nav, type To } from "./ValheimParts";
+import { artUrl, BIOME_IDS, clean, tx, type BiomeId, type BiomeRow, type BossRow, type CreatureRow, type Place, type PlaceRow, type Ref, type Tip } from "./valheimData";
+import { BiomeTags, Ing, pctChance, range, RefLink, Slot, WikiFigure, type Nav, type To } from "./ValheimParts";
 
 function Tips({ tips }: { tips: Tip[] }) {
   const t = useValheimCopy();
@@ -56,8 +57,10 @@ export function CreaturePage({ row, to, navigate }: { row: CreatureRow; to: To; 
           <hr className="vh-sep" />
           <div className="vh-cols">
             <div style={{ display: "grid", gap: 16, alignContent: "start" }}>
+              {row.photo && <WikiFigure photo={row.photo} alt={tx(row.name, lang)} className="is-creature" />}
               <div className="vh-kv"><div><span>{t.guide.health}</span><b>{row.health ?? "—"}</b></div></div>
               <Mods weak={row.weak} resist={row.resist} immune={row.immune} />
+              <FoundIn places={row.places} to={to} navigate={navigate} />
               {row.bossRef && (
                 <p className="vh-facts">{t.guide.boss}: <RefLink r={row.bossRef} to={to} navigate={navigate}><b>{tx(row.bossRef.name, lang)}</b></RefLink></p>
               )}
@@ -78,7 +81,7 @@ export function CreaturePage({ row, to, navigate }: { row: CreatureRow; to: To; 
 }
 
 /** El orden en que se agrupan los recursos: lo más habitual primero. */
-const HOW_ORDER = ["mine", "tree", "pickable", "destructible", "location", "fish"];
+const HOW_ORDER = ["mine", "tree", "pickable", "destructible", "extract", "location", "fish"];
 
 /**
  * Lo que se consigue en un bioma (rehecho el 2026-09-24 a pedido de ZoTaD):
@@ -213,6 +216,120 @@ export function BiomePage({ row, bosses, to, navigate }: { row: BiomeRow; bosses
           <Tips tips={row.tips} />
         </div>
       </div>
+      {(row.places ?? []).length > 0 && <Places places={row.places!} to={to} navigate={navigate} />}
+    </>
+  );
+}
+
+/** La tarjeta de un lugar: foto, nombre, tipo y quién vive ahí; lleva a su ficha. */
+function PlaceCard({ p, to, navigate }: { p: Place; to: To; navigate: Nav }) {
+  const t = useValheimCopy();
+  const { lang } = useLang();
+  return (
+    <RouteLink className="vh-place" to={to("places", p.slug ?? undefined)} onNavigate={navigate}>
+      {p.photo && <WikiFigure photo={p.photo} alt={tx(p.name, lang)} />}
+      <h4>{tx(p.name, lang)}{tx(p.type, lang) && <small>{tx(p.type, lang)}</small>}</h4>
+      {p.inhabitants.length > 0 && (
+        <div className="vh-place-who" aria-label={t.inhabitants}>
+          {p.inhabitants.map((c) => <span key={c.slug ?? c.name.en}>{tx(c.name, lang)}</span>)}
+        </div>
+      )}
+    </RouteLink>
+  );
+}
+
+/**
+ * Mazmorras y lugares del bioma, con foto y quién vive ahí (pedido de ZoTaD,
+ * 2026-09-24). Cada uno lleva a su ficha en la pestaña Lugares.
+ */
+function Places({ places, to, navigate }: { places: Place[]; to: To; navigate: Nav }) {
+  const t = useValheimCopy();
+  return (
+    <section className="vh-box" style={{ marginTop: 20 }}>
+      <p className="vh-h2">{t.places} · {places.length}</p>
+      <div className="vh-places">
+        {places.map((p) => <PlaceCard key={p.slug} p={p} to={to} navigate={navigate} />)}
+      </div>
+    </section>
+  );
+}
+
+/** Las fichas enlazadas de una lista (habitantes, botín, recursos), con su ícono. */
+function RefGrid({ title, refs, to, navigate }: { title: string; refs: Ref[]; to: To; navigate: Nav }) {
+  if (!refs.length) return null;
+  return (
+    <div>
+      <p className="vh-h2">{title} · {refs.length}</p>
+      <div className="vh-ings">{refs.map((r) => <Ing key={`${r.tab}/${r.slug ?? r.name.en}`} r={r} qty={null} to={to} navigate={navigate} />)}</div>
+    </div>
+  );
+}
+
+/** "Dónde aparece": los lugares de una criatura o un jefe. */
+export function FoundIn({ places, to, navigate }: { places: Ref[] | undefined; to: To; navigate: Nav }) {
+  const t = useValheimCopy();
+  const { lang } = useLang();
+  if (!places?.length) return null;
+  return (
+    <p className="vh-facts">
+      {t.foundIn}:{" "}
+      {places.map((p, i) => (
+        <span key={p.slug ?? p.name.en}>{i > 0 && ", "}<RefLink r={p} to={to} navigate={navigate}><b>{tx(p.name, lang)}</b></RefLink></span>
+      ))}
+    </p>
+  );
+}
+
+export function PlaceList({ places, to, navigate }: { places: PlaceRow[]; to: To; navigate: Nav }) {
+  const t = useValheimCopy();
+  const [biome, setBiome] = useState<BiomeId | null>(null);
+  const shown = places.filter((p) => !biome || p.biomes.includes(biome)).sort((a, b) => a.order - b.order || a.name.en.localeCompare(b.name.en));
+  const present = BIOME_IDS.filter((b) => places.some((p) => p.biomes.includes(b)));
+  return (
+    <>
+      <header className="vh-head"><h1>{t.tabs.places}</h1><p>{t.tabLede.places}</p></header>
+      <div className="vh-opts" style={{ margin: "0 0 16px" }}>
+        <button type="button" className="vh-chip" aria-pressed={biome === null} onClick={() => setBiome(null)}>{t.allBiomes}</button>
+        {present.map((b) => (
+          <button key={b} type="button" className="vh-chip" aria-pressed={biome === b} onClick={() => setBiome(b)}>{t.biomes[b]}</button>
+        ))}
+      </div>
+      <div className="vh-places">
+        {shown.map((p) => <PlaceCard key={p.slug} p={p} to={to} navigate={navigate} />)}
+      </div>
+    </>
+  );
+}
+
+export function PlacePage({ row, to, navigate }: { row: PlaceRow; to: To; navigate: Nav }) {
+  const t = useValheimCopy();
+  const { lang } = useLang();
+  return (
+    <>
+      <RouteLink className="vh-back" to={to("places")} onNavigate={navigate}>{t.detail.back(t.tabs.places)}</RouteLink>
+      <article className="vh-frame">
+        <div className="vh-inset vh-detail">
+          <div className="vh-guide" style={{ marginTop: 0 }}>
+            <div style={{ display: "grid", gap: 18, alignContent: "start" }}>
+              <header>
+                <h1 style={{ margin: 0, font: "700 clamp(30px, 4vw, 44px)/1 var(--vh-serif)", color: "var(--vh-brass-lt)" }}>{tx(row.name, lang)}</h1>
+                <div className="vh-alt" style={{ marginTop: 6, color: "var(--vh-faint)" }}>{tx(row.type, lang)} · {lang === "es" ? row.name.en : row.name.es}</div>
+                <div style={{ marginTop: 10, display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {row.biomes.map((b) => (
+                    <RouteLink key={b} to={to("biomes", b)} onNavigate={navigate} style={{ textDecoration: "none" }}><BiomeTags ids={[b]} /></RouteLink>
+                  ))}
+                </div>
+              </header>
+              <RefGrid title={t.inhabitants} refs={row.inhabitants} to={to} navigate={navigate} />
+              <RefGrid title={t.placeResources} refs={row.resources} to={to} navigate={navigate} />
+              <RefGrid title={t.placeLoot} refs={row.loot} to={to} navigate={navigate} />
+            </div>
+            <div style={{ display: "grid", gap: 18, alignContent: "start" }}>
+              {row.photo && <WikiFigure photo={row.photo} alt={tx(row.name, lang)} />}
+            </div>
+          </div>
+        </div>
+      </article>
     </>
   );
 }
@@ -239,6 +356,7 @@ export function BossPage({ row, to, navigate }: { row: BossRow; to: To; navigate
               </header>
               <div className="vh-kv"><div><span>{t.guide.health}</span><b>{row.health}</b></div></div>
               <Mods weak={row.weak} resist={row.resist} immune={row.immune} />
+              <FoundIn places={row.places} to={to} navigate={navigate} />
               {item && (
                 <div>
                   <p className="vh-h2">{t.guide.summon}</p>
@@ -266,6 +384,7 @@ export function BossPage({ row, to, navigate }: { row: BossRow; to: To; navigate
             </div>
             <div style={{ display: "grid", gap: 18, alignContent: "start" }}>
               {row.art && <img className="vh-bossart" src={artUrl(row.art)} alt={tx(row.name, lang)} width={256} height={256} />}
+              {row.photo && <WikiFigure photo={row.photo} alt={tx(row.name, lang)} />}
               <Tips tips={row.tips} />
             </div>
           </div>

@@ -47,7 +47,7 @@ function SourceLine({ s, to, navigate, t, lang }: { s: Source; to: To; navigate:
       body = <><RefLink r={s.ref} to={to} navigate={navigate} className="vh-src-who">{s.ref?.icon && <Slot icon={s.ref.icon} size="xs" />}{tx(s.ref?.name, lang)}</RefLink> <span>{range(s.min ?? 1, s.max ?? 1)}{s.chance != null && s.chance < 1 ? ` · ${pctChance(s.chance)}` : ""}</span></>;
       break;
     case "gather":
-      body = <b>{t.how[s.how ?? ""] ?? s.how}</b>;
+      body = <><b>{t.how[s.how ?? ""] ?? s.how}</b>{s.name ? <span>{tx(s.name, lang)}</span> : null}</>;
       break;
     case "farm":
       body = <b>{tx(s.name, lang) || t.how.farm}</b>;
@@ -332,6 +332,7 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
               {req.length > 0 && !item?.chain && (
                 <div>
                   <p className="vh-h2">{t.detail.recipe}{recipe && recipe.amount > 1 ? ` · ${t.detail.makes(recipe.amount)}` : ""}</p>
+                  {recipe?.anyOne && <p className="vh-dim" style={{ margin: "0 0 8px", fontSize: 13.5 }}>{t.detail.anyOne}</p>}
                   <div className="vh-ings">
                     {req.map((q) => <Ing key={q.slug ?? q.name.en} r={q} qty={q.amount} to={to} navigate={navigate} />)}
                   </div>

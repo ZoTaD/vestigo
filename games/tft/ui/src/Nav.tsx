@@ -191,7 +191,7 @@ export default function Nav({
                 >
                   <span className="top-hit-ic">
                     {h.icon ? <img src={iconUrl(h.icon)} alt="" width={28} height={28} loading="lazy" />
-                      : h.art ? <img src={artUrl(h.art)} alt="" width={28} height={28} loading="lazy" className="is-art" /> : null}
+                      : h.art || h.photo ? <img src={h.photo ?? artUrl(h.art)} alt="" width={28} height={28} loading="lazy" className="is-art" /> : null}
                   </span>
                   <span className="top-hit-n">
                     {lang === "es" ? h.es : h.en}

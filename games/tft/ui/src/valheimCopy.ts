@@ -30,10 +30,19 @@ const EN = {
   clear: "Clear filters",
   filtersTitle: "Filters",
   count: (n: number, total: number) => (n === total ? `${total}` : `${n} of ${total}`),
-  fromGame: "Names, numbers and pictures come from the game files (Valheim 1.0). Valheim is a game by Iron Gate; Vestigo is not affiliated with it.",
+  fromGame: "Names, numbers, icons and biome art come from the game files (Valheim 1.0), checked against the Valheim Wiki. Valheim is a game by Iron Gate; Vestigo is not affiliated with it.",
+  photoBy: (a: string | null) => (a ? `Photo: ${a} / Valheim Wiki` : "Photo: Valheim Wiki"),
+  places: "Dungeons and places",
+  inhabitants: "Who lives there",
+  placeLoot: "In its chests",
+  placeResources: "What you find there",
+  foundIn: "Where it shows up",
+  allBiomes: "All",
+  wikiCredit: "Places, habitats and photos of creatures and places:",
+  wikiLicense: "under CC BY-SA 3.0 (the author of each photo shows when you hover it).",
   tabs: {
     foods: "Food", meads: "Meads", weapons: "Weapons", armor: "Armor", tools: "Tools",
-    building: "Building", materials: "Materials", creatures: "Creatures", biomes: "Biomes", bosses: "Bosses",
+    building: "Building", materials: "Materials", creatures: "Creatures", biomes: "Biomes", places: "Places", bosses: "Bosses",
   } as Record<ValheimTab, string>,
   tabLede: {
     foods: "Everything you can eat: what it gives, how long it lasts and how to cook it.",
@@ -45,6 +54,7 @@ const EN = {
     materials: "Every material and trophy, where it comes from and what it is for.",
     creatures: "Every creature: health, what hurts it, what it drops and where it lives.",
     biomes: "The nine biomes in order: what lives there, what you find, what to bring and who rules it.",
+    places: "Dungeons, ruins and landmarks of every biome: who lives inside and what you can find there.",
     bosses: "The Forsaken: how to summon them, what hurts them and the power they leave.",
   } as Record<ValheimTab, string>,
   biomes: {
@@ -67,7 +77,7 @@ const EN = {
   effect: { health: "Healing", stamina: "Stamina", eitr: "Eitr", resist: "Resistance", other: "Other" } as Record<string, string>,
   how: {
     drop: "Hunting", pickable: "Picking", mine: "Mining", tree: "Chopping", destructible: "Breaking things", fish: "Fishing",
-    chest: "In chests", location: "In dungeons", farm: "Farming", trader: "Buying", craft: "Crafting", convert: "Processing",
+    chest: "In chests", location: "In dungeons", extract: "Extracting", farm: "Farming", trader: "Buying", craft: "Crafting", convert: "Processing",
   } as Record<string, string>,
   tool: { Hammer: "Hammer", Hoe: "Hoe", Cultivator: "Cultivator", Feaster: "Serving tray" } as Record<string, string>,
   filters: {
@@ -87,6 +97,7 @@ const EN = {
   detail: {
     back: (tab: string) => `← ${tab}`,
     recipe: "Recipe",
+    anyOne: "Any one of these is enough.",
     madeAt: "Made at",
     makes: (n: number) => `Makes ${n}`,
     upgrades: "Upgrades",
@@ -212,10 +223,19 @@ const ES: typeof EN = {
   clear: "Limpiar filtros",
   filtersTitle: "Filtros",
   count: (n, total) => (n === total ? `${total}` : `${n} de ${total}`),
-  fromGame: "Nombres, números e imágenes salen de los archivos del juego (Valheim 1.0). Valheim es un juego de Iron Gate; Vestigo no está afiliado.",
+  fromGame: "Nombres, números, íconos e ilustraciones de biomas salen de los archivos del juego (Valheim 1.0), revisados contra la Valheim Wiki. Valheim es un juego de Iron Gate; Vestigo no está afiliado.",
+  photoBy: (a: string | null) => (a ? `Foto: ${a} / Valheim Wiki` : "Foto: Valheim Wiki"),
+  places: "Mazmorras y lugares",
+  inhabitants: "Quién vive ahí",
+  placeLoot: "En sus cofres",
+  placeResources: "Qué se encuentra ahí",
+  foundIn: "Dónde aparece",
+  allBiomes: "Todos",
+  wikiCredit: "Lugares, hábitats y fotos de criaturas y lugares:",
+  wikiLicense: "bajo licencia CC BY-SA 3.0 (el autor de cada foto aparece al pasar el cursor).",
   tabs: {
     foods: "Comidas", meads: "Hidromieles", weapons: "Armas", armor: "Armaduras", tools: "Herramientas",
-    building: "Construcción", materials: "Materiales", creatures: "Criaturas", biomes: "Biomas", bosses: "Jefes",
+    building: "Construcción", materials: "Materiales", creatures: "Criaturas", biomes: "Biomas", places: "Lugares", bosses: "Jefes",
   },
   tabLede: {
     foods: "Todo lo que se come: cuánto da, cuánto dura y cómo se cocina.",
@@ -227,6 +247,7 @@ const ES: typeof EN = {
     materials: "Cada material y trofeo, de dónde sale y para qué sirve.",
     creatures: "Cada criatura: vida, qué le hace daño, qué suelta y dónde vive.",
     biomes: "Los nueve biomas en orden: qué vive ahí, qué encuentras, qué llevar y quién manda.",
+    places: "Mazmorras, ruinas y lugares de cada bioma: quién vive adentro y qué se encuentra ahí.",
     bosses: "Los Desterrados: cómo invocarlos, qué les pega y el poder que dejan.",
   },
   biomes: {
@@ -249,7 +270,7 @@ const ES: typeof EN = {
   effect: { health: "Curación", stamina: "Aguante", eitr: "Eitr", resist: "Resistencia", other: "Otros" },
   how: {
     drop: "Cazando", pickable: "Recogiendo", mine: "Minando", tree: "Talando", destructible: "Rompiendo objetos", fish: "Pescando",
-    chest: "En cofres", location: "En mazmorras", farm: "Cultivando", trader: "Comprando", craft: "Fabricando", convert: "Procesando",
+    chest: "En cofres", location: "En mazmorras", extract: "Extrayendo", farm: "Cultivando", trader: "Comprando", craft: "Fabricando", convert: "Procesando",
   },
   tool: { Hammer: "Martillo", Hoe: "Azada", Cultivator: "Cultivador", Feaster: "Bandeja" },
   filters: {
@@ -269,6 +290,7 @@ const ES: typeof EN = {
   detail: {
     back: (tab) => `← ${tab}`,
     recipe: "Receta",
+    anyOne: "Alcanza con uno cualquiera de estos.",
     madeAt: "Se hace en",
     makes: (n) => `Hace ${n}`,
     upgrades: "Mejoras",
