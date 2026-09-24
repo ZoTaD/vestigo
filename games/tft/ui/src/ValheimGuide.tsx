@@ -285,10 +285,12 @@ export function FoundIn({ places, to, navigate }: { places: Ref[] | undefined; t
   if (!places?.length) return null;
   return (
     <p className="vh-facts">
-      {t.foundIn}:{" "}
-      {places.map((p, i) => (
-        <span key={p.slug ?? p.name.en}>{i > 0 && ", "}<RefLink r={p} to={to} navigate={navigate}><b>{tx(p.name, lang)}</b></RefLink></span>
-      ))}
+      <span>{t.foundIn}:</span>
+      <span>
+        {places.map((p, i) => (
+          <span key={p.slug ?? p.name.en}>{i > 0 && ", "}<RefLink r={p} to={to} navigate={navigate}><b>{tx(p.name, lang)}</b></RefLink></span>
+        ))}
+      </span>
     </p>
   );
 }

@@ -64,7 +64,7 @@ if(n===imgs.length)document.getElementById('n').className='ok';}};imgs.forEach(i
 
 def import_saved(path: str | None) -> None:
     if not path:
-        found = sorted(glob.glob(os.path.join(os.path.expanduser("~"), "Downloads", "fotos-valheim*.htm*")), key=os.path.getmtime)
+        found = sorted([f for pat in ("fotos-valheim*.htm*", "Fotos de Valheim*.htm*") for f in glob.glob(os.path.join(os.path.expanduser("~"), "Downloads", pat))], key=os.path.getmtime)
         if not found:
             raise SystemExit("no encontré fotos-valheim*.html en Descargas: pasá la ruta")
         path = found[-1]
