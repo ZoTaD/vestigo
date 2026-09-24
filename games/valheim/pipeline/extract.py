@@ -210,8 +210,16 @@ def main() -> None:
 
     # --- Piezas, con la herramienta que las construye
     pieces = {}
+    piece_categories = {}
     for t in g.components("PieceTable"):
         tool = build_tables.get(t.go) or build_tables.get(t.key)
+        # Las pestañas del menú de cada herramienta. El martillo trae una
+        # sin token ("DEEPNORTH"); se nombra con el bioma.
+        labels = {}
+        for cat, tok in zip(t.tree.get("m_categories", []), t.tree.get("m_categoryLabels", [])):
+            labels[str(cat)] = loc.t(tok) or (loc.t("biome_deepnorth") if tok == "DEEPNORTH" else {"en": tok, "es": tok})
+        if tool and labels:
+            piece_categories[tool] = labels
         for p in t.tree["m_pieces"]:
             go = g.ref(t.file, p)
             for pc in g.comps_on(go):
@@ -480,6 +488,7 @@ def main() -> None:
     dump("bosses.json", sorted(bosses.values(), key=lambda b: b["order"]))
     dump("environments.json", environments)
     dump("hugin.json", hugin)
+    dump("piece_categories.json", piece_categories)
     dump("biomes.json", [{"id": bid, "bit": bit, "name": loc.t(tok)} for bit, bid, tok in BIOMES])
     n_ui, n_fonts, n_art = export_ui(g), export_fonts(g), export_art(g)
     counts = {"items": len(items), "recipes": len(recipes), "pieces": len(pieces), "conversions": len(conversions),

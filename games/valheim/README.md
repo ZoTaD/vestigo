@@ -11,15 +11,19 @@ Action.
 2. Si no existe el entorno:
    `python -m venv games/valheim/.venv` y
    `games/valheim/.venv/Scripts/python -m pip install UnityPy TypeTreeGeneratorAPI`.
-3. `cd games/valheim && .venv/Scripts/python -m pipeline.extract` (~3-4 min).
-4. Revisar `git diff --stat games/valheim/data`, los conteos de `data/meta.json`
+3. `cd games/valheim && .venv/Scripts/python -m pipeline.extract` (~4 min).
+4. `.venv/Scripts/python -m pipeline.site` (arma `data/site/`, lo que lee la
+   web) y `.venv/Scripts/python -m pipeline.check_links` (tiene que dar 0).
+5. Revisar `git diff --stat games/valheim/data`, los conteos de `data/meta.json`
    y su lista `withoutSource` (lo que quedó sin "de dónde sale").
-5. Si un campo cambió de nombre: `.venv/Scripts/python -m pipeline.peek <Clase>`.
+6. Si un campo cambió de nombre: `.venv/Scripts/python -m pipeline.peek <Clase>`.
 
 Tests: `cd games/valheim && .venv/Scripts/python -m unittest discover -s pipeline/tests -t . -v`.
 
 ## Qué escribe
 
+- `data/site/*.json`: una lista por pestaña con todo resuelto, las guías de
+  biomas y jefes y el índice buscable. Es lo único que lee la web.
 - `data/*.json`: objetos, recetas, piezas, conversiones, estaciones, criaturas,
   recolectables, cultivos, comerciantes y biomas, con nombres `{en, es}`.
 - `../tft/ui/public/valheim/icons/*.webp`: íconos de objetos, piezas y estaciones.

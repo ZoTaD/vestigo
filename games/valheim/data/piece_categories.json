@@ -1,0 +1,42 @@
+{
+ "Feaster": {
+  "5": {
+   "en": "Feasts",
+   "es": "Banquetes"
+  },
+  "6": {
+   "en": "Food",
+   "es": "Comida"
+  },
+  "7": {
+   "en": "Mead",
+   "es": "Hidromiel"
+  }
+ },
+ "Hammer": {
+  "0": {
+   "en": "Misc.",
+   "es": "Misceláneo"
+  },
+  "1": {
+   "en": "Crafting",
+   "es": "Elaboración"
+  },
+  "2": {
+   "en": "Building",
+   "es": "Construcción"
+  },
+  "3": {
+   "en": "Heavy Build",
+   "es": "Construcciones pesadas"
+  },
+  "4": {
+   "en": "Furniture",
+   "es": "Decoración"
+  },
+  "5": {
+   "en": "Deep North",
+   "es": "Norte profundo"
+  }
+ }
+}
