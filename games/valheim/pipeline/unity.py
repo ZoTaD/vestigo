@@ -109,6 +109,31 @@ class Game:
                         out.append(go)
         return out
 
+    def root_name(self, go_key: tuple | None, depth: int = 12) -> str | None:
+        """
+        El nombre del GameObject raíz, subiendo por los Transform. Un
+        recolectable puesto dentro de una ubicación (el alquitrán del pozo, el
+        cristal de la cueva) tiene de raíz el prefab de esa ubicación, y la
+        ubicación dice su bioma.
+        """
+        key = go_key
+        for _ in range(depth):
+            o = self._objs.get(key) if key else None
+            if o is None or o.type.name != "GameObject":
+                return None
+            parent = None
+            for comp in o.read_typetree().get("m_Component", []):
+                t = self._objs.get(self.ref(o.assets_file, comp.get("component")))
+                if t is not None and t.type.name in ("Transform", "RectTransform"):
+                    father = self._objs.get(self.ref(t.assets_file, t.read_typetree().get("m_Father")))
+                    if father is not None:
+                        parent = self.ref(father.assets_file, father.read_typetree().get("m_GameObject"))
+                    break
+            if not parent:
+                return o.peek_name()
+            key = parent
+        return None
+
     def comps_in_tree(self, go_key: tuple | None, depth: int = 4) -> list[Comp]:
         """
         Los componentes de un GameObject y de sus hijos.

@@ -1,5 +1,5 @@
 import unittest
-from pipeline.tiers import item_tier, mead_effect, food_focus, weapon_class, armor_slot
+from pipeline.tiers import Tiers, mead_effect, food_focus, weapon_class, armor_slot
 
 ITEMS = {
     "Wood": {"sources": [{"kind": "gather", "biomes": ["meadows", "blackforest"]}]},
@@ -10,32 +10,56 @@ ITEMS = {
     "Sword": {"sources": [{"kind": "craft"}]},
     "Loop": {"sources": [{"kind": "craft"}]},
     "Chest": {"sources": [{"kind": "gather", "how": "chest", "biomes": []}]},
+    # La cebolla se planta en las Praderas, pero la semilla sale de la Montaña.
+    "OnionSeeds": {"sources": [{"kind": "gather", "how": "chest", "biomes": ["mountain"]}, {"kind": "farm", "from": "sapling_seedonion", "biomes": ["meadows"]}]},
+    "Onion": {"sources": [{"kind": "farm", "from": "sapling_onion", "biomes": ["meadows", "blackforest"]}]},
+    "Dandelion": {"sources": [{"kind": "gather", "biomes": ["meadows"]}]},
+    "OnionSoup": {"sources": [{"kind": "craft"}]},
+    "Tea": {"sources": [{"kind": "craft"}]},
 }
 RECIPES = {
-    "Sword": [{"item": "Wood", "amount": 2}, {"item": "Silver", "amount": 10}, {"item": "Bronze", "amount": 5}],
-    "Loop": [{"item": "Loop", "amount": 1}],
+    "Sword": {"station": None, "level": 1, "requirements": [{"item": "Wood"}, {"item": "Silver"}, {"item": "Bronze"}]},
+    "Loop": {"station": None, "level": 1, "requirements": [{"item": "Loop"}]},
+    "OnionSoup": {"station": "piece_cauldron", "level": 2, "requirements": [{"item": "Onion"}]},
+    # Sólo diente de león, pero en el caldero nivel 3: la mesa de carnicero es de la Montaña.
+    "Tea": {"station": "piece_cauldron", "level": 3, "requirements": [{"item": "Dandelion"}]},
+}
+PIECES = {
+    "sapling_onion": {"requirements": [{"item": "OnionSeeds"}], "station": None},
+    "sapling_seedonion": {"requirements": [{"item": "Onion"}], "station": None},
+    "cauldron": {"requirements": [{"item": "Copper"}], "station": None},
+    "ext1": {"requirements": [{"item": "Dandelion"}], "station": None},
+    "ext2": {"requirements": [{"item": "Silver"}], "station": None},
 }
 CONV = {"Bronze": ["Copper"]}
 
 
+def tier(iid):
+    return Tiers(ITEMS, RECIPES, CONV, PIECES, {"piece_cauldron": "cauldron"}, {"cauldron": ["ext1", "ext2"]}).item(iid)
+
+
 class TestTier(unittest.TestCase):
     def test_junta_toma_el_primer_bioma(self):
-        self.assertEqual(item_tier("Wood", ITEMS, RECIPES, CONV), "meadows")
+        self.assertEqual(tier("Wood"), "meadows")
 
     def test_convertido_hereda_su_origen(self):
-        self.assertEqual(item_tier("Bronze", ITEMS, RECIPES, CONV), "blackforest")
+        self.assertEqual(tier("Bronze"), "blackforest")
 
     def test_fabricado_toma_el_ingrediente_mas_avanzado(self):
-        self.assertEqual(item_tier("Sword", ITEMS, RECIPES, CONV), "mountain")
-
-    def test_gana_la_forma_mas_temprana(self):
-        self.assertEqual(item_tier("Bronze", ITEMS, RECIPES, CONV), "blackforest")
+        self.assertEqual(tier("Sword"), "mountain")
 
     def test_ciclo_no_cuelga(self):
-        self.assertIsNone(item_tier("Loop", ITEMS, RECIPES, CONV))
+        self.assertIsNone(tier("Loop"))
 
     def test_sin_bioma(self):
-        self.assertIsNone(item_tier("Chest", ITEMS, RECIPES, CONV))
+        self.assertIsNone(tier("Chest"))
+
+    def test_cultivo_toma_el_bioma_de_la_semilla(self):
+        self.assertEqual(tier("Onion"), "mountain")
+
+    def test_la_receta_cuenta_el_nivel_de_estacion(self):
+        self.assertEqual(tier("OnionSoup"), "mountain")
+        self.assertEqual(tier("Tea"), "mountain")
 
 
 class TestCategorias(unittest.TestCase):

@@ -6,7 +6,7 @@
   "creatures": 155,
   "farms": 18,
   "fonts": 4,
-  "gatherables": 186,
+  "gatherables": 206,
   "icons": 1327,
   "items": 956,
   "pieces": 548,
@@ -14,7 +14,7 @@
   "traders": 3,
   "ui": 29
  },
- "extractedAt": "2026-09-24T18:51:34Z",
+ "extractedAt": "2026-09-24T21:10:32Z",
  "unity": "6000.0.75f1",
  "withoutSource": [
   "AsksvinCarrionNeck",
@@ -34,7 +34,6 @@
   "FrozenFuel",
   "GoldOre",
   "JuteBlue",
-  "QueenBee",
   "Sap",
   "VineberrySeeds",
   "Wisp",

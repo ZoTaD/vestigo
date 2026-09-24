@@ -1134,11 +1134,6 @@
  },
  "Charred_Archer": {
   "biomes": [
-   "meadows",
-   "blackforest",
-   "swamp",
-   "mountain",
-   "plains",
    "ashlands"
   ],
   "boss": false,
@@ -1244,11 +1239,6 @@
  },
  "Charred_Melee": {
   "biomes": [
-   "meadows",
-   "blackforest",
-   "swamp",
-   "mountain",
-   "plains",
    "ashlands"
   ],
   "boss": false,
@@ -1564,11 +1554,7 @@
  },
  "Draugr": {
   "biomes": [
-   "meadows",
-   "blackforest",
-   "swamp",
-   "mountain",
-   "plains"
+   "swamp"
   ],
   "boss": false,
   "drops": [
@@ -2974,9 +2960,6 @@
  },
  "Goblin": {
   "biomes": [
-   "meadows",
-   "blackforest",
-   "mountain",
    "plains"
   ],
   "boss": false,
@@ -3420,7 +3403,6 @@
  },
  "Greydwarf": {
   "biomes": [
-   "meadows",
    "blackforest"
   ],
   "boss": false,
@@ -3482,7 +3464,6 @@
  },
  "Greydwarf_Elite": {
   "biomes": [
-   "meadows",
    "blackforest"
   ],
   "boss": false,
@@ -3619,7 +3600,6 @@
  },
  "Greydwarf_Shaman": {
   "biomes": [
-   "meadows",
    "blackforest"
   ],
   "boss": false,
@@ -4632,11 +4612,6 @@
  },
  "Seeker": {
   "biomes": [
-   "meadows",
-   "blackforest",
-   "swamp",
-   "mountain",
-   "plains",
    "mistlands"
   ],
   "boss": false,

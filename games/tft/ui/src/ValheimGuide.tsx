@@ -77,6 +77,77 @@ export function CreaturePage({ row, to, navigate }: { row: CreatureRow; to: To; 
   );
 }
 
+/** El orden en que se agrupan los recursos: lo más habitual primero. */
+const HOW_ORDER = ["mine", "tree", "pickable", "destructible", "location", "fish"];
+
+/**
+ * Lo que se consigue en un bioma (rehecho el 2026-09-24 a pedido de ZoTaD):
+ * los recursos de la zona agrupados por cómo se juntan, lo que sueltan sus
+ * criaturas (pieles, carnes, trofeos), lo que se puede plantar y, aparte, el
+ * botín al azar de cofres y vasijas.
+ */
+function BiomeResources({ row, to, navigate }: { row: BiomeRow; to: To; navigate: Nav }) {
+  const t = useValheimCopy();
+  const { lang } = useLang();
+  const groups = new Map<string, BiomeRow["resources"]>();
+  for (const r of row.resources) {
+    const how = HOW_ORDER.find((h) => r.how.includes(h)) ?? r.how[0];
+    groups.set(how, [...(groups.get(how) ?? []), r]);
+  }
+  const drops = row.creatureDrops ?? [];
+  return (
+    <>
+      <section className="vh-box">
+        <p className="vh-h2">{t.guide.resources} · {row.resources.length}</p>
+        <div className="vh-resgroups">
+          {HOW_ORDER.filter((h) => groups.has(h)).map((h) => (
+            <div key={h}>
+              <p className="vh-src-k">{t.how[h] ?? h}</p>
+              <div className="vh-ings">
+                {groups.get(h)!.map((r) => <Ing key={r.slug ?? r.name.en} r={r} qty={null} to={to} navigate={navigate} />)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+      {drops.length > 0 && (
+        <section className="vh-box">
+          <p className="vh-h2">{t.guide.fromCreatures} · {drops.length}</p>
+          <div className="vh-ings">
+            {drops.map((d) => (
+              <RefLink key={`${d.tab}/${d.slug}`} r={d} to={to} navigate={navigate} className="vh-ing">
+                <Slot icon={d.icon} />
+                <span>{tx(d.name, lang)}<small className="vh-ing-from">{t.guide.dropsFrom(d.from.map((c) => tx(c.name, lang)).join(", "))}</small></span>
+              </RefLink>
+            ))}
+          </div>
+        </section>
+      )}
+      {(row.plant ?? []).length > 0 && (
+        <section className="vh-box">
+          <p className="vh-h2">{t.guide.plant} · {row.plant!.length}</p>
+          <div className="vh-ings">{row.plant!.map((r) => <Ing key={r.slug ?? r.name.en} r={r} qty={null} to={to} navigate={navigate} />)}</div>
+        </section>
+      )}
+      {(row.loot ?? []).length > 0 && (
+        <section className="vh-box">
+          <p className="vh-h2">{t.guide.loot} · {row.loot!.length}</p>
+          <p className="vh-dim" style={{ margin: "0 0 10px", fontSize: 13.5 }}>{t.guide.lootHint}</p>
+          <div className="vh-mosaic">
+            {row.loot!.map((r) => (
+              <RefLink key={`${r.tab}/${r.slug}`} r={r} to={to} navigate={navigate} className="vh-slot is-sm">
+                <span title={tx(r.name, lang)} style={{ display: "contents" }}>
+                  {r.icon && <img src={`/valheim/icons/${r.icon}.webp`} alt={tx(r.name, lang)} loading="lazy" width={30} height={30} />}
+                </span>
+              </RefLink>
+            ))}
+          </div>
+        </section>
+      )}
+    </>
+  );
+}
+
 export function BiomePage({ row, bosses, to, navigate }: { row: BiomeRow; bosses: BossRow[]; to: To; navigate: Nav }) {
   const t = useValheimCopy();
   const { lang } = useLang();
@@ -116,12 +187,7 @@ export function BiomePage({ row, bosses, to, navigate }: { row: BiomeRow; bosses
               ))}
             </div>
           </section>
-          <section className="vh-box">
-            <p className="vh-h2">{t.guide.resources} · {row.resources.length}</p>
-            <div className="vh-ings">
-              {row.resources.map((r) => <Ing key={r.slug ?? r.name.en} r={r} qty={null} to={to} navigate={navigate} />)}
-            </div>
-          </section>
+          <BiomeResources row={row} to={to} navigate={navigate} />
         </div>
         <div style={{ display: "grid", gap: 20 }}>
           {boss && (

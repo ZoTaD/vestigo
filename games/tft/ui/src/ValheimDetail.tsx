@@ -43,7 +43,8 @@ function SourceLine({ s, to, navigate, t, lang }: { s: Source; to: To; navigate:
       body = <><RefLink r={s.ref} to={to} navigate={navigate}>{tx(s.ref?.name, lang)}</RefLink> → <RefLink r={s.station} to={to} navigate={navigate}>{tx(s.station?.name, lang)}</RefLink>{s.time ? ` · ${s.time < 60 ? `${Math.round(s.time)} s` : t.minutes(Math.round(s.time / 60))}` : ""}</>;
       break;
     case "drop":
-      body = <><RefLink r={s.ref} to={to} navigate={navigate}>{tx(s.ref?.name, lang)}</RefLink> <span>{range(s.min ?? 1, s.max ?? 1)}{s.chance != null && s.chance < 1 ? ` · ${pctChance(s.chance)}` : ""}</span></>;
+      // Con la imagen de la criatura (su trofeo, o lo que suelta si no tiene), pedido de ZoTaD.
+      body = <><RefLink r={s.ref} to={to} navigate={navigate} className="vh-src-who">{s.ref?.icon && <Slot icon={s.ref.icon} size="xs" />}{tx(s.ref?.name, lang)}</RefLink> <span>{range(s.min ?? 1, s.max ?? 1)}{s.chance != null && s.chance < 1 ? ` · ${pctChance(s.chance)}` : ""}</span></>;
       break;
     case "gather":
       body = <b>{t.how[s.how ?? ""] ?? s.how}</b>;

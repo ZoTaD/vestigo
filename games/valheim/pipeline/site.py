@@ -17,11 +17,15 @@ import unicodedata
 from collections import defaultdict
 
 from .biomes import BIOMES, BIOME_ORDER
-from .tiers import armor_slot, food_focus, item_tier, mead_effect, weapon_class
+from .tiers import Tiers, armor_slot, food_focus, mead_effect, weapon_class
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.normpath(os.path.join(HERE, "..", "data"))
 OUT = os.path.join(DATA, "site")
+
+# Los rompibles que son botín al azar (las vasijas de la Tierra de Ceniza dan
+# bronce y plata) y no un recurso de la zona.
+LOOT_RE = re.compile(r"pot\d|_pot|urn|vase|barrel|crate|loot", re.I)
 
 KIND_TAB = {"food": "foods", "mead": "meads", "weapon": "weapons", "armor": "armor", "tool": "tools",
             "ammo": "tools", "material": "materials", "trophy": "materials", "misc": "materials"}
@@ -40,6 +44,12 @@ HUGIN_BIOME = {
 HUGIN_BOSS = {"Eikthyr": ["altar", "bosstrophy", "stemple4"], "Bonemass": ["wishbone"],
               "FrozenKing": ["prison", "sacrificialblood", "end_hugin"]}
 HUGIN_ALL_BOSSES = ["altar", "bosstrophy"]
+
+
+def ext_order(pid: str) -> int:
+    """El orden de una mejora de estación: el número de su id (cauldron_ext3_… → 3); "…_ext" a secas es 1."""
+    m = re.search(r"ext(\d*)", pid)
+    return int(m.group(1) or 1) if m else 99
 
 
 def slugify(name: str) -> str:
@@ -135,7 +145,18 @@ def main() -> None:
         r = ref.get(f"piece:{pid}") if pid else None
         return {"slug": r["slug"] if r else None, "tab": "building" if r else None, "name": name, "icon": st.get("icon") or (r or {}).get("icon")}
 
-    tier = {pid: item_tier(pid, items, req_by_item and {k: v for k, v in req_by_item.items()}, conv_from) for pid in items}
+    # El bioma de progresión (tiers.py): sigue semillas, conversiones, recetas
+    # y el nivel de estación que pide cada receta.
+    station_piece = {tok: piece_by_en.get((st.get("name") or {}).get("en")) for tok, st in stations.items()}
+    station_piece = {k: v for k, v in station_piece.items() if v}
+    ups_by_station = defaultdict(list)
+    for pid, p in pieces.items():
+        if p.get("extends") and p["extends"] in station_piece:
+            ups_by_station[station_piece[p["extends"]]].append(pid)
+    for lst in ups_by_station.values():
+        lst.sort(key=lambda x: (ext_order(x), x))
+    tiers = Tiers(items, recipe_by_item, conv_from, pieces, station_piece, ups_by_station)
+    tier = {pid: tiers.item(pid) for pid in items}
     gname = {g["id"]: g.get("name") for g in gatherables}
     fname = {f["id"]: f.get("name") for f in farms}
 
@@ -233,12 +254,8 @@ def main() -> None:
     # la suben de nivel puestas cerca, cada una +1. Van en el orden de sus ids
     # (cauldron_ext1_spice, …_ext3_butchertable, …), que es el de progresión
     # que les dieron los desarrolladores; "piece_magetable_ext" a secas es la 1.
-    def ext_order(pid):
-        m = re.search(r"ext(\d*)", pid)
-        return int(m.group(1) or 1) if m else 99
-
     def piece_tier(p):
-        return max((t for t in (tier.get(q["item"]) for q in p["requirements"]) if t), key=BIOME_ORDER.index, default=None)
+        return tiers.piece(p["id"])
 
     upgrades = defaultdict(list)
     for pid, p in pieces.items():
@@ -258,7 +275,7 @@ def main() -> None:
         tabs["building"].append({
             "id": pid, **ref[key], "desc": p["desc"], "tool": p["tool"], "category": p["category"], "categoryName": cat,
             "comfort": p["comfort"], "station": station_ref(p["station"]), "req": req_list(p["requirements"]),
-            "tier": max((t for t in (tier.get(q["item"]) for q in p["requirements"]) if t), key=BIOME_ORDER.index, default=None),
+            "tier": tiers.piece(pid),
             "processes": processes.get(slug) or None,
             "crafts": made or None,
             # Cada mejora con sus materiales y dónde se hace; la i-ésima deja la
@@ -296,15 +313,34 @@ def main() -> None:
     for bit, bid, _ in BIOMES:
         name = ref[f"biome:{bid}"]["name"]
         crs = sorted({c["name"]["en"]: c for c in tabs["creatures"] if bid in c["biomes"] and not c["boss"]}.values(), key=lambda c: c["health"] or 0)
-        res = {}
+        # Cuatro grupos (2026-09-24, ZoTaD vio el bronce "de la Tierra de Ceniza"
+        # y faltaban pieles y carnes): lo que da la zona, lo que sueltan sus
+        # criaturas, el botín de cofres y vasijas, y lo que se puede plantar.
+        res, loot = {}, {}
         for g in gatherables:
-            if bid in g["biomes"]:
-                for d in g["drops"]["items"]:
-                    if d["item"] in ref:
-                        res.setdefault(d["item"], {**ref[d["item"]], "how": set()})["how"].add(g["kind"])
+            if bid not in g["biomes"]:
+                continue
+            es_botin = g["kind"] == "chest" or (g["kind"] == "destructible" and LOOT_RE.search(g["id"]))
+            for d in g["drops"]["items"]:
+                if d["item"] not in ref:
+                    continue
+                if es_botin:
+                    loot.setdefault(d["item"], ref[d["item"]])
+                else:
+                    res.setdefault(d["item"], {**ref[d["item"]], "how": set()})["how"].add(g["kind"])
+        drops = {}
+        for c in crs:
+            for d in c["drops"]:
+                if d.get("slug"):
+                    e = drops.setdefault((d["tab"], d["slug"]), {k: d[k] for k in ("slug", "tab", "name", "icon")} | {"from": []})
+                    if c["slug"] not in {x["slug"] for x in e["from"]}:
+                        e["from"].append({k: c[k] for k in ("slug", "tab", "name")})
+        # Un cultivo que el juego deja plantar en 7 biomas o más es una regla
+        # general (la uva de vid salía "en el Océano"), no algo de la zona.
+        plant = {}
         for f in farms:
-            if bid in f["biomes"] and f["item"] in ref:
-                res.setdefault(f["item"], {**ref[f["item"]], "how": set()})["how"].add("farm")
+            if bid in f["biomes"] and f["item"] in ref and len(f["biomes"]) < 7:
+                plant.setdefault(f["item"], ref[f["item"]])
         foods = sorted((r for r in tabs["foods"] if r["tier"] == bid), key=lambda r: -(r["food"]["hp"] + r["food"]["st"] + r["food"]["eitr"]))
         boss = next((b for b in boss_rows if b["biome"] == bid), None)
         biome_rows.append({
@@ -312,6 +348,9 @@ def main() -> None:
             "env": environments.get(bid, {}),
             "creatures": [{k: c[k] for k in ("slug", "tab", "name", "icon", "health", "weak", "resist", "immune")} for c in crs],
             "resources": [{**v, "how": sorted(v["how"])} for v in res.values()],
+            "creatureDrops": sorted(drops.values(), key=lambda d: d["name"]["en"]),
+            "loot": sorted(loot.values(), key=lambda d: d["name"]["en"]),
+            "plant": sorted(plant.values(), key=lambda d: d["name"]["en"]),
             "foods": [{k: r[k] for k in ("slug", "tab", "name", "icon", "food")} for r in foods[:8]],
             "gear": {t: len([r for r in tabs[t] if r["tier"] == bid]) for t in ("weapons", "armor", "foods", "meads")},
             "boss": {k: boss[k] for k in ("slug", "tab", "name", "icon", "art")} if boss else None,

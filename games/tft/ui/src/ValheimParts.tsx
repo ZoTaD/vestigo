@@ -25,10 +25,11 @@ export function useTab<T extends ValheimTab>(tab: T | null): TabRows[T] | null {
 }
 
 /** La casilla de inventario del juego, con el ícono y la cantidad. */
-export function Slot({ icon, qty, size, alt = "" }: { icon: string | null | undefined; qty?: string | number | null; size?: "sm" | "lg"; alt?: string }) {
+export function Slot({ icon, qty, size, alt = "" }: { icon: string | null | undefined; qty?: string | number | null; size?: "xs" | "sm" | "lg"; alt?: string }) {
+  const px = size === "lg" ? 84 : size === "sm" ? 30 : size === "xs" ? 20 : 42;
   return (
     <span className={`vh-slot${size ? ` is-${size}` : ""}`}>
-      {icon && <img src={iconUrl(icon)} alt={alt} loading="lazy" width={size === "lg" ? 84 : size === "sm" ? 30 : 42} height={size === "lg" ? 84 : size === "sm" ? 30 : 42} />}
+      {icon && <img src={iconUrl(icon)} alt={alt} loading="lazy" width={px} height={px} />}
       {qty != null && qty !== "" && <span className="vh-qty">{qty}</span>}
     </span>
   );

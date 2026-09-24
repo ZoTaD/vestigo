@@ -11,7 +11,7 @@ import RouteLink from "./RouteLink";
 import { PENDING_SEARCH_EVENT, takePendingSearch } from "./pendingSearch";
 import { VALHEIM_TABS, type Route, type ValheimSection, type ValheimTab } from "./route";
 import { useValheimCopy } from "./valheimCopy";
-import { artUrl, fold, iconUrl, loadIndex, peekIndex, tx, type AnyRow, type BiomeRow, type BossRow, type CreatureRow, type IndexEntry, type ItemRow, type PieceRow } from "./valheimData";
+import { artUrl, iconUrl, loadIndex, peekIndex, searchIndex, tx, type AnyRow, type BiomeRow, type BossRow, type CreatureRow, type IndexEntry, type ItemRow, type PieceRow } from "./valheimData";
 import type { ListTab } from "./valheimTabs";
 import { useTab, type Nav, type To } from "./ValheimParts";
 import ValheimList from "./ValheimList";
@@ -57,17 +57,7 @@ function GlobalSearch({ index, to, navigate }: { index: IndexEntry[]; to: To; na
     window.addEventListener(PENDING_SEARCH_EVENT, take);
     return () => window.removeEventListener(PENDING_SEARCH_EVENT, take);
   }, []);
-  const hits = useMemo(() => {
-    const f = fold(q.trim());
-    if (f.length < 2) return [];
-    const starts: IndexEntry[] = [], has: IndexEntry[] = [];
-    for (const e of index) {
-      const n = fold(lang === "es" ? e.es : e.en), o = fold(lang === "es" ? e.en : e.es);
-      if (n.startsWith(f)) starts.push(e);
-      else if (n.includes(f) || o.includes(f)) has.push(e);
-    }
-    return [...starts, ...has].slice(0, 14);
-  }, [q, index, lang]);
+  const hits = useMemo(() => searchIndex(index, q, lang), [q, index, lang]);
   useEffect(() => {
     const close = (e: MouseEvent) => { if (box.current && !box.current.contains(e.target as Node)) setOpen(false); };
     document.addEventListener("mousedown", close);

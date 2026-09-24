@@ -1,8 +1,10 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useCopy, useLang, type Lang } from "./i18n";
 import RouteLink from "./RouteLink";
 import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
+import { artUrl, iconUrl, loadIndex, peekIndex, searchIndex, type IndexEntry } from "./valheimData";
+import { VALHEIM_COPY } from "./valheimCopy";
 
 export type Game = "tft" | "deadlock" | "poe2" | "valheim";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
@@ -54,10 +56,37 @@ export default function Nav({
       ? copy.shell.searchItemFor(copy.games.valheim)
       : copy.shell.searchFor(copy.games.deadlock);
 
+  /**
+   * En Valheim la barra muestra los resultados mientras se escribe, igual que
+   * el "Buscar en todo" de la sección, y cada uno lleva a su ficha (pedido de
+   * ZoTaD, 2026-09-24). El índice se pide recién al enfocar la barra.
+   */
+  const [vhIndex, setVhIndex] = useState<IndexEntry[] | null>(() => (inValheim ? peekIndex() : null));
+  const [open, setOpen] = useState(false);
+  const [sel, setSel] = useState(0);
+  const box = useRef<HTMLFormElement>(null);
+  const wantIndex = () => {
+    if (inValheim && !vhIndex) loadIndex().then(setVhIndex).catch(() => undefined);
+  };
+  const hits = useMemo(() => (inValheim && vhIndex ? searchIndex(vhIndex, query, lang, 10) : []), [inValheim, vhIndex, query, lang]);
+  useEffect(() => setSel(0), [query]);
+  useEffect(() => {
+    const close = (e: MouseEvent) => { if (box.current && !box.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, []);
+  const goTo = (h: IndexEntry) => {
+    setQuery("");
+    setOpen(false);
+    onNavigate({ ...route, view: "valheim", vhSection: h.tab, detail: h.slug });
+  };
+  const vhTabs = VALHEIM_COPY[lang].tabs;
+
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const q = query.trim();
     if (!q) return;
+    if (inValheim && hits.length) return goTo(hits[Math.min(sel, hits.length - 1)]);
     setPendingSearch(q);
     setQuery("");
     onNavigate(
@@ -121,7 +150,7 @@ export default function Nav({
           ))}
         </span>
 
-        <form className="top-search" role="search" onSubmit={submit}>
+        <form className="top-search" role="search" onSubmit={submit} ref={box}>
           <label className="top-search-field">
             <svg className="top-search-icon" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.2" />
@@ -131,7 +160,17 @@ export default function Nav({
               className="top-search-input"
               type="search"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => { setQuery(e.target.value); setOpen(true); wantIndex(); }}
+              onFocus={() => { setOpen(true); wantIndex(); }}
+              onKeyDown={(e) => {
+                if (!hits.length) return;
+                if (e.key === "ArrowDown") { e.preventDefault(); setSel((i) => (i + 1) % hits.length); }
+                if (e.key === "ArrowUp") { e.preventDefault(); setSel((i) => (i - 1 + hits.length) % hits.length); }
+                if (e.key === "Escape") setOpen(false);
+              }}
+              role={inValheim ? "combobox" : undefined}
+              aria-expanded={inValheim ? open && hits.length > 0 : undefined}
+              aria-controls={inValheim ? "top-hits" : undefined}
               placeholder={itemSearch ? copy.shell.searchItem : copy.shell.search}
               aria-label={searchLabel}
               autoComplete="off"
@@ -140,6 +179,29 @@ export default function Nav({
               {searchGame}
             </span>
           </label>
+          {inValheim && open && query.trim().length >= 2 && vhIndex && (
+            <div className="top-hits" id="top-hits" role="listbox">
+              {hits.length === 0 && <div className="top-hit is-empty">{VALHEIM_COPY[lang].noResults}</div>}
+              {hits.map((h, i) => (
+                <RouteLink
+                  key={`${h.tab}/${h.slug}`}
+                  className={`top-hit${i === sel ? " is-on" : ""}`}
+                  to={{ ...route, view: "valheim", vhSection: h.tab, detail: h.slug }}
+                  onNavigate={() => goTo(h)}
+                >
+                  <span className="top-hit-ic">
+                    {h.icon ? <img src={iconUrl(h.icon)} alt="" width={28} height={28} loading="lazy" />
+                      : h.art ? <img src={artUrl(h.art)} alt="" width={28} height={28} loading="lazy" className="is-art" /> : null}
+                  </span>
+                  <span className="top-hit-n">
+                    {lang === "es" ? h.es : h.en}
+                    <small>{lang === "es" ? h.en : h.es}</small>
+                  </span>
+                  <small className="top-hit-tab">{vhTabs[h.tab]}</small>
+                </RouteLink>
+              ))}
+            </div>
+          )}
         </form>
 
         <span className="top-lang">

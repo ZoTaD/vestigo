@@ -162,6 +162,12 @@ export interface BiomeRow {
   env: { cold?: boolean; freezing?: boolean; wet?: boolean; coldAtNight?: boolean; freezingAtNight?: boolean };
   creatures: (Ref & { health: number | null; weak: string[]; resist: string[]; immune: string[] })[];
   resources: (Ref & { how: string[] })[];
+  /** Lo que sueltan las criaturas del bioma, con quién lo suelta. */
+  creatureDrops?: (Ref & { from: Ref[] })[];
+  /** Botín al azar de cofres y vasijas de la zona (no es un recurso del bioma). */
+  loot?: Ref[];
+  /** Lo que se puede plantar acá. */
+  plant?: Ref[];
   foods: (Ref & { food: { hp: number; st: number; eitr: number; min: number; regen: number } })[];
   gear: Record<"weapons" | "armor" | "foods" | "meads", number>;
   boss: (Ref & { art: string | null }) | null;
@@ -222,6 +228,22 @@ export function stationOf(r: AnyRow): Ref | null {
 export const tx = (t: Txt | null | undefined, lang: Lang): string => (t ? (lang === "es" ? t.es || t.en : t.en) : "");
 /** Para buscar sin tildes ni mayúsculas: "Tuetano" encuentra "Tuétano". */
 export const fold = (s: string): string => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+/**
+ * Buscar en el índice por nombre en los dos idiomas, sin tildes: primero lo que
+ * empieza con el texto, después lo que lo contiene. Lo comparten el buscador de
+ * la portada de Valheim y el de la barra de arriba.
+ */
+export function searchIndex(index: IndexEntry[], q: string, lang: Lang, max = 14): IndexEntry[] {
+  const f = fold(q.trim());
+  if (f.length < 2) return [];
+  const starts: IndexEntry[] = [], has: IndexEntry[] = [];
+  for (const e of index) {
+    const n = fold(lang === "es" ? e.es : e.en), o = fold(lang === "es" ? e.en : e.es);
+    if (n.startsWith(f)) starts.push(e);
+    else if (n.includes(f) || o.includes(f)) has.push(e);
+  }
+  return [...starts, ...has].slice(0, max);
+}
 export const iconUrl = (icon: string | null | undefined) => (icon ? `/valheim/icons/${icon}.webp` : "");
 export const artUrl = (art: string | null | undefined) => (art ? `/valheim/art/${art}.webp` : "");
 /** Los textos del juego traen marcas de color de Unity (`<color=yellow>`): afuera. */

@@ -172,6 +172,24 @@
   background: rgba(var(--accent-rgb), 0.14);
 }
 
+/* Los resultados de la barra dentro de Valheim (2026-09-24): una lista debajo
+   del campo, como el "Buscar en todo" de la sección. */
+.top-search { position: relative; z-index: 70; }
+.top-hits {
+  position: absolute; z-index: 60; top: calc(100% + 6px); right: 0; width: max(100%, 22rem); max-height: 70vh; overflow: auto;
+  background: #16120e; border: 1px solid var(--line-strong); border-radius: 10px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55); padding: 4px;
+}
+.top-hit { display: grid; grid-template-columns: 32px 1fr auto; gap: 10px; align-items: center; padding: 6px 8px; border-radius: 7px; color: var(--text); text-decoration: none; font-size: 0.88rem; }
+.top-hit:hover, .top-hit.is-on { background: rgba(var(--accent-rgb), 0.14); }
+.top-hit.is-empty { display: block; color: var(--text-dim); }
+.top-hit-ic { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 6px; background: rgba(0, 0, 0, 0.35); overflow: hidden; }
+.top-hit-ic img { width: 26px; height: 26px; object-fit: contain; }
+.top-hit-ic img.is-art { width: 100%; height: 100%; object-fit: cover; }
+.top-hit-n { display: grid; line-height: 1.2; }
+.top-hit-n small, .top-hit-tab { color: var(--text-dim); font-size: 0.72rem; }
+/* En Valheim, el interior oscuro de los paneles del juego. */
+[data-game="valheim"] .top-hits { background: #1a120b; }
+
 .top-lang {
   display: flex;
   gap: 0.1rem;

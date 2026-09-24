@@ -33,7 +33,7 @@ Qué entra:
 - Los banquetes están duplicados con el mismo nombre; el que no tiene fuente
   toma la del otro (`share_by_name`).
 """
-import json, os, re, time
+import json, os, re, sys, time
 from datetime import datetime, timezone
 from .unity import Game
 from .loc import Loc, parse_localization
@@ -65,6 +65,33 @@ BOSS_ART = {"Eikthyr": "eikthyr_sony", "gd_king": "elder_sony", "Bonemass": "bon
 BIOME_ART = {"biome_meadows": "meadows", "biome_blackforest": "blackforest", "biome_swamp": "swamp",
              "biome_mountain": "mountain", "biome_heath": "plains", "biome_ocean": "ocean",
              "biome_mistlands": "mistlands", "biome_ashlands": "ashlands", "Valheim_DeepNorth_Logo": "deepnorth"}
+
+# Pistas de bioma por nombre, para lo que vive en las salas de una mazmorra
+# (prefabs aparte, sin ubicación que diga el bioma) y los cofres sueltos.
+# De lo más específico a lo más general; "shipwreck" es costa: queda sin bioma.
+NAME_BIOME = [("forestcrypt", "blackforest"), ("fcrypt", "blackforest"), ("trollcave", "blackforest"),
+              ("sunkencrypt", "swamp"), ("mountaincave", "mountain"), ("frostcave", "mountain"),
+              ("dvergr", "mistlands"), ("infested", "mistlands"), ("mistlands", "mistlands"),
+              ("charred", "ashlands"), ("morgen", "ashlands"), ("ashland", "ashlands"),
+              ("deepnorth", "deepnorth"), ("morkhalla", "deepnorth"),
+              # El lino y la cebada silvestres de las aldeas de fulings.
+              ("pickable_flax", "plains"), ("pickable_barley", "plains"), ("heath", "plains"), ("goblin", "plains"), ("plains", "plains"),
+              ("blackforest", "blackforest"), ("swamp", "swamp"), ("mountain", "mountain"), ("meadows", "meadows")]
+
+
+BIT_OF = {bid: bit for bit, bid, _ in BIOMES}
+EXTRA_GATHER = {"GuckSack": "swamp", "GuckSack_small": "swamp", "giant_brain": "mistlands",
+                "LeviathanLava": "ashlands", "MineRock_Meteorite": "ashlands", "Beehive": "meadows"}
+
+
+def hint_biome(*names: str) -> int:
+    for n in names:
+        low = (n or "").lower()
+        for key, bid in NAME_BIOME:
+            if key in low:
+                return BIT_OF[bid]
+    return 0
+
 
 # Personalización (barbas y peinados): son "objetos" para el juego pero no se
 # consiguen ni se usan; eran 114 sin ícono.
@@ -159,6 +186,7 @@ def export_art(g: Game) -> int:
 
 
 def main() -> None:
+    sys.stdout.reconfigure(encoding="utf-8")
     t0 = time.time()
     g = Game()
     g.index(CLASSES)
@@ -261,14 +289,24 @@ def main() -> None:
                 stations[st] = {"name": loc.t(st), "icon": None}
 
     # --- Criaturas y sus biomas
+    # Una aparición con llave de jefe ("defeated_queen", "defeated_fader") es
+    # una criatura de un bioma más avanzado que visita los anteriores de noche
+    # después de ese jefe: no es fauna de la zona (el buscador salía "en las
+    # Praderas", 2026-09-24). Cuenta como hábitat sólo si la criatura no
+    # aparece en ningún lado sin llave.
     spawn_biomes: dict[str, set] = {}
+    keyed_biomes: dict[str, set] = {}
     for c in g.components("SpawnSystemList"):
         for s in c.tree["m_spawners"]:
             if not s.get("m_enabled", 1) or is_everywhere(s["m_biome"]):
                 continue
             name = g.prefab(g.ref(c.file, s["m_prefab"]))
             if name:
-                spawn_biomes.setdefault(name, set()).update(biomes_of(s["m_biome"]))
+                keyed = (s.get("m_requiredGlobalKey") or "").startswith("defeated_")
+                (keyed_biomes if keyed else spawn_biomes).setdefault(name, set()).update(biomes_of(s["m_biome"]))
+    for name, bs in keyed_biomes.items():
+        if name not in spawn_biomes:
+            spawn_biomes[name] = set(bs)
     creatures = {}
     for cls in ("Humanoid", "Character"):
         for c in g.components(cls):
@@ -399,6 +437,27 @@ def main() -> None:
                     out += [("mine" if k == "mine" else k, d) for k, d in drops_of(nxt, depth + 1)]
         return out
 
+    # Lo que el juego pone sin pasar por la vegetación y no hay dato que diga
+    # dónde: las bolsas de guck que cuelgan de los árboles del Pantano, el
+    # cerebro de los gigantes de las Tierras Nubladas (tejido blando), el
+    # mineral de llametal de los leviatanes de lava y los meteoritos de la
+    # Tierra de Ceniza, y las colmenas silvestres de las Praderas (abeja reina).
+    # Tabla a mano, como la de los jefes (ZoTaD vio los biomas incompletos,
+    # 2026-09-24).
+    # Un mismo nombre puede estar en más de un bundle; vale la copia que tiene
+    # componentes (la otra es un cascarón y no suelta nada).
+    faltan = {name: BIT_OF[bid] for name, bid in EXTRA_GATHER.items()}
+    hallados = set()
+    for key, o in g._objs.items():
+        if o.type.name == "GameObject":
+            n = o.peek_name()
+            if n in faltan and g.root_name(key) == n and g.comps_in_tree(key, 1):
+                veg[key] = veg.get(key, 0) | faltan[n]
+                hallados.add(n)
+    faltan = {n: m for n, m in faltan.items() if n not in hallados}
+    if faltan:
+        print("⚠ recolectables a mano que no aparecieron:", sorted(faltan))
+
     gatherables = []
     for go, mask in veg.items():
         prefab = g.prefab(go)
@@ -408,23 +467,45 @@ def main() -> None:
             for it in d["items"]:
                 if it["item"] in items:
                     bucket.setdefault(it["item"], it)
+        if prefab in EXTRA_GATHER and not any(por_tipo.values()):
+            print(f"⚠ {prefab} (a mano) no suelta nada que conozcamos:", [k for k, _ in drops_of(go)])
         for kind, bucket in por_tipo.items():
             if bucket:
                 gatherables.append({"id": prefab, "name": None, "kind": kind, "biomes": biomes_of(mask), "drops": {"items": list(bucket.values())}})
 
+    # --- El bioma de cada ubicación (2026-09-24): la lista de ubicaciones del
+    # juego trae el nombre del prefab y su bioma. Lo que está adentro (el
+    # alquitrán del pozo, el cristal de la cueva, los cofres) toma el bioma de
+    # la ubicación que lo contiene. Las salas de las mazmorras son prefabs
+    # aparte: para esas vale la pista del nombre (`hint_biome`).
+    loc_biome: dict[str, int] = {}
+    for cls in ("ZoneSystem", "LocationList"):
+        for c in g.components(cls):
+            for l in c.tree.get("m_locations", []):
+                if l.get("m_enable") and l.get("m_prefabName"):
+                    loc_biome[l["m_prefabName"]] = loc_biome.get(l["m_prefabName"], 0) | l["m_biome"]
+
+    def where(go, *names) -> int:
+        root = g.root_name(go) or ""
+        mask = loc_biome.get(root, 0)
+        return mask or hint_biome(root, *names)
+
     # --- Recolectables de ubicaciones (fuera de toda vegetación), uno por prefab base
     en_vegetacion = {d["item"] for gt in gatherables for d in gt["drops"]["items"]}
-    vistos = set()
+    por_base: dict[str, dict] = {}
     for c in g.components("Pickable"):
         if c.go in veg:
             continue
         it = g.name_of_in(c.file)(c.tree["m_itemPrefab"])
         base = re.sub(r" \(\d+\)$", "", g.prefab(c.go) or "")
-        if not it or it not in items or it in en_vegetacion or not base.startswith("Pickable_") or base in vistos:
+        if not it or it not in items or it in en_vegetacion or not base.startswith("Pickable_"):
             continue
-        vistos.add(base)
-        gatherables.append({"id": base, "name": None, "kind": "location", "biomes": [],
-                            "drops": {"items": [{"item": it, "min": c.tree["m_amount"], "max": c.tree["m_amount"], "weight": 1.0}]}})
+        rec = por_base.setdefault(base, {"id": base, "name": None, "kind": "location", "mask": 0,
+                                         "drops": {"items": [{"item": it, "min": c.tree["m_amount"], "max": c.tree["m_amount"], "weight": 1.0}]}})
+        rec["mask"] |= where(c.go, base)
+    for rec in por_base.values():
+        rec["biomes"] = biomes_of(rec.pop("mask"))
+        gatherables.append(rec)
 
     # --- Cofres de las ubicaciones: ámbar, rubíes, collares, moldes del Norte
     # profundo. Sin bioma, igual que los recolectables de ubicación.
@@ -442,12 +523,14 @@ def main() -> None:
         its = [x for x in d["items"] if x["item"] in items]
         if not its:
             continue
+        mask = where(c.go, base)
         prev = next((x for x in gatherables if x["id"] == base and x["kind"] == "chest"), None)
         if prev:
             have = {x["item"] for x in prev["drops"]["items"]}
             prev["drops"]["items"] += [x for x in its if x["item"] not in have]
+            prev["biomes"] = biomes_of(mask | sum(BIT_OF[b] for b in prev["biomes"]))
         else:
-            gatherables.append({"id": base, "name": loc.t(c.tree.get("m_name")), "kind": "chest", "biomes": [], "drops": {"items": its}})
+            gatherables.append({"id": base, "name": loc.t(c.tree.get("m_name")), "kind": "chest", "biomes": biomes_of(mask), "drops": {"items": its}})
 
     # --- Cultivos y colmena
     farms = []
@@ -477,9 +560,10 @@ def main() -> None:
                 "drops": {"items": [{"item": pid, "min": 1, "max": 1, "weight": 1.0}]}}
                for pid in items if pid in spawn_biomes and items[pid]["itemType"] == 21]
     gatherables += fishing
-    # Un cultivo que también aparece como recolectable de ubicación: queda el cultivo.
-    cultivados = {f["item"] for f in farms}
-    gatherables = [x for x in gatherables if not (x["kind"] == "location" and x["drops"]["items"][0]["item"] in cultivados)]
+    # Antes se descartaba lo recolectable en ubicaciones si también se cultiva
+    # (no tenían bioma). Desde que la ubicación dice su bioma queda: el lino y
+    # la cebada silvestres de las aldeas de fulings son de las Llanuras, y sin
+    # ellos el hilo de lino y todo el metal negro salían del Norte profundo.
 
     # --- Cruces
     sources = build_sources(recipes, conversions, creatures, gatherables, traders, farms)

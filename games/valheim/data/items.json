@@ -71,55 +71,74 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_forestcrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest",
+     "swamp"
+    ],
     "from": "TreasureChest_blackforest",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountains",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_swamp",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_sunkencrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_01",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_02",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_fCrypt",
     "how": "chest",
     "kind": "gather"
@@ -154,37 +173,54 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest",
+     "swamp",
+     "plains",
+     "ocean",
+     "deepnorth"
+    ],
     "from": "shipwreck_karve_chest",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountains",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_swamp",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_heath_hildir",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_sunkencrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows",
+     "deepnorth"
+    ],
     "from": "TreasureChest_meadows_buried",
     "how": "chest",
     "kind": "gather"
@@ -233,13 +269,17 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "Morkhalla_ChestAncient",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "TreasureChest_morkhalla",
     "how": "chest",
     "kind": "gather"
@@ -282,7 +322,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "Morkhalla_ChestAncient",
     "how": "chest",
     "kind": "gather"
@@ -331,7 +373,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "Morkhalla_ChestAncient",
     "how": "chest",
     "kind": "gather"
@@ -380,7 +424,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "Morkhalla_ChestAncient",
     "how": "chest",
     "kind": "gather"
@@ -429,7 +475,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "Morkhalla_ChestAncient",
     "how": "chest",
     "kind": "gather"
@@ -471,7 +519,6 @@
   "sources": [
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 0.33,
@@ -3201,7 +3248,9 @@
     "station": "piece_blackforge"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_ashland_stone",
     "how": "chest",
     "kind": "gather"
@@ -3244,13 +3293,17 @@
     "station": "piece_blackforge"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "TreasureChest_morkhalla",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "TreasureChest_deepnorth_village",
     "how": "chest",
     "kind": "gather"
@@ -3300,7 +3353,10 @@
     "station": "piece_workbench"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows",
+     "deepnorth"
+    ],
     "from": "TreasureChest_meadows_buried",
     "how": "chest",
     "kind": "gather"
@@ -3343,43 +3399,58 @@
     "station": "piece_workbench"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_forestcrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest",
+     "swamp"
+    ],
     "from": "TreasureChest_blackforest",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_01",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_combat",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_02",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_fCrypt",
     "how": "chest",
     "kind": "gather"
@@ -3423,7 +3494,9 @@
     "station": "piece_workbench"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountains",
     "how": "chest",
     "kind": "gather"
@@ -3466,13 +3539,17 @@
     "station": "piece_forge"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_swamp",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_sunkencrypt",
     "how": "chest",
     "kind": "gather"
@@ -3552,7 +3629,9 @@
     "station": "piece_workbench"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_plains_stone",
     "how": "chest",
     "kind": "gather"
@@ -3596,13 +3675,17 @@
     "station": "piece_workbench"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_swamp",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_sunkencrypt",
     "how": "chest",
     "kind": "gather"
@@ -4517,7 +4600,9 @@
   "skill": 4,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_heath",
     "how": "chest",
     "kind": "gather"
@@ -5086,7 +5171,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_01",
     "how": "chest",
     "kind": "gather"
@@ -5127,7 +5214,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_02",
     "how": "chest",
     "kind": "gather"
@@ -5298,7 +5387,10 @@
   "skill": 7,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "meadows",
+     "deepnorth"
+    ],
     "from": "TreasureChest_meadows_buried",
     "how": "chest",
     "kind": "gather"
@@ -5530,13 +5622,33 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
+    "from": "Pickable_Barley_Wild",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "plains"
+    ],
+    "from": "Pickable_Barley",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_heath",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -6160,7 +6272,9 @@
   "skill": 7,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountains",
     "how": "chest",
     "kind": "gather"
@@ -6602,7 +6716,9 @@
     "min": 2
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_TimberHall",
     "how": "chest",
     "kind": "gather"
@@ -6711,13 +6827,17 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "Pickable_BlackCoreStand",
     "how": "location",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "Morkhalla_ChestAncient",
     "how": "chest",
     "kind": "gather"
@@ -7174,9 +7294,6 @@
    },
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "mountain",
      "plains"
     ],
     "chance": 1.0,
@@ -7194,7 +7311,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_heath",
     "how": "chest",
     "kind": "gather"
@@ -7338,7 +7457,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_ashland_stone",
     "how": "chest",
     "kind": "gather"
@@ -8189,7 +8310,9 @@
     "station": "piece_blackforge"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "TreasureChest_deepnorth_village",
     "how": "chest",
     "kind": "gather"
@@ -8803,43 +8926,61 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows",
+     "blackforest",
+     "deepnorth"
+    ],
     "from": "Pickable_ForestCryptRemains02",
     "how": "location",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows",
+     "blackforest",
+     "deepnorth"
+    ],
     "from": "Pickable_ForestCryptRemains01",
     "how": "location",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "Pickable_ForestCryptRemains03",
     "how": "location",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "Pickable_ForestCryptRemains04",
     "how": "location",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "Pickable_MountainRemains01_buried",
     "how": "location",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_trollcave",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergr_loose_stone",
     "how": "chest",
     "kind": "gather"
@@ -9676,7 +9817,9 @@
     "yield": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_TimberHall",
     "how": "chest",
     "kind": "gather"
@@ -9801,7 +9944,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "Morkhalla_ChestAncient",
     "how": "chest",
     "kind": "gather"
@@ -10094,11 +10239,6 @@
   "sources": [
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "swamp",
-     "mountain",
-     "plains",
      "mistlands"
     ],
     "chance": 1.0,
@@ -10591,11 +10731,6 @@
   "sources": [
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "swamp",
-     "mountain",
-     "plains",
      "mistlands"
     ],
     "chance": 1.0,
@@ -10695,6 +10830,12 @@
   "setName": null,
   "skill": 1,
   "sources": [
+   {
+    "biomes": [],
+    "from": "Pickable_Carrot",
+    "how": "location",
+    "kind": "gather"
+   },
    {
     "biomes": [
      "meadows",
@@ -10799,7 +10940,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -10977,7 +11120,9 @@
     "min": 2
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_charredfortress",
     "how": "chest",
     "kind": "gather"
@@ -11084,19 +11229,25 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_swamp",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_heath_hildir",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_sunkencrypt",
     "how": "chest",
     "kind": "gather"
@@ -11252,11 +11403,6 @@
    },
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "swamp",
-     "mountain",
-     "plains",
      "ashlands"
     ],
     "chance": 1.0,
@@ -11267,11 +11413,6 @@
    },
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "swamp",
-     "mountain",
-     "plains",
      "ashlands"
     ],
     "chance": 1.0,
@@ -11297,13 +11438,17 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_ashland_stone",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_charredfortress",
     "how": "chest",
     "kind": "gather"
@@ -11446,7 +11591,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_charredfortress",
     "how": "chest",
     "kind": "gather"
@@ -11498,7 +11645,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_heath_hildir",
     "how": "chest",
     "kind": "gather"
@@ -11983,9 +12132,6 @@
    },
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "mountain",
      "plains"
     ],
     "chance": 0.25,
@@ -12073,103 +12219,142 @@
     "min": 10
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "Pickable_DvergrMineTreasure",
     "how": "location",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountaincave",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountaincave",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_heath",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "TreasureChest_deepnorth_village",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest",
+     "swamp",
+     "plains",
+     "ocean",
+     "deepnorth"
+    ],
     "from": "shipwreck_karve_chest",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_forestcrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest",
+     "swamp"
+    ],
     "from": "TreasureChest_blackforest",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtown",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtown",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountains",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_plains_stone",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_swamp",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_heath_hildir",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_trollcave",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_ashland_stone",
     "how": "chest",
     "kind": "gather"
@@ -12181,49 +12366,66 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_sunkencrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtower",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_01",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_charredfortress",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_02",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_fCrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows",
+     "deepnorth"
+    ],
     "from": "TreasureChest_meadows_buried",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergr_loose_stone",
     "how": "chest",
     "kind": "gather"
@@ -13036,7 +13238,9 @@
     "yield": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "Morkhalla_ChestAncient",
     "how": "chest",
     "kind": "gather"
@@ -13804,7 +14008,9 @@
     "min": 8
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "Pickable_MountainCaveCrystal",
     "how": "location",
     "kind": "gather"
@@ -13938,7 +14144,6 @@
   "sources": [
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 1.0,
@@ -14047,7 +14252,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_trollcave",
     "how": "chest",
     "kind": "gather"
@@ -14362,7 +14569,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "Pickable_DragonEgg",
     "how": "location",
     "kind": "gather"
@@ -14675,7 +14884,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "Pickable_Swordpiece2",
     "how": "location",
     "kind": "gather"
@@ -14765,7 +14976,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "Pickable_Swordpiece3",
     "how": "location",
     "kind": "gather"
@@ -15145,13 +15358,17 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_swamp",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_sunkencrypt",
     "how": "chest",
     "kind": "gather"
@@ -15305,11 +15522,7 @@
    },
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "swamp",
-     "mountain",
-     "plains"
+     "swamp"
     ],
     "chance": 1.0,
     "from": "Draugr",
@@ -15318,7 +15531,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "Pickable_MeatPile",
     "how": "location",
     "kind": "gather"
@@ -17289,37 +17504,54 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "TreasureChest_deepnorth_village",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest",
+     "swamp",
+     "plains",
+     "ocean",
+     "deepnorth"
+    ],
     "from": "shipwreck_karve_chest",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_forestcrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest",
+     "swamp"
+    ],
     "from": "TreasureChest_blackforest",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_plains_stone",
     "how": "chest",
     "kind": "gather"
@@ -17331,25 +17563,33 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_01",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_combat",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_02",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_fCrypt",
     "how": "chest",
     "kind": "gather"
@@ -17520,7 +17760,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "Pickable_Fiddlehead",
     "how": "location",
     "kind": "gather"
@@ -20581,7 +20823,41 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
+    "from": "MineRock_Meteorite",
+    "how": "mine",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "from": "LeviathanLava",
+    "how": "mine",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "from": "LeviathanLava",
+    "how": "mine",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "ashlands"
+    ],
+    "from": "LeviathanLava",
+    "how": "mine",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_charredfortress",
     "how": "chest",
     "kind": "gather"
@@ -20622,7 +20898,25 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
+    "from": "Pickable_Flax_Wild",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "plains"
+    ],
+    "from": "Pickable_Flax",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -20688,19 +20982,25 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_01",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_02",
     "how": "chest",
     "kind": "gather"
@@ -21548,7 +21848,9 @@
     "min": 2
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_charredfortress",
     "how": "chest",
     "kind": "gather"
@@ -21627,7 +21929,9 @@
     "min": 2
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_charredfortress",
     "how": "chest",
     "kind": "gather"
@@ -21711,7 +22015,9 @@
     "min": 2
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_charredfortress",
     "how": "chest",
     "kind": "gather"
@@ -21919,7 +22225,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_plains_stone",
     "how": "chest",
     "kind": "gather"
@@ -22778,7 +23086,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 0.5,
@@ -22799,7 +23106,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 0.5,
@@ -22810,7 +23116,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 0.5,
@@ -22903,6 +23208,22 @@
     "kind": "drop",
     "max": 5,
     "min": 3
+   },
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "from": "GuckSack_small",
+    "how": "destructible",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "swamp"
+    ],
+    "from": "GuckSack",
+    "how": "destructible",
+    "kind": "gather"
    }
   ],
   "stack": 50,
@@ -24549,7 +24870,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_forestcrypt_hildir",
     "how": "chest",
     "kind": "gather"
@@ -24584,7 +24907,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountaincave_hildir",
     "how": "chest",
     "kind": "gather"
@@ -24619,7 +24944,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_plainsfortress_hildir",
     "how": "chest",
     "kind": "gather"
@@ -24694,6 +25021,14 @@
   "setName": null,
   "skill": 1,
   "sources": [
+   {
+    "biomes": [
+     "meadows"
+    ],
+    "from": "Beehive",
+    "how": "destructible",
+    "kind": "gather"
+   },
    {
     "biomes": [
      "meadows",
@@ -24924,13 +25259,17 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtown",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtower",
     "how": "chest",
     "kind": "gather"
@@ -25731,7 +26070,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_sunkencrypt",
     "how": "chest",
     "kind": "gather"
@@ -25922,6 +26263,12 @@
   "skill": 1,
   "sources": [
    {
+    "biomes": [],
+    "from": "Pickable_Kale",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
     "biomes": [
      "meadows",
      "blackforest",
@@ -26105,7 +26452,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -26723,7 +27072,10 @@
   "skill": 2,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "meadows",
+     "deepnorth"
+    ],
     "from": "TreasureChest_meadows_buried",
     "how": "chest",
     "kind": "gather"
@@ -26764,7 +27116,10 @@
     "station": "piece_blackforge"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands",
+     "ashlands"
+    ],
     "from": "Pickable_DvergrLantern",
     "how": "location",
     "kind": "gather"
@@ -26892,13 +27247,17 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_trollcave",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_combat",
     "how": "chest",
     "kind": "gather"
@@ -28341,13 +28700,17 @@
   "skill": 3,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_combat",
     "how": "chest",
     "kind": "gather"
@@ -29548,7 +29911,9 @@
     "yield": 6
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "TreasureChest_morkhalla",
     "how": "chest",
     "kind": "gather"
@@ -29764,7 +30129,9 @@
     "yield": 6
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "TreasureChest_morkhalla",
     "how": "chest",
     "kind": "gather"
@@ -29820,7 +30187,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtown",
     "how": "chest",
     "kind": "gather"
@@ -29910,7 +30279,9 @@
     "yield": 6
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtown",
     "how": "chest",
     "kind": "gather"
@@ -30000,7 +30371,9 @@
     "yield": 6
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "TreasureChest_morkhalla",
     "how": "chest",
     "kind": "gather"
@@ -30056,7 +30429,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtown",
     "how": "chest",
     "kind": "gather"
@@ -30238,7 +30613,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_TimberHall",
     "how": "chest",
     "kind": "gather"
@@ -31252,7 +31629,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_TimberHall",
     "how": "chest",
     "kind": "gather"
@@ -31264,7 +31643,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -31356,7 +31737,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_TimberHall",
     "how": "chest",
     "kind": "gather"
@@ -31368,7 +31751,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -31605,7 +31990,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_TimberHall",
     "how": "chest",
     "kind": "gather"
@@ -31617,7 +32004,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -31847,7 +32236,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_TimberHall",
     "how": "chest",
     "kind": "gather"
@@ -31859,7 +32250,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -32069,7 +32462,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_TimberHall",
     "how": "chest",
     "kind": "gather"
@@ -32081,7 +32476,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -32221,19 +32618,25 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "Pickable_MoltenCoreStand",
     "how": "location",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_ashland_stone",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "TreasureChest_charredfortress",
     "how": "chest",
     "kind": "gather"
@@ -33206,7 +33609,10 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest",
+     "swamp"
+    ],
     "from": "Pickable_Mushroom_yellow",
     "how": "location",
     "kind": "gather"
@@ -33387,7 +33793,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_heath",
     "how": "chest",
     "kind": "gather"
@@ -33741,6 +34149,14 @@
   "sources": [
    {
     "biomes": [],
+    "from": "Pickable_Oat",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -33851,19 +34267,25 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountaincave",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountaincave",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountains",
     "how": "chest",
     "kind": "gather"
@@ -33926,6 +34348,14 @@
   "sources": [
    {
     "biomes": [],
+    "from": "Pickable_Onion",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_TimberHall",
     "how": "chest",
     "kind": "gather"
@@ -34007,6 +34437,14 @@
   "sources": [
    {
     "biomes": [],
+    "from": "Pickable_SeedOnion",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountains",
     "how": "chest",
     "kind": "gather"
@@ -35046,6 +35484,12 @@
   "skill": 1,
   "sources": [
    {
+    "biomes": [],
+    "from": "Pickable_Poteitr",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
     "biomes": [
      "meadows",
      "blackforest",
@@ -35116,7 +35560,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -35288,7 +35734,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 1.0,
@@ -35428,7 +35873,16 @@
   },
   "setName": null,
   "skill": 1,
-  "sources": [],
+  "sources": [
+   {
+    "biomes": [
+     "meadows"
+    ],
+    "from": "Beehive",
+    "how": "destructible",
+    "kind": "gather"
+   }
+  ],
   "stack": 20,
   "usedIn": [
    {
@@ -35763,7 +36217,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 1.0,
@@ -35794,7 +36247,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 1.0,
@@ -36473,7 +36925,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "Pickable_RoyalJelly",
     "how": "location",
     "kind": "gather"
@@ -36529,49 +36983,70 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountaincave",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest",
+     "swamp",
+     "plains",
+     "ocean",
+     "deepnorth"
+    ],
     "from": "shipwreck_karve_chest",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_forestcrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountains",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_swamp",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_trollcave",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_sunkencrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows",
+     "deepnorth"
+    ],
     "from": "TreasureChest_meadows_buried",
     "how": "chest",
     "kind": "gather"
@@ -37819,7 +38294,9 @@
     "station": "piece_cauldron"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtown",
     "how": "chest",
     "kind": "gather"
@@ -38550,7 +39027,9 @@
     "station": "piece_stonecutter"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_heath",
     "how": "chest",
     "kind": "gather"
@@ -39744,7 +40223,9 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "mountain"
+    ],
     "from": "TreasureChest_mountaincave",
     "how": "chest",
     "kind": "gather"
@@ -39756,19 +40237,25 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_forestcrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains"
+    ],
     "from": "TreasureChest_plains_stone",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_trollcave",
     "how": "chest",
     "kind": "gather"
@@ -39780,13 +40267,18 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_fCrypt",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows",
+     "deepnorth"
+    ],
     "from": "TreasureChest_meadows_buried",
     "how": "chest",
     "kind": "gather"
@@ -40221,7 +40713,9 @@
   "skill": 3,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_swamp",
     "how": "chest",
     "kind": "gather"
@@ -40462,6 +40956,14 @@
     "kind": "drop",
     "max": 2,
     "min": 1
+   },
+   {
+    "biomes": [
+     "mistlands"
+    ],
+    "from": "giant_brain",
+    "how": "mine",
+    "kind": "gather"
    }
   ],
   "stack": 40,
@@ -41174,7 +41676,10 @@
   "skill": 5,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest",
+     "swamp"
+    ],
     "from": "TreasureChest_blackforest",
     "how": "chest",
     "kind": "gather"
@@ -42211,7 +42716,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 1.0,
@@ -42222,7 +42726,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 1.0,
@@ -42452,7 +42955,17 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
+    "from": "MineRock_Meteorite",
+    "how": "mine",
+    "kind": "gather"
+   },
+   {
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_trollcave",
     "how": "chest",
     "kind": "gather"
@@ -42709,7 +43222,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "Pickable_SulfurRock",
     "how": "location",
     "kind": "gather"
@@ -42778,7 +43293,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "Pickable_SurtlingCoreStand",
     "how": "location",
     "kind": "gather"
@@ -43944,13 +44461,17 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtown",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtower",
     "how": "chest",
     "kind": "gather"
@@ -44090,13 +44611,17 @@
   "skill": 1,
   "sources": [
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "Pickable_DvergrStein",
     "how": "location",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "mistlands"
+    ],
     "from": "TreasureChest_dvergrtown",
     "how": "chest",
     "kind": "gather"
@@ -44139,13 +44664,19 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains",
+     "deepnorth"
+    ],
     "from": "Pickable_TarBig",
     "how": "location",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "plains",
+     "deepnorth"
+    ],
     "from": "Pickable_Tar",
     "how": "location",
     "kind": "gather"
@@ -44479,7 +45010,9 @@
     "yield": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "Morkhalla_ChestAncient",
     "how": "chest",
     "kind": "gather"
@@ -44597,31 +45130,41 @@
     "station": null
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "TreasureChest_deepnorth_village",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_01",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_combat",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "meadows"
+    ],
     "from": "TreasureChest_meadows_02",
     "how": "chest",
     "kind": "gather"
@@ -45804,11 +46347,6 @@
   "sources": [
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "swamp",
-     "mountain",
-     "plains",
      "ashlands"
     ],
     "chance": 0.05,
@@ -45885,11 +46423,6 @@
   "sources": [
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "swamp",
-     "mountain",
-     "plains",
      "ashlands"
     ],
     "chance": 0.05,
@@ -46179,11 +46712,7 @@
    },
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "swamp",
-     "mountain",
-     "plains"
+     "swamp"
     ],
     "chance": 0.1,
     "from": "Draugr",
@@ -46302,11 +46831,7 @@
    },
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "swamp",
-     "mountain",
-     "plains"
+     "swamp"
     ],
     "chance": 0.1,
     "from": "Draugr",
@@ -46858,9 +47383,6 @@
    },
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "mountain",
      "plains"
     ],
     "chance": 0.1,
@@ -47125,7 +47647,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 0.05,
@@ -47165,7 +47686,6 @@
   "sources": [
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 0.1,
@@ -47215,7 +47735,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 0.1,
@@ -47923,11 +48442,6 @@
   "sources": [
    {
     "biomes": [
-     "meadows",
-     "blackforest",
-     "swamp",
-     "mountain",
-     "plains",
      "mistlands"
     ],
     "chance": 0.05,
@@ -48638,6 +49152,18 @@
   "skill": 1,
   "sources": [
    {
+    "biomes": [],
+    "from": "Pickable_DvergerThing",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
+    "biomes": [],
+    "from": "Pickable_Turnip",
+    "how": "location",
+    "kind": "gather"
+   },
+   {
     "biomes": [
      "meadows",
      "blackforest",
@@ -48723,7 +49249,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "deepnorth"
+    ],
     "from": "loot_deepNorth_Granary",
     "how": "chest",
     "kind": "gather"
@@ -49387,7 +49915,9 @@
     "min": 1
    },
    {
-    "biomes": [],
+    "biomes": [
+     "ashlands"
+    ],
     "from": "Pickable_VoltureEgg",
     "how": "location",
     "kind": "gather"
@@ -49573,13 +50103,17 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_swamp",
     "how": "chest",
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "swamp"
+    ],
     "from": "TreasureChest_sunkencrypt",
     "how": "chest",
     "kind": "gather"
@@ -50073,7 +50607,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 1.0,
@@ -50094,7 +50627,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 1.0,
@@ -50105,7 +50637,6 @@
    },
    {
     "biomes": [
-     "meadows",
      "blackforest"
     ],
     "chance": 1.0,
@@ -50412,7 +50943,9 @@
     "kind": "gather"
    },
    {
-    "biomes": [],
+    "biomes": [
+     "blackforest"
+    ],
     "from": "TreasureChest_trollcave",
     "how": "chest",
     "kind": "gather"
