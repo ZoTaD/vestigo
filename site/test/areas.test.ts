@@ -46,6 +46,19 @@ describe("cada vista en su chunk (2026-09-25)", () => {
     expect(files).toEqual(bySection);
   });
 
+  it("sólo la entrada y el prerender importan areas.ts", async () => {
+    // Si un módulo de la cáscara (App, RouteLink, Nav…) lo importara, su chunk
+    // cambiaría con cada publicación de datos y los que vuelven bajarían todo
+    // el JS de nuevo (ver areasRegistry.ts y manualChunks en vite.config.ts).
+    const { readdirSync } = await import("node:fs");
+    const src = new URL("../src/", import.meta.url);
+    const importers = readdirSync(src)
+      .filter((f) => /\.tsx?$/.test(f))
+      // `import type` se borra al compilar: no arrastra el módulo.
+      .filter((f) => /^import (?!type )[^\n]*from "\.\/areas";|import\("\.\/areas"\)/m.test(readFileSync(new URL(f, src), "utf-8")));
+    expect(importers.sort()).toEqual(["entry-server.tsx", "main.tsx"]);
+  });
+
   it("filesFor pide el área y, en Deadlock, la pestaña", () => {
     const base = { lang: "es" as const, dlSection: "meta" as const };
     expect(filesFor({ ...base, view: "valheim" })).toEqual(["src/Valheim.tsx"]);
