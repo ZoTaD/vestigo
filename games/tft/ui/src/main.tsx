@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import { installStaleChunkReload } from "./staleChunks";
 // Los tokens van primero: son las variables que todas las demás hojas leen.
 import "./styles/tokens.css";
 import "./styles/base.css";
@@ -32,6 +33,9 @@ import "./styles/poe2-regex.css";
 // Valheim (2026-09-24): la madera, el latón y la letra del juego, todo bajo `.vh`.
 import "./styles/valheim.css";
 import "./styles/valheim-planner.css";
+
+// Una pestaña vieja después de publicar se recarga sola en vez de quedar en blanco.
+installStaleChunkReload();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
