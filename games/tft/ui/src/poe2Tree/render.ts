@@ -45,8 +45,11 @@ export function iconStyle(T: Tree, n: TreeNode, px: number): CSSProperties {
 
 /** Un cuadro del arte de la clase (0 = la clase, 1… = sus ascendencias) como estilo CSS. */
 export function classArtStyle(T: Tree, clsEn: string, frame: number, px: number): CSSProperties {
-  const sh = T.sprites[`background-${clsEn.toLowerCase()}`];
-  const f = sh?.frames[`Class${frame}`];
+  // La hoja de retratos (150 KB para todas las clases) y no el fondo de cada
+  // clase (~500 KB cada uno): el elegidor muestra las ocho a la vez.
+  const small = T.sprites.portraits;
+  const sh = small ?? T.sprites[`background-${clsEn.toLowerCase()}`];
+  const f = small ? small.frames[`${clsEn}:Class${frame}`] : sh?.frames[`Class${frame}`];
   if (!f) return {};
   const k = px / f[2];
   return {

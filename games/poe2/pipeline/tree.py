@@ -27,6 +27,7 @@ sys.path.insert(0, os.path.join(HERE, "..", "tools"))
 from poe_bundles import Index  # noqa: E402
 from poe_dat import translations  # noqa: E402
 from poe_csd import Descriptions, clean  # noqa: E402
+import tree_portraits  # noqa: E402
 
 VERSION = "0.5.5"
 EXPORT_SHA = "bd87e6512c92b868542eddfb1ba4ea8b6dc2da36"
@@ -227,6 +228,8 @@ for s in SHEETS:
 used = {n.get("ic") for n in nodes.values()}
 for s in ("skills", "skills-disabled"):
     sprites[s]["frames"] = {k: v for k, v in sprites[s]["frames"].items() if k.split(":", 1)[1] in used}
+# Los retratos chicos de clase y ascendencia, en una hoja aparte (ver tree_portraits.py).
+sprites["portraits"] = tree_portraits.build(sprites, PUB, [c["en"] for c in classes])
 
 tree = {"version": VERSION, "export": EXPORT_SHA, "bounds": [T["min_x"], T["min_y"], T["max_x"], T["max_y"]],
         "classes": classes, "groups": groups, "masteries": masteries, "nodes": nodes, "edges": edges, "sprites": sprites}
