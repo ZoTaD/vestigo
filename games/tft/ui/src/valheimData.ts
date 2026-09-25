@@ -234,7 +234,8 @@ export interface BiomeRow {
   name: Txt;
   art: string;
   env: { cold?: boolean; freezing?: boolean; wet?: boolean; coldAtNight?: boolean; freezingAtNight?: boolean };
-  creatures: (Ref & { health: number | null; weak: string[]; resist: string[]; immune: string[] })[];
+  /** `passive`: no ataca (el recuadro "passive" del bioma en la wiki). */
+  creatures: (Ref & { health: number | null; weak: string[]; resist: string[]; immune: string[]; passive?: boolean })[];
   resources: (Ref & { how: string[] })[];
   /** Lo que sueltan las criaturas del bioma, con quién lo suelta. */
   creatureDrops?: (Ref & { from: Ref[] })[];

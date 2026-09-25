@@ -150,6 +150,22 @@ def main() -> None:
         habitat_by_name[name] = sorted(hab, key=BIOME_ORDER.index)
     for c in creatures.values():
         c["biomes"] = habitat_by_name.get(clean_txt(c["name"])["en"], c["biomes"])
+    # Y los hostiles que el recuadro de cada bioma de la wiki suma aparte (el
+    # Draugr de las torres de la Montaña, el Gammeltrol del Norte profundo):
+    # ZoTaD, 2026-09-25, "fijate que en cada bioma faltan cosas".
+    by_norm = defaultdict(list)
+    for c in creatures.values():
+        by_norm[wiki.norm(clean_txt(c["name"])["en"])].append(c)
+    for bid, box in wiki.biome_boxes().items():
+        for h in box.get("hostile", []):
+            for c in by_norm.get(wiki.norm(h.split("(")[0]), []):
+                if bid not in c["biomes"]:
+                    c["biomes"] = sorted({*c["biomes"], bid}, key=BIOME_ORDER.index)
+    # Variantes que el juego llama igual pero que se juegan distinto (el Draugr
+    # con arco): ficha propia, con el hábitat de la base (ya asignado arriba).
+    for cid, name in fixes.CREATURE_NAMES.items():
+        if cid in creatures:
+            creatures[cid]["name"] = name
     for it in items.values():
         for s in it["sources"]:
             if s["kind"] == "drop" and s.get("from") in creatures:
@@ -589,30 +605,21 @@ def main() -> None:
                 plant.setdefault(f["item"], ref[f["item"]])
         foods = sorted((r for r in tabs["foods"] if r["tier"] == bid), key=lambda r: -(r["food"]["hp"] + r["food"]["st"] + r["food"]["eitr"]))
         boss = next((b for b in boss_rows if b["biome"] == bid), None)
-        # Los ataques a la base, sólo con los enemigos que viven en el bioma
-        # (ZoTaD, 2026-09-25: "de qué me sirve tener al draco en el pantano").
-        # El juego deja caer casi todos los ataques en los cinco primeros biomas;
-        # uno que no trae a nadie de acá no se muestra.
-        native = {c["slug"] for c in crs}
-        raids = []
-        for e in events:
-            if not (e.get("start") and bid in e["biomes"]):
-                continue
-            who = [r for r in {r["slug"]: r for r in (by_name(cre_by_name, creatures[pf]["name"]["en"]) if pf in creatures else None
-                                                      for pf in e["spawn"]) if r}.values() if r["slug"] in native]
-            if who:
-                raids.append({"name": clean_txt(e["start"]), "after": [r for r in (key_ref(k) for k in e["requires"]) if r],
-                              "until": [r for r in (key_ref(k) for k in e["until"]) if r], "creatures": who})
+        # Enemigos y pacíficas (ZoTaD, 2026-09-25: "ahí sólo deberían aparecer
+        # los enemigos de ese bioma"): manda la lista "passive" del recuadro del
+        # bioma en la wiki; la cría de foca cuenta como la foca.
+        passive = [wiki.norm(n) for n in (wiki.biome_boxes().get(bid) or {}).get("passive", [])]
+        is_passive = lambda c: any(wiki.norm(c["name"]["en"]) == p or wiki.norm(c["name"]["en"]).endswith(" " + p) for p in passive)
         biome_rows.append({
             "id": bid, "slug": bid, "tab": "biomes", "name": name, "art": f"biome_{bid}",
             "env": environments.get(bid, {}),
-            "creatures": [{k: c[k] for k in ("slug", "tab", "name", "icon", "health", "weak", "resist", "immune")} for c in crs],
+            "creatures": [{**{k: c[k] for k in ("slug", "tab", "name", "icon", "health", "weak", "resist", "immune")},
+                           **({"passive": True} if is_passive(c) else {})} for c in crs],
             "resources": [{**v, "how": sorted(v["how"])} for v in res.values()],
             "creatureDrops": sorted(drops.values(), key=lambda d: d["name"]["en"]),
             "loot": sorted(loot.values(), key=lambda d: d["name"]["en"]),
             "plant": sorted(plant.values(), key=lambda d: d["name"]["en"]),
             "places": [{k: p[k] for k in ("slug", "tab", "name", "type", "photo", "inhabitants")} for p in place_rows if bid in p["biomes"]],
-            "events": raids,
             "foods": [{k: r[k] for k in ("slug", "tab", "name", "icon", "food")} for r in foods[:8]],
             "gear": {t: len([r for r in tabs[t] if r["tier"] == bid]) for t in ("weapons", "armor", "foods", "meads")},
             "boss": {k: boss[k] for k in ("slug", "tab", "name", "icon", "art")} if boss else None,

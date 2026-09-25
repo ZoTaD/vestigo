@@ -10,7 +10,7 @@ import RouteLink from "./RouteLink";
 import { useValheimCopy } from "./valheimCopy";
 import { artUrl, BIOME_IDS, clean, tx, type BiomeId, type BiomeRow, type BossRow, type CreatureRow, type Place, type PlaceRow, type Ref, type Tip } from "./valheimData";
 import { BiomeTags, Ing, pctChance, range, RefLink, Slot, WikiFigure, type Nav, type To } from "./ValheimParts";
-import { BiomeEvents, FightBlock, SpawnBlock, TameBlock } from "./ValheimMore";
+import { FightBlock, SpawnBlock, TameBlock } from "./ValheimMore";
 import ValheimPlanButton from "./ValheimPlanButton";
 
 function Tips({ tips }: { tips: Tip[] }) {
@@ -180,6 +180,8 @@ export function BiomePage({ row, bosses, to, navigate }: { row: BiomeRow; bosses
     env.wet && t.guide.envWet,
   ].filter(Boolean) as string[];
   const boss = bosses.find((b) => b.biome === row.id);
+  const enemies = row.creatures.filter((c) => !c.passive);
+  const peaceful = row.creatures.filter((c) => c.passive);
   return (
     <>
       <RouteLink className="vh-back" to={to("biomes")} onNavigate={navigate}>{t.detail.back(t.tabs.biomes)}</RouteLink>
@@ -196,20 +198,21 @@ export function BiomePage({ row, bosses, to, navigate }: { row: BiomeRow; bosses
             <p className="vh-h2">{t.guide.env}</p>
             <div className="vh-warn">{(warns.length ? warns : [t.guide.envNone]).map((w, i) => <p key={i}>{w}</p>)}</div>
           </section>
-          <section className="vh-box">
-            <p className="vh-h2">{t.guide.creatures} · {row.creatures.length}</p>
-            <div style={{ display: "grid", gap: 2 }}>
-              {row.creatures.map((c) => (
-                <RefLink key={c.slug ?? c.name.en} r={c} to={to} navigate={navigate} className="vh-cre">
-                  <Slot icon={c.icon} size="sm" />
-                  <span>{tx(c.name, lang)}<small>{c.weak.length ? `${t.guide.weak}: ${c.weak.map((d) => t.damage[d] ?? d).join(", ")}` : ""}</small></span>
-                  <span className="vh-dim">{c.health ?? ""}</span>
-                </RefLink>
-              ))}
-            </div>
-          </section>
+          {/* Enemigos y pacíficas (ZoTaD, 2026-09-25): sólo lo que vive en el bioma,
+              con la foto grande; los ataques a la base ya no van acá. */}
+          {enemies.length > 0 && (
+            <section className="vh-box">
+              <p className="vh-h2">{t.guide.enemies} · {enemies.length}</p>
+              <div className="vh-ings">{enemies.map((c) => <Ing key={c.slug ?? c.name.en} r={c} qty={null} to={to} navigate={navigate} />)}</div>
+            </section>
+          )}
+          {peaceful.length > 0 && (
+            <section className="vh-box">
+              <p className="vh-h2">{t.guide.peaceful} · {peaceful.length}</p>
+              <div className="vh-ings">{peaceful.map((c) => <Ing key={c.slug ?? c.name.en} r={c} qty={null} to={to} navigate={navigate} />)}</div>
+            </section>
+          )}
           <BiomeResources row={row} to={to} navigate={navigate} />
-          <BiomeEvents events={row.events ?? []} to={to} navigate={navigate} />
         </div>
         <div style={{ display: "grid", gap: 20 }}>
           {boss && (

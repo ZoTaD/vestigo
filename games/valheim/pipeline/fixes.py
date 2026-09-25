@@ -75,3 +75,8 @@ def apply(items: dict) -> None:
 # montículos de barro del Pantano (el mineral de hierro, sólo de meteoritos y
 # del hierro de pantano). Wiki "Coal": con madera en el horno de carbón.
 PLANNER_PREFER: dict[str, str] = {"Iron": "from:IronScrap", "Coal": "from:Wood"}
+
+# Variantes que el juego llama igual que la base pero que ZoTaD quiere ver
+# aparte (2026-09-25: "faltan los draugr arqueros"). Wiki "Draugr": el 25 % sale
+# con arco; mismo hábitat que el Draugr.
+CREATURE_NAMES: dict[str, dict] = {"Draugr_Ranged": {"en": "Draugr Archer", "es": "Draugr arquero"}}
