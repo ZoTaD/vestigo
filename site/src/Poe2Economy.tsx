@@ -3,7 +3,9 @@ import { useCopy, useLang, type Lang } from "./i18n";
 import { takePendingSearch } from "./pendingSearch";
 import {
   loadEconomy,
+  loadUniques,
   peekEconomy,
+  peekUniques,
   pickCurrency,
   fmtAmount,
   nameOf,
@@ -18,6 +20,7 @@ import {
   type ExchangeRow,
   type UniqueRow,
   type Tab,
+  type UniqueRows,
 } from "./poe2EconomyData";
 
 /**
@@ -49,6 +52,12 @@ export default function Poe2Economy({ league: leagueSlug, onLeague }: { league?:
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: "v", dir: -1 });
   const [tip, setTip] = useState<Tip | null>(null);
   const [jumped, setJumped] = useState(false);
+  /**
+   * Las filas de los únicos llegan en su propio archivo (2026-09-25): son tres
+   * cuartos del peso de la liga y la página abre en Moneda. Se piden al abrir
+   * una pestaña de únicos o al buscar, que busca en todas las pestañas.
+   */
+  const [uniq, setUniq] = useState<UniqueRows | null>(() => peekUniques(league.slug));
 
   // Al cambiar de liga se queda la anterior a la vista hasta que llega la
   // nueva (se ve atenuada), así la página no salta a "Cargando" y vuelve.
@@ -57,6 +66,7 @@ export default function Poe2Economy({ league: leagueSlug, onLeague }: { league?:
     let vivo = true;
     setError(false);
     loadEconomy(league.slug).then((e) => vivo && setEco(e), () => vivo && setError(true));
+    setUniq(peekUniques(league.slug));
     return () => { vivo = false; };
   }, [league.slug]);
 
@@ -71,21 +81,31 @@ export default function Poe2Economy({ league: leagueSlug, onLeague }: { league?:
   const tabs = useMemo(() => {
     if (!eco) return [];
     // Una pestaña sin nada no se muestra: Standard no trae únicos, y en las
-    // ligas hardcore chicas medio intercambio viene vacío.
+    // ligas hardcore chicas medio intercambio viene vacío. Las de únicos saben
+    // cuántas filas tienen aunque todavía no hayan llegado.
     return [
-      ...eco.exchange.map((tb) => ({ ...tb, kind: "currency" as Kind })),
-      ...eco.uniques.map((tb) => ({ ...tb, kind: "unique" as Kind })),
-    ].filter((tb) => tb.rows.length > 0) as (Tab<Row> & { kind: Kind })[];
-  }, [eco]);
+      ...eco.exchange.map((tb) => ({ ...tb, count: tb.rows.length, kind: "currency" as Kind })),
+      ...eco.uniques.map((tb) => ({ ...tb, rows: uniq?.[tb.id] ?? [], kind: "unique" as Kind })),
+    ].filter((tb) => tb.count > 0) as (Tab<Row> & { count: number; kind: Kind })[];
+  }, [eco, uniq]);
 
-  // Si la búsqueda vino de la barra, abre la primera pestaña donde hay algo.
+  const wantUniques = !!query.trim() || tabs.some((tb) => tb.kind === "unique" && tb.id === tabId);
   useEffect(() => {
-    if (!eco || jumped || !query) return;
+    if (!wantUniques || uniq) return;
+    let vivo = true;
+    loadUniques(league.slug).then((u) => vivo && setUniq(u), () => undefined);
+    return () => { vivo = false; };
+  }, [wantUniques, uniq, league.slug]);
+
+  // Si la búsqueda vino de la barra, abre la primera pestaña donde hay algo
+  // (esperando a los únicos, que también pueden tenerlo).
+  useEffect(() => {
+    if (!eco || jumped || !query || (!uniq && eco.uniques.length > 0)) return;
     setJumped(true);
     const q = query.toLowerCase();
     const hit = tabs.find((tb) => tb.rows.some((r) => haystack(r).includes(q)));
     if (hit) setTabId(hit.id);
-  }, [eco, jumped, query, tabs]);
+  }, [eco, jumped, query, tabs, uniq]);
 
   if (!eco) {
     return (
@@ -224,7 +244,7 @@ export default function Poe2Economy({ league: leagueSlug, onLeague }: { league?:
             placeholder={t.searchTab}
             aria-label={t.searchTab}
           />
-          <span className="p2-count">{t.count(shown.length)}</span>
+          <span className="p2-count">{t.count(cur.kind === "unique" && !uniq ? cur.count : shown.length)}</span>
         </div>
         <div className="p2-tablewrap">
           <table className="p2-table">
@@ -239,6 +259,9 @@ export default function Poe2Economy({ league: leagueSlug, onLeague }: { league?:
               </tr>
             </thead>
             <tbody onMouseLeave={() => setTip(null)}>
+              {cur.kind === "unique" && !uniq && (
+                <tr><td colSpan={6} className="p2-loading">{t.loading}</td></tr>
+              )}
               {rows.map((r) => {
                 const u = "n" in r;
                 const thin = isThin(r);

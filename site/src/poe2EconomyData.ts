@@ -1,10 +1,12 @@
 /**
  * Datos de la pestaña Economía de PoE2 (2026-09-23).
  *
- * `games/poe2/data/economy/` lo escribe `games/poe2/pipeline/economy.mjs`: un
- * archivo por liga (`<slug>.json`) y el índice `leagues.json`. Cada liga pesa
- * ~200 KB comprimida, así que ninguna entra al bundle: se pide la que se abre y
- * queda en memoria para el resto de la visita.
+ * `games/poe2/data/economy/` lo escribe `games/poe2/pipeline/economy.mjs`: dos
+ * archivos por liga y el índice `leagues.json`. `<slug>.json` trae la moneda y
+ * sólo las pestañas de los únicos; sus filas (tres cuartos del peso) viven en
+ * `<slug>.uniques.json` y se piden recién al abrir una de esas pestañas o al
+ * buscar (2026-09-25, ver economy-split.mjs). Nada entra al bundle: se pide lo
+ * que se abre y queda en memoria para el resto de la visita.
  */
 import type { Lang } from "./i18n";
 import index from "@poe2/economy/leagues.json";
@@ -52,14 +54,24 @@ export interface Tab<R> {
   rows: R[];
 }
 
+/** Una pestaña de únicos sin sus filas: lo que trae `<slug>.json`. */
+export interface UniqueHead {
+  id: string;
+  label: { es: string; en: string };
+  count: number;
+}
+
 export interface Economy {
   league: string;
   updated: string;
   rates: { chaos: number; exalted: number };
   core: Record<Currency, { en: string; es: string; icon: string }>;
   exchange: Tab<ExchangeRow>[];
-  uniques: Tab<UniqueRow>[];
+  uniques: UniqueHead[];
 }
+
+/** Las filas de cada pestaña de únicos, por id de pestaña. */
+export type UniqueRows = Record<string, UniqueRow[]>;
 
 export interface League {
   id: string;
@@ -94,7 +106,12 @@ export function sibling(l: League, hardcore: boolean): League | undefined {
 /** Las ligas sin repetir el par softcore/hardcore, en el orden del índice. */
 export const BASE_LEAGUES: League[] = LEAGUES.filter((l, i) => LEAGUES.findIndex((o) => baseName(o) === baseName(l)) === i);
 
-const archivos = import.meta.glob<{ default: unknown }>(["@poe2/economy/*.json", "!@poe2/economy/leagues.json"]);
+const archivos = import.meta.glob<{ default: unknown }>([
+  "@poe2/economy/*.json",
+  "!@poe2/economy/leagues.json",
+  "!@poe2/economy/*.uniques.json",
+]);
+const archivosUnicos = import.meta.glob<{ default: unknown }>("@poe2/economy/*.uniques.json");
 const pedidos = new Map<string, Promise<Economy>>();
 /** Lo ya cargado, para el primer render (y el prerender del build). */
 const listas = new Map<string, Economy>();
@@ -112,6 +129,26 @@ export function loadEconomy(slug: string): Promise<Economy> {
   return p;
 }
 export const peekEconomy = (slug: string): Economy | null => listas.get(slug) ?? null;
+
+const pedidosUnicos = new Map<string, Promise<UniqueRows>>();
+const unicos = new Map<string, UniqueRows>();
+/** Las filas de los únicos de una liga, que viajan en su propio archivo. */
+export function loadUniques(slug: string): Promise<UniqueRows> {
+  let p = pedidosUnicos.get(slug);
+  if (!p) {
+    const key = Object.keys(archivosUnicos).find((k) => k.endsWith(`/${slug}.uniques.json`));
+    if (!key) return Promise.resolve({});
+    p = archivosUnicos[key]().then((m) => {
+      const file = m.default as { tabs: { id: string; rows: UniqueRow[] }[] };
+      const rows: UniqueRows = Object.fromEntries(file.tabs.map((t) => [t.id, t.rows]));
+      unicos.set(slug, rows);
+      return rows;
+    });
+    pedidosUnicos.set(slug, p);
+  }
+  return p;
+}
+export const peekUniques = (slug: string): UniqueRows | null => unicos.get(slug) ?? null;
 
 /** Por debajo de esto un precio no es confiable: casi nadie lo vende. */
 export const isThin = (r: ExchangeRow | UniqueRow): boolean => ("n" in r ? r.n < 10 : r.vol < 1);

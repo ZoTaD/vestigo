@@ -13,10 +13,12 @@
  *
  * Sin dependencias: Node 18+ trae fetch. Uso: `node games/poe2/pipeline/economy.mjs [liga…]`.
  * Sin ligas baja todas las que lista poe.ninja, en su orden (el primero es el de
- * por defecto en el sitio). Escribe un archivo por liga en `data/economy/<slug>.json`
- * y el índice `data/economy/leagues.json`; una liga que falla no tira las demás.
+ * por defecto en el sitio). Escribe dos archivos por liga en `data/economy/`
+ * (`<slug>.json` y `<slug>.uniques.json`, ver economy-split.mjs) y el índice
+ * `data/economy/leagues.json`; una liga que falla no tira las demás.
  */
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from "node:fs";
+import { writeSplit } from "./economy-split.mjs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -132,7 +134,8 @@ async function main() {
     try {
       const out = await fetchLeague(l.id, { esById, uniqEs, trMod });
       const slug = slugOf(l.id);
-      writeFileSync(join(OUT_DIR, `${slug}.json`), JSON.stringify(out));
+      // En dos archivos: la moneda y, aparte, las filas de únicos (ver economy-split.mjs).
+      writeSplit(OUT_DIR, slug, out);
       const nEx = out.exchange.reduce((s, c) => s + c.rows.length, 0);
       const nU = out.uniques.reduce((s, c) => s + c.rows.length, 0);
       const vol = out.exchange.reduce((s, c) => s + c.rows.reduce((a, r) => a + r.vol, 0), 0);
