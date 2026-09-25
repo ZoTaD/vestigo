@@ -224,7 +224,8 @@ export function EffectsBlock({ effects, setPieces, to, navigate }: { effects: It
 
 /**
  * Los ataques a la base que pueden tocar en un bioma: el mensaje que avisa, desde
- * y hasta qué jefe, y quién viene (pedido de ZoTaD, 2026-09-24).
+ * y hasta qué jefe, y quién viene (pedido de ZoTaD, 2026-09-24). Sólo con los
+ * enemigos que viven en el bioma (`site.py`, 2026-09-25).
  */
 export function BiomeEvents({ events, to, navigate }: { events: NonNullable<BiomeRow["events"]>; to: To; navigate: Nav }) {
   const t = useValheimCopy().more;
@@ -234,7 +235,7 @@ export function BiomeEvents({ events, to, navigate }: { events: NonNullable<Biom
     list.map((r, j) => <span key={j}>{j > 0 && ", "}<RefLink r={r as never} to={to} navigate={navigate}>{tx(r.name, lang)}</RefLink></span>);
   return (
     <section className="vh-box">
-      <p className="vh-h2">{t.events} · {events.length}</p>
+      <p className="vh-h2">{t.biomeEvents} · {events.length}</p>
       <ul className="vh-rules">
         {events.map((e, i) => (
           <li key={i} style={{ display: "grid", gap: 6 }}>

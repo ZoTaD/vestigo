@@ -589,6 +589,20 @@ def main() -> None:
                 plant.setdefault(f["item"], ref[f["item"]])
         foods = sorted((r for r in tabs["foods"] if r["tier"] == bid), key=lambda r: -(r["food"]["hp"] + r["food"]["st"] + r["food"]["eitr"]))
         boss = next((b for b in boss_rows if b["biome"] == bid), None)
+        # Los ataques a la base, sólo con los enemigos que viven en el bioma
+        # (ZoTaD, 2026-09-25: "de qué me sirve tener al draco en el pantano").
+        # El juego deja caer casi todos los ataques en los cinco primeros biomas;
+        # uno que no trae a nadie de acá no se muestra.
+        native = {c["slug"] for c in crs}
+        raids = []
+        for e in events:
+            if not (e.get("start") and bid in e["biomes"]):
+                continue
+            who = [r for r in {r["slug"]: r for r in (by_name(cre_by_name, creatures[pf]["name"]["en"]) if pf in creatures else None
+                                                      for pf in e["spawn"]) if r}.values() if r["slug"] in native]
+            if who:
+                raids.append({"name": clean_txt(e["start"]), "after": [r for r in (key_ref(k) for k in e["requires"]) if r],
+                              "until": [r for r in (key_ref(k) for k in e["until"]) if r], "creatures": who})
         biome_rows.append({
             "id": bid, "slug": bid, "tab": "biomes", "name": name, "art": f"biome_{bid}",
             "env": environments.get(bid, {}),
@@ -598,12 +612,7 @@ def main() -> None:
             "loot": sorted(loot.values(), key=lambda d: d["name"]["en"]),
             "plant": sorted(plant.values(), key=lambda d: d["name"]["en"]),
             "places": [{k: p[k] for k in ("slug", "tab", "name", "type", "photo", "inhabitants")} for p in place_rows if bid in p["biomes"]],
-            # Los ataques a la base que pueden pasar acá, con quién viene.
-            "events": [{"name": clean_txt(e["start"]), "after": [r for r in (key_ref(k) for k in e["requires"]) if r],
-                        "until": [r for r in (key_ref(k) for k in e["until"]) if r],
-                        "creatures": list({r["slug"]: r for r in (by_name(cre_by_name, creatures[pf]["name"]["en"]) if pf in creatures else None
-                                                                  for pf in e["spawn"]) if r}.values())}
-                       for e in events if e.get("start") and bid in e["biomes"]],
+            "events": raids,
             "foods": [{k: r[k] for k in ("slug", "tab", "name", "icon", "food")} for r in foods[:8]],
             "gear": {t: len([r for r in tabs[t] if r["tier"] == bid]) for t in ("weapons", "armor", "foods", "meads")},
             "boss": {k: boss[k] for k in ("slug", "tab", "name", "icon", "art")} if boss else None,
