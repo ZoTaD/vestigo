@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * La economía de una liga en dos archivos (2026-09-25).
  *
