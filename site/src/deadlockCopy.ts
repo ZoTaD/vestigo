@@ -11,6 +11,7 @@
  * `copy.games.x` siguen escribiéndose igual.
  */
 import { COPY, useLang, type Lang } from "./i18n";
+import { DL_BAND_NAMES } from "./deadlockBandNames";
 
 const EN = {
   deadlock: {
@@ -1164,12 +1165,7 @@ const EN = {
       wins: (n: string) => `${n} wins`,
       of: (n: string) => `of ${n}`,
     },
-    bands: {
-      "phantom-above": "Phantom+",
-      "archon-oracle": "Emissary / Oracle",
-      "ritualist-emissary": "Mystic / Ritualist",
-      "arcanist-below": "Sentinel and below",
-    },
+    bands: DL_BAND_NAMES.en,
     note: "Each band is measured on its own matches, not on the ranks above it.",
     /**
      * Sólo aparece mientras la banda publicada no sea la preferida. No es una
@@ -2084,12 +2080,7 @@ const ES: typeof EN = {
       wins: (n: string) => `${n} ganadas`,
       of: (n: string) => `de ${n}`,
     },
-    bands: {
-      "phantom-above": "Fantasma+",
-      "archon-oracle": "Emisario/a / Oráculo",
-      "ritualist-emissary": "Místico/a / Ritualista",
-      "arcanist-below": "Centinela y abajo",
-    },
+    bands: DL_BAND_NAMES.es,
     note: "Cada banda se mide con sus propias partidas, no con las de los rangos de arriba.",
     fallback: (shown: string) =>
       `Fantasma+ todavía no tiene partidas clasificatorias suficientes en esta ventana. ` +

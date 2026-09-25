@@ -3,8 +3,8 @@ import heroesJson from "@deadlock/heroes.json";
 import { buildHeroes, patchMovers, PUBLISHED_BAND, type Hero } from "./deadlockData";
 import { buildItems as buildDlItems } from "./deadlockItemsData";
 import { heroes as heroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
-import { useLang, useLocale } from "./i18n";
-import { useCopy } from "./deadlockCopy";
+import { DL_BAND_NAMES } from "./deadlockBandNames";
+import { useCopy, useLang, useLocale } from "./i18n";
 import { lastProfile } from "./lastProfile";
 import { setPendingSearch } from "./pendingSearch";
 import RouteLink from "./RouteLink";
@@ -62,7 +62,7 @@ export default function Home({
     null
   );
 
-  const bandName = copy.deadlock.bands[PUBLISHED_BAND];
+  const bandName = DL_BAND_NAMES[lang][PUBLISHED_BAND];
 
   /* --- Buscador ---------------------------------------------------------- */
   // Sólo Deadlock: es el único juego con perfiles de jugador.
