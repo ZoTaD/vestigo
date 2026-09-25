@@ -603,6 +603,10 @@
  },
  {
   "from": "CopperOre",
+  "fuel": {
+   "item": "Coal",
+   "perProduct": 2
+  },
   "station": "piece_smelter",
   "time": 30.0,
   "to": "Copper",
@@ -610,6 +614,10 @@
  },
  {
   "from": "IronOre",
+  "fuel": {
+   "item": "Coal",
+   "perProduct": 2
+  },
   "station": "piece_smelter",
   "time": 30.0,
   "to": "Iron",
@@ -617,6 +625,10 @@
  },
  {
   "from": "IronScrap",
+  "fuel": {
+   "item": "Coal",
+   "perProduct": 2
+  },
   "station": "piece_smelter",
   "time": 30.0,
   "to": "Iron",
@@ -624,6 +636,10 @@
  },
  {
   "from": "BronzeScrap",
+  "fuel": {
+   "item": "Coal",
+   "perProduct": 2
+  },
   "station": "piece_smelter",
   "time": 30.0,
   "to": "Bronze",
@@ -631,6 +647,10 @@
  },
  {
   "from": "TinOre",
+  "fuel": {
+   "item": "Coal",
+   "perProduct": 2
+  },
   "station": "piece_smelter",
   "time": 30.0,
   "to": "Tin",
@@ -638,6 +658,10 @@
  },
  {
   "from": "SilverOre",
+  "fuel": {
+   "item": "Coal",
+   "perProduct": 2
+  },
   "station": "piece_smelter",
   "time": 30.0,
   "to": "Silver",
@@ -645,6 +669,10 @@
  },
  {
   "from": "CopperScrap",
+  "fuel": {
+   "item": "Coal",
+   "perProduct": 2
+  },
   "station": "piece_smelter",
   "time": 30.0,
   "to": "Copper",
@@ -673,6 +701,10 @@
  },
  {
   "from": "Softtissue",
+  "fuel": {
+   "item": "Sap",
+   "perProduct": 1
+  },
   "station": "piece_eitrrefinery",
   "time": 40.0,
   "to": "Eitr",
@@ -701,6 +733,10 @@
  },
  {
   "from": "FlametalOreNew",
+  "fuel": {
+   "item": "Coal",
+   "perProduct": 2
+  },
   "station": "piece_blastfurnace",
   "time": 30.0,
   "to": "FlametalNew",
@@ -708,6 +744,10 @@
  },
  {
   "from": "BlackMetalScrap",
+  "fuel": {
+   "item": "Coal",
+   "perProduct": 2
+  },
   "station": "piece_blastfurnace",
   "time": 30.0,
   "to": "BlackMetal",
@@ -715,6 +755,10 @@
  },
  {
   "from": "GoldOre",
+  "fuel": {
+   "item": "Coal",
+   "perProduct": 2
+  },
   "station": "piece_blastfurnace",
   "time": 30.0,
   "to": "Gold",

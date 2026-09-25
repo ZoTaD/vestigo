@@ -2069,7 +2069,7 @@
   "comfort": null,
   "desc": {
    "en": "An invigorating mushroom that can be used for cooking.",
-   "es": "Un hongo vigorizante que puede usarse para cocinar."
+   "es": "Hinchados con magia, estos orbes dorados burbujean desde el suelo por donde los Jotun cayeron."
   },
   "extends": null,
   "icon": "mushroomjotunpuffs",
@@ -2092,7 +2092,7 @@
   "comfort": null,
   "desc": {
    "en": "A mushroom commonly used in a sorcerer's diet.",
-   "es": "Un hongo común en la dieta de los hechiceros."
+   "es": "Las azules y delicadas oronjas de los magos crepitan como terminaciones nerviosas y con una vitalidad hechizante."
   },
   "extends": null,
   "icon": "mushroommagecap",
@@ -8660,7 +8660,7 @@
   "icon": "drawbridge_log",
   "id": "piece_drawbridge_log",
   "name": {
-   "en": "Rustic Drawbridge ",
+   "en": "Rustic Drawbridge",
    "es": "Puente levadizo rústico "
   },
   "requirements": [
@@ -10938,7 +10938,7 @@
   "comfort": null,
   "desc": {
    "en": "Can be eaten as is, or used for more advanced cooking.",
-   "es": "Se puede comer tal cual o usar en preparaciones más avanzadas."
+   "es": "Planta semillas de zanahoria para cultivar zanahorias."
   },
   "extends": null,
   "icon": "carrot",
@@ -10984,7 +10984,7 @@
   "comfort": null,
   "desc": {
    "en": "An invigorating mushroom that can be used for cooking.",
-   "es": "Un hongo vigorizante que puede usarse para cocinar."
+   "es": "Hinchados con magia, estos orbes dorados burbujean desde el suelo por donde los Jotun cayeron."
   },
   "extends": null,
   "icon": "mushroomjotunpuffs",
@@ -11007,7 +11007,7 @@
   "comfort": null,
   "desc": {
    "en": "A mushroom commonly used in a sorcerer's diet.",
-   "es": "Un hongo común en la dieta de los hechiceros."
+   "es": "Las azules y delicadas oronjas de los magos crepitan como terminaciones nerviosas y con una vitalidad hechizante."
   },
   "extends": null,
   "icon": "mushroommagecap",

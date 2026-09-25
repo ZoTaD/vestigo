@@ -5406,7 +5406,7 @@
    "slash": 5.0
   },
   "desc": {
-   "en": "A perfectly-balanced axe forged from dark metal with an emerald sheen.",
+   "en": "A perfectly balanced axe forged from dark metal with an emerald sheen.",
    "es": "Un hacha perfectamente equilibrada y forjada con metal oscuro que irradia una lustre esmeralda."
   },
   "effects": {
@@ -9982,7 +9982,7 @@
   },
   "desc": {
    "en": "Risen again from the ashes, this bow holds unyielding strength.",
-   "es": "Resucitado de las cenizas, este arco posee una fuerza inquebrantable."
+   "es": "Surgido nuevamente de las cenizas, este arco contiene una fuerza inflexible."
   },
   "effects": {
    "move": -0.05
@@ -9995,7 +9995,7 @@
   "maxQuality": 4,
   "name": {
    "en": "Ash Fang",
-   "es": "Colmillo de ceniza"
+   "es": "Colmillo de las cenizas"
   },
   "setName": null,
   "skill": 8,
@@ -11915,7 +11915,7 @@
   "damage": null,
   "damagePerLevel": null,
   "desc": {
-   "en": "Best used with a catapult. Make sure nothing fragile is in the way.\r\n",
+   "en": "Best used with a catapult. Make sure nothing fragile is in the way.\n",
    "es": "Lo mejor es usarlas en una catapulta. Asegúrate de no apuntar a algo frágil."
   },
   "food": null,
@@ -17590,7 +17590,7 @@
   "damagePerLevel": null,
   "desc": {
    "en": "The smouldering remains of a patriarch.",
-   "es": "El poder místico se revelará algún día."
+   "es": "Los restos humeantes de un patriarca."
   },
   "food": null,
   "icon": "faderdrop",
@@ -17600,7 +17600,7 @@
   "maxQuality": 1,
   "name": {
    "en": "Kindled Ribs",
-   "es": "Reliquia de Fader"
+   "es": "Costillas calcinadas"
   },
   "setName": null,
   "skill": 1,
@@ -18391,7 +18391,7 @@
   "damage": null,
   "damagePerLevel": null,
   "desc": {
-   "en": "Set the table with whatever food and drink you fancy, and impress your guests with a delicious feast.\r\n\r\n<color=yellow>Once a feast has been eaten of, it won't return any resources if dismantled.</color>",
+   "en": "Set the table with whatever food and drink you fancy, and impress your guests with a delicious feast.\n\n<color=yellow>Once a feast has been eaten of, it won't return any resources if dismantled.</color>",
    "es": "Prepara la mesa con la comida y bebida que te apetezca e impresiona a tus invitados con un delicioso festín."
   },
   "food": null,
@@ -35386,7 +35386,7 @@
   "damagePerLevel": null,
   "desc": {
    "en": "An invigorating mushroom that can be used for cooking.",
-   "es": "Un hongo vigorizante que puede usarse para cocinar."
+   "es": "Hinchados con magia, estos orbes dorados burbujean desde el suelo por donde los Jotun cayeron."
   },
   "food": {
    "eitr": 0.0,
@@ -35482,7 +35482,7 @@
   "damagePerLevel": null,
   "desc": {
    "en": "A mushroom commonly used in a sorcerer's diet.",
-   "es": "Un hongo común en la dieta de los hechiceros."
+   "es": "Las azules y delicadas oronjas de los magos crepitan como terminaciones nerviosas y con una vitalidad hechizante."
   },
   "food": {
    "eitr": 25.0,
@@ -48834,8 +48834,8 @@
   "damage": null,
   "damagePerLevel": null,
   "desc": {
-   "en": "Bones and viscous goo, held together by some unseen force.\r\n\r\nOffer it to the Sacrificial Stones.",
-   "es": "Estos huesos y esta masa viscosa se mantienen unidos por una fuerza intangible.\r\n\r\nHaz una ofrenda en las piedras de sacrificio."
+   "en": "Bones and viscous goo, held together by some unseen force.\n\nOffer it to the Sacrificial Stones.",
+   "es": "Estos huesos y esta masa viscosa se mantienen unidos por una fuerza intangible.\n\nHaz una ofrenda en las piedras de sacrificio."
   },
   "food": null,
   "icon": "trophybonemass",
@@ -49214,8 +49214,8 @@
   "damage": null,
   "damagePerLevel": null,
   "desc": {
-   "en": "The head of a dragon, majestic even in the rigor of death.\r\n\r\nOffer it to the Sacrificial Stones.",
-   "es": "Cabeza de una dragona que no ha perdido ni un ápice de majestuosidad tras la muerte.\r\n\r\nHaz una ofrenda en las piedras de sacrificio."
+   "en": "The head of a dragon, majestic even in the rigor of death.\n\nOffer it to the Sacrificial Stones.",
+   "es": "Cabeza de una dragona que no ha perdido ni un ápice de majestuosidad tras la muerte.\n\nHaz una ofrenda en las piedras de sacrificio."
   },
   "food": null,
   "icon": "trophydragonqueen",
@@ -49523,8 +49523,8 @@
   "damage": null,
   "damagePerLevel": null,
   "desc": {
-   "en": "This severed head oozes power.\r\n\r\nOffer it to the Sacrificial Stones.",
-   "es": "Esta cabeza decapitada exuda poder.\r\n\r\nHaz una ofrenda en las piedras de sacrificio."
+   "en": "This severed head oozes power.\n\nOffer it to the Sacrificial Stones.",
+   "es": "Esta cabeza decapitada exuda poder.\n\nHaz una ofrenda en las piedras de sacrificio."
   },
   "food": null,
   "icon": "trophyeikthyr",
@@ -49609,8 +49609,8 @@
   "damage": null,
   "damagePerLevel": null,
   "desc": {
-   "en": "The green dragon, corrupted beyond redemption.\r\n\r\nOffer him to the sacrificial stones.",
-   "es": "El dragón verde, corrompido más allá de la redención.\r\n\r\nOfrécelo a las piedras de sacrificio."
+   "en": "The green dragon, corrupted beyond redemption.\n\nOffer him to the sacrificial stones.",
+   "es": "El dragón verde, corrompido más allá de la redención.\n\nOfrécelo a las piedras de sacrificio."
   },
   "food": null,
   "icon": "trophyfader",
@@ -50126,7 +50126,7 @@
   "damage": null,
   "damagePerLevel": null,
   "desc": {
-   "en": "The crownless head of a dead king.\r\n\r\nOffer it to the Sacrificial Stones.",
+   "en": "The crownless head of a dead king.\n\nOffer it to the Sacrificial Stones.",
    "es": "La cabeza sin corona de un rey muerto."
   },
   "food": null,
@@ -51089,7 +51089,7 @@
   "damage": null,
   "damagePerLevel": null,
   "desc": {
-   "en": "She has seen enough.\r\n\r\nOffer it to the Sacrificial Stones.",
+   "en": "She has seen enough.\n\nOffer it to the Sacrificial Stones.",
    "es": "Ella ha visto demasiado."
   },
   "food": null,
@@ -51436,8 +51436,8 @@
   "damage": null,
   "damagePerLevel": null,
   "desc": {
-   "en": "This severed head oozes power.\r\n\r\nOffer it to the Sacrificial Stones.",
-   "es": "Esta cabeza decapitada exuda poder.\r\n\r\nHaz una ofrenda en las piedras de sacrificio."
+   "en": "This severed head oozes power.\n\nOffer it to the Sacrificial Stones.",
+   "es": "Esta cabeza decapitada exuda poder.\n\nHaz una ofrenda en las piedras de sacrificio."
   },
   "food": null,
   "icon": "trophytheelder",

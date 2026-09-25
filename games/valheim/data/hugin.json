@@ -5,8 +5,8 @@
    "es": "Hugin: Altares de los Desterrados"
   },
   "text": {
-   "en": "You have found the summoning place of one of the Forsaken. Make the correct offering at their altar and they will come.\r\n\r\nBe wary though, the Forsaken are not easy prey, so craft a wicked weapon, don your finest armour, and eat a hearty meal before engaging them in combat.",
-   "es": "Has encontrado el lugar de invocación de uno de los Desterrados. Aparecerá si haces la ofrenda correcta en el altar.\r\n\r\nPero has de tener muchísimo cuidado, pues no son presas fáciles. Hazte con un arma poderosa, ponte tu mejor armadura y llénate bien el estómago antes de enfrentarte a uno de ellos."
+   "en": "You have found the summoning place of one of the Forsaken. Make the correct offering at their altar and they will come.\n\nBe wary though, the Forsaken are not easy prey, so craft a wicked weapon, don your finest armour, and eat a hearty meal before engaging them in combat.",
+   "es": "Has encontrado el lugar de invocación de uno de los Desterrados. Aparecerá si haces la ofrenda correcta en el altar.\n\nPero has de tener muchísimo cuidado, pues no son presas fáciles. Hazte con un arma poderosa, ponte tu mejor armadura y llénate bien el estómago antes de enfrentarte a uno de ellos."
   },
   "topic": {
    "en": "Calling forth the beast",
@@ -19,8 +19,8 @@
    "es": "Hugin: prensa artesanal"
   },
   "text": {
-   "en": "Now you'll be able to craft ceramic tiles, which have excellent heat insulation.\r\nYou'll need them if you're to travel southwards!",
-   "es": "Ahora podrás fabricar baldosas de cerámica, que tienen un excelente aislamiento térmico.\r\n¡Las necesitarás si vas a viajar hacia el sur!"
+   "en": "Now you'll be able to craft ceramic tiles, which have excellent heat insulation.\nYou'll need them if you're to travel southwards!",
+   "es": "Ahora podrás fabricar baldosas de cerámica, que tienen un excelente aislamiento térmico.\n¡Las necesitarás si vas a viajar hacia el sur!"
   },
   "topic": {
    "en": "A new tool",
@@ -33,8 +33,8 @@
    "es": "Hugin: aguas hirviendo"
   },
   "text": {
-   "en": "It seems you have ventured to the boiling waters of the south. As you surely noted, this can be a deadly pursuit.\r\nTo traverse these waters you will need to build something sturdier if you dont want to sleep with the fishes.\r\n",
-   "es": "Parece que te has aventurado a las aguas hirviendo del sur. Como seguramente habrás notado, esta puede ser una búsqueda mortal.\r\nPara atravesar estas aguas necesitarás construir algo más resistente si no quieres dormir con los peces.\r\n"
+   "en": "It seems you have ventured to the boiling waters of the south. As you surely noted, this can be a deadly pursuit.\nTo traverse these waters you will need to build something sturdier if you dont want to sleep with the fishes.\n",
+   "es": "Parece que te has aventurado a las aguas hirviendo del sur. Como seguramente habrás notado, esta puede ser una búsqueda mortal.\nPara atravesar estas aguas necesitarás construir algo más resistente si no quieres dormir con los peces.\n"
   },
   "topic": {
    "en": "Ahoy!",
@@ -47,8 +47,8 @@
    "es": "Hugin: Tierras de Ceniza"
   },
   "text": {
-   "en": "You have discovered the Ashlands, the very hottest parts of the tenth world.\r\nHere, water boils without a cauldron, and anything flammable can be set alight with just a spark. Be careful!",
-   "es": "Has descubierto las Tierras de Ceniza, las partes más cálidas del décimo mundo.\r\nAquí, el agua hierve sin necesitar un caldero, y cualquier cosa inflamable puede arder con solo una chispa. ¡Ten cuidado!"
+   "en": "You have discovered the Ashlands, the very hottest parts of the tenth world.\nHere, water boils without a cauldron, and anything flammable can be set alight with just a spark. Be careful!",
+   "es": "Has descubierto las Tierras de Ceniza, las partes más cálidas del décimo mundo.\nAquí, el agua hierve sin necesitar un caldero, y cualquier cosa inflamable puede arder con solo una chispa. ¡Ten cuidado!"
   },
   "topic": {
    "en": "Keep a cool head!",
@@ -75,8 +75,8 @@
    "es": "Hugin: Asentarse"
   },
   "text": {
-   "en": "Sleep the night away in your bed and awaken feeling refreshed and full of energy.\r\n\r\nAnother improvement to your home would be some chests where you can store items. <color=yellow>It is good practice to always have some spare equipment</color>, if something unfortunate should happen to you while exploring...",
-   "es": "Duerme a pierna suelta en la cama y te despertarás con las energías recargadas por completo.\r\n\r\nTambién puedes colocar cofres en casa para guardar objetos y, de paso, mejorar tu morada. <color=yellow>Nunca está de más tener equipo de repuesto</color> por si te ocurre alguna desgracia cuando salgas a explorar..."
+   "en": "Sleep the night away in your bed and awaken feeling refreshed and full of energy.\n\nAnother improvement to your home would be some chests where you can store items. <color=yellow>It is good practice to always have some spare equipment</color>, if something unfortunate should happen to you while exploring...",
+   "es": "Duerme a pierna suelta en la cama y te despertarás con las energías recargadas por completo.\n\nTambién puedes colocar cofres en casa para guardar objetos y, de paso, mejorar tu morada. <color=yellow>Nunca está de más tener equipo de repuesto</color> por si te ocurre alguna desgracia cuando salgas a explorar..."
   },
   "topic": {
    "en": "A headrest for the weary!",
@@ -117,8 +117,8 @@
    "es": "Hugin: Frío"
   },
   "text": {
-   "en": "When the temperature drops at night, or if you are wet, you will suffer from being cold. This reduces your stamina regeneration.\r\n\r\nSeeking shelter by an open flame is your best option when this happens.",
-   "es": "Cuando la temperatura desciende al caer la noche o si te empapas, empezarás a sufrir por el frío y se reducirá tu regeneración de vigor.\r\n\r\nLo mejor que puedes hacer es cobijarte junto al fuego."
+   "en": "When the temperature drops at night, or if you are wet, you will suffer from being cold. This reduces your stamina regeneration.\n\nSeeking shelter by an open flame is your best option when this happens.",
+   "es": "Cuando la temperatura desciende al caer la noche o si te empapas, empezarás a sufrir por el frío y se reducirá tu regeneración de vigor.\n\nLo mejor que puedes hacer es cobijarte junto al fuego."
   },
   "topic": {
    "en": "Be wary of the weather",
@@ -131,8 +131,8 @@
    "es": "Hugin: Mazmorras"
   },
   "text": {
-   "en": "Delves and dungeons can be found across the tenth world. They are monuments of the past, and most often filled with the riches of civilizations long lost.\r\n\r\nRemember to bring a light source!",
-   "es": "Hay minas y mazmorras por todo el décimo mundo. Son monumentos del pasado y suelen estar a rebosar de riquezas de las civilizaciones de antaño.\r\n\r\nEso sí, no te olvides de llevar algo de luz."
+   "en": "Delves and dungeons can be found across the tenth world. They are monuments of the past, and most often filled with the riches of civilizations long lost.\n\nRemember to bring a light source!",
+   "es": "Hay minas y mazmorras por todo el décimo mundo. Son monumentos del pasado y suelen estar a rebosar de riquezas de las civilizaciones de antaño.\n\nEso sí, no te olvides de llevar algo de luz."
   },
   "topic": {
    "en": "Treasures lie below",
@@ -145,8 +145,8 @@
    "es": "Hugin: Muerte"
   },
   "text": {
-   "en": "Each time you are struck down, you will <color=yellow\">forget a small part of your abilities and drop your belongings</color> at the site of the accident.\r\n\r\nIf you wish you were home by now I'd recommend <color=yellow\">building a bed</color>, wherever home may be.",
-   "es": "Cada vez que te derroten, <color=yellow\">olvidarás una pequeña parte de tus habilidades y tus pertenencias se quedarán</color> en el lugar del accidente.\r\n\r\nSi desearías estar en casa ahora mismo, te recomiendo que <color=yellow\">construyas una cama</color>, esté donde esté tu hogar."
+   "en": "Each time you are struck down, you will <color=yellow\">forget a small part of your abilities and drop your belongings</color> at the site of the accident.\n\nIf you wish you were home by now I'd recommend <color=yellow\">building a bed</color>, wherever home may be.",
+   "es": "Cada vez que te derroten, <color=yellow\">olvidarás una pequeña parte de tus habilidades y tus pertenencias se quedarán</color> en el lugar del accidente.\n\nSi desearías estar en casa ahora mismo, te recomiendo que <color=yellow\">construyas una cama</color>, esté donde esté tu hogar."
   },
   "topic": {
    "en": "You suffered a mortal blow!",
@@ -187,8 +187,8 @@
    "es": "Hugin: Comida"
   },
   "text": {
-   "en": "You have found a snack. Consume it to improve your health and stamina.\r\n\r\nBe aware that before long you will grow hungry again, so try to always have at least a couple of different meals ready.",
-   "es": "Has encontrado un aperitivo, cómetelo para mejorar tanto la salud como el vigor.\r\n\r\nTen en cuenta que, pasado un rato, volverás a tener hambre, por lo que lo ideal es tener al menos un par de comidas distintas preparadas."
+   "en": "You have found a snack. Consume it to improve your health and stamina.\n\nBe aware that before long you will grow hungry again, so try to always have at least a couple of different meals ready.",
+   "es": "Has encontrado un aperitivo, cómetelo para mejorar tanto la salud como el vigor.\n\nTen en cuenta que, pasado un rato, volverás a tener hambre, por lo que lo ideal es tener al menos un par de comidas distintas preparadas."
   },
   "topic": {
    "en": "A tasty morsel!",
@@ -215,8 +215,8 @@
    "es": "Hugin: Martillo"
   },
   "text": {
-   "en": "With this tool you will raise mighty halls and towering fortifications.\r\n\r\nStart by building a <color=yellow>workbench</color>. This in turn will enable you to construct other things.",
-   "es": "Podrás erigir salas enormes y fortificaciones gigantescas con esta herramienta.\r\n\r\nAntes de nada, construye un <color=yellow>banco de trabajo</color> y así podrás fabricar más cosas."
+   "en": "With this tool you will raise mighty halls and towering fortifications.\n\nStart by building a <color=yellow>workbench</color>. This in turn will enable you to construct other things.",
+   "es": "Podrás erigir salas enormes y fortificaciones gigantescas con esta herramienta.\n\nAntes de nada, construye un <color=yellow>banco de trabajo</color> y así podrás fabricar más cosas."
   },
   "topic": {
    "en": "You have crafted a hammer",
@@ -229,8 +229,8 @@
    "es": "Hugin: Azada"
   },
   "text": {
-   "en": "This tool is used for landscaping. You could say it is the perfect complement to the hammer.\r\n\r\nUse it to clear the ground and manipulate the terrain. It is easier to create buildings on level ground!",
-   "es": "Esta herramienta es la clave de la jardinería y podría decirse que es el complemento perfecto del martillo.\r\n\r\nÚsala para despejar y manipular el terreno. Es mucho más sencillo construir edificios en superficies planas."
+   "en": "This tool is used for landscaping. You could say it is the perfect complement to the hammer.\n\nUse it to clear the ground and manipulate the terrain. It is easier to create buildings on level ground!",
+   "es": "Esta herramienta es la clave de la jardinería y podría decirse que es el complemento perfecto del martillo.\n\nÚsala para despejar y manipular el terreno. Es mucho más sencillo construir edificios en superficies planas."
   },
   "topic": {
    "en": "You have crafted a hoe",
@@ -243,8 +243,8 @@
    "es": "Hugin: Hambre"
   },
   "text": {
-   "en": "Consuming food is of <color=yellow>utmost importance</color> to a viking warrior, even in the afterlife. Having a full belly both fortifies your health and improves your stamina.\r\n\r\nFood can be found everywhere in the world, and a great deal of it can be prepared at a <color=yellow>cooking station</color>.",
-   "es": "El consumo de alimentos es de <color=yellow>suma importancia</color> para los vikingos, incluso en la otra vida. Si tienes el estómago lleno, tendrás mejor salud y vigor.\r\n\r\nPodrás encontrar comida en cualquier rincón del mundo, y puedes prepararla a tu gusto en la <color=yellow>estación de cocina</color>."
+   "en": "Consuming food is of <color=yellow>utmost importance</color> to a viking warrior, even in the afterlife. Having a full belly both fortifies your health and improves your stamina.\n\nFood can be found everywhere in the world, and a great deal of it can be prepared at a <color=yellow>cooking station</color>.",
+   "es": "El consumo de alimentos es de <color=yellow>suma importancia</color> para los vikingos, incluso en la otra vida. Si tienes el estómago lleno, tendrás mejor salud y vigor.\n\nPodrás encontrar comida en cualquier rincón del mundo, y puedes prepararla a tu gusto en la <color=yellow>estación de cocina</color>."
   },
   "topic": {
    "en": "You need sustenance",
@@ -257,8 +257,8 @@
    "es": "Hugin: Inventario"
   },
   "text": {
-   "en": "Most items must be crafted. However, due to your recent departure from Midgard, you will have to recall the true shape of objects. Just pick things up and it will all come back to you, I'm sure.\r\n\r\nMy lesser brother, Munin, tells me one can fashion a stone axe out of <color=yellow>wood and stone</color>.",
-   "es": "La mayoría de los objetos han de fabricarse. Sin embargo, como acabas de dejar Midgard, aún has de recordar la verdadera forma de muchos de ellos. No me cabe duda de que irás recuperando la memoria a medida que recojas cosas.\r\n\r\nMi hermano pequeño, Munin, me ha dicho que puedes hacer un hacha de piedra con <color=yellow>madera y piedra</color>."
+   "en": "Most items must be crafted. However, due to your recent departure from Midgard, you will have to recall the true shape of objects. Just pick things up and it will all come back to you, I'm sure.\n\nMy lesser brother, Munin, tells me one can fashion a stone axe out of <color=yellow>wood and stone</color>.",
+   "es": "La mayoría de los objetos han de fabricarse. Sin embargo, como acabas de dejar Midgard, aún has de recordar la verdadera forma de muchos de ellos. No me cabe duda de que irás recuperando la memoria a medida que recojas cosas.\n\nMi hermano pequeño, Munin, me ha dicho que puedes hacer un hacha de piedra con <color=yellow>madera y piedra</color>."
   },
   "topic": {
    "en": "Take stock of your inventory",
@@ -313,8 +313,8 @@
    "es": "Hugin: Mena"
   },
   "text": {
-   "en": "Raw ore needs to be refined in the <color=yellow>smelter</color> before you can work it at the <color=yellow>forge</color>.\r\n\r\nTo build a smelter you will need <color=yellow>surtling cores</color>. Search for them in the dark places beneath the earth.",
-   "es": "Las menas de minerales en bruto han de refinarse en el <color=yellow>horno de fundición</color> antes de poder usarlas en la <color=yellow>forja</color>.\r\n\r\nPara construir uno de estos hornos necesitarás <color=yellow>corazones de surtling</color>. Los encontrarás en lugares oscuros y subterráneos."
+   "en": "Raw ore needs to be refined in the <color=yellow>smelter</color> before you can work it at the <color=yellow>forge</color>.\n\nTo build a smelter you will need <color=yellow>surtling cores</color>. Search for them in the dark places beneath the earth.",
+   "es": "Las menas de minerales en bruto han de refinarse en el <color=yellow>horno de fundición</color> antes de poder usarlas en la <color=yellow>forja</color>.\n\nPara construir uno de estos hornos necesitarás <color=yellow>corazones de surtling</color>. Los encontrarás en lugares oscuros y subterráneos."
   },
   "topic": {
    "en": "You have found some ore",
@@ -327,8 +327,8 @@
    "es": "Hugin: Pico"
   },
   "text": {
-   "en": "The black forest is rich in minerals. There you can find copper in the ground and tin lining the ocean shore.\r\n\r\nNow go forth and strike the earth!",
-   "es": "El Bosque negro es rico en minerales y podrás encontrar cobre en el suelo y estaño en la costa.\r\n\r\n¿A qué esperas para ir a picar tierra?"
+   "en": "The black forest is rich in minerals. There you can find copper in the ground and tin lining the ocean shore.\n\nNow go forth and strike the earth!",
+   "es": "El Bosque negro es rico en minerales y podrás encontrar cobre en el suelo y estaño en la costa.\n\n¿A qué esperas para ir a picar tierra?"
   },
   "topic": {
    "en": "You have crafted a pickaxe",
@@ -341,8 +341,8 @@
    "es": "Hugin: Portales"
   },
   "text": {
-   "en": "Portals are great for fast travel between different parts of the world.\r\n\r\nOf course, you need to build one on the other end as well, then give the pair the same name and they will be automatically connected!",
-   "es": "Los portales son muy útiles para viajar entre las distintas partes del mundo.\r\n\r\nTambién tendrás que construir uno en el sitio al que quieras llegar y, si llamas igual a una pareja de ellos, se conectarán automáticamente."
+   "en": "Portals are great for fast travel between different parts of the world.\n\nOf course, you need to build one on the other end as well, then give the pair the same name and they will be automatically connected!",
+   "es": "Los portales son muy útiles para viajar entre las distintas partes del mundo.\n\nTambién tendrás que construir uno en el sitio al que quieras llegar y, si llamas igual a una pareja de ellos, se conectarán automáticamente."
   },
   "topic": {
    "en": "You have built a portal",
@@ -397,8 +397,8 @@
    "es": "Hugin: Escudo"
   },
   "text": {
-   "en": "A shield allows you to block incoming damage. \r\nIf your timing is perfect, the enemy may also be <color=yellow>parried</color>. \r\nBe careful though, if you block too many hits you will become <color=yellow>staggered</color>. The amount of damage you can block before becoming staggered depends on your maximum health, so if you plan on tanking a lot of damage you should eat food that increases your health.\r\nHeavier shields will block more damage but will also slow you down.",
-   "es": "El escudo te permite bloquear el daño que recibes. \r\nSi lo usas en el momento adecuado, puedes <color=yellow>rechazar</color> al enemigo. \r\nEn cualquier caso, ten cuidado, si bloqueas demasiados golpes de quedarás <color=yellow>tambaleándote</color>. La cantidad de daño que puedes bloquear antes de empezar a tambalearte depende de tu salud máxima, así que si planeas recibir muchos golpes, deberías comer algo que aumente tu salud.\r\nLos escudos más pesados bloquean más daño, pero también te ralentizan."
+   "en": "A shield allows you to block incoming damage. \nIf your timing is perfect, the enemy may also be <color=yellow>parried</color>. \nBe careful though, if you block too many hits you will become <color=yellow>staggered</color>. The amount of damage you can block before becoming staggered depends on your maximum health, so if you plan on tanking a lot of damage you should eat food that increases your health.\nHeavier shields will block more damage but will also slow you down.",
+   "es": "El escudo te permite bloquear el daño que recibes. \nSi lo usas en el momento adecuado, puedes <color=yellow>rechazar</color> al enemigo. \nEn cualquier caso, ten cuidado, si bloqueas demasiados golpes de quedarás <color=yellow>tambaleándote</color>. La cantidad de daño que puedes bloquear antes de empezar a tambalearte depende de tu salud máxima, así que si planeas recibir muchos golpes, deberías comer algo que aumente tu salud.\nLos escudos más pesados bloquean más daño, pero también te ralentizan."
   },
   "topic": {
    "en": "You have crafted a shield",
@@ -425,8 +425,8 @@
    "es": "Hugin: Horno de fundición"
   },
   "text": {
-   "en": "Deposit your raw ore in this furnace and it will melt away all impurities, leaving you with a bar of refined metal to work at the forge.\r\n\r\nYou will need <color=yellow>coal</color> to fuel the smelter. Coal can be produced by building a <color=yellow>kiln</color> and loading it with wood.",
-   "es": "Coloca las menas de mineral en bruto en este horno. Se derretirán todas las impurezas y quedará un lingote de metal refinado que podrás utilizar en la forja.\r\n\r\nPara ponerlo en marcha necesitarás <color=yellow>carbón</color>; podrás conseguirlo si construyes un horno de carbón y lo llenas de madera."
+   "en": "Deposit your raw ore in this furnace and it will melt away all impurities, leaving you with a bar of refined metal to work at the forge.\n\nYou will need <color=yellow>coal</color> to fuel the smelter. Coal can be produced by building a <color=yellow>kiln</color> and loading it with wood.",
+   "es": "Coloca las menas de mineral en bruto en este horno. Se derretirán todas las impurezas y quedará un lingote de metal refinado que podrás utilizar en la forja.\n\nPara ponerlo en marcha necesitarás <color=yellow>carbón</color>; podrás conseguirlo si construyes un horno de carbón y lo llenas de madera."
   },
   "topic": {
    "en": "You have built a smelter",
@@ -439,8 +439,8 @@
    "es": "Hugin: Consejo."
   },
   "text": {
-   "en": "Start tips: try to interact with things in the environment. Some items like stones, branches and pieces of flint can be collected and used for crafting. \r\n\r\nTo open your inventory and crafting screen press $KEY_Inventory.",
-   "es": "Consejos: Intenta interactuar con el entorno. Podrás recoger algunos objetos como las piedras, las ramas o los fragmentos de sílex para elaborar objetos. \r\n\r\nPulsa $KEY_Inventory para abrir el inventario y la pantalla de elaboración."
+   "en": "Start tips: try to interact with things in the environment. Some items like stones, branches and pieces of flint can be collected and used for crafting. \n\nTo open your inventory and crafting screen press $KEY_Inventory.",
+   "es": "Consejos: Intenta interactuar con el entorno. Podrás recoger algunos objetos como las piedras, las ramas o los fragmentos de sílex para elaborar objetos. \n\nPulsa $KEY_Inventory para abrir el inventario y la pantalla de elaboración."
   },
   "topic": {
    "en": "Welcome to Valheim",
@@ -453,8 +453,8 @@
    "es": "Hugin: Bienvenida"
   },
   "text": {
-   "en": "I am Hugin, sent here to guide you in your travels.\r\n\r\nThe megaliths surrounding you are the Sacrificial Stones. They represent the Forsaken, which you must slay in order to ascend to Valhalla.",
-   "es": "Soy Hugin, y mi deber es guiarte en tus viajes.\r\n\r\nLos megalitos que te rodean son las piedras de sacrificio, y son la representación de los Desterrados. Debes acabar con ellos para ascender al Valhalla."
+   "en": "I am Hugin, sent here to guide you in your travels.\n\nThe megaliths surrounding you are the Sacrificial Stones. They represent the Forsaken, which you must slay in order to ascend to Valhalla.",
+   "es": "Soy Hugin, y mi deber es guiarte en tus viajes.\n\nLos megalitos que te rodean son las piedras de sacrificio, y son la representación de los Desterrados. Debes acabar con ellos para ascender al Valhalla."
   },
   "topic": {
    "en": "Welcome to the tenth world, warrior",
@@ -467,8 +467,8 @@
    "es": "Hugin: Vegvísires"
   },
   "text": {
-   "en": "These magical stones were scattered throughout the lands by Oden as signposts pointing toward the ritual grounds of the Forsaken.\r\n\r\nIf inspected closer, this one will reveal the summoning place of Eikthyr, your <color=yellow>first prey</color>. He is a mighty beast, so you need to properly arm yourself before even attempting to defeat him.",
-   "es": "Son piedras mágicas que repartió Odín por estas tierras y que sirven de indicadores para señalar los lugares en los que están las tierras rituales de los Desterrados.\r\n\r\nSi la miras con atención, esta te revelará el lugar de invocación de Eikthyr, tu <color=yellow>primera presa</color>. Es una bestia muy poderosa, por lo que tendrás que equiparte en condiciones antes de plantarle cara."
+   "en": "These magical stones were scattered throughout the lands by Oden as signposts pointing toward the ritual grounds of the Forsaken.\n\nIf inspected closer, this one will reveal the summoning place of Eikthyr, your <color=yellow>first prey</color>. He is a mighty beast, so you need to properly arm yourself before even attempting to defeat him.",
+   "es": "Son piedras mágicas que repartió Odín por estas tierras y que sirven de indicadores para señalar los lugares en los que están las tierras rituales de los Desterrados.\n\nSi la miras con atención, esta te revelará el lugar de invocación de Eikthyr, tu <color=yellow>primera presa</color>. Es una bestia muy poderosa, por lo que tendrás que equiparte en condiciones antes de plantarle cara."
   },
   "topic": {
    "en": "This stone is a Vegvisir",
@@ -481,8 +481,8 @@
    "es": "Hugin: Eikthyr ha caído"
   },
   "text": {
-   "en": "You have been granted the power of Eikthyr. Use it in times of need.\r\n\r\nYour next target dwells in the black forest. Go there, explore the lands, and uncover their lost treasures and resources.\r\n\r\nThe Elder awaits!",
-   "es": "Has recibido el poder de Eikthyr, así que no dudes en usarlo cuando las cosas se pongan feas.\r\n\r\nTu próxima víctima mora en el Bosque negro. Parte hacia allí, explora las tierras y descubre los tesoros y bienes perdidos.\r\n\r\n¡El Sabio te espera!"
+   "en": "You have been granted the power of Eikthyr. Use it in times of need.\n\nYour next target dwells in the black forest. Go there, explore the lands, and uncover their lost treasures and resources.\n\nThe Elder awaits!",
+   "es": "Has recibido el poder de Eikthyr, así que no dudes en usarlo cuando las cosas se pongan feas.\n\nTu próxima víctima mora en el Bosque negro. Parte hacia allí, explora las tierras y descubre los tesoros y bienes perdidos.\n\n¡El Sabio te espera!"
   },
   "topic": {
    "en": "Oden is pleased",
@@ -537,8 +537,8 @@
    "es": "Hugin: Fúrcula"
   },
   "text": {
-   "en": "It seems one of the many bones this living ossuary hid in his belly was a Wishbone.\r\n\r\nThis bone contains powerful magic which guides you to things hidden in the earth. It can locate <color=yellow>silver veins</color>, but may also lead you to buried treasure...",
-   "es": "Parece que uno de los muchos huesos que escondía este osario en el estómago era una fúrcula.\r\n\r\nEste hueso contiene una magia poderosísima que te guía hacia las cosas que se encuentran ocultas en la tierra. Puede encontrar filones de plata... e incluso tesoros enterrados."
+   "en": "It seems one of the many bones this living ossuary hid in his belly was a Wishbone.\n\nThis bone contains powerful magic which guides you to things hidden in the earth. It can locate <color=yellow>silver veins</color>, but may also lead you to buried treasure...",
+   "es": "Parece que uno de los muchos huesos que escondía este osario en el estómago era una fúrcula.\n\nEste hueso contiene una magia poderosísima que te guía hacia las cosas que se encuentran ocultas en la tierra. Puede encontrar filones de plata... e incluso tesoros enterrados."
   },
   "topic": {
    "en": "Bonemass left you a parting gift",

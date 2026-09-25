@@ -308,13 +308,19 @@ def main() -> None:
         for c in g.components(cls):
             st = c.tree["m_name"].lstrip("$")
             name_of = g.name_of_in(c.file)
+            # El combustible (2026-09-25, para el Planificador): la fundición y el
+            # alto horno queman 2 de carbón por barra; el horno de carbón no lleva.
+            fuel = name_of(c.tree.get("m_fuelItem")) if cls == "Smelter" else None
             for cv in c.tree.get("m_conversion", []):
                 frm, to = name_of(cv["m_from"]), name_of(cv["m_to"])
                 if not frm or not to or (st, frm, to) in seen:
                     continue
                 seen.add((st, frm, to))
                 time_s = cv.get("m_cookTime") or (c.tree.get("m_fermentationDuration") if cls == "Fermenter" else c.tree.get("m_secPerProduct"))
-                conversions.append({"station": st, "from": frm, "to": to, "time": time_s, "yield": cv.get("m_producedItems", 1)})
+                row = {"station": st, "from": frm, "to": to, "time": time_s, "yield": cv.get("m_producedItems", 1)}
+                if fuel:
+                    row["fuel"] = {"item": fuel, "perProduct": c.tree.get("m_fuelPerProduct", 1)}
+                conversions.append(row)
             if st not in stations:
                 stations[st] = {"name": loc.t(st), "icon": None}
 
