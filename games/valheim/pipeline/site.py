@@ -122,6 +122,13 @@ def main() -> None:
     piece_categories = load("piece_categories.json")
     biomes_meta = load("biomes.json")
     fixes.apply(items)
+    # Construcción = lo que se construye con el martillo y cuesta materiales
+    # (ZoTaD, 2026-09-25: "construcción sólo van estructuras"). En la 1.0 la
+    # bandeja ("Feaster") pone cada comida sobre la mesa como pieza, y el pan o
+    # el pastel de luey salían en Construcción; lo que se planta con el
+    # cultivador y las acciones sin costo (reparar, borrar) tampoco son
+    # estructuras. `pieces` sigue entero para los biomas (los cultivos).
+    built = {pid: p for pid, p in pieces.items() if p["tool"] == "Hammer" and p["requirements"]}
     # Los eventos, uno por id (el juego tiene dos listas con los mismos).
     events = list({e["id"]: e for e in (load("events.json") if os.path.exists(os.path.join(DATA, "events.json")) else [])}.values())
     # Ataques y consejos de cada criatura y jefe (`tips_build.py`), por nombre en inglés.
@@ -191,7 +198,7 @@ def main() -> None:
 
     for pid, it in sorted(items.items(), key=lambda x: x[1]["name"]["en"]):
         claim(pid, KIND_TAB[it["kind"]], it["name"], it["icon"])
-    for pid, p in sorted(pieces.items(), key=lambda x: x[1]["name"]["en"]):
+    for pid, p in sorted(built.items(), key=lambda x: x[1]["name"]["en"]):
         claim(f"piece:{pid}", "building", p["name"], p["icon"])
     # Criaturas que se listan: las que viven en algún bioma, sueltan algo o son
     # jefes. Las demás (variantes invocadas, crías de prueba, apariciones de
@@ -361,7 +368,7 @@ def main() -> None:
         st = station_ref(r["station"])
         if st and st["slug"] and iid in ref:
             crafts[st["slug"]].append({**ref[iid], "level": r["level"]})
-    for pid, p in pieces.items():
+    for pid, p in built.items():
         st = station_ref(p["station"])
         if st and st["slug"] and f"piece:{pid}" in ref:
             crafts[st["slug"]].append({**ref[f"piece:{pid}"], "level": 1})
@@ -374,14 +381,14 @@ def main() -> None:
         return tiers.piece(p["id"])
 
     upgrades = defaultdict(list)
-    for pid, p in pieces.items():
+    for pid, p in built.items():
         st = station_ref(p.get("extends"))
         if st and st["slug"] and f"piece:{pid}" in ref:
             upgrades[st["slug"]].append((pid, p))
     for slug, ups in upgrades.items():
         ups.sort(key=lambda x: (ext_order(x[0]), x[1]["name"]["en"]))
 
-    for pid, p in pieces.items():
+    for pid, p in built.items():
         key = f"piece:{pid}"
         cat = (piece_categories.get(p["tool"]) or {}).get(str(p["category"]))
         slug = ref[key]["slug"]
@@ -666,7 +673,7 @@ def main() -> None:
         return tiers.piece(k[6:]) if k.startswith("piece:") else boss_biome.get(k) or tier.get(k)
 
     listed = {("piece:" + r["id"] if t == "building" else r["id"]): t for t, rows in tabs.items() if t in planner.CATS for r in rows}
-    plan = planner.build(items, recipes, pieces, conversions, bosses, ref, tier_of, station_ref, src, listed)
+    plan = planner.build(items, recipes, built, conversions, bosses, ref, tier_of, station_ref, src, listed)
     remap(plan)
     for tab, rows in tabs.items():
         sizes[tab] = dump(f"{tab}.json", rows)
