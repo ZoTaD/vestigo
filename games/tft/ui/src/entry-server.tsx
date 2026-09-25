@@ -1,5 +1,6 @@
 import { renderToString } from "react-dom/server";
 import App from "./App";
+import { PageMeta, preloadView } from "./areas";
 import { VALHEIM_TABS, type Route } from "./route";
 import { loadBuilds } from "./deadlockBuildsData";
 import { loadMastery } from "./deadlockMasteryData";
@@ -96,6 +97,9 @@ async function preloadValheim(route: Route, quiet: (p: Promise<unknown>) => Prom
 }
 
 export async function renderApp(route: Route): Promise<string> {
+  // El chunk de la vista (y el del `<head>`) antes que sus datos: los módulos de
+  // datos que precarga `preload` son los mismos que importa el área.
+  await Promise.all([preloadView(route.view), PageMeta.preload()]);
   await preload(route);
   // El idioma no se pasa aparte: `App` ya monta su propio `LangContext` con
   // `route.lang`, así que darle la ruta alcanza para que la copia salga en el

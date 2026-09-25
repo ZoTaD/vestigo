@@ -498,6 +498,12 @@
 
 /* Pie ----------------------------------------------------------------------- */
 
+/* Lo que ocupa una vista mientras baja su chunk (ver `areas.ts`): el pie no
+   sube hasta la barra ni vuelve a bajar medio segundo después. */
+.area-loading {
+  min-height: 100vh;
+}
+
 .foot {
   max-width: var(--col);
   margin: clamp(2.5rem, 6vw, 4.5rem) auto 0;

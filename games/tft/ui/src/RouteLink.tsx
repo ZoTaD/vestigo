@@ -1,4 +1,5 @@
 import { routePath, type Route } from "./route";
+import { preloadView } from "./areas";
 
 /**
  * Un enlace de navegación interna que **es un `<a href>` de verdad**.
@@ -42,6 +43,9 @@ export default function RouteLink({
   active?: boolean;
   children: React.ReactNode;
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className">) {
+  // Cada juego es un chunk aparte (`areas.ts`): se empieza a bajar cuando el
+  // mouse o el foco llegan al enlace, y para el clic casi siempre ya está.
+  const warm = () => void preloadView(to.view);
   return (
     <a
       href={routePath(to)}
@@ -57,6 +61,14 @@ export default function RouteLink({
         onNavigate(to);
       }}
       {...rest}
+      onPointerEnter={(e) => {
+        warm();
+        rest.onPointerEnter?.(e);
+      }}
+      onFocus={(e) => {
+        warm();
+        rest.onFocus?.(e);
+      }}
     >
       {children}
     </a>

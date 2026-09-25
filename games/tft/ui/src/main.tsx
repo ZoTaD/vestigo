@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { installStaleChunkReload } from "./staleChunks";
+import { preloadView } from "./areas";
+import { parseRoute } from "./route";
 // Las @font-face del sitio, servidas desde el dominio (ver fonts.ts).
 import "./fonts";
 // Los tokens van primero: son las variables que todas las demás hojas leen.
@@ -17,31 +19,26 @@ import "./styles/home.css";
 import "./styles/shell.css";
 import "./styles/primitives.css";
 import "./styles/views.css";
-// Deadlock con la dirección A del rediseño (2026-09-16): cada pestaña reescrita
-// vive acá, y lo que reemplaza se borra de `codex.css` en vez de pisarse.
-import "./styles/deadlock.css";
-import "./styles/deadlock-heroes.css";
-import "./styles/deadlock-builder.css";
-// El material del juego (papel, tiza, arte de héroes) sobre las hojas de Deadlock, 2026-09-23.
-import "./styles/deadlock-game.css";
 import "./styles/scrollbar.css";
-// Vestigo News (2026-09-17): la única página con paleta y fuentes propias, todo bajo `.vn`.
-import "./styles/news.css";
-// Path of Exile 2 (2026-09-23): la letra y los adornos del juego, todo bajo `.p2`.
-import "@fontsource/cinzel/400";
-import "./styles/poe2.css";
-import "./styles/poe2-codex.css";
-import "./styles/poe2-tree.css";
-import "./styles/poe2-regex.css";
-// Valheim (2026-09-24): la madera, el latón y la letra del juego, todo bajo `.vh`.
-import "./styles/valheim.css";
-import "./styles/valheim-planner.css";
+// Las hojas de cada juego (Deadlock y News, PoE2, Valheim) ya no van acá: viajan
+// con el chunk de su área (ver `areas.ts`) y sólo las baja quien entra al juego.
 
 // Una pestaña vieja después de publicar se recarga sola en vez de quedar en blanco.
 installStaleChunkReload();
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+/**
+ * El primer render espera al chunk de la vista de llegada (2026-09-25).
+ *
+ * `createRoot` reemplaza el HTML prerenderizado: si renderizara ya, un área
+ * todavía no bajada mostraría el fallback vacío de `Suspense` en lugar de la
+ * página que ya se estaba viendo. Esperando, la página prerenderizada queda en
+ * pantalla hasta que la app la reemplaza por la misma página, ya viva. El HTML
+ * anuncia ese chunk con `modulepreload`, así que casi siempre ya llegó.
+ */
+preloadView(parseRoute(window.location.pathname).view).then(() => {
+  ReactDOM.createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+});

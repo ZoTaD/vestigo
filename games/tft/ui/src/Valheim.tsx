@@ -20,6 +20,10 @@ import { BiomeList, BiomePage, BossList, BossPage, CreaturePage, PlaceList, Plac
 import ValheimPatches from "./ValheimPatches";
 import ValheimPlanner from "./ValheimPlannerPage";
 import { useMapCopy } from "./valheimMap/copy";
+// La madera, el latón y la letra del juego, todo bajo `.vh`. Desde el
+// 2026-09-25 este módulo se carga aparte (`areas.ts`) y sus hojas viajan con él.
+import "./styles/valheim.css";
+import "./styles/valheim-planner.css";
 
 // El mapa trae el generador del mundo: se baja sólo al abrirlo.
 const ValheimMap = lazy(() => import("./valheimMap/ValheimMap"));

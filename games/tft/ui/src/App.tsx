@@ -1,31 +1,9 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Nav from "./Nav";
 import RouteLink from "./RouteLink";
-import SectionHead from "./SectionHead";
-import Home from "./Home";
-import Deadlock, { PatchHistory } from "./Deadlock";
-import DeadlockItems from "./DeadlockItems";
-import DeadlockHeroes from "./DeadlockHeroes";
-import DeadlockBuilder from "./DeadlockBuilderPage";
-import DeadlockNews from "./DeadlockNews";
-import DeadlockRanks from "./DeadlockRanks";
-import DeadlockPlayerLadder from "./DeadlockPlayerLadder";
-import DeadlockPlayer from "./DeadlockPlayer";
-// `DeadlockReport` y no `DeadlockMatch`: el módulo de datos ya se llama
-// `deadlockMatch.ts`, y en Windows dos archivos que sólo difieren en mayúsculas
-// son el mismo archivo para el compilador.
-import DeadlockReport from "./DeadlockReport";
-import Poe2Economy from "./Poe2Economy";
-import Poe2Encyclopedia from "./Poe2Encyclopedia";
-import Poe2Patches from "./Poe2Patches";
-import Poe2TreePage from "./poe2Tree/Poe2TreePage";
-import Poe2RegexPage from "./poe2Regex/Poe2RegexPage";
-import Valheim from "./Valheim";
-import DeadlockBandPicker from "./DeadlockBandPicker";
-import { PUBLISHED_BAND as DL_PUBLISHED_BAND, type BandId as DlBandId } from "./deadlockData";
-import Privacy from "./Privacy";
-import Terms from "./Terms";
 import CookieBanner from "./CookieBanner";
+import { DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, TermsPage, ValheimArea } from "./areas";
+import type { BandId as DlBandId } from "./deadlockData";
 import {
   analyticsAvailable,
   loadAnalytics,
@@ -42,17 +20,8 @@ import {
   useCopy,
   type Lang,
 } from "./i18n";
-import {
-  LANGS,
-  DEADLOCK_SECTIONS,
-  POE2_SECTIONS,
-  parseRoute,
-  routePath,
-  type Route,
-  type DeadlockSection,
-} from "./route";
+import { LANGS, parseRoute, routePath, type Route } from "./route";
 import { storedBand } from "./bands";
-import PageMeta from "./PageMeta";
 
 // TFT no se monta desde el 2026-09-15: `parseRoute` ya no produce la vista
 // "tft", así que acá no hay nada que dibujar para ella. `TftArea.tsx` y sus
@@ -116,14 +85,10 @@ function Shell({
    * pasar a objetos volvía sola a Fantasma+, y el visitante tenía que elegir dos
    * veces lo mismo. Es el mismo criterio que la banda de TFT, que se recuerda
    * entre visitas — acá alcanza con que sobreviva al cambio de pestaña, porque
-   * la banda de Deadlock todavía no viaja en la URL.
+   * la banda de Deadlock todavía no viaja en la URL. `undefined` es "la
+   * publicada", que resuelve `DeadlockArea` (ver ahí por qué no acá).
    */
-  const [dlBand, setDlBand] = useState<DlBandId>(DL_PUBLISHED_BAND);
-  const dlPicker = <DeadlockBandPicker band={dlBand} onChange={setDlBand} />;
-
-  /** Opening or closing a detail is a navigation, so it gets its own URL. */
-  const goDlDetail = (next: DeadlockSection, slug?: string) =>
-    navigate({ ...route, view: "deadlock", dlSection: next, detail: slug });
+  const [dlBand, setDlBand] = useState<DlBandId | undefined>(undefined);
 
   // The legal pages open at the top: arriving at a policy already scrolled to
   // the footer you clicked from reads as a broken link.
@@ -164,132 +129,25 @@ function Shell({
     >
       <div className="grain" aria-hidden="true" />
 
-      <PageMeta route={route} />
+      <Suspense fallback={null}>
+        <PageMeta route={route} />
+      </Suspense>
 
       <Nav active={place} route={route} onNavigate={navigate} />
 
-      {place === "home" && (
-        <Home route={route} navigate={navigate} />
-      )}
-
-      {place === "deadlock" && (
-        <>
-          {/* La misma barra que TFT, con las pestañas de este juego. Que sea el
-              mismo control y no uno propio es deliberado: quien viene de la otra
-              pestaña no tiene que aprender nada nuevo. */}
-          <div className="subnav-wrap">
-            <nav className="subnav" aria-label={copy.games.deadlock}>
-              {DEADLOCK_SECTIONS.map((id) => (
-                <RouteLink
-                  className="subnav-item"
-                  key={id}
-                  to={{ ...route, view: "deadlock", dlSection: id, detail: undefined }}
-                  // Street Brawl es la Tier list en otro modo: la pestaña sigue encendida.
-                  active={route.dlSection === id || (id === "meta" && route.dlSection === "street-brawl")}
-                  onNavigate={navigate}
-                >
-                  {copy.deadlock.tabs[id]}
-                  {/* El perfil se publicó el 2026-08-11 y sigue creciendo. La
-                      insignia dice que se puede usar y que se va a mover, que es
-                      distinto del "Pronto" de Dota 2: eso anuncia lo que no
-                      existe, esto califica lo que sí. Se saca cuando la pestaña
-                      deje de cambiar. */}
-                  {id === "player" && <em className="subnav-beta">{copy.games.beta}</em>}
-                </RouteLink>
-              ))}
-            </nav>
-          </div>
-          {route.dlSection === "player" ? (
-            <DeadlockPlayer
-              accountId={route.detail}
-              onOpenAccount={(id) => goDlDetail("player", String(id))}
-              onOpenMatch={(id) => goDlDetail("match", String(id))}
-            />
-          ) : route.dlSection === "match" ? (
-            <DeadlockReport
-              matchId={route.detail}
-              onBack={(accountId) =>
-                goDlDetail("player", accountId === null ? undefined : String(accountId))
-              }
-            />
-          ) : route.dlSection === "items" ? (
-            <DeadlockItems
-              band={dlBand}
-              picker={dlPicker}
-              open={route.detail}
-              onOpen={(slug) => goDlDetail("items", slug)}
-            />
-          ) : route.dlSection === "heroes" ? (
-            <DeadlockHeroes
-              route={route}
-              navigate={navigate}
-              band={dlBand}
-              picker={dlPicker}
-              open={route.detail}
-            />
-          ) : route.dlSection === "builder" ? (
-            <DeadlockBuilder />
-          ) : route.dlSection === "ranks" ? (
-            /* Sin `picker`: la escalera es el eje sobre el que se definen las
-               bandas, así que filtrarla por una no significaría nada. */
-            <DeadlockRanks />
-          ) : route.dlSection === "ladder" ? (
-            /* Sin `band` ni `picker`: la escalera dejó de filtrar por banda el
-               2026-08-13. Mide a los mejores del mundo en clasificatorias, y el
-               filtro que tenía era por promedio del lobby, no por rango del
-               jugador — ver el comentario de `DeadlockPlayerLadder`. */
-            <DeadlockPlayerLadder route={route} navigate={navigate} />
-          ) : route.dlSection === "patches" ? (
-            /* Vestigo News: una edición por parche, y debajo el historial del
-               foro para los parches que no tienen edición. */
-            <DeadlockNews route={route} navigate={navigate} archive={<PatchHistory boxed />} />
-          ) : (
-            <Deadlock
-              route={route}
-              navigate={navigate}
-              band={dlBand}
-              picker={dlPicker}
-              open={route.detail}
-              onOpen={(slug) => goDlDetail("meta", slug)}
-              brawl={route.dlSection === "street-brawl"}
-            />
-          )}
-        </>
-      )}
-      {place === "poe2" && (
-        <>
-          {/* La sub-navegación ya va con la letra del juego: la barra de Vestigo
-              de arriba es la misma de todo el sitio, y el juego empieza acá. */}
-          <div className="p2-sub">
-            <nav className="p2-sub-in" aria-label={copy.games.poe2}>
-              {POE2_SECTIONS.map((id) => (
-                <RouteLink
-                  key={id}
-                  className="p2-sub-item"
-                  to={{ ...route, view: "poe2", p2Section: id, detail: undefined }}
-                  active={(route.p2Section ?? "economy") === id}
-                  onNavigate={navigate}
-                >
-                  {copy.poe2.tabs[id]}
-                </RouteLink>
-              ))}
-            </nav>
-          </div>
-          {(route.p2Section ?? "economy") === "encyclopedia" && <Poe2Encyclopedia route={route} navigate={navigate} />}
-          {route.p2Section === "patches" && <Poe2Patches route={route} navigate={navigate} />}
-          {route.p2Section === "tree" && <Poe2TreePage />}
-          {route.p2Section === "regex" && <Poe2RegexPage />}
-          {(route.p2Section ?? "economy") === "economy" && (
-            <Poe2Economy
-              league={route.detail}
-              onLeague={(l) => navigate({ ...route, view: "poe2", p2Section: "economy", detail: l.slug })}
-            />
-          )}
-        </>
-      )}
-      {place === "valheim" && <Valheim route={route} navigate={navigate} />}
-      {place === "privacy" && <Privacy />}
-      {place === "terms" && <Terms />}
+      {/* Cada vista es un chunk aparte (ver `areas.ts`). El fallback sólo se ve
+          al saltar a un juego que todavía no se bajó: la llegada al sitio espera
+          el chunk antes del primer render, en `main.tsx`. */}
+      <Suspense fallback={<div className="area-loading" aria-busy="true" />}>
+        {place === "home" && <HomeArea route={route} navigate={navigate} />}
+        {place === "deadlock" && (
+          <DeadlockArea route={route} navigate={navigate} band={dlBand} onBand={setDlBand} />
+        )}
+        {place === "poe2" && <Poe2Area route={route} navigate={navigate} />}
+        {place === "valheim" && <ValheimArea route={route} navigate={navigate} />}
+        {place === "privacy" && <PrivacyPage />}
+        {place === "terms" && <TermsPage />}
+      </Suspense>
 
       {/* One centred column, in the order someone reads it: where to go, where
           the data comes from, the notice Riot requires, then the byline. */}

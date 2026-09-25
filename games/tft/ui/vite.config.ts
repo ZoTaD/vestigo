@@ -10,6 +10,7 @@ import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, type Route } from "./src/route";
 import { COPY } from "./src/i18n";
+import { AREA_FILES } from "./src/areaFiles";
 
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
 const BRAND = COPY.en.brand;
@@ -225,6 +226,53 @@ function seoFiles(): Plugin {
  * el JS y el CSS que carga son los mismos y la app arranca igual. Netlify sirve
  * un archivo real antes de consultar el redirect de SPA.
  */
+/**
+ * Lo que el HTML de cada vista tiene que anunciar (2026-09-25).
+ *
+ * Cada juego es un chunk aparte con su CSS (`src/areas.ts`). La página
+ * prerenderizada se ve antes de que corra el JS, así que sin su hoja en el
+ * `<head>` se vería sin estilos hasta que llegara el chunk; y sin
+ * `modulepreload`, el chunk recién se pediría después de bajar y ejecutar la
+ * entrada. Acá se busca en el bundle el chunk de cada vista, se siguen sus
+ * imports estáticos y se juntan sus JS y sus CSS, menos lo que el `index.html`
+ * de Vite ya trae.
+ */
+function areaTags(bundle: Record<string, { type: string } & Record<string, any>>, html: string): Map<string, string> {
+  const chunks = Object.values(bundle).filter((c) => c.type === "chunk");
+  const byFile = new Map(chunks.map((c) => [c.fileName as string, c]));
+  const norm = (id: string | null | undefined) => (id ?? "").replaceAll("\\", "/");
+  const tags = new Map<string, string>();
+  for (const [view, file] of Object.entries(AREA_FILES)) {
+    // Por el módulo y no por `facadeModuleId`: cuando otro chunk importa algo
+    // del área (el árbol de PoE2 importa de su módulo), Rollup la deja sin
+    // fachada y ese campo viene en null.
+    const has = (c: Record<string, any>) => Object.keys(c.modules ?? {}).some((m) => norm(m).endsWith(`/${file}`));
+    const root = chunks.find((c) => norm(c.facadeModuleId).endsWith(`/${file}`)) ?? chunks.find(has);
+    if (!root) throw new Error(`prerender: no hay chunk para ${file} (vista "${view}"). ¿Cambió areas.ts?`);
+    const js = new Set<string>();
+    const css = new Set<string>();
+    const visit = (c: Record<string, any>) => {
+      if (js.has(c.fileName) || c.isEntry) return;
+      js.add(c.fileName);
+      for (const f of c.viteMetadata?.importedCss ?? []) css.add(f);
+      for (const imp of c.imports ?? []) {
+        const next = byFile.get(imp);
+        if (next) visit(next);
+      }
+    };
+    visit(root);
+    const fresh = (f: string) => !html.includes(`/${f}"`);
+    tags.set(
+      view,
+      [
+        ...[...css].filter(fresh).map((f) => `<link rel="stylesheet" crossorigin href="/${f}">`),
+        ...[...js].filter(fresh).map((f) => `<link rel="modulepreload" crossorigin href="/${f}">`),
+      ].join("\n    ")
+    );
+  }
+  return tags;
+}
+
 function prerenderRoutes(): Plugin {
   return {
     name: "vestigo-prerender",
@@ -252,6 +300,7 @@ function prerenderRoutes(): Plugin {
       const html = stripComments(String(entry.source));
 
       const pages = prerenderPages(readSitemapData().data, (path) => ogDrawn.has(path));
+      const tags = areaTags(bundle as Parameters<typeof areaTags>[0], html);
 
       /**
        * La app renderizada a texto, ruta por ruta.
@@ -285,8 +334,13 @@ function prerenderRoutes(): Plugin {
           renderApp: (route: Route) => Promise<string>;
         };
         for (const page of pages) {
-          const cuerpo = await renderApp(parseRoute(page.path));
-          const pagina = renderHtml(html, page, BRAND, cuerpo);
+          const route = parseRoute(page.path);
+          const cuerpo = await renderApp(route);
+          const propias = tags.get(route.view);
+          const pagina = renderHtml(html, page, BRAND, cuerpo).replace(
+            "</head>",
+            propias ? `  ${propias}\n  </head>` : "</head>"
+          );
           /**
            * El `index.html` de la raíz también lleva cuerpo, y es el que más lo
            * necesita: Netlify lo sirve para el dominio pelado **y como fallback
