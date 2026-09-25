@@ -380,8 +380,59 @@ function prerenderRoutes(): Plugin {
   };
 }
 
+/**
+ * En qué archivo va cada módulo (2026-09-25), para que una publicación de datos
+ * no le haga bajar todo el JS de nuevo a quien vuelve.
+ *
+ * Un chunk que importa otro lleva su nombre con hash adentro: si el de abajo
+ * cambia, cambia el de arriba. Con el reparto por defecto, la entrada tenía los
+ * `import()` de cada juego y además React y la cáscara, y todos los chunks
+ * importaban de ella: un dato de `heroes.json` cambiaba 30 archivos, React
+ * incluido, cuatro veces por día. Ahora:
+ *
+ * - `vendor`: React y los ayudantes de Vite. Sólo cambia si se actualiza React.
+ * - `shell`: todo lo que la entrada importa de forma estática (barra, idioma,
+ *   rutas…), salvo `areas.ts`. No conoce ningún nombre con hash de un juego:
+ *   `areas.ts` le llega por `areasRegistry.ts`.
+ * - La entrada: `main.tsx` y `areas.ts`. Es lo único que cambia siempre, y son
+ *   un par de KB.
+ */
+function manualChunks() {
+  let shell: Set<string> | null = null;
+  const norm = (id: string) => id.split("?")[0].replaceAll("\\", "/");
+  return (id: string, api: { getModuleIds: () => IterableIterator<string>; getModuleInfo: (id: string) => { importedIds: readonly string[] } | null }) => {
+    const file = norm(id);
+    // Los ayudantes de Vite (\0vite/preload-helper y compañía) los importan los
+    // chunks que tienen `import()`: en la entrada arrastrarían a todos.
+    if (id.startsWith("\0") && !file.includes("modulepreload-polyfill")) return "vendor";
+    if (file.includes("/node_modules/")) return /\.(c|m)?jsx?$/.test(file) ? "vendor" : undefined;
+    // Diminuto y sin datos, pero lo importan la copia de Deadlock y la portada:
+    // suelto, Rollup lo metía en el chunk de los datos de héroes y la copia
+    // entera (94 KB) cambiaba con cada publicación.
+    if (file.endsWith("/src/deadlockBandNames.ts")) return "shell";
+    if (!shell) {
+      shell = new Set();
+      const main = [...api.getModuleIds()].find((m) => norm(m).endsWith("/src/main.tsx"));
+      const stack = main ? [main] : [];
+      while (stack.length) {
+        for (const dep of api.getModuleInfo(stack.pop()!)?.importedIds ?? []) {
+          const d = norm(dep);
+          if (shell.has(dep) || d.includes("/node_modules/") || dep.startsWith("\0")) continue;
+          // `areas.ts` se queda en la entrada, pero lo que importa sí va a `shell`.
+          if (!d.endsWith("/src/areas.ts")) shell.add(dep);
+          stack.push(dep);
+        }
+      }
+    }
+    return shell.has(id) && /\.(tsx?|json)$/.test(file) ? "shell" : undefined;
+  };
+}
+
 export default defineConfig({
   plugins: [localDeadlockAssets(), react(), seoFiles(), prerenderRoutes()],
+  build: {
+    rollupOptions: { output: { manualChunks: manualChunks() } },
+  },
   resolve: {
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por

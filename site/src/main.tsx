@@ -2,7 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { installStaleChunkReload } from "./staleChunks";
-import { preloadRoute } from "./areas";
+// La entrada es lo único que importa `areas.ts` (ver `areasRegistry.ts`).
+import * as allAreas from "./areas";
+import { provideAreas } from "./areasRegistry";
 import { parseRoute } from "./route";
 // Las @font-face del sitio, servidas desde el dominio (ver fonts.ts).
 import "./fonts";
@@ -25,6 +27,7 @@ import "./styles/scrollbar.css";
 
 // Una pestaña vieja después de publicar se recarga sola en vez de quedar en blanco.
 installStaleChunkReload();
+provideAreas(allAreas);
 
 /**
  * El primer render espera al chunk de la vista de llegada, y en Deadlock al de
@@ -36,7 +39,7 @@ installStaleChunkReload();
  * pantalla hasta que la app la reemplaza por la misma página, ya viva. El HTML
  * anuncia ese chunk con `modulepreload`, así que casi siempre ya llegó.
  */
-preloadRoute(parseRoute(window.location.pathname)).then(() => {
+allAreas.preloadRoute(parseRoute(window.location.pathname)).then(() => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <App />

@@ -2,7 +2,7 @@ import { Suspense, useEffect, useState } from "react";
 import Nav from "./Nav";
 import RouteLink from "./RouteLink";
 import CookieBanner from "./CookieBanner";
-import { DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, TermsPage, ValheimArea } from "./areas";
+import { areas } from "./areasRegistry";
 import type { BandId as DlBandId } from "./deadlockData";
 import {
   analyticsAvailable,
@@ -45,6 +45,7 @@ function Shell({
 }) {
   const copy = useCopy();
   const { view: place } = route;
+  const { DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, TermsPage, ValheimArea } = areas();
   const [consent, setConsent] = useState<Consent | null>(storedConsent);
   // Reopening the notice from the footer is how a decision gets withdrawn,
   // which the GDPR requires to be as easy as giving it.

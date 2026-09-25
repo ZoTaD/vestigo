@@ -1,5 +1,5 @@
 import { routePath, type Route } from "./route";
-import { preloadRoute } from "./areas";
+import { areas } from "./areasRegistry";
 
 /**
  * Un enlace de navegación interna que **es un `<a href>` de verdad**.
@@ -46,7 +46,7 @@ export default function RouteLink({
   // Cada juego (y cada pestaña de Deadlock) es un chunk aparte (`areas.ts`): se
   // empieza a bajar cuando el mouse o el foco llegan al enlace, y para el clic
   // casi siempre ya está.
-  const warm = () => void preloadRoute(to);
+  const warm = () => void areas().preloadRoute(to);
   return (
     <a
       href={routePath(to)}

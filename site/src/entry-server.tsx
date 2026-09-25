@@ -1,6 +1,7 @@
 import { renderToString } from "react-dom/server";
 import App from "./App";
-import { preloadRoute } from "./areas";
+import * as allAreas from "./areas";
+import { provideAreas } from "./areasRegistry";
 import { VALHEIM_TABS, type Route } from "./route";
 import { loadBuilds } from "./deadlockBuildsData";
 import { loadMastery } from "./deadlockMasteryData";
@@ -14,6 +15,9 @@ import { isCat, loadCat, loadIndex } from "./poe2EncyclopediaData";
 import { EDITIONS, loadAllEditions, loadEdition as loadP2Edition } from "./poe2PatchesData";
 import { loadIndex as loadVhIndex, loadTab as loadVhTab } from "./valheimData";
 import { loadEdition as loadVhEdition, loadEditions as loadVhEditions } from "./valheimPatchesData";
+
+// Igual que en `main.tsx`: la cáscara recibe `areas.ts` en vez de importarlo.
+provideAreas(allAreas);
 
 /**
  * El HTML de una ruta, para el prerender del build (ver `vite.config.ts`).
@@ -100,7 +104,7 @@ export async function renderApp(route: Route): Promise<string> {
   // El chunk de la vista (y el de su pestaña) antes que sus datos: los módulos
   // de datos que precarga `preload` son los mismos que importa el área. El
   // `<head>` lo escribe `renderHtml`; `PageMeta` no se dibuja en el servidor.
-  await preloadRoute(route);
+  await allAreas.preloadRoute(route);
   await preload(route);
   // El idioma no se pasa aparte: `App` ya monta su propio `LangContext` con
   // `route.lang`, así que darle la ruta alcanza para que la copia salga en el
