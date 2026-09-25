@@ -40,10 +40,14 @@
 .vp-list-head { display: flex; align-items: baseline; justify-content: space-between; }
 .vp-list-head h2 { margin: 0; font: 700 22px var(--vh-serif); color: var(--vh-cream); }
 .vp-link { border: 0; background: none; color: var(--vh-faint); font: 400 13px var(--vh-sans); cursor: pointer; }
-.vp-pick { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.vp-pick { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: start; }
 .vp-pick-main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .vp-pick-main b { font: 700 14px var(--vh-sans); color: var(--vh-cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .vp-pick-main small { color: var(--vh-faint); font-size: 12px; }
+/* La vista previa de materiales de cada cosa de la lista. */
+.vp-prev { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 2px; }
+.vp-prev .vh-slot { width: 32px; height: 32px; }
+.vp-prev .vh-qty { font-size: 11px; right: 2px; bottom: 0; }
 .vp-sel { width: 100px; height: 26px; padding: 0 4px; background: rgba(0, 0, 0, 0.45); color: var(--vh-text); border: 0; border-radius: 4px; font: 400 13px var(--vh-sans); }
 .vp-qty { display: flex; align-items: center; gap: 4px; }
 .vp-qty input { width: 42px; height: 26px; text-align: center; background: rgba(0, 0, 0, 0.45); color: var(--vh-text); border: 0; border-radius: 4px; font: 700 14px var(--vh-sans); -moz-appearance: textfield; }

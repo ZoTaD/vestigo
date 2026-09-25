@@ -263,6 +263,20 @@ export function tree(d: PlannerData, st: PlanState, id: string, qty: number, pat
   };
 }
 
+/**
+ * Los materiales de una cosa de la lista para la vista previa de "Tu lista"
+ * (ZoTaD, 2026-09-25). Si se cocina o fermenta desde su versión cruda (el
+ * pastel picante sale del horno desde el pastel picante crudo), muestra los
+ * ingredientes de esa versión: el paso intermedio no le dice nada a nadie.
+ */
+export function preview(d: PlannerData, st: PlanState, p: Pick): TreeNode[] {
+  const root = tree(d, st, p.id, p.qty, [], p.level);
+  const v = makeVia(d, st, p.id);
+  const [first, ...rest] = root.kids;
+  if (v?.startsWith("from:") && first?.kids.length) return [...first.kids, ...rest];
+  return root.kids;
+}
+
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, Math.round(n) || lo));
 
 /** Sólo lo que está en el catálogo, con nivel y cantidad dentro de lo posible. */

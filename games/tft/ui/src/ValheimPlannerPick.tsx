@@ -5,7 +5,7 @@ import RouteLink from "./RouteLink";
 import type { ValheimSection } from "./route";
 import { useValheimCopy } from "./valheimCopy";
 import { BIOME_IDS, fold, tx, type AnyRow, type BiomeId } from "./valheimData";
-import { PLAN_CATS, SORTS, plan as calc, sanitize, setPick, addPick, sortByStat, biomeOf, inBiomes, type PItem, type PlanCat, type PlannerData, type SortKey } from "./valheimPlanner";
+import { PLAN_CATS, SORTS, preview, plan as calc, sanitize, setPick, addPick, sortByStat, biomeOf, inBiomes, type PItem, type PlanCat, type PlannerData, type SortKey } from "./valheimPlanner";
 import { collectNames, FILTERS, type FilterDef, type FilterState, type ListTab } from "./valheimTabs";
 import { setPlan, usePlan, writeUrl } from "./valheimPlannerStore";
 import { Slot, useTab, type Nav, type To } from "./ValheimParts";
@@ -226,6 +226,14 @@ export default function ValheimPlannerPick({ data, to, navigate }: { data: Plann
                       </select>
                     )}
                     {left && <small>{t.plan.batch(data.recipes[p.id]?.n ?? data.convert[p.id]?.[0]?.n ?? 1, left.made)}</small>}
+                    {/* Vista previa de lo que pide, con cuánto (ZoTaD, 2026-09-25). */}
+                    <span className="vp-prev">
+                      {preview(data, st, p).map((k) => (
+                        <span key={k.id} title={`${k.qty} × ${tx(data.items[k.id]?.name, lang)}`}>
+                          <Slot icon={data.items[k.id]?.icon} qty={k.qty} size="sm" alt={tx(data.items[k.id]?.name, lang)} />
+                        </span>
+                      ))}
+                    </span>
                   </span>
                   <span className="vp-qty">
                     <button type="button" className="vp-step" aria-label={t.plan.less} onClick={() => setPlan(setPick(st, i, { qty: p.qty - 1 }))}>−</button>

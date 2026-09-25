@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
-  addPick, biomeOf, inBiomes, materialBiomes, sortByStat, decodePlan, EMPTY_PLAN, encodePlan, plan, sanitize, setPick, tree,
+  addPick, preview, biomeOf, inBiomes, materialBiomes, sortByStat, decodePlan, EMPTY_PLAN, encodePlan, plan, sanitize, setPick, tree,
   type PlannerData, type PlanState,
 } from "../src/valheimPlanner";
 
@@ -95,6 +95,17 @@ describe("el Planificador de Valheim", () => {
     expect(t.st).toBe("piece_forge");
     expect(t.kids.map((k) => [k.id, k.qty])).toEqual([["Iron", 25], ["DeerHide", 2]]);
     expect(t.kids[0].kids.map((k) => k.id)).toEqual(["IronScrap", "Coal"]);
+  });
+
+  it("la vista previa salta la versión cruda de lo que se cocina", () => {
+    const P: PlannerData = {
+      ...D,
+      items: { ...D.items, Pie: it0("Pie", 1, { cat: "foods" }), PieRaw: it0("Raw pie"), Flour: it0("Flour") },
+      recipes: { ...D.recipes, PieRaw: { st: "piece_preptable", lv: 1, n: 1, req: [["Flour", 4, 0], ["RawMeat", 2, 0]] } },
+      convert: { ...D.convert, Pie: [{ st: "piece_oven", from: "PieRaw", time: 60, n: 1 }] },
+    };
+    expect(preview(P, EMPTY_PLAN, { id: "Pie", qty: 10, level: 1 }).map((k) => [k.id, k.qty])).toEqual([["Flour", 40], ["RawMeat", 20]]);
+    expect(preview(D, EMPTY_PLAN, { id: "HelmetIron", qty: 1, level: 2 }).map((k) => [k.id, k.qty])).toEqual([["Iron", 25], ["DeerHide", 2]]);
   });
 
   it("corta un ciclo sin colgarse", () => {
