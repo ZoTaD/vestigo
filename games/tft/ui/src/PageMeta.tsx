@@ -93,7 +93,7 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const section = route.p2Section ?? "economy";
     if (section === "economy") return LEAGUES.find((l) => l.slug === route.detail)?.name ?? null;
     if (section === "patches") return P2_EDITIONS.find((e) => e.slug === route.detail)?.version ?? null;
-    if (section === "tree") return null;
+    if (section === "tree" || section === "regex") return null;
     const e = peekP2Index()?.find((x) => x.id === route.detail);
     return e ? (lang === "es" ? e.es || e.en : e.en) : null;
   }

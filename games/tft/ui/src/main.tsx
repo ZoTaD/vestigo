@@ -28,6 +28,7 @@ import "./styles/news.css";
 import "./styles/poe2.css";
 import "./styles/poe2-codex.css";
 import "./styles/poe2-tree.css";
+import "./styles/poe2-regex.css";
 // Valheim (2026-09-24): la madera, el latón y la letra del juego, todo bajo `.vh`.
 import "./styles/valheim.css";
 

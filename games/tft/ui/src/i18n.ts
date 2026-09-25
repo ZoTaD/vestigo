@@ -1881,7 +1881,7 @@ const EN = {
 
   /** Path of Exile 2 (2026-09-23): por ahora sólo la pestaña Economía. */
   poe2: {
-    tabs: { economy: "Economy", encyclopedia: "Encyclopedia", patches: "Patches", tree: "Passive Tree" },
+    tabs: { economy: "Economy", encyclopedia: "Encyclopedia", patches: "Patches", tree: "Passive Tree", regex: "Regex" },
     soon: "Soon",
     league: "League",
     title: "Economy",
@@ -2000,6 +2000,12 @@ const EN = {
         description: () =>
           "Plan your Path of Exile 2 passive tree point by point with the official tree and art: see it " +
           "at every level, add your gems and export the .build file for the in-game Build Planner.",
+      },
+      regex: {
+        title: () => "Path of Exile 2 regex generator for waystones, tablets and vendors | Vestigo",
+        description: () =>
+          "Build the in-game search regex for waystones, tablets, gear, vendors and relics, with minimum values, " +
+          "for the game in English or Spanish. Copy it and paste it into the stash or vendor search.",
       },
       /** Las páginas con detalle: una liga, una categoría, una ficha, una edición. */
       detail: {
@@ -3638,7 +3644,7 @@ const ES: typeof EN = {
   },
 
   poe2: {
-    tabs: { economy: "Economía", encyclopedia: "Enciclopedia", patches: "Parches", tree: "Árbol de pasivas" },
+    tabs: { economy: "Economía", encyclopedia: "Enciclopedia", patches: "Parches", tree: "Árbol de pasivas", regex: "Regex" },
     soon: "Pronto",
     league: "Liga",
     title: "Economía",
@@ -3741,6 +3747,12 @@ const ES: typeof EN = {
         description: () =>
           "Armá tu árbol de pasivas de Path of Exile 2 punto por punto con el árbol y el arte oficiales, " +
           "en español: miralo en cada nivel, sumá tus gemas y exportá el .build para el Build Planner del juego.",
+      },
+      regex: {
+        title: () => "Generador de regex de Path of Exile 2 en español: piedras guía, tablillas y vendedores | Vestigo",
+        description: () =>
+          "Armá el regex de la búsqueda del juego para piedras guía, tablillas, equipo, vendedores y reliquias, con " +
+          "valores mínimos, para el juego en español o en inglés. Copialo y pegalo en el alijo o en el vendedor.",
       },
       detail: {
         league: (name: string) => ({

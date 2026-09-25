@@ -60,7 +60,7 @@ async function preload(route: Route): Promise<void> {
 async function preloadPoe2(route: Route, quiet: (p: Promise<unknown>) => Promise<unknown>): Promise<void> {
   const section = route.p2Section ?? "economy";
   // El árbol se arma en el navegador: el HTML lleva el título y la explicación.
-  if (section === "tree") return;
+  if (section === "tree" || section === "regex") return;
   if (section === "economy") {
     await quiet(loadEconomy(leagueBySlug(route.detail).slug));
     return;

@@ -27,8 +27,8 @@ const p2 = paths.filter((p) => p.includes("/poe2"));
 
 describe("PoE2 en el sitemap", () => {
   it("lista cada ficha, liga y edición en los dos idiomas", () => {
-    // las 4 pestañas (economía, enciclopedia, parches, árbol) + ligas + categorías + fichas + ediciones
-    const perLang = 4 + (leagues.length - 1) + 4 + entries.length + editions.length;
+    // las 5 pestañas (economía, enciclopedia, parches, árbol, regex) + ligas + categorías + fichas + ediciones
+    const perLang = 5 + (leagues.length - 1) + 4 + entries.length + editions.length;
     expect(p2.length).toBe(perLang * 2);
   });
 

@@ -19,6 +19,7 @@ import Poe2Economy from "./Poe2Economy";
 import Poe2Encyclopedia from "./Poe2Encyclopedia";
 import Poe2Patches from "./Poe2Patches";
 import Poe2TreePage from "./poe2Tree/Poe2TreePage";
+import Poe2RegexPage from "./poe2Regex/Poe2RegexPage";
 import Valheim from "./Valheim";
 import DeadlockBandPicker from "./DeadlockBandPicker";
 import { PUBLISHED_BAND as DL_PUBLISHED_BAND, type BandId as DlBandId } from "./deadlockData";
@@ -277,6 +278,7 @@ function Shell({
           {(route.p2Section ?? "economy") === "encyclopedia" && <Poe2Encyclopedia route={route} navigate={navigate} />}
           {route.p2Section === "patches" && <Poe2Patches route={route} navigate={navigate} />}
           {route.p2Section === "tree" && <Poe2TreePage />}
+          {route.p2Section === "regex" && <Poe2RegexPage />}
           {(route.p2Section ?? "economy") === "economy" && (
             <Poe2Economy
               league={route.detail}
