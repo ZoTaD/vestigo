@@ -1,0 +1,350 @@
+{
+ "stamp": "DATA-STAMP game-version=1.0.15 network=40 unity=6000.0.75f1 assembly_valheim-sha256=59f53fb55d99d22a33e8ed094eec8d21e9f133543bce92bc3d80dce44033adb1 dumped=2026-09-25 dumper=vestigo-map_data/1 mode=assets schema=1",
+ "gameVersion": "1.0.15",
+ "assemblyValheimSha256": "59f53fb55d99d22a33e8ed094eec8d21e9f133543bce92bc3d80dce44033adb1",
+ "extractedAt": "2026-09-25T00:00:50Z",
+ "schema": 1,
+ "networkVersion": 40,
+ "steamBuildId": 25390630,
+ "versionSource": "Player.log",
+ "playerLogWrittenAt": "2026-09-24T20:36:51Z",
+ "playerLogStale": false,
+ "logWorldGenVersion": 2,
+ "unity": "6000.0.75f1",
+ "worldGenVersion": 2,
+ "counts": {
+  "locations": 232,
+  "enabled": 186,
+  "placed": 183,
+  "withQuantity": 200,
+  "requested": 12939,
+  "prioritized": 23,
+  "fromAltBiomes": 16,
+  "withoutSoftRef": 19,
+  "renamedBySoftRef": 55,
+  "altBiomes": 32,
+  "altBiomesEnabled": 32,
+  "display": 183,
+  "displayManual": 138,
+  "displayFromGame": 45,
+  "displayUnnamed": 0,
+  "icons": 9
+ },
+ "listOrderCheck": "ok",
+ "listOrderFromLog": [
+  [
+   3,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   27,
+   25
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   25,
+   33
+  ],
+  [
+   25,
+   35
+  ]
+ ],
+ "withoutSoftRef": [
+  {
+   "prefabName": "Greydwarf_camp2",
+   "enable": false,
+   "quantity": 50,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "Greydwarf_camp3",
+   "enable": false,
+   "quantity": 100,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "Castle",
+   "enable": false,
+   "quantity": 200,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "Fort1",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "xmastree",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "Pillar1",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "Pillar2",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "StoneHouse1",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "StoneHouse2",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "StoneHouse5",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "GoblinCamp1",
+   "enable": false,
+   "quantity": 200,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "StoneTower2",
+   "enable": false,
+   "quantity": 100,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "StoneTower4",
+   "enable": false,
+   "quantity": 100,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "TrollCave",
+   "enable": false,
+   "quantity": 100,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "SunkenCrypt1",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "SunkenCrypt2",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "SunkenCrypt3",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "MountainCave01",
+   "enable": false,
+   "quantity": 500,
+   "assetIdValid": false
+  },
+  {
+   "prefabName": "Hugintest",
+   "enable": false,
+   "quantity": 0,
+   "assetIdValid": false
+  }
+ ],
+ "zoneSystem": {
+  "locationVersion": 32,
+  "waterLevel": 30.0,
+  "zoneSize": 64.0,
+  "zoneTTL": 10.0,
+  "zoneTTS": 5.0,
+  "locationScenes": [
+   "locations",
+   "locations_cp1",
+   "locations_mountaincaves",
+   "locations_mistlands",
+   "locations_hildir",
+   "locations_ashlands",
+   "locations_deepnorth"
+  ],
+  "locationLists": [
+   {
+    "name": "_LocationList_cp1",
+    "sortOrder": 3,
+    "locationCount": 3,
+    "vegetationCount": 0,
+    "firstLocationIndex": 130,
+    "firstVegetationIndex": 99
+   },
+   {
+    "name": "_LocationList_MountainCaves",
+    "sortOrder": 3,
+    "locationCount": 2,
+    "vegetationCount": 0,
+    "firstLocationIndex": 133,
+    "firstVegetationIndex": 99
+   },
+   {
+    "name": "_LocationList_Mistlands",
+    "sortOrder": 3,
+    "locationCount": 27,
+    "vegetationCount": 25,
+    "firstLocationIndex": 135,
+    "firstVegetationIndex": 99
+   },
+   {
+    "name": "_LocationList_Hildir",
+    "sortOrder": 3,
+    "locationCount": 4,
+    "vegetationCount": 0,
+    "firstLocationIndex": 162,
+    "firstVegetationIndex": 124
+   },
+   {
+    "name": "_LocationList_Ashlands",
+    "sortOrder": 3,
+    "locationCount": 25,
+    "vegetationCount": 33,
+    "firstLocationIndex": 166,
+    "firstVegetationIndex": 124
+   },
+   {
+    "name": "_LocationList_DeepNorth",
+    "sortOrder": 3,
+    "locationCount": 25,
+    "vegetationCount": 35,
+    "firstLocationIndex": 191,
+    "firstVegetationIndex": 157
+   }
+  ],
+  "sortOrderTies": true,
+  "altBiomeListNames": [
+   "AltBiomes_Erik"
+  ],
+  "zoneCtrlPrefabPresent": 1,
+  "locationProxyPrefabPresent": 1
+ },
+ "minimap": {
+  "textureSize": 2048,
+  "pixelSize": 12.0,
+  "exploreRadius": 50.0,
+  "exploreInterval": 0.25,
+  "removeRadius": 300.0,
+  "colors": {
+   "meadowsColor": {
+    "r": 0.5725337862968445,
+    "g": 0.6551003456115723,
+    "b": 0.3605249226093292,
+    "a": 1.0
+   },
+   "ashlandsColor": {
+    "r": 0.4811320900917053,
+    "g": 0.12482201308012009,
+    "b": 0.12482201308012009,
+    "a": 1.0
+   },
+   "blackforestColor": {
+    "r": 0.41963836550712585,
+    "g": 0.45481041073799133,
+    "b": 0.24669261276721954,
+    "a": 1.0
+   },
+   "deepnorthColor": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "a": 1.0
+   },
+   "heathColor": {
+    "r": 0.9062027931213379,
+    "g": 0.6707255840301514,
+    "b": 0.47043564915657043,
+    "a": 1.0
+   },
+   "swampColor": {
+    "r": 0.6394598484039307,
+    "g": 0.4469825327396393,
+    "b": 0.3448844254016876,
+    "a": 1.0
+   },
+   "mountainColor": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "a": 1.0
+   },
+   "mistlandsColor": {
+    "r": 0.2,
+    "g": 0.2,
+    "b": 0.2,
+    "a": 1.0,
+    "codeDefault": true
+   }
+  },
+  "oceanColorHardcoded": {
+   "r": 1.0,
+   "g": 1.0,
+   "b": 1.0,
+   "a": 1.0
+  },
+  "locationIcons": [
+   "StartTemple",
+   "Vendor_BlackForest",
+   "Hildir_camp",
+   "BogWitch_Camp",
+   "AncientUpgradeStation"
+  ],
+  "locationIconSprites": {
+   "StartTemple": "mapicon_start",
+   "Vendor_BlackForest": "mapicon_trader",
+   "Hildir_camp": "mapicon_hildir",
+   "BogWitch_Camp": "mapicon_bogwitch_camp",
+   "AncientUpgradeStation": "mapicon_upgradestation"
+  },
+  "pinIcons": {
+   "0": "mapicon_fire",
+   "1": "mapicon_house",
+   "2": "mapicon_hammer",
+   "3": "mapicon_pin",
+   "6": "mapicon_portal",
+   "4": "mapicon_death",
+   "5": "mapicon_bed",
+   "7": "mapicon_shout",
+   "9": "mapicon_boss_colored",
+   "10": "mapicon_player_32",
+   "11": "mapicon_randevent",
+   "13": "mapicon_eventarea",
+   "12": "mapicon_ping",
+   "14": "mapicon_hildir1",
+   "15": "mapicon_hildir2",
+   "16": "mapicon_hildir3",
+   "17": "mapicon_memorialplace"
+  }
+ },
+ "heightmap": {
+  "zoneWidth": 64,
+  "zoneScale": 1.0,
+  "zoneIsDistantLod": false
+ }
+}

@@ -18,7 +18,8 @@
       "@analysis/*": ["../analysis/src/*"],
       "@deadlock/*": ["../../deadlock/data/*"],
       "@poe2/*": ["../../poe2/data/*"],
-      "@valheim/*": ["../../valheim/data/site/*"]
+      "@valheim/*": ["../../valheim/data/site/*"],
+      "@valheimMap/*": ["../../valheim/data/map/*"]
     }
   },
   "include": ["src", "vite.config.ts", "dev-api.ts"]

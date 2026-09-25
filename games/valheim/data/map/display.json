@@ -1,0 +1,3676 @@
+{
+ "stamp": "DATA-STAMP game-version=1.0.15 network=40 unity=6000.0.75f1 assembly_valheim-sha256=59f53fb55d99d22a33e8ed094eec8d21e9f133543bce92bc3d80dce44033adb1 dumped=2026-09-25 dumper=vestigo-map_data/1 mode=assets schema=1",
+ "gameVersion": "1.0.15",
+ "assemblyValheimSha256": "59f53fb55d99d22a33e8ed094eec8d21e9f133543bce92bc3d80dce44033adb1",
+ "extractedAt": "2026-09-25T00:00:50Z",
+ "schema": 1,
+ "count": 183,
+ "locations": {
+  "StoneCircle": {
+   "name": {
+    "en": "Ancient Stone Circle",
+    "es": "Círculo de piedras antiguo"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "ancient-stone-circle"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "ancient-stone-circle"
+    }
+   ],
+   "candidates": false
+  },
+  "StartTemple": {
+   "name": {
+    "en": "Sacrificial Stones",
+    "es": "Piedras de sacrificio"
+   },
+   "nameSource": "manual",
+   "category": "start",
+   "icon": "mapicon_start",
+   "iconSource": "locationIcon",
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "sacrificial-stones"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "sacrificial-stones"
+    }
+   ],
+   "candidates": false
+  },
+  "Eikthyrnir": {
+   "name": {
+    "en": "Eikthyr",
+    "es": "Eikthyr"
+   },
+   "nameSource": "boss",
+   "category": "boss",
+   "icon": "mapicon_boss_colored",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Eikthyr",
+     "es": "Eikthyr"
+    },
+    "type": 9
+   },
+   "page": {
+    "tab": "bosses",
+    "slug": "eikthyr"
+   },
+   "pages": [
+    {
+     "tab": "bosses",
+     "slug": "eikthyr"
+    }
+   ],
+   "candidates": false
+  },
+  "GoblinKing": {
+   "name": {
+    "en": "Yagluth",
+    "es": "Yagluth"
+   },
+   "nameSource": "boss",
+   "category": "boss",
+   "icon": "mapicon_boss_colored",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Yagluth",
+     "es": "Yagluth"
+    },
+    "type": 9
+   },
+   "page": {
+    "tab": "bosses",
+    "slug": "yagluth"
+   },
+   "pages": [
+    {
+     "tab": "bosses",
+     "slug": "yagluth"
+    }
+   ],
+   "candidates": false
+  },
+  "Greydwarf_camp1": {
+   "name": {
+    "en": "Greydwarf Camp",
+    "es": "Campamento de grisucios"
+   },
+   "nameSource": "manual",
+   "category": "camp",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Runestone_Greydwarfs": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Grave1": {
+   "name": {
+    "en": "Swamp Grave",
+    "es": "Tumba del pantano"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "swamp-grave"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "swamp-grave"
+    }
+   ],
+   "candidates": false
+  },
+  "SwampRuin1": {
+   "name": {
+    "en": "Swamp Runestone Tower",
+    "es": "Torre de la piedra rúnica"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "swamp-runestone-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "swamp-runestone-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "SwampRuin2": {
+   "name": {
+    "en": "Swamp Runestone Tower",
+    "es": "Torre de la piedra rúnica"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "swamp-runestone-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "swamp-runestone-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "FireHole": {
+   "name": {
+    "en": "Geyser",
+    "es": "Géiser"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "geyser"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "geyser"
+    }
+   ],
+   "candidates": false
+  },
+  "Runestone_Draugr": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "GDKing": {
+   "name": {
+    "en": "The Elder",
+    "es": "El Sabio"
+   },
+   "nameSource": "boss",
+   "category": "boss",
+   "icon": "mapicon_boss_colored",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "The Elder",
+     "es": "El Sabio"
+    },
+    "type": 9
+   },
+   "page": {
+    "tab": "bosses",
+    "slug": "the-elder"
+   },
+   "pages": [
+    {
+     "tab": "bosses",
+     "slug": "the-elder"
+    }
+   ],
+   "candidates": false
+  },
+  "Bonemass": {
+   "name": {
+    "en": "Bonemass",
+    "es": "Tuétano"
+   },
+   "nameSource": "boss",
+   "category": "boss",
+   "icon": "mapicon_boss_colored",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Bonemass",
+     "es": "Tuétano"
+    },
+    "type": 9
+   },
+   "page": {
+    "tab": "bosses",
+    "slug": "bonemass"
+   },
+   "pages": [
+    {
+     "tab": "bosses",
+     "slug": "bonemass"
+    }
+   ],
+   "candidates": false
+  },
+  "Crypt2": {
+   "name": {
+    "en": "Burial Chambers",
+    "es": "Cámaras funerarias"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "burial-chambers"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "burial-chambers"
+    }
+   ],
+   "candidates": false
+  },
+  "Ruin1": {
+   "name": {
+    "en": "Abandoned Outpost",
+    "es": "Puesto abandonado"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Ruin2": {
+   "name": {
+    "en": "Greydwarf Tower",
+    "es": "Torre de grisucios"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "StoneHouse3": {
+   "name": {
+    "en": "Abandoned Outpost",
+    "es": "Puesto abandonado"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "StoneHouse4": {
+   "name": {
+    "en": "Abandoned Outpost",
+    "es": "Puesto abandonado"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Ruin3": {
+   "name": {
+    "en": "Fuling Ruin",
+    "es": "Ruina fuling"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "fuling-ruin"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "fuling-ruin"
+    }
+   ],
+   "candidates": false
+  },
+  "GoblinCamp2": {
+   "name": {
+    "en": "Fuling Village",
+    "es": "Aldea fuling"
+   },
+   "nameSource": "manual",
+   "category": "village",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "fuling-village"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "fuling-village"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneTower1": {
+   "name": {
+    "en": "Fuling Outpost",
+    "es": "Puesto fuling"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "fuling-outpost"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "fuling-outpost"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneTower3": {
+   "name": {
+    "en": "Fuling Outpost",
+    "es": "Puesto fuling"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "fuling-outpost"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "fuling-outpost"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneHenge1": {
+   "name": {
+    "en": "Stonehenge",
+    "es": "Círculo de monolitos"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "stonehenge"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "stonehenge"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneHenge2": {
+   "name": {
+    "en": "Stonehenge",
+    "es": "Círculo de monolitos"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "stonehenge"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "stonehenge"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneHenge3": {
+   "name": {
+    "en": "Stonehenge",
+    "es": "Círculo de monolitos"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "stonehenge"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "stonehenge"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneHenge4": {
+   "name": {
+    "en": "Stonehenge",
+    "es": "Círculo de monolitos"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "stonehenge"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "stonehenge"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneHenge5": {
+   "name": {
+    "en": "Stonehenge",
+    "es": "Círculo de monolitos"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "stonehenge"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "stonehenge"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneHenge6": {
+   "name": {
+    "en": "Stonehenge",
+    "es": "Círculo de monolitos"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "stonehenge"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "stonehenge"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse1": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse2": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse3": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse4": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse5": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse6": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse7": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse8": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse9": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse10": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse11": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse12": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodHouse13": {
+   "name": {
+    "en": "Abandoned House",
+    "es": "Casa abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-house"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-house"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodFarm1": {
+   "name": {
+    "en": "Abandoned Village",
+    "es": "Aldea abandonada"
+   },
+   "nameSource": "manual",
+   "category": "village",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-village"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-village"
+    }
+   ],
+   "candidates": false
+  },
+  "WoodVillage1": {
+   "name": {
+    "en": "Draugr Village",
+    "es": "Aldea draugr"
+   },
+   "nameSource": "manual",
+   "category": "village",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "draugr-village"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "draugr-village"
+    }
+   ],
+   "candidates": false
+  },
+  "TrollCave02": {
+   "name": {
+    "en": "Troll Cave",
+    "es": "Cueva del trol"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "troll-cave"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "troll-cave"
+    }
+   ],
+   "candidates": false
+  },
+  "SunkenCrypt4": {
+   "name": {
+    "en": "Sunken Crypts",
+    "es": "Criptas hundidas"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "sunken-crypts"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "sunken-crypts"
+    }
+   ],
+   "candidates": false
+  },
+  "Dolmen01": {
+   "name": {
+    "en": "Dolmen",
+    "es": "Dolmen"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dolmen"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dolmen"
+    }
+   ],
+   "candidates": false
+  },
+  "Dolmen02": {
+   "name": {
+    "en": "Dolmen",
+    "es": "Dolmen"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dolmen"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dolmen"
+    }
+   ],
+   "candidates": false
+  },
+  "Dolmen03": {
+   "name": {
+    "en": "Dolmen",
+    "es": "Dolmen"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dolmen"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dolmen"
+    }
+   ],
+   "candidates": false
+  },
+  "Crypt3": {
+   "name": {
+    "en": "Burial Chambers",
+    "es": "Cámaras funerarias"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "burial-chambers"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "burial-chambers"
+    }
+   ],
+   "candidates": false
+  },
+  "Crypt4": {
+   "name": {
+    "en": "Burial Chambers",
+    "es": "Cámaras funerarias"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "burial-chambers"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "burial-chambers"
+    }
+   ],
+   "candidates": false
+  },
+  "InfestedTree01": {
+   "name": {
+    "en": "Gucksack",
+    "es": "Saco de légamo"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "gucksack"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "gucksack"
+    }
+   ],
+   "candidates": false
+  },
+  "SwampHut1": {
+   "name": {
+    "en": "Abandoned Hut",
+    "es": "Choza abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-hut"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-hut"
+    }
+   ],
+   "candidates": false
+  },
+  "SwampHut2": {
+   "name": {
+    "en": "Abandoned Hut",
+    "es": "Choza abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-hut"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-hut"
+    }
+   ],
+   "candidates": false
+  },
+  "SwampHut3": {
+   "name": {
+    "en": "Abandoned Hut",
+    "es": "Choza abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-hut"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-hut"
+    }
+   ],
+   "candidates": false
+  },
+  "SwampHut4": {
+   "name": {
+    "en": "Abandoned Hut",
+    "es": "Choza abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-hut"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-hut"
+    }
+   ],
+   "candidates": false
+  },
+  "SwampHut5": {
+   "name": {
+    "en": "Abandoned Hut",
+    "es": "Choza abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-hut"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-hut"
+    }
+   ],
+   "candidates": false
+  },
+  "SwampWell1": {
+   "name": {
+    "en": "Inverted Tower",
+    "es": "Torre invertida"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "inverted-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "inverted-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneTowerRuins04": {
+   "name": {
+    "en": "Mountain Tower",
+    "es": "Torre de la montaña"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "mountain-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "mountain-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneTowerRuins05": {
+   "name": {
+    "en": "Mountain Tower",
+    "es": "Torre de la montaña"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "mountain-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "mountain-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneTowerRuins03": {
+   "name": {
+    "en": "Contested Tower",
+    "es": "Torre disputada"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "StoneTowerRuins07": {
+   "name": {
+    "en": "Skeleton Tower",
+    "es": "Torre de esqueletos"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "StoneTowerRuins08": {
+   "name": {
+    "en": "Skeleton Tower",
+    "es": "Torre de esqueletos"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "StoneTowerRuins09": {
+   "name": {
+    "en": "Skeleton Tower",
+    "es": "Torre de esqueletos"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "StoneTowerRuins10": {
+   "name": {
+    "en": "Skeleton Tower",
+    "es": "Torre de esqueletos"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Vendor_BlackForest": {
+   "name": {
+    "en": "Haldor",
+    "es": "Haldor"
+   },
+   "nameSource": "trader",
+   "category": "trader",
+   "icon": "mapicon_trader",
+   "iconSource": "locationIcon",
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": true
+  },
+  "ShipSetting01": {
+   "name": {
+    "en": "Viking Graveyard",
+    "es": "Cementerio vikingo"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "viking-graveyard"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "viking-graveyard"
+    }
+   ],
+   "candidates": false
+  },
+  "Dragonqueen": {
+   "name": {
+    "en": "Moder",
+    "es": "Moder"
+   },
+   "nameSource": "boss",
+   "category": "boss",
+   "icon": "mapicon_boss_colored",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Moder",
+     "es": "Moder"
+    },
+    "type": 9
+   },
+   "page": {
+    "tab": "bosses",
+    "slug": "moder"
+   },
+   "pages": [
+    {
+     "tab": "bosses",
+     "slug": "moder"
+    }
+   ],
+   "candidates": false
+  },
+  "DrakeNest01": {
+   "name": {
+    "en": "Drake Nest",
+    "es": "Nido de draco"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "drake-nest"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "drake-nest"
+    }
+   ],
+   "candidates": false
+  },
+  "Waymarker01": {
+   "name": {
+    "en": "Cairns",
+    "es": "Túmulos"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "cairns"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "cairns"
+    }
+   ],
+   "candidates": false
+  },
+  "Waymarker02": {
+   "name": {
+    "en": "Cairns",
+    "es": "Túmulos"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "cairns"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "cairns"
+    }
+   ],
+   "candidates": false
+  },
+  "AbandonedLogCabin02": {
+   "name": {
+    "en": "Abandoned Cabin",
+    "es": "Cabaña abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-cabin"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-cabin"
+    }
+   ],
+   "candidates": false
+  },
+  "AbandonedLogCabin03": {
+   "name": {
+    "en": "Abandoned Cabin",
+    "es": "Cabaña abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-cabin"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-cabin"
+    }
+   ],
+   "candidates": false
+  },
+  "AbandonedLogCabin04": {
+   "name": {
+    "en": "Abandoned Cabin",
+    "es": "Cabaña abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-cabin"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-cabin"
+    }
+   ],
+   "candidates": false
+  },
+  "MountainGrave01": {
+   "name": {
+    "en": "Mountain grave",
+    "es": "Tumba de la montaña"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "mountain-grave"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "mountain-grave"
+    }
+   ],
+   "candidates": false
+  },
+  "DrakeLorestone": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "MountainWell1": {
+   "name": {
+    "en": "Inverted Tower",
+    "es": "Torre invertida"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "inverted-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "inverted-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "ShipWreck01": {
+   "name": {
+    "en": "Shipwreck",
+    "es": "Naufragio"
+   },
+   "nameSource": "manual",
+   "category": "shipwreck",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "shipwreck"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "shipwreck"
+    }
+   ],
+   "candidates": false
+  },
+  "ShipWreck02": {
+   "name": {
+    "en": "Shipwreck",
+    "es": "Naufragio"
+   },
+   "nameSource": "manual",
+   "category": "shipwreck",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "shipwreck"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "shipwreck"
+    }
+   ],
+   "candidates": false
+  },
+  "ShipWreck03": {
+   "name": {
+    "en": "Shipwreck",
+    "es": "Naufragio"
+   },
+   "nameSource": "manual",
+   "category": "shipwreck",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "shipwreck"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "shipwreck"
+    }
+   ],
+   "candidates": false
+  },
+  "ShipWreck04": {
+   "name": {
+    "en": "Shipwreck",
+    "es": "Naufragio"
+   },
+   "nameSource": "manual",
+   "category": "shipwreck",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "shipwreck"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "shipwreck"
+    }
+   ],
+   "candidates": false
+  },
+  "Runestone_Meadows": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Runestone_Boars": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Runestone_Swamps": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Runestone_Mountains": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Runestone_BlackForest": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Runestone_Plains": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "CombatRuin01": {
+   "name": {
+    "en": "Combat Ruin",
+    "es": "Ruina de batalla"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "combat-ruin"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "combat-ruin"
+    }
+   ],
+   "candidates": false
+  },
+  "BigRockClearing": {
+   "name": {
+    "en": "Big Rock Clearing",
+    "es": "Claro de la gran roca"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "big-rock-clearing"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "big-rock-clearing"
+    }
+   ],
+   "candidates": true
+  },
+  "TarPit1": {
+   "name": {
+    "en": "Tar Pit",
+    "es": "Pozo de alquitrán"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "tar-pit"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "tar-pit"
+    }
+   ],
+   "candidates": false
+  },
+  "TarPit2": {
+   "name": {
+    "en": "Tar Pit",
+    "es": "Pozo de alquitrán"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "tar-pit"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "tar-pit"
+    }
+   ],
+   "candidates": false
+  },
+  "TarPit3": {
+   "name": {
+    "en": "Tar Pit",
+    "es": "Pozo de alquitrán"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "tar-pit"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "tar-pit"
+    }
+   ],
+   "candidates": false
+  },
+  "MountainCave02": {
+   "name": {
+    "en": "Frost Caves",
+    "es": "Cavernas gélidas"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "frost-caves"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "frost-caves"
+    }
+   ],
+   "candidates": false
+  },
+  "AncientUpgradeStation": {
+   "name": {
+    "en": "Forge of Potential",
+    "es": "Forja del Potencial"
+   },
+   "nameSource": "discoverLabel",
+   "category": "poi",
+   "icon": "mapicon_upgradestation",
+   "iconSource": "locationIcon",
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": true
+  },
+  "Mistlands_GuardTower1_new": {
+   "name": {
+    "en": "Dvergr Guard Tower",
+    "es": "Torre de guardia dvergr"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-guard-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-guard-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_GuardTower1_ruined_new": {
+   "name": {
+    "en": "Dvergr Guard Tower",
+    "es": "Torre de guardia dvergr"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-guard-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-guard-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_GuardTower1_ruined_new2": {
+   "name": {
+    "en": "Dvergr Guard Tower",
+    "es": "Torre de guardia dvergr"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-guard-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-guard-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_GuardTower2_new": {
+   "name": {
+    "en": "Dvergr Guard Tower",
+    "es": "Torre de guardia dvergr"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-guard-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-guard-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_GuardTower3_new": {
+   "name": {
+    "en": "Dvergr Guard Tower",
+    "es": "Torre de guardia dvergr"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-guard-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-guard-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_GuardTower3_ruined_new": {
+   "name": {
+    "en": "Dvergr Guard Tower",
+    "es": "Torre de guardia dvergr"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-guard-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-guard-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_Lighthouse1_new": {
+   "name": {
+    "en": "Dvergr Lighthouse",
+    "es": "Faro dvergr"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-lighthouse"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-lighthouse"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_Excavation1": {
+   "name": {
+    "en": "Dvergr Excavation Site",
+    "es": "Excavación dvergr"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-excavation-site"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-excavation-site"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_Excavation2": {
+   "name": {
+    "en": "Dvergr Excavation Site",
+    "es": "Excavación dvergr"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-excavation-site"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-excavation-site"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_Excavation3": {
+   "name": {
+    "en": "Dvergr Excavation Site",
+    "es": "Excavación dvergr"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-excavation-site"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-excavation-site"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_Harbour1": {
+   "name": {
+    "en": "Dvergr Harbor",
+    "es": "Puerto dvergr"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-harbor"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-harbor"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_Viaduct1": {
+   "name": {
+    "en": "Dvergr viaduct",
+    "es": "Viaducto dvergr"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-viaduct"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-viaduct"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_Viaduct2": {
+   "name": {
+    "en": "Dvergr viaduct",
+    "es": "Viaducto dvergr"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-viaduct"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-viaduct"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_RockSpire1": {
+   "name": {
+    "en": "Rock Spire",
+    "es": "Aguja de roca"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Mistlands_Giant1": {
+   "name": {
+    "en": "Giant Remains",
+    "es": "Restos de gigante"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "giant-remains"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "giant-remains"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_Giant2": {
+   "name": {
+    "en": "Giant Remains",
+    "es": "Restos de gigante"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "giant-remains"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "giant-remains"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_DvergrTownEntrance1": {
+   "name": {
+    "en": "Infested Mine",
+    "es": "Mina infestada"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "infested-mine"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "infested-mine"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_DvergrTownEntrance2": {
+   "name": {
+    "en": "Infested Mine",
+    "es": "Mina infestada"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "infested-mine"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "infested-mine"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_DvergrBossEntrance1": {
+   "name": {
+    "en": "The Queen",
+    "es": "La Reina"
+   },
+   "nameSource": "boss",
+   "category": "boss",
+   "icon": "mapicon_boss_colored",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "The Queen",
+     "es": "La Reina"
+    },
+    "type": 9
+   },
+   "page": {
+    "tab": "bosses",
+    "slug": "the-queen"
+   },
+   "pages": [
+    {
+     "tab": "bosses",
+     "slug": "the-queen"
+    },
+    {
+     "tab": "places",
+     "slug": "infested-citadel"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_RoadPost1": {
+   "name": {
+    "en": "Dvergr Road Post",
+    "es": "Poste de camino dvergr"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Mistlands_StatueGroup1": {
+   "name": {
+    "en": "Dvergr Statues",
+    "es": "Estatuas dvergr"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Mistlands_Statue1": {
+   "name": {
+    "en": "Dvergr Statues",
+    "es": "Estatuas dvergr"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Mistlands_Statue2": {
+   "name": {
+    "en": "Dvergr Statues",
+    "es": "Estatuas dvergr"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Mistlands_Swords1": {
+   "name": {
+    "en": "Ancient Sword",
+    "es": "Espada antigua"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "ancient-sword"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "ancient-sword"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_Swords2": {
+   "name": {
+    "en": "Ancient Sword",
+    "es": "Espada antigua"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "ancient-sword"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "ancient-sword"
+    }
+   ],
+   "candidates": false
+  },
+  "Mistlands_Swords3": {
+   "name": {
+    "en": "Ancient Sword",
+    "es": "Espada antigua"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "ancient-sword"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "ancient-sword"
+    }
+   ],
+   "candidates": false
+  },
+  "Runestone_Mistlands": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "Hildir_cave": {
+   "name": {
+    "en": "Howling Cavern",
+    "es": "Caverna de los aullidos"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": "mapicon_hildir2",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Howling Cavern",
+     "es": "Caverna de los aullidos"
+    },
+    "type": 15
+   },
+   "page": {
+    "tab": "places",
+    "slug": "howling-cavern"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "howling-cavern"
+    }
+   ],
+   "candidates": false
+  },
+  "Hildir_camp": {
+   "name": {
+    "en": "Hildir",
+    "es": "Hildir"
+   },
+   "nameSource": "trader",
+   "category": "trader",
+   "icon": "mapicon_hildir",
+   "iconSource": "locationIcon",
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": true
+  },
+  "Hildir_crypt": {
+   "name": {
+    "en": "Smouldering Tomb",
+    "es": "Tumba humeante"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": "mapicon_hildir1",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Smouldering Tomb",
+     "es": "Tumba humeante"
+    },
+    "type": 14
+   },
+   "page": {
+    "tab": "places",
+    "slug": "smouldering-tomb"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "smouldering-tomb"
+    }
+   ],
+   "candidates": false
+  },
+  "Hildir_plainsfortress": {
+   "name": {
+    "en": "Sealed Tower",
+    "es": "Torre sellada"
+   },
+   "nameSource": "discoverLabel",
+   "category": "dungeon",
+   "icon": "mapicon_hildir3",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Sealed Tower",
+     "es": "Torre sellada"
+    },
+    "type": 16
+   },
+   "page": {
+    "tab": "places",
+    "slug": "sealed-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "sealed-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "FaderLocation": {
+   "name": {
+    "en": "Fader",
+    "es": "Fader"
+   },
+   "nameSource": "boss",
+   "category": "boss",
+   "icon": "mapicon_boss_colored",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "The Emerald Flame",
+     "es": "La Llama Esmeralda"
+    },
+    "type": 9
+   },
+   "page": {
+    "tab": "bosses",
+    "slug": "fader"
+   },
+   "pages": [
+    {
+     "tab": "bosses",
+     "slug": "fader"
+    }
+   ],
+   "candidates": false
+  },
+  "PlaceofMystery1": {
+   "name": {
+    "en": "Mysterious Location",
+    "es": "Ubicación misteriosa"
+   },
+   "nameSource": "pin",
+   "category": "poi",
+   "icon": "mapicon_hildir1",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Mysterious Location",
+     "es": "Ubicación misteriosa"
+    },
+    "type": 14
+   },
+   "page": {
+    "tab": "places",
+    "slug": "mysterious-location"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "mysterious-location"
+    }
+   ],
+   "candidates": false
+  },
+  "PlaceofMystery2": {
+   "name": {
+    "en": "Mysterious Location",
+    "es": "Ubicación misteriosa"
+   },
+   "nameSource": "pin",
+   "category": "poi",
+   "icon": "mapicon_hildir1",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Mysterious Location",
+     "es": "Ubicación misteriosa"
+    },
+    "type": 14
+   },
+   "page": {
+    "tab": "places",
+    "slug": "mysterious-location"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "mysterious-location"
+    }
+   ],
+   "candidates": false
+  },
+  "PlaceofMystery3": {
+   "name": {
+    "en": "Tomb of Lord Reto",
+    "es": "Tumba de lord Reto"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": "mapicon_hildir1",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Mysterious Location",
+     "es": "Ubicación misteriosa"
+    },
+    "type": 14
+   },
+   "page": {
+    "tab": "places",
+    "slug": "tomb-of-lord-reto"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "tomb-of-lord-reto"
+    }
+   ],
+   "candidates": false
+  },
+  "CharredFortress": {
+   "name": {
+    "en": "Charred Fortress",
+    "es": "Fortaleza carbonizada"
+   },
+   "nameSource": "discoverLabel",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "charred-fortress"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "charred-fortress"
+    }
+   ],
+   "candidates": false
+  },
+  "FortressRuins": {
+   "name": {
+    "en": "Ashlands ruins",
+    "es": "Ruinas de la Tierra de Ceniza"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "ashlands-ruins"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "ashlands-ruins"
+    }
+   ],
+   "candidates": false
+  },
+  "CharredRuins1": {
+   "name": {
+    "en": "Charred Ruins",
+    "es": "Ruinas carbonizadas"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "charred-ruins"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "charred-ruins"
+    }
+   ],
+   "candidates": false
+  },
+  "Runestone_Ashlands": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "LeviathanLava": {
+   "name": {
+    "en": "Flametal Ore Vein",
+    "es": "Veta de mineral de llametal"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "flametal-ore-vein"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "flametal-ore-vein"
+    }
+   ],
+   "candidates": false
+  },
+  "SulfurArch": {
+   "name": {
+    "en": "Sulfur Arch",
+    "es": "Arco de azufre"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "sulfur-arch"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "sulfur-arch"
+    }
+   ],
+   "candidates": false
+  },
+  "CharredStone_Spawner": {
+   "name": {
+    "en": "Charred Stone",
+    "es": "Piedra carbonizada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "VoltureNest": {
+   "name": {
+    "en": "Volture Nest",
+    "es": "Nido de buicán"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "CharredTowerRuins1": {
+   "name": {
+    "en": "Charred Tower Ruins",
+    "es": "Ruinas de torre carbonizada"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "CharredTowerRuins1_dvergr": {
+   "name": {
+    "en": "Dvergr Charred Tower Ruins",
+    "es": "Ruinas de torre dvergr carbonizada"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "dvergr-charred-tower-ruins"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "dvergr-charred-tower-ruins"
+    }
+   ],
+   "candidates": false
+  },
+  "CharredTowerRuins2": {
+   "name": {
+    "en": "Charred Tower Ruins",
+    "es": "Ruinas de torre carbonizada"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "CharredTowerRuins3": {
+   "name": {
+    "en": "Charred Tower Ruins",
+    "es": "Ruinas de torre carbonizada"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "AshlandRuins": {
+   "name": {
+    "en": "Ashlands ruins",
+    "es": "Ruinas de la Tierra de Ceniza"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "ashlands-ruins"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "ashlands-ruins"
+    }
+   ],
+   "candidates": false
+  },
+  "MorgenHole1": {
+   "name": {
+    "en": "Putrid Hole",
+    "es": "Agujero pútrido"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "putrid-hole"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "putrid-hole"
+    }
+   ],
+   "candidates": false
+  },
+  "MorgenHole2": {
+   "name": {
+    "en": "Putrid Hole",
+    "es": "Agujero pútrido"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "putrid-hole"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "putrid-hole"
+    }
+   ],
+   "candidates": false
+  },
+  "MorgenHole3": {
+   "name": {
+    "en": "Putrid Hole",
+    "es": "Agujero pútrido"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "putrid-hole"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "putrid-hole"
+    }
+   ],
+   "candidates": false
+  },
+  "CharredRuins2": {
+   "name": {
+    "en": "Charred Ruins",
+    "es": "Ruinas carbonizadas"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "charred-ruins"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "charred-ruins"
+    }
+   ],
+   "candidates": false
+  },
+  "CharredRuins3": {
+   "name": {
+    "en": "Charred Ruins",
+    "es": "Ruinas carbonizadas"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "charred-ruins"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "charred-ruins"
+    }
+   ],
+   "candidates": false
+  },
+  "CharredRuins4": {
+   "name": {
+    "en": "Charred Ruins",
+    "es": "Ruinas carbonizadas"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "charred-ruins"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "charred-ruins"
+    }
+   ],
+   "candidates": false
+  },
+  "BogWitch_Camp": {
+   "name": {
+    "en": "The Bog Witch",
+    "es": "La bruja del pantano"
+   },
+   "nameSource": "trader",
+   "category": "trader",
+   "icon": "mapicon_bogwitch_camp",
+   "iconSource": "locationIcon",
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": true
+  },
+  "DN_Bossroom": {
+   "name": {
+    "en": "Kall Fimbulbringer",
+    "es": "Kall Fimbulbringer"
+   },
+   "nameSource": "boss",
+   "category": "boss",
+   "icon": "mapicon_boss_colored",
+   "iconSource": "pin",
+   "pin": {
+    "name": {
+     "en": "Aesir Passage",
+     "es": "Pasaje de los Aesir"
+    },
+    "type": 9
+   },
+   "page": {
+    "tab": "bosses",
+    "slug": "kall-fimbulbringer"
+   },
+   "pages": [
+    {
+     "tab": "bosses",
+     "slug": "kall-fimbulbringer"
+    }
+   ],
+   "candidates": false
+  },
+  "TheHole01": {
+   "name": {
+    "en": "Winding tunnels",
+    "es": "Túneles serpenteantes"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "NorthVillage": {
+   "name": {
+    "en": "Northern Village",
+    "es": "Aldea norteña"
+   },
+   "nameSource": "manual",
+   "category": "village",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "MorkBorg": {
+   "name": {
+    "en": "Mörkhalla",
+    "es": "Mörkhalla"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "NorthMemorialPlace": {
+   "name": {
+    "en": "Memorial Site",
+    "es": "Sitio conmemorativo"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "FrozenShip01_DN": {
+   "name": {
+    "en": "Frozen Ship",
+    "es": "Barco congelado"
+   },
+   "nameSource": "manual",
+   "category": "shipwreck",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "FrozenShip02_DN": {
+   "name": {
+    "en": "Frozen Ship",
+    "es": "Barco congelado"
+   },
+   "nameSource": "manual",
+   "category": "shipwreck",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "FrozenShip03_DN": {
+   "name": {
+    "en": "Frozen Ship",
+    "es": "Barco congelado"
+   },
+   "nameSource": "manual",
+   "category": "shipwreck",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "IcePond1": {
+   "name": {
+    "en": "Ice Pond",
+    "es": "Estanque helado"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "DN_hut01": {
+   "name": {
+    "en": "Northern Hut",
+    "es": "Choza norteña"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "ShipSetting02": {
+   "name": {
+    "en": "Viking Graveyard",
+    "es": "Cementerio vikingo"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "viking-graveyard"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "viking-graveyard"
+    }
+   ],
+   "candidates": false
+  },
+  "ShipSetting03": {
+   "name": {
+    "en": "Viking Graveyard",
+    "es": "Cementerio vikingo"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "viking-graveyard"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "viking-graveyard"
+    }
+   ],
+   "candidates": false
+  },
+  "LumberCamp": {
+   "name": {
+    "en": "Lumber Camp",
+    "es": "Campamento maderero"
+   },
+   "nameSource": "manual",
+   "category": "camp",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "ShipWreck01_DN": {
+   "name": {
+    "en": "Shipwreck",
+    "es": "Naufragio"
+   },
+   "nameSource": "manual",
+   "category": "shipwreck",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "shipwreck"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "shipwreck"
+    }
+   ],
+   "candidates": false
+  },
+  "ShipWreck02_DN": {
+   "name": {
+    "en": "Shipwreck",
+    "es": "Naufragio"
+   },
+   "nameSource": "manual",
+   "category": "shipwreck",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "shipwreck"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "shipwreck"
+    }
+   ],
+   "candidates": false
+  },
+  "Runestone_DeepNorth": {
+   "name": {
+    "en": "Runestone",
+    "es": "Piedra rúnica"
+   },
+   "nameSource": "runestone",
+   "category": "runestone",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "DN_gammeltrollFrac01": {
+   "name": {
+    "en": "Ancient Troll Remains",
+    "es": "Restos de trol antiguo"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "DN_gammeltrollFrac02": {
+   "name": {
+    "en": "Ancient Troll Remains",
+    "es": "Restos de trol antiguo"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "BearCave": {
+   "name": {
+    "en": "Bear Cave",
+    "es": "Cueva de osos"
+   },
+   "nameSource": "door",
+   "category": "dungeon",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "WoodVillage2": {
+   "name": {
+    "en": "Draugr Village",
+    "es": "Aldea draugr"
+   },
+   "nameSource": "manual",
+   "category": "village",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "draugr-village"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "draugr-village"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneTowerRuins07_sunk": {
+   "name": {
+    "en": "Sunken Tower",
+    "es": "Torre hundida"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "StoneTowerRuins08_sunk": {
+   "name": {
+    "en": "Sunken Tower",
+    "es": "Torre hundida"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "StoneTowerRuins09_sunk": {
+   "name": {
+    "en": "Sunken Tower",
+    "es": "Torre hundida"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "StoneTowerRuins10_sunk": {
+   "name": {
+    "en": "Sunken Tower",
+    "es": "Torre hundida"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "SwampHut1_1": {
+   "name": {
+    "en": "Abandoned Hut",
+    "es": "Choza abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-hut"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-hut"
+    }
+   ],
+   "candidates": false
+  },
+  "SwampHut2_1": {
+   "name": {
+    "en": "Abandoned Hut",
+    "es": "Choza abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-hut"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-hut"
+    }
+   ],
+   "candidates": false
+  },
+  "SwampHut3_1": {
+   "name": {
+    "en": "Abandoned Hut",
+    "es": "Choza abandonada"
+   },
+   "nameSource": "manual",
+   "category": "poi",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "abandoned-hut"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "abandoned-hut"
+    }
+   ],
+   "candidates": false
+  },
+  "StoneTowerRuins05_leet": {
+   "name": {
+    "en": "Mountain Tower",
+    "es": "Torre de la montaña"
+   },
+   "nameSource": "manual",
+   "category": "tower",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "mountain-tower"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "mountain-tower"
+    }
+   ],
+   "candidates": false
+  },
+  "GoblinCamp2_1": {
+   "name": {
+    "en": "Fuling Village",
+    "es": "Aldea fuling"
+   },
+   "nameSource": "manual",
+   "category": "village",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "fuling-village"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "fuling-village"
+    }
+   ],
+   "candidates": false
+  },
+  "GoblinHut01": {
+   "name": {
+    "en": "Fuling Hut",
+    "es": "Choza fuling"
+   },
+   "nameSource": "manual",
+   "category": "village",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "GoblinHut02": {
+   "name": {
+    "en": "Fuling Hut",
+    "es": "Choza fuling"
+   },
+   "nameSource": "manual",
+   "category": "village",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "GoblinHut03": {
+   "name": {
+    "en": "Fuling Hut",
+    "es": "Choza fuling"
+   },
+   "nameSource": "manual",
+   "category": "village",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": null,
+   "pages": [],
+   "candidates": false
+  },
+  "TarPit1_1": {
+   "name": {
+    "en": "Tar Pit",
+    "es": "Pozo de alquitrán"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "tar-pit"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "tar-pit"
+    }
+   ],
+   "candidates": false
+  },
+  "TarPit2_1": {
+   "name": {
+    "en": "Tar Pit",
+    "es": "Pozo de alquitrán"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "tar-pit"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "tar-pit"
+    }
+   ],
+   "candidates": false
+  },
+  "TarPit3_1": {
+   "name": {
+    "en": "Tar Pit",
+    "es": "Pozo de alquitrán"
+   },
+   "nameSource": "manual",
+   "category": "resource",
+   "icon": null,
+   "iconSource": null,
+   "pin": null,
+   "page": {
+    "tab": "places",
+    "slug": "tar-pit"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "tar-pit"
+    }
+   ],
+   "candidates": false
+  }
+ }
+}

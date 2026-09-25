@@ -5,7 +5,7 @@
  * Diseño: docs/design/2026-09-24-valheim-enciclopedia.md. La barra de Vestigo
  * de arriba es la del sitio; lo del juego empieza en la sub-navegación.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useLang } from "./i18n";
 import RouteLink from "./RouteLink";
 import { PENDING_SEARCH_EVENT, takePendingSearch } from "./pendingSearch";
@@ -18,6 +18,25 @@ import ValheimList from "./ValheimList";
 import ValheimDetail from "./ValheimDetail";
 import { BiomeList, BiomePage, BossList, BossPage, CreaturePage, PlaceList, PlacePage } from "./ValheimGuide";
 import ValheimPatches from "./ValheimPatches";
+import { useMapCopy } from "./valheimMap/copy";
+
+// El mapa trae el generador del mundo: se baja sólo al abrirlo.
+const ValheimMap = lazy(() => import("./valheimMap/ValheimMap"));
+
+/** Lo que se ve (y lo que leen los buscadores) mientras carga el mapa. */
+function MapFallback() {
+  const t = useMapCopy();
+  return (
+    <div className="vm">
+      <header className="vh-head vm-head"><h1>{t.h1}</h1><p>{t.lede}</p></header>
+      <div className="vm-view vm-loading" />
+      <section className="vm-about">
+        <div><h2>{t.howTitle}</h2>{t.how.map((p, i) => <p key={i}>{p}</p>)}</div>
+        <div><h2>{t.findSeedTitle}</h2>{t.findSeed.map((p, i) => <p key={i}>{p}</p>)}</div>
+      </section>
+    </div>
+  );
+}
 import { loadEditions, peekEditions, type EditionMeta } from "./valheimPatchesData";
 
 /** Un ícono representativo por pestaña, para la portada. */
@@ -143,6 +162,10 @@ function Home({ to, navigate }: { to: To; navigate: Nav }) {
             <span>{t.tabs[tab]}<small>{counts[tab] ?? ""}</small></span>
           </RouteLink>
         ))}
+        <RouteLink className="vh-box vh-hubcard" to={to("map")} onNavigate={navigate}>
+          <span className="vh-slot"><img src={iconUrl("cartography_table")} alt="" loading="lazy" width={42} height={42} /></span>
+          <span>{t.map.tab}<small>{t.map.hub}</small></span>
+        </RouteLink>
         <RouteLink className="vh-box vh-hubcard" to={to("patches")} onNavigate={navigate}>
           <span className="vh-slot"><img src={iconUrl("sign")} alt="" loading="lazy" width={42} height={42} /></span>
           <span>{t.pat.tab}<small>{latest ? `${t.pat.latest}: ${latest.version}` : ""}</small></span>
@@ -201,12 +224,18 @@ export default function Valheim({ route, navigate }: { route: Route; navigate: N
           {VALHEIM_TABS.map((tab) => (
             <RouteLink key={tab} className="vh-tab" to={to(tab)} active={sec === tab} onNavigate={navigate}>{t.tabs[tab]}</RouteLink>
           ))}
-          <RouteLink className="vh-tab is-home is-news" to={to("patches")} active={sec === "patches"} onNavigate={navigate}>{t.pat.tab}</RouteLink>
+          <RouteLink className="vh-tab is-home is-news" to={to("map")} active={sec === "map"} onNavigate={navigate}>{t.map.tab}</RouteLink>
+          <RouteLink className="vh-tab is-home" to={to("patches")} active={sec === "patches"} onNavigate={navigate}>{t.pat.tab}</RouteLink>
         </nav>
       </div>
       <main className="vh vh-page">
         {sec === "home" ? <Home to={to} navigate={navigate} />
           : sec === "patches" ? <ValheimPatches detail={route.detail} to={to} navigate={navigate} />
+          : sec === "map" ? (
+            <Suspense fallback={<MapFallback />}>
+              <ValheimMap openPage={(tab, slug) => navigate(to(tab as ValheimSection, slug))} />
+            </Suspense>
+          )
           : <TabView tab={sec} detail={route.detail} to={to} navigate={navigate} />}
         <p className="vh-note">{t.fromGame}</p>
         <p className="vh-note" style={{ marginTop: 6 }}>

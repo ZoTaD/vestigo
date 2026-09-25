@@ -211,6 +211,12 @@ const EN = {
     step: (n: number) => `${n}`,
   },
   // La Crónica: las notas de parche (2026-09-24).
+  map: {
+    tab: "Map",
+    hub: "Your world, by seed",
+    seoTitle: "Valheim Interactive Map by Seed (1.0): biomes, bosses, dungeons | Vestigo",
+    seoDesc: "Enter your Valheim world seed and explore the full interactive map: biomes, terrain, bosses, dungeons, traders and every location, generated exactly like the game (1.0). Free, in your browser.",
+  },
   pat: {
     tab: "Patches",
     title: "The Chronicle",
@@ -439,6 +445,12 @@ const ES: typeof EN = {
     biome: "Bioma",
     open: "Abrir",
     step: (n) => `${n}`,
+  },
+  map: {
+    tab: "Mapa",
+    hub: "Tu mundo, por semilla",
+    seoTitle: "Mapa interactivo de Valheim por semilla (1.0): biomas, jefes y mazmorras | Vestigo",
+    seoDesc: "Escribe la semilla de tu mundo de Valheim y explora el mapa interactivo completo: biomas, relieve, jefes, mazmorras, comerciantes y todos los lugares, generados exactamente como en el juego (1.0). Gratis, en tu navegador.",
   },
   pat: {
     tab: "Parches",

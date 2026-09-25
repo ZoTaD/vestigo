@@ -20,6 +20,8 @@ const deadlockDir = fileURLToPath(new URL("../../deadlock/data", import.meta.url
 const poe2Dir = fileURLToPath(new URL("../../poe2/data", import.meta.url));
 // Valheim (2026-09-24): lo que arma `games/valheim/pipeline/site.py`, una lista por pestaña.
 const valheimDir = fileURLToPath(new URL("../../valheim/data/site", import.meta.url));
+// El mapa por semilla (2026-09-25): las tablas de lugares que saca `pipeline/map_data.py`.
+const valheimMapDir = fileURLToPath(new URL("../../valheim/data/map", import.meta.url));
 
 /**
  * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.
@@ -330,7 +332,7 @@ export default defineConfig({
     // @deadlock is the same arrangement for the other game: its pipeline writes
     // to games/deadlock/data and this reads it in place. Un alias por juego y no
     // uno genérico, para que un import diga de cuál de los dos está hablando.
-    alias: { "@data": dataDir, "@analysis": analysisDir, "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir },
+    alias: { "@data": dataDir, "@analysis": analysisDir, "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

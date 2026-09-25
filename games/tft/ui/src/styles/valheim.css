@@ -428,3 +428,78 @@ a.vh-upg-mat:hover { color: var(--vh-cream); }
 .vh-effect p { margin: 0; font-size: 13.5px; color: var(--vh-dim); }
 .vh-rules a, .vh-lines a { color: var(--vh-brass-lt); text-decoration: none; }
 .vh-rules a:hover, .vh-lines a:hover { text-decoration: underline; }
+
+/* ---------- mapa interactivo (2026-09-24) ---------- */
+.vm-head h1 { margin-bottom: 0; }
+.vm-seed { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; margin: 0 0 14px; }
+.vm-seed label { display: grid; gap: 4px; flex: 1 1 220px; max-width: 320px; }
+.vm-seed label span { font: 700 11.5px var(--vh-sans); letter-spacing: 0.15em; text-transform: uppercase; color: var(--vh-brass); }
+.vm-seed .vh-input { font: 700 16px/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: 0.06em; }
+.vm-seed small { flex-basis: 100%; color: var(--vh-faint); font-size: 12px; }
+.vm-btn { font: 700 13px var(--vh-sans); color: #e2cda2; background: rgba(28, 19, 12, 0.92); border: 0; border-radius: 3px; padding: 9px 12px; cursor: pointer; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6); }
+.vm-btn:hover { color: #fff1cf; background: rgba(60, 40, 22, 0.95); }
+.vm-btn.is-main { color: #1a1008; background: linear-gradient(180deg, var(--vh-brass-lt), var(--vh-brass)); }
+.vm-layout { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 16px; align-items: start; }
+.vm-stage { position: relative; }
+.vm-view { position: relative; height: min(78vh, 900px); min-height: 380px; background: #07090e; border-radius: 4px; overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7), 0 14px 34px rgba(0, 0, 0, 0.55); cursor: grab; user-select: none; }
+.vm-view:active { cursor: grabbing; }
+.vm-view canvas { display: block; width: 100%; height: 100%; }
+.vm-loading { background: radial-gradient(circle at 50% 50%, #1b2230 0, #07090e 70%); }
+.vm-zoom { position: absolute; right: 10px; top: 10px; display: grid; gap: 4px; }
+.vm-zoom button { width: 34px; height: 34px; font: 700 18px/1 var(--vh-sans); color: #e2cda2; background: rgba(12, 8, 5, 0.82); border: 0; border-radius: 3px; cursor: pointer; }
+.vm-zoom button:hover { color: #fff; background: rgba(40, 28, 16, 0.95); }
+.vm-status { position: absolute; left: 10px; bottom: 10px; font-size: 12.5px; color: #e9dcc0; background: rgba(8, 6, 4, 0.72); padding: 5px 9px; border-radius: 3px; pointer-events: none; }
+.vm-cursor { position: absolute; left: 10px; top: 10px; display: grid; gap: 2px; font-size: 13px; color: #f2e2bd; background: rgba(8, 6, 4, 0.78); padding: 7px 10px; border-radius: 3px; pointer-events: none; min-width: 150px; }
+.vm-pop { position: absolute; right: 54px; top: 10px; width: min(300px, calc(100% - 70px)); background: rgba(18, 12, 8, 0.96); border-radius: 4px; padding: 12px 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); font-size: 13.5px; }
+.vm-pop h3 { margin: 0 24px 2px 0; font: 700 18px var(--vh-serif); color: var(--vh-brass-lt); }
+.vm-pop p { margin: 6px 0; }
+.vm-pop-x { position: absolute; right: 8px; top: 6px; background: none; border: 0; color: var(--vh-dim); font-size: 20px; cursor: pointer; }
+.vm-note { color: var(--vh-dim); font-size: 12.5px; }
+.vm-side { display: grid; gap: 12px; }
+.vm-panel { padding: 12px 12px 14px; }
+.vm-panel h3 { margin: 0 0 8px; font: 700 11.5px var(--vh-sans); letter-spacing: 0.15em; text-transform: uppercase; color: var(--vh-brass); }
+.vm-legend, .vm-catlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; font-size: 13.5px; }
+.vm-legend li { display: flex; align-items: center; gap: 8px; }
+.vm-legend i, .vm-catlist i { width: 12px; height: 12px; border-radius: 2px; flex: none; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5); }
+.vm-catlist label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.vm-catlist small { margin-left: auto; color: var(--vh-faint); }
+.vm-cats { display: flex; gap: 12px; margin-bottom: 8px; }
+.vm-link { background: none; border: 0; padding: 0; color: var(--vh-brass); font: 13px var(--vh-sans); cursor: pointer; }
+.vm-link:hover { color: var(--vh-brass-lt); }
+.vm-about { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px 32px; margin-top: 28px; color: var(--vh-dim); font-size: 14.5px; line-height: 1.6; max-width: 110ch; }
+.vm-about h2 { font: 700 20px var(--vh-serif); color: var(--vh-brass-lt); margin: 0 0 6px; }
+.vm-about p { margin: 0 0 10px; }
+@media (max-width: 900px) {
+  .vm-layout { grid-template-columns: 1fr; }
+  .vm-view { height: 70vh; }
+  .vm-side { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+}
+/* El panel de lugares del mapa. */
+.vm-locs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; max-height: min(78vh, 900px); overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; }
+.vm-locs > * { min-width: 0; }
+.vm-search { width: 100%; box-sizing: border-box; }
+.vm-group h4 { display: flex; justify-content: space-between; align-items: baseline; margin: 4px 0 6px; font: 700 11px var(--vh-sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--vh-faint); }
+.vm-group h4 .vm-link { font-size: 11.5px; letter-spacing: 0; text-transform: none; }
+.vm-types, .vm-dist { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 13.5px; }
+.vm-types li { display: flex; align-items: center; gap: 6px; }
+.vm-types li.is-off label span { color: var(--vh-faint); }
+.vm-types label { display: flex; align-items: center; gap: 7px; flex: 1; min-width: 0; cursor: pointer; }
+.vm-types label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vm-types i { width: 11px; height: 11px; border-radius: 50%; flex: none; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6); }
+.vm-types img { flex: none; }
+.vm-go { background: rgba(0, 0, 0, 0.3); border: 0; border-radius: 3px; color: var(--vh-brass); font: 12px var(--vh-sans); padding: 2px 7px; cursor: pointer; min-width: 38px; text-align: right; }
+.vm-go:hover { color: var(--vh-brass-lt); background: rgba(200, 150, 62, 0.15); }
+.vm-dist .vm-link { display: flex; justify-content: space-between; gap: 8px; width: 100%; box-sizing: border-box; color: var(--vh-text); font-size: 13.5px; text-align: left; }
+.vm-dist .vm-link b { color: var(--vh-brass-lt); font-weight: 600; }
+.vm-dist .vm-link:hover span { color: var(--vh-brass-lt); }
+/* La ventanita de un lugar al pasar el mouse. */
+.vm-tip { position: absolute; z-index: 3; pointer-events: none; background: rgba(16, 11, 7, 0.96); border-radius: 4px; overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7), 0 12px 30px rgba(0, 0, 0, 0.6); font-size: 13px; line-height: 1.45; }
+.vm-tip-photo { display: block; width: 100%; height: 140px; object-fit: cover; }
+.vm-tip-body { padding: 9px 12px 10px; }
+.vm-tip h4 { margin: 0; font: 700 16px var(--vh-serif); color: var(--vh-brass-lt); }
+.vm-tip p { margin: 4px 0 0; color: var(--vh-text); }
+.vm-tip .vm-tip-kind { margin-top: 1px; color: var(--vh-faint); font-size: 12px; }
+.vm-tip .vm-tip-pos { color: var(--vh-dim); font-size: 12px; }
+.vm-tip .vm-tip-hint { color: var(--vh-brass); font-size: 11.5px; }

@@ -47,10 +47,11 @@ export type Poe2Section = "economy" | "encyclopedia" | "patches";
  * Las pestañas de Valheim (2026-09-24). "home" es la portada de la sección
  * (`/valheim` a secas); las demás llevan su nombre en la URL y, opcionalmente,
  * el slug de una ficha (`/valheim/bosses/eikthyr`). "patches" es la Crónica
- * (`/valheim/patches/1-0-15`): no es una pestaña de datos del juego.
+ * (`/valheim/patches/1-0-15`): no es una pestaña de datos del juego. "map" es
+ * el mapa interactivo por semilla (`/valheim/map?seed=…`).
  */
 export type ValheimTab = "foods" | "meads" | "weapons" | "armor" | "tools" | "building" | "materials" | "creatures" | "biomes" | "places" | "bosses";
-export type ValheimSection = "home" | ValheimTab | "patches";
+export type ValheimSection = "home" | ValheimTab | "patches" | "map";
 export const VALHEIM_TABS: ValheimTab[] = ["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "places", "bosses"];
 
 export const LANGS: Lang[] = ["en", "es"];
@@ -222,6 +223,7 @@ export function parseRoute(pathname: string): Route {
 
   if (head === "valheim") {
     if (rest[1] === "patches") return { ...base, view: "valheim", vhSection: "patches", detail: rest[2] || undefined };
+    if (rest[1] === "map") return { ...base, view: "valheim", vhSection: "map" };
     if (!isVhTab(rest[1])) return { ...base, view: "valheim", vhSection: "home" };
     return { ...base, view: "valheim", vhSection: rest[1], detail: rest[2] || undefined };
   }

@@ -10,7 +10,24 @@ del juego: el botín de sus cofres (`CHESTS`) y lo que sueltan sus habitantes.
 Pedido de ZoTaD: nada enlaza a la wiki; cada lugar es una ficha de Vestigo y
 el crédito de las fotos va sólo en el pie de la página.
 """
+import json
+import os
+
 from . import wiki
+
+# Los nombres oficiales en español que trae el juego para algunos lugares
+# (`m_discoverLabel`, puertas de mazmorra), sacados por `map_data.py`. Mandan
+# sobre la tabla `ES` de abajo: el mapa y la ficha tienen que decir lo mismo
+# ("Cavernas gélidas", no "Cuevas heladas"; 2026-09-25).
+DISPLAY = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "map", "display.json"))
+
+
+def game_names() -> dict[str, str]:
+    if not os.path.exists(DISPLAY):
+        return {}
+    with open(DISPLAY, encoding="utf-8") as f:
+        locs = json.load(f).get("locations", {})
+    return {wiki.norm(v["name"]["en"]): v["name"]["es"] for v in locs.values() if v.get("nameSource") not in (None, "manual")}
 
 # Los tipos de ficha de la wiki, como se muestran. El orden es el de la lista:
 # primero las mazmorras, al final de dónde sale cada recurso.
@@ -92,6 +109,7 @@ def build(images: dict, creature_ref, item_ref, chest_items) -> list[dict]:
     photos = images.get("places", {})
     by_title = {v.get("title"): v for v in photos.values() if v.get("title")}
     rows = []
+    official = game_names()
     for loc in wiki.locations():
         title = loc["title"]
         if title in SKIP or not loc["biomes"]:
@@ -116,7 +134,7 @@ def build(images: dict, creature_ref, item_ref, chest_items) -> list[dict]:
                     seen.add(r["slug"])
                     loot.append(r)
         rows.append({
-            "slug": place_slug(title), "tab": "places", "name": {"en": title, "es": ES.get(title, title)},
+            "slug": place_slug(title), "tab": "places", "name": {"en": title, "es": official.get(wiki.norm(title)) or ES.get(title, title)},
             "kind": kind if kind in TYPE_ORDER else "other",
             "type": TYPE_NAME.get(kind, {"en": loc["type"], "es": loc["type"]}),
             "biomes": loc["biomes"], "photo": photo,

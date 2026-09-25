@@ -162,6 +162,7 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const t of VALHEIM_TABS) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: t }));
       for (const e of data.vh.entries) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: e.tab, detail: e.slug }));
       paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "patches" }));
+      paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "map" }));
       for (const e of data.vh.editions) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "patches", detail: e.slug }));
     }
   }
