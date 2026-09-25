@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { AREA_FILES } from "../src/areaFiles";
+import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor } from "../src/areaFiles";
 
 /**
  * `areaFiles.ts` repite a mano los `import()` de `areas.ts` porque la config de
@@ -10,9 +10,13 @@ import { AREA_FILES } from "../src/areaFiles";
  */
 describe("cada vista en su chunk (2026-09-25)", () => {
   const source = readFileSync(new URL("../src/areas.ts", import.meta.url), "utf-8");
-  const lazies = new Map(
-    [...source.matchAll(/export const (\w+) = lazyWithPreload\(\(\) => import\("\.\/([\w/]+)"\)\)/g)].map((m) => [m[1], m[2]])
-  );
+  // Las dos formas: `lazyWithPreload(() => import("./X"))` y, cuando el módulo
+  // también se usa aparte, `const loadX = () => import("./X")` + `lazyWithPreload(loadX)`.
+  const loaders = new Map([...source.matchAll(/const (\w+) = \(\) => import\("\.\/([\w/]+)"\);/g)].map((m) => [m[1], m[2]]));
+  const lazies = new Map([
+    ...[...source.matchAll(/export const (\w+) = lazyWithPreload\(\(\) => import\("\.\/([\w/]+)"\)\)/g)].map((m) => [m[1], m[2]] as const),
+    ...[...source.matchAll(/export const (\w+) = lazyWithPreload\((\w+)\)/g)].filter((m) => loaders.has(m[2])).map((m) => [m[1], loaders.get(m[2])!] as const),
+  ]);
   const byView = Object.fromEntries(
     [...source.matchAll(/^\s+(\w+): (\w+),$/gm)].filter((m) => lazies.has(m[2])).map((m) => [m[1], lazies.get(m[2])])
   );
@@ -24,5 +28,28 @@ describe("cada vista en su chunk (2026-09-25)", () => {
 
   it("hay un área por cada vista que sirve el sitio", () => {
     expect(Object.keys(byView).sort()).toEqual(["deadlock", "home", "poe2", "privacy", "terms", "valheim"]);
+  });
+
+  it("DEADLOCK_TAB_FILES nombra el mismo archivo que TABS en DeadlockArea.tsx", () => {
+    const area = readFileSync(new URL("../src/DeadlockArea.tsx", import.meta.url), "utf-8");
+    const tabLazies = new Map(
+      [...area.matchAll(/const (\w+) = lazyWithPreload\(\(\) => import\("\.\/([\w/]+)"\)\)/g)].map((m) => [m[1], m[2]])
+    );
+    const tabs = area.slice(area.indexOf("const TABS"), area.indexOf("};", area.indexOf("const TABS")));
+    const bySection = Object.fromEntries(
+      [...tabs.matchAll(/^\s+([\w-]+): (\w+),$/gm)].filter((m) => tabLazies.has(m[2])).map((m) => [m[1], tabLazies.get(m[2])])
+    );
+    const files = Object.fromEntries(
+      Object.entries(DEADLOCK_TAB_FILES).map(([s, f]) => [s, f!.replace(/^src\//, "").replace(/\.tsx?$/, "")])
+    );
+    expect(Object.keys(bySection).length).toBeGreaterThan(0);
+    expect(files).toEqual(bySection);
+  });
+
+  it("filesFor pide el área y, en Deadlock, la pestaña", () => {
+    const base = { lang: "es" as const, dlSection: "meta" as const };
+    expect(filesFor({ ...base, view: "valheim" })).toEqual(["src/Valheim.tsx"]);
+    expect(filesFor({ ...base, view: "deadlock" })).toEqual(["src/DeadlockArea.tsx"]);
+    expect(filesFor({ ...base, view: "deadlock", dlSection: "player" })).toEqual(["src/DeadlockArea.tsx", "src/DeadlockPlayer.tsx"]);
   });
 });

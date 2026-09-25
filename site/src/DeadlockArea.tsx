@@ -5,21 +5,12 @@
  * entraba a Valheim bajaba también el armador de Deadlock. Ahora `areas.ts`
  * carga este módulo aparte, con su CSS, y sólo cuando la ruta es de Deadlock.
  */
+import { Suspense } from "react";
 import { useCopy } from "./deadlockCopy";
 import RouteLink from "./RouteLink";
 import Deadlock, { PatchHistory } from "./Deadlock";
-import DeadlockItems from "./DeadlockItems";
-import DeadlockHeroes from "./DeadlockHeroes";
-import DeadlockBuilder from "./DeadlockBuilderPage";
-import DeadlockNews from "./DeadlockNews";
-import DeadlockRanks from "./DeadlockRanks";
-import DeadlockPlayerLadder from "./DeadlockPlayerLadder";
-import DeadlockPlayer from "./DeadlockPlayer";
-// `DeadlockReport` y no `DeadlockMatch`: el módulo de datos ya se llama
-// `deadlockMatch.ts`, y en Windows dos archivos que sólo difieren en mayúsculas
-// son el mismo archivo para el compilador.
-import DeadlockReport from "./DeadlockReport";
 import DeadlockBandPicker from "./DeadlockBandPicker";
+import { lazyWithPreload } from "./lazyWithPreload";
 import { PUBLISHED_BAND, type BandId } from "./deadlockData";
 import { DEADLOCK_SECTIONS, type DeadlockSection, type Route } from "./route";
 // Las hojas de Deadlock y de Vestigo News, en el mismo orden que tenían en
@@ -31,6 +22,44 @@ import "./styles/deadlock-builder.css";
 import "./styles/deadlock-game.css";
 // Vestigo News (2026-09-17): la única página con paleta y fuentes propias, todo bajo `.vn`.
 import "./styles/news.css";
+
+/**
+ * Cada pestaña, salvo la tier list, en su propio chunk (2026-09-25).
+ *
+ * La tier list es la puerta de entrada de Deadlock y viaja con el área; el
+ * resto (el perfil y el informe de partida, el armador, la ficha de héroe, las
+ * noticias…) eran más de la mitad del JS de Deadlock y los bajaba cualquiera
+ * que abriera la tier list. `preloadTab` la trae antes del primer render (lo
+ * llaman `main.tsx` y el prerender por medio de `preloadRoute`), y el HTML de
+ * cada página ya la anuncia con `modulepreload` (`areaFiles.ts`).
+ *
+ * Una pestaña nueva se suma acá, en `TABS` y en `DEADLOCK_TAB_FILES`.
+ */
+const DeadlockItems = lazyWithPreload(() => import("./DeadlockItems"));
+const DeadlockHeroes = lazyWithPreload(() => import("./DeadlockHeroes"));
+const DeadlockBuilder = lazyWithPreload(() => import("./DeadlockBuilderPage"));
+const DeadlockNews = lazyWithPreload(() => import("./DeadlockNews"));
+const DeadlockRanks = lazyWithPreload(() => import("./DeadlockRanks"));
+const DeadlockPlayerLadder = lazyWithPreload(() => import("./DeadlockPlayerLadder"));
+const DeadlockPlayer = lazyWithPreload(() => import("./DeadlockPlayer"));
+// `DeadlockReport` y no `DeadlockMatch`: el módulo de datos ya se llama
+// `deadlockMatch.ts`, y en Windows dos archivos que sólo difieren en mayúsculas
+// son el mismo archivo para el compilador.
+const DeadlockReport = lazyWithPreload(() => import("./DeadlockReport"));
+
+const TABS: Partial<Record<DeadlockSection, { preload: () => Promise<void> }>> = {
+  items: DeadlockItems,
+  heroes: DeadlockHeroes,
+  builder: DeadlockBuilder,
+  patches: DeadlockNews,
+  ranks: DeadlockRanks,
+  ladder: DeadlockPlayerLadder,
+  player: DeadlockPlayer,
+  match: DeadlockReport,
+};
+
+/** Baja el chunk de la pestaña de una ruta de Deadlock (la tier list ya viene con el área). */
+export const preloadTab = (route: Route): Promise<void> => TABS[route.dlSection]?.preload() ?? Promise.resolve();
 
 export default function DeadlockArea({
   route,
@@ -86,6 +115,9 @@ export default function DeadlockArea({
           ))}
         </nav>
       </div>
+      {/* Saltar a una pestaña que todavía no se bajó muestra esto medio segundo;
+          la barra de pestañas de arriba queda donde está. */}
+      <Suspense fallback={<div className="area-loading" aria-busy="true" />}>
       {route.dlSection === "player" ? (
         <DeadlockPlayer
           accountId={route.detail}
@@ -128,6 +160,7 @@ export default function DeadlockArea({
           brawl={route.dlSection === "street-brawl"}
         />
       )}
+      </Suspense>
     </>
   );
 }

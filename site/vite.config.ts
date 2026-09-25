@@ -9,7 +9,7 @@ import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, type Route } from "./src/route";
 import { COPY } from "./src/i18n";
-import { AREA_FILES } from "./src/areaFiles";
+import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor } from "./src/areaFiles";
 
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
 const BRAND = COPY.en.brand;
@@ -224,28 +224,39 @@ function seoFiles(): Plugin {
  * un archivo real antes de consultar el redirect de SPA.
  */
 /**
- * Lo que el HTML de cada vista tiene que anunciar (2026-09-25).
+ * Lo que el HTML de cada página tiene que anunciar (2026-09-25).
  *
- * Cada juego es un chunk aparte con su CSS (`src/areas.ts`). La página
- * prerenderizada se ve antes de que corra el JS, así que sin su hoja en el
- * `<head>` se vería sin estilos hasta que llegara el chunk; y sin
- * `modulepreload`, el chunk recién se pediría después de bajar y ejecutar la
- * entrada. Acá se busca en el bundle el chunk de cada vista, se siguen sus
+ * Cada juego es un chunk aparte con su CSS (`src/areas.ts`), y cada pestaña de
+ * Deadlock otro (`DeadlockArea.tsx`). La página prerenderizada se ve antes de
+ * que corra el JS, así que sin su hoja en el `<head>` se vería sin estilos
+ * hasta que llegara el chunk; y sin `modulepreload`, cada chunk recién se
+ * pediría después de bajar y ejecutar el anterior. Acá se busca en el bundle el
+ * chunk de cada archivo (`filesFor` en `src/areaFiles.ts`), se siguen sus
  * imports estáticos y se juntan sus JS y sus CSS, menos lo que el `index.html`
- * de Vite ya trae.
+ * de Vite ya trae. Devuelve una función con caché: hay miles de páginas y
+ * pocas combinaciones.
  */
-function areaTags(bundle: Record<string, { type: string } & Record<string, any>>, html: string): Map<string, string> {
+function areaTags(bundle: Record<string, { type: string } & Record<string, any>>, html: string): (files: string[]) => string {
   const chunks = Object.values(bundle).filter((c) => c.type === "chunk");
   const byFile = new Map(chunks.map((c) => [c.fileName as string, c]));
   const norm = (id: string | null | undefined) => (id ?? "").replaceAll("\\", "/");
-  const tags = new Map<string, string>();
-  for (const [view, file] of Object.entries(AREA_FILES)) {
+  const chunkOf = (file: string) => {
     // Por el módulo y no por `facadeModuleId`: cuando otro chunk importa algo
     // del área (el árbol de PoE2 importa de su módulo), Rollup la deja sin
     // fachada y ese campo viene en null.
     const has = (c: Record<string, any>) => Object.keys(c.modules ?? {}).some((m) => norm(m).endsWith(`/${file}`));
     const root = chunks.find((c) => norm(c.facadeModuleId).endsWith(`/${file}`)) ?? chunks.find(has);
-    if (!root) throw new Error(`prerender: no hay chunk para ${file} (vista "${view}"). ¿Cambió areas.ts?`);
+    if (!root) throw new Error(`prerender: no hay chunk para ${file}. ¿Cambió areas.ts o DeadlockArea.tsx?`);
+    return root;
+  };
+  // Que falte un chunk tiene que romper el build ahora, no en la página que lo use.
+  for (const file of [...Object.values(AREA_FILES), ...Object.values(DEADLOCK_TAB_FILES)]) chunkOf(file!);
+  const fresh = (f: string) => !html.includes(`/${f}"`);
+  const cache = new Map<string, string>();
+  return (files) => {
+    const key = files.join("|");
+    const hit = cache.get(key);
+    if (hit !== undefined) return hit;
     const js = new Set<string>();
     const css = new Set<string>();
     const visit = (c: Record<string, any>) => {
@@ -257,17 +268,14 @@ function areaTags(bundle: Record<string, { type: string } & Record<string, any>>
         if (next) visit(next);
       }
     };
-    visit(root);
-    const fresh = (f: string) => !html.includes(`/${f}"`);
-    tags.set(
-      view,
-      [
-        ...[...css].filter(fresh).map((f) => `<link rel="stylesheet" crossorigin href="/${f}">`),
-        ...[...js].filter(fresh).map((f) => `<link rel="modulepreload" crossorigin href="/${f}">`),
-      ].join("\n    ")
-    );
-  }
-  return tags;
+    for (const file of files) visit(chunkOf(file));
+    const tags = [
+      ...[...css].filter(fresh).map((f) => `<link rel="stylesheet" crossorigin href="/${f}">`),
+      ...[...js].filter(fresh).map((f) => `<link rel="modulepreload" crossorigin href="/${f}">`),
+    ].join("\n    ");
+    cache.set(key, tags);
+    return tags;
+  };
 }
 
 function prerenderRoutes(): Plugin {
@@ -333,7 +341,7 @@ function prerenderRoutes(): Plugin {
         for (const page of pages) {
           const route = parseRoute(page.path);
           const cuerpo = await renderApp(route);
-          const propias = tags.get(route.view);
+          const propias = tags(filesFor(route));
           const pagina = renderHtml(html, page, BRAND, cuerpo).replace(
             "</head>",
             propias ? `  ${propias}\n  </head>` : "</head>"

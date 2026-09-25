@@ -36,9 +36,12 @@ import { LANGS, parseRoute, routePath, type Route } from "./route";
 function Shell({
   route,
   navigate,
+  liveMeta,
 }: {
   route: Route;
   navigate: (next: Route) => void;
+  /** Si el `<head>` ya no es el que vino prerenderizado (ver `App`). */
+  liveMeta: boolean;
 }) {
   const copy = useCopy();
   const { view: place } = route;
@@ -123,9 +126,11 @@ function Shell({
     >
       <div className="grain" aria-hidden="true" />
 
-      <Suspense fallback={null}>
-        <PageMeta route={route} />
-      </Suspense>
+      {liveMeta && (
+        <Suspense fallback={null}>
+          <PageMeta route={route} />
+        </Suspense>
+      )}
 
       <Nav active={place} route={route} onNavigate={navigate} />
 
@@ -224,11 +229,24 @@ function initialRoute(): Route {
  */
 export default function App({ ssrRoute }: { ssrRoute?: Route } = {}) {
   const [route, setRoute] = useState<Route>(() => ssrRoute ?? initialRoute());
+  /**
+   * `PageMeta` (el `<head>` al navegar) se baja recién cuando hace falta
+   * (2026-09-25). Arma títulos con los datos de todos los juegos, y en la
+   * página de llegada el HTML prerenderizado ya trae los suyos. Hace falta desde
+   * la primera navegación, o de entrada si la dirección no era la canónica
+   * (`/` en español, por ejemplo: el HTML es el de `/en`).
+   */
+  const [liveMeta, setLiveMeta] = useState(
+    () => !ssrRoute && typeof window !== "undefined" && window.location.pathname !== routePath(route)
+  );
 
   // The back button has to work, or real URLs are worse than no URLs: people
   // would land deep in the site with no way back out.
   useEffect(() => {
-    const onPop = () => setRoute(parseRoute(window.location.pathname));
+    const onPop = () => {
+      setLiveMeta(true);
+      setRoute(parseRoute(window.location.pathname));
+    };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
@@ -243,6 +261,7 @@ export default function App({ ssrRoute }: { ssrRoute?: Route } = {}) {
   }, []);
 
   const navigate = (next: Route) => {
+    setLiveMeta(true);
     // El idioma se recuerda acá y no sólo en `setLang`, porque desde que el
     // selector es un `<a href>` el cambio entra por este camino. Con la memoria
     // sólo en `setLang`, elegir español y volver al día siguiente abría en
@@ -268,7 +287,7 @@ export default function App({ ssrRoute }: { ssrRoute?: Route } = {}) {
 
   return (
     <LangContext.Provider value={{ lang: route.lang, setLang }}>
-      <Shell route={route} navigate={navigate} />
+      <Shell route={route} navigate={navigate} liveMeta={liveMeta} />
     </LangContext.Provider>
   );
 }

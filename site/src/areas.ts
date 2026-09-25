@@ -16,10 +16,12 @@
  * qué CSS y qué JS anunciar en cada HTML) y en el `switch` de `App`.
  */
 import { lazyWithPreload } from "./lazyWithPreload";
-import type { View } from "./route";
+import type { Route, View } from "./route";
+
+const loadDeadlock = () => import("./DeadlockArea");
 
 export const HomeArea = lazyWithPreload(() => import("./Home"));
-export const DeadlockArea = lazyWithPreload(() => import("./DeadlockArea"));
+export const DeadlockArea = lazyWithPreload(loadDeadlock);
 export const Poe2Area = lazyWithPreload(() => import("./Poe2Area"));
 export const ValheimArea = lazyWithPreload(() => import("./Valheim"));
 export const PrivacyPage = lazyWithPreload(() => import("./Privacy"));
@@ -44,3 +46,13 @@ const BY_VIEW: Partial<Record<View, { preload: () => Promise<void> }>> = {
 /** Baja (una sola vez) el chunk de una vista. Nunca rechaza: si falla, el render lo reintenta. */
 export const preloadView = (view: View): Promise<void> =>
   (BY_VIEW[view]?.preload() ?? Promise.resolve()).catch(() => undefined);
+
+/**
+ * Lo mismo para una ruta entera: la vista y, en Deadlock, además el chunk de su
+ * pestaña (ver `preloadTab` en `DeadlockArea.tsx`). Es lo que esperan el primer
+ * render y el prerender, y lo que precarga un enlace al pasar el mouse.
+ */
+export const preloadRoute = async (route: Route): Promise<void> => {
+  await preloadView(route.view);
+  if (route.view === "deadlock") await loadDeadlock().then((m) => m.preloadTab(route)).catch(() => undefined);
+};

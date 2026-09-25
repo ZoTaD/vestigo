@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { installStaleChunkReload } from "./staleChunks";
-import { preloadView } from "./areas";
+import { preloadRoute } from "./areas";
 import { parseRoute } from "./route";
 // Las @font-face del sitio, servidas desde el dominio (ver fonts.ts).
 import "./fonts";
@@ -27,7 +27,8 @@ import "./styles/scrollbar.css";
 installStaleChunkReload();
 
 /**
- * El primer render espera al chunk de la vista de llegada (2026-09-25).
+ * El primer render espera al chunk de la vista de llegada, y en Deadlock al de
+ * su pestaña (2026-09-25).
  *
  * `createRoot` reemplaza el HTML prerenderizado: si renderizara ya, un área
  * todavía no bajada mostraría el fallback vacío de `Suspense` en lugar de la
@@ -35,7 +36,7 @@ installStaleChunkReload();
  * pantalla hasta que la app la reemplaza por la misma página, ya viva. El HTML
  * anuncia ese chunk con `modulepreload`, así que casi siempre ya llegó.
  */
-preloadView(parseRoute(window.location.pathname).view).then(() => {
+preloadRoute(parseRoute(window.location.pathname)).then(() => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <App />
