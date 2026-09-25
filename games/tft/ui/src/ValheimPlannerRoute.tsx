@@ -26,6 +26,9 @@ function sourceText(s: PSource, t: ValheimCopy, lang: Lang): string {
   return who || label;
 }
 
+/** 2.288 / 2,288: el español no agrupa las cifras de cuatro dígitos por defecto. */
+const thousands = (n: number, lang: Lang) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, lang === "es" ? "." : ",");
+
 export default function ValheimPlannerRoute({ data, to, navigate }: { data: PlannerData; to: To; navigate: Nav }) {
   const t = useValheimCopy();
   const { lang } = useLang();
@@ -91,7 +94,7 @@ export default function ValheimPlannerRoute({ data, to, navigate }: { data: Plan
           <p>{st.picks.map((x) => `${x.qty > 1 ? `${x.qty} × ` : ""}${name(x.id)}${x.level > 1 ? ` (${t.plan.level(x.level).toLowerCase()})` : ""}`).join(" · ")}</p>
         </div>
         <div className="vp-stats">
-          <span><b>≈ {Math.round(p.weight).toLocaleString(lang)}</b>{t.plan.weight}, {t.plan.trips(p.trips)}</span>
+          <span><b>≈ {thousands(Math.round(p.weight), lang)}</b>{t.plan.weight}, {t.plan.trips(p.trips)}</span>
           {p.fuelMinutes > 0 && <span><b>{p.fuelMinutes}</b>{t.plan.smelting}</span>}
           <span><b>{p.biomes.length}</b>{t.plan.biomes}</span>
         </div>
