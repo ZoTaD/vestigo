@@ -32,6 +32,17 @@ describe("las direcciones de Valheim", () => {
     expect(routePath(parseRoute("/en/valheim/patches"))).toBe("/en/valheim/patches");
   });
 
+  it("el Planificador y su hoja de ruta (2026-09-25)", () => {
+    const r = parseRoute("/es/valheim/planner");
+    expect(r.vhSection).toBe("planner");
+    expect(r.detail).toBeUndefined();
+    expect(routePath(r)).toBe("/es/valheim/planner");
+    const h = parseRoute("/en/valheim/planner/route");
+    expect(h.detail).toBe("route");
+    expect(routePath(h)).toBe("/en/valheim/planner/route");
+    expect(parseRoute("/es/valheim/planner/otra").detail).toBeUndefined();
+  });
+
   it("una pestaña que no existe cae en la portada", () => {
     expect(parseRoute("/es/valheim/dragones").vhSection).toBe("home");
   });

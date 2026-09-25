@@ -89,6 +89,7 @@ export function metaFor(
     const sec = route.vhSection ?? "home";
     if (sec === "home") return v.seo.home;
     if (sec === "map") return { title: v.map.seoTitle, description: v.map.seoDesc };
+    if (sec === "planner") return { title: v.plan.seoTitle, description: v.plan.seoDesc };
     if (sec === "patches") {
       if (!route.detail) return { title: v.pat.seoTab, description: v.pat.lede };
       const version = route.detail.replace(/-/g, ".");
@@ -216,14 +217,15 @@ export function jsonLdFor(
     const sec = route.vhSection ?? "home";
     const v = VALHEIM_COPY[lang];
     const trail = [{ name: brand, url: home }, { name: "Valheim", url: routeUrl({ ...route, vhSection: "home", detail: undefined }) }];
-    if (sec !== "home") trail.push({ name: sec === "patches" ? v.pat.tab : sec === "map" ? v.map.tab : v.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (sec !== "home") trail.push({ name: sec === "patches" ? v.pat.tab : sec === "map" ? v.map.tab : sec === "planner" ? v.plan.tab : v.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "map") {
-      // El mapa es una herramienta: se presenta como aplicación web gratuita.
+    if (sec === "map" || sec === "planner") {
+      // El mapa y el Planificador son herramientas: se presentan como aplicación web gratuita.
+      const app = sec === "map" ? v.map : v.plan;
       out.push({
-        "@context": "https://schema.org", "@type": "WebApplication", name: v.map.seoTitle.replace(/\s*\|.*$/, ""),
-        description: v.map.seoDesc, url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any",
+        "@context": "https://schema.org", "@type": "WebApplication", name: app.seoTitle.replace(/\s*\|.*$/, ""),
+        description: app.seoDesc, url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any",
         inLanguage: lang, isAccessibleForFree: true, offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       });
     }

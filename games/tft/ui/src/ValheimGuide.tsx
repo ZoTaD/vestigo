@@ -11,6 +11,7 @@ import { useValheimCopy } from "./valheimCopy";
 import { artUrl, BIOME_IDS, clean, tx, type BiomeId, type BiomeRow, type BossRow, type CreatureRow, type Place, type PlaceRow, type Ref, type Tip } from "./valheimData";
 import { BiomeTags, Ing, pctChance, range, RefLink, Slot, WikiFigure, type Nav, type To } from "./ValheimParts";
 import { BiomeEvents, FightBlock, SpawnBlock, TameBlock } from "./ValheimMore";
+import ValheimPlanButton from "./ValheimPlanButton";
 
 function Tips({ tips }: { tips: Tip[] }) {
   const t = useValheimCopy();
@@ -384,6 +385,7 @@ export function BossPage({ row, to, navigate }: { row: BossRow; to: To; navigate
                     <Ing r={item} qty={row.summon.amount} to={to} navigate={navigate} />
                     <span>{t.guide.summonAt(row.summon.amount, tx(item.name, lang))}{row.summon.altar ? ` · ${tx(row.summon.altar, lang)}` : ""}</span>
                   </div>
+                  <ValheimPlanButton id={`boss:${row.id}`} to={to} navigate={navigate} />
                 </div>
               )}
               {row.power && (

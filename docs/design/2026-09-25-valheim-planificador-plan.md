@@ -171,7 +171,7 @@ class PlannerTest(unittest.TestCase):
     def test_conversiones_con_combustible_y_alcance(self):
         p = self.build({"Sword": "weapons"})
         self.assertIn({"st": "piece_smelter", "from": "IronScrap", "time": 30.0, "n": 1, "fuel": ["Coal", 2]}, p["convert"]["Iron"])
-        self.assertEqual(set(p["items"]), {"Sword", "Iron", "IronOre", "IronScrap", "Coal", "Wood"})
+        self.assertEqual(set(p["items"]), {"Sword", "Iron", "IronOre", "IronScrap", "Coal", "Wood", "boss:Eikthyr"})
         self.assertEqual(p["items"]["Sword"]["cat"], "weapons")
         self.assertEqual(p["items"]["Sword"]["maxQ"], 4)
         self.assertNotIn("cat", p["items"]["Iron"])
@@ -996,7 +996,7 @@ git commit -m "feat(valheim): ruta, datos y lista guardada del Planificador"
 - Modificar: `games/tft/ui/src/Valheim.tsx` (pestaña, tarjeta en la portada, render)
 - Modificar: `games/tft/ui/src/prerender.ts` (título, descripción, migas, WebApplication)
 - Modificar: `games/tft/ui/src/sitemap.ts` (`/valheim/planner`)
-- Crear: `games/tft/ui/src/ValheimPlanner.tsx` (carga los datos y elige el paso)
+- Crear: `games/tft/ui/src/ValheimPlannerPage.tsx` (carga los datos y elige el paso)
 - Crear: `games/tft/ui/src/ValheimPlannerPick.tsx` (paso 1)
 - Crear: `games/tft/ui/src/styles/valheim-planner.css`; importarlo en `src/main.tsx` después de `valheim.css`
 - Test: `games/tft/ui/test/sitemap.test.ts` (o `prerender.test.ts`): el planner está en el sitemap en los dos idiomas.
@@ -1155,7 +1155,7 @@ git commit -m "feat(valheim): ruta, datos y lista guardada del Planificador"
   y, como el mapa, un `WebApplication` para `sec === "planner"` con
   `v.plan.seoTitle`/`v.plan.seoDesc`.
 
-- [ ] **Paso 5: `ValheimPlanner.tsx`:**
+- [ ] **Paso 5: `ValheimPlannerPage.tsx`:**
 
 ```tsx
 /**

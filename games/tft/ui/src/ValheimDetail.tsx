@@ -3,6 +3,7 @@
  * madera del panel de crafteo del juego).
  */
 import { useLang, type Lang } from "./i18n";
+import ValheimPlanButton from "./ValheimPlanButton";
 import RouteLink from "./RouteLink";
 import { useValheimCopy, type ValheimCopy } from "./valheimCopy";
 import type { ListTab } from "./valheimTabs";
@@ -277,6 +278,9 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
               </div>
             </div>
           </header>
+          {(item?.recipe || item?.sources.some((s) => s.kind === "convert") || (piece?.req.length ?? 0) > 0) && (
+            <ValheimPlanButton id={piece ? `piece:${row.id}` : row.id} to={to} navigate={navigate} />
+          )}
           {item?.summons?.map((b) => (
             <RouteLink key={b.slug ?? b.name.en} className="vh-summon" to={to("bosses", b.slug ?? undefined)} onNavigate={navigate}>
               <Slot icon={b.icon} size="sm" />

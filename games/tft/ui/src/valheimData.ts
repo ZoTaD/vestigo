@@ -13,6 +13,7 @@
  */
 import type { Lang } from "./i18n";
 import type { ValheimTab } from "./route";
+import type { PlannerData } from "./valheimPlanner";
 
 export interface Txt { en: string; es: string }
 
@@ -291,6 +292,9 @@ export const loadTab = <T extends ValheimTab>(tab: T): Promise<TabRows[T]> => lo
 export const peekTab = <T extends ValheimTab>(tab: T): TabRows[T] | null => (listos.get(tab) as TabRows[T] | undefined) ?? null;
 export const loadIndex = () => load<IndexEntry[]>("index");
 export const peekIndex = (): IndexEntry[] | null => (listos.get("index") as IndexEntry[] | undefined) ?? null;
+/** El grafo del Planificador (`pipeline/planner.py`): sólo lo pide esa pestaña. */
+export const loadPlanner = () => load<PlannerData>("planner");
+export const peekPlanner = (): PlannerData | null => (listos.get("planner") as PlannerData | undefined) ?? null;
 
 /**
  * Dónde se hace algo: la estación de su receta, la de su malta (hidromieles), la

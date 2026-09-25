@@ -31,6 +31,7 @@ import "./styles/poe2-tree.css";
 import "./styles/poe2-regex.css";
 // Valheim (2026-09-24): la madera, el latón y la letra del juego, todo bajo `.vh`.
 import "./styles/valheim.css";
+import "./styles/valheim-planner.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
