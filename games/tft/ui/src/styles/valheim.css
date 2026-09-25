@@ -503,3 +503,25 @@ a.vh-upg-mat:hover { color: var(--vh-cream); }
 .vm-tip .vm-tip-kind { margin-top: 1px; color: var(--vh-faint); font-size: 12px; }
 .vm-tip .vm-tip-pos { color: var(--vh-dim); font-size: 12px; }
 .vm-tip .vm-tip-hint { color: var(--vh-brass); font-size: 11.5px; }
+/* "Tu partida": subir el mundo y los personajes. */
+.vm-save { display: grid; gap: 10px; font-size: 13.5px; }
+.vm-save-note { margin: 0; color: var(--vh-dim); font-size: 12.5px; }
+.vm-save-opt { display: grid; gap: 6px; padding: 8px; background: rgba(0, 0, 0, 0.22); border-radius: 3px; }
+.vm-save-opt h4 { margin: 0; font: 700 14px var(--vh-serif); color: var(--vh-brass-lt); display: flex; gap: 8px; align-items: center; }
+.vm-save-opt p { margin: 0; color: var(--vh-dim); font-size: 12.5px; line-height: 1.45; }
+.vm-tag { font: 700 10px var(--vh-sans); letter-spacing: 0.08em; text-transform: uppercase; color: #1a1008; background: var(--vh-brass); padding: 2px 5px; border-radius: 2px; }
+.vm-drop { display: grid; gap: 3px; padding: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.03); }
+.vm-drop.is-over { background: rgba(200, 150, 62, 0.18); }
+.vm-drop small { color: var(--vh-faint); font-size: 11.5px; }
+.vm-err { color: #ff8a80; margin: 0; }
+.vm-save-sum p { margin: 0 0 4px; }
+.vm-save-sum ul { margin: 0; padding-left: 16px; color: var(--vh-dim); }
+.vm-save-sum code, .vm-help code { font-size: 12px; color: var(--vh-brass-lt); background: rgba(0, 0, 0, 0.35); padding: 1px 4px; border-radius: 2px; word-break: break-all; }
+.vm-save-layers { display: grid; gap: 4px; }
+.vm-save-layers label { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+.vm-save-layers i { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+.vm-save-layers small { margin-left: auto; color: var(--vh-faint); }
+.vm-help-btn { text-align: left; }
+.vm-help { display: grid; gap: 10px; font-size: 12.5px; color: var(--vh-dim); line-height: 1.5; }
+.vm-help h5 { margin: 0 0 3px; font: 700 13px var(--vh-sans); color: var(--vh-text); }
+.vm-help p { margin: 0 0 4px; }

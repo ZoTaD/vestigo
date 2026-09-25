@@ -1,10 +1,13 @@
+/// <reference types="node" />
 // Portado de Valheim-SeedLab (MIT, © 2026 DoomMachine) — docs/locations.md, src/SeedLab.Locations/AltBiomes.cs y LocationPlacementEngine.cs (resultados medidos)
 /**
  * La ubicación de lugares contra mundos reales:
  *
- * - "r495Ztbtx6" (el mundo del server del dueño): las cuatro posiciones de
- *   lugares únicos que escribe su Player.log ("Minimap: Adding unique location")
- *   y el aviso de que la variante "Fortress Mountain" no entra (0 sectores).
+ * - Un mundo real propio (opcional, el repo es público): con
+ *   VALHEIM_TEST_SEED y VALHEIM_TEST_PLAYER_LOG (el Player.log de alguien que
+ *   entró a ese mundo), cada "Minimap: Adding unique location (x, y, z)" del
+ *   log tiene que estar entre los lugares ubicados. Con el mundo del server de
+ *   ZoTaD dio las cuatro posiciones a menos de 6 mm (2026-09-25).
  * - 75539276, el mundo recién creado que SeedLab volcó del juego: 12.228
  *   lugares de 178 prefabs.
  * - 319486907 (hnBd9gJf2G): los contadores "placed N out of M" de su log de
@@ -14,6 +17,7 @@
  *
  * Los JSON son los del pipeline (`games/valheim/data/map/`).
  */
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { WorldGenerator } from "../generator";
 import { stableSeed } from "../stableHash";
@@ -76,26 +80,33 @@ describe("tablas", () => {
   });
 });
 
-describe("r495Ztbtx6: el Player.log del server", () => {
-  const seed = stableSeed("r495Ztbtx6");
+const ENV = (k: string) => (typeof process !== "undefined" ? process.env[k] ?? "" : "");
+const LOG_SEED = ENV("VALHEIM_TEST_SEED");
+const LOG_PATH = ENV("VALHEIM_TEST_PLAYER_LOG");
 
-  it("las cuatro posiciones únicas del log están entre los lugares ubicados", () => {
+describe.skipIf(!LOG_SEED || !LOG_PATH || !existsSync(LOG_PATH))("un mundo real y su Player.log", () => {
+  const seed = stableSeed(LOG_SEED);
+
+  it("cada posición única del log está entre los lugares ubicados", () => {
     const r = run(seed);
-    console.log(`r495Ztbtx6: grilla ${(r.ms.grid / 1000).toFixed(1)} s, colocación ${(r.ms.placement / 1000).toFixed(1)} s, `
+    console.log(`grilla ${(r.ms.grid / 1000).toFixed(1)} s, colocación ${(r.ms.placement / 1000).toFixed(1)} s, `
       + `${r.result.instances.length} lugares`);
-    // (x, y, z) tal como los escribe el log (dos decimales), y el prefab que resultó ser.
-    const logged: [number, number, number, string][] = [
-      [-195.8, 37.19, -261.55, "StartTemple"],
-      [2169.63, 76.39, -655.81, "Vendor_BlackForest"],
-      [-2366.01, 32.05, -1915.04, "Hildir_camp"],
-      [-645.89, 31.2, -3139.79, "BogWitch_Camp"],
-    ];
-    for (const [x, y, z, prefab] of logged) {
+    // (x, y, z) tal como los escribe el log, con dos decimales.
+    const logged = [...readFileSync(LOG_PATH, "utf-8").matchAll(/Adding unique location \((-?[\d.]+), (-?[\d.]+), (-?[\d.]+)\)/g)]
+      .map((m) => [Number(m[1]), Number(m[2]), Number(m[3])]);
+    expect(logged.length).toBeGreaterThan(0);
+    for (const [x, y, z] of logged) {
       const m = r.result.instances.filter((i) => Math.abs(i.x - x) <= 0.006 && Math.abs(i.z - z) <= 0.006);
-      expect(m.map((i) => i.prefab)).toEqual([prefab]);
+      expect(m).toHaveLength(1);
       expect(Math.abs(m[0].y - y)).toBeLessThanOrEqual(0.006);
     }
   }, 300_000);
+});
+
+// 319486907 (hnBd9gJf2G, de SeedLab) registra lo mismo que el mundo del server
+// de ZoTaD: la variante Fortress Mountain no entra (Placed 0/1-2, sectors 0, combos 2).
+describe("319486907: Fortress Mountain sin sectores y candidatos", () => {
+  const seed = 319486907;
 
   it("no asigna la variante Fortress Mountain (log: Placed 0/1-2, sectors 0, combos 2)", () => {
     const r = run(seed);

@@ -130,10 +130,10 @@ describe("proporciones en la grilla del minimapa (goal-model §1.6, columna 12 m
   }, 300_000);
 });
 
-describe("semilla del dueño: r495Ztbtx6", () => {
+describe("una semilla de texto: hnBd9gJf2G (de SeedLab)", () => {
   it("hash y muestreo grueso de biomas", () => {
-    const seed = stableSeed("r495Ztbtx6");
-    const w = createWorld("r495Ztbtx6");
+    const seed = stableSeed("hnBd9gJf2G");
+    const w = createWorld("hnBd9gJf2G");
     expect(w.seed).toBe(seed);
     const letter: Record<number, string> = {
       [BIOME.Meadows]: "P", [BIOME.BlackForest]: "B", [BIOME.Swamp]: "S", [BIOME.Mountain]: "M",
@@ -157,7 +157,7 @@ describe("semilla del dueño: r495Ztbtx6", () => {
       }
       rows.push(line);
     }
-    console.log(`r495Ztbtx6 -> stableSeed ${seed}\n${rows.join("\n")}\n` +
+    console.log(`hnBd9gJf2G -> stableSeed ${seed}\n${rows.join("\n")}\n` +
       [...counts].map(([b, n]) => `${letter[b]}=${n}`).join(" "));
     expect(w.biome(0, 0)).toBe(BIOME.Meadows); // el centro siempre es Pradera
     expect(counts.size).toBeGreaterThanOrEqual(8);

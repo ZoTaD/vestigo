@@ -35,6 +35,15 @@ export interface Marker {
   size?: number;
 }
 
+/** Una línea entre dos puntos del mundo (los portales con el mismo nombre). */
+export interface MapLine { x1: number; z1: number; x2: number; z2: number; color: string }
+
+/**
+ * La niebla de lo no explorado: una imagen alineada al mundo (fila 0 = norte)
+ * que cubre un cuadrado de `span` metros centrado en (0, 0).
+ */
+export interface FogLayer { canvas: HTMLCanvasElement; span: number }
+
 export interface HoverInfo { x: number; z: number; biome: number | null; height: number | null }
 
 interface Tile { canvas: HTMLCanvasElement; biomes: Uint16Array; heights: Float32Array; x0: number; z0: number; step: number; used: number }
@@ -58,9 +67,11 @@ interface Props {
   handle?: (h: ViewerHandle) => void;
   initial?: { x: number; z: number; mpp: number } | null;
   onView?: (v: { x: number; z: number; mpp: number }) => void;
+  fog?: FogLayer | null;
+  lines?: MapLine[];
 }
 
-export default function MapViewer({ seed, layer, grid, markers, onHover, onProgress, onError, onMarker, onMarkerHover, handle, initial, onView }: Props) {
+export default function MapViewer({ seed, layer, grid, markers, onHover, onProgress, onError, onMarker, onMarkerHover, handle, initial, onView, fog, lines }: Props) {
   const wrap = useRef<HTMLDivElement>(null);
   const cv = useRef<HTMLCanvasElement>(null);
   const pool = useRef<WorkerPool | null>(null);
@@ -73,6 +84,10 @@ export default function MapViewer({ seed, layer, grid, markers, onHover, onProgr
   const [, setTick] = useState(0);
   const markersRef = useRef(markers);
   markersRef.current = markers;
+  const fogRef = useRef(fog);
+  fogRef.current = fog;
+  const linesRef = useRef(lines);
+  linesRef.current = lines;
 
   // --- dibujo
   const draw = useCallback(() => {
@@ -125,6 +140,29 @@ export default function MapViewer({ seed, layer, grid, markers, onHover, onProgr
       for (let x = Math.ceil(xMin / stepM) * stepM; x <= xMax; x += stepM) { const sx = Math.round(toSx(x)) + 0.5; ctx.moveTo(sx, 0); ctx.lineTo(sx, H); }
       for (let z = Math.ceil(zMin / stepM) * stepM; z <= zMax; z += stepM) { const sy = Math.round(toSy(z)) + 0.5; ctx.moveTo(0, sy); ctx.lineTo(W, sy); }
       ctx.stroke();
+    }
+    // La niebla de lo que nadie exploró (de la partida que subió la persona).
+    const fg = fogRef.current;
+    if (fg) {
+      const s = fg.span / mpp;
+      const smooth = ctx.imageSmoothingEnabled;
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(fg.canvas, toSx(-fg.span / 2), toSy(fg.span / 2), s, s);
+      ctx.imageSmoothingEnabled = smooth;
+    }
+    // Las líneas entre portales con el mismo nombre.
+    const ls = linesRef.current;
+    if (ls?.length) {
+      ctx.lineWidth = 2 * dpr;
+      ctx.setLineDash([6 * dpr, 5 * dpr]);
+      for (const l of ls) {
+        ctx.strokeStyle = l.color;
+        ctx.beginPath();
+        ctx.moveTo(toSx(l.x1), toSy(l.z1));
+        ctx.lineTo(toSx(l.x2), toSy(l.z2));
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
     }
     // El borde del mundo.
     ctx.strokeStyle = "rgba(242,196,111,0.35)";
@@ -264,7 +302,7 @@ export default function MapViewer({ seed, layer, grid, markers, onHover, onProgr
   }, [seed, layer]);
 
   useEffect(() => () => { pool.current?.destroy(); pool.current = null; }, []);
-  useEffect(() => { redraw(); }, [markers, grid, redraw]);
+  useEffect(() => { redraw(); }, [markers, grid, fog, lines, redraw]);
 
   // --- tamaño del lienzo
   useEffect(() => {

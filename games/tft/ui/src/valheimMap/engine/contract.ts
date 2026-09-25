@@ -27,7 +27,7 @@ export interface World {
   forest(x: number, z: number): number;
 }
 
-/** Crea el mundo de una semilla de texto ("r495Ztbtx6"), lista para consultar. */
+/** Crea el mundo de una semilla de texto ("hnBd9gJf2G"), lista para consultar. */
 export type CreateWorld = (seedName: string) => World;
 
 /** Un lugar ubicado por el juego. `candidate`: uno de los posibles (Haldor, Hildir, la bruja). */
