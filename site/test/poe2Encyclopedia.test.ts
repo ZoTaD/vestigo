@@ -10,7 +10,7 @@ import { slugify } from "../src/route";
  * dejaron escrito: que cada ficha que el sitio enlaza exista, que cada dibujo
  * esté en public/, y que las menciones de los parches apunten a fichas reales.
  */
-const DATA = join(__dirname, "..", "..", "..", "poe2", "data");
+const DATA = join(__dirname, "..", "..", "games", "poe2", "data");
 const PUBLIC = join(__dirname, "..", "public");
 const read = (p: string) => JSON.parse(readFileSync(join(DATA, p), "utf-8"));
 

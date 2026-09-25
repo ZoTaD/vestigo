@@ -4,7 +4,7 @@
  * dirección (buff, nerf, arreglo…) y los nombres de la enciclopedia que cita.
  *
  * Nada de red ni de disco acá, así lo prueban los tests del sitio
- * (games/tft/ui/test/poe2Patches.test.ts) sin bajar nada.
+ * (site/test/poe2Patches.test.ts) sin bajar nada.
  */
 
 // ---------- texto ----------

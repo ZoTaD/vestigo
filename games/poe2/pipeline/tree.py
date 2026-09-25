@@ -35,7 +35,7 @@ RAW = f"https://raw.githubusercontent.com/grindinggear/poe2-skilltree-export/{EX
 GAME = os.environ.get("POE2_BUNDLES", r"C:/Program Files (x86)/Steam/steamapps/common/Path of Exile 2/Bundles2")
 CACHE = os.path.join(ROOT, "games", "poe2", ".cache", "tree-" + EXPORT_SHA[:8])
 OUT = os.path.join(ROOT, "games", "poe2", "data", "tree")
-PUB = os.path.join(ROOT, "games", "tft", "ui", "public", "poe2", "tree-sprites")
+PUB = os.path.join(ROOT, "site", "public", "poe2", "tree-sprites")
 UA = "vestigo.gg tree/1.0 (contact: grundynicolas021@gmail.com)"
 
 # Las clases que se pueden jugar hoy: las que traen arte en el export.

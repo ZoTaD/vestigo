@@ -26,7 +26,7 @@ from poe_csd import Descriptions, clean  # noqa: E402
 GAME = os.environ.get("POE2_BUNDLES", r"C:/Program Files (x86)/Steam/steamapps/common/Path of Exile 2/Bundles2")
 CACHE = os.path.join(ROOT, "games", "poe2", ".cache")
 OUT = os.path.join(ROOT, "games", "poe2", "data", "encyclopedia")
-ART = os.path.join(ROOT, "games", "tft", "ui", "public", "poe2", "art")
+ART = os.path.join(ROOT, "site", "public", "poe2", "art")
 REPOE = "https://repoe-fork.github.io/poe2/"
 UA = "vestigo.gg encyclopedia/1.0 (contact: grundynicolas021@gmail.com)"
 FORCE_ART = "--art" in sys.argv

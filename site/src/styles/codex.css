@@ -52,7 +52,7 @@
    **Ningún valor está elegido a ojo.** Salen de la paleta con nombre del propio
    juego (`assets.deadlock-api.com/v2/colors`, 164 entradas), medida el
    2026-08-18; el nombre interno de Valve va como comentario en cada uno. Ver
-   `games/tft/ui/design/deadlock/estilo.html`, que es la investigación entera.
+   `site/design/deadlock/estilo.html`, que es la investigación entera.
 
    La diferencia que más se nota no es el oro sino el negro: el del códex es
    **azul marino** (#080d1a) y el de Deadlock es **cálido, con verde** (#10130D).

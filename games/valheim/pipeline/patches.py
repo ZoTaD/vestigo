@@ -37,7 +37,7 @@ DATA = os.path.normpath(os.path.join(HERE, "..", "data"))
 SITE = os.path.join(DATA, "site")
 OUT = os.path.join(SITE, "patches")
 ES_DIR = os.path.join(DATA, "patches-es")
-COVERS = os.path.normpath(os.path.join(HERE, "..", "..", "tft", "ui", "public", "valheim", "news"))
+COVERS = os.path.normpath(os.path.join(HERE, "..", "..", "..", "site", "public", "valheim", "news"))
 
 APP = 892970
 FEED = f"https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid={APP}&count=400&maxlength=0&feeds=steam_community_announcements"

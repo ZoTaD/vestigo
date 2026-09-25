@@ -47,11 +47,11 @@ Tests: `cd games/valheim && .venv/Scripts/python -m unittest discover -s pipelin
   biomas y jefes y el índice buscable. Es lo único que lee la web.
 - `data/*.json`: objetos, recetas, piezas, conversiones, estaciones, criaturas,
   recolectables, cultivos, comerciantes y biomas, con nombres `{en, es}`.
-- `../tft/ui/public/valheim/icons/*.webp`: íconos de objetos, piezas y estaciones.
-- `../tft/ui/public/valheim/ui/*.webp`: paneles, botones y casillas de la interfaz.
-- `../tft/ui/public/valheim/fonts/`: Averia Serif/Sans Libre (OFL), en `.woff2` recortada a latín. Norse, la
+- `../../site/public/valheim/icons/*.webp`: íconos de objetos, piezas y estaciones.
+- `../../site/public/valheim/ui/*.webp`: paneles, botones y casillas de la interfaz.
+- `../../site/public/valheim/fonts/`: Averia Serif/Sans Libre (OFL), en `.woff2` recortada a latín. Norse, la
   de los títulos del juego, queda afuera hasta confirmar su licencia.
-- `data/site/patches/*.json` y `../tft/ui/public/valheim/news/*.webp`: la
+- `data/site/patches/*.json` y `../../site/public/valheim/news/*.webp`: la
   Crónica, una edición por versión estable (sin "Public Test"), con la portada
   del anuncio cuando trae imagen.
 

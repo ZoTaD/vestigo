@@ -13,7 +13,7 @@ import {
   bandCrest,
   patchMovers,
 } from "../src/deadlockData";
-import { BANDS as PIPE_BANDS, PREFERRED_BAND as PIPE_PREFERRED } from "../../../deadlock/pipeline/src/bands";
+import { BANDS as PIPE_BANDS, PREFERRED_BAND as PIPE_PREFERRED } from "../../games/deadlock/pipeline/src/bands";
 import heroes from "@deadlock/heroes.json";
 
 /**

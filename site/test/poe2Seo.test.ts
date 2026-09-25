@@ -9,7 +9,7 @@ import { prerenderPages } from "../src/prerender";
  * categoría, ficha y edición tiene su dirección, en los dos idiomas, con su
  * propio título. Se arma con los archivos reales de `games/poe2/data`.
  */
-const DATA = join(__dirname, "..", "..", "..", "poe2", "data");
+const DATA = join(__dirname, "..", "..", "games", "poe2", "data");
 const read = (p: string) => JSON.parse(readFileSync(join(DATA, p), "utf-8"));
 const leagues = read("economy/leagues.json").leagues as { slug: string; name: string }[];
 const entries = read("encyclopedia/index.json") as { id: string; cat: string; en: string; es: string }[];

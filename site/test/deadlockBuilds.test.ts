@@ -3,7 +3,7 @@ import buildsJson from "@deadlock/builds.json";
 import catalogJson from "@deadlock/catalog.json";
 import { PUBLISHED_BAND } from "../src/deadlockData";
 import { loadBuilds, buildsOf } from "../src/deadlockBuildsData";
-import { bonusFor } from "../../../deadlock/pipeline/src/investment";
+import { bonusFor } from "../../games/deadlock/pipeline/src/investment";
 
 /**
  * Recorre TODO lo publicado buscando lo que sólo se ve mirando fila por fila.

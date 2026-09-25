@@ -21,9 +21,9 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { WorldGenerator } from "../generator";
 import { stableSeed } from "../stableHash";
-import locations from "../../../../../../valheim/data/map/locations.json";
-import altbiomes from "../../../../../../valheim/data/map/altbiomes.json";
-import meta from "../../../../../../valheim/data/map/meta.json";
+import locations from "../../../../../games/valheim/data/map/locations.json";
+import altbiomes from "../../../../../games/valheim/data/map/altbiomes.json";
+import meta from "../../../../../games/valheim/data/map/meta.json";
 import {
   assembleGrid, computeGridBand, parseTables, placeDetailedFromGrid, prepareWorldLocations, toPlacedLocations,
   type BiomeGrid, type LocationTables, type PlacementResult,

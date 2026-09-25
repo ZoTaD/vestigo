@@ -164,7 +164,7 @@ export function loadHeroKit(): Promise<HeroKitFile | null> {
  * Un archivo por héroe, con la ruta relativa y no con el alias: `import.meta.glob`
  * necesita ver el directorio para partirlo en un chunk por archivo.
  */
-const DETALLES = import.meta.glob<{ default: HeroKitDetail }>("../../../deadlock/data/hero-kit/*.json");
+const DETALLES = import.meta.glob<{ default: HeroKitDetail }>("../../games/deadlock/data/hero-kit/*.json");
 const detalles = new Map<number, HeroKitDetail | null>();
 const pidiendoDetalle = new Map<number, Promise<HeroKitDetail | null>>();
 

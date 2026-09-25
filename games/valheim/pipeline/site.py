@@ -73,7 +73,7 @@ def clean_txt(t: dict) -> dict:
     return {k: re.sub(r"</?color[^>]*>", "", v).strip() for k, v in t.items()}
 
 
-PUBLIC = os.path.normpath(os.path.join(DATA, "..", "..", "tft", "ui", "public"))
+PUBLIC = os.path.normpath(os.path.join(DATA, "..", "..", "..", "site", "public"))
 
 
 def wiki_icon(photo: dict | None) -> str | None:

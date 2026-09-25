@@ -2,7 +2,7 @@
  * La escalera de inversión de almas, copiada de `deadlock/pipeline/src/investment.ts`.
  *
  * El armador de builds la necesita en el navegador, y la app no puede importar
- * del pipeline (Vite sólo sirve `games/tft`). **La copia está fijada por
+ * del pipeline (es otro paquete, con sus propias dependencias). **La copia está fijada por
  * `test/deadlockInvestment.test.ts`**, que la compara con el original: si un
  * parche mueve la escalera y se corrige sólo uno de los dos, el test falla.
  * La historia de dónde salen los números está en el original.

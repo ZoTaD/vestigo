@@ -330,17 +330,17 @@ jobs:
           git commit -m "chore: publish the Deadlock tier list measured on today's snapshot"
           # **El push se reintenta, y ese es el arreglo.**
           #
-          # Los dos publicadores —TFT y Deadlock— escriben en el mismo `main`, y
-          # entre el checkout y este momento el otro pudo haber pusheado. Sin
-          # esto el push se rechaza y la corrida muere en rojo con todo el
-          # trabajo hecho: medido el 2026-08-01, **6 de las últimas 15 corridas
-          # de TFT fallaron así**, o sea el 40%.
+          # Entre el checkout y este momento alguien pudo haber pusheado a
+          # `main` (a mano, o el publicador de TFT cuando existía). Sin esto el
+          # push se rechaza y la corrida muere en rojo con todo el trabajo
+          # hecho: medido el 2026-08-01, **6 de las últimas 15 corridas de TFT
+          # fallaron así**, o sea el 40%.
           #
-          # Se rebasea sobre lo que llegó en vez de forzar. Los dos tocan
-          # directorios distintos —`games/tft/data` y `games/deadlock/data`— así
-          # que el rebase nunca tiene conflicto; lo único que cambia es sobre qué
-          # commit queda apoyado el nuestro. Un `--force` en cambio borraría la
-          # publicación del otro juego sin que nada lo dijera.
+          # Se rebasea sobre lo que llegó en vez de forzar. Esta corrida sólo
+          # toca `games/deadlock/data`, así que el rebase casi nunca tiene
+          # conflicto; lo único que cambia es sobre qué commit queda apoyado el
+          # nuestro. Un `--force` en cambio borraría lo que llegó sin que nada
+          # lo dijera.
           empujado=0
           for intento in 1 2 3; do
             if git push; then empujado=1; break; fi

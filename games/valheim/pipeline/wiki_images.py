@@ -9,7 +9,7 @@ el archivo, quién lo subió y la página del archivo, para poder dar el crédit
 
 Qué foto va con qué se decide leyendo la copia local (`wiki.py`); a Fandom sólo
 se le pide la URL y el autor de cada archivo y la miniatura de 640 px. Escribe
-los webp en `games/tft/ui/public/valheim/wiki/` y el índice con créditos en
+los webp en `site/public/valheim/wiki/` y el índice con créditos en
 `data/wiki_images.json`. Lo que ya está bajado con el mismo archivo de origen
 no se vuelve a pedir, así que correrlo de nuevo es casi gratis.
 """
@@ -32,7 +32,7 @@ from . import wiki
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.normpath(os.path.join(HERE, "..", "data"))
 OUT_JSON = os.path.join(DATA, "wiki_images.json")
-PUBLIC = os.path.normpath(os.path.join(HERE, "..", "..", "tft", "ui", "public", "valheim", "wiki"))
+PUBLIC = os.path.normpath(os.path.join(HERE, "..", "..", "..", "site", "public", "valheim", "wiki"))
 SRC_PREFIX = "/valheim/wiki/"
 LOCAL_IMAGES = os.path.join(wiki.WIKI, "images")
 

@@ -18,7 +18,7 @@
  * abajo ya tiene ~69.000 partidas en quince días. El corte de arriba es Phantom
  * porque ahí empieza el juego "decente" (criterio de ZoTaD, 2026-07-29).
  *
- * Es la misma forma que las bandas de TFT (`games/tft/pipeline/src/bands.ts`):
+ * Es la misma forma que tenían las bandas de TFT (ya fuera del repo):
  * cuatro cortes que parten la escalera sin solaparse, más una banda por defecto
  * que sí se solapa a propósito y **nunca clasifica a un jugador** — si lo hiciera,
  * "la banda de arriba" dejaría de estar definida.

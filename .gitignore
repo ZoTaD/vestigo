@@ -6,16 +6,9 @@ dist/
 .env*
 !.env.example
 *.log
-games/tft/data/matches/
-test/.tmpstore/
-games/tft/pipeline/test/.tmppg/
 
 # ow-electron dev credentials
 desktop/.env
-
-# Scratch state from the Supabase CLI. Our migrations and functions live in
-# games/tft/supabase/, not here.
-supabase/.temp/
 
 # Incremental build state from `tsc -b`, regenerated on every build.
 *.tsbuildinfo
@@ -23,12 +16,6 @@ supabase/.temp/
 # Local editor/tooling config, not part of the project.
 .claude/
 .codex/
-
-# Scratch the Supabase CLI writes beside the project when it runs from here.
-games/tft/supabase/supabase/
-
-# Cache local de wrangler: trae el id y el mail de la cuenta, no va a git.
-.wrangler/
 
 # Cache local de la ventana del snapshot de Deadlock (REPORT_CACHE=1). Son
 # cientos de MB y se regenera solo; existe para no volver a bajar cinco minutos

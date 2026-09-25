@@ -73,11 +73,11 @@ export const editions: IndexEntry[] = (indexJson as unknown as { editions: Index
  * patrón al compilar para emitir un chunk por edición. Las traducciones caen en
  * el mismo patrón y se separan por nombre.
  */
-const FILES = import.meta.glob("../../../deadlock/data/news/*.json") as Record<
+const FILES = import.meta.glob("../../games/deadlock/data/news/*.json") as Record<
   string,
   () => Promise<{ default: unknown }>
 >;
-const pathOf = (slug: string, es = false) => `../../../deadlock/data/news/${slug}${es ? ".es" : ""}.json`;
+const pathOf = (slug: string, es = false) => `../../games/deadlock/data/news/${slug}${es ? ".es" : ""}.json`;
 
 export const hasEdition = (slug: string): boolean => pathOf(slug) in FILES;
 

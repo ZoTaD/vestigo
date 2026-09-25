@@ -47,7 +47,7 @@ def build(sprites, pub, classes):
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     root = os.path.normpath(os.path.join(here, "..", "..", ".."))
-    pub = os.path.join(root, "games", "tft", "ui", "public", "poe2", "tree-sprites")
+    pub = os.path.join(root, "site", "public", "poe2", "tree-sprites")
     path = os.path.join(root, "games", "poe2", "data", "tree", "tree.json")
     with open(path, encoding="utf-8") as f:
         tree = json.load(f)

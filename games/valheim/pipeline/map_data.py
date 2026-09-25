@@ -19,7 +19,7 @@ Escribe en `games/valheim/data/map/`:
 - `meta.json`: versión del juego, conteos y las constantes de prefab.
 - `display.json`: nombre (en/es), categoría, ícono y ficha del sitio de cada
   prefab que se coloca.
-Y los íconos del minimapa en `games/tft/ui/public/valheim/map/icons/`.
+Y los íconos del minimapa en `site/public/valheim/map/icons/`.
 
 Convenciones (las de SeedLab): los biomas son la máscara `Heightmap.Biome`, los
 enum van como enteros tal como están guardados (`biomeArea` 7 = todos los bits)
@@ -34,7 +34,7 @@ from datetime import datetime, timezone
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.normpath(os.path.join(HERE, "..", "data", "map"))
 SITE = os.path.normpath(os.path.join(HERE, "..", "data", "site"))
-ICONS = os.path.normpath(os.path.join(HERE, "..", "..", "tft", "ui", "public", "valheim", "map", "icons"))
+ICONS = os.path.normpath(os.path.join(HERE, "..", "..", "..", "site", "public", "valheim", "map", "icons"))
 GAME_ROOT = r"C:\Program Files (x86)\Steam\steamapps\common\Valheim"
 PLAYER_LOG = os.path.expandvars(r"%USERPROFILE%\AppData\LocalLow\IronGate\Valheim\Player.log")
 SCHEMA = 1

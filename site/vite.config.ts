@@ -14,12 +14,12 @@ import { AREA_FILES } from "./src/areaFiles";
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
 const BRAND = COPY.en.brand;
 
-const deadlockDir = fileURLToPath(new URL("../../deadlock/data", import.meta.url));
-const poe2Dir = fileURLToPath(new URL("../../poe2/data", import.meta.url));
+const deadlockDir = fileURLToPath(new URL("../games/deadlock/data", import.meta.url));
+const poe2Dir = fileURLToPath(new URL("../games/poe2/data", import.meta.url));
 // Valheim (2026-09-24): lo que arma `games/valheim/pipeline/site.py`, una lista por pestaña.
-const valheimDir = fileURLToPath(new URL("../../valheim/data/site", import.meta.url));
+const valheimDir = fileURLToPath(new URL("../games/valheim/data/site", import.meta.url));
 // El mapa por semilla (2026-09-25): las tablas de lugares que saca `pipeline/map_data.py`.
-const valheimMapDir = fileURLToPath(new URL("../../valheim/data/map", import.meta.url));
+const valheimMapDir = fileURLToPath(new URL("../games/valheim/data/map", import.meta.url));
 
 /**
  * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.

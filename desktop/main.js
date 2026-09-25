@@ -9,7 +9,6 @@ const { writeFileSync } = require("node:fs");
 const { join } = require("node:path");
 
 const GAMES = [
-  { name: "Teamfight Tactics", id: 21570 },
   { name: "Deadlock", id: 24482 },
 ];
 

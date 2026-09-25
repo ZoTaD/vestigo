@@ -14,10 +14,10 @@
     "allowImportingTsExtensions": true,
     "types": ["vite/client"],
     "paths": {
-      "@deadlock/*": ["../../deadlock/data/*"],
-      "@poe2/*": ["../../poe2/data/*"],
-      "@valheim/*": ["../../valheim/data/site/*"],
-      "@valheimMap/*": ["../../valheim/data/map/*"]
+      "@deadlock/*": ["../games/deadlock/data/*"],
+      "@poe2/*": ["../games/poe2/data/*"],
+      "@valheim/*": ["../games/valheim/data/site/*"],
+      "@valheimMap/*": ["../games/valheim/data/map/*"]
     }
   },
   "include": ["src", "vite.config.ts"]

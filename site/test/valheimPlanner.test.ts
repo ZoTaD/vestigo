@@ -168,7 +168,7 @@ describe("ordenar por estadística", () => {
 });
 
 describe("con los datos del juego", () => {
-  const real = JSON.parse(readFileSync(new URL("../../../valheim/data/site/planner.json", import.meta.url), "utf-8")) as PlannerData;
+  const real = JSON.parse(readFileSync(new URL("../../games/valheim/data/site/planner.json", import.meta.url), "utf-8")) as PlannerData;
 
   it("la armadura de hierro a nivel 2, Krom y 10 salchichas dan lo de la maqueta", () => {
     const p = plan(real, decodePlan("?l=HelmetIron.2,ArmorIronChest.2,ArmorIronLegs.2,THSwordKrom,Sausages*10"));

@@ -2,7 +2,7 @@
   "name": "probuilds-desktop",
   "version": "0.1.0",
   "private": true,
-  "description": "ProBuilds live overlay (ow-electron)",
+  "description": "Vestigo live overlay probe (ow-electron)",
   "main": "main.js",
   "scripts": {
     "probe": "ow-electron ."

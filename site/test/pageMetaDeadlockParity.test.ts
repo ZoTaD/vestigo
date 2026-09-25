@@ -21,7 +21,7 @@ import { readFileSync } from "node:fs";
  */
 
 const readDl = (name: string) =>
-  JSON.parse(readFileSync(new URL(`../../../deadlock/data/${name}`, import.meta.url), "utf-8"));
+  JSON.parse(readFileSync(new URL(`../../games/deadlock/data/${name}`, import.meta.url), "utf-8"));
 
 const dlCatalog = readDl("catalog.json");
 const dlHeroesFile = readDl("heroes.json");

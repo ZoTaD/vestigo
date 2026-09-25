@@ -5,7 +5,7 @@ Saca del Valheim instalado todo lo que muestra la sección.
 
 Se corre A MANO, una vez por parche (decisión de ZoTaD del 2026-09-24: los
 parches de Valheim salen poco). Tarda ~1-2 min. Escribe `games/valheim/data/`
-y los webp de `games/tft/ui/public/valheim/`.
+y los webp de `site/public/valheim/`.
 
 Qué entra:
 - Objetos: los de `ObjectDB.m_items` que tienen nombre traducido. Es la lista
@@ -44,7 +44,7 @@ from .sources import build_sources, build_used_in, share_by_name
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.normpath(os.path.join(HERE, "..", "data"))
-PUBLIC = os.path.normpath(os.path.join(HERE, "..", "..", "tft", "ui", "public", "valheim"))
+PUBLIC = os.path.normpath(os.path.join(HERE, "..", "..", "..", "site", "public", "valheim"))
 
 CLASSES = {"ObjectDB", "ItemDrop", "Recipe", "Piece", "PieceTable", "CraftingStation", "CookingStation",
            "Fermenter", "Smelter", "Humanoid", "Character", "CharacterDrop", "SpawnSystemList", "ZoneSystem",

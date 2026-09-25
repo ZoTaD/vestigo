@@ -1,7 +1,8 @@
-# The site lives in a subdirectory of this repo, so Netlify needs to be told
-# where to build from. `publish` is resolved relative to `base`.
+# The site lives in `site/` (until 2026-09-25 in `games/tft/ui`, from when TFT
+# was the only game), so Netlify needs to be told where to build from.
+# `publish` is resolved relative to `base`.
 [build]
-  base = "games/tft/ui"
+  base = "site"
   command = "npm run build"
   publish = "dist"
 
@@ -26,7 +27,7 @@
   #
   # Un juego nuevo suma acá su `games/<juego>/data`: si no, la Action que lo
   # actualiza queda en verde con el sitio sirviendo los datos viejos.
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/games/tft/ui :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/netlify.toml"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/netlify.toml"
 
 [build.environment]
   # Pinned so a Netlify default upgrade never changes the build under us.

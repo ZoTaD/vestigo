@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 // @ts-expect-error: módulo .mjs del pipeline, sin tipos (Node puro, sin dependencias)
-import * as P from "../../../poe2/pipeline/patches-parse.mjs";
+import * as P from "../../games/poe2/pipeline/patches-parse.mjs";
 
 describe("poe2 patches: títulos y versiones", () => {
   it("clasifica ediciones, hotfixes y lo que se ignora", () => {

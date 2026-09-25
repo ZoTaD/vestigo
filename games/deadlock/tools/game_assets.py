@@ -1,5 +1,5 @@
 """
-Imágenes de Deadlock sacadas del juego instalado → games/tft/ui/public/deadlock/game/
+Imágenes de Deadlock sacadas del juego instalado → site/public/deadlock/game/
 
 El sitio pedía todas las imágenes del juego a assets-bucket.deadlock-api.com,
 que es una copia de las mismas carpetas del juego y que ya se cayó una vez
@@ -21,7 +21,7 @@ from PIL import Image
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 DATA = os.path.join(ROOT, "games", "deadlock", "data")
-OUT = os.path.join(ROOT, "games", "tft", "ui", "public", "deadlock", "game")
+OUT = os.path.join(ROOT, "site", "public", "deadlock", "game")
 BUCKET = "https://assets-bucket.deadlock-api.com/assets-api-res/"
 GAME_VPK = r"C:/Program Files (x86)/Steam/steamapps/common/Deadlock/game/citadel/pak01_dir.vpk"
 

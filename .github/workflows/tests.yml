@@ -17,7 +17,7 @@ name: tests
 # ahora puede tardar hasta 24 horas. La contraparte es que los dos paquetes
 # corren local con un solo comando y son segundos:
 #
-#   npm test --prefix games/tft/ui && npm test --prefix games/deadlock/pipeline
+#   npm test --prefix site && npm test --prefix games/deadlock/pipeline
 #
 # **Los commits del bot nunca dispararon esto**, así que no hay nada que filtrar
 # por ahí: GitHub no crea corridas por pushes hechos con el GITHUB_TOKEN (regla
@@ -51,7 +51,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: games/*/*/package-lock.json
+          cache-dependency-path: |
+            site/package-lock.json
+            games/*/*/package-lock.json
 
       # Dos paquetes, dos instalaciones. `npm ci` y no `npm install` para que un
       # lockfile que se desfasó del package.json rompa el run en vez de ser
@@ -62,13 +64,13 @@ jobs:
       # ni siquiera se puede resolver.
       - name: install
         run: |
-          npm ci --prefix games/tft/ui
+          npm ci --prefix site
           npm ci --prefix games/deadlock/pipeline
 
       # Named separately so a red check says which package broke without
       # anyone opening the log.
-      - name: ui
-        run: npm test --prefix games/tft/ui
+      - name: site
+        run: npm test --prefix site
 
       - name: deadlock
         run: npm test --prefix games/deadlock/pipeline
@@ -78,4 +80,4 @@ jobs:
       # production through a green test suite unless `tsc -b` runs too — and
       # that is exactly what `npm run build` does before vite.
       - name: build
-        run: npm run build --prefix games/tft/ui
+        run: npm run build --prefix site
