@@ -1,7 +1,8 @@
 // `DeadlockBuilderPage` y no `DeadlockBuilder`: la lógica vive en `deadlockBuilder.ts`, y en
 // Windows dos archivos que sólo difieren en mayúsculas son el mismo (ver DeadlockVsBandCard).
 import { useEffect, useMemo, useState } from "react";
-import { useCopy, useLang, useLocale } from "./i18n";
+import { useLang, useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { PUBLISHED_BAND, useHeroes } from "./deadlockData";
 import { useItems, SLOTS, type Item, type Slot } from "./deadlockItemsData";
 import { useHeroBuilds, bySlot, byPhase } from "./deadlockBuildsData";

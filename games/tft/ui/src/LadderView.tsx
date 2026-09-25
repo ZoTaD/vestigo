@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import SectionHead from "./SectionHead";
 import { fetchLadder, type LadderEntry } from "./api";
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./tftCopy";
 
 /** The regions the ladder pull covers. Extend both here and the pull script. */
 const LADDER_REGIONS = ["na1", "euw1", "kr", "la2"];

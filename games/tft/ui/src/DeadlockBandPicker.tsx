@@ -1,4 +1,4 @@
-import { useCopy } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { BANDS, bandBadge, type BandId } from "./deadlockData";
 
 /**

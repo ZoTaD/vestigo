@@ -1,4 +1,4 @@
-import { useCopy } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { RANKED_MIN, type Corpus, type Streak, type Form } from "./deadlockMatch";
 
 /**

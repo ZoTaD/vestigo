@@ -1,4 +1,5 @@
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { PUBLISHED_BAND, useHeroes } from "./deadlockData";
 import { bandRangeOf } from "./deadlockVsBand";
 import { FIT_MIN_MATCHES, heroFit } from "./deadlockHeroFit";

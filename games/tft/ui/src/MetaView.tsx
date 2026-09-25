@@ -7,7 +7,8 @@ import { compSlugs } from "./slugs";
 import { BANDS, DEFAULT_BAND, type BandId } from "./bands";
 import { setOptions, publishedSet } from "./sets";
 import { LIVE } from "./data";
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./tftCopy";
 
 function pct(n: number, digits = 0) {
   return `${(n * 100).toFixed(digits)}%`;

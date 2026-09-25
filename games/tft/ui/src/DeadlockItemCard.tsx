@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { useCopy, useLang } from "./i18n";
+import { useLang } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { useItemDetail, iconUrl, cardArt, soulIcon, catalogUpgrades, type Item } from "./deadlockItemsData";
 import { ItemIcon } from "./DeadlockItemTip";
 

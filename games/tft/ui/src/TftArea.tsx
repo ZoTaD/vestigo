@@ -5,7 +5,7 @@ import UnitsView from "./UnitsView";
 import ItemsView from "./ItemsView";
 import LadderView from "./LadderView";
 import PlayerView from "./PlayerView";
-import { useCopy } from "./i18n";
+import { useCopy } from "./tftCopy";
 import { SECTIONS, type Route, type Section } from "./route";
 import { DEFAULT_BAND, rememberBand } from "./bands";
 

@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import type { Item } from "./deadlockItemsData";
 import type { AbilityView } from "./deadlockBuildsData";
 import { upgradePriority } from "./deadlockBuildsData";

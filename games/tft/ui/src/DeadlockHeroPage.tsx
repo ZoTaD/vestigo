@@ -1,7 +1,8 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
-import { useCopy, useLocale, useLang, type Lang } from "./i18n";
+import { useLocale, useLang, type Lang } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import DeadlockBuildCard from "./DeadlockBuildCard";
 import { DailyChart, MasteryBars } from "./DeadlockHeroCharts";
 import { BANDS, bandBadge, useHeroes, type BandId, type Hero } from "./deadlockData";

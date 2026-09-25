@@ -1,7 +1,8 @@
 import { useState } from "react";
 import SectionHead from "./SectionHead";
 import Chevron from "./Chevron";
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import {
   useItems,
   typeIconUrl,

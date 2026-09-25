@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
-import { useCopy, useLang } from "./i18n";
+import { useLang } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import ShopCard, { SHOP } from "./DeadlockShopCard";
 import { SLOTS, type Item, type Slot } from "./deadlockItemsData";
 import { items as itemSlugs } from "./deadlockSlugs";

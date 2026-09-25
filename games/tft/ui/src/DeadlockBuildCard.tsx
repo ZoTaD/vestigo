@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { ItemDetailPanel } from "./DeadlockItemCard";
 import { soulIcon } from "./deadlockItemsData";
 import {

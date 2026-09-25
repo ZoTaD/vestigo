@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import SectionHead from "./SectionHead";
 import { useItems, itemsDataset, type Item } from "./itemsData";
 import { items as itemSlugs } from "./slugs";
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./tftCopy";
 
 const LOBBY_AVERAGE = 4.5;
 

@@ -1,6 +1,6 @@
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
-import { useCopy } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 
 /**
  * Clasificatorias o Street Brawl, en la cabecera de la tier list (2026-09-24).

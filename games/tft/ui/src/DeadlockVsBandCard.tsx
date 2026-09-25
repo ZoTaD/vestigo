@@ -1,7 +1,8 @@
 // `DeadlockVsBandCard` y no `DeadlockVsBand`: el módulo de datos se llama
 // `deadlockVsBand.ts`, y en Windows dos archivos que sólo difieren en
 // mayúsculas son el mismo archivo para el compilador (ver DeadlockPeerCard).
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { useVsBand } from "./deadlockVsBand";
 
 /**

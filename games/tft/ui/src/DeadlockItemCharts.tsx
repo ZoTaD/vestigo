@@ -1,4 +1,5 @@
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { COSTS, SLOTS, type Item, type Scatter, type ShopCell, type Slot } from "./deadlockItemsData";
 import { ItemIcon } from "./DeadlockItemTip";
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SectionHead from "./SectionHead";
-import { useCopy, useLang, useLocale, type Lang } from "./i18n";
+import { useLang, useLocale, type Lang } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { text } from "./localized";
 import { catalog } from "./deadlockData";
 import {

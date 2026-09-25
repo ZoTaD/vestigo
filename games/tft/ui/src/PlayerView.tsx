@@ -7,7 +7,8 @@ import { useBandFile } from "./data";
 import { bandForTier, DEFAULT_BAND } from "./bands";
 import { attribute, type LpSnapshot } from "./lp";
 import ProfilePanel from "./ProfilePanel";
-import { useCopy, useLang, useLocale } from "./i18n";
+import { useLang, useLocale } from "./i18n";
+import { useCopy } from "./tftCopy";
 import type { Finding } from "@analysis/index";
 
 /** Regions the pipeline already knows how to route. Names come from the copy. */

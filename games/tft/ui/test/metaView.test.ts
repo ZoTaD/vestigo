@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { provisionalNotice } from "../src/MetaView";
-import { COPY } from "../src/i18n";
+import { copyFor } from "../src/tftCopy";
+
+// La copia de TFT vive en tftCopy.ts desde el 2026-09-25.
+const COPY = { en: copyFor("en"), es: copyFor("es") };
 
 /**
  * MetaView shows the provisional banner with exactly one line of JSX:

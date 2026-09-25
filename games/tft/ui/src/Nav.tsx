@@ -4,7 +4,7 @@ import RouteLink from "./RouteLink";
 import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
 import { artUrl, iconUrl, loadIndex, peekIndex, searchIndex, type IndexEntry } from "./valheimData";
-import { VALHEIM_COPY } from "./valheimCopy";
+import type { ValheimCopy } from "./valheimCopy";
 
 export type Game = "tft" | "deadlock" | "poe2" | "valheim";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
@@ -65,6 +65,15 @@ export default function Nav({
   const [open, setOpen] = useState(false);
   const [sel, setSel] = useState(0);
   const box = useRef<HTMLFormElement>(null);
+  /**
+   * Los textos de Valheim (35 KB) se piden recién adentro de Valheim: antes se
+   * importaban arriba y viajaban en el JS de entrada de todo el sitio. Para
+   * entonces el chunk de Valheim ya los trajo, así que la promesa es inmediata.
+   */
+  const [vhCopy, setVhCopy] = useState<Record<Lang, ValheimCopy> | null>(null);
+  useEffect(() => {
+    if (inValheim && !vhCopy) import("./valheimCopy").then((m) => setVhCopy(m.VALHEIM_COPY)).catch(() => undefined);
+  }, [inValheim, vhCopy]);
   const wantIndex = () => {
     if (inValheim && !vhIndex) loadIndex().then(setVhIndex).catch(() => undefined);
   };
@@ -80,7 +89,7 @@ export default function Nav({
     setOpen(false);
     onNavigate({ ...route, view: "valheim", vhSection: h.tab, detail: h.slug });
   };
-  const vhTabs = VALHEIM_COPY[lang].tabs;
+  const vhTabs = vhCopy?.[lang].tabs;
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -179,9 +188,9 @@ export default function Nav({
               {searchGame}
             </span>
           </label>
-          {inValheim && open && query.trim().length >= 2 && vhIndex && (
+          {inValheim && open && query.trim().length >= 2 && vhIndex && vhCopy && (
             <div className="top-hits" id="top-hits" role="listbox">
-              {hits.length === 0 && <div className="top-hit is-empty">{VALHEIM_COPY[lang].noResults}</div>}
+              {hits.length === 0 && <div className="top-hit is-empty">{vhCopy[lang].noResults}</div>}
               {hits.map((h, i) => (
                 <RouteLink
                   key={`${h.tab}/${h.slug}`}
@@ -197,7 +206,7 @@ export default function Nav({
                     {lang === "es" ? h.es : h.en}
                     <small>{lang === "es" ? h.en : h.es}</small>
                   </span>
-                  <small className="top-hit-tab">{vhTabs[h.tab]}</small>
+                  <small className="top-hit-tab">{vhTabs?.[h.tab]}</small>
                 </RouteLink>
               ))}
             </div>

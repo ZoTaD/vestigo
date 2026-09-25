@@ -1,6 +1,7 @@
 import type { PlayerProfile, PlayerTag, Tally } from "./analyzer";
 import { HABIT_IDS, MIN_PLAYER_GAMES, type CoachFinding } from "@analysis/index";
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./tftCopy";
 
 /** A lobby of eight averages this, so it is the line between good and bad. */
 const LOBBY_AVERAGE = 4.5;

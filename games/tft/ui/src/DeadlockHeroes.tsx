@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from
 import RouteLink from "./RouteLink";
 import SectionHead from "./SectionHead";
 import type { Route } from "./route";
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { useHeroes, bandBadge, type BandId } from "./deadlockData";
 import { heroes as heroSlugs } from "./deadlockSlugs";
 import DeadlockHeroPage from "./DeadlockHeroPage";

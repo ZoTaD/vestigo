@@ -5,7 +5,7 @@
  * entraba a Valheim bajaba también el armador de Deadlock. Ahora `areas.ts`
  * carga este módulo aparte, con su CSS, y sólo cuando la ruta es de Deadlock.
  */
-import { useCopy } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import RouteLink from "./RouteLink";
 import Deadlock, { PatchHistory } from "./Deadlock";
 import DeadlockItems from "./DeadlockItems";

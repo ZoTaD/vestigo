@@ -1,4 +1,5 @@
-import { useCopy, useLang, useLocale } from "./i18n";
+import { useLang, useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { ConFicha } from "./DeadlockBuildCard";
 import type { Item } from "./deadlockItemsData";
 

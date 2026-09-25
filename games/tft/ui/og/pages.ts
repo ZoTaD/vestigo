@@ -1,4 +1,5 @@
-import { COPY, type Lang } from "../src/i18n";
+import type { Lang } from "../src/i18n";
+import { DEADLOCK_COPY } from "../src/deadlockCopy";
 import { LANGS } from "../src/route";
 import { deadlockDetailSlugs, type SitemapData } from "../src/sitemap";
 import { NEWS_COPY, headlineBank, pickFrom, stableVariant } from "../src/newsCopy";
@@ -62,7 +63,7 @@ export function ogSpecs(data: OgData): { path: string; spec: OgSpec }[] {
     const locale = lang === "es" ? "es-AR" : "en-US";
     const pct = (n: number) => `${(n * 100).toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
     const int = (n: number) => n.toLocaleString(locale);
-    const band = (COPY[lang].deadlock.bands as Record<string, string>)[data.dlHeroStats.band] ?? data.dlHeroStats.band;
+    const band = (DEADLOCK_COPY[lang].deadlock.bands as Record<string, string>)[data.dlHeroStats.band] ?? data.dlHeroStats.band;
 
     slugs.heroes.forEach((slug, i) => {
       const id = data.dlHeroIds[i];

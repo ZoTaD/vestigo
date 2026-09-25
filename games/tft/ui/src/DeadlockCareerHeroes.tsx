@@ -1,4 +1,5 @@
-import { useCopy, useLang } from "./i18n";
+import { useLang } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { text } from "./localized";
 import { heroImg, heroName } from "./deadlockReportData";
 import type { HeroStat } from "./deadlockHeroStats";

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import SectionHead from "./SectionHead";
-import { useCopy, useLang, type Lang } from "./i18n";
+import { useLang, type Lang } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { text } from "./localized";
 import {
   fetchMatch,

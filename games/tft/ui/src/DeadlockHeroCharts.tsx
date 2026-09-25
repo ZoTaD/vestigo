@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useCopy, useLocale } from "./i18n";
+import { useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { dailySplit, type DayPoint } from "./deadlockHeroKitData";
 import type { MasteryBucket } from "./deadlockMasteryData";
 

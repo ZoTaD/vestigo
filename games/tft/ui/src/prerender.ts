@@ -1,8 +1,13 @@
-import { COPY, type Lang } from "./i18n";
+import type { Lang } from "./i18n";
+import { copyFor as deadlockCopyFor } from "./deadlockCopy";
+import { SEO_COPY } from "./seoCopy";
 import { LANGS, parseRoute, routeUrl, SITE_ORIGIN, type Route } from "./route";
 import { deadlockDetailSlugs, sitemapPaths, type SitemapData } from "./sitemap";
 import { POE2_COPY, type Poe2Copy } from "./poe2Copy";
 import { VALHEIM_COPY } from "./valheimCopy";
+
+/** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
+const copyOf = (lang: Lang) => ({ ...deadlockCopyFor(lang), seo: SEO_COPY[lang].seo });
 
 /**
  * El `<head>` de cada página, escrito en el build.
@@ -48,7 +53,7 @@ export function metaFor(
   lang: Lang,
   detailName: string | null
 ): { title: string; description: string } {
-  const copy = COPY[lang];
+  const copy = copyOf(lang);
   const seo = copy.seo;
 
   if (detailName && route.view === "deadlock") {
@@ -186,7 +191,7 @@ export function jsonLdFor(
   data: SitemapData,
   detailName: string | null
 ): object[] {
-  const copy = COPY[lang];
+  const copy = copyOf(lang);
   const brand = copy.brand;
   const home = routeUrl({ ...route, view: "home", detail: undefined });
   const org = { "@type": "Organization", name: brand, url: SITE_ORIGIN };

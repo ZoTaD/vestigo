@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { useCopy, useLang } from "./i18n";
+import { useLang } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import type { HistoryRow } from "./deadlockMatch";
 
 /**

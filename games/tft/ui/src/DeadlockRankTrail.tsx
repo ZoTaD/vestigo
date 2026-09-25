@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { useCopy, useLang, useLocale } from "./i18n";
+import { useLang, useLocale } from "./i18n";
+import { useCopy } from "./deadlockCopy";
 import { text } from "./localized";
 import { rankLabel, rankOf } from "./deadlockReportData";
 import { trailOf, type RankPoint } from "./deadlockRankHistory";
