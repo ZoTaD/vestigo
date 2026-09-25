@@ -14,11 +14,10 @@ name: tests
 # de los PR que aparezcan).
 #
 # **Lo que se pierde**: el rojo dejó de llegar a los 90 segundos de pushear y
-# ahora puede tardar hasta 24 horas. La contraparte es que los tres paquetes
+# ahora puede tardar hasta 24 horas. La contraparte es que los dos paquetes
 # corren local con un solo comando y son segundos:
 #
-#   npm test --prefix games/tft/pipeline && npm test --prefix games/tft/analysis \
-#     && npm test --prefix games/tft/ui && npm test --prefix games/deadlock/pipeline
+#   npm test --prefix games/tft/ui && npm test --prefix games/deadlock/pipeline
 #
 # **Los commits del bot nunca dispararon esto**, así que no hay nada que filtrar
 # por ahí: GitHub no crea corridas por pushes hechos con el GITHUB_TOKEN (regla
@@ -27,10 +26,8 @@ name: tests
 on:
   schedule:
     # 09:15 UTC = 06:15 en Argentina: el resultado está esperando cuando abrís la
-    # máquina. **La hora no es intercambiable con cualquier otra**: publish.yml
-    # corre en punto cada 4 horas (08:00, 12:00), publish-deadlock a las :30 de
-    # 0/6/12/18 y summarize a las 0/6/12/18 en punto. Las 09:15 es de los pocos
-    # huecos donde esto no compite por un runner con nadie.
+    # máquina, y no compite por un runner con publish-deadlock (a las :30 de
+    # 0/6/12/18).
     - cron: "15 9 * * *"
   pull_request:
   workflow_dispatch:
@@ -56,28 +53,20 @@ jobs:
           cache: npm
           cache-dependency-path: games/*/*/package-lock.json
 
-      # Cuatro paquetes, cuatro instalaciones. `npm ci` y no `npm install` para
-      # que un lockfile que se desfasó del package.json rompa el run en vez de
-      # ser reparado en silencio.
+      # Dos paquetes, dos instalaciones. `npm ci` y no `npm install` para que un
+      # lockfile que se desfasó del package.json rompa el run en vez de ser
+      # reparado en silencio. (Los de TFT se fueron con TFT, el 2026-09-25.)
       #
       # El de Deadlock no es opcional: la UI importa su tabla de bandas para
       # compararla contra la copia del navegador, así que sin instalarlo ese test
       # ni siquiera se puede resolver.
       - name: install
         run: |
-          npm ci --prefix games/tft/analysis
-          npm ci --prefix games/tft/pipeline
           npm ci --prefix games/tft/ui
           npm ci --prefix games/deadlock/pipeline
 
       # Named separately so a red check says which package broke without
       # anyone opening the log.
-      - name: analysis
-        run: npm test --prefix games/tft/analysis
-
-      - name: pipeline
-        run: npm test --prefix games/tft/pipeline
-
       - name: ui
         run: npm test --prefix games/tft/ui
 

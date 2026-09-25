@@ -2,8 +2,8 @@
  * El puente entre el buscador de la barra superior y la pestaña Jugador.
  *
  * El buscador vive en todas las páginas del sitio (rediseño del 2026-09-06);
- * la búsqueda de verdad —contra la API de Steam para Deadlock, contra Riot
- * para TFT— vive en la pestaña Jugador de cada juego. La barra no puede
+ * la búsqueda de verdad —contra deadlock-api.com— vive en la pestaña Jugador
+ * de Deadlock. La barra no puede
  * buscar por sí misma sin duplicar esa lógica, así que deja el texto acá,
  * navega a la pestaña, y la pestaña lo recoge al montarse.
  *

@@ -36,7 +36,7 @@ describe("parseRoute", () => {
   });
 
   it("reads views and sections", () => {
-    expect(parseRoute("/en")).toEqual({ lang: "en", view: "home", section: "meta", dlSection: "meta" });
+    expect(parseRoute("/en")).toEqual({ lang: "en", view: "home", dlSection: "meta" });
     expect(parseRoute("/es/deadlock")).toMatchObject({ lang: "es", view: "deadlock" });
     expect(parseRoute("/en/privacy")).toMatchObject({ view: "privacy" });
   });
@@ -100,23 +100,23 @@ describe("las direcciones de TFT ya no llevan a TFT", () => {
 
 describe("routePath", () => {
   const cases: [Route, string][] = [
-    [{ lang: "en", view: "home", section: "meta", dlSection: "meta" }, "/en"],
-    [{ lang: "es", view: "home", section: "meta", dlSection: "meta" }, "/es"],
-    [{ lang: "en", view: "deadlock", section: "meta", dlSection: "meta" }, "/en/deadlock"],
+    [{ lang: "en", view: "home", dlSection: "meta" }, "/en"],
+    [{ lang: "es", view: "home", dlSection: "meta" }, "/es"],
+    [{ lang: "en", view: "deadlock", dlSection: "meta" }, "/en/deadlock"],
     [
-      { lang: "en", view: "deadlock", section: "meta", dlSection: "items" },
+      { lang: "en", view: "deadlock", dlSection: "items" },
       "/en/deadlock/items",
     ],
     [
-      { lang: "es", view: "deadlock", section: "meta", dlSection: "items" },
+      { lang: "es", view: "deadlock", dlSection: "items" },
       "/es/deadlock/items",
     ],
     [
-      { lang: "en", view: "deadlock", section: "meta", dlSection: "patches" },
+      { lang: "en", view: "deadlock", dlSection: "patches" },
       "/en/deadlock/patches",
     ],
-    [{ lang: "en", view: "terms", section: "meta", dlSection: "meta" }, "/en/terms"],
-    [{ lang: "en", view: "privacy", section: "meta", dlSection: "meta" }, "/en/privacy"],
+    [{ lang: "en", view: "terms", dlSection: "meta" }, "/en/terms"],
+    [{ lang: "en", view: "privacy", dlSection: "meta" }, "/en/privacy"],
   ];
 
   it.each(cases)("builds %o", (route, expected) => {
@@ -135,7 +135,7 @@ describe("routePath", () => {
 
 describe("routeUrl", () => {
   it("builds the absolute URL canonical and hreflang need", () => {
-    expect(routeUrl({ lang: "es", view: "deadlock", section: "meta", dlSection: "items" })).toBe(
+    expect(routeUrl({ lang: "es", view: "deadlock", dlSection: "items" })).toBe(
       "https://vestigo.gg/es/deadlock/items"
     );
   });

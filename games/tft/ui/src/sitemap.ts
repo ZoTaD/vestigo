@@ -107,9 +107,9 @@ export function deadlockDetailSlugs(data: SitemapData): { heroes: string[]; item
 export function sitemapPaths(data: SitemapData): string[] {
   const paths: string[] = [];
 
-  // `Route` sigue llevando la pestaña de TFT aunque el sitio ya no la sirva;
-  // acá va con su valor por defecto y no cambia ningún camino.
-  const base = { section: "meta", dlSection: "meta" } as const;
+  // La pestaña de Deadlock es obligatoria en `Route`; fuera de Deadlock va con
+  // su valor por defecto y no cambia ningún camino.
+  const base = { dlSection: "meta" } as const;
 
   for (const lang of LANGS) {
     paths.push(routePath({ ...base, lang, view: "home" }));

@@ -1,5 +1,4 @@
 import type { Lang } from "./i18n";
-import { DEFAULT_BAND, isBandId, type BandId } from "./bands";
 
 /**
  * The site's addresses.
@@ -16,13 +15,9 @@ import { DEFAULT_BAND, isBandId, type BandId } from "./bands";
  * React, so the tests can cover every shape of URL cheaply.
  */
 
-export type Section = "meta" | "units" | "items" | "ladder" | "player";
 /**
- * Las pestañas de Deadlock, que son **otro conjunto** que las de TFT.
- *
- * Un tipo aparte y no una unión con `Section`: si "patches" entrara ahí,
- * `/tft/patches` parsearía a una pestaña que no existe y el sitio contestaría
- * 200 en una URL vacía. Cada juego declara las suyas.
+ * Las pestañas de Deadlock. Cada juego declara las suyas: una pestaña de un
+ * juego no es una dirección válida en otro.
  */
 export type DeadlockSection =
   | "meta"
@@ -35,7 +30,7 @@ export type DeadlockSection =
   | "patches"
   | "player"
   | "match";
-export type View = "home" | "tft" | "deadlock" | "poe2" | "valheim" | "privacy" | "terms";
+export type View = "home" | "deadlock" | "poe2" | "valheim" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -57,7 +52,6 @@ export type ValheimSection = "home" | ValheimTab | "patches" | "map" | "planner"
 export const VALHEIM_TABS: ValheimTab[] = ["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "places", "bosses"];
 
 export const LANGS: Lang[] = ["en", "es"];
-export const SECTIONS: Section[] = ["meta", "units", "items", "ladder", "player"];
 /**
  * En el orden en que se dibujan las pestañas.
  *
@@ -105,50 +99,32 @@ export const DL_DETAIL_SECTIONS: DeadlockSection[] = ["meta", "heroes", "items"]
  * ediciones salen del índice de noticias, no de los slugs de héroes e ítems.
  */
 const DL_WITH_DETAIL: DeadlockSection[] = [...DL_DETAIL_SECTIONS, "patches", "player", "match"];
-/** Detail pages exist for the three things people search by name. */
-export const DETAIL_SECTIONS: Section[] = ["units", "items", "meta"];
 
 export const DEFAULT_LANG: Lang = "en";
-const DEFAULT_SECTION: Section = "meta";
 const DEFAULT_DL_SECTION: DeadlockSection = "meta";
 const DEFAULT_P2_SECTION: Poe2Section = "economy";
 
 export interface Route {
   lang: Lang;
   view: View;
-  /** Which TFT tab. Carried even off /tft so returning to it lands where you left. */
-  section: Section;
-  /** Which Deadlock tab, con el mismo criterio: se conserva fuera de /deadlock. */
+  /** Qué pestaña de Deadlock. Se conserva fuera de /deadlock, así volver a Deadlock cae donde se dejó. */
   dlSection: DeadlockSection;
   /** Qué pestaña de PoE2. Opcional: fuera de /poe2 no hace falta, y sin ella es Economía. */
   p2Section?: Poe2Section;
   /** Qué pestaña de Valheim. Sin ella es la portada de la sección. */
   vhSection?: ValheimSection;
-  /**
-   * Which rank band the meta shows. Absent means the default one, which is why
-   * apex keeps the plain /tft/meta address it has always had.
-   */
-  band?: BandId;
-  /** A unit, item or comp slug, when the URL points at one. */
+  /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
   detail?: string;
 }
 
 const isLang = (v: string): v is Lang => (LANGS as string[]).includes(v);
-const isSection = (v: string): v is Section => (SECTIONS as string[]).includes(v);
 const isDlSection = (v: string): v is DeadlockSection => (DEADLOCK_ROUTES as string[]).includes(v);
-/**
- * Las vistas que el sitio **sirve**. `View` sigue incluyendo "tft" para que el
- * código de TFT compile, pero una URL `/tft/...` ya no llega a él.
- *
- * **TFT salió del sitio el 2026-09-15.** Su pipeline está apagada desde el 12
- * de agosto y el meta que servía era del set 17, parche 16.16: un mes viejo y
- * presentado como actual. Medido en Analytics del 18-ago al 14-sep, TFT fueron
- * 40 vistas contra 299 de Deadlock, y ninguna de las siete personas que
- * entraron volvió por él. Ocultarlo es mejor que servirlo viejo; la pipeline y
- * las vistas quedan en el repo por si se retoma. Ver
- * docs/design/2026-09-15-tft-sale-del-sitio.md.
- */
 const isP2Section = (v: string): v is Poe2Section => (POE2_SECTIONS as string[]).includes(v);
+/**
+ * Las vistas que el sitio sirve. TFT salió del sitio el 2026-09-15 y del repo el
+ * 2026-09-25: una `/tft/...` vieja cae en la portada (y en Netlify ni llega,
+ * porque `netlify.toml` la redirige con 301 antes).
+ */
 const isView = (v: string): v is View => ["home", "deadlock", "poe2", "valheim", "privacy", "terms"].includes(v);
 const isVhTab = (v: string | undefined): v is ValheimTab => !!v && (VALHEIM_TABS as string[]).includes(v);
 
@@ -184,14 +160,12 @@ export function parseRoute(pathname: string): Route {
   const parts = pathname.split("/").filter(Boolean);
 
   const lang = parts[0] && isLang(parts[0]) ? parts[0] : DEFAULT_LANG;
-  // Only drop the first segment when it really was a language, so /tft still
-  // works for anyone who typed it or linked it before languages were in paths.
+  // Only drop the first segment when it really was a language, so an address
+  // typed without one (/deadlock) still works.
   const rest = parts[0] && isLang(parts[0]) ? parts.slice(1) : parts;
 
-  const base = { lang, section: DEFAULT_SECTION, dlSection: DEFAULT_DL_SECTION };
+  const base = { lang, dlSection: DEFAULT_DL_SECTION };
   const head = rest[0];
-  // Una `/tft/...` cae acá también: en el navegador termina en la portada, y en
-  // Netlify ni llega, porque `netlify.toml` la redirige con 301 antes.
   if (!head || !isView(head)) return { ...base, view: "home" };
 
   // Deadlock lleva sus propias pestañas, y una que no se reconoce cae en el
@@ -232,23 +206,12 @@ export function parseRoute(pathname: string): Route {
     return { ...base, view: "valheim", vhSection: rest[1], detail: rest[2] || undefined };
   }
 
-  if (head !== "tft") return { ...base, view: head };
-
-  const section = rest[1] && isSection(rest[1]) ? rest[1] : DEFAULT_SECTION;
-
-  // Only the meta carries a band, and only in the first slot after the section.
-  // Anything else there is a comp slug, which keeps every /tft/meta/<comp> URL
-  // already in the sitemap pointing where it always did.
-  const banded = section === "meta" && !!rest[2] && isBandId(rest[2]);
-  const band = banded ? (rest[2] as BandId) : undefined;
-  const slot = banded ? rest[3] : rest[2];
-  const detail = slot && DETAIL_SECTIONS.includes(section) ? slot : undefined;
-  return { ...base, view: "tft", section, band, detail };
+  return { ...base, view: head };
 }
 
 /** Build the pathname for a route. The inverse of parseRoute. */
 export function routePath(route: Route): string {
-  const { lang, view, section, dlSection, band, detail } = route;
+  const { lang, view, dlSection, detail } = route;
   if (view === "home") return `/${lang}`;
   // El meta de Deadlock se queda con `/deadlock` a secas: es la pestaña por
   // defecto y la URL que ya está indexada, así que agregarle `/meta` partiría
@@ -270,12 +233,7 @@ export function routePath(route: Route): string {
     if (sec === "home") return `/${lang}/valheim`;
     return detail ? `/${lang}/valheim/${sec}/${detail}` : `/${lang}/valheim/${sec}`;
   }
-  if (view !== "tft") return `/${lang}/${view}`;
-  // The default band is left out entirely so the meta keeps one canonical URL
-  // instead of answering at both /tft/meta and /tft/meta/apex.
-  const showBand = section === "meta" && band && band !== DEFAULT_BAND;
-  const base = `/${lang}/tft/${section}` + (showBand ? `/${band}` : "");
-  return detail ? `${base}/${detail}` : base;
+  return `/${lang}/${view}`;
 }
 
 /** The same page in the other language, for the hreflang links. */

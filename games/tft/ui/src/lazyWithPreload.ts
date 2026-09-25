@@ -5,14 +5,14 @@ import { createElement, type ComponentType } from "react";
  *
  * **Por qué no `React.lazy` a secas.** El sitio se prerenderiza con
  * `renderToString` (ver `entry-server.tsx`), que no espera promesas: un
- * componente perezoso sin resolver rendería el `fallback` y las páginas de
- * TFT saldrían vacías al HTML que lee Google. Con este envoltorio, el servidor
- * llama a `preload()` antes de renderizar y el componente ya está en memoria;
- * en el navegador, la primera visita a una zona todavía no cargada lanza la
- * promesa y `Suspense` muestra el fallback hasta que llegue el chunk.
+ * componente perezoso sin resolver rendería el `fallback` y la página saldría
+ * vacía al HTML que lee Google. Con este envoltorio, el servidor llama a
+ * `preload()` antes de renderizar y el componente ya está en memoria; en el
+ * navegador, `main.tsx` hace lo mismo con la vista de llegada, y después la
+ * primera visita a un juego todavía no cargado lanza la promesa y `Suspense`
+ * muestra el fallback hasta que llegue el chunk.
  *
- * Es lo que deja partir el bundle por juego (2026-09-07): la portada y
- * Deadlock dejan de bajar el megabyte de datos de TFT.
+ * Es lo que deja partir el bundle por juego (ver `areas.ts`).
  */
 export function lazyWithPreload<P extends object>(
   factory: () => Promise<{ default: ComponentType<P> }>

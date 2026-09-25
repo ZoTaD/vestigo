@@ -21,11 +21,6 @@ import {
   type Lang,
 } from "./i18n";
 import { LANGS, parseRoute, routePath, type Route } from "./route";
-import { storedBand } from "./bands";
-
-// TFT no se monta desde el 2026-09-15: `parseRoute` ya no produce la vista
-// "tft", así que acá no hay nada que dibujar para ella. `TftArea.tsx` y sus
-// vistas siguen en el repo, sin importar, por si el juego vuelve (ver route.ts).
 
 /**
  * The shell: where you are, and the disclaimer under everything.
@@ -61,8 +56,8 @@ function Shell({
   // Now that navigation writes real URLs, GA is told the same path the address
   // bar shows — the reports and the site finally agree on what a page is.
   //
-  // The language prefix is dropped so /en/tft/units and /es/tft/units count as
-  // one page: the report is about which screens get used, not which
+  // The language prefix is dropped so /en/deadlock/items and /es/deadlock/items
+  // count as one page: the report is about which screens get used, not which
   // translations, and language is already a dimension of its own in GA.
   useEffect(() => {
     if (consent !== "granted") return;
@@ -83,9 +78,8 @@ function Shell({
    *
    * Con un `useState` por página, elegir Arconte en la tier list de héroes y
    * pasar a objetos volvía sola a Fantasma+, y el visitante tenía que elegir dos
-   * veces lo mismo. Es el mismo criterio que la banda de TFT, que se recuerda
-   * entre visitas — acá alcanza con que sobreviva al cambio de pestaña, porque
-   * la banda de Deadlock todavía no viaja en la URL. `undefined` es "la
+   * veces lo mismo. Alcanza con que sobreviva al cambio de pestaña, porque la
+   * banda de Deadlock todavía no viaja en la URL. `undefined` es "la
    * publicada", que resuelve `DeadlockArea` (ver ahí por qué no acá).
    */
   const [dlBand, setDlBand] = useState<DlBandId | undefined>(undefined);
@@ -150,7 +144,7 @@ function Shell({
       </Suspense>
 
       {/* One centred column, in the order someone reads it: where to go, where
-          the data comes from, the notice Riot requires, then the byline. */}
+          the data comes from, the publisher's notice, then the byline. */}
       <footer className="foot">
         <nav className="foot-links" aria-label={copy.footer.privacy}>
           <RouteLink
@@ -178,25 +172,16 @@ function Shell({
           )}
         </nav>
 
-        {/* Una sola línea de fuentes desde que Deadlock es el único juego: la
-            de Riot/CommunityDragon describía las páginas de TFT, que ya no se
-            sirven. */}
-        {/* En PoE2 no se nombra a Valve (no es su juego) ni a los proveedores
+        {/* Las fuentes siguen al juego de la página: nombrar la que no es, es
+            peor que no nombrar ninguna. En PoE2 no se nombra a Valve (no es su juego) ni a los proveedores
             de datos, a pedido de ZoTaD; sí el crédito que pide la licencia de
             la tipografía Fontin. */}
         <p className="foot-sources">
           {place === "poe2" ? copy.footer.sourcesPoe2 : place === "valheim" ? copy.footer.sourcesValheim : copy.footer.sourcesDeadlock}
         </p>
 
-        {/* Required by Riot's General Policies, which every third-party product
-            must post, and by Overwolf's compliance guide. It is not decoration —
-            leave the wording alone. */}
-        <p className="foot-legal">{copy.footer.disclaimer}</p>
-
-        {/* El mismo aviso, para el otro dueño: las directrices de contenido de
-            Valve piden lo mismo que las de Riot, así que el pie lo dice en las
-            dos direcciones o no lo dice en ninguna. Va en un párrafo aparte a
-            propósito: la redacción de Riot no se toca. */}
+        {/* Lo piden las directrices de contenido de Valve. El de Riot, que iba
+            arriba de este, se fue con TFT el 2026-09-25. */}
         <p className="foot-legal">{copy.footer.disclaimerValve}</p>
 
         <p className="foot-copy">
@@ -229,9 +214,7 @@ function initialRoute(): Route {
   const { pathname } = window.location;
   const parsed = parseRoute(pathname);
   const lang = urlNamesLang(pathname) ? parsed.lang : storedLang();
-  // Same rule for the rank: an address that names a band is what the sender
-  // meant to share, and only a silent one falls back to what was picked before.
-  return { ...parsed, lang, band: parsed.band ?? storedBand() };
+  return { ...parsed, lang };
 }
 
 /**
@@ -250,7 +233,7 @@ export default function App({ ssrRoute }: { ssrRoute?: Route } = {}) {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
-  // Tidy the address on arrival: "/" and "/tft" become the full canonical path
+  // Tidy the address on arrival: "/" becomes the full canonical path
   // without adding a history entry, so the first Back still leaves the site.
   useEffect(() => {
     const want = routePath(route);

@@ -22,8 +22,12 @@ function storageKeys(): string[] {
     const source = readFileSync(join(SRC, file), "utf-8");
     if (!source.includes("localStorage")) continue;
     // Both spellings in use: a named constant, and the literal passed inline.
-    for (const m of source.matchAll(/(?:STORAGE_KEY|CONSENT_KEY)\s*=\s*"([^"]+)"/g)) {
-      keys.add(m[1]);
+    // Only the files that touch localStorage count, so a sessionStorage key in
+    // another file (pendingSearch, staleChunks) is not mistaken for one.
+    for (const m of source.matchAll(/const\s+([A-Z_]+)\s*=\s*"(vestigo[.:][^"]+)"/g)) {
+      // Sólo si esa constante se usa con localStorage en el mismo archivo: un
+      // nombre de evento o una clave de sessionStorage no cuentan.
+      if (new RegExp(`localStorage\\.(?:get|set|remove)Item\\(${m[1]}\\b`).test(source)) keys.add(m[2]);
     }
     for (const m of source.matchAll(/localStorage\.(?:get|set|remove)Item\("([^"]+)"/g)) {
       keys.add(m[1]);
@@ -46,11 +50,12 @@ describe("the privacy policy's account of local storage", () => {
     // Fails loudly if a key is added, so the list below has to be revisited
     // rather than silently outgrown.
     expect(storageKeys()).toEqual([
-      "vestigo.band",
       "vestigo.consent",
       "vestigo.dlItemsView",
       "vestigo.lang",
-      "vestigo.lastPlayer",
+      "vestigo.lastProfile",
+      "vestigo:valheim:planner",
+      "vestigo:valheim:planner:have",
     ]);
   });
 

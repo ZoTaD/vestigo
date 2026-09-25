@@ -16,7 +16,7 @@ export const CONTACT_EMAIL = "zeitristech@gmail.com";
 /** The jurisdiction the operator is based in. */
 export const GOVERNING_LAW = "Argentina";
 
-export const LAST_UPDATED = "23 July 2026";
+export const LAST_UPDATED = "25 September 2026";
 
 export function LegalPage({
   title,

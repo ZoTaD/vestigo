@@ -42,11 +42,6 @@ const say = (loc: Localized | undefined, lang: Lang, fallback: string): string =
  * garantizar que un día digan cosas distintas. Lo único que cada lado resuelve
  * por su cuenta es `detailName`, porque el navegador lo saca del catálogo vivo
  * y el build de los JSON que tiene en la mano.
- *
- * Ya no recibe el número de set: las ramas de TFT (sus pestañas, sus bandas y
- * el detalle de unidad/ítem/comp) se fueron el 2026-09-15 con el juego, y eran
- * las únicas que lo usaban. `parseRoute` no produce la vista "tft", así que
- * ninguna ruta llega acá con ella.
  */
 export function metaFor(
   route: Route,
@@ -68,7 +63,6 @@ export function metaFor(
    * Con uno solo para el juego entero, `/deadlock`, `/deadlock/items` y
    * `/deadlock/patches` iban al sitemap con el mismo texto — tres URLs peleando
    * por la misma búsqueda, y la de objetos perdiendo justo la que debería ganar.
-   * Es la misma corrección que ya se hizo con las bandas de TFT.
    *
    * El meta conserva el título llano del juego: es la URL indexada.
    */
@@ -107,9 +101,8 @@ export function metaFor(
     }
     return { title: v.seo.tab(tabName), description: v.tabLede[sec] };
   }
-  // Lo que queda son la portada y las dos páginas legales. El `as` recorta
-  // "tft" del tipo, que sigue en `View` sólo para que su código compile.
-  const page = seo[route.view as "home" | "privacy" | "terms"];
+  // Lo que queda son la portada y las dos páginas legales.
+  const page = seo[route.view];
   return { title: page.title(), description: page.description() };
 }
 

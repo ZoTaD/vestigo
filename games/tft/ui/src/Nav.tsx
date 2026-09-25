@@ -6,7 +6,7 @@ import { routeInLang, type Route } from "./route";
 import { artUrl, iconUrl, loadIndex, peekIndex, searchIndex, type IndexEntry } from "./valheimData";
 import type { ValheimCopy } from "./valheimCopy";
 
-export type Game = "tft" | "deadlock" | "poe2" | "valheim";
+export type Game = "deadlock" | "poe2" | "valheim";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
 export type Place = "home" | Game;
 /** The legal pages are reachable from the footer and highlight no tab. */

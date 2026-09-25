@@ -5,9 +5,8 @@ import { slugify } from "./route";
 /**
  * Los nombres en la URL de héroes e ítems de Deadlock, y cómo volver de ahí.
  *
- * Calco exacto de `slugs.ts` (TFT): un slug siempre sale del nombre en
- * inglés, aunque la página esté en español — mismo motivo de siempre, un
- * héroe no puede tener dos direcciones según el idioma.
+ * Un slug siempre sale del nombre en inglés, aunque la página esté en
+ * español: un héroe no puede tener dos direcciones según el idioma.
  *
  * Sólo cubre la banda publicada por defecto (`PUBLISHED_BAND`): es la única
  * con datos disponibles de forma síncrona, que es lo que hace falta para

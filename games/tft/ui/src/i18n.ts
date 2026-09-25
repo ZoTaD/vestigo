@@ -3,11 +3,10 @@ import { createContext, useContext } from "react";
 /**
  * Every word on screen, in both languages.
  *
- * English is the default and the source of truth: the first readers of this site
- * are Riot's third-party review and Overwolf's dev-rel team, and the app has to
- * describe itself to them in their language without anyone flipping a switch.
- * Spanish is typed against the English shape, so a missing translation is a
- * compile error rather than a blank on the page.
+ * English is the default and the source of truth. Spanish is typed against the
+ * English shape, so a missing translation is a compile error rather than a
+ * blank on the page. Each game's own copy lives next to it (`deadlockCopy.ts`,
+ * `poe2Copy.ts`, `valheimCopy.ts`) and travels in that game's chunk.
  *
  * Prose lives here and only here. Nothing that renders text should hold a
  * sentence of its own — that is what let the whole app end up single-language.
@@ -31,8 +30,6 @@ export function rememberLang(lang: Lang): void {
 const EN = {
   brand: "Vestigo",
   games: {
-    tft: "Teamfight Tactics",
-    tftShort: "TFT",
     deadlock: "Deadlock",
     dota: "Dota 2",
     poe2: "Path of Exile 2",
@@ -101,9 +98,7 @@ const EN = {
     /** The captions under each panel's figures. The figures themselves are
      *  measured — these only name them. */
     figures: {
-      placement: (name: string) => `average placement · ${name}`,
       winRate: (name: string) => `win rate · ${name}`,
-      matchesSet: (set: string) => `matches · set ${set}`,
       matchesBand: (band: string) => `matches · ${band}`,
       /** La banda que publica `heroes.json`, que es la que muestra el panel. */
       topBand: "Phantom+",
@@ -112,7 +107,7 @@ const EN = {
     /** El buscador grande de la portada (rediseño del 2026-09-06). */
     search: {
       label: "Find your profile",
-      placeholder: { deadlock: "Steam name", tft: "Riot ID, e.g. Name#TAG" },
+      placeholder: { deadlock: "Steam name" },
       go: "Search",
       lastSeen: "Last seen",
     },
@@ -123,28 +118,21 @@ const EN = {
       rising: "Rising since the patch",
       mostPlayed: "Most played",
       bestValue: "Best value item",
-      bestComp: "Best comp",
-      bestItem: "Best item",
       wins: "win rate",
       use: "use",
-      placement: "avg placement",
       over: (pts: string) => `+${pts} over its price`,
-      better: (pts: string) => `${pts} better placement`,
       band: (band: string) => `in ${band}`,
-      set: (set: string) => `set ${set}`,
     },
     games: {
       heading: "Where you can use it",
       cta: "Open",
       soonCta: "Coming soon",
-      tft: "Meta report and match analysis, live now.",
       deadlock: "Hero and item tier lists, live now.",
       dota: "Match analysis, each patch's meta, and the heroes and items that win.",
       poe2: "Each league's meta and the builds that top players actually run.",
       valheim: "A wiki and tools for Valheim 1.0.",
       diablo2: "Breakpoints, runewords and terror zones.",
       soonHeading: "On the way",
-      tftCta: (set: string, n: string) => `Set ${set} comps · ${n}`,
       deadlockCta: (n: string) => `Hero tier list · ${n}`,
       profile: "Your profile",
       valheimLive: "Every recipe, food, weapon, piece and creature in Valheim 1.0, where each thing comes from, and every patch.",
@@ -202,11 +190,9 @@ const EN = {
   },
 
   footer: {
-    sources:
-      "Match data from the Riot Games API · Portraits, items and names from CommunityDragon",
     // The footer is on every page, but the sources are not the same on every
-    // page: nothing on /deadlock ever touched Riot or CommunityDragon. Naming
-    // the wrong source is worse than naming none, so the line follows the game.
+    // page. Naming the wrong source is worse than naming none, so the line
+    // follows the game.
     sourcesDeadlock:
       "Match data from the public deadlock-api.com snapshot · Hero and item art from Valve",
     sourcesPoe2: "Fontin typeface by Jos Buivenga (exljbris)",
@@ -216,10 +202,6 @@ const EN = {
     // Both documents are English-only, so a Spanish reader deserves fair warning
     // before the click rather than a surprise after it.
     englishOnly: "",
-    disclaimer:
-      "Vestigo isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot " +
-      "Games or anyone officially involved in producing or managing Riot Games properties. Riot " +
-      "Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.",
     disclaimerValve:
       "Vestigo isn't endorsed by Valve Corporation. Deadlock, Dota 2 and all associated " +
       "properties are trademarks or registered trademarks of Valve Corporation.",
@@ -247,8 +229,6 @@ const EN = {
 const ES: typeof EN = {
   brand: "Vestigo",
   games: {
-    tft: "Teamfight Tactics",
-    tftShort: "TFT",
     deadlock: "Deadlock",
     dota: "Dota 2",
     poe2: "Path of Exile 2",
@@ -302,16 +282,14 @@ const ES: typeof EN = {
       days: (n: number) => `hace ${n} días`,
     },
     figures: {
-      placement: (name: string) => `posición media · ${name}`,
       winRate: (name: string) => `victorias · ${name}`,
-      matchesSet: (set: string) => `partidas · set ${set}`,
       matchesBand: (band: string) => `partidas · ${band}`,
       topBand: "Phantom+",
       unmeasured: "todavía sin medir",
     },
     search: {
       label: "Buscá tu perfil",
-      placeholder: { deadlock: "Nombre de Steam", tft: "Riot ID, p. ej. Nombre#TAG" },
+      placeholder: { deadlock: "Nombre de Steam" },
       go: "Buscar",
       lastSeen: "Último visto",
     },
@@ -321,28 +299,21 @@ const ES: typeof EN = {
       rising: "Sube desde el parche",
       mostPlayed: "Más jugado",
       bestValue: "Ítem que más rinde",
-      bestComp: "Mejor comp",
-      bestItem: "Mejor ítem",
       wins: "victorias",
       use: "uso",
-      placement: "posición media",
       over: (pts: string) => `+${pts} sobre su precio`,
-      better: (pts: string) => `${pts} mejor posición`,
       band: (band: string) => `en ${band}`,
-      set: (set: string) => `set ${set}`,
     },
     games: {
       heading: "Dónde puedes usarlo",
       cta: "Entrar",
       soonCta: "Muy pronto",
-      tft: "Reporte del meta y análisis de partidas, funcionando ya.",
       deadlock: "Tier list de héroes e ítems, funcionando ya.",
       dota: "Análisis de tus partidas, la meta de cada parche y los héroes y objetos que ganan.",
       poe2: "La meta de cada liga y las builds que usan de verdad los de arriba.",
       valheim: "Una wiki y herramientas para Valheim 1.0.",
       diablo2: "Breakpoints, palabras rúnicas y zonas de terror.",
       soonHeading: "En camino",
-      tftCta: (set: string, n: string) => `Comps del set ${set} · ${n}`,
       deadlockCta: (n: string) => `Tier list de héroes · ${n}`,
       profile: "Tu perfil",
       valheimLive: "Cada receta, comida, arma, pieza y criatura de Valheim 1.0, de dónde sale cada cosa y todos los parches.",
@@ -399,8 +370,6 @@ const ES: typeof EN = {
   },
 
   footer: {
-    sources:
-      "Datos de partidas de la API de Riot Games · Retratos, ítems y nombres de CommunityDragon",
     sourcesDeadlock:
       "Datos de partidas del snapshot público de deadlock-api.com · Arte de héroes y objetos de Valve",
     sourcesPoe2: "Tipografía Fontin de Jos Buivenga (exljbris)",
@@ -408,11 +377,6 @@ const ES: typeof EN = {
     privacy: "Política de Privacidad",
     terms: "Términos del Servicio",
     englishOnly: "(en inglés)",
-    disclaimer:
-      "Vestigo no está avalado por Riot Games y no refleja las opiniones ni los puntos de vista " +
-      "de Riot Games ni de nadie oficialmente involucrado en la producción o gestión de las " +
-      "propiedades de Riot Games. Riot Games y todas sus propiedades asociadas son marcas " +
-      "comerciales o marcas registradas de Riot Games, Inc.",
     disclaimerValve:
       "Vestigo tampoco está avalado por Valve Corporation. Deadlock, Dota 2 y todas sus " +
       "propiedades asociadas son marcas comerciales o marcas registradas de Valve Corporation.",

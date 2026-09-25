@@ -2,10 +2,9 @@
  * El último perfil de Deadlock que se miró, para ofrecerlo a un clic desde la
  * portada ("último visto: ZoTaD").
  *
- * Es el par de TFT de `lastSearch.ts`: sólo el id y el nombre, en
- * `localStorage`, para que una visita nueva encuentre su perfil sin escribir.
- * Es lo único que se escribe en el dispositivo del visitante desde acá, y la
- * política de privacidad lo nombra junto al Riot ID recordado.
+ * Sólo el id y el nombre, en `localStorage`, para que una visita nueva
+ * encuentre su perfil sin escribir. Es lo único que se escribe en el
+ * dispositivo del visitante desde acá, y la política de privacidad lo nombra.
  */
 
 const KEY = "vestigo.lastProfile";

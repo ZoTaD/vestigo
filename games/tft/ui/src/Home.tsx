@@ -65,8 +65,7 @@ export default function Home({
   const bandName = copy.deadlock.bands[PUBLISHED_BAND];
 
   /* --- Buscador ---------------------------------------------------------- */
-  // Sólo Deadlock desde el 2026-09-15 (ver `route.ts`): el selector de juego
-  // que había acá se fue con TFT, y vuelve el día que haya un segundo juego.
+  // Sólo Deadlock: es el único juego con perfiles de jugador.
   const [query, setQuery] = useState("");
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -236,9 +235,6 @@ export default function Home({
         <h2 className="home-h2">{copy.home.games.heading}</h2>
 
         <ul className="game-list">
-          {/* El panel de TFT que abría esta lista salió el 2026-09-15 (ver
-              `route.ts`). Sus estilos siguen en `home.css` bajo
-              `[data-panel="tft"]`, para el día que vuelva. */}
           <li className="game-panel" data-panel="deadlock">
             <div className="game-panel-main">
               <h3 className="game-panel-name">{copy.games.deadlock}</h3>

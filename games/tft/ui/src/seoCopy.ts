@@ -11,10 +11,9 @@ const EN = {
   /**
    * What search engines and link previews show.
    *
-   * Titles name the set, because that is how people actually search — "TFT set
-   * 17 comps", not "TFT comps" — and it is the phrase we can realistically rank
-   * for against sites with years of authority. The set number is passed in
-   * rather than written here, so a new set does not silently date every page.
+   * Titles use the words people actually search with — "deadlock item tier
+   * list", "poe2 currency prices" — which is the phrase we can realistically
+   * rank for against sites with years of authority.
    *
    * Kept near 60 characters: past that Google truncates the title in results.
    */
@@ -82,47 +81,6 @@ const EN = {
       description: () =>
         "Tier lists, builds, guides and match analysis built from each game's own data. " +
         "Deadlock today; Dota 2, Path of Exile 2, Valheim and Diablo II on the way.",
-    },
-    tft: {
-      meta: {
-        title: (set: string) => `TFT Set ${set} Meta Comps and Tier List | Vestigo`,
-        description: (set: string) =>
-          `The strongest Teamfight Tactics Set ${set} comps, ranked by average placement ` +
-          "over thousands of high-elo games, with the units, items and level each one needs.",
-      },
-      // A band page is its own page, not a filter on the tier list: what wins in
-      // Gold is a different answer from what wins in Master, and it is the
-      // answer people actually search for.
-      metaBand: {
-        title: (band: string, set: string) => `TFT Set ${set} ${band} Meta Comps | Vestigo`,
-        description: (band: string, set: string) =>
-          `The best Teamfight Tactics Set ${set} comps in ${band}, ranked by average placement ` +
-          `over real ${band} games — not carried over from higher ranks.`,
-      },
-      units: {
-        title: (set: string) => `TFT Set ${set} Unit Stats and Win Rates | Vestigo`,
-        description: (set: string) =>
-          `Every Teamfight Tactics Set ${set} champion by play rate, average placement and ` +
-          "the items they actually carry, measured across thousands of high-elo boards.",
-      },
-      items: {
-        title: (set: string) => `TFT Set ${set} Item Stats and Best Carriers | Vestigo`,
-        description: (set: string) =>
-          `Which Teamfight Tactics Set ${set} items change where you place, what they are ` +
-          "built from, and the champions that hold them best.",
-      },
-      ladder: {
-        title: () => "TFT Challenger Ladder by Region | Vestigo",
-        description: () =>
-          "The top Teamfight Tactics players by region, with LP, wins and losses, " +
-          "straight from Riot's ranked ladder.",
-      },
-      player: {
-        title: () => "TFT Match History and Post-Game Analysis | Vestigo",
-        description: () =>
-          "Search any Riot ID and read the match back: where you placed, what you played, " +
-          "and the habits across your history that cost you the most.",
-      },
     },
     deadlock: {
       heroes: {
@@ -226,27 +184,12 @@ const EN = {
       title: () => "Terms of Service | Vestigo",
       description: () => "The rules for using Vestigo, and the limits of what it promises.",
     },
-    detail: {
-      title: (name: string, section: string, set: string) =>
-        section === "meta"
-          ? `${name} — TFT Set ${set} Comp Guide | Vestigo`
-          : `${name} — TFT Set ${set} Stats | Vestigo`,
-      description: (name: string, section: string, set: string) =>
-        section === "units"
-          ? `How ${name} performs in Teamfight Tactics Set ${set}: play rate, average ` +
-            "placement, the star levels worth chasing and the items it carries."
-          : section === "items"
-            ? `What ${name} does in Teamfight Tactics Set ${set}, what it is built from, ` +
-              "and which champions place best holding it."
-            : `How to play ${name} in Teamfight Tactics Set ${set}: the units, the items, ` +
-              "the level to stop at and how often it wins.",
-    },
   },
 };
 
 const ES: typeof EN = {
   // Los títulos en español no son traducciones literales: se escriben con las
-  // palabras que la gente busca de verdad ("comps de TFT", "mejores objetos"),
+  // palabras que la gente busca de verdad ("mejores objetos", "tier list"),
   // que no siempre coinciden con las del inglés. Es también donde hay menos
   // competencia, así que vale la pena tratarlos como texto original.
   seo: {
@@ -312,45 +255,6 @@ const ES: typeof EN = {
       description: () =>
         "Tier lists, builds, guías y análisis de partidas hechos con los datos de cada juego. " +
         "Deadlock hoy; Dota 2, Path of Exile 2, Valheim y Diablo II en camino.",
-    },
-    tft: {
-      meta: {
-        title: (set: string) => `Comps y Tier List del Set ${set} de TFT | Vestigo`,
-        description: (set: string) =>
-          `Las mejores comps del Set ${set} de Teamfight Tactics, ordenadas por posición ` +
-          "promedio sobre miles de partidas de high elo, con sus unidades, ítems y nivel.",
-      },
-      metaBand: {
-        title: (band: string, set: string) =>
-          `Mejores comps de TFT en ${band} — Set ${set} | Vestigo`,
-        description: (band: string, set: string) =>
-          `Las comps que mejor funcionan en ${band} en el Set ${set} de Teamfight Tactics, ` +
-          `medidas con partidas reales de ${band} y no heredadas de los rangos de arriba.`,
-      },
-      units: {
-        title: (set: string) => `Unidades del Set ${set} de TFT: estadísticas | Vestigo`,
-        description: (set: string) =>
-          `Todos los campeones del Set ${set} de Teamfight Tactics por uso, posición ` +
-          "promedio y los ítems que llevan de verdad, medidos sobre miles de tableros.",
-      },
-      items: {
-        title: (set: string) => `Mejores ítems del Set ${set} de TFT | Vestigo`,
-        description: (set: string) =>
-          `Qué ítems del Set ${set} de Teamfight Tactics cambian dónde terminas, con qué ` +
-          "componentes se arman y qué campeones los aprovechan mejor.",
-      },
-      ladder: {
-        title: () => "Ladder de Challenger de TFT por región | Vestigo",
-        description: () =>
-          "Los mejores jugadores de Teamfight Tactics por región, con LP, victorias y " +
-          "derrotas, directo del ladder de Riot.",
-      },
-      player: {
-        title: () => "Historial y análisis de partidas de TFT | Vestigo",
-        description: () =>
-          "Busca cualquier Riot ID y lee la partida de vuelta: dónde terminaste, qué " +
-          "jugaste y qué costumbres de tu historial te salen más caras.",
-      },
     },
     deadlock: {
       heroes: {
@@ -444,21 +348,6 @@ const ES: typeof EN = {
     terms: {
       title: () => "Términos del Servicio | Vestigo",
       description: () => "Las reglas para usar Vestigo y los límites de lo que promete.",
-    },
-    detail: {
-      title: (name: string, section: string, set: string) =>
-        section === "meta"
-          ? `${name} — guía de comp del Set ${set} de TFT | Vestigo`
-          : `${name} — estadísticas del Set ${set} de TFT | Vestigo`,
-      description: (name: string, section: string, set: string) =>
-        section === "units"
-          ? `Cómo rinde ${name} en el Set ${set} de Teamfight Tactics: uso, posición ` +
-            "promedio, qué nivel de estrellas conviene y los ítems que lleva."
-          : section === "items"
-            ? `Qué hace ${name} en el Set ${set} de Teamfight Tactics, con qué se arma y ` +
-              "qué campeones terminan mejor llevándolo."
-            : `Cómo jugar ${name} en el Set ${set} de Teamfight Tactics: las unidades, los ` +
-              "ítems, hasta qué nivel subir y con qué frecuencia gana.",
     },
   },
 };

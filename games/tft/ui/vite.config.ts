@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
-import { devApi } from "./dev-api";
 import { ROBOTS_TXT, sitemapXml, type SitemapData } from "./src/sitemap";
 import { prerenderPages, renderHtml, ogImagePath, stripComments } from "./src/prerender";
 import { renderOg } from "./og/og";
@@ -15,8 +14,6 @@ import { AREA_FILES } from "./src/areaFiles";
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
 const BRAND = COPY.en.brand;
 
-const dataDir = fileURLToPath(new URL("../data", import.meta.url));
-const analysisDir = fileURLToPath(new URL("../analysis/src", import.meta.url));
 const deadlockDir = fileURLToPath(new URL("../../deadlock/data", import.meta.url));
 const poe2Dir = fileURLToPath(new URL("../../poe2/data", import.meta.url));
 // Valheim (2026-09-24): lo que arma `games/valheim/pipeline/site.py`, una lista por pestaña.
@@ -376,17 +373,12 @@ function prerenderRoutes(): Plugin {
 }
 
 export default defineConfig({
-  // devApi stands in for the Supabase Edge Function while developing, speaking
-  // the same contract so the UI cannot tell them apart.
-  plugins: [localDeadlockAssets(), react(), devApi(), seoFiles(), prerenderRoutes()],
+  plugins: [localDeadlockAssets(), react(), seoFiles(), prerenderRoutes()],
   resolve: {
-    // The pipeline writes its output to games/tft/data. The UI reads it directly
-    // so there is a single source of truth — no copying, no drift.
-    // @analysis is the pure report logic, shared with the tests that cover it.
-    // @deadlock is the same arrangement for the other game: its pipeline writes
-    // to games/deadlock/data and this reads it in place. Un alias por juego y no
-    // uno genérico, para que un import diga de cuál de los dos está hablando.
-    alias: { "@data": dataDir, "@analysis": analysisDir, "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir },
+    // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
+    // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
+    // juego y no uno genérico, para que un import diga de qué juego habla.
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

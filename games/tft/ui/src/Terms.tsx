@@ -16,10 +16,11 @@ export default function Terms() {
 
       <Section heading="What Vestigo is">
         <p>
-          Vestigo is an independent statistics and analysis service for video games. It reads
-          match data that has already been played and presents it back: aggregate reports about
-          what is working in the current meta, and analysis of an individual account's past
-          matches.
+          Vestigo is an independent statistics, reference and analysis service for video games.
+          It reads match data that has already been played and presents it back — aggregate
+          reports about what is working in the current meta, and analysis of an individual
+          account's past matches — alongside reference material built from each game's own
+          files, such as encyclopedias, maps and planners.
         </p>
         <p>
           Everything Vestigo produces is retrospective. It does not read live game state, does
@@ -30,14 +31,9 @@ export default function Terms() {
 
       <Section heading="Not affiliated with the game publishers">
         <p>
-          Vestigo isn't endorsed by Riot Games and doesn't reflect the views or opinions of
-          Riot Games or anyone officially involved in producing or managing Riot Games
-          properties. Riot Games and all associated properties are trademarks or registered
-          trademarks of Riot Games, Inc.
-        </p>
-        <p>
-          Vestigo is likewise not affiliated with, endorsed by, or sponsored by Valve
-          Corporation. All game names, logos, and images belong to their respective owners.
+          Vestigo is not affiliated with, endorsed by, or sponsored by Valve Corporation,
+          Grinding Gear Games, Iron Gate AB, Coffee Stain Publishing, or any other company whose
+          games it covers. All game names, logos, and images belong to their respective owners.
         </p>
       </Section>
 
@@ -78,8 +74,8 @@ export default function Terms() {
 
       <Section heading="Availability">
         <p>
-          Vestigo depends on data provided by third parties, principally the Riot Games API.
-          That dependency means features can change or stop working for reasons outside our
+          Vestigo depends on data provided by third parties, such as the public deadlock-api.com
+          service, and on each game's own files. That dependency means features can change or stop working for reasons outside our
           control — a rate limit, a policy change, or a game update. We may add, change, or
           remove features at any time, and we do not guarantee uninterrupted availability.
         </p>
@@ -97,9 +93,10 @@ export default function Terms() {
       <Section heading="Intellectual property">
         <p>
           The site's code, its written analysis, and the way it presents data are ours. Game
-          content — names, portraits, item and trait icons, and the underlying match data —
-          belongs to the respective game publishers and is used to describe their games. Game
-          images are loaded from CommunityDragon, a community project we do not operate.
+          content — names, portraits, item icons, artwork, and the underlying match data —
+          belongs to the respective game publishers and is used to describe their games. Some
+          Valheim pictures come from the Valheim Wiki under the Creative Commons BY-SA licence,
+          and are credited where they appear.
         </p>
       </Section>
 

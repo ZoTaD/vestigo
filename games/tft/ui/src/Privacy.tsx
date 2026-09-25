@@ -1,23 +1,29 @@
 import { CONTACT_EMAIL, LegalPage, Section } from "./Legal";
 
 /**
- * Every claim here was checked against the code before it was written.
+ * Every claim here was checked against the code before it was written
+ * (rewritten 2026-09-25, when TFT left the repo and with it the Riot API, the
+ * Supabase database and the Cloudflare Worker this policy used to describe).
  *
- * The browser stores five keys of its own — vestigo.lang, vestigo.band,
- * the analytics decision, vestigo.lastPlayer and vestigo.dlItemsView — and sets no cookies unless
- * the visitor accepts. Grep for `localStorage` before editing that count: it
- * said "two" for a while after the rank filter shipped, which is exactly the
- * drift this note exists to prevent.
+ * The site is static: Netlify serves files and nothing else. There is no
+ * server of ours that receives a search, and no database. What reaches a third
+ * party does so from the visitor's own browser:
  *
- * Server-side the schema holds five tables — matches, match_players, players,
- * ladder and rate_limit — and row-level security is on with no policies, so the
- * publishable key returns nothing from any of them. This said "three" until the
- * ladder cache and the rate limiter were added without it being revisited; the
- * same drift, in the other direction. Check `list_tables` before editing it. Google
- * Analytics is loaded only after that acceptance: see analytics.ts, where the
- * script tag is never appended without it, so "declined" and "undecided" are
- * the same thing on the wire. Server-side, the schema in
- * If any of that changes, this document changes in the same commit.
+ * - the Deadlock player pages call api.deadlock-api.com directly
+ *   (`deadlockMatch.ts` and friends), including the Steam name typed into the
+ *   search (`players/steam-search`);
+ * - country flags load from flagcdn.com and Steam avatars from the URLs those
+ *   API responses carry;
+ * - Google Analytics loads only after acceptance (`analytics.ts`).
+ *
+ * Valheim save files are read in the browser (`SaveLoader.tsx`, a Worker) and
+ * never uploaded.
+ *
+ * The browser keeps six keys of its own in localStorage — vestigo.lang,
+ * vestigo.consent, vestigo.lastProfile, vestigo.dlItemsView and the Valheim
+ * Planner's two — and two in sessionStorage. `test/privacyStorage.test.ts`
+ * counts the localStorage ones: add a key without saying so here and it fails.
+ * If any of the above changes, this document changes in the same commit.
  */
 export default function Privacy() {
   return (
@@ -27,9 +33,14 @@ export default function Privacy() {
     >
       <Section heading="In short">
         <p>
-          Vestigo has no user accounts and never asks for a password or a payment method. To
-          analyse a player we need one thing: the Riot ID you type into the search box.
-          Everything else we hold is public match data provided by Riot Games.
+          Vestigo has no user accounts and never asks for a password or a payment method. It
+          has no database and no server of its own that receives what you type: the site is a
+          set of files, and the statistics on it are built in advance from public game data.
+        </p>
+        <p>
+          When you look up a Deadlock player, your browser asks deadlock-api.com, an
+          independent public service, for that account's public match data. We do not receive
+          the search or its results.
         </p>
         <p>
           We use Google Analytics to count visits, and only if you accept it. Until you do, no
@@ -41,39 +52,42 @@ export default function Privacy() {
 
       <Section heading="Who we are">
         <p>
-          Vestigo is an independent statistics and post-match analysis service for video
-          games. It is operated by an individual developer and is not affiliated with, endorsed
-          by, or connected to Riot Games, Inc. or Valve Corporation. For anything in this
-          policy, write to <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+          Vestigo is an independent statistics, reference and post-match analysis site for
+          video games. It is operated by an individual developer and is not affiliated with,
+          endorsed by, or connected to the companies that make the games it covers. For
+          anything in this policy, write to{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
         </p>
       </Section>
 
       <Section heading="What we collect">
-        <h3 className="legal-subheading">Information you give us</h3>
+        <h3 className="legal-subheading">Searches and files you use on the site</h3>
         <p>
-          The Riot ID (game name and tag line) and the region you enter in the search form. We
-          send them to Riot's API to resolve the account and retrieve its match history. We do
-          not ask for your name, email address, date of birth, or any payment detail.
+          On the Deadlock player pages you can type a Steam name or open an account. Your
+          browser sends that name, or the account's public identifier, straight to
+          deadlock-api.com to find the account and load its public profile, rank and match
+          history. We never see it.
         </p>
-
-        <h3 className="legal-subheading">Information we receive from Riot Games</h3>
         <p>
-          Match data returned by Riot's API. A match record covers all eight players in that
-          lobby, so it contains their account identifiers (PUUIDs), in-game names, final boards,
-          and placements. This is data Riot makes available to approved third-party developers;
-          we do not obtain it from any other source, and we do not scrape it from other sites.
+          On the Valheim map you can open your own world and character files to see your
+          explored map. They are read inside your browser and are never uploaded anywhere.
         </p>
 
         <h3 className="legal-subheading">Information stored in your browser</h3>
         <p>
-          Five items of local storage: your language choice, so the site opens in the language
-          you picked; the rank filter you last used on the meta list; your answer to the
-          analytics question, so we stop asking; the last Riot ID you searched, so
-          returning to the player page does not mean typing it again; and whether you prefer
-          the Deadlock items page as a shop or as a list. None of them is sent to
-          us — the Riot ID is stored on your device only, and the searches themselves reach our
-          server the same way whether or not it was remembered. Clearing your browser data
-          removes all five.
+          Six items of local storage: your language choice, so the site opens in the language
+          you picked; your answer to the analytics question, so we stop asking; the last
+          Deadlock profile you opened (its public account number and name), so the home page
+          can offer it again; whether you prefer the Deadlock items page as a shop or as a
+          list; and the list you build in the Valheim Planner, with the items you marked as
+          already owned. None of them is sent to us, and clearing your browser data removes all
+          six.
+        </p>
+        <p>
+          The site also keeps two short-lived values in session storage, which your browser
+          deletes when you close the tab: a search typed in the top bar, carried to the page
+          that answers it, and a note that stops the page from reloading itself twice in a row
+          after we publish an update.
         </p>
         <p>
           Cookies are set only if you accept analytics. In that case Google Analytics sets its
@@ -88,8 +102,8 @@ export default function Privacy() {
           what order, for how long, roughly where in the world the visit came from, and what
           kind of device and browser it used. Your IP address reaches Google as part of that
           request; Google states that it truncates IP addresses in the EU before storing them,
-          and we do not receive yours. We never send Google the Riot ID you searched for, and
-          the analytics data is never joined to match data.
+          and we do not receive yours. We never send Google the names or accounts you search
+          for.
         </p>
         <p>
           We use it for one thing: to see which parts of the site people actually use, so we
@@ -101,48 +115,44 @@ export default function Privacy() {
         <p>
           Our hosting provider processes standard request metadata — IP address, timestamp,
           and user agent — as any web server does, for delivery and abuse prevention. We do not
-          build profiles from it and do not combine it with the match data described above.
+          build profiles from it.
         </p>
 
         <h3 className="legal-subheading">What we do not collect</h3>
         <p>
           No accounts, passwords, or authentication tokens. No payment or financial data. No
-          data about you from any source other than Riot's API, your own search, and — if you
-          accept it — the analytics described above. We do not buy data about you, and we run
-          no advertising or cross-site tracking identifiers of our own.
+          email address, name or date of birth. We do not buy data about you, and we run no
+          advertising or cross-site tracking identifiers of our own.
         </p>
       </Section>
 
       <Section heading="Why we use it">
         <ul>
-          <li>To resolve the Riot ID you searched for and load that account's match history.</li>
           <li>
-            To produce the analysis you asked for: your placements, the compositions you play,
-            and the patterns across the matches shown on screen.
+            To show the statistics, tier lists, encyclopedias and maps on the site, which are
+            built from public game data and contain no information about you.
           </li>
           <li>
-            To build aggregate, non-personal statistics — the meta report — from match data at
-            large. These are counts and averages across thousands of games; no individual player
-            is identifiable in them.
+            To remember the few preferences listed above, on your own device, so the site
+            behaves the way you left it.
           </li>
-          <li>To cache Riot's responses so we stay within the rate limits Riot sets.</li>
           <li>
             If you accepted analytics: to count visits and see which pages get used, so we know
             what to work on.
           </li>
         </ul>
         <p>
-          We do not use this data to advertise to you, and we do not sell or rent it to anyone.
+          We do not use any of this to advertise to you, and we do not sell or rent it to
+          anyone.
         </p>
       </Section>
 
       <Section heading="Legal bases">
         <p>
-          Where the GDPR or the UK GDPR applies, we rely on legitimate interests
-          (Article 6(1)(f)) — operating an analysis service that people ask us to run for them,
-          and producing aggregate statistics about a game. Where you type a Riot ID into the
-          search box, we also rely on your request as the trigger for the processing. You can
-          object to processing at any time using the contact address below.
+          Where the GDPR or the UK GDPR applies, the request metadata our hosting provider
+          handles rests on our legitimate interest (Article 6(1)(f)) in delivering the site
+          and keeping it safe. The preferences stored in your browser are there because the
+          feature you used needs them, and they never leave your device.
         </p>
         <p>
           For analytics and the cookies it sets, the basis is your consent
@@ -154,62 +164,35 @@ export default function Privacy() {
 
       <Section heading="What we store, and for how long">
         <p>
-          Match records retrieved from Riot are stored so repeat views do not re-request the
-          same match, alongside a small index of which accounts appeared in which match and a
-          cache of Riot ID to account identifier. Aggregate statistics derived from that data
-          are kept for as long as the corresponding game set is current.
-        </p>
-        <p>
-          Match records are retained while they remain relevant to the current game set and are
-          removed when they no longer are. Riot's own developer policies also govern how long
-          third parties may retain data from its API, and where those require shorter retention
-          or deletion, they take precedence over this section.
-        </p>
-        <p>
-          We also keep a cache of the public Challenger ladder for each region, so that page
-          loads without calling Riot every time. It holds only what Riot publishes about those
-          standings.
-        </p>
-        <p>
-          When an account is searched, we record the ranked standing Riot reports for it at that
-          moment — tier, division, league points, and the number of ranked games played — with
-          the date it was recorded. This is what lets the profile show how an account's LP moved
-          over a set, which Riot's API does not report on its own. A new record is written only
-          when one of those values has changed since the last one. These records are kept
-          indefinitely; all of them describe standings Riot publishes about ranked play.
-        </p>
-        <p>
-          To keep one caller from exhausting our access to Riot's API, the server counts
-          requests over a rolling one-minute window. It does not store your IP address to do
-          it: the address is hashed the moment the request arrives and only that hash is
-          written, which is enough to count requests and not enough to identify you or to
-          recover the address. Each counter covers sixty seconds and is overwritten by the
-          next.
+          Nothing about you on our side: Vestigo has no database, and no search or file you
+          use on the site reaches us. What your browser stores stays there until you clear it.
         </p>
         <p>
           Analytics data, where you consented to it, is held by Google under the retention
           period set on our property and is deleted by Google when that period elapses. We keep
           no copy of it ourselves: we read the reports in Google's interface and nothing is
-          exported into our own database.
+          exported.
         </p>
       </Section>
 
       <Section heading="Who else is involved">
         <ul>
           <li>
-            <strong>Riot Games, Inc.</strong> — the source of all match data, reached through
-            its official API. Your search is sent to Riot in order to answer it.
+            <strong>deadlock-api.com</strong> — an independent community service that publishes
+            public Deadlock match data. Your browser contacts it directly on the Deadlock pages
+            that show live figures, and on the player pages it receives the name or account you
+            look up. Its handling of that request is governed by its own policies.
           </li>
           <li>
-            <strong>Our hosting and database provider</strong> — an infrastructure company that
-            stores the data described above on our behalf, under contract and on our
-            instructions. We name providers by category here rather than individually; if you
-            need to know which company it is, ask us and we will tell you.
+            <strong>flagcdn.com and Steam's image servers</strong> — your browser loads country
+            flags and profile pictures from them on the Deadlock player and ladder pages. As
+            with any image, the request carries your IP address; nothing about your search is
+            sent there.
           </li>
           <li>
-            <strong>CommunityDragon</strong> — a community project that hosts the game images
-            (champion portraits, item and trait icons) the site displays. Your browser loads
-            those images from it; no information about your search is sent there.
+            <strong>Our hosting provider</strong> — an infrastructure company that serves the
+            site's files on our behalf. We name providers by category here rather than
+            individually; if you need to know which company it is, ask us and we will tell you.
           </li>
           <li>
             <strong>Google (Google Analytics)</strong> — only if you accepted analytics. Your
@@ -227,26 +210,19 @@ export default function Privacy() {
 
       <Section heading="Where data is processed">
         <p>
-          Riot's API is served from regional endpoints matching the region you select, and our
-          hosting provider operates data centres in several countries, so data may be processed
-          outside the country you are in — including outside the European Economic Area. Where
-          that applies, transfers rely on the standard contractual clauses our provider has in
-          place. If you accepted analytics, Google likewise processes that data in the United
-          States under its own transfer safeguards; declining keeps your visit out of it
-          entirely.
+          Our hosting provider serves the site from data centres in several countries, and the
+          third parties above run their own servers, so a request may be processed outside the
+          country you are in — including outside the European Economic Area. If you accepted
+          analytics, Google processes that data in the United States under its own transfer
+          safeguards; declining keeps your visit out of it entirely.
         </p>
       </Section>
 
       <Section heading="Security">
         <p>
-          Our database has row-level security enabled with no public access policies, which
-          means the key shipped to your browser can read nothing from it; only our server-side
-          function, holding a separate credential, can. Our Riot API key exists only on the
-          server and is never sent to the browser. All traffic is served over HTTPS.
-        </p>
-        <p>
-          No system is perfectly secure. We do not hold passwords or payment data, which limits
-          what a breach could expose, but we cannot guarantee absolute security.
+          Vestigo holds no passwords, payment data or database of visitors, which leaves very
+          little that a breach could expose. All traffic is served over HTTPS. No system is
+          perfectly secure, and we cannot guarantee absolute security.
         </p>
       </Section>
 
@@ -269,24 +245,19 @@ export default function Privacy() {
         </p>
         <p>
           To exercise any of these, write to{" "}
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and tell us the Riot ID
-          concerned. Because we hold no accounts, that identifier is the only way we can locate
-          the data, and we may ask you to demonstrate control of it before we act. We will
-          respond within the period the applicable law requires.
-        </p>
-        <p>
-          Note that a match involves eight players, so a single match record can relate to
-          several people. Where we cannot delete a record without destroying data that belongs
-          to others, we will remove the identifiers linking it to you instead.
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Because we keep no accounts
+          and no database, the data stored in your browser is in your hands: clearing it
+          removes it. For the public match data deadlock-api.com publishes about a Deadlock
+          account, contact that service directly. We will respond within the period the
+          applicable law requires.
         </p>
       </Section>
 
       <Section heading="Children">
         <p>
           Vestigo is not directed at children under 13, and we do not knowingly collect
-          personal data from them. Riot's own services carry their own age requirements. If you
-          believe a child's data has reached us through a search, write to us and we will remove
-          it.
+          personal data from them. If you believe a child's data has reached us, write to us
+          and we will remove it.
         </p>
       </Section>
 

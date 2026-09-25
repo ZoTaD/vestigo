@@ -119,9 +119,9 @@ describe("la ruta de la pestaña", () => {
     // La tier list abre la build; la pestaña Héroes, la ficha entera: dos páginas.
     expect(parseRoute("/es/deadlock/dynamo")).toMatchObject({ dlSection: "meta", detail: "dynamo" });
     expect(parseRoute("/es/deadlock/heroes/dynamo")).toMatchObject({ dlSection: "heroes", detail: "dynamo" });
-    expect(routePath({ lang: "es", view: "deadlock", section: "meta", dlSection: "heroes", detail: "dynamo" })).toBe(
+    expect(routePath({ lang: "es", view: "deadlock", dlSection: "heroes", detail: "dynamo" })).toBe(
       "/es/deadlock/heroes/dynamo"
     );
-    expect(routePath({ lang: "en", view: "deadlock", section: "meta", dlSection: "heroes" })).toBe("/en/deadlock/heroes");
+    expect(routePath({ lang: "en", view: "deadlock", dlSection: "heroes" })).toBe("/en/deadlock/heroes");
   });
 });

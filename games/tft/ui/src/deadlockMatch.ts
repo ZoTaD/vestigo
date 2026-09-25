@@ -1,13 +1,12 @@
 /**
  * La partida de Deadlock: de dónde sale y en qué se convierte.
  *
- * **El navegador le pega directo a `deadlock-api.com`, sin pasar por el Worker.**
- * El Worker de Cloudflare existe para esconder la key de Riot, y acá no hay
- * ninguna key: la API de Deadlock es pública, sin autenticación, y contesta con
- * `access-control-allow-origin: *` (verificado el 2026-08-11). Meter un
- * intermediario sería sumar una pieza que se puede caer para no ganar nada — y
- * de paso el límite por IP de ellos pasa a contarse por visitante en vez de por
- * nuestro Worker entero, que es mejor para todos.
+ * **El navegador le pega directo a `deadlock-api.com`, sin intermediario.** No
+ * hay ninguna key que esconder: la API de Deadlock es pública, sin
+ * autenticación, y contesta con `access-control-allow-origin: *` (verificado el
+ * 2026-08-11). Un servidor propio en el medio sería una pieza más que se puede
+ * caer para no ganar nada — y el límite por IP de ellos se cuenta por
+ * visitante en vez de por un servidor nuestro, que es mejor para todos.
  *
  * Lo que llega es grande (1,2 MB por partida) y lo que se usa es poco, así que
  * `parseMatch` lo baja a lo mínimo antes de que nada más lo toque.

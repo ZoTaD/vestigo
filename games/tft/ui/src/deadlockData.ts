@@ -7,15 +7,14 @@ import { text, type Localized } from "./localized";
 /**
  * La capa de datos de Deadlock: la tier list de héroes, por banda y por idioma.
  *
- * Mismo reparto que en TFT (`data.ts`) y por los mismos motivos, así que conviene
- * leerlo con eso al lado:
+ * Dos reglas, heredadas de la tier list de TFT (que ya no está en el sitio):
  *
  * - La banda por defecto viaja en el bundle con un import estático, para que el
  *   primer dibujo no necesite ninguna vuelta a la red. Las otras cuatro son
  *   `import()` y Vite las emite como chunks aparte — sólo se baja la que se mira.
  * - Los nombres se resuelven **en tiempo de render**, no de import. Resolverlos
- *   al importar es exactamente el bug que dejó el catálogo de TFT en inglés
- *   mientras el resto del sitio cambiaba de idioma.
+ *   al importar deja los nombres en el idioma de la primera carga mientras el
+ *   resto del sitio cambia (le pasó al catálogo de TFT).
  */
 
 export type BandId = "phantom-above" | "archon-oracle" | "ritualist-emissary" | "arcanist-below";
@@ -31,7 +30,7 @@ export type HeroListId = BandId | typeof BRAWL;
 
 /**
  * La tabla de bandas, copia de la del pipeline
- * (`games/deadlock/pipeline/src/bands.ts`), igual que `bands.ts` copia la de TFT.
+ * (`games/deadlock/pipeline/src/bands.ts`).
  * `test/deadlock.test.ts` la compara contra la del pipeline, así que no pueden
  * divergir en silencio.
  */

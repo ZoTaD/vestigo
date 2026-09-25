@@ -13,7 +13,7 @@ import { DEADLOCK_PAGES, LANGS, type Route } from "../src/route";
  */
 describe("cada pestaña de Deadlock tiene su propio título", () => {
   const de = (dlSection: (typeof DEADLOCK_PAGES)[number], lang: "en" | "es" = "en") =>
-    metaFor({ lang, view: "deadlock", section: "meta", dlSection }, lang, null);
+    metaFor({ lang, view: "deadlock", dlSection }, lang, null);
 
   it.each(LANGS)("no repite ni título ni descripción en %s", (lang) => {
     const titulos = DEADLOCK_PAGES.map((s) => de(s, lang).title);
@@ -33,7 +33,7 @@ describe("cada pestaña de Deadlock tiene su propio título", () => {
 
   it("nombra al héroe o al ítem cuando la ruta abre uno", () => {
     const hero = metaFor(
-      { lang: "en", view: "deadlock", section: "meta", dlSection: "meta", detail: "infernus" },
+      { lang: "en", view: "deadlock", dlSection: "meta", detail: "infernus" },
       "en",
       "Infernus"
     );
@@ -56,7 +56,7 @@ describe("metaFor resuelve todas las vistas", () => {
 
   it.each(vistas)("no explota en %s", (view) => {
     for (const lang of LANGS) {
-      const m = metaFor({ lang, view, section: "meta", dlSection: "meta" }, lang, null);
+      const m = metaFor({ lang, view, dlSection: "meta" }, lang, null);
       expect(m.title.length).toBeGreaterThan(5);
       expect(m.description.length).toBeGreaterThan(5);
     }
