@@ -24,10 +24,14 @@ export default function ValheimPlannerPick({ data, to, navigate }: { data: Plann
   useEffect(() => { writeUrl(); }, []);
   useEffect(() => setShown(PAGE), [q, cat, biome]);
 
-  const catalog = useMemo(() => Object.entries(data.items)
-    .filter(([, it]) => it.cat)
-    .sort(([, a], [, b]) => (BIOME_IDS.indexOf(a.tier ?? ("" as never)) + 1 || 99) - (BIOME_IDS.indexOf(b.tier ?? ("" as never)) + 1 || 99)
-      || tx(a.name, lang).localeCompare(tx(b.name, lang))), [data, lang]);
+  // Por bioma de progresión, después por categoría y por nombre.
+  const catalog = useMemo(() => {
+    const tierIx = (b: string | null) => (b ? BIOME_IDS.indexOf(b as (typeof BIOME_IDS)[number]) : 99);
+    return Object.entries(data.items)
+      .filter(([, it]) => it.cat)
+      .sort(([, a], [, b]) => tierIx(a.tier) - tierIx(b.tier) || PLAN_CATS.indexOf(a.cat!) - PLAN_CATS.indexOf(b.cat!)
+        || tx(a.name, lang).localeCompare(tx(b.name, lang)));
+  }, [data, lang]);
   const hits = useMemo(() => {
     const f = fold(q.trim());
     return catalog.filter(([, it]) => (!cat || it.cat === cat) && (!biome || it.tier === biome)

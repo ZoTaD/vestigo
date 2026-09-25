@@ -9,8 +9,9 @@ de dónde sale. Diseño: docs/design/2026-09-25-valheim-planificador.md. Lo arma
 from .fixes import PLANNER_PREFER
 
 CATS = ("weapons", "armor", "tools", "foods", "meads", "materials", "building", "bosses")
-# Lo que se junta en la zona antes que el botín de cofres y vasijas.
-HOW_ORDER = ["drop", "mine", "tree", "pickable", "farm", "location", "extract", "fish", "destructible", "trader", "chest"]
+# Lo que se junta en la zona primero (la madera se tala, no se le saca a un
+# enanogrís), después lo que sueltan las criaturas y al final el botín.
+HOW_ORDER = ["mine", "tree", "pickable", "farm", "fish", "extract", "drop", "location", "destructible", "trader", "chest"]
 MAX_SOURCES = 4
 
 

@@ -4,7 +4,7 @@
    de color en filas o tarjetas (pedido de ZoTaD): lo elegido va con tinte.
 --------------------------------------------------------------------------- */
 .vp-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 22px; align-items: start; }
-.vp-cat { padding: 16px 0 8px; border-radius: 8px; }
+.vp-cat { padding: 16px 0 8px; border-radius: 8px; container-type: inline-size; }
 .vp-filters { display: grid; gap: 10px; padding: 0 14px 12px; }
 .vp-search { width: 100%; box-sizing: border-box; }
 .vp-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
@@ -12,7 +12,12 @@
 .vp-chip { padding: 6px 12px; border: 0; border-radius: 999px; background: rgba(255, 230, 180, 0.07); color: #d8c7a4; font: 700 13px var(--vh-sans); cursor: pointer; }
 .vp-chip:hover { background: rgba(255, 230, 180, 0.12); }
 .vp-chip.is-on { background: rgba(242, 196, 111, 0.2); color: var(--vh-brass-lt); }
-.vp-tr { display: grid; grid-template-columns: 38px minmax(0, 1fr) 150px 130px 150px; gap: 12px; align-items: center; padding: 6px 14px; }
+.vp-tr { display: grid; grid-template-columns: 38px minmax(0, 1fr) 140px 110px auto; gap: 12px; align-items: center; padding: 6px 14px; }
+/* Tabla angosta (la lista al lado ocupa lugar): quedan el objeto y el botón. */
+@container (max-width: 680px) {
+  .vp-tr { grid-template-columns: 38px minmax(0, 1fr) auto; }
+  .vp-tr > :nth-child(3), .vp-tr > :nth-child(4) { display: none; }
+}
 .vp-tr:nth-child(even of .vp-tr:not(.vp-th)) { background: rgba(255, 230, 180, 0.025); }
 .vp-tr.is-in { background: rgba(242, 196, 111, 0.08); }
 .vp-th { font: 700 12px var(--vh-sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--vh-faint); padding-top: 2px; padding-bottom: 6px; }
@@ -21,7 +26,7 @@
 .vp-name a:hover { color: var(--vh-brass-lt); }
 .vp-name small { color: var(--vh-faint); font: 400 12.5px var(--vh-sans); }
 .vp-dim { color: var(--vh-dim); font-size: 14px; }
-.vp-add { height: 32px; border: 0; border-radius: 6px; background: rgba(255, 230, 180, 0.09); color: var(--vh-text); font: 700 13.5px var(--vh-sans); cursor: pointer; }
+.vp-add { height: 32px; padding: 0 12px; white-space: nowrap; border: 0; border-radius: 6px; background: rgba(255, 230, 180, 0.09); color: var(--vh-text); font: 700 13.5px var(--vh-sans); cursor: pointer; }
 .vp-add:hover { background: rgba(255, 230, 180, 0.15); }
 .vp-add.is-in { background: rgba(242, 196, 111, 0.2); color: var(--vh-brass-lt); }
 .vp-more { display: block; margin: 10px auto 6px; padding: 8px 18px; border: 0; border-radius: 6px; background: rgba(255, 230, 180, 0.08); color: var(--vh-text); font: 700 14px var(--vh-sans); cursor: pointer; }
@@ -52,11 +57,8 @@
 
 @media (max-width: 900px) {
   .vp-grid { grid-template-columns: minmax(0, 1fr); }
-  .vp-tr { grid-template-columns: 38px minmax(0, 1fr) auto; }
-  .vp-tr > :nth-child(3), .vp-tr > :nth-child(4) { display: none; }
-  .vp-add { padding: 0 10px; }
   /* La lista pasa a una barra fija abajo que se abre. */
-  .vp-list { position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 40; border-radius: 12px 12px 0 0; max-height: 80vh; overflow: auto; }
+  .vp-list { position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 40; border-radius: 12px 12px 0 0; max-height: 80vh; overflow: auto; background: #1a120b; box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6); }
   .vp-bar { display: flex; width: 100%; justify-content: space-between; padding: 14px 18px; border: 0; background: none; color: var(--vh-brass-lt); font: 700 15px var(--vh-sans); cursor: pointer; }
   .vp-list:not(.is-open) .vp-list-in { display: none; }
   .vp { padding-bottom: 70px; }

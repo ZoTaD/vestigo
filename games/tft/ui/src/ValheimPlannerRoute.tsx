@@ -6,7 +6,7 @@ import type { ValheimSection } from "./route";
 import { useValheimCopy, type ValheimCopy } from "./valheimCopy";
 import { tx } from "./valheimData";
 import {
-  encodePlan, plan as calc, sanitize, setAny, setVia, tree, viaOf, viaOptions,
+  EMPTY_PLAN, encodePlan, plan as calc, sanitize, setAny, setVia, tree, viaOf, viaOptions,
   type PlannerData, type PSource, type TreeNode, type Via,
 } from "./valheimPlanner";
 import { setPlan, useHave, usePlan, writeUrl } from "./valheimPlannerStore";
@@ -21,7 +21,9 @@ function sourceText(s: PSource, t: ValheimCopy, lang: Lang): string {
     return `${who}${n}${pc}`;
   }
   const label = t.plan.how[s.how] ?? s.how;
-  return who ? `${label}: ${who}` : label;
+  if (s.how === "chest") return label;
+  if (s.how === "trader") return who ? `${label}: ${who}` : label;
+  return who || label;
 }
 
 export default function ValheimPlannerRoute({ data, to, navigate }: { data: PlannerData; to: To; navigate: Nav }) {
@@ -31,7 +33,8 @@ export default function ValheimPlannerRoute({ data, to, navigate }: { data: Plan
   const st = useMemo(() => sanitize(data, raw), [data, raw]);
   const p = useMemo(() => calc(data, st), [data, st]);
   const [mode, setMode] = useState<"table" | "raw">("raw");
-  const [have, toggle] = useHave(encodePlan(st));
+  // Las tildes van por lista de objetos: cambiar un camino no las borra.
+  const [have, toggle] = useHave(encodePlan({ ...EMPTY_PLAN, picks: st.picks }));
   const [copied, setCopied] = useState(false);
   useEffect(() => { writeUrl(); }, []);
   // La hoja de ruta depende de cada lista: que no se indexe.
@@ -43,6 +46,9 @@ export default function ValheimPlannerRoute({ data, to, navigate }: { data: Plan
   }, []);
 
   const name = (id: string) => tx(data.items[id]?.name, lang) || id;
+  // "de chatarra", no "de Chatarra": en español el nombre va en minúscula en
+  // medio de la frase. En inglés los nombres del juego van con mayúsculas.
+  const lower = (s: string) => (lang === "es" ? s.charAt(0).toLocaleLowerCase("es") + s.slice(1) : s);
   const stName = (tok: string | null) => (tok && data.stations[tok] ? tx(data.stations[tok].name, lang) : "");
   const link = (id: string, children: React.ReactNode) => {
     const it = data.items[id];
@@ -61,7 +67,7 @@ export default function ValheimPlannerRoute({ data, to, navigate }: { data: Plan
   const ids = new Set([...p.table.map((n) => n.id), ...p.steps.map((s) => s.id), ...p.raw.map((n) => n.id)]);
   const choices = [...ids].filter((id) => viaOptions(data, id).length > 1);
   const anys = [...new Set([...st.picks.map((x) => x.id), ...p.steps.map((s) => s.id)])].filter((id) => data.recipes[id]?.any);
-  const label = (id: string, v: Via) => (v === "craft" ? t.plan.viaCraft(stName(data.recipes[id]?.st ?? null)) : v === "raw" ? t.plan.viaRaw : t.plan.viaFrom(name(v.slice(5))));
+  const label = (id: string, v: Via) => (v === "craft" ? t.plan.viaCraft(stName(data.recipes[id]?.st ?? null)) : v === "raw" ? t.plan.viaRaw : t.plan.viaFrom(lower(name(v.slice(5)))));
 
   const Node = ({ n, depth }: { n: TreeNode; depth: number }) => (
     <>
@@ -85,7 +91,7 @@ export default function ValheimPlannerRoute({ data, to, navigate }: { data: Plan
           <p>{st.picks.map((x) => `${x.qty > 1 ? `${x.qty} × ` : ""}${name(x.id)}${x.level > 1 ? ` (${t.plan.level(x.level).toLowerCase()})` : ""}`).join(" · ")}</p>
         </div>
         <div className="vp-stats">
-          <span><b>≈ {p.weight.toLocaleString(lang)}</b>{t.plan.weight}, {t.plan.trips(p.trips)}</span>
+          <span><b>≈ {Math.round(p.weight).toLocaleString(lang)}</b>{t.plan.weight}, {t.plan.trips(p.trips)}</span>
           {p.fuelMinutes > 0 && <span><b>{p.fuelMinutes}</b>{t.plan.smelting}</span>}
           <span><b>{p.biomes.length}</b>{t.plan.biomes}</span>
         </div>
