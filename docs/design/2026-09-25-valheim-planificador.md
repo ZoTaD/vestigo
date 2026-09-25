@@ -95,9 +95,11 @@ elección viaja en la URL.
 
 ## Cálculo (`games/tft/ui/src/valheimPlanner.ts`, sin React)
 
-- **Nivel:** el costo hasta el nivel `q` es `amount + perLevel × (q − 1)`
-  por requisito. La estación pedida es el nivel mínimo de la receta más
-  `q − 1`.
+- **Nivel:** como en el juego (`Piece.Requirement.GetAmount`), fabricarlo
+  cuesta `amount` y subirlo al nivel `k` cuesta `perLevel × (k − 1)`. Hasta el
+  nivel `q`, en total: `amount + perLevel × q(q − 1)/2` por unidad (la espada
+  de hierro: 20, después +10, +20 y +30 de hierro). La estación pedida es el
+  nivel mínimo de la receta más `q − 1`.
 - **Tandas:** `ceil(cantidad pedida / lo que sale por receta)`. Lo que sobra
   se muestra ("pediste 10, salen 12").
 - **Mesa:** la suma de los requisitos de todo lo elegido.
