@@ -68,3 +68,10 @@ def apply(items: dict) -> None:
     for pid, extra in EXTRA_SOURCES.items():
         if pid in items:
             items[pid]["sources"] += [dict(s, wiki=True) for s in extra]
+
+
+# El camino por defecto del Planificador (2026-09-25) donde el primero no es el
+# de siempre. Wiki "Iron": sale de la chatarra de las criptas hundidas y de los
+# montículos de barro del Pantano (el mineral de hierro, sólo de meteoritos y
+# del hierro de pantano). Wiki "Coal": con madera en el horno de carbón.
+PLANNER_PREFER: dict[str, str] = {"Iron": "from:IronScrap", "Coal": "from:Wood"}

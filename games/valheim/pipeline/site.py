@@ -16,7 +16,7 @@ import re
 import unicodedata
 from collections import defaultdict
 
-from . import fixes, places, wiki
+from . import fixes, places, planner, wiki
 from .biomes import BIOMES, BIOME_ORDER
 from .tiers import Tiers, armor_slot, food_focus, mead_effect, weapon_class
 
@@ -643,8 +643,18 @@ def main() -> None:
         remap(rows)
     remap(biome_rows)
     remap(boss_rows)
+    # El Planificador (2026-09-25): su propio archivo, que sólo carga esa pestaña.
+    boss_biome = {f"boss:{b['id']}": b["biome"] for b in bosses}
+
+    def tier_of(k):
+        return tiers.piece(k[6:]) if k.startswith("piece:") else boss_biome.get(k) or tier.get(k)
+
+    listed = {("piece:" + r["id"] if t == "building" else r["id"]): t for t, rows in tabs.items() if t in planner.CATS for r in rows}
+    plan = planner.build(items, recipes, pieces, conversions, bosses, ref, tier_of, station_ref, src, listed)
+    remap(plan)
     for tab, rows in tabs.items():
         sizes[tab] = dump(f"{tab}.json", rows)
+    sizes["planner"] = dump("planner.json", plan)
     sizes["biomes"] = dump("biomes.json", biome_rows)
     sizes["bosses"] = dump("bosses.json", boss_rows)
     # El índice sale de las filas publicadas, una entrada por ficha. Antes salía

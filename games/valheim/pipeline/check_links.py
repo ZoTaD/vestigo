@@ -17,7 +17,7 @@ def broken() -> list[tuple[str, str]]:
     tabs = {}
     for f in glob.glob(os.path.join(OUT, "*.json")):
         n = os.path.basename(f)[:-5]
-        if n not in ("index", "meta"):
+        if n not in ("index", "meta", "planner"):
             tabs[n] = {r["slug"] for r in json.load(open(f, encoding="utf-8"))}
     bad = []
 
