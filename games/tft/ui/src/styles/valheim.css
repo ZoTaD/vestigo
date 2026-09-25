@@ -439,7 +439,9 @@ a.vh-upg-mat:hover { color: var(--vh-cream); }
 .vm-btn { font: 700 13px var(--vh-sans); color: #e2cda2; background: rgba(28, 19, 12, 0.92); border: 0; border-radius: 3px; padding: 9px 12px; cursor: pointer; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6); }
 .vm-btn:hover { color: #fff1cf; background: rgba(60, 40, 22, 0.95); }
 .vm-btn.is-main { color: #1a1008; background: linear-gradient(180deg, var(--vh-brass-lt), var(--vh-brass)); }
-.vm-layout { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 16px; align-items: start; }
+/* El mapa a todo el ancho y los paneles abajo, en horizontal (ZoTaD,
+   2026-09-25: al costado se cortaban los nombres). */
+.vm-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
 .vm-stage { position: relative; }
 .vm-view { position: relative; height: min(78vh, 900px); min-height: 380px; background: #07090e; border-radius: 4px; overflow: hidden;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7), 0 14px 34px rgba(0, 0, 0, 0.55); cursor: grab; user-select: none; }
@@ -456,7 +458,7 @@ a.vh-upg-mat:hover { color: var(--vh-cream); }
 .vm-pop p { margin: 6px 0; }
 .vm-pop-x { position: absolute; right: 8px; top: 6px; background: none; border: 0; color: var(--vh-dim); font-size: 20px; cursor: pointer; }
 .vm-note { color: var(--vh-dim); font-size: 12.5px; }
-.vm-side { display: grid; gap: 12px; }
+.vm-side { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; align-items: start; }
 .vm-panel { padding: 12px 12px 14px; }
 .vm-panel h3 { margin: 0 0 8px; font: 700 11.5px var(--vh-sans); letter-spacing: 0.15em; text-transform: uppercase; color: var(--vh-brass); }
 .vm-legend, .vm-catlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; font-size: 13.5px; }
@@ -471,12 +473,12 @@ a.vh-upg-mat:hover { color: var(--vh-cream); }
 .vm-about h2 { font: 700 20px var(--vh-serif); color: var(--vh-brass-lt); margin: 0 0 6px; }
 .vm-about p { margin: 0 0 10px; }
 @media (max-width: 900px) {
-  .vm-layout { grid-template-columns: 1fr; }
   .vm-view { height: 70vh; }
-  .vm-side { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 }
 /* El panel de lugares del mapa. */
-.vm-locs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; max-height: min(78vh, 900px); overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; }
+.vm-locs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 22px; align-items: start; }
+.vm-locs > h3, .vm-locs > .vm-search, .vm-locs > .vm-cats { grid-column: 1 / -1; }
+.vm-locs > .vm-search { max-width: 360px; }
 .vm-locs > * { min-width: 0; }
 .vm-search { width: 100%; box-sizing: border-box; }
 .vm-group h4 { display: flex; justify-content: space-between; align-items: baseline; margin: 4px 0 6px; font: 700 11px var(--vh-sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--vh-faint); }
@@ -525,3 +527,4 @@ a.vh-upg-mat:hover { color: var(--vh-cream); }
 .vm-help { display: grid; gap: 10px; font-size: 12.5px; color: var(--vh-dim); line-height: 1.5; }
 .vm-help h5 { margin: 0 0 3px; font: 700 13px var(--vh-sans); color: var(--vh-text); }
 .vm-help p { margin: 0 0 4px; }
+.vm-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }

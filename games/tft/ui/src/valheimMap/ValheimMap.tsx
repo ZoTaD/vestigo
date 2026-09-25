@@ -217,12 +217,7 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
               ))}
               <button type="button" className="vh-chip" aria-pressed={grid} onClick={() => setGrid(!grid)}>{t.grid}</button>
             </div>
-          </section>
-          <LocationPanel loc={loc} hidden={hidden} setHidden={setHidden} select={setSelected}
-            goTo={(x, z) => viewer.current?.goTo(x, z, Math.min(view.current?.mpp ?? 4, 4))}
-            center={() => view.current ?? { x: 0, z: 0 }} />
-          <section className="vh-box vm-panel">
-            <h3>{t.legend}</h3>
+            <h3 style={{ marginTop: 14 }}>{t.legend}</h3>
             <ul className="vm-legend">
               {BIOME_ORDER.map((b) => {
                 const c = landColor(b);
@@ -230,6 +225,9 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
               })}
             </ul>
           </section>
+          <LocationPanel loc={loc} hidden={hidden} setHidden={setHidden} select={setSelected}
+            goTo={(x, z) => viewer.current?.goTo(x, z, Math.min(view.current?.mpp ?? 4, 4))}
+            center={() => view.current ?? { x: 0, z: 0 }} />
         </aside>
       </div>
 
