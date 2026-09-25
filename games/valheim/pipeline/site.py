@@ -505,6 +505,18 @@ def main() -> None:
             "advice": (tips.get(clean_txt(b["name"])["en"]) or {}).get("tips"),
         })
 
+    # Lo que invoca a un jefe lo dice en su ficha (ZoTaD, 2026-09-25: la Campana
+    # no decía que invoca a Fader). "Se usa en" sólo mira recetas y piezas.
+    summons = defaultdict(list)
+    for b in bosses:
+        s_item = b["summon"]["item"]
+        if s_item:
+            summons[s_item].append({**ref[f"boss:{b['id']}"], "amount": b["summon"]["amount"], "altar": b["summon"]["altar"]})
+    for rows in tabs.values():
+        for r in rows:
+            if r.get("id") in summons:
+                r["summons"] = summons[r["id"]]
+
     # --- Biomas: qué hay, qué conviene llevar y a quién hay que ganarle.
     # Los lugares (mazmorras, estructuras), con ficha propia en la pestaña
     # Lugares. Un jefe que vive en un lugar enlaza a su ficha de jefe.

@@ -277,6 +277,12 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
               </div>
             </div>
           </header>
+          {item?.summons?.map((b) => (
+            <RouteLink key={b.slug ?? b.name.en} className="vh-summon" to={to("bosses", b.slug ?? undefined)} onNavigate={navigate}>
+              <Slot icon={b.icon} size="sm" />
+              <span>{t.detail.summons} <b>{tx(b.name, lang)}</b>: {t.detail.summonsHow(b.amount, b.altar ? tx(b.altar, lang) : "")}</span>
+            </RouteLink>
+          ))}
           {row.desc && <p className="vh-desc">{clean(tx(row.desc, lang))}</p>}
           <hr className="vh-sep" />
 

@@ -69,6 +69,8 @@ export interface ItemRow {
   effects?: ItemEffects;
   /** Las otras piezas del mismo set. */
   setPieces?: Ref[];
+  /** Los jefes que se invocan con esto (la Campana → Fader), cuántos y dónde. */
+  summons?: (Ref & { amount: number; altar: Txt | null })[];
   // Comidas
   food?: { hp: number; st: number; eitr: number; min: number; regen: number };
   focus?: "health" | "stamina" | "eitr" | "balanced";
