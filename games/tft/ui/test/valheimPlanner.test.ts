@@ -90,6 +90,13 @@ describe("el Planificador de Valheim", () => {
     expect(t.kids[1].kids.map((k) => [k.id, k.qty])).toEqual([["Wood", 210]]);
   });
 
+  it("la raíz del árbol es lo elegido, a su nivel, con sus ingredientes abajo", () => {
+    const t = tree(D, EMPTY_PLAN, "HelmetIron", 1, [], 2);
+    expect(t.st).toBe("piece_forge");
+    expect(t.kids.map((k) => [k.id, k.qty])).toEqual([["Iron", 25], ["DeerHide", 2]]);
+    expect(t.kids[0].kids.map((k) => k.id)).toEqual(["IronScrap", "Coal"]);
+  });
+
   it("corta un ciclo sin colgarse", () => {
     const C: PlannerData = { ...D, items: { ...D.items, A: it0("A", 1, { cat: "materials" }), B: it0("B") },
       convert: { A: [{ st: "x", from: "B", time: 1, n: 1 }], B: [{ st: "x", from: "A", time: 1, n: 1 }] } };

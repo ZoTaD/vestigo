@@ -124,7 +124,7 @@ export function stepFor(d: PlannerData, st: PlanState, id: string, qty: number, 
 }
 
 /** Lo elegido siempre se fabrica: si su camino es "juntarlo", va el primero que lo fabrica. */
-function makeVia(d: PlannerData, st: PlanState, id: string): Via | null {
+export function makeVia(d: PlannerData, st: PlanState, id: string): Via | null {
   const v = viaOf(d, st, id);
   return v !== "raw" ? v : viaOptions(d, id).find((o) => o !== "raw") ?? null;
 }
@@ -253,9 +253,10 @@ export interface TreeNode { id: string; qty: number; st: string | null; per: num
  * si dos ramas comparten una tanda (rarísimo) la suma puede diferir en una
  * tanda de "Para juntar", que sí junta la demanda.
  */
-export function tree(d: PlannerData, st: PlanState, id: string, qty: number, path: string[] = []): TreeNode {
-  const via = path.includes(id) || path.length > 8 ? "raw" : viaOf(d, st, id);
-  const s = via === "raw" ? null : stepFor(d, st, id, qty, via);
+export function tree(d: PlannerData, st: PlanState, id: string, qty: number, path: string[] = [], level = 1): TreeNode {
+  // La raíz es algo de la lista: siempre se fabrica, y a su nivel.
+  const via = path.includes(id) || path.length > 8 ? "raw" : path.length === 0 ? makeVia(d, st, id) ?? "raw" : viaOf(d, st, id);
+  const s = via === "raw" ? null : stepFor(d, st, id, qty, via, path.length === 0 ? level : 1);
   return {
     id, qty, st: s?.st ?? null, per: s ? s.made / s.batches : 1,
     kids: s ? s.inputs.map(([c, n]) => tree(d, st, c, n, [...path, id])) : [],

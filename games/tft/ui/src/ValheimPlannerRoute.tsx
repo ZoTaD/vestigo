@@ -6,7 +6,7 @@ import type { ValheimSection } from "./route";
 import { useValheimCopy, type ValheimCopy } from "./valheimCopy";
 import { tx } from "./valheimData";
 import {
-  EMPTY_PLAN, encodePlan, plan as calc, sanitize, setAny, setVia, tree, viaOf, viaOptions,
+  EMPTY_PLAN, encodePlan, plan as calc, sanitize, setAny, setPick, setVia, tree, viaOf, viaOptions,
   type PlannerData, type PSource, type TreeNode, type Via,
 } from "./valheimPlanner";
 import { setPlan, useHave, usePlan, writeUrl } from "./valheimPlannerStore";
@@ -109,21 +109,39 @@ export default function ValheimPlannerRoute({ data, to, navigate }: { data: Plan
               <button type="button" className={mode === "raw" ? "is-on" : ""} aria-pressed={mode === "raw"} onClick={() => setMode("raw")}>{t.plan.toRaw}</button>
             </div>
           </div>
-          {p.table.map((n) => (
-            <div key={n.id} className="vp-branch">
-              {mode === "raw"
-                ? <Node n={tree(data, st, n.id, n.qty)} depth={0} />
-                : (
-                  <div className="vp-node d0">
-                    <Slot icon={data.items[n.id]?.icon} size="sm" />
-                    <span className="vp-q">{n.qty}</span>
-                    <span className="vp-nname">{link(n.id, name(n.id))}</span>
-                  </div>
-                )}
-              <small className="vp-for">{t.plan.forWhat(n.for.map(name).join(", "))}</small>
-            </div>
-          ))}
-          {p.leftovers.map((l) => <p key={l.id} className="vp-note">{name(l.id)}: {t.plan.left(l.asked, l.made)}</p>)}
+          {/* Una rama por cosa de la lista, con sus ingredientes abajo; la cantidad y
+              el nivel se cambian acá mismo (ZoTaD, 2026-09-25: "quizás me confundí y
+              quiero 50 pasteles"). */}
+          {st.picks.map((pk, i) => {
+            const it = data.items[pk.id];
+            const root = tree(data, st, pk.id, pk.qty, [], pk.level);
+            const kids = mode === "raw" ? root.kids : root.kids.map((k) => ({ ...k, kids: [] }));
+            const left = p.leftovers.find((l) => l.id === pk.id);
+            return (
+              <div key={pk.id} className="vp-branch">
+                <div className="vp-node d0 vp-root">
+                  <Slot icon={it?.icon} size="sm" />
+                  <span className="vp-nname">{link(pk.id, name(pk.id))}</span>
+                  {root.st && <span className="vp-via">{t.plan.atStation(stName(root.st), root.per)}</span>}
+                  <span className="vp-rootctl">
+                    {(it?.maxQ ?? 1) > 1 && (
+                      <select className="vp-sel" aria-label={t.plan.level(pk.level)} value={pk.level} onChange={(e) => setPlan(setPick(st, i, { level: Number(e.target.value) }))}>
+                        {Array.from({ length: it.maxQ! }, (_, k) => <option key={k} value={k + 1}>{t.plan.level(k + 1)}</option>)}
+                      </select>
+                    )}
+                    <span className="vp-qty">
+                      <button type="button" className="vp-step" aria-label={t.plan.less} onClick={() => setPlan(setPick(st, i, { qty: Math.max(1, pk.qty - 1) }))}>−</button>
+                      <input type="number" min={1} max={999} value={pk.qty} aria-label={t.plan.qty} onChange={(e) => setPlan(setPick(st, i, { qty: Math.max(1, Number(e.target.value) || 1) }))} />
+                      <button type="button" className="vp-step" aria-label={t.plan.plus} onClick={() => setPlan(setPick(st, i, { qty: pk.qty + 1 }))}>+</button>
+                    </span>
+                    <button type="button" className="vp-x" aria-label={`${t.plan.remove}: ${name(pk.id)}`} onClick={() => setPlan(setPick(st, i, { qty: 0 }))}>×</button>
+                  </span>
+                </div>
+                {kids.map((k) => <Node key={k.id} n={k} depth={1} />)}
+                {left && <small className="vp-for">{t.plan.left(left.asked, left.made)}</small>}
+              </div>
+            );
+          })}
         </section>
 
         <aside className="vp-side">

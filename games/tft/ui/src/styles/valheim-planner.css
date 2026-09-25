@@ -94,6 +94,10 @@
 .vp-node.d0 .vp-nname { font-size: 17px; }
 .vp-via { font-size: 12.5px; color: var(--vh-faint); padding: 3px 8px; border-radius: 999px; background: rgba(255, 230, 180, 0.06); }
 .vp-for { display: block; color: var(--vh-faint); font-size: 12.5px; margin: 2px 0 0 46px; }
+.vp-root { flex-wrap: wrap; row-gap: 6px; }
+.vp-rootctl { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.vp-x { width: 26px; height: 26px; border: 0; border-radius: 4px; background: none; color: var(--vh-faint); font: 700 17px var(--vh-sans); cursor: pointer; }
+.vp-x:hover { color: var(--vh-text); background: rgba(255, 230, 180, 0.08); }
 .vp-note { color: var(--vh-faint); font-size: 12.5px; margin: 10px 0 0; }
 .vp-side { display: grid; gap: 18px; }
 .vp-gather, .vp-stations { padding: 14px 18px; border-radius: 8px; }
