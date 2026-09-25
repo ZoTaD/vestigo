@@ -79,8 +79,8 @@ const EN = {
     home: {
       title: () => "Vestigo — Tier lists, builds and data for the games you play",
       description: () =>
-        "Tier lists, builds, guides and match analysis built from each game's own data. " +
-        "Deadlock today; Dota 2, Path of Exile 2, Valheim and Diablo II on the way.",
+        "Tier lists, builds, guides and tools built from each game's own data: " +
+        "Deadlock, Path of Exile 2 and Valheim.",
     },
     deadlock: {
       heroes: {
@@ -253,8 +253,8 @@ const ES: typeof EN = {
     home: {
       title: () => "Vestigo — Tier lists, builds y datos de tus juegos",
       description: () =>
-        "Tier lists, builds, guías y análisis de partidas hechos con los datos de cada juego. " +
-        "Deadlock hoy; Dota 2, Path of Exile 2, Valheim y Diablo II en camino.",
+        "Tier lists, builds, guías y herramientas hechas con los datos de cada juego: " +
+        "Deadlock, Path of Exile 2 y Valheim.",
     },
     deadlock: {
       heroes: {
