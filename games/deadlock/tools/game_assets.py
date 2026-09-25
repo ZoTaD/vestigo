@@ -103,7 +103,9 @@ STYLE = [
     ("shop/catalog/catalog_shop_builds_header_bg_psd.png", "ui/builds-header.webp", 1200),
     ("shop/card_backer_psd.png", "ui/card-backer.webp", None),
     ("global/wash_rectangle_bg_psd.png", "ui/wash-rect.webp", 852),
-    ("main_menu/background_gothic_jpg.jpeg", "ui/menu-gothic.webp", 1920),
+    # 1280 y no 1920: se ve al 32 % de opacidad en una franja de ~800 px (la
+    # cabecera de cada pestaña), y a 1920 pesaba 184 KB en cada página.
+    ("main_menu/background_gothic_jpg.jpeg", "ui/menu-gothic.webp", 1280),
     ("main_menu/bg_city_png.png", "ui/menu-city.webp", 1920),
     ("main_menu/background_nyc_cityscape_bw_psd.png", "ui/menu-nyc.webp", 1920),
     ("main_menu/hero_release_vote/text_backer_box_psd.png", "ui/backer-box.webp", 1182),
