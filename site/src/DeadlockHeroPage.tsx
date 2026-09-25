@@ -27,6 +27,7 @@ import {
   type TextSpan,
 } from "./deadlockHeroKitData";
 import { ItemIcon } from "./DeadlockItemTip";
+import GameImg from "./GameImg";
 
 /**
  * La página de un héroe, dirección "C · Cartel" (elegida por ZoTaD el
@@ -56,7 +57,7 @@ function Spans({ spans, icons }: { spans: TextSpan[]; icons: Record<string, stri
         >
           {sp.icon && icons[sp.icon] ? (
             <span className="dl-icon-word">
-              <img className="dl-inline-icon" src={icons[sp.icon]} alt="" width={16} height={16} />
+              <GameImg className="dl-inline-icon" src={icons[sp.icon]} alt="" width={16} height={16} />
               {sp.t}
             </span>
           ) : (
@@ -77,7 +78,7 @@ function Stat({ stat, lang }: { stat: KitStat; lang: Lang }) {
   return (
     <div className="dl-hp-stat" title={escala ? t.spiritTip(escala) : undefined}>
       <span className="dl-hp-stat-value">
-        {stat.icon && <img src={stat.icon} alt="" width={16} height={16} loading="lazy" />}
+        {stat.icon && <GameImg src={stat.icon} alt="" width={16} height={16} loading="lazy" />}
         {localNumber(n, lang)}
         {u && <small>{u}</small>}
       </span>
@@ -150,12 +151,12 @@ function AbilityRow({ ability, icons, lang, flip }: { ability: KitAbility; icons
 
       <div className="dl-hp-ability-body">
         <div className="dl-hp-ability-kicker">
-          <img className="dl-hp-ability-icon" src={ability.img} alt="" width={40} height={40} loading="lazy" />
+          <GameImg className="dl-hp-ability-icon" src={ability.img} alt="" width={40} height={40} loading="lazy" />
           <span>{ability.ultimate ? t.ultimate : t.ability(ability.slot)}</span>
           {pasiva && <span className="dl-hp-tag">{t.passive}</span>}
           {ability.cooldown && (
             <span className="dl-hp-cd" title={t.cooldown}>
-              {ability.cooldown.icon && <img src={ability.cooldown.icon} alt="" width={14} height={14} />}
+              {ability.cooldown.icon && <GameImg src={ability.cooldown.icon} alt="" width={14} height={14} />}
               {localNumber(splitValue(ability.cooldown.value, ability.cooldown.unit).n, lang)}
               {splitValue(ability.cooldown.value, ability.cooldown.unit).u}
             </span>
@@ -241,7 +242,7 @@ function PathGrid({ heroId, abilities }: { heroId: number; abilities: KitAbility
               return (
                 <tr key={a.id}>
                   <th scope="row">
-                    <img className="abi" src={a.img} alt="" width={28} height={28} loading="lazy" />
+                    <GameImg className="abi" src={a.img} alt="" width={28} height={28} loading="lazy" />
                     <span>{a.name}</span>
                   </th>
                   {pasos.map((id, i) => {
@@ -352,7 +353,7 @@ function BandRows({ heroId, current }: { heroId: number; current: BandId }) {
       {filas.map((f) => (
         <div key={f.band} className="dl-hp-band" data-current={f.band === current || undefined}>
           <span className="dl-hp-band-name">
-            {bandBadge(f.band).img && <img src={bandBadge(f.band).img} alt="" width={20} height={20} loading="lazy" />}
+            {bandBadge(f.band).img && <GameImg src={bandBadge(f.band).img} alt="" width={20} height={20} loading="lazy" />}
             <span>
               {copy.deadlock.bands[f.band]}
               <small>{t.rankOf(f.rank, f.total)}</small>
@@ -401,7 +402,7 @@ function PairList({
             return (
               <li key={p[0]}>
                 <RouteLink className="dl-hp-pair" to={toHero(route, h.heroId)} onNavigate={navigate}>
-                  {h.img && <img src={h.img} alt="" width={40} height={40} loading="lazy" />}
+                  {h.img && <GameImg src={h.img} alt="" width={40} height={40} loading="lazy" />}
                   <span className="dl-hp-pair-name">{h.name}</span>
                   <span className="dl-hp-pair-n">{t.matches(p[1].toLocaleString(locale))}</span>
                   <span className="dl-hp-pair-wr">

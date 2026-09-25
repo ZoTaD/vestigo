@@ -18,6 +18,7 @@ import {
 } from "./deadlockNewsData";
 import { NEWS_COPY, headlineBank, pickFrom, stableVariant } from "./newsCopy";
 import { ItemIcon } from "./DeadlockItemTip";
+import GameImg from "./GameImg";
 
 /**
  * Vestigo News: la edición de un parche, como periódico.
@@ -180,7 +181,7 @@ export default function DeadlockNews({
                           title={heroName(h.heroId)}
                           style={{ "--hc": heroOf(h.heroId)?.color || FALLBACK_COLOR } as CSSProperties}
                         >
-                          <img src={heroOf(h.heroId)?.img} alt={heroName(h.heroId)} width={42} height={42} />
+                          <GameImg src={heroOf(h.heroId)?.img} alt={heroName(h.heroId)} width={42} height={42} />
                         </a>
                       ))}
                     </div>
@@ -256,7 +257,7 @@ export default function DeadlockNews({
                 }
               >
                 <div className="vn-hero-top">
-                  <img className="vn-portrait" src={hero?.card || hero?.img} alt="" width={64} height={64} />
+                  <GameImg className="vn-portrait" src={hero?.card || hero?.img} alt="" width={64} height={64} />
                   <div>
                     <h3>
                       {slug ? (
@@ -283,7 +284,7 @@ export default function DeadlockNews({
                     <div key={g.abilityId ?? "base"} className="vn-group">
                       <div className="vn-ghead">
                         {ab ? (
-                          <img className="vn-ab" src={ab.img} alt="" width={34} height={34} loading="lazy" />
+                          <GameImg className="vn-ab" src={ab.img} alt="" width={34} height={34} loading="lazy" />
                         ) : (
                           <span className="vn-base" aria-hidden="true">
                             ◆

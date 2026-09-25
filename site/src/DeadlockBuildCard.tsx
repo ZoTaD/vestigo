@@ -18,6 +18,7 @@ import {
   type ItemRef,
 } from "./deadlockBuildsData";
 import { GameCard, ItemIcon } from "./DeadlockItemTip";
+import GameImg from "./GameImg";
 
 /**
  * La tarjeta de build que se despliega al apretar un héroe en la tier list.
@@ -275,7 +276,7 @@ function SkillPath({ build, priority }: { build: BuildView; priority?: boolean }
         <ol className="dl-unlock-list">
           {build.abilities.map((a, i) => (
             <li key={a.id} title={a.name}>
-              <img src={a.img} alt={a.name} width={40} height={40} loading="lazy" />
+              <GameImg src={a.img} alt={a.name} width={40} height={40} loading="lazy" />
               <span className="dl-unlock-n" aria-hidden="true">{i + 1}</span>
             </li>
           ))}
@@ -313,7 +314,7 @@ function SkillPath({ build, priority }: { build: BuildView; priority?: boolean }
                   {/* El flex va adentro de la celda y no en el `<th>`:
                       `display:flex` en una celda la saca del layout de tabla. */}
                   <span className="dl-path-label">
-                    <img src={a.img} alt="" width={26} height={26} loading="lazy" />
+                    <GameImg src={a.img} alt="" width={26} height={26} loading="lazy" />
                     <span>{a.name}</span>
                   </span>
                 </th>
@@ -362,7 +363,7 @@ function SkillPriority({ build }: { build: BuildView }) {
         {orden.map((a, i) => (
           <li key={a.id} className="dl-prio-step">
             <span className="dl-prio-n">{c.priorityRank(i + 1)}</span>
-            <img src={a.img} alt="" width={44} height={44} loading="lazy" />
+            <GameImg src={a.img} alt="" width={44} height={44} loading="lazy" />
             {/* Los nombres del catálogo vienen con espacios duros; acá tienen
                 que poder partirse en dos renglones. */}
             <span className="dl-prio-name">{a.name.replace(/ /g, " ")}</span>
@@ -420,7 +421,7 @@ function BuyOrder({ buys }: { buys: BuyView[] }) {
                 {/* El precio arriba, como en la tienda del juego, con su propio
                     símbolo de alma en vez de una palabra. */}
                 <span className="dl-buy-cost">
-                  {soul && <img src={soul} alt="" width={11} height={11} />}
+                  {soul && <GameImg src={soul} alt="" width={11} height={11} />}
                   {i.cost.toLocaleString(locale)}
                 </span>
 

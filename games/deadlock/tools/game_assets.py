@@ -197,6 +197,10 @@ def main():
     print(f"reemplazos {len(manifest)} · extras {extra} · faltan {len(missing)} · {size // 1024} KB")
     for m in missing[:20]:
         print("  falta:", m)
+    # Las versiones chicas (48/96/160 px) que usa GameImg: ver thumbs.py.
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import thumbs
+    thumbs.build()
 
 
 if __name__ == "__main__":

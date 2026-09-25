@@ -7,6 +7,7 @@ import { useCopy } from "./deadlockCopy";
 import { useHeroes, bandBadge, type BandId } from "./deadlockData";
 import { heroes as heroSlugs } from "./deadlockSlugs";
 import DeadlockHeroPage from "./DeadlockHeroPage";
+import GameImg from "./GameImg";
 import {
   firstDir,
   sortRows,
@@ -245,7 +246,7 @@ export default function DeadlockHeroes({
         meta={
           meta && (
             <span className="dl-meta-line">
-              {insignia.img && <img src={insignia.img} alt="" width={18} height={18} />}
+              {insignia.img && <GameImg src={insignia.img} alt="" width={18} height={18} />}
               {t.meta(meta.heroes.length, bandName)}
             </span>
           )
@@ -279,7 +280,7 @@ export default function DeadlockHeroes({
                   <tr key={r.heroId}>
                     <th scope="row" className="dl-ht-sticky dl-ht-name">
                       <RouteLink className="dl-ht-hero" to={toHero(r.heroId)} onNavigate={navigate}>
-                        {r.img && <img src={r.img} alt="" width={32} height={32} loading="lazy" />}
+                        {r.img && <GameImg src={r.img} alt="" width={32} height={32} loading="lazy" />}
                         <span>{r.name}</span>
                       </RouteLink>
                     </th>

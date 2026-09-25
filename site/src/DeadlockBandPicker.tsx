@@ -1,5 +1,6 @@
 import { useCopy } from "./deadlockCopy";
 import { BANDS, bandBadge, type BandId } from "./deadlockData";
+import GameImg from "./GameImg";
 
 /**
  * El selector de banda de Deadlock, como **control segmentado** (`.seg`).
@@ -31,7 +32,7 @@ export default function DeadlockBandPicker({
             aria-pressed={band === b.id}
             onClick={() => onChange(b.id)}
           >
-            {insignia.img && <img src={insignia.img} alt="" width={20} height={20} />}
+            {insignia.img && <GameImg src={insignia.img} alt="" width={20} height={20} />}
             {copy.deadlock.bands[b.id]}
           </button>
         );

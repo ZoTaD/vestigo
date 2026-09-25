@@ -4,6 +4,7 @@ import { PUBLISHED_BAND, useHeroes } from "./deadlockData";
 import { bandRangeOf } from "./deadlockVsBand";
 import { FIT_MIN_MATCHES, heroFit } from "./deadlockHeroFit";
 import type { HeroStat } from "./deadlockHeroStats";
+import GameImg from "./GameImg";
 
 /**
  * "Te conviene jugar más": hasta tres héroes con los que te va mejor que a la
@@ -51,7 +52,7 @@ export default function DeadlockHeroFitCard({
             const ventaja = Math.round((f.winRate - f.bandWinRate) * 100);
             return (
               <li className="dl-fit-row" key={f.heroId}>
-                <img src={h?.img ?? ""} alt="" width={36} height={36} loading="lazy" />
+                <GameImg src={h?.img ?? ""} alt="" width={36} height={36} loading="lazy" />
                 <span className="dl-fit-hero">
                   <span className="dl-fit-name">{h?.name ?? `#${f.heroId}`}</span>
                   {/* Dos renglones cortos y no uno largo: la tarjeta vive en la

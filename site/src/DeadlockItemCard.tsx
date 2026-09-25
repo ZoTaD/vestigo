@@ -3,6 +3,7 @@ import { useLang } from "./i18n";
 import { useCopy } from "./deadlockCopy";
 import { useItemDetail, iconUrl, cardArt, soulIcon, catalogUpgrades, type Item } from "./deadlockItemsData";
 import { ItemIcon } from "./DeadlockItemTip";
+import GameImg from "./GameImg";
 
 /**
  * La tarjeta de un ítem, tal como la dibuja el juego.
@@ -51,7 +52,7 @@ export function ItemDetailPanel({ item, cost, footer }: { item: Item; cost: stri
       <header className="dl-card-head">
         <h4 className="dl-card-name">{item.name}</h4>
         <p className="dl-card-cost">
-          {soulIcon() && <img src={soulIcon()} alt="" width={17} height={17} />}
+          {soulIcon() && <GameImg src={soulIcon()} alt="" width={17} height={17} />}
           {cost}
           <span className="visually-hidden"> {c.detail.souls}</span>
         </p>
@@ -77,7 +78,7 @@ export function ItemDetailPanel({ item, cost, footer }: { item: Item; cost: stri
                     {b.cooldown && (
                       <span className="dl-card-pill">
                         {b.cooldown.icon && iconUrl(b.cooldown.icon) && (
-                          <img src={iconUrl(b.cooldown.icon)} alt="" width={14} height={14} />
+                          <GameImg src={iconUrl(b.cooldown.icon)} alt="" width={14} height={14} />
                         )}
                         {b.cooldown.value}
                         {b.cooldown.unit}
@@ -112,7 +113,7 @@ export function ItemDetailPanel({ item, cost, footer }: { item: Item; cost: stri
                             return (
                               <>
                                 <span className="dl-icon-word">
-                                  <img
+                                  <GameImg
                                     className="dl-inline-icon"
                                     src={iconUrl(sp.icon)}
                                     alt=""
@@ -159,7 +160,7 @@ export function ItemDetailPanel({ item, cost, footer }: { item: Item; cost: stri
                     {b.boxed.map((st, k) => (
                       <li key={k} data-tone={toneOf(st.icon)}>
                         {st.icon && iconUrl(st.icon) && (
-                          <img className="dl-stat-icon" src={iconUrl(st.icon)} alt="" width={16} height={16} loading="lazy" />
+                          <GameImg className="dl-stat-icon" src={iconUrl(st.icon)} alt="" width={16} height={16} loading="lazy" />
                         )}
                         <span className="dl-card-stat-value">
                           {st.value}

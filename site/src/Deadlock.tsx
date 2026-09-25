@@ -20,6 +20,7 @@ import {
   type Hero,
 } from "./deadlockData";
 import { heroes as heroSlugs } from "./deadlockSlugs";
+import GameImg from "./GameImg";
 
 /**
  * La tier list de héroes de Deadlock.
@@ -122,7 +123,7 @@ function HeroTile({
               pedido de ZoTaD el 2026-09-23 para que la tier list se vea como el
               juego. Sin tarjeta cae al ícono. */}
           {hero.card || hero.img ? (
-            <img src={hero.card || hero.img} alt="" loading="lazy" width={58} height={72} />
+            <GameImg src={hero.card || hero.img} alt="" loading="lazy" width={58} height={72} />
           ) : (
             <span className="dl-portrait-fallback">{hero.name.slice(0, 2)}</span>
           )}
@@ -311,7 +312,7 @@ function HeroPage({
 
       <div className="page">
         <header className="box dl-hero-head">
-          {hero.img && <img className="dl-hero-face" src={hero.img} alt="" width={96} height={96} />}
+          {hero.img && <GameImg className="dl-hero-face" src={hero.img} alt="" width={96} height={96} />}
           <div className="dl-hero-id">
             <span className="dl-hero-rank">{hp.rank(String(idx + 1), String(heroes.length))}</span>
             <span className="dl-chips">
@@ -466,7 +467,7 @@ function RailRow({
   return (
     <li>
       <RouteLink className="dl-rail-row" to={linkTo(route, hero)} onNavigate={navigate}>
-        {hero.img && <img src={hero.img} alt="" width={32} height={32} loading="lazy" />}
+        {hero.img && <GameImg src={hero.img} alt="" width={32} height={32} loading="lazy" />}
         <span className="dl-rail-name">{hero.name}</span>
         <span className="dl-rail-figure">{figure}</span>
       </RouteLink>
@@ -507,7 +508,7 @@ export default function Deadlock({
 
   const metaLine = meta && (
     <span className="dl-meta-line">
-      {!brawl && insignia.img && <img src={insignia.img} alt="" width={18} height={18} />}
+      {!brawl && insignia.img && <GameImg src={insignia.img} alt="" width={18} height={18} />}
       {meta.file.matches === 0
         ? copy.deadlock.emptyBand
         : `${copy.deadlock.sample(

@@ -6,6 +6,7 @@ import type { AbilityView } from "./deadlockBuildsData";
 import { upgradePriority } from "./deadlockBuildsData";
 import ShopCard from "./DeadlockShopCard";
 import type { StatGroup, StatRow } from "./deadlockBuildStats";
+import GameImg from "./GameImg";
 import {
   moveCategory,
   moveCategoryTo,
@@ -361,7 +362,7 @@ export function AbilityOrderEditor({
               title={c.add(a.name)}
               onClick={() => onAdd(a.id)}
             >
-              <img src={a.img} alt="" width={30} height={30} />
+              <GameImg src={a.img} alt="" width={30} height={30} />
             </button>
             <div className="dl-bd-abil-steps" role="cell">
               {Array.from({ length: ABILITY_PATH_MAX }, (_, n) => {
@@ -393,7 +394,7 @@ export function AbilityOrderEditor({
             {prioridad.map((a, i) => (
               <li key={a.id} className="dl-prio-step">
                 <span className="dl-prio-n">{bc.priorityRank(i + 1)}</span>
-                <img src={a.img} alt="" width={44} height={44} loading="lazy" />
+                <GameImg src={a.img} alt="" width={44} height={44} loading="lazy" />
                 <span className="dl-prio-name">{a.name.replace(/ /g, " ")}</span>
               </li>
             ))}

@@ -39,6 +39,7 @@ import DeadlockVsBand from "./DeadlockVsBandCard";
 import DeadlockRankTrail from "./DeadlockRankTrail";
 import { rankSteps, type RankPoint } from "./deadlockRankHistory";
 import { useHeroStats } from "./deadlockHeroStats";
+import GameImg from "./GameImg";
 import {
   metalOf,
   useHeroPlacings,
@@ -332,7 +333,7 @@ function HeroPlacings({ placings }: { placings: HeroPlacing[] }) {
           const nombre = n ? text(n, lang, "") : String(p.heroId);
           return (
             <li className="dl-placing-row" key={p.heroId} data-metal={metalOf(p.place) ?? undefined}>
-              <img src={heroImg(p.heroId) ?? ""} alt="" width={32} height={32} loading="lazy" />
+              <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={32} height={32} loading="lazy" />
               <span className="dl-placing-hero">{nombre}</span>
               <span className="dl-placing-place" title={c.placingTitle(nombre, p.place)}>
                 #{p.place}
@@ -379,7 +380,7 @@ function TopHeroes({
             title={`${nombre} · ${h.matches}`}
             onClick={() => onToggleHero(h.heroId)}
           >
-            <img src={heroImg(h.heroId) ?? ""} alt="" width={34} height={34} loading="lazy" />
+            <GameImg src={heroImg(h.heroId) ?? ""} alt="" width={34} height={34} loading="lazy" />
             <span>{h.matches}</span>
           </button>
         );
@@ -767,7 +768,7 @@ export default function DeadlockPlayer({
                     className={`dl-rep-match ${m.won ? "is-win" : "is-loss"}`}
                     onClick={() => onOpenMatch(m.matchId)}
                   >
-                    <img
+                    <GameImg
                       className="dl-rep-face"
                       src={heroImg(m.heroId) ?? ""}
                       alt={nombre ? text(nombre, lang, "") : ""}

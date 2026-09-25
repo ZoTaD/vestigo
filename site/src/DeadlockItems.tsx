@@ -20,6 +20,7 @@ import { type BandId } from "./deadlockData";
 import { items as itemSlugs } from "./deadlockSlugs";
 import { ItemIcon } from "./DeadlockItemTip";
 import DeadlockItemsShop from "./DeadlockItemsShop";
+import GameImg from "./GameImg";
 
 /**
  * La tier list de ítems de Deadlock.
@@ -104,7 +105,7 @@ function ItemRow({
                 medido, 57 de 156 dan más de un tipo y hay ítems del estante de
                 vitalidad que dan daño de espíritu. */}
             {item.types.map((t) => (
-              <img
+              <GameImg
                 key={t}
                 className="dl-type"
                 src={typeIconUrl(t)}
@@ -193,7 +194,7 @@ function CostGroup({
         aria-label={c.costGroup(precio, items.length)}
       >
         <span className="dl-shelf-price">
-          {alma && <img src={alma} alt="" width={18} height={18} />}
+          {alma && <GameImg src={alma} alt="" width={18} height={18} />}
           {precio}
         </span>
         {/* La base va en el encabezado y no en una nota al pie: es contra este
@@ -395,7 +396,7 @@ export default function DeadlockItems({
                   data-active={slot === s}
                   onClick={() => setSlot(slot === s ? null : s)}
                 >
-                  <img src={typeIconUrl(s === "weapon" ? "bullet_damage" : s === "vitality" ? "health" : "tech_damage")} alt="" width={18} height={18} />
+                  <GameImg src={typeIconUrl(s === "weapon" ? "bullet_damage" : s === "vitality" ? "health" : "tech_damage")} alt="" width={18} height={18} />
                   {c.slots[s]}
                 </button>
               ))}

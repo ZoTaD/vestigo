@@ -24,6 +24,7 @@ import { heroImg, heroName, itemOf, items, rankOf, report, useReport } from "./d
 import RankBadge from "./DeadlockRankBadge";
 import { lastAccount } from "./DeadlockPlayer";
 import { ItemIcon } from "./DeadlockItemTip";
+import GameImg from "./GameImg";
 
 /**
  * El informe de una partida.
@@ -272,7 +273,7 @@ function SoulsChart({
               }
               title={c.toggleCurve}
             >
-              <img src={heroImg(p.heroId) ?? ""} alt="" width={20} height={20} loading="lazy" />
+              <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={20} height={20} loading="lazy" />
               <span>{nombre(p)}</span>
             </button>
           </li>
@@ -332,7 +333,7 @@ function SoulsChart({
                   }`}
                   onClick={() => onPick(p.slot)}
                 >
-                  <img src={heroImg(p.heroId) ?? ""} alt="" width={18} height={18} loading="lazy" />
+                  <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={18} height={18} loading="lazy" />
                   <span className="dl-rep-read-name">{nombre(p)}</span>
                   <span className="dl-rep-read-num">{corto(nw, lang)}</span>
                 </button>
@@ -414,7 +415,7 @@ function Findings({ list, lang }: { list: Finding[]; lang: Lang }) {
             {src && f.itemId != null ? (
               <ItemIcon itemId={f.itemId} img={src} size={44} className="dl-rep-finding-icon" />
             ) : src ? (
-              <img className="dl-rep-finding-icon" src={src} alt="" width={44} height={44} loading="lazy" />
+              <GameImg className="dl-rep-finding-icon" src={src} alt="" width={44} height={44} loading="lazy" />
             ) : (
               <span className="dl-rep-finding-icon is-empty" aria-hidden="true" />
             )}
@@ -579,7 +580,7 @@ export default function DeadlockReport({
                       title={g ? c.gradeHow(g.letter, nombreHeroe(p.heroId)) : c.noGrade}
                     >
                       <span className="dl-rep-who">
-                        <img
+                        <GameImg
                           className="dl-rep-face"
                           src={heroImg(p.heroId) ?? ""}
                           alt={nombreHeroe(p.heroId)}

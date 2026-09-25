@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { useLang } from "./i18n";
 import { rankLabel, rankOf } from "./deadlockReportData";
+import GameImg from "./GameImg";
 
 /**
  * La insignia de un rango de Deadlock, **con el numeral del subnivel encima**.
@@ -69,7 +70,7 @@ export default function RankBadge({
       }
       title={title ?? nombre}
     >
-      <img src={r.img} alt={nombre} width={width} height={height} loading={eager ? undefined : "lazy"} />
+      <GameImg src={r.img} alt={nombre} width={width} height={height} loading={eager ? undefined : "lazy"} />
       {/* `aria-hidden` porque el `alt` de la imagen ya dice "Eternus IV": sin
           esto un lector de pantalla leería el numeral dos veces. */}
       {r.roman && (

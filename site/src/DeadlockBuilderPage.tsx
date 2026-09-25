@@ -10,6 +10,7 @@ import { useHeroKit } from "./deadlockHeroKitData";
 import ShopCard, { SHOP } from "./DeadlockShopCard";
 import { GuideEditor, AbilityOrderEditor, StatsPanel, empezarArrastre } from "./DeadlockBuilderEditor";
 import { buildStats } from "./deadlockBuildStats";
+import GameImg from "./GameImg";
 import {
   addCategory,
   addToCategory,
@@ -288,7 +289,7 @@ export default function DeadlockBuilder() {
                 }
               }}
             >
-              <img src={h.img} alt={h.name} width={40} height={40} loading="lazy" />
+              <GameImg src={h.img} alt={h.name} width={40} height={40} loading="lazy" />
             </button>
           ))}
         </div>
@@ -386,7 +387,7 @@ export default function DeadlockBuilder() {
             entrar entera (ver `.dl-bd-paper` en el CSS). */}
         <aside className="dl-bd-side" aria-label={c.yourBuild}>
           <div className="dl-bd-build-head">
-            {heroe && <img src={heroe.img} alt="" width={44} height={44} className="dl-bd-build-hero" />}
+            {heroe && <GameImg src={heroe.img} alt="" width={44} height={44} className="dl-bd-build-hero" />}
             <h2 className="dl-bd-build-title">
               {c.yourBuild}
               {heroe && <span className="dl-bd-build-heroname">{heroe.name}</span>}

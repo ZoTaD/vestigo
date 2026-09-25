@@ -15,6 +15,7 @@ import {
 import { catalog } from "./deadlockData";
 import { heroImg, rankLabel, rankOf } from "./deadlockReportData";
 import RankBadge from "./DeadlockRankBadge";
+import GameImg from "./GameImg";
 
 /**
  * La ladder de jugadores de Deadlock: los mejores del mundo en clasificatorias.
@@ -177,7 +178,7 @@ function Podium({
   return (
     <div className="dl-lb-podium">
       <div className="dl-lb-podium-head">
-        <img className="dl-lb-podium-face" src={heroImg(hero) ?? ""} alt="" width={40} height={40} />
+        <GameImg className="dl-lb-podium-face" src={heroImg(hero) ?? ""} alt="" width={40} height={40} />
         <h3 className="dl-lb-podium-title">{nombre ? text(nombre, lang, "") : `#${hero}`}</h3>
       </div>
 
@@ -373,7 +374,7 @@ export default function DeadlockPlayerLadder({
                 aria-label={h.name}
                 onClick={() => setHero(h.heroId)}
               >
-                <img src={heroImg(h.heroId) ?? ""} alt="" width={34} height={34} loading="lazy" />
+                <GameImg src={heroImg(h.heroId) ?? ""} alt="" width={34} height={34} loading="lazy" />
               </button>
             ))}
           </div>
