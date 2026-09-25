@@ -146,6 +146,35 @@ const DEFAULT_SORT: Record<ListTab, { key: string; dir: Dir }> = {
   creatures: { key: "health", dir: "asc" },
 };
 
+/** `?q=…&bioma…`: una clave por filtro, con su `key`; el orden como `sort=clave.asc`. */
+function readListQuery(defs: { key: string }[]): { q: string; state: FilterState; sort: { key: string; dir: "asc" | "desc" } | null } {
+  const p = new URLSearchParams(window.location.search);
+  const state: FilterState = {};
+  for (const d of defs) {
+    const v = p.get(d.key);
+    if (v) state[d.key] = v;
+  }
+  const [key, dir] = (p.get("sort") ?? "").split(".");
+  return { q: p.get("q") ?? "", state, sort: key && (dir === "asc" || dir === "desc") ? { key, dir } : null };
+}
+
+function writeListQuery(defs: { key: string }[], q: string, state: FilterState, sort: { key: string; dir: string }, def: { key: string; dir: string }): void {
+  const url = new URL(window.location.href);
+  const p = url.searchParams;
+  for (const d of defs) {
+    if (state[d.key]) p.set(d.key, state[d.key] as string);
+    else p.delete(d.key);
+  }
+  if (q) p.set("q", q);
+  else p.delete("q");
+  if (sort.key !== def.key || sort.dir !== def.dir) p.set("sort", `${sort.key}.${sort.dir}`);
+  else p.delete("sort");
+  const next = url.pathname + (p.toString() ? `?${p}` : "") + url.hash;
+  if (next !== window.location.pathname + window.location.search + window.location.hash) {
+    window.history.replaceState(window.history.state, "", next);
+  }
+}
+
 export default function ValheimList({ tab, rows, to, navigate }: { tab: ListTab; rows: AnyRow[]; to: To; navigate: Nav }) {
   const t = useValheimCopy();
   const { lang } = useLang();
@@ -153,6 +182,21 @@ export default function ValheimList({ tab, rows, to, navigate }: { tab: ListTab;
   const [q, setQ] = useState("");
   const [state, setState] = useState<FilterState>({});
   const [sort, setSort] = useState(DEFAULT_SORT[tab]);
+  // Los filtros, la búsqueda y el orden van en la dirección (pedido de ZoTaD,
+  // 2026-09-25): al abrir una ficha y volver atrás el navegador devuelve la
+  // dirección con ellos, y la lista vuelve como estaba. Se leen después de
+  // montar para que el primer render sea igual al HTML prerenderizado.
+  const [fromUrl, setFromUrl] = useState(false);
+  useEffect(() => {
+    const u = readListQuery(defs);
+    if (u.q) setQ(u.q);
+    if (Object.keys(u.state).length) setState(u.state);
+    if (u.sort) setSort(u.sort);
+    setFromUrl(true);
+  }, [defs]);
+  useEffect(() => {
+    if (fromUrl) writeListQuery(defs, q, state, sort, DEFAULT_SORT[tab]);
+  }, [fromUrl, defs, q, state, sort, tab]);
   // En el teléfono los filtros arrancan plegados: desplegados ocupaban hasta
   // 800 px antes del primer resultado.
   const [filtersOpen, setFiltersOpen] = useState(true);

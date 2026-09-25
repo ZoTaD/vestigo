@@ -36,7 +36,7 @@ describe("las direcciones de Valheim", () => {
     expect(parseRoute("/es/valheim/dragones").vhSection).toBe("home");
   });
 
-  it("tiene las diez pestañas en orden", () => {
-    expect(VALHEIM_TABS).toEqual(["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "bosses"]);
+  it("tiene las once pestañas en orden (Lugares desde el 2026-09-24)", () => {
+    expect(VALHEIM_TABS).toEqual(["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "places", "bosses"]);
   });
 });

@@ -4,7 +4,7 @@
  * inicio a cada jefe y comerciante, y cada grupo (mazmorras, aldeas, piedras
  * rúnicas…) con sus tipos, su cantidad y un botón para ir al más cercano.
  */
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useLang } from "../i18n";
 import { useMapCopy } from "./copy";
 import type { LocationsState, MapLocation } from "./locations";
@@ -18,11 +18,14 @@ interface Props {
   /** El centro de la vista, para "ir al más cercano". */
   center: () => { x: number; z: number };
   select: (key: string) => void;
+  /** "Tu partida" y el panel del mapa: van debajo de los grupos, a la izquierda,
+      en el hueco que deja el grupo más largo (pedido de ZoTaD, 2026-09-25). */
+  extra?: ReactNode;
 }
 
 const fold = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
-export default function LocationPanel({ loc, hidden, setHidden, goTo, center, select }: Props) {
+export default function LocationPanel({ loc, hidden, setHidden, goTo, center, select, extra }: Props) {
   const t = useMapCopy();
   const { lang } = useLang();
   const [q, setQ] = useState("");
@@ -86,7 +89,38 @@ export default function LocationPanel({ loc, hidden, setHidden, goTo, center, se
     .filter((c) => c.types.length);
   const allIds = loc.categories.flatMap((c) => c.types.map((ty) => ty.id));
 
-  if (!loc.items) return null;
+  // Sin lugares todavía (se están ubicando) igual se ven "Tu partida" y el mapa.
+  if (!loc.items) return extra ? <div className="vm-locs-extra is-alone">{extra}</div> : null;
+
+  // El grupo más largo va último, en la última columna y ocupando dos filas; en
+  // el hueco que deja a su izquierda entran "Tu partida" y el mapa.
+  const tallest = cats.reduce<(typeof cats)[number] | null>((m, c) => (!m || c.types.length > m.types.length ? c : m), null);
+  const group = (c: (typeof cats)[number], tall = false) => {
+    const ids = c.types.map((ty) => ty.id);
+    const anyShown = ids.some((id) => !hidden.has(id));
+    return (
+      <div className={`vm-group${tall ? " is-tall" : ""}`} key={c.id}>
+        <h4>
+          <span>{c.name[lang]}</span>
+          <button type="button" className="vm-link" onClick={() => toggle(ids, !anyShown)}>{anyShown ? t.hideAll : t.showAll}</button>
+        </h4>
+        <ul className="vm-types">
+          {c.types.map((ty) => (
+            <li key={ty.id} className={hidden.has(ty.id) ? "is-off" : undefined}>
+              <label>
+                <input type="checkbox" checked={!hidden.has(ty.id)} onChange={() => toggle([ty.id], hidden.has(ty.id))} />
+                {ty.iconUrl ? <img src={ty.iconUrl} alt="" width={18} height={18} /> : <i style={{ background: ty.color }} />}
+                <span>{ty.name[lang]}</span>
+              </label>
+              <button type="button" className="vm-go" onClick={() => nearest(ty.id)} title={t.goNearest} aria-label={`${t.goNearest}: ${ty.name[lang]}`}>
+                {ty.count}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
   return (
     <section className="vh-box vm-panel vm-locs">
       <h3>{t.count(items.length)}</h3>
@@ -97,47 +131,25 @@ export default function LocationPanel({ loc, hidden, setHidden, goTo, center, se
         <button type="button" className="vm-link" onClick={() => toggle(allIds, false)}>{t.hideAll}</button>
       </div>
 
-      {distances.length > 0 && !f && (
-        <div className="vm-group">
-          <h4>{t.fromSpawn}</h4>
-          <ul className="vm-dist">
-            {distances.map(({ l, d }) => (
-              <li key={l.type}>
-                <button type="button" className="vm-link" onClick={() => { goTo(l.x, l.z); select(l.key); }}>
-                  <span>{l.name[lang]}</span><b>{t.km(d)}</b>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {cats.map((c) => {
-        const ids = c.types.map((ty) => ty.id);
-        const anyShown = ids.some((id) => !hidden.has(id));
-        return (
-          <div className="vm-group" key={c.id}>
-            <h4>
-              <span>{c.name[lang]}</span>
-              <button type="button" className="vm-link" onClick={() => toggle(ids, !anyShown)}>{anyShown ? t.hideAll : t.showAll}</button>
-            </h4>
-            <ul className="vm-types">
-              {c.types.map((ty) => (
-                <li key={ty.id} className={hidden.has(ty.id) ? "is-off" : undefined}>
-                  <label>
-                    <input type="checkbox" checked={!hidden.has(ty.id)} onChange={() => toggle([ty.id], hidden.has(ty.id))} />
-                    {ty.iconUrl ? <img src={ty.iconUrl} alt="" width={18} height={18} /> : <i style={{ background: ty.color }} />}
-                    <span>{ty.name[lang]}</span>
-                  </label>
-                  <button type="button" className="vm-go" onClick={() => nearest(ty.id)} title={t.goNearest} aria-label={`${t.goNearest}: ${ty.name[lang]}`}>
-                    {ty.count}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-      })}
+      <div className="vm-locs-body">
+          {distances.length > 0 && !f && (
+            <div className="vm-group">
+              <h4>{t.fromSpawn}</h4>
+              <ul className="vm-dist">
+                {distances.map(({ l, d }) => (
+                  <li key={l.type}>
+                    <button type="button" className="vm-link" onClick={() => { goTo(l.x, l.z); select(l.key); }}>
+                      <span>{l.name[lang]}</span><b>{t.km(d)}</b>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {cats.filter((c) => c !== tallest).map((c) => group(c))}
+          {tallest && group(tallest, true)}
+          {extra && <div className="vm-locs-extra">{extra}</div>}
+      </div>
     </section>
   );
 }

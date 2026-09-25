@@ -477,7 +477,22 @@ a.vh-upg-mat:hover { color: var(--vh-cream); }
 }
 /* El panel de lugares del mapa. */
 .vm-locs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 22px; align-items: start; }
-.vm-locs > h3, .vm-locs > .vm-search, .vm-locs > .vm-cats { grid-column: 1 / -1; }
+.vm-locs > h3, .vm-locs > .vm-search, .vm-locs > .vm-cats, .vm-locs > .vm-locs-body { grid-column: 1 / -1; }
+/* "Tu partida" y el mapa van dentro del panel de lugares, en el hueco que
+   deja el grupo más largo (ZoTaD, 2026-09-25: todo junto, sin bajar tanto).
+   El grupo largo va a la última columna y ocupa dos filas; los dos paneles,
+   en las otras columnas de la fila de abajo. `dense` rellena los huecos. */
+.vm-locs-body { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); grid-auto-flow: row dense; gap: 12px 22px; align-items: start; }
+.vm-locs-body > * { min-width: 0; }
+.vm-group.is-tall { grid-column: -2 / -1; grid-row: span 2; }
+.vm-locs-extra { grid-column: 1 / -2; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; align-items: start; }
+.vm-locs-extra > .vh-box { background: rgba(0, 0, 0, 0.22); }
+.vm-locs-extra.is-alone { grid-column: 1 / -1; }
+.vm-locs-extra.is-alone > .vh-box { background: revert-layer; }
+@media (max-width: 620px) {
+  .vm-group.is-tall { grid-column: auto; grid-row: auto; }
+  .vm-locs-extra { grid-column: 1 / -1; }
+}
 .vm-locs > .vm-search { max-width: 360px; }
 .vm-locs > * { min-width: 0; }
 .vm-search { width: 100%; box-sizing: border-box; }

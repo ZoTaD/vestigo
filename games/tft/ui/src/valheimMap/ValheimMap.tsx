@@ -205,6 +205,10 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
         </div>
 
         <aside className="vm-side">
+          <LocationPanel loc={loc} hidden={hidden} setHidden={setHidden} select={setSelected}
+            goTo={(x, z) => viewer.current?.goTo(x, z, Math.min(view.current?.mpp ?? 4, 4))}
+            center={() => view.current ?? { x: 0, z: 0 }}
+            extra={<>
           <SaveLoader saves={saves} onWorld={(w) => {
             // El mundo trae su semilla: el mapa pasa a ser el de ese mundo.
             if (w.seedName && w.seedName !== seed) { setInput(w.seedName); setSeed(w.seedName); setSelected(null); writeUrl(w.seedName, view.current); }
@@ -225,9 +229,7 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
               })}
             </ul>
           </section>
-          <LocationPanel loc={loc} hidden={hidden} setHidden={setHidden} select={setSelected}
-            goTo={(x, z) => viewer.current?.goTo(x, z, Math.min(view.current?.mpp ?? 4, 4))}
-            center={() => view.current ?? { x: 0, z: 0 }} />
+            </>} />
         </aside>
       </div>
 
