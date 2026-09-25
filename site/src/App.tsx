@@ -20,7 +20,7 @@ import {
   useCopy,
   type Lang,
 } from "./i18n";
-import { LANGS, parseRoute, routePath, type Route } from "./route";
+import { LANGS, parseRoute, routePath, routeUrl, type Route } from "./route";
 
 /**
  * The shell: where you are, and the disclaimer under everything.
@@ -234,12 +234,16 @@ export default function App({ ssrRoute }: { ssrRoute?: Route } = {}) {
    * `PageMeta` (el `<head>` al navegar) se baja recién cuando hace falta
    * (2026-09-25). Arma títulos con los datos de todos los juegos, y en la
    * página de llegada el HTML prerenderizado ya trae los suyos. Hace falta desde
-   * la primera navegación, o de entrada si la dirección no era la canónica
-   * (`/` en español, por ejemplo: el HTML es el de `/en`).
+   * la primera navegación, o de entrada si el HTML servido no es el de esta
+   * página: su `canonical` no coincide cuando Netlify contestó con el de
+   * respaldo (un perfil o una partida, que no se prerenderizan) o cuando la
+   * dirección no era la canónica (`/` en español: el HTML es el de `/en`).
    */
-  const [liveMeta, setLiveMeta] = useState(
-    () => !ssrRoute && typeof window !== "undefined" && window.location.pathname !== routePath(route)
-  );
+  const [liveMeta, setLiveMeta] = useState(() => {
+    if (ssrRoute || typeof document === "undefined") return false;
+    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
+    return canonical !== routeUrl(route);
+  });
 
   // The back button has to work, or real URLs are worse than no URLs: people
   // would land deep in the site with no way back out.
