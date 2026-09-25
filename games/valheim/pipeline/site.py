@@ -28,6 +28,8 @@ OUT = os.path.join(DATA, "site")
 # bronce y plata) y no un recurso de la zona.
 LOOT_RE = re.compile(r"pot\d|_pot|urn|vase|barrel|crate|loot", re.I)
 
+FIGHT_DAMAGE = ("slash", "blunt", "pierce", "fire", "frost", "lightning", "poison", "spirit")
+
 KIND_TAB = {"food": "foods", "mead": "meads", "weapon": "weapons", "armor": "armor", "tool": "tools",
             "ammo": "tools", "material": "materials", "trophy": "materials", "misc": "materials"}
 
@@ -674,6 +676,31 @@ def main() -> None:
 
     listed = {("piece:" + r["id"] if t == "building" else r["id"]): t for t, rows in tabs.items() if t in planner.CATS for r in rows}
     plan = planner.build(items, recipes, built, conversions, bosses, ref, tier_of, station_ref, src, listed)
+    # Los números para comparar en el Planificador (ZoTaD, 2026-09-25: "así veo
+    # qué comidas quiero llevar"): los mismos de cada ficha.
+    stats = {}
+    for r in tabs["foods"]:
+        if r.get("food"):
+            f = r["food"]
+            stats[r["id"]] = {"food": [f["hp"], f["st"], f["eitr"], f["min"]]}
+    for r in tabs["meads"]:
+        if r.get("effect"):
+            stats[r["id"]] = {"effect": r["effect"]}
+    for r in tabs["weapons"] + tabs["tools"]:
+        # Sólo el daño de pelea: sin el de talar o picar, ni el "daño" genérico del
+        # cuchillo de carnicero (1000, para faenar animales domesticados).
+        d = {k: v for k, v in (r.get("damage") or {}).items() if k in FIGHT_DAMAGE and v}
+        if d:
+            stats[r["id"]] = {"dmg": round(sum(d.values())), "type": max(d, key=d.get)}
+    for r in tabs["armor"]:
+        # En un escudo lo que cuenta es el bloqueo.
+        if r.get("slot") == "shield" and r.get("blockPower"):
+            stats[r["id"]] = {"block": r["blockPower"]}
+        elif r.get("armor"):
+            stats[r["id"]] = {"armor": r["armor"]}
+    for k, v in stats.items():
+        if k in plan["items"]:
+            plan["items"][k]["stats"] = v
     remap(plan)
     for tab, rows in tabs.items():
         sizes[tab] = dump(f"{tab}.json", rows)

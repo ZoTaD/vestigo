@@ -11,7 +11,29 @@ import { BIOME_IDS, type BiomeId, type Txt } from "./valheimData";
 export type PlanCat = "weapons" | "armor" | "tools" | "foods" | "meads" | "materials" | "building" | "bosses";
 export const PLAN_CATS: PlanCat[] = ["weapons", "armor", "tools", "foods", "meads", "materials", "building", "bosses"];
 
-export interface PItem { name: Txt; icon: string | null; weight: number; tier: BiomeId | null; slug: string | null; tab: string | null; cat?: PlanCat; maxQ?: number }
+/** Los números para comparar (2026-09-25): comida [vida, vigor, eitr, minutos], efecto de la hidromiel, daño a nivel 1, armadura a nivel 1. */
+export interface PStats { food?: [hp: number, st: number, eitr: number, min: number]; effect?: string; dmg?: number; type?: string; armor?: number; block?: number }
+export interface PItem { name: Txt; icon: string | null; weight: number; tier: BiomeId | null; slug: string | null; tab: string | null; cat?: PlanCat; maxQ?: number; stats?: PStats }
+
+/** Por qué se puede ordenar cada categoría del catálogo. */
+export type SortKey = "hp" | "st" | "eitr" | "min" | "dmg" | "armor" | "block";
+export const SORTS: Partial<Record<PlanCat, SortKey[]>> = { foods: ["hp", "st", "eitr", "min"], weapons: ["dmg"], tools: ["dmg"], armor: ["armor", "block"] };
+
+/** El número de un objeto para ordenar; sin él, null (va al final). */
+export function statOf(it: PItem, key: SortKey): number | null {
+  const s = it.stats;
+  if (!s) return null;
+  const f = s.food;
+  const v = key === "hp" ? f?.[0] : key === "st" ? f?.[1] : key === "eitr" ? f?.[2] : key === "min" ? f?.[3] : key === "dmg" ? s.dmg : key === "block" ? s.block : s.armor;
+  return v == null || (key === "eitr" && v === 0) ? null : v;
+}
+
+/** De mayor a menor por `key`; lo que no tiene el número queda al final, en el orden que traía. */
+export function sortByStat<T extends [string, PItem]>(rows: T[], key: SortKey): T[] {
+  return rows.map((r, i) => [r, statOf(r[1], key), i] as const)
+    .sort((a, b) => (a[1] == null ? 1 : 0) - (b[1] == null ? 1 : 0) || (b[1] ?? 0) - (a[1] ?? 0) || a[2] - b[2])
+    .map((x) => x[0]);
+}
 export type PReq = [id: string, amount: number, perLevel: number];
 /** `post`: la estación donde se termina (lo fundido del Norte profundo va a la fundición helada). */
 export interface PRecipe { st: string | null; lv: number; n: number; req: PReq[]; any?: boolean; post?: string }

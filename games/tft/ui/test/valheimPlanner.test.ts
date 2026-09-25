@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
-  addPick, decodePlan, EMPTY_PLAN, encodePlan, plan, sanitize, setPick, tree,
+  addPick, sortByStat, decodePlan, EMPTY_PLAN, encodePlan, plan, sanitize, setPick, tree,
   type PlannerData, type PlanState,
 } from "../src/valheimPlanner";
 
@@ -117,6 +117,20 @@ describe("el Planificador de Valheim", () => {
     expect(a.picks).toEqual([{ id: "Sausages", qty: 2, level: 1 }]);
     expect(setPick(a, 0, { qty: 0 }).picks).toEqual([]);
     expect(setPick(a, 0, { level: 3 }).picks[0].level).toBe(3);
+  });
+});
+
+describe("ordenar por estadística", () => {
+  const f = (id: string, food: [number, number, number, number]) => [id, it0(id, 1, { cat: "foods", stats: { food } })] as [string, ReturnType<typeof it0>];
+  const rows = [f("A", [20, 60, 0, 20]), f("B", [80, 26, 0, 30]), f("C", [30, 30, 50, 25]), ["D", it0("D", 1, { cat: "foods" })] as [string, ReturnType<typeof it0>]];
+
+  it("de mayor a menor, sin número al final", () => {
+    expect(sortByStat(rows as never, "hp").map((r) => r[0])).toEqual(["B", "C", "A", "D"]);
+    expect(sortByStat(rows as never, "st").map((r) => r[0])).toEqual(["A", "C", "B", "D"]);
+  });
+
+  it("en eitr, lo que no da nada va al final", () => {
+    expect(sortByStat(rows as never, "eitr").map((r) => r[0])).toEqual(["C", "A", "B", "D"]);
   });
 });
 

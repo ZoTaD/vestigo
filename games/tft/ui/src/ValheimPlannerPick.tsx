@@ -5,7 +5,7 @@ import RouteLink from "./RouteLink";
 import type { ValheimSection } from "./route";
 import { useValheimCopy } from "./valheimCopy";
 import { BIOME_IDS, fold, tx } from "./valheimData";
-import { PLAN_CATS, plan as calc, sanitize, setPick, addPick, type PlanCat, type PlannerData } from "./valheimPlanner";
+import { PLAN_CATS, SORTS, plan as calc, sanitize, setPick, addPick, sortByStat, type PItem, type PlanCat, type PlannerData, type SortKey } from "./valheimPlanner";
 import { setPlan, usePlan, writeUrl } from "./valheimPlannerStore";
 import { Slot, type Nav, type To } from "./ValheimParts";
 
@@ -20,9 +20,13 @@ export default function ValheimPlannerPick({ data, to, navigate }: { data: Plann
   const [cat, setCat] = useState<PlanCat | null>(null);
   const [biome, setBiome] = useState<string | null>(null);
   const [shown, setShown] = useState(PAGE);
+  const [sort, setSort] = useState<SortKey | null>(null);
   const [open, setOpen] = useState(false);
   useEffect(() => { writeUrl(); }, []);
-  useEffect(() => setShown(PAGE), [q, cat, biome]);
+  useEffect(() => setShown(PAGE), [q, cat, biome, sort]);
+  // Cada categoría se ordena por lo suyo; al cambiar de categoría vuelve al bioma.
+  useEffect(() => setSort(null), [cat]);
+  const sorts = cat ? SORTS[cat] ?? [] : [];
 
   // Por bioma de progresión, después por categoría y por nombre.
   const catalog = useMemo(() => {
@@ -34,9 +38,29 @@ export default function ValheimPlannerPick({ data, to, navigate }: { data: Plann
   }, [data, lang]);
   const hits = useMemo(() => {
     const f = fold(q.trim());
-    return catalog.filter(([, it]) => (!cat || it.cat === cat) && (!biome || it.tier === biome)
+    const rows = catalog.filter(([, it]) => (!cat || it.cat === cat) && (!biome || it.tier === biome)
       && (!f || fold(it.name.en).includes(f) || fold(it.name.es).includes(f)));
-  }, [catalog, q, cat, biome]);
+    return sort ? sortByStat(rows, sort) : rows;
+  }, [catalog, q, cat, biome, sort]);
+  // Los números de cada fila (ZoTaD, 2026-09-25: "así veo qué comidas quiero llevar").
+  const statLine = (it: PItem) => {
+    const s = it.stats;
+    if (!s) return null;
+    if (s.food) {
+      const [hp, st, ei, min] = s.food;
+      return (
+        <>
+          <span className="vh-num-hp">{hp} {t.plan.hp}</span> · <span className="vh-num-st">{st} {t.plan.st}</span>
+          {ei > 0 && <> · <span className="vh-num-ei">{ei} {t.plan.eitr}</span></>} · {t.minutes(min)}
+        </>
+      );
+    }
+    if (s.effect) return <>{t.effect[s.effect] ?? s.effect}</>;
+    if (s.dmg != null) return <>{s.dmg} {(t.damage[s.type ?? ""] ?? s.type ?? "").toLowerCase()}</>;
+    if (s.armor != null) return <>{s.armor} {t.plan.armor}</>;
+    if (s.block != null) return <>{s.block} {t.plan.block}</>;
+    return null;
+  };
   const qtyOf = new Map(st.picks.map((p) => [p.id, p.qty]));
   const summary = useMemo(() => calc(data, st), [data, st]);
   const where = (id: string) => {
@@ -63,6 +87,15 @@ export default function ValheimPlannerPick({ data, to, navigate }: { data: Plann
                 <button key={c} type="button" className={`vp-chip${cat === c ? " is-on" : ""}`} onClick={() => setCat(cat === c ? null : c)}>{t.plan.cats[c]}</button>
               ))}
             </div>
+            {sorts.length > 0 && (
+              <div className="vp-chips">
+                <span className="vp-label">{t.plan.sortBy}</span>
+                <button type="button" className={`vp-chip${sort ? "" : " is-on"}`} onClick={() => setSort(null)}>{t.plan.sort.tier}</button>
+                {sorts.map((k) => (
+                  <button key={k} type="button" className={`vp-chip${sort === k ? " is-on" : ""}`} onClick={() => setSort(k)}>{t.plan.sort[k]}</button>
+                ))}
+              </div>
+            )}
             <div className="vp-chips">
               <span className="vp-label">{t.plan.biome}</span>
               {BIOME_IDS.map((b) => (
@@ -81,7 +114,7 @@ export default function ValheimPlannerPick({ data, to, navigate }: { data: Plann
                 <Slot icon={it.icon} size="sm" />
                 <span className="vp-name">
                   {it.slug && it.tab ? <RouteLink to={to(it.tab as ValheimSection, it.slug)} onNavigate={navigate}>{tx(it.name, lang)}</RouteLink> : tx(it.name, lang)}
-                  <small>{t.plan.cats[it.cat!]}</small>
+                  <small>{t.plan.cats[it.cat!]}{it.stats && <> · {statLine(it)}</>}</small>
                 </span>
                 <span className="vp-dim">{where(id)}</span>
                 <span className="vp-dim">{it.tier ? t.biomes[it.tier] : ""}</span>
