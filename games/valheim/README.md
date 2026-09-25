@@ -49,7 +49,7 @@ Tests: `cd games/valheim && .venv/Scripts/python -m unittest discover -s pipelin
   recolectables, cultivos, comerciantes y biomas, con nombres `{en, es}`.
 - `../tft/ui/public/valheim/icons/*.webp`: íconos de objetos, piezas y estaciones.
 - `../tft/ui/public/valheim/ui/*.webp`: paneles, botones y casillas de la interfaz.
-- `../tft/ui/public/valheim/fonts/`: Averia Serif/Sans Libre (OFL). Norse, la
+- `../tft/ui/public/valheim/fonts/`: Averia Serif/Sans Libre (OFL), en `.woff2` recortada a latín. Norse, la
   de los títulos del juego, queda afuera hasta confirmar su licencia.
 - `data/site/patches/*.json` y `../tft/ui/public/valheim/news/*.webp`: la
   Crónica, una edición por versión estable (sin "Public Test"), con la portada

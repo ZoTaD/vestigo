@@ -47,37 +47,13 @@
       content="Tier lists, builds, guides and match analysis built from each game&#39;s own data. Deadlock today; Dota 2, Path of Exile 2, Valheim and Diablo II on the way."
     />
     <meta name="twitter:image" content="https://vestigo.gg/og.jpg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!--
-      Tres familias, una sola voz para todo el sitio desde el rediseño del
-      2026-09-06 (ver `tokens.css`): Big Shoulders Display titula y lleva las
-      cifras grandes, Barlow es el texto y los controles, Barlow Condensed las
-      columnas numéricas angostas.
-
-      Cinzel, Cormorant Garamond y Marcellus SC se retiraron ese día: ninguna
-      regla las nombra ya (las hojas usan `--font-display` / `--font-text`).
-      Antes de sumar una familia nueva, buscar si ya hay una cargada que sirva.
+      Las fuentes del sitio (Big Shoulders Display, Barlow, Barlow Condensed y la
+      Cinzel de PoE2) se sirven desde el propio dominio desde el 2026-09-25: las
+      importa `src/fonts.ts` desde los paquetes @fontsource y Vite las emite en
+      /assets con hash, así que se guardan un año. Antes venían de Google Fonts,
+      que eran dos conexiones más (googleapis + gstatic) antes de ver la letra.
     -->
-    <!--
-      La hoja de Google Fonts se carga sin bloquear el primer pintado: se pide
-      como preload y se aplica al llegar (PageSpeed 2026-09-18: bloqueaba 750 ms
-      en móvil). Las familias llevan display=swap, así que mientras tanto se ve
-      la fuente de sistema y después cambia; sin JavaScript, el noscript la
-      carga como siempre.
-    -->
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;700;900&family=Cinzel:wght@400&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;700;900&family=Cinzel:wght@400&display=swap"
-      />
-    </noscript>
   </head>
   <body>
     <div id="root"></div>

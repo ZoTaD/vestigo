@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { installStaleChunkReload } from "./staleChunks";
+// Las @font-face del sitio, servidas desde el dominio (ver fonts.ts).
+import "./fonts";
 // Los tokens van primero: son las variables que todas las demás hojas leen.
 import "./styles/tokens.css";
 import "./styles/base.css";
@@ -26,6 +28,7 @@ import "./styles/scrollbar.css";
 // Vestigo News (2026-09-17): la única página con paleta y fuentes propias, todo bajo `.vn`.
 import "./styles/news.css";
 // Path of Exile 2 (2026-09-23): la letra y los adornos del juego, todo bajo `.p2`.
+import "@fontsource/cinzel/400";
 import "./styles/poe2.css";
 import "./styles/poe2-codex.css";
 import "./styles/poe2-tree.css";

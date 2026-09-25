@@ -153,6 +153,36 @@ def export_ui(g: Game) -> int:
     return n
 
 
+# Lo que el sitio escribe: latín con acentos y eñe (hasta U+024F), la puntuación
+# general y un puñado de signos. El resto de la fuente no se baja nunca.
+WEB_UNICODES = [*range(0x20, 0x250), *range(0x2000, 0x2070), 0x20AC, 0x2122, *range(0x2190, 0x2194), 0x2212]
+
+
+def web_font(ttf: bytes) -> bytes:
+    """Una `.ttf` del juego → `.woff2` recortada a `WEB_UNICODES` (2026-09-25).
+
+    Averia entera pesa ~160 KB por estilo; así, ~32 KB. La OFL permite
+    convertirla y recortarla.
+    """
+    import io
+
+    from fontTools import subset
+    from fontTools.ttLib import TTFont
+
+    font = TTFont(io.BytesIO(ttf))
+    opts = subset.Options()
+    opts.flavor = "woff2"
+    opts.layout_features = ["*"]
+    opts.name_IDs = ["*"]  # el nombre y la licencia de la fuente viajan con ella
+    sub = subset.Subsetter(opts)
+    sub.populate(unicodes=WEB_UNICODES)
+    sub.subset(font)
+    out = io.BytesIO()
+    font.flavor = "woff2"
+    font.save(out)
+    return out.getvalue()
+
+
 def export_fonts(g: Game) -> int:
     """Sólo Averia (OFL). Norse queda afuera hasta confirmar su licencia."""
     out = os.path.join(PUBLIC, "fonts")
@@ -164,8 +194,8 @@ def export_fonts(g: Game) -> int:
         f = o.read()
         if f.m_Name in OFL_FONTS and f.m_Name not in hechas and f.m_FontData:
             hechas.add(f.m_Name)
-            with open(os.path.join(out, f"{f.m_Name}.ttf"), "wb") as fh:
-                fh.write(bytes(f.m_FontData))
+            with open(os.path.join(out, f"{f.m_Name}.woff2"), "wb") as fh:
+                fh.write(web_font(bytes(f.m_FontData)))
     return len(hechas)
 
 
