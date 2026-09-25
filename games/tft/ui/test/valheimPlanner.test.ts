@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
-  addPick, sortByStat, decodePlan, EMPTY_PLAN, encodePlan, plan, sanitize, setPick, tree,
+  addPick, biomeOf, inBiomes, materialBiomes, sortByStat, decodePlan, EMPTY_PLAN, encodePlan, plan, sanitize, setPick, tree,
   type PlannerData, type PlanState,
 } from "../src/valheimPlanner";
 
@@ -117,6 +117,21 @@ describe("el Planificador de Valheim", () => {
     expect(a.picks).toEqual([{ id: "Sausages", qty: 2, level: 1 }]);
     expect(setPick(a, 0, { qty: 0 }).picks).toEqual([]);
     expect(setPick(a, 0, { level: 3 }).picks[0].level).toBe(3);
+  });
+});
+
+describe("filtrar por varios biomas", () => {
+  it("el bioma de un objeto es el de su material más avanzado si no trae uno", () => {
+    expect(materialBiomes(D, "HelmetIron")).toEqual(["meadows", "swamp"]);
+    expect(biomeOf(D, "HelmetIron")).toBe("swamp");
+    expect(biomeOf({ ...D, items: { ...D.items, HelmetIron: { ...D.items.HelmetIron, tier: "mountain" } } }, "HelmetIron")).toBe("mountain");
+  });
+
+  it("pasa si su bioma está entre los elegidos; sin elegidos, todo pasa", () => {
+    expect(inBiomes("swamp", ["swamp", "ashlands"])).toBe(true);
+    expect(inBiomes("deepnorth", ["swamp", "ashlands"])).toBe(false);
+    expect(inBiomes(null, ["swamp"])).toBe(false);
+    expect(inBiomes("deepnorth", [])).toBe(true);
   });
 });
 

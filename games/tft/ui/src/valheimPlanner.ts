@@ -225,6 +225,27 @@ export function plan(d: PlannerData, st: PlanState): Plan {
   };
 }
 
+/** Los biomas de donde salen los materiales crudos de un objeto, por el camino de siempre. */
+export function materialBiomes(d: PlannerData, id: string): BiomeId[] {
+  return plan(d, { ...EMPTY_PLAN, picks: [{ id, qty: 1, level: 1 }] }).biomes;
+}
+
+/**
+ * El bioma de un objeto para filtrar: el de progresión del pipeline o, si no
+ * tiene, el de su material más avanzado. Elegir Pantano y Tierra de Ceniza
+ * muestra lo de esos dos biomas y nunca lo que pide algo del Norte profundo
+ * (ZoTaD, 2026-09-25: "que no me aparezca el norte profundo que todavía no fui").
+ */
+export function biomeOf(d: PlannerData, id: string): BiomeId | null {
+  const it = d.items[id];
+  if (it?.tier) return it.tier;
+  const bs = materialBiomes(d, id);
+  return bs.length ? bs[bs.length - 1] : null;
+}
+
+/** Sin biomas elegidos, todo pasa. */
+export const inBiomes = (b: BiomeId | null, chosen: readonly string[]) => chosen.length === 0 || (!!b && chosen.includes(b));
+
 export interface TreeNode { id: string; qty: number; st: string | null; per: number; kids: TreeNode[] }
 
 /**

@@ -4,10 +4,11 @@ import { useLang } from "./i18n";
 import RouteLink from "./RouteLink";
 import type { ValheimSection } from "./route";
 import { useValheimCopy } from "./valheimCopy";
-import { BIOME_IDS, fold, tx } from "./valheimData";
-import { PLAN_CATS, SORTS, plan as calc, sanitize, setPick, addPick, sortByStat, type PItem, type PlanCat, type PlannerData, type SortKey } from "./valheimPlanner";
+import { BIOME_IDS, fold, tx, type AnyRow, type BiomeId } from "./valheimData";
+import { PLAN_CATS, SORTS, plan as calc, sanitize, setPick, addPick, sortByStat, biomeOf, inBiomes, type PItem, type PlanCat, type PlannerData, type SortKey } from "./valheimPlanner";
+import { collectNames, FILTERS, type FilterDef, type FilterState, type ListTab } from "./valheimTabs";
 import { setPlan, usePlan, writeUrl } from "./valheimPlannerStore";
-import { Slot, type Nav, type To } from "./ValheimParts";
+import { Slot, useTab, type Nav, type To } from "./ValheimParts";
 
 const PAGE = 60;
 
@@ -18,15 +19,29 @@ export default function ValheimPlannerPick({ data, to, navigate }: { data: Plann
   const st = useMemo(() => sanitize(data, raw), [data, raw]);
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<PlanCat | null>(null);
-  const [biome, setBiome] = useState<string | null>(null);
+  // Varios biomas a la vez (ZoTaD, 2026-09-25): "sólo de Tierra de Ceniza y del Pantano".
+  const [biomes, setBiomes] = useState<BiomeId[]>([]);
+  // Los filtros de la pestaña de la enciclopedia de esa categoría.
+  const [tf, setTf] = useState<FilterState>({});
   const [shown, setShown] = useState(PAGE);
   const [sort, setSort] = useState<SortKey | null>(null);
   const [open, setOpen] = useState(false);
   useEffect(() => { writeUrl(); }, []);
-  useEffect(() => setShown(PAGE), [q, cat, biome, sort]);
-  // Cada categoría se ordena por lo suyo; al cambiar de categoría vuelve al bioma.
-  useEffect(() => setSort(null), [cat]);
+  useEffect(() => setShown(PAGE), [q, cat, biomes, sort, tf]);
+  // Cada categoría se ordena y se filtra por lo suyo; al cambiarla, eso vuelve a cero.
+  useEffect(() => { setSort(null); setTf({}); }, [cat]);
   const sorts = cat ? SORTS[cat] ?? [] : [];
+  const listTab = cat && cat !== "bosses" ? (cat as ListTab) : null;
+  const tabRows = useTab(listTab) as AnyRow[] | null;
+  // El bioma va arriba, con varios a la vez: de la pestaña van los demás filtros.
+  const defs: FilterDef[] = useMemo(() => (listTab && tabRows ? FILTERS[listTab].filter((d) => d.key !== "biome") : []), [listTab, tabRows]);
+  const rowOf = useMemo(() => {
+    const m = new Map<string, AnyRow>();
+    for (const r of (tabRows ?? []) as (AnyRow & { id: string })[]) m.set(listTab === "building" ? `piece:${r.id}` : r.id, r);
+    return m;
+  }, [tabRows, listTab]);
+  const names = useMemo(() => collectNames(tabRows ?? [], defs), [tabRows, defs]);
+  const biomeById = useMemo(() => new Map(Object.keys(data.items).filter((k) => data.items[k].cat).map((k) => [k, biomeOf(data, k)])), [data]);
 
   // Por bioma de progresión, después por categoría y por nombre.
   const catalog = useMemo(() => {
@@ -36,12 +51,34 @@ export default function ValheimPlannerPick({ data, to, navigate }: { data: Plann
       .sort(([, a], [, b]) => tierIx(a.tier) - tierIx(b.tier) || PLAN_CATS.indexOf(a.cat!) - PLAN_CATS.indexOf(b.cat!)
         || tx(a.name, lang).localeCompare(tx(b.name, lang)));
   }, [data, lang]);
-  const hits = useMemo(() => {
+  // Buscador, categoría y biomas; los filtros de la pestaña van aparte para poder contar cada opción.
+  const base = useMemo(() => {
     const f = fold(q.trim());
-    const rows = catalog.filter(([, it]) => (!cat || it.cat === cat) && (!biome || it.tier === biome)
+    return catalog.filter(([id, it]) => (!cat || it.cat === cat) && inBiomes(biomeById.get(id) ?? null, biomes)
       && (!f || fold(it.name.en).includes(f) || fold(it.name.es).includes(f)));
+  }, [catalog, q, cat, biomes, biomeById]);
+  const passes = (id: string, except?: string) => defs.every((d) => {
+    if (d.key === except || !tf[d.key]) return true;
+    const r = rowOf.get(id);
+    return !!r && d.values(r).includes(tf[d.key] as string);
+  });
+  const hits = useMemo(() => {
+    const rows = base.filter(([id]) => passes(id));
     return sort ? sortByStat(rows, sort) : rows;
-  }, [catalog, q, cat, biome, sort]);
+  }, [base, tf, rowOf, defs, sort]);
+  /** Las opciones de un filtro con cuántas cosas deja cada una, como en la enciclopedia. */
+  const options = (d: FilterDef): [string, number][] => {
+    const counts = new Map<string, number>();
+    for (const [id] of base) {
+      const r = rowOf.get(id);
+      if (!r || !passes(id, d.key)) continue;
+      for (const v of new Set(d.values(r))) counts.set(v, (counts.get(v) ?? 0) + 1);
+    }
+    const out = [...counts];
+    const o = d.order;
+    return o ? out.sort((a, b) => (o.indexOf(a[0]) + 1 || 999) - (o.indexOf(b[0]) + 1 || 999)) : out.sort((a, b) => b[1] - a[1]);
+  };
+  const pickTf = (key: string, v: string | null) => setTf((s) => ({ ...s, [key]: v }));
   // Los números de cada fila (ZoTaD, 2026-09-25: "así veo qué comidas quiero llevar").
   const statLine = (it: PItem) => {
     const s = it.stats;
@@ -96,12 +133,50 @@ export default function ValheimPlannerPick({ data, to, navigate }: { data: Plann
                 ))}
               </div>
             )}
+            {defs.map((d) => {
+              const opts = options(d);
+              if (d.toggle) {
+                const n = opts.find((o) => o[0] === "yes")?.[1] ?? 0;
+                if (!n && !tf[d.key]) return null;
+                return (
+                  <div key={d.key} className="vp-chips">
+                    <button type="button" className={`vp-chip${tf[d.key] ? " is-on" : ""}`} onClick={() => pickTf(d.key, tf[d.key] ? null : "yes")}>
+                      {t.filters[d.title]} · {n}
+                    </button>
+                  </div>
+                );
+              }
+              if (opts.length < 2 && !tf[d.key]) return null;
+              // Las listas largas (estación, clase, set) van en un desplegable.
+              return d.column ? (
+                <label key={d.key} className="vp-chips">
+                  <span className="vp-label">{t.filters[d.title]}</span>
+                  <select className="vp-sel vp-selwide" value={tf[d.key] ?? ""} onChange={(e) => pickTf(d.key, e.target.value || null)}>
+                    <option value="">{t.filters.all}</option>
+                    {opts.map(([v, n]) => <option key={v} value={v}>{d.text(v, t, lang, names)} ({n})</option>)}
+                  </select>
+                </label>
+              ) : (
+                <div key={d.key} className="vp-chips">
+                  <span className="vp-label">{t.filters[d.title]}</span>
+                  <button type="button" className={`vp-chip${tf[d.key] ? "" : " is-on"}`} onClick={() => pickTf(d.key, null)}>{t.filters.all}</button>
+                  {opts.map(([v, n]) => (
+                    <button key={v} type="button" className={`vp-chip${tf[d.key] === v ? " is-on" : ""}`} onClick={() => pickTf(d.key, tf[d.key] === v ? null : v)}>
+                      {d.text(v, t, lang, names)} · {n}
+                    </button>
+                  ))}
+                </div>
+              );
+            })}
             <div className="vp-chips">
               <span className="vp-label">{t.plan.biome}</span>
               {BIOME_IDS.map((b) => (
-                <button key={b} type="button" className={`vp-chip${biome === b ? " is-on" : ""}`} onClick={() => setBiome(biome === b ? null : b)}>{t.biomes[b]}</button>
+                <button key={b} type="button" aria-pressed={biomes.includes(b)} className={`vp-chip${biomes.includes(b) ? " is-on" : ""}`}
+                  onClick={() => setBiomes(biomes.includes(b) ? biomes.filter((x) => x !== b) : [...biomes, b])}>{t.biomes[b]}</button>
               ))}
+              {biomes.length > 0 && <button type="button" className="vp-link" onClick={() => setBiomes([])}>{t.plan.clear}</button>}
             </div>
+            <p className="vp-hint">{t.plan.biomesHint}</p>
           </div>
           <div className="vp-tr vp-th" aria-hidden="true">
             <span /><span>{t.plan.colItem}</span><span>{t.plan.colWhere}</span><span>{t.plan.colBiome}</span><span />
