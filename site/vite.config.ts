@@ -9,7 +9,7 @@ import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, type Route } from "./src/route";
 import { COPY } from "./src/i18n";
-import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor } from "./src/areaFiles";
+import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor, originsFor } from "./src/areaFiles";
 
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
 const BRAND = COPY.en.brand;
@@ -341,7 +341,10 @@ function prerenderRoutes(): Plugin {
         for (const page of pages) {
           const route = parseRoute(page.path);
           const cuerpo = await renderApp(route);
-          const propias = tags(filesFor(route));
+          const conexiones = originsFor(route)
+            .map((o) => `<link rel="preconnect" href="${o.href}"${o.cors ? " crossorigin" : ""}>`)
+            .join("\n    ");
+          const propias = [tags(filesFor(route)), conexiones].filter(Boolean).join("\n    ");
           const pagina = renderHtml(html, page, BRAND, cuerpo).replace(
             "</head>",
             propias ? `  ${propias}\n  </head>` : "</head>"

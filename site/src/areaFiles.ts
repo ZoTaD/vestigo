@@ -34,6 +34,22 @@ export const DEADLOCK_TAB_FILES: Partial<Record<DeadlockSection, string>> = {
   match: "src/DeadlockReport.tsx",
 };
 
+/**
+ * Los servidores que una pestaña consulta apenas abre (2026-09-25): el HTML les
+ * abre la conexión (`preconnect`) mientras baja el JS, y la primera consulta
+ * no espera el DNS y el TLS. `cors` es para `fetch`; una imagen va sin.
+ */
+export const DEADLOCK_TAB_ORIGINS: Partial<Record<DeadlockSection, { href: string; cors: boolean }[]>> = {
+  ladder: [
+    { href: "https://api.deadlock-api.com", cors: true },
+    { href: "https://flagcdn.com", cors: false },
+  ],
+  player: [{ href: "https://api.deadlock-api.com", cors: true }],
+  match: [{ href: "https://api.deadlock-api.com", cors: true }],
+};
+
+export const originsFor = (route: Route) => (route.view === "deadlock" ? DEADLOCK_TAB_ORIGINS[route.dlSection] ?? [] : []);
+
 /** Los archivos cuyo JS y CSS necesita una ruta antes del primer render. */
 export function filesFor(route: Route): string[] {
   const area = AREA_FILES[route.view];
