@@ -3,8 +3,8 @@
  *
  * El mapa de Valheim, el árbol y el regex de PoE2 y los datos de cada pestaña se
  * bajan aparte, con un nombre que cambia en cada publicación. Una pestaña abierta
- * desde antes pide el archivo viejo; Netlify contesta con la página (no hay
- * 404 para `/assets`) y la carga falla. Sin esto, React desmontaba todo y la
+ * desde antes pide el archivo viejo; Netlify contesta con un 404 (desde el
+ * 2026-09-25; antes, con la página) y la carga falla. Sin esto, React desmontaba todo y la
  * pantalla quedaba en blanco hasta recargar (ZoTaD: "la primera vez que apretás
  * el mapa"). Ahora se recarga sola y trae la versión nueva.
  */

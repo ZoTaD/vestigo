@@ -77,6 +77,17 @@
   to = "/en"
   status = 301
 
+# Un chunk que ya no existe (una pestaña abierta de antes de un deploy pide el
+# nombre viejo) contesta 404 y no la página: `/assets/*` se guarda como
+# "immutable" (ver las cabeceras de abajo), y un `index.html` guardado un año
+# bajo el nombre de un `.js` no le sirve a nadie. La carga falla igual que antes
+# y `staleChunks.ts` recarga la pestaña. Sin `force`: el archivo que existe se
+# sirve antes de mirar esta regla.
+[[redirects]]
+  from = "/assets/*"
+  to = "/404.html"
+  status = 404
+
 # Static files that exist on disk (sitemap.xml, robots.txt, riot.txt) are served
 # before this rule is consulted, so they are not swallowed by it.
 [[redirects]]
@@ -101,3 +112,81 @@
   for = "/img/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# El JS y el CSS que arma Vite (2026-09-25). Cada nombre lleva el hash de su
+# contenido (`index-Dgbjy9ln.js`): si el archivo cambia, cambia el nombre, así
+# que un nombre dado es siempre el mismo archivo y "immutable" es seguro. Hasta
+# acá salían con el `max-age=0, must-revalidate` de Netlify, y cada visita
+# volvía a preguntar por cada chunk aunque lo tuviera guardado.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Las imágenes y fuentes de cada juego. Estos nombres NO llevan hash: salen del
+# juego (`game_assets.py`, el árbol de PoE2, la wiki de Valheim) y un parche
+# puede pisar un archivo con el mismo nombre. Por eso un día y no un año: dentro
+# del día no se pide nada, y pasado el día se muestra lo guardado mientras se
+# revisa en segundo plano (`stale-while-revalidate`), sin hacer esperar a nadie.
+#
+# Carpeta por carpeta y no `/deadlock/*`: las rutas sin idioma (`/deadlock/paige`)
+# son páginas que el comodín de abajo contesta con `index.html`, y un HTML con
+# un día de caché seguiría pidiendo chunks borrados después de un deploy. Por
+# eso los sprites del árbol viven en `tree-sprites/` y no en `tree/`, que es la
+# ruta de la página. Una carpeta nueva de assets tiene que sumarse acá.
+[[headers]]
+  for = "/deadlock/game/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/deadlock/shop/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/poe2/art/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/poe2/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/poe2/tree-sprites/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/poe2/ui/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/valheim/art/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/valheim/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/valheim/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/valheim/map/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/valheim/news/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/valheim/ui/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/valheim/wiki/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/og/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"

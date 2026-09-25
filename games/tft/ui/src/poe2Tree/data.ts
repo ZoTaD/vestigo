@@ -96,5 +96,6 @@ export const loadTexts = (lang: Lang) => load<Texts>(`tree.${lang}`);
 /** slug de la enciclopedia → id de metadata de la gema. */
 export const loadGemIds = () => load<Record<string, string>>("gems");
 
-/** Dónde se sirven los sprites (los copia el pipeline a `public/poe2/tree/`). */
-export const spriteUrl = (file: string) => `/poe2/tree/${file}`;
+/** Dónde se sirven los sprites (los copia el pipeline a `public/poe2/tree-sprites/`; no `tree/`,
+ * que es la ruta de la página y compartiría sus cabeceras de caché). */
+export const spriteUrl = (file: string) => `/poe2/tree-sprites/${file}`;
