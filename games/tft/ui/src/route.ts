@@ -42,7 +42,7 @@ export type View = "home" | "tft" | "deadlock" | "poe2" | "valheim" | "privacy" 
  * parches se suman acá cuando existan. Mismo criterio que `DeadlockSection`:
  * cada juego declara las suyas y una desconocida cae en la de por defecto.
  */
-export type Poe2Section = "economy" | "encyclopedia" | "patches";
+export type Poe2Section = "economy" | "encyclopedia" | "patches" | "tree";
 /**
  * Las pestañas de Valheim (2026-09-24). "home" es la portada de la sección
  * (`/valheim` a secas); las demás llevan su nombre en la URL y, opcionalmente,
@@ -84,7 +84,7 @@ export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match"
  */
 export const DEADLOCK_PAGES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "street-brawl"];
 /** En el orden en que se dibujan las pestañas de PoE2. */
-export const POE2_SECTIONS: Poe2Section[] = ["economy", "encyclopedia", "patches"];
+export const POE2_SECTIONS: Poe2Section[] = ["economy", "encyclopedia", "patches", "tree"];
 /**
  * Qué pestañas de Deadlock tienen página de detalle **enumerable**. "meta" son
  * héroes, "items" son ítems; rangos y parches no tienen una unidad que abrir.
@@ -215,9 +215,10 @@ export function parseRoute(pathname: string): Route {
     // El detalle depende de la pestaña: en Economía es la liga
     // (`/poe2/economy/hc-forbidden-rites`), en la Enciclopedia la categoría y la
     // ficha (`/poe2/encyclopedia/gems/untether`, por eso puede llevar una barra)
-    // y en Parches la edición (`/poe2/patches/0-5-5c`).
+    // y en Parches la edición (`/poe2/patches/0-5-5c`). El árbol no tiene: la
+    // build va en `?b=`, que no es parte de la ruta.
     const depth = p2Section === "encyclopedia" ? 2 : 1;
-    const detail = rest[1] === p2Section && rest[2] ? rest.slice(2, 2 + depth).join("/") : undefined;
+    const detail = p2Section !== "tree" && rest[1] === p2Section && rest[2] ? rest.slice(2, 2 + depth).join("/") : undefined;
     return { ...base, view: "poe2", p2Section, detail };
   }
 

@@ -27,12 +27,14 @@ const p2 = paths.filter((p) => p.includes("/poe2"));
 
 describe("PoE2 en el sitemap", () => {
   it("lista cada ficha, liga y edición en los dos idiomas", () => {
-    const perLang = 3 + (leagues.length - 1) + 4 + entries.length + editions.length;
+    // las 4 pestañas (economía, enciclopedia, parches, árbol) + ligas + categorías + fichas + ediciones
+    const perLang = 4 + (leagues.length - 1) + 4 + entries.length + editions.length;
     expect(p2.length).toBe(perLang * 2);
   });
 
   it("la liga por defecto no se repite: ya es /poe2", () => {
     expect(p2).toContain("/es/poe2");
+    expect(p2).toContain("/es/poe2/tree");
     expect(p2).not.toContain(`/es/poe2/economy/${leagues[0].slug}`);
     expect(p2).toContain(`/es/poe2/economy/${leagues[1].slug}`);
   });

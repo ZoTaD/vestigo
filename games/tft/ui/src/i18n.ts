@@ -1881,7 +1881,7 @@ const EN = {
 
   /** Path of Exile 2 (2026-09-23): por ahora sólo la pestaña Economía. */
   poe2: {
-    tabs: { economy: "Economy", encyclopedia: "Encyclopedia", patches: "Patches" },
+    tabs: { economy: "Economy", encyclopedia: "Encyclopedia", patches: "Patches", tree: "Passive Tree" },
     soon: "Soon",
     league: "League",
     title: "Economy",
@@ -1994,6 +1994,12 @@ const EN = {
         description: () =>
           "Every Path of Exile 2 patch, sorted into buffs, nerfs, fixes and new content, with the " +
           "gems and uniques it touches shown as in the game.",
+      },
+      tree: {
+        title: () => "Path of Exile 2 passive tree planner, level by level | Vestigo",
+        description: () =>
+          "Plan your Path of Exile 2 passive tree point by point with the official tree and art: see it " +
+          "at every level, add your gems and export the .build file for the in-game Build Planner.",
       },
       /** Las páginas con detalle: una liga, una categoría, una ficha, una edición. */
       detail: {
@@ -3632,7 +3638,7 @@ const ES: typeof EN = {
   },
 
   poe2: {
-    tabs: { economy: "Economía", encyclopedia: "Enciclopedia", patches: "Parches" },
+    tabs: { economy: "Economía", encyclopedia: "Enciclopedia", patches: "Parches", tree: "Árbol de pasivas" },
     soon: "Pronto",
     league: "Liga",
     title: "Economía",
@@ -3729,6 +3735,12 @@ const ES: typeof EN = {
         description: () =>
           "Cada parche de Path of Exile 2 ordenado en mejoras, nerfeos, arreglos y contenido nuevo, " +
           "con las gemas y los únicos que toca tal como se ven en el juego.",
+      },
+      tree: {
+        title: () => "Árbol de pasivas de Path of Exile 2: planificador nivel por nivel | Vestigo",
+        description: () =>
+          "Armá tu árbol de pasivas de Path of Exile 2 punto por punto con el árbol y el arte oficiales, " +
+          "en español: miralo en cada nivel, sumá tus gemas y exportá el .build para el Build Planner del juego.",
       },
       detail: {
         league: (name: string) => ({
