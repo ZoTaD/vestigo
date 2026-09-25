@@ -37,13 +37,11 @@ export const DEADLOCK_TAB_FILES: Partial<Record<DeadlockSection, string>> = {
 /**
  * Los servidores que una pestaña consulta apenas abre (2026-09-25): el HTML les
  * abre la conexión (`preconnect`) mientras baja el JS, y la primera consulta
- * no espera el DNS y el TLS. `cors` es para `fetch`; una imagen va sin.
+ * no espera el DNS y el TLS. `cors` es para `fetch`; una imagen va sin. (Las
+ * banderas ya no: salen del sitio desde el 2026-09-25, ver `flags.ts`.)
  */
 export const DEADLOCK_TAB_ORIGINS: Partial<Record<DeadlockSection, { href: string; cors: boolean }[]>> = {
-  ladder: [
-    { href: "https://api.deadlock-api.com", cors: true },
-    { href: "https://flagcdn.com", cors: false },
-  ],
+  ladder: [{ href: "https://api.deadlock-api.com", cors: true }],
   player: [{ href: "https://api.deadlock-api.com", cors: true }],
   match: [{ href: "https://api.deadlock-api.com", cors: true }],
 };

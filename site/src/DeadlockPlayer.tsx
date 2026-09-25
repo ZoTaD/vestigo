@@ -40,6 +40,7 @@ import DeadlockRankTrail from "./DeadlockRankTrail";
 import { rankSteps, type RankPoint } from "./deadlockRankHistory";
 import { useHeroStats } from "./deadlockHeroStats";
 import GameImg from "./GameImg";
+import { flagUrl } from "./flags";
 import {
   metalOf,
   useHeroPlacings,
@@ -169,8 +170,8 @@ function Profile({
             {account?.country && account.country.length === 2 && (
               <img
                 className="dl-flag"
-                src={`https://flagcdn.com/32x24/${account.country.toLowerCase()}.png`}
-                srcSet={`https://flagcdn.com/64x48/${account.country.toLowerCase()}.png 2x`}
+                src={flagUrl(account.country)}
+                srcSet={`${flagUrl(account.country, "64x48")} 2x`}
                 alt={account.country.toUpperCase()}
                 title={account.country.toUpperCase()}
                 width={22}

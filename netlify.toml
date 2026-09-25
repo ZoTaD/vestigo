@@ -172,6 +172,10 @@
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 [[headers]]
+  for = "/flags/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
   for = "/og/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"

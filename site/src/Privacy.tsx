@@ -12,9 +12,10 @@ import { CONTACT_EMAIL, LegalPage, Section } from "./Legal";
  * - the Deadlock player pages call api.deadlock-api.com directly
  *   (`deadlockMatch.ts` and friends), including the Steam name typed into the
  *   search (`players/steam-search`);
- * - country flags load from flagcdn.com and Steam avatars from the URLs those
- *   API responses carry; PoE2 item icons load from web.poecdn.com (the URLs
- *   in games/poe2/data) and some Deadlock icons from deadlock-api's bucket;
+ * - Steam avatars load from the URLs those API responses carry; PoE2 item
+ *   icons from web.poecdn.com (the URLs in games/poe2/data); hero ability
+ *   clips and the Vestigo News fonts from deadlock-api's bucket. Country flags
+ *   and every other Deadlock image are served by the site itself (2026-09-25);
  * - Google Analytics loads only after acceptance (`analytics.ts`).
  *
  * Valheim save files are read in the browser (`SaveLoader.tsx`, a Worker) and
@@ -181,15 +182,15 @@ export default function Privacy() {
           <li>
             <strong>deadlock-api.com</strong> — an independent community service that publishes
             public Deadlock match data. Your browser contacts it directly on the Deadlock pages
-            that show live figures or some of the game's icons, and on the player pages it
-            receives the name or account you look up. Its handling of that request is governed
-            by its own policies.
+            that show live figures, hero ability clips or Vestigo News, and on the player pages
+            it receives the name or account you look up. Its handling of that request is
+            governed by its own policies.
           </li>
           <li>
-            <strong>Image servers</strong> — your browser loads country flags from flagcdn.com
-            and profile pictures from Steam on the Deadlock player and ladder pages, and item
-            icons from Grinding Gear Games' servers on the Path of Exile 2 pages. As with any
-            image, the request carries your IP address; nothing about your search is sent there.
+            <strong>Image servers</strong> — your browser loads profile pictures from Steam on
+            the Deadlock player and ladder pages, and item icons from Grinding Gear Games'
+            servers on the Path of Exile 2 pages. As with any image, the request carries your IP
+            address; nothing about your search is sent there.
           </li>
           <li>
             <strong>Our hosting provider</strong> — an infrastructure company that serves the

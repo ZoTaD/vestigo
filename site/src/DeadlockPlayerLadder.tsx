@@ -16,6 +16,7 @@ import { catalog } from "./deadlockData";
 import { heroImg, rankLabel, rankOf } from "./deadlockReportData";
 import RankBadge from "./DeadlockRankBadge";
 import GameImg from "./GameImg";
+import { flagUrl } from "./flags";
 
 /**
  * La ladder de jugadores de Deadlock: los mejores del mundo en clasificatorias.
@@ -55,8 +56,8 @@ function Flag({ code }: { code?: string }) {
   return (
     <img
       className="dl-flag"
-      src={`https://flagcdn.com/32x24/${cc}.png`}
-      srcSet={`https://flagcdn.com/64x48/${cc}.png 2x`}
+      src={flagUrl(cc)}
+      srcSet={`${flagUrl(cc, "64x48")} 2x`}
       alt={code.toUpperCase()}
       title={code.toUpperCase()}
       width={20}
