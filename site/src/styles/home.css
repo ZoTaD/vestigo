@@ -377,46 +377,6 @@
   font-size: clamp(1.5rem, 3.4vw, 2.6rem);
 }
 
-/* --- TFT: su azul medianoche con oro ---------------------------------------- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] {
-  background:
-    radial-gradient(ellipse 120% 90% at 12% -20%, #1d2a4d 0%, transparent 62%),
-    linear-gradient(180deg, #0e1528 0%, #080d1a 100%);
-  color: #cfc9b6;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .game-panel-name {
-  background: linear-gradient(175deg, #f0d391 8%, #c9a24a 52%, #8a6a24 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .game-figure b {
-  color: #f0d391;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .game-figure.is-second b {
-  color: #e9e0cb;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .game-figure span {
-  color: #9c957f;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .game-cta {
-  background: #c9a24a;
-  border-color: #c9a24a;
-  color: #080d1a;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="tft"] .game-cta.is-ghost {
-  background: transparent;
-  border-color: rgba(201, 162, 74, 0.5);
-  color: #f0d391;
-}
-
 /* --- Deadlock: el negro cálido del juego, con su ámbar ---------------------- */
 
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] {

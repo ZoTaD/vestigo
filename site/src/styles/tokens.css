@@ -3,7 +3,7 @@
 
    Rediseño del 2026-09-06 (ver docs/design/2026-09-06-rediseno-plan.md). La
    regla que ordena todo: **una sola forma para todo el sitio, tres paletas**.
-   Portada, TFT y Deadlock comparten fuentes, espaciados, radios y componentes;
+   La portada y cada juego comparten fuentes, espaciados, radios y componentes;
    lo único que cada lugar re-declara es el color.
 
    Los nombres viejos del códex (`--ink`, `--vellum`, `--gold`, `--h-*`) siguen
@@ -52,7 +52,8 @@
   --tap: 44px;
 }
 
-/* TFT: oro sobre medianoche. Es el códex de siempre, con nombres nuevos. */
+/* La paleta base del códex: oro sobre medianoche (la de la portada y las páginas
+   legales; cada juego la re-declara con `data-game`). */
 [data-theme="codex"] {
   --bg: #080d1a;
   --bg-2: #0e1528;

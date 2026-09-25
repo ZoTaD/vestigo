@@ -1,8 +1,8 @@
 /* ---------------------------------------------------------------------------
    CÁSCARA — barra superior, sub-navegación, cabecera de sección, pie.
 
-   Todo lo que rodea al contenido de una página, igual en la portada, en TFT y
-   en Deadlock. Sólo usa los nombres de `tokens.css`; el color lo pone el lugar.
+   Todo lo que rodea al contenido de una página, igual en la portada y en cada
+   juego. Sólo usa los nombres de `tokens.css`; el color lo pone el lugar.
    Nada de acá se llama como en el códex viejo (`.topbar`, `.switcher`,
    `.masthead`) a propósito: así no hereda 300 líneas de reglas pensadas para
    otra forma.

@@ -102,7 +102,7 @@
 .vp-rootctl { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .vp-x { width: 26px; height: 26px; border: 0; border-radius: 4px; background: none; color: var(--vh-faint); font: 700 17px var(--vh-sans); cursor: pointer; }
 .vp-x:hover { color: var(--vh-text); background: rgba(255, 230, 180, 0.08); }
-.vp-note { color: var(--vh-faint); font-size: 12.5px; margin: 10px 0 0; }
+
 .vp-side { display: grid; gap: 18px; }
 .vp-gather, .vp-stations { padding: 14px 18px; border-radius: 8px; }
 .vp-need { display: grid; grid-template-columns: 20px 24px 44px minmax(0, 1fr); gap: 10px; align-items: center; padding: 7px 0; border-top: 1px solid rgba(200, 150, 62, 0.1); cursor: pointer; }

@@ -3,7 +3,7 @@
 
    Las piezas con las que se arma cualquier página del sitio a partir del
    rediseño del 2026-09-06. Cada una hace una sola cosa y sólo usa tokens:
-   el color lo pone el lugar (portada, TFT o Deadlock).
+   el color lo pone el lugar (la portada o cada juego).
 
    - `.page`        rejilla de página, con o sin rail
    - `.box`         una pregunta por caja, título de una palabra

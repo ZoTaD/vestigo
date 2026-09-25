@@ -19,7 +19,7 @@
 }
 
 /* El fondo y las variables viejas del códex (`--ink`, `--vellum`, `--gold`), como
-   hace Deadlock en codex.css: sin esto los costados quedan en el azul marino de TFT. */
+   hace Deadlock en codex.css: sin esto los costados quedan en el azul marino del códex. */
 [data-theme="codex"][data-game="poe2"] {
   --ink: #0b0a08;
   --ink-2: #110f0c;

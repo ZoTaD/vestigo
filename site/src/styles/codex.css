@@ -303,10 +303,6 @@
   gap: 0.35rem 0.8rem;
 }
 
-[data-theme="codex"][data-game="deadlock"] .seeker-input {
-  background: rgba(16, 19, 13, 0.72);
-}
-
 /**
  * **El título del perfil y del informe, que no tenía regla propia.**
  *
@@ -353,26 +349,7 @@
   color: var(--gold-lit);
 }
 
-/**
- * La bajada, derecha y entera.
- *
- * **La itálica es del códex, no de Deadlock.** Ahí separa la voz del sitio del
- * dato, y con Cormorant tiene sentido; con una grotesca cuadrada la itálica es
- * sólo una inclinación mecánica que no dice nada y cuesta legibilidad.
- *
- * Y entra en tres renglones y no en dos: con dos, la frase corta justo antes de
- * decir por qué un héroe se mueve, que es la mitad que explica la página.
- */
-[data-theme="codex"][data-game="deadlock"] .tool-head .standfirst {
-  font-style: normal;
-}
-
-[data-theme="codex"][data-game="deadlock"] .deadlock-meta .tool-head .standfirst {
-  -webkit-line-clamp: 3;
-}
-
-/* Las pestañas: versalitas condensadas, como los rótulos del juego. Cinzel las
-   hacía leer como los títulos de sección de TFT. */
+/* Las pestañas: versalitas condensadas, como los rótulos del juego. */
 [data-theme="codex"][data-game="deadlock"] .switch {
   font-family: var(--font-data-narrow);
   font-weight: 600;
@@ -410,15 +387,6 @@
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--vellum-dim);
-}
-
-[data-theme="codex"][data-game="deadlock"] .tool-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.5rem, 3.6vw, 2.1rem);
-  line-height: 1.05;
-  letter-spacing: 0.015em;
-  color: var(--gold-lit);
 }
 
 [data-theme="codex"] .grain {
@@ -476,107 +444,7 @@
   margin-top: 0.55em;
 }
 
-/* The italic stays here — at 1.1rem it reads fine and it is what gives the page
-   its voice — but the colour comes up to match. Slanted and dim at once was the
-   combination that hurt. */
-[data-theme="codex"] .standfirst {
-  max-width: 46ch;
-  margin: 1.8rem auto 0;
-  font-size: 1.1rem;
-  font-style: italic;
-  line-height: 1.62;
-  color: var(--vellum);
-  opacity: 0.88;
-}
-
-[data-theme="codex"] .dataset {
-  justify-content: center;
-  margin-top: 2.6rem;
-  padding-top: 1.7rem;
-  border-top: 1px solid rgba(201, 162, 74, 0.28);
-  position: relative;
-}
-
-[data-theme="codex"] .dataset::before {
-  content: "❖";
-  position: absolute;
-  top: -0.72em;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--ink-2);
-  padding: 0 0.7rem;
-  color: var(--gold);
-  font-size: 0.8rem;
-}
-
-[data-theme="codex"] .dataset dt {
-  font-family: var(--font-display);
-  font-size: 0.58rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.8;
-}
-
-[data-theme="codex"] .dataset dd {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  margin-top: 0.35rem;
-  color: var(--vellum);
-}
-
-/* Tiers ------------------------------------------------------------------- */
-
-[data-theme="codex"] .tier-head {
-  align-items: center;
-  gap: 1.1rem;
-}
-
-[data-theme="codex"] .tier-mark {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 1.5rem;
-  width: 3rem;
-  height: 3rem;
-  display: grid;
-  place-items: center;
-  color: var(--gold-lit);
-  border: 1px solid rgba(201, 162, 74, 0.55);
-  border-radius: 50%;
-  position: relative;
-  background: radial-gradient(circle at 35% 28%, rgba(201, 162, 74, 0.22), transparent 65%);
-}
-
-[data-theme="codex"] .tier-mark::after {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  border: 1px solid rgba(201, 162, 74, 0.25);
-  border-radius: 50%;
-}
-
-[data-theme="codex"] .tier-label {
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .tier-count {
-  font-style: italic;
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .tier-rule {
-  background: linear-gradient(90deg, rgba(201, 162, 74, 0.5), transparent);
-}
-
 /* Comp rows --------------------------------------------------------------- */
-
-[data-theme="codex"] .comp-list {
-  gap: 0.4rem;
-}
 
 [data-theme="codex"] .comp {
   border: 1px solid rgba(201, 162, 74, 0.16);
@@ -590,235 +458,7 @@
   transform: translateX(3px);
 }
 
-[data-theme="codex"] .comp-rank {
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  color: rgba(201, 162, 74, 0.55);
-}
-
-[data-theme="codex"] .trait-icon {
-  filter: brightness(0) saturate(100%) invert(72%) sepia(38%) saturate(560%) hue-rotate(1deg) brightness(92%);
-}
-
-[data-theme="codex"] .comp-name {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: 1.45rem;
-  letter-spacing: 0.03em;
-}
-
-[data-theme="codex"] .comp-carry {
-  color: var(--gold-lit);
-  font-weight: 700;
-}
-
-[data-theme="codex"] .comp-plan {
-  font-family: var(--font-display);
-  font-size: 0.55rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.72;
-}
-
-[data-theme="codex"] .unit-stars {
-  color: var(--gold-lit);
-  text-shadow: 0 0 6px rgba(240, 211, 145, 0.45);
-}
-
-[data-theme="codex"] .unit[data-cost="5"] .unit-stars {
-  color: #f6e3b0;
-}
-
-[data-theme="codex"] .unit-portrait {
-  border-radius: 50%;
-  border: 1px solid rgba(201, 162, 74, 0.4);
-  filter: saturate(0.72) contrast(1.04);
-  transition: filter 200ms ease, border-color 200ms ease;
-}
-
-[data-theme="codex"] .unit:hover .unit-portrait {
-  filter: saturate(1) contrast(1.08);
-  border-color: var(--gold-lit);
-}
-
-/* Cost rings, in TFT's own colours — grey, green, blue, purple, gold — but
-   muted to sit inside the parchment palette rather than glow like the game's
-   neon frames. A player reads a unit's cost from its ring at a glance. */
-[data-theme="codex"] .unit[data-cost="1"] .unit-portrait {
-  border-color: rgba(170, 172, 178, 0.6);
-}
-
-[data-theme="codex"] .unit[data-cost="2"] .unit-portrait {
-  border-color: rgba(120, 176, 138, 0.78);
-}
-
-[data-theme="codex"] .unit[data-cost="3"] .unit-portrait {
-  border-color: rgba(118, 156, 202, 0.8);
-}
-
-[data-theme="codex"] .unit[data-cost="4"] .unit-portrait {
-  border-color: rgba(176, 141, 198, 0.8);
-}
-
-[data-theme="codex"] .unit[data-cost="5"] .unit-portrait {
-  border-color: var(--gold-lit);
-  box-shadow: 0 0 0 2px rgba(240, 211, 145, 0.16);
-}
-
-[data-theme="codex"] .unit-name {
-  text-align: center;
-  color: var(--vellum);
-  font-size: 0.88rem;
-  letter-spacing: 0.02em;
-}
-
-[data-theme="codex"] .unit-stars[data-has="false"] {
-  visibility: hidden;
-}
-
-/* Items sit under the portrait like inlaid stones on a medallion. */
-[data-theme="codex"] .item-chip-icon {
-  border: 1px solid rgba(201, 162, 74, 0.5);
-  border-radius: 2px;
-  background: rgba(8, 13, 26, 0.8);
-  filter: saturate(0.85);
-  transition: border-color 160ms ease;
-}
-
-[data-theme="codex"] .item-chip:hover .item-chip-icon {
-  border-color: var(--gold-lit);
-}
-
-/* The hover card is a small illuminated plate. */
-[data-theme="codex"] .item-pop {
-  background: linear-gradient(180deg, #0d1424 0%, #080d1a 100%);
-  border: 1px solid rgba(201, 162, 74, 0.5);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.72);
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .item-pop::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -5px;
-  width: 8px;
-  height: 8px;
-  margin-left: -4px;
-  transform: rotate(45deg);
-  background: #080d1a;
-  border-right: 1px solid rgba(201, 162, 74, 0.5);
-  border-bottom: 1px solid rgba(201, 162, 74, 0.5);
-}
-
-[data-theme="codex"] .pop-head b {
-  font-family: var(--font-display);
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .pop-head em {
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .pop-head img,
-[data-theme="codex"] .pop-part img {
-  border: 1px solid rgba(201, 162, 74, 0.45);
-  border-radius: 2px;
-}
-
-[data-theme="codex"] .pop-label {
-  font-family: var(--font-display);
-  color: var(--gold);
-}
-
-[data-theme="codex"] .pop-recipe {
-  border-top: 1px solid rgba(201, 162, 74, 0.22);
-  padding-top: 0.55rem;
-}
-
-[data-theme="codex"] .pop-part {
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .pop-desc {
-  border-top: 1px solid rgba(201, 162, 74, 0.22);
-  padding-top: 0.55rem;
-  color: var(--vellum-dim);
-  font-style: italic;
-}
-
-[data-theme="codex"] .ip-part img {
-  border: 1px solid rgba(201, 162, 74, 0.35);
-  border-radius: 2px;
-  background: rgba(8, 13, 26, 0.8);
-}
-
-[data-theme="codex"] .ip-plus {
-  color: var(--gold);
-}
-
-[data-theme="codex"] .stat-value {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .stat-primary .stat-value {
-  color: var(--gold-lit);
-  font-size: 1.8rem;
-}
-
-[data-theme="codex"] .stat-label {
-  font-family: var(--font-display);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  color: var(--gold);
-  opacity: 0.85;
-}
-
-/* Badges: the strategic headline of the row. */
-[data-theme="codex"] .badge-plan {
-  font-family: var(--font-display);
-  font-weight: 700;
-  border: 1px solid rgba(201, 162, 74, 0.55);
-  color: var(--gold-lit);
-  background: rgba(201, 162, 74, 0.1);
-}
-
-[data-theme="codex"] .badge-plan[data-arch^="reroll"] {
-  border-color: #ffe9ae;
-  color: #ffe9ae;
-  background: rgba(255, 233, 174, 0.12);
-}
-
-[data-theme="codex"] .badge-level {
-  font-family: var(--font-display);
-  border: 1px solid rgba(201, 162, 74, 0.28);
-  color: var(--vellum-dim);
-}
-
 /* Synergies read as inlaid enamel plaques. */
-/* Name and count share one colour so the chip reads as a single label. */
-[data-theme="codex"] .synergy {
-  border: 1px solid rgba(201, 162, 74, 0.32);
-  background: rgba(8, 13, 26, 0.55);
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .synergy-name {
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .synergy img {
-  filter: brightness(0) saturate(100%) invert(72%) sepia(38%) saturate(560%) hue-rotate(1deg)
-    brightness(92%);
-}
-
-[data-theme="codex"] .synergy b {
-  font-family: var(--font-display);
-  color: var(--gold-lit);
-}
 
 /**
  * The line under each heading, which is the sentence that explains the section.
@@ -836,191 +476,7 @@
   opacity: 0.92;
 }
 
-[data-theme="codex"] .item-priority li {
-  border-bottom: 1px solid rgba(201, 162, 74, 0.1);
-  padding-bottom: 0.35rem;
-}
-
-[data-theme="codex"] .item-priority img {
-  border: 1px solid rgba(201, 162, 74, 0.45);
-  border-radius: 2px;
-}
-
-[data-theme="codex"] .ip-rank {
-  font-family: var(--font-display);
-  color: var(--gold);
-  opacity: 0.7;
-}
-
-[data-theme="codex"] .ip-name {
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .colophon {
-  text-align: center;
-  font-style: italic;
-  color: var(--vellum-dim);
-  padding-top: 1.6rem;
-  border-top: 1px solid rgba(201, 162, 74, 0.18);
-}
-
 /* A recommended 3-star is the loudest mark on the row — it is the whole plan. */
-/* Stars only ever render on a genuine 3-star target, so they always shine. */
-[data-theme="codex"] .unit-stars[data-has="true"] {
-  color: #ffe9ae;
-  text-shadow: 0 0 9px rgba(255, 233, 174, 0.75);
-}
-
-/* A 3-star target keeps its cost ring and gets a glow around it, rather than
-   overwriting the border — so the unit still reads its cost at a glance, and the
-   ★★★ above it plus this halo say "take this one to three". */
-[data-theme="codex"] .unit[data-target="true"] .unit-portrait {
-  box-shadow: 0 0 0 2px rgba(255, 233, 174, 0.5), 0 0 14px rgba(255, 233, 174, 0.28);
-}
-
-[data-theme="codex"] .unit[data-target="true"] .unit-name {
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .comp-chevron {
-  color: var(--gold);
-}
-
-/* Detail panel ------------------------------------------------------------ */
-
-[data-theme="codex"] .comp-detail {
-  border-top: 1px solid rgba(201, 162, 74, 0.2);
-  margin-top: 0.2rem;
-  padding-top: 1.2rem;
-}
-
-[data-theme="codex"] .detail-heading {
-  font-family: var(--font-display);
-  /* Uppercase with this much letter-spacing reads smaller than it measures, so
-     a section heading needs more than the body text around it, not less. */
-  font-size: 0.74rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 0.85rem;
-}
-
-[data-theme="codex"] .plan-steps li {
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .plan-steps li::before {
-  font-family: var(--font-display);
-  color: var(--gold);
-  opacity: 0.7;
-}
-
-/* Same reasoning as .detail-note: this is evidence, meant to be read. The rule
-   down its left side already marks it as an aside without dimming the words. */
-[data-theme="codex"] .plan-evidence {
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  color: var(--vellum);
-  opacity: 0.92;
-  border-left: 1px solid rgba(201, 162, 74, 0.35);
-  padding-left: 0.8rem;
-}
-
-[data-theme="codex"] .plan-evidence strong {
-  color: var(--gold-lit);
-  font-style: normal;
-}
-
-[data-theme="codex"] .detail-unit-list li {
-  padding: 0.3rem 0;
-  border-bottom: 1px solid rgba(201, 162, 74, 0.1);
-}
-
-[data-theme="codex"] .du-cost {
-  border: 1px solid rgba(201, 162, 74, 0.4);
-  border-radius: 50%;
-  font-family: var(--font-display);
-  color: var(--gold);
-}
-
-[data-theme="codex"] .du-cost[data-cost="5"] {
-  border-color: var(--gold-lit);
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .du-cost[data-cost="4"] {
-  border-color: rgba(176, 141, 198, 0.75);
-  color: rgba(198, 168, 216, 1);
-}
-
-[data-theme="codex"] .du-name {
-  font-size: 0.9rem;
-}
-
-[data-theme="codex"] .du-tag {
-  font-family: var(--font-display);
-  font-size: 0.5rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-style: normal;
-  margin-left: 0.45rem;
-  padding: 0.12rem 0.4rem;
-  border: 1px solid rgba(201, 162, 74, 0.45);
-  color: var(--gold);
-}
-
-[data-theme="codex"] .du-tag-star {
-  border-color: #ffe9ae;
-  color: #ffe9ae;
-}
-
-/* A rotation slot: present, but quieter than the skeleton. */
-[data-theme="codex"] .du-tag-flex {
-  border-color: rgba(201, 162, 74, 0.3);
-  color: var(--vellum-dim);
-}
-
-/* Flex units read as options, not fixtures: dashed ring, slightly stepped back.
-   Hover restores them fully, same as every other unit. */
-[data-theme="codex"] .unit[data-flex="true"] .unit-portrait {
-  border-style: dashed;
-  opacity: 0.82;
-}
-
-[data-theme="codex"] .unit[data-flex="true"] .unit-name {
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .unit[data-flex="true"]:hover .unit-portrait {
-  opacity: 1;
-}
-
-[data-theme="codex"] .du-freq {
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  color: var(--vellum-dim);
-  text-align: right;
-}
-
-[data-theme="codex"] .du-item {
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .du-item img {
-  border: 1px solid rgba(201, 162, 74, 0.4);
-  border-radius: 2px;
-}
-
-[data-theme="codex"] .du-item b {
-  font-weight: 400;
-  color: var(--gold);
-  opacity: 0.75;
-}
-
-[data-theme="codex"] .du-noitems {
-  color: rgba(156, 149, 127, 0.5);
-  font-size: 0.74rem;
-}
 
 /* Player profile ----------------------------------------------------------
    Chart colours are NOT the theme's display gold. That gold is too light and
@@ -1035,77 +491,10 @@
   --chart-bad: #c2504c;
 }
 
-[data-theme="codex"] .profile-stats {
-  border: 1px solid rgba(201, 162, 74, 0.18);
-  background: rgba(201, 162, 74, 0.06);
-}
-
-[data-theme="codex"] .stat-tile + .stat-tile {
-  border-left: 1px solid rgba(201, 162, 74, 0.18);
-}
-
-[data-theme="codex"] .stat-tile-value {
-  font-family: var(--font-display);
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .stat-tile-label {
-  font-family: var(--font-display);
-  color: var(--gold);
-  opacity: 0.85;
-}
-
-[data-theme="codex"] .profile-excluded {
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .tally-track {
-  background: rgba(233, 224, 203, 0.06);
-}
-
-[data-theme="codex"] .tally-fill {
-  background: var(--chart-bad);
-}
-
-[data-theme="codex"] .tally-fill[data-good="true"] {
-  background: var(--chart-good);
-}
-
-[data-theme="codex"] .tally-label img {
-  border: 1px solid rgba(201, 162, 74, 0.4);
-}
-
-[data-theme="codex"] .tally-name {
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .tally-figures b {
-  font-family: var(--font-display);
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .tally-figures em {
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .tally-unit {
-  font-family: var(--font-display);
-  color: var(--gold);
-  opacity: 0.6;
-}
-
 /* Player analyzer ---------------------------------------------------------
    Same manuscript, a different page: the search is an engraved plate and each
    finding a margin annotation, ruled in gold by how much it matters.
 -------------------------------------------------------------------------- */
-
-/* No rule of its own: the switcher used to sit below the masthead and needed a
-   line to separate it from the text above. It now sits directly under the top
-   bar, whose own bottom border already draws that line — keeping both stacked
-   two gold rules 36px apart with nothing between them. */
-[data-theme="codex"] .switcher {
-  padding-top: 1.6rem;
-}
 
 [data-theme="codex"] .switch {
   font-family: var(--font-display);
@@ -1126,202 +515,6 @@
   background: rgba(201, 162, 74, 0.12);
 }
 
-/* Rank band picker: the same plate as the section tabs, one step quieter, so it
-   reads as a setting inside the page rather than as navigation away from it. */
-[data-theme="codex"] .band-label {
-  font-family: var(--font-display);
-  color: var(--gold);
-  opacity: 0.8;
-}
-
-/* Platinum+ leads, lit like the active tab: it is the standard the page opens on. */
-[data-theme="codex"] .band-primary {
-  font-family: var(--font-display);
-  color: var(--gold-lit);
-  border: 1px solid var(--gold);
-  background: rgba(201, 162, 74, 0.14);
-  transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
-}
-
-/* When a filter is chosen, Platinum+ steps back to a quiet "return here". */
-[data-theme="codex"] .band-primary[data-active="false"] {
-  color: var(--vellum-dim);
-  border-color: rgba(201, 162, 74, 0.28);
-  background: transparent;
-}
-
-[data-theme="codex"] .band-primary:hover {
-  color: var(--gold-lit);
-  border-color: var(--gold);
-}
-
-[data-theme="codex"] .band-divider {
-  background: linear-gradient(
-    rgba(201, 162, 74, 0),
-    rgba(201, 162, 74, 0.5),
-    rgba(201, 162, 74, 0)
-  );
-}
-
-/* The rest of the ranks, behind a filter. A gold chevron marks it as a list;
-   it lights up once a filter is actually in effect. */
-[data-theme="codex"] .band-select {
-  appearance: none;
-  font-family: var(--font-display);
-  color: var(--vellum-dim);
-  border: 1px solid rgba(201, 162, 74, 0.28);
-  background-color: transparent;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23c9a24a' stroke-width='1.4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.9rem center;
-  transition: color 200ms ease, border-color 200ms ease, background-color 200ms ease;
-}
-
-[data-theme="codex"] .band-select:hover {
-  color: var(--gold-lit);
-  border-color: rgba(201, 162, 74, 0.55);
-}
-
-[data-theme="codex"] .band-select[data-active="true"] {
-  color: var(--gold-lit);
-  border-color: var(--gold);
-  background-color: rgba(201, 162, 74, 0.12);
-}
-
-[data-theme="codex"] .band-select option {
-  background: #0d1424;
-  color: var(--vellum);
-}
-
-/* Not red: nothing is broken. It is a caveat about the evidence, so it reads as
-   a marginal note the eye still has to stop on. */
-[data-theme="codex"] .band-warning {
-  color: var(--vellum);
-  border: 1px solid rgba(201, 162, 74, 0.34);
-  background: rgba(201, 162, 74, 0.07);
-}
-
-[data-theme="codex"] .band-loading {
-  color: var(--vellum);
-  opacity: 0.75;
-}
-
-[data-theme="codex"] .player-band {
-  color: var(--gold);
-  opacity: 0.85;
-}
-
-/* The copy-build button is the one real call to action in the panel: it earns a
-   filled gold plate, and confirms in place when it has copied. */
-[data-theme="codex"] .copy-build {
-  font-family: var(--font-display);
-  color: var(--ink-2);
-  background: var(--gold);
-  border: 1px solid var(--gold);
-  transition: background 200ms ease, color 200ms ease;
-}
-
-[data-theme="codex"] .copy-build:hover {
-  background: var(--gold-lit);
-  border-color: var(--gold-lit);
-}
-
-[data-theme="codex"] .copy-build[data-done="true"] {
-  color: var(--gold-lit);
-  background: transparent;
-  border-color: var(--gold);
-}
-
-/* The variant switch reads as a margin note on the comp, not a second CTA:
-   the same plate as the rank tabs, one step quieter. */
-[data-theme="codex"] .variant-btn {
-  font-family: var(--font-display);
-  color: var(--vellum-dim);
-  border: 1px solid rgba(201, 162, 74, 0.3);
-  background: transparent;
-  transition: color 200ms ease, border-color 200ms ease;
-}
-
-[data-theme="codex"] .variant-btn:hover {
-  color: var(--gold-lit);
-  border-color: rgba(201, 162, 74, 0.6);
-}
-
-/* A tier drop on a variant is the one thing here that must not be missed: it is
-   why the variant is a variant and not the lead. Coloured like its own tier. */
-[data-theme="codex"] .variant-tier {
-  font-family: var(--font-display);
-  color: var(--gold);
-}
-
-[data-theme="codex"] .variant-tier[data-tier="C"],
-[data-theme="codex"] .variant-tier[data-tier="D"] {
-  color: #d98b6a;
-}
-
-/* A fallback is a caveat, not a fact about the player: it reads plainer than
-   the line that names their real rank, so the two are never confused. */
-[data-theme="codex"] .player-band[data-guessed="true"] {
-  color: var(--vellum);
-  font-style: italic;
-  opacity: 0.8;
-}
-
-/* Search plate */
-
-[data-theme="codex"] .seeker-label {
-  font-family: var(--font-display);
-  color: var(--gold);
-  opacity: 0.85;
-}
-
-[data-theme="codex"] .seeker-input {
-  font-family: var(--font-text);
-  color: var(--vellum);
-  background: rgba(8, 13, 26, 0.72);
-  border: 1px solid rgba(201, 162, 74, 0.35);
-  transition: border-color 200ms ease, box-shadow 200ms ease;
-}
-
-[data-theme="codex"] .seeker-input::placeholder {
-  color: rgba(156, 149, 127, 0.6);
-  font-style: italic;
-}
-
-[data-theme="codex"] .seeker-input:focus {
-  outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 0 1px rgba(201, 162, 74, 0.35);
-}
-
-[data-theme="codex"] .seeker-select {
-  appearance: none;
-  cursor: pointer;
-}
-
-/* The dropdown list is painted by the OS, so it needs its own dark colours. */
-[data-theme="codex"] .seeker-select option {
-  background: #0d1424;
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .seeker-go {
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--gold-lit);
-  border: 1px solid var(--gold);
-  background: rgba(201, 162, 74, 0.12);
-  transition: background 200ms ease, color 200ms ease;
-}
-
-[data-theme="codex"] .seeker-go:hover:not([disabled]) {
-  background: rgba(201, 162, 74, 0.24);
-}
-
-[data-theme="codex"] .seeker-hint {
-  color: var(--vellum-dim);
-}
-
 /* Failures speak plainly, in oxblood rather than gold. */
 
 [data-theme="codex"] .notice {
@@ -1338,288 +531,6 @@
   color: var(--vellum-dim);
 }
 
-/* Player heading */
-
-[data-theme="codex"] .player-name {
-  font-family: var(--font-display);
-  font-weight: 500;
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .player-tag {
-  font-family: var(--font-display);
-  color: var(--gold);
-  opacity: 0.75;
-}
-
-[data-theme="codex"] .player-meta {
-  color: var(--vellum-dim);
-}
-
-/* The placement medallion echoes the tier mark. */
-
-[data-theme="codex"] .place-mark {
-  font-family: var(--font-display);
-  font-weight: 900;
-  color: var(--vellum-dim);
-  border: 1px solid rgba(201, 162, 74, 0.3);
-  position: relative;
-  background: radial-gradient(circle at 35% 28%, rgba(201, 162, 74, 0.1), transparent 65%);
-}
-
-[data-theme="codex"] .place-mark[data-top4="true"] {
-  color: var(--gold-lit);
-  border-color: rgba(201, 162, 74, 0.65);
-  background: radial-gradient(circle at 35% 28%, rgba(201, 162, 74, 0.24), transparent 65%);
-}
-
-/* First place earns the double rule the tier marks use. */
-[data-theme="codex"] .match-row[data-place="1"] .place-mark::after {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  border: 1px solid rgba(201, 162, 74, 0.35);
-  border-radius: 50%;
-}
-
-[data-theme="codex"] .match-row[data-place="1"] {
-  border-color: rgba(201, 162, 74, 0.4);
-}
-
-/* Findings: ruled annotations, weighted by severity. */
-
-[data-theme="codex"] .finding {
-  border-left: 2px solid rgba(156, 149, 127, 0.3);
-}
-
-[data-theme="codex"] .finding[data-severity="high"] {
-  border-left-color: #ffe9ae;
-}
-
-[data-theme="codex"] .finding[data-severity="medium"] {
-  border-left-color: var(--gold);
-}
-
-[data-theme="codex"] .finding-tag {
-  font-family: var(--font-display);
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .finding[data-severity="high"] .finding-tag {
-  color: #ffe9ae;
-}
-
-[data-theme="codex"] .finding[data-severity="medium"] .finding-tag {
-  color: var(--gold);
-}
-
-[data-theme="codex"] .finding-title {
-  font-family: var(--font-display);
-  font-weight: 500;
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .finding-detail {
-  color: var(--vellum-dim);
-}
-
-/* The evidence line is where we show our work, so it stays legible. */
-[data-theme="codex"] .finding-evidence {
-  color: rgba(201, 162, 74, 0.72);
-}
-
-/* Lobby table */
-
-[data-theme="codex"] .lobby-list li {
-  border-bottom: 1px solid rgba(201, 162, 74, 0.1);
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .lobby-list li[data-me="true"] {
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .lobby-place {
-  font-family: var(--font-display);
-  color: var(--gold);
-  opacity: 0.7;
-}
-
-[data-theme="codex"] .lobby-list li[data-me="true"] .lobby-name {
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .lobby-comp {
-  font-style: italic;
-  opacity: 0.8;
-}
-
-[data-theme="codex"] .skeleton {
-  border: 1px solid rgba(201, 162, 74, 0.12);
-  background: linear-gradient(180deg, rgba(233, 224, 203, 0.035), rgba(233, 224, 203, 0.012));
-}
-
-/* Top bar ------------------------------------------------------------------ */
-
-[data-theme="codex"] .topbar {
-  padding-bottom: 0.9rem;
-  border-bottom: 1px solid rgba(201, 162, 74, 0.24);
-}
-
-[data-theme="codex"] .topbar-brand {
-  font-family: var(--font-display);
-  font-size: 0.82rem;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .topgame,
-[data-theme="codex"] .langbtn {
-  font-family: var(--font-display);
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--vellum-dim);
-  border-radius: 2px;
-  transition: color 140ms ease, border-color 140ms ease;
-}
-
-[data-theme="codex"] .topgame:hover,
-[data-theme="codex"] .langbtn:hover {
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .topgame[data-active="true"],
-[data-theme="codex"] .langbtn[data-active="true"] {
-  color: var(--gold-lit);
-  border-color: rgba(201, 162, 74, 0.55);
-}
-
-[data-theme="codex"] .topgame-soon {
-  background: rgba(201, 162, 74, 0.16);
-  border: 1px solid rgba(201, 162, 74, 0.4);
-  color: var(--gold);
-}
-
-/**
- * La insignia de beta en una pestaña.
- *
- * **Sin fondo, al revés que el "Pronto" de Dota 2.** Ese vive en una pastilla
- * apagada porque anuncia algo que no se puede tocar; ésta cuelga de una pestaña
- * que sí se usa, y rellenarla la haría competir con el recuadro de la pestaña
- * activa — dos cajas encimadas discutiendo cuál manda.
- */
-[data-theme="codex"] .switch-beta {
-  border: 1px solid rgba(201, 162, 74, 0.45);
-  color: var(--gold);
-}
-
-/* Sobre la pestaña activa el borde dorado se pierde contra el suyo, así que ahí
-   la insignia se apoya en el color y no en la caja. */
-[data-theme="codex"] .switch[data-active="true"] .switch-beta {
-  border-color: transparent;
-  background: rgba(201, 162, 74, 0.2);
-  color: var(--gold-lit);
-}
-
-/* Home --------------------------------------------------------------------- */
-
-[data-theme="codex"] .home-card,
-[data-theme="codex"] .home-stance,
-[data-theme="codex"] .soon-panel {
-  border: 1px solid rgba(201, 162, 74, 0.28);
-  background: linear-gradient(180deg, rgba(22, 32, 60, 0.55), rgba(8, 13, 26, 0.35));
-}
-
-[data-theme="codex"] .home-card-title,
-[data-theme="codex"] .home-games-title,
-[data-theme="codex"] .home-stance-title {
-  font-family: var(--font-display);
-  color: var(--gold-lit);
-  font-weight: 500;
-}
-
-[data-theme="codex"] .home-card-body,
-[data-theme="codex"] .home-stance-body {
-  color: var(--vellum);
-  opacity: 0.88;
-  line-height: 1.55;
-}
-
-[data-theme="codex"] .home-card[data-soon="true"] {
-  opacity: 0.82;
-}
-
-[data-theme="codex"] .home-cta {
-  font-family: var(--font-display);
-  background: transparent;
-  border: 1px solid rgba(201, 162, 74, 0.5);
-  color: var(--gold-lit);
-  border-radius: 2px;
-  transition: background 140ms ease;
-}
-
-[data-theme="codex"] .home-cta:hover {
-  background: rgba(201, 162, 74, 0.14);
-}
-
-/* The disclaimer Riot requires. Quiet, but never hidden — and centred as a
-   block, not just as text, or the measure sits off to one side of the column. */
-[data-theme="codex"] .colophon-legal {
-  margin: 0 auto;
-  font-size: 0.72rem;
-  line-height: 1.6;
-  color: var(--vellum-dim);
-  /* rem, not ch: this theme's serif has a very narrow "0", so a ch-based
-     measure collapsed the notice to 383px and five ragged lines. */
-  max-width: 46rem;
-}
-
-/* Home: games strip ---------------------------------------------------------- */
-
-[data-theme="codex"] .game-row {
-  border: 1px solid rgba(201, 162, 74, 0.22);
-  background: rgba(22, 32, 60, 0.35);
-}
-
-[data-theme="codex"] .game-name {
-  font-family: var(--font-display);
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .game-note {
-  color: var(--vellum);
-  opacity: 0.8;
-}
-
-[data-theme="codex"] .game-row[data-soon="true"] {
-  opacity: 0.72;
-}
-
-[data-theme="codex"] .topbar-brand {
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  padding: 0;
-}
-
-[data-theme="codex"] .topbar-places {
-  display: flex;
-  align-items: center;
-  /* Home · TFT · Deadlock does not fit one phone line, and a row that runs off
-     the edge silently hides Deadlock — the tab we most want people to find. */
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-right: auto;
-}
-
-[data-theme="codex"] .topbar-divider {
-  width: 1px;
-  height: 1.1em;
-  background: rgba(201, 162, 74, 0.3);
-  margin: 0 0.4rem;
-}
-
 /* Charts --------------------------------------------------------------------- */
 
 /* Polarity, not identity: top four against the rest. Both steps were validated
@@ -1630,84 +541,7 @@
   --chart-bad: #b4453f;
 }
 
-[data-theme="codex"] .place-track {
-  border-bottom: 1px solid rgba(201, 162, 74, 0.28);
-}
-
-[data-theme="codex"] .place-fill[data-top4="true"] {
-  background: var(--chart-good);
-}
-
-[data-theme="codex"] .place-fill[data-top4="false"] {
-  background: var(--chart-bad);
-}
-
-[data-theme="codex"] .place-count {
-  font-family: var(--font-display);
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .place-label {
-  font-family: var(--font-display);
-  color: var(--vellum-dim);
-  text-transform: uppercase;
-}
-
-[data-theme="codex"] .coach-habit {
-  font-family: var(--font-display);
-  font-size: 0.86rem;
-  letter-spacing: 0.06em;
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .coach-who {
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--vellum-dim);
-}
-
-/* The reader's own figure is the one they came for, so it is the lit one. */
-[data-theme="codex"] .coach-rate[data-mine] b {
-  color: var(--gold-lit);
-}
-
-/* Deliberately not dim italics: this line carries the evidence for the claim
-   above it, and it has to be as readable as the claim. */
-[data-theme="codex"] .coach-cost,
-[data-theme="codex"] .coach-empty {
-  color: var(--vellum);
-}
-
 /* Footer links & legal documents --------------------------------------------- */
-
-[data-theme="codex"] .colophon-link {
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid rgba(201, 162, 74, 0.45);
-  color: var(--gold-lit);
-  font-family: var(--font-display);
-  font-size: 0.74rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-[data-theme="codex"] .colophon-link:hover {
-  border-bottom-color: var(--gold-lit);
-}
-
-[data-theme="codex"] .colophon-note,
-[data-theme="codex"] .colophon-copyright {
-  color: var(--vellum-dim);
-  font-size: 0.74rem;
-}
-
-[data-theme="codex"] .legal-updated {
-  font-family: var(--font-display);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--vellum-dim);
-}
 
 [data-theme="codex"] .legal-heading,
 [data-theme="codex"] .legal-subheading {
@@ -1732,229 +566,6 @@
 [data-theme="codex"] .legal-section + .legal-section {
   border-top: 1px solid rgba(201, 162, 74, 0.16);
   padding-top: clamp(1.2rem, 3vw, 1.8rem);
-}
-
-[data-theme="codex"] .colophon-sep {
-  color: rgba(201, 162, 74, 0.5);
-}
-
-[data-theme="codex"] .colophon-copyright {
-  font-family: var(--font-display);
-  font-style: normal;
-  font-size: 0.68rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--vellum-dim);
-  opacity: 0.75;
-}
-
-[data-theme="codex"] .colophon-sources {
-  color: var(--vellum-dim);
-}
-
-/* Units page ----------------------------------------------------------------- */
-
-[data-theme="codex"] .cost-chip,
-[data-theme="codex"] .unit-sort .seeker-label {
-  font-family: var(--font-display);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-[data-theme="codex"] .cost-chip {
-  background: transparent;
-  border: 1px solid rgba(201, 162, 74, 0.3);
-  color: var(--vellum-dim);
-  border-radius: 2px;
-  transition: color 140ms ease, border-color 140ms ease;
-}
-
-[data-theme="codex"] .cost-chip:hover {
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .cost-chip[data-active="true"] {
-  color: var(--gold-lit);
-  border-color: rgba(201, 162, 74, 0.6);
-}
-
-[data-theme="codex"] .unit-row {
-  border: 1px solid rgba(201, 162, 74, 0.16);
-  background: linear-gradient(180deg, rgba(22, 32, 60, 0.4), rgba(8, 13, 26, 0.25));
-  transition: border-color 160ms ease;
-}
-
-[data-theme="codex"] .unit-row:hover {
-  border-color: rgba(201, 162, 74, 0.4);
-}
-
-[data-theme="codex"] .unit-rank {
-  font-family: var(--font-display);
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .unit-headname {
-  font-family: var(--font-display);
-  color: var(--vellum);
-}
-
-/* The cost badge, matching the one in the comp detail. */
-[data-theme="codex"] .unit-cost {
-  border: 1px solid rgba(201, 162, 74, 0.4);
-  border-radius: 50%;
-  font-family: var(--font-display);
-  color: var(--gold);
-}
-
-[data-theme="codex"] .unit-cost[data-cost="5"] {
-  border-color: var(--gold-lit);
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .unit-cost[data-cost="4"] {
-  border-color: rgba(176, 141, 198, 0.75);
-  color: rgba(198, 168, 216, 1);
-}
-
-[data-theme="codex"] .unit-carry {
-  border: 1px solid rgba(201, 162, 74, 0.5);
-  color: var(--gold-lit);
-  border-radius: 2px;
-}
-
-[data-theme="codex"] .unit-beststar {
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .metric-value {
-  font-family: var(--font-display);
-  color: var(--vellum);
-}
-
-/* Placement and impact carry the same polarity as the charts: gold is good
-   against the lobby, the lighter oxblood is worse. Validated against this
-   surface — the pair separates by ΔE 19 under deuteranopia. */
-[data-theme="codex"] .metric-value[data-good="true"] {
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .metric-value[data-good="false"] {
-  color: #cf7d74;
-}
-
-[data-theme="codex"] .metric-label {
-  font-family: var(--font-display);
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .unit-detail {
-  border-top: 1px solid rgba(201, 162, 74, 0.16);
-}
-
-[data-theme="codex"] .ui-name {
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .ui-games {
-  font-family: var(--font-display);
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .units-updated {
-  font-family: var(--font-display);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--vellum-dim);
-}
-
-/* Items page ----------------------------------------------------------------- */
-
-[data-theme="codex"] .item-thumb img,
-[data-theme="codex"] .item-thumb-fallback {
-  border: 1px solid rgba(201, 162, 74, 0.5);
-  background: rgba(8, 13, 26, 0.8);
-}
-
-[data-theme="codex"] .item-recipe img {
-  border: 1px solid rgba(201, 162, 74, 0.4);
-  filter: saturate(0.85);
-}
-
-[data-theme="codex"] .carrier-name {
-  font-family: var(--font-display);
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .carrier-figs b {
-  font-family: var(--font-display);
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .carrier-figs b[data-good="true"] {
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .carrier-figs em {
-  color: var(--vellum-dim);
-}
-
-/* Profile timeline: same top-4 polarity as the placement chart. */
-[data-theme="codex"] .tl-bar[data-top4="true"] {
-  background: var(--chart-good);
-}
-
-[data-theme="codex"] .tl-bar[data-top4="false"] {
-  background: var(--chart-bad);
-}
-
-[data-theme="codex"] .tl-place {
-  font-family: var(--font-display);
-  color: var(--ink);
-  font-weight: 700;
-}
-
-/* Ladder --------------------------------------------------------------------- */
-
-[data-theme="codex"] .ladder-row:not(.ladder-head) {
-  border: 1px solid rgba(201, 162, 74, 0.14);
-  background: linear-gradient(180deg, rgba(22, 32, 60, 0.35), rgba(8, 13, 26, 0.2));
-}
-
-[data-theme="codex"] .ladder-head {
-  font-family: var(--font-display);
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .ld-rank {
-  font-family: var(--font-display);
-  color: var(--gold);
-}
-
-[data-theme="codex"] .ld-player b {
-  font-family: var(--font-display);
-  color: var(--vellum);
-}
-
-[data-theme="codex"] .ld-tag {
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .ld-unknown {
-  color: var(--vellum-dim);
-  font-size: 0.85rem;
-}
-
-[data-theme="codex"] .ld-lp {
-  font-family: var(--font-display);
-  color: var(--gold-lit);
-}
-
-[data-theme="codex"] .ld-record {
-  color: var(--vellum-dim);
-}
-
-[data-theme="codex"] .ld-top4[data-good="true"] {
-  color: var(--gold-lit);
 }
 
 /* Deadlock: la tier list de héroes -----------------------------------------
@@ -2067,20 +678,7 @@
     gap: 0.5rem 1.1rem;
   }
 
-  [data-theme="codex"] .dl-stats .stat-value {
-    font-size: 1.1rem;
-  }
-
-  [data-theme="codex"] .dl-stats .stat-primary .stat-value {
-    font-size: 1.35rem;
-  }
-
-  [data-theme="codex"] .dl-stats .stat-label {
-    font-size: 0.62rem;
-    letter-spacing: 0.08em;
-  }
 }
-
 
 /* Etiquetas y escudo de banda ---------------------------------------------
    La brecha y la tendencia dejaron de ser numeros con signo: "+3.0" era honesto
@@ -2253,56 +851,6 @@
 
 /* El tamaño de siempre: lo que heredan `/deadlock/items` y `/deadlock/ranks`,
    las dos pestañas de `.tool-head` que NO recortan su bajada. */
-/**
- * La bajada de las pestañas de herramienta.
- *
- * **Recortada a tres renglones**, no sin límite. Medido en `/deadlock/items`:
- * 259 caracteres en itálica de 18px daban **cinco renglones y 140px de alto**,
- * un muro arriba de la primera fila de datos. Tres renglones dejan entrar la
- * frase que explica de qué va la página y cortan la cola.
- *
- * No se recorta a dos —ahí sí se perdía la premisa— ni se saca la itálica, que
- * es lo que la separa del dato. La página de meta de Deadlock la aprieta más,
- * en su propia regla de abajo.
- */
-[data-theme="codex"] .tool-head .standfirst {
-  max-width: 52ch;
-  margin: 0.9rem 0 0;
-  font-size: 0.88rem;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* El encabezado de la tier list de héroes, que es una pestaña que se USA y no
-   una página de aterrizaje. Sólo acá la bajada se recorta a dos renglones —el
-   2026-08-12, con 731px de cromo arriba, un 1080p mostraba 2,6 héroes en la
-   primera pantalla—. El recorte se scopea a `.deadlock-meta` (el `<main>` de
-   `Deadlock.tsx`) a propósito: la bajada de `/deadlock/items` describe toda la
-   premisa de esa tier list en ~300 caracteres y dos renglones de 0.72rem
-   muestran un tercio; el diseño nunca autorizó comprimir esa pestaña, sólo
-   ésta. Sigue estando entera en el HTML —Google la lee— pero deja de costar
-   media pantalla. */
-[data-theme="codex"] .deadlock-meta .tool-head .standfirst {
-  max-width: 46ch;
-  margin: 0.5rem 0 0;
-  font-size: 0.72rem;
-  line-height: 1.45;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* `.band-label` trae `margin-bottom: 0.7rem` de `.band-picker` como control
-   centrado y solo en la página — acá es una fila más de una columna angosta,
-   y esos 13,3px de aire eran justo lo que le faltaba al riel para entrar en
-   el presupuesto. */
-[data-theme="codex"] .tool-head .band-label {
-  margin-bottom: 0.2rem;
-}
 
 [data-theme="codex"] .dl-meta-line,
 [data-theme="codex"] .tool-head .dl-fallback {
@@ -2329,23 +877,6 @@
 [data-theme="codex"] .tool-head .dl-fallback span {
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-[data-theme="codex"] .tool-head .band-picker {
-  margin: 0;
-}
-
-/* La nota del selector de banda a un renglon: medida, pesaba 40px de los 254
-   de la columna de controles, y en una tira de una sola linea con letra chica
-   sobra. El margen de arriba también baja: los 0,9rem de `.band-note` son para
-   cuando está centrada y sola en la página, no en esta columna apretada. */
-[data-theme="codex"] .tool-head .band-note {
-  font-size: 0.55rem;
-  margin-top: 0.2rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -2377,25 +908,6 @@
     gap: 1.1rem;
   }
 
-  [data-theme="codex"] .tool-head .standfirst {
-    font-size: 0.88rem;
-    line-height: 1.45;
-    margin-top: 0.6rem;
-  }
-
-  /* Misma letra que la regla de arriba, pero con la especificidad para ganarle
-     a `.deadlock-meta .tool-head .standfirst`: esa regla no tiene media query
-     propia, así que sin este selector calificado seguiría mandando en
-     teléfono y la letra no bajaría de 0.72rem a 0.88rem. */
-  [data-theme="codex"] .deadlock-meta .tool-head .standfirst {
-    font-size: 0.88rem;
-    line-height: 1.45;
-    margin-top: 0.6rem;
-  }
-
-  [data-theme="codex"] .tool-head .band-note {
-    margin-top: 0.5rem;
-  }
 }
 
 /* La lista de objetos (grupos por precio, filas, rail de gráficos) vive en
@@ -2946,7 +1458,6 @@
     grid-auto-columns: auto;
   }
 }
-
 
 /* La tarjeta de build -------------------------------------------------------
    Se despliega dentro del panel que abre debajo de la banda (`.dl-band-panel`
@@ -3717,7 +2228,6 @@
 
 }
 
-
 /* Los escalones: qué comprar en cada tier para llegar a la build terminada.
    Va a lo ancho, debajo de la build terminada y encima de las situacionales, que
    es el orden en que se leen: dónde termina, cómo se llega, qué sumar según el
@@ -3835,11 +2345,7 @@
    Se listan por clase y no como `.topbar a`, porque las clases son las que ya
    pintan el estado activo y el hover; agregar un selector por elemento sería un
    segundo lugar donde mirar cuando algo se vea raro. */
-[data-theme="codex"] a.topbar-brand,
-[data-theme="codex"] a.topgame,
-[data-theme="codex"] a.langbtn,
-[data-theme="codex"] a.switch,
-[data-theme="codex"] a.colophon-link {
+[data-theme="codex"] a.switch {
   text-decoration: none;
   cursor: pointer;
 }
@@ -4461,7 +2967,6 @@
   opacity: 0.95;
 }
 
-
 /* La flecha marca los pasos que son una MEJORA de algo ya comprado, donde no se
    paga el precio entero. Sin distinguirlos, la suma de almas del panel no
    cerraría con lo que la build cuesta de verdad. */
@@ -4659,19 +3164,6 @@
 
 /* Los dos equipos, uno al lado del otro: es como se mira una partida. */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * La letra, pegada al retrato.
  *
@@ -4705,8 +3197,6 @@
 [data-theme="codex"] .dl-rep-grade.is-bronze {
   background: linear-gradient(180deg, #d3a077, #9c6b40);
 }
-
-
 
 [data-theme="codex"] .dl-rep-findings {
   list-style: none;
@@ -5097,8 +3587,6 @@
   opacity: 1;
 }
 
-
-
 @media (max-width: 34rem) {
   [data-theme="codex"] .dl-rep-profile {
     grid-template-columns: auto 1fr;
@@ -5118,15 +3606,12 @@
     display: none;
   }
 
-  
-
   [data-theme="codex"] .dl-rep-match-date {
     display: none;
   }
 }
 
-/* El progreso de la última partida, al lado del rango: es el "LP" de Deadlock,
-   que en TFT no existe por partida. */
+/* El progreso de la última partida, al lado del rango: es el "LP" de Deadlock. */
 [data-theme="codex"] .dl-rep-progress {
   padding: 0 0.3rem;
   border: 1px solid rgba(201, 162, 74, 0.3);
@@ -5220,13 +3705,6 @@
   font-size: 0.75rem;
   line-height: 1.4;
   color: var(--vellum-dim);
-}
-
-
-
-/* En teléfono manda el KDA: las almas ya están enteras en el gráfico de abajo. */
-@media (max-width: 34rem) {
-  
 }
 
 /* La columna de un equipo: su encabezado con el resultado más los seis. Existe
@@ -5643,28 +4121,6 @@
   letter-spacing: 0;
 }
 
-/* --- Las cifras de TFT ------------------------------------------------------
-
-   TFT **no cambia de letra**: se queda en Cormorant, que es su voz y la de la
-   prosa del sitio. Lo único que se enciende son las cifras tabulares, que
-   Cormorant tiene (medido el 2026-08-12: con `tabular-nums` los diez dígitos
-   miden 196,41px sin importar cuáles sean).
-
-   Es la diferencia entre una columna de números que se puede comparar de un
-   vistazo y una en la que cada fila arranca corrida unos píxeles. Medido en
-   `/tft/meta`: 212 números en `<b>` y 48 posiciones de comp se dibujaban con
-   ancho proporcional. */
-[data-theme="codex"] .comp,
-[data-theme="codex"] .comp-rank,
-[data-theme="codex"] .dataset,
-[data-theme="codex"] .stat-value,
-[data-theme="codex"] .metric-value,
-[data-theme="codex"] .lobby-place,
-[data-theme="codex"] .place-count,
-[data-theme="codex"] .tiers b {
-  font-variant-numeric: tabular-nums;
-}
-
 /* Las columnas que son números puros se alinean a la derecha: es la convención
    del género, y la razón por la que existen las cifras tabulares. Los dígitos
    quedan uno sobre otro y la columna se compara de un vistazo. */
@@ -5686,61 +4142,6 @@
     padding-top: 0;
   }
 
-  /* La barra de juegos: marca a la izquierda, idioma a la derecha, juegos en el
-     medio deslizándose. `min-width: 0` es lo que permite que el hijo flex se
-     encoja por debajo de su contenido — sin eso el `overflow` no llega a
-     activarse nunca y la fila sigue empujando. */
-  [data-theme="codex"] .topbar {
-    flex-wrap: nowrap;
-    gap: 0.6rem;
-    align-items: center;
-  }
-
-  [data-theme="codex"] .topbar-places {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    min-width: 0;
-    gap: 0.15rem;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  [data-theme="codex"] .topbar-places::-webkit-scrollbar {
-    display: none;
-  }
-
-  [data-theme="codex"] .topgame {
-    padding: 0.3rem 0.5rem;
-    white-space: nowrap;
-    flex: 0 0 auto;
-  }
-
-  /* El divisor y el "Pronto" de Dota 2 se van del teléfono: en una fila que ya
-     se desliza, los dos sólo empujan hacia afuera las pestañas que sí llevan a
-     alguna parte. El anuncio sigue en escritorio, que es donde hay lugar. */
-  [data-theme="codex"] .topbar-divider,
-  [data-theme="codex"] .topgame.is-soon {
-    display: none;
-  }
-
-  /* Las pestañas de sección: misma cura. Se alinean a la izquierda en vez de
-     centrarse, porque una fila que se desliza tiene que empezar en el borde
-     para que se note que hay más a la derecha. */
-  [data-theme="codex"] .switcher {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    gap: 0.3rem;
-    padding-top: 0.9rem;
-    margin-top: 1rem;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  [data-theme="codex"] .switcher::-webkit-scrollbar {
-    display: none;
-  }
-
   [data-theme="codex"] .switch {
     padding: 0.35rem 0.8rem;
     letter-spacing: 0.12em;
@@ -5757,19 +4158,13 @@
     gap: 0.6rem;
   }
 
-  [data-theme="codex"] .tool-head .standfirst {
-    -webkit-line-clamp: 2;
-    font-size: 0.78rem;
-    margin-top: 0.5rem;
-  }
-
   [data-theme="codex"] .masthead {
     margin-bottom: 1.4rem;
   }
 
-  /* El encabezado de las pestañas de TFT y de la portada, que usan `.masthead`
-     centrado y NO pasan por `.tool-head`. Medido a 375px: en `/tft/meta` la
-     primera comp caía en **y=1040**, y la bajada sola —1,1rem sobre una base de
+  /* El encabezado centrado (`.masthead`), que NO pasa por `.tool-head`. Medido
+     a 375px (en la tier list de TFT, cuando existía): el primer dato caía en
+     **y=1040**, y la bajada sola —1,1rem sobre una base de
      19px, o sea 21px en itálica— eran cinco renglones y 170px.
 
      **Se achica, no se recorta.** La regla de `.tool-head` puede cortar a dos
@@ -5777,11 +4172,6 @@
      mirando; acá el mismo párrafo es la propuesta de la portada, y cortarlo a la
      mitad en el teléfono sería esconder de qué se trata el sitio justo a quien
      llega por primera vez. Bajar el cuerpo y el aire alcanza. */
-  [data-theme="codex"] .masthead .standfirst {
-    font-size: 0.85rem;
-    line-height: 1.5;
-    margin-top: 0.9rem;
-  }
 
   [data-theme="codex"] .masthead .title {
     font-size: clamp(1.5rem, 7vw, 2rem);
@@ -5794,33 +4184,7 @@
     margin-top: 0.1rem;
   }
 
-  /* Los selectores de set y de rango, que después de arreglar las dos barras
-     pasaron a ser el bloque más grande del encabezado: **327px medidos**, de los
-     cuales 80 son las dos frases que explican cada control.
-
-     Se aprieta el ritmo vertical y se achica esa prosa auxiliar, pero **no se
-     esconde**: son las dos frases que dicen que la lista cubre el set en curso y
-     que cada banda se mide sobre sus propias partidas. Sin ellas los números de
-     abajo se leen como si valieran para todos, que es justo el malentendido que
-     esas líneas existen para evitar. */
-  [data-theme="codex"] .band-picker {
-    margin-top: 1rem;
   }
-
-  [data-theme="codex"] .set-picker {
-    margin-bottom: 0.6rem;
-  }
-
-  [data-theme="codex"] .band-picker .detail-note {
-    font-size: 0.72rem;
-    line-height: 1.4;
-    margin-top: 0.4rem;
-  }
-
-  [data-theme="codex"] .dataset {
-    margin-top: 1.1rem;
-  }
-}
 
 /* --- El desborde que destapó el layout nuevo --------------------------------
 
@@ -5840,32 +4204,8 @@
    vez de su opción más larga. Van sin media query a propósito: el mínimo del
    select empuja en cualquier ancho, sólo que arriba de 375px sobra lugar y no
    se nota. */
-[data-theme="codex"] .tool-head > *,
-[data-theme="codex"] .tool-controls {
+[data-theme="codex"] .tool-head > * {
   min-width: 0;
-}
-
-[data-theme="codex"] .band-select {
-  width: 100%;
-  max-width: 100%;
-}
-
-/* --- 2b. Las tarjetas flotantes en pantallas sin puntero ---------------------
-
-   `.item-pop` es la ficha que aparece al pasar el mouse sobre un ítem: 268px de
-   ancho, `position: absolute` y **`visibility: hidden`**, que esconde pero
-   **sigue ocupando lugar en la maqueta**. En `/tft/meta` hay una por ítem de
-   cada comp: medido, inflaban `.app` a 429px sobre un viewport de 375, y el
-   desborde sólo no se veía porque `.app` recorta.
-
-   `@media (hover: none)` apunta exactamente a lo que importa: un dispositivo sin
-   puntero **no puede** mostrar una tarjeta de hover, así que ahí no es un dato
-   escondido, es trabajo de maquetado por algo que nunca se va a ver.
-   No se toca en escritorio. */
-@media (hover: none) {
-  [data-theme="codex"] .item-pop {
-    display: none;
-  }
 }
 
 /* --- 3. El perfil, a dos columnas -------------------------------------------
@@ -6171,7 +4511,6 @@
   width: 100%;
   height: auto;
 }
-
 
 /* --- La insignia de rango, con el numeral encima --------------------------- */
 
