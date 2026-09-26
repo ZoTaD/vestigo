@@ -2,7 +2,15 @@ import { describe, it, expect } from "vitest";
 import dlCatalogJson from "@deadlock/catalog.json";
 import dlHeroesJson from "@deadlock/heroes.json";
 import dlItemsJson from "@deadlock/items.json";
-import { deadlockDetailSlugs, sitemapPaths, sitemapXml, type SitemapData } from "../src/sitemap";
+import {
+  SITEMAP_GROUPS,
+  deadlockDetailSlugs,
+  sitemapIndexXml,
+  sitemapLastmod,
+  sitemapPaths,
+  sitemapXml,
+  type SitemapData,
+} from "../src/sitemap";
 import { heroes as dlHeroSlugs, items as dlItemSlugs } from "../src/deadlockSlugs";
 
 const data = {
@@ -95,7 +103,7 @@ describe("sitemapPaths", () => {
 });
 
 describe("sitemapXml", () => {
-  const xml = sitemapXml(data, "2026-07-23");
+  const xml = sitemapXml(data);
 
   it("is well-formed enough to submit", () => {
     expect(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>')).toBe(true);
@@ -112,6 +120,64 @@ describe("sitemapXml", () => {
   it("declares each page's translation", () => {
     expect(xml).toContain('hreflang="es"');
     expect(xml).toContain('hreflang="en"');
+  });
+});
+
+/**
+ * `lastmod` honesto (2026-09-26): antes todas las URLs llevaban la fecha diaria
+ * de Deadlock y Google deja de leer `lastmod` en todo el sitio cuando no es
+ * exacto. Cada página lleva la fecha de lo que la alimenta, o ninguna.
+ */
+describe("sitemapLastmod", () => {
+  const conFechas: SitemapData = {
+    ...data,
+    dlNews: [{ slug: "2026-09-16", title: "x", date: "2026-09-16T20:16:43.000Z", score: { nerf: 0, buff: 0, mixed: 0, fix: 0 } }],
+    p2: {
+      leagues: [{ slug: "std", name: "Standard" }],
+      entries: [{ id: "gems/abiding-hex", cat: "gems", en: "Abiding Hex", es: "Maleficio duradero" }],
+      editions: [
+        { slug: "0-5-5c", version: "0.5.5c", date: "2026-09-17", title: { en: "a", es: null } },
+        { slug: "0-5-5b", version: "0.5.5b", date: "2026-09-10", title: { en: "b", es: null } },
+      ],
+    },
+    vh: {
+      entries: [{ slug: "honey", tab: "foods", en: "Honey", es: "Miel" }],
+      editions: [{ slug: "1-0-15", version: "1.0.15", date: "2026-09-18", title: {} }],
+    },
+    dates: { deadlock: "2026-09-26T03:00:00Z", poe2Economy: "2026-09-23T22:00:02Z", valheim: "2026-09-25T14:20:32Z" },
+  };
+
+  it("fecha cada página con lo que la alimenta", () => {
+    expect(sitemapLastmod("/en/deadlock", conFechas)).toBe("2026-09-26");
+    expect(sitemapLastmod("/es/deadlock/patches/2026-09-16", conFechas)).toBe("2026-09-16");
+    expect(sitemapLastmod("/en/deadlock/patches", conFechas)).toBe("2026-09-16");
+    expect(sitemapLastmod("/en/poe2", conFechas)).toBe("2026-09-23");
+    expect(sitemapLastmod("/en/poe2/patches", conFechas)).toBe("2026-09-17");
+    expect(sitemapLastmod("/en/poe2/patches/0-5-5b", conFechas)).toBe("2026-09-10");
+    expect(sitemapLastmod("/en/valheim/foods/honey", conFechas)).toBe("2026-09-25");
+    expect(sitemapLastmod("/es/valheim/patches/1-0-15", conFechas)).toBe("2026-09-18");
+  });
+
+  it("deja sin fecha lo que no tiene sello, en vez de inventarla", () => {
+    expect(sitemapLastmod("/en", conFechas)).toBeUndefined();
+    expect(sitemapLastmod("/en/privacy", conFechas)).toBeUndefined();
+    expect(sitemapLastmod("/en/poe2/encyclopedia/gems/abiding-hex", conFechas)).toBeUndefined();
+    const xml = sitemapXml(conFechas, "site");
+    expect(xml).toContain("<loc>https://vestigo.gg/en</loc>");
+    expect(xml).not.toContain("<lastmod>");
+  });
+
+  it("parte el sitio en un sitemap por juego, con un índice en /sitemap.xml", () => {
+    const index = sitemapIndexXml(conFechas);
+    expect(index).toContain("<sitemapindex");
+    for (const g of ["site", "deadlock", "poe2", "valheim"]) {
+      expect(index).toContain(`<loc>https://vestigo.gg/sitemaps/${g}.xml</loc>`);
+    }
+    expect(index).toContain("<lastmod>2026-09-26</lastmod>");
+    // Entre los cuatro están todas las páginas, y ninguna en dos.
+    const locs = SITEMAP_GROUPS.flatMap((g) => sitemapXml(conFechas, g).match(/<loc>[^<]+/g) ?? []);
+    expect(locs.length).toBe(sitemapPaths(conFechas).length);
+    expect(sitemapXml(conFechas, "valheim")).not.toContain("/deadlock");
   });
 });
 

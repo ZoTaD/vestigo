@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
-import { ROBOTS_TXT, sitemapXml, type SitemapData } from "./src/sitemap";
+import { ROBOTS_TXT, SITEMAP_GROUPS, sitemapFile, sitemapIndexXml, sitemapXml, type SitemapData } from "./src/sitemap";
 import { prerenderPages, renderHtml, ogImagePath, stripComments } from "./src/prerender";
 import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
@@ -62,7 +62,7 @@ function localDeadlockAssets(): Plugin {
  * plugins leían lo mismo cada uno por su cuenta; desde que TFT salió del sitio
  * (2026-09-15) es una sola lectura, acá.
  */
-function readSitemapData(): { data: OgData; generatedAt: string } {
+function readSitemapData(): { data: OgData } {
   const readDl = (name: string) => JSON.parse(readFileSync(`${deadlockDir}/${name}`, "utf-8"));
   const readDlMaybe = (name: string) => {
     try {
@@ -130,6 +130,13 @@ function readSitemapData(): { data: OgData; generatedAt: string } {
     data: {
       p2,
       vh,
+      // Los sellos de cada pipeline, para el `lastmod` del sitemap. La
+      // enciclopedia de PoE2 no tiene sello y va sin fecha.
+      dates: {
+        deadlock: dlHeroesFile.generatedAt,
+        poe2Economy: p2Leagues?.updated,
+        valheim: readVh("meta.json")?.extractedAt,
+      },
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
       dlHeroIds: dlHeroesFile.heroes.map((h: { heroId: number }) => String(h.heroId)),
@@ -138,7 +145,6 @@ function readSitemapData(): { data: OgData; generatedAt: string } {
       dlHeroStats: { band: dlHeroesFile.band, heroes: dlHeroesFile.heroes },
       dlEditions,
     },
-    generatedAt: String(dlHeroesFile.generatedAt ?? ""),
   };
 }
 
@@ -170,17 +176,14 @@ function seoFiles(): Plugin {
     name: "vestigo-seo-files",
     apply: "build",
     async generateBundle() {
-      const { data, generatedAt } = readSitemapData();
+      const { data } = readSitemapData();
 
-      // The data stamps its own build time; using it rather than "now" keeps
-      // lastmod honest — it is when the data changed, not when we deployed.
-      const lastmod = generatedAt.slice(0, 10) || undefined;
-
-      this.emitFile({
-        type: "asset",
-        fileName: "sitemap.xml",
-        source: sitemapXml(data, lastmod ?? new Date().toISOString().slice(0, 10)),
-      });
+      // `/sitemap.xml` es el índice y cada juego tiene su sitemap; las fechas
+      // salen de cada página (`sitemapLastmod`), no del deploy.
+      this.emitFile({ type: "asset", fileName: "sitemap.xml", source: sitemapIndexXml(data) });
+      for (const group of SITEMAP_GROUPS) {
+        this.emitFile({ type: "asset", fileName: sitemapFile(group), source: sitemapXml(data, group) });
+      }
       this.emitFile({ type: "asset", fileName: "robots.txt", source: ROBOTS_TXT });
 
       /**

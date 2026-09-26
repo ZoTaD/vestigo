@@ -75,6 +75,64 @@ export interface SitemapData {
   p2?: Poe2SitemapData;
   /** Valheim. Opcional por lo mismo. */
   vh?: ValheimSitemapData;
+  /**
+   * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
+   * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
+   */
+  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string };
+}
+
+/** Los sitemaps en que se parte el sitio: uno por juego y uno para lo demás. */
+export const SITEMAP_GROUPS = ["site", "deadlock", "poe2", "valheim"] as const;
+export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];
+
+function sitemapGroup(path: string): SitemapGroup {
+  const game = path.split("/")[2];
+  return game === "deadlock" || game === "poe2" || game === "valheim" ? game : "site";
+}
+
+/** La más nueva de unas fechas, o nada si no hay ninguna. */
+function newest(dates: (string | undefined)[]): string | undefined {
+  return dates.filter((d): d is string => !!d).sort().at(-1);
+}
+
+/**
+ * La fecha en que cambió una página, o nada si no la sabemos.
+ *
+ * Hasta el 2026-09-26 todas las URLs llevaban la fecha de los datos de
+ * Deadlock, que se regeneran cada día: el sitemap decía que las 10.500 páginas
+ * (fichas de Valheim y PoE2 incluidas) cambiaron hoy. Google usa `lastmod` sólo
+ * si es "consistently and verifiably accurate", y cuando no lo es deja de
+ * leerlo en todo el sitio. Por eso cada página lleva la fecha de lo que la
+ * alimenta, y la que no tiene sello va sin `lastmod` antes que con uno falso.
+ */
+export function sitemapLastmod(path: string, data: SitemapData): string | undefined {
+  const [, , game, section, detail] = path.split("/");
+  const day = (d: string | undefined) => d?.slice(0, 10) || undefined;
+  if (game === "deadlock") {
+    const news = data.dlNews ?? [];
+    if (section === "patches") {
+      return day(detail ? news.find((e) => e.slug === detail)?.date : newest(news.map((e) => e.date)));
+    }
+    return day(data.dates?.deadlock);
+  }
+  if (game === "poe2") {
+    const editions = data.p2?.editions ?? [];
+    if (section === "patches") {
+      return day(detail ? editions.find((e) => e.slug === detail)?.date : newest(editions.map((e) => e.date)));
+    }
+    // `/poe2` a secas es la economía de la liga por defecto.
+    if (!section || section === "economy") return day(data.dates?.poe2Economy);
+    return undefined;
+  }
+  if (game === "valheim") {
+    const editions = data.vh?.editions ?? [];
+    if (section === "patches") {
+      return day(detail ? editions.find((e) => e.slug === detail)?.date : newest(editions.map((e) => e.date)));
+    }
+    return day(data.dates?.valheim);
+  }
+  return undefined;
 }
 
 /**
@@ -180,8 +238,8 @@ export function sitemapPaths(data: SitemapData): string[] {
  * learns the two language versions are the same page rather than duplicates
  * competing with each other.
  */
-export function sitemapXml(data: SitemapData, lastmod: string): string {
-  const paths = sitemapPaths(data);
+export function sitemapXml(data: SitemapData, group?: SitemapGroup): string {
+  const paths = sitemapPaths(data).filter((p) => !group || sitemapGroup(p) === group);
   // Group by the path with the language stripped, so both languages of one page
   // list each other.
   const byPage = new Map<string, string[]>();
@@ -199,10 +257,11 @@ export function sitemapXml(data: SitemapData, lastmod: string): string {
             return `    <xhtml:link rel="alternate" hreflang="${lang}" href="${SITE_ORIGIN}${alt}"/>`;
           })
           .join("\n");
+        const lastmod = sitemapLastmod(path, data);
         return (
           `  <url>\n` +
           `    <loc>${SITE_ORIGIN}${path}</loc>\n` +
-          `    <lastmod>${lastmod}</lastmod>\n` +
+          (lastmod ? `    <lastmod>${lastmod}</lastmod>\n` : "") +
           `${alternates}\n` +
           `  </url>`
         );
@@ -216,6 +275,38 @@ export function sitemapXml(data: SitemapData, lastmod: string): string {
     `        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n` +
     `${entries}\n` +
     `</urlset>\n`
+  );
+}
+
+/** Dónde se publica el sitemap de cada grupo. */
+export function sitemapFile(group: SitemapGroup): string {
+  return `sitemaps/${group}.xml`;
+}
+
+/**
+ * El índice que se publica en `/sitemap.xml` (2026-09-26): apunta a un sitemap
+ * por juego para que Search Console cuente las páginas indexadas de cada uno
+ * por separado. La dirección no cambia, así que el sitemap ya enviado sigue
+ * sirviendo.
+ */
+export function sitemapIndexXml(data: SitemapData): string {
+  const paths = sitemapPaths(data);
+  const entries = SITEMAP_GROUPS.filter((g) => paths.some((p) => sitemapGroup(p) === g))
+    .map((g) => {
+      const lastmod = newest(paths.filter((p) => sitemapGroup(p) === g).map((p) => sitemapLastmod(p, data)));
+      return (
+        `  <sitemap>\n` +
+        `    <loc>${SITE_ORIGIN}/${sitemapFile(g)}</loc>\n` +
+        (lastmod ? `    <lastmod>${lastmod}</lastmod>\n` : "") +
+        `  </sitemap>`
+      );
+    })
+    .join("\n");
+  return (
+    `<?xml version="1.0" encoding="UTF-8"?>\n` +
+    `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+    `${entries}\n` +
+    `</sitemapindex>\n`
   );
 }
 
