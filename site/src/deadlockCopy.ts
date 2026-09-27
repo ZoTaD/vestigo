@@ -896,8 +896,9 @@ const EN = {
       phase: { early: "Early game", mid: "Mid game", late: "Late game" },
       phaseRange: { early: "0 – 12 min", mid: "12 – 22 min", late: "22+ min" },
       mostPlayed: "Most played",
-      /** Sólo cuando le gana a todas las demás por dos errores estándar. */
-      bestWinRate: "Best win rate",
+      /** Sólo cuando sus objetos aportan medio punto más que los de todas las
+       *  demás: el winrate crudo premia llegar a lo caro. */
+      bestWinRate: "Performs best",
       none: "Not enough games with this hero yet.",
       name: (damage: string, trait: string) => `${damage} ${trait}`,
       damage: { weapon: "Weapon damage", vitality: "Bonus health", spirit: "Spirit power" },
@@ -974,6 +975,11 @@ const EN = {
       recoNone: "The most played build is already the best one we can measure — we'd change nothing.",
       recoWhy: (pts: string, games: string) => `+${pts} win points · ${games} games run it alongside the rest`,
       vsHero: (delta: string, hero: string) => ` · ${delta} vs this hero's ${hero}%`,
+      edgeScore: (pts: string) => ` · its items add ${pts} win points`,
+      edgeScoreWhy:
+        "Each purchase measured against players who were at the same minute with the same souls " +
+        "and spent them on something else, weighted by how many run each item. Unlike the build's " +
+        "win rate, it doesn't favor expensive builds just because whoever is already winning completes them.",
       blended: "Blended",
       blendedWhy: (pct: string) =>
         `Only ${pct}% of what these players do belongs to this build — the rest is part-way into another one`,
@@ -1921,7 +1927,7 @@ const ES: typeof EN = {
       phase: { early: "Inicio", mid: "Medio juego", late: "Juego tardío" },
       phaseRange: { early: "0 – 12 min", mid: "12 – 22 min", late: "22+ min" },
       mostPlayed: "La más jugada",
-      bestWinRate: "Mejor winrate",
+      bestWinRate: "Rinde más",
       none: "Todavía no hay partidas suficientes con este héroe.",
       // Los rasgos van como sustantivo y no como adjetivo: "Vampirismo de
       // espíritu" se lee bien y "Vampírica de espíritu" no concuerda con nada.
@@ -1959,6 +1965,11 @@ const ES: typeof EN = {
       recoWhy: (pts: string, games: string) =>
         `+${pts} puntos de victoria · ${games} partidas lo llevan junto al resto`,
       vsHero: (delta: string, hero: string) => ` · ${delta} contra el ${hero}% del héroe`,
+      edgeScore: (pts: string) => ` · sus objetos aportan ${pts} puntos de victoria`,
+      edgeScoreWhy:
+        "Cada compra medida contra jugadores que estaban en el mismo minuto con las mismas almas y " +
+        "las gastaron en otra cosa, pesada por cuántos llevan cada objeto. A diferencia del winrate " +
+        "de la build, no favorece a las caras sólo porque las completa el que ya va ganando.",
       blended: "Mezclada",
       blendedWhy: (pct: string) =>
         `Sólo el ${pct}% de lo que hace esta gente pertenece a esta build — el resto está a mitad de camino de otra`,

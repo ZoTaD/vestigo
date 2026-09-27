@@ -64,6 +64,8 @@ export interface CatalogItem {
   types?: string[];
   upgradesTo?: number[];
   upgradesFrom?: number[];
+  /** Las stats planas que da, como las nombra el juego (`TECH_LIFESTEAL`: 13). */
+  mods?: Record<string, number>;
 }
 
 /** Todos los ítems corriente abajo de uno, transitivo. */
@@ -186,6 +188,69 @@ export function groupBuilds(grupos: Group[]): ChosenGroup[] {
   return out;
 }
 
+/**
+ * Cuánto menos jugada puede estar la build de ayer y seguir primera.
+ *
+ * Las pestañas se ordenan por partidas, y con dos formas de jugar parejas el
+ * orden se daba vuelta de un día al otro por ruido: medido después del parche
+ * 09-16, **7 a 11 héroes por día** cambiaban cuál era la primera, contra 4 a 6
+ * antes. Leer la tarjeta de ayer y encontrar otra cosa en el mismo lugar es lo
+ * que hacía que las builds se sintieran "raras". Con el 15% la de ayer se queda
+ * adelante mientras siga estando entre las más jugadas; si la otra la pasa de
+ * verdad, la reemplaza.
+ */
+export const ORDEN_TOLERANCIA = 0.15;
+
+/** Jaccard sobre los doce publicados para decir que es "la misma build" que ayer. */
+export const MISMA_BUILD = 0.5;
+
+/**
+ * Pone primera a la build que ayer estaba primera, si sigue estando y no quedó
+ * claramente detrás. El resto conserva su orden.
+ */
+export function stableOrder<T extends { matches: number; items: { itemId: number }[] }>(
+  builds: T[],
+  anterior: number[] | undefined
+): T[] {
+  if (!anterior || anterior.length === 0 || builds.length < 2) return builds;
+  let mejor = -1;
+  let mejorJ = MISMA_BUILD;
+  builds.forEach((b, i) => {
+    const j = jaccard(b.items.map((x) => x.itemId), anterior);
+    if (j > mejorJ || (j === mejorJ && mejor === -1)) { mejor = i; mejorJ = j; }
+  });
+  if (mejor <= 0) return builds;
+  const tope = Math.max(...builds.map((b) => b.matches));
+  if (builds[mejor].matches < (1 - ORDEN_TOLERANCIA) * tope) return builds;
+  return [builds[mejor], ...builds.filter((_, i) => i !== mejor)];
+}
+
+/**
+ * Cuánto rinde una build, **medido compra por compra** y no por su winrate.
+ *
+ * El winrate de una build es el de su gente al final de la partida, y la build
+ * final es en parte consecuencia de ir ganando: los objetos caros los completa
+ * quien ya juntó almas. Medido el 2026-09-27, el winrate de cada build contra su
+ * héroe correlacionaba **0,50 con las almas de sus doce objetos** y en 21 de 29
+ * héroes "la de mejor winrate" era la más cara.
+ *
+ * Se probó corregirlo comparando partidas de igual duración y patrimonio, como
+ * el `adjusted_win_rate` de deadlock-api, y no alcanza: con el patrimonio a los
+ * 10, 12, 15 o 20 minutos la correlación queda en 0,47-0,55, y con el final se da
+ * vuelta (−0,73), porque el final ya es resultado. Lo que sí la saca es lo que
+ * hacen Statlocker y Vibelock: **valuar cada compra en el momento en que se
+ * hace**. Eso es el `edge` de cada objeto —pareado contra quien estaba en el
+ * mismo minuto con las mismas almas y las gastó en otra cosa—, y la build vale
+ * el promedio de los suyos pesado por prevalencia. Con esto la correlación con
+ * las almas baja a 0,15 y la de con el winrate real queda en 0,34: sigue
+ * midiendo lo mismo, sin el premio por haber llegado.
+ */
+export function edgeScore(items: { edge: number; prevalence: number }[]): number {
+  const peso = items.reduce((a, i) => a + i.prevalence, 0);
+  if (peso <= 0) return 0;
+  return items.reduce((a, i) => a + i.prevalence * i.edge, 0) / peso;
+}
+
 /** Los cuatro precios de la tienda, del más barato al más caro. */
 export const TIERS = [1, 2, 3, 4] as const;
 
@@ -215,18 +280,39 @@ export function byTier(items: { itemId: number; chain: number[] }[], catalogo: M
 /**
  * El rasgo que define a la build, para nombrarla.
  *
- * Sale de los tipos que el catálogo ya trae, así que no hay lista a mano: si la
- * build carga curación es "vampírica", si carga vida es "de aguante", y si no,
- * es la de daño. La prosa de cada rasgo vive en `i18n.ts` en los dos idiomas —
- * son palabras nuestras, no vocabulario del juego, así que no se bajan.
+ * **Ya no sale de los `types` del catálogo.** Esa etiqueta de "healing" la
+ * llevan 54 de los 156 objetos —Tiempo de Recarga Superior, Disipador de Magia,
+ * Coleccionista de Trofeos— y con pedir 4 de 12 salía "vampirismo" en 61 de 77
+ * builds (medido el 2026-09-27): dos pestañas del mismo héroe con el mismo
+ * nombre y builds de arma llamadas vampíricas.
+ *
+ * Ahora es lo que la build **da**: vampírica si lleva al menos dos objetos con
+ * robo de vida en sus stats (`BULLET_LIFESTEAL` o `TECH_LIFESTEAL`), de aguante
+ * si pone al menos un tercio largo de sus almas en vitalidad, y si no, de daño.
  */
 export type Trait = "vampiric" | "survival" | "dps";
 
+/** Las stats del juego que son robo de vida. */
+export const LIFESTEAL_MODS = ["BULLET_LIFESTEAL", "TECH_LIFESTEAL"] as const;
+/** Objetos con robo de vida para llamarla vampírica. */
+export const MIN_LIFESTEAL = 2;
+/** Fracción de las almas en vitalidad para llamarla de aguante. */
+export const SURVIVAL_SHARE = 0.35;
+
 export function traitOf(items: { itemId: number }[], catalogo: Map<number, CatalogItem>): Trait {
-  const con = (t: string) =>
-    items.filter((i) => (catalogo.get(i.itemId)?.types ?? []).includes(t)).length;
-  if (con("healing") >= 4) return "vampiric";
-  if (con("health") >= 5) return "survival";
+  const robo = items.filter((i) =>
+    LIFESTEAL_MODS.some((m) => (catalogo.get(i.itemId)?.mods?.[m] ?? 0) > 0)
+  ).length;
+  if (robo >= MIN_LIFESTEAL) return "vampiric";
+  let almas = 0;
+  let vida = 0;
+  for (const i of items) {
+    const it = catalogo.get(i.itemId);
+    if (!it) continue;
+    almas += it.cost;
+    if (it.slot === "vitality") vida += it.cost;
+  }
+  if (almas > 0 && vida / almas >= SURVIVAL_SHARE) return "survival";
   return "dps";
 }
 
@@ -346,6 +432,19 @@ export const COUNTER_REACH = 0.3;
  */
 export const COUNTER_MIN_BASE = 0.03;
 
+/**
+ * Uso máximo del objeto en ese héroe para seguir llamándolo situacional.
+ *
+ * **Arriba de esto es núcleo, aunque su compra salte contra ciertos rivales.**
+ * El 2026-09-27 Contrahechizo lo llevaba el 74% de las Vindictas y salía de su
+ * build por "situacional"; lo mismo Disipador de Magia en El Navajas (67%) y
+ * Golpe Fantasmal en Abrams (61%). Un objeto que compran dos de cada tres no
+ * depende de quién enfrentes: es parte de la build, y la build de la tarjeta
+ * tiene que ser la que se juega. Así lo cuentan también deadlock-api y Vibelock,
+ * que arman el núcleo por tasa de compra.
+ */
+export const COUNTER_MAX_BASE = 0.4;
+
 export interface CounterRow {
   heroId: number;
   itemId: number;
@@ -404,7 +503,7 @@ export function countersFrom(rows: CounterRow[]): Map<number, Counter[]> {
     const [heroId, itemId] = key.split("|").map(Number);
     const base = lista[0].base;
     // El objeto tiene que ser algo que ese héroe de verdad se buildea a veces.
-    if (base < COUNTER_MIN_BASE || lista.length < 5) continue;
+    if (base < COUNTER_MIN_BASE || base >= COUNTER_MAX_BASE || lista.length < 5) continue;
 
     const tasas = lista.map((r) => r.rate);
     const rango = Math.max(...tasas) - Math.min(...tasas);
@@ -563,6 +662,12 @@ export interface HeroBuild {
   aroundAbility?: number;
   matches: number;
   winRate: number;
+  /**
+   * El aporte de la build: el de sus doce objetos, pesado por cuántos de su
+   * gente llevan cada uno. En puntos de victoria. Decide cuál "rinde más";
+   * ver `edgeScore`.
+   */
+  edgeScore?: number;
   /**
    * Cuán puros son los jugadores de esta build: el peso medio que Archetypal
    * Analysis les asigna a su propio arquetipo, de 0 a 1.

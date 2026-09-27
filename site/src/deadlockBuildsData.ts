@@ -46,6 +46,12 @@ export interface RawBuild {
   aroundAbility?: number;
   matches: number;
   winRate: number;
+  /**
+   * El aporte de la build: el de sus doce objetos —cada compra medida contra
+   * quien estaba igual en ese minuto— pesado por prevalencia, en puntos de
+   * victoria. Ausente en archivos anteriores al 2026-09-27.
+   */
+  edgeScore?: number;
   /** Peso medio del arquetipo entre su gente, de 0 a 1. */
   commitment?: number;
   items: RawBuildItem[];
@@ -170,32 +176,56 @@ export const WINRATE_SIGMAS = 2;
 const seOf = (matches: number): number => (matches > 0 ? 0.5 / Math.sqrt(matches) : Infinity);
 
 /**
+ * Cuántos puntos de aporte tiene que sacarle una build a **todas** las demás para
+ * marcarla como la que rinde más. Es el mismo medio punto que exige la
+ * recomendación para cambiar un objeto (`MIN_GANANCIA` en el pipeline): una
+ * partida más cada doscientas. Medido el 2026-09-27, se cumple en 7 de 29 héroes.
+ */
+export const MARGEN_APORTE = 0.5;
+
+/**
  * Qué etiqueta lleva cada build, en el mismo orden en que vienen.
  *
- * Las builds llegan ordenadas por partidas, así que la primera es la más jugada.
- * La de mejor winrate se marca **sólo si le gana a todas las demás** por el
- * margen de arriba: si le saca mucho a una y empata con otra, no hay "la mejor",
- * hay dos parecidas.
+ * "La más jugada" va en la de más partidas, que casi siempre es la primera: el
+ * pipeline deja adelante la de ayer mientras no quede atrás por más del 15%
+ * (`stableOrder`), así el orden de las pestañas no salta y la etiqueta sigue
+ * diciendo la verdad.
+ *
+ * "Rinde más" se decide por `edgeScore` —el aporte de sus objetos, compra por
+ * compra— y no por el winrate de la build. **El winrate premiaba a la build más
+ * cara**: medido el 2026-09-27, en 21 de 29 héroes la de mejor winrate era la de
+ * más almas, porque los objetos caros los completa el que ya va ganando. Con
+ * archivos viejos, sin `edgeScore`, se sigue usando el winrate con dos errores
+ * estándar.
  *
  * **Con una sola build no se etiqueta nada.** Llamar "la más jugada" a la única
- * que hay no distingue nada de nada. Son cuatro héroes hoy, y se resuelve solo:
- * cuando el corpus ranked crezca les va a aparecer una segunda.
+ * que hay no distingue nada de nada.
  */
-export function badgesFor(builds: { winRate: number; matches: number }[]): BuildBadge[][] {
+export function badgesFor(
+  builds: { winRate: number; matches: number; edgeScore?: number }[]
+): BuildBadge[][] {
   const out: BuildBadge[][] = builds.map(() => []);
   if (builds.length < 2) return out;
 
-  out[0].push("played");
+  let masJugada = 0;
+  builds.forEach((b, i) => {
+    if (b.matches > builds[masJugada].matches) masJugada = i;
+  });
+  out[masJugada].push("played");
+
+  const porAporte = builds.every((b) => b.edgeScore !== undefined);
+  const valor = (b: (typeof builds)[number]) => (porAporte ? b.edgeScore! : b.winRate);
 
   let mejor = 0;
   builds.forEach((b, i) => {
-    if (b.winRate > builds[mejor].winRate) mejor = i;
+    if (valor(b) > valor(builds[mejor])) mejor = i;
   });
 
   const gana = builds.every((b, i) => {
     if (i === mejor) return true;
+    if (porAporte) return valor(builds[mejor]) - valor(b) >= MARGEN_APORTE;
     const margen = Math.sqrt(seOf(builds[mejor].matches) ** 2 + seOf(b.matches) ** 2);
-    return builds[mejor].winRate - b.winRate > WINRATE_SIGMAS * margen;
+    return valor(builds[mejor]) - valor(b) > WINRATE_SIGMAS * margen;
   });
   if (gana) out[mejor].push("winrate");
 

@@ -169,7 +169,7 @@ jobs:
       # del lado de DuckDB. Se suman ~4 minutos de pedirle a la API el orden de
       # habilidades, héroe por héroe.
       #
-      # **Una vez por día, a las 12:30 UTC. El "ojo cuando la muestra crezca"
+      # **Una vez por día** (ver la puerta, abajo). El "ojo cuando la muestra crezca"
       # que decía este comentario ya pasó.**
       #
       # Decía que con el corpus ranked eran ~1 minuto. Medido el 2026-08-13:
@@ -191,12 +191,26 @@ jobs:
       # la tarjeta de build queda congelada y nada lo diría. Lo que SÍ perdona
       # fallar es la API de habilidades, y eso se maneja adentro: si no contesta,
       # el JSON sale sin `abilityOrder` y la tarjeta no dibuja ese panel.
+      #
+      # **La puerta es la edad del archivo, no la hora del reloj**, por lo mismo
+      # que la escalera: el 2026-09-26 GitHub largó la corrida de las 12:30 a las
+      # 11:41, `date -u +%H` dio "11" y ese día no hubo builds. Con 20 horas
+      # corre una vez por día en la primera corrida que llegue, arranque cuando
+      # arranque.
       - name: build builds
         run: |
-          if [ "$(date -u +%H)" = "12" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/builds.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "las builds tienen ${edad_h}h; se regeneran"
             npm run build:builds --prefix games/deadlock/pipeline
           else
-            echo "las builds corren una vez por día (12:30 UTC); esta corrida las saltea"
+            echo "las builds tienen ${edad_h}h (< 20); esta corrida las saltea"
           fi
 
       # La escalera de rangos. Es la medición más barata de las cuatro —una

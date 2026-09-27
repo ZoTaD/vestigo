@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { WINRATE_SIGMAS, badgesFor } from "../src/deadlockBuildsData";
+import { MARGEN_APORTE, WINRATE_SIGMAS, badgesFor } from "../src/deadlockBuildsData";
 
 const b = (winRate: number, matches: number) => ({ winRate, matches });
 
@@ -51,6 +51,32 @@ describe("badgesFor", () => {
   it("aguanta una build sin partidas sin dividir por cero", () => {
     const out = badgesFor([b(0.5, 1000), b(0.9, 0)]);
     expect(out.flat()).not.toContain("winrate");
+  });
+
+  it("con el aporte, decide por lo que rinden los objetos y no por el winrate", () => {
+    // La cara gana 58% porque la completan los que ya van ganando; sus objetos,
+    // medidos compra por compra, aportan menos.
+    const out = badgesFor([
+      { winRate: 0.5, matches: 4000, edgeScore: 1.2 },
+      { winRate: 0.58, matches: 3000, edgeScore: 0.3 },
+    ]);
+    expect(out[0]).toEqual(["played", "winrate"]);
+    expect(out[1]).toEqual([]);
+  });
+
+  it("con el aporte, no marca nada si la diferencia es menor al margen", () => {
+    const out = badgesFor([
+      { winRate: 0.5, matches: 4000, edgeScore: 1.0 },
+      { winRate: 0.6, matches: 3000, edgeScore: 1.0 + MARGEN_APORTE - 0.01 },
+    ]);
+    expect(out.flat()).not.toContain("winrate");
+  });
+
+  it("'la más jugada' va en la de más partidas aunque no sea la primera", () => {
+    // El pipeline deja primera a la de ayer si no quedó atrás por más del 15%.
+    const out = badgesFor([b(0.5, 900), b(0.5, 1000)]);
+    expect(out[1]).toContain("played");
+    expect(out[0]).not.toContain("played");
   });
 
   it("el umbral es de dos errores estándar", () => {

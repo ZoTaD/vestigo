@@ -21,7 +21,7 @@ import { matchedCells, type MatchedCell, type StratumRow } from "./matching";
 import { fitMechanism, predictWin, shrinkageToMechanism, shrinkToward } from "./mechanism";
 import {
   terminalsOf, chainTo, groupBuilds, traitOf, damageSplit, countersFrom, collapseChains, byTier,
-  buyOrder,
+  buyOrder, stableOrder, edgeScore,
   type Group, type BuildsFile, type HeroEntry, type HeroBuild, type BuildItem,
   MIN_GROUP, MAX_SLOTS,
 } from "./buildCard";
@@ -31,7 +31,7 @@ import {
 } from "./abilities";
 import { archetypesForHero } from "./grouping";
 import { recommend, soporteDe, type Candidate } from "./recommend";
-import type { ItemMeta, PlayerRow } from "./features";
+import { damageOf, type ItemMeta, type PlayerRow } from "./features";
 
 /**
  * Las tres builds de cada héroe de Deadlock.
@@ -67,6 +67,24 @@ interface CatalogItem {
   types?: string[];
   upgradesTo?: number[];
   upgradesFrom?: number[];
+  mods?: Record<string, number>;
+}
+
+/**
+ * La build que cada héroe publicó primera en la corrida anterior, para que el
+ * orden de las pestañas no se dé vuelta por ruido (ver `stableOrder`).
+ */
+function primerasAnteriores(): Map<number, number[]> {
+  try {
+    const prev = JSON.parse(readFileSync(OUT, "utf8")) as BuildsFile;
+    return new Map(
+      prev.heroes
+        .filter((h) => h.builds.length > 0)
+        .map((h) => [h.heroId, h.builds[0].items.map((i) => i.itemId)])
+    );
+  } catch {
+    return new Map();
+  }
 }
 
 async function main() {
@@ -435,12 +453,13 @@ async function main() {
 
   // ── El archivo ─────────────────────────────────────────────────────────
   const heroes: HeroEntry[] = [];
+  const anteriores = primerasAnteriores();
   for (const heroId of heroIds) {
     const suyos = grupos.filter((g) => g.heroId === heroId);
     const elegidos = groupBuilds(suyos);
     if (elegidos.length === 0) continue;
 
-    const builds: HeroBuild[] = elegidos.map((g) => {
+    const medidas: HeroBuild[] = elegidos.map((g) => {
       const sinCounters = g.core.filter(
         (c) => !counters.get(heroId)?.some((x) => x.itemId === c.itemId)
       );
@@ -458,16 +477,28 @@ async function main() {
           };
         });
       const escalones = byTier(its, items);
+      /**
+       * El tipo de daño sale de los doce que se publican, no del núcleo entero:
+       * con el núcleo, objetos que lleva el 15% de la gente decidían el nombre
+       * de una build que no los muestra (Infernus salía "de poder espiritual"
+       * con doce objetos de arma).
+       */
+      const damage = damageOf(its.map((i) => i.itemId), itemMeta) as HeroBuild["damage"];
+      const rasgo = traitOf(its, items);
+      // "Daño de vida extra" no nombra nada: una build que pone más almas en
+      // vitalidad que en cualquier otra cosa es de aguante si no es vampírica.
+      const trait = damage === "vitality" && rasgo === "dps" ? "survival" : rasgo;
       return {
-        id: `${g.damage}-${traitOf(its, items)}`,
-        damage: g.damage,
-        trait: traitOf(its, items),
+        id: `${damage}-${trait}`,
+        damage,
+        trait,
         // La misma build partida por escalón: qué comprar en cada tier para
         // llegar a los doce de arriba.
         tiers: Object.fromEntries([...escalones].map(([t, ids]) => [t, ids])) as Record<string, number[]>,
         ...(g.ability ? { aroundAbility: Number(g.ability) } : {}),
         matches: g.matches,
         winRate: Number(g.winRate.toFixed(4)),
+        edgeScore: Number(edgeScore(its).toFixed(2)),
         ...(g.commitment !== undefined ? { commitment: Number(g.commitment.toFixed(3)) } : {}),
         items: its,
         damageSplit: damageSplit(its, items),
@@ -486,6 +517,8 @@ async function main() {
             : {}),
       };
     });
+
+    const builds = stableOrder(medidas, anteriores.get(heroId));
 
     // Dos grupos distintos pueden dar el mismo nombre —Seven tiene dos builds de
     // espíritu vampírico que se diferencian en otra cosa— y dos tabs con el

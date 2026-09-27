@@ -618,7 +618,16 @@ export default function DeadlockBuildCard({
               {c.sample(build.matches.toLocaleString(locale), (build.winRate * 100).toFixed(1))}
               {/* La referencia del héroe: sin ella, 56,0% no se sabe si es bueno.
                   Con ella, la build se lee como +1,7 sobre su propio héroe. */}
-              {heroWinRate !== undefined && (
+              {/* Con el aporte, lo que se compara es lo que rinden sus objetos
+                  compra por compra; el winrate crudo contra el héroe premiaba a
+                  las builds caras, que sólo completa el que ya va ganando. */}
+              {build.edgeScore !== undefined ? (
+                <span className="dl-build-vs" title={c.edgeScoreWhy}>
+                  {c.edgeScore(
+                    (build.edgeScore >= 0 ? "+" : "−") + Math.abs(build.edgeScore).toFixed(1)
+                  )}
+                </span>
+              ) : heroWinRate !== undefined && (
                 <span className="dl-build-vs">
                   {c.vsHero(
                     ((build.winRate - heroWinRate) * 100 >= 0 ? "+" : "−") +

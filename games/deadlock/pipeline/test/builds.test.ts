@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   parseCore, groupBuilds, traitOf, damageSplit, countersFrom, chainTo, terminalsOf, collapseChains,
-  MAX_SLOTS, MAX_OVERLAP, COUNTER_SWING, COUNTER_EXCESS, COUNTER_MIN_BASE, COUNTER_REACH, buyOrder,
+  MAX_SLOTS, MAX_OVERLAP, COUNTER_SWING, COUNTER_MAX_BASE, stableOrder, ORDEN_TOLERANCIA, edgeScore, COUNTER_EXCESS, COUNTER_MIN_BASE, COUNTER_REACH, buyOrder,
   type Group, type CatalogItem, type CounterRow, type BuildItem,
 } from "../src/buildCard";
 import { unlockOrder } from "../src/abilities";
@@ -104,18 +104,68 @@ describe("groupBuilds", () => {
 });
 
 describe("traitOf", () => {
-  it("llama vampírica a la que carga curación", () => {
-    const its = [13, 14, 1, 2].map((itemId) => ({ itemId }));
-    expect(traitOf(its, catalogo)).toBe("vampiric");
+  const cat = new Map<number, CatalogItem>([
+    [1, item({ slot: "vitality", mods: { TECH_LIFESTEAL: 13 } })],
+    [2, item({ slot: "vitality", mods: { BULLET_LIFESTEAL: 13 } })],
+    [3, item({ slot: "vitality", types: ["healing"] })],
+    [4, item({ slot: "spirit", types: ["healing"] })],
+    [5, item({ slot: "spirit" })],
+    [6, item({ slot: "weapon" })],
+  ]);
+
+  it("llama vampírica a la que lleva dos objetos con robo de vida", () => {
+    expect(traitOf([1, 2, 5].map((itemId) => ({ itemId })), cat)).toBe("vampiric");
   });
 
-  it("llama de aguante a la que carga vida", () => {
-    const its = [12, 15, 16, 17, 18].map((itemId) => ({ itemId }));
-    expect(traitOf(its, catalogo)).toBe("survival");
+  it("no alcanza con la etiqueta 'healing' del catálogo", () => {
+    // La llevan 54 objetos, entre ellos cooldowns y anticuración.
+    expect(traitOf([3, 4, 5, 6, 6].map((itemId) => ({ itemId })), cat)).not.toBe("vampiric");
+  });
+
+  it("llama de aguante a la que pone un tercio largo de sus almas en vitalidad", () => {
+    expect(traitOf([1, 3, 5, 6].map((itemId) => ({ itemId })), cat)).toBe("survival");
   });
 
   it("cae en daño cuando no hay un rasgo claro", () => {
-    expect(traitOf([{ itemId: 10 }, { itemId: 11 }], catalogo)).toBe("dps");
+    expect(traitOf([{ itemId: 5 }, { itemId: 6 }, { itemId: 1 }], cat)).toBe("dps");
+  });
+});
+
+describe("edgeScore", () => {
+  it("pesa el aporte de cada objeto por cuánta gente lo lleva", () => {
+    // 0,9 × 2 + 0,1 × (−3) = 1,5 sobre un peso de 1.
+    expect(edgeScore([{ edge: 2, prevalence: 0.9 }, { edge: -3, prevalence: 0.1 }])).toBeCloseTo(1.5, 10);
+  });
+
+  it("no depende de cuánto cuesten los objetos, sólo de lo que aportan", () => {
+    // Es el punto: el winrate crudo premiaba a la build más cara.
+    const barata = [{ edge: 1, prevalence: 0.8 }];
+    const cara = [{ edge: 1, prevalence: 0.8 }, { edge: 1, prevalence: 0.8 }];
+    expect(edgeScore(barata)).toBe(edgeScore(cara));
+  });
+
+  it("devuelve 0 sin objetos", () => {
+    expect(edgeScore([])).toBe(0);
+  });
+});
+
+describe("stableOrder", () => {
+  const b = (matches: number, ids: number[]) => ({ matches, items: ids.map((itemId) => ({ itemId })) });
+
+  it("deja primera a la de ayer si la otra no la pasa por más de la tolerancia", () => {
+    const hoy = [b(1000, [1, 2, 3, 4]), b(900, [5, 6, 7, 8])];
+    expect(stableOrder(hoy, [5, 6, 7, 8])[0].matches).toBe(900);
+  });
+
+  it("la reemplaza si la otra la pasa de verdad", () => {
+    const hoy = [b(1000, [1, 2, 3, 4]), b(1000 * (1 - ORDEN_TOLERANCIA) - 1, [5, 6, 7, 8])];
+    expect(stableOrder(hoy, [5, 6, 7, 8])[0].matches).toBe(1000);
+  });
+
+  it("no toca nada si la de ayer ya no existe", () => {
+    const hoy = [b(1000, [1, 2, 3, 4]), b(990, [5, 6, 7, 8])];
+    expect(stableOrder(hoy, [20, 21, 22, 23])).toBe(hoy);
+    expect(stableOrder(hoy, undefined)).toBe(hoy);
   });
 });
 
@@ -247,6 +297,16 @@ describe("countersFrom", () => {
     });
     expect(countersFrom(rows).get(1)).toBeUndefined();
     expect(COUNTER_MIN_BASE).toBe(0.03);
+  });
+
+  it("deja en el núcleo al que compra la mayoría aunque salte contra alguien", () => {
+    // El caso de Contrahechizo en Vindicta (2026-09-27): lo lleva el 74% y salta
+    // contra los héroes de espíritu. Es parte de la build, no un situacional.
+    const rows = contra([0.6, 0.65, 0.7, 0.72, 0.75, 0.78, 0.8, 0.95], 0.74, {
+      itemId: 50, n: 20_000,
+    });
+    expect(countersFrom(rows).get(1)).toBeUndefined();
+    expect(COUNTER_MAX_BASE).toBe(0.4);
   });
 
   it("descarta el salto que el azar explica entero, aunque supere el corte de swing", () => {
