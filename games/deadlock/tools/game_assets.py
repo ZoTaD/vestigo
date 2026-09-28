@@ -59,7 +59,7 @@ def find_local(panorama, rel):
     return None
 
 
-def save_webp(src, dst, max_w=None, quality=86, crop=None):
+def save_webp(src, dst, max_w=None, quality=86, crop=None, mask=False):
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     svg_dst = dst.rsplit(".", 1)[0] + ".svg"
     # Ya exportado y más nuevo que el original: no se repite (WebP método 6 es lento).
@@ -76,6 +76,11 @@ def save_webp(src, dst, max_w=None, quality=86, crop=None):
     im = im.convert("RGBA") if im.mode in ("RGBA", "LA", "P") else im.convert("RGB")
     if crop:
         im = im.crop(crop)
+    if mask:
+        # Las máscaras del juego vienen en blanco y negro opaco. Se pasan a
+        # blanco con transparencia para que `mask-image` funcione en cualquier
+        # navegador (Safari no sabe usar una máscara por luminancia).
+        im = Image.merge("RGBA", (*Image.new("RGB", im.size, "white").split(), im.convert("L")))
     if max_w and im.width > max_w:
         im = im.resize((max_w, round(im.height * max_w / im.width)), Image.LANCZOS)
     im.save(dst, "WEBP", quality=quality, method=6)
@@ -131,6 +136,12 @@ STYLE = [
     ("shop/catalog/catalog_tooltip_bg_modifies_spirit_psd.png", "ui/tooltip-mod-bg-spirit.webp", 520),
     ("upgrades/property_cooldown_large_psd.png", "ui/cooldown.webp", None),
     ("hud/icons/icon_soul.svg", "ui/icon-soul.svg", None),
+    # Vestigo News (2026-09-28): los recortes rasgados de las tarjetas de héroe de
+    # la pantalla de fin de partida. Son máscaras: el cuarto valor es "mask".
+    ("post_game/card_hero_mask_01_png.png", "ui/card-mask-1.webp", None, None, "mask"),
+    ("post_game/card_hero_mask_02_png.png", "ui/card-mask-2.webp", None, None, "mask"),
+    ("post_game/card_hero_mask_03_png.png", "ui/card-mask-3.webp", None, None, "mask"),
+    ("post_game/card_hero_mask_04_png.png", "ui/card-mask-4.webp", None, None, "mask"),
 ]
 
 
@@ -174,7 +185,8 @@ def main():
     for src, name, w, *rest in STYLE:
         p = os.path.join(img, src)
         if os.path.exists(p):
-            save_webp(p, os.path.join(OUT, name), w, crop=rest[0] if rest else None)
+            crop = rest[0] if rest else None
+            save_webp(p, os.path.join(OUT, name), w, crop=crop, mask="mask" in rest[1:])
             extra += 1
         else:
             print("no está en el juego:", src)
@@ -191,8 +203,16 @@ def main():
             rel = (art.get("background") or "")[len(BUCKET):]
             if rel in manifest:
                 backgrounds[f[:-5]] = "/deadlock/game/" + manifest[rel]
+    # Los héroes con las dos caras de ánimo (golpeado y festejando), que usa
+    # Vestigo News para nerfeados y buffeados. Los más nuevos pueden no tenerlas.
+    heroes_dir = os.path.join(OUT, "images", "heroes")
+    moods = sorted(
+        f[:-len("_card_critical.webp")]
+        for f in os.listdir(heroes_dir)
+        if f.endswith("_card_critical.webp") and os.path.exists(os.path.join(heroes_dir, f.replace("_critical", "_gloat")))
+    )
     with open(os.path.join(DATA, "game-art.json"), "w", encoding="utf-8") as f:
-        json.dump({"guns": guns, "backgrounds": backgrounds}, f)
+        json.dump({"guns": guns, "backgrounds": backgrounds, "moods": moods}, f)
     with open(os.path.join(OUT, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=0, sort_keys=True)
     size = sum(os.path.getsize(os.path.join(r, x)) for r, _, fs in os.walk(OUT) for x in fs)

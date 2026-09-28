@@ -16,7 +16,7 @@ import {
   type Translation,
   type Verdict,
 } from "./deadlockNewsData";
-import { NEWS_COPY, headlineBank, pickFrom, stableVariant } from "./newsCopy";
+import { NEWS_COPY, headlineBank, headlineLines, pickFrom, stableVariant } from "./newsCopy";
 import { ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
 
@@ -28,11 +28,31 @@ import GameImg from "./GameImg";
  * fuentes, y **todos** los cambios. La edición es larga a propósito; lo que se
  * lee de un vistazo es la portada: el titular, el balance y las caras.
  *
+ * Desde el 2026-09-28 lleva el "modelo B, fin de partida"
+ * (`docs/design/2026-09-28-vestigo-news-fin-de-partida.md`): tipografía plana
+ * sin dorado ni brillo, la ciudad del menú en la cabecera y la alineación de
+ * la pantalla de fin de partida, con la cara de ánimo de cada héroe.
+ *
  * Todo el CSS vive bajo `.vn` en `styles/news.css`.
  */
 
 /** Fondo de arte de cada héroe, sacado del juego (games/deadlock/tools/game_assets.py). */
 const BACKGROUNDS: Record<string, string> = gameArt.backgrounds;
+/** Los héroes que traen las dos caras de ánimo del juego (`<código>_card_critical|gloat`). */
+const MOODS = new Set<string>(gameArt.moods);
+
+/**
+ * El retrato con el ánimo del veredicto: golpeado (el de poca vida) si lo
+ * nerfearon, festejando (el de la racha) si lo buffearon. Sin cara de ánimo, o
+ * con la imagen fuera del sitio, queda el retrato de siempre.
+ */
+function moodCard(card: string | undefined, verdict: Verdict): string | undefined {
+  const m = card?.match(/^\/deadlock\/game\/images\/heroes\/(\w+)_card\.webp$/);
+  if (!card || !m || !MOODS.has(m[1])) return card;
+  if (verdict === "nerf") return card.replace(/_card\.webp$/, "_card_critical.webp");
+  if (verdict === "buff") return card.replace(/_card\.webp$/, "_card_gloat.webp");
+  return card;
+}
 
 const ARROW: Record<Dir, string> = { up: "▲", down: "▼", mid: "◆", fix: "✚" };
 const VERDICT_DIR: Record<Verdict, Dir> = { nerf: "down", buff: "up", mixed: "mid", fix: "fix" };
@@ -76,6 +96,17 @@ function Tag({ verdict, label }: { verdict: Verdict; label: string }) {
   );
 }
 
+/**
+ * Un título que puede bajar de línea entre palabras: algunos nombres traen
+ * espacios duros ("Encantamiento&nbsp;Balístico") y el navegador los trataba
+ * como una sola palabra larguísima.
+ */
+const plain = (title: string) => title.replace(/\u00a0/g, " ");
+
+/** La palabra más larga de un título, para que el CSS lo achique sin cortarla (ver news.css). */
+const wordFit = (title: string) =>
+  ({ "--vn-w": Math.max(1, ...plain(title).split(" ").map((w) => w.length)) }) as CSSProperties;
+
 const jump = (id: string) => (e: React.MouseEvent) => {
   e.preventDefault();
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -118,33 +149,58 @@ export default function DeadlockNews({
     (lang === "es" ? es?.headline : undefined) ??
     e.headline ??
     pickFrom(copy.headlines[headlineBank(e.score)], stableVariant(e.slug, 97));
-  // Las dos líneas del titular: la primera palabra en dorado.
-  const [first, ...rest] = headline.split(" ");
-  const hit = e.heroes.filter((h) => h.verdict === "nerf").slice(0, 4);
+  const lines = headlineLines(headline);
+  // La alineación de la portada: los cuatro más recortados y los cuatro más mejorados.
+  const hit = e.heroes.filter((h) => h.verdict === "nerf").sort((a, b) => b.down - a.down).slice(0, 4);
+  const won = e.heroes.filter((h) => h.verdict === "buff").sort((a, b) => b.up - a.up).slice(0, 4);
   const heroOf = (id: number) => catalog.heroes[String(id)];
   const heroName = (id: number) => text(heroOf(id)?.name, lang, "?");
+  const lineup = (hs: typeof hit, v: "nerf" | "buff") =>
+    hs.map((h, i) => (
+      <a
+        key={h.heroId}
+        className="vn-card"
+        data-v={v}
+        href={`#vn-h${h.heroId}`}
+        onClick={jump(`vn-h${h.heroId}`)}
+        style={
+          {
+            "--hc": heroOf(h.heroId)?.color || FALLBACK_COLOR,
+            // Los cuatro recortes rasgados del juego, corridos entre un grupo y el otro.
+            "--cut": `url(/deadlock/game/ui/card-mask-${((i + (v === "buff" ? 2 : 0)) % 4) + 1}.webp)`,
+          } as CSSProperties
+        }
+      >
+        <span className="vn-cut">
+          <img src={moodCard(heroOf(h.heroId)?.card, v)} alt="" width={280} height={380} loading="lazy" />
+        </span>
+        <span className="vn-who">
+          <b style={wordFit(heroName(h.heroId))}>{plain(heroName(h.heroId))}</b>
+          <span className="vn-lbl" data-dir={v === "nerf" ? "down" : "up"}>
+            {v === "nerf" ? `▼ ${copy.cuts(h.down)}` : `▲ ${copy.boosts(h.up)}`}
+          </span>
+        </span>
+      </a>
+    ));
 
   return (
     <main className="deadlock vn-page">
       <article className="vn" lang={lang}>
-        <div className="vn-meta vn-lbl">
-          <span>{copy.issue(issue)}</span>
-          <span>{longDate(e.date)}</span>
-          <span>{copy.price}</span>
-        </div>
-        <header className="vn-masthead">
-          <h1 className="vn-gold">{copy.masthead}</h1>
-          <div className="vn-deco vn-lbl">
-            <span>{copy.tagline}</span>
+        <header className="vn-top">
+          <h1 className="vn-mast">
+            <span className="vn-lbl">{copy.tagline}</span>
+            {copy.masthead}
+          </h1>
+          <div className="vn-ed vn-lbl">
+            <div>
+              <b>{copy.issue(issue)}</b> · {copy.price}
+            </div>
+            <div>{longDate(e.date)}</div>
+            <a href={e.url} target="_blank" rel="noopener noreferrer">
+              {copy.readNotes} ↗
+            </a>
           </div>
         </header>
-        <div className="vn-patchbar vn-lbl">
-          <b>{e.title}</b>
-          <span>Deadlock</span>
-          <a href={e.url} target="_blank" rel="noopener noreferrer">
-            {copy.readNotes} ↗
-          </a>
-        </div>
 
         {missing && <p className="vn-notice">{copy.missing}</p>}
         {pending && <p className="vn-notice">{copy.pending}</p>}
@@ -152,68 +208,77 @@ export default function DeadlockNews({
         <section className="vn-front">
           <div>
             <div className="vn-kicker vn-lbl">{copy.kicker(e.title)}</div>
-            <h2 className="vn-headline">
-              <span className="vn-gold">{first}</span>
-              {rest.length > 0 && (
-                <>
-                  <br />
-                  {rest.join(" ")}
-                </>
-              )}
+            <h2
+              className="vn-headline"
+              style={{ "--vn-hl-len": Math.max(...lines.map((l) => l.length)) } as CSSProperties}
+            >
+              <span>
+                {lines.map((l, i) => (
+                  <span key={i} className="vn-hl-line">
+                    {l}
+                  </span>
+                ))}
+              </span>
             </h2>
             <p className="vn-deck">{copy.deck(e.score, e.itemScore)}</p>
-            <div className="vn-glance" aria-label={copy.glanceHint}>
-              {(["nerf", "buff", "mixed", "fix"] as const).map((v) => {
-                const hs = e.heroes.filter((h) => h.verdict === v);
-                if (!hs.length) return null;
-                return (
-                  <div key={v} className="vn-glance-row" data-v={v}>
-                    <div className="vn-lbl">
-                      <b>{hs.length}</b>
-                      {copy.score[v]}
-                    </div>
-                    <div className="vn-faces">
-                      {hs.map((h) => (
-                        <a
-                          key={h.heroId}
-                          href={`#vn-h${h.heroId}`}
-                          onClick={jump(`vn-h${h.heroId}`)}
-                          title={heroName(h.heroId)}
-                          style={{ "--hc": heroOf(h.heroId)?.color || FALLBACK_COLOR } as CSSProperties}
-                        >
-                          <GameImg src={heroOf(h.heroId)?.img} alt={heroName(h.heroId)} width={42} height={42} />
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
-          <div className="vn-cover">
-            <div className="vn-strip">
-              {hit.map((h) => (
-                <div key={h.heroId} style={{ backgroundImage: `url(${heroOf(h.heroId)?.card})` }} />
-              ))}
-            </div>
-            <div className="vn-caption">
-              {hit.length > 0 && (
-                <>
-                  <span className="vn-lbl vn-hit">▼ {copy.hit}</span>
-                  <p>{hit.map((h) => heroName(h.heroId)).join(" · ")}</p>
-                </>
-              )}
-              <div className="vn-totals vn-lbl">
-                {[e.totals.heroLines, e.totals.itemLines, e.totals.general].map((n, i) => (
-                  <div key={copy.totals[i]}>
-                    <b>{n}</b>
-                    {copy.totals[i]}
+          <div className="vn-score" aria-label={copy.glanceHint}>
+            {(["nerf", "buff", "mixed", "fix"] as const).map((v) => {
+              const hs = e.heroes.filter((h) => h.verdict === v);
+              if (!hs.length) return null;
+              return (
+                <div key={v} className="vn-team" data-v={v}>
+                  <div className="vn-lbl">
+                    <b>{hs.length}</b>
+                    {copy.score[v]}
                   </div>
-                ))}
-              </div>
+                  <div className="vn-faces">
+                    {hs.map((h) => (
+                      <a
+                        key={h.heroId}
+                        href={`#vn-h${h.heroId}`}
+                        onClick={jump(`vn-h${h.heroId}`)}
+                        title={heroName(h.heroId)}
+                        style={{ "--hc": heroOf(h.heroId)?.color || FALLBACK_COLOR } as CSSProperties}
+                      >
+                        <GameImg src={heroOf(h.heroId)?.img} alt={heroName(h.heroId)} width={36} height={36} />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+            <div className="vn-totals vn-lbl">
+              {[e.totals.heroLines, e.totals.itemLines, e.totals.general].map((n, i) => (
+                <div key={copy.totals[i]}>
+                  <b>{n}</b>
+                  {copy.totals[i]}
+                </div>
+              ))}
             </div>
           </div>
         </section>
+
+        {(hit.length > 0 || won.length > 0) && (
+          <section className="vn-lineup">
+            {hit.length > 0 && (
+              <div>
+                <h3 className="vn-lbl" data-dir="down">
+                  ▼ {copy.hit}
+                </h3>
+                <div className="vn-cards">{lineup(hit, "nerf")}</div>
+              </div>
+            )}
+            {won.length > 0 && (
+              <div>
+                <h3 className="vn-lbl" data-dir="up">
+                  ▲ {copy.won}
+                </h3>
+                <div className="vn-cards">{lineup(won, "buff")}</div>
+              </div>
+            )}
+          </section>
+        )}
 
         {e.general.length > 0 && (
           <>
@@ -248,6 +313,7 @@ export default function DeadlockNews({
                 key={h.heroId}
                 id={`vn-h${h.heroId}`}
                 className="vn-hero"
+                data-v={h.verdict}
                 style={
                   {
                     "--hc": hero?.color || FALLBACK_COLOR,
@@ -257,9 +323,11 @@ export default function DeadlockNews({
                 }
               >
                 <div className="vn-hero-top">
-                  <GameImg className="vn-portrait" src={hero?.card || hero?.img} alt="" width={64} height={64} />
+                  <span className="vn-portrait">
+                    <img src={moodCard(hero?.card, h.verdict) || hero?.img} alt="" width={280} height={380} loading="lazy" />
+                  </span>
                   <div>
-                    <h3>
+                    <h3 style={wordFit(name)}>
                       {slug ? (
                         <RouteLink
                           to={{ ...route, view: "deadlock", dlSection: "meta", detail: slug }}
@@ -271,11 +339,13 @@ export default function DeadlockNews({
                         name
                       )}
                     </h3>
-                    <Tag verdict={h.verdict} label={copy.verdict[h.verdict]} />
-                  </div>
-                  <div className="vn-tally">
-                    {h.up > 0 && <div data-dir="up">▲ {h.up}</div>}
-                    {h.down > 0 && <div data-dir="down">▼ {h.down}</div>}
+                    <div className="vn-verdict">
+                      <Tag verdict={h.verdict} label={copy.verdict[h.verdict]} />
+                      <span className="vn-tally vn-lbl">
+                        {h.up > 0 && <span data-dir="up">▲ {h.up}</span>}
+                        {h.down > 0 && <span data-dir="down">▼ {h.down}</span>}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 {h.groups.map((g) => {
@@ -322,11 +392,11 @@ export default function DeadlockNews({
                     <div className="vn-ihead">
                       <div className="vn-icon">
                         {info?.img && (
-                          <ItemIcon itemId={i.itemId} img={info.img} size={32} />
+                          <ItemIcon itemId={i.itemId} img={info.img} size={52} />
                         )}
                       </div>
                       <div>
-                        <h3>{info ? info.name[lang] : i.itemId}</h3>
+                        <h3 style={wordFit(info ? info.name[lang] : "")}>{info ? plain(info.name[lang]) : i.itemId}</h3>
                         <Tag verdict={i.verdict} label={copy.verdict[i.verdict]} />
                       </div>
                     </div>

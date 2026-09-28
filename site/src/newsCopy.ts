@@ -29,6 +29,10 @@ interface NewsCopy {
   verdict: Record<Verdict, string>;
   glanceHint: string;
   hit: string;
+  /** La otra mitad de la alineación de la portada: los más mejorados. */
+  won: string;
+  cuts: (n: number) => string;
+  boosts: (n: number) => string;
   totals: [string, string, string];
   system: string;
   systemSub: string;
@@ -68,6 +72,9 @@ const EN: NewsCopy = {
   verdict: { nerf: "Nerf", buff: "Buff", mixed: "Mixed", fix: "Fix" },
   glanceHint: "Tap a face to jump to its changes",
   hit: "Hit hardest",
+  won: "Riding high",
+  cuts: (n) => `${n} ${n === 1 ? "cut" : "cuts"}`,
+  boosts: (n) => `${n} ${n === 1 ? "boost" : "boosts"}`,
   totals: ["hero changes", "item changes", "system changes"],
   system: "Systems",
   systemSub: "What changes for everyone",
@@ -107,6 +114,9 @@ const ES: NewsCopy = {
   verdict: { nerf: "Nerf", buff: "Buff", mixed: "Mixto", fix: "Arreglo" },
   glanceHint: "Tocá una cara para ir a sus cambios",
   hit: "Los más golpeados",
+  won: "Los que festejan",
+  cuts: (n) => `${n} ${n === 1 ? "recorte" : "recortes"}`,
+  boosts: (n) => `${n} ${n === 1 ? "mejora" : "mejoras"}`,
   totals: ["cambios en héroes", "cambios en objetos", "de sistema"],
   system: "Sistema",
   systemSub: "Lo que cambia para todos",
@@ -146,3 +156,21 @@ export function stableVariant(key: string, n: number): number {
 }
 
 export const pickFrom = (bank: string[], variant: number) => bank[variant % bank.length];
+
+/**
+ * El titular en dos líneas lo más parejas posible ("Valve afila / el hacha",
+ * no "Valve / afila el hacha"). El CSS lo achica según la más larga, así que
+ * repartirlo bien es lo que lo deja grande sin cortar ninguna palabra.
+ */
+export function headlineLines(headline: string): string[] {
+  const words = headline.split(" ").filter(Boolean);
+  if (words.length < 2) return words;
+  let best = [headline];
+  let bestLen = Infinity;
+  for (let i = 1; i < words.length; i++) {
+    const pair = [words.slice(0, i).join(" "), words.slice(i).join(" ")];
+    const len = Math.max(pair[0].length, pair[1].length);
+    if (len < bestLen) [best, bestLen] = [pair, len];
+  }
+  return best;
+}

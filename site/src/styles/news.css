@@ -1,16 +1,21 @@
 /* ---------------------------------------------------------------------------
    VESTIGO NEWS — la pestaña Parches de Deadlock como periódico (2026-09-17).
 
-   Modelo A del brainstorming (docs/design/2026-09-17-vestigo-news-design.md):
-   papel oscuro con grano, dorado degradado y las fuentes del juego.
+   Desde el 2026-09-28, "modelo B, fin de partida"
+   (docs/design/2026-09-28-vestigo-news-fin-de-partida.md): el papel oscuro
+   del juego, la ciudad del menú en blanco y negro arriba, títulos planos (sin
+   dorado ni brillo, pedido de ZoTaD) sobre el pincel negro de la votación de
+   héroes, y la alineación de la pantalla de fin de partida con la cara de
+   ánimo de cada héroe: golpeado si lo nerfearon, festejando si lo buffearon.
 
    Es la única página del sitio con su propia paleta, y a propósito: es una
-   pieza para compartir, y tiene que leerse como una portada de Deadlock y no
+   pieza para compartir, y tiene que leerse como una pantalla de Deadlock y no
    como una tabla más. Todo va bajo `.vn` para no tocar el resto.
 
-   Las fuentes se cargan del bucket de deadlock-api (CORS abierto), igual que
-   las imágenes: no se re-alojan. El navegador sólo las baja si esta página las
-   usa. Sin filos de color en tarjetas: tinte de fondo, texto o cifra.
+   Las fuentes se cargan del bucket de deadlock-api (CORS abierto): son del
+   juego y pagas, así que no se re-alojan. El material gráfico sale del juego
+   instalado (games/deadlock/tools/game_assets.py → /deadlock/game/ui/). Sin
+   filos de color en tarjetas: tinte de fondo, texto o cifra.
 --------------------------------------------------------------------------- */
 
 @font-face { font-family: "VN Reaver"; src: url(https://assets-bucket.deadlock-api.com/assets-api-res/fonts/reaver-bold.otf) format("opentype"); font-weight: 700; font-display: swap; }
@@ -21,213 +26,224 @@
 @font-face { font-family: "VN Retail"; src: url(https://assets-bucket.deadlock-api.com/assets-api-res/fonts/retaildemo-bold.otf) format("opentype"); font-weight: 700; font-display: swap; }
 
 .vn {
-  --vn-sheet-1: #18201c;
-  --vn-sheet-2: #0f1512;
-  --vn-ink: #ecdfc4;
-  --vn-ink-soft: #b9ad95;
-  --vn-ink-mute: #8a826f;
-  --vn-gold-1: #f3dca0;
-  --vn-gold-2: #c79a4e;
-  --vn-gold-3: #7d5a25;
-  --vn-rule: rgba(236, 223, 196, 0.16);
-  --vn-hair: rgba(236, 223, 196, 0.07);
-  --vn-up: #8fd48a;
-  --vn-down: #f07a64;
-  --vn-mid: #d9c48f;
+  --vn-ink: #e6ddc8;
+  --vn-ink-soft: #c2b9a4;
+  --vn-ink-mute: #8f8776;
+  --vn-rule: rgba(230, 221, 200, 0.14);
+  --vn-hair: rgba(230, 221, 200, 0.07);
+  --vn-panel: rgba(8, 9, 8, 0.55);
+  --vn-up: #8fd16a;
+  --vn-down: #ef5b4b;
+  --vn-mid: #cfc3a3;
+  --vn-up-t: rgba(143, 209, 106, 0.12);
+  --vn-down-t: rgba(239, 91, 75, 0.13);
   --vn-display: "VN Reaver", "Big Shoulders Display", Georgia, serif;
   --vn-text: "VN Radiance", Georgia, serif;
   --vn-label: "VN Retail", "Barlow Condensed", sans-serif;
+  --vn-pad: 44px;
 
   position: relative;
   margin: 0 0 24px;
-  padding: 34px 44px 30px;
+  padding: 0 var(--vn-pad) 30px;
   color: var(--vn-ink);
   font-family: var(--vn-text);
-  background:
-    radial-gradient(140% 50% at 50% 0%, rgba(243, 220, 160, 0.07), transparent 55%),
-    radial-gradient(90% 40% at 50% 0%, rgba(95, 179, 161, 0.1), transparent 70%),
-    linear-gradient(180deg, var(--vn-sheet-1), var(--vn-sheet-2));
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(243, 220, 160, 0.1), inset 0 0 160px rgba(0, 0, 0, 0.55);
+  /* El papel oscuro del juego (textures/paper_tile_1k_02_dark). */
+  background: #111311 url(/deadlock/game/ui/paper-dark.webp);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
   border-radius: var(--radius, 4px);
   overflow: hidden;
-}
-/* El grano del papel. */
-.vn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.2;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 .vn > * { position: relative; }
 .vn h1, .vn h2, .vn h3 { color: inherit; letter-spacing: 0; }
 
-.vn-gold {
-  background: linear-gradient(180deg, var(--vn-gold-1) 10%, var(--vn-gold-2) 55%, var(--vn-gold-3) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent !important;
-}
 .vn-lbl { font: 600 11.5px/1.25 var(--vn-label); letter-spacing: 0.16em; text-transform: uppercase; }
 .vn-arrow { flex: 0 0 auto; width: 14px; text-align: center; font: 700 11px/1 var(--vn-label); }
 .vn [data-dir="up"] { color: var(--vn-up); }
 .vn [data-dir="down"] { color: var(--vn-down); }
 .vn [data-dir="mid"], .vn [data-dir="fix"] { color: var(--vn-mid); }
 
-/* Cabecera ----------------------------------------------------------------- */
-.vn-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--vn-ink-soft); padding-bottom: 12px; }
-.vn-masthead { text-align: center; padding: 14px 0 10px; border-top: 1px solid var(--vn-rule); border-bottom: 1px solid var(--vn-rule); }
-.vn-masthead h1 {
-  margin: 0;
-  font: 700 clamp(44px, 9vw, 118px)/0.95 var(--vn-display);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  filter: drop-shadow(0 6px 18px rgba(199, 154, 78, 0.25));
+/* Cabecera: la ciudad del menú (main_menu/background_nyc_cityscape_bw) ------ */
+.vn-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 calc(-1 * var(--vn-pad));
+  padding: 60px var(--vn-pad) 24px;
+  border-bottom: 1px solid var(--vn-rule);
+  background:
+    linear-gradient(180deg, rgba(10, 11, 10, 0.35), #111311 96%),
+    url(/deadlock/game/ui/menu-nyc.webp) center 30% / cover no-repeat;
 }
-.vn-deco { display: flex; align-items: center; justify-content: center; gap: 14px; color: var(--vn-gold-2); letter-spacing: 0.3em; margin-top: 8px; }
-.vn-deco::before, .vn-deco::after { content: ""; height: 1px; flex: 0 1 160px; background: linear-gradient(90deg, transparent, var(--vn-gold-2), transparent); }
-.vn-deco span::before, .vn-deco span::after { content: "◆"; font-size: 8px; margin: 0 10px; vertical-align: 2px; }
-.vn-patchbar { display: flex; justify-content: center; align-items: center; gap: 26px; flex-wrap: wrap; padding: 10px 0; border-bottom: 3px double rgba(243, 220, 160, 0.25); color: var(--vn-ink-soft); }
-.vn-patchbar b { color: var(--vn-gold-1); }
-[data-theme="codex"] .vn-patchbar a { color: var(--vn-gold-1); text-decoration: none; }
-[data-theme="codex"] .vn-patchbar a:hover { text-decoration: underline; }
-.vn-notice { margin: 14px 0 0; padding: 10px 14px; border-radius: 4px; background: rgba(217, 196, 143, 0.12); font: italic 14px/1.4 var(--vn-text); color: var(--vn-ink); }
+.vn-mast { margin: 0; font: 700 clamp(46px, 8vw, 108px)/0.9 var(--vn-display); }
+.vn-mast .vn-lbl { display: block; margin-bottom: 14px; color: var(--vn-ink-mute); letter-spacing: 0.3em; }
+.vn-ed { text-align: right; line-height: 2; color: var(--vn-ink-mute); flex: 0 0 auto; }
+.vn-ed b { color: var(--vn-ink); font-weight: 700; }
+[data-theme="codex"] .vn-ed a { color: var(--vn-ink); text-decoration: none; }
+[data-theme="codex"] .vn-ed a:hover { text-decoration: underline; }
+.vn-notice { margin: 18px 0 0; padding: 10px 14px; border-radius: var(--radius, 4px); background: rgba(207, 195, 163, 0.12); font: italic 14px/1.4 var(--vn-text); color: var(--vn-ink); }
 
 /* Portada ------------------------------------------------------------------ */
-.vn-front { display: grid; grid-template-columns: 1.45fr 1fr; gap: 34px; padding: 26px 0; }
-.vn-kicker { color: var(--vn-down); letter-spacing: 0.22em; margin-bottom: 12px; }
-.vn-headline { margin: 0; font: 700 clamp(54px, 8.4vw, 120px)/0.86 var(--vn-display); text-transform: uppercase; overflow-wrap: anywhere; }
-.vn-headline .vn-gold { filter: drop-shadow(0 8px 26px rgba(199, 154, 78, 0.25)); }
-.vn-deck { font: italic 400 21px/1.4 var(--vn-text); margin: 20px 0 18px; max-width: 36ch; color: var(--vn-ink); }
-.vn-glance { display: grid; gap: 12px; }
-.vn-glance-row { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: center; }
-.vn-glance-row .vn-lbl { color: var(--vn-ink-mute); }
-.vn-glance-row .vn-lbl b { display: block; font: 700 30px/1 var(--vn-label); letter-spacing: 0; }
-.vn-glance-row[data-v="nerf"] b { color: var(--vn-down); }
-.vn-glance-row[data-v="buff"] b { color: var(--vn-up); }
-.vn-glance-row[data-v="mixed"] b { color: var(--vn-mid); }
-.vn-glance-row[data-v="fix"] b { color: var(--vn-ink); }
-.vn-faces { display: flex; flex-wrap: wrap; gap: 6px; }
+.vn-front { display: grid; grid-template-columns: 1fr minmax(0, 440px); gap: 48px; padding: 40px 0 32px; }
+.vn-kicker { color: var(--vn-down); letter-spacing: 0.22em; margin-bottom: 18px; }
+/* El titular sobre el pincel negro de la votación de héroes (text_backer_box). */
+/* **Las palabras no se cortan nunca** (ZoTaD, 2026-09-28): en vez de partirlas,
+   el titular se achica con el ancho de su columna. `--vn-hl-len` es la línea
+   más larga (headlineLines() lo reparte en dos) y 0,77em el ancho medio de una mayúscula
+   de Reaver (medida: 0,755em con "THANKS"), más los 0,63em de aire del pincel. */
+.vn-front > :first-child { container-type: inline-size; min-width: 0; }
+.vn-headline {
+  margin: 0;
+  font: 700 min(116px, calc(100cqi / (var(--vn-hl-len, 6) * 0.77 + 0.7)))/0.86 var(--vn-display);
+  text-transform: uppercase;
+}
+.vn-hl-line { display: block; white-space: nowrap; }
+.vn-headline > span {
+  display: inline-block;
+  padding: 0.19em 0.34em 0.12em 0.29em;
+  background: url(/deadlock/game/ui/backer-box.webp) center / 100% 100% no-repeat;
+}
+.vn-deck { font: italic 400 22px/1.4 var(--vn-text); margin: 22px 0 0; max-width: 34ch; color: var(--vn-ink-soft); }
+
+/* El marcador: un "equipo" por veredicto, con tinte y sin filos. */
+.vn-score { display: grid; gap: 8px; align-content: start; }
+.vn-team { display: grid; grid-template-columns: 84px 1fr; align-items: center; gap: 14px; padding: 12px 16px; background: var(--vn-panel); border-radius: var(--radius, 4px); }
+.vn-team[data-v="nerf"] { background: linear-gradient(90deg, var(--vn-down-t), var(--vn-panel) 70%); }
+.vn-team[data-v="buff"] { background: linear-gradient(90deg, var(--vn-up-t), var(--vn-panel) 70%); }
+.vn-team .vn-lbl { color: var(--vn-ink-mute); }
+.vn-team .vn-lbl b { display: block; font: 700 44px/0.95 var(--vn-display); letter-spacing: 0; color: var(--vn-ink); }
+.vn-team[data-v="nerf"] b { color: var(--vn-down); }
+.vn-team[data-v="buff"] b { color: var(--vn-up); }
+.vn-team[data-v="mixed"] b { color: var(--vn-mid); }
+.vn-faces { display: flex; flex-wrap: wrap; gap: 4px; }
 .vn-faces a {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
+  width: 36px;
+  height: 36px;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--hc) 55%, transparent), rgba(0, 0, 0, 0.4));
+  border-radius: var(--radius, 4px);
+  background: color-mix(in srgb, var(--hc) 45%, #000);
   transition: transform 150ms ease;
 }
-.vn-faces a:hover, .vn-faces a:focus-visible { transform: translateY(-2px) scale(1.06); }
+.vn-faces a:hover, .vn-faces a:focus-visible { transform: translateY(-2px); }
 .vn-faces img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vn-totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; color: var(--vn-ink-mute); }
+.vn-totals div { text-align: center; padding: 12px 4px 10px; background: var(--vn-panel); border-radius: var(--radius, 4px); font-size: 10.5px; }
+.vn-totals b { display: block; font: 700 36px/1 var(--vn-display); color: var(--vn-ink); letter-spacing: 0; margin-bottom: 4px; }
 
-.vn-cover { position: relative; min-height: 440px; border-radius: 4px; overflow: hidden; background: #0b0f0d; }
-.vn-strip { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(4, 1fr); }
-.vn-strip div { background-size: cover; background-position: center 18%; filter: grayscale(0.35) contrast(1.1) brightness(0.85); }
-.vn-cover::after {
-  content: "";
+/* La alineación: las tarjetas rasgadas de la pantalla de fin de partida
+   (post_game/card_hero_mask_0N) con la cara de ánimo de cada héroe. ---------- */
+.vn-lineup { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; padding: 4px 0 8px; }
+.vn .vn-lineup h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font: 600 12px/1.25 var(--vn-label); letter-spacing: 0.16em; }
+.vn-lineup h3::after { content: ""; flex: 1; height: 1px; background: var(--vn-rule); }
+.vn-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.vn-card { position: relative; display: block; height: 250px; color: inherit; text-decoration: none; container-type: inline-size; }
+.vn-cut {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgba(5, 8, 7, 0) 35%, rgba(5, 8, 7, 0.94) 90%),
-    linear-gradient(90deg, rgba(240, 122, 100, 0.32), rgba(95, 179, 161, 0.1) 60%, rgba(240, 122, 100, 0.2));
+  overflow: hidden;
+  background: color-mix(in srgb, var(--hc) 60%, #000);
+  -webkit-mask: var(--cut) center / 100% 100% no-repeat;
+  mask: var(--cut) center / 100% 100% no-repeat;
+  transition: transform 180ms ease;
 }
-.vn-caption { position: absolute; left: 20px; right: 20px; bottom: 18px; z-index: 2; }
-.vn-hit { color: var(--vn-down); }
-.vn-caption p { margin: 6px 0 0; font: 700 26px/1.05 var(--vn-display); text-transform: uppercase; }
-.vn-totals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
-.vn-totals div { text-align: center; padding: 10px 4px 8px; background: rgba(5, 8, 7, 0.6); backdrop-filter: blur(6px); border-radius: 4px; color: var(--vn-ink-soft); }
-.vn-totals b { display: block; font: 700 34px/1 var(--vn-label); color: var(--vn-ink); letter-spacing: 0; }
+.vn-cut img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 10%; display: block; }
+.vn-cut::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.9)); }
+.vn-card[data-v="nerf"] .vn-cut::after { background: linear-gradient(180deg, transparent 40%, rgba(90, 14, 8, 0.55) 70%, rgba(0, 0, 0, 0.9)); }
+.vn-card[data-v="buff"] .vn-cut::after { background: linear-gradient(180deg, transparent 40%, rgba(22, 60, 14, 0.55) 70%, rgba(0, 0, 0, 0.9)); }
+.vn-card:hover .vn-cut, .vn-card:focus-visible .vn-cut { transform: translateY(-3px); }
+.vn-who { position: absolute; left: 12px; right: 8px; bottom: 14px; }
+/* Los títulos de las tarjetas siguen la regla del titular: se achican hasta que
+   entra su palabra más larga (`--vn-w`, de wordFit() en DeadlockNews.tsx). */
+.vn-who b { display: block; font: 700 min(21px, calc((100cqi - 20px) / (var(--vn-w, 8) * 0.77)))/1 var(--vn-display); text-transform: uppercase; margin-bottom: 4px; }
+.vn-who .vn-lbl { font-size: min(10.5px, calc(100cqi / 11)); letter-spacing: 0.1em; white-space: nowrap; }
 
-/* Secciones ---------------------------------------------------------------- */
-.vn-sec { display: flex; align-items: baseline; gap: 16px; margin: 30px 0 16px; }
-.vn-sec h2 { margin: 0; font: 700 38px/1 var(--vn-display); text-transform: uppercase; letter-spacing: 0.05em; }
+/* Secciones: el pincel negro detrás del título (ver deadlock-game.css) ------ */
+.vn-sec { display: flex; align-items: center; gap: 18px; margin: 44px 0 18px; }
+.vn-sec h2 { margin: 0; font: 700 44px/1 var(--vn-display); text-transform: uppercase; }
 .vn-sec small { color: var(--vn-ink-mute); }
-.vn-sec::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--vn-rule), transparent); align-self: center; }
+.vn-sec::after { content: ""; flex: 1; height: 1px; background: var(--vn-rule); }
 
-.vn-general { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 34px; column-rule: 1px solid var(--vn-rule); counter-reset: vn-g; }
+.vn-general { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 8px; counter-reset: vn-g; }
 .vn-general li {
-  break-inside: avoid;
   counter-increment: vn-g;
   display: grid;
-  grid-template-columns: 34px 16px 1fr;
+  grid-template-columns: 30px 16px minmax(0, 1fr);
   gap: 6px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--vn-hair);
-  font-size: 14.5px;
+  padding: 12px 16px;
+  background: var(--vn-panel);
+  border-radius: var(--radius, 4px);
+  font-size: 15px;
   line-height: 1.45;
   color: var(--vn-ink-soft);
 }
-.vn-general li::before { content: counter(vn-g, decimal-leading-zero); font: 700 20px/1 var(--vn-display); color: var(--vn-gold-2); }
-.vn-general .vn-arrow { padding-top: 4px; }
+.vn-general li::before { content: counter(vn-g, decimal-leading-zero); font: 700 14px/1.5 var(--vn-label); color: var(--vn-ink-mute); }
+.vn-general .vn-arrow { padding-top: 5px; }
 
-/* Los héroes ocupan todo el ancho: tres columnas en escritorio. */
-.vn-heroes { columns: 3; column-gap: 14px; }
+/* Héroes: tres columnas; cada uno con su arte de fondo y su cara de ánimo. --- */
+.vn-heroes { columns: 3; column-gap: 12px; }
 .vn-hero {
+  container-type: inline-size;
   break-inside: avoid;
-  margin-bottom: 14px;
-  border-radius: 6px;
+  margin-bottom: 12px;
+  border-radius: var(--radius, 4px);
   overflow: hidden;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--hc) 26%, #121815), #111613 140px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  background: var(--vn-panel);
   scroll-margin-top: 16px;
 }
-.vn-hero-top {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px 12px;
-  background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--hc) 42%, transparent), transparent 70%);
+.vn-hero-top { position: relative; display: flex; align-items: flex-end; gap: 14px; min-height: 124px; padding: 0 16px 14px 122px; }
+.vn-portrait {
+  position: absolute;
+  left: 10px;
+  bottom: 0;
+  width: 102px;
+  height: 122px;
+  overflow: hidden;
+  -webkit-mask: url(/deadlock/game/ui/card-mask-2.webp) center / 100% 100% no-repeat;
+  mask: url(/deadlock/game/ui/card-mask-2.webp) center / 100% 100% no-repeat;
 }
-.vn-portrait { width: 64px; height: 64px; object-fit: cover; border-radius: 50%; background: rgba(0, 0, 0, 0.3); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45); flex: 0 0 auto; }
-.vn-hero h3 { margin: 0 0 5px; font: 700 26px/1 var(--vn-display); text-transform: uppercase; letter-spacing: 0.03em; }
+.vn-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 8%; display: block; }
+.vn-hero h3 { margin: 0 0 6px; font: 700 min(32px, calc((100cqi - 140px) / (var(--vn-w, 8) * 0.77)))/0.95 var(--vn-display); text-transform: uppercase; }
 [data-theme="codex"] .vn-hero h3 a { color: inherit; text-decoration: none; }
-[data-theme="codex"] .vn-hero h3 a:hover { color: var(--vn-gold-1); }
-.vn-tally { margin-left: auto; text-align: right; font: 700 13px/1.3 var(--vn-label); }
-.vn-tag { display: inline-flex; align-items: center; gap: 6px; font: 700 10.5px/1 var(--vn-label); letter-spacing: 0.16em; text-transform: uppercase; padding: 5px 9px 4px; border-radius: 999px; }
-.vn-tag[data-v="nerf"] { color: #ffd3c9; background: rgba(240, 122, 100, 0.22); }
-.vn-tag[data-v="buff"] { color: #d6f5d3; background: rgba(143, 212, 138, 0.2); }
-.vn-tag[data-v="mixed"] { color: #f1e6c6; background: rgba(217, 196, 143, 0.2); }
-.vn-tag[data-v="fix"] { color: var(--vn-ink); background: rgba(236, 223, 196, 0.12); }
-.vn-group { padding: 10px 16px 4px; border-top: 1px solid var(--vn-hair); }
+[data-theme="codex"] .vn-hero h3 a:hover { text-decoration: underline; }
+.vn-verdict { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.vn-tally { display: inline-flex; gap: 8px; }
+.vn-tag { display: inline-flex; align-items: center; gap: 6px; font: 700 10.5px/1 var(--vn-label); letter-spacing: 0.16em; text-transform: uppercase; padding: 5px 8px 4px; border-radius: var(--radius, 4px); }
+.vn-tag[data-v="nerf"] { color: var(--vn-down); background: var(--vn-down-t); }
+.vn-tag[data-v="buff"] { color: var(--vn-up); background: var(--vn-up-t); }
+.vn-tag[data-v="mixed"] { color: var(--vn-mid); background: rgba(207, 195, 163, 0.12); }
+.vn-tag[data-v="fix"] { color: var(--vn-ink); background: rgba(230, 221, 200, 0.1); }
+.vn-group { padding: 11px 16px 5px; border-top: 1px solid var(--vn-hair); }
 .vn-ghead { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
-.vn-ab {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  padding: 5px;
-  flex: 0 0 auto;
-  background: radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--hc) 70%, #222), #0c100e);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-}
-.vn-base { width: 34px; height: 34px; flex: 0 0 auto; border-radius: 8px; display: grid; place-items: center; background: rgba(236, 223, 196, 0.06); color: var(--vn-ink-mute); font-size: 13px; }
+/* Con el color del héroe detrás: hay íconos oscuros que sobre negro no se ven. */
+.vn-ab { width: 32px; height: 32px; padding: 4px; flex: 0 0 auto; border-radius: var(--radius, 4px); background: color-mix(in srgb, var(--hc) 50%, #111); }
+.vn-base { width: 32px; height: 32px; flex: 0 0 auto; border-radius: var(--radius, 4px); display: grid; place-items: center; background: rgba(230, 221, 200, 0.06); color: var(--vn-ink-mute); font-size: 12px; }
 .vn-ghead b { font: 600 15.5px/1.15 var(--vn-text); color: var(--vn-ink); }
 .vn-ghead small { display: block; font: italic 12px/1.2 var(--vn-text); color: var(--vn-ink-mute); }
-.vn-lines { list-style: none; margin: 0 0 6px; padding: 0 0 0 44px; }
-.vn-line { display: flex; gap: 8px; align-items: baseline; font-size: 13.5px; line-height: 1.4; color: var(--vn-ink-soft); padding: 3px 0; }
-.vn-num { font-family: var(--vn-label); font-weight: 600; color: var(--vn-ink); }
+.vn-lines { list-style: none; margin: 0 0 6px; padding: 0 0 0 42px; }
+.vn-line { display: flex; gap: 8px; align-items: baseline; font-size: 14px; line-height: 1.4; color: var(--vn-ink-soft); padding: 3px 0; }
+.vn-num { font-weight: 600; color: #fff6e2; }
 
-/* Objetos ------------------------------------------------------------------ */
-.vn-items { columns: 3; column-gap: 14px; }
+/* Objetos: el fondo de la ficha de la tienda según la familia ---------------- */
+.vn-items { columns: 3; column-gap: 12px; }
 .vn-item {
-  --slot: #8a826f;
+  --slot-bg: none;
+  container-type: inline-size;
   break-inside: avoid;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   padding: 14px 16px 10px;
-  border-radius: 6px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--slot) 20%, #121815), #111613 90px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius, 4px);
+  background: linear-gradient(180deg, rgba(8, 9, 8, 0.45), rgba(8, 9, 8, 0.82) 70px), var(--slot-bg) center top / 100% auto no-repeat, var(--vn-panel);
 }
-.vn-item[data-slot="weapon"] { --slot: #d08a3a; }
-.vn-item[data-slot="vitality"] { --slot: #6fae4a; }
-.vn-item[data-slot="spirit"] { --slot: #9a6fd0; }
+.vn-item[data-slot="weapon"] { --slot-bg: url(/deadlock/game/ui/tooltip-mod-bg-weapon.webp); }
+.vn-item[data-slot="vitality"] { --slot-bg: url(/deadlock/game/ui/tooltip-mod-bg-vitality.webp); }
+.vn-item[data-slot="spirit"] { --slot-bg: url(/deadlock/game/ui/tooltip-mod-bg-spirit.webp); }
 .vn-ihead { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
-.vn-icon { flex: 0 0 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--slot) 55%, transparent), rgba(0, 0, 0, 0.35)); }
-.vn-icon img { width: 32px; height: 32px; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5)); }
-.vn-item h3 { margin: 0 0 4px; font: 700 19px/1.05 var(--vn-display); text-transform: uppercase; overflow-wrap: anywhere; }
+.vn-icon { flex: 0 0 auto; display: grid; place-items: center; }
+.vn-ihead > div:last-child { min-width: 0; }
+.vn-item h3 { margin: 0 0 5px; font: 700 min(21px, calc((100cqi - 70px) / (var(--vn-w, 8) * 0.77)))/1.05 var(--vn-display); text-transform: uppercase; }
 .vn-item .vn-lines { padding-left: 0; }
 
-.vn-foot { margin-top: 30px; padding-top: 14px; border-top: 3px double rgba(243, 220, 160, 0.25); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; color: var(--vn-ink-mute); }
+.vn-foot { margin-top: 30px; padding-top: 14px; border-top: 1px solid var(--vn-rule); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; color: var(--vn-ink-mute); }
 
 /* Hemeroteca: fuera del papel, con las cajas del sitio. -------------------- */
 .vn-archive-list { list-style: none; margin: 0; padding: 0; }
@@ -236,21 +252,30 @@
 .vn-archive-date { color: var(--muted, #8a826f); font-variant-numeric: tabular-nums; }
 [data-theme="codex"] .vn-archive-link { font-weight: 700; }
 .vn-archive-title { color: var(--muted, #8a826f); }
-.vn-archive-score [data-dir="down"] { color: #f07a64; }
-.vn-archive-score [data-dir="up"] { color: #8fd48a; }
+.vn-archive-score [data-dir="down"] { color: #ef5b4b; }
+.vn-archive-score [data-dir="up"] { color: #8fd16a; }
 .vn-page > * + * { margin-top: 24px; }
 
 @media (max-width: 1040px) {
-  .vn-front { grid-template-columns: 1fr; }
+  .vn-front { grid-template-columns: 1fr; gap: 28px; }
+  .vn-lineup { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .vn-heroes, .vn-items { columns: 2; }
 }
 @media (max-width: 700px) {
-  .vn { padding: 22px 16px; }
-  .vn-meta { flex-direction: column; align-items: center; gap: 6px; }
-  .vn-heroes, .vn-items, .vn-general { columns: 1; }
-  .vn-cover { min-height: 360px; }
-  .vn-glance-row { grid-template-columns: 1fr; gap: 6px; }
-  .vn-glance-row .vn-lbl b { display: inline; margin-right: 6px; }
+  .vn { --vn-pad: 16px; }
+  .vn-top { flex-direction: column; align-items: flex-start; padding-top: 40px; }
+  .vn-ed { text-align: left; line-height: 1.8; }
+  .vn-headline > span { padding: 0.22em 0.3em 0.14em; }
+  .vn-deck { font-size: 19px; }
+  .vn-team { grid-template-columns: 64px 1fr; padding: 10px 12px; }
+  .vn-team .vn-lbl b { font-size: 36px; }
+  .vn-cards { gap: 6px; }
+  .vn-card { height: 170px; }
+  .vn-who { left: 8px; bottom: 10px; }
+  .vn-sec h2 { font-size: 34px; }
+  .vn-general { grid-template-columns: minmax(0, 1fr); }
+  .vn-general li { padding: 10px 12px; grid-template-columns: 24px 14px minmax(0, 1fr); }
+  .vn-heroes, .vn-items { columns: 1; }
   .vn-lines { padding-left: 0; }
   .vn-archive-list li { grid-template-columns: 1fr auto; gap: 4px 12px; }
   .vn-archive-title { grid-column: 1; }
