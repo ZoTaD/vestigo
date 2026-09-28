@@ -121,9 +121,17 @@ describe("las builds publicadas", () => {
     for (const h of file.heroes) expect(h.builds.length).toBeLessThanOrEqual(3);
   });
 
-  it("ordenan la primera como la más jugada, que es la recomendada", () => {
+  /**
+   * Desde el 2026-09-27 la primera es la de ayer mientras no quede más de 15%
+   * detrás de la más jugada (`stableOrder` en el pipeline), para que las
+   * pestañas no se den vuelta por ruido. Detrás de la primera, el orden sigue
+   * siendo por partidas.
+   */
+  it("ordenan la primera entre las más jugadas y el resto por partidas", () => {
     for (const h of file.heroes) {
-      for (let i = 1; i < h.builds.length; i++) {
+      const tope = Math.max(...h.builds.map((b) => b.matches));
+      expect(h.builds[0].matches).toBeGreaterThanOrEqual(0.85 * tope);
+      for (let i = 2; i < h.builds.length; i++) {
         expect(h.builds[i - 1].matches).toBeGreaterThanOrEqual(h.builds[i].matches);
       }
     }
