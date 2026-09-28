@@ -28,6 +28,11 @@ Action.
    profundo está a medio hacer) y lo que haga falta va a `fixes.py` con su porqué.
 5. Revisar `git diff --stat games/valheim/data`, los conteos de `data/meta.json`
    y su lista `withoutSource` (lo que quedó sin "de dónde sale").
+   `pipeline/tests/test_completeness.py` falla si algo publicado quedó sin
+   fuente, sin bioma, sin descripción, sin "para qué sirve", o una criatura sin
+   dónde aparece: se completa con su fuente en `fixes.py` (de dónde sale y lo
+   que se esconde por no conseguirse), `purposes.py` (para qué sirve) o
+   `texts.py` (descripciones de estaciones y festines, criaturas y lugares).
 6. Si un campo cambió de nombre: `.venv/Scripts/python -m pipeline.peek <Clase>`.
 7. La Crónica (notas de parche): `.venv/Scripts/python -m pipeline.patches`
    baja los anuncios de Steam y arma `data/site/patches/`. Va después de

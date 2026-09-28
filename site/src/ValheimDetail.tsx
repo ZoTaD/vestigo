@@ -7,7 +7,7 @@ import ValheimPlanButton from "./ValheimPlanButton";
 import RouteLink from "./RouteLink";
 import { useValheimCopy, type ValheimCopy } from "./valheimCopy";
 import type { ListTab } from "./valheimTabs";
-import { clean, tx, type ItemRow, type PieceRow, type Ref, type Req, type Source, type Use } from "./valheimData";
+import { clean, tx, type ItemRow, type PieceRow, type Purpose, type Ref, type Req, type Source, type Use } from "./valheimData";
 import { BiomeTags, FoodBars, Ing, pctChance, range, RefLink, Slot, useTab, type Nav, type To } from "./ValheimParts";
 import { EffectsBlock } from "./ValheimMore";
 
@@ -219,6 +219,48 @@ function StationUpgrades({ piece, to, navigate }: { piece: PieceRow; to: To; nav
   );
 }
 
+/**
+ * Para qué sirve lo que no es una receta (pedido de ZoTaD, 2026-09-28): una
+ * semilla, una silla de montar, un trofeo o una llave parecían no servir para
+ * nada porque "Se usa en" sólo ve recetas. Mismo renglón que "De dónde sale".
+ */
+function Purposes({ purposes, to, navigate }: { purposes: Purpose[]; to: To; navigate: Nav }) {
+  const t = useValheimCopy();
+  const { lang } = useLang();
+  if (purposes.length === 0) return null;
+  const who = (r?: Ref) => (
+    <RefLink r={r} to={to} navigate={navigate} className="vh-src-who">{r?.icon && <Slot icon={r.icon} size="xs" />}{tx(r?.name, lang)}</RefLink>
+  );
+  // Todo lo que come lo mismo va en un solo renglón.
+  const feeds = purposes.filter((p) => p.kind === "feed");
+  const rest = purposes.filter((p) => p.kind !== "feed");
+  const lines: { kind: string; body: React.ReactNode }[] = [];
+  for (const p of rest) {
+    if (p.kind === "plant") lines.push({ kind: p.kind, body: <>{t.detail.plantGrows} {p.ref ? who(p.ref) : <b>{tx(p.name, lang)}</b>}</> });
+    else if (p.kind === "saddle") lines.push({ kind: p.kind, body: <RefLink r={p.ref} to={to} navigate={navigate} className="vh-src-who">{p.ref?.icon && <Slot icon={p.ref.icon} size="xs" />}{t.detail.saddleWho(tx(p.ref?.name, lang))}</RefLink> });
+    else if (p.kind === "stones") lines.push({ kind: p.kind, body: <>{t.detail.stonesWho} {who(p.ref)}</> });
+    else if (p.kind === "stand") lines.push({ kind: p.kind, body: <span>{t.detail.standHow}</span> });
+    else if (p.kind === "sell") lines.push({ kind: p.kind, body: <span>{t.detail.sellFor(p.value ?? 0)}</span> });
+    else lines.push({ kind: p.kind, body: p.ref ? <>{who(p.ref)} <span>{tx(p.text, lang)}</span></> : <span>{tx(p.text, lang)}</span> });
+  }
+  if (feeds.length) {
+    lines.unshift({ kind: "feed", body: <>{feeds.map((f, i) => <span key={f.ref?.slug ?? i}>{i > 0 ? ", " : ""}{who(f.ref)}</span>)} <span>{t.detail.feedAfter(feeds.length)}</span></> });
+  }
+  return (
+    <div>
+      <p className="vh-h2">{t.detail.purposes}</p>
+      <div className="vh-srcs">
+        {lines.map((l, i) => (
+          <div key={i} className="vh-src">
+            <span className="vh-src-k">{t.detail.purpose[l.kind] ?? l.kind}</span>
+            {l.body}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function UsedIn({ uses, to, navigate }: { uses: Use[]; to: To; navigate: Nav }) {
   const t = useValheimCopy();
   const { lang } = useLang();
@@ -360,6 +402,7 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
 
             <div style={{ display: "grid", gap: 18, alignContent: "start" }}>
               {item && <Sources sources={item.sources} to={to} navigate={navigate} />}
+              {item?.purposes && <Purposes purposes={item.purposes} to={to} navigate={navigate} />}
               {item && <UsedIn uses={item.usedIn} to={to} navigate={navigate} />}
             </div>
           </div>

@@ -45,16 +45,20 @@ TYPE_NAME = dict(TYPES)
 
 # Nombres en español: los lugares no tienen nombre en el juego y van traducidos
 # a mano; los que son de un recurso usan el nombre del recurso en el juego.
+# El nombre del juego cuando la wiki usa otro (2026-09-28): la wiki la llama
+# "Hidden Forge", el juego "Forge of Potential" / "Forja del Potencial".
+EN = {"Hidden Forge": "Forge of Potential"}
+
 ES = {
     "Abandoned House": "Casa abandonada", "Abandoned Village": "Aldea abandonada", "Ancient Stone Circle": "Círculo de piedras antiguo",
     "Bee Nest": "Colmena silvestre", "Combat Ruin": "Ruina de batalla", "Dolmen": "Dolmen", "Draugr Village": "Aldea draugr",
     "Glade": "Claro", "Sacrificial Stones": "Piedras de sacrificio", "Viking Graveyard": "Cementerio vikingo",
     "Big Rock Clearing": "Claro de la gran roca", "Burial Chambers": "Cámaras funerarias", "Shipwreck": "Naufragio",
-    "Smouldering Tomb": "Tumba humeante", "Tin Deposit": "Depósito de estaño", "Troll Cave": "Cueva del trol",
+    "Smouldering Tomb": "Tumba humeante", "Tin Deposit": "Yacimiento de estaño", "Troll Cave": "Cueva del trol",
     "Abandoned Hut": "Choza abandonada", "Geyser": "Géiser", "Gucksack": "Saco de légamo", "Inverted Tower": "Torre invertida",
-    "Muddy Scrap Pile": "Montón de chatarra fangosa", "Sunken Crypts": "Criptas hundidas", "Swamp Grave": "Tumba del pantano",
+    "Muddy Scrap Pile": "Pila de chatarra lodosa", "Sunken Crypts": "Criptas hundidas", "Swamp Grave": "Tumba del pantano",
     "Swamp Runestone Tower": "Torre de la piedra rúnica", "Abandoned Cabin": "Cabaña abandonada", "Cairns": "Túmulos",
-    "Drake Nest": "Nido de draco", "Frost Caves": "Cuevas heladas", "Hidden Forge": "Forja oculta", "Howling Cavern": "Caverna aullante",
+    "Drake Nest": "Nido de draco", "Frost Caves": "Cuevas heladas", "Hidden Forge": "Forja del Potencial", "Howling Cavern": "Caverna aullante",
     "Mountain Tower": "Torre de la montaña", "Mountain grave": "Tumba de la montaña", "Obsidian Deposit": "Depósito de obsidiana",
     "Silver Vein": "Veta de plata", "Fuling Outpost": "Puesto fuling", "Fuling Ruin": "Ruina fuling", "Fuling Village": "Aldea fuling",
     "Sealed Tower": "Torre sellada", "Stonehenge": "Círculo de monolitos", "Tar Pit": "Pozo de alquitrán",
@@ -134,7 +138,7 @@ def build(images: dict, creature_ref, item_ref, chest_items) -> list[dict]:
                     seen.add(r["slug"])
                     loot.append(r)
         rows.append({
-            "slug": place_slug(title), "tab": "places", "name": {"en": title, "es": official.get(wiki.norm(title)) or ES.get(title, title)},
+            "slug": place_slug(title), "tab": "places", "name": {"en": EN.get(title, title), "es": official.get(wiki.norm(title)) or ES.get(title, title)},
             "kind": kind if kind in TYPE_ORDER else "other",
             "type": TYPE_NAME.get(kind, {"en": loc["type"], "es": loc["type"]}),
             "biomes": loc["biomes"], "photo": photo,

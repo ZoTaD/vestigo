@@ -17,6 +17,8 @@ import unicodedata
 from collections import defaultdict
 
 from . import fixes, places, planner, wiki
+from .purposes import PURPOSES
+from . import texts
 from .biomes import BIOMES, BIOME_ORDER
 from .tiers import Tiers, armor_slot, food_focus, mead_effect, weapon_class
 
@@ -52,7 +54,7 @@ HUGIN_ALL_BOSSES = ["altar", "bosstrophy"]
 # apagan) apariciones y eventos. Leídas del juego el 2026-09-24.
 KEY_BOSS = {"defeated_eikthyr": "Eikthyr", "defeated_gdking": "gd_king", "defeated_bonemass": "Bonemass",
             "defeated_dragon": "Dragon", "defeated_goblinking": "GoblinKing", "defeated_queen": "SeekerQueen",
-            "defeated_fader": "Fader"}
+            "defeated_fader": "Fader", "defeated_frozenking": "FrozenKing", "defeated_frozenking_p3": "FrozenKing"}
 
 
 def ext_order(pid: str) -> int:
@@ -123,6 +125,8 @@ def main() -> None:
     bosses, environments, hugin = load("bosses.json"), load("environments.json"), load("hugin.json")
     piece_categories = load("piece_categories.json")
     biomes_meta = load("biomes.json")
+    # Lo que no se consigue en una partida normal no se publica (ver `fixes.HIDE_ITEMS`).
+    items = {k: v for k, v in items.items() if k not in fixes.HIDE_ITEMS}
     fixes.apply(items)
     # Construcción = lo que se construye con el martillo y cuesta materiales
     # (ZoTaD, 2026-09-25: "construcción sólo van estructuras"). En la 1.0 la
@@ -159,6 +163,14 @@ def main() -> None:
         habitat_by_name[name] = sorted(hab, key=BIOME_ORDER.index)
     for c in creatures.values():
         c["biomes"] = habitat_by_name.get(clean_txt(c["name"])["en"], c["biomes"])
+    # Las que el juego no ubica (Brenna, Kall, las del Norte profundo): el bioma
+    # de `texts.CREATURES`, por nombre para que lo tomen también sus variantes
+    # (Skeleton_Hildir_nochest, FrozenKing_p3) y así lo que sueltan (2026-09-28).
+    hand_biomes = {clean_txt(creatures[cid]["name"])["en"]: h["biomes"]
+                   for cid, h in texts.CREATURES.items() if cid in creatures and h.get("biomes")}
+    for c in creatures.values():
+        if not c["biomes"] and clean_txt(c["name"])["en"] in hand_biomes:
+            c["biomes"] = list(hand_biomes[clean_txt(c["name"])["en"]])
     # Y los hostiles que el recuadro de cada bioma de la wiki suma aparte (el
     # Draugr de las torres de la Montaña, el Gammeltrol del Norte profundo):
     # ZoTaD, 2026-09-25, "fijate que en cada bioma faltan cosas".
@@ -208,7 +220,8 @@ def main() -> None:
     boss_ids0 = {b["id"] for b in bosses}
     for c in creatures.values():
         c["name"] = clean_txt(c["name"])
-    creatures = {k: c for k, c in creatures.items() if c["name"]["en"] and (c["biomes"] or c["drops"] or k in boss_ids0)}
+    creatures = {k: c for k, c in creatures.items()
+                 if c["name"]["en"] and k not in fixes.HIDE_CREATURES and (c["biomes"] or c["drops"] or k in boss_ids0)}
 
     def creature_icon(c):
         """
@@ -475,6 +488,17 @@ def main() -> None:
             "gameBiomes": game_biomes.get(cid, []),
             **creature_extras(cid, c),
         })
+        # Las que no viven sueltas (invocadas, de misiones, crías): cómo y dónde
+        # aparecen, desde `texts.CREATURES` (2026-09-28).
+        hand = texts.CREATURES.get(cid)
+        if hand:
+            row = tabs["creatures"][-1]
+            if hand.get("where"):
+                row["where"] = hand["where"]
+            if not row["biomes"] and hand.get("biomes"):
+                row["biomes"] = hand["biomes"]
+            if not row["drops"] and hand.get("dropsNothing"):
+                row["dropsNothing"] = True
 
     # Una ficha por nombre: la criatura base (el id más corto: Greydwarf y no
     # Greydwarf_Frozen). Antes ganaba la que más soltaba y el enanogrís de las
@@ -542,6 +566,56 @@ def main() -> None:
             if r.get("id") in summons:
                 r["summons"] = summons[r["id"]]
 
+    # --- Para qué sirve (pedido de ZoTaD, 2026-09-28: "falta para qué sirve").
+    # "Se usa en" sólo ve recetas y piezas, así que una semilla, una silla de
+    # montar o un trofeo parecían no servir para nada. Lo que el juego dice va
+    # acá; lo que no, de `purposes.py`, redactado desde la wiki con su página.
+    purposes = defaultdict(list)
+    for pid, p in pieces.items():
+        if p.get("tool") != "Cultivator":
+            continue
+        grows = next((f["item"] for f in farms if f["id"] == pid), None)
+        for q in p["requirements"]:
+            if q["item"] in ref:
+                target = ref.get(grows) if grows and grows != q["item"] else None
+                purposes[q["item"]].append({"kind": "plant", **({"ref": target} if target else {"name": p["name"]})})
+    for cid, c in creatures.items():
+        cr = ref.get(f"creature:{cid}")
+        if not cr or not c.get("tame"):
+            continue
+        for i in c.get("eats", []):
+            purposes[i].append({"kind": "feed", "ref": cr})
+        if c["tame"].get("saddle"):
+            purposes[c["tame"]["saddle"]].append({"kind": "saddle", "ref": cr})
+    boss_trophy = {d["item"]: b for b in bosses for d in b["drops"] if items.get(d["item"], {}).get("kind") == "trophy"}
+    for pid, it in items.items():
+        if it["kind"] == "trophy":
+            b = boss_trophy.get(pid)
+            purposes[pid].append({"kind": "stones", "ref": ref[f"boss:{b['id']}"]} if b else {"kind": "stand"})
+        # Las monedas son la plata de los comerciantes, no algo que se les vende.
+        if it["value"] and pid != "Coins":
+            purposes[pid].append({"kind": "sell", "value": it["value"]})
+    for pid, extra in PURPOSES.items():
+        for e in extra:
+            e = dict(e)
+            if e.get("ref"):
+                e["ref"] = ref[e["ref"]]
+            purposes[pid].append(e)
+    for rows in tabs.values():
+        for r in rows:
+            # La descripción que el juego no trae (estaciones, carnes, festines).
+            hand = (texts.PIECE_DESC if r["tab"] == "building" else texts.ITEM_DESC).get(r.get("id"))
+            if hand and not (r.get("desc") or {}).get("es"):
+                r["desc"] = {"en": hand["en"], "es": hand["es"]}
+            if r.get("id") in purposes and r["tab"] != "building":
+                seen, out = set(), []
+                for e in purposes[r["id"]]:
+                    k = json.dumps(e, sort_keys=True, ensure_ascii=False)
+                    if k not in seen:
+                        seen.add(k)
+                        out.append(e)
+                r["purposes"] = out
+
     # --- Biomas: qué hay, qué conviene llevar y a quién hay que ganarle.
     # Los lugares (mazmorras, estructuras), con ficha propia en la pestaña
     # Lugares. Un jefe que vive en un lugar enlaza a su ficha de jefe.
@@ -562,6 +636,21 @@ def main() -> None:
         chest_drops[g["id"]] += [ref[d["item"]] for d in g["drops"]["items"] if d["item"] in ref]
     place_rows = places.build(wiki_images, lambda n: by_name(cre_by_name, n), lambda n: by_name(item_by_name, n),
                               lambda cid: chest_drops.get(cid, []))
+    # Lo que la wiki no trae de algunos lugares (2026-09-28): qué es, quién vive
+    # y qué se junta ahí, desde `texts.PLACES`.
+    for p in place_rows:
+        extra = texts.PLACES.get(p["slug"])
+        if not extra:
+            continue
+        if extra.get("summary"):
+            p["summary"] = extra["summary"]
+        for field, table in (("inhabitants", cre_by_name), ("resources", item_by_name), ("loot", item_by_name)):
+            have = {(r["tab"], r["slug"]) for r in p[field]}
+            for n in extra.get(field, []):
+                r = by_name(table, n)
+                if r and (r["tab"], r["slug"]) not in have:
+                    have.add((r["tab"], r["slug"]))
+                    p[field].append(r)
     tabs["places"] = place_rows
     # Y al revés: en la ficha de cada criatura y jefe, dónde aparece.
     lives_in = defaultdict(list)

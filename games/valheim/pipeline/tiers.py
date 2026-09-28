@@ -11,6 +11,8 @@ TRADER_BIOME = {"Haldor": "blackforest", "Hildir": "meadows", "BogWitch": "swamp
 KEY_BIOME = {"defeated_eikthyr": "meadows", "defeated_gdking": "blackforest", "defeated_bonemass": "swamp",
              "defeated_dragon": "mountain", "defeated_goblinking": "plains", "defeated_serpent": "ocean",
              "defeated_queen": "mistlands", "defeated_fader": "ashlands", "defeated_writhan": "swamp",
+             # Kall Fimbulbringer: su condimento lo vende la bruja tras la tercera fase.
+             "defeated_frozenking": "deepnorth", "defeated_frozenking_p3": "deepnorth",
              # La ropa de Hildir: se desbloquea devolviéndole cada cofre (cripta
              # del Bosque negro, cueva de la Montaña, fortaleza de las Llanuras).
              "Hildir1": "blackforest", "Hildir2": "mountain", "Hildir3": "plains"}
@@ -63,10 +65,20 @@ class Tiers:
         it = self.items.get(iid)
         if not it:
             return None
-        options = [b for s in it["sources"] if s["kind"] in self.DIRECT for b in s.get("biomes") or []]
+        # Una fuente puede traer `tier`: el bioma de la progresión cuando no es
+        # dónde pasa. La sangre maliciosa cae en invasiones de las Praderas a
+        # las Llanuras, pero recién después de la Mörkhalla del Norte profundo.
+        options = [b for s in it["sources"] if s["kind"] in self.DIRECT
+                   for b in ([s["tier"]] if s.get("tier") else s.get("biomes") or [])]
         for s in it["sources"]:
             if s["kind"] == "farm":
                 t = self.piece(s.get("from"), seen)
+                if t:
+                    options.append(t)
+        # La porción de un festín sale del festín que se pone en la mesa.
+        for s in it["sources"]:
+            if s["kind"] == "craft" and s.get("via"):
+                t = self.item(s["via"], seen)
                 if t:
                     options.append(t)
         for parent in self.conversions.get(iid, []):

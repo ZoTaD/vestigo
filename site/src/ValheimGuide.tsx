@@ -56,6 +56,7 @@ export function CreaturePage({ row, to, navigate }: { row: CreatureRow; to: To; 
               <div style={{ marginTop: 10 }}><BiomeTags ids={row.biomes} /></div>
             </div>
           </header>
+          {row.where && <p className="vh-desc">{tx(row.where, lang)}</p>}
           <hr className="vh-sep" />
           <div className="vh-cols">
             <div style={{ display: "grid", gap: 16, alignContent: "start" }}>
@@ -67,6 +68,12 @@ export function CreaturePage({ row, to, navigate }: { row: CreatureRow; to: To; 
                 <p className="vh-facts">{t.guide.boss}: <RefLink r={row.bossRef} to={to} navigate={navigate}><b>{tx(row.bossRef.name, lang)}</b></RefLink></p>
               )}
             </div>
+            {row.drops.length === 0 && row.dropsNothing && (
+              <div>
+                <p className="vh-h2">{t.guide.drops}</p>
+                <p className="vh-dim">{t.guide.dropsNothing}</p>
+              </div>
+            )}
             {row.drops.length > 0 && (
               <div>
                 <p className="vh-h2">{t.guide.drops}</p>
@@ -344,6 +351,7 @@ export function PlacePage({ row, to, navigate }: { row: PlaceRow; to: To; naviga
                   ))}
                 </div>
               </header>
+              {row.summary && <p className="vh-desc" style={{ margin: 0 }}>{tx(row.summary, lang)}</p>}
               <RefGrid title={t.inhabitants} refs={row.inhabitants} to={to} navigate={navigate} />
               <RefGrid title={t.placeResources} refs={row.resources} to={to} navigate={navigate} />
               <RefGrid title={t.placeLoot} refs={row.loot} to={to} navigate={navigate} />

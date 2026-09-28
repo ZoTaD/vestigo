@@ -72,6 +72,8 @@ export interface ItemRow {
   setPieces?: Ref[];
   /** Los jefes que se invocan con esto (la Campana → Fader), cuántos y dónde. */
   summons?: (Ref & { amount: number; altar: Txt | null })[];
+  /** Para qué sirve lo que no es una receta: plantar, domesticar, montar, vender, colgar, y lo redactado desde la wiki. */
+  purposes?: Purpose[];
   // Comidas
   food?: { hp: number; st: number; eitr: number; min: number; regen: number };
   focus?: "health" | "stamina" | "eitr" | "balanced";
@@ -94,6 +96,16 @@ export interface ItemRow {
   hows?: string[];
   usedFor?: ValheimTab[];
   biomes?: BiomeId[];
+}
+
+/** Un uso que no es una receta (ver `purposes` en `pipeline/site.py`). */
+export interface Purpose {
+  kind: "plant" | "feed" | "saddle" | "stones" | "stand" | "sell" | "text";
+  ref?: Ref;
+  /** Lo que crece, cuando no tiene ficha propia (un árbol). */
+  name?: Txt;
+  value?: number;
+  text?: Txt;
 }
 
 export interface PieceRow {
@@ -142,6 +154,8 @@ export interface Place extends Ref {
 export interface PlaceRow extends Place {
   slug: string;
   tab: "places";
+  /** Qué es y para qué se va, redactado desde la wiki (2026-09-28). */
+  summary?: Txt;
   kind: string;
   biomes: BiomeId[];
   resources: Ref[];
@@ -180,6 +194,10 @@ export interface CreatureRow {
   slug: string;
   tab: "creatures";
   name: Txt;
+  /** Cómo y dónde aparece cuando no vive suelta en un bioma (una invocada, la de una misión), redactado desde la wiki. */
+  where?: Txt;
+  /** True si la wiki confirma que no suelta nada. */
+  dropsNothing?: boolean;
   icon: string | null;
   health: number | null;
   biomes: BiomeId[];
