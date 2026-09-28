@@ -1931,7 +1931,12 @@ const ES: typeof EN = {
       none: "Todavía no hay partidas suficientes con este héroe.",
       // Los rasgos van como sustantivo y no como adjetivo: "Vampirismo de
       // espíritu" se lee bien y "Vampírica de espíritu" no concuerda con nada.
-      name: (damage, trait) => `${trait} de ${damage}`,
+      // Con el rasgo "Daño" y el daño de arma saldría "Daño de daño de arma":
+      // ahí el daño ya dice todo y va solo.
+      name: (damage, trait) =>
+        trait === "Daño" && damage.startsWith("daño")
+          ? damage.charAt(0).toUpperCase() + damage.slice(1)
+          : `${trait} de ${damage}`,
       damage: { weapon: "daño de arma", vitality: "vida extra", spirit: "poder espiritual" },
       trait: { dps: "Daño", vampiric: "Vampirismo", survival: "Aguante" },
       damageSplit: "Inversión de almas",
