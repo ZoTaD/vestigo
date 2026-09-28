@@ -3895,6 +3895,22 @@
    "en": "This arrow burns whatever it pierces.",
    "es": "Esta flecha quema a todo lo que perfora."
   },
+  "effects": {
+   "attack": {
+    "name": {
+     "en": "Burning",
+     "es": "Quemadura"
+    },
+    "stats": {
+     "ttl": 5.0
+    },
+    "tooltip": {
+     "en": "You are on fire!",
+     "es": "¡Te quemas!"
+    }
+   },
+   "attackChance": null
+  },
   "food": null,
   "icon": "arrow_fire",
   "id": "ArrowFire",
@@ -4997,7 +5013,20 @@
    "es": "Los cielos resonarán en alabanza mientras haces sangrar a tus enemigos."
   },
   "effects": {
-   "move": -0.05
+   "missingHp": 0.2,
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "atgeirgold_bloodlightning",
@@ -5276,6 +5305,7 @@
    "es": "Cuanto más cerca esté tu muerte, más fuertes serán tus golpes."
   },
   "effects": {
+   "missingHp": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -5321,7 +5351,19 @@
    "es": "La carnicería te envuelve cuando empuñas estas hachas, y hasta el mismísimo Thor estaría orgulloso."
   },
   "effects": {
-   "move": -0.05
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "axeberzerker_lightning",
@@ -5366,6 +5408,21 @@
    "es": "Tus instintos más primarios toman las riendas y la naturaleza que te rodea se acerca para ayudarte."
   },
   "effects": {
+   "attack": {
+    "name": {
+     "en": "Immobilized",
+     "es": "Inmobilizado"
+    },
+    "stats": {
+     "speedModifier": -1000.0,
+     "ttl": 10.0
+    },
+    "tooltip": {
+     "en": "You are stuck",
+     "es": "Estás atascado"
+    }
+   },
+   "attackChance": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -5691,7 +5748,20 @@
    "es": "Al cortar madera y carne por igual, un estruendo atronador resonará por toda la tierra."
   },
   "effects": {
-   "move": -0.05
+   "missingHp": 0.2,
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "axe_gold_bloodlightning",
@@ -6817,7 +6887,20 @@
    "es": "Al partir a tus enemigos en dos, su sangre resonará como una tormenta."
   },
   "effects": {
-   "move": -0.2
+   "missingHp": 0.2,
+   "move": -0.2,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "battleaxegold_bloodlightning",
@@ -10044,6 +10127,7 @@
    "es": "Las flechas lanzadas con este arco desgarrarán la carne con una ferocidad inigualable."
   },
   "effects": {
+   "missingHp": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -10088,6 +10172,21 @@
    "es": "Así como la rama retorcida busca el sol, este arco busca la matanza."
   },
   "effects": {
+   "attack": {
+    "name": {
+     "en": "Immobilized",
+     "es": "Inmobilizado"
+    },
+    "stats": {
+     "speedModifier": -1000.0,
+     "ttl": 10.0
+    },
+    "tooltip": {
+     "en": "You are stuck",
+     "es": "Estás atascado"
+    }
+   },
+   "attackChance": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -10132,7 +10231,19 @@
    "es": "Deja que tus flechas sean tan ágiles como un rayo que cae."
   },
   "effects": {
-   "move": -0.05
+   "move": -0.05,
+   "onHit": {
+    "chance": 20,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "bow_ashlandsstorm",
@@ -10367,7 +10478,20 @@
    "es": "El relámpago danza en la cuerda, esperando ser liberado."
   },
   "effects": {
-   "move": -0.05
+   "missingHp": 0.2,
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "bow_gold_bloodlightning",
@@ -14497,7 +14621,20 @@
    "es": "La cuerda está tensa con poder contenido, como el aire antes de un rayo."
   },
   "effects": {
-   "move": -0.05
+   "missingHp": 0.2,
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "crossbow_gold_bloodlightning",
@@ -14647,6 +14784,7 @@
    "es": "Lista para hacer pedazos a tus enemigos."
   },
   "effects": {
+   "missingHp": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -14691,7 +14829,19 @@
    "es": "Las flechas atravesarán a tus enemigos como un vendaval especialmente desagradable."
   },
   "effects": {
-   "move": -0.05
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "crossbow_ripper_storm",
@@ -14735,6 +14885,21 @@
    "es": "Si la flecha no inmoviliza a tu enemigo, las raíces que surgen del suelo seguramente lo harán."
   },
   "effects": {
+   "attack": {
+    "name": {
+     "en": "Immobilized",
+     "es": "Inmobilizado"
+    },
+    "stats": {
+     "speedModifier": -1000.0,
+     "ttl": 10.0
+    },
+    "tooltip": {
+     "en": "You are stuck",
+     "es": "Estás atascado"
+    }
+   },
+   "attackChance": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -21439,6 +21604,21 @@
   "desc": {
    "en": "A fury comes over you as you fight with these weapons, your blood roaring like thunder in your ears... It seems appropriate.",
    "es": "Una furia se apodera de ti al luchar con estas armas, tu sangre ruge como el trueno en tus oídos... Parece apropiado."
+  },
+  "effects": {
+   "missingHp": 0.2,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "fistgold_bloodlightning",
@@ -28210,6 +28390,21 @@
    "en": "The blade is already bloodied, yet it sparks in want of more.",
    "es": "La hoja ya está manchada de sangre, pero chisporrotea ansiando más."
   },
+  "effects": {
+   "missingHp": 0.2,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
+  },
   "food": null,
   "icon": "knife_gold_bloodlightning",
   "id": "KnifeGold_BloodLightning",
@@ -29645,6 +29840,7 @@
    "es": "Esta maza absorbe la sangre como una esponja, y siempre anhela más."
   },
   "effects": {
+   "missingHp": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -29688,7 +29884,19 @@
    "es": "Particularmente eficaz en las mañanas nubladas."
   },
   "effects": {
-   "move": -0.05
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "maceeldner_lightning",
@@ -29731,6 +29939,21 @@
    "es": "Si la fuerza de tu golpe no es suficiente para derribar a tus enemigos, tal vez las raíces primigenias los sujeten por ti."
   },
   "effects": {
+   "attack": {
+    "name": {
+     "en": "Immobilized",
+     "es": "Inmobilizado"
+    },
+    "stats": {
+     "speedModifier": -1000.0,
+     "ttl": 10.0
+    },
+    "tooltip": {
+     "en": "You are stuck",
+     "es": "Estás atascado"
+    }
+   },
+   "attackChance": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -29876,7 +30099,20 @@
    "es": "Un arma capaz de rivalizar incluso con la del propio dios del trueno..."
   },
   "effects": {
-   "move": -0.05
+   "missingHp": 0.2,
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "macegold_bloodlightning",
@@ -42952,7 +43188,20 @@
    "es": "Cuando esta arma golpea con acierto, el impacto resonará por todo el mundo..."
   },
   "effects": {
-   "move": -0.2
+   "missingHp": 0.2,
+   "move": -0.2,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "sledgegold_bloodlightning",
@@ -43585,6 +43834,18 @@
    "es": "La ira del océano."
   },
   "effects": {
+   "attack": {
+    "name": {
+     "en": "Harpooned",
+     "es": "Con arpón"
+    },
+    "stats": {},
+    "tooltip": {
+     "en": "You have been harpooned.",
+     "es": "Te han tirado un arpón."
+    }
+   },
+   "attackChance": null,
    "move": -0.05
   },
   "food": null,
@@ -43814,7 +44075,20 @@
    "es": "Que golpee como un rayo, rápida y feroz."
   },
   "effects": {
-   "move": -0.05
+   "missingHp": 0.2,
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "speargold_bloodlightning",
@@ -43960,6 +44234,7 @@
    "es": "Se debe hacer un pequeño sacrificio para cada batalla..."
   },
   "effects": {
+   "missingHp": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -44003,7 +44278,19 @@
    "es": "Deja que el trueno divida el aire."
   },
   "effects": {
-   "move": -0.05
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "spearsplitner_lightning",
@@ -44046,6 +44333,21 @@
    "es": "Las fuerzas de la naturaleza irrumpen en el suelo allá donde golpea esta lanza."
   },
   "effects": {
+   "attack": {
+    "name": {
+     "en": "Immobilized",
+     "es": "Inmobilizado"
+    },
+    "stats": {
+     "speedModifier": -1000.0,
+     "ttl": 10.0
+    },
+    "tooltip": {
+     "en": "You are stuck",
+     "es": "Estás atascado"
+    }
+   },
+   "attackChance": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -44608,6 +44910,21 @@
    "es": "Un copo de nieve cautivo, con patrones infinitos emergiendo desde su interior..."
   },
   "effects": {
+   "attack": {
+    "name": {
+     "en": "Vengeance Sphere",
+     "es": "Esfera de venganza"
+    },
+    "stats": {
+     "ttl": 120.0
+    },
+    "tooltip": {
+     "en": "Should your enemy hurt you, it shall reflect back upon them at once.",
+     "es": "Si tu enemigo te hiere, se reflejará inmediatamente sobre él."
+    }
+   },
+   "attackChance": null,
+   "healthCost": 40,
    "move": -0.05
   },
   "food": null,
@@ -44908,6 +45225,7 @@
    "es": "Invoca una bestia furiosa para causar muerte y destrucción."
   },
   "effects": {
+   "healthCost": 60,
    "move": -0.05
   },
   "food": null,
@@ -44946,6 +45264,21 @@
    "es": "Por una pequeña ofrenda de sangre, protegerá al lanzador con un caparazón mágico."
   },
   "effects": {
+   "attack": {
+    "name": {
+     "en": "Magic barrier",
+     "es": "Barrera Mágica"
+    },
+    "stats": {
+     "ttl": 60.0
+    },
+    "tooltip": {
+     "en": "A magical shield that absorbs damage.",
+     "es": "Un escudo mágico que absorbe daño"
+    }
+   },
+   "attackChance": null,
+   "healthCost": 40,
    "move": -0.05
   },
   "food": null,
@@ -44984,6 +45317,7 @@
    "es": "Sacrifica un poco de sangre para hacer surgir a los muertos. Mejora la calavera para invocar múltiples esqueletos, e incrementa tu magia de sangre para hacerlos más fuertes."
   },
   "effects": {
+   "healthCost": 40,
    "move": -0.05
   },
   "food": null,
@@ -45022,6 +45356,7 @@
    "es": "Invoca ayuda de otro mundo. Solo cuesta una gota de tu sangre..."
   },
   "effects": {
+   "healthCost": 40,
    "move": -0.05
   },
   "food": null,
@@ -46113,7 +46448,20 @@
    "es": "A medida que la sangre recorre la hoja, despierta la tormenta del interior."
   },
   "effects": {
-   "move": -0.05
+   "missingHp": 0.2,
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "swordgold_bloodlightning",
@@ -46390,6 +46738,7 @@
    "es": "Si sangras, tus enemigos seguramente también lo harán."
   },
   "effects": {
+   "missingHp": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -46433,7 +46782,19 @@
    "es": "El poder del relámpago danza a lo largo de la hoja de esta espada, una promesa del dolor venidero."
   },
   "effects": {
-   "move": -0.05
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "swordniedhogg_lightning",
@@ -46476,6 +46837,21 @@
    "es": "Enreda a tus enemigos en raíces, como sugiere su nombre"
   },
   "effects": {
+   "attack": {
+    "name": {
+     "en": "Immobilized",
+     "es": "Inmobilizado"
+    },
+    "stats": {
+     "speedModifier": -1000.0,
+     "ttl": 10.0
+    },
+    "tooltip": {
+     "en": "You are stuck",
+     "es": "Estás atascado"
+    }
+   },
+   "attackChance": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -46707,7 +47083,20 @@
    "es": "Quien empuñe esta arma resultará realmente aterrador."
   },
   "effects": {
-   "move": -0.05
+   "missingHp": 0.2,
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "sword2hgold_bloodlightning",
@@ -46895,6 +47284,7 @@
    "es": "Si sangra, puedes matarlo."
   },
   "effects": {
+   "missingHp": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -46938,7 +47328,19 @@
    "es": "El rayo vinculado en esta espada es errático y siempre busca algo que golpear."
   },
   "effects": {
-   "move": -0.05
+   "move": -0.05,
+   "onHit": {
+    "chance": 25,
+    "chance2": 20,
+    "damage": {
+     "lightning": 75.0
+    },
+    "radius": 8.0,
+    "targets": [
+     2,
+     4
+    ]
+   }
   },
   "food": null,
   "icon": "thswordslayer_lightning",
@@ -46981,6 +47383,21 @@
    "es": "La espada trabaja con las fuerzas primigenias del mundo, buscando la muerte y la matanza."
   },
   "effects": {
+   "attack": {
+    "name": {
+     "en": "Immobilized",
+     "es": "Inmobilizado"
+    },
+    "stats": {
+     "speedModifier": -1000.0,
+     "ttl": 10.0
+    },
+    "tooltip": {
+     "en": "You are stuck",
+     "es": "Estás atascado"
+    }
+   },
+   "attackChance": 0.2,
    "move": -0.05
   },
   "food": null,
@@ -47766,6 +48183,32 @@
    "en": "Your mind hardens, as do your blows.",
    "es": "Tu mente se endurece, al igual que tus golpes."
   },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Bracelets of the Brave",
+     "es": "Brazaletes de Valentía"
+    },
+    "stats": {
+     "damagePct": {
+      "blunt": 0.1
+     },
+     "healthUpFront": 100.0,
+     "skills": [
+      {
+       "skill": 3,
+       "value": 20.0
+      }
+     ],
+     "ttl": 60.0
+    },
+    "tooltip": {
+     "en": "Increased mace damage, and a quick health burst regeneration.",
+     "es": "Daño de mazas incrementado, y un rápido incremento para la regeneración de salud."
+    }
+   },
+   "adrenalineMax": 85.0
+  },
   "food": null,
   "icon": "trinketblackdamagehealth",
   "id": "TrinketBlackDamageHealth",
@@ -47800,6 +48243,30 @@
   "desc": {
    "en": "Dance with death as you dodge your enemies' strikes.",
    "es": "Baila con la Muerte al evadir cada ataque enemigo."
+  },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Evasion Mantle",
+     "es": "Manto de Evasión"
+    },
+    "stats": {
+     "blockStaminaUseModifier": -0.5,
+     "skills": [
+      {
+       "skill": 108,
+       "value": 20.0
+      }
+     ],
+     "timedBlockBonus": 0.5,
+     "ttl": 120.0
+    },
+    "tooltip": {
+     "en": "Increased dodge skill and reduced block stamina cost.",
+     "es": "Habilidad de Evasión incrementada y reducción en el consumo de vigor al bloquear."
+    }
+   },
+   "adrenalineMax": 60.0
   },
   "food": null,
   "icon": "trinketblackstamina",
@@ -47836,6 +48303,27 @@
    "en": "Claw and bone and gold – grant them blood and they shall grant you a boon.",
    "es": "Garra, hueso y oro: dales sangre y te concederán un don."
   },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Neckstabber",
+     "es": "Degollador"
+    },
+    "stats": {
+     "addArmor": 20.0,
+     "attackStaminaUseModifier": -0.1,
+     "healthRegenMultiplier": 1.2,
+     "healthUpFront": 100.0,
+     "runStaminaDrainModifier": -0.1,
+     "ttl": 30.0
+    },
+    "tooltip": {
+     "en": "Health regenerates faster, running and attacking costs less stamina. You also get an instant boost to health and armour.",
+     "es": "La salud se regenera más rápido, correr y atacar cuesta menos vigor. También obtienes un impulso inmediato de salud y armadura."
+    }
+   },
+   "adrenalineMax": 65.0
+  },
   "food": null,
   "icon": "trinketdngold",
   "id": "TrinketBloodGoldHealth",
@@ -47870,6 +48358,27 @@
   "desc": {
    "en": "They say that the soul of a witch can grant strange powers to mortals...",
    "es": "Dicen que el alma de una bruja puede otorgar extraños poderes a los mortales..."
+  },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Witch Crown",
+     "es": "Corona de bruja"
+    },
+    "stats": {
+     "eitrRegenMultiplier": 1.1,
+     "eitrUpFront": 50.0,
+     "healthRegenMultiplier": 1.1,
+     "staminaRegenMultiplier": 1.1,
+     "staminaUpFront": 50.0,
+     "ttl": 30.0
+    },
+    "tooltip": {
+     "en": "Health, stamina and eitr regenerate faster, and you get an instant boost to stamina and eitr.",
+     "es": "La salud, el vigor y el eitr se regeneran más rápido, y obtienes un impulso inmediato de resistencia y eitr."
+    }
+   },
+   "adrenalineMax": 60.0
   },
   "food": null,
   "icon": "trinketdnnornthread",
@@ -47906,6 +48415,23 @@
    "en": "It pulsates with fragments of ancient life.",
    "es": "Late con los fragmentos de una vida antigua."
   },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Heart of the Forest",
+     "es": "Corazón del Bosque"
+    },
+    "stats": {
+     "healthRegenMultiplier": 1.25,
+     "ttl": 60.0
+    },
+    "tooltip": {
+     "en": "Increased health regeneration.",
+     "es": "Regeneración de salud incrementada."
+    }
+   },
+   "adrenalineMax": 50.0
+  },
   "food": null,
   "icon": "trinketbronzehealth",
   "id": "TrinketBronzeHealth",
@@ -47940,6 +48466,23 @@
   "desc": {
    "en": "A beautiful pendant, harbouring the endurance of a bear.",
    "es": "Un hermoso colgante que alberga la resistencia de un bjorn."
+  },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Bronze Pendant",
+     "es": "Colgante de Bronce"
+    },
+    "stats": {
+     "staminaRegenMultiplier": 1.25,
+     "ttl": 60.0
+    },
+    "tooltip": {
+     "en": "Increased stamina regeneration.",
+     "es": "Regeneración de vigor incrementada."
+    }
+   },
+   "adrenalineMax": 50.0
   },
   "food": null,
   "icon": "trinketbronzestamina",
@@ -47976,6 +48519,23 @@
    "en": "If you listen carefully, you can hear the faint echoes of lost souls...",
    "es": "Si prestas mucha atención, puedes oír los débiles ecos de almas perdidas..."
   },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Pulsating Earrings",
+     "es": "Pendientes Pulsantes"
+    },
+    "stats": {
+     "eitrRegenMultiplier": 1.25,
+     "ttl": 60.0
+    },
+    "tooltip": {
+     "en": "Increased eitr regeneration.",
+     "es": "Regeneración de eitr incrementada."
+    }
+   },
+   "adrenalineMax": 65.0
+  },
   "food": null,
   "icon": "trinketcarapaceeitr",
   "id": "TrinketCarapaceEitr",
@@ -48010,6 +48570,24 @@
   "desc": {
    "en": "Empty your mind as you become shapeless and one with the water.",
    "es": "Vacía tu mente mientras te vuelves informe y te fundes con el agua."
+  },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Fins of Destiny",
+     "es": "Aletas del Destino"
+    },
+    "stats": {
+     "swimSpeedModifier": 0.5,
+     "swimStaminaUseModifier": -0.8,
+     "ttl": 120.0
+    },
+    "tooltip": {
+     "en": "Reduced swim stamina cost and increased swim speed.",
+     "es": "Se ha reducido el coste de vigor al nadar y se ha aumentado la velocidad de nado."
+    }
+   },
+   "adrenalineMax": 10.0
   },
   "food": null,
   "icon": "trinketchitinswim",
@@ -48046,6 +48624,33 @@
    "en": "Tormented screams resonate from within.",
    "es": "Desde el interior resuenan gritos angustiados."
   },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Jörmundling ",
+     "es": "Jörmundling "
+    },
+    "stats": {
+     "eitrUpFront": 100.0,
+     "skills": [
+      {
+       "skill": 9,
+       "value": 20.0
+      },
+      {
+       "skill": 10,
+       "value": 20.0
+      }
+     ],
+     "ttl": 60.0
+    },
+    "tooltip": {
+     "en": "Increased elemental and blood magic skill, and a quick burst of eitr regeneration.",
+     "es": "Aumenta la habilidad de magia elemental y de sangre, y concede regeneración rápida de Eitr."
+    }
+   },
+   "adrenalineMax": 70.0
+  },
   "food": null,
   "icon": "trinketflametaleitr",
   "id": "TrinketFlametalEitr",
@@ -48080,6 +48685,24 @@
   "desc": {
    "en": "It's warm, as if filled with a lifesblood of its own.",
    "es": "Entre los latidos del corazón se oye que arde de deseo."
+  },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Brimstone",
+     "es": "Corazón de fuego"
+    },
+    "stats": {
+     "healthUpFront": 100.0,
+     "staminaUpFront": 100.0,
+     "ttl": 1.0
+    },
+    "tooltip": {
+     "en": "A quick burst of both health and stamina regeneration.",
+     "es": "Concede regeneración rápida de salud y vigor."
+    }
+   },
+   "adrenalineMax": 100.0
   },
   "food": null,
   "icon": "trinketflametalstaminahealth",
@@ -48116,6 +48739,24 @@
    "en": "A delicate yet defensive accessory.",
    "es": "Una pieza delicada pero defensiva."
   },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Iron Brooch",
+     "es": "Broche de hierro"
+    },
+    "stats": {
+     "addArmor": 20.0,
+     "healthUpFront": 50.0,
+     "ttl": 30.0
+    },
+    "tooltip": {
+     "en": "Increased armour and a quick burst of health regeneration.",
+     "es": "Aumenta la eficacia de la armadura y concede una rápida regeneración de vida."
+    }
+   },
+   "adrenalineMax": 65.0
+  },
   "food": null,
   "icon": "trinketironhealth",
   "id": "TrinketIronHealth",
@@ -48150,6 +48791,24 @@
   "desc": {
    "en": "Puts a spring in your step!",
    "es": "Ligera e imbuida de velocidad."
+  },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Nimble Anklet",
+     "es": "Tobillera"
+    },
+    "stats": {
+     "speedModifier": 0.15,
+     "staminaUpFront": 50.0,
+     "ttl": 30.0
+    },
+    "tooltip": {
+     "en": "Increased run speed and a quick burst of stamina regeneration.",
+     "es": "Aumenta la velocidad de carrera y concede una regeneración rápida de vigor."
+    }
+   },
+   "adrenalineMax": 60.0
   },
   "food": null,
   "icon": "trinketironstamina",
@@ -48186,6 +48845,26 @@
    "en": "A razor-sharp ankle chain. Can it truly be comfortable?",
    "es": "Una cadena afilada para el tobillo."
   },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Resounding Shackle",
+     "es": "Grillete resonante"
+    },
+    "stats": {
+     "damagePct": {
+      "slash": 0.1
+     },
+     "staminaUpFront": 100.0,
+     "ttl": 60.0
+    },
+    "tooltip": {
+     "en": "Increased slash damage and a quick burst of stamina regeneration.",
+     "es": "Aumenta el daño cortante y la regeneración de vigor."
+    }
+   },
+   "adrenalineMax": 75.0
+  },
   "food": null,
   "icon": "trinketscalestaminadamage",
   "id": "TrinketScaleStaminaDamage",
@@ -48221,6 +48900,35 @@
    "en": "Assume the sharp and furious mind of a wolf.",
    "es": "Diadema inspirada en la mente aguda y furiosa de un lobo."
   },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Wolf Sight",
+     "es": "Vista de lobo"
+    },
+    "stats": {
+     "damagePct": {
+      "pierce": 0.1
+     },
+     "skills": [
+      {
+       "skill": 8,
+       "value": 20.0
+      },
+      {
+       "skill": 5,
+       "value": 20.0
+      }
+     ],
+     "ttl": 30.0
+    },
+    "tooltip": {
+     "en": "Increased bow skill, spear skill, and increased pierce damage.",
+     "es": "Aumenta la habilidad con arcos y lanzas, y el daño perforante."
+    }
+   },
+   "adrenalineMax": 55.0
+  },
   "food": null,
   "icon": "trinketsilverdamage",
   "id": "TrinketSilverDamage",
@@ -48255,6 +48963,36 @@
   "desc": {
    "en": "A shard of frozen sorrow. Touching it makes you feel almost numb.",
    "es": "Un fragmento de dolor y desesperación congelados."
+  },
+  "effects": {
+   "adrenaline": {
+    "name": {
+     "en": "Crystal Heart",
+     "es": "Corazón de cristal"
+    },
+    "stats": {
+     "resist": [
+      {
+       "mod": "slightlyResistant",
+       "type": "blunt"
+      },
+      {
+       "mod": "slightlyResistant",
+       "type": "slash"
+      },
+      {
+       "mod": "slightlyResistant",
+       "type": "pierce"
+      }
+     ],
+     "ttl": 50.0
+    },
+    "tooltip": {
+     "en": "Increased resistance against blunt, slash and pierce damage.",
+     "es": "Aumenta la resistencia al daño contundente, cortante y perforante."
+    }
+   },
+   "adrenalineMax": 80.0
   },
   "food": null,
   "icon": "trinketsilverresist",

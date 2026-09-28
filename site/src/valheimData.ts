@@ -170,7 +170,20 @@ export interface StatusEffect {
   stats: Record<string, unknown> & { skills?: { skill: number; value: number }[]; resist?: Resist[]; damagePct?: Record<string, number> };
 }
 export interface Resist { type: string; mod: string }
-export interface ItemEffects { set?: StatusEffect; setSize?: number | null; equip?: StatusEffect; consume?: StatusEffect; resist?: Resist[]; move?: number }
+export interface ItemEffects {
+  set?: StatusEffect; setSize?: number | null; equip?: StatusEffect; consume?: StatusEffect; resist?: Resist[]; move?: number;
+  /** Amuletos: el efecto al llenar la adrenalina, y cuánta hace falta. */
+  adrenaline?: StatusEffect; adrenalineMax?: number | null;
+  /** El efecto que deja el arma al golpear (el jade), con su probabilidad si no es segura (0–1). */
+  attack?: StatusEffect; attackChance?: number | null;
+  perfectBlock?: StatusEffect;
+  /** Piedra de sangre: % de daño extra por cada punto de vida que falta. */
+  missingHp?: number;
+  /** Bastones de sangre: % de la vida actual que cuesta cada uso. */
+  healthCost?: number;
+  /** Iolita: rayo en cadena al pegar (probabilidad en %, la del ataque secundario, daño, radio, a cuántos salta). */
+  onHit?: { chance: number; chance2: number | null; damage: Record<string, number> | null; radius: number | null; targets?: [number, number] };
+}
 
 /** Una regla de aparición del mundo abierto (del juego). */
 export interface SpawnRule {

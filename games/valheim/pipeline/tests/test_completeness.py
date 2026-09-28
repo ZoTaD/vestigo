@@ -49,6 +49,22 @@ class TestCompleto(unittest.TestCase):
         self.assertEqual(names(r for r in rows if not r["biomes"] and not r.get("where")), [])
         self.assertEqual(names(r for r in rows if not r["drops"] and not r.get("dropsNothing")), [])
 
+    def test_armas_con_gema_y_abalorios_muestran_su_efecto(self):
+        # 2026-09-28, ZoTaD: "todo tiene que tener los efectos puestos". La
+        # piedra de sangre pega más con menos vida, la iolita tira rayos y el
+        # jade deja un efecto al golpear; los abalorios actúan con la adrenalina.
+        # Los bastones no llevan gema: la sangre de su nombre es la magia.
+        gem = {"Blood": "missingHp", "Lightning": "onHit", "Nature": "attack"}
+        faltan = []
+        for r in load("weapons"):
+            if r["id"].startswith("Staff"):
+                continue
+            for part, key in gem.items():
+                if part in r["id"] and key not in (r.get("effects") or {}):
+                    faltan.append(f"{r['name']['en']}: {key}")
+        faltan += [r["name"]["en"] for r in load("armor") if r["id"].startswith("Trinket") and "adrenaline" not in (r.get("effects") or {})]
+        self.assertEqual(sorted(faltan), [])
+
     def test_ningun_lugar_vacio(self):
         vacios = [r for r in load("places") if not (r["inhabitants"] or r["resources"] or r["loot"] or r.get("summary"))]
         self.assertEqual(names(vacios), [])

@@ -253,6 +253,10 @@ export default function Valheim({ route, navigate }: { route: Route; navigate: N
           {t.wikiCredit} <a href="https://valheim.fandom.com/wiki/Valheim_Wiki" target="_blank" rel="noopener">Valheim Wiki (Fandom)</a>,{" "}
           {t.wikiLicense.split("CC BY-SA 3.0")[0]}<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener license">CC BY-SA 3.0</a>{t.wikiLicense.split("CC BY-SA 3.0")[1]}
         </p>
+        <p className="vh-note" style={{ marginTop: 6 }}>
+          {t.wikiExtraCredit} <a href="https://valheim.weirdgloop.org/" target="_blank" rel="noopener">Valheim Wiki (weirdgloop)</a>,{" "}
+          <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener license">CC BY-NC-SA 3.0</a>.
+        </p>
       </main>
     </>
   );

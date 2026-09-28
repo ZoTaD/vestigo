@@ -92,7 +92,17 @@
   "Thrust": "Estocada",
   "Thrust feint": {"en": "Thrust feint", "es": "Estocada con finta"},
   "Torch": {"en": "Torch swing", "es": "Antorchazo"},
-  "Wall of Fire": {"en": "Wall of fire", "es": "Muro de fuego"}
+  "Wall of Fire": {"en": "Wall of fire", "es": "Muro de fuego"},
+  "Aoe": {"en": "Area burst", "es": "Estallido"},
+  "Cleave": {"en": "Cleave", "es": "Tajo descendente"},
+  "Dodge": {"en": "Dodge strike", "es": "Golpe esquivando"},
+  "Dodger": {"en": "Dodge strike (other side)", "es": "Golpe esquivando (al otro lado)"},
+  "Slashdw": {"en": "Dual-axe slash", "es": "Tajo con dos hachas"},
+  "Lantern": {"en": "Lantern swing", "es": "Golpe con farol"},
+  "Lightningbolt": {"en": "Lightning bolt", "es": "Rayo"},
+  "Magicblast": {"en": "Magic blast", "es": "Estallido mágico"},
+  "Ground slam area": {"en": "Ground slam (area)", "es": "Golpe contra el suelo (área)"},
+  "Sand cloud": {"en": "Sand volley", "es": "Ráfaga de arena"}
  },
  "groups": {
   "Unarmed": {"en": "Unarmed", "es": "Sin arma"},
@@ -103,7 +113,11 @@
   "Sledge": {"en": "Sledge arms", "es": "Brazos de maza"},
   "Spike": {"en": "Spike arms", "es": "Brazos de púa"},
   "Thungr": "Thungr",
-  "Zil": "Zil"
+  "Zil": "Zil",
+  "Axe": {"en": "Two axes", "es": "Dos hachas"},
+  "Greataxe": {"en": "Greataxe", "es": "Gran hacha"},
+  "Sword": {"en": "Sword", "es": "Espada"},
+  "Greataxe and Sword": {"en": "Greataxe and sword", "es": "Gran hacha y espada"}
  },
  "creatures": {
   "Eikthyr": {
@@ -1097,6 +1111,156 @@
     "es": [
      "Cuando empieza a hincharse, rueda o corre: la explosión cubre 6 m.",
      "Su explosión daña a otras criaturas y rompe las rocas de piedra cenicienta: aprovéchala."
+    ]
+   }
+  },
+  "Krigen": {
+   "attack_names": {"Charge": {"en": "Charge", "es": "Embestida"}, "Slash": {"en": "Slash", "es": "Tajo"}},
+   "tips": {
+    "en": [
+     "No weakness, and it shrugs off Pierce and especially Frost: bring Slash or Blunt weapons.",
+     "The sword and greataxe Krigen open with a long charge every 20 seconds: sidestep it and punish; they also dodge back often, so don't chase them with slow swings.",
+     "It drops the Protector and Vanguard moulds (3% each, doubled with one star, quadrupled with two): hunt the ones the Malicious Ice summons in Mörkhalla.",
+     "Killing your first Krigen or Hexen unlocks daytime Krigen and Hexen patrols that hunt you across the Deep North."
+    ],
+    "es": [
+     "No tiene debilidades y resiste Perforante y sobre todo Escarcha: lleva armas de daño Tajante o Contundente.",
+     "Los de espada y gran hacha abren con una carga larga cada 20 segundos: esquívala de costado y castígalos. Saltan hacia atrás seguido; no los persigas con golpes lentos.",
+     "Suelta los moldes del Protector y la Vanguardia (3 % cada uno, el doble con una estrella, el cuádruple con dos): caza los que invoca el Hielo malicioso en Mörkhalla.",
+     "Matar tu primer Krigen o Hexen activa patrullas diurnas de Krigen y Hexen que te persiguen por todo el Norte profundo."
+    ]
+   }
+  },
+  "Hexen": {
+   "tips": {
+    "en": [
+     "Weak to fire and almost immune to Frost: Fire Arrows or the Staff of Embers bring it down fast.",
+     "It flies and throws lightning from 5 to 20 m every few seconds: close the gap or fight from behind cover.",
+     "It has a 10% chance to drop the Intricate Key itself, so you can open Mörkhalla without the key mould. It also drops the Caller moulds (5% each).",
+     "Besides Mörkhalla, it shows up in Jotun invasions and, after your first Krigen or Hexen kill, in daytime patrols."
+    ],
+    "es": [
+     "Débil al fuego y casi inmune a la Escarcha: las flechas ígneas o el bastón de ascuas la tiran rápido.",
+     "Vuela y lanza rayos de 5 a 20 m cada pocos segundos: acércate rápido o pelea detrás de algo que te cubra.",
+     "Tiene un 10 % de soltar la Llave intrincada, así que puedes abrir Mörkhalla sin el molde de la llave. También suelta los moldes del Invocador (5 % cada uno).",
+     "Además de Mörkhalla, aparece en las invasiones jotun y, después de tu primer Krigen o Hexen muerto, en patrullas de día."
+    ]
+   }
+  },
+  "Elaking": {
+   "tips": {
+    "en": [
+     "Weak to fire and resistant to Frost.",
+     "In the Winding Tunnels they keep pouring out of Wardrobe Shafts until you break the shaft: destroy it first, which can also drop a mould.",
+     "Lantern carriers only swing; the ones without a lantern also leap at you, so keep your shield up.",
+     "It can drop the Mould: Intricate Key besides its hair bundle."
+    ],
+    "es": [
+     "Débil al fuego y resistente a la Escarcha.",
+     "En los Túneles serpenteantes salen de los pozos de ropero sin parar hasta que rompes el pozo: destrúyelo primero, que además puede soltar un molde.",
+     "Los que llevan farol sólo dan golpes; los que no llevan farol también te saltan encima, así que mantén el escudo arriba.",
+     "Además del fardo de pelo, puede soltar el Molde: llave intrincada."
+    ]
+   }
+  },
+  "Eyeless One": {
+   "tips": {
+    "en": [
+     "It sleeps until you come within about 10 m: sneak past it or start the fight when you are ready.",
+     "Its favourite attack throws six projectiles of 60 Blunt each from up to 15 m: block or roll, then close in.",
+     "Its claws add 100 Poison: drink Poison Resistance Mead before the Winding Tunnels.",
+     "It only resists Frost, so any other weapon works."
+    ],
+    "es": [
+     "Duerme hasta que te acercas a unos 10 m: pásale por al lado en sigilo o empieza la pelea cuando estés listo.",
+     "Su ataque preferido lanza seis proyectiles de 60 Contundente cada uno desde hasta 15 m: bloquea o rueda y después acércate.",
+     "Sus garras suman 100 de veneno: toma hidromiel resistente al veneno antes de entrar a los Túneles serpenteantes.",
+     "Sólo resiste la Escarcha, así que sirve cualquier otra arma."
+    ]
+   }
+  },
+  "Barka": {
+   "tips": {
+    "en": [
+     "Weak only to fire and resistant to every physical damage type, Frost and Lightning: Staff of Embers, Fire Arrows or bombs.",
+     "It starts dormant and wakes when you come within 20 m or make noise within 50 m: walk around it quietly if you don't need the fight.",
+     "Its long slam (180 Blunt and 100 Frost) reaches 10 to 20 m and throws you far back. Its hits also damage other Deep North creatures."
+    ],
+    "es": [
+     "Sólo es débil al fuego y resiste todo el daño físico, la Escarcha y el rayo: bastón de ascuas, flechas ígneas o bombas.",
+     "Empieza dormido y se despierta si te acercas a 20 m o haces ruido a menos de 50 m: rodéalo en silencio si no necesitas pelear.",
+     "Su golpe largo (180 Contundente y 100 de Escarcha) llega de 10 a 20 m y te lanza lejos. Sus golpes también lastiman a otras criaturas del Norte profundo."
+    ]
+   }
+  },
+  "Gammeltroll": {
+   "tips": {
+    "en": [
+     "The biggest creature in the game: it resists physical damage and is immune to fire, so aim for the weak point on its head.",
+     "It takes extra damage from pickaxes.",
+     "It throws eight logs in two bursts, 150 Blunt each where they land: keep moving sideways. A perfect parry does not stagger it.",
+     "Each one spawns only once and does not come back; the logs it throws can be chopped afterwards."
+    ],
+    "es": [
+     "Es la criatura más grande del juego: resiste el daño físico y es inmune al fuego, así que apunta al punto débil de la cabeza.",
+     "Recibe daño extra de los picos.",
+     "Tira ocho troncos en dos tandas, 150 Contundente cada uno donde caen: muévete de costado sin parar. Un bloqueo perfecto no lo aturde.",
+     "Cada uno aparece una sola vez y no vuelve; los troncos que tira se pueden talar después."
+    ]
+   }
+  },
+  "Moose": {
+   "tips": {
+    "en": [
+     "Aggressive but tameable: feed it Lingonberries in a pen, then ride it with a Moose Saddle.",
+     "Weak to fire and resistant to Slash, Blunt and Frost: Pierce weapons kill it fastest."
+    ],
+    "es": [
+     "Es agresivo pero se puede domesticar: dale arándanos rojos en un corral y después móntalo con la silla de alce.",
+     "Débil al fuego y resistente al daño Tajante, Contundente y a la Escarcha: con armas de Perforante cae más rápido."
+    ]
+   }
+  },
+  "Shapeless Pulp": {
+   "tips": {
+    "en": [
+     "Hexahedric Pulps in Mörkhalla spawn one every few seconds: break the Hexahedric Pulp first (it is weak to fire and Frost).",
+     "Weak to Blunt, Frost and Lightning; its area burst deals 110 Poison, so bring Poison Resistance Mead.",
+     "It splits into Tiny Pulps when it dies."
+    ],
+    "es": [
+     "Las Pulpas hexaédricas de Mörkhalla sacan una cada pocos segundos: rompe primero la Pulpa hexaédrica (es débil al fuego y a la Escarcha).",
+     "Débil a Contundente, Escarcha y rayo; su estallido hace 110 de veneno, así que lleva hidromiel resistente al veneno.",
+     "Al morir se parte en Pulpas diminutas."
+    ]
+   }
+  },
+  "Captive Fuling": {
+   "tips": {
+    "en": [
+     "Fights like a Plains Fuling but with more health and damage, and can have up to two stars.",
+     "They appear in Mörkhalla when you come within 60 m of their cell."
+    ],
+    "es": [
+     "Pelea como un fuling de las Llanuras pero con más salud y daño, y puede tener hasta dos estrellas.",
+     "Aparecen en Mörkhalla cuando te acercas a 60 m de su celda."
+    ]
+   }
+  },
+  "Kall Fimbulbringer": {
+   "no_attacks": true,
+   "tips": {
+    "en": [
+     "The final boss: summon him with three Malicious Blood at the Strange Bowl deep in his prison, reached through the Aesir Passage.",
+     "Three phases with their own health (10,000, 7,000 and 30,000). He can't be staggered and resists Pierce, fire, Frost and Lightning, so bring Slash or Blunt.",
+     "His chain whirl and rush punish standing still; in the last phase, below 35% health, spikes of ice rain down.",
+     "His Sacrificial Blood goes on the Chiselled Platform of the Sacrificial Stones to end the game."
+    ],
+    "es": [
+     "Es el jefe final: invócalo con tres de sangre maliciosa en el Cuenco extraño de su prisión, a la que se llega por el Pasaje de los Aesir.",
+     "Tiene tres fases con salud propia (10 000, 7000 y 30 000). No se aturde y resiste Perforante, fuego, Escarcha y rayo: usa daño Tajante o Contundente.",
+     "Su remolino y su embestida con cadenas castigan al que se queda quieto; en la última fase, por debajo del 35 % de salud, llueven púas de hielo.",
+     "Su sangre de sacrificio va en la Plataforma cincelada de las Piedras de sacrificio para terminar el juego."
     ]
    }
   }

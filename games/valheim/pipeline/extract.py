@@ -39,7 +39,7 @@ from .unity import Game
 from .loc import Loc, parse_localization
 from .biomes import BIOMES, BIOME_ORDER, biomes_of, is_everywhere
 from .records import (item_record, recipe_record, requirements, drop_table, character_drops, trader_items, damage_mods,
-                      mod_list, spawn_record, status_effect)
+                      mod_list, spawn_record, status_effect, _dmg)
 from .sources import build_sources, build_used_in, share_by_name
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -50,7 +50,7 @@ CLASSES = {"ObjectDB", "ItemDrop", "Recipe", "Piece", "PieceTable", "CraftingSta
            "Fermenter", "Smelter", "Humanoid", "Character", "CharacterDrop", "SpawnSystemList", "ZoneSystem",
            "LocationList", "Pickable", "MineRock5", "MineRock", "TreeBase", "DropOnDestroyed", "Trader",
            "Plant", "Beehive", "TreeLog", "Destructible", "Container", "OfferingBowl", "ItemStand", "EnvMan",
-           "StationExtension", "Tameable", "Procreation", "MonsterAI", "RandEventSystem"}
+           "StationExtension", "Tameable", "Procreation", "MonsterAI", "RandEventSystem", "Aoe"}
 
 # Los jefes en el orden en que se enfrentan, con su bioma. Es la única tabla
 # escrita a mano del extractor: el juego sabe el bioma del altar por la
@@ -274,6 +274,42 @@ def main() -> None:
                 se = se_of(c.file, sh.get(field))
                 if se:
                     effects[key] = se
+            # Lo que la 1.0 agrega (2026-09-28, ZoTaD: "no me dice para qué sirve"
+            # el Corazón de fuego): el efecto de los amuletos al llenar la
+            # adrenalina, el de algunas armas al golpear (la iolita: rayo en
+            # cadena) y el de algunos escudos al bloquear perfecto.
+            for field, key in (("m_fullAdrenalineSE", "adrenaline"), ("m_attackStatusEffect", "attack"),
+                               ("m_perfectBlockStatusEffect", "perfectBlock")):
+                se = se_of(c.file, sh.get(field))
+                if se:
+                    effects[key] = se
+            if effects.get("adrenaline"):
+                effects["adrenalineMax"] = sh.get("m_maxAdrenaline") or None
+            if effects.get("attack"):
+                chance = sh.get("m_attackStatusEffectChance")
+                effects["attackChance"] = round(chance, 3) if chance is not None and chance < 1 else None
+            # Lo que el arma hace al pegar y no es un efecto de estado (2026-09-28,
+            # ZoTaD: "cuando tienes menos vida pegas más"): la piedra de sangre
+            # suma daño por cada punto de vida que te falta, la iolita tira un
+            # rayo en cadena con cierta chance y los bastones de sangre cuestan vida.
+            atk1, atk2 = sh.get("m_attack") or {}, sh.get("m_secondaryAttack") or {}
+            per_hp = atk1.get("m_damageMultiplierPerMissingHP") or atk2.get("m_damageMultiplierPerMissingHP")
+            if per_hp:
+                effects["missingHp"] = round(per_hp * 100, 2)
+            hp_cost = atk1.get("m_attackHealthPercentage") or 0
+            if hp_cost:
+                effects["healthCost"] = round(hp_cost)
+            spawn = atk1.get("m_spawnOnHit") or {}
+            if spawn.get("m_PathID") and atk1.get("m_spawnOnHitChance"):
+                go = g.ref(c.file, spawn)
+                aoe = next((x.tree for x in g.comps_on(go) if x.cls == "Aoe"), None) if go else None
+                if aoe:
+                    hit = {"chance": round(atk1["m_spawnOnHitChance"] * 100),
+                           "chance2": round((atk2.get("m_spawnOnHitChance") or 0) * 100) or None,
+                           "damage": _dmg(aoe["m_damage"]), "radius": aoe.get("m_radius") or None}
+                    if aoe.get("m_chainMaxTargets"):
+                        hit["targets"] = [aoe["m_chainMinTargets"], aoe["m_chainMaxTargets"]]
+                    effects["onHit"] = hit
             if effects.get("set"):
                 effects["setSize"] = sh.get("m_setSize") or None
             resist = mod_list(sh.get("m_damageModifiers"))

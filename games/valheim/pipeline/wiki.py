@@ -17,6 +17,10 @@ from functools import lru_cache
 
 WIKI = os.environ.get("VALHEIM_WIKI") or os.path.join(os.path.expanduser("~"), "Desktop", "valheim-wiki")
 PAGES = os.path.join(WIKI, "pages", "main")
+# Páginas de la wiki de weirdgloop (valheim.weirdgloop.org), que sí tiene lo
+# del Norte profundo de la 1.0: se usan sólo para lo que la copia de Fandom no
+# trae (lugares y ataques de criaturas nuevas; 2026-09-28).
+EXTRA = os.path.join(WIKI, "weirdgloop")
 
 # Cómo nombra la wiki a cada bioma (con los plurales y los viejos).
 BIOME_NAMES = {
@@ -70,6 +74,19 @@ def pages() -> dict[str, str]:
     return out
 
 
+@lru_cache(maxsize=None)
+def extra_pages() -> dict[str, str]:
+    """Título → wikitext de weirdgloop, sólo los títulos que Fandom no tiene."""
+    out, have = {}, {norm(t) for t in pages()}
+    if not os.path.isdir(EXTRA):
+        return out
+    for fn in os.listdir(EXTRA):
+        if fn.endswith(".txt") and norm(fn[:-4]) not in have:
+            with open(os.path.join(EXTRA, fn), encoding="utf-8") as f:
+                out[fn[:-4]] = f.read()
+    return out
+
+
 def infobox(text: str) -> tuple[str, dict[str, str]] | None:
     """La primera ficha (`{{Infobox …}}`) de la página: tipo y campos."""
     m = re.search(r"\{\{\s*infobox[ _]([a-z_ ]+?)\s*\|", text, re.I)
@@ -111,9 +128,21 @@ def boxes() -> dict[str, tuple[str, str, dict]]:
     return out
 
 
-def lookup(name: str):
-    """La ficha de un nombre del juego: exacto, o el singular/plural."""
-    bx = boxes()
+@lru_cache(maxsize=None)
+def extra_boxes() -> dict[str, tuple[str, str, dict]]:
+    """Como `boxes()`, pero de las páginas de weirdgloop que Fandom no tiene."""
+    out = {}
+    for title, text in extra_pages().items():
+        b = infobox(text)
+        if b:
+            out[norm(title)] = (title, b[0], b[1])
+    return out
+
+
+def lookup(name: str, extra: bool = False):
+    """La ficha de un nombre del juego: exacto, o el singular/plural.
+    Con `extra`, si Fandom no la tiene, la busca en las páginas de weirdgloop."""
+    bx = {**extra_boxes(), **boxes()} if extra else boxes()
     n = norm(name)
     for k in (n, n.rstrip("s"), n + "s", re.sub(r"ies$", "y", n), re.sub(r"y$", "ies", n)):
         if k in bx:
@@ -172,7 +201,7 @@ def biome_boxes() -> dict[str, dict[str, list[str]]]:
 def locations() -> list[dict]:
     """Los lugares de la wiki (`Infobox location`): título, bioma, foto, habitantes y recursos."""
     out = []
-    for title, text in pages().items():
+    for title, text in list(pages().items()) + list(extra_pages().items()):
         b = infobox(text)
         if not b or b[0] != "location":
             continue

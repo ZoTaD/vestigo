@@ -12,6 +12,7 @@ el crédito de las fotos va sólo en el pie de la página.
 """
 import json
 import os
+import unicodedata
 
 from . import wiki
 
@@ -69,6 +70,7 @@ ES = {
     "Charred Fortress": "Fortaleza carbonizada", "Charred Ruins": "Ruinas carbonizadas", "Dvergr Charred Tower Ruins": "Ruinas de torre dvergr carbonizada",
     "Flametal Ore Vein": "Veta de mineral de llametal", "Mysterious Location": "Lugar misterioso", "Putrid Hole": "Pozo pútrido",
     "Sulfur Arch": "Arco de azufre", "Tomb of Lord Reto": "Tumba de lord Reto", "Unstable Lava Rock": "Roca de lava inestable",
+    "Mörkhalla": "Mörkhalla", "Winding Tunnels": "Túneles serpenteantes",
 }
 
 # Fichas de la wiki que no son un lugar de un bioma: aparecen en todos (los
@@ -101,7 +103,9 @@ CHESTS = {
 
 
 def place_slug(title: str) -> str:
-    return wiki.norm(title).replace("'", "").replace(" ", "-")
+    # Sin tildes ni diéresis antes de normalizar: "Mörkhalla" → "morkhalla".
+    plain = unicodedata.normalize("NFKD", title).encode("ascii", "ignore").decode()
+    return wiki.norm(plain).replace("'", "").replace(" ", "-")
 
 
 def build(images: dict, creature_ref, item_ref, chest_items) -> list[dict]:

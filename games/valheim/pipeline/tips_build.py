@@ -20,8 +20,9 @@ Correr:  cd games/valheim && .venv/Scripts/python -m pipeline.tips_build
                  "attack_names" (nombres propios: el "Attack" del jabalí es una cornada),
                  "skip_attacks" (lo que la ficha lista pero el juego no usa)}.
 
-Una criatura sale en el JSON si tiene ataques o consejos. Las que no tienen
-página en la wiki ni entrada en el fuente (el Norte profundo) quedan afuera.
+Una criatura sale en el JSON si tiene ataques o consejos. Las del Norte
+profundo, que Fandom no tiene, toman los ataques de las páginas de weirdgloop
+(`wiki.extra_pages()`, 2026-09-28).
 """
 import json
 import os
@@ -109,7 +110,8 @@ def parse_abilities(field: str):
         m = re.match(r"^([^()]+?)\s*(?:\(([^)]*)\))?$", text)
         if not m or len(m.group(1)) > 28 or " when " in text:
             continue  # "Regular Fuling shaman abilities when alone"
-        cd = re.match(r"\s*(\d+(?:\.\d+)?)\s*s\b", m.group(2) or "")
+        # "8s" en Fandom, "10 seconds" en weirdgloop.
+        cd = re.match(r"\s*(\d+(?:\.\d+)?)\s*s(?:econds?)?\b", m.group(2) or "")
         out.append((group, m.group(1).strip(), float(cd.group(1)) if cd else None))
     return out
 
@@ -144,6 +146,9 @@ def attacks_for(fields: dict, src: dict, cfg: dict, missing: set) -> list:
             g, n, _ = abil[j]
             dmg[i] = (dmg[i][0] or g, n, dmg[i][2])
 
+    # Un grupo "Greataxe and Sword" en `abilities` (Krigen) vale para cada uno de
+    # los grupos de `damage`: se abre en "Greataxe" y "Sword" (2026-09-28).
+    abil = [(part, n, cd) for g, n, cd in abil for part in (re.split(r"\s+and\s+", g) if g else [g])]
     cds = {(key(g or ""), key(n)): cd for g, n, cd in abil}
     out, seen = [], set()
 
@@ -224,7 +229,7 @@ def build() -> dict:
             problems.append(f"{name}: está en el fuente pero no en el sitio")
     for name in names:
         cfg = cfgs.get(name, {})
-        box = wiki.lookup(cfg.get("wiki", name))
+        box = wiki.lookup(cfg.get("wiki", name), extra=True)
         attacks = []
         if box and "creature" in box[1] and not cfg.get("no_attacks"):
             attacks = attacks_for(box[2], src, cfg, missing)

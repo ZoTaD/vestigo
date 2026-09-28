@@ -48,13 +48,21 @@ const EN = {
     attacks: "Attacks", tips: "Tips", cooldown: (s: number) => `every ${s} s`,
     effects: "Effects", setBonus: (n: number | null | undefined) => (n ? `Set bonus (${n} pieces)` : "Set bonus"), setPieces: "Other pieces of the set",
     equip: "When equipped", consume: "When taken", resists: "Resistances", move: (p: number) => `${p > 0 ? "+" : ""}${p}% movement speed`,
+    adrenaline: (n: number | null | undefined) => (n ? `When adrenaline fills up (${n})` : "When adrenaline fills up"),
+    onAttack: (p: number | null | undefined) => (p ? `On hit (${p}% chance)` : "On hit"), perfectBlock: "On a perfect block",
+    onHitTitle: "When attacking",
+    missingHp: (p: number) => `+${p}% damage for every point of health you are missing (+${Math.round(p * 100)}% with 100 health missing)`,
+    healthCost: (p: number) => `Each use costs ${p}% of your current health`,
+    chain: (chance: number, chance2: number | null | undefined, dmg: string, radius: number | null | undefined, targets: number[] | undefined) =>
+      `${chance}% chance${chance2 && chance2 !== chance ? ` (${chance2}% with the secondary attack)` : ""} to release chain lightning: ${dmg}` +
+      `${targets ? `, jumping to ${targets[0]}–${targets[1]} enemies` : ""}${radius ? ` within ${radius} m` : ""}`,
     mod: { resistant: "Resistant", weak: "Weak", immune: "Immune", veryResistant: "Very resistant", veryWeak: "Very weak",
       slightlyResistant: "Slightly resistant", slightlyWeak: "Slightly weak" } as Record<string, string>,
     stat: {
       healthUpFront: (v: number) => `+${v} health instantly`, staminaUpFront: (v: number) => `+${v} stamina instantly`, eitrUpFront: (v: number) => `+${v} eitr instantly`,
       healthOverTime: (v: number) => `+${v} health over time`, staminaOverTime: (v: number) => `+${v} stamina over time`, eitrOverTime: (v: number) => `+${v} eitr over time`,
       healthRegenMultiplier: (v: number) => `Health regen ×${v}`, staminaRegenMultiplier: (v: number) => `Stamina regen ×${v}`, eitrRegenMultiplier: (v: number) => `Eitr regen ×${v}`,
-      addMaxCarryWeight: (v: number) => `+${v} carry weight`, speedModifier: (v: number) => `${pct(v)} movement speed`, swimSpeedModifier: (v: number) => `${pct(v)} swim speed`,
+      addMaxCarryWeight: (v: number) => `+${v} carry weight`, speedModifier: (v: number) => (v <= -1 ? "Can't move" : `${pct(v)} movement speed`), swimSpeedModifier: (v: number) => `${pct(v)} swim speed`,
       runStaminaDrainModifier: (v: number) => `${pct(v)} stamina used running`, jumpStaminaUseModifier: (v: number) => `${pct(v)} stamina used jumping`,
       attackStaminaUseModifier: (v: number) => `${pct(v)} stamina used attacking`, blockStaminaUseModifier: (v: number) => `${pct(v)} stamina used blocking`,
       dodgeStaminaUseModifier: (v: number) => `${pct(v)} stamina used dodging`, swimStaminaUseModifier: (v: number) => `${pct(v)} stamina used swimming`,
@@ -77,6 +85,7 @@ const EN = {
   allBiomes: "All",
   wikiCredit: "Places, habitats and photos of creatures and places:",
   wikiLicense: "under CC BY-SA 3.0 (the author of each photo shows when you hover it).",
+  wikiExtraCredit: "Deep North data (places, attacks, drop rates) checked against",
   tabs: {
     foods: "Food", meads: "Meads", weapons: "Weapons", armor: "Armor", tools: "Tools",
     building: "Building", materials: "Materials", creatures: "Creatures", biomes: "Biomes", places: "Places", bosses: "Bosses",
@@ -361,13 +370,21 @@ const ES: typeof EN = {
     attacks: "Ataques", tips: "Consejos", cooldown: (s) => `cada ${s} s`,
     effects: "Efectos", setBonus: (n) => (n ? `Bono de set (${n} piezas)` : "Bono de set"), setPieces: "Las otras piezas del set",
     equip: "Al equiparlo", consume: "Al tomarlo", resists: "Resistencias", move: (p) => `${p > 0 ? "+" : ""}${p}% velocidad al moverte`,
+    adrenaline: (n) => (n ? `Al llenar la adrenalina (${n})` : "Al llenar la adrenalina"),
+    onAttack: (p) => (p ? `Al golpear (${p}% de probabilidad)` : "Al golpear"), perfectBlock: "Al bloquear perfecto",
+    onHitTitle: "Al atacar",
+    missingHp: (p) => `+${String(p).replace(".", ",")}% de daño por cada punto de vida que te falta (+${Math.round(p * 100)}% si te faltan 100 de vida)`,
+    healthCost: (p) => `Cada uso cuesta el ${p}% de la vida que tienes`,
+    chain: (chance, chance2, dmg, radius, targets) =>
+      `${chance}% de probabilidad${chance2 && chance2 !== chance ? ` (${chance2}% con el ataque secundario)` : ""} de soltar un rayo en cadena: ${dmg}` +
+      `${targets ? `, salta a entre ${targets[0]} y ${targets[1]} enemigos` : ""}${radius ? ` a ${radius} m` : ""}`,
     mod: { resistant: "Resistente", weak: "Débil", immune: "Inmune", veryResistant: "Muy resistente", veryWeak: "Muy débil",
       slightlyResistant: "Algo resistente", slightlyWeak: "Algo débil" },
     stat: {
       healthUpFront: (v) => `+${v} de vida al instante`, staminaUpFront: (v) => `+${v} de aguante al instante`, eitrUpFront: (v) => `+${v} de eitr al instante`,
       healthOverTime: (v) => `+${v} de vida con el tiempo`, staminaOverTime: (v) => `+${v} de aguante con el tiempo`, eitrOverTime: (v) => `+${v} de eitr con el tiempo`,
       healthRegenMultiplier: (v) => `Regeneración de vida ×${v}`, staminaRegenMultiplier: (v) => `Regeneración de aguante ×${v}`, eitrRegenMultiplier: (v) => `Regeneración de eitr ×${v}`,
-      addMaxCarryWeight: (v) => `+${v} de peso que puedes cargar`, speedModifier: (v) => `${pct(v)} de velocidad al moverte`, swimSpeedModifier: (v) => `${pct(v)} de velocidad al nadar`,
+      addMaxCarryWeight: (v) => `+${v} de peso que puedes cargar`, speedModifier: (v) => (v <= -1 ? "No puede moverse" : `${pct(v)} de velocidad al moverte`), swimSpeedModifier: (v) => `${pct(v)} de velocidad al nadar`,
       runStaminaDrainModifier: (v) => `${pct(v)} de aguante al correr`, jumpStaminaUseModifier: (v) => `${pct(v)} de aguante al saltar`,
       attackStaminaUseModifier: (v) => `${pct(v)} de aguante al atacar`, blockStaminaUseModifier: (v) => `${pct(v)} de aguante al bloquear`,
       dodgeStaminaUseModifier: (v) => `${pct(v)} de aguante al esquivar`, swimStaminaUseModifier: (v) => `${pct(v)} de aguante al nadar`,
@@ -390,6 +407,7 @@ const ES: typeof EN = {
   allBiomes: "Todos",
   wikiCredit: "Lugares, hábitats y fotos de criaturas y lugares:",
   wikiLicense: "bajo licencia CC BY-SA 3.0 (el autor de cada foto aparece al pasar el cursor).",
+  wikiExtraCredit: "Datos del Norte profundo (lugares, ataques, probabilidades) revisados contra",
   tabs: {
     foods: "Comidas", meads: "Hidromieles", weapons: "Armas", armor: "Armaduras", tools: "Herramientas",
     building: "Construcción", materials: "Materiales", creatures: "Criaturas", biomes: "Biomas", places: "Lugares", bosses: "Jefes",

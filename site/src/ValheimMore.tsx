@@ -193,7 +193,15 @@ export function EffectsBlock({ effects, setPieces, to, navigate }: { effects: It
   const c = useValheimCopy();
   if (!effects) return null;
   const t = c.more;
-  const has = effects.set || effects.equip || effects.consume || effects.resist?.length || effects.move;
+  // Lo que el arma hace al atacar sin ser un efecto de estado (2026-09-28).
+  const hit = effects.onHit;
+  const attackLines = [
+    ...(effects.missingHp ? [t.missingHp(effects.missingHp)] : []),
+    ...(hit ? [t.chain(hit.chance, hit.chance2, Object.entries(hit.damage ?? {}).map(([k, v]) => `${v} ${(c.damage[k] ?? k).toLowerCase()}`).join(", "), hit.radius, hit.targets)] : []),
+    ...(effects.healthCost ? [t.healthCost(effects.healthCost)] : []),
+  ];
+  const has = effects.set || effects.equip || effects.consume || effects.resist?.length || effects.move
+    || effects.adrenaline || effects.attack || effects.perfectBlock || attackLines.length;
   if (!has) return null;
   return (
     <div>
@@ -201,6 +209,15 @@ export function EffectsBlock({ effects, setPieces, to, navigate }: { effects: It
       <div className="vh-effects">
         {effects.consume && <EffectBox title={t.consume} se={effects.consume} />}
         {effects.equip && <EffectBox title={t.equip} se={effects.equip} />}
+        {effects.adrenaline && <EffectBox title={t.adrenaline(effects.adrenalineMax)} se={effects.adrenaline} />}
+        {attackLines.length > 0 && (
+          <div className="vh-effect">
+            <p className="vh-src-k">{t.onHitTitle}</p>
+            <ul className="vh-lines">{attackLines.map((l, i) => <li key={i}>{l}</li>)}</ul>
+          </div>
+        )}
+        {effects.attack && <EffectBox title={t.onAttack(effects.attackChance ? Math.round(effects.attackChance * 100) : null)} se={effects.attack} />}
+        {effects.perfectBlock && <EffectBox title={t.perfectBlock} se={effects.perfectBlock} />}
         {effects.set && <EffectBox title={t.setBonus(effects.setSize)} se={effects.set} />}
         {(effects.resist?.length || effects.move) ? (
           <div className="vh-effect">

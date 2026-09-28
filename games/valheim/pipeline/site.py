@@ -339,7 +339,7 @@ def main() -> None:
         row = base_row(pid, it)
         if it.get("effects"):
             # Bono de set, efecto al equipar o al tomar, resistencias y cuánto frena.
-            row["effects"] = {k: (clean_se(v) if isinstance(v, dict) else v) for k, v in it["effects"].items()}
+            row["effects"] = {k: (clean_se(v) if isinstance(v, dict) and "stats" in v else v) for k, v in it["effects"].items()}
         tab = KIND_TAB[it["kind"]]
         if tab == "foods":
             row.update(food=it["food"], focus=food_focus(it["food"]))

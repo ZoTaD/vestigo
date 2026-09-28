@@ -3102,8 +3102,16 @@
    "icon": null,
    "iconSource": null,
    "pin": null,
-   "page": null,
-   "pages": [],
+   "page": {
+    "tab": "places",
+    "slug": "winding-tunnels"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "winding-tunnels"
+    }
+   ],
    "candidates": false
   },
   "NorthVillage": {
@@ -3130,8 +3138,16 @@
    "icon": null,
    "iconSource": null,
    "pin": null,
-   "page": null,
-   "pages": [],
+   "page": {
+    "tab": "places",
+    "slug": "morkhalla"
+   },
+   "pages": [
+    {
+     "tab": "places",
+     "slug": "morkhalla"
+    }
+   ],
    "candidates": false
   },
   "NorthMemorialPlace": {
