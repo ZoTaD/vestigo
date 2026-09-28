@@ -14,6 +14,7 @@ import {
   bandablePartitions,
   PROVISIONAL_MATCHES,
   BADGE,
+  sqlString,
 } from "./snapshot";
 import { fetchPatches } from "./patches";
 import { BANDS, widestBand } from "./bands";
@@ -323,7 +324,8 @@ async function main() {
   await run(`create or replace table meta(item_id UBIGINT, cost INTEGER, slot VARCHAR)`);
   await run(
     `insert into meta values ${[...items]
-      .map(([id, v]) => `(${id}, ${v.cost ?? 0}, '${v.slot}')`)
+      // Los datos del catálogo vienen de deadlock-api: números como números y el texto escapado.
+      .map(([id, v]) => `(${Number(id)}, ${Number(v.cost ?? 0)}, ${sqlString(String(v.slot))})`)
       .join(", ")}`
   );
 

@@ -91,12 +91,32 @@
   to = "/index.html"
   status = 200
 
+# Content-Security-Policy (2026-09-28, auditoría de seguridad): la lista de
+# lugares de donde el navegador acepta cargar cosas en vestigo.gg. Es la red de
+# contención si algún día un dato de afuera (deadlock-api, Steam, la wiki) trajera
+# código: aunque llegara a la página, no se ejecutaría. Scripts sólo del sitio y
+# de Google Analytics (que se carga recién con el consentimiento); nada inline,
+# porque el sitio no tiene scripts inline (el JSON-LD es un bloque de datos, que
+# la CSP no bloquea). Estilos inline sí: React escribe `style=` en muchos lugares.
+#
+# **Un origen nuevo tiene que sumarse acá**, o el navegador lo bloquea en
+# silencio (queda en la consola). `vite preview` lee esta misma línea
+# (`netlifyCsp()` en site/vite.config.ts), así que se prueba antes de publicar.
+#   - assets-bucket.deadlock-api.com: fuentes del juego, videos de habilidades y
+#     las imágenes que no se sirven desde el sitio.
+#   - api.deadlock-api.com: buscador de jugadores, perfiles y partidas.
+#   - *.steamstatic.com: avatares de Steam.   web.poecdn.com: imágenes de PoE2.
+#   - Google Analytics: googletagmanager.com y los *.google-analytics.com.
+#
+# Permissions-Policy apaga lo que el sitio nunca usa (cámara, micrófono, etc.).
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://assets-bucket.deadlock-api.com https://web.poecdn.com https://*.steamstatic.com https://*.googletagmanager.com https://*.google-analytics.com; font-src 'self' https://assets-bucket.deadlock-api.com; media-src 'self' https://assets-bucket.deadlock-api.com; connect-src 'self' https://api.deadlock-api.com https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), interest-cohort=()"
 
 # El JS y el CSS que arma Vite (2026-09-25). Cada nombre lleva el hash de su
 # contenido (`index-Dgbjy9ln.js`): si el archivo cambia, cambia el nombre, así

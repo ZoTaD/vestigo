@@ -75,7 +75,14 @@ export default function MapViewer({ seed, layer, grid, markers, onHover, onProgr
   const wrap = useRef<HTMLDivElement>(null);
   const cv = useRef<HTMLCanvasElement>(null);
   const pool = useRef<WorkerPool | null>(null);
-  const cam = useRef({ x: initial?.x ?? 0, z: initial?.z ?? 0, mpp: initial?.mpp ?? 0 });
+  // La vista inicial sale del link (`?x=&z=&m=`), que puede armar cualquiera: se
+  // lleva a los mismos límites que el zoom y el arrastre. Un `m` de 1e-300 pedía
+  // mosaicos infinitos y colgaba la pestaña (auditoría de seguridad, 2026-09-28).
+  const cam = useRef({
+    x: Math.max(-WORLD, Math.min(WORLD, initial?.x ?? 0)),
+    z: Math.max(-WORLD, Math.min(WORLD, initial?.z ?? 0)),
+    mpp: initial?.mpp ? Math.max(MIN_MPP, Math.min(MAX_MPP, initial.mpp)) : 0,
+  });
   const base = useRef<{ canvas: HTMLCanvasElement; biomes: Uint16Array; heights: Float32Array; ready: boolean; preview?: HTMLCanvasElement } | null>(null);
   const tiles = useRef(new Map<string, Tile>());
   const pending = useRef(new Set<string>());

@@ -75,9 +75,19 @@ jobs:
     # leer cada partición una sola vez por proceso (docs/design/2026-09-20-lake).
     timeout-minutes: 150
     steps:
-      - uses: actions/checkout@v4
+      # **Sin credenciales guardadas** (2026-09-28, auditoría de seguridad). Por
+      # defecto el checkout deja el token con permiso de escritura en
+      # `.git/config` para toda la corrida, y así lo tendría a mano cualquier
+      # dependencia que se instala y ejecuta después (duckdb, tsx, esbuild). El
+      # token entra sólo en el paso `commit`, que es el único que empuja.
+      #
+      # Las actions van fijadas por commit y no por la etiqueta `v4`, que el dueño
+      # de la action puede mover: el comentario dice qué versión es cada una.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: npm
@@ -335,7 +345,14 @@ jobs:
 
       - name: commit
         if: steps.guard.outputs.publish == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          # El token, sólo acá y sólo para este comando (ver el checkout). Va como
+          # cabecera y no en la URL, igual que lo hace el propio checkout, y
+          # GitHub lo tapa en el log.
+          auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git_auth() { git -c "http.https://github.com/.extraheader=$auth" "$@"; }
           git config user.name "vestigo-bot"
           git config user.email "67348048+ZoTaD@users.noreply.github.com"
           # El directorio entero y no un patrón: eso es exactamente "lo que el
@@ -357,9 +374,9 @@ jobs:
           # lo dijera.
           empujado=0
           for intento in 1 2 3; do
-            if git push; then empujado=1; break; fi
+            if git_auth push origin "HEAD:$GITHUB_REF_NAME"; then empujado=1; break; fi
             echo "push rechazado (intento $intento): traigo lo que llegó y reintento"
-            git fetch origin "$GITHUB_REF_NAME" || break
+            git_auth fetch origin "$GITHUB_REF_NAME" || break
             git rebase "origin/$GITHUB_REF_NAME" || break
           done
           if [ "$empujado" != 1 ]; then

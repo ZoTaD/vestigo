@@ -348,8 +348,7 @@ function prerenderRoutes(): Plugin {
             .map((o) => `<link rel="preconnect" href="${o.href}"${o.cors ? " crossorigin" : ""}>`)
             .join("\n    ");
           const propias = [tags(filesFor(route)), conexiones].filter(Boolean).join("\n    ");
-          const pagina = renderHtml(html, page, BRAND, cuerpo).replace(
-            "</head>",
+          const pagina = renderHtml(html, page, BRAND, cuerpo).replace("</head>", () =>
             propias ? `  ${propias}\n  </head>` : "</head>"
           );
           /**
@@ -455,4 +454,15 @@ export default defineConfig({
     host: true,
     fs: { allow: [fileURLToPath(new URL("..", import.meta.url))] },
   },
+  // `vite preview` sirve el build con la misma CSP que Netlify en producción, para
+  // que un origen que falte se vea acá (bloqueado, en la consola) y no en vivo.
+  preview: { headers: { "Content-Security-Policy": netlifyCsp() } },
 });
+
+/** La Content-Security-Policy tal como está en netlify.toml: una sola fuente. */
+function netlifyCsp(): string {
+  const toml = readFileSync(fileURLToPath(new URL("../netlify.toml", import.meta.url)), "utf-8");
+  const m = toml.match(/^\s*Content-Security-Policy\s*=\s*"([^"]+)"/m);
+  if (!m) throw new Error("netlify.toml no tiene Content-Security-Policy");
+  return m[1];
+}

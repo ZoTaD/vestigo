@@ -38,16 +38,24 @@ concurrency:
   group: tests-${{ github.ref }}
   cancel-in-progress: true
 
+# Los tests sólo leen el repo: el token de la corrida no puede escribir nada
+# (2026-09-28, auditoría de seguridad).
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # Fijadas por commit, no por la etiqueta `v4` que se puede mover.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       # 22 rather than the 24 on the dev machine: @types/node is pinned to ^22,
       # so that is the version this code claims to target. A feature that only
       # exists in 24 should fail here — that is the job.
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: npm

@@ -41,6 +41,7 @@ import { rankSteps, type RankPoint } from "./deadlockRankHistory";
 import { useHeroStats } from "./deadlockHeroStats";
 import GameImg from "./GameImg";
 import { flagUrl } from "./flags";
+import { safeHref } from "./safeHref";
 import {
   metalOf,
   useHeroPlacings,
@@ -183,10 +184,10 @@ function Profile({
           {/* El enlace al perfil de Steam. `rel="noopener"` porque abre en otra
               pestaña, y `nofollow` porque es un perfil de un tercero: no le
               pasamos autoridad ni le pedimos a Google que lo rastree. */}
-          {account?.steamUrl && (
+          {safeHref(account?.steamUrl) && (
             <a
               className="dl-steam-link"
-              href={account.steamUrl}
+              href={safeHref(account?.steamUrl)}
               target="_blank"
               rel="noopener noreferrer nofollow"
             >

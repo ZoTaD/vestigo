@@ -137,7 +137,13 @@ export default function SaveLoader({ saves, onWorld }: { saves: SavesState; onWo
           {t.where.map((sec) => (
             <div key={sec.title[lang]}>
               <h5>{sec.title[lang]}</h5>
-              {sec.steps[lang].map((s, i) => <p key={i} dangerouslySetInnerHTML={{ __html: s }} />)}
+              {sec.steps[lang].map((s, i) => (
+                <p key={i}>
+                  {/* Las rutas van entre ⟦ ⟧ (ver `code` en saveCopy.ts): en los
+                      tramos impares del corte. */}
+                  {s.split(/⟦([^⟧]*)⟧/).map((part, j) => (j % 2 ? <code key={j}>{part}</code> : part))}
+                </p>
+              ))}
             </div>
           ))}
         </div>

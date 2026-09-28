@@ -5,7 +5,13 @@
  */
 import { useLang } from "../i18n";
 
-const code = (s: string) => `<code>${s}</code>`;
+/**
+ * Una ruta dentro de un paso. Va marcada entre `⟦ ⟧` y no como `<code>`: hasta
+ * el 2026-09-28 los pasos se dibujaban como HTML, y `<tu id>` o `<nombre>` se
+ * leían como etiquetas y desaparecían. Ahora `SaveLoader` corta el texto por
+ * estas marcas y dibuja cada ruta con React, sin HTML de por medio.
+ */
+const code = (s: string) => `⟦${s}⟧`;
 
 /** Dónde está cada archivo: igual en los dos idiomas, cada paso traducido. */
 const WHERE = [

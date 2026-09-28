@@ -140,6 +140,17 @@ describe("renderHtml", () => {
     const raro = { ...page, title: 'Ítem "raro" & <b>', description: "x" };
     expect(renderHtml(base, raro, "Vestigo")).toContain("&quot;raro&quot;");
   });
+
+  // En un texto de reemplazo, `$&` y `$'` insertan partes del documento: los
+  // datos tienen que llegar tal cual (auditoría de seguridad, 2026-09-28).
+  it("los $ de los datos llegan literales, sin insertar partes del documento", () => {
+    const conPesos = { ...page, title: "Precio $& y $' y $`" };
+    const conRoot = base.replace("<body></body>", '<body><div id="root"></div></body>');
+    const out = renderHtml(conRoot, conPesos, "Vestigo", "<p>$&$'</p>");
+    expect(out).toContain("<title>Precio $&amp; y $' y $`</title>");
+    expect(out).toContain('<div id="root"><p>$&$\'</p></div>');
+    expect(out.split("<title>").length - 1).toBe(1);
+  });
 });
 
 describe("las páginas de héroe e ítem de Deadlock", () => {

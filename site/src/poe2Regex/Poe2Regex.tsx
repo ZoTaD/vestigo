@@ -38,10 +38,44 @@ function readState(lang: GameLang): State {
   if (!r) return base;
   try {
     const s = JSON.parse(decodeURIComponent(escape(atob(r.replace(/-/g, "+").replace(/_/g, "/")))));
-    return { ...base, ...s };
+    return cleanState(s, base);
   } catch {
     return base;
   }
+}
+
+/**
+ * El estado que trae un link, campo por campo (2026-09-28, auditoría de
+ * seguridad). El `?r=` lo puede armar cualquiera: con un `mode` que no existe o
+ * un `sel` con otra forma, la pestaña se caía al abrir el link. Lo que no tiene
+ * la forma esperada se descarta y queda el valor de siempre.
+ */
+const isObj = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
+const num = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
+const RARITIES: Rar[] = ["Normal", "Magic", "Rare"];
+
+export function cleanState(raw: unknown, base: State): State {
+  if (!isObj(raw)) return base;
+  const out: State = { ...base, sel: {}, head: {}, rar: [] };
+  if (MODES.includes(raw.mode as Pool)) out.mode = raw.mode as Pool;
+  if (raw.game === "en" || raw.game === "es") out.game = raw.game;
+  if (raw.match === "any" || raw.match === "all") out.match = raw.match;
+  if (raw.corr === "any" || raw.corr === "yes" || raw.corr === "no") out.corr = raw.corr;
+  if (Array.isArray(raw.tier) && raw.tier.length === 2 && raw.tier.every(num)) {
+    const [a, b] = (raw.tier as number[]).map((x) => Math.min(16, Math.max(1, Math.round(x))));
+    out.tier = [Math.min(a, b), Math.max(a, b)];
+  }
+  if (Array.isArray(raw.rar)) out.rar = RARITIES.filter((x) => (raw.rar as unknown[]).includes(x));
+  if (isObj(raw.sel)) {
+    for (const [k, v] of Object.entries(raw.sel).slice(0, 500)) {
+      if (!/^[a-z]+:\d+$/.test(k) || !isObj(v) || typeof v.w !== "boolean") continue;
+      out.sel[k] = num(v.min) ? { w: v.w, min: v.min } : { w: v.w };
+    }
+  }
+  if (isObj(raw.head)) {
+    for (const k of HEADER_KEYS) if (num(raw.head[k])) out.head[k] = raw.head[k] as number;
+  }
+  return out;
 }
 
 function writeState(s: State): void {

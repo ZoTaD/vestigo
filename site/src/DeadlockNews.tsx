@@ -19,6 +19,7 @@ import {
 import { NEWS_COPY, headlineBank, headlineLines, pickFrom, stableVariant } from "./newsCopy";
 import { ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
+import { safeHref } from "./safeHref";
 
 /**
  * Vestigo News: la edición de un parche, como periódico.
@@ -196,7 +197,7 @@ export default function DeadlockNews({
               <b>{copy.issue(issue)}</b> · {copy.price}
             </div>
             <div>{longDate(e.date)}</div>
-            <a href={e.url} target="_blank" rel="noopener noreferrer">
+            <a href={safeHref(e.url)} target="_blank" rel="noopener noreferrer">
               {copy.readNotes} ↗
             </a>
           </div>

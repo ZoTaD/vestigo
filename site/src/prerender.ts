@@ -416,9 +416,12 @@ export function renderHtml(
     ? `\n    <script type="application/ld+json">${JSON.stringify(page.jsonLd).replace(/<\//g, "<\\/")}</script>`
     : "";
 
+  // Todos los reemplazos con datos van por función y no por texto: en un texto
+  // de reemplazo, `$&`, `$'` o `` $` `` insertan partes del documento, y un
+  // título o un cuerpo que los contuviera rompería el HTML (auditoría, 2026-09-28).
   return (
     html
-      .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(page.title)}</title>`)
+      .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${escape(page.title)}</title>`)
       // Fuera todo lo que este bloque vuelve a declarar, para no dejar dos
       // versiones de la misma etiqueta.
       .replace(/\s*<meta name="description"[^>]*>/g, "")
@@ -426,10 +429,10 @@ export function renderHtml(
       .replace(/\s*<meta property="og:[^"]+"[^>]*>/g, "")
       .replace(/\s*<meta name="twitter:[^"]+"[^>]*>/g, "")
       .replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/g, "")
-      .replace("</head>", `    ${head}${jsonLd}\n  </head>`)
+      .replace("</head>", () => `    ${head}${jsonLd}\n  </head>`)
       // El div de montaje deja de estar vacío. Se busca por su id y no por
       // posición: si `index.html` cambiara de forma, esto deja de sustituir y se
       // nota, en vez de escribir el cuerpo en el lugar equivocado.
-      .replace('<div id="root"></div>', `<div id="root">${body ?? ""}</div>`)
+      .replace('<div id="root"></div>', () => `<div id="root">${body ?? ""}</div>`)
   );
 }

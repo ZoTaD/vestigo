@@ -219,15 +219,15 @@ describe("el lake: lo que una base ya consolidó no se lee dos veces", () => {
           // De otra generación: afuera.
           { key: "d0", kind: "delta", generation: 0, hi: 500, rows_by_partition: { "107": 1 }, rows: 1, bytes: 1, built_at: "" },
   ];
-  const manifest = { public_url: "https://lake/", tables: { match_player: { generation: 1, files } } };
+  const manifest = { public_url: "https://data.deadlock-api.com/", tables: { match_player: { generation: 1, files } } };
 
   it("descarta los archivos consolidados y marca las particiones ya consolidadas de los demás", async () => {
     const { lakeFrom } = await import("../src/snapshot");
     const { extras } = lakeFrom(manifest);
     expect(extras).toEqual([
-      { url: "https://lake/d2", covered: [107] },
-      { url: "https://lake/d3", covered: [] },
-      { url: "https://lake/r1", covered: [] },
+      { url: "https://data.deadlock-api.com/d2", covered: [107] },
+      { url: "https://data.deadlock-api.com/d3", covered: [] },
+      { url: "https://data.deadlock-api.com/r1", covered: [] },
     ]);
   });
 
@@ -236,12 +236,63 @@ describe("el lake: lo que una base ya consolidó no se lee dos veces", () => {
     const sql = extrasSource(lakeFrom(manifest).extras);
     expect(sql).toContain("filename=true");
     expect(sql).toContain("exclude (filename)");
-    expect(sql).toContain("(filename = 'https://lake/d2' and match_id // 1000000 in (107))");
+    expect(sql).toContain("(filename = 'https://data.deadlock-api.com/d2' and match_id // 1000000 in (107))");
     expect(sql).not.toContain("d1");
   });
 
   it("sin nada consolidado no agrega filtro", async () => {
     const { extrasSource } = await import("../src/snapshot");
     expect(extrasSource([{ url: "u", covered: [] }])).not.toContain("where");
+  });
+});
+
+/**
+ * El manifiesto es de un tercero y sus valores terminan dentro del SQL de una
+ * corrida que puede publicar el sitio (auditoría de seguridad, 2026-09-28): si
+ * trae algo fuera de lo esperado, la corrida se trata como lake no disponible.
+ */
+describe("el lake: un manifiesto adulterado no llega al SQL", () => {
+  const base = (key: string): ManifestFile => ({ key, kind: "base", generation: 1, partition: 1, hi: 1, rows: 1, bytes: 1, built_at: "" });
+  const manifest = (public_url: string, key = "v1/tables/match_player/g1/base/part-0/a.parquet") => ({
+    public_url,
+    tables: { match_player: { generation: 1, files: [base(key)] } },
+  });
+
+  it("acepta el manifiesto real", async () => {
+    const { lakeFrom } = await import("../src/snapshot");
+    const { bases } = lakeFrom(manifest("https://data.deadlock-api.com"));
+    expect(bases.get(1)).toEqual(["https://data.deadlock-api.com/v1/tables/match_player/g1/base/part-0/a.parquet"]);
+  });
+
+  it("rechaza otro host, otro protocolo o credenciales en la dirección", async () => {
+    const { lakeFrom, isSnapshotUnavailable } = await import("../src/snapshot");
+    for (const url of ["https://otro.example.com", "http://data.deadlock-api.com", "https://x@data.deadlock-api.com", "no es una url"]) {
+      let error: unknown;
+      try {
+        lakeFrom(manifest(url));
+      } catch (e) {
+        error = e;
+      }
+      expect(isSnapshotUnavailable(error), url).toBe(true);
+    }
+  });
+
+  it("rechaza nombres de archivo con comillas, espacios o ..", async () => {
+    const { lakeFrom, isSnapshotUnavailable } = await import("../src/snapshot");
+    for (const key of ["a'.parquet", "a b.parquet", "../a.parquet", "a;b"]) {
+      let error: unknown;
+      try {
+        lakeFrom(manifest("https://data.deadlock-api.com", key));
+      } catch (e) {
+        error = e;
+      }
+      expect(isSnapshotUnavailable(error), key).toBe(true);
+    }
+  });
+
+  it("los literales de SQL duplican las comillas", async () => {
+    const { sqlString, extrasSource } = await import("../src/snapshot");
+    expect(sqlString("o'hara")).toBe("'o''hara'");
+    expect(extrasSource([{ url: "a'b", covered: [1] }])).toContain("filename = 'a''b'");
   });
 });

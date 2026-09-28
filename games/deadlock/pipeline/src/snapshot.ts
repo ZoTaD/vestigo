@@ -101,6 +101,44 @@ let lake: Lake | null = null;
  * archivo están todas en la base cuando `base(p).hi ≥ archivo.hi`, y ninguna
  * cuando no. Un archivo con todas sus particiones consolidadas ni se lee.
  */
+/**
+ * **El manifiesto es de un tercero y sus valores terminan dentro del SQL**
+ * (2026-09-28, auditoría de seguridad). Una dirección o un nombre de archivo
+ * con una comilla podría cerrar el literal y agregar sentencias propias, y esta
+ * corrida tiene permiso para publicar el sitio. Así que:
+ * - la dirección base tiene que ser exactamente la del lake, en https;
+ * - cada clave, sólo letras, números y `_ . / = -`, sin `..` (así son todas:
+ *   154 de 154 el día que se escribió esto);
+ * - y aun así cada literal se arma con `sqlString`, que duplica las comillas.
+ * Si algo no cumple, la corrida se trata como lake no disponible y no publica.
+ */
+const LAKE_HOST = "data.deadlock-api.com";
+const SAFE_KEY = /^[A-Za-z0-9_./=-]+$/;
+
+function trustedLakeUrl(raw: unknown): string {
+  let u: URL;
+  try {
+    u = new URL(String(raw));
+  } catch {
+    throw new SnapshotUnavailable(`el manifiesto trae una dirección inválida: ${String(raw).slice(0, 80)}`);
+  }
+  if (u.protocol !== "https:" || u.hostname !== LAKE_HOST || u.username || u.password || u.search || u.hash) {
+    throw new SnapshotUnavailable(`el manifiesto apunta a un lugar no esperado: ${u.origin}`);
+  }
+  return `${u.origin}${u.pathname}`.replace(/\/$/, "");
+}
+
+function trustedKey(key: unknown): string {
+  const k = String(key);
+  if (!SAFE_KEY.test(k) || k.includes("..")) {
+    throw new SnapshotUnavailable(`el manifiesto trae un nombre de archivo inválido: ${k.slice(0, 80)}`);
+  }
+  return k;
+}
+
+/** Un literal de texto de SQL: entre comillas simples, con las internas duplicadas. */
+export const sqlString = (s: string) => `'${s.replace(/'/g, "''")}'`;
+
 export function lakeFrom(manifest: {
   public_url: string;
   tables: Record<string, { generation?: number; files: ManifestFile[] }>;
@@ -109,8 +147,8 @@ export function lakeFrom(manifest: {
   if (!table || !table.files?.length) {
     throw new SnapshotUnavailable("el manifiesto del lake no trae match_player.");
   }
-  const publicUrl = manifest.public_url.replace(/\/$/, "");
-  const url = (k: string) => `${publicUrl}/${k}`;
+  const publicUrl = trustedLakeUrl(manifest.public_url);
+  const url = (k: string) => `${publicUrl}/${trustedKey(k)}`;
   const basesAll = table.files.filter((f) => f.kind === "base" && f.partition !== undefined);
   // Sólo la generación vigente: una base vieja de la misma partición duplicaría filas.
   const gen = table.generation ?? Math.max(...basesAll.map((f) => f.generation ?? 0));
@@ -143,11 +181,11 @@ export function lakeFrom(manifest: {
  */
 export function extrasSource(extras: ExtraFile[]): string {
   if (extras.length === 0) return `read_parquet('lake://match_player/vacio-${EXTRAS}')`;
-  const files = extras.map((f) => `'${f.url}'`).join(", ");
+  const files = extras.map((f) => sqlString(f.url)).join(", ");
   const read = `read_parquet([${files}], union_by_name=true, filename=true)`;
   const skip = extras
     .filter((f) => f.covered.length > 0)
-    .map((f) => `(filename = '${f.url}' and match_id // 1000000 in (${f.covered.join(", ")}))`);
+    .map((f) => `(filename = ${sqlString(f.url)} and match_id // 1000000 in (${f.covered.map(Number).join(", ")}))`);
   const where = skip.length > 0 ? ` where not (${skip.join(" or ")})` : "";
   return `(select * exclude (filename) from ${read}${where})`;
 }
@@ -186,7 +224,7 @@ export function partitionSource(n: number): string {
   if (lake && n === EXTRAS) return extrasSource(lake.extras);
   const files = lake ? (lake.bases.get(n) ?? []) : [`lake://match_player/${n}`];
   if (files.length === 0) return `read_parquet('lake://match_player/vacio-${n}')`;
-  return `read_parquet([${files.map((f) => `'${f}'`).join(", ")}], union_by_name=true)`;
+  return `read_parquet([${files.map(sqlString).join(", ")}], union_by_name=true)`;
 }
 
 /**
@@ -438,7 +476,7 @@ export async function partitionsWithColumn(
       const filas = (await (
         await con.runAndReadAll(
           `select count(*)::BIGINT as n from (describe select * from ${partitionSource(n)})
-           where column_name = '${column}'`
+           where column_name = ${sqlString(column)}`
         )
       ).getRowObjects()) as { n: bigint }[];
       return Number(filas[0].n) > 0 ? n : null;

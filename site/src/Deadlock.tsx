@@ -21,6 +21,7 @@ import {
 } from "./deadlockData";
 import { heroes as heroSlugs } from "./deadlockSlugs";
 import GameImg from "./GameImg";
+import { safeHref } from "./safeHref";
 
 /**
  * La tier list de héroes de Deadlock.
@@ -199,8 +200,8 @@ export function PatchHistory({ limit, boxed = false }: { limit?: number; boxed?:
               {p.title}
               {i === 0 && <span className="dl-history-tag">{copy.deadlock.patch.current}</span>}
             </span>
-            {p.link && (
-              <a className="dl-history-link" href={p.link} target="_blank" rel="noopener noreferrer">
+            {safeHref(p.link) && (
+              <a className="dl-history-link" href={safeHref(p.link)} target="_blank" rel="noopener noreferrer">
                 {copy.deadlock.patch.read}
               </a>
             )}
