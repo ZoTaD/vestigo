@@ -1,8 +1,8 @@
 {
- "stamp": "DATA-STAMP game-version=1.0.15 network=40 unity=6000.0.75f1 assembly_valheim-sha256=59f53fb55d99d22a33e8ed094eec8d21e9f133543bce92bc3d80dce44033adb1 dumped=2026-09-25 dumper=vestigo-map_data/1 mode=assets schema=1",
- "gameVersion": "1.0.15",
- "assemblyValheimSha256": "59f53fb55d99d22a33e8ed094eec8d21e9f133543bce92bc3d80dce44033adb1",
- "extractedAt": "2026-09-25T00:00:50Z",
+ "stamp": "DATA-STAMP game-version=1.0.16 network=40 unity=6000.0.75f1 assembly_valheim-sha256=96cfc004f7f4a6f30d070bef39eafd79c466a137121c4665a2f19fb9c15c6127 dumped=2026-09-29 dumper=vestigo-map_data/1 mode=assets schema=1",
+ "gameVersion": "1.0.16",
+ "assemblyValheimSha256": "96cfc004f7f4a6f30d070bef39eafd79c466a137121c4665a2f19fb9c15c6127",
+ "extractedAt": "2026-09-29T17:08:31Z",
  "schema": 1,
  "count": 232,
  "enabledCount": 183,

@@ -370,7 +370,9 @@ MANUAL: list[tuple[str, str, str, str]] = [
     (r"SulfurArch", "Sulfur Arch", "Arco de azufre", "resource"),
     (r"VoltureNest", "Volture Nest", "Nido de buicán", "poi"),
     (r"NorthVillage", "Northern Village", "Aldea norteña", "village"),
-    (r"NorthMemorialPlace", "Memorial Site", "Sitio conmemorativo", "poi"),
+    # Nombres oficiales (`memorialplace` y `piece_offerbowl_memorial`); grupo
+    # propio en el mapa para encontrar el altar (pedido de ZoTaD, 2026-09-29).
+    (r"NorthMemorialPlace", "Memorial Place (Ancient Altar)", "Lugar memorial (Altar antiguo)", "memorial"),
     (r"IcePond\d", "Ice Pond", "Estanque helado", "poi"),
     (r"HotSpring\d", "Hot Spring", "Fuente termal", "poi"),
     (r"DN_hut\d\d", "Northern Hut", "Choza norteña", "poi"),

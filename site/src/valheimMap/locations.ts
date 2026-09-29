@@ -59,6 +59,7 @@ export const CATEGORIES: { id: string; name: Txt; color: string; show: boolean; 
   { id: "boss", name: { en: "Boss altars", es: "Altares de jefes" }, color: "#e0463c", show: true, major: true },
   { id: "trader", name: { en: "Traders", es: "Comerciantes" }, color: "#f2c46f", show: true, major: true },
   { id: "dungeon", name: { en: "Dungeons", es: "Mazmorras" }, color: "#b77cff", show: true },
+  { id: "memorial", name: { en: "Memorial places", es: "Lugares memoriales" }, color: "#ff7eb6", show: false },
   { id: "village", name: { en: "Villages", es: "Aldeas" }, color: "#ff8a3d", show: false },
   { id: "camp", name: { en: "Enemy camps", es: "Campamentos" }, color: "#ff6f6f", show: false },
   { id: "tower", name: { en: "Towers and outposts", es: "Torres y puestos" }, color: "#d9a066", show: false },

@@ -132,6 +132,7 @@ class TestNombres(unittest.TestCase):
         self.assertEqual(manual_entry("StoneTowerRuins08_sunk")[0], "Sunken Tower")
         self.assertEqual(manual_entry("StoneTowerRuins05_leet")[0], "Mountain Tower")
         self.assertIsNone(manual_entry("Vendor_BlackForest"))
+        self.assertEqual(manual_entry("NorthMemorialPlace")[1:], ("Lugar memorial (Altar antiguo)", "memorial"))
 
     def test_jefe_con_ficha(self):
         e = display_entry("Eikthyrnir", {"boss": "Eikthyr", "pin": {"name": "$enemy_eikthyr", "type": 9}}, LOC, BOSSES, PLACES, PINS)
