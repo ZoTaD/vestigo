@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 /**
  * El historial de parches de Deadlock.
  *
- * Sale del changelog oficial del foro, que deadlock-api republica en
- * `/v1/patches` — el mismo feed que lee un jugador. Lo escribe `build.ts`, que ya
- * lo baja para saber dónde cortar la ventana de la tier list.
+ * Sale de los anuncios de Steam que deadlock-api junta en `/v2/patches` (hasta
+ * el 2026-09-29 era el foro, que no publicó City Never Sleeps). Lo escribe
+ * `build.ts`, que ya lo baja para saber dónde cortar la ventana de la tier list.
  *
  * **Ojo con el título: es la fecha de la BUILD, no la de publicación.** El parche
  * que llegó a los jugadores el 2026-07-28 se llama "06-30-2026 Update". Por eso

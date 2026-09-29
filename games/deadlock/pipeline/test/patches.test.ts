@@ -26,6 +26,26 @@ describe("sortPatches", () => {
     expect(p).toHaveLength(1);
     expect(p[0].title).toBe("buena");
   });
+
+  /**
+   * El foro republicó parches viejos tarde (el 08-22 figura el 16/9) y no tiene
+   * City Never Sleeps: la hora real de salida es la de Steam.
+   */
+  it("prefiere las entradas de Steam y normaliza el título", () => {
+    const p = sortPatches([
+      { source: "forum", title: "08-22-2026 Update", pub_date: "2026-09-16T22:41:28Z", link: "f" },
+      { source: "steam", title: " Minor Update - 08-22-2026", pub_date: "2026-08-22T21:40:46Z", link: "s1" },
+      { source: "steam", title: "City Never Sleeps", pub_date: "2026-09-29T20:25:11Z", link: "s2" },
+    ]);
+    expect(p.map((x) => x.title)).toEqual(["City Never Sleeps", "08-22-2026 Update"]);
+    expect(p[1].date).toBe("2026-08-22T21:40:46Z");
+    expect(p[1].link).toBe("s1");
+  });
+
+  it("sin entradas de Steam usa las del foro", () => {
+    const p = sortPatches([{ source: "forum", title: "09-16-2026 Update", pub_date: "2026-09-16T22:41:46Z" }]);
+    expect(p[0].title).toBe("09-16-2026 Update");
+  });
 });
 
 describe("patchWindows", () => {

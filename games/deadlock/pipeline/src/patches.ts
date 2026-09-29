@@ -6,6 +6,12 @@
  * entero, así que no marca nada. El dato vive en el changelog oficial del foro,
  * que deadlock-api republica en `/v1/patches` — el mismo feed que lee un jugador.
  *
+ * **Desde el 2026-09-29 se lee `/v2/patches`, y de ahí las entradas de Steam.**
+ * El foro no publicó City Never Sleeps y había republicado tarde parches viejos
+ * (el 08-22 figuraba el 16/9, casi un mes después de salir): con él, la tier
+ * list cortaba en el parche equivocado. La v2 junta foro y Steam; Steam trae la
+ * hora real en que el parche llegó a los jugadores.
+ *
  * **Por qué importa tanto.** Medido el 2026-07-29 sobre el parche del día
  * anterior: seis héroes se movieron 2 o más puntos de winrate, y Mirage y Haze
  * casi cinco. Una ventana de quince días a caballo de un parche promedia dos
@@ -14,7 +20,7 @@
  * 49,1%.
  */
 
-const PATCHES_URL = "https://api.deadlock-api.com/v1/patches";
+const PATCHES_URL = "https://api.deadlock-api.com/v2/patches";
 
 export interface Patch {
   /** Cuándo se publicó, ISO 8601 UTC. */
@@ -24,10 +30,24 @@ export interface Patch {
 }
 
 interface RawPatch {
+  /** "steam" o "forum" en la v2; la v1 no lo trae. */
+  source?: string;
   title?: string;
   pub_date?: string;
   link?: string;
 }
+
+const DATE_TOKEN = /\b\d{2}-\d{2}-\d{4}\b/;
+
+/**
+ * El título como lo escribe el foro: " Minor Update - 09-16-2026" → "09-16-2026
+ * Update" (igual que Vestigo News). Los nombres propios, como "City Never
+ * Sleeps", quedan como vienen.
+ */
+const cleanTitle = (title: string): string => {
+  const m = title.match(DATE_TOKEN);
+  return m ? `${m[0]} Update` : title.trim();
+};
 
 /**
  * Los parches, del más nuevo al más viejo.
@@ -35,11 +55,16 @@ interface RawPatch {
  * Se ordena por `pub_date` y NO por el título, aunque el título lleve una fecha:
  * el del 2026-07-28 se llama "06-30-2026 Update". El título es la fecha de la
  * build y lo que nos importa es cuándo llegó a los jugadores.
+ *
+ * Si hay entradas de Steam se usan sólo ésas (ver arriba); si no, las que haya.
  */
 export function sortPatches(raw: RawPatch[]): Patch[] {
-  return raw
-    .filter((p): p is RawPatch & { pub_date: string } => typeof p.pub_date === "string" && p.pub_date !== "")
-    .map((p) => ({ date: p.pub_date, title: p.title ?? "", link: p.link ?? "" }))
+  const usable = raw.filter(
+    (p): p is RawPatch & { pub_date: string } => typeof p.pub_date === "string" && p.pub_date !== ""
+  );
+  const steam = usable.filter((p) => p.source === "steam");
+  return (steam.length > 0 ? steam : usable)
+    .map((p) => ({ date: p.pub_date, title: cleanTitle(p.title ?? ""), link: p.link ?? "" }))
     .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 }
 
