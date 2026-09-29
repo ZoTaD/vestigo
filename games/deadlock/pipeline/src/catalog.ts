@@ -210,13 +210,29 @@ const MODS_DEL_ARMADOR = new Set([
  * `AbilityLifestealPercentHero` y `BonusSpiritLifesteal`), y sumarlas contaría
  * doble. Para la reducción de enfriamiento sólo vale la clave genérica: la de
  * habilidades con cargas no aplica a todas.
+ *
+ * `claseItem` suma los intrínsecos de `INTRINSECOS_SIN_FICHA`.
  */
+/**
+ * Stats que el juego aplica siempre aunque la ficha ya no las muestre.
+ *
+ * City Never Sleeps (6712, 2026-09-29) le sacó a Return Fire la sección innata,
+ * pero `abilities.vdata` le sigue registrando `BulletResist` (+10%) en
+ * `m_AutoIntrinsicModifiers`, y la API no publica esa lista. Revisado contra el
+ * vdata: es el único objeto de la tienda con un intrínseco fuera de la ficha
+ * (Improved Spirit trae vida y esprint en la API que el juego no aplica).
+ */
+const INTRINSECOS_SIN_FICHA: Record<string, string[]> = {
+  upgrade_return_fire: ["BulletResist"],
+};
+
 export function modsDe(
   props: Record<string, RawProperty>,
-  secciones: RawSection[] = []
+  secciones: RawSection[] = [],
+  claseItem?: string
 ): Record<string, number> {
-  const innatas = new Set(
-    secciones
+  const innatas = new Set([
+    ...secciones
       .filter((s) => s.section_type === "innate")
       .flatMap((s) => s.section_attributes ?? [])
       .flatMap((a) => [
@@ -224,8 +240,9 @@ export function modsDe(
         ...(a.elevated_properties ?? []),
         ...(a.important_properties ?? []),
         ...(a.important_properties_with_icon ?? []),
-      ])
-  );
+      ]),
+    ...(claseItem ? (INTRINSECOS_SIN_FICHA[claseItem] ?? []) : []),
+  ]);
   const out: Record<string, number> = {};
   for (const [clave, p] of Object.entries(props)) {
     if (!innatas.has(clave)) continue;
@@ -916,7 +933,7 @@ export function buildCatalog(
       ...(i.is_active_item ? { active: true as const } : {}),
       ...(i.imbue ? { imbue: true as const } : {}),
       ...(() => {
-        const mods = modsDe(i.properties ?? {}, i.tooltip_sections ?? []);
+        const mods = modsDe(i.properties ?? {}, i.tooltip_sections ?? [], i.class_name);
         return Object.keys(mods).length > 0 ? { mods } : {};
       })(),
     };

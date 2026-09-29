@@ -1,6 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
-import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { avisar, isPlayable, parseLoc, unidad, type TextSpan } from "./catalog";
 
 /**
@@ -400,12 +400,19 @@ const huella = (x: unknown): string => createHash("sha1").update(JSON.stringify(
  * Cruza las cuatro descargas (héroes e ítems en dos idiomas).
  *
  * Separado del `main` para que se pueda probar sin red.
+ *
+ * `videosPrevios` (id de habilidad → video) es el respaldo para cuando la API
+ * no trae el video: desde City Never Sleeps (6712) el juego no los referencia
+ * y la API dejó de publicarlos, aunque los archivos siguen en el bucket.
  */
 export function buildHeroKit(
   heroes: Record<Lang, RawHeroKit[]>,
   items: Record<Lang, RawAbility[]>,
-  generatedAt: string
+  generatedAt: string,
+  videosPrevios: Map<number, { mp4?: string; webm?: string }> = new Map()
 ): { file: HeroKitFile; details: HeroKitDetail[] } {
+  const conVideo = (a: KitAbility): KitAbility =>
+    a.video || !videosPrevios.has(a.id) ? a : { ...a, video: videosPrevios.get(a.id)! };
   const porClase = {
     en: new Map(items.en.map((i) => [i.class_name, i])),
     es: new Map(items.es.map((i) => [i.class_name, i])),
@@ -425,8 +432,8 @@ export function buildHeroKit(
       const en = clase ? porClase.en.get(clase) : undefined;
       if (!en) continue;
       const es = porClase.es.get(clase!) ?? en;
-      abilities.en.push(buildAbility(en, slot, icons));
-      abilities.es.push(buildAbility(es, slot, icons, rotulos(en)));
+      abilities.en.push(conVideo(buildAbility(en, slot, icons)));
+      abilities.es.push(conVideo(buildAbility(es, slot, icons, rotulos(en))));
     }
 
     const img = h.images ?? {};
@@ -480,9 +487,20 @@ async function main() {
     fetchAssets<RawAbility[]>("items", "en"),
     fetchAssets<RawAbility[]>("items", "es"),
   ]);
-  const { file, details } = buildHeroKit({ en: hEn, es: hEs }, { en: iEn, es: iEs }, new Date().toISOString());
-
+  // Los videos del kit publicado, por si la API ya no los trae (ver buildHeroKit).
   mkdirSync(OUT_HEROES, { recursive: true });
+  const videosPrevios = new Map<number, { mp4?: string; webm?: string }>();
+  for (const f of readdirSync(OUT_HEROES).filter((f) => f.endsWith(".json"))) {
+    const previo = JSON.parse(readFileSync(`${OUT_HEROES}/${f}`, "utf8")) as HeroKitDetail;
+    for (const a of previo.abilities?.en ?? []) if (a.video) videosPrevios.set(a.id, a.video);
+  }
+  const { file, details } = buildHeroKit(
+    { en: hEn, es: hEs },
+    { en: iEn, es: iEs },
+    new Date().toISOString(),
+    videosPrevios
+  );
+
   // Un héroe que deja de ser jugable no debe dejar su página vieja servida.
   for (const f of readdirSync(OUT_HEROES)) rmSync(`${OUT_HEROES}/${f}`);
   for (const d of details) writeFileSync(`${OUT_HEROES}/${d.heroId}.json`, JSON.stringify(d));

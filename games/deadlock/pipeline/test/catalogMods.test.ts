@@ -50,4 +50,19 @@ describe("modsDe", () => {
     const props = { BonusMoveSpeed: { value: "2.0m", provided_property_type: "MODIFIER_VALUE_MOVEMENT_SPEED_MAX" } };
     expect(modsDe(props, innate("BonusMoveSpeed"))).toEqual({ MOVEMENT_SPEED_MAX: 2 });
   });
+
+  /**
+   * City Never Sleeps (6712) le sacó a Return Fire la sección innata de la
+   * ficha, pero el juego le sigue aplicando `BulletResist` como intrínseco
+   * (`m_AutoIntrinsicModifiers` en abilities.vdata). La API no trae esa lista.
+   */
+  it("cuenta los intrínsecos que la ficha ya no muestra (Return Fire)", () => {
+    const props = {
+      BulletResist: { value: "10", provided_property_type: "MODIFIER_VALUE_BULLET_ARMOR_DAMAGE_RESIST" },
+      BulletDamageReflectedPct: { value: "65" },
+    };
+    const secciones = [{ section_type: "active", section_attributes: [{ important_properties: ["BulletDamageReflectedPct"] }] }];
+    expect(modsDe(props, secciones, "upgrade_return_fire")).toEqual({ BULLET_ARMOR_DAMAGE_RESIST: 10 });
+    expect(modsDe(props, secciones, "upgrade_otro")).toEqual({});
+  });
 });

@@ -230,6 +230,24 @@ describe("buildHeroKit", () => {
     expect(details[0].text.en.lore).toBe("A scientist.");
     expect(details[0].art).toEqual({ card: "https://x/card.webp", background: "https://x/bg.webp" });
   });
+
+  /**
+   * City Never Sleeps (6712) sacó los videos de habilidades de los archivos del
+   * juego y la API dejó de publicarlos, aunque siguen en el bucket. La habilidad
+   * es la misma: se conserva el video que ya teníamos.
+   */
+  it("sin video en la API conserva el que ya tenía la habilidad", () => {
+    const sinVideo = { ...stomp, videos: undefined };
+    const previos = new Map([[stomp.id, { mp4: "https://x/stomp.mp4" }]]);
+    const { details } = buildHeroKit(
+      { en: [dynamo], es: [dynamo] },
+      { en: [sinVideo, weapon], es: [sinVideo] },
+      "2026-09-29T00:00:00Z",
+      previos
+    );
+    expect(details[0].abilities.en[0].video).toEqual({ mp4: "https://x/stomp.mp4" });
+    expect(details[0].abilities.es[0].video).toEqual({ mp4: "https://x/stomp.mp4" });
+  });
 });
 
 describe("heroInsights", () => {
