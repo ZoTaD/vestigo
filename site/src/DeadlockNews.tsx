@@ -20,6 +20,7 @@ import { NEWS_COPY, headlineBank, headlineLines, pickFrom, stableVariant } from 
 import { ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
 import { safeHref } from "./safeHref";
+import { SpecialBody, SpecialFront, specialSource } from "./DeadlockNewsSpecial";
 
 /**
  * Vestigo News: la edición de un parche, como periódico.
@@ -56,7 +57,12 @@ function moodCard(card: string | undefined, verdict: Verdict): string | undefine
 }
 
 const ARROW: Record<Dir, string> = { up: "▲", down: "▼", mid: "◆", fix: "✚" };
-const VERDICT_DIR: Record<Verdict, Dir> = { nerf: "down", buff: "up", mixed: "mid", fix: "fix" };
+const VERDICT_DIR: Record<Verdict, Dir> = {
+  nerf: "down",
+  buff: "up",
+  mixed: "mid",
+  fix: "fix",
+};
 const FALLBACK_COLOR = "#7f7866";
 
 /** "cooldown: 34s → 38s": el "de → a" va resaltado, que es lo que se busca con la vista. */
@@ -106,7 +112,14 @@ const plain = (title: string) => title.replace(/\u00a0/g, " ");
 
 /** La palabra más larga de un título, para que el CSS lo achique sin cortarla (ver news.css). */
 const wordFit = (title: string) =>
-  ({ "--vn-w": Math.max(1, ...plain(title).split(" ").map((w) => w.length)) }) as CSSProperties;
+  ({
+    "--vn-w": Math.max(
+      1,
+      ...plain(title)
+        .split(" ")
+        .map((w) => w.length),
+    ),
+  }) as CSSProperties;
 
 const jump = (id: string) => (e: React.MouseEvent) => {
   e.preventDefault();
@@ -131,8 +144,18 @@ export default function DeadlockNews({
 
   const shortDate = (iso: string) => new Date(iso).toLocaleDateString(locale, { day: "numeric", month: "long" });
   const longDate = (iso: string) =>
-    new Date(iso).toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-  const toEdition = (s: string): Route => ({ ...route, view: "deadlock", dlSection: "patches", detail: s });
+    new Date(iso).toLocaleDateString(locale, {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  const toEdition = (s: string): Route => ({
+    ...route,
+    view: "deadlock",
+    dlSection: "patches",
+    detail: s,
+  });
 
   if (!slug) return <main className="deadlock vn-empty">{archive}</main>;
   if (!loaded) {
@@ -144,16 +167,25 @@ export default function DeadlockNews({
   }
 
   const { edition: e, es } = loaded;
-  const pending = lang === "es" && !es;
+  // La edición especial trae los dos idiomas adentro: no espera traducción.
+  const sp = e.special;
+  const pending = lang === "es" && !es && !sp;
   const issue = editions.length - editions.findIndex((x) => x.slug === e.slug);
   const headline =
+    sp?.headline[lang] ??
     (lang === "es" ? es?.headline : undefined) ??
     e.headline ??
     pickFrom(copy.headlines[headlineBank(e.score)], stableVariant(e.slug, 97));
   const lines = headlineLines(headline);
   // La alineación de la portada: los cuatro más recortados y los cuatro más mejorados.
-  const hit = e.heroes.filter((h) => h.verdict === "nerf").sort((a, b) => b.down - a.down).slice(0, 4);
-  const won = e.heroes.filter((h) => h.verdict === "buff").sort((a, b) => b.up - a.up).slice(0, 4);
+  const hit = e.heroes
+    .filter((h) => h.verdict === "nerf")
+    .sort((a, b) => b.down - a.down)
+    .slice(0, 4);
+  const won = e.heroes
+    .filter((h) => h.verdict === "buff")
+    .sort((a, b) => b.up - a.up)
+    .slice(0, 4);
   const heroOf = (id: number) => catalog.heroes[String(id)];
   const heroName = (id: number) => text(heroOf(id)?.name, lang, "?");
   const lineup = (hs: typeof hit, v: "nerf" | "buff") =>
@@ -191,6 +223,7 @@ export default function DeadlockNews({
           <h1 className="vn-mast">
             <span className="vn-lbl">{copy.tagline}</span>
             {copy.masthead}
+            {sp && <span className="vn-x-stamp">{sp.label[lang]}</span>}
           </h1>
           <div className="vn-ed vn-lbl">
             <div>
@@ -206,59 +239,73 @@ export default function DeadlockNews({
         {missing && <p className="vn-notice">{copy.missing}</p>}
         {pending && <p className="vn-notice">{copy.pending}</p>}
 
-        <section className="vn-front">
-          <div>
-            <div className="vn-kicker vn-lbl">{copy.kicker(e.title)}</div>
-            <h2
-              className="vn-headline"
-              style={{ "--vn-hl-len": Math.max(...lines.map((l) => l.length)) } as CSSProperties}
-            >
-              <span>
-                {lines.map((l, i) => (
-                  <span key={i} className="vn-hl-line">
-                    {l}
-                  </span>
-                ))}
-              </span>
-            </h2>
-            <p className="vn-deck">{copy.deck(e.score, e.itemScore)}</p>
-          </div>
-          <div className="vn-score" aria-label={copy.glanceHint}>
-            {(["nerf", "buff", "mixed", "fix"] as const).map((v) => {
-              const hs = e.heroes.filter((h) => h.verdict === v);
-              if (!hs.length) return null;
-              return (
-                <div key={v} className="vn-team" data-v={v}>
-                  <div className="vn-lbl">
-                    <b>{hs.length}</b>
-                    {copy.score[v]}
-                  </div>
-                  <div className="vn-faces">
-                    {hs.map((h) => (
-                      <a
-                        key={h.heroId}
-                        href={`#vn-h${h.heroId}`}
-                        onClick={jump(`vn-h${h.heroId}`)}
-                        title={heroName(h.heroId)}
-                        style={{ "--hc": heroOf(h.heroId)?.color || FALLBACK_COLOR } as CSSProperties}
-                      >
-                        <GameImg src={heroOf(h.heroId)?.img} alt={heroName(h.heroId)} width={36} height={36} />
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-            <div className="vn-totals vn-lbl">
-              {[e.totals.heroLines, e.totals.itemLines, e.totals.general].map((n, i) => (
-                <div key={copy.totals[i]}>
-                  <b>{n}</b>
-                  {copy.totals[i]}
-                </div>
-              ))}
+        {sp ? (
+          <SpecialFront s={sp} lang={lang} locale={locale} />
+        ) : (
+          <section className="vn-front">
+            <div>
+              <div className="vn-kicker vn-lbl">{copy.kicker(e.title)}</div>
+              <h2
+                className="vn-headline"
+                style={
+                  {
+                    "--vn-hl-len": Math.max(...lines.map((l) => l.length)),
+                  } as CSSProperties
+                }
+              >
+                <span>
+                  {lines.map((l, i) => (
+                    <span key={i} className="vn-hl-line">
+                      {l}
+                    </span>
+                  ))}
+                </span>
+              </h2>
+              <p className="vn-deck">{copy.deck(e.score, e.itemScore)}</p>
             </div>
-          </div>
-        </section>
+            <div className="vn-score" aria-label={copy.glanceHint}>
+              {(["nerf", "buff", "mixed", "fix"] as const).map((v) => {
+                const hs = e.heroes.filter((h) => h.verdict === v);
+                if (!hs.length) return null;
+                return (
+                  <div key={v} className="vn-team" data-v={v}>
+                    <div className="vn-lbl">
+                      <b>{hs.length}</b>
+                      {copy.score[v]}
+                    </div>
+                    <div className="vn-faces">
+                      {hs.map((h) => (
+                        <a
+                          key={h.heroId}
+                          href={`#vn-h${h.heroId}`}
+                          onClick={jump(`vn-h${h.heroId}`)}
+                          title={heroName(h.heroId)}
+                          style={
+                            {
+                              "--hc": heroOf(h.heroId)?.color || FALLBACK_COLOR,
+                            } as CSSProperties
+                          }
+                        >
+                          <GameImg src={heroOf(h.heroId)?.img} alt={heroName(h.heroId)} width={36} height={36} />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+              <div className="vn-totals vn-lbl">
+                {[e.totals.heroLines, e.totals.itemLines, e.totals.general].map((n, i) => (
+                  <div key={copy.totals[i]}>
+                    <b>{n}</b>
+                    {copy.totals[i]}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {sp && <SpecialBody s={sp} lang={lang} />}
 
         {(hit.length > 0 || won.length > 0) && (
           <section className="vn-lineup">
@@ -300,84 +347,99 @@ export default function DeadlockNews({
           </>
         )}
 
-        <div className="vn-sec">
-          <h2>{copy.heroes}</h2>
-          <small className="vn-lbl">{copy.heroesSub(e.totals.heroes, e.totals.heroLines)}</small>
-        </div>
-        <div className="vn-heroes">
-          {e.heroes.map((h) => {
-            const hero = heroOf(h.heroId);
-            const slug = heroSlugs.toSlug.get(String(h.heroId));
-            const name = heroName(h.heroId);
-            return (
-              <div
-                key={h.heroId}
-                id={`vn-h${h.heroId}`}
-                className="vn-hero"
-                data-v={h.verdict}
-                style={
-                  {
-                    "--hc": hero?.color || FALLBACK_COLOR,
-                    // El arte de fondo del héroe (el de su pantalla en el juego), detrás de su nombre.
-                    ...(BACKGROUNDS[String(h.heroId)] ? { "--hbg": `url(${BACKGROUNDS[String(h.heroId)]})` } : {}),
-                  } as CSSProperties
-                }
-              >
-                <div className="vn-hero-top">
-                  <span className="vn-portrait">
-                    <img src={moodCard(hero?.card, h.verdict) || hero?.img} alt="" width={280} height={380} loading="lazy" />
-                  </span>
-                  <div>
-                    <h3 style={wordFit(name)}>
-                      {slug ? (
-                        <RouteLink
-                          to={{ ...route, view: "deadlock", dlSection: "meta", detail: slug }}
-                          onNavigate={navigate}
-                        >
-                          {name}
-                        </RouteLink>
-                      ) : (
-                        name
-                      )}
-                    </h3>
-                    <div className="vn-verdict">
-                      <Tag verdict={h.verdict} label={copy.verdict[h.verdict]} />
-                      <span className="vn-tally vn-lbl">
-                        {h.up > 0 && <span data-dir="up">▲ {h.up}</span>}
-                        {h.down > 0 && <span data-dir="down">▼ {h.down}</span>}
+        {e.heroes.length > 0 && (
+          <>
+            <div className="vn-sec">
+              <h2>{copy.heroes}</h2>
+              <small className="vn-lbl">{copy.heroesSub(e.totals.heroes, e.totals.heroLines)}</small>
+            </div>
+            <div className="vn-heroes">
+              {e.heroes.map((h) => {
+                const hero = heroOf(h.heroId);
+                const slug = heroSlugs.toSlug.get(String(h.heroId));
+                const name = heroName(h.heroId);
+                return (
+                  <div
+                    key={h.heroId}
+                    id={`vn-h${h.heroId}`}
+                    className="vn-hero"
+                    data-v={h.verdict}
+                    style={
+                      {
+                        "--hc": hero?.color || FALLBACK_COLOR,
+                        // El arte de fondo del héroe (el de su pantalla en el juego), detrás de su nombre.
+                        ...(BACKGROUNDS[String(h.heroId)] ? { "--hbg": `url(${BACKGROUNDS[String(h.heroId)]})` } : {}),
+                      } as CSSProperties
+                    }
+                  >
+                    <div className="vn-hero-top">
+                      <span className="vn-portrait">
+                        <img
+                          src={moodCard(hero?.card, h.verdict) || hero?.img}
+                          alt=""
+                          width={280}
+                          height={380}
+                          loading="lazy"
+                        />
                       </span>
-                    </div>
-                  </div>
-                </div>
-                {h.groups.map((g) => {
-                  const ab = g.abilityId !== undefined ? e.abilities[String(g.abilityId)] : undefined;
-                  return (
-                    <div key={g.abilityId ?? "base"} className="vn-group">
-                      <div className="vn-ghead">
-                        {ab ? (
-                          <GameImg className="vn-ab" src={ab.img} alt="" width={34} height={34} loading="lazy" />
-                        ) : (
-                          <span className="vn-base" aria-hidden="true">
-                            ◆
-                          </span>
-                        )}
-                        <div>
-                          <b>{ab ? ab.name[lang] : copy.base}</b>
-                          {ab ? (
-                            lang === "es" && ab.name.es !== ab.name.en && <small>{ab.name.en}</small>
+                      <div>
+                        <h3 style={wordFit(name)}>
+                          {slug ? (
+                            <RouteLink
+                              to={{
+                                ...route,
+                                view: "deadlock",
+                                dlSection: "meta",
+                                detail: slug,
+                              }}
+                              onNavigate={navigate}
+                            >
+                              {name}
+                            </RouteLink>
                           ) : (
-                            <small>{copy.baseSub}</small>
+                            name
                           )}
+                        </h3>
+                        <div className="vn-verdict">
+                          <Tag verdict={h.verdict} label={copy.verdict[h.verdict]} />
+                          <span className="vn-tally vn-lbl">
+                            {h.up > 0 && <span data-dir="up">▲ {h.up}</span>}
+                            {h.down > 0 && <span data-dir="down">▼ {h.down}</span>}
+                          </span>
                         </div>
                       </div>
-                      <Lines lines={g.lines} lang={lang} es={es} />
                     </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
+                    {h.groups.map((g) => {
+                      const ab = g.abilityId !== undefined ? e.abilities[String(g.abilityId)] : undefined;
+                      return (
+                        <div key={g.abilityId ?? "base"} className="vn-group">
+                          <div className="vn-ghead">
+                            {ab ? (
+                              <GameImg className="vn-ab" src={ab.img} alt="" width={34} height={34} loading="lazy" />
+                            ) : (
+                              <span className="vn-base" aria-hidden="true">
+                                ◆
+                              </span>
+                            )}
+                            <div>
+                              <b>{ab ? ab.name[lang] : copy.base}</b>
+                              {ab ? (
+                                lang === "es" && ab.name.es !== ab.name.en && <small>{ab.name.en}</small>
+                              ) : (
+                                <small>{copy.baseSub}</small>
+                              )}
+                            </div>
+                          </div>
+                          <Lines lines={g.lines} lang={lang} es={es} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
 
         {e.items.length > 0 && (
           <>
@@ -392,9 +454,7 @@ export default function DeadlockNews({
                   <div key={i.itemId} className="vn-item" data-slot={info?.slot}>
                     <div className="vn-ihead">
                       <div className="vn-icon">
-                        {info?.img && (
-                          <ItemIcon itemId={i.itemId} img={info.img} size={52} />
-                        )}
+                        {info?.img && <ItemIcon itemId={i.itemId} img={info.img} size={52} />}
                       </div>
                       <div>
                         <h3 style={wordFit(info ? info.name[lang] : "")}>{info ? plain(info.name[lang]) : i.itemId}</h3>
@@ -419,7 +479,7 @@ export default function DeadlockNews({
         )}
 
         <footer className="vn-foot vn-lbl">
-          <span>{copy.source}</span>
+          <span>{sp ? specialSource(lang) : copy.source}</span>
           <span>vestigo.gg</span>
         </footer>
       </article>
@@ -434,7 +494,7 @@ export default function DeadlockNews({
             <li key={x.slug} data-current={x.slug === e.slug ? "" : undefined}>
               <span className="vn-archive-date">{shortDate(x.date)}</span>
               <RouteLink to={toEdition(x.slug)} onNavigate={navigate} className="vn-archive-link">
-                {(x.slug === e.slug ? headline : x.headline) ??
+                {(x.slug === e.slug ? headline : (x.special?.headline[lang] ?? x.headline)) ??
                   pickFrom(copy.headlines[headlineBank(x.score)], stableVariant(x.slug, 97))}
               </RouteLink>
               <span className="vn-archive-title">
@@ -442,7 +502,13 @@ export default function DeadlockNews({
                 {i === 0 && <span className="dl-history-tag">{copy.latest}</span>}
               </span>
               <span className="vn-archive-score">
-                <span data-dir="down">▼ {x.score.nerf}</span> <span data-dir="up">▲ {x.score.buff}</span>
+                {x.special ? (
+                  <span className="vn-x-tag">{x.special.label[lang]}</span>
+                ) : (
+                  <>
+                    <span data-dir="down">▼ {x.score.nerf}</span> <span data-dir="up">▲ {x.score.buff}</span>
+                  </>
+                )}
               </span>
             </li>
           ))}

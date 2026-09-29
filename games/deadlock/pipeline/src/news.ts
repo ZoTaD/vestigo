@@ -91,6 +91,17 @@ export interface Edition {
   unparsed: NewsLine[];
   abilities: Record<string, Named>;
   itemInfo: Record<string, Named & { slot: string }>;
+  /**
+   * Edición especial (una actualización grande sin notas de balance, como
+   * "City Never Sleeps"): se escribe a mano y el sitio la arma con su propia
+   * portada. Este script sólo la conserva y la resume en el índice.
+   */
+  special?: { label: Bilingual; headline: Bilingual; ogCards?: string[] } & Record<string, unknown>;
+}
+
+export interface Bilingual {
+  en: string;
+  es: string;
 }
 
 export interface Overrides {
@@ -385,6 +396,7 @@ export interface NewsIndexEntry {
   headline?: string;
   score: Tally;
   itemScore: Tally;
+  special?: { label: Bilingual; headline: Bilingual; ogCards?: string[] };
 }
 
 export const indexEntry = (e: Edition): NewsIndexEntry => ({
@@ -394,4 +406,7 @@ export const indexEntry = (e: Edition): NewsIndexEntry => ({
   ...(e.headline ? { headline: e.headline } : {}),
   score: e.score,
   itemScore: e.itemScore,
+  ...(e.special
+    ? { special: { label: e.special.label, headline: e.special.headline, ...(e.special.ogCards ? { ogCards: e.special.ogCards } : {}) } }
+    : {}),
 });

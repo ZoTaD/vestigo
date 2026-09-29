@@ -124,6 +124,17 @@ const cache = new Map<string, Promise<Buffer | null>>();
 /** Una imagen remota, una sola vez por build. `null` si no bajó: la página sale sin ella. */
 export function fetchImage(url: string): Promise<Buffer | null> {
   let p = cache.get(url);
+  if (!p && url.startsWith("/")) {
+    // Una imagen del propio sitio (`site/public`): todavía no está publicada, se lee del disco.
+    p = Promise.resolve().then(() => {
+      try {
+        return readFileSync(here(`../public${url}`));
+      } catch {
+        return null;
+      }
+    });
+    cache.set(url, p);
+  }
   if (!p) {
     p = fetch(url)
       .then(async (r) => (r.ok ? Buffer.from(await r.arrayBuffer()) : null))

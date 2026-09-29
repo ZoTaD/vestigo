@@ -49,6 +49,45 @@ export interface Edition {
   unparsed: NewsLine[];
   abilities: Record<string, Named>;
   itemInfo: Record<string, Named & { slot: string }>;
+  /** Edición especial: una actualización grande, escrita a mano (ver DeadlockNewsSpecial.tsx). */
+  special?: Special;
+}
+
+export interface Bilingual {
+  en: string;
+  es: string;
+}
+
+/** Una tarjeta con foto: lugar, neutral o cosa para hacer en el mapa. */
+export interface SpecialCard {
+  img: string;
+  name: Bilingual;
+  where?: string;
+  text: Bilingual;
+}
+
+export interface Special {
+  label: Bilingual;
+  kicker: Bilingual;
+  headline: Bilingual;
+  deck: Bilingual;
+  art?: string;
+  vote?: { title: Bilingual; text: Bilingual; dates: string[] };
+  stats: { n: string; label: Bilingual }[];
+  candidates: {
+    code: string;
+    color: string;
+    name: Bilingual;
+    slogan: Bilingual;
+    tags: { en: string[]; es: string[] };
+  }[];
+  broker?: { title: Bilingual; sub: Bilingual; img: string; logo: string; cards: string[]; points: Bilingual[] };
+  places: { img: string; name: string; where: Bilingual }[];
+  cityText: Bilingual;
+  haunts: SpecialCard[];
+  todo: SpecialCard[];
+  pings?: SpecialCard[];
+  more: { title: Bilingual; points: Bilingual[] }[];
 }
 
 export interface Translation {
@@ -63,6 +102,8 @@ export interface IndexEntry {
   headline?: string;
   score: Tally;
   itemScore: Tally;
+  /** Lo que el índice sabe de una edición especial; `ogCards` son las cartas de su vista previa. */
+  special?: { label: Bilingual; headline: Bilingual; ogCards?: string[] };
 }
 
 /** De la más nueva a la más vieja. */

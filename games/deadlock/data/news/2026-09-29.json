@@ -1,0 +1,757 @@
+{
+  "slug": "2026-09-29",
+  "title": "City Never Sleeps",
+  "date": "2026-09-29T20:25:11.000Z",
+  "url": "https://www.playdeadlock.com/cityneversleeps",
+  "headline": "Six on the ballot",
+  "score": {
+    "nerf": 0,
+    "buff": 0,
+    "mixed": 0,
+    "fix": 0
+  },
+  "itemScore": {
+    "nerf": 0,
+    "buff": 0,
+    "mixed": 0,
+    "fix": 0
+  },
+  "totals": {
+    "heroes": 0,
+    "heroLines": 0,
+    "items": 0,
+    "itemLines": 0,
+    "general": 0
+  },
+  "general": [],
+  "heroes": [],
+  "items": [],
+  "unparsed": [],
+  "abilities": {},
+  "itemInfo": {},
+  "special": {
+    "label": {
+      "en": "Special edition",
+      "es": "Edición especial"
+    },
+    "kicker": {
+      "en": "City Never Sleeps · Major update",
+      "es": "City Never Sleeps · Actualización grande"
+    },
+    "headline": {
+      "en": "Six on the ballot",
+      "es": "Seis en campaña"
+    },
+    "ogCards": [
+      "/deadlock/game/news/2026-09-29/poster-deadpack.webp",
+      "/deadlock/game/news/2026-09-29/poster-nurse.webp",
+      "/deadlock/game/news/2026-09-29/poster-baba.webp",
+      "/deadlock/game/news/2026-09-29/poster-ratking.webp"
+    ],
+    "deck": {
+      "en": "The Cursed Apple got a new face: a remade map, new neutrals, a banned merchant and six heroes asking for your vote. The first one arrives October 2.",
+      "es": "La Manzana Maldita cambió de cara: mapa rehecho, neutrales nuevos, un mercader prohibido y seis héroes que piden tu voto. El primero llega el 2 de octubre."
+    },
+    "art": "/deadlock/game/news/2026-09-29/title.webp",
+    "vote": {
+      "title": {
+        "en": "Voting is open",
+        "es": "Votación abierta"
+      },
+      "text": {
+        "en": "You vote in the new pregame lobby. The winning team's votes count double, and so does your first win of the day. Two heroes a week, Tuesdays and Fridays at 2:00 pm PT.",
+        "es": "Se vota en el nuevo lobby del pregame. Los votos del equipo que gana valen doble, y la primera victoria del día también. Salen dos por semana, martes y viernes a las 18:00 de Argentina."
+      },
+      "dates": [
+        "2026-10-02",
+        "2026-10-06",
+        "2026-10-09",
+        "2026-10-13",
+        "2026-10-16",
+        "2026-10-20"
+      ]
+    },
+    "stats": [
+      {
+        "n": "6",
+        "label": {
+          "en": "new heroes",
+          "es": "héroes nuevos"
+        }
+      },
+      {
+        "n": "9",
+        "label": {
+          "en": "new neutrals",
+          "es": "neutrales nuevos"
+        }
+      },
+      {
+        "n": "15k",
+        "label": {
+          "en": "new pings",
+          "es": "pings nuevos"
+        }
+      }
+    ],
+    "candidates": [
+      {
+        "code": "deadpack",
+        "color": "#c8553a",
+        "name": {
+          "en": "Deadman Danny",
+          "es": "Danny Difunto"
+        },
+        "slogan": {
+          "en": "Top choice",
+          "es": "La mejor opción"
+        },
+        "tags": {
+          "en": [
+            "Reckless",
+            "High-flying",
+            "Explosive"
+          ],
+          "es": [
+            "Temerario",
+            "Ambicioso",
+            "Explosivo"
+          ]
+        }
+      },
+      {
+        "code": "nurse",
+        "color": "#3f8a6c",
+        "name": {
+          "en": "Nurse Harrow",
+          "es": "Enfermera Harrow"
+        },
+        "slogan": {
+          "en": "Be not afraid",
+          "es": "No temas"
+        },
+        "tags": {
+          "en": [
+            "Strict",
+            "Terrifying",
+            "Savior"
+          ],
+          "es": [
+            "Estricta",
+            "Aterradora",
+            "Salvadora"
+          ]
+        }
+      },
+      {
+        "code": "chessmaster",
+        "color": "#5d7c3c",
+        "name": {
+          "en": "Solomon",
+          "es": "Salomón"
+        },
+        "slogan": {
+          "en": "Your move",
+          "es": "Tu jugada"
+        },
+        "tags": {
+          "en": [
+            "Strategist",
+            "Sage",
+            "Checkmate"
+          ],
+          "es": [
+            "Estratega",
+            "Inteligente",
+            "Jaque mate"
+          ]
+        }
+      },
+      {
+        "code": "baba",
+        "color": "#b8659a",
+        "name": {
+          "en": "Baba",
+          "es": "Yagá"
+        },
+        "slogan": {
+          "en": "Cast a vote",
+          "es": "Votá"
+        },
+        "tags": {
+          "en": [
+            "Cackling",
+            "Beady",
+            "Hexing"
+          ],
+          "es": [
+            "Risueña",
+            "Vigilante",
+            "Hechicera"
+          ]
+        }
+      },
+      {
+        "code": "artist",
+        "color": "#4a78b8",
+        "name": {
+          "en": "Violet",
+          "es": "Violeta"
+        },
+        "slogan": {
+          "en": "Support the arts",
+          "es": "Apoyá las artes"
+        },
+        "tags": {
+          "en": [
+            "Ambitious",
+            "Nimble",
+            "Creative"
+          ],
+          "es": [
+            "Ambiciosa",
+            "Ágil",
+            "Creativa"
+          ]
+        }
+      },
+      {
+        "code": "ratking",
+        "color": "#8a5a3a",
+        "name": {
+          "en": "Rat King",
+          "es": "Rey Rata"
+        },
+        "slogan": {
+          "en": "For the king",
+          "es": "Por el rey"
+        },
+        "tags": {
+          "en": [
+            "Scrappy",
+            "Regal",
+            "Tenacious"
+          ],
+          "es": [
+            "Peleón",
+            "Majestuoso",
+            "Determinado"
+          ]
+        }
+      }
+    ],
+    "broker": {
+      "title": {
+        "en": "The Broker",
+        "es": "El Broker"
+      },
+      "sub": {
+        "en": "Limited time · until the first new hero",
+        "es": "Por tiempo limitado · hasta el primer héroe nuevo"
+      },
+      "img": "/deadlock/game/news/2026-09-29/broker-shop.webp",
+      "logo": "/deadlock/game/news/2026-09-29/broker-logo.webp",
+      "cards": [
+        "/deadlock/game/news/2026-09-29/broker-ricochet.webp",
+        "/deadlock/game/news/2026-09-29/broker-recharge.webp"
+      ],
+      "points": [
+        {
+          "en": "Trade a high-tier item you own for its Corrupted version: stronger, but with a catch.",
+          "es": "Cambiás un objeto de nivel alto por su versión Corrupta: más fuerte, pero con trampa."
+        },
+        {
+          "en": "First shipment around minute 30, then a new one every ~15 minutes on average.",
+          "es": "El primer cargamento llega cerca del minuto 30; después, uno cada ~15 minutos en promedio."
+        },
+        {
+          "en": "The catch: every match rolls random downsides for corrupted items, the same for every player in that game.",
+          "es": "La trampa: cada partida sortea desventajas al azar para los objetos corruptos, iguales para todos los jugadores."
+        },
+        {
+          "en": "He shows up somewhere different each time and leaves town when the first new hero arrives.",
+          "es": "Aparece cada vez en un lugar distinto y se va de la ciudad cuando llega el primer héroe nuevo."
+        },
+        {
+          "en": "Street Brawl hands you a corrupted item after the round 5 draft.",
+          "es": "En Pelea callejera te dan un objeto corrupto después del draft de la ronda 5."
+        }
+      ]
+    },
+    "places": [
+      {
+        "img": "/deadlock/game/news/2026-09-29/place-times-square.webp",
+        "name": "Times Square",
+        "where": {
+          "en": "Broadway",
+          "es": "Broadway"
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/place-uptown.webp",
+        "name": "Uptown",
+        "where": {
+          "en": "Broadway",
+          "es": "Broadway"
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/place-umbria.webp",
+        "name": "Umbria University",
+        "where": {
+          "en": "Greenwich",
+          "es": "Greenwich"
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/place-central-park.webp",
+        "name": "Central Park",
+        "where": {
+          "en": "Greenwich",
+          "es": "Greenwich"
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/place-stock-exchange.webp",
+        "name": "Stock Exchange",
+        "where": {
+          "en": "York",
+          "es": "York"
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/place-seaport.webp",
+        "name": "Seaport Dock",
+        "where": {
+          "en": "York",
+          "es": "York"
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/place-theater.webp",
+        "name": "Theater",
+        "where": {
+          "en": "District",
+          "es": "Distrito"
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/place-chinatown.webp",
+        "name": "Chinatown",
+        "where": {
+          "en": "District",
+          "es": "Distrito"
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/place-haunted-lot.webp",
+        "name": "Haunted Lot",
+        "where": {
+          "en": "District",
+          "es": "Distrito"
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/place-plaza.webp",
+        "name": "Plaza",
+        "where": {
+          "en": "District",
+          "es": "Distrito"
+        }
+      }
+    ],
+    "cityText": {
+      "en": "Every lane was redone and the neutrals you knew are gone. Between the lanes there are now four districts to fight in: Theater, Chinatown, Haunted Lot and Plaza.",
+      "es": "Se rehicieron todas las líneas y los neutrales de siempre ya no están. Entre las líneas ahora hay cuatro distritos para pelear: Theater, Chinatown, Haunted Lot y Plaza."
+    },
+    "haunts": [
+      {
+        "img": "/deadlock/game/news/2026-09-29/haunt-specimen.webp",
+        "name": {
+          "en": "Specimen",
+          "es": "Espécimen"
+        },
+        "where": "Broadway",
+        "text": {
+          "en": "A loose hand in a jar, crawling around.",
+          "es": "Una mano suelta en un frasco, arrastrándose."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/haunt-past-dues.webp",
+        "name": {
+          "en": "Past Dues",
+          "es": "Deudas pasadas"
+        },
+        "where": "Greenwich",
+        "text": {
+          "en": "Overdue library books with a grudge.",
+          "es": "Libros de biblioteca vencidos y con rencor."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/haunt-gutter-ghouls.webp",
+        "name": {
+          "en": "Gutter Ghoul",
+          "es": "Necrófago"
+        },
+        "where": "York",
+        "text": {
+          "en": "Trash bags that came to life.",
+          "es": "Bolsas de basura que cobraron vida."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/haunt-barrel-mimics.webp",
+        "name": {
+          "en": "Barrel Mimic",
+          "es": "Barril impostor"
+        },
+        "where": "York",
+        "text": {
+          "en": "A gunpowder barrel that bites back.",
+          "es": "Un barril de pólvora que muerde."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/haunt-stage-hands.webp",
+        "name": {
+          "en": "Stage Hand",
+          "es": "Marioneta"
+        },
+        "where": "Theater",
+        "text": {
+          "en": "Puppets dancing across the stage.",
+          "es": "Marionetas que bailan por el escenario."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/haunt-festival-spirit.webp",
+        "name": {
+          "en": "Festival Spirit",
+          "es": "Espíritu festivo"
+        },
+        "where": "Chinatown",
+        "text": {
+          "en": "Paper lanterns that want you dead.",
+          "es": "Farolitos de papel con ganas de matarte."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/haunt-crabbage-pots.webp",
+        "name": {
+          "en": "Crabbage Pot",
+          "es": "Venus"
+        },
+        "where": "Chinatown",
+        "text": {
+          "en": "Potted plants with teeth.",
+          "es": "Plantas en maceta con dientes."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/haunt-shrooms.webp",
+        "name": {
+          "en": "Slum Shroom",
+          "es": "Hongo"
+        },
+        "where": "Haunted Lot",
+        "text": {
+          "en": "Fungi that learned to walk.",
+          "es": "Hongos que aprendieron a caminar."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/haunt-underhands.webp",
+        "name": {
+          "en": "Underhand",
+          "es": "Mañoso"
+        },
+        "where": "Plaza",
+        "text": {
+          "en": "Pickpocket souls that stay low.",
+          "es": "Almas carteristas que andan agachadas."
+        }
+      }
+    ],
+    "todo": [
+      {
+        "img": "/deadlock/game/news/2026-09-29/do-pool.webp",
+        "name": {
+          "en": "Sunken Plaza",
+          "es": "Sunken Plaza"
+        },
+        "where": "Plaza",
+        "text": {
+          "en": "High risk, high reward: the deeper you go, the more the outside sound fades, and so does your stamina.",
+          "es": "Mucho riesgo, mucha recompensa: cuanto más bajás, más se apaga el ruido de afuera… y tu estamina."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/do-bell.webp",
+        "name": {
+          "en": "Bell Tower",
+          "es": "Bell Tower"
+        },
+        "where": "Chinatown",
+        "text": {
+          "en": "A packed soul hotspot at the top, but the bell rings across the whole map while you collect.",
+          "es": "Arriba hay un montón de almas juntas, pero mientras las juntás la campana suena en todo el mapa."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/do-crate.webp",
+        "name": {
+          "en": "Tough Crates",
+          "es": "Cajas duras"
+        },
+        "text": {
+          "en": "They only break with a Heavy Melee, and carry extra souls.",
+          "es": "Sólo se rompen con cuerpo a cuerpo pesado, y traen almas de más."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/do-buffs.webp",
+        "name": {
+          "en": "Buff containers",
+          "es": "Mejoras permanentes"
+        },
+        "text": {
+          "en": "The golden statues now also give permanent Spirit Resist, Bullet Resist, Ability Range and Move Speed.",
+          "es": "Las estatuas doradas ahora también dan resistencia espiritual, resistencia a balas, alcance de habilidad y velocidad permanentes."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/do-snack.webp",
+        "name": {
+          "en": "Healing Snacks",
+          "es": "Bocaditos curativos"
+        },
+        "text": {
+          "en": "Hidden around the map, to heal up in a pinch.",
+          "es": "Escondidos por el mapa, para curarte de apuro."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/do-vents.webp",
+        "name": {
+          "en": "Steam Vents",
+          "es": "Rejillas de vapor"
+        },
+        "text": {
+          "en": "Stand on one for invisibility and a bit of regen.",
+          "es": "Parado encima quedás invisible y regenerás un poco."
+        }
+      }
+    ],
+    "more": [
+      {
+        "title": {
+          "en": "HUD and health bars",
+          "es": "HUD y barras de vida"
+        },
+        "points": [
+          {
+            "en": "New health bars: player names, Rejuvenator and ultimate indicators, live health, stamina and critical status.",
+            "es": "Barras de vida nuevas: nombre del jugador, aviso de Rejuvenecedor y de definitiva, vida en vivo, estamina y estado crítico."
+          },
+          {
+            "en": "Allies visible at any distance, clearer stats, and your shop stats update as you buy.",
+            "es": "Aliados visibles a cualquier distancia, estadísticas más claras, y las de la tienda cambian mientras comprás."
+          },
+          {
+            "en": "Build-ups and durations under your health bar (hello, Love Bites).",
+            "es": "Acumulaciones y duraciones debajo de tu vida (hola, Mordeduras cariñosas)."
+          },
+          {
+            "en": "New event feed: what landed the killing blow, full bounty and your share, and soul bags.",
+            "es": "Nuevo registro de eventos: qué dio el golpe final, la recompensa completa y tu parte, y las bolsas de almas."
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "The shop",
+          "es": "La tienda"
+        },
+        "points": [
+          {
+            "en": "Popular Items per hero from live player data, with how often and when each one is bought.",
+            "es": "Objetos populares por héroe con datos de partidas en vivo: cuánto se compra cada uno y en qué momento."
+          },
+          {
+            "en": "Stat filters you can mix, better search, and keys 1–6 to jump between tabs.",
+            "es": "Filtros por estadística combinables, mejor búsqueda y las teclas 1 a 6 para saltar entre pestañas."
+          },
+          {
+            "en": "Kill feed, chat and scoreboard while shopping; build copy/paste and a new build browser.",
+            "es": "Muertes, chat y marcador mientras comprás; copiar y pegar builds y un navegador de builds nuevo."
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Pings and voices",
+          "es": "Pings y voces"
+        },
+        "points": [
+          {
+            "en": "Reworked pings: minimap and top bar wheels, ability cooldowns, items, enemy status and clustered enemies.",
+            "es": "Pings rehechos: ruedas en el minimapa y la barra de arriba, recargas de habilidades, objetos, estado del enemigo y grupos."
+          },
+          {
+            "en": "Over 15,000 new ping lines and a typing indicator.",
+            "es": "Más de 15.000 líneas de ping nuevas y aviso de que alguien está escribiendo."
+          },
+          {
+            "en": "Pre-match conversations went from 700 to 1,500, plus 10,000+ new voice lines and a dialogue player.",
+            "es": "Las charlas antes de la partida pasaron de 700 a 1.500, más de 10.000 voces nuevas y un reproductor de diálogos."
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Accessibility",
+          "es": "Accesibilidad"
+        },
+        "points": [
+          {
+            "en": "Enemy UI color, subtitles with custom size, color and font, and reticle colors.",
+            "es": "Color de la interfaz enemiga, subtítulos con tamaño, color y fuente a gusto, y colores de la mira."
+          },
+          {
+            "en": "Auto move, auto mantle, auto fire and reduced camera shake.",
+            "es": "Avance automático, trepar automático, disparo automático y menos sacudida de cámara."
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Sandbox and settings",
+          "es": "Práctica y ajustes"
+        },
+        "points": [
+          {
+            "en": "Bot recording and looping, combat log, speed graph, DPS meter, falloff guides and free shopping.",
+            "es": "Grabar y repetir bots, registro de combate, gráfico de velocidad, medidor de DPS, guías de caída de daño y compras gratis."
+          },
+          {
+            "en": "Keybind map, shareable settings and reticle codes, per-hero settings and cloud-saved settings.",
+            "es": "Mapa de teclas, códigos para compartir ajustes y mira, ajustes por héroe y guardado en la nube."
+          },
+          {
+            "en": "You get notified when a report gets action; comms abuse means a mute for the match and a 30-day comms ban.",
+            "es": "Te avisan cuando un reporte tuyo tiene sanción; abusar del chat o la voz es silencio en la partida y 30 días sin comunicación."
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "In the match",
+          "es": "En la partida"
+        },
+        "points": [
+          {
+            "en": "Abilities and items fire the moment you press the button.",
+            "es": "Las habilidades y los objetos salen en el instante en que tocás el botón."
+          },
+          {
+            "en": "Parrying objectives no longer resets your Parry cooldown.",
+            "es": "Contraatacar a los objetivos ya no reinicia la recarga de Contraatacar."
+          },
+          {
+            "en": "Graves can destroy Venator's traps with her gun, and Walkers stop firing after dying.",
+            "es": "Graves puede romper las trampas de Venator con su arma, y los Caminantes dejan de disparar al morir."
+          },
+          {
+            "en": "Respawn timers in the world for camps and Mid-Boss, plus a Mid-Boss timer on the top bar.",
+            "es": "Tiempos de reaparición de campamentos y Jefe central en el mapa, y el del Jefe central en la barra de arriba."
+          },
+          {
+            "en": "Latest Source 2, better anti-cheat, network prediction and performance.",
+            "es": "Source 2 al día, mejor antitrampas, predicción de red y rendimiento."
+          }
+        ]
+      }
+    ],
+    "pings": [
+      {
+        "img": "/deadlock/game/news/2026-09-29/ping-lines.webp",
+        "name": {
+          "en": "Ping wheels",
+          "es": "Ruedas de ping"
+        },
+        "text": {
+          "en": "Minimap and top bar wheels to call a plan in one click: split push, stay together, retreat.",
+          "es": "Ruedas en el minimapa y en la barra de arriba para marcar un plan en un clic: dividir el empuje, ir juntos, retirarse."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/ping-topbar.webp",
+        "name": {
+          "en": "Top bar pings",
+          "es": "Pings en la barra"
+        },
+        "text": {
+          "en": "Say more about any hero in the match, like when their ultimate is ready.",
+          "es": "Decí más sobre cualquier héroe de la partida, como cuándo tiene la definitiva lista."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/ping-ability.webp",
+        "name": {
+          "en": "Ability pings",
+          "es": "Pings de habilidad"
+        },
+        "text": {
+          "en": "Detailed, live ability pings to track the cooldowns that matter.",
+          "es": "Pings de habilidad con detalle y en vivo para seguir las recargas que importan."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/ping-item.webp",
+        "name": {
+          "en": "Item pings",
+          "es": "Pings de objetos"
+        },
+        "text": {
+          "en": "Ping items in the shop to say you're buying them, or ask someone else to.",
+          "es": "Pingueá objetos en la tienda para avisar que los comprás, o pedir que alguien los compre."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/ping-enemy.webp",
+        "name": {
+          "en": "Enemy status",
+          "es": "Estado del enemigo"
+        },
+        "text": {
+          "en": "Call out critical health, a death, or an enemy about to respawn.",
+          "es": "Avisá vida crítica, una muerte o un enemigo por reaparecer."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/ping-clustered.webp",
+        "name": {
+          "en": "Enemy clusters",
+          "es": "Grupos de enemigos"
+        },
+        "text": {
+          "en": "Pinging a cluster on the minimap calls out how many are there.",
+          "es": "Pinguear un grupo en el minimapa canta cuántos hay."
+        }
+      },
+      {
+        "img": "/deadlock/game/news/2026-09-29/ping-targets.webp",
+        "name": {
+          "en": "New targets",
+          "es": "Más cosas pingueables"
+        },
+        "text": {
+          "en": "Troopers, neutrals, ziplines, the Rift, bridge buffs, the shop and more now react to pings.",
+          "es": "Tropas, neutrales, tirolesas, la tienda y mucho más ahora responden a los pings."
+        }
+      }
+    ]
+  }
+}

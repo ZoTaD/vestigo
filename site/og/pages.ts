@@ -48,6 +48,12 @@ const TXT = {
   },
 } satisfies Record<Lang, unknown>;
 
+interface SpecialEntry {
+  label: Record<Lang, string>;
+  headline: Record<Lang, string>;
+  ogCards?: string[];
+}
+
 const say = (loc: { en: string; es?: string }, lang: Lang) => (lang === "es" && loc.es) || loc.en;
 
 /** Todas las imágenes a dibujar: la ruta de su página y qué mostrar. */
@@ -101,6 +107,22 @@ export function ogSpecs(data: OgData): { path: string; spec: OgSpec }[] {
     });
 
     for (const e of data.dlNews ?? []) {
+      // Edición especial: sin nerfs ni buffs que contar; su sello y su titular en cada idioma.
+      const special = (e as typeof e & { special?: SpecialEntry }).special;
+      if (special) {
+        out.push({
+          path: `/${lang}/deadlock/patches/${e.slug}`,
+          spec: {
+            kicker: t.news(e.title),
+            title: special.headline[lang],
+            subtitle: special.label[lang],
+            footer: "vestigo.gg/deadlock/patches",
+            cards: special.ogCards ?? [],
+            accent: "#d8483a",
+          },
+        });
+        continue;
+      }
       const detail = data.dlEditions[e.slug];
       const copy = NEWS_COPY[lang];
       const headline = e.headline ?? pickFrom(copy.headlines[headlineBank(e.score)], stableVariant(e.slug, 97));

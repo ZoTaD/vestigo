@@ -75,6 +75,9 @@ async function main() {
     assetsEs,
     overrides: readJson<Overrides>(`${OVERRIDES_DIR}/${slug}.json`),
   });
+  // Un parche el mismo día que una edición especial no se la lleva puesta.
+  const special = readJson<Edition>(`${NEWS_DIR}/${slug}.json`)?.special;
+  if (special) edition.special = special;
 
   mkdirSync(NEWS_DIR, { recursive: true });
   writeFileSync(`${NEWS_DIR}/${slug}.json`, JSON.stringify(edition));

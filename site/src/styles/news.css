@@ -154,7 +154,7 @@
 .vn-who { position: absolute; left: 12px; right: 8px; bottom: 14px; }
 /* Los títulos de las tarjetas siguen la regla del titular: se achican hasta que
    entra su palabra más larga (`--vn-w`, de wordFit() en DeadlockNews.tsx). */
-.vn-who b { display: block; font: 700 min(21px, calc((100cqi - 20px) / (var(--vn-w, 8) * 0.77)))/1 var(--vn-display); text-transform: uppercase; margin-bottom: 4px; }
+.vn-who b { display: block; font: 700 min(21px, calc((100cqi - 20px) / (var(--vn-w, 8) * 0.86)))/1 var(--vn-display); text-transform: uppercase; margin-bottom: 4px; }
 .vn-who .vn-lbl { font-size: min(10.5px, calc(100cqi / 11)); letter-spacing: 0.1em; white-space: nowrap; }
 
 /* Secciones: el pincel negro detrás del título (ver deadlock-game.css) ------ */
@@ -279,4 +279,138 @@
   .vn-lines { padding-left: 0; }
   .vn-archive-list li { grid-template-columns: 1fr auto; gap: 4px 12px; }
   .vn-archive-title { grid-column: 1; }
+}
+
+/* ---------------------------------------------------------------------------
+   EDICIÓN ESPECIAL (2026-09-29, "City Never Sleeps"): una actualización grande
+   sin notas de balance. Portada con la votación de héroes nuevos y secciones
+   con fotos (DeadlockNewsSpecial.tsx). Los afiches, stickers y tarjetas de la
+   votación son del juego; las fotos del mapa y los neutrales, de la página
+   oficial de la actualización.
+--------------------------------------------------------------------------- */
+
+/* El sello: tinta roja sobre el papel, torcido como uno de goma. */
+.vn-mast { position: relative; }
+.vn-x-stamp {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.35em;
+  padding: 0.28em 0.55em 0.2em;
+  font: 700 clamp(13px, 1.9vw, 22px)/1 var(--vn-label);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #150d0b;
+  background: #d8483a;
+  transform: rotate(-6deg) translateY(-0.4em);
+  border-radius: 3px;
+}
+.vn-x-tag { font: 700 10.5px/1 "VN Retail", "Barlow Condensed", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: #d8483a; }
+
+/* Portada: el logo de la actualización, la votación y las cifras. */
+.vn-x-front .vn-kicker { color: #e0a13a; }
+.vn-x-art { display: block; width: 100%; max-width: 420px; height: auto; margin: -12px auto 4px; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6)); }
+.vn-x-vote { padding: 16px 18px; background: var(--vn-panel); border-radius: var(--radius, 4px); }
+.vn-x-vote-title { color: #e0a13a; margin-bottom: 10px; }
+.vn-x-stickers { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.vn-x-stickers a { display: block; transition: transform 150ms ease; }
+.vn-x-stickers a:hover, .vn-x-stickers a:focus-visible { transform: translateY(-3px) rotate(-4deg); }
+.vn-x-stickers img { display: block; width: 100%; height: auto; }
+.vn-x-vote p { margin: 12px 0 10px; font-size: 14.5px; line-height: 1.45; color: var(--vn-ink-soft); }
+.vn-x-dates { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; color: var(--vn-ink-mute); }
+.vn-x-dates b { color: var(--vn-ink); font-weight: 700; white-space: nowrap; }
+
+/* Los candidatos: los afiches de campaña del juego; al pasar el mouse, el
+   mismo afiche arrancado y pintado (vote_<héroe>_damaged). */
+.vn-x-posters { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.vn-x-poster { margin: 0; container-type: inline-size; scroll-margin-top: 16px; }
+.vn-x-sheet { position: relative; aspect-ratio: 781 / 1122; overflow: hidden; border-radius: 2px; box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5); transform: rotate(-1deg); transition: transform 200ms ease; }
+.vn-x-poster:nth-child(even) .vn-x-sheet { transform: rotate(1.2deg); }
+.vn-x-sheet img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.vn-x-torn { opacity: 0; transition: opacity 250ms ease; }
+.vn-x-poster:hover .vn-x-torn { opacity: 1; }
+.vn-x-poster:hover .vn-x-sheet { transform: rotate(0deg) translateY(-4px); }
+.vn-x-poster figcaption {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 12px;
+  padding: 10px 10px 12px;
+  border-radius: var(--radius, 4px);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--hc) 30%, transparent), var(--vn-panel) 80%);
+}
+.vn-x-face { width: 40px; height: 40px; flex: 0 0 auto; margin-top: -24px; }
+.vn-x-poster figcaption > div { flex: 1; min-width: 0; container-type: inline-size; }
+/* Los nombres siguen la regla de siempre: se achican hasta que entra su
+   palabra más larga (`--vn-w`, de fit() en DeadlockNewsSpecial.tsx), no se cortan. */
+.vn-x-poster b { display: block; font: 700 min(22px, calc(100cqi / (var(--vn-w, 8) * 0.86)))/1 var(--vn-display); text-transform: uppercase; }
+.vn-x-poster i { display: block; margin: 4px 0 6px; font: italic 13.5px/1.25 var(--vn-text); color: var(--vn-ink-soft); }
+.vn-x-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.vn-x-tags .vn-lbl { font-size: 9.5px; letter-spacing: 0.1em; padding: 3px 5px 2px; border-radius: 3px; background: rgba(230, 221, 200, 0.08); color: var(--vn-ink-mute); }
+
+/* El Broker */
+.vn-x-broker { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.vn-x-shop { position: relative; border-radius: var(--radius, 4px); overflow: hidden; background: radial-gradient(ellipse at 50% 60%, rgba(215, 70, 120, 0.22), transparent 70%), var(--vn-panel); }
+.vn-x-shop img:first-child { display: block; width: 100%; height: auto; }
+.vn-x-logo { position: absolute; left: 50%; top: 14px; width: 46%; transform: translateX(-50%) rotate(-3deg); filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.7)); }
+.vn-x-points { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.vn-x-points li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.45; color: var(--vn-ink-soft); }
+.vn-x-points li::before { content: "◆"; position: absolute; left: 0; top: 0.15em; font-size: 10px; color: #e0a13a; }
+/* Las dos cartas Corruptas a lo ancho de toda la sección, que se lean. */
+.vn-x-corrupt { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.vn-x-corrupt img { width: 100%; height: auto; display: block; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.55)); }
+
+/* La ciudad */
+.vn-x-lede { margin: 0 0 16px; max-width: 70ch; font: italic 17px/1.5 var(--vn-text); color: var(--vn-ink-soft); }
+.vn-x-places { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.vn-x-place { position: relative; margin: 0; aspect-ratio: 16 / 10; overflow: hidden; border-radius: var(--radius, 4px); container-type: inline-size; }
+.vn-x-place img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 300ms ease; }
+.vn-x-place:hover img { transform: scale(1.05); }
+.vn-x-place figcaption { position: absolute; inset: auto 0 0; padding: 26px 10px 8px; background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.85)); }
+.vn-x-place .vn-lbl { display: block; font-size: 9.5px; color: #e0a13a; }
+.vn-x-place b { display: block; font: 700 min(19px, calc((100cqi - 20px) / (var(--vn-w, 8) * 0.86)))/1 var(--vn-display); text-transform: uppercase; }
+
+/* Se buscan / Qué hacer: tarjetas con foto */
+.vn-x-cards { display: grid; gap: 10px; }
+/* Los nueve neutrales, de a tres: foto a la izquierda, ficha a la derecha. */
+.vn-x-haunt { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.vn-x-haunt .vn-x-card { display: grid; grid-template-columns: 120px minmax(0, 1fr); align-items: center; }
+.vn-x-haunt .vn-x-pic { --pic-h: 140px; }
+.vn-x-haunt figcaption { padding: 12px 14px 12px 4px; container-type: inline-size; }
+.vn-x-todo { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.vn-x-card { margin: 0; border-radius: var(--radius, 4px); overflow: hidden; background: var(--vn-panel); container-type: inline-size; }
+.vn-x-pic { --pic-h: 180px; display: grid; place-items: center; height: var(--pic-h); padding: 10px; background: radial-gradient(ellipse at 50% 70%, rgba(230, 221, 200, 0.1), transparent 70%); }
+.vn-x-pic img { max-width: 100%; max-height: calc(var(--pic-h) - 20px); object-fit: contain; display: block; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5)); }
+.vn-x-todo .vn-x-pic { --pic-h: 200px; }
+/* Pings: capturas del juego, a sangre. */
+.vn-x-ping { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.vn-x-ping .vn-x-pic { padding: 0; height: auto; aspect-ratio: 3 / 2; background: none; }
+.vn-x-ping .vn-x-pic img { width: 100%; height: 100%; max-height: none; object-fit: cover; filter: none; }
+.vn-x-ping figcaption { padding-top: 12px; }
+.vn-x-card figcaption { padding: 4px 14px 14px; }
+.vn-x-card .vn-lbl { display: block; font-size: 9.5px; color: #e0a13a; margin-bottom: 3px; }
+.vn-x-card b { display: block; font: 700 min(20px, calc((100cqi - 28px) / (var(--vn-w, 8) * 0.86)))/1.05 var(--vn-display); text-transform: uppercase; }
+.vn-x-card small { display: block; font: italic 12px/1.2 var(--vn-text); color: var(--vn-ink-mute); margin-top: 2px; }
+.vn-x-card p { margin: 6px 0 0; font-size: 14px; line-height: 1.4; color: var(--vn-ink-soft); }
+
+/* Todo lo demás */
+.vn-x-more { columns: 3; column-gap: 12px; }
+.vn-x-group { break-inside: avoid; margin-bottom: 12px; padding: 14px 16px; border-radius: var(--radius, 4px); background: var(--vn-panel); }
+.vn .vn-x-group h3 { margin: 0 0 10px; font: 700 22px/1 var(--vn-display); text-transform: uppercase; }
+.vn-x-group .vn-x-points li { font-size: 14px; }
+
+@media (max-width: 1040px) {
+  .vn-x-posters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .vn-x-broker { grid-template-columns: minmax(0, 1fr); }
+  .vn-x-places { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .vn-x-more { columns: 2; }
+  .vn-x-haunt { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .vn-x-stamp { display: block; width: max-content; margin: 10px 0 0; transform: rotate(-4deg); }
+  .vn-x-posters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vn-x-places { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vn-x-todo { grid-template-columns: minmax(0, 1fr); }
+  .vn-x-haunt { grid-template-columns: minmax(0, 1fr); }
+  .vn-x-pic, .vn-x-todo .vn-x-pic { --pic-h: 150px; }
+  .vn-x-more { columns: 1; }
 }
