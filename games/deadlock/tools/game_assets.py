@@ -11,7 +11,7 @@ Además exporta el material de estilo (papeles, tooltips, pizarra, arte de
 héroes, armas, insignias en tiza) a public/deadlock/game/ui/.
 
 Uso (una vez por parche, en la PC que tiene el juego):
-    python games/deadlock/tools/game_assets.py --vrf <Source2Viewer-CLI.exe> [--cache <carpeta>]
+    python games/deadlock/tools/game_assets.py --vrf <Source2Viewer-CLI.exe> [--cache <carpeta>] [--force]
 
 Source2Viewer-CLI: github.com/ValveResourceFormat/ValveResourceFormat/releases
 (cli-windows-x64.zip). Sólo LEE el pak del juego; no modifica nada.
@@ -59,12 +59,17 @@ def find_local(panorama, rel):
     return None
 
 
+FORCE = False
+
+
 def save_webp(src, dst, max_w=None, quality=86, crop=None, mask=False):
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     svg_dst = dst.rsplit(".", 1)[0] + ".svg"
     # Ya exportado y más nuevo que el original: no se repite (WebP método 6 es lento).
+    # Con --force se rehace igual: en un clon o rama nueva todos los archivos del
+    # sitio tienen fecha de hoy y el atajo se saltearía las imágenes de un parche.
     for d in (dst, svg_dst):
-        if os.path.exists(d) and os.path.getmtime(d) >= os.path.getmtime(src):
+        if not FORCE and os.path.exists(d) and os.path.getmtime(d) >= os.path.getmtime(src):
             return d
     if src.endswith(".svg"):
         # Los SVG se copian tal cual (con extensión .svg).
@@ -149,7 +154,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--vrf", required=True)
     ap.add_argument("--cache", default=os.path.join(ROOT, ".cache", "deadlock-panorama"))
+    ap.add_argument("--force", action="store_true", help="rehacer todas las imágenes aunque parezcan al día")
     a = ap.parse_args()
+    global FORCE
+    FORCE = a.force
     extract(a.vrf, a.cache)
     panorama = os.path.join(a.cache, "panorama")
 
@@ -158,6 +166,12 @@ def main():
         rel = u[len(BUCKET):]
         src = find_local(panorama, rel)
         if not src:
+            # El juego la borró pero el sitio todavía la usa (City Never Sleeps
+            # sacó los fondos de la ficha vieja): queda la copia que ya teníamos
+            # hasta que otra pieza la reemplace.
+            kept = os.path.join(OUT, rel.rsplit(".", 1)[0] + ".webp")
+            if os.path.exists(kept):
+                manifest[rel] = os.path.relpath(kept, OUT).replace(os.sep, "/")
             missing.append(rel)
             continue
         max_w = next((w for rx, w in MAX_W if rx.search(rel)), None)
