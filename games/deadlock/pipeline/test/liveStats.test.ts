@@ -22,6 +22,34 @@ describe("countsFrom", () => {
     expect(c.from).toBe("2026-09-16");
     expect(c.to).toBe("2026-09-19");
   });
+
+  /**
+   * Con `bucket=start_time_hour` la API devuelve una fila por héroe y por hora.
+   * Sin bucket redondea la ventana al día entero (medido el 2026-09-29: pedir
+   * desde las 20:25 daba las 243.324 filas de todo el día).
+   */
+  it("suma las horas de cada héroe y sólo cuenta las horas enteras de la ventana", () => {
+    const h = (iso: string) => Date.parse(iso) / 1000;
+    const c = countsFrom(
+      [
+        // 20:00–21:00 mezcla 25 minutos del parche anterior: afuera.
+        { hero_id: 1, matches: 99, wins: 50, bucket: h("2026-09-29T20:00:00Z") },
+        { hero_id: 1, matches: 10, wins: 6, bucket: h("2026-09-29T21:00:00Z") },
+        { hero_id: 1, matches: 5, wins: 2, bucket: h("2026-09-29T22:00:00Z") },
+        { hero_id: 2, matches: 7, wins: 1, bucket: h("2026-09-29T22:00:00Z") },
+        // 23:00–24:00 todavía no terminó a las 23:30: afuera.
+        { hero_id: 2, matches: 40, wins: 20, bucket: h("2026-09-29T23:00:00Z") },
+      ],
+      "2026-09-29T20:25:11Z",
+      "2026-09-29T23:30:00Z",
+      1
+    );
+    expect(c.rows).toEqual([
+      { hero_id: 1, matches: 15, wins: 8 },
+      { hero_id: 2, matches: 7, wins: 1 },
+    ]);
+    expect(c.boards).toBe(22);
+  });
 });
 
 describe("countsFrom en Street Brawl", () => {

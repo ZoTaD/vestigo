@@ -57,20 +57,40 @@ export interface LiveRow {
   hero_id: number;
   wins: number;
   matches: number;
+  /** Inicio de la hora (unix), cuando se pide con `bucket=start_time_hour`. */
+  bucket?: number;
 }
 
 const day = (iso: string) => iso.slice(0, 10);
+const HOUR = 3600;
 
-/** Las cuentas de la API, en la forma que consume `blendRows`. */
+/**
+ * Las cuentas de la API, en la forma que consume `blendRows`.
+ *
+ * Con filas por hora, **sólo entran las horas enteras de la ventana**: la de las
+ * 20:00 de un parche que salió a las 20:25 mezcla 25 minutos del juego anterior,
+ * y la hora en curso todavía no terminó. Después se suma cada héroe.
+ */
 export function countsFrom(
   rows: LiveRow[],
   from: string,
   to: string,
   playersPerMatch: number = PLAYERS_PER_MATCH
 ): BandCounts {
-  const boards = rows.reduce((n, r) => n + r.matches, 0);
+  const desde = Date.parse(from) / 1000;
+  const hasta = Date.parse(to) / 1000;
+  const porHeroe = new Map<number, { hero_id: number; matches: number; wins: number }>();
+  for (const r of rows) {
+    if (r.bucket !== undefined && (r.bucket < desde || r.bucket + HOUR > hasta)) continue;
+    const h = porHeroe.get(r.hero_id) ?? { hero_id: r.hero_id, matches: 0, wins: 0 };
+    h.matches += r.matches;
+    h.wins += r.wins;
+    porHeroe.set(r.hero_id, h);
+  }
+  const suma = [...porHeroe.values()];
+  const boards = suma.reduce((n, r) => n + r.matches, 0);
   return {
-    rows: rows.filter((r) => r.matches > 0).map((r) => ({ hero_id: r.hero_id, matches: r.matches, wins: r.wins })),
+    rows: suma.filter((r) => r.matches > 0),
     matches: Math.round(boards / playersPerMatch),
     boards,
     from: day(from),
@@ -91,7 +111,9 @@ export async function fetchLiveCounts(
   query: LiveQuery = {}
 ): Promise<BandCounts> {
   const unix = (iso: string) => Math.floor(Date.parse(iso) / 1000);
-  let url = `${LIVE}?min_unix_timestamp=${unix(from)}&max_unix_timestamp=${unix(to)}`;
+  // Por hora: sin `bucket`, la API redondea min/max al día entero (medido el
+  // 2026-09-29: desde las 20:25 devolvía las partidas de todo el día).
+  let url = `${LIVE}?min_unix_timestamp=${unix(from)}&max_unix_timestamp=${unix(to)}&bucket=start_time_hour`;
   if (tiers) {
     const badge = badgeRange(tiers);
     url += `&min_average_badge=${badge.min}&max_average_badge=${badge.max}`;
