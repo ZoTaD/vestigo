@@ -17,7 +17,9 @@ sólo cuando la habilidad entra en pantalla.
 Los SVG se revisan antes de guardarlos: se sirven desde nuestro dominio, así
 que uno con scripts o manejadores de eventos no se acepta.
 
-Uso (cuando un parche traiga íconos nuevos):
+Uso (cuando un parche traiga íconos nuevos), **siempre después de
+game_assets.py**, que reescribe manifest.json desde cero y borraría estas
+entradas (pasó con City Never Sleeps, 2026-09-29):
     python games/deadlock/tools/bucket_assets.py
 """
 import glob
