@@ -690,17 +690,40 @@ export function windowSql(partitions: number[], from: string, to: string): strin
  * descubrir.** En el Parquet la columna se llama literalmente `items.item_id`,
  * con el punto adentro del nombre; sin comillas DuckDB lee `items` como una tabla
  * y falla con "Referenced table items not found".
+ *
+ * Las compras corruptas del Broker no entran (ver `uncorruptedItems`).
  */
 export function itemsWindowSql(partitions: number[], from: string, to: string): string {
   return selectFrom(
     `start_time, won, match_id,
      ${BADGE} // 10 as tier,
-     "items.item_id" as item_ids, "items.game_time_s" as item_times`,
+     ${uncorruptedItems("item_id")} as item_ids, ${uncorruptedItems("game_time_s")} as item_times`,
     partitions,
     from,
     to
   );
 }
+
+/**
+ * La marca de una compra corrupta en `items.upgrade_info` (0x800000).
+ *
+ * City Never Sleeps (2026-09-29) trajo al Broker, que cambia un objeto de nivel
+ * alto por su versión Corrupta: más fuerte y con desventajas al azar por partida.
+ * **No cuenta como el objeto normal** (decisión de ZoTaD, igual que el
+ * `include_corrupted_items=false` de deadlock-api): mezclarlo le sube el
+ * winrate a Boundless Spirit por algo que no es Boundless Spirit.
+ *
+ * Así lo guarda el lake, medido ese día: la entrada original queda "vendida" en
+ * el momento del cambio y aparece otra del mismo `item_id` con 0x810000.
+ */
+export const CORRUPTED_BIT = 0x800000;
+
+/**
+ * La columna `items.<col>` sin las entradas corruptas, como expresión SQL.
+ * Las listas `items.*` van en paralelo: el índice `i` es la misma compra.
+ */
+export const uncorruptedItems = (col: string): string =>
+  `list_filter("items.${col}", (x, i) -> (coalesce("items.upgrade_info"[i], 0) & ${CORRUPTED_BIT}) = 0)`;
 
 /**
  * La misma ventana, con los baneos de cada partida (ver `bans.ts`). Una fila

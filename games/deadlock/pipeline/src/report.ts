@@ -15,6 +15,8 @@ import {
   PROVISIONAL_MATCHES,
   BADGE,
   sqlString,
+  CORRUPTED_BIT,
+  uncorruptedItems,
 } from "./snapshot";
 import { fetchPatches } from "./patches";
 import { BANDS, widestBand } from "./bands";
@@ -258,10 +260,13 @@ async function main() {
            list_extract("stats.boss_damage", len("stats.boss_damage")) as boss,
            list_distinct(list_transform(
              list_filter(range(1, len("items.item_id") + 1),
-               i -> "items.item_id"[i] in (${ids}) and coalesce("items.sold_time_s"[i], 0) = 0),
+               i -> "items.item_id"[i] in (${ids}) and coalesce("items.sold_time_s"[i], 0) = 0
+                    and (coalesce("items.upgrade_info"[i], 0) & ${CORRUPTED_BIT}) = 0),
              i -> "items.item_id"[i])) as kept,
-           "items.item_id" as item_ids, "items.game_time_s" as item_times,
-           "items.sold_time_s" as sold_times,
+           -- Sin compras corruptas (ver CORRUPTED_BIT); las tres listas se filtran
+           -- igual para que sigan alineadas compra por compra.
+           ${uncorruptedItems("item_id")} as item_ids, ${uncorruptedItems("game_time_s")} as item_times,
+           ${uncorruptedItems("sold_time_s")} as sold_times,
            len(list_filter("items.imbued_ability_id", x -> x is not null and x <> 0)) as imbued
     from ${partitionSource(n)}
     where match_mode = '${PLAYED_MODE}' and game_mode = '${PLAYED_GAME_MODE}'

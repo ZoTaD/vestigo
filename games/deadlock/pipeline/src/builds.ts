@@ -14,6 +14,8 @@ import {
   bandablePartitions,
   PROVISIONAL_MATCHES,
   BADGE,
+  CORRUPTED_BIT,
+  uncorruptedItems,
 } from "./snapshot";
 import { fetchPatches } from "./patches";
 import { BANDS, publishedDefaultBand } from "./bands";
@@ -131,14 +133,19 @@ async function main() {
    * La build de un jugador es **sin vendidos y sin repetidos**: un ítem
    * revendido y recomprado aparece dos veces en el array, y contarlo dos veces
    * rompe el tope de 12 que el juego impone.
+   *
+   * **Sin compras corruptas** (ver `CORRUPTED_BIT`): el objeto que se corrompió
+   * queda "vendido" en el lake, así que sale de la build final igual que uno
+   * vendido, y la entrada corrupta no cuenta ni como objeto ni como compra.
    */
   const rama = (n: number) => `
     select match_id, account_id, hero_id, won, team, start_time,
            list_distinct(list_transform(
              list_filter(range(1, len("items.item_id") + 1),
-               i -> "items.item_id"[i] in (${ids}) and coalesce("items.sold_time_s"[i], 0) = 0),
+               i -> "items.item_id"[i] in (${ids}) and coalesce("items.sold_time_s"[i], 0) = 0
+                    and (coalesce("items.upgrade_info"[i], 0) & ${CORRUPTED_BIT}) = 0),
              i -> "items.item_id"[i])) as kept,
-           "items.item_id" as item_ids, "items.game_time_s" as item_times,
+           ${uncorruptedItems("item_id")} as item_ids, ${uncorruptedItems("game_time_s")} as item_times,
            list_filter("items.imbued_ability_id", x -> x is not null and x <> 0) as imbued,
            "stats.time_stamp_s" as ts, "stats.net_worth" as nw,
            "stats.player_damage" as dmg, "stats.deaths" as deaths
