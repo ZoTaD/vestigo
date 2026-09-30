@@ -1066,7 +1066,8 @@ const EN = {
         "Every item measured against what its own price is worth, not against the whole shop. " +
         "A 6400 item wins more than an 800 one because you only buy it in a match that " +
         "already went long — so the number here is how far each item beats the others that " +
-        "cost the same.",
+        "cost the same. Each purchase also counts against how often its hero wins: an item only " +
+        "strong heroes buy doesn't get their win rate for free.",
       /** El grupo lleva el precio, que es como el jugador piensa en la tienda. */
       costGroup: (cost: string, n: number) => `${cost} souls, ${n} items`,
       /** El conteo a la derecha del encabezado del grupo. */
@@ -2115,7 +2116,9 @@ const ES: typeof EN = {
       lead:
         "Cada objeto medido contra lo que rinde su propio precio, no contra toda la tienda. " +
         "Uno de 6400 gana más que uno de 800 porque sólo se compra en una partida que ya venía " +
-        "larga — así que el número de acá es cuánto le saca cada objeto a los que cuestan lo mismo.",
+        "larga — así que el número de acá es cuánto le saca cada objeto a los que cuestan lo mismo. " +
+        "Y cada compra se cuenta contra lo que gana su héroe: un objeto que sólo compran héroes " +
+        "fuertes no se lleva gratis su porcentaje.",
       costGroup: (cost, n) => `${cost} almas, ${n} objetos`,
       itemCount: (n: number) => `${n} ${n === 1 ? "objeto" : "objetos"}`,
       baseline: (pct) => `cualquiera de este precio gana ${pct}`,
