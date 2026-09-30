@@ -774,13 +774,17 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-shop2-cell.dl-bd-cards {
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-cell {
+  display: grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
   grid-template-columns: repeat(auto-fill, minmax(4.3rem, 1fr));
   gap: 0.45rem;
   align-content: start;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-shop2-row[data-cols="1"] .dl-shop2-cell.dl-bd-cards {
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-row[data-cols="1"] .dl-shop2-cell {
   grid-template-columns: repeat(auto-fill, minmax(6.2rem, 1fr));
   gap: 0.6rem;
 }
@@ -839,7 +843,7 @@
     width: 4.2rem;
     margin: 0 0 0.4rem;
   }
-  [data-theme="codex"][data-game="deadlock"] .dl-shop2-cell.dl-bd-cards {
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-cell {
     grid-template-columns: repeat(auto-fill, minmax(4.9rem, 1fr));
   }
 }

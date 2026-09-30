@@ -8,6 +8,7 @@ import { useItems, SLOTS, type Item, type Slot } from "./deadlockItemsData";
 import { useHeroBuilds, bySlot, byPhase } from "./deadlockBuildsData";
 import { useHeroKit } from "./deadlockHeroKitData";
 import ShopCard, { SHOP } from "./DeadlockShopCard";
+import DeadlockShopTree from "./DeadlockShopTree";
 import { GuideEditor, AbilityOrderEditor, StatsPanel, empezarArrastre } from "./DeadlockBuilderEditor";
 import { buildStats } from "./deadlockBuildStats";
 import GameImg from "./GameImg";
@@ -82,7 +83,6 @@ export default function DeadlockBuilder() {
 
   const [heroId, setHeroId] = useState<number | null>(null);
   const [items, setItems] = useState<number[]>([]);
-  const [cat, setCat] = useState<Slot>("weapon");
   const [verValor, setVerValor] = useState(false);
   const [aviso, setAviso] = useState("");
   const [copiado, setCopiado] = useState(false);
@@ -259,7 +259,6 @@ export default function DeadlockBuilder() {
     }
   };
 
-  const enCat = itemsMeta.items.filter((i) => i.slot === cat);
   // La estrella azul del juego marca los objetos de la build elegida; acá, los
   // de la build más jugada del héroe según la tier list.
   const estrella = new Set((medidas?.builds[0]?.items ?? []).map((i) => i.itemId));
@@ -313,70 +312,29 @@ export default function DeadlockBuilder() {
             </label>
           </div>
 
-          {/* Las pestañas van en el lomo izquierdo del catálogo, como en el
-              juego: la elegida es la larga, pegada al papel. */}
-          <div className="dl-bd-catalog">
-            <div className="dl-bd-tabs" role="tablist" aria-label={c.shop}>
-              {SLOTS.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  role="tab"
-                  aria-selected={s === cat}
-                  aria-label={c.cats[s]}
-                  title={c.cats[s]}
-                  className="dl-bd-tab"
-                  data-cat={s}
-                  onClick={() => setCat(s)}
-                >
-                  <img
-                    src={s === cat ? `${SHOP}/tab_${s}.webp` : `${SHOP}/tabsm_${s}.webp`}
-                    alt=""
-                    width={95}
-                    height={s === cat ? 271 : 93}
-                  />
-                </button>
-              ))}
-            </div>
-
-            {/* El papel entero del juego, con sus recuadros impresos. Cada
-                escalón pone sus tarjetas adentro del recuadro que el juego
-                dibujó para él; ver `deadlock-builder.css`. */}
-            <div className="dl-bd-paper" role="tabpanel" data-cat={cat}>
-              {PRECIOS.map((precio, i) => (
-                <div className="dl-bd-tier" key={precio} data-tier={i + 1}>
-                  <span className="dl-bd-price">
-                    <img src={`${SHOP}/currency.webp`} alt="" width={13} height={24} />
-                    {precio}
-                  </span>
-                  <ul className="dl-bd-cards">
-                    {enCat
-                      .filter((it) => it.cost === precio)
-                      .sort((a, b) => a.name.localeCompare(b.name, lang))
-                      .map((it) => (
-                        <ShopCard
-                          key={it.itemId}
-                          item={it}
-                          owned={adquiridos.has(it.itemId)}
-                          // Un componente apagado por su mejora no se saca con un clic:
-                          // lo dice el nombre accesible en vez de prometer "Quitar".
-                          label={!items.includes(it.itemId) && adquiridos.has(it.itemId) ? `${it.name} — ${c.owned}` : undefined}
-                          upgrade={upgradesOwned(lookup(it.itemId)!, items)}
-                          starred={estrella.has(it.itemId) ? c.starred(heroe?.name ?? "") : undefined}
-                          showValue={verValor}
-                          onPick={() => alClicTienda(it.itemId)}
-                          upgradeOf={it.upgradesFrom.find((u) => items.includes(u.itemId))?.name}
-                          liProps={{
-                            draggable: true,
-                            onDragStart: (e) => empezarArrastre(e, { from: "shop", itemId: it.itemId }),
-                          }}
-                        />
-                      ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* La tienda nueva del juego (City Never Sleeps): las tres columnas
+              juntas, la barra lateral y los filtros; la misma que Objetos. */}
+          <DeadlockShopTree
+            items={itemsMeta.items}
+            renderCard={(it) => (
+              <ShopCard
+                item={it}
+                owned={adquiridos.has(it.itemId)}
+                // Un componente apagado por su mejora no se saca con un clic:
+                // lo dice el nombre accesible en vez de prometer "Quitar".
+                label={!items.includes(it.itemId) && adquiridos.has(it.itemId) ? `${it.name} — ${c.owned}` : undefined}
+                upgrade={upgradesOwned(lookup(it.itemId)!, items)}
+                starred={estrella.has(it.itemId) ? c.starred(heroe?.name ?? "") : undefined}
+                showValue={verValor}
+                onPick={() => alClicTienda(it.itemId)}
+                upgradeOf={it.upgradesFrom.find((u) => items.includes(u.itemId))?.name}
+                liProps={{
+                  draggable: true,
+                  onDragStart: (e) => empezarArrastre(e, { from: "shop", itemId: it.itemId }),
+                }}
+              />
+            )}
+          />
           {verValor && <p className="detail-note dl-bd-valuenote">{c.valueNote}</p>}
         </div>
 
