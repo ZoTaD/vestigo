@@ -298,11 +298,13 @@ export function redirectsFile(data: SitemapData): string {
  */
 export function sitemapXml(data: SitemapData, group?: SitemapGroup): string {
   const paths = sitemapPaths(data).filter((p) => !group || sitemapGroup(p) === group);
-  // Group by the path with the language stripped, so both languages of one page
-  // list each other.
+  // Group by the page, so both languages of one page list each other. La página
+  // es la dirección en inglés de su ruta, no la dirección sin el idioma: desde el
+  // 2026-09-30 Diablo II en español lleva otras palabras (`/es/d2r/unicos/…` es
+  // `/en/d2r/uniques/…`) y, sacando sólo el idioma, cada una quedaba sola.
   const byPage = new Map<string, string[]>();
   for (const path of paths) {
-    const key = path.replace(/^\/(en|es)/, "") || "/";
+    const key = routePath({ ...parseRoute(path), lang: "en" });
     byPage.set(key, [...(byPage.get(key) ?? []), path]);
   }
 

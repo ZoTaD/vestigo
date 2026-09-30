@@ -5,7 +5,7 @@ import patches from "@d2r/patches/index.json";
 import d2meta from "@d2r/meta.json";
 import { buildD2rEsSlugs } from "../src/d2r/slugs";
 import { D2R_SECTION_ES, D2R_SECTIONS, parseRoute, registerD2rSlugs, routePath, type D2rTab } from "../src/route";
-import { redirectsFile, sitemapLastmod, sitemapPaths, type SitemapData } from "../src/sitemap";
+import { redirectsFile, sitemapLastmod, sitemapPaths, sitemapXml, type SitemapData } from "../src/sitemap";
 import { prerenderPages } from "../src/prerender";
 
 /**
@@ -103,6 +103,17 @@ describe("el sitemap, el <head> y las redirecciones", () => {
     expect(paths).toContain("/en/d2r/uniques/the-gnasher");
     expect(paths).not.toContain("/es/d2r/uniques/the-gnasher");
     expect(paths.filter((p) => p.startsWith("/es/d2r")).length).toBe(paths.filter((p) => p.startsWith("/en/d2r")).length);
+  });
+
+  it("en el sitemap, cada página en español lista a su par en inglés aunque las palabras sean otras", () => {
+    const xml = sitemapXml(data, "d2r");
+    const entry = (loc: string) => {
+      const start = xml.indexOf(`<loc>https://vestigo.gg${loc}</loc>`);
+      return xml.slice(start, xml.indexOf("</url>", start));
+    };
+    expect(entry("/es/d2r/unicos/la-rechinante")).toContain('hreflang="en" href="https://vestigo.gg/en/d2r/uniques/the-gnasher"');
+    expect(entry("/en/d2r/uniques/the-gnasher")).toContain('hreflang="es" href="https://vestigo.gg/es/d2r/unicos/la-rechinante"');
+    expect(entry("/es/d2r/palabras-runicas")).toContain('hreflang="en" href="https://vestigo.gg/en/d2r/runewords"');
   });
 
   it("la fecha de un parche sale de su ficha, con la pestaña en español", () => {
