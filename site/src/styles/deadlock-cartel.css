@@ -769,7 +769,7 @@
 }
 
 /* ---------- Objetos, la lista: letras estampadas y familias en tinta ---------- */
-[data-theme="codex"][data-game="deadlock"] .dl-irow-tier[data-tier] {
+[data-theme="codex"][data-game="deadlock"] :is(.dl-irow-tier, .dl-ht-tier)[data-tier] {
   --tier-c: var(--cns-tan);
   color: var(--cns-ink);
   background: var(--tier-c);
@@ -777,10 +777,10 @@
   box-shadow: 2px 2px 0 rgba(30, 26, 20, 0.3);
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-irow-tier[data-tier="S"] { --tier-c: var(--cns-orange); }
-[data-theme="codex"][data-game="deadlock"] .dl-irow-tier[data-tier="A"] { --tier-c: var(--cns-yellow); }
-[data-theme="codex"][data-game="deadlock"] .dl-irow-tier[data-tier="B"] { --tier-c: var(--cns-green); }
-[data-theme="codex"][data-game="deadlock"] .dl-irow-tier[data-tier="C"] { --tier-c: var(--cns-cyan); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-irow-tier, .dl-ht-tier)[data-tier="S"] { --tier-c: var(--cns-orange); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-irow-tier, .dl-ht-tier)[data-tier="A"] { --tier-c: var(--cns-yellow); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-irow-tier, .dl-ht-tier)[data-tier="B"] { --tier-c: var(--cns-green); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-irow-tier, .dl-ht-tier)[data-tier="C"] { --tier-c: var(--cns-cyan); }
 
 [data-theme="codex"][data-game="deadlock"] :is(.box, .dl-shelf) .dl-irow-slot[data-slot="weapon"] { color: #a8511a; }
 [data-theme="codex"][data-game="deadlock"] :is(.box, .dl-shelf) .dl-irow-slot[data-slot="vitality"] { color: #2f7a1f; }
@@ -789,3 +789,23 @@
 [data-theme="codex"][data-game="deadlock"] .box .dl-callout-num { color: #2f7a1f; }
 [data-theme="codex"][data-game="deadlock"] .box .dl-callout-num[data-kind="overbought"],
 [data-theme="codex"][data-game="deadlock"] .box .dl-callout-num[data-kind="trap"] { color: #b2261c; }
+
+/* ---------- el informe de partida sobre papel ---------- */
+[data-theme="codex"][data-game="deadlock"] .box .dl-rep-souls {
+  background: rgba(30, 26, 20, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(30, 26, 20, 0.12);
+}
+
+[data-theme="codex"][data-game="deadlock"] .box .dl-rep-curve {
+  opacity: 0.7;
+}
+
+[data-theme="codex"][data-game="deadlock"] .box .dl-rep-curve.is-sapphire {
+  stroke: #2b6aa6;
+}
+
+/* Las notas al pie de las cajas, en tinta. La regla de la tier list las deja
+   crema porque allá van sobre la ciudad. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-tier-note {
+  color: var(--text-faint);
+}
