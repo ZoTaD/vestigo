@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import SectionHead from "./SectionHead";
@@ -41,6 +41,9 @@ function caraDe(card: string, tier: string | undefined): string {
   if (tier === "D") return card.replace(/_card\.webp$/, "_card_critical.webp");
   return card;
 }
+
+/** La cara de festejo, para cuando se pasa el mouse: cualquier héroe se agranda. */
+const festejo = (card: string): string => caraDe(card, "S");
 
 /**
  * La tier list de héroes de Deadlock.
@@ -120,7 +123,8 @@ function HeroTile({
 }) {
   const copy = useCopy();
   const fondo = FONDOS[String(hero.heroId)];
-  const retrato = hero.card ? caraDe(hero.card, tier) : hero.card;
+  const [encima, setEncima] = useState(false);
+  const retrato = hero.card ? (encima ? festejo(hero.card) : caraDe(hero.card, tier)) : hero.card;
 
   return (
     <li
@@ -148,6 +152,8 @@ function HeroTile({
         to={to}
         onNavigate={onNavigate}
         aria-label={copy.deadlock.buildCard.toggle(hero.name)}
+        onMouseEnter={() => setEncima(true)}
+        onMouseLeave={() => setEncima(false)}
       >
         <span className="dl-tile-face">
           {/* El retrato pintado de la tarjeta del juego (`*_card`, el de la
