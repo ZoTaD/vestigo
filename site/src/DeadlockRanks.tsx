@@ -206,8 +206,9 @@ export default function DeadlockRanks() {
           <div className="box-head">
             <h2 className="box-title">{t.day}</h2>
           </div>
+          {/* La más nueva arriba: lo que se viene a mirar es el día de hoy (ZoTaD, 2026-09-30). */}
           <ol className="dl-days">
-            {dias.map((d) => (
+            {[...dias].reverse().map((d) => (
               <li key={d.day} className="dl-day">
                 <span className="dl-day-label">{d.day.slice(5)}</span>
                 <span className="dl-day-track">

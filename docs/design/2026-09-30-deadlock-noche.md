@@ -5,10 +5,10 @@ publica en `main` ni se tocan workflows. Cada tarea: probar en el navegador
 (1440 y 375), commitear, tachar acá.
 
 ## A. Arreglos de lo que vio
-- [ ] A1. Tarjetas de la tienda enormes en la vista de una categoría y en el
+- [x] A1. Tarjetas de la tienda enormes en la vista de una categoría y en el
       Armador: achicarlas.
-- [ ] A2. Rangos, "Por día": de la más nueva a la más vieja.
-- [ ] A3. La ficha del objeto a veces aparece en cualquier lado con un
+- [x] A2. Rangos, "Por día": de la más nueva a la más vieja.
+- [x] A3. La ficha del objeto a veces aparece en cualquier lado con un
       rectángulo rojo alrededor: diagnosticar (sospecha: un ancestro con
       transform/filter/container-type vuelve "fixed" relativo) y arreglar.
 - [ ] A4. Populares sin separar por fase: todos juntos como en el juego.
