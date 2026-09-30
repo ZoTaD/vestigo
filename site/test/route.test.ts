@@ -245,7 +245,7 @@ describe("navigationPath: la dirección al navegar", () => {
   });
 
   it("vale para cualquier juego y con detalle: la ficha de un jefe, el planificador, el mapa de Valheim", () => {
-    for (const path of ["/es/d2r/drops/mephisto", "/es/d2r/planner", "/es/valheim/map", "/es/deadlock/items/basic-magazine", "/es"]) {
+    for (const path of ["/es/d2r/drops/mefisto", "/es/d2r/planificador", "/es/valheim/map", "/es/deadlock/items/basic-magazine", "/es"]) {
       const from = parseRoute(path);
       expect(navigationPath(from, { ...from, lang: "en" }, at), path).toBe(routePath({ ...from, lang: "en" }) + at.search + at.hash);
     }
@@ -258,7 +258,7 @@ describe("navigationPath: la dirección al navegar", () => {
 
   it("otra página empieza limpia, aunque cambie también el idioma", () => {
     const from = parseRoute("/es/d2r/drops");
-    expect(navigationPath(from, parseRoute("/es/d2r/planner"), at)).toBe("/es/d2r/planner");
+    expect(navigationPath(from, parseRoute("/es/d2r/planificador"), at)).toBe("/es/d2r/planificador");
     expect(navigationPath(from, parseRoute("/en/d2r/planner"), at)).toBe("/en/d2r/planner");
     expect(navigationPath(from, parseRoute("/es/d2r/drops/mephisto"), at)).toBe("/es/d2r/drops/mephisto");
     expect(navigationPath(parseRoute("/es/d2r/drops/mephisto"), parseRoute("/es/d2r/drops/diablo"), at)).toBe("/es/d2r/drops/diablo");

@@ -1,4 +1,4 @@
-import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, SITE_ORIGIN, VALHEIM_TABS, routePath, slugify, type D2rTab, type ValheimTab } from "./route";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -154,8 +154,12 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
     return day(data.dates?.valheim);
   }
   if (game === "d2r") {
+    // En español la pestaña se llama "parches": se lee la ruta y no el segmento.
+    const route = parseRoute(path);
     const patches = data.d2?.patches ?? [];
-    if (section === "patches") return day(detail ? patches.find((p) => p.slug === detail)?.date : newest(patches.map((p) => p.date)));
+    if (route.d2Section === "patches") {
+      return day(route.detail ? patches.find((p) => p.slug === route.detail)?.date : newest(patches.map((p) => p.date)));
+    }
     return day(data.dates?.d2r);
   }
   return undefined;
@@ -264,6 +268,23 @@ export function sitemapPaths(data: SitemapData): string[] {
   // Sin repetidas: una dirección dos veces es una página escrita dos veces y
   // una entrada de más en el sitemap (le pasó al índice de Valheim, 2026-09-24).
   return [...new Set(paths)];
+}
+
+/**
+ * El `_redirects` de Netlify (2026-09-30): cada página de Diablo II en español con su dirección vieja, la de las
+ * palabras en inglés (`/es/d2r/runewords/enigma`, publicada el 29/9), manda con 301 a la de ahora
+ * (`/es/d2r/palabras-runicas/enigma`). Sin esto la vieja caía en la regla del final de `netlify.toml`, que sirve la
+ * portada con 200: una página duplicada para Google y un enlace compartido que abría otra cosa. Netlify lee este
+ * archivo antes que las reglas de `netlify.toml`.
+ */
+export function redirectsFile(data: SitemapData): string {
+  const lines: string[] = [];
+  for (const path of sitemapPaths(data)) {
+    if (!path.startsWith("/es/d2r/")) continue;
+    const old = "/es" + routePath({ ...parseRoute(path), lang: "en" }).slice("/en".length);
+    if (old !== path) lines.push(`${old}  ${path}  301`);
+  }
+  return lines.length ? lines.join("\n") + "\n" : "";
 }
 
 /**

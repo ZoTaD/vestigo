@@ -64,6 +64,47 @@ export type D2rSection = "home" | D2rTab;
 export const D2R_SECTIONS: D2rTab[] = ["runes", "runewords", "uniques", "sets", "bases", "cube", "classes", "terror-zones", "breakpoints", "drops", "planner", "grail", "patches"];
 /** Las pestañas con una ficha por cosa (las que recorre el sitemap). */
 export const D2R_DETAIL_SECTIONS: D2rTab[] = ["runes", "runewords", "uniques", "sets", "classes", "patches", "drops"];
+/**
+ * Diablo II en español lleva la dirección en español (2026-09-30):
+ * `/es/d2r/palabras-runicas/enigma`, `/es/d2r/unicos/la-rechinante`. Pedido de ZoTaD: con la misma dirección en los
+ * dos idiomas, quien busca en español no veía sus palabras en el enlace. Cada idioma ya era una página aparte (con su
+ * hreflang), así que no se parte nada: la ruta interna sigue siendo la inglesa (`d2Section: "runewords"`,
+ * `detail: "enigma"`) y sólo se traduce al escribir y leer la dirección.
+ *
+ * Las secciones van acá porque son pocas. Las fichas salen de los nombres del juego en español (`d2rSlugs.ts`) y las
+ * anota `registerD2rSlugs` cuando se baja la sección: son ~550 y no tienen por qué viajar en la cáscara.
+ */
+export const D2R_SECTION_ES: Record<D2rTab, string> = {
+  runes: "runas",
+  runewords: "palabras-runicas",
+  uniques: "unicos",
+  sets: "conjuntos",
+  bases: "bases",
+  cube: "cubo-horadrico",
+  classes: "clases",
+  "terror-zones": "zonas-de-terror",
+  breakpoints: "breakpoints",
+  drops: "drops",
+  planner: "planificador",
+  grail: "grial",
+  patches: "parches",
+};
+const D2R_SECTION_BY_ES = new Map(Object.entries(D2R_SECTION_ES).map(([tab, es]) => [es, tab as D2rTab]));
+
+/** Los slugs en español de las fichas de Diablo II, por pestaña: id → slug y slug → id. */
+const d2rSlugsEs: Partial<Record<D2rTab, { toEs: Map<string, string>; toId: Map<string, string> }>> = {};
+
+/**
+ * Anota los slugs en español de las fichas (`{ uniques: { "the-gnasher": "la-rechinante" } }`). Sólo las que cambian:
+ * una ficha que no aparece se llama igual en los dos idiomas. La llaman la sección al cargarse (`D2r.tsx`) y el build
+ * antes de armar el sitemap; hasta entonces las fichas van con el slug inglés, que también se entiende.
+ */
+export function registerD2rSlugs(slugs: Partial<Record<D2rTab, Record<string, string>>>): void {
+  for (const [tab, map] of Object.entries(slugs) as [D2rTab, Record<string, string>][]) {
+    const pairs = Object.entries(map);
+    d2rSlugsEs[tab] = { toEs: new Map(pairs), toId: new Map(pairs.map(([id, es]) => [es, id])) };
+  }
+}
 
 export const LANGS: Lang[] = ["en", "es"];
 /**
@@ -154,6 +195,11 @@ const isP2Section = (v: string): v is Poe2Section => (POE2_SECTIONS as string[])
 const isView = (v: string): v is View => ["home", "deadlock", "poe2", "valheim", "d2r", "privacy", "terms"].includes(v);
 const isVhTab = (v: string | undefined): v is ValheimTab => !!v && (VALHEIM_TABS as string[]).includes(v);
 const isD2Tab = (v: string | undefined): v is D2rTab => !!v && (D2R_SECTIONS as string[]).includes(v);
+/**
+ * La pestaña de Diablo II de un segmento, escrito en cualquiera de los dos idiomas: `/es/d2r/runewords` (las
+ * direcciones del 29/9, antes de traducirlas) sigue abriendo la pestaña, y la app corrige la barra a la de su idioma.
+ */
+const d2Tab = (v: string | undefined): D2rTab | undefined => (isD2Tab(v) ? v : v ? D2R_SECTION_BY_ES.get(v) : undefined);
 
 /**
  * A name as it appears in a URL: lowercase, ASCII, hyphen-separated.
@@ -161,6 +207,9 @@ const isD2Tab = (v: string | undefined): v is D2rTab => !!v && (D2R_SECTIONS as 
  * Always built from the English name even when the page renders in Spanish, so
  * switching language never changes the address of a thing — one page, one URL,
  * and no split ranking between two spellings of the same unit.
+ *
+ * Salvo Diablo II desde el 2026-09-30, que en español lleva el nombre español
+ * (ver `D2R_SECTION_ES`).
  */
 export function slugify(name: string): string {
   return (
@@ -234,9 +283,12 @@ export function parseRoute(pathname: string): Route {
   }
 
   if (head === "d2r") {
-    if (!isD2Tab(rest[1])) return { ...base, view: "d2r", d2Section: "home" };
-    const detail = (D2R_DETAIL_SECTIONS as string[]).includes(rest[1]) && rest[2] ? rest[2] : undefined;
-    return { ...base, view: "d2r", d2Section: rest[1], detail };
+    const tab = d2Tab(rest[1]);
+    if (!tab) return { ...base, view: "d2r", d2Section: "home" };
+    const slug = D2R_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
+    // En español el slug es el del nombre español; uno que no se conoce se deja como vino (el inglés de antes).
+    const detail = slug && lang === "es" ? (d2rSlugsEs[tab]?.toId.get(slug) ?? slug) : slug;
+    return { ...base, view: "d2r", d2Section: tab, detail };
   }
 
   return { ...base, view: head };
@@ -269,7 +321,9 @@ export function routePath(route: Route): string {
   if (view === "d2r") {
     const sec = route.d2Section ?? "home";
     if (sec === "home") return `/${lang}/d2r`;
-    return detail ? `/${lang}/d2r/${sec}/${detail}` : `/${lang}/d2r/${sec}`;
+    if (lang !== "es") return detail ? `/${lang}/d2r/${sec}/${detail}` : `/${lang}/d2r/${sec}`;
+    const path = `/es/d2r/${D2R_SECTION_ES[sec]}`;
+    return detail ? `${path}/${d2rSlugsEs[sec]?.toEs.get(detail) ?? detail}` : path;
   }
   return `/${lang}/${view}`;
 }

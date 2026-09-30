@@ -15,3 +15,9 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+/** Los slugs en español de las fichas de Diablo II, armados en el build (`d2rSlugsModule` en vite.config.ts). */
+declare module "virtual:d2r-slugs-es" {
+  const slugs: import("./d2r/slugs").D2rSlugsEs;
+  export default slugs;
+}

@@ -34,8 +34,8 @@ describe("¿Qué suelta? y la ficha de cada jefe", () => {
     const st = { ...DEFAULT_STATE, m: "drops" as const, place: { k: "s" as const, id: "mephisto" } };
     const html = inEs(createElement(DropsWhat, { st, set: () => undefined, route, navigate: () => undefined }));
     expect(html).toContain("Runa Cham");
-    expect(html).toContain('href="/es/d2r/runes/cham"');
-    expect(html).toContain('href="/es/d2r/uniques/');
+    expect(html).toContain('href="/es/d2r/runas/cham"');
+    expect(html).toContain('href="/es/d2r/unicos/');
     expect(html).toContain("Ver todo (");
   });
 
@@ -58,9 +58,12 @@ describe("los enlaces de las listas", () => {
   /** Las fichas que la wiki tiene: "runes/ber", "uniques/the-stone-of-jordan", "sets/tal-rashas-wrappings"… */
   const pages = new Set((wikiIndex as { sec: string; id: string }[]).map((e) => `${e.sec}/${e.id}`));
   const line = (target: Target): DropLine => ({ target, p: 0.01 });
-  /** A dónde llevan los enlaces que dibuja la lista, en orden. */
+  /** A qué fichas llevan los enlaces que dibuja la lista, en orden ("uniques/the-gnasher", leído de su dirección en español). */
   const links = (lists: Lists) =>
-    [...inEs(createElement(DropLists, { lists, route, navigate: () => undefined })).matchAll(/href="\/es\/d2r\/([^"]+)"/g)].map((m) => m[1]);
+    [...inEs(createElement(DropLists, { lists, route, navigate: () => undefined })).matchAll(/href="(\/es\/d2r\/[^"]+)"/g)].map((m) => {
+      const r = parseRoute(m[1]);
+      return `${r.d2Section}/${r.detail}`;
+    });
   /** De a 10: la lista muestra 24 antes de "Ver todo", así que una tanda así se ve entera. */
   const batches = <T>(xs: T[]) => Array.from({ length: Math.ceil(xs.length / 10) }, (_, i) => xs.slice(i * 10, i * 10 + 10));
 

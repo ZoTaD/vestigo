@@ -21,12 +21,16 @@ describe("las direcciones de Diablo II", () => {
     expect(routePath(parseRoute("/es/d2r/no-existe"))).toBe("/es/d2r");
   });
 
-  it("pestañas y fichas de la wiki", () => {
-    const r = parseRoute("/es/d2r/runewords/enigma");
+  it("pestañas y fichas de la wiki, en español con la pestaña en español", () => {
+    const r = parseRoute("/es/d2r/palabras-runicas/enigma");
     expect(r.d2Section).toBe("runewords");
     expect(r.detail).toBe("enigma");
-    expect(routePath(r)).toBe("/es/d2r/runewords/enigma");
+    expect(routePath(r)).toBe("/es/d2r/palabras-runicas/enigma");
+    expect(routePath({ ...r, lang: "en" })).toBe("/en/d2r/runewords/enigma");
     expect(routePath(parseRoute("/en/d2r/planner"))).toBe("/en/d2r/planner");
+    expect(routePath(parseRoute("/es/d2r/planificador"))).toBe("/es/d2r/planificador");
+    // La dirección del 29/9, con la pestaña en inglés, sigue abriendo la misma página.
+    expect(parseRoute("/es/d2r/runewords/enigma")).toEqual(r);
     // Las bases y el planificador no tienen fichas.
     expect(parseRoute("/es/d2r/bases/monarch").detail).toBeUndefined();
   });

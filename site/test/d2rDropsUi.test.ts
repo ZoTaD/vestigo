@@ -627,14 +627,15 @@ describe("el directorio de jefes al pie de la calculadora", () => {
   const D = dropData();
   const ids = D.sources.map((s) => s.id);
   const calc = (path: string, render: typeof inEs) => render(createElement(D2rDrops, { route: parseRoute(path), navigate: () => undefined }));
-  /** Los ids de las fichas a las que enlaza la página, en el orden en que aparecen. */
-  const fichas = (html: string, lang: string) => [...html.matchAll(new RegExp(`href="/${lang}/d2r/drops/([a-z0-9-]+)"`, "g"))].map((m) => m[1]);
+  /** Los ids de las fichas a las que enlaza la página, en el orden en que aparecen (en español el slug es otro: se lee la dirección). */
+  const fichas = (html: string, lang: string) =>
+    [...html.matchAll(new RegExp(`href="(/${lang}/d2r/drops/[a-z0-9-]+)"`, "g"))].map((m) => parseRoute(m[1]).detail);
   const actOf = (s: (typeof D.sources)[number]) => (s.area === null ? null : D.areaById.get(s.area)!.act);
 
   it("enlaza a la ficha de cada jefe y superúnico, una vez cada uno", () => {
     const html = calc("/es/d2r/drops", inEs);
-    expect(html).toContain('href="/es/d2r/drops/mephisto"');
-    expect(html).toContain('href="/es/d2r/drops/the-countess"');
+    expect(html).toContain('href="/es/d2r/drops/mefisto"');
+    expect(html).toContain('href="/es/d2r/drops/la-condesa"');
     expect(fichas(html, "es")).toHaveLength(64);
     expect([...fichas(html, "es")].sort()).toEqual([...ids].sort());
     expect(html).toContain("Mefisto</a>");

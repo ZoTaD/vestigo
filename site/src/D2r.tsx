@@ -12,11 +12,16 @@
 import { Suspense, useEffect } from "react";
 import RouteLink from "./RouteLink";
 import { lazyWithPreload } from "./lazyWithPreload";
-import type { D2rSection, Route } from "./route";
+import { registerD2rSlugs, type D2rSection, type Route } from "./route";
 import { D2R_BETA, D2R_LIVE, D2R_TABS, useD2rCopy } from "./d2rCopy";
 import D2rHome from "./d2r/D2rHome";
+import slugsEs from "virtual:d2r-slugs-es";
 import "./styles/d2r.css";
 import "./styles/d2r-wiki.css";
+
+// Las direcciones en español de las fichas (`/es/d2r/unicos/la-rechinante`), antes del primer render: `main.tsx` espera
+// este chunk y recién después `App` lee la dirección, así que la ruta ya llega con el id de la ficha.
+registerD2rSlugs(slugsEs);
 
 type Nav = (route: Route) => void;
 

@@ -3,11 +3,13 @@ import react from "@vitejs/plugin-react";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
-import { ROBOTS_TXT, SITEMAP_GROUPS, sitemapFile, sitemapIndexXml, sitemapXml, type SitemapData } from "./src/sitemap";
+import { redirectsFile, ROBOTS_TXT, SITEMAP_GROUPS, sitemapFile, sitemapIndexXml, sitemapXml, type SitemapData } from "./src/sitemap";
 import { prerenderPages, renderHtml, ogImagePath, stripComments } from "./src/prerender";
 import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
-import { parseRoute, type Route } from "./src/route";
+import { parseRoute, registerD2rSlugs, type Route } from "./src/route";
+import { buildD2rEsSlugs } from "./src/d2r/slugs";
+import type { D2IndexEntry } from "./src/d2r/index";
 import { COPY } from "./src/i18n";
 import { AREA_FILES, D2R_TAB_FILES, DEADLOCK_TAB_FILES, filesFor, originsFor } from "./src/areaFiles";
 
@@ -133,19 +135,9 @@ function readSitemapData(): { data: OgData } {
   let d2: SitemapData["d2"];
   try {
     d2 = JSON.parse(readFileSync(`${d2rDir}/meta.json`, "utf-8"));
-    // Las fichas de la wiki (runas, palabras rúnicas, únicos, conjuntos). Sin el
-    // índice, la sección entra sólo con sus pestañas.
-    try {
-      d2!.index = JSON.parse(readFileSync(`${d2rDir}/wiki/index.json`, "utf-8"));
-    } catch {
-      /* sin wiki.py corrido */
-    }
-    try {
-      // Las fichas de jefes y superúnicos de la calculadora de drops, en el mismo índice.
-      d2!.index = [...(d2!.index ?? []), ...JSON.parse(readFileSync(`${d2rDir}/drops/index.json`, "utf-8"))];
-    } catch {
-      /* sin drops.py corrido */
-    }
+    d2!.index = readD2Index();
+    // Las direcciones en español de esas fichas (`/es/d2r/unicos/la-rechinante`), antes de armar ninguna.
+    registerD2rSlugs(buildD2rEsSlugs(d2!.index));
     try {
       d2!.patches = JSON.parse(readFileSync(`${d2rDir}/patches/index.json`, "utf-8"));
     } catch {
@@ -174,6 +166,39 @@ function readSitemapData(): { data: OgData } {
       dlNews,
       dlHeroStats: { band: dlHeroesFile.band, heroes: dlHeroesFile.heroes },
       dlEditions,
+    },
+  };
+}
+
+/**
+ * Las fichas de Diablo II: las de la wiki (runas, palabras rúnicas, únicos, conjuntos, clases) y las de los jefes y
+ * superúnicos de la calculadora de drops. Sin un índice, la sección entra sólo con lo del otro (o con sus pestañas).
+ */
+function readD2Index(): D2IndexEntry[] {
+  const read = (file: string): D2IndexEntry[] => {
+    try {
+      return JSON.parse(readFileSync(`${d2rDir}/${file}`, "utf-8"));
+    } catch {
+      return []; // sin wiki.py o drops.py corrido
+    }
+  };
+  return [...read("wiki/index.json"), ...read("drops/index.json")];
+}
+
+/**
+ * Los slugs en español de las fichas de Diablo II como módulo (2026-09-30): `import slugs from
+ * "virtual:d2r-slugs-es"`. Se arman de los índices en cada build (ver `src/d2r/slugs.ts`), así no hay un archivo más
+ * que regenerar y no pueden quedar distintos de los del sitemap, que salen de la misma cuenta.
+ */
+function d2rSlugsModule(): Plugin {
+  const ID = "virtual:d2r-slugs-es";
+  return {
+    name: "vestigo-d2r-slugs-es",
+    resolveId: (id) => (id === ID ? `\0${ID}` : null),
+    load(id) {
+      if (id !== `\0${ID}`) return null;
+      for (const f of ["wiki/index.json", "drops/index.json"]) this.addWatchFile(`${d2rDir}/${f}`);
+      return `export default ${JSON.stringify(buildD2rEsSlugs(readD2Index()))};`;
     },
   };
 }
@@ -215,6 +240,8 @@ function seoFiles(): Plugin {
         this.emitFile({ type: "asset", fileName: sitemapFile(group), source: sitemapXml(data, group) });
       }
       this.emitFile({ type: "asset", fileName: "robots.txt", source: ROBOTS_TXT });
+      // Las direcciones viejas de Diablo II en español, a las de ahora (ver `redirectsFile`).
+      this.emitFile({ type: "asset", fileName: "_redirects", source: redirectsFile(data) });
 
       /**
        * Las imágenes de vista previa, una por héroe, objeto y edición (ver
@@ -439,7 +466,8 @@ function manualChunks() {
     const file = norm(id);
     // Los ayudantes de Vite (\0vite/preload-helper y compañía) los importan los
     // chunks que tienen `import()`: en la entrada arrastrarían a todos.
-    if (id.startsWith("\0") && !file.includes("modulepreload-polyfill")) return "vendor";
+    // Los slugs de Diablo II también empiezan con \0, pero son datos de la sección: van con ella.
+    if (id.startsWith("\0") && !file.includes("modulepreload-polyfill") && !id.startsWith("\0virtual:d2r-")) return "vendor";
     if (file.includes("/node_modules/")) return /\.(c|m)?jsx?$/.test(file) ? "vendor" : undefined;
     // Diminuto y sin datos, pero lo importan la copia de Deadlock y la portada:
     // suelto, Rollup lo metía en el chunk de los datos de héroes y la copia
@@ -464,7 +492,7 @@ function manualChunks() {
 }
 
 export default defineConfig({
-  plugins: [localDeadlockAssets(), react(), seoFiles(), prerenderRoutes()],
+  plugins: [localDeadlockAssets(), d2rSlugsModule(), react(), seoFiles(), prerenderRoutes()],
   build: {
     rollupOptions: { output: { manualChunks: manualChunks() } },
   },
