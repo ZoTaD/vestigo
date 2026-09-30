@@ -22,6 +22,8 @@ import {
 import { heroes as heroSlugs } from "./deadlockSlugs";
 import GameImg from "./GameImg";
 import { safeHref } from "./safeHref";
+import DeadlockPopularCard from "./DeadlockPopularCard";
+import { PopularHeroContext } from "./deadlockPopularData";
 
 /**
  * La tier list de héroes de Deadlock.
@@ -352,12 +354,16 @@ function HeroPage({
           <a href="#dl-build">{hp.tabs.build}</a>
           <a href="#dl-skills">{hp.tabs.skills}</a>
           <a href="#dl-buy">{hp.tabs.buy}</a>
+          <a href="#dl-popular">{hp.tabs.popular}</a>
           <a href="#dl-counters">{hp.tabs.counters}</a>
           <a href="#dl-mastery">{hp.tabs.mastery}</a>
         </nav>
 
         <div className="dl-band-panel dl-hero-body">
           <DeadlockBuildCard heroId={hero.heroId} heroWinRate={hero.winRate} skillPriority />
+          <PopularHeroContext.Provider value={hero.heroId}>
+            <DeadlockPopularCard heroId={hero.heroId} heroName={hero.name} />
+          </PopularHeroContext.Provider>
           <DeadlockMastery heroId={hero.heroId} />
         </div>
 

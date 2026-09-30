@@ -24,8 +24,21 @@ const EN = {
       prev: "Previous",
       next: "Next",
       rank: (n: string, total: string) => `#${n} of ${total}`,
-      tabs: { build: "Build", skills: "Abilities", buy: "Buy order", counters: "Matchups", mastery: "Mastery" },
+      tabs: { build: "Build", skills: "Abilities", buy: "Buy order", popular: "Popular", counters: "Matchups", mastery: "Mastery" },
       kpis: { winRate: "Win rate", pickRate: "Pick rate", skillGap: "Skill gap", trend: "Since the patch" },
+      /**
+       * Los "Popular Items" de la tienda del juego (City Never Sleeps, 2026-09-29):
+       * el dato es del juego, y los textos repiten los suyos.
+       */
+      popular: {
+        title: "Popular items",
+        lead: (name: string) => `What ${name} players buy most at each stage of the game.`,
+        phases: { early: "Early game", mid: "Mid game", late: "Late game" },
+        updated: (date: string) => `Last updated on ${date}`,
+        pick: (pct: string) => `${pct}% of matches`,
+        wins: (pct: string) => `${pct}% won`,
+        empty: "The game has no popular items for this hero yet.",
+      },
     },
     /**
      * La pestaña Héroes (2026-09-22): los 38 en una tabla con los atributos
@@ -1263,8 +1276,17 @@ const ES: typeof EN = {
       prev: "Anterior",
       next: "Siguiente",
       rank: (n: string, total: string) => `#${n} de ${total}`,
-      tabs: { build: "Build", skills: "Habilidades", buy: "Orden de compra", counters: "Enfrentamientos", mastery: "Maestría" },
+      tabs: { build: "Build", skills: "Habilidades", buy: "Orden de compra", popular: "Populares", counters: "Enfrentamientos", mastery: "Maestría" },
       kpis: { winRate: "Victorias", pickRate: "Uso", skillGap: "Brecha", trend: "Desde el parche" },
+      popular: {
+        title: "Objetos populares",
+        lead: (name: string) => `Lo que más se compra con ${name} en cada fase de la partida.`,
+        phases: { early: "Fase inicial", mid: "Fase media", late: "Fase avanzada" },
+        updated: (date: string) => `Última actualización: ${date}`,
+        pick: (pct: string) => `${pct} % de las partidas`,
+        wins: (pct: string) => `${pct} % ganadas`,
+        empty: "El juego todavía no tiene objetos populares para este héroe.",
+      },
     },
     heroes: {
       title: "Héroes",

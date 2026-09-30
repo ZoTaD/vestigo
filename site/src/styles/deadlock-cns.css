@@ -466,3 +466,141 @@
   background: rgba(16, 19, 13, 0.7);
   border-radius: 0 0 5px 5px;
 }
+
+/* ---------- Objetos populares: la pantalla "Popular Items" de la tienda ----------
+   (DeadlockPopularCard). Cartel catalog_shop_top_recommendations_header, papel
+   catalog_shop_popular_bg (tres columnas teñidas), cabecera
+   shop_filtered_tree_header_full ("Stock up! / Big deal! / Feel good!"). */
+[data-theme="codex"][data-game="deadlock"] .dl-popular {
+  margin-top: 1.4rem;
+  scroll-margin-top: 1rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-banner {
+  aspect-ratio: 1825 / 134;
+  background: url(/deadlock/game/ui/cns/popular-header.webp) center / 100% 100% no-repeat;
+  box-shadow: var(--cns-shadow);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1.2rem;
+  padding: 0.9rem 0 0.8rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-lead {
+  margin: 0;
+  color: rgba(247, 233, 213, 0.72);
+  font-size: 0.9rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-phases img {
+  width: 20px;
+  height: auto;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-paper {
+  position: relative;
+  padding: 0 0 1.2rem;
+  background: url(/deadlock/game/ui/cns/shop-popular-bg.webp) center top / 100% 100% no-repeat;
+  box-shadow: var(--cns-shadow);
+}
+
+/* La cabecera de las tres columnas, a todo el ancho. */
+[data-theme="codex"][data-game="deadlock"] .dl-pop-cols {
+  aspect-ratio: 2160 / 183;
+  margin-bottom: 0.4rem;
+  background: url(/deadlock/game/ui/cns/shop-columns-header.webp) center / 100% 100% no-repeat;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-tier {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0 0.6rem 0.8rem;
+}
+
+/* El precio del escalón con su filete, como en la tienda: tinta oscura sobre el papel. */
+[data-theme="codex"][data-game="deadlock"] .dl-pop-price {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.4rem 0.4rem 0.6rem;
+  font: 900 1.45rem/1 var(--font-display);
+  color: #2b261d;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-price::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: rgba(43, 38, 29, 0.45);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-cell {
+  list-style: none;
+  margin: 0;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.55rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-item {
+  position: relative;
+  transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-item:hover {
+  transform: translateY(-3px) rotate(-1.5deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-item .dl-gcard {
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* El % de partidas, en un sticker como los pricetags de la tienda nueva. */
+[data-theme="codex"][data-game="deadlock"] .dl-pop-pick {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  z-index: 2;
+  padding: 3px 6px 2px;
+  font: 800 0.8rem/1 var(--font-display);
+  letter-spacing: 0.02em;
+  color: #0d2b22;
+  background: #3fe2b4;
+  border-radius: 2px;
+  transform: rotate(6deg);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-pick small {
+  font-size: 0.7em;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-pick[data-hot] {
+  color: var(--cns-ink);
+  background: var(--cns-yellow);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pop-updated {
+  margin: 0.6rem 0 0;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+@media (max-width: 760px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-pop-tier {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-pop-cols {
+    display: none;
+  }
+}
