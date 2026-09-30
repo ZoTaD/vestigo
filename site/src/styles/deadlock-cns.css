@@ -392,6 +392,18 @@
    sin esquinas redondeadas; la cabecera es la pincelada sin color de fondo; el
    nombre a 36px; y la línea verde de popularidad. */
 
+/* La caja flotante mide lo mismo que la ficha (450px, como en el juego). Sin
+   ancho fijo se estiraba hasta el renglón más largo del texto (885px medidos) y
+   el cálculo de posición centraba esa caja invisible, no la ficha: la ficha
+   aparecía corrida o arriba de todo. */
+[data-theme="codex"][data-game="deadlock"] .dl-slot-pop {
+  width: min(450px, calc(100vw - 16px));
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
 /* #ModTooltipContainer: background-size 100% 100%, img-shadow 0 0 10px, padding-bottom 30px */
 [data-theme="codex"][data-game="deadlock"] .dl-card {
   --dl-backer: url(/deadlock/game/ui/cns/tooltip-weapon.webp);
@@ -1033,15 +1045,12 @@
 }
 
 /* ---------- el dorado escrito a mano en las hojas viejas, pasado a naranja ----------
-   Generado con un script sobre codex.css, views.css y las hojas de Deadlock:
-   las mismas reglas, sólo con las declaraciones que llevaban el oro del códex
-   (#c9a24a, #f0d391, rgba(201,162,74)) o el latón de Deadlock (#c6a269,
-   rgba(198,162,105)). No se tocan esas hojas porque son compartidas. */
-[data-theme="codex"][data-game="deadlock"] {
-  --gold: #dd6638;
-  --gold-lit: #f59a6c;
-}
-
+   Generado con un script sobre las hojas en su orden de carga (codex.css,
+   views.css y las de Deadlock): para cada selector y propiedad se toma el valor
+   que efectivamente gana y, sólo si es el oro del códex (#c9a24a, #f0d391,
+   rgba(201,162,74)) o el latón de Deadlock (#c6a269, rgba(198,162,105)), se
+   repite acá en naranja. Así no se revive un borde que una hoja posterior ya
+   había sacado (pasó con el marco de la ficha flotante). */
 [data-theme="codex"][data-game="deadlock"] .tool-head .dl-meta-line {
   border-top: 1px solid rgba(221, 102, 56, 0.28);
   border-bottom: 1px solid rgba(221, 102, 56, 0.28);
@@ -1061,11 +1070,6 @@
 
 [data-theme="codex"][data-game="deadlock"] .dl-crest img {
   filter: drop-shadow(0 0 4px rgba(221, 102, 56, 0.28));
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-provisional {
-  border: 1px solid rgba(221, 102, 56, 0.4);
-  background: rgba(221, 102, 56, 0.06);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-view-toggle {
@@ -1088,38 +1092,16 @@
   background: linear-gradient(180deg, rgba(221, 102, 56, 0.75), rgba(221, 102, 56, 0.28));
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-build-tab {
-  border: 1px solid rgba(221, 102, 56, 0.2);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-panel {
-  border: 1px solid rgba(221, 102, 56, 0.14);
-}
-
 [data-theme="codex"][data-game="deadlock"] .dl-reco-swap {
   border: 1px solid rgba(221, 102, 56, 0.16);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-dmg-bar {
-  background: rgba(221, 102, 56, 0.12);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-unlock-list img {
   border: 1px solid rgba(221, 102, 56, 0.22);
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-slot-btn {
-  border: 1px solid rgba(221, 102, 56, 0.22);
-}
-
 [data-theme="codex"][data-game="deadlock"] .dl-slot[data-carries] .dl-slot-btn {
-  box-shadow:
-    0 0 0 1px rgba(221, 102, 56, 0.45),
-    0 0 10px rgba(221, 102, 56, 0.3);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-slot-pop {
-  border: 1px solid rgba(221, 102, 56, 0.35);
+  box-shadow: 0 0 0 2px var(--gold-lit), 0 0 12px rgba(221, 102, 56, 0.35);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-counter-item {
@@ -1168,21 +1150,14 @@
   border-color: rgba(221, 102, 56, 0.55);
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-rep-input {
-  border: 1px solid rgba(221, 102, 56, 0.35);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-rep-go {
-  background: rgba(221, 102, 56, 0.14);
-  border: 1px solid rgba(221, 102, 56, 0.5);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-rep-account,
 [data-theme="codex"][data-game="deadlock"] .dl-rep-match {
   border: 1px solid rgba(221, 102, 56, 0.16);
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-rep-account:hover,
+[data-theme="codex"][data-game="deadlock"] .dl-rep-account:hover {
+  border-color: rgba(221, 102, 56, 0.5);
+}
+
 [data-theme="codex"][data-game="deadlock"] .dl-rep-match:hover {
   border-color: rgba(221, 102, 56, 0.5);
 }
@@ -1215,10 +1190,6 @@
   background: rgba(221, 102, 56, 0.45);
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-rep-buy {
-  border: 1px solid rgba(221, 102, 56, 0.14);
-}
-
 [data-theme="codex"][data-game="deadlock"] .dl-rep-souls {
   border: 1px solid rgba(221, 102, 56, 0.14);
 }
@@ -1237,24 +1208,14 @@
 
 [data-theme="codex"][data-game="deadlock"] .dl-rep-row.is-open {
   border-color: rgba(221, 102, 56, 0.6);
-  background: rgba(221, 102, 56, 0.08);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-rep-key.is-open {
   border-color: rgba(221, 102, 56, 0.6);
-  background: rgba(221, 102, 56, 0.1);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-rep-read.is-open {
   border-color: rgba(221, 102, 56, 0.5);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-rep-back {
-  border: 1px solid rgba(221, 102, 56, 0.25);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-rep-back:hover {
-  border-color: rgba(221, 102, 56, 0.55);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-rank-badge {
@@ -1306,8 +1267,14 @@
   border: 1px solid rgba(221, 102, 56, 0.3);
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-rep-match-grade em[data-grade="A+"],
-[data-theme="codex"][data-game="deadlock"] .dl-rep-match-grade em[data-grade="A"],
+[data-theme="codex"][data-game="deadlock"] .dl-rep-match-grade em[data-grade="A+"] {
+  border-color: rgba(221, 102, 56, 0.7);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rep-match-grade em[data-grade="A"] {
+  border-color: rgba(221, 102, 56, 0.7);
+}
+
 [data-theme="codex"][data-game="deadlock"] .dl-rep-match-grade em[data-grade="A-"] {
   border-color: rgba(221, 102, 56, 0.7);
 }
@@ -1325,6 +1292,14 @@
   background: rgba(221, 102, 56, 0.12);
 }
 
+[data-theme="codex"][data-game="deadlock"] [data-place="home"] .game-panel[data-panel="deadlock"] .game-panel-name {
+  color: #f59a6c;
+}
+
+[data-theme="codex"][data-game="deadlock"] [data-place="home"] .game-panel[data-panel="deadlock"] .game-cta.is-ghost {
+  color: #f59a6c;
+}
+
 [data-theme="codex"][data-game="deadlock"] .dl-placing-row[data-metal="gold"] .dl-placing-place {
   color: #f59a6c;
 }
@@ -1339,10 +1314,6 @@
 
 [data-theme="codex"][data-game="deadlock"] .dl-bd-sim:first-child {
   background: rgba(221, 102, 56, 0.16);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-slot[data-carries] .dl-slot-btn {
-  box-shadow: 0 0 0 2px var(--gold-lit), 0 0 12px rgba(221, 102, 56, 0.35);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-buy-game[data-key] .dl-gcard {
