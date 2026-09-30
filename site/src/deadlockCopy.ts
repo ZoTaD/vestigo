@@ -728,6 +728,16 @@ const EN = {
       read:
         "How to read it: find the minute on the left and how far ahead or behind your team was; " +
         "the number is how often teams in that spot won.",
+      compare: {
+        title: "Before and after the comeback nerf",
+        lead: (date: string, days: number) =>
+          `The ${date} patch cut the comeback mechanics. Same ${days} days on each side, at minute 20.`,
+        before: "Before",
+        after: "After",
+        lopsided: "Games already lopsided (10%+ apart)",
+        back10: "Comebacks from 10–20% behind",
+        back20: "Comebacks from over 20% behind",
+      },
     },
     /**
      * **Se llama `ladder` y no `ranks` porque `deadlock.ranks` ya existe**: es el
@@ -1876,6 +1886,16 @@ const ES: typeof EN = {
       read:
         "Cómo se lee: buscá el minuto a la izquierda y cuánto iba arriba o abajo tu equipo; el número " +
         "es cuántas veces ganaron los equipos que estaban así.",
+      compare: {
+        title: "Antes y después del recorte a las remontadas",
+        lead: (date: string, days: number) =>
+          `El parche del ${date} recortó las mecánicas de remontada. Los mismos ${days} días de cada lado, al minuto 20.`,
+        before: "Antes",
+        after: "Después",
+        lopsided: "Partidas ya desparejas (más de 10 % de diferencia)",
+        back10: "Remontadas yendo de 10 a 20 % abajo",
+        back20: "Remontadas yendo más de 20 % abajo",
+      },
     },
     ladder: {
       title: "La",

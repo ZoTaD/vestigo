@@ -20,7 +20,15 @@ interface Cell {
   wins: number;
 }
 
+interface WindowCells {
+  from: string;
+  to: string;
+  matches: number;
+  bands: Record<string, { matches: number; cells: Cell[][] }>;
+}
+
 interface ComebacksFile {
+  compare?: { patch: string; date: string; before: WindowCells; after: WindowCells };
   from: string;
   to: string;
   matches: number;
@@ -108,6 +116,8 @@ export default function DeadlockComebacks({ band, picker }: { band: BandId; pick
           )}
         </ul>
 
+        {DATA.compare && <Comparacion band={band} />}
+
         <section className="box dl-cb-board">
           <div className="box-head">
             <h2 className="box-title">{c.boardTitle}</h2>
@@ -157,5 +167,67 @@ export default function DeadlockComebacks({ band, picker }: { band: BandId; pick
         </section>
       </div>
     </main>
+  );
+}
+
+/** El antes y el después del parche que recortó las remontadas, al minuto 20. */
+function Comparacion({ band }: { band: BandId }) {
+  const copy = useCopy();
+  const locale = useLocale();
+  const c = copy.deadlock.comebacks.compare;
+  const cmp = DATA.compare!;
+  const i = DATA.minutes.indexOf(20);
+  if (i < 0) return null;
+  const celdas = (w: WindowCells) => (w.bands[band] ?? w.bands.all).cells[i];
+  const suma = (cs: Cell[], tramos: number[]) =>
+    tramos.reduce((s, j) => ({ n: s.n + cs[j].n, wins: s.wins + cs[j].wins }), { n: 0, wins: 0 });
+  const total = (cs: Cell[]) => cs.reduce((s, x) => s + x.n, 0);
+  const ult = DATA.edges.length;
+  const filas = [
+    // Los dos lados de una partida despareja caen en tramos lejos del medio.
+    { label: c.lopsided, f: (cs: Cell[]) => suma(cs, [0, 1, 2, ult - 2, ult - 1, ult]).n / Math.max(1, total(cs)), bueno: -1 },
+    { label: c.back10, f: (cs: Cell[]) => { const x = suma(cs, [2]); return x.n ? x.wins / x.n : NaN; }, bueno: 1 },
+    { label: c.back20, f: (cs: Cell[]) => { const x = suma(cs, [0, 1]); return x.n ? x.wins / x.n : NaN; }, bueno: 1 },
+  ];
+  const antes = celdas(cmp.before);
+  const despues = celdas(cmp.after);
+  const pct = (p: number) => `${(p * 100).toLocaleString(locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })} %`;
+  const dias = Math.round((Date.parse(cmp.after.to) - Date.parse(cmp.after.from)) / 86_400_000);
+  const fecha = new Date(cmp.date + "T12:00:00Z").toLocaleDateString(locale, { day: "numeric", month: "long" });
+
+  return (
+    <section className="box dl-cb-compare">
+      <div className="box-head">
+        <h2 className="box-title">{c.title}</h2>
+        <p className="box-lead">{c.lead(fecha, dias)}</p>
+      </div>
+      <table className="dl-cb-cmp">
+        <thead>
+          <tr>
+            <th />
+            <th scope="col">{c.before}</th>
+            <th aria-hidden="true" />
+            <th scope="col">{c.after}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filas.map((f) => {
+            const a = f.f(antes);
+            const b = f.f(despues);
+            const dir = Math.abs(b - a) < 0.005 ? "flat" : (b - a) * f.bueno > 0 ? "good" : "bad";
+            return (
+              <tr key={f.label}>
+                <th scope="row">{f.label}</th>
+                <td>{Number.isFinite(a) ? pct(a) : "—"}</td>
+                <td className="dl-cb-arrow" data-dir={dir} aria-hidden="true">
+                  →
+                </td>
+                <td data-dir={dir}>{Number.isFinite(b) ? pct(b) : "—"}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </section>
   );
 }

@@ -809,3 +809,48 @@
 [data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-tier-note {
   color: var(--text-faint);
 }
+
+/* El antes y el después del recorte: una tabla chica de diario. */
+[data-theme="codex"][data-game="deadlock"] .dl-cb-compare {
+  margin-bottom: 1.6rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-cmp {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-cmp th,
+[data-theme="codex"][data-game="deadlock"] .dl-cb-cmp td {
+  padding: 0.55rem 0.4rem;
+  border-bottom: 1px dashed var(--line);
+  text-align: right;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-cmp thead th {
+  font: 700 0.75rem/1 var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-cmp tbody th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-cmp td {
+  font: 800 1.2rem/1 var(--font-display);
+  color: var(--text);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-cmp td.dl-cb-arrow {
+  width: 2rem;
+  text-align: center;
+  color: var(--text-faint);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-cmp td[data-dir="good"]:not(.dl-cb-arrow) { color: var(--good); }
+[data-theme="codex"][data-game="deadlock"] .dl-cb-cmp td[data-dir="bad"]:not(.dl-cb-arrow) { color: var(--bad); }

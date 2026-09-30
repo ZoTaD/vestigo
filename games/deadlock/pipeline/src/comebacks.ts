@@ -107,6 +107,8 @@ export type BandKey = "all" | BandId;
 
 export interface ComebacksFile {
   generatedAt: string;
+  /** El antes y el después del recorte de las remontadas, si se midió. */
+  compare?: CompareBlock;
   from: string;
   to: string;
   /** Partidas (no lados) en la ventana, contadas al minuto 6. */
@@ -150,6 +152,29 @@ export function comebacksFile(rows: AggRow[], meta: { from: string; to: string; 
   };
 }
 
+/**
+ * El antes y el después del parche que recortó las remontadas (09-16-2026
+ * Update: sin bonus fijo por ir apenas atrás, el Rift de 35% a 10% + 1%/min, el
+ * 70% del bonus a los dos más pobres). Es un dato editorial, no se deduce: se
+ * compara la misma cantidad de días a cada lado, hasta City Never Sleeps.
+ */
+export const COMEBACK_NERF = {
+  title: "09-16-2026 Update",
+  date: "2026-09-16T22:41:46",
+  /** Hasta dónde mide el "después": el parche siguiente (City Never Sleeps). */
+  until: "2026-09-29T20:25:11",
+} as const;
+
+/** Una ventana medida: sólo sus bandas, sin lo que ya dice el archivo. */
+export type WindowCells = Pick<ComebacksFile, "from" | "to" | "matches" | "bands">;
+
+export interface CompareBlock {
+  patch: string;
+  date: string;
+  before: WindowCells;
+  after: WindowCells;
+}
+
 const OUT_DIR = "../data";
 const OUT = `${OUT_DIR}/comebacks.json`;
 /** Quince días: las remontadas cambian con los parches que las tocan, no día a día. */
@@ -162,18 +187,31 @@ async function main() {
   const desde = new Date(ahora.getTime() - WINDOW_DAYS * 86_400_000).toISOString().slice(0, 19);
   const parts = await listPartitions();
   const con = await connect(":memory:");
-  const ranges = await partitionRanges(con, parts, 8);
-  const cubren = partitionsCovering(ranges, desde + "Z", hasta + "Z");
-  const filas = (await (await con.runAndReadAll(comebackAggSql(comebackSourceSql(cubren, desde, hasta)))).getRowObjects()) as unknown as AggRow[];
-  const file = comebacksFile(
-    filas.map((r) => ({ tier: Number(r.tier), minute: Number(r.minute), bucket: Number(r.bucket), n: Number(r.n), wins: Number(r.wins) })),
-    { from: desde.slice(0, 10), to: hasta.slice(0, 10), generatedAt: ahora.toISOString() }
-  );
+  const ranges = await partitionRanges(con, parts, 10);
+  const medir = async (a: string, b: string) => {
+    const filas = (await (
+      await con.runAndReadAll(comebackAggSql(comebackSourceSql(partitionsCovering(ranges, a + "Z", b + "Z"), a, b)))
+    ).getRowObjects()) as unknown as AggRow[];
+    return comebacksFile(
+      filas.map((r) => ({ tier: Number(r.tier), minute: Number(r.minute), bucket: Number(r.bucket), n: Number(r.n), wins: Number(r.wins) })),
+      { from: a.slice(0, 10), to: b.slice(0, 10), generatedAt: ahora.toISOString() }
+    );
+  };
+  const file = await medir(desde, hasta);
+
+  // El antes y el después del recorte, los mismos días a cada lado.
+  const corte = Date.parse(COMEBACK_NERF.date + "Z");
+  const dias = Date.parse(COMEBACK_NERF.until + "Z") - corte;
+  const antes = await medir(new Date(corte - dias).toISOString().slice(0, 19), COMEBACK_NERF.date);
+  const despues = await medir(COMEBACK_NERF.date, COMEBACK_NERF.until);
+  const ventana = (f: ComebacksFile): WindowCells => ({ from: f.from, to: f.to, matches: f.matches, bands: f.bands });
+  file.compare = { patch: COMEBACK_NERF.title, date: COMEBACK_NERF.date.slice(0, 10), before: ventana(antes), after: ventana(despues) };
   mkdirSync(OUT_DIR, { recursive: true });
   writeFileSync(OUT, JSON.stringify(file));
   console.log(
-    `remontadas: ${file.matches.toLocaleString("es")} partidas, ${file.from} → ${file.to} ` +
-      `(${((Date.now() - t0) / 1000).toFixed(0)}s)`
+    `remontadas: ${file.matches.toLocaleString("es")} partidas, ${file.from} → ${file.to}; ` +
+      `antes/después del ${file.compare.date}: ${antes.matches.toLocaleString("es")} / ` +
+      `${despues.matches.toLocaleString("es")} (${((Date.now() - t0) / 1000).toFixed(0)}s)`
   );
 }
 
