@@ -1024,3 +1024,101 @@
     font-size: 0.66rem;
   }
 }
+
+/* ===========================================================================
+   PRUEBA (30/9, pedido de ZoTaD): papel de diario más oscuro y rasgado.
+   El crema de arriba pasa a papel de diario viejo (tostado, con la trama de
+   medio tono de la impresión y manchas en los bordes) y cada hoja lleva el
+   canto rasgado arriba y abajo. Para volver al crema: borrar este bloque
+   entero, hasta el final de la hoja.
+   =========================================================================== */
+[data-theme="codex"][data-game="deadlock"] {
+  --diario-a: #d6c39c;
+  --diario-b: #c4ad83;
+  /* La trama de medio tono de la impresión, con una veladura del mismo papel
+     encima: pura, los puntitos ensuciaban la letra chica. */
+  --diario-trama:
+    linear-gradient(rgba(214, 195, 156, 0.55), rgba(196, 173, 131, 0.55)),
+    url(/deadlock/game/ui/cns/dot-pattern.webp) 0 0 / 420px;
+  --diario-manchas:
+    radial-gradient(120% 90% at 0% 0%, rgba(92, 62, 24, 0.22), transparent 55%),
+    radial-gradient(110% 80% at 100% 100%, rgba(92, 62, 24, 0.26), transparent 55%),
+    radial-gradient(60% 40% at 85% 12%, rgba(120, 84, 36, 0.12), transparent 70%);
+}
+
+/* La tinta, un punto más oscura para el papel más oscuro. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side, .dl-tier, .cartel-papel) {
+  --text: #17130e;
+  --text-dim: #3d3428;
+  --text-faint: #564b3b;
+  --line: rgba(30, 22, 12, 0.22);
+  --surface: rgba(30, 22, 12, 0.07);
+  --surface-2: rgba(30, 22, 12, 0.13);
+  --surface-solid: #cbb68d;
+}
+
+/* Las hojas: papel tostado con la trama de impresión y las manchas. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side):not(.dl-chalkboard),
+[data-theme="codex"][data-game="deadlock"] .dl-cb-heads li {
+  background:
+    var(--diario-manchas),
+    var(--diario-trama),
+    linear-gradient(170deg, var(--diario-a), var(--diario-b));
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier {
+  background:
+    var(--diario-manchas),
+    var(--diario-trama),
+    linear-gradient(100deg, var(--diario-a), var(--diario-b) 55%, #cfba92);
+}
+
+/* El canto rasgado de arriba (la tira ya lo tenía) y el de abajo, en todas.
+   `:where` deja la especificidad en cero: las hojas que ya son sticky (el
+   costado del armador) siguen siéndolo. */
+:where([data-theme="codex"][data-game="deadlock"]) :where(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side, .dl-cb-heads li) {
+  position: relative;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier::before {
+  background: var(--diario-a);
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side, .dl-cb-heads li):not(.dl-chalkboard)::before,
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side, .dl-tier, .dl-cb-heads li):not(.dl-chalkboard)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 11px;
+  pointer-events: none;
+  -webkit-mask: url(/deadlock/game/ui/cns/torn-edge.webp) center / 100% 100%;
+  mask: url(/deadlock/game/ui/cns/torn-edge.webp) center / 100% 100%;
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side, .dl-cb-heads li):not(.dl-chalkboard)::before {
+  top: -9px;
+  background: var(--diario-a);
+  transform: scaleY(-1);
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side, .dl-tier, .dl-cb-heads li):not(.dl-chalkboard)::after {
+  bottom: -9px;
+  background: var(--diario-b);
+}
+
+/* Los situacionales del tablero de build siguen en papel oscuro, sin cantos. */
+[data-theme="codex"][data-game="deadlock"] .dl-bshop .dl-panel.dl-counters {
+  background: #1a1712;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-bshop .dl-panel.dl-counters::before,
+[data-theme="codex"][data-game="deadlock"] .dl-bshop .dl-panel.dl-counters::after {
+  display: none;
+}
+
+/* Lo que tenía su propio crema, al tono nuevo. */
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid tbody th,
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid thead tr:last-child th:first-child {
+  background: #cdb88f;
+}
