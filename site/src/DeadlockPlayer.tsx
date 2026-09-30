@@ -684,183 +684,25 @@ export default function DeadlockPlayer({
       )}
 
       {/*
-        Dos columnas: las partidas a la izquierda, quién es el jugador a la
-        derecha. Es el reparto que usan los cuatro sitios del género (Statlocker
-        752+420, Dotabuff 760+428, op.gg 332+740, OpenDota 65/35) y el que
-        convierte una página de 3.995px en una de ~1.500.
+        Tres pisos (ZoTaD, 2026-09-30: "la pestaña de player está mal
+        distribuida"). Antes eran dos columnas —partidas y un costado con diez
+        tarjetas— y el costado medía el triple que las partidas, con media
+        pantalla vacía a la izquierda.
 
-        **El orden del DOM pone las partidas primero a propósito**: son el
-        contenido principal, y es lo que tiene que encontrar un buscador o un
-        lector de pantalla. En el teléfono el CSS sube la ficha con `order`,
-        porque ahí lo primero que se quiere ver es el rango.
+        1. La ficha: quién es, su rango en el tiempo y dónde está en el mundo, a
+           lo ancho, que es lo primero que se busca al abrir un perfil.
+        2. Las partidas (el contenido principal) con, al costado, las dos
+           tarjetas que las leen: contra tu banda y la forma reciente.
+        3. Héroes y gente, en columnas de diario que se llenan parejo.
+
+        Las tarjetas de los pisos 1 y 3 llevan `dl-profile-aside` porque sus
+        reglas de tarjeta angosta cuelgan de esa clase (codex.css §4).
       */}
       {historial && (
-        <div className="page has-rail dl-profile-grid">
-          <div className="page-main dl-profile-main">
-            <section className="box dl-matches">
-            <div className="box-head">
-              <h2 className="box-title">{c.history}</h2>
-              <span className="box-aside">{c.shown(visibles.length, filtrado.length)}</span>
-            </div>
-            {/* El filtro va ARRIBA de la lista y no en la ficha lateral: manda
-                sobre las dos columnas, y el lugar donde se ve el efecto más
-                grande es acá. */}
-            <DeadlockScopePicker scope={modo} counts={conteos} onChange={cambiarModo} />
-
-            {/**
-             * **Encabezado de columnas, que la lista no tenía.**
-             *
-             * ZoTaD miró su propio historial y no supo qué era el número al
-             * lado del KDA (eran golpes/denies). Una columna sin rótulo no es un
-             * dato: es una cifra que el lector tiene que adivinar, y la que no se
-             * adivina se ignora. Comparte la misma grilla que la fila, así que
-             * cada rótulo cae sobre lo que rotula.
-             */}
-            <div className="dl-rep-match-head" aria-hidden="true">
-              <span className="dl-rep-face" />
-              <span className="dl-rep-match-hero">{c.histCols.hero}</span>
-              {/* El rango va pegado al héroe en el encabezado Y en la fila: si
-                  el orden del DOM difiere entre los dos, cada rótulo cae sobre
-                  otra columna — que es exactamente lo que pasó al agregarla. */}
-              <span className="dl-rep-match-rank">{c.histCols.rank}</span>
-              <span className="dl-rep-match-result">{c.histCols.result}</span>
-              <span className="dl-rep-match-grade">{c.histCols.grade}</span>
-              <span className="dl-rep-match-kda" title={c.histColsFull.kda}>
-                {c.histCols.kda}
-              </span>
-              <span className="dl-rep-match-farm" title={c.histColsFull.farm}>
-                {c.histCols.farm}
-              </span>
-              <span className="dl-rep-match-num">{c.histCols.souls}</span>
-              <span className="dl-rep-match-num">{c.histCols.length}</span>
-              <span className="dl-rep-match-date">{c.histCols.when}</span>
-            </div>
-
-            <ul className="dl-rep-matches">
-            {visibles.map((m) => {
-              const nombre = heroName(m.heroId);
-              const paso = pasos.get(m.matchId);
-              /**
-               * El rango que tenía en esa partida, y de dónde venía.
-               *
-               * Sólo el ASCENSO se marca con la flecha. Bajar de rango también
-               * está en los datos, pero un cartel de "descendiste" en tu propio
-               * perfil no es algo que nadie viniera a buscar; en ese caso queda
-               * la insignia sola, que es el dato sin el juicio.
-               */
-              const enEsa = paso ? rankOf(paso.badge) : null;
-              const nuevo = paso && paso.delta > 0 ? rankOf(paso.badge) : null;
-              const previo = paso && paso.delta > 0 && paso.previo > 0 ? rankOf(paso.previo) : null;
-              /**
-               * **La flecha sólo si las dos insignias se ven distintas.**
-               *
-               * Arriba del último rango publicado el badge sigue subiendo pero se
-               * dibuja siempre igual —Eternus sin numeral, ver `rankOf`—, así que
-               * 122 → 123 pintaba dos insignias idénticas separadas por una flecha:
-               * la forma visual de "cambiaste de rango" puesta sobre un rango que
-               * no cambió. Ahí la insignia sola dice lo mismo sin prometer nada.
-               */
-              const cambioVisible =
-                nuevo && previo && (nuevo.img !== previo.img || nuevo.sub !== previo.sub);
-              const subio = cambioVisible ? nuevo : null;
-              const desde = cambioVisible ? previo : null;
-              return (
-                <li key={m.matchId}>
-                  <button
-                    className={`dl-rep-match ${m.won ? "is-win" : "is-loss"}`}
-                    onClick={() => onOpenMatch(m.matchId)}
-                  >
-                    <GameImg
-                      className="dl-rep-face"
-                      src={heroImg(m.heroId) ?? ""}
-                      alt={nombre ? text(nombre, lang, "") : ""}
-                      width={44}
-                      height={44}
-                      loading="lazy"
-                    />
-                    <span className="dl-rep-match-hero">
-                      {/* El nombre en su propio `<span>`: la elipsis necesita un
-                          elemento al que agarrarse, y con el nombre como nodo de
-                          texto suelto la regla terminaba recortando la insignia
-                          de ascenso que va al lado. */}
-                      <span className="dl-rep-hero-name">
-                        {nombre ? text(nombre, lang, "") : m.heroId}
-                      </span>
-                    </span>
-
-                    {/**
-                     * El rango que el jugador tenía en esa partida, siempre que
-                     * exista — y **el ascenso mostrado como el cambio que fue**:
-                     * la insignia vieja, una flecha y la nueva. "Eternus 3 →
-                     * Eternus 4" cuenta algo; una insignia sola sólo dice dónde
-                     * quedó, que es justo lo que la fila de al lado ya dice.
-                     */}
-                    <span className="dl-rep-match-rank">
-                      {subio && desde && paso ? (
-                        <span
-                          className="dl-rankup"
-                          title={c.rankUpTitle(rankLabel(desde, lang), rankLabel(subio, lang))}
-                        >
-                          <RankBadge badge={paso.previo} height={RANKUP_H} title="" />
-                          <em aria-hidden="true">→</em>
-                          <RankBadge
-                            className="dl-rankup-new"
-                            badge={paso.badge}
-                            height={RANKUP_H}
-                            title=""
-                          />
-                        </span>
-                      ) : (
-                        paso &&
-                        enEsa && (
-                          <RankBadge className="dl-rep-rank" badge={paso.badge} height={RANK_H} />
-                        )
-                      )}
-                    </span>
-                    <span className="dl-rep-match-result">{m.won ? c.win : c.loss}</span>
-                    <span className="dl-rep-match-grade">
-                      {grades.get(m.matchId) && (
-                        <em data-grade={grades.get(m.matchId)}>{grades.get(m.matchId)}</em>
-                      )}
-                    </span>
-                    <span className="dl-rep-match-kda">
-                      {m.kills}/{m.deaths}/{m.assists}
-                    </span>
-                    {/* Golpes y denies, en ese orden: es el par que el jugador de
-                        este género ya lee junto. */}
-                    <span className="dl-rep-match-farm" title={c.farmTitle(m.lastHits, m.denies)}>
-                      {m.lastHits}/{m.denies}
-                    </span>
-                    <span className="dl-rep-match-num">{m.netWorth.toLocaleString(lang)}</span>
-                    <span className="dl-rep-match-num">{mmss(m.durationS)}</span>
-                    <span className="dl-rep-match-date">{fecha(m.startTime, lang)}</span>
-                    {/* La insignia por fila se fue: `ranked_display_badge` da 0
-                        en las 475 partidas medidas, así que no dibujaba nunca.
-                        El rango de cada partida ahora sale de `mmr-history` y se
-                        muestra donde importa: en la que ascendió. */}
-                  </button>
-                </li>
-              );
-            })}
-            </ul>
-
-            {/* Sólo cuando hay algo más que mostrar. Un botón que no hace nada
-                es peor que ningún botón. */}
-            {visibles.length < filtrado.length && (
-              <button
-                type="button"
-                className="dl-more"
-                onClick={() => setVerFilas((n) => n + HISTORY_PAGE)}
-              >
-                {c.showMore}
-              </button>
-            )}
-            </section>
-          </div>
-
-          <aside className="page-rail is-first dl-profile-aside">
+        <>
+          <div className="dl-profile-aside dl-profile-top">
             {resumen && (
-              <div className="box dl-pcard">
+              <div className="box dl-pcard dl-pcard-id">
                 <h2 className="box-title dl-pcard-title">{c.cards.profile}</h2>
                 <Profile account={cuenta} resumen={resumen} rank={rango} rankReady={rangoListo} world={world} />
               </div>
@@ -871,22 +713,197 @@ export default function DeadlockPlayer({
                 más; con una no hay línea. */}
             <DeadlockRankTrail points={serie} />
 
-            {/* Va arriba de la forma reciente a propósito: "sos el #56 del
-                mundo con Abrams" es más fuerte que "ganaste 2 seguidas", y en el
-                teléfono esta columna es lo primero que se ve. */}
+            {/* "Sos el #56 del mundo con Abrams" es más fuerte que "ganaste 2
+                seguidas": va en la ficha. */}
             <HeroPlacings placings={placings} />
+          </div>
 
-            {/* Tus promedios contra tu banda. Va después del ranking mundial y
-                antes de la forma reciente: contesta "¿soy bueno para mi rango?",
-                que es más fuerte que "ganaste 2 seguidas". Sólo con rango. */}
-            <DeadlockVsBand accountId={id} badge={rango?.badge ?? 0} />
-
-            {corpus && (
-              <div className="box dl-pcard">
-                <DeadlockStreakForm corpus={corpus} streak={streak} forma={forma} />
+          <div className="page has-rail dl-profile-grid">
+            <div className="page-main dl-profile-main">
+              <section className="box dl-matches">
+              <div className="box-head">
+                <h2 className="box-title">{c.history}</h2>
+                <span className="box-aside">{c.shown(visibles.length, filtrado.length)}</span>
               </div>
-            )}
+              {/* El filtro va ARRIBA de la lista y no en la ficha lateral: manda
+                  sobre las dos columnas, y el lugar donde se ve el efecto más
+                  grande es acá. */}
+              <DeadlockScopePicker scope={modo} counts={conteos} onChange={cambiarModo} />
 
+              {/**
+               * **Encabezado de columnas, que la lista no tenía.**
+               *
+               * ZoTaD miró su propio historial y no supo qué era el número al
+               * lado del KDA (eran golpes/denies). Una columna sin rótulo no es un
+               * dato: es una cifra que el lector tiene que adivinar, y la que no se
+               * adivina se ignora. Comparte la misma grilla que la fila, así que
+               * cada rótulo cae sobre lo que rotula.
+               */}
+              <div className="dl-rep-match-head" aria-hidden="true">
+                <span className="dl-rep-face" />
+                <span className="dl-rep-match-hero">{c.histCols.hero}</span>
+                {/* El rango va pegado al héroe en el encabezado Y en la fila: si
+                    el orden del DOM difiere entre los dos, cada rótulo cae sobre
+                    otra columna — que es exactamente lo que pasó al agregarla. */}
+                <span className="dl-rep-match-rank">{c.histCols.rank}</span>
+                <span className="dl-rep-match-result">{c.histCols.result}</span>
+                <span className="dl-rep-match-grade">{c.histCols.grade}</span>
+                <span className="dl-rep-match-kda" title={c.histColsFull.kda}>
+                  {c.histCols.kda}
+                </span>
+                <span className="dl-rep-match-farm" title={c.histColsFull.farm}>
+                  {c.histCols.farm}
+                </span>
+                <span className="dl-rep-match-num">{c.histCols.souls}</span>
+                <span className="dl-rep-match-num">{c.histCols.length}</span>
+                <span className="dl-rep-match-date">{c.histCols.when}</span>
+              </div>
+
+              <ul className="dl-rep-matches">
+              {visibles.map((m) => {
+                const nombre = heroName(m.heroId);
+                const paso = pasos.get(m.matchId);
+                /**
+                 * El rango que tenía en esa partida, y de dónde venía.
+                 *
+                 * Sólo el ASCENSO se marca con la flecha. Bajar de rango también
+                 * está en los datos, pero un cartel de "descendiste" en tu propio
+                 * perfil no es algo que nadie viniera a buscar; en ese caso queda
+                 * la insignia sola, que es el dato sin el juicio.
+                 */
+                const enEsa = paso ? rankOf(paso.badge) : null;
+                const nuevo = paso && paso.delta > 0 ? rankOf(paso.badge) : null;
+                const previo = paso && paso.delta > 0 && paso.previo > 0 ? rankOf(paso.previo) : null;
+                /**
+                 * **La flecha sólo si las dos insignias se ven distintas.**
+                 *
+                 * Arriba del último rango publicado el badge sigue subiendo pero se
+                 * dibuja siempre igual —Eternus sin numeral, ver `rankOf`—, así que
+                 * 122 → 123 pintaba dos insignias idénticas separadas por una flecha:
+                 * la forma visual de "cambiaste de rango" puesta sobre un rango que
+                 * no cambió. Ahí la insignia sola dice lo mismo sin prometer nada.
+                 */
+                const cambioVisible =
+                  nuevo && previo && (nuevo.img !== previo.img || nuevo.sub !== previo.sub);
+                const subio = cambioVisible ? nuevo : null;
+                const desde = cambioVisible ? previo : null;
+                return (
+                  <li key={m.matchId}>
+                    <button
+                      className={`dl-rep-match ${m.won ? "is-win" : "is-loss"}`}
+                      onClick={() => onOpenMatch(m.matchId)}
+                    >
+                      <GameImg
+                        className="dl-rep-face"
+                        src={heroImg(m.heroId) ?? ""}
+                        alt={nombre ? text(nombre, lang, "") : ""}
+                        width={44}
+                        height={44}
+                        loading="lazy"
+                      />
+                      <span className="dl-rep-match-hero">
+                        {/* El nombre en su propio `<span>`: la elipsis necesita un
+                            elemento al que agarrarse, y con el nombre como nodo de
+                            texto suelto la regla terminaba recortando la insignia
+                            de ascenso que va al lado. */}
+                        <span className="dl-rep-hero-name">
+                          {nombre ? text(nombre, lang, "") : m.heroId}
+                        </span>
+                      </span>
+
+                      {/**
+                       * El rango que el jugador tenía en esa partida, siempre que
+                       * exista — y **el ascenso mostrado como el cambio que fue**:
+                       * la insignia vieja, una flecha y la nueva. "Eternus 3 →
+                       * Eternus 4" cuenta algo; una insignia sola sólo dice dónde
+                       * quedó, que es justo lo que la fila de al lado ya dice.
+                       */}
+                      <span className="dl-rep-match-rank">
+                        {subio && desde && paso ? (
+                          <span
+                            className="dl-rankup"
+                            title={c.rankUpTitle(rankLabel(desde, lang), rankLabel(subio, lang))}
+                          >
+                            <RankBadge badge={paso.previo} height={RANKUP_H} title="" />
+                            <em aria-hidden="true">→</em>
+                            <RankBadge
+                              className="dl-rankup-new"
+                              badge={paso.badge}
+                              height={RANKUP_H}
+                              title=""
+                            />
+                          </span>
+                        ) : (
+                          paso &&
+                          enEsa && (
+                            <RankBadge className="dl-rep-rank" badge={paso.badge} height={RANK_H} />
+                          )
+                        )}
+                      </span>
+                      <span className="dl-rep-match-result">{m.won ? c.win : c.loss}</span>
+                      <span className="dl-rep-match-grade">
+                        {grades.get(m.matchId) && (
+                          <em data-grade={grades.get(m.matchId)}>{grades.get(m.matchId)}</em>
+                        )}
+                      </span>
+                      <span className="dl-rep-match-kda">
+                        {m.kills}/{m.deaths}/{m.assists}
+                      </span>
+                      {/* Golpes y denies, en ese orden: es el par que el jugador de
+                          este género ya lee junto. */}
+                      <span className="dl-rep-match-farm" title={c.farmTitle(m.lastHits, m.denies)}>
+                        {m.lastHits}/{m.denies}
+                      </span>
+                      <span className="dl-rep-match-num">{m.netWorth.toLocaleString(lang)}</span>
+                      <span className="dl-rep-match-num">{mmss(m.durationS)}</span>
+                      <span className="dl-rep-match-date">{fecha(m.startTime, lang)}</span>
+                      {/* La insignia por fila se fue: `ranked_display_badge` da 0
+                          en las 475 partidas medidas, así que no dibujaba nunca.
+                          El rango de cada partida ahora sale de `mmr-history` y se
+                          muestra donde importa: en la que ascendió. */}
+                    </button>
+                  </li>
+                );
+              })}
+              </ul>
+
+              {/* Sólo cuando hay algo más que mostrar. Un botón que no hace nada
+                  es peor que ningún botón. */}
+              {visibles.length < filtrado.length && (
+                <button
+                  type="button"
+                  className="dl-more"
+                  onClick={() => setVerFilas((n) => n + HISTORY_PAGE)}
+                >
+                  {c.showMore}
+                </button>
+              )}
+              </section>
+            </div>
+
+            <aside className="page-rail is-first dl-profile-aside">
+              {/* Tus promedios contra tu banda: contesta "¿soy bueno para mi
+                  rango?" al lado de las partidas que lo miden. Sólo con rango. */}
+              <DeadlockVsBand accountId={id} badge={rango?.badge ?? 0} />
+
+              {corpus && (
+                <div className="box dl-pcard">
+                  <DeadlockStreakForm corpus={corpus} streak={streak} forma={forma} />
+                </div>
+              )}
+
+              {/* Cuesta CERO pedidos: agrupa por día el historial que ya está en
+                  memoria. Ver `DeadlockActivity`. Sigue al modo como el resto de
+                  la ficha: si el perfil habla de clasificatorias, el calendario
+                  que dice "jugaste" tiene que hablar de las mismas. */}
+              <div className="box dl-pcard">
+                <h2 className="box-title dl-pcard-title">{c.cards.activity}</h2>
+                <DeadlockActivity rows={enModo} />
+              </div>
+            </aside>
+          </div>
+
+          <div className="dl-profile-aside dl-profile-more">
             {heroesTop.length > 0 && (
               <div className="box dl-pcard">
                 <h2 className="box-title dl-pcard-title">{c.cards.heroes}</h2>
@@ -898,10 +915,9 @@ export default function DeadlockPlayer({
               </div>
             )}
 
-            {/* Va después de "Más jugados" porque contesta la misma pregunta con
-                más detalle: cuáles son tus héroes, y qué tan bien te va con
-                cada uno. Los botones de arriba filtran la lista; esta tabla
-                mide la carrera. */}
+            {/* Cuáles son tus héroes y qué tan bien te va con cada uno: los
+                botones de "Más jugados" filtran la lista; esta tabla mide la
+                carrera. */}
             <DeadlockCareerHeroes stats={carrera} />
 
             {/* La misma carrera, leída contra tu rango: de "cómo te va con cada
@@ -925,17 +941,8 @@ export default function DeadlockPlayer({
               rows={enModo}
               onOpenAccount={onOpenAccount}
             />
-
-            {/* Cuesta CERO pedidos: agrupa por día el historial que ya está en
-                memoria. Ver `DeadlockActivity`. Sigue al modo como el resto de
-                la ficha: si el perfil habla de clasificatorias, el calendario
-                que dice "jugaste" tiene que hablar de las mismas. */}
-            <div className="box dl-pcard">
-              <h2 className="box-title dl-pcard-title">{c.cards.activity}</h2>
-              <DeadlockActivity rows={enModo} />
-            </div>
-          </aside>
-        </div>
+          </div>
+        </>
       )}
     </section>
   );

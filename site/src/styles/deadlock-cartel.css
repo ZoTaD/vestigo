@@ -9,6 +9,33 @@
    cinta; los recuadros del costado son recortes de diario.
    --------------------------------------------------------------------------- */
 
+/* ---------- papel crema: adentro de un recorte, la tinta manda ----------
+   Los tokens del tema se redefinen dentro de cada pieza de papel, así los
+   componentes escritos con --text, --line, --good… se leen sobre crema sin
+   tocarlos uno por uno. `--cns-paper` NO se toca: es el color de los títulos
+   sobre la pincelada negra, que sigue negra. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-ht-wrap, .dl-hp-ability, .dl-tier, .cartel-papel) {
+  --text: #1e1a14;
+  --text-dim: #4a4133;
+  --text-faint: #6b6150;
+  --surface: rgba(30, 26, 20, 0.05);
+  --surface-2: rgba(30, 26, 20, 0.1);
+  --surface-solid: #e6d6b9;
+  --line: rgba(30, 26, 20, 0.16);
+  --line-strong: rgba(30, 26, 20, 0.34);
+  --accent: #c2512a;
+  --accent-lit: #b2401c;
+  --accent-dark: #8f3316;
+  --good: #2f7a1f;
+  --bad: #b2261c;
+  --vellum: #1e1a14;
+  --vellum-dim: #4a4133;
+  --gold: #c2512a;
+  --gold-lit: #b2401c;
+  --dl-amber: #8a5d00;
+  color: var(--text);
+}
+
 /* ---------- tier list de héroes: la pared de carteles ---------- */
 [data-theme="codex"][data-game="deadlock"] .dl-bands {
   gap: 2rem;
@@ -253,8 +280,11 @@
   transform: translateY(-4px) rotate(0deg) scale(1.05);
 }
 
-/* ---------- el rail: recortes de diario pegados al costado ---------- */
-[data-theme="codex"][data-game="deadlock"] .page-rail .box {
+/* ---------- las cajas: recortes de diario pegados sobre la ciudad ----------
+   Toda caja de Deadlock (`.box`, `.dl-panel`) es papel crema con tinta, con la
+   sombra dura del resto. Las que tienen que seguir oscuras (la pizarra, el
+   papel de la tienda) lo dicen en su propia regla. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-ht-wrap, .dl-hp-ability) {
   border: 0;
   color: #1e1a14;
   background:
@@ -264,6 +294,7 @@
   box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.55);
 }
 
+/* Los del costado, apenas torcidos, como pegados a mano. */
 [data-theme="codex"][data-game="deadlock"] .page-rail .box:nth-child(odd) {
   transform: rotate(0.5deg);
 }
@@ -272,11 +303,11 @@
   transform: rotate(-0.4deg);
 }
 
-[data-theme="codex"][data-game="deadlock"] .page-rail :is(.box-lead, .box-empty, .dl-history-name) {
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) :is(.box-lead, .box-empty, .box-aside, .dl-history-name) {
   color: rgba(30, 26, 20, 0.72);
 }
 
-[data-theme="codex"][data-game="deadlock"] .page-rail :is(.dl-rail-name, .dl-history-date) {
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) :is(.dl-rail-name, .dl-history-date) {
   color: #1e1a14;
 }
 
@@ -301,6 +332,49 @@
 
 [data-theme="codex"][data-game="deadlock"] .page-rail .dl-history-row[data-current] {
   background: rgba(221, 102, 56, 0.14);
+}
+
+/* ---------- Jugador: tres pisos (DeadlockPlayer) ----------
+   La ficha a lo ancho en tres columnas, después partidas + su costado, y abajo
+   héroes y gente en columnas de diario que se llenan parejo. */
+[data-theme="codex"][data-game="deadlock"] .dl-profile-top {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+  align-items: start;
+  margin-top: 1.4rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-profile-more {
+  display: block;
+  columns: 3 19rem;
+  column-gap: 1.4rem;
+  margin-top: 1.8rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-profile-more > * {
+  break-inside: avoid;
+  margin-bottom: 1.4rem;
+}
+
+@media (max-width: 1100px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-profile-top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-profile-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* En el teléfono el rango ya está arriba, en la ficha: las partidas vuelven a
+   ir antes que su costado. */
+@media (max-width: 63.99rem) {
+  [data-theme="codex"][data-game="deadlock"] .dl-profile-grid > .dl-profile-aside {
+    order: 0;
+  }
 }
 
 /* ---------- el resto de la tier list, a tono ---------- */
@@ -350,4 +424,163 @@
   [data-theme="codex"][data-game="deadlock"] .dl-tile-btn:hover {
     transform: none;
   }
+}
+
+/* El título de pincel no pisa la primera línea de la caja. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) > .box-title,
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .box-head > .box-title {
+  margin-bottom: 0.55rem;
+}
+
+/* ---------- controles y filetes sobre el papel ---------- */
+/* El control segmentado, impreso: tinta clara de fondo, la opción elegida en naranja. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .seg {
+  border-color: rgba(30, 26, 20, 0.2);
+  background: rgba(30, 26, 20, 0.07);
+  box-shadow: 2px 2px 0 rgba(30, 26, 20, 0.25);
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .seg > * {
+  border-right-color: rgba(30, 26, 20, 0.14);
+  color: rgba(30, 26, 20, 0.7);
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .seg > *:hover {
+  color: #1e1a14;
+  background: rgba(30, 26, 20, 0.07);
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .seg > *[data-active="true"],
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .seg > *[aria-pressed="true"] {
+  color: var(--cns-ink);
+  background: var(--cns-orange);
+}
+
+/* Los filetes naranjas del bloque generado (dorado → naranja), en tinta sobre papel. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) :is(.dl-rep-profile, .dl-rank-badge, .dl-rep-stats, .dl-rep-progress) {
+  border-color: var(--line);
+}
+
+/* La actividad: el bloque generado de dorado → naranja pisaba también los días
+   jugados (misma especificidad, cargado después) y el calendario salía vacío. */
+[data-theme="codex"][data-game="deadlock"] .dl-activity-day {
+  background: rgba(30, 26, 20, 0.08);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-activity-day[data-result="win"] { background: var(--chart-good); }
+[data-theme="codex"][data-game="deadlock"] .dl-activity-day[data-result="loss"] { background: var(--chart-bad); }
+[data-theme="codex"][data-game="deadlock"] .dl-activity-day[data-result="even"] { background: rgba(120, 105, 80, 0.55); }
+
+/* La forma reciente, impresa. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-rep-form {
+  background: rgba(30, 26, 20, 0.05);
+  border-color: var(--line);
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-rep-streak.is-win { color: var(--good); }
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-rep-streak.is-loss { color: var(--bad); }
+
+/* ---------- la pizarra sigue siendo pizarra ----------
+   Las cajas `.dl-chalkboard` (rangos) no pasan a papel: van sobre la pizarra
+   del escondite, con tiza. Se vuelven a poner los tokens claros. */
+[data-theme="codex"][data-game="deadlock"] .box.dl-chalkboard {
+  --text: #eeeae2;
+  --text-dim: rgba(238, 234, 226, 0.75);
+  --text-faint: rgba(238, 234, 226, 0.55);
+  --line: rgba(238, 234, 226, 0.18);
+  --line-strong: rgba(238, 234, 226, 0.35);
+  --surface: rgba(238, 234, 226, 0.05);
+  --surface-2: rgba(238, 234, 226, 0.1);
+  --accent: #f59a6c;
+  --accent-lit: #ffb48c;
+  --good: #97da79;
+  --bad: #ef5b4b;
+  --vellum: #eeeae2;
+  --vellum-dim: rgba(238, 234, 226, 0.75);
+  color: var(--text);
+  background:
+    linear-gradient(rgba(18, 20, 20, 0.45), rgba(18, 20, 20, 0.62)),
+    url(/deadlock/game/ui/blackboard.webp) center / cover no-repeat,
+    #1d2020;
+  box-shadow: var(--cns-shadow), inset 0 0 0 6px #3a2a1c, inset 0 0 0 8px #1b140d;
+  transform: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .box.dl-chalkboard :is(.box-lead, .box-aside) {
+  color: rgba(238, 234, 226, 0.72);
+}
+
+/* ---------- Héroes, la ficha: cada habilidad en su hoja ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-hp-ability {
+  padding: clamp(1rem, 2.4vw, 1.8rem);
+  transform: rotate(-0.25deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-hp-ability:nth-child(even) {
+  transform: rotate(0.25deg);
+}
+
+/* El clip (o su lugar) es la foto pegada en la hoja, con cinta. */
+[data-theme="codex"][data-game="deadlock"] .dl-hp-ability-media {
+  box-shadow: 5px 6px 0 rgba(0, 0, 0, 0.3);
+  transform: rotate(-1deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-hp-ability[data-flip] .dl-hp-ability-media {
+  transform: rotate(1deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-hp-ability-media::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: -0.7rem;
+  left: 50%;
+  width: 5rem;
+  height: 1.3rem;
+  background: rgba(236, 226, 205, 0.75);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%) rotate(-3deg);
+  pointer-events: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-hp-video.is-empty span {
+  color: rgba(247, 233, 213, 0.6);
+}
+
+/* El número de la habilidad, estampado en crema sobre la foto. */
+[data-theme="codex"][data-game="deadlock"] .dl-hp-ability-key {
+  color: #f4e8d2;
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* El ícono de la habilidad (blanco en el juego) va en tinta sobre el papel. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability) :is(.dl-hp-ability-icon, .abi) {
+  filter: brightness(0) opacity(0.82);
+}
+
+/* Los colores de las familias, oscurecidos para leerse sobre crema. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability, .dl-tier) .dl-attr[data-attr^="Spirit"],
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability, .dl-tier) .dl-attr[data-attr="BonusSpiritDamage"] {
+  color: #7440c4;
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability, .dl-tier) .dl-attr:is([data-attr*="Weapon"], [data-attr*="FireRate"], [data-attr="BulletResist"]) {
+  color: #a8511a;
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability, .dl-tier) .dl-attr:is([data-attr="Heal"], [data-attr="Regen"]) {
+  color: #2f7a1f;
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability, .dl-tier) .dl-attr[data-attr*="MoveSpeed"] {
+  color: #137260;
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability, .dl-tier) .dl-attr[data-attr="MeleeDamage"] {
+  color: #b33a26;
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability, .dl-tier) .dl-attr:is([data-attr="Slow"], [data-attr="Stun"]) {
+  color: #2b5caf;
 }
