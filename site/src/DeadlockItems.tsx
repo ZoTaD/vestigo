@@ -87,7 +87,7 @@ function ItemRow({
         aria-expanded={open}
         aria-label={c.detail.toggle(item.name)}
       >
-        <span className="dl-irow-tier" aria-hidden="true">
+        <span className="dl-irow-tier" data-tier={item.tier} aria-hidden="true">
           {item.tier}
         </span>
 

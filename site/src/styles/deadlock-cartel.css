@@ -14,7 +14,7 @@
    componentes escritos con --text, --line, --good… se leen sobre crema sin
    tocarlos uno por uno. `--cns-paper` NO se toca: es el color de los títulos
    sobre la pincelada negra, que sigue negra. */
-[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side, .dl-tier, .cartel-papel) {
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side, .dl-tier, .cartel-papel) {
   --text: #1e1a14;
   --text-dim: #4a4133;
   --text-faint: #6b6150;
@@ -284,7 +284,7 @@
    Toda caja de Deadlock (`.box`, `.dl-panel`) es papel crema con tinta, con la
    sombra dura del resto. Las que tienen que seguir oscuras (la pizarra, el
    papel de la tienda) lo dicen en su propia regla. */
-[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side) {
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side) {
   border: 0;
   color: #1e1a14;
   background:
@@ -767,3 +767,25 @@
   z-index: 1;
   background: #ecdfc4;
 }
+
+/* ---------- Objetos, la lista: letras estampadas y familias en tinta ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-irow-tier[data-tier] {
+  --tier-c: var(--cns-tan);
+  color: var(--cns-ink);
+  background: var(--tier-c);
+  font-family: "VN Reaver", var(--font-display);
+  box-shadow: 2px 2px 0 rgba(30, 26, 20, 0.3);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-irow-tier[data-tier="S"] { --tier-c: var(--cns-orange); }
+[data-theme="codex"][data-game="deadlock"] .dl-irow-tier[data-tier="A"] { --tier-c: var(--cns-yellow); }
+[data-theme="codex"][data-game="deadlock"] .dl-irow-tier[data-tier="B"] { --tier-c: var(--cns-green); }
+[data-theme="codex"][data-game="deadlock"] .dl-irow-tier[data-tier="C"] { --tier-c: var(--cns-cyan); }
+
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-shelf) .dl-irow-slot[data-slot="weapon"] { color: #a8511a; }
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-shelf) .dl-irow-slot[data-slot="vitality"] { color: #2f7a1f; }
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-shelf) .dl-irow-slot[data-slot="spirit"] { color: #7440c4; }
+
+[data-theme="codex"][data-game="deadlock"] .box .dl-callout-num { color: #2f7a1f; }
+[data-theme="codex"][data-game="deadlock"] .box .dl-callout-num[data-kind="overbought"],
+[data-theme="codex"][data-game="deadlock"] .box .dl-callout-num[data-kind="trap"] { color: #b2261c; }
