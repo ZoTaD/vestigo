@@ -97,13 +97,15 @@
   color: var(--cns-paper);
 }
 
-[data-theme="codex"][data-game="deadlock"] .subnav-item[aria-current="page"],
 [data-theme="codex"][data-game="deadlock"] .subnav-item[data-active="true"] {
   color: var(--cns-paper);
 }
 
 [data-theme="codex"][data-game="deadlock"] .subnav-item::after {
   height: 3px;
+}
+
+[data-theme="codex"][data-game="deadlock"] .subnav-item[data-active="true"]::after {
   background: var(--cns-orange);
 }
 
@@ -602,5 +604,204 @@
   }
   [data-theme="codex"][data-game="deadlock"] .dl-pop-cols {
     display: none;
+  }
+}
+
+/* ---------- Objetos, vista Tienda: la tienda nueva del juego ----------
+   (DeadlockItemsShop). Barra lateral con las pestañas del juego
+   (catalog_shop_tab_*), papel de tres columnas teñidas
+   (catalog_shop_popular_bg), cabeceras "Stock up! / Big deal! / Feel good!"
+   (shop_filtered_tree_header_full, recortada por columna) y los pricetags
+   nuevos de cada escalón. */
+[data-theme="codex"][data-game="deadlock"] .dl-shop2 {
+  display: grid;
+  grid-template-columns: 4.4rem minmax(0, 1fr);
+  gap: 0 0.7rem;
+  align-items: start;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2 > :not(.dl-shop2-rail):not(.dl-shop2-paper) {
+  grid-column: 1 / -1;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-rail {
+  position: sticky;
+  top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tab {
+  display: grid;
+  place-items: center;
+  width: 4.4rem;
+  height: 4.3rem;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+  background: #5b5750;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.45);
+  filter: saturate(0.55) brightness(0.8);
+  transform: translateX(6px);
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tab[data-view="weapon"] { background: #e0b02a; }
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tab[data-view="spirit"] { background: #b77ce0; }
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tab[data-view="vitality"] { background: #93c947; }
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tab[data-view="all"] { background: #cfc8bb; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tab img {
+  width: 2.9rem;
+  height: auto;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tab[data-view="all"] img {
+  width: 2.4rem;
+  filter: brightness(0.35);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tab:hover {
+  filter: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tab[aria-selected="true"] {
+  filter: none;
+  transform: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-paper {
+  container: shop2 / inline-size;
+  padding: 0 0 1rem;
+  background: url(/deadlock/game/ui/cns/shop-popular-bg.webp) center top / 100% 100% no-repeat;
+  box-shadow: var(--cns-shadow);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2[data-view]:not([data-view="all"]) .dl-shop2-paper {
+  background-image: url(/deadlock/game/ui/cns/shop-bg.webp);
+}
+
+/* Las cabeceras de columna: la misma imagen, recortada al tercio de cada familia. */
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-heads {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: 0 1.1rem;
+  margin: 0 0.7rem 0.3rem 5.6rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-heads[data-cols="1"] { --cols: 1; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-head {
+  aspect-ratio: 720 / 183;
+  background: url(/deadlock/game/ui/cns/shop-columns-header.webp) 0 0 / 300% 100% no-repeat;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-heads[data-cols="1"] .dl-shop2-head {
+  aspect-ratio: auto;
+  height: 4.2rem;
+  background-size: auto 100%;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-head[data-cat="spirit"] { background-position: 50% 0; }
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-head[data-cat="vitality"] { background-position: 100% 0; }
+
+/* Un escalón: el pricetag nuevo a la izquierda, torcido, y la fila de columnas. */
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tier {
+  position: relative;
+  padding: 0.9rem 0.7rem 0.9rem 5.6rem;
+  border-top: 2px solid rgba(43, 38, 29, 0.28);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tier:first-of-type {
+  border-top: 0;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-price {
+  position: absolute;
+  z-index: 3;
+  top: 0.9rem;
+  left: 0.5rem;
+  width: 4.7rem;
+  height: auto;
+  transform: rotate(-7deg);
+  filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.4));
+  pointer-events: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-tier[data-tier="4"] .dl-shop2-price {
+  width: 4.6rem;
+  top: 0.6rem;
+  transform: rotate(8deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 1.1rem;
+  padding-top: 0.6rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-row[data-cols="1"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-cell.dl-bd-cards {
+  grid-template-columns: repeat(auto-fill, minmax(4.3rem, 1fr));
+  gap: 0.45rem;
+  align-content: start;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-row[data-cols="1"] .dl-shop2-cell.dl-bd-cards {
+  grid-template-columns: repeat(auto-fill, minmax(6.2rem, 1fr));
+  gap: 0.6rem;
+}
+
+/* Los nombres entran enteros: se achican con el ancho de la tarjeta en vez de
+   cortarse (regla de ZoTaD, ver [[palabras-no-se-cortan]]). */
+[data-theme="codex"][data-game="deadlock"] .dl-shop2 .dl-bd-card {
+  container-type: inline-size;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2 .dl-bd-card-name {
+  font-size: clamp(0.5rem, 10.5cqi, 0.74rem);
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2 .dl-bd-card {
+  transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2 .dl-bd-card:hover {
+  transform: translateY(-3px) rotate(-1.2deg);
+  z-index: 4;
+}
+
+@media (max-width: 900px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-rail {
+    position: static;
+    flex-direction: row;
+    margin-bottom: 0.6rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-tab {
+    transform: translateY(4px);
+    width: 3.6rem;
+    height: 3.5rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.8rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-heads {
+    display: none;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-row[data-cols="1"] {
+    padding-left: 0;
   }
 }
