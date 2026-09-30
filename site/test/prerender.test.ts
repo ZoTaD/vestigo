@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
-import { prerenderPages, renderHtml, metaFor } from "../src/prerender";
+import { prerenderPages, renderHtml, metaFor, stripComments } from "../src/prerender";
 import { sitemapPaths, deadlockDetailSlugs, type SitemapData } from "../src/sitemap";
 import { parseRoute } from "../src/route";
 
@@ -108,6 +108,20 @@ describe("renderHtml", () => {
     for (const tag of ["og:title", "og:url", "og:description", "twitter:title"]) {
       expect(html.split(`"${tag}"`).length - 1).toBe(1);
     }
+  });
+
+  it("con el index.html de verdad tampoco: una sola descripción, y el idioma de la página", () => {
+    // El HTML de arriba es de mentira y tiene cada etiqueta en una línea. El de verdad corta las largas después de
+    // `<meta` (desde el 25/9), y el borrado no las encontraba: cada página salía con la descripción genérica en inglés
+    // primero y la suya después, y todas las páginas en español decían `lang="en"` (hasta el 2026-09-30).
+    const real = stripComments(readFileSync(new URL("../index.html", import.meta.url), "utf-8"));
+    const out = renderHtml(real, page, "Vestigo");
+    for (const tag of ['name="description"', 'property="og:description"', 'name="twitter:description"', 'property="og:title"', 'rel="canonical"']) {
+      expect(out.split(tag).length - 1, tag).toBe(1);
+    }
+    expect(out).not.toContain("Deadlock, Path of Exile 2 and Valheim.");
+    expect(out).toContain('<html lang="es">');
+    expect(renderHtml(real, pages.find((p) => p.path === "/en")!, "Vestigo")).toContain('<html lang="en">');
   });
 
   it("corrige la og:url, que apuntaba a la home en todas las páginas", () => {

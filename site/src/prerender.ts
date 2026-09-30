@@ -340,6 +340,8 @@ export interface PrerenderPage {
   canonical: string;
   /** hreflang → URL, incluido x-default. */
   alternates: { hreflang: string; href: string }[];
+  /** Para `<html lang>`. */
+  lang: Lang;
   /** Para og:locale. */
   locale: string;
   /** La imagen de la vista previa, absoluta. */
@@ -397,6 +399,7 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
       description,
       canonical,
       alternates,
+      lang,
       locale: lang === "es" ? "es_AR" : "en_US",
       image,
       ogType: isEdition ? "article" : "website",
@@ -466,13 +469,20 @@ export function renderHtml(
   // título o un cuerpo que los contuviera rompería el HTML (auditoría, 2026-09-28).
   return (
     html
+      // El idioma de la página: `index.html` dice "en", y todas las páginas en
+      // español salían declaradas en inglés (hasta el 2026-09-30).
+      .replace(/<html lang="[^"]*"/, () => `<html lang="${page.lang}"`)
       .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${escape(page.title)}</title>`)
       // Fuera todo lo que este bloque vuelve a declarar, para no dejar dos
-      // versiones de la misma etiqueta.
-      .replace(/\s*<meta name="description"[^>]*>/g, "")
-      .replace(/\s*<link rel="canonical"[^>]*>/g, "")
-      .replace(/\s*<meta property="og:[^"]+"[^>]*>/g, "")
-      .replace(/\s*<meta name="twitter:[^"]+"[^>]*>/g, "")
+      // versiones de la misma etiqueta. `\s+` y no un espacio: en `index.html`
+      // las etiquetas largas cortan la línea después de `<meta` (desde el
+      // 25/9), y con un espacio fijo no se borraban. Cada página salía con dos
+      // descripciones, la genérica en inglés primero —la que mostraban X y
+      // Discord al compartir un enlace— hasta el 2026-09-30.
+      .replace(/\s*<meta\s+name="description"[^>]*>/g, "")
+      .replace(/\s*<link\s+rel="canonical"[^>]*>/g, "")
+      .replace(/\s*<meta\s+property="og:[^"]+"[^>]*>/g, "")
+      .replace(/\s*<meta\s+name="twitter:[^"]+"[^>]*>/g, "")
       .replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/g, "")
       .replace("</head>", () => `    ${head}${jsonLd}\n  </head>`)
       // El div de montaje deja de estar vacío. Se busca por su id y no por
