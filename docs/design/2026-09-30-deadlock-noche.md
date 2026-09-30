@@ -36,7 +36,7 @@ publica en `main` ni se tocan workflows. Cada tarea: probar en el navegador
       comparable con la actual (conmutador en la página o ruta aparte).
       Hecho: `docs/design/2026-09-30-deadlock-diseno-b.md` (botón A/B y
       `?diseno=b`), más la vista "Por letra" de Objetos en los dos diseños.
-- [ ] C2. Propuestas para otras pestañas con mejores visuales.
+- [x] C2. Propuestas para otras pestañas con mejores visuales.
 
 ## D. Jugador
 - [x] D1. Redistribuir la pestaña Jugador (hoy desperdicia espacio).
@@ -53,8 +53,12 @@ publica en `main` ni se tocan workflows. Cada tarea: probar en el navegador
       corrompido) y el §5 completo (coeficientes estandarizados en el informe).
 
 ## F. Pestaña nueva para la comunidad
-- [ ] F1. Investigar foros (preguntas sin respuesta, cosas que ninguna página
+- [x] F1. Investigar foros (preguntas sin respuesta, cosas que ninguna página
       hace) y proponer/prototipar una pestaña.
+      Hecho: pestaña **Remontadas** (2205940, 78b9a6c). La investigación
+      (Reddit bloqueado; Steam, foro oficial, prensa) marcó como hueco total
+      "si perdés la línea, ¿perdiste?". Segunda idea, sin hacer: "Ranked,
+      medido" (la fórmula de puntos: ±300 base, racha 2→+370 … 5+→+430).
 
 ## G. Estilo Cartel en todo Deadlock (pedido de ZoTaD a la 1 h)
 - [x] G1. B fijo, sin botón (d5b65ef).
