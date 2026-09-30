@@ -860,7 +860,11 @@
   align-items: stretch;
   gap: 0;
   margin-bottom: 0.5rem;
-  background: url(/deadlock/game/ui/cns/filter-nav.webp) center / 100% 100% no-repeat, #6d655a;
+  /* La franja de papel claro de la tienda (filter_nav_backer), con su textura. */
+  background:
+    linear-gradient(rgba(214, 205, 188, 0.82), rgba(186, 176, 158, 0.9)),
+    url(/deadlock/game/ui/cns/filter-nav.webp) center / 100% 100% no-repeat,
+    #c9c0ae;
   box-shadow: var(--cns-shadow-sm);
 }
 
@@ -872,7 +876,7 @@
   padding: 0 1.05rem;
   border: 0;
   background: transparent;
-  color: #2b261d;
+  color: #1e1a14;
   font: 700 1.05rem/1 "VN Retail", var(--font-display);
   cursor: pointer;
   transition: background 140ms ease, color 140ms ease;
