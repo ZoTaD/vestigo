@@ -1,0 +1,373 @@
+/* ---------------------------------------------------------------------------
+   CITY NEVER SLEEPS — la estética de Deadlock desde el 2026-09-29.
+
+   ZoTaD pidió llevar el sitio a la estética de la actualización: "bordes rectos
+   tipo periódico", el papel, las hojas rotas, las manchas y el cómic del juego,
+   con sus colores. La referencia es la página oficial
+   (playdeadlock.com/cityneversleeps) y la tienda nueva del juego:
+
+   - Paleta de esa página: crema #F7E9D5 sobre casi negro, naranja #DD6638 como
+     acento, y amarillo #FFE14D, cian #60CDE3 y verde #97DA79 de apoyo (son los
+     colores de las tres líneas del mapa nuevo).
+   - Bordes rectos y sombras duras, sin desenfoque, como una viñeta impresa.
+   - Títulos sobre el pincel negro de la votación de héroes (backer-box) y la
+     palabra clave sobre una placa naranja torcida, como "An [updated] visitor's
+     guide" en la página.
+   - La ciudad de noche detrás de cada cabecera, cortada por el borde de papel
+     rasgado de la página oficial, y el grano de película del juego encima.
+
+   Va en una hoja aparte, cargada después de las de Deadlock, para que el cambio
+   se pueda leer y revertir entero. Los tokens se redefinen acá y no en
+   tokens.css. No hay filos de color en tarjetas (ver
+   [[sin-bordes-de-color-en-cards]]): el color va en placas, tintes y cifras.
+--------------------------------------------------------------------------- */
+
+[data-theme="codex"][data-game="deadlock"] {
+  --cns-paper: #f7e9d5;
+  --cns-ink: #0b0a09;
+  --cns-orange: #dd6638;
+  --cns-red: #d8483a;
+  --cns-yellow: #ffe14d;
+  --cns-cyan: #60cde3;
+  --cns-green: #97da79;
+  --cns-tan: #c9b596;
+  /* Las familias de la tienda nueva (cabeceras "Stock up! / Big deal! / Feel good!"). */
+  --cns-weapon: #d9843a;
+  --cns-spirit: #a383e6;
+  --cns-vitality: #86c25d;
+  /* La sombra de viñeta: dura, corrida abajo a la derecha. */
+  --cns-shadow: 6px 6px 0 rgba(0, 0, 0, 0.5);
+  --cns-shadow-sm: 3px 3px 0 rgba(0, 0, 0, 0.5);
+
+  --bg: #0d0c0b;
+  --bg-2: #15130f;
+  --bg-glow: #2b1a10;
+  --surface: rgba(247, 233, 213, 0.035);
+  --surface-2: rgba(247, 233, 213, 0.075);
+  --surface-solid: #1a1714;
+  --text: #f7e9d5;
+  --text-dim: #b3a58f;
+  --text-faint: #7a705f;
+  --accent: #dd6638;
+  --accent-lit: #f59a6c;
+  --accent-dark: #a2431f;
+  --accent-rgb: 221, 102, 56;
+  --accent-2: #60cde3;
+  --good: #97da79;
+  --bad: #ef5b4b;
+  --line: rgba(247, 233, 213, 0.13);
+  --line-strong: rgba(247, 233, 213, 0.32);
+  --on-accent: #120c08;
+  /* Periódico: esquinas rectas. */
+  --radius: 2px;
+  --radius-lg: 2px;
+  --radius-pill: 2px;
+
+  background:
+    radial-gradient(1200px 520px at 50% -160px, rgba(221, 102, 56, 0.09), transparent 70%),
+    var(--bg);
+}
+
+/* ---------- el grano de película del juego, apenas moviéndose ---------- */
+[data-theme="codex"][data-game="deadlock"] .grain {
+  background: url(/deadlock/game/ui/cns/filmgrain.webp) 0 0 / 256px repeat;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  animation: cns-grain 0.9s steps(3) infinite;
+}
+
+@keyframes cns-grain {
+  0% { background-position: 0 0; }
+  33% { background-position: -83px 41px; }
+  66% { background-position: 57px -67px; }
+  100% { background-position: 0 0; }
+}
+
+/* ---------- pestañas de Deadlock: subrayado grueso, como tinta ---------- */
+[data-theme="codex"][data-game="deadlock"] .subnav {
+  border-bottom-color: rgba(247, 233, 213, 0.1);
+}
+
+[data-theme="codex"][data-game="deadlock"] .subnav-item {
+  color: rgba(247, 233, 213, 0.58);
+  font-weight: 700;
+}
+
+[data-theme="codex"][data-game="deadlock"] .subnav-item:hover {
+  color: var(--cns-paper);
+}
+
+[data-theme="codex"][data-game="deadlock"] .subnav-item[aria-current="page"],
+[data-theme="codex"][data-game="deadlock"] .subnav-item[data-active="true"] {
+  color: var(--cns-paper);
+}
+
+[data-theme="codex"][data-game="deadlock"] .subnav-item::after {
+  height: 3px;
+  background: var(--cns-orange);
+}
+
+/* ---------- la cabecera de cada pestaña: la ciudad de noche y el papel rasgado ---------- */
+[data-theme="codex"][data-game="deadlock"] .sechead {
+  position: relative;
+  isolation: isolate;
+  margin-top: 0;
+  padding-top: 2.6rem;
+  padding-bottom: 2.4rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .sechead::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0 calc(50% - 50vw);
+  background:
+    linear-gradient(180deg, rgba(13, 12, 11, 0.1) 0%, rgba(13, 12, 11, 0.35) 60%, rgba(13, 12, 11, 0.6) 100%),
+    linear-gradient(90deg, rgba(13, 12, 11, 0.82) 0%, rgba(13, 12, 11, 0.3) 45%, rgba(13, 12, 11, 0.05) 75%, rgba(13, 12, 11, 0.4) 100%),
+    url(/deadlock/game/ui/cns/city.webp) 72% 30% / cover no-repeat;
+  opacity: 1;
+  filter: none;
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+/* El borde de papel rasgado de la página oficial, dado vuelta: el fondo de la
+   página "muerde" el pie de la ciudad. */
+[data-theme="codex"][data-game="deadlock"] .sechead::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
+  bottom: -2px;
+  height: 34px;
+  background: url(/deadlock/game/ui/cns/torn-edge.webp) 0 0 / 1600px 100% repeat-x;
+  transform: scaleY(-1);
+}
+
+[data-theme="codex"][data-game="deadlock"] .sechead-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  color: var(--cns-paper);
+  opacity: 0.8;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+}
+
+[data-theme="codex"][data-game="deadlock"] .sechead-eyebrow::before {
+  content: "";
+  width: 0.55em;
+  height: 0.55em;
+  background: var(--cns-orange);
+  transform: rotate(45deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .sechead-title {
+  font-size: clamp(2.2rem, 4.6vw, 3.4rem);
+  color: var(--cns-paper);
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
+}
+
+/* La palabra clave sobre una placa naranja torcida, con la trama de tinta del
+   cartel de votación (text_speckle_mask) para que parezca impresa. */
+[data-theme="codex"][data-game="deadlock"] .sechead-title em {
+  display: inline-block;
+  margin-left: 0.08em;
+  padding: 0.04em 0.24em 0.08em;
+  color: var(--cns-ink);
+  background: var(--cns-orange);
+  text-shadow: none;
+  transform: rotate(-2deg);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+  -webkit-mask: url(/deadlock/game/ui/cns/speckle.webp) center / 100% 100%;
+  mask: url(/deadlock/game/ui/cns/speckle.webp) center / 100% 100%;
+}
+
+[data-theme="codex"][data-game="deadlock"] .sechead-meta {
+  color: rgba(247, 233, 213, 0.72);
+}
+
+/* ---------- cajas: papel oscuro, esquinas rectas, sombra de viñeta ---------- */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-tier, .dl-shelf, .dl-panel, .dl-ht-wrap) {
+  border: 1px solid rgba(247, 233, 213, 0.09);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(24, 21, 17, 0.9), rgba(15, 13, 11, 0.95)),
+    url(/deadlock/game/ui/paper-dark.webp) 0 0 / 512px;
+  box-shadow: var(--cns-shadow);
+}
+
+/* El título de cada caja, sobre el pincel negro de la votación de héroes. */
+[data-theme="codex"][data-game="deadlock"] .box-title {
+  display: inline-block;
+  margin: -0.15rem 0 0 -0.45rem;
+  padding: 0.34em 0.75em 0.26em 0.6em;
+  color: var(--cns-paper);
+  background: url(/deadlock/game/ui/backer-box.webp) center / 100% 100% no-repeat;
+  font-size: 1.12rem;
+  letter-spacing: 0.06em;
+}
+
+[data-theme="codex"][data-game="deadlock"] .box-head {
+  margin-bottom: 0.85rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .box-lead {
+  color: rgba(247, 233, 213, 0.62);
+}
+
+/* ---------- control segmentado: placa rellena, sombra dura ---------- */
+[data-theme="codex"][data-game="deadlock"] .seg {
+  border-color: rgba(247, 233, 213, 0.14);
+  background: rgba(13, 12, 11, 0.55);
+  box-shadow: var(--cns-shadow-sm);
+}
+
+[data-theme="codex"][data-game="deadlock"] .seg > * {
+  border-right-color: rgba(247, 233, 213, 0.1);
+  color: rgba(247, 233, 213, 0.64);
+  font-weight: 700;
+}
+
+[data-theme="codex"][data-game="deadlock"] .seg > *:hover {
+  color: var(--cns-paper);
+  background: rgba(247, 233, 213, 0.05);
+}
+
+[data-theme="codex"][data-game="deadlock"] .seg > *[data-active="true"],
+[data-theme="codex"][data-game="deadlock"] .seg > *[aria-pressed="true"] {
+  color: var(--cns-ink);
+  background: var(--cns-orange);
+}
+
+/* ---------- tier list: la letra estampada en una placa de color ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-bands {
+  gap: 1rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier {
+  grid-template-columns: 5.6rem minmax(0, 1fr);
+  overflow: visible;
+  --tier-c: var(--cns-tan);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier[data-tier="S"] { --tier-c: var(--cns-orange); }
+[data-theme="codex"][data-game="deadlock"] .dl-tier[data-tier="A"] { --tier-c: var(--cns-yellow); }
+[data-theme="codex"][data-game="deadlock"] .dl-tier[data-tier="B"] { --tier-c: var(--cns-green); }
+[data-theme="codex"][data-game="deadlock"] .dl-tier[data-tier="C"] { --tier-c: var(--cns-cyan); }
+
+/* El bloque de la letra es papel de color con el canto rasgado (rough_edge del
+   juego) y la trama de tinta encima. */
+[data-theme="codex"][data-game="deadlock"] .dl-tier-mark {
+  position: relative;
+  margin: -1px 0 -1px -1px;
+  border-right: 0;
+  background: var(--tier-c);
+  color: var(--cns-ink);
+  -webkit-mask: url(/deadlock/game/ui/cns/rough-edge.webp) center / 100% 100%;
+  mask: url(/deadlock/game/ui/cns/rough-edge.webp) center / 100% 100%;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier-mark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url(/deadlock/game/ui/cns/dot-pattern.webp) center / 260px;
+  opacity: 0.16;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier-letter {
+  position: relative;
+  font-size: 3.1rem;
+  color: var(--cns-ink);
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.28);
+  transform: rotate(-4deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier-sub {
+  position: relative;
+  color: rgba(11, 10, 9, 0.78);
+  font-weight: 700;
+}
+
+/* Las tarjetas de héroe: se levantan y se tuercen como una foto que se toma. */
+[data-theme="codex"][data-game="deadlock"] .dl-tile-btn {
+  border: 1px solid rgba(247, 233, 213, 0.06);
+  border-radius: 2px;
+  background: rgba(247, 233, 213, 0.035);
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), background 160ms ease, box-shadow 180ms ease;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile-btn:hover,
+[data-theme="codex"][data-game="deadlock"] .dl-tile-btn:focus-visible {
+  background: rgba(247, 233, 213, 0.085);
+  transform: translateY(-3px) rotate(-1.4deg);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(even) .dl-tile-btn:hover,
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(even) .dl-tile-btn:focus-visible {
+  transform: translateY(-3px) rotate(1.4deg);
+}
+
+/* El retrato, recortado con los cantos rasgados de las tarjetas de fin de partida. */
+[data-theme="codex"][data-game="deadlock"] .dl-tile-face img,
+[data-theme="codex"][data-game="deadlock"] .dl-tile-face .dl-portrait-fallback {
+  border-radius: 0;
+  -webkit-mask: url(/deadlock/game/ui/card-mask-2.webp) center / 100% 100%;
+  mask: url(/deadlock/game/ui/card-mask-2.webp) center / 100% 100%;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(3n + 1) .dl-tile-face img { -webkit-mask-image: url(/deadlock/game/ui/card-mask-1.webp); mask-image: url(/deadlock/game/ui/card-mask-1.webp); }
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(3n + 2) .dl-tile-face img { -webkit-mask-image: url(/deadlock/game/ui/card-mask-3.webp); mask-image: url(/deadlock/game/ui/card-mask-3.webp); }
+
+/* ---------- rail: filas separadas por filetes punteados de periódico ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-rail-list > li + li {
+  border-top: 1px dashed rgba(247, 233, 213, 0.1);
+}
+
+/* ---------- próximos pasos: placas de papel crema ---------- */
+[data-theme="codex"][data-game="deadlock"] .next-step {
+  border-radius: 2px;
+  box-shadow: var(--cns-shadow-sm);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+[data-theme="codex"][data-game="deadlock"] .next-step:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- entrada: los bloques suben de a uno ---------- */
+@keyframes cns-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-bands > .dl-tier {
+  animation: cns-rise 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-bands > .dl-tier:nth-child(2) { animation-delay: 60ms; }
+[data-theme="codex"][data-game="deadlock"] .dl-bands > .dl-tier:nth-child(3) { animation-delay: 120ms; }
+[data-theme="codex"][data-game="deadlock"] .dl-bands > .dl-tier:nth-child(4) { animation-delay: 180ms; }
+[data-theme="codex"][data-game="deadlock"] .dl-bands > .dl-tier:nth-child(n + 5) { animation-delay: 240ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="codex"][data-game="deadlock"] .grain,
+  [data-theme="codex"][data-game="deadlock"] .dl-bands > .dl-tier {
+    animation: none;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-tile-btn:hover {
+    transform: none;
+  }
+}

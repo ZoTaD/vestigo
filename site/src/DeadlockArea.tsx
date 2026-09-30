@@ -20,6 +20,8 @@ import "./styles/deadlock-heroes.css";
 import "./styles/deadlock-builder.css";
 // El material del juego (papel, tiza, arte de héroes) sobre las hojas de Deadlock, 2026-09-23.
 import "./styles/deadlock-game.css";
+// City Never Sleeps (2026-09-29): la estética nueva, encima de todo lo de Deadlock.
+import "./styles/deadlock-cns.css";
 // Vestigo News (2026-09-17): la única página con paleta y fuentes propias, todo bajo `.vn`.
 import "./styles/news.css";
 
