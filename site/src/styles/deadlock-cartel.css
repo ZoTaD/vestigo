@@ -1,0 +1,353 @@
+/* ---------------------------------------------------------------------------
+   Deadlock, estilo "Cartel" (2026-09-30) — el que eligió ZoTaD para todo el sitio.
+
+   Carga después de deadlock-cns.css y pisa sus cajas oscuras donde corresponde.
+   La idea: la pared de carteles de la ciudad. Cada letra es una tira de papel
+   crema pegada torcida, con la letra estampada en su color; cada héroe es una
+   foto impresa del juego (la carta de la selección, sobre su arte de fondo, con
+   la cara de ánimo: los de S festejan y los de D están golpeados), sujeta con
+   cinta; los recuadros del costado son recortes de diario.
+   --------------------------------------------------------------------------- */
+
+/* ---------- tier list de héroes: la pared de carteles ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-bands {
+  gap: 2rem;
+  padding-top: 0.6rem;
+}
+
+/* La tira de papel crema, un poco torcida, con la trama de tinta y el desgaste. */
+[data-theme="codex"][data-game="deadlock"] .dl-tier {
+  position: relative;
+  grid-template-columns: 7.4rem minmax(0, 1fr);
+  border: 0;
+  border-radius: 0;
+  background:
+    url(/deadlock/game/ui/cns/speckle.webp) center / 520px,
+    linear-gradient(100deg, #f3e6cf, #e8d8bb 55%, #efe0c5);
+  background-blend-mode: multiply, normal;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.55);
+  transform: rotate(-0.35deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier:nth-child(even) {
+  transform: rotate(0.3deg);
+}
+
+/* El canto de arriba, rasgado. */
+[data-theme="codex"][data-game="deadlock"] .dl-tier::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -9px;
+  height: 12px;
+  background: #f1e3ca;
+  -webkit-mask: url(/deadlock/game/ui/cns/torn-edge.webp) center / 100% 100%;
+  mask: url(/deadlock/game/ui/cns/torn-edge.webp) center / 100% 100%;
+  transform: scaleY(-1);
+  pointer-events: none;
+}
+
+/* La letra: estampada con tinta del color de la línea, sobresale a la izquierda
+   como la solapa de un cartel. */
+[data-theme="codex"][data-game="deadlock"] .dl-tier-mark {
+  margin: -0.7rem 0 -0.7rem -0.9rem;
+  padding: 1rem 0.4rem;
+  box-shadow: none;
+  transform: rotate(-2deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier:nth-child(even) .dl-tier-mark {
+  transform: rotate(1.5deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier-letter {
+  font: 700 5.2rem/0.9 "VN Reaver", var(--font-display);
+  text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tier-sub {
+  font-size: 0.72rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tiles {
+  gap: 1.2rem 0.9rem;
+  padding: 1.3rem 1.2rem 1.4rem 1.4rem;
+}
+
+/* ---------- cada héroe: la foto impresa de su carta, con cinta ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-tile {
+  position: relative;
+  width: 7.6rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: -0.55rem;
+  left: 50%;
+  width: 3.2rem;
+  height: 1.05rem;
+  background: rgba(236, 226, 205, 0.72);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%) rotate(-4deg);
+  pointer-events: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(even)::after {
+  transform: translateX(-50%) rotate(5deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile-btn {
+  position: relative;
+  display: block;
+  padding: 0.3rem 0.3rem 0.35rem;
+  border: 0;
+  border-radius: 0;
+  background: url(/deadlock/game/ui/card-backer.webp) center / 100% 100% no-repeat, #efe3c6;
+  box-shadow: 4px 5px 0 rgba(0, 0, 0, 0.35);
+  transform: rotate(-1.4deg);
+  /* Para que el nombre se achique con la foto en vez de cortarse. */
+  container-type: inline-size;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(even) .dl-tile-btn {
+  transform: rotate(1.2deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(3n) .dl-tile-btn {
+  transform: rotate(-0.4deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile-btn:hover,
+[data-theme="codex"][data-game="deadlock"] .dl-tile-btn:focus-visible,
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(n) .dl-tile-btn:hover,
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(n) .dl-tile-btn:focus-visible {
+  z-index: 4;
+  background: url(/deadlock/game/ui/card-backer.webp) center / 100% 100% no-repeat, #efe3c6;
+  transform: translateY(-5px) rotate(0deg) scale(1.05);
+  box-shadow: 8px 10px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* La foto: el arte de fondo del héroe y su carta encima, sin máscara rasgada. */
+[data-theme="codex"][data-game="deadlock"] .dl-tile-face {
+  position: relative;
+  display: block;
+  margin: 0;
+  aspect-ratio: 280 / 330;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.55)),
+    var(--dl-hero-bg, none) 72% 35% / auto 150% no-repeat,
+    color-mix(in srgb, var(--dl-hero, #3a3128) 55%, #15120e);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile-face img,
+[data-theme="codex"][data-game="deadlock"] .dl-tile-face .dl-portrait-fallback,
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(n) .dl-tile-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile-btn:hover .dl-tile-face img {
+  transform: scale(1.06);
+}
+
+/* Las marcas (dificultad, tendencia), como chinches en las esquinas de la foto. */
+[data-theme="codex"][data-game="deadlock"] :is(.dl-tile-mark, .dl-tile-trend) {
+  top: 4px;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--cns-ink, #0b0a09);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile-mark { right: 4px; }
+[data-theme="codex"][data-game="deadlock"] .dl-tile-trend { left: 4px; }
+
+/* El nombre, sobre la pincelada negra del juego, pisando el pie de la foto. */
+[data-theme="codex"][data-game="deadlock"] .dl-tile-name {
+  position: relative;
+  z-index: 2;
+  display: block;
+  margin: -1.2rem -0.45rem 0;
+  padding: 0.42rem 0.4rem 0.36rem;
+  font: 700 clamp(0.55rem, 11.5cqi, 0.86rem)/1 "VN Reaver", var(--font-display);
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: visible;
+  color: #f4e8d2;
+  background: url(/deadlock/game/ui/backer-box.webp) center / 100% 100% no-repeat;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile-btn:hover .dl-tile-name {
+  color: var(--cns-yellow, #ffe14d);
+}
+
+/* El % de victorias: un sello del color de la letra, torcido en la esquina. */
+[data-theme="codex"][data-game="deadlock"] .dl-tile-wr {
+  position: absolute;
+  z-index: 3;
+  right: -0.55rem;
+  bottom: 3.3rem;
+  padding: 0.26rem 0.35rem 0.2rem;
+  font: 800 1.02rem/1 var(--font-display);
+  color: var(--cns-ink, #0b0a09);
+  background: var(--tier-c, #c9b596);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+  transform: rotate(6deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(even) .dl-tile-wr {
+  transform: rotate(-5deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile-pr {
+  display: block;
+  margin-top: 0.3rem;
+  font: 700 0.7rem/1 var(--font-display);
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: rgba(43, 38, 29, 0.75);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tile-pr::before {
+  content: "◉ ";
+  opacity: 0.6;
+}
+
+/* ---------- Objetos por letra: las mismas tiras de papel ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-itiers-heads {
+  margin-left: calc(7.4rem + 0.8rem);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier-cols {
+  padding: 1.1rem 1rem 1.1rem 1.2rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier-col {
+  background: rgba(var(--fam), 0.16);
+  box-shadow: inset 0 0 0 1px rgba(43, 38, 29, 0.08);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier .dl-bd-card:nth-child(odd) {
+  transform: rotate(-1deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier .dl-bd-card:nth-child(even) {
+  transform: rotate(0.8deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier .dl-bd-card:hover {
+  transform: translateY(-4px) rotate(0deg) scale(1.05);
+}
+
+/* ---------- el rail: recortes de diario pegados al costado ---------- */
+[data-theme="codex"][data-game="deadlock"] .page-rail .box {
+  border: 0;
+  color: #1e1a14;
+  background:
+    url(/deadlock/game/ui/cns/speckle.webp) center / 520px,
+    linear-gradient(170deg, #f1e4cc, #e5d4b6);
+  background-blend-mode: multiply, normal;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="codex"][data-game="deadlock"] .page-rail .box:nth-child(odd) {
+  transform: rotate(0.5deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .page-rail .box:nth-child(even) {
+  transform: rotate(-0.4deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .page-rail :is(.box-lead, .box-empty, .dl-history-name) {
+  color: rgba(30, 26, 20, 0.72);
+}
+
+[data-theme="codex"][data-game="deadlock"] .page-rail :is(.dl-rail-name, .dl-history-date) {
+  color: #1e1a14;
+}
+
+[data-theme="codex"][data-game="deadlock"] .page-rail .dl-rail-list > li + li {
+  border-top-color: rgba(30, 26, 20, 0.2);
+}
+
+[data-theme="codex"][data-game="deadlock"] .page-rail .dl-rail-row:hover {
+  background: rgba(30, 26, 20, 0.07);
+}
+
+[data-theme="codex"][data-game="deadlock"] .page-rail .dl-rail-figure {
+  color: #b2401c;
+}
+
+[data-theme="codex"][data-game="deadlock"] .page-rail .delta.is-up { color: #2f7a1f; }
+[data-theme="codex"][data-game="deadlock"] .page-rail .delta.is-down { color: #b2261c; }
+
+[data-theme="codex"][data-game="deadlock"] .page-rail :is(.dl-history-link, .dl-rail-more) {
+  color: #b2401c;
+}
+
+[data-theme="codex"][data-game="deadlock"] .page-rail .dl-history-row[data-current] {
+  background: rgba(221, 102, 56, 0.14);
+}
+
+/* ---------- el resto de la tier list, a tono ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-tier-note {
+  color: rgba(247, 233, 213, 0.6);
+}
+
+@media (max-width: 600px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-tier {
+    grid-template-columns: 3.4rem minmax(0, 1fr);
+    transform: none;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-tier:nth-child(even) {
+    transform: none;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-tier-mark {
+    margin: -0.5rem 0 -0.5rem -0.4rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-tier-letter {
+    font-size: 2.8rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-itier-cols {
+    padding: 0.7rem 0.6rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-tiles {
+    gap: 1rem 0.55rem;
+    padding: 1rem 0.6rem 1rem 0.7rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-tile {
+    width: calc((100% - 1.1rem) / 3);
+  }
+  /* En el teléfono el sello tapaba la cara: baja debajo del nombre. */
+  [data-theme="codex"][data-game="deadlock"] .dl-tile-wr,
+  [data-theme="codex"][data-game="deadlock"] .dl-tile:nth-child(even) .dl-tile-wr {
+    position: relative;
+    display: block;
+    width: fit-content;
+    margin: 0.35rem auto 0;
+    right: auto;
+    bottom: auto;
+    font-size: 0.82rem;
+    transform: rotate(-3deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="codex"][data-game="deadlock"] .dl-tile-btn:hover {
+    transform: none;
+  }
+}

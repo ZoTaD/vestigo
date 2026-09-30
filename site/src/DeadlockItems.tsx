@@ -21,7 +21,6 @@ import { items as itemSlugs } from "./deadlockSlugs";
 import { ItemIcon } from "./DeadlockItemTip";
 import DeadlockItemsShop from "./DeadlockItemsShop";
 import DeadlockItemsTiers from "./DeadlockItemsTiers";
-import { useDesign } from "./deadlockDesign";
 import GameImg from "./GameImg";
 
 /** Tienda (como el juego), tier list por letra o lista con gráficos. */
@@ -271,10 +270,9 @@ export default function DeadlockItems({
   /** El estante elegido (arma, vitalidad, espíritu), o todos. */
   const [slot, setSlot] = useState<Slot | null>(null);
   /**
-   * Tienda (como el juego) o lista. Arranca en la tienda —pedido de ZoTaD del
+   * Tienda (como el juego), por letra o lista. Arranca en la tienda —pedido de ZoTaD del
    * 2026-09-23: "siempre copiando el juego"— y se recuerda en este navegador.
    */
-  const design = useDesign();
   const [elegida, setVista] = useState<Vista | null>(() => {
     try {
       const v = localStorage.getItem("vestigo.dlItemsView");
@@ -283,8 +281,7 @@ export default function DeadlockItems({
       return null;
     }
   });
-  /** Sin elección guardada: la tienda en el diseño A, la tier list por letra en el B. */
-  const vista: Vista = elegida ?? (design === "b" ? "tiers" : "shop");
+  const vista: Vista = elegida ?? "shop";
   const cambiarVista = (v: Vista) => {
     setVista(v);
     try {

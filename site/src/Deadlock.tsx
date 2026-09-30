@@ -23,15 +23,14 @@ import { heroes as heroSlugs } from "./deadlockSlugs";
 import GameImg from "./GameImg";
 import { safeHref } from "./safeHref";
 import { CANDIDATES, CANDIDATES_EDITION, candidatesVisible, stickerOf } from "./deadlockCandidates";
-import { useDesign } from "./deadlockDesign";
 import gameArt from "@deadlock/game-art.json";
 
-/** Diseño B: el arte de fondo de cada héroe y quiénes traen caras de ánimo. */
+/** El arte de fondo de cada héroe y quiénes traen caras de ánimo. */
 const FONDOS: Record<string, string> = gameArt.backgrounds;
 const CARAS = new Set<string>(gameArt.moods);
 
 /**
- * Diseño B: la cara de ánimo del juego según la letra. Los de S festejan (la
+ * La cara de ánimo del juego según la letra. Los de S festejan (la
  * cara de la racha) y los de D están golpeados (la de poca vida); el resto
  * queda con el retrato de siempre.
  */
@@ -113,16 +112,15 @@ function HeroTile({
   onNavigate,
 }: {
   hero: Hero;
-  /** La letra de la banda: en el diseño B elige la cara de ánimo. */
+  /** La letra de la banda: elige la cara de ánimo. */
   tier?: string;
   /** La página del héroe: el tile es un enlace de verdad, no un botón. */
   to: Route;
   onNavigate: (route: Route) => void;
 }) {
   const copy = useCopy();
-  const design = useDesign();
-  const fondo = design === "b" ? FONDOS[String(hero.heroId)] : undefined;
-  const retrato = design === "b" && hero.card ? caraDe(hero.card, tier) : hero.card;
+  const fondo = FONDOS[String(hero.heroId)];
+  const retrato = hero.card ? caraDe(hero.card, tier) : hero.card;
 
   return (
     <li

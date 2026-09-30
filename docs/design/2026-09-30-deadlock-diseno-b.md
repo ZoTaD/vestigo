@@ -1,4 +1,10 @@
-# Deadlock, diseño B "Cartel" (prototipo para comparar)
+# Deadlock, estilo "Cartel"
+
+> **Elegido por ZoTaD el 2026-09-30** ("es justo el estilo que queremos, con
+> assets… hay que actualizar el sitio con todo ese estilo"). Quedó fijo: se
+> borraron el botón A/B y `deadlockDesign.tsx`, y la hoja pasó a
+> `site/src/styles/deadlock-cartel.css` sin el prefijo `[data-dl-design="b"]`.
+> Lo de abajo es cómo se presentó el prototipo.
 
 Fecha: 2026-09-30 · Rama `feat/deadlock-cns` · Pedido de ZoTaD: "otro diseño
 alternativo al que tenemos que sea mucho más Deadlock", al menos para la tier
