@@ -50,6 +50,33 @@ def save(im, rel, w=None, q=82, lossless=False):
     im.save(path, "WEBP", quality=q, method=5, lossless=lossless)
 
 
+# Los dos casilleros de arma del panel de inventario, a escala completa (1162×1507): x por dentro de las líneas del marco,
+# la línea de arriba del marco, la separadora de la franja de las pestañas I/II y la línea de abajo.
+WEAPON_SLOTS = [(98, 315), (850, 1067)]
+SLOT_TOP, SLOT_SEPARATOR, SLOT_BOTTOM = 175, 223, 624
+
+
+def weapon_slots_whole(im):
+    """
+    Los casilleros de arma traen arriba la franja de las pestañas I/II (cambiar de arma). En el planificador no hay
+    pestañas y la franja quedaba como un rectángulo negro vacío encima del casillero (ZoTaD, 2026-09-30): se estira el
+    fondo del casillero hasta la línea de arriba del marco, y cada uno queda de una pieza, como los demás. Si el panel
+    cambia en un parche, corta en vez de pintar mal.
+    """
+    im = im.convert("RGBA")
+    if im.size != (1162, 1507):
+        raise SystemExit(f"el panel del inventario cambió de tamaño ({im.size}): revisar WEAPON_SLOTS")
+    rgb = im.convert("RGB")
+    for x0, x1 in WEAPON_SLOTS:
+        mid = (x0 + x1) // 2
+        band = [sum(rgb.getpixel((x, y))) / 3 for x in range(x0 + 2, x1 - 2, 4) for y in range(SLOT_TOP + 3, SLOT_SEPARATOR - 2, 3)]
+        if sum(band) / len(band) > 10 or sum(rgb.getpixel((mid, SLOT_SEPARATOR))) / 3 < 90:
+            raise SystemExit("el panel del inventario cambió: la franja de las pestañas I/II no está donde se esperaba")
+        inside = im.crop((x0, SLOT_SEPARATOR + 1, x1, SLOT_BOTTOM))
+        im.paste(inside.resize((x1 - x0, SLOT_BOTTOM - SLOT_TOP - 1), Image.LANCZOS), (x0, SLOT_TOP + 1))
+    return im
+
+
 def bbox(frames):
     """El contorno visible común a todos los cuadros (los sprites traen margen transparente)."""
     box = None
@@ -160,7 +187,7 @@ def assets(c):
     # El panel de inventario del juego para el planificador: el muñeco con sus
     # diez casilleros y la grilla de abajo (donde van los talismanes), y la silueta
     # de cada casillero vacío.
-    save(first("panel/inventory/background"), "inventory", w=800, q=78)
+    save(weapon_slots_whole(first("panel/inventory/background")), "inventory", w=800, q=78)
     for slot in ["headarmor", "amulet", "weapon", "chestarmor", "shield", "glove", "belt", "boots", "ring"]:
         save(first(f"panel/inventory/inventory_paperdoll_{slot}"), f"paperdoll/{slot}", q=86)
 

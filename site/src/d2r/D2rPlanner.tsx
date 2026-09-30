@@ -60,6 +60,20 @@ const CLASS_TYPES = ["amaz", "sorc", "necr", "pala", "barb", "drui", "assn", "wa
 /** La penalidad a las resistencias en Normal, Pesadilla e Infierno. */
 const RES_PENALTY = [0, 40, 100];
 
+/**
+ * Las cuatro resistencias como las muestra la hoja del personaje: lo que suma el equipo menos la penalidad de la
+ * dificultad, con el tope de 75 (más lo que sume la resistencia máxima). En Infierno arrancan en −100: con poco
+ * equipo quedan negativas, y es lo que ve el juego.
+ */
+export function resistances(val: (stat: string) => number, d: number) {
+  return (["fire", "cold", "light", "poison"] as const).map((r) => {
+    const gear = val(`${r}resist`);
+    const raw = gear - RES_PENALTY[d];
+    const cap = 75 + val(`max${r}resist`);
+    return { key: r, gear, raw, shown: Math.min(raw, cap), cap };
+  });
+}
+
 type Ref = { k: "u" | "s" | "r"; id: string };
 type Build = { c: number; l: number; d: number; p: "max" | "min"; s: Partial<Record<SlotKey, Ref>>; ch: Ref[] };
 const EMPTY: Build = { c: 1, l: 90, d: 2, p: "max", s: {}, ch: [] };
@@ -196,11 +210,7 @@ export default function D2rPlanner(_: { route: Route; navigate: (r: Route) => vo
 
   const val = (name: string) => stats.filter((s) => s.s === name).reduce((n, s) => n + s.max, 0);
   // "Todas las resistencias" ya llega partida en las cuatro (res-all pone las cuatro stats).
-  const res = (["fire", "cold", "light", "poison"] as const).map((r) => {
-    const raw = val(`${r}resist`) - RES_PENALTY[b.d];
-    const cap = 75 + val(`max${r}resist`);
-    return { key: r, raw, shown: Math.min(raw, cap), cap };
-  });
+  const res = resistances(val, b.d);
   const reqLevel = Math.max(0, ...equipped.map((e) => e.it.req));
   const lines = useMemo(() => describe(stats, E, lang, b.l).map((l) => l.text), [stats, lang, b.l]);
 
@@ -333,10 +343,13 @@ export default function D2rPlanner(_: { route: Route; navigate: (r: Route) => vo
                   <li key={r.key} className={`is-${r.key}`}>
                     <span>{tp.res[r.key]}</span>
                     <b className={r.shown < 0 ? "is-neg" : r.shown >= r.cap ? "is-cap" : ""}>{r.shown}%</b>
-                    {r.raw > r.cap && <small>+{r.raw - r.cap}</small>}
+                    {RES_PENALTY[b.d] > 0 && <small>{tp.resGear(r.gear)}</small>}
+                    {r.raw > r.cap && <small>{tp.resOver(r.raw - r.cap)}</small>}
                   </li>
                 ))}
               </ul>
+              {/* Sin esto, un −90% en Infierno parecía un error: es la penalidad de la dificultad, como en el juego. */}
+              {RES_PENALTY[b.d] > 0 && <p className="d2-plan-note">{tp.resPenalty(tp.diffs[b.d], RES_PENALTY[b.d])}</p>}
               <h2 className="d2-h3">{tp.speeds}</h2>
               <dl className="d2-plan-kv">
                 {(

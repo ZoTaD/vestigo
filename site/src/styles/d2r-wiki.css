@@ -314,6 +314,7 @@ a.d2-rune-row:hover { background: #1a1511; }
 .d2-plan-res .is-light b { color: #ffe066; }
 .d2-plan-res .is-poison b { color: #7ee05a; }
 .d2-plan-res b.is-neg { color: #ff4d4d; }
+.d2-plan-note { margin: 6px 0 0; font-size: 13px; color: var(--d2-dim); }
 @media (max-width: 420px) { .d2-plan-res { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 /* Cada etiqueta con su número al lado, no en los extremos de la fila. */
 .d2-plan-kv { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 4px 16px; margin: 0; }
