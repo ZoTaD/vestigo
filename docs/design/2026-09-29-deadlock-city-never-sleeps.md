@@ -95,8 +95,10 @@ se compra cada objeto en la fase elegida. Datos: `npm run build:popular` →
 
 1. OK de ZoTaD sobre lo visual (se revisa en `localhost:5177`).
 2. `publish-deadlock.yml`: sumar los pasos `build:popular`,
-   `build:shop-filters` y `build:comebacks` después de `catalog` (no se pudo
-   editar el workflow desde la sesión). `build:comebacks` lee 15 días del lake
-   (~3 min) y escribe `data/comebacks.json` para la pestaña Remontadas.
+   `build:shop-filters`, `build:comebacks` y `build:rank-points` después de
+   `catalog` (no se pudo editar el workflow desde la sesión). `build:comebacks`
+   lee ~26 días del lake (~5 min) → `data/comebacks.json` (Remontadas);
+   `build:rank-points` lee 7 días (~1,5 min) → `data/rank-points.json` (el
+   recuadro "Cuántos puntos da cada partida" de Rangos).
 3. Push a `main` (la pieza 1 ya está verificada en la misma rama) y una corrida
    del workflow.

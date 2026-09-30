@@ -19,6 +19,7 @@
     "build:brawl": "node node_modules/tsx/dist/cli.mjs src/brawl.ts",
     "build:popular": "node node_modules/tsx/dist/cli.mjs src/popular.ts",
     "build:comebacks": "node --max-old-space-size=8192 node_modules/tsx/dist/cli.mjs src/comebacks.ts",
+    "build:rank-points": "node --max-old-space-size=8192 node_modules/tsx/dist/cli.mjs src/rankPoints.ts",
     "build:shop-filters": "node src/shopFilters.mjs"
   },
   "devDependencies": {

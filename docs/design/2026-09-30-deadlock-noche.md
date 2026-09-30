@@ -58,7 +58,8 @@ publica en `main` ni se tocan workflows. Cada tarea: probar en el navegador
       Hecho: pestaña **Remontadas** (2205940, 78b9a6c). La investigación
       (Reddit bloqueado; Steam, foro oficial, prensa) marcó como hueco total
       "si perdés la línea, ¿perdiste?". Segunda idea, sin hacer: "Ranked,
-      medido" (la fórmula de puntos: ±300 base, racha 2→+370 … 5+→+430).
+      medido" quedó como recuadro en Rangos ("Cuántos puntos da cada partida":
+      +300, racha +370/+390/+410/+430, −300, escudo ≈ −41; build:rank-points).
 
 ## G. Estilo Cartel en todo Deadlock (pedido de ZoTaD a la 1 h)
 - [x] G1. B fijo, sin botón (d5b65ef).

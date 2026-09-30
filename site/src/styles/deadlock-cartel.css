@@ -911,3 +911,116 @@
 [data-theme="codex"][data-game="deadlock"] .dl-hp-ability .dl-hp-stat-spirit {
   color: #7440c4;
 }
+
+/* ---------- Rangos: cuántos puntos da cada partida (DeadlockRankPoints) ----------
+   Una escalera de seis peldaños (la racha) y tres sellos (derrota, escudo,
+   calibración). */
+[data-theme="codex"][data-game="deadlock"] .dl-rp-head {
+  margin: 0.4rem 0 0.4rem;
+  font: 700 0.75rem/1 var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stairs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.5rem;
+  height: 12rem;
+  margin: 0 0 1.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stairs li {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 100%;
+  gap: 0.35rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-bar {
+  align-self: end;
+  display: grid;
+  place-items: start center;
+  height: var(--h);
+  padding-top: 0.5rem;
+  background:
+    url(/deadlock/game/ui/cns/speckle.webp) center / 300px,
+    #2f7a1f;
+  background-blend-mode: multiply, normal;
+  box-shadow: 3px 3px 0 rgba(30, 26, 20, 0.35);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stairs li:last-child .dl-rp-bar {
+  background-color: var(--cns-orange);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-bar strong {
+  font: 700 clamp(1.1rem, 2.4vw, 1.7rem)/1 "VN Reaver", var(--font-display);
+  color: #f4e8d2;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-nth {
+  text-align: center;
+  font: 700 0.85rem/1.1 var(--font-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stamps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stamps li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.8rem;
+  background: rgba(30, 26, 20, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(30, 26, 20, 0.12);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stamps strong {
+  flex: none;
+  font: 700 1.5rem/1 "VN Reaver", var(--font-display);
+  color: var(--text);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stamps li[data-tone="bad"] strong { color: var(--bad); }
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stamps li[data-tone="shield"] strong { color: #2b5caf; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stamps span {
+  display: grid;
+  gap: 0.15rem;
+  font: 700 0.85rem/1.2 var(--font-display);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stamps small {
+  font: 500 0.78rem/1.3 var(--font-body, inherit);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-dim);
+}
+
+@media (max-width: 600px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-rp-stairs {
+    gap: 0.25rem;
+    height: 10rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-rp-nth {
+    font-size: 0.66rem;
+  }
+}

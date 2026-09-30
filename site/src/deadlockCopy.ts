@@ -753,6 +753,19 @@ const EN = {
         "day by day — how many players sit at each rank, and where the games are being played.",
       view: { matches: "Matches", players: "Players" },
       /** "¿Dónde estás vos?": la pregunta que trae a la gente a una página de rangos. */
+      /** Cuántos puntos da cada partida, medido (2026-09-30). */
+      points: {
+        title: "How many points a game gives",
+        lead: (n: string, from: string, to: string) =>
+          `Measured over ${n} ranked games, ${from} to ${to}. The number is what most players got.`,
+        streakHead: "Win in a row",
+        nth: (k: number, last: boolean) => (last ? `${k + 1}th+` : ["1st", "2nd", "3rd", "4th", "5th"][k] ?? `${k + 1}th`),
+        avg: (pts: string) => `Average ${pts}`,
+        loss: "Loss",
+        shield: "Loss with a demotion shield",
+        shieldNote: "The shield takes the hit (average)",
+        calibration: "Calibrating, win / loss",
+      },
       mine: {
         title: "Where are you?",
         pick: "Your rank",
@@ -1904,6 +1917,19 @@ const ES: typeof EN = {
         "La Temporada 1 reinició todos los rangos el 30 de julio. Esto es la escalera " +
         "reconstruyéndose, día a día: cuánta gente hay en cada escalón y a qué nivel se juega.",
       view: { matches: "Partidas", players: "Jugadores" },
+      /** Cuántos puntos da cada partida, medido (2026-09-30). */
+      points: {
+        title: "Cuántos puntos da cada partida",
+        lead: (n: string, from: string, to: string) =>
+          `Medido en ${n} partidas clasificatorias, del ${from} al ${to}. El número es el que le tocó a la mayoría.`,
+        streakHead: "Victoria seguida n.º",
+        nth: (k: number, last: boolean) => (last ? `${k + 1}.ª o más` : `${k + 1}.ª`),
+        avg: (pts: string) => `Promedio ${pts}`,
+        loss: "Derrota",
+        shield: "Derrota con escudo de descenso",
+        shieldNote: "El escudo se lleva el golpe (promedio)",
+        calibration: "Calibrando, victoria / derrota",
+      },
       mine: {
         title: "¿Dónde estás vos?",
         pick: "Tu rango",

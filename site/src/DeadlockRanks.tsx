@@ -5,6 +5,7 @@ import { useCopy } from "./deadlockCopy";
 import { text } from "./localized";
 import { catalog } from "./deadlockData";
 import GameImg from "./GameImg";
+import DeadlockRankPoints from "./DeadlockRankPoints";
 import {
   dayRows,
   chalkBadge,
@@ -199,6 +200,9 @@ export default function DeadlockRanks() {
           </figure>
         )}
       </section>
+
+      {/* Cuántos puntos da cada partida: la fórmula que Valve no publicó. */}
+      <DeadlockRankPoints />
 
       <div className="dl-ranks-pair">
       {dias.length > 0 && (
