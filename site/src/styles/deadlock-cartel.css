@@ -1107,6 +1107,12 @@
   background: var(--diario-b);
 }
 
+/* La placa de la letra sobresale de la tira: va por encima de sus cantos
+   rasgados (el de abajo le cruzaba una línea por el pie). */
+[data-theme="codex"][data-game="deadlock"] .dl-tier-mark {
+  z-index: 2;
+}
+
 /* Los situacionales del tablero de build siguen en papel oscuro, sin cantos. */
 [data-theme="codex"][data-game="deadlock"] .dl-bshop .dl-panel.dl-counters {
   background: #1a1712;
