@@ -218,8 +218,11 @@
   border-color: var(--line-strong);
 }
 
-/* Móvil: la marca, los juegos como pastillas cortas, la lupa. El buscador
-   completo baja a una segunda fila cuando se abre. */
+/* Móvil: arriba la marca y el idioma, debajo los juegos y al final el buscador.
+   **Los juegos bajan a otra fila cuando no entran** (2026-09-29, capturas de
+   usuarios): eran una fila que se deslizaba de costado y cortaba "DIABLO II"
+   contra el borde, sin nada que avisara que seguía. Con el idioma al lado de
+   la marca, la barra usa una fila menos que antes aunque los juegos envuelvan. */
 @media (max-width: 760px) {
   .top-in {
     flex-wrap: wrap;
@@ -233,25 +236,24 @@
   }
 
   .top-places {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
+    order: 5;
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.1rem;
   }
 
-  .top-places::-webkit-scrollbar {
-    display: none;
-  }
-
+  /* Con este aire los cinco lugares entran en una fila desde 375 px; más
+     angosto, el último baja entero a la fila de abajo. */
   .top-place {
     flex: 0 0 auto;
-    padding: 0 0.5rem;
+    white-space: nowrap;
+    padding: 0 0.35rem;
     font-size: 0.68rem;
     letter-spacing: 0.06em;
   }
 
-  /* El juego anunciado no entra en un teléfono al lado de los tres que sí
-     existen; vuelve en cuanto tenga ruta. */
+  /* El juego anunciado no entra en un teléfono al lado de los que sí existen;
+     vuelve en cuanto tenga ruta. */
   .top-place.is-soon {
     display: none;
   }
@@ -269,6 +271,32 @@
   .top-search-field {
     width: 100%;
     height: var(--tap);
+  }
+}
+
+/* Tablet y ventanas angostas: con Diablo II son cinco lugares y el buscador ya
+   no entra en la misma fila (medido: hacen falta unos 1.000 px). Baja a una
+   segunda fila a todo el ancho, en vez de salirse por la derecha y tapar el
+   idioma (2026-09-29). */
+@media (min-width: 761px) and (max-width: 1000px) {
+  .top-in {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .top-lang {
+    margin-left: auto;
+  }
+
+  .top-search {
+    order: 10;
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+
+  .top-search-field {
+    width: 100%;
   }
 }
 

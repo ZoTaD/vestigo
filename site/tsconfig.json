@@ -17,7 +17,8 @@
       "@deadlock/*": ["../games/deadlock/data/*"],
       "@poe2/*": ["../games/poe2/data/*"],
       "@valheim/*": ["../games/valheim/data/site/*"],
-      "@valheimMap/*": ["../games/valheim/data/map/*"]
+      "@valheimMap/*": ["../games/valheim/data/map/*"],
+      "@d2r/*": ["../games/d2r/data/*"]
     }
   },
   "include": ["src", "vite.config.ts"]

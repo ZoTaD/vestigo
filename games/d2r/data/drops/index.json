@@ -1,0 +1,386 @@
+[
+ {
+  "sec": "drops",
+  "id": "corpsefire",
+  "en": "Corpsefire",
+  "es": "Cadáver ardiente"
+ },
+ {
+  "sec": "drops",
+  "id": "bishibosh",
+  "en": "Bishibosh",
+  "es": "Bishibosh"
+ },
+ {
+  "sec": "drops",
+  "id": "bonebreaker",
+  "en": "Bonebreaker",
+  "es": "Rompehuesos"
+ },
+ {
+  "sec": "drops",
+  "id": "coldcrow",
+  "en": "Coldcrow",
+  "es": "Cuervo Gélido"
+ },
+ {
+  "sec": "drops",
+  "id": "rakanishu",
+  "en": "Rakanishu",
+  "es": "Rakanishu"
+ },
+ {
+  "sec": "drops",
+  "id": "treehead-woodfist",
+  "en": "Treehead WoodFist",
+  "es": "Puñoleño del Árbol"
+ },
+ {
+  "sec": "drops",
+  "id": "griswold",
+  "en": "Griswold",
+  "es": "Griswold"
+ },
+ {
+  "sec": "drops",
+  "id": "the-countess",
+  "en": "The Countess",
+  "es": "La Condesa"
+ },
+ {
+  "sec": "drops",
+  "id": "the-smith",
+  "en": "The Smith",
+  "es": "El Herrero"
+ },
+ {
+  "sec": "drops",
+  "id": "pitspawn-fouldog",
+  "en": "Pitspawn Fouldog",
+  "es": "Perro Fétido del Foso"
+ },
+ {
+  "sec": "drops",
+  "id": "bone-ash",
+  "en": "Bone Ash",
+  "es": "Ceniza Ósea"
+ },
+ {
+  "sec": "drops",
+  "id": "the-cow-king",
+  "en": "The Cow King",
+  "es": "El Rey Vaca"
+ },
+ {
+  "sec": "drops",
+  "id": "radament",
+  "en": "Radament",
+  "es": "Radament"
+ },
+ {
+  "sec": "drops",
+  "id": "creeping-feature",
+  "en": "Creeping Feature",
+  "es": "Aparición Espeluznante"
+ },
+ {
+  "sec": "drops",
+  "id": "bloodwitch-the-wild",
+  "en": "Bloodwitch the Wild",
+  "es": "Bruja Sangrienta la Salvaje"
+ },
+ {
+  "sec": "drops",
+  "id": "beetleburst",
+  "en": "Beetleburst",
+  "es": "Ráfaga de Escarabajos"
+ },
+ {
+  "sec": "drops",
+  "id": "coldworm-the-burrower",
+  "en": "Coldworm the Burrower",
+  "es": "Cresálido el Excavador"
+ },
+ {
+  "sec": "drops",
+  "id": "dark-elder",
+  "en": "Dark Elder",
+  "es": "Ancestro Oscuro"
+ },
+ {
+  "sec": "drops",
+  "id": "fangskin",
+  "en": "Fangskin",
+  "es": "Piel Dentada"
+ },
+ {
+  "sec": "drops",
+  "id": "fire-eye",
+  "en": "Fire Eye",
+  "es": "Ojo Ardiente"
+ },
+ {
+  "sec": "drops",
+  "id": "the-summoner",
+  "en": "The Summoner",
+  "es": "El Invocador"
+ },
+ {
+  "sec": "drops",
+  "id": "ancient-kaa-the-soulless",
+  "en": "Ancient Kaa the Soulless",
+  "es": "Anciano Kaa el Desalmado"
+ },
+ {
+  "sec": "drops",
+  "id": "sszark-the-burning",
+  "en": "Sszark the Burning",
+  "es": "Sszark el Ardiente"
+ },
+ {
+  "sec": "drops",
+  "id": "witch-doctor-endugu",
+  "en": "Witch Doctor Endugu",
+  "es": "Santero Endugu"
+ },
+ {
+  "sec": "drops",
+  "id": "stormtree",
+  "en": "Stormtree",
+  "es": "Árbol Tormentoso"
+ },
+ {
+  "sec": "drops",
+  "id": "battlemaid-sarina",
+  "en": "Battlemaid Sarina",
+  "es": "Doncella Sarina"
+ },
+ {
+  "sec": "drops",
+  "id": "icehawk-riftwing",
+  "en": "Icehawk Riftwing",
+  "es": "Alagélida de la Grieta"
+ },
+ {
+  "sec": "drops",
+  "id": "ismail-vilehand",
+  "en": "Ismail Vilehand",
+  "es": "Ismail Manovil"
+ },
+ {
+  "sec": "drops",
+  "id": "geleb-flamefinger",
+  "en": "Geleb Flamefinger",
+  "es": "Geleb Dedo Llameante"
+ },
+ {
+  "sec": "drops",
+  "id": "toorc-icefist",
+  "en": "Toorc Icefist",
+  "es": "Toorc Puño de Hielo"
+ },
+ {
+  "sec": "drops",
+  "id": "bremm-sparkfist",
+  "en": "Bremm Sparkfist",
+  "es": "Bremm Puño Chispeante"
+ },
+ {
+  "sec": "drops",
+  "id": "wyand-voidbringer",
+  "en": "Wyand Voidbringer",
+  "es": "Wyand Portavacío"
+ },
+ {
+  "sec": "drops",
+  "id": "maffer-dragonhand",
+  "en": "Maffer Dragonhand",
+  "es": "Maffer Mano de Dragón"
+ },
+ {
+  "sec": "drops",
+  "id": "hephasto-the-armorer",
+  "en": "Hephasto The Armorer",
+  "es": "Efasto el Armero"
+ },
+ {
+  "sec": "drops",
+  "id": "infector-of-souls",
+  "en": "Infector of Souls",
+  "es": "Corruptor de Almas"
+ },
+ {
+  "sec": "drops",
+  "id": "lord-de-seis",
+  "en": "Lord De Seis",
+  "es": "Señor de Seis"
+ },
+ {
+  "sec": "drops",
+  "id": "grand-vizier-of-chaos",
+  "en": "Grand Vizier of Chaos",
+  "es": "Gran Visir del Caos"
+ },
+ {
+  "sec": "drops",
+  "id": "shenk-the-overseer",
+  "en": "Shenk the Overseer",
+  "es": "Shenk el Mayoral"
+ },
+ {
+  "sec": "drops",
+  "id": "dac-farren",
+  "en": "Dac Farren",
+  "es": "Dac Farren"
+ },
+ {
+  "sec": "drops",
+  "id": "eldritch-the-rectifier",
+  "en": "Eldritch the Rectifier",
+  "es": "Eldritch el Rectificador"
+ },
+ {
+  "sec": "drops",
+  "id": "eyeback-the-unleashed",
+  "en": "Eyeback the Unleashed",
+  "es": "Espaldojo el Desatado"
+ },
+ {
+  "sec": "drops",
+  "id": "sharptooth-slayer",
+  "en": "Sharptooth Slayer",
+  "es": "Exterminador de Dientes Afilados"
+ },
+ {
+  "sec": "drops",
+  "id": "thresh-socket",
+  "en": "Thresh Socket",
+  "es": "Azotador Engarzado"
+ },
+ {
+  "sec": "drops",
+  "id": "frozenstein",
+  "en": "Frozenstein",
+  "es": "Frozenstein"
+ },
+ {
+  "sec": "drops",
+  "id": "bonesaw-breaker",
+  "en": "Bonesaw Breaker",
+  "es": "Quebrantador de Sierra Ósea"
+ },
+ {
+  "sec": "drops",
+  "id": "snapchip-shatter",
+  "en": "Snapchip Shatter",
+  "es": "Destructor de Estalactitas"
+ },
+ {
+  "sec": "drops",
+  "id": "pindleskin",
+  "en": "Pindleskin",
+  "es": "Granujo"
+ },
+ {
+  "sec": "drops",
+  "id": "nihlathak",
+  "en": "Nihlathak",
+  "es": "Nihlathak"
+ },
+ {
+  "sec": "drops",
+  "id": "colenzo-the-annihilator",
+  "en": "Colenzo the Annihilator",
+  "es": "Colenzo el Aniquilador"
+ },
+ {
+  "sec": "drops",
+  "id": "achmel-the-cursed",
+  "en": "Achmel the Cursed",
+  "es": "Achmel el Maldito"
+ },
+ {
+  "sec": "drops",
+  "id": "bartuc-the-bloody",
+  "en": "Bartuc the Bloody",
+  "es": "Bartuc el Sangriento"
+ },
+ {
+  "sec": "drops",
+  "id": "ventar-the-unholy",
+  "en": "Ventar the Unholy",
+  "es": "Ventar el Impío"
+ },
+ {
+  "sec": "drops",
+  "id": "lister-the-tormentor",
+  "en": "Lister the Tormentor",
+  "es": "Lister el Atormentador"
+ },
+ {
+  "sec": "drops",
+  "id": "andariel",
+  "en": "Andariel",
+  "es": "Andariel"
+ },
+ {
+  "sec": "drops",
+  "id": "duriel",
+  "en": "Duriel",
+  "es": "Duriel"
+ },
+ {
+  "sec": "drops",
+  "id": "mephisto",
+  "en": "Mephisto",
+  "es": "Mefisto"
+ },
+ {
+  "sec": "drops",
+  "id": "diablo",
+  "en": "Diablo",
+  "es": "Diablo"
+ },
+ {
+  "sec": "drops",
+  "id": "baal",
+  "en": "Baal",
+  "es": "Baal"
+ },
+ {
+  "sec": "drops",
+  "id": "izual",
+  "en": "Izual",
+  "es": "Izual"
+ },
+ {
+  "sec": "drops",
+  "id": "blood-raven",
+  "en": "Blood Raven",
+  "es": "Cuervo Sangriento"
+ },
+ {
+  "sec": "drops",
+  "id": "diablo-clone",
+  "en": "Diablo Clone",
+  "es": "Clon de Diablo"
+ },
+ {
+  "sec": "drops",
+  "id": "colossal-talic",
+  "en": "Talic, Colossal Ancient",
+  "es": "Talic, Ancestro Colosal"
+ },
+ {
+  "sec": "drops",
+  "id": "colossal-madawc",
+  "en": "Madawc, Colossal Ancient",
+  "es": "Madawc, Ancestro Colosal"
+ },
+ {
+  "sec": "drops",
+  "id": "colossal-korlic",
+  "en": "Korlic, Colossal Ancient",
+  "es": "Korlic, Ancestro Colosal"
+ }
+]

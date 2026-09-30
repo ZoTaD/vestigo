@@ -20,7 +20,7 @@ import {
   useCopy,
   type Lang,
 } from "./i18n";
-import { LANGS, parseRoute, routePath, routeUrl, type Route } from "./route";
+import { LANGS, navigationPath, parseRoute, routePath, routeUrl, type Route } from "./route";
 
 /**
  * The shell: where you are, and the disclaimer under everything.
@@ -45,7 +45,7 @@ function Shell({
 }) {
   const copy = useCopy();
   const { view: place } = route;
-  const { DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, TermsPage, ValheimArea } = areas();
+  const { D2rArea, DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, TermsPage, ValheimArea } = areas();
   const [consent, setConsent] = useState<Consent | null>(storedConsent);
   // Reopening the notice from the footer is how a decision gets withdrawn,
   // which the GDPR requires to be as easy as giving it.
@@ -112,7 +112,7 @@ function Shell({
     <div
       className="app"
       data-theme="codex"
-      data-game={place === "deadlock" || place === "poe2" || place === "valheim" ? place : undefined}
+      data-game={place === "deadlock" || place === "poe2" || place === "valheim" || place === "d2r" ? place : undefined}
       /**
        * La home es el único lugar que no es el códex.
        *
@@ -145,6 +145,7 @@ function Shell({
         )}
         {place === "poe2" && <Poe2Area route={route} navigate={navigate} />}
         {place === "valheim" && <ValheimArea route={route} navigate={navigate} />}
+        {place === "d2r" && <D2rArea route={route} navigate={navigate} />}
         {place === "privacy" && <PrivacyPage />}
         {place === "terms" && <TermsPage />}
       </Suspense>
@@ -182,13 +183,16 @@ function Shell({
             peor que no nombrar ninguna. En PoE2 no se nombra a Valve (no es su juego) ni a los proveedores
             de datos, a pedido de ZoTaD; sí el crédito que pide la licencia de
             la tipografía Fontin. */}
-        <p className="foot-sources">
-          {place === "poe2" ? copy.footer.sourcesPoe2 : place === "valheim" ? copy.footer.sourcesValheim : copy.footer.sourcesDeadlock}
-        </p>
+        {place !== "d2r" && (
+          <p className="foot-sources">
+            {place === "poe2" ? copy.footer.sourcesPoe2 : place === "valheim" ? copy.footer.sourcesValheim : copy.footer.sourcesDeadlock}
+          </p>
+        )}
 
         {/* Lo piden las directrices de contenido de Valve. El de Riot, que iba
-            arriba de este, se fue con TFT el 2026-09-25. */}
-        <p className="foot-legal">{copy.footer.disclaimerValve}</p>
+            arriba de este, se fue con TFT el 2026-09-25. En Diablo II va el de
+            Blizzard: nombrar a Valve en un juego de Blizzard no avisa nada. */}
+        <p className="foot-legal">{place === "d2r" ? copy.footer.disclaimerBlizzard : copy.footer.disclaimerValve}</p>
 
         <p className="foot-copy">
           © {new Date().getFullYear()} {copy.brand}
@@ -273,7 +277,8 @@ export default function App({ ssrRoute }: { ssrRoute?: Route } = {}) {
     // inglés.
     if (next.lang !== route.lang) rememberLang(next.lang);
     const path = routePath(next);
-    if (path !== window.location.pathname) window.history.pushState(null, "", path);
+    // Al cambiar de idioma la dirección se lleva la query y el hash (ver `navigationPath`).
+    if (path !== window.location.pathname) window.history.pushState(null, "", navigationPath(route, next, window.location));
     setRoute(next);
   };
 

@@ -1,0 +1,89 @@
+{
+ "slug": "3-1-2",
+ "version": "3.1.2",
+ "date": "2026-04-01",
+ "season": null,
+ "title": {
+  "en": "Stability and Warlock fixes",
+  "es": "Estabilidad y arreglos del Conjurador"
+ },
+ "summary": {
+  "en": "A client patch focused on crashes, disconnects and display bugs, with a few Warlock fixes and more daggers at vendors. The Steam launch problem it caused was fixed the same day.",
+  "es": "Un parche de cliente centrado en cierres, desconexiones y errores de imagen, con algunos arreglos del Conjurador y más dagas en los mercaderes. El problema que causó al abrir el juego en Steam se resolvió ese mismo día."
+ },
+ "url": "https://news.blizzard.com/en-us/article/24271875/reign-of-the-warlock-3-1-2-patch-notes",
+ "sections": [
+  {
+   "title": {
+    "en": "Stability and graphics",
+    "es": "Estabilidad y gráficos"
+   },
+   "items": [
+    {
+     "en": "Fixed several crashes and disconnects.",
+     "es": "Se arreglaron varios cierres inesperados y desconexiones."
+    },
+    {
+     "en": "Fixed resolution problems and UI panels showing at the wrong size.",
+     "es": "Se arreglaron problemas de resolución y paneles de la interfaz que se veían del tamaño equivocado."
+    },
+    {
+     "en": "Fixed graphics rendering errors in several areas.",
+     "es": "Se arreglaron errores de renderizado en varias zonas."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Warlock",
+    "es": "Conjurador"
+   },
+   "items": [
+    {
+     "en": "Blood Oath no longer stays active after the character loses all skill points.",
+     "es": "Juramento de sangre ya no queda activo cuando el personaje pierde todos sus puntos de habilidad."
+    },
+    {
+     "en": "Casting Blood Boil several times in quick succession no longer kills your own demons.",
+     "es": "Lanzar Hervor de sangre varias veces seguidas ya no mata a tus propios demonios."
+    },
+    {
+     "en": "The visual effect of the Death Hex status is less intense.",
+     "es": "El efecto visual del estado Death Hex es menos intenso."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Vendors and chat",
+    "es": "Mercaderes y chat"
+   },
+   "items": [
+    {
+     "en": "Vendors now stock more daggers, which had been scarce since launch.",
+     "es": "Los mercaderes ahora tienen más dagas, que escaseaban desde el lanzamiento."
+    },
+    {
+     "en": "Game chat shows the character name again instead of the player's BattleTag.",
+     "es": "El chat de la partida vuelve a mostrar el nombre del personaje en lugar de la BattleTag del jugador."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Follow-up fixes",
+    "es": "Arreglos posteriores"
+   },
+   "items": [
+    {
+     "en": "April 1: after the update the Steam version failed to start with a data initialization error; a fix went out the same day.",
+     "es": "1 de abril: después de la actualización, la versión de Steam no abría por un error al iniciar los datos; el arreglo salió ese mismo día."
+    },
+    {
+     "en": "April 2 hotfix: demons bound with Bind Demon no longer leave corpses you can interact with.",
+     "es": "Hotfix del 2 de abril: los demonios de Amarrar demonio ya no dejan cadáveres con los que se pueda interactuar."
+    }
+   ]
+  }
+ ]
+}

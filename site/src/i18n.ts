@@ -140,6 +140,10 @@ const EN = {
       valheimPatches: "Patch notes",
       valheimEntries: "entries, with official names in English and Spanish",
       valheimBiomes: "biomes, each with its guide and its boss",
+      d2rLive: "All 33 runes with their level and runewords, and everything that can drop in Sanctuary, with the game's official names.",
+      d2rCta: "Runes and runewords",
+      d2rRunewords: "runewords",
+      d2rUniques: "uniques that can drop",
     },
   },
 
@@ -205,6 +209,9 @@ const EN = {
     disclaimerValve:
       "Vestigo isn't endorsed by Valve Corporation. Deadlock, Dota 2 and all associated " +
       "properties are trademarks or registered trademarks of Valve Corporation.",
+    disclaimerBlizzard:
+      "Vestigo is a fan site and isn't endorsed by or affiliated with Blizzard Entertainment. Diablo and " +
+      "Diablo II: Resurrected are trademarks or registered trademarks of Blizzard Entertainment, Inc.",
   },
 
   // Said plainly, and without a pre-ticked box or a greyed-out "decline": the
@@ -321,6 +328,10 @@ const ES: typeof EN = {
       valheimPatches: "Parches",
       valheimEntries: "fichas, con los nombres oficiales en español e inglés",
       valheimBiomes: "biomas, cada uno con su guía y su jefe",
+      d2rLive: "Las 33 runas con su nivel y sus palabras rúnicas, y todo lo que puede caer en Santuario, con los nombres oficiales del juego.",
+      d2rCta: "Runas y palabras rúnicas",
+      d2rRunewords: "palabras rúnicas",
+      d2rUniques: "únicos que pueden caer",
     },
   },
 
@@ -380,6 +391,9 @@ const ES: typeof EN = {
     disclaimerValve:
       "Vestigo tampoco está avalado por Valve Corporation. Deadlock, Dota 2 y todas sus " +
       "propiedades asociadas son marcas comerciales o marcas registradas de Valve Corporation.",
+    disclaimerBlizzard:
+      "Vestigo es un sitio de fans y no está avalado por Blizzard Entertainment ni afiliado a ella. Diablo y " +
+      "Diablo II: Resurrected son marcas comerciales o marcas registradas de Blizzard Entertainment, Inc.",
   },
 
   consent: {

@@ -1,0 +1,202 @@
+{
+ "slug": "3-1",
+ "version": "3.1",
+ "date": "2026-02-11",
+ "season": null,
+ "title": {
+  "en": "Reign of the Warlock launch",
+  "es": "Lanzamiento de Reign of the Warlock"
+ },
+ "summary": {
+  "en": "The Reign of the Warlock DLC adds the Warlock, the first new class in 25 years, along with act-wide Terror Zones with Heralds, the Colossal Ancients fight, the Chronicle, a built-in loot filter and stash tabs that stack items.",
+  "es": "El DLC Reign of the Warlock suma al Conjurador, la primera clase nueva en 25 años, junto con Zonas de Terror por acto con Heraldos, la pelea contra los Ancestros Colosales, la Crónica, un filtro de botín integrado y pestañas del Arcón que apilan objetos."
+ },
+ "url": "https://news.blizzard.com/en-us/article/24243863/rain-annihilation-in-reign-of-the-warlock",
+ "notes": false,
+ "sections": [
+  {
+   "title": {
+    "en": "The Warlock",
+    "es": "El Conjurador"
+   },
+   "items": [
+    {
+     "en": "A new playable class, the first added to Diablo II in 25 years, with three skill trees: Demon, Eldritch and Chaos.",
+     "es": "Una clase jugable nueva, la primera que suma Diablo II en 25 años, con tres árboles de habilidades: Demonio, Espanto y Caos."
+    },
+    {
+     "en": "Demon summons Goatmen, Tainted and Defilers, can take over the demons you fight with Bind Demon and can sacrifice them with Consume to power yourself up.",
+     "es": "Demonio invoca caprinos, impíos y profanadores, te deja someter a los demonios que enfrentás con Amarrar demonio y sacrificarlos con Consumir para potenciarte."
+    },
+    {
+     "en": "Eldritch hexes your weapon, attacks with ethereal copies of it and can hurl it from a distance.",
+     "es": "Espanto hechiza tu arma, ataca con copias etéreas de ella y puede lanzarla a distancia."
+    },
+    {
+     "en": "Chaos strikes from afar with hellfire and void: Miasma skills, Apocalypse and Abyss, which pulls enemies in.",
+     "es": "Caos castiga de lejos con fuego infernal y vacío: las habilidades de miasma, Apocalipsis y Abismo, que atrae a los enemigos."
+    },
+    {
+     "en": "An innate passive lets the Warlock levitate a two-handed weapon in one hand and still use an off-hand.",
+     "es": "Una pasiva propia de la clase le deja hacer levitar un arma de dos manos en una sola mano y usar igual la otra."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Terror Zones and Heralds",
+    "es": "Zonas de Terror y Heraldos"
+   },
+   "items": [
+    {
+     "en": "New consumables let you choose which Act gets terrorized; every zone in it becomes tougher and more rewarding.",
+     "es": "Nuevos consumibles te dejan elegir qué acto queda aterrorizado; todas sus zonas se vuelven más duras y dan mejor botín."
+    },
+    {
+     "en": "In Hell, Heralds hunt you down, and each one that catches you is far more dangerous than the last.",
+     "es": "En Infierno, los Heraldos te persiguen, y cada uno que te alcanza es mucho más peligroso que el anterior."
+    },
+    {
+     "en": "The Terror Zone rotation now changes every 30 minutes instead of every hour, with regrouped zones.",
+     "es": "La rotación de las Zonas de Terror ahora cambia cada 30 minutos en lugar de cada hora, con las zonas reagrupadas."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Colossal Ancients",
+    "es": "Ancestros Colosales"
+   },
+   "items": [
+    {
+     "en": "Terrorized Act bosses can drop Ancient statues; putting all five in the Horadric Cube opens the fight.",
+     "es": "Los jefes de acto aterrorizados pueden soltar estatuas de los Ancestros; con las cinco en el Cubo horádrico se abre la pelea."
+    },
+    {
+     "en": "Talic, Korlic and Madawc grow stronger as the fight goes on, and each one you kill empowers the rest.",
+     "es": "Talic, Korlic y Madawc se hacen más fuertes a medida que avanza la pelea, y cada uno que matás potencia a los demás."
+    },
+    {
+     "en": "The reward is a unique jewel that depends on the last Ancient killed: Defender's Fire or Defender's Bile (Talic), Protector's Frost or Protector's Stone (Korlic), Guardian's Thunder or Guardian's Light (Madawc).",
+     "es": "La recompensa es una joya única que depende del último Ancestro que matás: Fuego del defensor o Cólera del defensor (Talic), Escarcha del protector o Piedra del protector (Korlic), Trueno del guardián o Luz del guardián (Madawc)."
+    },
+    {
+     "en": "These jewels require level 75 and, like Gheed's Fortune, only one can be equipped at a time.",
+     "es": "Estas joyas piden nivel 75 y, como Fortuna de Gheed, sólo se puede tener una equipada a la vez."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "New items",
+    "es": "Objetos nuevos"
+   },
+   "items": [
+    {
+     "en": "Grimoires, the Warlock's off-hand, come in 15 bases across normal, exceptional and elite, and can roll Warlock skill mods and extra fire or magic damage.",
+     "es": "Los grimorios, la mano secundaria del Conjurador, vienen en 15 bases entre normales, excepcionales y de élite, y pueden salir con modificadores de habilidades del Conjurador y daño extra de fuego o mágico."
+    },
+    {
+     "en": "Daggers can roll up to three +1 to +3 bonuses to random Warlock skills; vendors in every act now sell them and they were removed from gambling.",
+     "es": "Las dagas pueden salir con hasta tres bonus de +1 a +3 a habilidades del Conjurador al azar; ahora las venden mercaderes de todos los actos y ya no se consiguen apostando."
+    },
+    {
+     "en": "Two Warlock sets: Bane's Garments, a low-level set, and Horazon's Splendor, a five-piece elite set.",
+     "es": "Dos conjuntos del Conjurador: Atuendos del azote, de nivel bajo, y Esplendor de Horazon, un conjunto de élite de cinco piezas."
+    },
+    {
+     "en": "Twelve new uniques, among them the Ars Al'Diabolos grimoire, Dreadfang, Wraithstep, the Opalvein and Sling rings and Gheed's Wager.",
+     "es": "Doce únicos nuevos, entre ellos el grimorio Ars Al'Diabolos, Dienterror, Piespectral, los anillos Vena opalina y Honda, y Apuesta de Gheed."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Runewords",
+    "es": "Palabras rúnicas"
+   },
+   "items": [
+    {
+     "en": "Authority (Hel + Shael + Ral) for 3-socket body armor and Coven (Ist + Ral + Io) for 3-socket helms.",
+     "es": "Autoridad (Hel + Shael + Ral) para armaduras de 3 engarces y Aquelarre (Ist + Ral + Io) para yelmos de 3 engarces."
+    },
+    {
+     "en": "Void (Thul + Zod + Ist) and Ritual (Amn + Shael + Ohm) for 3-socket daggers.",
+     "es": "Vacío (Thul + Zod + Ist) y Ritual (Amn + Shael + Ohm) para dagas de 3 engarces."
+    },
+    {
+     "en": "Vigilance (Dol + Gul) for 2-socket shields and grimoires.",
+     "es": "Vigilancia (Dol + Gul) para escudos y grimorios de 2 engarces."
+    },
+    {
+     "en": "Hustle was split in two: Hysteria for body armor and Mania for weapons.",
+     "es": "Hustle se dividió en dos: Histeria para armaduras y Manía para armas."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Chronicle, loot filter and stash",
+    "es": "Crónica, filtro de botín y Arcón"
+   },
+   "items": [
+    {
+     "en": "The Chronicle records every unique, set item and runeword you collect, with where and when you found it; completing parts of it unlocks rewards to show off.",
+     "es": "La Crónica registra cada único, objeto de conjunto y palabra rúnica que juntás, con dónde y cuándo lo encontraste; completar partes desbloquea recompensas para lucir."
+    },
+    {
+     "en": "A built-in loot filter decides what shows up when you press Alt; you can build your own, use community filters and share them by link on PC.",
+     "es": "Un filtro de botín integrado decide qué se ve al apretar Alt; podés armar el tuyo, usar los de la comunidad y compartirlos con un enlace en PC."
+    },
+    {
+     "en": "Advanced stash tabs stack items, with dedicated tabs for materials, gems, runes and consumables.",
+     "es": "Las pestañas avanzadas del Arcón apilan objetos, con pestañas propias para materiales, gemas, runas y consumibles."
+    },
+    {
+     "en": "Buying the DLC adds two stash tabs and two character slots.",
+     "es": "Comprar el DLC suma dos pestañas del Arcón y dos casillas de personaje."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Eras and editions",
+    "es": "Eras y ediciones"
+   },
+   "items": [
+    {
+     "en": "The game is split into three separate eras (Classic, Lord of Destruction and Reign of the Warlock), and your existing characters exist in each one independently.",
+     "es": "El juego se divide en tres eras separadas (Classic, Lord of Destruction y Reign of the Warlock), y tus personajes existen en cada una por su cuenta."
+    },
+    {
+     "en": "Characters can be carried forward (Classic to Lord of Destruction, then to Reign of the Warlock) but never back.",
+     "es": "Los personajes se pueden pasar hacia adelante (de Classic a Lord of Destruction y de ahí a Reign of the Warlock), pero nunca hacia atrás."
+    },
+    {
+     "en": "The game reached Steam as the Infernal Edition, which bundles the base game and the DLC; Xbox Game Pass only includes the base game.",
+     "es": "El juego llegó a Steam como Infernal Edition, que trae el juego base y el DLC; Xbox Game Pass sólo incluye el juego base."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "First fixes (February 12–17)",
+    "es": "Primeros arreglos (12 al 17 de febrero)"
+   },
+   "items": [
+    {
+     "en": "Hotfix 3.1.0.1 (February 12) fixed players being unable to join games because they were in different regions.",
+     "es": "El hotfix 3.1.0.1 (12 de febrero) arregló que no se pudiera entrar a partidas de jugadores de otras regiones."
+    },
+    {
+     "en": "The same hotfix delivered the Diablo IV and World of Warcraft bonus items to Steam buyers who were missing them.",
+     "es": "El mismo hotfix entregó los regalos para Diablo IV y World of Warcraft a quienes compraron en Steam y no los habían recibido."
+    },
+    {
+     "en": "February 17: a server fix stopped online Chronicles from being wiped when identifying set or unique items dropped by weapon and armor racks; offline play got its fix in March.",
+     "es": "17 de febrero: un arreglo del servidor evitó que la Crónica se borrara en línea al identificar objetos de conjunto o únicos caídos de estantes de armas y armaduras; sin conexión se arregló en marzo."
+    }
+   ]
+  }
+ ]
+}

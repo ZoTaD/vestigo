@@ -1,0 +1,15 @@
+{
+ "build": "3.3.93847",
+ "patch": "3.3",
+ "counts": {
+  "runes": 33,
+  "runewords": 99,
+  "uniques": 403,
+  "sets": 34,
+  "setItems": 135,
+  "cubeRecipes": 157,
+  "gems": 35,
+  "bases": 514
+ },
+ "extractedAt": "2026-09-29"
+}

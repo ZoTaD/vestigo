@@ -10,6 +10,7 @@ import { setPendingSearch } from "./pendingSearch";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import vhMeta from "@valheim/meta.json";
+import d2Meta from "@d2r/meta.json";
 
 /** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
 const VH_ENTRIES = Object.entries(vhMeta.counts).reduce((n, [k, v]) => (k === "biomes" || k === "bosses" ? n : n + v), 0);
@@ -298,6 +299,30 @@ export default function Home({
               </p>
             </div>
           </li>
+
+          {/* Diablo II salió de "Pronto" el 2026-09-29, con la portada de la sección. */}
+          <li className="game-panel" data-panel="d2r">
+            <div className="game-panel-main">
+              <h3 className="game-panel-name">{copy.games.diablo2}</h3>
+              <p className="game-panel-note">{copy.home.games.d2rLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "d2r", d2Section: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.d2rCta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(d2Meta.counts.runewords)}</b>
+                <span>{copy.home.games.d2rRunewords}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(d2Meta.counts.uniques)}</b>
+                <span>{copy.home.games.d2rUniques}</span>
+              </p>
+            </div>
+          </li>
         </ul>
 
         {/* Los que vienen, en el orden de la hoja de ruta (2026-09-23). Se
@@ -310,7 +335,6 @@ export default function Home({
             [
               ["dota", copy.games.dota, copy.home.games.dota],
               ["poe2", copy.games.poe2, copy.home.games.poe2],
-              ["diablo2", copy.games.diablo2, copy.home.games.diablo2],
             ] as const
           ).map(([id, nombre, nota]) => (
             <li className="game-soon" data-panel={id} key={id}>

@@ -5,6 +5,7 @@ import { LANGS, parseRoute, routeUrl, SITE_ORIGIN, type Route } from "./route";
 import { deadlockDetailSlugs, sitemapPaths, type SitemapData } from "./sitemap";
 import { POE2_COPY, type Poe2Copy } from "./poe2Copy";
 import { VALHEIM_COPY } from "./valheimCopy";
+import { D2R_COPY } from "./d2rCopy";
 
 /** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
 const copyOf = (lang: Lang) => ({ ...deadlockCopyFor(lang), seo: SEO_COPY[lang].seo });
@@ -101,6 +102,22 @@ export function metaFor(
     }
     return { title: v.seo.tab(tabName), description: v.tabLede[sec] };
   }
+  // Diablo II (2026-09-29): la portada, cada pestaña y cada ficha (la wiki y los jefes de la calculadora de drops).
+  if (route.view === "d2r") {
+    const s = D2R_COPY[lang].seo;
+    const sec = route.d2Section ?? "home";
+    if (sec === "home") return { title: s.title, description: s.description };
+    if (route.detail && detailName) {
+      if (sec === "runes") return s.rune(detailName);
+      if (sec === "runewords") return s.runeword(detailName);
+      if (sec === "uniques") return s.unique(detailName);
+      if (sec === "sets") return s.set(detailName);
+      if (sec === "classes") return s.cls(detailName);
+      if (sec === "patches") return s.patch(detailName);
+      if (sec === "drops") return s.dropsSource(detailName);
+    }
+    return s[sec as "runes" | "runewords" | "uniques" | "sets" | "bases" | "cube" | "classes" | "terror-zones" | "breakpoints" | "drops" | "planner" | "grail" | "patches"];
+  }
   // Lo que queda son la portada y las dos páginas legales.
   const page = seo[route.view];
   return { title: page.title(), description: page.description() };
@@ -133,6 +150,8 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const e of data.p2?.editions ?? []) out[`p2-patches/${e.slug}`] = e.version;
   for (const e of data.p2?.entries ?? []) out[`p2-encyclopedia/${e.id}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.vh?.entries ?? []) out[`vh-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.d2?.index ?? []) out[`d2-${e.sec}/${e.id}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const p of data.d2?.patches ?? []) out[`d2-patches/${p.slug}`] = p.version;
   for (const e of data.vh?.editions ?? []) {
     const name = (lang === "es" && e.title.es) || e.title.en;
     out[`vh-patches/${e.slug}`] = name ? `${e.version} — ${name}` : e.version;
@@ -166,6 +185,9 @@ export function ogImagePath(route: Route, latestEdition?: string): string | null
 export const DEFAULT_OG = `${SITE_ORIGIN}/og.jpg`;
 
 export function ogImageUrl(route: Route, latestEdition?: string, available: (path: string) => boolean = () => true): string {
+  // Diablo II tiene su propia vista previa (la puerta y el logo en llamas), para
+  // que lo que se comparte en X se vea como el juego y no como la portada del sitio.
+  if (route.view === "d2r") return `${SITE_ORIGIN}/d2r/og.jpg`;
   const path = ogImagePath(route, latestEdition);
   return path && available(path) ? `${SITE_ORIGIN}${path}` : DEFAULT_OG;
 }
@@ -243,6 +265,27 @@ export function jsonLdFor(
         inLanguage: lang,
         isAccessibleForFree: true,
         about: { "@type": "VideoGame", name: "Valheim" },
+      });
+    }
+    return out;
+  }
+  if (route.view === "d2r") {
+    // Vestigo › Diablo II › pestaña › ficha; el planificador, el Grial y la calculadora de drops (no las fichas de cada
+    // jefe), además, como aplicaciones web gratuitas.
+    const sec = route.d2Section ?? "home";
+    const tabs = D2R_COPY[lang].tabs;
+    const trail = [{ name: brand, url: home }, { name: "Diablo II: Resurrected", url: routeUrl({ ...route, d2Section: "home", detail: undefined }) }];
+    if (sec !== "home") trail.push({ name: tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
+    if (sec === "planner" || sec === "grail" || (sec === "drops" && !route.detail)) {
+      // La calculadora se presenta con el nombre de la herramienta y no con la etiqueta corta de su pestaña ("Drops"),
+      // que dice poco fuera de la barra; el planificador y el Grial ya se llaman parecido a su pestaña.
+      const name = sec === "drops" ? D2R_COPY[lang].tools.drops.name : tabs[sec];
+      out.push({
+        "@context": "https://schema.org", "@type": "WebApplication", name, description: page.description, url: page.canonical,
+        applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Diablo II: Resurrected" },
       });
     }
     return out;
@@ -329,7 +372,9 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
           ? `p2-${route.p2Section ?? "economy"}/${route.detail}`
           : route.view === "valheim"
             ? `vh-${route.vhSection ?? "home"}/${route.detail}`
-            : null;
+            : route.view === "d2r"
+              ? `d2-${route.d2Section ?? "home"}/${route.detail}`
+              : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
     const { title, description } = metaFor(route, lang, detail);
 
