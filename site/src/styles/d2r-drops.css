@@ -1,0 +1,148 @@
+/* ---------------------------------------------------------------------------
+   DIABLO II — la calculadora de drops (2026-09-29).
+
+   El mismo lenguaje que la wiki (d2r-wiki.css): piedra negra, la letra del
+   juego y el color en el texto (dorado único, verde conjunto, naranja runa).
+   Sin filos de color en las filas: las barras son de oro apagado sobre
+   piedra, como las de la Crónica. En el celular todo va en una columna, sin
+   tablas anchas, y los nombres bajan de línea entre palabras.
+--------------------------------------------------------------------------- */
+
+.d2-dr-about { display: grid; gap: 10px; max-width: 760px; margin-top: 28px; color: var(--d2-dim); }
+
+/* El directorio de jefes y superúnicos al pie de la calculadora: un enlace a la ficha de cada uno, por acto. Los nombres van en
+   columnas que se acomodan solas (dos en el celular) y bajan de línea entre palabras; el fondo es un tinte, sin filos de color. */
+.d2-dr-sources { display: grid; gap: 14px; margin-top: 40px; }
+.d2-dr-src-act { display: grid; gap: 6px; }
+.d2-dr-src-act h3 { font-family: var(--d2-title); font-weight: normal; font-size: 14px; letter-spacing: 0.05em; color: var(--d2-dim); }
+.d2-dr-src-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(190px, 100%), 1fr)); gap: 4px; list-style: none; padding: 0; margin: 0; }
+/* La celda llena la fila: los nombres de dos renglones no dejan tarjetas desparejas. */
+.d2-dr-src-list li { display: grid; }
+.d2-dr-src-list a { display: flex; align-items: center; padding: 7px 10px; font-family: var(--d2-title); font-size: 14px; line-height: 1.25; color: var(--d2-ink); text-decoration: none; background: #0f0d0b; }
+.d2-dr-src-list a:hover { background: #1b1612; }
+/* Nunca menos de lo que mide la palabra más larga ("Quebrantador"): la columna no se achica hasta que el nombre se salga. */
+@media (max-width: 600px) { .d2-dr-src-list { grid-template-columns: repeat(2, minmax(min-content, 1fr)); } }
+
+/* Controles. */
+.d2-dr-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 14px 0; }
+.d2-dr-field { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; color: var(--d2-dim); }
+.d2-dr-field input, .d2-dr-field select, .d2-dr-place select {
+  height: 36px; padding: 0 10px; min-width: 0; max-width: 100%;
+  background: #0d0b09; color: var(--d2-ink); border: 0; border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); font: inherit;
+  /* 16 px: con menos, el iPhone hace zoom sobre la página al tocar el campo. */
+  font-size: 16px;
+}
+.d2-dr-field input { width: 88px; }
+.d2-dr-extra summary { cursor: pointer; font-family: var(--d2-title); font-size: 13px; letter-spacing: 0.03em; color: var(--d2-dim); }
+.d2-dr-extra-in { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 10px; }
+
+/* El buscador y sus resultados, en la página. La región de resultados existe siempre (es una región viva): vacía no ocupa lugar. */
+.d2-dr-picker { display: grid; margin-bottom: 14px; }
+.d2-dr-results:not(:empty) { margin-top: 8px; }
+.d2-dr-nohits { color: var(--d2-dim); }
+/* Con las dos clases gana a .d2-search de la wiki sin depender del orden en que carguen las hojas. */
+.d2-search.d2-dr-search { max-width: 520px; }
+.d2-dr-hits { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 6px; list-style: none; padding: 0; margin: 0; }
+.d2-dr-hit {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 10px 6px 6px; text-align: left; cursor: pointer; color: inherit;
+  background: radial-gradient(ellipse at 20% 50%, #17130f, #0c0a08 75%); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+}
+.d2-dr-hit:hover { background: radial-gradient(ellipse at 20% 50%, #2a1f16, #0e0b09 75%); }
+.d2-dr-examples { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; color: var(--d2-dim); }
+.d2-dr-examples .d2-empty { flex-basis: 100%; }
+
+/* Por qué no lo suelta nadie y, si es de Clasificación esta temporada, el botón que la prende debajo. */
+.d2-dr-none { display: grid; justify-items: start; gap: 10px; margin: 16px 0; }
+.d2-dr-none .d2-empty { margin: 0; }
+
+/* El ítem elegido y las listas de lugares. */
+.d2-dr-item { display: flex; align-items: center; gap: 14px; margin: 6px 0 10px; }
+.d2-dr-item-h { font-family: var(--d2-title); font-weight: normal; font-size: clamp(20px, 3.4vw, 28px); letter-spacing: 0.03em; line-height: 1.2; }
+.d2-dr-item small { color: var(--d2-dim); }
+.d2-dr-list { margin-bottom: 22px; }
+.d2-dr-rows { display: grid; gap: 6px; list-style: none; padding: 0; margin: 0; }
+.d2-dr-row { background: radial-gradient(ellipse at 20% 50%, #17130f, #0c0a08 75%); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.035); }
+/* La columna del nombre no baja del ancho de su palabra más larga ("Desolladores"): con `minmax(0, 1fr)` cuatro cifras en millones la achicaban
+   hasta que el nombre se montaba sobre ellas (entre 761 y 800 px). Las cifras bajan de línea en su columna. Un segundo renglón (la barra de
+   los jefes) se ubica solo, así las filas de las áreas, que no la tienen, no reservan el espacio de un renglón vacío. */
+.d2-dr-row-main {
+  display: grid; grid-template-columns: minmax(min-content, 1fr) auto; grid-template-areas: "name odds";
+  gap: 6px 12px; width: 100%; padding: 10px 12px; text-align: left; cursor: pointer; color: inherit;
+}
+.d2-dr-row-main:hover { background: rgba(255, 255, 255, 0.025); }
+.d2-dr-row-name { grid-area: name; display: grid; gap: 2px; min-width: 0; }
+.d2-dr-row-name b { font-family: var(--d2-title); font-weight: normal; font-size: 16px; letter-spacing: 0.02em; color: var(--d2-ink); }
+.d2-dr-row-name small { font-size: 13px; color: var(--d2-dim); }
+.d2-dr-odds { grid-area: odds; align-self: center; font-family: var(--d2-title); font-size: 15px; color: var(--d2-unique); white-space: nowrap; }
+.d2-dr-bar { grid-column: 1 / -1; display: block; height: 4px; background: #1d1813; }
+.d2-dr-bar > i { display: block; height: 100%; background: linear-gradient(90deg, #7a6531, #c7b377); }
+.d2-dr-cats { grid-area: odds; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 14px; }
+.d2-dr-cats > span { display: grid; justify-items: end; }
+.d2-dr-cats small { font-family: var(--d2-title); font-size: 11px; letter-spacing: 0.04em; color: var(--d2-dim); }
+.d2-dr-cats b { font-family: var(--d2-title); font-weight: normal; font-size: 14px; color: var(--d2-unique); white-space: nowrap; }
+.d2-dr-open { display: grid; gap: 10px; justify-items: start; padding: 0 12px 12px; }
+.d2-dr-why summary { cursor: pointer; font-size: 14px; color: var(--d2-dim); }
+.d2-dr-why ol { display: grid; gap: 3px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--d2-ink); }
+/* "N pasos más" del camino de un número. */
+button.d2-dr-more { padding: 0; border: 0; background: none; font: inherit; color: var(--d2-dim); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* La curva del hallazgo mágico. */
+.d2-dr-mf { max-width: 520px; margin: 8px 0 22px; }
+.d2-dr-mf-svg { display: block; width: 100%; height: auto; background: #0d0b09; }
+.d2-dr-mf-svg polyline { fill: none; stroke: #c7b377; stroke-width: 2; }
+.d2-dr-mf-svg circle { fill: var(--d2-rune); }
+.d2-dr-mf-axis { stroke: rgba(255, 255, 255, 0.12); }
+.d2-dr-mf p { margin-top: 8px; color: var(--d2-dim); }
+
+/* "¿Qué suelta?": el lugar y las tres listas. */
+.d2-dr-place { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 14px; }
+/* El selector de lugar mide lo que su nombre más largo ("Fortaleza de la Piedra Ecuménica Nivel 1"): en el celular la etiqueta se achica al ancho de la página y el selector recorta lo que no entra. */
+.d2-dr-place > .d2-dr-field { min-width: 0; max-width: 100%; }
+.d2-dr-runes { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; list-style: none; padding: 0; margin: 0 0 18px; }
+/* La chance puede bajar de línea ("1 en 1.234" / "millones"): la pieza llena la celda para que las de una fila queden parejas. */
+.d2-dr-runes > li { display: grid; }
+.d2-dr-rune { display: grid; align-content: start; justify-items: center; gap: 2px; padding: 8px 4px; text-align: center; color: inherit; text-decoration: none; background: #0f0d0b; }
+.d2-dr-rune:hover { background: #1b1612; }
+.d2-dr-rune b { font-family: var(--d2-title); font-weight: normal; font-size: 13px; color: var(--d2-rune); }
+.d2-dr-rune small { font-size: 12px; color: var(--d2-dim); }
+.d2-dr-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.d2-dr-links a { text-decoration: none; }
+
+/* El simulador: el botín en el piso, con las etiquetas del juego. */
+.d2-dr-sim-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 6px 0 16px; }
+.d2-dr-open-btn { min-height: 44px; padding: 10px 22px; cursor: pointer; font-family: var(--d2-title); font-size: 15px; letter-spacing: 0.04em; color: #fff3d6; background: #5a1510; }
+.d2-dr-open-btn:hover { background: #7a1d15; }
+.d2-dr-ground { display: flex; flex-wrap: wrap; gap: 8px 10px; padding: 18px 14px; margin-bottom: 12px; background: radial-gradient(ellipse at 50% 40%, #1c1712, #080706 80%); }
+.d2-dr-loot { padding: 3px 8px; font-family: var(--d2-title); font-size: 14px; background: rgba(0, 0, 0, 0.72); }
+.d2-dr-loot.is-unique { color: var(--d2-unique); }
+.d2-dr-loot.is-set { color: var(--d2-set); }
+.d2-dr-loot.is-rune { color: var(--d2-rune); }
+.d2-dr-loot small { margin-left: 4px; color: #f1ece2; }
+.d2-dr-sum { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--d2-dim); }
+.d2-dr-sum .is-rare { color: #ffff64; }
+.d2-dr-sum .is-magic { color: var(--d2-magic); }
+
+/* La ficha usa .d2-detail (todo alineado al inicio); sus listas (y la región que las envuelve) van de lado a lado. */
+.d2-dr-src > section, .d2-dr-src > .d2-dr-controls, .d2-dr-src > .d2-dr-live { justify-self: stretch; width: 100%; }
+
+/* "calculando…" (ver Busy.tsx). Con una lista vieja a la vista va arriba a la derecha de ella, sin correr nada de lugar, y la
+   lista se apaga un poco; sin lista todavía, va solo en su renglón. Los dos con una demora corta, así una cuenta rápida no
+   parpadea. Es texto sobre el fondo de los campos: sin filos ni barras de color. */
+.d2-dr-live { position: relative; }
+.d2-dr-busy { margin: 0; font-size: 13px; color: var(--d2-dim); opacity: 0; animation: d2-dr-busy 0.2s ease-out 0.15s forwards; }
+.d2-dr-live > .d2-dr-busy:not(:only-child) { position: absolute; top: 0; right: 0; z-index: 1; padding: 2px 8px; background: #0d0b09; }
+.d2-dr-live.is-busy > :not(.d2-dr-busy) { opacity: 0.55; transition: opacity 0.2s 0.15s; }
+.d2-dr-examples > .d2-dr-live { flex-basis: 100%; }
+@keyframes d2-dr-busy { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .d2-dr-busy { animation-duration: 0s; }
+  .d2-dr-live.is-busy > :not(.d2-dr-busy) { transition-duration: 0s; }
+}
+
+/* Hasta 760 px la fila apila el nombre arriba y las cifras abajo: con cuatro cifras en millones (un ítem raro en una Zona de Terror) el nombre se quedaba sin lugar entre 600 y 700 px. */
+@media (max-width: 760px) {
+  .d2-dr-row-main { grid-template-areas: "name name" "odds odds"; }
+  .d2-dr-odds, .d2-dr-cats { justify-self: start; justify-content: flex-start; }
+  .d2-dr-cats > span { justify-items: start; }
+}

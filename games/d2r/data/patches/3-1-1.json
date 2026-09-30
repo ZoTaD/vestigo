@@ -1,0 +1,129 @@
+{
+ "slug": "3-1-1",
+ "version": "3.1.1",
+ "date": "2026-02-19",
+ "season": 13,
+ "title": {
+  "en": "Fixes for the start of Season 13",
+  "es": "Arreglos para el arranque de la Temporada 13"
+ },
+ "summary": {
+  "en": "The client patch that arrived the day before Ladder Season 13, the first ladder with the Warlock: crash, Chronicle and console fixes. It also covers the hotfixes that followed until March 10.",
+  "es": "El parche de cliente que llegó el día antes de la Temporada 13 de Clasificación, la primera con el Conjurador: arreglos de cierres, de la Crónica y de consolas. También incluye los hotfixes que siguieron hasta el 10 de marzo."
+ },
+ "url": "https://news.blizzard.com/en-us/article/24244884/reign-of-the-warlock-3-1-1-patch-notes",
+ "sections": [
+  {
+   "title": {
+    "en": "Ladder Season 13",
+    "es": "Temporada 13 de Clasificación"
+   },
+   "items": [
+    {
+     "en": "Season 13, the first ladder with the Warlock, started on February 20 at 5 p.m. PST (February 21 in Europe and Asia).",
+     "es": "La Temporada 13, la primera Clasificación con el Conjurador, empezó el 20 de febrero a las 17 h PST (21 de febrero en Europa y Asia)."
+    },
+    {
+     "en": "Season 12 had ended on February 11, the same day Reign of the Warlock launched.",
+     "es": "La Temporada 12 había terminado el 11 de febrero, el mismo día que salió Reign of the Warlock."
+    },
+    {
+     "en": "Mosaic was turned off in the Season 13 ladder because of a graphics bug that could crash the game; it stayed available offline and in non-ladder.",
+     "es": "Mosaico quedó desactivada en la Clasificación de la Temporada 13 por un error gráfico que podía cerrar el juego; siguió disponible sin conexión y fuera de Clasificación."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Gameplay and crashes",
+    "es": "Juego y cierres"
+   },
+   "items": [
+    {
+     "en": "Mosaic can now be crafted online in non-ladder games; when Reign of the Warlock launched it only worked offline.",
+     "es": "Mosaico ya se puede hacer en línea fuera de Clasificación; al salir Reign of the Warlock sólo funcionaba sin conexión."
+    },
+    {
+     "en": "Diablo's Lightning Breath now hits characters standing right next to him (this was already fixed with patch 3.1).",
+     "es": "El Aliento eléctrico de Diablo ahora alcanza a los personajes que están pegados a él (ya se había arreglado con el parche 3.1)."
+    },
+    {
+     "en": "Fixed client freezes and a crash when using the game list with mouse and keyboard.",
+     "es": "Se arreglaron congelamientos del cliente y un cierre al usar la lista de partidas con mouse y teclado."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Interface and Chronicle",
+    "es": "Interfaz y Crónica"
+   },
+   "items": [
+    {
+     "en": "Mania no longer appears in the Chronicle as Hustle.",
+     "es": "Manía ya no aparece en la Crónica como Hustle."
+    },
+    {
+     "en": "The Chronicle no longer marks items you already registered as eligible.",
+     "es": "La Crónica ya no marca como disponibles objetos que ya tenías registrados."
+    },
+    {
+     "en": "The Chronicle's backlight reward no longer looks distorted on the Amazon.",
+     "es": "La recompensa de retroiluminación de la Crónica ya no se ve deformada en la Amazona."
+    },
+    {
+     "en": "Fixed the Apocalypse tooltip and an error on the title screen.",
+     "es": "Se corrigieron la descripción de Apocalipsis y un error en la pantalla de título."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Consoles",
+    "es": "Consolas"
+   },
+   "items": [
+    {
+     "en": "Fixed several crashes and lockups when docking or undocking a Nintendo Switch, including on the ladder board, in the brightness and screen space options and with the loot filter's rule editor open.",
+     "es": "Se arreglaron varios cierres y bloqueos al conectar o desconectar la Nintendo Switch de la base, incluso en la tabla de Clasificación, en las opciones de brillo y espacio de pantalla y con el editor de reglas del filtro de botín abierto."
+    },
+    {
+     "en": "Searching the Chronicle no longer crashes the game on Switch.",
+     "es": "Buscar en la Crónica ya no cierra el juego en Switch."
+    },
+    {
+     "en": "Fixed overlapping UI on handhelds when using mouse and keyboard.",
+     "es": "Se arregló la interfaz superpuesta en portátiles al usar mouse y teclado."
+    },
+    {
+     "en": "3.1.1 itself brought a UI bug to PlayStation, fixed on PS4 on February 25 and on PS5 on February 26.",
+     "es": "El propio 3.1.1 trajo un error de interfaz en PlayStation, que se arregló el 25 de febrero en PS4 y el 26 en PS5."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Hotfixes (February 26 – March 10)",
+    "es": "Hotfixes (26 de febrero al 10 de marzo)"
+   },
+   "items": [
+    {
+     "en": "February 26 (3.1.1.2): the Colossal Ancients jewel drops again online even if a player went in and out of the portal during the fight.",
+     "es": "26 de febrero (3.1.1.2): la joya de los Ancestros Colosales vuelve a caer en línea aunque alguien haya entrado y salido del portal durante la pelea."
+    },
+    {
+     "en": "March 4: you can join ladder games hosted in another region again.",
+     "es": "4 de marzo: se vuelve a poder entrar a partidas de Clasificación de otra región."
+    },
+    {
+     "en": "March 10 (3.1.1.4): identifying uniques dropped by weapon or armor racks no longer resets the Chronicle, online or offline.",
+     "es": "10 de marzo (3.1.1.4): identificar únicos caídos de estantes de armas o armaduras ya no reinicia la Crónica, ni en línea ni sin conexión."
+    },
+    {
+     "en": "The same update fixed the Colossal Ancients jewel in offline games and improved stability.",
+     "es": "Esa misma actualización arregló la joya de los Ancestros Colosales en partidas sin conexión y mejoró la estabilidad."
+    }
+   ]
+  }
+ ]
+}

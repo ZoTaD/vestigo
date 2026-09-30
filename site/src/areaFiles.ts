@@ -1,4 +1,4 @@
-import type { DeadlockSection, Route, View } from "./route";
+import type { D2rSection, DeadlockSection, Route, View } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -14,6 +14,7 @@ export const AREA_FILES: Partial<Record<View, string>> = {
   deadlock: "src/DeadlockArea.tsx",
   poe2: "src/Poe2Area.tsx",
   valheim: "src/Valheim.tsx",
+  d2r: "src/D2r.tsx",
   privacy: "src/Privacy.tsx",
   terms: "src/Terms.tsx",
 };
@@ -36,6 +37,26 @@ export const DEADLOCK_TAB_FILES: Partial<Record<DeadlockSection, string>> = {
 };
 
 /**
+ * Las pestañas de Diablo II que viajan en su propio chunk, igual que `TABS` en
+ * `D2r.tsx` (2026-09-29). La portada viene con el área.
+ */
+export const D2R_TAB_FILES: Partial<Record<D2rSection, string>> = {
+  runes: "src/d2r/D2rRunes.tsx",
+  runewords: "src/d2r/D2rRunewords.tsx",
+  uniques: "src/d2r/D2rUniques.tsx",
+  sets: "src/d2r/D2rSets.tsx",
+  bases: "src/d2r/D2rBases.tsx",
+  cube: "src/d2r/D2rCube.tsx",
+  classes: "src/d2r/D2rClasses.tsx",
+  "terror-zones": "src/d2r/D2rZones.tsx",
+  breakpoints: "src/d2r/D2rBreakpoints.tsx",
+  drops: "src/d2r/D2rDrops.tsx",
+  planner: "src/d2r/D2rPlanner.tsx",
+  grail: "src/d2r/D2rGrail.tsx",
+  patches: "src/d2r/D2rPatches.tsx",
+};
+
+/**
  * Los servidores que una pestaña consulta apenas abre (2026-09-25): el HTML les
  * abre la conexión (`preconnect`) mientras baja el JS, y la primera consulta
  * no espera el DNS y el TLS. `cors` es para `fetch`; una imagen va sin. (Las
@@ -53,6 +74,7 @@ export const originsFor = (route: Route) => (route.view === "deadlock" ? DEADLOC
 export function filesFor(route: Route): string[] {
   const area = AREA_FILES[route.view];
   if (!area) return [];
-  const tab = route.view === "deadlock" ? DEADLOCK_TAB_FILES[route.dlSection] : undefined;
+  const tab =
+    route.view === "deadlock" ? DEADLOCK_TAB_FILES[route.dlSection] : route.view === "d2r" ? D2R_TAB_FILES[route.d2Section ?? "home"] : undefined;
   return tab ? [area, tab] : [area];
 }

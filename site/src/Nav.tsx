@@ -6,7 +6,7 @@ import { routeInLang, type Route } from "./route";
 import { artUrl, iconUrl, loadIndex, peekIndex, searchIndex, type IndexEntry } from "./valheimData";
 import type { ValheimCopy } from "./valheimCopy";
 
-export type Game = "deadlock" | "poe2" | "valheim";
+export type Game = "deadlock" | "poe2" | "valheim" | "d2r";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
 export type Place = "home" | Game;
 /** The legal pages are reachable from the footer and highlight no tab. */
@@ -148,10 +148,19 @@ export default function Nav({
           >
             {copy.games.valheim}
           </RouteLink>
+          {/* Diablo II salió de "Pronto" el 2026-09-29, con su portada. */}
+          <RouteLink
+            className="top-place"
+            to={{ ...a("d2r"), d2Section: "home" }}
+            active={active === "d2r"}
+            onNavigate={onNavigate}
+          >
+            {copy.games.diablo2Short}
+          </RouteLink>
           {/* Los juegos que vienen se anuncian, no se enlazan: no existe la
               ruta, así que un enlace llevaría a un 404 y de paso entraría al
               sitemap. En el orden de la hoja de ruta (2026-09-23). */}
-          {[copy.games.dota, copy.games.diablo2Short].map((nombre) => (
+          {[copy.games.dota].map((nombre) => (
             <span className="top-place is-soon" aria-disabled="true" key={nombre}>
               {nombre}
               <em className="top-soon">{copy.games.soon}</em>

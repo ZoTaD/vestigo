@@ -9,7 +9,7 @@ import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, type Route } from "./src/route";
 import { COPY } from "./src/i18n";
-import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor, originsFor } from "./src/areaFiles";
+import { AREA_FILES, D2R_TAB_FILES, DEADLOCK_TAB_FILES, filesFor, originsFor } from "./src/areaFiles";
 
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
 const BRAND = COPY.en.brand;
@@ -20,6 +20,8 @@ const poe2Dir = fileURLToPath(new URL("../games/poe2/data", import.meta.url));
 const valheimDir = fileURLToPath(new URL("../games/valheim/data/site", import.meta.url));
 // El mapa por semilla (2026-09-25): las tablas de lugares que saca `pipeline/map_data.py`.
 const valheimMapDir = fileURLToPath(new URL("../games/valheim/data/map", import.meta.url));
+// Diablo II: Resurrected (2026-09-29): lo que escribe `games/d2r/tools/extract.py`.
+const d2rDir = fileURLToPath(new URL("../games/d2r/data", import.meta.url));
 
 /**
  * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.
@@ -126,16 +128,44 @@ function readSitemapData(): { data: OgData } {
           editions: vhPatches.editions,
         }
       : undefined;
+  // Diablo II: la portada, las pestañas, las fichas de la wiki y de los jefes de la calculadora de drops, y los parches.
+  // Sin el extractor corrido, afuera del sitemap.
+  let d2: SitemapData["d2"];
+  try {
+    d2 = JSON.parse(readFileSync(`${d2rDir}/meta.json`, "utf-8"));
+    // Las fichas de la wiki (runas, palabras rúnicas, únicos, conjuntos). Sin el
+    // índice, la sección entra sólo con sus pestañas.
+    try {
+      d2!.index = JSON.parse(readFileSync(`${d2rDir}/wiki/index.json`, "utf-8"));
+    } catch {
+      /* sin wiki.py corrido */
+    }
+    try {
+      // Las fichas de jefes y superúnicos de la calculadora de drops, en el mismo índice.
+      d2!.index = [...(d2!.index ?? []), ...JSON.parse(readFileSync(`${d2rDir}/drops/index.json`, "utf-8"))];
+    } catch {
+      /* sin drops.py corrido */
+    }
+    try {
+      d2!.patches = JSON.parse(readFileSync(`${d2rDir}/patches/index.json`, "utf-8"));
+    } catch {
+      /* todavía sin parches */
+    }
+  } catch {
+    d2 = undefined;
+  }
   return {
     data: {
       p2,
       vh,
+      d2,
       // Los sellos de cada pipeline, para el `lastmod` del sitemap. La
       // enciclopedia de PoE2 no tiene sello y va sin fecha.
       dates: {
         deadlock: dlHeroesFile.generatedAt,
         poe2Economy: p2Leagues?.updated,
         valheim: readVh("meta.json")?.extractedAt,
+        d2r: d2?.extractedAt,
       },
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
@@ -253,7 +283,7 @@ function areaTags(bundle: Record<string, { type: string } & Record<string, any>>
     return root;
   };
   // Que falte un chunk tiene que romper el build ahora, no en la página que lo use.
-  for (const file of [...Object.values(AREA_FILES), ...Object.values(DEADLOCK_TAB_FILES)]) chunkOf(file!);
+  for (const file of [...Object.values(AREA_FILES), ...Object.values(DEADLOCK_TAB_FILES), ...Object.values(D2R_TAB_FILES)]) chunkOf(file!);
   const fresh = (f: string) => !html.includes(`/${f}"`);
   const cache = new Map<string, string>();
   return (files) => {
@@ -442,7 +472,7 @@ export default defineConfig({
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
     // juego y no uno genérico, para que un import diga de qué juego habla.
-    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir },
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

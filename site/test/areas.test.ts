@@ -27,7 +27,7 @@ describe("cada vista en su chunk (2026-09-25)", () => {
   });
 
   it("hay un área por cada vista que sirve el sitio", () => {
-    expect(Object.keys(byView).sort()).toEqual(["deadlock", "home", "poe2", "privacy", "terms", "valheim"]);
+    expect(Object.keys(byView).sort()).toEqual(["d2r", "deadlock", "home", "poe2", "privacy", "terms", "valheim"]);
   });
 
   it("DEADLOCK_TAB_FILES nombra el mismo archivo que TABS en DeadlockArea.tsx", () => {

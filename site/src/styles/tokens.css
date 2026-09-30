@@ -165,6 +165,34 @@
   --radius-pill: 3px;
 }
 
+/* Diablo II: Resurrected (2026-09-29): piedra negra, el oro de los únicos y el
+   rojo del Arcón. Como en los otros juegos, sólo cambian los colores de la
+   cáscara; la letra y los adornos del juego viven en d2r.css. */
+[data-theme="codex"][data-game="d2r"] {
+  --bg: #060504;
+  --bg-2: #0e0c0a;
+  --bg-glow: #2a1208;
+  --surface: rgba(255, 240, 210, 0.045);
+  --surface-2: rgba(255, 240, 210, 0.08);
+  --surface-solid: #12100d;
+  --text: #e6dac0;
+  --text-dim: #9a8f78;
+  --text-faint: #6d6555;
+  --accent: #c7b377;
+  --accent-lit: #e8d9a8;
+  --accent-dark: #8c7c4f;
+  --accent-rgb: 199, 179, 119;
+  --accent-2: #b32a2a;
+  --good: #00c000;
+  --bad: #d0402f;
+  --line: rgba(199, 179, 119, 0.2);
+  --line-strong: rgba(199, 179, 119, 0.45);
+  --on-accent: #060504;
+  --radius: 2px;
+  --radius-lg: 2px;
+  --radius-pill: 2px;
+}
+
 /* Portada: papel. La marca es clara y los juegos son oscuros; ese contraste es
    el que hace que cada juego pegue el salto al entrar. */
 [data-theme="codex"][data-place="home"] {

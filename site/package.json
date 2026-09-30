@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "d2:drops": "vite-node -c scripts/node.config.ts scripts/d2-drops.ts"
   },
   "dependencies": {
     "@fontsource/barlow": "^5.3.0",

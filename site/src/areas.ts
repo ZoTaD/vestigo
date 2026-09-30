@@ -24,6 +24,8 @@ export const HomeArea = lazyWithPreload(() => import("./Home"));
 export const DeadlockArea = lazyWithPreload(loadDeadlock);
 export const Poe2Area = lazyWithPreload(() => import("./Poe2Area"));
 export const ValheimArea = lazyWithPreload(() => import("./Valheim"));
+const loadD2r = () => import("./D2r");
+export const D2rArea = lazyWithPreload(loadD2r);
 export const PrivacyPage = lazyWithPreload(() => import("./Privacy"));
 export const TermsPage = lazyWithPreload(() => import("./Terms"));
 
@@ -39,6 +41,7 @@ const BY_VIEW: Partial<Record<View, { preload: () => Promise<void> }>> = {
   deadlock: DeadlockArea,
   poe2: Poe2Area,
   valheim: ValheimArea,
+  d2r: D2rArea,
   privacy: PrivacyPage,
   terms: TermsPage,
 };
@@ -55,4 +58,5 @@ export const preloadView = (view: View): Promise<void> =>
 export const preloadRoute = async (route: Route): Promise<void> => {
   await preloadView(route.view);
   if (route.view === "deadlock") await loadDeadlock().then((m) => m.preloadTab(route)).catch(() => undefined);
+  if (route.view === "d2r") await loadD2r().then((m) => m.preloadTab(route)).catch(() => undefined);
 };

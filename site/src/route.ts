@@ -31,7 +31,7 @@ export type DeadlockSection =
   | "patches"
   | "player"
   | "match";
-export type View = "home" | "deadlock" | "poe2" | "valheim" | "privacy" | "terms";
+export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -51,6 +51,19 @@ export type Poe2Section = "economy" | "encyclopedia" | "patches" | "tree" | "reg
 export type ValheimTab = "foods" | "meads" | "weapons" | "armor" | "tools" | "building" | "materials" | "creatures" | "biomes" | "places" | "bosses";
 export type ValheimSection = "home" | ValheimTab | "patches" | "map" | "planner";
 export const VALHEIM_TABS: ValheimTab[] = ["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "places", "bosses"];
+/**
+ * Diablo II: Resurrected (2026-09-29). "home" es la portada (`/d2r`); cada
+ * pestaña lleva su nombre en la URL y, las que tienen fichas, el slug
+ * (`/d2r/runewords/enigma`). Una dirección desconocida debajo de `/d2r` cae en
+ * la portada, como en Valheim. El planificador lleva el equipo en `?b=`, que no
+ * es parte de la ruta; la calculadora de drops también guarda su estado en la
+ * query (`?m=`, `?i=`…) y tiene una ficha por jefe (`/d2r/drops/mephisto`).
+ */
+export type D2rTab = "runes" | "runewords" | "uniques" | "sets" | "bases" | "cube" | "classes" | "terror-zones" | "breakpoints" | "drops" | "planner" | "grail" | "patches";
+export type D2rSection = "home" | D2rTab;
+export const D2R_SECTIONS: D2rTab[] = ["runes", "runewords", "uniques", "sets", "bases", "cube", "classes", "terror-zones", "breakpoints", "drops", "planner", "grail", "patches"];
+/** Las pestañas con una ficha por cosa (las que recorre el sitemap). */
+export const D2R_DETAIL_SECTIONS: D2rTab[] = ["runes", "runewords", "uniques", "sets", "classes", "patches", "drops"];
 
 export const LANGS: Lang[] = ["en", "es"];
 /**
@@ -124,6 +137,8 @@ export interface Route {
   p2Section?: Poe2Section;
   /** Qué pestaña de Valheim. Sin ella es la portada de la sección. */
   vhSection?: ValheimSection;
+  /** Qué pestaña de Diablo II. Sin ella es la portada de la sección. */
+  d2Section?: D2rSection;
   /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
   detail?: string;
 }
@@ -136,8 +151,9 @@ const isP2Section = (v: string): v is Poe2Section => (POE2_SECTIONS as string[])
  * 2026-09-25: una `/tft/...` vieja cae en la portada (y en Netlify ni llega,
  * porque `netlify.toml` la redirige con 301 antes).
  */
-const isView = (v: string): v is View => ["home", "deadlock", "poe2", "valheim", "privacy", "terms"].includes(v);
+const isView = (v: string): v is View => ["home", "deadlock", "poe2", "valheim", "d2r", "privacy", "terms"].includes(v);
 const isVhTab = (v: string | undefined): v is ValheimTab => !!v && (VALHEIM_TABS as string[]).includes(v);
+const isD2Tab = (v: string | undefined): v is D2rTab => !!v && (D2R_SECTIONS as string[]).includes(v);
 
 /**
  * A name as it appears in a URL: lowercase, ASCII, hyphen-separated.
@@ -217,6 +233,12 @@ export function parseRoute(pathname: string): Route {
     return { ...base, view: "valheim", vhSection: rest[1], detail: rest[2] || undefined };
   }
 
+  if (head === "d2r") {
+    if (!isD2Tab(rest[1])) return { ...base, view: "d2r", d2Section: "home" };
+    const detail = (D2R_DETAIL_SECTIONS as string[]).includes(rest[1]) && rest[2] ? rest[2] : undefined;
+    return { ...base, view: "d2r", d2Section: rest[1], detail };
+  }
+
   return { ...base, view: head };
 }
 
@@ -244,11 +266,33 @@ export function routePath(route: Route): string {
     if (sec === "home") return `/${lang}/valheim`;
     return detail ? `/${lang}/valheim/${sec}/${detail}` : `/${lang}/valheim/${sec}`;
   }
+  if (view === "d2r") {
+    const sec = route.d2Section ?? "home";
+    if (sec === "home") return `/${lang}/d2r`;
+    return detail ? `/${lang}/d2r/${sec}/${detail}` : `/${lang}/d2r/${sec}`;
+  }
   return `/${lang}/${view}`;
 }
 
 /** The same page in the other language, for the hreflang links. */
 export const routeInLang = (route: Route, lang: Lang): Route => ({ ...route, lang });
+
+/**
+ * La dirección que se escribe en la barra al navegar de `from` a `to` (2026-09-29).
+ *
+ * Es `routePath(to)`, salvo cuando `to` es **la misma página en otro idioma** (el selector EN / ES): ahí viajan también
+ * la query y el hash de la dirección actual. Las pestañas guardan su estado en la query (el ítem de la calculadora de
+ * drops, el equipo del planificador, el Grial que se mira) y no se remontan al cambiar de idioma: el estado seguía en
+ * pantalla pero la dirección lo perdía, y "Copiar enlace" o recargar lo dejaban afuera. Cualquier otra navegación
+ * empieza limpia, como siempre.
+ *
+ * Pura y con la ubicación por argumento (`at`), para probarla sin navegador.
+ */
+export function navigationPath(from: Route, to: Route, at: { search: string; hash: string }): string {
+  const path = routePath(to);
+  const samePage = to.lang !== from.lang && routePath({ ...to, lang: from.lang }) === routePath(from);
+  return samePage ? path + at.search + at.hash : path;
+}
 
 export const SITE_ORIGIN = "https://vestigo.gg";
 

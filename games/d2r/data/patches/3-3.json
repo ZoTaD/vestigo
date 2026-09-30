@@ -1,0 +1,197 @@
+{
+ "slug": "3-3",
+ "version": "3.3",
+ "date": "2026-08-18",
+ "season": 15,
+ "title": {
+  "en": "Season 15 and item buffs",
+  "es": "Temporada 15 y mejoras de objetos"
+ },
+ "summary": {
+  "en": "The patch that opened Ladder Season 15: eight ladder-only runewords reach non-ladder, several leveling uniques and the Angelic Raiment set get Ladder-only buffs, and Latent Sunder Charms and Worldstone Shards get harder to find.",
+  "es": "El parche que abrió la Temporada 15 de Clasificación: ocho palabras rúnicas dejan de ser exclusivas de Clasificación, varios únicos para subir de nivel y el conjunto Vestiduras angelicales reciben mejoras sólo en Clasificación, y los Talismanes de merma latentes y los fragmentos de la Piedra Ecuménica cuestan más de conseguir."
+ },
+ "url": "https://news.blizzard.com/en-us/article/24296140/diablo-ii-resurrected-ladder-season-15-now-live",
+ "sections": [
+  {
+   "title": {
+    "en": "Ladder Season 15",
+    "es": "Temporada 15 de Clasificación"
+   },
+   "items": [
+    {
+     "en": "New calendar from this season on: the old ladder closes on a Monday, the patch rolls out on Tuesday and the new season opens on Friday.",
+     "es": "Desde esta temporada hay calendario nuevo: la Clasificación vieja cierra un lunes, el parche sale el martes y la temporada nueva arranca el viernes."
+    },
+    {
+     "en": "Season 14 closed on August 17 and Season 15 started on August 21 at 5 p.m. PDT (already August 22 in Europe and Asia).",
+     "es": "La Temporada 14 cerró el 17 de agosto y la 15 empezó el 21 de agosto a las 17 h PDT (en Europa y Asia ya era 22)."
+    },
+    {
+     "en": "Season 14 characters moved to non-ladder and their shared stash items went to the withdraw-only tabs; anything still left there from Season 13 was deleted.",
+     "es": "Los personajes de la Temporada 14 pasaron a fuera de Clasificación y lo que tenían en el Arcón compartido quedó en las pestañas de sólo retiro; lo que seguía ahí de la Temporada 13 se borró."
+    },
+    {
+     "en": "You have all of Season 15 to take those Season 14 items out before they are lost too.",
+     "es": "Tenés toda la Temporada 15 para sacar esos objetos de la 14 antes de que también se pierdan."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Runewords",
+    "es": "Palabras rúnicas"
+   },
+   "items": [
+    {
+     "en": "Mania, Hysteria, Metamorphosis, Ground, Temper, Hearth, Cure and Bulwark are no longer ladder-only: from Season 15 on they can also be made in non-ladder games.",
+     "es": "Manía, Histeria, Metamorfosis, Suelo, Ira, Fogón, Cura y Baluarte dejan de ser exclusivas de Clasificación: desde la Temporada 15 también se pueden hacer fuera de ella."
+    },
+    {
+     "en": "Six of them are helm runewords; Mania (weapons) and Hysteria (body armor) are the two halves of the old Hustle.",
+     "es": "Seis son para yelmos; Manía (armas) e Histeria (armaduras) son las dos mitades de la vieja Hustle."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Weapon uniques (Ladder only)",
+    "es": "Armas únicas (sólo en Clasificación)"
+   },
+   "items": [
+    {
+     "en": "Bloodletter gains 20% Faster Run/Walk.",
+     "es": "Flebotomista gana 20% de velocidad al correr/caminar."
+    },
+    {
+     "en": "The Battlebranch's item level drops from 34 to 30 and its required level from 25 to 17, so you can use it much earlier.",
+     "es": "La ramabélica baja su nivel de objeto de 34 a 30 y el nivel requerido de 25 a 17, así que se puede usar mucho antes."
+    },
+    {
+     "en": "Rogue's Bow adds +1 to +3 to either Cold Arrow or Fire Arrow (Amazon only).",
+     "es": "Arco de renegada suma de +1 a +3 a Flecha de frío o a Flecha de fuego (sólo Amazona)."
+    },
+    {
+     "en": "Pluckeye gains +25% Increased Attack Speed.",
+     "es": "Arrancaojos gana +25% de velocidad de ataque."
+    },
+    {
+     "en": "Bane Ash loses its attack speed and enhanced damage in exchange for +20% Faster Cast Rate, which suits casters better.",
+     "es": "Cenizas de ruina pierde la velocidad de ataque y el daño mejorado a cambio de +20% de velocidad de lanzamiento, algo que le sirve más a quien lanza hechizos."
+    },
+    {
+     "en": "Gravenspine gains +10% Faster Cast Rate.",
+     "es": "Criptamédula gana +10% de velocidad de lanzamiento."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Armor, jewelry and sets (Ladder only)",
+    "es": "Armaduras, joyas y conjuntos (sólo en Clasificación)"
+   },
+   "items": [
+    {
+     "en": "Blinkbat's Form goes from 10% to 30% Faster Run/Walk and adds +1 Mana after each kill.",
+     "es": "Forma de parpalado pasa de 10% a 30% de velocidad al correr/caminar y suma +1 de maná por cada asesinato."
+    },
+    {
+     "en": "The Ward now has one socket.",
+     "es": "La guarda ahora trae un engarce."
+    },
+    {
+     "en": "Manald Heal gains +10% Faster Cast Rate.",
+     "es": "Alivio de Manald gana +10% de velocidad de lanzamiento."
+    },
+    {
+     "en": "Angelic Raiment: with three pieces worn, Angelic Sickle adds +6 damage and Angelic Mantle +100% damage to undead, and the full set now gives +1 to all skills.",
+     "es": "Vestiduras angelicales: con tres piezas puestas, Hoz angelical suma +6 de daño y Manto angelical +100% de daño a no muertos, y el conjunto completo ahora da +1 a todas las habilidades."
+    },
+    {
+     "en": "All these new versions exist only in Ladder and only in Reign of the Warlock; Classic and Lord of Destruction keep the old ones.",
+     "es": "Todas estas versiones nuevas existen sólo en Clasificación y sólo en Reign of the Warlock; Classic y Lord of Destruction conservan las de antes."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Terror Zones and Colossal Ancients",
+    "es": "Zonas de Terror y Ancestros Colosales"
+   },
+   "items": [
+    {
+     "en": "Heralds of tier 3 and above are more likely to drop rare or better items.",
+     "es": "Los Heraldos de nivel 3 en adelante tienen más probabilidad de soltar objetos raros o mejores."
+    },
+    {
+     "en": "The minimum level for a Latent Sunder Charm to drop rises from 69 to 75.",
+     "es": "El nivel mínimo para que caiga un Talismán de merma latente sube de 69 a 75."
+    },
+    {
+     "en": "Getting them through Magic Find is rarer and now only possible in Hell; the Herald drop rate stays the same.",
+     "es": "Conseguirlos con hallazgo mágico es más raro y ahora sólo pasa en Infierno; la probabilidad de los Heraldos no cambia."
+    },
+    {
+     "en": "Worldstone Shards drop less often, but each one now comes with an extra item.",
+     "es": "Los fragmentos de la Piedra Ecuménica caen menos, pero cada uno ahora viene con un objeto extra."
+    },
+    {
+     "en": "Ancient statues, needed to open the Colossal Ancients fight, also drop less often.",
+     "es": "Las estatuas de los Ancestros, necesarias para abrir la pelea contra los Ancestros Colosales, también caen menos."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Warlock fixes",
+    "es": "Arreglos del Conjurador"
+   },
+   "items": [
+    {
+     "en": "Bind Demon's extra damage bonus was higher than intended; with the fix, bound demons hit less hard.",
+     "es": "El bonus de daño extra de Amarrar demonio era mayor de lo previsto; con el arreglo, los demonios amarrados pegan menos."
+    },
+    {
+     "en": "Sigil: Death no longer spends mana when the cast fails, and it now benefits from +Fire Skills.",
+     "es": "Sigilo: muerte ya no gasta maná cuando el lanzamiento falla y ahora aprovecha el + a las habilidades de Fuego."
+    },
+    {
+     "en": "Miasma Chain no longer collides with neutral or friendly units.",
+     "es": "Cadena de miasma ya no choca contra unidades neutrales o aliadas."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Other fixes",
+    "es": "Otros arreglos"
+   },
+   "items": [
+    {
+     "en": "Characters no longer get stuck in Leap's landing animation.",
+     "es": "Los personajes ya no quedan trabados en la animación de aterrizaje de Salto."
+    },
+    {
+     "en": "Some bosses no longer lose their AI, and Council Members that spawn as Heralds drop loot again.",
+     "es": "Algunos jefes ya no pierden su IA, y los Miembros del concilio que aparecen como Heraldos vuelven a soltar botín."
+    },
+    {
+     "en": "Keys can be bought in bulk from Hratli with a controller.",
+     "es": "Con control ya se pueden comprar llaves al por mayor a Hratli."
+    },
+    {
+     "en": "Names of off-screen items no longer flash on screen while you move.",
+     "es": "Los nombres de objetos que quedan fuera de pantalla ya no aparecen un instante mientras te movés."
+    },
+    {
+     "en": "Several Chronicle fixes, including the 'eligible' notice showing on items already registered and missing in 8-player games.",
+     "es": "Varios arreglos en la Crónica, entre ellos el aviso de objeto disponible que salía en objetos ya registrados y que no salía en partidas de 8 jugadores."
+    },
+    {
+     "en": "General stability and performance improvements.",
+     "es": "Mejoras generales de estabilidad y rendimiento."
+    }
+   ]
+  }
+ ]
+}

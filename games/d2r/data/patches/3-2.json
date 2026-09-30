@@ -1,0 +1,225 @@
+{
+ "slug": "3-2",
+ "version": "3.2",
+ "date": "2026-05-19",
+ "season": 14,
+ "title": {
+  "en": "Season 14 and the Warlock rebalance",
+  "es": "Temporada 14 y el rebalanceo del Conjurador"
+ },
+ "summary": {
+  "en": "The first big balance pass after Reign of the Warlock, refined on the April PTR: the Warlock is reined in across its three trees, Heralds and Latent Sunder Charms are reworked, the Colossal Ancients get tougher and WASD movement comes back.",
+  "es": "El primer gran ajuste después de Reign of the Warlock, pulido en el servidor de pruebas de abril: el Conjurador se modera en sus tres árboles, se rehacen los Heraldos y los Talismanes de merma latentes, los Ancestros Colosales se vuelven más duros y vuelve el movimiento con WASD."
+ },
+ "url": "https://news.blizzard.com/en-us/article/24261478/diablo-ii-resurrected-ladder-season-14-has-concluded",
+ "sections": [
+  {
+   "title": {
+    "en": "Ladder Season 14",
+    "es": "Temporada 14 de Clasificación"
+   },
+   "items": [
+    {
+     "en": "Season 14 started on May 22 at 5 p.m. PDT (May 23 in Europe and Asia); the patch itself went live three days earlier, on May 19.",
+     "es": "La Temporada 14 empezó el 22 de mayo a las 17 h PDT (23 de mayo en Europa y Asia); el parche en sí salió tres días antes, el 19 de mayo."
+    },
+    {
+     "en": "Season 13 characters moved to non-ladder with their shared stash items in withdraw-only tabs, and anything still left there from Season 12 was deleted.",
+     "es": "Los personajes de la Temporada 13 pasaron a fuera de Clasificación con lo de su Arcón compartido en pestañas de sólo retiro, y lo que quedaba ahí de la Temporada 12 se borró."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Warlock: general and Chaos",
+    "es": "Conjurador: general y Caos"
+   },
+   "items": [
+    {
+     "en": "A two-handed weapon can now only be held in one hand if the other hand carries a grimoire.",
+     "es": "Un arma de dos manos ahora sólo se puede llevar en una mano si en la otra hay un grimorio."
+    },
+    {
+     "en": "Health potions heal the Warlock for 150% instead of 100%, like other classes with a similar playstyle.",
+     "es": "Las pociones de vida le rinden al Conjurador un 150% en lugar de un 100%, como a otras clases de estilo parecido."
+    },
+    {
+     "en": "Ring of Fire and Flame Wave deal less base damage; Flame Wave loses about 15%.",
+     "es": "Anillo de fuego y Ola llameante hacen menos daño base; Ola llameante pierde alrededor de un 15%."
+    },
+    {
+     "en": "Miasma Bolt's direct hit is weaker, while its cloud keeps its damage and no longer deals an extra hit when it fades.",
+     "es": "El impacto directo de Saeta de miasma es más débil; la nube conserva su daño y ya no pega una vez de más al desaparecer."
+    },
+    {
+     "en": "Miasma Chain loses its cast delay, but active chains are capped (from 5 up to 10) and each chain can hit a monster only once per second.",
+     "es": "Cadena de miasma pierde la demora de lanzamiento, pero las cadenas activas tienen tope (de 5 a 10) y cada cadena sólo puede golpear a un monstruo una vez por segundo."
+    },
+    {
+     "en": "Abyss is capped at an 11-yard radius, and Sigil: Lethargy loses its damage-taken effect but now works on hostile players.",
+     "es": "Abismo queda con un radio máximo de 11 yardas, y Sigilo: letargo pierde el aumento de daño recibido pero ahora afecta a jugadores hostiles."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Warlock: Eldritch",
+    "es": "Conjurador: Espanto"
+   },
+   "items": [
+    {
+     "en": "Echoing Strike uses 90% of weapon damage (up from 75%), adds its damage bonuses instead of multiplying them and no longer always hits.",
+     "es": "Golpe resonante usa el 90% del daño del arma (antes 75%), suma sus bonus de daño en vez de multiplicarlos y ya no acierta siempre."
+    },
+    {
+     "en": "Echoing Strike still doesn't wear down weapon durability: the fix tested on the PTR was rolled back, good news for ethereal weapons.",
+     "es": "Golpe resonante sigue sin gastar la durabilidad del arma: se dio marcha atrás con el arreglo probado en el servidor de pruebas, buena noticia para las armas etéreas."
+    },
+    {
+     "en": "Eldritch Blast's life and mana steal is now a flat 5% (it used to range from 5% to 20%).",
+     "es": "El robo de vida y de maná de Ráfaga sobrenatural queda fijo en 5% (antes iba de 5% a 20%)."
+    },
+    {
+     "en": "Mirrored Blades now shows its attack rating, repeats while the button is held on a controller, and with bows its first missile no longer gets the mirrors' damage modifier.",
+     "es": "Hojas espejadas ahora muestra su índice de ataque, se repite al mantener el botón en el control y, con arcos, el primer proyectil ya no recibe el modificador de daño de los reflejos."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Warlock: Demon",
+    "es": "Conjurador: Demonio"
+   },
+   "items": [
+    {
+     "en": "Bind Demon needs hard points to bind elites: 10 for champions, 15 for uniques and 20 for super uniques.",
+     "es": "Amarrar demonio pide puntos base (sin los bonus de objetos) para amarrar élites: 10 para campeones, 15 para únicos y 20 para superúnicos."
+    },
+    {
+     "en": "The bind chance starts at 20% and climbs with diminishing returns toward 56%; it now rolls once per second instead of 12 times, and a sound warns you when a bind can't work.",
+     "es": "La probabilidad de amarrar arranca en 20% y sube con rendimiento decreciente hacia 56%; ahora se tira una vez por segundo en lugar de 12, y un sonido te avisa cuando no vas a poder."
+    },
+    {
+     "en": "Bound demons have a life cap that varies by demon, and aura-enchanted ones switch to a fixed new aura (Conviction becomes Fanaticism, Might becomes Concentration and so on).",
+     "es": "Los demonios amarrados tienen un tope de vida que depende de cada uno, y los encantados con aura pasan a un aura nueva fija (Convicción pasa a Fanatismo, Poder a Concentración, etc.)."
+    },
+    {
+     "en": "Demonic Mastery needs hard points for extra demons, but fewer: 5 for a second demon and 10 for a third; its attack speed bonus is capped at 25%.",
+     "es": "Maestría demoníaca pide puntos base para sumar demonios, pero menos: 5 para el segundo y 10 para el tercero; su bonus de velocidad de ataque tiene un tope de 25%."
+    },
+    {
+     "en": "Blood Oath now passes 3% (level 1) to 25% (level 20) of the damage you take to your demon, and Consume gives bigger bonuses for demons from harder difficulties.",
+     "es": "Juramento de sangre ahora le pasa a tu demonio del 3% (nivel 1) al 25% (nivel 20) del daño que recibís, y Consumir da más bonus con demonios de dificultades más altas."
+    },
+    {
+     "en": "Summon Tainted's Blood Boil synergy drops from 30% to 20% but actually works now, and Blood Boil's radius grows from 5 to 7 yards as it levels.",
+     "es": "La sinergia de Hervor de sangre con Invocación de impío baja de 30% a 20% pero ahora funciona de verdad, y el radio de Hervor de sangre crece de 5 a 7 yardas al subirla."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Terror Zones and Heralds",
+    "es": "Zonas de Terror y Heraldos"
+   },
+   "items": [
+    {
+     "en": "Any kill inside a Terror Zone can now send a Herald after you, and the chance grows with every monster you kill in that zone.",
+     "es": "Cualquier muerte dentro de una Zona de Terror ahora puede mandar un Heraldo a cazarte, y la probabilidad crece con cada monstruo que matás en esa zona."
+    },
+    {
+     "en": "A lightning storm over the slain monster gives you 5 seconds of warning, and Herald tiers now rise when one spawns, not when one dies.",
+     "es": "Una tormenta eléctrica sobre el monstruo muerto te da 5 segundos de aviso, y el nivel de los Heraldos ahora sube cuando aparece uno, no cuando lo matás."
+    },
+    {
+     "en": "Heralds above tier 1 are easier: each tier adds 250% life (was 500%) and 25% damage (was 50%).",
+     "es": "Los Heraldos por encima del nivel 1 son más accesibles: cada nivel suma 250% de vida (antes 500%) y 25% de daño (antes 50%)."
+    },
+    {
+     "en": "Latent Sunder Charms can drop from any monster, terrorized or not, thanks to Magic Find.",
+     "es": "Los Talismanes de merma latentes pueden caer de cualquier monstruo, aterrorizado o no, gracias al hallazgo mágico."
+    },
+    {
+     "en": "The Herald bonus to drop them now starts at tier 1, doubles at tiers 3 and 4 and triples at tier 5; like Worldstone Shards, it no longer depends on player count, which helps solo players.",
+     "es": "El bonus de los Heraldos para soltarlos ahora arranca en el nivel 1, se duplica en los niveles 3 y 4 y se triplica en el 5; igual que los fragmentos de la Piedra Ecuménica, ya no depende de la cantidad de jugadores, lo que ayuda a quien juega solo."
+    },
+    {
+     "en": "Heralds drop unique, set and rare items slightly less often, in line with super unique monsters.",
+     "es": "Los Heraldos sueltan objetos únicos, de conjunto y raros un poco menos seguido, a la par de los monstruos superúnicos."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Colossal Ancients",
+    "es": "Ancestros Colosales"
+   },
+   "items": [
+    {
+     "en": "Act bosses outside Terror Zones can now drop Ancient statues too, at a lower rate.",
+     "es": "Los jefes de acto fuera de las Zonas de Terror ahora también pueden soltar estatuas de los Ancestros, con menos probabilidad."
+    },
+    {
+     "en": "The Colossals' magic resistance goes from 50% to 75%, part of a push to make the fight harder for builds that found it too easy.",
+     "es": "La resistencia mágica de los Colosales pasa de 50% a 75%, parte de un cambio para que la pelea les cueste más a los builds que la tenían demasiado fácil."
+    },
+    {
+     "en": "The summoned Colossal Barbarians keep spawning, up to five at once.",
+     "es": "Los Bárbaros Colosales invocados siguen apareciendo sin parar, hasta cinco a la vez."
+    },
+    {
+     "en": "Talic's whirlwind and fire twisters, Korlic's cold fissure and Madawc's thunderstorm deal more damage.",
+     "es": "El remolino y los torbellinos de fuego de Talic, la fisura de frío de Korlic y la tormenta eléctrica de Madawc hacen más daño."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "Quality of life",
+    "es": "Calidad de vida"
+   },
+   "items": [
+    {
+     "en": "Bindable keyboard movement (WASD) is back after its brief trial in 2024.",
+     "es": "Vuelve el movimiento con teclado configurable (WASD), que ya se había probado un tiempo en 2024."
+    },
+    {
+     "en": "Chronicle rewards no longer unequip when you join a game or die, and the Chronicle works better with a controller.",
+     "es": "Las recompensas de la Crónica ya no se desequipan al entrar a una partida o al morir, y la Crónica se maneja mejor con control."
+    },
+    {
+     "en": "With a controller you can take three items at once out of the advanced stash tabs, and gold hidden by the loot filter is picked up automatically again.",
+     "es": "Con control podés sacar tres objetos a la vez de las pestañas avanzadas del Arcón, y el oro que oculta el filtro de botín se vuelve a juntar solo."
+    },
+    {
+     "en": "Items other than runes can be quick-moved from the inventory to the personal or shared stash again.",
+     "es": "Los objetos que no son runas se vuelven a poder pasar rápido del inventario al Arcón personal o compartido."
+    },
+    {
+     "en": "More than twenty fixes for menus, consoles and handhelds (Nintendo Switch docking among them) and for joining games in other regions.",
+     "es": "Más de veinte arreglos en menús, consolas y portátiles (entre ellos el acople de la Nintendo Switch) y al unirse a partidas de otras regiones."
+    }
+   ]
+  },
+  {
+   "title": {
+    "en": "July follow-ups (3.2.0.1 and 3.2.0.2)",
+    "es": "Parches de julio (3.2.0.1 y 3.2.0.2)"
+   },
+   "items": [
+    {
+     "en": "3.2.0.1 (July 14, Steam): the game's data was reorganized; it took one full re-download, but small patches no longer trigger huge downloads.",
+     "es": "3.2.0.1 (14 de julio, Steam): se reorganizaron los datos del juego; hubo que bajarlo entero una vez, pero los parches chicos ya no piden descargas enormes."
+    },
+    {
+     "en": "3.2.0.2 (July 16): characters that wouldn't load with Mosaic unlocked in the Chronicle and a crafted Mosaic item in the shared stash load again.",
+     "es": "3.2.0.2 (16 de julio): vuelven a cargar los personajes que fallaban al tener Mosaico desbloqueada en la Crónica y un objeto con Mosaico en el Arcón compartido."
+    },
+    {
+     "en": "It also fixed saves that failed to load after summoning an Iron Golem from an item holding a Colossal Ancients jewel while wearing another one.",
+     "es": "También arregló las partidas guardadas que no cargaban al invocar un Gólem de hierro con un objeto que llevaba una joya de los Ancestros Colosales mientras tenías otra equipada."
+    }
+   ]
+  }
+ ]
+}

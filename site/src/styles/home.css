@@ -430,6 +430,21 @@
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="valheim"] .game-cta { background: #c8963e; border-color: #c8963e; color: #1a1008; }
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="valheim"] .game-cta.is-ghost { background: transparent; border-color: rgba(200, 150, 62, 0.5); color: #f2c46f; }
 
+/* --- Diablo II: la piedra del Arcón y el oro de los únicos (2026-09-29) ----- */
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] {
+  background:
+    radial-gradient(ellipse 120% 90% at 12% -20%, rgba(255, 110, 20, 0.14) 0%, transparent 62%),
+    linear-gradient(180deg, rgba(8, 6, 5, 0.88) 0%, rgba(6, 5, 4, 0.95) 100%),
+    url(/d2r/game/stone.webp) center / cover;
+  color: #9a8f78;
+}
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-panel-name { color: #e6dac0; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-figure b { color: #c7b377; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-figure.is-second b { color: #e6dac0; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-figure span { color: #8a806b; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-cta { background: #8f1d14; border-color: #8f1d14; color: #fff3d6; }
+
 /* --- Los que vienen: apagados a propósito ----------------------------------
    Una fila de cuatro, chicos, debajo del juego que ya existe (2026-09-23).
    Cada uno lleva su color en el fondo y en el trazo del nombre, nunca en un

@@ -10,6 +10,7 @@ import { LEAGUES } from "./poe2EconomyData";
 import { EDITIONS as P2_EDITIONS } from "./poe2PatchesData";
 import { loadIndex as loadP2Index, peekIndex as peekP2Index } from "./poe2EncyclopediaData";
 import { loadIndex as loadVhIndex, peekIndex as peekVhIndex } from "./valheimData";
+import { loadD2Index, peekD2Index } from "./d2r/index";
 import { loadEditions as loadVhEditions, peekEditions as peekVhEditions } from "./valheimPatchesData";
 
 /**
@@ -107,6 +108,10 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const e = peekVhIndex()?.find((x) => x.tab === route.vhSection && x.slug === route.detail);
     return e ? (lang === "es" ? e.es || e.en : e.en) : null;
   }
+  if (route.view === "d2r" && route.detail) {
+    const e = peekD2Index()?.find((x) => x.sec === route.d2Section && x.id === route.detail);
+    return e ? (lang === "es" ? e.es || e.en : e.en) : null;
+  }
   return null;
 }
 
@@ -170,6 +175,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "valheim" && route.vhSection !== "patches" && route.detail && !peekVhIndex()) {
       let vivo = true;
       loadVhIndex().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una ficha de Diablo II, con el índice de su wiki.
+    if (route.view === "d2r" && route.detail && !peekD2Index()) {
+      let vivo = true;
+      loadD2Index().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
   }, [route, copy, lang]);

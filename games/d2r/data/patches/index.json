@@ -1,0 +1,57 @@
+[
+ {
+  "slug": "3-3",
+  "version": "3.3",
+  "date": "2026-08-18",
+  "title": {
+   "en": "Season 15 and item buffs",
+   "es": "Temporada 15 y mejoras de objetos"
+  },
+  "season": 15,
+  "url": "https://news.blizzard.com/en-us/article/24296140/diablo-ii-resurrected-ladder-season-15-now-live"
+ },
+ {
+  "slug": "3-2",
+  "version": "3.2",
+  "date": "2026-05-19",
+  "title": {
+   "en": "Season 14 and the Warlock rebalance",
+   "es": "Temporada 14 y el rebalanceo del Conjurador"
+  },
+  "season": 14,
+  "url": "https://news.blizzard.com/en-us/article/24261478/diablo-ii-resurrected-ladder-season-14-has-concluded"
+ },
+ {
+  "slug": "3-1-2",
+  "version": "3.1.2",
+  "date": "2026-04-01",
+  "title": {
+   "en": "Stability and Warlock fixes",
+   "es": "Estabilidad y arreglos del Conjurador"
+  },
+  "season": null,
+  "url": "https://news.blizzard.com/en-us/article/24271875/reign-of-the-warlock-3-1-2-patch-notes"
+ },
+ {
+  "slug": "3-1-1",
+  "version": "3.1.1",
+  "date": "2026-02-19",
+  "title": {
+   "en": "Fixes for the start of Season 13",
+   "es": "Arreglos para el arranque de la Temporada 13"
+  },
+  "season": 13,
+  "url": "https://news.blizzard.com/en-us/article/24244884/reign-of-the-warlock-3-1-1-patch-notes"
+ },
+ {
+  "slug": "3-1",
+  "version": "3.1",
+  "date": "2026-02-11",
+  "title": {
+   "en": "Reign of the Warlock launch",
+   "es": "Lanzamiento de Reign of the Warlock"
+  },
+  "season": null,
+  "url": "https://news.blizzard.com/en-us/article/24243863/rain-annihilation-in-reign-of-the-warlock"
+ }
+]

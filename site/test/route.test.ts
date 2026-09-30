@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseRoute, routePath, routeUrl, slugify, type Route } from "../src/route";
+import { navigationPath, parseRoute, routePath, routeUrl, slugify, type Route } from "../src/route";
 
 describe("slugify", () => {
   it("lowercases and hyphenates", () => {
@@ -227,5 +227,46 @@ describe("Path of Exile 2", () => {
     const r = parseRoute("/es/poe2/nada/standard");
     expect(r.detail).toBeUndefined();
     expect(routePath(r)).toBe("/es/poe2");
+  });
+});
+
+/**
+ * La dirección que escribe la barra al navegar (2026-09-29): el selector de idioma lleva a la misma página en el otro
+ * idioma y tiene que llevarse lo que la página guarda en la query (el ítem de la calculadora de drops, el equipo del
+ * planificador, el Grial que se mira). Cualquier otra navegación empieza limpia.
+ */
+describe("navigationPath: la dirección al navegar", () => {
+  const at = { search: "?i=u.harlequin-crest&d=2", hash: "#jefes" };
+
+  it("la misma página en el otro idioma se lleva la query y el hash", () => {
+    const drops = parseRoute("/es/d2r/drops");
+    expect(navigationPath(drops, { ...drops, lang: "en" }, at)).toBe("/en/d2r/drops?i=u.harlequin-crest&d=2#jefes");
+    expect(navigationPath({ ...drops, lang: "en" }, drops, at)).toBe("/es/d2r/drops?i=u.harlequin-crest&d=2#jefes");
+  });
+
+  it("vale para cualquier juego y con detalle: la ficha de un jefe, el planificador, el mapa de Valheim", () => {
+    for (const path of ["/es/d2r/drops/mephisto", "/es/d2r/planner", "/es/valheim/map", "/es/deadlock/items/basic-magazine", "/es"]) {
+      const from = parseRoute(path);
+      expect(navigationPath(from, { ...from, lang: "en" }, at), path).toBe(routePath({ ...from, lang: "en" }) + at.search + at.hash);
+    }
+  });
+
+  it("sin query ni hash es la ruta a secas", () => {
+    const from = parseRoute("/es/d2r/drops");
+    expect(navigationPath(from, { ...from, lang: "en" }, { search: "", hash: "" })).toBe("/en/d2r/drops");
+  });
+
+  it("otra página empieza limpia, aunque cambie también el idioma", () => {
+    const from = parseRoute("/es/d2r/drops");
+    expect(navigationPath(from, parseRoute("/es/d2r/planner"), at)).toBe("/es/d2r/planner");
+    expect(navigationPath(from, parseRoute("/en/d2r/planner"), at)).toBe("/en/d2r/planner");
+    expect(navigationPath(from, parseRoute("/es/d2r/drops/mephisto"), at)).toBe("/es/d2r/drops/mephisto");
+    expect(navigationPath(parseRoute("/es/d2r/drops/mephisto"), parseRoute("/es/d2r/drops/diablo"), at)).toBe("/es/d2r/drops/diablo");
+    expect(navigationPath(from, parseRoute("/es/deadlock"), at)).toBe("/es/deadlock");
+  });
+
+  it("quedarse en el mismo idioma no es un cambio de idioma: no arrastra nada", () => {
+    const from = parseRoute("/es/d2r/drops");
+    expect(navigationPath(from, from, at)).toBe("/es/d2r/drops");
   });
 });

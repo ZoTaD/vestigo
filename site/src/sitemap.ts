@@ -1,4 +1,4 @@
-import { LANGS, DEADLOCK_PAGES, POE2_SECTIONS, SITE_ORIGIN, VALHEIM_TABS, routePath, slugify, type ValheimTab } from "./route";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, SITE_ORIGIN, VALHEIM_TABS, routePath, slugify, type D2rTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -56,6 +56,25 @@ export interface ValheimSitemapData {
   editions: { slug: string; version: string; date: string; title: { en?: string; es?: string } }[];
 }
 
+/**
+ * Lo que el sitemap necesita de Diablo II (2026-09-29): el `meta.json` que
+ * escribe `games/d2r/tools/extract.py`, más los índices de fichas (la wiki y los
+ * jefes de la calculadora de drops) y los parches resumidos.
+ */
+export interface D2rSitemapData {
+  build: string;
+  patch: string;
+  /** Cuándo cambiaron los datos de verdad (el extractor no la mueve si no cambió nada). */
+  extractedAt: string;
+  /**
+   * Las fichas, con su pestaña: las de la wiki (`wiki/index.json`: runas, palabras rúnicas, únicos, conjuntos y clases) y
+   * las de los jefes y superúnicos de la calculadora de drops (`drops/index.json`).
+   */
+  index?: { sec: D2rTab; id: string; en: string; es: string }[];
+  /** Los parches resumidos (`patches/index.json`), con su fecha: es su `lastmod`. */
+  patches?: { slug: string; version: string; date: string }[];
+}
+
 /** Las categorías de la enciclopedia, en el orden de sus pestañas. */
 export const POE2_CATS = ["gems", "uniques", "bases", "currency"] as const;
 
@@ -75,20 +94,22 @@ export interface SitemapData {
   p2?: Poe2SitemapData;
   /** Valheim. Opcional por lo mismo. */
   vh?: ValheimSitemapData;
+  /** Diablo II: Resurrected. Opcional por lo mismo. */
+  d2?: D2rSitemapData;
   /**
    * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
    * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
    */
-  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string };
+  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string };
 }
 
 /** Los sitemaps en que se parte el sitio: uno por juego y uno para lo demás. */
-export const SITEMAP_GROUPS = ["site", "deadlock", "poe2", "valheim"] as const;
+export const SITEMAP_GROUPS = ["site", "deadlock", "poe2", "valheim", "d2r"] as const;
 export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];
 
 function sitemapGroup(path: string): SitemapGroup {
   const game = path.split("/")[2];
-  return game === "deadlock" || game === "poe2" || game === "valheim" ? game : "site";
+  return game === "deadlock" || game === "poe2" || game === "valheim" || game === "d2r" ? game : "site";
 }
 
 /** La más nueva de unas fechas, o nada si no hay ninguna. */
@@ -131,6 +152,11 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
       return day(detail ? editions.find((e) => e.slug === detail)?.date : newest(editions.map((e) => e.date)));
     }
     return day(data.dates?.valheim);
+  }
+  if (game === "d2r") {
+    const patches = data.d2?.patches ?? [];
+    if (section === "patches") return day(detail ? patches.find((p) => p.slug === detail)?.date : newest(patches.map((p) => p.date)));
+    return day(data.dates?.d2r);
   }
   return undefined;
 }
@@ -223,6 +249,15 @@ export function sitemapPaths(data: SitemapData): string[] {
       paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "map" }));
       paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "planner" }));
       for (const e of data.vh.editions) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "patches", detail: e.slug }));
+    }
+
+    // Diablo II: Resurrected (2026-09-29): la portada, cada pestaña, cada ficha (la wiki y los jefes de la calculadora de
+    // drops) y cada parche resumido.
+    if (data.d2) {
+      paths.push(routePath({ ...base, lang, view: "d2r", d2Section: "home" }));
+      for (const s of D2R_SECTIONS) paths.push(routePath({ ...base, lang, view: "d2r", d2Section: s }));
+      for (const e of data.d2.index ?? []) paths.push(routePath({ ...base, lang, view: "d2r", d2Section: e.sec, detail: e.id }));
+      for (const p of data.d2.patches ?? []) paths.push(routePath({ ...base, lang, view: "d2r", d2Section: "patches", detail: p.slug }));
     }
   }
 

@@ -1,0 +1,1813 @@
+{
+ "counts": {
+  "runes": 33,
+  "runewords": 99,
+  "uniques": 403,
+  "sets": 34,
+  "setItems": 135,
+  "cubeRecipes": 157,
+  "gems": 35,
+  "bases": 514
+ },
+ "runes": [
+  {
+   "id": "el",
+   "code": "r01",
+   "name": {
+    "en": "El Rune",
+    "es": "Runa El"
+   },
+   "lvl": 11,
+   "runewords": [
+    {
+     "en": "Breath of the Dying",
+     "es": "Aliento de los moribundos"
+    },
+    {
+     "en": "Death",
+     "es": "Muerte"
+    },
+    {
+     "en": "Fortitude",
+     "es": "Fortaleza"
+    },
+    {
+     "en": "Honor",
+     "es": "Honor"
+    },
+    {
+     "en": "Malice",
+     "es": "Malicia"
+    },
+    {
+     "en": "Voice of Reason",
+     "es": "Voz de la razón"
+    },
+    {
+     "en": "Steel",
+     "es": "Acero"
+    },
+    {
+     "en": "Unbending Will",
+     "es": "Voluntad inflexible"
+    },
+    {
+     "en": "Wind",
+     "es": "Viento"
+    }
+   ]
+  },
+  {
+   "id": "eld",
+   "code": "r02",
+   "name": {
+    "en": "Eld Rune",
+    "es": "Runa Eld"
+   },
+   "lvl": 11,
+   "runewords": [
+    {
+     "en": "Breath of the Dying",
+     "es": "Aliento de los moribundos"
+    },
+    {
+     "en": "Faith",
+     "es": "Fe"
+    },
+    {
+     "en": "Passion",
+     "es": "Pasión"
+    },
+    {
+     "en": "Voice of Reason",
+     "es": "Voz de la razón"
+    },
+    {
+     "en": "Principle",
+     "es": "Principio"
+    },
+    {
+     "en": "Silence",
+     "es": "Silencio"
+    },
+    {
+     "en": "Unbending Will",
+     "es": "Voluntad inflexible"
+    },
+    {
+     "en": "Wisdom",
+     "es": "Sabiduría"
+    },
+    {
+     "en": "Hysteria",
+     "es": "Histeria"
+    },
+    {
+     "en": "Mania",
+     "es": "Manía"
+    }
+   ]
+  },
+  {
+   "id": "tir",
+   "code": "r03",
+   "name": {
+    "en": "Tir Rune",
+    "es": "Runa Tir"
+   },
+   "lvl": 13,
+   "runewords": [
+    {
+     "en": "Beast",
+     "es": "Bestia"
+    },
+    {
+     "en": "Crescent Moon",
+     "es": "Luna creciente"
+    },
+    {
+     "en": "Edge",
+     "es": "Filo"
+    },
+    {
+     "en": "Grief",
+     "es": "Pena"
+    },
+    {
+     "en": "Harmony",
+     "es": "Armonía"
+    },
+    {
+     "en": "Honor",
+     "es": "Honor"
+    },
+    {
+     "en": "Insight",
+     "es": "Percepción"
+    },
+    {
+     "en": "Leaf",
+     "es": "Hoja"
+    },
+    {
+     "en": "Nadir",
+     "es": "Nadir"
+    },
+    {
+     "en": "Prudence",
+     "es": "Prudencia"
+    },
+    {
+     "en": "Silence",
+     "es": "Silencio"
+    },
+    {
+     "en": "Steel",
+     "es": "Acero"
+    },
+    {
+     "en": "Strength",
+     "es": "Fuerza"
+    },
+    {
+     "en": "Wealth",
+     "es": "Riqueza"
+    }
+   ]
+  },
+  {
+   "id": "nef",
+   "code": "r04",
+   "name": {
+    "en": "Nef Rune",
+    "es": "Runa Nef"
+   },
+   "lvl": 13,
+   "runewords": [
+    {
+     "en": "Black",
+     "es": "Opaco"
+    },
+    {
+     "en": "Flickering Flame",
+     "es": "Llama parpadeante"
+    },
+    {
+     "en": "Melody",
+     "es": "Melodía"
+    },
+    {
+     "en": "Myth",
+     "es": "Mito"
+    },
+    {
+     "en": "Nadir",
+     "es": "Nadir"
+    },
+    {
+     "en": "Obsession",
+     "es": "Obsesión"
+    },
+    {
+     "en": "Radiance",
+     "es": "Resplandor"
+    },
+    {
+     "en": "Smoke",
+     "es": "Humo"
+    }
+   ]
+  },
+  {
+   "id": "eth",
+   "code": "r05",
+   "name": {
+    "en": "Eth Rune",
+    "es": "Runa Eth"
+   },
+   "lvl": 15,
+   "runewords": [
+    {
+     "en": "Bramble",
+     "es": "Zarza"
+    },
+    {
+     "en": "Breath of the Dying",
+     "es": "Aliento de los moribundos"
+    },
+    {
+     "en": "Fury",
+     "es": "Furia"
+    },
+    {
+     "en": "Grief",
+     "es": "Pena"
+    },
+    {
+     "en": "Holy Thunder",
+     "es": "Trueno sagrado"
+    },
+    {
+     "en": "Malice",
+     "es": "Malicia"
+    },
+    {
+     "en": "Memory",
+     "es": "Memoria"
+    },
+    {
+     "en": "Obedience",
+     "es": "Obediencia"
+    },
+    {
+     "en": "Rhyme",
+     "es": "Rima"
+    },
+    {
+     "en": "Splendor",
+     "es": "Esplendor"
+    },
+    {
+     "en": "Stealth",
+     "es": "Sigilo"
+    },
+    {
+     "en": "Zephyr",
+     "es": "Céfiro"
+    }
+   ]
+  },
+  {
+   "id": "ith",
+   "code": "r06",
+   "name": {
+    "en": "Ith Rune",
+    "es": "Runa Ith"
+   },
+   "lvl": 15,
+   "runewords": [
+    {
+     "en": "Enigma",
+     "es": "Enigma"
+    },
+    {
+     "en": "Harmony",
+     "es": "Armonía"
+    },
+    {
+     "en": "Honor",
+     "es": "Honor"
+    },
+    {
+     "en": "Malice",
+     "es": "Malicia"
+    },
+    {
+     "en": "Mist",
+     "es": "Bruma"
+    },
+    {
+     "en": "Radiance",
+     "es": "Resplandor"
+    },
+    {
+     "en": "Rain",
+     "es": "Lluvia"
+    },
+    {
+     "en": "Unbending Will",
+     "es": "Voluntad inflexible"
+    },
+    {
+     "en": "Wisdom",
+     "es": "Sabiduría"
+    }
+   ]
+  },
+  {
+   "id": "tal",
+   "code": "r07",
+   "name": {
+    "en": "Tal Rune",
+    "es": "Runa Tal"
+   },
+   "lvl": 17,
+   "runewords": [
+    {
+     "en": "Ancients' Pledge",
+     "es": "Juramento de los ancestros"
+    },
+    {
+     "en": "Edge",
+     "es": "Filo"
+    },
+    {
+     "en": "Holy Thunder",
+     "es": "Trueno sagrado"
+    },
+    {
+     "en": "Insight",
+     "es": "Percepción"
+    },
+    {
+     "en": "Pattern",
+     "es": "Patrón"
+    },
+    {
+     "en": "Spirit",
+     "es": "Espíritu"
+    },
+    {
+     "en": "Stealth",
+     "es": "Sigilo"
+    },
+    {
+     "en": "Venom",
+     "es": "Veneno"
+    },
+    {
+     "en": "Cure",
+     "es": "Cura"
+    }
+   ]
+  },
+  {
+   "id": "ral",
+   "code": "r08",
+   "name": {
+    "en": "Ral Rune",
+    "es": "Runa Ral"
+   },
+   "lvl": 19,
+   "runewords": [
+    {
+     "en": "Ancients' Pledge",
+     "es": "Juramento de los ancestros"
+    },
+    {
+     "en": "Authority",
+     "es": "Autoridad"
+    },
+    {
+     "en": "Bramble",
+     "es": "Zarza"
+    },
+    {
+     "en": "Call to Arms",
+     "es": "Llamado a las armas"
+    },
+    {
+     "en": "Enlightenment",
+     "es": "Iluminación"
+    },
+    {
+     "en": "Grief",
+     "es": "Pena"
+    },
+    {
+     "en": "Holy Thunder",
+     "es": "Trueno sagrado"
+    },
+    {
+     "en": "Insight",
+     "es": "Percepción"
+    },
+    {
+     "en": "King's Grace",
+     "es": "Gracia del rey"
+    },
+    {
+     "en": "Leaf",
+     "es": "Hoja"
+    },
+    {
+     "en": "Principle",
+     "es": "Principio"
+    },
+    {
+     "en": "Temper",
+     "es": "Ira"
+    },
+    {
+     "en": "Coven",
+     "es": "Aquelarre"
+    }
+   ]
+  },
+  {
+   "id": "ort",
+   "code": "r09",
+   "name": {
+    "en": "Ort Rune",
+    "es": "Runa Ort"
+   },
+   "lvl": 21,
+   "runewords": [
+    {
+     "en": "Ancients' Pledge",
+     "es": "Juramento de los ancestros"
+    },
+    {
+     "en": "Death",
+     "es": "Muerte"
+    },
+    {
+     "en": "Famine",
+     "es": "Hambruna"
+    },
+    {
+     "en": "Holy Thunder",
+     "es": "Trueno sagrado"
+    },
+    {
+     "en": "Lore",
+     "es": "Historia"
+    },
+    {
+     "en": "Passion",
+     "es": "Pasión"
+    },
+    {
+     "en": "Pattern",
+     "es": "Patrón"
+    },
+    {
+     "en": "Rain",
+     "es": "Lluvia"
+    },
+    {
+     "en": "Spirit",
+     "es": "Espíritu"
+    },
+    {
+     "en": "Zephyr",
+     "es": "Céfiro"
+    },
+    {
+     "en": "Ground",
+     "es": "Suelo"
+    }
+   ]
+  },
+  {
+   "id": "thul",
+   "code": "r10",
+   "name": {
+    "en": "Thul Rune",
+    "es": "Runa Thul"
+   },
+   "lvl": 23,
+   "runewords": [
+    {
+     "en": "Black",
+     "es": "Opaco"
+    },
+    {
+     "en": "Duress",
+     "es": "Coerción"
+    },
+    {
+     "en": "Heart of the Oak",
+     "es": "Corazón de roble"
+    },
+    {
+     "en": "King's Grace",
+     "es": "Gracia del rey"
+    },
+    {
+     "en": "Mist",
+     "es": "Bruma"
+    },
+    {
+     "en": "Obedience",
+     "es": "Obediencia"
+    },
+    {
+     "en": "Pattern",
+     "es": "Patrón"
+    },
+    {
+     "en": "Peace",
+     "es": "Paz"
+    },
+    {
+     "en": "Spirit",
+     "es": "Espíritu"
+    },
+    {
+     "en": "Treachery",
+     "es": "Traición"
+    },
+    {
+     "en": "Void",
+     "es": "Vacío"
+    },
+    {
+     "en": "Hearth",
+     "es": "Fogón"
+    }
+   ]
+  },
+  {
+   "id": "amn",
+   "code": "r11",
+   "name": {
+    "en": "Amn Rune",
+    "es": "Runa Amn"
+   },
+   "lvl": 25,
+   "runewords": [
+    {
+     "en": "Call to Arms",
+     "es": "Llamado a las armas"
+    },
+    {
+     "en": "Edge",
+     "es": "Filo"
+    },
+    {
+     "en": "Eternity",
+     "es": "Eternidad"
+    },
+    {
+     "en": "Hand of Justice",
+     "es": "Mano de la justicia"
+    },
+    {
+     "en": "Honor",
+     "es": "Honor"
+    },
+    {
+     "en": "Ice",
+     "es": "Hielo"
+    },
+    {
+     "en": "King's Grace",
+     "es": "Gracia del rey"
+    },
+    {
+     "en": "Lawbringer",
+     "es": "Justiciero"
+    },
+    {
+     "en": "Myth",
+     "es": "Mito"
+    },
+    {
+     "en": "Peace",
+     "es": "Paz"
+    },
+    {
+     "en": "Spirit",
+     "es": "Espíritu"
+    },
+    {
+     "en": "Strength",
+     "es": "Fuerza"
+    },
+    {
+     "en": "Mosaic",
+     "es": "Mosaico"
+    },
+    {
+     "en": "Ritual",
+     "es": "Ritual"
+    }
+   ]
+  },
+  {
+   "id": "sol",
+   "code": "r12",
+   "name": {
+    "en": "Sol Rune",
+    "es": "Runa Sol"
+   },
+   "lvl": 27,
+   "runewords": [
+    {
+     "en": "Bone",
+     "es": "Hueso"
+    },
+    {
+     "en": "Dragon",
+     "es": "Dragón"
+    },
+    {
+     "en": "Enlightenment",
+     "es": "Iluminación"
+    },
+    {
+     "en": "Eternity",
+     "es": "Eternidad"
+    },
+    {
+     "en": "Fortitude",
+     "es": "Fortaleza"
+    },
+    {
+     "en": "Harmony",
+     "es": "Armonía"
+    },
+    {
+     "en": "Honor",
+     "es": "Honor"
+    },
+    {
+     "en": "Insight",
+     "es": "Percepción"
+    },
+    {
+     "en": "Lore",
+     "es": "Historia"
+    },
+    {
+     "en": "Memory",
+     "es": "Memoria"
+    },
+    {
+     "en": "Radiance",
+     "es": "Resplandor"
+    },
+    {
+     "en": "Bulwark",
+     "es": "Baluarte"
+    }
+   ]
+  },
+  {
+   "id": "shael",
+   "code": "r13",
+   "name": {
+    "en": "Shael Rune",
+    "es": "Runa Shael"
+   },
+   "lvl": 29,
+   "runewords": [
+    {
+     "en": "Authority",
+     "es": "Autoridad"
+    },
+    {
+     "en": "Crescent Moon",
+     "es": "Luna creciente"
+    },
+    {
+     "en": "Duress",
+     "es": "Coerción"
+    },
+    {
+     "en": "Ice",
+     "es": "Hielo"
+    },
+    {
+     "en": "Melody",
+     "es": "Melodía"
+    },
+    {
+     "en": "Mist",
+     "es": "Bruma"
+    },
+    {
+     "en": "Oath",
+     "es": "Juramento"
+    },
+    {
+     "en": "Peace",
+     "es": "Paz"
+    },
+    {
+     "en": "Plague",
+     "es": "Peste"
+    },
+    {
+     "en": "Rhyme",
+     "es": "Rima"
+    },
+    {
+     "en": "Stone",
+     "es": "Piedra"
+    },
+    {
+     "en": "Treachery",
+     "es": "Traición"
+    },
+    {
+     "en": "Hysteria",
+     "es": "Histeria"
+    },
+    {
+     "en": "Mania",
+     "es": "Manía"
+    },
+    {
+     "en": "Ground",
+     "es": "Suelo"
+    },
+    {
+     "en": "Temper",
+     "es": "Ira"
+    },
+    {
+     "en": "Hearth",
+     "es": "Fogón"
+    },
+    {
+     "en": "Cure",
+     "es": "Cura"
+    },
+    {
+     "en": "Bulwark",
+     "es": "Baluarte"
+    },
+    {
+     "en": "Ritual",
+     "es": "Ritual"
+    }
+   ]
+  },
+  {
+   "id": "dol",
+   "code": "r14",
+   "name": {
+    "en": "Dol Rune",
+    "es": "Runa Dol"
+   },
+   "lvl": 31,
+   "runewords": [
+    {
+     "en": "Chains of Honor",
+     "es": "Cadenas de honor"
+    },
+    {
+     "en": "Exile",
+     "es": "Exilio"
+    },
+    {
+     "en": "Fortitude",
+     "es": "Fortaleza"
+    },
+    {
+     "en": "Passion",
+     "es": "Pasión"
+    },
+    {
+     "en": "Silence",
+     "es": "Silencio"
+    },
+    {
+     "en": "Venom",
+     "es": "Veneno"
+    },
+    {
+     "en": "White",
+     "es": "Blanco"
+    },
+    {
+     "en": "Vigilance",
+     "es": "Vigilancia"
+    }
+   ]
+  },
+  {
+   "id": "hel",
+   "code": "r15",
+   "name": {
+    "en": "Hel Rune",
+    "es": "Runa Hel"
+   },
+   "lvl": 0,
+   "runewords": [
+    {
+     "en": "Authority",
+     "es": "Autoridad"
+    },
+    {
+     "en": "Breath of the Dying",
+     "es": "Aliento de los moribundos"
+    },
+    {
+     "en": "Death",
+     "es": "Muerte"
+    },
+    {
+     "en": "Doom",
+     "es": "Calamidad"
+    },
+    {
+     "en": "Lionheart",
+     "es": "Corazón de león"
+    },
+    {
+     "en": "Myth",
+     "es": "Mito"
+    },
+    {
+     "en": "Obedience",
+     "es": "Obediencia"
+    },
+    {
+     "en": "Rift",
+     "es": "Grieta"
+    },
+    {
+     "en": "Silence",
+     "es": "Silencio"
+    },
+    {
+     "en": "Unbending Will",
+     "es": "Voluntad inflexible"
+    }
+   ]
+  },
+  {
+   "id": "io",
+   "code": "r16",
+   "name": {
+    "en": "Io Rune",
+    "es": "Runa Io"
+   },
+   "lvl": 35,
+   "runewords": [
+    {
+     "en": "Black",
+     "es": "Opaco"
+    },
+    {
+     "en": "Delirium",
+     "es": "Delirio"
+    },
+    {
+     "en": "Dream",
+     "es": "Sueño"
+    },
+    {
+     "en": "Memory",
+     "es": "Memoria"
+    },
+    {
+     "en": "Obsession",
+     "es": "Obsesión"
+    },
+    {
+     "en": "Pride",
+     "es": "Orgullo"
+    },
+    {
+     "en": "Unbending Will",
+     "es": "Voluntad inflexible"
+    },
+    {
+     "en": "White",
+     "es": "Blanco"
+    },
+    {
+     "en": "Metamorphosis",
+     "es": "Metamorfosis"
+    },
+    {
+     "en": "Ground",
+     "es": "Suelo"
+    },
+    {
+     "en": "Temper",
+     "es": "Ira"
+    },
+    {
+     "en": "Hearth",
+     "es": "Fogón"
+    },
+    {
+     "en": "Cure",
+     "es": "Cura"
+    },
+    {
+     "en": "Bulwark",
+     "es": "Baluarte"
+    },
+    {
+     "en": "Coven",
+     "es": "Aquelarre"
+    }
+   ]
+  },
+  {
+   "id": "lum",
+   "code": "r17",
+   "name": {
+    "en": "Lum Rune",
+    "es": "Runa Lum"
+   },
+   "lvl": 37,
+   "runewords": [
+    {
+     "en": "Beast",
+     "es": "Bestia"
+    },
+    {
+     "en": "Lionheart",
+     "es": "Corazón de león"
+    },
+    {
+     "en": "Memory",
+     "es": "Memoria"
+    },
+    {
+     "en": "Oath",
+     "es": "Juramento"
+    },
+    {
+     "en": "Obsession",
+     "es": "Obsesión"
+    },
+    {
+     "en": "Smoke",
+     "es": "Humo"
+    },
+    {
+     "en": "Splendor",
+     "es": "Esplendor"
+    },
+    {
+     "en": "Stone",
+     "es": "Piedra"
+    },
+    {
+     "en": "Wrath",
+     "es": "Ira"
+    }
+   ]
+  },
+  {
+   "id": "ko",
+   "code": "r18",
+   "name": {
+    "en": "Ko Rune",
+    "es": "Runa Ko"
+   },
+   "lvl": 39,
+   "runewords": [
+    {
+     "en": "Destruction",
+     "es": "Destrucción"
+    },
+    {
+     "en": "Harmony",
+     "es": "Armonía"
+    },
+    {
+     "en": "Heart of the Oak",
+     "es": "Corazón de roble"
+    },
+    {
+     "en": "Lawbringer",
+     "es": "Justiciero"
+    },
+    {
+     "en": "Melody",
+     "es": "Melodía"
+    },
+    {
+     "en": "Obedience",
+     "es": "Obediencia"
+    },
+    {
+     "en": "Voice of Reason",
+     "es": "Voz de la razón"
+    },
+    {
+     "en": "Rift",
+     "es": "Grieta"
+    },
+    {
+     "en": "Sanctuary",
+     "es": "Santuario"
+    },
+    {
+     "en": "Wealth",
+     "es": "Riqueza"
+    },
+    {
+     "en": "Hysteria",
+     "es": "Histeria"
+    },
+    {
+     "en": "Mania",
+     "es": "Manía"
+    }
+   ]
+  },
+  {
+   "id": "fal",
+   "code": "r19",
+   "name": {
+    "en": "Fal Rune",
+    "es": "Runa Fal"
+   },
+   "lvl": 41,
+   "runewords": [
+    {
+     "en": "Chaos",
+     "es": "Caos"
+    },
+    {
+     "en": "Famine",
+     "es": "Hambruna"
+    },
+    {
+     "en": "Gloom",
+     "es": "Penumbra"
+    },
+    {
+     "en": "Kingslayer",
+     "es": "Matarreyes"
+    },
+    {
+     "en": "Lionheart",
+     "es": "Corazón de león"
+    },
+    {
+     "en": "Obedience",
+     "es": "Obediencia"
+    },
+    {
+     "en": "Unbending Will",
+     "es": "Voluntad inflexible"
+    },
+    {
+     "en": "Metamorphosis",
+     "es": "Metamorfosis"
+    }
+   ]
+  },
+  {
+   "id": "lem",
+   "code": "r20",
+   "name": {
+    "en": "Lem Rune",
+    "es": "Runa Lem"
+   },
+   "lvl": 43,
+   "runewords": [
+    {
+     "en": "Delirium",
+     "es": "Delirio"
+    },
+    {
+     "en": "Faith",
+     "es": "Fe"
+    },
+    {
+     "en": "Lawbringer",
+     "es": "Justiciero"
+    },
+    {
+     "en": "Obsession",
+     "es": "Obsesión"
+    },
+    {
+     "en": "Passion",
+     "es": "Pasión"
+    },
+    {
+     "en": "Voice of Reason",
+     "es": "Voz de la razón"
+    },
+    {
+     "en": "Rift",
+     "es": "Grieta"
+    },
+    {
+     "en": "Treachery",
+     "es": "Traición"
+    },
+    {
+     "en": "Wealth",
+     "es": "Riqueza"
+    }
+   ]
+  },
+  {
+   "id": "pul",
+   "code": "r21",
+   "name": {
+    "en": "Pul Rune",
+    "es": "Runa Pul"
+   },
+   "lvl": 45,
+   "runewords": [
+    {
+     "en": "Dream",
+     "es": "Sueño"
+    },
+    {
+     "en": "Enlightenment",
+     "es": "Iluminación"
+    },
+    {
+     "en": "Flickering Flame",
+     "es": "Llama parpadeante"
+    },
+    {
+     "en": "Gloom",
+     "es": "Penumbra"
+    },
+    {
+     "en": "Heart of the Oak",
+     "es": "Corazón de roble"
+    },
+    {
+     "en": "Oath",
+     "es": "Juramento"
+    },
+    {
+     "en": "Stone",
+     "es": "Piedra"
+    },
+    {
+     "en": "Wisdom",
+     "es": "Sabiduría"
+    },
+    {
+     "en": "Wrath",
+     "es": "Ira"
+    }
+   ]
+  },
+  {
+   "id": "um",
+   "code": "r22",
+   "name": {
+    "en": "Um Rune",
+    "es": "Runa Um"
+   },
+   "lvl": 47,
+   "runewords": [
+    {
+     "en": "Beast",
+     "es": "Bestia"
+    },
+    {
+     "en": "Bone",
+     "es": "Hueso"
+    },
+    {
+     "en": "Chains of Honor",
+     "es": "Cadenas de honor"
+    },
+    {
+     "en": "Chaos",
+     "es": "Caos"
+    },
+    {
+     "en": "Crescent Moon",
+     "es": "Luna creciente"
+    },
+    {
+     "en": "Doom",
+     "es": "Calamidad"
+    },
+    {
+     "en": "Duress",
+     "es": "Coerción"
+    },
+    {
+     "en": "Gloom",
+     "es": "Penumbra"
+    },
+    {
+     "en": "Kingslayer",
+     "es": "Matarreyes"
+    },
+    {
+     "en": "Plague",
+     "es": "Peste"
+    },
+    {
+     "en": "Stone",
+     "es": "Piedra"
+    }
+   ]
+  },
+  {
+   "id": "mal",
+   "code": "r23",
+   "name": {
+    "en": "Mal Rune",
+    "es": "Runa Mal"
+   },
+   "lvl": 49,
+   "runewords": [
+    {
+     "en": "Beast",
+     "es": "Bestia"
+    },
+    {
+     "en": "Brand",
+     "es": "Marca"
+    },
+    {
+     "en": "Call to Arms",
+     "es": "Llamado a las armas"
+    },
+    {
+     "en": "Grief",
+     "es": "Pena"
+    },
+    {
+     "en": "Infinity",
+     "es": "Infinito"
+    },
+    {
+     "en": "Kingslayer",
+     "es": "Matarreyes"
+    },
+    {
+     "en": "Last Wish",
+     "es": "Último deseo"
+    },
+    {
+     "en": "Oath",
+     "es": "Juramento"
+    },
+    {
+     "en": "Prudence",
+     "es": "Prudencia"
+    },
+    {
+     "en": "Rain",
+     "es": "Lluvia"
+    },
+    {
+     "en": "Sanctuary",
+     "es": "Santuario"
+    },
+    {
+     "en": "Venom",
+     "es": "Veneno"
+    },
+    {
+     "en": "Wrath",
+     "es": "Ira"
+    },
+    {
+     "en": "Mosaic",
+     "es": "Mosaico"
+    }
+   ]
+  },
+  {
+   "id": "ist",
+   "code": "r24",
+   "name": {
+    "en": "Ist Rune",
+    "es": "Runa Ist"
+   },
+   "lvl": 51,
+   "runewords": [
+    {
+     "en": "Call to Arms",
+     "es": "Llamado a las armas"
+    },
+    {
+     "en": "Chains of Honor",
+     "es": "Cadenas de honor"
+    },
+    {
+     "en": "Delirium",
+     "es": "Delirio"
+    },
+    {
+     "en": "Eternity",
+     "es": "Eternidad"
+    },
+    {
+     "en": "Exile",
+     "es": "Exilio"
+    },
+    {
+     "en": "Infinity",
+     "es": "Infinito"
+    },
+    {
+     "en": "Obsession",
+     "es": "Obsesión"
+    },
+    {
+     "en": "Silence",
+     "es": "Silencio"
+    },
+    {
+     "en": "Void",
+     "es": "Vacío"
+    },
+    {
+     "en": "Coven",
+     "es": "Aquelarre"
+    }
+   ]
+  },
+  {
+   "id": "gul",
+   "code": "r25",
+   "name": {
+    "en": "Gul Rune",
+    "es": "Runa Gul"
+   },
+   "lvl": 53,
+   "runewords": [
+    {
+     "en": "Brand",
+     "es": "Marca"
+    },
+    {
+     "en": "Death",
+     "es": "Muerte"
+    },
+    {
+     "en": "Fury",
+     "es": "Furia"
+    },
+    {
+     "en": "Kingslayer",
+     "es": "Matarreyes"
+    },
+    {
+     "en": "Mist",
+     "es": "Bruma"
+    },
+    {
+     "en": "Principle",
+     "es": "Principio"
+    },
+    {
+     "en": "Rift",
+     "es": "Grieta"
+    },
+    {
+     "en": "Mosaic",
+     "es": "Mosaico"
+    },
+    {
+     "en": "Vigilance",
+     "es": "Vigilancia"
+    }
+   ]
+  },
+  {
+   "id": "vex",
+   "code": "r26",
+   "name": {
+    "en": "Vex Rune",
+    "es": "Runa Vex"
+   },
+   "lvl": 55,
+   "runewords": [
+    {
+     "en": "Breath of the Dying",
+     "es": "Aliento de los moribundos"
+    },
+    {
+     "en": "Death",
+     "es": "Muerte"
+    },
+    {
+     "en": "Destruction",
+     "es": "Destrucción"
+    },
+    {
+     "en": "Exile",
+     "es": "Exilio"
+    },
+    {
+     "en": "Flickering Flame",
+     "es": "Llama parpadeante"
+    },
+    {
+     "en": "Heart of the Oak",
+     "es": "Corazón de roble"
+    },
+    {
+     "en": "Phoenix",
+     "es": "Fénix"
+    },
+    {
+     "en": "Silence",
+     "es": "Silencio"
+    }
+   ]
+  },
+  {
+   "id": "ohm",
+   "code": "r27",
+   "name": {
+    "en": "Ohm Rune",
+    "es": "Runa Ohm"
+   },
+   "lvl": 57,
+   "runewords": [
+    {
+     "en": "Bramble",
+     "es": "Zarza"
+    },
+    {
+     "en": "Call to Arms",
+     "es": "Llamado a las armas"
+    },
+    {
+     "en": "Chaos",
+     "es": "Caos"
+    },
+    {
+     "en": "Doom",
+     "es": "Calamidad"
+    },
+    {
+     "en": "Exile",
+     "es": "Exilio"
+    },
+    {
+     "en": "Faith",
+     "es": "Fe"
+    },
+    {
+     "en": "Famine",
+     "es": "Hambruna"
+    },
+    {
+     "en": "Ritual",
+     "es": "Ritual"
+    }
+   ]
+  },
+  {
+   "id": "lo",
+   "code": "r28",
+   "name": {
+    "en": "Lo Rune",
+    "es": "Runa Lo"
+   },
+   "lvl": 59,
+   "runewords": [
+    {
+     "en": "Brand",
+     "es": "Marca"
+    },
+    {
+     "en": "Destruction",
+     "es": "Destrucción"
+    },
+    {
+     "en": "Doom",
+     "es": "Calamidad"
+    },
+    {
+     "en": "Dragon",
+     "es": "Dragón"
+    },
+    {
+     "en": "Fortitude",
+     "es": "Fortaleza"
+    },
+    {
+     "en": "Grief",
+     "es": "Pena"
+    },
+    {
+     "en": "Hand of Justice",
+     "es": "Mano de la justicia"
+    },
+    {
+     "en": "Ice",
+     "es": "Hielo"
+    },
+    {
+     "en": "Phoenix",
+     "es": "Fénix"
+    },
+    {
+     "en": "Pride",
+     "es": "Orgullo"
+    }
+   ]
+  },
+  {
+   "id": "sur",
+   "code": "r29",
+   "name": {
+    "en": "Sur Rune",
+    "es": "Runa Sur"
+   },
+   "lvl": 61,
+   "runewords": [
+    {
+     "en": "Bramble",
+     "es": "Zarza"
+    },
+    {
+     "en": "Dragon",
+     "es": "Dragón"
+    },
+    {
+     "en": "Eternity",
+     "es": "Eternidad"
+    },
+    {
+     "en": "Hand of Justice",
+     "es": "Mano de la justicia"
+    },
+    {
+     "en": "Last Wish",
+     "es": "Último deseo"
+    },
+    {
+     "en": "Pride",
+     "es": "Orgullo"
+    },
+    {
+     "en": "Wind",
+     "es": "Viento"
+    }
+   ]
+  },
+  {
+   "id": "ber",
+   "code": "r30",
+   "name": {
+    "en": "Ber Rune",
+    "es": "Runa Ber"
+   },
+   "lvl": 63,
+   "runewords": [
+    {
+     "en": "Beast",
+     "es": "Bestia"
+    },
+    {
+     "en": "Chains of Honor",
+     "es": "Cadenas de honor"
+    },
+    {
+     "en": "Destruction",
+     "es": "Destrucción"
+    },
+    {
+     "en": "Enigma",
+     "es": "Enigma"
+    },
+    {
+     "en": "Eternity",
+     "es": "Eternidad"
+    },
+    {
+     "en": "Infinity",
+     "es": "Infinito"
+    },
+    {
+     "en": "Last Wish",
+     "es": "Último deseo"
+    },
+    {
+     "en": "Wrath",
+     "es": "Ira"
+    }
+   ]
+  },
+  {
+   "id": "jah",
+   "code": "r31",
+   "name": {
+    "en": "Jah Rune",
+    "es": "Runa Jah"
+   },
+   "lvl": 65,
+   "runewords": [
+    {
+     "en": "Brand",
+     "es": "Marca"
+    },
+    {
+     "en": "Destruction",
+     "es": "Destrucción"
+    },
+    {
+     "en": "Dream",
+     "es": "Sueño"
+    },
+    {
+     "en": "Enigma",
+     "es": "Enigma"
+    },
+    {
+     "en": "Faith",
+     "es": "Fe"
+    },
+    {
+     "en": "Famine",
+     "es": "Hambruna"
+    },
+    {
+     "en": "Fury",
+     "es": "Furia"
+    },
+    {
+     "en": "Ice",
+     "es": "Hielo"
+    },
+    {
+     "en": "Last Wish",
+     "es": "Último deseo"
+    },
+    {
+     "en": "Phoenix",
+     "es": "Fénix"
+    }
+   ]
+  },
+  {
+   "id": "cham",
+   "code": "r32",
+   "name": {
+    "en": "Cham Rune",
+    "es": "Runa Cham"
+   },
+   "lvl": 67,
+   "runewords": [
+    {
+     "en": "Doom",
+     "es": "Calamidad"
+    },
+    {
+     "en": "Hand of Justice",
+     "es": "Mano de la justicia"
+    },
+    {
+     "en": "Mist",
+     "es": "Bruma"
+    },
+    {
+     "en": "Plague",
+     "es": "Peste"
+    },
+    {
+     "en": "Pride",
+     "es": "Orgullo"
+    },
+    {
+     "en": "Metamorphosis",
+     "es": "Metamorfosis"
+    }
+   ]
+  },
+  {
+   "id": "zod",
+   "code": "r33",
+   "name": {
+    "en": "Zod Rune",
+    "es": "Runa Zod"
+   },
+   "lvl": 69,
+   "runewords": [
+    {
+     "en": "Breath of the Dying",
+     "es": "Aliento de los moribundos"
+    },
+    {
+     "en": "Obsession",
+     "es": "Obsesión"
+    },
+    {
+     "en": "Void",
+     "es": "Vacío"
+    }
+   ]
+  }
+ ],
+ "classes": [
+  {
+   "id": "amazon",
+   "name": {
+    "en": "Amazon",
+    "es": "Amazona"
+   }
+  },
+  {
+   "id": "assassin",
+   "name": {
+    "en": "Assassin",
+    "es": "Asesina"
+   }
+  },
+  {
+   "id": "barbarian",
+   "name": {
+    "en": "Barbarian",
+    "es": "Bárbaro"
+   }
+  },
+  {
+   "id": "druid",
+   "name": {
+    "en": "Druid",
+    "es": "Druida"
+   }
+  },
+  {
+   "id": "necromancer",
+   "name": {
+    "en": "Necromancer",
+    "es": "Nigromante"
+   }
+  },
+  {
+   "id": "paladin",
+   "name": {
+    "en": "Paladin",
+    "es": "Paladín"
+   }
+  },
+  {
+   "id": "sorceress",
+   "name": {
+    "en": "Sorceress",
+    "es": "Hechicera"
+   }
+  },
+  {
+   "id": "warlock",
+   "name": {
+    "en": "Warlock",
+    "es": "Conjurador"
+   }
+  }
+ ],
+ "events": [
+  {
+   "id": "terror",
+   "name": {
+    "en": "Terror Zones",
+    "es": "Zonas de Terror"
+   }
+  },
+  {
+   "id": "uber",
+   "name": {
+    "en": "Diablo Walks the Earth",
+    "es": "Diablo camina sobre la tierra"
+   }
+  },
+  {
+   "id": "pandemonium",
+   "name": {
+    "en": "Pandemonium Event",
+    "es": "Evento del Pandemonio"
+   }
+  },
+  {
+   "id": "cow",
+   "name": {
+    "en": "There is no Cow Level",
+    "es": "No hay Nivel de la Vaca"
+   }
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+/* ---------------------------------------------------------------------------
+   DIABLO II — "Dónde farmearlo" (2026-09-29): el bloque de las fichas de la
+   wiki (únicos, runas y conjuntos) y la nota que lo acompaña.
+
+   Es una hoja aparte y no parte de la calculadora (d2r-drops.css) para que una
+   ficha no baje las reglas de toda la calculadora por unas diez reglas. La
+   calculadora baja ésta también: su nota bajo cada título es la misma.
+--------------------------------------------------------------------------- */
+
+.d2-dr-note { margin: -4px 0 10px; font-size: 14px; color: var(--d2-dim); }
+
+.d2-dr-block { display: grid; gap: 8px; width: 100%; max-width: 620px; }
+.d2-dr-mini { display: grid; gap: 4px; list-style: none; padding: 0; margin: 0; }
+.d2-dr-mini li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; padding: 6px 10px; background: #0f0d0b; }
+.d2-dr-mini b { font-family: var(--d2-title); font-weight: normal; color: var(--d2-ink); }
+/* En la ficha de un conjunto el nombre de cada pieza es un enlace: con la letra del juego y sin subrayado se lee como el nombre de un jefe. */
+.d2-dr-mini a { font-family: var(--d2-title); text-decoration: none; }
+/* Sin subrayado, el color es la única pista de que es un enlace: al pasar el mouse o con el foco del teclado se subraya. */
+.d2-dr-mini a:hover, .d2-dr-mini a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+.d2-dr-mini small { color: var(--d2-dim); }
+.d2-dr-mini span { font-family: var(--d2-title); color: var(--d2-unique); white-space: nowrap; }
+.d2-dr-block > a { justify-self: start; text-decoration: none; }
