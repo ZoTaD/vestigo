@@ -758,7 +758,7 @@ export const FILTER_DEFS = {
  ]
 };
 
-// EShopFilters_t bit numbers (schema enum in client.dll).
+// Los bits de EShopFilters_t (el enum de filtros del juego).
 export const BIT = {
   EShopFilterWeaponDamage: 0, EShopFilterWeaponAmmo: 1, EShopFilterWeaponFireRate: 2, EShopFilterWeaponBulletVelocity: 3,
   EShopFilterWeaponRange: 4, EShopFilterMelee: 5, EShopFilterPhysicalAdditionalDamage: 6, EShopFilterSpiritDamage: 7,
