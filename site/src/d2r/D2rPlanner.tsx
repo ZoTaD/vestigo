@@ -105,6 +105,70 @@ function fits(base: Base | undefined, slot: SlotKey | "charm", cls: number): boo
   return !own || own === CLASS_TYPES[cls];
 }
 
+/** El alto de un talismán en la grilla: chico 1, grande 2, grandioso 3 (el ancho es siempre una columna). */
+const charmHeight = (ref: Ref): number => resolve(ref)?.base?.size?.[1] ?? 1;
+/** El grupo de "sólo uno" del juego: del Annihilus, la Antorcha o la Fortuna de Gheed se lleva uno solo. */
+const carryOf = (ref: Ref): number | undefined => (ref.k === "u" ? UNIQUES.find((x) => x.id === ref.id)?.carry : undefined);
+
+/**
+ * Dónde va cada talismán en la grilla de 10×4 del inventario: en el primer hueco, de arriba abajo y de izquierda a
+ * derecha, donde entra su alto entero, como los acomoda uno en el juego. null si ya no entra. Antes cada uno iba a su
+ * columna desde la primera fila y la cuenta cortaba en diez, con la mitad de la grilla vacía.
+ */
+export function packCharms(heights: number[], cols = GRID.cols, rows = GRID.rows): ({ col: number; row: number } | null)[] {
+  const used = Array.from({ length: rows }, () => Array<boolean>(cols).fill(false));
+  return heights.map((h) => {
+    for (let row = 0; row + h <= rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        let free = true;
+        for (let k = 0; k < h && free; k++) free = !used[row + k][col];
+        if (!free) continue;
+        for (let k = 0; k < h; k++) used[row + k][col] = true;
+        return { col, row };
+      }
+    }
+    return null;
+  });
+}
+
+/** Los talismanes que valen, en el orden en que se pusieron: los que entran en la grilla y uno por grupo de "sólo uno". */
+export function validCharms(refs: Ref[]): Ref[] {
+  const out: Ref[] = [];
+  const groups = new Set<number>();
+  for (const ref of refs) {
+    const g = carryOf(ref);
+    if (g !== undefined && groups.has(g)) continue;
+    const pos = packCharms([...out, ref].map(charmHeight));
+    if (!pos[pos.length - 1]) continue;
+    if (g !== undefined) groups.add(g);
+    out.push(ref);
+  }
+  return out;
+}
+
+/** El lugar que queda: la primera casilla libre (donde va el "+") y si un talismán más entraría ahí dentro. */
+export function charmRoom(refs: Ref[]): { first: { col: number; row: number } | null; fits: (ref: Ref) => boolean } {
+  const pos = packCharms(refs.map(charmHeight));
+  const used = Array.from({ length: GRID.rows }, () => Array<boolean>(GRID.cols).fill(false));
+  refs.forEach((ref, i) => {
+    const p = pos[i];
+    if (p) for (let k = 0; k < charmHeight(ref); k++) used[p.row + k][p.col] = true;
+  });
+  let first: { col: number; row: number } | null = null;
+  for (let row = 0; row < GRID.rows && !first; row++) {
+    const col = used[row].indexOf(false);
+    if (col >= 0) first = { col, row };
+  }
+  const groups = new Set(refs.map(carryOf).filter((g): g is number => g !== undefined));
+  const fits = (ref: Ref) => {
+    const g = carryOf(ref);
+    if (g !== undefined && groups.has(g)) return false;
+    const next = packCharms([...refs, ref].map(charmHeight));
+    return !!next[next.length - 1];
+  };
+  return { first, fits };
+}
+
 /** Las palabras rúnicas que se pueden armar en alguna base de ese casillero (para esa clase). */
 function runewordsFor(slot: SlotKey, cls: number): Runeword[] {
   const bases = BASES.filter((b) => b.kind !== "misc" && b.spawnable && fits(b, slot, cls));
@@ -135,8 +199,16 @@ function decode(q: string | null): Build {
       else if ((SLOT_KEYS as string[]).includes(slot)) b.s[slot as SlotKey] = ref;
     }
   }
+  // Un enlace armado a mano no puede traer diez Fortunas de Gheed ni más talismanes de los que entran.
+  b.ch = validCharms(b.ch);
   return b;
 }
+
+/** Todos los talismanes que se pueden poner: para saber si todavía entra alguno y mostrar el "+". */
+const CHARM_REFS: Ref[] = [
+  ...UNIQUES.filter((u) => fits(BASE_BY_CODE.get(u.base), "charm", 0)).map((u) => ({ k: "u" as const, id: u.id })),
+  ...[...SET_ITEMS.values()].filter(({ item }) => fits(BASE_BY_CODE.get(item.base), "charm", 0)).map(({ item }) => ({ k: "s" as const, id: item.id })),
+];
 
 export default function D2rPlanner(_: { route: Route; navigate: (r: Route) => void }) {
   const t = useD2rCopy();
@@ -212,12 +284,15 @@ export default function D2rPlanner(_: { route: Route; navigate: (r: Route) => vo
   // "Todas las resistencias" ya llega partida en las cuatro (res-all pone las cuatro stats).
   const res = resistances(val, b.d);
   const reqLevel = Math.max(0, ...equipped.map((e) => e.it.req));
+  // Dónde va cada talismán y cuánto lugar queda (el "+" va en la primera casilla libre).
+  const charmPos = useMemo(() => packCharms(b.ch.map(charmHeight)), [b.ch]);
+  const room = useMemo(() => charmRoom(b.ch), [b.ch]);
   const lines = useMemo(() => describe(stats, E, lang, b.l).map((l) => l.text), [stats, lang, b.l]);
 
   const set = (patch: Partial<Build>) => setB((x) => ({ ...x, ...patch }));
   const equip = (slot: SlotKey | "charm", ref: Ref | null) => {
     setB((x) => {
-      if (slot === "charm") return ref ? { ...x, ch: [...x.ch, ref].slice(0, 10) } : x;
+      if (slot === "charm") return ref ? { ...x, ch: validCharms([...x.ch, ref]) } : x;
       const s = { ...x.s };
       if (ref) s[slot] = ref;
       else delete s[slot];
@@ -269,13 +344,15 @@ export default function D2rPlanner(_: { route: Route; navigate: (r: Route) => vo
             <div className="d2-doll-grid" style={{ left: `${GRID.x}%`, top: `${GRID.y}%`, width: `${GRID.w}%`, height: `${GRID.h}%` }}>
               {b.ch.map((ref, i) => {
                 const it = resolve(ref);
-                const h = it?.base?.size?.[1] ?? 1;
+                const h = charmHeight(ref);
+                const p = charmPos[i];
+                if (!p) return null;
                 return (
                   <button
                     type="button"
                     key={i}
                     className="d2-doll-charm"
-                    style={{ gridColumn: `${i + 1}`, gridRow: `1 / span ${h}` }}
+                    style={{ gridColumn: `${p.col + 1}`, gridRow: `${p.row + 1} / span ${h}` }}
                     onClick={() => setB((x) => ({ ...x, ch: x.ch.filter((_, j) => j !== i) }))}
                     title={`${it ? tr(it.name, lang) : ""} · ${tp.remove}`}
                   >
@@ -283,8 +360,15 @@ export default function D2rPlanner(_: { route: Route; navigate: (r: Route) => vo
                   </button>
                 );
               })}
-              {b.ch.length < 10 && (
-                <button type="button" className="d2-doll-add" style={{ gridColumn: `${b.ch.length + 1}` }} onClick={() => setPicking("charm")} aria-label={tp.addCharm} title={tp.addCharm}>
+              {room.first && CHARM_REFS.some(room.fits) && (
+                <button
+                  type="button"
+                  className="d2-doll-add"
+                  style={{ gridColumn: `${room.first.col + 1}`, gridRow: `${room.first.row + 1}` }}
+                  onClick={() => setPicking("charm")}
+                  aria-label={tp.addCharm}
+                  title={tp.addCharm}
+                >
                   +
                 </button>
               )}
@@ -419,6 +503,7 @@ export default function D2rPlanner(_: { route: Route; navigate: (r: Route) => vo
           slot={picking}
           cls={b.c}
           current={picking === "charm" ? undefined : b.s[picking]}
+          allow={picking === "charm" ? room.fits : undefined}
           onPick={(ref) => equip(picking, ref)}
           onClose={() => setPicking(null)}
           locale={locale}
@@ -429,7 +514,7 @@ export default function D2rPlanner(_: { route: Route; navigate: (r: Route) => vo
 }
 
 /** La lista para elegir un ítem de un casillero: únicos, piezas de conjunto y palabras rúnicas. */
-function Picker({ slot, cls, current, onPick, onClose, locale }: { slot: SlotKey | "charm"; cls: number; current?: Ref; onPick: (r: Ref | null) => void; onClose: () => void; locale: string }) {
+function Picker({ slot, cls, current, allow, onPick, onClose, locale }: { slot: SlotKey | "charm"; cls: number; current?: Ref; allow?: (r: Ref) => boolean; onPick: (r: Ref | null) => void; onClose: () => void; locale: string }) {
   const t = useD2rCopy();
   const tp = t.planner;
   const { lang } = useLang();
@@ -448,11 +533,11 @@ function Picker({ slot, cls, current, onPick, onClose, locale }: { slot: SlotKey
     const ok = (n: { en: string; es: string }) => !needle || fold(n.en).includes(needle) || fold(n.es).includes(needle);
     const out: { ref: Ref; name: string; img: string | null; tone: string; kind: string; req: number; preview: string[] }[] = [];
     for (const u of UNIQUES) {
-      if (!fits(BASE_BY_CODE.get(u.base), slot, cls) || !ok(u.name)) continue;
+      if (!fits(BASE_BY_CODE.get(u.base), slot, cls) || !ok(u.name) || (allow && !allow({ k: "u", id: u.id }))) continue;
       out.push({ ref: { k: "u", id: u.id }, name: tr(u.name, lang), img: u.img, tone: "unique", kind: tp.kindUnique, req: u.req, preview: describeProps(u.props as Prop[], E, lang).slice(0, 3) });
     }
     for (const { item, set } of SET_ITEMS.values()) {
-      if (!fits(BASE_BY_CODE.get(item.base), slot, cls) || !ok(item.name)) continue;
+      if (!fits(BASE_BY_CODE.get(item.base), slot, cls) || !ok(item.name) || (allow && !allow({ k: "s", id: item.id }))) continue;
       out.push({ ref: { k: "s", id: item.id }, name: tr(item.name, lang), img: item.img, tone: "set", kind: tr(set.name, lang), req: item.req, preview: describeProps(item.props as Prop[], E, lang).slice(0, 3) });
     }
     if (slot !== "charm" && SLOT_GAT[slot] !== undefined) {
@@ -462,7 +547,7 @@ function Picker({ slot, cls, current, onPick, onClose, locale }: { slot: SlotKey
       }
     }
     return out.sort((a, b) => a.req - b.req);
-  }, [q, slot, cls, lang, tp]);
+  }, [q, slot, cls, lang, tp, allow]);
 
   return (
     <div className="d2-pick" role="dialog" aria-modal="true" aria-label={tp.choose} onClick={onClose}>

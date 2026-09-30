@@ -383,13 +383,18 @@ def main():
                 k += 1
             seen.add(sid)
             base = by_code.get(r["code"])
-            uniques.append({
+            u = {
                 "id": sid, "key": r["index"], "name": name, "base": r["code"],
                 "lvl": num(r.get("lvl")) or 0, "req": num(r.get("lvl req")) or 0,
                 "props": props,
                 "img": icons.get(hd_uniques.get(hd_key(r["index"]))) or (base or {}).get("img"),
                 "ladder": num(r.get("firstLadderSeason")) or None,
-            })
+            }
+            # "Sólo uno": el juego no deja llevar dos del mismo grupo (el Annihilus, la Antorcha, la Fortuna de Gheed y
+            # los seis Talismanes de Ruptura elaborados, que comparten uno). Sólo lo llevan los que lo tienen.
+            if num(r.get("carry1")):
+                u["carry"] = num(r.get("carry1"))
+            uniques.append(u)
 
         # ── Conjuntos ───────────────────────────────────────────────────────
         set_items = {}

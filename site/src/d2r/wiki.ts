@@ -82,6 +82,8 @@ export interface Unique {
   props: Prop[];
   img: string | null;
   ladder: number | null;
+  /** El grupo de "sólo uno" del juego: no se pueden llevar dos del mismo (Annihilus, Antorcha, Fortuna de Gheed). */
+  carry?: number;
 }
 
 export interface SetItem {

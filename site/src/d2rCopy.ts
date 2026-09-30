@@ -17,6 +17,8 @@ export { SEASON } from "./d2r/season";
 export const D2R_TABS = ["home", "runes", "runewords", "uniques", "sets", "bases", "cube", "classes", "terror-zones", "breakpoints", "drops", "planner", "grail", "patches"] as const;
 export type D2rTabKey = (typeof D2R_TABS)[number];
 export const D2R_LIVE: D2rTabKey[] = ["home", "runes", "runewords", "uniques", "sets", "bases", "cube", "classes", "terror-zones", "breakpoints", "drops", "planner", "grail", "patches"];
+/** Las pestañas que todavía se están completando: llevan la etiqueta "Beta" (ZoTaD, 2026-09-30). */
+export const D2R_BETA: D2rTabKey[] = ["classes"];
 
 const EN = {
   seo: {
@@ -49,6 +51,7 @@ const EN = {
     cube: "Horadric Cube", "terror-zones": "Terror Zones", breakpoints: "Breakpoints", classes: "Classes", drops: "Drops", grail: "Holy Grail", patches: "Patches",
   } satisfies Record<D2rTabKey, string>,
   soon: "Soon",
+  beta: "Beta",
   logoAlt: "Diablo II",
   resurrectedAlt: "Resurrected",
   tagline: "Runes, runewords, uniques, sets and a gear planner, with the game's official names in English and Spanish.",
@@ -122,7 +125,7 @@ const EN = {
     newRotw: "Reign of the Warlock",
     ladderOnly: "Ladder only",
     sockets: (n: number) => `${n} sockets`,
-    count: (n: string) => `${n} results`,
+    count: (n: string) => (n === "1" ? "1 result" : `${n} results`),
     slotsLong: ["In weapons", "In helms and body armor", "In shields"],
     slotsShort: ["Weapon", "Armor", "Shield"],
   },
@@ -436,6 +439,7 @@ const ES: typeof EN = {
     cube: "Cubo horádrico", "terror-zones": "Zonas de Terror", breakpoints: "Breakpoints", classes: "Clases", drops: "Drops", grail: "Grial", patches: "Parches",
   },
   soon: "Pronto",
+  beta: "Beta",
   logoAlt: "Diablo II",
   resurrectedAlt: "Resurrected",
   tagline: "Runas, palabras rúnicas, únicos, conjuntos y un planificador de equipo, con los nombres oficiales del juego en español.",
@@ -509,7 +513,7 @@ const ES: typeof EN = {
     newRotw: "Reign of the Warlock",
     ladderOnly: "Sólo en Clasificación",
     sockets: (n: number) => `${n} engarces`,
-    count: (n: string) => `${n} resultados`,
+    count: (n: string) => (n === "1" ? "1 resultado" : `${n} resultados`),
     slotsLong: ["En armas", "En yelmos y armaduras", "En escudos"],
     slotsShort: ["Arma", "Armadura", "Escudo"],
   },

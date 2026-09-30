@@ -58,10 +58,17 @@
   padding: 10px 16px 12px;
 }
 /* Si no entran, bajan a otra fila (en Valheim se cortaban en el celular y ZoTaD lo marcó). Con las catorce
-   pestañas, en español hacen falta unos 1.290 px: con un tope de 1.240 "Parches" quedaba sola en otra fila. */
+   pestañas y la etiqueta "Beta" de Clases, en español hacen falta unos 1.320 px: con un tope menor "Parches"
+   quedaba sola en otra fila. */
 .d2-tabs {
   display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 2px;
-  max-width: 1300px; margin: 0 auto;
+  max-width: 1330px; margin: 0 auto;
+}
+/* La etiqueta de una pestaña que todavía se está completando (Clases): chica, con fondo tenue y sin borde. */
+.d2-tab-beta {
+  margin-left: 6px; padding: 1px 4px 0;
+  font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.4;
+  color: #e8d9a8; background: rgba(199, 179, 119, 0.16); border-radius: 2px;
 }
 .d2-tab {
   position: relative; flex: none;
@@ -90,7 +97,7 @@
 .d2-tab.is-soon { color: #6f6656; cursor: default; }
 @media (max-width: 760px) { .d2-tab.is-soon { display: none; } }
 /* En pantallas medianas (1.280, 1.366) un poco menos de aire entra las catorce en una fila, sin una sola abajo. */
-@media (max-width: 1360px) { .d2-tab { padding: 0 9px; } }
+@media (max-width: 1360px) { .d2-tab { padding: 0 8px; } .d2-tab-beta { margin-left: 4px; padding: 1px 3px 0; } }
 /* En el celular, un poco más chicas: con las trece pestañas eran cinco filas antes del contenido. */
 @media (max-width: 480px) {
   .d2-tabs-band { padding: 8px 10px 10px; }

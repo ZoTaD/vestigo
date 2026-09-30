@@ -13,7 +13,7 @@ import { Suspense, useEffect } from "react";
 import RouteLink from "./RouteLink";
 import { lazyWithPreload } from "./lazyWithPreload";
 import type { D2rSection, Route } from "./route";
-import { D2R_LIVE, D2R_TABS, useD2rCopy } from "./d2rCopy";
+import { D2R_BETA, D2R_LIVE, D2R_TABS, useD2rCopy } from "./d2rCopy";
 import D2rHome from "./d2r/D2rHome";
 import "./styles/d2r.css";
 import "./styles/d2r-wiki.css";
@@ -132,6 +132,7 @@ function Tabs({ route, navigate }: { route: Route; navigate: Nav }) {
               key={tab}
             >
               {t.tabs[tab]}
+              {D2R_BETA.includes(tab) && <small className="d2-tab-beta">{t.beta}</small>}
             </RouteLink>
           ) : (
             <span className="d2-tab is-soon" aria-disabled="true" title={t.soon} key={tab}>
