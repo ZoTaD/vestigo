@@ -114,10 +114,10 @@ const EN = {
           "and how close it is to the builds that win. Share it with a link.",
       },
       ranks: {
-        title: () => "Deadlock Rank Distribution — Players by Rank | Vestigo",
+        title: () => "Deadlock Ranks — Distribution and Rank Points per Game | Vestigo",
         description: () =>
-          "How many players sit at every Deadlock rank, and how the ladder is rebuilding itself " +
-          "day by day since the Season 1 reset.",
+          "How many players sit at every Deadlock rank, and how many rank points a win or a loss " +
+          "gives by win streak, with demotion shields and calibration, measured on a million games.",
       },
       comebacks: {
         title: () => "Deadlock Comebacks — What a Soul Lead Is Worth | Vestigo",
@@ -294,10 +294,10 @@ const ES: typeof EN = {
           "mejoras y cuánto se parece a las builds que ganan. Compartila con un link.",
       },
       ranks: {
-        title: () => "Distribución de rangos de Deadlock — jugadores por rango | Vestigo",
+        title: () => "Rangos de Deadlock — distribución y puntos por partida | Vestigo",
         description: () =>
-          "Cuánta gente hay en cada rango de Deadlock, y cómo se reconstruye la escalera día a " +
-          "día desde el reinicio de la Temporada 1.",
+          "Cuánta gente hay en cada rango de Deadlock y cuántos puntos da ganar o perder según la " +
+          "racha, con escudos de descenso y calibración, medido en un millón de partidas.",
       },
       comebacks: {
         title: () => "Remontadas en Deadlock — cuánto vale una ventaja de almas | Vestigo",

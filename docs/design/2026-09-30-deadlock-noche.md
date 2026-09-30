@@ -68,4 +68,9 @@ publica en `main` ni se tocan workflows. Cada tarea: probar en el navegador
       jugador (27a1380, a63a99b, dc07a22).
 
 ## Informe de la mañana
-- [ ] Resumen con capturas para ZoTaD.
+- [x] Resumen con capturas para ZoTaD (mandado en la sesión, 30/9 ~2 h).
+
+## H. Repaso de madrugada
+- [x] Objetos: el objeto abierto arriba de la tienda, entero (9307e1b).
+- [x] Hemeroteca de News en tinta; contraste revisado en todas las pestañas.
+- [x] Rangos: "Cuántos puntos da cada partida" (39705c4) y título SEO.
