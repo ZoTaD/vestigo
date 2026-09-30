@@ -23,6 +23,7 @@ import { heroes as heroSlugs } from "./deadlockSlugs";
 import GameImg from "./GameImg";
 import { safeHref } from "./safeHref";
 import DeadlockPopularCard from "./DeadlockPopularCard";
+import { CANDIDATES, CANDIDATES_EDITION, candidatesVisible, stickerOf } from "./deadlockCandidates";
 import { PopularHeroContext } from "./deadlockPopularData";
 
 /**
@@ -136,7 +137,7 @@ function HeroTile({
               className="dl-tile-mark"
               data-kind={hero.difficulty}
               title={`${copy.deadlock.difficulty[hero.difficulty]} — ${copy.deadlock.why.skillGap(
-                signed(hero.skillGap)
+                signed(hero.skillGap),
               )}`}
             >
               <MarkIcon kind={hero.difficulty} />
@@ -147,16 +148,16 @@ function HeroTile({
             <span
               className="dl-tile-trend"
               data-kind={hero.momentum}
-              title={`${copy.deadlock.momentum[hero.momentum]} — ${copy.deadlock.why.trend(
-                signed(hero.trend)
-              )}`}
+              title={`${copy.deadlock.momentum[hero.momentum]} — ${copy.deadlock.why.trend(signed(hero.trend))}`}
             >
               <MarkIcon kind={hero.momentum} />
             </span>
           )}
         </span>
 
-        <span className="dl-tile-name" title={hero.name}>{hero.name}</span>
+        <span className="dl-tile-name" title={hero.name}>
+          {hero.name}
+        </span>
         <span className="dl-tile-wr">{pct(hero.winRate)}</span>
         <span className="dl-tile-pr">{pct(hero.pickRate)}</span>
       </RouteLink>
@@ -329,11 +330,7 @@ function HeroPage({
                 </span>
               )}
               {hero.momentum && (
-                <span
-                  className="dl-chip"
-                  data-kind={hero.momentum}
-                  title={copy.deadlock.why.trend(signed(hero.trend))}
-                >
+                <span className="dl-chip" data-kind={hero.momentum} title={copy.deadlock.why.trend(signed(hero.trend))}>
                   <span aria-hidden="true">{hero.momentum === "up" ? "▲" : "▼"}</span>{" "}
                   {copy.deadlock.momentum[hero.momentum]}
                 </span>
@@ -518,11 +515,7 @@ export default function Deadlock({
       {!brawl && insignia.img && <GameImg src={insignia.img} alt="" width={18} height={18} />}
       {meta.file.matches === 0
         ? copy.deadlock.emptyBand
-        : `${copy.deadlock.sample(
-            meta.file.matches.toLocaleString(locale),
-            meta.file.from,
-            meta.file.to
-          )} · ${
+        : `${copy.deadlock.sample(meta.file.matches.toLocaleString(locale), meta.file.from, meta.file.to)} · ${
             meta.file.crossesPatch
               ? copy.deadlock.patch.blend(meta.file.patch.title, Math.round((meta.file.patchShare ?? 0) * 100))
               : copy.deadlock.patch.since(meta.file.patch.title)
@@ -531,7 +524,7 @@ export default function Deadlock({
               ? ` · ${copy.deadlock.patch.live(
                   meta.file.snapshotUntil
                     ? new Date(meta.file.snapshotUntil).toLocaleDateString(locale, { day: "numeric", month: "short" })
-                    : null
+                    : null,
                 )}`
               : ""
           }`}
@@ -614,67 +607,93 @@ export default function Deadlock({
       ) : (
         <div className="page has-rail">
           <div className="page-main">
-              <>
-                <div className="dl-bands">
-                  {TIER_ORDER.map((tier) => {
-                    const heroes = meta.heroes.filter((h) => h.tier === tier);
-                    if (heroes.length === 0) return null;
-                    return (
-                      <TierBand
-                        key={tier}
-                        tier={tier}
-                        heroes={heroes}
-                        route={route}
-                        navigate={navigate}
-                        linkTo={linkTo}
-                      />
-                    );
-                  })}
-                </div>
+            <>
+              <div className="dl-bands">
+                {TIER_ORDER.map((tier) => {
+                  const heroes = meta.heroes.filter((h) => h.tier === tier);
+                  if (heroes.length === 0) return null;
+                  return (
+                    <TierBand
+                      key={tier}
+                      tier={tier}
+                      heroes={heroes}
+                      route={route}
+                      navigate={navigate}
+                      linkTo={linkTo}
+                    />
+                  );
+                })}
+              </div>
 
-                <p className="dl-tier-note">{brawl ? copy.deadlock.brawl.legend : copy.deadlock.rail.legend}</p>
-                <p className="dl-tier-note" lang={lang}>
-                  {brawl ? copy.deadlock.brawl.footnote : copy.deadlock.footnote}
-                </p>
+              <p className="dl-tier-note">{brawl ? copy.deadlock.brawl.legend : copy.deadlock.rail.legend}</p>
+              <p className="dl-tier-note" lang={lang}>
+                {brawl ? copy.deadlock.brawl.footnote : copy.deadlock.footnote}
+              </p>
 
-                {/* La página termina con un siguiente paso, no con el pie legal. */}
-                <nav className="next-steps" aria-label={copy.deadlock.next.label}>
-                  {topS && !brawl && (
-                    <RouteLink className="next-step" to={toHero(route, topS)} onNavigate={navigate}>
-                      <span className="next-step-label">{copy.deadlock.next.label}</span>
-                      <span className="next-step-title">{copy.deadlock.next.topHero(topS.name)}</span>
-                    </RouteLink>
-                  )}
-                  {/* La otra lista: de Street Brawl a clasificatorias y al revés. */}
-                  <RouteLink
-                    className="next-step"
-                    to={{ ...route, view: "deadlock", dlSection: brawl ? "meta" : "street-brawl", detail: undefined }}
-                    onNavigate={navigate}
-                  >
-                    <span className="next-step-label">{copy.deadlock.mode.label}</span>
-                    <span className="next-step-title">{brawl ? copy.deadlock.next.ranked : copy.deadlock.next.brawl}</span>
+              {/* La página termina con un siguiente paso, no con el pie legal. */}
+              <nav className="next-steps" aria-label={copy.deadlock.next.label}>
+                {topS && !brawl && (
+                  <RouteLink className="next-step" to={toHero(route, topS)} onNavigate={navigate}>
+                    <span className="next-step-label">{copy.deadlock.next.label}</span>
+                    <span className="next-step-title">{copy.deadlock.next.topHero(topS.name)}</span>
                   </RouteLink>
-                  <RouteLink
-                    className="next-step"
-                    to={{ ...route, view: "deadlock", dlSection: "items", detail: undefined }}
-                    onNavigate={navigate}
-                  >
-                    <span className="next-step-label">{copy.deadlock.tabs.items}</span>
-                    <span className="next-step-title">{copy.deadlock.next.items}</span>
-                  </RouteLink>
-                  <RouteLink
-                    className="next-step"
-                    to={{ ...route, view: "deadlock", dlSection: "player", detail: undefined }}
-                    onNavigate={navigate}
-                  >
-                    <span className="next-step-label">{copy.deadlock.tabs.player}</span>
-                    <span className="next-step-title">{copy.deadlock.next.profile}</span>
-                  </RouteLink>
-                </nav>
-              </>
+                )}
+                {/* La otra lista: de Street Brawl a clasificatorias y al revés. */}
+                <RouteLink
+                  className="next-step"
+                  to={{ ...route, view: "deadlock", dlSection: brawl ? "meta" : "street-brawl", detail: undefined }}
+                  onNavigate={navigate}
+                >
+                  <span className="next-step-label">{copy.deadlock.mode.label}</span>
+                  <span className="next-step-title">
+                    {brawl ? copy.deadlock.next.ranked : copy.deadlock.next.brawl}
+                  </span>
+                </RouteLink>
+                <RouteLink
+                  className="next-step"
+                  to={{ ...route, view: "deadlock", dlSection: "items", detail: undefined }}
+                  onNavigate={navigate}
+                >
+                  <span className="next-step-label">{copy.deadlock.tabs.items}</span>
+                  <span className="next-step-title">{copy.deadlock.next.items}</span>
+                </RouteLink>
+                <RouteLink
+                  className="next-step"
+                  to={{ ...route, view: "deadlock", dlSection: "player", detail: undefined }}
+                  onNavigate={navigate}
+                >
+                  <span className="next-step-label">{copy.deadlock.tabs.player}</span>
+                  <span className="next-step-title">{copy.deadlock.next.profile}</span>
+                </RouteLink>
+              </nav>
+            </>
           </div>
 
           <aside className="page-rail">
+            {/* Los seis en votación (City Never Sleeps): hasta que salga el último. */}
+            {candidatesVisible() && (
+              <section className="box dl-vote-box">
+                <div className="box-head">
+                  <h2 className="box-title">{copy.deadlock.rail.vote.title}</h2>
+                  <p className="box-lead">{copy.deadlock.rail.vote.lead}</p>
+                </div>
+                <ul className="dl-vote-faces">
+                  {CANDIDATES.map((c) => (
+                    <li key={c.code} title={lang === "es" ? c.name.es : c.name.en}>
+                      <img src={stickerOf(c.code)} alt={lang === "es" ? c.name.es : c.name.en} width={64} height={64} />
+                    </li>
+                  ))}
+                </ul>
+                <RouteLink
+                  className="dl-vote-cta"
+                  to={{ ...route, view: "deadlock", dlSection: "patches", detail: CANDIDATES_EDITION }}
+                  onNavigate={navigate}
+                >
+                  {copy.deadlock.rail.vote.cta} →
+                </RouteLink>
+              </section>
+            )}
+
             <section className="box">
               <div className="box-head">
                 <h2 className="box-title">{copy.deadlock.rail.movers}</h2>
@@ -735,7 +754,13 @@ export default function Deadlock({
                 <ol className="dl-rail-list">
                   {/* Sin decimales: con la muestra que hay, 12% y 13% no se distinguen. */}
                   {masBaneados.map((h) => (
-                    <RailRow key={h.heroId} hero={h} route={route} navigate={navigate} figure={pct(h.banRate ?? 0, 0)} />
+                    <RailRow
+                      key={h.heroId}
+                      hero={h}
+                      route={route}
+                      navigate={navigate}
+                      figure={pct(h.banRate ?? 0, 0)}
+                    />
                   ))}
                 </ol>
               </section>

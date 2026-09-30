@@ -242,6 +242,12 @@ const EN = {
     rail: {
       movers: "Since the patch",
       moversLead: "Who moved most, in win-rate points.",
+      /** La caja de los héroes en votación (City Never Sleeps). */
+      vote: {
+        title: "On the ballot",
+        lead: "Six new heroes. Vote in the pregame; the first one arrives October 2.",
+        cta: "See the special edition",
+      },
       moversNone: "No hero moved enough yet to call it a change.",
       mostPlayed: "Most played",
       /**
@@ -1492,6 +1498,11 @@ const ES: typeof EN = {
     rail: {
       movers: "Desde el parche",
       moversLead: "Quién se movió más, en puntos de winrate.",
+      vote: {
+        title: "En votación",
+        lead: "Seis héroes nuevos. Se vota en el pregame; el primero llega el 2 de octubre.",
+        cta: "Ver la edición especial",
+      },
       moversNone: "Todavía ningún héroe se movió lo suficiente como para llamarlo un cambio.",
       mostPlayed: "Más jugados",
       banned: "Los más baneados",
