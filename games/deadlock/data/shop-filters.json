@@ -1,0 +1,1718 @@
+{
+ "source": "https://api.deadlock-api.com/v1/assets/items",
+ "generatedAt": "2026-09-30T00:26:20.345Z",
+ "categories": [
+  {
+   "key": "Physical",
+   "locKey": "CitadelShopFilterCategory_Physical",
+   "en": "Physical",
+   "es": "Físico",
+   "es_latam": null,
+   "color": "#C0673B",
+   "icon": "s2r://panorama/images/shop/catalog/filters/sigil_physical_psd.vtex",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/shop/catalog/filters/sigil_physical.png"
+  },
+  {
+   "key": "Spirit",
+   "locKey": "CitadelShopFilterCategory_Spirit",
+   "en": "Spirit",
+   "es": "Espíritu",
+   "es_latam": null,
+   "color": "#B377E3",
+   "icon": "s2r://panorama/images/shop/catalog/filters/sigil_magic_psd.vtex",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/shop/catalog/filters/sigil_magic.png"
+  },
+  {
+   "key": "Defense",
+   "locKey": "CitadelShopFilterCategory_Defense",
+   "en": "Defense",
+   "es": "Defensa",
+   "es_latam": null,
+   "color": "#28AE4E",
+   "icon": "s2r://panorama/images/shop/catalog/filters/sigil_defense_psd.vtex",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/shop/catalog/filters/sigil_defense.png"
+  },
+  {
+   "key": "Mobility",
+   "locKey": "CitadelShopFilterCategory_Mobility",
+   "en": "Mobility",
+   "es": "Movilidad",
+   "es_latam": null,
+   "color": "#30ACE6",
+   "icon": "s2r://panorama/images/shop/catalog/filters/sigil_mobility_psd.vtex",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/shop/catalog/filters/sigil_mobility.png"
+  },
+  {
+   "key": "Disruption",
+   "locKey": "CitadelShopFilterCategory_Disruption",
+   "en": "Disruption",
+   "es": "Interrupción",
+   "es_latam": null,
+   "color": "#E3B018",
+   "icon": "s2r://panorama/images/shop/catalog/filters/sigil_disruption_psd.vtex",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/shop/catalog/filters/sigil_disruption.png"
+  },
+  {
+   "key": "Misc",
+   "locKey": "CitadelShopFilterCategory_Misc",
+   "en": "Misc",
+   "es": "Misceláneo",
+   "es_latam": null,
+   "color": "#B38763",
+   "icon": "s2r://panorama/images/shop/catalog/filters/sigil_misc_psd.vtex",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/shop/catalog/filters/sigil_misc.png"
+  }
+ ],
+ "groups": [
+  {
+   "key": "Gun",
+   "locKey": "CitadelShopFilterCategory_GunImprovements",
+   "en": "Gun Improvements",
+   "es": "Mejoras de arma",
+   "es_latam": null
+  },
+  {
+   "key": "AbilityImprovements",
+   "locKey": "CitadelShopFilterCategory_AbilityImprovements",
+   "en": "Ability Improvements",
+   "es": "Mejoras de habilidades",
+   "es_latam": null
+  },
+  {
+   "key": "AdditionalDamage",
+   "locKey": "CitadelShopFilterCategory_AdditionalDamage",
+   "en": "Additional Damage",
+   "es": "Daño adicional",
+   "es_latam": null
+  },
+  {
+   "key": "Health",
+   "locKey": "CitadelShopFilterCategory_Health",
+   "en": "Health",
+   "es": "Vida",
+   "es_latam": null
+  },
+  {
+   "key": "Resistances",
+   "locKey": "CitadelShopFilterCategory_Resistances",
+   "en": "Resistances",
+   "es": "Resistencias",
+   "es_latam": null
+  },
+  {
+   "key": "Movement",
+   "locKey": "CitadelShopFilterCategory_Movement",
+   "en": "Movement",
+   "es": "Movimiento",
+   "es_latam": null
+  },
+  {
+   "key": "Effectiveness",
+   "locKey": "CitadelShopFilterCategory_Effectiveness",
+   "en": "Reductions",
+   "es": "Reducciones",
+   "es_latam": null
+  },
+  {
+   "key": "GunReductions",
+   "locKey": "CitadelShopFilterCategory_GunReductions",
+   "en": "Gun Reductions",
+   "es": "Reducciones de arma",
+   "es_latam": null
+  },
+  {
+   "key": "StatusEffects",
+   "locKey": "CitadelShopFilterCategory_StatusEffects",
+   "en": "Status Effects",
+   "es": "Efectos de estado",
+   "es_latam": null
+  }
+ ],
+ "filters": [
+  {
+   "key": "EShopFilterWeaponDamage",
+   "category": "Physical",
+   "group": "Gun",
+   "groupPath": [
+    "Gun"
+   ],
+   "en": "Weapon Damage",
+   "es": "Daño del arma",
+   "es_latam": "Daño por arma",
+   "iconClass": "Gun",
+   "icon": "s2r://panorama/images/icons/properties/gun.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/gun.svg"
+  },
+  {
+   "key": "EShopFilterWeaponAmmo",
+   "category": "Physical",
+   "group": "Gun",
+   "groupPath": [
+    "Gun"
+   ],
+   "en": "Ammo",
+   "es": "Munición",
+   "es_latam": null,
+   "iconClass": "Ammo",
+   "icon": "s2r://panorama/images/icons/properties/ammo.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/ammo.svg"
+  },
+  {
+   "key": "EShopFilterWeaponFireRate",
+   "category": "Physical",
+   "group": "Gun",
+   "groupPath": [
+    "Gun"
+   ],
+   "en": "Fire Rate",
+   "es": "Cadencia de tiro",
+   "es_latam": null,
+   "iconClass": "FireRate",
+   "icon": "s2r://panorama/images/icons/properties/fire_rate.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/fire_rate.svg"
+  },
+  {
+   "key": "EShopFilterWeaponBulletVelocity",
+   "category": "Physical",
+   "group": "Gun",
+   "groupPath": [
+    "Gun"
+   ],
+   "en": "Bullet Velocity",
+   "es": "Velocidad de las balas",
+   "es_latam": null,
+   "iconClass": "BulletVelocity",
+   "icon": "s2r://panorama/images/icons/properties/bullet_velocity.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/bullet_velocity.svg"
+  },
+  {
+   "key": "EShopFilterWeaponRange",
+   "category": "Physical",
+   "group": "Gun",
+   "groupPath": [
+    "Gun"
+   ],
+   "en": "Range",
+   "es": "Alcance",
+   "es_latam": null,
+   "iconClass": "Range",
+   "icon": "s2r://panorama/images/icons/properties/range.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/range.svg"
+  },
+  {
+   "key": "EShopFilterMelee",
+   "category": "Physical",
+   "group": null,
+   "groupPath": [],
+   "en": "Melee",
+   "es": "Cuerpo a cuerpo",
+   "es_latam": "Cuerpo a cuerpo",
+   "iconClass": "Melee",
+   "icon": "s2r://panorama/images/icons/properties/melee.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/melee.svg"
+  },
+  {
+   "key": "EShopFilterPhysicalAdditionalDamage",
+   "category": "Physical",
+   "group": null,
+   "groupPath": [],
+   "en": "Additional Physical Damage",
+   "es": "Daño físico adicional",
+   "es_latam": null,
+   "iconClass": "DamageWeapon",
+   "icon": "s2r://panorama/images/icons/properties/damage_bullet.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/damage_bullet.svg"
+  },
+  {
+   "key": "EShopFilterSpiritDamage",
+   "category": "Spirit",
+   "group": "AbilityImprovements",
+   "groupPath": [
+    "AbilityImprovements"
+   ],
+   "en": "Spirit Power",
+   "es": "Poder espiritual",
+   "es_latam": null,
+   "iconClass": "Spirit",
+   "icon": "s2r://panorama/images/icons/properties/spirit.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/spirit.svg"
+  },
+  {
+   "key": "EShopFilterSpiritCooldownAndCharges",
+   "category": "Spirit",
+   "group": "AbilityImprovements",
+   "groupPath": [
+    "AbilityImprovements"
+   ],
+   "en": "Cooldown & Charges",
+   "es": "Tiempo de recarga y cargas",
+   "es_latam": null,
+   "iconClass": "Cooldown",
+   "icon": "s2r://panorama/images/icons/properties/cooldown.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/cooldown.svg"
+  },
+  {
+   "key": "EShopFilterSpiritDuration",
+   "category": "Spirit",
+   "group": "AbilityImprovements",
+   "groupPath": [
+    "AbilityImprovements"
+   ],
+   "en": "Duration",
+   "es": "Duración",
+   "es_latam": null,
+   "iconClass": "Duration",
+   "icon": "s2r://panorama/images/icons/properties/duration.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/duration.svg"
+  },
+  {
+   "key": "EShopFilterSpiritRange",
+   "category": "Spirit",
+   "group": "AbilityImprovements",
+   "groupPath": [
+    "AbilityImprovements"
+   ],
+   "en": "Range",
+   "es": "Alcance",
+   "es_latam": null,
+   "iconClass": "Range",
+   "icon": "s2r://panorama/images/icons/properties/range.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/range.svg"
+  },
+  {
+   "key": "EShopFilterSpiritAdditionalDamage",
+   "category": "Spirit",
+   "group": "AdditionalDamage",
+   "groupPath": [
+    "AdditionalDamage"
+   ],
+   "en": "Spirit Damage",
+   "es": "Daño espiritual",
+   "es_latam": null,
+   "iconClass": "DamageMagic",
+   "icon": "s2r://panorama/images/icons/properties/damage_magic_color.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/damage_magic_color.svg"
+  },
+  {
+   "key": "EShopFilterSpiritAdditionalDamagePct",
+   "category": "Spirit",
+   "group": "AdditionalDamage",
+   "groupPath": [
+    "AdditionalDamage"
+   ],
+   "en": "Health % Damage",
+   "es": "Daño según vida",
+   "es_latam": null,
+   "iconClass": "DamageOverTime",
+   "icon": "s2r://panorama/images/icons/properties/damage_over_time_color.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/damage_over_time_color.svg"
+  },
+  {
+   "key": "EShopFilterHP",
+   "category": "Defense",
+   "group": "Health",
+   "groupPath": [
+    "Health"
+   ],
+   "en": "HP",
+   "es": "Vida",
+   "es_latam": null,
+   "iconClass": "Health",
+   "icon": "s2r://panorama/images/icons/properties/health.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/health.svg"
+  },
+  {
+   "key": "EShopFilterRegen",
+   "category": "Defense",
+   "group": "Health",
+   "groupPath": [
+    "Health"
+   ],
+   "en": "Regen",
+   "es": "Regeneración",
+   "es_latam": null,
+   "iconClass": "HealthRegen",
+   "icon": "s2r://panorama/images/icons/properties/health_regen.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/health_regen.svg"
+  },
+  {
+   "key": "EShopFilterOutOfCombatRegen",
+   "category": "Defense",
+   "group": "Health",
+   "groupPath": [
+    "Health"
+   ],
+   "en": "Out of Combat Regen",
+   "es": "Regeneración fuera de combate",
+   "es_latam": null,
+   "iconClass": "HealthRegenOutOfCombat",
+   "icon": "s2r://panorama/images/icons/properties/health_regen.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/health_regen.svg"
+  },
+  {
+   "key": "EShopFilterBarrier",
+   "category": "Defense",
+   "group": "Health",
+   "groupPath": [
+    "Health"
+   ],
+   "en": "Barrier",
+   "es": "Barrera",
+   "es_latam": null,
+   "iconClass": "Barrier",
+   "icon": "s2r://panorama/images/icons/properties/armor_alt.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/armor_alt.svg"
+  },
+  {
+   "key": "EShopFilterHealing",
+   "category": "Defense",
+   "group": "Health",
+   "groupPath": [
+    "Health"
+   ],
+   "en": "Healing",
+   "es": "Curación",
+   "es_latam": "Curación",
+   "iconClass": "Heal",
+   "icon": "s2r://panorama/images/icons/properties/heal.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/heal.svg"
+  },
+  {
+   "key": "EShopFilterLifesteal",
+   "category": "Defense",
+   "group": "Health",
+   "groupPath": [
+    "Health"
+   ],
+   "en": "Lifesteal",
+   "es": "Robo de vida",
+   "es_latam": null,
+   "iconClass": "HealthSteal",
+   "icon": "s2r://panorama/images/icons/properties/health_steal.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/health_steal.svg"
+  },
+  {
+   "key": "EShopFilterPhysicalResist",
+   "category": "Defense",
+   "group": "Resistances",
+   "groupPath": [
+    "Resistances"
+   ],
+   "en": "Physical Resistance",
+   "es": "Resistencia física",
+   "es_latam": null,
+   "iconClass": "ArmorBullet",
+   "icon": "s2r://panorama/images/icons/properties/armor_bullet.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/armor_bullet.svg"
+  },
+  {
+   "key": "EShopFilterSpiritResist",
+   "category": "Defense",
+   "group": "Resistances",
+   "groupPath": [
+    "Resistances"
+   ],
+   "en": "Spirit Resistance",
+   "es": "Resistencia espiritual",
+   "es_latam": null,
+   "iconClass": "ArmorSpirit",
+   "icon": "s2r://panorama/images/icons/properties/armor_spirit.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/armor_spirit.svg"
+  },
+  {
+   "key": "EShopFilterMeleeResist",
+   "category": "Defense",
+   "group": "Resistances",
+   "groupPath": [
+    "Resistances"
+   ],
+   "en": "Melee Resistance",
+   "es": "Resistencia cuerpo a cuerpo",
+   "es_latam": null,
+   "iconClass": "ArmorMelee",
+   "icon": "s2r://panorama/images/icons/properties/armor_melee.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/armor_melee.svg"
+  },
+  {
+   "key": "EShopFilterDebuffResist",
+   "category": "Defense",
+   "group": "Resistances",
+   "groupPath": [
+    "Resistances"
+   ],
+   "en": "Debuff Resistance",
+   "es": "Resistencia a desventajas",
+   "es_latam": null,
+   "iconClass": "DebuffRemove",
+   "icon": "s2r://panorama/images/icons/properties/debuff_remove.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/debuff_remove.svg"
+  },
+  {
+   "key": "EShopFilterSlowResist",
+   "category": "Defense",
+   "group": "Resistances",
+   "groupPath": [
+    "Resistances"
+   ],
+   "en": "Slow Resistance",
+   "es": "Resistencia a la ralentización",
+   "es_latam": null,
+   "iconClass": "ConditionSlow",
+   "icon": "s2r://panorama/images/icons/properties/condition_slow.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/condition_slow.svg"
+  },
+  {
+   "key": "EShopFilterAntiCC",
+   "category": "Defense",
+   "group": null,
+   "groupPath": [],
+   "en": "Anti-CC",
+   "es": "Anticontrol de multitudes",
+   "es_latam": null,
+   "iconClass": "Debuff",
+   "icon": "s2r://panorama/images/icons/properties/debuff.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/debuff.svg"
+  },
+  {
+   "key": "EShopFilterInvulnerability",
+   "category": "Defense",
+   "group": null,
+   "groupPath": [],
+   "en": "Invulnerability",
+   "es": "Invulnerabilidad",
+   "es_latam": null,
+   "iconClass": "Invulnerable",
+   "icon": "s2r://panorama/images/upgrades/mods_armor/unstoppable_psd.vtex",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/upgrades/mods_armor/unstoppable.png"
+  },
+  {
+   "key": "EShopFilterMoveSpeed",
+   "category": "Mobility",
+   "group": "Movement",
+   "groupPath": [
+    "Movement"
+   ],
+   "en": "Move Speed",
+   "es": "Velocidad de movimiento",
+   "es_latam": null,
+   "iconClass": "MoveSpeed",
+   "icon": "s2r://panorama/images/icons/properties/move_speed.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/move_speed.svg"
+  },
+  {
+   "key": "EShopFilterSprint",
+   "category": "Mobility",
+   "group": "Movement",
+   "groupPath": [
+    "Movement"
+   ],
+   "en": "Sprint",
+   "es": "Esprint",
+   "es_latam": null,
+   "iconClass": "MoveSprint",
+   "icon": "s2r://panorama/images/icons/properties/move_sprint.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/move_sprint.svg"
+  },
+  {
+   "key": "EShopFilterStamina",
+   "category": "Mobility",
+   "group": "Movement",
+   "groupPath": [
+    "Movement"
+   ],
+   "en": "Stamina",
+   "es": "Aguante",
+   "es_latam": null,
+   "iconClass": "MoveStamina",
+   "icon": "s2r://panorama/images/icons/properties/move_stamina.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/move_stamina.svg"
+  },
+  {
+   "key": "EShopFilterJumpAndDash",
+   "category": "Mobility",
+   "group": "Movement",
+   "groupPath": [
+    "Movement"
+   ],
+   "en": "Jump/Dash/Slide",
+   "es": "Salto/Impulso/Deslizamiento",
+   "es_latam": null,
+   "iconClass": "MoveSlide",
+   "icon": "s2r://panorama/images/icons/properties/move_slide.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/move_slide.svg"
+  },
+  {
+   "key": "EShopFilterTeleport",
+   "category": "Mobility",
+   "group": null,
+   "groupPath": [],
+   "en": "Teleport",
+   "es": "Teletransporte",
+   "es_latam": null,
+   "iconClass": "Teleport",
+   "icon": "s2r://panorama/images/icons/properties/condition_immobilize.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/condition_immobilize.svg"
+  },
+  {
+   "key": "EShopFilterStealth",
+   "category": "Mobility",
+   "group": null,
+   "groupPath": [],
+   "en": "Stealth",
+   "es": "Sigilo",
+   "es_latam": null,
+   "iconClass": "Visibility",
+   "icon": "s2r://panorama/images/icons/properties/visibility.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/visibility.svg"
+  },
+  {
+   "key": "EShopFilterAntiHeal",
+   "category": "Disruption",
+   "group": null,
+   "groupPath": [],
+   "en": "Anti-Healing",
+   "es": "Anticuración",
+   "es_latam": null,
+   "iconClass": "DebuffHealing",
+   "icon": "s2r://panorama/images/icons/properties/debuff_healing_reduction.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/debuff_healing_reduction.svg"
+  },
+  {
+   "key": "EShopFilterBulletVuln",
+   "category": "Disruption",
+   "group": null,
+   "groupPath": [],
+   "en": "Physical Vulnerability",
+   "es": "Vulnerabilidad física",
+   "es_latam": null,
+   "iconClass": "DebuffBulletArmor",
+   "icon": "s2r://panorama/images/icons/properties/armor_debuff_bullet_reduction.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/armor_debuff_bullet_reduction.svg"
+  },
+  {
+   "key": "EShopFilterSpiritVuln",
+   "category": "Disruption",
+   "group": null,
+   "groupPath": [],
+   "en": "Spirit Vulnerability",
+   "es": "Vulnerabilidad espiritual",
+   "es_latam": null,
+   "iconClass": "DebuffSpiritArmor",
+   "icon": "s2r://panorama/images/icons/properties/armor_debuff_spirit_reduction.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/armor_debuff_spirit_reduction.svg"
+  },
+  {
+   "key": "EShopFilterBulletDamageReduction",
+   "category": "Disruption",
+   "group": "GunReductions",
+   "groupPath": [
+    "Effectiveness",
+    "GunReductions"
+   ],
+   "en": "Bullet Damage Reduction",
+   "es": "Reducción del daño balístico",
+   "es_latam": null,
+   "iconClass": "DebuffGun",
+   "icon": "s2r://panorama/images/icons/properties/debuff_gun_damage.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/debuff_gun_damage.svg"
+  },
+  {
+   "key": "EShopFilterFireRateReduction",
+   "category": "Disruption",
+   "group": "GunReductions",
+   "groupPath": [
+    "Effectiveness",
+    "GunReductions"
+   ],
+   "en": "Fire Rate Reduction",
+   "es": "Reducción de la cadencia de tiro",
+   "es_latam": null,
+   "iconClass": "DebuffFireRate",
+   "icon": "s2r://panorama/images/icons/properties/debuff_fire_rate_reduction.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/debuff_fire_rate_reduction.svg"
+  },
+  {
+   "key": "EShopFilterSpiritDamageReduction",
+   "category": "Disruption",
+   "group": "Effectiveness",
+   "groupPath": [
+    "Effectiveness"
+   ],
+   "en": "Spirit Damage Reduction",
+   "es": "Reducción del daño espiritual",
+   "es_latam": null,
+   "iconClass": "DebuffSpirit",
+   "icon": "s2r://panorama/images/icons/properties/debuff_spirit.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/debuff_spirit.svg"
+  },
+  {
+   "key": "EShopFilterMobilityReduction",
+   "category": "Disruption",
+   "group": "Effectiveness",
+   "groupPath": [
+    "Effectiveness"
+   ],
+   "en": "Slow",
+   "es": "Ralentización",
+   "es_latam": null,
+   "iconClass": "DebuffMoveSpeed",
+   "icon": "s2r://panorama/images/icons/properties/debuff_move_speed.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/debuff_move_speed.svg"
+  },
+  {
+   "key": "EShopFilterStatus_Stun",
+   "category": "Disruption",
+   "group": "StatusEffects",
+   "groupPath": [
+    "StatusEffects"
+   ],
+   "en": "Stun",
+   "es": "Aturdimiento",
+   "es_latam": null,
+   "iconClass": "ConditionStun",
+   "icon": "s2r://panorama/images/icons/properties/condition_stun.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/condition_stun.svg"
+  },
+  {
+   "key": "EShopFilterStatus_Disarm",
+   "category": "Disruption",
+   "group": "StatusEffects",
+   "groupPath": [
+    "StatusEffects"
+   ],
+   "en": "Disarm",
+   "es": "Desarme",
+   "es_latam": null,
+   "iconClass": "ConditionDisarm",
+   "icon": "s2r://panorama/images/icons/properties/condition_disarm.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/condition_disarm.svg"
+  },
+  {
+   "key": "EShopFilterStatus_Silence",
+   "category": "Disruption",
+   "group": "StatusEffects",
+   "groupPath": [
+    "StatusEffects"
+   ],
+   "en": "Silence",
+   "es": "Silencio",
+   "es_latam": null,
+   "iconClass": "ConditionSilence",
+   "icon": "s2r://panorama/images/icons/properties/condition_silence.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/condition_silence.svg"
+  },
+  {
+   "key": "EShopFilterStatus_Curse",
+   "category": "Disruption",
+   "group": "StatusEffects",
+   "groupPath": [
+    "StatusEffects"
+   ],
+   "en": "Curse",
+   "es": "Maldición",
+   "es_latam": null,
+   "iconClass": "ConditionCurse",
+   "icon": "s2r://panorama/images/icons/properties/condition_curse.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/condition_curse.svg"
+  },
+  {
+   "key": "EShopFilterStatus_Immobilize",
+   "category": "Disruption",
+   "group": "StatusEffects",
+   "groupPath": [
+    "StatusEffects"
+   ],
+   "en": "Immobilize",
+   "es": "Inmovilización",
+   "es_latam": null,
+   "iconClass": "ConditionImmobilize",
+   "icon": "s2r://panorama/images/icons/properties/condition_immobilize.vsvg",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/icons/icons/properties/condition_immobilize.svg"
+  },
+  {
+   "key": "EShopFilterActive",
+   "category": "Misc",
+   "group": null,
+   "groupPath": [],
+   "en": "Active Items",
+   "es": "Objetos activos",
+   "es_latam": null,
+   "iconClass": null,
+   "icon": null,
+   "iconUrl": null
+  },
+  {
+   "key": "EShopFilterImbue",
+   "category": "Misc",
+   "group": null,
+   "groupPath": [],
+   "en": "Imbue Items",
+   "es": "Objetos imbuidos",
+   "es_latam": null,
+   "iconClass": null,
+   "icon": null,
+   "iconUrl": null
+  }
+ ],
+ "itemTypes": [
+  {
+   "key": "EShopFilterItemWeapon",
+   "en": "Weapon Items",
+   "es": "Objetos de la categoría Arma",
+   "es_latam": null,
+   "icon": "s2r://panorama/images/hud/core/core_weapon_icon_psd.vtex",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/hud/core/core_weapon_icon.png"
+  },
+  {
+   "key": "EShopFilterItemSpirit",
+   "en": "Spirit Items",
+   "es": "Objetos de la categoría Espíritu",
+   "es_latam": null,
+   "icon": "s2r://panorama/images/hud/core/core_spirit_icon_psd.vtex",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/hud/core/core_spirit_icon.png"
+  },
+  {
+   "key": "EShopFilterItemVitality",
+   "en": "Vitality Items",
+   "es": "Objetos de la categoría Vitalidad",
+   "es_latam": null,
+   "icon": "s2r://panorama/images/hud/core/core_armor_icon_psd.vtex",
+   "iconUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/hud/core/core_armor_icon.png"
+  }
+ ],
+ "items": {
+  "7409189": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterOutOfCombatRegen"
+  ],
+  "26002154": [
+   "EShopFilterMelee",
+   "EShopFilterPhysicalResist"
+  ],
+  "64550694": [
+   "EShopFilterMelee",
+   "EShopFilterMeleeResist"
+  ],
+  "84321454": [
+   "EShopFilterWeaponAmmo",
+   "EShopFilterWeaponFireRate",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterImbue"
+  ],
+  "98582110": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterHP",
+   "EShopFilterMoveSpeed",
+   "EShopFilterBulletVuln"
+  ],
+  "112198670": [
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterBarrier",
+   "EShopFilterPhysicalResist",
+   "EShopFilterSpiritResist"
+  ],
+  "230297145": [],
+  "334300056": [
+   "EShopFilterStamina",
+   "EShopFilterJumpAndDash"
+  ],
+  "339443430": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterHP",
+   "EShopFilterLifesteal",
+   "EShopFilterDebuffResist",
+   "EShopFilterMoveSpeed"
+  ],
+  "343572757": [
+   "EShopFilterSpiritRange",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterAntiHeal"
+  ],
+  "365620721": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponFireRate"
+  ],
+  "380806748": [
+   "EShopFilterSpiritCooldownAndCharges",
+   "EShopFilterImbue"
+  ],
+  "381961617": [
+   "EShopFilterWeaponAmmo",
+   "EShopFilterWeaponFireRate",
+   "EShopFilterLifesteal",
+   "EShopFilterMoveSpeed"
+  ],
+  "393974127": [
+   "EShopFilterMobilityReduction"
+  ],
+  "395867183": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritAdditionalDamage"
+  ],
+  "395944548": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterHP",
+   "EShopFilterMeleeResist"
+  ],
+  "424779525": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritCooldownAndCharges",
+   "EShopFilterImbue"
+  ],
+  "465043967": [
+   "EShopFilterMelee",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterSpiritVuln"
+  ],
+  "493591231": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterHP",
+   "EShopFilterSprint",
+   "EShopFilterMobilityReduction",
+   "EShopFilterStatus_Stun"
+  ],
+  "499683006": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterHP",
+   "EShopFilterLifesteal"
+  ],
+  "600033864": [
+   "EShopFilterBarrier",
+   "EShopFilterJumpAndDash",
+   "EShopFilterActive"
+  ],
+  "619484391": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterHP",
+   "EShopFilterStatus_Silence",
+   "EShopFilterActive"
+  ],
+  "630839635": [
+   "EShopFilterPhysicalResist",
+   "EShopFilterSpiritResist",
+   "EShopFilterActive",
+   "EShopFilterImbue"
+  ],
+  "668299740": [
+   "EShopFilterWeaponFireRate"
+  ],
+  "673001892": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponBulletVelocity"
+  ],
+  "677738769": [
+   "EShopFilterActive"
+  ],
+  "690458959": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponBulletVelocity"
+  ],
+  "709540378": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterSpiritRange",
+   "EShopFilterHP",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterPhysicalResist",
+   "EShopFilterActive"
+  ],
+  "710436191": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterMobilityReduction",
+   "EShopFilterActive"
+  ],
+  "754480263": [
+   "EShopFilterSpiritRange",
+   "EShopFilterImbue"
+  ],
+  "787198704": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritCooldownAndCharges"
+  ],
+  "800008313": [
+   "EShopFilterMelee",
+   "EShopFilterPhysicalResist",
+   "EShopFilterBulletVuln",
+   "EShopFilterStatus_Stun"
+  ],
+  "805079544": [
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterBarrier",
+   "EShopFilterPhysicalResist"
+  ],
+  "811521119": [
+   "EShopFilterSpiritAdditionalDamage"
+  ],
+  "857669956": [
+   "EShopFilterSpiritRange",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterBarrier",
+   "EShopFilterMoveSpeed",
+   "EShopFilterActive"
+  ],
+  "865846625": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterSpiritDamage",
+   "EShopFilterHP",
+   "EShopFilterLifesteal"
+  ],
+  "865958998": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterHP",
+   "EShopFilterHealing",
+   "EShopFilterMoveSpeed",
+   "EShopFilterStealth"
+  ],
+  "876563814": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterHP",
+   "EShopFilterLifesteal"
+  ],
+  "915014646": [
+   "EShopFilterSpiritCooldownAndCharges",
+   "EShopFilterOutOfCombatRegen"
+  ],
+  "951866250": [
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterBarrier",
+   "EShopFilterPhysicalResist",
+   "EShopFilterSpiritResist",
+   "EShopFilterAntiCC"
+  ],
+  "968099481": [
+   "EShopFilterSpiritDamage"
+  ],
+  "989206714": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterSpiritResist",
+   "EShopFilterDebuffResist",
+   "EShopFilterMoveSpeed",
+   "EShopFilterActive"
+  ],
+  "1009965641": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterPhysicalResist"
+  ],
+  "1047818222": [
+   "EShopFilterHP",
+   "EShopFilterDebuffResist"
+  ],
+  "1055679805": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponFireRate",
+   "EShopFilterHP",
+   "EShopFilterLifesteal",
+   "EShopFilterPhysicalResist",
+   "EShopFilterActive"
+  ],
+  "1102081447": [
+   "EShopFilterHP",
+   "EShopFilterSprint",
+   "EShopFilterMobilityReduction"
+  ],
+  "1113837674": [
+   "EShopFilterSpiritResist",
+   "EShopFilterSpiritDamageReduction",
+   "EShopFilterStatus_Silence"
+  ],
+  "1132564516": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterActive"
+  ],
+  "1144549437": [
+   "EShopFilterLifesteal",
+   "EShopFilterSpiritVuln"
+  ],
+  "1150006784": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritDuration",
+   "EShopFilterSpiritRange",
+   "EShopFilterStamina",
+   "EShopFilterJumpAndDash"
+  ],
+  "1152158042": [
+   "EShopFilterSpiritRange",
+   "EShopFilterSprint",
+   "EShopFilterMobilityReduction",
+   "EShopFilterStatus_Immobilize",
+   "EShopFilterActive"
+  ],
+  "1193964439": [
+   "EShopFilterSpiritRange",
+   "EShopFilterSpiritResist"
+  ],
+  "1219329868": [
+   "EShopFilterHP",
+   "EShopFilterSpiritVuln",
+   "EShopFilterSpiritDamageReduction",
+   "EShopFilterActive"
+  ],
+  "1235347618": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponFireRate",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterPhysicalResist"
+  ],
+  "1250307611": [
+   "EShopFilterRegen",
+   "EShopFilterMeleeResist",
+   "EShopFilterSlowResist",
+   "EShopFilterMoveSpeed",
+   "EShopFilterFireRateReduction"
+  ],
+  "1252627263": [
+   "EShopFilterMelee",
+   "EShopFilterHP",
+   "EShopFilterLifesteal",
+   "EShopFilterMobilityReduction"
+  ],
+  "1254091416": [
+   "EShopFilterSpiritRange",
+   "EShopFilterHP",
+   "EShopFilterStatus_Stun",
+   "EShopFilterActive"
+  ],
+  "1282141666": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterSpiritAdditionalDamagePct",
+   "EShopFilterHP",
+   "EShopFilterHealing",
+   "EShopFilterPhysicalResist"
+  ],
+  "1292979587": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterSpiritDamage",
+   "EShopFilterMoveSpeed",
+   "EShopFilterImbue"
+  ],
+  "1342610602": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponRange",
+   "EShopFilterMeleeResist"
+  ],
+  "1371725689": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterTeleport",
+   "EShopFilterMobilityReduction",
+   "EShopFilterStatus_Disarm",
+   "EShopFilterActive"
+  ],
+  "1378931225": [
+   "EShopFilterPhysicalResist",
+   "EShopFilterActive"
+  ],
+  "1396247347": [
+   "EShopFilterWeaponAmmo",
+   "EShopFilterPhysicalAdditionalDamage"
+  ],
+  "1409190604": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponFireRate",
+   "EShopFilterHP",
+   "EShopFilterLifesteal",
+   "EShopFilterSpiritResist",
+   "EShopFilterMoveSpeed",
+   "EShopFilterActive"
+  ],
+  "1414025773": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterHP",
+   "EShopFilterHealing",
+   "EShopFilterAntiCC",
+   "EShopFilterMoveSpeed"
+  ],
+  "1414319208": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterPhysicalResist"
+  ],
+  "1427630806": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterRegen",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterHealing",
+   "EShopFilterSpiritResist",
+   "EShopFilterMoveSpeed"
+  ],
+  "1437614329": [
+   "EShopFilterMelee",
+   "EShopFilterLifesteal"
+  ],
+  "1439347412": [
+   "EShopFilterHP",
+   "EShopFilterRegen",
+   "EShopFilterHealing"
+  ],
+  "1548066885": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponAmmo"
+  ],
+  "1558545403": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterHP",
+   "EShopFilterMoveSpeed",
+   "EShopFilterActive"
+  ],
+  "1644605047": [
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterBarrier",
+   "EShopFilterAntiCC"
+  ],
+  "1662311306": [
+   "EShopFilterSpiritRange",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterBarrier",
+   "EShopFilterDebuffResist",
+   "EShopFilterMoveSpeed",
+   "EShopFilterActive"
+  ],
+  "1672893796": [
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterBarrier",
+   "EShopFilterActive"
+  ],
+  "1710079648": [
+   "EShopFilterRegen",
+   "EShopFilterHealing",
+   "EShopFilterSprint",
+   "EShopFilterActive"
+  ],
+  "1736094134": [
+   "EShopFilterStamina",
+   "EShopFilterJumpAndDash"
+  ],
+  "1763073141": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponAmmo"
+  ],
+  "1770441818": [
+   "EShopFilterHP",
+   "EShopFilterBulletVuln"
+  ],
+  "1797283378": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterHP",
+   "EShopFilterLifesteal",
+   "EShopFilterSpiritResist",
+   "EShopFilterActive"
+  ],
+  "1798666702": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterMelee",
+   "EShopFilterSpiritDamage",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterMoveSpeed",
+   "EShopFilterSprint",
+   "EShopFilterStealth",
+   "EShopFilterActive"
+  ],
+  "1804594021": [
+   "EShopFilterSpiritRange",
+   "EShopFilterHealing",
+   "EShopFilterSprint",
+   "EShopFilterActive"
+  ],
+  "1813726886": [
+   "EShopFilterSprint",
+   "EShopFilterMobilityReduction",
+   "EShopFilterActive"
+  ],
+  "1825399334": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterStamina",
+   "EShopFilterJumpAndDash"
+  ],
+  "1925087134": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterPhysicalResist",
+   "EShopFilterFireRateReduction"
+  ],
+  "1932939246": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterBulletVuln",
+   "EShopFilterActive"
+  ],
+  "1955841979": [
+   "EShopFilterHP",
+   "EShopFilterSpiritResist",
+   "EShopFilterDebuffResist"
+  ],
+  "1976391348": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterSpiritResist",
+   "EShopFilterMobilityReduction",
+   "EShopFilterActive"
+  ],
+  "1998374645": [
+   "EShopFilterSpiritAdditionalDamage"
+  ],
+  "2010028405": [
+   "EShopFilterPhysicalAdditionalDamage",
+   "EShopFilterHP"
+  ],
+  "2037039379": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterHP",
+   "EShopFilterAntiHeal",
+   "EShopFilterBulletDamageReduction",
+   "EShopFilterSpiritDamageReduction"
+  ],
+  "2054088113": [
+   "EShopFilterStatus_Stun",
+   "EShopFilterActive"
+  ],
+  "2059712766": [
+   "EShopFilterHealing",
+   "EShopFilterSpiritResist",
+   "EShopFilterStamina",
+   "EShopFilterActive"
+  ],
+  "2061878743": [
+   "EShopFilterHP",
+   "EShopFilterSprint",
+   "EShopFilterBulletVuln",
+   "EShopFilterStatus_Disarm",
+   "EShopFilterActive"
+  ],
+  "2064029594": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponBulletVelocity",
+   "EShopFilterSpiritDamage"
+  ],
+  "2068250483": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritCooldownAndCharges",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterImbue"
+  ],
+  "2081037738": [
+   "EShopFilterSpiritResist",
+   "EShopFilterSpiritVuln"
+  ],
+  "2095565695": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponRange",
+   "EShopFilterHP",
+   "EShopFilterMeleeResist",
+   "EShopFilterMobilityReduction"
+  ],
+  "2108215830": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterPhysicalResist",
+   "EShopFilterMoveSpeed",
+   "EShopFilterSprint",
+   "EShopFilterActive"
+  ],
+  "2121044373": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterSpiritAdditionalDamagePct",
+   "EShopFilterHP"
+  ],
+  "2142980412": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterSpiritVuln",
+   "EShopFilterSpiritDamageReduction",
+   "EShopFilterStatus_Silence",
+   "EShopFilterActive"
+  ],
+  "2152872419": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponBulletVelocity",
+   "EShopFilterWeaponRange",
+   "EShopFilterSprint"
+  ],
+  "2163598980": [
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterSpiritResist"
+  ],
+  "2221211450": [
+   "EShopFilterWeaponAmmo",
+   "EShopFilterWeaponFireRate",
+   "EShopFilterSpiritCooldownAndCharges"
+  ],
+  "2226497419": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritDuration",
+   "EShopFilterHP",
+   "EShopFilterLifesteal"
+  ],
+  "2319629810": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterHP",
+   "EShopFilterSpiritResist",
+   "EShopFilterStamina"
+  ],
+  "2356412290": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponAmmo"
+  ],
+  "2407033488": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponAmmo"
+  ],
+  "2407781327": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterMelee",
+   "EShopFilterHP",
+   "EShopFilterPhysicalResist",
+   "EShopFilterSpiritResist",
+   "EShopFilterMobilityReduction",
+   "EShopFilterActive"
+  ],
+  "2417568017": [
+   "EShopFilterSpiritAdditionalDamagePct",
+   "EShopFilterHP",
+   "EShopFilterSpiritResist",
+   "EShopFilterDebuffResist",
+   "EShopFilterActive"
+  ],
+  "2447176615": [
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterSlowResist",
+   "EShopFilterMoveSpeed"
+  ],
+  "2462046703": [
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterSprint",
+   "EShopFilterActive"
+  ],
+  "2463960640": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponAmmo",
+   "EShopFilterHP",
+   "EShopFilterPhysicalResist"
+  ],
+  "2480592370": [
+   "EShopFilterWeaponFireRate"
+  ],
+  "2481177645": [
+   "EShopFilterHP",
+   "EShopFilterSprint",
+   "EShopFilterBulletVuln",
+   "EShopFilterFireRateReduction"
+  ],
+  "2519598785": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterHP",
+   "EShopFilterOutOfCombatRegen"
+  ],
+  "2533252781": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritResist",
+   "EShopFilterAntiCC",
+   "EShopFilterInvulnerability",
+   "EShopFilterMoveSpeed",
+   "EShopFilterActive"
+  ],
+  "2566692615": [
+   "EShopFilterRegen",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterHealing"
+  ],
+  "2603935618": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterHealing",
+   "EShopFilterAntiHeal"
+  ],
+  "2617435668": [
+   "EShopFilterStatus_Disarm",
+   "EShopFilterStatus_Silence",
+   "EShopFilterStatus_Curse",
+   "EShopFilterActive"
+  ],
+  "2678489038": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterHP",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterBulletVuln"
+  ],
+  "2717651715": [
+   "EShopFilterSpiritDuration",
+   "EShopFilterPhysicalResist"
+  ],
+  "2739107182": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterMoveSpeed",
+   "EShopFilterJumpAndDash"
+  ],
+  "2800629741": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritDuration",
+   "EShopFilterHP",
+   "EShopFilterMoveSpeed",
+   "EShopFilterJumpAndDash",
+   "EShopFilterActive"
+  ],
+  "2820116164": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritCooldownAndCharges",
+   "EShopFilterSpiritDuration",
+   "EShopFilterBarrier"
+  ],
+  "2829638276": [
+   "EShopFilterRegen",
+   "EShopFilterOutOfCombatRegen"
+  ],
+  "2922054143": [
+   "EShopFilterHP",
+   "EShopFilterSprint",
+   "EShopFilterBulletVuln",
+   "EShopFilterFireRateReduction",
+   "EShopFilterActive"
+  ],
+  "2947183272": [
+   "EShopFilterHP",
+   "EShopFilterRegen",
+   "EShopFilterHealing",
+   "EShopFilterMoveSpeed"
+  ],
+  "2951612397": [
+   "EShopFilterSpiritDuration",
+   "EShopFilterImbue"
+  ],
+  "2956256701": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritRange",
+   "EShopFilterHealing",
+   "EShopFilterActive"
+  ],
+  "2971868509": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterPhysicalResist",
+   "EShopFilterBulletVuln"
+  ],
+  "3005970438": [
+   "EShopFilterSpiritResist",
+   "EShopFilterSpiritVuln"
+  ],
+  "3028234315": [
+   "EShopFilterSpiritCooldownAndCharges",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterSpiritResist"
+  ],
+  "3074274290": [
+   "EShopFilterSpiritRange",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterSprint"
+  ],
+  "3077079169": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponBulletVelocity"
+  ],
+  "3140772621": [
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterPhysicalResist"
+  ],
+  "3144988365": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritAdditionalDamagePct",
+   "EShopFilterHP",
+   "EShopFilterAntiHeal",
+   "EShopFilterActive"
+  ],
+  "3190916303": [
+   "EShopFilterMelee",
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterHP",
+   "EShopFilterSpiritResist",
+   "EShopFilterSpiritVuln",
+   "EShopFilterSpiritDamageReduction"
+  ],
+  "3261353684": [
+   "EShopFilterSpiritCooldownAndCharges",
+   "EShopFilterOutOfCombatRegen"
+  ],
+  "3269957497": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterWeaponBulletVelocity"
+  ],
+  "3270001687": [
+   "EShopFilterPhysicalResist",
+   "EShopFilterTeleport",
+   "EShopFilterActive"
+  ],
+  "3294954488": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterSpiritRange",
+   "EShopFilterImbue"
+  ],
+  "3331811235": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterWeaponRange",
+   "EShopFilterSprint"
+  ],
+  "3357231760": [
+   "EShopFilterHP",
+   "EShopFilterDebuffResist",
+   "EShopFilterAntiCC",
+   "EShopFilterActive"
+  ],
+  "3361075077": [
+   "EShopFilterActive"
+  ],
+  "3361811174": [
+   "EShopFilterHP",
+   "EShopFilterPhysicalResist",
+   "EShopFilterDebuffResist",
+   "EShopFilterInvulnerability"
+  ],
+  "3399065363": [
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterSprint"
+  ],
+  "3403085434": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterPhysicalResist",
+   "EShopFilterSlowResist",
+   "EShopFilterMoveSpeed",
+   "EShopFilterJumpAndDash",
+   "EShopFilterActive"
+  ],
+  "3491236900": [
+   "EShopFilterHP",
+   "EShopFilterPhysicalResist"
+  ],
+  "3523480953": [
+   "EShopFilterBarrier",
+   "EShopFilterAntiCC",
+   "EShopFilterInvulnerability",
+   "EShopFilterMoveSpeed"
+  ],
+  "3568217437": [
+   "EShopFilterSpiritAdditionalDamagePct",
+   "EShopFilterAntiHeal",
+   "EShopFilterBulletDamageReduction",
+   "EShopFilterSpiritDamageReduction",
+   "EShopFilterMobilityReduction"
+  ],
+  "3577481646": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterLifesteal",
+   "EShopFilterMobilityReduction",
+   "EShopFilterImbue"
+  ],
+  "3585132399": [
+   "EShopFilterHP",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterMoveSpeed"
+  ],
+  "3633614685": [
+   "EShopFilterHP"
+  ],
+  "3647584222": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterPhysicalAdditionalDamage",
+   "EShopFilterActive"
+  ],
+  "3696726732": [
+   "EShopFilterSpiritAdditionalDamagePct",
+   "EShopFilterAntiHeal"
+  ],
+  "3729138568": [
+   "EShopFilterMoveSpeed",
+   "EShopFilterStamina",
+   "EShopFilterActive"
+  ],
+  "3731635960": [
+   "EShopFilterHealing",
+   "EShopFilterSpiritResist",
+   "EShopFilterDebuffResist",
+   "EShopFilterMoveSpeed",
+   "EShopFilterActive"
+  ],
+  "3776945997": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritCooldownAndCharges"
+  ],
+  "3791587546": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterDebuffResist",
+   "EShopFilterMobilityReduction"
+  ],
+  "3812615317": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterSpiritResist",
+   "EShopFilterMobilityReduction",
+   "EShopFilterStatus_Immobilize",
+   "EShopFilterActive"
+  ],
+  "3862866912": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterHealing"
+  ],
+  "3884003354": [
+   "EShopFilterHP",
+   "EShopFilterBulletVuln",
+   "EShopFilterSpiritVuln",
+   "EShopFilterAntiHeal"
+  ],
+  "3919289022": [
+   "EShopFilterWeaponAmmo",
+   "EShopFilterWeaponFireRate",
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterImbue"
+  ],
+  "3949773228": [
+   "EShopFilterSpiritAdditionalDamage",
+   "EShopFilterHP",
+   "EShopFilterDebuffResist",
+   "EShopFilterActive"
+  ],
+  "3970837787": [
+   "EShopFilterSpiritDamage",
+   "EShopFilterSpiritCooldownAndCharges",
+   "EShopFilterOutOfCombatRegen",
+   "EShopFilterSpiritResist"
+  ],
+  "3977876567": [
+   "EShopFilterWeaponAmmo",
+   "EShopFilterWeaponFireRate",
+   "EShopFilterStamina",
+   "EShopFilterJumpAndDash"
+  ],
+  "4050602737": [
+   "EShopFilterSpiritCooldownAndCharges",
+   "EShopFilterSpiritRange",
+   "EShopFilterHealing"
+  ],
+  "4053935515": [
+   "EShopFilterWeaponDamage",
+   "EShopFilterPhysicalAdditionalDamage",
+   "EShopFilterHP",
+   "EShopFilterHealing",
+   "EShopFilterMoveSpeed"
+  ],
+  "4075861416": [
+   "EShopFilterHP",
+   "EShopFilterLifesteal",
+   "EShopFilterSpiritVuln"
+  ],
+  "4104549924": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterSprint"
+  ],
+  "4121584236": [
+   "EShopFilterWeaponFireRate",
+   "EShopFilterMoveSpeed",
+   "EShopFilterActive"
+  ],
+  "4139877411": [
+   "EShopFilterStamina"
+  ],
+  "4204808176": [
+   "EShopFilterHP",
+   "EShopFilterHealing",
+   "EShopFilterMeleeResist"
+  ]
+ }
+}

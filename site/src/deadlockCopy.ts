@@ -784,6 +784,12 @@ const EN = {
       shop: "Shop",
       /** La pestaña "todo" de la barra lateral de la tienda nueva (City Never Sleeps). */
       all: "All items",
+      /** Los filtros de la tienda nueva: se muestran los objetos con cualquiera de los elegidos. */
+      filters: {
+        label: "Filter the shop",
+        clear: "Clear filters",
+        count: (n: number) => (n === 1 ? "1 item" : `${n} items`),
+      },
       cats: { weapon: "Weapon", vitality: "Vitality", spirit: "Spirit" },
       showValue: "Show measured value",
       valueNote: "The number on each card: win-rate points over what its price usually gives, from the item tier list.",
@@ -1846,6 +1852,11 @@ const ES: typeof EN = {
       pickHero: "Elegí un héroe",
       shop: "Tienda",
       all: "Todos los objetos",
+      filters: {
+        label: "Filtrar la tienda",
+        clear: "Quitar filtros",
+        count: (n: number) => (n === 1 ? "1 objeto" : `${n} objetos`),
+      },
       cats: { weapon: "Arma", vitality: "Vitalidad", spirit: "Espíritu" },
       showValue: "Ver valor medido",
       valueNote: "El número de cada tarjeta: puntos de victoria por encima de lo que suele dar su precio, de la tier list de objetos.",

@@ -201,6 +201,13 @@ STYLE = [
     ("shop/catalog/cards/shopitem_paperwear01_psd.png", "ui/cns/paperwear-1.webp", None),
     ("shop/catalog/cards/shopitem_paperwear02_psd.png", "ui/cns/paperwear-2.webp", None),
     ("masks/rough_edge_02_png.png", "ui/cns/rough-edge.webp", 1024, None, "mask"),
+    # Los reversos de las tarjetas de la tienda (armador, GameCard): City Never
+    # Sleeps los redibujó. Viven en public/deadlock/shop/ desde el armador.
+    *[
+        (f"shop/catalog/cards/card_backer_{slot}_t{t}_psd.png", f"../shop/card_{slot}_t{t}.webp", 160)
+        for slot in ("weapon", "spirit", "vitality")
+        for t in (1, 2, 3, 4)
+    ],
     ("main_menu/hero_release_vote/text_speckle_mask_psd.png", "ui/cns/speckle.webp", 1200, None, "mask"),
 ]
 

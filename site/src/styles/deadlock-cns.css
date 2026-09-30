@@ -499,6 +499,10 @@
   font-size: 0.9rem;
 }
 
+[data-theme="codex"][data-game="deadlock"] .dl-pop-phases {
+  flex-wrap: wrap;
+}
+
 [data-theme="codex"][data-game="deadlock"] .dl-pop-phases img {
   width: 20px;
   height: auto;
@@ -605,6 +609,14 @@
   [data-theme="codex"][data-game="deadlock"] .dl-pop-cols {
     display: none;
   }
+  [data-theme="codex"][data-game="deadlock"] .dl-pop-phases {
+    width: 100%;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-pop-phases > * {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 0 0.6rem;
+  }
 }
 
 /* ---------- Objetos, vista Tienda: la tienda nueva del juego ----------
@@ -620,8 +632,12 @@
   align-items: start;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-shop2 > :not(.dl-shop2-rail):not(.dl-shop2-paper) {
+[data-theme="codex"][data-game="deadlock"] .dl-shop2 > :not(.dl-shop2-rail):not(.dl-shop2-paper):not(.dl-shop2-filters):not(.dl-sf-panel) {
   grid-column: 1 / -1;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-rail {
+  grid-row: span 3;
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-shop2-rail {
@@ -785,6 +801,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
   [data-theme="codex"][data-game="deadlock"] .dl-shop2-rail {
+    grid-row: auto;
     position: static;
     flex-direction: row;
     margin-bottom: 0.6rem;
@@ -801,7 +818,198 @@
   [data-theme="codex"][data-game="deadlock"] .dl-shop2-heads {
     display: none;
   }
-  [data-theme="codex"][data-game="deadlock"] .dl-shop2-row[data-cols="1"] {
-    padding-left: 0;
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-tier {
+    padding: 0.6rem 0.6rem 0.8rem;
+  }
+  /* El pricetag arriba de la fila, no en un margen que le come lugar a las tarjetas. */
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-price,
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-tier[data-tier="4"] .dl-shop2-price {
+    position: static;
+    display: block;
+    width: 4.2rem;
+    margin: 0 0 0.4rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-cell.dl-bd-cards {
+    grid-template-columns: repeat(auto-fill, minmax(4.9rem, 1fr));
+  }
+}
+
+/* ---------- los filtros de la tienda (citadel_ui_shop_filters) ----------
+   Una pestaña por categoría con su sigilo y su color del juego
+   (PhysicalColor #C0673B, MagicColor #B377E3, DefenseColor #28AE4E,
+   MobilityColor #30ACE6, DisruptionColor #E3B018, MiscColor #B38763) y el
+   panel con los subfiltros sobre la trama de puntos del menú del juego. */
+[data-theme="codex"][data-game="deadlock"] .dl-shop2-filters {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 0.5rem;
+  background: url(/deadlock/game/ui/cns/filter-nav.webp) center / 100% 100% no-repeat, #6d655a;
+  box-shadow: var(--cns-shadow-sm);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 1.05rem;
+  border: 0;
+  background: transparent;
+  color: #2b261d;
+  font: 700 1.05rem/1 "VN Retail", var(--font-display);
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-cat:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-cat[aria-expanded="true"],
+[data-theme="codex"][data-game="deadlock"] .dl-sf-cat[data-on] {
+  color: #120f0b;
+  background: var(--sf);
+}
+
+/* El sigilo es una máscara: toma el color de la categoría. */
+[data-theme="codex"][data-game="deadlock"] .dl-sf-sigil {
+  width: 1.35rem;
+  height: 1.8rem;
+  background: currentColor;
+  -webkit-mask: var(--sigil) center / contain no-repeat;
+  mask: var(--sigil) center / contain no-repeat;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  padding: 0 0.3rem;
+  font: 800 0.72rem/1 var(--font-display);
+  color: var(--cns-paper);
+  background: #120f0b;
+  border-radius: 2px;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-status {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0 0.9rem;
+  color: #2b261d;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-clear {
+  padding: 0.35rem 0.7rem;
+  border: 0;
+  border-radius: 2px;
+  background: #120f0b;
+  color: var(--cns-paper);
+  font: 700 0.72rem/1 var(--font-text);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* El panel: la trama de puntos del juego, teñida con el color de la categoría. */
+[data-theme="codex"][data-game="deadlock"] .dl-sf-panel {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  margin: -0.5rem 0 0.8rem;
+  padding: 0.9rem 1.1rem 1rem;
+  background:
+    url(/deadlock/game/ui/cns/dot-pattern.webp) center / 420px,
+    var(--sf);
+  background-blend-mode: multiply, normal;
+  box-shadow: var(--cns-shadow);
+  animation: cns-drop 160ms ease-out;
+}
+
+@keyframes cns-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-group {
+  margin: 0 0 0.35rem;
+  font: 800 0.72rem/1 var(--font-text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(18, 15, 11, 0.7);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.4rem;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: #120f0b;
+  font: 600 0.92rem/1.2 var(--font-text);
+  cursor: pointer;
+  text-align: left;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-opt:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-opt img {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) opacity(0.75);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-box {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  border: 2px solid rgba(18, 15, 11, 0.75);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-sf-opt[aria-pressed="true"] .dl-sf-box {
+  background:
+    no-repeat center / 11px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 6.5l3 3 6-7' fill='none' stroke='%23f7e9d5' stroke-width='2.2'/%3E%3C/svg%3E"),
+    #120f0b;
+}
+
+@media (max-width: 900px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-shop2-filters,
+  [data-theme="codex"][data-game="deadlock"] .dl-sf-panel {
+    grid-column: 1;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-sf-cat {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 0 0.7rem;
+    font-size: 0.92rem;
   }
 }
