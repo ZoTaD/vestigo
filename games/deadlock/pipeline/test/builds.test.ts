@@ -2,7 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   parseCore, groupBuilds, traitOf, damageSplit, countersFrom, chainTo, terminalsOf, collapseChains,
   MAX_SLOTS, MAX_OVERLAP, COUNTER_SWING, COUNTER_MAX_BASE, stableOrder, ORDEN_TOLERANCIA, edgeScore, COUNTER_EXCESS, COUNTER_MIN_BASE, COUNTER_REACH, buyOrder,
-  type Group, type CatalogItem, type CounterRow, type BuildItem,
+  coreWithoutCounters, COUNTERS_SHOWN,
+  type Group, type CatalogItem, type CounterRow, type BuildItem, type Counter,
 } from "../src/buildCard";
 import { unlockOrder } from "../src/abilities";
 
@@ -379,6 +380,29 @@ describe("unlockOrder", () => {
 
   it("aguanta una respuesta rota sin tirar", () => {
     expect(unlockOrder([])).toEqual([]);
+  });
+});
+
+/**
+ * Un counter sale del núcleo porque va en "situacionales". Pero sólo se
+ * publican seis: sacar del núcleo un 7º que no se publica lo borraba de las dos
+ * listas (5 de 38 héroes tenían los seis ocupados el 2026-09-29).
+ */
+describe("coreWithoutCounters", () => {
+  const counter = (itemId: number): Counter => ({
+    itemId, relativeSwing: 2, reach: 0.4, excess: 3, base: 0.1, against: [{ heroId: 2, points: 5 }],
+  });
+  const siete = [101, 102, 103, 104, 105, 106, 107].map(counter);
+
+  it("saca del núcleo sólo los counters que se publican", () => {
+    const core = [101, 10, 107, 11].map((itemId) => ({ itemId, prevalence: 0.5 }));
+    expect(COUNTERS_SHOWN).toBe(6);
+    expect(coreWithoutCounters(core, siete).map((c) => c.itemId)).toEqual([10, 107, 11]);
+  });
+
+  it("sin counters no toca el núcleo", () => {
+    const core = [10, 11].map((itemId) => ({ itemId, prevalence: 0.5 }));
+    expect(coreWithoutCounters(core, undefined)).toEqual(core);
   });
 });
 

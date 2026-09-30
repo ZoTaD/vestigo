@@ -17,15 +17,15 @@ import {
   CORRUPTED_BIT,
   uncorruptedItems,
 } from "./snapshot";
-import { fetchPatches } from "./patches";
+import { anchorPatch, fetchPatches } from "./patches";
 import { BANDS, publishedDefaultBand } from "./bands";
 import { matchedCells, type MatchedCell, type StratumRow } from "./matching";
-import { fitMechanism, predictWin, shrinkageToMechanism, shrinkToward } from "./mechanism";
+import { fitMechanism, predictWin, publishedMechanism, shrinkageToMechanism, shrinkToward } from "./mechanism";
 import {
   terminalsOf, chainTo, groupBuilds, traitOf, damageSplit, countersFrom, collapseChains, byTier,
-  buyOrder, stableOrder, edgeScore,
+  buyOrder, stableOrder, edgeScore, coreWithoutCounters,
   type Group, type BuildsFile, type HeroEntry, type HeroBuild, type BuildItem,
-  MIN_GROUP, MAX_SLOTS,
+  MIN_GROUP, MAX_SLOTS, COUNTERS_SHOWN,
 } from "./buildCard";
 import {
   fetchAbilityOrder, fetchBuildAbilityOrder, fetchAbilityAssets, fetchAbilitySlots,
@@ -89,6 +89,49 @@ function primerasAnteriores(): Map<number, number[]> {
   }
 }
 
+/**
+ * La ventana, una partición por rama. **Cada partición nombra sus columnas**: no
+ * comparten esquema —la 95 y la 96 traen 153 columnas contra 139 de las viejas—
+ * y unirlas con `select *` falla. Es la misma trampa que ya rompió
+ * `build:heroes`.
+ *
+ * La build de un jugador es **sin vendidos y sin repetidos**: un ítem
+ * revendido y recomprado aparece dos veces en el array, y contarlo dos veces
+ * rompe el tope de 12 que el juego impone.
+ *
+ * **Sin compras corruptas** (ver `CORRUPTED_BIT`): el objeto que se corrompió
+ * queda "vendido" en el lake, así que sale de la build final igual que uno
+ * vendido, y no cuenta como compra ni la entrada corrupta ni la original
+ * (ver `uncorruptedItems`): la partida se jugó con la versión corrupta.
+ *
+ * **El `> 0` del badge es el mismo de `selectFrom`**, y hace falta aunque la
+ * banda de las builds no incluya el tier 0: un badge 0 es "sin rango", no
+ * Obscurus, y la banda por defecto la decide la muestra.
+ *
+ * Exportada sólo para probarla: `main` es la única que la usa.
+ */
+export function buildsBranchSql(
+  n: number,
+  w: { ids: string; tiers: string; from: string; to: string }
+): string {
+  return `
+    select match_id, account_id, hero_id, won, team, start_time,
+           list_distinct(list_transform(
+             list_filter(range(1, len("items.item_id") + 1),
+               i -> "items.item_id"[i] in (${w.ids}) and coalesce("items.sold_time_s"[i], 0) = 0
+                    and (coalesce("items.upgrade_info"[i], 0) & ${CORRUPTED_BIT}) = 0),
+             i -> "items.item_id"[i])) as kept,
+           ${uncorruptedItems("item_id")} as item_ids, ${uncorruptedItems("game_time_s")} as item_times,
+           list_filter("items.imbued_ability_id", x -> x is not null and x <> 0) as imbued,
+           "stats.time_stamp_s" as ts, "stats.net_worth" as nw,
+           "stats.player_damage" as dmg, "stats.deaths" as deaths
+    from ${partitionSource(n)}
+    where match_mode = '${PLAYED_MODE}' and game_mode = '${PLAYED_GAME_MODE}'
+      and ${BADGE} > 0 and ${BADGE} // 10 in (${w.tiers})
+      and start_time >= TIMESTAMP '${w.from}' and start_time < TIMESTAMP '${w.to}'
+      and len("stats.time_stamp_s") > 0`;
+}
+
 async function main() {
   const catalog = JSON.parse(readFileSync(CATALOG, "utf8")) as {
     items: Record<string, CatalogItem>;
@@ -125,35 +168,7 @@ async function main() {
   const to = hasta.toISOString().slice(0, 19);
   console.log(`ventana ${from.slice(0, 10)} → ${to.slice(0, 10)} · particiones ${parts.join(", ")}`);
 
-  /**
-   * La ventana. **Cada partición nombra sus columnas**: no comparten esquema
-   * —la 95 y la 96 traen 153 columnas contra 139 de las viejas— y unirlas con
-   * `select *` falla. Es la misma trampa que ya rompió `build:heroes`.
-   *
-   * La build de un jugador es **sin vendidos y sin repetidos**: un ítem
-   * revendido y recomprado aparece dos veces en el array, y contarlo dos veces
-   * rompe el tope de 12 que el juego impone.
-   *
-   * **Sin compras corruptas** (ver `CORRUPTED_BIT`): el objeto que se corrompió
-   * queda "vendido" en el lake, así que sale de la build final igual que uno
-   * vendido, y la entrada corrupta no cuenta ni como objeto ni como compra.
-   */
-  const rama = (n: number) => `
-    select match_id, account_id, hero_id, won, team, start_time,
-           list_distinct(list_transform(
-             list_filter(range(1, len("items.item_id") + 1),
-               i -> "items.item_id"[i] in (${ids}) and coalesce("items.sold_time_s"[i], 0) = 0
-                    and (coalesce("items.upgrade_info"[i], 0) & ${CORRUPTED_BIT}) = 0),
-             i -> "items.item_id"[i])) as kept,
-           ${uncorruptedItems("item_id")} as item_ids, ${uncorruptedItems("game_time_s")} as item_times,
-           list_filter("items.imbued_ability_id", x -> x is not null and x <> 0) as imbued,
-           "stats.time_stamp_s" as ts, "stats.net_worth" as nw,
-           "stats.player_damage" as dmg, "stats.deaths" as deaths
-    from ${partitionSource(n)}
-    where match_mode = '${PLAYED_MODE}' and game_mode = '${PLAYED_GAME_MODE}'
-      and ${BADGE} // 10 in (${tiersDefecto})
-      and start_time >= TIMESTAMP '${from}' and start_time < TIMESTAMP '${to}'
-      and len("stats.time_stamp_s") > 0`;
+  const rama = (n: number) => buildsBranchSql(n, { ids, tiers: tiersDefecto, from, to });
 
   let t = Date.now();
   const lap = () => { const s = ((Date.now() - t) / 1000).toFixed(1); t = Date.now(); return s; };
@@ -176,10 +191,12 @@ async function main() {
    * quince días por el parche vigente.
    */
   const parches = await fetchPatches();
+  // El título es el del último; el corte, el del ancla (un hotfix pegado a un
+  // parche no reinicia la ventana, ver `anchorPatch`).
   const parche = parches[0];
   let crossesPatch = false;
   if (parche) {
-    const iso = new Date(parche.date).toISOString().slice(0, 19);
+    const iso = new Date(anchorPatch(parches).date).toISOString().slice(0, 19);
     const [c] = (await rows(`
       select count(distinct match_id) filter (where start_time >= TIMESTAMP '${iso}')::BIGINT as post
       from player`)) as unknown as { post: bigint }[];
@@ -467,9 +484,9 @@ async function main() {
     if (elegidos.length === 0) continue;
 
     const medidas: HeroBuild[] = elegidos.map((g) => {
-      const sinCounters = g.core.filter(
-        (c) => !counters.get(heroId)?.some((x) => x.itemId === c.itemId)
-      );
+      // Contra los counters que se PUBLICAN, no la lista entera: un 7º que no
+      // entra en situacionales se queda en la build (ver `coreWithoutCounters`).
+      const sinCounters = coreWithoutCounters(g.core, counters.get(heroId));
       const its: BuildItem[] = collapseChains(sinCounters, items)
         .slice(0, MAX_SLOTS)
         .map((c) => {
@@ -542,7 +559,7 @@ async function main() {
       heroId,
       matches: builds.reduce((a, b) => a + b.matches, 0),
       builds,
-      counters: (counters.get(heroId) ?? []).slice(0, 6),
+      counters: (counters.get(heroId) ?? []).slice(0, COUNTERS_SHOWN),
     });
   }
 
@@ -723,11 +740,9 @@ async function main() {
     // usa este mismo reparto** (ver `report.ts`), y estimarlo pide el pareo
     // entero. Publicarlo acá lo mantiene vivo: la nota hereda lo que midió la
     // última corrida en vez de arrastrar una constante escrita a mano.
-    mechanism: {
-      damage: Number(fit.damage.toFixed(4)),
-      deaths: Number(fit.deaths.toFixed(4)),
-      economy: Number(fit.economy.toFixed(4)),
-    },
+    // Con cifras significativas: el de economía es por alma (~1e-5) y con cuatro
+    // decimales salía 0 (ver `publishedMechanism`).
+    mechanism: publishedMechanism(fit),
     abilities,
     heroes,
   };

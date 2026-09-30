@@ -1,9 +1,11 @@
 import { describe, it, expect } from "vitest";
+import { DuckDBInstance } from "@duckdb/node-api";
 import {
   baselinesFrom,
   shrinkageToward,
   shrinkTo,
   itemsFileFrom,
+  itemStatsSql,
   MIN_BUYS,
   type RawItemRow,
 } from "../src/items";
@@ -123,5 +125,72 @@ describe("el archivo de una banda", () => {
   it("normaliza el pickRate contra las filas jugador de la banda", () => {
     const item3 = file.items.find((i) => i.itemId === 3)!;
     expect(item3.pickRate).toBeCloseTo(70000 / totales.boards, 4);
+  });
+});
+
+/**
+ * Un objeto que sólo compra un héroe fuerte gana porque gana el héroe. Medido
+ * en Fantasma+ (auditoría del 2026-09-29, §3): descontar el héroe mueve 0,4-1,0
+ * puntos de media y cambia de tercio a 43 de 156 objetos.
+ */
+describe("el héroe que lo compra", () => {
+  /**
+   * Dos héroes de 1.000 partidas en la misma banda: el 1 gana el 70% y el 2 el
+   * 30%. El objeto 10 lo compra sólo el 1, en todas. El 20 lo compra la mitad
+   * de cada uno, y en ésas los dos ganan 10 puntos más que su héroe (80% y 40%).
+   */
+  const leer = async (): Promise<RawItemRow[]> => {
+    const con = await (await DuckDBInstance.create(":memory:")).connect();
+    await con.run(`create table t as
+      select *, list_transform(item_ids, x -> 600) as item_times from (
+        select n as match_id, TIMESTAMP '2026-09-30 00:00:00' as start_time, 10 as tier, hero_id,
+               case when hero_id = 1 then n % 10 < 7 else n % 10 < 3 end as won,
+               list_filter([10, 20]::UBIGINT[], x -> (x = 10 and hero_id = 1)
+                 or (x = 20 and ((hero_id = 1 and n % 10 in (0, 1, 2, 3, 7))
+                              or (hero_id = 2 and n % 10 in (0, 1, 5, 6, 7))))) as item_ids
+        from (select n, case when n < 1000 then 1 else 2 end as hero_id from range(2000) r(n))
+      )`);
+    const crudas = (await con.runAndReadAll(itemStatsSql("select * from t", "10", "10, 20"))).getRowObjects();
+    return crudas.map((x) => ({
+      item_id: Number(x.item_id),
+      cost: 3200,
+      buys: x.buys as bigint,
+      wins: x.wins as bigint,
+      hero_wins: Number(x.hero_wins),
+      buy_seconds: Number(x.buy_seconds),
+    }));
+  };
+
+  it("la consulta suma, compra por compra, el winrate del héroe en la banda", async () => {
+    const filas = await leer();
+    const de = (id: number) => filas.find((f) => f.item_id === id)!;
+    expect(Number(de(10).buys)).toBe(1000);
+    expect(Number(de(10).wins)).toBe(700);
+    expect(de(10).hero_wins).toBeCloseTo(700, 6);
+    expect(Number(de(20).wins)).toBe(600);
+    expect(de(20).hero_wins).toBeCloseTo(500, 6);
+  });
+
+  it("el objeto del héroe fuerte deja de verse bueno, y el que rinde más que su héroe sube", async () => {
+    const filas = await leer();
+    const file = itemsFileFrom(filas, banda, totales, parche, "2026-09-30T00:00:00Z");
+    const de = (id: number) => file.items.find((i) => i.itemId === id)!;
+    expect(de(10).delta).toBeLessThan(0);
+    expect(de(20).delta).toBeGreaterThan(0);
+    // Lo crudo sigue siendo lo que midió: el 70% del héroe fuerte.
+    expect(de(10).winRateRaw).toBeCloseTo(0.7, 6);
+
+    // Sin descontar el héroe, que es lo que se publicaba, el orden era el contrario.
+    const sinHeroe = itemsFileFrom(
+      filas.map(({ hero_wins: _, ...f }) => f),
+      banda, totales, parche, "2026-09-30T00:00:00Z"
+    );
+    expect(sinHeroe.items.find((i) => i.itemId === 10)!.delta).toBeGreaterThan(0);
+  });
+
+  it("la base del precio sale de las mismas compras ajustadas: el objeto promedio sigue en 0", async () => {
+    const file = itemsFileFrom(await leer(), banda, totales, parche, "2026-09-30T00:00:00Z");
+    // (700 − 700 + 500) + (600 − 500 + 500) sobre 2.000 compras.
+    expect(file.costBaselines["3200"]).toBeCloseTo(0.55, 4);
   });
 });

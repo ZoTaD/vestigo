@@ -2,7 +2,7 @@ import { fileURLToPath } from "node:url";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { blendRows, heroesFileFrom, ratesFrom } from "./build";
 import { fetchLiveCounts, BRAWL_PLAYERS_PER_MATCH, type LiveQuery } from "./liveStats";
-import { fetchPatches, patchWindows, prePatchWeight } from "./patches";
+import { anchorPatch, fetchPatches, patchWindows, prePatchWeight } from "./patches";
 import { MAX_WINDOW_DAYS, PROVISIONAL_MATCHES } from "./snapshot";
 
 /**
@@ -40,10 +40,12 @@ const BRAWL: LiveQuery = { gameMode: "street_brawl", playersPerMatch: BRAWL_PLAY
 
 async function main() {
   const patches = await fetchPatches();
+  // Se muestra el último; se mide desde el ancla, igual que la tier list
+  // rankeada (ver `anchorPatch`).
   const patch = patches[0];
   const ahora = new Date();
 
-  const { after, before } = patchWindows(patch.date, ahora, MAX_WINDOW_DAYS);
+  const { after, before } = patchWindows(anchorPatch(patches).date, ahora, MAX_WINDOW_DAYS);
   const desde = new Date(ahora.getTime() - MAX_WINDOW_DAYS * 86_400_000).toISOString();
   const hasta = ahora.toISOString();
   const pre = after.from > desde ? { from: desde, to: after.from } : null;

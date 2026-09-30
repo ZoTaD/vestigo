@@ -1071,9 +1071,9 @@ const EN = {
        */
       stats: { delta: "Edge", winRate: "Win rate", pickRate: "Pick rate" },
       deltaWhy: (points: string, base: string) =>
-        `Wins ${points} points more than the average item at this price (${base}). ` +
-        "Measured against its own price because buying something expensive already means the " +
-        "match went long.",
+        `Wins ${points} points more than the average item at this price (${base}), counting ` +
+        "each purchase against how often its hero wins. Measured against its own price because " +
+        "buying something expensive already means the match went long.",
       /**
        * Los encabezados de la ficha salen del propio juego: `innate`, `active` y
        * `passive` son los tres `section_type` que manda su API. Traducirlos es lo
@@ -2070,8 +2070,9 @@ const ES: typeof EN = {
       },
       stats: { delta: "Ventaja", winRate: "Victorias", pickRate: "Uso" },
       deltaWhy: (points, base) =>
-        `Gana ${points} puntos más que el objeto promedio de este precio (${base}). Se mide ` +
-        "contra su propio precio porque comprar algo caro ya significa que la partida se hizo larga.",
+        `Gana ${points} puntos más que el objeto promedio de este precio (${base}), contando ` +
+        "cada compra contra lo que gana su héroe. Se mide contra su propio precio porque comprar " +
+        "algo caro ya significa que la partida se hizo larga.",
       detail: {
         toggle: (name) => `${name} — qué hace`,
         loading: "Cargando…",

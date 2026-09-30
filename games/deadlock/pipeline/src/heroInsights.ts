@@ -32,10 +32,15 @@ const DAYS = 30;
 /**
  * Cuántas partidas hacen falta para publicar un cruce.
  *
- * En Fantasma+ un héroe juega unas 2.000 partidas en la ventana; repartidas
- * entre 37 rivales son ~300 por rival, y los héroes menos jugados quedan en
- * ~100. Debajo de 100 el error estándar de un winrate pasa los 5 puntos, que es
- * más que la diferencia que se quiere mostrar.
+ * En Fantasma+ un héroe juega unas 2.000 partidas en la ventana; con seis
+ * rivales por partida, repartidas entre 37 son ~300 por rival (y ~270 por
+ * aliado, que son cinco), y los héroes menos jugados quedan en ~100. Debajo de
+ * 100 el error estándar de un winrate pasa los 5 puntos, que es más que la
+ * diferencia que se quiere mostrar.
+ *
+ * Esas cuentas son **de partida entera** (ver `pairPaths`). Con el filtro de
+ * carril que la API aplica por defecto eran ~110 por rival, y este piso dejaba
+ * afuera a la mayoría.
  */
 export const MIN_PAIR = 100;
 
@@ -189,6 +194,21 @@ export function buildInsights(
   };
 }
 
+/**
+ * Las dos consultas de cruces: contra cada rival y junto a cada aliado.
+ *
+ * **`same_lane_filter=false` no es opcional.** La API lo trae en `true` por
+ * defecto, y así sólo cuenta al rival y al compañero **de carril**: medido en
+ * Fantasma+ el 2026-09-29, los "vs" sumaban 2,12 partidas por partida del héroe
+ * (con todos los rivales serían ~6) y los "with" 1,01 (serían ~5). La página
+ * dice "partidas con cada héroe en el equipo rival (o en el propio)", que es la
+ * partida entera.
+ */
+export function pairPaths(q: string, from: number, to: number): { counters: string; synergies: string } {
+  const comun = `${q}&min_unix_timestamp=${from}&max_unix_timestamp=${to}&same_lane_filter=false`;
+  return { counters: `hero-counter-stats?${comun}`, synergies: `hero-synergy-stats?${comun}` };
+}
+
 async function traer<T>(path: string): Promise<T> {
   const res = await fetch(`${API}/${path}`);
   if (!res.ok) throw new Error(`${path.split("?")[0]} contestó ${res.status}`);
@@ -222,12 +242,14 @@ async function main() {
     const badge = badgeRange(band.tiers);
     const q = `min_average_badge=${badge.min}&max_average_badge=${badge.max}`;
 
+    const rutas = pairPaths(q, unix(from), hasta);
+
     try {
       const [totals, daily, counters, synergies] = await Promise.all([
         traer<StatsRow[]>(`hero-stats?${q}&min_unix_timestamp=${unix(from)}&max_unix_timestamp=${hasta}`),
         traer<StatsRow[]>(`hero-stats?${q}&min_unix_timestamp=${unix(hace30)}&bucket=start_time_day`),
-        traer<CounterRow[]>(`hero-counter-stats?${q}&min_unix_timestamp=${unix(from)}&max_unix_timestamp=${hasta}`),
-        traer<SynergyRow[]>(`hero-synergy-stats?${q}&min_unix_timestamp=${unix(from)}&max_unix_timestamp=${hasta}`),
+        traer<CounterRow[]>(rutas.counters),
+        traer<SynergyRow[]>(rutas.synergies),
       ]);
       const file = buildInsights(
         band.id,

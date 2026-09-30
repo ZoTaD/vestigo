@@ -13,7 +13,7 @@ import {
   runSnapshotBuild,
   PROVISIONAL_MATCHES,
 } from "./snapshot";
-import { fetchPatches, patchWindows, measureWindow, type Patch } from "./patches";
+import { anchorPatch, fetchPatches, patchWindows, measureWindow, type Patch } from "./patches";
 
 /**
  * La tier list de ítems de Deadlock, medida contra el precio de cada ítem.
@@ -46,6 +46,11 @@ import { fetchPatches, patchWindows, measureWindow, type Patch } from "./patches
  * real; entre dos de 3200 sí la hay. Elegir bien sólo paga donde los ítems de
  * verdad se diferencian.
  *
+ * **Desde el 2026-09-29 se descuenta también al héroe que compra** (ver
+ * `adjustedWins`): un objeto que sólo compra un héroe fuerte ganaba por el
+ * héroe. Lo que sigue adentro es el estado de la partida —el que compra tarde
+ * suele ir adelante en almas—, que el pareo de `builds.ts` sí controla.
+ *
  * Ver `docs/design/2026-07-30-tier-list-de-items-deadlock-design.md`.
  */
 
@@ -73,8 +78,28 @@ export interface RawItemRow {
   cost: number;
   buys: bigint;
   wins: bigint;
+  /**
+   * Las victorias que se esperaban sólo por **quién** lo compró: la suma, sobre
+   * sus compras, del winrate del héroe en la banda (ver `itemStatsSql`). Sin el
+   * dato, cada compra cuenta como de un héroe de 50%, que es no ajustar.
+   */
+  hero_wins?: number;
   /** Segundo mediano de compra. Se guarda en minutos. */
   buy_seconds: number;
+}
+
+/**
+ * Las victorias de un ítem **descontando al héroe**: cada compra aporta
+ * `won − (winrate del héroe − 0,5)`.
+ *
+ * Un objeto que sólo compra un héroe fuerte ganaba porque ganaba el héroe:
+ * medido en Fantasma+ el 2026-09-29, descontarlo mueve 0,4-1,0 puntos de media
+ * (hasta 3) y cambia de tercio a 43 de 156 objetos. Es el ajuste mínimo; el
+ * estado de la partida (ir adelante en almas) sigue adentro.
+ */
+function adjustedWins(row: RawItemRow): number {
+  const buys = Number(row.buys);
+  return Number(row.wins) - (row.hero_wins ?? buys / 2) + buys / 2;
 }
 
 export interface Rate {
@@ -87,14 +112,18 @@ export interface ItemStat {
   /** Compras. No se muestra: es el denominador. */
   n: number;
   /**
-   * Puntos de winrate sobre lo que rinde un ítem cualquiera de ese precio.
+   * Puntos de winrate sobre lo que rinde un ítem cualquiera de ese precio,
+   * **con el héroe que lo compra descontado** (ver `adjustedWins`).
    *
    * Es el número que ordena la lista y el que va en pantalla. Positivo significa
    * que el ítem le gana a su propio precio; negativo, que le está costando la
    * partida a quien lo compra.
    */
   delta: number;
-  /** Lo que midió sin encoger, para poder auditar el encogimiento. */
+  /**
+   * Lo que midió, sin encoger y sin descontar al héroe. Por eso `delta` ya no es
+   * `winRateRaw − base`: la diferencia es lo que explica quién lo compra.
+   */
   winRateRaw: number;
   /** Qué fracción de las filas jugador de la banda lo compraron. */
   pickRate: number;
@@ -112,9 +141,10 @@ export interface ItemsFile {
   /** True cuando la ventana incluye partidas de antes del parche (ver `measureWindow`). */
   crossesPatch?: boolean;
   /**
-   * Lo que rinde cada precio en esta banda. **Se publica a propósito**: el
-   * `delta` es una resta contra estos números, y sin ellos el lector tendría que
-   * confiar. Misma regla que `winRateRaw` en la tier list de héroes.
+   * Lo que rinde cada precio en esta banda, con el héroe descontado igual que
+   * cada ítem (ver `baselinesFrom`). **Se publica a propósito**: el `delta` es
+   * una resta contra estos números, y sin ellos el lector tendría que confiar.
+   * Misma regla que `winRateRaw` en la tier list de héroes.
    */
   costBaselines: Record<string, number>;
   matches: number;
@@ -131,12 +161,17 @@ export interface ItemsFile {
  * pesar lo mismo que uno que se compra cien mil. Lo que la base contesta es
  * "¿cuánto vale gastar 3200 almas?", y eso lo contestan las compras, no la lista
  * de objetos disponibles.
+ *
+ * **Con el héroe descontado** (ver `adjustedWins`), igual que cada ítem: así el
+ * objeto promedio de un precio sigue dando 0. Con la base cruda, un precio que
+ * compran más los héroes flojos quedaba corrido entero (medido: hasta 0,18
+ * puntos en los de 3200).
  */
 export function baselinesFrom(rows: RawItemRow[]): Map<number, number> {
   const acc = new Map<number, { buys: number; wins: number }>();
   for (const row of rows) {
     const cur = acc.get(row.cost) ?? { buys: 0, wins: 0 };
-    acc.set(row.cost, { buys: cur.buys + Number(row.buys), wins: cur.wins + Number(row.wins) });
+    acc.set(row.cost, { buys: cur.buys + Number(row.buys), wins: cur.wins + adjustedWins(row) });
   }
   return new Map([...acc].map(([cost, { buys, wins }]) => [cost, buys > 0 ? wins / buys : 0.5]));
 }
@@ -194,21 +229,23 @@ export function itemsFileFrom(
   for (const [cost, base] of bases) {
     const delPrecio = rows
       .filter((row) => row.cost === cost)
-      .map((row) => ({ wr: Number(row.wins) / Number(row.buys), n: Number(row.buys) }));
+      .map((row) => ({ wr: adjustedWins(row) / Number(row.buys), n: Number(row.buys) }));
     kPorPrecio.set(cost, shrinkageToward(delPrecio, base));
   }
 
   const items: ItemStat[] = rows
     .map((row) => {
       const n = Number(row.buys);
-      const wr = Number(row.wins) / n;
+      // Lo que se encoge y se compara es el winrate con el héroe descontado; lo
+      // que se publica como crudo es lo que midió, sin tocar.
+      const wr = adjustedWins(row) / n;
       const base = bases.get(row.cost)!;
       const encogido = shrinkTo(wr, n, kPorPrecio.get(row.cost)!, base);
       return {
         itemId: row.item_id,
         n,
         delta: r((encogido - base) * 100, 2),
-        winRateRaw: r(wr),
+        winRateRaw: r(Number(row.wins) / n),
         pickRate: totals.boards > 0 ? r(n / totals.boards) : 0,
         buyMinute: r(row.buy_seconds / 60, 1),
         ...(n < MIN_BUYS ? { thinData: true } : {}),
@@ -231,6 +268,32 @@ export function itemsFileFrom(
   };
 }
 
+/**
+ * Las compras de cada ítem en una banda, con lo que haría falta para descontar
+ * al héroe: `hero_wins` suma, compra por compra, el winrate del héroe que lo
+ * compró en **la misma banda y la misma ventana** (ver `adjustedWins`).
+ *
+ * El winrate del héroe sale de todas sus filas jugador, compre o no el ítem:
+ * es "cuánto gana este héroe acá", no "cuánto gana quien compra esto".
+ */
+export function itemStatsSql(base: string, tiers: string, ids: string): string {
+  return `
+    with filas as (
+      select hero_id, won, item_ids, item_times from (${base}) where tier in (${tiers})
+    ),
+    heroe as (select hero_id, avg(won::INT)::DOUBLE as hw from filas group by hero_id),
+    compra as (
+      select hero_id, won, unnest(item_ids) as item_id, unnest(item_times) as compra_s from filas
+    )
+    select c.item_id, count(*)::BIGINT as buys,
+           sum(case when c.won then 1 else 0 end)::BIGINT as wins,
+           sum(h.hw)::DOUBLE as hero_wins,
+           median(c.compra_s)::INTEGER as buy_seconds
+    from compra c join heroe h on h.hero_id = c.hero_id
+    where c.compra_s > 0 and c.item_id in (${ids})
+    group by c.item_id`;
+}
+
 interface CatalogItem {
   cost: number;
 }
@@ -246,8 +309,12 @@ async function main() {
   const ids = [...costOf.keys()].join(", ");
 
   const [partitions, patches] = await Promise.all([listPartitions(), fetchPatches()]);
+  // Se muestra el último; se mide desde el ancla, que salta los hotfixes pegados
+  // a un parche (ver `anchorPatch`).
   const patch = patches[0];
+  const ancla = anchorPatch(patches);
   console.log(`último parche: ${patch.date} — ${patch.title}`);
+  if (ancla !== patch) console.log(`  la ventana se ancla en "${ancla.title}" (${ancla.date}): lo de después es un hotfix`);
   console.log(`  ${costOf.size} ítems de tienda en el catálogo`);
 
   const con = await connect();
@@ -256,11 +323,11 @@ async function main() {
   const defecto = publishedDefaultBand();
   const ranges = await partitionRanges(con, partitions);
   const ahora = await windowEnd(con, ranges);
-  const { after } = patchWindows(patch.date, ahora, MAX_WINDOW_DAYS);
+  const { after } = patchWindows(ancla.date, ahora, MAX_WINDOW_DAYS);
   const partsAfter = await bandablePartitions(con, partitionsCovering(ranges, after.from, after.to));
   if (partsAfter.length === 0) {
     throw new Error(
-      `el snapshot no tiene ni una partición posterior al parche del ${patch.date}. ` +
+      `el snapshot no tiene ni una partición posterior al parche del ${ancla.date}. ` +
         "O el parche es de hace minutos, o el snapshot dejó de actualizarse."
     );
   }
@@ -272,16 +339,6 @@ async function main() {
 
   const baseAfter = itemsWindowSql(partsAfter, after.from, after.to);
   const baseWide = itemsWindowSql(partsWide, wideFrom, ahora.toISOString());
-
-  const statsSql = (base: string, tiers: string) => `
-    select item_id, count(*)::BIGINT as buys,
-           sum(case when won then 1 else 0 end)::BIGINT as wins,
-           median(compra_s)::INTEGER as buy_seconds
-    from (
-      select tier, won, unnest(item_ids) as item_id, unnest(item_times) as compra_s
-      from (${base})
-    ) where compra_s > 0 and tier in (${tiers}) and item_id in (${ids})
-    group by item_id`;
 
   const totalsSql = (base: string, tiers: string) => `
     select count(distinct match_id)::BIGINT as matches, count(*)::BIGINT as boards,
@@ -300,20 +357,21 @@ async function main() {
       select count(distinct match_id)::BIGINT as matches
       from (${baseWide}) where tier in (${tiers}) and start_time >= TIMESTAMP '${after.from.slice(0, 19)}'`
     )) as unknown as { matches: bigint }[];
-    const ventana = measureWindow(patch.date, ahora, MAX_WINDOW_DAYS, Number(post.matches), PROVISIONAL_MATCHES);
+    const ventana = measureWindow(ancla.date, ahora, MAX_WINDOW_DAYS, Number(post.matches), PROVISIONAL_MATCHES);
     const base = ventana.sincePatch ? baseAfter : baseWide;
 
     const [tot] = (await rows(totalsSql(base, tiers))) as unknown as {
       matches: bigint; boards: bigint; from: string; to: string;
     }[];
-    const crudas = (await rows(statsSql(base, tiers))) as unknown as {
-      item_id: number; buys: bigint; wins: bigint; buy_seconds: number;
+    const crudas = (await rows(itemStatsSql(base, tiers, ids))) as unknown as {
+      item_id: number; buys: bigint; wins: bigint; hero_wins: number; buy_seconds: number;
     }[];
     const agg: RawItemRow[] = crudas.map((x) => ({
       item_id: x.item_id,
       cost: costOf.get(x.item_id)!,
       buys: x.buys,
       wins: x.wins,
+      hero_wins: Number(x.hero_wins),
       buy_seconds: Number(x.buy_seconds),
     }));
 

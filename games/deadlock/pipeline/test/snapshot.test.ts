@@ -9,7 +9,10 @@ import {
   rankHoursSql,
   RANK_COVERAGE,
   RANK_MIN_PER_HOUR,
+  BADGE,
 } from "../src/snapshot";
+import { buildsBranchSql } from "../src/builds";
+import { reportBranchSql } from "../src/report";
 
 /**
  * El filtro de modo es la única parte de `windowSql` que decide **qué partidas
@@ -100,6 +103,20 @@ describe("el filtro de rango pide un rango de verdad", () => {
 
   it("ya no alcanza con que la columna venga", () => {
     expect(sql).not.toContain("is not null");
+  });
+
+  /**
+   * Builds e informe arman su propia rama (necesitan columnas que `selectFrom`
+   * no trae) y filtraban sólo por `// 10 in (...)`. El informe usa la banda de
+   * abajo, que incluye el tier 0: el día de un reset como el del 30/7 se habría
+   * llevado todas las partidas sin rango como Obscurus.
+   */
+  it("también en las ramas propias de builds y del informe", () => {
+    const w = { ids: "1, 2", tiers: "0, 1, 2, 3, 4", from: "2026-09-26T00:00:00", to: "2026-09-30T00:00:00" };
+    for (const rama of [buildsBranchSql(96, w), reportBranchSql(96, w)]) {
+      expect(rama).toContain(`${BADGE} > 0`);
+      expect(rama).toContain(`${BADGE} // 10 in (0, 1, 2, 3, 4)`);
+    }
   });
 });
 

@@ -47,6 +47,27 @@ const FLAT: Mechanism = { intercept: 0, damage: 0, deaths: 0, economy: 0 };
  */
 export const MEASURED: Mechanism = { intercept: 0, damage: 0.133, deaths: -0.442, economy: 0.231 };
 
+/** Lo que `builds.json` publica del ajuste: sin el intercepto, que la nota no usa. */
+export type PublishedMechanism = Omit<Mechanism, "intercept">;
+
+/**
+ * El ajuste como se publica, con **cuatro cifras significativas** y no cuatro
+ * decimales.
+ *
+ * Los coeficientes están en unidades distintas: el de economía es por alma y
+ * vale ~1e-5, así que `toFixed(4)` lo publicaba como 0 en todas las corridas, y
+ * el informe de partida (que arma sus pesos con esto) le daba peso 0 a las
+ * almas. Con cifras significativas cada uno guarda su precisión.
+ *
+ * Ojo: esto sólo arregla el redondeo. El informe sigue aplicando coeficientes en
+ * unidades crudas a z-scores, así que el peso de las almas sale igual de chico;
+ * publicar coeficientes estandarizados es otro arreglo (auditoría del 2026-09-29, §5).
+ */
+export function publishedMechanism(fit: Mechanism): PublishedMechanism {
+  const cifras = (x: number) => Number(x.toPrecision(4));
+  return { damage: cifras(fit.damage), deaths: cifras(fit.deaths), economy: cifras(fit.economy) };
+}
+
 /**
  * Las variables del mecanismo, con el daño en relativo.
  *

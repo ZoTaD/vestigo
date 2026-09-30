@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   fitMechanism,
   predictWin,
+  publishedMechanism,
   shrinkageToMechanism,
   shrinkToward,
 } from "../src/mechanism";
@@ -50,6 +51,27 @@ describe("fitMechanism", () => {
   it("devuelve un ajuste plano cuando no hay celdas suficientes", () => {
     const fit = fitMechanism([cell({ win: 0.05 })]);
     expect(fit).toEqual({ intercept: 0, damage: 0, deaths: 0, economy: 0 });
+  });
+});
+
+/**
+ * El coeficiente de economía es por alma (~1e-5): con `toFixed(4)` se publicaba
+ * 0 en todas las corridas, y el informe de partida armaba la nota con peso 0 en
+ * las almas.
+ */
+describe("publishedMechanism", () => {
+  it("guarda cuatro cifras significativas: un coeficiente chico no se redondea a 0", () => {
+    const pub = publishedMechanism({ intercept: 0.3, damage: 0.0433217, deaths: -0.0566789, economy: 0.0000123456 });
+    expect(pub).toEqual({ damage: 0.04332, deaths: -0.05668, economy: 0.00001235 });
+    expect(pub.economy).not.toBe(0);
+  });
+
+  it("no publica el intercepto, que la nota no usa", () => {
+    expect(publishedMechanism({ intercept: 0.3, damage: 0, deaths: 0, economy: 0 })).toEqual({
+      damage: 0,
+      deaths: 0,
+      economy: 0,
+    });
   });
 });
 

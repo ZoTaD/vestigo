@@ -540,6 +540,22 @@ export function countersFrom(rows: CounterRow[]): Map<number, Counter[]> {
   return out;
 }
 
+/** Cuántos counters publica cada héroe en "situacionales", los de más exceso. */
+export const COUNTERS_SHOWN = 6;
+
+/**
+ * El núcleo de una build sin los counters **que se publican**.
+ *
+ * Un counter sale de los doce porque va aparte, en situacionales. Filtrar contra
+ * la lista entera y publicar sólo las seis primeras dejaba al 7º y siguientes
+ * sin lugar: ni en la build ni en situacionales. Medido el 2026-09-29, 5 de 38
+ * héroes tenían los seis ocupados.
+ */
+export function coreWithoutCounters<T extends { itemId: number }>(core: T[], counters: Counter[] | undefined): T[] {
+  const publicados = new Set((counters ?? []).slice(0, COUNTERS_SHOWN).map((c) => c.itemId));
+  return core.filter((c) => !publicados.has(c.itemId));
+}
+
 /* ── Lo que se publica ──────────────────────────────────────────────────── */
 
 export interface BuildItem {

@@ -19,7 +19,7 @@ import {
   partitionsWithColumn,
 } from "./snapshot";
 import { banRatesFor, bansSql, splitBanRows, type BandBans, type HeroTierBanRow, type TierBanRow } from "./bans";
-import { fetchPatches, patchWindows, prePatchWeight, type Patch } from "./patches";
+import { anchorPatch, fetchPatches, patchWindows, prePatchWeight, type Patch } from "./patches";
 import { fetchLiveCounts, type BandCounts } from "./liveStats";
 
 /**
@@ -480,8 +480,12 @@ async function measureBans(
 
 async function main() {
   const patches = await fetchPatches();
+  // Se muestra el último; se mide desde el ancla, que salta los hotfixes pegados
+  // a un parche (ver `anchorPatch`).
   const patch = patches[0];
+  const ancla = anchorPatch(patches);
   console.log(`último parche: ${patch.date} — ${patch.title}`);
+  if (ancla !== patch) console.log(`  la ventana se ancla en "${ancla.title}" (${ancla.date}): lo de después es un hotfix`);
 
   const snap = await openSnapshot();
   const reloj = new Date();
@@ -501,7 +505,7 @@ async function main() {
     );
   }
 
-  const { after, before } = patchWindows(patch.date, ahora, MAX_WINDOW_DAYS);
+  const { after, before } = patchWindows(ancla.date, ahora, MAX_WINDOW_DAYS);
   const desde = new Date(ahora.getTime() - MAX_WINDOW_DAYS * 86_400_000).toISOString();
   const hasta = ahora.toISOString();
   const wide: Window = { from: desde, to: hasta };

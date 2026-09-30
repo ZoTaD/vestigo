@@ -68,6 +68,32 @@ export function sortPatches(raw: RawPatch[]): Patch[] {
     .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 }
 
+/**
+ * El parche que ancla la ventana: una entrada a menos de `mergeDays` días de la
+ * anterior no la reinicia, se suma al parche que vino antes.
+ *
+ * **Existe por Steam.** El feed de Steam trae cada entrada —hotfixes, el
+ * "Matchmaking Update"—, y cada una es un corte. Entre las diez últimas hubo dos
+ * a 1,2 y 2,0 días de la anterior. Cortar en un hotfix a un día de un parche
+ * grande reinicia todo: la tier list de héroes vuelve a pesar casi entero el
+ * juego viejo (`prePatchWeight` vuelve a 1) y objetos, builds e informe vuelven
+ * a los quince días, justo cuando el parche grande empezaba a juntar muestra.
+ *
+ * Se encadena: dos hotfixes seguidos, cada uno cerca del anterior, anclan en el
+ * parche que los trajo. Cuatro días cubren los dos casos vistos.
+ *
+ * Lo que se MUESTRA sigue siendo `patches[0]` (el último, con su título); esto
+ * sólo decide desde cuándo se mide.
+ */
+export function anchorPatch(patches: Patch[], mergeDays = 4): Patch {
+  let ancla = patches[0];
+  for (const previo of patches.slice(1)) {
+    if (Date.parse(ancla.date) - Date.parse(previo.date) >= mergeDays * 86_400_000) break;
+    ancla = previo;
+  }
+  return ancla;
+}
+
 /** Baja la lista de parches. Tira si no contesta: sin ella el corte sería a ciegas. */
 export async function fetchPatches(url: string = PATCHES_URL): Promise<Patch[]> {
   const res = await fetch(url);

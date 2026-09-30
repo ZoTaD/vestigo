@@ -9,7 +9,7 @@ import {
   type RawAbility,
   type RawHeroKit,
 } from "../src/heroKit";
-import { buildInsights, perMatchOf, MIN_PAIR } from "../src/heroInsights";
+import { buildInsights, perMatchOf, pairPaths, MIN_PAIR } from "../src/heroInsights";
 
 // Recortes reales de la API del 2026-09-22 (Dínamo), sin los SVG.
 const stomp: RawAbility = {
@@ -277,6 +277,23 @@ describe("heroInsights", () => {
     expect(f.heroes["11"].with).toEqual([[8, 120, 70]]);
     expect(f.heroes["8"].with).toEqual([[11, 120, 70]]);
     expect(f.heroes["11"].daily).toEqual([["2026-09-16", 13, 7]]);
+  });
+
+  /**
+   * La API filtra por carril si no se le dice nada (`same_lane_filter=true` por
+   * defecto): medido en Fantasma+, los "vs" sumaban 2,12 partidas por partida
+   * del héroe (con todos los rivales serían ~6) y los "with" 1,01. La página
+   * dice "partidas con cada héroe en el equipo rival (o en el propio)".
+   */
+  it("los cruces son de la partida entera, no del rival de carril", () => {
+    const p = pairPaths("min_average_badge=91&max_average_badge=116", 100, 200);
+    expect(p.counters.startsWith("hero-counter-stats?")).toBe(true);
+    expect(p.synergies.startsWith("hero-synergy-stats?")).toBe(true);
+    for (const path of [p.counters, p.synergies]) {
+      expect(path).toContain("same_lane_filter=false");
+      expect(path).toContain("min_average_badge=91&max_average_badge=116");
+      expect(path).toContain("min_unix_timestamp=100&max_unix_timestamp=200");
+    }
   });
 });
 

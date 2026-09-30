@@ -18,9 +18,9 @@ import {
   CORRUPTED_BIT,
   uncorruptedItems,
 } from "./snapshot";
-import { fetchPatches } from "./patches";
+import { anchorPatch, fetchPatches } from "./patches";
 import { BANDS, widestBand } from "./bands";
-import { MEASURED } from "./mechanism";
+import { MEASURED, type PublishedMechanism } from "./mechanism";
 
 /**
  * La referencia del informe de partida.
@@ -194,6 +194,46 @@ export interface HeroReport {
  */
 const SIGNALS = ["souls", "damage", "deaths"];
 
+/**
+ * La ventana, una partición por rama. Cada partición nombra sus columnas porque
+ * no comparten esquema —la trampa que ya rompió `build:heroes` dos veces—, y las
+ * series de `stats` se leen por su último elemento, que es el acumulado al
+ * terminar.
+ *
+ * **El `> 0` del badge no es redundante acá**: el informe usa la banda de más
+ * muestra, que hoy es la de abajo (tiers 0-4), y un badge 0 es "sin rango", no
+ * Obscurus. Sin él, el día de un reset como el del 2026-07-30 se llevaría todas
+ * las partidas sin rango. Es el mismo corte de `selectFrom`.
+ *
+ * Exportada sólo para probarla: `main` es la única que la usa.
+ */
+export function reportBranchSql(
+  n: number,
+  w: { ids: string; tiers: string; from: string; to: string }
+): string {
+  return `
+    select match_id, account_id, hero_id, won, team, start_time, duration_s,
+           net_worth, deaths,
+           list_extract("stats.player_damage", len("stats.player_damage")) as damage,
+           list_extract("stats.boss_damage", len("stats.boss_damage")) as boss,
+           list_distinct(list_transform(
+             list_filter(range(1, len("items.item_id") + 1),
+               i -> "items.item_id"[i] in (${w.ids}) and coalesce("items.sold_time_s"[i], 0) = 0
+                    and (coalesce("items.upgrade_info"[i], 0) & ${CORRUPTED_BIT}) = 0),
+             i -> "items.item_id"[i])) as kept,
+           -- Sin los objetos corrompidos, original y corrupta (ver uncorruptedItems):
+           -- si no, el original "vendido" al corromper contaba como venta de verdad.
+           -- Las tres listas se filtran igual para que sigan alineadas compra por compra.
+           ${uncorruptedItems("item_id")} as item_ids, ${uncorruptedItems("game_time_s")} as item_times,
+           ${uncorruptedItems("sold_time_s")} as sold_times,
+           len(list_filter("items.imbued_ability_id", x -> x is not null and x <> 0)) as imbued
+    from ${partitionSource(n)}
+    where match_mode = '${PLAYED_MODE}' and game_mode = '${PLAYED_GAME_MODE}'
+      and ${BADGE} > 0 and ${BADGE} // 10 in (${w.tiers})
+      and start_time >= TIMESTAMP '${w.from}' and start_time < TIMESTAMP '${w.to}'
+      and len("stats.player_damage") > 0 and duration_s > 600`;
+}
+
 async function main() {
   const catalog = JSON.parse(readFileSync(CATALOG, "utf8")) as { items: Record<string, CatalogItem> };
   const items = new Map(Object.entries(catalog.items).map(([id, v]) => [Number(id), v]));
@@ -248,31 +288,7 @@ async function main() {
   const to = hasta.toISOString().slice(0, 19);
   console.log(`ventana ${from.slice(0, 10)} → ${to.slice(0, 10)} · particiones ${parts.join(", ")}`);
 
-  /**
-   * La ventana. Cada partición nombra sus columnas porque no comparten esquema
-   * —la trampa que ya rompió `build:heroes` dos veces—, y las series de `stats`
-   * se leen por su último elemento, que es el acumulado al terminar.
-   */
-  const rama = (n: number) => `
-    select match_id, account_id, hero_id, won, team, start_time, duration_s,
-           net_worth, deaths,
-           list_extract("stats.player_damage", len("stats.player_damage")) as damage,
-           list_extract("stats.boss_damage", len("stats.boss_damage")) as boss,
-           list_distinct(list_transform(
-             list_filter(range(1, len("items.item_id") + 1),
-               i -> "items.item_id"[i] in (${ids}) and coalesce("items.sold_time_s"[i], 0) = 0
-                    and (coalesce("items.upgrade_info"[i], 0) & ${CORRUPTED_BIT}) = 0),
-             i -> "items.item_id"[i])) as kept,
-           -- Sin compras corruptas (ver CORRUPTED_BIT); las tres listas se filtran
-           -- igual para que sigan alineadas compra por compra.
-           ${uncorruptedItems("item_id")} as item_ids, ${uncorruptedItems("game_time_s")} as item_times,
-           ${uncorruptedItems("sold_time_s")} as sold_times,
-           len(list_filter("items.imbued_ability_id", x -> x is not null and x <> 0)) as imbued
-    from ${partitionSource(n)}
-    where match_mode = '${PLAYED_MODE}' and game_mode = '${PLAYED_GAME_MODE}'
-      and ${BADGE} // 10 in (${tiers})
-      and start_time >= TIMESTAMP '${from}' and start_time < TIMESTAMP '${to}'
-      and len("stats.player_damage") > 0 and duration_s > 600`;
+  const rama = (n: number) => reportBranchSql(n, { ids, tiers, from, to });
 
   let t = Date.now();
   const lap = () => {
@@ -295,11 +311,12 @@ async function main() {
 
   // La ventana se ancla al parche si el parche tiene con qué, igual que las
   // builds: la tarjeta y la tier list tienen que describir el mismo juego.
+  // El título es el del último; el corte, el del ancla (ver `anchorPatch`).
   const parches = await fetchPatches();
   const parche = parches[0] ?? null;
   let crossesPatch = false;
   if (parche && !yaEstaba) {
-    const iso = new Date(parche.date).toISOString().slice(0, 19);
+    const iso = new Date(anchorPatch(parches).date).toISOString().slice(0, 19);
     const [c] = (await rows(`
       select count(distinct match_id) filter (where start_time >= TIMESTAMP '${iso}')::BIGINT as post
       from player`)) as unknown as { post: bigint }[];
@@ -441,7 +458,7 @@ async function main() {
    */
   let mech = MEASURED;
   try {
-    const b = JSON.parse(readFileSync(BUILDS, "utf8")) as { mechanism?: typeof MEASURED };
+    const b = JSON.parse(readFileSync(BUILDS, "utf8")) as { mechanism?: PublishedMechanism };
     if (b.mechanism && Number.isFinite(b.mechanism.deaths)) mech = { intercept: 0, ...b.mechanism };
     else console.log("  builds.json todavía no publica el mecanismo: se usa la última medición conocida");
   } catch {

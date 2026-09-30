@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { sortPatches, patchWindows, measureWindow, prePatchWeight } from "../src/patches";
+import { sortPatches, patchWindows, measureWindow, prePatchWeight, anchorPatch, type Patch } from "../src/patches";
 import { shrinkageFrom, shrink } from "../src/build";
 
 describe("sortPatches", () => {
@@ -45,6 +45,45 @@ describe("sortPatches", () => {
   it("sin entradas de Steam usa las del foro", () => {
     const p = sortPatches([{ source: "forum", title: "09-16-2026 Update", pub_date: "2026-09-16T22:41:46Z" }]);
     expect(p[0].title).toBe("09-16-2026 Update");
+  });
+});
+
+/**
+ * Con Steam cada entrada es un corte: hotfixes y anuncios también. Entre las
+ * últimas diez hubo dos a 1,2 y 2,0 días de la anterior, y cortar ahí reinicia
+ * la ventana: la tier list de héroes vuelve a pesar el parche viejo casi entero
+ * y objetos/builds vuelven a los quince días.
+ */
+describe("anchorPatch", () => {
+  const p = (date: string, title: string): Patch => ({ date, title, link: "" });
+  const cns = p("2026-09-29T20:25:11Z", "City Never Sleeps");
+  const anterior = p("2026-09-16T22:41:46Z", "09-16-2026 Update");
+
+  it("un hotfix al día siguiente no reinicia la ventana: ancla en el parche grande", () => {
+    const hotfix = p("2026-09-30T20:00:00Z", "09-30-2026 Update");
+    expect(anchorPatch([hotfix, cns, anterior])).toBe(cns);
+  });
+
+  it("uno a cinco días del anterior sí es un corte propio", () => {
+    const otro = p("2026-10-04T20:25:11Z", "10-04-2026 Update");
+    expect(anchorPatch([otro, cns, anterior])).toBe(otro);
+  });
+
+  it("dos hotfixes seguidos se encadenan hasta el parche que los trajo", () => {
+    const h1 = p("2026-10-01T10:00:00Z", "10-01-2026 Update");
+    const h2 = p("2026-10-03T12:00:00Z", "10-03-2026 Update");
+    // h2 está a 2 días de h1 y h1 a 1,6 de CNS: los tres son el mismo juego.
+    expect(anchorPatch([h2, h1, cns, anterior])).toBe(cns);
+  });
+
+  it("sin anterior, o con uno lejos, el ancla es el último", () => {
+    expect(anchorPatch([cns])).toBe(cns);
+    expect(anchorPatch([cns, anterior])).toBe(cns);
+  });
+
+  it("el margen se puede cambiar", () => {
+    const hotfix = p("2026-09-30T20:00:00Z", "09-30-2026 Update");
+    expect(anchorPatch([hotfix, cns, anterior], 0.5)).toBe(hotfix);
   });
 });
 

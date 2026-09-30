@@ -692,10 +692,13 @@ export function windowSql(partitions: number[], from: string, to: string): strin
  * y falla con "Referenced table items not found".
  *
  * Las compras corruptas del Broker no entran (ver `uncorruptedItems`).
+ *
+ * `hero_id` viaja para descontar al héroe que compra (ver `itemStatsSql` en
+ * `items.ts`): es un byte por fila, no un array.
  */
 export function itemsWindowSql(partitions: number[], from: string, to: string): string {
   return selectFrom(
-    `start_time, won, match_id,
+    `start_time, won, match_id, hero_id,
      ${BADGE} // 10 as tier,
      ${uncorruptedItems("item_id")} as item_ids, ${uncorruptedItems("game_time_s")} as item_times`,
     partitions,
@@ -719,11 +722,27 @@ export function itemsWindowSql(partitions: number[], from: string, to: string): 
 export const CORRUPTED_BIT = 0x800000;
 
 /**
- * La columna `items.<col>` sin las entradas corruptas, como expresión SQL.
- * Las listas `items.*` van en paralelo: el índice `i` es la misma compra.
+ * La columna `items.<col>` sin los objetos que se corrompieron, como expresión
+ * SQL. Las listas `items.*` van en paralelo: el índice `i` es la misma compra.
+ *
+ * **Sale el objeto entero, no sólo la entrada corrupta.** Si un `item_id` tiene
+ * alguna entrada con el bit, se van todas las suyas: la original (que el lake
+ * deja "vendida" en el segundo del cambio) y la corrupta. Sacar sólo la segunda
+ * dejaba la original con su minuto de compra, y la partida —jugada con la
+ * versión corrupta— se le cargaba al objeto normal: el 12,7% de las compras de
+ * 6400 post City Never Sleeps, y el informe la contaba como venta.
+ *
+ * **La lista de ids corruptos se calcula una vez por fila** con el
+ * `list_transform([...], c -> ...)[1]`, que sólo sirve para ponerle nombre. La
+ * forma directa —`list_contains(list_filter(...), ...)` adentro del filtro— da
+ * lo mismo fila por fila pero la recalcula por cada elemento: medido sobre
+ * 580.213 filas, 9,9 s contra 0,56 s para tres columnas.
  */
 export const uncorruptedItems = (col: string): string =>
-  `list_filter("items.${col}", (x, i) -> (coalesce("items.upgrade_info"[i], 0) & ${CORRUPTED_BIT}) = 0)`;
+  `list_transform(
+     [list_filter("items.item_id", (y, j) -> (coalesce("items.upgrade_info"[j], 0) & ${CORRUPTED_BIT}) <> 0)],
+     corruptos -> list_filter("items.${col}", (x, i) -> not list_contains(corruptos, "items.item_id"[i]))
+   )[1]`;
 
 /**
  * La misma ventana, con los baneos de cada partida (ver `bans.ts`). Una fila
