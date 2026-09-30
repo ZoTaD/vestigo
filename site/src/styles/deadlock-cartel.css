@@ -869,3 +869,36 @@
     --irow-cols: 1.5rem 2.2rem minmax(0, 1fr) 0.75rem;
   }
 }
+
+/* ---------- la hemeroteca de Vestigo News, en papel ---------- */
+[data-theme="codex"][data-game="deadlock"] .box .vn-archive-link {
+  color: #1e1a14;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+[data-theme="codex"][data-game="deadlock"] .box .vn-archive-link:hover {
+  color: #b2401c;
+}
+
+[data-theme="codex"][data-game="deadlock"] .box :is(.vn-archive-date, .vn-archive-title) {
+  color: var(--text-dim);
+}
+
+[data-theme="codex"][data-game="deadlock"] .box .vn-archive-title .dl-history-tag {
+  margin-left: 0.5rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .box .vn-archive-list li {
+  border-top-color: var(--line);
+}
+
+[data-theme="codex"][data-game="deadlock"] .box .vn-archive-list li[data-current] {
+  background: rgba(221, 102, 56, 0.1);
+}
+
+[data-theme="codex"][data-game="deadlock"] .box .vn-archive-score [data-dir="down"] { color: var(--bad); }
+[data-theme="codex"][data-game="deadlock"] .box .vn-archive-score [data-dir="up"] { color: var(--good); }
