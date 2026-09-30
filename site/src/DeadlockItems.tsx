@@ -20,7 +20,12 @@ import { type BandId } from "./deadlockData";
 import { items as itemSlugs } from "./deadlockSlugs";
 import { ItemIcon } from "./DeadlockItemTip";
 import DeadlockItemsShop from "./DeadlockItemsShop";
+import DeadlockItemsTiers from "./DeadlockItemsTiers";
+import { useDesign } from "./deadlockDesign";
 import GameImg from "./GameImg";
+
+/** Tienda (como el juego), tier list por letra o lista con gráficos. */
+type Vista = "shop" | "tiers" | "list";
 
 /**
  * La tier list de ítems de Deadlock.
@@ -269,14 +274,18 @@ export default function DeadlockItems({
    * Tienda (como el juego) o lista. Arranca en la tienda —pedido de ZoTaD del
    * 2026-09-23: "siempre copiando el juego"— y se recuerda en este navegador.
    */
-  const [vista, setVista] = useState<"shop" | "list">(() => {
+  const design = useDesign();
+  const [elegida, setVista] = useState<Vista | null>(() => {
     try {
-      return localStorage.getItem("vestigo.dlItemsView") === "list" ? "list" : "shop";
+      const v = localStorage.getItem("vestigo.dlItemsView");
+      return v === "list" || v === "shop" || v === "tiers" ? v : null;
     } catch {
-      return "shop";
+      return null;
     }
   });
-  const cambiarVista = (v: "shop" | "list") => {
+  /** Sin elección guardada: la tienda en el diseño A, la tier list por letra en el B. */
+  const vista: Vista = elegida ?? (design === "b" ? "tiers" : "shop");
+  const cambiarVista = (v: Vista) => {
     setVista(v);
     try {
       localStorage.setItem("vestigo.dlItemsView", v);
@@ -286,7 +295,7 @@ export default function DeadlockItems({
   };
   const selector = (
     <div className="seg dl-items-views" role="group" aria-label={c.views.label}>
-      {(["shop", "list"] as const).map((v) => (
+      {(["shop", "tiers", "list"] as const).map((v) => (
         <button key={v} type="button" aria-pressed={vista === v} data-active={vista === v} onClick={() => cambiarVista(v)}>
           {c.views[v]}
         </button>
@@ -308,6 +317,25 @@ export default function DeadlockItems({
     ? meta?.items.find((i) => itemSlugs.toSlug.get(String(i.itemId)) === open)?.cost
     : undefined;
   const abiertosEfectivo = openCost !== undefined ? new Set(abiertos).add(openCost) : abiertos;
+
+  /** El objeto abierto con su fila de números, para la Tienda y la vista por letra. */
+  const detalleAbierto = () => {
+    const it = open && meta ? meta.items.find((i) => itemSlugs.toSlug.get(String(i.itemId)) === open) : undefined;
+    if (!it || !meta) return null;
+    return (
+      <section className="box dl-items-shop-detail">
+        <ol className="dl-irows">
+          <ItemRow
+            item={it}
+            base={meta.file.costBaselines[String(it.cost)] ?? 0.5}
+            cost={it.cost.toLocaleString(locale)}
+            open
+            onToggle={() => onOpen(undefined)}
+          />
+        </ol>
+      </section>
+    );
+  };
 
   const scatter = meta ? scatterOf(meta.items) : null;
   const celdas = meta ? shopMap(meta.items) : [];
@@ -339,6 +367,12 @@ export default function DeadlockItems({
 
       {!meta ? (
         <p className="dl-loading-note">{c.loading}</p>
+      ) : vista === "tiers" ? (
+        <div className="dl-items-shopview">
+          {selector}
+          <p className="detail-note dl-items-shopnote">{c.tiers.lead}</p>
+          <DeadlockItemsTiers items={meta.items} openSlug={open} onOpenItem={onOpen} detalle={detalleAbierto()} />
+        </div>
       ) : vista === "shop" ? (
         <div className="dl-items-shopview">
           {selector}
@@ -347,23 +381,7 @@ export default function DeadlockItems({
             items={meta.items}
             openSlug={open}
             onOpenItem={onOpen}
-            detalle={(() => {
-              const it = open ? meta.items.find((i) => itemSlugs.toSlug.get(String(i.itemId)) === open) : undefined;
-              if (!it) return null;
-              return (
-                <section className="box dl-items-shop-detail">
-                  <ol className="dl-irows">
-                    <ItemRow
-                      item={it}
-                      base={meta.file.costBaselines[String(it.cost)] ?? 0.5}
-                      cost={it.cost.toLocaleString(locale)}
-                      open
-                      onToggle={() => onOpen(undefined)}
-                    />
-                  </ol>
-                </section>
-              );
-            })()}
+            detalle={detalleAbierto()}
           />
         </div>
       ) : (

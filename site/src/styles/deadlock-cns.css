@@ -1257,6 +1257,81 @@
   transform: rotate(0deg) translate(-1px, -1px);
 }
 
+/* ---------- Objetos, vista "Por letra": una banda por letra, como la de héroes ----------
+   (DeadlockItemsTiers). Adentro, las tres familias de la tienda en columnas,
+   apenas teñidas con su color, y arriba sus cabeceras del juego. */
+[data-theme="codex"][data-game="deadlock"] .dl-itiers-heads {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 0.9rem;
+  margin: 0 0.8rem 0.4rem calc(5.6rem + 0.8rem);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itiers-head {
+  justify-self: center;
+  width: min(100%, 16rem);
+  aspect-ratio: 720 / 183;
+  background: url(/deadlock/game/ui/cns/shop-columns-header.webp) 0 0 / 300% 100% no-repeat;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itiers-head[data-cat="spirit"] { background-position: 50% 0; }
+[data-theme="codex"][data-game="deadlock"] .dl-itiers-head[data-cat="vitality"] { background-position: 100% 0; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  padding: 0.8rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier-col {
+  --fam: 217, 132, 58;
+  display: grid;
+  /* Cuatro por fila en una pantalla de escritorio: con 4,9 rem entraban tres y
+     la banda B medía tres pantallas. */
+  grid-template-columns: repeat(auto-fill, minmax(4rem, 4.5rem));
+  justify-content: start;
+  align-content: start;
+  gap: 0.5rem 0.45rem;
+  min-height: 3rem;
+  margin: 0;
+  padding: 0.55rem;
+  list-style: none;
+  background: rgba(var(--fam), 0.07);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier-col[data-cat="spirit"] { --fam: 163, 131, 230; }
+[data-theme="codex"][data-game="deadlock"] .dl-itier-col[data-cat="vitality"] { --fam: 134, 194, 93; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier .dl-bd-card {
+  container-type: inline-size;
+  transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier .dl-bd-card:hover {
+  z-index: 4;
+  transform: translateY(-3px) rotate(-1.2deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itier .dl-bd-card-name {
+  font-size: clamp(0.5rem, 10.5cqi, 0.74rem);
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+
+@media (max-width: 900px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-itiers-heads { display: none; }
+  [data-theme="codex"][data-game="deadlock"] .dl-itier-cols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+    padding: 0.6rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-itier-col:empty { display: none; }
+  [data-theme="codex"][data-game="deadlock"] .dl-itier-col {
+    grid-template-columns: repeat(auto-fill, minmax(4.2rem, 1fr));
+  }
+}
+
 /* ---------- "VN Retail" en español ----------
    La letra de las tarjetas de la tienda que sirve el bucket es la demo de
    Retail: 66 glifos, sin tildes, eñes ni signos. En español cada letra que

@@ -1043,7 +1043,11 @@ const EN = {
       slots: { weapon: "Weapon", vitality: "Vitality", spirit: "Spirit" },
       /** El chip que apaga el filtro por estante. */
       allSlots: "All",
-      views: { shop: "Shop", list: "List", label: "View" },
+      views: { shop: "Shop", tiers: "Tier list", list: "List", label: "View" },
+      tiers: {
+        count: (n: number) => `${n} ${n === 1 ? "item" : "items"}`,
+        lead: "Every item by its tier and family, best first. Hover for the item card; click for its numbers.",
+      },
       shopNote: "Each card shows its tier and its edge over what the same souls would have bought. Hover for the item card; click for its numbers.",
       /**
        * Qué da el ítem. Son los nombres de las cinco familias, no vocabulario de
@@ -2051,7 +2055,11 @@ const ES: typeof EN = {
       baseline: (pct) => `cualquiera de este precio gana ${pct}`,
       slots: { weapon: "Arma", vitality: "Vitalidad", spirit: "Espíritu" },
       allSlots: "Todos",
-      views: { shop: "Tienda", list: "Lista", label: "Vista" },
+      views: { shop: "Tienda", tiers: "Por letra", list: "Lista", label: "Vista" },
+      tiers: {
+        count: (n: number) => `${n} ${n === 1 ? "objeto" : "objetos"}`,
+        lead: "Todos los objetos por letra y familia, el mejor primero. Pasá el mouse para ver la ficha; tocalo para ver sus números.",
+      },
       shopNote: "Cada tarjeta lleva su tier y su ventaja contra lo que se habría comprado con las mismas almas. Pasá el mouse para ver la ficha; tocala para ver sus números.",
       types: {
         bullet_damage: "Daño de arma",

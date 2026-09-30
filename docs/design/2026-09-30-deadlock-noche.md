@@ -32,8 +32,10 @@ publica en `main` ni se tocan workflows. Cada tarea: probar en el navegador
   en español.
 
 ## C. Diseño alternativo "mucho más Deadlock"
-- [ ] C1. Tier list de héroes y de objetos en una segunda dirección visual,
+- [x] C1. Tier list de héroes y de objetos en una segunda dirección visual,
       comparable con la actual (conmutador en la página o ruta aparte).
+      Hecho: `docs/design/2026-09-30-deadlock-diseno-b.md` (botón A/B y
+      `?diseno=b`), más la vista "Por letra" de Objetos en los dos diseños.
 - [ ] C2. Propuestas para otras pestañas con mejores visuales.
 
 ## D. Jugador

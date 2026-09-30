@@ -13,6 +13,7 @@ import DeadlockBandPicker from "./DeadlockBandPicker";
 import { lazyWithPreload } from "./lazyWithPreload";
 import { PUBLISHED_BAND, type BandId } from "./deadlockData";
 import { DEADLOCK_SECTIONS, type DeadlockSection, type Route } from "./route";
+import { DesignContext, DesignSwitch, useDesignState } from "./deadlockDesign";
 // Las hojas de Deadlock y de Vestigo News, en el mismo orden que tenían en
 // `main.tsx`: viajan en el CSS de este chunk y no en el de todo el sitio.
 import "./styles/deadlock.css";
@@ -22,6 +23,8 @@ import "./styles/deadlock-builder.css";
 import "./styles/deadlock-game.css";
 // City Never Sleeps (2026-09-29): la estética nueva, encima de todo lo de Deadlock.
 import "./styles/deadlock-cns.css";
+// El diseño B para comparar (2026-09-30): sólo pisa lo de A bajo `[data-dl-design="b"]`.
+import "./styles/deadlock-alt.css";
 // Vestigo News (2026-09-17): la única página con paleta y fuentes propias, todo bajo `.vn`.
 import "./styles/news.css";
 
@@ -84,6 +87,10 @@ export default function DeadlockArea({
 }) {
   const copy = useCopy();
   const band = chosen ?? PUBLISHED_BAND;
+  const [design, setDesign] = useDesignState();
+  /** Las pestañas donde A y B se ven distintos: ahí va el botón para cambiar. */
+  const conDiseno =
+    ((route.dlSection === "meta" || route.dlSection === "street-brawl") && !route.detail) || route.dlSection === "items";
   const picker = <DeadlockBandPicker band={band} onChange={onBand} />;
 
   /** Opening or closing a detail is a navigation, so it gets its own URL. */
@@ -91,7 +98,8 @@ export default function DeadlockArea({
     navigate({ ...route, view: "deadlock", dlSection: next, detail: slug });
 
   return (
-    <>
+    <DesignContext.Provider value={design}>
+    <div className="dl-design" data-dl-design={design}>
       {/* La misma barra que TFT, con las pestañas de este juego. Que sea el
           mismo control y no uno propio es deliberado: quien viene de la otra
           pestaña no tiene que aprender nada nuevo. */}
@@ -163,6 +171,8 @@ export default function DeadlockArea({
         />
       )}
       </Suspense>
-    </>
+      {conDiseno && <DesignSwitch design={design} onChange={setDesign} />}
+    </div>
+    </DesignContext.Provider>
   );
 }

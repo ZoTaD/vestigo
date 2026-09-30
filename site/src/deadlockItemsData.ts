@@ -103,11 +103,14 @@ export const OPEN_COSTS = new Set<number>([6400, 3200]);
  * Los números salen de la distribución medida (q1 −1,04, mediana −0,14, q3
  * +0,75), no de elegir redondos y mirar después qué pasa.
  */
+/** Los cortes de S, A, B y C, en puntos de victoria sobre la base del precio. */
+export const TIER_CUTS = { S: 2, A: 0.8, B: -0.3, C: -1.8 } as const;
+
 export function tierOfDelta(delta: number): string {
-  if (delta >= 2) return "S";
-  if (delta >= 0.8) return "A";
-  if (delta >= -0.3) return "B";
-  if (delta >= -1.8) return "C";
+  if (delta >= TIER_CUTS.S) return "S";
+  if (delta >= TIER_CUTS.A) return "A";
+  if (delta >= TIER_CUTS.B) return "B";
+  if (delta >= TIER_CUTS.C) return "C";
   return "D";
 }
 

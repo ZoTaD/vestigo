@@ -23,6 +23,25 @@ import { heroes as heroSlugs } from "./deadlockSlugs";
 import GameImg from "./GameImg";
 import { safeHref } from "./safeHref";
 import { CANDIDATES, CANDIDATES_EDITION, candidatesVisible, stickerOf } from "./deadlockCandidates";
+import { useDesign } from "./deadlockDesign";
+import gameArt from "@deadlock/game-art.json";
+
+/** Diseño B: el arte de fondo de cada héroe y quiénes traen caras de ánimo. */
+const FONDOS: Record<string, string> = gameArt.backgrounds;
+const CARAS = new Set<string>(gameArt.moods);
+
+/**
+ * Diseño B: la cara de ánimo del juego según la letra. Los de S festejan (la
+ * cara de la racha) y los de D están golpeados (la de poca vida); el resto
+ * queda con el retrato de siempre.
+ */
+function caraDe(card: string, tier: string | undefined): string {
+  const m = card.match(/\/(\w+)_card\.webp$/);
+  if (!m || !CARAS.has(m[1])) return card;
+  if (tier === "S") return card.replace(/_card\.webp$/, "_card_gloat.webp");
+  if (tier === "D") return card.replace(/_card\.webp$/, "_card_critical.webp");
+  return card;
+}
 
 /**
  * La tier list de héroes de Deadlock.
@@ -89,15 +108,21 @@ function MarkIcon({ kind }: { kind: "hard" | "easy" | "up" | "down" }) {
  */
 function HeroTile({
   hero,
+  tier,
   to,
   onNavigate,
 }: {
   hero: Hero;
+  /** La letra de la banda: en el diseño B elige la cara de ánimo. */
+  tier?: string;
   /** La página del héroe: el tile es un enlace de verdad, no un botón. */
   to: Route;
   onNavigate: (route: Route) => void;
 }) {
   const copy = useCopy();
+  const design = useDesign();
+  const fondo = design === "b" ? FONDOS[String(hero.heroId)] : undefined;
+  const retrato = design === "b" && hero.card ? caraDe(hero.card, tier) : hero.card;
 
   return (
     <li
@@ -111,7 +136,14 @@ function HeroTile({
        * cuánto de ese color usa en cada lugar; y sin color declarado cae al oro
        * del tema, que es el comportamiento que teníamos antes de esto.
        */
-      style={hero.color ? ({ "--dl-hero": hero.color } as CSSProperties) : undefined}
+      style={
+        hero.color || fondo
+          ? ({
+              ...(hero.color ? { "--dl-hero": hero.color } : {}),
+              ...(fondo ? { "--dl-hero-bg": `url(${fondo})` } : {}),
+            } as CSSProperties)
+          : undefined
+      }
     >
       <RouteLink
         className="dl-tile-btn"
@@ -124,8 +156,8 @@ function HeroTile({
               pantalla de selección), no el ícono chico con contorno del HUD:
               pedido de ZoTaD el 2026-09-23 para que la tier list se vea como el
               juego. Sin tarjeta cae al ícono. */}
-          {hero.card || hero.img ? (
-            <GameImg src={hero.card || hero.img} alt="" loading="lazy" width={58} height={72} />
+          {retrato || hero.img ? (
+            <GameImg src={retrato || hero.img} alt="" loading="lazy" width={58} height={72} />
           ) : (
             <span className="dl-portrait-fallback">{hero.name.slice(0, 2)}</span>
           )}
@@ -441,7 +473,7 @@ function TierBand({
 
       <ol className="dl-tiles">
         {heroes.map((h) => (
-          <HeroTile key={h.heroId} hero={h} to={linkTo(route, h)} onNavigate={navigate} />
+          <HeroTile key={h.heroId} hero={h} tier={tier} to={linkTo(route, h)} onNavigate={navigate} />
         ))}
       </ol>
     </section>
