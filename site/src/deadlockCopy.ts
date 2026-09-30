@@ -1060,6 +1060,9 @@ const EN = {
         upgradesTo: "Upgrades to",
         upgradesFrom: "Upgrades from",
         souls: "souls",
+        /** La línea verde de la tienda del juego (Citadel_PopularityLabel_*), con el mismo texto. */
+        popular: (phase: "early" | "mid" | "late", pct: string) =>
+          `Purchased ${{ early: "early game", mid: "mid game", late: "late game" }[phase]} in ${pct}% of matches.`,
       },
       loading: "Loading this rank's items…",
       charts: {
@@ -2019,6 +2022,8 @@ const ES: typeof EN = {
         upgradesTo: "Mejora para",
         upgradesFrom: "Mejora de",
         souls: "almas",
+        popular: (phase, pct) =>
+          `Adquirido durante la fase ${{ early: "inicial", mid: "media", late: "avanzada" }[phase]} en el ${pct} % de las partidas.`,
       },
       loading: "Cargando los objetos de este rango…",
       charts: {

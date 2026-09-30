@@ -371,3 +371,98 @@
     transform: none;
   }
 }
+
+/* ---------- la ficha del objeto de City Never Sleeps ----------
+   Sale de la hoja nueva del juego (panorama/styles/tooltips/
+   citadel_tooltip_mod_details.vcss, cliente 6722). Lo que cambió contra la
+   que ya traducía deadlock-game.css: el papel pintado por familia con el borde
+   rasgado (tooltip_backer_* + su opacity-mask, horneada en ui/cns/tooltip-*),
+   sin esquinas redondeadas; la cabecera es la pincelada sin color de fondo; el
+   nombre a 36px; y la línea verde de popularidad. */
+
+/* #ModTooltipContainer: background-size 100% 100%, img-shadow 0 0 10px, padding-bottom 30px */
+[data-theme="codex"][data-game="deadlock"] .dl-card {
+  --dl-backer: url(/deadlock/game/ui/cns/tooltip-weapon.webp);
+  border-radius: 0;
+  overflow: visible;
+  padding-bottom: 30px;
+  background: var(--dl-backer) center / 100% 100% no-repeat;
+  box-shadow: none;
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.75));
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-card[data-slot="vitality"] {
+  --dl-backer: url(/deadlock/game/ui/cns/tooltip-vitality.webp);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-card[data-slot="spirit"] {
+  --dl-backer: url(/deadlock/game/ui/cns/tooltip-spirit.webp);
+}
+
+/* .HeaderContainer: min-height 96px, padding 20px 25px, la pincelada sin color detrás */
+[data-theme="codex"][data-game="deadlock"] .dl-card-head {
+  padding: 20px 25px;
+  background: var(--card-head) left center / 100% 100% no-repeat;
+}
+
+/* .ModName: bold 36px (Oracle en el juego; acá la VN Reaver del diario, la más cercana) */
+[data-theme="codex"][data-game="deadlock"] .dl-card-name {
+  font: 700 36px/1.02 "VN Reaver", "VN Radiance", var(--font-display);
+  color: #ffffff;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* .AttributesContainer: sin fondo propio; se ve el papel */
+[data-theme="codex"][data-game="deadlock"] .dl-card-body {
+  background: none;
+}
+
+/* #PopularityContainer: la cara del héroe 30px y .popularityLabel en brandGreen,
+   itálica, 16px, margin 8px 8px 8px 10px; padding 5px 20px */
+[data-theme="codex"][data-game="deadlock"] .dl-card-pop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 4px 0 0;
+  padding: 5px 20px;
+  font: italic 500 16px/1.25 "VN Radiance", var(--font-text);
+  color: #5fe69e;
+  text-align: left;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-card-pop img {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  object-position: 50% 12%;
+  border-radius: 50%;
+}
+
+/* .componentsSection (padding 0 20px): .componentsLabel sobre offBlack&ea y
+   .componentsList sobre offBlack&70 con las esquinas de abajo redondeadas */
+[data-theme="codex"][data-game="deadlock"] .dl-card-up {
+  margin: 0 20px;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-card-up .dl-detail-kind {
+  background: rgba(16, 19, 13, 0.92);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-card-up-list {
+  background: rgba(16, 19, 13, 0.44);
+  border-radius: 0 0 5px 5px;
+  padding-top: 5px;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-card-up + .dl-card-up {
+  margin-top: 6px;
+}
+
+/* Lo que agrega Vestigo al pie, dentro del papel. */
+[data-theme="codex"][data-game="deadlock"] .dl-card-foot {
+  margin: 8px 20px 0;
+  background: rgba(16, 19, 13, 0.7);
+  border-radius: 0 0 5px 5px;
+}

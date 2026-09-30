@@ -1,9 +1,11 @@
-import type { ReactNode } from "react";
-import { useLang } from "./i18n";
+import { useContext, type ReactNode } from "react";
+import { useLang, useLocale } from "./i18n";
 import { useCopy } from "./deadlockCopy";
 import { useItemDetail, iconUrl, cardArt, soulIcon, catalogUpgrades, type Item } from "./deadlockItemsData";
 import { ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
+import { catalog } from "./deadlockData";
+import { PopularHeroContext, usePopularOf } from "./deadlockPopularData";
 
 /**
  * La tarjeta de un ítem, tal como la dibuja el juego.
@@ -26,6 +28,12 @@ export function ItemDetailPanel({ item, cost, footer }: { item: Item; cost: stri
   const { lang } = useLang();
   const c = copy.deadlock.itemsPage;
   const ficha = useItemDetail(item.itemId);
+  const locale = useLocale();
+  // "Adquirido durante la fase media en el 30 % de las partidas": el dato de la
+  // tienda del juego para el héroe de la página, si la página tiene uno.
+  const heroId = useContext(PopularHeroContext);
+  const popular = usePopularOf(item.itemId);
+  const heroImg = heroId !== null ? catalog.heroes[String(heroId)]?.img : undefined;
   // Las fichas que llegan con sólo el id (al pasar el mouse) no traen sus
   // mejoras: se completan del catálogo, porque el juego las pone al pie.
   const cat = catalogUpgrades(item.itemId, lang);
@@ -175,6 +183,14 @@ export function ItemDetailPanel({ item, cost, footer }: { item: Item; cost: stri
             ))}
           </section>
         ))}
+
+        {/* #PopularityContainer: la cara del héroe y la frase en verde, como en la tienda nueva. */}
+        {popular && (
+          <p className="dl-card-pop">
+            {heroImg && <GameImg src={heroImg} alt="" width={30} height={30} />}
+            <span>{c.detail.popular(popular.phase, Math.round(popular.pick * 100).toLocaleString(locale))}</span>
+          </p>
+        )}
 
         {/* De qué ítems sale éste. El juego lo pone al pie de la tarjeta. */}
         {upgradesFrom.length > 0 && (

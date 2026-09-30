@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
 
 /**
  * Los "objetos populares" de cada héroe, los de la tienda del juego (2026-09-29).
@@ -123,4 +123,19 @@ export function popularOf(heroId: number, itemId: number): PopularOf | null {
   let m = mejores.get(heroId);
   if (!m) mejores.set(heroId, (m = bestPhases(hero)));
   return m.get(itemId) ?? null;
+}
+
+/**
+ * El héroe de la página, para que la ficha de un objeto diga cuánto lo compra
+ * ese héroe (la línea verde del juego). Lo ponen la página de build y la ficha
+ * del héroe; los portales de React lo heredan, así que llega también a la
+ * ficha flotante.
+ */
+export const PopularHeroContext = createContext<number | null>(null);
+
+/** La fase y el pick del objeto para el héroe de la página, o null. */
+export function usePopularOf(itemId: number): PopularOf | null {
+  const heroId = useContext(PopularHeroContext);
+  const hero = usePopular(heroId);
+  return heroId !== null && hero ? popularOf(heroId, itemId) : null;
 }

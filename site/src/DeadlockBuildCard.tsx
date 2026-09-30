@@ -19,6 +19,7 @@ import {
 } from "./deadlockBuildsData";
 import { GameCard, ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
+import { PopularHeroContext } from "./deadlockPopularData";
 
 /**
  * La tarjeta de build que se despliega al apretar un héroe en la tier list.
@@ -454,7 +455,20 @@ function BuyOrder({ buys }: { buys: BuyView[] }) {
   );
 }
 
-export default function DeadlockBuildCard({
+/**
+ * La tarjeta de build, con el héroe como contexto: las fichas de objeto que se
+ * abren adentro dicen cuánto compra ese héroe cada objeto, como la tienda del
+ * juego desde City Never Sleeps (2026-09-29).
+ */
+export default function DeadlockBuildCard(props: Parameters<typeof BuildCard>[0]) {
+  return (
+    <PopularHeroContext.Provider value={props.heroId}>
+      <BuildCard {...props} />
+    </PopularHeroContext.Provider>
+  );
+}
+
+function BuildCard({
   heroId,
   heroWinRate,
   skillPriority,
