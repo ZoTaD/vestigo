@@ -144,6 +144,17 @@ jobs:
         continue-on-error: true
         run: npm run build:hero-insights --prefix games/deadlock/pipeline
 
+      # Los objetos populares de cada héroe y los filtros de la tienda (City
+      # Never Sleeps, 2026-09-29). Salen de la API de assets, son segundos, y
+      # cambian con los parches. **Perdonan fallar**: queda lo commiteado.
+      - name: build popular
+        continue-on-error: true
+        run: npm run build:popular --prefix games/deadlock/pipeline
+
+      - name: build shop filters
+        continue-on-error: true
+        run: npm run build:shop-filters --prefix games/deadlock/pipeline
+
       # Vestigo News: la edición del periódico del parche vigente (2026-09-17).
       #
       # **Va después de `build heroes`** porque la nota de análisis lee
@@ -330,6 +341,20 @@ jobs:
             npm run build:mastery --prefix games/deadlock/pipeline
           else
             echo "la maestría corre una vez por día (06:30 UTC); esta corrida la saltea"
+          fi
+
+      # Remontadas y cuántos puntos da cada partida (2026-09-30), del lake. Una
+      # vez por día como la maestría: Remontadas lee ~26 días (~5 min) y los
+      # puntos una semana (~1,5 min), y los dos cambian con los parches, no con
+      # las horas. **Perdonan fallar**: queda lo commiteado.
+      - name: build comebacks and rank points
+        continue-on-error: true
+        run: |
+          if [ "$(date -u +%H)" = "06" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            npm run build:comebacks --prefix games/deadlock/pipeline
+            npm run build:rank-points --prefix games/deadlock/pipeline
+          else
+            echo "remontadas y puntos corren una vez por día (06:30 UTC); esta corrida los saltea"
           fi
 
       - name: guard
