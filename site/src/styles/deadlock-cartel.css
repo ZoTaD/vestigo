@@ -14,7 +14,7 @@
    componentes escritos con --text, --line, --good… se leen sobre crema sin
    tocarlos uno por uno. `--cns-paper` NO se toca: es el color de los títulos
    sobre la pincelada negra, que sigue negra. */
-[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-ht-wrap, .dl-hp-ability, .dl-tier, .cartel-papel) {
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side, .dl-tier, .cartel-papel) {
   --text: #1e1a14;
   --text-dim: #4a4133;
   --text-faint: #6b6150;
@@ -284,7 +284,7 @@
    Toda caja de Deadlock (`.box`, `.dl-panel`) es papel crema con tinta, con la
    sombra dura del resto. Las que tienen que seguir oscuras (la pizarra, el
    papel de la tienda) lo dicen en su propia regla. */
-[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-ht-wrap, .dl-hp-ability) {
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side) {
   border: 0;
   color: #1e1a14;
   background:
@@ -583,4 +583,66 @@
 
 [data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability, .dl-tier) .dl-attr:is([data-attr="Slow"], [data-attr="Stun"]) {
   color: #2b5caf;
+}
+
+/* ---------- la página de build: la foto del héroe en su ficha ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-hero-head {
+  align-items: center;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-hero-photo {
+  position: relative;
+  flex: none;
+  display: block;
+  width: 6.6rem;
+  margin: -0.4rem 0.4rem -0.4rem 0;
+  padding: 0.28rem;
+  background: url(/deadlock/game/ui/card-backer.webp) center / 100% 100% no-repeat, #efe3c6;
+  box-shadow: 4px 5px 0 rgba(0, 0, 0, 0.35);
+  transform: rotate(-2deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-hero-photo::after {
+  content: "";
+  position: absolute;
+  top: -0.55rem;
+  left: 50%;
+  width: 3rem;
+  height: 1rem;
+  background: rgba(236, 226, 205, 0.75);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%) rotate(4deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-hero-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 280 / 330;
+  object-fit: cover;
+  object-position: 50% 0;
+  background:
+    var(--dl-hero-bg, none) 72% 35% / auto 150% no-repeat,
+    color-mix(in srgb, var(--dl-hero, #3a3128) 55%, #15120e);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-bshop .dl-counters .dl-panel-head {
+  display: inline-block;
+  margin: 0 0 0.8rem;
+  padding: 0.35rem 0.8rem 0.25rem;
+  font: 800 1.05rem/1 var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cns-paper);
+  background: url(/deadlock/game/ui/backer-box.webp) center / 100% 100% no-repeat;
+}
+
+/* El armador: el costado "Tu build" es una hoja, con las casillas vacías marcadas en lápiz. */
+[data-theme="codex"][data-game="deadlock"] .dl-bd-side {
+  border-radius: 2px;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-bd-side .dl-bd-empty {
+  background: rgba(30, 26, 20, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(30, 26, 20, 0.14);
 }

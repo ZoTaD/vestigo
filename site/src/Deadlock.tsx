@@ -344,7 +344,23 @@ function HeroPage({
 
       <div className="page">
         <header className="box dl-hero-head">
-          {hero.img && <GameImg className="dl-hero-face" src={hero.img} alt="" width={96} height={96} />}
+          {/* La foto de su carta sobre su arte, con la cara de ánimo de su letra,
+              como en la tier list. Sin carta, el ícono de siempre. */}
+          {hero.card ? (
+            <span
+              className="dl-hero-photo"
+              style={
+                {
+                  ...(FONDOS[String(hero.heroId)] ? { "--dl-hero-bg": `url(${FONDOS[String(hero.heroId)]})` } : {}),
+                  ...(hero.color ? { "--dl-hero": hero.color } : {}),
+                } as CSSProperties
+              }
+            >
+              <GameImg src={caraDe(hero.card, hero.tier)} alt="" width={112} height={132} />
+            </span>
+          ) : (
+            hero.img && <GameImg className="dl-hero-face" src={hero.img} alt="" width={96} height={96} />
+          )}
           <div className="dl-hero-id">
             <span className="dl-hero-rank">{hp.rank(String(idx + 1), String(heroes.length))}</span>
             <span className="dl-chips">
