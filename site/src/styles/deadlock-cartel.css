@@ -902,3 +902,12 @@
 
 [data-theme="codex"][data-game="deadlock"] .box .vn-archive-score [data-dir="down"] { color: var(--bad); }
 [data-theme="codex"][data-game="deadlock"] .box .vn-archive-score [data-dir="up"] { color: var(--good); }
+
+/* Los metales del podio y el escalado de espíritu, oscurecidos para el papel. */
+[data-theme="codex"][data-game="deadlock"] .box .dl-lb-step[data-metal="gold"] .dl-lb-step-pos { color: #8a6410; }
+[data-theme="codex"][data-game="deadlock"] .box .dl-lb-step[data-metal="silver"] .dl-lb-step-pos { color: #5d6670; }
+[data-theme="codex"][data-game="deadlock"] .box .dl-lb-step[data-metal="bronze"] .dl-lb-step-pos { color: #85491f; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-hp-ability .dl-hp-stat-spirit {
+  color: #7440c4;
+}
