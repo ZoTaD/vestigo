@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SectionHead from "./SectionHead";
 import Chevron from "./Chevron";
 import { useLocale } from "./i18n";
@@ -314,6 +314,21 @@ export default function DeadlockItems({
     ? meta?.items.find((i) => itemSlugs.toSlug.get(String(i.itemId)) === open)?.cost
     : undefined;
   const abiertosEfectivo = openCost !== undefined ? new Set(abiertos).add(openCost) : abiertos;
+
+  /**
+   * Al abrir un objeto con un clic, la vista va a su detalle: en la Tienda está
+   * arriba de todo y el clic suele venir de bien abajo. No al cargar la página
+   * (la dirección propia del objeto ya lo muestra arriba).
+   */
+  const primera = useRef(true);
+  useEffect(() => {
+    if (primera.current) {
+      primera.current = false;
+      return;
+    }
+    if (!open) return;
+    document.querySelector(".dl-items-shop-detail")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [open]);
 
   /** El objeto abierto con su fila de números, para la Tienda y la vista por letra. */
   const detalleAbierto = () => {

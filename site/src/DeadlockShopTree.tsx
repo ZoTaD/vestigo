@@ -58,7 +58,7 @@ export default function DeadlockShopTree({
 }: {
   items: Item[];
   renderCard: (item: Item) => ReactNode;
-  /** Lo que va debajo de la tienda (el detalle del objeto abierto, una nota). */
+  /** Lo que va arriba de la tienda (el detalle del objeto abierto, una nota). */
   children?: ReactNode;
 }) {
   const copy = useCopy();
@@ -90,6 +90,11 @@ export default function DeadlockShopTree({
       .map((it) => <Fragment key={it.itemId}>{renderCard(it)}</Fragment>);
 
   return (
+    <>
+    {/* Arriba y afuera de la grilla: adentro, la barra lateral pegajosa lo
+        tapaba; abajo, el objeto abierto (y su página propia) quedaba al fondo
+        de toda la tienda. */}
+    {children}
     <div className="dl-shop2" data-view={vista}>
       <nav className="dl-shop2-rail" role="tablist" aria-label={c.shop}>
         {VISTAS.map((v) => (
@@ -218,7 +223,7 @@ export default function DeadlockShopTree({
             ),
         )}
       </div>
-      {children}
     </div>
+    </>
   );
 }

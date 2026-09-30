@@ -854,3 +854,18 @@
 
 [data-theme="codex"][data-game="deadlock"] .dl-cb-cmp td[data-dir="good"]:not(.dl-cb-arrow) { color: var(--good); }
 [data-theme="codex"][data-game="deadlock"] .dl-cb-cmp td[data-dir="bad"]:not(.dl-cb-arrow) { color: var(--bad); }
+
+/* El objeto abierto, arriba de la tienda y separado del papel. Lleva las
+   columnas de la fila de la lista: sin ellas (viven en `.dl-shelf`) la fila se
+   apilaba en una sola columna de 1.150 px. */
+[data-theme="codex"][data-game="deadlock"] .dl-items-shop-detail {
+  --irow-cols: 1.75rem 2.5rem minmax(0, 1fr) 5.2rem 4.8rem 4.8rem 0.75rem;
+  margin: 0.4rem 0 1.6rem;
+  scroll-margin-top: 1rem;
+}
+
+@media (max-width: 640px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-items-shop-detail {
+    --irow-cols: 1.5rem 2.2rem minmax(0, 1fr) 0.75rem;
+  }
+}
