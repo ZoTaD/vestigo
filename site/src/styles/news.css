@@ -53,6 +53,9 @@
   border-radius: var(--radius, 4px);
   overflow: hidden;
 }
+/* Retail Demo no trae tildes ni eñes: en español, las etiquetas en Barlow Condensed. */
+html:lang(es) .vn { --vn-label: "Barlow Condensed", sans-serif; }
+html:lang(es) .vn-x-tag { font-family: "Barlow Condensed", sans-serif; }
 .vn > * { position: relative; }
 .vn h1, .vn h2, .vn h3 { color: inherit; letter-spacing: 0; }
 

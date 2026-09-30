@@ -24,21 +24,12 @@ const EN = {
       prev: "Previous",
       next: "Next",
       rank: (n: string, total: string) => `#${n} of ${total}`,
-      tabs: { build: "Build", skills: "Abilities", buy: "Buy order", popular: "Popular", counters: "Matchups", mastery: "Mastery" },
+      tabs: { build: "Build", skills: "Abilities", buy: "Buy order", counters: "Matchups", mastery: "Mastery" },
       kpis: { winRate: "Win rate", pickRate: "Pick rate", skillGap: "Skill gap", trend: "Since the patch" },
       /**
        * Los "Popular Items" de la tienda del juego (City Never Sleeps, 2026-09-29):
        * el dato es del juego, y los textos repiten los suyos.
        */
-      popular: {
-        title: "Popular items",
-        lead: (name: string) => `What ${name} players buy most at each stage of the game.`,
-        phases: { early: "Early game", mid: "Mid game", late: "Late game" },
-        updated: (date: string) => `Last updated on ${date}`,
-        pick: (pct: string) => `${pct}% of matches`,
-        wins: (pct: string) => `${pct}% won`,
-        empty: "The game has no popular items for this hero yet.",
-      },
     },
     /**
      * La pestaña Héroes (2026-09-22): los 38 en una tabla con los atributos
@@ -948,6 +939,17 @@ const EN = {
       /* "Skill path" y no "unlock order": lo que la grilla muestra ya no es cuál
          sale primero sino qué se sube en cada paso, que son 15 o 16. */
       skillPath: "Skill path",
+      /** El tablero de la build con la forma de la tienda del juego (2026-09-30). */
+      board: {
+        popular: "Popular",
+        popularLead: "What players of this hero buy most.",
+        faded: "Faded: parts that get upgraded later into another item.",
+        order: (n: number) => `Buy #${n}`,
+        step: (n: number) => `Point ${n}`,
+        unlock: "Unlock",
+        upgrade: (n: number) => `Upgrade ${n}`,
+      skillsFrom: (build: string) => `From the ${build} build, the most played`,
+      },
       skillPathNote: "The order most players level abilities in, step by step.",
       skillStep: (n: number) => `step ${n}`,
       /* Lo que se completa primero. "Max order" es jerga de LoL que acá no
@@ -1290,17 +1292,8 @@ const ES: typeof EN = {
       prev: "Anterior",
       next: "Siguiente",
       rank: (n: string, total: string) => `#${n} de ${total}`,
-      tabs: { build: "Build", skills: "Habilidades", buy: "Orden de compra", popular: "Populares", counters: "Enfrentamientos", mastery: "Maestría" },
+      tabs: { build: "Build", skills: "Habilidades", buy: "Orden de compra", counters: "Enfrentamientos", mastery: "Maestría" },
       kpis: { winRate: "Victorias", pickRate: "Uso", skillGap: "Brecha", trend: "Desde el parche" },
-      popular: {
-        title: "Objetos populares",
-        lead: (name: string) => `Lo que más se compra con ${name} en cada fase de la partida.`,
-        phases: { early: "Fase inicial", mid: "Fase media", late: "Fase avanzada" },
-        updated: (date: string) => `Última actualización: ${date}`,
-        pick: (pct: string) => `${pct} % de las partidas`,
-        wins: (pct: string) => `${pct} % ganadas`,
-        empty: "El juego todavía no tiene objetos populares para este héroe.",
-      },
     },
     heroes: {
       title: "Héroes",
@@ -1993,6 +1986,16 @@ const ES: typeof EN = {
       investment: (souls: string) => `${souls} almas`,
       unlockOrder: "Orden de habilidades",
       skillPath: "Cómo subir las habilidades",
+      board: {
+        popular: "Populares",
+        popularLead: "Lo que más compran los jugadores de este héroe.",
+        faded: "Apagados: componentes que después se mejoran a otro objeto.",
+        order: (n: number) => `Compra n.º ${n}`,
+        step: (n: number) => `Punto ${n}`,
+        unlock: "Desbloqueo",
+        upgrade: (n: number) => `Mejora ${n}`,
+      skillsFrom: (build: string) => `De la build ${build}, la más jugada`,
+      },
       skillPathNote: "El orden en que la mayoría sube sus habilidades, paso a paso.",
       skillStep: (n) => `paso ${n}`,
       priority: "Qué mejorar primero",

@@ -4,7 +4,7 @@ import type { Route } from "./route";
 import SectionHead from "./SectionHead";
 import { useLocale, useLang } from "./i18n";
 import { useCopy } from "./deadlockCopy";
-import DeadlockBuildCard from "./DeadlockBuildCard";
+import DeadlockBuildShop from "./DeadlockBuildShop";
 import DeadlockMastery from "./DeadlockMastery";
 import DeadlockModePicker from "./DeadlockModePicker";
 import { usePatches } from "./deadlockPatchesData";
@@ -22,9 +22,7 @@ import {
 import { heroes as heroSlugs } from "./deadlockSlugs";
 import GameImg from "./GameImg";
 import { safeHref } from "./safeHref";
-import DeadlockPopularCard from "./DeadlockPopularCard";
 import { CANDIDATES, CANDIDATES_EDITION, candidatesVisible, stickerOf } from "./deadlockCandidates";
-import { PopularHeroContext } from "./deadlockPopularData";
 
 /**
  * La tier list de héroes de Deadlock.
@@ -345,22 +343,18 @@ function HeroPage({
           <HeroKpis hero={hero} />
         </header>
 
-        {/* Cinco anclas, fijas al scrollear. Apuntan a los encabezados que la
-            tarjeta de build ya tiene; no reordenan nada. */}
+        {/* Cinco anclas, fijas al scrollear. Apuntan a las partes del tablero
+            de build (DeadlockBuildShop) y a la maestría; no reordenan nada. */}
         <nav className="seg dl-hero-tabs" aria-label={hero.name}>
           <a href="#dl-build">{hp.tabs.build}</a>
-          <a href="#dl-skills">{hp.tabs.skills}</a>
           <a href="#dl-buy">{hp.tabs.buy}</a>
-          <a href="#dl-popular">{hp.tabs.popular}</a>
+          <a href="#dl-skills">{hp.tabs.skills}</a>
           <a href="#dl-counters">{hp.tabs.counters}</a>
           <a href="#dl-mastery">{hp.tabs.mastery}</a>
         </nav>
 
         <div className="dl-band-panel dl-hero-body">
-          <DeadlockBuildCard heroId={hero.heroId} heroWinRate={hero.winRate} skillPriority />
-          <PopularHeroContext.Provider value={hero.heroId}>
-            <DeadlockPopularCard heroId={hero.heroId} heroName={hero.name} />
-          </PopularHeroContext.Provider>
+          <DeadlockBuildShop heroId={hero.heroId} heroName={hero.name} heroWinRate={hero.winRate} />
           <DeadlockMastery heroId={hero.heroId} />
         </div>
 

@@ -11,15 +11,25 @@ publica en `main` ni se tocan workflows. Cada tarea: probar en el navegador
 - [x] A3. La ficha del objeto a veces aparece en cualquier lado con un
       rectángulo rojo alrededor: diagnosticar (sospecha: un ancestro con
       transform/filter/container-type vuelve "fixed" relativo) y arreglar.
-- [ ] A4. Populares sin separar por fase: todos juntos como en el juego.
+- [x] A4. Populares sin separar por fase: todos juntos como en el juego.
 
 ## B. Página de build rehecha con la tienda del juego
-- [ ] B1. Reemplazar "Orden de compra" por el papel de la tienda (el de
+- [x] B1. Reemplazar "Orden de compra" por el papel de la tienda (el de
       Populares, estirado o con más assets), con adentro: orden de compra,
       senda de habilidades e inversión de almas.
-- [ ] B2. En lugar de las fases, los botones de build (las populares y la
+- [x] B2. En lugar de las fases, los botones de build (las populares y la
       nuestra en beta).
-- [ ] B3. Una forma fachera de mostrar cómo subir habilidades.
+- [x] B3. Una forma fachera de mostrar cómo subir habilidades.
+
+  Hecho en `DeadlockBuildShop.tsx`: pestañas Populares / builds medidas /
+  nuestra (beta); el cartel del juego o la franja cian con el nombre; las tres
+  barras de inversión; el papel de la tienda con cada compra en su escalón y
+  familia, con su número, los componentes apagados y la cinta "Clave"; la tira
+  del orden de compra por tramo; la pizarra con la prioridad 1.º–4.º y la
+  tablatura de tiza (◆ desbloqueo, I–III mejoras, la III en círculo). En
+  Populares la pizarra aclara de qué build sale. De paso: "VN Retail" (la demo
+  del bucket) no trae tildes y en español rompía "Duración" → Barlow Condensed
+  en español.
 
 ## C. Diseño alternativo "mucho más Deadlock"
 - [ ] C1. Tier list de héroes y de objetos en una segunda dirección visual,
