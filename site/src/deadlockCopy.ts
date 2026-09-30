@@ -265,6 +265,7 @@ const EN = {
       topHero: (name: string) => `Why ${name} is S`,
       ranked: "Ranked tier list",
       brawl: "Street Brawl tier list",
+      comebacks: "Lose the lane, lose the game?",
     },
     /** Rankeadas o Street Brawl: la cabecera de la tier list elige el modo. */
     mode: { label: "Game mode", ranked: "Ranked", brawl: "Street Brawl" },
@@ -1577,6 +1578,7 @@ const ES: typeof EN = {
       topHero: (name: string) => `Por qué ${name} es S`,
       ranked: "Tier list de clasificatorias",
       brawl: "Tier list de pelea callejera",
+      comebacks: "¿Perdés la línea, perdés la partida?",
     },
     mode: { label: "Modo de juego", ranked: "Clasificatorias", brawl: "Pelea callejera" },
     brawl: {

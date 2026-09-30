@@ -705,6 +705,14 @@ export default function Deadlock({
                 </RouteLink>
                 <RouteLink
                   className="next-step"
+                  to={{ ...route, view: "deadlock", dlSection: "comebacks", detail: undefined }}
+                  onNavigate={navigate}
+                >
+                  <span className="next-step-label">{copy.deadlock.tabs.comebacks}</span>
+                  <span className="next-step-title">{copy.deadlock.next.comebacks}</span>
+                </RouteLink>
+                <RouteLink
+                  className="next-step"
                   to={{ ...route, view: "deadlock", dlSection: "player", detail: undefined }}
                   onNavigate={navigate}
                 >
