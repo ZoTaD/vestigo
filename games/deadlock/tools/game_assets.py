@@ -62,7 +62,7 @@ def find_local(panorama, rel):
 FORCE = False
 
 
-def save_webp(src, dst, max_w=None, quality=86, crop=None, mask=False):
+def save_webp(src, dst, max_w=None, quality=86, crop=None, mask=False, alpha=None):
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     svg_dst = dst.rsplit(".", 1)[0] + ".svg"
     # Ya exportado y más nuevo que el original: no se repite (WebP método 6 es lento).
@@ -86,6 +86,17 @@ def save_webp(src, dst, max_w=None, quality=86, crop=None, mask=False):
         # blanco con transparencia para que `mask-image` funcione en cualquier
         # navegador (Safari no sabe usar una máscara por luminancia).
         im = Image.merge("RGBA", (*Image.new("RGB", im.size, "white").split(), im.convert("L")))
+    if alpha:
+        # El recorte que el juego aplica con `opacity-mask` (la ficha de objeto de
+        # City Never Sleeps): se hornea en la transparencia, así el sitio no carga
+        # dos imágenes ni depende de `mask-image` para los bordes rasgados.
+        m = Image.open(alpha)
+        # Unas máscaras dibujan la forma en la transparencia (vitalidad,
+        # espíritu) y otras en el brillo (arma): se usa la que tenga variación.
+        a = m.getchannel("A") if "A" in m.getbands() and m.getchannel("A").getextrema() != (255, 255) else m.convert("L")
+        a = a.resize(im.size, Image.LANCZOS)
+        im = im.convert("RGBA")
+        im.putalpha(Image.composite(im.getchannel("A"), Image.new("L", im.size, 0), a))
     if max_w and im.width > max_w:
         im = im.resize((max_w, round(im.height * max_w / im.width)), Image.LANCZOS)
     im.save(dst, "WEBP", quality=quality, method=6)
@@ -147,6 +158,50 @@ STYLE = [
     ("post_game/card_hero_mask_02_png.png", "ui/card-mask-2.webp", None, None, "mask"),
     ("post_game/card_hero_mask_03_png.png", "ui/card-mask-3.webp", None, None, "mask"),
     ("post_game/card_hero_mask_04_png.png", "ui/card-mask-4.webp", None, None, "mask"),
+    # City Never Sleeps (2026-09-29): la ficha de objeto nueva, papel pintado por
+    # familia con el borde rasgado de su `opacity-mask` horneado ("alpha:").
+    ("tooltips/items/tooltip_backer_weapon_psd.png", "ui/cns/tooltip-weapon.webp", 900, None,
+     "alpha:tooltips/items/tooltip_backer_weapon_mask_psd.png"),
+    ("tooltips/items/tooltip_backer_vitality_psd.png", "ui/cns/tooltip-vitality.webp", 900, None,
+     "alpha:tooltips/items/tooltip_backer_vitality_mask_psd.png"),
+    ("tooltips/items/tooltip_backer_spirit_psd.png", "ui/cns/tooltip-spirit.webp", 900, None,
+     "alpha:tooltips/items/tooltip_backer_spirit_mask_psd.png"),
+    ("tooltips/items/tooltip_backer_weapon_corrupted_psd.png", "ui/cns/tooltip-weapon-corrupted.webp", 900, None,
+     "alpha:tooltips/items/tooltip_backer_weapon_mask_psd.png"),
+    # La tienda nueva: grano, trama de puntos, papel de Populares, cartel, cabecera
+    # de las tres columnas, pestañas, sigilos de los filtros y fases.
+    ("textures/filmgrain_psd.png", "ui/cns/filmgrain.webp", 512),
+    ("shop/catalog/filters/filter_backer_dot_pattern_psd.png", "ui/cns/dot-pattern.webp", 804),
+    ("shop/catalog/catalog_shop_popular_bg_psd.png", "ui/cns/shop-popular-bg.webp", 1400),
+    ("shop/catalog/catalog_shop_generic_bg2_psd.png", "ui/cns/shop-bg.webp", 1400),
+    ("shop/catalog/catalog_shop_top_recommendations_header_psd.png", "ui/cns/popular-header.webp", 1825),
+    ("shop/catalog/filters/shop_filtered_tree_header_full_psd.png", "ui/cns/shop-columns-header.webp", 2160),
+    ("shop/catalog/filters/filter_nav_backer_psd.png", "ui/cns/filter-nav.webp", 1431),
+    ("shop/catalog/catalog_shop_tab_shape_psd.png", "ui/cns/tab-shape.webp", None),
+    ("shop/catalog/catalog_shop_tab_edge_overlay_psd.png", "ui/cns/tab-edge.webp", None),
+    ("shop/catalog/catalog_shop_tab_icon_all_psd.png", "ui/cns/tab-all.webp", None),
+    ("shop/catalog/catalog_shop_tab_icon_recommendations_psd.png", "ui/cns/tab-popular.webp", None),
+    ("shop/catalog/catalog_shop_tab_icon_builds_psd.png", "ui/cns/tab-builds.webp", None),
+    ("shop/catalog/catalog_shop_tab_weapon_sm_psd.png", "ui/cns/tab-weapon.webp", None),
+    ("shop/catalog/catalog_shop_tab_spirit_sm_psd.png", "ui/cns/tab-spirit.webp", None),
+    ("shop/catalog/catalog_shop_tab_vitality_sm_psd.png", "ui/cns/tab-vitality.webp", None),
+    ("shop/catalog/filters/sigil_physical_psd.png", "ui/cns/sigil-physical.webp", None),
+    ("shop/catalog/filters/sigil_magic_psd.png", "ui/cns/sigil-spirit.webp", None),
+    ("shop/catalog/filters/sigil_defense_psd.png", "ui/cns/sigil-defense.webp", None),
+    ("shop/catalog/filters/sigil_mobility_psd.png", "ui/cns/sigil-mobility.webp", None),
+    ("shop/catalog/filters/sigil_disruption_psd.png", "ui/cns/sigil-disruption.webp", None),
+    ("shop/catalog/filters/sigil_misc_psd.png", "ui/cns/sigil-misc.webp", None),
+    ("shop/catalog/filters/icon_early_game_png.png", "ui/cns/phase-early.webp", None),
+    ("shop/catalog/filters/icon_mid_game_png.png", "ui/cns/phase-mid.webp", None),
+    ("shop/catalog/filters/icon_late_game_png.png", "ui/cns/phase-late.webp", None),
+    ("shop/catalog/pricetag_tier1_psd.png", "ui/cns/pricetag-1.webp", 300),
+    ("shop/catalog/pricetag_tier2_psd.png", "ui/cns/pricetag-2.webp", 300),
+    ("shop/catalog/pricetag_tier3_psd.png", "ui/cns/pricetag-3.webp", 300),
+    ("shop/catalog/pricetag_tier4_psd.png", "ui/cns/pricetag-4.webp", 300),
+    ("shop/catalog/cards/shopitem_paperwear01_psd.png", "ui/cns/paperwear-1.webp", None),
+    ("shop/catalog/cards/shopitem_paperwear02_psd.png", "ui/cns/paperwear-2.webp", None),
+    ("masks/rough_edge_02_png.png", "ui/cns/rough-edge.webp", 1024, None, "mask"),
+    ("main_menu/hero_release_vote/text_speckle_mask_psd.png", "ui/cns/speckle.webp", 1200, None, "mask"),
 ]
 
 
@@ -200,7 +255,9 @@ def main():
         p = os.path.join(img, src)
         if os.path.exists(p):
             crop = rest[0] if rest else None
-            save_webp(p, os.path.join(OUT, name), w, crop=crop, mask="mask" in rest[1:])
+            flags = rest[1:]
+            alpha = next((os.path.join(img, f[len("alpha:"):]) for f in flags if f.startswith("alpha:")), None)
+            save_webp(p, os.path.join(OUT, name), w, crop=crop, mask="mask" in flags, alpha=alpha)
             extra += 1
         else:
             print("no está en el juego:", src)
