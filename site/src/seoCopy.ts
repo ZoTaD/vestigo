@@ -119,6 +119,12 @@ const EN = {
           "How many players sit at every Deadlock rank, and how the ladder is rebuilding itself " +
           "day by day since the Season 1 reset.",
       },
+      comebacks: {
+        title: () => "Deadlock Comebacks — What a Soul Lead Is Worth | Vestigo",
+        description: () =>
+          "Lose your lane, lose the game? Win rate by soul lead or deficit at every minute of a " +
+          "ranked Deadlock match, by rank.",
+      },
       ladder: {
         title: () => "Deadlock Player Ladder — Best Players by Hero and Rank | Vestigo",
         description: () =>
@@ -292,6 +298,12 @@ const ES: typeof EN = {
         description: () =>
           "Cuánta gente hay en cada rango de Deadlock, y cómo se reconstruye la escalera día a " +
           "día desde el reinicio de la Temporada 1.",
+      },
+      comebacks: {
+        title: () => "Remontadas en Deadlock — cuánto vale una ventaja de almas | Vestigo",
+        description: () =>
+          "Si perdés la línea, ¿perdiste? El porcentaje de victorias según la ventaja o desventaja de " +
+          "almas en cada minuto de una clasificatoria de Deadlock, por rango.",
       },
       ladder: {
         title: () => "Escalera de jugadores de Deadlock — los mejores por héroe | Vestigo",

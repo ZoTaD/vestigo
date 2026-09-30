@@ -30,6 +30,7 @@ export const DEADLOCK_TAB_FILES: Partial<Record<DeadlockSection, string>> = {
   patches: "src/DeadlockNews.tsx",
   ranks: "src/DeadlockRanks.tsx",
   ladder: "src/DeadlockPlayerLadder.tsx",
+  comebacks: "src/DeadlockComebacks.tsx",
   player: "src/DeadlockPlayer.tsx",
   match: "src/DeadlockReport.tsx",
 };

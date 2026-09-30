@@ -663,3 +663,107 @@
 [data-theme="codex"][data-game="deadlock"] .dl-hp-ability .dl-hp-video :is(img, .abi) {
   filter: brightness(0) invert(0.95);
 }
+
+/* ---------- Remontadas (DeadlockComebacks) ----------
+   Tres titulares como recortes de diario y la grilla minuto × ventaja en una
+   hoja, con cada casilla teñida de rojo tinta (se pierde) a verde (se gana). */
+[data-theme="codex"][data-game="deadlock"] .dl-cb-heads {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.2rem;
+  margin: 0 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-heads li {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.2rem 1.1rem;
+  background:
+    url(/deadlock/game/ui/cns/speckle.webp) center / 520px,
+    linear-gradient(170deg, #f1e4cc, #e5d4b6);
+  background-blend-mode: multiply, normal;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.55);
+  transform: rotate(-0.6deg);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-heads li:nth-child(2) { transform: rotate(0.5deg); }
+[data-theme="codex"][data-game="deadlock"] .dl-cb-heads li:nth-child(3) { transform: rotate(-0.3deg); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-heads strong {
+  font: 700 clamp(2.2rem, 4.5vw, 3.2rem)/0.95 "VN Reaver", var(--font-display);
+  color: #b2261c;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-heads li[data-tone="hope"] strong {
+  color: #2f7a1f;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-heads span {
+  font: 700 1rem/1.25 var(--font-display);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #1e1a14;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-scroll {
+  overflow-x: auto;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: separate;
+  border-spacing: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid th {
+  padding: 0.3rem 0.2rem;
+  font: 700 0.75rem/1.1 var(--font-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+  white-space: nowrap;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-sides th {
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid tbody th {
+  font: 700 1.1rem/1 "VN Reaver", var(--font-display);
+  color: var(--text);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid td {
+  height: 2.6rem;
+  text-align: center;
+  font: 800 1.05rem/1 var(--font-display);
+  color: var(--ink, #1e1a14);
+  background: var(--heat, rgba(30, 26, 20, 0.06));
+  cursor: default;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid td[data-thin] {
+  color: var(--text-faint);
+  font-weight: 600;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-cb-read {
+  margin: 0.9rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* En el teléfono la grilla se desliza; la columna de minutos queda fija. */
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid tbody th,
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid thead tr:last-child th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: #ecdfc4;
+}

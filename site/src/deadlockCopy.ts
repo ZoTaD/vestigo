@@ -304,6 +304,7 @@ const EN = {
       builder: "Build maker",
       ranks: "Ranks",
       ladder: "Ladder",
+      comebacks: "Comebacks",
       patches: "Patches",
       player: "Player",
       /** No se dibuja como pestaña: existe para titular `/deadlock/match/<id>`. */
@@ -696,6 +697,38 @@ const EN = {
         "learning the hero from being a better player to begin with.",
     },
 
+    /**
+     * Remontadas (2026-09-30): cuánto vale ir adelante o atrás en almas en cada
+     * minuto. La pregunta más repetida de los foros después del parche del 16/9.
+     */
+    comebacks: {
+      title: "What a lead",
+      titleBreak: " is worth",
+      lead:
+        "Lose your lane, lose the game? How often a team wins by how many souls ahead or behind " +
+        "it was at each minute of a ranked match.",
+      headline: (minute: number, from: string, to: string, pct: string) =>
+        `At minute ${minute}, ${from}–${to} behind: you win ${pct}`,
+      headlineDeep: (minute: number, over: string) => `of teams over ${over} behind at minute ${minute} win`,
+      headlineEarly: (minute: number, from: string, to: string) =>
+        `still win at minute ${minute} from ${from}–${to} behind: the early game forgives`,
+      oneIn: (n: number) => `1 in ${n}`,
+      boardTitle: "Win rate by soul lead",
+      boardLead:
+        "Each cell: how often the team with that soul lead (or deficit) at that minute went on to win. " +
+        "The lead is relative: souls ahead over the average of both teams.",
+      minute: "Minute",
+      behind: "Behind",
+      ahead: "Ahead",
+      even: "Even",
+      thin: "Too few games",
+      cell: (minute: number, range: string, pct: string, n: string) =>
+        `Minute ${minute}, ${range}: ${pct} won (${n} games)`,
+      sample: (n: string, from: string, to: string) => `${n} ranked games · ${from} to ${to}`,
+      read:
+        "How to read it: find the minute on the left and how far ahead or behind your team was; " +
+        "the number is how often teams in that spot won.",
+    },
     /**
      * **Se llama `ladder` y no `ranks` porque `deadlock.ranks` ya existe**: es el
      * rótulo del filtro por rango de la tier list. La primera versión de esta
@@ -1553,6 +1586,7 @@ const ES: typeof EN = {
       builder: "Armador",
       ranks: "Rangos",
       ladder: "Escalera",
+      comebacks: "Remontadas",
       patches: "Parches",
       player: "Jugador",
       match: "Partida",
@@ -1810,6 +1844,38 @@ const ES: typeof EN = {
         "No separa aprender al héroe de ser mejor jugador desde antes.",
     },
 
+    /**
+     * Remontadas (2026-09-30): cuánto vale ir adelante o atrás en almas en cada
+     * minuto. La pregunta más repetida de los foros después del parche del 16/9.
+     */
+    comebacks: {
+      title: "Cuánto vale",
+      titleBreak: " ir adelante",
+      lead:
+        "Si perdés la línea, ¿perdiste? Cuántas veces gana un equipo según cuántas almas de ventaja " +
+        "o de desventaja llevaba en cada minuto de una clasificatoria.",
+      headline: (minute: number, from: string, to: string, pct: string) =>
+        `Al minuto ${minute}, de ${from} a ${to} abajo: ganás ${pct}`,
+      headlineDeep: (minute: number, over: string) => `gana el que va más de ${over} abajo al minuto ${minute}`,
+      headlineEarly: (minute: number, from: string, to: string) =>
+        `todavía gana al minuto ${minute} yendo de ${from} a ${to} abajo: el principio perdona`,
+      oneIn: (n: number) => `1 de cada ${n}`,
+      boardTitle: "Victorias según la ventaja de almas",
+      boardLead:
+        "Cada casilla: cuántas veces ganó el equipo que en ese minuto iba con esa ventaja (o desventaja) " +
+        "de almas. La ventaja es relativa: las almas de más sobre el promedio de los dos equipos.",
+      minute: "Minuto",
+      behind: "Abajo",
+      ahead: "Arriba",
+      even: "Parejo",
+      thin: "Pocas partidas",
+      cell: (minute: number, range: string, pct: string, n: string) =>
+        `Minuto ${minute}, ${range}: ganó el ${pct} (${n} partidas)`,
+      sample: (n: string, from: string, to: string) => `${n} partidas clasificatorias · del ${from} al ${to}`,
+      read:
+        "Cómo se lee: buscá el minuto a la izquierda y cuánto iba arriba o abajo tu equipo; el número " +
+        "es cuántas veces ganaron los equipos que estaban así.",
+    },
     ladder: {
       title: "La",
       titleBreak: " escalera",

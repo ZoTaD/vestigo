@@ -27,6 +27,7 @@ export type DeadlockSection =
   | "builder"
   | "ranks"
   | "ladder"
+  | "comebacks"
   | "patches"
   | "player"
   | "match";
@@ -61,7 +62,17 @@ export const LANGS: Lang[] = ["en", "es"];
  * partida); la de Héroes es el héroe entero — kit, números, enfrentamientos,
  * historia. Pedido de ZoTaD: desde la tier list "yo quiero la build nada más".
  */
-export const DEADLOCK_SECTIONS: DeadlockSection[] = ["meta", "heroes", "items", "builder", "ranks", "ladder", "patches", "player"];
+export const DEADLOCK_SECTIONS: DeadlockSection[] = [
+  "meta",
+  "heroes",
+  "items",
+  "builder",
+  "ranks",
+  "ladder",
+  "comebacks",
+  "patches",
+  "player",
+];
 /**
  * Las direcciones válidas, que son **más que las pestañas**.
  *

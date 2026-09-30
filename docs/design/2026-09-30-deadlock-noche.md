@@ -39,15 +39,28 @@ publica en `main` ni se tocan workflows. Cada tarea: probar en el navegador
 - [ ] C2. Propuestas para otras pestañas con mejores visuales.
 
 ## D. Jugador
-- [ ] D1. Redistribuir la pestaña Jugador (hoy desperdicia espacio).
+- [x] D1. Redistribuir la pestaña Jugador (hoy desperdicia espacio).
+      Hecho: tres pisos (ficha a lo ancho; partidas + contra tu banda, forma y
+      actividad; héroes y gente en columnas de diario).
 
 ## E. Revisión de método
-- [ ] E1. Revisar cómo se toman y cruzan los objetos en las tier lists y las
+- [x] E1. Revisar cómo se toman y cruzan los objetos en las tier lists y las
       builds; anotar problemas y arreglar lo seguro.
+      Hecho (9f2b357): corruptas enteras fuera, anchorPatch (hotfix a < 4 días
+      no reinicia la ventana), enfrentamientos de partida entera, counters 7.º+,
+      BADGE > 0, coeficiente de almas, y la tier list de objetos contra el
+      winrate del héroe. Quedan para decidir: la §1b (la build pierde el objeto
+      corrompido) y el §5 completo (coeficientes estandarizados en el informe).
 
 ## F. Pestaña nueva para la comunidad
 - [ ] F1. Investigar foros (preguntas sin respuesta, cosas que ninguna página
       hace) y proponer/prototipar una pestaña.
+
+## G. Estilo Cartel en todo Deadlock (pedido de ZoTaD a la 1 h)
+- [x] G1. B fijo, sin botón (d5b65ef).
+- [x] G2. Toda caja en papel crema con tokens de tinta; pizarra de rangos
+      sigue pizarra; Héroes lado a lado, ficha de héroe, build, armador,
+      jugador (27a1380, a63a99b, dc07a22).
 
 ## Informe de la mañana
 - [ ] Resumen con capturas para ZoTaD.
