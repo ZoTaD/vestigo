@@ -83,11 +83,20 @@ se compra cada objeto en la fase elegida. Datos: `npm run build:popular` →
   reversos `shop/card_*`), siempre seguido de `bucket_assets.py`.
 - De la página oficial: `games/deadlock/tools/cns_web_assets.py`.
 
+## Después (noche del 29 al 30/9)
+
+- Estilo **Cartel** en todo Deadlock (`deadlock-cartel.css`, ver
+  `docs/design/2026-09-30-deadlock-diseno-b.md`).
+- Página de build rehecha como la tienda (`DeadlockBuildShop.tsx`).
+- Pestaña **Remontadas** (`DeadlockComebacks.tsx`, `build:comebacks`).
+- Jugador en tres pisos; arreglos de método (ver la lista de la noche).
+
 ## Pendiente para publicar
 
 1. OK de ZoTaD sobre lo visual (se revisa en `localhost:5177`).
-2. `publish-deadlock.yml`: sumar los pasos `build:popular` y
-   `build:shop-filters` después de `catalog` (no se pudo editar el workflow
-   desde la sesión).
+2. `publish-deadlock.yml`: sumar los pasos `build:popular`,
+   `build:shop-filters` y `build:comebacks` después de `catalog` (no se pudo
+   editar el workflow desde la sesión). `build:comebacks` lee 15 días del lake
+   (~3 min) y escribe `data/comebacks.json` para la pestaña Remontadas.
 3. Push a `main` (la pieza 1 ya está verificada en la misma rama) y una corrida
    del workflow.
