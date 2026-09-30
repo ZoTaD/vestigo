@@ -167,6 +167,12 @@ const DL_WITH_DETAIL: DeadlockSection[] = [...DL_DETAIL_SECTIONS, "patches", "pl
 
 export const DEFAULT_LANG: Lang = "en";
 const DEFAULT_DL_SECTION: DeadlockSection = "meta";
+/**
+ * La tier list de Deadlock vive en `/deadlock/tier-list` desde el 2026-09-30 (antes, `/deadlock` a secas). Pedido de
+ * ZoTaD: quien busca "deadlock tier list" no veía esas palabras en el enlace. En los dos idiomas igual: en español
+ * también se busca "tier list". La dirección vieja manda con 301 (`_redirects`) y la app la sigue entendiendo.
+ */
+export const DL_TIER_LIST = "tier-list";
 const DEFAULT_P2_SECTION: Poe2Section = "economy";
 
 export interface Route {
@@ -248,6 +254,7 @@ export function parseRoute(pathname: string): Route {
   // meta en vez de dar una página en blanco.
   if (head === "deadlock") {
     const maybeSection = rest[1];
+    if (maybeSection === DL_TIER_LIST) return { ...base, view: "deadlock", dlSection: DEFAULT_DL_SECTION, detail: rest[2] || undefined };
     // "meta" (héroes) es la sección por defecto y no lleva su nombre en la
     // URL, así que el segmento después de "deadlock" puede ser el nombre de
     // otra pestaña (items/ranks/patches) O el slug de un héroe. Si no es una
@@ -260,8 +267,7 @@ export function parseRoute(pathname: string): Route {
     return { ...base, view: "deadlock", dlSection: DEFAULT_DL_SECTION, detail: maybeSection || undefined };
   }
 
-  // Economía es la de por defecto y se queda con `/poe2` a secas, como el meta
-  // de Deadlock con `/deadlock`.
+  // Economía es la de por defecto y se queda con `/poe2` a secas.
   if (head === "poe2") {
     const p2Section = rest[1] && isP2Section(rest[1]) ? rest[1] : DEFAULT_P2_SECTION;
     // El detalle depende de la pestaña: en Economía es la liga
@@ -298,12 +304,11 @@ export function parseRoute(pathname: string): Route {
 export function routePath(route: Route): string {
   const { lang, view, dlSection, detail } = route;
   if (view === "home") return `/${lang}`;
-  // El meta de Deadlock se queda con `/deadlock` a secas: es la pestaña por
-  // defecto y la URL que ya está indexada, así que agregarle `/meta` partiría
-  // el posicionamiento entre dos direcciones de la misma página.
+  // La tier list es `/deadlock/tier-list` (ver `DL_TIER_LIST`). La build de cada
+  // héroe se queda en `/deadlock/<héroe>`, que es la dirección ya indexada.
   if (view === "deadlock") {
     if (dlSection === DEFAULT_DL_SECTION) {
-      return detail ? `/${lang}/deadlock/${detail}` : `/${lang}/deadlock`;
+      return detail ? `/${lang}/deadlock/${detail}` : `/${lang}/deadlock/${DL_TIER_LIST}`;
     }
     const dlPath = `/${lang}/deadlock/${dlSection}`;
     return DL_WITH_DETAIL.includes(dlSection) && detail ? `${dlPath}/${detail}` : dlPath;

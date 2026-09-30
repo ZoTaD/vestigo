@@ -121,8 +121,11 @@ describe("el sitemap, el <head> y las redirecciones", () => {
     expect(en.alternates).toContainEqual({ hreflang: "es", href: "https://vestigo.gg/es/d2r/unicos/la-rechinante" });
   });
 
-  it("cada dirección vieja en español manda con 301 a la nueva, y sólo esas", () => {
+  it("cada dirección vieja manda con 301 a la nueva, y sólo esas", () => {
     const lines = redirectsFile(data).trim().split("\n");
+    // La tier list de Deadlock, que hasta el 30/9 era /deadlock a secas.
+    expect(lines).toContain("/en/deadlock  /en/deadlock/tier-list  301");
+    expect(lines).toContain("/es/deadlock  /es/deadlock/tier-list  301");
     expect(lines).toContain("/es/d2r/runewords  /es/d2r/palabras-runicas  301");
     expect(lines).toContain("/es/d2r/runewords/enigma  /es/d2r/palabras-runicas/enigma  301");
     expect(lines).toContain("/es/d2r/uniques/the-gnasher  /es/d2r/unicos/la-rechinante  301");
@@ -131,7 +134,7 @@ describe("el sitemap, el <head> y las redirecciones", () => {
     // Lo que no cambió no redirige (redirigir a sí misma sería un bucle).
     expect(lines.some((l) => l.startsWith("/es/d2r/bases "))).toBe(false);
     expect(lines.some((l) => l.startsWith("/es/d2r/drops "))).toBe(false);
-    expect(lines.some((l) => l.startsWith("/en/"))).toBe(false);
+    expect(lines.filter((l) => l.startsWith("/en/"))).toEqual(["/en/deadlock  /en/deadlock/tier-list  301"]);
     for (const l of lines) {
       const [from, to, code] = l.split(/\s+/);
       expect(code).toBe("301");

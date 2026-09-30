@@ -77,7 +77,8 @@ describe("sitemapPaths", () => {
    */
   it("lista las pestañas de Deadlock en los dos idiomas", () => {
     for (const lang of ["en", "es"]) {
-      expect(paths).toContain(`/${lang}/deadlock`);
+      expect(paths).toContain(`/${lang}/deadlock/tier-list`);
+      expect(paths).not.toContain(`/${lang}/deadlock`);
       expect(paths).toContain(`/${lang}/deadlock/items`);
       expect(paths).toContain(`/${lang}/deadlock/patches`);
       expect(paths).not.toContain(`/${lang}/deadlock/meta`);
@@ -113,7 +114,7 @@ describe("sitemapXml", () => {
   });
 
   it("uses absolute URLs, which sitemaps require", () => {
-    expect(xml).toContain("<loc>https://vestigo.gg/en/deadlock</loc>");
+    expect(xml).toContain("<loc>https://vestigo.gg/en/deadlock/tier-list</loc>");
     expect(xml).not.toMatch(/<loc>\/[^<]/);
   });
 

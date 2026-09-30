@@ -271,14 +271,16 @@ export function sitemapPaths(data: SitemapData): string[] {
 }
 
 /**
- * El `_redirects` de Netlify (2026-09-30): cada página de Diablo II en español con su dirección vieja, la de las
- * palabras en inglés (`/es/d2r/runewords/enigma`, publicada el 29/9), manda con 301 a la de ahora
- * (`/es/d2r/palabras-runicas/enigma`). Sin esto la vieja caía en la regla del final de `netlify.toml`, que sirve la
- * portada con 200: una página duplicada para Google y un enlace compartido que abría otra cosa. Netlify lee este
- * archivo antes que las reglas de `netlify.toml`.
+ * El `_redirects` de Netlify (2026-09-30): las páginas que se mudaron mandan con 301 a su dirección nueva. Sin esto la
+ * vieja caía en la regla del final de `netlify.toml`, que sirve la portada con 200: una página duplicada para Google y
+ * un enlace compartido que abría otra cosa. Netlify lee este archivo antes que las reglas de `netlify.toml`.
+ *
+ * - La tier list de Deadlock: `/deadlock` → `/deadlock/tier-list` (ver `DL_TIER_LIST`).
+ * - Cada página de Diablo II en español con la dirección de las palabras en inglés (`/es/d2r/runewords/enigma`,
+ *   publicada el 29/9) → la de ahora (`/es/d2r/palabras-runicas/enigma`).
  */
 export function redirectsFile(data: SitemapData): string {
-  const lines: string[] = [];
+  const lines = LANGS.map((lang) => `/${lang}/deadlock  ${routePath({ lang, view: "deadlock", dlSection: "meta" })}  301`);
   for (const path of sitemapPaths(data)) {
     if (!path.startsWith("/es/d2r/")) continue;
     const old = "/es" + routePath({ ...parseRoute(path), lang: "en" }).slice("/en".length);

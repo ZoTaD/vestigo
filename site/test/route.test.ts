@@ -102,7 +102,7 @@ describe("routePath", () => {
   const cases: [Route, string][] = [
     [{ lang: "en", view: "home", dlSection: "meta" }, "/en"],
     [{ lang: "es", view: "home", dlSection: "meta" }, "/es"],
-    [{ lang: "en", view: "deadlock", dlSection: "meta" }, "/en/deadlock"],
+    [{ lang: "en", view: "deadlock", dlSection: "meta" }, "/en/deadlock/tier-list"],
     [
       { lang: "en", view: "deadlock", dlSection: "items" },
       "/en/deadlock/items",
@@ -148,11 +148,16 @@ describe("las páginas de héroe e ítem de Deadlock", () => {
     expect(routePath(r)).toBe("/en/deadlock/infernus");
   });
 
-  it("sin héroe, la URL de meta sigue siendo la pestaña sola", () => {
-    const r = parseRoute("/en/deadlock");
-    expect(r).toMatchObject({ view: "deadlock", dlSection: "meta" });
-    expect(r.detail).toBeUndefined();
-    expect(routePath(r)).toBe("/en/deadlock");
+  it("sin héroe, la tier list es /deadlock/tier-list (y /deadlock a secas, la de antes del 30/9, sigue abriéndola)", () => {
+    for (const path of ["/en/deadlock/tier-list", "/en/deadlock"]) {
+      const r = parseRoute(path);
+      expect(r, path).toMatchObject({ view: "deadlock", dlSection: "meta" });
+      expect(r.detail).toBeUndefined();
+      expect(routePath(r)).toBe("/en/deadlock/tier-list");
+    }
+    expect(routePath(parseRoute("/es/deadlock"))).toBe("/es/deadlock/tier-list");
+    // La build de un héroe no se muda: sigue en /deadlock/<héroe>.
+    expect(routePath(parseRoute("/en/deadlock/tier-list/infernus"))).toBe("/en/deadlock/infernus");
   });
 
   it("un ítem va bajo /deadlock/items/<slug>", () => {
@@ -262,7 +267,7 @@ describe("navigationPath: la dirección al navegar", () => {
     expect(navigationPath(from, parseRoute("/en/d2r/planner"), at)).toBe("/en/d2r/planner");
     expect(navigationPath(from, parseRoute("/es/d2r/drops/mephisto"), at)).toBe("/es/d2r/drops/mephisto");
     expect(navigationPath(parseRoute("/es/d2r/drops/mephisto"), parseRoute("/es/d2r/drops/diablo"), at)).toBe("/es/d2r/drops/diablo");
-    expect(navigationPath(from, parseRoute("/es/deadlock"), at)).toBe("/es/deadlock");
+    expect(navigationPath(from, parseRoute("/es/deadlock"), at)).toBe("/es/deadlock/tier-list");
   });
 
   it("quedarse en el mismo idioma no es un cambio de idioma: no arrastra nada", () => {
