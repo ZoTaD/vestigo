@@ -308,9 +308,19 @@ jobs:
       # corridas de TFT moría así). Acá reusa el guardián, el commit y el
       # reintento de push que ya están abajo.
       #
-      # El cron dispara a las :30 de cada hora par, así que este `if` lo deja en
-      # una sola: 06:30 UTC. `workflow_dispatch` lo corre siempre, para poder
-      # probarlo a mano sin esperar al día siguiente.
+      # **La puerta es la edad del archivo y media jornada, no la hora exacta.**
+      # Hasta el 2026-10-01 preguntaba si `date -u +%H` daba "06" (la maestría,
+      # las remontadas y los puntos) o "18" (el informe). Pero la hora se mira
+      # cuando el paso arranca, ~45 minutos después de que arrancó la corrida, y
+      # GitHub encima atrasa el arranque: la de las 06:30 llegaba a las 07:08 y
+      # la de las 18:30 arrancaba a las 22:30. El informe quedó clavado en el
+      # 2026-09-28 y las remontadas y los puntos no corrieron solos ni una vez.
+      #
+      # Ahora: corre si el archivo tiene 20 horas o más y la hora UTC cae en su
+      # media jornada —maestría, remontadas y puntos de 00 a 11; el informe de
+      # 12 a 23—, así los dos pasos de ~5,5 minutos siguen sin encimarse. Si
+      # ninguna corrida cayó en su mitad, a las 40 horas corre igual.
+      # `workflow_dispatch` lo corre siempre, para poder probarlo a mano.
       # La referencia del informe de partida: qué compraron los que ganaron en
       # cada situación. **Una vez por día**, por lo mismo que la maestría.
       #
@@ -329,32 +339,59 @@ jobs:
       # acercarse al timeout sin necesidad.
       - name: build report
         run: |
-          if [ "$(date -u +%H)" = "18" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/report.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          hora=$(date -u +%H)
+          if { [ "$edad_h" -ge 20 ] && [ "$hora" -ge 12 ]; } || [ "$edad_h" -ge 40 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "la referencia del informe tiene ${edad_h}h; se regenera"
             npm run build:report --prefix games/deadlock/pipeline
           else
-            echo "la referencia del informe corre una vez por día (18:30 UTC); esta corrida la saltea"
+            echo "la referencia del informe tiene ${edad_h}h (son las ${hora} UTC); esta corrida la saltea"
           fi
 
       - name: build mastery
         run: |
-          if [ "$(date -u +%H)" = "06" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/mastery.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          hora=$(date -u +%H)
+          if { [ "$edad_h" -ge 20 ] && [ "$hora" -lt 12 ]; } || [ "$edad_h" -ge 40 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "la maestría tiene ${edad_h}h; se regenera"
             npm run build:mastery --prefix games/deadlock/pipeline
           else
-            echo "la maestría corre una vez por día (06:30 UTC); esta corrida la saltea"
+            echo "la maestría tiene ${edad_h}h (son las ${hora} UTC); esta corrida la saltea"
           fi
 
       # Remontadas y cuántos puntos da cada partida (2026-09-30), del lake. Una
-      # vez por día como la maestría: Remontadas lee ~26 días (~5 min) y los
+      # vez por día y con la misma puerta que la maestría: Remontadas lee ~26 días (~5 min) y los
       # puntos una semana (~1,5 min), y los dos cambian con los parches, no con
       # las horas. **Perdonan fallar**: queda lo commiteado.
       - name: build comebacks and rank points
         continue-on-error: true
         run: |
-          if [ "$(date -u +%H)" = "06" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/comebacks.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          hora=$(date -u +%H)
+          if { [ "$edad_h" -ge 20 ] && [ "$hora" -lt 12 ]; } || [ "$edad_h" -ge 40 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "las remontadas tienen ${edad_h}h; se regeneran con los puntos"
             npm run build:comebacks --prefix games/deadlock/pipeline
             npm run build:rank-points --prefix games/deadlock/pipeline
           else
-            echo "remontadas y puntos corren una vez por día (06:30 UTC); esta corrida los saltea"
+            echo "las remontadas tienen ${edad_h}h (son las ${hora} UTC); esta corrida las saltea con los puntos"
           fi
 
       - name: guard
