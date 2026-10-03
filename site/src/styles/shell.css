@@ -582,6 +582,17 @@
   color: var(--text-faint);
 }
 
+/* Los créditos enlazan a la fuente (Zomboid a The Indie Stone): sin esto el link salía en el azul del navegador sobre
+   el fondo oscuro. Genérico, para que sirva a cualquier juego que enlace su crédito. */
+.foot-sources a {
+  color: var(--accent-lit);
+  text-underline-offset: 0.2em;
+}
+
+.foot-sources a:hover {
+  color: var(--accent);
+}
+
 /* Aviso de cookies ----------------------------------------------------------- */
 
 /**

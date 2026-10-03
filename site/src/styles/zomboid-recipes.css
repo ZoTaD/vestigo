@@ -1,0 +1,65 @@
+/*
+ * Project Zomboid, la pestaña Recetas (2026-09-30). Las hojas, las filas de la lista, los chips, los renglones de
+ * números y los enlaces son los de Objetos (zomboid-items.css, clases `.pzi-*`): es la misma libreta. Acá va sólo lo
+ * propio de una receta: las líneas de ingredientes con su cantidad, las opciones de "cualquiera de:", el líquido de un
+ * recipiente, el resultado según el ingrediente y las formas de aprenderla.
+ *
+ * Reglas de la casa: sin bordes ni barras de color (las filas alternan con tinte), nada que parta una palabra y nada
+ * más ancho que la hoja en el celular.
+ */
+
+/* ---------- Ingredientes, herramientas y resultado ---------- */
+
+.pzr-lines { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.pzr-what { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 36px; }
+/* La cantidad, como en la libreta: la cifra en la letra de los títulos. Un ancho mínimo alinea los nombres de abajo. */
+.pzr-n { flex: none; min-width: 2.4em; font: 700 18px / 1 "Old Standard TT", serif; white-space: nowrap; }
+.pzr-item { display: inline-flex; align-items: center; gap: 8px; min-width: 0; color: var(--pz-ink); font-weight: 600; line-height: 1.3; text-underline-offset: 2px; }
+.pzr-item:hover { color: var(--pz-pencil); }
+.pzr-item:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+.pzr-anyof, .pzr-any { font: 700 21px / 1 "Caveat", cursive; color: var(--pz-pencil); }
+.pzr-entity { font-weight: 700; line-height: 1.3; }
+
+/* "Cualquiera de:": las opciones debajo, corridas a la altura del nombre. Una opción que pide otra cantidad la lleva
+   adelante, igual que la línea. */
+.pzi-links.pzr-opts { padding-left: calc(2.4em + 10px); }
+.pzr-opts li { column-gap: 8px; }
+.pzr-opts .pzr-n { min-width: 0; font-size: 16px; }
+.pzr .pzi-more { padding-left: calc(2.4em + 10px); }
+
+/* Lo que va adentro de un recipiente, y "se construye en el lugar": notas a lápiz debajo de la línea. */
+.pzr .pzr-fluid { margin: 0; padding-left: calc(2.4em + 10px); font: 700 20px / 26px "Caveat", cursive; color: var(--pz-pencil); }
+.pzr .pzr-nothing { margin: 0; }
+
+/* Según el ingrediente: una fila por resultado, alternadas con tinte, lo que entra → lo que sale. Lo que entra son
+   alternativas ("A o B"): cada uno da el resultado por su cuenta. */
+.pzr-choices { display: grid; margin: 4px 0 0; padding: 0; list-style: none; }
+.pzr-choices li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 40px; padding: 4px 8px; }
+.pzr-choices li:nth-child(odd) { background: var(--pzi-tint); }
+.pzr-from { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; }
+.pzr-fromitem { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.pzr-comma { margin-left: -6px; color: var(--pz-dim); }
+/* El "o" entre alternativas, a lápiz como el "cualquiera de:", pegado al objeto que sigue. */
+.pzr-or { flex: none; font: 700 23px / 1 "Caveat", cursive; color: var(--pz-pencil); }
+/* La flecha y su resultado, una sola pieza: si la fila no entra, baja entera y la flecha no queda sola en un renglón. */
+.pzr-gives { display: inline-flex; flex-wrap: nowrap; align-items: center; gap: 10px; min-width: 0; }
+.pzr-arrow { flex: none; font: 700 24px / 1 "Caveat", cursive; color: var(--pz-pencil); }
+.pzr-to { display: inline-flex; min-width: 0; }
+
+/* ---------- Requisitos ---------- */
+
+.pzr .pzi-lines dd { overflow-wrap: normal; }
+.pzr-none { font: 600 15px "Noto Sans", sans-serif; color: var(--pz-dim); }
+
+/* ---------- Cómo se aprende ---------- */
+
+.pzr .pzr-learnany { margin: 0 0 6px; font-size: 21px; }
+.pzr-ways { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pzr .pzr-how { margin: 0; font-weight: 700; line-height: 28px; }
+.pzr .pzr-known { margin: 0; font: 700 24px / 28px "Caveat", cursive; color: var(--pz-pencil); }
+
+@media (max-width: 860px) {
+  /* En el celular la sangría de las opciones se achica: la hoja es angosta y los nombres largos (una revista) bajan de
+     renglón en vez de salirse. */
+  .pzi-links.pzr-opts, .pzr .pzi-more, .pzr .pzr-fluid { padding-left: 14px; }
+}

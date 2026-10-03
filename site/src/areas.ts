@@ -26,6 +26,8 @@ export const Poe2Area = lazyWithPreload(() => import("./Poe2Area"));
 export const ValheimArea = lazyWithPreload(() => import("./Valheim"));
 const loadD2r = () => import("./D2r");
 export const D2rArea = lazyWithPreload(loadD2r);
+const loadZomboid = () => import("./Zomboid");
+export const ZomboidArea = lazyWithPreload(loadZomboid);
 export const PrivacyPage = lazyWithPreload(() => import("./Privacy"));
 export const TermsPage = lazyWithPreload(() => import("./Terms"));
 
@@ -42,6 +44,7 @@ const BY_VIEW: Partial<Record<View, { preload: () => Promise<void> }>> = {
   poe2: Poe2Area,
   valheim: ValheimArea,
   d2r: D2rArea,
+  zomboid: ZomboidArea,
   privacy: PrivacyPage,
   terms: TermsPage,
 };
@@ -51,12 +54,19 @@ export const preloadView = (view: View): Promise<void> =>
   (BY_VIEW[view]?.preload() ?? Promise.resolve()).catch(() => undefined);
 
 /**
- * Lo mismo para una ruta entera: la vista y, en Deadlock, además el chunk de su
- * pestaña (ver `preloadTab` en `DeadlockArea.tsx`). Es lo que esperan el primer
- * render y el prerender, y lo que precarga un enlace al pasar el mouse.
+ * Lo mismo para una ruta entera: la vista y, en Deadlock, Diablo II y Project
+ * Zomboid, además el chunk de su pestaña (ver `preloadTab` en cada área). Es lo
+ * que esperan el primer render y el prerender, y lo que precarga un enlace al
+ * pasar el mouse.
+ *
+ * En Zomboid es además lo que traduce la dirección: cada pestaña trae y anota
+ * los slugs en español de lo que enlaza, y la pestaña se reconoce por su nombre,
+ * que es fijo; así, cuando `App` lee la dirección, `/es/…/objetos/palanca` ya
+ * es la palanca.
  */
 export const preloadRoute = async (route: Route): Promise<void> => {
   await preloadView(route.view);
   if (route.view === "deadlock") await loadDeadlock().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "d2r") await loadD2r().then((m) => m.preloadTab(route)).catch(() => undefined);
+  if (route.view === "zomboid") await loadZomboid().then((m) => m.preloadTab(route)).catch(() => undefined);
 };

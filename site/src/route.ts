@@ -31,7 +31,7 @@ export type DeadlockSection =
   | "patches"
   | "player"
   | "match";
-export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "privacy" | "terms";
+export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -91,8 +91,36 @@ export const D2R_SECTION_ES: Record<D2rTab, string> = {
 };
 const D2R_SECTION_BY_ES = new Map(Object.entries(D2R_SECTION_ES).map(([tab, es]) => [es, tab as D2rTab]));
 
-/** Los slugs en español de las fichas de Diablo II, por pestaña: id → slug y slug → id. */
-const d2rSlugsEs: Partial<Record<D2rTab, { toEs: Map<string, string>; toId: Map<string, string> }>> = {};
+/**
+ * Los slugs en español de las fichas de un juego, por pestaña: id → slug y slug → id. Sólo guarda los que cambian;
+ * una ficha que no aparece se llama igual en los dos idiomas. Lo usan Diablo II y Project Zomboid.
+ */
+class LocalSlugs<T extends string> {
+  private byTab: Partial<Record<T, { toEs: Map<string, string>; toId: Map<string, string> }>> = {};
+  /**
+   * Suma a lo que ya había, no lo pisa (2026-09-30): una pestaña puede anotar sólo los pocos slugs de otra que enlaza
+   * (Moodles, los 30 objetos de sus consejos) sin borrar el mapa entero que anotó antes la pestaña Objetos. Todos
+   * salen de la misma cuenta del build, así que un id nunca llega con dos slugs distintos.
+   */
+  register(slugs: Partial<Record<T, Record<string, string>>>): void {
+    for (const [tab, map] of Object.entries(slugs) as [T, Record<string, string>][]) {
+      const known = (this.byTab[tab] ??= { toEs: new Map(), toId: new Map() });
+      for (const [id, es] of Object.entries(map)) {
+        known.toEs.set(id, es);
+        known.toId.set(es, id);
+      }
+    }
+  }
+  toEs(tab: T, id: string): string {
+    return this.byTab[tab]?.toEs.get(id) ?? id;
+  }
+  toId(tab: T, slug: string): string {
+    return this.byTab[tab]?.toId.get(slug) ?? slug;
+  }
+}
+
+/** Los slugs en español de las fichas de Diablo II. */
+const d2rSlugsEs = new LocalSlugs<D2rTab>();
 
 /**
  * Anota los slugs en español de las fichas (`{ uniques: { "the-gnasher": "la-rechinante" } }`). Sólo las que cambian:
@@ -100,10 +128,75 @@ const d2rSlugsEs: Partial<Record<D2rTab, { toEs: Map<string, string>; toId: Map<
  * antes de armar el sitemap; hasta entonces las fichas van con el slug inglés, que también se entiende.
  */
 export function registerD2rSlugs(slugs: Partial<Record<D2rTab, Record<string, string>>>): void {
-  for (const [tab, map] of Object.entries(slugs) as [D2rTab, Record<string, string>][]) {
-    const pairs = Object.entries(map);
-    d2rSlugsEs[tab] = { toEs: new Map(pairs), toId: new Map(pairs.map(([id, es]) => [es, id])) };
-  }
+  d2rSlugsEs.register(slugs);
+}
+
+/**
+ * Project Zomboid (2026-09-30). Diseño: docs/design/2026-09-30-zomboid.md. La dirección lleva el nombre completo
+ * (`/project-zomboid`), que es como se busca el juego. `/zomboid` a secas ya no es una página (manda con 301 a la de
+ * verdad, ver `netlify.toml`): la carpeta `/zomboid/...` es de assets y no puede ser también una dirección.
+ * Como Diablo II, en español las pestañas y las fichas van en español.
+ */
+export type PzTab = "map" | "items" | "recipes" | "crafting" | "traits" | "professions" | "planner" | "skills" | "moodles" | "server" | "patches";
+export type PzSection = "home" | PzTab;
+export const PZ_SEGMENT = "project-zomboid";
+export const PZ_SECTIONS: PzTab[] = ["map", "items", "recipes", "crafting", "traits", "professions", "planner", "skills", "moodles", "server", "patches"];
+/** Las pestañas con una ficha por cosa (`/project-zomboid/items/crowbar`). */
+export const PZ_DETAIL_SECTIONS: PzTab[] = ["items", "recipes", "traits", "professions", "skills", "moodles", "server", "patches"];
+/**
+ * Las pestañas que ya tienen página. Las demás se muestran apagadas, no entran al sitemap, y una dirección a una de
+ * ellas muestra la portada. Cada pestaña se suma acá el día que se publica: Objetos, Recetas y el Mapa, el 2026-09-30.
+ *
+ * Rasgos (2026-09-30) entra con `professions`: las profesiones no tienen solapa (la de "Rasgos" queda marcada en sus
+ * páginas), pero sí lista (`/profesiones`) y fichas, y sin estar acá no irían al sitemap y su dirección mostraría la
+ * portada.
+ *
+ * Personaje (`planner`, el planificador, 2026-09-30) no tiene fichas: es una página sola con el personaje en `?b=`.
+ *
+ * Moodles (2026-09-30): la lista de los 26 y una ficha por moodle, que así van al sitemap.
+ *
+ * Habilidades (2026-09-30): la lista de las 35 y una ficha por habilidad, con sus libros y la calculadora de XP.
+ *
+ * Servidor (2026-10-01): el generador (`/servidor`, con la configuración en `?p=&s=&i=`) y sus dos fichas del índice,
+ * los presets comparados (`/servidor/presets-de-sandbox`) y la calculadora de cortes de agua y luz
+ * (`/servidor/cortes-de-agua-y-luz`), que por eso está también en `PZ_DETAIL_SECTIONS`.
+ *
+ * Fabricación (`crafting`, el planificador de fabricación, 2026-10-02) no tiene fichas: es una página sola con lo que
+ * elegiste en `?q=…`.
+ *
+ * Parches (2026-10-01, conectada el 2026-10-02): la lista y una página por versión (`/parches/42-21`); los slugs son
+ * iguales en los dos idiomas. Sus páginas no están en el índice de fichas: el sitemap las saca de `patches/index.json`.
+ */
+export const PZ_PUBLISHED: PzTab[] = ["map", "items", "recipes", "crafting", "traits", "professions", "planner", "moodles", "skills", "server", "patches"];
+/**
+ * Fichas del índice que todavía no tienen página propia (2026-10-01): su dirección abre la pestaña, pero el sitemap y
+ * el prerender las saltean. Si no, Google vería el generador de Servidor otra vez con otro título (contenido duplicado)
+ * si la rama se publicara antes de la Task 5 (los cortes de agua y luz). Cada tarea saca su ficha de acá al conectar su
+ * página (y `zomboidPublish.test.ts` lo vigila): los presets comparados y la calculadora de cortes salieron el
+ * 2026-10-02 (Tasks 4 y 5). Queda vacía, lista para la próxima ficha que llegue al índice antes que su página.
+ */
+export const PZ_DETAILS_PENDING: Partial<Record<PzTab, readonly string[]>> = {};
+export const PZ_SECTION_ES: Record<PzTab, string> = {
+  map: "mapa",
+  items: "objetos",
+  recipes: "recetas",
+  crafting: "fabricacion",
+  traits: "rasgos",
+  professions: "profesiones",
+  planner: "personaje",
+  skills: "habilidades",
+  moodles: "moodles",
+  server: "servidor",
+  patches: "parches",
+};
+const PZ_SECTION_BY_ES = new Map(Object.entries(PZ_SECTION_ES).map(([tab, es]) => [es, tab as PzTab]));
+
+/** Los slugs en español de las fichas de Project Zomboid. */
+const pzSlugsEs = new LocalSlugs<PzTab>();
+
+/** Anota los slugs en español de las fichas de Project Zomboid (los arma el build, como los de Diablo II). */
+export function registerPzSlugs(slugs: Partial<Record<PzTab, Record<string, string>>>): void {
+  pzSlugsEs.register(slugs);
 }
 
 export const LANGS: Lang[] = ["en", "es"];
@@ -186,6 +279,8 @@ export interface Route {
   vhSection?: ValheimSection;
   /** Qué pestaña de Diablo II. Sin ella es la portada de la sección. */
   d2Section?: D2rSection;
+  /** Qué pestaña de Project Zomboid. Sin ella es la portada de la sección. */
+  pzSection?: PzSection;
   /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
   detail?: string;
 }
@@ -207,6 +302,10 @@ const isD2Tab = (v: string | undefined): v is D2rTab => !!v && (D2R_SECTIONS as 
  */
 const d2Tab = (v: string | undefined): D2rTab | undefined => (isD2Tab(v) ? v : v ? D2R_SECTION_BY_ES.get(v) : undefined);
 
+const isPzTab = (v: string | undefined): v is PzTab => !!v && (PZ_SECTIONS as string[]).includes(v);
+/** La pestaña de Project Zomboid de un segmento, escrito en cualquiera de los dos idiomas. */
+const pzTab = (v: string | undefined): PzTab | undefined => (isPzTab(v) ? v : v ? PZ_SECTION_BY_ES.get(v) : undefined);
+
 /**
  * A name as it appears in a URL: lowercase, ASCII, hyphen-separated.
  *
@@ -216,6 +315,9 @@ const d2Tab = (v: string | undefined): D2rTab | undefined => (isD2Tab(v) ? v : v
  *
  * Salvo Diablo II desde el 2026-09-30, que en español lleva el nombre español
  * (ver `D2R_SECTION_ES`).
+ *
+ * Tiene una copia en Python, `slugify` de `games/zomboid/tools/extract.py`, que
+ * arma los ids de las fichas de Project Zomboid: si cambia una, cambia la otra.
  */
 export function slugify(name: string): string {
   return (
@@ -248,6 +350,22 @@ export function parseRoute(pathname: string): Route {
 
   const base = { lang, dlSection: DEFAULT_DL_SECTION };
   const head = rest[0];
+
+  // Project Zomboid va con el nombre completo (`/project-zomboid`). `/zomboid` a secas no entra: es la carpeta de los
+  // íconos y del mapa, y Netlify lo manda con 301 a la dirección de verdad.
+  if (head === PZ_SEGMENT) {
+    const tab = pzTab(rest[1]);
+    // Una pestaña que todavía no existe (o que no se conoce) muestra la portada, y así la dirección, el título y el
+    // canonical dicen lo mismo que la pantalla.
+    if (!tab || !PZ_PUBLISHED.includes(tab)) return { ...base, view: "zomboid", pzSection: "home" };
+    const slug = PZ_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
+    // El slug se traduce en los dos idiomas: el español de una ficha nunca coincide con el inglés de otra (lo cuida el
+    // armado de los slugs), así que `/en/…/objetos/palanca` abre la palanca en vez de una ficha rota. Uno que no se
+    // conoce se deja como vino.
+    const detail = slug ? pzSlugsEs.toId(tab, slug) : undefined;
+    return { ...base, view: "zomboid", pzSection: tab, detail };
+  }
+
   if (!head || !isView(head)) return { ...base, view: "home" };
 
   // Deadlock lleva sus propias pestañas, y una que no se reconoce cae en el
@@ -292,8 +410,8 @@ export function parseRoute(pathname: string): Route {
     const tab = d2Tab(rest[1]);
     if (!tab) return { ...base, view: "d2r", d2Section: "home" };
     const slug = D2R_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
-    // En español el slug es el del nombre español; uno que no se conoce se deja como vino (el inglés de antes).
-    const detail = slug && lang === "es" ? (d2rSlugsEs[tab]?.toId.get(slug) ?? slug) : slug;
+    // El slug se traduce en los dos idiomas (ver Project Zomboid, arriba): uno que no se conoce se deja como vino.
+    const detail = slug ? d2rSlugsEs.toId(tab, slug) : slug;
     return { ...base, view: "d2r", d2Section: tab, detail };
   }
 
@@ -328,7 +446,15 @@ export function routePath(route: Route): string {
     if (sec === "home") return `/${lang}/d2r`;
     if (lang !== "es") return detail ? `/${lang}/d2r/${sec}/${detail}` : `/${lang}/d2r/${sec}`;
     const path = `/es/d2r/${D2R_SECTION_ES[sec]}`;
-    return detail ? `${path}/${d2rSlugsEs[sec]?.toEs.get(detail) ?? detail}` : path;
+    return detail ? `${path}/${d2rSlugsEs.toEs(sec, detail)}` : path;
+  }
+  if (view === "zomboid") {
+    const sec = route.pzSection ?? "home";
+    const root = `/${lang}/${PZ_SEGMENT}`;
+    if (sec === "home") return root;
+    if (lang !== "es") return detail ? `${root}/${sec}/${detail}` : `${root}/${sec}`;
+    const path = `${root}/${PZ_SECTION_ES[sec]}`;
+    return detail ? `${path}/${pzSlugsEs.toEs(sec, detail)}` : path;
   }
   return `/${lang}/${view}`;
 }

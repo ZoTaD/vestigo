@@ -1,0 +1,3 @@
+# Los extractores escriben los JSON con LF y no reescriben un archivo si sus bytes no cambiaron: con core.autocrlf=true,
+# un checkout los pasaba a CRLF y la próxima corrida los reescribía igual. Quedan en LF también en la copia de trabajo.
+data/**/*.json text eol=lf

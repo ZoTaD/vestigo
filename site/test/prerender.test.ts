@@ -119,7 +119,7 @@ describe("renderHtml", () => {
     for (const tag of ['name="description"', 'property="og:description"', 'name="twitter:description"', 'property="og:title"', 'rel="canonical"']) {
       expect(out.split(tag).length - 1, tag).toBe(1);
     }
-    expect(out).not.toContain("Deadlock, Path of Exile 2 and Valheim.");
+    expect(out).not.toContain("Diablo II: Resurrected and Project Zomboid, in English and Spanish.");
     expect(out).toContain('<html lang="es">');
     expect(renderHtml(real, pages.find((p) => p.path === "/en")!, "Vestigo")).toContain('<html lang="en">');
   });

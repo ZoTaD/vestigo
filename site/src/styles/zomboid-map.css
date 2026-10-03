@@ -1,0 +1,492 @@
+/*
+ * El Mapa de Project Zomboid (2026-09-30), estética "Libreta de supervivencia": el mapa ocupa una hoja grande pegada
+ * con cinta sobre el escritorio, y la base y el link van en hojas de libreta al costado. En el celular el mapa ocupa el
+ * ancho y las hojas del costado van en un panel que se abre desde abajo (sin scroll horizontal).
+ *
+ * Los estilos de Leaflet (leaflet.css) llegan con el chunk del visor; acá van sólo los retoques para que sus piezas se
+ * vean de la libreta. La hoja del mapa no se inclina como las otras: Leaflet calcula dónde cae el mouse sin contar una
+ * rotación, y el mapa quedaría corrido del cursor.
+ */
+
+.pzm { max-width: 1320px; }
+
+/* La hoja de introducción: el título que se busca, las cifras y la nota a lápiz. */
+.pzm-intro { container-type: inline-size; padding: 16px 22px 12px; }
+.pzm-kick { margin: 0 0 2px; font: 600 12px "Noto Sans", sans-serif; letter-spacing: 0.24em; text-transform: uppercase; color: var(--pz-dim); line-height: 28px; }
+.pzm-h1 { margin: 0 0 6px; font: 700 clamp(28px, 6.5cqi, 44px) / 1.05 "Old Standard TT", serif; }
+.pz-page p.pzm-lede { max-width: 860px; margin: 0; font-size: 16px; }
+.pz-page p.pzm-hand { display: inline-block; margin: 4px 0 0; font: 700 24px / 28px "Caveat", cursive; color: var(--pz-pencil); transform: rotate(-1.5deg); }
+
+.pzm-layout { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 26px; align-items: start; margin-top: 28px; }
+
+/* La hoja del mapa: un borde de papel alrededor, dos cintas y la sombra de las hojas sueltas. */
+.pzm-sheet { position: relative; margin: 0; padding: 10px; background: var(--pz-paper); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45); }
+.pzm-tape { z-index: 2; pointer-events: none; }
+.pzm-tape.is-a { left: -26px; top: 14px; transform: rotate(-32deg); }
+.pzm-tape.is-b { right: -22px; bottom: 26px; transform: rotate(-26deg); }
+/* `isolation`: los z-index de adentro (las capas de Leaflet, la vista del mapa entero, los controles) no salen de la hoja. */
+.pzm-frame { position: relative; isolation: isolate; height: clamp(460px, 76vh, 820px); overflow: hidden; background: #3d3f38; }
+
+/* La vista del mapa entero, del prerender: tapa el visor (arriba de sus capas y abajo de los controles) mientras llegan
+   el visor y las primeras teselas, y se desvanece cuando la base ya pinta (`is-gone`). No ataja el mouse: el mapa se
+   puede mover aunque todavía esté. */
+.pzm-overview {
+  position: absolute;
+  inset: 0;
+  z-index: 450;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.pzm-overview.is-gone { opacity: 0; }
+.pzm-leaflet { position: absolute; inset: 0; background: transparent; font: inherit; }
+.pzm-leaflet.leaflet-container { background: #3d3f38; }
+/* El papel: el color de fondo del mapa de papel del juego (lo pone el visor, de `common.style`). */
+.pzm-leaflet.leaflet-container.is-paper { background: var(--pzm-paper-bg, #dbd7c0); }
+.pzm-leaflet:focus-visible { outline: 3px solid var(--pz-pencil); outline-offset: -3px; }
+/* Más cerca que un píxel por casilla, la vista satelital se ve en píxeles como el juego, no borrosa. */
+.pzm-leaflet.is-near .pzm-sat img { image-rendering: pixelated; }
+
+.pzm-status {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 460;
+  margin: 0;
+  padding: 6px 14px;
+  transform: translate(-50%, -50%) rotate(-2deg);
+  background: var(--pz-paper);
+  color: var(--pz-pencil);
+  font: 700 26px / 1.2 "Caveat", cursive;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+.pzm-status.is-error { color: var(--pz-ink); font: 400 15px / 1.5 "Noto Sans", sans-serif; transform: translate(-50%, -50%); }
+
+/* Las coordenadas: una nota a lápiz en un recorte de papel, abajo a la izquierda, que no ataja el mouse. */
+.pzm-coords {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 800;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  padding: 2px 10px;
+  background: rgba(239, 233, 216, 0.92);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transform: rotate(-1deg);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.pzm-coords:has(.pzm-coords-xy:empty) { display: none; }
+.pzm-coords-xy { font: 700 22px / 1.2 "Caveat", cursive; color: var(--pz-pencil); font-variant-numeric: tabular-nums; }
+.pzm-coords-where { font: 600 11px "Noto Sans", sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pz-dim); }
+
+/* Los botones de zoom de Leaflet, de papel y tinta. El borde, también con `.leaflet-touch` delante: leaflet.css trae
+   `.leaflet-touch .leaflet-bar { border: 2px solid … }`, que le ganaba a `.pzm .leaflet-bar` (carga después, misma
+   especificidad). */
+.pzm .leaflet-bar,
+.pzm .leaflet-touch .leaflet-bar { border: 0; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35); }
+/* Con `.leaflet-touch` delante: leaflet.css carga después y trae `.leaflet-touch .leaflet-bar a` (30×30) con la misma
+   especificidad que `.pzm .leaflet-bar a`, así que sin esto ganaba él. 40 px: el dedo acierta. */
+.pzm .leaflet-bar a,
+.pzm .leaflet-bar a:hover,
+.pzm .leaflet-touch .leaflet-bar a,
+.pzm .leaflet-touch .leaflet-bar a:hover {
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  border-bottom: 1px solid var(--pz-paper-2);
+  background: var(--pz-paper);
+  color: var(--pz-ink);
+  font: 700 24px / 38px "Old Standard TT", serif;
+}
+.pzm .leaflet-bar a:last-child,
+.pzm .leaflet-touch .leaflet-bar a:last-child { border-bottom: 0; }
+.pzm .leaflet-bar a:hover,
+.pzm .leaflet-touch .leaflet-bar a:hover { background: var(--pz-paper-2); }
+.pzm .leaflet-bar a.leaflet-disabled,
+.pzm .leaflet-touch .leaflet-bar a.leaflet-disabled { color: var(--pz-dim); background: var(--pz-paper-2); opacity: 0.6; }
+.pzm .leaflet-bar a:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+
+/* Los textos del mapa (pueblos, ríos, bosques, lugares): el marcador mide 0 y el texto se centra en el punto. */
+.pzm-label { pointer-events: none; }
+.pzm-label span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%) rotate(var(--pzm-rot, 0deg));
+  white-space: pre;
+  text-align: center;
+  line-height: 1.05;
+}
+.pzm-label.is-town span {
+  font-family: "Old Standard TT", serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #fbf6e6;
+  text-shadow: 0 0 3px rgba(12, 16, 10, 0.95), 0 0 8px rgba(12, 16, 10, 0.7);
+}
+.pzm-label.is-water span { font: italic 600 1em "Noto Sans", sans-serif; letter-spacing: 0.12em; color: #d9f1f3; text-shadow: 0 0 3px rgba(10, 40, 44, 0.95); }
+.pzm-label.is-forest span { font: italic 600 1em "Old Standard TT", serif; letter-spacing: 0.2em; color: #e9f1cf; text-shadow: 0 0 3px rgba(20, 34, 12, 0.95); }
+.pzm-label.is-place span { font: 700 1em "Noto Sans", sans-serif; color: #fff7dc; text-shadow: 0 0 2px rgba(12, 16, 10, 1), 0 0 5px rgba(12, 16, 10, 0.8); }
+/* Sobre el papel, tinta: como los mapas de papel del juego. */
+.is-paper .pzm-label.is-town span { color: var(--pz-ink); text-shadow: 0 0 3px var(--pz-paper), 0 0 7px var(--pz-paper); }
+.is-paper .pzm-label.is-water span { color: #1f5e66; text-shadow: 0 0 3px var(--pz-paper); }
+.is-paper .pzm-label.is-forest span { color: #3f5a2c; text-shadow: 0 0 3px var(--pz-paper); }
+.is-paper .pzm-label.is-place span { color: var(--pz-ink); text-shadow: 0 0 2px var(--pz-paper), 0 0 5px var(--pz-paper); }
+
+/* El costado: hojas de libreta. Derechas (sin inclinar) para que los controles no bailen. */
+.pzm-side { display: grid; gap: 22px; }
+.pzm-side > .pz-page.pzm-card { transform: none; }
+.pzm-card { padding: 14px 16px 12px; }
+.pzm-h2 { margin: 0 0 6px; font: 700 22px / 28px "Old Standard TT", serif; }
+.pzm-h3 { margin: 6px 0 0; font: 600 12px / 28px "Noto Sans", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pz-dim); }
+.pz-page p.pzm-about,
+.pz-page p.pzm-hint { margin: 6px 0 0; color: var(--pz-dim); font-size: 13px; line-height: 20px; }
+
+/* La base: dos renglones que se marcan a lápiz. El radio queda para el teclado y el lector, escondido a la vista. */
+.pzm-bases { display: grid; }
+.pzm-base { position: relative; display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 4px 6px; cursor: pointer; font-weight: 600; }
+.pzm-base input { position: absolute; opacity: 0; pointer-events: none; }
+.pzm-base.is-on { background: rgba(179, 38, 30, 0.1); color: var(--pz-pencil); }
+.pzm-base:has(input:focus-visible) { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+.pzm-base-swatch { flex: none; width: 30px; height: 22px; background: center / cover; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); }
+.pzm-base-swatch.is-sat { background-image: url(/zomboid/map/sat/2/10_9.webp); }
+.pzm-base-swatch.is-paper { background: linear-gradient(90deg, #d29e69 0 30%, #dbd7c0 30% 42%, #b8cd54 42% 62%, #dbd7c0 62% 72%, #3b8d95 72%); }
+
+/* La clave del papel: cuadritos del color de cada tipo de edificio (tinte, no borde). */
+.pzm-key { display: grid; margin: 0; padding: 0; list-style: none; font-size: 13px; }
+.pzm-key li { display: flex; align-items: center; gap: 10px; min-height: 26px; }
+.pzm-key-swatch { flex: none; width: 16px; height: 16px; background: var(--pzm-swatch); }
+
+.pzm-copy {
+  min-height: 40px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  background: var(--pz-grass);
+  color: var(--pz-paper);
+  font: 700 14px "Noto Sans", sans-serif;
+  cursor: pointer;
+}
+.pzm-copy:hover { background: #356a33; }
+.pzm-copy.is-done { background: var(--pz-ink); }
+.pzm-copy:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* ── Las capas del juego (Task 3) ── */
+
+/* La hoja "Capas": leyenda e interruptores a la vez. Cada renglón, un sello teñido del color de la capa, el nombre y la
+   cifra; prendida, el renglón se marca a lápiz (tinte, no borde) y el sello toma su color. Apagada, el sello va en gris. */
+/* `--pzm-layer-indent`: lo que va debajo de un renglón (la explicación, las claves) arranca donde arranca el nombre: el
+   relleno del renglón (6) más el sello (26) más el espacio (10). */
+.pzm-layers { --pzm-layer-indent: 42px; display: grid; margin: 0; padding: 0; list-style: none; }
+.pzm-layer-row { position: relative; display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 40px; padding: 2px 6px; cursor: pointer; font-weight: 600; }
+.pzm-layer-row input { position: absolute; opacity: 0; pointer-events: none; }
+.pzm-layer-row:has(input:focus-visible) { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+.pzm-layer.is-on > .pzm-layer-row { background: rgba(179, 38, 30, 0.1); color: var(--pz-pencil); }
+.pzm-layer-row:hover { background: rgba(43, 79, 126, 0.07); }
+.pzm-layer-mark { display: grid; place-items: center; width: 26px; height: 26px; }
+.pzm-layer-mark .pz-stamp { width: 24px; height: 24px; color: #9a927f; }
+.pzm-layer.is-on .pzm-layer-mark .pz-stamp { color: var(--pzm-tint); }
+.pzm-layer-name { min-width: 0; }
+.pzm-layer-n { font: 600 12px "Noto Sans", sans-serif; color: var(--pz-dim); font-variant-numeric: tabular-nums; }
+/* La densidad de zombis: cuando Leaflet estira una tesela entre zooms (o la pantalla tiene más de un píxel por píxel),
+   que los cuadritos de cada chunk no se laven en un borroneo. */
+.pzm-heat-tile { image-rendering: pixelated; }
+.pz-page p.pzm-layer-about { margin: 0 0 4px var(--pzm-layer-indent); color: var(--pz-dim); font-size: 13px; line-height: 20px; }
+/* "Acercá para ver las zonas": a lápiz, para que se note que la capa está prendida pero todavía no se ve. */
+.pz-page p.pzm-layer-about.is-far { color: var(--pz-pencil); font-weight: 600; }
+.pzm-forage { margin: 0 0 6px var(--pzm-layer-indent); font-size: 13px; }
+.pzm-forage li { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; gap: 10px; min-height: 24px; }
+.pzm-forage .pzm-key-swatch { opacity: 0.85; }
+.pzm-prof { display: grid; gap: 2px; margin: 0 0 8px var(--pzm-layer-indent); }
+.pzm-prof-label { font: 600 11px "Noto Sans", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pz-dim); }
+.pzm-prof select {
+  min-height: 36px;
+  width: 100%;
+  padding: 4px 8px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 600 14px "Noto Sans", sans-serif;
+  box-shadow: inset 0 -2px 0 rgba(42, 38, 32, 0.25);
+}
+.pzm-prof select:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+
+/* Los sellos sobre el mapa (puntos de aparición, escondites): el marcador de Leaflet mide 0 y el sello se centra en su
+   punto. El halo claro va en el marcador y no en el sello: un `filter` en el mismo elemento que la `mask` queda recortado
+   por ella. */
+.leaflet-marker-icon.pzm-mark { overflow: visible; filter: drop-shadow(0 0 1px rgba(250, 247, 236, 0.95)) drop-shadow(0 0 2px rgba(250, 247, 236, 0.6)); }
+.pzm-mark-in { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); }
+.pzm-spawn .pzm-mark-in { width: 20px; height: 20px; }
+.pzm-stash-pin .pzm-mark-in { width: 24px; height: 24px; cursor: pointer; }
+.pzm-stash-pin:focus-visible { outline: none; }
+.pzm-stash-pin:focus-visible .pzm-mark-in { outline: 2px solid var(--pz-pencil); outline-offset: 3px; }
+/* De cerca, las anotaciones del escondite (`--pzm-k`, lo pone el visor según el zoom): el sello centrado en su punto y
+   la nota desde su punto hacia la derecha, en Caveat como en el juego. */
+.pzm-ann .pzm-mark-in { width: calc(21px * var(--pzm-k, 1)); height: calc(21px * var(--pzm-k, 1)); cursor: pointer; }
+.pzm-note {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font: 700 calc(14px * var(--pzm-k, 1)) / 1.05 "Caveat", cursive;
+  white-space: nowrap;
+  cursor: pointer;
+  text-shadow: 0 0 2px rgba(250, 247, 236, 0.95), 0 0 5px rgba(250, 247, 236, 0.7);
+}
+/* La anotación que marca el escondite es la que se elige con el teclado de cerca: el foco, a lápiz alrededor. */
+.pzm-ann.is-main:focus-visible { outline: none; }
+.pzm-ann.is-main:focus-visible > * { outline: 2px solid var(--pz-pencil); outline-offset: 3px; }
+/* Con la hoja de un escondite abierta, los demás se apagan un poco. */
+.has-pick .pzm-mark-in:not(.is-picked),
+.has-pick .pzm-note:not(.is-picked) { opacity: 0.35; }
+
+/* La nota de qué es cada zona (y cada punto): un recorte de papel, sin el borde ni la redondez de Leaflet. */
+.leaflet-tooltip.pzm-tip {
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 0;
+  background: var(--pz-paper);
+  color: var(--pz-ink);
+  font: 400 13px / 1.4 "Noto Sans", sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+}
+.leaflet-tooltip.pzm-tip span { display: block; }
+.leaflet-tooltip.pzm-tip span:first-child { font-weight: 700; }
+.leaflet-tooltip-top.pzm-tip::before { border-top-color: var(--pz-paper); }
+
+/* La hoja de un escondite: una nota pegada con cinta sobre el mapa, arriba a la derecha (abajo en el celular). */
+.pz-page.pzm-stash {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 900;
+  width: min(300px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  overflow-y: auto;
+  padding: 14px 16px 10px;
+  transform: rotate(0.6deg);
+}
+.pzm-stash-tape { left: 50%; top: -12px; width: 90px; height: 24px; transform: translateX(-50%) rotate(-3deg); }
+.pzm-stash-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  color: var(--pz-dim);
+  font: 400 26px / 1 "Noto Sans", sans-serif;
+  cursor: pointer;
+}
+.pzm-stash-close:hover { color: var(--pz-pencil); }
+.pzm-stash-close:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: -4px; }
+.pz-page p.pzm-stash-kick { margin: 0; font: 600 11px / 28px "Noto Sans", sans-serif; letter-spacing: 0.2em; text-transform: uppercase; color: var(--pz-dim); }
+.pzm-stash-h { margin: 0 40px 4px 0; font: 700 22px / 28px "Old Standard TT", serif; }
+.pzm-stash-facts { display: grid; margin: 0; }
+.pzm-stash-facts dt { font: 600 11px / 20px "Noto Sans", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pz-dim); }
+.pzm-stash-facts dd { margin: 0 0 6px; font-size: 14px; line-height: 22px; }
+.pzm-stash-facts a { color: var(--pz-pencil); font-weight: 700; }
+.pzm-stash-notes { margin: 4px 0 6px; padding-left: 18px; font: 700 18px / 24px "Caveat", cursive; color: var(--pz-pencil); }
+.pz-page p.pzm-stash-at { margin: 0; font-size: 12px; line-height: 22px; color: var(--pz-dim); font-variant-numeric: tabular-nums; }
+
+/* ── Edificios y buscador (Task 4) ── */
+
+/* El buscador: un renglón de la libreta arriba del mapa, en el borde de papel de la hoja. La lista se abre encima del
+   mapa (por eso el z-index: la hoja del mapa aísla sus capas, y la lista tiene que quedar arriba de todas). */
+.pzm-search { position: relative; z-index: 3; margin: 0 0 10px; }
+.pzm-search-in {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 600 15px "Noto Sans", sans-serif;
+  box-shadow: inset 0 -2px 0 rgba(42, 38, 32, 0.25);
+}
+.pzm-search-in::placeholder { color: var(--pz-dim); font-weight: 400; }
+.pzm-search-in:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+.pzm-search-list,
+.pzm-search-none {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin: 4px 0 0;
+  background: var(--pz-paper);
+  /* Tinta: la hoja del mapa no es una `.pz-page`, y sin esto hereda el color claro del escritorio. */
+  color: var(--pz-ink);
+  font-size: 14px;
+  line-height: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+.pzm-search-list { max-height: min(340px, 60vh); overflow-y: auto; padding: 4px 0; list-style: none; }
+.pzm-search-list[hidden] { display: none; }
+.pz-page p.pzm-search-none,
+.pzm-search-none { padding: 10px 12px; color: var(--pz-dim); font-size: 14px; }
+.pzm-search-opt { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 40px; padding: 4px 12px; cursor: pointer; }
+.pzm-search-opt.is-on { background: rgba(179, 38, 30, 0.1); color: var(--pz-pencil); }
+.pzm-search-name { min-width: 0; font-weight: 600; }
+.pzm-search-kind { font: 600 11px "Noto Sans", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pz-dim); white-space: nowrap; }
+
+/* La hoja del edificio: la misma nota que la del escondite (`.pzm-stash`), con los pisos y la tabla de habitaciones. */
+/* La hoja toma el foco al abrirse (para el teclado y el lector), pero no se marca: un filo de color alrededor de una
+   tarjeta no va en la libreta. Los controles de adentro sí muestran su foco. */
+.pzm-bld:focus,
+.pzm-bld:focus-visible { outline: none; }
+.pz-page p.pzm-bld-facts { margin: 0 0 8px; color: var(--pz-dim); font-size: 13px; line-height: 20px; }
+.pzm-bld-floors { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 8px; }
+.pzm-bld-floor { position: relative; display: inline-flex; align-items: center; min-height: 36px; padding: 2px 10px; background: var(--pz-paper-2); cursor: pointer; font-size: 13px; font-weight: 600; }
+.pzm-bld-floor input { position: absolute; opacity: 0; pointer-events: none; }
+.pzm-bld-floor.is-on { background: rgba(179, 38, 30, 0.14); color: var(--pz-pencil); }
+.pzm-bld-floor:has(input:focus-visible) { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+.pzm-rooms { width: 100%; margin: 0 0 6px; border-collapse: collapse; font-size: 14px; }
+.pzm-rooms th { padding: 0 0 2px; font: 600 11px / 20px "Noto Sans", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pz-dim); text-align: left; }
+.pzm-rooms th:last-child,
+.pzm-rooms-size { text-align: right; }
+.pzm-rooms td { padding: 3px 0; line-height: 20px; vertical-align: top; }
+.pzm-rooms tbody tr:hover { background: rgba(179, 38, 30, 0.08); }
+.pzm-rooms-n { color: var(--pz-dim); font-variant-numeric: tabular-nums; }
+.pzm-rooms-size { padding-left: 12px; color: var(--pz-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* "Qué hay" en cada habitación (2026-10-02): el botón es una nota en lápiz al lado del nombre, y la lista se abre debajo
+   de la fila, a lo ancho de la hoja. Cada objeto es un renglón de la libreta (la raya azul del papel, no un filo de
+   color): el nombre arriba, el mueble y la chance en lápiz abajo, que bajan de renglón si no entran. */
+.pzm-loot-toggle {
+  display: inline-block;
+  min-height: 28px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--pz-pencil);
+  font: 700 17px / 28px "Caveat", cursive;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.pzm-loot-toggle:hover { color: var(--pz-ink); }
+.pzm-loot-toggle:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+.pzm-loot-toggle[aria-expanded="true"] { text-decoration: none; }
+.pzm-rooms tbody tr.pzm-loot-row:hover { background: transparent; }
+.pzm-rooms .pzm-loot-row > td { padding: 0 0 8px; }
+.pz-page p.pzm-stash-at + .pzm-rooms { margin-top: 2px; }
+.pz-page p.pzm-loot-wait,
+.pz-page p.pzm-loot-generic { margin: 0; font: 700 17px / 24px "Caveat", cursive; color: var(--pz-pencil); }
+.pzm-loot-list { margin: 0; padding: 0; list-style: none; }
+.pzm-loot-list li { display: flex; flex-direction: column; padding: 3px 0 4px; border-bottom: 1px solid var(--pz-rule); }
+.pzm-loot-item { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--pz-ink); font-weight: 600; line-height: 1.3; text-underline-offset: 2px; }
+.pzm-loot-item > span { min-width: 0; }
+.pzm-loot-item:hover { color: var(--pz-pencil); }
+.pzm-loot-item:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+.pzm-loot-item .pzi-icon { display: block; flex: none; image-rendering: pixelated; }
+.pzm-loot-item .pzi-noicon { display: block; flex: none; background: var(--pz-paper-2); }
+.pzm-loot-meta { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 10px; padding-left: 32px; font: 700 16px / 20px "Caveat", cursive; color: var(--pz-pencil); }
+/* La cifra en letra de imprenta: en Caveat un 1 y un 7 se confunden. */
+.pzm-loot-pct { font: 700 13px / 20px "Noto Sans", sans-serif; color: var(--pz-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pzm-loot .pzi-more summary { min-height: 28px; font: 700 18px / 28px "Caveat", cursive; color: var(--pz-pencil); cursor: pointer; }
+
+/* El botón del panel y el de cerrarlo: sólo en el celular. */
+.pzm-panel-btn,
+.pzm-panel-close { display: none; }
+
+@media (max-width: 860px) {
+  /* La intro, más corta: en el celular el mapa tiene que asomar sin tanto scroll. */
+  .pzm-intro { padding: 12px 16px 8px; }
+  .pz-page p.pzm-lede { font-size: 15px; line-height: 24px; }
+  .pzm-layout { grid-template-columns: minmax(0, 1fr); margin-top: 20px; }
+  /* El mapa ocupa el ancho de la pantalla: sin el borde de papel ni las cintas, y hasta los bordes. */
+  .pzm-sheet { margin-inline: -24px; padding: 0; box-shadow: none; }
+  .pzm-tape { display: none; }
+  .pzm-frame { height: 72vh; height: 72svh; min-height: 380px; }
+
+  .pzm-panel-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 800;
+    display: block;
+    min-height: 44px;
+    padding: 8px 14px;
+    border: 0;
+    background: var(--pz-paper);
+    color: var(--pz-ink);
+    font: 700 14px "Noto Sans", sans-serif;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+  }
+  .pzm-panel-btn:focus-visible,
+  .pzm-panel-close:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+  /* Las hojas del costado, en un panel que sube desde abajo y tapa parte del mapa (el resto se sigue moviendo). */
+  .pzm-side {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1200;
+    max-height: 64vh;
+    max-height: 64svh;
+    overflow-y: auto;
+    gap: 14px;
+    padding: 12px 14px 18px;
+    background: #1f2a1f;
+    box-shadow: 0 -10px 28px rgba(0, 0, 0, 0.5);
+    transform: translateY(105%);
+    visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s;
+  }
+  .pzm-side.is-open { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  /* En el panel, lo justo: la explicación del papel sigue en el HTML (la lee Google) pero no ocupa el panel, y la clave
+     va en dos columnas. */
+  .pzm-side .pz-page p.pzm-about { display: none; }
+  .pzm-key { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 12px; }
+  .pzm-key.pzm-forage { grid-template-columns: minmax(0, 1fr); }
+  /* El buscador, a lo ancho como el mapa, con el margen de la página. */
+  .pzm-search { margin: 0; padding: 8px 16px; }
+  .pzm-search-list,
+  .pzm-search-none { left: 16px; right: 16px; }
+  /* La hoja del escondite, abajo y a lo ancho del mapa, sin tapar el botón de las opciones. */
+  .pz-page.pzm-stash { top: auto; right: 10px; bottom: 10px; left: 10px; width: auto; max-height: 58%; transform: none; }
+  .pzm-panel-close {
+    display: block;
+    justify-self: end;
+    min-height: 44px;
+    padding: 8px 14px;
+    border: 0;
+    background: transparent;
+    color: var(--pz-desk-text);
+    font: 700 14px "Noto Sans", sans-serif;
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pzm-side,
+  .pzm-side.is-open { transition: none; }
+  .pzm-overview { transition: none; }
+}
+
+/* La clave de la densidad de zombis (Task 3, 2026-10-01): "menos ↔ más" con la rampa del lápiz. Tres columnas: las dos
+   puntas nunca se cortan (nowrap) y es la barra la que se achica. Sin borde: la barra es un relleno sobre el papel. */
+.pzm-heat-key {
+  display: grid;
+  grid-template-columns: auto minmax(24px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 2px var(--pzm-layer-indent);
+  font: 700 17px / 1 "Caveat", cursive;
+  color: var(--pz-pencil);
+}
+.pzm-heat-end { white-space: nowrap; }
+.pzm-heat-bar { display: flex; height: 12px; background: var(--pz-paper-2); }
+.pzm-heat-bar > span { flex: 1 1 0; }

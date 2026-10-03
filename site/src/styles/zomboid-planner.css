@@ -1,0 +1,330 @@
+/*
+ * Project Zomboid, la pestaña Personaje (2026-09-30): el Planificador. Las hojas, el buscador, los títulos y los
+ * enlaces son los de Objetos (zomboid-items.css, clases `.pzi-*`): es la misma libreta. Acá va lo propio: las tarjetas
+ * de profesión, las filas de rasgos que se prenden y se apagan, la hoja del personaje al costado y las habilidades con
+ * sus rayitas.
+ *
+ * Reglas de la casa: sin bordes ni barras de color. Lo elegido va con tinte y una tilde; los puntos negativos, con la
+ * cifra y el fondo teñidos de rojo lápiz. Ninguna palabra se corta, y en el celular nada es más ancho que la pantalla:
+ * las profesiones se deslizan dentro de su hoja, como los filtros de Objetos.
+ */
+
+.pzb {
+  /* El verde del juego para lo bueno y el rojo lápiz para lo malo, los mismos de Rasgos. */
+  --pzb-good: #2f6a2c;
+  --pzb-bad: var(--pz-pencil);
+  --pzb-good-tint: rgba(47, 106, 44, 0.14);
+  --pzb-bad-tint: rgba(179, 38, 30, 0.12);
+}
+
+.pzb-cost { font: 700 18px / 1.1 "Old Standard TT", serif; white-space: nowrap; }
+.pzb-cost.is-good { color: var(--pzb-good); }
+.pzb-cost.is-bad { color: var(--pzb-bad); }
+
+/* Elegir a la izquierda, tu personaje a la derecha y quieto mientras bajás por los rasgos. */
+.pzb-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 0 22px; align-items: start; }
+.pzb-pick { min-width: 0; }
+.pzb-side { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; padding-bottom: 8px; }
+.pz .pzi .pzb-side .pz-page { margin-bottom: 0; }
+
+/* Las hojas de elegir van sin los renglones de la página: cada fila lleva el suyo, como en la lista de Rasgos. */
+.pz .pzi .pzb-sheet { padding: 6px 18px 14px; background: var(--pz-paper); }
+.pzb-sheet .pzi-h2 { min-height: 44px; margin: 0 0 4px; }
+.pz .pzi .pzb-search { padding: 12px; }
+
+/* ---------- Las profesiones ---------- */
+
+.pzb-strip { position: relative; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.pzb-prof {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-areas: "i c" "n n";
+  align-items: start;
+  gap: 6px 8px;
+  min-height: 44px;
+  padding: 8px 10px 10px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 600 14px / 1.25 "Noto Sans", sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+.pzb-prof > .pzi-icon, .pzb-prof > .pzi-noicon { grid-area: i; }
+.pzb-prof .pzb-cost { grid-area: c; justify-self: end; }
+.pzb-prof .pzb-name { grid-area: n; }
+.pzb-prof:hover { background: var(--pzi-tint-strong); }
+/* La elegida, en tinta: la única de la hoja, se ve de lejos. Sus puntos, del color del papel. */
+.pzb-prof.is-on { background: var(--pz-ink); color: var(--pz-paper); }
+.pzb-prof.is-on .pzb-cost { color: inherit; }
+.pzb-prof:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* ---------- Los rasgos ---------- */
+
+.pzb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); column-gap: 22px; }
+.pzb-trait {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  grid-template-areas: "i n c" "i l l";
+  column-gap: 12px;
+  align-items: baseline;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 6px 9px;
+  border: 0;
+  /* El renglón de la libreta, del mismo azul que los de la hoja. */
+  background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0);
+  color: var(--pz-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.pzb-trait > .pzi-icon, .pzb-trait > .pzi-noicon { grid-area: i; align-self: start; }
+.pzb-tname { grid-area: n; font: 700 15px / 1.3 "Noto Sans", sans-serif; }
+.pzb-trait .pzb-cost { grid-area: c; justify-self: end; }
+.pzb-trait.is-positive .pzb-cost { color: var(--pzb-good); }
+.pzb-trait.is-negative .pzb-cost { color: var(--pzb-bad); }
+/* Qué hace, en dos renglones como mucho: la descripción entera está en la ficha del rasgo. */
+.pzb-line {
+  grid-area: l;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin-top: 2px;
+  font: 400 13px / 1.4 "Noto Sans", sans-serif;
+  color: var(--pz-dim);
+}
+.pzb-trait:hover { background-color: var(--pzi-tint); }
+/* Elegido: el tinte de su lado (verde si cuesta, rojo si da) y una tilde; nada de bordes. */
+.pzb-trait.is-on.is-positive { background-color: var(--pzb-good-tint); }
+.pzb-trait.is-on.is-negative { background-color: var(--pzb-bad-tint); }
+.pzb-check { width: 16px; height: 16px; margin: 0 6px -2px 0; color: var(--pz-grass); }
+.pzb-trait.is-negative .pzb-check { color: var(--pzb-bad); }
+/* Apagado: el rasgo se ve más claro y el motivo va a lápiz, entero (es lo que hay que leer). */
+.pzb-trait:disabled { cursor: not-allowed; background-color: transparent; }
+.pzb-trait:disabled > :not(.pzb-line) { opacity: 0.4; }
+.pzb-trait:disabled .pzb-line { display: block; font: 700 17px / 1.2 "Caveat", cursive; color: var(--pz-pencil); }
+.pzb-trait:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: -2px; }
+
+/* La barra de puntos del celular: en la computadora la hoja del costado ya los muestra. */
+.pzb-bar { display: none; }
+
+/* ---------- Tu personaje ---------- */
+
+.pz .pzi .pzb-card { padding: 16px 18px 18px; }
+.pzb-card .pzi-h2 { margin-bottom: 6px; }
+.pzb-h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  margin: 14px 0 4px;
+  font: 700 18px / 28px "Old Standard TT", serif;
+}
+.pzb-h3 .pzi-hand { font-size: 18px; line-height: 22px; }
+
+/* Los puntos para gastar, grandes. Negativos: la cifra y el fondo en rojo lápiz (tinte, no borde). */
+.pz .pzi .pzb-points {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0 12px;
+  margin: 0;
+  padding: 8px 12px;
+  background: var(--pzi-tint);
+  line-height: 1.3;
+}
+.pzb-points span { font: 700 15px "Noto Sans", sans-serif; }
+.pzb-points b { grid-row: span 2; align-self: center; font: 700 40px / 1 "Old Standard TT", serif; }
+.pzb-points small { font: 600 13px "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pz .pzi .pzb-points.is-neg { background: var(--pzb-bad-tint); }
+.pzb-points.is-neg b { color: var(--pzb-bad); }
+
+.pzb-notes { margin-top: 8px; }
+.pz .pzi .pzb-notes p { margin: 0; font: 700 19px / 24px "Caveat", cursive; color: var(--pz-pencil); }
+
+.pzb-heldprof, .pzb-held a { display: inline-flex; align-items: center; gap: 10px; min-width: 0; color: var(--pz-ink); text-underline-offset: 2px; }
+/* Subrayado sólo el nombre: la cifra de puntos no es parte del enlace que se lee. */
+.pzb-heldprof { display: flex; min-height: 40px; font-weight: 700; text-decoration: none; }
+.pzb-heldprof > span { text-decoration: underline; }
+.pzb-heldprof .pzb-cost { margin-left: auto; }
+.pzb-heldprof:hover, .pzb-held a:hover { color: var(--pz-pencil); }
+.pzb-heldprof:focus-visible, .pzb-held a:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+.pzb-held { margin: 0; padding: 0; list-style: none; }
+.pzb-held li { display: flex; align-items: center; gap: 8px; min-height: 40px; }
+.pzb-held a { flex: 1; font-weight: 600; line-height: 1.25; }
+.pzb-held .pzb-cost { font-size: 16px; }
+.pzb-free { font: 700 16px / 1.1 "Caveat", cursive; color: var(--pz-pencil); text-align: right; }
+.pzb-x {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: var(--pzi-tint);
+  color: var(--pz-ink);
+  font: 700 18px / 1 "Noto Sans", sans-serif;
+  cursor: pointer;
+}
+.pzb-x:hover { background: var(--pzi-tint-strong); color: var(--pz-pencil); }
+.pzb-x:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+.pz .pzi .pzb-none { margin: 0; color: var(--pz-dim); line-height: 28px; }
+
+.pzb-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.pzb-actions .pzi-copy { min-height: 40px; padding: 8px 14px; font-size: 13px; }
+.pzb-reset {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 700 13px "Noto Sans", sans-serif;
+  cursor: pointer;
+}
+.pzb-reset:hover { background: var(--pzi-tint-strong); }
+.pzb-reset:disabled { opacity: 0.5; cursor: default; }
+.pzb-reset:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* ---------- Tu sobreviviente (2026-10-01) ---------- */
+
+/* Arriba de la hoja del personaje. El marco mide el ancho de su hoja (3:4, como el afiche): el canvas del 3D entra en el
+   mismo lugar, así no salta nada; en el celular, el ancho de la pantalla menos la hoja, nunca un ancho fijo. */
+.pz .pzi .pzsu { padding: 16px 18px 18px; }
+.pzsu .pzi-h2 { margin-bottom: 8px; }
+/* "con la ropa de Trabajador de la construcción" no entra en un renglón de la columna: baja entera, sin cortar palabras. */
+.pzsu .pzi-h2 .pzi-hand { white-space: normal; }
+
+.pzsu-sex { display: flex; gap: 8px; margin-bottom: 10px; }
+.pzsu-sex button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 700 14px "Noto Sans", sans-serif;
+  cursor: pointer;
+}
+.pzsu-sex button:hover { background: var(--pzi-tint-strong); }
+/* El elegido, en tinta y con su tilde, como la profesión elegida: tinte, nunca borde. */
+.pzsu-sex button.is-on { background: var(--pz-ink); color: var(--pz-paper); }
+.pzsu-check { width: 16px; height: 16px; margin-right: 6px; color: inherit; }
+.pzsu-sex button:focus-visible, .pzsu-tools button:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+.pzsu-frame { position: relative; aspect-ratio: 3 / 4; width: 100%; background: var(--pzi-tint); }
+.pzsu-frame img, .pzsu-frame canvas { width: 100%; height: 100%; display: block; }
+/* Mientras se arma, el canvas espera debajo del afiche; listo, queda solo en el marco. */
+.pzsu-frame canvas { position: absolute; inset: 0; cursor: grab; }
+.pzsu-frame canvas:active { cursor: grabbing; }
+.pzsu-frame img { position: relative; object-fit: contain; }
+
+.pz .pzi .pzsu-note { margin: 6px 0 0; font: 700 18px / 22px "Caveat", cursive; color: var(--pz-pencil); }
+.pz .pzi .pzsu-note:empty { margin: 0; }
+
+.pzsu-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.pzsu-tools button {
+  min-width: 44px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 700 14px "Noto Sans", sans-serif;
+  cursor: pointer;
+}
+.pzsu-tools button:hover { background: var(--pzi-tint-strong); }
+.pzsu-tools button:disabled { opacity: 0.5; cursor: default; }
+.pzsu-tools .pzsu-go { flex: 1; background: var(--pz-ink); color: var(--pz-paper); }
+.pzsu-tools .pzsu-go:hover:not(:disabled) { background: var(--pz-pencil); }
+
+/* Lo que lleva puesto: una lista que baja de renglón, cada prenda entera. */
+.pzsu-wear { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 0; padding: 0; list-style: none; line-height: 28px; }
+.pzsu-wear a { color: var(--pz-ink); font-weight: 600; text-underline-offset: 2px; }
+.pzsu-wear a:hover { color: var(--pz-pencil); }
+.pzsu-wear a:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* ---------- Las habilidades ---------- */
+
+/* La lista es el contenedor: el ancho que importa es el de la lista y no el de la pantalla (en la columna de escritorio
+   también puede quedar angosta). Ver el @container de más abajo. */
+.pzb-skills { margin: 0; padding: 0; list-style: none; container: pzb-skills / inline-size; }
+.pzb-skills li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 20px 50px;
+  align-items: center;
+  gap: 0 10px;
+  min-height: 28px;
+  line-height: 1.2;
+}
+.pzb-sname { font-weight: 600; }
+/* Las diez rayitas del juego: llenas hasta el nivel, en el verde de las barras de habilidad. */
+.pzb-pips { display: inline-flex; gap: 2px; }
+.pzb-pips i { display: block; width: 6px; height: 14px; background: var(--pzi-tint-strong); }
+.pzb-pips i.on { background: var(--pz-grass); }
+.pzb-lvl { font: 700 16px "Old Standard TT", serif; text-align: right; }
+.pzb-mult { font: 700 16px "Old Standard TT", serif; text-align: right; white-space: nowrap; }
+.pzb-skills li.is-zero .pzb-sname, .pzb-skills li.is-zero .pzb-lvl { color: var(--pz-dim); font-weight: 400; }
+
+/* Rayitas (78 px), nivel (20), multiplicador (50) y los huecos suman unos 178 px fijos, y la palabra más larga
+   («Mantenimiento») mide unos 128: hacen falta 306 px de lista. Con menos, al nombre le quedaban 24 px (320 px de pantalla)
+   o 79 (375) y se montaba sobre las rayitas. Las palabras no se cortan, así que no se achica el nombre:
+   1) hasta 330 px (la columna de escritorio mide 304) se afinan las rayitas, que pasan a 59 px y le devuelven 19 al nombre;
+   2) debajo de 300 px el nombre queda entero en su renglón y las rayitas, el nivel y el multiplicador pasan debajo. */
+@container pzb-skills (max-width: 330px) {
+  .pzb-pips { gap: 1px; }
+  .pzb-pips i { width: 5px; }
+}
+@container pzb-skills (max-width: 299px) {
+  .pzb-pips { gap: 2px; }
+  .pzb-pips i { width: 6px; }
+  .pzb-skills li {
+    grid-template-columns: auto minmax(0, 1fr) 20px 50px;
+    grid-template-areas: "n n n n" "p . l m";
+    padding: 4px 0;
+  }
+  .pzb-sname { grid-area: n; }
+  .pzb-pips { grid-area: p; }
+  .pzb-lvl { grid-area: l; }
+  .pzb-mult { grid-area: m; }
+}
+
+@media (max-width: 860px) {
+  .pzb-layout { grid-template-columns: minmax(0, 1fr); }
+  .pzb-side { position: static; max-height: none; overflow: visible; padding-bottom: 0; }
+  .pz .pzi .pzb-side .pz-page { margin-bottom: 22px; }
+
+  /* Las 25 profesiones, en una tira que se desliza dentro de su hoja: apiladas eran una pantalla y media antes del
+     primer rasgo. */
+  .pzb-strip { display: flex; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-bottom: 6px; }
+  .pzb-prof { flex: 0 0 136px; scroll-snap-align: start; }
+
+  /* En una columna, la descripción de cada rasgo en un renglón: 81 filas de tres renglones eran demasiado largas. */
+  .pzb-line { -webkit-line-clamp: 1; }
+
+  /* Los puntos acompañan abajo mientras se eligen rasgos y se quedan donde terminan las listas, antes de tu personaje. */
+  .pzb-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px 12px;
+    margin: 0 0 22px;
+    padding: 8px 14px;
+    background: var(--pz-paper);
+    color: var(--pz-ink);
+    box-shadow: 0 -6px 14px rgba(0, 0, 0, 0.3);
+    font: 700 15px "Noto Sans", sans-serif;
+  }
+  .pzb-bar b { font: 700 24px / 1 "Old Standard TT", serif; vertical-align: -2px; }
+  .pzb-bar.is-neg { background: linear-gradient(var(--pzb-bad-tint), var(--pzb-bad-tint)), var(--pz-paper); }
+  .pzb-bar.is-neg b { color: var(--pzb-bad); }
+  .pzb-bar a { display: inline-flex; align-items: center; min-height: 40px; color: var(--pz-ink); text-underline-offset: 3px; }
+}

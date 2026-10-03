@@ -1,0 +1,118 @@
+/*
+ * Project Zomboid, la pestaña Habilidades y libros (2026-09-30). Las hojas, el buscador, la cabecera de la ficha, las
+ * tablas y los enlaces son los de Objetos (zomboid-items.css, clases `.pzi-*`): es la misma libreta. Acá va lo propio:
+ * las filas de la lista, el sello grande de la cabecera, los VHS y la calculadora.
+ *
+ * Reglas de la casa: sin bordes ni barras de color en filas u hojas (lo que importa va por tinte, texto o cifra).
+ * Ninguna palabra se corta y nada es más ancho que la hoja en el celular: las tablas scrollean dentro de su caja.
+ */
+
+/* ---------- La lista ---------- */
+
+/* Como en Rasgos y Moodles: sin los renglones de la página, cada fila lleva el suyo abajo (tiene dos renglones y no
+   calza con los de la hoja). */
+.pz .pzi .pzs-sheet { padding: 6px 18px 12px; background: var(--pz-paper); }
+.pzs-sheet .pzi-h2 { min-height: 44px; margin: 0; }
+/* "Combate: Cuerpo a cuerpo" no entra de un renglón a 320 px: se parte entre palabras al lado del sello, sin soltarlo
+   ni mandar la cifra abajo sola. */
+.pzs .pzs-sheet .pzi-h2 { flex-wrap: nowrap; }
+.pzs .pzs-sheet .pzi-h2 small { flex: none; }
+
+.pzs-rows { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); column-gap: 26px; }
+.pzs-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "n b" "l l";
+  column-gap: 12px;
+  align-items: baseline;
+  padding: 8px 6px 9px;
+  margin: 0 -6px;
+  color: var(--pz-ink);
+  text-decoration: none;
+  /* El renglón de la libreta, del mismo azul que los de la hoja. */
+  background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0);
+}
+.pzs-name { grid-area: n; font: 700 15px / 1.3 "Noto Sans", sans-serif; }
+.pzs-line { grid-area: l; margin-top: 2px; font: 400 14px / 1.4 "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzs-nbooks { grid-area: b; font: 700 17px / 1 "Caveat", cursive; color: var(--pz-pencil); white-space: nowrap; }
+.pzs-row:hover { background-color: var(--pzi-tint); }
+.pzs-row:hover .pzs-name { text-decoration: underline; }
+.pzs-row:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: -2px; }
+
+/* ---------- La ficha ---------- */
+
+/* El sello de la categoría, grande, donde las otras fichas llevan el ícono del juego (las habilidades no tienen). */
+.pzs-seal { display: grid; place-items: center; flex: none; width: 72px; height: 72px; background: var(--pz-paper-2); }
+.pzs-seal .pz-stamp { width: 48px; height: 48px; color: var(--pz-grass); }
+/* En el celular el sello se achica: a 320 px le dejaba al título 110 px, y "Arma larga contundente" bajaba mucho. */
+@media (max-width: 480px) {
+  .pzs-seal { width: 52px; height: 52px; }
+  .pzs-seal .pz-stamp { width: 34px; height: 34px; }
+}
+
+.pzs-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px; margin: 12px 0 0; font: 600 15px "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pz .pzs-head .pzs-meta { margin-bottom: 0; }
+
+/* Como en Moodles: el título de una hoja no suelta el sello, se parte entre palabras a su lado (nunca dentro de una). */
+.pzs .pzi-rel .pzi-h2 { flex-wrap: nowrap; }
+.pzs .pzi-rel .pzi-h2 small { flex: none; }
+
+.pzs-note { display: block; font-size: 14px; color: var(--pz-dim); }
+.pz .pzs .pzs-note { margin: 4px 0 0; line-height: 1.45; }
+.pzs-h3 { margin: 10px 0 2px; font: 700 12px / 28px "Noto Sans", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pz-dim); }
+.pzs-h3:first-of-type { margin-top: 0; }
+
+/* La tabla de XP: los números a la derecha, como en una planilla, y el nivel en negrita. */
+.pzs-table th[scope="row"], .pzs-plan th[scope="row"] { font: 700 15px "Old Standard TT", serif; color: var(--pz-ink); letter-spacing: 0; text-transform: none; white-space: nowrap; }
+.pzs-table td, .pzs-plan td:nth-child(3), .pzs-plan td:nth-child(4) { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pzs-table th:not([scope="row"]):not(:first-child), .pzs-plan th:nth-child(3), .pzs-plan th:nth-child(4) { text-align: right; }
+
+/* Los libros: el enlace arriba y, en el renglón de abajo, su tramo con el multiplicador y desde cuándo se lee. */
+/* Una sola columna: los nombres de los libros son largos ("Carpintería V: «Ensamblaje de Obra…»") y en dos se pisaban. */
+.pz .pzs .pzs-booklist { grid-template-columns: minmax(0, 1fr); }
+.pzs-booklist li { column-gap: 10px; padding: 4px 0 6px; }
+.pzs-booklist li > a { flex-basis: 100%; }
+.pzs-booklist li > .pzi-meta { margin-left: 40px; }
+.pz .pzs .pzs-booklist .pzs-note { display: inline; margin: 0; }
+
+/* Los VHS y los programas de TV no tienen ficha: el nombre (o el día y la hora) a la izquierda y la XP a la derecha, en
+   renglones. */
+.pzs-medialist { margin: 0; padding: 0; list-style: none; }
+.pzs-medialist li { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 14px; flex-wrap: wrap; min-height: 28px; line-height: 28px; }
+.pzs-medialist b { margin-left: auto; font: 700 17px / 28px "Old Standard TT", serif; white-space: nowrap; }
+/* El programa que sale antes de la hora de arranque: el aviso en chico. Si empuja la XP a otro renglón, el
+   margin-left: auto de arriba la deja a la derecha como en los demás. */
+.pzs-before { font-size: 13px; color: var(--pz-dim); }
+/* El total del canal, como el pie de una planilla: en negrita, sin raya de color. */
+.pzs-medialist .pzs-tvtotal span { font-weight: 700; }
+
+/* ---------- La calculadora ---------- */
+
+/* A lo ancho y sin renglones (los controles no calzan en ellos): una hoja de papel liso. */
+.pz .pzi .pzs-calc { background: var(--pz-paper); }
+.pzs-form { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 20px; margin: 4px 0 14px; }
+.pzs-field { display: grid; gap: 4px; min-width: 0; margin: 0; padding: 0; border: 0; font: 600 14px "Noto Sans", sans-serif; }
+.pzs-field > span, .pzs-field legend { color: var(--pz-dim); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+.pzs-field legend { padding: 0; margin-bottom: 4px; }
+.pzs-field small { max-width: 320px; font-weight: 400; color: var(--pz-dim); line-height: 1.4; }
+.pzs-field select {
+  min-height: 40px;
+  max-width: 100%;
+  padding: 6px 10px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 700 16px "Noto Sans", sans-serif;
+}
+.pzs-field select:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+.pzs-checks label, .pzs-checks.pzs-usebooks { display: flex; align-items: center; gap: 8px; min-height: 32px; font-weight: 600; cursor: pointer; }
+.pzs-checks small { color: var(--pz-dim); }
+.pzs-checks input { width: 18px; height: 18px; margin: 0; accent-color: var(--pz-grass); }
+.pzs-usebooks { align-self: end; }
+
+/* El resultado: la XP a ganar en grande, que es la respuesta; lo demás, en tinta normal. */
+.pzs-result { container-type: inline-size; }
+.pz .pzs-result p { margin: 0 0 8px; line-height: 1.5; }
+.pzs-earn b { font: 700 30px / 1.1 "Old Standard TT", serif; white-space: nowrap; }
+.pzs-plan { margin: 6px 0 4px; }
+.pzs-plan td:nth-child(2) { min-width: 180px; }

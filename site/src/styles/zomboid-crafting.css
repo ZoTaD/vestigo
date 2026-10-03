@@ -1,0 +1,230 @@
+/*
+ * Project Zomboid, la pestaña Fabricación (2026-10-02): el Planificador de fabricación. Las hojas, el buscador, los
+ * chips, los títulos y los íconos son los de Objetos (zomboid-items.css, clases `.pzi-*`, que la pestaña importa): es la
+ * misma libreta. Acá va lo propio: las dos columnas, el catálogo con su "Sumar", tu lista con las cantidades, la hoja de
+ * ruta en renglones y el árbol con su sangría.
+ *
+ * Reglas de la casa: sin bordes ni barras de color. Lo que está en tu lista y lo que se fabrica van con tinte; lo que
+ * pide aprender, con texto en lápiz rojo. Ninguna palabra se corta, y en el celular nada es más ancho que la pantalla:
+ * las categorías bajan de renglón y el árbol deja de sangrar después del nivel 6.
+ */
+
+.pzc {
+  --pzc-on: rgba(63, 122, 60, 0.14);
+  --pzc-made: rgba(42, 38, 32, 0.05);
+}
+
+/* Elegir a la izquierda, la hoja de ruta a la derecha; en el celular, una abajo de la otra. */
+.pzc-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 22px; align-items: start; }
+@media (min-width: 960px) {
+  .pzc-layout { grid-template-columns: minmax(280px, 380px) minmax(0, 1fr); }
+}
+.pzc-pick, .pzc-out { min-width: 0; }
+
+/* Las hojas sin los renglones de la página: cada fila lleva el suyo, como en Personaje. */
+.pz .pzi .pzc-sheet { padding: 6px 18px 14px; background: var(--pz-paper); }
+.pzc-sheet .pzi-h2 { min-height: 44px; margin: 0 0 6px; }
+.pzc-empty .pzi-hand { margin: 4px 0 8px; }
+
+.pzc-h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 10px;
+  margin: 16px 0 4px;
+  font: 700 19px / 26px "Old Standard TT", serif;
+}
+.pzc-h3 .pzi-hand { font-size: 19px; }
+
+/* ---------- Elegir ---------- */
+
+.pzc-kinds, .pzc-cats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.pzc-kinds .pzi-chip { min-height: 36px; }
+/* Una categoría larga ("Ensamblaje de electrónica") no se corta: el chip entero baja de renglón. */
+.pzc-cats .pzi-chip { white-space: nowrap; }
+
+.pzc-catalog, .pzc-targets, .pzc-rows, .pzc-tree, .pzc-kids { margin: 0; padding: 0; list-style: none; }
+.pzc-catalog { margin-top: 8px; }
+.pzc-catalog li, .pzc-targets li {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 10px;
+  min-height: 44px;
+  padding: 4px 6px;
+  margin: 0 -6px;
+  background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0);
+  font: 600 14px / 1.25 "Noto Sans", sans-serif;
+}
+/* Lo que ya está en tu lista: tinte verde, y la cantidad en el texto. */
+.pzc-catalog li.is-on { background-color: var(--pzc-on); }
+.pzc-cname { min-width: 0; }
+.pzc-cname small { display: block; font: 600 12px / 1.3 "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzc-inlist { display: block; font: 700 17px / 1.1 "Caveat", cursive; font-style: normal; color: var(--pz-grass); }
+
+.pzc-add, .pzc-remove, .pzc-act, .pzc-more, .pzc-qty button {
+  min-height: 36px;
+  padding: 4px 12px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 700 13px "Noto Sans", sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pzc-add:hover, .pzc-remove:hover, .pzc-act:hover, .pzc-more:hover, .pzc-qty button:hover { background: var(--pzi-tint-strong); }
+.pzc-add:focus-visible, .pzc-remove:focus-visible, .pzc-act:focus-visible, .pzc-more:focus-visible, .pzc-qty button:focus-visible,
+.pzc-qty input:focus-visible, .pzc select:focus-visible {
+  outline: 2px solid var(--pz-pencil);
+  outline-offset: 2px;
+}
+.pzc-act.is-on { background: var(--pz-ink); color: var(--pz-paper); }
+.pzc-qty button:disabled { opacity: 0.45; cursor: default; }
+.pzc-more { margin-top: 10px; }
+.pzc-more small { font-weight: 600; color: var(--pz-dim); }
+.pzc-none { margin: 8px 0 4px; font: 700 21px / 26px "Caveat", cursive; color: var(--pz-pencil); }
+
+/* Tu lista: el nombre, la cantidad con − y +, y "Sacar". En el celular, la cantidad y "Sacar" bajan debajo del nombre. */
+.pzc-targets li { grid-template-columns: minmax(0, 1fr) auto auto; padding-top: 6px; padding-bottom: 6px; }
+.pzc-tname { display: inline-flex; align-items: center; gap: 10px; min-width: 0; color: var(--pz-ink); text-underline-offset: 2px; }
+.pzc-tname:hover { color: var(--pz-pencil); }
+.pzc-qty { display: inline-flex; align-items: center; gap: 4px; }
+.pzc-qty button { min-width: 36px; padding: 4px 0; font-size: 18px; line-height: 1; }
+.pzc-qty input {
+  width: 3.6em;
+  min-height: 36px;
+  padding: 2px 4px;
+  border: 0;
+  background: var(--pzi-tint);
+  color: var(--pz-ink);
+  font: 700 17px "Old Standard TT", serif;
+  text-align: center;
+}
+
+/* ---------- La hoja de ruta ---------- */
+
+/* Renglones alternados con tinte: la cantidad adelante, en la letra de los títulos, y lo que es al lado. */
+.pzc-rows li { display: flex; align-items: center; gap: 4px 12px; min-height: 40px; padding: 4px 8px; margin: 0 -8px; }
+.pzc-rows li:nth-child(odd) { background: var(--pzi-tint); }
+.pzc-qtycol { flex: none; display: flex; flex-direction: column; align-items: flex-end; min-width: 3em; }
+.pzc-n { font: 700 18px / 1.1 "Old Standard TT", serif; white-space: nowrap; }
+.pzc-uses { font: 600 12px / 1.2 "Noto Sans", sans-serif; color: var(--pz-dim); white-space: nowrap; }
+.pzc-what, .pzc-plain { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; min-width: 0; line-height: 1.35; }
+.pzc-item { display: inline-flex; align-items: center; gap: 8px; min-width: 0; color: var(--pz-ink); font-weight: 600; text-underline-offset: 2px; }
+.pzc-item:hover { color: var(--pz-pencil); }
+.pzc-item:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+.pzc-sname { font-weight: 700; }
+.pzc-notes { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.pzc-why { font: 700 18px / 1.1 "Caveat", cursive; font-style: normal; color: var(--pz-dim); }
+.pzc-why.is-found { color: var(--pz-grass); }
+/* Lo que pide aprender, en lápiz rojo: es lo que más cuesta conseguir. */
+.pzc-why.is-learn { color: var(--pz-pencil); }
+.pzc-where { font: 600 13px / 1.3 "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzc-oneof { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.pzc-alts { font-size: 14px; }
+.pzc-or { font: 700 18px / 1 "Caveat", cursive; color: var(--pz-dim); }
+.pzc-moretools { display: inline; }
+.pzc-moretools summary { display: inline; font: 700 18px / 1.1 "Caveat", cursive; color: var(--pz-pencil); cursor: pointer; }
+.pzc-moretools[open] summary { display: block; }
+.pzc-ways { flex-basis: 100%; font-size: 14px; color: var(--pz-dim); }
+.pzc-ways .pzc-item { font-weight: 600; }
+.pzc-gives { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.pzc-arrow { font: 700 22px / 1 "Caveat", cursive; color: var(--pz-pencil); }
+.pzc-steps { counter-reset: none; }
+.pzc-share { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+
+/* Dónde aparece más: un renglón propio debajo del nombre, y "Dónde aparece →" en lápiz, como un link escrito a mano. */
+.pzc-what > .pzc-where { flex-basis: 100%; }
+.pzc-wlink { font: 700 18px / 1.1 "Caveat", cursive; color: var(--pz-pencil); white-space: nowrap; text-underline-offset: 2px; }
+.pzc-wlink:hover { color: var(--pz-ink); }
+.pzc-wlink:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* "tengo": un campo chico al final del renglón (o del nodo del árbol), con su palabra en lápiz. Si no entra al lado del
+   nombre (en el celular), baja a su propio renglón a la derecha, en vez de apretar el nombre. */
+.pzc-rows li { flex-wrap: wrap; }
+.pzc-rows li > .pzc-what { flex: 1 1 200px; }
+.pzc-have { display: inline-flex; align-items: center; gap: 6px; flex: none; margin-left: auto; }
+.pzc-have > span, .pzc-havetool > span { font: 700 17px / 1 "Caveat", cursive; color: var(--pz-dim); white-space: nowrap; }
+.pzc-have input {
+  width: 3.4em;
+  min-height: 32px;
+  padding: 2px 4px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 700 15px "Old Standard TT", serif;
+  text-align: center;
+}
+.pzc-have input:focus-visible, .pzc-havetool input:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+/* "la tengo": la casilla; marcada, la fila se tiñe de verde y dice "✓ la tenés". */
+.pzc-havetool { display: inline-flex; align-items: center; gap: 6px; flex: none; min-height: 36px; margin-left: auto; cursor: pointer; }
+.pzc-havetool input { width: 18px; height: 18px; margin: 0; accent-color: var(--pz-grass); }
+.pzc-rows li.is-have { background: var(--pzc-on); }
+.pzc-rows li.is-have .pzc-havetool > span { color: var(--pz-grass); }
+
+/* ---------- Tu personaje ---------- */
+
+.pzc-charrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.pzc-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
+.pzc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 2px 2px 8px;
+  background: var(--pzi-tint);
+  font: 600 13px / 1.2 "Noto Sans", sans-serif;
+}
+.pzc-chip .pzc-act { min-height: 32px; padding: 2px 10px; }
+.pz .pzi .pzc-charnote { margin: 8px 0 2px; font-size: 19px; }
+
+/* ---------- Para aprender ---------- */
+
+.pzc-lrecipe + .pzc-lrecipe { margin-top: 10px; }
+.pzc-lrecipe .pzc-h3 { margin-top: 10px; }
+.pzc-lrecipe .pzc-h3 .pzc-item { font-weight: 700; }
+.pzc-lwith { margin: 0 0 2px; }
+
+/* ---------- El árbol ---------- */
+
+.pzc-tree { margin: 6px 0 14px; }
+/* 12 px por nivel hasta el 6; más abajo, sin sangría y con "↳ nivel N" (ver TreeSheet.tsx). */
+.pzc-kids { padding-left: 12px; }
+.pzc-kids.is-flat { padding-left: 0; }
+.pzc-nrow {
+  display: flex;
+  align-items: center;
+  gap: 4px 10px;
+  min-height: 40px;
+  padding: 4px 6px;
+  background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0);
+  font-size: 14px;
+}
+/* Lo que se fabrica, con tinte; lo que se junta, en el papel. */
+.pzc-node.is-made > .pzc-nrow { background-color: var(--pzc-made); }
+.pzc-nrow > .pzi-icon, .pzc-nrow > .pzi-noicon { align-self: flex-start; margin-top: 2px; }
+.pzc-nmain { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-width: 0; }
+.pzc-nname { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 0 4px; }
+.pzc-with { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; }
+.pzc-tool { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; }
+.pzc-select { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; }
+.pzc select {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 32px;
+  padding: 2px 6px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 600 13px "Noto Sans", sans-serif;
+  text-overflow: ellipsis;
+}
+.pzc-deep { flex: none; font: 700 17px / 1 "Caveat", cursive; color: var(--pz-dim); white-space: nowrap; }
+
+@media (max-width: 640px) {
+  .pz .pzi .pzc-sheet { padding-left: 12px; padding-right: 12px; }
+  .pzc-targets li { grid-template-columns: minmax(0, 1fr) auto; row-gap: 6px; }
+  .pzc-targets .pzc-tname { grid-column: 1 / -1; }
+  .pzc-nrow { padding-left: 2px; padding-right: 2px; }
+  .pzc-select, .pzc-with select { flex: 1 1 160px; }
+  .pzc-select select { flex: 1; }
+}

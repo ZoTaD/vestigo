@@ -11,6 +11,7 @@ import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import vhMeta from "@valheim/meta.json";
 import d2Meta from "@d2r/meta.json";
+import pzMeta from "@zomboid/meta.json";
 
 /** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
 const VH_ENTRIES = Object.entries(vhMeta.counts).reduce((n, [k, v]) => (k === "biomes" || k === "bosses" ? n : n + v), 0);
@@ -320,6 +321,32 @@ export default function Home({
               <p className="game-figure is-second">
                 <b>{num(d2Meta.counts.uniques)}</b>
                 <span>{copy.home.games.d2rUniques}</span>
+              </p>
+            </div>
+          </li>
+
+          {/* Project Zomboid entra el 2026-09-30, con la portada de la libreta. */}
+          <li className="game-panel" data-panel="zomboid">
+            <div className="game-panel-main">
+              <h3 className="game-panel-name">{copy.games.zomboid}</h3>
+              <p className="game-panel-note">{copy.home.games.zomboidLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "zomboid", pzSection: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.zomboidCta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(pzMeta.counts.items)}</b>
+                <span>{copy.home.games.zomboidItems}</span>
+              </p>
+              <p className="game-figure is-second">
+                {/* Las de fabricar y las de construir: las 1.170 que lista la pestaña Recetas (igual que la portada de
+                    Project Zomboid), no sólo las 969 primeras. */}
+                <b>{num(pzMeta.counts.recipes + pzMeta.counts.buildRecipes)}</b>
+                <span>{copy.home.games.zomboidRecipes}</span>
               </p>
             </div>
           </li>

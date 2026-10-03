@@ -1,4 +1,4 @@
-import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type ValheimTab } from "./route";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -75,6 +75,39 @@ export interface D2rSitemapData {
   patches?: { slug: string; version: string; date: string }[];
 }
 
+/**
+ * Lo que el sitemap necesita de Project Zomboid (2026-09-30): el `meta.json` y el `index.json` que escribe
+ * `games/zomboid/tools/extract.py`.
+ */
+export interface ZomboidSitemapData {
+  version: string;
+  /** Cuándo cambiaron los datos de verdad (el extractor no la mueve si no cambió nada). */
+  extractedAt: string;
+  /**
+   * Cuándo cambió el mapa de verdad (el `extractedAt` de `data/map/meta.json`, que escribe `map.py` y no se mueve si el
+   * mapa salió igual). El Mapa se alimenta de eso y no del extractor general, que se corre más seguido: con la fecha
+   * general, el sitemap diría que el mapa cambió cada vez que cambió un objeto.
+   */
+  mapExtractedAt?: string;
+  /**
+   * Cuándo cambió el botín de verdad (el `extractedAt` de `data/loot/meta.json`, que escribe `loot.py` y no se mueve si
+   * el botín salió igual). Mueve la fecha de Objetos (cada ficha dice dónde aparece) y la del Mapa (cada edificio dice
+   * qué puede aparecer por habitación), y Fabricación (qué se junta y qué se fabrica sale de dónde aparece cada cosa), y
+   * sólo ésas: la receta de un rasgo no cambia porque cambió una tabla de botín.
+   */
+  lootExtractedAt?: string;
+  /**
+   * Las fichas, con su pestaña (objetos, recetas, rasgos, profesiones, habilidades, moodles). El build arma con ellas
+   * los slugs en español, y el sitemap lista las de cada pestaña a medida que se publica.
+   */
+  index?: { sec: PzTab; id: string; en: string; es: string; via?: { en: string[]; es: string[] } }[];
+  /**
+   * Las versiones de la pestaña Parches (`site/patches/index.json`, 2026-10-02): una página por versión, con el slug
+   * igual en los dos idiomas. Su `lastmod` es `updated` (cuándo se tocó su Crónica o su diff) o, sin eso, su fecha.
+   */
+  patches?: { slug: string; version: string; date: string; updated?: string }[];
+}
+
 /** Las categorías de la enciclopedia, en el orden de sus pestañas. */
 export const POE2_CATS = ["gems", "uniques", "bases", "currency"] as const;
 
@@ -96,19 +129,23 @@ export interface SitemapData {
   vh?: ValheimSitemapData;
   /** Diablo II: Resurrected. Opcional por lo mismo. */
   d2?: D2rSitemapData;
+  /** Project Zomboid. Opcional por lo mismo. */
+  zb?: ZomboidSitemapData;
   /**
    * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
    * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
    */
-  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string };
+  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string };
 }
 
 /** Los sitemaps en que se parte el sitio: uno por juego y uno para lo demás. */
-export const SITEMAP_GROUPS = ["site", "deadlock", "poe2", "valheim", "d2r"] as const;
+export const SITEMAP_GROUPS = ["site", "deadlock", "poe2", "valheim", "d2r", "zomboid"] as const;
 export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];
 
 function sitemapGroup(path: string): SitemapGroup {
   const game = path.split("/")[2];
+  // Zomboid se llama distinto en la dirección (`/project-zomboid`) que en el grupo.
+  if (game === PZ_SEGMENT) return "zomboid";
   return game === "deadlock" || game === "poe2" || game === "valheim" || game === "d2r" ? game : "site";
 }
 
@@ -161,6 +198,26 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
       return day(route.detail ? patches.find((p) => p.slug === route.detail)?.date : newest(patches.map((p) => p.date)));
     }
     return day(data.dates?.d2r);
+  }
+  if (game === PZ_SEGMENT) {
+    // En español la pestaña se llama "mapa" y "objetos": se lee la ruta y no el segmento. Sin el sello del mapa, la
+    // fecha de la sección antes que ninguna. El botín mueve la del Mapa y la de Objetos (lista y fichas): la más
+    // reciente entre su sello y la propia de cada una; sin el sello del botín, queda como estaba.
+    const route = parseRoute(path);
+    const sec = route.pzSection;
+    // Parches, como Diablo II: cada versión con la fecha en que se tocó su página, y la lista con la más nueva.
+    if (sec === "patches") {
+      const patches = data.zb?.patches ?? [];
+      const when = (p: { date: string; updated?: string }) => p.updated ?? p.date;
+      const p = route.detail ? patches.find((x) => x.slug === route.detail) : undefined;
+      return day(route.detail ? (p && when(p)) : newest(patches.map(when)));
+    }
+    const loot = day(data.zb?.lootExtractedAt);
+    const later = (a: string | undefined, b: string | undefined) => (a && b ? (a > b ? a : b) : a ?? b);
+    if (sec === "map") return later(day(data.zb?.mapExtractedAt) ?? day(data.dates?.zomboid), loot);
+    // Fabricación también: cada objeto dice si se encuentra tirado o se fabrica, y eso sale del botín.
+    if (sec === "items" || sec === "crafting") return later(day(data.dates?.zomboid), loot);
+    return day(data.dates?.zomboid);
   }
   return undefined;
 }
@@ -262,6 +319,23 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const s of D2R_SECTIONS) paths.push(routePath({ ...base, lang, view: "d2r", d2Section: s }));
       for (const e of data.d2.index ?? []) paths.push(routePath({ ...base, lang, view: "d2r", d2Section: e.sec, detail: e.id }));
       for (const p of data.d2.patches ?? []) paths.push(routePath({ ...base, lang, view: "d2r", d2Section: "patches", detail: p.slug }));
+    }
+
+    // Project Zomboid (2026-09-30): la portada, las pestañas que ya tienen página (`PZ_PUBLISHED`) y las fichas de las
+    // que las tienen. Una ficha de una pestaña sin publicar no entra: su dirección todavía abre la portada. Tampoco una
+    // ficha que todavía no tiene página propia (`PZ_DETAILS_PENDING`, 2026-10-01): abriría la pestaña con otro título.
+    if (data.zb) {
+      paths.push(routePath({ ...base, lang, view: "zomboid", pzSection: "home" }));
+      for (const s of PZ_PUBLISHED) paths.push(routePath({ ...base, lang, view: "zomboid", pzSection: s }));
+      const withDetails = new Set(PZ_PUBLISHED.filter((s) => PZ_DETAIL_SECTIONS.includes(s)));
+      for (const e of data.zb.index ?? []) {
+        if (!withDetails.has(e.sec) || PZ_DETAILS_PENDING[e.sec as PzTab]?.includes(e.id)) continue;
+        paths.push(routePath({ ...base, lang, view: "zomboid", pzSection: e.sec, detail: e.id }));
+      }
+      // Las versiones de Parches no están en el índice de fichas: salen de su propio índice.
+      if (PZ_PUBLISHED.includes("patches")) {
+        for (const p of data.zb.patches ?? []) paths.push(routePath({ ...base, lang, view: "zomboid", pzSection: "patches", detail: p.slug }));
+      }
     }
   }
 

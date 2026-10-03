@@ -6,6 +6,8 @@ import { deadlockDetailSlugs, sitemapPaths, type SitemapData } from "./sitemap";
 import { POE2_COPY, type Poe2Copy } from "./poe2Copy";
 import { VALHEIM_COPY } from "./valheimCopy";
 import { D2R_COPY } from "./d2rCopy";
+import { tidyTitleName, ZOMBOID_COPY } from "./zomboidCopy";
+import { esHeadNames } from "./zomboid/headName";
 
 /** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
 const copyOf = (lang: Lang) => ({ ...deadlockCopyFor(lang), seo: SEO_COPY[lang].seo });
@@ -42,12 +44,15 @@ const say = (loc: Localized | undefined, lang: Lang, fallback: string): string =
  * decisiones que elige qué copia usa cada página, y tenerla dos veces es
  * garantizar que un día digan cosas distintas. Lo único que cada lado resuelve
  * por su cuenta es `detailName`, porque el navegador lo saca del catálogo vivo
- * y el build de los JSON que tiene en la mano.
+ * y el build de los JSON que tiene en la mano. `via` es lo mismo para los
+ * rasgos de profesión de Project Zomboid que tienen un gemelo que se elige: las
+ * profesiones que lo traen (ver `seo.detail` en `zomboidCopy.ts`).
  */
 export function metaFor(
   route: Route,
   lang: Lang,
-  detailName: string | null
+  detailName: string | null,
+  via?: string[] | null
 ): { title: string; description: string } {
   const copy = copyOf(lang);
   const seo = copy.seo;
@@ -118,6 +123,15 @@ export function metaFor(
     }
     return s[sec as "runes" | "runewords" | "uniques" | "sets" | "bases" | "cube" | "classes" | "terror-zones" | "breakpoints" | "drops" | "planner" | "grail" | "patches"];
   }
+  // Project Zomboid (2026-09-30): la portada, cada pestaña y cada ficha. Una ficha sin nombre (el índice todavía no
+  // llegó al navegador) o de una sección sin plantilla lleva el de su pestaña.
+  if (route.view === "zomboid") {
+    const s = ZOMBOID_COPY[lang].seo;
+    const sec = route.pzSection ?? "home";
+    const detail = sec !== "home" && route.detail ? s.detail[sec] : undefined;
+    // Con los espacios de más de su nombre afuera (ver `tidyTitleName`): sale igual en el título, la descripción y og:*.
+    return detail && detailName ? detail(tidyTitleName(detailName), via ?? undefined) : s[sec];
+  }
   // Lo que queda son la portada y las dos páginas legales.
   const page = seo[route.view];
   return { title: page.title(), description: page.description() };
@@ -152,6 +166,19 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const e of data.vh?.entries ?? []) out[`vh-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.d2?.index ?? []) out[`d2-${e.sec}/${e.id}`] = lang === "es" ? e.es || e.en : e.en;
   for (const p of data.d2?.patches ?? []) out[`d2-patches/${p.slug}`] = p.version;
+  // En español, las fichas de una sección que el juego llama igual llevan el inglés entre paréntesis (ver `esHeadNames`).
+  const pzHead = new Map<string, Map<string, string>>();
+  if (lang === "es") {
+    const bySec = new Map<string, { id: string; en: string; es: string }[]>();
+    for (const e of data.zb?.index ?? []) {
+      if (!bySec.has(e.sec)) bySec.set(e.sec, []);
+      bySec.get(e.sec)!.push(e);
+    }
+    for (const [sec, rows] of bySec) pzHead.set(sec, esHeadNames(rows));
+  }
+  for (const e of data.zb?.index ?? [])
+    out[`zb-${e.sec}/${e.id}`] = lang === "es" ? pzHead.get(e.sec)?.get(e.id) || e.es || e.en : e.en;
+  for (const p of data.zb?.patches ?? []) out[`zb-patches/${p.slug}`] = p.version;
   for (const e of data.vh?.editions ?? []) {
     const name = (lang === "es" && e.title.es) || e.title.en;
     out[`vh-patches/${e.slug}`] = name ? `${e.version} — ${name}` : e.version;
@@ -290,6 +317,25 @@ export function jsonLdFor(
     }
     return out;
   }
+  if (route.view === "zomboid") {
+    // Vestigo › Project Zomboid › pestaña › ficha.
+    const sec = route.pzSection ?? "home";
+    const trail = [{ name: brand, url: home }, { name: "Project Zomboid", url: routeUrl({ ...route, pzSection: "home", detail: undefined }) }];
+    if (sec !== "home") trail.push({ name: ZOMBOID_COPY[lang].tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (route.detail && detailName) trail.push({ name: tidyTitleName(detailName), url: page.canonical });
+    const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
+    // El Planificador de personaje (2026-09-30) y el de fabricación (2026-10-02) son herramientas, como los de Diablo II:
+    // además, aplicaciones web gratuitas. Con el nombre de la herramienta (el título sin la marca), no con el de su solapa
+    // ("Personaje", "Fabricación").
+    if (sec === "planner" || sec === "crafting") {
+      out.push({
+        "@context": "https://schema.org", "@type": "WebApplication", name: page.title.replace(/\s*\|.*$/, ""), description: page.description,
+        url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Project Zomboid" },
+      });
+    }
+    return out;
+  }
   if (route.view !== "deadlock") return [];
 
   const deadlockUrl = routeUrl({ ...route, dlSection: "meta", detail: undefined });
@@ -362,6 +408,9 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
     en: detailNames(data, "en"),
     es: detailNames(data, "es"),
   };
+  // Las profesiones de los rasgos gemelos de Zomboid, por la misma clave que su nombre (ver `metaFor`).
+  const vias = new Map<string, { en: string[]; es: string[] }>();
+  for (const e of data.zb?.index ?? []) if (e.via) vias.set(`zb-${e.sec}/${e.id}`, e.via);
 
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);
@@ -376,9 +425,11 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
             ? `vh-${route.vhSection ?? "home"}/${route.detail}`
             : route.view === "d2r"
               ? `d2-${route.d2Section ?? "home"}/${route.detail}`
-              : null;
+              : route.view === "zomboid"
+                ? `zb-${route.pzSection ?? "home"}/${route.detail}`
+                : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
-    const { title, description } = metaFor(route, lang, detail);
+    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null);
 
     const alternates = LANGS.map((l) => ({
       hreflang: l as string,

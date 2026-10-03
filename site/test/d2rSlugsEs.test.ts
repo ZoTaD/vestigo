@@ -85,9 +85,11 @@ describe("las direcciones en español", () => {
     expect(routePath(old)).toBe("/es/d2r/unicos/la-rechinante");
   });
 
-  it("un slug inglés bajo /en no se traduce aunque coincida con uno en español", () => {
+  it("bajo /en, el slug inglés queda como está y uno en español también se traduce y abre su ficha", () => {
     expect(parseRoute("/en/d2r/uniques/the-gnasher").detail).toBe("the-gnasher");
     expect(routePath(parseRoute("/en/d2r/drops/mephisto"))).toBe("/en/d2r/drops/mephisto");
+    // Un enlace en español compartido con el idioma cambiado a mano abre la ficha y no una rota.
+    expect(parseRoute("/en/d2r/uniques/la-rechinante").detail).toBe("the-gnasher");
   });
 });
 

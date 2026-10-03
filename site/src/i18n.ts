@@ -37,6 +37,8 @@ const EN = {
     valheim: "Valheim",
     diablo2: "Diablo II: Resurrected",
     diablo2Short: "Diablo II",
+    zomboid: "Project Zomboid",
+    zomboidShort: "Zomboid",
     soon: "Soon",
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
@@ -83,7 +85,7 @@ const EN = {
     title: "Every game",
     titleBreak: "leaves a trace",
     lead:
-      "Tier lists, builds, guides and match analysis, built from each game's own data " +
+      "Tier lists, builds, guides and match analysis, built on data " +
       "instead of opinions.",
     counts: {
       matches: "matches read",
@@ -144,6 +146,10 @@ const EN = {
       d2rCta: "Runes and runewords",
       d2rRunewords: "runewords",
       d2rUniques: "uniques that can drop",
+      zomboidLive: "The Knox County map, every item and recipe of Build 42, and the planners to last one more day.",
+      zomboidCta: "Open the notebook",
+      zomboidItems: "items",
+      zomboidRecipes: "recipes",
     },
   },
 
@@ -212,6 +218,9 @@ const EN = {
     disclaimerBlizzard:
       "Vestigo is a fan site and isn't endorsed by or affiliated with Blizzard Entertainment. Diablo and " +
       "Diablo II: Resurrected are trademarks or registered trademarks of Blizzard Entertainment, Inc.",
+    disclaimerTis:
+      "Vestigo is a fan site and isn't endorsed by or affiliated with The Indie Stone. Project Zomboid and its " +
+      "content belong to The Indie Stone.",
   },
 
   // Said plainly, and without a pre-ticked box or a greyed-out "decline": the
@@ -243,6 +252,8 @@ const ES: typeof EN = {
     valheim: "Valheim",
     diablo2: "Diablo II: Resurrected",
     diablo2Short: "Diablo II",
+    zomboid: "Project Zomboid",
+    zomboidShort: "Zomboid",
     soon: "Pronto",
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
@@ -277,7 +288,7 @@ const ES: typeof EN = {
     title: "Todo juego",
     titleBreak: "deja rastro",
     lead:
-      "Tier lists, builds, guías y análisis de partidas, hechos con los datos de cada juego " +
+      "Tier lists, builds, guías y análisis de partidas, hechos con datos " +
       "y no con opiniones.",
     counts: {
       matches: "partidas leídas",
@@ -332,6 +343,10 @@ const ES: typeof EN = {
       d2rCta: "Runas y palabras rúnicas",
       d2rRunewords: "palabras rúnicas",
       d2rUniques: "únicos que pueden caer",
+      zomboidLive: "El mapa de Knox County, todos los objetos y recetas de la Build 42, y los planificadores para durar un día más.",
+      zomboidCta: "Abrir la libreta",
+      zomboidItems: "objetos",
+      zomboidRecipes: "recetas",
     },
   },
 
@@ -394,6 +409,9 @@ const ES: typeof EN = {
     disclaimerBlizzard:
       "Vestigo es un sitio de fans y no está avalado por Blizzard Entertainment ni afiliado a ella. Diablo y " +
       "Diablo II: Resurrected son marcas comerciales o marcas registradas de Blizzard Entertainment, Inc.",
+    disclaimerTis:
+      "Vestigo es un sitio de fans y no está avalado por The Indie Stone ni afiliado a ella. Project Zomboid y su " +
+      "contenido pertenecen a The Indie Stone.",
   },
 
   consent: {

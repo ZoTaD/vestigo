@@ -1,0 +1,58 @@
+{
+ "slug": "42-21",
+ "version": "42.21",
+ "branch": "stable",
+ "date": "2026-09-28",
+ "unstableDate": "2026-09-23",
+ "title": {
+  "en": "Fewer duplicated zombies and less intrusive trees",
+  "es": "Menos zombis duplicados y árboles que molestan menos"
+ },
+ "summary": {
+  "en": "The first incremental update after Build 42 went stable, tested on the unstable branch for five days before release. It goes after zombies that vanished when you came back to an area and duplicated zombies online, makes XXL trees easier to see past and turns loadstring and loadstream back on for mods. The Indie Stone says a few duplication cases remain and are planned for the next update.",
+  "es": "La primera actualización incremental después de que el Build 42 llegó a estable; pasó cinco días por la rama inestable antes de salir. Ataca los zombis que desaparecían al volver a una zona y los duplicados en multijugador, hace que los árboles XXL tapen menos y les devuelve a los mods loadstring y loadstream. The Indie Stone avisa que todavía quedan algunos casos y que van en la próxima actualización."
+ },
+ "highlights": [
+  {
+   "en": "Zombies no longer disappear when you leave a chunk and come back, in single player and online, and duplicated zombies in multiplayer were addressed too.",
+   "es": "Los zombis ya no desaparecen cuando salís de un chunk y volvés, tanto en un jugador como online, y también se atacaron los zombis duplicados en multijugador."
+  },
+  {
+   "en": "XXL trees get out of the way: they fade better while you drive, no longer cover the houses and furniture beneath them, and are more see-through overall.",
+   "es": "Los árboles XXL estorban menos: se transparentan mejor cuando manejás, ya no tapan las casas y muebles que quedan abajo y en general dejan ver más."
+  },
+  {
+   "en": "The Welder starts out knowing Welding recipes rather than Blacksmithing ones, washing machines now clean dirty rags and bandages, and fridges lose their cold little by little once the power goes off.",
+   "es": "El Obrero metalúrgico arranca con recetas de Metalistería en vez de Herrería, el lavarropas limpia trapos y vendas sucios, y las heladeras se calientan de a poco el día que se corta la luz."
+  },
+  {
+   "en": "86 more fluid containers can purify water in the right oven, and explosives now work in basements.",
+   "es": "86 recipientes más sirven para purificar agua en el horno que corresponde, y los explosivos ya funcionan en los sótanos."
+  },
+  {
+   "en": "Split-screen: each player keeps their own read books and XP boosts, fishing behaves, and a crash when two players share a moving car is gone.",
+   "es": "Pantalla dividida: cada jugador tiene sus propios libros leídos y bonos de XP, la pesca anda bien y se arregló un cierre inesperado cuando dos comparten un auto en movimiento."
+  },
+  {
+   "en": "Multiplayer: a wider anti-cheat, safehouse exploits closed, no more joining dedicated servers without Steam authentication (it got around SteamID bans), and smoother driving with high ping.",
+   "es": "Multijugador: el anticheat bloquea más trampas, se cerraron trucos con los refugios, ya no se puede entrar a un servidor dedicado sin autenticarse en Steam (eso salteaba los baneos por SteamID) y manejar con ping alto anda mejor."
+  }
+ ],
+ "sources": [
+  {
+   "kind": "steam",
+   "url": "https://store.steampowered.com/news/app/108600/view/1844751498218925",
+   "gid": "1844751498218925"
+  },
+  {
+   "kind": "steam",
+   "url": "https://store.steampowered.com/news/app/108600/view/1844751498231307",
+   "gid": "1844751498231307"
+  },
+  {
+   "kind": "notes",
+   "url": "https://theindiestone.com/forums/topic/101693-4221-unstable-released/"
+  }
+ ],
+ "updated": "2026-10-02"
+}

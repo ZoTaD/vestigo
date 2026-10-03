@@ -1,0 +1,188 @@
+/*
+ * Project Zomboid (2026-09-30): "Libreta de supervivencia". Diseño: docs/design/2026-09-30-zomboid.md.
+ *
+ * El mapa de papel del juego anotado con lápiz rojo y los sellos del juego (dibujos de línea blanca que se tiñen con
+ * `mask`, como hace el juego al anotar un mapa), hojas de libreta con renglones, clips y cinta sobre el verde del
+ * escritorio. Los colores de la leyenda (--pz-res, --pz-retail…) son los del mapa de papel del juego: los mismos
+ * tipos de edificio que dibuja el mapa en modo "papel".
+ */
+
+/* El escritorio verde. La capa "codex" pinta el fondo de todas las páginas con `--ink`/`--ink-2` (azul noche por
+   defecto), así que, igual que Valheim y Diablo II, cada juego la repinta con lo suyo: acá el verde de la mesa de la
+   libreta, con un resplandor tibio de lámpara arriba. Sin esto la libreta quedaba sobre el azul del sitio. */
+[data-theme="codex"][data-game="zomboid"] {
+  --ink: #1b241b;
+  --ink-2: #162016;
+  --vellum: #eef0e6;
+  --vellum-dim: var(--text-dim);
+  --gold: var(--accent);
+  --gold-lit: var(--accent-lit);
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(var(--accent-rgb), 0.08) 0%, transparent 60%),
+    linear-gradient(180deg, #1f2a1f 0%, #1b241b 60%, #172017 100%);
+  background-attachment: fixed;
+}
+:root:has(.app[data-game="zomboid"]) {
+  --sb-track: #172017;
+  --sb-hatch: rgba(239, 233, 216, 0.07);
+  --sb-paper: #b3261e;
+  --sb-ink: #172017;
+  /* Literal a propósito: esto se aplica a <html>, y los tokens del juego (--accent) viven en .app, más abajo. */
+  --sb-hover: #f3d36b;
+}
+
+.pz {
+  --pz-paper: #efe9d8;
+  --pz-paper-2: #e6dec7;
+  --pz-ink: #2a2620;
+  --pz-dim: #6b6354;
+  --pz-pencil: #b3261e;
+  --pz-rule: rgba(43, 79, 126, 0.18);
+  --pz-grass: #3f7a3c;
+  --pz-tape: rgba(236, 226, 190, 0.82);
+  --pz-comm: #8a6cc8;
+  --pz-retail: #b5c35a;
+  --pz-ind: #2b2b2b;
+  --pz-res: #e0a37a;
+  --pz-food: #e8c43c;
+  --pz-hosp: #6ec2d6;
+  --pz-med: #d6577a;
+  --pz-park: #3f9a3a;
+  /* El texto claro sobre el escritorio verde y el gancho gris de las hojas. */
+  --pz-desk-text: #f3eedf;
+  --pz-clip: #8e8e8e;
+  font-family: "Noto Sans", system-ui, sans-serif;
+  background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.05), transparent 55%);
+  overflow-x: clip;
+}
+
+/* Las pestañas: solapas de papel. En el celular bajan de fila, nunca se deslizan cortadas. Del alto de un dedo (40px, y
+   44px en el celular) con el texto centrado; `position: relative` ancla el "Pronto" escondido de las apagadas. */
+.pz-tabs-band { max-width: 1180px; margin: 0 auto; padding: 18px 24px 0; }
+.pz-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.pz-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 7px 13px;
+  text-align: center;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 700 13px "Noto Sans", sans-serif;
+  text-decoration: none;
+  clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%);
+}
+.pz-tab.is-on { background: var(--pz-paper); box-shadow: inset 0 -3px 0 var(--pz-pencil); }
+.pz-tab.is-soon { opacity: 0.45; cursor: default; }
+/* El recorte de solapa también corta el contorno de foco: al navegar con teclado la solapa se muestra entera y
+   marcada, para que se vea dónde está el foco. */
+.pz-tab:focus-visible { clip-path: none; outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+.pz-main { max-width: 1180px; margin: 0 auto; padding: 26px 24px 60px; }
+
+/* La portada: el título a la izquierda, el mapa de papel pegado con cinta a la derecha. */
+.pz-hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 34px; align-items: center; }
+.pz-title { container-type: inline-size; color: var(--pz-desk-text); }
+.pz-kick { margin: 0; font: 600 13px "Noto Sans", sans-serif; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-dim); }
+.pz-h1 { margin: 10px 0 14px; font: 700 clamp(40px, 13cqi, 68px) / 0.95 "Old Standard TT", serif; letter-spacing: 0.02em; }
+.pz-lede { margin: 0 0 12px; max-width: 470px; font-size: 17px; line-height: 1.55; color: var(--pz-desk-text); }
+.pz-hand { display: inline-block; margin: 0; font: 700 26px "Caveat", cursive; color: var(--accent); transform: rotate(-2deg); }
+
+.pz-mapwrap { position: relative; height: 470px; margin: 0; transform: rotate(1.5deg); }
+.pz-paper {
+  position: absolute;
+  inset: 0;
+  background: url(/zomboid/ui/muldraughmap.webp) 50% 30% / cover;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+}
+.pz-tape { position: absolute; width: 110px; height: 30px; background: var(--pz-tape); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
+/* Un sello del juego, teñido del color que le toque (`color`), con la imagen en `--stamp`. */
+.pz-stamp {
+  display: inline-block;
+  width: 38px;
+  height: 38px;
+  background: currentColor;
+  -webkit-mask: var(--stamp) center / contain no-repeat;
+  mask: var(--stamp) center / contain no-repeat;
+}
+.pz-mapwrap .pz-stamp { position: absolute; color: var(--pz-pencil); }
+.pz-note { position: absolute; font: 700 24px "Caveat", cursive; color: var(--pz-pencil); transform: rotate(-5deg); white-space: nowrap; }
+.pz-ring { position: absolute; border: 3px solid var(--pz-pencil); border-radius: 50%; transform: rotate(-10deg); }
+
+/* Las hojas de la libreta: renglones azules, un clip y un poco torcidas, como sueltas sobre el escritorio. */
+.pz-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 40px; }
+.pz-page {
+  position: relative;
+  padding: 18px 18px 16px;
+  color: var(--pz-ink);
+  background: var(--pz-paper) linear-gradient(transparent 27px, var(--pz-rule) 28px) 0 0 / 100% 28px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+.pz-page:nth-child(2) { transform: rotate(-0.8deg); }
+.pz-page:nth-child(3) { transform: rotate(0.7deg); }
+.pz-clip { position: absolute; top: -12px; right: 24px; width: 18px; height: 46px; border: 3px solid var(--pz-clip); border-radius: 9px; }
+.pz-h2 { margin: 0 0 8px; font: 700 26px "Old Standard TT", serif; }
+.pz-page p { margin: 0 0 12px; line-height: 28px; }
+
+.pz-counts { list-style: none; margin: 0; padding: 0; }
+.pz-counts li { display: flex; gap: 10px; align-items: center; min-height: 28px; }
+.pz-counts .pz-stamp { width: 22px; height: 22px; color: var(--pz-grass); }
+.pz-counts b { margin-left: auto; font: 700 18px "Old Standard TT", serif; }
+/* Una cifra con pestaña publicada es un enlace a ella: el renglón entero, que se subraya al pasar. */
+.pz-count-link { display: flex; flex: 1; gap: 10px; align-items: center; min-height: 28px; color: inherit; text-decoration: none; }
+.pz-count-link:hover { text-decoration: underline; }
+.pz-count-link:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+.pz-tools { list-style: none; margin: 0; padding: 0; }
+.pz-tools li { display: grid; grid-template-columns: 26px 1fr; column-gap: 10px; padding: 4px 0; }
+/* Cada pieza de la fila declara su columna (sello a la 1, título y texto a la 2) en vez de depender del orden en que
+   la grilla las va acomodando: así agregar o sacar un hijo no corre nada. */
+.pz-tools .pz-stamp { grid-column: 1; width: 24px; height: 24px; margin-top: 2px; color: var(--pz-grass); }
+.pz-tools b { grid-column: 2; font-weight: 700; }
+.pz-tools .pz-tool-text { grid-column: 2; color: var(--pz-dim); font-size: 14px; line-height: 1.4; }
+/* Una herramienta con pestaña publicada: el título enlaza, subrayado a lápiz para que se distinga de las que vienen. */
+.pz-tool-link { color: inherit; text-decoration: underline 2px var(--pz-pencil); text-underline-offset: 3px; }
+.pz-tool-link:hover { color: var(--pz-pencil); }
+.pz-tool-link:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+/* El segundo link de un renglón (los presets comparados), debajo de su texto. */
+.pz-tools .pz-tool-more { grid-column: 2; justify-self: start; font-size: 14px; font-weight: 600; line-height: 1.6; }
+.pz-soon { font: 700 17px "Caveat", cursive; color: var(--pz-pencil); margin-left: 6px; }
+
+/* Mientras baja una pestaña o sus datos: una hoja vacía con "cargando…" a lápiz, del alto de una página para que el pie
+   no suba y baje. El lápiz late despacio; quien pidió menos movimiento la ve quieta. */
+.pz-loading { max-width: 1180px; min-height: 60vh; margin: 0 auto; padding: 26px 24px 60px; }
+.pz-loading-page { min-height: 340px; }
+.pz-loading-hand {
+  display: inline-block;
+  margin: 0;
+  font: 700 30px "Caveat", cursive;
+  color: var(--pz-pencil);
+  transform: rotate(-2deg);
+  animation: pz-pulse 1.4s ease-in-out infinite;
+}
+.pz-loading-error { margin: 0; line-height: 28px; }
+.pz-retry {
+  min-height: 32px;
+  padding: 5px 12px;
+  border: 0;
+  background: var(--pz-grass);
+  color: var(--pz-paper);
+  font: 700 12px "Noto Sans", sans-serif;
+  cursor: pointer;
+}
+.pz-retry:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+@keyframes pz-pulse {
+  50% { opacity: 0.35; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pz-loading-hand { animation: none; }
+}
+
+@media (max-width: 860px) {
+  .pz-tab { min-height: 44px; }
+  .pz-hero { grid-template-columns: 1fr; }
+  .pz-mapwrap { height: 360px; transform: rotate(1deg); }
+  .pz-grid { grid-template-columns: 1fr; }
+}

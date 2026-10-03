@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useCopy, useLang } from "./i18n";
-import { LANGS, routeUrl, type Route } from "./route";
+import { LANGS, routeUrl, type PzTab, type Route } from "./route";
 import { metaFor, ogImageUrl } from "./prerender";
 import { editions } from "./deadlockNewsData";
 import { heroes as dlHeroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
@@ -11,6 +11,8 @@ import { EDITIONS as P2_EDITIONS } from "./poe2PatchesData";
 import { loadIndex as loadP2Index, peekIndex as peekP2Index } from "./poe2EncyclopediaData";
 import { loadIndex as loadVhIndex, peekIndex as peekVhIndex } from "./valheimData";
 import { loadD2Index, peekD2Index } from "./d2r/index";
+import { loadPzNames, peekPzName } from "./zomboid/index";
+import { pzPatchName } from "./zomboid/patches/slug";
 import { loadEditions as loadVhEditions, peekEditions as peekVhEditions } from "./valheimPatchesData";
 
 /**
@@ -71,6 +73,17 @@ function setAlternates(route: Route) {
   add("x-default", routeUrl({ ...route, lang: "en" }));
 }
 
+/**
+ * La ficha de Zomboid cuyo nombre hay que buscar, o `null` si la ruta no es una. `patches` queda afuera: sus páginas no
+ * están en el índice de nombres, y el nombre de una versión sale del slug mismo si tiene página (`pzPatchName`, en
+ * `dlDetailName`).
+ */
+function pzNameKey(route: Route): { sec: PzTab; id: string } | null {
+  const sec = route.pzSection;
+  if (route.view !== "zomboid" || !route.detail || !sec || sec === "home" || sec === "patches") return null;
+  return { sec, id: route.detail };
+}
+
 /** The display name behind a detail slug, in the language on screen. */
 function dlDetailName(route: Route, lang: "en" | "es"): string | null {
   if (!route.detail) return null;
@@ -112,6 +125,14 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const e = peekD2Index()?.find((x) => x.sec === route.d2Section && x.id === route.detail);
     return e ? (lang === "es" ? e.es || e.en : e.en) : null;
   }
+  // Una versión de Parches de Zomboid: el nombre es la versión, que sale del slug sin bajar nada; una que no tiene
+  // página no tiene nombre, y el <head> queda el de la lista, como la página.
+  if (route.view === "zomboid" && route.pzSection === "patches" && route.detail) return pzPatchName(route.detail);
+  const pz = pzNameKey(route);
+  if (pz) {
+    const e = peekPzName(pz.sec, pz.id);
+    return e ? (lang === "es" ? e.esHead || e.es || e.en : e.en) : null;
+  }
   return null;
 }
 
@@ -125,7 +146,10 @@ export default function PageMeta({ route }: { route: Route }) {
     // the scrapers that never run this. Two copies of that chain would be two
     // chances to say different things about the same page.
     const apply = (detail: string | null) => {
-    const { title, description } = metaFor(route, lang, detail);
+    // Las profesiones de un rasgo gemelo de Zomboid (ver `metaFor`): llegan con los nombres de su sección.
+    const key = pzNameKey(route);
+    const via = key ? peekPzName(key.sec, key.id)?.via?.[lang] : null;
+    const { title, description } = metaFor(route, lang, detail, via);
     const url = routeUrl(route);
 
     document.title = title;
@@ -181,6 +205,13 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "d2r" && route.detail && !peekD2Index()) {
       let vivo = true;
       loadD2Index().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una de Project Zomboid, con los nombres de su sección (no los de todas: ver `zomboid/index.ts`).
+    const pz = pzNameKey(route);
+    if (pz && !peekPzName(pz.sec, pz.id)) {
+      let vivo = true;
+      loadPzNames(pz.sec).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
   }, [route, copy, lang]);

@@ -1,0 +1,85 @@
+/*
+ * Project Zomboid, la pestaña Moodles (2026-09-30). Las hojas, el buscador, la cabecera de la ficha y los enlaces son los
+ * de Objetos (zomboid-items.css, clases `.pzi-*`): es la misma libreta. Acá va lo propio: el moodle como lo dibuja el
+ * juego, las filas de la lista y los niveles y el consejo de la ficha.
+ *
+ * Reglas de la casa: sin bordes ni barras de color. La gravedad de un nivel va por el tinte del círculo (el del juego,
+ * de gris a rojo) y por su número. Ninguna palabra se corta y nada es más ancho que la hoja en el celular.
+ */
+
+/* ---------- El moodle ---------- */
+
+/* El círculo del juego (`Moodles_BGsolid`, blanco) teñido con `mask` del color del nivel, su aro (`Moodles_BGoutline`)
+   y el ícono encima. Los tres son de 64×64: a otro tamaño se escalan juntos. */
+.pzmo-badge { position: relative; display: block; flex: none; }
+.pzmo-badge::before,
+.pzmo-badge::after { content: ""; position: absolute; inset: 0; }
+.pzmo-badge::before {
+  background: var(--pzmo-tint);
+  -webkit-mask: url(/zomboid/moodles/Moodles_BGsolid.webp) center / contain no-repeat;
+  mask: url(/zomboid/moodles/Moodles_BGsolid.webp) center / contain no-repeat;
+}
+.pzmo-badge::after { background: url(/zomboid/moodles/Moodles_BGoutline.webp) center / contain no-repeat; }
+.pzmo-badge img { position: relative; z-index: 1; display: block; }
+
+/* ---------- La lista ---------- */
+
+/* Como en Rasgos: sin los renglones de la página, cada fila lleva el suyo abajo (tienen dos renglones de alto distinto
+   y no calzan con los de la hoja). */
+.pz .pzi .pzmo-sheet { padding: 6px 18px 12px; background: var(--pz-paper); }
+.pzmo-sheet .pzi-h2 { min-height: 44px; margin: 0; }
+
+.pzmo-rows { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr)); column-gap: 26px; }
+.pzmo-row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-areas: "b n" "b l";
+  column-gap: 12px;
+  align-items: center;
+  padding: 8px 6px 9px;
+  margin: 0 -6px;
+  color: var(--pz-ink);
+  text-decoration: none;
+  /* El renglón de la libreta, del mismo azul que los de la hoja. */
+  background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0);
+}
+.pzmo-row > .pzmo-badge { grid-area: b; }
+.pzmo-name { grid-area: n; align-self: end; font: 700 15px / 1.3 "Noto Sans", sans-serif; }
+.pzmo-line { grid-area: l; align-self: start; margin-top: 2px; font: 400 14px / 1.4 "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzmo-row:hover { background-color: var(--pzi-tint); }
+.pzmo-row:hover .pzmo-name { text-decoration: underline; }
+.pzmo-row:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: -2px; }
+
+/* ---------- La ficha ---------- */
+
+.pzmo-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 12px 0 0; font: 600 15px "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pz .pzmo-head .pzmo-meta { margin-bottom: 0; }
+.pzmo-meta .pzi-hand { font-size: 22px; }
+
+/* El título de una hoja no suelta el sello: se parte entre palabras a su lado (nunca dentro de una), como en Rasgos.
+   "Más moodles: Heridas y enfermedades" no entra de un renglón en 375 px. */
+.pzmo .pzi-rel .pzi-h2 { flex-wrap: nowrap; }
+.pzmo .pzi-rel .pzi-h2 small { flex: none; }
+
+/* Los niveles: el círculo de cada uno a la izquierda, y el número, el nombre y lo que dice a la derecha. Sin los
+   renglones de la página, como la lista: cada nivel lleva el suyo. */
+.pz .pzi .pzmo-levels { background: var(--pz-paper); }
+.pzmo-levellist { margin: 0; padding: 0; list-style: none; }
+.pzmo-level {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  column-gap: 14px;
+  align-items: start;
+  padding: 10px 0 11px;
+  background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0);
+}
+.pzmo-level > .pzmo-badge { grid-row: 1 / span 3; }
+.pzmo-lvl { font: 700 12px / 1.3 "Noto Sans", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pz-dim); }
+.pzmo-lname { font: 700 18px / 1.3 "Old Standard TT", serif; }
+.pzmo-ldesc { margin-top: 2px; font-style: italic; line-height: 1.45; color: var(--pz-dim); }
+
+/* Qué hacer: lo principal de la ficha, en tinta y sobre los renglones de la hoja (28 px). */
+.pz .pzmo-advice .pzmo-advicetext { margin: 0; font-size: 16px; line-height: 28px; }
+.pzmo-link { color: var(--pz-ink); font-weight: 600; text-decoration: underline 2px var(--pz-pencil); text-underline-offset: 3px; }
+.pzmo-link:hover { color: var(--pz-pencil); }
+.pzmo-link:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }

@@ -1,0 +1,332 @@
+/*
+ * Project Zomboid, la pestaña Objetos (2026-09-30), con la estética de la libreta (zomboid.css): la lista son hojas con
+ * renglones, una por categoría, y la ficha es una página sobre ese objeto con sus números en renglones.
+ *
+ * Reglas de la casa: sin bordes ni barras de color en filas u hojas (el estado va por tinte o texto), los títulos se
+ * achican con container queries y nunca cortan una palabra, y lo ancho (una tabla, un ID largo) scrollea dentro de su
+ * caja, no la página.
+ */
+
+.pzi {
+  --pzi-tint: rgba(42, 38, 32, 0.06);
+  --pzi-tint-strong: rgba(42, 38, 32, 0.12);
+  --pzi-code-bg: rgba(42, 38, 32, 0.07);
+}
+
+/* Las hojas de esta pestaña no se tuercen de a dos y de a tres como en la portada: una lista larga torcida se lee mal y
+   asoma por el costado. Sólo la del texto, apenas, como suelta sobre el escritorio. */
+.pz .pzi .pz-page { transform: none; margin-bottom: 22px; }
+.pz .pzi .pzi-intro { transform: rotate(-0.4deg); }
+
+/* Los títulos: se achican con el ancho de su caja, nunca parten una palabra. El tamaño de siempre (28 a 46 px), salvo
+   que su palabra más larga no entre: `--pzi-w` es cuántos em mide (de `wordFit()` en ui.tsx), y ahí baja lo justo para
+   que entre. En un celular de 375 px la caja del título mide 173: "Telecomunicaciones" a 28 px medía 257. Sin
+   `--pzi-w` (un título corto, fijo), el tamaño de siempre. */
+.pzi-intro, .pzi-titles { container-type: inline-size; }
+.pzi-h1 {
+  margin: 0 0 10px;
+  font: 700 min(clamp(28px, 7.5cqi, 46px), calc(100cqi / var(--pzi-w, 0.01))) / 1.08 "Old Standard TT", serif;
+}
+.pzi-h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-height: 30px;
+  margin: 0 0 8px;
+  font: 700 24px / 30px "Old Standard TT", serif;
+}
+.pzi-h2 .pz-stamp { flex: none; width: 24px; height: 24px; color: var(--pz-grass); }
+.pzi-h2 small { font: 600 14px "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzi-hand { display: inline-block; margin: 0; font: 700 22px / 28px "Caveat", cursive; color: var(--pz-pencil); transform: rotate(-1.5deg); }
+.pzi-h2 .pzi-hand { margin-left: 6px; font-size: 20px; white-space: nowrap; }
+
+/* ---------- La lista ---------- */
+
+.pzi-missing { margin: 0 0 6px; font: 700 24px / 28px "Caveat", cursive; color: var(--pz-pencil); }
+
+.pzi-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 12px;
+  background: var(--pz-paper-2);
+}
+.pzi-search:focus-within { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+.pzi-search .pz-stamp { flex: none; width: 22px; height: 22px; color: var(--pz-dim); }
+.pzi-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 0;
+  border: 0;
+  background: transparent;
+  color: var(--pz-ink);
+  font: 600 16px "Noto Sans", sans-serif;
+}
+.pzi-search input:focus { outline: none; }
+.pzi-search input::placeholder { color: var(--pz-dim); opacity: 0.8; }
+
+.pzi-chips { display: grid; gap: 8px; margin-top: 14px; }
+.pzi-chips > .pzi-chip { justify-self: start; }
+.pzi-chipgroup { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 4px 10px; align-items: start; }
+.pzi-chiphead { font: 700 21px / 32px "Caveat", cursive; color: var(--pz-pencil); }
+.pzi-chiprow { display: flex; flex-wrap: wrap; gap: 6px; }
+.pzi-chip {
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 600 13px "Noto Sans", sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pzi-chip small { margin-left: 3px; font-weight: 700; color: var(--pz-dim); }
+.pzi-chip:hover { background: var(--pzi-tint-strong); }
+.pzi-chip[aria-pressed="true"] { background: var(--pz-ink); color: var(--pz-paper); }
+.pzi-chip[aria-pressed="true"] small { color: inherit; opacity: 0.75; }
+.pzi-chip:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+.pzi-count {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 16px;
+  margin: 0 0 14px;
+  color: var(--pz-desk-text);
+  font: 600 14px "Noto Sans", sans-serif;
+}
+.pzi-hand-note { font: 700 21px "Caveat", cursive; color: var(--accent); transform: rotate(-1deg); }
+.pzi-empty { margin: 0 0 22px; font: 700 26px "Caveat", cursive; color: var(--pz-desk-text); }
+
+/* Una hoja por categoría, con renglones de 40px: lo que ocupa una fila con su ícono de 32. */
+.pz .pzi .pzi-cat {
+  --line: 40px;
+  padding: 4px 18px 10px;
+  background: var(--pz-paper) linear-gradient(transparent calc(var(--line) - 1px), var(--pz-rule) var(--line)) 0 4px / 100% var(--line);
+}
+.pzi-cat .pzi-h2 { min-height: var(--line); margin: 0; }
+.pzi-rows { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); column-gap: 20px; }
+.pzi-row {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  /* La primera fila se estira: el ícono ocupa las dos y, sin variantes, el nombre queda centrado en el renglón en vez
+     de pegado arriba. */
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas: "i n w" "i v w";
+  column-gap: 10px;
+  min-height: var(--line);
+  padding: 2px 6px;
+  margin: 0 -6px;
+  color: var(--pz-ink);
+  text-decoration: none;
+  font: 600 14px / 1.2 "Noto Sans", sans-serif;
+}
+.pzi-row > .pzi-icon, .pzi-row > .pzi-noicon { grid-area: i; align-self: center; }
+.pzi-row .pzi-name { grid-area: n; align-self: center; }
+.pzi-row .pzi-var { grid-area: v; font: 700 16px / 1 "Caveat", cursive; color: var(--pz-pencil); }
+.pzi-row .pzi-w { grid-area: w; align-self: center; font: 700 15px "Old Standard TT", serif; color: var(--pz-dim); }
+.pzi-row:hover { background: var(--pzi-tint); }
+.pzi-row:hover .pzi-name { text-decoration: underline; }
+.pzi-row:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: -2px; }
+
+/* Los íconos del juego: 32×32 pixel art, escalado sin suavizar. */
+.pzi-icon { display: block; flex: none; image-rendering: pixelated; }
+/* Los que el sitio achica (construcciones de 48×48 y profesiones de 64×64 en una fila, ver `ItemIcon` en ui.tsx):
+   suavizados, porque en pixelado una escala que no es entera se come líneas del dibujo. */
+.pzi-icon.is-smooth { image-rendering: auto; }
+.pzi-noicon { display: block; flex: none; background: var(--pzi-tint); }
+/* Una profesión sin ícono (Desempleado): una hoja en blanco de la libreta, con sus renglones, en vez de un hueco. Los
+   renglones van por el tamaño del fondo (relativo a la hoja) y no por `padding`, que en % se mide contra el padre. */
+.pzi-noicon.is-blank {
+  background: repeating-linear-gradient(transparent 0 5px, var(--pz-rule) 5px 6px) 50% 75% / 64% 58% no-repeat, var(--pz-paper);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transform: rotate(-4deg) scale(0.86);
+}
+
+/* ---------- La ficha ---------- */
+
+.pzi-crumb { margin: 0 0 14px; }
+.pzi-crumb a { color: var(--pz-desk-text); font: 600 14px "Noto Sans", sans-serif; text-decoration: none; }
+.pzi-crumb a:hover { text-decoration: underline; }
+
+.pz .pzi .pzi-head { padding: 22px 22px 18px; }
+.pzi-headmain { display: flex; align-items: center; gap: 18px; }
+.pzi-titles { flex: 1; min-width: 0; }
+.pzi-kick { margin: 0; font: 600 12px "Noto Sans", sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pz-dim); }
+.pzi-ficha .pzi-h1 { margin: 4px 0 0; }
+.pzi-tip { margin: 12px 0 0; font-style: italic; color: var(--pz-dim); line-height: 28px; }
+
+.pzi-ids { display: grid; gap: 6px; margin: 16px 0 0; }
+.pzi-ids > div { display: grid; grid-template-columns: 130px minmax(0, 1fr); align-items: center; gap: 4px 10px; min-height: 36px; }
+.pzi-ids dt { font: 700 14px "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzi-ids dd { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; margin: 0; }
+.pzi-num { font: 700 17px "Old Standard TT", serif; }
+
+/* Un ID nunca se parte: el comando baja de renglón sólo entre sus partes (`/additem`, el usuario, el ID), y un ID que
+   igual no entra scrollea dentro de su caja en vez de empujar la página. */
+.pzi code {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 3px 7px;
+  background: var(--pzi-code-bg);
+  font: 600 14px / 1.5 ui-monospace, "Cascadia Mono", Consolas, monospace;
+  vertical-align: middle;
+}
+.pzi-table code { white-space: nowrap; }
+
+.pzi-copy {
+  min-height: 32px;
+  padding: 5px 12px;
+  border: 0;
+  background: var(--pz-grass);
+  color: var(--pz-paper);
+  font: 700 12px "Noto Sans", sans-serif;
+  cursor: pointer;
+}
+.pzi-copy.is-done { background: var(--pz-ink); }
+.pzi-copy:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* Las variantes: la tabla scrollea dentro de su hoja en el celular. Filas alternadas con tinte, sin líneas de color. */
+.pzi-tablebox { overflow-x: auto; }
+.pzi-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.pzi-table th {
+  padding: 6px 12px 6px 6px;
+  text-align: left;
+  font: 700 11px "Noto Sans", sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pz-dim);
+  white-space: nowrap;
+}
+.pzi-table td { padding: 4px 12px 4px 6px; vertical-align: middle; }
+.pzi-table tbody tr:nth-child(odd) { background: var(--pzi-tint); }
+.pzi-cellname { display: flex; align-items: center; gap: 8px; min-width: 170px; font-weight: 600; }
+.pzi-cellid { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+
+/* Los números a la izquierda, las relaciones apiladas a la derecha; sin números, las relaciones a lo ancho. */
+.pzi-sheets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 22px; align-items: start; }
+.pzi-sheets.is-wide { grid-template-columns: minmax(0, 1fr); }
+.pzi-relcol { min-width: 0; }
+
+.pzi-lines { margin: 0; }
+.pzi-lines > div { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; min-height: 28px; line-height: 28px; }
+.pzi-lines dd { margin: 0; text-align: right; font: 700 17px / 28px "Old Standard TT", serif; }
+.pzi-lines dd code { font-size: 13px; }
+/* La bala o el cargador de un arma, enlazados a su ficha: se leen como un número más, con el subrayado de enlace. */
+.pzi-statlink { color: var(--pz-ink); text-underline-offset: 3px; }
+.pzi-statlink:hover { color: var(--pz-pencil); }
+.pzi-statlink:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+.pzi-links { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr)); column-gap: 16px; margin: 0; padding: 0; list-style: none; }
+.pzi-links li { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; min-height: 28px; padding: 2px 0; }
+.pzi-links a { display: inline-flex; align-items: center; gap: 8px; color: var(--pz-ink); line-height: 1.3; text-underline-offset: 2px; }
+.pzi-links a:hover { color: var(--pz-pencil); }
+.pzi-meta { font: 700 17px / 1.1 "Caveat", cursive; color: var(--pz-pencil); }
+.pzi-more summary { min-height: 28px; font: 700 20px / 28px "Caveat", cursive; color: var(--pz-pencil); cursor: pointer; }
+
+/* ---------- Dónde aparece (2026-10-01) ----------
+   Listas y no tablas: cada lugar es un renglón con el nombre arriba y las notas en lápiz abajo (mueble, chance, banda,
+   condición, el link al mapa), que bajan de renglón en el celular. La rareza va como palabra con un tinte suave detrás,
+   nunca con un filo de color. */
+.pzi-h3 {
+  margin: 14px 0 2px;
+  font: 700 12px / 22px "Noto Sans", sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pz-dim);
+}
+.pzi-where-note { display: block; margin: 0 0 4px; font-size: 19px; line-height: 23px; transform: rotate(-0.6deg); }
+/* En la columna de la derecha es una sola columna; a lo ancho (un objeto sin números, como la insignia) los renglones se
+   reparten en dos o tres, así la hoja no es una tira larga con el costado vacío. */
+.pzi-where-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); column-gap: 24px; margin: 0; padding: 0; list-style: none; }
+.pzi-where-list li { display: flex; flex-direction: column; min-height: 28px; padding: 4px 0 5px; }
+.pzi-where-name { font-weight: 600; line-height: 1.35; }
+.pzi-where-name a { display: inline-flex; align-items: center; gap: 8px; color: var(--pz-ink); text-underline-offset: 2px; }
+.pzi-where-name a:hover { color: var(--pz-pencil); }
+.pzi-where-sub { font-size: 13px; line-height: 1.35; color: var(--pz-dim); }
+.pzi-where-list .pzi-meta { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 10px; row-gap: 2px; margin-top: 1px; }
+/* La cifra en letra de imprenta: en Caveat un 1 y un 7 se confunden. */
+.pzi-where-pct { font: 700 14px / 20px "Noto Sans", sans-serif; color: var(--pz-ink); white-space: nowrap; }
+.pzi-band { padding: 0 6px; border-radius: 3px; font: 600 12px / 20px "Noto Sans", sans-serif; color: var(--pz-ink); white-space: nowrap; }
+.pzi-band.is-veryCommon { background: rgba(63, 122, 60, 0.24); }
+.pzi-band.is-common { background: rgba(63, 122, 60, 0.12); }
+.pzi-band.is-uncommon { background: rgba(232, 196, 60, 0.32); }
+.pzi-band.is-rare { background: rgba(224, 140, 90, 0.3); }
+.pzi-band.is-veryRare { background: rgba(179, 38, 30, 0.16); }
+.pzi-where-map { font: 700 17px / 1.1 "Caveat", cursive; color: var(--pz-pencil); text-underline-offset: 2px; }
+.pzi-where-map:hover { color: var(--pz-ink); }
+.pzi-where-map:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+.pzi-where > .pzi-where-map { display: inline-block; margin-top: 2px; font-size: 19px; }
+/* "Planificá qué juntar →" (y sus hermanos en Recetas y Personaje): a lápiz, debajo de la lista, como el link al Mapa.
+   Puede bajar de renglón entre palabras, nunca adentro de una. */
+.pzi-craftlink { display: inline-block; margin-top: 6px; font: 700 19px / 1.15 "Caveat", cursive; color: var(--pz-pencil); text-underline-offset: 2px; }
+.pzi-craftlink:hover { color: var(--pz-ink); }
+.pzi-craftlink:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+.pzi-where-rest { margin: 2px 0 0; font: 700 18px / 24px "Caveat", cursive; color: var(--pz-dim); }
+
+@media (max-width: 860px) {
+  .pzi-chipgroup { grid-template-columns: minmax(0, 1fr); }
+  /* En el celular cada familia es una sola fila que se desliza dentro de la hoja: 77 chips apilados eran una pantalla
+     y media antes de la primera fila. */
+  .pzi-chiprow { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .pzi-ids > div { grid-template-columns: minmax(0, 1fr); }
+  .pzi-sheets { grid-template-columns: minmax(0, 1fr); }
+  .pzi-headmain { gap: 12px; }
+}
+
+/* ---------- Los renglones de un cambio de parche (2026-10-02) ---------- */
+
+/* Los usan la página de cada versión (Parches) y el "Qué cambió" de cada ficha. Van acá y no en zomboid-patches.css
+   porque esta hoja ya la cargan todas las fichas: el recuadro baja en su propio chunk sólo si la ficha tiene cambios, y
+   así sale con estilo desde el HTML prerenderizado. Sin bordes ni barras de color: sube/baja es una palabra con tinte. */
+.pzp-link { color: var(--pz-ink); font-weight: 600; text-decoration: underline 2px var(--pz-pencil); text-underline-offset: 3px; }
+.pzp-link:hover { color: var(--pz-pencil); }
+.pzp-link:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+.pzp-ent { display: block; font-weight: 700; line-height: 28px; }
+.pzp-fields { margin: 0; }
+.pzp-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 16px;
+  align-items: baseline;
+  padding: 2px 6px;
+  margin: 0 -6px;
+}
+.pzp-field:nth-child(odd) { background: var(--pzi-tint); }
+.pzp-field dt { font-size: 14px; line-height: 24px; color: var(--pz-dim); }
+.pzp-field dt code { padding: 0 4px; border-radius: 3px; background: var(--pzi-code-bg); font-size: 13px; }
+.pzp-field dd { margin: 0; text-align: right; line-height: 24px; }
+.pzp-ba { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; gap: 0 8px; }
+.pzp-b { color: var(--pz-dim); }
+.pzp-a { font: 700 16px / 24px "Old Standard TT", serif; }
+.pzp-arrow { color: var(--pz-dim); }
+.pzp-list { display: flex; flex-direction: column; align-items: flex-end; }
+.pzp-add { font-weight: 600; }
+.pzp-rem { color: var(--pz-dim); text-decoration: line-through 1px; }
+.pzp-up,
+.pzp-down { padding: 0 6px; border-radius: 3px; font: 600 12px / 20px "Noto Sans", sans-serif; color: var(--pz-ink); white-space: nowrap; }
+.pzp-up { background: rgba(63, 122, 60, 0.18); }
+.pzp-down { background: rgba(179, 38, 30, 0.14); }
+
+/* "Qué cambió": una hoja más de la ficha, a lo ancho y al final. Un bloque por versión (la versión y la fecha enlazadas a
+   su página) y debajo sus renglones. Derecha: no hereda el giro de `.pz-page:nth-child(2|3)` según dónde caiga. */
+.pz .pzi .pzp-box { transform: none; }
+.pzp-boxver + .pzp-boxver { margin-top: 14px; }
+.pz .pzp-box .pzp-boxhead { margin: 0; font: 700 19px / 28px "Old Standard TT", serif; }
+.pzp-boxhead time { font: 600 14px / 28px "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzp-boxchange + .pzp-boxchange { margin-top: 6px; }
+.pz .pzp-box .pzp-ent { margin: 0; }
+.pz .pzp-box .pzp-appeared { margin: 0; line-height: 28px; font-style: italic; }
+.pz .pzp-box .pzp-boxall { margin: 10px 0 0; line-height: 28px; }
+
+/* En el celular, la etiqueta arriba y el antes → después debajo, a la izquierda: nada pasa del ancho de la hoja. */
+@media (max-width: 560px) {
+  .pzp-field { grid-template-columns: minmax(0, 1fr); }
+  .pzp-field dd { text-align: left; }
+  .pzp-ba { justify-content: flex-start; }
+  .pzp-list { align-items: flex-start; }
+}

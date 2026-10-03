@@ -445,6 +445,20 @@
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-figure span { color: #8a806b; }
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-cta { background: #8f1d14; border-color: #8f1d14; color: #fff3d6; }
 
+/* --- Project Zomboid: el verde del escritorio y el mapa de papel (2026-09-30) --- */
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] {
+  background:
+    linear-gradient(180deg, rgba(24, 33, 24, 0.9) 0%, rgba(20, 28, 20, 0.96) 100%),
+    url(/zomboid/ui/muldraughmap.webp) 50% 35% / cover;
+  color: #b9c2ad;
+}
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] .game-panel-name { color: #efe9d8; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] .game-figure b { color: #f3d36b; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] .game-figure.is-second b { color: #efe9d8; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] .game-figure span { color: #8a9580; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] .game-cta { background: #b3261e; border-color: #b3261e; color: #fff5e6; }
+
 /* --- Los que vienen: apagados a propósito ----------------------------------
    Una fila de cuatro, chicos, debajo del juego que ya existe (2026-09-23).
    Cada uno lleva su color en el fondo y en el trazo del nombre, nunca en un

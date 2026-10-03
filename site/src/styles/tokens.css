@@ -193,6 +193,33 @@
   --radius-pill: 2px;
 }
 
+/* Project Zomboid (2026-09-30): la libreta de supervivencia. El verde del escritorio, el amarillo del lápiz y el rojo
+   de las anotaciones; la hoja, la cinta y los sellos viven en zomboid.css. */
+[data-theme="codex"][data-game="zomboid"] {
+  --bg: #1f2a1f;
+  --bg-2: #263326;
+  --bg-glow: #2f3f2e;
+  --surface: rgba(239, 233, 216, 0.06);
+  --surface-2: rgba(239, 233, 216, 0.1);
+  --surface-solid: #253125;
+  --text: #eef0e6;
+  --text-dim: #b9c2ad;
+  --text-faint: #8a9580;
+  --accent: #f3d36b;
+  --accent-lit: #f8e39a;
+  --accent-dark: #b89a3a;
+  --accent-rgb: 243, 211, 107;
+  --accent-2: #b3261e;
+  --good: #6fae5a;
+  --bad: #d0402f;
+  --line: rgba(239, 233, 216, 0.18);
+  --line-strong: rgba(239, 233, 216, 0.4);
+  --on-accent: #1f2a1f;
+  --radius: 2px;
+  --radius-lg: 2px;
+  --radius-pill: 2px;
+}
+
 /* Portada: papel. La marca es clara y los juegos son oscuros; ese contraste es
    el que hace que cada juego pegue el salto al entrar. */
 [data-theme="codex"][data-place="home"] {

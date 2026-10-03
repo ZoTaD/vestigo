@@ -1,4 +1,4 @@
-import type { D2rSection, DeadlockSection, Route, View } from "./route";
+import type { D2rSection, DeadlockSection, PzSection, Route, View } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -15,6 +15,7 @@ export const AREA_FILES: Partial<Record<View, string>> = {
   poe2: "src/Poe2Area.tsx",
   valheim: "src/Valheim.tsx",
   d2r: "src/D2r.tsx",
+  zomboid: "src/Zomboid.tsx",
   privacy: "src/Privacy.tsx",
   terms: "src/Terms.tsx",
 };
@@ -57,6 +58,26 @@ export const D2R_TAB_FILES: Partial<Record<D2rSection, string>> = {
 };
 
 /**
+ * Las pestañas de Project Zomboid que viajan en su propio chunk, igual que `TABS`
+ * en `Zomboid.tsx` (2026-09-30; lo cuida `test/areas.test.ts`). Cada una suma
+ * acá su línea el día que se publica. La portada viene con el área.
+ */
+export const PZ_TAB_FILES: Partial<Record<PzSection, string>> = {
+  map: "src/zomboid/map/ZomboidMap.tsx",
+  items: "src/zomboid/items/ZomboidItems.tsx",
+  recipes: "src/zomboid/recipes/ZomboidRecipes.tsx",
+  crafting: "src/zomboid/crafting/ZomboidCrafting.tsx",
+  // Rasgos y profesiones comparten chunk (ver `TABS` en Zomboid.tsx).
+  traits: "src/zomboid/traits/ZomboidTraits.tsx",
+  professions: "src/zomboid/traits/ZomboidTraits.tsx",
+  planner: "src/zomboid/planner/ZomboidPlanner.tsx",
+  moodles: "src/zomboid/moodles/ZomboidMoodles.tsx",
+  skills: "src/zomboid/skills/ZomboidSkills.tsx",
+  server: "src/zomboid/server/ZomboidServer.tsx",
+  patches: "src/zomboid/patches/ZomboidPatches.tsx",
+};
+
+/**
  * Los servidores que una pestaña consulta apenas abre (2026-09-25): el HTML les
  * abre la conexión (`preconnect`) mientras baja el JS, y la primera consulta
  * no espera el DNS y el TLS. `cors` es para `fetch`; una imagen va sin. (Las
@@ -75,6 +96,12 @@ export function filesFor(route: Route): string[] {
   const area = AREA_FILES[route.view];
   if (!area) return [];
   const tab =
-    route.view === "deadlock" ? DEADLOCK_TAB_FILES[route.dlSection] : route.view === "d2r" ? D2R_TAB_FILES[route.d2Section ?? "home"] : undefined;
+    route.view === "deadlock"
+      ? DEADLOCK_TAB_FILES[route.dlSection]
+      : route.view === "d2r"
+        ? D2R_TAB_FILES[route.d2Section ?? "home"]
+        : route.view === "zomboid"
+          ? PZ_TAB_FILES[route.pzSection ?? "home"]
+          : undefined;
   return tab ? [area, tab] : [area];
 }

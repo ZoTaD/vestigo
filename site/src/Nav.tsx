@@ -6,7 +6,7 @@ import { routeInLang, type Route } from "./route";
 import { artUrl, iconUrl, loadIndex, peekIndex, searchIndex, type IndexEntry } from "./valheimData";
 import type { ValheimCopy } from "./valheimCopy";
 
-export type Game = "deadlock" | "poe2" | "valheim" | "d2r";
+export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
 export type Place = "home" | Game;
 /** The legal pages are reachable from the footer and highlight no tab. */
@@ -156,6 +156,15 @@ export default function Nav({
             onNavigate={onNavigate}
           >
             {copy.games.diablo2Short}
+          </RouteLink>
+          {/* Project Zomboid entra el 2026-09-30, con la portada de la libreta. */}
+          <RouteLink
+            className="top-place"
+            to={{ ...a("zomboid"), pzSection: "home" }}
+            active={active === "zomboid"}
+            onNavigate={onNavigate}
+          >
+            {copy.games.zomboidShort}
           </RouteLink>
           {/* Los juegos que vienen se anuncian, no se enlazan: no existe la
               ruta, así que un enlace llevaría a un 404 y de paso entraría al

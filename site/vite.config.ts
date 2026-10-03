@@ -1,17 +1,18 @@
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
-import { redirectsFile, ROBOTS_TXT, SITEMAP_GROUPS, sitemapFile, sitemapIndexXml, sitemapXml, type SitemapData } from "./src/sitemap";
+import { redirectsFile, ROBOTS_TXT, SITEMAP_GROUPS, sitemapFile, sitemapIndexXml, sitemapXml, type SitemapData, type ZomboidSitemapData } from "./src/sitemap";
 import { prerenderPages, renderHtml, ogImagePath, stripComments } from "./src/prerender";
 import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
-import { parseRoute, registerD2rSlugs, type Route } from "./src/route";
+import { parseRoute, registerD2rSlugs, registerPzSlugs, type Route } from "./src/route";
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
+import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
 import { COPY } from "./src/i18n";
-import { AREA_FILES, D2R_TAB_FILES, DEADLOCK_TAB_FILES, filesFor, originsFor } from "./src/areaFiles";
+import { AREA_FILES, D2R_TAB_FILES, DEADLOCK_TAB_FILES, filesFor, originsFor, PZ_TAB_FILES } from "./src/areaFiles";
 
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
 const BRAND = COPY.en.brand;
@@ -24,6 +25,8 @@ const valheimDir = fileURLToPath(new URL("../games/valheim/data/site", import.me
 const valheimMapDir = fileURLToPath(new URL("../games/valheim/data/map", import.meta.url));
 // Diablo II: Resurrected (2026-09-29): lo que escribe `games/d2r/tools/extract.py`.
 const d2rDir = fileURLToPath(new URL("../games/d2r/data", import.meta.url));
+// Project Zomboid (2026-09-30): lo que escriben `games/zomboid/tools/extract.py` y `map.py`.
+const zomboidDir = fileURLToPath(new URL("../games/zomboid/data", import.meta.url));
 
 /**
  * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.
@@ -146,11 +149,49 @@ function readSitemapData(): { data: OgData } {
   } catch {
     d2 = undefined;
   }
+  // Project Zomboid (2026-09-30): el sello del extractor y las fichas. Sin el sello, la sección queda afuera del sitemap.
+  let zb: SitemapData["zb"];
+  try {
+    const m = JSON.parse(readFileSync(`${zomboidDir}/meta.json`, "utf-8"));
+    const index = readPzIndex();
+    // El mapa tiene su propio sello (`map.py`): sin él, el sitemap usa el del extractor para la pestaña.
+    let mapExtractedAt: string | undefined;
+    try {
+      mapExtractedAt = JSON.parse(readFileSync(`${zomboidDir}/map/meta.json`, "utf-8")).extractedAt;
+    } catch {
+      mapExtractedAt = undefined;
+    }
+    // Y el botín, el suyo (`loot.py`): mueve la fecha de Objetos y la del Mapa. Sin él, todo queda como estaba.
+    let lootExtractedAt: string | undefined;
+    try {
+      lootExtractedAt = JSON.parse(readFileSync(`${zomboidDir}/loot/meta.json`, "utf-8")).extractedAt;
+    } catch {
+      lootExtractedAt = undefined;
+    }
+    // Las versiones de la pestaña Parches (2026-10-02), con su fecha: cada página va al sitemap con la suya. Sin el
+    // archivo (site.py sin correr), la pestaña queda sin páginas de versión.
+    let patches: ZomboidSitemapData["patches"];
+    try {
+      type Meta = { slug: string; version: string; date: string; updated?: string };
+      patches = (JSON.parse(readFileSync(`${zomboidDir}/site/patches/index.json`, "utf-8")).patches as Meta[]).map(
+        ({ slug, version, date, updated }) => ({ slug, version, date, updated }),
+      );
+    } catch {
+      patches = undefined;
+    }
+    zb = { version: m.version, extractedAt: m.extractedAt, mapExtractedAt, lootExtractedAt, index, patches };
+    // Las direcciones en español de esas fichas (`/es/project-zomboid/objetos/palanca`), antes de armar ninguna, igual
+    // que Diablo II.
+    registerPzSlugs(buildEsSlugs(index, []));
+  } catch {
+    zb = undefined;
+  }
   return {
     data: {
       p2,
       vh,
       d2,
+      zb,
       // Los sellos de cada pipeline, para el `lastmod` del sitemap. La
       // enciclopedia de PoE2 no tiene sello y va sin fecha.
       dates: {
@@ -158,6 +199,7 @@ function readSitemapData(): { data: OgData } {
         poe2Economy: p2Leagues?.updated,
         valheim: readVh("meta.json")?.extractedAt,
         d2r: d2?.extractedAt,
+        zomboid: zb?.extractedAt,
       },
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
@@ -186,19 +228,261 @@ function readD2Index(): D2IndexEntry[] {
 }
 
 /**
- * Los slugs en español de las fichas de Diablo II como módulo (2026-09-30): `import slugs from
- * "virtual:d2r-slugs-es"`. Se arman de los índices en cada build (ver `src/d2r/slugs.ts`), así no hay un archivo más
- * que regenerar y no pueden quedar distintos de los del sitemap, que salen de la misma cuenta.
+ * Las fichas de Project Zomboid (objetos, recetas, rasgos, profesiones, habilidades y moodles), del `index.json` que
+ * escribe `games/zomboid/tools/extract.py`. Sin el extractor corrido, ninguna, y lo avisa una vez: sin eso, el build
+ * salía sin una sola ficha de Zomboid en el sitemap y sin decir por qué.
+ *
+ * Se guarda la lectura mientras el archivo no cambie (la fecha de modificación): los plugins de slugs y de nombres la
+ * piden en cada `resolveId`, y releer y parsear ~5.000 fichas por cada import era trabajo tirado. El servidor de
+ * desarrollo sigue viendo el índice nuevo en cuanto se regenera.
  */
-function d2rSlugsModule(): Plugin {
-  const ID = "virtual:d2r-slugs-es";
+let pzIndexCache: { mtimeMs: number; index: NonNullable<ZomboidSitemapData["index"]> } | undefined;
+let pzIndexWarned = false;
+function readPzIndex(): NonNullable<ZomboidSitemapData["index"]> {
+  const file = `${zomboidDir}/index.json`;
+  try {
+    const { mtimeMs } = statSync(file);
+    if (pzIndexCache?.mtimeMs !== mtimeMs) pzIndexCache = { mtimeMs, index: JSON.parse(readFileSync(file, "utf-8")) };
+    return pzIndexCache.index;
+  } catch (e) {
+    if (!pzIndexWarned) {
+      pzIndexWarned = true;
+      console.warn(`[zomboid] no pude leer ${file} (${(e as Error).message}): Project Zomboid sale sin fichas.`);
+    }
+    return [];
+  }
+}
+
+/**
+ * Los slugs en español de las fichas de un juego como módulo (2026-09-30): `import slugs from "virtual:d2r-slugs-es"`
+ * (Diablo II) o `"virtual:pz-slugs-es"` (Project Zomboid). Se arman de los índices en cada build (ver
+ * `src/esSlugs.ts`), así no hay un archivo más que regenerar y no pueden quedar distintos de los del sitemap, que salen
+ * de la misma cuenta. `files` son los índices que lee `build`: el servidor de desarrollo lo rearma si cambian.
+ *
+ * Con `sections`, sirve además un módulo por sección (`virtual:pz-slugs-es/items` → `{ items: {…} }`, vacío si la
+ * sección se llama igual en los dos idiomas). Es para Zomboid, donde el mapa entero pesa ~236 KB (contra 19 KB en
+ * Diablo II) y no puede viajar con la portada: cada pestaña trae sólo las secciones que enlaza. Una sección que no está
+ * en el índice no resuelve, así un nombre mal escrito rompe el build en vez de dejar las fichas con el slug inglés.
+ */
+function esSlugsModule(id: string, files: string[], build: () => object, sections?: () => string[]): Plugin {
+  const prefix = `${id}/`;
   return {
-    name: "vestigo-d2r-slugs-es",
-    resolveId: (id) => (id === ID ? `\0${ID}` : null),
-    load(id) {
-      if (id !== `\0${ID}`) return null;
-      for (const f of ["wiki/index.json", "drops/index.json"]) this.addWatchFile(`${d2rDir}/${f}`);
-      return `export default ${JSON.stringify(buildD2rEsSlugs(readD2Index()))};`;
+    name: `vestigo-${id.slice("virtual:".length)}`,
+    resolveId(source) {
+      if (source === id) return `\0${id}`;
+      if (sections && source.startsWith(prefix) && sections().includes(source.slice(prefix.length))) return `\0${source}`;
+      return null;
+    },
+    load(source) {
+      if (source !== `\0${id}` && !source.startsWith(`\0${prefix}`)) return null;
+      for (const f of files) this.addWatchFile(f);
+      const all = build() as Record<string, unknown>;
+      if (source === `\0${id}`) return `export default ${JSON.stringify(all)};`;
+      const sec = source.slice(`\0${prefix}`.length);
+      return `export default ${JSON.stringify({ [sec]: all[sec] ?? {} })};`;
+    },
+  };
+}
+
+/**
+ * Los slugs en español de los objetos que enlaza la pestaña Fabricación de Project Zomboid (2026-10-02):
+ * `virtual:pz-slugs-es/craft-items` → `{ items: {…} }` con sólo los objetos de `craft.json` (`items`, ~2.500: lo que se
+ * fabrica, lo que se gasta y las herramientas), del mismo `buildEsSlugs` que el sitemap. La misma receta que
+ * `skill-items`: el módulo de toda la sección trae las 3.826 fichas. Sin `craft.json` (sin `craft.py` corrido), sale
+ * vacío. Antes que el de las secciones en la lista de plugins, por lo mismo que `skill-items`.
+ */
+function pzCraftItemSlugsModule(): Plugin {
+  const id = "virtual:pz-slugs-es/craft-items";
+  return {
+    name: "vestigo-pz-craft-item-slugs",
+    resolveId: (source) => (source === id ? `\0${id}` : null),
+    load(source) {
+      if (source !== `\0${id}`) return null;
+      this.addWatchFile(`${zomboidDir}/index.json`);
+      this.addWatchFile(`${zomboidDir}/craft.json`);
+      let wanted = new Set<string>();
+      try {
+        wanted = new Set(Object.keys(JSON.parse(readFileSync(`${zomboidDir}/craft.json`, "utf-8")).items ?? {}));
+      } catch {
+        // Sin el grafo no hay pestaña que enlace nada: el módulo sale vacío, como los de las secciones.
+      }
+      const all = buildEsSlugs(readPzIndex(), []).items ?? {};
+      const items = Object.fromEntries(Object.entries(all).filter(([itemId]) => wanted.has(itemId)));
+      return `export default ${JSON.stringify({ items })};`;
+    },
+  };
+}
+
+/**
+ * Los slugs en español de lo que enlaza la pestaña Parches de Project Zomboid (2026-10-02):
+ * `virtual:pz-slugs-es/patch-ents` → `{ items: {…}, recipes: {…}, … }` con sólo las fichas que aparecen en algún diff
+ * de `site/patches/<versión>.json`, del mismo `buildEsSlugs` que el sitemap. Lo mismo que `skill-items`: sin esto, el
+ * tenedor nuevo de la 42.22 enlazaría en español a `/objetos/fork` (abre la ficha, pero no es su dirección), y traer las
+ * secciones enteras era pagar 3.826 objetos y 1.170 recetas por unos pocos. Mientras no haya diffs sale vacío. Antes que
+ * el de las secciones en la lista de plugins, por lo mismo que `skill-items`.
+ */
+function pzPatchEntSlugsModule(): Plugin {
+  const id = "virtual:pz-slugs-es/patch-ents";
+  const dir = `${zomboidDir}/site/patches`;
+  type Ent = { slug?: string };
+  type Page = { diff?: { kinds: Record<string, { added: Ent[]; removed: Ent[]; changed: Ent[] }> } };
+  return {
+    name: "vestigo-pz-patch-ent-slugs",
+    resolveId: (source) => (source === id ? `\0${id}` : null),
+    load(source) {
+      if (source !== `\0${id}`) return null;
+      this.addWatchFile(`${zomboidDir}/index.json`);
+      // Qué fichas enlaza cada tipo de cambio (`KIND_SEC` en `zomboid/patches/data.ts`; las opciones de sandbox no
+      // tienen ficha propia).
+      const sec: Record<string, string> = { items: "items", recipes: "recipes", traits: "traits", professions: "professions", skills: "skills", moodles: "moodles" };
+      const wanted = new Map<string, Set<string>>();
+      let files: string[] = [];
+      try {
+        files = readdirSync(dir).filter((f) => f.endsWith(".json") && f !== "index.json");
+      } catch {
+        // Sin `site.py` corrido no hay páginas ni enlaces: el módulo sale vacío.
+      }
+      for (const f of files) {
+        this.addWatchFile(`${dir}/${f}`);
+        const page = JSON.parse(readFileSync(`${dir}/${f}`, "utf-8")) as Page;
+        for (const [kind, d] of Object.entries(page.diff?.kinds ?? {})) {
+          const tab = sec[kind];
+          if (!tab) continue;
+          const set = wanted.get(tab) ?? new Set<string>();
+          for (const e of [...d.added, ...d.removed, ...d.changed]) if (e.slug) set.add(e.slug);
+          wanted.set(tab, set);
+        }
+      }
+      const all = buildEsSlugs(readPzIndex(), []) as Record<string, Record<string, string>>;
+      const out = Object.fromEntries(
+        [...wanted].map(([tab, slugs]) => [tab, Object.fromEntries(Object.entries(all[tab] ?? {}).filter(([slug]) => slugs.has(slug)))]),
+      );
+      return `export default ${JSON.stringify(out)};`;
+    },
+  };
+}
+
+/**
+ * Las versiones de Parches de Project Zomboid que tienen página (2026-10-02): `virtual:pz-patch-pages` →
+ * `["42-20", "42-21"]`, los nombres de los archivos de `site/patches/` sin `index.json`. Lo usa `pzPatchName` (en el
+ * shell, para el `<head>` al navegar). Antes era un `import.meta.glob`, que dejaba en el shell el nombre con hash del
+ * chunk de cada página: cada vez que site.py reescribía una, cambiaba el shell y se invalidaba la caché de todo el sitio.
+ * Esto sólo cambia cuando entra una versión.
+ */
+function pzPatchPagesModule(): Plugin {
+  const id = "virtual:pz-patch-pages";
+  const dir = `${zomboidDir}/site/patches`;
+  return {
+    name: "vestigo-pz-patch-pages",
+    resolveId: (source) => (source === id ? `\0${id}` : null),
+    load(source) {
+      if (source !== `\0${id}`) return null;
+      this.addWatchFile(dir);
+      let slugs: string[] = [];
+      try {
+        slugs = readdirSync(dir)
+          .filter((f) => f.endsWith(".json") && f !== "index.json")
+          .map((f) => f.slice(0, -".json".length))
+          .sort();
+      } catch {
+        // Sin `site.py` corrido no hay páginas.
+      }
+      return `export default ${JSON.stringify(slugs)};`;
+    },
+  };
+}
+
+/**
+ * Los slugs en español de los objetos que enlaza la pestaña Habilidades de Project Zomboid (2026-09-30):
+ * `virtual:pz-slugs-es/skill-items` → `{ items: {…} }` con sólo los libros de habilidad y las revistas de
+ * `site/skills.json` (~200), sacados del mismo `buildEsSlugs` que el sitemap. El módulo de toda la sección
+ * (`virtual:pz-slugs-es/items`) trae los de las 3.826 fichas (47 KB con gzip) para esos enlaces; y escribirlos a mano,
+ * como los 30 de Moodles, eran 200 renglones que se desactualizan con cada parche. Va con el nombre de una sección más
+ * para que `manualChunks` lo deje con los datos de su pestaña y no en vendor. Va antes que el de las secciones en la lista
+ * de plugins: ése no lo resuelve ("skill-items" no es una sección del índice), pero su `load` atiende cualquier id con su
+ * prefijo y lo devolvía vacío.
+ */
+function pzSkillItemSlugsModule(): Plugin {
+  const id = "virtual:pz-slugs-es/skill-items";
+  return {
+    name: "vestigo-pz-skill-item-slugs",
+    resolveId: (source) => (source === id ? `\0${id}` : null),
+    load(source) {
+      if (source !== `\0${id}`) return null;
+      this.addWatchFile(`${zomboidDir}/index.json`);
+      this.addWatchFile(`${zomboidDir}/site/skills.json`);
+      type SkillRow = { books: { item: { id: string } }[]; magazines: { id: string }[] };
+      let skills: SkillRow[] = [];
+      try {
+        skills = JSON.parse(readFileSync(`${zomboidDir}/site/skills.json`, "utf-8"));
+      } catch {
+        // Sin el extractor corrido no hay habilidades ni enlaces: el módulo sale vacío, como los de las secciones.
+      }
+      const wanted = new Set(skills.flatMap((s) => [...s.books.map((b) => b.item.id), ...s.magazines.map((m) => m.id)]));
+      const all = buildEsSlugs(readPzIndex(), []).items ?? {};
+      const items = Object.fromEntries(Object.entries(all).filter(([itemId]) => wanted.has(itemId)));
+      return `export default ${JSON.stringify({ items })};`;
+    },
+  };
+}
+
+/**
+ * Los slugs en español de la ropa del sobreviviente del Planificador de Zomboid (2026-10-01):
+ * `virtual:pz-slugs-es/outfit-items` → `{ items: {…} }` con sólo las prendas de `outfits.json` (~55), del mismo
+ * `buildEsSlugs` que el sitemap. Es lo mismo que `skill-items`: "Lleva puesto" enlaza a Objetos, y sin esto el enlace en
+ * español iría con el slug inglés (abre la ficha, pero no es su dirección). Antes que el de las secciones, por lo mismo.
+ */
+function pzOutfitItemSlugsModule(): Plugin {
+  const id = "virtual:pz-slugs-es/outfit-items";
+  return {
+    name: "vestigo-pz-outfit-item-slugs",
+    resolveId: (source) => (source === id ? `\0${id}` : null),
+    load(source) {
+      if (source !== `\0${id}`) return null;
+      this.addWatchFile(`${zomboidDir}/index.json`);
+      this.addWatchFile(`${zomboidDir}/outfits.json`);
+      type Outfits = { outfits: Record<string, Record<string, { wear: { slug?: string }[] }>> };
+      let data: Outfits = { outfits: {} };
+      try {
+        data = JSON.parse(readFileSync(`${zomboidDir}/outfits.json`, "utf-8"));
+      } catch {
+        // Sin `model3d.py` corrido no hay ropa ni enlaces: el módulo sale vacío.
+      }
+      const wanted = new Set(Object.values(data.outfits).flatMap((bySex) => Object.values(bySex).flatMap((o) => o.wear.map((w) => w.slug))));
+      const all = buildEsSlugs(readPzIndex(), []).items ?? {};
+      const items = Object.fromEntries(Object.entries(all).filter(([itemId]) => wanted.has(itemId)));
+      return `export default ${JSON.stringify({ items })};`;
+    },
+  };
+}
+
+/**
+ * Los nombres de las fichas de Project Zomboid, un módulo por sección (2026-09-30): `virtual:pz-names/items` exporta
+ * `{ [id]: [en, es] }` con sólo las fichas de esa sección. Es lo único que necesita el `<head>` de una ficha al navegar
+ * (`zomboid/index.ts` → `PageMeta.tsx`): el `index.json` entero pesa 143 KB con gzip por sus `ref` y por las cinco
+ * secciones que esa ficha no usa, y bajarlo para poner un título era pagar de más. Igual que los slugs, una sección que
+ * no está en el índice no resuelve: un nombre mal escrito rompe el build en vez de quedar sin título. Sale de la misma
+ * lectura del índice que el sitemap y los slugs, así no hay un archivo más que regenerar ni que se desincronice.
+ */
+function pzNamesModule(): Plugin {
+  const prefix = "virtual:pz-names/";
+  return {
+    name: "vestigo-pz-names",
+    resolveId(source) {
+      if (source.startsWith(prefix) && readPzIndex().some((e) => e.sec === source.slice(prefix.length))) return `\0${source}`;
+      return null;
+    },
+    load(source) {
+      if (!source.startsWith(`\0${prefix}`)) return null;
+      this.addWatchFile(`${zomboidDir}/index.json`);
+      const sec = source.slice(`\0${prefix}`.length);
+      // [en, es], y en los rasgos gemelos de profesión también sus profesiones: [en, es, viaEn, viaEs] (ver `metaFor`).
+      const names = Object.fromEntries(
+        readPzIndex()
+          .filter((e) => e.sec === sec)
+          .map((e) => [e.id, e.via ? [e.en, e.es, e.via.en, e.via.es] : [e.en, e.es]]),
+      );
+      return `export default ${JSON.stringify(names)};`;
     },
   };
 }
@@ -310,7 +594,7 @@ function areaTags(bundle: Record<string, { type: string } & Record<string, any>>
     return root;
   };
   // Que falte un chunk tiene que romper el build ahora, no en la página que lo use.
-  for (const file of [...Object.values(AREA_FILES), ...Object.values(DEADLOCK_TAB_FILES), ...Object.values(D2R_TAB_FILES)]) chunkOf(file!);
+  for (const file of [...Object.values(AREA_FILES), ...Object.values(DEADLOCK_TAB_FILES), ...Object.values(D2R_TAB_FILES), ...Object.values(PZ_TAB_FILES)]) chunkOf(file!);
   const fresh = (f: string) => !html.includes(`/${f}"`);
   const cache = new Map<string, string>();
   return (files) => {
@@ -401,6 +685,12 @@ function prerenderRoutes(): Plugin {
         for (const page of pages) {
           const route = parseRoute(page.path);
           const cuerpo = await renderApp(route);
+          // Una página de Project Zomboid escrita con la hoja de "cargando…" (2026-09-30) sale sin un solo dato ni
+          // enlace, y nadie lo nota hasta mirar el HTML servido: pasa si `preloadZomboid` (entry-server.tsx) no espera
+          // los datos de una pestaña nueva, o si una ficha cae en un archivo que no se pidió. Mejor que el build falle.
+          if (route.view === "zomboid" && cuerpo.includes('class="pz-loading"')) {
+            throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
+          }
           const conexiones = originsFor(route)
             .map((o) => `<link rel="preconnect" href="${o.href}"${o.cors ? " crossorigin" : ""}>`)
             .join("\n    ");
@@ -466,8 +756,21 @@ function manualChunks() {
     const file = norm(id);
     // Los ayudantes de Vite (\0vite/preload-helper y compañía) los importan los
     // chunks que tienen `import()`: en la entrada arrastrarían a todos.
-    // Los slugs de Diablo II también empiezan con \0, pero son datos de la sección: van con ella.
-    if (id.startsWith("\0") && !file.includes("modulepreload-polyfill") && !id.startsWith("\0virtual:d2r-")) return "vendor";
+    // Los slugs en español de cada juego (`\0virtual:d2r-slugs-es`, `\0virtual:pz-slugs-es` y los de cada sección de
+    // Zomboid, `\0virtual:pz-slugs-es/items`) y los nombres de sus fichas (`\0virtual:pz-names/items`) también empiezan
+    // con \0, pero son datos de su sección: van con ella. En vendor, los ~236 KB de slugs de Zomboid los bajaría cualquiera
+    // que entre al sitio, y los nombres, que se piden de a una sección, volverían a ser un solo bloque.
+    // `\0virtual:pz-patch-pages` (las versiones de Parches con página) también: cambia con cada versión, no con React.
+    const datosDeSeccion = /^\0virtual:(?:[\w-]+-slugs-es(?:\/[\w-]+)?|pz-names\/[\w-]+|pz-patch-pages)$/.test(id);
+    // Leaflet (el visor del Mapa de Zomboid, 2026-09-30) va en su propio chunk y no en vendor: vendor lo baja cualquiera
+    // que entre al sitio, y Leaflet sólo hace falta en el Mapa. Antes que la regla de `\0`: el plugin de CommonJS le
+    // arma envoltorios virtuales (`\0…/leaflet-src.js?commonjs-module`) que también son de Leaflet. Su CSS no: va con el
+    // módulo que la importa (el del visor, que también se pide aparte).
+    if (file.includes("/node_modules/leaflet/")) return /\.css$/.test(file) ? undefined : "leaflet";
+    // three.js (el sobreviviente en 3D del Planificador de Zomboid, 2026-10-01) va en su propio chunk, como Leaflet: sólo
+    // lo baja quien toca "Ver en 3D". En vendor lo bajaría cualquiera que entre al sitio.
+    if (file.includes("/node_modules/three/")) return "three";
+    if (id.startsWith("\0") && !file.includes("modulepreload-polyfill") && !datosDeSeccion) return "vendor";
     if (file.includes("/node_modules/")) return /\.(c|m)?jsx?$/.test(file) ? "vendor" : undefined;
     // Diminuto y sin datos, pero lo importan la copia de Deadlock y la portada:
     // suelto, Rollup lo metía en el chunk de los datos de héroes y la copia
@@ -492,7 +795,26 @@ function manualChunks() {
 }
 
 export default defineConfig({
-  plugins: [localDeadlockAssets(), d2rSlugsModule(), react(), seoFiles(), prerenderRoutes()],
+  plugins: [
+    localDeadlockAssets(),
+    esSlugsModule("virtual:d2r-slugs-es", [`${d2rDir}/wiki/index.json`, `${d2rDir}/drops/index.json`], () => buildD2rEsSlugs(readD2Index())),
+    // Antes que el de las secciones: su `load` atiende todo lo que empiece con `virtual:pz-slugs-es/`.
+    pzCraftItemSlugsModule(),
+    pzSkillItemSlugsModule(),
+    pzOutfitItemSlugsModule(),
+    pzPatchEntSlugsModule(),
+    pzPatchPagesModule(),
+    esSlugsModule(
+      "virtual:pz-slugs-es",
+      [`${zomboidDir}/index.json`],
+      () => buildEsSlugs(readPzIndex(), []),
+      () => [...new Set(readPzIndex().map((e) => e.sec))],
+    ),
+    pzNamesModule(),
+    react(),
+    seoFiles(),
+    prerenderRoutes(),
+  ],
   build: {
     rollupOptions: { output: { manualChunks: manualChunks() } },
   },
@@ -500,7 +822,7 @@ export default defineConfig({
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
     // juego y no uno genérico, para que un import diga de qué juego habla.
-    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir },
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

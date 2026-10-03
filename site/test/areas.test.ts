@@ -1,6 +1,9 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor } from "../src/areaFiles";
+import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor, PZ_TAB_FILES } from "../src/areaFiles";
+import { PZ_SECTIONS } from "../src/route";
+import pzIndex from "@zomboid/index.json";
+import pzSlugsEs from "virtual:pz-slugs-es";
 
 /**
  * `areaFiles.ts` repite a mano los `import()` de `areas.ts` porque la config de
@@ -27,7 +30,7 @@ describe("cada vista en su chunk (2026-09-25)", () => {
   });
 
   it("hay un área por cada vista que sirve el sitio", () => {
-    expect(Object.keys(byView).sort()).toEqual(["d2r", "deadlock", "home", "poe2", "privacy", "terms", "valheim"]);
+    expect(Object.keys(byView).sort()).toEqual(["d2r", "deadlock", "home", "poe2", "privacy", "terms", "valheim", "zomboid"]);
   });
 
   it("DEADLOCK_TAB_FILES nombra el mismo archivo que TABS en DeadlockArea.tsx", () => {
@@ -64,5 +67,47 @@ describe("cada vista en su chunk (2026-09-25)", () => {
     expect(filesFor({ ...base, view: "valheim" })).toEqual(["src/Valheim.tsx"]);
     expect(filesFor({ ...base, view: "deadlock" })).toEqual(["src/DeadlockArea.tsx"]);
     expect(filesFor({ ...base, view: "deadlock", dlSection: "player" })).toEqual(["src/DeadlockArea.tsx", "src/DeadlockPlayer.tsx"]);
+    expect(filesFor({ ...base, view: "zomboid", pzSection: "home" })).toEqual(["src/Zomboid.tsx"]);
+  });
+});
+
+/**
+ * Project Zomboid (2026-09-30): cada pestaña es un chunk aparte, como en Diablo II, y trae sólo los slugs en español de
+ * las secciones que enlaza. El mapa entero pesa ~236 KB y no puede viajar con la portada.
+ */
+describe("Project Zomboid: cada pestaña en su chunk", () => {
+  it("toda pestaña de PZ_TAB_FILES es una sección de la ruta, y su archivo existe", () => {
+    for (const [sec, file] of Object.entries(PZ_TAB_FILES)) {
+      expect(PZ_SECTIONS, sec).toContain(sec);
+      expect(existsSync(new URL(`../${file}`, import.meta.url)), file).toBe(true);
+    }
+  });
+
+  it("PZ_TAB_FILES nombra el mismo archivo que TABS en Zomboid.tsx: si no, el HTML de la pestaña sale sin su JS ni su CSS", () => {
+    const src = readFileSync(new URL("../src/Zomboid.tsx", import.meta.url), "utf-8");
+    const lazies = new Map([...src.matchAll(/const (\w+) = lazyWithPreload\(\(\) => import\("\.\/([\w/]+)"\)\);/g)].map((m) => [m[1], m[2]]));
+    const start = src.indexOf("const TABS");
+    expect(start).toBeGreaterThan(-1);
+    const tabs = src.slice(start, src.indexOf("};", start));
+    const bySection = Object.fromEntries([...tabs.matchAll(/^\s+"?([\w-]+)"?: (\w+),$/gm)].filter((m) => lazies.has(m[2])).map((m) => [m[1], lazies.get(m[2])]));
+    const files = Object.fromEntries(Object.entries(PZ_TAB_FILES).map(([s, f]) => [s, f!.replace(/^src\//, "").replace(/\.tsx?$/, "")]));
+    expect(files).toEqual(bySection);
+  });
+
+  it("el módulo de slugs de cada sección tiene exactamente las fichas de esa sección del módulo entero", async () => {
+    const secs = [...new Set((pzIndex as { sec: string }[]).map((e) => e.sec))];
+    expect(secs.length).toBeGreaterThan(0);
+    for (const sec of secs) {
+      const mod = (await import(/* @vite-ignore */ `virtual:pz-slugs-es/${sec}`)) as { default: Record<string, Record<string, string>> };
+      expect(mod.default, sec).toEqual({ [sec]: (pzSlugsEs as Record<string, Record<string, string>>)[sec] ?? {} });
+    }
+    // Y entre todos cubren el entero: no queda una sección con slugs sin su módulo.
+    for (const sec of Object.keys(pzSlugsEs)) expect(secs, sec).toContain(sec);
+    expect((pzSlugsEs as Record<string, Record<string, string>>).items?.crowbar).toBe("palanca");
+  });
+
+  it("una sección que no está en el índice no resuelve: un nombre mal escrito rompe en vez de dejar el slug inglés", async () => {
+    const nope = "virtual:pz-slugs-es/itemz";
+    await expect(import(/* @vite-ignore */ nope)).rejects.toThrow();
   });
 });

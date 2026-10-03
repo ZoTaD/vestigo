@@ -1,0 +1,97 @@
+/*
+ * Project Zomboid, la pestaña Rasgos (2026-09-30): rasgos y profesiones. Las hojas, el buscador, la cabecera de la ficha,
+ * los renglones y los enlaces son los de Objetos (zomboid-items.css, clases `.pzi-*`): es la misma libreta. Acá va lo
+ * propio: las filas de dos renglones de la lista (nombre y puntos arriba, qué hace abajo) y los puntos de la ficha.
+ *
+ * Reglas de la casa: sin bordes ni barras de color. Un rasgo positivo o negativo se distingue por el signo y el tinte de
+ * su cifra (verde y rojo lápiz, como los pinta el juego), y por la hoja en la que está. Ninguna palabra se corta y nada
+ * es más ancho que la hoja en el celular.
+ */
+
+.pzt {
+  /* El verde del juego para lo bueno, un poco más oscuro que el del sello para que se lea sobre el papel. */
+  --pzt-good: #2f6a2c;
+  --pzt-bad: var(--pz-pencil);
+}
+
+/* ---------- La lista ---------- */
+
+/* Las hojas de la lista van sin los renglones de la página: cada fila lleva el suyo abajo, como escrita sobre la línea
+   (las filas tienen dos renglones de alto distinto y no calzan con los de la hoja). */
+.pz .pzi .pzt-sheet { padding: 6px 18px 12px; background: var(--pz-paper); }
+.pzt-sheet .pzi-h2 { min-height: 44px; margin: 0; }
+
+.pzt-rows { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr)); column-gap: 26px; }
+.pzt-row {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  grid-template-areas: "i n c" "i l l";
+  column-gap: 12px;
+  align-items: baseline;
+  padding: 9px 6px 10px;
+  margin: 0 -6px;
+  color: var(--pz-ink);
+  text-decoration: none;
+  /* El renglón de la libreta, del mismo azul que los de la hoja. */
+  background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0);
+}
+.pzt-row.pzt-profrow { grid-template-columns: 48px minmax(0, 1fr) auto; }
+.pzt-row > .pzi-icon, .pzt-row > .pzi-noicon { grid-area: i; align-self: start; }
+.pzt-name { grid-area: n; font: 700 15px / 1.3 "Noto Sans", sans-serif; }
+.pzt-cost { grid-area: c; justify-self: end; font: 700 18px / 1.1 "Old Standard TT", serif; white-space: nowrap; }
+.pzt-cost.is-positive { color: var(--pzt-good); }
+.pzt-cost.is-negative { color: var(--pzt-bad); }
+.pzt-cost.pzt-profonly { font: 700 17px / 1 "Caveat", cursive; color: var(--pz-pencil); }
+.pzt-line { grid-area: l; margin-top: 2px; font: 400 14px / 1.4 "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzt-row:hover { background-color: var(--pzi-tint); }
+.pzt-row:hover .pzt-name { text-decoration: underline; }
+.pzt-row:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: -2px; }
+
+.pzt-totraits { color: var(--pz-ink); font-weight: 700; text-decoration: underline 2px var(--pz-pencil); text-underline-offset: 3px; }
+.pzt-totraits:hover { color: var(--pz-pencil); }
+.pzt-totraits:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* ---------- La ficha ---------- */
+
+/* Qué hace: la descripción del juego es lo principal de un rasgo, así que va en tinta y no en gris como una nota. */
+.pz .pzt-head .pzt-desc { margin: 14px 0 0; font-size: 17px; line-height: 28px; }
+.pzt-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 10px 0 0; }
+.pz .pzt-head .pzt-price { margin-bottom: 0; }
+.pzt-price b { font: 700 34px / 1 "Old Standard TT", serif; }
+.pzt-price span { font: 600 15px "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzt-price.is-positive b { color: var(--pzt-good); }
+.pzt-price.is-negative b { color: var(--pzt-bad); }
+.pzt-price .pzi-hand { font-size: 22px; }
+
+/* El enlace al planificador de personaje: un botón de la libreta, como "Copiar", del alto de un dedo. */
+.pz .pzt-head .pzt-plan { margin: 14px 0 0; }
+.pzt-planbtn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px 14px;
+  background: var(--pz-grass);
+  color: var(--pz-paper);
+  font: 700 14px / 1.25 "Noto Sans", sans-serif;
+  text-decoration: none;
+}
+.pzt-planbtn:hover { background: var(--pz-ink); }
+.pzt-planbtn:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* El título de una hoja de la ficha no suelta el sello: en el celular "Habilidades que sube" no entraba al lado del
+   sello, bajaba entero de renglón y el sello quedaba solo arriba. Así el título se parte entre palabras al lado del
+   sello (nunca dentro de una), y la cifra lo sigue. */
+.pzt .pzi-rel .pzi-h2 { flex-wrap: nowrap; }
+.pzt .pzi-rel .pzi-h2 small { flex: none; }
+
+.pz .pzt .pzt-none { margin: 0; color: var(--pz-dim); }
+/* Los pueblos no son enlaces: texto de la hoja, con su renglón. */
+.pzt-townlist li { font-weight: 600; }
+/* Lo que sabe sin ser una receta con ficha (temporadas de cultivo, mecánica de autos): texto, debajo de los enlaces. */
+.pzt .pzt-recipes .pzi-links + .pzt-known, .pzt .pzt-recipes .pzi-more + .pzt-known { margin-top: 6px; }
+.pzt-known li { font-weight: 600; }
+
+/* El renglón que lleva al gemelo (Herrería que se elige ↔ la del Herrero): el texto y el enlace con su ícono. */
+.pz .pzt-head .pzt-twin { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin: 12px 0 0; color: var(--pz-dim); }
+.pzt-twin a { display: inline-flex; align-items: center; gap: 8px; color: var(--pz-ink); font-weight: 600; text-underline-offset: 2px; }
+.pzt-twin a:hover { color: var(--pz-pencil); }

@@ -1,0 +1,467 @@
+/*
+ * Project Zomboid, la pestaña Servidor (2026-10-01): el generador. Las hojas, el buscador, los títulos y el botón de
+ * copiar son los de Objetos (zomboid-items.css, clases `.pzi-*`): es la misma libreta. Acá va lo propio: las tarjetas
+ * de los presets, la barra de los archivos, las hojas que se abren y se cierran y las filas de opciones.
+ *
+ * Reglas de la casa: sin bordes ni barras de color. Una opción cambiada va con tinte de fondo y el texto "cambiada" a
+ * lápiz; el preset elegido, en tinta. Ninguna palabra se corta: las claves largas bajan de renglón por sus puntos
+ * (`<wbr>`) y, si su tramo más largo no entra, se achican con su caja. En el celular cada fila es una columna y nada es
+ * más ancho que la pantalla.
+ */
+
+.pzsv {
+  --pzsv-changed: rgba(179, 38, 30, 0.09);
+  --pzsv-changed-strong: rgba(179, 38, 30, 0.16);
+}
+
+/* ---------- Los presets ---------- */
+
+.pz .pzi .pzsv-presets { padding: 6px 18px 16px; background: var(--pz-paper); }
+.pzsv-presets .pzi-h2 { min-height: 44px; margin: 0 0 6px; }
+.pzsv-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: 8px; }
+.pzsv-preset {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 44px;
+  padding: 10px 12px 12px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 400 13px / 1.4 "Noto Sans", sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+.pzsv-preset b { font: 700 19px / 1.15 "Old Standard TT", serif; }
+.pzsv-preset span { color: var(--pz-dim); }
+.pzsv-preset:hover { background: var(--pzi-tint-strong); }
+.pzsv-preset.is-on { background: var(--pz-ink); color: var(--pz-paper); }
+.pzsv-preset.is-on span { color: inherit; opacity: 0.8; }
+.pzsv-preset:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+/* Cada tarjeta lleva debajo "en qué cambia" (a los presets comparados), afuera del botón; y debajo de las cinco, el link
+   a la comparación entera. A lápiz, como las notas de la libreta. */
+.pzsv-preset-cell { display: grid; grid-template-rows: minmax(0, 1fr) auto; min-width: 0; }
+.pzsv-preset-compare,
+.pzsv-compare a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font: 700 18px / 1.1 "Caveat", cursive;
+  color: var(--pz-pencil);
+  text-underline-offset: 3px;
+}
+.pzsv-preset-compare { justify-self: start; padding: 0 2px; }
+.pzsv-compare { margin: 6px 0 0; }
+.pzsv-compare a { font-size: 20px; }
+.pzsv-preset-compare:focus-visible,
+.pzsv-compare a:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* ---------- La barra: buscar, filtrar y los archivos ---------- */
+
+.pz .pzi .pzsv-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px 16px;
+  align-items: center;
+  padding: 14px;
+  background: var(--pz-paper);
+}
+.pzsv-only { justify-self: end; min-height: 44px; }
+.pzsv-name-field { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; align-items: center; font: 600 13px "Noto Sans", sans-serif; }
+.pzsv-name-field input {
+  min-width: 0;
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 600 15px ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+.pzsv-name-field input:focus { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+.pzsv-name-field small { grid-column: 2; font: 700 17px / 1.1 "Caveat", cursive; color: var(--pz-pencil); }
+.pzsv-files { display: grid; gap: 8px; justify-items: end; }
+.pzsv-file { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px 8px; }
+.pzi .pzsv-file code {
+  padding: 2px 6px;
+  background: var(--pzi-code-bg);
+  font: 600 13px / 1.5 ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+.pzsv-file small { font: 700 17px / 1.1 "Caveat", cursive; color: var(--pz-pencil); }
+.pzsv-file .pzi-copy { min-height: 36px; }
+
+/* ---------- Las hojas ---------- */
+
+.pz .pzi .pzsv-sheet { padding: 4px 18px 12px; background: var(--pz-paper); }
+.pzsv-sheet > summary { position: relative; padding-right: 30px; list-style: none; cursor: pointer; }
+.pzsv-sheet > summary::-webkit-details-marker { display: none; }
+.pzsv-sheet > summary .pzi-h2 { min-height: 48px; margin: 0; }
+/* "Opciones de tiempo" no entra de un renglón a 375 px: se parte entre palabras al lado del sello, sin mandar la cifra
+   abajo sola (como en Habilidades). */
+.pzsv-sheet > summary .pzi-h2 { flex-wrap: nowrap; }
+.pzsv-sheet > summary .pzi-h2 small, .pzsv-sheet > summary .pzsv-count { flex: none; }
+/* Abrir y cerrar, a lápiz al final del título: el triángulo del navegador no entra en el renglón del título. */
+.pzsv-sheet > summary .pzi-h2::after,
+.pzsv-sheet > summary .pzsv-h3::after {
+  content: "−";
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  font: 700 26px / 1 "Caveat", cursive;
+  color: var(--pz-pencil);
+}
+.pzsv-sheet:not([open]) > summary .pzi-h2::after,
+.pzsv-sheet:not([open]) > summary .pzsv-h3::after { content: "+"; }
+.pzsv-sheet > summary:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+.pzsv-count { font: 700 19px / 1.1 "Caveat", cursive; color: var(--pz-pencil); white-space: nowrap; }
+
+/* Las hojas del .ini, dentro de la grande: sin papel propio, sólo su título. */
+.pz .pzi .pzsv-ini { padding-bottom: 6px; }
+.pzsv-about { max-width: 70ch; margin: 0 0 6px; font-size: 14px; line-height: 1.5; color: var(--pz-dim); }
+.pz .pzi .pzsv-sub { padding: 0; margin: 8px 0 0; background: none; box-shadow: none; }
+.pzsv-h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  min-height: 44px;
+  margin: 0;
+  font: 700 20px / 1.2 "Old Standard TT", serif;
+}
+.pzsv-h3 small { font: 600 13px "Noto Sans", sans-serif; color: var(--pz-dim); }
+
+.pzsv-rows { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(440px, 100%), 1fr)); column-gap: 26px; }
+/* El subtítulo del juego dentro de una hoja ("Características de zombies") ocupa el ancho entero. */
+.pzsv-sub-title { grid-column: 1 / -1; margin: 14px 0 2px; font: 700 21px / 1.2 "Caveat", cursive; color: var(--pz-pencil); }
+
+/* ---------- Cada opción ---------- */
+
+.pzsv-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 190px);
+  grid-template-areas: "head ctl" "tip tip" "note note" "meta meta";
+  column-gap: 14px;
+  align-items: start;
+  min-width: 0;
+  padding: 10px 8px 10px;
+  margin: 0 -8px;
+  /* El renglón de la libreta, del mismo azul que los de la hoja. */
+  background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0);
+  color: var(--pz-ink);
+  font: 400 14px / 1.4 "Noto Sans", sans-serif;
+}
+/* Cambiada respecto de la base: tinte de fondo (y el texto "cambiada" en la cabecera), nunca un borde. */
+.pzsv-row.is-changed { background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0), var(--pzsv-changed); }
+
+.pzsv-head { grid-area: head; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; min-width: 0; container-type: inline-size; }
+.pzsv-label { display: grid; gap: 1px; min-width: 0; }
+.pzsv-name { font: 700 15px / 1.3 "Noto Sans", sans-serif; }
+/* La clave: se selecciona entera de un clic para copiarla. Baja por sus puntos y, si su tramo más largo no entra en su
+   caja, se achica lo justo: `--pzsv-k` es cuántas letras tiene ese tramo (`keyFit` en OptionRow.tsx), y la monoespaciada
+   mide ~0,6 em por letra (0,62 para no quedar corto). Las del .ini, sin puntos, bajan donde arranca otra palabra
+   (`keyParts`: "Remove|Player|Corpses…"), así que su tramo es una palabra y casi nunca se achican; antes la más larga,
+   "RemovePlayerCorpsesOnCorpseRemoval" (34), quedaba en ~9 px a 320. Una corta no se achica nunca. */
+/* Con `.pzi` adelante: `.pzi code` (Objetos) les pone 14 px y le gana a una clase sola. */
+.pzi .pzsv-key {
+  justify-self: start;
+  padding: 0 4px;
+  background: var(--pzi-code-bg);
+  color: var(--pz-dim);
+  font: 600 min(13px, calc(100cqi / (var(--pzsv-k, 35) * 0.62))) / 1.5 ui-monospace, "Cascadia Mono", Consolas, monospace;
+  user-select: all;
+}
+/* En el .ini la clave es el nombre (el juego las muestra así): en tinta y más grande. */
+.pzi .pzsv-key.is-name { color: var(--pz-ink); font-size: min(14px, calc(100cqi / (var(--pzsv-k, 35) * 0.62))); font-weight: 700; }
+.pzsv-mark { font: 700 18px / 1 "Caveat", cursive; color: var(--pz-pencil); }
+
+.pzsv-ctl { grid-area: ctl; display: grid; gap: 4px; min-width: 0; }
+.pzsv-select,
+.pzsv-input {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 6px 8px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 600 14px "Noto Sans", sans-serif;
+}
+.pzsv-input.is-number { font-variant-numeric: tabular-nums; }
+.pzsv-select:focus,
+.pzsv-input:focus { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+.pzsv-input[aria-invalid="true"] { background: var(--pzsv-changed-strong); }
+.pzsv-error { font: 700 16px / 1.15 "Caveat", cursive; color: var(--pz-pencil); }
+.pzsv-check { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; font-weight: 600; cursor: pointer; }
+.pzsv-check input { width: 20px; height: 20px; margin: 0; accent-color: var(--pz-grass); }
+
+.pzsv-tip { grid-area: tip; margin: 6px 0 0; font-size: 13px; line-height: 1.45; color: var(--pz-dim); }
+.pzsv-note { grid-area: note; margin: 4px 0 0; font: 700 18px / 1.2 "Caveat", cursive; color: var(--pz-pencil); }
+.pzsv-note a { color: inherit; text-underline-offset: 3px; }
+.pzsv-meta { grid-area: meta; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 4px 0 0; font-size: 12px; color: var(--pz-dim); }
+.pzsv-reset {
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 0;
+  background: var(--pzsv-changed-strong);
+  color: var(--pz-ink);
+  font: 700 12px "Noto Sans", sans-serif;
+  cursor: pointer;
+}
+.pzsv-reset:hover { background: var(--pz-ink); color: var(--pz-paper); }
+.pzsv-reset:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* `.pz-page p` les pone 28 px de renglón a todos los párrafos: en las filas, el suyo. */
+.pz .pzsv-row p { line-height: inherit; }
+.pz .pzsv-row .pzsv-note { line-height: 1.2; }
+
+@media (max-width: 860px) {
+  /* La barra en dos renglones: buscar y filtrar; el nombre y los archivos debajo, a lo ancho. */
+  .pz .pzi .pzsv-bar { grid-template-columns: minmax(0, 1fr); }
+  .pzsv-only { justify-self: start; }
+  .pzsv-name-field { grid-template-columns: minmax(0, 1fr); }
+  .pzsv-name-field small { grid-column: 1; }
+  /* Cada archivo: su nombre arriba y los dos botones lado a lado, a lo ancho. */
+  .pzsv-files { justify-items: stretch; }
+  .pzsv-file { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pzi .pzsv-file code { grid-column: 1 / -1; justify-self: start; }
+  .pzsv-file.is-link { grid-template-columns: auto minmax(0, 1fr); }
+  /* Cada fila, una columna: el nombre, el control a lo ancho, la ayuda y el default. */
+  .pzsv-row { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "ctl" "tip" "note" "meta"; row-gap: 6px; }
+  .pz .pzi .pzsv-sheet, .pz .pzi .pzsv-presets { padding-left: 12px; padding-right: 12px; }
+  .pzsv-row { margin: 0 -6px; padding-left: 6px; padding-right: 6px; }
+}
+
+/* ---------- Pegá tu archivo (Task 3) ---------- */
+
+/* Cerrada de entrada: el camino de siempre es elegir un preset. Usa el "+/−" a lápiz de las hojas. */
+.pzsv-paste > summary .pzi-h2 { flex-wrap: wrap; }
+.pzsv-privacy { margin: 0 0 10px; font: 700 20px / 1.15 "Caveat", cursive; color: var(--pz-grass); }
+.pzsv-paste-in { display: grid; gap: 8px; }
+.pzsv-paste-label { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font: 600 13px "Noto Sans", sans-serif; }
+.pzi .pzsv-paste-label code { padding: 0 4px; background: var(--pzi-code-bg); font: 600 13px / 1.5 ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.pzsv-paste-text {
+  width: 100%;
+  min-width: 0;
+  min-height: 170px;
+  padding: 10px 12px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 500 13px / 1.5 ui-monospace, "Cascadia Mono", Consolas, monospace;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.pzsv-paste-text:focus { outline: 2px solid var(--pz-pencil); outline-offset: 1px; }
+.pzsv-paste-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.pzsv-paste-tools > .pzi-copy { min-height: 40px; }
+.pzsv-paste-kind { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.pzsv-paste-kind > span { font: 700 19px / 1 "Caveat", cursive; color: var(--pz-pencil); }
+.pzsv-paste-kind .pzi-chip { min-height: 36px; }
+.pzsv-paste-error { margin: 0; padding: 8px 10px; background: var(--pzsv-changed); font-size: 14px; line-height: 1.45; }
+
+.pzsv-paste-out { display: grid; gap: 12px; margin-top: 14px; }
+.pzsv-paste-out .pzsv-h3 { min-height: 0; }
+.pzsv-paste-block > summary { min-height: 40px; font: 700 21px / 40px "Caveat", cursive; color: var(--pz-pencil); cursor: pointer; }
+.pzsv-paste-block > summary small { font: 600 13px "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzsv-paste-block h4 { margin: 0 0 2px; font: 700 21px / 1.2 "Caveat", cursive; color: var(--pz-pencil); }
+
+/* Qué cambia: tres columnas en la compu; en el celular, cada opción una tarjeta (ver el @media). */
+.pzsv-diffs { display: grid; }
+.pzsv-diff {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2px 14px;
+  align-items: baseline;
+  padding: 6px 0;
+  background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0);
+  font-size: 14px;
+  line-height: 1.4;
+}
+.pzsv-diff.is-head { font: 700 12px "Noto Sans", sans-serif; color: var(--pz-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+.pzsv-diff-name { display: grid; min-width: 0; }
+.pzi .pzsv-diff-name code { justify-self: start; color: var(--pz-dim); font: 600 12px / 1.5 ui-monospace, "Cascadia Mono", Consolas, monospace; background: none; padding: 0; }
+.pzsv-diff-file { display: grid; min-width: 0; font-weight: 700; }
+.pzsv-diff-file small { font-weight: 400; font-size: 12px; color: var(--pz-dim); }
+.pzsv-diff-base { display: grid; min-width: 0; color: var(--pz-dim); }
+/* El nombre de la columna dentro de cada valor: sólo en el celular, donde no hay encabezado. */
+.pzsv-diff-col { display: none; font: 700 11px "Noto Sans", sans-serif; font-style: normal; color: var(--pz-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+
+.pzsv-paste-list { display: grid; gap: 4px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.45; }
+.pzsv-paste-list li { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; align-items: baseline; min-width: 0; }
+.pzsv-line { font: 700 12px "Noto Sans", sans-serif; color: var(--pz-dim); white-space: nowrap; }
+.pzi .pzsv-paste-list code { justify-self: start; padding: 0 4px; background: var(--pzi-code-bg); font: 600 13px / 1.5 ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.pzsv-paste-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 0; }
+.pzsv-paste-load { min-height: 44px; padding: 8px 18px; font-size: 14px; }
+.pzsv-paste-load:disabled { background: var(--pz-paper-2); color: var(--pz-dim); cursor: not-allowed; }
+.pzsv-paste-actions [role="status"] { font: 700 19px / 1.15 "Caveat", cursive; color: var(--pz-grass); }
+.pz .pzsv-paste p { line-height: 1.45; }
+
+@media (max-width: 860px) {
+  .pz .pzi .pzsv-paste { padding-left: 12px; padding-right: 12px; }
+  /* Cada diferencia, una tarjeta: el nombre arriba y los dos valores debajo, con su encabezado escrito. */
+  .pzsv-diff.is-head { display: none; }
+  .pzsv-diff { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .pzsv-diff-name { grid-column: 1 / -1; }
+  .pzsv-diff-col { display: block; }
+  .pzsv-paste-list li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+
+/* ---------- Los presets comparados (Task 4, `/servidor/presets-de-sandbox`) ---------- */
+
+/* El breadcrumb: "Servidor › Presets de sandbox", la página actual sin enlace. */
+.pzsp .pzi-crumb > span { color: var(--pz-desk-text); font: 600 14px "Noto Sans", sans-serif; }
+
+/* Cada preset: el nombre, la descripción del juego, cuántas cambia y el link al generador. Apocalipsis, la base, en tinta. */
+.pzsp-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px 12px;
+  background: var(--pz-paper-2);
+  color: var(--pz-ink);
+  font: 400 13px / 1.4 "Noto Sans", sans-serif;
+  scroll-margin-top: 16px;
+}
+.pzsp-card b { font: 700 19px / 1.15 "Old Standard TT", serif; }
+.pzsp-card > span { color: var(--pz-dim); }
+.pzsp-card.is-base { background: var(--pz-ink); color: var(--pz-paper); }
+.pzsp-card.is-base > span { color: inherit; opacity: 0.8; }
+.pzsp-diffs { margin-top: auto; padding-top: 4px; font: 700 18px / 1.15 "Caveat", cursive; font-style: normal; color: var(--pz-pencil); }
+.pzsp-card.is-base .pzsp-diffs { color: inherit; }
+.pzsp-use {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 12px;
+  background: var(--pz-grass);
+  color: var(--pz-paper);
+  font: 700 12px "Noto Sans", sans-serif;
+  text-decoration: none;
+}
+.pzsp-use:hover { background: var(--pz-ink); }
+.pzsp-card.is-base .pzsp-use:hover { background: var(--pz-paper); color: var(--pz-ink); }
+.pzsp-use:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* El filtro y qué quiere decir el tinte (un cuadrito teñido, no un borde). */
+.pzsp-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: 0 0 8px; }
+.pzsp-bar .pzsv-only { justify-self: auto; }
+.pzsp-legend { display: inline-flex; align-items: center; gap: 8px; font: 700 19px / 1.1 "Caveat", cursive; color: var(--pz-desk-text); }
+.pzsp-legend i { width: 22px; height: 16px; background: var(--pz-paper); box-shadow: inset 0 0 0 40px var(--pzsv-changed-strong); }
+
+/* Una hoja: la tabla opción × 5 presets, con los renglones de la libreta. */
+.pz .pzi .pzsp-sheet { padding: 4px 18px 14px; background: var(--pz-paper); }
+.pzsp-sheet > .pzi-h2 { min-height: 48px; margin: 0 0 4px; }
+.pzsp-table { width: 100%; table-layout: fixed; border-collapse: collapse; color: var(--pz-ink); font: 400 14px / 1.35 "Noto Sans", sans-serif; }
+/* La opción, angosta (sus nombres bajan de renglón en los espacios): las cinco columnas de valores necesitan ~145 px
+   para "Base.Dung_Mouse," de WorldItemRemovalList, que no se corta. */
+.pzsp-table th:first-child { width: 20%; }
+.pzsp-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px 8px 6px;
+  background: var(--pz-paper);
+  color: var(--pz-dim);
+  font: 700 12px / 1.25 "Noto Sans", sans-serif;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: bottom;
+}
+.pzsp-sub th { padding: 14px 8px 2px; font: 700 21px / 1.2 "Caveat", cursive; color: var(--pz-pencil); text-align: left; }
+.pzsp-row > * { padding: 8px; vertical-align: top; background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0); }
+.pzsp-opt { text-align: left; font-weight: 400; }
+.pzsp-optin { display: grid; gap: 1px; min-width: 0; container-type: inline-size; }
+.pzsp-cell.is-diff { background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0), var(--pzsv-changed-strong); }
+.pzsp-val { font-weight: 600; }
+/* El nombre del preset dentro de cada valor: sólo en el celular, donde no hay encabezado. */
+.pzsp-col { display: none; color: var(--pz-dim); font: 700 11px / 1.3 "Noto Sans", sans-serif; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* Las tarjetas empiezan antes que el resto de la página (1120 y no 860 px): más angosta, la tabla no les da a las cinco
+   columnas esos ~145 px (medido en el navegador). */
+@media (max-width: 1120px) {
+  .pz .pzi .pzsp-sheet { padding-left: 12px; padding-right: 12px; }
+  /* Cada opción, una tarjeta: el nombre arriba y un renglón por preset ("Brote inicial · Normal"). */
+  .pzsp-table, .pzsp-table tbody, .pzsp-table tr, .pzsp-table th, .pzsp-table td { display: block; width: auto; }
+  .pzsp-table th:first-child { width: auto; }
+  .pzsp-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .pzsp-sub th { padding: 12px 0 2px; }
+  .pzsp-row { margin: 8px 0; padding: 8px 10px 6px; background: var(--pz-paper-2); }
+  .pzsp-row > * { padding: 0; background: none; }
+  .pzsp-opt { margin-bottom: 4px; }
+  /* Con `.pzsp-table` adelante: si no, el `display: block` de arriba le gana. */
+  .pzsp-table .pzsp-cell { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 10px; align-items: baseline; padding: 3px 6px; margin: 0 -6px; }
+  .pzsp-cell.is-diff { background: var(--pzsv-changed-strong); }
+  .pzsp-col { display: block; }
+}
+
+/* ---------- La calculadora de cortes de agua y luz (Task 5, `/servidor/cortes-de-agua-y-luz`) ---------- */
+
+/* El breadcrumb, como en los presets comparados. */
+.pzsc .pzi-crumb > span { color: var(--pz-desk-text); font: 600 14px "Noto Sans", sans-serif; }
+
+/* Las dos solapas (Servidor / Partida de un jugador): de papel, pegadas arriba de la hoja de las entradas, como las
+   pestañas de la libreta. La elegida es del papel de la hoja; la otra, del más oscuro. */
+.pzsc-modes { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 -1px 14px; }
+.pzsc-mode {
+  min-height: 44px;
+  padding: 8px 18px;
+  border: 0;
+  background: var(--pz-paper-2);
+  color: var(--pz-dim);
+  font: 700 14px "Noto Sans", sans-serif;
+  cursor: pointer;
+  clip-path: polygon(5% 0, 95% 0, 100% 100%, 0 100%);
+}
+.pzsc-mode.is-on { background: var(--pz-paper); color: var(--pz-ink); }
+.pzsc-mode:hover { color: var(--pz-ink); }
+.pzsc-mode:focus-visible { clip-path: none; outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+.pz .pzi .pzsc-in { padding: 8px 18px 16px; background: var(--pz-paper); }
+.pzsc-in .pzi-h2 { margin-bottom: 2px; }
+.pzsc-mode-note { margin: 0 0 10px; font: 700 20px / 1.2 "Caveat", cursive; color: var(--pz-pencil); }
+.pz .pzsc p { line-height: 1.45; }
+
+.pzsc-presets { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 0 0 14px; }
+.pzsc-presets-label { margin-right: 4px; font: 700 20px / 1 "Caveat", cursive; color: var(--pz-pencil); }
+.pzsc-presets .pzi-chip { min-height: 40px; }
+
+.pzsc-group { min-width: 0; margin: 0 0 12px; padding: 0; border: 0; }
+.pzsc-group legend { padding: 0; margin: 0 0 6px; font: 700 13px "Noto Sans", sans-serif; color: var(--pz-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+.pzsc-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr)); gap: 10px 14px; margin: 0 0 12px; }
+.pzsc-cuts { grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); }
+.pzsc-field { display: grid; gap: 4px; align-content: start; min-width: 0; font: 600 13px / 1.3 "Noto Sans", sans-serif; color: var(--pz-ink); }
+.pzsc-field small { font: 700 16px / 1.15 "Caveat", cursive; color: var(--pz-pencil); }
+.pzi .pzsc-key { padding: 0 4px; background: var(--pzi-code-bg); color: var(--pz-dim); font: 600 12px / 1.5 ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.pzsc-starts { margin: 2px 0 0; font: 700 20px / 1.2 "Caveat", cursive; color: var(--pz-grass); }
+.pzsc-back { margin: 4px 0 0; }
+.pzsc-back a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  font: 700 20px / 1.1 "Caveat", cursive;
+  color: var(--pz-pencil);
+  text-underline-offset: 3px;
+}
+.pzsc-back a:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 2px; }
+
+/* El resultado: dos hojas, agua y luz, lado a lado; en el celular, una debajo de la otra. */
+.pzsc-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 0 22px; }
+.pz .pzi .pzsc-sheet { padding: 8px 18px 16px; background: var(--pz-paper); container-type: inline-size; }
+.pzsc-date { margin: 4px 0 2px; font: 700 min(30px, 9cqi) / 1.15 "Old Standard TT", serif; color: var(--pz-ink); }
+.pzsc-date.is-flat { color: var(--pz-pencil); }
+.pzsc-after { margin: 0; font: 600 15px / 1.4 "Noto Sans", sans-serif; }
+.pzsc-real { margin: 2px 0 0; font: 700 20px / 1.2 "Caveat", cursive; color: var(--pz-pencil); }
+.pzsc-bound { padding: 6px 0 10px; background: linear-gradient(transparent calc(100% - 1px), var(--pz-rule) 0); }
+.pzsc-bound h3 { margin: 0; font: 700 12px "Noto Sans", sans-serif; color: var(--pz-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+.pzsc-range { margin: 8px 0 0; font-size: 13px; color: var(--pz-dim); }
+
+.pz .pzi .pzsc-how { padding: 8px 18px 14px; background: var(--pz-paper); }
+.pzsc-how ul { display: grid; gap: 8px; max-width: 78ch; margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.5; }
+
+@media (max-width: 860px) {
+  .pz .pzi .pzsc-in, .pz .pzi .pzsc-sheet, .pz .pzi .pzsc-how { padding-left: 12px; padding-right: 12px; }
+  .pzsc-modes { margin-left: 8px; }
+  .pzsc-mode { padding: 8px 14px; }
+}

@@ -18,7 +18,8 @@
       "@poe2/*": ["../games/poe2/data/*"],
       "@valheim/*": ["../games/valheim/data/site/*"],
       "@valheimMap/*": ["../games/valheim/data/map/*"],
-      "@d2r/*": ["../games/d2r/data/*"]
+      "@d2r/*": ["../games/d2r/data/*"],
+      "@zomboid/*": ["../games/zomboid/data/*"]
     }
   },
   "include": ["src", "vite.config.ts"]

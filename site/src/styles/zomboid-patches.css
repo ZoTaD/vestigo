@@ -1,0 +1,87 @@
+/*
+ * Project Zomboid, la pestaña Parches (2026-10-02). Las hojas, los títulos, la cabecera y los enlaces son los de Objetos
+ * (zomboid-items.css, clases `.pzi-*`): es la misma libreta. Acá va lo propio: la hoja de cada versión en la lista, la
+ * cabecera y el resumen de una versión, sus hotfixes y fuentes, y los renglones del diff.
+ *
+ * Reglas de la casa: sin bordes ni barras de color. Si un número sube o baja lo dice la palabra, con un tinte suave
+ * detrás. Ninguna palabra se corta (las claves crudas bajan de renglón sólo en un punto, con `<wbr>`) y nada es más
+ * ancho que la hoja en el celular: los cambios son renglones de grilla que pasan a una columna, no tablas.
+ */
+
+/* ---------- La lista ---------- */
+
+/* Cada versión es una hoja entera que enlaza a su página: la versión grande, la fecha y la rama, el título, el resumen y
+   las cuentas. Todo cae sobre los renglones de la hoja (28 px). */
+.pz .pzi .pzp-ver {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 22px 18px;
+  color: var(--pz-ink);
+  text-decoration: none;
+  container-type: inline-size;
+}
+.pz .pzi .pzp-ver:nth-of-type(odd) { transform: rotate(0.25deg); }
+.pz .pzi .pzp-ver:nth-of-type(even) { transform: rotate(-0.25deg); }
+.pzp-ver:hover .pzp-vtitle,
+.pzp-ver:hover .pzp-vnum { text-decoration: underline 2px var(--pz-pencil); text-underline-offset: 4px; }
+.pzp-ver:focus-visible { outline: 2px solid var(--pz-pencil); outline-offset: 3px; }
+
+.pzp-vhead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 16px; }
+.pzp-vnum { font: 700 clamp(34px, 10cqi, 50px) / 56px "Old Standard TT", serif; white-space: nowrap; }
+.pzp-vmeta,
+.pzp-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; font: 600 14px / 28px "Noto Sans", sans-serif; color: var(--pz-dim); }
+.pzp-vmeta > * + *::before,
+.pzp-meta > * + *::before { content: "·"; margin-right: 10px; }
+.pzp-vtitle { font: 700 21px / 28px "Old Standard TT", serif; }
+.pzp-vlede { margin-top: 0; line-height: 28px; }
+.pzp-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.pzp-chip {
+  padding: 0 8px;
+  border-radius: 3px;
+  background: var(--pzi-tint-strong);
+  font: 600 13px / 22px "Noto Sans", sans-serif;
+  color: var(--pz-ink);
+  white-space: nowrap;
+}
+
+/* ---------- La página de una versión ---------- */
+
+.pzp-title { margin: 2px 0 0; font: 700 22px / 28px "Old Standard TT", serif; }
+.pz .pzp-head .pzp-meta { margin: 10px 0 0; }
+
+.pz .pzp-summary .pzp-lede { font-size: 17px; line-height: 28px; }
+.pzp-highlights { margin: 0; padding-left: 22px; }
+.pzp-highlights li { line-height: 28px; }
+.pzp-highlights li::marker { color: var(--pz-pencil); }
+
+.pzp-hotlist { margin: 0; padding: 0; list-style: none; }
+.pzp-hotlist > li + li { margin-top: 14px; }
+.pz .pzp-hotlist p { margin: 0; }
+.pzp-hothead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 12px; }
+.pzp-hotver { font: 700 19px / 28px "Old Standard TT", serif; }
+.pzp-hothead time { font: 600 14px / 28px "Noto Sans", sans-serif; color: var(--pz-dim); }
+
+.pzp-sources { display: flex; flex-wrap: wrap; gap: 0 18px; margin: 0; padding: 0; list-style: none; }
+.pzp-sources li { line-height: 28px; }
+.pzp-sources a { color: var(--pz-ink); text-decoration: underline 1px var(--pz-pencil); text-underline-offset: 3px; }
+.pzp-sources a:hover { color: var(--pz-pencil); }
+.pzp-sources a::after { content: " ↗"; color: var(--pz-dim); }
+
+.pz .pzp-what .pzp-note { margin: 0; }
+.pzp-bottom { margin-top: 4px; }
+
+/* ---------- El diff ---------- */
+
+/* Los cambiados: el nombre de la cosa y, debajo, un renglón por campo. Entre una cosa y la otra, aire; sin rayas. Los
+   renglones (`.pzp-field`), el nombre (`.pzp-ent`) y los enlaces (`.pzp-link`) están en zomboid-items.css: los usa también
+   el "Qué cambió" de cada ficha, que baja aparte y no puede esperar a esta hoja. */
+.pzp-changed { margin: 0; padding: 0; list-style: none; }
+.pzp-changed > li { padding: 6px 0 10px; }
+.pzp-name { color: var(--pz-ink); }
+a.pzp-name { text-underline-offset: 2px; }
+a.pzp-name:hover { color: var(--pz-pencil); }
+
+/* En el celular, la hoja de cada versión con menos margen. */
+@media (max-width: 560px) {
+  .pz .pzi .pzp-ver { padding: 14px 16px 16px; }
+}

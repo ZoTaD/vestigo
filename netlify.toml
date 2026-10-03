@@ -27,7 +27,7 @@
   #
   # Un juego nuevo suma acá su `games/<juego>/data`: si no, la Action que lo
   # actualiza queda en verde con el sitio sirviendo los datos viejos.
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/games/d2r/data :/netlify.toml"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/games/d2r/data :/games/zomboid/data :/netlify.toml"
 
 [build.environment]
   # Pinned so a Netlify default upgrade never changes the build under us.
@@ -71,6 +71,21 @@
 [[redirects]]
   from = "/tft/*"
   to = "/en"
+  status = 301
+
+# `/zomboid` era un atajo a la sección (2026-09-30); ahora manda con 301 a la
+# dirección de verdad. La carpeta `/zomboid/...` es de assets (íconos, mapa).
+[[redirects]]
+  from = "/zomboid"
+  to = "/en/project-zomboid"
+  status = 301
+[[redirects]]
+  from = "/en/zomboid"
+  to = "/en/project-zomboid"
+  status = 301
+[[redirects]]
+  from = "/es/zomboid"
+  to = "/es/project-zomboid"
   status = 301
 
 # Un chunk que ya no existe (una pestaña abierta de antes de un deploy pide el
@@ -189,6 +204,38 @@
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 [[headers]]
   for = "/valheim/wiki/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/zomboid/items/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/zomboid/build/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/zomboid/traits/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/zomboid/professions/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/zomboid/moodles/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/zomboid/ui/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/zomboid/map/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/zomboid/3d/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 [[headers]]

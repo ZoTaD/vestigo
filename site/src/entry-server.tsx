@@ -15,6 +15,9 @@ import { isCat, loadCat, loadIndex } from "./poe2EncyclopediaData";
 import { EDITIONS, loadAllEditions, loadEdition as loadP2Edition } from "./poe2PatchesData";
 import { loadIndex as loadVhIndex, loadTab as loadVhTab } from "./valheimData";
 import { loadEdition as loadVhEdition, loadEditions as loadVhEditions } from "./valheimPatchesData";
+import { preloadItemsRoute } from "./zomboid/items/data";
+import { preloadRecipesRoute } from "./zomboid/recipes/data";
+import { preloadCraftRoute } from "./zomboid/crafting/data";
 
 // Igual que en `main.tsx`: la cáscara recibe `areas.ts` en vez de importarlo.
 provideAreas(allAreas);
@@ -33,6 +36,7 @@ async function preload(route: Route): Promise<void> {
   const quiet = (p: Promise<unknown>) => p.catch(() => undefined);
   if (route.view === "poe2") return preloadPoe2(route, quiet);
   if (route.view === "valheim") return preloadValheim(route, quiet);
+  if (route.view === "zomboid") return preloadZomboid(route, quiet);
   if (route.view !== "deadlock") return;
   if (route.dlSection === "meta" && route.detail) await Promise.all([quiet(loadBuilds()), quiet(loadMastery())]);
   if (route.dlSection === "heroes" && route.detail) {
@@ -98,6 +102,22 @@ async function preloadValheim(route: Route, quiet: (p: Promise<unknown>) => Prom
     if (slug) tasks.push(quiet(loadVhEdition(slug)));
   }
   await Promise.all(tasks);
+}
+
+/**
+ * Project Zomboid (2026-09-30): la lista de Objetos o de Recetas, o el archivo donde vive la ficha (y la lista si la
+ * ficha no existe, que se muestra con una nota), o el grafo de Fabricación (`craft.json`, 2026-10-02). `preloadTab` ya lo pide junto con el chunk; se espera acá también para
+ * que el HTML no dependa de ese detalle: sin la lista o la ficha, la página sale con "cargando…" y sin un solo enlace.
+ *
+ * Rasgos, profesiones, el planificador, Moodles, Habilidades y Servidor no tienen línea: sus datos viajan en el chunk
+ * de la pestaña (`zomboid/traits/data.ts`, `zomboid/moodles/data.ts`, `zomboid/skills/data.ts`,
+ * `zomboid/server/data.ts`), y el chunk ya lo baja `preloadRoute` antes de este paso. Una pestaña nueva con datos
+ * aparte sí la suma.
+ */
+async function preloadZomboid(route: Route, quiet: (p: Promise<unknown>) => Promise<unknown>): Promise<void> {
+  if (route.pzSection === "items") await quiet(preloadItemsRoute(route));
+  if (route.pzSection === "recipes") await quiet(preloadRecipesRoute(route));
+  if (route.pzSection === "crafting") await quiet(preloadCraftRoute(route));
 }
 
 export async function renderApp(route: Route): Promise<string> {

@@ -33,6 +33,7 @@ export default function RouteLink({
   onNavigate,
   className,
   active,
+  prefetch = "hover",
   children,
   ...rest
 }: {
@@ -41,6 +42,15 @@ export default function RouteLink({
   className?: string;
   /** Marca la página actual: pinta el estado y pone `aria-current`. */
   active?: boolean;
+  /**
+   * Cuándo empezar a bajar lo que pide el destino: al pasar el mouse (`hover`,
+   * lo normal), o recién al apretar (`press`: `pointerdown`, que le gana unos
+   * 100 ms al clic). `press` es para las listas largas, donde el mouse cruza
+   * decenas de filas camino a otra cosa: en Objetos de Project Zomboid cada
+   * fila baja el archivo de su ficha (~15 KB), y pasar por la lista eran
+   * decenas de descargas que nadie pidió. El foco del teclado baja siempre.
+   */
+  prefetch?: "hover" | "press";
   children: React.ReactNode;
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className">) {
   // Cada juego (y cada pestaña de Deadlock) es un chunk aparte (`areas.ts`): se
@@ -63,8 +73,12 @@ export default function RouteLink({
       }}
       {...rest}
       onPointerEnter={(e) => {
-        warm();
+        if (prefetch === "hover") warm();
         rest.onPointerEnter?.(e);
+      }}
+      onPointerDown={(e) => {
+        if (prefetch === "press") warm();
+        rest.onPointerDown?.(e);
       }}
       onFocus={(e) => {
         warm();
