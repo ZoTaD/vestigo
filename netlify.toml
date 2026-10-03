@@ -32,6 +32,9 @@
 [build.environment]
   # Pinned so a Netlify default upgrade never changes the build under us.
   NODE_VERSION = "22"
+  # Project Zomboid (2026-10-03) trajo miles de JSON y el build pasó los 2 GB de heap que da Node por defecto:
+  # sin esto, Netlify corta con "JavaScript heap out of memory" a mitad de la transformación.
+  NODE_OPTIONS = "--max-old-space-size=6144"
 
 # Every screen has a real URL (/en/deadlock/items/frenzy and friends), but the app
 # is still a single HTML file that reads the path at runtime. This hands any
