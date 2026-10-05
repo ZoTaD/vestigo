@@ -31,7 +31,7 @@ export type DeadlockSection =
   | "patches"
   | "player"
   | "match";
-export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "privacy" | "terms";
+export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -93,7 +93,7 @@ const D2R_SECTION_BY_ES = new Map(Object.entries(D2R_SECTION_ES).map(([tab, es])
 
 /**
  * Los slugs en español de las fichas de un juego, por pestaña: id → slug y slug → id. Sólo guarda los que cambian;
- * una ficha que no aparece se llama igual en los dos idiomas. Lo usan Diablo II y Project Zomboid.
+ * una ficha que no aparece se llama igual en los dos idiomas. Lo usan Diablo II, Project Zomboid y Rust.
  */
 class LocalSlugs<T extends string> {
   private byTab: Partial<Record<T, { toEs: Map<string, string>; toId: Map<string, string> }>> = {};
@@ -199,6 +199,33 @@ export function registerPzSlugs(slugs: Partial<Record<PzTab, Record<string, stri
   pzSlugsEs.register(slugs);
 }
 
+/**
+ * Rust (2026-10-05). Diseño: docs/design/2026-10-05-rust.md. Como Diablo II y Zomboid, en español las pestañas y las
+ * fichas van en español. `/rust` sin idioma no es una página: la carpeta `/rust/...` es de assets (íconos, fondo) y
+ * Netlify la manda con 301 a `/en/rust`.
+ */
+export type RustTab = "items" | "raid";
+export type RustSection = "home" | RustTab;
+export const RUST_SEGMENT = "rust";
+export const RUST_SECTIONS: RustTab[] = ["items", "raid"];
+/** Las pestañas con una ficha por cosa (`/rust/items/assault-rifle`). */
+export const RUST_DETAIL_SECTIONS: RustTab[] = ["items"];
+/**
+ * Las pestañas que ya tienen página. Las demás se muestran apagadas, no entran al sitemap, y una dirección a una de
+ * ellas muestra la portada. Cada pestaña se suma acá el día que se publica.
+ */
+export const RUST_PUBLISHED: RustTab[] = [];
+export const RUST_SECTION_ES: Record<RustTab, string> = { items: "objetos", raid: "raideo" };
+const RUST_SECTION_BY_ES = new Map(Object.entries(RUST_SECTION_ES).map(([tab, es]) => [es, tab as RustTab]));
+
+/** Los slugs en español de las fichas de Rust. */
+const rustSlugsEs = new LocalSlugs<RustTab>();
+
+/** Anota los slugs en español de las fichas de Rust (los arma el build y la pestaña Objetos, como en Zomboid). */
+export function registerRustSlugs(slugs: Partial<Record<RustTab, Record<string, string>>>): void {
+  rustSlugsEs.register(slugs);
+}
+
 export const LANGS: Lang[] = ["en", "es"];
 /**
  * En el orden en que se dibujan las pestañas.
@@ -281,6 +308,8 @@ export interface Route {
   d2Section?: D2rSection;
   /** Qué pestaña de Project Zomboid. Sin ella es la portada de la sección. */
   pzSection?: PzSection;
+  /** Qué pestaña de Rust. Sin ella es la portada de la sección. */
+  rsSection?: RustSection;
   /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
   detail?: string;
 }
@@ -305,6 +334,10 @@ const d2Tab = (v: string | undefined): D2rTab | undefined => (isD2Tab(v) ? v : v
 const isPzTab = (v: string | undefined): v is PzTab => !!v && (PZ_SECTIONS as string[]).includes(v);
 /** La pestaña de Project Zomboid de un segmento, escrito en cualquiera de los dos idiomas. */
 const pzTab = (v: string | undefined): PzTab | undefined => (isPzTab(v) ? v : v ? PZ_SECTION_BY_ES.get(v) : undefined);
+
+const isRustTab = (v: string | undefined): v is RustTab => !!v && (RUST_SECTIONS as string[]).includes(v);
+/** La pestaña de Rust de un segmento, escrito en cualquiera de los dos idiomas. */
+const rustTab = (v: string | undefined): RustTab | undefined => (isRustTab(v) ? v : v ? RUST_SECTION_BY_ES.get(v) : undefined);
 
 /**
  * A name as it appears in a URL: lowercase, ASCII, hyphen-separated.
@@ -365,6 +398,17 @@ export function parseRoute(pathname: string): Route {
     // conoce se deja como vino.
     const detail = slug ? pzSlugsEs.toId(tab, slug) : undefined;
     return { ...base, view: "zomboid", pzSection: tab, detail };
+  }
+
+  if (head === RUST_SEGMENT) {
+    const tab = rustTab(rest[1]);
+    // Como Zomboid: una pestaña sin publicar (o que no se conoce) muestra la portada, y la dirección, el título y el
+    // canonical dicen lo mismo que la pantalla.
+    if (!tab || !RUST_PUBLISHED.includes(tab)) return { ...base, view: "rust", rsSection: "home" };
+    const slug = RUST_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
+    // El slug se traduce en los dos idiomas (el extractor cuida que el español de uno no sea el inglés de otro).
+    const detail = slug ? rustSlugsEs.toId(tab, slug) : undefined;
+    return { ...base, view: "rust", rsSection: tab, detail };
   }
 
   if (!head || !isView(head)) return { ...base, view: "home" };
@@ -456,6 +500,14 @@ export function routePath(route: Route): string {
     if (lang !== "es") return detail ? `${root}/${sec}/${detail}` : `${root}/${sec}`;
     const path = `${root}/${PZ_SECTION_ES[sec]}`;
     return detail ? `${path}/${pzSlugsEs.toEs(sec, detail)}` : path;
+  }
+  if (view === "rust") {
+    const sec = route.rsSection ?? "home";
+    const root = `/${lang}/${RUST_SEGMENT}`;
+    if (sec === "home") return root;
+    if (lang !== "es") return detail ? `${root}/${sec}/${detail}` : `${root}/${sec}`;
+    const path = `${root}/${RUST_SECTION_ES[sec]}`;
+    return detail ? `${path}/${rustSlugsEs.toEs(sec, detail)}` : path;
   }
   return `/${lang}/${view}`;
 }
