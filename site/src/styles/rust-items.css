@@ -92,6 +92,9 @@ a.rs-ref:hover { color: #fff; }
 .rs-yields b { font-weight: 700; white-space: nowrap; }
 .rs-dim { color: var(--rs-dim); }
 .rs-tag { margin-left: 8px; padding: 1px 6px; background: rgba(255, 255, 255, 0.08); font-size: 12px; font-style: normal; text-transform: uppercase; }
+/* Dónde aparece tiene cuatro columnas: el nombre de la fuente se queda con un ancho mínimo para que a 375 px no quede
+   una palabra por renglón, y las cifras se achican al lado. */
+.rs-loot th[scope="row"] { min-width: 9em; }
 
 .rs-shops { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .rs-shops li { display: flex; flex-wrap: wrap; gap: 4px 12px; }
@@ -103,4 +106,12 @@ a.rs-ref:hover { color: #fff; }
   .rs-grid { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); }
   .rs-table { font-size: 14px; }
   .rs-table td { white-space: normal; }
+  /* A 375 px las cuatro columnas de Dónde aparece no entraban: "PROBABILIDAD" no se corta, así que se achica el aire
+     de las celdas y de los títulos, y las etiquetas (NPC, Navidad) bajan de renglón enteras. Las cifras no se parten
+     ("10–20 %" dejaba el "%" solo abajo). */
+  .rs-loot th[scope="row"] { min-width: 7em; }
+  .rs-loot th, .rs-loot td { padding: 6px 4px; }
+  .rs-loot td { white-space: nowrap; }
+  .rs-loot thead th { font-size: 11px; letter-spacing: 0.02em; }
+  .rs-loot .rs-tag { display: inline-block; margin: 2px 0 0 6px; }
 }

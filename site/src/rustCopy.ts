@@ -5,7 +5,7 @@
  * la que trae el juego). Acá va lo nuestro: pestañas, títulos para Google y los textos de la portada.
  */
 import { useLang } from "./i18n";
-import type { EffectStat, ModStat, RecyclerKey } from "./rust/items/data";
+import type { EffectStat, LootEvent, LootKind, ModStat, RecyclerKey } from "./rust/items/data";
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
@@ -86,6 +86,10 @@ export interface RustCopy {
     lootBox: string;
     lootAmount: string;
     lootChance: string;
+    lootCond: string;
+    kinds: Record<Exclude<LootKind, "box">, string>;
+    events: Record<LootEvent, string>;
+    contents: string;
     blueprint: string;
     shops: string;
     shopRow: (amount: number, item: string, price: number, currency: string) => string;
@@ -191,10 +195,14 @@ const EN: RustCopy = {
     spoilInto: (t) => `Spoils after ${t}:`,
     recycleNote: "“+ 50%” is the chance of getting one more. For an item at full condition: a worn one gives less. The green recycler gives more while the monument's power grid is on, and the red one only works with it.",
     loot: "Where to find it",
-    lootNote: "Chance that one container has at least one.",
-    lootBox: "Container",
+    lootNote: "Chance that a crate, NPC or item has at least one; the amount counts all its rolls. Condition: how worn it comes out.",
+    lootBox: "Source",
     lootAmount: "Amount",
     lootChance: "Chance",
+    lootCond: "Condition",
+    kinds: { npc: "NPC", item: "Opened", collect: "Pick up" },
+    events: { xmas: "Christmas", halloween: "Halloween", easter: "Easter" },
+    contents: "What's inside",
     blueprint: "Blueprint",
     shops: "Where to buy it",
     shopRow: (amount, item, price, currency) => `${amount} × ${item} for ${price} ${currency}`,
@@ -313,10 +321,14 @@ const ES: RustCopy = {
     spoilInto: (t) => `Se echa a perder en ${t}:`,
     recycleNote: "“+ 50 %” es la chance de que salga uno más. Con el objeto entero: uno gastado da menos. La verde rinde más mientras el monumento tiene la red eléctrica prendida, y la roja sólo anda con ella.",
     loot: "Dónde aparece",
-    lootNote: "Probabilidad de que una caja traiga al menos uno.",
-    lootBox: "Caja",
+    lootNote: "Probabilidad de que una caja, un NPC o un objeto traiga al menos uno; la cantidad cuenta todas sus tiradas. Estado: qué tan gastado sale.",
+    lootBox: "Dónde",
     lootAmount: "Cantidad",
     lootChance: "Probabilidad",
+    lootCond: "Estado",
+    kinds: { npc: "NPC", item: "Se abre", collect: "Del suelo" },
+    events: { xmas: "Navidad", halloween: "Halloween", easter: "Pascua" },
+    contents: "Qué trae",
     blueprint: "Plano",
     shops: "Dónde comprarlo",
     shopRow: (amount, item, price, currency) => `${amount} × ${item} por ${price} de ${currency}`,

@@ -27,6 +27,8 @@ export interface ListRow {
 }
 
 /** Las cuatro recicladoras, de la que más rinde a la que menos (`RECYCLERS` de extract.py). */
+export type LootKind = "box" | "npc" | "item" | "collect";
+export type LootEvent = "xmas" | "halloween" | "easter";
 export type RecyclerKey = "red" | "green_power" | "green" | "yellow";
 export interface Recycler {
   key: RecyclerKey;
@@ -69,7 +71,20 @@ export interface Ficha {
   usedIn: Ref[];
   recycle: { scrap: number; out: (Ref & { amount: number })[]; eff: Recycler[] } | null;
   recycledFrom: { eff: Recycler[]; rows: (Ref & { amount: number; scrap: boolean })[] } | null;
-  loot: { c: string; name: Loc; chance: number; min: number; max: number; bp: boolean }[];
+  loot: {
+    c: string;
+    name: Loc;
+    kind: LootKind;
+    event: LootEvent | null;
+    /** El objeto que se abre, si la fuente es uno (un regalo, una bolsa de Halloween). */
+    item: Ref | null;
+    chance: number;
+    min: number;
+    max: number;
+    bp: boolean;
+    cond: [number, number] | null;
+  }[];
+  contents: (Ref & { chance: number; min: number; max: number; bp: boolean })[];
   shops: { shop: Loc; amount: number; bp: boolean; currency: Ref; price: number }[];
 }
 

@@ -78,6 +78,39 @@ def use_of(i, ref):
     return {"effects": u["effects"], "mods": u["mods"], "spoil": spoil}
 
 
+def loot_row(r, src, item, ref):
+    """
+    Una fila de "Dónde aparece": la fuente con su nombre, qué es (caja, NPC, objeto que se abre, recolectable), si es de
+    un evento, y con qué condición sale el objeto (`cond`, [mín, máx] en fracción). `cond` va sólo si el objeto tiene
+    condición y no es un plano: la caja que gasta todo (`worn: all`) usa `found`; la que a veces (`some`), de `found`
+    mínimo a entero; la que nunca, entero.
+    """
+    cond = None
+    found = (item.get("condition") or {}).get("found")
+    if found and not r["bp"]:
+        worn = src.get("worn", "none")
+        cond = list(found) if worn == "all" else [found[0], 1] if worn == "some" else [1, 1]
+    return {
+        "c": r["c"], "name": {"en": src["en"], "es": src["es"]}, "kind": src.get("kind", "box"), "event": src.get("event"),
+        "item": ref(src["item"]) if src.get("item") else None,
+        "chance": r["chance"], "min": r["min"], "max": r["max"], "bp": r["bp"], "cond": cond,
+    }
+
+
+def contents_of(loot, ref):
+    """Lo que trae cada objeto que se abre (fuentes con `kind: item`), de lo más probable a lo menos."""
+    out = {}
+    for sid, rows in loot["items"].items():
+        for r in rows:
+            src = loot["containers"][r["c"]]
+            if src.get("kind") == "item":
+                out.setdefault(src["item"], []).append(
+                    {**ref(sid), "chance": r["chance"], "min": r["min"], "max": r["max"], "bp": r["bp"]})
+    for rows in out.values():
+        rows.sort(key=lambda r: (-r["chance"], r["name"]["en"].lower()))
+    return out
+
+
 def build(items_doc, loot, shops):
     items = items_doc["items"]
     by_id = {i["id"]: i for i in items}
@@ -97,6 +130,7 @@ def build(items_doc, loot, shops):
     recycled = recycled_from(items, ref)
 
     containers = loot["containers"]
+    contents = contents_of(loot, ref)
     shops_by_item = {}
     for o in shops["orders"]:
         shops_by_item.setdefault(o["item"], []).append({
@@ -131,8 +165,8 @@ def build(items_doc, loot, shops):
             "usedIn": [ref(u) for u in used_in.get(i["id"], [])],
             "recycle": recycle,
             "recycledFrom": {"eff": items_doc["recyclers"], "rows": recycled[i["id"]]} if i["id"] in recycled else None,
-            "loot": [{"c": r["c"], "name": containers[r["c"]], "chance": r["chance"], "min": r["min"], "max": r["max"], "bp": r["bp"]}
-                     for r in loot["items"].get(i["id"], [])],
+            "loot": [loot_row(r, containers[r["c"]], i, ref) for r in loot["items"].get(i["id"], [])],
+            "contents": contents.get(i["id"], []),
             "shops": shops_by_item.get(i["id"], []),
         }
 

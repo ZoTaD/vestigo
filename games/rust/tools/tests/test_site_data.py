@@ -101,10 +101,34 @@ class TestBuild(unittest.TestCase):
         self.assertIsNone(self.fichas["assault-rifle"]["recycledFrom"])
 
     def test_botin_y_tiendas_con_nombres(self):
-        self.assertEqual(self.fichas["assault-rifle"]["loot"], [{"c": "elite", "name": {"en": "Elite Crate", "es": "Caja de élite"}, "chance": 0.1, "min": 1, "max": 1, "bp": False}])
+        self.assertEqual(self.fichas["assault-rifle"]["loot"], [{
+            "c": "elite", "name": {"en": "Elite Crate", "es": "Caja de élite"}, "kind": "box", "event": None, "item": None,
+            "chance": 0.1, "min": 1, "max": 1, "bp": False, "cond": None,
+        }])
         shop = self.fichas["wood"]["shops"][0]
         self.assertEqual(shop["shop"], {"en": "Outpost", "es": "Puesto Avanzado"})
         self.assertEqual((shop["currency"]["id"], shop["price"], shop["amount"]), ("scrap", 50, 1000))
+
+    def test_condicion_por_fuente_y_lo_que_trae_un_objeto(self):
+        doc = json.loads(json.dumps(DOC))
+        doc["items"][0]["condition"] = {"max": 150, "repairable": True, "found": [0.1, 0.2]}
+        box = lambda en, worn: {"en": en, "es": en, "kind": "box", "event": None, "worn": worn}  # noqa: E731
+        loot = {
+            "containers": {
+                "elite": box("Elite Crate", "all"), "locked": box("Locked Crate", "none"), "barrel": box("Barrel", "some"),
+                "open_wood": {"en": "Wood", "es": "Madera", "kind": "item", "item": "wood", "event": "xmas", "worn": "none"},
+            },
+            "items": {"rifle.ak": [{"c": c, "chance": 0.1, "min": 1, "max": 1, "bp": False} for c in ("elite", "locked", "barrel", "open_wood")]},
+        }
+        out = rust_site.build(doc, loot, SHOPS)
+        rows = {r["c"]: r for r in out["fichas"]["assault-rifle"]["loot"]}
+        self.assertEqual(rows["elite"]["cond"], [0.1, 0.2])
+        self.assertEqual(rows["locked"]["cond"], [1, 1])
+        self.assertEqual(rows["barrel"]["cond"], [0.1, 1])
+        self.assertEqual((rows["open_wood"]["item"]["slug"], rows["open_wood"]["event"]), ("wood", "xmas"))
+        # Lo que trae la "madera" que se abre: el AK.
+        self.assertEqual([c["id"] for c in out["fichas"]["wood"]["contents"]], ["rifle.ak"])
+        self.assertEqual(out["fichas"]["assault-rifle"]["contents"], [])
 
     def test_los_slugs_en_espanol_solo_los_que_cambian(self):
         self.assertEqual(self.out["slugsEs"], {"items": {"assault-rifle": "fusil-de-asalto", "wood": "madera", "scrap": "chatarra"}})

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { craftTimes, formatDuration } from "../src/rust/items/format";
+import { condText, craftTimes, formatChance, formatDuration } from "../src/rust/items/format";
 
 describe("las cuentas chicas de la ficha de Rust", () => {
   it("formatDuration", () => {
@@ -16,5 +16,20 @@ describe("las cuentas chicas de la ficha de Rust", () => {
       { bench: 0, seconds: 30 }, { bench: 1, seconds: 15 }, { bench: 2, seconds: 7.5 }, { bench: 3, seconds: 7.5 },
     ]);
     expect(craftTimes(45, 3)).toEqual([{ bench: 3, seconds: 45 }]);
+  });
+});
+
+describe("el estado al aparecer y la probabilidad", () => {
+  const pct = (p: number) => `${p} %`;
+  it("condText", () => {
+    expect(condText([0.1, 0.2], pct)).toBe("10–20 %");
+    expect(condText([1, 1], pct)).toBe("100 %");
+    expect(condText([0.01, 0.03], pct)).toBe("1–3 %");
+  });
+  it("formatChance", () => {
+    expect(formatChance(0.2845, "es-AR")).toBe("28 %");
+    expect(formatChance(0.039, "es-AR")).toBe("3,9 %");
+    expect(formatChance(0.0004, "es-AR")).toBe("< 0,1 %");
+    expect(formatChance(1, "es-AR")).toBe("100 %");
   });
 });

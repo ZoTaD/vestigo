@@ -22,6 +22,8 @@ describe("la pestaña Objetos de Rust", () => {
     await preloadTab(parseRoute("/en/rust/items/metal-fragments"));
     await preloadTab(parseRoute("/en/rust/items/hatchet"));
     await preloadTab(parseRoute("/en/rust/items/medical-syringe"));
+    await preloadTab(parseRoute("/es/rust/objetos/fragmentos-de-metal"));
+    await preloadTab(parseRoute("/en/rust/items/small-present"));
   });
 
   it("la lista enlaza cada ficha con su slug en español y trae los filtros", () => {
@@ -46,7 +48,7 @@ describe("la pestaña Objetos de Rust", () => {
     expect(html).toContain("Investigar: 120 de chatarra");
     expect(html).toContain("Caja de élite");
     // La tabla del botín dice qué es cada columna, y cada botón de copiar dice qué copia.
-    expect(html).toMatch(/<thead><tr><th scope="col">Caja<\/th><th scope="col">Cantidad<\/th><th scope="col">Probabilidad<\/th><\/tr><\/thead>/);
+    expect(html).toMatch(/<thead><tr><th scope="col">Dónde<\/th><th scope="col">Cantidad<\/th><th scope="col">Probabilidad<\/th><th scope="col">Estado<\/th><\/tr><\/thead>/);
     expect(html).toContain('aria-label="Copiar: Shortname"');
     expect(html).toContain('aria-label="Copiar: Comando para spawnearlo"');
     expect(html).toContain('aria-live="polite"');
@@ -144,5 +146,25 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
     expect(html).toContain("Health over time");
     expect(html).toMatch(/Health over time<\/dt><dd>\+20</);
     expect(html).toMatch(/Radiation<\/dt><dd>−10</);
+  });
+
+  it("el AK: los científicos pesados, el estado al aparecer y la cantidad de todas las tiradas", () => {
+    const html = render("es", "/es/rust/objetos/fusil-de-asalto");
+    expect(html).toContain("Científico pesado (plataforma petrolera)");
+    expect(html).toContain(">NPC<");
+    expect(html).toContain("10–20 %"); // caja de élite
+    expect(html).toContain("× 1–2"); // caja bloqueada
+  });
+
+  it("los fragmentos de metal: el regalo pequeño enlazado y marcado como de Navidad", () => {
+    const html = render("es", "/es/rust/objetos/fragmentos-de-metal");
+    expect(html).toContain('href="/es/rust/objetos/regalo-pequeno"');
+    expect(html).toContain(">Navidad<");
+  });
+
+  it("el regalo pequeño: qué trae", () => {
+    const html = render("en", "/en/rust/items/small-present");
+    expect(html).toContain("What&#x27;s inside"); // React escapa el apóstrofo en el HTML
+    expect(html).toContain('href="/en/rust/items/metal-fragments"');
   });
 });

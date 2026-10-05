@@ -9,6 +9,7 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
 import { say, type Ficha, type Ref } from "./data";
+import { ContentsSection, LootSection } from "./FichaLoot";
 import { RepairSection, UseSection } from "./FichaMore";
 import RecycleSection, { RecycledFrom } from "./FichaRecycle";
 import { craftTimes, formatDuration } from "./format";
@@ -112,33 +113,8 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
       <RecycleSection ficha={ficha} route={route} navigate={navigate} />
       <RecycledFrom ficha={ficha} route={route} navigate={navigate} />
 
-      {ficha.loot.length > 0 && (
-        <section className="rs-pnl">
-          <h2 className="rs-hd">{t.loot}</h2>
-          <p className="rs-ficha-note">{t.lootNote}</p>
-          <table className="rs-table">
-            <thead>
-              <tr>
-                <th scope="col">{t.lootBox}</th>
-                <th scope="col">{t.lootAmount}</th>
-                <th scope="col">{t.lootChance}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ficha.loot.map((l) => (
-                <tr key={`${l.c}-${l.bp}`}>
-                  <th scope="row">
-                    {say(l.name, lang)}
-                    {l.bp && <em className="rs-tag">{t.blueprint}</em>}
-                  </th>
-                  <td>{l.min === l.max ? `× ${num(l.min)}` : `× ${num(l.min)}–${num(l.max)}`}</td>
-                  <td>{formatChance(l.chance, locale)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      )}
+      <LootSection ficha={ficha} route={route} navigate={navigate} />
+      <ContentsSection ficha={ficha} route={route} navigate={navigate} />
 
       {ficha.shops.length > 0 && (
         <section className="rs-pnl">
@@ -167,14 +143,6 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
  */
 function longestWord(name: string): number {
   return Math.max(1, ...name.split(/[\s-]+/).map((w) => [...w].length));
-}
-
-/** 0,0123 → "1,2 %"; por debajo de 0,1 % se dice "< 0,1 %" en vez de un cero que miente. */
-function formatChance(p: number, locale: string): string {
-  if (p >= 0.995) return "100 %";
-  if (p < 0.001) return `< ${(0.1).toLocaleString(locale)} %`;
-  const pct = p * 100;
-  return `${pct.toLocaleString(locale, { maximumFractionDigits: pct < 10 ? 1 : 0 })} %`;
 }
 
 /** Un dato con botón de copiar. Sin JS (el prerender) se ve el texto, que se puede seleccionar igual. */
