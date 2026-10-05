@@ -27,7 +27,7 @@ from world import World  # noqa: E402
 
 # El enum `DamageType` del juego: el índice en `ProtectionProperties.amounts`. Relevado el 2026-10-05 (BlockStone tiene
 # Explosion 0,5 en el 16 y Bullet 0,99 en el 9).
-BULLET, EXPLOSION = 9, 16
+BULLET = 9
 # La parte de bala de la munición explosiva cuenta al 40 % contra construcciones. Calibrado con dos valores conocidos de
 # la comunidad (pared de piedra 185 balas, de madera 49), que el 0,4 da exactos; el origen en el código del juego no se
 # encontró. Contra chapa y blindado no cambia nada: la protección contra bala es 0,9999.
@@ -127,7 +127,8 @@ def craft_cost(sid, items, qty=1.0):
 def rounded(cost):
     if cost is None:
         return None
-    r = lambda x: round(x, 2) if x % 1 else int(x)  # noqa: E731
+    # Se redondea antes de mirar si tiene decimales: el ruido de coma flotante dejaba `650.0` en vez de `650`.
+    r = lambda x: round(x, 2) if round(x, 2) % 1 else int(round(x, 2))  # noqa: E731
     return {
         "sulfur": r(cost["raw"].get("sulfur", 0)), "gunpowder": r(cost["gunpowder"]), "time": r(cost["time"]),
         "raw": {k: r(v) for k, v in sorted(cost["raw"].items())},
@@ -140,30 +141,6 @@ GAME_CLASSES = {
     "Door", "BuildingPrivlidge", "AutoTurret", "SimpleBuildingBlock", "Gate", "StabilityEntity", "ShopFront", "Workbench",
     "BoxStorage", "RFTimedExplosive", "TimedExplosive", "DudTimedExplosive", "Projectile",
 }
-
-
-def by_game_object(w, paths):
-    """
-    Respaldo por si un prefab tiene la vida o el daño en una clase que no está en `GAME_CLASSES`: busca los GameObject
-    con esos nombres y lee sus MonoBehaviour. Recorre todos los GameObject (lento), por eso corre sólo si falta algo, y
-    avisa la clase para sumarla a la lista.
-    """
-    out = {}
-    for o in w.env.objects:
-        if o.type.name != "GameObject":
-            continue
-        go = o.read()
-        if go.m_Name not in paths:
-            continue
-        for c in go.m_Components:
-            comp = getattr(c, "component", c).deref()  # la forma cambia entre versiones de UnityPy
-            if comp.type.name == "MonoBehaviour":
-                tt = w.tree(comp)
-                if "startHealth" in tt or "damageTypes" in tt:
-                    cls = w.scripts.get((w.file_of(comp.assets_file, tt["m_Script"]["m_FileID"]), tt["m_Script"]["m_PathID"]))
-                    print(f"[rust] raideo: {go.m_Name} tiene sus datos en {cls}; sumala a GAME_CLASSES", file=sys.stderr)
-                    out.setdefault(go.m_Name, []).append((comp, tt))
-    return out
 
 
 def read_game(w):
@@ -186,11 +163,6 @@ def read_game(w):
     # Sólo el prefab mismo: su GameObject raíz se llama con la ruta completa; las copias en escenas tienen nombre corto.
     for o, tt, _ in w.behaviours(GAME_CLASSES):
         take(o, tt, w.go_name(o, tt))
-    missing = (wanted_targets - set(targets)) | (wanted_ex - set(explosives))
-    if missing:
-        for path, comps in by_game_object(w, missing).items():
-            for o, tt in comps:
-                take(o, tt, path)
 
     # El daño radial de la bala explosiva vive en el objeto (items.preload): su dueño es el `ItemDefinition` del mismo
     # GameObject, por un índice armado una vez (como `world.item_prefabs`).
@@ -204,7 +176,10 @@ def read_game(w):
             radial = (d["type"], d["amount"])
     missing = sorted((wanted_targets - set(targets)) | (wanted_ex - set(explosives)))
     if missing or len(grades) != len(GRADES) or radial is None:
-        raise SystemExit(f"faltan datos de raideo: prefabs {missing}, grados {sorted(grades)}, radial {radial}")
+        # Un prefab que falta suele tener la vida o el daño en una clase que no está en `GAME_CLASSES`: hay que buscarla
+        # y sumarla. Recorrer todos los GameObject para encontrarla sola choca con la memoria, por eso se corta acá.
+        raise SystemExit(f"faltan datos de raideo: prefabs {missing} (¿su clase falta en GAME_CLASSES?), "
+                         f"grados {sorted(grades)}, radial {radial}")
     return grades, targets, explosives, radial
 
 
@@ -240,7 +215,7 @@ def collect():
         hp, prot = prefab_targets[path]
         it = items[sid]
         targets.append({"id": sid, "kind": kind, "slug": it["slug"], "item": sid, "icon": sid,
-                        "name": {"en": it["name"]["en"], "es": it["name"]["es"] or it["name"]["en"]}, "hp": int(hp), "dmg": dmg_map(prot)})
+                        "name": {"en": it["name"]["en"], "es": it["name"]["es"]}, "hp": int(hp), "dmg": dmg_map(prot)})
     return {"explosives": explosives, "targets": targets}
 
 
