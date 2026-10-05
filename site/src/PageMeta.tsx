@@ -156,7 +156,7 @@ export default function PageMeta({ route }: { route: Route }) {
     const key = pzNameKey(route);
     const via = key ? peekPzName(key.sec, key.id)?.via?.[lang] : null;
     const rsItem = route.view === "rust" && route.rsSection === "items" && route.detail ? peekRsItem(route.detail) : null;
-    const rsHas = rsItem ? { craft: !!rsItem.craft, shop: rsItem.shops.length > 0, loot: rsItem.loot.length > 0 } : null;
+    const rsHas = rsItem ? { craft: !!rsItem.craft, shop: rsItem.shops.length > 0, loot: rsItem.loot.length > 0, recycle: !!rsItem.recycle } : null;
     const { title, description } = metaFor(route, lang, detail, via, rsHas);
     const url = routeUrl(route);
 

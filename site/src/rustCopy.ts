@@ -21,6 +21,7 @@ export interface RustHas {
   craft?: boolean;
   shop?: boolean;
   loot?: boolean;
+  recycle?: boolean;
 }
 
 export interface RustCopy {
@@ -184,15 +185,18 @@ const EN: RustCopy = {
     },
   },
   detailSeo: (name, has = {}) => {
+    const topics = [...(has.craft ? ["crafting"] : []), ...(has.recycle ? ["recycling"] : []), ...(has.loot || has.shop ? ["where to find it"] : [])];
     const parts = [
-      ...(has.craft ? ["its recipe, workbench and research cost"] : []),
-      ...(has.loot ? ["which crates and NPCs drop it"] : []),
+      ...(has.craft ? ["how to craft it, with its recipe, workbench and research cost"] : []),
+      ...(has.recycle ? ["what it recycles into"] : []),
+      ...(has.loot ? ["where to find it"] : []),
       ...(has.shop ? ["where to buy it"] : []),
     ];
-    const tail = parts.length ? ", plus its shortname and spawn command" : "what it is for, its shortname and spawn command";
     return {
-      title: `${name} — Rust: Crafting, Recycling and Where to Find It | Vestigo`,
-      description: `${has.craft ? `How to craft ${name} in Rust` : `${name} in Rust`}: ${parts.join(", ")}${tail}.`,
+      title: topics.length
+        ? `${name} — Rust: ${topics.length > 1 ? `${topics.slice(0, -1).join(", ")} and ${topics[topics.length - 1]}` : topics[0]} | Vestigo`
+        : `${name} in Rust: Stats, Shortname and Spawn Command | Vestigo`,
+      description: `${name} in Rust: ${parts.length ? `${parts.join(", ")}, plus its shortname and spawn command` : "what it is for, its shortname and spawn command"}.`,
     };
   },
   loading: "Loading…",
@@ -363,15 +367,18 @@ const ES: RustCopy = {
     },
   },
   detailSeo: (name, has = {}) => {
+    const topics = [...(has.craft ? ["crafteo"] : []), ...(has.recycle ? ["reciclaje"] : []), ...(has.loot || has.shop ? ["dónde se encuentra"] : [])];
     const parts = [
-      ...(has.craft ? ["su receta, banco y costo de investigación"] : []),
-      ...(has.loot ? ["en qué cajas y NPC aparece"] : []),
-      ...(has.shop ? ["dónde comprarlo"] : []),
+      ...(has.craft ? ["cómo se craftea, con su receta, banco y costo de investigación"] : []),
+      ...(has.recycle ? ["lo que da al reciclarlo"] : []),
+      ...(has.loot ? ["dónde aparece"] : []),
+      ...(has.shop ? ["dónde se compra"] : []),
     ];
-    const tail = parts.length ? ", más su shortname y el comando para spawnearlo" : "para qué sirve, su shortname y el comando para spawnearlo";
     return {
-      title: `${name} — Rust: crafteo, reciclaje y dónde encontrarlo | Vestigo`,
-      description: `${has.craft ? `Cómo craftear ${name} en Rust` : `${name} en Rust`}: ${parts.join(", ")}${tail}.`,
+      title: topics.length
+        ? `${name} — Rust: ${topics.length > 1 ? `${topics.slice(0, -1).join(", ")} y ${topics[topics.length - 1]}` : topics[0]} | Vestigo`
+        : `${name} en Rust: datos, shortname y comando para spawnearlo | Vestigo`,
+      description: `${name} en Rust: ${parts.length ? `${parts.join(", ")}, más su shortname y el comando para spawnearlo` : "para qué sirve, su shortname y el comando para spawnearlo"}.`,
     };
   },
   loading: "Cargando…",

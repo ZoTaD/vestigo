@@ -205,7 +205,7 @@ function readSitemapData(): { data: OgData } {
     if (list) {
       try {
         registerRustSlugs(JSON.parse(readFileSync(`${rustDir}/site/slugs-es.json`, "utf-8")));
-        items = list.rows.map(({ slug, en, es, c, s, l }) => ({ slug, en, es, c, s, l }));
+        items = list.rows.map(({ slug, en, es, c, s, l, r }) => ({ slug, en, es, c, s, l, r }));
       } catch (e) {
         // Con la lista pero sin los slugs en español, las fichas no entran (saldrían con la hoja de "cargando…"):
         // se avisa para que no parezca que Rust simplemente no tiene fichas.

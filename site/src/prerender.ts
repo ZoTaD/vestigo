@@ -443,7 +443,7 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
 
   // Lo que tiene cada ficha de Rust (receta, tienda, botín): la descripción sólo promete eso.
   const rsHas = new Map<string, RustHas>();
-  for (const e of data.rs?.items ?? []) rsHas.set(`rs-items/${e.slug}`, { craft: !!e.c, shop: !!e.s, loot: !!e.l });
+  for (const e of data.rs?.items ?? []) rsHas.set(`rs-items/${e.slug}`, { craft: !!e.c, shop: !!e.s, loot: !!e.l, recycle: !!e.r });
 
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);

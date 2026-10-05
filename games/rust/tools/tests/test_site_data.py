@@ -82,7 +82,7 @@ class TestBuild(unittest.TestCase):
     def test_la_lista_sin_redirects_y_ordenada(self):
         rows = self.out["list"]["rows"]
         self.assertEqual([r["id"] for r in rows], ["rifle.ak", "scrap", "wood"])
-        self.assertEqual(rows[0], {"id": "rifle.ak", "slug": "assault-rifle", "slugEs": "fusil-de-asalto", "en": "Assault Rifle", "es": "Fusil de asalto", "cat": "weapon", "c": 1, "l": 1})
+        self.assertEqual(rows[0], {"id": "rifle.ak", "slug": "assault-rifle", "slugEs": "fusil-de-asalto", "en": "Assault Rifle", "es": "Fusil de asalto", "cat": "weapon", "c": 1, "l": 1, "r": 1})
         self.assertEqual(self.out["list"]["cats"], ["weapon", "resources"])
 
     def test_la_receta_con_referencias_y_se_usa_en(self):
@@ -163,10 +163,10 @@ class TestBuild(unittest.TestCase):
 
     def test_las_banderas_de_la_lista_dicen_lo_que_el_objeto_tiene(self):
         rows = {r["slug"]: r for r in self.out["list"]["rows"]}
-        flag = lambda slug: {k: rows[slug].get(k) for k in "csl"}  # noqa: E731
-        self.assertEqual(flag("assault-rifle"), {"c": 1, "s": None, "l": 1})
-        self.assertEqual(flag("wood"), {"c": None, "s": 1, "l": None})
-        self.assertEqual(flag("scrap"), {"c": None, "s": None, "l": None})
+        flag = lambda slug: {k: rows[slug].get(k) for k in "cslr"}  # noqa: E731
+        self.assertEqual(flag("assault-rifle"), {"c": 1, "s": None, "l": 1, "r": 1})
+        self.assertEqual(flag("wood"), {"c": None, "s": 1, "l": None, "r": None})
+        self.assertEqual(flag("scrap"), {"c": None, "s": None, "l": None, "r": None})
 
     def test_la_errata_del_espanol_corrige_el_nombre_pero_no_el_slug(self):
         doc = json.loads(json.dumps(DOC))

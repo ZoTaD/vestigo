@@ -174,9 +174,9 @@ def deploy_of(i, dep, by_id, ref):
 def flags_of(f):
     """
     Lo que el <head> de la ficha puede prometer: `c` si tiene receta, `s` si se vende, `l` si aparece en botín, NPC o
-    recolectables. Sólo va la que es cierta (la lista pesa para 1.032 filas); el prerender la lee sin bajar las fichas.
+    recolectables, `r` si se puede reciclar. Sólo va la que es cierta (la lista pesa para 1.032 filas); el prerender la lee sin bajar las fichas.
     """
-    return {k: 1 for k, on in (("c", f["craft"]), ("s", f["shops"]), ("l", f["loot"])) if on}
+    return {k: 1 for k, on in (("c", f["craft"]), ("s", f["shops"]), ("l", f["loot"]), ("r", f["recycle"])) if on}
 
 
 def build(items_doc, loot, shops, mixing=None, deployables=None, skins=None):

@@ -28,6 +28,7 @@ export interface ListRow {
   c?: 1;
   s?: 1;
   l?: 1;
+  r?: 1;
 }
 
 /** Las cuatro recicladoras, de la que más rinde a la que menos (`RECYCLERS` de extract.py). */

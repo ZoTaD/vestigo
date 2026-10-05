@@ -11,38 +11,45 @@ registerRustSlugs(slugsEs);
 
 const data = {
   dlHeroes: {}, dlItems: {}, dlHeroIds: [], dlItemIds: [],
-  rs: { build: rsMeta.build, extractedAt: rsMeta.extractedAt, items: list.rows.map((r) => ({ slug: r.slug, en: r.en, es: r.es, c: r.c, s: r.s, l: r.l })) },
+  rs: { build: rsMeta.build, extractedAt: rsMeta.extractedAt, items: list.rows.map((r) => ({ slug: r.slug, en: r.en, es: r.es, c: r.c, s: r.s, l: r.l, r: r.r })) },
   dates: { rust: rsMeta.extractedAt },
 } as unknown as SitemapData;
 
-const descOf = (path: string) => prerenderPages(data).find((p) => p.path === path)!.description;
-const bare = list.rows.find((r) => !r.c && !r.s && !r.l)!;
+const page = (path: string) => prerenderPages(data).find((p) => p.path === path)!;
+const bare = list.rows.find((r) => !r.c && !r.s && !r.l && !r.r)!;
 const sold = list.rows.find((r) => r.s && !r.c)!;
 
-describe("la description de la ficha sólo promete lo que el objeto tiene", () => {
-  it("con receta: cómo craftearlo, y su botín", () => {
-    const d = descOf("/es/rust/objetos/fusil-de-asalto");
-    expect(d).toMatch(/^Cómo craftear Fusil de asalto en Rust: su receta, banco y costo de investigación/);
-    expect(d).toContain("en qué cajas y NPC aparece");
+describe("el <head> de la ficha sólo afirma lo que el objeto tiene", () => {
+  it("con receta (AK): crafteo, reciclaje y dónde se encuentra; el nombre va primero", () => {
+    const es = page("/es/rust/objetos/fusil-de-asalto");
+    expect(es.title).toBe("Fusil de asalto — Rust: crafteo, reciclaje y dónde se encuentra | Vestigo");
+    expect(es.description).toBe("Fusil de asalto en Rust: cómo se craftea, con su receta, banco y costo de investigación, lo que da al reciclarlo, dónde aparece, más su shortname y el comando para spawnearlo.");
+    const en = page("/en/rust/items/assault-rifle");
+    expect(en.title).toBe("Assault Rifle — Rust: crafting, recycling and where to find it | Vestigo");
+    expect(en.description).toMatch(/^Assault Rifle in Rust: how to craft it, with its recipe, workbench and research cost, what it recycles into, where to find it, plus/);
   });
-  it("sin receta, tienda ni botín: sin crafteo ni compra", () => {
-    const d = descOf(`/es/rust/objetos/${bare.slugEs}`);
-    expect(d).not.toMatch(/craftear|receta|comprarlo|cajas/);
-    expect(d.startsWith(`${bare.es ?? bare.en} en Rust: para qué sirve, su shortname`)).toBe(true);
-    expect(descOf(`/en/rust/items/${bare.slug}`)).not.toMatch(/craft|recipe|buy|crates/);
+  it("una veta (mineral de metal): sólo dónde se encuentra, sin crafteo, compra ni cajas", () => {
+    for (const path of ["/es/rust/objetos/mena-de-metal", "/en/rust/items/metal-ore"]) {
+      const p = page(path);
+      expect(p.title + p.description).not.toMatch(/craft|receta|recipe|compra|buy|cajas|crates|recicl|recycl/i);
+    }
+    expect(page("/es/rust/objetos/mena-de-metal").title).toBe("Mena de metal — Rust: dónde se encuentra | Vestigo");
+    expect(page("/es/rust/objetos/mena-de-metal").description).toMatch(/^Mena de metal en Rust: dónde aparece, más su shortname/);
   });
-  it("la chatarra no se craftea: aparece en botín y se compra, sin receta", () => {
-    const d = descOf("/es/rust/objetos/chatarra");
-    expect(d).toMatch(/^Chatarra en Rust: en qué cajas y NPC aparece, dónde comprarlo, más su shortname/);
-    expect(d).not.toMatch(/craftear|receta/);
+  it("lo que se compra dice dónde se compra", () => {
+    const es = page("/es/rust/objetos/chatarra");
+    expect(es.description).toBe("Chatarra en Rust: dónde aparece, dónde se compra, más su shortname y el comando para spawnearlo.");
+    expect(es.title).toBe("Chatarra — Rust: dónde se encuentra | Vestigo");
+    expect(page(`/en/rust/items/${sold.slug}`).description).toContain("where to buy it");
+    expect(page("/es/rust/objetos/fusil-de-asalto").description).not.toContain("se compra");
   });
-  it("lo que se vende dice dónde comprarlo, y lo que no, no", () => {
-    expect(descOf(`/es/rust/objetos/${sold.slugEs}`)).toContain("dónde comprarlo");
-    expect(descOf(`/en/rust/items/${sold.slug}`)).toContain("where to buy it");
-    expect(descOf("/es/rust/objetos/fusil-de-asalto")).not.toContain("dónde comprarlo");
-  });
-  it("el nombre va tal cual, sin mayúscula en medio de la frase", () => {
-    expect(descOf("/en/rust/items/assault-rifle")).toMatch(/^How to craft Assault Rifle in Rust: its recipe/);
+  it("sin nada: título neutro y descripción sin promesas", () => {
+    const es = page(`/es/rust/objetos/${bare.slugEs}`);
+    expect(es.title).toBe(`${bare.es ?? bare.en} en Rust: datos, shortname y comando para spawnearlo | Vestigo`);
+    expect(es.description).toBe(`${bare.es ?? bare.en} en Rust: para qué sirve, su shortname y el comando para spawnearlo.`);
+    const en = page(`/en/rust/items/${bare.slug}`);
+    expect(en.title).toBe(`${bare.en} in Rust: Stats, Shortname and Spawn Command | Vestigo`);
+    expect(en.title + en.description).not.toMatch(/craft|recipe|buy|find|recycl/i);
   });
 });
 
