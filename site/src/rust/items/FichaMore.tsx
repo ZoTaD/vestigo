@@ -234,3 +234,27 @@ export function DetectedSection({ ficha, route, navigate }: Props) {
     </section>
   );
 }
+
+/** Las skins que trae el juego para este objeto, con su ícono. Las de workshop llevan la etiqueta. */
+export function SkinsSection({ ficha }: { ficha: Ficha }) {
+  const t = useRustCopy().items;
+  const { lang } = useLang();
+  const locale = useLocale();
+  if (!ficha.skins.length) return null;
+  return (
+    <section className="rs-pnl">
+      <h2 className="rs-hd">{t.skins(ficha.skins.length.toLocaleString(locale))}</h2>
+      <ul className="rs-skins">
+        {ficha.skins.map((s) => (
+          <li key={s.id}>
+            <span className="rs-slot">
+              {s.icon && <img src={`/rust/${s.icon}.webp`} alt="" width={64} height={64} loading="lazy" />}
+            </span>
+            <span>{say(s.name, lang)}</span>
+            {s.workshop && <em className="rs-tag">{t.workshop}</em>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}

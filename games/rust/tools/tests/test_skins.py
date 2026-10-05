@@ -43,12 +43,21 @@ class TestSkinsInGame(unittest.TestCase):
 
     def test_cantidad_y_forma(self):
         total = sum(len(v) for v in data()["items"].values())
-        self.assertGreater(total, 300)
+        # Las 312 de los objetos visibles, contando las cuatro cuyo asset termina en `.skin` o `.sitem`.
+        self.assertEqual(total, 312)
+        planters = {s["id"] for s in data()["items"]["planter.large"]} | {s["id"] for s in data()["items"]["planter.triangle"]}
+        self.assertTrue({10297, 10298} <= planters)
+        lunar = {s["id"] for s in data()["items"]["wall.frame.lunar2025_a"]}
+        self.assertTrue({10281, 10282} <= lunar)
         for sid, rows in data()["items"].items():
             names = [r["name"]["en"].lower() for r in rows]
             self.assertEqual(names, sorted(names), sid)
             for r in rows:
                 self.assertTrue(r["name"]["en"], (sid, r["id"]))
+                # Sin ícono propio ni redirect, queda el del objeto: ninguna se muestra vacía.
+                self.assertTrue(r["icon"], (sid, r["id"]))
+        crystal = {s["id"]: s for s in data()["items"]["rifle.ak"]}[10561]
+        self.assertEqual(crystal["icon"], "items/rifle.ak")
 
 
 SKINS_JSON = extract.DATA / "skins.json"

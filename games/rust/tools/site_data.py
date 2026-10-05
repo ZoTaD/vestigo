@@ -160,7 +160,7 @@ def deploy_of(i, dep, by_id, ref):
     return {"attach": attach, "upkeep": upkeep, "decay": d.get("decay")}
 
 
-def build(items_doc, loot, shops, mixing=None, deployables=None):
+def build(items_doc, loot, shops, mixing=None, deployables=None, skins=None):
     items = items_doc["items"]
     by_id = {i["id"]: i for i in items}
 
@@ -221,6 +221,7 @@ def build(items_doc, loot, shops, mixing=None, deployables=None):
             "turns": [{"how": t["how"], "into": ref(t["into"]), "amount": t["amount"], "chance": t["chance"]} for t in i.get("turns") or []],
             "shops": shops_by_item.get(i["id"], []),
             "deploy": deploy_of(i, deployables, by_id, ref),
+            "skins": (skins or {}).get("items", {}).get(i["id"], []),
             "vibration": (deployables or {}).get("vibration", {}).get(i["id"]),
             "detectedBy": ref(SEISMIC_SENSOR) if (deployables or {}).get("vibration", {}).get(i["id"]) else None,
         }
@@ -240,7 +241,7 @@ def build(items_doc, loot, shops, mixing=None, deployables=None):
 def main():
     load = lambda n: json.loads((DATA / n).read_text(encoding="utf-8"))  # noqa: E731
     optional = lambda n: load(n) if (DATA / n).exists() else None  # noqa: E731
-    out = build(load("items.json"), load("loot.json"), load("shops.json"), optional("mixing.json"), optional("deployables.json"))
+    out = build(load("items.json"), load("loot.json"), load("shops.json"), optional("mixing.json"), optional("deployables.json"), optional("skins.json"))
     (OUT / "items").mkdir(parents=True, exist_ok=True)
     dump = lambda path, obj: path.write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")  # noqa: E731
     dump(OUT / "list.json", out["list"])

@@ -72,6 +72,13 @@ class TestBuild(unittest.TestCase):
         self.assertEqual(out["fichas"]["wood"]["turns"], [{"how": "burn", "into": {"id": "scrap", "slug": "scrap", "name": {"en": "Scrap", "es": "Chatarra"}}, "amount": 1, "chance": 0.25}])
         self.assertEqual(self.fichas["assault-rifle"]["obtained"], [])
 
+    def test_skins(self):
+        skins = {"items": {"rifle.ak": [{"id": 10135, "name": {"en": "Digital Camo AK47", "es": "AK47 con camuflaje digital"},
+                                         "icon": "skins/10135", "workshop": True}]}}
+        out = rust_site.build(DOC, LOOT, SHOPS, None, None, skins)
+        self.assertEqual(out["fichas"]["assault-rifle"]["skins"][0]["icon"], "skins/10135")
+        self.assertEqual(out["fichas"]["wood"]["skins"], [])
+
     def test_la_lista_sin_redirects_y_ordenada(self):
         rows = self.out["list"]["rows"]
         self.assertEqual([r["id"] for r in rows], ["rifle.ak", "scrap", "wood"])
@@ -198,3 +205,9 @@ class TestBuildReal(unittest.TestCase):
         verde = [r["amount"] * 2 if r["scrap"] else r["amount"] for r in sc]
         self.assertEqual(verde, sorted(verde, reverse=True))
         self.assertEqual(mf[0]["id"], "workbench3")  # 1.000 fragmentos por unidad, el que más da
+
+    def test_ningun_archivo_de_fichas_pasa_de_48_kb_con_gzip(self):
+        import gzip
+        for f in sorted((rust_site.OUT / "items").glob("*.json")):
+            size = len(gzip.compress(f.read_bytes()))
+            self.assertLess(size, 48_000, f"{f.name}: {size} bytes con gzip")

@@ -98,6 +98,8 @@ export interface Ficha {
   } | null;
   vibration: number | null;
   detectedBy: Ref | null;
+  /** `icon`: ruta debajo de `/rust/` sin `.webp` (`skins/10135` o `items/rifle.ak.ice`). */
+  skins: { id: number; name: Loc; icon: string | null; workshop: boolean }[];
 }
 
 /** `SHARDS` de site_data.py: si se cambia uno se cambia el otro (lo prueba rustItemsData.test.ts). */

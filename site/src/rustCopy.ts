@@ -103,6 +103,8 @@ export interface RustCopy {
     decayNote: string;
     detectedBy: string;
     vibration: (n: number) => string;
+    skins: (n: string) => string;
+    workshop: string;
     how: Record<HowKind, string>;
     perUnit: (pct: string) => string;
     blueprint: string;
@@ -231,6 +233,8 @@ const EN: RustCopy = {
     decayNote: "Time until it breaks with no upkeep in the tool cupboard.",
     detectedBy: "Detected by",
     vibration: (n) => `vibration level ${n}`,
+    skins: (n) => `Skins (${n})`,
+    workshop: "Workshop",
     how: { cook: "Cooking or smelting", burn: "Burning", swap: "Using it", mix: "Mixing table" },
     perUnit: (pct) => `${pct} per unit`,
     blueprint: "Blueprint",
@@ -372,6 +376,8 @@ const ES: RustCopy = {
     decayNote: "Lo que tarda en romperse si el armario no tiene con qué pagar el mantenimiento.",
     detectedBy: "Lo detecta",
     vibration: (n) => `nivel de vibración ${n}`,
+    skins: (n) => `Skins (${n})`,
+    workshop: "Workshop",
     how: { cook: "Cocinando o fundiendo", burn: "Quemándolo", swap: "Usándolo", mix: "Mesa de mezcla" },
     perUnit: (pct) => `${pct} por unidad`,
     blueprint: "Plano",

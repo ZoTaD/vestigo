@@ -153,6 +153,12 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
     expect(html).toMatch(/Radiation<\/dt><dd>−10</);
   });
 
+  it("el AK: las skins con su nombre y su ícono", () => {
+    const html = render("es", "/es/rust/objetos/fusil-de-asalto");
+    expect(html).toContain("AK47 con camuflaje digital");
+    expect(html).toContain('src="/rust/skins/10135.webp"');
+  });
+
   it("el AK: los científicos pesados, el estado al aparecer y la cantidad de todas las tiradas de la caja", () => {
     const html = render("es", "/es/rust/objetos/fusil-de-asalto");
     expect(html).toContain("Científico pesado (plataforma petrolera)");

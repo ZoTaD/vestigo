@@ -123,3 +123,9 @@ a.rs-ref:hover { color: #fff; }
 .rs-obtain .rs-ref { display: inline-flex; gap: 6px; align-items: center; }
 .rs-sub { margin: 12px 0 6px; color: var(--rs-dim); font: 700 12px/1.2 "Roboto Condensed", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; }
 .rs-sub:first-of-type { margin-top: 0; }
+
+/* Las skins, en la misma grilla que la lista de objetos. */
+.rs-skins { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.rs-skins li { display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 1.2; color: var(--rs-soft); }
+.rs-skins .rs-slot { padding: 10px; }
+.rs-skins .rs-tag { margin: 0; align-self: start; }
