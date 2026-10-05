@@ -13,6 +13,7 @@ import { loadIndex as loadVhIndex, peekIndex as peekVhIndex } from "./valheimDat
 import { loadD2Index, peekD2Index } from "./d2r/index";
 import { loadPzNames, peekPzName } from "./zomboid/index";
 import { pzPatchName } from "./zomboid/patches/slug";
+import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/data";
 import { loadEditions as loadVhEditions, peekEditions as peekVhEditions } from "./valheimPatchesData";
 
 /**
@@ -133,6 +134,11 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const e = peekPzName(pz.sec, pz.id);
     return e ? (lang === "es" ? e.esHead || e.es || e.en : e.en) : null;
   }
+  // Una ficha de Objetos de Rust: el nombre sale de su archivo (uno de los 32 repartidos), que la pestaña pide igual.
+  if (route.view === "rust" && route.rsSection === "items" && route.detail) {
+    const f = peekRsItem(route.detail);
+    return f ? (lang === "es" ? f.name.es || f.name.en : f.name.en) : null;
+  }
   return null;
 }
 
@@ -212,6 +218,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (pz && !peekPzName(pz.sec, pz.id)) {
       let vivo = true;
       loadPzNames(pz.sec).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una ficha de Rust, con el archivo de la ficha (que la pestaña ya pidió).
+    if (route.view === "rust" && route.rsSection === "items" && route.detail && !peekRsItem(route.detail)) {
+      let vivo = true;
+      loadRsItem(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
   }, [route, copy, lang]);

@@ -80,6 +80,8 @@ export interface RustSitemapData {
   build: number;
   /** Cuándo cambiaron los datos de verdad (el extractor no la mueve si no cambió nada). */
   extractedAt: string;
+  /** Las fichas de Objetos (`games/rust/data/site/list.json`): slug inglés y nombres, para el sitemap y el `<head>`. */
+  items?: { slug: string; en: string; es: string | null }[];
 }
 
 /**
@@ -353,6 +355,9 @@ export function sitemapPaths(data: SitemapData): string[] {
     if (data.rs) {
       paths.push(routePath({ ...base, lang, view: "rust", rsSection: "home" }));
       for (const s of RUST_PUBLISHED) paths.push(routePath({ ...base, lang, view: "rust", rsSection: s }));
+      if (RUST_PUBLISHED.includes("items")) {
+        for (const it of data.rs.items ?? []) paths.push(routePath({ ...base, lang, view: "rust", rsSection: "items", detail: it.slug }));
+      }
     }
   }
 

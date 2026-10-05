@@ -3,11 +3,11 @@ import react from "@vitejs/plugin-react";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
-import { redirectsFile, ROBOTS_TXT, SITEMAP_GROUPS, sitemapFile, sitemapIndexXml, sitemapXml, type SitemapData, type ZomboidSitemapData } from "./src/sitemap";
+import { redirectsFile, ROBOTS_TXT, SITEMAP_GROUPS, sitemapFile, sitemapIndexXml, sitemapXml, type RustSitemapData, type SitemapData, type ZomboidSitemapData } from "./src/sitemap";
 import { prerenderPages, renderHtml, ogImagePath, stripComments } from "./src/prerender";
 import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
-import { parseRoute, registerD2rSlugs, registerPzSlugs, type Route } from "./src/route";
+import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, type Route } from "./src/route";
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
@@ -188,11 +188,21 @@ function readSitemapData(): { data: OgData } {
   } catch {
     zb = undefined;
   }
-  // Rust (2026-10-05): el sello del extractor. Sin él, la sección queda afuera del sitemap.
+  // Rust (2026-10-05): el sello del extractor y las fichas de Objetos. Sin el sello, la sección queda afuera del sitemap;
+  // sin la lista (site_data.py sin correr), sin fichas. Los slugs en español se anotan antes de armar ninguna dirección:
+  // si no, `/es/rust/objetos/fusil-de-asalto` llega al prerender sin traducir y la ficha sale con la hoja de "cargando…".
   let rs: SitemapData["rs"];
   try {
     const m = JSON.parse(readFileSync(`${rustDir}/meta.json`, "utf-8"));
-    rs = { build: m.build, extractedAt: m.extractedAt };
+    let items: RustSitemapData["items"];
+    try {
+      const list = JSON.parse(readFileSync(`${rustDir}/site/list.json`, "utf-8")) as { rows: { slug: string; en: string; es: string | null }[] };
+      items = list.rows.map(({ slug, en, es }) => ({ slug, en, es }));
+      registerRustSlugs(JSON.parse(readFileSync(`${rustDir}/site/slugs-es.json`, "utf-8")));
+    } catch {
+      items = undefined;
+    }
+    rs = { build: m.build, extractedAt: m.extractedAt, items };
   } catch {
     rs = undefined;
   }
@@ -701,6 +711,11 @@ function prerenderRoutes(): Plugin {
           // enlace, y nadie lo nota hasta mirar el HTML servido: pasa si `preloadZomboid` (entry-server.tsx) no espera
           // los datos de una pestaña nueva, o si una ficha cae en un archivo que no se pidió. Mejor que el build falle.
           if (route.view === "zomboid" && cuerpo.includes('class="pz-loading"')) {
+            throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
+          }
+          // Lo mismo en Rust: una ficha cuyo slug en español no se anotó (ver `readSitemapData`) o cuyo archivo no se
+          // pidió en `entry-server.tsx` sale vacía.
+          if (route.view === "rust" && cuerpo.includes("rs-loading")) {
             throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
           }
           const conexiones = originsFor(route)

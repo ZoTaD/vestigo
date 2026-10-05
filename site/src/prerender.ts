@@ -133,8 +133,13 @@ export function metaFor(
     // Con los espacios de más de su nombre afuera (ver `tidyTitleName`): sale igual en el título, la descripción y og:*.
     return detail && detailName ? detail(tidyTitleName(detailName), via ?? undefined) : s[sec];
   }
-  // Rust (2026-10-05): la portada y cada pestaña. Las fichas de Objetos se suman cuando se publiquen.
-  if (route.view === "rust") return RUST_COPY[lang].seo[route.rsSection ?? "home"];
+  // Rust (2026-10-05): la portada, cada pestaña y cada ficha de Objetos. Una ficha sin nombre todavía (el archivo no
+  // llegó al navegador) lleva el de su pestaña.
+  if (route.view === "rust") {
+    const r = RUST_COPY[lang];
+    if (route.rsSection === "items" && route.detail && detailName) return r.detailSeo(detailName);
+    return r.seo[route.rsSection ?? "home"];
+  }
   // Lo que queda son la portada y las dos páginas legales.
   const page = seo[route.view];
   return { title: page.title(), description: page.description() };
@@ -186,6 +191,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     const name = (lang === "es" && e.title.es) || e.title.en;
     out[`vh-patches/${e.slug}`] = name ? `${e.version} — ${name}` : e.version;
   }
+  for (const e of data.rs?.items ?? []) out[`rs-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
 
   return out;
 }
@@ -218,6 +224,8 @@ export function ogImageUrl(route: Route, latestEdition?: string, available: (pat
   // Diablo II tiene su propia vista previa (la puerta y el logo en llamas), para
   // que lo que se comparte en X se vea como el juego y no como la portada del sitio.
   if (route.view === "d2r") return `${SITE_ORIGIN}/d2r/og.jpg`;
+  // Rust tiene la suya (un cuadro del juego con el título, `games/rust/tools/ui.py`).
+  if (route.view === "rust") return `${SITE_ORIGIN}/rust/og.jpg`;
   const path = ogImagePath(route, latestEdition);
   return path && available(path) ? `${SITE_ORIGIN}${path}` : DEFAULT_OG;
 }
@@ -340,11 +348,21 @@ export function jsonLdFor(
     return out;
   }
   if (route.view === "rust") {
-    // Vestigo › Rust › pestaña.
+    // Vestigo › Rust › pestaña › ficha. La portada, además, como aplicación web gratuita (el buscador, la cuenta del
+    // wipe y las herramientas), con el nombre de la guía.
     const sec = route.rsSection ?? "home";
     const trail = [{ name: brand, url: home }, { name: "Rust", url: routeUrl({ ...route, rsSection: "home", detail: undefined }) }];
     if (sec !== "home") trail.push({ name: RUST_COPY[lang].tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
-    return trail.length > 2 ? [crumbs(trail)] : [];
+    if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
+    if (sec === "home") {
+      out.push({
+        "@context": "https://schema.org", "@type": "WebApplication", name: RUST_COPY[lang].home.h1, description: page.description,
+        url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Rust" },
+      });
+    }
+    return out;
   }
   if (route.view !== "deadlock") return [];
 
@@ -437,7 +455,9 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
               ? `d2-${route.d2Section ?? "home"}/${route.detail}`
               : route.view === "zomboid"
                 ? `zb-${route.pzSection ?? "home"}/${route.detail}`
-                : null;
+                : route.view === "rust"
+                  ? `rs-${route.rsSection ?? "home"}/${route.detail}`
+                  : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
     const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null);
 
