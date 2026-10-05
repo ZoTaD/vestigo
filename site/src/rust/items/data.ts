@@ -32,6 +32,10 @@ export interface Recycler {
   key: RecyclerKey;
   eff: number;
 }
+/** Lo que mueve usar o comer un objeto (`MetabolismAttribute.Type` en extract.py). */
+export type EffectStat = "calories" | "hydration" | "poison" | "radiation" | "bleeding" | "health" | "healthOverTime";
+/** Los modificadores de los tés, con `value` en fracción (0,5 = +50 %). */
+export type ModStat = "woodYield" | "oreYield" | "radiationResistance" | "radiationExposureResistance" | "maxHealth" | "scrapYield";
 export interface ItemsList {
   cats: string[];
   rows: ListRow[];
@@ -47,6 +51,13 @@ export interface Ficha {
   rarity: string;
   stack: number;
   condition: { max: number; repairable: boolean } | null;
+  despawn: number;
+  repair: { cost: (Ref & { amount: number })[]; bp: boolean; loss: number } | null;
+  use: {
+    effects: { stat: EffectStat; amount: number; time: number }[];
+    mods: { stat: ModStat; value: number; duration: number }[];
+    spoil: { hours: number; into: Ref | null } | null;
+  } | null;
   craft: {
     amount: number;
     time: number;

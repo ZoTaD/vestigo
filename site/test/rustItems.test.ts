@@ -20,6 +20,8 @@ describe("la pestaña Objetos de Rust", () => {
     await preloadTab(parseRoute("/es/rust/objetos/madera"));
     await preloadTab(parseRoute("/es/rust/objetos/engranajes"));
     await preloadTab(parseRoute("/en/rust/items/metal-fragments"));
+    await preloadTab(parseRoute("/en/rust/items/hatchet"));
+    await preloadTab(parseRoute("/en/rust/items/medical-syringe"));
   });
 
   it("la lista enlaza cada ficha con su slug en español y trae los filtros", () => {
@@ -121,4 +123,26 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
     expect(afuera).not.toContain(ultima);
   });
 
+  it("el AK: cuánto tarda en desaparecer, el tiempo en su banco y la reparación", () => {
+    const html = render("es", "/es/rust/objetos/fusil-de-asalto");
+    expect(html).toContain("Desaparece del piso en");
+    expect(html).toContain("1 h");
+    expect(html).toContain("Banco de nivel 3: 45 s");
+    expect(html).toContain("Reparación");
+    expect(html).toContain("Cada reparación le saca 20 % de condición máxima");
+    expect(html).toContain("Pide el plano");
+  });
+
+  it("el hacha: el tiempo en cada banco", () => {
+    const html = render("en", "/en/rust/items/hatchet");
+    for (const s of ["Workbench level 1: 30 s", "Workbench level 2: 15 s", "Workbench level 3: 7.5 s"]) expect(html).toContain(s);
+  });
+
+  it("la jeringa: lo que hace al usarla", () => {
+    const html = render("en", "/en/rust/items/medical-syringe");
+    expect(html).toContain("When used");
+    expect(html).toContain("Health over time");
+    expect(html).toContain("+20");
+    expect(html).toContain("−10");
+  });
 });

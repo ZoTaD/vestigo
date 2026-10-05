@@ -5,7 +5,7 @@
  * la que trae el juego). Acá va lo nuestro: pestañas, títulos para Google y los textos de la portada.
  */
 import { useLang } from "./i18n";
-import type { RecyclerKey } from "./rust/items/data";
+import type { EffectStat, ModStat, RecyclerKey } from "./rust/items/data";
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
@@ -61,6 +61,20 @@ export interface RustCopy {
     chance: (pct: number) => string;
     /** Un porcentaje con el espacio del idioma ("50%" / "50 %"). */
     pct: (p: number) => string;
+    despawn: string;
+    repair: string;
+    repairMax: string;
+    repairLoss: (pct: string) => string;
+    repairBp: string;
+    use: string;
+    stats: Record<EffectStat, string>;
+    mods: Record<ModStat, string>;
+    /** "+50 % durante 30 min". */
+    modRow: (value: string, duration: string) => string;
+    /** Un efecto que se reparte en el tiempo: "en 30 s". */
+    overTime: (t: string) => string;
+    /** "Se echa a perder en 24 h:" y después el objeto en que queda. */
+    spoil: (t: string) => string;
     recycleNote: string;
     recycledFrom: string;
     recycledItem: string;
@@ -155,6 +169,23 @@ const EN: RustCopy = {
     recyclers: { red: "Red (Power Plant)", green_power: "Green, powered", green: "Green", yellow: "Yellow (safe zone)" },
     chance: (pct) => `${pct}% chance`,
     pct: (p) => `${p}%`,
+    despawn: "Despawns after",
+    repair: "Repair",
+    repairMax: "At the repair bench, from broken to full.",
+    repairLoss: (pct) => `Each repair takes ${pct}% off max condition`,
+    repairBp: "Needs the blueprint",
+    use: "When used",
+    stats: {
+      calories: "Calories", hydration: "Hydration", poison: "Poison", radiation: "Radiation", bleeding: "Bleeding",
+      health: "Health", healthOverTime: "Health over time",
+    },
+    mods: {
+      woodYield: "Wood yield", oreYield: "Ore yield", radiationResistance: "Radiation resistance",
+      radiationExposureResistance: "Radiation exposure resistance", maxHealth: "Max health", scrapYield: "Scrap yield",
+    },
+    modRow: (value, duration) => `${value} for ${duration}`,
+    overTime: (t) => `over ${t}`,
+    spoil: (t) => `Spoils after ${t}:`,
     recycleNote: "“+ 50%” is the chance of getting one more. For an item at full condition: a worn one gives less. The green recycler gives more while the monument's power grid is on, and the red one only works with it.",
     loot: "Where to find it",
     lootNote: "Chance that one container has at least one.",
@@ -258,6 +289,24 @@ const ES: RustCopy = {
     recyclers: { red: "Roja (planta de energía)", green_power: "Verde con electricidad", green: "Verde", yellow: "Amarilla (zona segura)" },
     chance: (pct) => `${pct} % de chance`,
     pct: (p) => `${p} %`,
+    despawn: "Desaparece del piso en",
+    repair: "Reparación",
+    repairMax: "En el banco de reparación, de roto a entero.",
+    repairLoss: (pct) => `Cada reparación le saca ${pct} % de condición máxima`,
+    repairBp: "Pide el plano",
+    use: "Al usarlo",
+    stats: {
+      calories: "Calorías", hydration: "Hidratación", poison: "Veneno", radiation: "Radiación", bleeding: "Sangrado",
+      health: "Vida", healthOverTime: "Vida con el tiempo",
+    },
+    mods: {
+      woodYield: "Rendimiento de madera", oreYield: "Rendimiento de mineral", radiationResistance: "Resistencia a la radiación",
+      radiationExposureResistance: "Resistencia a la exposición a la radiación", maxHealth: "Vida máxima",
+      scrapYield: "Rendimiento de chatarra",
+    },
+    modRow: (value, duration) => `${value} durante ${duration}`,
+    overTime: (t) => `en ${t}`,
+    spoil: (t) => `Se echa a perder en ${t}:`,
     recycleNote: "“+ 50 %” es la chance de que salga uno más. Con el objeto entero: uno gastado da menos. La verde rinde más mientras el monumento tiene la red eléctrica prendida, y la roja sólo anda con ella.",
     loot: "Dónde aparece",
     lootNote: "Probabilidad de que una caja traiga al menos uno.",

@@ -59,6 +59,25 @@ def recycled_from(items, ref):
     return out
 
 
+def repair_of(i, ref):
+    """La reparación en el banco, con cada ingrediente como referencia (para el ícono y el enlace)."""
+    r = i.get("repair")
+    if not r:
+        return None
+    return {"cost": [{**ref(c["id"]), "amount": c["amount"]} for c in r["cost"]], "bp": r["bp"], "loss": r["loss"]}
+
+
+def use_of(i, ref):
+    """Los efectos de usarlo o comerlo, con el objeto en el que se pudre como referencia."""
+    u = i.get("use")
+    if not u:
+        return None
+    spoil = u.get("spoil")
+    if spoil:
+        spoil = {"hours": spoil["hours"], "into": ref(spoil["into"]) if spoil.get("into") else None}
+    return {"effects": u["effects"], "mods": u["mods"], "spoil": spoil}
+
+
 def build(items_doc, loot, shops):
     items = items_doc["items"]
     by_id = {i["id"]: i for i in items}
@@ -106,6 +125,9 @@ def build(items_doc, loot, shops):
             "id": i["id"], "itemid": i["itemid"], "slug": i["slug"], "slugEs": i["slugEs"], "name": i["name"],
             "desc": i["desc"], "cat": i["category"], "rarity": i["rarity"], "stack": i["stack"],
             "condition": i["condition"], "craft": craft,
+            "despawn": i.get("despawn"),
+            "repair": repair_of(i, ref),
+            "use": use_of(i, ref),
             "usedIn": [ref(u) for u in used_in.get(i["id"], [])],
             "recycle": recycle,
             "recycledFrom": {"eff": items_doc["recyclers"], "rows": recycled[i["id"]]} if i["id"] in recycled else None,

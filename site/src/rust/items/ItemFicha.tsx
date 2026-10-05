@@ -9,7 +9,9 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
 import { say, type Ficha, type Ref } from "./data";
+import { RepairSection, UseSection } from "./FichaMore";
 import RecycleSection, { RecycledFrom } from "./FichaRecycle";
+import { craftTimes, formatDuration } from "./format";
 
 type Nav = (r: Route) => void;
 
@@ -53,6 +55,10 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
             <dt>{t.stack}</dt>
             <dd>{num(ficha.stack)}</dd>
           </div>
+          <div>
+            <dt>{t.despawn}</dt>
+            <dd>{formatDuration(ficha.despawn)}</dd>
+          </div>
           {ficha.condition && (
             <div>
               <dt>{t.condition}</dt>
@@ -63,6 +69,8 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
           )}
         </dl>
       </section>
+
+      <UseSection ficha={ficha} route={route} navigate={navigate} />
 
       {c && (
         <section className="rs-pnl">
@@ -79,8 +87,11 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
           </ul>
           <p className="rs-meta">
             <span>{t.gives(c.amount)}</span>
-            <span>{t.seconds(num(c.time))}</span>
-            <span>{c.workbench ? t.workbench(c.workbench) : t.noWorkbench}</span>
+            {craftTimes(c.time, c.workbench).map(({ bench, seconds }) => (
+              <span key={bench}>
+                {bench ? t.workbench(bench) : t.noWorkbench}: {t.seconds(num(seconds))}
+              </span>
+            ))}
             {c.researchScrap !== null && <span>{t.research(num(c.researchScrap))}</span>}
             {c.default && <span>{t.defaultBp}</span>}
           </p>
@@ -144,6 +155,7 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
           </ul>
         </section>
       )}
+      <RepairSection ficha={ficha} route={route} navigate={navigate} />
     </main>
   );
 }

@@ -75,6 +75,18 @@ class TestBuild(unittest.TestCase):
         self.assertEqual([e["key"] for e in rec["eff"]], ["red", "green_power", "green", "yellow"])
         self.assertEqual(rec["out"][0]["slug"], "wood")
 
+    def test_despawn_reparacion_y_efectos(self):
+        doc = json.loads(json.dumps(DOC))
+        ak = doc["items"][0]
+        ak.update({"despawn": 3600, "repair": {"cost": [{"id": "wood", "amount": 40}], "bp": True, "loss": 0.2},
+                   "use": {"effects": [{"stat": "health", "amount": 15, "time": 0}], "mods": [], "spoil": {"hours": 24, "into": "wood"}}})
+        f = rust_site.build(doc, LOOT, SHOPS)["fichas"]["assault-rifle"]
+        self.assertEqual(f["despawn"], 3600)
+        self.assertEqual(f["repair"]["cost"], [{"id": "wood", "slug": "wood", "name": {"en": "Wood", "es": "Madera"}, "amount": 40}])
+        self.assertEqual((f["repair"]["bp"], f["repair"]["loss"]), (True, 0.2))
+        self.assertEqual(f["use"]["spoil"], {"hours": 24, "into": {"id": "wood", "slug": "wood", "name": {"en": "Wood", "es": "Madera"}}})
+        self.assertIsNone(self.fichas["wood"]["repair"])
+
     def test_se_obtiene_reciclando(self):
         wood = self.fichas["wood"]["recycledFrom"]
         self.assertEqual(wood["rows"], [{"id": "rifle.ak", "slug": "assault-rifle", "name": {"en": "Assault Rifle", "es": "Fusil de asalto"}, "amount": 200, "scrap": False}])
