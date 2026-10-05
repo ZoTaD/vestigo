@@ -82,6 +82,12 @@ a.rs-ref:hover { color: #fff; }
 .rs-table th[scope="row"] { font-weight: 400; }
 .rs-table th[scope="row"] .rs-ref { display: inline-flex; gap: 6px; align-items: center; }
 .rs-table td { white-space: nowrap; }
+/* El reciclaje va en filas por recicladora: lo que da se acomoda en renglones en vez de estirar la tabla. */
+.rs-recycle td { white-space: normal; }
+.rs-yields { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0; padding: 0; list-style: none; }
+.rs-yields .rs-ref { display: inline-flex; flex-wrap: wrap; gap: 2px 6px; align-items: center; }
+.rs-yields b { font-weight: 700; white-space: nowrap; }
+.rs-dim { color: var(--rs-dim); }
 .rs-tag { margin-left: 8px; padding: 1px 6px; background: rgba(255, 255, 255, 0.08); font-size: 12px; font-style: normal; text-transform: uppercase; }
 
 .rs-shops { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }

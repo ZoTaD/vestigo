@@ -24,7 +24,7 @@ def it(sid, en, es=None, cat="weapon", craft=None, recycle=None, redirect=None):
 
 
 DOC = {
-    "recyclers": {"monument": 0.5, "safezone": 0.4},
+    "recyclers": [{"key": "red", "eff": 0.75}, {"key": "green_power", "eff": 0.6}, {"key": "green", "eff": 0.5}, {"key": "yellow", "eff": 0.4}],
     "items": [
         it("rifle.ak", "Assault Rifle", "Fusil de asalto", craft={
             "ingredients": [{"id": "wood", "amount": 200}], "amount": 1, "time": 45, "workbench": 3,
@@ -72,7 +72,7 @@ class TestBuild(unittest.TestCase):
 
     def test_reciclaje_con_las_eficiencias(self):
         rec = self.fichas["assault-rifle"]["recycle"]
-        self.assertEqual(rec["eff"], {"monument": 0.5, "safezone": 0.4})
+        self.assertEqual([e["key"] for e in rec["eff"]], ["red", "green_power", "green", "yellow"])
         self.assertEqual(rec["out"][0]["slug"], "wood")
 
     def test_botin_y_tiendas_con_nombres(self):

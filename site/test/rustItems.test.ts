@@ -18,6 +18,7 @@ describe("la pestaña Objetos de Rust", () => {
     await preloadTab(parseRoute("/en/rust/items/wood"));
     await preloadTab(parseRoute("/en/rust/items/gears"));
     await preloadTab(parseRoute("/es/rust/objetos/madera"));
+    await preloadTab(parseRoute("/es/rust/objetos/engranajes"));
   });
 
   it("la lista enlaza cada ficha con su slug en español y trae los filtros", () => {
@@ -39,7 +40,7 @@ describe("la pestaña Objetos de Rust", () => {
     expect(html).toContain("Fusil de asalto");
     expect(html).toContain("inventory.give rifle.ak 1");
     expect(html).toMatch(/href="\/es\/rust\/objetos\/[^"]+"/);
-    expect(html).toContain("Investigar: 500 de chatarra");
+    expect(html).toContain("Investigar: 120 de chatarra");
     expect(html).toContain("Caja de élite");
     // La tabla del botín dice qué es cada columna, y cada botón de copiar dice qué copia.
     expect(html).toMatch(/<thead><tr><th scope="col">Caja<\/th><th scope="col">Cantidad<\/th><th scope="col">Probabilidad<\/th><\/tr><\/thead>/);
@@ -58,14 +59,14 @@ describe("la pestaña Objetos de Rust", () => {
     expect(render("es", "/es/rust/objetos/madera")).toContain("Puesto Avanzado");
   });
 
-  it("los engranajes: lo seguro y la chance de uno más, y la chatarra escalada", () => {
+  it("los engranajes en las cuatro recicladoras, una fila por recicladora", () => {
     const html = render("en", "/en/rust/items/gears");
-    expect(html).toContain("Recycling");
-    // Recicladora de monumento (50 %): 12 fragmentos + 50 % y 10 de chatarra; zona segura (40 %): 10 y 8.
-    expect(html).toContain("× 12 + 50%");
-    expect(html).toContain("× 10");
-    expect(html).toContain("× 8");
-    expect(html).not.toContain(">13<");
+    expect(html).toContain("Red (Power Plant)");
+    expect(html).toContain("Green, powered");
+    expect(html).toContain("Yellow (safe zone)");
+    // Roja 18 + 75 % y 15 de chatarra; verde con electricidad 15 y 12; verde 12 + 50 % y 10; amarilla 10 y 8.
+    for (const s of ["× 18 + 75%", "× 15", "× 12 + 50%", "× 12", "× 10", "× 8"]) expect(html).toContain(s);
+    expect(render("es", "/es/rust/objetos/engranajes")).toContain("Verde con electricidad");
   });
 
   it("la cuenta de la lista va en singular con un solo objeto", () => {

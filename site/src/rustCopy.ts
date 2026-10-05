@@ -5,6 +5,7 @@
  * la que trae el juego). Acá va lo nuestro: pestañas, títulos para Google y los textos de la portada.
  */
 import { useLang } from "./i18n";
+import type { RecyclerKey } from "./rust/items/data";
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
@@ -54,8 +55,9 @@ export interface RustCopy {
     defaultBp: string;
     usedIn: string;
     recycle: string;
-    recycleMonument: string;
-    recycleSafe: string;
+    recycler: string;
+    recycleGives: string;
+    recyclers: Record<RecyclerKey, string>;
     chance: (pct: number) => string;
     /** Un porcentaje con el espacio del idioma ("50%" / "50 %"). */
     pct: (p: number) => string;
@@ -142,11 +144,12 @@ const EN: RustCopy = {
     defaultBp: "Known from the start",
     usedIn: "Used in",
     recycle: "Recycling",
-    recycleMonument: "Monument recycler",
-    recycleSafe: "Safe zone recycler",
+    recycler: "Recycler",
+    recycleGives: "Gives",
+    recyclers: { red: "Red (Power Plant)", green_power: "Green, powered", green: "Green", yellow: "Yellow (safe zone)" },
     chance: (pct) => `${pct}% chance`,
     pct: (p) => `${p}%`,
-    recycleNote: "“+ 50%” is the chance of getting one more. For an item at full condition: a worn one gives less.",
+    recycleNote: "“+ 50%” is the chance of getting one more. For an item at full condition: a worn one gives less. The green recycler gives more while the monument's power grid is on, and the red one only works with it.",
     loot: "Where to find it",
     lootNote: "Chance that one container has at least one.",
     lootBox: "Container",
@@ -241,11 +244,12 @@ const ES: RustCopy = {
     defaultBp: "Se sabe desde el principio",
     usedIn: "Se usa en",
     recycle: "Reciclaje",
-    recycleMonument: "Recicladora de monumento",
-    recycleSafe: "Recicladora de zona segura",
+    recycler: "Recicladora",
+    recycleGives: "Da",
+    recyclers: { red: "Roja (planta de energía)", green_power: "Verde con electricidad", green: "Verde", yellow: "Amarilla (zona segura)" },
     chance: (pct) => `${pct} % de chance`,
     pct: (p) => `${p} %`,
-    recycleNote: "“+ 50 %” es la chance de que salga uno más. Con el objeto entero: uno gastado da menos.",
+    recycleNote: "“+ 50 %” es la chance de que salga uno más. Con el objeto entero: uno gastado da menos. La verde rinde más mientras el monumento tiene la red eléctrica prendida, y la roja sólo anda con ella.",
     loot: "Dónde aparece",
     lootNote: "Probabilidad de que una caja traiga al menos uno.",
     lootBox: "Caja",

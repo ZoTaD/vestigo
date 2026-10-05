@@ -9,7 +9,7 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
 import { say, type Ficha, type Ref } from "./data";
-import { recycleScrap, recycleYield, type RecycleYield } from "./recycle";
+import RecycleSection from "./FichaRecycle";
 
 type Nav = (r: Route) => void;
 
@@ -18,9 +18,6 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
   const { lang } = useLang();
   const locale = useLocale();
   const num = (n: number) => n.toLocaleString(locale);
-  // "× 3 + 75 %": lo seguro y la chance de uno más; "75 % de chance" si no hay nada seguro.
-  const yieldText = (y: RecycleYield) =>
-    y.n === 0 ? (y.pct ? t.chance(y.pct) : "—") : y.pct ? `× ${num(y.n)} + ${t.pct(y.pct)}` : `× ${num(y.n)}`;
   const name = say(ficha.name, lang);
   const desc = say(ficha.desc, lang);
   const link = (r: Ref, children: ReactNode) =>
@@ -34,7 +31,6 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
   const icon = (id: string, size = 40) => <img src={`/rust/items/${id}.webp`} alt="" width={size} height={size} />;
   const command = `inventory.give ${ficha.id} 1`;
   const c = ficha.craft;
-  const r = ficha.recycle;
   return (
     <main className="rs-main rs-ficha">
       <RouteLink className="rs-back" to={{ ...route, view: "rust", rsSection: "items", detail: undefined }} onNavigate={navigate}>
@@ -102,40 +98,7 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
         </section>
       )}
 
-      {r && (
-        <section className="rs-pnl">
-          <h2 className="rs-hd">{t.recycle}</h2>
-          <table className="rs-table">
-            <thead>
-              <tr>
-                <th scope="col" />
-                <th scope="col">{t.recycleMonument} ({Math.round(r.eff.monument * 100)} %)</th>
-                <th scope="col">{t.recycleSafe} ({Math.round(r.eff.safezone * 100)} %)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {r.scrap > 0 && (
-                <tr>
-                  <th scope="row">{link({ id: "scrap", slug: "scrap", name: { en: "Scrap", es: "Chatarra" } }, <>{icon("scrap", 28)}<span>{lang === "es" ? "Chatarra" : "Scrap"}</span></>)}</th>
-                  {[r.eff.monument, r.eff.safezone].map((eff, i) => (
-                    <td key={i}>{`× ${num(recycleScrap(r.scrap, eff))}`}</td>
-                  ))}
-                </tr>
-              )}
-              {r.out.map((o) => (
-                <tr key={o.id}>
-                  <th scope="row">{link(o, <>{icon(o.id, 28)}<span>{say(o.name, lang)}</span></>)}</th>
-                  {[r.eff.monument, r.eff.safezone].map((eff, i) => {
-                    const y = recycleYield(o.amount, eff);
-                    return <td key={i}>{yieldText(y)}</td>;
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="rs-ficha-note">{t.recycleNote}</p>
-        </section>
-      )}
+      <RecycleSection ficha={ficha} route={route} navigate={navigate} />
 
       {ficha.loot.length > 0 && (
         <section className="rs-pnl">

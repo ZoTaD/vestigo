@@ -25,6 +25,13 @@ export interface ListRow {
   es: string | null;
   cat: string;
 }
+
+/** Las cuatro recicladoras, de la que más rinde a la que menos (`RECYCLERS` de extract.py). */
+export type RecyclerKey = "red" | "green_power" | "green" | "yellow";
+export interface Recycler {
+  key: RecyclerKey;
+  eff: number;
+}
 export interface ItemsList {
   cats: string[];
   rows: ListRow[];
@@ -49,7 +56,7 @@ export interface Ficha {
     ingredients: (Ref & { amount: number })[];
   } | null;
   usedIn: Ref[];
-  recycle: { scrap: number; out: (Ref & { amount: number })[]; eff: { monument: number; safezone: number } } | null;
+  recycle: { scrap: number; out: (Ref & { amount: number })[]; eff: Recycler[] } | null;
   loot: { c: string; name: Loc; chance: number; min: number; max: number; bp: boolean }[];
   shops: { shop: Loc; amount: number; bp: boolean; currency: Ref; price: number }[];
 }
