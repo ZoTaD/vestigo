@@ -18,12 +18,21 @@ import world  # noqa: E402
 
 HAVE_GAME = (extract.BUNDLES / "shared" / "assetscenes.bundle").exists()
 _DATA = None
+_W = None
+
+
+def W():
+    """Un solo `World` para todos los tests (abrir los tres bundles tarda ~20 s)."""
+    global _W
+    if _W is None:
+        _W = world.World()
+    return _W
 
 
 def data():
     global _DATA
     if _DATA is None:
-        _DATA = world.collect()
+        _DATA = world.collect(W())
     return _DATA
 
 
@@ -121,6 +130,18 @@ class TestContainerChances(unittest.TestCase):
                    "LootSpawnSlots": [], "scrapAmount": 25}
         self.assertEqual(world.container_chances(a_veces, lambda x: x)[("scrap", False)], (1.0, 25, 30))
 
+    def test_el_maximo_suma_las_tiradas(self):
+        # Dos tiradas de 2–4: hasta 8 en la misma caja.
+        tt = {"lootDefinition": leaf("a", amount=2, max_amount=5), "maxDefinitionsToSpawn": 2, "LootSpawnSlots": [], "scrapAmount": 0}
+        self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (1.0, 2, 8))
+
+    def test_una_ranura_imposible_no_cuenta(self):
+        tt = {"lootDefinition": None, "maxDefinitionsToSpawn": 0, "scrapAmount": 0, "LootSpawnSlots": [
+            {"definition": leaf("a"), "numberToSpawn": 1, "probability": 0.0},
+            {"definition": leaf("a"), "numberToSpawn": 1, "probability": 0.5},
+        ]}
+        self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (0.5, 1, 1))
+
 
 @unittest.skipUnless(HAVE_GAME, "sin el juego instalado")
 class TestWorldInGame(unittest.TestCase):
@@ -178,6 +199,46 @@ class TestWorldInGame(unittest.TestCase):
             self.assertIn(o["item"], ids, o)
             self.assertIn(o["currency"], ids, o)
             self.assertGreater(o["price"], 0, o)
+
+    def test_totales_contando_todas_las_tiradas(self):
+        # Contra rusthelp.com (2026-10-05): AK ×1–2 en la bloqueada, ×1–3 en la de élite, ×1 en la del helicóptero.
+        def rows(sid):
+            return {r["c"]: r for r in data()["loot"]["items"][sid] if not r["bp"]}
+
+        ak = rows("rifle.ak")
+        self.assertAlmostEqual(ak["locked"]["chance"], 0.2845, places=3)
+        self.assertEqual((ak["locked"]["min"], ak["locked"]["max"]), (1, 2))
+        self.assertEqual((ak["elite"]["min"], ak["elite"]["max"]), (1, 3))
+        self.assertEqual((ak["heli"]["min"], ak["heli"]["max"]), (1, 1))
+        c4 = rows("explosive.timed")
+        self.assertAlmostEqual(c4["supply"]["chance"], 0.2653, places=3)
+        self.assertEqual(c4["supply"]["max"], 2)
+        self.assertAlmostEqual(c4["bradley"]["chance"], 0.36, places=3)
+        self.assertEqual((rows("gears")["locked"]["min"], rows("gears")["locked"]["max"]), (5, 10))
+
+    def test_la_entrega_de_papa_noel(self):
+        src = data()["loot"]["containers"]["santa"]
+        self.assertEqual((src["es"], src["kind"], src["event"]), ("Entrega aérea de Papá Noel", "box", "xmas"))
+        c4 = {r["c"]: r for r in data()["loot"]["items"]["explosive.timed"] if not r["bp"]}
+        self.assertAlmostEqual(c4["santa"]["chance"], 0.1429, places=3)
+        self.assertEqual((c4["santa"]["min"], c4["santa"]["max"]), (1, 1))
+
+    def test_que_cajas_gastan_lo_que_sale(self):
+        boxes = data()["loot"]["containers"]
+        self.assertEqual(boxes["elite"]["worn"], "all")
+        self.assertEqual(boxes["military"]["worn"], "all")
+        self.assertEqual(boxes["locked"]["worn"], "none")
+        self.assertEqual(boxes["heli"]["worn"], "none")
+        self.assertEqual(boxes["barrel"]["worn"], "some")  # los del costado del camino sí, los de autospawn no
+
+    def test_ningun_lootspawn_entra_en_ciclo(self):
+        # `Collection.Ballistic` se elige a sí misma en una rama: antes era una recursión infinita.
+        w = W()
+        for o, tt, _ in w.behaviours({"LootSpawn"}):
+            tree = w.spawn_tree(o, {"m_FileID": 0, "m_PathID": o.path_id})
+            self.assertIsNotNone(tree, tt["m_Name"])
+            for p in world.roll_chances(tree, lambda x: x).values():
+                self.assertTrue(0 <= p <= 1 + 1e-9, tt["m_Name"])
 
 
 if __name__ == "__main__":

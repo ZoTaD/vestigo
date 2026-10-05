@@ -5,7 +5,7 @@ Lee las escenas del juego (`Bundles/shared/assetscenes.bundle`) junto con `conte
 `NPCVendingOrder`) e `items.preload.bundle` (los objetos), porque las referencias cruzan de un archivo a otro.
 Escribe:
   - `games/rust/data/loot.json`: por objeto, en qué cajas aparece, con la probabilidad de que una caja traiga al menos
-    uno y la cantidad;
+    uno, la cantidad contando todas sus tiradas y si sale gastado;
   - `games/rust/data/shops.json`: qué vende cada tienda de monumento (Outpost, Bandit Camp, pueblo pesquero, rancho,
     granero) y a qué precio. El pozo de agua tiene tienda, pero todas sus órdenes son de precio al azar: no entra.
 
@@ -37,7 +37,8 @@ from extract import BUNDLES, DATA, read_content, text_of  # noqa: E402
 # vagones, buena parte de las del laboratorio) van aparte, porque mezclarlas mostraba un botín que ninguna da. Lo que
 # no está acá no se muestra (el extractor lista lo que deja afuera): `dm *`, `invisible_*` y `hiddenhackablecrate` son
 # de modding,
-# `satellite_crate_*`, `giftbox_loot`, `presentdrop` y `xmastunnellootbox` de eventos, `loot-barrel-tutorial` de la isla
+# `satellite_crate_*`, `giftbox_loot` y `xmastunnellootbox` son de eventos sin un nombre que la comunidad use,
+# `loot-barrel-tutorial` de la isla
 # del tutorial, y `loot_trash` y `loot_component_test` no aparecen en ningún monumento.
 CONTAINERS = {
     "crate_elite": "elite", "underwater_labs/crate_elite": "elite",
@@ -81,6 +82,8 @@ CONTAINERS = {
     "codelockedhackablecrate_ghostship": "locked", "codelockedhackablecrate_min_build_radius": "locked",
     "codelockedhackablecrate_no_build_radius": "locked",
     "supply_drop": "supply",
+    # La entrega aérea del trineo de Papá Noel (evento de Navidad): un `SupplyDrop` con su propia tabla.
+    "presentdrop": "santa",
 }
 # Los nombres de las cajas. Los que el juego tiene en engine.json van por su token (`lootfood`, `supplydrop`); los demás,
 # escritos acá con el nombre que usan las wikis (rusthelp.com, 2026-10-05) y, en español, las palabras del juego
@@ -122,7 +125,14 @@ CONTAINER_NAMES = {
     "bradley": ("Bradley APC Crate", "Caja del Bradley"),
     "locked": ("Locked Crate", "Caja bloqueada"),
     "supply": "supplydrop",
+    "santa": ("Santa's Supply Drop", "Entrega aérea de Papá Noel"),
 }
+# Las cajas que sólo existen en un evento. La ficha lo marca, para que nadie las busque en julio.
+CONTAINER_EVENTS = {"santa": "xmas"}
+# Los `LootContainer.spawnType` en los que el juego gasta lo que sale (`PopulateLoot`): TOWN (2) y ROADSIDE (5). Ahí un
+# objeto con condición sale entre `foundCondition.fractionMin` y `fractionMax` de su máximo (la AK de la caja de élite,
+# al 10–20 %); en las demás, entero.
+WORN_TYPES = {2, 5}
 LOOT_CLASSES = {"LootContainer", "LockedByEntCrate", "HackableLockedCrate", "SupplyDrop", "FreeableLootContainer"}
 # Las tiendas, por el prefab del monumento donde está la máquina. La clave sale de la primera coincidencia; el nombre,
 # del token oficial (engine.json). El pozo de agua queda en la lista para que su máquina no corte por "monumento sin
@@ -258,24 +268,33 @@ class World:
         o = self.obj(owner, ref)
         return (o.assets_file.name, o.path_id) if o else None
 
-    def spawn_tree(self, owner, ref):
+    def spawn_tree(self, owner, ref, _stack=()):
         """
         Un `LootSpawn` como árbol simple, con las referencias ya seguidas (cada una desde el archivo donde vive su
         dueño): `{"subSpawn": [{"weight", "category": árbol | None, "extraSpawns"}],
         "items": [{"sid", "amount", "isBP", "maxAmount"}]}`. `None` si `ref` no apunta a nada. Se arma una vez por
         `LootSpawn` (muchas cajas comparten subárboles).
+
+        Una rama que se elige a sí misma (`Collection.Ballistic`) hace que el juego vuelva a tirar: es lo mismo que sacarla
+        del sorteo, y así se trata. Un ciclo más largo corta con el nombre, en vez de una recursión infinita.
         """
         o = self.follow(owner, ref, "LootSpawn")
         if o is None:
             return None
         key = (o.assets_file.name, o.path_id)
+        if key in _stack:
+            raise SystemExit(f"LootSpawn en ciclo: {self.tree(o)['m_Name']}")
         if key not in self.spawns:
             t = self.tree(o)
+            subs = []
+            for s in t["subSpawn"]:
+                child = self.obj(o, s["category"])
+                if child is not None and (child.assets_file.name, child.path_id) == key:
+                    continue
+                subs.append({"weight": s["weight"], "category": self.spawn_tree(o, s["category"], _stack + (key,)),
+                             "extraSpawns": s.get("extraSpawns", 0)})
             self.spawns[key] = {
-                "subSpawn": [
-                    {"weight": s["weight"], "category": self.spawn_tree(o, s["category"]), "extraSpawns": s.get("extraSpawns", 0)}
-                    for s in t["subSpawn"]
-                ],
+                "subSpawn": subs,
                 "items": [
                     {"sid": self.shortname(o, i["itemDef"], "objeto del botín"), "amount": i["amount"], "isBP": i["isBP"],
                      "maxAmount": i["maxAmount"]}
@@ -348,7 +367,9 @@ def amounts(spawn, resolve, acc=None, times=1):
 def container_chances(tt, resolve):
     """
     {(shortname, es_plano): (probabilidad de que la caja traiga al menos uno, mínimo, máximo)}. Cada tirada es
-    independiente: P = 1 − Π (1 − p_tirada).
+    independiente: P = 1 − Π (1 − p_tirada). El mínimo es lo menos que da una tirada que lo trae; el máximo, lo que darían
+    juntas todas las tiradas que pueden traerlo (la caja bloqueada tira dos veces la tabla de la AK: hasta 2). Una ranura
+    con probabilidad 0 no cuenta para nada.
     """
     rolls = []  # (spawn, probabilidad de que la tirada ocurra)
     slots = tt.get("LootSpawnSlots") or []
@@ -359,9 +380,13 @@ def container_chances(tt, resolve):
         rolls += [(resolve(tt["lootDefinition"]), 1.0)] * tt["maxDefinitionsToSpawn"]
     miss, amt = {}, {}
     for spawn, p_roll in rolls:
+        if p_roll <= 0:
+            continue
         for key, p in roll_chances(spawn, resolve).items():
             miss[key] = miss.get(key, 1.0) * (1 - min(1.0, p_roll) * p)
-        amounts(spawn, resolve, amt)
+        for key, (lo, hi) in amounts(spawn, resolve).items():
+            old = amt.get(key)
+            amt[key] = (lo, hi) if old is None else (min(lo, old[0]), old[1] + hi)
     out = {k: (1 - m, *amt[k]) for k, m in miss.items() if m < 1}
     fixed = tt.get("scrapAmount") or 0
     if fixed > 0:
@@ -382,9 +407,40 @@ def container_base(path):
     return f"underwater_labs/{base}" if "/underwater_labs/" in path else base
 
 
-def collect_loot(w, texts):
-    """El botín y, aparte, `tables`: por clave, la firma de la tabla de cada prefab (para el test que las compara)."""
-    by_key, ignored, tables = {}, set(), {}
+def name_of(texts, n):
+    """Un nombre de `CONTAINER_NAMES` o `NPC_NAMES`: un token de engine.json o un par (inglés, español) escrito a mano."""
+    if isinstance(n, tuple):
+        return {"en": n[0], "es": n[1]}
+    return {"en": text_of(texts, "en", n), "es": text_of(texts, "es", n)}
+
+
+def merge(found, key, got):
+    """
+    Suma a `found[key]` lo de un prefab más. Los prefabs de una clave tienen la misma tabla (lo exige un test), así que dan
+    lo mismo; igual, por las dudas, se queda la probabilidad más alta y el rango de cantidades de todos.
+    """
+    dst = found.setdefault(key, {})
+    for item_key, (p, lo, hi) in got.items():
+        prev = dst.get(item_key)
+        dst[item_key] = (p, lo, hi) if prev is None else (max(p, prev[0]), min(lo, prev[1]), max(hi, prev[2]))
+
+
+def loot_doc(found, sources):
+    """`loot.json`: las fuentes con algo que mostrar y, por objeto, en cuáles aparece, de la más probable a la menos."""
+    items = {}
+    for key, got in found.items():
+        for (sid, bp), (p, lo, hi) in got.items():
+            if round(p, 4) <= 0:
+                continue  # menos de 1 en 20.000: mostrarlo como 0 % confunde más de lo que informa
+            items.setdefault(sid, []).append({"c": key, "chance": round(p, 4), "min": lo, "max": hi, "bp": bp})
+    for rows in items.values():
+        rows.sort(key=lambda r: (-r["chance"], r["c"], r["bp"]))
+    return {"containers": {k: sources[k] for k in sorted(found)}, "items": dict(sorted(items.items()))}
+
+
+def collect_boxes(w, texts, found, sources, tables):
+    """Las cajas de `CONTAINERS`: su botín va a `found`, su nombre a `sources`, su firma a `tables`. Devuelve las que no se muestran."""
+    ignored, worn = set(), {}
     for o, tt, _ in w.behaviours(LOOT_CLASSES):
         path = w.go_name(o, tt)
         if not path.startswith("assets/"):
@@ -399,6 +455,7 @@ def collect_loot(w, texts):
             tuple((w.ref_key(o, s["definition"]), s["numberToSpawn"], round(s["probability"], 6))
                   for s in tt.get("LootSpawnSlots") or []),
         )
+        worn.setdefault(key, set()).add(tt.get("SpawnType") in WORN_TYPES)
         # La caja con sus árboles ya resueltos: `container_chances` y `roll_chances` reciben la identidad, igual que en
         # los tests.
         resolved = {
@@ -410,27 +467,24 @@ def collect_loot(w, texts):
             ],
             "scrapAmount": tt.get("scrapAmount", 0),
         }
-        # Los prefabs de una clave tienen la misma tabla (lo exige un test), así que dan lo mismo; igual, por las dudas,
-        # se queda la probabilidad más alta y el rango de cantidades de todos.
-        for item_key, (p, lo, hi) in container_chances(resolved, lambda x: x).items():
-            prev = by_key.setdefault(key, {}).get(item_key)
-            by_key[key][item_key] = (p, lo, hi) if prev is None else (max(p, prev[0]), min(lo, prev[1]), max(hi, prev[2]))
+        merge(found, key, container_chances(resolved, lambda x: x))
+    for key, flags in worn.items():
+        # Los barriles juntan prefabs de los dos tipos: "a veces" gastado.
+        sources[key] = {**name_of(texts, CONTAINER_NAMES[key]), "kind": "box", "event": CONTAINER_EVENTS.get(key),
+                        "worn": "all" if flags == {True} else "none" if flags == {False} else "some"}
+    return ignored
+
+
+def collect_loot(w, texts):
+    """
+    El botín de todas las fuentes y, aparte, `tables`: por clave, la firma de la tabla de cada prefab (para el test que
+    las compara). `found` junta, por clave, {(sid, plano): (probabilidad, mínimo, máximo)}; `sources`, qué es cada clave.
+    """
+    found, sources, tables = {}, {}, {}
+    ignored = collect_boxes(w, texts, found, sources, tables)
     if ignored:
         print(f"[rust] cajas que no se muestran: {', '.join(sorted(ignored))}", file=sys.stderr)
-
-    items = {}
-    for key, found in by_key.items():
-        for (sid, bp), (p, lo, hi) in found.items():
-            if round(p, 4) <= 0:
-                continue  # menos de 1 en 20.000: mostrarlo como 0 % confunde más de lo que informa
-            items.setdefault(sid, []).append({"c": key, "chance": round(p, 4), "min": lo, "max": hi, "bp": bp})
-    for rows in items.values():
-        rows.sort(key=lambda r: (-r["chance"], r["c"], r["bp"]))
-    names = {}
-    for key in sorted(by_key):
-        n = CONTAINER_NAMES[key]
-        names[key] = {"en": n[0], "es": n[1]} if isinstance(n, tuple) else {"en": text_of(texts, "en", n), "es": text_of(texts, "es", n)}
-    return {"containers": names, "items": dict(sorted(items.items()))}, tables
+    return loot_doc(found, sources), tables
 
 
 def collect_shops(w, texts):
@@ -466,13 +520,14 @@ def collect_shops(w, texts):
     return {"shops": shops, "orders": orders}
 
 
-def collect():
+def collect(w=None):
     """
-    Lee el juego y devuelve `{"loot": ..., "shops": ..., "tables": ...}` sin escribir nada (lo usan los tests).
-    `tables` no se escribe: es la firma de la tabla de cada prefab por clave, para comprobar que no se mezclan.
+    Lee el juego y devuelve `{"loot": ..., "shops": ..., "tables": ...}` sin escribir nada (lo usan los tests, que le
+    pasan un `World` ya abierto). `tables` no se escribe: es la firma de la tabla de cada prefab por clave, para
+    comprobar que no se mezclan.
     """
     texts, _ = read_content()
-    w = World()
+    w = w or World()
     loot, tables = collect_loot(w, texts)
     shops = collect_shops(w, texts)
     w.report_unresolved()
