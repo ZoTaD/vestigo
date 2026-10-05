@@ -3,7 +3,7 @@
  * los datos para copiar (shortname, itemid, comando de admin). Después, cada sección sólo si tiene algo: crafteo, se usa
  * en, reciclaje (en las dos recicladoras), dónde aparece y dónde comprarlo.
  */
-import { useState, type ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import { useLang, useLocale } from "../../i18n";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
@@ -41,7 +41,9 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
         <span className="rs-slot rs-slot-big">{icon(ficha.id, 128)}</span>
         <div className="rs-title">
           <p className="rs-hd">{t.cats[ficha.cat] ?? ficha.cat}</p>
-          <h1 className="rs-h1">{name}</h1>
+          <h1 className="rs-h1" style={{ "--rs-word": longestWord(name) } as CSSProperties}>
+            {name}
+          </h1>
           {desc && <p className="rs-lede">{desc}</p>}
         </div>
         <dl className="rs-facts">
@@ -133,8 +135,15 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
       {ficha.loot.length > 0 && (
         <section className="rs-pnl">
           <h2 className="rs-hd">{t.loot}</h2>
-          <p className="rs-note">{t.lootNote}</p>
+          <p className="rs-ficha-note">{t.lootNote}</p>
           <table className="rs-table">
+            <thead>
+              <tr>
+                <th scope="col">{t.lootBox}</th>
+                <th scope="col">{t.lootAmount}</th>
+                <th scope="col">{t.lootChance}</th>
+              </tr>
+            </thead>
             <tbody>
               {ficha.loot.map((l) => (
                 <tr key={`${l.c}-${l.bp}`}>
@@ -170,6 +179,15 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
   );
 }
 
+/**
+ * Cuántas letras tiene la palabra más larga del nombre. Con eso el título de la ficha baja lo justo para que esa palabra
+ * entre entera en su columna (`rust-items.css`): "Transmisor de radiofrecuencia" no cabía a 375 px con el mínimo de
+ * la portada, y las palabras no se cortan.
+ */
+function longestWord(name: string): number {
+  return Math.max(1, ...name.split(/[\s-]+/).map((w) => [...w].length));
+}
+
 /** 0,0123 → "1,2 %"; por debajo de 0,1 % se dice "< 0,1 %" en vez de un cero que miente. */
 function formatChance(p: number, locale: string): string {
   if (p >= 0.995) return "100 %";
@@ -190,6 +208,7 @@ function Copyable({ label, value }: { label: string; value: string }) {
         <button
           type="button"
           className="rs-copy"
+          aria-label={`${t.copy}: ${label}`}
           onClick={() => {
             navigator.clipboard?.writeText(value).then(() => {
               setDone(true);
@@ -199,6 +218,10 @@ function Copyable({ label, value }: { label: string; value: string }) {
         >
           {done ? t.copied : t.copy}
         </button>
+        {/* El botón cambia de texto pero conserva su `aria-label`: el aviso de "Copiado" va aparte, para el lector. */}
+        <span className="rs-sr" aria-live="polite">
+          {done ? t.copied : ""}
+        </span>
       </dd>
     </div>
   );

@@ -32,7 +32,7 @@ export default function ItemList({ list, route, navigate, missing }: { list: Ite
           <span className="rs-hd">{t.search}</span>
           <input type="search" value={query} placeholder={t.searchPlaceholder} onChange={(e) => setQuery(e.target.value)} />
         </label>
-        <div className="rs-cats" role="group" aria-label={t.search}>
+        <div className="rs-cats" role="group" aria-label={t.categories}>
           <button type="button" className={`rs-cat${cat === null ? " is-on" : ""}`} aria-pressed={cat === null} onClick={() => setCat(null)}>
             {t.all}
           </button>
@@ -42,7 +42,7 @@ export default function ItemList({ list, route, navigate, missing }: { list: Ite
             </button>
           ))}
         </div>
-        <p className="rs-count-line">{t.count(rows.length.toLocaleString(locale))}</p>
+        <p className="rs-count-line">{t.count(rows.length, rows.length.toLocaleString(locale))}</p>
         {rows.length === 0 && <p className="rs-empty">{t.empty}</p>}
         <ul className="rs-grid">
           {rows.map((r) => {

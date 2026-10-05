@@ -25,7 +25,7 @@
   cursor: pointer;
 }
 .rs-cat.is-on { background: #55702a; color: #fff; }
-.rs-count-line, .rs-empty, .rs-note { margin: 0 0 10px; color: var(--rs-dim); font-size: 15px; }
+.rs-count-line, .rs-empty, .rs-ficha-note { margin: 0 0 10px; color: var(--rs-dim); font-size: 15px; }
 .rs-missing { margin: 0 0 12px; padding: 10px 12px; background: var(--rs-red-tint); }
 
 .rs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
@@ -40,10 +40,21 @@ a.rs-cell:hover .rs-slot { background: rgba(255, 255, 255, 0.12); }
 .rs-back:hover { color: #fff; }
 .rs-ficha-top { display: grid; grid-template-columns: 128px 1fr; gap: 18px; align-items: start; }
 .rs-slot-big { width: 128px; padding: 12px; }
+/*
+ * En la ficha el título baja de los 34 px de la portada cuando su palabra más larga no entra en la columna (a 375 px,
+ * al lado del ícono, son ~188 px): `--rs-word` son sus letras (ItemFicha.tsx), y 0,6 em por letra es lo que mide la
+ * más ancha de Roboto Condensed 800 en mayúsculas, con margen. Nunca menos de 20 px.
+ */
+.rs-ficha .rs-h1 { font-size: max(20px, min(clamp(34px, 11cqi, 56px), calc(100cqi / (var(--rs-word, 8) * 0.6)))); }
 .rs-facts { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px 18px; margin: 0; }
 .rs-facts dt { color: var(--rs-dim); font: 700 12px/1.2 "Roboto Condensed", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; }
-.rs-facts dd { display: flex; gap: 8px; align-items: center; margin: 4px 0 0; }
-.rs-facts code { padding: 3px 6px; background: rgba(0, 0, 0, 0.45); font-size: 14px; }
+/* `flex-wrap` y `min-width: 0`: a 375 px el comando largo (`inventory.give door.double.hinged.toptier 1`) baja de
+   fila con su botón en vez de empujar la página; parte en los espacios, nunca adentro de una palabra. */
+.rs-facts > div { min-width: 0; }
+.rs-facts dd { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; margin: 4px 0 0; }
+.rs-facts code { min-width: 0; max-width: 100%; padding: 3px 6px; background: rgba(0, 0, 0, 0.45); font-size: 14px; }
+/* Sólo para el lector de pantalla (el aviso de "Copiado"). */
+.rs-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .rs-copy, .rs-btn {
   padding: 4px 8px;
   border: 0;

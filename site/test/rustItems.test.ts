@@ -3,7 +3,8 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { LangContext } from "../src/i18n";
 import { parseRoute } from "../src/route";
-import Rust, { preloadTab } from "../src/Rust";
+import Rust, { cameFromHistory, notePop, preloadTab } from "../src/Rust";
+import { RUST_COPY } from "../src/rustCopy";
 
 const render = (lang: "en" | "es", path: string) =>
   renderToStaticMarkup(
@@ -16,6 +17,7 @@ describe("la pestaña Objetos de Rust", () => {
     await preloadTab(parseRoute("/es/rust/objetos/fusil-de-asalto"));
     await preloadTab(parseRoute("/en/rust/items/wood"));
     await preloadTab(parseRoute("/en/rust/items/gears"));
+    await preloadTab(parseRoute("/es/rust/objetos/madera"));
   });
 
   it("la lista enlaza cada ficha con su slug en español y trae los filtros", () => {
@@ -23,6 +25,7 @@ describe("la pestaña Objetos de Rust", () => {
     expect(html).toContain('href="/es/rust/objetos/fusil-de-asalto"');
     expect(html).toContain(">Armas<");
     expect(html).toContain('type="search"');
+    expect(html).toContain('role="group" aria-label="Categorías"');
     expect(html).not.toContain("rs-loading");
   });
 
@@ -36,15 +39,23 @@ describe("la pestaña Objetos de Rust", () => {
     expect(html).toContain("Fusil de asalto");
     expect(html).toContain("inventory.give rifle.ak 1");
     expect(html).toMatch(/href="\/es\/rust\/objetos\/[^"]+"/);
-    expect(html).toContain("500");
+    expect(html).toContain("Investigar: 500 de chatarra");
     expect(html).toContain("Caja de élite");
+    // La tabla del botín dice qué es cada columna, y cada botón de copiar dice qué copia.
+    expect(html).toMatch(/<thead><tr><th scope="col">Caja<\/th><th scope="col">Cantidad<\/th><th scope="col">Probabilidad<\/th><\/tr><\/thead>/);
+    expect(html).toContain('aria-label="Copiar: Shortname"');
+    expect(html).toContain('aria-label="Copiar: Comando para spawnearlo"');
+    expect(html).toContain('aria-live="polite"');
     expect(html).not.toContain("rs-loading");
   });
 
-  it("la madera: se usa en, y la tienda de Outpost si la vende", () => {
+  it("la madera: se usa en, y la tienda de Outpost que la vende", () => {
     const html = render("en", "/en/rust/items/wood");
     expect(html).toContain("Used in");
     expect(html).toContain('href="/en/rust/items/assault-rifle"');
+    expect(html).toContain("Where to buy it");
+    expect(html).toContain("Outpost");
+    expect(render("es", "/es/rust/objetos/madera")).toContain("Puesto Avanzado");
   });
 
   it("los engranajes: lo que da el reciclador en cada recicladora", () => {
@@ -54,10 +65,33 @@ describe("la pestaña Objetos de Rust", () => {
     expect(html).toContain(">10<");
   });
 
+  it("la cuenta de la lista va en singular con un solo objeto", () => {
+    expect(RUST_COPY.es.items.count(1, "1")).toBe("1 objeto");
+    expect(RUST_COPY.en.items.count(1, "1")).toBe("1 item");
+    expect(RUST_COPY.es.items.count(1032, "1.032")).toBe("1.032 objetos");
+    expect(RUST_COPY.en.items.count(1032, "1,032")).toBe("1,032 items");
+  });
+
   it("una ficha que no existe muestra la lista con una nota", async () => {
     await preloadTab(parseRoute("/es/rust/objetos/no-existe"));
     const html = render("es", "/es/rust/objetos/no-existe");
     expect(html).toContain("rs-missing");
     expect(html).toContain('href="/es/rust/objetos/fusil-de-asalto"');
+  });
+});
+
+// Volver a la lista con Atrás tiene que devolver el lugar donde estabas en la grilla, no subir arriba.
+describe("Rust: Atrás y Adelante no vuelven arriba", () => {
+  it("la página que llegó con Atrás o Adelante no vuelve arriba; la navegación siguiente de la app sí", () => {
+    expect(cameFromHistory("/es/rust/objetos")).toBe(false);
+    notePop("/es/rust/objetos");
+    expect(cameFromHistory("/es/rust/objetos")).toBe(true);
+    expect(cameFromHistory("/es/rust/objetos")).toBe(false);
+  });
+
+  it("un Atrás hacia otra dirección no se guarda para después", () => {
+    notePop("/es");
+    expect(cameFromHistory("/es/rust/objetos/fusil-de-asalto")).toBe(false);
+    expect(cameFromHistory("/es")).toBe(false);
   });
 });

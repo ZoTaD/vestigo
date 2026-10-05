@@ -30,7 +30,10 @@ export interface RustCopy {
     searchPlaceholder: string;
     all: string;
     cats: Record<string, string>;
-    count: (n: string) => string;
+    /** Para el lector de pantalla del grupo de filtros por categoría. */
+    categories: string;
+    /** `n` decide singular o plural; `shown` es la cifra ya formateada en el idioma de la página. */
+    count: (n: number, shown: string) => string;
     empty: string;
     missing: string;
     shortname: string;
@@ -56,6 +59,9 @@ export interface RustCopy {
     chance: (pct: number) => string;
     loot: string;
     lootNote: string;
+    lootBox: string;
+    lootAmount: string;
+    lootChance: string;
     blueprint: string;
     shops: string;
     shopRow: (amount: number, item: string, price: number, currency: string) => string;
@@ -109,7 +115,8 @@ const EN: RustCopy = {
       tool: "Tools", medical: "Medical", food: "Food", ammunition: "Ammo", traps: "Traps", misc: "Misc",
       component: "Components", electrical: "Electrical", fun: "Fun",
     },
-    count: (n) => `${n} items`,
+    categories: "Categories",
+    count: (n, shown) => (n === 1 ? `${shown} item` : `${shown} items`),
     empty: "Nothing matches that search.",
     missing: "That item doesn't exist (or changed its name). Here's the full list.",
     shortname: "Shortname",
@@ -135,6 +142,9 @@ const EN: RustCopy = {
     chance: (pct) => `${pct}% chance`,
     loot: "Where to find it",
     lootNote: "Chance that one container has at least one.",
+    lootBox: "Container",
+    lootAmount: "Amount",
+    lootChance: "Chance",
     blueprint: "Blueprint",
     shops: "Where to buy it",
     shopRow: (amount, item, price, currency) => `${amount} × ${item} for ${price} ${currency}`,
@@ -200,7 +210,8 @@ const ES: RustCopy = {
       tool: "Herramientas", medical: "Medicina", food: "Comida", ammunition: "Munición", traps: "Trampas",
       misc: "Misceláneos", component: "Componentes", electrical: "Electricidad", fun: "Diversión",
     },
-    count: (n) => `${n} objetos`,
+    categories: "Categorías",
+    count: (n, shown) => (n === 1 ? `${shown} objeto` : `${shown} objetos`),
     empty: "No hay nada con esa búsqueda.",
     missing: "Ese objeto no existe (o cambió de nombre). Acá está la lista completa.",
     shortname: "Shortname",
@@ -226,6 +237,9 @@ const ES: RustCopy = {
     chance: (pct) => `${pct} % de chance`,
     loot: "Dónde aparece",
     lootNote: "Probabilidad de que una caja traiga al menos uno.",
+    lootBox: "Caja",
+    lootAmount: "Cantidad",
+    lootChance: "Probabilidad",
     blueprint: "Plano",
     shops: "Dónde comprarlo",
     shopRow: (amount, item, price, currency) => `${amount} × ${item} por ${price} de ${currency}`,

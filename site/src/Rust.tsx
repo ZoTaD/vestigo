@@ -50,15 +50,37 @@ export const preloadTab = (route: Route): Promise<void> => {
   return Promise.all([TABS[sec]?.preload(), TAB_DATA[sec]?.(route)]).then(() => undefined);
 };
 
+/**
+ * La dirección a la que llevó el último Atrás o Adelante del navegador, hasta que la vuelta arriba la consulte. Igual que
+ * en `Zomboid.tsx` y `D2r.tsx` (no se importa de ahí: arrastraría el chunk de esa sección). La anota un listener del
+ * módulo y no del componente: con Atrás desde otra sección, `Rust` se monta después del `popstate` y tiene que saberlo.
+ */
+let poppedTo: string | null = null;
+
+/** Anota un Atrás o Adelante. Lo llama el listener de `popstate`; se exporta para probarlo sin un navegador. */
+export const notePop = (path: string): void => {
+  poppedTo = path;
+};
+
+/** ¿La página que se muestra llegó con Atrás o Adelante? Se consume al preguntar. */
+export function cameFromHistory(path: string): boolean {
+  const hit = poppedTo === path;
+  poppedTo = null;
+  return hit;
+}
+
+if (typeof window !== "undefined") window.addEventListener("popstate", () => notePop(window.location.pathname));
+
 const isLive = (tab: RustSection) => tab === "home" || (RUST_PUBLISHED as RustSection[]).includes(tab);
 
 export default function Rust({ route, navigate }: TabProps) {
   const section = route.rsSection ?? "home";
   const Tab = TABS[section];
   // Cambiar de pestaña o de ficha arranca arriba, como cambiar de página: un objeto del fondo de la lista abría su
-  // ficha a la altura donde estaba el casillero.
+  // ficha a la altura donde estaba el casillero. Atrás y Adelante no: el navegador devuelve el lugar donde estabas, y
+  // volver arriba lo perdía al regresar a la lista.
   useEffect(() => {
-    if (typeof window !== "undefined") window.scrollTo({ top: 0 });
+    if (typeof window !== "undefined" && !cameFromHistory(window.location.pathname)) window.scrollTo({ top: 0 });
   }, [section, route.detail]);
   return (
     <div className="rs">
