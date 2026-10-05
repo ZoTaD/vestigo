@@ -38,7 +38,7 @@ export default function RustHome({ route, navigate }: { route: Route; navigate: 
           <ul className="rs-slots">
             {(home as HomeItem[]).map((it) => {
               const name = (lang === "es" && it.name.es) || it.name.en;
-              const icon = <img src={`/rust/items/${it.id}.webp`} alt={name} width={64} height={64} loading="lazy" />;
+              const icon = <img src={`/rust/items/${it.id}.webp`} alt={name} width={64} height={64} />;
               return (
                 <li key={it.id}>
                   {isLive("items") ? (
@@ -95,8 +95,8 @@ export default function RustHome({ route, navigate }: { route: Route; navigate: 
 }
 
 /**
- * La cuenta regresiva al wipe forzado. Sin reloj (el prerender, y el primer render en el navegador, que tiene que
- * coincidir con él) muestra sólo el día, en UTC; la hora y la cuenta dependen de quien mira y aparecen al montar.
+ * La cuenta regresiva al wipe forzado. Sin reloj (el prerender) va sólo el día, en UTC; la hora y la cuenta dependen
+ * de quien mira y aparecen al montar.
  */
 function Wipe() {
   const t = useRustCopy().home.wipe;

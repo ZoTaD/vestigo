@@ -42,7 +42,7 @@
   text-transform: uppercase;
   text-decoration: none;
 }
-.rs-tab.is-on { background: var(--rs-green); color: #fff; }
+.rs-tab.is-on { background: #55702a; /* 5,6:1 con blanco; el verde de acento da 3,8:1 */ color: #fff; }
 .rs-tab.is-soon { opacity: 0.45; cursor: default; }
 
 .rs-main { max-width: 1180px; margin: 0 auto; padding: 22px 24px 60px; }

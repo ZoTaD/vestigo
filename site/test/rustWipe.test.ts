@@ -13,6 +13,12 @@ describe("el wipe forzado", () => {
     expect(forcedWipe(2027, 0).toISOString()).toBe("2027-01-07T19:00:00.000Z");
   });
 
+  it("en marzo el horario de verano arranca el segundo domingo", () => {
+    expect(forcedWipe(2027, 2).toISOString()).toBe("2027-03-04T19:00:00.000Z"); // jueves 4/3, antes del domingo 14/3
+    expect(forcedWipe(2026, 2).toISOString()).toBe("2026-03-05T19:00:00.000Z"); // el cambio fue el 8/3
+    expect(forcedWipe(2026, 3).toISOString()).toBe("2026-04-02T18:00:00.000Z");
+  });
+
   it("el próximo es el de este mes si todavía no pasó, y si no el del que viene", () => {
     expect(nextForcedWipe(new Date("2026-10-05T12:00:00Z")).toISOString()).toBe("2026-11-05T19:00:00.000Z");
     expect(nextForcedWipe(new Date("2026-10-01T17:59:00Z")).toISOString()).toBe("2026-10-01T18:00:00.000Z");
