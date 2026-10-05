@@ -2,7 +2,7 @@
 Tests de `world.py` (2026-10-05): el botín de cada caja y las tiendas de cada monumento.
 
 La parte sin el juego prueba la cuenta de probabilidades con árboles sintéticos. La parte con el juego lee
-`assetscenes.bundle` y `content.bundle` (~30 s) una sola vez para todos los tests.
+`assetscenes.bundle`, `content.bundle` e `items.preload.bundle` (~1 min) una sola vez para todos los tests.
 
 Uso (desde la raíz del worktree):
     python -m unittest discover -s games/rust/tools/tests -v
@@ -36,6 +36,11 @@ def node(*children):
     return {"subSpawn": [{"weight": w, "category": c, "extraSpawns": 0} for w, c in children], "items": []}
 
 
+def node_extra(*children):
+    """children: (peso, subárbol, extraSpawns)."""
+    return {"subSpawn": [{"weight": w, "category": c, "extraSpawns": e} for w, c, e in children], "items": []}
+
+
 class TestRollChances(unittest.TestCase):
     """`roll_chances` con árboles armados a mano: `resolve` es la identidad y los ítems traen `sid` ya resuelto."""
 
@@ -61,6 +66,14 @@ class TestRollChances(unittest.TestCase):
     def test_un_plano_va_aparte(self):
         self.assertEqual(world.roll_chances(leaf("a", bp=True), lambda x: x), {("a", True): 1.0})
 
+    def test_extra_spawns_tira_la_subcategoria_otra_vez(self):
+        # La rama elegida se tira 1 + extraSpawns veces: 1 − (1 − 0,5)² = 0,75; y la rama sale la mitad de las veces.
+        inner = node((1, leaf("a")), (1, leaf("b")))
+        tree = node_extra((1, inner, 1), (1, leaf("c"), 0))
+        got = world.roll_chances(tree, lambda x: x)
+        self.assertAlmostEqual(got[("a", False)], 0.5 * 0.75)
+        self.assertAlmostEqual(got[("c", False)], 0.5)
+
 
 class TestContainerChances(unittest.TestCase):
     def test_tiradas_de_la_definicion(self):
@@ -85,6 +98,19 @@ class TestContainerChances(unittest.TestCase):
     def test_cantidades(self):
         tt = {"lootDefinition": leaf("a", amount=2, max_amount=5), "maxDefinitionsToSpawn": 1, "LootSpawnSlots": [], "scrapAmount": 0}
         self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (1.0, 2, 5))
+
+    def test_cantidades_con_extra_spawns(self):
+        tree = node_extra((1, leaf("a", amount=2, max_amount=5), 2))
+        tt = {"lootDefinition": tree, "maxDefinitionsToSpawn": 1, "LootSpawnSlots": [], "scrapAmount": 0}
+        self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (1.0, 2, 15))
+
+    def test_la_chatarra_fija_se_suma_a_la_del_arbol(self):
+        # `GenerateScrap` mete `scrapAmount` además de lo que dio el botín, no en su lugar.
+        seguro = {"lootDefinition": leaf("scrap", amount=5), "maxDefinitionsToSpawn": 1, "LootSpawnSlots": [], "scrapAmount": 25}
+        self.assertEqual(world.container_chances(seguro, lambda x: x)[("scrap", False)], (1.0, 30, 30))
+        a_veces = {"lootDefinition": node((1, leaf("scrap", amount=5)), (1, leaf("b"))), "maxDefinitionsToSpawn": 1,
+                   "LootSpawnSlots": [], "scrapAmount": 25}
+        self.assertEqual(world.container_chances(a_veces, lambda x: x)[("scrap", False)], (1.0, 25, 30))
 
 
 @unittest.skipUnless(HAVE_GAME, "sin el juego instalado")
@@ -113,6 +139,20 @@ class TestWorldInGame(unittest.TestCase):
             for r in rows:
                 self.assertTrue(0 < r["chance"] <= 1, (sid, r))
                 self.assertTrue(1 <= r["min"] <= r["max"], (sid, r))
+
+    def test_cada_clave_junta_prefabs_con_la_misma_tabla(self):
+        for key, prefabs in data()["tables"].items():
+            self.assertEqual(len(set(prefabs.values())), 1, (key, sorted(prefabs)))
+
+    def test_las_variantes_de_la_caja_bloqueada_son_la_misma_caja(self):
+        locked = data()["tables"]["locked"]
+        for base in ("codelockedhackablecrate", "codelockedhackablecrate_oilrig", "codelockedhackablecrate_ghostship"):
+            self.assertIn(base, locked)
+
+    def test_cajas_nuevas_con_nombre(self):
+        boxes = data()["loot"]["containers"]
+        for key in ("jungle", "shore", "cannons", "medical_lab", "military_wagon"):
+            self.assertTrue(boxes[key]["en"] and boxes[key]["es"], key)
 
     def test_tiendas_de_outpost_y_bandit_camp(self):
         shops = data()["shops"]
