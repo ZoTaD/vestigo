@@ -23,6 +23,7 @@ describe("la pestaña Objetos de Rust", () => {
     await preloadTab(parseRoute("/en/rust/items/hatchet"));
     await preloadTab(parseRoute("/en/rust/items/sheet-metal-door"));
     await preloadTab(parseRoute("/en/rust/items/timed-explosive-charge"));
+    await preloadTab(parseRoute("/en/rust/items/large-wood-box"));
     await preloadTab(parseRoute("/en/rust/items/medical-syringe"));
     await preloadTab(parseRoute("/es/rust/objetos/fragmentos-de-metal"));
     await preloadTab(parseRoute("/en/rust/items/small-present"));
@@ -191,10 +192,14 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
   it("la puerta de chapa: qué se le pone, mantenimiento y desgaste", () => {
     const html = render("en", "/en/rust/items/sheet-metal-door");
     expect(html).toContain("Building");
-    for (const s of ['href="/en/rust/items/code-lock"', 'href="/en/rust/items/door-closer"', 'href="/en/rust/items/dragon-door-knocker"']) expect(html).toContain(s);
+    for (const s of ['href="/en/rust/items/code-lock"', 'href="/en/rust/items/door-closer"', 'href="/en/rust/items/dragon-door-knocker"', 'href="/en/rust/items/skull-door-knocker"']) expect(html).toContain(s);
     expect(html).toContain("15–49");
     expect(html).toContain("Outside: 8 h");
     expect(html).toContain("Inside: 80 h");
+  });
+
+  it("la caja grande de madera: el desgaste empieza después de una demora", () => {
+    expect(render("en", "/en/rust/items/large-wood-box")).toContain("Starts after 5 h");
   });
 
   it("el C4 lo detecta el sensor sísmico, nivel 3", () => {

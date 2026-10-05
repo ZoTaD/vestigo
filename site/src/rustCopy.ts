@@ -368,7 +368,7 @@ const ES: RustCopy = {
     decay: "Desgaste",
     decayOut: (t) => `Afuera: ${t}`,
     decayIn: (t) => `Adentro: ${t}`,
-    decayDelay: (t) => `Empieza a las ${t}`,
+    decayDelay: (t) => `Empieza después de ${t}`,
     decayNote: "Lo que tarda en romperse si el armario no tiene con qué pagar el mantenimiento.",
     detectedBy: "Lo detecta",
     vibration: (n) => `nivel de vibración ${n}`,

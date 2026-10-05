@@ -1,7 +1,7 @@
 /**
  * Las secciones de la ficha de Rust que no son crafteo, reciclaje ni botín (2026-10-05): lo que hace al usarlo y la
- * reparación. Más adelante: se obtiene de, se convierte en, construcción, qué lo detecta y skins. Cada una devuelve
- * `null` si no hay nada que mostrar.
+ * reparación, de dónde se obtiene, en qué se convierte, la construcción (qué se le pone, mantenimiento y desgaste),
+ * qué lo detecta y las skins. Cada una devuelve `null` si no hay nada que mostrar.
  */
 import { useLang, useLocale } from "../../i18n";
 import type { Route } from "../../route";
