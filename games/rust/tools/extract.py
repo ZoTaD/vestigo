@@ -44,6 +44,9 @@ CATEGORIES = {
 }
 # El enum `Rarity` del juego.
 RARITIES = {0: "none", 1: "common", 2: "uncommon", 3: "rare", 4: "veryrare"}
+# Objetos de desarrollo que el juego dejó sin ocultar: no existen para el jugador (nombres como "Smoke Rocket WIP!!!!"
+# y "Test Generator") y no tienen que entrar en las cifras ni tener ficha.
+EXCLUDED = {"ammo.rocket.smoke", "electric.generator.small"}
 # Los casilleros de la portada (estética A "Inventario"), en orden: lo que más se busca y los materiales de siempre.
 HOME_ITEMS = [
     "rifle.ak", "explosive.timed", "rocket.launcher", "hazmatsuit", "syringe.medical", "lock.code",
@@ -106,43 +109,76 @@ def number(x):
     return int(x) if float(x).is_integer() else round(float(x), 3)
 
 
-def assign_slugs(items):
+def assign_slugs(items, previous=None):
     """
     Los slugs en/es de cada objeto, únicos en cada idioma y sin que el español de uno sea el inglés de otro (la
-    dirección se traduce en los dos idiomas, ver `parseRoute`). Si dos chocan, los dos llevan el shortname al final.
+    dirección se traduce en los dos idiomas, ver `parseRoute`).
+
+    - Los redirects (skins y variantes de otro objeto) no tienen ficha: llevan `None` y no entran en ninguna cuenta,
+      así no le roban el slug limpio a un objeto visible.
+    - `previous` es `{id: (slug, slugEs)}` del `items.json` de antes. Un objeto que ya tenía slug lo conserva si sigue
+      saliendo de su nombre (es `slugify(nombre)` o empieza por eso más un guion) y no choca con otro que se lo quedó:
+      un parche que suma un objeto con el nombre de uno existente no le cambia la URL al existente.
+    - Los demás toman el slug limpio si está libre; si no (o si lo piden dos a la vez), llevan `-<shortname>`.
     """
-    def unique(key_of):
-        seen = {}
-        for it in items:
-            seen.setdefault(key_of(it), []).append(it)
-        return seen
-
+    previous = previous or {}
+    live = [it for it in items if not it["redirectOf"]]
     for it in items:
-        it["slug"] = slugify(it["name"]["en"])
-        it["slugEs"] = slugify(it["name"]["es"] or it["name"]["en"])
-    for field in ("slug", "slugEs"):
-        for slug, group in unique(lambda i: i[field]).items():
-            if len(group) > 1:
-                for it in group:
-                    it[field] = f"{slug}-{slugify(it['id'])}"
-    by_en = {it["slug"]: it["id"] for it in items}
-    for it in items:
-        owner = by_en.get(it["slugEs"])
-        if owner and owner != it["id"]:
-            it["slugEs"] = f"{it['slugEs']}-{slugify(it['id'])}"
+        if it["redirectOf"]:
+            it["slug"] = it["slugEs"] = None
+
+    def assign(field, base_of, forbidden):
+        """`forbidden(slug, id)` dice si ese slug está vedado para ese objeto (cruce entre idiomas)."""
+        idx = 0 if field == "slug" else 1
+        taken, pending = set(), []
+        for it in live:
+            base, old = base_of(it), (previous.get(it["id"]) or (None, None))[idx]
+            if old and (old == base or old.startswith(base + "-")) and old not in taken and not forbidden(old, it["id"]):
+                it[field] = old
+                taken.add(old)
+            else:
+                pending.append(it)
+        wanting = {}
+        for it in pending:
+            wanting.setdefault(base_of(it), []).append(it)
+        for base, group in wanting.items():
+            for it in group:
+                clean = len(group) == 1 and base not in taken and not forbidden(base, it["id"])
+                it[field] = base if clean else f"{base}-{slugify(it['id'])}"
+                taken.add(it[field])
+
+    assign("slug", lambda i: slugify(i["name"]["en"]), lambda slug, sid: False)
+    by_en = {it["slug"]: it["id"] for it in live}
+    assign("slugEs", lambda i: slugify(i["name"]["es"] or i["name"]["en"]), lambda slug, sid: by_en.get(slug, sid) != sid)
 
 
-def build_items(classes, texts):
+def text_of(texts, lang, token):
+    """
+    El texto de un token. El juego busca sin distinguir mayúsculas: `jukebox` (el token del objeto) está en el
+    `engine.json` como `Jukebox`, y con la búsqueda exacta quedaba con el nombre heredado de la Boom Box.
+    """
+    table = texts[lang]
+    if token in table:
+        return table[token]
+    lower = texts.setdefault("_lower", {}).get(lang)
+    if lower is None:
+        lower = texts["_lower"][lang] = {}
+        for k, v in table.items():
+            lower.setdefault(k.lower(), v)
+    return lower.get(token.lower())
+
+
+def build_items(classes, texts, previous=None):
     defs = classes["ItemDefinition"]
     by_pid = {pid: tt["shortname"] for pid, tt in defs}
     blueprints = {tt["m_GameObject"]["m_PathID"]: tt for _, tt in classes.get("ItemBlueprint", [])}
     items, skipped = [], []
     for _, d in defs:
-        if d["hidden"]:
-            continue
         sid = d["shortname"]
+        if d["hidden"] or sid in EXCLUDED:
+            continue
         tok_name, tok_desc = d["displayName"], d["displayDescription"]
-        name_en = texts["en"].get(tok_name["token"]) or tok_name["legacyEnglish"]
+        name_en = text_of(texts, "en", tok_name["token"]) or tok_name["legacyEnglish"]
         if not name_en:
             skipped.append(sid)
             continue
@@ -164,10 +200,10 @@ def build_items(classes, texts):
         items.append({
             "id": sid,
             "itemid": d["itemid"],
-            "name": {"en": name_en, "es": texts["es"].get(tok_name["token"]) or None},
+            "name": {"en": name_en, "es": text_of(texts, "es", tok_name["token"]) or None},
             "desc": {
-                "en": texts["en"].get(tok_desc["token"]) or tok_desc["legacyEnglish"] or None,
-                "es": texts["es"].get(tok_desc["token"]) or None,
+                "en": text_of(texts, "en", tok_desc["token"]) or tok_desc["legacyEnglish"] or None,
+                "es": text_of(texts, "es", tok_desc["token"]) or None,
             },
             "category": CATEGORIES[d["category"]],
             "rarity": RARITIES.get(d["rarity"], "none"),
@@ -178,15 +214,24 @@ def build_items(classes, texts):
         })
     if skipped:
         print(f"[rust] {len(skipped)} objetos sin nombre inglés quedaron afuera: {', '.join(skipped[:10])}…", file=sys.stderr)
-    assign_slugs(items)
-    items.sort(key=lambda i: i["slug"])
+    assign_slugs(items, previous)
+    # Los redirects (sin slug) al final, por shortname.
+    items.sort(key=lambda i: (i["slug"] is None, i["slug"] or "", i["id"]))
     return items
 
 
-def collect():
-    """Lee el juego y devuelve los datos, sin escribir nada (lo usan los tests)."""
+def collect(previous=None):
+    """Lee el juego y devuelve los datos, sin escribir nada (lo usan los tests). `previous` ver `assign_slugs`."""
     classes = load_classes(BUNDLES / "shared" / "items.preload.bundle")
-    return {"items": build_items(classes, read_texts()), "build": read_build()}
+    return {"items": build_items(classes, read_texts(), previous), "build": read_build()}
+
+
+def read_previous_slugs():
+    """`{id: (slug, slugEs)}` del `items.json` de la corrida anterior, para que las URLs no se muevan entre parches."""
+    f = DATA / "items.json"
+    if not f.exists():
+        return {}
+    return {i["id"]: (i.get("slug"), i.get("slugEs")) for i in json.loads(f.read_text(encoding="utf-8"))["items"]}
 
 
 def write_icons(items):
@@ -204,7 +249,7 @@ def write_icons(items):
 
 
 def main():
-    got = collect()
+    got = collect(read_previous_slugs())
     items = got["items"]
     write_icons(items)
     DATA.mkdir(parents=True, exist_ok=True)
@@ -219,7 +264,7 @@ def main():
     prev = json.loads(meta_file.read_text(encoding="utf-8")) if meta_file.exists() else None
     digest = hashlib.sha256(body.encode("utf-8")).hexdigest()
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    visible = [i for i in items if not i["redirectOf"]]
+    visible = [i for i in items if not i["redirectOf"]]  # los redirects no tienen ficha ni cuentan
     meta = {
         "build": got["build"],
         "extractedAt": stamp(prev, digest, now),

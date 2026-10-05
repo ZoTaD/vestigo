@@ -10,6 +10,7 @@ Uso (desde la raíz del worktree):
 """
 import json
 import os
+import re
 import sys
 import unittest
 
@@ -49,6 +50,49 @@ class TestStamp(unittest.TestCase):
         self.assertEqual(extract.stamp(prev, "abc", "2026-11-05T19:00:00Z"), "2026-10-05T12:00:00Z")
         self.assertEqual(extract.stamp(prev, "xyz", "2026-11-05T19:00:00Z"), "2026-11-05T19:00:00Z")
         self.assertEqual(extract.stamp(None, "xyz", "2026-11-05T19:00:00Z"), "2026-11-05T19:00:00Z")
+
+
+def fake(sid, en, es=None, redirect=None):
+    return {"id": sid, "name": {"en": en, "es": es}, "redirectOf": redirect}
+
+
+class TestAssignSlugs(unittest.TestCase):
+    """Datos sintéticos, sin el juego."""
+
+    def test_sin_anterior_los_que_chocan_llevan_sufijo_los_dos(self):
+        items = [fake("a.one", "Torch"), fake("a.two", "Torch"), fake("rifle", "Rifle")]
+        extract.assign_slugs(items)
+        self.assertEqual([i["slug"] for i in items], ["torch-aone", "torch-atwo", "rifle"])
+
+    def test_un_objeto_nuevo_no_le_cambia_el_slug_al_existente(self):
+        items = [fake("a.one", "Torch"), fake("b.new", "Torch")]
+        extract.assign_slugs(items, {"a.one": ("torch", "torch")})
+        self.assertEqual(items[0]["slug"], "torch")
+        self.assertEqual(items[1]["slug"], "torch-bnew")
+        self.assertEqual(items[0]["slugEs"], "torch")
+        self.assertEqual(items[1]["slugEs"], "torch-bnew")
+
+    def test_si_cambio_de_nombre_toma_el_slug_nuevo(self):
+        items = [fake("a.one", "Flame Torch")]
+        extract.assign_slugs(items, {"a.one": ("torch", "antorcha")})
+        self.assertEqual(items[0]["slug"], "flame-torch")
+
+    def test_un_sufijo_viejo_se_conserva_mientras_el_nombre_sirva(self):
+        items = [fake("a.one", "Torch"), fake("a.two", "Torch")]
+        extract.assign_slugs(items, {"a.one": ("torch-a-one", "x"), "a.two": ("torch", "x")})
+        self.assertEqual([i["slug"] for i in items], ["torch-a-one", "torch"])
+
+    def test_el_espanol_no_es_el_ingles_de_otro(self):
+        items = [fake("a", "Trap", "Rifle"), fake("b", "Rifle", "Otro")]
+        extract.assign_slugs(items)
+        self.assertEqual(items[0]["slugEs"], "rifle-a")
+        self.assertEqual(items[1]["slug"], "rifle")
+
+    def test_los_redirects_no_compiten_ni_llevan_slug(self):
+        items = [fake("skin", "Gun", "Trabuco", redirect="gun"), fake("gun", "Gun", "Trabuco")]
+        extract.assign_slugs(items)
+        self.assertEqual((items[0]["slug"], items[0]["slugEs"]), (None, None))
+        self.assertEqual((items[1]["slug"], items[1]["slugEs"]), ("gun", "trabuco"))
 
 
 @unittest.skipUnless(HAVE_GAME, "Rust no está instalado (RUST_DIR)")
@@ -107,6 +151,7 @@ class TestItems(unittest.TestCase):
 
     def test_slugs_unicos_y_sin_cruces_entre_idiomas(self):
         items = data()["items"]
+        items = [i for i in items if not i["redirectOf"]]
         en = [i["slug"] for i in items]
         es = [i["slugEs"] for i in items]
         self.assertEqual(len(en), len(set(en)))
@@ -114,9 +159,29 @@ class TestItems(unittest.TestCase):
         # Un slug español nunca es el inglés de OTRO objeto: la dirección se traduce en los dos idiomas.
         by_en = {i["slug"]: i["id"] for i in items}
         for i in items:
-            self.assertIn(by_en.get(i["slugEs"], i["id"]), (i["id"],), i["id"])
+            self.assertEqual(by_en.get(i["slugEs"], i["id"]), i["id"], i["id"])
         for s in en + es:
             self.assertEqual(s, extract.slugify(s), s)
+
+    def test_las_skins_no_le_roban_el_slug_a_nadie(self):
+        self.assertEqual(item("guntrap")["slugEs"], "trabuco")
+        redirects = [i for i in data()["items"] if i["redirectOf"]]
+        self.assertGreater(len(redirects), 50)
+        for i in redirects:
+            self.assertIsNone(i["slug"], i["id"])
+            self.assertIsNone(i["slugEs"], i["id"])
+
+    def test_sin_objetos_de_desarrollo(self):
+        ids = {i["id"] for i in data()["items"]}
+        self.assertFalse(ids & extract.EXCLUDED)
+        for i in data()["items"]:
+            self.assertIsNone(re.search(r"WIP", i["name"]["en"]), i["id"])
+            self.assertFalse(i["name"]["en"].startswith("Test "), i["id"])
+
+    def test_la_rocola_no_es_la_boom_box(self):
+        # El token `jukebox` está en el engine.json como `Jukebox`: se busca sin distinguir mayúsculas.
+        self.assertEqual(item("jukebox")["name"], {"en": "Jukebox", "es": "Rocola"})
+        self.assertNotEqual(item("jukebox")["slug"], item("boombox")["slug"])
 
     def test_ingredientes_que_existen(self):
         ids = {i["id"] for i in data()["items"]}
@@ -124,10 +189,11 @@ class TestItems(unittest.TestCase):
             for ing in (it["craft"] or {}).get("ingredients", []):
                 self.assertIn(ing["id"], ids, f"{it['id']} pide {ing['id']}")
 
-    def test_los_objetos_de_la_portada_existen(self):
-        ids = {i["id"] for i in data()["items"]}
+    def test_los_objetos_de_la_portada_existen_y_no_son_redirects(self):
+        by_id = {i["id"]: i for i in data()["items"]}
         for sid in extract.HOME_ITEMS:
-            self.assertIn(sid, ids)
+            self.assertIn(sid, by_id)
+            self.assertIsNone(by_id[sid]["redirectOf"], sid)
 
 
 if __name__ == "__main__":

@@ -314,206 +314,6 @@
    "icon": true
   },
   {
-   "id": "rifle.ak.diver",
-   "itemid": -139037392,
-   "name": {
-    "en": "Abyss Assault Rifle",
-    "es": "Fusil de asalto abisal"
-   },
-   "desc": {
-    "en": "A waterlogged assault rifle from the abyss",
-    "es": "Un fusil automático de gran potencia recuperado de las profundidades abisales."
-   },
-   "category": "weapon",
-   "rarity": "veryrare",
-   "stack": 1,
-   "condition": {
-    "max": 150,
-    "repairable": true
-   },
-   "redirectOf": "rifle.ak",
-   "craft": null,
-   "slug": "abyss-assault-rifle",
-   "slugEs": "fusil-de-asalto-abisal",
-   "icon": true
-  },
-  {
-   "id": "hazmatsuit.diver",
-   "itemid": -797592358,
-   "name": {
-    "en": "Abyss Hazmat",
-    "es": "Traje protector abisal"
-   },
-   "desc": {
-    "en": "A damaged deep-water survival suit was found in the abyss. Although it may no longer serve its original purpose, it functions reliably as a Hazmat suit. Owning this suit also grants access to the Abyss Pickaxe, Abyss Hatchet, Abyss Torch, and Abyss AR.",
-    "es": "Se encontró un traje de supervivencia en aguas profundas, dañado en el abismo. Aunque ya no cumple su función original, funciona de forma fiable como traje de protección. Poseer este traje también otorga acceso al Pico Metálico Abisal, Hacha Abisal, AR Abisal y la Antorcha Abisal."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 450,
-    "repairable": true
-   },
-   "redirectOf": "hazmatsuit",
-   "craft": null,
-   "slug": "abyss-hazmat",
-   "slugEs": "traje-protector-abisal",
-   "icon": true
-  },
-  {
-   "id": "abyss.barrel.horizontal",
-   "itemid": -880494890,
-   "name": {
-    "en": "Abyss Horizontal Storage Tank",
-    "es": "Tanque de almacenamiento horizontal del abismo"
-   },
-   "desc": {
-    "en": "Horizontal Abyss container taken from the depths of the ocean",
-    "es": "Contenedor del abismo horizontal tomado de las profundidades del océano"
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "base.horizontal.barrel",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 300
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 75
-     }
-    ],
-    "amount": 1,
-    "time": 30,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "abyss-horizontal-storage-tank",
-   "slugEs": "tanque-de-almacenamiento-horizontal-del-abismo",
-   "icon": true
-  },
-  {
-   "id": "diverhatchet",
-   "itemid": 1046904719,
-   "name": {
-    "en": "Abyss Metal Hatchet",
-    "es": "Hacha metálica Abisal"
-   },
-   "desc": {
-    "en": "Metal hatchet, reclaimed from the abyss, perfect for survival and crafting",
-    "es": "Hacha de metal, recuperado del abismo, perfecto para la supervivencia y la elaboración"
-   },
-   "category": "tool",
-   "rarity": "uncommon",
-   "stack": 1,
-   "condition": {
-    "max": 400,
-    "repairable": true
-   },
-   "redirectOf": "hatchet",
-   "craft": null,
-   "slug": "abyss-metal-hatchet",
-   "slugEs": "hacha-metalica-abisal",
-   "icon": true
-  },
-  {
-   "id": "diverpickaxe",
-   "itemid": 1561022037,
-   "name": {
-    "en": "Abyss Metal Pickaxe",
-    "es": "Pico metálico Abisal"
-   },
-   "desc": {
-    "en": "Plucked from the abyss, this Metal Pickaxe is a prized possession for any survivor",
-    "es": "Arrancada del abismo, esta piqueta de metal es una preciada posesión para cualquier superviviente."
-   },
-   "category": "tool",
-   "rarity": "uncommon",
-   "stack": 1,
-   "condition": {
-    "max": 400,
-    "repairable": true
-   },
-   "redirectOf": "pickaxe",
-   "craft": null,
-   "slug": "abyss-metal-pickaxe",
-   "slugEs": "pico-metalico-abisal",
-   "icon": true
-  },
-  {
-   "id": "divertorch",
-   "itemid": 1846605708,
-   "name": {
-    "en": "Abyss Torch",
-    "es": "Antorcha Abisal"
-   },
-   "desc": {
-    "en": "Illuminate the underwater depths with this durable and waterproof diving torch",
-    "es": "Ilumina las profundidades marinas con esta duradera y resistente al agua antorcha de buzo."
-   },
-   "category": "tool",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 50,
-    "repairable": false
-   },
-   "redirectOf": "torch",
-   "craft": null,
-   "slug": "abyss-torch",
-   "slugEs": "antorcha-abisal",
-   "icon": true
-  },
-  {
-   "id": "abyss.barrel.vertical",
-   "itemid": -919882824,
-   "name": {
-    "en": "Abyss Vertical Storage Tank",
-    "es": "Tanque de almacenamiento vertical del abismo"
-   },
-   "desc": {
-    "en": "Vertical Abyss container taken from the depths of the ocean",
-    "es": "Contenedor del abismo vertical tomado de las profundidades del océano"
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "base.vertical.barrel",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 300
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 75
-     }
-    ],
-    "amount": 1,
-    "time": 30,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "abyss-vertical-storage-tank",
-   "slugEs": "tanque-de-almacenamiento-vertical-del-abismo",
-   "icon": true
-  },
-  {
    "id": "workbench.upgrade.accelerated",
    "itemid": 798382300,
    "name": {
@@ -1148,30 +948,6 @@
    "craft": null,
    "slug": "arctic-scientist-suit",
    "slugEs": "traje-de-cientifico-artico",
-   "icon": true
-  },
-  {
-   "id": "hazmatsuit.arcticsuit",
-   "itemid": -470439097,
-   "name": {
-    "en": "Arctic Suit",
-    "es": "Traje ártico"
-   },
-   "desc": {
-    "en": "An arctic variant of the hazmat suit which trades radiation for cold protection.",
-    "es": "Una variante ártica del traje de materiales peligrosos que sacrifica protección frente a la radiación, los mordiscos y las explosiones a cambio de más protección en entornos gélidos."
-   },
-   "category": "attire",
-   "rarity": "rare",
-   "stack": 1,
-   "condition": {
-    "max": 450,
-    "repairable": true
-   },
-   "redirectOf": "hazmatsuit",
-   "craft": null,
-   "slug": "arctic-suit",
-   "slugEs": "traje-artico",
    "icon": true
   },
   {
@@ -1882,79 +1658,6 @@
    "icon": true
   },
   {
-   "id": "bamboo.barrel",
-   "itemid": -1652561344,
-   "name": {
-    "en": "Bamboo Barrel",
-    "es": "Barril bambú"
-   },
-   "desc": {
-    "en": "Keep your things in this bamboo barrel. Stores up to 48 items. Cannot be locked.",
-    "es": "Guarda tus cosas en este barril de bambú. Almacena hasta 48 objetos. No se puede bloquear."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "base.vertical.barrel",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 300
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 75
-     }
-    ],
-    "amount": 1,
-    "time": 30,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "bamboo-barrel",
-   "slugEs": "barril-bambu",
-   "icon": true
-  },
-  {
-   "id": "single.shallow.wall.shelves",
-   "itemid": -193519904,
-   "name": {
-    "en": "Bamboo Wall Shelves",
-    "es": "Estantería de pared de bambú"
-   },
-   "desc": {
-    "en": "A shallow bamboo wall shelf for small item stacking",
-    "es": "Una cajonera de bambú con estantes para acumular objetos pequeños."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "base.single.shelves",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 100
-     }
-    ],
-    "amount": 1,
-    "time": 10,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "bamboo-wall-shelves",
-   "slugEs": "estanteria-de-pared-de-bambu",
-   "icon": true
-  },
-  {
    "id": "bandage",
    "itemid": -2072273936,
    "name": {
@@ -2042,54 +1745,6 @@
    "icon": true
   },
   {
-   "id": "gamesroom.minifridge",
-   "itemid": 352442426,
-   "name": {
-    "en": "Bar Games Minifridge",
-    "es": "Mininevera Para Bar"
-   },
-   "desc": {
-    "en": "A small fridge you can store food into and keep your drink cool!",
-    "es": "¡Un pequeño refrigerador puede guardar comida y mantener su bebida fresca!"
-   },
-   "category": "electrical",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "mini fridge",
-   "craft": null,
-   "slug": "bar-games-minifridge",
-   "slugEs": "mininevera-para-bar",
-   "icon": true
-  },
-  {
-   "id": "gamesroom.shotgun.trap",
-   "itemid": 399522257,
-   "name": {
-    "en": "Bar Games Shotgun Trap",
-    "es": "Trabuco Para Bar"
-   },
-   "desc": {
-    "en": "A shotgun trap triggered by movement, place near doorways and load with handmade shells.",
-    "es": "Trabuco activado por el movimiento. Plántala enfrente a tu puerta, cárgala con cartuchos caseros, y grita '¡Ve al infierno!' Cuando tus enemigos pasen por delante."
-   },
-   "category": "traps",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 200,
-    "repairable": true
-   },
-   "redirectOf": "guntrap",
-   "craft": null,
-   "slug": "bar-games-shotgun-trap",
-   "slugEs": "trabuco-para-bar",
-   "icon": true
-  },
-  {
    "id": "barricade.woodwire",
    "itemid": 1382263453,
    "name": {
@@ -2168,30 +1823,6 @@
    },
    "slug": "barbeque",
    "slugEs": "barbacoa",
-   "icon": true
-  },
-  {
-   "id": "mace.baseballbat",
-   "itemid": -2026042603,
-   "name": {
-    "en": "Baseball Bat",
-    "es": "Bate de béisbol"
-   },
-   "desc": {
-    "en": "A baseball bat wrapped in barbed wire",
-    "es": "Un bate de béisbol envuelto en alambre de púas"
-   },
-   "category": "weapon",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 200,
-    "repairable": true
-   },
-   "redirectOf": "mace",
-   "craft": null,
-   "slug": "baseball-bat",
-   "slugEs": "bate-de-beisbol",
    "icon": true
   },
   {
@@ -3218,27 +2849,6 @@
    "icon": true
   },
   {
-   "id": "hat.candle.birthday",
-   "itemid": 1633553557,
-   "name": {
-    "en": "Birthday Candle Hat",
-    "es": "Sombrero cumpleañero"
-   },
-   "desc": {
-    "en": "A hat with a birthday candle on top. You can turn the candle on in your inventory.",
-    "es": "Un sombrero con una vela de cumpleaños encima. Puedes encender la vela en tu inventario."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "hat.candle",
-   "craft": null,
-   "slug": "birthday-candle-hat",
-   "slugEs": "sombrero-cumpleanero",
-   "icon": true
-  },
-  {
    "id": "black.berry",
    "itemid": 1771755747,
    "name": {
@@ -3549,27 +3159,6 @@
    "icon": true
   },
   {
-   "id": "industrial.wall.light.blue",
-   "itemid": 920930831,
-   "name": {
-    "en": "Blue Industrial Wall Light",
-    "es": "Lámpara azul de industrial de pared"
-   },
-   "desc": {
-    "en": "A small blue light source.",
-    "es": "Una pequeña fuente de luz azul."
-   },
-   "category": "electrical",
-   "rarity": "none",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "industrial.wall.light",
-   "craft": null,
-   "slug": "blue-industrial-wall-light",
-   "slugEs": "lampara-azul-de-industrial-de-pared",
-   "icon": true
-  },
-  {
    "id": "jumpsuit.suit.blue",
    "itemid": 1601468620,
    "name": {
@@ -3676,30 +3265,6 @@
    "craft": null,
    "slug": "blueberries",
    "slugEs": "arandanos",
-   "icon": true
-  },
-  {
-   "id": "blunderbuss",
-   "itemid": -880412831,
-   "name": {
-    "en": "Blunderbuss",
-    "es": "Trabuco"
-   },
-   "desc": {
-    "en": "A Shotgun with two barrels allowing two shots to be fired in quick succession before needing to reload.",
-    "es": "Una escopeta con dos cañones, permitiendo realizar dos disparos en rápida sucesión antes de necesitar ser recargada."
-   },
-   "category": "weapon",
-   "rarity": "rare",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "shotgun.double",
-   "craft": null,
-   "slug": "blunderbuss",
-   "slugEs": "trabuco-blunderbuss",
    "icon": true
   },
   {
@@ -4110,52 +3675,8 @@
     "researchable": false,
     "default": true
    },
-   "slug": "boom-box-boombox",
+   "slug": "boom-box",
    "slugEs": "parlante",
-   "icon": true
-  },
-  {
-   "id": "jukebox",
-   "itemid": -1018085504,
-   "name": {
-    "en": "Boom Box",
-    "es": null
-   },
-   "desc": {
-    "en": "A Jukebox that brings the tunes! Play recorded cassette tapes or stream audio from the internet. Fitted with a matrix display that shows the tuned station. Open the settings to change audio options.",
-    "es": "¡Una rocola que te trae la mejor música! Reproduce cintas de casetes grabadas o escucha audio en streaming desde internet. Cuenta con una pantalla matricial que muestra la emisora sintonizada. Abre la configuración para cambiar las opciones de audio."
-   },
-   "category": "fun",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": null,
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 200
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 100
-     },
-     {
-      "id": "cloth",
-      "amount": 20
-     }
-    ],
-    "amount": 1,
-    "time": 15,
-    "workbench": 1,
-    "researchable": false,
-    "default": true
-   },
-   "slug": "boom-box-jukebox",
-   "slugEs": "boom-box",
    "icon": true
   },
   {
@@ -4299,30 +3820,6 @@
    },
    "slug": "bota-bag",
    "slugEs": "bota",
-   "icon": true
-  },
-  {
-   "id": "crossbowbowless",
-   "itemid": 2022157467,
-   "name": {
-    "en": "Bowless Crossbow",
-    "es": "Ballesta sin arco."
-   },
-   "desc": {
-    "en": "A bowless crossbow for fans of DIY",
-    "es": "Una ballesta sin arco para los aficionados al bricolaje."
-   },
-   "category": "weapon",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "crossbow",
-   "craft": null,
-   "slug": "bowless-crossbow",
-   "slugEs": "ballesta-sin-arco",
    "icon": true
   },
   {
@@ -5762,27 +5259,6 @@
    "icon": true
   },
   {
-   "id": "electric.fluorescentlight.ceiling",
-   "itemid": 640470230,
-   "name": {
-    "en": "Ceiling Fluorescent Light",
-    "es": "Luz fluorescente de techo"
-   },
-   "desc": {
-    "en": "A flicker-free fluorescent light.",
-    "es": "Una luz fluorescente sin parpadeo."
-   },
-   "category": "electrical",
-   "rarity": "common",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "ceilinglight",
-   "craft": null,
-   "slug": "ceiling-fluorescent-light",
-   "slugEs": "luz-fluorescente-de-techo",
-   "icon": true
-  },
-  {
    "id": "ceilinglight",
    "itemid": 1142993169,
    "name": {
@@ -7120,54 +6596,6 @@
    "icon": true
   },
   {
-   "id": "concretehatchet",
-   "itemid": 1176355476,
-   "name": {
-    "en": "Concrete Hatchet",
-    "es": "Hacha de hormigón armado"
-   },
-   "desc": {
-    "en": "A salvaged piece of concrete and rebar which can be used to harvest wood",
-    "es": "Un trozo de hormigón y barras de refuerzo sacado de unos escombros. Su duro borde lo hace apto para recolectar madera."
-   },
-   "category": "tool",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "stonehatchet",
-   "craft": null,
-   "slug": "concrete-hatchet",
-   "slugEs": "hacha-de-hormigon-armado",
-   "icon": true
-  },
-  {
-   "id": "concretepickaxe",
-   "itemid": -1360171080,
-   "name": {
-    "en": "Concrete Pickaxe",
-    "es": "Pico de hormigón armado"
-   },
-   "desc": {
-    "en": "A salvaged piece of concrete and rebar with a sharp edge. Can be used to harvest Stone, Metal ore and Sulfur ore.",
-    "es": "Un trozo de hormigón y barras de refuerzo sacado de unos escombros. Su cabeza puntiaguda lo hace apto para recolectar piedra, metal y azufre."
-   },
-   "category": "tool",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "stone.pickaxe",
-   "craft": null,
-   "slug": "concrete-pickaxe",
-   "slugEs": "pico-de-hormigon-armado",
-   "icon": true
-  },
-  {
    "id": "confetticannon",
    "itemid": 1603174987,
    "name": {
@@ -8135,54 +7563,6 @@
    "icon": true
   },
   {
-   "id": "rifle.ak.glass",
-   "itemid": -1920964108,
-   "name": {
-    "en": "Crystal Assault Rifle Diamond",
-    "es": "Rifle de Asalto de Diamante"
-   },
-   "desc": {
-    "en": "Machined from the toughest gemstones, this Assault Rifle skin will show each and every shot you take.",
-    "es": "Machined from the toughest gemstones, this Assault Rifle skin will show each and every shot you take."
-   },
-   "category": "weapon",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 150,
-    "repairable": true
-   },
-   "redirectOf": "rifle.ak",
-   "craft": null,
-   "slug": "crystal-assault-rifle-diamond",
-   "slugEs": "rifle-de-asalto-de-diamante",
-   "icon": true
-  },
-  {
-   "id": "torch.torch.skull",
-   "itemid": -1175656359,
-   "name": {
-    "en": "Cultist Deer Torch",
-    "es": "Antorcha de la secta"
-   },
-   "desc": {
-    "en": "Cultist Deer Torch",
-    "es": "Antorcha de la secta"
-   },
-   "category": "tool",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 50,
-    "repairable": false
-   },
-   "redirectOf": "torch",
-   "craft": null,
-   "slug": "cultist-deer-torch",
-   "slugEs": "antorcha-de-la-secta",
-   "icon": true
-  },
-  {
    "id": "cursedcauldron",
    "itemid": 1242522330,
    "name": {
@@ -9037,51 +8417,6 @@
    "icon": true
   },
   {
-   "id": "hat.dragonmask",
-   "itemid": -22883916,
-   "name": {
-    "en": "Dragon Mask",
-    "es": "Máscara del dragón"
-   },
-   "desc": {
-    "en": "A special dragon mask to celebrate Chinese New Year",
-    "es": "Una máscara especial para celebrar el año nuevo chino."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "hat.wolf",
-   "craft": null,
-   "slug": "dragon-mask",
-   "slugEs": "mascara-del-dragon",
-   "icon": true
-  },
-  {
-   "id": "rocket.launcher.dragon",
-   "itemid": -1315992997,
-   "name": {
-    "en": "Dragon Rocket Launcher",
-    "es": "Lanzamisiles del dragón"
-   },
-   "desc": {
-    "en": "Unmatched craftsmanship meets devastating firepower.",
-    "es": "La artesanía inigualable se combina con una potencia de fuego devastadora."
-   },
-   "category": "weapon",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "rocket.launcher",
-   "craft": null,
-   "slug": "dragon-rocket-launcher",
-   "slugEs": "lanzamisiles-del-dragon",
-   "icon": true
-  },
-  {
    "id": "drone",
    "itemid": 1588492232,
    "name": {
@@ -9895,51 +9230,6 @@
    },
    "slug": "f1-grenade",
    "slugEs": "granada-f1",
-   "icon": true
-  },
-  {
-   "id": "beanbagseatfabric",
-   "itemid": -576866254,
-   "name": {
-    "en": "Fabric Beanbag Seat",
-    "es": "Puff de tela"
-   },
-   "desc": {
-    "en": "A cozy fabric beanbag seat to sink in to.",
-    "es": "Acogedor puff de tela en el que hundirse."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 5,
-   "condition": null,
-   "redirectOf": "chair",
-   "craft": null,
-   "slug": "fabric-beanbag-seat",
-   "slugEs": "puff-de-tela",
-   "icon": true
-  },
-  {
-   "id": "factorydoor",
-   "itemid": 2054391128,
-   "name": {
-    "en": "Factory Door",
-    "es": "Puerta de fábrica"
-   },
-   "desc": {
-    "en": "Medium strength door, vulnerable to explosives. Contains a bulletproof viewing portal",
-    "es": "Puerta de resistencia media, vulnerable a explosivos. Equivalente a una puerta de chapa, pero incorpora una ventana de cristal blindado."
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": false
-   },
-   "redirectOf": "door.hinged.metal",
-   "craft": null,
-   "slug": "factory-door",
-   "slugEs": "puerta-de-fabrica",
    "icon": true
   },
   {
@@ -10991,30 +10281,6 @@
    "icon": true
   },
   {
-   "id": "frontier_hatchet",
-   "itemid": 1937380239,
-   "name": {
-    "en": "Frontier Hatchet",
-    "es": "Hacha fronteriza"
-   },
-   "desc": {
-    "en": "A Frontier Hatchet, useful for chopping trees and dismembering corpses.",
-    "es": "Un hacha fronteriza, útil para cortar árboles y desmembrar cadáveres."
-   },
-   "category": "tool",
-   "rarity": "uncommon",
-   "stack": 1,
-   "condition": {
-    "max": 400,
-    "repairable": true
-   },
-   "redirectOf": "hatchet",
-   "craft": null,
-   "slug": "frontier-hatchet",
-   "slugEs": "hacha-fronteriza",
-   "icon": true
-  },
-  {
    "id": "gunrack.single.3.horizontal",
    "itemid": -52398594,
    "name": {
@@ -11078,30 +10344,6 @@
    },
    "slug": "frontier-horseshoe-single-item-rack",
    "slugEs": "expositor-individual-con-herraduras-para-armas",
-   "icon": true
-  },
-  {
-   "id": "hazmatsuit.frontier",
-   "itemid": -105415879,
-   "name": {
-    "en": "Frontier Suit",
-    "es": "Traje de Pionero"
-   },
-   "desc": {
-    "en": "A Frontier suit",
-    "es": "Un Traje Pionero"
-   },
-   "category": "attire",
-   "rarity": "rare",
-   "stack": 1,
-   "condition": {
-    "max": 450,
-    "repairable": true
-   },
-   "redirectOf": "hazmatsuit",
-   "craft": null,
-   "slug": "frontier-suit",
-   "slugEs": "traje-de-pionero",
    "icon": true
   },
   {
@@ -11643,27 +10885,6 @@
    "icon": true
   },
   {
-   "id": "rockingchair.rockingchair3",
-   "itemid": 192249897,
-   "name": {
-    "en": "Green",
-    "es": "Verde"
-   },
-   "desc": {
-    "en": "A rocking chair that responds to your input. Don't fire whilst seated.",
-    "es": "Una silla que responde a tus movimientos. No es recomendable disparar mientras estás sentado."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 5,
-   "condition": null,
-   "redirectOf": "rockingchair",
-   "craft": null,
-   "slug": "green",
-   "slugEs": "verde",
-   "icon": true
-  },
-  {
    "id": "green.berry",
    "itemid": 858486327,
    "name": {
@@ -11768,27 +10989,6 @@
    },
    "slug": "green-boomer",
    "slugEs": "fuegos-artificiales-de-castillo-verdes",
-   "icon": true
-  },
-  {
-   "id": "industrial.wall.light.green",
-   "itemid": 1268178466,
-   "name": {
-    "en": "Green Industrial Wall Light",
-    "es": "Lámpara verde industrial de pared"
-   },
-   "desc": {
-    "en": "A small green light source.",
-    "es": "Una pequeña fuente de luz verde."
-   },
-   "category": "electrical",
-   "rarity": "common",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "industrial.wall.light",
-   "craft": null,
-   "slug": "green-industrial-wall-light",
-   "slugEs": "lampara-verde-industrial-de-pared",
    "icon": true
   },
   {
@@ -11911,72 +11111,6 @@
    },
    "slug": "gun-powder",
    "slugEs": "polvora",
-   "icon": true
-  },
-  {
-   "id": "half.bamboo.shelves",
-   "itemid": -1923843855,
-   "name": {
-    "en": "Half Height Bamboo Shelves",
-    "es": "Estantes de bambú a media altura"
-   },
-   "desc": {
-    "en": "Half height salvaged bamboo shelves for stacking",
-    "es": "Estantes de bambú recuperado de media altura para apilar"
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "base.half.shelves",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "metal.fragments",
-      "amount": 40
-     }
-    ],
-    "amount": 1,
-    "time": 10,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "half-height-bamboo-shelves",
-   "slugEs": "estantes-de-bambu-a-media-altura",
-   "icon": true
-  },
-  {
-   "id": "halfheight.industrial.shelves",
-   "itemid": 786458957,
-   "name": {
-    "en": "Half Height Industrial Shelves",
-    "es": "Estanterías industriales de altura media"
-   },
-   "desc": {
-    "en": "Half height industrial shelves for stacking",
-    "es": "Estanterías industriales de media altura para apilar"
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "base.half.shelves",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "metal.fragments",
-      "amount": 40
-     }
-    ],
-    "amount": 1,
-    "time": 10,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "half-height-industrial-shelves",
-   "slugEs": "estanterias-industriales-de-altura-media",
    "icon": true
   },
   {
@@ -13104,90 +12238,6 @@
    "icon": true
   },
   {
-   "id": "gates.external.high.adobe",
-   "itemid": -401905610,
-   "name": {
-    "en": "High External Adobe Gate",
-    "es": "Portón Alto de Adobe"
-   },
-   "desc": {
-    "en": "A high stone gate, allowing access in and out of your compound.",
-    "es": "Un gran portón de piedra, permitiendo acceso y salida de tu recinto."
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "gates.external.high.stone",
-   "craft": null,
-   "slug": "high-external-adobe-gate",
-   "slugEs": "porton-alto-de-adobe",
-   "icon": true
-  },
-  {
-   "id": "wall.external.high.adobe",
-   "itemid": 756890702,
-   "name": {
-    "en": "High External Adobe Wall",
-    "es": "Pared Alta de Adobe"
-   },
-   "desc": {
-    "en": "A high stone wall used to keep people off your property.",
-    "es": "Una pared alta de piedra, para mantener a la gente fuera de tu propiedad."
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "wall.external.high.stone",
-   "craft": null,
-   "slug": "high-external-adobe-wall",
-   "slugEs": "pared-alta-de-adobe",
-   "icon": true
-  },
-  {
-   "id": "gates.external.high.legacy",
-   "itemid": -1442339204,
-   "name": {
-    "en": "High External Legacy Gate",
-    "es": "Portón Alto Clásico"
-   },
-   "desc": {
-    "en": "A legacy themed wooden gate to keep the untamed wilderness away from your property, it's seen better days. Replaces the High External Wooden Wall.",
-    "es": "Un portón de madera de estilo clásico para mantener la naturaleza salvaje alejada de tu propiedad. Ha tenido mejores tiempos. Reemplaza a Pared Alta de Madera."
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "gates.external.high.wood",
-   "craft": null,
-   "slug": "high-external-legacy-gate",
-   "slugEs": "porton-alto-clasico",
-   "icon": true
-  },
-  {
-   "id": "wall.external.high.legacy",
-   "itemid": -1993883724,
-   "name": {
-    "en": "High External Legacy Wall",
-    "es": "Pared Alta Clásica"
-   },
-   "desc": {
-    "en": "A legacy themed wooden wall to keep the untamed wilderness away from your property, made with questionable carpentry. Replaces the High External Wooden Wall.",
-    "es": "Pared de madera con temática clásica para mantener la naturaleza salvaje alejada de tu propiedad, hecho con carpintería de dudosa calidad. Reemplaza a la Pared Alta de Madera Externa."
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "wall.external.high",
-   "craft": null,
-   "slug": "high-external-legacy-wall",
-   "slugEs": "pared-alta-clasica",
-   "icon": true
-  },
-  {
    "id": "gates.external.high.stone",
    "itemid": -691113464,
    "name": {
@@ -13802,30 +12852,6 @@
    "icon": true
   },
   {
-   "id": "metal.facemask.hockey",
-   "itemid": -1334569149,
-   "name": {
-    "en": "Hockey Mask",
-    "es": "Máscara de hockey"
-   },
-   "desc": {
-    "en": "A protective facemask which provides the user with excellent head protection from all forms of attacks.",
-    "es": "Una máscara blindada que cubre la cara y proporciona al usuario un grado excelente de protección frente a todos los tipos de ataque."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 320,
-    "repairable": true
-   },
-   "redirectOf": "metal.facemask",
-   "craft": null,
-   "slug": "hockey-mask",
-   "slugEs": "mascara-de-hockey",
-   "icon": true
-  },
-  {
    "id": "weapon.mod.holosight",
    "itemid": 442289265,
    "name": {
@@ -14161,27 +13187,6 @@
    "icon": true
   },
   {
-   "id": "hat.horsemask",
-   "itemid": -418359052,
-   "name": {
-    "en": "Horse Mask",
-    "es": "Máscara de caballo"
-   },
-   "desc": {
-    "en": "A Beautifully crafted red and gold Horse mask to celebrate the 2026 Lunar New Year. This item replaces the wolf headdress.",
-    "es": "Una máscara de caballo bellamente elaborada en rojo y dorado para celebrar el Año Nuevo Lunar 2026. Este objeto reemplaza la capucha de lobo."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "hat.wolf",
-   "craft": null,
-   "slug": "horse-mask",
-   "slugEs": "mascara-de-caballo",
-   "icon": true
-  },
-  {
    "id": "hosetool",
    "itemid": 363163265,
    "name": {
@@ -14437,99 +13442,6 @@
    },
    "slug": "hv-pistol-ammo",
    "slugEs": "municion-de-alta-velocidad-de-9mm",
-   "icon": true
-  },
-  {
-   "id": "rifle.ak.ice",
-   "itemid": -1335497659,
-   "name": {
-    "en": "Ice Assault Rifle",
-    "es": "Fusil de asalto helado"
-   },
-   "desc": {
-    "en": "Ice-covered high damage machine rifle.",
-    "es": "Fusil de asalto automático de gran potencia cubierto de hielo."
-   },
-   "category": "weapon",
-   "rarity": "veryrare",
-   "stack": 1,
-   "condition": {
-    "max": 150,
-    "repairable": true
-   },
-   "redirectOf": "rifle.ak",
-   "craft": null,
-   "slug": "ice-assault-rifle",
-   "slugEs": "fusil-de-asalto-helado",
-   "icon": true
-  },
-  {
-   "id": "metal.plate.torso.icevest",
-   "itemid": -1478855279,
-   "name": {
-    "en": "Ice Metal Chest Plate",
-    "es": "Coraza de metal helada"
-   },
-   "desc": {
-    "en": "A metal plate covering your torso, provides excellent protection from all forms of attacks.",
-    "es": "Una pieza de armadura que cuelga una placa de metal a cada lado del torso y proporciona al usuario un grado excelente de protección frente a todos los tipos de ataque."
-   },
-   "category": "attire",
-   "rarity": "veryrare",
-   "stack": 1,
-   "condition": {
-    "max": 360,
-    "repairable": true
-   },
-   "redirectOf": "metal.plate.torso",
-   "craft": null,
-   "slug": "ice-metal-chest-plate",
-   "slugEs": "coraza-de-metal-helada",
-   "icon": true
-  },
-  {
-   "id": "metal.facemask.icemask",
-   "itemid": 110116923,
-   "name": {
-    "en": "Ice Metal Facemask",
-    "es": "Máscara de metal helada"
-   },
-   "desc": {
-    "en": "A protective facemask which provides the user with excellent head protection from all forms of attacks.",
-    "es": "Una máscara blindada que cubre la cara y proporciona al usuario un grado excelente de protección frente a todos los tipos de ataque."
-   },
-   "category": "attire",
-   "rarity": "veryrare",
-   "stack": 1,
-   "condition": {
-    "max": 320,
-    "repairable": true
-   },
-   "redirectOf": "metal.facemask",
-   "craft": null,
-   "slug": "ice-metal-facemask",
-   "slugEs": "mascara-de-metal-helada",
-   "icon": true
-  },
-  {
-   "id": "chair.icethrone",
-   "itemid": -1944704288,
-   "name": {
-    "en": "Ice Throne",
-    "es": "Trono Helado"
-   },
-   "desc": {
-    "en": "An Ice Throne. Fit for the one true arctic warlord.",
-    "es": "Un Trono de Hielo. Ideal para el único y auténtico señor de la guerra ártico."
-   },
-   "category": "items",
-   "rarity": "common",
-   "stack": 5,
-   "condition": null,
-   "redirectOf": "chair",
-   "craft": null,
-   "slug": "ice-throne",
-   "slugEs": "trono-helado",
    "icon": true
   },
   {
@@ -14803,30 +13715,6 @@
    "icon": true
   },
   {
-   "id": "industrial.autoturret",
-   "itemid": -786398324,
-   "name": {
-    "en": "Industrial Auto Turret",
-    "es": "Torreta automática industrial"
-   },
-   "desc": {
-    "en": "This automated electric sentry turret will engage and neutralize any moving targets it has line of sight to. You must equip it with a projectile weapon and the corresponding ammunition. Note : The turret will search for targets in a 180 degree arc facing *you* when you place it. Requires 10 power.",
-    "es": "Esta torreta centinela automatizada se enfrentará y neutralizará a cualquier blanco en su línea visual. Debe ser equipada con un arma de fuego y cargada con la munición correspondiente.\n\nNota: La torreta buscará objetivos en un arco de 180 grados mirando hacia ti cuando la coloques. Requiere 10 unidades de energía eléctrica para funcionar."
-   },
-   "category": "electrical",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "autoturret",
-   "craft": null,
-   "slug": "industrial-auto-turret",
-   "slugEs": "torreta-automatica-industrial",
-   "icon": true
-  },
-  {
    "id": "industrial.combiner",
    "itemid": 1538126328,
    "name": {
@@ -14930,54 +13818,6 @@
    "icon": true
   },
   {
-   "id": "industrial.electric.furnace",
-   "itemid": 225892284,
-   "name": {
-    "en": "Industrial Electric Furnace",
-    "es": "Horno eléctrico industrial"
-   },
-   "desc": {
-    "en": "An electrical version of a furnace that uses electricity instead of a fuel source.",
-    "es": "Una alternativa al horno tradicional que usa electricidad en vez de madera para generar calor. Por esto mismo, no produce carbón."
-   },
-   "category": "electrical",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "electric.furnace",
-   "craft": null,
-   "slug": "industrial-electric-furnace",
-   "slugEs": "horno-electrico-industrial",
-   "icon": true
-  },
-  {
-   "id": "industrial.garagedoor",
-   "itemid": 346569548,
-   "name": {
-    "en": "Industrial Garage Door",
-    "es": "Puerta de garaje industrial"
-   },
-   "desc": {
-    "en": "A garage door that rolls up and down.",
-    "es": "Una puerta de garaje que se abre y cierra verticalmente."
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "wall.frame.garagedoor",
-   "craft": null,
-   "slug": "industrial-garage-door",
-   "slugEs": "puerta-de-garaje-industrial",
-   "icon": true
-  },
-  {
    "id": "industrial.splitter",
    "itemid": 742745918,
    "name": {
@@ -15011,110 +13851,6 @@
    "icon": true
   },
   {
-   "id": "industrial.storage.horizontal",
-   "itemid": -1019111952,
-   "name": {
-    "en": "Industrial Storage Horizontal Barrel",
-    "es": "Barril de almacenamiento horizontal industrial"
-   },
-   "desc": {
-    "en": "Horizontal barrel to store industrial materials",
-    "es": "Barril horizontal para almacenar materiales industriales"
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "base.horizontal.barrel",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 300
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 75
-     }
-    ],
-    "amount": 1,
-    "time": 30,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "industrial-storage-horizontal-barrel",
-   "slugEs": "barril-de-almacenamiento-horizontal-industrial",
-   "icon": true
-  },
-  {
-   "id": "industrial.storage.vertical",
-   "itemid": -883975138,
-   "name": {
-    "en": "Industrial Storage Vertical Barrel",
-    "es": "Barril de almacenamiento vertical industrial"
-   },
-   "desc": {
-    "en": "Vertical barrel to store industrial materials",
-    "es": "Barril vertical para almacenar materiales industriales."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "base.vertical.barrel",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 300
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 75
-     }
-    ],
-    "amount": 1,
-    "time": 30,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "industrial-storage-vertical-barrel",
-   "slugEs": "barril-de-almacenamiento-vertical-industrial",
-   "icon": true
-  },
-  {
-   "id": "industrial.torch",
-   "itemid": 4474927,
-   "name": {
-    "en": "Industrial Torch",
-    "es": "Antorcha industrial"
-   },
-   "desc": {
-    "en": "An old mining lamp used as a torch. Lights your way at night and can be used as a weapon",
-    "es": "Una vieja lámpara de minero usada como linterna. Ilumina tu camino por la noche y puede usarse como arma"
-   },
-   "category": "tool",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 50,
-    "repairable": false
-   },
-   "redirectOf": "torch",
-   "craft": null,
-   "slug": "industrial-torch",
-   "slugEs": "antorcha-industrial",
-   "icon": true
-  },
-  {
    "id": "industrial.wall.light",
    "itemid": 1623701499,
    "name": {
@@ -15145,39 +13881,6 @@
    },
    "slug": "industrial-wall-light",
    "slugEs": "lampara-industrial-de-pared",
-   "icon": true
-  },
-  {
-   "id": "wall.shallow.industrial.shelves",
-   "itemid": -265202949,
-   "name": {
-    "en": "Industrial Wall Shelves",
-    "es": "Estantería de pared industrial"
-   },
-   "desc": {
-    "en": "A shallow industrial wall shelf for small item stacking",
-    "es": "Una cajonera industrial con estantes para acumular objetos pequeños."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "base.single.shelves",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 100
-     }
-    ],
-    "amount": 1,
-    "time": 10,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "industrial-wall-shelves",
-   "slugEs": "estanteria-de-pared-industrial",
    "icon": true
   },
   {
@@ -15443,6 +14146,50 @@
    "icon": true
   },
   {
+   "id": "jukebox",
+   "itemid": -1018085504,
+   "name": {
+    "en": "Jukebox",
+    "es": "Rocola"
+   },
+   "desc": {
+    "en": "A Jukebox that brings the tunes! Play recorded cassette tapes or stream audio from the internet. Fitted with a matrix display that shows the tuned station. Open the settings to change audio options.",
+    "es": "¡Una rocola que te trae la mejor música! Reproduce cintas de casetes grabadas o escucha audio en streaming desde internet. Cuenta con una pantalla matricial que muestra la emisora sintonizada. Abre la configuración para cambiar las opciones de audio."
+   },
+   "category": "fun",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": null,
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 200
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 100
+     },
+     {
+      "id": "cloth",
+      "amount": 20
+     }
+    ],
+    "amount": 1,
+    "time": 15,
+    "workbench": 1,
+    "researchable": false,
+    "default": true
+   },
+   "slug": "jukebox",
+   "slugEs": "rocola",
+   "icon": true
+  },
+  {
    "id": "jumpsuit.suit",
    "itemid": -97459906,
    "name": {
@@ -15578,275 +14325,6 @@
    },
    "slug": "key-lock",
    "slugEs": "cerradura-de-llave",
-   "icon": true
-  },
-  {
-   "id": "hazmatsuit.kick",
-   "itemid": 972302244,
-   "name": {
-    "en": "KICK Hazmat",
-    "es": "KICK Haza"
-   },
-   "desc": {
-    "en": "Unique hazmat suit obtainable during KICK Drops 2025",
-    "es": "Unique hazmat suit obtainable during KICK Drops 2025"
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 450,
-    "repairable": true
-   },
-   "redirectOf": "hazmatsuit",
-   "craft": null,
-   "slug": "kick-hazmat",
-   "slugEs": "kick-haza",
-   "icon": true
-  },
-  {
-   "id": "knighttorso.armour",
-   "itemid": 547862680,
-   "name": {
-    "en": "Knights armour cuirass",
-    "es": "Coraza de caballero"
-   },
-   "desc": {
-    "en": "A well made collection of scrap metal formed into a knights armour.",
-    "es": "Una colección de chatarra bien hecha para formar una armadura de caballero."
-   },
-   "category": "attire",
-   "rarity": "uncommon",
-   "stack": 1,
-   "condition": {
-    "max": 500,
-    "repairable": true
-   },
-   "redirectOf": "roadsign.jacket",
-   "craft": null,
-   "slug": "knights-armour-cuirass",
-   "slugEs": "coraza-de-caballero",
-   "icon": true
-  },
-  {
-   "id": "knightsarmour.helmet",
-   "itemid": -427072335,
-   "name": {
-    "en": "Knights armour helmet",
-    "es": "Casco de armadura de caballero"
-   },
-   "desc": {
-    "en": "A medieval knights helmet. Made from scrap metal. Excellent craftmanship.",
-    "es": "Un casco de caballero medieval. Hecho de chatarra. Excelente artesanía."
-   },
-   "category": "attire",
-   "rarity": "uncommon",
-   "stack": 1,
-   "condition": {
-    "max": 200,
-    "repairable": true
-   },
-   "redirectOf": "coffeecan.helmet",
-   "craft": null,
-   "slug": "knights-armour-helmet",
-   "slugEs": "casco-de-armadura-de-caballero",
-   "icon": true
-  },
-  {
-   "id": "knightsarmour.skirt",
-   "itemid": -945708533,
-   "name": {
-    "en": "Knights armour skirt plates",
-    "es": "Placa de faldón de armadura de caballero"
-   },
-   "desc": {
-    "en": "A well made set of knights plate that covers the hips and thighs. Made of scrap metal.",
-    "es": "Un conjunto bien hecho de placa de caballero que cubre las caderas y los muslos. Hecho de chatarra."
-   },
-   "category": "attire",
-   "rarity": "uncommon",
-   "stack": 1,
-   "condition": {
-    "max": 150,
-    "repairable": true
-   },
-   "redirectOf": "roadsign.kilt",
-   "craft": null,
-   "slug": "knights-armour-skirt-plates",
-   "slugEs": "placa-de-faldon-de-armadura-de-caballero",
-   "icon": true
-  },
-  {
-   "id": "krieg.chainsword",
-   "itemid": -1770281406,
-   "name": {
-    "en": "Krieg chainsword",
-    "es": "Espada de cadena Krieg"
-   },
-   "desc": {
-    "en": "A brutal tool of war, roaring to life with every swing.",
-    "es": "Una herramienta brutal de guerra, que ruge con cada golpe."
-   },
-   "category": "tool",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "chainsaw",
-   "craft": null,
-   "slug": "krieg-chainsword",
-   "slugEs": "espada-de-cadena-krieg",
-   "icon": true
-  },
-  {
-   "id": "hazmat.krieg",
-   "itemid": -902423513,
-   "name": {
-    "en": "Krieg Hazmat",
-    "es": "Traje protector Krieg"
-   },
-   "desc": {
-    "en": "A Krieg Hazmat Suit, standard issue for those who never retreat.",
-    "es": "Un traje protector Krieg, equipo estándar para aquellos que nunca se retiran."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 450,
-    "repairable": true
-   },
-   "redirectOf": "hazmatsuit",
-   "craft": null,
-   "slug": "krieg-hazmat",
-   "slugEs": "traje-protector-krieg",
-   "icon": true
-  },
-  {
-   "id": "kriegbackpack",
-   "itemid": -874650016,
-   "name": {
-    "en": "Krieg Large Backpack",
-    "es": "Mochila grande Krieg"
-   },
-   "desc": {
-    "en": "Carry your essentials in a rugged military pack, built for endurance and practicality.",
-    "es": "Lleva tus objetos esenciales en una mochila militar resistente, diseñada para ofrecer durabilidad y practicidad."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "largebackpack",
-   "craft": null,
-   "slug": "krieg-large-backpack",
-   "slugEs": "mochila-grande-krieg",
-   "icon": true
-  },
-  {
-   "id": "krieg.shotgun",
-   "itemid": -420889602,
-   "name": {
-    "en": "Krieg Shotgun",
-    "es": "Escopeta Krieg"
-   },
-   "desc": {
-    "en": "Heavy, reliable, and unforgiving. A weapon that never hesitates.",
-    "es": "Pesado, confiable e inolvidable. Un arma que nunca se empeña."
-   },
-   "category": "weapon",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "shotgun.pump",
-   "craft": null,
-   "slug": "krieg-shotgun",
-   "slugEs": "escopeta-krieg",
-   "icon": true
-  },
-  {
-   "id": "krieg.storage.vertical",
-   "itemid": 1305765685,
-   "name": {
-    "en": "Krieg Storage Barrel",
-    "es": "Barril de almacenamiento Krieg"
-   },
-   "desc": {
-    "en": "Industrial barrels repurposed for the front lines. Sturdy, disciplined, and unmistakably Krieg.",
-    "es": "Barriles industriales reutilizados para el frente. Robustos, disciplinados e inconfundiblemente Krieg."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "base.vertical.barrel",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 300
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 75
-     }
-    ],
-    "amount": 1,
-    "time": 30,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "krieg-storage-barrel",
-   "slugEs": "barril-de-almacenamiento-krieg",
-   "icon": true
-  },
-  {
-   "id": "krieg.storage.horizontal",
-   "itemid": 652793345,
-   "name": {
-    "en": "Krieg Storage Crates",
-    "es": "Cajas de almacenamiento Krieg"
-   },
-   "desc": {
-    "en": "Military-grade crates designed for efficient storage and durability. A staple of any well-supplied outpost.",
-    "es": "Cajas de grado militar diseñadas para un almacenamiento y durabilidad eficiente. Un elemento básico de cualquier Puesto Avanzado bien suministrado."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "base.horizontal.barrel",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 300
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 75
-     }
-    ],
-    "amount": 1,
-    "time": 30,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "krieg-storage-crates",
-   "slugEs": "cajas-de-almacenamiento-krieg",
    "icon": true
   },
   {
@@ -16318,27 +14796,6 @@
    },
    "slug": "large-hunting-trophy",
    "slugEs": "trofeo-de-caza-grande",
-   "icon": true
-  },
-  {
-   "id": "industrial.furnace.large",
-   "itemid": 1868984394,
-   "name": {
-    "en": "Large Industrial Furnace",
-    "es": "Horno industrial grande"
-   },
-   "desc": {
-    "en": "Used to smelt large quantities of ore. Difficult to secure, must be placed on terrain.",
-    "es": "Utilizado para fundir grandes cantidades de mena. Difícil de asegurar, debe ser colocado sobre terreno."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "furnace.large",
-   "craft": null,
-   "slug": "large-industrial-furnace",
-   "slugEs": "horno-industrial-grande",
    "icon": true
   },
   {
@@ -16874,27 +15331,6 @@
    "icon": true
   },
   {
-   "id": "beanbagseatleather",
-   "itemid": -1220928936,
-   "name": {
-    "en": "Leather Beanbag Seat",
-    "es": "Puff de cuero"
-   },
-   "desc": {
-    "en": "A cozy leather beanbag seat to sink in to.",
-    "es": "Acogedor asiento puff de cuero en el que hundirse."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 5,
-   "condition": null,
-   "redirectOf": "chair",
-   "craft": null,
-   "slug": "leather-beanbag-seat",
-   "slugEs": "puff-de-cuero",
-   "icon": true
-  },
-  {
    "id": "burlap.gloves",
    "itemid": 1366282552,
    "name": {
@@ -16925,54 +15361,6 @@
    },
    "slug": "leather-gloves",
    "slugEs": "guantes-de-cuero",
-   "icon": true
-  },
-  {
-   "id": "legacy bow",
-   "itemid": -73195037,
-   "name": {
-    "en": "Legacy Bow",
-    "es": "Arco clásico"
-   },
-   "desc": {
-    "en": "Hunting Bow, useful for short to medium range combat and hunting.",
-    "es": "Un arco de caza, útil para el combate a corta y media distancia (y para la caza)."
-   },
-   "category": "weapon",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 50,
-    "repairable": true
-   },
-   "redirectOf": "bow.hunting",
-   "craft": null,
-   "slug": "legacy-bow",
-   "slugEs": "arco-clasico",
-   "icon": true
-  },
-  {
-   "id": "legacyfurnace",
-   "itemid": -1310391395,
-   "name": {
-    "en": "Legacy Furnace",
-    "es": "Horno arcaico"
-   },
-   "desc": {
-    "en": "Legacy Furnace",
-    "es": "Un horno con el diseño que solía tener en la versión Legacy de Rust. Utilízalo para fundir la mena que has minado."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "furnace",
-   "craft": null,
-   "slug": "legacy-furnace",
-   "slugEs": "horno-arcaico",
    "icon": true
   },
   {
@@ -17591,75 +15979,6 @@
    "icon": true
   },
   {
-   "id": "lumberjack hoodie",
-   "itemid": -763071910,
-   "name": {
-    "en": "Lumberjack Hoodie",
-    "es": "Sudadera de leñador"
-   },
-   "desc": {
-    "en": "A lumberjack themed hoodie, earned by helping the Lumberjack. Offers the same protection as the standard hoodie.",
-    "es": "Una sudadera temática de leñador, que se gana ayudando al Leñador. Ofrece la misma protección que la sudadera estándar."
-   },
-   "category": "attire",
-   "rarity": "uncommon",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "hoodie",
-   "craft": null,
-   "slug": "lumberjack-hoodie",
-   "slugEs": "sudadera-de-lenador",
-   "icon": true
-  },
-  {
-   "id": "hazmatsuit.lumberjack",
-   "itemid": 861513346,
-   "name": {
-    "en": "Lumberjack Suit",
-    "es": "Traje de Leñador"
-   },
-   "desc": {
-    "en": "A Lumberjack Suit",
-    "es": "Un traje de Leñador"
-   },
-   "category": "attire",
-   "rarity": "rare",
-   "stack": 1,
-   "condition": {
-    "max": 450,
-    "repairable": true
-   },
-   "redirectOf": "hazmatsuit",
-   "craft": null,
-   "slug": "lumberjack-suit",
-   "slugEs": "traje-de-lenador",
-   "icon": true
-  },
-  {
-   "id": "spear.cny",
-   "itemid": 695450239,
-   "name": {
-    "en": "Lunar New Year Spear",
-    "es": "Lanza del año nuevo chino."
-   },
-   "desc": {
-    "en": "A Chinese themed New Year themed metal Spear",
-    "es": "Una lanza de metal con temática de año nuevo chino."
-   },
-   "category": "weapon",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "spear.wooden",
-   "craft": null,
-   "slug": "lunar-new-year-spear",
-   "slugEs": "lanza-del-ano-nuevo-chino",
-   "icon": true
-  },
-  {
    "id": "wall.frame.lunar2025_a",
    "itemid": 1115193056,
    "name": {
@@ -17691,56 +16010,8 @@
     "researchable": false,
     "default": false
    },
-   "slug": "lunar-wall-frame-inlay-wallframelunar2025-a",
-   "slugEs": "incrustacion-de-marco-de-pared-lunar-wallframelunar2025-a",
-   "icon": true
-  },
-  {
-   "id": "wall.frame.lunar2025_b",
-   "itemid": -450890885,
-   "name": {
-    "en": "Lunar Wall Frame Inlay",
-    "es": "Incrustación de marco de pared lunar"
-   },
-   "desc": {
-    "en": "A Lunar New Year themed decorative wall divider with swirling inlay",
-    "es": "Un divisor de pared decorativo con incrustaciones en forma de remolino y temática del Año Nuevo Lunar"
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 10,
-   "condition": {
-    "max": 100,
-    "repairable": false
-   },
-   "redirectOf": "wall.frame.lunar2025_a",
-   "craft": null,
-   "slug": "lunar-wall-frame-inlay-wallframelunar2025-b",
-   "slugEs": "incrustacion-de-marco-de-pared-lunar-wallframelunar2025-b",
-   "icon": true
-  },
-  {
-   "id": "wall.frame.lunar2025_c",
-   "itemid": -2016974826,
-   "name": {
-    "en": "Lunar Wall Frame Inlay",
-    "es": "Incrustación de marco de pared lunar"
-   },
-   "desc": {
-    "en": "A Lunar New Year themed decorative wall divider with floral inlay",
-    "es": "Un divisor de pared decorativo con motivos del Año Nuevo Lunar e incrustaciones florales"
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 10,
-   "condition": {
-    "max": 100,
-    "repairable": false
-   },
-   "redirectOf": "wall.frame.lunar2025_a",
-   "craft": null,
-   "slug": "lunar-wall-frame-inlay-wallframelunar2025-c",
-   "slugEs": "incrustacion-de-marco-de-pared-lunar-wallframelunar2025-c",
+   "slug": "lunar-wall-frame-inlay",
+   "slugEs": "incrustacion-de-marco-de-pared-lunar",
    "icon": true
   },
   {
@@ -18056,30 +16327,6 @@
    },
    "slug": "medical-syringe",
    "slugEs": "jeringa-medica",
-   "icon": true
-  },
-  {
-   "id": "rifle.ak.med",
-   "itemid": 472505338,
-   "name": {
-    "en": "Medieval Assault Rifle",
-    "es": "Rifle de Asalto Medieval"
-   },
-   "desc": {
-    "en": "Medieval themed high damage machine rifle.",
-    "es": "Fusil de asalto de alto daño de temática medieval."
-   },
-   "category": "weapon",
-   "rarity": "veryrare",
-   "stack": 1,
-   "condition": {
-    "max": 150,
-    "repairable": true
-   },
-   "redirectOf": "rifle.ak",
-   "craft": null,
-   "slug": "medieval-assault-rifle",
-   "slugEs": "rifle-de-asalto-medieval",
    "icon": true
   },
   {
@@ -18639,27 +16886,6 @@
    "craft": null,
    "slug": "metal-armor-insert",
    "slugEs": "insercion-de-armadura-de-metal",
-   "icon": true
-  },
-  {
-   "id": "bar.stool.metal",
-   "itemid": -1639742441,
-   "name": {
-    "en": "Metal Bar Stool",
-    "es": "Taburete de Metal Para Bar"
-   },
-   "desc": {
-    "en": "Pull up a stool and have a drink. A decorative item which provides comfort while seated.",
-    "es": "Pull up a stool and have a drink. A decorative item which provides comfort while seated."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 5,
-   "condition": null,
-   "redirectOf": "chair",
-   "craft": null,
-   "slug": "metal-bar-stool",
-   "slugEs": "taburete-de-metal-para-bar",
    "icon": true
   },
   {
@@ -20470,27 +18696,6 @@
    "icon": true
   },
   {
-   "id": "attire.nesthat",
-   "itemid": 1081315464,
-   "name": {
-    "en": "Nest Hat",
-    "es": "Gorro de nido"
-   },
-   "desc": {
-    "en": "An extremely silly easter nest hat with googly eyes.",
-    "es": "Un gorro exageradamente bobo que cubre la cabeza con un nido y un pollito de ojos saltones."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "hat.wolf",
-   "craft": null,
-   "slug": "nest-hat",
-   "slugEs": "gorro-de-nido",
-   "icon": true
-  },
-  {
    "id": "wall.frame.netting",
    "itemid": 1516985844,
    "name": {
@@ -20641,30 +18846,6 @@
    },
    "slug": "ninja-suit",
    "slugEs": "traje-de-ninja",
-   "icon": true
-  },
-  {
-   "id": "hazmatsuit.nomadsuit",
-   "itemid": 491263800,
-   "name": {
-    "en": "Nomad Suit",
-    "es": "Traje de nómada"
-   },
-   "desc": {
-    "en": "A nomad suit.",
-    "es": "Un traje de morador del desierto que te protegerá de la intemperie y de la radiación."
-   },
-   "category": "attire",
-   "rarity": "rare",
-   "stack": 1,
-   "condition": {
-    "max": 450,
-    "repairable": true
-   },
-   "redirectOf": "hazmatsuit",
-   "craft": null,
-   "slug": "nomad-suit",
-   "slugEs": "traje-de-nomada",
    "icon": true
   },
   {
@@ -21138,27 +19319,6 @@
    "icon": true
   },
   {
-   "id": "hat.oxmask",
-   "itemid": 1315082560,
-   "name": {
-    "en": "Ox Mask",
-    "es": "Máscara del buey"
-   },
-   "desc": {
-    "en": "An Ox mask to celebrate the 2021 Lunar New Year.",
-    "es": "Una máscara de buey con borlas dinámicas para celebrar el Año Nuevo Lunar de 2021."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "hat.wolf",
-   "craft": null,
-   "slug": "ox-mask",
-   "slugEs": "mascara-del-buey",
-   "icon": true
-  },
-  {
    "id": "paddle",
    "itemid": 1491189398,
    "name": {
@@ -21240,51 +19400,6 @@
    },
    "slug": "paddling-pool",
    "slugEs": "piscina-inflable",
-   "icon": true
-  },
-  {
-   "id": "paintabletarget.reactive",
-   "itemid": -1039234836,
-   "name": {
-    "en": "Paintable Reactive Target",
-    "es": "Objetivo reactivo pintable"
-   },
-   "desc": {
-    "en": "A reactive target practice in which you can paint whatever you want",
-    "es": "Un objetivo reactivo pintable en la que puedes pintar lo que quieras"
-   },
-   "category": "electrical",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "target.reactive",
-   "craft": null,
-   "slug": "paintable-reactive-target",
-   "slugEs": "objetivo-reactivo-pintable",
-   "icon": true
-  },
-  {
-   "id": "window.paintable",
-   "itemid": 738611016,
-   "name": {
-    "en": "Paintable Window",
-    "es": "Ventana pintable"
-   },
-   "desc": {
-    "en": "A window with paintable glass",
-    "es": "Una ventana con vidrio pintable"
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 10,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "wall.window.glass.reinforced",
-   "craft": null,
-   "slug": "paintable-window",
-   "slugEs": "ventana-pintable",
    "icon": true
   },
   {
@@ -21789,30 +19904,6 @@
    "icon": true
   },
   {
-   "id": "hazmatsuit.pilot",
-   "itemid": 1065594600,
-   "name": {
-    "en": "Pilot Hazmat",
-    "es": "Traje Protector de Piloto"
-   },
-   "desc": {
-    "en": "A hazmat suit made from a fighter pilot's flight suit.",
-    "es": "Un traje protector fabricado a partir del traje de vuelo de un piloto de combate."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 450,
-    "repairable": true
-   },
-   "redirectOf": "hazmatsuit",
-   "craft": null,
-   "slug": "pilot-hazmat",
-   "slugEs": "traje-protector-de-piloto",
-   "icon": true
-  },
-  {
    "id": "pinata",
    "itemid": -1442496789,
    "name": {
@@ -21962,30 +20053,6 @@
    },
    "slug": "pitchfork-bolt",
    "slugEs": "cerrojo-de-horqueta",
-   "icon": true
-  },
-  {
-   "id": "hazmat.plague",
-   "itemid": -1587608109,
-   "name": {
-    "en": "Plague Doctor Hazmat Suit",
-    "es": "Plague Doctor Hazmat Suit"
-   },
-   "desc": {
-    "en": "The Plague Doctor delivers no cure - only death and decay. Bring out your dead, or prepare to join them.",
-    "es": "Plague doctor garb, used as a hazmat."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 450,
-    "repairable": true
-   },
-   "redirectOf": "hazmatsuit",
-   "craft": null,
-   "slug": "plague-doctor-hazmat-suit",
-   "slugEs": "plague-doctor-hazmat-suit",
    "icon": true
   },
   {
@@ -22609,54 +20676,6 @@
    "icon": true
   },
   {
-   "id": "lumberjack.hatchet",
-   "itemid": -399173933,
-   "name": {
-    "en": "Prototype Hatchet",
-    "es": "Hacha Prototipo"
-   },
-   "desc": {
-    "en": "A prototype field hatchet, useful for gathering wood",
-    "es": "Un prototipo de hacha de campo. Útil para recolectar madera."
-   },
-   "category": "tool",
-   "rarity": "uncommon",
-   "stack": 1,
-   "condition": {
-    "max": 400,
-    "repairable": true
-   },
-   "redirectOf": "hatchet",
-   "craft": null,
-   "slug": "prototype-hatchet",
-   "slugEs": "hacha-prototipo",
-   "icon": true
-  },
-  {
-   "id": "lumberjack.pickaxe",
-   "itemid": 236677901,
-   "name": {
-    "en": "Prototype Pickaxe",
-    "es": "Pico Prototipo"
-   },
-   "desc": {
-    "en": "A prototype field pickaxe. Useful for gathering ore from rocks.",
-    "es": "Un prototipo de pico de campo. Útil para recolectar piedra, metal y azufre."
-   },
-   "category": "tool",
-   "rarity": "uncommon",
-   "stack": 1,
-   "condition": {
-    "max": 400,
-    "repairable": true
-   },
-   "redirectOf": "pickaxe",
-   "craft": null,
-   "slug": "prototype-pickaxe",
-   "slugEs": "pico-prototipo",
-   "icon": true
-  },
-  {
    "id": "workbench.upgrade.prototype",
    "itemid": -180862419,
    "name": {
@@ -23196,27 +21215,6 @@
    "icon": true
   },
   {
-   "id": "hat.rabbitmask",
-   "itemid": -986782031,
-   "name": {
-    "en": "Rabbit Mask",
-    "es": "Máscara del conejo"
-   },
-   "desc": {
-    "en": "A Beautifully crafted Rabbit mask to celebrate the 2023 Lunar New Year",
-    "es": "Una delicada máscara de conejo diseñada para celebrar el Año Nuevo Lunar de 2023."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "hat.wolf",
-   "craft": null,
-   "slug": "rabbit-mask",
-   "slugEs": "mascara-del-conejo",
-   "icon": true
-  },
-  {
    "id": "radiationremovetea",
    "itemid": -496584751,
    "name": {
@@ -23347,27 +21345,6 @@
    "craft": null,
    "slug": "range-workbench-upgrade",
    "slugEs": "mejora-de-rango",
-   "icon": true
-  },
-  {
-   "id": "hat.ratmask",
-   "itemid": 271048478,
-   "name": {
-    "en": "Rat Mask",
-    "es": "Máscara de la rata"
-   },
-   "desc": {
-    "en": "A Beautifully crafted bronze and gold Rat mask to celebrate the 2020 Lunar New Year. This item replaces the wolf headdress.",
-    "es": "Una máscara de rata de bronce y oro, bellamente elaborada, para celebrar el Año Nuevo Lunar 2020. Esta pieza reemplaza el tocado de lobo."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "hat.wolf",
-   "craft": null,
-   "slug": "rat-mask",
-   "slugEs": "mascara-de-la-rata",
    "icon": true
   },
   {
@@ -23853,27 +21830,6 @@
    "icon": true
   },
   {
-   "id": "industrial.wall.light.red",
-   "itemid": -1160621614,
-   "name": {
-    "en": "Red Industrial Wall Light",
-    "es": "Lámpara roja industrial de pared"
-   },
-   "desc": {
-    "en": "A small red light source.",
-    "es": "Una pequeña fuente de luz roja."
-   },
-   "category": "electrical",
-   "rarity": "common",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "industrial.wall.light",
-   "craft": null,
-   "slug": "red-industrial-wall-light",
-   "slugEs": "lampara-roja-industrial-de-pared",
-   "icon": true
-  },
-  {
    "id": "keycard_red",
    "itemid": -1880870149,
    "name": {
@@ -24167,30 +22123,6 @@
    },
    "slug": "research-table",
    "slugEs": "mesa-de-investigacion",
-   "icon": true
-  },
-  {
-   "id": "cupboard.tool.retro",
-   "itemid": 1488606552,
-   "name": {
-    "en": "Retro Tool Cupboard",
-    "es": "Armario de herramientas retro"
-   },
-   "desc": {
-    "en": "Transform your tool cupboard experience with this modified Hi-Fi cabinet. Complete with retro displays indicating vital base data as well as frosted glass doors allowing you to view its contents of tools and resources!",
-    "es": "Transforma tu armario de herramientas con este gabinete Hi-Fi modificado. ¡Completo con pantallas retro que indican datos sobre tu base y puertas de vidrio que le permiten ver sus recursos!"
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 1,
-    "repairable": true
-   },
-   "redirectOf": "cupboard.tool",
-   "craft": null,
-   "slug": "retro-tool-cupboard",
-   "slugEs": "armario-de-herramientas-retro",
    "icon": true
   },
   {
@@ -24810,30 +22742,6 @@
    "icon": true
   },
   {
-   "id": "horse.armor.lny26",
-   "itemid": -2068194497,
-   "name": {
-    "en": "Roadsign Horse Armor",
-    "es": null
-   },
-   "desc": {
-    "en": "A full body armor for a horse. Provides strong protection for you and your steed, at the cost of greatly reduced movement speed.",
-    "es": null
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "horse.armor.roadsign",
-   "craft": null,
-   "slug": "roadsign-horse-armor-horsearmorlny26",
-   "slugEs": "roadsign-horse-armor",
-   "icon": true
-  },
-  {
    "id": "horse.armor.roadsign",
    "itemid": 60528587,
    "name": {
@@ -24869,7 +22777,7 @@
     "researchable": true,
     "default": false
    },
-   "slug": "roadsign-horse-armor-horsearmorroadsign",
+   "slug": "roadsign-horse-armor",
    "slugEs": "armadura-de-senales-para-caballo",
    "icon": true
   },
@@ -25225,30 +23133,6 @@
    "craft": null,
    "slug": "rotten-apple",
    "slugEs": "manzana-podrida",
-   "icon": true
-  },
-  {
-   "id": "rocket.launcher.rpg7",
-   "itemid": 494161326,
-   "name": {
-    "en": "RPG Launcher",
-    "es": "Launcher RPG"
-   },
-   "desc": {
-    "en": "Unmatched craftsmanship meets devastating firepower.",
-    "es": "La artesanía inigualable se combina con una potencia de fuego devastadora."
-   },
-   "category": "weapon",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "rocket.launcher",
-   "craft": null,
-   "slug": "rpg-launcher",
-   "slugEs": "launcher-rpg",
    "icon": true
   },
   {
@@ -25866,27 +23750,6 @@
    },
    "slug": "salvaged-icepick",
    "slugEs": "piolet-de-hielo-de-chatarra",
-   "icon": true
-  },
-  {
-   "id": "salvaged.industrial.shelves",
-   "itemid": -1018026008,
-   "name": {
-    "en": "Salvaged Industrial Shelves",
-    "es": "Estanterías industriales recuperadas"
-   },
-   "desc": {
-    "en": "Shelves for item stacking",
-    "es": "Estanterías, para apilar elementos."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 10,
-   "condition": null,
-   "redirectOf": "shelves",
-   "craft": null,
-   "slug": "salvaged-industrial-shelves",
-   "slugEs": "estanterias-industriales-recuperadas",
    "icon": true
   },
   {
@@ -26833,30 +24696,6 @@
    "icon": true
   },
   {
-   "id": "cupboard.tool.shockbyte",
-   "itemid": 1174957864,
-   "name": {
-    "en": "Shockbyte Tool Cupboard",
-    "es": "Armario Shockbyte"
-   },
-   "desc": {
-    "en": "Ensure 100% Tool Cupboard uptime with this Tool Cupboard skin.",
-    "es": "Garantiza el 100 % del Armario de Herramientas con este aspecto para Armario de Herramientas."
-   },
-   "category": "construction",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 1,
-    "repairable": true
-   },
-   "redirectOf": "cupboard.tool",
-   "craft": null,
-   "slug": "shockbyte-tool-cupboard",
-   "slugEs": "armario-shockbyte",
-   "icon": true
-  },
-  {
    "id": "wall.frame.shopfront",
    "itemid": -796583652,
    "name": {
@@ -26991,7 +24830,7 @@
     "default": false
    },
    "slug": "shotgun-trap",
-   "slugEs": "trabuco-guntrap",
+   "slugEs": "trabuco",
    "icon": true
   },
   {
@@ -27812,102 +25651,6 @@
    },
    "slug": "sky-lantern",
    "slugEs": "farolillo-volante",
-   "icon": true
-  },
-  {
-   "id": "skylantern.skylantern.green",
-   "itemid": -1770889433,
-   "name": {
-    "en": "Sky Lantern - Green",
-    "es": "Farolillo volante - Verde"
-   },
-   "desc": {
-    "en": "A beautiful green sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch.",
-    "es": "A beautiful green sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
-   },
-   "category": "fun",
-   "rarity": "none",
-   "stack": 20,
-   "condition": {
-    "max": 100,
-    "repairable": false
-   },
-   "redirectOf": "skylantern",
-   "craft": null,
-   "slug": "sky-lantern-green",
-   "slugEs": "farolillo-volante-verde",
-   "icon": true
-  },
-  {
-   "id": "skylantern.skylantern.orange",
-   "itemid": -1824770114,
-   "name": {
-    "en": "Sky Lantern - Orange",
-    "es": "Farolillo volante - Naranja"
-   },
-   "desc": {
-    "en": "A beautiful orange sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch.",
-    "es": "A beautiful orange sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
-   },
-   "category": "fun",
-   "rarity": "none",
-   "stack": 20,
-   "condition": {
-    "max": 100,
-    "repairable": false
-   },
-   "redirectOf": "skylantern",
-   "craft": null,
-   "slug": "sky-lantern-orange",
-   "slugEs": "farolillo-volante-naranja",
-   "icon": true
-  },
-  {
-   "id": "skylantern.skylantern.purple",
-   "itemid": 831955134,
-   "name": {
-    "en": "Sky Lantern - Purple",
-    "es": "Farolillo volante - Morado"
-   },
-   "desc": {
-    "en": "A beautiful purple sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch.",
-    "es": "A beautiful purple sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
-   },
-   "category": "fun",
-   "rarity": "none",
-   "stack": 20,
-   "condition": {
-    "max": 100,
-    "repairable": false
-   },
-   "redirectOf": "skylantern",
-   "craft": null,
-   "slug": "sky-lantern-purple",
-   "slugEs": "farolillo-volante-morado",
-   "icon": true
-  },
-  {
-   "id": "skylantern.skylantern.red",
-   "itemid": -1433390281,
-   "name": {
-    "en": "Sky Lantern - Red",
-    "es": "Farolillo volante - Rojo"
-   },
-   "desc": {
-    "en": "A beautiful red sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch.",
-    "es": "A beautiful red sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
-   },
-   "category": "fun",
-   "rarity": "none",
-   "stack": 20,
-   "condition": {
-    "max": 100,
-    "repairable": false
-   },
-   "redirectOf": "skylantern",
-   "craft": null,
-   "slug": "sky-lantern-red",
-   "slugEs": "farolillo-volante-rojo",
    "icon": true
   },
   {
@@ -28747,48 +26490,6 @@
    "icon": true
   },
   {
-   "id": "ammo.rocket.smoke",
-   "itemid": -17123659,
-   "name": {
-    "en": "Smoke Rocket WIP!!!!",
-    "es": "Misil de humo (¡trabajo en proceso!)"
-   },
-   "desc": {
-    "en": "Emits thick, visibility blocking smoke upon impact.",
-    "es": "Crea una densa nube de humo que impide la visibilidad tras el impacto."
-   },
-   "category": "ammunition",
-   "rarity": "none",
-   "stack": 3,
-   "condition": null,
-   "redirectOf": null,
-   "craft": null,
-   "slug": "smoke-rocket-wip",
-   "slugEs": "misil-de-humo-trabajo-en-proceso",
-   "icon": true
-  },
-  {
-   "id": "hat.snakemask",
-   "itemid": -1314079879,
-   "name": {
-    "en": "Snake mask",
-    "es": "Máscara de serpiente"
-   },
-   "desc": {
-    "en": "A Beautifully crafted Snake mask to celebrate the 2025 Lunar New Year",
-    "es": "Una delicada máscara de serpiente diseñada para celebrar el Año Nuevo Lunar de 2025."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "hat.wolf",
-   "craft": null,
-   "slug": "snake-mask",
-   "slugEs": "mascara-de-serpiente",
-   "icon": true
-  },
-  {
    "id": "venom.snake",
    "itemid": -870140677,
    "name": {
@@ -29232,30 +26933,6 @@
    },
    "slug": "sousaphone",
    "slugEs": "tubaria",
-   "icon": true
-  },
-  {
-   "id": "rifle.lr300.space",
-   "itemid": 533993281,
-   "name": {
-    "en": "Space LR-300 Assault Rifle",
-    "es": "Fusil de asalto espacial LR-300"
-   },
-   "desc": {
-    "en": "Non-standard-issue high-powered light assault rifle for only the most elite of practitioners.",
-    "es": "Fusil de asalto ligero, de alta potencia y no estándar, exclusivo para practicantes selectos."
-   },
-   "category": "weapon",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 150,
-    "repairable": true
-   },
-   "redirectOf": "rifle.lr300",
-   "craft": null,
-   "slug": "space-lr-300-assault-rifle",
-   "slugEs": "fusil-de-asalto-espacial-lr-300",
    "icon": true
   },
   {
@@ -30311,86 +27988,6 @@
    "icon": true
   },
   {
-   "id": "storage_barrel_c",
-   "itemid": -1421257350,
-   "name": {
-    "en": "Storage Barrel Horizontal",
-    "es": "Barril de almacenamiento horizontal"
-   },
-   "desc": {
-    "en": "Keep your things in this wooden barrel. Stores up to 48 items. Cannot be locked.",
-    "es": "Mantén tus cosas a buen recaudo con este espacioso contenedor de almacenamiento de madera. Caben hasta 48 objetos. No se le puede colocar una cerradura."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "base.horizontal.barrel",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 300
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 75
-     }
-    ],
-    "amount": 1,
-    "time": 30,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "storage-barrel-horizontal",
-   "slugEs": "barril-de-almacenamiento-horizontal",
-   "icon": true
-  },
-  {
-   "id": "storage_barrel_b",
-   "itemid": 1307626005,
-   "name": {
-    "en": "Storage Barrel Vertical",
-    "es": "Barril de almacenamiento vertical"
-   },
-   "desc": {
-    "en": "Keep your things in this wooden barrel. Stores up to 48 items. Cannot be locked.",
-    "es": "Mantén tus cosas a buen recaudo con este espacioso contenedor de almacenamiento de madera. Caben hasta 48 objetos. No se le puede colocar una cerradura."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "base.vertical.barrel",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 300
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 75
-     }
-    ],
-    "amount": 1,
-    "time": 30,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "storage-barrel-vertical",
-   "slugEs": "barril-de-almacenamiento-vertical",
-   "icon": true
-  },
-  {
    "id": "storage.monitor",
    "itemid": 1149964039,
    "name": {
@@ -31256,27 +28853,6 @@
    "icon": true
   },
   {
-   "id": "rockingchair.rockingchair2",
-   "itemid": 1758333838,
-   "name": {
-    "en": "Teal",
-    "es": "Azul cerceta"
-   },
-   "desc": {
-    "en": "A rocking chair that responds to your input. Don't fire whilst seated.",
-    "es": "Una silla que responde a tus movimientos. No es recomendable disparar mientras estás sentado."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 5,
-   "condition": null,
-   "redirectOf": "rockingchair",
-   "craft": null,
-   "slug": "teal",
-   "slugEs": "azul-cerceta",
-   "icon": true
-  },
-  {
    "id": "techparts",
    "itemid": 73681876,
    "name": {
@@ -31379,30 +28955,6 @@
    "icon": true
   },
   {
-   "id": "electric.generator.small",
-   "itemid": -295829489,
-   "name": {
-    "en": "Test Generator",
-    "es": "Generador de pruebas"
-   },
-   "desc": {
-    "en": "A Mailbox that accepts notes. Only you can access the mail due to a one way slit.",
-    "es": "Un buzón que admite notas y cintas de audio. Sólo los propietarios de la vivienda pueden acceder al correo gracias a una ranura unidireccional."
-   },
-   "category": "electrical",
-   "rarity": "uncommon",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": null,
-   "craft": null,
-   "slug": "test-generator",
-   "slugEs": "generador-de-pruebas",
-   "icon": true
-  },
-  {
    "id": "smg.thompson",
    "itemid": -1758372725,
    "name": {
@@ -31472,27 +29024,6 @@
    "craft": null,
    "slug": "thruster-module",
    "slugEs": "modulo-de-propulsor",
-   "icon": true
-  },
-  {
-   "id": "hat.tigermask",
-   "itemid": 709206314,
-   "name": {
-    "en": "Tiger Mask",
-    "es": "Máscara del tigre"
-   },
-   "desc": {
-    "en": "A special tiger mask to celebrate Chinese New Year",
-    "es": "Una máscara de tigre con incrustación de jade para celebrar el Año Nuevo Lunar de 2022."
-   },
-   "category": "attire",
-   "rarity": "none",
-   "stack": 1,
-   "condition": null,
-   "redirectOf": "hat.wolf",
-   "craft": null,
-   "slug": "tiger-mask",
-   "slugEs": "mascara-del-tigre",
    "icon": true
   },
   {
@@ -31987,30 +29518,6 @@
    "icon": true
   },
   {
-   "id": "twitchrivals2023desk",
-   "itemid": -243540612,
-   "name": {
-    "en": "Twitch Rivals Desk",
-    "es": "Escritorio de Twitch Rivals"
-   },
-   "desc": {
-    "en": "Twitch Rivals Desk",
-    "es": "Una estación informática para el acceso remoto a cámaras de vigilancia, drones y otros dispositivos."
-   },
-   "category": "electrical",
-   "rarity": "common",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "computerstation",
-   "craft": null,
-   "slug": "twitch-rivals-desk",
-   "slugEs": "escritorio-de-twitch-rivals",
-   "icon": true
-  },
-  {
    "id": "twitchrivalsflag",
    "itemid": -739993590,
    "name": {
@@ -32029,30 +29536,6 @@
    "craft": null,
    "slug": "twitch-rivals-flag",
    "slugEs": "bandera-de-twitch-rivals",
-   "icon": true
-  },
-  {
-   "id": "hazmatsuittwitch",
-   "itemid": 468313189,
-   "name": {
-    "en": "Twitch Rivals Hazmat Suit",
-    "es": "Traje Protector de Twitch Rivals"
-   },
-   "desc": {
-    "en": "A purple hazmat suit made from radiation resistant rubber.",
-    "es": "Un traje protector morado hecho con un tipo de goma resistente a la radiación."
-   },
-   "category": "attire",
-   "rarity": "rare",
-   "stack": 1,
-   "condition": {
-    "max": 450,
-    "repairable": true
-   },
-   "redirectOf": "hazmatsuit",
-   "craft": null,
-   "slug": "twitch-rivals-hazmat-suit",
-   "slugEs": "traje-protector-de-twitch-rivals",
    "icon": true
   },
   {
@@ -32597,78 +30080,6 @@
    },
    "slug": "wanted-poster",
    "slugEs": "cartel-de-se-busca",
-   "icon": true
-  },
-  {
-   "id": "wantedposter.wantedposter2",
-   "itemid": 301063058,
-   "name": {
-    "en": "Wanted Poster 2",
-    "es": "Cartel de \"se busca\" 2"
-   },
-   "desc": {
-    "en": "A poster that can display a given player's face as wanted.",
-    "es": "Un póster que exhibe la cara y el nombre de un jugador para anunciarlo como buscado."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": false
-   },
-   "redirectOf": "wantedposter",
-   "craft": null,
-   "slug": "wanted-poster-2",
-   "slugEs": "cartel-de-se-busca-2",
-   "icon": true
-  },
-  {
-   "id": "wantedposter.wantedposter3",
-   "itemid": -1265020883,
-   "name": {
-    "en": "Wanted Poster 3",
-    "es": "Cartel de \"se busca\" 3"
-   },
-   "desc": {
-    "en": "A poster that can display a given player's face as wanted.",
-    "es": "Un póster que exhibe la cara y el nombre de un jugador para anunciarlo como buscado."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": false
-   },
-   "redirectOf": "wantedposter",
-   "craft": null,
-   "slug": "wanted-poster-3",
-   "slugEs": "cartel-de-se-busca-3",
-   "icon": true
-  },
-  {
-   "id": "wantedposter.wantedposter4",
-   "itemid": 1463862472,
-   "name": {
-    "en": "Wanted Poster 4",
-    "es": "Cartel de \"se busca\" 4"
-   },
-   "desc": {
-    "en": "A poster that can display a given player's face as wanted.",
-    "es": "Un póster que exhibe la cara y el nombre de un jugador para anunciarlo como buscado."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": false
-   },
-   "redirectOf": "wantedposter",
-   "craft": null,
-   "slug": "wanted-poster-4",
-   "slugEs": "cartel-de-se-busca-4",
    "icon": true
   },
   {
@@ -33493,46 +30904,6 @@
    "icon": true
   },
   {
-   "id": "wicker.barrel",
-   "itemid": -526026171,
-   "name": {
-    "en": "Wicker Barrel",
-    "es": "Barril de mimbre"
-   },
-   "desc": {
-    "en": "Keep your things in this wicker barrel. Stores up to 48 items. Cannot be locked.",
-    "es": "Guarda tus cosas en este barril de mimbre. Almacena hasta 48 objetos. No se puede cerrar con llave."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 1,
-   "condition": {
-    "max": 100,
-    "repairable": true
-   },
-   "redirectOf": "base.horizontal.barrel",
-   "craft": {
-    "ingredients": [
-     {
-      "id": "wood",
-      "amount": 300
-     },
-     {
-      "id": "metal.fragments",
-      "amount": 75
-     }
-    ],
-    "amount": 1,
-    "time": 30,
-    "workbench": 0,
-    "researchable": false,
-    "default": false
-   },
-   "slug": "wicker-barrel",
-   "slugEs": "barril-de-mimbre",
-   "icon": true
-  },
-  {
    "id": "gunrack_wide.horizontal",
    "itemid": -96256997,
    "name": {
@@ -34092,27 +31463,6 @@
    },
    "slug": "wooden-arrow",
    "slugEs": "flecha-de-madera",
-   "icon": true
-  },
-  {
-   "id": "bar.stool.wood",
-   "itemid": -1444366079,
-   "name": {
-    "en": "Wooden Bar Stool",
-    "es": "Taburete de madera de Bar"
-   },
-   "desc": {
-    "en": "Pull up a stool and have a drink. A decorative item which provides comfort while seated.",
-    "es": "Pull up a stool and have a drink. A decorative item which provides comfort while seated."
-   },
-   "category": "items",
-   "rarity": "none",
-   "stack": 5,
-   "condition": null,
-   "redirectOf": "chair",
-   "craft": null,
-   "slug": "wooden-bar-stool",
-   "slugEs": "taburete-de-madera-de-bar",
    "icon": true
   },
   {
@@ -34973,6 +32323,2611 @@
    "craft": null,
    "slug": "yellow-perch",
    "slugEs": "perca",
+   "icon": true
+  },
+  {
+   "id": "abyss.barrel.horizontal",
+   "itemid": -880494890,
+   "name": {
+    "en": "Abyss Horizontal Storage Tank",
+    "es": "Tanque de almacenamiento horizontal del abismo"
+   },
+   "desc": {
+    "en": "Horizontal Abyss container taken from the depths of the ocean",
+    "es": "Contenedor del abismo horizontal tomado de las profundidades del océano"
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "base.horizontal.barrel",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 300
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 75
+     }
+    ],
+    "amount": 1,
+    "time": 30,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "abyss.barrel.vertical",
+   "itemid": -919882824,
+   "name": {
+    "en": "Abyss Vertical Storage Tank",
+    "es": "Tanque de almacenamiento vertical del abismo"
+   },
+   "desc": {
+    "en": "Vertical Abyss container taken from the depths of the ocean",
+    "es": "Contenedor del abismo vertical tomado de las profundidades del océano"
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "base.vertical.barrel",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 300
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 75
+     }
+    ],
+    "amount": 1,
+    "time": 30,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "attire.nesthat",
+   "itemid": 1081315464,
+   "name": {
+    "en": "Nest Hat",
+    "es": "Gorro de nido"
+   },
+   "desc": {
+    "en": "An extremely silly easter nest hat with googly eyes.",
+    "es": "Un gorro exageradamente bobo que cubre la cabeza con un nido y un pollito de ojos saltones."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "hat.wolf",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "bamboo.barrel",
+   "itemid": -1652561344,
+   "name": {
+    "en": "Bamboo Barrel",
+    "es": "Barril bambú"
+   },
+   "desc": {
+    "en": "Keep your things in this bamboo barrel. Stores up to 48 items. Cannot be locked.",
+    "es": "Guarda tus cosas en este barril de bambú. Almacena hasta 48 objetos. No se puede bloquear."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "base.vertical.barrel",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 300
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 75
+     }
+    ],
+    "amount": 1,
+    "time": 30,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "bar.stool.metal",
+   "itemid": -1639742441,
+   "name": {
+    "en": "Metal Bar Stool",
+    "es": "Taburete de Metal Para Bar"
+   },
+   "desc": {
+    "en": "Pull up a stool and have a drink. A decorative item which provides comfort while seated.",
+    "es": "Pull up a stool and have a drink. A decorative item which provides comfort while seated."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 5,
+   "condition": null,
+   "redirectOf": "chair",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "bar.stool.wood",
+   "itemid": -1444366079,
+   "name": {
+    "en": "Wooden Bar Stool",
+    "es": "Taburete de madera de Bar"
+   },
+   "desc": {
+    "en": "Pull up a stool and have a drink. A decorative item which provides comfort while seated.",
+    "es": "Pull up a stool and have a drink. A decorative item which provides comfort while seated."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 5,
+   "condition": null,
+   "redirectOf": "chair",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "beanbagseatfabric",
+   "itemid": -576866254,
+   "name": {
+    "en": "Fabric Beanbag Seat",
+    "es": "Puff de tela"
+   },
+   "desc": {
+    "en": "A cozy fabric beanbag seat to sink in to.",
+    "es": "Acogedor puff de tela en el que hundirse."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 5,
+   "condition": null,
+   "redirectOf": "chair",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "beanbagseatleather",
+   "itemid": -1220928936,
+   "name": {
+    "en": "Leather Beanbag Seat",
+    "es": "Puff de cuero"
+   },
+   "desc": {
+    "en": "A cozy leather beanbag seat to sink in to.",
+    "es": "Acogedor asiento puff de cuero en el que hundirse."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 5,
+   "condition": null,
+   "redirectOf": "chair",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "blunderbuss",
+   "itemid": -880412831,
+   "name": {
+    "en": "Blunderbuss",
+    "es": "Trabuco"
+   },
+   "desc": {
+    "en": "A Shotgun with two barrels allowing two shots to be fired in quick succession before needing to reload.",
+    "es": "Una escopeta con dos cañones, permitiendo realizar dos disparos en rápida sucesión antes de necesitar ser recargada."
+   },
+   "category": "weapon",
+   "rarity": "rare",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "shotgun.double",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "chair.icethrone",
+   "itemid": -1944704288,
+   "name": {
+    "en": "Ice Throne",
+    "es": "Trono Helado"
+   },
+   "desc": {
+    "en": "An Ice Throne. Fit for the one true arctic warlord.",
+    "es": "Un Trono de Hielo. Ideal para el único y auténtico señor de la guerra ártico."
+   },
+   "category": "items",
+   "rarity": "common",
+   "stack": 5,
+   "condition": null,
+   "redirectOf": "chair",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "concretehatchet",
+   "itemid": 1176355476,
+   "name": {
+    "en": "Concrete Hatchet",
+    "es": "Hacha de hormigón armado"
+   },
+   "desc": {
+    "en": "A salvaged piece of concrete and rebar which can be used to harvest wood",
+    "es": "Un trozo de hormigón y barras de refuerzo sacado de unos escombros. Su duro borde lo hace apto para recolectar madera."
+   },
+   "category": "tool",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "stonehatchet",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "concretepickaxe",
+   "itemid": -1360171080,
+   "name": {
+    "en": "Concrete Pickaxe",
+    "es": "Pico de hormigón armado"
+   },
+   "desc": {
+    "en": "A salvaged piece of concrete and rebar with a sharp edge. Can be used to harvest Stone, Metal ore and Sulfur ore.",
+    "es": "Un trozo de hormigón y barras de refuerzo sacado de unos escombros. Su cabeza puntiaguda lo hace apto para recolectar piedra, metal y azufre."
+   },
+   "category": "tool",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "stone.pickaxe",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "crossbowbowless",
+   "itemid": 2022157467,
+   "name": {
+    "en": "Bowless Crossbow",
+    "es": "Ballesta sin arco."
+   },
+   "desc": {
+    "en": "A bowless crossbow for fans of DIY",
+    "es": "Una ballesta sin arco para los aficionados al bricolaje."
+   },
+   "category": "weapon",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "crossbow",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "cupboard.tool.retro",
+   "itemid": 1488606552,
+   "name": {
+    "en": "Retro Tool Cupboard",
+    "es": "Armario de herramientas retro"
+   },
+   "desc": {
+    "en": "Transform your tool cupboard experience with this modified Hi-Fi cabinet. Complete with retro displays indicating vital base data as well as frosted glass doors allowing you to view its contents of tools and resources!",
+    "es": "Transforma tu armario de herramientas con este gabinete Hi-Fi modificado. ¡Completo con pantallas retro que indican datos sobre tu base y puertas de vidrio que le permiten ver sus recursos!"
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 1,
+    "repairable": true
+   },
+   "redirectOf": "cupboard.tool",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "cupboard.tool.shockbyte",
+   "itemid": 1174957864,
+   "name": {
+    "en": "Shockbyte Tool Cupboard",
+    "es": "Armario Shockbyte"
+   },
+   "desc": {
+    "en": "Ensure 100% Tool Cupboard uptime with this Tool Cupboard skin.",
+    "es": "Garantiza el 100 % del Armario de Herramientas con este aspecto para Armario de Herramientas."
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 1,
+    "repairable": true
+   },
+   "redirectOf": "cupboard.tool",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "diverhatchet",
+   "itemid": 1046904719,
+   "name": {
+    "en": "Abyss Metal Hatchet",
+    "es": "Hacha metálica Abisal"
+   },
+   "desc": {
+    "en": "Metal hatchet, reclaimed from the abyss, perfect for survival and crafting",
+    "es": "Hacha de metal, recuperado del abismo, perfecto para la supervivencia y la elaboración"
+   },
+   "category": "tool",
+   "rarity": "uncommon",
+   "stack": 1,
+   "condition": {
+    "max": 400,
+    "repairable": true
+   },
+   "redirectOf": "hatchet",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "diverpickaxe",
+   "itemid": 1561022037,
+   "name": {
+    "en": "Abyss Metal Pickaxe",
+    "es": "Pico metálico Abisal"
+   },
+   "desc": {
+    "en": "Plucked from the abyss, this Metal Pickaxe is a prized possession for any survivor",
+    "es": "Arrancada del abismo, esta piqueta de metal es una preciada posesión para cualquier superviviente."
+   },
+   "category": "tool",
+   "rarity": "uncommon",
+   "stack": 1,
+   "condition": {
+    "max": 400,
+    "repairable": true
+   },
+   "redirectOf": "pickaxe",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "divertorch",
+   "itemid": 1846605708,
+   "name": {
+    "en": "Abyss Torch",
+    "es": "Antorcha Abisal"
+   },
+   "desc": {
+    "en": "Illuminate the underwater depths with this durable and waterproof diving torch",
+    "es": "Ilumina las profundidades marinas con esta duradera y resistente al agua antorcha de buzo."
+   },
+   "category": "tool",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 50,
+    "repairable": false
+   },
+   "redirectOf": "torch",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "electric.fluorescentlight.ceiling",
+   "itemid": 640470230,
+   "name": {
+    "en": "Ceiling Fluorescent Light",
+    "es": "Luz fluorescente de techo"
+   },
+   "desc": {
+    "en": "A flicker-free fluorescent light.",
+    "es": "Una luz fluorescente sin parpadeo."
+   },
+   "category": "electrical",
+   "rarity": "common",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "ceilinglight",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "factorydoor",
+   "itemid": 2054391128,
+   "name": {
+    "en": "Factory Door",
+    "es": "Puerta de fábrica"
+   },
+   "desc": {
+    "en": "Medium strength door, vulnerable to explosives. Contains a bulletproof viewing portal",
+    "es": "Puerta de resistencia media, vulnerable a explosivos. Equivalente a una puerta de chapa, pero incorpora una ventana de cristal blindado."
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": false
+   },
+   "redirectOf": "door.hinged.metal",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "frontier_hatchet",
+   "itemid": 1937380239,
+   "name": {
+    "en": "Frontier Hatchet",
+    "es": "Hacha fronteriza"
+   },
+   "desc": {
+    "en": "A Frontier Hatchet, useful for chopping trees and dismembering corpses.",
+    "es": "Un hacha fronteriza, útil para cortar árboles y desmembrar cadáveres."
+   },
+   "category": "tool",
+   "rarity": "uncommon",
+   "stack": 1,
+   "condition": {
+    "max": 400,
+    "repairable": true
+   },
+   "redirectOf": "hatchet",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "gamesroom.minifridge",
+   "itemid": 352442426,
+   "name": {
+    "en": "Bar Games Minifridge",
+    "es": "Mininevera Para Bar"
+   },
+   "desc": {
+    "en": "A small fridge you can store food into and keep your drink cool!",
+    "es": "¡Un pequeño refrigerador puede guardar comida y mantener su bebida fresca!"
+   },
+   "category": "electrical",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "mini fridge",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "gamesroom.shotgun.trap",
+   "itemid": 399522257,
+   "name": {
+    "en": "Bar Games Shotgun Trap",
+    "es": "Trabuco Para Bar"
+   },
+   "desc": {
+    "en": "A shotgun trap triggered by movement, place near doorways and load with handmade shells.",
+    "es": "Trabuco activado por el movimiento. Plántala enfrente a tu puerta, cárgala con cartuchos caseros, y grita '¡Ve al infierno!' Cuando tus enemigos pasen por delante."
+   },
+   "category": "traps",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 200,
+    "repairable": true
+   },
+   "redirectOf": "guntrap",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "gates.external.high.adobe",
+   "itemid": -401905610,
+   "name": {
+    "en": "High External Adobe Gate",
+    "es": "Portón Alto de Adobe"
+   },
+   "desc": {
+    "en": "A high stone gate, allowing access in and out of your compound.",
+    "es": "Un gran portón de piedra, permitiendo acceso y salida de tu recinto."
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "gates.external.high.stone",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "gates.external.high.legacy",
+   "itemid": -1442339204,
+   "name": {
+    "en": "High External Legacy Gate",
+    "es": "Portón Alto Clásico"
+   },
+   "desc": {
+    "en": "A legacy themed wooden gate to keep the untamed wilderness away from your property, it's seen better days. Replaces the High External Wooden Wall.",
+    "es": "Un portón de madera de estilo clásico para mantener la naturaleza salvaje alejada de tu propiedad. Ha tenido mejores tiempos. Reemplaza a Pared Alta de Madera."
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "gates.external.high.wood",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "half.bamboo.shelves",
+   "itemid": -1923843855,
+   "name": {
+    "en": "Half Height Bamboo Shelves",
+    "es": "Estantes de bambú a media altura"
+   },
+   "desc": {
+    "en": "Half height salvaged bamboo shelves for stacking",
+    "es": "Estantes de bambú recuperado de media altura para apilar"
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "base.half.shelves",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "metal.fragments",
+      "amount": 40
+     }
+    ],
+    "amount": 1,
+    "time": 10,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "halfheight.industrial.shelves",
+   "itemid": 786458957,
+   "name": {
+    "en": "Half Height Industrial Shelves",
+    "es": "Estanterías industriales de altura media"
+   },
+   "desc": {
+    "en": "Half height industrial shelves for stacking",
+    "es": "Estanterías industriales de media altura para apilar"
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "base.half.shelves",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "metal.fragments",
+      "amount": 40
+     }
+    ],
+    "amount": 1,
+    "time": 10,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hat.candle.birthday",
+   "itemid": 1633553557,
+   "name": {
+    "en": "Birthday Candle Hat",
+    "es": "Sombrero cumpleañero"
+   },
+   "desc": {
+    "en": "A hat with a birthday candle on top. You can turn the candle on in your inventory.",
+    "es": "Un sombrero con una vela de cumpleaños encima. Puedes encender la vela en tu inventario."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "hat.candle",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hat.dragonmask",
+   "itemid": -22883916,
+   "name": {
+    "en": "Dragon Mask",
+    "es": "Máscara del dragón"
+   },
+   "desc": {
+    "en": "A special dragon mask to celebrate Chinese New Year",
+    "es": "Una máscara especial para celebrar el año nuevo chino."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "hat.wolf",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hat.horsemask",
+   "itemid": -418359052,
+   "name": {
+    "en": "Horse Mask",
+    "es": "Máscara de caballo"
+   },
+   "desc": {
+    "en": "A Beautifully crafted red and gold Horse mask to celebrate the 2026 Lunar New Year. This item replaces the wolf headdress.",
+    "es": "Una máscara de caballo bellamente elaborada en rojo y dorado para celebrar el Año Nuevo Lunar 2026. Este objeto reemplaza la capucha de lobo."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "hat.wolf",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hat.oxmask",
+   "itemid": 1315082560,
+   "name": {
+    "en": "Ox Mask",
+    "es": "Máscara del buey"
+   },
+   "desc": {
+    "en": "An Ox mask to celebrate the 2021 Lunar New Year.",
+    "es": "Una máscara de buey con borlas dinámicas para celebrar el Año Nuevo Lunar de 2021."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "hat.wolf",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hat.rabbitmask",
+   "itemid": -986782031,
+   "name": {
+    "en": "Rabbit Mask",
+    "es": "Máscara del conejo"
+   },
+   "desc": {
+    "en": "A Beautifully crafted Rabbit mask to celebrate the 2023 Lunar New Year",
+    "es": "Una delicada máscara de conejo diseñada para celebrar el Año Nuevo Lunar de 2023."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "hat.wolf",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hat.ratmask",
+   "itemid": 271048478,
+   "name": {
+    "en": "Rat Mask",
+    "es": "Máscara de la rata"
+   },
+   "desc": {
+    "en": "A Beautifully crafted bronze and gold Rat mask to celebrate the 2020 Lunar New Year. This item replaces the wolf headdress.",
+    "es": "Una máscara de rata de bronce y oro, bellamente elaborada, para celebrar el Año Nuevo Lunar 2020. Esta pieza reemplaza el tocado de lobo."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "hat.wolf",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hat.snakemask",
+   "itemid": -1314079879,
+   "name": {
+    "en": "Snake mask",
+    "es": "Máscara de serpiente"
+   },
+   "desc": {
+    "en": "A Beautifully crafted Snake mask to celebrate the 2025 Lunar New Year",
+    "es": "Una delicada máscara de serpiente diseñada para celebrar el Año Nuevo Lunar de 2025."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "hat.wolf",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hat.tigermask",
+   "itemid": 709206314,
+   "name": {
+    "en": "Tiger Mask",
+    "es": "Máscara del tigre"
+   },
+   "desc": {
+    "en": "A special tiger mask to celebrate Chinese New Year",
+    "es": "Una máscara de tigre con incrustación de jade para celebrar el Año Nuevo Lunar de 2022."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "hat.wolf",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hazmat.krieg",
+   "itemid": -902423513,
+   "name": {
+    "en": "Krieg Hazmat",
+    "es": "Traje protector Krieg"
+   },
+   "desc": {
+    "en": "A Krieg Hazmat Suit, standard issue for those who never retreat.",
+    "es": "Un traje protector Krieg, equipo estándar para aquellos que nunca se retiran."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 450,
+    "repairable": true
+   },
+   "redirectOf": "hazmatsuit",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hazmat.plague",
+   "itemid": -1587608109,
+   "name": {
+    "en": "Plague Doctor Hazmat Suit",
+    "es": "Plague Doctor Hazmat Suit"
+   },
+   "desc": {
+    "en": "The Plague Doctor delivers no cure - only death and decay. Bring out your dead, or prepare to join them.",
+    "es": "Plague doctor garb, used as a hazmat."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 450,
+    "repairable": true
+   },
+   "redirectOf": "hazmatsuit",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hazmatsuit.arcticsuit",
+   "itemid": -470439097,
+   "name": {
+    "en": "Arctic Suit",
+    "es": "Traje ártico"
+   },
+   "desc": {
+    "en": "An arctic variant of the hazmat suit which trades radiation for cold protection.",
+    "es": "Una variante ártica del traje de materiales peligrosos que sacrifica protección frente a la radiación, los mordiscos y las explosiones a cambio de más protección en entornos gélidos."
+   },
+   "category": "attire",
+   "rarity": "rare",
+   "stack": 1,
+   "condition": {
+    "max": 450,
+    "repairable": true
+   },
+   "redirectOf": "hazmatsuit",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hazmatsuit.diver",
+   "itemid": -797592358,
+   "name": {
+    "en": "Abyss Hazmat",
+    "es": "Traje protector abisal"
+   },
+   "desc": {
+    "en": "A damaged deep-water survival suit was found in the abyss. Although it may no longer serve its original purpose, it functions reliably as a Hazmat suit. Owning this suit also grants access to the Abyss Pickaxe, Abyss Hatchet, Abyss Torch, and Abyss AR.",
+    "es": "Se encontró un traje de supervivencia en aguas profundas, dañado en el abismo. Aunque ya no cumple su función original, funciona de forma fiable como traje de protección. Poseer este traje también otorga acceso al Pico Metálico Abisal, Hacha Abisal, AR Abisal y la Antorcha Abisal."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 450,
+    "repairable": true
+   },
+   "redirectOf": "hazmatsuit",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hazmatsuit.frontier",
+   "itemid": -105415879,
+   "name": {
+    "en": "Frontier Suit",
+    "es": "Traje de Pionero"
+   },
+   "desc": {
+    "en": "A Frontier suit",
+    "es": "Un Traje Pionero"
+   },
+   "category": "attire",
+   "rarity": "rare",
+   "stack": 1,
+   "condition": {
+    "max": 450,
+    "repairable": true
+   },
+   "redirectOf": "hazmatsuit",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hazmatsuit.kick",
+   "itemid": 972302244,
+   "name": {
+    "en": "KICK Hazmat",
+    "es": "KICK Haza"
+   },
+   "desc": {
+    "en": "Unique hazmat suit obtainable during KICK Drops 2025",
+    "es": "Unique hazmat suit obtainable during KICK Drops 2025"
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 450,
+    "repairable": true
+   },
+   "redirectOf": "hazmatsuit",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hazmatsuit.lumberjack",
+   "itemid": 861513346,
+   "name": {
+    "en": "Lumberjack Suit",
+    "es": "Traje de Leñador"
+   },
+   "desc": {
+    "en": "A Lumberjack Suit",
+    "es": "Un traje de Leñador"
+   },
+   "category": "attire",
+   "rarity": "rare",
+   "stack": 1,
+   "condition": {
+    "max": 450,
+    "repairable": true
+   },
+   "redirectOf": "hazmatsuit",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hazmatsuit.nomadsuit",
+   "itemid": 491263800,
+   "name": {
+    "en": "Nomad Suit",
+    "es": "Traje de nómada"
+   },
+   "desc": {
+    "en": "A nomad suit.",
+    "es": "Un traje de morador del desierto que te protegerá de la intemperie y de la radiación."
+   },
+   "category": "attire",
+   "rarity": "rare",
+   "stack": 1,
+   "condition": {
+    "max": 450,
+    "repairable": true
+   },
+   "redirectOf": "hazmatsuit",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hazmatsuit.pilot",
+   "itemid": 1065594600,
+   "name": {
+    "en": "Pilot Hazmat",
+    "es": "Traje Protector de Piloto"
+   },
+   "desc": {
+    "en": "A hazmat suit made from a fighter pilot's flight suit.",
+    "es": "Un traje protector fabricado a partir del traje de vuelo de un piloto de combate."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 450,
+    "repairable": true
+   },
+   "redirectOf": "hazmatsuit",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "hazmatsuittwitch",
+   "itemid": 468313189,
+   "name": {
+    "en": "Twitch Rivals Hazmat Suit",
+    "es": "Traje Protector de Twitch Rivals"
+   },
+   "desc": {
+    "en": "A purple hazmat suit made from radiation resistant rubber.",
+    "es": "Un traje protector morado hecho con un tipo de goma resistente a la radiación."
+   },
+   "category": "attire",
+   "rarity": "rare",
+   "stack": 1,
+   "condition": {
+    "max": 450,
+    "repairable": true
+   },
+   "redirectOf": "hazmatsuit",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "horse.armor.lny26",
+   "itemid": -2068194497,
+   "name": {
+    "en": "Lunar New Year Horse Armor",
+    "es": "Armadura de Caballo de Año Nuevo Lunar"
+   },
+   "desc": {
+    "en": "A full body Lunar New Year themed armor for a horse. Provides strong protection for you and your steed, at the cost of greatly reduced movement speed.",
+    "es": "Una armadura completa para caballo con temática de Año Nuevo Lunar. Proporciona una fuerte protección para ti y tu montura, a costa de una velocidad de movimiento reducida."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "horse.armor.roadsign",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "industrial.autoturret",
+   "itemid": -786398324,
+   "name": {
+    "en": "Industrial Auto Turret",
+    "es": "Torreta automática industrial"
+   },
+   "desc": {
+    "en": "This automated electric sentry turret will engage and neutralize any moving targets it has line of sight to. You must equip it with a projectile weapon and the corresponding ammunition. Note : The turret will search for targets in a 180 degree arc facing *you* when you place it. Requires 10 power.",
+    "es": "Esta torreta centinela automatizada se enfrentará y neutralizará a cualquier blanco en su línea visual. Debe ser equipada con un arma de fuego y cargada con la munición correspondiente.\n\nNota: La torreta buscará objetivos en un arco de 180 grados mirando hacia ti cuando la coloques. Requiere 10 unidades de energía eléctrica para funcionar."
+   },
+   "category": "electrical",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "autoturret",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "industrial.electric.furnace",
+   "itemid": 225892284,
+   "name": {
+    "en": "Industrial Electric Furnace",
+    "es": "Horno eléctrico industrial"
+   },
+   "desc": {
+    "en": "An electrical version of a furnace that uses electricity instead of a fuel source.",
+    "es": "Una alternativa al horno tradicional que usa electricidad en vez de madera para generar calor. Por esto mismo, no produce carbón."
+   },
+   "category": "electrical",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "electric.furnace",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "industrial.furnace.large",
+   "itemid": 1868984394,
+   "name": {
+    "en": "Large Industrial Furnace",
+    "es": "Horno industrial grande"
+   },
+   "desc": {
+    "en": "Used to smelt large quantities of ore. Difficult to secure, must be placed on terrain.",
+    "es": "Utilizado para fundir grandes cantidades de mena. Difícil de asegurar, debe ser colocado sobre terreno."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "furnace.large",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "industrial.garagedoor",
+   "itemid": 346569548,
+   "name": {
+    "en": "Industrial Garage Door",
+    "es": "Puerta de garaje industrial"
+   },
+   "desc": {
+    "en": "A garage door that rolls up and down.",
+    "es": "Una puerta de garaje que se abre y cierra verticalmente."
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "wall.frame.garagedoor",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "industrial.storage.horizontal",
+   "itemid": -1019111952,
+   "name": {
+    "en": "Industrial Storage Horizontal Barrel",
+    "es": "Barril de almacenamiento horizontal industrial"
+   },
+   "desc": {
+    "en": "Horizontal barrel to store industrial materials",
+    "es": "Barril horizontal para almacenar materiales industriales"
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "base.horizontal.barrel",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 300
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 75
+     }
+    ],
+    "amount": 1,
+    "time": 30,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "industrial.storage.vertical",
+   "itemid": -883975138,
+   "name": {
+    "en": "Industrial Storage Vertical Barrel",
+    "es": "Barril de almacenamiento vertical industrial"
+   },
+   "desc": {
+    "en": "Vertical barrel to store industrial materials",
+    "es": "Barril vertical para almacenar materiales industriales."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "base.vertical.barrel",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 300
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 75
+     }
+    ],
+    "amount": 1,
+    "time": 30,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "industrial.torch",
+   "itemid": 4474927,
+   "name": {
+    "en": "Industrial Torch",
+    "es": "Antorcha industrial"
+   },
+   "desc": {
+    "en": "An old mining lamp used as a torch. Lights your way at night and can be used as a weapon",
+    "es": "Una vieja lámpara de minero usada como linterna. Ilumina tu camino por la noche y puede usarse como arma"
+   },
+   "category": "tool",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 50,
+    "repairable": false
+   },
+   "redirectOf": "torch",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "industrial.wall.light.blue",
+   "itemid": 920930831,
+   "name": {
+    "en": "Blue Industrial Wall Light",
+    "es": "Lámpara azul de industrial de pared"
+   },
+   "desc": {
+    "en": "A small blue light source.",
+    "es": "Una pequeña fuente de luz azul."
+   },
+   "category": "electrical",
+   "rarity": "none",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "industrial.wall.light",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "industrial.wall.light.green",
+   "itemid": 1268178466,
+   "name": {
+    "en": "Green Industrial Wall Light",
+    "es": "Lámpara verde industrial de pared"
+   },
+   "desc": {
+    "en": "A small green light source.",
+    "es": "Una pequeña fuente de luz verde."
+   },
+   "category": "electrical",
+   "rarity": "common",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "industrial.wall.light",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "industrial.wall.light.red",
+   "itemid": -1160621614,
+   "name": {
+    "en": "Red Industrial Wall Light",
+    "es": "Lámpara roja industrial de pared"
+   },
+   "desc": {
+    "en": "A small red light source.",
+    "es": "Una pequeña fuente de luz roja."
+   },
+   "category": "electrical",
+   "rarity": "common",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "industrial.wall.light",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "knightsarmour.helmet",
+   "itemid": -427072335,
+   "name": {
+    "en": "Knights armour helmet",
+    "es": "Casco de armadura de caballero"
+   },
+   "desc": {
+    "en": "A medieval knights helmet. Made from scrap metal. Excellent craftmanship.",
+    "es": "Un casco de caballero medieval. Hecho de chatarra. Excelente artesanía."
+   },
+   "category": "attire",
+   "rarity": "uncommon",
+   "stack": 1,
+   "condition": {
+    "max": 200,
+    "repairable": true
+   },
+   "redirectOf": "coffeecan.helmet",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "knightsarmour.skirt",
+   "itemid": -945708533,
+   "name": {
+    "en": "Knights armour skirt plates",
+    "es": "Placa de faldón de armadura de caballero"
+   },
+   "desc": {
+    "en": "A well made set of knights plate that covers the hips and thighs. Made of scrap metal.",
+    "es": "Un conjunto bien hecho de placa de caballero que cubre las caderas y los muslos. Hecho de chatarra."
+   },
+   "category": "attire",
+   "rarity": "uncommon",
+   "stack": 1,
+   "condition": {
+    "max": 150,
+    "repairable": true
+   },
+   "redirectOf": "roadsign.kilt",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "knighttorso.armour",
+   "itemid": 547862680,
+   "name": {
+    "en": "Knights armour cuirass",
+    "es": "Coraza de caballero"
+   },
+   "desc": {
+    "en": "A well made collection of scrap metal formed into a knights armour.",
+    "es": "Una colección de chatarra bien hecha para formar una armadura de caballero."
+   },
+   "category": "attire",
+   "rarity": "uncommon",
+   "stack": 1,
+   "condition": {
+    "max": 500,
+    "repairable": true
+   },
+   "redirectOf": "roadsign.jacket",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "krieg.chainsword",
+   "itemid": -1770281406,
+   "name": {
+    "en": "Krieg chainsword",
+    "es": "Espada de cadena Krieg"
+   },
+   "desc": {
+    "en": "A brutal tool of war, roaring to life with every swing.",
+    "es": "Una herramienta brutal de guerra, que ruge con cada golpe."
+   },
+   "category": "tool",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "chainsaw",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "krieg.shotgun",
+   "itemid": -420889602,
+   "name": {
+    "en": "Krieg Shotgun",
+    "es": "Escopeta Krieg"
+   },
+   "desc": {
+    "en": "Heavy, reliable, and unforgiving. A weapon that never hesitates.",
+    "es": "Pesado, confiable e inolvidable. Un arma que nunca se empeña."
+   },
+   "category": "weapon",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "shotgun.pump",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "krieg.storage.horizontal",
+   "itemid": 652793345,
+   "name": {
+    "en": "Krieg Storage Crates",
+    "es": "Cajas de almacenamiento Krieg"
+   },
+   "desc": {
+    "en": "Military-grade crates designed for efficient storage and durability. A staple of any well-supplied outpost.",
+    "es": "Cajas de grado militar diseñadas para un almacenamiento y durabilidad eficiente. Un elemento básico de cualquier Puesto Avanzado bien suministrado."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "base.horizontal.barrel",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 300
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 75
+     }
+    ],
+    "amount": 1,
+    "time": 30,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "krieg.storage.vertical",
+   "itemid": 1305765685,
+   "name": {
+    "en": "Krieg Storage Barrel",
+    "es": "Barril de almacenamiento Krieg"
+   },
+   "desc": {
+    "en": "Industrial barrels repurposed for the front lines. Sturdy, disciplined, and unmistakably Krieg.",
+    "es": "Barriles industriales reutilizados para el frente. Robustos, disciplinados e inconfundiblemente Krieg."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "base.vertical.barrel",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 300
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 75
+     }
+    ],
+    "amount": 1,
+    "time": 30,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "kriegbackpack",
+   "itemid": -874650016,
+   "name": {
+    "en": "Krieg Large Backpack",
+    "es": "Mochila grande Krieg"
+   },
+   "desc": {
+    "en": "Carry your essentials in a rugged military pack, built for endurance and practicality.",
+    "es": "Lleva tus objetos esenciales en una mochila militar resistente, diseñada para ofrecer durabilidad y practicidad."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "largebackpack",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "legacy bow",
+   "itemid": -73195037,
+   "name": {
+    "en": "Legacy Bow",
+    "es": "Arco clásico"
+   },
+   "desc": {
+    "en": "Hunting Bow, useful for short to medium range combat and hunting.",
+    "es": "Un arco de caza, útil para el combate a corta y media distancia (y para la caza)."
+   },
+   "category": "weapon",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 50,
+    "repairable": true
+   },
+   "redirectOf": "bow.hunting",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "legacyfurnace",
+   "itemid": -1310391395,
+   "name": {
+    "en": "Legacy Furnace",
+    "es": "Horno arcaico"
+   },
+   "desc": {
+    "en": "Legacy Furnace",
+    "es": "Un horno con el diseño que solía tener en la versión Legacy de Rust. Utilízalo para fundir la mena que has minado."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "furnace",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "lumberjack hoodie",
+   "itemid": -763071910,
+   "name": {
+    "en": "Lumberjack Hoodie",
+    "es": "Sudadera de leñador"
+   },
+   "desc": {
+    "en": "A lumberjack themed hoodie, earned by helping the Lumberjack. Offers the same protection as the standard hoodie.",
+    "es": "Una sudadera temática de leñador, que se gana ayudando al Leñador. Ofrece la misma protección que la sudadera estándar."
+   },
+   "category": "attire",
+   "rarity": "uncommon",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "hoodie",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "lumberjack.hatchet",
+   "itemid": -399173933,
+   "name": {
+    "en": "Prototype Hatchet",
+    "es": "Hacha Prototipo"
+   },
+   "desc": {
+    "en": "A prototype field hatchet, useful for gathering wood",
+    "es": "Un prototipo de hacha de campo. Útil para recolectar madera."
+   },
+   "category": "tool",
+   "rarity": "uncommon",
+   "stack": 1,
+   "condition": {
+    "max": 400,
+    "repairable": true
+   },
+   "redirectOf": "hatchet",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "lumberjack.pickaxe",
+   "itemid": 236677901,
+   "name": {
+    "en": "Prototype Pickaxe",
+    "es": "Pico Prototipo"
+   },
+   "desc": {
+    "en": "A prototype field pickaxe. Useful for gathering ore from rocks.",
+    "es": "Un prototipo de pico de campo. Útil para recolectar piedra, metal y azufre."
+   },
+   "category": "tool",
+   "rarity": "uncommon",
+   "stack": 1,
+   "condition": {
+    "max": 400,
+    "repairable": true
+   },
+   "redirectOf": "pickaxe",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "mace.baseballbat",
+   "itemid": -2026042603,
+   "name": {
+    "en": "Baseball Bat",
+    "es": "Bate de béisbol"
+   },
+   "desc": {
+    "en": "A baseball bat wrapped in barbed wire",
+    "es": "Un bate de béisbol envuelto en alambre de púas"
+   },
+   "category": "weapon",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 200,
+    "repairable": true
+   },
+   "redirectOf": "mace",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "metal.facemask.hockey",
+   "itemid": -1334569149,
+   "name": {
+    "en": "Hockey Mask",
+    "es": "Máscara de hockey"
+   },
+   "desc": {
+    "en": "A protective facemask which provides the user with excellent head protection from all forms of attacks.",
+    "es": "Una máscara blindada que cubre la cara y proporciona al usuario un grado excelente de protección frente a todos los tipos de ataque."
+   },
+   "category": "attire",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 320,
+    "repairable": true
+   },
+   "redirectOf": "metal.facemask",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "metal.facemask.icemask",
+   "itemid": 110116923,
+   "name": {
+    "en": "Ice Metal Facemask",
+    "es": "Máscara de metal helada"
+   },
+   "desc": {
+    "en": "A protective facemask which provides the user with excellent head protection from all forms of attacks.",
+    "es": "Una máscara blindada que cubre la cara y proporciona al usuario un grado excelente de protección frente a todos los tipos de ataque."
+   },
+   "category": "attire",
+   "rarity": "veryrare",
+   "stack": 1,
+   "condition": {
+    "max": 320,
+    "repairable": true
+   },
+   "redirectOf": "metal.facemask",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "metal.plate.torso.icevest",
+   "itemid": -1478855279,
+   "name": {
+    "en": "Ice Metal Chest Plate",
+    "es": "Coraza de metal helada"
+   },
+   "desc": {
+    "en": "A metal plate covering your torso, provides excellent protection from all forms of attacks.",
+    "es": "Una pieza de armadura que cuelga una placa de metal a cada lado del torso y proporciona al usuario un grado excelente de protección frente a todos los tipos de ataque."
+   },
+   "category": "attire",
+   "rarity": "veryrare",
+   "stack": 1,
+   "condition": {
+    "max": 360,
+    "repairable": true
+   },
+   "redirectOf": "metal.plate.torso",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "paintabletarget.reactive",
+   "itemid": -1039234836,
+   "name": {
+    "en": "Paintable Reactive Target",
+    "es": "Objetivo reactivo pintable"
+   },
+   "desc": {
+    "en": "A reactive target practice in which you can paint whatever you want",
+    "es": "Un objetivo reactivo pintable en la que puedes pintar lo que quieras"
+   },
+   "category": "electrical",
+   "rarity": "none",
+   "stack": 1,
+   "condition": null,
+   "redirectOf": "target.reactive",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "rifle.ak.diver",
+   "itemid": -139037392,
+   "name": {
+    "en": "Abyss Assault Rifle",
+    "es": "Fusil de asalto abisal"
+   },
+   "desc": {
+    "en": "A waterlogged assault rifle from the abyss",
+    "es": "Un fusil automático de gran potencia recuperado de las profundidades abisales."
+   },
+   "category": "weapon",
+   "rarity": "veryrare",
+   "stack": 1,
+   "condition": {
+    "max": 150,
+    "repairable": true
+   },
+   "redirectOf": "rifle.ak",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "rifle.ak.glass",
+   "itemid": -1920964108,
+   "name": {
+    "en": "Crystal Assault Rifle Diamond",
+    "es": "Rifle de Asalto de Diamante"
+   },
+   "desc": {
+    "en": "Machined from the toughest gemstones, this Assault Rifle skin will show each and every shot you take.",
+    "es": "Machined from the toughest gemstones, this Assault Rifle skin will show each and every shot you take."
+   },
+   "category": "weapon",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 150,
+    "repairable": true
+   },
+   "redirectOf": "rifle.ak",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "rifle.ak.ice",
+   "itemid": -1335497659,
+   "name": {
+    "en": "Ice Assault Rifle",
+    "es": "Fusil de asalto helado"
+   },
+   "desc": {
+    "en": "Ice-covered high damage machine rifle.",
+    "es": "Fusil de asalto automático de gran potencia cubierto de hielo."
+   },
+   "category": "weapon",
+   "rarity": "veryrare",
+   "stack": 1,
+   "condition": {
+    "max": 150,
+    "repairable": true
+   },
+   "redirectOf": "rifle.ak",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "rifle.ak.med",
+   "itemid": 472505338,
+   "name": {
+    "en": "Medieval Assault Rifle",
+    "es": "Rifle de Asalto Medieval"
+   },
+   "desc": {
+    "en": "Medieval themed high damage machine rifle.",
+    "es": "Fusil de asalto de alto daño de temática medieval."
+   },
+   "category": "weapon",
+   "rarity": "veryrare",
+   "stack": 1,
+   "condition": {
+    "max": 150,
+    "repairable": true
+   },
+   "redirectOf": "rifle.ak",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "rifle.lr300.space",
+   "itemid": 533993281,
+   "name": {
+    "en": "Space LR-300 Assault Rifle",
+    "es": "Fusil de asalto espacial LR-300"
+   },
+   "desc": {
+    "en": "Non-standard-issue high-powered light assault rifle for only the most elite of practitioners.",
+    "es": "Fusil de asalto ligero, de alta potencia y no estándar, exclusivo para practicantes selectos."
+   },
+   "category": "weapon",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 150,
+    "repairable": true
+   },
+   "redirectOf": "rifle.lr300",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "rocket.launcher.dragon",
+   "itemid": -1315992997,
+   "name": {
+    "en": "Dragon Rocket Launcher",
+    "es": "Lanzamisiles del dragón"
+   },
+   "desc": {
+    "en": "Unmatched craftsmanship meets devastating firepower.",
+    "es": "La artesanía inigualable se combina con una potencia de fuego devastadora."
+   },
+   "category": "weapon",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "rocket.launcher",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "rocket.launcher.rpg7",
+   "itemid": 494161326,
+   "name": {
+    "en": "RPG Launcher",
+    "es": "Launcher RPG"
+   },
+   "desc": {
+    "en": "Unmatched craftsmanship meets devastating firepower.",
+    "es": "La artesanía inigualable se combina con una potencia de fuego devastadora."
+   },
+   "category": "weapon",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "rocket.launcher",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "rockingchair.rockingchair2",
+   "itemid": 1758333838,
+   "name": {
+    "en": "Teal",
+    "es": "Azul cerceta"
+   },
+   "desc": {
+    "en": "A rocking chair that responds to your input. Don't fire whilst seated.",
+    "es": "Una silla que responde a tus movimientos. No es recomendable disparar mientras estás sentado."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 5,
+   "condition": null,
+   "redirectOf": "rockingchair",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "rockingchair.rockingchair3",
+   "itemid": 192249897,
+   "name": {
+    "en": "Green",
+    "es": "Verde"
+   },
+   "desc": {
+    "en": "A rocking chair that responds to your input. Don't fire whilst seated.",
+    "es": "Una silla que responde a tus movimientos. No es recomendable disparar mientras estás sentado."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 5,
+   "condition": null,
+   "redirectOf": "rockingchair",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "salvaged.industrial.shelves",
+   "itemid": -1018026008,
+   "name": {
+    "en": "Salvaged Industrial Shelves",
+    "es": "Estanterías industriales recuperadas"
+   },
+   "desc": {
+    "en": "Shelves for item stacking",
+    "es": "Estanterías, para apilar elementos."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "shelves",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "single.shallow.wall.shelves",
+   "itemid": -193519904,
+   "name": {
+    "en": "Bamboo Wall Shelves",
+    "es": "Estantería de pared de bambú"
+   },
+   "desc": {
+    "en": "A shallow bamboo wall shelf for small item stacking",
+    "es": "Una cajonera de bambú con estantes para acumular objetos pequeños."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "base.single.shelves",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 100
+     }
+    ],
+    "amount": 1,
+    "time": 10,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "skylantern.skylantern.green",
+   "itemid": -1770889433,
+   "name": {
+    "en": "Sky Lantern - Green",
+    "es": "Farolillo volante - Verde"
+   },
+   "desc": {
+    "en": "A beautiful green sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch.",
+    "es": "A beautiful green sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
+   },
+   "category": "fun",
+   "rarity": "none",
+   "stack": 20,
+   "condition": {
+    "max": 100,
+    "repairable": false
+   },
+   "redirectOf": "skylantern",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "skylantern.skylantern.orange",
+   "itemid": -1824770114,
+   "name": {
+    "en": "Sky Lantern - Orange",
+    "es": "Farolillo volante - Naranja"
+   },
+   "desc": {
+    "en": "A beautiful orange sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch.",
+    "es": "A beautiful orange sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
+   },
+   "category": "fun",
+   "rarity": "none",
+   "stack": 20,
+   "condition": {
+    "max": 100,
+    "repairable": false
+   },
+   "redirectOf": "skylantern",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "skylantern.skylantern.purple",
+   "itemid": 831955134,
+   "name": {
+    "en": "Sky Lantern - Purple",
+    "es": "Farolillo volante - Morado"
+   },
+   "desc": {
+    "en": "A beautiful purple sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch.",
+    "es": "A beautiful purple sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
+   },
+   "category": "fun",
+   "rarity": "none",
+   "stack": 20,
+   "condition": {
+    "max": 100,
+    "repairable": false
+   },
+   "redirectOf": "skylantern",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "skylantern.skylantern.red",
+   "itemid": -1433390281,
+   "name": {
+    "en": "Sky Lantern - Red",
+    "es": "Farolillo volante - Rojo"
+   },
+   "desc": {
+    "en": "A beautiful red sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch.",
+    "es": "A beautiful red sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
+   },
+   "category": "fun",
+   "rarity": "none",
+   "stack": 20,
+   "condition": {
+    "max": 100,
+    "repairable": false
+   },
+   "redirectOf": "skylantern",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "spear.cny",
+   "itemid": 695450239,
+   "name": {
+    "en": "Lunar New Year Spear",
+    "es": "Lanza del año nuevo chino."
+   },
+   "desc": {
+    "en": "A Chinese themed New Year themed metal Spear",
+    "es": "Una lanza de metal con temática de año nuevo chino."
+   },
+   "category": "weapon",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "spear.wooden",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "storage_barrel_b",
+   "itemid": 1307626005,
+   "name": {
+    "en": "Storage Barrel Vertical",
+    "es": "Barril de almacenamiento vertical"
+   },
+   "desc": {
+    "en": "Keep your things in this wooden barrel. Stores up to 48 items. Cannot be locked.",
+    "es": "Mantén tus cosas a buen recaudo con este espacioso contenedor de almacenamiento de madera. Caben hasta 48 objetos. No se le puede colocar una cerradura."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "base.vertical.barrel",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 300
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 75
+     }
+    ],
+    "amount": 1,
+    "time": 30,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "storage_barrel_c",
+   "itemid": -1421257350,
+   "name": {
+    "en": "Storage Barrel Horizontal",
+    "es": "Barril de almacenamiento horizontal"
+   },
+   "desc": {
+    "en": "Keep your things in this wooden barrel. Stores up to 48 items. Cannot be locked.",
+    "es": "Mantén tus cosas a buen recaudo con este espacioso contenedor de almacenamiento de madera. Caben hasta 48 objetos. No se le puede colocar una cerradura."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "base.horizontal.barrel",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 300
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 75
+     }
+    ],
+    "amount": 1,
+    "time": 30,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "torch.torch.skull",
+   "itemid": -1175656359,
+   "name": {
+    "en": "Cultist Deer Torch",
+    "es": "Antorcha de la secta"
+   },
+   "desc": {
+    "en": "Cultist Deer Torch",
+    "es": "Antorcha de la secta"
+   },
+   "category": "tool",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 50,
+    "repairable": false
+   },
+   "redirectOf": "torch",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "twitchrivals2023desk",
+   "itemid": -243540612,
+   "name": {
+    "en": "Twitch Rivals Desk",
+    "es": "Escritorio de Twitch Rivals"
+   },
+   "desc": {
+    "en": "Twitch Rivals Desk",
+    "es": "Una estación informática para el acceso remoto a cámaras de vigilancia, drones y otros dispositivos."
+   },
+   "category": "electrical",
+   "rarity": "common",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "computerstation",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "wall.external.high.adobe",
+   "itemid": 756890702,
+   "name": {
+    "en": "High External Adobe Wall",
+    "es": "Pared Alta de Adobe"
+   },
+   "desc": {
+    "en": "A high stone wall used to keep people off your property.",
+    "es": "Una pared alta de piedra, para mantener a la gente fuera de tu propiedad."
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "wall.external.high.stone",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "wall.external.high.legacy",
+   "itemid": -1993883724,
+   "name": {
+    "en": "High External Legacy Wall",
+    "es": "Pared Alta Clásica"
+   },
+   "desc": {
+    "en": "A legacy themed wooden wall to keep the untamed wilderness away from your property, made with questionable carpentry. Replaces the High External Wooden Wall.",
+    "es": "Pared de madera con temática clásica para mantener la naturaleza salvaje alejada de tu propiedad, hecho con carpintería de dudosa calidad. Reemplaza a la Pared Alta de Madera Externa."
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "wall.external.high",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "wall.frame.lunar2025_b",
+   "itemid": -450890885,
+   "name": {
+    "en": "Lunar Wall Frame Inlay",
+    "es": "Incrustación de marco de pared lunar"
+   },
+   "desc": {
+    "en": "A Lunar New Year themed decorative wall divider with swirling inlay",
+    "es": "Un divisor de pared decorativo con incrustaciones en forma de remolino y temática del Año Nuevo Lunar"
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 10,
+   "condition": {
+    "max": 100,
+    "repairable": false
+   },
+   "redirectOf": "wall.frame.lunar2025_a",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "wall.frame.lunar2025_c",
+   "itemid": -2016974826,
+   "name": {
+    "en": "Lunar Wall Frame Inlay",
+    "es": "Incrustación de marco de pared lunar"
+   },
+   "desc": {
+    "en": "A Lunar New Year themed decorative wall divider with floral inlay",
+    "es": "Un divisor de pared decorativo con motivos del Año Nuevo Lunar e incrustaciones florales"
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 10,
+   "condition": {
+    "max": 100,
+    "repairable": false
+   },
+   "redirectOf": "wall.frame.lunar2025_a",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "wall.shallow.industrial.shelves",
+   "itemid": -265202949,
+   "name": {
+    "en": "Industrial Wall Shelves",
+    "es": "Estantería de pared industrial"
+   },
+   "desc": {
+    "en": "A shallow industrial wall shelf for small item stacking",
+    "es": "Una cajonera industrial con estantes para acumular objetos pequeños."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 10,
+   "condition": null,
+   "redirectOf": "base.single.shelves",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 100
+     }
+    ],
+    "amount": 1,
+    "time": 10,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "wantedposter.wantedposter2",
+   "itemid": 301063058,
+   "name": {
+    "en": "Wanted Poster 2",
+    "es": "Cartel de \"se busca\" 2"
+   },
+   "desc": {
+    "en": "A poster that can display a given player's face as wanted.",
+    "es": "Un póster que exhibe la cara y el nombre de un jugador para anunciarlo como buscado."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": false
+   },
+   "redirectOf": "wantedposter",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "wantedposter.wantedposter3",
+   "itemid": -1265020883,
+   "name": {
+    "en": "Wanted Poster 3",
+    "es": "Cartel de \"se busca\" 3"
+   },
+   "desc": {
+    "en": "A poster that can display a given player's face as wanted.",
+    "es": "Un póster que exhibe la cara y el nombre de un jugador para anunciarlo como buscado."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": false
+   },
+   "redirectOf": "wantedposter",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "wantedposter.wantedposter4",
+   "itemid": 1463862472,
+   "name": {
+    "en": "Wanted Poster 4",
+    "es": "Cartel de \"se busca\" 4"
+   },
+   "desc": {
+    "en": "A poster that can display a given player's face as wanted.",
+    "es": "Un póster que exhibe la cara y el nombre de un jugador para anunciarlo como buscado."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": false
+   },
+   "redirectOf": "wantedposter",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "wicker.barrel",
+   "itemid": -526026171,
+   "name": {
+    "en": "Wicker Barrel",
+    "es": "Barril de mimbre"
+   },
+   "desc": {
+    "en": "Keep your things in this wicker barrel. Stores up to 48 items. Cannot be locked.",
+    "es": "Guarda tus cosas en este barril de mimbre. Almacena hasta 48 objetos. No se puede cerrar con llave."
+   },
+   "category": "items",
+   "rarity": "none",
+   "stack": 1,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "base.horizontal.barrel",
+   "craft": {
+    "ingredients": [
+     {
+      "id": "wood",
+      "amount": 300
+     },
+     {
+      "id": "metal.fragments",
+      "amount": 75
+     }
+    ],
+    "amount": 1,
+    "time": 30,
+    "workbench": 0,
+    "researchable": false,
+    "default": false
+   },
+   "slug": null,
+   "slugEs": null,
+   "icon": true
+  },
+  {
+   "id": "window.paintable",
+   "itemid": 738611016,
+   "name": {
+    "en": "Paintable Window",
+    "es": "Ventana pintable"
+   },
+   "desc": {
+    "en": "A window with paintable glass",
+    "es": "Una ventana con vidrio pintable"
+   },
+   "category": "construction",
+   "rarity": "none",
+   "stack": 10,
+   "condition": {
+    "max": 100,
+    "repairable": true
+   },
+   "redirectOf": "wall.window.glass.reinforced",
+   "craft": null,
+   "slug": null,
+   "slugEs": null,
    "icon": true
   }
  ]
