@@ -11,16 +11,25 @@ es la de los assets y Netlify la manda con 301 a `/en/rust`), sacados del juego 
 
 ## En cada actualización (primer jueves del mes)
 
+**Memoria:** `extract.py`, `world.py`, `skins.py` y `raid.py` cargan varios GB de bundles cada uno. Corré **uno por vez**,
+nunca en paralelo ni con otro proceso del juego abierto, y mirá antes la RAM libre (hacen falta ≥ 20 GB):
+
+    powershell -c "(Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory/1MB"
+
 1. Actualizá el juego en Steam.
 2. `python games/rust/tools/extract.py` (objetos, recetas, reciclaje, íconos).
 3. `python games/rust/tools/skins.py` (las skins del juego con su ícono; ~3 min, después de `extract.py` porque usa sus
    íconos para las skins que son un objeto propio).
-4. `python games/rust/tools/world.py` (botín de las cajas y tiendas de los monumentos; ~1 min).
+4. `python games/rust/tools/world.py` (botín de las cajas y tiendas de los monumentos, más `mixing.json` y `deployables.json`; ~1 min).
 5. `python games/rust/tools/raid.py` (vida, protección y daño para la calculadora de raideo; ~30 s).
 6. `python games/rust/tools/site_data.py` (los archivos que baja la pestaña Objetos; un segundo).
-7. Los tests (ver abajo). Si un número de los tests del juego cambió, revisá en el juego que el cambio sea real antes
+7. `python games/rust/tools/ui.py` (el fondo de la portada y su vista previa): sólo cuando cambia el fondo, no en cada
+   parche.
+8. Los tests (ver abajo). Si un número de los tests del juego cambió, revisá en el juego que el cambio sea real antes
    de tocar el test.
-8. Commiteá `games/rust/data`, `site/public/rust/items` y `site/public/rust/skins`.
+9. La verificación final, desde `site/`: `npx vitest run test/rust` y
+   `NODE_OPTIONS=--max-old-space-size=6144 npm run build`.
+10. Commiteá `games/rust/data`, `site/public/rust/items` y `site/public/rust/skins`.
 
 ## Tests
 
@@ -35,6 +44,7 @@ varios GB de bundles con UnityPy, así que se corren **de a un archivo por vez**
     RUST_GAME=1 python -m unittest games/rust/tools/tests/test_extract.py -v
     RUST_GAME=1 python -m unittest games/rust/tools/tests/test_skins.py -v
     RUST_GAME=1 python -m unittest games/rust/tools/tests/test_world.py -v
+    RUST_GAME=1 python -m unittest games/rust/tools/tests/test_raid.py -v
 
 (En PowerShell: `$env:RUST_GAME = "1"; python -m unittest ...`.) Cada módulo carga el juego una sola vez y lo suelta al
 terminar.

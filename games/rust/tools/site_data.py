@@ -11,6 +11,7 @@ Uso, desde la raíz del repo:
     python games/rust/tools/site_data.py
 """
 import json
+import sys
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parents[1] / "data"
@@ -27,6 +28,9 @@ CATEGORY_ORDER = [
 # permite: no se nombran.
 ATTACH = {"lock": ["lock.code", "lock.key"], "closer": ["door.closer"], "knocker": ["dragondoorknocker", "skulldoorknocker"]}
 SEISMIC_SENSOR = "electric.seismicsensor"
+# Erratas del español del juego (es-ES), por id: se corrigen acá, al armar el sitio, para no tener que volver a extraer.
+# El slug en español no se toca (ya se calculó con el texto original y las URLs no se mueven entre parches).
+ES_FIXES = {"lock.code": "Cerradura numérica"}
 
 
 def fnv1a32(s):
@@ -102,10 +106,17 @@ def loot_row(r, src, item, ref):
     }
 
 
-def contents_of(loot, ref):
-    """Lo que trae cada objeto que se abre (fuentes con `kind: item`), de lo más probable a lo menos."""
+def contents_of(loot, ref, known=None):
+    """
+    Lo que trae cada objeto que se abre (fuentes con `kind: item`), de lo más probable a lo menos. Si se pasa `known` (los
+    ids de items.json), se descartan los contenidos que no están ahí —el botín nombra algún objeto que el juego ya no
+    tiene, como el trineo navideño del regalo mediano—: sin ficha ni ícono, saldrían con el id crudo de nombre.
+    """
     out = {}
     for sid, rows in loot["items"].items():
+        if known is not None and sid not in known:
+            print(f"[rust] aviso: el botín nombra {sid}, que no está en items.json; se descarta", file=sys.stderr)
+            continue
         for r in rows:
             src = loot["containers"][r["c"]]
             if src.get("kind") == "item":
@@ -160,8 +171,16 @@ def deploy_of(i, dep, by_id, ref):
     return {"attach": attach, "upkeep": upkeep, "decay": d.get("decay")}
 
 
+def flags_of(f):
+    """
+    Lo que el <head> de la ficha puede prometer: `c` si tiene receta, `s` si se vende, `l` si aparece en botín, NPC o
+    recolectables. Sólo va la que es cierta (la lista pesa para 1.032 filas); el prerender la lee sin bajar las fichas.
+    """
+    return {k: 1 for k, on in (("c", f["craft"]), ("s", f["shops"]), ("l", f["loot"])) if on}
+
+
 def build(items_doc, loot, shops, mixing=None, deployables=None, skins=None):
-    items = items_doc["items"]
+    items = [{**i, "name": {**i["name"], "es": ES_FIXES[i["id"]]}} if i["id"] in ES_FIXES else i for i in items_doc["items"]]
     by_id = {i["id"]: i for i in items}
 
     def ref(sid):
@@ -180,7 +199,7 @@ def build(items_doc, loot, shops, mixing=None, deployables=None, skins=None):
     obtained = obtained_by(items, mixing, ref)
 
     containers = loot["containers"]
-    contents = contents_of(loot, ref)
+    contents = contents_of(loot, ref, set(by_id))
     shops_by_item = {}
     for o in shops["orders"]:
         shops_by_item.setdefault(o["item"], []).append({
@@ -230,8 +249,8 @@ def build(items_doc, loot, shops, mixing=None, deployables=None, skins=None):
     return {
         "list": {
             "cats": [c for c in CATEGORY_ORDER if c in present],
-            "rows": [{"id": i["id"], "slug": i["slug"], "slugEs": i["slugEs"], "en": i["name"]["en"], "es": i["name"]["es"], "cat": i["category"]}
-                     for i in visible],
+            "rows": [{"id": i["id"], "slug": i["slug"], "slugEs": i["slugEs"], "en": i["name"]["en"], "es": i["name"]["es"], "cat": i["category"],
+                      **flags_of(fichas[i["slug"]])} for i in visible],
         },
         "fichas": fichas,
         "slugsEs": {"items": {i["slug"]: i["slugEs"] for i in visible if i["slugEs"] != i["slug"]}},
