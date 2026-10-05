@@ -140,5 +140,7 @@ a.rs-ref:hover { color: #fff; }
 /* El raideo en la portada y en las fichas (2026-10-05): vive acá porque la portada no carga rust-raid.css. */
 .rs-raid-preview { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
 .rs-raid-preview li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 8px; background: var(--rs-slot); }
+/* La nota de fallas va en la ficha y en la calculadora: vive acá porque la ficha no carga rust-raid.css. */
+.rs-dud { display: block; color: var(--rs-dim); font-size: 12px; }
 .rs-raid-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
 a.rs-btn { display: inline-block; padding: 8px 12px; text-decoration: none; }
