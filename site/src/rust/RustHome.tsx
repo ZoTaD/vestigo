@@ -10,6 +10,7 @@ import RouteLink from "../RouteLink";
 import { useLang, useLocale } from "../i18n";
 import { RUST_PUBLISHED, type Route, type RustTab } from "../route";
 import { useRustCopy } from "../rustCopy";
+import RaidPreview from "./RaidPreview";
 import RustSearch from "./RustSearch";
 import { nextForcedWipe } from "./wipe";
 
@@ -60,6 +61,7 @@ export default function RustHome({ route, navigate }: { route: Route; navigate: 
 
         <aside className="rs-side">
           <Wipe />
+          <RaidPreview route={route} />
           <section className="rs-pnl">
             <h2 className="rs-hd">{t.toolsTitle}</h2>
             <ul className="rs-tools">

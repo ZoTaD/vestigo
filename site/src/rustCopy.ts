@@ -112,6 +112,7 @@ export interface RustCopy {
     shopRow: (amount: number, item: string, price: number, currency: string) => string;
     back: string;
   };
+  raidBlocks: { toBreak: string; breaks: string; open: string };
   raid: {
     h1: string;
     lede: string;
@@ -146,6 +147,7 @@ export interface RustCopy {
     lede: (items: string, recipes: string) => string;
     slotsTitle: string;
     wipe: { title: string; days: string; hours: string; minutes: string; note: string };
+    raidPreview: { title: string; calc: string; table: string; c4: string };
     toolsTitle: string;
     tools: { tab: RustTab; title: string; text: string }[];
     aboutTitle: string;
@@ -269,6 +271,7 @@ const EN: RustCopy = {
     shopRow: (amount, item, price, currency) => `${amount} × ${item} for ${price} ${currency}`,
     back: "All items",
   },
+  raidBlocks: { toBreak: "What it takes to break it", breaks: "What it breaks", open: "Open in the raid calculator" },
   raid: {
     h1: "Rust Raid Calculator",
     lede: "Pick what you want to break and how many: you get how many explosives of each kind it takes, the sulfur it costs and the cheapest mix.",
@@ -309,6 +312,7 @@ const EN: RustCopy = {
       minutes: "min",
       note: "First Thursday of every month, when Facepunch ships the update (around 2 pm New York time).",
     },
+    raidPreview: { title: "Raid costs", calc: "Calculate", table: "Full table", c4: "C4" },
     toolsTitle: "Tools",
     tools: [
       { tab: "items", title: "Items", text: "Recipe, workbench, recycling, loot and shortname of every item." },
@@ -439,6 +443,7 @@ const ES: RustCopy = {
     shopRow: (amount, item, price, currency) => `${amount} × ${item} por ${price} de ${currency}`,
     back: "Todos los objetos",
   },
+  raidBlocks: { toBreak: "Cuánto cuesta romperla", breaks: "Qué rompe", open: "Abrir en la calculadora de raideo" },
   raid: {
     h1: "Calculadora de raideo de Rust",
     lede: "Elegí qué querés romper y cuántos: te dice cuántos explosivos de cada tipo hacen falta, el azufre que cuesta y la mezcla más barata.",
@@ -479,6 +484,7 @@ const ES: RustCopy = {
       minutes: "min",
       note: "Primer jueves de cada mes, cuando Facepunch saca la actualización (cerca de las 14 de Nueva York).",
     },
+    raidPreview: { title: "Lo que cuesta raidear", calc: "Calcular", table: "Ver tabla", c4: "C4" },
     toolsTitle: "Herramientas",
     tools: [
       { tab: "items", title: "Objetos", text: "Receta, banco, reciclaje, loot y shortname de cada objeto." },

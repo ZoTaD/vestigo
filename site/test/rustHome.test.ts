@@ -23,6 +23,14 @@ describe("la portada de Rust", () => {
     expect(html).toContain("Sobre esta guía");
   });
 
+  it("el adelanto de la calculadora: C4 y azufre para la pared de piedra, y los dos botones", () => {
+    const html = render("es", "/es/rust");
+    expect(html).toContain("Pared de piedra");
+    expect(html).toMatch(/data-cell="building\.stone"[^>]*>2 C4 · 4\.400</);
+    expect(html).toContain('href="/es/rust/raideo"');
+    expect(html).toContain('href="/es/rust/raideo#tabla"');
+  });
+
   it("en inglés, el h1 dice lo que se busca", () => {
     expect(render("en", "/en/rust")).toMatch(/<h1[^>]*>Rust Guide: Items, Crafting &amp; Raids<\/h1>/);
   });

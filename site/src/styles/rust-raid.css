@@ -24,7 +24,6 @@
 .rs-raid-mix { display: grid; gap: 4px; margin: 0 0 12px; padding: 10px 12px; background: rgba(108, 142, 54, 0.22); }
 .rs-raid-sulfur { font-size: 22px; font-weight: 800; }
 .rs-dud { display: block; color: var(--rs-dim); font-size: 12px; }
-.rs-raid-actions { display: flex; gap: 8px; margin: 12px 0 0; }
 .rs-scroll { overflow-x: auto; }
 .rs-raid-table td { text-align: center; }
 .rs-raid-table thead th { text-align: center; }
