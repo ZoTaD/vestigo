@@ -56,8 +56,33 @@ class TestSkinsInGame(unittest.TestCase):
                 self.assertTrue(r["name"]["en"], (sid, r["id"]))
                 # Sin ícono propio ni redirect, queda el del objeto: ninguna se muestra vacía.
                 self.assertTrue(r["icon"], (sid, r["id"]))
-        crystal = {s["id"]: s for s in data()["items"]["rifle.ak"]}[10561]
-        self.assertEqual(crystal["icon"], "items/rifle.ak")
+
+
+class TestAssignIcons(unittest.TestCase):
+    """La elección del ícono, sin el juego: datos armados a mano con la forma de `read_skins`."""
+
+    def skin(self, skin_id, sid, icon=None, redirect=None):
+        return {"id": skin_id, "sid": sid, "name": {"en": str(skin_id), "es": None}, "workshop": False,
+                "redirect": redirect, "icon": icon}
+
+    def test_un_sprite_compartido_se_escribe_una_vez(self):
+        # Las AK de cristal comparten el Sprite de la Sapphire: antes la última pisaba a las otras y quedaban sin ícono.
+        rows = [self.skin(10562, "rifle.ak", ("cab-a", 7)), self.skin(10561, "rifle.ak", ("cab-a", 7)),
+                self.skin(10563, "rifle.ak", ("cab-a", 7))]
+        needed = skins.assign_icons(rows, lambda sid: True)
+        self.assertEqual(needed, {("cab-a", 7): 10562})
+        icons = {r["id"]: skins.final_icon(r, {10562}, lambda sid: True) for r in rows}
+        self.assertEqual(icons, {10562: "skins/10562", 10561: "skins/10562", 10563: "skins/10562"})
+
+    def test_redirect_y_ultimo_recurso(self):
+        rows = [self.skin(13070, "rifle.ak", ("cab-a", 1), redirect="rifle.ak.ice"),
+                self.skin(1, "rifle.ak", ("cab-a", 2)), self.skin(2, "rifle.ak"), self.skin(3, "sin.icono")]
+        has = lambda sid: sid in ("rifle.ak", "rifle.ak.ice")  # noqa: E731
+        needed = skins.assign_icons(rows, has)
+        self.assertEqual(needed, {("cab-a", 2): 1})
+        # El 1 no se encontró en los bundles: cae al ícono del objeto, igual que el 2, que no trae ninguno.
+        got = [skins.final_icon(r, set(), has) for r in rows]
+        self.assertEqual(got, ["items/rifle.ak.ice", "items/rifle.ak", "items/rifle.ak", None])
 
 
 SKINS_JSON = extract.DATA / "skins.json"
@@ -70,8 +95,8 @@ class TestSkinIcons(unittest.TestCase):
         public = extract.ROOT / "site" / "public" / "rust"
         for sid, rows in doc["items"].items():
             for r in rows:
-                if r["icon"]:
-                    self.assertTrue((public / f"{r['icon']}.webp").exists(), (sid, r["icon"]))
+                self.assertTrue(r["icon"], (sid, r["id"]))
+                self.assertTrue((public / f"{r['icon']}.webp").exists(), (sid, r["icon"]))
 
 
 def tearDownModule():

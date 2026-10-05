@@ -354,7 +354,7 @@
      "en": "Explosives Storage Box",
      "es": "Caja almacén de explosivos"
     },
-    "icon": null,
+    "icon": "items/box.wooden.large",
     "workshop": false
    },
    {
@@ -1894,6 +1894,28 @@
     "workshop": true
    }
   ],
+  "planter.large": [
+   {
+    "id": 10298,
+    "name": {
+     "en": "Railroad Planter",
+     "es": "Huerto de ferrocarril"
+    },
+    "icon": "skins/10298",
+    "workshop": false
+   }
+  ],
+  "planter.triangle": [
+   {
+    "id": 10297,
+    "name": {
+     "en": "Triangle Railroad Planter",
+     "es": "Huerto triangular de ferrocarril"
+    },
+    "icon": "skins/10297",
+    "workshop": false
+   }
+  ],
   "rifle.ak": [
    {
     "id": 13076,
@@ -1919,7 +1941,7 @@
      "en": "Crystal Assault Rifle Emerald",
      "es": "Rifle de Asalto de Esmeralda"
     },
-    "icon": null,
+    "icon": "items/rifle.ak",
     "workshop": false
    },
    {
@@ -1928,7 +1950,7 @@
      "en": "Crystal Assault Rifle Pink Diamond",
      "es": "Rifle de Asalto de Diamante Rosa"
     },
-    "icon": null,
+    "icon": "items/rifle.ak",
     "workshop": false
    },
    {
@@ -1937,7 +1959,7 @@
      "en": "Crystal Assault Rifle Ruby",
      "es": "Rifle de Asalto de Ruby"
     },
-    "icon": null,
+    "icon": "items/rifle.ak",
     "workshop": false
    },
    {
@@ -2869,6 +2891,26 @@
      "es": "Puerta de garaje industrial"
     },
     "icon": "items/industrial.garagedoor",
+    "workshop": false
+   }
+  ],
+  "wall.frame.lunar2025_a": [
+   {
+    "id": 10282,
+    "name": {
+     "en": "Floral",
+     "es": "Floral"
+    },
+    "icon": "items/wall.frame.lunar2025_c",
+    "workshop": false
+   },
+   {
+    "id": 10281,
+    "name": {
+     "en": "Swirling",
+     "es": "Remolinos"
+    },
+    "icon": "items/wall.frame.lunar2025_b",
     "workshop": false
    }
   ],
