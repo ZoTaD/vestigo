@@ -150,7 +150,7 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
     expect(html).toMatch(/Radiation<\/dt><dd>−10</);
   });
 
-  it("el AK: los científicos pesados, el estado al aparecer y la cantidad de todas las tiradas", () => {
+  it("el AK: los científicos pesados, el estado al aparecer y la cantidad de todas las tiradas de la caja", () => {
     const html = render("es", "/es/rust/objetos/fusil-de-asalto");
     expect(html).toContain("Científico pesado (plataforma petrolera)");
     expect(html).toContain(">NPC<");
