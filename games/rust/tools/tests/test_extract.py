@@ -8,6 +8,7 @@ test: un número distinto puede ser un error del lector y no del parche.
 Uso (desde la raíz del worktree):
     python -m unittest discover -s games/rust/tools/tests -v
 """
+import gc
 import json
 import os
 import re
@@ -15,9 +16,10 @@ import sys
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.dirname(__file__))
 import extract  # noqa: E402
+from _game import solo_con_juego  # noqa: E402
 
-HAVE_GAME = (extract.BUNDLES / "shared" / "items.preload.bundle").exists()
 _DATA = None
 
 
@@ -95,7 +97,7 @@ class TestAssignSlugs(unittest.TestCase):
         self.assertEqual((items[1]["slug"], items[1]["slugEs"]), ("gun", "trabuco"))
 
 
-@unittest.skipUnless(HAVE_GAME, "Rust no está instalado (RUST_DIR)")
+@solo_con_juego
 class TestItems(unittest.TestCase):
     def test_el_build_de_steam(self):
         self.assertIsInstance(data()["build"], int)
@@ -265,7 +267,7 @@ class TestRecycleOf(unittest.TestCase):
         self.assertIsNone(extract.recycle_of(self.bp([(2, 20.0)]), self.BY_PID))
 
 
-@unittest.skipUnless(HAVE_GAME, "sin el juego instalado")
+@solo_con_juego
 class TestRecycleAndResearchInGame(unittest.TestCase):
     def test_eficiencias_de_las_recicladoras(self):
         self.assertEqual(data()["recyclers"], [
@@ -366,7 +368,7 @@ class TestFichaSinJuego(unittest.TestCase):
         self.assertEqual(extract.turns_of(None, {"byproductItem": ref(0), "byproductAmount": 1, "byproductChance": 0.0}, None, by_pid), [])
 
 
-@unittest.skipUnless(HAVE_GAME, "sin el juego instalado")
+@solo_con_juego
 class TestFichaInGame(unittest.TestCase):
     def test_despawn(self):
         want = {"rifle.ak": 3600, "hatchet": 1200, "smg.thompson": 2400, "lock.code": 300, "torch": 30,
@@ -403,6 +405,13 @@ class TestFichaInGame(unittest.TestCase):
         self.assertIn({"how": "swap", "into": "fat.animal", "amount": 18, "chance": 1}, item("fish.orangeroughy")["turns"])
         self.assertIn({"how": "swap", "into": "bone.fragments", "amount": 20, "chance": 1}, item("skull.wolf")["turns"])
         self.assertEqual(item("rifle.ak")["turns"], [])
+
+
+def tearDownModule():
+    """Suelta lo que se cargó del juego (varios GB) apenas termina el módulo."""
+    global _DATA
+    _DATA = None
+    gc.collect()
 
 
 if __name__ == "__main__":

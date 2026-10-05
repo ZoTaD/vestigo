@@ -7,16 +7,18 @@ prueban contra lo que ya escribió `skins.py`.
 Uso (desde la raíz del worktree):
     python -m unittest discover -s games/rust/tools/tests -v
 """
+import gc
 import json
 import os
 import sys
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.dirname(__file__))
 import extract  # noqa: E402
+from _game import solo_con_juego  # noqa: E402
 import skins  # noqa: E402
 
-HAVE_GAME = (extract.BUNDLES / "shared" / "content.bundle").exists()
 _DATA = None
 
 
@@ -27,7 +29,7 @@ def data():
     return _DATA
 
 
-@unittest.skipUnless(HAVE_GAME, "sin el juego instalado")
+@solo_con_juego
 class TestSkinsInGame(unittest.TestCase):
     def test_las_del_ak(self):
         ak = {s["id"]: s for s in data()["items"]["rifle.ak"]}
@@ -61,6 +63,13 @@ class TestSkinIcons(unittest.TestCase):
             for r in rows:
                 if r["icon"]:
                     self.assertTrue((public / f"{r['icon']}.webp").exists(), (sid, r["icon"]))
+
+
+def tearDownModule():
+    """Suelta lo que se cargó del juego (varios GB) apenas termina el módulo."""
+    global _DATA
+    _DATA = None
+    gc.collect()
 
 
 if __name__ == "__main__":

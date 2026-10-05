@@ -17,6 +17,23 @@ es la de los assets y Netlify la manda con 301 a `/en/rust`), sacados del juego 
    íconos para las skins que son un objeto propio).
 4. `python games/rust/tools/world.py` (botín de las cajas y tiendas de los monumentos; ~1 min).
 5. `python games/rust/tools/site_data.py` (los archivos que baja la pestaña Objetos; un segundo).
-6. `python -m unittest discover -s games/rust/tools/tests -v`. Si un número de los tests cambió, revisá en el juego
-   que el cambio sea real antes de tocar el test.
+6. Los tests (ver abajo). Si un número de los tests del juego cambió, revisá en el juego que el cambio sea real antes
+   de tocar el test.
 7. Commiteá `games/rust/data`, `site/public/rust/items` y `site/public/rust/skins`.
+
+## Tests
+
+La suite normal no lee el juego (datos sintéticos y los JSON ya generados en `games/rust/data`); corre en segundos y se
+puede lanzar siempre, sin la variable:
+
+    python -m unittest discover -s games/rust/tools/tests -v
+
+Los tests que leen los archivos del juego se saltean salvo con `RUST_GAME=1` (y el juego instalado). Cada uno carga
+varios GB de bundles con UnityPy, así que se corren **de a un archivo por vez**, nunca dos procesos a la vez:
+
+    RUST_GAME=1 python -m unittest games/rust/tools/tests/test_extract.py -v
+    RUST_GAME=1 python -m unittest games/rust/tools/tests/test_skins.py -v
+    RUST_GAME=1 python -m unittest games/rust/tools/tests/test_world.py -v
+
+(En PowerShell: `$env:RUST_GAME = "1"; python -m unittest ...`.) Cada módulo carga el juego una sola vez y lo suelta al
+terminar.

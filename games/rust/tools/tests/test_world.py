@@ -7,16 +7,18 @@ La parte sin el juego prueba la cuenta de probabilidades con árboles sintético
 Uso (desde la raíz del worktree):
     python -m unittest discover -s games/rust/tools/tests -v
 """
+import gc
 import json
 import os
 import sys
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.dirname(__file__))
 import extract  # noqa: E402
+from _game import solo_con_juego  # noqa: E402
 import world  # noqa: E402
 
-HAVE_GAME = (extract.BUNDLES / "shared" / "assetscenes.bundle").exists()
 _DATA = None
 _W = None
 
@@ -222,7 +224,7 @@ class TestSpawnTreeCiclo(unittest.TestCase):
         self.assertAlmostEqual(got[("b", False)], 0.5)
 
 
-@unittest.skipUnless(HAVE_GAME, "sin el juego instalado")
+@solo_con_juego
 class TestWorldInGame(unittest.TestCase):
     def test_las_cajas_conocidas_estan_con_nombre_en_los_dos_idiomas(self):
         boxes = data()["loot"]["containers"]
@@ -425,6 +427,14 @@ class TestWorldInGame(unittest.TestCase):
         vib = data()["deployables"]["vibration"]
         self.assertEqual({k: vib[k] for k in ("explosive.timed", "ammo.rocket.basic", "explosive.satchel", "grenade.beancan", "ammo.rocket.hv")},
                          {"explosive.timed": 3, "ammo.rocket.basic": 3, "explosive.satchel": 2, "grenade.beancan": 1, "ammo.rocket.hv": 1})
+
+
+def tearDownModule():
+    """Suelta lo que se cargó del juego (varios GB) apenas termina el módulo."""
+    global _DATA, _W
+    _DATA = None
+    _W = None
+    gc.collect()
 
 
 if __name__ == "__main__":
