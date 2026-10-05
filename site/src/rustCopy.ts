@@ -92,6 +92,17 @@ export interface RustCopy {
     contents: string;
     obtained: string;
     turnsInto: string;
+    building: string;
+    attach: string;
+    upkeep: string;
+    upkeepNote: string;
+    decay: string;
+    decayOut: (t: string) => string;
+    decayIn: (t: string) => string;
+    decayDelay: (t: string) => string;
+    decayNote: string;
+    detectedBy: string;
+    vibration: (n: number) => string;
     how: Record<HowKind, string>;
     perUnit: (pct: string) => string;
     blueprint: string;
@@ -209,6 +220,17 @@ const EN: RustCopy = {
     contents: "What's inside",
     obtained: "Obtained from",
     turnsInto: "Turns into",
+    building: "Building",
+    attach: "Takes",
+    upkeep: "Upkeep per day",
+    upkeepNote: "From the smallest base to the biggest: the tool cupboard charges more the more pieces the base has.",
+    decay: "Decay",
+    decayOut: (t) => `Outside: ${t}`,
+    decayIn: (t) => `Inside: ${t}`,
+    decayDelay: (t) => `Starts after ${t}`,
+    decayNote: "Time until it breaks with no upkeep in the tool cupboard.",
+    detectedBy: "Detected by",
+    vibration: (n) => `vibration level ${n}`,
     how: { cook: "Cooking or smelting", burn: "Burning", swap: "Using it", mix: "Mixing table" },
     perUnit: (pct) => `${pct} per unit`,
     blueprint: "Blueprint",
@@ -339,6 +361,17 @@ const ES: RustCopy = {
     contents: "Qué trae",
     obtained: "Se obtiene de",
     turnsInto: "Se convierte en",
+    building: "Construcción",
+    attach: "Se le puede poner",
+    upkeep: "Mantenimiento por día",
+    upkeepNote: "De la base más chica a la más grande: el armario cobra más cuantas más piezas tenga la base.",
+    decay: "Desgaste",
+    decayOut: (t) => `Afuera: ${t}`,
+    decayIn: (t) => `Adentro: ${t}`,
+    decayDelay: (t) => `Empieza a las ${t}`,
+    decayNote: "Lo que tarda en romperse si el armario no tiene con qué pagar el mantenimiento.",
+    detectedBy: "Lo detecta",
+    vibration: (n) => `nivel de vibración ${n}`,
     how: { cook: "Cocinando o fundiendo", burn: "Quemándolo", swap: "Usándolo", mix: "Mesa de mezcla" },
     perUnit: (pct) => `${pct} por unidad`,
     blueprint: "Plano",

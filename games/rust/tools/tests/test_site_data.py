@@ -151,6 +151,29 @@ class TestBuild(unittest.TestCase):
         scrap = self.fichas["scrap"]
         self.assertEqual((scrap["craft"], scrap["recycle"], scrap["loot"], scrap["shops"], scrap["usedIn"]), (None, None, [], [], []))
 
+    def test_construccion(self):
+        doc = json.loads(json.dumps(DOC))
+        doc["items"] += [
+            it("door.hinged.metal", "Sheet Metal Door", "Puerta de chapa", cat="construction",
+               craft={"ingredients": [{"id": "wood", "amount": 150}, {"id": "gears", "amount": 2}], "amount": 1, "time": 30,
+                      "workbench": 0, "researchable": True, "researchScrap": 60, "default": False}),
+            it("lock.code", "Code Lock", "Cerradura numérica", cat="construction"),
+            it("electric.seismicsensor", "Seismic Sensor", "Sensor sísmico", cat="electrical"),
+            it("gears", "Gears", "Engranajes", cat="component"),
+        ]
+        dep = {"items": {"door.hinged.metal": {"door": {"lock": True, "closer": False, "knocker": False, "hatch": False},
+                                               "upkeep": True, "decay": {"delay": 0, "duration": 8}}},
+               "vibration": {"rifle.ak": 3}}
+        out = rust_site.build(doc, LOOT, SHOPS, None, dep)
+        d = out["fichas"]["sheet-metal-door"]["deploy"]
+        self.assertEqual([a["id"] for a in d["attach"]], ["lock.code"])  # lock.key no está en estos datos: no se nombra
+        # Sólo los recursos pagan mantenimiento: los engranajes (componente) no.
+        self.assertEqual(d["upkeep"], [{"id": "wood", "slug": "wood", "name": {"en": "Wood", "es": "Madera"}, "amount": 150}])
+        self.assertEqual(d["decay"], {"delay": 0, "duration": 8})
+        ak = out["fichas"]["assault-rifle"]
+        self.assertEqual((ak["vibration"], ak["detectedBy"]["id"]), (3, "electric.seismicsensor"))
+        self.assertIsNone(ak["deploy"])
+
 
 REAL = os.path.join(os.path.dirname(__file__), "..", "..", "data")
 

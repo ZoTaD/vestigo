@@ -22,6 +22,11 @@ CATEGORY_ORDER = [
     "weapon", "construction", "items", "resources", "attire", "tool", "medical", "food", "ammunition", "traps",
     "misc", "component", "electrical", "fun",
 ]
+# Qué objetos son cada cosa que se le puede poner a una puerta (`Door.canTakeLock`, `canTakeCloser`, `canTakeKnocker`).
+# El controlador de puertas y las coronas también se le ponen (rusthelp las lista), pero no se identificó el campo que lo
+# permite: no se nombran.
+ATTACH = {"lock": ["lock.code", "lock.key"], "closer": ["door.closer"], "knocker": ["dragondoorknocker", "skulldoorknocker"]}
+SEISMIC_SENSOR = "electric.seismicsensor"
 
 
 def fnv1a32(s):
@@ -132,7 +137,30 @@ def obtained_by(items, mixing, ref):
     return out
 
 
-def build(items_doc, loot, shops, mixing=None):
+def deploy_of(i, dep, by_id, ref):
+    """
+    Lo de construcción de un objeto que se coloca: qué se le puede poner (si es una puerta), el mantenimiento por día al
+    100 % (los ingredientes de categoría Recursos de su receta; el sitio saca el rango) y el desgaste. `None` si nada.
+    Sólo se nombra lo que se le puede poner: que una puerta no lleve cierrapuertas no se afirma, porque el juego sólo dice
+    `canTakeCloser` en falso y no por qué.
+    """
+    d = (dep or {}).get("items", {}).get(i["id"])
+    if not d:
+        return None
+    attach = []
+    for field, sids in ATTACH.items():
+        if (d.get("door") or {}).get(field):
+            attach += [ref(s) for s in sids if s in by_id]
+    upkeep = []
+    if d.get("upkeep") and i.get("craft"):
+        upkeep = [{**ref(g["id"]), "amount": g["amount"]} for g in i["craft"]["ingredients"]
+                  if by_id.get(g["id"], {}).get("category") == "resources"]
+    if not (attach or upkeep or d.get("decay")):
+        return None
+    return {"attach": attach, "upkeep": upkeep, "decay": d.get("decay")}
+
+
+def build(items_doc, loot, shops, mixing=None, deployables=None):
     items = items_doc["items"]
     by_id = {i["id"]: i for i in items}
 
@@ -192,6 +220,9 @@ def build(items_doc, loot, shops, mixing=None):
             "obtained": obtained.get(i["id"], []),
             "turns": [{"how": t["how"], "into": ref(t["into"]), "amount": t["amount"], "chance": t["chance"]} for t in i.get("turns") or []],
             "shops": shops_by_item.get(i["id"], []),
+            "deploy": deploy_of(i, deployables, by_id, ref),
+            "vibration": (deployables or {}).get("vibration", {}).get(i["id"]),
+            "detectedBy": ref(SEISMIC_SENSOR) if (deployables or {}).get("vibration", {}).get(i["id"]) else None,
         }
 
     present = {i["category"] for i in visible}
@@ -209,7 +240,7 @@ def build(items_doc, loot, shops, mixing=None):
 def main():
     load = lambda n: json.loads((DATA / n).read_text(encoding="utf-8"))  # noqa: E731
     optional = lambda n: load(n) if (DATA / n).exists() else None  # noqa: E731
-    out = build(load("items.json"), load("loot.json"), load("shops.json"), optional("mixing.json"))
+    out = build(load("items.json"), load("loot.json"), load("shops.json"), optional("mixing.json"), optional("deployables.json"))
     (OUT / "items").mkdir(parents=True, exist_ok=True)
     dump = lambda path, obj: path.write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")  # noqa: E731
     dump(OUT / "list.json", out["list"])

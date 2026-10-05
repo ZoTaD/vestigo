@@ -90,6 +90,14 @@ export interface Ficha {
   obtained: { how: HowKind; from: (Ref & { amount: number })[]; amount: number; chance: number; time?: number; bp?: boolean }[];
   turns: { how: Exclude<HowKind, "mix">; into: Ref; amount: number; chance: number }[];
   shops: { shop: Loc; amount: number; bp: boolean; currency: Ref; price: number }[];
+  deploy: {
+    attach: Ref[];
+    upkeep: (Ref & { amount: number })[];
+    /** En horas, sin mantenimiento y afuera de una base. */
+    decay: { delay: number; duration: number } | null;
+  } | null;
+  vibration: number | null;
+  detectedBy: Ref | null;
 }
 
 /** `SHARDS` de site_data.py: si se cambia uno se cambia el otro (lo prueba rustItemsData.test.ts). */

@@ -7,7 +7,7 @@ import { useLang, useLocale } from "../../i18n";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
 import { say, type Ficha } from "./data";
-import { formatDuration } from "./format";
+import { formatDuration, upkeepRange } from "./format";
 import { Icon, RefLink, type Nav } from "./parts";
 
 type Props = { ficha: Ficha; route: Route; navigate: Nav };
@@ -151,6 +151,86 @@ export function TurnsSection({ ficha, route, navigate }: Props) {
           </li>
         ))}
       </ul>
+    </section>
+  );
+}
+
+/** Lo de construcción: qué se le pone (puertas), cuánto mantenimiento paga y cuánto tarda en romperse. */
+export function BuildingSection({ ficha, route, navigate }: Props) {
+  const t = useRustCopy().items;
+  const { lang } = useLang();
+  const locale = useLocale();
+  const num = (n: number) => n.toLocaleString(locale);
+  const d = ficha.deploy;
+  if (!d) return null;
+  return (
+    <section className="rs-pnl">
+      <h2 className="rs-hd">{t.building}</h2>
+      {d.attach.length > 0 && (
+        <>
+          <h3 className="rs-sub">{t.attach}</h3>
+          <ul className="rs-refs">
+            {d.attach.map((a) => (
+              <li key={a.id}>
+                <RefLink r={a} route={route} navigate={navigate}>
+                  <Icon id={a.id} size={32} />
+                  <span>{say(a.name, lang)}</span>
+                </RefLink>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      {d.upkeep.length > 0 && (
+        <>
+          <h3 className="rs-sub">{t.upkeep}</h3>
+          <ul className="rs-yields">
+            {d.upkeep.map((u) => {
+              const [lo, hi] = upkeepRange(u.amount);
+              return (
+                <li key={u.id}>
+                  <RefLink r={u} route={route} navigate={navigate}>
+                    <Icon id={u.id} size={28} />
+                    <span>{say(u.name, lang)}</span>
+                    <b>{`${num(lo)}–${num(hi)}`}</b>
+                  </RefLink>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="rs-ficha-note">{t.upkeepNote}</p>
+        </>
+      )}
+      {d.decay && (
+        <>
+          <h3 className="rs-sub">{t.decay}</h3>
+          <p className="rs-meta">
+            <span>{t.decayOut(formatDuration(d.decay.duration * 3600))}</span>
+            <span>{t.decayIn(formatDuration(d.decay.duration * 36000))}</span>
+            {d.decay.delay > 0 && <span>{t.decayDelay(formatDuration(d.decay.delay * 3600))}</span>}
+          </p>
+          <p className="rs-ficha-note">{t.decayNote}</p>
+        </>
+      )}
+    </section>
+  );
+}
+
+/** Qué lo detecta: el sensor sísmico, con el nivel de vibración de la explosión. */
+export function DetectedSection({ ficha, route, navigate }: Props) {
+  const t = useRustCopy().items;
+  const { lang } = useLang();
+  if (!ficha.vibration || !ficha.detectedBy) return null;
+  return (
+    <section className="rs-pnl">
+      <h2 className="rs-hd">{t.detectedBy}</h2>
+      <p className="rs-meta">
+        <RefLink r={ficha.detectedBy} route={route} navigate={navigate}>
+          <Icon id={ficha.detectedBy.id} size={28} />
+          <span>{say(ficha.detectedBy.name, lang)}</span>
+        </RefLink>
+        <span>{t.vibration(ficha.vibration)}</span>
+      </p>
     </section>
   );
 }

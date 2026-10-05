@@ -40,3 +40,11 @@ export function condText([lo, hi]: [number, number], pct: (p: number) => string)
   const b = Math.round(hi * 100);
   return a === b ? pct(a) : `${a}–${pct(b)}`;
 }
+
+/**
+ * El mantenimiento por día de un recurso, de la base más chica a la más grande (`decay.bracket_*`: el armario cobra el
+ * 10 % del costo de cada pieza en una base chica y hasta el 33,3 % en una grande), para abajo como en el juego.
+ */
+export function upkeepRange(amount: number): [number, number] {
+  return [Math.floor(amount * 0.1 + 1e-9), Math.floor(amount * 0.333 + 1e-9)];
+}

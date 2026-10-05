@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { condText, craftTimes, formatChance, formatDuration } from "../src/rust/items/format";
+import { condText, craftTimes, formatChance, formatDuration, upkeepRange } from "../src/rust/items/format";
 
 describe("las cuentas chicas de la ficha de Rust", () => {
   it("formatDuration", () => {
@@ -31,5 +31,14 @@ describe("el estado al aparecer y la probabilidad", () => {
     expect(formatChance(0.039, "es-AR")).toBe("3,9 %");
     expect(formatChance(0.0004, "es-AR")).toBe("< 0,1 %");
     expect(formatChance(1, "es-AR")).toBe("100 %");
+  });
+});
+
+describe("el mantenimiento por día", () => {
+  it("de la base más chica a la más grande (10 % a 33,3 %, para abajo)", () => {
+    expect(upkeepRange(150)).toEqual([15, 49]);
+    expect(upkeepRange(300)).toEqual([30, 99]);
+    expect(upkeepRange(20)).toEqual([2, 6]);
+    expect(upkeepRange(4000)).toEqual([400, 1332]);
   });
 });
