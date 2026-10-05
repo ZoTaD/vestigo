@@ -394,6 +394,33 @@ class TestWorldInGame(unittest.TestCase):
         self.assertEqual(recipes["gunpowder"]["in"], [{"id": "sulfur", "amount": 20}, {"id": "charcoal", "amount": 20}])
         self.assertEqual(recipes["healingtea"]["in"], [{"id": "red.berry", "amount": 4}])
 
+    def test_puertas(self):
+        dep = data()["deployables"]["items"]
+        self.assertEqual(dep["door.hinged.metal"]["door"], {"lock": True, "closer": True, "knocker": True, "hatch": False})
+        self.assertTrue(dep["door.hinged.toptier"]["door"]["hatch"])
+        self.assertEqual(dep["wall.frame.garagedoor"]["door"], {"lock": True, "closer": False, "knocker": False, "hatch": False})
+
+    def test_mantenimiento(self):
+        dep = data()["deployables"]["items"]
+        for sid in ("door.hinged.metal", "wall.frame.garagedoor", "wall.external.high.stone", "door.hinged.toptier"):
+            self.assertTrue(dep[sid]["upkeep"], sid)
+        self.assertFalse(dep.get("box.wooden.large", {}).get("upkeep", False))
+
+    def test_desgaste(self):
+        # rusthelp.com (2026-10-05): puerta de chapa 8 h, caja grande 8 h, horno 96 h, caja de madera 96 h, sacos 15 min.
+        dep = data()["deployables"]["items"]
+        self.assertEqual(dep["door.hinged.metal"]["decay"], {"delay": 0, "duration": 8})
+        self.assertEqual(dep["door.hinged.toptier"]["decay"], {"delay": 0, "duration": 12})
+        self.assertEqual(dep["box.wooden.large"]["decay"], {"delay": 5, "duration": 8})
+        self.assertEqual(dep["furnace"]["decay"], {"delay": 48, "duration": 96})  # sólo hay copias en los departamentos
+        self.assertEqual(dep["box.wooden"]["decay"]["duration"], 96)
+        self.assertEqual(dep["barricade.sandbags"]["decay"], {"delay": 0, "duration": 0.25})
+
+    def test_vibracion(self):
+        vib = data()["deployables"]["vibration"]
+        self.assertEqual({k: vib[k] for k in ("explosive.timed", "ammo.rocket.basic", "explosive.satchel", "grenade.beancan", "ammo.rocket.hv")},
+                         {"explosive.timed": 3, "ammo.rocket.basic": 3, "explosive.satchel": 2, "grenade.beancan": 1, "ammo.rocket.hv": 1})
+
 
 if __name__ == "__main__":
     unittest.main()

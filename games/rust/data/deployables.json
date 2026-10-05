@@ -1,0 +1,704 @@
+{
+ "items": {
+  "abyss.barrel.horizontal": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "abyss.barrel.vertical": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "ballista.mounted": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 2,
+    "duration": 2
+   }
+  },
+  "bamboo.barrel": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "barricade.sandbags": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 0,
+    "duration": 0.25
+   }
+  },
+  "bathtub.planter": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
+  "batteringram": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 2,
+    "duration": 2
+   }
+  },
+  "box.wooden": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 96
+   }
+  },
+  "box.wooden.large": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "campfire": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
+  "catapult": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 2,
+    "duration": 2
+   }
+  },
+  "cursedcauldron": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
+  "door.double.hinged.bardoors": {
+   "door": null,
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 3
+   }
+  },
+  "door.double.hinged.metal": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "door.double.hinged.toptier": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": true
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 12
+   }
+  },
+  "door.double.hinged.wood": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 3
+   }
+  },
+  "door.hinged.metal": {
+   "door": {
+    "lock": true,
+    "closer": true,
+    "knocker": true,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "door.hinged.toptier": {
+   "door": {
+    "lock": true,
+    "closer": true,
+    "knocker": true,
+    "hatch": true
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 12
+   }
+  },
+  "door.hinged.wood": {
+   "door": {
+    "lock": true,
+    "closer": true,
+    "knocker": true,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 3
+   }
+  },
+  "electric.furnace": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 96
+   }
+  },
+  "electric.wallcabinet": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "elevator": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "factorydoor": {
+   "door": {
+    "lock": true,
+    "closer": true,
+    "knocker": true,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "fireplace.stone": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
+  "floor.grill": {
+   "door": null,
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "floor.ladder.hatch": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "floor.ladder.hatch.toptier": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 12
+   }
+  },
+  "floor.triangle.grill": {
+   "door": null,
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "floor.triangle.ladder.hatch": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "floor.triangle.ladder.hatch.toptier": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 12
+   }
+  },
+  "furnace": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 96
+   }
+  },
+  "furnace.large": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 8,
+    "duration": 8
+   }
+  },
+  "gates.external.high.adobe": {
+   "door": null,
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "gates.external.high.legacy": {
+   "door": null,
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "gates.external.high.stone": {
+   "door": null,
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "gates.external.high.wood": {
+   "door": null,
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "industrial.furnace.large": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 8,
+    "duration": 8
+   }
+  },
+  "industrial.garagedoor": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "industrial.storage.horizontal": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "industrial.storage.vertical": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "krieg.storage.horizontal": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "krieg.storage.vertical": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "legacyfurnace": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 96
+   }
+  },
+  "locker": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 96
+   }
+  },
+  "minecart.planter": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
+  "planter.large": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
+  "planter.small": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
+  "planter.triangle": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
+  "shutter.metal.embrasure.a": {
+   "door": null,
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "shutter.metal.embrasure.b": {
+   "door": null,
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "shutter.wood.a": {
+   "door": {
+    "lock": false,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 3
+   }
+  },
+  "siegetower": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 2,
+    "duration": 2
+   }
+  },
+  "small.oil.refinery": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "small_ramp": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "storage_barrel_b": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "storage_barrel_c": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "telephone": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 8,
+    "duration": 8
+   }
+  },
+  "trap.bear": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
+  "trap.landmine": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
+  "wall.external.high": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.external.high.adobe": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.external.high.ice": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.external.high.legacy": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.external.high.stone": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.frame.cell": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.frame.cell.gate": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "wall.frame.fence": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.frame.fence.gate": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "wall.frame.garagedoor": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 8
+   }
+  },
+  "wall.frame.lunar2025_a": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.frame.lunar2025_b": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.frame.lunar2025_c": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.frame.netting": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.frame.shopfront": {
+   "door": {
+    "lock": true,
+    "closer": false,
+    "knocker": false,
+    "hatch": false
+   },
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 3
+   }
+  },
+  "wall.frame.shopfront.metal": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.window.bars.metal": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.window.bars.toptier": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.window.bars.wood": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wall.window.glass.reinforced": {
+   "door": null,
+   "upkeep": true,
+   "decay": null
+  },
+  "wicker.barrel": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "window.paintable": {
+   "door": null,
+   "upkeep": true,
+   "decay": {
+    "delay": 0,
+    "duration": 12
+   }
+  }
+ },
+ "vibration": {
+  "ammo.grenadelauncher.he": 2,
+  "ammo.mortar.basic": 2,
+  "ammo.mortar.fragment": 1,
+  "ammo.rocket.basic": 3,
+  "ammo.rocket.hv": 1,
+  "ammo.rocket.mlrs": 3,
+  "ammo.rocket.seeker": 1,
+  "ammo.rocket.smoke": 1,
+  "cannonball": 1,
+  "catapult.ammo.explosive": 2,
+  "explosive.satchel": 2,
+  "explosive.timed": 3,
+  "grenade.beancan": 1,
+  "grenade.f1": 1,
+  "submarine.torpedo.straight": 2,
+  "trap.landmine": 1
+ }
+}

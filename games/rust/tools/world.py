@@ -9,7 +9,9 @@ Escribe:
     espantapájaros); y de los recolectables y objetos que se abren (regalos, bolsas de Halloween, huevos);
   - `games/rust/data/shops.json`: qué vende cada tienda de monumento (Outpost, Bandit Camp, pueblo pesquero, rancho,
     granero) y a qué precio. El pozo de agua tiene tienda, pero todas sus órdenes son de precio al azar: no entra;
-  - `games/rust/data/mixing.json`: las recetas de la mesa de mezcla.
+  - `games/rust/data/mixing.json`: las recetas de la mesa de mezcla;
+  - `games/rust/data/deployables.json`: qué se le pone a cada puerta, quién paga mantenimiento, cuánto tarda en
+    romperse sin él (desgaste) y con qué nivel de vibración detecta el sensor sísmico cada explosivo.
 
 La cuenta del botín sigue `LootContainer.PopulateLoot`/`GenerateScrap` y `LootSpawn.SpawnIntoContainer` del juego
 (decompilados públicos: github.com/MillionthOdin16/RustChangelog, `LootContainer.cs` y `LootSpawn.cs`): si la caja
@@ -183,6 +185,15 @@ NPC_CLASSES = {"ScientistNPC", "ScientistNPC2", "TunnelDweller", "UnderwaterDwel
 # (`ItemModCrackOpen`).
 OPENABLE = {"ItemModUnwrap": "xmas", "ItemModOpenLootBag": "halloween", "ItemModCrackOpen": "easter"}
 COLLECTABLES = "assets/bundled/prefabs/autospawn/collectable/"
+# Cuánto tarda en romperse sin mantenimiento algo de un grado de construcción (`BuildingGradeDecay` → `decay.duration_*`,
+# valores por defecto del servidor: paja, madera, piedra, metal, blindado), en horas y sin demora (`decay.delay_*` = 0).
+# Adentro de una base dura 10 veces más (`decay.upkeep_inside_decay_scale` = 0,1): eso lo multiplica el sitio.
+DECAY_GRADE_HOURS = {0: 1, 1: 3, 2: 5, 3: 8, 4: 12}
+# Los prefabs que explotan, con su `vibrationLevel` (lo que detecta el sensor sísmico), y las armas que se tiran y dicen
+# qué prefab tiran (`prefabToThrow`): el C4 en la mano es `explosive.timed.entity`, el que explota `.deployed`.
+EXPLOSIVE_CLASSES = {"TimedExplosive", "DudTimedExplosive", "RFTimedExplosive", "SeasonalTimedExplosive", "MLRSRocket",
+                     "BeeGrenade", "DeployableSiegeExplosive", "Landmine"}
+THROWER_CLASSES = {"ThrownWeapon", "GrenadeWeapon"}
 LOOT_CLASSES = {"LootContainer", "LockedByEntCrate", "HackableLockedCrate", "SupplyDrop", "FreeableLootContainer"}
 # Las tiendas, por el prefab del monumento donde está la máquina. La clave sale de la primera coincidencia; el nombre,
 # del token oficial (engine.json). El pozo de agua queda en la lista para que su máquina no corte por "monumento sin
@@ -706,6 +717,87 @@ def collect_mixing(w):
     return {"recipes": out}
 
 
+def prefab_paths(w):
+    """{guid: ruta del prefab}, del `GameManifest` de content.bundle (`prefabProperties`, ~17.300 entradas)."""
+    for _, tt, _ in w.behaviours({"GameManifest"}):
+        return {p["guid"]: p["name"] for p in tt["prefabProperties"]}
+    raise SystemExit("No encontré el GameManifest en content.bundle")
+
+
+def item_prefabs(w, paths):
+    """
+    Los prefabs de cada objeto, por shortname: `deploy` (lo que se coloca, `ItemModDeployable`), `entity` (lo que se
+    tiene en la mano, `ItemModEntity`) y `projectile` (lo que dispara, `ItemModProjectile`). Todo vive en items.preload.
+    """
+    sid_of = {}
+    for o, tt, _ in w.behaviours({"ItemDefinition"}):
+        if not tt["hidden"]:
+            sid_of[(o.assets_file.name, tt["m_GameObject"]["m_PathID"])] = tt["shortname"]
+    out = {}
+    fields = {"ItemModDeployable": ("deploy", "entityPrefab"), "ItemModEntity": ("entity", "entityPrefab"),
+              "ItemModProjectile": ("projectile", "projectileObject")}
+    for o, tt, cls in w.behaviours(set(fields)):
+        sid = sid_of.get((o.assets_file.name, tt["m_GameObject"]["m_PathID"]))
+        what, field = fields[cls]
+        path = paths.get(tt[field]["guid"])
+        if sid and path:
+            out.setdefault(sid, {})[what] = path
+    return out
+
+
+def collect_deployables(w):
+    """
+    Lo de construcción de cada objeto que se coloca:
+      - `door`: qué se le puede poner (`Door.canTakeLock`, `canTakeCloser`, `canTakeKnocker`) y si tiene mirilla
+        (`hasHatch`);
+      - `upkeep`: si el armario le cobra mantenimiento (`Upkeep`; cuánto lo calcula el sitio con la receta);
+      - `decay`: demora y duración del desgaste en horas (`BuildingGradeDecay` o `DeployableDecay`). Viven en el
+        GameObject raíz con el nombre corto del prefab y sólo 90 de 532 objetos los traen en el cliente: el resto queda
+        sin dato.
+    Y `vibration`: el nivel con que el sensor sísmico detecta cada explosivo.
+    """
+    paths = prefab_paths(w)
+    prefabs = item_prefabs(w, paths)
+    by_path, decay_by_name, decay_own, vibration_by_path, thrown = {}, {}, {}, {}, {}
+    for o, tt, cls in w.behaviours({"Door", "Upkeep", "DeployableDecay", "BuildingGradeDecay"} | EXPLOSIVE_CLASSES | THROWER_CLASSES):
+        name = w.go_name(o, tt)
+        if cls == "Door" and name.startswith("assets/"):
+            by_path.setdefault(name, {})["door"] = {"lock": bool(tt["canTakeLock"]), "closer": bool(tt["canTakeCloser"]),
+                                                    "knocker": bool(tt["canTakeKnocker"]), "hatch": bool(tt["hasHatch"])}
+        elif cls == "Upkeep" and name.startswith("assets/"):
+            by_path.setdefault(name, {})["upkeep"] = tt["upkeepMultiplier"] > 0
+        elif cls in ("DeployableDecay", "BuildingGradeDecay") and not name.startswith("assets/"):
+            # Manda el del prefab mismo (la raíz es el GameObject). Si sólo hay copias dentro de un monumento (el horno de
+            # los departamentos), vale la copia: es el mismo prefab colocado.
+            own = w.root_name(o, tt) == name
+            if name in decay_by_name and (decay_own[name] or not own):
+                continue
+            if cls == "BuildingGradeDecay":
+                decay_by_name[name] = {"delay": 0, "duration": DECAY_GRADE_HOURS[tt["decayGrade"]]}
+            else:
+                decay_by_name[name] = {"delay": number(tt["decayDelay"]), "duration": number(tt["decayDuration"])}
+            decay_own[name] = own
+        elif cls in EXPLOSIVE_CLASSES and name.startswith("assets/"):
+            vibration_by_path[name] = tt.get("vibrationLevel", 0)
+        elif cls in THROWER_CLASSES and name.startswith("assets/") and tt.get("prefabToThrow", {}).get("guid"):
+            thrown[name] = paths.get(tt["prefabToThrow"]["guid"])
+    items, vibration = {}, {}
+    for sid, p in sorted(prefabs.items()):
+        deploy = p.get("deploy")
+        if deploy:
+            short = deploy.rsplit("/", 1)[-1].removesuffix(".prefab")
+            got = {"door": by_path.get(deploy, {}).get("door"), "upkeep": by_path.get(deploy, {}).get("upkeep", False),
+                   "decay": decay_by_name.get(short)}
+            if got["door"] or got["upkeep"] or got["decay"]:
+                items[sid] = got
+        for path in (p.get("projectile"), thrown.get(p.get("entity")), deploy):
+            level = vibration_by_path.get(path)
+            if level:
+                vibration[sid] = level
+                break
+    return {"items": items, "vibration": vibration}
+
+
 def collect_loot(w, texts):
     """
     El botín de todas las fuentes y, aparte, `tables`: por clave, la firma de la tabla de cada prefab (para el test que
@@ -758,7 +850,7 @@ def collect_shops(w, texts):
 
 def collect(w=None):
     """
-    Lee el juego y devuelve `{"loot": ..., "shops": ..., "mixing": ..., "tables": ...}` sin escribir nada (lo usan los tests, que le
+    Lee el juego y devuelve `{"loot": ..., "shops": ..., "mixing": ..., "deployables": ..., "tables": ...}` sin escribir nada (lo usan los tests, que le
     pasan un `World` ya abierto). `tables` no se escribe: es la firma de la tabla de cada prefab por clave, para
     comprobar que no se mezclan.
     """
@@ -767,17 +859,18 @@ def collect(w=None):
     loot, tables = collect_loot(w, texts)
     shops = collect_shops(w, texts)
     mixing = collect_mixing(w)
+    deployables = collect_deployables(w)
     w.report_unresolved()
-    return {"loot": loot, "shops": shops, "mixing": mixing, "tables": tables}
+    return {"loot": loot, "shops": shops, "mixing": mixing, "deployables": deployables, "tables": tables}
 
 
 def main():
     got = collect()
-    for name in ("loot", "shops", "mixing"):
+    for name in ("loot", "shops", "mixing", "deployables"):
         (DATA / f"{name}.json").write_text(json.dumps(got[name], ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     n_items = len(got["loot"]["items"])
     print(f"[rust] botín: {len(got['loot']['containers'])} cajas, {n_items} objetos; tiendas: {len(got['shops']['orders'])} órdenes; "
-          f"mesa de mezcla: {len(got['mixing']['recipes'])} recetas")
+          f"mesa de mezcla: {len(got['mixing']['recipes'])} recetas; construcción: {len(got['deployables']['items'])} objetos")
 
 
 if __name__ == "__main__":
