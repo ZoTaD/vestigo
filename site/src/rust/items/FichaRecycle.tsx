@@ -10,6 +10,9 @@ import { say, type Ficha, type Ref } from "./data";
 import { Icon, RefLink, type Nav } from "./parts";
 import { recycleScrap, recycleYield, type RecycleYield } from "./recycle";
 
+/** Espacio no separable entre el número y el %: en el celular "60" quedaba en una línea y "%" en la otra. */
+const nb = (s: string) => s.replace(/ %/g, " %");
+
 /** La chatarra no viene en `recycle.out` (se escala distinto): se nombra a mano, con su ficha. */
 const SCRAP: Ref = { id: "scrap", slug: "scrap", name: { en: "Scrap", es: "Chatarra" } };
 
@@ -21,7 +24,7 @@ export default function RecycleSection({ ficha, route, navigate }: { ficha: Fich
   const r = ficha.recycle;
   if (!r) return null;
   const yieldText = (y: RecycleYield) =>
-    y.n === 0 ? t.chance(y.pct) : y.pct ? `× ${num(y.n)} + ${t.pct(y.pct)}` : `× ${num(y.n)}`;
+    y.n === 0 ? nb(t.chance(y.pct)) : y.pct ? `× ${num(y.n)} + ${nb(t.pct(y.pct))}` : `× ${num(y.n)}`;
   const chip = (ref: Ref, text: string) => (
     <RefLink r={ref} route={route} navigate={navigate}>
       <Icon id={ref.id} size={28} />
@@ -43,7 +46,7 @@ export default function RecycleSection({ ficha, route, navigate }: { ficha: Fich
           {r.eff.map(({ key, eff }) => (
             <tr key={key}>
               <th scope="row">
-                {t.recyclers[key]} <span className="rs-dim">{t.pct(Math.round(eff * 100))}</span>
+                {t.recyclers[key]} <span className="rs-dim">{nb(t.pct(Math.round(eff * 100)))}</span>
               </th>
               <td>
                 <ul className="rs-yields">
@@ -80,7 +83,7 @@ export function RecycledFrom({ ficha, route, navigate }: { ficha: Ficha; route: 
   const cell = (amount: number, scrap: boolean, eff: number) => {
     if (scrap) return `× ${num(recycleScrap(amount, eff))}`;
     const y = recycleYield(amount, eff);
-    return y.n === 0 ? (y.pct ? t.chance(y.pct) : "—") : y.pct ? `× ${num(y.n)} + ${t.pct(y.pct)}` : `× ${num(y.n)}`;
+    return y.n === 0 ? (y.pct ? nb(t.chance(y.pct)) : "—") : y.pct ? `× ${num(y.n)} + ${nb(t.pct(y.pct))}` : `× ${num(y.n)}`;
   };
   const row = (r: (typeof rf.rows)[number]) => (
     <tr key={r.id}>

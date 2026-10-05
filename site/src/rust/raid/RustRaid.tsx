@@ -53,6 +53,16 @@ export default function RustRaid({
     setSel(parseSelection(window.location.search));
     setReady(true);
   }, []);
+  // El navegador resuelve el #hash antes de que la pestaña cargue en diferido y la página se arma con otra altura: en
+  // frío no bajaba a la tabla. Se baja a mano una vez montada (y otra a los 400 ms, por si crecen las imágenes).
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+    const go = () => document.getElementById(id)?.scrollIntoView();
+    go();
+    const timer = window.setTimeout(go, 400);
+    return () => window.clearTimeout(timer);
+  }, []);
   useEffect(() => {
     if (!ready) return;
     // Cambia sólo `o`: los demás parámetros del link (utm, etc.) se conservan.

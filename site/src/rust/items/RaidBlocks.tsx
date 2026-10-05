@@ -34,7 +34,10 @@ export default function RaidBlocks({ itemId, route }: { itemId: string; route: R
                       <img src={`/rust/items/${e.id}.webp`} alt="" width={28} height={28} /> {say(e.name, lang)}
                     </th>
                     <td data-cell={`${target.id}|${e.id}`}>{num(n)}</td>
-                    <td>{e.cost ? `${num(n * e.cost.sulfur)} ${c.raid.sulfur.toLowerCase()}` : c.raid.notCraftable}</td>
+                    <td>
+                      {e.cost ? `${num(n * e.cost.sulfur)} ${c.raid.sulfur.toLowerCase()}` : c.raid.notCraftable}
+                      {e.dud > 0 && <small className="rs-dud">{c.raid.dud(Math.round(e.dud * 100))}</small>}
+                    </td>
                   </tr>
                 );
               })}
