@@ -1,0 +1,30 @@
+{
+ "headline": "Cae Ratannia",
+ "lines": {
+  "Fixed bugs that were causing troopers to walk too slowly in lane": "Se arreglaron errores que hacían caminar demasiado lento a los soldados en la línea",
+  "Rat King: Scrap Grenade - Fixed some bugs with bouncing targeting": "Se arreglaron errores en el apuntado de los rebotes",
+  "Rat King: Scrap Grenade - Damage increased from 65 to 70": "Daño: 65 → 70",
+  "Rat King: Scrap Grenade - T2 Damage increased from 65 to 70": "Mejora 2 · daño: 65 → 70",
+  "Rat King: Rat Swarm - Base Cooldown reduced from 28s to 24s": "Recarga base: 28s → 24s",
+  "Rat King: Rule, Ratannia! - Cooldown increased from 130 to 160": "Recarga: 130 → 160",
+  "Rat King: Rule, Ratannia! - Damage Reduction reduced from 20% to 15%": "Reducción de daño: 20% → 15%",
+  "Rat King: Rule, Ratannia! - Radius reduced from 24m to 20m": "Radio: 24m → 20m",
+  "Rat King: Rule, Ratannia! - Charge Duration reduced from 12s to 10s": "Duración de la carga: 12s → 10s",
+  "Rat King: Rule, Ratannia! - Bonus Move speed no longer scales with Spirit": "La velocidad de movimiento extra ya no escala con espíritu",
+  "Rat King: Rule, Ratannia! - Now falls faster while charging": "Ahora cae más rápido mientras carga",
+  "Rat King: Rule, Ratannia! - T1 +1m/s Move Speed to +2m/s Move Speed": "Mejora 1 · velocidad de movimiento: +1m/s → +2m/s",
+  "Rat King: Rule, Ratannia! - T1 No longer gives -20s cooldown (Total cooldown from 110s to 160s)": "Mejora 1: ya no da -20s de recarga (recarga total: 110s → 160s)",
+  "Rat King: Rule, Ratannia! - T2 No longer grants +8s Charge Duration (Total charge duration from 20s to 10s)": "Mejora 2: ya no da +8s de carga (carga total: 20s → 10s)",
+  "Rat King: Rule, Ratannia! - T2 Flag Duration reduced from +8s to +5s": "Mejora 2 · duración de la bandera: +8s → +5s",
+  "Rat King: Rule, Ratannia! - T3 Damage Reduction reduced from 15% to 10% (Total Damage Reduction from 35% to 25%)": "Mejora 3 · reducción de daño: 15% → 10% (total: 35% → 25%)",
+  "Sinclair: Base HP Regen reduced from 2 to 1": "Regeneración de vida base: 2 → 1",
+  "Sinclair: Gun - Falloff range reduced from 25-61 to 20-60": "Arma · alcance de caída de daño: 25-61 → 20-60",
+  "Sinclair: Gun - Reduced bullet base damage from 17.76 to 16.5": "Arma · daño base por bala: 17,76 → 16,5",
+  "Sinclair: Vexing Bolt - Now does half damage to objectives": "Ahora hace la mitad de daño a los objetivos",
+  "Sinclair: Spectral Assistant - Gun falloff range reduced from 25-61 to 20-60": "Alcance de caída de daño del arma: 25-61 → 20-60",
+  "Sinclair: Rabbit Hex - Radius reduced from 6.5m to 6m": "Radio: 6,5m → 6m",
+  "Sinclair: Rabbit Hex - T3 reduced from +3m Radius to +2m": "Mejora 3 · radio: +3m → +2m",
+  "Sinclair: Audience Participation - Copy duration reduced from 12s to 9s": "Duración de la copia: 12s → 9s",
+  "Sinclair: Audience Participation - Copied cooldown increased from 40% to 60%": "Recarga copiada: 40% → 60%"
+ }
+}

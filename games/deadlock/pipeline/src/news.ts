@@ -291,11 +291,27 @@ export function buildEdition(input: EditionInput): Edition {
   const itemInfo: Record<string, Named & { slot: string }> = {};
   const unparsed: NewsLine[] = [];
   const img = (a: AssetEntry) => a.shop_image_webp ?? a.image_webp ?? a.image ?? "";
+  const upgrades = new Map(assetsEn.filter((a) => a.type === "upgrade").map((a) => [a.name.toLowerCase(), a]));
+
+  // Algunos parches vienen sin secciones (el del 5/10): una línea "Nombre: …"
+  // de otra sección va a héroes u objetos si el nombre es de uno.
+  const heroLines = [...(sections.heroes ?? [])];
+  const itemLines = [...(sections.items ?? [])];
+  const generalLines: string[] = [];
+  for (const [k, lines] of Object.entries(sections)) {
+    if (k === "heroes" || k === "items") continue;
+    for (const src of lines) {
+      const name = src.match(/^([^:]+):/)?.[1].trim().toLowerCase();
+      if (name && heroByName.has(name)) heroLines.push(src);
+      else if (name && upgrades.has(name)) itemLines.push(src);
+      else generalLines.push(src);
+    }
+  }
 
   // Héroes: "Nombre: resto". La habilidad es el prefijo más largo que coincide;
   // en un arreglo ("Fixed ... Rallying Charge") puede estar en el medio.
   const heroes = new Map<number, HeroEntry>();
-  for (const src of sections.heroes ?? []) {
+  for (const src of heroLines) {
     const m = src.match(/^([^:]+):\s*(.+)$/);
     const heroId = m ? heroByName.get(m[1].trim().toLowerCase()) : undefined;
     if (!m || heroId === undefined) {
@@ -309,7 +325,7 @@ export function buildEdition(input: EditionInput): Edition {
     const low = rest.toLowerCase();
     const prefixed = own.find((a) => low.startsWith(a.name.toLowerCase() + " ") || low === a.name.toLowerCase());
     const ability = prefixed ?? (/^fixed\b/i.test(rest) ? own.find((a) => low.includes(a.name.toLowerCase())) : undefined);
-    const body = prefixed ? rest.slice(prefixed.name.length).trim() : rest;
+    const body = prefixed ? rest.slice(prefixed.name.length).trim().replace(/^[-–:]\s*/, "") : rest;
     if (ability) {
       abilities[ability.id] = { name: { en: ability.name, es: esName.get(ability.id) ?? ability.name }, img: img(ability) };
     }
@@ -338,9 +354,8 @@ export function buildEdition(input: EditionInput): Edition {
   heroList.sort((a, b) => ORDER[a.verdict] - ORDER[b.verdict] || b.up + b.down - (a.up + a.down));
 
   // Objetos: "Nombre: resto".
-  const upgrades = new Map(assetsEn.filter((a) => a.type === "upgrade").map((a) => [a.name.toLowerCase(), a]));
   const items = new Map<number, ItemEntry>();
-  for (const src of sections.items ?? []) {
+  for (const src of itemLines) {
     const m = src.match(/^([^:]+):\s*(.+)$/);
     const item = m ? upgrades.get(m[1].trim().toLowerCase()) : undefined;
     if (!m || !item) {
@@ -359,10 +374,8 @@ export function buildEdition(input: EditionInput): Edition {
   const itemList = [...items.values()].map((i) => ({ ...i, verdict: verdictOf(i.lines) }));
   itemList.sort((a, b) => ORDER[a.verdict] - ORDER[b.verdict] || b.lines.length - a.lines.length);
 
-  // Todo lo que no es héroe ni objeto va a "sistema", con su sección de origen.
-  const general: NewsLine[] = Object.entries(sections)
-    .filter(([k]) => k !== "heroes" && k !== "items")
-    .flatMap(([, lines]) => lines.map((src) => line(src, src, dirOf(src, src))));
+  // Todo lo que no es héroe ni objeto va a "sistema".
+  const general: NewsLine[] = generalLines.map((src) => line(src, src, dirOf(src, src)));
 
   const slug = slugOf(post.date);
   return {
