@@ -58,11 +58,14 @@ describe("la pestaña Objetos de Rust", () => {
     expect(render("es", "/es/rust/objetos/madera")).toContain("Puesto Avanzado");
   });
 
-  it("los engranajes: lo que da el reciclador en cada recicladora", () => {
+  it("los engranajes: lo seguro y la chance de uno más, y la chatarra escalada", () => {
     const html = render("en", "/en/rust/items/gears");
     expect(html).toContain("Recycling");
-    expect(html).toContain(">13<");
-    expect(html).toContain(">10<");
+    // Recicladora de monumento (50 %): 12 fragmentos + 50 % y 10 de chatarra; zona segura (40 %): 10 y 8.
+    expect(html).toContain("× 12 + 50%");
+    expect(html).toContain("× 10");
+    expect(html).toContain("× 8");
+    expect(html).not.toContain(">13<");
   });
 
   it("la cuenta de la lista va en singular con un solo objeto", () => {

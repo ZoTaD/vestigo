@@ -57,6 +57,9 @@ export interface RustCopy {
     recycleMonument: string;
     recycleSafe: string;
     chance: (pct: number) => string;
+    /** Un porcentaje con el espacio del idioma ("50%" / "50 %"). */
+    pct: (p: number) => string;
+    recycleNote: string;
     loot: string;
     lootNote: string;
     lootBox: string;
@@ -142,6 +145,8 @@ const EN: RustCopy = {
     recycleMonument: "Monument recycler",
     recycleSafe: "Safe zone recycler",
     chance: (pct) => `${pct}% chance`,
+    pct: (p) => `${p}%`,
+    recycleNote: "“+ 50%” is the chance of getting one more. For an item at full condition: a worn one gives less.",
     loot: "Where to find it",
     lootNote: "Chance that one container has at least one.",
     lootBox: "Container",
@@ -239,6 +244,8 @@ const ES: RustCopy = {
     recycleMonument: "Recicladora de monumento",
     recycleSafe: "Recicladora de zona segura",
     chance: (pct) => `${pct} % de chance`,
+    pct: (p) => `${p} %`,
+    recycleNote: "“+ 50 %” es la chance de que salga uno más. Con el objeto entero: uno gastado da menos.",
     loot: "Dónde aparece",
     lootNote: "Probabilidad de que una caja traiga al menos uno.",
     lootBox: "Caja",

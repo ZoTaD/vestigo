@@ -9,7 +9,7 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
 import { say, type Ficha, type Ref } from "./data";
-import { recycleYield } from "./recycle";
+import { recycleScrap, recycleYield, type RecycleYield } from "./recycle";
 
 type Nav = (r: Route) => void;
 
@@ -18,6 +18,9 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
   const { lang } = useLang();
   const locale = useLocale();
   const num = (n: number) => n.toLocaleString(locale);
+  // "× 3 + 75 %": lo seguro y la chance de uno más; "75 % de chance" si no hay nada seguro.
+  const yieldText = (y: RecycleYield) =>
+    y.n === 0 ? (y.pct ? t.chance(y.pct) : "—") : y.pct ? `× ${num(y.n)} + ${t.pct(y.pct)}` : `× ${num(y.n)}`;
   const name = say(ficha.name, lang);
   const desc = say(ficha.desc, lang);
   const link = (r: Ref, children: ReactNode) =>
@@ -114,8 +117,9 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
               {r.scrap > 0 && (
                 <tr>
                   <th scope="row">{link({ id: "scrap", slug: "scrap", name: { en: "Scrap", es: "Chatarra" } }, <>{icon("scrap", 28)}<span>{lang === "es" ? "Chatarra" : "Scrap"}</span></>)}</th>
-                  <td>{num(r.scrap)}</td>
-                  <td>{num(r.scrap)}</td>
+                  {[r.eff.monument, r.eff.safezone].map((eff, i) => (
+                    <td key={i}>{`× ${num(recycleScrap(r.scrap, eff))}`}</td>
+                  ))}
                 </tr>
               )}
               {r.out.map((o) => (
@@ -123,12 +127,13 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
                   <th scope="row">{link(o, <>{icon(o.id, 28)}<span>{say(o.name, lang)}</span></>)}</th>
                   {[r.eff.monument, r.eff.safezone].map((eff, i) => {
                     const y = recycleYield(o.amount, eff);
-                    return <td key={i}>{y.kind === "fixed" ? num(y.n) : t.chance(y.pct)}</td>;
+                    return <td key={i}>{yieldText(y)}</td>;
                   })}
                 </tr>
               ))}
             </tbody>
           </table>
+          <p className="rs-ficha-note">{t.recycleNote}</p>
         </section>
       )}
 
