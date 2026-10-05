@@ -146,15 +146,15 @@ class TestContainerChances(unittest.TestCase):
         self.assertEqual(world.amounts(node((0, leaf("a"))), lambda x: x), {})
 
     def test_npc_la_cantidad_sale_de_la_ranura_mas_probable(self):
-        # Un NPC: la cantidad es la de la ranura que más probabilidad le aporta al objeto (la primera: 1 − 0,7² = 0,91
-        # contra 0,5), con sus dos tiradas sumadas (2 × 2–4 = 2–8). La ranura de ×10–20 no entra en el rango aunque sea
+        # Un NPC: la cantidad es la de la ranura que más probabilidad le aporta al objeto (la primera: 1 − 0,7² = 0,51
+        # contra 0,4), con sus dos tiradas sumadas (2 × 2–4 = 2–8). La ranura de ×10–20 no entra en el rango aunque sea
         # mayor. La probabilidad sí combina las dos. Una caja suma todo: 2–(8 + 19).
         tt = {"lootDefinition": None, "maxDefinitionsToSpawn": 0, "scrapAmount": 0, "LootSpawnSlots": [
             {"definition": leaf("a", amount=2, max_amount=5), "numberToSpawn": 2, "probability": 0.3},
-            {"definition": leaf("a", amount=10, max_amount=20), "numberToSpawn": 1, "probability": 0.5},
+            {"definition": leaf("a", amount=10, max_amount=20), "numberToSpawn": 1, "probability": 0.4},
         ]}
         npc = world.container_chances(tt, lambda x: x, sum_slots=False)[("a", False)]
-        self.assertAlmostEqual(npc[0], 1 - 0.7 ** 2 * 0.5)
+        self.assertAlmostEqual(npc[0], 1 - 0.7 ** 2 * 0.6)
         self.assertEqual(npc[1:], (2, 8))
         self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)][1:], (2, 27))
 
