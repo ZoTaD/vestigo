@@ -17,9 +17,9 @@ describe("el raideo en las fichas", () => {
     await preloadTab(parseRoute("/es/rust/objetos/fusil-de-asalto"));
   });
 
-  it("una puerta dice cuánto cuesta romperla y abre la calculadora con ella elegida", () => {
+  it("una puerta dice lo que cuesta romperla y abre la calculadora con ella elegida", () => {
     const html = render("es", "/es/rust/objetos/puerta-de-chapa");
-    expect(html).toContain("Cuánto cuesta romperla");
+    expect(html).toContain("Lo que cuesta romperlo");
     expect(html).toMatch(/data-cell="door\.hinged\.metal\|explosive\.timed"[^>]*>1</);
     expect(html).toContain('href="/es/rust/raideo?o=door.hinged.metal"');
   });
@@ -33,6 +33,6 @@ describe("el raideo en las fichas", () => {
   it("un objeto que no es ni explosivo ni objetivo no muestra nada de raideo", () => {
     const html = render("es", "/es/rust/objetos/fusil-de-asalto");
     expect(html).not.toContain("Qué rompe");
-    expect(html).not.toContain("Cuánto cuesta romperla");
+    expect(html).not.toContain("Lo que cuesta romperlo");
   });
 });

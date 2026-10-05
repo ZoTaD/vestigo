@@ -7,7 +7,7 @@ import { POE2_COPY, type Poe2Copy } from "./poe2Copy";
 import { VALHEIM_COPY } from "./valheimCopy";
 import { D2R_COPY } from "./d2rCopy";
 import { tidyTitleName, ZOMBOID_COPY } from "./zomboidCopy";
-import { RUST_COPY } from "./rustCopy";
+import { RUST_COPY, type RustHas } from "./rustCopy";
 import { esHeadNames } from "./zomboid/headName";
 
 /** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
@@ -53,7 +53,8 @@ export function metaFor(
   route: Route,
   lang: Lang,
   detailName: string | null,
-  via?: string[] | null
+  via?: string[] | null,
+  rsHas?: RustHas | null
 ): { title: string; description: string } {
   const copy = copyOf(lang);
   const seo = copy.seo;
@@ -137,7 +138,7 @@ export function metaFor(
   // llegó al navegador) lleva el de su pestaña.
   if (route.view === "rust") {
     const r = RUST_COPY[lang];
-    if (route.rsSection === "items" && route.detail && detailName) return r.detailSeo(detailName);
+    if (route.rsSection === "items" && route.detail && detailName) return r.detailSeo(detailName, rsHas ?? undefined);
     return r.seo[route.rsSection ?? "home"];
   }
   // Lo que queda son la portada y las dos páginas legales.
@@ -440,6 +441,10 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
   const vias = new Map<string, { en: string[]; es: string[] }>();
   for (const e of data.zb?.index ?? []) if (e.via) vias.set(`zb-${e.sec}/${e.id}`, e.via);
 
+  // Lo que tiene cada ficha de Rust (receta, tienda, botín): la descripción sólo promete eso.
+  const rsHas = new Map<string, RustHas>();
+  for (const e of data.rs?.items ?? []) rsHas.set(`rs-items/${e.slug}`, { craft: !!e.c, shop: !!e.s, loot: !!e.l });
+
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);
     const lang = route.lang;
@@ -459,7 +464,7 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
                   ? `rs-${route.rsSection ?? "home"}/${route.detail}`
                   : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
-    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null);
+    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""));
 
     const alternates = LANGS.map((l) => ({
       hreflang: l as string,

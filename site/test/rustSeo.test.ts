@@ -11,9 +11,40 @@ registerRustSlugs(slugsEs);
 
 const data = {
   dlHeroes: {}, dlItems: {}, dlHeroIds: [], dlItemIds: [],
-  rs: { build: rsMeta.build, extractedAt: rsMeta.extractedAt, items: list.rows.map((r) => ({ slug: r.slug, en: r.en, es: r.es })) },
+  rs: { build: rsMeta.build, extractedAt: rsMeta.extractedAt, items: list.rows.map((r) => ({ slug: r.slug, en: r.en, es: r.es, c: r.c, s: r.s, l: r.l })) },
   dates: { rust: rsMeta.extractedAt },
 } as unknown as SitemapData;
+
+const descOf = (path: string) => prerenderPages(data).find((p) => p.path === path)!.description;
+const bare = list.rows.find((r) => !r.c && !r.s && !r.l)!;
+const sold = list.rows.find((r) => r.s && !r.c)!;
+
+describe("la description de la ficha sólo promete lo que el objeto tiene", () => {
+  it("con receta: cómo craftearlo, y su botín", () => {
+    const d = descOf("/es/rust/objetos/fusil-de-asalto");
+    expect(d).toMatch(/^Cómo craftear Fusil de asalto en Rust: su receta, banco y costo de investigación/);
+    expect(d).toContain("en qué cajas y NPC aparece");
+  });
+  it("sin receta, tienda ni botín: sin crafteo ni compra", () => {
+    const d = descOf(`/es/rust/objetos/${bare.slugEs}`);
+    expect(d).not.toMatch(/craftear|receta|comprarlo|cajas/);
+    expect(d.startsWith(`${bare.es ?? bare.en} en Rust: para qué sirve, su shortname`)).toBe(true);
+    expect(descOf(`/en/rust/items/${bare.slug}`)).not.toMatch(/craft|recipe|buy|crates/);
+  });
+  it("la chatarra no se craftea: aparece en botín y se compra, sin receta", () => {
+    const d = descOf("/es/rust/objetos/chatarra");
+    expect(d).toMatch(/^Chatarra en Rust: en qué cajas y NPC aparece, dónde comprarlo, más su shortname/);
+    expect(d).not.toMatch(/craftear|receta/);
+  });
+  it("lo que se vende dice dónde comprarlo, y lo que no, no", () => {
+    expect(descOf(`/es/rust/objetos/${sold.slugEs}`)).toContain("dónde comprarlo");
+    expect(descOf(`/en/rust/items/${sold.slug}`)).toContain("where to buy it");
+    expect(descOf("/es/rust/objetos/fusil-de-asalto")).not.toContain("dónde comprarlo");
+  });
+  it("el nombre va tal cual, sin mayúscula en medio de la frase", () => {
+    expect(descOf("/en/rust/items/assault-rifle")).toMatch(/^How to craft Assault Rifle in Rust: its recipe/);
+  });
+});
 
 describe("Rust en el sitemap y el <head>", () => {
   it("la portada entra en su grupo, con la fecha de sus datos", () => {

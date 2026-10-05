@@ -1,6 +1,6 @@
 /**
- * Cuentas chicas de la ficha de Rust, sin React (2026-10-05): duraciones, el tiempo de fabricación en cada banco y, más
- * adelante, el estado al aparecer, la probabilidad y el mantenimiento. Las cifras van sin separador de miles: son chicas.
+ * Cuentas chicas de la ficha de Rust, sin React (2026-10-05): duraciones, el tiempo de fabricación en cada banco, el
+ * estado al aparecer, la probabilidad y el mantenimiento. Las cifras van sin separador de miles: son chicas.
  */
 
 /** 30 → "30 s", 1200 → "20 min", 3600 → "1 h", 9000 → "2 h 30 min". Las unidades son las mismas en los dos idiomas. */

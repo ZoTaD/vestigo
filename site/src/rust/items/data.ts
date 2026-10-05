@@ -24,6 +24,10 @@ export interface ListRow {
   en: string;
   es: string | null;
   cat: string;
+  /** Receta, se vende, aparece en botín/NPC/recolectables: sólo está la que es cierta (ver `flags_of` de site_data.py). */
+  c?: 1;
+  s?: 1;
+  l?: 1;
 }
 
 /** Las cuatro recicladoras, de la que más rinde a la que menos (`RECYCLERS` de extract.py). */

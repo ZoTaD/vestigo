@@ -1,7 +1,7 @@
 /**
  * La ficha de un objeto de Rust (2026-10-05). Arriba, el ícono en su casillero, el nombre y la descripción oficiales y
  * los datos para copiar (shortname, itemid, comando de admin). Después, cada sección sólo si tiene algo: crafteo, se usa
- * en, reciclaje (en las dos recicladoras), dónde aparece y dónde comprarlo.
+ * en, reciclaje (en las cuatro recicladoras), dónde aparece y dónde comprarlo.
  */
 import { useState, type CSSProperties, type ReactNode } from "react";
 import { useLang, useLocale } from "../../i18n";

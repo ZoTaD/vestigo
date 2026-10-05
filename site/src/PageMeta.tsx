@@ -155,7 +155,9 @@ export default function PageMeta({ route }: { route: Route }) {
     // Las profesiones de un rasgo gemelo de Zomboid (ver `metaFor`): llegan con los nombres de su sección.
     const key = pzNameKey(route);
     const via = key ? peekPzName(key.sec, key.id)?.via?.[lang] : null;
-    const { title, description } = metaFor(route, lang, detail, via);
+    const rsItem = route.view === "rust" && route.rsSection === "items" && route.detail ? peekRsItem(route.detail) : null;
+    const rsHas = rsItem ? { craft: !!rsItem.craft, shop: rsItem.shops.length > 0, loot: rsItem.loot.length > 0 } : null;
+    const { title, description } = metaFor(route, lang, detail, via, rsHas);
     const url = routeUrl(route);
 
     document.title = title;

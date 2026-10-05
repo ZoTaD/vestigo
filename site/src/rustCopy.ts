@@ -13,6 +13,16 @@ export const RUST_TABS: RustSection[] = ["home", "items", "raid"];
 
 type Seo = { title: string; description: string };
 
+/**
+ * Lo que una ficha de Objetos tiene de verdad, para que su descripción no prometa lo que no hay (384 objetos no se
+ * craftean y la mayoría no se vende): receta, tienda y botín/NPC/recolectables. Sin dato, no se promete nada de eso.
+ */
+export interface RustHas {
+  craft?: boolean;
+  shop?: boolean;
+  loot?: boolean;
+}
+
 export interface RustCopy {
   tabs: Record<RustSection, string>;
   soon: string;
@@ -20,7 +30,7 @@ export interface RustCopy {
   soonTabs: string[];
   seo: Record<RustSection, Seo>;
   /** El `<head>` de una ficha de Objetos. */
-  detailSeo: (name: string) => Seo;
+  detailSeo: (name: string, has?: RustHas) => Seo;
   loading: string;
   loadError: string;
   retry: string;
@@ -173,10 +183,18 @@ const EN: RustCopy = {
       description: "How many C4, rockets, satchels or explosive ammo you need for any wall, door or deployable in Rust, the sulfur it costs and the cheapest mix.",
     },
   },
-  detailSeo: (name) => ({
-    title: `${name} — Rust: Crafting, Recycling and Where to Find It | Vestigo`,
-    description: `How to craft ${name} in Rust: recipe, workbench and research cost, what it recycles into, which crates drop it, where to buy it, and its shortname and spawn command.`,
-  }),
+  detailSeo: (name, has = {}) => {
+    const parts = [
+      ...(has.craft ? ["its recipe, workbench and research cost"] : []),
+      ...(has.loot ? ["which crates and NPCs drop it"] : []),
+      ...(has.shop ? ["where to buy it"] : []),
+    ];
+    const tail = parts.length ? ", plus its shortname and spawn command" : "what it is for, its shortname and spawn command";
+    return {
+      title: `${name} — Rust: Crafting, Recycling and Where to Find It | Vestigo`,
+      description: `${has.craft ? `How to craft ${name} in Rust` : `${name} in Rust`}: ${parts.join(", ")}${tail}.`,
+    };
+  },
   loading: "Loading…",
   loadError: "This page didn't load.",
   retry: "Try again",
@@ -344,10 +362,18 @@ const ES: RustCopy = {
       description: "Cuántos C4, cohetes, cargas de mochila o balas explosivas necesitás para cada pared, puerta o deployable de Rust, el azufre que cuesta y la mezcla más barata.",
     },
   },
-  detailSeo: (name) => ({
-    title: `${name} — Rust: crafteo, reciclaje y dónde encontrarlo | Vestigo`,
-    description: `Cómo craftear ${name} en Rust: receta, banco y costo de investigación, lo que da al reciclarlo, en qué cajas aparece, dónde comprarlo, su shortname y el comando para spawnearlo.`,
-  }),
+  detailSeo: (name, has = {}) => {
+    const parts = [
+      ...(has.craft ? ["su receta, banco y costo de investigación"] : []),
+      ...(has.loot ? ["en qué cajas y NPC aparece"] : []),
+      ...(has.shop ? ["dónde comprarlo"] : []),
+    ];
+    const tail = parts.length ? ", más su shortname y el comando para spawnearlo" : "para qué sirve, su shortname y el comando para spawnearlo";
+    return {
+      title: `${name} — Rust: crafteo, reciclaje y dónde encontrarlo | Vestigo`,
+      description: `${has.craft ? `Cómo craftear ${name} en Rust` : `${name} en Rust`}: ${parts.join(", ")}${tail}.`,
+    };
+  },
   loading: "Cargando…",
   loadError: "Esta página no cargó.",
   retry: "Reintentar",
@@ -443,7 +469,7 @@ const ES: RustCopy = {
     shopRow: (amount, item, price, currency) => `${amount} × ${item} por ${price} de ${currency}`,
     back: "Todos los objetos",
   },
-  raidBlocks: { toBreak: "Cuánto cuesta romperla", breaks: "Qué rompe", open: "Abrir en la calculadora de raideo" },
+  raidBlocks: { toBreak: "Lo que cuesta romperlo", breaks: "Qué rompe", open: "Abrir en la calculadora de raideo" },
   raid: {
     h1: "Calculadora de raideo de Rust",
     lede: "Elegí qué querés romper y cuántos: te dice cuántos explosivos de cada tipo hacen falta, el azufre que cuesta y la mezcla más barata.",

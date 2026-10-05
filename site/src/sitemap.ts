@@ -81,7 +81,7 @@ export interface RustSitemapData {
   /** Cuándo cambiaron los datos de verdad (el extractor no la mueve si no cambió nada). */
   extractedAt: string;
   /** Las fichas de Objetos (`games/rust/data/site/list.json`): slug inglés y nombres, para el sitemap y el `<head>`. */
-  items?: { slug: string; en: string; es: string | null }[];
+  items?: { slug: string; en: string; es: string | null; c?: 1; s?: 1; l?: 1 }[];
 }
 
 /**
