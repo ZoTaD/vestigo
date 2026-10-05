@@ -93,3 +93,64 @@ export function RepairSection({ ficha, route, navigate }: Props) {
     </section>
   );
 }
+
+/** Cómo se consigue este objeto sin crafteo ni botín: cocinando, fundiendo, quemando o usando otro, o en la mesa de mezcla. */
+export function ObtainSection({ ficha, route, navigate }: Props) {
+  const t = useRustCopy().items;
+  const { lang } = useLang();
+  const locale = useLocale();
+  const num = (n: number) => n.toLocaleString(locale);
+  if (!ficha.obtained.length) return null;
+  return (
+    <section className="rs-pnl">
+      <h2 className="rs-hd">{t.obtained}</h2>
+      <ul className="rs-obtain">
+        {ficha.obtained.map((o, i) => (
+          <li key={i}>
+            <b>{t.how[o.how]}</b>
+            <span className="rs-yields">
+              {o.from.map((f) => (
+                <RefLink key={f.id} r={f} route={route} navigate={navigate}>
+                  <Icon id={f.id} size={28} />
+                  <span>{o.how === "mix" ? `${num(f.amount)} × ` : ""}{say(f.name, lang)}</span>
+                </RefLink>
+              ))}
+            </span>
+            <span>
+              → × {num(o.amount)}
+              {o.chance < 1 && ` (${t.perUnit(t.pct(Math.round(o.chance * 100)))})`}
+              {o.time ? ` · ${t.seconds(num(o.time))}` : ""}
+              {o.bp ? ` · ${t.repairBp}` : ""}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/** En qué se convierte este objeto: al cocinarlo o fundirlo, al quemarlo, al usarlo. */
+export function TurnsSection({ ficha, route, navigate }: Props) {
+  const t = useRustCopy().items;
+  const { lang } = useLang();
+  const locale = useLocale();
+  const num = (n: number) => n.toLocaleString(locale);
+  if (!ficha.turns.length) return null;
+  return (
+    <section className="rs-pnl">
+      <h2 className="rs-hd">{t.turnsInto}</h2>
+      <ul className="rs-obtain">
+        {ficha.turns.map((o, i) => (
+          <li key={i}>
+            <b>{t.how[o.how]}</b>
+            <RefLink r={o.into} route={route} navigate={navigate}>
+              <Icon id={o.into.id} size={28} />
+              <span>× {num(o.amount)} {say(o.into.name, lang)}</span>
+            </RefLink>
+            {o.chance < 1 && <span>{t.perUnit(t.pct(Math.round(o.chance * 100)))}</span>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}

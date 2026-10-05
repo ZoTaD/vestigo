@@ -115,3 +115,9 @@ a.rs-ref:hover { color: #fff; }
   .rs-loot thead th { font-size: 11px; letter-spacing: 0.02em; }
   .rs-loot .rs-tag { display: inline-block; margin: 2px 0 0 6px; }
 }
+
+/* "Se obtiene de" y "se convierte en": una línea por forma, que baja de renglón entera en el celular. */
+.rs-obtain { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.rs-obtain li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; }
+.rs-obtain b { font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px; }
+.rs-obtain .rs-ref { display: inline-flex; gap: 6px; align-items: center; }

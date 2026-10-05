@@ -10,7 +10,7 @@ import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
 import { say, type Ficha, type Ref } from "./data";
 import { ContentsSection, LootSection } from "./FichaLoot";
-import { RepairSection, UseSection } from "./FichaMore";
+import { ObtainSection, RepairSection, TurnsSection, UseSection } from "./FichaMore";
 import RecycleSection, { RecycledFrom } from "./FichaRecycle";
 import { craftTimes, formatDuration } from "./format";
 
@@ -115,6 +115,8 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
 
       <LootSection ficha={ficha} route={route} navigate={navigate} />
       <ContentsSection ficha={ficha} route={route} navigate={navigate} />
+      <ObtainSection ficha={ficha} route={route} navigate={navigate} />
+      <TurnsSection ficha={ficha} route={route} navigate={navigate} />
 
       {ficha.shops.length > 0 && (
         <section className="rs-pnl">

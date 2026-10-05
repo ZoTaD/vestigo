@@ -111,7 +111,28 @@ def contents_of(loot, ref):
     return out
 
 
-def build(items_doc, loot, shops):
+def obtained_by(items, mixing, ref):
+    """
+    Las otras formas de conseguir cada objeto: cocinando, fundiendo, quemando o usando otro (`turns` de items.json) y en
+    la mesa de mezcla (`mixing.json`). `from` son los ingredientes (de a uno para las transformaciones); `amount`, lo que
+    da; `chance`, la probabilidad por unidad (quemar madera da carbón el 25 % de las veces).
+    """
+    out = {}
+    for i in items:
+        if not i["slug"]:
+            continue
+        for t in i.get("turns") or []:
+            out.setdefault(t["into"], []).append(
+                {"how": t["how"], "from": [{**ref(i["id"]), "amount": 1}], "amount": t["amount"], "chance": t["chance"]})
+    for r in (mixing or {}).get("recipes", []):
+        out.setdefault(r["out"], []).append({
+            "how": "mix", "from": [{**ref(x["id"]), "amount": x["amount"]} for x in r["in"]], "amount": r["amount"],
+            "chance": 1, "time": r["time"], "bp": r["bp"],
+        })
+    return out
+
+
+def build(items_doc, loot, shops, mixing=None):
     items = items_doc["items"]
     by_id = {i["id"]: i for i in items}
 
@@ -128,6 +149,7 @@ def build(items_doc, loot, shops):
         for ing in (i["craft"] or {}).get("ingredients", []):
             used_in.setdefault(ing["id"], []).append(i["id"])
     recycled = recycled_from(items, ref)
+    obtained = obtained_by(items, mixing, ref)
 
     containers = loot["containers"]
     contents = contents_of(loot, ref)
@@ -167,6 +189,8 @@ def build(items_doc, loot, shops):
             "recycledFrom": {"eff": items_doc["recyclers"], "rows": recycled[i["id"]]} if i["id"] in recycled else None,
             "loot": [loot_row(r, containers[r["c"]], i, ref) for r in loot["items"].get(i["id"], [])],
             "contents": contents.get(i["id"], []),
+            "obtained": obtained.get(i["id"], []),
+            "turns": [{"how": t["how"], "into": ref(t["into"]), "amount": t["amount"], "chance": t["chance"]} for t in i.get("turns") or []],
             "shops": shops_by_item.get(i["id"], []),
         }
 
@@ -184,7 +208,8 @@ def build(items_doc, loot, shops):
 
 def main():
     load = lambda n: json.loads((DATA / n).read_text(encoding="utf-8"))  # noqa: E731
-    out = build(load("items.json"), load("loot.json"), load("shops.json"))
+    optional = lambda n: load(n) if (DATA / n).exists() else None  # noqa: E731
+    out = build(load("items.json"), load("loot.json"), load("shops.json"), optional("mixing.json"))
     (OUT / "items").mkdir(parents=True, exist_ok=True)
     dump = lambda path, obj: path.write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")  # noqa: E731
     dump(OUT / "list.json", out["list"])

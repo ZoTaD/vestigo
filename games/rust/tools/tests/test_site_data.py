@@ -58,6 +58,20 @@ class TestBuild(unittest.TestCase):
         self.out = rust_site.build(DOC, LOOT, SHOPS)
         self.fichas = self.out["fichas"]
 
+    def test_se_obtiene_de_y_se_convierte_en(self):
+        doc = json.loads(json.dumps(DOC))
+        by_id = {i["id"]: i for i in doc["items"]}
+        by_id["wood"]["turns"] = [{"how": "burn", "into": "scrap", "amount": 1, "chance": 0.25}]
+        mixing = {"recipes": [{"name": "X", "out": "scrap", "amount": 3, "time": 1, "bp": True, "in": [{"id": "wood", "amount": 10}]}]}
+        out = rust_site.build(doc, LOOT, SHOPS, mixing)
+        got = out["fichas"]["scrap"]["obtained"]
+        self.assertEqual([o["how"] for o in got], ["burn", "mix"])
+        self.assertEqual(got[0]["from"], [{"id": "wood", "slug": "wood", "name": {"en": "Wood", "es": "Madera"}, "amount": 1}])
+        self.assertEqual((got[0]["amount"], got[0]["chance"]), (1, 0.25))
+        self.assertEqual((got[1]["amount"], got[1]["time"], got[1]["bp"]), (3, 1, True))
+        self.assertEqual(out["fichas"]["wood"]["turns"], [{"how": "burn", "into": {"id": "scrap", "slug": "scrap", "name": {"en": "Scrap", "es": "Chatarra"}}, "amount": 1, "chance": 0.25}])
+        self.assertEqual(self.fichas["assault-rifle"]["obtained"], [])
+
     def test_la_lista_sin_redirects_y_ordenada(self):
         rows = self.out["list"]["rows"]
         self.assertEqual([r["id"] for r in rows], ["rifle.ak", "scrap", "wood"])

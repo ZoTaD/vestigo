@@ -5,7 +5,7 @@
  * la que trae el juego). Acá va lo nuestro: pestañas, títulos para Google y los textos de la portada.
  */
 import { useLang } from "./i18n";
-import type { EffectStat, LootEvent, LootKind, ModStat, RecyclerKey } from "./rust/items/data";
+import type { EffectStat, HowKind, LootEvent, LootKind, ModStat, RecyclerKey } from "./rust/items/data";
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
@@ -90,6 +90,10 @@ export interface RustCopy {
     kinds: Record<Exclude<LootKind, "box">, string>;
     events: Record<LootEvent, string>;
     contents: string;
+    obtained: string;
+    turnsInto: string;
+    how: Record<HowKind, string>;
+    perUnit: (pct: string) => string;
     blueprint: string;
     shops: string;
     shopRow: (amount: number, item: string, price: number, currency: string) => string;
@@ -203,6 +207,10 @@ const EN: RustCopy = {
     kinds: { npc: "NPC", item: "Opened", collect: "Pick up" },
     events: { xmas: "Christmas", halloween: "Halloween", easter: "Easter" },
     contents: "What's inside",
+    obtained: "Obtained from",
+    turnsInto: "Turns into",
+    how: { cook: "Cooking or smelting", burn: "Burning", swap: "Using it", mix: "Mixing table" },
+    perUnit: (pct) => `${pct} per unit`,
     blueprint: "Blueprint",
     shops: "Where to buy it",
     shopRow: (amount, item, price, currency) => `${amount} × ${item} for ${price} ${currency}`,
@@ -329,6 +337,10 @@ const ES: RustCopy = {
     kinds: { npc: "NPC", item: "Se abre", collect: "Del suelo" },
     events: { xmas: "Navidad", halloween: "Halloween", easter: "Pascua" },
     contents: "Qué trae",
+    obtained: "Se obtiene de",
+    turnsInto: "Se convierte en",
+    how: { cook: "Cocinando o fundiendo", burn: "Quemándolo", swap: "Usándolo", mix: "Mesa de mezcla" },
+    perUnit: (pct) => `${pct} por unidad`,
     blueprint: "Plano",
     shops: "Dónde comprarlo",
     shopRow: (amount, item, price, currency) => `${amount} × ${item} por ${price} de ${currency}`,

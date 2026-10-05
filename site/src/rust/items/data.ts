@@ -42,6 +42,8 @@ export interface ItemsList {
   cats: string[];
   rows: ListRow[];
 }
+export type HowKind = "cook" | "burn" | "swap" | "mix";
+
 export interface Ficha {
   id: string;
   itemid: number;
@@ -85,6 +87,8 @@ export interface Ficha {
     cond: [number, number] | null;
   }[];
   contents: (Ref & { chance: number; min: number; max: number; bp: boolean })[];
+  obtained: { how: HowKind; from: (Ref & { amount: number })[]; amount: number; chance: number; time?: number; bp?: boolean }[];
+  turns: { how: Exclude<HowKind, "mix">; into: Ref; amount: number; chance: number }[];
   shops: { shop: Loc; amount: number; bp: boolean; currency: Ref; price: number }[];
 }
 

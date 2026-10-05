@@ -24,6 +24,8 @@ describe("la pestaña Objetos de Rust", () => {
     await preloadTab(parseRoute("/en/rust/items/medical-syringe"));
     await preloadTab(parseRoute("/es/rust/objetos/fragmentos-de-metal"));
     await preloadTab(parseRoute("/en/rust/items/small-present"));
+    await preloadTab(parseRoute("/en/rust/items/556-rifle-ammo"));
+    await preloadTab(parseRoute("/en/rust/items/metal-ore"));
   });
 
   it("la lista enlaza cada ficha con su slug en español y trae los filtros", () => {
@@ -166,5 +168,21 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
     const html = render("en", "/en/rust/items/small-present");
     expect(html).toContain("What&#x27;s inside"); // React escapa el apóstrofo en el HTML
     expect(html).toContain('href="/en/rust/items/metal-fragments"');
+  });
+
+  it("se obtiene de: fundiendo mineral y en la mesa de mezcla", () => {
+    const mf = render("en", "/en/rust/items/metal-fragments");
+    expect(mf).toContain("Obtained from");
+    expect(mf).toContain("Cooking or smelting");
+    expect(mf).toContain('href="/en/rust/items/metal-ore"');
+    expect(render("en", "/en/rust/items/556-rifle-ammo")).toContain("Mixing table");
+  });
+
+  it("se convierte en: la madera da carbón al quemarse, con su chance", () => {
+    const html = render("en", "/en/rust/items/wood");
+    expect(html).toContain("Turns into");
+    expect(html).toContain('href="/en/rust/items/charcoal"');
+    expect(html).toContain("25% per unit");
+    expect(render("en", "/en/rust/items/metal-ore")).toContain('href="/en/rust/items/metal-fragments"');
   });
 });
