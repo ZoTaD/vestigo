@@ -9,6 +9,7 @@ import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, type Route } from "./src/route";
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
+import { isRsLoadingPage } from "./src/rust/loadingGuard";
 import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
 import { COPY } from "./src/i18n";
@@ -725,7 +726,7 @@ function prerenderRoutes(): Plugin {
           }
           // Lo mismo en Rust: una ficha cuyo slug en español no se anotó (ver `readSitemapData`) o cuyo archivo no se
           // pidió en `entry-server.tsx` sale vacía.
-          if (route.view === "rust" && /class="[^"]*rs-loading/.test(cuerpo)) {
+          if (route.view === "rust" && isRsLoadingPage(cuerpo)) {
             throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
           }
           const conexiones = originsFor(route)
