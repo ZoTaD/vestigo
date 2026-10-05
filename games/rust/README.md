@@ -16,10 +16,11 @@ es la de los assets y Netlify la manda con 301 a `/en/rust`), sacados del juego 
 3. `python games/rust/tools/skins.py` (las skins del juego con su ícono; ~3 min, después de `extract.py` porque usa sus
    íconos para las skins que son un objeto propio).
 4. `python games/rust/tools/world.py` (botín de las cajas y tiendas de los monumentos; ~1 min).
-5. `python games/rust/tools/site_data.py` (los archivos que baja la pestaña Objetos; un segundo).
-6. Los tests (ver abajo). Si un número de los tests del juego cambió, revisá en el juego que el cambio sea real antes
+5. `python games/rust/tools/raid.py` (vida, protección y daño para la calculadora de raideo; ~30 s).
+6. `python games/rust/tools/site_data.py` (los archivos que baja la pestaña Objetos; un segundo).
+7. Los tests (ver abajo). Si un número de los tests del juego cambió, revisá en el juego que el cambio sea real antes
    de tocar el test.
-7. Commiteá `games/rust/data`, `site/public/rust/items` y `site/public/rust/skins`.
+8. Commiteá `games/rust/data`, `site/public/rust/items` y `site/public/rust/skins`.
 
 ## Tests
 

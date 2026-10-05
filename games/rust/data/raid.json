@@ -1,0 +1,746 @@
+{
+ "explosives": [
+  {
+   "id": "explosive.timed",
+   "slug": "timed-explosive-charge",
+   "name": {
+    "en": "Timed Explosive Charge",
+    "es": "Carga explosiva con temporizador"
+   },
+   "dud": 0,
+   "cost": {
+    "sulfur": 2200,
+    "gunpowder": 1000,
+    "time": 330,
+    "raw": {
+     "charcoal": 3000,
+     "cloth": 5,
+     "lowgradefuel": 60,
+     "metal.fragments": 200,
+     "sulfur": 2200,
+     "techparts": 2
+    }
+   }
+  },
+  {
+   "id": "ammo.rocket.basic",
+   "slug": "rocket",
+   "name": {
+    "en": "Rocket",
+    "es": "Misil"
+   },
+   "dud": 0,
+   "cost": {
+    "sulfur": 1400,
+    "gunpowder": 650,
+    "time": 190,
+    "raw": {
+     "charcoal": 1950,
+     "lowgradefuel": 30,
+     "metal.fragments": 100,
+     "metalpipe": 2,
+     "sulfur": 1400
+    }
+   }
+  },
+  {
+   "id": "ammo.rocket.hv",
+   "slug": "high-velocity-rocket",
+   "name": {
+    "en": "High Velocity Rocket",
+    "es": "Misil de alta velocidad"
+   },
+   "dud": 0,
+   "cost": {
+    "sulfur": 200,
+    "gunpowder": 100,
+    "time": 30,
+    "raw": {
+     "charcoal": 300,
+     "metalpipe": 1,
+     "sulfur": 200
+    }
+   }
+  },
+  {
+   "id": "explosive.satchel",
+   "slug": "satchel-charge",
+   "name": {
+    "en": "Satchel Charge",
+    "es": "Bolsa explosiva"
+   },
+   "dud": 0.2,
+   "cost": {
+    "sulfur": 480,
+    "gunpowder": 240,
+    "time": 93,
+    "raw": {
+     "charcoal": 720,
+     "metal.fragments": 80,
+     "rope": 1,
+     "stash.small": 1,
+     "sulfur": 480
+    }
+   }
+  },
+  {
+   "id": "grenade.beancan",
+   "slug": "beancan-grenade",
+   "name": {
+    "en": "Beancan Grenade",
+    "es": "Granada de lata"
+   },
+   "dud": 0.15,
+   "cost": {
+    "sulfur": 120,
+    "gunpowder": 60,
+    "time": 22,
+    "raw": {
+     "charcoal": 180,
+     "metal.fragments": 20,
+     "sulfur": 120
+    }
+   }
+  },
+  {
+   "id": "ammo.rifle.explosive",
+   "slug": "explosive-556-rifle-ammo",
+   "name": {
+    "en": "Explosive 5.56 Rifle Ammo",
+    "es": "Munición explosiva del calibre 5.56"
+   },
+   "dud": 0,
+   "cost": {
+    "sulfur": 25,
+    "gunpowder": 10,
+    "time": 3.5,
+    "raw": {
+     "charcoal": 30,
+     "metal.fragments": 5,
+     "sulfur": 25
+    }
+   }
+  },
+  {
+   "id": "ammo.grenadelauncher.he",
+   "slug": "40mm-he-grenade",
+   "name": {
+    "en": "40mm HE Grenade",
+    "es": "Granada explosiva de 40mm"
+   },
+   "dud": 0,
+   "cost": null
+  }
+ ],
+ "targets": [
+  {
+   "id": "building.twigs",
+   "kind": "building",
+   "slug": null,
+   "item": null,
+   "icon": "wood",
+   "name": {
+    "en": "Twig wall",
+    "es": "Pared de ramitas"
+   },
+   "hp": 10,
+   "dmg": {
+    "explosive.timed": 550.0,
+    "ammo.rocket.basic": 290.0,
+    "ammo.rocket.hv": 60.0,
+    "explosive.satchel": 155.0,
+    "grenade.beancan": 35.0,
+    "ammo.rifle.explosive": 9.01,
+    "ammo.grenadelauncher.he": 46.0
+   }
+  },
+  {
+   "id": "building.wood",
+   "kind": "building",
+   "slug": null,
+   "item": null,
+   "icon": "wood",
+   "name": {
+    "en": "Wooden wall",
+    "es": "Pared de madera"
+   },
+   "hp": 250,
+   "dmg": {
+    "explosive.timed": 495.0,
+    "ammo.rocket.basic": 249.0,
+    "ammo.rocket.hv": 31.5,
+    "explosive.satchel": 91.5,
+    "grenade.beancan": 19.5,
+    "ammo.rifle.explosive": 5.109,
+    "ammo.grenadelauncher.he": 32.6
+   }
+  },
+  {
+   "id": "building.stone",
+   "kind": "building",
+   "slug": null,
+   "item": null,
+   "icon": "stones",
+   "name": {
+    "en": "Stone wall",
+    "es": "Pared de piedra"
+   },
+   "hp": 500,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 139.0,
+    "ammo.rocket.hv": 16.5,
+    "explosive.satchel": 51.5,
+    "grenade.beancan": 11.0,
+    "ammo.rifle.explosive": 2.705,
+    "ammo.grenadelauncher.he": 18.6
+   }
+  },
+  {
+   "id": "building.metal",
+   "kind": "building",
+   "slug": null,
+   "item": null,
+   "icon": "metal.fragments",
+   "name": {
+    "en": "Sheet metal wall",
+    "es": "Pared de chapa"
+   },
+   "hp": 1000,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 138.25,
+    "ammo.rocket.hv": 15.015,
+    "explosive.satchel": 43.5,
+    "grenade.beancan": 9.0,
+    "ammo.rifle.explosive": 2.507,
+    "ammo.grenadelauncher.he": 18.05
+   }
+  },
+  {
+   "id": "building.toptier",
+   "kind": "building",
+   "slug": null,
+   "item": null,
+   "icon": "metal.refined",
+   "name": {
+    "en": "Armored wall",
+    "es": "Pared blindada"
+   },
+   "hp": 2000,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 138.25,
+    "ammo.rocket.hv": 15.015,
+    "explosive.satchel": 43.5,
+    "grenade.beancan": 9.0,
+    "ammo.rifle.explosive": 2.507,
+    "ammo.grenadelauncher.he": 18.05
+   }
+  },
+  {
+   "id": "door.hinged.wood",
+   "kind": "door",
+   "slug": "wooden-door",
+   "item": "door.hinged.wood",
+   "icon": "door.hinged.wood",
+   "name": {
+    "en": "Wooden Door",
+    "es": "Puerta de madera"
+   },
+   "hp": 200,
+   "dmg": {
+    "explosive.timed": 1100.0,
+    "ammo.rocket.basic": 553.75,
+    "ammo.rocket.hv": 67.5,
+    "explosive.satchel": 170.0,
+    "grenade.beancan": 35.0,
+    "ammo.rifle.explosive": 11.02,
+    "ammo.grenadelauncher.he": 72.75
+   }
+  },
+  {
+   "id": "door.hinged.metal",
+   "kind": "door",
+   "slug": "sheet-metal-door",
+   "item": "door.hinged.metal",
+   "icon": "door.hinged.metal",
+   "name": {
+    "en": "Sheet Metal Door",
+    "es": "Puerta de chapa"
+   },
+   "hp": 250,
+   "dmg": {
+    "explosive.timed": 440.0,
+    "ammo.rocket.basic": 223.75,
+    "ammo.rocket.hv": 24.0,
+    "explosive.satchel": 70.0,
+    "grenade.beancan": 14.5,
+    "ammo.rifle.explosive": 4.008,
+    "ammo.grenadelauncher.he": 30.75
+   }
+  },
+  {
+   "id": "door.hinged.toptier",
+   "kind": "door",
+   "slug": "armored-door",
+   "item": "door.hinged.toptier",
+   "icon": "door.hinged.toptier",
+   "name": {
+    "en": "Armored Door",
+    "es": "Puerta blindada"
+   },
+   "hp": 1000,
+   "dmg": {
+    "explosive.timed": 440.0,
+    "ammo.rocket.basic": 223.75,
+    "ammo.rocket.hv": 24.0,
+    "explosive.satchel": 70.0,
+    "grenade.beancan": 14.5,
+    "ammo.rifle.explosive": 4.008,
+    "ammo.grenadelauncher.he": 30.75
+   }
+  },
+  {
+   "id": "door.double.hinged.wood",
+   "kind": "door",
+   "slug": "wood-double-door",
+   "item": "door.double.hinged.wood",
+   "icon": "door.double.hinged.wood",
+   "name": {
+    "en": "Wood Double Door",
+    "es": "Puerta doble de madera"
+   },
+   "hp": 200,
+   "dmg": {
+    "explosive.timed": 1100.0,
+    "ammo.rocket.basic": 553.75,
+    "ammo.rocket.hv": 67.5,
+    "explosive.satchel": 170.0,
+    "grenade.beancan": 35.0,
+    "ammo.rifle.explosive": 11.02,
+    "ammo.grenadelauncher.he": 72.75
+   }
+  },
+  {
+   "id": "door.double.hinged.metal",
+   "kind": "door",
+   "slug": "sheet-metal-double-door",
+   "item": "door.double.hinged.metal",
+   "icon": "door.double.hinged.metal",
+   "name": {
+    "en": "Sheet Metal Double Door",
+    "es": "Puerta doble de chapa"
+   },
+   "hp": 250,
+   "dmg": {
+    "explosive.timed": 440.0,
+    "ammo.rocket.basic": 223.75,
+    "ammo.rocket.hv": 24.0,
+    "explosive.satchel": 70.0,
+    "grenade.beancan": 14.5,
+    "ammo.rifle.explosive": 4.008,
+    "ammo.grenadelauncher.he": 30.75
+   }
+  },
+  {
+   "id": "door.double.hinged.toptier",
+   "kind": "door",
+   "slug": "armored-double-door",
+   "item": "door.double.hinged.toptier",
+   "icon": "door.double.hinged.toptier",
+   "name": {
+    "en": "Armored Double Door",
+    "es": "Puerta doble blindada"
+   },
+   "hp": 1000,
+   "dmg": {
+    "explosive.timed": 440.0,
+    "ammo.rocket.basic": 223.75,
+    "ammo.rocket.hv": 24.0,
+    "explosive.satchel": 70.0,
+    "grenade.beancan": 14.5,
+    "ammo.rifle.explosive": 4.008,
+    "ammo.grenadelauncher.he": 30.75
+   }
+  },
+  {
+   "id": "wall.frame.garagedoor",
+   "kind": "door",
+   "slug": "garage-door",
+   "item": "wall.frame.garagedoor",
+   "icon": "wall.frame.garagedoor",
+   "name": {
+    "en": "Garage Door",
+    "es": "Puerta de garaje"
+   },
+   "hp": 600,
+   "dmg": {
+    "explosive.timed": 440.0,
+    "ammo.rocket.basic": 223.75,
+    "ammo.rocket.hv": 24.0,
+    "explosive.satchel": 70.0,
+    "grenade.beancan": 14.5,
+    "ammo.rifle.explosive": 4.008,
+    "ammo.grenadelauncher.he": 30.75
+   }
+  },
+  {
+   "id": "floor.ladder.hatch",
+   "kind": "door",
+   "slug": "ladder-hatch",
+   "item": "floor.ladder.hatch",
+   "icon": "floor.ladder.hatch",
+   "name": {
+    "en": "Ladder Hatch",
+    "es": "Trampilla"
+   },
+   "hp": 250,
+   "dmg": {
+    "explosive.timed": 440.0,
+    "ammo.rocket.basic": 223.75,
+    "ammo.rocket.hv": 24.0,
+    "explosive.satchel": 70.0,
+    "grenade.beancan": 14.5,
+    "ammo.rifle.explosive": 4.008,
+    "ammo.grenadelauncher.he": 30.75
+   }
+  },
+  {
+   "id": "wall.frame.shopfront.metal",
+   "kind": "door",
+   "slug": "metal-shop-front",
+   "item": "wall.frame.shopfront.metal",
+   "icon": "wall.frame.shopfront.metal",
+   "name": {
+    "en": "Metal Shop Front",
+    "es": "Escaparate de tienda metálico"
+   },
+   "hp": 750,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 138.25,
+    "ammo.rocket.hv": 15.015,
+    "explosive.satchel": 43.5,
+    "grenade.beancan": 9.0,
+    "ammo.rifle.explosive": 2.507,
+    "ammo.grenadelauncher.he": 18.05
+   }
+  },
+  {
+   "id": "wall.window.bars.metal",
+   "kind": "window",
+   "slug": "metal-window-bars",
+   "item": "wall.window.bars.metal",
+   "icon": "wall.window.bars.metal",
+   "name": {
+    "en": "Metal Window Bars",
+    "es": "Rejas de metal"
+   },
+   "hp": 500,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 138.25,
+    "ammo.rocket.hv": 15.015,
+    "explosive.satchel": 43.5,
+    "grenade.beancan": 9.0,
+    "ammo.rifle.explosive": 2.507,
+    "ammo.grenadelauncher.he": 18.05
+   }
+  },
+  {
+   "id": "wall.window.bars.toptier",
+   "kind": "window",
+   "slug": "reinforced-glass-window",
+   "item": "wall.window.bars.toptier",
+   "icon": "wall.window.bars.toptier",
+   "name": {
+    "en": "Reinforced Glass Window",
+    "es": "Ventana de rejas blindada"
+   },
+   "hp": 500,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 138.25,
+    "ammo.rocket.hv": 15.015,
+    "explosive.satchel": 43.5,
+    "grenade.beancan": 9.0,
+    "ammo.rifle.explosive": 2.507,
+    "ammo.grenadelauncher.he": 18.05
+   }
+  },
+  {
+   "id": "wall.window.glass.reinforced",
+   "kind": "window",
+   "slug": "strengthened-glass-window",
+   "item": "wall.window.glass.reinforced",
+   "icon": "wall.window.glass.reinforced",
+   "name": {
+    "en": "Strengthened Glass Window",
+    "es": "Ventana de cristal reforzado"
+   },
+   "hp": 350,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 138.25,
+    "ammo.rocket.hv": 15.015,
+    "explosive.satchel": 43.5,
+    "grenade.beancan": 9.0,
+    "ammo.rifle.explosive": 2.507,
+    "ammo.grenadelauncher.he": 18.05
+   }
+  },
+  {
+   "id": "shutter.metal.embrasure.a",
+   "kind": "window",
+   "slug": "metal-horizontal-embrasure",
+   "item": "shutter.metal.embrasure.a",
+   "icon": "shutter.metal.embrasure.a",
+   "name": {
+    "en": "Metal horizontal embrasure",
+    "es": "Tronera horizontal de metal"
+   },
+   "hp": 500,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 138.25,
+    "ammo.rocket.hv": 16.5,
+    "explosive.satchel": 41.5,
+    "grenade.beancan": 8.5,
+    "ammo.rifle.explosive": 2.705,
+    "ammo.grenadelauncher.he": 18.05
+   }
+  },
+  {
+   "id": "wall.external.high",
+   "kind": "external",
+   "slug": "high-external-wooden-wall",
+   "item": "wall.external.high",
+   "icon": "wall.external.high",
+   "name": {
+    "en": "High External Wooden Wall",
+    "es": "Pared Alta de Madera"
+   },
+   "hp": 500,
+   "dmg": {
+    "explosive.timed": 495.0,
+    "ammo.rocket.basic": 249.0,
+    "ammo.rocket.hv": 31.5,
+    "explosive.satchel": 91.5,
+    "grenade.beancan": 19.5,
+    "ammo.rifle.explosive": 5.109,
+    "ammo.grenadelauncher.he": 32.6
+   }
+  },
+  {
+   "id": "wall.external.high.stone",
+   "kind": "external",
+   "slug": "high-external-stone-wall",
+   "item": "wall.external.high.stone",
+   "icon": "wall.external.high.stone",
+   "name": {
+    "en": "High External Stone Wall",
+    "es": "Pared Alta de Piedra"
+   },
+   "hp": 500,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 139.0,
+    "ammo.rocket.hv": 16.5,
+    "explosive.satchel": 51.5,
+    "grenade.beancan": 11.0,
+    "ammo.rifle.explosive": 2.705,
+    "ammo.grenadelauncher.he": 18.6
+   }
+  },
+  {
+   "id": "gates.external.high.wood",
+   "kind": "external",
+   "slug": "high-external-wooden-gate",
+   "item": "gates.external.high.wood",
+   "icon": "gates.external.high.wood",
+   "name": {
+    "en": "High External Wooden Gate",
+    "es": "Portón exterior de madera"
+   },
+   "hp": 500,
+   "dmg": {
+    "explosive.timed": 495.0,
+    "ammo.rocket.basic": 249.0,
+    "ammo.rocket.hv": 31.5,
+    "explosive.satchel": 91.5,
+    "grenade.beancan": 19.5,
+    "ammo.rifle.explosive": 5.109,
+    "ammo.grenadelauncher.he": 32.6
+   }
+  },
+  {
+   "id": "gates.external.high.stone",
+   "kind": "external",
+   "slug": "high-external-stone-gate",
+   "item": "gates.external.high.stone",
+   "icon": "gates.external.high.stone",
+   "name": {
+    "en": "High External Stone Gate",
+    "es": "Portón exterior de piedra"
+   },
+   "hp": 500,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 139.0,
+    "ammo.rocket.hv": 16.5,
+    "explosive.satchel": 51.5,
+    "grenade.beancan": 11.0,
+    "ammo.rifle.explosive": 2.705,
+    "ammo.grenadelauncher.he": 18.6
+   }
+  },
+  {
+   "id": "cupboard.tool",
+   "kind": "deployable",
+   "slug": "tool-cupboard",
+   "item": "cupboard.tool",
+   "icon": "cupboard.tool",
+   "name": {
+    "en": "Tool Cupboard",
+    "es": "Armario de herramientas"
+   },
+   "hp": 100,
+   "dmg": {
+    "explosive.timed": 1100.0,
+    "ammo.rocket.basic": 553.75,
+    "ammo.rocket.hv": 67.5,
+    "explosive.satchel": 170.0,
+    "grenade.beancan": 35.0,
+    "ammo.rifle.explosive": 11.02,
+    "ammo.grenadelauncher.he": 72.75
+   }
+  },
+  {
+   "id": "autoturret",
+   "kind": "deployable",
+   "slug": "auto-turret",
+   "item": "autoturret",
+   "icon": "autoturret",
+   "name": {
+    "en": "Auto Turret",
+    "es": "Torreta automática"
+   },
+   "hp": 1000,
+   "dmg": {
+    "explosive.timed": 550.0,
+    "ammo.rocket.basic": 312.5,
+    "ammo.rocket.hv": 345.0,
+    "explosive.satchel": 275.0,
+    "grenade.beancan": 65.0,
+    "ammo.rifle.explosive": 7.01,
+    "ammo.grenadelauncher.he": 62.5
+   }
+  },
+  {
+   "id": "wall.frame.cell",
+   "kind": "deployable",
+   "slug": "prison-cell-wall",
+   "item": "wall.frame.cell",
+   "icon": "wall.frame.cell",
+   "name": {
+    "en": "Prison Cell Wall",
+    "es": "Reja de cárcel"
+   },
+   "hp": 300,
+   "dmg": {
+    "explosive.timed": 440.0,
+    "ammo.rocket.basic": 223.75,
+    "ammo.rocket.hv": 24.0,
+    "explosive.satchel": 70.0,
+    "grenade.beancan": 14.5,
+    "ammo.rifle.explosive": 4.008,
+    "ammo.grenadelauncher.he": 30.75
+   }
+  },
+  {
+   "id": "wall.frame.cell.gate",
+   "kind": "deployable",
+   "slug": "prison-cell-gate",
+   "item": "wall.frame.cell.gate",
+   "icon": "wall.frame.cell.gate",
+   "name": {
+    "en": "Prison Cell Gate",
+    "es": "Portón de celda de prisión"
+   },
+   "hp": 300,
+   "dmg": {
+    "explosive.timed": 440.0,
+    "ammo.rocket.basic": 223.75,
+    "ammo.rocket.hv": 24.0,
+    "explosive.satchel": 70.0,
+    "grenade.beancan": 14.5,
+    "ammo.rifle.explosive": 4.008,
+    "ammo.grenadelauncher.he": 30.75
+   }
+  },
+  {
+   "id": "floor.grill",
+   "kind": "deployable",
+   "slug": "floor-grill",
+   "item": "floor.grill",
+   "icon": "floor.grill",
+   "name": {
+    "en": "Floor grill",
+    "es": "Suelo de rejilla"
+   },
+   "hp": 250,
+   "dmg": {
+    "explosive.timed": 440.0,
+    "ammo.rocket.basic": 223.75,
+    "ammo.rocket.hv": 24.0,
+    "explosive.satchel": 70.0,
+    "grenade.beancan": 14.5,
+    "ammo.rifle.explosive": 4.008,
+    "ammo.grenadelauncher.he": 30.75
+   }
+  },
+  {
+   "id": "workbench3",
+   "kind": "deployable",
+   "slug": "workbench-level-3",
+   "item": "workbench3",
+   "icon": "workbench3",
+   "name": {
+    "en": "Workbench Level 3",
+    "es": "Mesa de trabajo Nivel 3"
+   },
+   "hp": 750,
+   "dmg": {
+    "explosive.timed": 275.0,
+    "ammo.rocket.basic": 138.25,
+    "ammo.rocket.hv": 16.5,
+    "explosive.satchel": 41.5,
+    "grenade.beancan": 8.5,
+    "ammo.rifle.explosive": 2.705,
+    "ammo.grenadelauncher.he": 18.05
+   }
+  },
+  {
+   "id": "box.wooden.large",
+   "kind": "deployable",
+   "slug": "large-wood-box",
+   "item": "box.wooden.large",
+   "icon": "box.wooden.large",
+   "name": {
+    "en": "Large Wood Box",
+    "es": "Caja grande de madera"
+   },
+   "hp": 300,
+   "dmg": {
+    "explosive.timed": 550.0,
+    "ammo.rocket.basic": 312.5,
+    "ammo.rocket.hv": 195.0,
+    "explosive.satchel": 275.0,
+    "grenade.beancan": 65.0,
+    "ammo.rifle.explosive": 7.01,
+    "ammo.grenadelauncher.he": 62.5
+   }
+  }
+ ]
+}
