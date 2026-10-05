@@ -340,12 +340,19 @@ def amounts(spawn, resolve, acc=None, times=1):
     """
     {(shortname, es_plano): (mínimo, máximo)} de una tirada: la cantidad de cada ítem en las hojas del árbol. Una rama
     con `extraSpawns` se tira 1 + `extraSpawns` veces, así que el máximo se multiplica (`times` acumula los niveles); el
-    mínimo no, porque el objeto puede salir en una sola de esas tiradas.
+    mínimo no, porque el objeto puede salir en una sola de esas tiradas. Una rama de peso 0 nunca se elige (las de
+    `ScientistLoot` hacia `ToolsBasic` y `GunParts`) y un árbol sin peso no da nada, igual que en `roll_chances`: si
+    no, su cantidad se sumaría al máximo de la caja.
     """
     acc = {} if acc is None else acc
     if not spawn:
         return acc
-    for s in spawn.get("subSpawn") or []:
+    subs = spawn.get("subSpawn") or []
+    if subs and sum(s["weight"] for s in subs) <= 0:
+        return acc
+    for s in subs:
+        if s["weight"] <= 0:
+            continue
         amounts(resolve(s["category"]), resolve, acc, times * (1 + max(0, s.get("extraSpawns") or 0)))
     for it in spawn.get("items") or []:
         sid = it["sid"]
@@ -455,7 +462,8 @@ def collect_boxes(w, texts, found, sources, tables):
             tuple((w.ref_key(o, s["definition"]), s["numberToSpawn"], round(s["probability"], 6))
                   for s in tt.get("LootSpawnSlots") or []),
         )
-        worn.setdefault(key, set()).add(tt.get("SpawnType") in WORN_TYPES)
+        # Sin `.get`: si una caja no trae el campo, que corte, en vez de darla por "entera" en silencio.
+        worn.setdefault(key, set()).add(tt["SpawnType"] in WORN_TYPES)
         # La caja con sus árboles ya resueltos: `container_chances` y `roll_chances` reciben la identidad, igual que en
         # los tests.
         resolved = {

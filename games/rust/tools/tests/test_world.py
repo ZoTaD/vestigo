@@ -135,12 +135,65 @@ class TestContainerChances(unittest.TestCase):
         tt = {"lootDefinition": leaf("a", amount=2, max_amount=5), "maxDefinitionsToSpawn": 2, "LootSpawnSlots": [], "scrapAmount": 0}
         self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (1.0, 2, 8))
 
+    def test_una_rama_de_peso_cero_no_suma_cantidad(self):
+        # `ScientistLoot` tiene ramas de peso 0 (hacia `ToolsBasic` y `GunParts`): nunca salen, así que su cantidad no
+        # puede sumarse al máximo de la caja aunque el mismo objeto venga por otra rama.
+        tree = node((1, leaf("a", amount=1, max_amount=3)), (0, leaf("a", amount=5, max_amount=11)))
+        tt = {"lootDefinition": tree, "maxDefinitionsToSpawn": 2, "LootSpawnSlots": [], "scrapAmount": 0}
+        self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (1.0, 1, 4))
+
+    def test_un_arbol_sin_peso_no_da_cantidad(self):
+        self.assertEqual(world.amounts(node((0, leaf("a"))), lambda x: x), {})
+
     def test_una_ranura_imposible_no_cuenta(self):
         tt = {"lootDefinition": None, "maxDefinitionsToSpawn": 0, "scrapAmount": 0, "LootSpawnSlots": [
             {"definition": leaf("a"), "numberToSpawn": 1, "probability": 0.0},
             {"definition": leaf("a"), "numberToSpawn": 1, "probability": 0.5},
         ]}
         self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (0.5, 1, 1))
+
+
+class _FakeFile:
+    def __init__(self):
+        self.name, self.externals, self.objects = "fake", [], {}
+
+
+class _FakeObj:
+    def __init__(self, af, pid, tt):
+        self.assets_file, self.path_id, self._tt = af, pid, tt
+        af.objects[pid] = self
+
+    def read_typetree(self):
+        return self._tt
+
+
+class TestSpawnTreeCiclo(unittest.TestCase):
+    """`World.spawn_tree` sobre objetos de mentira, sin abrir el juego."""
+
+    def test_una_rama_que_se_elige_a_si_misma_es_volver_a_tirar(self):
+        # Como `Collection.Ballistic`: si sale la rama que apunta a la misma tabla, el juego vuelve a tirar. Equivale a
+        # sacarla del sorteo: a y b quedan mitad y mitad (no 1/4 cada uno, que sería contar la rama como vacía).
+        af = _FakeFile()
+
+        def ref(pid):
+            return {"m_FileID": 0, "m_PathID": pid}
+
+        for pid, sid in ((10, "a"), (11, "b")):
+            _FakeObj(af, pid, {"shortname": sid})
+        for pid, item in ((2, 10), (3, 11)):
+            _FakeObj(af, pid, {"m_Name": f"hoja{pid}", "subSpawn": [],
+                               "items": [{"itemDef": ref(item), "amount": 1, "isBP": 0, "maxAmount": -1}]})
+        _FakeObj(af, 1, {"m_Name": "ciclo", "items": [], "subSpawn": [
+            {"weight": 1, "category": ref(2), "extraSpawns": 0},
+            {"weight": 1, "category": ref(3), "extraSpawns": 0},
+            {"weight": 2, "category": ref(1), "extraSpawns": 0},
+        ]})
+        w = world.World.__new__(world.World)
+        w.files, w.trees, w.spawns, w.unresolved = {"fake": af}, {}, {}, {}
+        tree = w.spawn_tree(af.objects[1], ref(1))
+        got = world.roll_chances(tree, lambda x: x)
+        self.assertAlmostEqual(got[("a", False)], 0.5)
+        self.assertAlmostEqual(got[("b", False)], 0.5)
 
 
 @unittest.skipUnless(HAVE_GAME, "sin el juego instalado")
