@@ -190,6 +190,14 @@
     "duration": 96
    }
   },
+  "electric.rf.broadcaster": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 48,
+    "duration": 48
+   }
+  },
   "electric.wallcabinet": {
    "door": null,
    "upkeep": false,
@@ -532,6 +540,22 @@
    "decay": {
     "delay": 48,
     "duration": 48
+   }
+  },
+  "wall.animal.fence": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
+   }
+  },
+  "wall.animal.fence.gate": {
+   "door": null,
+   "upkeep": false,
+   "decay": {
+    "delay": 5,
+    "duration": 8
    }
   },
   "wall.external.high": {

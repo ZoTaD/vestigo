@@ -739,9 +739,16 @@ def item_prefabs(w, paths):
     for o, tt, cls in w.behaviours(set(fields)):
         sid = sid_of.get((o.assets_file.name, tt["m_GameObject"]["m_PathID"]))
         what, field = fields[cls]
-        path = paths.get(tt[field]["guid"])
+        guid = tt[field]["guid"]
+        path = paths.get(guid)
         if sid and path:
             out.setdefault(sid, {})[what] = path
+        elif sid and guid and cls == "ItemModDeployable":
+            # Un objeto que se coloca y cuyo prefab no está en el manifiesto se quedaría sin puerta, mantenimiento ni
+            # desgaste sin que nadie se entere: se avisa como el resto de lo que no se resuelve.
+            slot = w.unresolved.setdefault("prefab de ItemModDeployable", [0, None])
+            slot[0] += 1
+            slot[1] = slot[1] or f"{sid} -> guid {guid}"
     return out
 
 
@@ -752,8 +759,11 @@ def collect_deployables(w):
         (`hasHatch`);
       - `upkeep`: si el armario le cobra mantenimiento (`Upkeep`; cuánto lo calcula el sitio con la receta);
       - `decay`: demora y duración del desgaste en horas (`BuildingGradeDecay` o `DeployableDecay`). Viven en el
-        GameObject raíz con el nombre corto del prefab y sólo 90 de 532 objetos los traen en el cliente: el resto queda
-        sin dato.
+        GameObject raíz con el nombre corto del prefab, y el cliente los trae sólo para 89 prefabs de los 532 que se
+        colocan: 67 son de objetos visibles y el resto de objetos ocultos (o sin ItemDefinition, como la maceta de vía
+        triangular). Lo demás queda sin dato. El nombre se compara en minúsculas, porque el GameObject a veces no lleva
+        las mismas mayúsculas que el archivo del prefab (la cerca de animales y su portón, el emisor RF) y se perdían
+        sin aviso.
     Y `vibration`: el nivel con que el sensor sísmico detecta cada explosivo.
     """
     paths = prefab_paths(w)
@@ -762,6 +772,8 @@ def collect_deployables(w):
     for o, tt, cls in w.behaviours({"Door", "Upkeep", "DeployableDecay", "BuildingGradeDecay"} | EXPLOSIVE_CLASSES | THROWER_CLASSES):
         name = w.go_name(o, tt)
         if cls == "Door" and name.startswith("assets/"):
+            # La puerta de garaje sale con `canTakeCloser` false. Rusthelp lista el cierrapuertas en la página del
+            # garaje, pero su propia página del cierrapuertas no incluye el garaje, y el juego dice que no: queda false.
             by_path.setdefault(name, {})["door"] = {"lock": bool(tt["canTakeLock"]), "closer": bool(tt["canTakeCloser"]),
                                                     "knocker": bool(tt["canTakeKnocker"]), "hatch": bool(tt["hasHatch"])}
         elif cls == "Upkeep" and name.startswith("assets/"):
@@ -770,6 +782,7 @@ def collect_deployables(w):
             # Manda el del prefab mismo (la raíz es el GameObject). Si sólo hay copias dentro de un monumento (el horno de
             # los departamentos), vale la copia: es el mismo prefab colocado.
             own = w.root_name(o, tt) == name
+            name = name.lower()
             if name in decay_by_name and (decay_own[name] or not own):
                 continue
             if cls == "BuildingGradeDecay":
@@ -787,7 +800,7 @@ def collect_deployables(w):
         if deploy:
             short = deploy.rsplit("/", 1)[-1].removesuffix(".prefab")
             got = {"door": by_path.get(deploy, {}).get("door"), "upkeep": by_path.get(deploy, {}).get("upkeep", False),
-                   "decay": decay_by_name.get(short)}
+                   "decay": decay_by_name.get(short.lower())}
             if got["door"] or got["upkeep"] or got["decay"]:
                 items[sid] = got
         for path in (p.get("projectile"), thrown.get(p.get("entity")), deploy):

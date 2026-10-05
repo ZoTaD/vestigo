@@ -415,6 +415,11 @@ class TestWorldInGame(unittest.TestCase):
         self.assertEqual(dep["furnace"]["decay"], {"delay": 48, "duration": 96})  # sólo hay copias en los departamentos
         self.assertEqual(dep["box.wooden"]["decay"]["duration"], 96)
         self.assertEqual(dep["barricade.sandbags"]["decay"], {"delay": 0, "duration": 0.25})
+        # El GameObject del emisor RF lleva mayúsculas que el archivo del prefab no tiene: se cruza igual.
+        self.assertIsNotNone(dep["electric.rf.broadcaster"]["decay"])
+        # 89 prefabs traen desgaste; 67 son de objetos visibles. Las macetas de vía también cruzan por minúsculas, pero
+        # `rail.road.planter` está oculto y la triangular no tiene ItemDefinition: no son objetos del sitio.
+        self.assertEqual(sum(1 for d in dep.values() if d["decay"]), 67)
 
     def test_vibracion(self):
         vib = data()["deployables"]["vibration"]
