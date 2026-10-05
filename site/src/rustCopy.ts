@@ -62,6 +62,9 @@ export interface RustCopy {
     /** Un porcentaje con el espacio del idioma ("50%" / "50 %"). */
     pct: (p: number) => string;
     recycleNote: string;
+    recycledFrom: string;
+    recycledItem: string;
+    showAll: (n: string) => string;
     loot: string;
     lootNote: string;
     lootBox: string;
@@ -143,6 +146,9 @@ const EN: RustCopy = {
     research: (n) => `Research: ${n} scrap`,
     defaultBp: "Known from the start",
     usedIn: "Used in",
+    recycledFrom: "Recycled from",
+    recycledItem: "Item",
+    showAll: (n) => `Show all ${n}`,
     recycle: "Recycling",
     recycler: "Recycler",
     recycleGives: "Gives",
@@ -243,6 +249,9 @@ const ES: RustCopy = {
     research: (n) => `Investigar: ${n} de chatarra`,
     defaultBp: "Se sabe desde el principio",
     usedIn: "Se usa en",
+    recycledFrom: "Se obtiene reciclando",
+    recycledItem: "Objeto",
+    showAll: (n) => `Ver los ${n}`,
     recycle: "Reciclaje",
     recycler: "Recicladora",
     recycleGives: "Da",

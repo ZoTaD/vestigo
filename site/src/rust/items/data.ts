@@ -57,6 +57,7 @@ export interface Ficha {
   } | null;
   usedIn: Ref[];
   recycle: { scrap: number; out: (Ref & { amount: number })[]; eff: Recycler[] } | null;
+  recycledFrom: { eff: Recycler[]; rows: (Ref & { amount: number; scrap: boolean })[] } | null;
   loot: { c: string; name: Loc; chance: number; min: number; max: number; bp: boolean }[];
   shops: { shop: Loc; amount: number; bp: boolean; currency: Ref; price: number }[];
 }

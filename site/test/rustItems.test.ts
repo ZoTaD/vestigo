@@ -19,6 +19,7 @@ describe("la pestaña Objetos de Rust", () => {
     await preloadTab(parseRoute("/en/rust/items/gears"));
     await preloadTab(parseRoute("/es/rust/objetos/madera"));
     await preloadTab(parseRoute("/es/rust/objetos/engranajes"));
+    await preloadTab(parseRoute("/en/rust/items/metal-fragments"));
   });
 
   it("la lista enlaza cada ficha con su slug en español y trae los filtros", () => {
@@ -97,5 +98,15 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
     notePop("/es");
     expect(cameFromHistory("/es/rust/objetos/fusil-de-asalto")).toBe(false);
     expect(cameFromHistory("/es")).toBe(false);
+  });
+
+  it("los fragmentos de metal: qué los da al reciclarlo, los primeros 20 y el botón para ver todos", () => {
+    const html = render("en", "/en/rust/items/metal-fragments");
+    expect(html).toContain("Recycled from");
+    expect(html).toContain('href="/en/rust/items/garage-door"');
+    expect(html).toContain("Show all");
+    // La puerta de garaje da 300 por unidad: 150 en la verde, 120 en la amarilla.
+    expect(html).toContain("× 150");
+    expect(html).toContain("× 120");
   });
 });

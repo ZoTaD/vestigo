@@ -75,6 +75,12 @@ class TestBuild(unittest.TestCase):
         self.assertEqual([e["key"] for e in rec["eff"]], ["red", "green_power", "green", "yellow"])
         self.assertEqual(rec["out"][0]["slug"], "wood")
 
+    def test_se_obtiene_reciclando(self):
+        wood = self.fichas["wood"]["recycledFrom"]
+        self.assertEqual(wood["rows"], [{"id": "rifle.ak", "slug": "assault-rifle", "name": {"en": "Assault Rifle", "es": "Fusil de asalto"}, "amount": 200, "scrap": False}])
+        self.assertEqual([e["key"] for e in wood["eff"]], ["red", "green_power", "green", "yellow"])
+        self.assertIsNone(self.fichas["assault-rifle"]["recycledFrom"])
+
     def test_botin_y_tiendas_con_nombres(self):
         self.assertEqual(self.fichas["assault-rifle"]["loot"], [{"c": "elite", "name": {"en": "Elite Crate", "es": "Caja de élite"}, "chance": 0.1, "min": 1, "max": 1, "bp": False}])
         shop = self.fichas["wood"]["shops"][0]
@@ -103,3 +109,6 @@ class TestBuildReal(unittest.TestCase):
         ak = out["fichas"]["assault-rifle"]
         self.assertTrue(ak["loot"])
         self.assertEqual(ak["craft"]["researchScrap"], 120)
+        mf = out["fichas"]["metal-fragments"]["recycledFrom"]["rows"]
+        self.assertGreater(len(mf), 300)
+        self.assertEqual(mf[0]["id"], "workbench3")  # 1.000 fragmentos por unidad, el que más da

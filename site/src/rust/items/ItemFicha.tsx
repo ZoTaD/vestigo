@@ -9,7 +9,7 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
 import { say, type Ficha, type Ref } from "./data";
-import RecycleSection from "./FichaRecycle";
+import RecycleSection, { RecycledFrom } from "./FichaRecycle";
 
 type Nav = (r: Route) => void;
 
@@ -99,6 +99,7 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
       )}
 
       <RecycleSection ficha={ficha} route={route} navigate={navigate} />
+      <RecycledFrom ficha={ficha} route={route} navigate={navigate} />
 
       {ficha.loot.length > 0 && (
         <section className="rs-pnl">

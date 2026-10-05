@@ -3,6 +3,7 @@
  * cuatro columnas de "× 12 + 50 %" no entran a 375 px sin scroll. En cada fila, lo que sale seguro y la chance de uno
  * más (`recycle.ts`), con la chatarra fija escalada.
  */
+import { useState } from "react";
 import { useLang, useLocale } from "../../i18n";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
@@ -59,6 +60,66 @@ export default function RecycleSection({ ficha, route, navigate }: { ficha: Fich
         </tbody>
       </table>
       <p className="rs-ficha-note">{t.recycleNote}</p>
+    </section>
+  );
+}
+
+/** Cuántas filas de "se obtiene reciclando" se ven de entrada: los fragmentos de metal tienen más de 300. */
+export const RECYCLED_FIRST = 20;
+/** Las dos recicladoras de esta tabla: las que más se usan (la de monumento y la de zona segura). */
+const FROM_KEYS = ["green", "yellow"] as const;
+
+/** Qué objetos dan éste al reciclarlos, con lo que da cada uno en la verde y en la amarilla. */
+export function RecycledFrom({ ficha, route, navigate }: { ficha: Ficha; route: Route; navigate: Nav }) {
+  const t = useRustCopy().items;
+  const { lang } = useLang();
+  const locale = useLocale();
+  const [all, setAll] = useState(false);
+  const rf = ficha.recycledFrom;
+  if (!rf) return null;
+  const num = (n: number) => n.toLocaleString(locale);
+  const cols = FROM_KEYS.map((k) => rf.eff.find((e) => e.key === k)).filter((e): e is NonNullable<typeof e> => !!e);
+  const cell = (amount: number, scrap: boolean, eff: number) => {
+    if (scrap) return `× ${num(recycleScrap(amount, eff))}`;
+    const y = recycleYield(amount, eff);
+    return y.n === 0 ? (y.pct ? t.chance(y.pct) : "—") : y.pct ? `× ${num(y.n)} + ${t.pct(y.pct)}` : `× ${num(y.n)}`;
+  };
+  const rows = all ? rf.rows : rf.rows.slice(0, RECYCLED_FIRST);
+  return (
+    <section className="rs-pnl">
+      <h2 className="rs-hd">{t.recycledFrom}</h2>
+      <table className="rs-table">
+        <thead>
+          <tr>
+            <th scope="col">{t.recycledItem}</th>
+            {cols.map((c) => (
+              <th scope="col" key={c.key}>
+                {t.recyclers[c.key]}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.id}>
+              <th scope="row">
+                <RefLink r={r} route={route} navigate={navigate}>
+                  <Icon id={r.id} size={28} />
+                  <span>{say(r.name, lang)}</span>
+                </RefLink>
+              </th>
+              {cols.map((c) => (
+                <td key={c.key}>{cell(r.amount, r.scrap, c.eff)}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {!all && rf.rows.length > RECYCLED_FIRST && (
+        <button type="button" className="rs-btn" onClick={() => setAll(true)}>
+          {t.showAll(num(rf.rows.length))}
+        </button>
+      )}
     </section>
   );
 }

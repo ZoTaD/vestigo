@@ -80,7 +80,8 @@ a.rs-ref:hover { color: #fff; }
 .rs-table th, .rs-table td { padding: 7px 8px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
 .rs-table thead th { color: var(--rs-dim); font: 700 12px/1.2 "Roboto Condensed", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; }
 .rs-table th[scope="row"] { font-weight: 400; }
-.rs-table th[scope="row"] .rs-ref { display: inline-flex; gap: 6px; align-items: center; }
+.rs-table th[scope="row"] .rs-ref { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.rs-pnl > .rs-btn { margin-top: 10px; }
 .rs-table td { white-space: nowrap; }
 /* El reciclaje va en filas por recicladora: lo que da se acomoda en renglones en vez de estirar la tabla. */
 .rs-recycle td { white-space: normal; }

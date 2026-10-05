@@ -38,6 +38,25 @@ def shard(slug, n=SHARDS):
     return f"{fnv1a32(slug) % n:02d}"
 
 
+def recycled_from(items, ref):
+    """
+    La inversa del reciclaje: por cada objeto, qué otros lo dan al reciclarlos y cuánto por unidad al 100 % (la chatarra
+    fija va con `scrap: True`, porque el sitio la escala distinto). De lo que más da a lo que menos.
+    """
+    out = {}
+    for i in items:
+        rec = i.get("recycle")
+        if not i["slug"] or not rec:
+            continue
+        for o in rec["out"]:
+            out.setdefault(o["id"], []).append({**ref(i["id"]), "amount": o["amount"], "scrap": False})
+        if rec["scrap"]:
+            out.setdefault("scrap", []).append({**ref(i["id"]), "amount": rec["scrap"], "scrap": True})
+    for rows in out.values():
+        rows.sort(key=lambda r: (-r["amount"], r["name"]["en"].lower(), r["id"]))
+    return out
+
+
 def build(items_doc, loot, shops):
     items = items_doc["items"]
     by_id = {i["id"]: i for i in items}
@@ -54,6 +73,7 @@ def build(items_doc, loot, shops):
     for i in visible:
         for ing in (i["craft"] or {}).get("ingredients", []):
             used_in.setdefault(ing["id"], []).append(i["id"])
+    recycled = recycled_from(items, ref)
 
     containers = loot["containers"]
     shops_by_item = {}
@@ -86,6 +106,7 @@ def build(items_doc, loot, shops):
             "condition": i["condition"], "craft": craft,
             "usedIn": [ref(u) for u in used_in.get(i["id"], [])],
             "recycle": recycle,
+            "recycledFrom": {"eff": items_doc["recyclers"], "rows": recycled[i["id"]]} if i["id"] in recycled else None,
             "loot": [{"c": r["c"], "name": containers[r["c"]], "chance": r["chance"], "min": r["min"], "max": r["max"], "bp": r["bp"]}
                      for r in loot["items"].get(i["id"], [])],
             "shops": shops_by_item.get(i["id"], []),
