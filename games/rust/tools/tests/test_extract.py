@@ -196,5 +196,74 @@ class TestItems(unittest.TestCase):
             self.assertIsNone(by_id[sid]["redirectOf"], sid)
 
 
+class TestResearchScrap(unittest.TestCase):
+    """Sin el juego: la tabla del ResearchTable (rareza → chatarra) y el `scrapRequired` que la pisa."""
+
+    def test_rareza_de_la_receta_y_si_no_la_del_objeto(self):
+        bp = {"rarity": 2, "scrapRequired": 0}
+        self.assertEqual(extract.research_scrap(0, bp), 75)
+        self.assertEqual(extract.research_scrap(2, {"rarity": 0, "scrapRequired": 0}), 75)
+        self.assertEqual(extract.research_scrap(1, {"rarity": 0, "scrapRequired": 0}), 20)
+        self.assertEqual(extract.research_scrap(3, {"rarity": 3, "scrapRequired": 0}), 125)
+        self.assertEqual(extract.research_scrap(4, {"rarity": 4, "scrapRequired": 0}), 500)
+        self.assertEqual(extract.research_scrap(0, {"rarity": 0, "scrapRequired": 0}), 500)
+
+    def test_scrap_required_manda(self):
+        self.assertEqual(extract.research_scrap(3, {"rarity": 0, "scrapRequired": 100}), 100)
+
+
+class TestRecycleOf(unittest.TestCase):
+    """Sin el juego: qué sale del reciclador por cada objeto, al 100 %."""
+
+    BY_PID = {1: "metal.fragments", 2: "scrap", 3: "metal.refined"}
+
+    def bp(self, ings, amount=1, scrap=0):
+        return {
+            "ingredients": [{"itemDef": {"m_FileID": 0, "m_PathID": p}, "amount": a} for p, a in ings],
+            "amountToCreate": amount,
+            "scrapFromRecycle": scrap,
+        }
+
+    def test_la_chatarra_de_la_receta_no_vuelve_y_la_de_reciclar_si(self):
+        got = extract.recycle_of(self.bp([(1, 25.0), (2, 100.0)], scrap=10), self.BY_PID)
+        self.assertEqual(got, {"scrap": 10, "out": [{"id": "metal.fragments", "amount": 25}]})
+
+    def test_se_divide_por_lo_que_da_la_receta(self):
+        got = extract.recycle_of(self.bp([(1, 10.0)], amount=4), self.BY_PID)
+        self.assertEqual(got, {"scrap": 0, "out": [{"id": "metal.fragments", "amount": 2.5}]})
+
+    def test_sin_receta_o_sin_nada_que_dar_no_se_recicla(self):
+        self.assertIsNone(extract.recycle_of(None, self.BY_PID))
+        self.assertIsNone(extract.recycle_of(self.bp([(2, 20.0)]), self.BY_PID))
+
+
+@unittest.skipUnless(HAVE_GAME, "sin el juego instalado")
+class TestRecycleAndResearchInGame(unittest.TestCase):
+    def test_eficiencias_de_las_recicladoras(self):
+        self.assertEqual(data()["recyclers"], {"monument": 0.5, "safezone": 0.4})
+
+    def test_engranajes_y_componentes_tecnicos(self):
+        self.assertEqual(item("gears")["recycle"], {"scrap": 10, "out": [{"id": "metal.fragments", "amount": 25}]})
+        self.assertEqual(item("techparts")["recycle"], {"scrap": 20, "out": [{"id": "metal.refined", "amount": 2}]})
+
+    def test_un_arma_devuelve_sus_ingredientes(self):
+        ak = item("rifle.ak")["recycle"]
+        self.assertEqual(ak["scrap"], 0)
+        self.assertIn({"id": "riflebody", "amount": 1}, ak["out"])
+
+    def test_chatarra_para_investigar(self):
+        want = {
+            "rifle.ak": 500, "explosive.timed": 500, "rocket.launcher": 500, "smg.thompson": 125,
+            "rifle.semiauto": 125, "lock.code": 75, "wall.frame.garagedoor": 75, "hatchet": 75,
+        }
+        for sid, scrap in want.items():
+            self.assertEqual(item(sid)["craft"]["researchScrap"], scrap, sid)
+
+    def test_lo_que_no_se_investiga_no_tiene_costo(self):
+        for it in data()["items"]:
+            if it["craft"] and not it["craft"]["researchable"]:
+                self.assertIsNone(it["craft"]["researchScrap"], it["id"])
+
+
 if __name__ == "__main__":
     unittest.main()
