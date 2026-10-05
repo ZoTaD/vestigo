@@ -339,6 +339,13 @@ export function jsonLdFor(
     }
     return out;
   }
+  if (route.view === "rust") {
+    // Vestigo › Rust › pestaña.
+    const sec = route.rsSection ?? "home";
+    const trail = [{ name: brand, url: home }, { name: "Rust", url: routeUrl({ ...route, rsSection: "home", detail: undefined }) }];
+    if (sec !== "home") trail.push({ name: RUST_COPY[lang].tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    return trail.length > 2 ? [crumbs(trail)] : [];
+  }
   if (route.view !== "deadlock") return [];
 
   const deadlockUrl = routeUrl({ ...route, dlSection: "meta", detail: undefined });

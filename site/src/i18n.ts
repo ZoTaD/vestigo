@@ -151,6 +151,10 @@ const EN = {
       zomboidCta: "Open the notebook",
       zomboidItems: "items",
       zomboidRecipes: "recipes",
+      rustLive: "Every item with its crafting, recycling and loot, the raid calculator and the countdown to the next wipe.",
+      rustCta: "Open the inventory",
+      rustItems: "items",
+      rustRecipes: "recipes",
     },
   },
 
@@ -352,6 +356,10 @@ const ES: typeof EN = {
       zomboidCta: "Abrir la libreta",
       zomboidItems: "objetos",
       zomboidRecipes: "recetas",
+      rustLive: "Cada objeto con su crafteo, reciclaje y loot, la calculadora de raideo y la cuenta regresiva al próximo wipe.",
+      rustCta: "Abrir el inventario",
+      rustItems: "objetos",
+      rustRecipes: "recetas",
     },
   },
 

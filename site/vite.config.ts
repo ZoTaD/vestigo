@@ -188,12 +188,21 @@ function readSitemapData(): { data: OgData } {
   } catch {
     zb = undefined;
   }
+  // Rust (2026-10-05): el sello del extractor. Sin él, la sección queda afuera del sitemap.
+  let rs: SitemapData["rs"];
+  try {
+    const m = JSON.parse(readFileSync(`${rustDir}/meta.json`, "utf-8"));
+    rs = { build: m.build, extractedAt: m.extractedAt };
+  } catch {
+    rs = undefined;
+  }
   return {
     data: {
       p2,
       vh,
       d2,
       zb,
+      rs,
       // Los sellos de cada pipeline, para el `lastmod` del sitemap. La
       // enciclopedia de PoE2 no tiene sello y va sin fecha.
       dates: {
@@ -202,6 +211,7 @@ function readSitemapData(): { data: OgData } {
         valheim: readVh("meta.json")?.extractedAt,
         d2r: d2?.extractedAt,
         zomboid: zb?.extractedAt,
+        rust: rs?.extractedAt,
       },
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,

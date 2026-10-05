@@ -12,6 +12,7 @@ import type { Route } from "./route";
 import vhMeta from "@valheim/meta.json";
 import d2Meta from "@d2r/meta.json";
 import pzMeta from "@zomboid/meta.json";
+import rsMeta from "@rust/meta.json";
 
 /** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
 const VH_ENTRIES = Object.entries(vhMeta.counts).reduce((n, [k, v]) => (k === "biomes" || k === "bosses" ? n : n + v), 0);
@@ -347,6 +348,30 @@ export default function Home({
                     Project Zomboid), no sólo las 969 primeras. */}
                 <b>{num(pzMeta.counts.recipes + pzMeta.counts.buildRecipes)}</b>
                 <span>{copy.home.games.zomboidRecipes}</span>
+              </p>
+            </div>
+          </li>
+
+          {/* Rust entra el 2026-10-05, con la portada del inventario. */}
+          <li className="game-panel" data-panel="rust">
+            <div className="game-panel-main">
+              <h3 className="game-panel-name">{copy.games.rust}</h3>
+              <p className="game-panel-note">{copy.home.games.rustLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "rust", rsSection: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.rustCta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(rsMeta.counts.items)}</b>
+                <span>{copy.home.games.rustItems}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(rsMeta.counts.recipes)}</b>
+                <span>{copy.home.games.rustRecipes}</span>
               </p>
             </div>
           </li>

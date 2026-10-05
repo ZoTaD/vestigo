@@ -1,4 +1,4 @@
-import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -75,6 +75,13 @@ export interface D2rSitemapData {
   patches?: { slug: string; version: string; date: string }[];
 }
 
+/** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
+export interface RustSitemapData {
+  build: number;
+  /** Cuándo cambiaron los datos de verdad (el extractor no la mueve si no cambió nada). */
+  extractedAt: string;
+}
+
 /**
  * Lo que el sitemap necesita de Project Zomboid (2026-09-30): el `meta.json` y el `index.json` que escribe
  * `games/zomboid/tools/extract.py`.
@@ -131,21 +138,24 @@ export interface SitemapData {
   d2?: D2rSitemapData;
   /** Project Zomboid. Opcional por lo mismo. */
   zb?: ZomboidSitemapData;
+  /** Rust. Opcional por lo mismo. */
+  rs?: RustSitemapData;
   /**
    * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
    * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
    */
-  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string };
+  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string };
 }
 
 /** Los sitemaps en que se parte el sitio: uno por juego y uno para lo demás. */
-export const SITEMAP_GROUPS = ["site", "deadlock", "poe2", "valheim", "d2r", "zomboid"] as const;
+export const SITEMAP_GROUPS = ["site", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust"] as const;
 export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];
 
 function sitemapGroup(path: string): SitemapGroup {
   const game = path.split("/")[2];
   // Zomboid se llama distinto en la dirección (`/project-zomboid`) que en el grupo.
   if (game === PZ_SEGMENT) return "zomboid";
+  if (game === RUST_SEGMENT) return "rust";
   return game === "deadlock" || game === "poe2" || game === "valheim" || game === "d2r" ? game : "site";
 }
 
@@ -219,6 +229,7 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
     if (sec === "items" || sec === "crafting") return later(day(data.dates?.zomboid), loot);
     return day(data.dates?.zomboid);
   }
+  if (game === RUST_SEGMENT) return day(data.dates?.rust);
   return undefined;
 }
 
@@ -336,6 +347,12 @@ export function sitemapPaths(data: SitemapData): string[] {
       if (PZ_PUBLISHED.includes("patches")) {
         for (const p of data.zb.patches ?? []) paths.push(routePath({ ...base, lang, view: "zomboid", pzSection: "patches", detail: p.slug }));
       }
+    }
+
+    // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).
+    if (data.rs) {
+      paths.push(routePath({ ...base, lang, view: "rust", rsSection: "home" }));
+      for (const s of RUST_PUBLISHED) paths.push(routePath({ ...base, lang, view: "rust", rsSection: s }));
     }
   }
 
