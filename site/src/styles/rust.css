@@ -1,0 +1,97 @@
+/*
+ * Rust (2026-10-05): estética A "Inventario", el HUD del juego. Diseño: docs/design/2026-10-05-rust.md.
+ *
+ * Paneles oscuros translúcidos sobre un cuadro desenfocado del menú del juego, casilleros de inventario con el ícono
+ * del objeto, y el verde y el rojo de los botones del juego. Sin bordes de color: el estado va por tinte o cifra.
+ */
+.rs {
+  --rs-text: #e2dbd3;
+  --rs-dim: #a39d93;
+  --rs-soft: #cfc8be;
+  --rs-panel: rgba(30, 30, 28, 0.78);
+  --rs-bar: rgba(0, 0, 0, 0.55);
+  --rs-slot: rgba(255, 255, 255, 0.07);
+  --rs-green: #6c8e36;
+  --rs-red-tint: rgba(205, 65, 43, 0.22);
+  position: relative;
+  isolation: isolate;
+  color: var(--rs-text);
+  font-family: "Roboto Condensed", system-ui, sans-serif;
+  overflow-x: clip;
+}
+/* El fondo: un cuadro del video del menú del juego, desenfocado en el archivo (ui.py) y oscurecido acá. */
+.rs::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(rgba(14, 14, 12, 0.5), rgba(14, 14, 12, 0.88) 70%),
+    url(/rust/bg/outpost.webp) center top / cover no-repeat;
+}
+
+/* Las pestañas: la barra del inventario. En el celular bajan de fila, nunca se deslizan cortadas. */
+.rs-tabs-band { background: var(--rs-bar); }
+.rs-tabs { display: flex; flex-wrap: wrap; gap: 4px; max-width: 1180px; margin: 0 auto; padding: 10px 24px; }
+.rs-tab {
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #bcb5ab;
+  font: 700 14px/1.2 "Roboto Condensed", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.rs-tab.is-on { background: var(--rs-green); color: #fff; }
+.rs-tab.is-soon { opacity: 0.45; cursor: default; }
+
+.rs-main { max-width: 1180px; margin: 0 auto; padding: 22px 24px 60px; }
+.rs-body { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; align-items: start; }
+.rs-pnl { background: var(--rs-panel); padding: 18px; }
+.rs-hd { margin: 0 0 12px; font: 800 13px/1.2 "Roboto Condensed", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rs-dim); }
+.rs-title { container-type: inline-size; }
+.rs-h1 { margin: 0 0 8px; font: 800 clamp(34px, 11cqi, 56px)/1 "Roboto Condensed", sans-serif; text-transform: uppercase; }
+.rs-lede { margin: 0 0 18px; max-width: 52ch; font-size: 17px; line-height: 1.45; color: var(--rs-soft); }
+
+/* Los casilleros del inventario: el ícono del objeto en un cuadro gris; el nombre va en el alt y en el title. */
+.rs-slots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0; padding: 0; list-style: none; }
+.rs-slot { position: relative; display: block; aspect-ratio: 1; padding: 8px; background: var(--rs-slot); }
+.rs-slot img { display: block; width: 100%; height: 100%; object-fit: contain; }
+a.rs-slot:hover,
+a.rs-slot:focus-visible { background: rgba(255, 255, 255, 0.14); }
+
+.rs-side { display: grid; gap: 16px; }
+.rs-wipe { padding: 14px 16px; background: var(--rs-red-tint); }
+.rs-wipe-when { margin: 0; color: var(--rs-soft); font-size: 16px; }
+.rs-count { display: flex; gap: 18px; margin: 10px 0 0; }
+.rs-count b { display: block; font: 800 32px/1 "Roboto Condensed", sans-serif; font-variant-numeric: tabular-nums; }
+.rs-count span { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rs-dim); }
+.rs-note { margin: 10px 0 0; font-size: 13px; line-height: 1.4; color: var(--rs-dim); }
+
+.rs-tools { margin: 0; padding: 0; list-style: none; }
+.rs-tools li + li { border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.rs-tool { display: block; padding: 10px 0; color: inherit; text-decoration: none; }
+.rs-tool b { font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.rs-tool span { display: block; margin-top: 2px; color: var(--rs-dim); font-size: 15px; line-height: 1.4; }
+a.rs-tool:hover b { color: #fff; }
+.rs-soon {
+  margin-left: 8px;
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--rs-dim);
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.rs-about { margin-top: 16px; }
+.rs-about h2 { margin: 0 0 10px; font: 800 20px/1.2 "Roboto Condensed", sans-serif; letter-spacing: 0.06em; text-transform: uppercase; }
+.rs-about p { max-width: 75ch; margin: 0 0 10px; line-height: 1.55; color: var(--rs-soft); }
+
+@media (max-width: 860px) {
+  .rs-body { grid-template-columns: 1fr; }
+  .rs-slots { grid-template-columns: repeat(4, 1fr); }
+  .rs-tabs,
+  .rs-main { padding-left: 16px; padding-right: 16px; }
+}

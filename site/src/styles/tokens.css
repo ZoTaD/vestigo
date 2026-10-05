@@ -220,6 +220,33 @@
   --radius-pill: 2px;
 }
 
+/* Rust (2026-10-05): el HUD del juego. Texto hueso, el verde de los botones de acción y el rojo del juego; los
+   paneles translúcidos y los casilleros viven en rust.css. */
+[data-theme="codex"][data-game="rust"] {
+  --bg: #141412;
+  --bg-2: #1c1c19;
+  --bg-glow: #24241f;
+  --surface: rgba(226, 219, 211, 0.06);
+  --surface-2: rgba(226, 219, 211, 0.1);
+  --surface-solid: #1e1e1b;
+  --text: #e2dbd3;
+  --text-dim: #a39d93;
+  --text-faint: #7d776e;
+  --accent: #6c8e36;
+  --accent-lit: #82a845;
+  --accent-dark: #55702a;
+  --accent-rgb: 108, 142, 54;
+  --accent-2: #cd412b;
+  --good: #6c8e36;
+  --bad: #cd412b;
+  --line: rgba(226, 219, 211, 0.14);
+  --line-strong: rgba(226, 219, 211, 0.32);
+  --on-accent: #ffffff;
+  --radius: 2px;
+  --radius-lg: 2px;
+  --radius-pill: 2px;
+}
+
 /* Portada: papel. La marca es clara y los juegos son oscuros; ese contraste es
    el que hace que cada juego pegue el salto al entrar. */
 [data-theme="codex"][data-place="home"] {
