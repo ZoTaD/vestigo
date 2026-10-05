@@ -64,7 +64,7 @@ export interface RustCopy {
     recycleNote: string;
     recycledFrom: string;
     recycledItem: string;
-    showAll: (n: string) => string;
+    showRest: (n: string) => string;
     loot: string;
     lootNote: string;
     lootBox: string;
@@ -148,7 +148,7 @@ const EN: RustCopy = {
     usedIn: "Used in",
     recycledFrom: "Recycled from",
     recycledItem: "Item",
-    showAll: (n) => `Show all ${n}`,
+    showRest: (n) => `Show the other ${n}`,
     recycle: "Recycling",
     recycler: "Recycler",
     recycleGives: "Gives",
@@ -251,7 +251,7 @@ const ES: RustCopy = {
     usedIn: "Se usa en",
     recycledFrom: "Se obtiene reciclando",
     recycledItem: "Objeto",
-    showAll: (n) => `Ver los ${n}`,
+    showRest: (n) => `Ver las ${n} restantes`,
     recycle: "Reciclaje",
     recycler: "Recicladora",
     recycleGives: "Da",

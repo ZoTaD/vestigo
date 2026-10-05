@@ -53,7 +53,9 @@ def recycled_from(items, ref):
         if rec["scrap"]:
             out.setdefault("scrap", []).append({**ref(i["id"]), "amount": rec["scrap"], "scrap": True})
     for rows in out.values():
-        rows.sort(key=lambda r: (-r["amount"], r["name"]["en"].lower(), r["id"]))
+        # Todo a la escala de la recicladora verde (50 %): la chatarra fija se multiplica por 1 y el resto por 0,5, así que
+        # con la cantidad cruda una fila de chatarra quedaría el doble de arriba de lo que da. Duplicado para seguir con enteros.
+        rows.sort(key=lambda r: (-(r["amount"] * 2 if r["scrap"] else r["amount"]), r["name"]["en"].lower(), r["id"]))
     return out
 
 

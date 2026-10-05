@@ -100,13 +100,25 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
     expect(cameFromHistory("/es")).toBe(false);
   });
 
-  it("los fragmentos de metal: qué los da al reciclarlo, los primeros 20 y el botón para ver todos", () => {
+  it("los fragmentos de metal: las primeras 20 filas a la vista y el resto adentro de un details, todo en el HTML", () => {
     const html = render("en", "/en/rust/items/metal-fragments");
     expect(html).toContain("Recycled from");
-    expect(html).toContain('href="/en/rust/items/garage-door"');
-    expect(html).toContain("Show all");
-    // La puerta de garaje da 300 por unidad: 150 en la verde, 120 en la amarilla.
-    expect(html).toContain("× 150");
-    expect(html).toContain("× 120");
+    const at = html.indexOf("<details");
+    expect(at).toBeGreaterThan(0);
+    expect(html).toMatch(/<summary[^>]*>Show the other 314<\/summary>/);
+    const rows = (h: string) => h.match(/<tr>.*?<\/tr>/g) ?? [];
+    const section = html.slice(html.indexOf("Recycled from"));
+    const afuera = rows(section.slice(0, section.indexOf("<details")));
+    const adentro = rows(section.slice(section.indexOf("<details"), section.indexOf("</details>")));
+    // 20 de datos más el encabezado afuera; el resto (más su encabezado) adentro.
+    expect(afuera.filter((r) => r.includes("<td>")).length).toBe(20);
+    expect(adentro.filter((r) => r.includes("<td>")).length).toBe(314);
+    // La puerta de garaje da 300 por unidad: 150 en la verde, 120 en la amarilla. Está entre las primeras 20.
+    const garage = afuera.find((r) => r.includes('href="/en/rust/items/garage-door"'));
+    expect(garage).toMatch(/<td>× 150<\/td><td>× 120<\/td>/);
+    // Una de las que quedan después del puesto 20 sigue en el HTML, adentro del details.
+    const ultima = adentro.filter((r) => r.includes("<td>")).at(-1)!;
+    expect(afuera).not.toContain(ultima);
   });
+
 });

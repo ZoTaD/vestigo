@@ -111,4 +111,8 @@ class TestBuildReal(unittest.TestCase):
         self.assertEqual(ak["craft"]["researchScrap"], 120)
         mf = out["fichas"]["metal-fragments"]["recycledFrom"]["rows"]
         self.assertGreater(len(mf), 300)
+        # Orden a la escala de la verde: la chatarra fija vale el doble que su cantidad cruda.
+        sc = out["fichas"]["scrap"]["recycledFrom"]["rows"]
+        verde = [r["amount"] * 2 if r["scrap"] else r["amount"] for r in sc]
+        self.assertEqual(verde, sorted(verde, reverse=True))
         self.assertEqual(mf[0]["id"], "workbench3")  # 1.000 fragmentos por unidad, el que más da
