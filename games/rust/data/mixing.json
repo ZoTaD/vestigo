@@ -1,0 +1,599 @@
+{
+ "recipes": [
+  {
+   "name": "AdvancedCoolingTea.Recipe",
+   "out": "advancedcoolingtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "coolingtea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "CraftingTea.RecipeAdvanced",
+   "out": "advancedcraftingtea_quality",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "craftingtea_quality",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "AdvancedWarmingTea.Recipe",
+   "out": "advancedwarmingtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "warmingtea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "AdvanceHarvestingTea.Recipe",
+   "out": "advanceharvestingtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "harvestingtea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "PistolAmmo",
+   "out": "ammo.pistol",
+   "amount": 4,
+   "time": 1,
+   "bp": true,
+   "in": [
+    {
+     "id": "gunpowder",
+     "amount": 5
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 10
+    }
+   ]
+  },
+  {
+   "name": "IncendiaryPistolAmmo",
+   "out": "ammo.pistol.fire",
+   "amount": 3,
+   "time": 3,
+   "bp": true,
+   "in": [
+    {
+     "id": "gunpowder",
+     "amount": 10
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 10
+    },
+    {
+     "id": "sulfur",
+     "amount": 5
+    }
+   ]
+  },
+  {
+   "name": "HVPistolAmmo",
+   "out": "ammo.pistol.hv",
+   "amount": 4,
+   "time": 3,
+   "bp": true,
+   "in": [
+    {
+     "id": "gunpowder",
+     "amount": 10
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 10
+    }
+   ]
+  },
+  {
+   "name": "RifleAmmo",
+   "out": "ammo.rifle",
+   "amount": 3,
+   "time": 1,
+   "bp": true,
+   "in": [
+    {
+     "id": "gunpowder",
+     "amount": 5
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 10
+    }
+   ]
+  },
+  {
+   "name": "HVRifleAmmo",
+   "out": "ammo.rifle.hv",
+   "amount": 3,
+   "time": 3,
+   "bp": true,
+   "in": [
+    {
+     "id": "gunpowder",
+     "amount": 10
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 10
+    }
+   ]
+  },
+  {
+   "name": "IncendiaryAmmo.Recipe",
+   "out": "ammo.rifle.incendiary",
+   "amount": 2,
+   "time": 3,
+   "bp": true,
+   "in": [
+    {
+     "id": "gunpowder",
+     "amount": 10
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 10
+    },
+    {
+     "id": "sulfur",
+     "amount": 5
+    }
+   ]
+  },
+  {
+   "name": "BasicCoolingTea.Recipe",
+   "out": "coolingtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "white.berry",
+     "amount": 2
+    },
+    {
+     "id": "blue.berry",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "name": "CraftingTea.Recipe",
+   "out": "craftingtea_quality",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "green.berry",
+     "amount": 3
+    },
+    {
+     "id": "white.berry",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "name": "FertilizerExplosives.Recipe",
+   "out": "explosives",
+   "amount": 1,
+   "time": 4,
+   "bp": true,
+   "in": [
+    {
+     "id": "gunpowder",
+     "amount": 50
+    },
+    {
+     "id": "lowgradefuel",
+     "amount": 3
+    },
+    {
+     "id": "sulfur",
+     "amount": 10
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 10
+    }
+   ]
+  },
+  {
+   "name": "GunPowderRecipe",
+   "out": "gunpowder",
+   "amount": 10,
+   "time": 1,
+   "bp": true,
+   "in": [
+    {
+     "id": "sulfur",
+     "amount": 20
+    },
+    {
+     "id": "charcoal",
+     "amount": 20
+    }
+   ]
+  },
+  {
+   "name": "HarvestingTea.Recipe",
+   "out": "harvestingtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "yellow.berry",
+     "amount": 1
+    },
+    {
+     "id": "green.berry",
+     "amount": 3
+    }
+   ]
+  },
+  {
+   "name": "HealingTea.Basic.Recipe",
+   "out": "healingtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "red.berry",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "HealingTea.Advanced.Recipe",
+   "out": "healingtea.advanced",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "healingtea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "HealingTea.Pure.Recipe",
+   "out": "healingtea.pure",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "healingtea.advanced",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "LowGradeRecipe",
+   "out": "lowgradefuel",
+   "amount": 4,
+   "time": 1,
+   "bp": true,
+   "in": [
+    {
+     "id": "cloth",
+     "amount": 1
+    },
+    {
+     "id": "fat.animal",
+     "amount": 3
+    }
+   ]
+  },
+  {
+   "name": "MaxHealthTea.Basic.Recipe",
+   "out": "maxhealthtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "red.berry",
+     "amount": 3
+    },
+    {
+     "id": "yellow.berry",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "name": "MaxHealthTea.Advanced.Recipe",
+   "out": "maxhealthtea.advanced",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "maxhealthtea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "MaxHealthTea.Pure.Recipe",
+   "out": "maxhealthtea.pure",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "maxhealthtea.advanced",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "OreTea.Basic.Recipe",
+   "out": "oretea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "yellow.berry",
+     "amount": 2
+    },
+    {
+     "id": "blue.berry",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "name": "OreTea.Advanced.Recipe",
+   "out": "oretea.advanced",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "oretea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "OreTea.Pure.Recipe",
+   "out": "oretea.pure",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "oretea.advanced",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "PureCoolingTea.Recipe",
+   "out": "purecoolingtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "advancedcoolingtea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "CraftingTea.RecipePure",
+   "out": "purecraftingtea_quality",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "advancedcraftingtea_quality",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "PureHarvestingTea.Recipe",
+   "out": "pureharvestingtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "advanceharvestingtea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "PureWarmingTea.Recipe",
+   "out": "purewarmingtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "advancedwarmingtea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "RadiationResistanceTea.Basic.Recipe",
+   "out": "radiationresisttea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "red.berry",
+     "amount": 2
+    },
+    {
+     "id": "green.berry",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "name": "RadiationResistanceTea.Advanced.Recipe",
+   "out": "radiationresisttea.advanced",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "radiationresisttea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "RadiationResistanceTea.Pure.Recipe",
+   "out": "radiationresisttea.pure",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "radiationresisttea.advanced",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "ScrapTea.Basic.Recipe",
+   "out": "scraptea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "yellow.berry",
+     "amount": 2
+    },
+    {
+     "id": "white.berry",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "name": "ScrapTea.Advanced.Recipe",
+   "out": "scraptea.advanced",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "scraptea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "ScrapTea.Pure.Recipe",
+   "out": "scraptea.pure",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "scraptea.advanced",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "WarmingTea.Recipe",
+   "out": "warmingtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "white.berry",
+     "amount": 2
+    },
+    {
+     "id": "yellow.berry",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "name": "WoodTea.Basic.Recipe",
+   "out": "woodtea",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "red.berry",
+     "amount": 2
+    },
+    {
+     "id": "blue.berry",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "name": "WoodTea.Advanced.Recipe",
+   "out": "woodtea.advanced",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "woodtea",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "name": "WoodTea.Pure.Recipe",
+   "out": "woodtea.pure",
+   "amount": 1,
+   "time": 5,
+   "bp": false,
+   "in": [
+    {
+     "id": "woodtea.advanced",
+     "amount": 4
+    }
+   ]
+  }
+ ]
+}

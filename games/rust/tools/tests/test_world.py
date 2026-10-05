@@ -358,6 +358,42 @@ class TestWorldInGame(unittest.TestCase):
         for key in set(world.NPCS.values()):
             self.assertEqual(len(set(data()["tables"][key].values())), 1, key)
 
+    def test_recolectables(self):
+        # rusthelp.com (2026-10-05): "Metal (collectable) ×50", "Halloween Metal (collectable) ×75".
+        def row(sid, key):
+            return next(r for r in data()["loot"]["items"][sid] if r["c"] == key)
+
+        self.assertEqual((row("metal.ore", "collect_metalore")["chance"], row("metal.ore", "collect_metalore")["min"]), (1, 50))
+        self.assertEqual(row("metal.ore", "collect_halloween_metalore")["min"], 75)
+        self.assertEqual(row("cloth", "collect_hemp")["min"], 10)
+        srcs = data()["loot"]["containers"]
+        self.assertEqual((srcs["collect_hemp"]["kind"], srcs["collect_hemp"]["event"]), ("collect", None))
+        self.assertEqual(srcs["collect_halloween_metalore"]["event"], "halloween")
+
+    def test_lo_que_se_abre(self):
+        # rusthelp.com: regalo pequeño 12,99 % de fragmentos ×25–49; bolsa chica de Halloween 11,11 %; regalo grande
+        # 13,33 % de escopeta de corredera.
+        def row(sid, key):
+            return next(r for r in data()["loot"]["items"][sid] if r["c"] == key)
+
+        small = row("metal.fragments", "open_xmas.present.small")
+        self.assertAlmostEqual(small["chance"], 0.1299, places=3)
+        self.assertEqual((small["min"], small["max"]), (25, 49))
+        self.assertAlmostEqual(row("metal.fragments", "open_halloween.lootbag.small")["chance"], 0.1111, places=3)
+        self.assertAlmostEqual(row("shotgun.pump", "open_xmas.present.large")["chance"], 0.1333, places=3)
+        src = data()["loot"]["containers"]["open_xmas.present.small"]
+        self.assertEqual((src["kind"], src["item"], src["event"]), ("item", "xmas.present.small", "xmas"))
+        self.assertEqual(data()["loot"]["containers"]["open_easter.goldegg"]["event"], "easter")
+
+    def test_mesa_de_mezcla(self):
+        recipes = {r["out"]: r for r in data()["mixing"]["recipes"]}
+        self.assertEqual(len(data()["mixing"]["recipes"]), 39)
+        ammo = recipes["ammo.rifle"]
+        self.assertEqual((ammo["amount"], ammo["bp"]), (3, True))
+        self.assertEqual(ammo["in"], [{"id": "gunpowder", "amount": 5}, {"id": "metal.fragments", "amount": 10}])
+        self.assertEqual(recipes["gunpowder"]["in"], [{"id": "sulfur", "amount": 20}, {"id": "charcoal", "amount": 20}])
+        self.assertEqual(recipes["healingtea"]["in"], [{"id": "red.berry", "amount": 4}])
+
 
 if __name__ == "__main__":
     unittest.main()

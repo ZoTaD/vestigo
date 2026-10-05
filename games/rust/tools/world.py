@@ -5,10 +5,11 @@ Lee las escenas del juego (`Bundles/shared/assetscenes.bundle`) junto con `conte
 `NPCVendingOrder`) e `items.preload.bundle` (los objetos), porque las referencias cruzan de un archivo a otro.
 Escribe:
   - `games/rust/data/loot.json`: por objeto, en qué cajas aparece, con la probabilidad de que una caja traiga al menos
-    uno, la cantidad contando todas sus tiradas y si sale gastado; y de los NPC (científicos, moradores,
-    espantapájaros);
+    uno, la cantidad contando todas sus tiradas y si sale gastado; de los NPC (científicos, moradores,
+    espantapájaros); y de los recolectables y objetos que se abren (regalos, bolsas de Halloween, huevos);
   - `games/rust/data/shops.json`: qué vende cada tienda de monumento (Outpost, Bandit Camp, pueblo pesquero, rancho,
-    granero) y a qué precio. El pozo de agua tiene tienda, pero todas sus órdenes son de precio al azar: no entra.
+    granero) y a qué precio. El pozo de agua tiene tienda, pero todas sus órdenes son de precio al azar: no entra;
+  - `games/rust/data/mixing.json`: las recetas de la mesa de mezcla.
 
 La cuenta del botín sigue `LootContainer.PopulateLoot`/`GenerateScrap` y `LootSpawn.SpawnIntoContainer` del juego
 (decompilados públicos: github.com/MillionthOdin16/RustChangelog, `LootContainer.cs` y `LootSpawn.cs`): si la caja
@@ -29,7 +30,7 @@ from pathlib import Path
 import UnityPy
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from extract import BUNDLES, DATA, read_content, text_of  # noqa: E402
+from extract import BUNDLES, DATA, number, read_content, slugify, text_of  # noqa: E402
 
 # Las cajas que se muestran, por el nombre del prefab sin carpeta ni extensión; las del laboratorio submarino llevan
 # delante `underwater_labs/`, porque varias se llaman igual que las de los monumentos. Sólo comparten clave los prefabs
@@ -177,6 +178,11 @@ NPC_NAMES = {
 NPC_EVENTS = {"scarecrow": "halloween", "gingerbread": "xmas"}
 NPC_CLASSES = {"ScientistNPC", "ScientistNPC2", "TunnelDweller", "UnderwaterDweller", "ScarecrowNPC", "GingerbreadNPC",
                "BanditGuard", "NPCShopKeeper", "NPCPlayer"}
+# Los objetos que se abren y lo que tiran (`revealList`), con el evento en el que aparecen: los regalos de Navidad
+# (`ItemModUnwrap`), las bolsas de caramelos de Halloween (`ItemModOpenLootBag`) y los huevos de Pascua
+# (`ItemModCrackOpen`).
+OPENABLE = {"ItemModUnwrap": "xmas", "ItemModOpenLootBag": "halloween", "ItemModCrackOpen": "easter"}
+COLLECTABLES = "assets/bundled/prefabs/autospawn/collectable/"
 LOOT_CLASSES = {"LootContainer", "LockedByEntCrate", "HackableLockedCrate", "SupplyDrop", "FreeableLootContainer"}
 # Las tiendas, por el prefab del monumento donde está la máquina. La clave sale de la primera coincidencia; el nombre,
 # del token oficial (engine.json). El pozo de agua queda en la lista para que su máquina no corte por "monumento sin
@@ -614,6 +620,92 @@ def collect_npcs(w, texts, found, sources, tables):
     return ignored
 
 
+def collect_collectibles(w, texts, found, sources):
+    """
+    Lo que se junta del suelo (`CollectibleEntity`: cáñamo, hongos, bayas, piedras y metal sueltos): siempre lo mismo, con
+    el nombre del juego (`itemName`). Los de Halloween dan más y van con su clave.
+    """
+    for o, tt, _ in w.behaviours({"CollectibleEntity"}):
+        path = w.go_name(o, tt)
+        if not path.startswith(COLLECTABLES):
+            continue  # el diésel del excavador y las instancias en escenas
+        token = tt["itemName"]["token"]
+        halloween = "/halloween/" in path
+        key = ("collect_halloween_" if halloween else "collect_") + slugify(token).replace("-", "")
+        got = {}
+        for i in tt.get("itemList") or []:
+            sid = w.shortname(o, i["itemDef"], "objeto recolectable")
+            if sid:
+                n = max(1, int(i["amount"]))
+                got[(sid, False)] = (1.0, n, n)
+        merge(found, key, got)
+        sources[key] = {
+            "en": text_of(texts, "en", token) or tt["itemName"]["legacyEnglish"].strip(),
+            "es": text_of(texts, "es", token),
+            "kind": "collect", "event": "halloween" if halloween else None, "worn": "none",
+        }
+
+
+def collect_openables(w, texts, found, sources):
+    """
+    Lo que trae un objeto al abrirlo (`OPENABLE`): `revealList` tirada `maxTries` veces. Hoy todos tiran una vez; si un
+    parche pone `minTries` ≠ `maxTries` corta, porque la cuenta de la probabilidad cambia.
+    """
+    defs = {}
+    for o, tt, _ in w.behaviours({"ItemDefinition"}):
+        defs[(o.assets_file.name, tt["m_GameObject"]["m_PathID"])] = tt
+    for o, tt, cls in w.behaviours(set(OPENABLE)):
+        d = defs[(o.assets_file.name, tt["m_GameObject"]["m_PathID"])]
+        if d["hidden"]:
+            continue
+        sid = d["shortname"]
+        if tt["minTries"] != tt["maxTries"]:
+            raise SystemExit(f"{sid}: se abre entre {tt['minTries']} y {tt['maxTries']} veces; revisar la cuenta")
+        res = {"lootDefinition": w.spawn_tree(o, tt["revealList"]), "maxDefinitionsToSpawn": tt["maxTries"],
+               "LootSpawnSlots": [], "scrapAmount": 0}
+        key = f"open_{sid}"
+        merge(found, key, container_chances(res, lambda x: x))
+        token = d["displayName"]["token"]
+        sources[key] = {"en": text_of(texts, "en", token) or d["displayName"]["legacyEnglish"], "es": text_of(texts, "es", token),
+                        "kind": "item", "item": sid, "event": OPENABLE[cls], "worn": "none"}
+
+
+def collect_mixing(w):
+    """
+    Las recetas de la mesa de mezcla (`MixingTable.Recipes` → `RecipeList` → `Recipe`): cada ingrediente ocupa una
+    ranura y puede repetirse, así que se suman por objeto. `RequiresBlueprint` dice si hace falta saber el plano del
+    producto.
+    """
+    seen, out = set(), []
+    for o, tt, _ in w.behaviours({"MixingTable"}):
+        if not w.go_name(o, tt).startswith("assets/"):
+            continue
+        rl = w.follow(o, tt["Recipes"], "RecipeList de la mesa de mezcla")
+        if rl is None:
+            continue
+        for ref in w.tree(rl)["Recipes"]:
+            r = w.follow(rl, ref, "receta de la mesa de mezcla")
+            if r is None:
+                continue
+            t = w.tree(r)
+            if t["m_Name"] in seen:
+                continue
+            seen.add(t["m_Name"])
+            product = w.shortname(r, t["ProducedItem"], "producto de la mesa de mezcla")
+            if not product:
+                continue
+            ins = {}
+            for i in t["Ingredients"]:
+                sid = w.shortname(r, i["Ingredient"], "ingrediente de la mesa de mezcla")
+                if sid:
+                    ins[sid] = ins.get(sid, 0) + i["Count"]
+            out.append({"name": t["m_Name"], "out": product, "amount": t["ProducedItemCount"],
+                        "time": number(t["MixingDuration"]), "bp": bool(t["RequiresBlueprint"]),
+                        "in": [{"id": k, "amount": v} for k, v in ins.items()]})
+    out.sort(key=lambda r: (r["out"], r["name"]))
+    return {"recipes": out}
+
+
 def collect_loot(w, texts):
     """
     El botín de todas las fuentes y, aparte, `tables`: por clave, la firma de la tabla de cada prefab (para el test que
@@ -626,6 +718,8 @@ def collect_loot(w, texts):
     npcs_out = collect_npcs(w, texts, found, sources, tables)
     if npcs_out:
         print(f"[rust] NPC con botín que no se muestran: {', '.join(sorted(npcs_out))}", file=sys.stderr)
+    collect_collectibles(w, texts, found, sources)
+    collect_openables(w, texts, found, sources)
     return loot_doc(found, sources), tables
 
 
@@ -664,7 +758,7 @@ def collect_shops(w, texts):
 
 def collect(w=None):
     """
-    Lee el juego y devuelve `{"loot": ..., "shops": ..., "tables": ...}` sin escribir nada (lo usan los tests, que le
+    Lee el juego y devuelve `{"loot": ..., "shops": ..., "mixing": ..., "tables": ...}` sin escribir nada (lo usan los tests, que le
     pasan un `World` ya abierto). `tables` no se escribe: es la firma de la tabla de cada prefab por clave, para
     comprobar que no se mezclan.
     """
@@ -672,16 +766,18 @@ def collect(w=None):
     w = w or World()
     loot, tables = collect_loot(w, texts)
     shops = collect_shops(w, texts)
+    mixing = collect_mixing(w)
     w.report_unresolved()
-    return {"loot": loot, "shops": shops, "tables": tables}
+    return {"loot": loot, "shops": shops, "mixing": mixing, "tables": tables}
 
 
 def main():
     got = collect()
-    for name in ("loot", "shops"):
+    for name in ("loot", "shops", "mixing"):
         (DATA / f"{name}.json").write_text(json.dumps(got[name], ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     n_items = len(got["loot"]["items"])
-    print(f"[rust] botín: {len(got['loot']['containers'])} cajas, {n_items} objetos; tiendas: {len(got['shops']['orders'])} órdenes")
+    print(f"[rust] botín: {len(got['loot']['containers'])} cajas, {n_items} objetos; tiendas: {len(got['shops']['orders'])} órdenes; "
+          f"mesa de mezcla: {len(got['mixing']['recipes'])} recetas")
 
 
 if __name__ == "__main__":

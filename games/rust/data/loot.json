@@ -42,6 +42,188 @@
    "event": null,
    "worn": "all"
   },
+  "collect_blackberry": {
+   "en": "Black Berry",
+   "es": "Baya negra",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_blueberry": {
+   "en": "Blue Berry",
+   "es": "Baya azul",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_coconut": {
+   "en": "Coconut",
+   "es": "Coco",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_corn": {
+   "en": "Corn",
+   "es": "Maíz",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_greenberry": {
+   "en": "Green Berry",
+   "es": "Baya verde",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_halloween_bone": {
+   "en": "Bones",
+   "es": "Huesos",
+   "kind": "collect",
+   "event": "halloween",
+   "worn": "none"
+  },
+  "collect_halloween_metalore": {
+   "en": "Metal Ore",
+   "es": "Mena de metal",
+   "kind": "collect",
+   "event": "halloween",
+   "worn": "none"
+  },
+  "collect_halloween_stone": {
+   "en": "Stone",
+   "es": "Piedra",
+   "kind": "collect",
+   "event": "halloween",
+   "worn": "none"
+  },
+  "collect_halloween_sulfurore": {
+   "en": "Sulfur Ore",
+   "es": "Mena de azufre",
+   "kind": "collect",
+   "event": "halloween",
+   "worn": "none"
+  },
+  "collect_halloween_wood": {
+   "en": "Wood",
+   "es": "Madera",
+   "kind": "collect",
+   "event": "halloween",
+   "worn": "none"
+  },
+  "collect_hemp": {
+   "en": "Hemp Fibers",
+   "es": "Fibras de cáñamo",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_hqmetalore": {
+   "en": "High Quality Metal Ore",
+   "es": "Mena de metal de alta calidad",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_metalore": {
+   "en": "Metal Ore",
+   "es": "Mena de metal",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_mushroom": {
+   "en": "Mushroom",
+   "es": "Setas",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_orchid": {
+   "en": "Orchid",
+   "es": "Orquídea",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_potato": {
+   "en": "Potato",
+   "es": "Patata",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_pumpkin": {
+   "en": "Pumpkin",
+   "es": "Calabaza",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_redberry": {
+   "en": "Red Berry",
+   "es": "Baya roja",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_rose": {
+   "en": "Rose",
+   "es": "Rosa",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_stone": {
+   "en": "Stone",
+   "es": "Piedra",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_sulfurore": {
+   "en": "Sulfur Ore",
+   "es": "Mena de azufre",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_sunflower": {
+   "en": "Sunflower",
+   "es": "Girasol",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_wheat": {
+   "en": "Wheat",
+   "es": "Trigo",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_whiteberry": {
+   "en": "White Berry",
+   "es": "Baya blanca",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_wood": {
+   "en": "Wood",
+   "es": "Madera",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
+  "collect_yellowberry": {
+   "en": "Yellow Berry",
+   "es": "Baya amarilla",
+   "kind": "collect",
+   "event": null,
+   "worn": "none"
+  },
   "crate": {
    "en": "Crate",
    "es": "Caja",
@@ -188,6 +370,78 @@
    "kind": "box",
    "event": null,
    "worn": "all"
+  },
+  "open_easter.bronzeegg": {
+   "en": "Bronze Egg",
+   "es": "Huevo de bronce",
+   "kind": "item",
+   "item": "easter.bronzeegg",
+   "event": "easter",
+   "worn": "none"
+  },
+  "open_easter.goldegg": {
+   "en": "Gold Egg",
+   "es": "Huevo de oro",
+   "kind": "item",
+   "item": "easter.goldegg",
+   "event": "easter",
+   "worn": "none"
+  },
+  "open_easter.silveregg": {
+   "en": "Silver Egg",
+   "es": "Huevo de plata",
+   "kind": "item",
+   "item": "easter.silveregg",
+   "event": "easter",
+   "worn": "none"
+  },
+  "open_halloween.lootbag.large": {
+   "en": "Large Loot Bag",
+   "es": "Bolsa de dulces grande",
+   "kind": "item",
+   "item": "halloween.lootbag.large",
+   "event": "halloween",
+   "worn": "none"
+  },
+  "open_halloween.lootbag.medium": {
+   "en": "Medium Loot Bag",
+   "es": "Bolsa de dulces mediana",
+   "kind": "item",
+   "item": "halloween.lootbag.medium",
+   "event": "halloween",
+   "worn": "none"
+  },
+  "open_halloween.lootbag.small": {
+   "en": "Small Loot Bag",
+   "es": "Bolsa de dulces pequeña",
+   "kind": "item",
+   "item": "halloween.lootbag.small",
+   "event": "halloween",
+   "worn": "none"
+  },
+  "open_xmas.present.large": {
+   "en": "Large Present",
+   "es": "Regalo grande",
+   "kind": "item",
+   "item": "xmas.present.large",
+   "event": "xmas",
+   "worn": "none"
+  },
+  "open_xmas.present.medium": {
+   "en": "Medium Present",
+   "es": "Regalo mediano",
+   "kind": "item",
+   "item": "xmas.present.medium",
+   "event": "xmas",
+   "worn": "none"
+  },
+  "open_xmas.present.small": {
+   "en": "Small Present",
+   "es": "Regalo pequeño",
+   "kind": "item",
+   "item": "xmas.present.small",
+   "event": "xmas",
+   "worn": "none"
   },
   "roadsign": {
    "en": "Road Sign",
@@ -411,6 +665,20 @@
     "min": 10,
     "max": 10,
     "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
+    "chance": 0.1064,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.0649,
+    "min": 8,
+    "max": 11,
+    "bp": false
    }
   ],
   "ammo.pistol": [
@@ -468,6 +736,41 @@
     "chance": 0.5185,
     "min": 15,
     "max": 15,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.large",
+    "chance": 0.2,
+    "min": 20,
+    "max": 20,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.1562,
+    "min": 20,
+    "max": 20,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.1471,
+    "min": 20,
+    "max": 20,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.1429,
+    "min": 30,
+    "max": 30,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
+    "min": 30,
+    "max": 30,
     "bp": false
    },
    {
@@ -701,6 +1004,13 @@
     "bp": false
    },
    {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.4286,
+    "min": 20,
+    "max": 50,
+    "bp": false
+   },
+   {
     "c": "heavy",
     "chance": 0.3703,
     "min": 12,
@@ -726,6 +1036,13 @@
     "chance": 0.3372,
     "min": 12,
     "max": 36,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.3333,
+    "min": 20,
+    "max": 50,
     "bp": false
    },
    {
@@ -1066,6 +1383,20 @@
     "min": 5,
     "max": 5,
     "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.1429,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
+    "min": 5,
+    "max": 5,
+    "bp": false
    }
   ],
   "ammo.rocket.hv": [
@@ -1079,6 +1410,20 @@
    {
     "c": "heli",
     "chance": 0.15,
+    "min": 3,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.1429,
+    "min": 3,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
     "min": 3,
     "max": 3,
     "bp": false
@@ -1105,6 +1450,20 @@
     "min": 2,
     "max": 2,
     "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.1429,
+    "min": 2,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
+    "min": 2,
+    "max": 2,
+    "bp": false
    }
   ],
   "ammo.rocket.seeker": [
@@ -1118,6 +1477,20 @@
    {
     "c": "heli",
     "chance": 0.15,
+    "min": 4,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.1429,
+    "min": 4,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
     "min": 4,
     "max": 4,
     "bp": false
@@ -1157,6 +1530,27 @@
     "chance": 0.4523,
     "min": 6,
     "max": 18,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.25,
+    "min": 5,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.2353,
+    "min": 5,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.large",
+    "chance": 0.1333,
+    "min": 12,
+    "max": 12,
     "bp": false
    },
    {
@@ -1578,14 +1972,49 @@
     "bp": false
    },
    {
+    "c": "open_easter.goldegg",
+    "chance": 0.0367,
+    "min": 10,
+    "max": 42,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.0327,
     "min": 3,
     "max": 5,
     "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0179,
+    "min": 10,
+    "max": 14,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0117,
+    "min": 10,
+    "max": 14,
+    "bp": false
    }
   ],
   "arrow.wooden": [
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.1176,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.small",
+    "chance": 0.1111,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   },
    {
     "c": "tools",
     "chance": 0.0735,
@@ -1598,6 +2027,33 @@
     "chance": 0.049,
     "min": 5,
     "max": 5,
+    "bp": false
+   }
+  ],
+  "attire.bunny.onesie": [
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.1562,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "attire.bunnyears": [
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.1176,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "attire.reindeer.headband": [
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.0649,
+    "min": 1,
+    "max": 1,
     "bp": false
    }
   ],
@@ -1815,6 +2271,27 @@
     "min": 5,
     "max": 36,
     "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0101,
+    "min": 5,
+    "max": 27,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0045,
+    "min": 5,
+    "max": 9,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0029,
+    "min": 5,
+    "max": 9,
+    "bp": false
    }
   ],
   "ballista.bolt.incendiary": [
@@ -1830,6 +2307,27 @@
     "chance": 0.0834,
     "min": 5,
     "max": 108,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0101,
+    "min": 5,
+    "max": 81,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0045,
+    "min": 5,
+    "max": 27,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0029,
+    "min": 5,
+    "max": 27,
     "bp": false
    }
   ],
@@ -1847,6 +2345,27 @@
     "min": 3,
     "max": 144,
     "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0444,
+    "min": 3,
+    "max": 108,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0223,
+    "min": 3,
+    "max": 36,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0146,
+    "min": 3,
+    "max": 36,
+    "bp": false
    }
   ],
   "ballista.bolt.pitchfork": [
@@ -1862,6 +2381,27 @@
     "chance": 0.0834,
     "min": 5,
     "max": 108,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0101,
+    "min": 5,
+    "max": 81,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0045,
+    "min": 5,
+    "max": 27,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0029,
+    "min": 5,
+    "max": 27,
     "bp": false
    }
   ],
@@ -1881,10 +2421,31 @@
     "bp": false
    },
    {
+    "c": "open_easter.goldegg",
+    "chance": 0.0158,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.0078,
     "min": 1,
     "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0071,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0047,
+    "min": 1,
+    "max": 1,
     "bp": false
    },
    {
@@ -1953,10 +2514,31 @@
     "bp": false
    },
    {
+    "c": "open_easter.goldegg",
+    "chance": 0.0232,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0107,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.0078,
     "min": 1,
     "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.007,
+    "min": 1,
+    "max": 1,
     "bp": false
    },
    {
@@ -2576,6 +3158,27 @@
     "bp": false
    },
    {
+    "c": "open_easter.goldegg",
+    "chance": 0.0367,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0179,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0117,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.0078,
     "min": 1,
@@ -2817,6 +3420,15 @@
     "bp": false
    }
   ],
+  "black.berry": [
+   {
+    "c": "collect_blackberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "black.raspberries": [
    {
     "c": "food",
@@ -2835,12 +3447,30 @@
     "bp": false
    }
   ],
+  "blue.berry": [
+   {
+    "c": "collect_blueberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "blueberries": [
    {
     "c": "food",
     "chance": 0.2135,
     "min": 1,
     "max": 3,
+    "bp": false
+   }
+  ],
+  "bone.fragments": [
+   {
+    "c": "collect_halloween_bone",
+    "chance": 1.0,
+    "min": 30,
+    "max": 30,
     "bp": false
    }
   ],
@@ -2904,6 +3534,20 @@
   ],
   "bow.compound": [
    {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.0588,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.small",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "underwater_adv",
     "chance": 0.0111,
     "min": 1,
@@ -2961,6 +3605,20 @@
    }
   ],
   "bow.hunting": [
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.0588,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.small",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
    {
     "c": "tools",
     "chance": 0.049,
@@ -3282,6 +3940,15 @@
     "bp": false
    }
   ],
+  "candycaneclub": [
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.1299,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "cannonball": [
    {
     "c": "cannons",
@@ -3322,6 +3989,27 @@
     "chance": 0.5386,
     "min": 1,
     "max": 4,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0642,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0357,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0234,
+    "min": 1,
+    "max": 1,
     "bp": false
    },
    {
@@ -3395,6 +4083,27 @@
     "min": 8,
     "max": 76,
     "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0642,
+    "min": 8,
+    "max": 57,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0357,
+    "min": 8,
+    "max": 19,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0234,
+    "min": 8,
+    "max": 19,
+    "bp": false
    }
   ],
   "catapult.ammo.explosive": [
@@ -3411,6 +4120,27 @@
     "min": 2,
     "max": 44,
     "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1753,
+    "min": 1,
+    "max": 33,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0357,
+    "min": 2,
+    "max": 11,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0234,
+    "min": 2,
+    "max": 11,
+    "bp": false
    }
   ],
   "catapult.ammo.incendiary": [
@@ -3426,6 +4156,27 @@
     "chance": 0.5386,
     "min": 2,
     "max": 36,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0642,
+    "min": 2,
+    "max": 27,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0357,
+    "min": 2,
+    "max": 9,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0234,
+    "min": 2,
+    "max": 9,
     "bp": false
    }
   ],
@@ -3626,6 +4377,20 @@
    {
     "c": "scarecrow",
     "chance": 0.1176,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0938,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.0882,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3884,10 +4649,40 @@
     "bp": false
    },
    {
+    "c": "open_xmas.present.small",
+    "chance": 0.1299,
+    "min": 3,
+    "max": 4,
+    "bp": false
+   },
+   {
     "c": "foodbox",
     "chance": 0.1289,
     "min": 1,
     "max": 2,
+    "bp": false
+   },
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.1176,
+    "min": 3,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.small",
+    "chance": 0.1111,
+    "min": 3,
+    "max": 4,
+    "bp": false
+   }
+  ],
+  "cloth": [
+   {
+    "c": "collect_hemp",
+    "chance": 1.0,
+    "min": 10,
+    "max": 10,
     "bp": false
    }
   ],
@@ -4158,6 +4953,15 @@
     "bp": false
    }
   ],
+  "coconut": [
+   {
+    "c": "collect_coconut",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "coffeecan.helmet": [
    {
     "c": "supply",
@@ -4241,6 +5045,13 @@
    {
     "c": "scarecrow",
     "chance": 0.1597,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.049,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4371,6 +5182,13 @@
   ],
   "corn": [
    {
+    "c": "collect_corn",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "scarecrow",
     "chance": 0.5,
     "min": 3,
@@ -4476,6 +5294,13 @@
     "chance": 1.0,
     "min": 15,
     "max": 19,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.large",
+    "chance": 0.1333,
+    "min": 250,
+    "max": 250,
     "bp": false
    }
   ],
@@ -4850,6 +5675,15 @@
    {
     "c": "underwater_dweller",
     "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "easterbasket": [
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.2353,
     "min": 1,
     "max": 1,
     "bp": false
@@ -7181,6 +8015,13 @@
     "bp": false
    },
    {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
+    "min": 1,
+    "max": 11,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.0857,
     "min": 1,
@@ -7450,6 +8291,13 @@
   ],
   "flameturret": [
    {
+    "c": "open_xmas.present.large",
+    "chance": 0.1333,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "underwater_adv",
     "chance": 0.0111,
     "min": 1,
@@ -7596,6 +8444,13 @@
    {
     "c": "mine",
     "chance": 0.0769,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.large",
+    "chance": 0.0667,
     "min": 1,
     "max": 1,
     "bp": false
@@ -8668,6 +9523,13 @@
     "min": 2,
     "max": 2,
     "bp": false
+   },
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.0094,
+    "min": 5,
+    "max": 10,
+    "bp": false
    }
   ],
   "generator.wind.scrap": [
@@ -8805,6 +9667,13 @@
    }
   ],
   "green.berry": [
+   {
+    "c": "collect_greenberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
    {
     "c": "cache",
     "chance": 0.1464,
@@ -9794,6 +10663,13 @@
   ],
   "hazmatsuit": [
    {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.1471,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.04,
     "min": 1,
@@ -10437,6 +11313,27 @@
     "bp": false
    },
    {
+    "c": "open_easter.goldegg",
+    "chance": 0.0367,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0179,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0117,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.0078,
     "min": 1,
@@ -10509,6 +11406,27 @@
     "bp": false
    },
    {
+    "c": "open_easter.goldegg",
+    "chance": 0.0367,
+    "min": 2,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0179,
+    "min": 2,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0117,
+    "min": 2,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.0078,
     "min": 1,
@@ -10562,6 +11480,15 @@
     "chance": 0.0006,
     "min": 1,
     "max": 1,
+    "bp": false
+   }
+  ],
+  "hq.metal.ore": [
+   {
+    "c": "collect_hqmetalore",
+    "chance": 1.0,
+    "min": 5,
+    "max": 5,
     "bp": false
    }
   ],
@@ -11087,6 +12014,20 @@
     "bp": false
    },
    {
+    "c": "open_easter.silveregg",
+    "chance": 0.0938,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.0882,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.0429,
     "min": 1,
@@ -11462,6 +12403,20 @@
   ],
   "lmg.m249": [
    {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "heli",
     "chance": 0.1,
     "min": 1,
@@ -11643,6 +12598,20 @@
     "bp": false
    },
    {
+    "c": "open_easter.silveregg",
+    "chance": 0.0938,
+    "min": 20,
+    "max": 39,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.0882,
+    "min": 20,
+    "max": 39,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.065,
     "min": 35,
@@ -11650,7 +12619,21 @@
     "bp": false
    },
    {
+    "c": "open_xmas.present.small",
+    "chance": 0.0649,
+    "min": 25,
+    "max": 34,
+    "bp": false
+   },
+   {
     "c": "gingerbread",
+    "chance": 0.0638,
+    "min": 150,
+    "max": 150,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
     "chance": 0.0638,
     "min": 150,
     "max": 150,
@@ -12025,6 +13008,43 @@
     "min": 30,
     "max": 49,
     "bp": false
+   },
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.1299,
+    "min": 25,
+    "max": 49,
+    "bp": false
+   },
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.1176,
+    "min": 25,
+    "max": 49,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.small",
+    "chance": 0.1111,
+    "min": 25,
+    "max": 49,
+    "bp": false
+   }
+  ],
+  "metal.ore": [
+   {
+    "c": "collect_halloween_metalore",
+    "chance": 1.0,
+    "min": 75,
+    "max": 75,
+    "bp": false
+   },
+   {
+    "c": "collect_metalore",
+    "chance": 1.0,
+    "min": 50,
+    "max": 50,
+    "bp": false
    }
   ],
   "metal.plate.torso": [
@@ -12129,6 +13149,13 @@
     "bp": false
    },
    {
+    "c": "open_xmas.present.large",
+    "chance": 0.1333,
+    "min": 60,
+    "max": 60,
+    "bp": false
+   },
+   {
     "c": "scientist_nvg",
     "chance": 0.1167,
     "min": 15,
@@ -12147,6 +13174,20 @@
     "chance": 0.0568,
     "min": 15,
     "max": 24,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0367,
+    "min": 80,
+    "max": 597,
+    "bp": false
+   },
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.0327,
+    "min": 32,
+    "max": 78,
     "bp": false
    },
    {
@@ -12169,6 +13210,20 @@
     "min": 15,
     "max": 24,
     "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0179,
+    "min": 80,
+    "max": 199,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0117,
+    "min": 80,
+    "max": 199,
+    "bp": false
    }
   ],
   "metal.shield": [
@@ -12184,6 +13239,27 @@
     "chance": 0.5386,
     "min": 1,
     "max": 12,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0642,
+    "min": 1,
+    "max": 9,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0357,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0234,
+    "min": 1,
+    "max": 3,
     "bp": false
    },
    {
@@ -12455,6 +13531,13 @@
     "min": 1,
     "max": 4,
     "bp": false
+   },
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.0094,
+    "min": 5,
+    "max": 10,
+    "bp": false
    }
   ],
   "metalspring": [
@@ -12558,6 +13641,27 @@
     "chance": 0.3047,
     "min": 2,
     "max": 8,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0367,
+    "min": 2,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0179,
+    "min": 2,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0117,
+    "min": 2,
+    "max": 2,
     "bp": false
    },
    {
@@ -12758,6 +13862,20 @@
   ],
   "multiplegrenadelauncher": [
    {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "heavy",
     "chance": 0.05,
     "min": 1,
@@ -12776,6 +13894,15 @@
    {
     "c": "scarecrow",
     "chance": 0.0227,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "mushroom": [
+   {
+    "c": "collect_mushroom",
+    "chance": 1.0,
     "min": 1,
     "max": 1,
     "bp": false
@@ -12841,6 +13968,15 @@
    {
     "c": "heavy_bradley",
     "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "orchid": [
+   {
+    "c": "collect_orchid",
+    "chance": 1.0,
     "min": 1,
     "max": 1,
     "bp": false
@@ -13201,6 +14337,15 @@
     "bp": false
    }
   ],
+  "pistol.eoka": [
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.0649,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "pistol.m92": [
    {
     "c": "supply",
@@ -13369,6 +14514,27 @@
    }
   ],
   "pistol.revolver": [
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.1562,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.1471,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.large",
+    "chance": 0.1333,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
    {
     "c": "underwater_adv",
     "chance": 0.0111,
@@ -13613,9 +14779,23 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
+    "chance": 0.1064,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "potato": [
+   {
+    "c": "collect_potato",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
    {
     "c": "cache",
     "chance": 0.3434,
@@ -13900,6 +15080,13 @@
   ],
   "pumpkin": [
    {
+    "c": "collect_pumpkin",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "food",
     "chance": 0.2135,
     "min": 1,
@@ -13914,6 +15101,15 @@
     "bp": false
    }
   ],
+  "pumpkinbasket": [
+   {
+    "c": "open_halloween.lootbag.small",
+    "chance": 0.2222,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "radiationresisttea": [
    {
     "c": "cache",
@@ -13924,6 +15120,13 @@
    }
   ],
   "red.berry": [
+   {
+    "c": "collect_redberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
    {
     "c": "cache",
     "chance": 0.1464,
@@ -14354,6 +15557,20 @@
     "bp": false
    },
    {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "supply",
     "chance": 0.0381,
     "min": 1,
@@ -14409,6 +15626,20 @@
     "chance": 0.1831,
     "min": 1,
     "max": 2,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
+    "min": 1,
+    "max": 1,
     "bp": false
    },
    {
@@ -15174,6 +16405,15 @@
     "bp": false
    }
   ],
+  "rose": [
+   {
+    "c": "collect_rose",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "rug": [
    {
     "c": "basic",
@@ -15271,6 +16511,13 @@
     "bp": false
    },
    {
+    "c": "open_xmas.present.medium",
+    "chance": 0.0851,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "tools",
     "chance": 0.049,
     "min": 1,
@@ -15350,6 +16597,13 @@
     "bp": false
    },
    {
+    "c": "open_easter.goldegg",
+    "chance": 0.0642,
+    "min": 1,
+    "max": 9,
+    "bp": false
+   },
+   {
     "c": "tools",
     "chance": 0.049,
     "min": 1,
@@ -15357,10 +16611,24 @@
     "bp": false
    },
    {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0357,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.0327,
     "min": 1,
     "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0234,
+    "min": 1,
+    "max": 3,
     "bp": false
    },
    {
@@ -15420,7 +16688,23 @@
     "bp": false
    }
   ],
+  "santahat": [
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.026,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "scarecrowhead": [
+   {
+    "c": "open_halloween.lootbag.small",
+    "chance": 0.1111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
    {
     "c": "scarecrow",
     "chance": 0.0227,
@@ -15590,6 +16874,20 @@
     "min": 8,
     "max": 11,
     "bp": false
+   },
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.0649,
+    "min": 8,
+    "max": 11,
+    "bp": false
+   },
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.0327,
+    "min": 140,
+    "max": 318,
+    "bp": false
    }
   ],
   "scraptea": [
@@ -15661,6 +16959,132 @@
    {
     "c": "heavy_bradley",
     "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.black.berry": [
+   {
+    "c": "collect_blackberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.blue.berry": [
+   {
+    "c": "collect_blueberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.corn": [
+   {
+    "c": "collect_corn",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.green.berry": [
+   {
+    "c": "collect_greenberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.hemp": [
+   {
+    "c": "collect_hemp",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.orchid": [
+   {
+    "c": "collect_orchid",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.potato": [
+   {
+    "c": "collect_potato",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.pumpkin": [
+   {
+    "c": "collect_pumpkin",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.red.berry": [
+   {
+    "c": "collect_redberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.rose": [
+   {
+    "c": "collect_rose",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.sunflower": [
+   {
+    "c": "collect_sunflower",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.wheat": [
+   {
+    "c": "collect_wheat",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.white.berry": [
+   {
+    "c": "collect_whiteberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "seed.yellow.berry": [
+   {
+    "c": "collect_yellowberry",
+    "chance": 1.0,
     "min": 1,
     "max": 1,
     "bp": false
@@ -15915,6 +17339,13 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.0094,
+    "min": 5,
+    "max": 10,
+    "bp": false
    }
   ],
   "shelves": [
@@ -16130,6 +17561,20 @@
   ],
   "shotgun.double": [
    {
+    "c": "open_easter.silveregg",
+    "chance": 0.1562,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.1471,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.065,
     "min": 1,
@@ -16267,6 +17712,27 @@
     "bp": false
    },
    {
+    "c": "open_xmas.present.large",
+    "chance": 0.1333,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0938,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.0882,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.0134,
     "min": 1,
@@ -16385,6 +17851,13 @@
    {
     "c": "gingerbread",
     "chance": 0.1078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
+    "chance": 0.1064,
     "min": 1,
     "max": 1,
     "bp": false
@@ -16638,6 +18111,27 @@
     "bp": false
    },
    {
+    "c": "open_easter.goldegg",
+    "chance": 0.0367,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0179,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0117,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "underwater_adv",
     "chance": 0.0111,
     "min": 1,
@@ -16850,6 +18344,13 @@
   "sled.xmas": [
    {
     "c": "gingerbread",
+    "chance": 0.0638,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
     "chance": 0.0638,
     "min": 1,
     "max": 1,
@@ -17118,6 +18619,13 @@
     "bp": false
    },
    {
+    "c": "open_xmas.present.large",
+    "chance": 0.0667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.028,
     "min": 1,
@@ -17201,6 +18709,20 @@
     "chance": 0.1831,
     "min": 1,
     "max": 2,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.1111,
+    "min": 1,
+    "max": 1,
     "bp": false
    },
    {
@@ -17455,7 +18977,21 @@
   ],
   "snowball": [
    {
+    "c": "open_xmas.present.small",
+    "chance": 0.1948,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "gingerbread",
+    "chance": 0.1277,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
     "chance": 0.1277,
     "min": 1,
     "max": 4,
@@ -17465,6 +19001,13 @@
   "snowballgun": [
    {
     "c": "gingerbread",
+    "chance": 0.0638,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
     "chance": 0.0638,
     "min": 1,
     "max": 1,
@@ -17551,6 +19094,13 @@
    {
     "c": "scarecrow",
     "chance": 0.1597,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.049,
     "min": 1,
     "max": 1,
     "bp": false
@@ -17644,9 +19194,25 @@
     "bp": false
    }
   ],
+  "stocking.large": [
+   {
+    "c": "open_xmas.present.large",
+    "chance": 0.1333,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "stocking.small": [
    {
     "c": "gingerbread",
+    "chance": 0.1064,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
     "chance": 0.1064,
     "min": 1,
     "max": 1,
@@ -17673,10 +19239,66 @@
   ],
   "stones": [
    {
+    "c": "collect_halloween_stone",
+    "chance": 1.0,
+    "min": 75,
+    "max": 75,
+    "bp": false
+   },
+   {
+    "c": "collect_stone",
+    "chance": 1.0,
+    "min": 50,
+    "max": 50,
+    "bp": false
+   },
+   {
     "c": "gingerbread",
     "chance": 0.2128,
     "min": 1000,
     "max": 1000,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
+    "chance": 0.2128,
+    "min": 1000,
+    "max": 1000,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.1562,
+    "min": 2500,
+    "max": 2500,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.1471,
+    "min": 2500,
+    "max": 2500,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.1299,
+    "min": 100,
+    "max": 199,
+    "bp": false
+   },
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.1176,
+    "min": 100,
+    "max": 199,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.small",
+    "chance": 0.1111,
+    "min": 100,
+    "max": 199,
     "bp": false
    }
   ],
@@ -17803,7 +19425,39 @@
     "bp": false
    }
   ],
+  "sulfur.ore": [
+   {
+    "c": "collect_halloween_sulfurore",
+    "chance": 1.0,
+    "min": 75,
+    "max": 75,
+    "bp": false
+   },
+   {
+    "c": "collect_sulfurore",
+    "chance": 1.0,
+    "min": 50,
+    "max": 50,
+    "bp": false
+   }
+  ],
+  "sunflower": [
+   {
+    "c": "collect_sunflower",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "supply.signal": [
+   {
+    "c": "open_xmas.present.large",
+    "chance": 0.0667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
    {
     "c": "elite",
     "chance": 0.0372,
@@ -17962,6 +19616,13 @@
    },
    {
     "c": "gingerbread",
+    "chance": 0.0638,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
     "chance": 0.0638,
     "min": 1,
     "max": 1,
@@ -18439,6 +20100,13 @@
     "chance": 0.0239,
     "min": 2,
     "max": 3,
+    "bp": false
+   },
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.0094,
+    "min": 4,
+    "max": 8,
     "bp": false
    },
    {
@@ -18945,6 +20613,15 @@
     "bp": false
    }
   ],
+  "vampire.stake": [
+   {
+    "c": "open_halloween.lootbag.small",
+    "chance": 0.1111,
+    "min": 3,
+    "max": 4,
+    "bp": false
+   }
+  ],
   "wall.external.high": [
    {
     "c": "underwater_adv",
@@ -19386,11 +21063,25 @@
     "min": 1,
     "max": 2,
     "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.medium",
+    "chance": 0.049,
+    "min": 1,
+    "max": 2,
+    "bp": false
    }
   ],
   "wall.ice.wall": [
    {
     "c": "gingerbread",
+    "chance": 0.0638,
+    "min": 3,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
     "chance": 0.0638,
     "min": 3,
     "max": 4,
@@ -20169,6 +21860,13 @@
   ],
   "weapon.mod.holosight": [
    {
+    "c": "open_xmas.present.large",
+    "chance": 0.0667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.0134,
     "min": 1,
@@ -20250,6 +21948,13 @@
    {
     "c": "heli",
     "chance": 0.0816,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.large",
+    "chance": 0.0667,
     "min": 1,
     "max": 1,
     "bp": false
@@ -20408,6 +22113,13 @@
   ],
   "weapon.mod.silencer": [
    {
+    "c": "open_xmas.present.large",
+    "chance": 0.0667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.019,
     "min": 1,
@@ -20480,7 +22192,23 @@
     "bp": false
    }
   ],
+  "wheat": [
+   {
+    "c": "collect_wheat",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "white.berry": [
+   {
+    "c": "collect_whiteberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
    {
     "c": "cache",
     "chance": 0.1464,
@@ -20500,6 +22228,20 @@
   ],
   "wood": [
    {
+    "c": "collect_halloween_wood",
+    "chance": 1.0,
+    "min": 75,
+    "max": 75,
+    "bp": false
+   },
+   {
+    "c": "collect_wood",
+    "chance": 1.0,
+    "min": 50,
+    "max": 50,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.4296,
     "min": 5000,
@@ -20511,6 +22253,48 @@
     "chance": 0.3047,
     "min": 5000,
     "max": 20000,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.1299,
+    "min": 200,
+    "max": 399,
+    "bp": false
+   },
+   {
+    "c": "open_easter.bronzeegg",
+    "chance": 0.1176,
+    "min": 200,
+    "max": 399,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.small",
+    "chance": 0.1111,
+    "min": 200,
+    "max": 399,
+    "bp": false
+   },
+   {
+    "c": "open_easter.goldegg",
+    "chance": 0.0367,
+    "min": 5000,
+    "max": 15000,
+    "bp": false
+   },
+   {
+    "c": "open_halloween.lootbag.large",
+    "chance": 0.0179,
+    "min": 5000,
+    "max": 5000,
+    "bp": false
+   },
+   {
+    "c": "open_easter.silveregg",
+    "chance": 0.0117,
+    "min": 5000,
+    "max": 5000,
     "bp": false
    }
   ],
@@ -20680,10 +22464,44 @@
     "bp": false
    }
   ],
+  "wrappingpaper": [
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.1299,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "xmas.decoration.baubels": [
    {
     "c": "gingerbread",
     "chance": 0.0266,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
+    "chance": 0.0266,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "xmas.decoration.candycanes": [
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.0162,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "xmas.decoration.gingerbreadmen": [
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.0162,
     "min": 1,
     "max": 1,
     "bp": false
@@ -20696,12 +22514,44 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
+    "chance": 0.0106,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "xmas.decoration.pinecone": [
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.0162,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "xmas.decoration.star": [
    {
     "c": "gingerbread",
     "chance": 0.0266,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "open_xmas.present.medium",
+    "chance": 0.0266,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "xmas.decoration.tinsel": [
+   {
+    "c": "open_xmas.present.small",
+    "chance": 0.0162,
     "min": 1,
     "max": 1,
     "bp": false
@@ -20740,6 +22590,13 @@
    }
   ],
   "yellow.berry": [
+   {
+    "c": "collect_yellowberry",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
    {
     "c": "cache",
     "chance": 0.1464,
