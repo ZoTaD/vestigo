@@ -134,6 +134,7 @@ export interface RustCopy {
     cheapest: string;
     share: string;
     copied: string;
+    copyFailed: string;
     table: string;
     tableNote: string;
     minutes: (m: string) => string;
@@ -290,6 +291,7 @@ const EN: RustCopy = {
     cheapest: "Cheapest in sulfur",
     share: "Copy link",
     copied: "Link copied",
+    copyFailed: "Couldn't copy: copy it from the address bar",
     table: "Full raid table",
     tableNote: "Explosives needed for one of each, placed right on the target. Duds not counted.",
     minutes: (m) => `${m} min`,
@@ -459,6 +461,7 @@ const ES: RustCopy = {
     cheapest: "Lo más barato en azufre",
     share: "Copiar link",
     copied: "Link copiado",
+    copyFailed: "No se pudo copiar: copialo de la barra de direcciones",
     table: "Tabla completa de raideo",
     tableNote: "Explosivos para romper uno de cada uno, pegados al objetivo. Sin contar las fallas.",
     minutes: (m) => `${m} min`,

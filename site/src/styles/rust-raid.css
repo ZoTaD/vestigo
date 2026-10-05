@@ -45,3 +45,6 @@
   .rs-raid-grid > * { min-width: 0; }
   .rs-raid-result .rs-table td { white-space: nowrap; }
 }
+/* Fuera del media query: sin esto la tabla completa ensanchaba el grid y `overflow-x: clip` de `.rs` la escondía. */
+.rs-raid { grid-template-columns: minmax(0, 1fr); }
+.rs-raid > * { min-width: 0; }

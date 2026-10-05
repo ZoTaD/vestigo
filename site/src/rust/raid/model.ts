@@ -39,7 +39,7 @@ const BY_ID = new Map(TARGETS.map((t) => [t.id, t]));
 const BY_ITEM = new Map(TARGETS.filter((t) => t.item).map((t) => [t.item!, t]));
 const EX_BY_ID = new Map(EXPLOSIVES.map((e) => [e.id, e]));
 /** El tope de cantidad por objetivo en la selección: más que eso es un error de tipeo, no una base. */
-const MAX_QTY = 99;
+export const MAX_QTY = 99;
 
 export const targetForItem = (itemId: string) => BY_ITEM.get(itemId);
 export const explosiveById = (id: string) => EX_BY_ID.get(id);

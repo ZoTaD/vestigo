@@ -17,6 +17,7 @@ import {
   EXPLOSIVES,
   formatSelection,
   KINDS,
+  MAX_QTY,
   parseSelection,
   selectionCost,
   selectionMix,
@@ -46,7 +47,7 @@ export default function RustRaid({
   // Hasta leer la URL no se escribe nada: si no, el primer render (vacío, igual al prerender) borraba el `?o=` del link
   // compartido antes de leerlo.
   const [ready, setReady] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<"ok" | "fail" | null>(null);
 
   useEffect(() => {
     setSel(parseSelection(window.location.search));
@@ -54,8 +55,16 @@ export default function RustRaid({
   }, []);
   useEffect(() => {
     if (!ready) return;
+    // Cambia sólo `o`: los demás parámetros del link (utm, etc.) se conservan.
+    const params = new URLSearchParams(window.location.search);
+    params.delete("o");
+    const o = formatSelection(sel).slice(3); // sin "?o="
+    const rest = params.toString();
+    const search = [rest, o ? `o=${o}` : ""].filter(Boolean).join("&");
     const url =
-      window.location.pathname + formatSelection(sel) + window.location.hash;
+      window.location.pathname +
+      (search ? `?${search}` : "") +
+      window.location.hash;
     if (
       url !==
       window.location.pathname + window.location.search + window.location.hash
@@ -65,12 +74,24 @@ export default function RustRaid({
 
   const bump = (id: string, d: number) =>
     setSel((s) => {
-      const n = Math.max(0, Math.min(99, (s[id] ?? 0) + d));
+      const n = Math.max(0, Math.min(MAX_QTY, (s[id] ?? 0) + d));
       const next = { ...s };
       if (n) next[id] = n;
       else delete next[id];
       return next;
     });
+  // Si el navegador no deja copiar (sin permiso o sin HTTPS), se avisa en el mismo botón en vez de callarlo.
+  const copyLink = () => {
+    const done = (r: "ok" | "fail") => {
+      setCopied(r);
+      window.setTimeout(() => setCopied(null), 2000);
+    };
+    if (!navigator.clipboard) return done("fail");
+    navigator.clipboard.writeText(window.location.href).then(
+      () => done("ok"),
+      () => done("fail"),
+    );
+  };
   const picked = Object.keys(sel).length > 0;
   const mix = picked ? selectionMix(sel) : null;
 
@@ -115,7 +136,7 @@ export default function RustRaid({
                         >
                           −
                         </button>
-                        <b aria-live="polite">{qty}</b>
+                        <b>{qty}</b>
                         <button
                           type="button"
                           onClick={() => bump(x.id, 1)}
@@ -218,20 +239,12 @@ export default function RustRaid({
                 </table>
               </div>
               <p className="rs-raid-actions">
-                <button
-                  type="button"
-                  className="rs-btn"
-                  onClick={() =>
-                    navigator.clipboard?.writeText(window.location.href).then(
-                      () => {
-                        setCopied(true);
-                        window.setTimeout(() => setCopied(false), 1500);
-                      },
-                      () => undefined,
-                    )
-                  }
-                >
-                  {copied ? t.copied : t.share}
+                <button type="button" className="rs-btn" onClick={copyLink}>
+                  {copied === "ok"
+                    ? t.copied
+                    : copied === "fail"
+                      ? t.copyFailed
+                      : t.share}
                 </button>
                 <button
                   type="button"
