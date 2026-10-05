@@ -28,6 +28,7 @@ const loadD2r = () => import("./D2r");
 export const D2rArea = lazyWithPreload(loadD2r);
 const loadZomboid = () => import("./Zomboid");
 export const ZomboidArea = lazyWithPreload(loadZomboid);
+export const RustArea = lazyWithPreload(() => import("./Rust"));
 export const PrivacyPage = lazyWithPreload(() => import("./Privacy"));
 export const TermsPage = lazyWithPreload(() => import("./Terms"));
 
@@ -45,6 +46,7 @@ const BY_VIEW: Partial<Record<View, { preload: () => Promise<void> }>> = {
   valheim: ValheimArea,
   d2r: D2rArea,
   zomboid: ZomboidArea,
+  rust: RustArea,
   privacy: PrivacyPage,
   terms: TermsPage,
 };

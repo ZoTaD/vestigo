@@ -7,6 +7,7 @@ import { POE2_COPY, type Poe2Copy } from "./poe2Copy";
 import { VALHEIM_COPY } from "./valheimCopy";
 import { D2R_COPY } from "./d2rCopy";
 import { tidyTitleName, ZOMBOID_COPY } from "./zomboidCopy";
+import { RUST_COPY } from "./rustCopy";
 import { esHeadNames } from "./zomboid/headName";
 
 /** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
@@ -132,6 +133,8 @@ export function metaFor(
     // Con los espacios de más de su nombre afuera (ver `tidyTitleName`): sale igual en el título, la descripción y og:*.
     return detail && detailName ? detail(tidyTitleName(detailName), via ?? undefined) : s[sec];
   }
+  // Rust (2026-10-05): la portada y cada pestaña. Las fichas de Objetos se suman cuando se publiquen.
+  if (route.view === "rust") return RUST_COPY[lang].seo[route.rsSection ?? "home"];
   // Lo que queda son la portada y las dos páginas legales.
   const page = seo[route.view];
   return { title: page.title(), description: page.description() };

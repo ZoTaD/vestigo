@@ -27,6 +27,8 @@ const valheimMapDir = fileURLToPath(new URL("../games/valheim/data/map", import.
 const d2rDir = fileURLToPath(new URL("../games/d2r/data", import.meta.url));
 // Project Zomboid (2026-09-30): lo que escriben `games/zomboid/tools/extract.py` y `map.py`.
 const zomboidDir = fileURLToPath(new URL("../games/zomboid/data", import.meta.url));
+// Rust (2026-10-05): lo que escribe `games/rust/tools/extract.py`.
+const rustDir = fileURLToPath(new URL("../games/rust/data", import.meta.url));
 
 /**
  * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.
@@ -822,7 +824,7 @@ export default defineConfig({
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
     // juego y no uno genérico, para que un import diga de qué juego habla.
-    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir },
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

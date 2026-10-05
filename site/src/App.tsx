@@ -45,7 +45,7 @@ function Shell({
 }) {
   const copy = useCopy();
   const { view: place } = route;
-  const { D2rArea, DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, TermsPage, ValheimArea, ZomboidArea } = areas();
+  const { D2rArea, DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, RustArea, TermsPage, ValheimArea, ZomboidArea } = areas();
   const [consent, setConsent] = useState<Consent | null>(storedConsent);
   // Reopening the notice from the footer is how a decision gets withdrawn,
   // which the GDPR requires to be as easy as giving it.
@@ -112,7 +112,7 @@ function Shell({
     <div
       className="app"
       data-theme="codex"
-      data-game={place === "deadlock" || place === "poe2" || place === "valheim" || place === "d2r" || place === "zomboid" ? place : undefined}
+      data-game={place === "deadlock" || place === "poe2" || place === "valheim" || place === "d2r" || place === "zomboid" || place === "rust" ? place : undefined}
       /**
        * La home es el único lugar que no es el códex.
        *
@@ -147,6 +147,7 @@ function Shell({
         {place === "valheim" && <ValheimArea route={route} navigate={navigate} />}
         {place === "d2r" && <D2rArea route={route} navigate={navigate} />}
         {place === "zomboid" && <ZomboidArea route={route} navigate={navigate} />}
+        {place === "rust" && <RustArea route={route} navigate={navigate} />}
         {place === "privacy" && <PrivacyPage />}
         {place === "terms" && <TermsPage />}
       </Suspense>
@@ -184,7 +185,7 @@ function Shell({
             peor que no nombrar ninguna. En PoE2 no se nombra a Valve (no es su juego) ni a los proveedores
             de datos, a pedido de ZoTaD; sí el crédito que pide la licencia de
             la tipografía Fontin. */}
-        {place !== "d2r" && place !== "zomboid" && (
+        {place !== "d2r" && place !== "zomboid" && place !== "rust" && (
           <p className="foot-sources">
             {place === "poe2" ? copy.footer.sourcesPoe2 : place === "valheim" ? copy.footer.sourcesValheim : copy.footer.sourcesDeadlock}
           </p>
@@ -203,9 +204,17 @@ function Shell({
 
         {/* Lo piden las directrices de contenido de Valve. El de Riot, que iba
             arriba de este, se fue con TFT el 2026-09-25. En Diablo II va el de
-            Blizzard: nombrar a Valve en un juego de Blizzard no avisa nada. */}
+            Blizzard: nombrar a Valve en un juego de Blizzard no avisa nada. En
+            Rust, el de Facepunch: su política de UGC pide que quede claro que
+            no es oficial (2026-10-05). */}
         <p className="foot-legal">
-          {place === "d2r" ? copy.footer.disclaimerBlizzard : place === "zomboid" ? copy.footer.disclaimerTis : copy.footer.disclaimerValve}
+          {place === "d2r"
+            ? copy.footer.disclaimerBlizzard
+            : place === "zomboid"
+              ? copy.footer.disclaimerTis
+              : place === "rust"
+                ? copy.footer.disclaimerFacepunch
+                : copy.footer.disclaimerValve}
         </p>
 
         <p className="foot-copy">

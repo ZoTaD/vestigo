@@ -6,7 +6,7 @@ import { routeInLang, type Route } from "./route";
 import { artUrl, iconUrl, loadIndex, peekIndex, searchIndex, type IndexEntry } from "./valheimData";
 import type { ValheimCopy } from "./valheimCopy";
 
-export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid";
+export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
 export type Place = "home" | Game;
 /** The legal pages are reachable from the footer and highlight no tab. */
@@ -165,6 +165,15 @@ export default function Nav({
             onNavigate={onNavigate}
           >
             {copy.games.zomboidShort}
+          </RouteLink>
+          {/* Rust entra el 2026-10-05, con la portada del inventario. */}
+          <RouteLink
+            className="top-place"
+            to={{ ...a("rust"), rsSection: "home" }}
+            active={active === "rust"}
+            onNavigate={onNavigate}
+          >
+            {copy.games.rust}
           </RouteLink>
           {/* Los juegos que vienen se anuncian, no se enlazan: no existe la
               ruta, así que un enlace llevaría a un 404 y de paso entraría al

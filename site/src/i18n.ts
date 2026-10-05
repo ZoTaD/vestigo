@@ -39,6 +39,7 @@ const EN = {
     diablo2Short: "Diablo II",
     zomboid: "Project Zomboid",
     zomboidShort: "Zomboid",
+    rust: "Rust",
     soon: "Soon",
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
@@ -221,6 +222,9 @@ const EN = {
     disclaimerTis:
       "Vestigo is a fan site and isn't endorsed by or affiliated with The Indie Stone. Project Zomboid and its " +
       "content belong to The Indie Stone.",
+    disclaimerFacepunch:
+      "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Facepunch Studios. Rust and its " +
+      "content belong to Facepunch Studios.",
   },
 
   // Said plainly, and without a pre-ticked box or a greyed-out "decline": the
@@ -254,6 +258,7 @@ const ES: typeof EN = {
     diablo2Short: "Diablo II",
     zomboid: "Project Zomboid",
     zomboidShort: "Zomboid",
+    rust: "Rust",
     soon: "Pronto",
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
@@ -412,6 +417,9 @@ const ES: typeof EN = {
     disclaimerTis:
       "Vestigo es un sitio de fans y no está avalado por The Indie Stone ni afiliado a ella. Project Zomboid y su " +
       "contenido pertenecen a The Indie Stone.",
+    disclaimerFacepunch:
+      "Vestigo es un sitio de fans no oficial y no está avalado por Facepunch Studios ni afiliado a ella. Rust y su " +
+      "contenido pertenecen a Facepunch Studios.",
   },
 
   consent: {

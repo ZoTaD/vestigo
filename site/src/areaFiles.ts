@@ -16,6 +16,7 @@ export const AREA_FILES: Partial<Record<View, string>> = {
   valheim: "src/Valheim.tsx",
   d2r: "src/D2r.tsx",
   zomboid: "src/Zomboid.tsx",
+  rust: "src/Rust.tsx",
   privacy: "src/Privacy.tsx",
   terms: "src/Terms.tsx",
 };

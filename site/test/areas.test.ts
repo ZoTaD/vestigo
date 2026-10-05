@@ -30,7 +30,7 @@ describe("cada vista en su chunk (2026-09-25)", () => {
   });
 
   it("hay un área por cada vista que sirve el sitio", () => {
-    expect(Object.keys(byView).sort()).toEqual(["d2r", "deadlock", "home", "poe2", "privacy", "terms", "valheim", "zomboid"]);
+    expect(Object.keys(byView).sort()).toEqual(["d2r", "deadlock", "home", "poe2", "privacy", "rust", "terms", "valheim", "zomboid"]);
   });
 
   it("DEADLOCK_TAB_FILES nombra el mismo archivo que TABS en DeadlockArea.tsx", () => {
@@ -68,6 +68,7 @@ describe("cada vista en su chunk (2026-09-25)", () => {
     expect(filesFor({ ...base, view: "deadlock" })).toEqual(["src/DeadlockArea.tsx"]);
     expect(filesFor({ ...base, view: "deadlock", dlSection: "player" })).toEqual(["src/DeadlockArea.tsx", "src/DeadlockPlayer.tsx"]);
     expect(filesFor({ ...base, view: "zomboid", pzSection: "home" })).toEqual(["src/Zomboid.tsx"]);
+    expect(filesFor({ ...base, view: "rust", rsSection: "home" })).toEqual(["src/Rust.tsx"]);
   });
 });
 
