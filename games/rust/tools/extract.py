@@ -44,17 +44,25 @@ CATEGORIES = {
 }
 # El enum `Rarity` del juego.
 RARITIES = {0: "none", 1: "common", 2: "uncommon", 3: "rare", 4: "veryrare"}
-# La chatarra que pide la mesa de investigación, por rareza (`ResearchTable.ScrapForResearch`). Lo cuida un test con
-# ocho objetos de valor conocido (AK 500, Thompson 125, cerradura de código 75…).
-RESEARCH_SCRAP = {1: 20, 2: 75, 3: 125, 4: 500, 0: 500}
-# Tres recetas traen `ItemBlueprint.rarity` = 5, un valor que la tabla de arriba no tiene y del que no sale el costo;
-# se toman de la wiki oficial de Facepunch, mesa de investigación (verificado el 2026-10-05):
-# https://wiki.facepunch.com/rust/item/furnace (120), .../item/electric.furnace (30), .../item/ladder.wooden.wall (60).
-RESEARCH_OVERRIDES = {"furnace": 120, "electric.furnace": 30, "ladder.wooden.wall": 60}
-# Las recicladoras que se muestran, por `recyclerType`. El 1 es el de Outpost y Bandit Camp (relevado el 2026-10-05 en
-# las escenas de `compound.prefab` y `bandit_town.prefab`); el 0, el de los demás monumentos. El 2 es la roja de la
-# planta de energía, que pide la red eléctrica: queda afuera.
-RECYCLER_TYPES = {0: "monument", 1: "safezone"}
+# La chatarra que pide la mesa de investigación, por la rareza del objeto (`ItemDefinition.rarity`). El juego la bajó:
+# la tabla del código decompilado de 2024 (20/75/125/500, con la rareza de la receta y `scrapRequired`) ya no es la que
+# cobra. Ésta se relevó el 2026-10-05 contra la wiki oficial de Facepunch (wiki.facepunch.com/rust/item/<shortname>,
+# "Research Table") y rusthelp.com: AK, C4 y lanzacohetes 120; Thompson, SKS y escopeta de dos caños 60 (aunque su receta
+# pida 200); hacha, pico y puerta de garaje 30; temporizador 15; horno, caja de madera y cerradura de código (rareza 0)
+# 120. Lo cuida un test con doce objetos.
+RESEARCH_SCRAP = {0: 120, 1: 15, 2: 30, 3: 60, 4: 120}
+# Las cuatro recicladoras de la ficha, de la que más rinde a la que menos, y de dónde sale su eficiencia en
+# `RecyclerConfig` (content.bundle): (clave, `recyclerType`, campo).
+#   - red: la roja de la planta de energía (tipo 2), que sólo anda con la red eléctrica del monumento completa;
+#   - green_power: la verde de los monumentos (tipo 0) con la red eléctrica prendida (`powergridEfficiency`);
+#   - green: la misma sin electricidad;
+#   - yellow: la amarilla de las zonas seguras (tipo 1: Outpost, Bandit Camp, ciudades flotantes).
+RECYCLERS = [
+    ("red", 2, "efficiency"),
+    ("green_power", 0, "powergridEfficiency"),
+    ("green", 0, "efficiency"),
+    ("yellow", 1, "efficiency"),
+]
 # Objetos de desarrollo que el juego dejó sin ocultar: no existen para el jugador (nombres como "Smoke Rocket WIP!!!!"
 # y "Test Generator") y no tienen que entrar en las cifras ni tener ficha.
 EXCLUDED = {"ammo.rocket.smoke", "electric.generator.small"}
@@ -109,7 +117,7 @@ def load_classes(path):
 def read_content():
     """
     Lo que se lee de `content.bundle`: los textos oficiales por token ({"en": {...}, "es": {...}}; no hay es-MX, el
-    juego trae es-ES) y la eficiencia de cada recicladora ({"monument": 0.5, "safezone": 0.4}). Juntos porque abrir
+    juego trae es-ES) y las cuatro recicladoras con su eficiencia (`recyclers_of`). Juntos porque abrir
     el bundle (4,6 GB) es lo que tarda.
     """
     env = UnityPy.load(str(BUNDLES / "shared" / "content.bundle"))
@@ -117,22 +125,32 @@ def read_content():
     for lang, folder in (("en", "en"), ("es", "es-es")):
         texts[lang] = json.loads(env.container[f"assets/localization/{folder}/engine.json"].read().m_Script)
     scripts = {o.path_id: o.read().m_ClassName for o in env.objects if o.type.name == "MonoScript"}
-    recyclers = None
+    configs = None
     for o in env.objects:
         # `peek_name` lee sólo el nombre: el typetree entero de miles de MonoBehaviour tardaba minutos.
         if o.type.name != "MonoBehaviour" or o.peek_name() != "RecyclerConfig":
             continue
         tt = o.read_typetree()
         if scripts.get(tt.get("m_Script", {}).get("m_PathID")) == "RecyclerConfig":
-            recyclers = {
-                RECYCLER_TYPES[c["recyclerType"]]: round(c["efficiency"], 3)
-                for c in tt["recyclerTypeConfigs"]
-                if c["recyclerType"] in RECYCLER_TYPES
-            }
+            configs = {c["recyclerType"]: c for c in tt["recyclerTypeConfigs"]}
             break
-    if not recyclers or set(recyclers) != set(RECYCLER_TYPES.values()):
-        raise SystemExit(f"RecyclerConfig no trae los tipos esperados: {recyclers}")
-    return texts, recyclers
+    return texts, recyclers_of(configs)
+
+
+def recyclers_of(configs):
+    """
+    Las recicladoras de `RECYCLERS`, en ese orden, con su eficiencia: [{"key": "red", "eff": 0.75}, …]. Corta si falta un
+    tipo o si una eficiencia no tiene sentido: un parche que cambie `RecyclerConfig` no puede pasar en silencio.
+    """
+    if not configs:
+        raise SystemExit("No encontré RecyclerConfig en content.bundle")
+    out = []
+    for key, rtype, field in RECYCLERS:
+        eff = (configs.get(rtype) or {}).get(field) or 0
+        if not 0 < eff <= 1:
+            raise SystemExit(f"RecyclerConfig: el tipo {rtype} no trae un {field} válido ({eff})")
+        out.append({"key": key, "eff": round(eff, 3)})
+    return out
 
 
 def number(x):
@@ -199,27 +217,21 @@ def text_of(texts, lang, token):
     return lower.get(token.lower())
 
 
-def research_scrap(item_rarity, bp, sid=None):
+def research_scrap(rarity, sid=None):
     """
-    La chatarra para investigar: el override del objeto si lo hay, si no `scrapRequired` de la receta, si no la tabla por
-    rareza (la de la receta, o la del objeto si la receta no tiene). Una rareza que no está en la tabla y sin override
-    corta: un parche con rarezas nuevas no puede pasar en silencio.
+    La chatarra para investigar: `RESEARCH_SCRAP` por la rareza del objeto. Una rareza que no está en la tabla corta: un
+    parche con rarezas nuevas no puede pasar en silencio.
     """
-    if sid in RESEARCH_OVERRIDES:
-        return RESEARCH_OVERRIDES[sid]
-    if bp["scrapRequired"] > 0:
-        return bp["scrapRequired"]
-    rarity = bp["rarity"] or item_rarity
     if rarity not in RESEARCH_SCRAP:
-        raise SystemExit(f"{sid}: rareza {rarity} sin costo de investigación: agregarlo a RESEARCH_OVERRIDES")
+        raise SystemExit(f"{sid}: rareza {rarity} sin costo de investigación: agregarla a RESEARCH_SCRAP")
     return RESEARCH_SCRAP[rarity]
 
 
 def recycle_of(bp, by_pid):
     """
     Qué da un objeto en el reciclador, por unidad y al 100 %: los ingredientes de su receta divididos lo que da la
-    receta, sin la chatarra que pide (el reciclador se la saltea), más `scrapFromRecycle`, que es fija. La eficiencia
-    y el redondeo los pone el sitio (`site/src/rust/items/recycle.ts`). `None` si no da nada.
+    receta, sin la chatarra que pide (el reciclador se la saltea), más `scrapFromRecycle`, que es fija. La eficiencia, la parte decimal (chance de uno más) y la chatarra escalada
+    los pone el sitio (`site/src/rust/items/recycle.ts`). `None` si no da nada.
     """
     if not bp:
         return None
@@ -275,7 +287,7 @@ def build_items(classes, texts, previous=None):
                 "time": number(bp["time"]),
                 "workbench": bp["workbenchLevelRequired"],
                 "researchable": bool(bp["isResearchable"]),
-                "researchScrap": research_scrap(d["rarity"], bp, sid) if bp["isResearchable"] else None,
+                "researchScrap": research_scrap(d["rarity"], sid) if bp["isResearchable"] else None,
                 "default": bool(bp["defaultBlueprint"]),
             }
         items.append({

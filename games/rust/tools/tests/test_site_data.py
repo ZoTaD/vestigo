@@ -102,4 +102,4 @@ class TestBuildReal(unittest.TestCase):
         self.assertEqual(len(out["list"]["rows"]), len(visible))
         ak = out["fichas"]["assault-rifle"]
         self.assertTrue(ak["loot"])
-        self.assertEqual(ak["craft"]["researchScrap"], 500)
+        self.assertEqual(ak["craft"]["researchScrap"], 120)

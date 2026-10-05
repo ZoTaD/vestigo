@@ -197,27 +197,37 @@ class TestItems(unittest.TestCase):
 
 
 class TestResearchScrap(unittest.TestCase):
-    """Sin el juego: la tabla del ResearchTable (rareza → chatarra) y el `scrapRequired` que la pisa."""
+    """Sin el juego: la tabla de la mesa de investigación, por la rareza del objeto (la de la receta ya no cuenta)."""
 
-    def test_rareza_de_la_receta_y_si_no_la_del_objeto(self):
-        bp = {"rarity": 2, "scrapRequired": 0}
-        self.assertEqual(extract.research_scrap(0, bp), 75)
-        self.assertEqual(extract.research_scrap(2, {"rarity": 0, "scrapRequired": 0}), 75)
-        self.assertEqual(extract.research_scrap(1, {"rarity": 0, "scrapRequired": 0}), 20)
-        self.assertEqual(extract.research_scrap(3, {"rarity": 3, "scrapRequired": 0}), 125)
-        self.assertEqual(extract.research_scrap(4, {"rarity": 4, "scrapRequired": 0}), 500)
-        self.assertEqual(extract.research_scrap(0, {"rarity": 0, "scrapRequired": 0}), 500)
+    def test_tabla_por_rareza(self):
+        self.assertEqual([extract.research_scrap(r) for r in (0, 1, 2, 3, 4)], [120, 15, 30, 60, 120])
 
-    def test_scrap_required_manda(self):
-        self.assertEqual(extract.research_scrap(3, {"rarity": 0, "scrapRequired": 100}), 100)
-
-
-    def test_override_manda_y_rareza_desconocida_corta(self):
-        bp = {"rarity": 5, "scrapRequired": 0}
-        self.assertEqual(extract.research_scrap(0, bp, "furnace"), 120)
+    def test_rareza_desconocida_corta(self):
         with self.assertRaises(SystemExit) as cm:
-            extract.research_scrap(0, bp, "objeto.nuevo")
+            extract.research_scrap(5, "objeto.nuevo")
         self.assertIn("objeto.nuevo", str(cm.exception))
+
+
+class TestRecyclersOf(unittest.TestCase):
+    """Sin el juego: las cuatro recicladoras salen de los tres tipos de `RecyclerConfig`."""
+
+    CONFIGS = {
+        0: {"recyclerType": 0, "efficiency": 0.5, "powergridEfficiency": 0.6000000238418579},
+        1: {"recyclerType": 1, "efficiency": 0.4000000059604645, "powergridEfficiency": 0.0},
+        2: {"recyclerType": 2, "efficiency": 0.75, "powergridEfficiency": 0.0},
+    }
+
+    def test_las_cuatro_en_orden(self):
+        self.assertEqual(extract.recyclers_of(self.CONFIGS), [
+            {"key": "red", "eff": 0.75}, {"key": "green_power", "eff": 0.6},
+            {"key": "green", "eff": 0.5}, {"key": "yellow", "eff": 0.4},
+        ])
+
+    def test_un_tipo_que_falta_corta(self):
+        with self.assertRaises(SystemExit):
+            extract.recyclers_of({0: self.CONFIGS[0], 1: self.CONFIGS[1]})
+        with self.assertRaises(SystemExit):
+            extract.recyclers_of(None)
 
 
 class TestRedirectOf(unittest.TestCase):
@@ -258,7 +268,10 @@ class TestRecycleOf(unittest.TestCase):
 @unittest.skipUnless(HAVE_GAME, "sin el juego instalado")
 class TestRecycleAndResearchInGame(unittest.TestCase):
     def test_eficiencias_de_las_recicladoras(self):
-        self.assertEqual(data()["recyclers"], {"monument": 0.5, "safezone": 0.4})
+        self.assertEqual(data()["recyclers"], [
+            {"key": "red", "eff": 0.75}, {"key": "green_power", "eff": 0.6},
+            {"key": "green", "eff": 0.5}, {"key": "yellow", "eff": 0.4},
+        ])
 
     def test_engranajes_y_componentes_tecnicos(self):
         self.assertEqual(item("gears")["recycle"], {"scrap": 10, "out": [{"id": "metal.fragments", "amount": 25}]})
@@ -270,9 +283,12 @@ class TestRecycleAndResearchInGame(unittest.TestCase):
         self.assertIn({"id": "riflebody", "amount": 1}, ak["out"])
 
     def test_chatarra_para_investigar(self):
+        # Los de la wiki oficial de Facepunch y rusthelp.com (2026-10-05). La escopeta de dos caños trae
+        # `scrapRequired` 200 y el resorte 50: el juego ya no los usa.
         want = {
-            "rifle.ak": 500, "explosive.timed": 500, "rocket.launcher": 500, "smg.thompson": 125,
-            "rifle.semiauto": 125, "lock.code": 75, "wall.frame.garagedoor": 75, "hatchet": 75,
+            "rifle.ak": 120, "explosive.timed": 120, "rocket.launcher": 120, "smg.thompson": 60, "rifle.semiauto": 60,
+            "lock.code": 120, "wall.frame.garagedoor": 30, "hatchet": 30, "shotgun.double": 60, "metalspring": 60,
+            "electric.timer": 15, "crankshaft2": 15,
         }
         for sid, scrap in want.items():
             self.assertEqual(item(sid)["craft"]["researchScrap"], scrap, sid)
