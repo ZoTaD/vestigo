@@ -1,0 +1,8288 @@
+{
+ "containers": {
+  "ammo": {
+   "en": "Ammo Crate",
+   "es": "Caja de munición"
+  },
+  "barrel": {
+   "en": "Barrel",
+   "es": "Barril"
+  },
+  "basic": {
+   "en": "Basic Crate",
+   "es": "Caja básica"
+  },
+  "bradley": {
+   "en": "Bradley APC Crate",
+   "es": "Caja del Bradley"
+  },
+  "cache": {
+   "en": "Food Cache",
+   "es": "Escondite de comida"
+  },
+  "crate": {
+   "en": "Crate",
+   "es": "Caja"
+  },
+  "elite": {
+   "en": "Elite Crate",
+   "es": "Caja de élite"
+  },
+  "food": {
+   "en": "Food Crate",
+   "es": "Caja de comida"
+  },
+  "fuel": {
+   "en": "Fuel Crate",
+   "es": "Caja de combustible"
+  },
+  "heli": {
+   "en": "Patrol Helicopter Crate",
+   "es": "Caja del helicóptero de patrulla"
+  },
+  "locked": {
+   "en": "Locked Crate",
+   "es": "Caja bloqueada"
+  },
+  "medical": {
+   "en": "Medical Crate",
+   "es": "Caja médica"
+  },
+  "military": {
+   "en": "Military Crate",
+   "es": "Caja militar"
+  },
+  "mine": {
+   "en": "Mine Crate",
+   "es": "Caja de mina"
+  },
+  "oil": {
+   "en": "Oil Barrel",
+   "es": "Barril de petróleo"
+  },
+  "roadsign": {
+   "en": "Road Sign",
+   "es": "Cartel de ruta"
+  },
+  "supply": {
+   "en": "Supply Drop",
+   "es": "Entrega aérea de suministros"
+  },
+  "tech": {
+   "en": "Tech Parts Crate",
+   "es": "Caja de componentes"
+  },
+  "tools": {
+   "en": "Toolbox",
+   "es": "Caja de herramientas"
+  },
+  "trash": {
+   "en": "Trash Pile",
+   "es": "Pila de basura"
+  },
+  "underwater": {
+   "en": "Underwater Crate",
+   "es": "Caja submarina"
+  },
+  "underwater_adv": {
+   "en": "Advanced Underwater Crate",
+   "es": "Caja submarina avanzada"
+  },
+  "vehicle": {
+   "en": "Vehicle Parts Crate",
+   "es": "Caja de piezas de vehículo"
+  }
+ },
+ "items": {
+  "advancedblueprintfragment": [
+   {
+    "c": "locked",
+    "chance": 1.0,
+    "min": 2,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.1,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "aiming.module.mlrs": [
+   {
+    "c": "locked",
+    "chance": 0.5,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ammo.pistol": [
+   {
+    "c": "supply",
+    "chance": 0.9621,
+    "min": 15,
+    "max": 48,
+    "bp": false
+   },
+   {
+    "c": "ammo",
+    "chance": 0.5781,
+    "min": 15,
+    "max": 15,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.1016,
+    "min": 15,
+    "max": 48,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0781,
+    "min": 15,
+    "max": 48,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0434,
+    "min": 15,
+    "max": 48,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0147,
+    "min": 15,
+    "max": 15,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0098,
+    "min": 15,
+    "max": 15,
+    "bp": false
+   }
+  ],
+  "ammo.pistol.fire": [
+   {
+    "c": "supply",
+    "chance": 0.4686,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "ammo",
+    "chance": 0.271,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0059,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0039,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   }
+  ],
+  "ammo.pistol.hv": [
+   {
+    "c": "supply",
+    "chance": 0.2649,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "ammo",
+    "chance": 0.1426,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0029,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.002,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   }
+  ],
+  "ammo.rifle": [
+   {
+    "c": "supply",
+    "chance": 0.7154,
+    "min": 12,
+    "max": 50,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.37,
+    "min": 50,
+    "max": 120,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.3503,
+    "min": 8,
+    "max": 120,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.3063,
+    "min": 8,
+    "max": 120,
+    "bp": false
+   },
+   {
+    "c": "ammo",
+    "chance": 0.2977,
+    "min": 12,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0731,
+    "min": 8,
+    "max": 50,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0065,
+    "min": 12,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0044,
+    "min": 12,
+    "max": 12,
+    "bp": false
+   }
+  ],
+  "ammo.rifle.explosive": [
+   {
+    "c": "locked",
+    "chance": 0.3389,
+    "min": 1,
+    "max": 30,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.19,
+    "min": 30,
+    "max": 30,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.15,
+    "min": 30,
+    "max": 30,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.1261,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "ammo",
+    "chance": 0.0652,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0013,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0009,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   }
+  ],
+  "ammo.rifle.hv": [
+   {
+    "c": "locked",
+    "chance": 0.3389,
+    "min": 1,
+    "max": 40,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.19,
+    "min": 40,
+    "max": 40,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.15,
+    "min": 40,
+    "max": 40,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.1261,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "ammo",
+    "chance": 0.0652,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0013,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0009,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   }
+  ],
+  "ammo.rifle.incendiary": [
+   {
+    "c": "locked",
+    "chance": 0.3389,
+    "min": 1,
+    "max": 60,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.2387,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.19,
+    "min": 60,
+    "max": 60,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.15,
+    "min": 60,
+    "max": 60,
+    "bp": false
+   },
+   {
+    "c": "ammo",
+    "chance": 0.1275,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0026,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0017,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   }
+  ],
+  "ammo.rocket.basic": [
+   {
+    "c": "heli",
+    "chance": 0.25,
+    "min": 3,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ammo.rocket.fire": [
+   {
+    "c": "bradley",
+    "chance": 0.19,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.15,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   }
+  ],
+  "ammo.rocket.hv": [
+   {
+    "c": "bradley",
+    "chance": 0.19,
+    "min": 3,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.15,
+    "min": 3,
+    "max": 3,
+    "bp": false
+   }
+  ],
+  "ammo.rocket.mlrs": [
+   {
+    "c": "bradley",
+    "chance": 1.0,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.2,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.15,
+    "min": 2,
+    "max": 2,
+    "bp": false
+   }
+  ],
+  "ammo.rocket.seeker": [
+   {
+    "c": "bradley",
+    "chance": 0.19,
+    "min": 4,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.15,
+    "min": 4,
+    "max": 4,
+    "bp": false
+   }
+  ],
+  "ammo.shotgun": [
+   {
+    "c": "supply",
+    "chance": 0.818,
+    "min": 6,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "ammo",
+    "chance": 0.4523,
+    "min": 6,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0853,
+    "min": 5,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0156,
+    "min": 8,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0107,
+    "min": 6,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0087,
+    "min": 8,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0071,
+    "min": 6,
+    "max": 6,
+    "bp": false
+   }
+  ],
+  "ammo.shotgun.fire": [
+   {
+    "c": "supply",
+    "chance": 0.5,
+    "min": 4,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "ammo",
+    "chance": 0.2929,
+    "min": 4,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0064,
+    "min": 4,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0043,
+    "min": 4,
+    "max": 8,
+    "bp": false
+   }
+  ],
+  "ammo.shotgun.slug": [
+   {
+    "c": "supply",
+    "chance": 0.5,
+    "min": 4,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "ammo",
+    "chance": 0.2929,
+    "min": 4,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0122,
+    "min": 8,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0094,
+    "min": 8,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0064,
+    "min": 4,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0052,
+    "min": 8,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0043,
+    "min": 4,
+    "max": 4,
+    "bp": false
+   }
+  ],
+  "antiradpills": [
+   {
+    "c": "trash",
+    "chance": 0.3615,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "food",
+    "chance": 0.349,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   }
+  ],
+  "apple": [
+   {
+    "c": "cache",
+    "chance": 0.5349,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "food",
+    "chance": 0.271,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "trash",
+    "chance": 0.2297,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "arrow.bone": [
+   {
+    "c": "tools",
+    "chance": 0.049,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0327,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   }
+  ],
+  "arrow.fire": [
+   {
+    "c": "locked",
+    "chance": 0.4296,
+    "min": 10,
+    "max": 15,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.3047,
+    "min": 10,
+    "max": 15,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.049,
+    "min": 3,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0327,
+    "min": 3,
+    "max": 6,
+    "bp": false
+   }
+  ],
+  "arrow.wooden": [
+   {
+    "c": "tools",
+    "chance": 0.0735,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.049,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   }
+  ],
+  "autoturret": [
+   {
+    "c": "locked",
+    "chance": 0.159,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0476,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0223,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tech",
+    "chance": 0.0158,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0121,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "axe.salvaged": [
+   {
+    "c": "tools",
+    "chance": 0.0196,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0131,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ballista.bolt.hammerhead": [
+   {
+    "c": "locked",
+    "chance": 0.1259,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.0834,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   }
+  ],
+  "ballista.bolt.incendiary": [
+   {
+    "c": "locked",
+    "chance": 0.1259,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.0834,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   }
+  ],
+  "ballista.bolt.piercer": [
+   {
+    "c": "locked",
+    "chance": 0.5095,
+    "min": 3,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.3693,
+    "min": 3,
+    "max": 10,
+    "bp": false
+   }
+  ],
+  "ballista.bolt.pitchfork": [
+   {
+    "c": "locked",
+    "chance": 0.1259,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.0834,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   }
+  ],
+  "ballista.mounted": [
+   {
+    "c": "locked",
+    "chance": 0.2059,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.1311,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ballista.static": [
+   {
+    "c": "locked",
+    "chance": 0.2902,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.1919,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ballistic.helmet": [
+   {
+    "c": "locked",
+    "chance": 0.1667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0333,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ballistic.legarmor": [
+   {
+    "c": "locked",
+    "chance": 0.1667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0333,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ballistic.vest": [
+   {
+    "c": "locked",
+    "chance": 0.1667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0333,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "bandage": [
+   {
+    "c": "medical",
+    "chance": 0.4545,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "barricade.concrete": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "barricade.metal": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "barricade.sandbags": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "barricade.stone": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "barricade.wood": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "barricade.wood.cover": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "barricade.woodwire": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "basicblueprintfragment": [
+   {
+    "c": "supply",
+    "chance": 1.0,
+    "min": 2,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.1,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.1,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "batteringram": [
+   {
+    "c": "locked",
+    "chance": 0.4372,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.3047,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "bdu.pants": [
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "bdu.shirt": [
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "bearmeat.cooked": [
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "bed": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "beehive": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "black.raspberries": [
+   {
+    "c": "food",
+    "chance": 0.2135,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "blueberries": [
+   {
+    "c": "food",
+    "chance": 0.2135,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "boomerang": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "bow.compound": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "bow.hunting": [
+   {
+    "c": "tools",
+    "chance": 0.049,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0327,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "bread.loaf": [
+   {
+    "c": "food",
+    "chance": 0.271,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "trash",
+    "chance": 0.2297,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "cache",
+    "chance": 0.2254,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "bucket.helmet": [
+   {
+    "c": "supply",
+    "chance": 0.3631,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "bucket.water": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "burlap.gloves": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "can.beans": [
+   {
+    "c": "food",
+    "chance": 0.271,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "trash",
+    "chance": 0.2297,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "cache",
+    "chance": 0.2254,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "can.tuna": [
+   {
+    "c": "food",
+    "chance": 0.271,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "trash",
+    "chance": 0.2297,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "cache",
+    "chance": 0.2254,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "carburetor1": [
+   {
+    "c": "vehicle",
+    "chance": 0.284,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "carburetor2": [
+   {
+    "c": "vehicle",
+    "chance": 0.284,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "catapult": [
+   {
+    "c": "locked",
+    "chance": 0.7012,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.5386,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "catapult.ammo.boulder": [
+   {
+    "c": "locked",
+    "chance": 0.6972,
+    "min": 8,
+    "max": 20,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.5386,
+    "min": 8,
+    "max": 20,
+    "bp": false
+   }
+  ],
+  "catapult.ammo.explosive": [
+   {
+    "c": "locked",
+    "chance": 0.6972,
+    "min": 2,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.5386,
+    "min": 2,
+    "max": 12,
+    "bp": false
+   }
+  ],
+  "catapult.ammo.incendiary": [
+   {
+    "c": "locked",
+    "chance": 0.6972,
+    "min": 2,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.5386,
+    "min": 2,
+    "max": 10,
+    "bp": false
+   }
+  ],
+  "cctv.camera": [
+   {
+    "c": "locked",
+    "chance": 0.4571,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.4286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tech",
+    "chance": 0.1378,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.1261,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0714,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0252,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0168,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ceilinglight": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "chainsaw": [
+   {
+    "c": "supply",
+    "chance": 0.2653,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0098,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0065,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "chair": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "chicken.cooked": [
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "chickencoop": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "chocolate": [
+   {
+    "c": "food",
+    "chance": 0.271,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "trash",
+    "chance": 0.2297,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "cache",
+    "chance": 0.2254,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "clothing.mod.armorinsert_asbestos": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "clothing.mod.armorinsert_lead": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "clothing.mod.armorinsert_metal": [
+   {
+    "c": "locked",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.05,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "clothing.mod.armorinsert_wood": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "coffeecan.helmet": [
+   {
+    "c": "supply",
+    "chance": 0.3631,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "computerstation": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "cookingworkbench": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "corn": [
+   {
+    "c": "cache",
+    "chance": 0.3434,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "food",
+    "chance": 0.271,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "trash",
+    "chance": 0.2297,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "crankshaft1": [
+   {
+    "c": "vehicle",
+    "chance": 0.284,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "crankshaft2": [
+   {
+    "c": "vehicle",
+    "chance": 0.284,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "crossbow": [
+   {
+    "c": "tools",
+    "chance": 0.0245,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0163,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "crude.oil": [
+   {
+    "c": "fuel",
+    "chance": 1.0,
+    "min": 15,
+    "max": 20,
+    "bp": false
+   },
+   {
+    "c": "oil",
+    "chance": 1.0,
+    "min": 15,
+    "max": 20,
+    "bp": false
+   }
+  ],
+  "deermeat.cooked": [
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "diving.fins": [
+   {
+    "c": "crate",
+    "chance": 0.0167,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0109,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0073,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "diving.mask": [
+   {
+    "c": "crate",
+    "chance": 0.0417,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0272,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0182,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "diving.tank": [
+   {
+    "c": "crate",
+    "chance": 0.025,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0163,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0109,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "diving.wetsuit": [
+   {
+    "c": "crate",
+    "chance": 0.0167,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0109,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0073,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "door.double.hinged.toptier": [
+   {
+    "c": "bradley",
+    "chance": 0.15,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "door.hinged.toptier": [
+   {
+    "c": "bradley",
+    "chance": 0.3,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "drone": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "dropbox": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.andswitch": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0083,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.audioalarm": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.battery.rechargable.large": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.battery.rechargable.medium": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.battery.rechargable.small": [
+   {
+    "c": "crate",
+    "chance": 0.0127,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.blocker": [
+   {
+    "c": "crate",
+    "chance": 0.0127,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.button": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.counter": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.digitalclock": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.doorcontroller": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0072,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.flasherlight": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0072,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.fuelgenerator.small": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0014,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.furnace": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.hbhfsensor": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0022,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.heater": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.igniter": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0083,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.laserdetector": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.orswitch": [
+   {
+    "c": "crate",
+    "chance": 0.0127,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.pressurepad": [
+   {
+    "c": "crate",
+    "chance": 0.0127,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.random.switch": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0083,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.rf.broadcaster": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0022,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.rf.receiver": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0022,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.seismicsensor": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.sirenlight": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0072,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.solarpanel.large": [
+   {
+    "c": "crate",
+    "chance": 0.0155,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.splitter": [
+   {
+    "c": "crate",
+    "chance": 0.0127,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.sprinkler": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.switch": [
+   {
+    "c": "crate",
+    "chance": 0.0127,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.teslacoil": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0014,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.timer": [
+   {
+    "c": "crate",
+    "chance": 0.0127,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electric.xorswitch": [
+   {
+    "c": "crate",
+    "chance": 0.0127,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electrical.branch": [
+   {
+    "c": "crate",
+    "chance": 0.0127,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electrical.combiner": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0072,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "electrical.memorycell": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "elevator": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "explosive.satchel": [
+   {
+    "c": "supply",
+    "chance": 0.4898,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0857,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "explosive.timed": [
+   {
+    "c": "bradley",
+    "chance": 0.36,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.2653,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.2566,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.096,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "explosives": [
+   {
+    "c": "locked",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "fireplace.stone": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "flamethrower": [
+   {
+    "c": "elite",
+    "chance": 0.0723,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "flameturret": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "flare": [
+   {
+    "c": "mine",
+    "chance": 0.0769,
+    "min": 4,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 4,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 4,
+    "max": 6,
+    "bp": false
+   }
+  ],
+  "flashlight.held": [
+   {
+    "c": "mine",
+    "chance": 0.0769,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "floor.grill": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "floor.ladder.hatch": [
+   {
+    "c": "bradley",
+    "chance": 0.3,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "floor.ladder.hatch.toptier": [
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "floor.triangle.grill": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "floor.triangle.ladder.hatch": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "floor.triangle.ladder.hatch.toptier": [
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "fluid.combiner": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "fluid.splitter": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "fluid.switch": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "fridge": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "fun.guitar": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "furnace.large": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "fuse": [
+   {
+    "c": "tech",
+    "chance": 0.2653,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0477,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0143,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "fuse.highgrade": [
+   {
+    "c": "military",
+    "chance": 0.06,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.03,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "gates.external.high.stone": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "gates.external.high.wood": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "gears": [
+   {
+    "c": "locked",
+    "chance": 0.3125,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "tech",
+    "chance": 0.2653,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.1597,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.1429,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.1429,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0477,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0143,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   }
+  ],
+  "generator.wind.scrap": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "granolabar": [
+   {
+    "c": "food",
+    "chance": 0.271,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "trash",
+    "chance": 0.2297,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "cache",
+    "chance": 0.2254,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "green.berry": [
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "grenade.beancan": [
+   {
+    "c": "elite",
+    "chance": 0.065,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "grenade.bee": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "grenade.f1": [
+   {
+    "c": "supply",
+    "chance": 0.4898,
+    "min": 2,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0979,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0723,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "grenade.flashbang": [
+   {
+    "c": "elite",
+    "chance": 0.0723,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "grenade.molotov": [
+   {
+    "c": "elite",
+    "chance": 0.0723,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "grenade.smoke": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "gunpowder": [
+   {
+    "c": "mine",
+    "chance": 0.0769,
+    "min": 15,
+    "max": 25,
+    "bp": false
+   }
+  ],
+  "guntrap": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hab.armor": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hammer.salvaged": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "handcuffs": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hat.beenie": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hat.boonie": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hat.candle": [
+   {
+    "c": "mine",
+    "chance": 0.1538,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hat.cap": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hat.miner": [
+   {
+    "c": "mine",
+    "chance": 0.1538,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hatchet": [
+   {
+    "c": "tools",
+    "chance": 0.0784,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0523,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "mine",
+    "chance": 0.0256,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hazmatsuit": [
+   {
+    "c": "crate",
+    "chance": 0.04,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "healingtea": [
+   {
+    "c": "cache",
+    "chance": 0.1841,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "heavy.plate.helmet": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "heavy.plate.jacket": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "heavy.plate.pants": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hmlmg": [
+   {
+    "c": "locked",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "homingmissile.launcher": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "honeycomb": [
+   {
+    "c": "food",
+    "chance": 0.271,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "trash",
+    "chance": 0.2297,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "cache",
+    "chance": 0.2254,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hoodie": [
+   {
+    "c": "supply",
+    "chance": 0.3631,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0327,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0218,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "hopper": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "horse.armor.roadsign": [
+   {
+    "c": "locked",
+    "chance": 0.4372,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.3047,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "horse.shoes.advanced": [
+   {
+    "c": "locked",
+    "chance": 0.4372,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.3047,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "icepick.salvaged": [
+   {
+    "c": "tools",
+    "chance": 0.0196,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0131,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "industrial.combiner": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "industrial.conveyor": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "industrial.crafter": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "industrial.splitter": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "iotable": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "jacket": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "jacket.snow": [
+   {
+    "c": "supply",
+    "chance": 0.4358,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "jackhammer": [
+   {
+    "c": "supply",
+    "chance": 0.2653,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0098,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0065,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "jar.pickle": [
+   {
+    "c": "food",
+    "chance": 0.187,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   }
+  ],
+  "kayak": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "knife.combat": [
+   {
+    "c": "tools",
+    "chance": 0.0245,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0163,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ladder.wooden.wall": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "largebackpack": [
+   {
+    "c": "military",
+    "chance": 0.05,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "largemedkit": [
+   {
+    "c": "medical",
+    "chance": 0.5,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "lmg.m249": [
+   {
+    "c": "heli",
+    "chance": 0.1,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "locker": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "longsword": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "lowgradefuel": [
+   {
+    "c": "fuel",
+    "chance": 1.0,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "oil",
+    "chance": 1.0,
+    "min": 5,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "mine",
+    "chance": 0.3077,
+    "min": 2,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.065,
+    "min": 35,
+    "max": 35,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0098,
+    "min": 20,
+    "max": 40,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0065,
+    "min": 20,
+    "max": 40,
+    "bp": false
+   }
+  ],
+  "m16a2": [
+   {
+    "c": "locked",
+    "chance": 0.1212,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "mace": [
+   {
+    "c": "tools",
+    "chance": 0.049,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0327,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "mailbox": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "mask.balaclava": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "mask.bandana": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "meat.pork.cooked": [
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "medical.honey.bandage": [
+   {
+    "c": "medical",
+    "chance": 0.1818,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "metal.detector": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "metal.facemask": [
+   {
+    "c": "locked",
+    "chance": 0.5278,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "metal.fragments": [
+   {
+    "c": "mine",
+    "chance": 0.1538,
+    "min": 30,
+    "max": 50,
+    "bp": false
+   }
+  ],
+  "metal.plate.torso": [
+   {
+    "c": "locked",
+    "chance": 0.5278,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "metal.refined": [
+   {
+    "c": "supply",
+    "chance": 0.691,
+    "min": 32,
+    "max": 200,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.6641,
+    "min": 15,
+    "max": 200,
+    "bp": false
+   },
+   {
+    "c": "tech",
+    "chance": 0.3056,
+    "min": 15,
+    "max": 25,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.2773,
+    "min": 15,
+    "max": 25,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.25,
+    "min": 15,
+    "max": 25,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.1667,
+    "min": 15,
+    "max": 25,
+    "bp": false
+   },
+   {
+    "c": "mine",
+    "chance": 0.0769,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   }
+  ],
+  "metal.shield": [
+   {
+    "c": "locked",
+    "chance": 0.7012,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.5386,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "metalblade": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.6281,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.3819,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.1545,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "metalpipe": [
+   {
+    "c": "roadsign",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.3927,
+    "min": 5,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "tech",
+    "chance": 0.3056,
+    "min": 5,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.2773,
+    "min": 5,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.1667,
+    "min": 5,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.1597,
+    "min": 5,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0477,
+    "min": 1,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0143,
+    "min": 1,
+    "max": 5,
+    "bp": false
+   }
+  ],
+  "metalspring": [
+   {
+    "c": "tech",
+    "chance": 0.2653,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0477,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0143,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   }
+  ],
+  "minicrossbow": [
+   {
+    "c": "locked",
+    "chance": 0.4296,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.3047,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "minigun": [
+   {
+    "c": "locked",
+    "chance": 0.1,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "mixingtable": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "modularcarlift": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "nightvisiongoggles": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "oretea": [
+   {
+    "c": "cache",
+    "chance": 0.1841,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "paddle": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "pants": [
+   {
+    "c": "supply",
+    "chance": 0.3631,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0654,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0436,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "pants.shorts": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "parachute": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "pickaxe": [
+   {
+    "c": "tools",
+    "chance": 0.0784,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0523,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "mine",
+    "chance": 0.0256,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "pistol.m92": [
+   {
+    "c": "supply",
+    "chance": 0.1831,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0203,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0156,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0087,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "pistol.prototype17": [
+   {
+    "c": "supply",
+    "chance": 0.1831,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0203,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0156,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0087,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "pistol.python": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "pistol.revolver": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "pistol.semiauto": [
+   {
+    "c": "elite",
+    "chance": 0.0723,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "piston1": [
+   {
+    "c": "vehicle",
+    "chance": 0.4083,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "piston2": [
+   {
+    "c": "vehicle",
+    "chance": 0.4083,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "planter.large": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "planter.triangle": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "potato": [
+   {
+    "c": "cache",
+    "chance": 0.3434,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "food",
+    "chance": 0.271,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "trash",
+    "chance": 0.2297,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "powered.water.purifier": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "prisonerhood": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "propanetank": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.3773,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.2084,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0803,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ptz.cctv.camera": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "pumpkin": [
+   {
+    "c": "food",
+    "chance": 0.2135,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "radiationresisttea": [
+   {
+    "c": "cache",
+    "chance": 0.1841,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "red.berry": [
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "reinforced.wooden.shield": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "revolver.hc": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rf.detonator": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0014,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rf_pager": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0014,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rifle.ak": [
+   {
+    "c": "locked",
+    "chance": 0.2845,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.039,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0222,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0087,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rifle.bolt": [
+   {
+    "c": "locked",
+    "chance": 0.2273,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.039,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0222,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0087,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rifle.l96": [
+   {
+    "c": "bradley",
+    "chance": 0.0868,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0606,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0081,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0062,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rifle.lr300": [
+   {
+    "c": "locked",
+    "chance": 0.2424,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.0381,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0122,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0094,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0052,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rifle.m39": [
+   {
+    "c": "supply",
+    "chance": 0.1831,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0122,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0094,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0052,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rifle.semiauto": [
+   {
+    "c": "supply",
+    "chance": 0.2344,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rifle.sks": [
+   {
+    "c": "locked",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "riflebody": [
+   {
+    "c": "tech",
+    "chance": 0.2489,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.2265,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.1333,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0933,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "riot.helmet": [
+   {
+    "c": "supply",
+    "chance": 0.3631,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "roadsign.gloves": [
+   {
+    "c": "supply",
+    "chance": 0.3757,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "roadsign.jacket": [
+   {
+    "c": "supply",
+    "chance": 0.3757,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "roadsign.kilt": [
+   {
+    "c": "supply",
+    "chance": 0.3757,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "roadsigns": [
+   {
+    "c": "roadsign",
+    "chance": 1.0,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tech",
+    "chance": 0.2653,
+    "min": 2,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.1429,
+    "min": 2,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.1429,
+    "min": 2,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0477,
+    "min": 2,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0143,
+    "min": 2,
+    "max": 4,
+    "bp": false
+   }
+  ],
+  "rocket.launcher": [
+   {
+    "c": "locked",
+    "chance": 0.0732,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rope": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.6281,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.3819,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.1545,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   }
+  ],
+  "rug": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "rug.bear": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "salvaged.cleaver": [
+   {
+    "c": "tools",
+    "chance": 0.049,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0327,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "salvaged.sword": [
+   {
+    "c": "locked",
+    "chance": 0.6972,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.5386,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.049,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0327,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "scrap": [
+   {
+    "c": "barrel",
+    "chance": 1.0,
+    "min": 2,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "basic",
+    "chance": 1.0,
+    "min": 3,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 1.0,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 1.0,
+    "min": 25,
+    "max": 25,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 1.0,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "tech",
+    "chance": 1.0,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 1.0,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 1.0,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 1.0,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "vehicle",
+    "chance": 1.0,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.5556,
+    "min": 140,
+    "max": 160,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.3333,
+    "min": 140,
+    "max": 160,
+    "bp": false
+   }
+  ],
+  "scraptea": [
+   {
+    "c": "cache",
+    "chance": 0.1841,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "searchlight": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "semibody": [
+   {
+    "c": "tech",
+    "chance": 0.2653,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0477,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0143,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "sewingkit": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.3773,
+    "min": 3,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.2084,
+    "min": 3,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0803,
+    "min": 3,
+    "max": 5,
+    "bp": false
+   }
+  ],
+  "sheetmetal": [
+   {
+    "c": "locked",
+    "chance": 0.3125,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "tech",
+    "chance": 0.2653,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.1597,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.1429,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0477,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0143,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   }
+  ],
+  "shelves": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shirt.collared": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shirt.tanktop": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shoes.boots": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shotgun.double": [
+   {
+    "c": "elite",
+    "chance": 0.065,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shotgun.m4": [
+   {
+    "c": "locked",
+    "chance": 0.0909,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0122,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0094,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0052,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shotgun.pump": [
+   {
+    "c": "supply",
+    "chance": 0.2344,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shotgun.spas12": [
+   {
+    "c": "supply",
+    "chance": 0.1831,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0081,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0062,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0035,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shotgun.waterpipe": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shutter.metal.embrasure.a": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shutter.metal.embrasure.b": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "shutter.wood.a": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "siegetower": [
+   {
+    "c": "locked",
+    "chance": 0.4296,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.3047,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "sign.wooden.huge": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "sign.wooden.large": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "skidoo": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "small.oil.refinery": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "smallwaterbottle": [
+   {
+    "c": "food",
+    "chance": 0.6682,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "trash",
+    "chance": 0.2297,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "cache",
+    "chance": 0.2254,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "smart.alarm": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "smart.switch": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "smg.2": [
+   {
+    "c": "supply",
+    "chance": 0.2344,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0156,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0087,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "smg.mp5": [
+   {
+    "c": "supply",
+    "chance": 0.1831,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.039,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0222,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0087,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "smg.thompson": [
+   {
+    "c": "supply",
+    "chance": 0.2344,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0156,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.0087,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "smgbody": [
+   {
+    "c": "tech",
+    "chance": 0.36,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.3257,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.2,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.14,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "sparkplug1": [
+   {
+    "c": "vehicle",
+    "chance": 0.4083,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "sparkplug2": [
+   {
+    "c": "vehicle",
+    "chance": 0.4083,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "speargun": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "spikes.floor": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "spinner.wheel": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "stone.pickaxe": [
+   {
+    "c": "mine",
+    "chance": 0.0769,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "stonehatchet": [
+   {
+    "c": "mine",
+    "chance": 0.0769,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "storage.monitor": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "storageadaptor": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "supply.signal": [
+   {
+    "c": "elite",
+    "chance": 0.0372,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0143,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.01,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "syringe.medical": [
+   {
+    "c": "medical",
+    "chance": 0.1818,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "t1_smg": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "table": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "target.reactive": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "targeting.computer": [
+   {
+    "c": "locked",
+    "chance": 0.5529,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.5238,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tech",
+    "chance": 0.167,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.1527,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0873,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tools",
+    "chance": 0.0308,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0206,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "tarp": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.3773,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.2084,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0803,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   }
+  ],
+  "techparts": [
+   {
+    "c": "locked",
+    "chance": 0.3927,
+    "min": 2,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "tech",
+    "chance": 0.3056,
+    "min": 2,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.2773,
+    "min": 2,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "bradley",
+    "chance": 0.25,
+    "min": 10,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.1667,
+    "min": 2,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.1597,
+    "min": 4,
+    "max": 5,
+    "bp": false
+   }
+  ],
+  "telephone": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "tincan.alarm": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "tool.binoculars": [
+   {
+    "c": "tools",
+    "chance": 0.0784,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0523,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "mine",
+    "chance": 0.0256,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "trap.bear": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "trap.landmine": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "tshirt": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "tshirt.long": [
+   {
+    "c": "tools",
+    "chance": 0.0654,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0436,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "tunalight": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "valve1": [
+   {
+    "c": "vehicle",
+    "chance": 0.4083,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "valve2": [
+   {
+    "c": "vehicle",
+    "chance": 0.4083,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.external.high": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.external.high.stone": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.frame.cell": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.frame.cell.gate": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.frame.fence": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.frame.fence.gate": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.frame.garagedoor": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.window.bars.metal": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.window.bars.toptier": [
+   {
+    "c": "locked",
+    "chance": 0.0556,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.window.glass.reinforced": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "watchtower.wood": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "water.barrel": [
+   {
+    "c": "basic",
+    "chance": 0.0479,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "barrel",
+    "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "water.catcher.large": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "water.catcher.small": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "waterjug": [
+   {
+    "c": "food",
+    "chance": 0.349,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "waterpump": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.8x.scope": [
+   {
+    "c": "bradley",
+    "chance": 0.0868,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0081,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0062,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.burstmodule": [
+   {
+    "c": "bradley",
+    "chance": 0.5,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.25,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.075,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.extendedmags": [
+   {
+    "c": "bradley",
+    "chance": 0.5,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.26,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.075,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.flashlight": [
+   {
+    "c": "underwater_adv",
+    "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "crate",
+    "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.gascompressionovedrive": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.holosight": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.lasersight": [
+   {
+    "c": "bradley",
+    "chance": 0.5,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.2917,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0816,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.muzzleboost": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.muzzlebrake": [
+   {
+    "c": "locked",
+    "chance": 0.0134,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0078,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "military",
+    "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.silencer": [
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "weapon.mod.small.scope": [
+   {
+    "c": "bradley",
+    "chance": 0.5,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "locked",
+    "chance": 0.2917,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heli",
+    "chance": 0.0816,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "white.berry": [
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wolfmeat.cooked": [
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wood": [
+   {
+    "c": "locked",
+    "chance": 0.4296,
+    "min": 5000,
+    "max": 5000,
+    "bp": false
+   },
+   {
+    "c": "supply",
+    "chance": 0.3047,
+    "min": 5000,
+    "max": 5000,
+    "bp": false
+   }
+  ],
+  "wood.armor.jacket": [
+   {
+    "c": "tools",
+    "chance": 0.0654,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0436,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wood.armor.pants": [
+   {
+    "c": "tools",
+    "chance": 0.0654,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater",
+    "chance": 0.0436,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "woodtea": [
+   {
+    "c": "cache",
+    "chance": 0.1841,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "workbench.upgrade.accelerated": [
+   {
+    "c": "locked",
+    "chance": 0.0625,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0375,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "workbench.upgrade.comfort": [
+   {
+    "c": "crate",
+    "chance": 0.0063,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "workbench.upgrade.defensive": [
+   {
+    "c": "crate",
+    "chance": 0.0063,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "workbench.upgrade.efficiency": [
+   {
+    "c": "military",
+    "chance": 0.0167,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "workbench.upgrade.prototype": [
+   {
+    "c": "military",
+    "chance": 0.0167,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "workbench.upgrade.range": [
+   {
+    "c": "crate",
+    "chance": 0.0063,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "workbench.upgrade.recyclebin": [
+   {
+    "c": "crate",
+    "chance": 0.0063,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "workbench.upgrade.reinforced": [
+   {
+    "c": "military",
+    "chance": 0.0167,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "workbench.upgrade.salvage": [
+   {
+    "c": "locked",
+    "chance": 0.0625,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "elite",
+    "chance": 0.0375,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "yellow.berry": [
+   {
+    "c": "cache",
+    "chance": 0.1464,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ]
+ }
+}

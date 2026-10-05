@@ -1,0 +1,994 @@
+{
+ "shops": {
+  "outpost": {
+   "en": "Outpost",
+   "es": "Puesto Avanzado"
+  },
+  "bandit": {
+   "en": "Bandit Camp",
+   "es": "Campamento de bandoleros"
+  },
+  "fishing": {
+   "en": "Fishing Village",
+   "es": "Poblado pesquero"
+  },
+  "ranch": {
+   "en": "Ranch",
+   "es": "Rancho"
+  },
+  "barn": {
+   "en": "Large Barn",
+   "es": "Granero espacioso"
+  }
+ },
+ "orders": [
+  {
+   "shop": "bandit",
+   "item": "ammo.grenadelauncher.buckshot",
+   "amount": 6,
+   "bp": false,
+   "currency": "scrap",
+   "price": 15
+  },
+  {
+   "shop": "bandit",
+   "item": "can.tuna",
+   "amount": 5,
+   "bp": false,
+   "currency": "scrap",
+   "price": 10
+  },
+  {
+   "shop": "bandit",
+   "item": "carburetor2",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 65
+  },
+  {
+   "shop": "bandit",
+   "item": "ceilinglight",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "bandit",
+   "item": "composter",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "bandit",
+   "item": "crankshaft2",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 65
+  },
+  {
+   "shop": "bandit",
+   "item": "dropbox",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 40
+  },
+  {
+   "shop": "bandit",
+   "item": "electric.battery.rechargable.medium",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 75
+  },
+  {
+   "shop": "bandit",
+   "item": "electric.sprinkler",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 15
+  },
+  {
+   "shop": "bandit",
+   "item": "fluid.splitter",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "bandit",
+   "item": "fluid.switch",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "bandit",
+   "item": "generator.wind.scrap",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 500
+  },
+  {
+   "shop": "bandit",
+   "item": "grenade.f1",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 8
+  },
+  {
+   "shop": "bandit",
+   "item": "hab.armor",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 70
+  },
+  {
+   "shop": "bandit",
+   "item": "jar.pickle",
+   "amount": 6,
+   "bp": false,
+   "currency": "scrap",
+   "price": 1
+  },
+  {
+   "shop": "bandit",
+   "item": "locker",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 40
+  },
+  {
+   "shop": "bandit",
+   "item": "mixingtable",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 175
+  },
+  {
+   "shop": "bandit",
+   "item": "modularcarlift",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 150
+  },
+  {
+   "shop": "bandit",
+   "item": "nightvisiongoggles",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 250
+  },
+  {
+   "shop": "bandit",
+   "item": "pistol.m92",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 250
+  },
+  {
+   "shop": "bandit",
+   "item": "piston2",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 40
+  },
+  {
+   "shop": "bandit",
+   "item": "planter.large",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "bandit",
+   "item": "rifle.lr300",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 500
+  },
+  {
+   "shop": "bandit",
+   "item": "rifle.m39",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 400
+  },
+  {
+   "shop": "bandit",
+   "item": "roadsign.gloves",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 40
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 2,
+   "bp": false,
+   "currency": "metal.refined",
+   "price": 1
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 10,
+   "bp": false,
+   "currency": "antiradpills",
+   "price": 1
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 15,
+   "bp": false,
+   "currency": "keycard_green",
+   "price": 1
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 40,
+   "bp": false,
+   "currency": "keycard_blue",
+   "price": 1
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 80,
+   "bp": false,
+   "currency": "keycard_red",
+   "price": 1
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 5,
+   "bp": false,
+   "currency": "fish.troutsmall",
+   "price": 1
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 2,
+   "bp": false,
+   "currency": "honey",
+   "price": 1
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 3,
+   "bp": false,
+   "currency": "fertilizer",
+   "price": 2
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 1,
+   "bp": false,
+   "currency": "crude.oil",
+   "price": 6
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 10,
+   "bp": false,
+   "currency": "corn",
+   "price": 15
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 1,
+   "bp": false,
+   "currency": "metal.fragments",
+   "price": 20
+  },
+  {
+   "shop": "bandit",
+   "item": "scrap",
+   "amount": 10,
+   "bp": false,
+   "currency": "cloth",
+   "price": 80
+  },
+  {
+   "shop": "bandit",
+   "item": "seed.corn",
+   "amount": 20,
+   "bp": false,
+   "currency": "scrap",
+   "price": 10
+  },
+  {
+   "shop": "bandit",
+   "item": "shelves",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 25
+  },
+  {
+   "shop": "bandit",
+   "item": "shotgun.spas12",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 250
+  },
+  {
+   "shop": "bandit",
+   "item": "sparkplug2",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 40
+  },
+  {
+   "shop": "bandit",
+   "item": "tunalight",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 5
+  },
+  {
+   "shop": "bandit",
+   "item": "valve2",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 40
+  },
+  {
+   "shop": "bandit",
+   "item": "water.barrel",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "bandit",
+   "item": "waterjug",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 5
+  },
+  {
+   "shop": "bandit",
+   "item": "weapon.mod.8x.scope",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 300
+  },
+  {
+   "shop": "barn",
+   "item": "horse.armor.roadsign",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 100
+  },
+  {
+   "shop": "barn",
+   "item": "horse.saddle.double",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 90
+  },
+  {
+   "shop": "barn",
+   "item": "horse.saddle.single",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 75
+  },
+  {
+   "shop": "barn",
+   "item": "horse.shoes.advanced",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 40
+  },
+  {
+   "shop": "barn",
+   "item": "scrap",
+   "amount": 3,
+   "bp": false,
+   "currency": "sunflower",
+   "price": 1
+  },
+  {
+   "shop": "barn",
+   "item": "scrap",
+   "amount": 8,
+   "bp": false,
+   "currency": "orchid",
+   "price": 1
+  },
+  {
+   "shop": "barn",
+   "item": "scrap",
+   "amount": 50,
+   "bp": false,
+   "currency": "rose",
+   "price": 12
+  },
+  {
+   "shop": "fishing",
+   "item": "diving.fins",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 25
+  },
+  {
+   "shop": "fishing",
+   "item": "diving.mask",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 15
+  },
+  {
+   "shop": "fishing",
+   "item": "diving.tank",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 35
+  },
+  {
+   "shop": "fishing",
+   "item": "diving.wetsuit",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 20
+  },
+  {
+   "shop": "fishing",
+   "item": "fishingrod.handmade",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 80
+  },
+  {
+   "shop": "fishing",
+   "item": "kayak",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 50
+  },
+  {
+   "shop": "fishing",
+   "item": "paddle",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 25
+  },
+  {
+   "shop": "fishing",
+   "item": "scrap",
+   "amount": 90,
+   "bp": false,
+   "currency": "fish.smallshark",
+   "price": 2
+  },
+  {
+   "shop": "fishing",
+   "item": "scrap",
+   "amount": 55,
+   "bp": false,
+   "currency": "fish.salmon",
+   "price": 2
+  },
+  {
+   "shop": "fishing",
+   "item": "scrap",
+   "amount": 75,
+   "bp": false,
+   "currency": "fish.orangeroughy",
+   "price": 2
+  },
+  {
+   "shop": "fishing",
+   "item": "scrap",
+   "amount": 65,
+   "bp": false,
+   "currency": "fish.catfish",
+   "price": 2
+  },
+  {
+   "shop": "fishing",
+   "item": "scrap",
+   "amount": 30,
+   "bp": false,
+   "currency": "fish.troutsmall",
+   "price": 5
+  },
+  {
+   "shop": "fishing",
+   "item": "scrap",
+   "amount": 50,
+   "bp": false,
+   "currency": "fish.yellowperch",
+   "price": 5
+  },
+  {
+   "shop": "fishing",
+   "item": "skidoo",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 200
+  },
+  {
+   "shop": "fishing",
+   "item": "submarine.torpedo.straight",
+   "amount": 2,
+   "bp": false,
+   "currency": "scrap",
+   "price": 75
+  },
+  {
+   "shop": "fishing",
+   "item": "worm",
+   "amount": 5,
+   "bp": false,
+   "currency": "scrap",
+   "price": 50
+  },
+  {
+   "shop": "outpost",
+   "item": "ammo.rocket.sam",
+   "amount": 6,
+   "bp": false,
+   "currency": "scrap",
+   "price": 75
+  },
+  {
+   "shop": "outpost",
+   "item": "autoturret",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 400
+  },
+  {
+   "shop": "outpost",
+   "item": "chainsaw",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 125
+  },
+  {
+   "shop": "outpost",
+   "item": "computerstation",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 300
+  },
+  {
+   "shop": "outpost",
+   "item": "diesel_barrel",
+   "amount": 1,
+   "bp": false,
+   "currency": "lowgradefuel",
+   "price": 300
+  },
+  {
+   "shop": "outpost",
+   "item": "electric.fuelgenerator.small",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 125
+  },
+  {
+   "shop": "outpost",
+   "item": "electric.heater",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 75
+  },
+  {
+   "shop": "outpost",
+   "item": "electric.igniter",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 50
+  },
+  {
+   "shop": "outpost",
+   "item": "electric.solarpanel.large",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 75
+  },
+  {
+   "shop": "outpost",
+   "item": "electric.teslacoil",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 75
+  },
+  {
+   "shop": "outpost",
+   "item": "flameturret",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 250
+  },
+  {
+   "shop": "outpost",
+   "item": "fluid.combiner",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "outpost",
+   "item": "fluid.splitter",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "outpost",
+   "item": "fluid.switch",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "outpost",
+   "item": "furnace.large",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 350
+  },
+  {
+   "shop": "outpost",
+   "item": "gears",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 125
+  },
+  {
+   "shop": "outpost",
+   "item": "grenade.smoke",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 5
+  },
+  {
+   "shop": "outpost",
+   "item": "guntrap",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 150
+  },
+  {
+   "shop": "outpost",
+   "item": "hatchet",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 40
+  },
+  {
+   "shop": "outpost",
+   "item": "jacket.snow",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 20
+  },
+  {
+   "shop": "outpost",
+   "item": "jackhammer",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 150
+  },
+  {
+   "shop": "outpost",
+   "item": "lowgradefuel",
+   "amount": 20,
+   "bp": false,
+   "currency": "scrap",
+   "price": 10
+  },
+  {
+   "shop": "outpost",
+   "item": "metal.fragments",
+   "amount": 250,
+   "bp": false,
+   "currency": "scrap",
+   "price": 25
+  },
+  {
+   "shop": "outpost",
+   "item": "metalblade",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 15
+  },
+  {
+   "shop": "outpost",
+   "item": "metalpipe",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "outpost",
+   "item": "metalspring",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 60
+  },
+  {
+   "shop": "outpost",
+   "item": "pickaxe",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 50
+  },
+  {
+   "shop": "outpost",
+   "item": "pistol.revolver",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 200
+  },
+  {
+   "shop": "outpost",
+   "item": "powered.water.purifier",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 150
+  },
+  {
+   "shop": "outpost",
+   "item": "rf.detonator",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 75
+  },
+  {
+   "shop": "outpost",
+   "item": "rf_pager",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 75
+  },
+  {
+   "shop": "outpost",
+   "item": "rope",
+   "amount": 1,
+   "bp": false,
+   "currency": "cloth",
+   "price": 30
+  },
+  {
+   "shop": "outpost",
+   "item": "samsite",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 500
+  },
+  {
+   "shop": "outpost",
+   "item": "sheetmetal",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 30
+  },
+  {
+   "shop": "outpost",
+   "item": "shoes.boots",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 20
+  },
+  {
+   "shop": "outpost",
+   "item": "shotgun.double",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 250
+  },
+  {
+   "shop": "outpost",
+   "item": "small.oil.refinery",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 125
+  },
+  {
+   "shop": "outpost",
+   "item": "stones",
+   "amount": 1000,
+   "bp": false,
+   "currency": "scrap",
+   "price": 50
+  },
+  {
+   "shop": "outpost",
+   "item": "stones",
+   "amount": 150,
+   "bp": false,
+   "currency": "wood",
+   "price": 500
+  },
+  {
+   "shop": "outpost",
+   "item": "tactical.gloves",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 40
+  },
+  {
+   "shop": "outpost",
+   "item": "tshirt",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 5
+  },
+  {
+   "shop": "outpost",
+   "item": "tshirt.long",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 10
+  },
+  {
+   "shop": "outpost",
+   "item": "waterpump",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 200
+  },
+  {
+   "shop": "outpost",
+   "item": "wood",
+   "amount": 1000,
+   "bp": false,
+   "currency": "scrap",
+   "price": 20
+  },
+  {
+   "shop": "outpost",
+   "item": "wood",
+   "amount": 500,
+   "bp": false,
+   "currency": "stones",
+   "price": 150
+  },
+  {
+   "shop": "ranch",
+   "item": "horse.armor.roadsign",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 100
+  },
+  {
+   "shop": "ranch",
+   "item": "horse.saddle.double",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 90
+  },
+  {
+   "shop": "ranch",
+   "item": "horse.saddle.single",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 75
+  },
+  {
+   "shop": "ranch",
+   "item": "horse.shoes.advanced",
+   "amount": 1,
+   "bp": false,
+   "currency": "scrap",
+   "price": 40
+  },
+  {
+   "shop": "ranch",
+   "item": "scrap",
+   "amount": 3,
+   "bp": false,
+   "currency": "sunflower",
+   "price": 1
+  },
+  {
+   "shop": "ranch",
+   "item": "scrap",
+   "amount": 8,
+   "bp": false,
+   "currency": "orchid",
+   "price": 1
+  },
+  {
+   "shop": "ranch",
+   "item": "scrap",
+   "amount": 50,
+   "bp": false,
+   "currency": "rose",
+   "price": 12
+  }
+ ]
+}
