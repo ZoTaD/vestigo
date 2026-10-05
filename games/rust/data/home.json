@@ -1,0 +1,110 @@
+[
+ {
+  "id": "rifle.ak",
+  "slug": "assault-rifle",
+  "slugEs": "fusil-de-asalto",
+  "name": {
+   "en": "Assault Rifle",
+   "es": "Fusil de asalto"
+  }
+ },
+ {
+  "id": "explosive.timed",
+  "slug": "timed-explosive-charge",
+  "slugEs": "carga-explosiva-con-temporizador",
+  "name": {
+   "en": "Timed Explosive Charge",
+   "es": "Carga explosiva con temporizador"
+  }
+ },
+ {
+  "id": "rocket.launcher",
+  "slug": "rocket-launcher",
+  "slugEs": "lanzamisiles",
+  "name": {
+   "en": "Rocket Launcher",
+   "es": "Lanzamisiles"
+  }
+ },
+ {
+  "id": "hazmatsuit",
+  "slug": "hazmat-suit",
+  "slugEs": "traje-protector",
+  "name": {
+   "en": "Hazmat Suit",
+   "es": "Traje Protector"
+  }
+ },
+ {
+  "id": "syringe.medical",
+  "slug": "medical-syringe",
+  "slugEs": "jeringa-medica",
+  "name": {
+   "en": "Medical Syringe",
+   "es": "Jeringa médica"
+  }
+ },
+ {
+  "id": "lock.code",
+  "slug": "code-lock",
+  "slugEs": "cerradura-numerica",
+  "name": {
+   "en": "Code Lock",
+   "es": "Cerradura númerica"
+  }
+ },
+ {
+  "id": "metal.fragments",
+  "slug": "metal-fragments",
+  "slugEs": "fragmentos-de-metal",
+  "name": {
+   "en": "Metal Fragments",
+   "es": "Fragmentos de metal"
+  }
+ },
+ {
+  "id": "sulfur",
+  "slug": "sulfur",
+  "slugEs": "azufre",
+  "name": {
+   "en": "Sulfur",
+   "es": "Azufre"
+  }
+ },
+ {
+  "id": "scrap",
+  "slug": "scrap",
+  "slugEs": "chatarra",
+  "name": {
+   "en": "Scrap",
+   "es": "Chatarra"
+  }
+ },
+ {
+  "id": "wood",
+  "slug": "wood",
+  "slugEs": "madera",
+  "name": {
+   "en": "Wood",
+   "es": "Madera"
+  }
+ },
+ {
+  "id": "stones",
+  "slug": "stones",
+  "slugEs": "piedras",
+  "name": {
+   "en": "Stones",
+   "es": "Piedras"
+  }
+ },
+ {
+  "id": "cloth",
+  "slug": "cloth",
+  "slugEs": "tela",
+  "name": {
+   "en": "Cloth",
+   "es": "Tela"
+  }
+ }
+]

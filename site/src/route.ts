@@ -316,8 +316,9 @@ const pzTab = (v: string | undefined): PzTab | undefined => (isPzTab(v) ? v : v 
  * Salvo Diablo II desde el 2026-09-30, que en español lleva el nombre español
  * (ver `D2R_SECTION_ES`).
  *
- * Tiene una copia en Python, `slugify` de `games/zomboid/tools/extract.py`, que
- * arma los ids de las fichas de Project Zomboid: si cambia una, cambia la otra.
+ * Tiene dos copias en Python, `slugify` de `games/zomboid/tools/extract.py` y de
+ * `games/rust/tools/extract.py`, que arman los ids de las fichas de Project
+ * Zomboid y de Rust: si cambia una, cambian las otras.
  */
 export function slugify(name: string): string {
   return (
