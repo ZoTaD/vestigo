@@ -114,7 +114,7 @@ class TestItems(unittest.TestCase):
         self.assertEqual(ak["slugEs"], "fusil-de-asalto")
         self.assertEqual(ak["category"], "weapon")
         self.assertEqual(ak["rarity"], "veryrare")
-        self.assertEqual(ak["condition"], {"max": 150, "repairable": True})
+        self.assertEqual(ak["condition"], {"max": 150, "repairable": True, "found": [0.1, 0.2]})
         c = ak["craft"]
         self.assertEqual(
             c["ingredients"],
@@ -306,6 +306,103 @@ class TestRecycleAndResearchInGame(unittest.TestCase):
         for it in data()["items"]:
             if it["craft"] and not it["craft"]["researchable"]:
                 self.assertIsNone(it["craft"]["researchScrap"], it["id"])
+
+
+class TestFichaSinJuego(unittest.TestCase):
+    """Sin el juego: las cuentas de despawn, reparación, efectos y transformaciones con datos armados a mano."""
+
+    def test_despawn_por_rareza(self):
+        d = lambda r, dr=0, quick=0: {"rarity": r, "despawnRarity": dr, "quickDespawn": quick}  # noqa: E731
+        self.assertEqual(extract.despawn_seconds(d(4)), 3600)
+        self.assertEqual(extract.despawn_seconds(d(3)), 2400)
+        self.assertEqual(extract.despawn_seconds(d(2)), 1200)
+        self.assertEqual(extract.despawn_seconds(d(1)), 300)
+        self.assertEqual(extract.despawn_seconds(d(0)), 300)
+        self.assertEqual(extract.despawn_seconds(d(3, 4)), 3600)  # despawnRarity manda
+        self.assertEqual(extract.despawn_seconds(d(4, 0, 1)), 30)  # quickDespawn
+
+    def test_reparacion_con_componentes(self):
+        ref = lambda p: {"m_FileID": 0, "m_PathID": p}  # noqa: E731
+        defs = {
+            1: {"shortname": "metal.refined", "category": 3, "treatAsComponentForRepairs": 0, "m_GameObject": ref(11)},
+            2: {"shortname": "wood", "category": 3, "treatAsComponentForRepairs": 0, "m_GameObject": ref(12)},
+            3: {"shortname": "riflebody", "category": 13, "treatAsComponentForRepairs": 0, "m_GameObject": ref(13)},
+            4: {"shortname": "metalspring", "category": 13, "treatAsComponentForRepairs": 0, "m_GameObject": ref(14)},
+        }
+        blueprints = {
+            13: {"ingredients": [{"itemDef": ref(1), "amount": 3.0}]},
+            14: {"ingredients": [{"itemDef": ref(1), "amount": 2.0}, {"itemDef": ref(2), "amount": 50.0}]},
+        }
+        ak = {"ingredients": [{"itemDef": ref(1), "amount": 50.0}, {"itemDef": ref(2), "amount": 200.0},
+                              {"itemDef": ref(3), "amount": 1.0}, {"itemDef": ref(4), "amount": 4.0}]}
+        # 50 + 3 + 2 × 4 = 61 de metal de alta calidad × 0,2 = 12,2 → 13; 200 de madera → 40.
+        self.assertEqual(extract.repair_cost(ak, defs, blueprints), [{"id": "metal.refined", "amount": 13}, {"id": "wood", "amount": 40}])
+
+    def test_efectos_y_podrirse(self):
+        consumable = {"effects": [{"type": 6, "amount": 15.0, "time": 0.0}, {"type": 2, "amount": 5.0, "time": 0.0},
+                                  {"type": 7, "amount": 20.0, "time": 0.0}],
+                      "modifiers": [{"type": 0, "value": 0.5, "duration": 1800.0}, {"type": 20, "value": 3.5, "duration": 4.0}]}
+        spoiling = {"TotalSpoilTimeHours": 24.0, "SpoilItem": {"m_FileID": 0, "m_PathID": 9}}
+        got = extract.use_of(consumable, spoiling, {9: "bearmeat.spoiled"})
+        self.assertEqual(got["effects"], [{"stat": "health", "amount": 15, "time": 0}, {"stat": "healthOverTime", "amount": 20, "time": 0}])
+        self.assertEqual(got["mods"], [{"stat": "woodYield", "value": 0.5, "duration": 1800}])
+        self.assertEqual(got["spoil"], {"hours": 24, "into": "bearmeat.spoiled"})
+        self.assertIsNone(extract.use_of(None, None, {}))
+
+    def test_transformaciones(self):
+        ref = lambda p: {"m_FileID": 0, "m_PathID": p}  # noqa: E731
+        by_pid = {1: "metal.fragments", 2: "charcoal", 3: "fat.animal"}
+        got = extract.turns_of(
+            {"becomeOnCooked": ref(1), "amountOfBecome": 1.0},
+            {"byproductItem": ref(2), "byproductAmount": 1, "byproductChance": 0.25},
+            {"becomeItem": [{"itemDef": ref(3), "amount": 18.0}]},
+            by_pid,
+        )
+        self.assertEqual(got, [
+            {"how": "cook", "into": "metal.fragments", "amount": 1, "chance": 1},
+            {"how": "burn", "into": "charcoal", "amount": 1, "chance": 0.25},
+            {"how": "swap", "into": "fat.animal", "amount": 18, "chance": 1},
+        ])
+        self.assertEqual(extract.turns_of(None, {"byproductItem": ref(0), "byproductAmount": 1, "byproductChance": 0.0}, None, by_pid), [])
+
+
+@unittest.skipUnless(HAVE_GAME, "sin el juego instalado")
+class TestFichaInGame(unittest.TestCase):
+    def test_despawn(self):
+        want = {"rifle.ak": 3600, "hatchet": 1200, "smg.thompson": 2400, "lock.code": 300, "torch": 30,
+                "ammo.rocket.seeker": 3600, "metal.fragments": 1200, "wood": 300, "ammo.grenadelauncher.buckshot": 300}
+        for sid, s in want.items():
+            self.assertEqual(item(sid)["despawn"], s, sid)
+
+    def test_condicion_al_aparecer(self):
+        self.assertEqual(item("hatchet")["condition"]["found"], [1, 1])
+        self.assertEqual(item("shotgun.pump")["condition"]["found"], [0.01, 0.03])
+
+    def test_reparacion(self):
+        self.assertEqual(item("rifle.ak")["repair"], {"cost": [{"id": "metal.refined", "amount": 13}, {"id": "wood", "amount": 40}], "bp": True, "loss": 0.2})
+        self.assertEqual(item("hatchet")["repair"]["cost"], [{"id": "wood", "amount": 20}, {"id": "metal.fragments", "amount": 15}])
+        self.assertEqual(item("wall.frame.garagedoor")["repair"]["cost"], [{"id": "metal.fragments", "amount": 70}])
+        self.assertEqual(item("spear.stone")["repair"]["cost"], [{"id": "spear.wooden", "amount": 1}, {"id": "stones", "amount": 4}])
+        self.assertEqual(item("furnace")["repair"]["cost"], [{"id": "stones", "amount": 40}, {"id": "wood", "amount": 20}, {"id": "lowgradefuel", "amount": 10}])
+        self.assertIsNone(item("door.hinged.metal")["repair"])  # se repara con el martillo, no en el banco
+        self.assertIsNone(item("diving.tank")["repair"])  # se recarga
+
+    def test_efectos(self):
+        syringe = {e["stat"]: e["amount"] for e in item("syringe.medical")["use"]["effects"]}
+        self.assertEqual(syringe, {"poison": -5, "radiation": -10, "health": 15, "healthOverTime": 20})
+        bear = item("bearmeat.cooked")["use"]
+        self.assertEqual({e["stat"]: e["amount"] for e in bear["effects"]}, {"calories": 100, "hydration": 1, "healthOverTime": 5})
+        self.assertEqual(bear["spoil"]["hours"], 24)
+        self.assertEqual(item("woodtea")["use"]["mods"], [{"stat": "woodYield", "value": 0.5, "duration": 1800}])
+        self.assertEqual(item("scraptea.pure")["use"]["mods"], [{"stat": "scrapYield", "value": 3.5, "duration": 3600}])
+
+    def test_transformaciones(self):
+        self.assertIn({"how": "cook", "into": "metal.fragments", "amount": 1, "chance": 1}, item("metal.ore")["turns"])
+        self.assertIn({"how": "cook", "into": "lowgradefuel", "amount": 3, "chance": 1}, item("crude.oil")["turns"])
+        self.assertIn({"how": "burn", "into": "charcoal", "amount": 1, "chance": 0.25}, item("wood")["turns"])
+        self.assertIn({"how": "swap", "into": "fat.animal", "amount": 18, "chance": 1}, item("fish.orangeroughy")["turns"])
+        self.assertIn({"how": "swap", "into": "bone.fragments", "amount": 20, "chance": 1}, item("skull.wolf")["turns"])
+        self.assertEqual(item("rifle.ak")["turns"], [])
 
 
 if __name__ == "__main__":

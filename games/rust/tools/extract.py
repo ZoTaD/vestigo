@@ -16,6 +16,7 @@ La instalación se busca en la carpeta de Steam por defecto, o en la variable de
 """
 import hashlib
 import json
+import math
 import os
 import re
 import sys
@@ -63,6 +64,25 @@ RECYCLERS = [
     ("green", 0, "efficiency"),
     ("yellow", 1, "efficiency"),
 ]
+# El `ItemCategory` de los componentes (`CATEGORIES`): en la reparación, un componente se cobra con lo que lleva su receta.
+COMPONENT = 13
+# Cuánto tarda en desaparecer un objeto tirado (`Item.GetDespawnDuration`): `server.itemdespawn` (300 s) por un
+# multiplicador de la rareza (`despawnRarity`, o la del objeto si es 0): clamp((rareza − 1) × 4, 1, 100). Los de
+# `quickDespawn` (antorchas, mapa) se van a los `server.itemdespawn_quick` (30 s). Son los valores por defecto del
+# servidor; verificados el 2026-10-05 contra rusthelp.com (AK 1 h, hacha 20 min, Thompson 40 min, antorcha 30 s).
+ITEM_DESPAWN = 300
+ITEM_DESPAWN_QUICK = 30
+# El banco de reparación cobra esa fracción de la receta para llevar un objeto de roto a entero
+# (`RepairBench.REPAIR_COST_FRACTION`) y le saca esa fracción de condición máxima en cada reparación
+# (`maxConditionLostOnRepair` del prefab `repairbench_static`, medido el 2026-10-05).
+REPAIR_COST_FRACTION = 0.2
+REPAIR_LOSS = 0.2
+# Lo que hace usar o comer un objeto (`ItemModConsumable.effects`, enum `MetabolismAttribute.Type`). El 2 (pulso) no lo
+# usa ningún objeto.
+EFFECTS = {0: "calories", 1: "hydration", 3: "poison", 4: "radiation", 5: "bleeding", 6: "health", 7: "healthOverTime"}
+# Los modificadores de los tés (`ItemModConsumable.modifiers`, enum `Modifier.ModifierType`), con `value` en fracción.
+# Del 6 en adelante son tipos nuevos (pasteles, la jeringa) cuyo nombre no está verificado: no se muestran.
+MODIFIERS = {0: "woodYield", 1: "oreYield", 2: "radiationResistance", 3: "radiationExposureResistance", 4: "maxHealth", 5: "scrapYield"}
 # Objetos de desarrollo que el juego dejó sin ocultar: no existen para el jugador (nombres como "Smoke Rocket WIP!!!!"
 # y "Test Generator") y no tienen que entrar en las cifras ni tener ficha.
 EXCLUDED = {"ammo.rocket.smoke", "electric.generator.small"}
@@ -260,10 +280,103 @@ def redirect_of(ref, by_pid):
     return by_pid.get(ref["m_PathID"])
 
 
+def despawn_seconds(d):
+    """Los segundos que tarda en desaparecer tirado en el piso (`ITEM_DESPAWN`)."""
+    if d["quickDespawn"]:
+        return ITEM_DESPAWN_QUICK
+    rarity = d["despawnRarity"] or d["rarity"]
+    return min(max((rarity - 1) * 4, 1), 100) * ITEM_DESPAWN
+
+
+def repair_cost(bp, defs, blueprints):
+    """
+    Lo que cuesta reparar en el banco de roto a entero (`RepairBench.GetRepairCostList` y `RepairAnItem`): los
+    ingredientes de la receta, con cada componente (categoría Componentes, o `treatAsComponentForRepairs`) cambiado por el
+    primer ingrediente de su propia receta × la cantidad (mínimo 1), y todo × `REPAIR_COST_FRACTION`, para arriba.
+    `defs` son los `ItemDefinition` por path_id; `blueprints`, las recetas por el path_id de su GameObject. Verificado el
+    2026-10-05 contra la wiki oficial: AK 13 de metal de alta calidad y 40 de madera, puerta de garaje 70 fragmentos.
+    """
+    total = []  # [path_id, cantidad], en el orden del juego
+
+    def add(pid, amount):
+        for row in total:
+            if row[0] == pid:
+                row[1] += amount
+                return
+        total.append([pid, amount])
+
+    for ing in bp["ingredients"]:
+        pid = ing["itemDef"]["m_PathID"]
+        d = defs[pid]
+        if d["category"] == COMPONENT or d["treatAsComponentForRepairs"]:
+            sub = blueprints.get(d["m_GameObject"]["m_PathID"])
+            if sub and sub["ingredients"]:
+                first = sub["ingredients"][0]
+                add(first["itemDef"]["m_PathID"], max(first["amount"] * ing["amount"], 1))
+            continue
+        add(pid, ing["amount"])
+    # El `- 1e-9` es por la coma flotante: 200 × 0,2 no puede quedar en 41.
+    return [{"id": defs[pid]["shortname"], "amount": math.ceil(a * REPAIR_COST_FRACTION - 1e-9)} for pid, a in total]
+
+
+def use_of(consumable, spoiling, by_pid):
+    """
+    Lo que hace comer o usar el objeto (`ItemModConsumable`: efectos y modificadores) y en cuánto se echa a perder
+    (`ItemModFoodSpoiling`). `None` si no tiene nada de eso.
+    """
+    effects, mods = [], []
+    if consumable:
+        for e in consumable["effects"]:
+            stat = EFFECTS.get(e["type"])
+            if stat and e["amount"]:
+                effects.append({"stat": stat, "amount": number(e["amount"]), "time": number(e["time"])})
+        for m in consumable.get("modifiers") or []:
+            if m["type"] in MODIFIERS:
+                mods.append({"stat": MODIFIERS[m["type"]], "value": round(m["value"], 3), "duration": number(m["duration"])})
+    spoil = None
+    if spoiling:
+        spoil = {"hours": number(spoiling["TotalSpoilTimeHours"]), "into": by_pid.get(spoiling["SpoilItem"]["m_PathID"])}
+    if not effects and not mods and not spoil:
+        return None
+    return {"effects": effects, "mods": mods, "spoil": spoil}
+
+
+def turns_of(cook, burn, swap, by_pid):
+    """
+    En qué se convierte el objeto:
+      - cocinado o fundido (`ItemModCookable`: cada unidad da `amountOfBecome` de `becomeOnCooked`);
+      - quemado como combustible (`ItemModBurnable`: `byproductAmount` de `byproductItem` con `byproductChance` por unidad);
+      - usado: destripar un pescado, romper un cráneo (`ItemModSwap.becomeItem`; las `RandomOptions` de algunos peces no
+        entran).
+    Todas las referencias viven en items.preload (`m_FileID` 0). Lista vacía si nada.
+    """
+    def sid_of(ref):
+        return by_pid.get(ref["m_PathID"]) if ref and ref["m_FileID"] == 0 else None
+
+    out = []
+    if cook and sid_of(cook["becomeOnCooked"]):
+        out.append({"how": "cook", "into": sid_of(cook["becomeOnCooked"]), "amount": number(cook["amountOfBecome"]), "chance": 1})
+    if burn and burn["byproductChance"] > 0 and sid_of(burn["byproductItem"]):
+        out.append({"how": "burn", "into": sid_of(burn["byproductItem"]), "amount": burn["byproductAmount"],
+                    "chance": round(burn["byproductChance"], 3)})
+    for b in (swap or {}).get("becomeItem") or []:
+        if sid_of(b["itemDef"]):
+            out.append({"how": "swap", "into": sid_of(b["itemDef"]), "amount": number(b["amount"]), "chance": 1})
+    return out
+
+
 def build_items(classes, texts, previous=None):
     defs = classes["ItemDefinition"]
     by_pid = {pid: tt["shortname"] for pid, tt in defs}
     blueprints = {tt["m_GameObject"]["m_PathID"]: tt for _, tt in classes.get("ItemBlueprint", [])}
+    defs_by_pid = {pid: tt for pid, tt in defs}
+
+    def by_go(name):
+        """Los `ItemMod*` de una clase, por el path_id de su GameObject (el mismo que el del `ItemDefinition`)."""
+        return {tt["m_GameObject"]["m_PathID"]: tt for _, tt in classes.get(name, [])}
+
+    repair_mods, consumables, spoilings = by_go("ItemModRepair"), by_go("ItemModConsumable"), by_go("ItemModFoodSpoiling")
+    cookables, burnables, swaps = by_go("ItemModCookable"), by_go("ItemModBurnable"), by_go("ItemModSwap")
     items, skipped = [], []
     for _, d in defs:
         sid = d["shortname"]
@@ -278,7 +391,8 @@ def build_items(classes, texts, previous=None):
             raise SystemExit(f"{sid}: categoría {d['category']} desconocida (¿cambió el enum ItemCategory?)")
         cond = d["condition"]
         redirect = d["isRedirectOf"]
-        bp = blueprints.get(d["m_GameObject"]["m_PathID"])
+        go = d["m_GameObject"]["m_PathID"]
+        bp = blueprints.get(go)
         craft = None
         if bp and bp["userCraftable"]:
             craft = {
@@ -290,6 +404,14 @@ def build_items(classes, texts, previous=None):
                 "researchScrap": research_scrap(d["rarity"], sid) if bp["isResearchable"] else None,
                 "default": bool(bp["defaultBlueprint"]),
             }
+        repair = None
+        rmod = repair_mods.get(go)
+        # Los que tienen `ItemModRepair.canUseRepairBench` (tanques de buceo, martillo neumático) se recargan: el banco
+        # no les cobra la receta.
+        if cond["enabled"] and cond["repairable"] and bp and not (rmod and rmod["canUseRepairBench"]):
+            repair = {"cost": repair_cost(bp, defs_by_pid, blueprints),
+                      "bp": bool(bp["isResearchable"] and not bp["defaultBlueprint"]), "loss": REPAIR_LOSS}
+        found = cond["foundCondition"]
         items.append({
             "id": sid,
             "itemid": d["itemid"],
@@ -301,10 +423,17 @@ def build_items(classes, texts, previous=None):
             "category": CATEGORIES[d["category"]],
             "rarity": RARITIES.get(d["rarity"], "none"),
             "stack": d["stackable"],
-            "condition": {"max": number(cond["max"]), "repairable": bool(cond["repairable"])} if cond["enabled"] else None,
+            # `number` deja 1.0 en 1, como el resto de los JSON del sitio.
+            "condition": {"max": number(cond["max"]), "repairable": bool(cond["repairable"]),
+                          "found": [number(round(found["fractionMin"], 3)), number(round(found["fractionMax"], 3))]}
+                         if cond["enabled"] else None,
             "redirectOf": redirect_of(redirect, by_pid),
             "craft": craft,
             "recycle": recycle_of(bp, by_pid),
+            "despawn": despawn_seconds(d),
+            "repair": repair,
+            "use": use_of(consumables.get(go), spoilings.get(go), by_pid),
+            "turns": turns_of(cookables.get(go), burnables.get(go), swaps.get(go), by_pid),
         })
     if skipped:
         print(f"[rust] {len(skipped)} objetos sin nombre inglés quedaron afuera: {', '.join(skipped[:10])}…", file=sys.stderr)
