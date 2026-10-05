@@ -1,0 +1,47 @@
+/* Rust, calculadora de raideo (2026-10-05). Hereda las variables de `.rs` y las tablas de rust-items.css. */
+.rs-raid { display: grid; gap: 12px; }
+.rs-raid-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; align-items: start; }
+.rs-raid-result { position: sticky; top: 12px; }
+.rs-raid-kind h3 { margin: 14px 0 6px; font: 700 14px/1.2 "Roboto Condensed", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rs-soft); }
+.rs-raid-targets { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.rs-raid-targets li { display: grid; grid-template-columns: 32px 1fr auto; gap: 10px; align-items: center; padding: 4px 6px; background: var(--rs-slot); }
+.rs-raid-targets li.is-on { background: rgba(108, 142, 54, 0.28); }
+.rs-raid-name { display: flex; flex-direction: column; font-size: 15px; line-height: 1.2; }
+.rs-raid-name small { color: var(--rs-dim); font-size: 13px; }
+.rs-stepper { display: inline-flex; align-items: center; gap: 6px; }
+.rs-stepper button {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--rs-text);
+  font: 700 18px/1 "Roboto Condensed", sans-serif;
+  cursor: pointer;
+}
+.rs-stepper button:hover:not(:disabled) { background: #55702a; color: #fff; }
+.rs-stepper button:disabled { opacity: 0.35; cursor: default; }
+.rs-stepper b { min-width: 2ch; text-align: center; }
+.rs-raid-mix { display: grid; gap: 4px; margin: 0 0 12px; padding: 10px 12px; background: rgba(108, 142, 54, 0.22); }
+.rs-raid-sulfur { font-size: 22px; font-weight: 800; }
+.rs-dud { display: block; color: var(--rs-dim); font-size: 12px; }
+.rs-raid-actions { display: flex; gap: 8px; margin: 12px 0 0; }
+.rs-scroll { overflow-x: auto; }
+.rs-raid-table td { text-align: center; }
+.rs-raid-table thead th { text-align: center; }
+.rs-kind { padding-top: 14px; color: var(--rs-dim); font: 700 12px/1.2 "Roboto Condensed", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; text-align: left; }
+
+@media (max-width: 860px) {
+  .rs-raid-grid { grid-template-columns: 1fr; }
+  .rs-raid-result { position: static; }
+}
+
+/* La mezcla más barata: un renglón por explosivo, con su cantidad a la derecha. */
+.rs-raid-mixlist { display: grid; gap: 3px; margin: 2px 0; padding: 0; list-style: none; }
+.rs-raid-mixlist li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 3px 6px; background: rgba(0, 0, 0, 0.22); }
+.rs-raid-mixlist li b { font-size: 20px; font-weight: 800; }
+.rs-raid-mixname { font-size: 15px; line-height: 1.2; }
+@media (max-width: 860px) {
+  /* Sin esto el grid se ensanchaba con la tabla y recortaba la caja a 375 px. */
+  .rs-raid-grid > * { min-width: 0; }
+  .rs-raid-result .rs-table td { white-space: nowrap; }
+}

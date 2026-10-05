@@ -28,11 +28,13 @@ type TabProps = { route: Route; navigate: Nav };
 type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
 const RsItems = lazyWithPreload(() => import("./rust/items/RustItems"));
+const RsRaid = lazyWithPreload(() => import("./rust/raid/RustRaid"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá, en `RUST_TAB_FILES` y en `RUST_PUBLISHED`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `RUST_TAB_FILES`.
 const TABS: Partial<Record<RustSection, LazyTab>> = {
   items: RsItems,
+  raid: RsRaid,
 };
 
 /**

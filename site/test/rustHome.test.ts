@@ -47,11 +47,10 @@ describe("la portada de Rust", () => {
     }
   });
 
-  it("Objetos enlaza; Raideo y las pestañas de las etapas que vienen se ven apagadas", () => {
+  it("Objetos y Raideo enlazan; las pestañas de las etapas que vienen se ven apagadas", () => {
     const html = render("es", "/es/rust");
     expect(html).toContain('href="/es/rust/objetos"');
-    expect(html).not.toContain('href="/es/rust/raideo"');
-    expect(html).toMatch(/class="rs-tab is-soon"[^>]*>Raideo</);
+    expect(html).toContain('href="/es/rust/raideo"');
     expect(html).toMatch(/class="rs-tab is-soon"[^>]*>Monumentos</);
   });
 

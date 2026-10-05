@@ -25,11 +25,12 @@ describe("Rust en el sitemap y el <head>", () => {
     expect(sitemapLastmod("/es/rust", data)).toBe(rsMeta.extractedAt.slice(0, 10));
   });
 
-  it("Objetos entra; Raideo, que todavía no se publicó, no", () => {
+  it("Objetos y Raideo entran al sitemap", () => {
     const paths = sitemapPaths(data);
     expect(paths).toContain("/es/rust/objetos");
     expect(paths).toContain("/en/rust/items");
-    expect(paths.some((p) => p.startsWith("/es/rust/raideo") || p.startsWith("/en/rust/raid"))).toBe(false);
+    expect(paths).toContain("/es/rust/raideo");
+    expect(paths).toContain("/en/rust/raid");
   });
 
   it("sin el extractor corrido, Rust queda afuera en vez de romper el build", () => {

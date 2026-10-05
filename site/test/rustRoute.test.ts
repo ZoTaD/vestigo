@@ -19,9 +19,10 @@ describe("las direcciones de Rust", () => {
     expect(RUST_SECTION_ES).toEqual({ items: "objetos", raid: "raideo" });
   });
 
-  it("Objetos ya está publicada; Raideo todavía no, y muestra la portada", () => {
+  it("Objetos y Raideo están publicadas; lo que no existe muestra la portada", () => {
     expect(routePath(parseRoute("/es/rust/objetos"))).toBe("/es/rust/objetos");
-    expect(routePath(parseRoute("/es/rust/raideo"))).toBe("/es/rust");
+    expect(routePath(parseRoute("/es/rust/raideo"))).toBe("/es/rust/raideo");
+    expect(routePath(parseRoute("/en/rust/raid"))).toBe("/en/rust/raid");
     expect(routePath(parseRoute("/en/rust/no-existe"))).toBe("/en/rust");
   });
 

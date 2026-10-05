@@ -81,6 +81,7 @@ export const PZ_TAB_FILES: Partial<Record<PzSection, string>> = {
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */
 export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
   items: "src/rust/items/RustItems.tsx",
+  raid: "src/rust/raid/RustRaid.tsx",
 };
 
 /**

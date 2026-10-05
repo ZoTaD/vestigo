@@ -112,6 +112,32 @@ export interface RustCopy {
     shopRow: (amount: number, item: string, price: number, currency: string) => string;
     back: string;
   };
+  raid: {
+    h1: string;
+    lede: string;
+    pick: string;
+    kinds: Record<"building" | "door" | "window" | "external" | "deployable", string>;
+    buildingNote: string;
+    hp: (n: string) => string;
+    add: string;
+    remove: string;
+    clear: string;
+    empty: string;
+    result: string;
+    explosive: string;
+    amount: string;
+    sulfur: string;
+    gunpowder: string;
+    time: string;
+    notCraftable: string;
+    dud: (pct: number) => string;
+    cheapest: string;
+    share: string;
+    copied: string;
+    table: string;
+    tableNote: string;
+    minutes: (m: string) => string;
+  };
   home: {
     kicker: string;
     h1: string;
@@ -241,6 +267,32 @@ const EN: RustCopy = {
     shops: "Where to buy it",
     shopRow: (amount, item, price, currency) => `${amount} × ${item} for ${price} ${currency}`,
     back: "All items",
+  },
+  raid: {
+    h1: "Rust Raid Calculator",
+    lede: "Pick what you want to break and how many: you get how many explosives of each kind it takes, the sulfur it costs and the cheapest mix.",
+    pick: "What do you want to break?",
+    kinds: { building: "Building", door: "Doors", window: "Windows and bars", external: "External walls", deployable: "Deployables" },
+    buildingNote: "Every building piece of a grade has the same health: a stone wall, floor or foundation take the same.",
+    hp: (n) => `${n} HP`,
+    add: "Add",
+    remove: "Remove",
+    clear: "Clear",
+    empty: "Add something to break and the cost shows up here.",
+    result: "What it takes",
+    explosive: "Explosive",
+    amount: "Amount",
+    sulfur: "Sulfur",
+    gunpowder: "Gunpowder",
+    time: "Craft time",
+    notCraftable: "Can't be crafted",
+    dud: (pct) => `Fails ${pct}% of the time: bring extra.`,
+    cheapest: "Cheapest in sulfur",
+    share: "Copy link",
+    copied: "Link copied",
+    table: "Full raid table",
+    tableNote: "Explosives needed for one of each, placed right on the target. Duds not counted.",
+    minutes: (m) => `${m} min`,
   },
   home: {
     kicker: "Rust",
@@ -384,6 +436,32 @@ const ES: RustCopy = {
     shops: "Dónde comprarlo",
     shopRow: (amount, item, price, currency) => `${amount} × ${item} por ${price} de ${currency}`,
     back: "Todos los objetos",
+  },
+  raid: {
+    h1: "Calculadora de raideo de Rust",
+    lede: "Elegí qué querés romper y cuántos: te dice cuántos explosivos de cada tipo hacen falta, el azufre que cuesta y la mezcla más barata.",
+    pick: "¿Qué querés romper?",
+    kinds: { building: "Construcción", door: "Puertas", window: "Ventanas y rejas", external: "Muros externos", deployable: "Deployables" },
+    buildingNote: "Todas las piezas de un mismo grado tienen la misma vida: una pared, un piso o un cimiento de piedra cuestan lo mismo.",
+    hp: (n) => `${n} de vida`,
+    add: "Sumar",
+    remove: "Sacar",
+    clear: "Vaciar",
+    empty: "Sumá algo para romper y acá aparece lo que cuesta.",
+    result: "Lo que hace falta",
+    explosive: "Explosivo",
+    amount: "Cantidad",
+    sulfur: "Azufre",
+    gunpowder: "Pólvora",
+    time: "Tiempo de crafteo",
+    notCraftable: "No se craftea",
+    dud: (pct) => `Falla el ${pct} % de las veces: llevá de más.`,
+    cheapest: "Lo más barato en azufre",
+    share: "Copiar link",
+    copied: "Link copiado",
+    table: "Tabla completa de raideo",
+    tableNote: "Explosivos para romper uno de cada uno, pegados al objetivo. Sin contar las fallas.",
+    minutes: (m) => `${m} min`,
   },
   home: {
     kicker: "Rust",
