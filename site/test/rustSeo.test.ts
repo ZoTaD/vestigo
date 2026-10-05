@@ -70,6 +70,16 @@ describe("Rust en el sitemap y el <head>", () => {
     expect(ld).toContainEqual(expect.objectContaining({ "@type": "WebApplication", isAccessibleForFree: true }));
   });
 
+  it("la calculadora se presenta como aplicación web gratuita, con migas", () => {
+    const page = prerenderPages(data).find((p) => p.path === "/es/rust/raideo")!;
+    expect(page.title).toMatch(/^Calculadora de raideo de Rust/);
+    const types = page.jsonLd.map((j) => (j as { "@type": string })["@type"]);
+    expect(types).toContain("BreadcrumbList");
+    expect(types).toContain("WebApplication");
+    const app = page.jsonLd.find((j) => (j as { "@type": string })["@type"] === "WebApplication") as { name: string };
+    expect(app.name).toBe("Calculadora de raideo de Rust");
+  });
+
   it("toda la sección usa su propia vista previa", () => {
     expect(ogImageUrl(parseRoute("/es/rust"))).toBe("https://vestigo.gg/rust/og.jpg");
     expect(ogImageUrl(parseRoute("/en/rust/items/assault-rifle"))).toBe("https://vestigo.gg/rust/og.jpg");

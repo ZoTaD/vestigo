@@ -348,16 +348,16 @@ export function jsonLdFor(
     return out;
   }
   if (route.view === "rust") {
-    // Vestigo › Rust › pestaña › ficha. La portada, además, como aplicación web gratuita (el buscador, la cuenta del
+    // Vestigo › Rust › pestaña › ficha. La portada y la calculadora de raideo, además, como aplicación web gratuita (el buscador, la cuenta del
     // wipe y las herramientas), con el nombre de la guía.
     const sec = route.rsSection ?? "home";
     const trail = [{ name: brand, url: home }, { name: "Rust", url: routeUrl({ ...route, rsSection: "home", detail: undefined }) }];
     if (sec !== "home") trail.push({ name: RUST_COPY[lang].tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "home") {
+    if (sec === "home" || sec === "raid") {
       out.push({
-        "@context": "https://schema.org", "@type": "WebApplication", name: RUST_COPY[lang].home.h1, description: page.description,
+        "@context": "https://schema.org", "@type": "WebApplication", name: sec === "raid" ? RUST_COPY[lang].raid.h1 : RUST_COPY[lang].home.h1, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Rust" },
       });
