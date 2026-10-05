@@ -5,7 +5,8 @@ Lee las escenas del juego (`Bundles/shared/assetscenes.bundle`) junto con `conte
 `NPCVendingOrder`) e `items.preload.bundle` (los objetos), porque las referencias cruzan de un archivo a otro.
 Escribe:
   - `games/rust/data/loot.json`: por objeto, en qué cajas aparece, con la probabilidad de que una caja traiga al menos
-    uno, la cantidad contando todas sus tiradas y si sale gastado;
+    uno, la cantidad contando todas sus tiradas y si sale gastado; y de los NPC (científicos, moradores,
+    espantapájaros);
   - `games/rust/data/shops.json`: qué vende cada tienda de monumento (Outpost, Bandit Camp, pueblo pesquero, rancho,
     granero) y a qué precio. El pozo de agua tiene tienda, pero todas sus órdenes son de precio al azar: no entra.
 
@@ -133,6 +134,47 @@ CONTAINER_EVENTS = {"santa": "xmas"}
 # objeto con condición sale entre `foundCondition.fractionMin` y `fractionMax` de su máximo (la AK de la caja de élite,
 # al 10–20 %); en las demás, entero.
 WORN_TYPES = {2, 5}
+# Los NPC con botín, por el prefab sin carpeta ni extensión, con la regla de `CONTAINERS`: comparten clave sólo los que
+# tienen la misma tabla (lo exige un test). Los científicos se separan por dónde están, con los nombres que usa la
+# comunidad (rusthelp.com, 2026-10-05): los de monumentos (y el carguero, la plataforma, el Bradley, el Chinook) tienen
+# una tabla; los de los túneles militares y los de las lanchas, otra (rusthelp les da la misma jeringa, 36,34 %).
+# Afuera, y se listan al correr: los guardias de Bandit Camp y los científicos de Outpost (zonas seguras), los
+# `scientist2*` sin botín, `npcplayertest` y los vendedores.
+NPCS = {
+    "scientistnpc_roam": "scientist", "scientistnpc_patrol": "scientist", "scientistnpc_roamtethered": "scientist",
+    "scientistnpc_excavator": "scientist", "scientistnpc_oilrig": "scientist", "scientistnpc_cargo": "scientist",
+    "scientistnpc_cargo_turret_any": "scientist", "scientistnpc_cargo_turret_lr300": "scientist",
+    "scientistnpc_arena": "scientist", "scientistnpc_bradley": "scientist", "scientistnpc_ch47_gunner": "scientist",
+    "scientistnpc_patrol_arctic": "scientist", "scientistnpc_outbreak": "scientist",
+    "scientistnpc_roam_nvg_variant": "scientist_nvg",
+    "scientistnpc_full_any": "scientist_tunnel", "scientistnpc_full_lr300": "scientist_tunnel",
+    "scientistnpc_full_mp5": "scientist_tunnel", "scientistnpc_full_pistol": "scientist_tunnel",
+    "scientistnpc_full_shotgun": "scientist_tunnel",
+    "scientistnpc_rhib": "scientist_boat", "scientistnpc_ptboat": "scientist_boat",
+    "scientistnpc_junkpile_pistol": "scientist_junkpile",
+    "scientistnpc_heavy": "heavy", "scientistnpc_bradley_heavy": "heavy_bradley",
+    "npc_tunneldweller": "tunnel_dweller", "npc_tunneldwellerspawned": "tunnel_dweller",
+    "npc_underwaterdweller": "underwater_dweller",
+    "scarecrow": "scarecrow", "scarecrow_dungeon": "scarecrow", "scarecrow_dungeonnoroam": "scarecrow",
+    "gingerbread_dungeon": "gingerbread", "gingerbread_meleedungeon": "gingerbread",
+}
+# Los nombres: el token del juego cuando lo hay, y si no a mano, con las palabras del juego.
+NPC_NAMES = {
+    "scientist": "scientist.name",
+    "scientist_nvg": ("Night Vision Scientist", "Científico con visión nocturna"),
+    "scientist_tunnel": ("Military Tunnel Scientist", "Científico de los túneles militares"),
+    "scientist_boat": ("Boat Scientist", "Científico de lancha"),
+    "scientist_junkpile": ("Junk Pile Scientist", "Científico de la pila de chatarra"),
+    "heavy": ("Heavy Scientist (Oil Rig)", "Científico pesado (plataforma petrolera)"),
+    "heavy_bradley": ("Heavy Scientist (Bradley)", "Científico pesado (Bradley)"),
+    "tunnel_dweller": "tunneldweller.name",
+    "underwater_dweller": "underwaterdweller.name",
+    "scarecrow": "scarecrow.name",
+    "gingerbread": "gingerbread_man",
+}
+NPC_EVENTS = {"scarecrow": "halloween", "gingerbread": "xmas"}
+NPC_CLASSES = {"ScientistNPC", "ScientistNPC2", "TunnelDweller", "UnderwaterDweller", "ScarecrowNPC", "GingerbreadNPC",
+               "BanditGuard", "NPCShopKeeper", "NPCPlayer"}
 LOOT_CLASSES = {"LootContainer", "LockedByEntCrate", "HackableLockedCrate", "SupplyDrop", "FreeableLootContainer"}
 # Las tiendas, por el prefab del monumento donde está la máquina. La clave sale de la primera coincidencia; el nombre,
 # del token oficial (engine.json). El pozo de agua queda en la lista para que su máquina no corte por "monumento sin
@@ -408,6 +450,20 @@ def container_chances(tt, resolve):
     return out
 
 
+def npc_chances(per_loadout):
+    """
+    El botín de un NPC que elige su equipo al azar entre `loadouts`, todos igual de probables (`EquipLoadout`):
+    `per_loadout` trae el resultado de `container_chances` con cada equipo (las ranuras `onlyWithLoadoutNamed` cambian de
+    uno a otro: la minigun del científico pesado). La probabilidad es el promedio; la cantidad, el rango de todos.
+    """
+    n = len(per_loadout)
+    out = {}
+    for got in per_loadout:
+        for key, (p, lo, hi) in got.items():
+            o = out.get(key)
+            out[key] = (p / n, lo, hi) if o is None else (o[0] + p / n, min(lo, o[1]), max(hi, o[2]))
+    return out
+
 def container_base(path):
     """`assets/…/radtown/crate_elite.prefab` → `crate_elite`; las del laboratorio submarino, con `underwater_labs/`."""
     base = path.rsplit("/", 1)[-1].removesuffix(".prefab").removesuffix(".entity")
@@ -483,6 +539,45 @@ def collect_boxes(w, texts, found, sources, tables):
     return ignored
 
 
+def collect_npcs(w, texts, found, sources, tables):
+    """
+    El botín de los NPC de `NPCS` (`HumanNPC.LootSpawnSlots`, que el cadáver recibe al morir). Cada ranura se tira
+    `numberToSpawn` veces con su probabilidad, y las que tienen `onlyWithLoadoutNamed`, sólo con ese equipo. La ropa que
+    queda puesta en el cadáver no se cuenta. Devuelve los prefabs con botín que no se muestran.
+    """
+    ignored, seen = set(), set()
+    for o, tt, _ in w.behaviours(NPC_CLASSES):
+        path = w.go_name(o, tt)
+        if not path.startswith("assets/"):
+            continue
+        base = path.rsplit("/", 1)[-1].removesuffix(".prefab")
+        slots = tt.get("LootSpawnSlots") or []
+        key = NPCS.get(base)
+        if key is None:
+            if slots:
+                ignored.add(base)
+            continue
+        tables.setdefault(key, {})[base] = tuple(
+            (w.ref_key(o, s["definition"]), s["numberToSpawn"], round(s["probability"], 6), s.get("onlyWithLoadoutNamed") or "")
+            for s in slots
+        )
+        names = []
+        for ref in tt.get("loadouts") or []:
+            lo = w.follow(o, ref, "PlayerInventoryProperties")
+            names.append(w.tree(lo).get("niceName", "") if lo else "")
+        per = []
+        for name in names or [""]:
+            res = {"lootDefinition": None, "maxDefinitionsToSpawn": 0, "scrapAmount": 0, "LootSpawnSlots": [
+                {"definition": w.spawn_tree(o, s["definition"]), "numberToSpawn": s["numberToSpawn"], "probability": s["probability"]}
+                for s in slots if not s.get("onlyWithLoadoutNamed") or s["onlyWithLoadoutNamed"] == name
+            ]}
+            per.append(container_chances(res, lambda x: x))
+        merge(found, key, npc_chances(per))
+        seen.add(key)
+    for key in seen:
+        sources[key] = {**name_of(texts, NPC_NAMES[key]), "kind": "npc", "event": NPC_EVENTS.get(key), "worn": "none"}
+    return ignored
+
 def collect_loot(w, texts):
     """
     El botín de todas las fuentes y, aparte, `tables`: por clave, la firma de la tabla de cada prefab (para el test que
@@ -492,6 +587,9 @@ def collect_loot(w, texts):
     ignored = collect_boxes(w, texts, found, sources, tables)
     if ignored:
         print(f"[rust] cajas que no se muestran: {', '.join(sorted(ignored))}", file=sys.stderr)
+    npcs_out = collect_npcs(w, texts, found, sources, tables)
+    if npcs_out:
+        print(f"[rust] NPC con botín que no se muestran: {', '.join(sorted(npcs_out))}", file=sys.stderr)
     return loot_doc(found, sources), tables
 
 

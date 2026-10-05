@@ -98,6 +98,27 @@
    "event": null,
    "worn": "none"
   },
+  "gingerbread": {
+   "en": "Gingerbread Man",
+   "es": "Hombre de jengibre",
+   "kind": "npc",
+   "event": "xmas",
+   "worn": "none"
+  },
+  "heavy": {
+   "en": "Heavy Scientist (Oil Rig)",
+   "es": "Científico pesado (plataforma petrolera)",
+   "kind": "npc",
+   "event": null,
+   "worn": "none"
+  },
+  "heavy_bradley": {
+   "en": "Heavy Scientist (Bradley)",
+   "es": "Científico pesado (Bradley)",
+   "kind": "npc",
+   "event": null,
+   "worn": "none"
+  },
   "heli": {
    "en": "Patrol Helicopter Crate",
    "es": "Caja del helicóptero de patrulla",
@@ -182,6 +203,48 @@
    "event": "xmas",
    "worn": "none"
   },
+  "scarecrow": {
+   "en": "Scarecrow",
+   "es": "Espantapájaros",
+   "kind": "npc",
+   "event": "halloween",
+   "worn": "none"
+  },
+  "scientist": {
+   "en": "Scientist",
+   "es": "Científico",
+   "kind": "npc",
+   "event": null,
+   "worn": "none"
+  },
+  "scientist_boat": {
+   "en": "Boat Scientist",
+   "es": "Científico de lancha",
+   "kind": "npc",
+   "event": null,
+   "worn": "none"
+  },
+  "scientist_junkpile": {
+   "en": "Junk Pile Scientist",
+   "es": "Científico de la pila de chatarra",
+   "kind": "npc",
+   "event": null,
+   "worn": "none"
+  },
+  "scientist_nvg": {
+   "en": "Night Vision Scientist",
+   "es": "Científico con visión nocturna",
+   "kind": "npc",
+   "event": null,
+   "worn": "none"
+  },
+  "scientist_tunnel": {
+   "en": "Military Tunnel Scientist",
+   "es": "Científico de los túneles militares",
+   "kind": "npc",
+   "event": null,
+   "worn": "none"
+  },
   "shore": {
    "en": "Shore Crate",
    "es": "Caja costera",
@@ -224,6 +287,13 @@
    "event": null,
    "worn": "none"
   },
+  "tunnel_dweller": {
+   "en": "Tunnel Dweller",
+   "es": "Morador subterráneo",
+   "kind": "npc",
+   "event": null,
+   "worn": "none"
+  },
   "underwater": {
    "en": "Underwater Crate",
    "es": "Caja submarina",
@@ -237,6 +307,13 @@
    "kind": "box",
    "event": null,
    "worn": "all"
+  },
+  "underwater_dweller": {
+   "en": "Underwater Dweller",
+   "es": "Morador subacuático",
+   "kind": "npc",
+   "event": null,
+   "worn": "none"
   },
   "vehicle": {
    "en": "Vehicle Parts Crate",
@@ -279,6 +356,63 @@
     "bp": false
    }
   ],
+  "ammo.grenadelauncher.buckshot": [
+   {
+    "c": "heavy",
+    "chance": 0.2085,
+    "min": 4,
+    "max": 21,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.2085,
+    "min": 4,
+    "max": 21,
+    "bp": false
+   }
+  ],
+  "ammo.grenadelauncher.he": [
+   {
+    "c": "heavy",
+    "chance": 0.1426,
+    "min": 2,
+    "max": 9,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.1426,
+    "min": 2,
+    "max": 9,
+    "bp": false
+   }
+  ],
+  "ammo.grenadelauncher.smoke": [
+   {
+    "c": "heavy",
+    "chance": 0.2085,
+    "min": 2,
+    "max": 9,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.2085,
+    "min": 2,
+    "max": 9,
+    "bp": false
+   }
+  ],
+  "ammo.handmade.shell": [
+   {
+    "c": "gingerbread",
+    "chance": 0.1064,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   }
+  ],
   "ammo.pistol": [
    {
     "c": "supply",
@@ -302,10 +436,52 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.6111,
+    "min": 15,
+    "max": 93,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.6111,
+    "min": 15,
+    "max": 93,
+    "bp": false
+   },
+   {
     "c": "ammo",
     "chance": 0.5781,
     "min": 15,
     "max": 45,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.5185,
+    "min": 15,
+    "max": 45,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.5185,
+    "min": 15,
+    "max": 45,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.1111,
+    "min": 15,
+    "max": 15,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.1111,
+    "min": 15,
+    "max": 15,
     "bp": false
    },
    {
@@ -327,6 +503,20 @@
     "chance": 0.0434,
     "min": 15,
     "max": 48,
+    "bp": false
+   },
+   {
+    "c": "scientist_boat",
+    "chance": 0.0331,
+    "min": 30,
+    "max": 60,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0331,
+    "min": 30,
+    "max": 60,
     "bp": false
    },
    {
@@ -360,10 +550,38 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.271,
+    "min": 10,
+    "max": 30,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.271,
+    "min": 10,
+    "max": 30,
+    "bp": false
+   },
+   {
     "c": "santa",
     "chance": 0.271,
     "min": 10,
     "max": 30,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.01,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.01,
+    "min": 10,
+    "max": 10,
     "bp": false
    },
    {
@@ -397,10 +615,38 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.1426,
+    "min": 10,
+    "max": 30,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.1426,
+    "min": 10,
+    "max": 30,
+    "bp": false
+   },
+   {
     "c": "santa",
     "chance": 0.1426,
     "min": 10,
     "max": 30,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.005,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.005,
+    "min": 10,
+    "max": 10,
     "bp": false
    },
    {
@@ -441,6 +687,27 @@
     "bp": false
    },
    {
+    "c": "scientist",
+    "chance": 0.5117,
+    "min": 12,
+    "max": 36,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.5117,
+    "min": 12,
+    "max": 36,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.3703,
+    "min": 8,
+    "max": 136,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.37,
     "min": 50,
@@ -455,6 +722,13 @@
     "bp": false
    },
    {
+    "c": "heavy_bradley",
+    "chance": 0.3372,
+    "min": 8,
+    "max": 86,
+    "bp": false
+   },
+   {
     "c": "heli",
     "chance": 0.3063,
     "min": 8,
@@ -466,6 +740,20 @@
     "chance": 0.2977,
     "min": 12,
     "max": 36,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.1111,
+    "min": 12,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.1111,
+    "min": 12,
+    "max": 12,
     "bp": false
    },
    {
@@ -527,10 +815,38 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.0652,
+    "min": 8,
+    "max": 24,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0652,
+    "min": 8,
+    "max": 24,
+    "bp": false
+   },
+   {
     "c": "santa",
     "chance": 0.0652,
     "min": 8,
     "max": 24,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0022,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.0022,
+    "min": 8,
+    "max": 8,
     "bp": false
    },
    {
@@ -585,10 +901,38 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.0652,
+    "min": 10,
+    "max": 30,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0652,
+    "min": 10,
+    "max": 30,
+    "bp": false
+   },
+   {
     "c": "santa",
     "chance": 0.0652,
     "min": 10,
     "max": 30,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0022,
+    "min": 10,
+    "max": 10,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.0022,
+    "min": 10,
+    "max": 10,
     "bp": false
    },
    {
@@ -643,10 +987,38 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.1275,
+    "min": 8,
+    "max": 24,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.1275,
+    "min": 8,
+    "max": 24,
+    "bp": false
+   },
+   {
     "c": "santa",
     "chance": 0.1275,
     "min": 8,
     "max": 24,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0044,
+    "min": 8,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.0044,
+    "min": 8,
+    "max": 8,
     "bp": false
    },
    {
@@ -767,6 +1139,20 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.4882,
+    "min": 5,
+    "max": 29,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.4882,
+    "min": 5,
+    "max": 29,
+    "bp": false
+   },
+   {
     "c": "ammo",
     "chance": 0.4523,
     "min": 6,
@@ -788,10 +1174,45 @@
     "bp": false
    },
    {
+    "c": "scientist",
+    "chance": 0.0795,
+    "min": 6,
+    "max": 18,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.0795,
+    "min": 6,
+    "max": 18,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0568,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
     "c": "heli",
     "chance": 0.0156,
     "min": 8,
     "max": 11,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0126,
+    "min": 6,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0126,
+    "min": 6,
+    "max": 6,
     "bp": false
    },
    {
@@ -832,6 +1253,20 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.2929,
+    "min": 4,
+    "max": 21,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.2929,
+    "min": 4,
+    "max": 21,
+    "bp": false
+   },
+   {
     "c": "santa",
     "chance": 0.2929,
     "min": 4,
@@ -843,6 +1278,55 @@
     "chance": 0.0739,
     "min": 4,
     "max": 21,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0481,
+    "min": 4,
+    "max": 21,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.0481,
+    "min": 4,
+    "max": 21,
+    "bp": false
+   },
+   {
+    "c": "scientist_boat",
+    "chance": 0.0286,
+    "min": 4,
+    "max": 7,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0286,
+    "min": 4,
+    "max": 7,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0076,
+    "min": 4,
+    "max": 7,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0076,
+    "min": 4,
+    "max": 7,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.0071,
+    "min": 4,
+    "max": 7,
     "bp": false
    },
    {
@@ -869,6 +1353,20 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.2995,
+    "min": 4,
+    "max": 23,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.2995,
+    "min": 4,
+    "max": 23,
+    "bp": false
+   },
+   {
     "c": "ammo",
     "chance": 0.2929,
     "min": 4,
@@ -890,6 +1388,20 @@
     "bp": false
    },
    {
+    "c": "scientist",
+    "chance": 0.0481,
+    "min": 4,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.0481,
+    "min": 4,
+    "max": 12,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.0122,
     "min": 8,
@@ -901,6 +1413,20 @@
     "chance": 0.0094,
     "min": 8,
     "max": 11,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0076,
+    "min": 4,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0076,
+    "min": 4,
+    "max": 4,
     "bp": false
    },
    {
@@ -1126,6 +1652,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.0085,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "tools",
     "chance": 0.0028,
     "min": 1,
@@ -1133,8 +1666,57 @@
     "bp": false
    },
    {
+    "c": "scientist",
+    "chance": 0.0023,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.0019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0017,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0017,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0002,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0002,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0002,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0002,
     "min": 1,
     "max": 1,
     "bp": false
@@ -1186,6 +1768,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -1297,6 +1907,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "ballista.static": [
@@ -1338,6 +1976,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -1414,6 +2080,20 @@
   ],
   "bandage": [
    {
+    "c": "heavy",
+    "chance": 0.5556,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.5556,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "cannons",
     "chance": 0.5364,
     "min": 1,
@@ -1430,6 +2110,43 @@
    {
     "c": "medical",
     "chance": 0.4,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.1667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.1667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "barrelcostume": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0227,
     "min": 1,
     "max": 1,
     "bp": false
@@ -1470,6 +2187,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "barricade.metal": [
@@ -1507,6 +2252,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "barricade.sandbags": [
@@ -1530,12 +2303,75 @@
     "min": 1,
     "max": 4,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 4,
+    "bp": false
    }
   ],
   "barricade.stone": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -1557,6 +2393,34 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "barrel",
     "chance": 0.0113,
     "min": 1,
@@ -1568,6 +2432,34 @@
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -1601,6 +2493,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "basicblueprintfragment": [
@@ -1613,6 +2540,13 @@
    },
    {
     "c": "military",
+    "chance": 0.1,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
     "chance": 0.1,
     "min": 1,
     "max": 1,
@@ -1668,6 +2602,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "bdu.pants": [
@@ -1684,6 +2646,20 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "bdu.shirt": [
@@ -1697,6 +2673,20 @@
    {
     "c": "heli",
     "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
     "min": 1,
     "max": 1,
     "bp": false
@@ -1732,6 +2722,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "beehive": [
@@ -1752,6 +2777,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -1805,6 +2865,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "bow.compound": [
@@ -1825,6 +2920,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -1925,12 +3055,75 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "bucket.water": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -1947,6 +3140,34 @@
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -2130,6 +3351,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "catapult.ammo.boulder": [
@@ -2231,6 +3480,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.05,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "tools",
     "chance": 0.0252,
     "min": 1,
@@ -2240,6 +3496,55 @@
    {
     "c": "underwater",
     "chance": 0.0168,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0141,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0102,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0102,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -2266,6 +3571,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "chainsaw": [
@@ -2279,6 +3619,13 @@
    {
     "c": "santa",
     "chance": 0.1429,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.1176,
     "min": 1,
     "max": 1,
     "bp": false
@@ -2331,6 +3678,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "chair": [
@@ -2351,6 +3726,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -2386,9 +3796,51 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "chocolate": [
+   {
+    "c": "scarecrow",
+    "chance": 0.5,
+    "min": 3,
+    "max": 4,
+    "bp": false
+   },
    {
     "c": "food_lab",
     "chance": 0.271,
@@ -2441,6 +3893,20 @@
   ],
   "clothing.mod.armorinsert_asbestos": [
    {
+    "c": "scientist_boat",
+    "chance": 0.0143,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0143,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.0134,
     "min": 1,
@@ -2471,6 +3937,41 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.0036,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -2485,6 +3986,20 @@
     "bp": false
    },
    {
+    "c": "scientist_boat",
+    "chance": 0.01,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.01,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.0078,
     "min": 1,
@@ -2508,6 +4023,41 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.0025,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -2524,6 +4074,27 @@
    {
     "c": "military",
     "chance": 0.05,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_boat",
+    "chance": 0.0043,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0043,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.0011,
     "min": 1,
     "max": 1,
     "bp": false
@@ -2547,6 +4118,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -2601,6 +4207,43 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "coffin.storage": [
+   {
+    "c": "scarecrow",
+    "chance": 0.1597,
+    "min": 1,
+    "max": 2,
+    "bp": false
    }
   ],
   "computerstation": [
@@ -2638,6 +4281,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "cookingworkbench": [
@@ -2661,9 +4332,51 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "corn": [
+   {
+    "c": "scarecrow",
+    "chance": 0.5,
+    "min": 3,
+    "max": 4,
+    "bp": false
+   },
    {
     "c": "cache",
     "chance": 0.3434,
@@ -2722,6 +4435,15 @@
     "chance": 0.284,
     "min": 1,
     "max": 2,
+    "bp": false
+   }
+  ],
+  "cratecostume": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0227,
+    "min": 1,
+    "max": 1,
     "bp": false
    }
   ],
@@ -2950,6 +4672,20 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "door.hinged.toptier": [
@@ -2977,6 +4713,20 @@
    {
     "c": "heli",
     "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3017,6 +4767,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "dropbox": [
@@ -3037,6 +4815,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3091,6 +4904,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.audioalarm": [
@@ -3111,6 +4952,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3153,6 +5029,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0028,
     "min": 1,
@@ -3162,6 +5045,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3216,6 +5120,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.battery.rechargable.small": [
@@ -3236,6 +5168,41 @@
    {
     "c": "underwater_adv",
     "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3262,6 +5229,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.button": [
@@ -3282,6 +5284,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3324,6 +5361,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0028,
     "min": 1,
@@ -3333,6 +5377,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3373,6 +5438,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.doorcontroller": [
@@ -3396,6 +5489,41 @@
     "min": 1,
     "max": 2,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.flasherlight": [
@@ -3418,6 +5546,41 @@
     "chance": 0.0072,
     "min": 1,
     "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
     "bp": false
    }
   ],
@@ -3458,6 +5621,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0014,
     "min": 1,
@@ -3467,6 +5637,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0014,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3504,6 +5695,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3546,6 +5765,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0022,
     "min": 1,
@@ -3555,6 +5781,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0022,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3581,12 +5828,75 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.igniter": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -3650,6 +5960,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0028,
     "min": 1,
@@ -3659,6 +5976,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3685,6 +6023,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.pressurepad": [
@@ -3705,6 +6078,41 @@
    {
     "c": "underwater_adv",
     "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3759,6 +6167,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.rf.broadcaster": [
@@ -3798,6 +6234,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0022,
     "min": 1,
@@ -3807,6 +6250,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0022,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3849,6 +6313,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0022,
     "min": 1,
@@ -3858,6 +6329,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0022,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3898,6 +6390,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.sirenlight": [
@@ -3921,6 +6441,41 @@
     "min": 1,
     "max": 2,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.solarpanel.large": [
@@ -3941,6 +6496,41 @@
    {
     "c": "underwater_adv",
     "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -3967,6 +6557,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.sprinkler": [
@@ -3990,6 +6615,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.switch": [
@@ -4010,6 +6670,41 @@
    {
     "c": "underwater_adv",
     "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4052,6 +6747,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0014,
     "min": 1,
@@ -4061,6 +6763,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0014,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4087,6 +6810,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electric.xorswitch": [
@@ -4107,6 +6865,41 @@
    {
     "c": "underwater_adv",
     "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4133,6 +6926,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "electrical.combiner": [
@@ -4155,6 +6983,41 @@
     "chance": 0.0072,
     "min": 1,
     "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
     "bp": false
    }
   ],
@@ -4195,6 +7058,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0028,
     "min": 1,
@@ -4204,6 +7074,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0028,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4241,6 +7132,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4288,6 +7207,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "explosive.timed": [
@@ -4332,6 +7286,20 @@
     "min": 1,
     "max": 2,
     "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "explosives": [
@@ -4355,12 +7323,54 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "fireplace.stone": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -4379,6 +7389,20 @@
     "chance": 0.0723,
     "min": 1,
     "max": 4,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0506,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0506,
+    "min": 1,
+    "max": 2,
     "bp": false
    },
    {
@@ -4408,6 +7432,20 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "flameturret": [
@@ -4431,9 +7469,65 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "flare": [
+   {
+    "c": "scientist_boat",
+    "chance": 0.3634,
+    "min": 4,
+    "max": 15,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.3634,
+    "min": 4,
+    "max": 15,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.2361,
+    "min": 4,
+    "max": 10,
+    "bp": false
+   },
    {
     "c": "mine",
     "chance": 0.0769,
@@ -4458,6 +7552,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 4,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 4,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 4,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 4,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 4,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 4,
     "max": 5,
     "bp": false
@@ -4490,6 +7619,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4537,6 +7701,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "floor.ladder.hatch.toptier": [
@@ -4550,6 +7742,20 @@
    {
     "c": "heli",
     "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4573,6 +7779,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4613,6 +7854,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "floor.triangle.ladder.hatch.toptier": [
@@ -4626,6 +7895,20 @@
    {
     "c": "heli",
     "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4652,6 +7935,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "fluid.splitter": [
@@ -4672,6 +7990,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4698,6 +8051,131 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "frankensteinmask": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0227,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "frankensteins.monster.01.head": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "frankensteins.monster.01.legs": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "frankensteins.monster.01.torso": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "frankensteins.monster.02.head": [
+   {
+    "c": "scarecrow",
+    "chance": 0.1667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "frankensteins.monster.02.legs": [
+   {
+    "c": "scarecrow",
+    "chance": 0.1667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "frankensteins.monster.02.torso": [
+   {
+    "c": "scarecrow",
+    "chance": 0.1667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "frankensteins.monster.03.head": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "frankensteins.monster.03.legs": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "frankensteins.monster.03.torso": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0833,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "fridge": [
@@ -4721,12 +8199,75 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "fun.guitar": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -4774,6 +8315,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "fuse": [
@@ -4806,8 +8375,43 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0875,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0875,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0743,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0743,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.0477,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0473,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4878,6 +8482,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "gates.external.high.wood": [
@@ -4898,6 +8530,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -4954,8 +8621,43 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0875,
+    "min": 2,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0875,
+    "min": 2,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0743,
+    "min": 2,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0743,
+    "min": 2,
+    "max": 6,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.0477,
+    "min": 2,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0473,
     "min": 2,
     "max": 2,
     "bp": false
@@ -5000,6 +8702,43 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "ghostsheet": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0227,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5056,6 +8795,15 @@
     "bp": false
    }
   ],
+  "gravestone": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0682,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "green.berry": [
    {
     "c": "cache",
@@ -5069,6 +8817,20 @@
    {
     "c": "elite",
     "chance": 0.065,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.05,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.05,
     "min": 1,
     "max": 2,
     "bp": false
@@ -5090,6 +8852,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5116,6 +8913,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "grenade.f1": [
@@ -5134,6 +8966,13 @@
     "bp": false
    },
    {
+    "c": "scarecrow",
+    "chance": 0.1136,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.0979,
     "min": 1,
@@ -5148,6 +8987,41 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.0506,
+    "min": 1,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0506,
+    "min": 1,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "scientist_boat",
+    "chance": 0.0286,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0286,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.0071,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "military",
     "chance": 0.0042,
     "min": 1,
@@ -5164,6 +9038,20 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5178,6 +9066,20 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.0506,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0506,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.0134,
     "min": 1,
@@ -5201,6 +9103,20 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5215,6 +9131,20 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.0506,
+    "min": 1,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0506,
+    "min": 1,
+    "max": 5,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.0134,
     "min": 1,
@@ -5238,6 +9168,20 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5278,6 +9222,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "gunpowder": [
@@ -5310,6 +9282,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "hab.armor": [
@@ -5333,6 +9340,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "hammer.salvaged": [
@@ -5353,6 +9395,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5393,12 +9470,68 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "hat.beenie": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -5415,6 +9548,34 @@
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -5440,6 +9601,34 @@
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -5477,6 +9666,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5531,6 +9755,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "hazmatsuit": [
@@ -5544,6 +9803,55 @@
    {
     "c": "crate_wagon",
     "chance": 0.04,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_boat",
+    "chance": 0.0286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0191,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0184,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0184,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0184,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0184,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5563,6 +9871,13 @@
     "bp": false
    },
    {
+    "c": "scientist_junkpile",
+    "chance": 0.0071,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "military",
     "chance": 0.0042,
     "min": 1,
@@ -5579,6 +9894,27 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5628,6 +9964,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "heavy.plate.jacket": [
@@ -5662,6 +10026,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5702,6 +10094,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "hmlmg": [
@@ -5722,6 +10142,20 @@
    {
     "c": "heli",
     "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5759,6 +10193,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5871,6 +10333,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "hopper": [
@@ -5891,6 +10381,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -5938,6 +10463,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "horse.shoes.advanced": [
@@ -5979,6 +10532,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -6033,6 +10614,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "industrial.combiner": [
@@ -6056,6 +10665,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "industrial.conveyor": [
@@ -6076,6 +10720,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -6116,6 +10795,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "industrial.splitter": [
@@ -6136,6 +10843,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -6162,6 +10904,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "jacket": [
@@ -6182,6 +10959,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -6219,6 +11031,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -6305,6 +11152,73 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "keycard_green": [
+   {
+    "c": "scientist_boat",
+    "chance": 0.3634,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.3634,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.2361,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   }
+  ],
+  "knife.butcher": [
+   {
+    "c": "scarecrow",
+    "chance": 0.2941,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "knife.combat": [
@@ -6342,6 +11256,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "ladder.wooden.wall": [
@@ -6369,6 +11318,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -6446,6 +11430,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "lmg.m249": [
@@ -6499,6 +11511,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "longsword": [
@@ -6536,6 +11576,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "lowgradefuel": [
@@ -6561,8 +11629,36 @@
     "bp": false
    },
    {
+    "c": "scarecrow",
+    "chance": 0.1176,
+    "min": 20,
+    "max": 39,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0975,
+    "min": 35,
+    "max": 135,
+    "bp": false
+   },
+   {
     "c": "elite",
     "chance": 0.065,
+    "min": 35,
+    "max": 35,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0638,
+    "min": 150,
+    "max": 150,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.05,
     "min": 35,
     "max": 35,
     "bp": false
@@ -6626,12 +11722,75 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "mailbox": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -6653,6 +11812,34 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "barrel",
     "chance": 0.0113,
     "min": 1,
@@ -6664,6 +11851,34 @@
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -6729,6 +11944,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "metal.facemask": [
@@ -6749,6 +11999,20 @@
    {
     "c": "heli",
     "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
     "min": 1,
     "max": 1,
     "bp": false
@@ -6781,6 +12045,20 @@
    {
     "c": "heli",
     "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
     "min": 1,
     "max": 1,
     "bp": false
@@ -6851,10 +12129,45 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.1167,
+    "min": 15,
+    "max": 24,
+    "bp": false
+   },
+   {
     "c": "mine",
     "chance": 0.0769,
     "min": 1,
     "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0568,
+    "min": 15,
+    "max": 24,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0292,
+    "min": 15,
+    "max": 24,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0239,
+    "min": 15,
+    "max": 24,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0239,
+    "min": 15,
+    "max": 24,
     "bp": false
    }
   ],
@@ -6900,6 +12213,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "metalblade": [
@@ -6911,8 +12252,36 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.3956,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.3956,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.3819,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.2851,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.2851,
     "min": 1,
     "max": 2,
     "bp": false
@@ -7018,10 +12387,66 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.1167,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0875,
+    "min": 1,
+    "max": 16,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0875,
+    "min": 1,
+    "max": 16,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0751,
+    "min": 1,
+    "max": 9,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0743,
+    "min": 1,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0743,
+    "min": 1,
+    "max": 12,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.0477,
     "min": 1,
     "max": 4,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0239,
+    "min": 5,
+    "max": 5,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0239,
+    "min": 5,
+    "max": 5,
     "bp": false
    },
    {
@@ -7062,6 +12487,34 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0875,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0875,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0743,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0743,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.0477,
     "min": 1,
@@ -7069,8 +12522,24 @@
     "bp": false
    },
    {
+    "c": "scientist",
+    "chance": 0.0473,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "barrel",
     "chance": 0.0143,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "military flamethrower": [
+   {
+    "c": "heavy",
+    "chance": 0.05,
     "min": 1,
     "max": 1,
     "bp": false
@@ -7111,12 +12580,54 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "minigun": [
    {
     "c": "locked",
     "chance": 0.1,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.05,
     "min": 1,
     "max": 1,
     "bp": false
@@ -7140,6 +12651,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -7180,6 +12726,59 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "multiplegrenadelauncher": [
+   {
+    "c": "heavy",
+    "chance": 0.05,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.05,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "mummymask": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0227,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "nightvisiongoggles": [
@@ -7217,6 +12816,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "oretea": [
@@ -7232,6 +12859,34 @@
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -7293,12 +12948,75 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "pants.shorts": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -7346,9 +13064,58 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "pickaxe": [
+   {
+    "c": "scientist_boat",
+    "chance": 0.3634,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.3634,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.2361,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
    {
     "c": "cannons",
     "chance": 0.11,
@@ -7397,6 +13164,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "pistol.m92": [
@@ -7417,6 +13219,20 @@
    {
     "c": "elite",
     "chance": 0.0203,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0156,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0156,
     "min": 1,
     "max": 1,
     "bp": false
@@ -7454,6 +13270,20 @@
    {
     "c": "elite",
     "chance": 0.0203,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0156,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0156,
     "min": 1,
     "max": 1,
     "bp": false
@@ -7508,6 +13338,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "pistol.revolver": [
@@ -7531,6 +13389,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "pistol.semiauto": [
@@ -7539,6 +13432,20 @@
     "chance": 0.0723,
     "min": 1,
     "max": 4,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0506,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0506,
+    "min": 1,
+    "max": 2,
     "bp": false
    },
    {
@@ -7568,6 +13475,20 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "piston1": [
@@ -7588,10 +13509,47 @@
     "bp": false
    }
   ],
+  "pitchfork": [
+   {
+    "c": "scarecrow",
+    "chance": 0.2941,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "planter.large": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -7613,8 +13571,45 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "barrel",
     "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "pookie.bear": [
+   {
+    "c": "gingerbread",
+    "chance": 0.1064,
     "min": 1,
     "max": 1,
     "bp": false
@@ -7699,6 +13694,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "prisonerhood": [
@@ -7722,6 +13745,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "propanetank": [
@@ -7733,8 +13791,36 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.2222,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.2222,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.2084,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.1542,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.1542,
     "min": 1,
     "max": 2,
     "bp": false
@@ -7779,6 +13865,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -7839,6 +13953,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "revolver.hc": [
@@ -7873,6 +14022,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -7915,6 +14092,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0014,
     "min": 1,
@@ -7924,6 +14108,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0014,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -7966,6 +14171,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "crate",
     "chance": 0.0014,
     "min": 1,
@@ -7975,6 +14187,27 @@
    {
     "c": "crate_wagon",
     "chance": 0.0014,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -8000,6 +14233,20 @@
     "chance": 0.0222,
     "min": 1,
     "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.018,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.018,
+    "min": 1,
+    "max": 2,
     "bp": false
    },
    {
@@ -8033,6 +14280,20 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.018,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.018,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "bradley",
     "chance": 0.0087,
     "min": 1,
@@ -8058,6 +14319,20 @@
    {
     "c": "elite",
     "chance": 0.0081,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0062,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0062,
     "min": 1,
     "max": 1,
     "bp": false
@@ -8100,6 +14375,20 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.0094,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0094,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "heli",
     "chance": 0.0094,
     "min": 1,
@@ -8132,6 +14421,20 @@
    {
     "c": "elite",
     "chance": 0.0122,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0094,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0094,
     "min": 1,
     "max": 1,
     "bp": false
@@ -8200,6 +14503,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "rifle.sks": [
@@ -8220,6 +14551,20 @@
    {
     "c": "heli",
     "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
     "min": 1,
     "max": 1,
     "bp": false
@@ -8267,6 +14612,48 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.0933,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_boat",
+    "chance": 0.0413,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0413,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0233,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0191,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0191,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "riot.helmet": [
@@ -8301,6 +14688,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -8355,6 +14777,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "roadsign.jacket": [
@@ -8403,6 +14853,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -8457,6 +14935,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "roadsigns": [
@@ -8496,8 +15002,43 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0875,
+    "min": 2,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0875,
+    "min": 2,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0743,
+    "min": 2,
+    "max": 9,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0743,
+    "min": 2,
+    "max": 9,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.0477,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0473,
     "min": 2,
     "max": 3,
     "bp": false
@@ -8545,6 +15086,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "rope": [
@@ -8563,8 +15132,36 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.3956,
+    "min": 1,
+    "max": 6,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.3956,
+    "min": 1,
+    "max": 6,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.3819,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.2851,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.2851,
     "min": 1,
     "max": 4,
     "bp": false
@@ -8586,6 +15183,34 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "barrel",
     "chance": 0.0113,
     "min": 1,
@@ -8602,6 +15227,34 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "barrel",
     "chance": 0.0113,
     "min": 1,
@@ -8610,6 +15263,13 @@
    }
   ],
   "salvaged.cleaver": [
+   {
+    "c": "gingerbread",
+    "chance": 0.0866,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
    {
     "c": "tools",
     "chance": 0.049,
@@ -8641,6 +15301,34 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -8692,6 +15380,50 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "scarecrowhead": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0227,
     "min": 1,
     "max": 1,
     "bp": false
@@ -8832,10 +15564,31 @@
     "bp": false
    },
    {
+    "c": "scientist_boat",
+    "chance": 0.3634,
+    "min": 8,
+    "max": 33,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.3634,
+    "min": 8,
+    "max": 33,
+    "bp": false
+   },
+   {
     "c": "locked",
     "chance": 0.3333,
     "min": 140,
     "max": 159,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.2361,
+    "min": 8,
+    "max": 22,
     "bp": false
    }
   ],
@@ -8883,12 +15636,61 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "semibody": [
    {
+    "c": "scientist_boat",
+    "chance": 0.3634,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.3634,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "tech2",
     "chance": 0.2653,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.2361,
     "min": 1,
     "max": 2,
     "bp": false
@@ -8915,8 +15717,43 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0875,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0875,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0743,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0743,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.0477,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0473,
     "min": 1,
     "max": 1,
     "bp": false
@@ -8938,8 +15775,36 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.2222,
+    "min": 3,
+    "max": 12,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.2222,
+    "min": 3,
+    "max": 12,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.2084,
+    "min": 3,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.1542,
+    "min": 3,
+    "max": 8,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.1542,
     "min": 3,
     "max": 8,
     "bp": false
@@ -9003,8 +15868,43 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0875,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0875,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0743,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0743,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.0477,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0473,
     "min": 1,
     "max": 1,
     "bp": false
@@ -9021,6 +15921,34 @@
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -9054,12 +15982,75 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "shirt.tanktop": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -9107,12 +16098,61 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "shotgun.double": [
    {
     "c": "elite",
     "chance": 0.065,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0584,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.05,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.05,
     "min": 1,
     "max": 1,
     "bp": false
@@ -9137,6 +16177,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "shotgun.m4": [
@@ -9150,6 +16218,20 @@
    {
     "c": "elite",
     "chance": 0.0122,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0094,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0094,
     "min": 1,
     "max": 1,
     "bp": false
@@ -9218,6 +16300,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "shotgun.spas12": [
@@ -9243,6 +16353,20 @@
     "bp": false
    },
    {
+    "c": "heavy",
+    "chance": 0.0062,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0062,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "heli",
     "chance": 0.0062,
     "min": 1,
@@ -9258,6 +16382,13 @@
    }
   ],
   "shotgun.waterpipe": [
+   {
+    "c": "gingerbread",
+    "chance": 0.1078,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
    {
     "c": "underwater_adv",
     "chance": 0.0111,
@@ -9275,6 +16406,34 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -9315,6 +16474,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "shutter.metal.embrasure.b": [
@@ -9352,6 +16539,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "shutter.wood.a": [
@@ -9363,8 +16578,45 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "barrel",
     "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "sickle": [
+   {
+    "c": "scarecrow",
+    "chance": 0.2941,
     "min": 1,
     "max": 1,
     "bp": false
@@ -9405,12 +16657,75 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "sign.wooden.huge": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -9427,6 +16742,34 @@
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -9474,6 +16817,43 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "sled.xmas": [
+   {
+    "c": "gingerbread",
+    "chance": 0.0638,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "small.oil.refinery": [
@@ -9508,6 +16888,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -9599,6 +17007,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "smart.switch": [
@@ -9636,6 +17072,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "smg.2": [
@@ -9658,6 +17122,20 @@
     "chance": 0.028,
     "min": 1,
     "max": 4,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0162,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0162,
+    "min": 1,
+    "max": 2,
     "bp": false
    },
    {
@@ -9698,6 +17176,20 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
     "min": 1,
     "max": 1,
     "bp": false
@@ -9733,10 +17225,38 @@
     "bp": false
    },
    {
+    "c": "scientist_boat",
+    "chance": 0.0331,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0331,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "heli",
     "chance": 0.0222,
     "min": 1,
     "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.018,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.018,
+    "min": 1,
+    "max": 2,
     "bp": false
    },
    {
@@ -9767,6 +17287,20 @@
     "chance": 0.028,
     "min": 1,
     "max": 4,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0162,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0162,
+    "min": 1,
+    "max": 2,
     "bp": false
    },
    {
@@ -9807,6 +17341,20 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
     "min": 1,
     "max": 1,
     "bp": false
@@ -9854,6 +17402,73 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.14,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.035,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_boat",
+    "chance": 0.0286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.0071,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "snowball": [
+   {
+    "c": "gingerbread",
+    "chance": 0.1277,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   }
+  ],
+  "snowballgun": [
+   {
+    "c": "gingerbread",
+    "chance": 0.0638,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "sparkplug1": [
@@ -9895,12 +17510,84 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "spiderweb": [
+   {
+    "c": "scarecrow",
+    "chance": 0.1597,
+    "min": 1,
+    "max": 2,
+    "bp": false
    }
   ],
   "spikes.floor": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -9922,8 +17609,45 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
     "c": "barrel",
     "chance": 0.0113,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "stocking.small": [
+   {
+    "c": "gingerbread",
+    "chance": 0.1064,
     "min": 1,
     "max": 1,
     "bp": false
@@ -9944,6 +17668,15 @@
     "chance": 0.0769,
     "min": 1,
     "max": 1,
+    "bp": false
+   }
+  ],
+  "stones": [
+   {
+    "c": "gingerbread",
+    "chance": 0.2128,
+    "min": 1000,
+    "max": 1000,
     "bp": false
    }
   ],
@@ -9982,6 +17715,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "storageadaptor": [
@@ -10005,6 +17766,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "supply.signal": [
@@ -10017,6 +17813,13 @@
    },
    {
     "c": "locked",
+    "chance": 0.0143,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
     "chance": 0.0143,
     "min": 1,
     "max": 1,
@@ -10042,14 +17845,84 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0036,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0029,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0029,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "syringe.medical": [
+   {
+    "c": "heavy",
+    "chance": 0.889,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.889,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
    {
     "c": "jungle",
     "chance": 0.4213,
     "min": 1,
     "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_boat",
+    "chance": 0.3634,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.3634,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.3353,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.3338,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.2361,
+    "min": 1,
+    "max": 2,
     "bp": false
    },
    {
@@ -10067,8 +17940,29 @@
     "bp": false
    },
    {
+    "c": "tunnel_dweller",
+    "chance": 0.1667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.1667,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "medical",
     "chance": 0.1,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0638,
     "min": 1,
     "max": 1,
     "bp": false
@@ -10130,12 +18024,75 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "table": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -10166,6 +18123,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -10222,6 +18214,13 @@
     "bp": false
    },
    {
+    "c": "scientist_nvg",
+    "chance": 0.0611,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "tools",
     "chance": 0.0308,
     "min": 1,
@@ -10231,6 +18230,55 @@
    {
     "c": "underwater",
     "chance": 0.0206,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0172,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0125,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0125,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0019,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0019,
     "min": 1,
     "max": 1,
     "bp": false
@@ -10245,8 +18293,36 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.2222,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.2222,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "underwater",
     "chance": 0.2084,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.1542,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.1542,
     "min": 1,
     "max": 2,
     "bp": false
@@ -10322,6 +18398,55 @@
     "min": 4,
     "max": 8,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.1167,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0292,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_boat",
+    "chance": 0.0286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0239,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0239,
+    "min": 2,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.0071,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "telephone": [
@@ -10345,6 +18470,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "tincan.alarm": [
@@ -10365,6 +18525,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -10393,10 +18588,38 @@
     "bp": false
    },
    {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
     "c": "mine",
     "chance": 0.0256,
     "min": 1,
     "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
     "bp": false
    },
    {
@@ -10425,6 +18648,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -10465,6 +18723,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "tshirt": [
@@ -10485,6 +18771,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -10525,12 +18846,75 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "tunalight": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -10582,6 +18966,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "wall.external.high.stone": [
@@ -10616,6 +19035,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -10656,6 +19103,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "wall.frame.cell.gate": [
@@ -10693,6 +19168,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "wall.frame.fence": [
@@ -10716,6 +19219,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "wall.frame.fence.gate": [
@@ -10736,6 +19274,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -10776,6 +19349,52 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "wall.graveyard.fence": [
+   {
+    "c": "scarecrow",
+    "chance": 0.1597,
+    "min": 1,
+    "max": 4,
+    "bp": false
+   }
+  ],
+  "wall.ice.wall": [
+   {
+    "c": "gingerbread",
+    "chance": 0.0638,
+    "min": 3,
+    "max": 4,
+    "bp": false
    }
   ],
   "wall.window.bars.metal": [
@@ -10799,6 +19418,41 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "wall.window.bars.toptier": [
@@ -10819,6 +19473,20 @@
    {
     "c": "heli",
     "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
     "min": 1,
     "max": 1,
     "bp": false
@@ -10859,6 +19527,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "watchtower.wood": [
@@ -10882,12 +19578,75 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "water.barrel": [
    {
     "c": "basic",
     "chance": 0.0479,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0335,
+    "min": 1,
+    "max": 3,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0225,
+    "min": 1,
+    "max": 2,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0225,
     "min": 1,
     "max": 2,
     "bp": false
@@ -10935,6 +19694,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "water.catcher.small": [
@@ -10955,6 +19742,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -11032,6 +19854,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "weapon.mod.8x.scope": [
@@ -11045,6 +19895,20 @@
    {
     "c": "elite",
     "chance": 0.0081,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0062,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0062,
     "min": 1,
     "max": 1,
     "bp": false
@@ -11129,12 +19993,61 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "weapon.mod.flashlight": [
    {
+    "c": "scientist_boat",
+    "chance": 0.0286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_tunnel",
+    "chance": 0.0286,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
     "c": "underwater_adv",
     "chance": 0.0111,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_junkpile",
+    "chance": 0.0071,
     "min": 1,
     "max": 1,
     "bp": false
@@ -11149,6 +20062,41 @@
    {
     "c": "crate_wagon",
     "chance": 0.0044,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scarecrow",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "tunnel_dweller",
+    "chance": 0.0016,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "underwater_dweller",
+    "chance": 0.0016,
     "min": 1,
     "max": 1,
     "bp": false
@@ -11189,6 +20137,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "weapon.mod.holosight": [
@@ -11226,6 +20202,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "weapon.mod.lasersight": [
@@ -11255,6 +20259,20 @@
     "chance": 0.019,
     "min": 1,
     "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
     "bp": false
    }
   ],
@@ -11290,6 +20308,34 @@
    {
     "c": "military_wagon",
     "chance": 0.0042,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
     "min": 1,
     "max": 1,
     "bp": false
@@ -11330,6 +20376,34 @@
     "min": 1,
     "max": 1,
     "bp": false
+   },
+   {
+    "c": "scientist_nvg",
+    "chance": 0.003,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "scientist",
+    "chance": 0.0007,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0006,
+    "min": 1,
+    "max": 1,
+    "bp": false
    }
   ],
   "weapon.mod.silencer": [
@@ -11343,6 +20417,20 @@
    {
     "c": "heli",
     "chance": 0.0066,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
     "min": 1,
     "max": 1,
     "bp": false
@@ -11375,6 +20463,20 @@
     "chance": 0.019,
     "min": 1,
     "max": 2,
+    "bp": false
+   },
+   {
+    "c": "heavy",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   },
+   {
+    "c": "heavy_bradley",
+    "chance": 0.0024,
+    "min": 1,
+    "max": 1,
     "bp": false
    }
   ],
@@ -11439,6 +20541,15 @@
    {
     "c": "underwater",
     "chance": 0.0436,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "woodcross": [
+   {
+    "c": "scarecrow",
+    "chance": 0.0682,
     "min": 1,
     "max": 1,
     "bp": false
@@ -11569,12 +20680,46 @@
     "bp": false
    }
   ],
+  "xmas.decoration.baubels": [
+   {
+    "c": "gingerbread",
+    "chance": 0.0266,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "xmas.decoration.lights": [
+   {
+    "c": "gingerbread",
+    "chance": 0.0106,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
+  "xmas.decoration.star": [
+   {
+    "c": "gingerbread",
+    "chance": 0.0266,
+    "min": 1,
+    "max": 1,
+    "bp": false
+   }
+  ],
   "xmas.present.medium": [
    {
     "c": "santa",
     "chance": 1.0,
     "min": 2,
     "max": 6,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.25,
+    "min": 1,
+    "max": 1,
     "bp": false
    }
   ],
@@ -11584,6 +20729,13 @@
     "chance": 1.0,
     "min": 2,
     "max": 10,
+    "bp": false
+   },
+   {
+    "c": "gingerbread",
+    "chance": 0.75,
+    "min": 1,
+    "max": 1,
     "bp": false
    }
   ],

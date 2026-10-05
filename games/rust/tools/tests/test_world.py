@@ -153,6 +153,19 @@ class TestContainerChances(unittest.TestCase):
         self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (0.5, 1, 1))
 
 
+class TestNpcChances(unittest.TestCase):
+    """Un NPC elige un equipo al azar (todos igual de probables): la chance es el promedio entre equipos."""
+
+    def test_promedio_entre_equipos(self):
+        a = {("x", False): (1.0, 1, 1)}
+        b = {("x", False): (0.5, 1, 2), ("y", False): (0.2, 3, 3)}
+        got = world.npc_chances([a, b])
+        self.assertAlmostEqual(got[("x", False)][0], 0.75)
+        self.assertEqual(got[("x", False)][1:], (1, 2))
+        self.assertAlmostEqual(got[("y", False)][0], 0.1)
+        self.assertEqual(got[("y", False)][1:], (3, 3))
+
+
 class _FakeFile:
     def __init__(self):
         self.name, self.externals, self.objects = "fake", [], {}
@@ -292,6 +305,34 @@ class TestWorldInGame(unittest.TestCase):
             self.assertIsNotNone(tree, tt["m_Name"])
             for p in world.roll_chances(tree, lambda x: x).values():
                 self.assertTrue(0 <= p <= 1 + 1e-9, tt["m_Name"])
+
+    def test_cientificos_pesados(self):
+        # Contra rusthelp.com (2026-10-05): AK 1,8 % ×1–2 y munición de 40 mm 20,86 % ×4–21 en los de la plataforma y
+        # del Bradley.
+        ak = {r["c"]: r for r in data()["loot"]["items"]["rifle.ak"] if not r["bp"]}
+        for key in ("heavy", "heavy_bradley"):
+            self.assertAlmostEqual(ak[key]["chance"], 0.018, places=3)
+            self.assertEqual((ak[key]["min"], ak[key]["max"]), (1, 2))
+        mgl = {r["c"]: r for r in data()["loot"]["items"]["ammo.grenadelauncher.buckshot"]}
+        self.assertAlmostEqual(mgl["heavy"]["chance"], 0.2085, places=3)
+        self.assertEqual((mgl["heavy"]["min"], mgl["heavy"]["max"]), (4, 21))
+
+    def test_cientificos_y_moradores(self):
+        gears = {r["c"]: r for r in data()["loot"]["items"]["gears"] if not r["bp"]}
+        self.assertAlmostEqual(gears["scientist"]["chance"], 0.0473, places=3)
+        self.assertAlmostEqual(gears["tunnel_dweller"]["chance"], 0.0743, places=3)
+        self.assertAlmostEqual(gears["scarecrow"]["chance"], 0.0875, places=3)
+        srcs = data()["loot"]["containers"]
+        self.assertEqual((srcs["heavy"]["kind"], srcs["heavy"]["worn"]), ("npc", "none"))
+        self.assertEqual(srcs["tunnel_dweller"]["es"], "Morador subterráneo")
+        self.assertEqual(srcs["scarecrow"]["event"], "halloween")
+        self.assertEqual(srcs["gingerbread"]["event"], "xmas")
+        for key in set(world.NPCS.values()):
+            self.assertTrue(srcs[key]["en"] and srcs[key]["es"], key)
+
+    def test_los_npc_de_una_clave_tienen_la_misma_tabla(self):
+        for key in set(world.NPCS.values()):
+            self.assertEqual(len(set(data()["tables"][key].values())), 1, key)
 
 
 if __name__ == "__main__":
