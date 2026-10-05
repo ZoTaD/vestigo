@@ -118,23 +118,27 @@ export function selectionMix(sel: Selection): Mix | null {
   return Object.keys(counts).length ? { counts, sulfur } : null;
 }
 
-/** `?o=building.stone:2,door.hinged.metal` → { "building.stone": 2, "door.hinged.metal": 1 }. Lo desconocido se ignora. */
+/**
+ * `?o=building.stone:2,door.hinged.metal` → { "building.stone": 2, "door.hinged.metal": 1 }. Lo desconocido se ignora, la
+ * cantidad tiene que ser sólo dígitos (nada de "1e1" o "0x5") y un id repetido suma, con el tope de siempre.
+ */
 export function parseSelection(search: string): Selection {
   const raw = new URLSearchParams(search).get("o");
   const out: Selection = {};
   for (const part of (raw ?? "").split(",")) {
     const [id, q] = part.split(":");
     if (!BY_ID.has(id)) continue;
+    if (q !== undefined && !/^\d+$/.test(q)) continue;
     const n = q === undefined ? 1 : Number(q);
-    if (Number.isInteger(n) && n > 0) out[id] = Math.min(n, MAX_QTY);
+    if (n > 0) out[id] = Math.min((out[id] ?? 0) + n, MAX_QTY);
   }
   return out;
 }
 
-/** La selección para la URL; vacía, sin `?`. La cantidad 1 no se escribe. */
+/** La selección para la URL; vacía, sin `?`. Sólo ids conocidos y enteros de 1 a 99; la cantidad 1 no se escribe. */
 export function formatSelection(sel: Selection): string {
   const parts = Object.entries(sel)
-    .filter(([, n]) => n > 0)
+    .filter(([id, n]) => BY_ID.has(id) && Number.isInteger(n) && n >= 1 && n <= MAX_QTY)
     .map(([id, n]) => (n === 1 ? id : `${id}:${n}`));
   return parts.length ? `?o=${parts.join(",")}` : "";
 }

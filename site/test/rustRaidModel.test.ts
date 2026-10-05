@@ -61,4 +61,42 @@ describe("el modelo de la calculadora de raideo", () => {
     expect(targetForItem("rifle.ak")).toBeUndefined();
     expect(explosiveById("explosive.timed")?.cost?.sulfur).toBe(2200);
   });
+  it("caso fijo: la pared de madera sale con 49 balas explosivas, 1.225 de azufre", () => {
+    const mix = cheapestMix(t("building.wood"))!;
+    expect(mix.counts).toEqual({ "ammo.rifle.explosive": 49 });
+    expect(mix.sulfur).toBe(1225);
+  });
+
+  it("el azufre de la mezcla es la suma de cantidad por costo, en todos los objetivos", () => {
+    for (const target of TARGETS) {
+      const mix = cheapestMix(target);
+      if (!mix) continue;
+      const sum = Object.entries(mix.counts).reduce((s, [id, n]) => s + n * explosiveById(id)!.cost!.sulfur, 0);
+      expect(mix.sulfur).toBe(sum);
+    }
+  });
+
+  it("la granada HE de 40 mm no se craftea: cuenta golpes pero el azufre es null", () => {
+    const got = selectionCost({ "building.stone": 1 }, "ammo.grenadelauncher.he")!;
+    expect(got.count).toBeGreaterThan(0);
+    expect(got.sulfur).toBeNull();
+    expect(got.gunpowder).toBeNull();
+    expect(got.time).toBeNull();
+  });
+
+  it("parseSelection acepta una URL sin ? y suma los ids repetidos con tope en 99", () => {
+    expect(parseSelection("o=building.stone:2")).toEqual({ "building.stone": 2 });
+    expect(parseSelection("?o=building.stone:2,building.stone:3,door.hinged.metal")).toEqual({ "building.stone": 5, "door.hinged.metal": 1 });
+    expect(parseSelection("?o=building.stone:90,building.stone:90")).toEqual({ "building.stone": 99 });
+  });
+
+  it("parseSelection sólo acepta enteros simples como cantidad", () => {
+    expect(parseSelection("?o=building.stone:1e1,building.wood:0x5,building.metal:-2,door.hinged.metal:2.5")).toEqual({});
+  });
+
+  it("formatSelection normaliza: descarta ids desconocidos y cantidades que no son enteros de 1 a 99", () => {
+    expect(formatSelection({ "no.existe": 3, "building.stone": 2.5, "building.wood": 0, "building.metal": -1, "door.hinged.metal": 150, "door.hinged.wood": 4 })).toBe(
+      "?o=door.hinged.wood:4",
+    );
+  });
 });
