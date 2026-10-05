@@ -13,8 +13,10 @@ es la de los assets y Netlify la manda con 301 a `/en/rust`), sacados del juego 
 
 1. Actualizá el juego en Steam.
 2. `python games/rust/tools/extract.py` (objetos, recetas, reciclaje, íconos).
-3. `python games/rust/tools/world.py` (botín de las cajas y tiendas de los monumentos; ~1 min).
-4. `python games/rust/tools/site_data.py` (los archivos que baja la pestaña Objetos; un segundo).
-5. `python -m unittest discover -s games/rust/tools/tests -v`. Si un número de los tests cambió, revisá en el juego
+3. `python games/rust/tools/skins.py` (las skins del juego con su ícono; ~3 min, después de `extract.py` porque usa sus
+   íconos para las skins que son un objeto propio).
+4. `python games/rust/tools/world.py` (botín de las cajas y tiendas de los monumentos; ~1 min).
+5. `python games/rust/tools/site_data.py` (los archivos que baja la pestaña Objetos; un segundo).
+6. `python -m unittest discover -s games/rust/tools/tests -v`. Si un número de los tests cambió, revisá en el juego
    que el cambio sea real antes de tocar el test.
-6. Commiteá `games/rust/data` y `site/public/rust/items`.
+7. Commiteá `games/rust/data`, `site/public/rust/items` y `site/public/rust/skins`.

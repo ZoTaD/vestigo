@@ -1,0 +1,2960 @@
+{
+ "items": {
+  "autoturret": [
+   {
+    "id": 10479,
+    "name": {
+     "en": "Industrial Auto Turret",
+     "es": "Torreta automática industrial"
+    },
+    "icon": "items/industrial.autoturret",
+    "workshop": false
+   }
+  ],
+  "beachchair": [
+   {
+    "id": 13000,
+    "name": {
+     "en": "Camo",
+     "es": "Camuflaje"
+    },
+    "icon": "skins/13000",
+    "workshop": false
+   },
+   {
+    "id": 13001,
+    "name": {
+     "en": "Flamingo",
+     "es": "Flamenco"
+    },
+    "icon": "skins/13001",
+    "workshop": false
+   },
+   {
+    "id": 13002,
+    "name": {
+     "en": "Leaves",
+     "es": "Hojas"
+    },
+    "icon": "skins/13002",
+    "workshop": false
+   },
+   {
+    "id": 13003,
+    "name": {
+     "en": "Pizza",
+     "es": "Pizza"
+    },
+    "icon": "skins/13003",
+    "workshop": false
+   },
+   {
+    "id": 13004,
+    "name": {
+     "en": "Target",
+     "es": "Diana"
+    },
+    "icon": "skins/13004",
+    "workshop": false
+   },
+   {
+    "id": 13005,
+    "name": {
+     "en": "Tarp",
+     "es": "Lona verde"
+    },
+    "icon": "skins/13005",
+    "workshop": false
+   },
+   {
+    "id": 13006,
+    "name": {
+     "en": "ZenLabs",
+     "es": "ZenLabs"
+    },
+    "icon": "skins/13006",
+    "workshop": false
+   }
+  ],
+  "beachparasol": [
+   {
+    "id": 13007,
+    "name": {
+     "en": "Camo",
+     "es": "Camuflaje"
+    },
+    "icon": "skins/13007",
+    "workshop": false
+   },
+   {
+    "id": 13008,
+    "name": {
+     "en": "Flamingo",
+     "es": "Flamenco"
+    },
+    "icon": "skins/13008",
+    "workshop": false
+   },
+   {
+    "id": 13009,
+    "name": {
+     "en": "Leaves",
+     "es": "Hojas"
+    },
+    "icon": "skins/13009",
+    "workshop": false
+   },
+   {
+    "id": 13010,
+    "name": {
+     "en": "Pizza",
+     "es": "Pizza"
+    },
+    "icon": "skins/13010",
+    "workshop": false
+   },
+   {
+    "id": 13011,
+    "name": {
+     "en": "Target",
+     "es": "Diana"
+    },
+    "icon": "skins/13011",
+    "workshop": false
+   },
+   {
+    "id": 13012,
+    "name": {
+     "en": "Tarp",
+     "es": "Lona verde"
+    },
+    "icon": "skins/13012",
+    "workshop": false
+   },
+   {
+    "id": 13013,
+    "name": {
+     "en": "ZenLabs",
+     "es": "ZenLabs"
+    },
+    "icon": "skins/13013",
+    "workshop": false
+   }
+  ],
+  "beachtowel": [
+   {
+    "id": 13014,
+    "name": {
+     "en": "Brown Stripes",
+     "es": "Marrón y franjas"
+    },
+    "icon": "skins/13014",
+    "workshop": false
+   },
+   {
+    "id": 13015,
+    "name": {
+     "en": "Cobalt",
+     "es": "Cobalto"
+    },
+    "icon": "skins/13015",
+    "workshop": false
+   },
+   {
+    "id": 13016,
+    "name": {
+     "en": "Dyed",
+     "es": "Teñida"
+    },
+    "icon": "skins/13016",
+    "workshop": false
+   },
+   {
+    "id": 13017,
+    "name": {
+     "en": "Fish",
+     "es": "Peces"
+    },
+    "icon": "skins/13017",
+    "workshop": false
+   },
+   {
+    "id": 13018,
+    "name": {
+     "en": "Shell",
+     "es": "Conchas"
+    },
+    "icon": "skins/13018",
+    "workshop": false
+   },
+   {
+    "id": 13019,
+    "name": {
+     "en": "Stripes",
+     "es": "Franjas"
+    },
+    "icon": "skins/13019",
+    "workshop": false
+   },
+   {
+    "id": 13020,
+    "name": {
+     "en": "Waves",
+     "es": "Olas"
+    },
+    "icon": "skins/13020",
+    "workshop": false
+   }
+  ],
+  "boogieboard": [
+   {
+    "id": 13021,
+    "name": {
+     "en": "Corrugated",
+     "es": "Acanalada"
+    },
+    "icon": "skins/13021",
+    "workshop": false
+   },
+   {
+    "id": 13022,
+    "name": {
+     "en": "Crash Test",
+     "es": "Prueba de choque"
+    },
+    "icon": "skins/13022",
+    "workshop": false
+   },
+   {
+    "id": 13023,
+    "name": {
+     "en": "Flames",
+     "es": "Llamas"
+    },
+    "icon": "skins/13023",
+    "workshop": false
+   },
+   {
+    "id": 13024,
+    "name": {
+     "en": "Marbled",
+     "es": "Jaspeada"
+    },
+    "icon": "skins/13024",
+    "workshop": false
+   },
+   {
+    "id": 13025,
+    "name": {
+     "en": "Shark",
+     "es": "Tiburón"
+    },
+    "icon": "skins/13025",
+    "workshop": false
+   },
+   {
+    "id": 13026,
+    "name": {
+     "en": "Stars",
+     "es": "Estrellas"
+    },
+    "icon": "skins/13026",
+    "workshop": false
+   }
+  ],
+  "bow.hunting": [
+   {
+    "id": 10231,
+    "name": {
+     "en": "Legacy Bow",
+     "es": "Arco clásico"
+    },
+    "icon": "items/legacy bow",
+    "workshop": false
+   }
+  ],
+  "box.wooden": [
+   {
+    "id": 10329,
+    "name": {
+     "en": "Flight Recorder Box",
+     "es": "Caja negra"
+    },
+    "icon": "skins/10329",
+    "workshop": false
+   }
+  ],
+  "box.wooden.large": [
+   {
+    "id": 10436,
+    "name": {
+     "en": "Ammo Storage Box",
+     "es": "Caja almacén de munición"
+    },
+    "icon": "skins/10436",
+    "workshop": false
+   },
+   {
+    "id": 10124,
+    "name": {
+     "en": "Ammo Wooden Box",
+     "es": "Caja de munición"
+    },
+    "icon": "skins/10124",
+    "workshop": true
+   },
+   {
+    "id": 10437,
+    "name": {
+     "en": "Armor Storage Box",
+     "es": "Caja almacén de armaduras"
+    },
+    "icon": "skins/10437",
+    "workshop": false
+   },
+   {
+    "id": 10438,
+    "name": {
+     "en": "Charcoal Storage Box",
+     "es": "Caja almacén de carbón"
+    },
+    "icon": "skins/10438",
+    "workshop": false
+   },
+   {
+    "id": 10122,
+    "name": {
+     "en": "Christmas Storage",
+     "es": "Almacenamiento navideño"
+    },
+    "icon": "skins/10122",
+    "workshop": true
+   },
+   {
+    "id": 10439,
+    "name": {
+     "en": "Clothing Storage Box",
+     "es": "Caja almacén de ropa"
+    },
+    "icon": "skins/10439",
+    "workshop": false
+   },
+   {
+    "id": 10440,
+    "name": {
+     "en": "Comps Storage Box",
+     "es": "Caja almacén de comps"
+    },
+    "icon": "skins/10440",
+    "workshop": false
+   },
+   {
+    "id": 10441,
+    "name": {
+     "en": "Explosives Storage Box",
+     "es": "Caja almacén de explosivos"
+    },
+    "icon": null,
+    "workshop": false
+   },
+   {
+    "id": 10123,
+    "name": {
+     "en": "First Aid Green",
+     "es": "Caja verde de primeros auxilios"
+    },
+    "icon": "skins/10123",
+    "workshop": true
+   },
+   {
+    "id": 10442,
+    "name": {
+     "en": "Food Storage Box",
+     "es": "Caja almacén de comida"
+    },
+    "icon": "skins/10442",
+    "workshop": false
+   },
+   {
+    "id": 10141,
+    "name": {
+     "en": "Gun Box",
+     "es": "Caja de armas"
+    },
+    "icon": "skins/10141",
+    "workshop": true
+   },
+   {
+    "id": 10443,
+    "name": {
+     "en": "Guns Storage Box",
+     "es": "Caja de almacenamiento para armas"
+    },
+    "icon": "skins/10443",
+    "workshop": false
+   },
+   {
+    "id": 10293,
+    "name": {
+     "en": "Medieval Large Wood Box",
+     "es": "Caja medieval grande de madera"
+    },
+    "icon": "skins/10293",
+    "workshop": false
+   },
+   {
+    "id": 10444,
+    "name": {
+     "en": "Meds Storage Box",
+     "es": "Caja de almacenamiento de medicinas"
+    },
+    "icon": "skins/10444",
+    "workshop": false
+   },
+   {
+    "id": 10445,
+    "name": {
+     "en": "Metal Storage Box",
+     "es": "Caja de almacenamiento metálica"
+    },
+    "icon": "skins/10445",
+    "workshop": false
+   },
+   {
+    "id": 10446,
+    "name": {
+     "en": "Ore Storage Box",
+     "es": "Caja de almacenamiento de ores"
+    },
+    "icon": "skins/10446",
+    "workshop": false
+   },
+   {
+    "id": 10447,
+    "name": {
+     "en": "Scrap Storage Box",
+     "es": "Caja de almacenamiento de chatarra"
+    },
+    "icon": "skins/10447",
+    "workshop": false
+   },
+   {
+    "id": 10448,
+    "name": {
+     "en": "Stone Storage Box",
+     "es": "Caja de almacenamiento de piedra"
+    },
+    "icon": "skins/10448",
+    "workshop": false
+   },
+   {
+    "id": 10449,
+    "name": {
+     "en": "Sulfur Storage Box",
+     "es": "Caja de almacenamiento de sulfuro"
+    },
+    "icon": "skins/10449",
+    "workshop": false
+   },
+   {
+    "id": 10450,
+    "name": {
+     "en": "Tools Storage Box",
+     "es": "Caja grande para herramientas"
+    },
+    "icon": "skins/10450",
+    "workshop": false
+   },
+   {
+    "id": 10451,
+    "name": {
+     "en": "Wood Storage Box",
+     "es": "Caja pequeña de madera"
+    },
+    "icon": "skins/10451",
+    "workshop": false
+   }
+  ],
+  "bucket.helmet": [
+   {
+    "id": 10127,
+    "name": {
+     "en": "Medic Helmet",
+     "es": "Casco médico"
+    },
+    "icon": "skins/10127",
+    "workshop": true
+   }
+  ],
+  "burlap.gloves": [
+   {
+    "id": 10128,
+    "name": {
+     "en": "Boxer's Bandages",
+     "es": "Vendas de boxeador"
+    },
+    "icon": "skins/10128",
+    "workshop": true
+   }
+  ],
+  "burlap.shirt": [
+   {
+    "id": 10136,
+    "name": {
+     "en": "Pirate Vest & Shirt",
+     "es": "Chaleco y camisa pirata"
+    },
+    "icon": "skins/10136",
+    "workshop": true
+   }
+  ],
+  "ceilinglight": [
+   {
+    "id": 10334,
+    "name": {
+     "en": "Ceiling Fluorescent Light",
+     "es": "Luz fluorescente de techo"
+    },
+    "icon": "items/electric.fluorescentlight.ceiling",
+    "workshop": false
+   }
+  ],
+  "chainsaw": [
+   {
+    "id": 10417,
+    "name": {
+     "en": "Krieg chainsword",
+     "es": "Espada de cadena Krieg"
+    },
+    "icon": "items/krieg.chainsword",
+    "workshop": false
+   }
+  ],
+  "chair": [
+   {
+    "id": 10327,
+    "name": {
+     "en": "Fabric Beanbag Seat",
+     "es": "Puff de tela"
+    },
+    "icon": "items/beanbagseatfabric",
+    "workshop": false
+   },
+   {
+    "id": 10215,
+    "name": {
+     "en": "Ice King Pack",
+     "es": "Paquete del Rey Helado"
+    },
+    "icon": "items/chair.icethrone",
+    "workshop": false
+   },
+   {
+    "id": 10332,
+    "name": {
+     "en": "Leather Beanbag Seat",
+     "es": "Puff de cuero"
+    },
+    "icon": "items/beanbagseatleather",
+    "workshop": false
+   },
+   {
+    "id": 10511,
+    "name": {
+     "en": "Metal Bar Stool",
+     "es": "Taburete de Metal Para Bar"
+    },
+    "icon": "items/bar.stool.metal",
+    "workshop": false
+   },
+   {
+    "id": 10310,
+    "name": {
+     "en": "Salvaged Ejector Seat",
+     "es": "Asiento eyector recuperado"
+    },
+    "icon": "skins/10310",
+    "workshop": false
+   },
+   {
+    "id": 10512,
+    "name": {
+     "en": "Wooden Bar Stool",
+     "es": "Taburete de madera de Bar"
+    },
+    "icon": "items/bar.stool.wood",
+    "workshop": false
+   }
+  ],
+  "coffeecan.helmet": [
+   {
+    "id": 10286,
+    "name": {
+     "en": "Knights armour helmet",
+     "es": "Casco de armadura de caballero"
+    },
+    "icon": "items/knightsarmour.helmet",
+    "workshop": false
+   }
+  ],
+  "computerstation": [
+   {
+    "id": 10228,
+    "name": {
+     "en": "Twitch Rivals Desk",
+     "es": "Escritorio de Twitch Rivals"
+    },
+    "icon": "items/twitchrivals2023desk",
+    "workshop": false
+   }
+  ],
+  "crossbow": [
+   {
+    "id": 10492,
+    "name": {
+     "en": "Bowless Crossbow",
+     "es": "Ballesta sin arco."
+    },
+    "icon": "items/crossbowbowless",
+    "workshop": false
+   }
+  ],
+  "cupboard.tool": [
+   {
+    "id": 10238,
+    "name": {
+     "en": "Retro Tool Cupboard",
+     "es": "Armario de herramientas retro"
+    },
+    "icon": "items/cupboard.tool.retro",
+    "workshop": false
+   },
+   {
+    "id": 10239,
+    "name": {
+     "en": "Shockbyte Tool Cupboard",
+     "es": "Armario Shockbyte"
+    },
+    "icon": "items/cupboard.tool.shockbyte",
+    "workshop": false
+   }
+  ],
+  "discofloor": [
+   {
+    "id": 13057,
+    "name": {
+     "en": "Large Tiles",
+     "es": "Baldosas grandes"
+    },
+    "icon": "skins/13057",
+    "workshop": false
+   }
+  ],
+  "door.double.hinged.metal": [
+   {
+    "id": 10290,
+    "name": {
+     "en": "Medieval Sheet Metal Double Door",
+     "es": "Puerta doble de chapa medieval"
+    },
+    "icon": "skins/10290",
+    "workshop": false
+   }
+  ],
+  "door.hinged.metal": [
+   {
+    "id": 10198,
+    "name": {
+     "en": "Factory Door",
+     "es": "Puerta de fábrica"
+    },
+    "icon": "items/factorydoor",
+    "workshop": false
+   },
+   {
+    "id": 10189,
+    "name": {
+     "en": "Industrial Door",
+     "es": "Puerta industrial"
+    },
+    "icon": "skins/10189",
+    "workshop": false
+   },
+   {
+    "id": 10291,
+    "name": {
+     "en": "Medieval Sheet Metal Door",
+     "es": "Puerta de chapa medieval"
+    },
+    "icon": "skins/10291",
+    "workshop": false
+   }
+  ],
+  "electric.furnace": [
+   {
+    "id": 10481,
+    "name": {
+     "en": "Industrial Electric Furnace",
+     "es": "Horno eléctrico industrial"
+    },
+    "icon": "items/industrial.electric.furnace",
+    "workshop": false
+   }
+  ],
+  "furnace": [
+   {
+    "id": 10229,
+    "name": {
+     "en": "Legacy Furnace",
+     "es": "Horno arcaico"
+    },
+    "icon": "items/legacyfurnace",
+    "workshop": false
+   }
+  ],
+  "furnace.large": [
+   {
+    "id": 10478,
+    "name": {
+     "en": "Large Industrial Furnace",
+     "es": "Horno industrial grande"
+    },
+    "icon": "items/industrial.furnace.large",
+    "workshop": false
+   }
+  ],
+  "gates.external.high.stone": [
+   {
+    "id": 10299,
+    "name": {
+     "en": "High External Adobe Gate",
+     "es": "Portón Alto de Adobe"
+    },
+    "icon": "items/gates.external.high.adobe",
+    "workshop": false
+   }
+  ],
+  "gates.external.high.wood": [
+   {
+    "id": 10301,
+    "name": {
+     "en": "Legacy Gate",
+     "es": "Portón Clásico"
+    },
+    "icon": "items/gates.external.high.legacy",
+    "workshop": false
+   }
+  ],
+  "gun.water": [
+   {
+    "id": 13046,
+    "name": {
+     "en": "Green",
+     "es": "Verde"
+    },
+    "icon": "skins/13046",
+    "workshop": false
+   },
+   {
+    "id": 13047,
+    "name": {
+     "en": "Grey",
+     "es": "Gris"
+    },
+    "icon": "skins/13047",
+    "workshop": false
+   },
+   {
+    "id": 13048,
+    "name": {
+     "en": "Orange",
+     "es": "Naranja"
+    },
+    "icon": "skins/13048",
+    "workshop": false
+   },
+   {
+    "id": 13049,
+    "name": {
+     "en": "Yellow",
+     "es": "Amarillo"
+    },
+    "icon": "skins/13049",
+    "workshop": false
+   }
+  ],
+  "guntrap": [
+   {
+    "id": 10510,
+    "name": {
+     "en": "Bar Games Shotgun Trap",
+     "es": "Trabuco Para Bar"
+    },
+    "icon": "items/gamesroom.shotgun.trap",
+    "workshop": false
+   }
+  ],
+  "hat.beenie": [
+   {
+    "id": 14180,
+    "name": {
+     "en": "Black Beenie Hat",
+     "es": "Gorro de lana negro"
+    },
+    "icon": "skins/14180",
+    "workshop": false
+   },
+   {
+    "id": 10018,
+    "name": {
+     "en": "Blue Beenie Hat",
+     "es": "Gorro de lana azul"
+    },
+    "icon": "skins/10018",
+    "workshop": false
+   },
+   {
+    "id": 10017,
+    "name": {
+     "en": "Green Beenie Hat",
+     "es": "Gorro de lana verde"
+    },
+    "icon": "skins/10017",
+    "workshop": false
+   },
+   {
+    "id": 10040,
+    "name": {
+     "en": "Rasta Beenie",
+     "es": "Gorro rastafari"
+    },
+    "icon": "skins/10040",
+    "workshop": true
+   },
+   {
+    "id": 10016,
+    "name": {
+     "en": "Red Beenie Hat",
+     "es": "Gorro de lana rojo"
+    },
+    "icon": "skins/10016",
+    "workshop": false
+   },
+   {
+    "id": 10085,
+    "name": {
+     "en": "Winter Deers",
+     "es": "Renos invernales"
+    },
+    "icon": "skins/10085",
+    "workshop": true
+   }
+  ],
+  "hat.boonie": [
+   {
+    "id": 10058,
+    "name": {
+     "en": "Farmer Hat",
+     "es": "Sombrero de granjero"
+    },
+    "icon": "skins/10058",
+    "workshop": true
+   }
+  ],
+  "hat.candle": [
+   {
+    "id": 10339,
+    "name": {
+     "en": "Birthday Candle Hat",
+     "es": "Sombrero cumpleañero"
+    },
+    "icon": "items/hat.candle.birthday",
+    "workshop": false
+   }
+  ],
+  "hat.cap": [
+   {
+    "id": 10029,
+    "name": {
+     "en": "Blue Cap",
+     "es": "Gorra azul"
+    },
+    "icon": "skins/10029",
+    "workshop": false
+   },
+   {
+    "id": 10027,
+    "name": {
+     "en": "Forest Camo Cap",
+     "es": "Gorra de camuflaje boscoso"
+    },
+    "icon": "skins/10027",
+    "workshop": false
+   },
+   {
+    "id": 10055,
+    "name": {
+     "en": "Friendly Cap",
+     "es": "Gorra amistosa"
+    },
+    "icon": "skins/10055",
+    "workshop": true
+   },
+   {
+    "id": 10030,
+    "name": {
+     "en": "Green Cap",
+     "es": "Gorra verde"
+    },
+    "icon": "skins/10030",
+    "workshop": false
+   },
+   {
+    "id": 10026,
+    "name": {
+     "en": "Grey Cap",
+     "es": "Gorra gris"
+    },
+    "icon": "skins/10026",
+    "workshop": false
+   },
+   {
+    "id": 10028,
+    "name": {
+     "en": "Red Cap",
+     "es": "Gorra roja"
+    },
+    "icon": "skins/10028",
+    "workshop": false
+   },
+   {
+    "id": 10045,
+    "name": {
+     "en": "Rescue Cap",
+     "es": "Gorra de rescate"
+    },
+    "icon": "skins/10045",
+    "workshop": true
+   }
+  ],
+  "hat.wolf": [
+   {
+    "id": 10161,
+    "name": {
+     "en": "Dragon Mask",
+     "es": "Máscara del dragón"
+    },
+    "icon": "items/hat.dragonmask",
+    "workshop": false
+   },
+   {
+    "id": 10356,
+    "name": {
+     "en": "Horse Mask",
+     "es": "Máscara de caballo"
+    },
+    "icon": "items/hat.horsemask",
+    "workshop": false
+   },
+   {
+    "id": 10192,
+    "name": {
+     "en": "Ox Mask",
+     "es": "Máscara del buey"
+    },
+    "icon": "items/hat.oxmask",
+    "workshop": false
+   },
+   {
+    "id": 10218,
+    "name": {
+     "en": "Rabbit Mask",
+     "es": "Máscara del conejo"
+    },
+    "icon": "items/hat.rabbitmask",
+    "workshop": false
+   },
+   {
+    "id": 10173,
+    "name": {
+     "en": "Rat Mask",
+     "es": "Máscara de la rata"
+    },
+    "icon": "items/hat.ratmask",
+    "workshop": false
+   },
+   {
+    "id": 10284,
+    "name": {
+     "en": "Snake Mask",
+     "es": "Máscara de serpiente"
+    },
+    "icon": "items/hat.snakemask",
+    "workshop": false
+   },
+   {
+    "id": 10205,
+    "name": {
+     "en": "Tiger Mask",
+     "es": "Máscara del tigre"
+    },
+    "icon": "items/hat.tigermask",
+    "workshop": false
+   }
+  ],
+  "hatchet": [
+   {
+    "id": 13077,
+    "name": {
+     "en": "Diver Hatchet",
+     "es": "Hacha de buzo"
+    },
+    "icon": "items/diverhatchet",
+    "workshop": false
+   },
+   {
+    "id": 13085,
+    "name": {
+     "en": "Frontier Hatchet",
+     "es": "Hacha fronteriza"
+    },
+    "icon": "items/frontier_hatchet",
+    "workshop": false
+   },
+   {
+    "id": 13073,
+    "name": {
+     "en": "Prototype Hatchet",
+     "es": "Hacha Prototipo"
+    },
+    "icon": "items/lumberjack.hatchet",
+    "workshop": false
+   }
+  ],
+  "hazmatsuit": [
+   {
+    "id": 10222,
+    "name": {
+     "en": "Abyss Pack",
+     "es": "Paquete Abisal"
+    },
+    "icon": "items/hazmatsuit.diver",
+    "workshop": false
+   },
+   {
+    "id": 10207,
+    "name": {
+     "en": "Arctic Pack",
+     "es": "Paquete ártico"
+    },
+    "icon": "items/hazmatsuit.arcticsuit",
+    "workshop": false
+   },
+   {
+    "id": 10240,
+    "name": {
+     "en": "Frontiersman Pack",
+     "es": "Paquete del Pionero"
+    },
+    "icon": "items/hazmatsuit.frontier",
+    "workshop": false
+   },
+   {
+    "id": 10338,
+    "name": {
+     "en": "KICK Hazmat",
+     "es": "KICK Haza"
+    },
+    "icon": "items/hazmatsuit.kick",
+    "workshop": false
+   },
+   {
+    "id": 10419,
+    "name": {
+     "en": "Krieg Hazmat",
+     "es": "Traje protector Krieg"
+    },
+    "icon": "items/hazmat.krieg",
+    "workshop": false
+   },
+   {
+    "id": 10211,
+    "name": {
+     "en": "Lumberjack Pack",
+     "es": "Paquete de Leñador"
+    },
+    "icon": "items/hazmatsuit.lumberjack",
+    "workshop": false
+   },
+   {
+    "id": 10201,
+    "name": {
+     "en": "Nomad Outfit",
+     "es": "Atuendo nómada"
+    },
+    "icon": "items/hazmatsuit.nomadsuit",
+    "workshop": false
+   },
+   {
+    "id": 10331,
+    "name": {
+     "en": "Pilot Suit",
+     "es": "Traje de Piloto"
+    },
+    "icon": "items/hazmatsuit.pilot",
+    "workshop": false
+   },
+   {
+    "id": 10570,
+    "name": {
+     "en": "Plague Doctor Hazmat Suit",
+     "es": "Plague Doctor Hazmat Suit"
+    },
+    "icon": "items/hazmat.plague",
+    "workshop": false
+   },
+   {
+    "id": 10180,
+    "name": {
+     "en": "Spacesuit",
+     "es": "Traje de astronauta"
+    },
+    "icon": "skins/10180",
+    "workshop": false
+   }
+  ],
+  "hoodie": [
+   {
+    "id": 10142,
+    "name": {
+     "en": "BCHILLZ! Hoodie",
+     "es": "Sudadera de BCHILLZ!"
+    },
+    "icon": "skins/10142",
+    "workshop": true
+   },
+   {
+    "id": 14179,
+    "name": {
+     "en": "Black Hoodie",
+     "es": "Sudadera negra con capucha"
+    },
+    "icon": "skins/14179",
+    "workshop": false
+   },
+   {
+    "id": 10052,
+    "name": {
+     "en": "Bloody Hoodie",
+     "es": "Sudadera ensangrentada"
+    },
+    "icon": "skins/10052",
+    "workshop": true
+   },
+   {
+    "id": 14178,
+    "name": {
+     "en": "Blue Hoodie",
+     "es": "Sudadera azul con capucha"
+    },
+    "icon": "skins/14178",
+    "workshop": false
+   },
+   {
+    "id": 10133,
+    "name": {
+     "en": "Cuda87 Hoodie",
+     "es": "Sudadera de Cuda87"
+    },
+    "icon": "skins/10133",
+    "workshop": true
+   },
+   {
+    "id": 14072,
+    "name": {
+     "en": "Green Hoodie",
+     "es": "Sudadera verde"
+    },
+    "icon": "skins/14072",
+    "workshop": false
+   },
+   {
+    "id": 10132,
+    "name": {
+     "en": "Rhinocrunch Hoodie",
+     "es": "Sudadera de Rhinocrunch"
+    },
+    "icon": "skins/10132",
+    "workshop": true
+   },
+   {
+    "id": 10129,
+    "name": {
+     "en": "Safety Crew",
+     "es": "Personal de seguridad"
+    },
+    "icon": "skins/10129",
+    "workshop": true
+   },
+   {
+    "id": 10086,
+    "name": {
+     "en": "Skeleton Hoodie",
+     "es": "Sudadera de esqueleto"
+    },
+    "icon": "skins/10086",
+    "workshop": true
+   }
+  ],
+  "horse.armor.roadsign": [
+   {
+    "id": 10357,
+    "name": {
+     "en": "Lunar New Year Horse Armor",
+     "es": "Armadura de Caballo de Año Nuevo Lunar"
+    },
+    "icon": "items/horse.armor.lny26",
+    "workshop": false
+   }
+  ],
+  "industrial.wall.light": [
+   {
+    "id": 10309,
+    "name": {
+     "en": "Blue Industrial Wall Light",
+     "es": "Lámpara azul de industrial de pared"
+    },
+    "icon": "items/industrial.wall.light.blue",
+    "workshop": false
+   },
+   {
+    "id": 10289,
+    "name": {
+     "en": "Green Industrial Wall Light",
+     "es": "Lámpara verde industrial de pared"
+    },
+    "icon": "items/industrial.wall.light.green",
+    "workshop": false
+   },
+   {
+    "id": 10288,
+    "name": {
+     "en": "Red Industrial Wall Light",
+     "es": "Lámpara roja industrial de pared"
+    },
+    "icon": "items/industrial.wall.light.red",
+    "workshop": false
+   }
+  ],
+  "innertube": [
+   {
+    "id": 13027,
+    "name": {
+     "en": "Camo",
+     "es": "Camuflaje"
+    },
+    "icon": "skins/13027",
+    "workshop": false
+   },
+   {
+    "id": 13028,
+    "name": {
+     "en": "Donut",
+     "es": "Donut"
+    },
+    "icon": "skins/13028",
+    "workshop": false
+   },
+   {
+    "id": 13029,
+    "name": {
+     "en": "Horse",
+     "es": "Caballo"
+    },
+    "icon": "skins/13029",
+    "workshop": false
+   },
+   {
+    "id": 13030,
+    "name": {
+     "en": "Tire",
+     "es": "Neumático"
+    },
+    "icon": "skins/13030",
+    "workshop": false
+   },
+   {
+    "id": 13031,
+    "name": {
+     "en": "Unicorn",
+     "es": "Unicornio"
+    },
+    "icon": "skins/13031",
+    "workshop": false
+   },
+   {
+    "id": 13032,
+    "name": {
+     "en": "Watermelon",
+     "es": "Sandía"
+    },
+    "icon": "skins/13032",
+    "workshop": false
+   },
+   {
+    "id": 13033,
+    "name": {
+     "en": "Zebra",
+     "es": "Cebra"
+    },
+    "icon": "skins/13033",
+    "workshop": false
+   }
+  ],
+  "jacket": [
+   {
+    "id": 10011,
+    "name": {
+     "en": "Blue Jacket",
+     "es": "Chaqueta azul"
+    },
+    "icon": "skins/10011",
+    "workshop": false
+   },
+   {
+    "id": 10012,
+    "name": {
+     "en": "Desert Jacket",
+     "es": "Chaqueta del desierto"
+    },
+    "icon": "skins/10012",
+    "workshop": false
+   },
+   {
+    "id": 10009,
+    "name": {
+     "en": "Green Jacket",
+     "es": "Chaqueta verde"
+    },
+    "icon": "skins/10009",
+    "workshop": false
+   },
+   {
+    "id": 10015,
+    "name": {
+     "en": "Hunting Jacket",
+     "es": "Chaqueta de caza"
+    },
+    "icon": "skins/10015",
+    "workshop": false
+   },
+   {
+    "id": 10013,
+    "name": {
+     "en": "Multicam Jacket",
+     "es": "Chaqueta de multicamuflaje"
+    },
+    "icon": "skins/10013",
+    "workshop": false
+   },
+   {
+    "id": 10072,
+    "name": {
+     "en": "Provocateur Jacket",
+     "es": "Chaqueta de provocador"
+    },
+    "icon": "skins/10072",
+    "workshop": true
+   },
+   {
+    "id": 10010,
+    "name": {
+     "en": "Red Jacket",
+     "es": "Chaqueta roja"
+    },
+    "icon": "skins/10010",
+    "workshop": false
+   },
+   {
+    "id": 10008,
+    "name": {
+     "en": "Snowcamo Jacket",
+     "es": "Chaqueta de camuflaje níveo"
+    },
+    "icon": "skins/10008",
+    "workshop": false
+   },
+   {
+    "id": 10014,
+    "name": {
+     "en": "Urban Camo Jacket",
+     "es": "Chaqueta de camuflaje urbano"
+    },
+    "icon": "skins/10014",
+    "workshop": false
+   }
+  ],
+  "jacket.snow": [
+   {
+    "id": 10113,
+    "name": {
+     "en": "Black",
+     "es": "Abrigo negro"
+    },
+    "icon": "skins/10113",
+    "workshop": false
+   },
+   {
+    "id": 10112,
+    "name": {
+     "en": "Woodland",
+     "es": "Abrigo boscoso"
+    },
+    "icon": "skins/10112",
+    "workshop": false
+   }
+  ],
+  "knife.bone": [
+   {
+    "id": 10307,
+    "name": {
+     "en": "Obsidian Bone Knife",
+     "es": "Cuchillo de obsidiana"
+    },
+    "icon": "skins/10307",
+    "workshop": false
+   }
+  ],
+  "knife.combat": [
+   {
+    "id": 10306,
+    "name": {
+     "en": "Sunken Combat Knife",
+     "es": "Cuchillo de combate hundido"
+    },
+    "icon": "skins/10306",
+    "workshop": false
+   }
+  ],
+  "largebackpack": [
+   {
+    "id": 10416,
+    "name": {
+     "en": "Krieg Large Backpack",
+     "es": "Mochila grande Krieg"
+    },
+    "icon": "items/kriegbackpack",
+    "workshop": false
+   }
+  ],
+  "lock.code": [
+   {
+    "id": 10318,
+    "name": {
+     "en": "Flight Control Codelock",
+     "es": "Cerradura con clave de control de vuelo"
+    },
+    "icon": "skins/10318",
+    "workshop": false
+   }
+  ],
+  "mace": [
+   {
+    "id": 10214,
+    "name": {
+     "en": "Baseball Bat",
+     "es": "Bate de béisbol"
+    },
+    "icon": "items/mace.baseballbat",
+    "workshop": false
+   }
+  ],
+  "mask.balaclava": [
+   {
+    "id": 10069,
+    "name": {
+     "en": "Desert Camo Balaclava",
+     "es": "Pasamontañas de camuflaje desértico"
+    },
+    "icon": "skins/10069",
+    "workshop": false
+   },
+   {
+    "id": 10071,
+    "name": {
+     "en": "Double Yellow Balaclava",
+     "es": "Pasamontañas de franjas amarillas"
+    },
+    "icon": "skins/10071",
+    "workshop": false
+   },
+   {
+    "id": 10068,
+    "name": {
+     "en": "Forest Camo Balaclava",
+     "es": "Pasamontañas de camuflaje boscoso"
+    },
+    "icon": "skins/10068",
+    "workshop": false
+   },
+   {
+    "id": 10057,
+    "name": {
+     "en": "Murica Balaclava",
+     "es": "Pasamontañas \"Murica\""
+    },
+    "icon": "skins/10057",
+    "workshop": true
+   },
+   {
+    "id": 10075,
+    "name": {
+     "en": "Nightmare Balaclava",
+     "es": "Pasamontañas de pesadilla"
+    },
+    "icon": "skins/10075",
+    "workshop": true
+   },
+   {
+    "id": 10070,
+    "name": {
+     "en": "Red Check Balaclava",
+     "es": "Pasamontañas de cuadros rojos"
+    },
+    "icon": "skins/10070",
+    "workshop": false
+   },
+   {
+    "id": 10054,
+    "name": {
+     "en": "Rorschach Skull",
+     "es": "Calavera de Rorschach"
+    },
+    "icon": "skins/10054",
+    "workshop": true
+   },
+   {
+    "id": 10090,
+    "name": {
+     "en": "Skin Balaclava",
+     "es": "Pasamontañas de piel humana"
+    },
+    "icon": "skins/10090",
+    "workshop": true
+   },
+   {
+    "id": 10084,
+    "name": {
+     "en": "The Rust Knight",
+     "es": "El Caballero del Óxido"
+    },
+    "icon": "skins/10084",
+    "workshop": true
+   },
+   {
+    "id": 10139,
+    "name": {
+     "en": "Valentine Balaclava",
+     "es": "Pasamontañas de San Valentín"
+    },
+    "icon": "skins/10139",
+    "workshop": true
+   },
+   {
+    "id": 10111,
+    "name": {
+     "en": "Zipper Face",
+     "es": "Cara de cremallera"
+    },
+    "icon": "skins/10111",
+    "workshop": true
+   }
+  ],
+  "mask.bandana": [
+   {
+    "id": 10061,
+    "name": {
+     "en": "Black Bandana",
+     "es": "Pañuelo negro"
+    },
+    "icon": "skins/10061",
+    "workshop": false
+   },
+   {
+    "id": 10060,
+    "name": {
+     "en": "Blue Bandana",
+     "es": "Pañuelo azul"
+    },
+    "icon": "skins/10060",
+    "workshop": false
+   },
+   {
+    "id": 10067,
+    "name": {
+     "en": "Checkered Bandana",
+     "es": "Pañuelo a cuadros"
+    },
+    "icon": "skins/10067",
+    "workshop": false
+   },
+   {
+    "id": 10104,
+    "name": {
+     "en": "Creepy Clown Bandana",
+     "es": "Pañuelo de payaso espeluznante"
+    },
+    "icon": "skins/10104",
+    "workshop": true
+   },
+   {
+    "id": 10066,
+    "name": {
+     "en": "Desert Camo Bandana",
+     "es": "Pañuelo de camuflaje desértico"
+    },
+    "icon": "skins/10066",
+    "workshop": false
+   },
+   {
+    "id": 10063,
+    "name": {
+     "en": "Forest Camo Bandana",
+     "es": "Pañuelo de camuflaje boscoso"
+    },
+    "icon": "skins/10063",
+    "workshop": false
+   },
+   {
+    "id": 10059,
+    "name": {
+     "en": "Green Bandana",
+     "es": "Pañuelo verde"
+    },
+    "icon": "skins/10059",
+    "workshop": false
+   },
+   {
+    "id": 10065,
+    "name": {
+     "en": "Red Skull Bandana",
+     "es": "Pañuelo rojo de calavera"
+    },
+    "icon": "skins/10065",
+    "workshop": false
+   },
+   {
+    "id": 10064,
+    "name": {
+     "en": "Skull Bandana",
+     "es": "Pañuelo de calavera"
+    },
+    "icon": "skins/10064",
+    "workshop": false
+   },
+   {
+    "id": 10062,
+    "name": {
+     "en": "Snow Camo Bandana",
+     "es": "Pañuelo de camuflaje níveo"
+    },
+    "icon": "skins/10062",
+    "workshop": false
+   },
+   {
+    "id": 10079,
+    "name": {
+     "en": "Wizard Bandana",
+     "es": "Pañuelo de mago"
+    },
+    "icon": "skins/10079",
+    "workshop": true
+   }
+  ],
+  "metal.facemask": [
+   {
+    "id": 10212,
+    "name": {
+     "en": "Hockey Mask",
+     "es": "Máscara de hockey"
+    },
+    "icon": "items/metal.facemask.hockey",
+    "workshop": false
+   },
+   {
+    "id": 10217,
+    "name": {
+     "en": "Ice Metal Facemask",
+     "es": "Máscara de metal helada"
+    },
+    "icon": "items/metal.facemask.icemask",
+    "workshop": false
+   }
+  ],
+  "metal.plate.torso": [
+   {
+    "id": 10216,
+    "name": {
+     "en": "Ice Metal Chest Plate",
+     "es": "Coraza de metal helada"
+    },
+    "icon": "items/metal.plate.torso.icevest",
+    "workshop": false
+   }
+  ],
+  "mini fridge": [
+   {
+    "id": 10507,
+    "name": {
+     "en": "Bar Games Minifridge",
+     "es": "Mininevera Para Bar"
+    },
+    "icon": "items/gamesroom.minifridge",
+    "workshop": false
+   }
+  ],
+  "paddlingpool": [
+   {
+    "id": 13034,
+    "name": {
+     "en": "Hot Tub",
+     "es": "Caliente"
+    },
+    "icon": "skins/13034",
+    "workshop": false
+   },
+   {
+    "id": 13035,
+    "name": {
+     "en": "Rainbow",
+     "es": "Arcoiris"
+    },
+    "icon": "skins/13035",
+    "workshop": false
+   },
+   {
+    "id": 13036,
+    "name": {
+     "en": "Sea Scape",
+     "es": "Paisaje marino"
+    },
+    "icon": "skins/13036",
+    "workshop": false
+   },
+   {
+    "id": 13037,
+    "name": {
+     "en": "Spawn Pool",
+     "es": "Piscina de aparición"
+    },
+    "icon": "skins/13037",
+    "workshop": false
+   }
+  ],
+  "pants": [
+   {
+    "id": 10001,
+    "name": {
+     "en": "Blue Jeans",
+     "es": "Vaqueros azules"
+    },
+    "icon": "skins/10001",
+    "workshop": false
+   },
+   {
+    "id": 10049,
+    "name": {
+     "en": "Blue Track Pants",
+     "es": "Pantalones de chándal azules"
+    },
+    "icon": "skins/10049",
+    "workshop": true
+   },
+   {
+    "id": 10019,
+    "name": {
+     "en": "Forest Camo Pants",
+     "es": "Pantalón de camuflaje boscoso"
+    },
+    "icon": "skins/10019",
+    "workshop": false
+   },
+   {
+    "id": 10078,
+    "name": {
+     "en": "Old Prisoner Pants",
+     "es": "Pantalones viejos de presidiario"
+    },
+    "icon": "skins/10078",
+    "workshop": true
+   },
+   {
+    "id": 10048,
+    "name": {
+     "en": "Punk Rock Pants",
+     "es": "Pantalones punk-rock"
+    },
+    "icon": "skins/10048",
+    "workshop": true
+   },
+   {
+    "id": 10021,
+    "name": {
+     "en": "Snow Camo Pants",
+     "es": "Pantalón de camuflaje níveo"
+    },
+    "icon": "skins/10021",
+    "workshop": false
+   },
+   {
+    "id": 10020,
+    "name": {
+     "en": "Urban Camo Pants",
+     "es": "Pantalones de camuflaje urbano"
+    },
+    "icon": "skins/10020",
+    "workshop": false
+   }
+  ],
+  "pickaxe": [
+   {
+    "id": 13078,
+    "name": {
+     "en": "Diver Pickaxe",
+     "es": "Pico de buzo"
+    },
+    "icon": "items/diverpickaxe",
+    "workshop": false
+   },
+   {
+    "id": 13072,
+    "name": {
+     "en": "Prototype Pickaxe",
+     "es": "Pico Prototipo"
+    },
+    "icon": "items/lumberjack.pickaxe",
+    "workshop": false
+   }
+  ],
+  "pistol.revolver": [
+   {
+    "id": 10114,
+    "name": {
+     "en": "Outback revolver",
+     "es": "Revólver del yermo australiano"
+    },
+    "icon": "skins/10114",
+    "workshop": true
+   }
+  ],
+  "pistol.semiauto": [
+   {
+    "id": 10087,
+    "name": {
+     "en": "Contamination Pistol",
+     "es": "Pistola contaminante"
+    },
+    "icon": "skins/10087",
+    "workshop": true
+   },
+   {
+    "id": 10108,
+    "name": {
+     "en": "Halloween Bat",
+     "es": "Murciélago de Halloween"
+    },
+    "icon": "skins/10108",
+    "workshop": true
+   },
+   {
+    "id": 10330,
+    "name": {
+     "en": "M15 Semi-Automatic Pistol",
+     "es": "Pistola Semi Automática M15"
+    },
+    "icon": "skins/10330",
+    "workshop": false
+   },
+   {
+    "id": 10081,
+    "name": {
+     "en": "Reaper Note Pistol",
+     "es": "Pistola del cuaderno de muerte"
+    },
+    "icon": "skins/10081",
+    "workshop": true
+   },
+   {
+    "id": 10073,
+    "name": {
+     "en": "Red Shine Pistol",
+     "es": "Pistola de resplandor rojo"
+    },
+    "icon": "skins/10073",
+    "workshop": true
+   }
+  ],
+  "rifle.ak": [
+   {
+    "id": 13076,
+    "name": {
+     "en": "Abyss Assault Rifle",
+     "es": "Fusil de asalto abisal"
+    },
+    "icon": "items/rifle.ak.diver",
+    "workshop": false
+   },
+   {
+    "id": 10560,
+    "name": {
+     "en": "Crystal Assault Rifle Diamond",
+     "es": "Rifle de Asalto de Diamante"
+    },
+    "icon": "items/rifle.ak.glass",
+    "workshop": false
+   },
+   {
+    "id": 10563,
+    "name": {
+     "en": "Crystal Assault Rifle Emerald",
+     "es": "Rifle de Asalto de Esmeralda"
+    },
+    "icon": null,
+    "workshop": false
+   },
+   {
+    "id": 10564,
+    "name": {
+     "en": "Crystal Assault Rifle Pink Diamond",
+     "es": "Rifle de Asalto de Diamante Rosa"
+    },
+    "icon": null,
+    "workshop": false
+   },
+   {
+    "id": 10561,
+    "name": {
+     "en": "Crystal Assault Rifle Ruby",
+     "es": "Rifle de Asalto de Ruby"
+    },
+    "icon": null,
+    "workshop": false
+   },
+   {
+    "id": 10562,
+    "name": {
+     "en": "Crystal Assault Rifle Sapphire",
+     "es": "Rifle de Asalto de Zafiro"
+    },
+    "icon": "skins/10562",
+    "workshop": false
+   },
+   {
+    "id": 10135,
+    "name": {
+     "en": "Digital Camo AK47",
+     "es": "AK47 con camuflaje digital"
+    },
+    "icon": "skins/10135",
+    "workshop": true
+   },
+   {
+    "id": 13070,
+    "name": {
+     "en": "Ice Assault Rifle",
+     "es": "Fusil de asalto helado"
+    },
+    "icon": "items/rifle.ak.ice",
+    "workshop": false
+   },
+   {
+    "id": 10308,
+    "name": {
+     "en": "Jungle Relic Assault Rifle",
+     "es": "Rifle de asalto selvático"
+    },
+    "icon": "skins/10308",
+    "workshop": false
+   },
+   {
+    "id": 10292,
+    "name": {
+     "en": "Medieval Assault Rifle",
+     "es": "Rifle de Asalto Medieval"
+    },
+    "icon": "items/rifle.ak.med",
+    "workshop": false
+   },
+   {
+    "id": 10137,
+    "name": {
+     "en": "Military Camo AK47",
+     "es": "AK47 de camuflaje militar"
+    },
+    "icon": "skins/10137",
+    "workshop": true
+   },
+   {
+    "id": 10138,
+    "name": {
+     "en": "Tempered AK47",
+     "es": "AK47 templado"
+    },
+    "icon": "skins/10138",
+    "workshop": true
+   }
+  ],
+  "rifle.bolt": [
+   {
+    "id": 10117,
+    "name": {
+     "en": "Dreamcatcher",
+     "es": "Atrapasueños"
+    },
+    "icon": "skins/10117",
+    "workshop": true
+   },
+   {
+    "id": 10115,
+    "name": {
+     "en": "Ghost Bolt Rifle",
+     "es": "Fusil de cerrojo fantasma"
+    },
+    "icon": "skins/10115",
+    "workshop": true
+   },
+   {
+    "id": 10116,
+    "name": {
+     "en": "Tundra Bolt Rifle",
+     "es": "Fusil de cerrojo de la tundra"
+    },
+    "icon": "skins/10116",
+    "workshop": true
+   }
+  ],
+  "rifle.lr300": [
+   {
+    "id": 10431,
+    "name": {
+     "en": "Space LR-300 Assault Rifle",
+     "es": "Fusil de asalto espacial LR-300"
+    },
+    "icon": "items/rifle.lr300.space",
+    "workshop": false
+   }
+  ],
+  "roadsign.jacket": [
+   {
+    "id": 10287,
+    "name": {
+     "en": "Knights armour cuirass",
+     "es": "Coraza de caballero"
+    },
+    "icon": "items/knighttorso.armour",
+    "workshop": false
+   }
+  ],
+  "roadsign.kilt": [
+   {
+    "id": 10285,
+    "name": {
+     "en": "Knights armour skirt plates",
+     "es": "Placa de faldón de armadura de caballero"
+    },
+    "icon": "items/knightsarmour.skirt",
+    "workshop": false
+   }
+  ],
+  "rock": [
+   {
+    "id": 10315,
+    "name": {
+     "en": "Jungle Rock",
+     "es": "Roca selvática"
+    },
+    "icon": "skins/10315",
+    "workshop": false
+   },
+   {
+    "id": 10197,
+    "name": {
+     "en": "Skull",
+     "es": "Calavera (roca)"
+    },
+    "icon": "skins/10197",
+    "workshop": false
+   }
+  ],
+  "rocket.launcher": [
+   {
+    "id": 10236,
+    "name": {
+     "en": "Dragon Rocket Launcher",
+     "es": "Lanzamisiles del dragón"
+    },
+    "icon": "items/rocket.launcher.dragon",
+    "workshop": false
+   },
+   {
+    "id": 10337,
+    "name": {
+     "en": "RPG Launcher",
+     "es": "Launcher RPG"
+    },
+    "icon": "items/rocket.launcher.rpg7",
+    "workshop": false
+   }
+  ],
+  "rockingchair": [
+   {
+    "id": 13083,
+    "name": {
+     "en": "Green",
+     "es": "Verde"
+    },
+    "icon": "items/rockingchair.rockingchair3",
+    "workshop": false
+   },
+   {
+    "id": 13084,
+    "name": {
+     "en": "Teal",
+     "es": "Azul cerceta"
+    },
+    "icon": "items/rockingchair.rockingchair2",
+    "workshop": false
+   }
+  ],
+  "shelves": [
+   {
+    "id": 10314,
+    "name": {
+     "en": "Bamboo Salvaged Shelves",
+     "es": "Estantes de bambú reciclado"
+    },
+    "icon": "skins/10314",
+    "workshop": false
+   },
+   {
+    "id": 10476,
+    "name": {
+     "en": "Salvaged Industrial Shelves",
+     "es": "Estanterías industriales recuperadas"
+    },
+    "icon": "items/salvaged.industrial.shelves",
+    "workshop": false
+   }
+  ],
+  "shoes.boots": [
+   {
+    "id": 10080,
+    "name": {
+     "en": "Army Boots",
+     "es": "Botas del Ejército"
+    },
+    "icon": "skins/10080",
+    "workshop": true
+   },
+   {
+    "id": 10023,
+    "name": {
+     "en": "Black Boots",
+     "es": "Botas negras"
+    },
+    "icon": "skins/10023",
+    "workshop": false
+   },
+   {
+    "id": 10088,
+    "name": {
+     "en": "Bloody Boots",
+     "es": "Botas ensangrentadas"
+    },
+    "icon": "skins/10088",
+    "workshop": true
+   },
+   {
+    "id": 10034,
+    "name": {
+     "en": "Punk Boots",
+     "es": "Botas punk"
+    },
+    "icon": "skins/10034",
+    "workshop": true
+   },
+   {
+    "id": 10044,
+    "name": {
+     "en": "Scavenged Sneaker Boots",
+     "es": "Zapatillas recicladas"
+    },
+    "icon": "skins/10044",
+    "workshop": true
+   },
+   {
+    "id": 10022,
+    "name": {
+     "en": "Tan Boots",
+     "es": "Botas color tostado"
+    },
+    "icon": "skins/10022",
+    "workshop": false
+   }
+  ],
+  "shotgun.double": [
+   {
+    "id": 13086,
+    "name": {
+     "en": "Blunderbuss",
+     "es": "Trabuco"
+    },
+    "icon": "items/blunderbuss",
+    "workshop": false
+   }
+  ],
+  "shotgun.pump": [
+   {
+    "id": 10074,
+    "name": {
+     "en": "Chieftain Pump Shotgun",
+     "es": "Escopeta de corredera del cacique"
+    },
+    "icon": "skins/10074",
+    "workshop": true
+   },
+   {
+    "id": 10420,
+    "name": {
+     "en": "Krieg Shotgun",
+     "es": "Escopeta Krieg"
+    },
+    "icon": "items/krieg.shotgun",
+    "workshop": false
+   },
+   {
+    "id": 10140,
+    "name": {
+     "en": "The Swampmaster",
+     "es": "El dueño de la ciénaga"
+    },
+    "icon": "skins/10140",
+    "workshop": true
+   }
+  ],
+  "shotgun.waterpipe": [
+   {
+    "id": 10143,
+    "name": {
+     "en": "The Peace Pipe",
+     "es": "La pipa de la paz"
+    },
+    "icon": "skins/10143",
+    "workshop": true
+   }
+  ],
+  "skull.trophy": [
+   {
+    "id": 13052,
+    "name": {
+     "en": "Glass",
+     "es": "Cristal"
+    },
+    "icon": "skins/13052",
+    "workshop": false
+   },
+   {
+    "id": 13053,
+    "name": {
+     "en": "Glass 2",
+     "es": "Cristal 2"
+    },
+    "icon": "skins/13053",
+    "workshop": false
+   },
+   {
+    "id": 13054,
+    "name": {
+     "en": "Table",
+     "es": "Mesa"
+    },
+    "icon": "skins/13054",
+    "workshop": false
+   }
+  ],
+  "skullspikes": [
+   {
+    "id": 13050,
+    "name": {
+     "en": "Candles",
+     "es": "Velas"
+    },
+    "icon": "skins/13050",
+    "workshop": false
+   },
+   {
+    "id": 13051,
+    "name": {
+     "en": "Pumpkin",
+     "es": "Calabaza"
+    },
+    "icon": "skins/13051",
+    "workshop": false
+   }
+  ],
+  "skylantern": [
+   {
+    "id": 13058,
+    "name": {
+     "en": "Sky Lantern - Green",
+     "es": "Farolillo volante - Verde"
+    },
+    "icon": "items/skylantern.skylantern.green",
+    "workshop": false
+   },
+   {
+    "id": 13067,
+    "name": {
+     "en": "Sky Lantern - Orange",
+     "es": "Farolillo volante - Naranja"
+    },
+    "icon": "items/skylantern.skylantern.orange",
+    "workshop": false
+   },
+   {
+    "id": 13059,
+    "name": {
+     "en": "Sky Lantern - Purple",
+     "es": "Farolillo volante - Morado"
+    },
+    "icon": "items/skylantern.skylantern.purple",
+    "workshop": false
+   },
+   {
+    "id": 13069,
+    "name": {
+     "en": "Sky Lantern - Red",
+     "es": "Farolillo volante - Rojo"
+    },
+    "icon": "items/skylantern.skylantern.red",
+    "workshop": false
+   }
+  ],
+  "sled": [
+   {
+    "id": 13056,
+    "name": {
+     "en": "Sled",
+     "es": "Trineo"
+    },
+    "icon": "skins/13056",
+    "workshop": false
+   }
+  ],
+  "sleepingbag": [
+   {
+    "id": 10121,
+    "name": {
+     "en": "Aston Christmas",
+     "es": "Navidad infantil"
+    },
+    "icon": "skins/10121",
+    "workshop": true
+   },
+   {
+    "id": 10037,
+    "name": {
+     "en": "Blue Plaid Sleeping Bag",
+     "es": "Saco de dormir tartán azul"
+    },
+    "icon": "skins/10037",
+    "workshop": true
+   },
+   {
+    "id": 10119,
+    "name": {
+     "en": "Christmas Bag",
+     "es": "Saco de dormir navideño"
+    },
+    "icon": "skins/10119",
+    "workshop": true
+   },
+   {
+    "id": 10107,
+    "name": {
+     "en": "Horror Bag",
+     "es": "Saco del horror"
+    },
+    "icon": "skins/10107",
+    "workshop": true
+   },
+   {
+    "id": 10077,
+    "name": {
+     "en": "Tiger Crown Sleeping Bag",
+     "es": "Saco de dormir de la corona del tigre"
+    },
+    "icon": "skins/10077",
+    "workshop": true
+   },
+   {
+    "id": 10076,
+    "name": {
+     "en": "Wood Camo Sleeping Bag",
+     "es": "Saco de dormir de camuflaje boscoso"
+    },
+    "icon": "skins/10076",
+    "workshop": true
+   }
+  ],
+  "spear.wooden": [
+   {
+    "id": 10235,
+    "name": {
+     "en": "Chinese New Year Spear",
+     "es": "Lanza del año nuevo chino"
+    },
+    "icon": "items/spear.cny",
+    "workshop": false
+   }
+  ],
+  "stone.pickaxe": [
+   {
+    "id": 13074,
+    "name": {
+     "en": "Concrete Pickaxe",
+     "es": "Pico de hormigón armado"
+    },
+    "icon": "items/concretepickaxe",
+    "workshop": false
+   }
+  ],
+  "stonehatchet": [
+   {
+    "id": 13075,
+    "name": {
+     "en": "Concrete Hatchet",
+     "es": "Hacha de hormigón armado"
+    },
+    "icon": "items/concretehatchet",
+    "workshop": false
+   }
+  ],
+  "sunglasses": [
+   {
+    "id": 13040,
+    "name": {
+     "en": "Black Style 2",
+     "es": "Estilo Negro 2"
+    },
+    "icon": "skins/13040",
+    "workshop": false
+   },
+   {
+    "id": 13043,
+    "name": {
+     "en": "Black Style 2",
+     "es": "Estilo Negro 2"
+    },
+    "icon": "skins/13043",
+    "workshop": false
+   },
+   {
+    "id": 13041,
+    "name": {
+     "en": "Camo",
+     "es": "Camuflaje"
+    },
+    "icon": "skins/13041",
+    "workshop": false
+   },
+   {
+    "id": 13038,
+    "name": {
+     "en": "Chalk",
+     "es": "Tiza"
+    },
+    "icon": "skins/13038",
+    "workshop": false
+   },
+   {
+    "id": 13044,
+    "name": {
+     "en": "Chrome",
+     "es": "Cromáticas"
+    },
+    "icon": "skins/13044",
+    "workshop": false
+   },
+   {
+    "id": 13045,
+    "name": {
+     "en": "Gold",
+     "es": "Doradas"
+    },
+    "icon": "skins/13045",
+    "workshop": false
+   },
+   {
+    "id": 13042,
+    "name": {
+     "en": "Red",
+     "es": "Rojas"
+    },
+    "icon": "skins/13042",
+    "workshop": false
+   },
+   {
+    "id": 13039,
+    "name": {
+     "en": "Tortoise",
+     "es": "Tortuga"
+    },
+    "icon": "skins/13039",
+    "workshop": false
+   }
+  ],
+  "target.reactive": [
+   {
+    "id": 10344,
+    "name": {
+     "en": "Paintable Reactive Target",
+     "es": "Objetivo reactivo pintable"
+    },
+    "icon": "items/paintabletarget.reactive",
+    "workshop": false
+   }
+  ],
+  "torch": [
+   {
+    "id": 10213,
+    "name": {
+     "en": "Cultist Deer Torch",
+     "es": "Antorcha de la secta"
+    },
+    "icon": "items/torch.torch.skull",
+    "workshop": false
+   },
+   {
+    "id": 13079,
+    "name": {
+     "en": "Diver Torch",
+     "es": "Antorcha de buzo"
+    },
+    "icon": "items/divertorch",
+    "workshop": false
+   },
+   {
+    "id": 10480,
+    "name": {
+     "en": "Industrial Torch",
+     "es": "Antorcha industrial"
+    },
+    "icon": "items/industrial.torch",
+    "workshop": false
+   }
+  ],
+  "tshirt": [
+   {
+    "id": 10130,
+    "name": {
+     "en": "Argyle Scavenger",
+     "es": "Suéter a rombos"
+    },
+    "icon": "skins/10130",
+    "workshop": true
+   },
+   {
+    "id": 10033,
+    "name": {
+     "en": "Baseball Tshirt",
+     "es": "Camiseta de béisbol"
+    },
+    "icon": "skins/10033",
+    "workshop": true
+   },
+   {
+    "id": 10003,
+    "name": {
+     "en": "Black Tshirt",
+     "es": "Camiseta negra"
+    },
+    "icon": "skins/10003",
+    "workshop": false
+   },
+   {
+    "id": 14177,
+    "name": {
+     "en": "Blue Tshirt",
+     "es": "Camiseta azul"
+    },
+    "icon": "skins/14177",
+    "workshop": false
+   },
+   {
+    "id": 14181,
+    "name": {
+     "en": "Forest Camo Tshirt",
+     "es": "Camiseta de camuflaje boscoso"
+    },
+    "icon": "skins/14181",
+    "workshop": false
+   },
+   {
+    "id": 10024,
+    "name": {
+     "en": "German Tshirt",
+     "es": "Camiseta de Alemania"
+    },
+    "icon": "skins/10024",
+    "workshop": false
+   },
+   {
+    "id": 10035,
+    "name": {
+     "en": "Hacker Valley Veteran",
+     "es": "Veterano del Valle Hacker"
+    },
+    "icon": "skins/10035",
+    "workshop": true
+   },
+   {
+    "id": 10046,
+    "name": {
+     "en": "Missing Textures TShirt",
+     "es": "Camiseta sin texturas"
+    },
+    "icon": "skins/10046",
+    "workshop": true
+   },
+   {
+    "id": 10038,
+    "name": {
+     "en": "Murderer T-Shirt",
+     "es": "Camiseta de asesino"
+    },
+    "icon": "skins/10038",
+    "workshop": true
+   },
+   {
+    "id": 101,
+    "name": {
+     "en": "Red Tshirt",
+     "es": "Camiseta roja"
+    },
+    "icon": "skins/101",
+    "workshop": false
+   },
+   {
+    "id": 10025,
+    "name": {
+     "en": "Russia Tshirt",
+     "es": "Camiseta de Rusia"
+    },
+    "icon": "skins/10025",
+    "workshop": false
+   },
+   {
+    "id": 10002,
+    "name": {
+     "en": "Sandbox Game Shirt",
+     "es": "Camiseta de juego sandbox"
+    },
+    "icon": "skins/10002",
+    "workshop": false
+   },
+   {
+    "id": 10134,
+    "name": {
+     "en": "Ser Winter TShirt",
+     "es": "Camiseta de Ser Winter"
+    },
+    "icon": "skins/10134",
+    "workshop": true
+   },
+   {
+    "id": 10041,
+    "name": {
+     "en": "Skull & Bones TShirt",
+     "es": "Camiseta de calavera y huesos"
+    },
+    "icon": "skins/10041",
+    "workshop": true
+   },
+   {
+    "id": 10053,
+    "name": {
+     "en": "Smile T-Shirt",
+     "es": "Camiseta sonriente"
+    },
+    "icon": "skins/10053",
+    "workshop": true
+   },
+   {
+    "id": 10039,
+    "name": {
+     "en": "Target Practice T-Shirt",
+     "es": "Camiseta para prácticas de tiro"
+    },
+    "icon": "skins/10039",
+    "workshop": true
+   },
+   {
+    "id": 584379,
+    "name": {
+     "en": "Urban Camo",
+     "es": "Camiseta de camuflaje urbano"
+    },
+    "icon": "skins/584379",
+    "workshop": false
+   },
+   {
+    "id": 10043,
+    "name": {
+     "en": "Vyshyvanka Shirt",
+     "es": "Camiseta Vyshyvanka"
+    },
+    "icon": "skins/10043",
+    "workshop": true
+   }
+  ],
+  "tshirt.long": [
+   {
+    "id": 10047,
+    "name": {
+     "en": "Aztec Long T-Shirt",
+     "es": "Camiseta azteca de manga larga"
+    },
+    "icon": "skins/10047",
+    "workshop": true
+   },
+   {
+    "id": 10004,
+    "name": {
+     "en": "Black Longsleeve T-Shirt",
+     "es": "Camiseta negra de manga larga"
+    },
+    "icon": "skins/10004",
+    "workshop": false
+   },
+   {
+    "id": 10106,
+    "name": {
+     "en": "Creepy Jack",
+     "es": "Calabaza espeluznante"
+    },
+    "icon": "skins/10106",
+    "workshop": true
+   },
+   {
+    "id": 10050,
+    "name": {
+     "en": "Frankensteins Sweater",
+     "es": "Jersey de Frankenstein"
+    },
+    "icon": "skins/10050",
+    "workshop": true
+   },
+   {
+    "id": 10032,
+    "name": {
+     "en": "Green Checkered Shirt",
+     "es": "Camisa de cuadros verde"
+    },
+    "icon": "skins/10032",
+    "workshop": true
+   },
+   {
+    "id": 10005,
+    "name": {
+     "en": "Grey Longsleeve T-Shirt",
+     "es": "Camiseta gris de manga larga"
+    },
+    "icon": "skins/10005",
+    "workshop": false
+   },
+   {
+    "id": 10118,
+    "name": {
+     "en": "Merry Reindeer",
+     "es": "Reno feliz"
+    },
+    "icon": "skins/10118",
+    "workshop": true
+   },
+   {
+    "id": 10051,
+    "name": {
+     "en": "Nightmare Sweater",
+     "es": "Suéter de pesadilla"
+    },
+    "icon": "skins/10051",
+    "workshop": true
+   },
+   {
+    "id": 10006,
+    "name": {
+     "en": "Orange Longsleeve T-Shirt",
+     "es": "Camiseta de manga larga roja"
+    },
+    "icon": "skins/10006",
+    "workshop": false
+   },
+   {
+    "id": 10036,
+    "name": {
+     "en": "Sign Painter",
+     "es": "Pintor de carteles"
+    },
+    "icon": "skins/10036",
+    "workshop": true
+   },
+   {
+    "id": 10042,
+    "name": {
+     "en": "Varsity Jacket",
+     "es": "Chaqueta de universitario"
+    },
+    "icon": "skins/10042",
+    "workshop": true
+   },
+   {
+    "id": 10007,
+    "name": {
+     "en": "Yellow Longsleeve T-Shirt",
+     "es": "Camiseta amarilla de manga larga"
+    },
+    "icon": "skins/10007",
+    "workshop": false
+   }
+  ],
+  "twitch.headset": [
+   {
+    "id": 13055,
+    "name": {
+     "en": "Purple Headset",
+     "es": "Auriculares púrpuras"
+    },
+    "icon": "skins/13055",
+    "workshop": false
+   }
+  ],
+  "wall.external.high": [
+   {
+    "id": 10316,
+    "name": {
+     "en": "Legacy Wall",
+     "es": "Pared Clásica"
+    },
+    "icon": "items/wall.external.high.legacy",
+    "workshop": false
+   }
+  ],
+  "wall.external.high.stone": [
+   {
+    "id": 10303,
+    "name": {
+     "en": "High External Adobe Wall",
+     "es": "Pared Alta de Adobe"
+    },
+    "icon": "items/wall.external.high.adobe",
+    "workshop": false
+   }
+  ],
+  "wall.frame.garagedoor": [
+   {
+    "id": 10482,
+    "name": {
+     "en": "Industrial Garage Door",
+     "es": "Puerta de garaje industrial"
+    },
+    "icon": "items/industrial.garagedoor",
+    "workshop": false
+   }
+  ],
+  "wall.window.glass.reinforced": [
+   {
+    "id": 10343,
+    "name": {
+     "en": "Paintable Window",
+     "es": "Ventana pintable"
+    },
+    "icon": "items/window.paintable",
+    "workshop": false
+   }
+  ],
+  "wantedposter": [
+   {
+    "id": 13080,
+    "name": {
+     "en": "Wanted Poster 2",
+     "es": "Cartel de \"se busca\" 2"
+    },
+    "icon": "items/wantedposter.wantedposter2",
+    "workshop": false
+   },
+   {
+    "id": 13082,
+    "name": {
+     "en": "Wanted Poster 2",
+     "es": "Cartel de \"se busca\" 2"
+    },
+    "icon": "items/wantedposter.wantedposter4",
+    "workshop": false
+   },
+   {
+    "id": 13081,
+    "name": {
+     "en": "Wanted Poster 3",
+     "es": "Cartel de \"se busca\" 3"
+    },
+    "icon": "items/wantedposter.wantedposter3",
+    "workshop": false
+   }
+  ],
+  "wood.armor.helmet": [
+   {
+    "id": 10319,
+    "name": {
+     "en": "Coconut Armor Helmet",
+     "es": "Casco de armadura de coco"
+    },
+    "icon": "skins/10319",
+    "workshop": false
+   }
+  ],
+  "wood.armor.jacket": [
+   {
+    "id": 10320,
+    "name": {
+     "en": "Coconut Armor Torso",
+     "es": "Casco de armadura de coco"
+    },
+    "icon": "skins/10320",
+    "workshop": false
+   }
+  ],
+  "wood.armor.pants": [
+   {
+    "id": 10321,
+    "name": {
+     "en": "Coconut Armor Pants",
+     "es": "Pantalones de armadura de coco"
+    },
+    "icon": "skins/10321",
+    "workshop": false
+   }
+  ],
+  "woodarmor.gloves": [
+   {
+    "id": 10317,
+    "name": {
+     "en": "Coconut Armor Gloves",
+     "es": "Guantes de Armadura de Coco"
+    },
+    "icon": "skins/10317",
+    "workshop": false
+   }
+  ]
+ }
+}
