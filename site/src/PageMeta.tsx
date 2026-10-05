@@ -221,7 +221,7 @@ export default function PageMeta({ route }: { route: Route }) {
       return () => { vivo = false; };
     }
     // Y para una ficha de Rust, con el archivo de la ficha (que la pestaña ya pidió).
-    if (route.view === "rust" && route.rsSection === "items" && route.detail && !peekRsItem(route.detail)) {
+    if (route.view === "rust" && route.rsSection === "items" && route.detail && peekRsItem(route.detail) === undefined) {
       let vivo = true;
       loadRsItem(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };

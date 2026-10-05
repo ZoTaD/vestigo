@@ -10,6 +10,7 @@ Uso, desde la raíz del repo (necesita ffmpeg en el PATH, `pip install fonttools
     python games/rust/tools/ui.py
 """
 import os
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -61,6 +62,12 @@ def og_image(frame: Image.Image) -> None:
 
 
 def main() -> None:
+    # Antes de tocar nada: sin ffmpeg o sin la tipografía el script moría a la mitad, con el fondo ya escrito y la
+    # vista previa sin regenerar.
+    if shutil.which("ffmpeg") is None:
+        raise SystemExit("Falta ffmpeg en el PATH (se usa para sacar el cuadro del video del menú).")
+    if not FONT_WOFF2.exists():
+        raise SystemExit(f"Falta la tipografía {FONT_WOFF2}: corré `npm install` en site/.")
     OUT.mkdir(parents=True, exist_ok=True)
     for name, (video, second) in FRAMES.items():
         with tempfile.TemporaryDirectory() as tmp:

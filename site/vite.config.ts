@@ -195,12 +195,22 @@ function readSitemapData(): { data: OgData } {
   try {
     const m = JSON.parse(readFileSync(`${rustDir}/meta.json`, "utf-8"));
     let items: RustSitemapData["items"];
+    let list: { rows: { slug: string; en: string; es: string | null }[] } | undefined;
     try {
-      const list = JSON.parse(readFileSync(`${rustDir}/site/list.json`, "utf-8")) as { rows: { slug: string; en: string; es: string | null }[] };
-      items = list.rows.map(({ slug, en, es }) => ({ slug, en, es }));
-      registerRustSlugs(JSON.parse(readFileSync(`${rustDir}/site/slugs-es.json`, "utf-8")));
+      list = JSON.parse(readFileSync(`${rustDir}/site/list.json`, "utf-8"));
     } catch {
-      items = undefined;
+      list = undefined; // sin site_data.py corrido: sin fichas, y está bien
+    }
+    if (list) {
+      try {
+        registerRustSlugs(JSON.parse(readFileSync(`${rustDir}/site/slugs-es.json`, "utf-8")));
+        items = list.rows.map(({ slug, en, es }) => ({ slug, en, es }));
+      } catch (e) {
+        // Con la lista pero sin los slugs en español, las fichas no entran (saldrían con la hoja de "cargando…"):
+        // se avisa para que no parezca que Rust simplemente no tiene fichas.
+        console.warn(`[rust] hay list.json pero slugs-es.json falta o no se pudo leer (${(e as Error).message}); el sitemap y el prerender salen sin fichas.`);
+        items = undefined;
+      }
     }
     rs = { build: m.build, extractedAt: m.extractedAt, items };
   } catch {
@@ -715,7 +725,7 @@ function prerenderRoutes(): Plugin {
           }
           // Lo mismo en Rust: una ficha cuyo slug en español no se anotó (ver `readSitemapData`) o cuyo archivo no se
           // pidió en `entry-server.tsx` sale vacía.
-          if (route.view === "rust" && cuerpo.includes("rs-loading")) {
+          if (route.view === "rust" && /class="[^"]*rs-loading/.test(cuerpo)) {
             throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
           }
           const conexiones = originsFor(route)
