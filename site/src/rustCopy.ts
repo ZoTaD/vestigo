@@ -73,8 +73,10 @@ export interface RustCopy {
     modRow: (value: string, duration: string) => string;
     /** Un efecto que se reparte en el tiempo: "en 30 s". */
     overTime: (t: string) => string;
-    /** "Se echa a perder en 24 h:" y después el objeto en que queda. */
+    /** "Se echa a perder en 24 h". */
     spoil: (t: string) => string;
+    /** Lo mismo con dos puntos, cuando sigue el enlace al objeto en que queda. */
+    spoilInto: (t: string) => string;
     recycleNote: string;
     recycledFrom: string;
     recycledItem: string;
@@ -181,11 +183,12 @@ const EN: RustCopy = {
     },
     mods: {
       woodYield: "Wood yield", oreYield: "Ore yield", radiationResistance: "Radiation resistance",
-      radiationExposureResistance: "Radiation exposure resistance", maxHealth: "Max health", scrapYield: "Scrap yield",
+      maxHealth: "Max health", scrapYield: "Scrap yield",
     },
     modRow: (value, duration) => `${value} for ${duration}`,
     overTime: (t) => `over ${t}`,
-    spoil: (t) => `Spoils after ${t}:`,
+    spoil: (t) => `Spoils after ${t}`,
+    spoilInto: (t) => `Spoils after ${t}:`,
     recycleNote: "“+ 50%” is the chance of getting one more. For an item at full condition: a worn one gives less. The green recycler gives more while the monument's power grid is on, and the red one only works with it.",
     loot: "Where to find it",
     lootNote: "Chance that one container has at least one.",
@@ -301,12 +304,13 @@ const ES: RustCopy = {
     },
     mods: {
       woodYield: "Rendimiento de madera", oreYield: "Rendimiento de mineral", radiationResistance: "Resistencia a la radiación",
-      radiationExposureResistance: "Resistencia a la exposición a la radiación", maxHealth: "Vida máxima",
+      maxHealth: "Vida máxima",
       scrapYield: "Rendimiento de chatarra",
     },
     modRow: (value, duration) => `${value} durante ${duration}`,
     overTime: (t) => `en ${t}`,
-    spoil: (t) => `Se echa a perder en ${t}:`,
+    spoil: (t) => `Se echa a perder en ${t}`,
+    spoilInto: (t) => `Se echa a perder en ${t}:`,
     recycleNote: "“+ 50 %” es la chance de que salga uno más. Con el objeto entero: uno gastado da menos. La verde rinde más mientras el monumento tiene la red eléctrica prendida, y la roja sólo anda con ella.",
     loot: "Dónde aparece",
     lootNote: "Probabilidad de que una caja traiga al menos uno.",

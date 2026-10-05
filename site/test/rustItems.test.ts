@@ -126,7 +126,7 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
   it("el AK: cuánto tarda en desaparecer, el tiempo en su banco y la reparación", () => {
     const html = render("es", "/es/rust/objetos/fusil-de-asalto");
     expect(html).toContain("Desaparece del piso en");
-    expect(html).toContain("1 h");
+    expect(html).toMatch(/Desaparece del piso en<\/dt><dd>1 h</);
     expect(html).toContain("Banco de nivel 3: 45 s");
     expect(html).toContain("Reparación");
     expect(html).toContain("Cada reparación le saca 20 % de condición máxima");
@@ -142,7 +142,7 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
     const html = render("en", "/en/rust/items/medical-syringe");
     expect(html).toContain("When used");
     expect(html).toContain("Health over time");
-    expect(html).toContain("+20");
-    expect(html).toContain("−10");
+    expect(html).toMatch(/Health over time<\/dt><dd>\+20</);
+    expect(html).toMatch(/Radiation<\/dt><dd>−10</);
   });
 });

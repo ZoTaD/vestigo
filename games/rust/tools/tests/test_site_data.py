@@ -87,6 +87,13 @@ class TestBuild(unittest.TestCase):
         self.assertEqual(f["use"]["spoil"], {"hours": 24, "into": {"id": "wood", "slug": "wood", "name": {"en": "Wood", "es": "Madera"}}})
         self.assertIsNone(self.fichas["wood"]["repair"])
 
+    def test_use_of_con_modificadores_y_sin_objeto_al_pudrirse(self):
+        i = {"use": {"effects": [], "mods": [{"stat": "woodYield", "value": 0.5, "duration": 1800}], "spoil": {"hours": 24, "into": None}}}
+        u = rust_site.use_of(i, lambda sid: {"id": sid})
+        self.assertEqual(u["mods"], [{"stat": "woodYield", "value": 0.5, "duration": 1800}])
+        self.assertEqual(u["spoil"], {"hours": 24, "into": None})
+        self.assertIsNone(rust_site.use_of({"use": None}, lambda sid: {"id": sid}))
+
     def test_se_obtiene_reciclando(self):
         wood = self.fichas["wood"]["recycledFrom"]
         self.assertEqual(wood["rows"], [{"id": "rifle.ak", "slug": "assault-rifle", "name": {"en": "Assault Rifle", "es": "Fusil de asalto"}, "amount": 200, "scrap": False}])
@@ -118,6 +125,8 @@ class TestBuildReal(unittest.TestCase):
         visible = [i for i in load("items.json")["items"] if i["slug"]]
         self.assertEqual(len(out["fichas"]), len(visible))
         self.assertEqual(len(out["list"]["rows"]), len(visible))
+        for slug, f in out["fichas"].items():
+            self.assertIsInstance(f["despawn"], (int, float), slug)
         ak = out["fichas"]["assault-rifle"]
         self.assertTrue(ak["loot"])
         self.assertEqual(ak["craft"]["researchScrap"], 120)

@@ -6,17 +6,11 @@
 import { useLang, useLocale } from "../../i18n";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
-import { say, type Ficha, type ModStat } from "./data";
+import { say, type Ficha } from "./data";
 import { formatDuration } from "./format";
 import { Icon, RefLink, type Nav } from "./parts";
 
 type Props = { ficha: Ficha; route: Route; navigate: Nav };
-
-/**
- * Modificadores que no se muestran. El tipo 3 (`radiationExposureResistance`) todavía no está confirmado contra el
- * juego: si resulta mal, se agrega acá y desaparece de todas las fichas sin tocar nada más.
- */
-const HIDDEN_MODS: readonly ModStat[] = [];
 
 /** "+20" o "−10" (con el signo menos tipográfico). */
 function signed(n: number, num: (n: number) => string): string {
@@ -30,15 +24,15 @@ export function UseSection({ ficha, route, navigate }: Props) {
   const num = (n: number) => n.toLocaleString(locale);
   const u = ficha.use;
   if (!u) return null;
-  const mods = u.mods.filter((m) => !HIDDEN_MODS.includes(m.stat));
+  const mods = u.mods;
   if (!u.effects.length && !mods.length && !u.spoil) return null;
   return (
     <section className="rs-pnl">
       <h2 className="rs-hd">{t.use}</h2>
       {(u.effects.length > 0 || mods.length > 0) && (
         <dl className="rs-facts">
-          {u.effects.map((e) => (
-            <div key={e.stat}>
+          {u.effects.map((e, i) => (
+            <div key={i}>
               <dt>{t.stats[e.stat]}</dt>
               <dd>
                 {signed(e.amount, num)}
@@ -46,17 +40,17 @@ export function UseSection({ ficha, route, navigate }: Props) {
               </dd>
             </div>
           ))}
-          {mods.map((m) => (
-            <div key={m.stat}>
+          {mods.map((m, i) => (
+            <div key={i}>
               <dt>{t.mods[m.stat]}</dt>
-              <dd>{t.modRow(`+${t.pct(Math.round(m.value * 100))}`, formatDuration(m.duration))}</dd>
+              <dd>{t.modRow(`${signed(Math.round(m.value * 100), (n) => t.pct(n))}`, formatDuration(m.duration))}</dd>
             </div>
           ))}
         </dl>
       )}
       {u.spoil && (
         <p className="rs-meta">
-          <span>{t.spoil(formatDuration(u.spoil.hours * 3600))}</span>
+          <span>{(u.spoil.into ? t.spoilInto : t.spoil)(formatDuration(u.spoil.hours * 3600))}</span>
           {u.spoil.into && (
             <RefLink r={u.spoil.into} route={route} navigate={navigate}>
               {say(u.spoil.into.name, lang)}

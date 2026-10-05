@@ -82,7 +82,7 @@ REPAIR_LOSS = 0.2
 EFFECTS = {0: "calories", 1: "hydration", 3: "poison", 4: "radiation", 5: "bleeding", 6: "health", 7: "healthOverTime"}
 # Los modificadores de los tés (`ItemModConsumable.modifiers`, enum `Modifier.ModifierType`), con `value` en fracción.
 # Del 6 en adelante son tipos nuevos (pasteles, la jeringa) cuyo nombre no está verificado: no se muestran.
-MODIFIERS = {0: "woodYield", 1: "oreYield", 2: "radiationResistance", 3: "radiationExposureResistance", 4: "maxHealth", 5: "scrapYield"}
+MODIFIERS = {0: "woodYield", 1: "oreYield", 2: "radiationResistance", 4: "maxHealth", 5: "scrapYield"}
 # Objetos de desarrollo que el juego dejó sin ocultar: no existen para el jugador (nombres como "Smoke Rocket WIP!!!!"
 # y "Test Generator") y no tienen que entrar en las cifras ni tener ficha.
 EXCLUDED = {"ammo.rocket.smoke", "electric.generator.small"}

@@ -35,7 +35,7 @@ export interface Recycler {
 /** Lo que mueve usar o comer un objeto (`MetabolismAttribute.Type` en extract.py). */
 export type EffectStat = "calories" | "hydration" | "poison" | "radiation" | "bleeding" | "health" | "healthOverTime";
 /** Los modificadores de los tés, con `value` en fracción (0,5 = +50 %). */
-export type ModStat = "woodYield" | "oreYield" | "radiationResistance" | "radiationExposureResistance" | "maxHealth" | "scrapYield";
+export type ModStat = "woodYield" | "oreYield" | "radiationResistance" | "maxHealth" | "scrapYield";
 export interface ItemsList {
   cats: string[];
   rows: ListRow[];
