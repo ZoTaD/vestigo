@@ -96,13 +96,22 @@ class TestContainerChances(unittest.TestCase):
         self.assertEqual(world.container_chances(tt, lambda x: x)[("scrap", False)], (1.0, 25, 25))
 
     def test_cantidades(self):
+        # El brief esperaba 2–5, pero el juego hace `(int)Random.Range(amount, maxAmount)` con floats
+        # (`ItemAmountRanged.GetAmount` y `LootSpawn.SpawnIntoContainer`, decompilado en
+        # github.com/MillionthOdin16/RustChangelog): trunca, y el 5 no sale nunca. Corregido con el visto bueno de ZoTaD.
         tt = {"lootDefinition": leaf("a", amount=2, max_amount=5), "maxDefinitionsToSpawn": 1, "LootSpawnSlots": [], "scrapAmount": 0}
-        self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (1.0, 2, 5))
+        self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (1.0, 2, 4))
+
+    def test_cantidades_con_maximo_pegado_al_minimo(self):
+        # maxAmount apenas por encima de amount: el rango truncado queda en el mínimo, nunca por debajo.
+        tt = {"lootDefinition": leaf("a", amount=2, max_amount=2.5), "maxDefinitionsToSpawn": 1, "LootSpawnSlots": [], "scrapAmount": 0}
+        self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (1.0, 2, 2))
 
     def test_cantidades_con_extra_spawns(self):
+        # Tres tiradas de 2–4 (ver `test_cantidades`): hasta 12.
         tree = node_extra((1, leaf("a", amount=2, max_amount=5), 2))
         tt = {"lootDefinition": tree, "maxDefinitionsToSpawn": 1, "LootSpawnSlots": [], "scrapAmount": 0}
-        self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (1.0, 2, 15))
+        self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)], (1.0, 2, 12))
 
     def test_la_chatarra_fija_se_suma_a_la_del_arbol(self):
         # `GenerateScrap` mete `scrapAmount` además de lo que dio el botín, no en su lugar.

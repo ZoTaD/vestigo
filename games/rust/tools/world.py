@@ -21,6 +21,7 @@ Uso, desde la raíz del repo (tarda ~1 min: abrir los tres bundles y seguir las 
     python games/rust/tools/world.py
 """
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -332,7 +333,12 @@ def amounts(spawn, resolve, acc=None, times=1):
         if not sid:
             continue
         lo = max(1, int(it["amount"]))
-        hi = (max(lo, int(it["maxAmount"])) if it["maxAmount"] > 0 else lo) * times
+        # El juego hace `(int)Random.Range(amount, maxAmount)` con floats (`ItemAmountRanged.GetAmount`, decompilado en
+        # github.com/MillionthOdin16/RustChangelog): trunca, así que el tope real es el entero anterior a `maxAmount`
+        # (con 5, sale hasta 4), y nunca menos que el mínimo. Sin rango (`maxAmount` ≤ `amount`), sale `amount`.
+        top = it["maxAmount"]
+        hi = max(lo, math.ceil(top) - 1) if top > 0 and top > it["amount"] else lo
+        hi *= times
         key = (sid, bool(it["isBP"]))
         old = acc.get(key)
         acc[key] = (min(lo, old[0]), max(hi, old[1])) if old else (lo, hi)

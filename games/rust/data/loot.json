@@ -290,7 +290,7 @@
     "c": "supply",
     "chance": 0.7813,
     "min": 12,
-    "max": 100,
+    "max": 98,
     "bp": false
    },
    {
@@ -563,7 +563,7 @@
     "c": "elite",
     "chance": 0.2,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
@@ -595,7 +595,7 @@
     "c": "supply",
     "chance": 0.8592,
     "min": 6,
-    "max": 24,
+    "max": 22,
     "bp": false
    },
    {
@@ -616,14 +616,14 @@
     "c": "elite",
     "chance": 0.0853,
     "min": 5,
-    "max": 12,
+    "max": 11,
     "bp": false
    },
    {
     "c": "heli",
     "chance": 0.0156,
     "min": 8,
-    "max": 12,
+    "max": 11,
     "bp": false
    },
    {
@@ -637,7 +637,7 @@
     "c": "bradley",
     "chance": 0.0087,
     "min": 8,
-    "max": 12,
+    "max": 11,
     "bp": false
    },
    {
@@ -653,35 +653,35 @@
     "c": "supply",
     "chance": 0.5,
     "min": 4,
-    "max": 8,
+    "max": 7,
     "bp": false
    },
    {
     "c": "ammo",
     "chance": 0.2929,
     "min": 4,
-    "max": 8,
+    "max": 7,
     "bp": false
    },
    {
     "c": "cannons",
     "chance": 0.0739,
     "min": 4,
-    "max": 8,
+    "max": 7,
     "bp": false
    },
    {
     "c": "tools",
     "chance": 0.0064,
     "min": 4,
-    "max": 8,
+    "max": 7,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.0043,
     "min": 4,
-    "max": 8,
+    "max": 7,
     "bp": false
    }
   ],
@@ -711,14 +711,14 @@
     "c": "elite",
     "chance": 0.0122,
     "min": 8,
-    "max": 12,
+    "max": 11,
     "bp": false
    },
    {
     "c": "heli",
     "chance": 0.0094,
     "min": 8,
-    "max": 12,
+    "max": 11,
     "bp": false
    },
    {
@@ -732,7 +732,7 @@
     "c": "bradley",
     "chance": 0.0052,
     "min": 8,
-    "max": 12,
+    "max": 11,
     "bp": false
    },
    {
@@ -748,35 +748,35 @@
     "c": "jungle",
     "chance": 0.4213,
     "min": 4,
-    "max": 8,
+    "max": 7,
     "bp": false
    },
    {
     "c": "trash",
     "chance": 0.3615,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "foodbox_lab",
     "chance": 0.349,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "shore",
     "chance": 0.349,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "foodbox",
     "chance": 0.2489,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    }
   ],
@@ -836,14 +836,14 @@
     "c": "tools",
     "chance": 0.049,
     "min": 5,
-    "max": 10,
+    "max": 9,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.0327,
     "min": 5,
-    "max": 10,
+    "max": 9,
     "bp": false
    }
   ],
@@ -852,28 +852,28 @@
     "c": "locked",
     "chance": 0.4296,
     "min": 10,
-    "max": 15,
+    "max": 14,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.3047,
     "min": 10,
-    "max": 15,
+    "max": 14,
     "bp": false
    },
    {
     "c": "tools",
     "chance": 0.049,
     "min": 3,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.0327,
     "min": 3,
-    "max": 6,
+    "max": 5,
     "bp": false
    }
   ],
@@ -1014,14 +1014,14 @@
     "c": "locked",
     "chance": 0.1259,
     "min": 5,
-    "max": 10,
+    "max": 9,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.0834,
     "min": 5,
-    "max": 10,
+    "max": 9,
     "bp": false
    }
   ],
@@ -1030,14 +1030,14 @@
     "c": "locked",
     "chance": 0.1259,
     "min": 5,
-    "max": 30,
+    "max": 27,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.0834,
     "min": 5,
-    "max": 30,
+    "max": 27,
     "bp": false
    }
   ],
@@ -1046,14 +1046,14 @@
     "c": "locked",
     "chance": 0.5095,
     "min": 3,
-    "max": 40,
+    "max": 36,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.3693,
     "min": 3,
-    "max": 40,
+    "max": 36,
     "bp": false
    }
   ],
@@ -1062,14 +1062,14 @@
     "c": "locked",
     "chance": 0.1259,
     "min": 5,
-    "max": 30,
+    "max": 27,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.0834,
     "min": 5,
-    "max": 30,
+    "max": 27,
     "bp": false
    }
   ],
@@ -1877,7 +1877,7 @@
     "c": "cannons",
     "chance": 1.0,
     "min": 8,
-    "max": 12,
+    "max": 11,
     "bp": false
    }
   ],
@@ -1948,14 +1948,14 @@
     "c": "locked",
     "chance": 0.6972,
     "min": 8,
-    "max": 20,
+    "max": 19,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.5386,
     "min": 8,
-    "max": 20,
+    "max": 19,
     "bp": false
    }
   ],
@@ -1964,14 +1964,14 @@
     "c": "locked",
     "chance": 0.6972,
     "min": 2,
-    "max": 12,
+    "max": 11,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.5386,
     "min": 2,
-    "max": 12,
+    "max": 11,
     "bp": false
    }
   ],
@@ -1980,14 +1980,14 @@
     "c": "locked",
     "chance": 0.6972,
     "min": 2,
-    "max": 10,
+    "max": 9,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.5386,
     "min": 2,
-    "max": 10,
+    "max": 9,
     "bp": false
    }
   ],
@@ -2543,14 +2543,14 @@
     "c": "fuel",
     "chance": 1.0,
     "min": 15,
-    "max": 20,
+    "max": 19,
     "bp": false
    },
    {
     "c": "oil",
     "chance": 1.0,
     "min": 15,
-    "max": 20,
+    "max": 19,
     "bp": false
    }
   ],
@@ -2559,7 +2559,7 @@
     "c": "jungle",
     "chance": 0.4213,
     "min": 3,
-    "max": 5,
+    "max": 4,
     "bp": false
    }
   ],
@@ -2568,7 +2568,7 @@
     "c": "jungle",
     "chance": 0.4213,
     "min": 5,
-    "max": 12,
+    "max": 11,
     "bp": false
    }
   ],
@@ -2577,7 +2577,7 @@
     "c": "jungle",
     "chance": 0.4213,
     "min": 5,
-    "max": 12,
+    "max": 11,
     "bp": false
    }
   ],
@@ -2586,7 +2586,7 @@
     "c": "jungle",
     "chance": 0.33,
     "min": 10,
-    "max": 12,
+    "max": 11,
     "bp": false
    }
   ],
@@ -4221,28 +4221,28 @@
     "c": "mine",
     "chance": 0.0769,
     "min": 4,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "underwater_adv",
     "chance": 0.0111,
     "min": 4,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "crate",
     "chance": 0.0044,
     "min": 4,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "crate_wagon",
     "chance": 0.0044,
     "min": 4,
-    "max": 6,
+    "max": 5,
     "bp": false
    }
   ],
@@ -4698,7 +4698,7 @@
     "c": "tech2",
     "chance": 0.2653,
     "min": 2,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
@@ -4712,35 +4712,35 @@
     "c": "crate",
     "chance": 0.1429,
     "min": 2,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "crate_wagon",
     "chance": 0.1429,
     "min": 2,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "underwater_adv",
     "chance": 0.1429,
     "min": 2,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.0477,
     "min": 2,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "barrel",
     "chance": 0.0143,
     "min": 2,
-    "max": 3,
+    "max": 2,
     "bp": false
    }
   ],
@@ -4899,14 +4899,14 @@
     "c": "supply",
     "chance": 0.4898,
     "min": 2,
-    "max": 12,
+    "max": 9,
     "bp": false
    },
    {
     "c": "locked",
     "chance": 0.0979,
     "min": 1,
-    "max": 12,
+    "max": 9,
     "bp": false
    },
    {
@@ -5054,7 +5054,7 @@
     "c": "mine",
     "chance": 0.0769,
     "min": 15,
-    "max": 25,
+    "max": 24,
     "bp": false
    }
   ],
@@ -5663,14 +5663,14 @@
     "c": "locked",
     "chance": 0.4372,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.3047,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
@@ -5707,14 +5707,14 @@
     "c": "locked",
     "chance": 0.4372,
     "min": 1,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.3047,
     "min": 2,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
@@ -6014,21 +6014,21 @@
     "c": "foodbox_lab",
     "chance": 0.187,
     "min": 1,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "shore",
     "chance": 0.187,
     "min": 1,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "foodbox",
     "chance": 0.1289,
     "min": 1,
-    "max": 3,
+    "max": 2,
     "bp": false
    }
   ],
@@ -6291,14 +6291,14 @@
     "c": "fuel",
     "chance": 1.0,
     "min": 5,
-    "max": 10,
+    "max": 9,
     "bp": false
    },
    {
     "c": "oil",
     "chance": 1.0,
     "min": 5,
-    "max": 10,
+    "max": 9,
     "bp": false
    },
    {
@@ -6319,14 +6319,14 @@
     "c": "tools",
     "chance": 0.0098,
     "min": 20,
-    "max": 40,
+    "max": 39,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.0065,
     "min": 20,
-    "max": 40,
+    "max": 39,
     "bp": false
    }
   ],
@@ -6507,7 +6507,7 @@
     "c": "mine",
     "chance": 0.1538,
     "min": 30,
-    "max": 50,
+    "max": 49,
     "bp": false
    }
   ],
@@ -6539,63 +6539,63 @@
     "c": "supply",
     "chance": 0.691,
     "min": 32,
-    "max": 200,
+    "max": 199,
     "bp": false
    },
    {
     "c": "locked",
     "chance": 0.6641,
     "min": 15,
-    "max": 200,
+    "max": 199,
     "bp": false
    },
    {
     "c": "tech3",
     "chance": 0.3056,
     "min": 15,
-    "max": 25,
+    "max": 24,
     "bp": false
    },
    {
     "c": "elite",
     "chance": 0.2773,
     "min": 15,
-    "max": 25,
+    "max": 24,
     "bp": false
    },
    {
     "c": "underwater_adv",
     "chance": 0.25,
     "min": 15,
-    "max": 25,
+    "max": 24,
     "bp": false
    },
    {
     "c": "military",
     "chance": 0.1667,
     "min": 15,
-    "max": 25,
+    "max": 24,
     "bp": false
    },
    {
     "c": "military_lab",
     "chance": 0.1667,
     "min": 15,
-    "max": 25,
+    "max": 24,
     "bp": false
    },
    {
     "c": "military_wagon",
     "chance": 0.1667,
     "min": 15,
-    "max": 25,
+    "max": 24,
     "bp": false
    },
    {
     "c": "mine",
     "chance": 0.0769,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    }
   ],
@@ -6678,91 +6678,91 @@
     "c": "locked",
     "chance": 0.3927,
     "min": 5,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "tech3",
     "chance": 0.3056,
     "min": 5,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "elite",
     "chance": 0.2773,
     "min": 5,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "tech2",
     "chance": 0.2653,
     "min": 1,
-    "max": 5,
+    "max": 4,
     "bp": false
    },
    {
     "c": "military",
     "chance": 0.1667,
     "min": 5,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "military_lab",
     "chance": 0.1667,
     "min": 5,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "military_wagon",
     "chance": 0.1667,
     "min": 5,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.1597,
     "min": 5,
-    "max": 6,
+    "max": 5,
     "bp": false
    },
    {
     "c": "crate",
     "chance": 0.1429,
     "min": 1,
-    "max": 5,
+    "max": 4,
     "bp": false
    },
    {
     "c": "crate_wagon",
     "chance": 0.1429,
     "min": 1,
-    "max": 5,
+    "max": 4,
     "bp": false
    },
    {
     "c": "underwater_adv",
     "chance": 0.1429,
     "min": 1,
-    "max": 5,
+    "max": 4,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.0477,
     "min": 1,
-    "max": 5,
+    "max": 4,
     "bp": false
    },
    {
     "c": "barrel",
     "chance": 0.0143,
     "min": 1,
-    "max": 5,
+    "max": 4,
     "bp": false
    }
   ],
@@ -6771,42 +6771,42 @@
     "c": "tech2",
     "chance": 0.2653,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "crate",
     "chance": 0.1429,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "crate_wagon",
     "chance": 0.1429,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "underwater_adv",
     "chance": 0.1429,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.0477,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "barrel",
     "chance": 0.0143,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    }
   ],
@@ -6815,14 +6815,14 @@
     "c": "locked",
     "chance": 0.4296,
     "min": 2,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.3047,
     "min": 2,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
@@ -8135,42 +8135,42 @@
     "c": "tech2",
     "chance": 0.2653,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    },
    {
     "c": "crate",
     "chance": 0.1429,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    },
    {
     "c": "crate_wagon",
     "chance": 0.1429,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    },
    {
     "c": "underwater_adv",
     "chance": 0.1429,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.0477,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    },
    {
     "c": "barrel",
     "chance": 0.0143,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    }
   ],
@@ -8216,28 +8216,28 @@
     "c": "underwater_adv",
     "chance": 0.6281,
     "min": 1,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "jungle",
     "chance": 0.4213,
     "min": 1,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.3819,
     "min": 1,
-    "max": 3,
+    "max": 2,
     "bp": false
    },
    {
     "c": "barrel",
     "chance": 0.1545,
     "min": 1,
-    "max": 3,
+    "max": 2,
     "bp": false
    }
   ],
@@ -8485,14 +8485,14 @@
     "c": "supply",
     "chance": 0.5556,
     "min": 140,
-    "max": 160,
+    "max": 159,
     "bp": false
    },
    {
     "c": "locked",
     "chance": 0.3333,
     "min": 140,
-    "max": 160,
+    "max": 159,
     "bp": false
    }
   ],
@@ -8591,21 +8591,21 @@
     "c": "underwater_adv",
     "chance": 0.3773,
     "min": 3,
-    "max": 5,
+    "max": 4,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.2084,
     "min": 3,
-    "max": 5,
+    "max": 4,
     "bp": false
    },
    {
     "c": "barrel",
     "chance": 0.0803,
     "min": 3,
-    "max": 5,
+    "max": 4,
     "bp": false
    }
   ],
@@ -8621,7 +8621,7 @@
     "c": "tech2",
     "chance": 0.2653,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
@@ -8635,35 +8635,35 @@
     "c": "crate",
     "chance": 0.1429,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "crate_wagon",
     "chance": 0.1429,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "underwater_adv",
     "chance": 0.1429,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.0477,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "barrel",
     "chance": 0.0143,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    }
   ],
@@ -9664,7 +9664,7 @@
     "c": "jungle",
     "chance": 0.4213,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
@@ -9856,21 +9856,21 @@
     "c": "underwater_adv",
     "chance": 0.3773,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "underwater",
     "chance": 0.2084,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "barrel",
     "chance": 0.0803,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    }
   ],
@@ -9879,56 +9879,56 @@
     "c": "locked",
     "chance": 0.3927,
     "min": 2,
-    "max": 5,
+    "max": 4,
     "bp": false
    },
    {
     "c": "tech3",
     "chance": 0.3056,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    },
    {
     "c": "elite",
     "chance": 0.2773,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    },
    {
     "c": "bradley",
     "chance": 0.25,
     "min": 10,
-    "max": 12,
+    "max": 11,
     "bp": false
    },
    {
     "c": "military",
     "chance": 0.1667,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    },
    {
     "c": "military_lab",
     "chance": 0.1667,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    },
    {
     "c": "military_wagon",
     "chance": 0.1667,
     "min": 2,
-    "max": 4,
+    "max": 3,
     "bp": false
    },
    {
     "c": "supply",
     "chance": 0.1597,
     "min": 4,
-    "max": 5,
+    "max": 4,
     "bp": false
    }
   ],
@@ -10573,28 +10573,28 @@
     "c": "foodbox_lab",
     "chance": 0.349,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "shore",
     "chance": 0.349,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "foodbox",
     "chance": 0.2489,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
     "c": "food",
     "chance": 0.2135,
     "min": 1,
-    "max": 2,
+    "max": 1,
     "bp": false
    },
    {
