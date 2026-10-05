@@ -15,11 +15,22 @@ const render = (lang: "en" | "es", path: string) =>
 describe("la portada de Rust", () => {
   it("dice qué hay, con las cifras de los datos, en español", () => {
     const html = render("es", "/es/rust");
-    expect(html).toContain("Guía de Rust en español");
+    expect(html).toMatch(/<h1[^>]*>Guía de Rust en español<\/h1>/);
+    expect(html).toContain('type="search"');
     expect(html).toContain(meta.counts.items.toLocaleString("es-AR"));
     expect(html).toContain(meta.counts.recipes.toLocaleString("es-AR"));
     expect(html).toContain("Próximo wipe forzado");
     expect(html).toContain("Sobre esta guía");
+  });
+
+  it("en inglés, el h1 dice lo que se busca", () => {
+    expect(render("en", "/en/rust")).toMatch(/<h1[^>]*>Rust Guide: Items, Crafting &amp; Raids<\/h1>/);
+  });
+
+  it("los casilleros enlazan la ficha de cada objeto con su slug en español", () => {
+    const html = render("es", "/es/rust");
+    expect(html).toContain('href="/es/rust/objetos/fusil-de-asalto"');
+    expect(html).toContain('href="/es/rust/objetos/azufre"');
   });
 
   it("en inglés, con los textos en inglés", () => {

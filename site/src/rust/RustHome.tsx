@@ -10,6 +10,7 @@ import RouteLink from "../RouteLink";
 import { useLang, useLocale } from "../i18n";
 import { RUST_PUBLISHED, type Route, type RustTab } from "../route";
 import { useRustCopy } from "../rustCopy";
+import RustSearch from "./RustSearch";
 import { nextForcedWipe } from "./wipe";
 
 type Nav = (r: Route) => void;
@@ -31,9 +32,10 @@ export default function RustHome({ route, navigate }: { route: Route; navigate: 
         <section className="rs-pnl">
           <p className="rs-hd">{t.kicker}</p>
           <div className="rs-title">
-            <h1 className="rs-h1">Rust</h1>
+            <h1 className="rs-h1">{t.h1}</h1>
           </div>
           <p className="rs-lede">{t.lede(items, recipes)}</p>
+          <RustSearch route={route} navigate={navigate} />
           <h2 className="rs-hd">{t.slotsTitle}</h2>
           <ul className="rs-slots">
             {(home as HomeItem[]).map((it) => {
@@ -42,7 +44,7 @@ export default function RustHome({ route, navigate }: { route: Route; navigate: 
               return (
                 <li key={it.id}>
                   {isLive("items") ? (
-                    <RouteLink className="rs-slot" title={name} to={{ ...route, view: "rust", rsSection: "items", detail: it.slug }} onNavigate={navigate}>
+                    <RouteLink className="rs-slot" to={{ ...route, view: "rust", rsSection: "items", detail: it.slug }} onNavigate={navigate}>
                       {icon}
                     </RouteLink>
                   ) : (

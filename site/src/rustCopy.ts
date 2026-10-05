@@ -69,6 +69,8 @@ export interface RustCopy {
   };
   home: {
     kicker: string;
+    h1: string;
+    searchLabel: string;
     lede: (items: string, recipes: string) => string;
     slotsTitle: string;
     wipe: { title: string; days: string; hours: string; minutes: string; note: string };
@@ -151,7 +153,9 @@ const EN: RustCopy = {
     back: "All items",
   },
   home: {
-    kicker: "Rust guide",
+    kicker: "Rust",
+    h1: "Rust Guide: Items, Crafting & Raids",
+    searchLabel: "Find an item",
     lede: (items, recipes) => `${items} items with their crafting, recycling and where they drop, ${recipes} recipes and the raid calculator to know how much sulfur it takes to get in.`,
     slotsTitle: "Most searched",
     wipe: {
@@ -246,7 +250,9 @@ const ES: RustCopy = {
     back: "Todos los objetos",
   },
   home: {
-    kicker: "Guía de Rust en español",
+    kicker: "Rust",
+    h1: "Guía de Rust en español",
+    searchLabel: "Buscar un objeto",
     lede: (items, recipes) => `${items} objetos con su crafteo, reciclaje y dónde aparecen, ${recipes} recetas y la calculadora de raideo para saber cuánto azufre cuesta entrar.`,
     slotsTitle: "Lo más buscado",
     wipe: {

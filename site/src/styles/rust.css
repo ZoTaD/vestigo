@@ -50,7 +50,7 @@
 .rs-pnl { background: var(--rs-panel); padding: 18px; }
 .rs-hd { margin: 0 0 12px; font: 800 13px/1.2 "Roboto Condensed", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rs-dim); }
 .rs-title { container-type: inline-size; }
-.rs-h1 { margin: 0 0 8px; font: 800 clamp(34px, 11cqi, 56px)/1 "Roboto Condensed", sans-serif; text-transform: uppercase; }
+.rs-h1 { margin: 0 0 8px; font: 800 clamp(30px, 8cqi, 52px)/1.05 "Roboto Condensed", sans-serif; text-transform: uppercase; }
 .rs-lede { margin: 0 0 18px; max-width: 52ch; font-size: 17px; line-height: 1.45; color: var(--rs-soft); }
 
 /* Los casilleros del inventario: el ícono del objeto en un cuadro gris; el nombre va en el alt y en el title. */
@@ -95,3 +95,19 @@ a.rs-tool:hover b { color: #fff; }
   .rs-tabs,
   .rs-main { padding-left: 16px; padding-right: 16px; }
 }
+
+/* El buscador de la portada: el campo y hasta ocho resultados con su ícono. */
+.rs-find { position: relative; margin: 0 0 18px; }
+.rs-find input {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 0;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--rs-text);
+  font: 400 17px/1.3 "Roboto Condensed", sans-serif;
+}
+.rs-find-hits { display: grid; gap: 2px; max-width: 420px; margin: 4px 0 0; padding: 0; list-style: none; }
+.rs-find-hits .rs-ref { display: flex; gap: 8px; align-items: center; padding: 6px 8px; background: rgba(0, 0, 0, 0.55); color: inherit; text-decoration: none; }
+.rs-find-hits .rs-ref:hover { background: #55702a; color: #fff; }
