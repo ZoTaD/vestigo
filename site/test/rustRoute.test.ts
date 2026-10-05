@@ -19,8 +19,9 @@ describe("las direcciones de Rust", () => {
     expect(RUST_SECTION_ES).toEqual({ items: "objetos", raid: "raideo" });
   });
 
-  it("una pestaña que todavía no se publicó (o que no existe) muestra la portada", () => {
-    expect(routePath(parseRoute("/es/rust/objetos"))).toBe("/es/rust");
+  it("Objetos ya está publicada; Raideo todavía no, y muestra la portada", () => {
+    expect(routePath(parseRoute("/es/rust/objetos"))).toBe("/es/rust/objetos");
+    expect(routePath(parseRoute("/es/rust/raideo"))).toBe("/es/rust");
     expect(routePath(parseRoute("/en/rust/no-existe"))).toBe("/en/rust");
   });
 
@@ -29,5 +30,14 @@ describe("las direcciones de Rust", () => {
     const ak = { ...parseRoute("/es/rust"), rsSection: "items" as const, detail: "assault-rifle" };
     expect(routePath(ak)).toBe("/es/rust/objetos/fusil-de-asalto");
     expect(routePath({ ...ak, lang: "en" })).toBe("/en/rust/items/assault-rifle");
+  });
+
+  it("parseRoute lee la ficha en los dos idiomas y con el slug del otro idioma", () => {
+    registerRustSlugs({ items: { "assault-rifle": "fusil-de-asalto" } });
+    expect(parseRoute("/es/rust/objetos/fusil-de-asalto")).toMatchObject({ lang: "es", view: "rust", rsSection: "items", detail: "assault-rifle" });
+    expect(parseRoute("/en/rust/items/assault-rifle")).toMatchObject({ lang: "en", rsSection: "items", detail: "assault-rifle" });
+    // El slug se traduce en los dos idiomas: un link en inglés con el slug español abre la misma ficha.
+    expect(parseRoute("/en/rust/items/fusil-de-asalto").detail).toBe("assault-rifle");
+    expect(parseRoute("/es/rust/items/assault-rifle")).toMatchObject({ rsSection: "items", detail: "assault-rifle" });
   });
 });

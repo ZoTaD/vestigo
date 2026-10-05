@@ -1,4 +1,4 @@
-import type { D2rSection, DeadlockSection, PzSection, Route, View } from "./route";
+import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, View } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -78,6 +78,11 @@ export const PZ_TAB_FILES: Partial<Record<PzSection, string>> = {
   patches: "src/zomboid/patches/ZomboidPatches.tsx",
 };
 
+/** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */
+export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
+  items: "src/rust/items/RustItems.tsx",
+};
+
 /**
  * Los servidores que una pestaña consulta apenas abre (2026-09-25): el HTML les
  * abre la conexión (`preconnect`) mientras baja el JS, y la primera consulta
@@ -103,6 +108,8 @@ export function filesFor(route: Route): string[] {
         ? D2R_TAB_FILES[route.d2Section ?? "home"]
         : route.view === "zomboid"
           ? PZ_TAB_FILES[route.pzSection ?? "home"]
-          : undefined;
+          : route.view === "rust"
+            ? RUST_TAB_FILES[route.rsSection ?? "home"]
+            : undefined;
   return tab ? [area, tab] : [area];
 }

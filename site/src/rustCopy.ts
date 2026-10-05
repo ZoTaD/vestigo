@@ -18,6 +18,49 @@ export interface RustCopy {
   /** Las pestañas de las etapas que vienen: se anuncian apagadas, sin dirección. */
   soonTabs: string[];
   seo: Record<RustSection, Seo>;
+  /** El `<head>` de una ficha de Objetos. */
+  detailSeo: (name: string) => Seo;
+  loading: string;
+  loadError: string;
+  retry: string;
+  items: {
+    h1: string;
+    lede: (n: string) => string;
+    search: string;
+    searchPlaceholder: string;
+    all: string;
+    cats: Record<string, string>;
+    count: (n: string) => string;
+    empty: string;
+    missing: string;
+    shortname: string;
+    itemid: string;
+    command: string;
+    copy: string;
+    copied: string;
+    stack: string;
+    condition: string;
+    repairable: string;
+    notRepairable: string;
+    craft: string;
+    gives: (n: number) => string;
+    seconds: (s: string) => string;
+    workbench: (n: number) => string;
+    noWorkbench: string;
+    research: (n: string) => string;
+    defaultBp: string;
+    usedIn: string;
+    recycle: string;
+    recycleMonument: string;
+    recycleSafe: string;
+    chance: (pct: number) => string;
+    loot: string;
+    lootNote: string;
+    blueprint: string;
+    shops: string;
+    shopRow: (amount: number, item: string, price: number, currency: string) => string;
+    back: string;
+  };
   home: {
     kicker: string;
     lede: (items: string, recipes: string) => string;
@@ -47,6 +90,55 @@ const EN: RustCopy = {
       title: "Rust Raid Calculator: Sulfur Cost for Every Wall and Door | Vestigo",
       description: "How many C4, rockets, satchels or explosive ammo you need for any wall, door or deployable in Rust, the sulfur it costs and the cheapest mix.",
     },
+  },
+  detailSeo: (name) => ({
+    title: `${name} — Rust: Crafting, Recycling and Where to Find It | Vestigo`,
+    description: `How to craft ${name} in Rust: recipe, workbench and research cost, what it recycles into, which crates drop it, where to buy it, and its shortname and spawn command.`,
+  }),
+  loading: "Loading…",
+  loadError: "This page didn't load.",
+  retry: "Try again",
+  items: {
+    h1: "Rust items",
+    lede: (n) => `${n} items with their recipe, what they recycle into, where they drop and where to buy them.`,
+    search: "Search items",
+    searchPlaceholder: "AK, C4, sulfur, rifle.ak…",
+    all: "All",
+    cats: {
+      weapon: "Weapons", construction: "Construction", items: "Items", resources: "Resources", attire: "Attire",
+      tool: "Tools", medical: "Medical", food: "Food", ammunition: "Ammo", traps: "Traps", misc: "Misc",
+      component: "Components", electrical: "Electrical", fun: "Fun",
+    },
+    count: (n) => `${n} items`,
+    empty: "Nothing matches that search.",
+    missing: "That item doesn't exist (or changed its name). Here's the full list.",
+    shortname: "Shortname",
+    itemid: "Item ID",
+    command: "Spawn command",
+    copy: "Copy",
+    copied: "Copied",
+    stack: "Stack",
+    condition: "Durability",
+    repairable: "repairable",
+    notRepairable: "not repairable",
+    craft: "Crafting",
+    gives: (n) => (n > 1 ? `Makes ${n}` : "Makes 1"),
+    seconds: (s) => `${s} s`,
+    workbench: (n) => `Workbench level ${n}`,
+    noWorkbench: "No workbench",
+    research: (n) => `Research: ${n} scrap`,
+    defaultBp: "Known from the start",
+    usedIn: "Used in",
+    recycle: "Recycling",
+    recycleMonument: "Monument recycler",
+    recycleSafe: "Safe zone recycler",
+    chance: (pct) => `${pct}% chance`,
+    loot: "Where to find it",
+    lootNote: "Chance that one container has at least one.",
+    blueprint: "Blueprint",
+    shops: "Where to buy it",
+    shopRow: (amount, item, price, currency) => `${amount} × ${item} for ${price} ${currency}`,
+    back: "All items",
   },
   home: {
     kicker: "Rust guide",
@@ -89,6 +181,55 @@ const ES: RustCopy = {
       title: "Calculadora de raideo de Rust: cuánto azufre cuesta cada pared y puerta | Vestigo",
       description: "Cuántos C4, cohetes, cargas de mochila o balas explosivas necesitás para cada pared, puerta o deployable de Rust, el azufre que cuesta y la mezcla más barata.",
     },
+  },
+  detailSeo: (name) => ({
+    title: `${name} — Rust: crafteo, reciclaje y dónde encontrarlo | Vestigo`,
+    description: `Cómo craftear ${name} en Rust: receta, banco y costo de investigación, lo que da al reciclarlo, en qué cajas aparece, dónde comprarlo, su shortname y el comando para spawnearlo.`,
+  }),
+  loading: "Cargando…",
+  loadError: "Esta página no cargó.",
+  retry: "Reintentar",
+  items: {
+    h1: "Objetos de Rust",
+    lede: (n) => `${n} objetos con su receta, lo que dan al reciclarlos, dónde aparecen y dónde comprarlos.`,
+    search: "Buscar objetos",
+    searchPlaceholder: "AK, C4, azufre, rifle.ak…",
+    all: "Todos",
+    cats: {
+      weapon: "Armas", construction: "Construcción", items: "Objetos", resources: "Recursos", attire: "Ropa",
+      tool: "Herramientas", medical: "Medicina", food: "Comida", ammunition: "Munición", traps: "Trampas",
+      misc: "Misceláneos", component: "Componentes", electrical: "Electricidad", fun: "Diversión",
+    },
+    count: (n) => `${n} objetos`,
+    empty: "No hay nada con esa búsqueda.",
+    missing: "Ese objeto no existe (o cambió de nombre). Acá está la lista completa.",
+    shortname: "Shortname",
+    itemid: "ID del objeto",
+    command: "Comando para spawnearlo",
+    copy: "Copiar",
+    copied: "Copiado",
+    stack: "Pila",
+    condition: "Durabilidad",
+    repairable: "se repara",
+    notRepairable: "no se repara",
+    craft: "Crafteo",
+    gives: (n) => (n > 1 ? `Da ${n}` : "Da 1"),
+    seconds: (s) => `${s} s`,
+    workbench: (n) => `Banco de nivel ${n}`,
+    noWorkbench: "Sin banco",
+    research: (n) => `Investigar: ${n} de chatarra`,
+    defaultBp: "Se sabe desde el principio",
+    usedIn: "Se usa en",
+    recycle: "Reciclaje",
+    recycleMonument: "Recicladora de monumento",
+    recycleSafe: "Recicladora de zona segura",
+    chance: (pct) => `${pct} % de chance`,
+    loot: "Dónde aparece",
+    lootNote: "Probabilidad de que una caja traiga al menos uno.",
+    blueprint: "Plano",
+    shops: "Dónde comprarlo",
+    shopRow: (amount, item, price, currency) => `${amount} × ${item} por ${price} de ${currency}`,
+    back: "Todos los objetos",
   },
   home: {
     kicker: "Guía de Rust en español",

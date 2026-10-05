@@ -214,7 +214,7 @@ export const RUST_DETAIL_SECTIONS: RustTab[] = ["items"];
  * Las pestañas que ya tienen página. Las demás se muestran apagadas, no entran al sitemap, y una dirección a una de
  * ellas muestra la portada. Cada pestaña se suma acá el día que se publica.
  */
-export const RUST_PUBLISHED: RustTab[] = [];
+export const RUST_PUBLISHED: RustTab[] = ["items"];
 export const RUST_SECTION_ES: Record<RustTab, string> = { items: "objetos", raid: "raideo" };
 const RUST_SECTION_BY_ES = new Map(Object.entries(RUST_SECTION_ES).map(([tab, es]) => [es, tab as RustTab]));
 

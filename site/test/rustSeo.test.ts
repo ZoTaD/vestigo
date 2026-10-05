@@ -20,8 +20,11 @@ describe("Rust en el sitemap y el <head>", () => {
     expect(sitemapLastmod("/es/rust", data)).toBe(rsMeta.extractedAt.slice(0, 10));
   });
 
-  it("las pestañas que todavía no se publicaron no entran", () => {
-    expect(sitemapPaths(data).some((p) => p.startsWith("/es/rust/") || p.startsWith("/en/rust/"))).toBe(false);
+  it("Objetos entra; Raideo, que todavía no se publicó, no", () => {
+    const paths = sitemapPaths(data);
+    expect(paths).toContain("/es/rust/objetos");
+    expect(paths).toContain("/en/rust/items");
+    expect(paths.some((p) => p.startsWith("/es/rust/raideo") || p.startsWith("/en/rust/raid"))).toBe(false);
   });
 
   it("sin el extractor corrido, Rust queda afuera en vez de romper el build", () => {

@@ -12,7 +12,7 @@ import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
 import { COPY } from "./src/i18n";
-import { AREA_FILES, D2R_TAB_FILES, DEADLOCK_TAB_FILES, filesFor, originsFor, PZ_TAB_FILES } from "./src/areaFiles";
+import { AREA_FILES, D2R_TAB_FILES, DEADLOCK_TAB_FILES, filesFor, originsFor, PZ_TAB_FILES, RUST_TAB_FILES } from "./src/areaFiles";
 
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
 const BRAND = COPY.en.brand;
@@ -606,7 +606,7 @@ function areaTags(bundle: Record<string, { type: string } & Record<string, any>>
     return root;
   };
   // Que falte un chunk tiene que romper el build ahora, no en la página que lo use.
-  for (const file of [...Object.values(AREA_FILES), ...Object.values(DEADLOCK_TAB_FILES), ...Object.values(D2R_TAB_FILES), ...Object.values(PZ_TAB_FILES)]) chunkOf(file!);
+  for (const file of [...Object.values(AREA_FILES), ...Object.values(DEADLOCK_TAB_FILES), ...Object.values(D2R_TAB_FILES), ...Object.values(PZ_TAB_FILES), ...Object.values(RUST_TAB_FILES)]) chunkOf(file!);
   const fresh = (f: string) => !html.includes(`/${f}"`);
   const cache = new Map<string, string>();
   return (files) => {

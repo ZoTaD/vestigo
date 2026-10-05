@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor, PZ_TAB_FILES } from "../src/areaFiles";
-import { PZ_SECTIONS } from "../src/route";
+import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor, PZ_TAB_FILES, RUST_TAB_FILES } from "../src/areaFiles";
+import { PZ_SECTIONS, RUST_SECTIONS } from "../src/route";
 import pzIndex from "@zomboid/index.json";
 import pzSlugsEs from "virtual:pz-slugs-es";
 
@@ -110,5 +110,27 @@ describe("Project Zomboid: cada pestaña en su chunk", () => {
   it("una sección que no está en el índice no resuelve: un nombre mal escrito rompe en vez de dejar el slug inglés", async () => {
     const nope = "virtual:pz-slugs-es/itemz";
     await expect(import(/* @vite-ignore */ nope)).rejects.toThrow();
+  });
+});
+
+/** Rust (2026-10-05): cada pestaña con página es un chunk aparte, como en Project Zomboid. */
+describe("Rust: cada pestaña en su chunk", () => {
+  it("toda pestaña de RUST_TAB_FILES es una sección de la ruta, y su archivo existe", () => {
+    expect(Object.keys(RUST_TAB_FILES).length).toBeGreaterThan(0);
+    for (const [sec, file] of Object.entries(RUST_TAB_FILES)) {
+      expect(RUST_SECTIONS, sec).toContain(sec);
+      expect(existsSync(new URL(`../${file}`, import.meta.url)), file).toBe(true);
+    }
+  });
+
+  it("RUST_TAB_FILES nombra el mismo archivo que TABS en Rust.tsx: si no, el HTML de la pestaña sale sin su JS ni su CSS", () => {
+    const src = readFileSync(new URL("../src/Rust.tsx", import.meta.url), "utf-8");
+    const lazies = new Map([...src.matchAll(/const (\w+) = lazyWithPreload\(\(\) => import\("\.\/([\w/]+)"\)\);/g)].map((m) => [m[1], m[2]]));
+    const start = src.indexOf("const TABS");
+    expect(start).toBeGreaterThan(-1);
+    const tabs = src.slice(start, src.indexOf("};", start));
+    const bySection = Object.fromEntries([...tabs.matchAll(/^\s+"?([\w-]+)"?: (\w+),$/gm)].filter((m) => lazies.has(m[2])).map((m) => [m[1], lazies.get(m[2])]));
+    const files = Object.fromEntries(Object.entries(RUST_TAB_FILES).map(([s, f]) => [s, f!.replace(/^src\//, "").replace(/\.tsx?$/, "")]));
+    expect(files).toEqual(bySection);
   });
 });

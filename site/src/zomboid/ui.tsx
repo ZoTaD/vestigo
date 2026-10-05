@@ -5,7 +5,7 @@
  * en Objetos (`items/ui.tsx`) y subieron acá cuando llegó Recetas, que las usa igual: una sola versión de cada una, así
  * las dos pestañas se ven y se comportan igual.
  */
-import { Fragment, useEffect, useLayoutEffect, useReducer, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { stamp } from "./ZomboidHome";
 
 /**
@@ -207,35 +207,6 @@ export function Collapse<T>({
   );
 }
 
-/**
- * Lo que ya llegó de una carga (`peek`), y si no, la pide y vuelve a dibujar cuando llega. `key` es qué se pide (el slug
- * de la ficha, o "list"); `null` es no pedir nada. Si falla, `failed` y `retry` para la hoja de error.
- */
-export function useLoad<T>(key: string | null, peek: () => T | undefined, load: () => Promise<unknown>) {
-  const [, bump] = useReducer((n: number) => n + 1, 0);
-  const [failed, setFailed] = useState<string | null>(null);
-  const [attempt, setAttempt] = useState(0);
-  const value = key === null ? undefined : peek();
-  const waiting = key !== null && value === undefined;
-  useEffect(() => {
-    if (!waiting) return;
-    let alive = true;
-    load().then(
-      () => alive && bump(),
-      () => alive && setFailed(key),
-    );
-    return () => {
-      alive = false;
-    };
-    // `load` cambia en cada render (es una flecha): lo que decide pedir de nuevo es qué se pide y el reintento.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, waiting, attempt]);
-  return {
-    value,
-    failed: waiting && failed === key,
-    retry: () => {
-      setFailed(null);
-      setAttempt((n) => n + 1);
-    },
-  };
-}
+// `useLoad` vive en `src/useLoad.ts` desde que la usa Rust (ver ahí); se re-exporta para que las pestañas de Zomboid
+// la sigan importando de acá.
+export { useLoad } from "../useLoad";

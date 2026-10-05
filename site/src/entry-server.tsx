@@ -18,6 +18,7 @@ import { loadEdition as loadVhEdition, loadEditions as loadVhEditions } from "./
 import { preloadItemsRoute } from "./zomboid/items/data";
 import { preloadRecipesRoute } from "./zomboid/recipes/data";
 import { preloadCraftRoute } from "./zomboid/crafting/data";
+import { preloadItemsRoute as preloadRsItemsRoute } from "./rust/items/data";
 
 // Igual que en `main.tsx`: la cáscara recibe `areas.ts` en vez de importarlo.
 provideAreas(allAreas);
@@ -37,6 +38,7 @@ async function preload(route: Route): Promise<void> {
   if (route.view === "poe2") return preloadPoe2(route, quiet);
   if (route.view === "valheim") return preloadValheim(route, quiet);
   if (route.view === "zomboid") return preloadZomboid(route, quiet);
+  if (route.view === "rust") return preloadRust(route, quiet);
   if (route.view !== "deadlock") return;
   if (route.dlSection === "meta" && route.detail) await Promise.all([quiet(loadBuilds()), quiet(loadMastery())]);
   if (route.dlSection === "heroes" && route.detail) {
@@ -118,6 +120,14 @@ async function preloadZomboid(route: Route, quiet: (p: Promise<unknown>) => Prom
   if (route.pzSection === "items") await quiet(preloadItemsRoute(route));
   if (route.pzSection === "recipes") await quiet(preloadRecipesRoute(route));
   if (route.pzSection === "crafting") await quiet(preloadCraftRoute(route));
+}
+
+/**
+ * Rust (2026-10-05): la lista de Objetos, o el archivo de la ficha (y la lista si la ficha no existe). Sin esto la
+ * página sale con "cargando…" y sin un solo enlace; el prerender corta el build si pasa (`vite.config.ts`).
+ */
+async function preloadRust(route: Route, quiet: (p: Promise<unknown>) => Promise<unknown>): Promise<void> {
+  if (route.rsSection === "items") await quiet(preloadRsItemsRoute(route));
 }
 
 export async function renderApp(route: Route): Promise<string> {

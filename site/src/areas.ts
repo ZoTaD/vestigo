@@ -28,7 +28,8 @@ const loadD2r = () => import("./D2r");
 export const D2rArea = lazyWithPreload(loadD2r);
 const loadZomboid = () => import("./Zomboid");
 export const ZomboidArea = lazyWithPreload(loadZomboid);
-export const RustArea = lazyWithPreload(() => import("./Rust"));
+const loadRust = () => import("./Rust");
+export const RustArea = lazyWithPreload(loadRust);
 export const PrivacyPage = lazyWithPreload(() => import("./Privacy"));
 export const TermsPage = lazyWithPreload(() => import("./Terms"));
 
@@ -56,12 +57,12 @@ export const preloadView = (view: View): Promise<void> =>
   (BY_VIEW[view]?.preload() ?? Promise.resolve()).catch(() => undefined);
 
 /**
- * Lo mismo para una ruta entera: la vista y, en Deadlock, Diablo II y Project
- * Zomboid, además el chunk de su pestaña (ver `preloadTab` en cada área). Es lo
+ * Lo mismo para una ruta entera: la vista y, en Deadlock, Diablo II, Project
+ * Zomboid y Rust, además el chunk de su pestaña (ver `preloadTab` en cada área). Es lo
  * que esperan el primer render y el prerender, y lo que precarga un enlace al
  * pasar el mouse.
  *
- * En Zomboid es además lo que traduce la dirección: cada pestaña trae y anota
+ * En Zomboid y Rust es además lo que traduce la dirección: cada pestaña trae y anota
  * los slugs en español de lo que enlaza, y la pestaña se reconoce por su nombre,
  * que es fijo; así, cuando `App` lee la dirección, `/es/…/objetos/palanca` ya
  * es la palanca.
@@ -71,4 +72,5 @@ export const preloadRoute = async (route: Route): Promise<void> => {
   if (route.view === "deadlock") await loadDeadlock().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "d2r") await loadD2r().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "zomboid") await loadZomboid().then((m) => m.preloadTab(route)).catch(() => undefined);
+  if (route.view === "rust") await loadRust().then((m) => m.preloadTab(route)).catch(() => undefined);
 };
