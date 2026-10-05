@@ -47,6 +47,10 @@ RARITIES = {0: "none", 1: "common", 2: "uncommon", 3: "rare", 4: "veryrare"}
 # La chatarra que pide la mesa de investigación, por rareza (`ResearchTable.ScrapForResearch`). Lo cuida un test con
 # ocho objetos de valor conocido (AK 500, Thompson 125, cerradura de código 75…).
 RESEARCH_SCRAP = {1: 20, 2: 75, 3: 125, 4: 500, 0: 500}
+# Tres recetas traen `ItemBlueprint.rarity` = 5, un valor que la tabla de arriba no tiene y del que no sale el costo;
+# se toman de la wiki oficial de Facepunch, mesa de investigación (verificado el 2026-10-05):
+# https://wiki.facepunch.com/rust/item/furnace (120), .../item/electric.furnace (30), .../item/ladder.wooden.wall (60).
+RESEARCH_OVERRIDES = {"furnace": 120, "electric.furnace": 30, "ladder.wooden.wall": 60}
 # Las recicladoras que se muestran, por `recyclerType`. El 1 es el de Outpost y Bandit Camp (relevado el 2026-10-05 en
 # las escenas de `compound.prefab` y `bandit_town.prefab`); el 0, el de los demás monumentos. El 2 es la roja de la
 # planta de energía, que pide la red eléctrica: queda afuera.
@@ -195,14 +199,20 @@ def text_of(texts, lang, token):
     return lower.get(token.lower())
 
 
-def research_scrap(item_rarity, bp):
-    """La chatarra para investigar: `scrapRequired` si la receta lo trae, si no la tabla por rareza (la de la receta, o
-    la del objeto si la receta no tiene)."""
+def research_scrap(item_rarity, bp, sid=None):
+    """
+    La chatarra para investigar: el override del objeto si lo hay, si no `scrapRequired` de la receta, si no la tabla por
+    rareza (la de la receta, o la del objeto si la receta no tiene). Una rareza que no está en la tabla y sin override
+    corta: un parche con rarezas nuevas no puede pasar en silencio.
+    """
+    if sid in RESEARCH_OVERRIDES:
+        return RESEARCH_OVERRIDES[sid]
     if bp["scrapRequired"] > 0:
         return bp["scrapRequired"]
-    # La rareza 5 (furnace, electric.furnace, escalera de madera) no está en el enum que conocemos y la wiki da otros
-    # costos (30, 60, 120) que no salen de estos datos: sin número antes que uno inventado.
-    return RESEARCH_SCRAP.get(bp["rarity"] or item_rarity)
+    rarity = bp["rarity"] or item_rarity
+    if rarity not in RESEARCH_SCRAP:
+        raise SystemExit(f"{sid}: rareza {rarity} sin costo de investigación: agregarlo a RESEARCH_OVERRIDES")
+    return RESEARCH_SCRAP[rarity]
 
 
 def recycle_of(bp, by_pid):
@@ -265,7 +275,7 @@ def build_items(classes, texts, previous=None):
                 "time": number(bp["time"]),
                 "workbench": bp["workbenchLevelRequired"],
                 "researchable": bool(bp["isResearchable"]),
-                "researchScrap": research_scrap(d["rarity"], bp) if bp["isResearchable"] else None,
+                "researchScrap": research_scrap(d["rarity"], bp, sid) if bp["isResearchable"] else None,
                 "default": bool(bp["defaultBlueprint"]),
             }
         items.append({

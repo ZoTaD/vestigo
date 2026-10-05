@@ -11262,7 +11262,7 @@
     "time": 30,
     "workbench": 2,
     "researchable": true,
-    "researchScrap": null,
+    "researchScrap": 30,
     "default": false
    },
    "recycle": {
@@ -13564,7 +13564,7 @@
     "time": 30,
     "workbench": 0,
     "researchable": true,
-    "researchScrap": null,
+    "researchScrap": 120,
     "default": true
    },
    "recycle": {
@@ -41724,7 +41724,7 @@
     "time": 30,
     "workbench": 1,
     "researchable": true,
-    "researchScrap": null,
+    "researchScrap": 60,
     "default": false
    },
    "recycle": {

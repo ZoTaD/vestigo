@@ -212,6 +212,24 @@ class TestResearchScrap(unittest.TestCase):
         self.assertEqual(extract.research_scrap(3, {"rarity": 0, "scrapRequired": 100}), 100)
 
 
+    def test_override_manda_y_rareza_desconocida_corta(self):
+        bp = {"rarity": 5, "scrapRequired": 0}
+        self.assertEqual(extract.research_scrap(0, bp, "furnace"), 120)
+        with self.assertRaises(SystemExit) as cm:
+            extract.research_scrap(0, bp, "objeto.nuevo")
+        self.assertIn("objeto.nuevo", str(cm.exception))
+
+
+class TestRedirectOf(unittest.TestCase):
+    BY_PID = {7: "rifle.ak"}
+
+    def test_casos(self):
+        self.assertIsNone(extract.redirect_of({"m_FileID": 0, "m_PathID": 0}, self.BY_PID))
+        self.assertEqual(extract.redirect_of({"m_FileID": 0, "m_PathID": 7}, self.BY_PID), "rifle.ak")
+        with self.assertRaises(SystemExit):
+            extract.redirect_of({"m_FileID": 2, "m_PathID": 7}, self.BY_PID)
+
+
 class TestRecycleOf(unittest.TestCase):
     """Sin el juego: qué sale del reciclador por cada objeto, al 100 %."""
 
@@ -257,6 +275,15 @@ class TestRecycleAndResearchInGame(unittest.TestCase):
             "rifle.semiauto": 125, "lock.code": 75, "wall.frame.garagedoor": 75, "hatchet": 75,
         }
         for sid, scrap in want.items():
+            self.assertEqual(item(sid)["craft"]["researchScrap"], scrap, sid)
+
+    def test_ningun_investigable_queda_sin_costo(self):
+        for it in data()["items"]:
+            if it["craft"] and it["craft"]["researchable"]:
+                self.assertIsNotNone(it["craft"]["researchScrap"], it["id"])
+
+    def test_costos_de_rareza_5(self):
+        for sid, scrap in (("furnace", 120), ("electric.furnace", 30), ("ladder.wooden.wall", 60)):
             self.assertEqual(item(sid)["craft"]["researchScrap"], scrap, sid)
 
     def test_lo_que_no_se_investiga_no_tiene_costo(self):
