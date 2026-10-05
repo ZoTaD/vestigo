@@ -248,7 +248,7 @@ export function SkinsSection({ ficha }: { ficha: Ficha }) {
         {ficha.skins.map((s) => (
           <li key={s.id}>
             <span className="rs-slot">
-              {s.icon && <img src={`/rust/${s.icon}.webp`} alt="" width={64} height={64} loading="lazy" />}
+              <img src={`/rust/${s.icon ?? `items/${ficha.id}`}.webp`} alt="" width={64} height={64} loading="lazy" />
             </span>
             <span>{say(s.name, lang)}</span>
             {s.workshop && <em className="rs-tag">{t.workshop}</em>}

@@ -157,6 +157,7 @@ describe("Rust: Atrás y Adelante no vuelven arriba", () => {
     const html = render("es", "/es/rust/objetos/fusil-de-asalto");
     expect(html).toContain("AK47 con camuflaje digital");
     expect(html).toContain('src="/rust/skins/10135.webp"');
+    expect(html).toContain('<em class="rs-tag">Workshop</em>'); // la 10135 es de workshop
   });
 
   it("el AK: los científicos pesados, el estado al aparecer y la cantidad de todas las tiradas de la caja", () => {

@@ -100,6 +100,9 @@ def read_skins(want, by_pid):
                      "es": text_of(texts, "es", token) or None},
             "workshop": bool(tt["workshopID"]), "redirect": redirect, "icon": icon,
         })
+    # Soltar content.bundle antes de abrir los bundles de texturas: si no, los dos quedan vivos a la vez en RAM.
+    del env
+    gc.collect()
     return out
 
 

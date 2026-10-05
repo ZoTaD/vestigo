@@ -208,6 +208,8 @@ class TestBuildReal(unittest.TestCase):
 
     def test_ningun_archivo_de_fichas_pasa_de_48_kb_con_gzip(self):
         import gzip
-        for f in sorted((rust_site.OUT / "items").glob("*.json")):
+        files = sorted((rust_site.OUT / "items").glob("*.json"))
+        self.assertTrue(files)  # que no pase vacío si la carpeta no existe
+        for f in files:
             size = len(gzip.compress(f.read_bytes()))
             self.assertLess(size, 48_000, f"{f.name}: {size} bytes con gzip")
