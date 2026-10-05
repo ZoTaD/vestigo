@@ -158,13 +158,15 @@ NPCS = {
     "scarecrow": "scarecrow", "scarecrow_dungeon": "scarecrow", "scarecrow_dungeonnoroam": "scarecrow",
     "gingerbread_dungeon": "gingerbread", "gingerbread_meleedungeon": "gingerbread",
 }
-# Los nombres: el token del juego cuando lo hay, y si no a mano, con las palabras del juego.
+# Los nombres: el token del juego cuando lo hay, y si no a mano, con las palabras del juego. Para el de la pila de
+# chatarra y el de visión nocturna no hay token (2026-10-05); el primero va como lo escribe la comunidad ("Junkpile
+# Scientist", rustexplore.com y Facepunch), el segundo no tiene un nombre de uso común.
 NPC_NAMES = {
     "scientist": "scientist.name",
     "scientist_nvg": ("Night Vision Scientist", "Científico con visión nocturna"),
     "scientist_tunnel": ("Military Tunnel Scientist", "Científico de los túneles militares"),
     "scientist_boat": ("Boat Scientist", "Científico de lancha"),
-    "scientist_junkpile": ("Junk Pile Scientist", "Científico de la pila de chatarra"),
+    "scientist_junkpile": ("Junkpile Scientist", "Científico de la pila de chatarra"),
     "heavy": ("Heavy Scientist (Oil Rig)", "Científico pesado (plataforma petrolera)"),
     "heavy_bradley": ("Heavy Scientist (Bradley)", "Científico pesado (Bradley)"),
     "tunnel_dweller": "tunneldweller.name",
@@ -413,29 +415,50 @@ def amounts(spawn, resolve, acc=None, times=1):
     return acc
 
 
-def container_chances(tt, resolve):
+def container_chances(tt, resolve, sum_slots=True):
     """
     {(shortname, es_plano): (probabilidad de que la caja traiga al menos uno, mínimo, máximo)}. Cada tirada es
     independiente: P = 1 − Π (1 − p_tirada). El mínimo es lo menos que da una tirada que lo trae; el máximo, lo que darían
     juntas todas las tiradas que pueden traerlo (la caja bloqueada tira dos veces la tabla de la AK: hasta 2). Una ranura
     con probabilidad 0 no cuenta para nada.
+
+    Con `sum_slots=False` (los NPC) la cantidad sale de la ranura que más probabilidad le aporta a ese objeto, con sus
+    tiradas repetidas (`numberToSpawn`) sumadas; la probabilidad sigue combinando todas las ranuras. Las ranuras de un NPC
+    son kits ("arma con su munición") que en la práctica no salen todos juntos: sumarlas daba al científico pesado
+    ×8–136 de 5,56, y rusthelp (2026-10-05) muestra ×12–36, que es la ranura de munición tirada tres veces.
     """
-    rolls = []  # (spawn, probabilidad de que la tirada ocurra)
+    rolls = []  # (ranura, spawn, probabilidad de que la tirada ocurra)
     slots = tt.get("LootSpawnSlots") or []
     if slots:
-        for s in slots:
-            rolls += [(resolve(s["definition"]), s["probability"])] * s["numberToSpawn"]
+        for i, s in enumerate(slots):
+            rolls += [(i, resolve(s["definition"]), s["probability"])] * s["numberToSpawn"]
     elif tt.get("lootDefinition"):
-        rolls += [(resolve(tt["lootDefinition"]), 1.0)] * tt["maxDefinitionsToSpawn"]
-    miss, amt = {}, {}
-    for spawn, p_roll in rolls:
+        rolls += [(0, resolve(tt["lootDefinition"]), 1.0)] * tt["maxDefinitionsToSpawn"]
+    miss, per_slot, slot_miss = {}, {}, {}
+    for slot, spawn, p_roll in rolls:
         if p_roll <= 0:
             continue
+        sm = slot_miss.setdefault(slot, {})
         for key, p in roll_chances(spawn, resolve).items():
             miss[key] = miss.get(key, 1.0) * (1 - min(1.0, p_roll) * p)
+            sm[key] = sm.get(key, 1.0) * (1 - min(1.0, p_roll) * p)
+        dst = per_slot.setdefault(slot, {})
         for key, (lo, hi) in amounts(spawn, resolve).items():
-            old = amt.get(key)
-            amt[key] = (lo, hi) if old is None else (min(lo, old[0]), old[1] + hi)
+            old = dst.get(key)
+            dst[key] = (lo, hi) if old is None else (min(lo, old[0]), old[1] + hi)
+    amt = {}
+    if sum_slots:
+        for got in per_slot.values():
+            for key, (lo, hi) in got.items():
+                old = amt.get(key)
+                amt[key] = (lo, hi) if old is None else (min(lo, old[0]), old[1] + hi)
+    else:
+        best = {}  # objeto → (probabilidad que le aporta la ranura, ranura)
+        for slot, sm in slot_miss.items():
+            for key, m in sm.items():
+                if key not in best or 1 - m > best[key][0]:
+                    best[key] = (1 - m, slot)
+        amt = {key: per_slot[slot][key] for key, (_, slot) in best.items()}
     out = {k: (1 - m, *amt[k]) for k, m in miss.items() if m < 1}
     fixed = tt.get("scrapAmount") or 0
     if fixed > 0:
@@ -463,6 +486,7 @@ def npc_chances(per_loadout):
             o = out.get(key)
             out[key] = (p / n, lo, hi) if o is None else (o[0] + p / n, min(lo, o[1]), max(hi, o[2]))
     return out
+
 
 def container_base(path):
     """`assets/…/radtown/crate_elite.prefab` → `crate_elite`; las del laboratorio submarino, con `underwater_labs/`."""
@@ -557,6 +581,10 @@ def collect_npcs(w, texts, found, sources, tables):
             if slots:
                 ignored.add(base)
             continue
+        if not slots:
+            # Un NPC de la lista que se quedó sin botín: no se muestra, pero que se note (un parche lo vació o lo movió).
+            print(f"[rust] NPC sin LootSpawnSlots: {base}", file=sys.stderr)
+            continue
         tables.setdefault(key, {})[base] = tuple(
             (w.ref_key(o, s["definition"]), s["numberToSpawn"], round(s["probability"], 6), s.get("onlyWithLoadoutNamed") or "")
             for s in slots
@@ -564,19 +592,27 @@ def collect_npcs(w, texts, found, sources, tables):
         names = []
         for ref in tt.get("loadouts") or []:
             lo = w.follow(o, ref, "PlayerInventoryProperties")
-            names.append(w.tree(lo).get("niceName", "") if lo else "")
+            if lo is None:
+                raise SystemExit(f"NPC {base}: un equipo (loadout) no resuelve: {ref}")
+            names.append(w.tree(lo)["niceName"])
+        for s in slots:
+            only = s.get("onlyWithLoadoutNamed") or ""
+            if only and only not in names:
+                # Un parche que renombra un equipo borraría esa ranura en silencio (nunca coincidiría): mejor cortar.
+                raise SystemExit(f"NPC {base}: la ranura pide el equipo {only!r}, que no está entre {names}")
         per = []
         for name in names or [""]:
             res = {"lootDefinition": None, "maxDefinitionsToSpawn": 0, "scrapAmount": 0, "LootSpawnSlots": [
                 {"definition": w.spawn_tree(o, s["definition"]), "numberToSpawn": s["numberToSpawn"], "probability": s["probability"]}
                 for s in slots if not s.get("onlyWithLoadoutNamed") or s["onlyWithLoadoutNamed"] == name
             ]}
-            per.append(container_chances(res, lambda x: x))
+            per.append(container_chances(res, lambda x: x, sum_slots=False))
         merge(found, key, npc_chances(per))
         seen.add(key)
     for key in seen:
         sources[key] = {**name_of(texts, NPC_NAMES[key]), "kind": "npc", "event": NPC_EVENTS.get(key), "worn": "none"}
     return ignored
+
 
 def collect_loot(w, texts):
     """

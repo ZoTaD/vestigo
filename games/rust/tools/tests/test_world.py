@@ -145,6 +145,19 @@ class TestContainerChances(unittest.TestCase):
     def test_un_arbol_sin_peso_no_da_cantidad(self):
         self.assertEqual(world.amounts(node((0, leaf("a"))), lambda x: x), {})
 
+    def test_npc_la_cantidad_sale_de_la_ranura_mas_probable(self):
+        # Un NPC: la cantidad es la de la ranura que más probabilidad le aporta al objeto (la primera: 1 − 0,7² = 0,91
+        # contra 0,5), con sus dos tiradas sumadas (2 × 2–4 = 2–8). La ranura de ×10–20 no entra en el rango aunque sea
+        # mayor. La probabilidad sí combina las dos. Una caja suma todo: 2–(8 + 19).
+        tt = {"lootDefinition": None, "maxDefinitionsToSpawn": 0, "scrapAmount": 0, "LootSpawnSlots": [
+            {"definition": leaf("a", amount=2, max_amount=5), "numberToSpawn": 2, "probability": 0.3},
+            {"definition": leaf("a", amount=10, max_amount=20), "numberToSpawn": 1, "probability": 0.5},
+        ]}
+        npc = world.container_chances(tt, lambda x: x, sum_slots=False)[("a", False)]
+        self.assertAlmostEqual(npc[0], 1 - 0.7 ** 2 * 0.5)
+        self.assertEqual(npc[1:], (2, 8))
+        self.assertEqual(world.container_chances(tt, lambda x: x)[("a", False)][1:], (2, 27))
+
     def test_una_ranura_imposible_no_cuenta(self):
         tt = {"lootDefinition": None, "maxDefinitionsToSpawn": 0, "scrapAmount": 0, "LootSpawnSlots": [
             {"definition": leaf("a"), "numberToSpawn": 1, "probability": 0.0},
@@ -307,12 +320,23 @@ class TestWorldInGame(unittest.TestCase):
                 self.assertTrue(0 <= p <= 1 + 1e-9, tt["m_Name"])
 
     def test_cientificos_pesados(self):
-        # Contra rusthelp.com (2026-10-05): AK 1,8 % ×1–2 y munición de 40 mm 20,86 % ×4–21 en los de la plataforma y
-        # del Bradley.
+        # Contra rusthelp.com (2026-10-05): AK 1,8 % y munición de 40 mm 20,86 % ×4–21 en los de la plataforma y del
+        # Bradley. La cantidad de un NPC es la de la ranura que más le aporta al objeto (con sus tiradas repetidas
+        # sumadas): el AK sale de `Collection.Weapons` (1,56 %, ×1) o de `RadTownElite` (0,24 %, ×1), así que ×1.
+        # rusthelp da ×1–2 porque para el AK suma las dos ranuras, pero no lo hace con la 5,56 (no suma el kit de la
+        # minigun): se sigue una sola regla para todos los objetos.
         ak = {r["c"]: r for r in data()["loot"]["items"]["rifle.ak"] if not r["bp"]}
         for key in ("heavy", "heavy_bradley"):
             self.assertAlmostEqual(ak[key]["chance"], 0.018, places=3)
-            self.assertEqual((ak[key]["min"], ak[key]["max"]), (1, 2))
+            self.assertEqual((ak[key]["min"], ak[key]["max"]), (1, 1))
+        # 5,56: la ranura de munición, tirada tres veces (rusthelp: ×12–36); no la suma de todos los kits (×136).
+        rifle = {r["c"]: r for r in data()["loot"]["items"]["ammo.rifle"] if not r["bp"]}
+        for key in ("heavy", "heavy_bradley"):
+            self.assertEqual((rifle[key]["min"], rifle[key]["max"]), (12, 36), key)
+        # La minigun sólo la trae el pesado de la plataforma, y sólo con ese equipo (uno de cuatro): 0,2 / 4.
+        minigun = {r["c"]: r for r in data()["loot"]["items"]["minigun"] if not r["bp"]}
+        self.assertAlmostEqual(minigun["heavy"]["chance"], 0.05, places=4)
+        self.assertNotIn("heavy_bradley", minigun)
         mgl = {r["c"]: r for r in data()["loot"]["items"]["ammo.grenadelauncher.buckshot"]}
         self.assertAlmostEqual(mgl["heavy"]["chance"], 0.2085, places=3)
         self.assertEqual((mgl["heavy"]["min"], mgl["heavy"]["max"]), (4, 21))
