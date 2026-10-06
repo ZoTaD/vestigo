@@ -16,6 +16,8 @@ import { pzPatchName } from "./zomboid/patches/slug";
 import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/data";
 import { loadCrates as loadRsCrates, peekCrates as peekRsCrates } from "./rust/crates/data";
 import { crateName } from "./rust/crates/model";
+import { loadShopIndex as loadRsShopIndex, peekShopIndex as peekRsShopIndex } from "./rust/shops/data";
+import { shopName } from "./rust/shops/model";
 import { RUST_COPY } from "./rustCopy";
 import { loadEditions as loadVhEditions, peekEditions as peekVhEditions } from "./valheimPatchesData";
 
@@ -147,6 +149,11 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const e = peekRsCrates()?.bySlug.get(route.detail);
     return e ? crateName(e, lang, RUST_COPY[lang].items.events) : null;
   }
+  // Una ficha de Tiendas: el nombre sale de `shops.json`.
+  if (route.view === "rust" && route.rsSection === "shops" && route.detail) {
+    const e = peekRsShopIndex()?.bySlug.get(route.detail);
+    return e ? shopName(e, lang) : null;
+  }
   return null;
 }
 
@@ -165,11 +172,14 @@ export default function PageMeta({ route }: { route: Route }) {
     const via = key ? peekPzName(key.sec, key.id)?.via?.[lang] : null;
     const rsItem = route.view === "rust" && route.rsSection === "items" && route.detail ? peekRsItem(route.detail) : null;
     const rsCrate = route.view === "rust" && route.rsSection === "crates" && route.detail ? peekRsCrates()?.bySlug.get(route.detail) : undefined;
+    const rsShop = route.view === "rust" && route.rsSection === "shops" && route.detail ? peekRsShopIndex()?.bySlug.get(route.detail) : undefined;
     const rsHas = rsItem
       ? { craft: !!rsItem.craft, shop: rsItem.shops.length > 0, loot: rsItem.loot.length > 0, recycle: !!rsItem.recycle }
       : rsCrate
         ? { crate: { kind: rsCrate.kind, n: rsCrate.n, bp: rsCrate.bp } }
-        : null;
+        : rsShop
+          ? { store: { n: rsShop.n, bp: rsShop.bp } }
+          : null;
     const { title, description } = metaFor(route, lang, detail, via, rsHas);
     const url = routeUrl(route);
 
@@ -245,6 +255,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "rust" && route.rsSection === "crates" && route.detail && !peekRsCrates()) {
       let vivo = true;
       loadRsCrates().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una de Tiendas, con `shops.json`.
+    if (route.view === "rust" && route.rsSection === "shops" && route.detail && !peekRsShopIndex()) {
+      let vivo = true;
+      loadRsShopIndex().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
   }, [route, copy, lang]);

@@ -56,6 +56,8 @@ export const PAGES = [
   "/en/rust/items/assault-rifle",
   "/en/rust/crates",
   "/en/rust/crates/elite-crate",
+  "/en/rust/shops",
+  "/en/rust/shops/bandit-camp",
   "/en/rust/raid",
 ];
 

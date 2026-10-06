@@ -20,6 +20,7 @@ import { preloadRecipesRoute } from "./zomboid/recipes/data";
 import { preloadCraftRoute } from "./zomboid/crafting/data";
 import { preloadItemsRoute as preloadRsItemsRoute } from "./rust/items/data";
 import { loadCrates as loadRsCrates } from "./rust/crates/data";
+import { loadShopIndex as loadRsShopIndex, loadShops as loadRsShops } from "./rust/shops/data";
 
 // Igual que en `main.tsx`: la cáscara recibe `areas.ts` en vez de importarlo.
 provideAreas(allAreas);
@@ -127,10 +128,13 @@ async function preloadZomboid(route: Route, quiet: (p: Promise<unknown>) => Prom
  * Rust (2026-10-05): la lista de Objetos, o el archivo de la ficha (y la lista si la ficha no existe). Sin esto la
  * página sale con "cargando…" y sin un solo enlace; el prerender corta el build si pasa (`vite.config.ts`).
  * Cajas (2026-10-06) baja su `loot.json`, y la ficha de un objeto también: "Dónde aparece" enlaza cada caja.
+ * Tiendas (2026-10-06) baja `shops.json` y la lista; la ficha de un objeto, sólo `shops.json` ("Dónde comprarlo").
  */
 async function preloadRust(route: Route, quiet: (p: Promise<unknown>) => Promise<unknown>): Promise<void> {
   if (route.rsSection === "items") await quiet(preloadRsItemsRoute(route));
   if (route.rsSection === "crates" || (route.rsSection === "items" && route.detail)) await quiet(loadRsCrates());
+  if (route.rsSection === "shops") await quiet(loadRsShops());
+  if (route.rsSection === "items" && route.detail) await quiet(loadRsShopIndex());
 }
 
 export async function renderApp(route: Route): Promise<string> {

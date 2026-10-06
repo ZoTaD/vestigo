@@ -88,6 +88,8 @@ export interface RustSitemapData {
    * el slug inglés, el nombre ya con el evento si comparte nombre con otra, y lo que el `<head>` puede prometer.
    */
   crates?: { slug: string; en: string; es: string; kind: LootKind; n: number; bp: boolean }[];
+  /** Las fichas de Tiendas (2026-10-06), de `shops.json` (`shopIndex` de `rust/shops/model.ts`): cuántas ofertas y si hay planos. */
+  shops?: { slug: string; en: string; es: string; n: number; bp: boolean }[];
 }
 
 /**
@@ -366,6 +368,9 @@ export function sitemapPaths(data: SitemapData): string[] {
       }
       if (RUST_PUBLISHED.includes("crates")) {
         for (const c of data.rs.crates ?? []) paths.push(routePath({ ...base, lang, view: "rust", rsSection: "crates", detail: c.slug }));
+      }
+      if (RUST_PUBLISHED.includes("shops")) {
+        for (const s of data.rs.shops ?? []) paths.push(routePath({ ...base, lang, view: "rust", rsSection: "shops", detail: s.slug }));
       }
     }
   }

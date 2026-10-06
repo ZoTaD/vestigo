@@ -11,6 +11,7 @@ import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, type 
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { isRsLoadingPage } from "./src/rust/loadingGuard";
 import { crateIndex, crateName, crateRows, crateSlugsEs, type LootFile } from "./src/rust/crates/model";
+import { shopIndex, shopSlugsEs, type ShopFile } from "./src/rust/shops/model";
 import type { ListRow } from "./src/rust/items/data";
 import { RUST_COPY } from "./src/rustCopy";
 import { buildEsSlugs } from "./src/esSlugs";
@@ -200,6 +201,7 @@ function readSitemapData(): { data: OgData } {
     const m = JSON.parse(readFileSync(`${rustDir}/meta.json`, "utf-8"));
     let items: RustSitemapData["items"];
     let crates: RustSitemapData["crates"];
+    let shops: RustSitemapData["shops"];
     let list: { rows: ListRow[] } | undefined;
     try {
       list = JSON.parse(readFileSync(`${rustDir}/site/list.json`, "utf-8"));
@@ -231,7 +233,18 @@ function readSitemapData(): { data: OgData } {
         crates = undefined; // sin world.py corrido: sin fichas de Cajas
       }
     }
-    rs = { build: m.build, extractedAt: m.extractedAt, items, crates };
+    // Tiendas (2026-10-06): las mismas cuentas que la pestaña (`rust/shops/model.ts`), con los slugs en español anotados.
+    if (list && items) {
+      try {
+        const file: ShopFile = JSON.parse(readFileSync(`${rustDir}/shops.json`, "utf-8"));
+        const index = shopIndex(file);
+        registerRustSlugs({ shops: shopSlugsEs(index) });
+        shops = index.map((e) => ({ slug: e.slug, en: e.en, es: e.es, n: e.n, bp: e.bp }));
+      } catch {
+        shops = undefined; // sin shops.json: sin fichas de Tiendas
+      }
+    }
+    rs = { build: m.build, extractedAt: m.extractedAt, items, crates, shops };
   } catch {
     rs = undefined;
   }

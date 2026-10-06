@@ -140,6 +140,7 @@ export function metaFor(
     const r = RUST_COPY[lang];
     if (route.rsSection === "items" && route.detail && detailName) return r.detailSeo(detailName, rsHas ?? undefined);
     if (route.rsSection === "crates" && route.detail && detailName && rsHas?.crate) return r.crateSeo(detailName, rsHas.crate);
+    if (route.rsSection === "shops" && route.detail && detailName && rsHas?.store) return r.shopSeo(detailName, rsHas.store);
     return r.seo[route.rsSection ?? "home"];
   }
   // Lo que queda son la portada y las dos páginas legales.
@@ -195,6 +196,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   }
   for (const e of data.rs?.items ?? []) out[`rs-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.rs?.crates ?? []) out[`rs-crates/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.rs?.shops ?? []) out[`rs-shops/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
 
   return out;
 }
@@ -447,6 +449,7 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
   const rsHas = new Map<string, RustHas>();
   for (const e of data.rs?.items ?? []) rsHas.set(`rs-items/${e.slug}`, { craft: !!e.c, shop: !!e.s, loot: !!e.l, recycle: !!e.r });
   for (const e of data.rs?.crates ?? []) rsHas.set(`rs-crates/${e.slug}`, { crate: { kind: e.kind, n: e.n, bp: e.bp } });
+  for (const e of data.rs?.shops ?? []) rsHas.set(`rs-shops/${e.slug}`, { store: { n: e.n, bp: e.bp } });
 
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);

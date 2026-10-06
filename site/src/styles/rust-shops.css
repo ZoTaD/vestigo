@@ -1,0 +1,35 @@
+/*
+ * Rust, pestaña Tiendas (2026-10-06). Hereda las variables de `.rs` (rust.css) y la ficha y las tablas de
+ * rust-items.css. Como Cajas: casilleros sin bordes de color.
+ */
+.rs-shops-tab { display: grid; gap: 12px; }
+.rs-shops-tab .rs-lede { margin-bottom: 0; }
+.rs-shop-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+.rs-shop { display: flex; flex-direction: column; gap: 10px; height: 100%; box-sizing: border-box; padding: 12px; background: var(--rs-slot); color: inherit; text-decoration: none; }
+.rs-shop:hover { background: rgba(255, 255, 255, 0.12); }
+.rs-shop-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.rs-shop-name { font-weight: 700; font-size: 17px; letter-spacing: 0.06em; text-transform: uppercase; }
+a.rs-shop:hover .rs-shop-name { color: #fff; }
+.rs-shop-n { flex: none; color: var(--rs-dim); font-size: 14px; white-space: nowrap; }
+.rs-shop-icons { display: flex; flex-wrap: wrap; gap: 4px; min-height: 40px; }
+.rs-shop-icons img { width: 40px; height: 40px; padding: 2px; background: rgba(0, 0, 0, 0.25); }
+
+/* La ficha no lleva ícono: el título ocupa todo el ancho (igual que en Cajas, con las dos clases para ganarle a rust-items.css). */
+.rs-ficha-top.rs-shop-top { grid-template-columns: 1fr; }
+.rs-shop-table th[scope="row"] { min-width: 10em; }
+.rs-shop-table th[scope="row"] .rs-ref { flex-wrap: nowrap; }
+.rs-shop-table img { flex: none; }
+.rs-shop-table td:nth-child(2), .rs-shop-table thead th:nth-child(2) { text-align: right; }
+.rs-shop-table td .rs-ref { display: inline-flex; gap: 6px; align-items: center; }
+.rs-price { font-weight: 700; }
+
+@media (max-width: 640px) {
+  .rs-shop-list { grid-template-columns: 1fr; }
+  .rs-shop-table th, .rs-shop-table td { padding: 6px 4px; }
+  .rs-shop-table td:nth-child(2) { white-space: nowrap; }
+  /* A 390 px el nombre de la moneda no entra al lado de la cifra. En la tabla de chatarra sobra (lo dice el título): queda
+     la cifra con su ícono. En la otra baja siempre debajo de la cifra, así todas las filas se leen igual. */
+  .rs-shop-scrap .rs-cur { display: none; }
+  .rs-shop-table td .rs-ref { display: inline-grid; grid-template-columns: auto auto; gap: 2px 6px; justify-content: start; }
+  .rs-shop-table .rs-cur { grid-column: 1 / -1; }
+}

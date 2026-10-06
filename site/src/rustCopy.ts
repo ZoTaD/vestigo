@@ -9,7 +9,7 @@ import type { EffectStat, HowKind, LootEvent, LootKind, ModStat, RecyclerKey } f
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
-export const RUST_TABS: RustSection[] = ["home", "items", "crates", "raid"];
+export const RUST_TABS: RustSection[] = ["home", "items", "crates", "shops", "raid"];
 
 type Seo = { title: string; description: string };
 
@@ -24,6 +24,14 @@ export interface RustHas {
   recycle?: boolean;
   /** Una ficha de Cajas (2026-10-06): lo que su `<head>` puede prometer. */
   crate?: RustCrateHas;
+  /** Una ficha de Tiendas (2026-10-06). */
+  store?: RustShopHas;
+}
+
+/** Lo que tiene una ficha de Tiendas (2026-10-06): cuántas ofertas y si alguna es un plano. */
+export interface RustShopHas {
+  n: number;
+  bp: boolean;
 }
 
 /** Lo que tiene una ficha de Cajas: qué clase de fuente es, cuántos objetos da y si alguno sale como plano. */
@@ -43,6 +51,8 @@ export interface RustCopy {
   detailSeo: (name: string, has?: RustHas) => Seo;
   /** El `<head>` de una ficha de Cajas. */
   crateSeo: (name: string, has: RustCrateHas) => Seo;
+  /** El `<head>` de una ficha de Tiendas. */
+  shopSeo: (name: string, has: RustShopHas) => Seo;
   loading: string;
   loadError: string;
   retry: string;
@@ -152,6 +162,23 @@ export interface RustCopy {
     missing: string;
     back: string;
   };
+  shops: {
+    h1: string;
+    lede: (n: string) => string;
+    /** Cuántas ofertas tiene una tienda: `n` decide singular o plural, `shown` es la cifra formateada. */
+    count: (n: number, shown: string) => string;
+    /** La bajada de la ficha. */
+    sells: (n: number, shown: string) => string;
+    scrapTable: string;
+    scrapNote: string;
+    otherTable: string;
+    otherNote: string;
+    item: string;
+    amount: string;
+    price: string;
+    missing: string;
+    back: string;
+  };
   raidBlocks: { toBreak: string; breaks: string; open: string };
   raid: {
     h1: string;
@@ -196,7 +223,7 @@ export interface RustCopy {
 }
 
 const EN: RustCopy = {
-  tabs: { home: "Home", items: "Items", crates: "Crates", raid: "Raid" },
+  tabs: { home: "Home", items: "Items", crates: "Crates", shops: "Shops", raid: "Raid" },
   soon: "Soon",
   soonTabs: ["Monuments", "Electricity", "Farming", "Server", "Patches"],
   seo: {
@@ -211,6 +238,10 @@ const EN: RustCopy = {
     crates: {
       title: "Rust Loot Tables: Every Crate, NPC and Drop Chance | Vestigo",
       description: "What every Rust crate, barrel, NPC, pick-up and event present can drop: each item with its chance and amount, from the basic crate to the elite one.",
+    },
+    shops: {
+      title: "Rust Shops: Outpost and Bandit Camp Items and Prices | Vestigo",
+      description: "What every NPC shop in Rust sells and for how much: Outpost, Bandit Camp, the fishing village, the ranch and the barn, with the amount and price of each offer.",
     },
     raid: {
       title: "Rust Raid Calculator: Sulfur Cost for Every Wall and Door | Vestigo",
@@ -243,6 +274,10 @@ const EN: RustCopy = {
     }
     return { title: `Rust ${name} Loot Table: Drop Chances | Vestigo`, description: `${name} in Rust: ${items} it can drop, each with the chance of getting it and the amount${extra}.` };
   },
+  shopSeo: (name, { n, bp }) => ({
+    title: `Rust ${name} Shop: Every Item and Price | Vestigo`,
+    description: `What the ${name} vending machines sell in Rust: ${n === 1 ? "its offer" : `all ${n} offers`}, with the amount you get and what it costs${bp ? ", and which ones are blueprints" : ""}.`,
+  }),
   loading: "Loading…",
   loadError: "This page didn't load.",
   retry: "Try again",
@@ -356,6 +391,21 @@ const EN: RustCopy = {
     missing: "That crate doesn't exist (or changed its name). Here's the full list.",
     back: "All crates",
   },
+  shops: {
+    h1: "Rust shops",
+    lede: (n) => `What the vending machines of these ${n} NPC shops sell, how much you get and what it costs.`,
+    count: (n, shown) => (n === 1 ? `${shown} offer` : `${shown} offers`),
+    sells: (n, shown) => (n === 1 ? "The offer in its vending machines." : `The ${shown} offers in its vending machines.`),
+    scrapTable: "Bought with scrap",
+    scrapNote: "From cheapest to most expensive.",
+    otherTable: "Paid with other items",
+    otherNote: "Selling resources, fish or flowers for scrap, and swaps. Grouped by what you pay with.",
+    item: "You get",
+    amount: "Amount",
+    price: "Price",
+    missing: "That shop doesn't exist (or changed its name). Here's the full list.",
+    back: "All shops",
+  },
   raidBlocks: { toBreak: "What it takes to break it", breaks: "What it breaks", open: "Open in the raid calculator" },
   raid: {
     h1: "Rust Raid Calculator",
@@ -402,6 +452,7 @@ const EN: RustCopy = {
     tools: [
       { tab: "items", title: "Items", text: "Recipe, workbench, recycling, loot and shortname of every item." },
       { tab: "crates", title: "Loot tables", text: "What every crate, NPC and present can drop, and how likely." },
+      { tab: "shops", title: "Shops", text: "What Outpost, Bandit Camp and the other NPC shops sell, and the price." },
       { tab: "raid", title: "Raid calculator", text: "Explosives and sulfur for any wall, door or deployable." },
     ],
     aboutTitle: "About this guide",
@@ -413,7 +464,7 @@ const EN: RustCopy = {
 };
 
 const ES: RustCopy = {
-  tabs: { home: "Portada", items: "Objetos", crates: "Cajas", raid: "Raideo" },
+  tabs: { home: "Portada", items: "Objetos", crates: "Cajas", shops: "Tiendas", raid: "Raideo" },
   soon: "Pronto",
   soonTabs: ["Monumentos", "Electricidad", "Granjas", "Servidor", "Parches"],
   seo: {
@@ -428,6 +479,10 @@ const ES: RustCopy = {
     crates: {
       title: "Cajas de Rust: botín y probabilidades de cada caja y NPC | Vestigo",
       description: "Qué puede traer cada caja, barril, NPC, recolectable y regalo de evento de Rust: cada objeto con su probabilidad y cantidad, de la caja básica a la de élite.",
+    },
+    shops: {
+      title: "Tiendas de Rust: qué vende cada una y a qué precio | Vestigo",
+      description: "Qué vende cada tienda de NPC de Rust y a qué precio: el Puesto Avanzado, el Campamento de bandoleros, el poblado pesquero, el rancho y el granero.",
     },
     raid: {
       title: "Calculadora de raideo de Rust: cuánto azufre cuesta cada pared y puerta | Vestigo",
@@ -460,6 +515,10 @@ const ES: RustCopy = {
     }
     return { title: `${name} de Rust: botín y probabilidades | Vestigo`, description: `${name} en Rust: ${items} que puede dar, cada uno con su probabilidad y cantidad${extra}.` };
   },
+  shopSeo: (name, { n, bp }) => ({
+    title: `Tienda del ${name} de Rust: objetos y precios | Vestigo`,
+    description: `Qué venden las máquinas expendedoras del ${name} en Rust: ${n === 1 ? "su oferta" : `las ${n} ofertas`}, con la cantidad que recibís y lo que cuesta${bp ? ", y cuáles son planos" : ""}.`,
+  }),
   loading: "Cargando…",
   loadError: "Esta página no cargó.",
   retry: "Reintentar",
@@ -574,6 +633,21 @@ const ES: RustCopy = {
     missing: "Esa caja no existe (o cambió de nombre). Acá está la lista completa.",
     back: "Todas las cajas",
   },
+  shops: {
+    h1: "Tiendas de Rust",
+    lede: (n) => `Qué venden las máquinas expendedoras de estas ${n} tiendas de NPC, cuánto recibís y lo que cuesta.`,
+    count: (n, shown) => (n === 1 ? `${shown} oferta` : `${shown} ofertas`),
+    sells: (n, shown) => (n === 1 ? "La oferta de sus máquinas expendedoras." : `Las ${shown} ofertas de sus máquinas expendedoras.`),
+    scrapTable: "Se paga con chatarra",
+    scrapNote: "De la más barata a la más cara.",
+    otherTable: "Se paga con otros objetos",
+    otherNote: "Vender recursos, pescado o flores por chatarra, y cambios. Agrupado por lo que se paga.",
+    item: "Recibís",
+    amount: "Cantidad",
+    price: "Precio",
+    missing: "Esa tienda no existe (o cambió de nombre). Acá está la lista completa.",
+    back: "Todas las tiendas",
+  },
   raidBlocks: { toBreak: "Lo que cuesta romperlo", breaks: "Qué rompe", open: "Abrir en la calculadora de raideo" },
   raid: {
     h1: "Calculadora de raideo de Rust",
@@ -620,6 +694,7 @@ const ES: RustCopy = {
     tools: [
       { tab: "items", title: "Objetos", text: "Receta, banco, reciclaje, loot y shortname de cada objeto." },
       { tab: "crates", title: "Cajas", text: "Qué puede traer cada caja, NPC y regalo, y con qué probabilidad." },
+      { tab: "shops", title: "Tiendas", text: "Qué venden el Puesto Avanzado, el Campamento de bandoleros y las otras tiendas, y a qué precio." },
       { tab: "raid", title: "Calculadora de raideo", text: "Explosivos y azufre para cada pared, puerta o deployable." },
     ],
     aboutTitle: "Sobre esta guía",

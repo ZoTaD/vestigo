@@ -13,6 +13,7 @@ import { ContentsSection, LootSection } from "./FichaLoot";
 import { BuildingSection, DetectedSection, ObtainSection, RepairSection, SkinsSection, TurnsSection, UseSection } from "./FichaMore";
 import RaidBlocks from "./RaidBlocks";
 import RecycleSection, { RecycledFrom } from "./FichaRecycle";
+import { ShopsSection } from "./FichaShops";
 import { craftTimes, formatDuration, longestWord } from "./format";
 
 type Nav = (r: Route) => void;
@@ -119,21 +120,7 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
       <ObtainSection ficha={ficha} route={route} navigate={navigate} />
       <TurnsSection ficha={ficha} route={route} navigate={navigate} />
 
-      {ficha.shops.length > 0 && (
-        <section className="rs-pnl">
-          <h2 className="rs-hd">{t.shops}</h2>
-          <ul className="rs-shops">
-            {ficha.shops.map((s, i) => (
-              <li key={i}>
-                <b>{say(s.shop, lang)}</b>
-                <span>
-                  {t.shopRow(s.amount, s.bp ? `${name} (${t.blueprint})` : name, s.price, say(s.currency.name, lang))}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      <ShopsSection ficha={ficha} route={route} navigate={navigate} />
       <BuildingSection ficha={ficha} route={route} navigate={navigate} />
       <RaidBlocks itemId={ficha.id} route={route} />
       <DetectedSection ficha={ficha} route={route} navigate={navigate} />
