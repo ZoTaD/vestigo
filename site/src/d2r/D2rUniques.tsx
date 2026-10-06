@@ -86,7 +86,9 @@ function UniqueList({ route, navigate, missing }: { route: Route; navigate: Nav;
                   name={tr(u.name, lang)}
                   tone="unique"
                   meta={`${tr(BASE_BY_CODE.get(u.base)?.name, lang)} · ${t.wiki.level} ${u.req}`}
-                />
+                >
+                  {u.ladder && <em className="d2-badge">{t.wiki.ladderOnly}</em>}
+                </ItemCard>
               </li>
             )} />
           </ul>
@@ -111,7 +113,11 @@ function UniqueDetail({ u, route, navigate }: { u: Unique; route: Route; navigat
           <h1 className="d2-detail-h d2-tone-unique">{tr(u.name, lang)}</h1>
           <p className="d2-detail-sub">
             {tr(base?.name, lang)} · {catName(base?.cat, lang)}
+            {u.ladder && <em className="d2-badge">{t.wiki.ladderOnly}</em>}
           </p>
+          {/* Los únicos que cambió la 3.3 traen la versión nueva, que sólo cae en Clasificación (notas de Blizzard del
+              parche). Sin el aviso, sus stats parecían valer para todos (auditoría 2026-10-06). */}
+          {u.ladder && <p className="d2-detail-sub">{t.wiki.ladderChanged}</p>}
         </div>
       </div>
       <ItemBox name={tr(u.name, lang)} tone="unique" sub={tr(base?.name, lang)} base={baseLines(base, props, lang, u.req)} lines={describeProps(props, E, lang)} />
