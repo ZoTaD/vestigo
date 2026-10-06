@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import engine from "../../games/d2r/data/wiki/engine.json";
 import uniques from "../../games/d2r/data/wiki/uniques.json";
 import runewords from "../../games/d2r/data/wiki/runewords.json";
+import sets from "../../games/d2r/data/wiki/sets.json";
 import { describeProps, sprintf, type Engine, type Prop } from "../src/d2r/stats";
 import { runewordLines } from "../src/d2r/D2rRunewords";
 
@@ -62,5 +63,18 @@ describe("líneas de ítems conocidos", () => {
     const weapon = runewordLines(rw("Spirit"), 0, "es");
     const shield = runewordLines(rw("Spirit"), 2, "es");
     expect(weapon).not.toEqual(shield);
+  });
+});
+
+describe("stats por nivel sin parámetro y clase al azar (auditoría 2026-10-06)", () => {
+  const set = (id: string) => (sets as unknown as { items: { id: string; props: Prop[] }[] }[]).flatMap((s) => s.items).find((i) => i.id === id)!;
+  it("el valor por nivel sale de mín/máx cuando la propiedad no trae parámetro (antes decía +0)", () => {
+    expect(describeProps((rw("Fortitude") as { props: Prop[] }).props, E, "en")).toContain("+(1-148) to Life (Based on Character Level)");
+    expect(describeProps((rw("Leaf") as { props: Prop[] }).props, E, "es")).toContain("+(2-198) de defensa (Según el nivel del personaje)");
+    expect(describeProps(set("griswolds-valor").props, E, "en")).toContain("+(0-24) Absorbs Cold Damage (Based on Character Level)");
+  });
+  it("Antorcha del Infierno: +3 a una clase al azar, no el rango de clases", () => {
+    expect(describeProps(uniq("Hellfire Torch").props, E, "en")).toContain("+3 to a Random Class' Skill Levels");
+    expect(describeProps(uniq("Hellfire Torch").props, E, "es")).toContain("+3 a los niveles de habilidad de una clase aleatoria");
   });
 });
