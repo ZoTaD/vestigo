@@ -51,3 +51,9 @@ declare module "virtual:pz-patch-pages" {
   const slugs: string[];
   export default slugs;
 }
+
+/** Lo que da cada objeto de Rust en el reciclador (`rustRecycleModule` en vite.config.ts), para la pestaña Reciclador. */
+declare module "virtual:rust-recycle" {
+  const file: import("./rust/recycler/model").RecycleFile;
+  export default file;
+}

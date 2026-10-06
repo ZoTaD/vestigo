@@ -1,0 +1,30 @@
+/*
+ * Rust, pestaña Reciclador (2026-10-06). Hereda las variables de `.rs` (rust.css), los botones de filtro, el buscador y
+ * los "da" del reciclaje de rust-items.css.
+ */
+.rs-recycler { display: grid; gap: 12px; }
+.rs-recycler .rs-lede { margin-bottom: 8px; }
+.rs-recycler .rs-ficha-note { margin-bottom: 0; }
+.rs-recycler-tools { display: flex; flex-wrap: wrap; gap: 4px 24px; }
+.rs-recycler-tools .rs-hd { display: block; margin-bottom: 6px; }
+.rs-recycler-eff { opacity: 0.75; }
+.rs-recycler .rs-search .rs-hd { display: block; }
+.rs-recycler-table th[scope="row"] { min-width: 11em; }
+/* El nombre se queda al lado de su ícono y parte en renglones, como en Cajas. */
+.rs-recycler-table th[scope="row"] .rs-ref { flex-wrap: nowrap; }
+.rs-recycler-table img { flex: none; }
+.rs-recycler-table td { white-space: normal; }
+.rs-recycler-table td.rs-recycler-scrap, .rs-recycler-table thead th:nth-child(2) { text-align: right; white-space: nowrap; }
+.rs-recycler-scrap { font-weight: 700; }
+.rs-recycler-table .rs-yields { gap: 4px 14px; }
+
+@media (max-width: 640px) {
+  .rs-recycler-table th, .rs-recycler-table td { padding: 6px 4px; }
+  .rs-recycler-table th[scope="row"] { min-width: 7.5em; }
+  .rs-recycler-table thead th { font-size: 11px; letter-spacing: 0.02em; }
+  /* Cada cosa que da, en un renglón: el ícono a la izquierda y el nombre con la cantidad al lado (antes el ícono quedaba
+     solo arriba). */
+  .rs-recycler-table .rs-yields { flex-direction: column; gap: 6px; }
+  .rs-recycler-table .rs-yields .rs-ref { display: grid; grid-template-columns: 24px auto; gap: 0 6px; align-items: start; }
+  .rs-recycler-table .rs-yields .rs-ref b { grid-column: 2; }
+}

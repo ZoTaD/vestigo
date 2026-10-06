@@ -8,10 +8,9 @@ import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
 import { say, type Ficha, type Ref } from "./data";
 import { Icon, RefLink, type Nav } from "./parts";
+import { nb } from "./format";
 import { recycleScrap, recycleYield, type RecycleYield } from "./recycle";
 
-/** Espacio no separable entre el número y el %: en el celular "60" quedaba en una línea y "%" en la otra. */
-const nb = (s: string) => s.replace(/ %/g, " %");
 
 /** La chatarra no viene en `recycle.out` (se escala distinto): se nombra a mano, con su ficha. */
 const SCRAP: Ref = { id: "scrap", slug: "scrap", name: { en: "Scrap", es: "Chatarra" } };

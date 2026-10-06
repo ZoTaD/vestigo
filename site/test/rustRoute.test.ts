@@ -16,7 +16,7 @@ describe("las direcciones de Rust", () => {
       expect(routePath({ ...parseRoute("/en/rust"), rsSection: tab })).toBe(`/en/rust/${tab}`);
       expect(routePath({ ...parseRoute("/es/rust"), rsSection: tab })).toBe(`/es/rust/${RUST_SECTION_ES[tab]}`);
     }
-    expect(RUST_SECTION_ES).toEqual({ items: "objetos", crates: "cajas", shops: "tiendas", raid: "raideo" });
+    expect(RUST_SECTION_ES).toEqual({ items: "objetos", crates: "cajas", shops: "tiendas", recycler: "reciclador", raid: "raideo" });
   });
 
   it("Objetos y Raideo están publicadas; lo que no existe muestra la portada", () => {

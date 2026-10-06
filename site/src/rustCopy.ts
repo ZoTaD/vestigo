@@ -9,7 +9,7 @@ import type { EffectStat, HowKind, LootEvent, LootKind, ModStat, RecyclerKey } f
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
-export const RUST_TABS: RustSection[] = ["home", "items", "crates", "shops", "raid"];
+export const RUST_TABS: RustSection[] = ["home", "items", "crates", "shops", "recycler", "raid"];
 
 type Seo = { title: string; description: string };
 
@@ -179,6 +179,20 @@ export interface RustCopy {
     missing: string;
     back: string;
   };
+  recycler: {
+    h1: string;
+    lede: (n: string) => string;
+    /** Qué es la eficiencia, con la de cada recicladora ya formateada ("50%"). */
+    effNote: (pct: Record<RecyclerKey, string>) => string;
+    pick: string;
+    sortBy: string;
+    sorts: Record<"scrap" | "name", string>;
+    item: string;
+    scrap: string;
+    gives: string;
+    count: (n: number, shown: string) => string;
+    empty: string;
+  };
   raidBlocks: { toBreak: string; breaks: string; open: string };
   raid: {
     h1: string;
@@ -223,7 +237,7 @@ export interface RustCopy {
 }
 
 const EN: RustCopy = {
-  tabs: { home: "Home", items: "Items", crates: "Crates", shops: "Shops", raid: "Raid" },
+  tabs: { home: "Home", items: "Items", crates: "Crates", shops: "Shops", recycler: "Recycler", raid: "Raid" },
   soon: "Soon",
   soonTabs: ["Monuments", "Electricity", "Farming", "Server", "Patches"],
   seo: {
@@ -242,6 +256,10 @@ const EN: RustCopy = {
     shops: {
       title: "Rust Shops: Outpost and Bandit Camp Items and Prices | Vestigo",
       description: "What every NPC shop in Rust sells and for how much: Outpost, Bandit Camp, the fishing village, the ranch and the barn, with the amount and price of each offer.",
+    },
+    recycler: {
+      title: "Rust Recycler: What Every Item Recycles Into (Scrap List) | Vestigo",
+      description: "What every Rust item gives in the recycler: the scrap first, then the rest, in the monument, powered, Power Plant or safe zone recycler. Sort by scrap.",
     },
     raid: {
       title: "Rust Raid Calculator: Sulfur Cost for Every Wall and Door | Vestigo",
@@ -406,6 +424,20 @@ const EN: RustCopy = {
     missing: "That shop doesn't exist (or changed its name). Here's the full list.",
     back: "All shops",
   },
+  recycler: {
+    h1: "Rust recycler",
+    lede: (n) => `What each of these ${n} items gives in the recycler, scrap first. Pick the recycler and sort by scrap to see what is worth recycling.`,
+    effNote: (p) =>
+      `A recycler gives back a share of the item's recipe: ${p.green} at monuments (${p.green_power} while the monument's power is on), ${p.red} at the Power Plant's red one and ${p.yellow} at the yellow one in safe zones; “+ 50%” is the chance of one more, and scrap is the average.`,
+    pick: "Recycler",
+    sortBy: "Sort by",
+    sorts: { scrap: "Most scrap", name: "Name" },
+    item: "Item",
+    scrap: "Scrap",
+    gives: "Also gives",
+    count: (n, shown) => (n === 1 ? `${shown} item` : `${shown} items`),
+    empty: "Nothing matches that search.",
+  },
   raidBlocks: { toBreak: "What it takes to break it", breaks: "What it breaks", open: "Open in the raid calculator" },
   raid: {
     h1: "Rust Raid Calculator",
@@ -453,6 +485,7 @@ const EN: RustCopy = {
       { tab: "items", title: "Items", text: "Recipe, workbench, recycling, loot and shortname of every item." },
       { tab: "crates", title: "Loot tables", text: "What every crate, NPC and present can drop, and how likely." },
       { tab: "shops", title: "Shops", text: "What Outpost, Bandit Camp and the other NPC shops sell, and the price." },
+      { tab: "recycler", title: "Recycler", text: "What every item recycles into, sorted by scrap." },
       { tab: "raid", title: "Raid calculator", text: "Explosives and sulfur for any wall, door or deployable." },
     ],
     aboutTitle: "About this guide",
@@ -464,7 +497,7 @@ const EN: RustCopy = {
 };
 
 const ES: RustCopy = {
-  tabs: { home: "Portada", items: "Objetos", crates: "Cajas", shops: "Tiendas", raid: "Raideo" },
+  tabs: { home: "Portada", items: "Objetos", crates: "Cajas", shops: "Tiendas", recycler: "Reciclador", raid: "Raideo" },
   soon: "Pronto",
   soonTabs: ["Monumentos", "Electricidad", "Granjas", "Servidor", "Parches"],
   seo: {
@@ -483,6 +516,10 @@ const ES: RustCopy = {
     shops: {
       title: "Tiendas de Rust: qué vende cada una y a qué precio | Vestigo",
       description: "Qué vende cada tienda de NPC de Rust y a qué precio: el Puesto Avanzado, el Campamento de bandoleros, el poblado pesquero, el rancho y el granero.",
+    },
+    recycler: {
+      title: "Reciclador de Rust: qué da cada objeto (chatarra) | Vestigo",
+      description: "Qué da cada objeto de Rust en el reciclador: primero la chatarra y después lo demás, en la recicladora de monumento, con luz, roja o de zona segura.",
     },
     raid: {
       title: "Calculadora de raideo de Rust: cuánto azufre cuesta cada pared y puerta | Vestigo",
@@ -648,6 +685,20 @@ const ES: RustCopy = {
     missing: "Esa tienda no existe (o cambió de nombre). Acá está la lista completa.",
     back: "Todas las tiendas",
   },
+  recycler: {
+    h1: "Reciclador de Rust",
+    lede: (n) => `Qué da cada uno de estos ${n} objetos en el reciclador, primero la chatarra. Elegí la recicladora y ordená por chatarra para ver qué conviene reciclar.`,
+    effNote: (p) =>
+      `Una recicladora devuelve una parte de la receta del objeto: ${p.green} la de los monumentos (${p.green_power} mientras el monumento tiene la luz prendida), ${p.red} la roja de la planta de energía y ${p.yellow} la amarilla de las zonas seguras; “+ 50 %” es la chance de que salga uno más, y la chatarra es el promedio.`,
+    pick: "Recicladora",
+    sortBy: "Ordenar por",
+    sorts: { scrap: "Más chatarra", name: "Nombre" },
+    item: "Objeto",
+    scrap: "Chatarra",
+    gives: "También da",
+    count: (n, shown) => (n === 1 ? `${shown} objeto` : `${shown} objetos`),
+    empty: "Nada coincide con esa búsqueda.",
+  },
   raidBlocks: { toBreak: "Lo que cuesta romperlo", breaks: "Qué rompe", open: "Abrir en la calculadora de raideo" },
   raid: {
     h1: "Calculadora de raideo de Rust",
@@ -695,6 +746,7 @@ const ES: RustCopy = {
       { tab: "items", title: "Objetos", text: "Receta, banco, reciclaje, loot y shortname de cada objeto." },
       { tab: "crates", title: "Cajas", text: "Qué puede traer cada caja, NPC y regalo, y con qué probabilidad." },
       { tab: "shops", title: "Tiendas", text: "Qué venden el Puesto Avanzado, el Campamento de bandoleros y las otras tiendas, y a qué precio." },
+      { tab: "recycler", title: "Reciclador", text: "Qué da cada objeto al reciclarlo, ordenado por chatarra." },
       { tab: "raid", title: "Calculadora de raideo", text: "Explosivos y azufre para cada pared, puerta o deployable." },
     ],
     aboutTitle: "Sobre esta guía",

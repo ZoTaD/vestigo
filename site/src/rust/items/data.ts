@@ -6,7 +6,7 @@
  *
  * Los `import()` van escritos acá para que Vite arme un chunk por archivo: nada de esto viaja en el de la pestaña.
  */
-import type { Route } from "../../route";
+import { registerRustSlugs, type Route } from "../../route";
 import { once, shardedFichas } from "../../zomboid/store";
 import { pzShardOf } from "../../zomboid/shard";
 
@@ -110,7 +110,18 @@ export interface Ficha {
 /** `SHARDS` de site_data.py: si se cambia uno se cambia el otro (lo prueba rustItemsData.test.ts). */
 export const RUST_SHARDS = 32;
 
-const list = once<ItemsList>(() => import("@rust/site/list.json"));
+/**
+ * Al llegar la lista se anotan los slugs en español de todas las fichas (cada fila trae el suyo): Cajas, Tiendas y el
+ * Reciclador enlazan objetos sin importar `slugs-es.json` (eso lo hacen Objetos y Raideo), y sin esto, en español, el
+ * navegador dibujaba `/es/rust/objetos/gears` donde el prerender había escrito `/es/rust/objetos/engranajes`.
+ */
+const list = once<ItemsList>(() =>
+  import("@rust/site/list.json").then((m) => {
+    const rows = (m.default as ItemsList).rows;
+    registerRustSlugs({ items: Object.fromEntries(rows.filter((r) => r.slugEs !== r.slug).map((r) => [r.slug, r.slugEs])) });
+    return m;
+  }),
+);
 const fichas = shardedFichas<Ficha>(
   import.meta.glob<{ default: Record<string, Ficha> }>("@rust/site/items/*.json"),
   (slug) => pzShardOf(slug, RUST_SHARDS),

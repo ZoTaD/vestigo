@@ -30,6 +30,7 @@ type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 const RsItems = lazyWithPreload(() => import("./rust/items/RustItems"));
 const RsCrates = lazyWithPreload(() => import("./rust/crates/RustCrates"));
 const RsShops = lazyWithPreload(() => import("./rust/shops/RustShops"));
+const RsRecycler = lazyWithPreload(() => import("./rust/recycler/RustRecycler"));
 const RsRaid = lazyWithPreload(() => import("./rust/raid/RustRaid"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá, en `RUST_TAB_FILES` y en `RUST_PUBLISHED`. */
@@ -38,6 +39,7 @@ const TABS: Partial<Record<RustSection, LazyTab>> = {
   items: RsItems,
   crates: RsCrates,
   shops: RsShops,
+  recycler: RsRecycler,
   raid: RsRaid,
 };
 
@@ -52,6 +54,8 @@ const TAB_DATA: Partial<Record<RustSection, (route: Route) => Promise<void>>> = 
   crates: () => Promise.all([RsCrates.preload(), import("./rust/crates/data")]).then(([, m]) => m.loadCrates()).then(() => undefined),
   // Tiendas, lo mismo con `shops.json` y la lista de Objetos.
   shops: () => Promise.all([RsShops.preload(), import("./rust/shops/data")]).then(([, m]) => m.loadShops()).then(() => undefined),
+  // Reciclador: lo que da cada objeto (armado en el build) y la lista de Objetos.
+  recycler: () => Promise.all([RsRecycler.preload(), import("./rust/recycler/data")]).then(([, m]) => m.loadRecycler()).then(() => undefined),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Rust, y sus datos (la portada ya viene con el área). */

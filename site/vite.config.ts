@@ -12,6 +12,7 @@ import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { isRsLoadingPage } from "./src/rust/loadingGuard";
 import { crateIndex, crateName, crateRows, crateSlugsEs, type LootFile } from "./src/rust/crates/model";
 import { shopIndex, shopSlugsEs, type ShopFile } from "./src/rust/shops/model";
+import type { RecycleFile } from "./src/rust/recycler/model";
 import type { ListRow } from "./src/rust/items/data";
 import { RUST_COPY } from "./src/rustCopy";
 import { buildEsSlugs } from "./src/esSlugs";
@@ -878,7 +879,8 @@ function manualChunks() {
     // con \0, pero son datos de su sección: van con ella. En vendor, los ~236 KB de slugs de Zomboid los bajaría cualquiera
     // que entre al sitio, y los nombres, que se piden de a una sección, volverían a ser un solo bloque.
     // `\0virtual:pz-patch-pages` (las versiones de Parches con página) también: cambia con cada versión, no con React.
-    const datosDeSeccion = /^\0virtual:(?:[\w-]+-slugs-es(?:\/[\w-]+)?|pz-names\/[\w-]+|pz-patch-pages)$/.test(id);
+    // Y `\0virtual:rust-recycle` (el Reciclador de Rust, 2026-10-06): ~12 KB de datos que sólo pide esa pestaña.
+    const datosDeSeccion = /^\0virtual:(?:[\w-]+-slugs-es(?:\/[\w-]+)?|pz-names\/[\w-]+|pz-patch-pages|rust-recycle)$/.test(id);
     // Leaflet (el visor del Mapa de Zomboid, 2026-09-30) va en su propio chunk y no en vendor: vendor lo baja cualquiera
     // que entre al sitio, y Leaflet sólo hace falta en el Mapa. Antes que la regla de `\0`: el plugin de CommonJS le
     // arma envoltorios virtuales (`\0…/leaflet-src.js?commonjs-module`) que también son de Leaflet. Su CSS no: va con el
@@ -911,6 +913,42 @@ function manualChunks() {
   };
 }
 
+/**
+ * Lo que da cada objeto de Rust en el reciclador, para la pestaña Reciclador (2026-10-06): `virtual:rust-recycle` →
+ * `{ recyclers, rows: [{ id, scrap, out }] }`, sacado de `items.json` sólo con los objetos que tienen ficha (los de
+ * `site/list.json`). `items.json` entero pesa 1,2 MB (recetas, textos, condición…) y la pestaña sólo necesita esto
+ * (~100 KB, ~12 KB con gzip); un archivo más en `games/rust/data` sería otro que regenerar y que podría quedar distinto
+ * de las fichas, que salen de la misma cuenta (`site_data.py`). Como los JSON del sitio, va como `JSON.parse` (regla 7
+ * de CLAUDE.md). Sin el extractor corrido sale vacío y la pestaña dice que no hay nada.
+ */
+function rustRecycleModule(): Plugin {
+  const id = "virtual:rust-recycle";
+  return {
+    name: "vestigo-rust-recycle",
+    resolveId: (source) => (source === id ? `\0${id}` : null),
+    load(source) {
+      if (source !== `\0${id}`) return null;
+      this.addWatchFile(`${rustDir}/items.json`);
+      this.addWatchFile(`${rustDir}/site/list.json`);
+      let out: RecycleFile = { recyclers: [], rows: [] };
+      try {
+        const doc = JSON.parse(readFileSync(`${rustDir}/items.json`, "utf-8")) as {
+          items: { id: string; recycle?: { scrap: number; out: { id: string; amount: number }[] } | null }[];
+          recyclers: RecycleFile["recyclers"];
+        };
+        const visible = new Set((JSON.parse(readFileSync(`${rustDir}/site/list.json`, "utf-8")) as { rows: ListRow[] }).rows.map((r) => r.id));
+        out = {
+          recyclers: doc.recyclers,
+          rows: doc.items.filter((i) => i.recycle && visible.has(i.id)).map((i) => ({ id: i.id, scrap: i.recycle!.scrap, out: i.recycle!.out })),
+        };
+      } catch {
+        // Sin `extract.py` ni `site_data.py` corridos: sin filas.
+      }
+      return `export default JSON.parse(${JSON.stringify(JSON.stringify(out))});`;
+    },
+  };
+}
+
 export default defineConfig({
   plugins: [
     localDeadlockAssets(),
@@ -928,6 +966,7 @@ export default defineConfig({
       () => [...new Set(readPzIndex().map((e) => e.sec))],
     ),
     pzNamesModule(),
+    rustRecycleModule(),
     react(),
     seoFiles(),
     prerenderRoutes(),

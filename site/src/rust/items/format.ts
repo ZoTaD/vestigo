@@ -57,3 +57,9 @@ export function upkeepRange(amount: number): [number, number] {
 export function longestWord(name: string): number {
   return Math.max(1, ...name.split(/[\s-]+/).map((w) => [...w].length));
 }
+
+/**
+ * Espacio no separable entre el número y el %: en el celular "60" quedaba en una línea y "%" en la otra. Lo usan el
+ * reciclaje de la ficha (`FichaRecycle.tsx`) y la pestaña Reciclador.
+ */
+export const nb = (s: string): string => s.replace(/ %/g, " %");

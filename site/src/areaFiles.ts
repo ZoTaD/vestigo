@@ -83,6 +83,7 @@ export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
   items: "src/rust/items/RustItems.tsx",
   crates: "src/rust/crates/RustCrates.tsx",
   shops: "src/rust/shops/RustShops.tsx",
+  recycler: "src/rust/recycler/RustRecycler.tsx",
   raid: "src/rust/raid/RustRaid.tsx",
 };
 
