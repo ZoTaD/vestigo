@@ -41,7 +41,7 @@ push a la rama.
    Sets, Palabras rúnicas), PoE2 Enciclopedia, Valheim, Deadlock Objetos.
 3. [~] **Imágenes**: `loading="lazy"`, `decoding="async"` y tamaño en todos
    los `<img>` de listas.
-4. [ ] **Build**: medido (ver arriba). Pendiente: que un deploy de datos no
+4. [x] **Build**: medido (ver arriba). Pendiente: que un deploy de datos no
    cambie el HTML de los otros juegos (entrada con nombre fijo o similar;
    primero medir cuántos HTML cambian con un cambio de datos), bajar la RAM y
    ver si el prerender se puede acelerar.
@@ -72,3 +72,11 @@ push a la rama.
   hashes, 485 (Deadlock y la raíz). Assets nuevos: 40 JS, ningún CSS.
   Arreglo: el HTML carga `/app.js` (nombre fijo) con la entrada y los
   `modulepreload` de cada pestaña; la pestaña va en `<html data-pre>`.
+- 2026-10-06: `app.js` verificado: con el mismo par de publicaciones cambian
+  485 HTML (antes 22.221). Todas las páginas cargan sin errores; cuesta un
+  pedido más (`app.js`, 10 KB, se revalida).
+- 2026-10-06: `json: { stringify: true }` en Vite. `vite build` 149 s → 93 s,
+  pico de RAM 5,8 GB → 2,3 GB, prerender 76 s → 55 s. Los JS comprimidos
+  pesan un 1 % más (8,49 → 8,59 MB en 913 archivos).
+- 2026-10-06: `npm run perf` (presupuesto de `CLAUDE.md`): todas las páginas
+  medidas dentro del presupuesto. No va en CI por los minutos de Actions.

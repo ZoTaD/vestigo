@@ -2,10 +2,14 @@
  * Cuánto pesa cada página (2026-10-06): pedidos, imágenes, nodos del DOM y memoria al cargar en frío.
  *
  *   npx vite preview --port 4173 &
- *   node scripts/perf.mjs [http://localhost:4173] [--only zomboid] [--json salida.json]
+ *   node scripts/perf.mjs [http://localhost:4173] [--only zomboid] [--json salida.json] [--budget]
  *
  * Cada página se abre en un contexto nuevo (sin caché) y se mide cuando la red queda quieta. Es el antes y el después
  * del plan de optimización (`docs/plans/2026-10-06-optimizacion-sitio.md`) y la base del presupuesto de CI.
+ *
+ * Con `--budget` sale con error si una página pasa el presupuesto de `CLAUDE.md` (`BUDGET` abajo). No corre en CI: los
+ * minutos de GitHub Actions están contados (ver `.github/workflows/tests.yml`); se corre antes de publicar un juego o una
+ * pestaña nueva.
  *
  * Usa el Playwright que haya: el del proyecto si está, si no el global. `PW_CHROMIUM` apunta a un Chromium propio.
  */
@@ -49,7 +53,12 @@ export const PAGES = [
   "/en/project-zomboid/patches",
 ];
 
+/** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */
+export const BUDGET = { requests: 250, images: 200, nodes: 3000 };
+
 const args = process.argv.slice(2);
+const budget = args.includes("--budget");
+if (budget) args.splice(args.indexOf("--budget"), 1);
 const flag = (name) => {
   const i = args.indexOf(name);
   return i >= 0 ? args.splice(i, 2)[1] : undefined;
@@ -102,3 +111,16 @@ for (const path of PAGES.filter((p) => !only || p.includes(only))) {
 }
 await browser.close();
 if (jsonOut) writeFileSync(jsonOut, JSON.stringify(rows, null, 1));
+if (budget) {
+  const over = rows.flatMap((r) => [
+    ...(r.requests > BUDGET.requests ? [`${r.path}: ${r.requests} pedidos (tope ${BUDGET.requests})`] : []),
+    ...(r.images > BUDGET.images ? [`${r.path}: ${r.images} imágenes (tope ${BUDGET.images})`] : []),
+    ...(r.nodes > BUDGET.nodes ? [`${r.path}: ${r.nodes} nodos (tope ${BUDGET.nodes})`] : []),
+    ...(r.errors ? [`${r.path}: ${r.errors} errores`] : []),
+  ]);
+  if (over.length) {
+    console.error(`\nFuera de presupuesto:\n  ${over.join("\n  ")}`);
+    process.exit(1);
+  }
+  console.log("\nTodas las páginas dentro del presupuesto.");
+}

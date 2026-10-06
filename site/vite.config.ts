@@ -866,6 +866,13 @@ export default defineConfig({
   build: {
     rollupOptions: { output: { manualChunks: manualChunks() } },
   },
+  /**
+   * Cada JSON como `JSON.parse("…")` y no como un objeto de JavaScript (2026-10-06). Son ~50 MB de datos (31 de
+   * Zomboid): convertidos a objetos, Rollup los recorría como código y el build pasaba los 5,8 GB de RAM (el tope en
+   * Netlify es 6). Además el navegador lee un `JSON.parse` más rápido que el mismo objeto escrito en JS. Lo que se
+   * pierde es importar una clave suelta (`import { x } from "./a.json"`), que el sitio no usa.
+   */
+  json: { stringify: true },
   resolve: {
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
