@@ -19,8 +19,8 @@ se anota acá para corregirlo en el extractor.
 1. [x] Rust con las reglas de rendimiento (`LazyRows`, imágenes, `perf.mjs`,
    build medido).
 2. [x] Rust · Cajas: qué trae cada caja (`loot.json`).
-3. [ ] Rust · Tiendas: qué vende cada monumento (`shops.json`).
-4. [ ] Rust · Reciclador: qué da cada objeto, ordenado por chatarra.
+3. [x] Rust · Tiendas: qué vende cada monumento (`shops.json`).
+4. [x] Rust · Reciclador: qué da cada objeto, ordenado por chatarra.
 5. [x] Auditoría Valheim.
 6. [x] Auditoría D2R.
 7. [x] Auditoría Zomboid.
@@ -69,7 +69,18 @@ datos sacados del juego están, en general, muy bien.
   de VHS y TV es configurable (`LevelForMediaXPCutoff`), "jugadores de
   bowling".
 
+- **Rust, tiendas:** la wiki oficial sólo muestra la máquina de recursos del
+  Puesto Avanzado (7 ofertas, coinciden todas). Bandit Camp, contra
+  corrosionhour.com (no oficial, 2023): ~40 precios coinciden; difieren la
+  tarjeta roja (80 vs 40) y las pastillas antirradiación (10 vs 1).
+- **Rust, reciclador:** 12 componentes coinciden exacto con la wiki oficial.
+
 ### Pendiente (necesita el juego o una decisión)
+
+- **Reciclador por defecto:** la página arranca en la verde de monumento
+  (50 %), como dicen el extractor y la ficha. La wiki oficial dice que "la
+  recicladora estándar devuelve 60 %" (la nuestra con electricidad). Si es
+  así, cambiar `DEFAULT_RECYCLER` en `site/src/rust/recycler/model.ts`.
 
 - **Rust, cajas:** la wiki oficial da otras probabilidades para AK y
   cerrojo (4,4 % vs 3,9 %), C4 y explosivos (2,4 vs 1,9), cuerpos de rifle y
@@ -89,3 +100,6 @@ datos sacados del juego están, en general, muy bien.
   "bolsa de lona", recetas sin nombre en español). No hay un mecanismo de
   correcciones al español en `games/zomboid/tools`: sumarlo y volver a
   extraer.
+- Pasos 3 y 4: Tiendas (`0c5a9d1f`) y Reciclador (`63690479`, 777 objetos
+  con `LazyRows`); slugs de Halloween cortos en Cajas (`6112ac02`). Build
+  95 s, 24.472 páginas; presupuesto en verde.
