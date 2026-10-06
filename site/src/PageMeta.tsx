@@ -14,6 +14,9 @@ import { loadD2Index, peekD2Index } from "./d2r/index";
 import { loadPzNames, peekPzName } from "./zomboid/index";
 import { pzPatchName } from "./zomboid/patches/slug";
 import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/data";
+import { loadCrates as loadRsCrates, peekCrates as peekRsCrates } from "./rust/crates/data";
+import { crateName } from "./rust/crates/model";
+import { RUST_COPY } from "./rustCopy";
 import { loadEditions as loadVhEditions, peekEditions as peekVhEditions } from "./valheimPatchesData";
 
 /**
@@ -139,6 +142,11 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const f = peekRsItem(route.detail);
     return f ? (lang === "es" ? f.name.es || f.name.en : f.name.en) : null;
   }
+  // Una ficha de Cajas: el nombre sale de `loot.json`, que la pestaña pide igual.
+  if (route.view === "rust" && route.rsSection === "crates" && route.detail) {
+    const e = peekRsCrates()?.bySlug.get(route.detail);
+    return e ? crateName(e, lang, RUST_COPY[lang].items.events) : null;
+  }
   return null;
 }
 
@@ -156,7 +164,12 @@ export default function PageMeta({ route }: { route: Route }) {
     const key = pzNameKey(route);
     const via = key ? peekPzName(key.sec, key.id)?.via?.[lang] : null;
     const rsItem = route.view === "rust" && route.rsSection === "items" && route.detail ? peekRsItem(route.detail) : null;
-    const rsHas = rsItem ? { craft: !!rsItem.craft, shop: rsItem.shops.length > 0, loot: rsItem.loot.length > 0, recycle: !!rsItem.recycle } : null;
+    const rsCrate = route.view === "rust" && route.rsSection === "crates" && route.detail ? peekRsCrates()?.bySlug.get(route.detail) : undefined;
+    const rsHas = rsItem
+      ? { craft: !!rsItem.craft, shop: rsItem.shops.length > 0, loot: rsItem.loot.length > 0, recycle: !!rsItem.recycle }
+      : rsCrate
+        ? { crate: { kind: rsCrate.kind, n: rsCrate.n, bp: rsCrate.bp } }
+        : null;
     const { title, description } = metaFor(route, lang, detail, via, rsHas);
     const url = routeUrl(route);
 
@@ -226,6 +239,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "rust" && route.rsSection === "items" && route.detail && peekRsItem(route.detail) === undefined) {
       let vivo = true;
       loadRsItem(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una de Cajas, con `loot.json`.
+    if (route.view === "rust" && route.rsSection === "crates" && route.detail && !peekRsCrates()) {
+      let vivo = true;
+      loadRsCrates().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
   }, [route, copy, lang]);

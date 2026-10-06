@@ -9,7 +9,7 @@ import type { EffectStat, HowKind, LootEvent, LootKind, ModStat, RecyclerKey } f
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
-export const RUST_TABS: RustSection[] = ["home", "items", "raid"];
+export const RUST_TABS: RustSection[] = ["home", "items", "crates", "raid"];
 
 type Seo = { title: string; description: string };
 
@@ -22,6 +22,15 @@ export interface RustHas {
   shop?: boolean;
   loot?: boolean;
   recycle?: boolean;
+  /** Una ficha de Cajas (2026-10-06): lo que su `<head>` puede prometer. */
+  crate?: RustCrateHas;
+}
+
+/** Lo que tiene una ficha de Cajas: qué clase de fuente es, cuántos objetos da y si alguno sale como plano. */
+export interface RustCrateHas {
+  kind: LootKind;
+  n: number;
+  bp: boolean;
 }
 
 export interface RustCopy {
@@ -32,6 +41,8 @@ export interface RustCopy {
   seo: Record<RustSection, Seo>;
   /** El `<head>` de una ficha de Objetos. */
   detailSeo: (name: string, has?: RustHas) => Seo;
+  /** El `<head>` de una ficha de Cajas. */
+  crateSeo: (name: string, has: RustCrateHas) => Seo;
   loading: string;
   loadError: string;
   retry: string;
@@ -123,6 +134,24 @@ export interface RustCopy {
     shopRow: (amount: number, item: string, price: number, currency: string) => string;
     back: string;
   };
+  crates: {
+    h1: string;
+    lede: (n: string) => string;
+    groups: Record<LootKind, string>;
+    /** `n` decide singular o plural; `shown` es la cifra ya formateada en el idioma de la página. */
+    count: (n: number, shown: string) => string;
+    /** La bajada de la ficha, según qué clase de fuente es. */
+    drops: Record<LootKind, (n: number, shown: string) => string>;
+    note: string;
+    worn: Record<"some" | "all", string>;
+    /** El título de la tabla de la ficha. */
+    table: string;
+    item: string;
+    /** El enlace a la ficha del objeto que se abre (un regalo, una bolsa). */
+    openItem: string;
+    missing: string;
+    back: string;
+  };
   raidBlocks: { toBreak: string; breaks: string; open: string };
   raid: {
     h1: string;
@@ -167,7 +196,7 @@ export interface RustCopy {
 }
 
 const EN: RustCopy = {
-  tabs: { home: "Home", items: "Items", raid: "Raid" },
+  tabs: { home: "Home", items: "Items", crates: "Crates", raid: "Raid" },
   soon: "Soon",
   soonTabs: ["Monuments", "Electricity", "Farming", "Server", "Patches"],
   seo: {
@@ -178,6 +207,10 @@ const EN: RustCopy = {
     items: {
       title: "Rust Items List: Crafting, Recycling and Where to Find Them | Vestigo",
       description: "Every Rust item with its crafting recipe and workbench, what it recycles into, which crates drop it, its shortname and the admin command to spawn it.",
+    },
+    crates: {
+      title: "Rust Loot Tables: Every Crate, NPC and Drop Chance | Vestigo",
+      description: "What every Rust crate, barrel, NPC, pick-up and event present can drop: each item with its chance and amount, from the basic crate to the elite one.",
     },
     raid: {
       title: "Rust Raid Calculator: Sulfur Cost for Every Wall and Door | Vestigo",
@@ -198,6 +231,17 @@ const EN: RustCopy = {
         : `${name} in Rust: Stats, Shortname and Spawn Command | Vestigo`,
       description: `${name} in Rust: ${parts.length ? `${parts.join(", ")}, plus its shortname and spawn command` : "what it is for, its shortname and spawn command"}.`,
     };
+  },
+  crateSeo: (name, { kind, n, bp }) => {
+    const items = n === 1 ? "the item" : `the ${n} items`;
+    const extra = bp ? ", and which ones come as a blueprint" : "";
+    if (kind === "collect") {
+      return { title: `Rust ${name}: What Picking It Up Gives | Vestigo`, description: `${name} in Rust: what picking it up gives you, with the amount and chance of each item${extra}.` };
+    }
+    if (kind === "item") {
+      return { title: `Rust ${name}: What's Inside and Drop Chances | Vestigo`, description: `${name} in Rust: ${items} it can have inside when opened, each with its chance and amount${extra}.` };
+    }
+    return { title: `Rust ${name} Loot Table: Drop Chances | Vestigo`, description: `${name} in Rust: ${items} it can drop, each with the chance of getting it and the amount${extra}.` };
   },
   loading: "Loading…",
   loadError: "This page didn't load.",
@@ -293,6 +337,25 @@ const EN: RustCopy = {
     shopRow: (amount, item, price, currency) => `${amount} × ${item} for ${price} ${currency}`,
     back: "All items",
   },
+  crates: {
+    h1: "Rust loot tables",
+    lede: (n) => `What each of these ${n} crates, NPCs, pick-ups and openable items can give, with the chance and amount of every item.`,
+    groups: { box: "Crates and barrels", npc: "NPCs", collect: "Pick-ups", item: "Openable items" },
+    count: (n, shown) => (n === 1 ? `${shown} item` : `${shown} items`),
+    drops: {
+      box: (n, shown) => (n === 1 ? "The item it can drop." : `The ${shown} items it can drop, from most to least likely.`),
+      npc: (n, shown) => (n === 1 ? "The item it can drop." : `The ${shown} items it can drop, from most to least likely.`),
+      collect: (n, shown) => (n === 1 ? "What you get when you pick it up." : `The ${shown} items you can get when you pick it up, from most to least likely.`),
+      item: (n, shown) => (n === 1 ? "What it has inside when opened." : `The ${shown} items it can have inside when opened, from most to least likely.`),
+    },
+    note: "Chance that it has at least one. In crates the amount counts all its rolls; for NPCs it is what the slot that gives the most provides.",
+    worn: { all: "Items with durability come out worn.", some: "Items with durability can come out worn or at full condition." },
+    table: "Loot",
+    item: "Item",
+    openItem: "See the item",
+    missing: "That crate doesn't exist (or changed its name). Here's the full list.",
+    back: "All crates",
+  },
   raidBlocks: { toBreak: "What it takes to break it", breaks: "What it breaks", open: "Open in the raid calculator" },
   raid: {
     h1: "Rust Raid Calculator",
@@ -338,6 +401,7 @@ const EN: RustCopy = {
     toolsTitle: "Tools",
     tools: [
       { tab: "items", title: "Items", text: "Recipe, workbench, recycling, loot and shortname of every item." },
+      { tab: "crates", title: "Loot tables", text: "What every crate, NPC and present can drop, and how likely." },
       { tab: "raid", title: "Raid calculator", text: "Explosives and sulfur for any wall, door or deployable." },
     ],
     aboutTitle: "About this guide",
@@ -349,7 +413,7 @@ const EN: RustCopy = {
 };
 
 const ES: RustCopy = {
-  tabs: { home: "Portada", items: "Objetos", raid: "Raideo" },
+  tabs: { home: "Portada", items: "Objetos", crates: "Cajas", raid: "Raideo" },
   soon: "Pronto",
   soonTabs: ["Monumentos", "Electricidad", "Granjas", "Servidor", "Parches"],
   seo: {
@@ -360,6 +424,10 @@ const ES: RustCopy = {
     items: {
       title: "Objetos de Rust: crafteo, reciclaje y dónde encontrarlos | Vestigo",
       description: "Todos los objetos de Rust con su receta y banco de trabajo, lo que dan en el reciclador, en qué cajas aparecen, su shortname y el comando para spawnearlos.",
+    },
+    crates: {
+      title: "Cajas de Rust: botín y probabilidades de cada caja y NPC | Vestigo",
+      description: "Qué puede traer cada caja, barril, NPC, recolectable y regalo de evento de Rust: cada objeto con su probabilidad y cantidad, de la caja básica a la de élite.",
     },
     raid: {
       title: "Calculadora de raideo de Rust: cuánto azufre cuesta cada pared y puerta | Vestigo",
@@ -380,6 +448,17 @@ const ES: RustCopy = {
         : `${name} en Rust: datos, shortname y comando para spawnearlo | Vestigo`,
       description: `${name} en Rust: ${parts.length ? `${parts.join(", ")}, más su shortname y el comando para spawnearlo` : "para qué sirve, su shortname y el comando para spawnearlo"}.`,
     };
+  },
+  crateSeo: (name, { kind, n, bp }) => {
+    const items = n === 1 ? "el objeto" : `los ${n} objetos`;
+    const extra = bp ? ", y cuáles salen como plano" : "";
+    if (kind === "collect") {
+      return { title: `${name} de Rust (recolectable): qué da | Vestigo`, description: `${name} en Rust: lo que da al recogerlo, con la cantidad y la probabilidad de cada objeto${extra}.` };
+    }
+    if (kind === "item") {
+      return { title: `${name} de Rust: qué trae y probabilidades | Vestigo`, description: `${name} en Rust: ${items} que puede traer al abrirlo, cada uno con su probabilidad y cantidad${extra}.` };
+    }
+    return { title: `${name} de Rust: botín y probabilidades | Vestigo`, description: `${name} en Rust: ${items} que puede dar, cada uno con su probabilidad y cantidad${extra}.` };
   },
   loading: "Cargando…",
   loadError: "Esta página no cargó.",
@@ -476,6 +555,25 @@ const ES: RustCopy = {
     shopRow: (amount, item, price, currency) => `${amount} × ${item} por ${price} de ${currency}`,
     back: "Todos los objetos",
   },
+  crates: {
+    h1: "Cajas y botín de Rust",
+    lede: (n) => `Qué puede dar cada una de estas ${n} cajas, NPC, recolectables y objetos que se abren, con la probabilidad y la cantidad de cada objeto.`,
+    groups: { box: "Cajas y barriles", npc: "NPC", collect: "Recolectables", item: "Objetos que se abren" },
+    count: (n, shown) => (n === 1 ? `${shown} objeto` : `${shown} objetos`),
+    drops: {
+      box: (n, shown) => (n === 1 ? "El objeto que puede traer." : `Los ${shown} objetos que puede traer, del más probable al menos.`),
+      npc: (n, shown) => (n === 1 ? "El objeto que puede soltar." : `Los ${shown} objetos que puede soltar, del más probable al menos.`),
+      collect: (n, shown) => (n === 1 ? "Lo que da al recogerlo." : `Los ${shown} objetos que puede dar al recogerlo, del más probable al menos.`),
+      item: (n, shown) => (n === 1 ? "Lo que trae al abrirlo." : `Los ${shown} objetos que puede traer al abrirlo, del más probable al menos.`),
+    },
+    note: "Probabilidad de que traiga al menos uno. En las cajas la cantidad cuenta todas sus tiradas; en los NPC, es lo que da la ranura que más aporta.",
+    worn: { all: "Los objetos con durabilidad salen gastados.", some: "Los objetos con durabilidad pueden salir gastados o enteros." },
+    table: "Botín",
+    item: "Objeto",
+    openItem: "Ver el objeto",
+    missing: "Esa caja no existe (o cambió de nombre). Acá está la lista completa.",
+    back: "Todas las cajas",
+  },
   raidBlocks: { toBreak: "Lo que cuesta romperlo", breaks: "Qué rompe", open: "Abrir en la calculadora de raideo" },
   raid: {
     h1: "Calculadora de raideo de Rust",
@@ -521,6 +619,7 @@ const ES: RustCopy = {
     toolsTitle: "Herramientas",
     tools: [
       { tab: "items", title: "Objetos", text: "Receta, banco, reciclaje, loot y shortname de cada objeto." },
+      { tab: "crates", title: "Cajas", text: "Qué puede traer cada caja, NPC y regalo, y con qué probabilidad." },
       { tab: "raid", title: "Calculadora de raideo", text: "Explosivos y azufre para cada pared, puerta o deployable." },
     ],
     aboutTitle: "Sobre esta guía",

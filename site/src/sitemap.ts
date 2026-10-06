@@ -1,3 +1,4 @@
+import type { LootKind } from "./rust/items/data";
 import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
@@ -82,6 +83,11 @@ export interface RustSitemapData {
   extractedAt: string;
   /** Las fichas de Objetos (`games/rust/data/site/list.json`): slug inglés y nombres, para el sitemap y el `<head>`. */
   items?: { slug: string; en: string; es: string | null; c?: 1; s?: 1; l?: 1; r?: 1 }[];
+  /**
+   * Las fichas de Cajas (2026-10-06), de `loot.json` y la lista de Objetos (`crateIndex` de `rust/crates/model.ts`):
+   * el slug inglés, el nombre ya con el evento si comparte nombre con otra, y lo que el `<head>` puede prometer.
+   */
+  crates?: { slug: string; en: string; es: string; kind: LootKind; n: number; bp: boolean }[];
 }
 
 /**
@@ -357,6 +363,9 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const s of RUST_PUBLISHED) paths.push(routePath({ ...base, lang, view: "rust", rsSection: s }));
       if (RUST_PUBLISHED.includes("items")) {
         for (const it of data.rs.items ?? []) paths.push(routePath({ ...base, lang, view: "rust", rsSection: "items", detail: it.slug }));
+      }
+      if (RUST_PUBLISHED.includes("crates")) {
+        for (const c of data.rs.crates ?? []) paths.push(routePath({ ...base, lang, view: "rust", rsSection: "crates", detail: c.slug }));
       }
     }
   }

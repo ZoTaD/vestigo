@@ -2,10 +2,17 @@
  * Dónde aparece un objeto de Rust y qué trae uno que se abre (2026-10-05). Las fuentes son cajas, NPC, objetos que se
  * abren (regalos, bolsas, huevos) y cosas del suelo; cada fila dice cuál es con una etiqueta, y si es de un evento. La
  * cantidad cuenta todas las tiradas de la fuente, y el estado sólo se muestra si el objeto tiene condición.
+ *
+ * Cada fuente enlaza su ficha en Cajas (2026-10-06), con lo demás que puede dar; la de un objeto que se abre sigue
+ * enlazando la ficha de ese objeto. Los slugs de Cajas salen de `loot.json`, que se pide aparte: hasta que llega, los
+ * nombres van sin enlace.
  */
 import { useLang, useLocale } from "../../i18n";
+import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
+import { useLoad } from "../../useLoad";
+import { loadCrates, peekCrates } from "../crates/data";
 import { say, type Ficha } from "./data";
 import { condText, formatChance } from "./format";
 import { Icon, RefLink, type Nav } from "./parts";
@@ -17,6 +24,7 @@ export function LootSection({ ficha, route, navigate }: Props) {
   const { lang } = useLang();
   const locale = useLocale();
   const num = (n: number) => n.toLocaleString(locale);
+  const crates = useLoad(ficha.loot.length ? "crates" : null, () => peekCrates() ?? undefined, loadCrates).value;
   if (!ficha.loot.length) return null;
   const withCond = ficha.loot.some((l) => l.cond);
   return (
@@ -40,6 +48,10 @@ export function LootSection({ ficha, route, navigate }: Props) {
                   <RefLink r={l.item} route={route} navigate={navigate}>
                     {say(l.name, lang)}
                   </RefLink>
+                ) : crates?.byKey.has(l.c) ? (
+                  <RouteLink className="rs-ref" to={{ ...route, view: "rust", rsSection: "crates", detail: crates.byKey.get(l.c)!.slug }} onNavigate={navigate}>
+                    {say(l.name, lang)}
+                  </RouteLink>
                 ) : (
                   say(l.name, lang)
                 )}

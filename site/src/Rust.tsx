@@ -28,12 +28,14 @@ type TabProps = { route: Route; navigate: Nav };
 type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
 const RsItems = lazyWithPreload(() => import("./rust/items/RustItems"));
+const RsCrates = lazyWithPreload(() => import("./rust/crates/RustCrates"));
 const RsRaid = lazyWithPreload(() => import("./rust/raid/RustRaid"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá, en `RUST_TAB_FILES` y en `RUST_PUBLISHED`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `RUST_TAB_FILES`.
 const TABS: Partial<Record<RustSection, LazyTab>> = {
   items: RsItems,
+  crates: RsCrates,
   raid: RsRaid,
 };
 
@@ -44,6 +46,8 @@ const TABS: Partial<Record<RustSection, LazyTab>> = {
 const TAB_DATA: Partial<Record<RustSection, (route: Route) => Promise<void>>> = {
   items: (route) =>
     Promise.all([RsItems.preload(), import("./rust/items/data")]).then(([, m]) => m.preloadItemsRoute(parseRoute(routePath(route)))),
+  // Cajas baja todo junto (la lista y las fichas salen del mismo `loot.json`), y al llegar anota sus slugs en español.
+  crates: () => Promise.all([RsCrates.preload(), import("./rust/crates/data")]).then(([, m]) => m.loadCrates()).then(() => undefined),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Rust, y sus datos (la portada ya viene con el área). */

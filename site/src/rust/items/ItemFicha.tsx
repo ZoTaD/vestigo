@@ -13,7 +13,7 @@ import { ContentsSection, LootSection } from "./FichaLoot";
 import { BuildingSection, DetectedSection, ObtainSection, RepairSection, SkinsSection, TurnsSection, UseSection } from "./FichaMore";
 import RaidBlocks from "./RaidBlocks";
 import RecycleSection, { RecycledFrom } from "./FichaRecycle";
-import { craftTimes, formatDuration } from "./format";
+import { craftTimes, formatDuration, longestWord } from "./format";
 
 type Nav = (r: Route) => void;
 
@@ -141,15 +141,6 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
       <SkinsSection ficha={ficha} />
     </main>
   );
-}
-
-/**
- * Cuántas letras tiene la palabra más larga del nombre. Con eso el título de la ficha baja lo justo para que esa palabra
- * entre entera en su columna (`rust-items.css`): "Transmisor de radiofrecuencia" no cabía a 375 px con el mínimo de
- * la portada, y las palabras no se cortan.
- */
-function longestWord(name: string): number {
-  return Math.max(1, ...name.split(/[\s-]+/).map((w) => [...w].length));
 }
 
 /** Un dato con botón de copiar. Sin JS (el prerender) se ve el texto, que se puede seleccionar igual. */

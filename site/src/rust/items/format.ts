@@ -48,3 +48,12 @@ export function condText([lo, hi]: [number, number], pct: (p: number) => string)
 export function upkeepRange(amount: number): [number, number] {
   return [Math.floor(amount * 0.1 + 1e-9), Math.floor(amount * 0.333 + 1e-9)];
 }
+
+/**
+ * Cuántas letras tiene la palabra más larga del nombre. Con eso el título de la ficha baja lo justo para que esa palabra
+ * entre entera en su columna (`rust-items.css`): "Transmisor de radiofrecuencia" no cabía a 375 px con el mínimo de
+ * la portada, y las palabras no se cortan. Lo usan las fichas de Objetos y de Cajas.
+ */
+export function longestWord(name: string): number {
+  return Math.max(1, ...name.split(/[\s-]+/).map((w) => [...w].length));
+}

@@ -10,6 +10,9 @@ import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, type Route } from "./src/route";
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { isRsLoadingPage } from "./src/rust/loadingGuard";
+import { crateIndex, crateName, crateRows, crateSlugsEs, type LootFile } from "./src/rust/crates/model";
+import type { ListRow } from "./src/rust/items/data";
+import { RUST_COPY } from "./src/rustCopy";
 import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
 import { COPY } from "./src/i18n";
@@ -196,7 +199,8 @@ function readSitemapData(): { data: OgData } {
   try {
     const m = JSON.parse(readFileSync(`${rustDir}/meta.json`, "utf-8"));
     let items: RustSitemapData["items"];
-    let list: { rows: NonNullable<RustSitemapData["items"]> } | undefined;
+    let crates: RustSitemapData["crates"];
+    let list: { rows: ListRow[] } | undefined;
     try {
       list = JSON.parse(readFileSync(`${rustDir}/site/list.json`, "utf-8"));
     } catch {
@@ -213,7 +217,21 @@ function readSitemapData(): { data: OgData } {
         items = undefined;
       }
     }
-    rs = { build: m.build, extractedAt: m.extractedAt, items };
+    // Cajas (2026-10-06): las mismas cuentas que la pestaña (`rust/crates/model.ts`), con la lista para descartar lo que
+    // no tiene ficha. Sus slugs en español también se anotan antes de armar ninguna dirección.
+    if (list && items) {
+      try {
+        const loot: LootFile = JSON.parse(readFileSync(`${rustDir}/loot.json`, "utf-8"));
+        const index = crateIndex(loot, crateRows(loot, new Map(list.rows.map((r) => [r.id, r]))));
+        registerRustSlugs({ crates: crateSlugsEs(index) });
+        crates = index.map((e) => ({
+          slug: e.slug, en: crateName(e, "en", RUST_COPY.en.items.events), es: crateName(e, "es", RUST_COPY.es.items.events), kind: e.kind, n: e.n, bp: e.bp,
+        }));
+      } catch {
+        crates = undefined; // sin world.py corrido: sin fichas de Cajas
+      }
+    }
+    rs = { build: m.build, extractedAt: m.extractedAt, items, crates };
   } catch {
     rs = undefined;
   }

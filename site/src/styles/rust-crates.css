@@ -1,0 +1,30 @@
+/*
+ * Rust, pestaña Cajas (2026-10-06). Hereda las variables de `.rs` (rust.css) y la ficha, las tablas y las etiquetas de
+ * rust-items.css. Sin bordes de color: el evento va en una etiqueta.
+ */
+.rs-crates { display: grid; gap: 12px; }
+.rs-crates .rs-lede { margin-bottom: 0; }
+.rs-crate-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 4px; margin: 0; padding: 0; list-style: none; }
+.rs-crate { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; height: 100%; box-sizing: border-box; padding: 9px 10px; background: var(--rs-slot); color: inherit; text-decoration: none; }
+.rs-crate:hover { background: rgba(255, 255, 255, 0.12); }
+.rs-crate-name { font-size: 16px; line-height: 1.25; }
+.rs-crate .rs-tag { display: inline-block; margin: 0 0 0 8px; }
+.rs-crate-n { flex: none; color: var(--rs-dim); font-size: 14px; white-space: nowrap; }
+a.rs-crate:hover .rs-crate-name { color: #fff; }
+
+/* La ficha sin ícono (cajas, NPC y recolectables): el título ocupa todo el ancho, también en el celular. Con las dos
+   clases, para ganarle al `80px 1fr` de rust-items.css sea cual sea el orden en que lleguen las hojas. */
+.rs-ficha-top.rs-crate-top { grid-template-columns: 1fr; }
+.rs-crate-ficha .rs-ficha-top .rs-ficha-note { margin: -8px 0 14px; }
+.rs-crate-ficha .rs-hd .rs-tag { margin-left: 8px; }
+.rs-crate-table th[scope="row"] { min-width: 10em; }
+/* El nombre se queda al lado de su ícono: a 390 px bajaba entero abajo del ícono. */
+.rs-crate-table th[scope="row"] .rs-ref { flex-wrap: nowrap; }
+.rs-crate-table th[scope="row"] img { flex: none; }
+.rs-crate-table td, .rs-crate-table thead th:not(:first-child) { text-align: right; }
+
+@media (max-width: 640px) {
+  .rs-crate-list { grid-template-columns: 1fr; }
+  .rs-crate-table th, .rs-crate-table td { padding: 6px 4px; }
+  .rs-crate-table td { white-space: nowrap; }
+}
