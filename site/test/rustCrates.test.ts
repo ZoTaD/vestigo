@@ -31,13 +31,30 @@ describe("el índice de Cajas", () => {
     expect(new Set(index.map((e) => e.slugEs)).size).toBe(index.length);
   });
 
-  it("la mena de metal de Halloween suma su clave; la de siempre se queda con el slug corto", () => {
+  it("la mena de metal de Halloween suma el evento; la de siempre se queda con el slug corto", () => {
     const by = new Map(index.map((e) => [e.key, e]));
     expect(by.get("collect_metalore")!.slug).toBe("metal-ore");
-    expect(by.get("collect_halloween_metalore")!.slug).toBe("metal-ore-collect-halloween-metalore");
-    expect(by.get("collect_halloween_metalore")!.slugEs).toBe("mena-de-metal-collect-halloween-metalore");
+    expect(by.get("collect_halloween_metalore")!.slug).toBe("metal-ore-halloween");
+    expect(by.get("collect_halloween_metalore")!.slugEs).toBe("mena-de-metal-halloween");
     expect(crateName(by.get("collect_halloween_metalore")!, "es", RUST_COPY.es.items.events)).toBe("Mena de metal (Halloween)");
     expect(by.get("elite")).toMatchObject({ slug: "elite-crate", slugEs: "caja-de-elite", kind: "box" });
+  });
+
+  it("las cuatro de Halloween llevan el evento en los dos idiomas", () => {
+    const by = new Map(index.map((e) => [e.key, e]));
+    expect(["metalore", "stone", "sulfurore", "wood"].map((k) => [by.get(`collect_halloween_${k}`)!.slug, by.get(`collect_halloween_${k}`)!.slugEs])).toEqual([
+      ["metal-ore-halloween", "mena-de-metal-halloween"],
+      ["stone-halloween", "piedra-halloween"],
+      ["sulfur-ore-halloween", "mena-de-azufre-halloween"],
+      ["wood-halloween", "madera-halloween"],
+    ]);
+  });
+
+  it("si con el evento todavía chocan, recién ahí suma la clave", () => {
+    const c = (event: "halloween" | null) => ({ en: "Wood", es: "Madera", kind: "collect" as const, event, worn: "none" as const });
+    const fake: LootFile = { containers: { a: c(null), b_x: c("halloween"), b_y: c("halloween") }, items: {} };
+    const slugs = Object.fromEntries(crateIndex(fake, new Map()).map((e) => [e.key, e.slug]));
+    expect(slugs).toEqual({ a: "wood", b_x: "wood-b-x", b_y: "wood-b-y" });
   });
 
   it("las cajas primero, después NPC, recolectables y objetos que se abren", () => {
@@ -161,7 +178,7 @@ describe("la copia y el <head> de Cajas", () => {
   });
 
   it("las dos menas de metal no comparten título", () => {
-    expect(page("/en/rust/crates/metal-ore").title).not.toBe(page("/en/rust/crates/metal-ore-collect-halloween-metalore").title);
-    expect(page("/en/rust/crates/metal-ore-collect-halloween-metalore").title).toBe("Rust Metal Ore (Halloween): What Picking It Up Gives | Vestigo");
+    expect(page("/en/rust/crates/metal-ore").title).not.toBe(page("/en/rust/crates/metal-ore-halloween").title);
+    expect(page("/en/rust/crates/metal-ore-halloween").title).toBe("Rust Metal Ore (Halloween): What Picking It Up Gives | Vestigo");
   });
 });

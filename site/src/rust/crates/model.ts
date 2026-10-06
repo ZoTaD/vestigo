@@ -34,8 +34,8 @@ export interface CrateEntry extends LootContainer {
   slug: string;
   slugEs: string;
   /**
-   * Comparte el nombre con otra fuente (la mena de metal de Halloween y la de siempre): el slug lleva la clave y el
-   * nombre que se muestra, el evento entre paréntesis.
+   * Comparte el nombre con otra fuente (la mena de metal de Halloween y la de siempre): el slug y el nombre que se
+   * muestra llevan el evento (`metal-ore-halloween`, "Metal Ore (Halloween)").
    */
   dup: boolean;
   /** Cuántos objetos distintos puede dar. */
@@ -77,20 +77,31 @@ export function crateRows(loot: LootFile, known: ReadonlyMap<string, ListRow>): 
 
 /**
  * El índice, en el orden de la lista (por grupo y, adentro, por nombre en inglés). El slug sale del nombre en cada
- * idioma; si dos fuentes dan el mismo, la de un evento suma su clave (`metal-ore-collect-halloween-metalore`) y la de
- * siempre se queda con el corto.
+ * idioma; si dos fuentes dan el mismo, la de un evento suma el evento (`metal-ore-halloween`, `mena-de-metal-halloween`)
+ * y la de siempre se queda con el corto. Sólo si así todavía chocan (dos fuentes del mismo evento con el mismo nombre)
+ * se suma la clave, que es única pero se lee mal (`metal-ore-collect-halloween-metalore`).
  */
 export function crateIndex(loot: LootFile, rows: ReadonlyMap<string, CrateRow[]>): CrateEntry[] {
   const keys = Object.keys(loot.containers);
-  const taken = new Map<string, number>();
-  for (const k of keys) {
-    const s = slugify(loot.containers[k].en);
-    taken.set(s, (taken.get(s) ?? 0) + 1);
-  }
+  const count = (slugs: string[]) => {
+    const m = new Map<string, number>();
+    for (const s of slugs) m.set(s, (m.get(s) ?? 0) + 1);
+    return m;
+  };
+  const base = new Map(keys.map((k) => [k, slugify(loot.containers[k].en)]));
+  const taken = count([...base.values()]);
+  const isDup = (k: string) => (taken.get(base.get(k)!) ?? 0) > 1 && loot.containers[k].event !== null;
+  // Primero con el evento; lo que siga repetido (contra otro con evento o contra un slug corto) va con la clave.
+  const withEvent = new Map(keys.map((k) => [k, isDup(k) ? `-${slugify(loot.containers[k].event!)}` : ""]));
+  const again = count(keys.map((k) => base.get(k)! + withEvent.get(k)!));
+  const tailOf = (k: string) => {
+    const t = withEvent.get(k)!;
+    return t && (again.get(base.get(k)! + t) ?? 0) > 1 ? `-${slugify(k)}` : t;
+  };
   const entries = keys.map((key): CrateEntry => {
     const c = loot.containers[key];
-    const dup = (taken.get(slugify(c.en)) ?? 0) > 1 && c.event !== null;
-    const tail = dup ? `-${slugify(key)}` : "";
+    const dup = isDup(key);
+    const tail = tailOf(key);
     const own = rows.get(key) ?? [];
     return {
       ...c,
