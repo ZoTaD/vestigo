@@ -143,7 +143,7 @@ function Cards({ cards, lang, kind }: { cards: SpecialCard[]; lang: "en" | "es";
       {cards.map((c) => (
         <figure key={c.name.en} className="vn-x-card">
           <div className="vn-x-pic">
-            <img src={c.img} alt="" loading="lazy" />
+            <img src={c.img} alt="" loading="lazy" decoding="async" />
           </div>
           <figcaption>
             {c.where && <span className="vn-lbl">{c.where}</span>}
@@ -177,12 +177,12 @@ export function SpecialBody({ s, lang }: { s: Special; lang: "en" | "es" }) {
                 alt={`${c.name[lang]} — ${c.slogan[lang]}`}
                 width={560}
                 height={805}
-                loading="lazy"
+                loading="lazy" decoding="async"
               />
-              <img className="vn-x-torn" src={poster(c.code, true)} alt="" width={560} height={805} loading="lazy" />
+              <img className="vn-x-torn" src={poster(c.code, true)} alt="" width={560} height={805} loading="lazy" decoding="async" />
             </div>
             <figcaption>
-              <img className="vn-x-face" src={sticker(c.code)} alt="" width={64} height={64} loading="lazy" />
+              <img className="vn-x-face" src={sticker(c.code)} alt="" width={64} height={64} loading="lazy" decoding="async" />
               <div>
                 <b style={fit(c.name[lang])}>{c.name[lang]}</b>
                 <i>“{c.slogan[lang]}”</i>
@@ -204,8 +204,8 @@ export function SpecialBody({ s, lang }: { s: Special; lang: "en" | "es" }) {
           <Sec title={s.broker.title[lang]} sub={s.broker.sub[lang]} />
           <div className="vn-x-broker">
             <div className="vn-x-shop">
-              <img src={s.broker.img} alt="" loading="lazy" />
-              <img className="vn-x-logo" src={s.broker.logo} alt={s.broker.title[lang]} loading="lazy" />
+              <img src={s.broker.img} alt="" loading="lazy" decoding="async" />
+              <img className="vn-x-logo" src={s.broker.logo} alt={s.broker.title[lang]} loading="lazy" decoding="async" />
             </div>
             <ul className="vn-x-points">
               {s.broker.points.map((p) => (
@@ -214,7 +214,7 @@ export function SpecialBody({ s, lang }: { s: Special; lang: "en" | "es" }) {
             </ul>
             <div className="vn-x-corrupt">
               {s.broker.cards.map((src) => (
-                <img key={src} src={src} alt="" loading="lazy" />
+                <img key={src} src={src} alt="" loading="lazy" decoding="async" />
               ))}
             </div>
           </div>
@@ -226,7 +226,7 @@ export function SpecialBody({ s, lang }: { s: Special; lang: "en" | "es" }) {
       <div className="vn-x-places">
         {s.places.map((p) => (
           <figure key={p.name} className="vn-x-place">
-            <img src={p.img} alt="" loading="lazy" />
+            <img src={p.img} alt="" loading="lazy" decoding="async" />
             <figcaption>
               <span className="vn-lbl">{p.where[lang]}</span>
               <b style={fit(p.name)}>{p.name}</b>

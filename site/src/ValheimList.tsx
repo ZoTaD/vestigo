@@ -7,6 +7,7 @@
  * pestaña anterior, y ZoTaD lo marcó.
  */
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { LazyRows } from "./LazyRows";
 import { useLang, type Lang } from "./i18n";
 import RouteLink from "./RouteLink";
 import { useValheimCopy, type ValheimCopy } from "./valheimCopy";
@@ -175,6 +176,9 @@ function writeListQuery(defs: { key: string }[], q: string, state: FilterState, 
   }
 }
 
+
+/** El alto de una fila de la tabla (ícono chico + relleno + borde), medido en el navegador el 2026-10-06. */
+const VH_ROW = 49;
 export default function ValheimList({ tab, rows, to, navigate }: { tab: ListTab; rows: AnyRow[]; to: To; navigate: Nav }) {
   const t = useValheimCopy();
   const { lang } = useLang();
@@ -300,7 +304,7 @@ export default function ValheimList({ tab, rows, to, navigate }: { tab: ListTab;
                   </tr>
                 </thead>
                 <tbody>
-                  {shown.map((r) => (
+                  <LazyRows items={shown} rowHeight={VH_ROW} tag="tr" eager render={(r) => (
                     <tr key={r.slug}>
                       <td className="is-ic">
                         <RouteLink to={to(tab, r.slug)} onNavigate={navigate} aria-hidden="true" tabIndex={-1}>
@@ -317,7 +321,7 @@ export default function ValheimList({ tab, rows, to, navigate }: { tab: ListTab;
                         <td key={c.key} className={`${c.right ? "is-r" : ""}${c.hideMobile ? " vh-hide-m" : ""}${c.hideMd ? " vh-hide-md" : ""}`}>{c.cell(r)}</td>
                       ))}
                     </tr>
-                  ))}
+                  )} />
                 </tbody>
               </table>
             </div>

@@ -19,24 +19,32 @@ ZoTaD lo pida.
 - `public/`: 20.454 archivos (Zomboid 73 MB, 3.459 íconos sueltos).
 - Ninguna lista usa virtualización ni render diferido. 70 de 158 `<img>` no
   llevan `loading`, 156 no llevan `decoding="async"`, 33 sin tamaño.
-- Build: ver "Build" abajo.
+- Build local (4 núcleos): `tsc -b` 26 s + `vite build` 149 s, pico de
+  **5,8 GB de RAM** (el tope en Netlify es 6 GB). Del build: prerender de
+  22.222 rutas 76 s, imágenes OG 18 s. `dist/`: 587 MB y 44.145 archivos, de
+  los que 22.224 son HTML (345 MB).
+- **Cada deploy cambia los 22 mil HTML**: todos apuntan al `index-<hash>.js`,
+  y ese hash cambia con cualquier dato. Netlify sube sólo lo que cambió, así que
+  hoy sube ~345 MB en cada publicación automática.
 
 ## Pasos
 
 Cada paso: medir antes y después, tests + `tsc -b` + `vite build`, commit y
 push a la rama.
 
-1. [ ] **Script de medición** (`site/scripts/perf.mjs`): recorre las páginas
+1. [x] **Script de medición** (`site/scripts/perf.mjs`): recorre las páginas
    pesadas de cada juego con Playwright contra `vite preview` y anota pedidos,
    imágenes, nodos y tiempo. Sirve de antes/después y de base para CI.
-2. [ ] **Render diferido de listas largas**: un componente que monta cada
+2. [~] **Render diferido de listas largas** (`src/LazyRows.tsx`): un componente que monta cada
    bloque (categoría) recién cuando se acerca a la pantalla, con alto
    reservado. Primero Zomboid Objetos y Recetas; después D2R (Únicos, Bases,
    Sets, Palabras rúnicas), PoE2 Enciclopedia, Valheim, Deadlock Objetos.
-3. [ ] **Imágenes**: `loading="lazy"`, `decoding="async"` y tamaño en todos
+3. [~] **Imágenes**: `loading="lazy"`, `decoding="async"` y tamaño en todos
    los `<img>` de listas.
-4. [ ] **Build**: medir qué parte tarda (transformación, prerender, imágenes
-   OG, sitemap) y recortar lo que sobre.
+4. [ ] **Build**: medido (ver arriba). Pendiente: que un deploy de datos no
+   cambie el HTML de los otros juegos (entrada con nombre fijo o similar;
+   primero medir cuántos HTML cambian con un cambio de datos), bajar la RAM y
+   ver si el prerender se puede acelerar.
 5. [ ] **Datos fuera del bundle** (el cambio grande, por juego, empezando por
    Zomboid): los JSON pasan a archivos estáticos con nombre con hash y se piden
    con `fetch`. Un deploy de sólo datos deja de recompilar el JS.
@@ -47,3 +55,15 @@ push a la rama.
 ## Bitácora
 
 - 2026-10-06: plan escrito, medición base de producción.
+- 2026-10-06: `scripts/perf.mjs` y base local en `perf-2026-10-06-antes.json`.
+- 2026-10-06: `LazyRows` en Zomboid Objetos y Recetas, Valheim (tablas) y D2R
+  Únicos. Medido en local:
+  - Objetos: 6.167 ms, 3.147 pedidos, 15.967 nodos → 1.537 ms, 144, 1.235.
+  - Recetas: 1.920 ms, 909 pedidos, 4.006 nodos → 922 ms, 113, 684.
+  - Bajando hasta el final se dibujan todas las filas; el alto estimado erra
+    1,3–1,5 %. En el prerender dibuja todo (test `lazyRows.test.ts`).
+  - Falta medir el alto de fila real de Valheim (`VH_ROW`) y D2R (`D2_CARD`).
+- 2026-10-06: `decoding="async"` en todos los `<img loading="lazy">`.
+- Ya fallaba antes de empezar, no es de este plan:
+  `test/deadlockBuilds.test.ts` ("no publican ningún héroe que no exista",
+  39 > 38).

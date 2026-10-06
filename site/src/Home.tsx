@@ -159,7 +159,7 @@ export default function Home({
                   {copy.games.deadlock} · {copy.home.today.bestHero}
                 </span>
                 <span className="today-body">
-                  {bestHero.img && <img src={bestHero.img} alt="" width={48} height={48} loading="lazy" />}
+                  {bestHero.img && <img src={bestHero.img} alt="" width={48} height={48} loading="lazy" decoding="async" />}
                   <span className="today-name">{bestHero.name}</span>
                 </span>
                 <span className="today-figure">
@@ -180,7 +180,7 @@ export default function Home({
                 </span>
                 <span className="today-body">
                   {(rising ?? mostPlayed)!.img && (
-                    <img src={(rising ?? mostPlayed)!.img} alt="" width={48} height={48} loading="lazy" />
+                    <img src={(rising ?? mostPlayed)!.img} alt="" width={48} height={48} loading="lazy" decoding="async" />
                   )}
                   <span className="today-name">{(rising ?? mostPlayed)!.name}</span>
                 </span>
@@ -219,7 +219,7 @@ export default function Home({
                   {copy.games.deadlock} · {copy.home.today.bestValue}
                 </span>
                 <span className="today-body">
-                  {bestValue.img && <img src={bestValue.img} alt="" width={48} height={48} loading="lazy" />}
+                  {bestValue.img && <img src={bestValue.img} alt="" width={48} height={48} loading="lazy" decoding="async" />}
                   <span className="today-name">{bestValue.name}</span>
                 </span>
                 <span className="today-figure">

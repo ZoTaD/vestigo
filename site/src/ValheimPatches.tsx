@@ -216,8 +216,8 @@ function Letter({ paras }: { paras: string[] }) {
 }
 
 function RefPic({ e, alt = "" }: { e: IndexEntry; alt?: string }) {
-  if (e.icon) return <img src={iconUrl(e.icon)} alt={alt} loading="lazy" width={42} height={42} />;
-  if (e.art) return <img src={artUrl(e.art)} alt={alt} loading="lazy" width={42} height={42} style={{ objectFit: "cover", width: "100%", height: "100%" }} />;
+  if (e.icon) return <img src={iconUrl(e.icon)} alt={alt} loading="lazy" decoding="async" width={42} height={42} />;
+  if (e.art) return <img src={artUrl(e.art)} alt={alt} loading="lazy" decoding="async" width={42} height={42} style={{ objectFit: "cover", width: "100%", height: "100%" }} />;
   return null;
 }
 

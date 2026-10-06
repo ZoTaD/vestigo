@@ -29,7 +29,7 @@ export function Slot({ icon, qty, size, alt = "" }: { icon: string | null | unde
   const px = size === "lg" ? 84 : size === "sm" ? 30 : size === "xs" ? 20 : 42;
   return (
     <span className={`vh-slot${size ? ` is-${size}` : ""}`}>
-      {icon && <img src={iconUrl(icon)} alt={alt} loading="lazy" width={px} height={px} />}
+      {icon && <img src={iconUrl(icon)} alt={alt} loading="lazy" decoding="async" width={px} height={px} />}
       {qty != null && qty !== "" && <span className="vh-qty">{qty}</span>}
     </span>
   );
@@ -107,7 +107,7 @@ export function WikiFigure({ photo, alt, className }: { photo: WikiPhoto; alt: s
   const t = useValheimCopy();
   return (
     <figure className={`vh-photo${className ? ` ${className}` : ""}`}>
-      <img src={photo.src} alt={alt} title={t.photoBy(photo.author)} width={photo.w} height={photo.h} loading="lazy" />
+      <img src={photo.src} alt={alt} title={t.photoBy(photo.author)} width={photo.w} height={photo.h} loading="lazy" decoding="async" />
     </figure>
   );
 }

@@ -118,7 +118,7 @@ function GlobalSearch({ index, to, navigate }: { index: IndexEntry[]; to: (d?: s
           {hits.length === 0 && <div className="p2-enc-hit is-empty">{t.noResults}</div>}
           {hits.map((h) => (
             <RouteLink key={h.id} to={to(h.id)} onNavigate={(r) => { navigate(r); setOpen(false); setQ(""); }} className={`p2-enc-hit is-${RARITY[h.cat]}`}>
-              <span className="p2-enc-hit-ic">{h.icon && <img src={h.icon} alt="" loading="lazy" />}</span>
+              <span className="p2-enc-hit-ic">{h.icon && <img src={h.icon} alt="" loading="lazy" decoding="async" />}</span>
               <span className="p2-enc-hit-n">{nameOf(h, lang)}</span>
               <span className="p2-enc-hit-c">{t.cats[h.cat]}</span>
             </RouteLink>
@@ -145,7 +145,7 @@ function Home({ index, to, navigate }: { index: IndexEntry[]; to: (d?: string) =
         <RouteLink key={c} to={to(c)} onNavigate={navigate} className="p2-panel p2-enc-tile">
           <div className="p2-plate-head is-small"><h2 className="p2-plate">{t.cats[c]}</h2></div>
           <div className={`p2-enc-mosaic is-${c}`} aria-hidden="true">
-            {sample(c, c === "gems" ? 18 : 12).map((e) => <img key={e.id} src={e.icon!} alt="" loading="lazy" />)}
+            {sample(c, c === "gems" ? 18 : 12).map((e) => <img key={e.id} src={e.icon!} alt="" loading="lazy" decoding="async" />)}
           </div>
           <p className="p2-enc-tile-lede">{t.catLede[c]}</p>
           <p className="p2-enc-tile-n">{t.count(index.filter((e) => e.cat === c).length)}</p>
@@ -240,7 +240,7 @@ function CatList({ cat, to, navigate }: { cat: Cat; to: (d?: string) => Route; n
             className={`p2-enc-card is-${RARITY[cat]}`}
             onMouseMove={(e: MouseEvent) => setTip({ entry: r, x: e.clientX, y: e.clientY })}
           >
-            <span className={`p2-enc-art${cat === "gems" ? " is-gem" : ""}`}>{r.icon && <img src={r.icon} alt="" loading="lazy" />}</span>
+            <span className={`p2-enc-art${cat === "gems" ? " is-gem" : ""}`}>{r.icon && <img src={r.icon} alt="" loading="lazy" decoding="async" />}</span>
             <span className="p2-enc-name">{nameOf(r, lang)}</span>
           </RouteLink>
         ))}
@@ -362,7 +362,7 @@ function Supports({ ids, rows, to, navigate }: { ids: string[]; rows: Gem[]; to:
       <div className="p2-enc-mini">
         {gems.map((s) => (
           <RouteLink key={s.slug} to={to(`gems/${s.slug}`)} onNavigate={navigate} className="p2-enc-minicard is-gem" {...bind(`gems/${s.slug}`)}>
-            <span className="p2-enc-art is-gem">{s.icon && <img src={s.icon} alt="" loading="lazy" />}</span>
+            <span className="p2-enc-art is-gem">{s.icon && <img src={s.icon} alt="" loading="lazy" decoding="async" />}</span>
             <span className="p2-enc-name">{nameOf(s, lang)}</span>
           </RouteLink>
         ))}
@@ -424,7 +424,7 @@ function UniquesOnBase({ slug, to, navigate }: { slug: string; to: (d?: string) 
       <div className="p2-enc-mini">
         {list.map((u) => (
           <RouteLink key={u.slug} to={to(`uniques/${u.slug}`)} onNavigate={navigate} className="p2-enc-minicard is-unique" {...bind(`uniques/${u.slug}`)}>
-            <span className="p2-enc-art">{u.icon && <img src={u.icon} alt="" loading="lazy" />}</span>
+            <span className="p2-enc-art">{u.icon && <img src={u.icon} alt="" loading="lazy" decoding="async" />}</span>
             <span className="p2-enc-name">{nameOf(u, lang)}</span>
           </RouteLink>
         ))}

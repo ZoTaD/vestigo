@@ -62,7 +62,7 @@ function Flag({ code }: { code?: string }) {
       title={code.toUpperCase()}
       width={20}
       height={15}
-      loading="lazy"
+      loading="lazy" decoding="async"
       onError={() => setFalló(true)}
     />
   );
@@ -375,7 +375,7 @@ export default function DeadlockPlayerLadder({
                 aria-label={h.name}
                 onClick={() => setHero(h.heroId)}
               >
-                <GameImg src={heroImg(h.heroId) ?? ""} alt="" width={34} height={34} loading="lazy" />
+                <GameImg src={heroImg(h.heroId) ?? ""} alt="" width={34} height={34} loading="lazy" decoding="async" />
               </button>
             ))}
           </div>
