@@ -202,7 +202,7 @@ function StationUpgrades({ piece, to, navigate }: { piece: PieceRow; to: To; nav
                       {unlocked.slice(0, MAX).map((c) => (
                         <RefLink key={`${c.tab}/${c.slug}`} r={c} to={to} navigate={navigate} className="vh-slot is-sm">
                           <span title={tx(c.name, lang)} style={{ display: "contents" }}>
-                            {c.icon && <img src={`/valheim/icons/${c.icon}.webp`} alt={tx(c.name, lang)} loading="lazy" width={30} height={30} />}
+                            {c.icon && <img src={`/valheim/icons/${c.icon}.webp`} alt={tx(c.name, lang)} loading="lazy" decoding="async" width={30} height={30} />}
                           </span>
                         </RefLink>
                       ))}
@@ -274,7 +274,7 @@ function UsedIn({ uses, to, navigate }: { uses: Use[]; to: To; navigate: Nav }) 
         {uniq.map((u) => (
           <RefLink key={`${u.tab}/${u.slug}`} r={u} to={to} navigate={navigate} className="vh-slot" >
             <span title={tx(u.name, lang)} style={{ display: "contents" }}>
-              {u.icon && <img src={`/valheim/icons/${u.icon}.webp`} alt={tx(u.name, lang)} loading="lazy" width={42} height={42} />}
+              {u.icon && <img src={`/valheim/icons/${u.icon}.webp`} alt={tx(u.name, lang)} loading="lazy" decoding="async" width={42} height={42} />}
             </span>
           </RefLink>
         ))}
@@ -429,7 +429,7 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
                 {piece.crafts.map((c) => (
                   <RefLink key={`${c.tab}/${c.slug}`} r={c} to={to} navigate={navigate} className="vh-slot">
                     <span title={`${tx(c.name, lang)}${c.level > 1 ? ` · ${t.level(c.level)}` : ""}`} style={{ display: "contents" }}>
-                      {c.icon && <img src={`/valheim/icons/${c.icon}.webp`} alt={tx(c.name, lang)} loading="lazy" width={42} height={42} />}
+                      {c.icon && <img src={`/valheim/icons/${c.icon}.webp`} alt={tx(c.name, lang)} loading="lazy" decoding="async" width={42} height={42} />}
                       {c.level > 1 && <span className="vh-qty">{c.level}</span>}
                     </span>
                   </RefLink>

@@ -613,7 +613,7 @@ function seoFiles(): Plugin {
  * de Vite ya trae. Devuelve una función con caché: hay miles de páginas y
  * pocas combinaciones.
  */
-function areaTags(bundle: Record<string, { type: string } & Record<string, any>>, html: string): (files: string[]) => string {
+function areaTags(bundle: Record<string, { type: string } & Record<string, any>>, html: string): (files: string[]) => { css: string; js: string[] } {
   const chunks = Object.values(bundle).filter((c) => c.type === "chunk");
   const byFile = new Map(chunks.map((c) => [c.fileName as string, c]));
   const norm = (id: string | null | undefined) => (id ?? "").replaceAll("\\", "/");
@@ -629,7 +629,7 @@ function areaTags(bundle: Record<string, { type: string } & Record<string, any>>
   // Que falte un chunk tiene que romper el build ahora, no en la página que lo use.
   for (const file of [...Object.values(AREA_FILES), ...Object.values(DEADLOCK_TAB_FILES), ...Object.values(D2R_TAB_FILES), ...Object.values(PZ_TAB_FILES), ...Object.values(RUST_TAB_FILES)]) chunkOf(file!);
   const fresh = (f: string) => !html.includes(`/${f}"`);
-  const cache = new Map<string, string>();
+  const cache = new Map<string, { css: string; js: string[] }>();
   return (files) => {
     const key = files.join("|");
     const hit = cache.get(key);
@@ -646,13 +646,54 @@ function areaTags(bundle: Record<string, { type: string } & Record<string, any>>
       }
     };
     for (const file of files) visit(chunkOf(file));
-    const tags = [
-      ...[...css].filter(fresh).map((f) => `<link rel="stylesheet" crossorigin href="/${f}">`),
-      ...[...js].filter(fresh).map((f) => `<link rel="modulepreload" crossorigin href="/${f}">`),
-    ].join("\n    ");
+    const tags = {
+      css: [...css].filter(fresh).map((f) => `<link rel="stylesheet" crossorigin href="/${f}">`).join("\n    "),
+      js: [...js].filter(fresh),
+    };
     cache.set(key, tags);
     return tags;
   };
+}
+
+/**
+ * El HTML de cada página no nombra ningún JS con hash (2026-10-06): carga `/app.js`, de nombre fijo.
+ *
+ * La entrada (`index-<hash>.js`) cambia con cualquier dato, y cada uno de los 22 mil HTML la nombraba, junto con los
+ * `modulepreload` de su pestaña. Medido con dos publicaciones seguidas de la tier list de Deadlock: cambiaban 22.221
+ * HTML y, sin contar los hashes, sólo 485 (los de Deadlock). Netlify sube lo que cambió, o sea ~345 MB por publicación
+ * para nada. Ahora `app.js` lleva la entrada y lo que precarga cada pestaña, y el HTML sólo dice qué pestaña es
+ * (`<html data-pre="…">`, con los nombres de los archivos fuente, que no cambian).
+ *
+ * El CSS sigue en el HTML: sin él la página prerenderizada se vería sin estilos hasta que llegara el JS, y su hash
+ * sólo cambia si cambia el CSS (en esa medición, ningún CSS cambió). `app.js` no va en `/assets/`: se sirve con la
+ * caché por defecto de Netlify (se revalida en cada visita) y no con la de un año.
+ */
+const ENTRY_TAGS = /\s*<script type="module" crossorigin src="\/(assets\/[^"]+\.js)"><\/script>|\s*<link rel="modulepreload" crossorigin href="\/(assets\/[^"]+\.js)">/g;
+
+function splitEntry(html: string): { html: string; entry: string; base: string[] } {
+  let entry = "";
+  const base: string[] = [];
+  let first = true;
+  const out = html.replace(ENTRY_TAGS, (_, script: string | undefined, preload: string | undefined) => {
+    if (script) entry = script;
+    else if (preload) base.push(preload);
+    if (!first) return "";
+    first = false;
+    return '\n    <script type="module" src="/app.js"></script>';
+  });
+  if (!entry) throw new Error("prerender: index.html no trae el <script> de la entrada; no se puede armar app.js.");
+  return { html: out, entry, base };
+}
+
+function appJs(entry: string, base: string[], preloads: Map<string, string[]>): string {
+  const table = JSON.stringify(Object.fromEntries(preloads));
+  return [
+    "// Generado por vite.config.ts (prerenderRoutes): la entrada y lo que precarga cada pestaña. No editar.",
+    `const B=${JSON.stringify(base)},P=${table};`,
+    "for(const f of B.concat(P[document.documentElement.dataset.pre]||[])){const l=document.createElement('link');l.rel='modulepreload';l.crossOrigin='';l.href='/'+f;document.head.appendChild(l)}",
+    `import('/${entry}');`,
+    "",
+  ].join("\n");
 }
 
 function prerenderRoutes(): Plugin {
@@ -679,10 +720,12 @@ function prerenderRoutes(): Plugin {
       const outDir = options.dir ?? "dist";
       // Sin los comentarios de index.html: explican decisiones en el repo, pero
       // salían en cada página servida.
-      const html = stripComments(String(entry.source));
+      const split = splitEntry(stripComments(String(entry.source)));
+      const html = split.html;
+      const preloads = new Map<string, string[]>();
 
       const pages = prerenderPages(readSitemapData().data, (path) => ogDrawn.has(path));
-      const tags = areaTags(bundle as Parameters<typeof areaTags>[0], html);
+      const tags = areaTags(bundle as Parameters<typeof areaTags>[0], String(entry.source));
 
       /**
        * La app renderizada a texto, ruta por ruta.
@@ -732,10 +775,14 @@ function prerenderRoutes(): Plugin {
           const conexiones = originsFor(route)
             .map((o) => `<link rel="preconnect" href="${o.href}"${o.cors ? " crossorigin" : ""}>`)
             .join("\n    ");
-          const propias = [tags(filesFor(route)), conexiones].filter(Boolean).join("\n    ");
-          const pagina = renderHtml(html, page, BRAND, cuerpo).replace("</head>", () =>
-            propias ? `  ${propias}\n  </head>` : "</head>"
-          );
+          const files = filesFor(route);
+          const pre = files.join("|");
+          const own = tags(files);
+          if (!preloads.has(pre)) preloads.set(pre, own.js);
+          const propias = [own.css, conexiones].filter(Boolean).join("\n    ");
+          const pagina = renderHtml(html, page, BRAND, cuerpo)
+            .replace("</head>", () => (propias ? `  ${propias}\n  </head>` : "</head>"))
+            .replace(/<html\b/, () => `<html data-pre="${pre}"`);
           /**
            * El `index.html` de la raíz también lleva cuerpo, y es el que más lo
            * necesita: Netlify lo sirve para el dominio pelado **y como fallback
@@ -765,6 +812,7 @@ function prerenderRoutes(): Plugin {
         // Pase lo que pase: un servidor sin cerrar deja el proceso del build vivo.
         await ssr.close();
       }
+      writeFileSync(join(outDir, "app.js"), appJs(split.entry, split.base, preloads));
       this.info?.(`Prerenderizadas ${escritas} rutas en ${((Date.now() - t0) / 1000).toFixed(1)}s.`);
     },
   };
@@ -856,6 +904,13 @@ export default defineConfig({
   build: {
     rollupOptions: { output: { manualChunks: manualChunks() } },
   },
+  /**
+   * Cada JSON como `JSON.parse("…")` y no como un objeto de JavaScript (2026-10-06). Son ~50 MB de datos (31 de
+   * Zomboid): convertidos a objetos, Rollup los recorría como código y el build pasaba los 5,8 GB de RAM (el tope en
+   * Netlify es 6). Además el navegador lee un `JSON.parse` más rápido que el mismo objeto escrito en JS. Lo que se
+   * pierde es importar una clave suelta (`import { x } from "./a.json"`), que el sitio no usa.
+   */
+  json: { stringify: true },
   resolve: {
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por

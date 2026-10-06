@@ -36,8 +36,8 @@ provideAreas(allAreas);
  * `createRoot` reemplaza el HTML prerenderizado: si renderizara ya, un área
  * todavía no bajada mostraría el fallback vacío de `Suspense` en lugar de la
  * página que ya se estaba viendo. Esperando, la página prerenderizada queda en
- * pantalla hasta que la app la reemplaza por la misma página, ya viva. El HTML
- * anuncia ese chunk con `modulepreload`, así que casi siempre ya llegó.
+ * pantalla hasta que la app la reemplaza por la misma página, ya viva. `app.js`
+ * anuncia ese chunk con `modulepreload` (ver `splitEntry` en vite.config.ts), así que casi siempre ya llegó.
  */
 allAreas.preloadRoute(parseRoute(window.location.pathname)).then(() => {
   ReactDOM.createRoot(document.getElementById("root")!).render(

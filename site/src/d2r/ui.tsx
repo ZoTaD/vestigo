@@ -34,7 +34,7 @@ export function ItemIcon({ asset, size = "md", alt = "" }: { asset: string | nul
   if (!src) return <span className={`d2-ic is-${size} is-empty`} aria-hidden="true" />;
   return (
     <span className={`d2-ic is-${size}`}>
-      <img src={src} alt={alt} loading="lazy" />
+      <img src={src} alt={alt} loading="lazy" decoding="async" />
     </span>
   );
 }

@@ -135,7 +135,7 @@ export function GameCard({
       style={{ width, backgroundImage: `url(/deadlock/shop/card_${slot}_t${tier}.webp)`, fontSize: width * 0.105 }}
     >
       <span className="dl-bd-card-art">
-        {src && <GameImg src={src} alt="" width={width} height={width} loading="lazy" />}
+        {src && <GameImg src={src} alt="" width={width} height={width} loading="lazy" decoding="async" />}
         {name && raw?.active && <span className="dl-bd-tag">{es ? "Activo" : "Active"}</span>}
         {name && raw?.imbue && <span className="dl-bd-tag is-imbue">{es ? "Imbuir" : "Imbue"}</span>}
       </span>

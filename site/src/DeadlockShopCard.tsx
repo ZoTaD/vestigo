@@ -87,7 +87,7 @@ export default function ShopCard({
         style={{ backgroundImage: `url(${SHOP}/card_${item.slot}_t${tier}.webp)` }}
       >
         <span className="dl-bd-card-art">
-          <GameImg src={item.img} alt="" width={96} height={96} loading="lazy" />
+          <GameImg src={item.img} alt="" width={96} height={96} loading="lazy" decoding="async" />
           {!compact && item.active && <span className="dl-bd-tag">{c.activeTag}</span>}
           {!compact && item.imbue && <span className="dl-bd-tag is-imbue">{c.imbueTag}</span>}
         </span>

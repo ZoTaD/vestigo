@@ -164,7 +164,7 @@ function Stash({ tab, navigate }: { tab: (t: D2rTab) => Route; navigate: Nav }) 
             <>
               <span className={`d2-slot-ic${s.icon.length > 1 ? " is-trio" : ""}${s.tall ? " is-tall" : ""}`}>
                 {s.icon.map((ic) => (
-                  <img src={gameImg(ic)} alt="" key={ic} loading="lazy" />
+                  <img src={gameImg(ic)} alt="" key={ic} loading="lazy" decoding="async" />
                 ))}
               </span>
               <h3 className={`d2-tone-${s.tone}`}>{s.name}</h3>
@@ -204,7 +204,7 @@ function Tools({ tab, navigate }: { tab: (t: D2rTab) => Route; navigate: Nav }) 
         {tools.map((tool) => {
           const body = (
             <>
-              <img src={gameImg(tool.icon)} alt="" width={171} height={171} loading="lazy" />
+              <img src={gameImg(tool.icon)} alt="" width={171} height={171} loading="lazy" decoding="async" />
               <div>
                 <h3>{tool.name}</h3>
                 <p>{tool.desc}</p>
@@ -289,7 +289,7 @@ function Runes({ tab, navigate }: { tab: (t: D2rTab) => Route; navigate: Nav }) 
               onFocus={(e) => setOpen({ rune: r, el: e.currentTarget })}
               onBlur={() => setOpen(null)}
             >
-              <img src={gameImg(`rune/${r.id}`)} alt="" width={98} height={98} loading="lazy" />
+              <img src={gameImg(`rune/${r.id}`)} alt="" width={98} height={98} loading="lazy" decoding="async" />
               <span className="d2-rune-name">{say(r.name).replace(/^(Runa |)(.*?)( Rune|)$/, "$2")}</span>
               <span className="d2-rune-no">#{i + 1}</span>
             </RouteLink>
@@ -328,7 +328,7 @@ function Classes({ tab, navigate }: { tab: (t: D2rTab) => Route; navigate: Nav }
           <li key={c.id}>
             <RouteLink className="d2-class" to={{ ...tab("classes"), detail: c.id }} onNavigate={navigate}>
               <span className="d2-class-pic">
-                <img src={gameImg(`class/${c.id}`)} alt="" width={120} height={120} loading="lazy" />
+                <img src={gameImg(`class/${c.id}`)} alt="" width={120} height={120} loading="lazy" decoding="async" />
                 {/* La clase que trajo Reign of the Warlock (feb-2026). */}
                 {c.id === "warlock" && <small>{t.classes.isNew}</small>}
               </span>
@@ -354,7 +354,7 @@ function Events({ tab, navigate }: { tab: (t: D2rTab) => Route; navigate: Nav })
           const body = (
             <>
               <span className={`d2-event-ic${ev.id === "terror" ? " is-terror" : ""}`}>
-                <img src={gameImg(EVENT_ICON[ev.id])} alt="" loading="lazy" />
+                <img src={gameImg(EVENT_ICON[ev.id])} alt="" loading="lazy" decoding="async" />
               </span>
               <div>
                 <h3>{lang === "es" ? ev.name.es : ev.name.en}</h3>

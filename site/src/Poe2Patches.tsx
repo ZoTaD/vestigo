@@ -149,7 +149,7 @@ function EditionView({
               const e = index.get(id)!;
               return (
                 <RouteLink key={id} to={{ ...route, view: "poe2", p2Section: "encyclopedia", detail: id }} onNavigate={navigate} className={`p2-pat-ref is-${RARITY[e.cat]}`} {...bind(id)}>
-                  <span className={`p2-enc-art${e.cat === "gems" ? " is-gem" : ""}`}>{e.icon && <img src={e.icon} alt="" loading="lazy" />}</span>
+                  <span className={`p2-enc-art${e.cat === "gems" ? " is-gem" : ""}`}>{e.icon && <img src={e.icon} alt="" loading="lazy" decoding="async" />}</span>
                   <span className="p2-enc-name">{nameOf(e, lang)}</span>
                 </RouteLink>
               );
@@ -223,7 +223,7 @@ function withRefs(l: Line, { lang, index, bind, route, navigate }: LineCtx): Rea
     if (!e) return <Fragment key={i}>{part}</Fragment>;
     return (
       <RouteLink key={i} to={{ ...route, view: "poe2", p2Section: "encyclopedia", detail: e.id }} onNavigate={navigate} className={`p2-pat-name is-${RARITY[e.cat]}`} {...bind(e.id)}>
-        {e.icon && <img src={e.icon} alt="" loading="lazy" />}
+        {e.icon && <img src={e.icon} alt="" loading="lazy" decoding="async" />}
         {part}
       </RouteLink>
     );

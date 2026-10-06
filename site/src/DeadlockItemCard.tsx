@@ -168,7 +168,7 @@ export function ItemDetailPanel({ item, cost, footer }: { item: Item; cost: stri
                     {b.boxed.map((st, k) => (
                       <li key={k} data-tone={toneOf(st.icon)}>
                         {st.icon && iconUrl(st.icon) && (
-                          <GameImg className="dl-stat-icon" src={iconUrl(st.icon)} alt="" width={16} height={16} loading="lazy" />
+                          <GameImg className="dl-stat-icon" src={iconUrl(st.icon)} alt="" width={16} height={16} loading="lazy" decoding="async" />
                         )}
                         <span className="dl-card-stat-value">
                           {st.value}

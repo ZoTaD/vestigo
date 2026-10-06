@@ -191,7 +191,7 @@ export default function DeadlockRanks() {
             <figcaption className="dl-hist-axis">
               {hist.groups.map((g) => (
                 <span key={g.tier} className="dl-hist-group" style={{ flexGrow: g.span }}>
-                  {g.img && <GameImg className="dl-hist-badge" src={chalkBadge(g.img)} alt="" width={22} height={22} loading="lazy" drawn={30} />}
+                  {g.img && <GameImg className="dl-hist-badge" src={chalkBadge(g.img)} alt="" width={22} height={22} loading="lazy" decoding="async" drawn={30} />}
                   <span className="dl-hist-name">{g.name}</span>
                   <span className="dl-hist-n">{n(g.value)}</span>
                 </span>

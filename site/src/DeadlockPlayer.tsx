@@ -335,7 +335,7 @@ function HeroPlacings({ placings }: { placings: HeroPlacing[] }) {
           const nombre = n ? text(n, lang, "") : String(p.heroId);
           return (
             <li className="dl-placing-row" key={p.heroId} data-metal={metalOf(p.place) ?? undefined}>
-              <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={32} height={32} loading="lazy" />
+              <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={32} height={32} loading="lazy" decoding="async" />
               <span className="dl-placing-hero">{nombre}</span>
               <span className="dl-placing-place" title={c.placingTitle(nombre, p.place)}>
                 #{p.place}
@@ -382,7 +382,7 @@ function TopHeroes({
             title={`${nombre} · ${h.matches}`}
             onClick={() => onToggleHero(h.heroId)}
           >
-            <GameImg src={heroImg(h.heroId) ?? ""} alt="" width={34} height={34} loading="lazy" />
+            <GameImg src={heroImg(h.heroId) ?? ""} alt="" width={34} height={34} loading="lazy" decoding="async" />
             <span>{h.matches}</span>
           </button>
         );
@@ -674,7 +674,7 @@ export default function DeadlockPlayer({
           {cuentas.slice(0, 10).map((a) => (
             <li key={a.accountId}>
               <button className="dl-rep-account" onClick={() => onOpenAccount(a.accountId)}>
-                {a.avatar && <img src={a.avatar} alt="" width={40} height={40} loading="lazy" />}
+                {a.avatar && <img src={a.avatar} alt="" width={40} height={40} loading="lazy" decoding="async" />}
                 <span className="dl-rep-account-name">{a.name}</span>
                 <span className="dl-rep-account-note">{c.recent(a.recent)}</span>
               </button>
@@ -799,7 +799,7 @@ export default function DeadlockPlayer({
                         alt={nombre ? text(nombre, lang, "") : ""}
                         width={44}
                         height={44}
-                        loading="lazy"
+                        loading="lazy" decoding="async"
                       />
                       <span className="dl-rep-match-hero">
                         {/* El nombre en su propio `<span>`: la elipsis necesita un

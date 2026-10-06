@@ -288,7 +288,7 @@ export default function DeadlockBuilder() {
                 }
               }}
             >
-              <GameImg src={h.img} alt={h.name} width={40} height={40} loading="lazy" />
+              <GameImg src={h.img} alt={h.name} width={40} height={40} loading="lazy" decoding="async" />
             </button>
           ))}
         </div>

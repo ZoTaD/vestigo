@@ -7,6 +7,7 @@
  * ficha desde la pestaña. Buscar y filtrar esconden filas en el navegador; el HTML prerenderizado las tiene todas.
  */
 import { useDeferredValue, useMemo, useState } from "react";
+import { LazyRows } from "../../LazyRows";
 import meta from "@zomboid/meta.json";
 import RouteLink from "../../RouteLink";
 import { useLang, useLocale } from "../../i18n";
@@ -119,7 +120,7 @@ export default function RecipeList({ list, route, navigate, missing }: { list: R
       </p>
       {!shown && <p className="pzi-empty">{t.empty}</p>}
 
-      {visible.map(([key, rows]) => (
+      {visible.map(([key, rows], n) => (
         <section className="pz-page pzi-cat" key={key}>
           <h2 className="pzi-h2">
             {name(list.cats[key])} <small>{num(rows.length)}</small>
@@ -127,13 +128,13 @@ export default function RecipeList({ list, route, navigate, missing }: { list: R
           <div className="pzi-rows">
             {/* `press`, como en Objetos: la ficha baja al apretar la fila y no al pasar el mouse. Con `hover`, cruzar una
                 lista de 1.170 filas bajaba un archivo de fichas (~6 KB) por cada fila tocada. */}
-            {rows.map((r) => (
+            <LazyRows items={rows} rowHeight={40} eager={n === 0} render={(r) => (
               <RouteLink className="pzi-row" to={toRecipe(r.id)} onNavigate={navigate} prefetch="press" key={r.id}>
                 <ItemIcon icon={r.icon} dir={r.kind === "build" ? "build" : "items"} />
                 <span className="pzi-name">{name(r)}</span>
                 {r.kind === "build" && <em className="pzi-var">{t.buildMark}</em>}
               </RouteLink>
-            ))}
+            )} />
           </div>
         </section>
       ))}

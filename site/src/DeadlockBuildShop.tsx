@@ -462,7 +462,7 @@ function Pizarra({ build, from }: { build: BuildView; from?: string }) {
           {orden.map((a, i) => (
             <li key={a.id}>
               <span className="dl-chalk-rank">{c.priorityRank(i + 1)}</span>
-              <GameImg src={a.img} alt="" width={52} height={52} loading="lazy" />
+              <GameImg src={a.img} alt="" width={52} height={52} loading="lazy" decoding="async" />
               <span className="dl-chalk-name">{a.name.replace(/ /g, " ")}</span>
             </li>
           ))}
@@ -481,7 +481,7 @@ function Pizarra({ build, from }: { build: BuildView; from?: string }) {
         ))}
         {filas.map((a, r) => (
           <span key={a.id} className="dl-chalk-row" style={{ gridRow: r + 2 }} aria-hidden="true">
-            <GameImg src={a.img} alt="" width={30} height={30} loading="lazy" />
+            <GameImg src={a.img} alt="" width={30} height={30} loading="lazy" decoding="async" />
           </span>
         ))}
         {pasos.map((p) => (

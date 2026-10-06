@@ -273,7 +273,7 @@ function SoulsChart({
               }
               title={c.toggleCurve}
             >
-              <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={20} height={20} loading="lazy" />
+              <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={20} height={20} loading="lazy" decoding="async" />
               <span>{nombre(p)}</span>
             </button>
           </li>
@@ -333,7 +333,7 @@ function SoulsChart({
                   }`}
                   onClick={() => onPick(p.slot)}
                 >
-                  <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={18} height={18} loading="lazy" />
+                  <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={18} height={18} loading="lazy" decoding="async" />
                   <span className="dl-rep-read-name">{nombre(p)}</span>
                   <span className="dl-rep-read-num">{corto(nw, lang)}</span>
                 </button>
@@ -415,7 +415,7 @@ function Findings({ list, lang }: { list: Finding[]; lang: Lang }) {
             {src && f.itemId != null ? (
               <ItemIcon itemId={f.itemId} img={src} size={44} className="dl-rep-finding-icon" />
             ) : src ? (
-              <GameImg className="dl-rep-finding-icon" src={src} alt="" width={44} height={44} loading="lazy" />
+              <GameImg className="dl-rep-finding-icon" src={src} alt="" width={44} height={44} loading="lazy" decoding="async" />
             ) : (
               <span className="dl-rep-finding-icon is-empty" aria-hidden="true" />
             )}
@@ -586,7 +586,7 @@ export default function DeadlockReport({
                           alt={nombreHeroe(p.heroId)}
                           width={40}
                           height={40}
-                          loading="lazy"
+                          loading="lazy" decoding="async"
                         />
                         <span className="dl-rep-who-txt">
                           <span className="dl-rep-who-name">{quien ?? nombreHeroe(p.heroId)}</span>

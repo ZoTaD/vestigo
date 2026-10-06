@@ -157,7 +157,7 @@ export default function Poe2Economy({ league: leagueSlug, onLeague }: { league?:
     list.length ? <div className="p2-mlist">{list.map((m) => mover(m, right(m.row)))}</div> : <p className="p2-mempty">{t.fewData}</p>;
   const mover = ({ row, cat }: { row: ExchangeRow; cat: string }, right: ReactNode) => (
     <div className="p2-mrow" key={row.id} onMouseMove={hover(row, "currency", cat)} onMouseLeave={() => setTip(null)}>
-      {row.icon ? <img className="p2-mrow-ic" src={row.icon} alt="" loading="lazy" /> : <span />}
+      {row.icon ? <img className="p2-mrow-ic" src={row.icon} alt="" loading="lazy" decoding="async" /> : <span />}
       <div>
         <div className="p2-mrow-n">{nameOf(row, lang)}</div>
         <div className="p2-mrow-c">{cat}</div>
@@ -267,7 +267,7 @@ export default function Poe2Economy({ league: leagueSlug, onLeague }: { league?:
                 const thin = isThin(r);
                 return (
                   <tr key={r.id} onMouseMove={hover(r, cur.kind)}>
-                    <td className="p2-ic"><div className="p2-icbox">{r.icon && <img src={r.icon} alt="" loading="lazy" />}</div></td>
+                    <td className="p2-ic"><div className="p2-icbox">{r.icon && <img src={r.icon} alt="" loading="lazy" decoding="async" />}</div></td>
                     <td>
                       <div className={`p2-n${u ? " is-unique" : ""}`}>{nameOf(r, lang)}</div>
                       {u && <div className="p2-b">{lang === "es" ? r.base : r.baseEn}</div>}
