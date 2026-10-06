@@ -128,6 +128,9 @@ def main() -> None:
     # Lo que no se consigue en una partida normal no se publica (ver `fixes.HIDE_ITEMS`).
     items = {k: v for k, v in items.items() if k not in fixes.HIDE_ITEMS}
     fixes.apply(items)
+    for boss_id, amount in fixes.BOSS_SUMMON_AMOUNT.items():
+        if boss_id in {b["id"] for b in bosses}:
+            next(b for b in bosses if b["id"] == boss_id)["summon"]["amount"] = amount
     # Construcción = lo que se construye con el martillo y cuesta materiales
     # (ZoTaD, 2026-09-25: "construcción sólo van estructuras"). En la 1.0 la
     # bandeja ("Feaster") pone cada comida sobre la mesa como pieza, y el pan o

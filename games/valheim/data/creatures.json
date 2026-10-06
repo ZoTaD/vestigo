@@ -22,7 +22,7 @@
    {
     "chance": 1.0,
     "item": "Guck",
-    "max": 5,
+    "max": 4,
     "min": 3,
     "perLevel": false
    }
@@ -92,14 +92,14 @@
    {
     "chance": 1.0,
     "item": "AskHide",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "AsksvinMeat",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    }
@@ -540,14 +540,14 @@
    {
     "chance": 1.0,
     "item": "BjornMeat",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "BjornHide",
-    "max": 5,
+    "max": 4,
     "min": 4,
     "perLevel": true
    },
@@ -623,14 +623,14 @@
    {
     "chance": 1.0,
     "item": "BjornMeat",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "BjornHide",
-    "max": 5,
+    "max": 4,
     "min": 4,
     "perLevel": true
    },
@@ -719,7 +719,7 @@
    {
     "chance": 1.0,
     "item": "Ooze",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }
@@ -775,7 +775,7 @@
    {
     "chance": 1.0,
     "item": "Ooze",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }
@@ -813,7 +813,7 @@
    {
     "chance": 1.0,
     "item": "Ooze",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    },
@@ -876,7 +876,7 @@
    {
     "chance": 1.0,
     "item": "Crystal",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -921,14 +921,14 @@
    {
     "chance": 1.0,
     "item": "ProustitePowder",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "SulfurStone",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -1333,14 +1333,14 @@
    {
     "chance": 1.0,
     "item": "BoneMawSerpentMeat",
-    "max": 8,
+    "max": 7,
     "min": 6,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "BonemawSerpentTooth",
-    "max": 10,
+    "max": 9,
     "min": 8,
     "perLevel": true
    }
@@ -1388,7 +1388,7 @@
    {
     "chance": 1.0,
     "item": "CharredBone",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    },
@@ -1483,7 +1483,7 @@
    {
     "chance": 1.0,
     "item": "CharredBone",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    },
@@ -1526,7 +1526,7 @@
    {
     "chance": 1.0,
     "item": "CharredBone",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    },
@@ -1657,7 +1657,7 @@
    {
     "chance": 1.0,
     "item": "CharredBone",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }
@@ -1715,7 +1715,7 @@
    {
     "chance": 1.0,
     "item": "CharredBone",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }
@@ -1755,7 +1755,7 @@
    {
     "chance": 0.5,
     "item": "Feathers",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }
@@ -1843,7 +1843,7 @@
    {
     "chance": 1.0,
     "item": "DeerHide",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    },
@@ -2004,7 +2004,7 @@
    {
     "chance": 1.0,
     "item": "Entrails",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    },
@@ -2054,7 +2054,7 @@
    {
     "chance": 1.0,
     "item": "Entrails",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    },
@@ -2204,21 +2204,21 @@
    {
     "chance": 0.25,
     "item": "Softtissue",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 0.5,
     "item": "BlackMarble",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 1.0,
     "item": "Coins",
-    "max": 15,
+    "max": 14,
     "min": 2,
     "perLevel": false
    },
@@ -2268,21 +2268,21 @@
    {
     "chance": 0.25,
     "item": "Softtissue",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 0.5,
     "item": "BlackMarble",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 1.0,
     "item": "Coins",
-    "max": 15,
+    "max": 14,
     "min": 2,
     "perLevel": false
    },
@@ -2330,7 +2330,7 @@
    {
     "chance": 1.0,
     "item": "Coins",
-    "max": 20,
+    "max": 19,
     "min": 10,
     "perLevel": true
    },
@@ -2393,21 +2393,21 @@
    {
     "chance": 0.25,
     "item": "Softtissue",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 0.5,
     "item": "BlackMarble",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 1.0,
     "item": "Coins",
-    "max": 15,
+    "max": 14,
     "min": 2,
     "perLevel": false
    },
@@ -2445,21 +2445,21 @@
    {
     "chance": 0.25,
     "item": "Softtissue",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 0.5,
     "item": "BlackMarble",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 1.0,
     "item": "Coins",
-    "max": 15,
+    "max": 14,
     "min": 2,
     "perLevel": false
    },
@@ -2497,21 +2497,21 @@
    {
     "chance": 0.25,
     "item": "Softtissue",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 0.5,
     "item": "BlackMarble",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 1.0,
     "item": "Coins",
-    "max": 15,
+    "max": 14,
     "min": 2,
     "perLevel": false
    },
@@ -2549,21 +2549,21 @@
    {
     "chance": 0.25,
     "item": "Softtissue",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 0.5,
     "item": "BlackMarble",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
    {
     "chance": 1.0,
     "item": "Coins",
-    "max": 15,
+    "max": 14,
     "min": 2,
     "perLevel": false
    },
@@ -2636,7 +2636,7 @@
    {
     "chance": 1.0,
     "item": "ElakingHairBundle",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -2697,7 +2697,7 @@
    {
     "chance": 1.0,
     "item": "ElakingHairBundle",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -2756,7 +2756,7 @@
    {
     "chance": 1.0,
     "item": "MoleClaws",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -2833,7 +2833,7 @@
    {
     "chance": 1.0,
     "item": "CelestialFeather",
-    "max": 4,
+    "max": 3,
     "min": 2,
     "perLevel": true
    },
@@ -3014,7 +3014,7 @@
    {
     "chance": 1.0,
     "item": "WolfFang",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -3064,7 +3064,7 @@
    {
     "chance": 1.0,
     "item": "JuteRed",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    },
@@ -3307,7 +3307,7 @@
    {
     "chance": 1.0,
     "item": "Ectoplasm",
-    "max": 5,
+    "max": 4,
     "min": 1,
     "perLevel": false
    },
@@ -3382,7 +3382,7 @@
    {
     "chance": 0.5,
     "item": "Ectoplasm",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    }
@@ -3416,7 +3416,7 @@
    {
     "chance": 1.0,
     "item": "Ectoplasm",
-    "max": 5,
+    "max": 4,
     "min": 1,
     "perLevel": false
    },
@@ -3523,14 +3523,14 @@
    {
     "chance": 0.25,
     "item": "Coins",
-    "max": 10,
+    "max": 9,
     "min": 5,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "BlackMetalScrap",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -3605,14 +3605,14 @@
    {
     "chance": 0.25,
     "item": "Coins",
-    "max": 10,
+    "max": 9,
     "min": 5,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "BlackMetalScrap",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -3649,14 +3649,14 @@
    {
     "chance": 1.0,
     "item": "Coins",
-    "max": 20,
+    "max": 19,
     "min": 5,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "BlackMetalScrap",
-    "max": 5,
+    "max": 4,
     "min": 3,
     "perLevel": true
    },
@@ -3795,21 +3795,21 @@
    {
     "chance": 0.25,
     "item": "Coins",
-    "max": 40,
+    "max": 39,
     "min": 20,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "AncientCoin",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
    {
     "chance": 0.2,
     "item": "Lingonberry",
-    "max": 10,
+    "max": 9,
     "min": 1,
     "perLevel": true
    }
@@ -3875,21 +3875,21 @@
    {
     "chance": 0.25,
     "item": "Coins",
-    "max": 40,
+    "max": 39,
     "min": 20,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "BlackMetalScrap",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "Pukeberries",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -3987,21 +3987,21 @@
    {
     "chance": 1.0,
     "item": "GemstoneBlue",
-    "max": 4,
+    "max": 3,
     "min": 2,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "GemstoneGreen",
-    "max": 4,
+    "max": 3,
     "min": 2,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "GemstoneRed",
-    "max": 4,
+    "max": 3,
     "min": 2,
     "perLevel": true
    }
@@ -4159,7 +4159,7 @@
    {
     "chance": 1.0,
     "item": "Wood",
-    "max": 5,
+    "max": 4,
     "min": 3,
     "perLevel": true
    },
@@ -4275,7 +4275,7 @@
    {
     "chance": 1.0,
     "item": "Ice",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }
@@ -4336,7 +4336,7 @@
    {
     "chance": 1.0,
     "item": "Resin",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -4350,7 +4350,7 @@
    {
     "chance": 1.0,
     "item": "Pukeberries",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }
@@ -4424,7 +4424,7 @@
    {
     "chance": 1.0,
     "item": "Resin",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -4438,14 +4438,14 @@
    {
     "chance": 1.0,
     "item": "Pukeberries",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "Ice",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }
@@ -4547,7 +4547,7 @@
    {
     "chance": 1.0,
     "item": "ScaleHide",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    },
@@ -4604,7 +4604,7 @@
    {
     "chance": 1.0,
     "item": "FreezeGland",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }
@@ -4662,7 +4662,7 @@
    {
     "chance": 1.0,
     "item": "Feathers",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    }
@@ -4743,7 +4743,7 @@
    {
     "chance": 1.0,
     "item": "Leatherstraps",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    },
@@ -4844,7 +4844,7 @@
    {
     "chance": 1.0,
     "item": "Leatherstraps",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    },
@@ -4898,7 +4898,7 @@
    {
     "chance": 1.0,
     "item": "NornThread",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    },
@@ -5079,7 +5079,7 @@
    {
     "chance": 1.0,
     "item": "LoxMeat",
-    "max": 6,
+    "max": 5,
     "min": 4,
     "perLevel": true
    },
@@ -5093,7 +5093,7 @@
    {
     "chance": 1.0,
     "item": "LoxPelt",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    }
@@ -5214,7 +5214,7 @@
    {
     "chance": 1.0,
     "item": "MooseMeat",
-    "max": 6,
+    "max": 5,
     "min": 4,
     "perLevel": true
    },
@@ -5228,14 +5228,14 @@
    {
     "chance": 1.0,
     "item": "MooseHide",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "MooseSinew",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    }
@@ -5354,7 +5354,7 @@
    {
     "chance": 1.0,
     "item": "MorgenSinew",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -5403,7 +5403,7 @@
    {
     "chance": 1.0,
     "item": "MorgenSinew",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -5537,7 +5537,7 @@
    {
     "chance": 1.0,
     "item": "SealHide",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    },
@@ -5551,7 +5551,7 @@
    {
     "chance": 1.0,
     "item": "SealBlubber",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    }
@@ -5639,14 +5639,14 @@
    {
     "chance": 1.0,
     "item": "BugMeat",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "Carapace",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -5777,14 +5777,14 @@
    {
     "chance": 1.0,
     "item": "BugMeat",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "Carapace",
-    "max": 4,
+    "max": 3,
     "min": 2,
     "perLevel": true
    },
@@ -5798,7 +5798,7 @@
    {
     "chance": 1.0,
     "item": "Mandible",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    }
@@ -5889,14 +5889,14 @@
    {
     "chance": 1.0,
     "item": "SerpentMeat",
-    "max": 8,
+    "max": 7,
     "min": 6,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "SerpentScale",
-    "max": 10,
+    "max": 9,
     "min": 8,
     "perLevel": true
    }
@@ -6621,14 +6621,14 @@
    {
     "chance": 1.0,
     "item": "Stone",
-    "max": 10,
+    "max": 9,
     "min": 5,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "Crystal",
-    "max": 12,
+    "max": 11,
     "min": 8,
     "perLevel": true
    }
@@ -6676,7 +6676,7 @@
    {
     "chance": 1.0,
     "item": "Coal",
-    "max": 5,
+    "max": 4,
     "min": 4,
     "perLevel": true
    },
@@ -6825,7 +6825,7 @@
    {
     "chance": 1.0,
     "item": "Coins",
-    "max": 30,
+    "max": 29,
     "min": 20,
     "perLevel": true
    },
@@ -6935,7 +6935,7 @@
    {
     "chance": 1.0,
     "item": "Coins",
-    "max": 30,
+    "max": 29,
     "min": 20,
     "perLevel": true
    },
@@ -6981,7 +6981,7 @@
    {
     "chance": 0.5,
     "item": "WolfFang",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    },
@@ -7027,28 +7027,28 @@
    {
     "chance": 1.0,
     "item": "BjornMeat",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": true
    },
    {
     "chance": 0.8,
     "item": "RottenMeat",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "UndeadBjornRibcage",
-    "max": 3,
+    "max": 2,
     "min": 1,
     "perLevel": true
    },
    {
     "chance": 1.0,
     "item": "BjornHide",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }
@@ -7116,14 +7116,14 @@
    {
     "chance": 0.5,
     "item": "Feathers",
-    "max": 3,
+    "max": 2,
     "min": 2,
     "perLevel": false
    },
    {
     "chance": 0.5,
     "item": "VoltureEgg",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": false
    }
@@ -7188,7 +7188,7 @@
    {
     "chance": 1.0,
     "item": "WolfPelt",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    },
@@ -7393,7 +7393,7 @@
    {
     "chance": 1.0,
     "item": "WrithanRoots",
-    "max": 2,
+    "max": 1,
     "min": 1,
     "perLevel": true
    }

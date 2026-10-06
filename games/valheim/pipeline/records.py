@@ -105,7 +105,10 @@ def drop_table(table: dict, name_of) -> dict:
 
 
 def character_drops(tree: dict, name_of) -> list[dict]:
-    return [{"item": name_of(d["m_prefab"]), "min": d["m_amountMin"], "max": d["m_amountMax"],
+    # `CharacterDrop` saca la cantidad con `Random.Range(min, max)` de enteros, que nunca devuelve `max`: el lobo con
+    # piel 1-2 da 1, el luey con carne 4-6 da 4-5 (Weird Gloop "Wolf" y "Lox", 2026-10-06). Se guarda el rango real.
+    return [{"item": name_of(d["m_prefab"]), "min": d["m_amountMin"],
+             "max": d["m_amountMax"] - 1 if d["m_amountMax"] > d["m_amountMin"] else d["m_amountMax"],
              "chance": round(d["m_chance"], 3), "perLevel": bool(d["m_levelMultiplier"])}
             for d in tree["m_drops"] if name_of(d["m_prefab"])]
 
