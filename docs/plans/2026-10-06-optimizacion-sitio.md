@@ -67,3 +67,8 @@ push a la rama.
 - Ya fallaba antes de empezar, no es de este plan:
   `test/deadlockBuilds.test.ts` ("no publican ningún héroe que no exista",
   39 > 38).
+- 2026-10-06: medido con dos publicaciones reales seguidas de la tier list
+  (`62c32ae2` → `ebb42db7`): cambian 22.221 de 22.222 HTML; sin contar los
+  hashes, 485 (Deadlock y la raíz). Assets nuevos: 40 JS, ningún CSS.
+  Arreglo: el HTML carga `/app.js` (nombre fijo) con la entrada y los
+  `modulepreload` de cada pestaña; la pestaña va en `<html data-pre>`.

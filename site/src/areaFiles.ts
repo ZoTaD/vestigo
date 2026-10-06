@@ -2,8 +2,8 @@ import type { D2rSection, DeadlockSection, PzSection, Route, View } from "./rout
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
- * bundle y ponga en el HTML prerenderizado su `<link rel="stylesheet">` y sus
- * `<link rel="modulepreload">`. Tiene que coincidir con los `import()` de
+ * bundle y ponga en el HTML prerenderizado su `<link rel="stylesheet">`, y en
+ * `app.js` sus `modulepreload`. Tiene que coincidir con los `import()` de
  * `areas.ts` (lo cuida `test/areas.test.ts`).
  *
  * Archivo aparte porque lo importa `vite.config.ts`: si importara `areas.ts`,
