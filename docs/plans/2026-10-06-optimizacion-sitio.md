@@ -35,21 +35,24 @@ push a la rama.
 1. [x] **Script de medición** (`site/scripts/perf.mjs`): recorre las páginas
    pesadas de cada juego con Playwright contra `vite preview` y anota pedidos,
    imágenes, nodos y tiempo. Sirve de antes/después y de base para CI.
-2. [~] **Render diferido de listas largas** (`src/LazyRows.tsx`): un componente que monta cada
+2. [x] **Render diferido de listas largas** (`src/LazyRows.tsx`): un componente que monta cada
    bloque (categoría) recién cuando se acerca a la pantalla, con alto
    reservado. Primero Zomboid Objetos y Recetas; después D2R (Únicos, Bases,
    Sets, Palabras rúnicas), PoE2 Enciclopedia, Valheim, Deadlock Objetos.
-3. [~] **Imágenes**: `loading="lazy"`, `decoding="async"` y tamaño en todos
+3. [x] **Imágenes**: `loading="lazy"`, `decoding="async"` y tamaño en todos
    los `<img>` de listas.
 4. [x] **Build**: medido (ver arriba). Pendiente: que un deploy de datos no
    cambie el HTML de los otros juegos (entrada con nombre fijo o similar;
    primero medir cuántos HTML cambian con un cambio de datos), bajar la RAM y
    ver si el prerender se puede acelerar.
-5. [ ] **Datos fuera del bundle** (el cambio grande, por juego, empezando por
+5. [—] **Datos fuera del bundle** (descartado por ahora: con `json.stringify` el
+   build bajó a 93 s y 2,3 GB, y los datos ya bajan por pestaña. Revisar si
+   un juego nuevo vuelve a subir la memoria) (el cambio grande, por juego, empezando por
    Zomboid): los JSON pasan a archivos estáticos con nombre con hash y se piden
    con `fetch`. Un deploy de sólo datos deja de recompilar el JS.
-6. [ ] **Íconos**: evaluar sprites por categoría para Zomboid (3.459 archivos).
-7. [ ] **Presupuesto en CI**: el script del paso 1 falla si una página pasa de
+6. [—] **Íconos**: sprites descartados: con `LazyRows` ninguna página medida
+   pasa de ~160 pedidos.
+7. [x] **Presupuesto** (local, `npm run perf`; no en CI por los minutos): el script del paso 1 falla si una página pasa de
    N pedidos o N nodos. Así Rust entra con límites.
 
 ## Bitácora
