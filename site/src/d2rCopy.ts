@@ -110,7 +110,7 @@ const EN = {
     title: "World events",
     desc: {
       terror: "Terrorized zones raise their monsters' level and what they drop.",
-      uber: "When Terror is unleashed upon Sanctuary, Uber Diablo appears.",
+      uber: "Sell enough Stones of Jordan and, when \"Diablo has invaded Sanctuary\", Uber Diablo appears.",
       pandemonium: "The keys, the three bosses' organs and Uber Tristram.",
       cow: "The game swears it doesn't exist.",
     } as Record<string, string>,
@@ -124,6 +124,7 @@ const EN = {
     level: "Level",
     newRotw: "Reign of the Warlock",
     ladderOnly: "Ladder only",
+    ladderChanged: "Changed in patch 3.3: this version only drops on Ladder.",
     sockets: (n: number) => `${n} sockets`,
     count: (n: string) => (n === "1" ? "1 result" : `${n} results`),
     slotsLong: ["In weapons", "In helms and body armor", "In shields"],
@@ -498,7 +499,7 @@ const ES: typeof EN = {
     title: "Eventos del mundo",
     desc: {
       terror: "Las zonas aterrorizadas suben el nivel de sus monstruos y lo que sueltan.",
-      uber: "Cuando el Terror se libera sobre Santuario, aparece Uber Diablo.",
+      uber: "Vendé suficientes Piedras de Jordán y, cuando Diablo invade Santuario, aparece Uber Diablo.",
       pandemonium: "Las llaves, los órganos de los tres jefes y el Tristram de los Uber.",
       cow: "El juego jura que no existe.",
     },
@@ -512,6 +513,7 @@ const ES: typeof EN = {
     level: "Nivel",
     newRotw: "Reign of the Warlock",
     ladderOnly: "Sólo en Clasificación",
+    ladderChanged: "Cambiado en el parche 3.3: esta versión sólo cae en Clasificación.",
     sockets: (n: number) => `${n} engarces`,
     count: (n: string) => (n === "1" ? "1 resultado" : `${n} resultados`),
     slotsLong: ["En armas", "En yelmos y armaduras", "En escudos"],

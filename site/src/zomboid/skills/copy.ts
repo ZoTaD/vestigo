@@ -123,7 +123,7 @@ const EN: PzSkillsCopy = {
 
   mediaTitle: "VHS tapes that give XP",
   mediaNote: (cutoff) =>
-    `Base XP, before multipliers, and only while the skill is below level ${cutoff}. Each line of a tape counts once; "up to" means part of the tape is also on another one.`,
+    `Base XP, before multipliers, and only while the skill is below level ${cutoff} (the default; a server can change it with LevelForMediaXPCutoff). Each line of a tape counts once; "up to" means part of the tape is also on another one.`,
   mediaXp: (xp) => `+${xp} XP`,
   mediaUpTo: (xp) => `up to ${xp} XP`,
 
@@ -132,7 +132,7 @@ const EN: PzSkillsCopy = {
   tvBeforeStart: (time) => `(ends before ${time}, the default start time; not in the total)`,
   tvTotal: "In total",
   tvNote: (cutoff) =>
-    `Each show airs once, on that day of your game (day 1 is the day you start) and in that time slot: tune in within it and it plays from the start. Base XP, before multipliers, and only while the skill is below level ${cutoff}.`,
+    `Each show airs once, on that day of your game (day 1 is the day you start) and in that time slot: tune in within it and it plays from the start. Base XP, before multipliers, and only while the skill is below level ${cutoff} (the default; a server can change it with LevelForMediaXPCutoff).`,
 
   whoTitle: "Traits and professions",
   whoStart: "Starting levels",
@@ -200,7 +200,7 @@ const ES: PzSkillsCopy = {
 
   mediaTitle: "VHS que dan XP",
   mediaNote: (cutoff) =>
-    `XP base, antes de multiplicadores, y sólo mientras la habilidad esté por debajo del nivel ${cutoff}. Cada línea de una cinta cuenta una sola vez; "hasta" es que parte de la cinta también está en otra.`,
+    `XP base, antes de multiplicadores, y sólo mientras la habilidad esté por debajo del nivel ${cutoff} (el valor por defecto; un servidor lo puede cambiar con LevelForMediaXPCutoff). Cada línea de una cinta cuenta una sola vez; "hasta" es que parte de la cinta también está en otra.`,
   mediaXp: (xp) => `+${xp} XP`,
   mediaUpTo: (xp) => `hasta ${xp} XP`,
 
@@ -209,7 +209,7 @@ const ES: PzSkillsCopy = {
   tvBeforeStart: (time) => `(termina antes de las ${time}, la hora de arranque por defecto; no suma al total)`,
   tvTotal: "En total",
   tvNote: (cutoff) =>
-    `Cada programa sale una sola vez, ese día de la partida (el 1 es el día en que arrancás) y en ese horario: si ponés el canal dentro del horario, lo ves desde el principio. XP base, antes de multiplicadores, y sólo mientras la habilidad esté por debajo del nivel ${cutoff}.`,
+    `Cada programa sale una sola vez, ese día de la partida (el 1 es el día en que arrancás) y en ese horario: si ponés el canal dentro del horario, lo ves desde el principio. XP base, antes de multiplicadores, y sólo mientras la habilidad esté por debajo del nivel ${cutoff} (el valor por defecto; un servidor lo puede cambiar con LevelForMediaXPCutoff).`,
 
   whoTitle: "Rasgos y profesiones",
   whoStart: "Niveles de inicio",

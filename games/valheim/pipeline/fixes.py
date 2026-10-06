@@ -119,6 +119,11 @@ def apply(items: dict) -> None:
 # de siempre. Wiki "Iron": sale de la chatarra de las criptas hundidas y de los
 # montículos de barro del Pantano (el mineral de hierro, sólo de meteoritos y
 # del hierro de pantano). Wiki "Coal": con madera en el horno de carbón.
+# Cuántos objetos pide el altar de cada jefe, cuando el extractor lee mal el número. Yagluth: el altar usa soportes
+# (`m_useItemStands`) y el extractor toma `m_bossItems` (3), pero son 5 tótems de fuling, uno por cuenco (Weird Gloop
+# "Yagluth", 2026-10-06). `site.py` lo aplica sobre `data/bosses.json`.
+BOSS_SUMMON_AMOUNT: dict[str, int] = {"GoblinKing": 5}
+
 PLANNER_PREFER: dict[str, str] = {"Iron": "from:IronScrap", "Coal": "from:Wood"}
 
 # Variantes que el juego llama igual que la base pero que ZoTaD quiere ver

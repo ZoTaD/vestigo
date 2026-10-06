@@ -50,7 +50,9 @@ export interface Engine {
 
 /**
  * Una stat ya convertida desde su propiedad. `min`/`max` son el rango con que
- * puede salir; `perLevel` es el valor en octavos por nivel de personaje.
+ * puede salir; `perLevel` es el valor en octavos por nivel de personaje y, si
+ * sale con rango (la vida por nivel de Fortaleza, de 8 a 12 octavos),
+ * `perLevelMin` es la punta baja.
  */
 export interface Stat {
   s: string;
@@ -58,6 +60,7 @@ export interface Stat {
   min: number;
   max: number;
   perLevel?: number;
+  perLevelMin?: number;
   /** Para las habilidades con evento o cargas: [probabilidad o cargas, nivel]. */
   a?: number;
   b?: number;
@@ -127,7 +130,12 @@ export function toStats(props: Prop[], E: Engine): Stat[] {
         case 17:
           if (!s) break;
           // Las "por nivel" (y la duración del frío o el veneno) usan el parámetro.
-          if (s.endsWith("_perlevel") || s.includes("perlevel")) out.push({ s, min: 0, max: 0, perLevel: npar });
+          // Sin parámetro, el valor por nivel viene en mín/máx: la vida por nivel de Fortaleza (`hp/lvl`, 8 a 12), la
+          // defensa de Hoja (`ac/lvl` 16), la absorción de frío de Griswold. Leerlo del parámetro daba "+0" (2026-10-06).
+          if (s.endsWith("_perlevel") || s.includes("perlevel")) {
+            if (Number.isFinite(npar)) out.push({ s, min: 0, max: 0, perLevel: npar });
+            else out.push({ s, min: 0, max: 0, perLevel: max, ...(min !== max ? { perLevelMin: min } : {}) });
+          }
           else if (s === "coldlength" || s === "poisonlength") out.push({ s, min: npar || min, max: npar || max });
           else out.push({ s, min: Number.isFinite(npar) ? npar : min, max: Number.isFinite(npar) ? npar : max });
           break;
@@ -135,7 +143,9 @@ export function toStats(props: Prop[], E: Engine): Stat[] {
         case 23: out.push({ s: ETHEREAL, min: 1, max: 1 }); break;
         case 24: if (s === "item_reanimate") out.push({ s, par: npar, min, max }); break;
         case 21: if (s) out.push({ s, par: v ?? npar, min, max }); break;
-        case 36: out.push({ s: RAND_CLASS, min, max }); break;
+        // +N a las habilidades de una clase al azar: mín/máx son el rango de clases (0-7), y N es el valor fijo de la
+        // propiedad (`v`). Leer mín/máx escribía "+(0-7)" en la Antorcha del Infierno (2026-10-06).
+        case 36: out.push({ s: RAND_CLASS, min: v ?? min, max: v ?? max }); break;
         default:
           if (s) out.push({ s, par: Number.isFinite(npar) ? npar : undefined, min, max });
       }
@@ -159,7 +169,10 @@ export function sumStats(stats: Stat[]): Stat[] {
     else {
       cur.min += st.min;
       cur.max += st.max;
-      if (st.perLevel) cur.perLevel = (cur.perLevel ?? 0) + st.perLevel;
+      if (st.perLevel) {
+        if (st.perLevelMin !== undefined || cur.perLevelMin !== undefined) cur.perLevelMin = (cur.perLevelMin ?? cur.perLevel ?? 0) + (st.perLevelMin ?? st.perLevel);
+        cur.perLevel = (cur.perLevel ?? 0) + st.perLevel;
+      }
     }
   }
   return [...byKey.values()];
@@ -168,7 +181,8 @@ export function sumStats(stats: Stat[]): Stat[] {
 /** El valor de una stat para un nivel de personaje (el máximo del rango, o lo elegido). */
 export function valueAt(st: Stat, clvl: number, pick: "min" | "max" = "max"): number {
   const base = pick === "min" ? st.min : st.max;
-  return st.perLevel ? base + Math.floor((st.perLevel * clvl) / 8) : base;
+  const per = pick === "min" ? (st.perLevelMin ?? st.perLevel) : st.perLevel;
+  return per ? base + Math.floor((per * clvl) / 8) : base;
 }
 
 /**
@@ -179,7 +193,7 @@ export function valueAt(st: Stat, clvl: number, pick: "min" | "max" = "max"): nu
 function shown(st: Stat, lang: Lang, clvl?: number): number | string {
   if (st.perLevel) {
     if (clvl) return valueAt(st, clvl);
-    const lo = st.min + Math.floor(st.perLevel / 8);
+    const lo = st.min + Math.floor((st.perLevelMin ?? st.perLevel) / 8);
     const hi = st.max + Math.floor((st.perLevel * 99) / 8);
     return lo === hi ? lo : `(${lo}-${hi})`;
   }
