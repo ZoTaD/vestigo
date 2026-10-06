@@ -4,6 +4,7 @@
  * ficha. El filtro y la búsqueda sólo esconden.
  */
 import { useMemo, useState } from "react";
+import { LazyRows } from "../../LazyRows";
 import { useLang, useLocale } from "../../i18n";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
@@ -13,6 +14,9 @@ import { filterRows } from "./filter";
 
 type Nav = (r: Route) => void;
 
+
+/** El alto de un casillero con su nombre, de respaldo hasta que se dibuja la primera tanda (que se mide sola). */
+const RS_CELL = 130;
 export default function ItemList({ list, route, navigate, missing }: { list: ItemsList; route: Route; navigate: Nav; missing: boolean }) {
   const t = useRustCopy().items;
   const { lang } = useLang();
@@ -45,19 +49,19 @@ export default function ItemList({ list, route, navigate, missing }: { list: Ite
         <p className="rs-count-line">{t.count(rows.length, rows.length.toLocaleString(locale))}</p>
         {rows.length === 0 && <p className="rs-empty">{t.empty}</p>}
         <ul className="rs-grid">
-          {rows.map((r) => {
+          <LazyRows items={rows} rowHeight={RS_CELL} tag="li" eager render={(r) => {
             const name = (lang === "es" && r.es) || r.en;
             return (
               <li key={r.id}>
                 <RouteLink className="rs-cell" to={{ ...route, view: "rust", rsSection: "items", detail: r.slug }} onNavigate={navigate} prefetch="press">
                   <span className="rs-slot">
-                    <img src={`/rust/items/${r.id}.webp`} alt="" width={64} height={64} loading="lazy" />
+                    <img src={`/rust/items/${r.id}.webp`} alt="" width={64} height={64} loading="lazy" decoding="async" />
                   </span>
                   <span className="rs-cell-name">{name}</span>
                 </RouteLink>
               </li>
             );
-          })}
+          }} />
         </ul>
       </section>
     </main>

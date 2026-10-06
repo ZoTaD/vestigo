@@ -51,6 +51,10 @@ export const PAGES = [
   "/en/project-zomboid/crafting",
   "/en/project-zomboid/traits",
   "/en/project-zomboid/patches",
+  "/en/rust",
+  "/en/rust/items",
+  "/en/rust/items/assault-rifle",
+  "/en/rust/raid",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */
