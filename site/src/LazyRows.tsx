@@ -27,7 +27,7 @@ export function LazyRows<T>({
   items: readonly T[];
   /** Devuelve la fila con su `key`, como en un `map`. */
   render: (item: T, index: number) => ReactNode;
-  /** El alto de una fila de la grilla, en px, sin la separación. */
+  /** El alto de una fila, en px, sin la separación: el respaldo para cuando la lista todavía no dibujó ninguna. */
   rowHeight: number;
   chunk?: number;
   /** Cuánto antes de llegar a la pantalla se dibuja una tanda, en px. */
@@ -62,16 +62,24 @@ function Chunk({ eager, rows, rowHeight, margin, tag, children }: { eager: boole
   const [height, setHeight] = useState(rows * rowHeight);
   const ref = useRef<HTMLElement>(null);
 
-  // El alto con las columnas de verdad, antes de pintar: si no, la barra de scroll salta al medirse.
+  // El alto con las columnas de verdad, antes de pintar: si no, la barra de scroll salta al medirse. Si la lista ya
+  // tiene filas dibujadas, el alto de fila sale de ellas (en el celular una fila de tabla apilada mide el triple);
+  // si no, del `rowHeight` que se pasó.
   useMeasure(() => {
     const el = ref.current;
-    const grid = el?.parentElement;
-    if (shown || tag === "tr" || !el || !grid) return;
+    const grid = tag === "tr" ? el : el?.parentElement;
+    if (shown || !el || !grid) return;
+    const drawn = [...(el.parentElement?.children ?? [])].filter((c) => c !== el && !c.hasAttribute("data-lazy")).slice(0, 12);
+    const line = drawn.length ? drawn.reduce((sum, c) => sum + c.getBoundingClientRect().height, 0) / drawn.length : rowHeight;
+    if (tag === "tr") {
+      setHeight(rows * line);
+      return;
+    }
     const style = getComputedStyle(grid);
     const cols = Math.max(1, style.gridTemplateColumns.split(" ").filter(Boolean).length);
     const gap = parseFloat(style.rowGap) || 0;
     const lines = Math.ceil(rows / cols);
-    setHeight(lines * rowHeight + Math.max(0, lines - 1) * gap);
+    setHeight(lines * line + Math.max(0, lines - 1) * gap);
   }, [shown, tag, rows, rowHeight]);
 
   useEffect(() => {
@@ -93,11 +101,11 @@ function Chunk({ eager, rows, rowHeight, margin, tag, children }: { eager: boole
   if (shown) return <>{children}</>;
   if (tag === "tr")
     return (
-      <tr ref={ref as RefObject<HTMLTableRowElement>} aria-hidden="true">
+      <tr ref={ref as RefObject<HTMLTableRowElement>} aria-hidden="true" data-lazy="">
         <td colSpan={99} style={{ height, padding: 0, border: 0 }} />
       </tr>
     );
   const style = { gridColumn: "1 / -1", height, listStyle: "none" };
-  if (tag === "li") return <li ref={ref as RefObject<HTMLLIElement>} aria-hidden="true" style={style} />;
-  return <div ref={ref as RefObject<HTMLDivElement>} aria-hidden="true" style={style} />;
+  if (tag === "li") return <li ref={ref as RefObject<HTMLLIElement>} aria-hidden="true" data-lazy="" style={style} />;
+  return <div ref={ref as RefObject<HTMLDivElement>} aria-hidden="true" data-lazy="" style={style} />;
 }

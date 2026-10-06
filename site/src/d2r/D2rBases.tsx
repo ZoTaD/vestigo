@@ -9,6 +9,7 @@
  * nunca sale con más de 4 aunque su base diga otra cosa.
  */
 import { useMemo, useState } from "react";
+import { LazyRows } from "../LazyRows";
 import { useLang, useLocale } from "../i18n";
 import type { Route } from "../route";
 import { useD2rCopy } from "../d2rCopy";
@@ -20,6 +21,9 @@ type Group = "armor" | "weapon";
 type Tier = "all" | "n" | "x" | "e";
 
 /** Los engarces que puede tener de verdad una base. */
+
+/** El alto de una fila de la tabla, medido en el navegador el 2026-10-06 en escritorio (en el celular las filas se apilan y son más altas). */
+const D2_BASE_ROW = 54;
 export function maxSockets(b: Base): number {
   const cap = TYPES[b.type]?.sockets?.[2];
   return cap ? Math.min(b.sockets, cap) : b.sockets;
@@ -79,7 +83,7 @@ export default function D2rBases(_: { route: Route; navigate: (r: Route) => void
           options={[{ value: "all", label: t.wiki.all }, ...(["n", "x", "e"] as const).map((k) => ({ value: k, label: t.basesTab.tier[k] }))]}
         />
       </div>
-      {byCat.map(([cat, bs]) => (
+      {byCat.map(([cat, bs], n) => (
         <section className="d2-cat" key={cat}>
           <h2 className="d2-cat-h">
             {catName(cat, lang)} <small>{bs.length.toLocaleString(locale)}</small>
@@ -99,7 +103,7 @@ export default function D2rBases(_: { route: Route; navigate: (r: Route) => void
                 </tr>
               </thead>
               <tbody>
-                {bs.map((b) => (
+                <LazyRows items={bs} rowHeight={D2_BASE_ROW} tag="tr" chunk={40} eager={n === 0} render={(b) => (
                   <tr key={b.code}>
                     <th scope="row">
                       <span className="d2-table-name">
@@ -120,7 +124,7 @@ export default function D2rBases(_: { route: Route; navigate: (r: Route) => void
                     <td data-label={t.basesTab.col.lvl}>{b.req.lvl || "—"}</td>
                     <td data-label={t.basesTab.col.sockets}>{maxSockets(b) || "—"}</td>
                   </tr>
-                ))}
+                )} />
               </tbody>
             </table>
           </div>

@@ -27,7 +27,7 @@ const catOf = (u: Unique) => BASE_BY_CODE.get(u.base)?.cat ?? null;
 
 
 /** El alto de una tarjeta de la lista (`.d2-card`), medido en el navegador el 2026-10-06. */
-const D2_CARD = 64;
+const D2_CARD = 72;
 export default function D2rUniques({ route, navigate }: { route: Route; navigate: Nav }) {
   const u = route.detail ? UNIQUES.find((x) => x.id === route.detail) : undefined;
   if (route.detail && u) return <UniqueDetail u={u} route={route} navigate={navigate} />;

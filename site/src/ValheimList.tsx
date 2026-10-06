@@ -177,8 +177,8 @@ function writeListQuery(defs: { key: string }[], q: string, state: FilterState, 
 }
 
 
-/** El alto de una fila de la tabla (ícono chico + relleno + borde), medido en el navegador el 2026-10-06. */
-const VH_ROW = 49;
+/** El alto de una fila de la tabla (ícono chico + relleno + borde), medido en el navegador el 2026-10-06 en escritorio; en el celular el nombre se parte y es más alta. */
+const VH_ROW = 51;
 export default function ValheimList({ tab, rows, to, navigate }: { tab: ListTab; rows: AnyRow[]; to: To; navigate: Nav }) {
   const t = useValheimCopy();
   const { lang } = useLang();
