@@ -40,7 +40,7 @@ export default function RustSearch({ route, navigate }: { route: Route; navigate
           {hits.map((r) => (
             <li key={r.id}>
               <RouteLink className="rs-ref" to={to(r)} onNavigate={navigate}>
-                <img src={`/rust/items/${r.id}.webp`} alt="" width={28} height={28} />
+                <img src={`/rust/items/${r.id}.webp`} alt="" width={28} height={28} loading="lazy" decoding="async" />
                 <span>{(lang === "es" && r.es) || r.en}</span>
               </RouteLink>
             </li>

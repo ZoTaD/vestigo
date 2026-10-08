@@ -1,10 +1,12 @@
 /**
  * La lista de Objetos de Rust (2026-10-05): casilleros del inventario con el ícono y el nombre, filtro por categoría y
  * buscador. Todos los objetos van en el HTML (el prerender los escribe): son los enlaces por los que Google llega a cada
- * ficha. El filtro y la búsqueda sólo esconden.
+ * ficha. El filtro y la búsqueda sólo esconden. En el navegador la grilla se dibuja de a tandas (`LazyRows`, 2026-10-08):
+ * son ~1.000 casilleros.
  */
 import { useMemo, useState } from "react";
 import { useLang, useLocale } from "../../i18n";
+import { LazyRows } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
@@ -12,6 +14,9 @@ import type { ItemsList } from "./data";
 import { filterRows } from "./filter";
 
 type Nav = (r: Route) => void;
+
+/** El alto de un casillero de la grilla, en px, medido en el navegador a 1.400 px (2026-10-08; a 375 px mide ~160). */
+const RS_CELL = 142;
 
 export default function ItemList({ list, route, navigate, missing }: { list: ItemsList; route: Route; navigate: Nav; missing: boolean }) {
   const t = useRustCopy().items;
@@ -45,19 +50,19 @@ export default function ItemList({ list, route, navigate, missing }: { list: Ite
         <p className="rs-count-line">{t.count(rows.length, rows.length.toLocaleString(locale))}</p>
         {rows.length === 0 && <p className="rs-empty">{t.empty}</p>}
         <ul className="rs-grid">
-          {rows.map((r) => {
+          <LazyRows items={rows} rowHeight={RS_CELL} tag="li" eager render={(r) => {
             const name = (lang === "es" && r.es) || r.en;
             return (
               <li key={r.id}>
                 <RouteLink className="rs-cell" to={{ ...route, view: "rust", rsSection: "items", detail: r.slug }} onNavigate={navigate} prefetch="press">
                   <span className="rs-slot">
-                    <img src={`/rust/items/${r.id}.webp`} alt="" width={64} height={64} loading="lazy" />
+                    <img src={`/rust/items/${r.id}.webp`} alt="" width={64} height={64} loading="lazy" decoding="async" />
                   </span>
                   <span className="rs-cell-name">{name}</span>
                 </RouteLink>
               </li>
             );
-          })}
+          }} />
         </ul>
       </section>
     </main>

@@ -57,6 +57,10 @@ a.rs-cell:hover .rs-slot { background: rgba(255, 255, 255, 0.12); }
 .rs-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .rs-ings, .rs-refs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+/* En grilla y no en fila que se dobla (2026-10-08): "Se usa en" va de a tandas (`LazyRows`), que calcula el alto que
+   falta con las columnas de la grilla. */
+.rs-refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.rs-refs .rs-ref { height: 100%; box-sizing: border-box; }
 .rs-ings .rs-ref { display: flex; flex-direction: column; gap: 4px; width: 88px; font-size: 14px; line-height: 1.2; }
 .rs-ings .rs-slot { width: 64px; padding: 10px; }
 .rs-qty { position: absolute; right: 4px; bottom: 2px; font-size: 13px; text-shadow: 0 1px 2px #000; }

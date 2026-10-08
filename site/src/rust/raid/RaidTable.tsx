@@ -26,7 +26,7 @@ export default function RaidTable({ route, navigate }: { route: Route; navigate:
               <th scope="col" />
               {EXPLOSIVES.map((e) => (
                 <th scope="col" key={e.id} title={say(e.name, lang)}>
-                  <img src={`/rust/items/${e.id}.webp`} alt={say(e.name, lang)} width={32} height={32} />
+                  <img src={`/rust/items/${e.id}.webp`} alt={say(e.name, lang)} width={32} height={32} loading="lazy" decoding="async" />
                 </th>
               ))}
             </tr>

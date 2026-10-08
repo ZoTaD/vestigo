@@ -4,6 +4,7 @@
  * más (`recycle.ts`), con la chatarra fija escalada.
  */
 import { useLang, useLocale } from "../../i18n";
+import { LazyRows } from "../../LazyRows";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
 import { say, type Ficha, type Ref } from "./data";
@@ -68,6 +69,8 @@ export default function RecycleSection({ ficha, route, navigate }: { ficha: Fich
 
 /** Cuántas filas de "se obtiene reciclando" se ven de entrada: los fragmentos de metal tienen más de 300. */
 export const RECYCLED_FIRST = 20;
+/** El alto de una fila de esa tabla, en px, medido en el navegador a 1.400 px (2026-10-08). */
+const RS_RECYCLED_ROW = 47;
 /** Las dos recicladoras de esta tabla: las que más se usan (la de monumento y la de zona segura). */
 const FROM_KEYS = ["green", "yellow"] as const;
 
@@ -124,7 +127,10 @@ export function RecycledFrom({ ficha, route, navigate }: { ficha: Ficha; route: 
           <summary className="rs-btn">{t.showRest(num(rest.length))}</summary>
           <table className="rs-table">
             {head}
-            <tbody>{rest.map(row)}</tbody>
+            {/* Son más de 300 filas en los fragmentos de metal: de a tandas, y sólo al abrir el desplegable (2026-10-08). */}
+            <tbody>
+              <LazyRows items={rest} rowHeight={RS_RECYCLED_ROW} tag="tr" chunk={40} render={row} />
+            </tbody>
           </table>
         </details>
       )}

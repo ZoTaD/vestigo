@@ -9,9 +9,9 @@ import type { Ref } from "./data";
 
 export type Nav = (r: Route) => void;
 
-/** El ícono de un objeto. El texto alternativo va vacío: al lado siempre está el nombre. */
+/** El ícono de un objeto. El texto alternativo va vacío: al lado siempre está el nombre. Baja al acercarse (2026-10-08). */
 export function Icon({ id, size = 40 }: { id: string; size?: number }) {
-  return <img src={`/rust/items/${id}.webp`} alt="" width={size} height={size} />;
+  return <img src={`/rust/items/${id}.webp`} alt="" width={size} height={size} loading="lazy" decoding="async" />;
 }
 
 /** Un enlace a la ficha de otro objeto, o el nombre suelto si no tiene ficha (una skin, un objeto oculto). */

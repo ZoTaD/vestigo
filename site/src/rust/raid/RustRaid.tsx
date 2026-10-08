@@ -126,6 +126,7 @@ export default function RustRaid({
                         alt=""
                         width={32}
                         height={32}
+                        decoding="async"
                       />
                       <span className="rs-raid-name">
                         {name}
@@ -174,6 +175,7 @@ export default function RustRaid({
                           alt=""
                           width={28}
                           height={28}
+                          decoding="async"
                         />
                         <span className="rs-raid-mixname">
                           {say(e.name, lang)}
@@ -210,6 +212,7 @@ export default function RustRaid({
                               alt=""
                               width={28}
                               height={28}
+                              decoding="async"
                             />{" "}
                             {say(e.name, lang)}
                             {e.dud > 0 && (

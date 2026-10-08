@@ -5,6 +5,7 @@
  */
 import { useState, type CSSProperties, type ReactNode } from "react";
 import { useLang, useLocale } from "../../i18n";
+import { LazyRows } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
@@ -16,6 +17,9 @@ import RecycleSection, { RecycledFrom } from "./FichaRecycle";
 import { craftTimes, formatDuration } from "./format";
 
 type Nav = (r: Route) => void;
+
+/** El alto de un renglón de "Se usa en", en px, medido en el navegador (2026-10-08). */
+const RS_REF = 40;
 
 export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; route: Route; navigate: Nav }) {
   const t = useRustCopy().items;
@@ -32,7 +36,10 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
     ) : (
       <span className="rs-ref">{children}</span>
     );
-  const icon = (id: string, size = 40) => <img src={`/rust/items/${id}.webp`} alt="" width={size} height={size} />;
+  // Sólo el ícono grande de arriba baja ya; los de las secciones esperan a acercarse (2026-10-08).
+  const icon = (id: string, size = 40, eager = false) => (
+    <img src={`/rust/items/${id}.webp`} alt="" width={size} height={size} loading={eager ? undefined : "lazy"} decoding={eager ? undefined : "async"} />
+  );
   const command = `inventory.give ${ficha.id} 1`;
   const c = ficha.craft;
   return (
@@ -41,7 +48,7 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
         ← {t.back}
       </RouteLink>
       <section className="rs-pnl rs-ficha-top">
-        <span className="rs-slot rs-slot-big">{icon(ficha.id, 128)}</span>
+        <span className="rs-slot rs-slot-big">{icon(ficha.id, 128, true)}</span>
         <div className="rs-title">
           <p className="rs-hd">{t.cats[ficha.cat] ?? ficha.cat}</p>
           <h1 className="rs-h1" style={{ "--rs-word": longestWord(name) } as CSSProperties}>
@@ -104,9 +111,10 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
         <section className="rs-pnl">
           <h2 className="rs-hd">{t.usedIn}</h2>
           <ul className="rs-refs">
-            {ficha.usedIn.map((u) => (
+            {/* Los fragmentos de metal se usan en 303 objetos: de a tandas (2026-10-08). */}
+            <LazyRows items={ficha.usedIn} rowHeight={RS_REF} tag="li" chunk={40} render={(u) => (
               <li key={u.id}>{link(u, <>{icon(u.id, 32)}<span>{say(u.name, lang)}</span></>)}</li>
-            ))}
+            )} />
           </ul>
         </section>
       )}

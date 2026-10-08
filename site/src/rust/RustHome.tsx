@@ -41,7 +41,7 @@ export default function RustHome({ route, navigate }: { route: Route; navigate: 
           <ul className="rs-slots">
             {(home as HomeItem[]).map((it) => {
               const name = (lang === "es" && it.name.es) || it.name.en;
-              const icon = <img src={`/rust/items/${it.id}.webp`} alt={name} width={64} height={64} />;
+              const icon = <img src={`/rust/items/${it.id}.webp`} alt={name} width={64} height={64} decoding="async" />;
               return (
                 <li key={it.id}>
                   {isLive("items") ? (

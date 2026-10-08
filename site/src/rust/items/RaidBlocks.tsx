@@ -31,7 +31,7 @@ export default function RaidBlocks({ itemId, route }: { itemId: string; route: R
                 return (
                   <tr key={e.id}>
                     <th scope="row">
-                      <img src={`/rust/items/${e.id}.webp`} alt="" width={28} height={28} /> {say(e.name, lang)}
+                      <img src={`/rust/items/${e.id}.webp`} alt="" width={28} height={28} loading="lazy" decoding="async" /> {say(e.name, lang)}
                     </th>
                     <td data-cell={`${target.id}|${e.id}`}>{num(n)}</td>
                     <td>
