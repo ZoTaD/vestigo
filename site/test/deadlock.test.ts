@@ -101,7 +101,7 @@ describe("tierOf", () => {
    * letra quedara vacía, la banda no se debe dibujar — y este test avisa antes
    * de que aparezca un riel con cero tiles.
    */
-  it("reparte los 38 héroes en las cinco letras", () => {
+  it("reparte a todos los héroes en las cinco letras", () => {
     const heroes = buildHeroes(PUBLISHED_BAND, "en");
     const letras = [...new Set(heroes.map((h) => h.tier))].sort();
     expect(letras).toEqual(["A", "B", "C", "D", "S"]);
@@ -111,7 +111,7 @@ describe("tierOf", () => {
 describe("la tier list publicada", () => {
   const built = buildHeroes(PUBLISHED_BAND, "en");
 
-  it("trae los 38 héroes jugables, con nombre e imagen", () => {
+  it("trae a todos los héroes jugables, con nombre e imagen", () => {
     expect(built.length).toBeGreaterThan(30);
     for (const h of built) {
       expect(h.name, `héroe ${h.heroId}`).not.toBe("");

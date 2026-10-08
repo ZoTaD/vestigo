@@ -63,7 +63,11 @@ describe("las builds publicadas", () => {
    */
   it("no publican ningún héroe que no exista", () => {
     expect(file.heroes.length).toBeGreaterThan(0);
-    expect(file.heroes.length).toBeLessThanOrEqual(38);
+    // Tantos como héroes tiene el catálogo, que crece con cada héroe nuevo (Baba,
+    // 2026-10-05): un número fijo acá rompía el test con cada salida.
+    expect(file.heroes.length).toBeLessThanOrEqual(
+      Object.keys((catalogJson as { heroes: Record<string, unknown> }).heroes).length
+    );
     for (const h of file.heroes) {
       expect((catalogJson as { heroes: Record<string, unknown> }).heroes[String(h.heroId)], `héroe ${h.heroId}`).toBeDefined();
     }

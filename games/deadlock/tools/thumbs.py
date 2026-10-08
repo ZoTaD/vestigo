@@ -40,10 +40,11 @@ def sources():
                 yield os.path.join(dirpath, name)
 
 
-def build(force=False):
+def build(force=False, only=None):
+    """`only`: rutas de imágenes puntuales (las recién bajadas) en vez de recorrer todo."""
     made = copied = skipped = 0
     total = 0
-    for src in sources():
+    for src in (only if only is not None else sources()):
         rel = os.path.relpath(src, GAME)
         with Image.open(src) as im:
             w, h = im.size

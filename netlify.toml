@@ -51,6 +51,23 @@
 # Van ANTES del comodín de abajo: Netlify aplica la primera regla que coincide,
 # y el comodín las serviría con 200. La forma sin barra va aparte porque el
 # splat no la cubre con seguridad. Sin `force`: ya no hay archivo en esas rutas.
+# Baba (héroe 88) salió sin catálogo el 5/10 y sus páginas se publicaron con el id.
+[[redirects]]
+  from = "/en/deadlock/heroes/88"
+  to = "/en/deadlock/heroes/baba"
+  status = 301
+[[redirects]]
+  from = "/en/deadlock/88"
+  to = "/en/deadlock/baba"
+  status = 301
+[[redirects]]
+  from = "/es/deadlock/heroes/88"
+  to = "/es/deadlock/heroes/baba"
+  status = 301
+[[redirects]]
+  from = "/es/deadlock/88"
+  to = "/es/deadlock/baba"
+  status = 301
 [[redirects]]
   from = "/en/tft"
   to = "/en"

@@ -231,6 +231,19 @@ describe("buildHeroKit", () => {
     expect(details[0].art).toEqual({ card: "https://x/card.webp", background: "https://x/bg.webp" });
   });
 
+  it("suma al héroe en desarrollo que ya tiene partidas medidas", () => {
+    const baba: RawHeroKit = { ...dynamo, id: 88, name: "Baba", in_development: true };
+    const enPruebas: RawHeroKit = { ...dynamo, id: 99, in_development: true };
+    const { file } = buildHeroKit(
+      { en: [dynamo, baba, enPruebas], es: [] },
+      { en: [stomp, weapon], es: [] },
+      "2026-10-08T00:00:00Z",
+      new Map(),
+      new Set([11, 88])
+    );
+    expect(Object.keys(file.heroes)).toEqual(["11", "88"]);
+  });
+
   /**
    * City Never Sleeps (6712) sacó los videos de habilidades de los archivos del
    * juego y la API dejó de publicarlos, aunque siguen en el bucket. La habilidad

@@ -83,6 +83,13 @@ describe("los objetos populares por héroe", () => {
     expect(h.phases.late.map((e) => e.itemId)).toEqual([3696726732, 2951612397]);
   });
 
+  it("suma al héroe en desarrollo sólo si ya tiene partidas medidas", () => {
+    const baba: RawPopularHero = { ...infernus, id: 88, name: "Baba", in_development: true };
+    const enPruebas: RawPopularHero = { ...infernus, id: 99, name: "Prototipo", in_development: true };
+    expect(buildPopular([infernus, baba, enPruebas], shop, new Set([1, 88])).map((h) => h.heroId)).toEqual([1, 88]);
+    expect(buildPopular([infernus, baba], shop).map((h) => h.heroId)).toEqual([1]);
+  });
+
   it("deja afuera a los héroes que no se pueden jugar y a los que no traen el dato", () => {
     const sinDato: RawPopularHero = { ...infernus, id: 2, name: "Seven", popular_items: undefined };
     expect(buildPopular([infernus, danny, sinDato], shop).map((h) => h.heroId)).toEqual([1]);
