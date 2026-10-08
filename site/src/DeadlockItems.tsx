@@ -117,7 +117,7 @@ function ItemRow({
                 title={c.types[t as keyof typeof c.types] ?? t}
                 width={16}
                 height={16}
-                loading="lazy"
+                loading="lazy" decoding="async"
               />
             ))}
           </span>

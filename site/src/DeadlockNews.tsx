@@ -205,7 +205,7 @@ export default function DeadlockNews({
         }
       >
         <span className="vn-cut">
-          <img src={moodCard(heroOf(h.heroId)?.card, v)} alt="" width={280} height={380} loading="lazy" />
+          <img src={moodCard(heroOf(h.heroId)?.card, v)} alt="" width={280} height={380} loading="lazy" decoding="async" />
         </span>
         <span className="vn-who">
           <b style={wordFit(heroName(h.heroId))}>{plain(heroName(h.heroId))}</b>
@@ -379,7 +379,7 @@ export default function DeadlockNews({
                           alt=""
                           width={280}
                           height={380}
-                          loading="lazy"
+                          loading="lazy" decoding="async"
                         />
                       </span>
                       <div>
@@ -415,7 +415,7 @@ export default function DeadlockNews({
                         <div key={g.abilityId ?? "base"} className="vn-group">
                           <div className="vn-ghead">
                             {ab ? (
-                              <GameImg className="vn-ab" src={ab.img} alt="" width={34} height={34} loading="lazy" />
+                              <GameImg className="vn-ab" src={ab.img} alt="" width={34} height={34} loading="lazy" decoding="async" />
                             ) : (
                               <span className="vn-base" aria-hidden="true">
                                 ◆

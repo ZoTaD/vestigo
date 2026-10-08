@@ -67,7 +67,7 @@ function ClassList({ route, navigate, missing }: { route: Route; navigate: Nav; 
         {CLASSES.map((c) => (
           <li key={c.id}>
             <RouteLink className="d2-cls-card" to={{ ...route, detail: c.id }} onNavigate={navigate}>
-              <img src={gameImg(`class/${c.id}`)} alt="" width={120} height={120} loading="lazy" />
+              <img src={gameImg(`class/${c.id}`)} alt="" width={120} height={120} loading="lazy" decoding="async" />
               <span>
                 <b>{tr(c.name, lang)}</b>
                 <small>{c.tabs.map((x) => tr(x, lang)).join(" · ")}</small>
@@ -145,7 +145,7 @@ function ClassDetail({ cls, route, navigate }: { cls: GameClass; route: Route; n
                     onBlur={() => setOpen(null)}
                     onClick={(e) => setOpen((o) => (o?.skill === s ? null : { skill: s, el: e.currentTarget }))}
                   >
-                    <img src={`/d2r/skills/${cls.id}/${s.id}.webp`} alt="" loading="lazy" />
+                    <img src={`/d2r/skills/${cls.id}/${s.id}.webp`} alt="" loading="lazy" decoding="async" />
                   </button>
                 ))}
             </div>
@@ -177,7 +177,7 @@ function ClassDetail({ cls, route, navigate }: { cls: GameClass; route: Route; n
                 .sort((a, b) => a.lvl - b.lvl || a.col - b.col)
                 .map((s) => (
                   <li key={s.id}>
-                    <img src={`/d2r/skills/${cls.id}/${s.id}.webp`} alt="" width={44} height={44} loading="lazy" />
+                    <img src={`/d2r/skills/${cls.id}/${s.id}.webp`} alt="" width={44} height={44} loading="lazy" decoding="async" />
                     <div>
                       <b>{tr(s.name, lang)}</b>
                       <small>

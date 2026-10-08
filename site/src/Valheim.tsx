@@ -108,8 +108,8 @@ function GlobalSearch({ index, to, navigate }: { index: IndexEntry[]; to: To; na
           {hits.map((h) => (
             <RouteLink key={`${h.tab}/${h.slug}`} className="vh-hit" to={to(h.tab, h.slug)} onNavigate={(r) => { navigate(r); setOpen(false); }}>
               <span className="vh-slot is-sm">
-                {h.icon ? <img src={iconUrl(h.icon)} alt="" loading="lazy" width={30} height={30} />
-                  : h.art || h.photo ? <img src={h.photo ?? artUrl(h.art)} alt="" loading="lazy" width={30} height={30} style={{ objectFit: "cover", width: "100%", height: "100%" }} /> : null}
+                {h.icon ? <img src={iconUrl(h.icon)} alt="" loading="lazy" decoding="async" width={30} height={30} />
+                  : h.art || h.photo ? <img src={h.photo ?? artUrl(h.art)} alt="" loading="lazy" decoding="async" width={30} height={30} style={{ objectFit: "cover", width: "100%", height: "100%" }} /> : null}
               </span>
               <span>{lang === "es" ? h.es : h.en}<br /><small>{lang === "es" ? h.en : h.es}</small></span>
               <small>{t.tabs[h.tab]}</small>
@@ -163,20 +163,20 @@ function Home({ to, navigate }: { to: To; navigate: Nav }) {
       <div className="vh-hub">
         {VALHEIM_TABS.filter((x) => x !== "biomes").map((tab) => (
           <RouteLink key={tab} className="vh-box vh-hubcard" to={to(tab)} onNavigate={navigate}>
-            <span className="vh-slot"><img src={iconUrl(TAB_ICON[tab])} alt="" loading="lazy" width={42} height={42} /></span>
+            <span className="vh-slot"><img src={iconUrl(TAB_ICON[tab])} alt="" loading="lazy" decoding="async" width={42} height={42} /></span>
             <span>{t.tabs[tab]}<small>{counts[tab] ?? ""}</small></span>
           </RouteLink>
         ))}
         <RouteLink className="vh-box vh-hubcard" to={to("map")} onNavigate={navigate}>
-          <span className="vh-slot"><img src={iconUrl("cartography_table")} alt="" loading="lazy" width={42} height={42} /></span>
+          <span className="vh-slot"><img src={iconUrl("cartography_table")} alt="" loading="lazy" decoding="async" width={42} height={42} /></span>
           <span>{t.map.tab}<small>{t.map.hub}</small></span>
         </RouteLink>
         <RouteLink className="vh-box vh-hubcard" to={to("planner")} onNavigate={navigate}>
-          <span className="vh-slot"><img src={iconUrl("forge")} alt="" loading="lazy" width={42} height={42} /></span>
+          <span className="vh-slot"><img src={iconUrl("forge")} alt="" loading="lazy" decoding="async" width={42} height={42} /></span>
           <span>{t.plan.tab}<small>{t.plan.hub}</small></span>
         </RouteLink>
         <RouteLink className="vh-box vh-hubcard" to={to("patches")} onNavigate={navigate}>
-          <span className="vh-slot"><img src={iconUrl("sign")} alt="" loading="lazy" width={42} height={42} /></span>
+          <span className="vh-slot"><img src={iconUrl("sign")} alt="" loading="lazy" decoding="async" width={42} height={42} /></span>
           <span>{t.pat.tab}<small>{latest ? `${t.pat.latest}: ${latest.version}` : ""}</small></span>
         </RouteLink>
       </div>

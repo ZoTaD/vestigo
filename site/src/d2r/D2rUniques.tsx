@@ -4,6 +4,7 @@
  * con el tooltip entero: defensa o daño ya calculados, requisitos y stats.
  */
 import { useMemo, useState } from "react";
+import { LazyRows } from "../LazyRows";
 import uniquesJson from "@d2r/wiki/uniques.json";
 import { useLang, useLocale } from "../i18n";
 import type { Route } from "../route";
@@ -24,6 +25,9 @@ type Group = "all" | "armor" | "weapon" | "acc";
 
 const catOf = (u: Unique) => BASE_BY_CODE.get(u.base)?.cat ?? null;
 
+
+/** El alto de una tarjeta de la lista (`.d2-card`), medido en el navegador el 2026-10-06. */
+const D2_CARD = 72;
 export default function D2rUniques({ route, navigate }: { route: Route; navigate: Nav }) {
   const u = route.detail ? UNIQUES.find((x) => x.id === route.detail) : undefined;
   if (route.detail && u) return <UniqueDetail u={u} route={route} navigate={navigate} />;
@@ -69,11 +73,11 @@ function UniqueList({ route, navigate, missing }: { route: Route; navigate: Nav;
       </div>
       {missing && <p className="d2-empty">{t.wiki.notFound}</p>}
       <p className="d2-count">{t.wiki.count(total.toLocaleString(locale))}</p>
-      {byCat.map(([cat, us]) => (
+      {byCat.map(([cat, us], n) => (
         <section className="d2-cat" key={cat}>
           <h2 className="d2-cat-h">{catName(cat, lang) || cat}</h2>
           <ul className="d2-cards">
-            {us.map((u) => (
+            <LazyRows items={us} rowHeight={D2_CARD} tag="li" chunk={40} eager={n === 0} render={(u) => (
               <li key={u.id}>
                 <ItemCard
                   to={{ ...route, detail: u.id }}
@@ -84,7 +88,7 @@ function UniqueList({ route, navigate, missing }: { route: Route; navigate: Nav;
                   meta={`${tr(BASE_BY_CODE.get(u.base)?.name, lang)} · ${t.wiki.level} ${u.req}`}
                 />
               </li>
-            ))}
+            )} />
           </ul>
         </section>
       ))}

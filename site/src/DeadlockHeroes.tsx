@@ -280,7 +280,7 @@ export default function DeadlockHeroes({
                   <tr key={r.heroId}>
                     <th scope="row" className="dl-ht-sticky dl-ht-name">
                       <RouteLink className="dl-ht-hero" to={toHero(r.heroId)} onNavigate={navigate}>
-                        {r.img && <GameImg src={r.img} alt="" width={32} height={32} loading="lazy" />}
+                        {r.img && <GameImg src={r.img} alt="" width={32} height={32} loading="lazy" decoding="async" />}
                         <span>{r.name}</span>
                       </RouteLink>
                     </th>

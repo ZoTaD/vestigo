@@ -165,7 +165,7 @@ function BiomeResources({ row, to, navigate }: { row: BiomeRow; to: To; navigate
             {row.loot!.map((r) => (
               <RefLink key={`${r.tab}/${r.slug}`} r={r} to={to} navigate={navigate} className="vh-slot is-sm">
                 <span title={tx(r.name, lang)} style={{ display: "contents" }}>
-                  {r.icon && <img src={`/valheim/icons/${r.icon}.webp`} alt={tx(r.name, lang)} loading="lazy" width={30} height={30} />}
+                  {r.icon && <img src={`/valheim/icons/${r.icon}.webp`} alt={tx(r.name, lang)} loading="lazy" decoding="async" width={30} height={30} />}
                 </span>
               </RefLink>
             ))}
@@ -439,7 +439,7 @@ export function BiomeList({ biomes, bosses, to, navigate }: { biomes: BiomeRow[]
           const boss = bosses.find((x) => x.biome === b.id);
           return (
             <RouteLink key={b.id} className={`vh-bcard${b.id === "deepnorth" ? " is-logo" : ""}`} to={to("biomes", b.slug)} onNavigate={navigate}>
-              <img src={artUrl(b.art)} alt="" loading="lazy" width={852} height={480} />
+              <img src={artUrl(b.art)} alt="" loading="lazy" decoding="async" width={852} height={480} />
               <em>{i + 1}{boss ? ` · ${tx(boss.name, lang)}` : ""}</em>
               <span>{tx(b.name, lang)}</span>
             </RouteLink>
@@ -459,7 +459,7 @@ export function BossList({ bosses, to, navigate }: { bosses: BossRow[]; to: To; 
       <div className="vh-hub" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
         {bosses.map((b, i) => (
           <RouteLink key={b.slug} className="vh-box vh-hubcard" to={to("bosses", b.slug)} onNavigate={navigate}>
-            {b.art && <img src={artUrl(b.art)} alt="" width={88} height={88} style={{ width: 88, height: 88 }} loading="lazy" />}
+            {b.art && <img src={artUrl(b.art)} alt="" width={88} height={88} style={{ width: 88, height: 88 }} loading="lazy" decoding="async" />}
             <span>
               {i + 1}. {tx(b.name, lang)}
               <small>{b.biome ? t.biomes[b.biome] : ""}{b.summon.item ? ` · ${b.summon.amount} × ${tx(b.summon.item.name, lang)}` : ""}</small>

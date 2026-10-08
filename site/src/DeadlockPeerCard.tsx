@@ -67,7 +67,7 @@ export default function DeadlockPeers({
                 title={c.rowTitle(nombre, p.matches, p.wins, p.losses)}
               >
                 {cuenta?.avatar ? (
-                  <img src={cuenta.avatar} alt="" width={28} height={28} loading="lazy" />
+                  <img src={cuenta.avatar} alt="" width={28} height={28} loading="lazy" decoding="async" />
                 ) : (
                   <span className="dl-peer-face" aria-hidden="true" />
                 )}

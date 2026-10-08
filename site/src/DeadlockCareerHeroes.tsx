@@ -55,7 +55,7 @@ export default function DeadlockCareerHeroes({ stats }: { stats: HeroStat[] }) {
           return (
             <li className="dl-career-row" key={h.heroId}>
               <span className="dl-career-hero">
-                <GameImg src={heroImg(h.heroId) ?? ""} alt="" width={26} height={26} loading="lazy" />
+                <GameImg src={heroImg(h.heroId) ?? ""} alt="" width={26} height={26} loading="lazy" decoding="async" />
                 <span className="dl-career-name">{nombre}</span>
               </span>
               <span className="dl-career-num">{h.matches}</span>

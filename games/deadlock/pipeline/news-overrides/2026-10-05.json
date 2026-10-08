@@ -1,0 +1,9 @@
+{
+  "headline": "Ratannia falls",
+  "dirs": {
+    "Rat King: Scrap Grenade - Fixed some bugs with bouncing targeting": "fix",
+    "Rat King: Rule, Ratannia! - Bonus Move speed no longer scales with Spirit": "down",
+    "Rat King: Rule, Ratannia! - T1 +1m/s Move Speed to +2m/s Move Speed": "up",
+    "Sinclair: Vexing Bolt - Now does half damage to objectives": "down"
+  }
+}

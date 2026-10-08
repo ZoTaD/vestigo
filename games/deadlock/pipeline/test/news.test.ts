@@ -185,4 +185,23 @@ describe("buildEdition", () => {
     // Sin corrección, menos ralentización cuenta como buff: la regla trata "slow values" como algo donde más es peor.
     expect(e.general[1].dir).toBe("up");
   });
+
+  it("atribuye héroes y objetos aunque el parche venga sin secciones", () => {
+    const flat = buildEdition({
+      post: {
+        ...POST,
+        contents:
+          "[p]- Fixed bugs that were causing troopers to walk too slowly in lane[/p][p][/p]" +
+          "[p]- Celeste: Dazzling Trick - Cooldown increased from 34s to 38s[/p]" +
+          "[p]- Golden Goose Egg: Souls per minute reduced from 90 to 80[/p]",
+      },
+      heroNames: HEROES,
+      assetsEn: ASSETS,
+      assetsEs: ASSETS_ES,
+    });
+    expect(flat.general.map((l) => l.src)).toEqual(["Fixed bugs that were causing troopers to walk too slowly in lane"]);
+    expect(flat.heroes[0].groups[0]).toMatchObject({ abilityId: 1, lines: [{ dir: "down" }] });
+    expect(flat.heroes[0].groups[0].lines[0].text).not.toMatch(/^-/);
+    expect(flat.items.map((i) => i.itemId)).toEqual([11]);
+  });
 });

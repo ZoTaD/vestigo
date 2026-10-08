@@ -161,7 +161,7 @@ function HeroTile({
               pedido de ZoTaD el 2026-09-23 para que la tier list se vea como el
               juego. Sin tarjeta cae al ícono. */}
           {retrato || hero.img ? (
-            <GameImg src={retrato || hero.img} alt="" loading="lazy" width={58} height={72} />
+            <GameImg src={retrato || hero.img} alt="" loading="lazy" decoding="async" width={58} height={72} />
           ) : (
             <span className="dl-portrait-fallback">{hero.name.slice(0, 2)}</span>
           )}
@@ -517,7 +517,7 @@ function RailRow({
   return (
     <li>
       <RouteLink className="dl-rail-row" to={linkTo(route, hero)} onNavigate={navigate}>
-        {hero.img && <GameImg src={hero.img} alt="" width={32} height={32} loading="lazy" />}
+        {hero.img && <GameImg src={hero.img} alt="" width={32} height={32} loading="lazy" decoding="async" />}
         <span className="dl-rail-name">{hero.name}</span>
         <span className="dl-rail-figure">{figure}</span>
       </RouteLink>

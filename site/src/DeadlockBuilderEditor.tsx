@@ -394,7 +394,7 @@ export function AbilityOrderEditor({
             {prioridad.map((a, i) => (
               <li key={a.id} className="dl-prio-step">
                 <span className="dl-prio-n">{bc.priorityRank(i + 1)}</span>
-                <GameImg src={a.img} alt="" width={44} height={44} loading="lazy" />
+                <GameImg src={a.img} alt="" width={44} height={44} loading="lazy" decoding="async" />
                 <span className="dl-prio-name">{a.name.replace(/ /g, " ")}</span>
               </li>
             ))}

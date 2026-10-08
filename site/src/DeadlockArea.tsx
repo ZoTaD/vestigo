@@ -34,8 +34,8 @@ import "./styles/news.css";
  * resto (el perfil y el informe de partida, el armador, la ficha de héroe, las
  * noticias…) eran más de la mitad del JS de Deadlock y los bajaba cualquiera
  * que abriera la tier list. `preloadTab` la trae antes del primer render (lo
- * llaman `main.tsx` y el prerender por medio de `preloadRoute`), y el HTML de
- * cada página ya la anuncia con `modulepreload` (`areaFiles.ts`).
+ * llaman `main.tsx` y el prerender por medio de `preloadRoute`), y `app.js` ya la
+ * anuncia con `modulepreload` en cada página (`areaFiles.ts`).
  *
  * Una pestaña nueva se suma acá, en `TABS` y en `DEADLOCK_TAB_FILES`.
  */
