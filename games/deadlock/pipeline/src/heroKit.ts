@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { avisar, isPlayable, parseLoc, unidad, type TextSpan } from "./catalog";
+import { avisar, heroesEnPartidas, isPlayable, parseLoc, unidad, type TextSpan } from "./catalog";
 
 /**
  * El kit de cada héroe: sus atributos base, su arma y sus cuatro habilidades,
@@ -409,7 +409,8 @@ export function buildHeroKit(
   heroes: Record<Lang, RawHeroKit[]>,
   items: Record<Lang, RawAbility[]>,
   generatedAt: string,
-  videosPrevios: Map<number, { mp4?: string; webm?: string }> = new Map()
+  videosPrevios: Map<number, { mp4?: string; webm?: string }> = new Map(),
+  enPartidas: ReadonlySet<number> = new Set()
 ): { file: HeroKitFile; details: HeroKitDetail[] } {
   const conVideo = (a: KitAbility): KitAbility =>
     a.video || !videosPrevios.has(a.id) ? a : { ...a, video: videosPrevios.get(a.id)! };
@@ -422,7 +423,7 @@ export function buildHeroKit(
   const rows: Record<string, HeroKitRow> = {};
   const details: HeroKitDetail[] = [];
 
-  for (const h of heroes.en.filter(isPlayable)) {
+  for (const h of heroes.en.filter((h) => isPlayable(h, enPartidas))) {
     const hEs = esHero.get(h.id) ?? h;
     const icons = new Map<string, string>();
     const abilities: Record<Lang, KitAbility[]> = { en: [], es: [] };
@@ -498,7 +499,8 @@ async function main() {
     { en: hEn, es: hEs },
     { en: iEn, es: iEs },
     new Date().toISOString(),
-    videosPrevios
+    videosPrevios,
+    heroesEnPartidas()
   );
 
   // Un héroe que deja de ser jugable no debe dejar su página vieja servida.

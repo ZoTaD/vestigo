@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { buildCatalog, isPlayable, isShopItem, parseLoc, buildDetail, unidad, tiposDe } from "../src/catalog";
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { buildCatalog, heroesEnPartidas, isPlayable, isShopItem, parseLoc, buildDetail, unidad, tiposDe } from "../src/catalog";
 
 const heroe = (id: number, name: string, extra = {}) => ({
   id,
@@ -86,6 +89,58 @@ describe("el catálogo cruza los dos idiomas", () => {
   it("sigue armando los héroes como antes", () => {
     expect(isPlayable(heroe(1, "Infernus"))).toBe(true);
     expect(Object.keys(cat.heroes)).toEqual(["1"]);
+  });
+});
+
+/**
+ * Baba (88) salió el 2026-10-05 y la API de assets lo siguió mandando con
+ * `in_development: true` días después, con miles de partidas ya en el snapshot.
+ * La bandera atrasa respecto del juego; las partidas no. Por eso un héroe en
+ * desarrollo entra **sólo** si aparece en la tier list medida, y los que están
+ * en pruebas sin partidas siguen afuera.
+ */
+describe("un héroe en desarrollo que ya se juega", () => {
+  const baba = heroe(88, "Baba", { in_development: true });
+  const enPruebas = heroe(99, "Prototipo", { in_development: true });
+
+  it("entra si tiene partidas medidas, y el que no tiene sigue afuera", () => {
+    const partidas = new Set([88]);
+    expect(isPlayable(baba, partidas)).toBe(true);
+    expect(isPlayable(enPruebas, partidas)).toBe(false);
+    expect(isPlayable(baba)).toBe(false);
+  });
+
+  it("las partidas no reviven a uno deshabilitado o que no se puede elegir", () => {
+    const partidas = new Set([88]);
+    expect(isPlayable({ ...baba, disabled: true }, partidas)).toBe(false);
+    expect(isPlayable({ ...baba, player_selectable: false }, partidas)).toBe(false);
+  });
+
+  it("el catálogo lo suma con su nombre en los dos idiomas", () => {
+    const cat = buildCatalog(
+      [heroe(1, "Infernus"), baba, enPruebas],
+      [heroe(1, "Infernus"), heroe(88, "Yagá", { in_development: true })],
+      [], [], [], [],
+      "2026-10-08T00:00:00Z",
+      new Set([1, 88])
+    );
+    expect(Object.keys(cat.heroes)).toEqual(["1", "88"]);
+    expect(cat.heroes["88"].name).toEqual({ en: "Baba", es: "Yagá" });
+  });
+
+  it("las partidas salen de los archivos de la tier list y de ningún otro", () => {
+    const dir = mkdtempSync(join(tmpdir(), "partidas-"));
+    const lista = (ids: number[]) => JSON.stringify({ heroes: ids.map((heroId) => ({ heroId, matches: 10 })) });
+    writeFileSync(join(dir, "heroes.json"), lista([1, 88]));
+    writeFileSync(join(dir, "heroes.phantom-above.json"), lista([2]));
+    // Las fichas por héroe empiezan igual pero no son la tier list.
+    writeFileSync(join(dir, "hero-insights.phantom-above.json"), lista([77]));
+    writeFileSync(join(dir, "heroLadder.json"), lista([66]));
+    expect([...heroesEnPartidas(dir)].sort((a, b) => a - b)).toEqual([1, 2, 88]);
+  });
+
+  it("sin tier list publicada no rompe: no hay partidas", () => {
+    expect(heroesEnPartidas(join(tmpdir(), "no-existe-vestigo")).size).toBe(0);
   });
 });
 

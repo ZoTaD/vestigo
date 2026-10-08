@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url";
-import { writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { RANKS } from "./bands";
 
 /**
@@ -543,9 +543,47 @@ export const avisar = (msg: string) => {
  * con veinte filas en cero, y se hace por las banderas que trae el propio juego
  * en vez de por una lista escrita a mano que habría que mantener con cada héroe
  * nuevo.
+ *
+ * **`in_development` atrasa respecto del juego.** Baba (88) salió el 2026-10-05
+ * y la API lo siguió marcando en desarrollo con miles de partidas ya jugadas:
+ * la tier list lo medía y el catálogo no lo tenía, así que su página salía como
+ * "88" sin nombre ni retrato. Por eso un héroe en desarrollo entra si **aparece
+ * en las partidas medidas** (`enPartidas`, ver `heroesEnPartidas`). Las otras
+ * dos banderas no se perdonan: un héroe que no se puede elegir o deshabilitado
+ * queda afuera aunque haya quedado alguna partida suya.
  */
-export const isPlayable = (h: RawHero): boolean =>
-  h.player_selectable === true && h.disabled !== true && h.in_development !== true;
+export const isPlayable = (h: RawHero, enPartidas: ReadonlySet<number> = new Set()): boolean =>
+  h.player_selectable === true &&
+  h.disabled !== true &&
+  (h.in_development !== true || enPartidas.has(h.id));
+
+/** Los archivos de la tier list: `heroes.json` y uno por banda. */
+const TIER_LIST = /^heroes(\.[a-z-]+)?\.json$/;
+
+/**
+ * Los héroes que tienen partidas en la tier list publicada.
+ *
+ * Es la prueba de que un héroe se juega, más allá de lo que diga la bandera de
+ * la API. Se lee lo publicado (el catálogo corre antes de `build:heroes`, así
+ * que es la tier list de la corrida anterior: alcanza, un héroe nuevo tarda una
+ * corrida en aparecer en los dos). Sin archivos devuelve vacío, y el filtro
+ * queda como antes.
+ */
+export function heroesEnPartidas(dir = OUT_DIR): Set<number> {
+  const ids = new Set<number>();
+  if (!existsSync(dir)) return ids;
+  for (const f of readdirSync(dir).filter((f) => TIER_LIST.test(f))) {
+    try {
+      const file = JSON.parse(readFileSync(`${dir}/${f}`, "utf8")) as { heroes?: { heroId?: number; matches?: number }[] };
+      for (const h of file.heroes ?? []) {
+        if (typeof h.heroId === "number" && (h.matches ?? 0) > 0) ids.add(h.heroId);
+      }
+    } catch {
+      // Un archivo roto no tiene que tirar el catálogo: ese héroe espera a la próxima.
+    }
+  }
+  return ids;
+}
 
 /** El coste de los ítems que sólo existen en Street Brawl. */
 const BRAWL_COST = 9999;
@@ -839,14 +877,15 @@ export function buildCatalog(
   ranksEs: RawRank[],
   itemsEn: RawItem[],
   itemsEs: RawItem[],
-  generatedAt: string
+  generatedAt: string,
+  enPartidas: ReadonlySet<number> = new Set()
 ): Catalog {
   const esHero = new Map(heroesEs.map((h) => [h.id, h.name]));
   const esRank = new Map(ranksEs.map((r) => [r.tier, r.name]));
   const esItem = new Map(itemsEs.map((i) => [i.id, i.name]));
 
   const heroes: Record<string, CatalogHero> = {};
-  for (const h of heroesEn.filter(isPlayable)) {
+  for (const h of heroesEn.filter((h) => isPlayable(h, enPartidas))) {
     const img = h.images?.icon_image_small_webp ?? h.images?.icon_image_small;
     const card = h.images?.icon_hero_card_webp ?? h.images?.icon_hero_card ?? img;
     // Un héroe sin retrato dibujaría una fila rota; mejor que no esté.
@@ -968,7 +1007,7 @@ async function main() {
   ]);
 
   const catalog = buildCatalog(
-    heroesEn, heroesEs, ranksEn, ranksEs, itemsEn, itemsEs, new Date().toISOString()
+    heroesEn, heroesEs, ranksEn, ranksEs, itemsEn, itemsEs, new Date().toISOString(), heroesEnPartidas()
   );
   const traducidos = Object.values(catalog.heroes).filter((h) => h.name.es !== h.name.en).length;
   const itemsTraducidos = Object.values(catalog.items).filter((i) => i.name.es !== i.name.en).length;

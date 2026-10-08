@@ -1,6 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { avisar, isPlayable } from "./catalog";
+import { avisar, heroesEnPartidas, isPlayable } from "./catalog";
 
 /**
  * Los "objetos populares" de cada héroe, tal como los muestra la tienda del juego.
@@ -132,8 +132,12 @@ const todas = (heroes: RawPopularHero[]): RawPopularEntry[] =>
  * válido o al que la tienda le deja las tres fases vacías no se publica: una
  * ficha sin fecha o sin filas no dice nada.
  */
-export function buildPopular(heroes: RawPopularHero[], shopItemIds: ReadonlySet<number>): PopularHero[] {
-  const jugables = heroes.filter((h) => isPlayable(h) && h.popular_items);
+export function buildPopular(
+  heroes: RawPopularHero[],
+  shopItemIds: ReadonlySet<number>,
+  enPartidas: ReadonlySet<number> = new Set()
+): PopularHero[] {
+  const jugables = heroes.filter((h) => isPlayable(h, enPartidas) && h.popular_items);
   const entradas = todas(jugables);
   const escPick = escala(entradas.map((e) => e.pick_pct));
   const escWin = escala(entradas.map((e) => e.winrate_pct));
@@ -191,7 +195,7 @@ async function main() {
 
   console.log("bajando los héroes de deadlock-api (popular_items)...");
   const heroes = await fetchHeroes();
-  const popular = buildPopular(heroes, shop);
+  const popular = buildPopular(heroes, shop, heroesEnPartidas());
   // Sin datos no se borra lo publicado: si la API deja de mandar el campo, la
   // ficha se queda con lo último que hubo en vez de quedar vacía.
   if (popular.length === 0) throw new Error("la API no trajo popular_items para ningún héroe jugable");
