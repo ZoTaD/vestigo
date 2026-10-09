@@ -1,0 +1,3060 @@
+{
+ "categories": [
+  "source",
+  "battery",
+  "route",
+  "logic",
+  "switch",
+  "sensor",
+  "defense",
+  "light",
+  "appliance"
+ ],
+ "components": [
+  {
+   "id": "electric.solarpanel.large",
+   "cls": "SolarPanel",
+   "cat": "source",
+   "name": {
+    "en": "Large Solar Panel",
+    "es": "Panel solar grande"
+   },
+   "slug": "large-solar-panel",
+   "slugEs": "panel-solar-grande",
+   "in": [],
+   "out": [
+    {
+     "n": "Electric Output",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "maximalPowerOutput": 20,
+    "dot_minimum": 0.3,
+    "dot_maximum": 0.7
+   },
+   "gen": 20,
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 5
+    },
+    {
+     "id": "techparts",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "electric.fuelgenerator.small",
+   "cls": "FuelGenerator",
+   "cat": "source",
+   "name": {
+    "en": "Small Generator",
+    "es": "Generador pequeño"
+   },
+   "slug": "small-generator",
+   "slugEs": "generador-pequeno",
+   "in": [
+    {
+     "n": "Force Start",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Force Stop",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "outputEnergy": 40,
+    "fuelPerSec": 0.06944
+   },
+   "gen": 40,
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 5
+    },
+    {
+     "id": "gears",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "id": "electric.generator.small",
+   "cls": "ElectricGenerator",
+   "cat": "source",
+   "name": {
+    "en": "Test Generator",
+    "es": "Generador de pruebas"
+   },
+   "slug": null,
+   "slugEs": null,
+   "in": [],
+   "out": [
+    {
+     "n": "Power Output 1",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Power Output 2",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Power Output 3",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "electricAmount": 100.0
+   },
+   "gen": 100,
+   "craft": []
+  },
+  {
+   "id": "generator.water",
+   "cls": "ElectricWaterWheel",
+   "cat": "source",
+   "name": {
+    "en": "Water Wheel",
+    "es": "Molino de agua"
+   },
+   "slug": "water-wheel",
+   "slugEs": "molino-de-agua",
+   "in": [],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "nocode",
+   "p": {
+    "maxPowerGenerationFromWater": 30
+   },
+   "gen": 30,
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 500
+    },
+    {
+     "id": "gears",
+     "amount": 2
+    },
+    {
+     "id": "sheetmetal",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "generator.wind.scrap",
+   "cls": "ElectricWindmill",
+   "cat": "source",
+   "name": {
+    "en": "Wind Turbine",
+    "es": "Aerogenerador"
+   },
+   "slug": "wind-turbine",
+   "slugEs": "aerogenerador",
+   "in": [],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "maxPowerGeneration": 150
+   },
+   "gen": 150,
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 500
+    },
+    {
+     "id": "metal.refined",
+     "amount": 10
+    },
+    {
+     "id": "gears",
+     "amount": 3
+    },
+    {
+     "id": "sheetmetal",
+     "amount": 3
+    }
+   ]
+  },
+  {
+   "id": "electric.battery.rechargable.large",
+   "cls": "ElectricBattery",
+   "cat": "battery",
+   "name": {
+    "en": "Large Rechargeable Battery",
+    "es": "Batería eléctrica grande"
+   },
+   "slug": "large-rechargeable-battery",
+   "slugEs": "bateria-electrica-grande",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Output",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Fully Charged",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "maxOutput": 100,
+    "maxCapactiySeconds": 1440000.0,
+    "rustWattSeconds": 12000.0,
+    "maximumInboundEnergyRatio": 4.0,
+    "chargeRatio": 0.8
+   },
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 10
+    },
+    {
+     "id": "techparts",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "id": "electric.battery.rechargable.medium",
+   "cls": "ElectricBattery",
+   "cat": "battery",
+   "name": {
+    "en": "Medium Rechargeable Battery",
+    "es": "Batería eléctrica mediana"
+   },
+   "slug": "medium-rechargeable-battery",
+   "slugEs": "bateria-electrica-mediana",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Output",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Fully Charged",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "maxOutput": 50,
+    "maxCapactiySeconds": 540000.0,
+    "rustWattSeconds": 6000.0,
+    "maximumInboundEnergyRatio": 4.0,
+    "chargeRatio": 0.8
+   },
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 5
+    },
+    {
+     "id": "techparts",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "electric.battery.rechargable.small",
+   "cls": "ElectricBattery",
+   "cat": "battery",
+   "name": {
+    "en": "Small Rechargeable Battery",
+    "es": "Batería eléctrica pequeña"
+   },
+   "slug": "small-rechargeable-battery",
+   "slugEs": "bateria-electrica-pequena",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Output",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Fully Charged",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "maxOutput": 15,
+    "maxCapactiySeconds": 24000.0,
+    "rustWattSeconds": 2200.0,
+    "maximumInboundEnergyRatio": 4.0,
+    "chargeRatio": 0.8
+   },
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 5
+    }
+   ]
+  },
+  {
+   "id": "electric.blocker",
+   "cls": "ElectricalBlocker",
+   "cat": "route",
+   "name": {
+    "en": "Blocker",
+    "es": "Bloqueador eléctrico"
+   },
+   "slug": "blocker",
+   "slugEs": "bloqueador-electrico",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Block Passthrough",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electric.cabletunnel",
+   "cls": "CableTunnel",
+   "cat": "route",
+   "name": {
+    "en": "Cable Tunnel",
+    "es": "Túnel de cableado"
+   },
+   "slug": "cable-tunnel",
+   "slugEs": "tunel-de-cableado",
+   "in": [
+    {
+     "n": "Tunnel 1 In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Tunnel 2 In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Tunnel 3 In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Tunnel 4 In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Tunnel 1 Out",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Tunnel 2 Out",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Tunnel 3 Out",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Tunnel 4 Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": []
+  },
+  {
+   "id": "electrical.branch",
+   "cls": "ElectricalBranch",
+   "cat": "route",
+   "name": {
+    "en": "Electrical Branch",
+    "es": "Ramificación eléctrica"
+   },
+   "slug": "electrical-branch",
+   "slugEs": "ramificacion-electrica",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Branch Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "branchAmount": 2
+   },
+   "range": {
+    "branchAmount": [
+     1,
+     10000000
+    ]
+   },
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electrical.combiner",
+   "cls": "ElectricalCombiner",
+   "cat": "route",
+   "name": {
+    "en": "Root Combiner",
+    "es": "Combinador eléctrico"
+   },
+   "slug": "root-combiner",
+   "slugEs": "combinador-electrico",
+   "in": [
+    {
+     "n": "Root Power 1",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Root Power 2",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Combined Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electric.splitter",
+   "cls": "Splitter",
+   "cat": "route",
+   "name": {
+    "en": "Splitter",
+    "es": "Divisor de corriente eléctrica"
+   },
+   "slug": "splitter",
+   "slugEs": "divisor-de-corriente-electrica",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out 1",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Power Out 2",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Power Out 3",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 100
+    }
+   ]
+  },
+  {
+   "id": "electric.andswitch",
+   "cls": "ANDSwitch",
+   "cat": "logic",
+   "name": {
+    "en": "AND Switch",
+    "es": "Puerta lógica AND"
+   },
+   "slug": "and-switch",
+   "slugEs": "puerta-logica-and",
+   "in": [
+    {
+     "n": "Input A",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Input B",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 100
+    }
+   ]
+  },
+  {
+   "id": "electric.counter",
+   "cls": "PowerCounter",
+   "cat": "logic",
+   "name": {
+    "en": "Counter",
+    "es": "Contador"
+   },
+   "slug": "counter",
+   "slugEs": "contador",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Increment Counter",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Decrement Counter",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Reset Counter",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "range": {
+    "target": [
+     0,
+     999
+    ]
+   },
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electrical.memorycell",
+   "cls": "ElectricalDFlipFlop",
+   "cat": "logic",
+   "name": {
+    "en": "Memory Cell",
+    "es": "Célula de memoria"
+   },
+   "slug": "memory-cell",
+   "slugEs": "celula-de-memoria",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Set",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Reset",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Toggle",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Output",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Inverted Output",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electric.orswitch",
+   "cls": "ORSwitch",
+   "cat": "logic",
+   "name": {
+    "en": "OR Switch",
+    "es": "Puerta lógica OR"
+   },
+   "slug": "or-switch",
+   "slugEs": "puerta-logica-or",
+   "in": [
+    {
+     "n": "Input A",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Input B",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 100
+    }
+   ]
+  },
+  {
+   "id": "electric.random.switch",
+   "cls": "RANDSwitch",
+   "cat": "logic",
+   "name": {
+    "en": "RAND Switch",
+    "es": "Puerta lógica RAND"
+   },
+   "slug": "rand-switch",
+   "slugEs": "puerta-logica-rand",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Set",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Reset",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electric.timer",
+   "cls": "CustomTimerSwitch",
+   "cat": "logic",
+   "name": {
+    "en": "Timer",
+    "es": "Temporizador"
+   },
+   "slug": "timer",
+   "slugEs": "temporizador",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Toggle On",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "timerLength": 10.0
+   },
+   "range": {
+    "timerLength": [
+     0.25,
+     1000000000.0
+    ]
+   },
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electric.xorswitch",
+   "cls": "XORSwitch",
+   "cat": "logic",
+   "name": {
+    "en": "XOR Switch",
+    "es": "Puerta lógca XOR"
+   },
+   "slug": "xor-switch",
+   "slugEs": "puerta-logca-xor",
+   "in": [
+    {
+     "n": "Input A",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Input B",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 100
+    }
+   ]
+  },
+  {
+   "id": "electric.button",
+   "cls": "PressButton",
+   "cat": "switch",
+   "name": {
+    "en": "Button",
+    "es": "Botón"
+   },
+   "slug": "button",
+   "slugEs": "boton",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "pressDuration": 1.0,
+    "pressPowerTime": 0.5,
+    "pressPowerAmount": 2,
+    "smallBurst": 0
+   },
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electric.rf.broadcaster",
+   "cls": "RFBroadcaster",
+   "cat": "switch",
+   "name": {
+    "en": "RF Broadcaster",
+    "es": "Emisor de radiofrecuencia"
+   },
+   "slug": "rf-broadcaster",
+   "slugEs": "emisor-de-radiofrecuencia",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 150
+    }
+   ]
+  },
+  {
+   "id": "electric.rf.receiver",
+   "cls": "RFReceiver",
+   "cat": "switch",
+   "name": {
+    "en": "RF Receiver",
+    "es": "Receptor de radiofrecuencia"
+   },
+   "slug": "rf-receiver",
+   "slugEs": "receptor-de-radiofrecuencia",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 150
+    }
+   ]
+  },
+  {
+   "id": "smart.switch",
+   "cls": "SmartSwitch",
+   "cat": "switch",
+   "name": {
+    "en": "Smart Switch",
+    "es": "Interruptor inteligente"
+   },
+   "slug": "smart-switch",
+   "slugEs": "interruptor-inteligente",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Switch On",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Switch Off",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 3
+    },
+    {
+     "id": "techparts",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "electric.switch",
+   "cls": "ElectricSwitch",
+   "cat": "switch",
+   "name": {
+    "en": "Switch",
+    "es": "Interruptor"
+   },
+   "slug": "switch",
+   "slugEs": "interruptor",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Switch On",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Switch Off",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 100
+    }
+   ]
+  },
+  {
+   "id": "electric.hbhfsensor",
+   "cls": "HBHFSensor",
+   "cat": "sensor",
+   "name": {
+    "en": "HBHF Sensor",
+    "es": "Detector de calvos"
+   },
+   "slug": "hbhf-sensor",
+   "slugEs": "detector-de-calvos",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {
+    "range": 10
+   },
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electric.laserdetector",
+   "cls": "LaserDetector",
+   "cat": "sensor",
+   "name": {
+    "en": "Laser Detector",
+    "es": "Detector láser"
+   },
+   "slug": "laser-detector",
+   "slugEs": "detector-laser",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electric.pressurepad",
+   "cls": "PressurePad",
+   "cat": "sensor",
+   "name": {
+    "en": "Pressure Pad",
+    "es": "Placa de presión"
+   },
+   "slug": "pressure-pad",
+   "slugEs": "placa-de-presion",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "pressPowerTime": 0.5,
+    "pressPowerAmount": 1
+   },
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 150
+    },
+    {
+     "id": "metalspring",
+     "amount": 1
+    },
+    {
+     "id": "gears",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "electric.seismicsensor",
+   "cls": "SeismicSensor",
+   "cat": "sensor",
+   "name": {
+    "en": "Seismic Sensor",
+    "es": "Sensor sísmico"
+   },
+   "slug": "seismic-sensor",
+   "slugEs": "sensor-sismico",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {
+    "range": 30
+   },
+   "range": {
+    "range": [
+     1,
+     30
+    ]
+   },
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 3
+    },
+    {
+     "id": "techparts",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "storage.monitor",
+   "cls": "StorageMonitor",
+   "cat": "sensor",
+   "name": {
+    "en": "Storage Monitor",
+    "es": "Monitor de almacenamiento"
+   },
+   "slug": "storage-monitor",
+   "slugEs": "monitor-de-almacenamiento",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 3
+    },
+    {
+     "id": "techparts",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "autoturret",
+   "cls": "AutoTurret",
+   "cat": "defense",
+   "name": {
+    "en": "Auto Turret",
+    "es": "Torreta automática"
+   },
+   "slug": "auto-turret",
+   "slugEs": "torreta-automatica",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Has Target",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Low Ammo",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "No Ammo",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "use": 10,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "targeting.computer",
+     "amount": 1
+    },
+    {
+     "id": "cctv.camera",
+     "amount": 1
+    },
+    {
+     "id": "metal.refined",
+     "amount": 25
+    }
+   ]
+  },
+  {
+   "id": "electric.doorcontroller",
+   "cls": "CustomDoorManipulator",
+   "cat": "defense",
+   "name": {
+    "en": "Door Controller",
+    "es": "Controlador de puerta"
+   },
+   "slug": "door-controller",
+   "slugEs": "controlador-de-puerta",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Open",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Close",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {
+    "powerAction": 1
+   },
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "electric.igniter",
+   "cls": "Igniter",
+   "cat": "defense",
+   "name": {
+    "en": "Igniter",
+    "es": "Encendedor"
+   },
+   "slug": "igniter",
+   "slugEs": "encendedor",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 2,
+   "useSrc": "field",
+   "p": {
+    "IgniteRange": 2.0,
+    "IgniteFrequency": 2.0
+   },
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "industrial.autoturret",
+   "cls": "AutoTurret",
+   "cat": "defense",
+   "name": {
+    "en": "Industrial Auto Turret",
+    "es": "Torreta automática industrial"
+   },
+   "slug": null,
+   "slugEs": null,
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Has Target",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Low Ammo",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "No Ammo",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "use": 10,
+   "useSrc": "code",
+   "p": {},
+   "craft": []
+  },
+  {
+   "id": "paintabletarget.reactive",
+   "cls": "ReactiveTarget",
+   "cat": "defense",
+   "name": {
+    "en": "Paintable Reactive Target",
+    "es": "Objetivo reactivo pintable"
+   },
+   "slug": null,
+   "slugEs": null,
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Reset",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Lower",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "code",
+   "p": {
+    "activationPowerTime": 0.5,
+    "activationPowerAmount": 1
+   },
+   "craft": []
+  },
+  {
+   "id": "target.reactive",
+   "cls": "ReactiveTarget",
+   "cat": "defense",
+   "name": {
+    "en": "Reactive Target",
+    "es": "Diana reactiva"
+   },
+   "slug": "reactive-target",
+   "slugEs": "diana-reactiva",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Reset",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Lower",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "code",
+   "p": {
+    "activationPowerTime": 0.5,
+    "activationPowerAmount": 1
+   },
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 100
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 150
+    },
+    {
+     "id": "gears",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "samsite",
+   "cls": "SamSite",
+   "cat": "defense",
+   "name": {
+    "en": "SAM Site",
+    "es": "Batería antiaérea"
+   },
+   "slug": "sam-site",
+   "slugEs": "bateria-antiaerea",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Invert Mode",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Has Target",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Low Ammo",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "No Ammo",
+     "t": 0,
+     "m": 0
+    },
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 25,
+   "useSrc": "code",
+   "p": {
+    "lowAmmoThreshold": 10
+   },
+   "craft": []
+  },
+  {
+   "id": "electric.teslacoil",
+   "cls": "TeslaCoil",
+   "cat": "defense",
+   "name": {
+    "en": "Tesla Coil",
+    "es": "Bobina de Tesla"
+   },
+   "slug": "tesla-coil",
+   "slugEs": "bobina-de-tesla",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 25,
+   "useSrc": "formula",
+   "p": {
+    "powerToDamageRatio": 1.4,
+    "maxDamageOutput": 35.0,
+    "powerForHeavyShorting": 10
+   },
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 3
+    },
+    {
+     "id": "techparts",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "industrial.wall.light.blue",
+   "cls": "SimpleLight",
+   "cat": "light",
+   "name": {
+    "en": "Blue Industrial Wall Light",
+    "es": "Lámpara azul de industrial de pared"
+   },
+   "slug": null,
+   "slugEs": null,
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "field",
+   "p": {},
+   "craft": []
+  },
+  {
+   "id": "electric.bulbstringlights",
+   "cls": "StringLights",
+   "cat": "light",
+   "name": {
+    "en": "Bulb String Lights",
+    "es": "Guirnalda de luces"
+   },
+   "slug": "bulb-string-lights",
+   "slugEs": "guirnalda-de-luces",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "nocode",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "electric.fluorescentlight.ceiling",
+   "cls": "CeilingLight",
+   "cat": "light",
+   "name": {
+    "en": "Ceiling Fluorescent Light",
+    "es": "Luz fluorescente de techo"
+   },
+   "slug": null,
+   "slugEs": null,
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 2,
+   "useSrc": "field",
+   "p": {},
+   "craft": []
+  },
+  {
+   "id": "ceilinglight",
+   "cls": "CeilingLight",
+   "cat": "light",
+   "name": {
+    "en": "Ceiling Light",
+    "es": "Lámpara de techo"
+   },
+   "slug": "ceiling-light",
+   "slugEs": "lampara-de-techo",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 2,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "electric.chandelier",
+   "cls": "Chandelier",
+   "cat": "light",
+   "name": {
+    "en": "Chandelier",
+    "es": "Candelabro"
+   },
+   "slug": "chandelier",
+   "slugEs": "candelabro",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "nocode",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 100
+    }
+   ]
+  },
+  {
+   "id": "xmas.lightstring.advanced",
+   "cls": "ChristmasLights",
+   "cat": "light",
+   "name": {
+    "en": "Deluxe Christmas Lights",
+    "es": "Luces navideñas de lujo"
+   },
+   "slug": "deluxe-christmas-lights",
+   "slugEs": "luces-navidenas-de-lujo",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "use": 1,
+   "useSrc": "nocode",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "electric.tablelight",
+   "cls": "SimpleLight",
+   "cat": "light",
+   "name": {
+    "en": "Electric Table Lamp",
+    "es": "Lámpara de mesa eléctrica"
+   },
+   "slug": "electric-table-lamp",
+   "slugEs": "lampara-de-mesa-electrica",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "electric.fairylights",
+   "cls": "StringLights",
+   "cat": "light",
+   "name": {
+    "en": "Fairy Lights",
+    "es": "Luces de hadas"
+   },
+   "slug": "fairy-lights",
+   "slugEs": "luces-de-hadas",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "nocode",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "electric.flasherlight",
+   "cls": "FlasherLight",
+   "cat": "light",
+   "name": {
+    "en": "Flasher Light",
+    "es": "Luz parpadeante"
+   },
+   "slug": "flasher-light",
+   "slugEs": "luz-parpadeante",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 120
+    }
+   ]
+  },
+  {
+   "id": "electric.fluorescentlight",
+   "cls": "SimpleLight",
+   "cat": "light",
+   "name": {
+    "en": "Fluorescent Light",
+    "es": "Luces fluorescentes"
+   },
+   "slug": "fluorescent-light",
+   "slugEs": "luces-fluorescentes",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "industrial.wall.light.green",
+   "cls": "SimpleLight",
+   "cat": "light",
+   "name": {
+    "en": "Green Industrial Wall Light",
+    "es": "Lámpara verde industrial de pared"
+   },
+   "slug": null,
+   "slugEs": null,
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "field",
+   "p": {},
+   "craft": []
+  },
+  {
+   "id": "industrial.wall.light",
+   "cls": "SimpleLight",
+   "cat": "light",
+   "name": {
+    "en": "Industrial Wall Light",
+    "es": "Lámpara industrial de pared"
+   },
+   "slug": "industrial-wall-light",
+   "slugEs": "lampara-industrial-de-pared",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 30
+    }
+   ]
+  },
+  {
+   "id": "sign.neon.xl.animated",
+   "cls": "NeonSign",
+   "cat": "light",
+   "name": {
+    "en": "Large Animated Neon Sign",
+    "es": "Cartel de neón animado grande"
+   },
+   "slug": "large-animated-neon-sign",
+   "slugEs": "cartel-de-neon-animado-grande",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Frame 1",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Frame 2",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Frame 3",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Frame 4",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Frame 5",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 7,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 350
+    },
+    {
+     "id": "metal.refined",
+     "amount": 5
+    }
+   ]
+  },
+  {
+   "id": "sign.neon.xl",
+   "cls": "NeonSign",
+   "cat": "light",
+   "name": {
+    "en": "Large Neon Sign",
+    "es": "Cartel de neón grande"
+   },
+   "slug": "large-neon-sign",
+   "slugEs": "cartel-de-neon-grande",
+   "in": [
+    {
+     "n": "Electric Input",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 6,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 250
+    }
+   ]
+  },
+  {
+   "id": "sign.neon.125x215.animated",
+   "cls": "NeonSign",
+   "cat": "light",
+   "name": {
+    "en": "Medium Animated Neon Sign",
+    "es": "Cartel de neón animado mediano"
+   },
+   "slug": "medium-animated-neon-sign",
+   "slugEs": "cartel-de-neon-animado-mediano",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Frame 1",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Frame 2",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Frame 3",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 5,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 300
+    },
+    {
+     "id": "metal.refined",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "id": "sign.neon.125x215",
+   "cls": "NeonSign",
+   "cat": "light",
+   "name": {
+    "en": "Medium Neon Sign",
+    "es": "Cartel de neón mediano"
+   },
+   "slug": "medium-neon-sign",
+   "slugEs": "cartel-de-neon-mediano",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 4,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 200
+    }
+   ]
+  },
+  {
+   "id": "industrial.wall.light.red",
+   "cls": "SimpleLight",
+   "cat": "light",
+   "name": {
+    "en": "Red Industrial Wall Light",
+    "es": "Lámpara roja industrial de pared"
+   },
+   "slug": null,
+   "slugEs": null,
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "field",
+   "p": {},
+   "craft": []
+  },
+  {
+   "id": "searchlight",
+   "cls": "SearchLight",
+   "cat": "light",
+   "name": {
+    "en": "Search Light",
+    "es": "Foco"
+   },
+   "slug": "search-light",
+   "slugEs": "foco",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 10,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 500
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 200
+    }
+   ]
+  },
+  {
+   "id": "electric.simplelight",
+   "cls": "SimpleLight",
+   "cat": "light",
+   "name": {
+    "en": "Simple Light",
+    "es": "Luz sencilla"
+   },
+   "slug": "simple-light",
+   "slugEs": "luz-sencilla",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "field",
+   "p": {},
+   "craft": []
+  },
+  {
+   "id": "electric.sirenlight",
+   "cls": "SirenLight",
+   "cat": "light",
+   "name": {
+    "en": "Siren Light",
+    "es": "Luz de sirena"
+   },
+   "slug": "siren-light",
+   "slugEs": "luz-de-sirena",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 120
+    }
+   ]
+  },
+  {
+   "id": "sign.neon.125x125",
+   "cls": "NeonSign",
+   "cat": "light",
+   "name": {
+    "en": "Small Neon Sign",
+    "es": "Cartel de neón pequeño"
+   },
+   "slug": "small-neon-sign",
+   "slugEs": "cartel-de-neon-pequeno",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 2,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 150
+    }
+   ]
+  },
+  {
+   "id": "electric.spotlight",
+   "cls": "OrientableLight",
+   "cat": "light",
+   "name": {
+    "en": "Spot Light",
+    "es": "Reflector"
+   },
+   "slug": "spot-light",
+   "slugEs": "reflector",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "electric.spotlight.tripod",
+   "cls": "OrientableLight",
+   "cat": "light",
+   "name": {
+    "en": "Tripod Spot Light",
+    "es": "Reflector con trípode"
+   },
+   "slug": "tripod-spot-light",
+   "slugEs": "reflector-con-tripode",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "neonsigntr",
+   "cls": "SimpleLight",
+   "cat": "light",
+   "name": {
+    "en": "Twitch Rivals Neon Sign",
+    "es": "Letrero neón de Twitch Rivals"
+   },
+   "slug": "twitch-rivals-neon-sign",
+   "slugEs": "letrero-neon-de-twitch-rivals",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 150
+    }
+   ]
+  },
+  {
+   "id": "electric.audioalarm",
+   "cls": "AudioAlarm",
+   "cat": "appliance",
+   "name": {
+    "en": "Audio Alarm",
+    "es": "Alarma"
+   },
+   "slug": "audio-alarm",
+   "slugEs": "alarma",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "gamesroom.minifridge",
+   "cls": "Fridge",
+   "cat": "appliance",
+   "name": {
+    "en": "Bar Games Minifridge",
+    "es": "Mininevera Para Bar"
+   },
+   "slug": null,
+   "slugEs": null,
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 2,
+   "useSrc": "field",
+   "p": {},
+   "craft": []
+  },
+  {
+   "id": "boombox",
+   "cls": "DeployableBoomBox",
+   "cat": "appliance",
+   "name": {
+    "en": "Boom Box",
+    "es": "Parlante"
+   },
+   "slug": "boom-box",
+   "slugEs": "parlante",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Toggle Play",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Audio Out",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "use": 10,
+   "useSrc": "code",
+   "p": {
+    "PowerUsageWhilePlaying": 10
+   },
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 200
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 100
+    },
+    {
+     "id": "cloth",
+     "amount": 20
+    }
+   ]
+  },
+  {
+   "id": "cctv.camera",
+   "cls": "CCTV_RC",
+   "cat": "appliance",
+   "name": {
+    "en": "CCTV Camera",
+    "es": "Cámara de vigilancia"
+   },
+   "slug": "cctv-camera",
+   "slugEs": "camara-de-vigilancia",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 3,
+   "useSrc": "code",
+   "p": {},
+   "craft": []
+  },
+  {
+   "id": "electric.heater",
+   "cls": "ElectricalHeater",
+   "cat": "appliance",
+   "name": {
+    "en": "Electric Heater",
+    "es": "Calefactor eléctrico"
+   },
+   "slug": "electric-heater",
+   "slugEs": "calefactor-electrico",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 3,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 200
+    }
+   ]
+  },
+  {
+   "id": "fridge",
+   "cls": "Fridge",
+   "cat": "appliance",
+   "name": {
+    "en": "Fridge",
+    "es": "Frigorífico"
+   },
+   "slug": "fridge",
+   "slugEs": "frigorifico",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 5,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 150
+    }
+   ]
+  },
+  {
+   "id": "jukebox",
+   "cls": "DeployableBoomBox",
+   "cat": "appliance",
+   "name": {
+    "en": "Jukebox",
+    "es": "Rocola"
+   },
+   "slug": "jukebox",
+   "slugEs": "rocola",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    },
+    {
+     "n": "Toggle Play",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "out": [
+    {
+     "n": "Audio Out",
+     "t": 0,
+     "m": 0
+    }
+   ],
+   "use": 10,
+   "useSrc": "code",
+   "p": {
+    "PowerUsageWhilePlaying": 10
+   },
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 200
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 100
+    },
+    {
+     "id": "cloth",
+     "amount": 20
+    }
+   ]
+  },
+  {
+   "id": "mini fridge",
+   "cls": "Fridge",
+   "cat": "appliance",
+   "name": {
+    "en": "Mini Fridge",
+    "es": "Minirefri"
+   },
+   "slug": "mini-fridge",
+   "slugEs": "minirefri",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 2,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "modularcarlift",
+   "cls": "ModularCarGarage",
+   "cat": "appliance",
+   "name": {
+    "en": "Modular Car Lift",
+    "es": "Elevador de automóviles"
+   },
+   "slug": "modular-car-lift",
+   "slugEs": "elevador-de-automoviles",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 5,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 200
+    },
+    {
+     "id": "metal.refined",
+     "amount": 5
+    },
+    {
+     "id": "gears",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "powered.water.purifier",
+   "cls": "PoweredWaterPurifier",
+   "cat": "appliance",
+   "name": {
+    "en": "Powered Water Purifier",
+    "es": "Purificador de agua eléctrico"
+   },
+   "slug": "powered-water-purifier",
+   "slugEs": "purificador-de-agua-electrico",
+   "in": [
+    {
+     "n": "Water In",
+     "t": 1,
+     "m": 0
+    },
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 5,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 300
+    },
+    {
+     "id": "cloth",
+     "amount": 20
+    },
+    {
+     "id": "wood",
+     "amount": 100
+    }
+   ]
+  },
+  {
+   "id": "ptz.cctv.camera",
+   "cls": "CCTV_RC",
+   "cat": "appliance",
+   "name": {
+    "en": "PTZ CCTV Camera",
+    "es": "Cámara de vigilancia rotatoria"
+   },
+   "slug": "ptz-cctv-camera",
+   "slugEs": "camara-de-vigilancia-rotatoria",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 3,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "cctv.camera",
+     "amount": 1
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 150
+    }
+   ]
+  },
+  {
+   "id": "smart.alarm",
+   "cls": "SmartAlarm",
+   "cat": "appliance",
+   "name": {
+    "en": "Smart Alarm",
+    "es": "Alarma inteligente"
+   },
+   "slug": "smart-alarm",
+   "slugEs": "alarma-inteligente",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Power Out",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 3
+    },
+    {
+     "id": "techparts",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "vending.machine",
+   "cls": "VendingMachine",
+   "cat": "appliance",
+   "name": {
+    "en": "Vending Machine",
+    "es": "Máquina expendedora"
+   },
+   "slug": "vending-machine",
+   "slugEs": "maquina-expendedora",
+   "in": [
+    {
+     "n": "[Fridge] Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [],
+   "use": 5,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 20
+    },
+    {
+     "id": "gears",
+     "amount": 3
+    }
+   ]
+  },
+  {
+   "id": "electric.wallcabinet",
+   "cls": "ContainerIOEntity",
+   "cat": "appliance",
+   "name": {
+    "en": "Wall Cabinet",
+    "es": "Gabinete de pared"
+   },
+   "slug": "wall-cabinet",
+   "slugEs": "gabinete-de-pared",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 250
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "waterpump",
+   "cls": "WaterPump",
+   "cat": "appliance",
+   "name": {
+    "en": "Water Pump",
+    "es": "Bomba extractora de agua"
+   },
+   "slug": "water-pump",
+   "slugEs": "bomba-extractora-de-agua",
+   "in": [
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1
+    }
+   ],
+   "out": [
+    {
+     "n": "Water Output",
+     "t": 1,
+     "m": 1
+    }
+   ],
+   "use": 5,
+   "useSrc": "field",
+   "p": {},
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 250
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 200
+    },
+    {
+     "id": "gears",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "names": {
+  "cctv.camera": {
+   "en": "CCTV Camera",
+   "es": "Cámara de vigilancia"
+  },
+  "cloth": {
+   "en": "Cloth",
+   "es": "Tela"
+  },
+  "gears": {
+   "en": "Gears",
+   "es": "Engranajes"
+  },
+  "metal.fragments": {
+   "en": "Metal Fragments",
+   "es": "Fragmentos de metal"
+  },
+  "metal.refined": {
+   "en": "High Quality Metal",
+   "es": "Metal de alta calidad"
+  },
+  "metalspring": {
+   "en": "Metal Spring",
+   "es": "Muelle metálico"
+  },
+  "sheetmetal": {
+   "en": "Sheet Metal",
+   "es": "Chapa metálica"
+  },
+  "targeting.computer": {
+   "en": "Targeting Computer",
+   "es": "Ordenador"
+  },
+  "techparts": {
+   "en": "Tech Trash",
+   "es": "Basura electrónica"
+  },
+  "wood": {
+   "en": "Wood",
+   "es": "Madera"
+  }
+ }
+}

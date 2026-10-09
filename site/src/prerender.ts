@@ -12,6 +12,7 @@ import { FARMING_COPY } from "./rust/farming/copy";
 import { PATCHES_COPY } from "./rust/patches/copy";
 import { MONUMENTS_COPY } from "./rust/monuments/copy";
 import { SERVER_COPY } from "./rust/server/copy";
+import { circuitMeta } from "./rust/electric/circuitMeta";
 import { esHeadNames } from "./zomboid/headName";
 
 /** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
@@ -150,6 +151,9 @@ export function metaFor(
     }
     if (route.rsSection === "patches" && route.detail && detailName) return PATCHES_COPY[lang].seo.edition(detailName);
     if (route.rsSection === "monuments" && route.detail && detailName) return MONUMENTS_COPY[lang].seo.monument(detailName);
+    // Un circuito listo de Electricidad: su nombre y su explicación (los anota `circuits.ts`).
+    const circuit = route.rsSection === "electricity" ? circuitMeta(route.detail) : undefined;
+    if (circuit) return r.circuitSeo(circuit.name[lang], circuit.about[lang]);
     return r.seo[route.rsSection ?? "home"];
   }
   // Lo que queda son la portada y las dos páginas legales.
@@ -205,6 +209,11 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   }
   for (const e of data.rs?.items ?? []) out[`rs-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const slug of data.rs?.circuits ?? []) {
+    const m = circuitMeta(slug);
+    // Con mayúscula, como un título: "Torreta solar" en las migas.
+    if (m) out[`rs-electricity/${slug}`] = m.name[lang].charAt(0).toUpperCase() + m.name[lang].slice(1);
+  }
 
   return out;
 }
@@ -369,8 +378,16 @@ export function jsonLdFor(
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
     const genetics = sec === "farming" && route.detail === "genetics";
-    if (sec === "home" || sec === "raid" || sec === "server" || genetics) {
-      const appName = genetics ? FARMING_COPY[lang].calc.h1 : sec === "server" ? SERVER_COPY[lang].h1 : sec === "raid" ? RUST_COPY[lang].raid.h1 : RUST_COPY[lang].home.h1;
+    if (sec === "home" || sec === "raid" || sec === "server" || sec === "electricity" || genetics) {
+      const appName = genetics
+        ? FARMING_COPY[lang].calc.h1
+        : sec === "server"
+          ? SERVER_COPY[lang].h1
+          : sec === "raid"
+            ? RUST_COPY[lang].raid.h1
+            : sec === "electricity"
+              ? page.title.replace(/\s*\|.*$/, "")
+              : RUST_COPY[lang].home.h1;
       out.push({
         "@context": "https://schema.org", "@type": "WebApplication", name: appName, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,

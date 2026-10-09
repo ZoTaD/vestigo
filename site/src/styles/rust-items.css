@@ -112,3 +112,10 @@ a.rs-cell:hover .rs-slot { background: rgba(255, 255, 255, 0.12); }
 .rs-skins li { display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 1.2; color: var(--rs-soft); }
 .rs-skins .rs-slot { padding: 10px; }
 .rs-skins .rs-tag { margin: 0; align-self: start; }
+
+/* El bloque "Electricidad" de la ficha (2026-10-09). */
+.rs-elec-kv { display: grid; gap: 0; margin: 0 0 12px; }
+.rs-elec-kv div { display: grid; grid-template-columns: minmax(110px, auto) 1fr; gap: 12px; padding: 6px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
+.rs-elec-kv dt { color: var(--rs-dim); }
+.rs-elec-kv dd { margin: 0; }
+.rs-elec a.rs-btn { padding: 8px 12px; }

@@ -11,6 +11,7 @@ import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, type 
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { isRsLoadingPage } from "./src/rust/loadingGuard";
 import { farmingPages, monumentsPages, patchesPages, type RustPage } from "./src/rust/sitemapPages";
+import { CIRCUITS, circuitSlugsEs } from "./src/rust/electric/circuits";
 import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
 import { COPY } from "./src/i18n";
@@ -235,7 +236,9 @@ function readSitemapData(): { data: OgData } {
     } catch (e) {
       console.warn(`[rust] sin las ediciones de Parches (${(e as Error).message})`);
     }
-    rs = { build: m.build, extractedAt: m.extractedAt, items, pages };
+    // Los circuitos listos de Electricidad (2026-10-09): sus slugs en español y su nombre (lo anota `circuits.ts`).
+    registerRustSlugs({ electricity: circuitSlugsEs() });
+    rs = { build: m.build, extractedAt: m.extractedAt, items, circuits: CIRCUITS.map((c) => c.slug), pages };
   } catch {
     rs = undefined;
   }
@@ -878,6 +881,9 @@ function manualChunks() {
     // three.js (el sobreviviente en 3D del Planificador de Zomboid, 2026-10-01) va en su propio chunk, como Leaflet: sólo
     // lo baja quien toca "Ver en 3D". En vendor lo bajaría cualquiera que entre al sitio.
     if (file.includes("/node_modules/three/")) return "three";
+    // React Flow (el editor de Electricidad de Rust, 2026-10-09) también: sólo lo baja quien abre el editor. Con sus
+    // dependencias (zustand, d3-*, classcat), que nadie más usa. Su CSS va con el módulo que lo importa.
+    if (/\/node_modules\/(?:@xyflow|zustand|d3-[\w-]+|classcat|use-sync-external-store)\//.test(file)) return /\.css$/.test(file) ? undefined : "xyflow";
     if (id.startsWith("\0") && !file.includes("modulepreload-polyfill") && !datosDeSeccion) return "vendor";
     if (file.includes("/node_modules/")) return /\.(c|m)?jsx?$/.test(file) ? "vendor" : undefined;
     // Diminuto y sin datos, pero lo importan la copia de Deadlock y la portada:

@@ -23,6 +23,11 @@ nunca en paralelo ni con otro proceso del juego abierto, y mirá antes la RAM li
 4. `python games/rust/tools/world.py` (botín de las cajas y tiendas de los monumentos, más `mixing.json` y `deployables.json`; ~1 min).
 5. `python games/rust/tools/raid.py` (vida, protección y daño para la calculadora de raideo; ~30 s).
 6. `python games/rust/tools/site_data.py` (los archivos que baja la pestaña Objetos; un segundo).
+   Después, `python games/rust/tools/extract_io.py` (la caché de electricidad, ~12 GB de RAM; uno por vez) y
+   `python games/rust/tools/electricity.py` (los componentes de la pestaña Electricidad, `electricity.json` y
+   `electricity-items.json`; un segundo, lee la caché y `items.json`). Si cambió el comportamiento de un componente en
+   el juego, el motor (`site/src/rust/electric/engine/`) se revisa contra el código decompilado; ver
+   `docs/superpowers/plans/2026-10-09-rust-electricidad.md`.
 6b. `python games/rust/tools/farming.py` (Granjas: lee la caché cruda `games/rust/cache/`, no el juego; un segundo).
 6c. `python games/rust/tools/monuments.py` (Monumentos: de la caché cruda; antes de `patches.py`, que enlaza sus nombres).
 6d. `python games/rust/tools/convars.py` (Servidor: clona el decompilado público en `games/rust/.cache/`; sólo cuando
@@ -51,6 +56,7 @@ varios GB de bundles con UnityPy, así que se corren **de a un archivo por vez**
     RUST_GAME=1 python -m unittest games/rust/tools/tests/test_skins.py -v
     RUST_GAME=1 python -m unittest games/rust/tools/tests/test_world.py -v
     RUST_GAME=1 python -m unittest games/rust/tools/tests/test_raid.py -v
+    RUST_CACHE=1 python -m unittest games/rust/tools/tests/test_electricity.py -v   # lee la caché, no el juego
 
 (En PowerShell: `$env:RUST_GAME = "1"; python -m unittest ...`.) Cada módulo carga el juego una sola vez y lo suelta al
 terminar.

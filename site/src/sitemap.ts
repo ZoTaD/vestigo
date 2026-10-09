@@ -85,6 +85,8 @@ export interface RustSitemapData {
   items?: { slug: string; en: string; es: string | null; c?: 1; s?: 1; l?: 1; r?: 1 }[];
   /** Las fichas de las pestañas de la etapa 2 (Granjas, Monumentos, Parches…; `rust/sitemapPages.ts`). */
   pages?: RustPage[];
+  /** Los circuitos listos de Electricidad (2026-10-09), por slug inglés (`site/src/rust/electric/circuits.ts`). */
+  circuits?: string[];
 }
 
 /**
@@ -377,6 +379,9 @@ export function sitemapPaths(data: SitemapData): string[] {
       }
       for (const pg of data.rs.pages ?? []) {
         if (RUST_PUBLISHED.includes(pg.tab)) paths.push(routePath({ ...base, lang, view: "rust", rsSection: pg.tab, detail: pg.slug }));
+      }
+      if (RUST_PUBLISHED.includes("electricity")) {
+        for (const slug of data.rs.circuits ?? []) paths.push(routePath({ ...base, lang, view: "rust", rsSection: "electricity", detail: slug }));
       }
     }
   }

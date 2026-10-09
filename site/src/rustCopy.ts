@@ -9,7 +9,7 @@ import type { EffectStat, HowKind, LootEvent, LootKind, ModStat, RecyclerKey } f
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
-export const RUST_TABS: RustSection[] = ["home", "items", "raid", "monuments", "farming", "server", "patches"];
+export const RUST_TABS: RustSection[] = ["home", "items", "raid", "electricity", "monuments", "farming", "server", "patches"];
 
 type Seo = { title: string; description: string };
 
@@ -32,6 +32,8 @@ export interface RustCopy {
   seo: Record<RustSection, Seo>;
   /** El `<head>` de una ficha de Objetos. */
   detailSeo: (name: string, has?: RustHas) => Seo;
+  /** El `<head>` de un circuito listo de Electricidad: su nombre ("solar turret") y su explicación. */
+  circuitSeo: (name: string, about: string) => Seo;
   loading: string;
   loadError: string;
   retry: string;
@@ -124,6 +126,8 @@ export interface RustCopy {
     back: string;
   };
   raidBlocks: { toBreak: string; breaks: string; open: string };
+  /** El bloque "Electricidad" de las fichas de componentes (2026-10-09). */
+  elecBlock: { title: string; inputs: string; outputs: string; uses: string; noUse: string; makes: string; battery: (out: string, cap: string) => string; tryIt: string };
   raid: {
     h1: string;
     lede: string;
@@ -166,10 +170,17 @@ export interface RustCopy {
   };
 }
 
+/** Una descripción para Google: hasta 160 caracteres, cortada en una palabra. */
+function clip(s: string): string {
+  if (s.length <= 160) return s;
+  const cut = s.slice(0, 157);
+  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+}
+
 const EN: RustCopy = {
-  tabs: { home: "Home", items: "Items", raid: "Raid", monuments: "Monuments", farming: "Farming", server: "Server", patches: "Patches" },
+  tabs: { home: "Home", items: "Items", raid: "Raid", electricity: "Electricity", monuments: "Monuments", farming: "Farming", server: "Server", patches: "Patches" },
   soon: "Soon",
-  soonTabs: ["Electricity"],
+  soonTabs: [],
   seo: {
     home: {
       title: "Rust Guide: Items, Crafting, Recycling and Raid Calculator | Vestigo",
@@ -199,7 +210,15 @@ const EN: RustCopy = {
       title: "Rust Patch Notes: Every Monthly Update | Vestigo",
       description: "The official notes of every Rust update since 2024, month by month, with links to every item they mention and to the full changelist.",
     },
+    electricity: {
+      title: "Rust Electricity Simulator: Circuit Builder and Wiring Guide | Vestigo",
+      description: "Build and test Rust circuits in your browser: batteries, solar, splitters, branches, logic gates, timers and turrets work like in the game.",
+    },
   },
+  circuitSeo: (name, about) => ({
+    title: `Rust ${name.replace(/\b\w/g, (c) => c.toUpperCase())} Circuit: How to Wire It | Vestigo`,
+    description: clip(about),
+  }),
   detailSeo: (name, has = {}) => {
     const topics = [...(has.craft ? ["crafting"] : []), ...(has.recycle ? ["recycling"] : []), ...(has.loot || has.shop ? ["where to find it"] : [])];
     const parts = [
@@ -310,6 +329,16 @@ const EN: RustCopy = {
     back: "All items",
   },
   raidBlocks: { toBreak: "What it takes to break it", breaks: "What it breaks", open: "Open in the raid calculator" },
+  elecBlock: {
+    title: "Electricity",
+    inputs: "Inputs",
+    outputs: "Outputs",
+    uses: "Power use",
+    noUse: "none",
+    makes: "Makes up to",
+    battery: (out, cap) => `Gives up to ${out} and stores ${cap} rWm`,
+    tryIt: "Try it in the simulator",
+  },
   raid: {
     h1: "Rust Raid Calculator",
     lede: "Pick what you want to break and how many: you get how many explosives of each kind it takes, the sulfur it costs and the cheapest mix.",
@@ -355,6 +384,7 @@ const EN: RustCopy = {
     tools: [
       { tab: "items", title: "Items", text: "Recipe, workbench, recycling, loot and shortname of every item." },
       { tab: "raid", title: "Raid calculator", text: "Explosives and sulfur for any wall, door or deployable." },
+      { tab: "electricity", title: "Electricity simulator", text: "Build circuits and watch the power flow, with ready-made ones to copy." },
       { tab: "monuments", title: "Monuments", text: "Keycards, fuses, recyclers, radiation and the Power Trip grid of every monument." },
       { tab: "farming", title: "Farming and genetics", text: "Plants, crossbreeding calculator, compost and animals." },
       { tab: "server", title: "Server", text: "Every console command and convar, the wipe calendar and a server.cfg generator." },
@@ -369,9 +399,9 @@ const EN: RustCopy = {
 };
 
 const ES: RustCopy = {
-  tabs: { home: "Portada", items: "Objetos", raid: "Raideo", monuments: "Monumentos", farming: "Granjas", server: "Servidor", patches: "Parches" },
+  tabs: { home: "Portada", items: "Objetos", raid: "Raideo", electricity: "Electricidad", monuments: "Monumentos", farming: "Granjas", server: "Servidor", patches: "Parches" },
   soon: "Pronto",
-  soonTabs: ["Electricidad"],
+  soonTabs: [],
   seo: {
     home: {
       title: "Guía de Rust: objetos, crafteo, reciclaje y calculadora de raideo | Vestigo",
@@ -401,7 +431,15 @@ const ES: RustCopy = {
       title: "Parches de Rust: las notas de cada actualización | Vestigo",
       description: "Las notas oficiales de cada actualización de Rust desde 2024, mes a mes, con enlaces a los objetos que nombran y a la lista completa de cambios.",
     },
+    electricity: {
+      title: "Simulador de electricidad de Rust: armá y probá circuitos | Vestigo",
+      description: "Armá y probá circuitos de Rust en el navegador: baterías, paneles solares, splitters, ramas, compuertas, temporizadores y torretas, como en el juego.",
+    },
   },
+  circuitSeo: (name, about) => ({
+    title: `Circuito de ${name} en Rust: cómo cablearlo | Vestigo`,
+    description: clip(about),
+  }),
   detailSeo: (name, has = {}) => {
     const topics = [...(has.craft ? ["crafteo"] : []), ...(has.recycle ? ["reciclaje"] : []), ...(has.loot || has.shop ? ["dónde se encuentra"] : [])];
     const parts = [
@@ -513,6 +551,16 @@ const ES: RustCopy = {
     back: "Todos los objetos",
   },
   raidBlocks: { toBreak: "Lo que cuesta romperlo", breaks: "Qué rompe", open: "Abrir en la calculadora de raideo" },
+  elecBlock: {
+    title: "Electricidad",
+    inputs: "Entradas",
+    outputs: "Salidas",
+    uses: "Consumo",
+    noUse: "nada",
+    makes: "Genera hasta",
+    battery: (out, cap) => `Da hasta ${out} y guarda ${cap} rWm`,
+    tryIt: "Probarlo en el simulador",
+  },
   raid: {
     h1: "Calculadora de raideo de Rust",
     lede: "Elegí qué querés romper y cuántos: te dice cuántos explosivos de cada tipo hacen falta, el azufre que cuesta y la mezcla más barata.",
@@ -558,6 +606,7 @@ const ES: RustCopy = {
     tools: [
       { tab: "items", title: "Objetos", text: "Receta, banco, reciclaje, loot y shortname de cada objeto." },
       { tab: "raid", title: "Calculadora de raideo", text: "Explosivos y azufre para cada pared, puerta o deployable." },
+      { tab: "electricity", title: "Simulador de electricidad", text: "Armá circuitos y mirá cómo corre la energía, con circuitos listos para copiar." },
       { tab: "monuments", title: "Monumentos", text: "Tarjetas, fusibles, recicladoras, radiación y la red de Power Trip de cada monumento." },
       { tab: "farming", title: "Granjas y genética", text: "Plantas, calculadora de cruzas, compost y animales." },
       { tab: "server", title: "Servidor", text: "Todos los comandos y convars de consola, el calendario de wipes y un generador de server.cfg." },

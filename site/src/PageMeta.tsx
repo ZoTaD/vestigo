@@ -17,6 +17,7 @@ import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/dat
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
 import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
+import { circuitMeta } from "./rust/electric/circuitMeta";
 import { loadEditions as loadVhEditions, peekEditions as peekVhEditions } from "./valheimPatchesData";
 
 /**
@@ -153,6 +154,8 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const m = peekRsMonuments()?.monuments.find((x) => x.id === route.detail);
     return m ? (lang === "es" ? m.name.es || m.name.en : m.name.en) : null;
   }
+  // Un circuito listo de Electricidad: el nombre lo anota `circuits.ts` (viaja con la pestaña).
+  if (route.view === "rust" && route.rsSection === "electricity" && route.detail) return circuitMeta(route.detail)?.name[lang] ?? null;
   return null;
 }
 
@@ -234,6 +237,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (pz && !peekPzName(pz.sec, pz.id)) {
       let vivo = true;
       loadPzNames(pz.sec).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para un circuito listo de Rust, con los circuitos (que la pestaña ya pidió).
+    if (route.view === "rust" && route.rsSection === "electricity" && route.detail && !circuitMeta(route.detail)) {
+      let vivo = true;
+      import("./rust/electric/circuits").then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una ficha de Rust, con el archivo de la ficha (que la pestaña ya pidió).

@@ -71,6 +71,10 @@ export const PAGES = [
   "/es/rust/monumentos/complejo-de-apartamentos",
   // Servidor (2026-10-09): 1.384 convars de a tandas.
   "/en/rust/server",
+  // Electricidad (2026-10-09): el editor (en frío abre la torreta solar) y el circuito listo más grande.
+  "/en/rust/electricity",
+  "/es/rust/electricidad",
+  "/en/rust/electricity/battery-backup",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

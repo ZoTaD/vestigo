@@ -5,13 +5,15 @@ import slugsEs from "../../games/rust/data/site/slugs-es.json";
 import { parseRoute, registerRustSlugs } from "../src/route";
 import { sitemapLastmod, sitemapPaths, sitemapXml, type SitemapData } from "../src/sitemap";
 import { jsonLdFor, metaFor, ogImageUrl, prerenderPages } from "../src/prerender";
+import { CIRCUITS, circuitSlugsEs } from "../src/rust/electric/circuits";
 
 // Como en el build: los slugs en español se anotan antes de armar ninguna dirección.
 registerRustSlugs(slugsEs);
+registerRustSlugs({ electricity: circuitSlugsEs() });
 
 const data = {
   dlHeroes: {}, dlItems: {}, dlHeroIds: [], dlItemIds: [],
-  rs: { build: rsMeta.build, extractedAt: rsMeta.extractedAt, items: list.rows.map((r) => ({ slug: r.slug, en: r.en, es: r.es, c: r.c, s: r.s, l: r.l, r: r.r })) },
+  rs: { build: rsMeta.build, extractedAt: rsMeta.extractedAt, items: list.rows.map((r) => ({ slug: r.slug, en: r.en, es: r.es, c: r.c, s: r.s, l: r.l, r: r.r })), circuits: CIRCUITS.map((c) => c.slug) },
   dates: { rust: rsMeta.extractedAt },
 } as unknown as SitemapData;
 
@@ -121,5 +123,35 @@ describe("Rust en el sitemap y el <head>", () => {
   it("toda la sección usa su propia vista previa", () => {
     expect(ogImageUrl(parseRoute("/es/rust"))).toBe("https://vestigo.gg/rust/og.jpg");
     expect(ogImageUrl(parseRoute("/en/rust/items/assault-rifle"))).toBe("https://vestigo.gg/rust/og.jpg");
+  });
+});
+
+describe("Electricidad en el sitemap y el <head> (2026-10-09)", () => {
+  it("el editor y cada circuito listo entran al sitemap en los dos idiomas", () => {
+    const paths = sitemapPaths(data);
+    expect(paths).toContain("/en/rust/electricity");
+    expect(paths).toContain("/es/rust/electricidad");
+    expect(paths).toContain("/en/rust/electricity/solar-turret");
+    expect(paths).toContain("/es/rust/electricidad/torreta-solar");
+    expect(paths.filter((p) => p.startsWith("/es/rust/electricidad/")).length).toBe(CIRCUITS.length);
+  });
+
+  it("el circuito lleva su nombre en el título, su explicación y migas hasta él", () => {
+    const en = page("/en/rust/electricity/solar-turret");
+    expect(en.title).toBe("Rust Solar Turret Circuit: How to Wire It | Vestigo");
+    expect(en.description.length).toBeLessThanOrEqual(160);
+    expect(en.description).toMatch(/^Two large solar panels/);
+    const es = page("/es/rust/electricidad/torreta-solar");
+    expect(es.title).toBe("Circuito de torreta solar en Rust: cómo cablearlo | Vestigo");
+    expect(es.alternates).toContainEqual({ hreflang: "en", href: "https://vestigo.gg/en/rust/electricity/solar-turret" });
+    const crumbs = es.jsonLd.find((j) => (j as { "@type": string })["@type"] === "BreadcrumbList") as { itemListElement: { name: string }[] };
+    expect(crumbs.itemListElement.map((i) => i.name)).toEqual(["Vestigo", "Rust", "Electricidad", "Torreta solar"]);
+  });
+
+  it("el editor es una aplicación web gratuita con su título", () => {
+    const p = page("/en/rust/electricity");
+    expect(p.title).toMatch(/^Rust Electricity Simulator/);
+    const app = p.jsonLd.find((j) => (j as { "@type": string })["@type"] === "WebApplication") as { name: string };
+    expect(app.name).toBe("Rust Electricity Simulator: Circuit Builder and Wiring Guide");
   });
 });

@@ -16,7 +16,7 @@ describe("las direcciones de Rust", () => {
       expect(routePath({ ...parseRoute("/en/rust"), rsSection: tab })).toBe(`/en/rust/${tab}`);
       expect(routePath({ ...parseRoute("/es/rust"), rsSection: tab })).toBe(`/es/rust/${RUST_SECTION_ES[tab]}`);
     }
-    expect(RUST_SECTION_ES).toMatchObject({ items: "objetos", raid: "raideo", farming: "granjas" });
+    expect(RUST_SECTION_ES).toEqual({ items: "objetos", raid: "raideo", electricity: "electricidad", farming: "granjas", monuments: "monumentos", server: "servidor", patches: "parches" });
   });
 
   it("Objetos y Raideo están publicadas; lo que no existe muestra la portada", () => {
@@ -49,5 +49,15 @@ describe("las direcciones de Rust", () => {
     expect(parseRoute("/es/rust/granjas/genetica")).toMatchObject({ rsSection: "farming", detail: "genetics" });
     expect(routePath(parseRoute("/en/rust/farming/genetics"))).toBe("/en/rust/farming/genetics");
     expect(routePath({ ...parseRoute("/en/rust/farming/hemp"), lang: "es" })).toBe("/es/rust/granjas/canamo");
+  });
+
+  it("Electricidad (2026-10-09): el editor y cada circuito listo con el slug de su idioma", () => {
+    expect(routePath(parseRoute("/en/rust/electricity"))).toBe("/en/rust/electricity");
+    expect(routePath(parseRoute("/es/rust/electricidad"))).toBe("/es/rust/electricidad");
+    registerRustSlugs({ electricity: { "solar-turret": "torreta-solar" } });
+    expect(parseRoute("/es/rust/electricidad/torreta-solar")).toMatchObject({ rsSection: "electricity", detail: "solar-turret" });
+    const c = { ...parseRoute("/en/rust"), rsSection: "electricity" as const, detail: "solar-turret" };
+    expect(routePath(c)).toBe("/en/rust/electricity/solar-turret");
+    expect(routePath({ ...c, lang: "es" })).toBe("/es/rust/electricidad/torreta-solar");
   });
 });
