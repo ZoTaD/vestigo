@@ -62,6 +62,9 @@ export const PAGES = [
   "/en/rust/farming/hemp",
   "/en/rust/farming/genetics",
   "/es/rust/granjas/genetica",
+  // Parches (2026-10-09): la lista (41 portadas) y la edición más larga traducida.
+  "/en/rust/patches",
+  "/es/rust/parches/livestock",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

@@ -17,6 +17,11 @@ export interface RustPage {
 
 type Loc = { en: string; es: string | null };
 
+/** Parches: una ficha por edición, con su fecha (va al `lastmod`). El nombre es el mismo en los dos idiomas. */
+export function patchesPages(idx: { editions: { slug: string; name: string; date: string }[] }): RustPage[] {
+  return idx.editions.map((e) => ({ tab: "patches" as const, slug: e.slug, en: e.name, es: e.name, date: e.date }));
+}
+
 /** Granjas: la calculadora de genética y una ficha por planta. */
 export function farmingPages(f: { plants: { id: string; name: Loc }[] }): RustPage[] {
   return [

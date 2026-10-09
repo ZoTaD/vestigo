@@ -27,3 +27,23 @@ Diseño: `docs/superpowers/specs/2026-10-09-rust-etapa-2-design.md`, punto 3. Pa
    edición, JSON-LD `Article`.
 5. Traducir a mano la edición más nueva.
 6. Build + perf; números al final.
+
+## Resultado (2026-10-09)
+
+- 41 ediciones (2024-01-04 → 2026-10-01), 760 KB de JSON (~18 KB cada una) y 41 portadas webp (1,2 MB). La más nueva
+  (Livestock, 141 renglones) va traducida a mano en `games/rust/data/patches-es/livestock.json`; las demás salen en
+  inglés con aviso hasta que se traduzcan (`python games/rust/tools/patches.py --offline --todo <slug>`).
+- Decisiones:
+  - Script manual y no workflow: el único workflow que publica es el de Deadlock, y los anuncios de Rust salen una vez
+    por mes (el primer jueves, con el wipe). Se corre después del parche, junto con los demás extractores.
+  - Hotfixes: no están en Steam; quedan afuera (se podrían sumar desde rust.facepunch.com/changes en otro paso).
+  - Las imágenes internas del anuncio no se muestran (vienen de files.facepunch.com, otro origen para la CSP); sólo la
+    portada, bajada al sitio. Los videos de YouTube tampoco.
+  - Objetos nombrados: los de dos palabras o más sin mirar mayúsculas, los de una con mayúscula y ≥ 5 letras (para no
+    enlazar "Rope" o "Milk" sueltos en una frase). Los monumentos todavía no tienen ficha: se enlazan cuando exista la
+    pestaña.
+  - Slug = el título del anuncio (`livestock`, `upgrade-hard-raid-harder`); si se repite, la más vieja lleva el año
+    (`seasons-beatings-2024`). Es el mismo en los dos idiomas: es el nombre propio de la actualización.
+- Build: 119 s el comando, `vite build` 1 min 42 s, 24.412 páginas (+84).
+- Perf: `/en/rust/patches` 70 pedidos, 42 imágenes, 424 nodos; `/es/rust/parches/livestock` 30/2/292. Dentro del
+  presupuesto.

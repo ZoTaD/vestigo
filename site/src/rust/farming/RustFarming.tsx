@@ -6,6 +6,7 @@
  * Los datos bajan aparte (`data.ts`). Si la planta no existe, se muestra la portada de la granja con una nota.
  */
 import slugsEs from "@rust/site/farming-slugs-es.json";
+import itemSlugsEs from "@rust/site/slugs-es.json";
 import { registerRustSlugs, type Route } from "../../route";
 import { useLoad } from "../../useLoad";
 import RsLoading from "../RsLoading";
@@ -17,7 +18,9 @@ import "../../styles/rust-items.css";
 import "../../styles/rust-farming.css";
 
 // Al cargarse el módulo, como Objetos: `/es/rust/granjas/canamo` ya llega como `hemp`.
+// También los de Objetos (como Raideo): la granja enlaza fichas de objetos, y en español van con su slug.
 registerRustSlugs(slugsEs);
+registerRustSlugs(itemSlugsEs);
 
 type Nav = (r: Route) => void;
 

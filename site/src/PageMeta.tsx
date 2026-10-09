@@ -15,6 +15,7 @@ import { loadPzNames, peekPzName } from "./zomboid/index";
 import { pzPatchName } from "./zomboid/patches/slug";
 import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/data";
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
+import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadEditions as loadVhEditions, peekEditions as peekVhEditions } from "./valheimPatchesData";
 
 /**
@@ -145,6 +146,8 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const p = peekRsFarming()?.plants.find((x) => x.id === route.detail);
     return p ? (lang === "es" ? p.name.es || p.name.en : p.name.en) : null;
   }
+  // Una edición de Parches de Rust: su nombre ("Livestock") es el mismo en los dos idiomas.
+  if (route.view === "rust" && route.rsSection === "patches" && route.detail) return peekRsEdition(route.detail)?.name ?? null;
   return null;
 }
 
@@ -232,6 +235,11 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "rust" && route.rsSection === "items" && route.detail && peekRsItem(route.detail) === undefined) {
       let vivo = true;
       loadRsItem(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    if (route.view === "rust" && route.rsSection === "patches" && route.detail && peekRsEdition(route.detail) === undefined) {
+      let vivo = true;
+      loadRsEdition(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     if (route.view === "rust" && route.rsSection === "farming" && route.detail && !peekRsFarming()) {

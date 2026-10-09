@@ -9,6 +9,7 @@ import { D2R_COPY } from "./d2rCopy";
 import { tidyTitleName, ZOMBOID_COPY } from "./zomboidCopy";
 import { RUST_COPY, type RustHas } from "./rustCopy";
 import { FARMING_COPY } from "./rust/farming/copy";
+import { PATCHES_COPY } from "./rust/patches/copy";
 import { esHeadNames } from "./zomboid/headName";
 
 /** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
@@ -145,6 +146,7 @@ export function metaFor(
       if (route.detail === "genetics") return fc.genetics;
       if (detailName) return fc.plant(detailName);
     }
+    if (route.rsSection === "patches" && route.detail && detailName) return PATCHES_COPY[lang].seo.edition(detailName);
     return r.seo[route.rsSection ?? "home"];
   }
   // Lo que queda son la portada y las dos páginas legales.
@@ -486,8 +488,10 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
     const canonical = routeUrl(route);
     const image = ogImageUrl(route, data.dlNews?.[0]?.slug, ogAvailable);
     const vhEdition = route.view === "valheim" && route.vhSection === "patches" && route.detail ? data.vh?.editions.find((e) => e.slug === route.detail) : undefined;
-    const isEdition = (route.view === "deadlock" && route.dlSection === "patches" && !!route.detail) || !!vhEdition;
-    const edition = vhEdition ?? (isEdition ? data.dlNews?.find((e) => e.slug === route.detail) : undefined);
+    // Una edición de Parches de Rust (2026-10-09) también es un artículo, con su fecha.
+    const rsEdition = route.view === "rust" && route.rsSection === "patches" && route.detail ? data.rs?.pages?.find((p) => p.tab === "patches" && p.slug === route.detail && p.date) : undefined;
+    const isEdition = (route.view === "deadlock" && route.dlSection === "patches" && !!route.detail) || !!vhEdition || !!rsEdition;
+    const edition = vhEdition ?? (rsEdition ? { date: rsEdition.date! } : isEdition ? data.dlNews?.find((e) => e.slug === route.detail) : undefined);
     return {
       path,
       title,

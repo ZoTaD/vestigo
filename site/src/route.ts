@@ -204,18 +204,18 @@ export function registerPzSlugs(slugs: Partial<Record<PzTab, Record<string, stri
  * fichas van en español. `/rust` sin idioma no es una página: la carpeta `/rust/...` es de assets (íconos, fondo) y
  * Netlify la manda con 301 a `/en/rust`.
  */
-export type RustTab = "items" | "raid" | "farming";
+export type RustTab = "items" | "raid" | "farming" | "patches";
 export type RustSection = "home" | RustTab;
 export const RUST_SEGMENT = "rust";
-export const RUST_SECTIONS: RustTab[] = ["items", "raid", "farming"];
+export const RUST_SECTIONS: RustTab[] = ["items", "raid", "farming", "patches"];
 /** Las pestañas con una ficha por cosa (`/rust/items/assault-rifle`). */
-export const RUST_DETAIL_SECTIONS: RustTab[] = ["items", "farming"];
+export const RUST_DETAIL_SECTIONS: RustTab[] = ["items", "farming", "patches"];
 /**
  * Las pestañas que ya tienen página. Las demás se muestran apagadas, no entran al sitemap, y una dirección a una de
  * ellas muestra la portada. Cada pestaña se suma acá el día que se publica.
  */
-export const RUST_PUBLISHED: RustTab[] = ["items", "raid", "farming"];
-export const RUST_SECTION_ES: Record<RustTab, string> = { items: "objetos", raid: "raideo", farming: "granjas" };
+export const RUST_PUBLISHED: RustTab[] = ["items", "raid", "farming", "patches"];
+export const RUST_SECTION_ES: Record<RustTab, string> = { items: "objetos", raid: "raideo", farming: "granjas", patches: "parches" };
 const RUST_SECTION_BY_ES = new Map(Object.entries(RUST_SECTION_ES).map(([tab, es]) => [es, tab as RustTab]));
 
 /** Los slugs en español de las fichas de Rust. */
