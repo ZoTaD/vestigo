@@ -91,8 +91,26 @@ Números de los prefabs y de `WaterCatcherCollectRate` de la caché del build 25
 - [x] **I5.** Circuitos listos: clasificador, horno automático, autocrafteo. Páginas y tests.
 
 ### Cierre
-- [ ] **Z.** vitest entero, Python, build (tiempo y RAM), perf con las páginas nuevas, capturas.
+- [x] **Z.** vitest entero, Python, build (tiempo y RAM), perf con las páginas nuevas, capturas.
 
-## Resultados
+## Resultados (2026-10-09)
 
-(se completa al terminar)
+- **Componentes:** 94 en el editor (+8 de agua con el depósito oculto del purificador, +8 industriales, +1 poste de
+  tendido de Power Trip con salida ajustable). `industrial-items.json` (155 KB, 27 KB gzip) se baja aparte, sólo en la
+  pestaña.
+- **Circuitos listos:** 22 (15 de energía, 4 de agua: riego de granja, purificador con bomba, colector a barril,
+  interruptor de fluidos como bomba; 3 industriales: clasificador, horno automático, autocrafteo), 44 páginas EN/ES.
+- **Tests:** 16 del motor de agua, 11 del industrial (60 por pila cada 5 s, 30 y 30 con dos destinos, filtros y modo
+  No, máximo en destino, horno: 18 fragmentos y 22 de carbón en 60 s con 30 leños, crafteador: 10 de pólvora por tanda
+  y bloqueo por nivel de banco), drenaje del parche de marzo 2024 y poste de tendido; vitest entero 145 archivos en
+  verde; Python 16 de `test_electricity.py` (con `RUST_CACHE=1`) y la suite entera en verde.
+- **Build:** 119 s el comando (`vite build` 1 min 42 s), 24.342 páginas, pico de RAM 2,48 GB.
+- **Perf** (frío, 1.400 × 900):
+
+  | Página | Pedidos | Imágenes | Nodos |
+  | --- | ---: | ---: | ---: |
+  | `/en/rust/electricity` | 78 | 49 | 849 |
+  | `/es/rust/electricidad` | 78 | 49 | 850 |
+  | `/en/rust/electricity/battery-backup` | 83 | 54 | 953 |
+  | `/en/rust/electricity/farm-irrigation` | 81 | 52 | 900 |
+  | `/es/rust/electricidad/horno-automatico` | 81 | 52 | 965 |

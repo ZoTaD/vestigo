@@ -61,6 +61,9 @@ export const PAGES = [
   "/en/rust/electricity",
   "/es/rust/electricidad",
   "/en/rust/electricity/battery-backup",
+  // Agua e industrial (2026-10-09): un circuito de cada uno.
+  "/en/rust/electricity/farm-irrigation",
+  "/es/rust/electricidad/horno-automatico",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */
