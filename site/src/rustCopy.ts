@@ -9,7 +9,7 @@ import type { EffectStat, HowKind, LootEvent, LootKind, ModStat, RecyclerKey } f
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
-export const RUST_TABS: RustSection[] = ["home", "items", "raid", "electricity"];
+export const RUST_TABS: RustSection[] = ["home", "items", "raid", "electricity", "monuments", "farming", "server", "patches"];
 
 type Seo = { title: string; description: string };
 
@@ -178,9 +178,9 @@ function clip(s: string): string {
 }
 
 const EN: RustCopy = {
-  tabs: { home: "Home", items: "Items", raid: "Raid", electricity: "Electricity" },
+  tabs: { home: "Home", items: "Items", raid: "Raid", electricity: "Electricity", monuments: "Monuments", farming: "Farming", server: "Server", patches: "Patches" },
   soon: "Soon",
-  soonTabs: ["Monuments", "Farming", "Server", "Patches"],
+  soonTabs: [],
   seo: {
     home: {
       title: "Rust Guide: Items, Crafting, Recycling and Raid Calculator | Vestigo",
@@ -193,6 +193,22 @@ const EN: RustCopy = {
     raid: {
       title: "Rust Raid Calculator: Sulfur Cost for Every Wall and Door | Vestigo",
       description: "How many C4, rockets, satchels or explosive ammo you need for any wall, door or deployable in Rust, the sulfur it costs and the cheapest mix.",
+    },
+    farming: {
+      title: "Rust Farming Guide: Plants, Genes, Planters and Compost | Vestigo",
+      description: "Every Rust plant with its growth stages, harvest and water needs, the genetics calculator, planters, compost, chickens, bees, cows, sheep and horse breeds.",
+    },
+    monuments: {
+      title: "Rust Monuments: Keycards, Fuses, Recyclers and the Power Grid | Vestigo",
+      description: "Every Rust monument with its keycard puzzle, fuses, recyclers, radiation, safe zone, shops and what the Power Trip grid turns on at each stage.",
+    },
+    server: {
+      title: "Rust Server Commands and Convars: Full List, Wipe Calendar and server.cfg | Vestigo",
+      description: "Every Rust console command and convar with its default value and what it does, the forced wipe calendar and a startup line and server.cfg generator.",
+    },
+    patches: {
+      title: "Rust Patch Notes: Every Monthly Update | Vestigo",
+      description: "The official notes of every Rust update since 2024, month by month, with links to every item they mention and to the full changelist.",
     },
     electricity: {
       title: "Rust Electricity Simulator: Circuit Builder and Wiring Guide | Vestigo",
@@ -370,6 +386,10 @@ const EN: RustCopy = {
       { tab: "items", title: "Items", text: "Recipe, workbench, recycling, loot and shortname of every item." },
       { tab: "raid", title: "Raid calculator", text: "Explosives and sulfur for any wall, door or deployable." },
       { tab: "electricity", title: "Electricity simulator", text: "Build circuits and watch the power flow, with ready-made ones to copy." },
+      { tab: "monuments", title: "Monuments", text: "Keycards, fuses, recyclers, radiation and the Power Trip grid of every monument." },
+      { tab: "farming", title: "Farming and genetics", text: "Plants, crossbreeding calculator, compost and animals." },
+      { tab: "server", title: "Server", text: "Every console command and convar, the wipe calendar and a server.cfg generator." },
+      { tab: "patches", title: "Patch notes", text: "Every monthly update since 2024, with links to the items it mentions." },
     ],
     aboutTitle: "About this guide",
     about: (items, recipes) => [
@@ -380,9 +400,9 @@ const EN: RustCopy = {
 };
 
 const ES: RustCopy = {
-  tabs: { home: "Portada", items: "Objetos", raid: "Raideo", electricity: "Electricidad" },
+  tabs: { home: "Portada", items: "Objetos", raid: "Raideo", electricity: "Electricidad", monuments: "Monumentos", farming: "Granjas", server: "Servidor", patches: "Parches" },
   soon: "Pronto",
-  soonTabs: ["Monumentos", "Granjas", "Servidor", "Parches"],
+  soonTabs: [],
   seo: {
     home: {
       title: "Guía de Rust: objetos, crafteo, reciclaje y calculadora de raideo | Vestigo",
@@ -395,6 +415,22 @@ const ES: RustCopy = {
     raid: {
       title: "Calculadora de raideo de Rust: cuánto azufre cuesta cada pared y puerta | Vestigo",
       description: "Cuántos C4, cohetes, cargas de mochila o balas explosivas necesitás para cada pared, puerta o deployable de Rust, el azufre que cuesta y la mezcla más barata.",
+    },
+    farming: {
+      title: "Granjas en Rust: plantas, genes, jardineras y compost | Vestigo",
+      description: "Cada planta de Rust con sus etapas, cosecha y agua, la calculadora de genética, jardineras, compost, gallinas, abejas, vacas, ovejas y razas de caballo.",
+    },
+    monuments: {
+      title: "Monumentos de Rust: tarjetas, fusibles, recicladoras y la red eléctrica | Vestigo",
+      description: "Cada monumento de Rust con su puzzle de tarjetas, fusibles, recicladoras, radiación, zona segura, tiendas y lo que prende la red de Power Trip.",
+    },
+    server: {
+      title: "Comandos y convars del servidor de Rust: lista completa, wipes y server.cfg | Vestigo",
+      description: "Todos los comandos y convars de consola de Rust con su valor por defecto y para qué sirven, el calendario de wipes y un generador de server.cfg.",
+    },
+    patches: {
+      title: "Parches de Rust: las notas de cada actualización | Vestigo",
+      description: "Las notas oficiales de cada actualización de Rust desde 2024, mes a mes, con enlaces a los objetos que nombran y a la lista completa de cambios.",
     },
     electricity: {
       title: "Simulador de electricidad de Rust: armá y probá circuitos | Vestigo",
@@ -573,6 +609,10 @@ const ES: RustCopy = {
       { tab: "items", title: "Objetos", text: "Receta, banco, reciclaje, loot y shortname de cada objeto." },
       { tab: "raid", title: "Calculadora de raideo", text: "Explosivos y azufre para cada pared, puerta o deployable." },
       { tab: "electricity", title: "Simulador de electricidad", text: "Armá circuitos y mirá cómo corre la energía, con circuitos listos para copiar." },
+      { tab: "monuments", title: "Monumentos", text: "Tarjetas, fusibles, recicladoras, radiación y la red de Power Trip de cada monumento." },
+      { tab: "farming", title: "Granjas y genética", text: "Plantas, calculadora de cruzas, compost y animales." },
+      { tab: "server", title: "Servidor", text: "Todos los comandos y convars de consola, el calendario de wipes y un generador de server.cfg." },
+      { tab: "patches", title: "Parches", text: "Cada actualización mensual desde 2024, con enlaces a los objetos que nombra." },
     ],
     aboutTitle: "Sobre esta guía",
     about: (items, recipes) => [

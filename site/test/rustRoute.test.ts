@@ -16,7 +16,7 @@ describe("las direcciones de Rust", () => {
       expect(routePath({ ...parseRoute("/en/rust"), rsSection: tab })).toBe(`/en/rust/${tab}`);
       expect(routePath({ ...parseRoute("/es/rust"), rsSection: tab })).toBe(`/es/rust/${RUST_SECTION_ES[tab]}`);
     }
-    expect(RUST_SECTION_ES).toEqual({ items: "objetos", raid: "raideo", electricity: "electricidad" });
+    expect(RUST_SECTION_ES).toEqual({ items: "objetos", raid: "raideo", electricity: "electricidad", farming: "granjas", monuments: "monumentos", server: "servidor", patches: "parches" });
   });
 
   it("Objetos y Raideo están publicadas; lo que no existe muestra la portada", () => {
@@ -40,6 +40,15 @@ describe("las direcciones de Rust", () => {
     // El slug se traduce en los dos idiomas: un link en inglés con el slug español abre la misma ficha.
     expect(parseRoute("/en/rust/items/fusil-de-asalto").detail).toBe("assault-rifle");
     expect(parseRoute("/es/rust/items/assault-rifle")).toMatchObject({ rsSection: "items", detail: "assault-rifle" });
+  });
+
+  it("Granjas: la lista, la genética y cada planta en los dos idiomas (2026-10-09)", () => {
+    registerRustSlugs({ farming: { genetics: "genetica", hemp: "canamo" } });
+    expect(parseRoute("/es/rust/granjas")).toMatchObject({ view: "rust", rsSection: "farming", detail: undefined });
+    expect(parseRoute("/en/rust/farming/genetics")).toMatchObject({ rsSection: "farming", detail: "genetics" });
+    expect(parseRoute("/es/rust/granjas/genetica")).toMatchObject({ rsSection: "farming", detail: "genetics" });
+    expect(routePath(parseRoute("/en/rust/farming/genetics"))).toBe("/en/rust/farming/genetics");
+    expect(routePath({ ...parseRoute("/en/rust/farming/hemp"), lang: "es" })).toBe("/es/rust/granjas/canamo");
   });
 
   it("Electricidad (2026-10-09): el editor y cada circuito listo con el slug de su idioma", () => {

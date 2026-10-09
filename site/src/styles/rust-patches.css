@@ -1,0 +1,29 @@
+/*
+ * Rust, pestaña Parches (2026-10-09). Hereda las variables de `.rs` (rust.css). Las tarjetas sin bordes de color: la
+ * portada del anuncio, la fecha y el nombre.
+ */
+.rs-patches { display: grid; gap: 12px; }
+.rs-patch-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.rs-patch-card { display: grid; height: 100%; background: var(--rs-panel); color: inherit; text-decoration: none; }
+.rs-patch-card:hover { background: rgba(48, 48, 44, 0.9); }
+.rs-patch-cover { display: block; aspect-ratio: 16 / 9; background: var(--rs-slot); overflow: hidden; }
+.rs-patch-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.rs-patch-txt { display: grid; gap: 4px; padding: 10px 12px 14px; container-type: inline-size; }
+.rs-patch-txt time { color: var(--rs-dim); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+.rs-patch-txt b { font: 800 clamp(17px, 8cqi, 22px)/1.1 "Roboto Condensed", sans-serif; text-transform: uppercase; }
+.rs-patch-heads { color: var(--rs-soft); font-size: 14px; line-height: 1.35; }
+
+.rs-patch { min-width: 0; }
+.rs-patch-head { display: grid; gap: 14px; margin-bottom: 14px; }
+.rs-patch-hero { display: block; width: 100%; max-width: 640px; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.rs-patch-head .rs-hd { display: block; margin: 0 0 6px; }
+.rs-patch-sec { max-width: 78ch; }
+.rs-patch-sec h2 { margin: 26px 0 8px; font: 800 22px/1.15 "Roboto Condensed", sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+.rs-patch-sec h3 { margin: 18px 0 6px; font: 700 17px/1.2 "Roboto Condensed", sans-serif; letter-spacing: 0.04em; text-transform: uppercase; color: var(--rs-soft); }
+.rs-patch p, .rs-patch li { line-height: 1.55; color: var(--rs-soft); }
+.rs-patch p { margin: 0 0 10px; max-width: 78ch; }
+.rs-patch ul { margin: 0 0 10px; padding-left: 20px; }
+.rs-patch pre { max-width: 100%; margin: 0 0 10px; padding: 10px; overflow-x: auto; background: rgba(0, 0, 0, 0.45); font-size: 13px; }
+.rs-patch-ref { color: #c5dc9a; text-decoration: underline; text-decoration-color: rgba(197, 220, 154, 0.4); text-underline-offset: 2px; }
+.rs-patch-ref:hover { color: #fff; }
+.rs-patch .rs-meta .rs-btn { padding: 7px 10px; text-decoration: none; }

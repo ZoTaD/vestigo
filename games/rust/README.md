@@ -29,13 +29,19 @@ nunca en paralelo ni con otro proceso del juego abierto, y mirá antes la RAM li
    `electricity.json`, `electricity-items.json` e `industrial-items.json`; un segundo, lee la caché y `items.json`). Si cambió el comportamiento de un componente en
    el juego, el motor (`site/src/rust/electric/engine/`) se revisa contra el código decompilado; ver
    `docs/superpowers/plans/2026-10-09-rust-electricidad.md`.
+6b. `python games/rust/tools/farming.py` (Granjas: lee la caché cruda `games/rust/cache/`, no el juego; un segundo).
+6c. `python games/rust/tools/monuments.py` (Monumentos: de la caché cruda; antes de `patches.py`, que enlaza sus nombres).
+6d. `python games/rust/tools/convars.py` (Servidor: clona el decompilado público en `games/rust/.cache/`; sólo cuando
+    cambie esa fuente).
+6e. `python games/rust/tools/patches.py` (Parches: baja los anuncios de Steam; después `--offline --todo <slug>` deja los
+    renglones a traducir en `data/patches-es/<slug>.todo.json`, se traducen, se guardan como `<slug>.json` y se corre de nuevo).
 7. `python games/rust/tools/ui.py` (el fondo de la portada y su vista previa): sólo cuando cambia el fondo, no en cada
    parche.
 8. Los tests (ver abajo). Si un número de los tests del juego cambió, revisá en el juego que el cambio sea real antes
    de tocar el test.
 9. La verificación final, desde `site/`: `npx vitest run test/rust` y
    `NODE_OPTIONS=--max-old-space-size=6144 npm run build`.
-10. Commiteá `games/rust/data`, `site/public/rust/items` y `site/public/rust/skins`.
+10. Commiteá `games/rust/data`, `site/public/rust/items`, `site/public/rust/skins`, `site/public/rust/patches`, `site/public/rust/monuments` y `site/public/rust/farming`.
 
 ## Tests
 

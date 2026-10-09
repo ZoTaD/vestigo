@@ -1,0 +1,55 @@
+/*
+ * Rust, pestaña Servidor (2026-10-09). Hereda las variables de `.rs` (rust.css). El calendario, el generador y la
+ * referencia; sin bordes de color (el próximo wipe va con el tinte rojo del wipe de la portada).
+ */
+.rs-server { display: grid; gap: 12px; }
+.rs-server .rs-pnl { min-width: 0; }
+.rs-farm-p { margin: 0 0 12px; max-width: 75ch; line-height: 1.5; color: var(--rs-soft); }
+.rs-server-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 12px; align-items: start; }
+.rs-wipes { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.rs-wipes li { padding: 8px 10px; background: var(--rs-slot); color: var(--rs-soft); }
+.rs-wipes li.is-next { background: var(--rs-red-tint); color: var(--rs-text); font-weight: 700; }
+.rs-wipes li::first-letter { text-transform: uppercase; }
+
+.rs-srv-form { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px 14px; margin-bottom: 12px; }
+.rs-srv-field { display: grid; gap: 4px; min-width: 0; font-size: 13px; color: var(--rs-dim); letter-spacing: 0.06em; text-transform: uppercase; }
+.rs-srv-field input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 7px 9px;
+  border: 0;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--rs-text);
+  font: 400 16px/1.3 "Roboto Condensed", sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.rs-srv-seed { display: flex; gap: 6px; align-items: flex-end; min-width: 0; }
+.rs-srv-seed .rs-srv-field { flex: 1; }
+.rs-srv-seed .rs-btn { padding: 8px 10px; }
+.rs-srv-check { display: flex; gap: 8px; align-items: center; align-self: end; font-size: 15px; }
+.rs-srv-os { display: flex; gap: 4px; margin: 0 0 10px; }
+.rs-srv-code pre { max-width: 100%; margin: 0 0 12px; padding: 10px 12px; overflow-x: auto; background: rgba(0, 0, 0, 0.5); font-size: 13px; line-height: 1.5; }
+.rs-srv-code .rs-sub { display: flex; gap: 10px; align-items: center; }
+
+.rs-search { display: block; margin: 0 0 12px; }
+.rs-search input { width: 100%; max-width: 420px; padding: 10px 12px; border: 0; background: rgba(0, 0, 0, 0.45); color: var(--rs-text); font: 400 17px/1.3 "Roboto Condensed", sans-serif; }
+.rs-cats { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 10px; }
+.rs-cat { padding: 7px 12px; border: 0; background: rgba(255, 255, 255, 0.06); color: #bcb5ab; font: 700 13px/1.2 "Roboto Condensed", sans-serif; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+.rs-cat.is-on { background: #55702a; color: #fff; }
+.rs-count-line, .rs-empty { margin: 0 0 10px; color: var(--rs-dim); font-size: 15px; }
+.rs-convars { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.rs-convars > li { min-width: 0; padding: 8px 10px; background: var(--rs-slot); }
+.rs-cv-head { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+.rs-cv-head > code { font-size: 15px; color: #fff; }
+.rs-cv-def { margin-left: auto; color: var(--rs-dim); font-size: 13px; }
+.rs-cv-def code { color: var(--rs-soft); }
+.rs-convars p { margin: 4px 0 0; color: var(--rs-soft); font-size: 14px; line-height: 1.4; }
+.rs-tag { padding: 1px 6px; background: rgba(255, 255, 255, 0.08); font-size: 11px; font-style: normal; letter-spacing: 0.06em; text-transform: uppercase; }
+.rs-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 860px) {
+  .rs-server-cols { grid-template-columns: 1fr; }
+  .rs-cv-def { margin-left: 0; }
+}

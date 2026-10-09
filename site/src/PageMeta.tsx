@@ -14,6 +14,9 @@ import { loadD2Index, peekD2Index } from "./d2r/index";
 import { loadPzNames, peekPzName } from "./zomboid/index";
 import { pzPatchName } from "./zomboid/patches/slug";
 import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/data";
+import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
+import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
+import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
 import { circuitMeta } from "./rust/electric/circuitMeta";
 import { loadEditions as loadVhEditions, peekEditions as peekVhEditions } from "./valheimPatchesData";
 
@@ -140,6 +143,17 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const f = peekRsItem(route.detail);
     return f ? (lang === "es" ? f.name.es || f.name.en : f.name.en) : null;
   }
+  // Una planta de Granjas (2026-10-09): el nombre sale de `farming.json`, que la pestaña pide igual.
+  if (route.view === "rust" && route.rsSection === "farming" && route.detail && route.detail !== "genetics") {
+    const p = peekRsFarming()?.plants.find((x) => x.id === route.detail);
+    return p ? (lang === "es" ? p.name.es || p.name.en : p.name.en) : null;
+  }
+  // Una edición de Parches de Rust: su nombre ("Livestock") es el mismo en los dos idiomas.
+  if (route.view === "rust" && route.rsSection === "patches" && route.detail) return peekRsEdition(route.detail)?.name ?? null;
+  if (route.view === "rust" && route.rsSection === "monuments" && route.detail) {
+    const m = peekRsMonuments()?.monuments.find((x) => x.id === route.detail);
+    return m ? (lang === "es" ? m.name.es || m.name.en : m.name.en) : null;
+  }
   // Un circuito listo de Electricidad: el nombre lo anota `circuits.ts` (viaja con la pestaña).
   if (route.view === "rust" && route.rsSection === "electricity" && route.detail) return circuitMeta(route.detail)?.name[lang] ?? null;
   return null;
@@ -235,6 +249,21 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "rust" && route.rsSection === "items" && route.detail && peekRsItem(route.detail) === undefined) {
       let vivo = true;
       loadRsItem(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    if (route.view === "rust" && route.rsSection === "patches" && route.detail && peekRsEdition(route.detail) === undefined) {
+      let vivo = true;
+      loadRsEdition(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    if (route.view === "rust" && route.rsSection === "monuments" && route.detail && !peekRsMonuments()) {
+      let vivo = true;
+      loadRsMonuments().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    if (route.view === "rust" && route.rsSection === "farming" && route.detail && !peekRsFarming()) {
+      let vivo = true;
+      loadRsFarming().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
   }, [route, copy, lang]);

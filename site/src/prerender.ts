@@ -8,6 +8,10 @@ import { VALHEIM_COPY } from "./valheimCopy";
 import { D2R_COPY } from "./d2rCopy";
 import { tidyTitleName, ZOMBOID_COPY } from "./zomboidCopy";
 import { RUST_COPY, type RustHas } from "./rustCopy";
+import { FARMING_COPY } from "./rust/farming/copy";
+import { PATCHES_COPY } from "./rust/patches/copy";
+import { MONUMENTS_COPY } from "./rust/monuments/copy";
+import { SERVER_COPY } from "./rust/server/copy";
 import { circuitMeta } from "./rust/electric/circuitMeta";
 import { esHeadNames } from "./zomboid/headName";
 
@@ -140,6 +144,13 @@ export function metaFor(
   if (route.view === "rust") {
     const r = RUST_COPY[lang];
     if (route.rsSection === "items" && route.detail && detailName) return r.detailSeo(detailName, rsHas ?? undefined);
+    if (route.rsSection === "farming" && route.detail) {
+      const fc = FARMING_COPY[lang].seo;
+      if (route.detail === "genetics") return fc.genetics;
+      if (detailName) return fc.plant(detailName);
+    }
+    if (route.rsSection === "patches" && route.detail && detailName) return PATCHES_COPY[lang].seo.edition(detailName);
+    if (route.rsSection === "monuments" && route.detail && detailName) return MONUMENTS_COPY[lang].seo.monument(detailName);
     // Un circuito listo de Electricidad: su nombre y su explicación (los anota `circuits.ts`).
     const circuit = route.rsSection === "electricity" ? circuitMeta(route.detail) : undefined;
     if (circuit) return r.circuitSeo(circuit.name[lang], circuit.about[lang]);
@@ -197,6 +208,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     out[`vh-patches/${e.slug}`] = name ? `${e.version} — ${name}` : e.version;
   }
   for (const e of data.rs?.items ?? []) out[`rs-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const slug of data.rs?.circuits ?? []) {
     const m = circuitMeta(slug);
     // Con mayúscula, como un título: "Torreta solar" en las migas.
@@ -365,8 +377,17 @@ export function jsonLdFor(
     if (sec !== "home") trail.push({ name: RUST_COPY[lang].tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "home" || sec === "raid" || sec === "electricity") {
-      const appName = sec === "raid" ? RUST_COPY[lang].raid.h1 : sec === "electricity" ? page.title.replace(/\s*\|.*$/, "") : RUST_COPY[lang].home.h1;
+    const genetics = sec === "farming" && route.detail === "genetics";
+    if (sec === "home" || sec === "raid" || sec === "server" || sec === "electricity" || genetics) {
+      const appName = genetics
+        ? FARMING_COPY[lang].calc.h1
+        : sec === "server"
+          ? SERVER_COPY[lang].h1
+          : sec === "raid"
+            ? RUST_COPY[lang].raid.h1
+            : sec === "electricity"
+              ? page.title.replace(/\s*\|.*$/, "")
+              : RUST_COPY[lang].home.h1;
       out.push({
         "@context": "https://schema.org", "@type": "WebApplication", name: appName, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
@@ -487,8 +508,10 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
     const canonical = routeUrl(route);
     const image = ogImageUrl(route, data.dlNews?.[0]?.slug, ogAvailable);
     const vhEdition = route.view === "valheim" && route.vhSection === "patches" && route.detail ? data.vh?.editions.find((e) => e.slug === route.detail) : undefined;
-    const isEdition = (route.view === "deadlock" && route.dlSection === "patches" && !!route.detail) || !!vhEdition;
-    const edition = vhEdition ?? (isEdition ? data.dlNews?.find((e) => e.slug === route.detail) : undefined);
+    // Una edición de Parches de Rust (2026-10-09) también es un artículo, con su fecha.
+    const rsEdition = route.view === "rust" && route.rsSection === "patches" && route.detail ? data.rs?.pages?.find((p) => p.tab === "patches" && p.slug === route.detail && p.date) : undefined;
+    const isEdition = (route.view === "deadlock" && route.dlSection === "patches" && !!route.detail) || !!vhEdition || !!rsEdition;
+    const edition = vhEdition ?? (rsEdition ? { date: rsEdition.date! } : isEdition ? data.dlNews?.find((e) => e.slug === route.detail) : undefined);
     return {
       path,
       title,

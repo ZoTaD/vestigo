@@ -1,0 +1,49 @@
+/*
+ * Rust, pestaña Monumentos (2026-10-09). Hereda las variables de `.rs` (rust.css) y la ficha de Objetos
+ * (rust-items.css). Sin bordes de color: tarjetas, radiación y zona segura van como etiquetas con tinte.
+ */
+.rs-mons { display: grid; gap: 12px; }
+.rs-mons .rs-pnl { min-width: 0; }
+.rs-farm-p { margin: 0 0 12px; max-width: 75ch; line-height: 1.5; color: var(--rs-soft); }
+.rs-mon-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.rs-mon-card { display: grid; height: 100%; background: var(--rs-panel); color: inherit; text-decoration: none; }
+.rs-mon-card:hover { background: rgba(48, 48, 44, 0.9); }
+.rs-mon-pic { display: grid; place-items: center; aspect-ratio: 16 / 9; background: var(--rs-slot); overflow: hidden; }
+.rs-mon-pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.rs-mon-type { color: var(--rs-dim); font: 700 13px/1 "Roboto Condensed", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; }
+.rs-mon-txt { display: grid; gap: 6px; padding: 10px 12px 12px; container-type: inline-size; }
+.rs-mon-txt b { font: 800 clamp(16px, 8cqi, 20px)/1.1 "Roboto Condensed", sans-serif; text-transform: uppercase; }
+.rs-mon-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.rs-mon-chip { padding: 2px 6px; background: rgba(255, 255, 255, 0.08); font-size: 12px; font-style: normal; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.rs-mon-chip.is-safe { background: rgba(108, 142, 54, 0.35); }
+.rs-mon-chip.is-green, .rs-mon-chip.is-rec-green { background: rgba(108, 142, 54, 0.45); }
+.rs-mon-chip.is-blue { background: rgba(58, 106, 170, 0.5); }
+.rs-mon-chip.is-red, .rs-mon-chip.is-rec-red { background: rgba(205, 65, 43, 0.45); }
+.rs-mon-chip.is-rec-yellow { background: rgba(196, 160, 40, 0.45); }
+.rs-mon-chip.is-rad { background: rgba(196, 160, 40, 0.3); }
+
+.rs-mon-top { display: grid; gap: 14px; }
+.rs-mon-hero { display: block; width: 100%; max-width: 640px; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.rs-mon-puzzle { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 0; padding: 0; list-style: none; }
+.rs-mon-puzzle li { display: flex; gap: 10px; align-items: center; }
+.rs-mon-puzzle .rs-slot { width: 56px; padding: 8px; }
+.rs-mon-power { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.rs-mon-power li { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.rs-mon-shop { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+.rs-mon-shop .rs-ref { display: flex; gap: 8px; align-items: center; height: 100%; padding: 4px; background: var(--rs-slot); }
+.rs-mon-shop .rs-slot { flex: none; width: 48px; padding: 6px; background: transparent; }
+.rs-mon-shop .rs-dim { display: block; font-size: 14px; }
+
+.rs-grid-stages { display: grid; gap: 8px; margin: 0 0 10px; padding: 0; list-style: none; }
+.rs-grid-stages li { display: grid; grid-template-columns: minmax(150px, 200px) 1fr; gap: 10px; align-items: start; padding: 8px 10px; background: var(--rs-slot); }
+.rs-grid-stage { display: grid; gap: 2px; }
+.rs-grid-stage b { font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.rs-grid-stage span { display: flex; gap: 6px; align-items: center; color: var(--rs-soft); }
+.rs-grid-mons { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.rs-farm-compost { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 4px 10px; margin: 0; padding: 0; list-style: none; }
+.rs-farm-compost li { display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 2px 8px 2px 2px; background: var(--rs-slot); }
+.rs-farm-compost .rs-ref { display: flex; gap: 6px; align-items: center; min-width: 0; font-size: 14px; }
+
+@media (max-width: 640px) {
+  .rs-grid-stages li { grid-template-columns: 1fr; }
+}

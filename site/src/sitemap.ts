@@ -1,3 +1,4 @@
+import type { RustPage } from "./rust/sitemapPages";
 import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
@@ -82,6 +83,8 @@ export interface RustSitemapData {
   extractedAt: string;
   /** Las fichas de Objetos (`games/rust/data/site/list.json`): slug inglés y nombres, para el sitemap y el `<head>`. */
   items?: { slug: string; en: string; es: string | null; c?: 1; s?: 1; l?: 1; r?: 1 }[];
+  /** Las fichas de las pestañas de la etapa 2 (Granjas, Monumentos, Parches…; `rust/sitemapPages.ts`). */
+  pages?: RustPage[];
   /** Los circuitos listos de Electricidad (2026-10-09), por slug inglés (`site/src/rust/electric/circuits.ts`). */
   circuits?: string[];
 }
@@ -233,7 +236,21 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
     if (sec === "items" || sec === "crafting") return later(day(data.dates?.zomboid), loot);
     return day(data.dates?.zomboid);
   }
-  if (game === RUST_SEGMENT) return day(data.dates?.rust);
+  if (game === RUST_SEGMENT) {
+    // Una ficha con fecha propia (un parche) va con la suya, y su pestaña con la más nueva de sus fichas o la de los
+    // datos, la que sea más reciente. Lo demás, con la fecha de los datos de Rust.
+    const route = parseRoute(path);
+    const pages = (data.rs?.pages ?? []).filter((p) => p.tab === route.rsSection && p.date);
+    if (route.detail) {
+      const own = pages.find((p) => p.slug === route.detail)?.date;
+      if (own) return day(own);
+    } else if (pages.length) {
+      const newestPage = newest(pages.map((p) => p.date!));
+      const rust = data.dates?.rust;
+      return day(newestPage && rust ? (newestPage > rust ? newestPage : rust) : newestPage ?? rust);
+    }
+    return day(data.dates?.rust);
+  }
   return undefined;
 }
 
@@ -359,6 +376,9 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const s of RUST_PUBLISHED) paths.push(routePath({ ...base, lang, view: "rust", rsSection: s }));
       if (RUST_PUBLISHED.includes("items")) {
         for (const it of data.rs.items ?? []) paths.push(routePath({ ...base, lang, view: "rust", rsSection: "items", detail: it.slug }));
+      }
+      for (const pg of data.rs.pages ?? []) {
+        if (RUST_PUBLISHED.includes(pg.tab)) paths.push(routePath({ ...base, lang, view: "rust", rsSection: pg.tab, detail: pg.slug }));
       }
       if (RUST_PUBLISHED.includes("electricity")) {
         for (const slug of data.rs.circuits ?? []) paths.push(routePath({ ...base, lang, view: "rust", rsSection: "electricity", detail: slug }));

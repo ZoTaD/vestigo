@@ -55,11 +55,10 @@ describe("la portada de Rust", () => {
     }
   });
 
-  it("Objetos y Raideo enlazan; las pestañas de las etapas que vienen se ven apagadas", () => {
+  it("todas las pestañas enlazan: ya no queda ninguna apagada (2026-10-09)", () => {
     const html = render("es", "/es/rust");
-    expect(html).toContain('href="/es/rust/objetos"');
-    expect(html).toContain('href="/es/rust/raideo"');
-    expect(html).toMatch(/class="rs-tab is-soon"[^>]*>Monumentos</);
+    for (const tab of ["objetos", "raideo", "electricidad", "monumentos", "granjas", "servidor", "parches"]) expect(html).toContain(`href="/es/rust/${tab}"`);
+    expect(html).not.toContain("is-soon");
   });
 
   it("antes de tener reloj (el prerender) muestra el día del wipe sin la cuenta", () => {

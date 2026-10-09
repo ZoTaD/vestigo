@@ -10,6 +10,7 @@ import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, type Route } from "./src/route";
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { isRsLoadingPage } from "./src/rust/loadingGuard";
+import { farmingPages, monumentsPages, patchesPages, type RustPage } from "./src/rust/sitemapPages";
 import { CIRCUITS, circuitSlugsEs } from "./src/rust/electric/circuits";
 import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
@@ -214,9 +215,30 @@ function readSitemapData(): { data: OgData } {
         items = undefined;
       }
     }
+    // Etapa 2 (2026-10-09): las fichas de Granjas (y las pestañas que vengan), con sus slugs en español anotados antes.
+    const pages: RustPage[] = [];
+    try {
+      const farming = JSON.parse(readFileSync(`${rustDir}/farming.json`, "utf-8"));
+      registerRustSlugs(JSON.parse(readFileSync(`${rustDir}/site/farming-slugs-es.json`, "utf-8")));
+      pages.push(...farmingPages(farming));
+    } catch (e) {
+      console.warn(`[rust] sin las fichas de Granjas (${(e as Error).message})`);
+    }
+    try {
+      const mons = JSON.parse(readFileSync(`${rustDir}/monuments.json`, "utf-8"));
+      registerRustSlugs(JSON.parse(readFileSync(`${rustDir}/site/monuments-slugs-es.json`, "utf-8")));
+      pages.push(...monumentsPages(mons));
+    } catch (e) {
+      console.warn(`[rust] sin las fichas de Monumentos (${(e as Error).message})`);
+    }
+    try {
+      pages.push(...patchesPages(JSON.parse(readFileSync(`${rustDir}/patches/index.json`, "utf-8"))));
+    } catch (e) {
+      console.warn(`[rust] sin las ediciones de Parches (${(e as Error).message})`);
+    }
     // Los circuitos listos de Electricidad (2026-10-09): sus slugs en español y su nombre (lo anota `circuits.ts`).
     registerRustSlugs({ electricity: circuitSlugsEs() });
-    rs = { build: m.build, extractedAt: m.extractedAt, items, circuits: CIRCUITS.map((c) => c.slug) };
+    rs = { build: m.build, extractedAt: m.extractedAt, items, circuits: CIRCUITS.map((c) => c.slug), pages };
   } catch {
     rs = undefined;
   }
@@ -909,6 +931,9 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: { output: { manualChunks: manualChunks() } },
+    // Las fuentes nunca van como `data:` dentro del CSS: la CSP (`font-src 'self'`) las bloquea. Pasaba con los
+    // pedacitos chicos de @fontsource (griego extendido de Roboto Condensed en Rust).
+    assetsInlineLimit: (file) => (/\.woff2?$/.test(file) ? false : undefined),
   },
   /**
    * Cada JSON como `JSON.parse("…")` y no como un objeto de JavaScript (2026-10-06). Son ~50 MB de datos (31 de

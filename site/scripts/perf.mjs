@@ -57,6 +57,20 @@ export const PAGES = [
   "/en/rust/items/metal-fragments",
   "/en/rust/raid",
   "/es/rust/objetos",
+  // Granjas (2026-10-09): la portada de la granja (94 compostables), una planta y la calculadora.
+  "/en/rust/farming",
+  "/en/rust/farming/hemp",
+  "/en/rust/farming/genetics",
+  "/es/rust/granjas/genetica",
+  // Parches (2026-10-09): la lista (41 portadas) y la edición más larga traducida.
+  "/en/rust/patches",
+  "/es/rust/parches/livestock",
+  // Monumentos (2026-10-09): la lista con la red de Power Trip y la ficha con la tienda más larga (Bandit Camp, 46).
+  "/en/rust/monuments",
+  "/en/rust/monuments/bandit-camp",
+  "/es/rust/monumentos/complejo-de-apartamentos",
+  // Servidor (2026-10-09): 1.384 convars de a tandas.
+  "/en/rust/server",
   // Electricidad (2026-10-09): el editor (en frío abre la torreta solar) y el circuito listo más grande.
   "/en/rust/electricity",
   "/es/rust/electricidad",
