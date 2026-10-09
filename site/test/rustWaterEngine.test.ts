@@ -93,6 +93,15 @@ describe("Consumo", () => {
     expect((w.get("s") as Sprinkler).splashes).toBeGreaterThan(0);
   });
 
+  it("servidor actual: con menos de 2 de caudal el aspersor no pide nada; con 2 o más pide 2", () => {
+    const w = run(c([["b", "water.barrel", { water: 1000 }], ["s", "electric.sprinkler"]], "b.0>s.0"), 3);
+    const s = w.get("s") as Sprinkler;
+    s.currentEnergy = 1;
+    expect(s.desiredPower()).toBe(0);
+    s.currentEnergy = 12;
+    expect(s.desiredPower()).toBe(2);
+  });
+
   it("dos aspersores por splitter: 6 y 6 de caudal, gastan 4 por segundo entre los dos", () => {
     const w = run(c([["b", "water.barrel", { water: 1000 }], ["sp", "fluid.splitter"], ["s1", "electric.sprinkler"], ["s2", "electric.sprinkler"]], "b.0>sp.0 sp.0>s1.0 sp.1>s2.0"), 3);
     expect([w.get("s1")!.received[0], w.get("s2")!.received[0]]).toEqual([6, 6]);

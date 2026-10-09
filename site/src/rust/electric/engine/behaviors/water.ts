@@ -420,8 +420,10 @@ export class Sprinkler extends IOEntity {
   override get blockFluidDraining(): boolean {
     return this.currentFuelSource !== null;
   }
+  /** Servidor dedicado (build 25823813): pide los 2 enteros o nada (`currentEnergy < ConsumptionAmount` → 0); en 2024
+   *  pedía lo que le llegara, con tope en 2. */
   override desiredPower(): number {
-    return Math.min(Math.max(this.currentEnergy, 0), this.consumptionAmount());
+    return this.currentEnergy < this.consumptionAmount() ? 0 : this.consumptionAmount();
   }
   override updateHasPower(inputAmount: number, inputSlot: number): void {
     super.updateHasPower(inputAmount, inputSlot);

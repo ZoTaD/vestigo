@@ -195,36 +195,53 @@ export class FuelGenerator extends IOEntity {
 }
 
 /**
- * Poste de tendido eléctrico (Power Trip, 6/8/2026): da energía "según la potencia de la central". El número por etapa
- * no está en el cliente ni en el decompilado: acá se ajusta a mano (aproximado). Empuja por sus 6 salidas como el
- * generador de prueba.
+ * Poste de tendido eléctrico (Power Trip, 6/8/2026). Fuente: el servidor dedicado (build 25823813, 9/10/2026),
+ * `PowergridIOAccessPoint` y `PowergridManager.Server_GetCurrentPowerlineEnergy`: con F fusibles pesados puestos en la
+ * central y R ranuras (15 + 5 = 20), da `(int) Lerp(base, max, Clamp01((F − 1) / (R − 1)))`, 0 sin fusibles; convars
+ * `powergrid.powerlinebasepoweroutput` 5 y `powergrid.powerlinemaxpoweroutput` 50. No consume, y no pisa
+ * `GetPassthroughAmount`: lo que da se reparte entre las salidas conectadas como cualquier `IOEntity`.
  */
+export const POLE = { slots: 20, base: 5, max: 50 };
+export function powerlineEnergy(fuses: number, slots = POLE.slots): number {
+  if (fuses <= 0) return 0;
+  const t = slots <= 1 ? 0 : Math.min(1, Math.max(0, (fuses - 1) / (slots - 1)));
+  return Math.trunc(POLE.base + (POLE.max - POLE.base) * t);
+}
 export class PowerlinePole extends IOEntity {
   override isRootEntity(): boolean {
     return true;
   }
+  /** Los fusibles pesados puestos en la central (lo que se elige en el inspector); por defecto, la red llena. */
+  fuses(): number {
+    return Math.max(0, Math.min(POLE.slots, Math.round(this.cfg.fuses ?? POLE.slots)));
+  }
+  override consumptionAmount(): number {
+    return 0;
+  }
   override getCurrentEnergy(): number {
-    return Math.max(0, Math.round(this.cfg.output ?? 0));
+    return powerlineEnergy(this.fuses());
   }
   override maximalPowerOutput(): number {
-    return this.getCurrentEnergy();
-  }
-  override getPassthroughAmount(): number {
-    return this.getCurrentEnergy();
+    return 9999;
   }
   override updateOutputs(): void {
     this.currentEnergy = this.getCurrentEnergy();
-    for (let i = 0; i < this.outputs.length; i++) this.send(i, this.currentEnergy);
+    for (let i = 0; i < this.outputs.length; i++) this.send(i, this.getPassthroughAmount(i));
+  }
+  override onCircuitChanged(forceUpdate: boolean): void {
+    super.onCircuitChanged(forceUpdate);
+    // Una conexión nueva o quitada cambia el reparto entre salidas.
+    this.markDirtyForceUpdateOutputs();
   }
   override readouts(): Readout[] {
-    return [{ k: "generating", v: this.getCurrentEnergy() }, { k: "approx", v: true }];
+    return [{ k: "generating", v: this.getCurrentEnergy() }, { k: "outputsUsed", v: this.cachedOutputsUsed }];
   }
   override actions(): Action[] {
-    return [{ k: "output", kind: "number", value: this.getCurrentEnergy(), min: 0, max: 100000, step: 1 }];
+    return [{ k: "fuses", kind: "number", value: this.fuses(), min: 0, max: POLE.slots, step: 1 }];
   }
   override act(key: string, value?: number): void {
-    if (key === "output" && value !== undefined) {
-      this.cfg.output = Math.max(0, Math.round(value));
+    if (key === "fuses" && value !== undefined) {
+      this.cfg.fuses = Math.max(0, Math.min(POLE.slots, Math.round(value)));
       this.markDirtyForceUpdateOutputs();
     }
   }

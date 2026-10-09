@@ -39,7 +39,10 @@ CODE_USE = {
     "ElectricWindmill": (0, "ElectricWindmill.cs (no la sobrescribe: es fuente, no tiene entrada)"),
     "FuelGenerator": (0, "FuelGenerator.cs"),
     "ElectricGenerator": (0, "ElectricGenerator.cs"),
-    # Agua (2026-10-09): el aspersor pide 2 de agua por segundo; el interruptor de fluidos hereda el 0 del interruptor.
+    # Agua (2026-10-09): el aspersor pide 2 de agua por segundo a la fuente (`ConsumptionAmount`) y reparte 15 por
+    # salpicada cada 5 s (`WaterPerSplash`/`SplashFrequency` del prefab) entre lo que moja: son dos números distintos y
+    # los dos valen hoy (rustrician.io, act. 16/8/2026: "consumption average 2ml/sec", "output average 3ml/sec").
+    # El interruptor de fluidos hereda el 0 del interruptor.
     "Sprinkler": (2, "Sprinkler.cs"),
     # Industrial: el adaptador no consume (IndustrialStorageAdaptor.cs).
     "IndustrialStorageAdaptor": (0, "IndustrialStorageAdaptor.cs"),
@@ -78,7 +81,15 @@ BASE_USE = {
 # Clases sin código en el decompilado (posteriores a agosto de 2024) y sin el consumo como campo: lo heredan de
 # `IOEntity` (1) mientras no aparezca su código. Se marcan como "sin código" en el JSON. La rueda de agua tampoco tiene
 # código: es fuente fija con `maxPowerGenerationFromWater`.
-NO_CODE_USE = {"StringLights": 1, "ChristmasLights": 1, "Chandelier": 1, "OrientableLight": 1, "ElectricWaterWheel": 0}
+NO_CODE_USE = {"ElectricWaterWheel": 0}
+# (9/10) Las luces que antes estaban acá ya tienen código: el del servidor dedicado (build 25823813, leído con
+# Mono.Cecil) devuelve el consumo fijo en `ConsumptionAmount()`, y el reflector lo pisa aunque su prefab diga 1.
+CODE_USE.update({
+    "StringLights": (5, "servidor dedicado: StringLights.ConsumptionAmount"),
+    "ChristmasLights": (5, "servidor dedicado: ChristmasLights.ConsumptionAmount"),
+    "Chandelier": (4, "servidor dedicado: Chandelier.ConsumptionAmount"),
+    "OrientableLight": (5, "servidor dedicado: OrientableLight.ConsumptionAmount"),
+})
 
 # El poste de tendido eléctrico (Power Trip): prefab estático, sin objeto. Ver `powerline_pole` en electricity.py.
 POWERLINE_POLE = "assets/prefabs/io/electric/generators/powergrid_powerline_io.static.prefab"

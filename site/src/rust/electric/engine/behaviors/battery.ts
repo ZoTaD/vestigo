@@ -6,7 +6,11 @@
  *   su salida, con tope en `maxOutput`; se recalcula cada 1 s (`CheckDischarge`) y se cobra cada 1 s (`TickUsage`).
  * - Carga cada 1 s con `min(lo que entra, DesiredPower) × chargeRatio` (0,8): un panel de 20 carga 16 rWs por segundo.
  * - Descarga sólo con ≥ 5 rWs y con algo enchufado a la salida.
- * - Acá: la salida "Fully Charged" (feb. 2025) no está en el decompilado: da 1 con la batería llena (aproximación).
+ * - La salida "Fully Charged" (Polish and Progress, 5/12/2024) sale del código del servidor dedicado (build 25823813,
+ *   9/10/2026), no del decompilado: `Flag_Full` se prende cuando la carga redondeada en rWm llega al máximo y se apaga
+ *   cuando baja de ahí sólo si lo que gasta supera lo último que cargó (o si no está cargando): con un cargador que
+ *   cubre el gasto sigue "llena". Por esa salida da 1; lo que cuelga de ella suma como mucho 1 al gasto, y con algo
+ *   enchufado sólo ahí la batería también descarga (`GetDrain`, `CheckDischarge`, `RefreshFullChargeFlag`).
  */
 import { Flag, IOEntity, type Action, type Readout } from "../ioentity";
 
@@ -14,7 +18,10 @@ export class ElectricBattery extends IOEntity {
   rustWattSeconds = this.cfg.charge !== undefined ? this.cfg.charge * 60 : this.def.p.rustWattSeconds;
   activeDrain = 0;
   private inputHistory: number[] = [];
-  private wasFull = false;
+  /** `Flag_Full`: lo que da la salida "Fully Charged". */
+  private fullFlag = false;
+  /** `lastChargeIn`: lo que cargó en el último `AddCharge` (0 si no le entra nada). */
+  lastChargeIn = 0;
 
   get maxOutput(): number {
     return this.def.p.maxOutput;
@@ -46,7 +53,7 @@ export class ElectricBattery extends IOEntity {
   override serverInit(): void {
     // `InvokeRandomized(CheckDischarge, Random.Range(0, 1), 1, 0.1)`: acá sin azar.
     this.invokeRepeating("CheckDischarge", () => this.checkDischarge(), 0.5, 1);
-    this.wasFull = this.isFull();
+    this.refreshFull();
   }
 
   addConnectedRecursive(root: IOEntity, inputIndex: number, list: Map<IOEntity, Set<number>>): void {
@@ -72,7 +79,25 @@ export class ElectricBattery extends IOEntity {
       if (e.wantsPower(slot)) this.addConnectedRecursive(e, slot, list);
       else list.set(e, new Set([slot]));
     }
+    // "Fully Charged": lo que cuelga de esa salida, recorrido igual, suma 1 como mucho.
     let num = 0;
+    const aux = this.outputs[1]?.connectedTo;
+    if (this.fullFlag && aux) {
+      const auxList = new Map<IOEntity, Set<number>>();
+      const slot = this.outputs[1].connectedToSlot;
+      if (aux.wantsPower(slot)) this.addConnectedRecursive(aux, slot, auxList);
+      else auxList.set(aux, new Set([slot]));
+      outer: for (const [ent, slots] of auxList) {
+        for (const idx of slots) {
+          if (!ent.shouldDrainBattery(this)) continue;
+          num += ent.desiredPower(idx);
+          if (num >= 1) {
+            num = 1;
+            break outer;
+          }
+        }
+      }
+    }
     for (const [ent, slots] of list) {
       for (const idx of slots) {
         if (!ent.shouldDrainBattery(this)) continue;
@@ -94,8 +119,9 @@ export class ElectricBattery extends IOEntity {
       return;
     }
     const e = this.outputs[0].connectedTo;
+    const aux = this.outputs[1]?.connectedTo ?? null;
     this.activeDrain = this.getDrain();
-    this.setDischarging(e !== null);
+    this.setDischarging(e !== null || aux !== null);
   }
 
   setDischarging(wantsOn: boolean): void {
@@ -103,8 +129,8 @@ export class ElectricBattery extends IOEntity {
   }
 
   override getPassthroughAmount(outputSlot = 0): number {
-    if (outputSlot === 1) return this.isFull() ? 1 : 0;
-    if (!this.isOn()) return 0;
+    if (outputSlot === 1) return this.fullFlag ? 1 : 0;
+    if (outputSlot !== 0 || !this.isOn()) return 0;
     return Math.floor(this.maxOutput * (this.rustWattSeconds >= 1 ? 1 : 0));
   }
 
@@ -123,7 +149,10 @@ export class ElectricBattery extends IOEntity {
       this.inputHistory.push(inputAmount);
     }
     if (inputSlot === 0) {
-      if (!this.isPowered() && !this.isFlickering()) this.cancelInvoke("AddCharge");
+      if (!this.isPowered() && !this.isFlickering()) {
+        this.cancelInvoke("AddCharge");
+        this.lastChargeIn = 0;
+      }
       else if (!this.isInvoking("AddCharge")) this.invokeRepeating("AddCharge", () => this.addCharge(), 1, 1);
     }
   }
@@ -139,20 +168,29 @@ export class ElectricBattery extends IOEntity {
   chargeChanged(): void {
     this.setFlag(Flag.Reserved5, this.rustWattSeconds > this.maxCapactiySeconds * 0.25);
     this.setFlag(Flag.Reserved6, this.rustWattSeconds > this.maxCapactiySeconds * 0.75);
-    // Acá: la salida "Fully Charged" cambia cuando la batería se llena o deja de estar llena.
-    const full = this.isFull();
-    if (full !== this.wasFull) {
-      this.wasFull = full;
+    this.refreshFull();
+  }
+
+  /** `RefreshFullChargeFlag`. */
+  refreshFull(): void {
+    const full = Math.round(this.rustWattSeconds / 60) >= this.maxCapactiySeconds / 60;
+    if (full && !this.fullFlag) {
+      this.fullFlag = true;
+      this.markDirtyForceUpdateOutputs();
+    } else if (!full && this.fullFlag && (this.activeDrain > this.lastChargeIn || this.lastChargeIn === 0)) {
+      this.fullFlag = false;
       this.markDirtyForceUpdateOutputs();
     }
   }
 
+  /** Lo que muestra la salida "Fully Charged" (`Flag_Full`). */
   isFull(): boolean {
-    return this.rustWattSeconds >= this.maxCapactiySeconds;
+    return this.fullFlag;
   }
 
   addCharge(): void {
     const num = Math.min(this.isFlickering() ? this.highestInputFromHistory() : this.currentEnergy, this.desiredPower()) * this.chargeRatio;
+    this.lastChargeIn = num;
     if (num > 0) {
       this.rustWattSeconds = Math.min(Math.max(this.rustWattSeconds + num, 0), this.maxCapactiySeconds);
       this.chargeChanged();

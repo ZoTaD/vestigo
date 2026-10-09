@@ -20,6 +20,8 @@ export const CFG_KEYS = [
   "on", "fuel", "charge", "branchAmount", "timerLength", "target", "count", "passthrough", "frequency", "players", "detect", "vibration", "ammo", "open", "manualMode",
   // v2 (2026-10-09): agua e industrial.
   "height", "water", "salt", "fresh", "mode", "crafting",
+  // Poste de tendido (9/10): fusibles pesados en la central.
+  "fuses",
 ] as const;
 
 class Writer {

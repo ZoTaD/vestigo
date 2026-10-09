@@ -74,10 +74,14 @@ prefabs (salida de las baterías, consumo cuando es un campo, duración del bot�
    consumo como campo del prefab (heladera 5, minibar 2, luces 1…) usan ese campo con la lógica de `IOEntity`; la rueda
    de agua usa `maxPowerGenerationFromWater` (30) como generador fijo; el reloj digital, el biocombustible y la tolva
    quedan **afuera** de la paleta hasta tener su código.
-2. **Salida "Fully Charged" de la batería** (feb. 2025, posterior al decompilado): no hay código. La wiki oficial
-   (https://wiki.facepunch.com/rust/item/electric.battery.rechargable.large) la lista como salida de señal ("emite
-   una señal cuando la batería está completamente cargada"). Se simula como las salidas de estado de la torreta
-   (`min(1, …)`): 1 cuando la carga llega al máximo. Aproximación documentada.
+2. ~~**Salida "Fully Charged" de la batería**~~ **Resuelta (9/10) con el código del servidor dedicado** (build
+   25823813, `C:\RustServer`, leído con Mono.Cecil): se agregó en "Polish and Progress" (5/12/2024, no feb. 2025;
+   https://rust.facepunch.com/news/polish-and-progress: "outputs 1 power when the battery is 100% charged"). En el
+   código: `Flag_Full` se prende cuando `RoundToInt(rWs / 60) ≥ capacidad en rWm`, y se apaga cuando deja de estarlo
+   sólo si `activeDrain > lastChargeIn` o si no está cargando (`lastChargeIn == 0`): con un cargador que cubre el
+   gasto sigue "llena" (histéresis). La salida da 1 con el flag; `GetDrain` recorre lo que cuelga de ella y suma como
+   mucho 1 al gasto; `CheckDischarge` descarga si hay algo en cualquiera de las dos salidas. Portado en `battery.ts`,
+   tests "Batería: salida Fully Charged". Coincide con rustrician.io (act. 16/8/2026).
 3. **Sol:** el juego usa `TOD_Sky` y el ángulo del panel (`dot` entre el frente del panel y el sol, de 0,3 a 0,7). El
    editor modela el panel bien orientado y la altura del sol como `sin(π·(h − 6) / 12)` entre las 6 y las 18; de noche,
    0. Es aproximado (latitud y orientación reales cambian la curva).
@@ -103,11 +107,21 @@ prefabs (salida de las baterías, consumo cuando es un campo, duración del bot�
     mismo cuadro en que le alcanza la energía.
 11. **Controlador de puerta:** la puerta se abre y se cierra al instante; en el juego tarda (y `IsBusy` demora la
     acción siguiente 1 s).
-13. **Poste de tendido eléctrico** (Power Trip, 6/8/2026, https://rust.facepunch.com/news/power-trip: "Powerline
-    poles can now provide electricity, amount dependent on power plant power"): está en la caché como prefab estático
-    (`powergrid_powerline_io.static.prefab`, `PowergridIOAccessPoint`, 6 salidas) y las etapas de la red (1/4/10/18
-    fusibles) en `PowergridStageConfig`, pero cuánta energía da por etapa no está ni en el cliente ni en el
-    decompilado: en el editor la salida se ajusta a mano y se muestra como aproximada.
+13. ~~**Poste de tendido eléctrico**~~ **Resuelta (9/10) con el código del servidor dedicado:**
+    `PowergridIOAccessPoint.GetCurrentEnergy` = `PowergridManager.Server_GetCurrentPowerlineEnergy` =
+    `(int) Lerp(powerlinebasepoweroutput 5, powerlinemaxpoweroutput 50, Clamp01((F − 1) / (R − 1)))` con F fusibles
+    pesados puestos y R ranuras (15 + 5 = 20); 0 sin fusibles. Con 1/4/10/18/20 fusibles: 5/12/26/45/50. No consume ni
+    pisa `GetPassthroughAmount`: lo reparte entre las salidas conectadas como cualquier `IOEntity`. En el editor deja de
+    ser aproximado: en el inspector se eligen los fusibles de la central (0–20, clave `fuses` en el link) y "explicar"
+    muestra la cuenta. (Rustafied decía "hasta 30 en total": quedó viejo o era otro valor de prueba.)
+14. **Consumos que cambiaron desde 2024 (9/10, servidor dedicado):** las tiras de luces y las luces navideñas consumen
+    5, la araña 4 y el reflector 5 (`ConsumptionAmount()` fijo en código; el prefab del reflector dice 1 pero el código
+    lo pisa). El aspersor ahora pide 2 o nada (`DesiredPower`: 0 si le llega menos de 2). La heladera y el generador de
+    biocombustible usan su campo `PowerConsumption`/`powerConsumption`; la tolva consume 8; el reloj digital sólo deja
+    pasar corriente mientras suena. Revisados contra el código actual y sin cambios: `IOEntity.DesiredPower`,
+    `GetCurrentEnergy`, `GetHasPower`, `GetPassthroughAmount`, `UpdateOutputs`, `ShouldUpdateOutputs`,
+    `ShouldDrainBattery`. **No auditado todavía:** el resto de las clases portadas (compuertas, temporizador, sensores,
+    torreta…) contra el código de hoy.
 12. **Afuera de la paleta por ahora:** reloj digital, generador de biocombustible y tolva (sin código), bloque de
     comandos (admin), ascensor y teléfono (no se modelan), lo de audio (parlante conectado, luces de sonido, piso de
     baile) y lo que anda con combustible o pilas (máquinas de niebla y nieve, estroboscópica, parlante de Halloween).

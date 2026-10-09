@@ -104,10 +104,10 @@
     }
    ],
    "use": 0,
-   "useSrc": "nocode",
+   "useSrc": "code",
+   "gen": 50,
    "p": {},
-   "craft": [],
-   "approx": true
+   "craft": []
   },
   {
    "id": "electric.fuelgenerator.small",
@@ -1924,8 +1924,8 @@
      "h": 0.13
     }
    ],
-   "use": 1,
-   "useSrc": "nocode",
+   "use": 5,
+   "useSrc": "code",
    "p": {},
    "craft": [
     {
@@ -2030,8 +2030,8 @@
      "h": -0.02
     }
    ],
-   "use": 1,
-   "useSrc": "nocode",
+   "use": 4,
+   "useSrc": "code",
    "p": {},
    "craft": [
     {
@@ -2067,8 +2067,8 @@
      "h": 0.13
     }
    ],
-   "use": 1,
-   "useSrc": "nocode",
+   "use": 5,
+   "useSrc": "code",
    "p": {},
    "craft": [
     {
@@ -2141,8 +2141,8 @@
      "h": 0.13
     }
    ],
-   "use": 1,
-   "useSrc": "nocode",
+   "use": 5,
+   "useSrc": "code",
    "p": {},
    "craft": [
     {
@@ -2704,8 +2704,8 @@
      "h": -0.01
     }
    ],
-   "use": 1,
-   "useSrc": "field",
+   "use": 5,
+   "useSrc": "code",
    "p": {},
    "craft": [
     {
@@ -2741,8 +2741,8 @@
      "h": 1.07
     }
    ],
-   "use": 1,
-   "useSrc": "field",
+   "use": 5,
+   "useSrc": "code",
    "p": {},
    "craft": [
     {

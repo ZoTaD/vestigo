@@ -7,7 +7,7 @@ import { Flag, type IOEntity } from "./ioentity";
 import type { ElectricBattery } from "./behaviors/battery";
 import type { World } from "./world";
 import type { Circuit, Wire } from "./types";
-import { sunDot } from "./behaviors/sources";
+import { POLE, sunDot, type PowerlinePole } from "./behaviors/sources";
 import { gravityBlocks, WATER_PHRASES, wireWater } from "./explainWater";
 import { INDUSTRIAL_PHRASES } from "./explainIndustrial";
 
@@ -59,6 +59,22 @@ const BY_CLASS: Record<string, Phr> = {
     e.isOn()
       ? [lang === "es" ? `Prendido: da ${e.def.p.outputEnergy} y quema combustible de baja calidad.` : `On: it gives ${e.def.p.outputEnergy} and burns low grade fuel.`]
       : [lang === "es" ? "Apagado: no da nada. Se prende a mano o con energía en \"Force Start\"." : "Off: it gives nothing. Turn it on by hand or with power on \"Force Start\"."],
+  PowergridIOAccessPoint: (e, lang) => {
+    const p = e as PowerlinePole;
+    const f = p.fuses();
+    const used = Math.max(1, e.cachedOutputsUsed);
+    const each = Math.floor(e.getCurrentEnergy() / used);
+    if (f === 0) return [lang === "es" ? "Sin fusibles pesados en la central, el poste no da nada." : "With no Heavy Fuses in the Power Plant, the pole gives nothing."];
+    const calc = `${POLE.base} + (${POLE.max} − ${POLE.base}) × (${f} − 1) / (${POLE.slots} − 1)`;
+    return [
+      lang === "es"
+        ? `Con ${f} de ${POLE.slots} fusibles pesados en la central da ${e.getCurrentEnergy()}: ${calc}, sin decimales.`
+        : `With ${f} of ${POLE.slots} Heavy Fuses in the Power Plant it gives ${e.getCurrentEnergy()}: ${calc}, rounded down.`,
+      lang === "es"
+        ? `Lo reparte entre las salidas conectadas: ${used} → ${each} por salida.`
+        : `It splits that between the connected outputs: ${used} → ${each} each.`,
+    ];
+  },
   ElectricGenerator: (e, lang) => [lang === "es" ? `Da ${e.getCurrentEnergy()} por cada salida (sólo en modo creativo).` : `It gives ${e.getCurrentEnergy()} on every output (creative mode only).`],
   ElectricBattery: (e, lang) => {
     const b = e as ElectricBattery;
@@ -68,11 +84,11 @@ const BY_CLASS: Record<string, Phr> = {
     else if (b.rustWattSeconds < 5) out.push(lang === "es" ? "Está vacía: no descarga." : "It's empty: it can't discharge.");
     else out.push(lang === "es" ? "No tiene nada enchufado a la salida: no descarga." : "Nothing is plugged into its output: it doesn't discharge.");
     if (b.isOn() && b.activeDrain > 0) out.push(lang === "es" ? `Con esta carga dura ${duration(b.rustWattSeconds / b.activeDrain, lang)}.` : `At this rate it lasts ${duration(b.rustWattSeconds / b.activeDrain, lang)}.`);
-    if (b.currentEnergy > 0 && !b.isFull()) {
+    if (b.currentEnergy > 0 && b.rustWattSeconds < b.maxCapactiySeconds) {
       const c = Math.min(b.currentEnergy, b.desiredPower()) * b.chargeRatio;
       out.push(lang === "es" ? `Le entran ${b.currentEnergy}: guarda ${n(c, lang)} por segundo (el 80 %).` : `It gets ${b.currentEnergy} in: it stores ${n(c, lang)} per second (80%).`);
     }
-    if (b.isFull()) out.push(lang === "es" ? "Está llena: no pide más carga." : "It's full: it takes no more charge.");
+    if (b.rustWattSeconds >= b.maxCapactiySeconds) out.push(lang === "es" ? "Está llena: no pide más carga." : "It's full: it takes no more charge.");
     return out;
   },
   Splitter: (e, lang) => {

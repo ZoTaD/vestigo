@@ -53,8 +53,14 @@ Números de los prefabs y de `WaterCatcherCollectRate` de la caché del build 25
 ## Dudas (anotadas, no inventadas)
 
 1. ~~`server.waterContainersLeaveWaterBehind`~~ **Resuelta:** es `false` por defecto (`ConVar/Server.cs`).
-2. El aspersor pide 2 por segundo en el decompilado (`ConsumptionAmount`); el prefab actual dice 15 por salpicada cada
-   5 s. Se sigue el código.
+2. ~~El aspersor pide 2 por segundo en el decompilado; el prefab actual dice 15 por salpicada cada 5 s~~ **Resuelta
+   (9/10):** no se contradicen, son dos cosas distintas y las dos valen hoy. `ConsumptionAmount` (2) es lo que el
+   aspersor le pide por segundo a la fuente; `WaterPerSplash` 15 cada `SplashFrequency` 5 s es lo que reparte entre lo
+   que moja (macetas, piletas, jugadores). El manual de rustrician.io (act. 16/8/2026,
+   https://www.rustrician.io/wiki/powerstorage.html) lo midió igual: consumo promedio 2 ml/s (120 por minuto) y salida
+   promedio 3 ml/s (15 por ciclo de ~5 s); la wiki de rustlabs da los mismos números. El código del servidor dedicado (build 25823813) confirma
+   `ConsumptionAmount` 2 y cambia `DesiredPower`: ahora pide 2 o nada (antes, lo que le llegara con tope en 2); portado
+   en `water.ts` con test.
 3. El purificador sin energía (necesita fuego) queda afuera: el editor no tiene fuego.
 4. ~~Valores por defecto de las convars industriales~~ **Resuelta** (`ConVar/Server.cs`): `conveyorMoveFrequency` 5 s,
    `industrialCrafterFrequency` 5 s, `maxItemStacksMovedPerTickIndustrial` 12, `industrialAllowQuickMove` sí.

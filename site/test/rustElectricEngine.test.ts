@@ -7,6 +7,7 @@ import data from "@rust/electricity.json";
 import { buildWorld, Catalog, live, type Circuit } from "../src/rust/electric/engine";
 import type { ElectricityData, PartCfg } from "../src/rust/electric/engine/types";
 import type { ElectricBattery } from "../src/rust/electric/engine/behaviors/battery";
+import { powerlineEnergy } from "../src/rust/electric/engine/behaviors/sources";
 
 const cat = new Catalog(data as unknown as ElectricityData);
 
@@ -360,9 +361,60 @@ describe("Drenaje de baterías (parche del 14/3/2024, \"Fixes and Chicken Costum
 });
 
 describe("Poste de tendido eléctrico (Power Trip)", () => {
-  it("da lo que se le ajusta por sus 6 salidas", () => {
-    const w = run(c([["p", "powerline.pole", { output: 40 }], ["l", "electric.simplelight"], ["l2", "electric.simplelight"]], "p.0>l.0 p.5>l2.0"), 3);
-    expect([w.get("l")!.received[0], w.get("l2")!.received[0]]).toEqual([40, 40]);
+  // Servidor dedicado (build 25823813): `PowergridManager.Server_GetCurrentPowerlineEnergy` =
+  // (int) Lerp(5, 50, (fusibles − 1) / (20 − 1)), 0 sin fusibles; el reparto es el `GetPassthroughAmount` de `IOEntity`.
+  it("lo que da según los fusibles pesados de la central", () => {
+    expect([0, 1, 4, 10, 18, 20].map((f) => powerlineEnergy(f))).toEqual([0, 5, 12, 26, 45, 50]);
+  });
+
+  it("con la red llena da 50 y lo reparte entre las salidas conectadas", () => {
+    const w = run(c([["p", "powerline.pole"], ["l", "electric.simplelight"], ["l2", "electric.simplelight"]], "p.0>l.0 p.5>l2.0"), 3);
+    expect([got(w, "l"), got(w, "l2")]).toEqual([25, 25]);
+  });
+
+  it("con 4 fusibles (etapa 2) da 12; sin fusibles, nada", () => {
+    expect(got(run(c([["p", "powerline.pole", { fuses: 4 }], ["l", "electric.simplelight"]], "p.0>l.0"), 3), "l")).toBe(12);
+    expect(got(run(c([["p", "powerline.pole", { fuses: 0 }], ["l", "electric.simplelight"]], "p.0>l.0"), 3), "l")).toBe(0);
   });
 });
+
+describe("Batería: salida Fully Charged (Polish and Progress, 5/12/2024; código del servidor, build 25823813)", () => {
+  const full = (charger = false) =>
+    c(
+      [["b", "electric.battery.rechargable.medium", { charge: 9000 }], ["l", "electric.simplelight"], ["l2", "electric.simplelight"], ...(charger ? ([["g", "electric.generator.small"]] as [string, string][]) : [])],
+      `b.0>l.0 b.1>l2.0${charger ? " g.0>b.0" : ""}`,
+    );
+
+  it("da 1 con la batería llena", () => {
+    expect(got(run(full(), 1), "l2")).toBe(1);
+  });
+
+  it("lo que cuelga de esa salida suma 1 al gasto (`GetDrain`)", () => {
+    const w = run(full(), 1.6);
+    const b = w.get("b") as ElectricBattery;
+    expect(b.activeDrain).toBe(2);
+    expect(b.maxCapactiySeconds - b.rustWattSeconds).toBe(2);
+  });
+
+  it("sigue 'llena' mientras la carga redondeada en rWm no baja del máximo, y sin cargador se apaga cuando baja", () => {
+    const early = run(full(), 10);
+    expect(got(early, "l2")).toBe(1);
+    const late = run(full(), 25);
+    expect((late.get("b") as ElectricBattery).isFull()).toBe(false);
+    expect(got(late, "l2")).toBe(0);
+    expect((late.get("b") as ElectricBattery).activeDrain).toBe(1);
+  });
+
+  it("con un cargador que cubre el gasto no se apaga (`lastChargeIn` ≥ gasto)", () => {
+    const w = run(full(true), 60);
+    expect(got(w, "l2")).toBe(1);
+  });
+
+  it("con algo enchufado sólo en 'Fully Charged' también descarga (`CheckDischarge`)", () => {
+    const w = run(c([["b", "electric.battery.rechargable.medium", { charge: 9000 }], ["l2", "electric.simplelight"]], "b.1>l2.0"), 2);
+    expect((w.get("b") as ElectricBattery).isOn()).toBe(true);
+    expect(got(w, "l2")).toBe(1);
+  });
+});
+
 

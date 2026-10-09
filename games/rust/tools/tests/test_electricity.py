@@ -127,9 +127,11 @@ class Agua(unittest.TestCase):
 
 
 class PosteDeTendido(unittest.TestCase):
-    def test_el_poste_de_power_trip_es_fuente_con_seis_salidas_y_aproximado(self):
+    def test_el_poste_de_power_trip_es_fuente_con_seis_salidas(self):
+        # Ya no es aproximado: la fórmula sale del servidor dedicado (`PowergridManager.Server_GetCurrentPowerlineEnergy`).
         c = by_id(json.loads(DATA.read_text(encoding="utf-8")))["powerline.pole"]
-        self.assertEqual((c["cls"], c["cat"], len(c["out"]), c["approx"]), ("PowergridIOAccessPoint", "source", 6, True))
+        self.assertEqual((c["cls"], c["cat"], len(c["out"])), ("PowergridIOAccessPoint", "source", 6))
+        self.assertNotIn("approx", c)
 
 
 class Industrial(unittest.TestCase):
