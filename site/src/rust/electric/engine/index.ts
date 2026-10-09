@@ -11,7 +11,8 @@ import { HBHFSensor, LaserDetector, PressurePad, SeismicSensor, StorageMonitor }
 import { ElectricGenerator, ElectricWaterWheel, ElectricWindmill, FuelGenerator, PowerlinePole, SolarPanel } from "./behaviors/sources";
 import { ElectricSwitch, PressButton, RFBroadcaster, RFReceiver, SmartSwitch } from "./behaviors/switches";
 import { FluidSwitch, LiquidContainer, PoweredWaterPurifier, Sprinkler, WaterCatcher, WaterPump } from "./behaviors/water";
-import type { Circuit, ComponentDef, ElectricityData, Part, PartCfg, Wire } from "./types";
+import { BaseOven, BoxStorage, IndustrialConveyor, IndustrialCrafter } from "./behaviors/industrial";
+import type { Circuit, ComponentDef, ElectricityData, IndItem, Part, PartCfg, Wire } from "./types";
 import { DEFAULT_ENV } from "./types";
 import { World } from "./world";
 
@@ -64,6 +65,10 @@ const BEHAVIORS: Record<string, Ctor> = {
   PoweredWaterPurifier,
   Sprinkler,
   FluidSwitch,
+  IndustrialConveyor,
+  IndustrialCrafter,
+  BaseOven,
+  BoxStorage,
 };
 
 export const behaviorOf = (cls: string): Ctor => BEHAVIORS[cls] ?? Consumer;
@@ -71,6 +76,8 @@ export const behaviorOf = (cls: string): Ctor => BEHAVIORS[cls] ?? Consumer;
 /** El catálogo de componentes por shortname. */
 export class Catalog {
   readonly byId: Map<string, ComponentDef>;
+  /** Los objetos para la red industrial (`industrial-items.json`): se cargan aparte, cuando hacen falta. */
+  items: Record<string, IndItem> = {};
   constructor(readonly data: ElectricityData) {
     this.byId = new Map(data.components.map((c) => [c.id, c]));
   }
@@ -98,6 +105,7 @@ export function wireError(cat: Catalog, circuit: Circuit, w: Wire): "missing" | 
 export function buildWorld(cat: Catalog, circuit: Circuit): World {
   const world = new World();
   world.env = { ...DEFAULT_ENV, ...circuit.env };
+  world.items = cat.items;
   for (const p of circuit.parts) addEntity(cat, world, p, false);
   for (const w of circuit.wires) {
     const part = world.get(w.from[0]);
@@ -122,6 +130,7 @@ function addEntity(cat: Catalog, world: World, p: Part, live: boolean): IOEntity
   // La configuración vive en la parte: lo que el usuario cambia en el inspector queda guardado en el circuito.
   p.cfg ??= {};
   const e = new Cls(world, p.id, def, p.cfg);
+  e.part = p;
   world.entities.set(p.id, e);
   // El hijo que el juego crea con la entidad (`SpawnStorageEnt`): otra entidad, con su propio inventario.
   const cdef = def.child ? cat.get(def.child) : undefined;

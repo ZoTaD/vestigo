@@ -8,7 +8,7 @@
  * misma entidad no actualiza sus salidas dos veces en menos de `RESPONSE_TIME` (0,1 s): eso arma los relojes y el
  * parpadeo de los circuitos realimentados.
  */
-import type { ComponentDef, IOType, PartCfg, SlotDef } from "./types";
+import type { ComponentDef, IOType, Part, PartCfg, SlotDef } from "./types";
 import type { World } from "./world";
 
 /** `IOEntity.responsetime` (convar `ioentity.responsetime`, 0,1 s por defecto). */
@@ -112,6 +112,9 @@ export class IOEntity {
     this.sent = own.map(() => 0);
     this.ioType = def.io ?? 0;
   }
+
+  /** La parte del circuito (para el inventario de una caja o los filtros de una cinta). */
+  part: Part | null = null;
 
   /** La entidad que el juego crea con esta (el depósito del purificador) y la que la creó. */
   child: IOEntity | null = null;

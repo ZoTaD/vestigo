@@ -38,6 +38,10 @@ export interface ComponentDef {
   icon?: string;
   /** Sus números no están en los datos del juego: se ajustan a mano (el poste de tendido). */
   approx?: boolean;
+  /** Caja u horno con el adaptador de almacenamiento puesto (una sola parte). */
+  adaptor?: boolean;
+  /** El único combustible que acepta el horno (`fuelType`). */
+  fuel?: string;
   cat: Category;
   name: { en: string; es: string | null };
   slug: string | null;
@@ -54,6 +58,19 @@ export interface ComponentDef {
   /** Lo que el jugador puede configurar, con su rango. */
   range?: Record<string, [number, number]>;
   craft: { id: string; amount: number }[];
+}
+
+/** Lo que la red industrial necesita de un objeto (`games/rust/data/industrial-items.json`). */
+export interface IndItem {
+  stack: number;
+  cat: string;
+  name: { en: string; es: string | null };
+  /** `ItemModCookable`: en qué se convierte, cuánto, en cuánto tiempo y entre qué temperaturas. */
+  cook?: { into: string; n: number; time: number; low: number; high: number };
+  /** `ItemModBurnable`: cuánto dura y qué deja. */
+  burn?: { fuel: number; by: string | null; byN: number; byChance: number };
+  /** La receta: ingredientes, cuánto da, tiempo y banco. */
+  craft?: { in: [string, number][]; n: number; time: number; wb: number };
 }
 
 export interface ElectricityData {
