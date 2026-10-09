@@ -30,7 +30,9 @@ nunca en paralelo ni con otro proceso del juego abierto, y mirá antes la RAM li
    el juego, el motor (`site/src/rust/electric/engine/`) se revisa contra el código decompilado; ver
    `docs/superpowers/plans/2026-10-09-rust-electricidad.md`.
 6b. `python games/rust/tools/farming.py` (Granjas: lee la caché cruda `games/rust/cache/`, no el juego; un segundo).
-6c. `python games/rust/tools/monuments.py` (Monumentos: de la caché cruda; antes de `patches.py`, que enlaza sus nombres).
+6c. `python games/rust/tools/monuments.py` (Monumentos: de la caché cruda, la del cliente y la del servidor; antes de
+    `patches.py`, que enlaza sus nombres). Si cambió lo que aparece en los monumentos o los costos, antes actualizá el
+    servidor dedicado y corré `python games/rust/tools/extract_server.py` (ver abajo).
 6d. `python games/rust/tools/convars.py` (Servidor: clona el decompilado público en `games/rust/.cache/`; sólo cuando
     cambie esa fuente).
 6e. `python games/rust/tools/patches.py` (Parches: baja los anuncios de Steam; después `--offline --todo <slug>` deja los
@@ -41,7 +43,7 @@ nunca en paralelo ni con otro proceso del juego abierto, y mirá antes la RAM li
    de tocar el test.
 9. La verificación final, desde `site/`: `npx vitest run test/rust` y
    `NODE_OPTIONS=--max-old-space-size=6144 npm run build`.
-10. Commiteá `games/rust/data`, `site/public/rust/items`, `site/public/rust/skins`, `site/public/rust/patches`, `site/public/rust/monuments` y `site/public/rust/farming`.
+10. Commiteá `games/rust/data` (con `monuments.json` y `monuments-loot.json`), `site/public/rust/items`, `site/public/rust/skins`, `site/public/rust/patches`, `site/public/rust/monuments` y `site/public/rust/farming`.
 
 ## Tests
 
@@ -58,6 +60,7 @@ varios GB de bundles con UnityPy, así que se corren **de a un archivo por vez**
     RUST_GAME=1 python -m unittest games/rust/tools/tests/test_world.py -v
     RUST_GAME=1 python -m unittest games/rust/tools/tests/test_raid.py -v
     RUST_CACHE=1 python -m unittest games/rust/tools/tests/test_electricity.py -v   # lee la caché, no el juego
+    RUST_SERVER=1 python -m unittest games/rust/tools/tests/test_extract_server.py -v   # lee el servidor dedicado
 
 (En PowerShell: `$env:RUST_GAME = "1"; python -m unittest ...`.) Cada módulo carga el juego una sola vez y lo suelta al
 terminar.
@@ -68,3 +71,16 @@ terminar.
 `extract_media.py` vuelcan del juego, sin tocar el sitio, lo que hace falta para Monumentos, Electricidad y Granjas a
 `games/rust/cache/` (no versionada salvo su `README.md`, que explica qué hay y de dónde sale). Usan la base común de
 `cache_dump.py`. Misma regla de memoria: uno por vez (~12-14 GB de RAM de pico cada uno).
+
+## Servidor dedicado (2026-10-09)
+
+Lo que el cliente no trae (qué cajas, NPC y objetos sueltos aparecen en cada monumento y cuántos; el alquiler de las
+tiendas, los apartamentos y lo que dura un fusible de la red de Power Trip) sale del servidor dedicado, instalado fuera
+del repo con SteamCMD (app 258550, ~5,7 GB, en `C:\RustServer` o donde diga `RUST_SERVER_DIR`):
+
+    C:\SteamCMD\steamcmd.exe +force_install_dir C:/RustServer +login anonymous +app_update 258550 validate +quit
+    python games/rust/tools/extract_server.py
+
+No hace falta arrancarlo: `extract_server.py` lee sus bundles con UnityPy (~4 GB de RAM, ~40 s; uno por vez) y los
+valores que el servidor pone en código con `server_code.ps1` (PowerShell de Windows con el Mono.Cecil que trae el mismo
+servidor). Escribe `games/rust/cache/server/` (ver el README de la caché); después va `monuments.py`.

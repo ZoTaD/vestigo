@@ -10,9 +10,11 @@ import { useLang, useLocale } from "../../i18n";
 import RouteLink from "../../RouteLink";
 import { registerRustSlugs, type Route } from "../../route";
 import { useLoad } from "../../useLoad";
+import { formatDuration } from "../items/format";
 import { Icon, RefLink } from "../items/parts";
 import RsLoading from "../RsLoading";
 import { useMonumentsCopy } from "./copy";
+import { MonumentSpawns } from "./MonumentSpawns";
 import { loadMonuments, peekMonuments, say, type Card, type Monument, type Monuments } from "./data";
 import MonumentPuzzleSection from "./Puzzle";
 import "../../styles/rust-items.css";
@@ -41,8 +43,11 @@ const to = (route: Route, detail?: string): Route => ({ ...route, view: "rust", 
 function MonumentList({ d, route, navigate, missing }: { d: Monuments; route: Route; navigate: Nav; missing: boolean }) {
   const t = useMonumentsCopy();
   const { lang } = useLang();
+  const locale = useLocale();
   const byId = new Map(d.monuments.map((m) => [m.id, m]));
   const pg = d.powergrid;
+  const pct = (x: number) => `${Math.round(x * 100).toLocaleString(locale)}`;
+  const slow = `${pct(pg.wear.slow[0])}–${pct(pg.wear.slow[1])} %`;
   return (
     <main className="rs-main rs-mons">
       <section className="rs-pnl">
@@ -107,6 +112,9 @@ function MonumentList({ d, route, navigate, missing }: { d: Monuments; route: Ro
             </li>
           ))}
         </ol>
+        <p className="rs-farm-p">
+          {t.grid.wear(pg.wear.worst, formatDuration(pg.wear.seconds), slow, pg.wear.pop[1], pg.wear.pop[0], Math.round(1 / pg.wear.lowPopScale))}
+        </p>
         <p className="rs-note">{t.grid.note}</p>
       </section>
     </main>
@@ -123,6 +131,7 @@ function MonumentFicha({ d, m, route, navigate }: { d: Monuments; m: Monument; r
   const shop = m.shop ? d.shops[m.shop] : null;
   const fusesAt = (stage: number) => d.powergrid.stages[stage - 1] ?? 0;
   const cards = CARDS.filter((c) => m.cards[c]);
+  const rent = d.apartments.shopRent;
   return (
     <main className="rs-main rs-ficha rs-mons">
       <RouteLink className="rs-back" to={to(route)} onNavigate={navigate}>
@@ -197,6 +206,8 @@ function MonumentFicha({ d, m, route, navigate }: { d: Monuments; m: Monument; r
 
       <MonumentPuzzleSection id={m.id} route={route} navigate={navigate} />
 
+      <MonumentSpawns d={d} m={m} route={route} navigate={navigate} />
+
       {Object.keys(m.recyclers).length > 0 && (
         <section className="rs-pnl">
           <h2 className="rs-hd">{t.recyclersTitle}</h2>
@@ -233,7 +244,10 @@ function MonumentFicha({ d, m, route, navigate }: { d: Monuments; m: Monument; r
       {m.apartments && (
         <section className="rs-pnl">
           <h2 className="rs-hd">{t.apartments.title}</h2>
-          <p className="rs-farm-p">{t.apartments.lede(d.apartments.shops)}</p>
+          <p className="rs-farm-p">
+            {t.apartments.lede(d.apartments.shops)} {t.apartments.freeHours(d.apartments.freeHours)} {t.apartments.evict(d.apartments.evictHours)}{" "}
+            {t.apartments.masterKey(d.apartments.masterKey)}
+          </p>
           <table className="rs-table">
             <thead>
               <tr>
@@ -255,7 +269,7 @@ function MonumentFicha({ d, m, route, navigate }: { d: Monuments; m: Monument; r
             </tbody>
           </table>
           <h3 className="rs-sub">{t.apartments.taxTitle}</h3>
-          <p className="rs-farm-p">{t.apartments.taxNote}</p>
+          <p className="rs-farm-p">{t.apartments.taxNote(d.apartments.taxScale)}</p>
           <ul className="rs-farm-compost">
             {d.apartments.tax.map((x) => (
               <li key={x.item.id}>
@@ -267,6 +281,10 @@ function MonumentFicha({ d, m, route, navigate }: { d: Monuments; m: Monument; r
               </li>
             ))}
           </ul>
+          <h3 className="rs-sub">{t.apartments.shopsTitle}</h3>
+          <p className="rs-farm-p">
+            {t.apartments.shopOpen(rent.fee + rent.hours * rent.perHour, rent.fee, rent.hours, rent.perHour)} {t.apartments.shopTakeover(rent.protectHours)}
+          </p>
           <p className="rs-note">{t.apartments.defaults}</p>
         </section>
       )}
@@ -294,7 +312,6 @@ function MonumentFicha({ d, m, route, navigate }: { d: Monuments; m: Monument; r
           </ul>
         </section>
       )}
-      <p className="rs-note">{t.serverNote}</p>
     </main>
   );
 }

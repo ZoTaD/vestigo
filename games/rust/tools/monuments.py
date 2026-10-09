@@ -8,13 +8,18 @@ Lee la caché cruda del cliente (`games/rust/cache/world/`, `io/configs.json`, `
   games/rust/data/site/monuments-slugs-es.json   los slugs en español de las fichas (`{"monuments": {...}}`)
   site/public/rust/monuments/<id>.webp           un cuadro del video del menú, 640 × 360, para los que tienen video
 
-Lo que el cliente no trae (qué cajas y NPC aparecen en cada uno, el alquiler de las tiendas, el mantenimiento de los
-monumentos que mantienen los jugadores) es del servidor: no se inventa, no sale.
+Lo que el cliente no trae sale de la caché del servidor dedicado (`games/rust/cache/server/`, `extract_server.py`,
+2026-10-09): qué cajas, NPC y objetos sueltos aparecen en cada monumento y cuántos (`spawns`), el alquiler de las
+tiendas, los apartamentos y lo que dura un fusible de la red (`rent`, `apartments`, `powergrid.fuse*`). Además escribe
+
+  games/rust/data/monuments-loot.json            el botín de cada caja y NPC que aparece en algún monumento (lo baja la
+                                                 ficha cuando se abre una caja)
 
 Uso, desde la raíz del repo (un par de segundos, no abre bundles):
     python games/rust/tools/monuments.py
 """
 import json
+import math
 import os
 import sys
 from collections import Counter, defaultdict
@@ -23,6 +28,7 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(__file__))
 from extract import slugify, text_of  # noqa: E402
 from farming import Items, dump  # noqa: E402
+from world import CONTAINERS, NPCS, container_base, name_of  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[3]
 CACHE = Path(os.environ.get("RUST_CACHE_DIR", ROOT / "games" / "rust" / "cache"))
@@ -84,6 +90,137 @@ SHOPS = {
     "small/stables_b.prefab": "barn", "fishing_village/fishing_village_a.prefab": "fishing",
     "fishing_village/fishing_village_b.prefab": "fishing", "fishing_village/fishing_village_c.prefab": "fishing",
 }
+
+
+# --- lo que aparece (servidor) ---
+# Los NPC que `world.NPCS` no lista (no tienen botín en `loot.json`): los científicos nuevos de las plataformas
+# petroleras (`gen2/scientist2`, botín en `cache/server/npc_loot.json`) y los guardias de las zonas seguras (sin botín).
+EXTRA_NPCS = {"scientist2": "scientist_rig", "npc_bandit_guard": "bandit_guard", "scientistnpc_peacekeeper": "peacekeeper"}
+EXTRA_NPC_NAMES = {
+    "scientist_rig": ("Oil Rig Scientist", "Científico de la plataforma petrolera"),
+    "bandit_guard": "banditguard.name",
+    "peacekeeper": ("Peacekeeper Scientist", "Científico pacificador"),
+}
+RIG_SCIENTIST = "assets/rust.ai/agents/npcplayer/humannpc/scientist/gen2/scientist2.prefab"
+# Lo que se junta del suelo dentro del monumento: tarjetas, fragmentos de planos y barriles de diésel (el objeto que dan).
+PICKUPS = {
+    "keycard_green_pickup.entity": "keycard_green", "keycard_blue_pickup.entity": "keycard_blue",
+    "keycard_red_pickup.entity": "keycard_red", "basicblueprintfragment_pickup.entity": "basicblueprintfragment",
+    "basicblueprintfragment_singlepickup.entity": "basicblueprintfragment",
+    "advancedblueprintfragment_pickup.entity": "advancedblueprintfragment", "diesel_collectable": "diesel_barrel",
+}
+# Los puntos que sostienen una sola entidad (`GenericSpawnPoint.ObjectSpawned` los apaga hasta que se va); un
+# `RadialSpawnPoint` reparte en un radio y no se ocupa.
+SINGLE_POINTS = ("GenericSpawnPoint", "SpaceCheckingSpawnPoint", "VehicleSpawnPoint")
+
+
+def prefab_base(path: str) -> str:
+    return path.rsplit("/", 1)[-1].removesuffix(".prefab")
+
+
+def classify(path: str | None):
+    """Qué es lo que aparece: ("loot", clave de loot.json), ("npc", clave), ("pickup", objeto) o None (minerales,
+    troncos, vehículos, barricadas, decoración: no se muestran; un prefab que el manifiesto no conoce, tampoco)."""
+    if not path:
+        return None
+    base = prefab_base(path)
+    if container_base(path) in CONTAINERS:
+        return ("loot", CONTAINERS[container_base(path)])
+    if base in NPCS:
+        return ("npc", NPCS[base])
+    if base in EXTRA_NPCS:
+        return ("npc", EXTRA_NPCS[base])
+    if base in PICKUPS:
+        return ("pickup", PICKUPS[base])
+    return None
+
+
+def group_full(g) -> int:
+    """Cuántas entidades tiene un grupo lleno (`SpawnGroup.Spawn`): `maxPopulation`, sin pasar de los puntos que
+    sostienen una sola; sin puntos no aparece nada."""
+    pts = g.get("points") or {}
+    single = sum(n for k, n in pts.items() if k in SINGLE_POINTS)
+    if pts.get("RadialSpawnPoint"):
+        return g["data"]["maxPopulation"]
+    return min(g["data"]["maxPopulation"], single)
+
+
+def tier_applies(mask: int, tier: int) -> bool:
+    """`SpawnGroup.Tier` (flags de `MonumentTier`; -1 o 0 = en todos): si el grupo aparece en un monumento de ese tier."""
+    return mask <= 0 or bool(mask & (1 << tier))
+
+
+def tally(groups, singles, tier, nested, respawn, power=False, depth=0):
+    """
+    {(tipo, clave, con red): (seguro, máximo, esperado)} de un conjunto de grupos y entidades sueltas en un tier. Cada
+    lugar de un grupo lleno elige un prefab por peso: lo esperado suma la probabilidad de cada opción; lo seguro, lo que
+    dan todas las opciones a la vez (barril azul o amarillo: 1 barril siempre). Un prefab que trae sus propios grupos
+    (las carpas de la base militar abandonada, las pilas de chatarra) se abre y suma lo suyo (`nested`).
+    """
+    acc: dict = {}
+
+    def add(key, lo, hi, avg):
+        a, b, c = acc.get(key, (0, 0, 0.0))
+        acc[key] = (a + lo, b + hi, c + avg)
+
+    def contrib(path, pw):
+        what = classify(path)
+        if what:
+            return {(*what, pw): (1, 1, 1.0)}
+        if path in nested and depth < 4:
+            return tally(*nested[path], tier, nested, respawn, pw, depth + 1)
+        return {}
+
+    for g in groups:
+        if not tier_applies(g["data"]["Tier"], tier):
+            continue
+        full = group_full(g)
+        pw = power or "powergrid" in g["ctx"].get("go", "").lower()
+        options = [(p["weight"], contrib((p.get("prefab") or {}).get("prefab"), pw)) for p in g["data"]["prefabs"] if p["weight"] > 0]
+        total = sum(w for w, _ in options)
+        if not full or total <= 0:
+            continue
+        # Un retraso infinito (el volcado lo guarda como texto, "inf") es un grupo que no se repone.
+        lo_s, hi_s = float(g["data"]["respawnDelayMin"]), float(g["data"]["respawnDelayMax"])
+        for key in {k for _, c in options for k in c}:
+            vals = [c.get(key, (0, 0, 0.0)) for _, c in options]
+            add(key, full * min(v[0] for v in vals), full * max(v[1] for v in vals),
+                full * sum(w / total * c.get(key, (0, 0, 0.0))[2] for w, c in options))
+            if depth == 0 and math.isfinite(hi_s) and hi_s > 0:
+                r = respawn.setdefault(key, [math.inf, 0])
+                r[0], r[1] = min(r[0], lo_s), max(r[1], hi_s)
+    for path in singles:
+        for key, v in contrib(path, power).items():
+            add(key, *v)
+    return acc
+
+
+def spawns_of(groups, singles, tiers: list[int], nested=None):
+    """
+    Lo que aparece en un monumento, por cosa: `lo` lo seguro, `hi` lo máximo (todos los grupos donde puede salir,
+    llenos) y `avg` lo esperado; `respawn`, los minutos entre reapariciones de las cajas (de los grupos del monumento). Si hay grupos
+    que dependen del tier del monumento, se cuenta cada tier y queda el rango de todos (`by_tier`). `power` marca lo que
+    sólo aparece con la red de Power Trip prendida (los grupos `Powergrid` de las salas de botín).
+    """
+    nested = nested or {}
+    respawn: dict = {}
+    per_tier = [tally(groups, singles, t, nested, respawn) for t in (tiers or [0, 1, 2])]
+    keys = sorted({k for acc in per_tier for k in acc}, key=lambda k: (k[0], k[2], k[1]))
+    out = {"loot": [], "npc": [], "pickup": []}
+    for key in keys:
+        vals = [acc.get(key, (0, 0, 0.0)) for acc in per_tier]
+        row = {"id": key[1], "lo": min(v[0] for v in vals), "hi": max(v[1] for v in vals),
+               "avg": round(sum(v[2] for v in vals) / len(vals), 1)}
+        if key[2]:
+            row["power"] = True
+        out[key[0]].append(row)
+    for rows in out.values():
+        rows.sort(key=lambda r: (bool(r.get("power")), -r["avg"], r["id"]))
+    # Cada cuánto se reponen las cajas (minutos, de los grupos del monumento que se reponen al menos cada minuto).
+    waits = [r for k, r in respawn.items() if k[0] == "loot" and r[0] >= 60]
+    out["respawn"] = [round(min(r[0] for r in waits) / 60), round(max(r[1] for r in waits) / 60)] if waits else None
+    by_tier = any(g["data"]["Tier"] > 0 for g in groups)
+    return out, by_tier
 
 
 def load(rel):
@@ -171,6 +308,27 @@ def build():
         if k:
             per[k]["power"][(s, power_kind(x["ctx"].get("go", "")))] += 1
 
+    # Lo que aparece en cada monumento (servidor). Sólo los grupos de las escenas de monumento: las piezas de
+    # `assets/scenes/prefabs/` y los `*_ai.prefab` de la escena de props ya están copiados adentro de la escena.
+    spawners: dict[str, list] = defaultdict(list)
+    singles: dict[str, list] = defaultdict(list)
+    # Los prefabs que no son monumento pero traen grupos (carpas, pilas de chatarra) se abren cuando un grupo los elige.
+    nested: dict[str, tuple] = defaultdict(lambda: ([], []))
+    for g in load("server/spawners.json"):
+        root = g["ctx"].get("root", "")
+        if root.startswith(MON):
+            spawners[root[len(MON):]].append(g)
+        elif root.startswith("assets/"):
+            nested[root][0].append(g)
+    for x in load("server/individual.json"):
+        root = x["ctx"].get("root", "")
+        path = (x["data"].get("entityPrefab") or {}).get("prefab")
+        if root.startswith(MON):
+            singles[root[len(MON):]].append(path)
+        elif root.startswith("assets/"):
+            nested[root][1].append(path)
+    nested = dict(nested)
+
     with open(DATA / "items.json", encoding="utf-8") as f:
         items = Items(json.load(f)["items"], load("farming/items.json") + load("io/items.json"))
 
@@ -190,6 +348,9 @@ def build():
         size = first["monument"][0]["size"] if first.get("monument") else None
         photo = next((PHOTOS[k] for k in keys if k in PHOTOS), None)
         mid = slugify(en)
+        spawns, by_tier = spawns_of(spawners.get(keys[0], []), singles.get(keys[0], []), tiers_of(first["tier"]), nested)
+        for row in spawns["pickup"]:
+            row["item"] = items.ref(row.pop("id"))
         out.append({
             "id": mid,
             "slugEs": slugify(first["name"]["es"] or en),
@@ -210,6 +371,8 @@ def build():
             "power": sorted(({"stage": s, "what": w, "n": n} for (s, w), n in agg["power"].items()), key=lambda x: (x["stage"], x["what"])),
             "shop": next((SHOPS[k] for k in keys if k in SHOPS), None),
             "apartments": "apartments_complex" in keys[0],
+            "spawns": spawns,
+            "spawnsByTier": by_tier,
         })
 
     stages = [s["requiredFuses"] for s in load("io/configs.json")["PowergridStageConfig"][0]["data"]["stages"]]
@@ -222,6 +385,17 @@ def build():
         "fuse": heavy,
         "byStage": [{"stage": i + 1, "fuses": f, "monuments": [m["id"] for m in out if any(p["stage"] == i + 1 for p in m["power"])]} for i, f in enumerate(stages)],
     }
+    # Lo que dura un fusible en la central (`PowergridManager.ServerFuseDeteriorationTick`, convars `powergrid.*` del
+    # servidor): los `fuseFullDecayCount` más gastados duran `fuseLifespanSeconds` con `fuseDecayHighPop` jugadores o más
+    # (con `fuseDecayLowPop` o menos, a `fuseDecayLowPopScale` de esa velocidad); el resto se gasta a una fracción al azar
+    # entre `fuseSlowDecayFractionMin` y `Max`.
+    code = load("server/code.json")
+    pg = code["Powergrid"]
+    powergrid["wear"] = {
+        "seconds": pg["fuseLifespanSeconds"], "worst": pg["fuseFullDecayCount"],
+        "slow": [pg["fuseSlowDecayFractionMin"], pg["fuseSlowDecayFractionMax"]],
+        "pop": [pg["fuseDecayLowPop"], pg["fuseDecayHighPop"]], "lowPopScale": pg["fuseDecayLowPopScale"],
+    }
     rooms = Counter((x["data"]["Size"], x["data"]["PurchaseCost"], x["data"]["MinimumRent"]) for x in cls("ApartmentRoom"))
     tax = {}
     for x in cls("ItemModApartmentTax"):
@@ -233,6 +407,20 @@ def build():
         "tax": [{"item": items.ref(sid), "scrap": v} for sid, v in sorted(tax.items(), key=lambda kv: (-kv[1], kv[0]))],
         "shops": sum(1 for x in cls("RentableShop") if x["ctx"].get("root", "").endswith("apartments_complex_1.prefab")),
         "scrap": items.ref("scrap"),
+    }
+    # Los costos que el servidor pone en código (`ConVar.ApartmentCommands`, `RentableShop`): horas de alquiler gratis al
+    # entrar, la llave maestra del guardia, cuánto pesa el impuesto por recursos (`rentscaling`: con 0, el alquiler es el
+    # mínimo del cuarto: `ApartmentRoom.GetDailyUpkeepCost` = máx(mínimo, impuesto × rentscaling)) y el alquiler de una
+    # tienda: abrirla cuesta `InitialScrapFee` + `InitialRentHoursRequired` horas de `ScrapPerHourRent`, y quitársela a
+    # otro jugador sube el multiplicador en 1 (`Server_OpenStore`), que también multiplica el alquiler por hora.
+    ap, shop = code["ConVar.ApartmentCommands"], code["RentableShop"]
+    apartments["freeHours"] = ap["apartmentfreerenthours"]
+    apartments["masterKey"] = ap["masterkeyprice"]
+    apartments["taxScale"] = ap["rentscaling"]
+    apartments["evictHours"] = round(ap["apartmentevictiondelay"] / 3600)
+    apartments["shopRent"] = {
+        "fee": shop["InitialScrapFee"], "perHour": shop["ScrapPerHourRent"], "hours": shop["InitialRentHoursRequired"],
+        "protectHours": shop["ProtectionFromTakeoverHours"],
     }
     texts = {lang: load(f"localization/{lang}/engine.json") for lang in ("en", "es-es")}
     room_names = {
@@ -250,9 +438,46 @@ def build():
         {"item": items.ref(o["item"]), "amount": o["amount"], "bp": o["bp"], "currency": items.ref(o["currency"]), "price": o["price"]}
         for o in sh["orders"] if o["shop"] == key
     ]} for key in sorted({m["shop"] for m in out if m["shop"]})}
-    doc = {"monuments": out, "powergrid": powergrid, "apartments": apartments, "shops": shops}
+    sources, loot = loot_tables(out, items, texts)
+    doc = {"monuments": out, "powergrid": powergrid, "apartments": apartments, "shops": shops, "sources": sources}
     slugs = {"monuments": {m["id"]: m["slugEs"] for m in out if m["slugEs"] != m["id"]}}
-    return doc, slugs
+    return doc, slugs, loot
+
+
+def loot_tables(mons, items, texts):
+    """
+    Los nombres de cada caja y NPC que aparece en algún monumento (`sources`, en monuments.json) y su botín
+    (`monuments-loot.json`: por fuente, filas `[objeto, probabilidad, mínimo, máximo, plano]` de la más probable a la
+    menos, más los nombres y slugs de los objetos). El botín es el de `loot.json` (world.py); el del científico de las
+    plataformas, el de `cache/server/npc_loot.json`.
+    """
+    with open(DATA / "loot.json", encoding="utf-8") as f:
+        lj = json.load(f)
+    used = sorted({(kind, r["id"]) for m in mons for kind in ("loot", "npc") for r in m["spawns"][kind]})
+    sources, tables = {}, {}
+    for kind, key in used:
+        src = lj["containers"].get(key)
+        if src:
+            sources[key] = {"en": src["en"], "es": src["es"], "kind": kind, "event": src.get("event")}
+        elif key in EXTRA_NPC_NAMES:
+            sources[key] = {**name_of({"en": texts["en"], "es": texts["es-es"]}, EXTRA_NPC_NAMES[key]), "kind": kind,
+                            "event": None}
+        else:
+            raise SystemExit(f"[rust] {key} aparece en un monumento y no tiene nombre (loot.json ni EXTRA_NPC_NAMES)")
+    for sid, rows in lj["items"].items():
+        for r in rows:
+            if r["c"] in sources:
+                tables.setdefault(r["c"], []).append([sid, r["chance"], r["min"], r["max"], r["bp"]])
+    if "scientist_rig" in sources:
+        rig = load("server/npc_loot.json").get(RIG_SCIENTIST) or []
+        tables["scientist_rig"] = [[r["sid"], r["chance"], r["min"], r["max"], r["bp"]] for r in rig]
+    for rows in tables.values():
+        rows.sort(key=lambda r: (-r[1], r[0], r[4]))
+    ids = sorted({r[0] for rows in tables.values() for r in rows})
+    refs = {sid: {"slug": items.ref(sid)["slug"], "name": items.ref(sid)["name"]} for sid in ids}
+    for key, src in sources.items():
+        src["loot"] = bool(tables.get(key))
+    return sources, {"items": refs, "tables": dict(sorted(tables.items()))}
 
 
 def write_photos(mons):
@@ -274,13 +499,16 @@ def write_photos(mons):
 
 
 def main():
-    doc, slugs = build()
+    doc, slugs, loot = build()
     write_photos(doc["monuments"])
     for m in doc["monuments"]:
         m.pop("_photo")
     dump(DATA / "monuments.json", doc)
+    dump(DATA / "monuments-loot.json", loot)
     dump(DATA / "site" / "monuments-slugs-es.json", slugs)
-    print(f"[rust] monumentos: {len(doc['monuments'])}, red eléctrica en {sum(1 for m in doc['monuments'] if m['power'])}")
+    print(f"[rust] monumentos: {len(doc['monuments'])}, red eléctrica en {sum(1 for m in doc['monuments'] if m['power'])}, "
+          f"con cajas {sum(1 for m in doc['monuments'] if m['spawns']['loot'])}, con NPC "
+          f"{sum(1 for m in doc['monuments'] if m['spawns']['npc'])}; {len(loot['tables'])} tablas de botín")
 
 
 if __name__ == "__main__":

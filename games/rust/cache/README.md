@@ -6,7 +6,7 @@ después de Power Trip y Common Ground). Sólo se versiona este README (`.gitign
 `games/rust/tools/` y se corren desde la raíz del repo, **uno por vez** (cada uno abre varios GB de bundles; ver la
 regla de memoria en `games/rust/README.md`).
 
-Pesa ~160 MB (items 60, sprites 28, video_frames 25, world 19, io 14, localization 12, farming 2).
+Pesa ~165 MB (items 60, sprites 28, video_frames 25, world 19, io 14, localization 12, server 5, farming 2).
 
 | Carpeta | Script | De dónde sale |
 | --- | --- | --- |
@@ -16,6 +16,7 @@ Pesa ~160 MB (items 60, sprites 28, video_frames 25, world 19, io 14, localizati
 | `farming/` | `extract_farming.py` | ídem |
 | `sprites/` | `extract_sprites.py` (después de los tres de arriba) | `Bundles/shared/textures.*.bundle`, `Bundles/textures/*.bundle`, `maps.bundle`, `monuments.bundle` |
 | `localization/`, `items/`, `video_frames/`, `streaming/` | `extract_media.py` | `content.bundle`, `Bundles/items/`, `RustClient_Data/StreamingAssets/` |
+| `server/` | `extract_server.py` (+ `server_code.ps1`) | el **servidor dedicado** (SteamCMD app 258550): sus `assetscenes`/`content`/`items.preload.bundle` y `RustDedicated_Data/Managed/Assembly-CSharp.dll` |
 
 `classes.json` salió de un script de exploración (un `World()` que cuenta cada clase con la lectura cruda de
 `m_Script` y lee el typetree de una instancia por clase); `extract_io.py` y `extract_world.py` hacen lo mismo para
@@ -81,8 +82,44 @@ lógicas (las lógicas consumen 1 por defecto), etc. Esos números están en el 
 
 **No está en el cliente:** qué cajas y cuántas aparecen en cada monumento, y qué NPC (los `SpawnGroup` y puntos de
 aparición de monumentos los arma el servidor; en el cliente hay sólo 2 `SpawnGroup` y 28 `NPCSpawner`, del carguero).
-Tampoco los costos de mantenimiento de los monumentos mantenidos por jugadores ni el alquiler de las tiendas (convars y
-código del servidor). Para eso: servidor dedicado (SteamCMD app 258550) o el código decompilado.
+Tampoco el alquiler de las tiendas ni lo que dura un fusible de la red (convars y código del servidor). Todo eso está en
+`server/`, abajo.
+
+## Servidor dedicado (`server/`, 2026-10-09)
+
+Sacada del servidor dedicado bajado ese día con SteamCMD (app 258550, build 25823813, ~5,7 GB en `C:\RustServer`). Sus
+bundles tienen la misma forma que los del cliente (las escenas `AssetScene-monument.N` y `props.*` en
+`Bundles/shared/assetscenes.bundle`; `monuments.bundle` del servidor sólo trae texturas), pero con los componentes que
+sólo corren en el servidor.
+
+- `spawners.json`: los 1.867 grupos (`SpawnGroup`, `NPCSpawner`, `ScientistSpawner`, `AiLocationSpawner`,
+  `JunkpileNPCSpawner`, `JunkPileWaterSpawner`, `GameModeSpawnGroup`) con `ctx`, el typetree (`prefabs` con su peso,
+  `maxPopulation`, `respawnDelayMin`/`Max`, `Tier` = flags de `MonumentTier`, -1 en todos) y `points`: cuántos puntos de
+  aparición tiene (`GetComponentsInChildren<BaseSpawnPoint>`: los del GameObject y sus hijos). Un grupo lleno tiene
+  `maxPopulation` entidades, sin pasar de sus `GenericSpawnPoint` (cada uno sostiene una; un `RadialSpawnPoint` no se
+  ocupa); cada lugar elige un prefab por peso. Las piezas de `assets/scenes/prefabs/` y los `*_ai.prefab` de la escena
+  de props (`oilrigai`, `launchsite_ai`, `nuclear_missile_silo_ai`, los guardias de Bandit Camp y Outpost) ya están
+  copiados dentro de la escena de cada monumento: `monuments.py` cuenta sólo los de raíz `autospawn/monument/`, y abre
+  los prefabs que traen grupos propios (las carpas de la base militar, las pilas de chatarra). Unos pocos `prefabs`
+  apuntan a un GUID que el `GameManifest` no conoce (científicos viejos de los túneles militares): no aparecen.
+- `individual.json`: los 133 `IndividualSpawner` (una entidad fija: carteles de ruta, el MLRS de la base militar).
+- `placed.json`: cajas y NPC colocados sin grupo (en los monumentos casi no hay: las torretas de las zonas seguras y el
+  `BradleySpawner` de la zona de lanzamiento).
+- `npc_loot.json`: el botín de los científicos nuevos (`gen2/scientist2.prefab`, los de las dos plataformas
+  petroleras): va en `Scientist2FSM.dead.LootSpawnSlots`, no en `HumanNPC.LootSpawnSlots`, así que `world.py` no lo ve.
+- `code.json`: valores por defecto en código (`server_code.ps1`: constantes y lo que el `.cctor` asigna con un literal):
+  `RentableShop` (alquiler 10 de chatarra por hora, 100 de entrada, 12 h pagas al abrir, 6 h de protección),
+  `ConVar.ApartmentCommands` (4 h gratis, llave maestra 1.000, `rentscaling` 0, desalojo a las 24 h), `Powergrid`
+  (fusibles: 9.600 s de vida para los 3 más gastados, el resto al 8-12 %; energía de los postes de tendido
+  `powerlineBasePowerOutput` 5 a `powerlineMaxPowerOutput` 50) y `ApartmentRoom`.
+- `build.json`: de qué build del servidor es.
+
+Las fórmulas que usan esos números (código del servidor, leído con el Mono.Cecil del propio servidor):
+`RentableShop.CalculateScrapCosts` = (`ScrapPerHourRent` × 12 + `InitialScrapFee`) × multiplicador, que sube 1 cada vez
+que la tienda cambia de dueño (`Server_OpenStore`) y vuelve a 1 cuando cierra por falta de pago (`DeductRent`);
+`ApartmentRoom.GetDailyUpkeepCost` = máx(`MinimumRent`, Σ impuesto por pila × `rentscaling`);
+`PowergridManager.Server_GetCurrentPowerlineEnergy` = Lerp(5, 50, (fusibles puestos − 1) / (ranuras − 1)), truncado
+(0 sin fusibles; las ranuras son las de las cajas de la central, 15 + 5).
 
 ## Granjas (`farming/`)
 
