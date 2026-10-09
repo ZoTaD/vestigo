@@ -154,6 +154,15 @@ prefabs (salida de las baterías, consumo cuando es un campo, duración del bot�
 ### Si queda cuerda
 - [ ] **16.** Agua (sección 6) con el mismo motor. **17.** Industrial (sección 7).
 
+  **No se arrancaron (decisión del 9/10, sin ZoTaD).** El agua del juego depende de la altura: `LiquidContainer`
+  empuja a sus destinos (`CheckPushLiquid`) y descuenta lo que piden (`CalculateDrain`) sólo si `AllowLiquidPassthrough`
+  da sí, y eso compara la altura del enchufe de origen con la del destino (`LiquidPassthroughGravityThreshold`). Un
+  editor plano no tiene alturas: hay que decidir si cada parte lleva una altura (o un "piso") o si se asume todo al
+  mismo nivel, y eso cambia la UI. Además el agua es un objeto en un inventario (dulce o salada, con tope por
+  contenedor), así que el motor necesita inventarios. Lo industrial (cintas, crafteador, filtros) es otro tanto:
+  `IndustrialConveyor` mueve pilas de objetos con filtros. Las dos cosas quedan para un plan propio, con esa decisión
+  primero; el motor ya separa los tipos de enchufe (`IOType`) y el editor no deja cablear tipos distintos.
+
 ## Resultados (2026-10-09)
 
 - **Datos:** 77 componentes en 9 categorías (`electricity.json`, 48 KB; `electricity-items.json`, 6 KB para las fichas).
