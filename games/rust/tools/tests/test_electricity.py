@@ -43,8 +43,8 @@ class Forma(unittest.TestCase):
                 self.assertIn(c["useSrc"], ("field", "code", "formula", "base", "nocode"))
                 for s in c["in"] + c["out"]:
                     self.assertIn(s["t"], (0, 1, 2, 3, 4))
-                # Algo de energía o de agua: si no, no es de esta pestaña.
-                self.assertTrue(any(s["t"] in (0, 1) for s in c["in"] + c["out"]))
+                # Algo de energía, agua o industrial: si no, no es de esta pestaña.
+                self.assertTrue(any(s["t"] in (0, 1, 4) for s in c["in"] + c["out"]))
                 for s in c["in"] + c["out"]:
                     self.assertIsInstance(s["h"], (int, float))
 
