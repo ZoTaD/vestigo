@@ -8,6 +8,7 @@ import type { ElectricBattery } from "./behaviors/battery";
 import type { World } from "./world";
 import type { Circuit, Wire } from "./types";
 import { sunDot } from "./behaviors/sources";
+import { gravityBlocks, WATER_PHRASES, wireWater } from "./explainWater";
 
 export type Lang = "en" | "es";
 
@@ -123,21 +124,27 @@ function gate(e: IOEntity, lang: Lang, rule: string): string[] {
 export function explainPart(world: World, id: string, lang: Lang): string[] {
   const e = world.get(id);
   if (!e) return [];
-  const f = BY_CLASS[e.def.cls] ?? (e.def.cat === "source" || e.def.cat === "battery" ? () => [] : consumer);
+  const f = BY_CLASS[e.def.cls] ?? WATER_PHRASES[e.def.cls] ?? (e.def.cat === "source" || e.def.cat === "battery" ? () => [] : consumer);
   return f(e, lang).filter(Boolean);
 }
 
 /** El porqué de un cable: cuánto lleva y de dónde a dónde. */
 export function explainWire(world: World, w: Wire, lang: Lang): string[] {
-  const a = world.get(w.from[0]);
+  const part = world.get(w.from[0]);
   const b = world.get(w.to[0]);
-  if (!a || !b) return [];
-  const v = a.sent[w.from[1]] ?? 0;
-  return [lang === "es" ? `Lleva ${v} de "${outName(a, w.from[1])}" (${name(a, lang)}) a "${b.inputs[w.to[1]]?.niceName}" (${name(b, lang)}).` : `It carries ${v} from "${outName(a, w.from[1])}" (${name(a, lang)}) to "${b.inputs[w.to[1]]?.niceName}" (${name(b, lang)}).`];
+  if (!part || !b) return [];
+  // La salida puede ser del hijo (el "Water Out" del purificador es de su depósito).
+  const [a, slot] = part.port(w.from[1]);
+  const v = a.sent[slot] ?? 0;
+  const out = part.def.out[w.from[1]]?.n || `#${w.from[1] + 1}`;
+  return [
+    lang === "es" ? `Lleva ${v} de "${out}" (${name(part, lang)}) a "${b.inputs[w.to[1]]?.niceName}" (${name(b, lang)}).` : `It carries ${v} from "${out}" (${name(part, lang)}) to "${b.inputs[w.to[1]]?.niceName}" (${name(b, lang)}).`,
+    ...wireWater(a, slot, b, lang),
+  ];
 }
 
 /** Los avisos del circuito: consumidores sin energía suficiente, cortos y lazos que no se calman. */
-export type Issue = { id: string; kind: "unpowered" | "short" | "unwired" } | { id: null; kind: "overload" };
+export type Issue = { id: string; kind: "unpowered" | "short" | "unwired" | "uphill" } | { id: null; kind: "overload" };
 
 export function issues(world: World, circuit: Circuit): Issue[] {
   const out: Issue[] = [];
@@ -148,6 +155,14 @@ export function issues(world: World, circuit: Circuit): Issue[] {
     if (e.hasFlag(Flag.Reserved7)) out.push({ id: p.id, kind: "short" });
     else if (main >= 0 && !e.inputs[main].connectedTo && e.def.cat !== "battery" && e.def.cat !== "sensor" && e.def.cat !== "switch" && e.def.cat !== "logic" && e.def.cat !== "route") out.push({ id: p.id, kind: "unwired" });
     else if (main >= 0 && e.inputs[main].connectedTo && e.consumptionAmount() > 0 && e.currentEnergy > 0 && e.currentEnergy < e.consumptionAmount()) out.push({ id: p.id, kind: "unpowered" });
+  }
+  // El agua que no sube: un aviso por destino.
+  for (const w of circuit.wires) {
+    const part = world.get(w.from[0]);
+    const b = world.get(w.to[0]);
+    if (!part || !b) continue;
+    const [a, slot] = part.port(w.from[1]);
+    if (gravityBlocks(a, slot, b) && !out.some((i) => i.id === w.to[0] && i.kind === "uphill")) out.push({ id: w.to[0], kind: "uphill" });
   }
   if (world.overloaded) out.push({ id: null, kind: "overload" });
   return out;

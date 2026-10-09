@@ -142,3 +142,21 @@ describe("Interruptor de fluidos y colector", () => {
     expect(liq(w, "b")).toEqual({ kind: "water", amount: 10 });
   });
 });
+
+describe("Explicar el agua", () => {
+  it("el cable dice que el agua no sube, con la altura de cada enchufe, y aparece el aviso", async () => {
+    const { explainWire, explainPart, issues } = await import("../src/rust/electric/engine/explain");
+    const circuit = c([["a", "water.barrel", { water: 1000 }], ["b", "water.barrel", { height: 0.5 }]], "a.0>b.0");
+    const w = run(circuit, 5);
+    expect(explainWire(w, circuit.wires[0], "es")[1]).toBe("El agua no pasa: el enchufe de salida está a 1,1 m y la entrada a 2,53 m. Sin bomba, el agua sólo baja (o sube menos de 1 m).");
+    expect(issues(w, circuit)).toContainEqual({ id: "b", kind: "uphill" });
+    expect(explainPart(w, "a", "en")[0]).toBe("It holds 1000 fresh water (room for 20000).");
+  });
+
+  it("el cable del purificador sale de su depósito", async () => {
+    const { explainWire } = await import("../src/rust/electric/engine/explain");
+    const circuit = c([["u", "powered.water.purifier"], ["b", "water.barrel", { height: -3 }]], "u.0>b.0");
+    const w = run(circuit, 2);
+    expect(explainWire(w, circuit.wires[0], "en")[0]).toMatch(/^It carries 0 from "Water Out" \(Powered Water Purifier\)/);
+  });
+});

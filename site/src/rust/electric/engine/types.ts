@@ -69,6 +69,10 @@ export interface Part {
   x: number;
   y: number;
   cfg?: PartCfg;
+  /** Lo que tiene adentro (cajas, hornos, crafteador): shortname, ranura y cantidad. */
+  inv?: { id: string; slot: number; n: number }[];
+  /** Los filtros de una cinta industrial: objeto o categoría, máximo en destino, mínimo en origen y tanda. */
+  filters?: { item?: string; cat?: string; max?: number; min?: number; buffer?: number }[];
 }
 
 /** Un cable: de la salida `from[1]` de la parte `from[0]` a la entrada `to[1]` de `to[0]`. */
