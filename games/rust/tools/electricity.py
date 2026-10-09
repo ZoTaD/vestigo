@@ -34,10 +34,14 @@ OUT = ROOT / "data" / "electricity.json"
 # Lo poco que muestra el bloque "Electricidad" de las fichas de Objetos (viaja con la pestaña Objetos: tiene que ser chico).
 OUT_ITEMS = ROOT / "data" / "electricity-items.json"
 ELECTRIC = 0
+FLUID = 1
+# Las redes que entran al editor: energía y agua (2026-10-09). Industrial (4) se suma en su plan.
+NETS = {ELECTRIC, FLUID}
 
 
 def slots(raw):
-    return [{"n": s["niceName"], "t": s["type"], "m": s["mainPowerSlot"]} for s in raw]
+    """Cada enchufe: nombre, tipo, si es la entrada principal y su altura en el prefab (`h`, para la gravedad del agua)."""
+    return [{"n": s["niceName"], "t": s["type"], "m": s["mainPowerSlot"], "h": round(s["handlePosition"]["y"], 3)} for s in raw]
 
 
 def consumption(cls, data):
@@ -72,10 +76,30 @@ def config_range(configs, name):
     return [int(lo) if float(lo).is_integer() and name != "TimerConfig" else lo, int(hi) if name != "TimerConfig" else hi]
 
 
+def params(cls, d, configs):
+    """Los campos del prefab que usa el motor; los de contenedor de agua y las tasas del colector, si corresponde."""
+    keys = list(ov.PARAMS.get(cls, []))
+    if cls in ov.LIQUID_CLASSES:
+        keys += ov.LIQUID_PARAMS
+    p = {k: d[k] for k in keys if k in d}
+    rates = d.get("collectionRates")
+    if cls == "WaterCatcher" and rates:
+        r = next(x["data"] for x in configs["WaterCatcherCollectRate"] if x["data"]["m_Name"] == rates["name"])
+        p.update({f"rate_{k}": r[k] for k in ("baseRate", "rainRate", "snowRate", "fogRate")})
+    return p
+
+
+def category(cls, d):
+    if d.get("ioType") == FLUID or cls in ov.WATER_CLASSES:
+        return "water"
+    return ov.CATEGORY.get(cls, "appliance")
+
+
 def build():
     prefabs = json.loads(PREFABS.read_text(encoding="utf-8"))
     configs = json.loads(CONFIGS.read_text(encoding="utf-8"))
     items = {i["id"]: i for i in json.loads(ITEMS.read_text(encoding="utf-8"))["items"]}
+    by_path = {e["ctx"]["go"]: e for e in prefabs}
     comps, names, seen = [], {}, set()
     for e in prefabs:
         cls, d = e["class"], e["data"]
@@ -83,7 +107,7 @@ def build():
         if not deploy or cls in ov.EXCLUDE:
             continue
         ins, outs = slots(d.get("inputs", [])), slots(d.get("outputs", []))
-        if not any(s["t"] == ELECTRIC for s in ins + outs):
+        if not any(s["t"] in NETS for s in ins + outs):
             continue
         for it in deploy:
             sid = it["sid"]
@@ -93,11 +117,11 @@ def build():
             site = items.get(sid)
             use, src = consumption(cls, d)
             c = {
-                "id": sid, "cls": cls, "cat": ov.CATEGORY.get(cls, "appliance"),
+                "id": sid, "cls": cls, "cat": category(cls, d), "io": d.get("ioType", 0),
                 "name": site["name"] if site else it["name"],
                 "slug": site["slug"] if site else None, "slugEs": site["slugEs"] if site else None,
-                "in": ins, "out": outs, "use": use, "useSrc": src,
-                "p": {k: d[k] for k in ov.PARAMS.get(cls, []) if k in d},
+                "in": ins, "out": [dict(s) for s in outs], "use": use, "useSrc": src,
+                "p": params(cls, d, configs),
             }
             gen = generation(cls, d)
             if gen is not None:
@@ -112,9 +136,27 @@ def build():
             for g in c["craft"]:
                 gi = items.get(g["id"])
                 names[g["id"]] = gi["name"] if gi else {"en": g["id"], "es": None}
+            # El purificador deja el agua dulce en otra entidad (`storagePrefab`, su depósito) que tiene el "Water Out":
+            # va como componente oculto y sus salidas se muestran en el purificador (`v` = índice en el hijo).
+            child = (d.get("storagePrefab") or {}).get("prefab")
+            if child and child in by_path:
+                ce = by_path[child]
+                cid = f"{sid}#storage"
+                cd = ce["data"]
+                comps.append({
+                    "id": cid, "cls": ce["class"], "cat": "water", "io": cd.get("ioType", 0), "hidden": True,
+                    "name": c["name"], "slug": None, "slugEs": None,
+                    "in": slots(cd.get("inputs", [])), "out": slots(cd.get("outputs", [])),
+                    "use": consumption(ce["class"], cd)[0], "useSrc": consumption(ce["class"], cd)[1],
+                    "p": params(ce["class"], cd, configs), "craft": [],
+                })
+                c["child"] = cid
+                c["out"] += [{**o, "v": i} for i, o in enumerate(slots(cd.get("outputs", [])))]
             comps.append(c)
     order = {k: i for i, k in enumerate(ov.CATEGORIES)}
     comps.sort(key=lambda c: (order[c["cat"]], c["name"]["en"].lower(), c["id"]))
+    for w in ("water", "water.salt"):
+        names[w] = items[w]["name"]
     return {"categories": ov.CATEGORIES, "components": comps, "names": dict(sorted(names.items()))}
 
 
@@ -122,7 +164,7 @@ def items_view(doc):
     """Por shortname: enchufes (nombre y tipo), consumo y generación. Sólo lo eléctrico que tiene ficha de Objetos."""
     out = {}
     for c in doc["components"]:
-        if not c["slug"]:
+        if not c["slug"] or c.get("hidden"):
             continue
         row = {"in": [[s["n"], s["t"]] for s in c["in"]], "out": [[s["n"], s["t"]] for s in c["out"]], "use": c["use"]}
         if "gen" in c:

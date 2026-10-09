@@ -39,6 +39,9 @@ CODE_USE = {
     "ElectricWindmill": (0, "ElectricWindmill.cs (no la sobrescribe: es fuente, no tiene entrada)"),
     "FuelGenerator": (0, "FuelGenerator.cs"),
     "ElectricGenerator": (0, "ElectricGenerator.cs"),
+    # Agua (2026-10-09): el aspersor pide 2 de agua por segundo; el interruptor de fluidos hereda el 0 del interruptor.
+    "Sprinkler": (2, "Sprinkler.cs"),
+    "FluidSwitch": (0, "FluidSwitch.cs"),
 }
 
 # `Mathf.CeilToInt(maxDamageOutput / powerToDamageRatio)` (TeslaCoil.cs), con los campos del prefab actual.
@@ -63,6 +66,8 @@ BASE_USE = {
     "FlasherLight": "FlasherLight.cs → IOEntity.cs",
     "SirenLight": "SirenLight.cs → IOEntity.cs",
     "ContainerIOEntity": "ContainerIOEntity.cs → IOEntity.cs",
+    "LiquidContainer": "LiquidContainer.cs → IOEntity.cs",
+    "WaterCatcher": "WaterCatcher.cs → LiquidContainer.cs → IOEntity.cs",
     "IOEntity": "IOEntity.cs",
 }
 
@@ -88,7 +93,7 @@ EXCLUDE = {
     "SpookySpeaker": "funciona con pilas, no con energía",
     "StrobeLight": "funciona con pilas, no con energía",
     # Industrial (plan 7) y agua sin energía (plan 6).
-    "FluidSwitch": "agua (etapa 6)",
+    "WaterPurifier": "el purificador sin energía necesita fuego, que el editor no tiene",
     "IndustrialConveyor": "industrial (etapa 7)",
     "IndustrialCrafter": "industrial (etapa 7)",
     "IndustrialStorageAdaptor": "industrial (etapa 7)",
@@ -97,7 +102,7 @@ EXCLUDE = {
 EXCLUDE_ITEMS = {"discoball", "weaponrack.light", "weaponrack.doublelight"}
 
 # La paleta: categoría por clase, en el orden en que se muestran.
-CATEGORIES = ["source", "battery", "route", "logic", "switch", "sensor", "defense", "light", "appliance"]
+CATEGORIES = ["source", "battery", "route", "logic", "switch", "sensor", "defense", "light", "appliance", "water"]
 CATEGORY = {
     "SolarPanel": "source", "ElectricWindmill": "source", "ElectricWaterWheel": "source", "FuelGenerator": "source",
     "ElectricGenerator": "source",
@@ -116,7 +121,9 @@ CATEGORY = {
     "NeonSign": "light", "StringLights": "light", "OrientableLight": "light", "SearchLight": "light",
     "ChristmasLights": "light", "Chandelier": "light",
 }
-# Lo demás que consume (heladera, calefactor, cámaras, bomba de agua…) va a "appliance".
+# Lo demás que consume (heladera, calefactor, cámaras…) va a "appliance". Lo de la red de agua (`ioType` 1, más la
+# bomba y el purificador, que son eléctricos con salida o entrada de agua) va a "water".
+WATER_CLASSES = {"WaterPump", "PoweredWaterPurifier"}
 
 # Campos del prefab que el motor necesita, por clase (se copian tal cual a `p`).
 PARAMS = {
@@ -138,7 +145,14 @@ PARAMS = {
     "SamSite": ["lowAmmoThreshold"],
     "DeployableBoomBox": ["PowerUsageWhilePlaying"],
     "Igniter": ["IgniteRange", "IgniteFrequency"],
+    # Agua: todo `LiquidContainer` lleva los de contenedor (`LIQUID_PARAMS`) además de estos.
+    "WaterPump": ["PumpInterval", "AmountPerPump"],
+    "WaterCatcher": ["maxItemToCreate"],
+    "PoweredWaterPurifier": ["waterToProcessPerMinute", "freshWaterRatio", "stopWhenOutputFull", "ConvertInterval"],
+    "Sprinkler": ["SplashFrequency", "WaterPerSplash"],
 }
+LIQUID_CLASSES = {"LiquidContainer", "WaterPump", "WaterCatcher", "PoweredWaterPurifier", "WaterPurifier"}
+LIQUID_PARAMS = ["maxStackSize", "maxOutputFlow", "autofillOutputs", "autofillTickRate", "autofillTickAmount", "startingAmount"]
 
 # Rangos que el jugador puede poner en el juego. Temporizador y sensor sísmico: los paneles `TimerConfig` y
 # `SeismicSensorConfig` de la caché (`io/configs.json`); la rama: `SetBranchOffPower` clampa a 1..10.000.000

@@ -8,13 +8,15 @@
   "sensor",
   "defense",
   "light",
-  "appliance"
+  "appliance",
+  "water"
  ],
  "components": [
   {
    "id": "electric.solarpanel.large",
    "cls": "SolarPanel",
    "cat": "source",
+   "io": 0,
    "name": {
     "en": "Large Solar Panel",
     "es": "Panel solar grande"
@@ -26,7 +28,8 @@
     {
      "n": "Electric Output",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 0,
@@ -52,6 +55,7 @@
    "id": "electric.fuelgenerator.small",
    "cls": "FuelGenerator",
    "cat": "source",
+   "io": 0,
    "name": {
     "en": "Small Generator",
     "es": "Generador pequeño"
@@ -62,19 +66,22 @@
     {
      "n": "Force Start",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.32
     },
     {
      "n": "Force Stop",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.32
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.32
     }
    ],
    "use": 0,
@@ -99,6 +106,7 @@
    "id": "electric.generator.small",
    "cls": "ElectricGenerator",
    "cat": "source",
+   "io": 0,
    "name": {
     "en": "Test Generator",
     "es": "Generador de pruebas"
@@ -110,17 +118,20 @@
     {
      "n": "Power Output 1",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.75
     },
     {
      "n": "Power Output 2",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.75
     },
     {
      "n": "Power Output 3",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.75
     }
    ],
    "use": 0,
@@ -135,6 +146,7 @@
    "id": "generator.water",
    "cls": "ElectricWaterWheel",
    "cat": "source",
+   "io": 0,
    "name": {
     "en": "Water Wheel",
     "es": "Molino de agua"
@@ -146,7 +158,8 @@
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.716
     }
    ],
    "use": 0,
@@ -174,6 +187,7 @@
    "id": "generator.wind.scrap",
    "cls": "ElectricWindmill",
    "cat": "source",
+   "io": 0,
    "name": {
     "en": "Wind Turbine",
     "es": "Aerogenerador"
@@ -185,7 +199,8 @@
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.35
     }
    ],
    "use": 0,
@@ -217,6 +232,7 @@
    "id": "electric.battery.rechargable.large",
    "cls": "ElectricBattery",
    "cat": "battery",
+   "io": 0,
    "name": {
     "en": "Large Rechargeable Battery",
     "es": "Batería eléctrica grande"
@@ -227,19 +243,22 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.96
     }
    ],
    "out": [
     {
      "n": "Power Output",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.96
     },
     {
      "n": "Fully Charged",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 1.11
     }
    ],
    "use": 0,
@@ -266,6 +285,7 @@
    "id": "electric.battery.rechargable.medium",
    "cls": "ElectricBattery",
    "cat": "battery",
+   "io": 0,
    "name": {
     "en": "Medium Rechargeable Battery",
     "es": "Batería eléctrica mediana"
@@ -276,19 +296,22 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.73
     }
    ],
    "out": [
     {
      "n": "Power Output",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.73
     },
     {
      "n": "Fully Charged",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.84
     }
    ],
    "use": 0,
@@ -315,6 +338,7 @@
    "id": "electric.battery.rechargable.small",
    "cls": "ElectricBattery",
    "cat": "battery",
+   "io": 0,
    "name": {
     "en": "Small Rechargeable Battery",
     "es": "Batería eléctrica pequeña"
@@ -325,19 +349,22 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.315
     }
    ],
    "out": [
     {
      "n": "Power Output",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.315
     },
     {
      "n": "Fully Charged",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.15
     }
    ],
    "use": 0,
@@ -360,6 +387,7 @@
    "id": "electric.blocker",
    "cls": "ElectricalBlocker",
    "cat": "route",
+   "io": 0,
    "name": {
     "en": "Blocker",
     "es": "Bloqueador eléctrico"
@@ -370,19 +398,22 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.12
     },
     {
      "n": "Block Passthrough",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.13
     }
    ],
    "use": 0,
@@ -399,6 +430,7 @@
    "id": "electric.cabletunnel",
    "cls": "CableTunnel",
    "cat": "route",
+   "io": 0,
    "name": {
     "en": "Cable Tunnel",
     "es": "Túnel de cableado"
@@ -409,44 +441,52 @@
     {
      "n": "Tunnel 1 In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.01
     },
     {
      "n": "Tunnel 2 In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.01
     },
     {
      "n": "Tunnel 3 In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     },
     {
      "n": "Tunnel 4 In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Tunnel 1 Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.01
     },
     {
      "n": "Tunnel 2 Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.01
     },
     {
      "n": "Tunnel 3 Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     },
     {
      "n": "Tunnel 4 Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 1,
@@ -458,6 +498,7 @@
    "id": "electrical.branch",
    "cls": "ElectricalBranch",
    "cat": "route",
+   "io": 0,
    "name": {
     "en": "Electrical Branch",
     "es": "Ramificación eléctrica"
@@ -468,19 +509,22 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.12
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.13
     },
     {
      "n": "Branch Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.13
     }
    ],
    "use": 0,
@@ -505,6 +549,7 @@
    "id": "electrical.combiner",
    "cls": "ElectricalCombiner",
    "cat": "route",
+   "io": 0,
    "name": {
     "en": "Root Combiner",
     "es": "Combinador eléctrico"
@@ -515,19 +560,22 @@
     {
      "n": "Root Power 1",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.12
     },
     {
      "n": "Root Power 2",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.12
     }
    ],
    "out": [
     {
      "n": "Combined Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.13
     }
    ],
    "use": 0,
@@ -544,6 +592,7 @@
    "id": "electric.splitter",
    "cls": "Splitter",
    "cat": "route",
+   "io": 0,
    "name": {
     "en": "Splitter",
     "es": "Divisor de corriente eléctrica"
@@ -554,24 +603,28 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.32
     }
    ],
    "out": [
     {
      "n": "Power Out 1",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.32
     },
     {
      "n": "Power Out 2",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.32
     },
     {
      "n": "Power Out 3",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.32
     }
    ],
    "use": 0,
@@ -588,6 +641,7 @@
    "id": "electric.andswitch",
    "cls": "ANDSwitch",
    "cat": "logic",
+   "io": 0,
    "name": {
     "en": "AND Switch",
     "es": "Puerta lógica AND"
@@ -598,19 +652,22 @@
     {
      "n": "Input A",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.228
     },
     {
      "n": "Input B",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.228
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.237
     }
    ],
    "use": 0,
@@ -627,6 +684,7 @@
    "id": "electric.counter",
    "cls": "PowerCounter",
    "cat": "logic",
+   "io": 0,
    "name": {
     "en": "Counter",
     "es": "Contador"
@@ -637,29 +695,34 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     },
     {
      "n": "Increment Counter",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.148
     },
     {
      "n": "Decrement Counter",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.088
     },
     {
      "n": "Reset Counter",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.028
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.18
     }
    ],
    "use": 0,
@@ -682,6 +745,7 @@
    "id": "electrical.memorycell",
    "cls": "ElectricalDFlipFlop",
    "cat": "logic",
+   "io": 0,
    "name": {
     "en": "Memory Cell",
     "es": "Célula de memoria"
@@ -692,34 +756,40 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.12
     },
     {
      "n": "Set",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.07
     },
     {
      "n": "Reset",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.0
     },
     {
      "n": "Toggle",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": -0.07
     }
    ],
    "out": [
     {
      "n": "Output",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.13
     },
     {
      "n": "Inverted Output",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.13
     }
    ],
    "use": 0,
@@ -736,6 +806,7 @@
    "id": "electric.orswitch",
    "cls": "ORSwitch",
    "cat": "logic",
+   "io": 0,
    "name": {
     "en": "OR Switch",
     "es": "Puerta lógica OR"
@@ -746,19 +817,22 @@
     {
      "n": "Input A",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.228
     },
     {
      "n": "Input B",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.228
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.237
     }
    ],
    "use": 0,
@@ -775,6 +849,7 @@
    "id": "electric.random.switch",
    "cls": "RANDSwitch",
    "cat": "logic",
+   "io": 0,
    "name": {
     "en": "RAND Switch",
     "es": "Puerta lógica RAND"
@@ -785,24 +860,28 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.12
     },
     {
      "n": "Set",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.04
     },
     {
      "n": "Reset",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": -0.04
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.13
     }
    ],
    "use": 0,
@@ -819,6 +898,7 @@
    "id": "electric.timer",
    "cls": "CustomTimerSwitch",
    "cat": "logic",
+   "io": 0,
    "name": {
     "en": "Timer",
     "es": "Temporizador"
@@ -829,19 +909,22 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.253
     },
     {
      "n": "Toggle On",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": -0.013
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.237
     }
    ],
    "use": 0,
@@ -866,6 +949,7 @@
    "id": "electric.xorswitch",
    "cls": "XORSwitch",
    "cat": "logic",
+   "io": 0,
    "name": {
     "en": "XOR Switch",
     "es": "Puerta lógca XOR"
@@ -876,19 +960,22 @@
     {
      "n": "Input A",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.239
     },
     {
      "n": "Input B",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.239
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.241
     }
    ],
    "use": 0,
@@ -905,6 +992,7 @@
    "id": "electric.button",
    "cls": "PressButton",
    "cat": "switch",
+   "io": 0,
    "name": {
     "en": "Button",
     "es": "Botón"
@@ -915,14 +1003,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.12
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.16
     }
    ],
    "use": 0,
@@ -944,6 +1034,7 @@
    "id": "electric.rf.broadcaster",
    "cls": "RFBroadcaster",
    "cat": "switch",
+   "io": 0,
    "name": {
     "en": "RF Broadcaster",
     "es": "Emisor de radiofrecuencia"
@@ -954,7 +1045,8 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.05
     }
    ],
    "out": [],
@@ -972,6 +1064,7 @@
    "id": "electric.rf.receiver",
    "cls": "RFReceiver",
    "cat": "switch",
+   "io": 0,
    "name": {
     "en": "RF Receiver",
     "es": "Receptor de radiofrecuencia"
@@ -982,14 +1075,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.12
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.12
     }
    ],
    "use": 1,
@@ -1006,6 +1101,7 @@
    "id": "smart.switch",
    "cls": "SmartSwitch",
    "cat": "switch",
+   "io": 0,
    "name": {
     "en": "Smart Switch",
     "es": "Interruptor inteligente"
@@ -1016,24 +1112,28 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.22
     },
     {
      "n": "Switch On",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.07
     },
     {
      "n": "Switch Off",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": -0.09
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.2
     }
    ],
    "use": 0,
@@ -1054,6 +1154,7 @@
    "id": "electric.switch",
    "cls": "ElectricSwitch",
    "cat": "switch",
+   "io": 0,
    "name": {
     "en": "Switch",
     "es": "Interruptor"
@@ -1064,24 +1165,28 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.22
     },
     {
      "n": "Switch On",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.07
     },
     {
      "n": "Switch Off",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": -0.09
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.2
     }
    ],
    "use": 0,
@@ -1098,6 +1203,7 @@
    "id": "electric.hbhfsensor",
    "cls": "HBHFSensor",
    "cat": "sensor",
+   "io": 0,
    "name": {
     "en": "HBHF Sensor",
     "es": "Detector de calvos"
@@ -1108,14 +1214,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 1,
@@ -1134,6 +1242,7 @@
    "id": "electric.laserdetector",
    "cls": "LaserDetector",
    "cat": "sensor",
+   "io": 0,
    "name": {
     "en": "Laser Detector",
     "es": "Detector láser"
@@ -1144,14 +1253,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 1,
@@ -1168,6 +1279,7 @@
    "id": "electric.pressurepad",
    "cls": "PressurePad",
    "cat": "sensor",
+   "io": 0,
    "name": {
     "en": "Pressure Pad",
     "es": "Placa de presión"
@@ -1178,14 +1290,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 0,
@@ -1213,6 +1327,7 @@
    "id": "electric.seismicsensor",
    "cls": "SeismicSensor",
    "cat": "sensor",
+   "io": 0,
    "name": {
     "en": "Seismic Sensor",
     "es": "Sensor sísmico"
@@ -1223,14 +1338,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.23
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.23
     }
    ],
    "use": 1,
@@ -1259,6 +1376,7 @@
    "id": "storage.monitor",
    "cls": "StorageMonitor",
    "cat": "sensor",
+   "io": 0,
    "name": {
     "en": "Storage Monitor",
     "es": "Monitor de almacenamiento"
@@ -1269,19 +1387,22 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.035
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.115
     },
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.115
     }
    ],
    "use": 1,
@@ -1302,6 +1423,7 @@
    "id": "autoturret",
    "cls": "AutoTurret",
    "cat": "defense",
+   "io": 0,
    "name": {
     "en": "Auto Turret",
     "es": "Torreta automática"
@@ -1312,24 +1434,28 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.59
     }
    ],
    "out": [
     {
      "n": "Has Target",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.59
     },
     {
      "n": "Low Ammo",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.59
     },
     {
      "n": "No Ammo",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.59
     }
    ],
    "use": 10,
@@ -1354,6 +1480,7 @@
    "id": "electric.doorcontroller",
    "cls": "CustomDoorManipulator",
    "cat": "defense",
+   "io": 0,
    "name": {
     "en": "Door Controller",
     "es": "Controlador de puerta"
@@ -1364,24 +1491,28 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.12
     },
     {
      "n": "Open",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.04
     },
     {
      "n": "Close",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": -0.03
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.12
     }
    ],
    "use": 1,
@@ -1400,6 +1531,7 @@
    "id": "electric.igniter",
    "cls": "Igniter",
    "cat": "defense",
+   "io": 0,
    "name": {
     "en": "Igniter",
     "es": "Encendedor"
@@ -1410,7 +1542,8 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.05
     }
    ],
    "out": [],
@@ -1431,6 +1564,7 @@
    "id": "industrial.autoturret",
    "cls": "AutoTurret",
    "cat": "defense",
+   "io": 0,
    "name": {
     "en": "Industrial Auto Turret",
     "es": "Torreta automática industrial"
@@ -1441,24 +1575,28 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.35
     }
    ],
    "out": [
     {
      "n": "Has Target",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.35
     },
     {
      "n": "Low Ammo",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.35
     },
     {
      "n": "No Ammo",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.29
     }
    ],
    "use": 10,
@@ -1470,6 +1608,7 @@
    "id": "paintabletarget.reactive",
    "cls": "ReactiveTarget",
    "cat": "defense",
+   "io": 0,
    "name": {
     "en": "Paintable Reactive Target",
     "es": "Objetivo reactivo pintable"
@@ -1480,24 +1619,28 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.105
     },
     {
      "n": "Reset",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.04
     },
     {
      "n": "Lower",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.04
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.04
     }
    ],
    "use": 1,
@@ -1512,6 +1655,7 @@
    "id": "target.reactive",
    "cls": "ReactiveTarget",
    "cat": "defense",
+   "io": 0,
    "name": {
     "en": "Reactive Target",
     "es": "Diana reactiva"
@@ -1522,24 +1666,28 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.11
     },
     {
      "n": "Reset",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.04
     },
     {
      "n": "Lower",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.04
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.04
     }
    ],
    "use": 1,
@@ -1567,6 +1715,7 @@
    "id": "samsite",
    "cls": "SamSite",
    "cat": "defense",
+   "io": 0,
    "name": {
     "en": "SAM Site",
     "es": "Batería antiaérea"
@@ -1577,34 +1726,40 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.58
     },
     {
      "n": "Invert Mode",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.58
     }
    ],
    "out": [
     {
      "n": "Has Target",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.58
     },
     {
      "n": "Low Ammo",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.58
     },
     {
      "n": "No Ammo",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.58
     },
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.42
     }
    ],
    "use": 25,
@@ -1618,6 +1773,7 @@
    "id": "electric.teslacoil",
    "cls": "TeslaCoil",
    "cat": "defense",
+   "io": 0,
    "name": {
     "en": "Tesla Coil",
     "es": "Bobina de Tesla"
@@ -1628,7 +1784,8 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.03
     }
    ],
    "out": [],
@@ -1654,6 +1811,7 @@
    "id": "industrial.wall.light.blue",
    "cls": "SimpleLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Blue Industrial Wall Light",
     "es": "Lámpara azul de industrial de pared"
@@ -1664,14 +1822,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 1,
@@ -1683,6 +1843,7 @@
    "id": "electric.bulbstringlights",
    "cls": "StringLights",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Bulb String Lights",
     "es": "Guirnalda de luces"
@@ -1693,14 +1854,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.11
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.13
     }
    ],
    "use": 1,
@@ -1717,6 +1880,7 @@
    "id": "electric.fluorescentlight.ceiling",
    "cls": "CeilingLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Ceiling Fluorescent Light",
     "es": "Luz fluorescente de techo"
@@ -1727,14 +1891,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 2,
@@ -1746,6 +1912,7 @@
    "id": "ceilinglight",
    "cls": "CeilingLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Ceiling Light",
     "es": "Lámpara de techo"
@@ -1756,14 +1923,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 2,
@@ -1780,6 +1949,7 @@
    "id": "electric.chandelier",
    "cls": "Chandelier",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Chandelier",
     "es": "Candelabro"
@@ -1790,14 +1960,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.02
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.02
     }
    ],
    "use": 1,
@@ -1814,6 +1986,7 @@
    "id": "xmas.lightstring.advanced",
    "cls": "ChristmasLights",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Deluxe Christmas Lights",
     "es": "Luces navideñas de lujo"
@@ -1824,14 +1997,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.12
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.13
     }
    ],
    "use": 1,
@@ -1848,6 +2023,7 @@
    "id": "electric.tablelight",
    "cls": "SimpleLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Electric Table Lamp",
     "es": "Lámpara de mesa eléctrica"
@@ -1858,14 +2034,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.06
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.06
     }
    ],
    "use": 1,
@@ -1882,6 +2060,7 @@
    "id": "electric.fairylights",
    "cls": "StringLights",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Fairy Lights",
     "es": "Luces de hadas"
@@ -1892,14 +2071,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.11
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.13
     }
    ],
    "use": 1,
@@ -1916,6 +2097,7 @@
    "id": "electric.flasherlight",
    "cls": "FlasherLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Flasher Light",
     "es": "Luz parpadeante"
@@ -1926,14 +2108,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.03
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.03
     }
    ],
    "use": 1,
@@ -1950,6 +2134,7 @@
    "id": "electric.fluorescentlight",
    "cls": "SimpleLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Fluorescent Light",
     "es": "Luces fluorescentes"
@@ -1960,14 +2145,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.03
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.03
     }
    ],
    "use": 1,
@@ -1984,6 +2171,7 @@
    "id": "industrial.wall.light.green",
    "cls": "SimpleLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Green Industrial Wall Light",
     "es": "Lámpara verde industrial de pared"
@@ -1994,14 +2182,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 1,
@@ -2013,6 +2203,7 @@
    "id": "industrial.wall.light",
    "cls": "SimpleLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Industrial Wall Light",
     "es": "Lámpara industrial de pared"
@@ -2023,14 +2214,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 1,
@@ -2047,6 +2240,7 @@
    "id": "sign.neon.xl.animated",
    "cls": "NeonSign",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Large Animated Neon Sign",
     "es": "Cartel de neón animado grande"
@@ -2057,39 +2251,46 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.1
     },
     {
      "n": "Frame 1",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.16
     },
     {
      "n": "Frame 2",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.16
     },
     {
      "n": "Frame 3",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.16
     },
     {
      "n": "Frame 4",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.16
     },
     {
      "n": "Frame 5",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.16
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.1
     }
    ],
    "use": 7,
@@ -2110,6 +2311,7 @@
    "id": "sign.neon.xl",
    "cls": "NeonSign",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Large Neon Sign",
     "es": "Cartel de neón grande"
@@ -2120,14 +2322,16 @@
     {
      "n": "Electric Input",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.1
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.1
     }
    ],
    "use": 6,
@@ -2144,6 +2348,7 @@
    "id": "sign.neon.125x215.animated",
    "cls": "NeonSign",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Medium Animated Neon Sign",
     "es": "Cartel de neón animado mediano"
@@ -2154,29 +2359,34 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.1
     },
     {
      "n": "Frame 1",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.16
     },
     {
      "n": "Frame 2",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.16
     },
     {
      "n": "Frame 3",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.16
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.1
     }
    ],
    "use": 5,
@@ -2197,6 +2407,7 @@
    "id": "sign.neon.125x215",
    "cls": "NeonSign",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Medium Neon Sign",
     "es": "Cartel de neón mediano"
@@ -2207,14 +2418,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.1
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.1
     }
    ],
    "use": 4,
@@ -2231,6 +2444,7 @@
    "id": "industrial.wall.light.red",
    "cls": "SimpleLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Red Industrial Wall Light",
     "es": "Lámpara roja industrial de pared"
@@ -2241,14 +2455,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 1,
@@ -2260,6 +2476,7 @@
    "id": "searchlight",
    "cls": "SearchLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Search Light",
     "es": "Foco"
@@ -2270,14 +2487,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.11
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.11
     }
    ],
    "use": 10,
@@ -2298,6 +2517,7 @@
    "id": "electric.simplelight",
    "cls": "SimpleLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Simple Light",
     "es": "Luz sencilla"
@@ -2308,14 +2528,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.0
     }
    ],
    "use": 1,
@@ -2327,6 +2549,7 @@
    "id": "electric.sirenlight",
    "cls": "SirenLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Siren Light",
     "es": "Luz de sirena"
@@ -2337,14 +2560,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.03
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.03
     }
    ],
    "use": 1,
@@ -2361,6 +2586,7 @@
    "id": "sign.neon.125x125",
    "cls": "NeonSign",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Small Neon Sign",
     "es": "Cartel de neón pequeño"
@@ -2371,14 +2597,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.1
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.1
     }
    ],
    "use": 2,
@@ -2395,6 +2623,7 @@
    "id": "electric.spotlight",
    "cls": "OrientableLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Spot Light",
     "es": "Reflector"
@@ -2405,14 +2634,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.01
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.01
     }
    ],
    "use": 1,
@@ -2429,6 +2660,7 @@
    "id": "electric.spotlight.tripod",
    "cls": "OrientableLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Tripod Spot Light",
     "es": "Reflector con trípode"
@@ -2439,14 +2671,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 1.07
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 1.07
     }
    ],
    "use": 1,
@@ -2463,6 +2697,7 @@
    "id": "neonsigntr",
    "cls": "SimpleLight",
    "cat": "light",
+   "io": 0,
    "name": {
     "en": "Twitch Rivals Neon Sign",
     "es": "Letrero neón de Twitch Rivals"
@@ -2473,14 +2708,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.01
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.01
     }
    ],
    "use": 1,
@@ -2497,6 +2734,7 @@
    "id": "electric.audioalarm",
    "cls": "AudioAlarm",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Audio Alarm",
     "es": "Alarma"
@@ -2507,7 +2745,8 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.02
     }
    ],
    "out": [],
@@ -2525,6 +2764,7 @@
    "id": "gamesroom.minifridge",
    "cls": "Fridge",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Bar Games Minifridge",
     "es": "Mininevera Para Bar"
@@ -2535,7 +2775,8 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.1
     }
    ],
    "out": [],
@@ -2548,6 +2789,7 @@
    "id": "boombox",
    "cls": "DeployableBoomBox",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Boom Box",
     "es": "Parlante"
@@ -2558,19 +2800,22 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.6
     },
     {
      "n": "Toggle Play",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.23
     }
    ],
    "out": [
     {
      "n": "Audio Out",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.67
     }
    ],
    "use": 10,
@@ -2597,6 +2842,7 @@
    "id": "cctv.camera",
    "cls": "CCTV_RC",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "CCTV Camera",
     "es": "Cámara de vigilancia"
@@ -2607,7 +2853,8 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.03
     }
    ],
    "out": [],
@@ -2620,6 +2867,7 @@
    "id": "electric.heater",
    "cls": "ElectricalHeater",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Electric Heater",
     "es": "Calefactor eléctrico"
@@ -2630,14 +2878,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.07
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.07
     }
    ],
    "use": 3,
@@ -2654,6 +2904,7 @@
    "id": "fridge",
    "cls": "Fridge",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Fridge",
     "es": "Frigorífico"
@@ -2664,7 +2915,8 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.15
     }
    ],
    "out": [],
@@ -2682,6 +2934,7 @@
    "id": "jukebox",
    "cls": "DeployableBoomBox",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Jukebox",
     "es": "Rocola"
@@ -2692,19 +2945,22 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.7
     },
     {
      "n": "Toggle Play",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.23
     }
    ],
    "out": [
     {
      "n": "Audio Out",
      "t": 0,
-     "m": 0
+     "m": 0,
+     "h": 0.7
     }
    ],
    "use": 10,
@@ -2731,6 +2987,7 @@
    "id": "mini fridge",
    "cls": "Fridge",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Mini Fridge",
     "es": "Minirefri"
@@ -2741,7 +2998,8 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.1
     }
    ],
    "out": [],
@@ -2759,6 +3017,7 @@
    "id": "modularcarlift",
    "cls": "ModularCarGarage",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Modular Car Lift",
     "es": "Elevador de automóviles"
@@ -2769,7 +3028,8 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.068
     }
    ],
    "out": [],
@@ -2792,50 +3052,10 @@
    ]
   },
   {
-   "id": "powered.water.purifier",
-   "cls": "PoweredWaterPurifier",
-   "cat": "appliance",
-   "name": {
-    "en": "Powered Water Purifier",
-    "es": "Purificador de agua eléctrico"
-   },
-   "slug": "powered-water-purifier",
-   "slugEs": "purificador-de-agua-electrico",
-   "in": [
-    {
-     "n": "Water In",
-     "t": 1,
-     "m": 0
-    },
-    {
-     "n": "Power In",
-     "t": 0,
-     "m": 1
-    }
-   ],
-   "out": [],
-   "use": 5,
-   "useSrc": "field",
-   "p": {},
-   "craft": [
-    {
-     "id": "metal.fragments",
-     "amount": 300
-    },
-    {
-     "id": "cloth",
-     "amount": 20
-    },
-    {
-     "id": "wood",
-     "amount": 100
-    }
-   ]
-  },
-  {
    "id": "ptz.cctv.camera",
    "cls": "CCTV_RC",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "PTZ CCTV Camera",
     "es": "Cámara de vigilancia rotatoria"
@@ -2846,7 +3066,8 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": -0.055
     }
    ],
    "out": [],
@@ -2868,6 +3089,7 @@
    "id": "smart.alarm",
    "cls": "SmartAlarm",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Smart Alarm",
     "es": "Alarma inteligente"
@@ -2878,14 +3100,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.035
     }
    ],
    "out": [
     {
      "n": "Power Out",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.035
     }
    ],
    "use": 1,
@@ -2906,6 +3130,7 @@
    "id": "vending.machine",
    "cls": "VendingMachine",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Vending Machine",
     "es": "Máquina expendedora"
@@ -2916,7 +3141,8 @@
     {
      "n": "[Fridge] Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.15
     }
    ],
    "out": [],
@@ -2938,6 +3164,7 @@
    "id": "electric.wallcabinet",
    "cls": "ContainerIOEntity",
    "cat": "appliance",
+   "io": 0,
    "name": {
     "en": "Wall Cabinet",
     "es": "Gabinete de pared"
@@ -2948,14 +3175,16 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.84
     }
    ],
    "out": [
     {
      "n": "Passthrough",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.84
     }
    ],
    "use": 1,
@@ -2973,9 +3202,456 @@
    ]
   },
   {
+   "id": "fluid.combiner",
+   "cls": "ElectricalCombiner",
+   "cat": "water",
+   "io": 1,
+   "name": {
+    "en": "Fluid Combiner",
+    "es": "Combinador de fluido"
+   },
+   "slug": "fluid-combiner",
+   "slugEs": "combinador-de-fluido",
+   "in": [
+    {
+     "n": "Water In 1",
+     "t": 1,
+     "m": 1,
+     "h": 0.18
+    },
+    {
+     "n": "Water In 2",
+     "t": 1,
+     "m": 1,
+     "h": 0.18
+    },
+    {
+     "n": "Water In 3",
+     "t": 1,
+     "m": 1,
+     "h": 0.18
+    }
+   ],
+   "out": [
+    {
+     "n": "Water Out",
+     "t": 1,
+     "m": 0,
+     "h": 0.0
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "fluid.splitter",
+   "cls": "Splitter",
+   "cat": "water",
+   "io": 1,
+   "name": {
+    "en": "Fluid Splitter",
+    "es": "Divisor de fluido"
+   },
+   "slug": "fluid-splitter",
+   "slugEs": "divisor-de-fluido",
+   "in": [
+    {
+     "n": "Water In",
+     "t": 1,
+     "m": 1,
+     "h": 0.18
+    }
+   ],
+   "out": [
+    {
+     "n": "Water Out 1",
+     "t": 1,
+     "m": 0,
+     "h": 0.0
+    },
+    {
+     "n": "Water Out 2",
+     "t": 1,
+     "m": 1,
+     "h": 0.0
+    },
+    {
+     "n": "Water Out 3",
+     "t": 1,
+     "m": 1,
+     "h": 0.0
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "fluid.switch",
+   "cls": "FluidSwitch",
+   "cat": "water",
+   "io": 1,
+   "name": {
+    "en": "Fluid Switch & Pump",
+    "es": "Llave de paso"
+   },
+   "slug": "fluid-switch-pump",
+   "slugEs": "llave-de-paso",
+   "in": [
+    {
+     "n": "Fluid Input",
+     "t": 1,
+     "m": 1,
+     "h": 0.0
+    },
+    {
+     "n": "Toggle",
+     "t": 0,
+     "m": 0,
+     "h": 0.2
+    },
+    {
+     "n": "Pump Power",
+     "t": 0,
+     "m": 0,
+     "h": 0.2
+    }
+   ],
+   "out": [
+    {
+     "n": "Fluid Output",
+     "t": 1,
+     "m": 1,
+     "h": 0.0
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 150
+    }
+   ]
+  },
+  {
+   "id": "water.catcher.large",
+   "cls": "WaterCatcher",
+   "cat": "water",
+   "io": 1,
+   "name": {
+    "en": "Large Water Catcher",
+    "es": "Recolector de agua grande"
+   },
+   "slug": "large-water-catcher",
+   "slugEs": "recolector-de-agua-grande",
+   "in": [
+    {
+     "n": "Water In",
+     "t": 1,
+     "m": 0,
+     "h": 0.8
+    }
+   ],
+   "out": [
+    {
+     "n": "Water Out",
+     "t": 1,
+     "m": 0,
+     "h": 0.75
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {
+    "maxItemToCreate": 30.0,
+    "maxStackSize": 50000,
+    "maxOutputFlow": 12,
+    "autofillOutputs": 1,
+    "autofillTickRate": 2.0,
+    "autofillTickAmount": 6,
+    "startingAmount": 0,
+    "rate_baseRate": 0.25,
+    "rate_rainRate": 500.0,
+    "rate_snowRate": 0.5,
+    "rate_fogRate": 2.0
+   },
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 500
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 200
+    },
+    {
+     "id": "tarp",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "id": "powered.water.purifier",
+   "cls": "PoweredWaterPurifier",
+   "cat": "water",
+   "io": 0,
+   "name": {
+    "en": "Powered Water Purifier",
+    "es": "Purificador de agua eléctrico"
+   },
+   "slug": "powered-water-purifier",
+   "slugEs": "purificador-de-agua-electrico",
+   "in": [
+    {
+     "n": "Water In",
+     "t": 1,
+     "m": 0,
+     "h": 1.08
+    },
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1,
+     "h": 0.45
+    }
+   ],
+   "out": [
+    {
+     "n": "Water Out",
+     "t": 1,
+     "m": 0,
+     "h": -0.47,
+     "v": 0
+    }
+   ],
+   "use": 5,
+   "useSrc": "field",
+   "p": {
+    "waterToProcessPerMinute": 4000,
+    "freshWaterRatio": 2,
+    "stopWhenOutputFull": 1,
+    "ConvertInterval": 5.0,
+    "maxStackSize": 5000,
+    "maxOutputFlow": 6,
+    "autofillOutputs": 0,
+    "autofillTickRate": 2.0,
+    "autofillTickAmount": 2,
+    "startingAmount": 0
+   },
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 300
+    },
+    {
+     "id": "cloth",
+     "amount": 20
+    },
+    {
+     "id": "wood",
+     "amount": 100
+    }
+   ],
+   "child": "powered.water.purifier#storage"
+  },
+  {
+   "id": "powered.water.purifier#storage",
+   "cls": "LiquidContainer",
+   "cat": "water",
+   "io": 1,
+   "hidden": true,
+   "name": {
+    "en": "Powered Water Purifier",
+    "es": "Purificador de agua eléctrico"
+   },
+   "slug": null,
+   "slugEs": null,
+   "in": [],
+   "out": [
+    {
+     "n": "Water Out",
+     "t": 1,
+     "m": 0,
+     "h": -0.47
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {
+    "maxStackSize": 5000,
+    "maxOutputFlow": 12,
+    "autofillOutputs": 1,
+    "autofillTickRate": 2.0,
+    "autofillTickAmount": 24,
+    "startingAmount": 0
+   },
+   "craft": []
+  },
+  {
+   "id": "water.catcher.small",
+   "cls": "WaterCatcher",
+   "cat": "water",
+   "io": 1,
+   "name": {
+    "en": "Small Water Catcher",
+    "es": "Colector de agua pequeño"
+   },
+   "slug": "small-water-catcher",
+   "slugEs": "colector-de-agua-pequeno",
+   "in": [
+    {
+     "n": "Water In",
+     "t": 1,
+     "m": 0,
+     "h": 0.6
+    }
+   ],
+   "out": [
+    {
+     "n": "Water Out",
+     "t": 1,
+     "m": 0,
+     "h": 0.29
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {
+    "maxItemToCreate": 10.0,
+    "maxStackSize": 10000,
+    "maxOutputFlow": 6,
+    "autofillOutputs": 1,
+    "autofillTickRate": 2.0,
+    "autofillTickAmount": 12,
+    "startingAmount": 0,
+    "rate_baseRate": 0.25,
+    "rate_rainRate": 500.0,
+    "rate_snowRate": 0.5,
+    "rate_fogRate": 2.0
+   },
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 100
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    },
+    {
+     "id": "tarp",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "id": "electric.sprinkler",
+   "cls": "Sprinkler",
+   "cat": "water",
+   "io": 1,
+   "name": {
+    "en": "Sprinkler",
+    "es": "Aspersor"
+   },
+   "slug": "sprinkler",
+   "slugEs": "aspersor",
+   "in": [
+    {
+     "n": "Water In",
+     "t": 1,
+     "m": 1,
+     "h": 0.09
+    }
+   ],
+   "out": [
+    {
+     "n": "Passthrough",
+     "t": 1,
+     "m": 0,
+     "h": 0.09
+    }
+   ],
+   "use": 2,
+   "useSrc": "code",
+   "p": {
+    "SplashFrequency": 5.0,
+    "WaterPerSplash": 15
+   },
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "water.barrel",
+   "cls": "LiquidContainer",
+   "cat": "water",
+   "io": 1,
+   "name": {
+    "en": "Water Barrel",
+    "es": "Barril de agua"
+   },
+   "slug": "water-barrel",
+   "slugEs": "barril-de-agua",
+   "in": [
+    {
+     "n": "Water In",
+     "t": 1,
+     "m": 0,
+     "h": 2.03
+    }
+   ],
+   "out": [
+    {
+     "n": "Water Out",
+     "t": 1,
+     "m": 0,
+     "h": 1.1
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {
+    "maxStackSize": 20000,
+    "maxOutputFlow": 12,
+    "autofillOutputs": 1,
+    "autofillTickRate": 2.0,
+    "autofillTickAmount": 24,
+    "startingAmount": 0
+   },
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 250
+    },
+    {
+     "id": "tarp",
+     "amount": 1
+    }
+   ]
+  },
+  {
    "id": "waterpump",
    "cls": "WaterPump",
-   "cat": "appliance",
+   "cat": "water",
+   "io": 0,
    "name": {
     "en": "Water Pump",
     "es": "Bomba extractora de agua"
@@ -2986,19 +3662,30 @@
     {
      "n": "Power In",
      "t": 0,
-     "m": 1
+     "m": 1,
+     "h": 0.65
     }
    ],
    "out": [
     {
      "n": "Water Output",
      "t": 1,
-     "m": 1
+     "m": 1,
+     "h": 0.74
     }
    ],
    "use": 5,
    "useSrc": "field",
-   "p": {},
+   "p": {
+    "PumpInterval": 10.0,
+    "AmountPerPump": 85,
+    "maxStackSize": 2000,
+    "maxOutputFlow": 12,
+    "autofillOutputs": 1,
+    "autofillTickRate": 2.0,
+    "autofillTickAmount": 24,
+    "startingAmount": 0
+   },
    "craft": [
     {
      "id": "wood",
@@ -3048,9 +3735,21 @@
    "en": "Targeting Computer",
    "es": "Ordenador"
   },
+  "tarp": {
+   "en": "Tarp",
+   "es": "Lona"
+  },
   "techparts": {
    "en": "Tech Trash",
    "es": "Basura electrónica"
+  },
+  "water": {
+   "en": "Water",
+   "es": "Agua"
+  },
+  "water.salt": {
+   "en": "Salt Water",
+   "es": "Agua salada"
   },
   "wood": {
    "en": "Wood",
