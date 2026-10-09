@@ -5,7 +5,7 @@ import { Catalog } from "../src/rust/electric/engine";
 import type { ElectricityData } from "../src/rust/electric/engine/types";
 import { EditorStore } from "../src/rust/electric/editor/store";
 
-const cat = new Catalog(data as ElectricityData);
+const cat = new Catalog(data as unknown as ElectricityData);
 
 describe("EditorStore", () => {
   it("agregar, cablear y simular", () => {

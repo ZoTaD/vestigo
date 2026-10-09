@@ -8,7 +8,7 @@ import { buildWorld, Catalog, live, type Circuit } from "../src/rust/electric/en
 import type { ElectricityData, PartCfg } from "../src/rust/electric/engine/types";
 import type { ElectricBattery } from "../src/rust/electric/engine/behaviors/battery";
 
-const cat = new Catalog(data as ElectricityData);
+const cat = new Catalog(data as unknown as ElectricityData);
 
 /** `c([["a", "electric.splitter"]], "a.0>b.0 a.1>c.0")`: partes y cables en una línea. */
 function c(parts: [string, string, PartCfg?][], wires = "", env: Circuit["env"] = {}): Circuit {

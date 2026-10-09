@@ -6,7 +6,7 @@ import { buildWorld, Catalog, type Circuit } from "../src/rust/electric/engine";
 import { explainPart, explainWire, issues } from "../src/rust/electric/engine/explain";
 import type { ElectricityData } from "../src/rust/electric/engine/types";
 
-const cat = new Catalog(data as ElectricityData);
+const cat = new Catalog(data as unknown as ElectricityData);
 
 const CIRCUIT: Circuit = {
   parts: [

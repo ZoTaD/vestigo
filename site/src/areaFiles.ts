@@ -82,6 +82,7 @@ export const PZ_TAB_FILES: Partial<Record<PzSection, string>> = {
 export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
   items: "src/rust/items/RustItems.tsx",
   raid: "src/rust/raid/RustRaid.tsx",
+  electricity: "src/rust/electric/RustElectricity.tsx",
 };
 
 /**

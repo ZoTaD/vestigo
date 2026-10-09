@@ -244,8 +244,14 @@ export class EditorStore {
   advance(dt: number): void {
     if (!this.running) return;
     this.world.tick(Math.min(dt, MAX_STEP / this.speed) * this.speed);
-    this.emit();
+    // Se dibuja hasta 10 veces por segundo: alcanza para leer las cifras y no recalcula la página en cada cuadro.
+    const now = Date.now();
+    if (now - this.lastEmit >= 100) {
+      this.lastEmit = now;
+      this.emit();
+    }
   }
+  private lastEmit = 0;
 }
 
 /** Dos cables que comparten la entrada o la salida. */

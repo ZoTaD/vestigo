@@ -5,7 +5,7 @@ import { CIRCUITS } from "../src/rust/electric/circuits";
 import { buildWorld, Catalog, wireError } from "../src/rust/electric/engine";
 import type { Circuit, ElectricityData } from "../src/rust/electric/engine/types";
 
-const cat = new Catalog(data as ElectricityData);
+const cat = new Catalog(data as unknown as ElectricityData);
 const get = (slug: string): Circuit => structuredClone(CIRCUITS.find((c) => c.slug === slug)!.circuit);
 const start = (c: Circuit, s = 5) => {
   const w = buildWorld(cat, c);
