@@ -21,6 +21,24 @@ export interface ElectricCopy {
   height: string;
   rain: string;
   fog: string;
+  contents: string;
+  blueprint: string;
+  empty: string;
+  addItem: string;
+  addBlueprint: string;
+  emptyIt: string;
+  refill: string;
+  filters: string;
+  mode: string;
+  modes: string[];
+  filterItem: string;
+  filterMax: string;
+  filterMin: string;
+  filterBuffer: string;
+  noFilter: string;
+  addFilter: string;
+  addCategory: string;
+  categories: Record<string, string>;
   undo: string;
   redo: string;
   remove: string;
@@ -88,6 +106,24 @@ const EN: ElectricCopy = {
   height: "Turbine height",
   rain: "Rain",
   fog: "Fog",
+  contents: "Contents",
+  blueprint: "Blueprint",
+  empty: "Empty.",
+  addItem: "Add an item…",
+  addBlueprint: "Add a blueprint…",
+  emptyIt: "Empty it",
+  refill: "Restore contents",
+  filters: "Filters",
+  mode: "Mode",
+  modes: ["Any", "And", "Not"],
+  filterItem: "Item",
+  filterMax: "Max at destination",
+  filterMin: "Keep at source",
+  filterBuffer: "Batch",
+  noFilter: "No filter: everything goes.",
+  addFilter: "Filter an item…",
+  addCategory: "Filter a category",
+  categories: { weapon: "Weapons", construction: "Construction", items: "Items", resources: "Resources", attire: "Attire", tool: "Tools", medical: "Medical", food: "Food", ammunition: "Ammunition", traps: "Traps", misc: "Misc", component: "Components", electrical: "Electrical", fun: "Fun" },
   undo: "Undo",
   redo: "Redo",
   remove: "Delete",
@@ -170,6 +206,13 @@ const EN: ElectricCopy = {
     knocked: "Knocked down",
     playing: "Playing",
     approx: "Approximate (set it by hand)",
+    sources: "Sources",
+    targets: "Destinations",
+    movedLast: "Moved last run",
+    slotsUsed: "Slots in use",
+    smelting: "Smelting",
+    crafting: "Crafting",
+    crafted: "Made so far",
     liquid: "Water",
     kind: "Kind",
     flow: "Flow",
@@ -202,6 +245,7 @@ const EN: ElectricCopy = {
     fresh: "Fresh water source (river or lake)",
     height: "Height (m)",
     output: "Power it gives",
+    workbench: "Workbench level",
   },
   yes: "yes",
   no: "no",
@@ -231,6 +275,24 @@ const ES: ElectricCopy = {
   height: "Altura del molino",
   rain: "Lluvia",
   fog: "Niebla",
+  contents: "Contenido",
+  blueprint: "Plano",
+  empty: "Vacío.",
+  addItem: "Agregar un objeto…",
+  addBlueprint: "Agregar un plano…",
+  emptyIt: "Vaciar",
+  refill: "Volver a llenar",
+  filters: "Filtros",
+  mode: "Modo",
+  modes: ["Cualquiera", "Y", "No"],
+  filterItem: "Objeto",
+  filterMax: "Máximo en destino",
+  filterMin: "Dejar en origen",
+  filterBuffer: "Tanda",
+  noFilter: "Sin filtro: pasa todo.",
+  addFilter: "Filtrar un objeto…",
+  addCategory: "Filtrar una categoría",
+  categories: { weapon: "Armas", construction: "Construcción", items: "Objetos", resources: "Recursos", attire: "Ropa", tool: "Herramientas", medical: "Medicina", food: "Comida", ammunition: "Munición", traps: "Trampas", misc: "Misceláneos", component: "Componentes", electrical: "Electricidad", fun: "Diversión" },
   undo: "Deshacer",
   redo: "Rehacer",
   remove: "Borrar",
@@ -313,6 +375,13 @@ const ES: ElectricCopy = {
     knocked: "Caído",
     playing: "Sonando",
     approx: "Aproximado (se ajusta a mano)",
+    sources: "Orígenes",
+    targets: "Destinos",
+    movedLast: "Movió en la última vuelta",
+    slotsUsed: "Ranuras usadas",
+    smelting: "Fundiendo",
+    crafting: "Fabricando",
+    crafted: "Fabricó",
     liquid: "Agua",
     kind: "Tipo",
     flow: "Caudal",
@@ -345,6 +414,7 @@ const ES: ElectricCopy = {
     fresh: "Agua dulce (río o lago)",
     height: "Altura (m)",
     output: "Energía que da",
+    workbench: "Nivel del banco",
   },
   yes: "sí",
   no: "no",

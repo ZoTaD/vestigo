@@ -18,7 +18,7 @@ function PartNode({ id, selected }: NodeProps) {
   if (!e) return null;
   const def = e.def;
   const name = nameOf(def.name, lang);
-  const on = (def.cat === "water" && e.isOn()) || e.isPowered() || (def.cat === "source" && e.sent.some((v) => v > 0)) || (def.cat === "battery" && e.isOn());
+  const on = ((def.cat === "water" || def.cat === "industrial") && e.isOn()) || e.isPowered() || (def.cat === "source" && e.sent.some((v) => v > 0)) || (def.cat === "battery" && e.isOn());
   // Aviso: un corto, o le llega energía pero no le alcanza.
   const use = e.consumptionAmount();
   const warn = e.hasFlag(Flag.Reserved7) || (use > 0 && e.currentEnergy > 0 && e.currentEnergy < use);

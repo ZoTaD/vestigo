@@ -18,11 +18,12 @@ function WireEdge({ id, source, sourceHandleId, sourceX, sourceY, targetX, targe
   return (
     <>
       <BaseEdge id={id} path={path} className={cls} interactionWidth={14} />
-      <EdgeLabelRenderer>
+      {/* Los cables industriales no llevan cifra: lo que mueven son objetos (lo dice el inspector de la cinta). */}
+      {type === 4 ? null : <EdgeLabelRenderer>
         <span className={`el-wlabel${v > 0 ? " is-live" : ""}`} style={{ transform: `translate(-50%, -50%) translate(${lx}px, ${ly}px)` }}>
           {v}
         </span>
-      </EdgeLabelRenderer>
+      </EdgeLabelRenderer>}
     </>
   );
 }

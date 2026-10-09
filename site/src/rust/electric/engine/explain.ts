@@ -9,6 +9,7 @@ import type { World } from "./world";
 import type { Circuit, Wire } from "./types";
 import { sunDot } from "./behaviors/sources";
 import { gravityBlocks, WATER_PHRASES, wireWater } from "./explainWater";
+import { INDUSTRIAL_PHRASES } from "./explainIndustrial";
 
 export type Lang = "en" | "es";
 
@@ -124,7 +125,7 @@ function gate(e: IOEntity, lang: Lang, rule: string): string[] {
 export function explainPart(world: World, id: string, lang: Lang): string[] {
   const e = world.get(id);
   if (!e) return [];
-  const f = BY_CLASS[e.def.cls] ?? WATER_PHRASES[e.def.cls] ?? (e.def.cat === "source" || e.def.cat === "battery" ? () => [] : consumer);
+  const f = BY_CLASS[e.def.cls] ?? WATER_PHRASES[e.def.cls] ?? INDUSTRIAL_PHRASES[e.def.cls] ?? (e.def.cat === "source" || e.def.cat === "battery" ? () => [] : consumer);
   return f(e, lang).filter(Boolean);
 }
 

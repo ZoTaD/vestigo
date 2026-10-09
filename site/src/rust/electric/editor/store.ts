@@ -5,7 +5,7 @@
  * Los cambios de estructura (agregar, borrar, cablear) se aplican al mundo vivo con `live`, así una batería no pierde
  * su carga cuando se agrega una luz. Deshacer, rehacer y cargar otro circuito rearman el mundo de cero.
  */
-import { buildWorld, live, wireError, type Catalog } from "../engine";
+import { buildWorld, live, wireError, type Catalog, type IOEntity } from "../engine";
 import type { Circuit, Env, Part, PartCfg, Wire } from "../engine/types";
 import { DEFAULT_ENV } from "../engine/types";
 import type { World } from "../engine/world";
@@ -235,6 +235,34 @@ export class EditorStore {
       e.sendChangedToRoot(true);
       for (const s of e.inputs) s.connectedTo?.sendChangedToRoot(true);
     }
+    this.changed();
+  }
+
+  /** El contenido de una caja, horno o crafteador: se guarda en la parte y el contenedor se vuelve a llenar con eso. */
+  setInventory(id: string, inv: NonNullable<Part["inv"]>): void {
+    const p = this.circuit.parts.find((x) => x.id === id);
+    const e = this.world.get(id) as (IOEntity & { container?: { items: unknown[] } }) | undefined;
+    if (!p || !e?.container) return;
+    this.snapshot();
+    if (inv.length) p.inv = inv.map((x) => ({ ...x }));
+    else delete p.inv;
+    e.container.items = [];
+    e.serverInit();
+    this.changed();
+  }
+
+  /** Los filtros y el modo de una cinta. */
+  setFilters(id: string, filters: NonNullable<Part["filters"]>, mode: number): void {
+    const p = this.circuit.parts.find((x) => x.id === id);
+    const e = this.world.get(id) as (IOEntity & { refreshFilters?: () => void }) | undefined;
+    if (!p || !e) return;
+    this.snapshot();
+    if (filters.length) p.filters = filters.map((f) => ({ ...f }));
+    else delete p.filters;
+    p.cfg ??= {};
+    if (mode) p.cfg.mode = mode;
+    else delete p.cfg.mode;
+    e.refreshFilters?.();
     this.changed();
   }
 

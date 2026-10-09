@@ -9,6 +9,7 @@ import type { Route } from "../../../route";
 import type { Action, Readout } from "../engine";
 import { duration, explainPart, explainWire, issues } from "../engine/explain";
 import { waterName } from "../engine/explainWater";
+import { Contents, Filters } from "./IndustrialPanel";
 import { iconOf, nameOf, useEditor, useSim } from "./ctx";
 import { wireKey } from "./store";
 
@@ -39,6 +40,10 @@ function PartPanel({ id, route, navigate }: { id: string; route: Route; navigate
     if (typeof r.v === "boolean") return r.v ? t.yes : t.no;
     if (r.k === "lasts" && typeof r.v === "number") return duration(r.v, lang);
     if (r.k === "kind") return r.v ? waterName(String(r.v), lang) : "—";
+    if (r.k === "crafting") {
+      const n = r.v ? store.world.items[String(r.v)]?.name : undefined;
+      return n ? (lang === "es" ? n.es ?? n.en : n.en) : "—";
+    }
     const v = typeof r.v === "number" ? num(r.v) : r.v;
     return r.of !== undefined ? `${v} / ${num(r.of)}` : String(v);
   };
@@ -80,6 +85,8 @@ function PartPanel({ id, route, navigate }: { id: string; route: Route; navigate
           />
         </div>
       ) : null}
+      <Contents e={e} />
+      <Filters e={e} />
       <h3 className="el-sub">{t.explain}</h3>
       <div className="el-why">
         {explainPart(store.world, id, lang).map((s, i) => (

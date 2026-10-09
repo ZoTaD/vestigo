@@ -351,6 +351,71 @@ export const CIRCUITS: ReadyCircuit[] = [
       wires: W("g.0>sw.0 sw.0>f.2 a.0>f.0 f.0>b.0"),
     },
   },
+  // ---- Industrial (2026-10-09) ----
+  {
+    slug: "item-sorter",
+    slugEs: "clasificador",
+    name: { en: "item sorter", es: "clasificador de objetos" },
+    about: {
+      en: "An industrial splitter feeds two conveyors from the same box: one filters metal and sulfur ore into the ore box, the other is set to Not with the same filter and takes everything else. Each conveyor moves every 5 seconds.",
+      es: "Un splitter industrial alimenta dos cintas desde la misma caja: una filtra la mena de metal y la de azufre hacia la caja de menas, y la otra, en modo No con el mismo filtro, se lleva todo lo demás. Cada cinta mueve cada 5 segundos.",
+    },
+    circuit: {
+      parts: [
+        P("g", "electric.battery.rechargable.medium", X(0), -160, { charge: 9000 }),
+        P("sp", "electric.splitter", X(1), -160),
+        { ...P("a", "box.wooden.large", X(0), 60), inv: [{ id: "metal.ore", slot: 0, n: 500 }, { id: "sulfur.ore", slot: 1, n: 500 }, { id: "wood", slot: 2, n: 300 }, { id: "scrap", slot: 3, n: 100 }] },
+        P("is", "industrial.splitter", X(1), 60),
+        { ...P("k1", "industrial.conveyor", X(2), -20, { on: 1 }), filters: [{ item: "metal.ore" }, { item: "sulfur.ore" }] },
+        { ...P("k2", "industrial.conveyor", X(2), 140, { on: 1, mode: 2 }), filters: [{ item: "metal.ore" }, { item: "sulfur.ore" }] },
+        P("b1", "box.wooden.large", X(3), -20),
+        P("b2", "box.wooden.large", X(3), 140),
+      ],
+      wires: W("g.0>sp.0 sp.0>k1.1 sp.1>k2.1 a.0>is.0 is.0>k1.0 is.1>k2.0 k1.0>b1.0 k2.0>b2.0"),
+    },
+  },
+  {
+    slug: "auto-furnace",
+    slugEs: "horno-automatico",
+    name: { en: "auto furnace", es: "horno automático" },
+    about: {
+      en: "A conveyor fills a furnace from a box: wood goes into the fuel slot and ore into the input slots on their own. A second conveyor empties the output slots into another box. The furnace has to be lit with wood inside and goes out when it runs out.",
+      es: "Una cinta llena un horno desde una caja: la leña va sola a la ranura de combustible y la mena a las de entrada. Otra cinta vacía las ranuras de salida en otra caja. El horno se prende con leña adentro y se apaga cuando se le acaba.",
+    },
+    circuit: {
+      parts: [
+        P("g", "electric.battery.rechargable.medium", X(0), -160, { charge: 9000 }),
+        P("sp", "electric.splitter", X(1), -160),
+        { ...P("a", "box.wooden.large", X(0), 60), inv: [{ id: "wood", slot: 0, n: 1000 }, { id: "metal.ore", slot: 1, n: 1000 }] },
+        P("k1", "industrial.conveyor", X(1), 60, { on: 1 }),
+        { ...P("f", "furnace", X(2), 60, { on: 1 }), inv: [{ id: "wood", slot: 0, n: 20 }] },
+        P("k2", "industrial.conveyor", X(3), 60, { on: 1 }),
+        P("b", "box.wooden.large", X(4), 60),
+      ],
+      wires: W("g.0>sp.0 sp.0>k1.1 sp.1>k2.1 a.0>k1.0 k1.0>f.0 f.0>k2.0 k2.0>b.0"),
+    },
+  },
+  {
+    slug: "auto-crafting",
+    slugEs: "autocrafteo",
+    name: { en: "auto crafting", es: "autocrafteo" },
+    about: {
+      en: "A conveyor feeds charcoal and sulfur to an industrial crafter with the gun powder blueprint; every 5 seconds it starts a batch of 10 if it has 30 charcoal and 20 sulfur, and a second conveyor takes the gun powder to a box.",
+      es: "Una cinta le lleva carbón y azufre a un crafteador industrial con el plano de la pólvora; cada 5 segundos arranca una tanda de 10 si tiene 30 de carbón y 20 de azufre, y otra cinta se lleva la pólvora a una caja.",
+    },
+    circuit: {
+      parts: [
+        P("g", "electric.battery.rechargable.medium", X(0), -160, { charge: 9000 }),
+        P("sp", "electric.splitter", X(1), -160),
+        { ...P("a", "box.wooden.large", X(0), 60), inv: [{ id: "charcoal", slot: 0, n: 1000 }, { id: "sulfur", slot: 1, n: 1000 }] },
+        P("k1", "industrial.conveyor", X(1), 60, { on: 1 }),
+        { ...P("x", "industrial.crafter", X(2), 60, { on: 1 }), inv: [{ id: "bp:gunpowder", slot: 0, n: 1 }] },
+        P("k2", "industrial.conveyor", X(3), 60, { on: 1 }),
+        P("b", "box.wooden.large", X(4), 60),
+      ],
+      wires: W("g.0>sp.0 sp.0>k1.1 sp.1>k2.1 sp.2>x.1 a.0>k1.0 k1.0>x.0 x.0>k2.0 k2.0>b.0"),
+    },
+  },
 ];
 
 function gateCircuit(gate: string, a: number, b: number): Circuit {

@@ -81,7 +81,11 @@ export default function RustElectricity({ route, navigate }: { route: Route; nav
   // Al entrar (y al pasar de un circuito listo a otro), se arma el estado con el circuito que toca.
   useEffect(() => {
     let alive = true;
-    void initialCircuit(ready?.circuit, ready === firstReady ? startHash : "").then((c) => {
+    // Los objetos de la red industrial (pila, fundir, recetas) van aparte: sólo los baja quien abre el editor.
+    const items = import("@rust/industrial-items.json").then((m) => {
+      cat.items = m.default as unknown as Catalog["items"];
+    });
+    void Promise.all([initialCircuit(ready?.circuit, ready === firstReady ? startHash : ""), items]).then(([c]) => {
       if (!alive) return;
       setStore((s) => {
         if (s) {

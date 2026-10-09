@@ -276,7 +276,8 @@ def items_view(doc):
     """Por shortname: enchufes (nombre y tipo), consumo y generación. Sólo lo eléctrico que tiene ficha de Objetos."""
     out = {}
     for c in doc["components"]:
-        if not c["slug"] or c.get("hidden"):
+        # Las cajas y hornos van con el adaptador puesto: en su ficha no tiene sentido mostrar los enchufes del adaptador.
+        if not c["slug"] or c.get("hidden") or c.get("adaptor"):
             continue
         row = {"in": [[s["n"], s["t"]] for s in c["in"]], "out": [[s["n"], s["t"]] for s in c["out"]], "use": c["use"]}
         if "gen" in c:

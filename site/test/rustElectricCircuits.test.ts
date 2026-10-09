@@ -1,11 +1,13 @@
 /** Los circuitos listos (2026-10-09): cada uno hace lo que dice su texto. */
 import { describe, expect, it } from "vitest";
 import data from "@rust/electricity.json";
+import items from "@rust/industrial-items.json";
 import { CIRCUITS } from "../src/rust/electric/circuits";
 import { buildWorld, Catalog, wireError } from "../src/rust/electric/engine";
 import type { Circuit, ElectricityData } from "../src/rust/electric/engine/types";
 
 const cat = new Catalog(data as unknown as ElectricityData);
+cat.items = items as unknown as Catalog["items"];
 const get = (slug: string): Circuit => structuredClone(CIRCUITS.find((c) => c.slug === slug)!.circuit);
 const start = (c: Circuit, s = 5) => {
   const w = buildWorld(cat, c);
@@ -169,5 +171,27 @@ describe("circuitos listos", () => {
     off.parts.find((p) => p.id === "sw")!.cfg = { on: 0 };
     const w2 = start(off, 30);
     expect((w2.get("b") as unknown as { liquid: unknown }).liquid).toBeNull();
+  });
+
+  const amount = (w: ReturnType<typeof start>, id: string, item: string) =>
+    (w.get(id) as unknown as { container: { items: { id: string; amount: number; bp?: boolean }[] } }).container.items.filter((x) => x.id === item && !x.bp).reduce((a, x) => a + x.amount, 0);
+
+  it("clasificador: las menas a una caja y lo demás a la otra", () => {
+    const w = start(get("item-sorter"), 30);
+    expect(amount(w, "b1", "metal.ore") + amount(w, "b1", "sulfur.ore")).toBeGreaterThan(0);
+    expect(amount(w, "b1", "wood")).toBe(0);
+    expect(amount(w, "b2", "wood") + amount(w, "b2", "scrap")).toBeGreaterThan(0);
+    expect(amount(w, "b2", "metal.ore")).toBe(0);
+  });
+
+  it("horno automático: llegan fragmentos de metal y carbón a la caja de salida", () => {
+    const w = start(get("auto-furnace"), 120);
+    expect(amount(w, "b", "metal.fragments")).toBeGreaterThan(0);
+    expect(amount(w, "b", "charcoal")).toBeGreaterThan(0);
+  });
+
+  it("autocrafteo: la pólvora llega a la caja", () => {
+    const w = start(get("auto-crafting"), 40);
+    expect(amount(w, "b", "gunpowder")).toBeGreaterThan(0);
   });
 });
