@@ -1356,8 +1356,8 @@
     "amount": 1,
     "time": 30,
     "workbench": 0,
-    "researchable": false,
-    "researchScrap": null,
+    "researchable": true,
+    "researchScrap": 15,
     "default": false
    },
    "recycle": {
@@ -1403,8 +1403,8 @@
     "amount": 1,
     "time": 30,
     "workbench": 0,
-    "researchable": false,
-    "researchScrap": null,
+    "researchable": true,
+    "researchScrap": 30,
     "default": false
    },
    "recycle": {

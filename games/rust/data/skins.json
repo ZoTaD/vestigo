@@ -354,7 +354,7 @@
      "en": "Explosives Storage Box",
      "es": "Caja almacén de explosivos"
     },
-    "icon": "items/box.wooden.large",
+    "icon": "skins/10441",
     "workshop": false
    },
    {
@@ -372,7 +372,7 @@
      "en": "Food Storage Box",
      "es": "Caja almacén de comida"
     },
-    "icon": "skins/10442",
+    "icon": "skins/10441",
     "workshop": false
    },
    {
@@ -1941,7 +1941,7 @@
      "en": "Crystal Assault Rifle Emerald",
      "es": "Rifle de Asalto de Esmeralda"
     },
-    "icon": "items/rifle.ak",
+    "icon": "skins/10564",
     "workshop": false
    },
    {
@@ -1950,7 +1950,7 @@
      "en": "Crystal Assault Rifle Pink Diamond",
      "es": "Rifle de Asalto de Diamante Rosa"
     },
-    "icon": "items/rifle.ak",
+    "icon": "skins/10564",
     "workshop": false
    },
    {
@@ -1959,7 +1959,7 @@
      "en": "Crystal Assault Rifle Ruby",
      "es": "Rifle de Asalto de Ruby"
     },
-    "icon": "items/rifle.ak",
+    "icon": "skins/10564",
     "workshop": false
    },
    {
@@ -1968,7 +1968,7 @@
      "en": "Crystal Assault Rifle Sapphire",
      "es": "Rifle de Asalto de Zafiro"
     },
-    "icon": "skins/10562",
+    "icon": "skins/10564",
     "workshop": false
    },
    {
