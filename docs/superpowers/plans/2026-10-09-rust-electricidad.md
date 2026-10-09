@@ -86,6 +86,19 @@ prefabs (salida de las baterías, consumo cuando es un campo, duración del bot�
 6. **Interruptor y temporizador con consumo 0:** el decompilado dice 0; rustlabs y la wiki dicen 1. Se sigue el código.
 7. **HBHF / sensores / torreta / SAM:** lo que detectan lo pone el usuario en el inspector (jugadores, objetivo,
    munición), no hay mundo.
+8. **`Invoke` repetido:** si el código llama dos veces a `Invoke` con el mismo método, acá el segundo reemplaza al
+   primero (no se apilan). No se confirmó cómo lo hace `InvokeHandler` de Facepunch; en el código que se portó sólo
+   importa en el emisor de RF (`StopBroadcasting`), donde da lo mismo.
+9. **Monitor de almacenamiento:** el decompilado devuelve lo mismo por "Power Out" y por "Passthrough" (sólo con el
+   pulso); en el juego actual "Passthrough" podría pasar siempre. Se sigue el decompilado.
+10. **Torreta:** `InitiateStartup` tiene una demora de arranque (sonido y animación) que no se modela: se prende en el
+    mismo cuadro en que le alcanza la energía.
+11. **Controlador de puerta:** la puerta se abre y se cierra al instante; en el juego tarda (y `IsBusy` demora la
+    acción siguiente 1 s).
+12. **Afuera de la paleta por ahora:** reloj digital, generador de biocombustible y tolva (sin código), bloque de
+    comandos (admin), ascensor y teléfono (no se modelan), lo de audio (parlante conectado, luces de sonido, piso de
+    baile) y lo que anda con combustible o pilas (máquinas de niebla y nieve, estroboscópica, parlante de Halloween).
+    El interruptor de fluidos y lo industrial, para las etapas 6 y 7.
 
 ## Global Constraints
 
@@ -102,45 +115,67 @@ prefabs (salida de las baterías, consumo cuando es un campo, duración del bot�
 ## Tareas
 
 ### Datos
-- [ ] **1.** `electricity_overrides.py` (consumos de código con fuente, categorías, parámetros, exclusiones) y
+- [x] **1.** `electricity_overrides.py` (consumos de código con fuente, categorías, parámetros, exclusiones) y
   `electricity.py` → `electricity.json`. Tests (`test_electricity.py`): forma del JSON sin caché; con la caché
   (`RUST_CACHE=1`): ningún componente sin consumo o generación, y los números conocidos (solar 20, molino 150, rueda 30,
   generador 40, baterías 15/50/100 y 400/9.000/24.000 rWm, torreta 10, SAM 25).
 
 ### Motor
-- [ ] **2.** `engine/world.ts`: entidades, flags, cola por cuadro, planificador de `Invoke`, `tick`. `engine/ioentity.ts`:
+- [x] **2.** `engine/world.ts`: entidades, flags, cola por cuadro, planificador de `Invoke`, `tick`. `engine/ioentity.ts`:
   port de `IOEntity` (UpdateFromInput, UpdateOutputs, ShouldUpdateOutputs, GetPassthroughAmount, DesiredPower,
   UpdateHasPower, IsFlickering, IsConnectedTo, SendChangedToRoot, ConnectTo, Disconnect, ClearConnections, Init).
   Tests: luz encadenada, división entre salidas, propagación en el mismo cuadro, `responsetime`.
-- [ ] **3.** Fuentes: generador de prueba, generador a combustible (on/off, combustible), solar (hora), molino (viento),
+- [x] **3.** Fuentes: generador de prueba, generador a combustible (on/off, combustible), solar (hora), molino (viento),
   rueda de agua. Tests con números conocidos.
-- [ ] **4.** Baterías: carga, descarga, drenaje recursivo, 5 rWs mínimos, "Fully Charged". Tests: batería mediana con
+- [x] **4.** Baterías: carga, descarga, drenaje recursivo, 5 rWs mínimos, "Fully Charged". Tests: batería mediana con
   torreta + luz drena 11; panel 20 carga 16 por segundo; batería en serie.
-- [ ] **5.** Reparto: splitter (resto a las primeras), rama, combinador (corto si se realimenta), bloqueador. Tests.
-- [ ] **6.** Lógica: AND, OR, XOR (corto), celda de memoria, RAND, contador, temporizador, interruptores, botón,
+- [x] **5.** Reparto: splitter (resto a las primeras), rama, combinador (corto si se realimenta), bloqueador. Tests.
+- [x] **6.** Lógica: AND, OR, XOR (corto), celda de memoria, RAND, contador, temporizador, interruptores, botón,
   túnel de cables. Tests por tabla de verdad y por tiempo (temporizador 10 s, botón 1 s + pulso).
-- [ ] **7.** Sensores y consumidores especiales: HBHF, láser, placa, sísmico, monitor, RF emisor/receptor, torreta y
+- [x] **7.** Sensores y consumidores especiales: HBHF, láser, placa, sísmico, monitor, RF emisor/receptor, torreta y
   SAM (salidas de estado), controlador de puerta, blanco reactivo, Tesla, encendedor, rocola. Tests.
-- [ ] **8.** `explain.ts` (EN/ES) y `issues.ts` (enchufe de tipo distinto, consumidor sin energía, corto). Tests.
+- [x] **8.** `explain.ts` (EN/ES) y `issues.ts` (enchufe de tipo distinto, consumidor sin energía, corto). Tests.
 
 ### Guardado y circuitos
-- [ ] **9.** `codec.ts` (binario versionado + deflate-raw + base64url; versión vieja abre) y autoguardado. Tests.
-- [ ] **10.** `circuits.ts`: 12-20 circuitos listos. Test: cada uno carga, simula y da el resultado esperado
+- [x] **9.** `codec.ts` (binario versionado + deflate-raw + base64url; versión vieja abre) y autoguardado. Tests.
+- [x] **10.** `circuits.ts`: 12-20 circuitos listos. Test: cada uno carga, simula y da el resultado esperado
   (torreta prendida, puerta abre, etc.).
 
 ### Sitio
-- [ ] **11.** Ruta `electricity` (+ slug de circuito), `RUST_SECTIONS`, `RUST_PUBLISHED`, `RUST_TAB_FILES`, `TABS`,
+- [x] **11.** Ruta `electricity` (+ slug de circuito), `RUST_SECTIONS`, `RUST_PUBLISHED`, `RUST_TAB_FILES`, `TABS`,
   copia EN/ES, SEO, prerender (con los nombres de los circuitos) y sitemap. Tests de ruta/sitemap/SEO.
-- [ ] **12.** Editor: lienzo, nodos, paleta, inspector, barra, deshacer, selección, materiales, celular sólo lectura.
+- [x] **12.** Editor: lienzo, nodos, paleta, inspector, barra, deshacer, selección, materiales, celular sólo lectura.
   Conectar en localhost (puerto 5184) apenas se vea.
-- [ ] **13.** Fichas de Objetos: bloque "Electricidad" (enchufes, consumo, generación) con "Probar en el editor".
-- [ ] **14.** Portada: pestaña Electricidad activa; encabezado ES "Guía de Rust" (arreglo de paso del diseño).
-- [ ] **15.** Verificación: vitest entero, Python, `npm run build` (tiempo y RAM), `npm run perf` con las páginas
+- [x] **13.** Fichas de Objetos: bloque "Electricidad" (enchufes, consumo, generación) con "Probar en el editor".
+- [x] **14.** Portada: pestaña Electricidad activa; encabezado ES "Guía de Rust" (arreglo de paso del diseño).
+- [x] **15.** Verificación: vitest entero, Python, `npm run build` (tiempo y RAM), `npm run perf` con las páginas
   nuevas, capturas EN/ES, editor, circuito listo y celular.
 
 ### Si queda cuerda
 - [ ] **16.** Agua (sección 6) con el mismo motor. **17.** Industrial (sección 7).
 
-## Resultados
+## Resultados (2026-10-09)
 
-(se completa al terminar)
+- **Datos:** 77 componentes en 9 categorías (`electricity.json`, 48 KB; `electricity-items.json`, 6 KB para las fichas).
+  Consumo: 24 del campo del prefab, 34 del código, 1 por fórmula (Tesla), 13 de `IOEntity` (1), 5 sin código (4 luces
+  nuevas con 1, rueda de agua 0) — `useSrc` en el JSON.
+- **Motor:** port de `IOEntity` y 35 comportamientos (las demás clases usan `IOEntity` tal cual). 37 tests de motor con
+  casos del código y cifras conocidas (splitter 7/7/6, batería que empuja 50 y drena 11, carga al 80 %, tope de carga
+  4 × salida, torreta que necesita 11 para sus salidas de estado, HBHF por jugador, AND/OR/XOR, memoria, contador,
+  temporizador, botón de 0,5 s, RF, puerta, lazos que oscilan sin colgar), 15 de circuitos listos, 9 de codec y explicar,
+  8 del estado del editor.
+- **Circuitos listos:** 15, cada uno con página en/es (30 páginas) y su prueba en el simulador.
+- **Build** (`NODE_OPTIONS=--max-old-space-size=6144 npm run build`): 105-116 s el comando entero (`vite build`
+  1 min 29 s – 1 min 32 s), 24.328 páginas prerenderizadas (+32), pico de RAM del árbol de procesos 2,47-2,48 GB.
+  React Flow va en su chunk (`xyflow`, 185 KB, 60 KB gzip); `vendor` sigue en 143 KB.
+- **Perf** (`npm run perf --only rust`, en frío, 1.400 × 900):
+
+  | Página | Pedidos | Imágenes | Nodos |
+  | --- | ---: | ---: | ---: |
+  | `/en/rust/electricity` | 73 | 45 | 731 |
+  | `/es/rust/electricidad` | 72 | 44 | 732 |
+  | `/en/rust/electricity/battery-backup` | 78 | 50 | 835 |
+
+- **Pendiente:** etapas 6 (agua) y 7 (industrial); probar en el juego los números dudosos (interruptor y temporizador
+  con consumo 0, "Fully Charged"); un test de Python preexistente de `feat/rust` falla (`test_skins`: falta el ícono
+  `skins/10441.webp` en el repo; no es de esta rama).

@@ -320,3 +320,20 @@ describe("Cambios en vivo", () => {
     expect(got(w, "l")).toBe(0);
   });
 });
+
+describe("Lazos (responsetime)", () => {
+  it("un bloqueador que se bloquea a sí mismo oscila sin colgar el simulador (el juego no deja actualizar dos veces en 0,1 s)", () => {
+    const w = run(c([["g", "electric.generator.small"], ["bl", "electric.blocker"], ["sp", "electric.splitter"], ["l", "electric.simplelight"]], "g.0>bl.0 bl.0>sp.0 sp.0>bl.1 sp.1>l.0"), 2);
+    let changes = 0;
+    let last = w.get("l")!.received[0];
+    for (let i = 0; i < 60; i++) {
+      w.tick(1 / 30);
+      const v = w.get("l")!.received[0];
+      if (v !== last) changes++;
+      last = v;
+    }
+    expect(changes).toBeGreaterThan(4);
+    expect(w.overloaded).toBe(false);
+  });
+});
+
