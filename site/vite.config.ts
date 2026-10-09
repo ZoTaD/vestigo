@@ -931,6 +931,9 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: { output: { manualChunks: manualChunks() } },
+    // Las fuentes nunca van como `data:` dentro del CSS: la CSP (`font-src 'self'`) las bloquea. Pasaba con los
+    // pedacitos chicos de @fontsource (griego extendido de Roboto Condensed en Rust).
+    assetsInlineLimit: (file) => (/\.woff2?$/.test(file) ? false : undefined),
   },
   /**
    * Cada JSON como `JSON.parse("…")` y no como un objeto de JavaScript (2026-10-06). Son ~50 MB de datos (31 de
