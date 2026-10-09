@@ -15,15 +15,33 @@ export interface SlotDef {
   t: IOType;
   /** `mainPowerSlot`: la entrada que alimenta (las otras son señales). */
   m: 0 | 1;
+  /** Altura del enchufe en el prefab (`handlePosition.y`, metros): la usa la gravedad del agua. */
+  h?: number;
+  /** Si está, el enchufe es de la entidad hija (el depósito del purificador): índice de la salida en el hijo. */
+  v?: number;
 }
 
-export type Category = "source" | "battery" | "route" | "logic" | "switch" | "sensor" | "defense" | "light" | "appliance";
+export type Category = "source" | "battery" | "route" | "logic" | "switch" | "sensor" | "defense" | "light" | "appliance" | "water" | "industrial";
 
 export interface ComponentDef {
   /** shortname del objeto que lo coloca. */
   id: string;
   /** Clase del juego: elige el comportamiento. */
   cls: string;
+  /** `IOEntity.ioType`: la red de la entidad (0 energía, 1 agua, 4 industrial). */
+  io?: IOType;
+  /** Una entidad que el juego crea junto con esta (el depósito del purificador): no va en la paleta. */
+  hidden?: boolean;
+  /** El id del componente hijo (`hidden`) que el juego crea con esta entidad. */
+  child?: string;
+  /** Ícono prestado de otro objeto (el poste de tendido no tiene uno propio). */
+  icon?: string;
+  /** Sus números no están en los datos del juego: se ajustan a mano (el poste de tendido). */
+  approx?: boolean;
+  /** Caja u horno con el adaptador de almacenamiento puesto (una sola parte). */
+  adaptor?: boolean;
+  /** El único combustible que acepta el horno (`fuelType`). */
+  fuel?: string;
   cat: Category;
   name: { en: string; es: string | null };
   slug: string | null;
@@ -40,6 +58,19 @@ export interface ComponentDef {
   /** Lo que el jugador puede configurar, con su rango. */
   range?: Record<string, [number, number]>;
   craft: { id: string; amount: number }[];
+}
+
+/** Lo que la red industrial necesita de un objeto (`games/rust/data/industrial-items.json`). */
+export interface IndItem {
+  stack: number;
+  cat: string;
+  name: { en: string; es: string | null };
+  /** `ItemModCookable`: en qué se convierte, cuánto, en cuánto tiempo y entre qué temperaturas. */
+  cook?: { into: string; n: number; time: number; low: number; high: number };
+  /** `ItemModBurnable`: cuánto dura y qué deja. */
+  burn?: { fuel: number; by: string | null; byN: number; byChance: number };
+  /** La receta: ingredientes, cuánto da, tiempo y banco. */
+  craft?: { in: [string, number][]; n: number; time: number; wb: number };
 }
 
 export interface ElectricityData {
@@ -59,6 +90,10 @@ export interface Part {
   x: number;
   y: number;
   cfg?: PartCfg;
+  /** Lo que tiene adentro (cajas, hornos, crafteador): shortname, ranura y cantidad. */
+  inv?: { id: string; slot: number; n: number }[];
+  /** Los filtros de una cinta industrial: objeto o categoría, máximo en destino, mínimo en origen y tanda. */
+  filters?: { item?: string; cat?: string; max?: number; min?: number; buffer?: number }[];
 }
 
 /** Un cable: de la salida `from[1]` de la parte `from[0]` a la entrada `to[1]` de `to[0]`. */
@@ -75,6 +110,10 @@ export interface Env {
   gust: number;
   /** Altura del molino sobre el terreno, en metros. */
   height: number;
+  /** Clima para los colectores de agua (0-1): `Climate.GetRain`, `GetFog`, `GetSnow`. */
+  rain: number;
+  fog: number;
+  snow: number;
 }
 
 export interface Circuit {
@@ -83,4 +122,4 @@ export interface Circuit {
   env?: Partial<Env>;
 }
 
-export const DEFAULT_ENV: Env = { hour: 12, gust: 0.5, height: 20 };
+export const DEFAULT_ENV: Env = { hour: 12, gust: 0.5, height: 20, rain: 0, fog: 0, snow: 0 };

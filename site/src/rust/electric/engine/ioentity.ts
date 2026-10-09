@@ -8,7 +8,7 @@
  * misma entidad no actualiza sus salidas dos veces en menos de `RESPONSE_TIME` (0,1 s): eso arma los relojes y el
  * parpadeo de los circuitos realimentados.
  */
-import type { ComponentDef, IOType, PartCfg, SlotDef } from "./types";
+import type { ComponentDef, IOType, Part, PartCfg, SlotDef } from "./types";
 import type { World } from "./world";
 
 /** `IOEntity.responsetime` (convar `ioentity.responsetime`, 0,1 s por defecto). */
@@ -105,10 +105,82 @@ export class IOEntity {
     readonly cfg: PartCfg,
   ) {
     this.inputs = def.in.map((d) => new IOSlot(d));
-    this.outputs = def.out.map((d) => new IOSlot(d));
+    // Los enchufes con `v` son del hijo (el depósito del purificador): la entidad no los tiene.
+    const own = def.out.filter((d) => d.v === undefined);
+    this.outputs = own.map((d) => new IOSlot(d));
     this.received = def.in.map(() => 0);
-    this.sent = def.out.map(() => 0);
+    this.sent = own.map(() => 0);
+    this.ioType = def.io ?? 0;
   }
+
+  /** La parte del circuito (para el inventario de una caja o los filtros de una cinta). */
+  part: Part | null = null;
+
+  /** La entidad que el juego crea con esta (el depósito del purificador) y la que la creó. */
+  child: IOEntity | null = null;
+  parent: IOEntity | null = null;
+
+  /** La salida `i` de la parte tal como la ve el editor: puede ser del hijo. */
+  port(i: number): [IOEntity, number] {
+    if (i < this.outputs.length || !this.child) return [this, i];
+    return [this.child, this.def.out[i]?.v ?? 0];
+  }
+  /** Lo último que salió por la salida `i` de la parte (del hijo, si es suya). */
+  sentAt(i: number): number {
+    const [e, k] = this.port(i);
+    return e.sent[k] ?? 0;
+  }
+
+  // ---- Altura y gravedad del agua (IOEntity.cs: `AllowLiquidPassthrough`, `FindGravitySource`) ----
+
+  /** Acá: la altura de la parte en el editor (metros, 0 por defecto); el hijo usa la de su padre. */
+  get height(): number {
+    return this.parent ? this.parent.height : (this.cfg.height ?? 0);
+  }
+  /** La altura "en el mundo" de un enchufe: la de la parte más la del enchufe en el prefab. */
+  outY(i: number): number {
+    return this.height + (this.outputs[i]?.def.h ?? 0);
+  }
+  inY(i: number): number {
+    return this.height + (this.inputs[i]?.def.h ?? 0);
+  }
+  get isGravitySource(): boolean {
+    return false;
+  }
+  get disregardGravityRestrictionsOnLiquid(): boolean {
+    return false;
+  }
+  get liquidPassthroughGravityThreshold(): number {
+    return 1;
+  }
+  get blockFluidDraining(): boolean {
+    return false;
+  }
+  allowLiquidPassthrough(fromSource: IOEntity, sourceY: number, _forPlacement = false): boolean {
+    if (fromSource.disregardGravityRestrictionsOnLiquid || this.disregardGravityRestrictionsOnLiquid) return true;
+    if (this.inputs.length === 0) return false;
+    const num = sourceY - this.inY(0);
+    if (num > 0) return true;
+    if (Math.abs(num) < this.liquidPassthroughGravityThreshold) return true;
+    return false;
+  }
+  findGravitySource(depth: number, ignoreSelf: boolean): { e: IOEntity; y: number } | null {
+    if (depth <= 0) return null;
+    if (!ignoreSelf && this.isGravitySource) return { e: this, y: this.outY(0) };
+    for (const s of this.inputs) {
+      let e = s.connectedTo;
+      if (!e) continue;
+      if (e.isGravitySource) return { e, y: e.outY(0) };
+      const found = e.findGravitySource(depth - 1, false);
+      if (found) {
+        e = found.e;
+        return { e, y: e.outY(0) };
+      }
+    }
+    return null;
+  }
+  /** `SetFuelType`: el contenedor que la abastece de agua y de qué tipo. */
+  setFuelType(_kind: string | null, _source: IOEntity | null): void {}
 
   /** Acá: `outputs[i].connectedTo.Get().UpdateFromInput(amount, outputs[i].connectedToSlot)`, anotando la cifra. */
   send(i: number, amount: number): void {
@@ -315,8 +387,10 @@ export class IOEntity {
       const s = this.outputs[i];
       const e = s.connectedTo;
       if (!e) continue;
-      // Acá: la gravedad del agua (`AllowLiquidPassthrough`) no se modela: esta pestaña es la red eléctrica.
-      this.send(i, this.getPassthroughAmount(i));
+      let flow = true;
+      // El agua no sube: si el destino no deja pasar desde la altura de este enchufe, le llega 0.
+      if (this.ioType === 1 && !this.disregardGravityRestrictionsOnLiquid && !e.disregardGravityRestrictionsOnLiquid && !e.allowLiquidPassthrough(this, this.outY(i))) flow = false;
+      this.send(i, flow ? this.getPassthroughAmount(i) : 0);
     }
   }
 

@@ -7,6 +7,9 @@ import { BACKTRACKING, clamp, Flag, idiv, IOEntity, type Action, type Readout } 
 
 /** Reparte en partes iguales entre las salidas conectadas; el resto, de a 1, a las primeras. No mira lo que piden. */
 export class Splitter extends IOEntity {
+  override get blockFluidDraining(): boolean {
+    return true;
+  }
   override isRootEntity(): boolean {
     return true;
   }
@@ -64,6 +67,9 @@ export class ElectricalCombiner extends IOEntity {
   input1Amount = 0;
   input2Amount = 0;
   input3Amount = 0;
+  override get blockFluidDraining(): boolean {
+    return true;
+  }
   override isRootEntity(): boolean {
     return true;
   }

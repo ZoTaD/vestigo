@@ -11,18 +11,19 @@ function WireEdge({ id, source, sourceHandleId, sourceX, sourceY, targetX, targe
   useSim();
   const e = store.world.get(source);
   const slot = Number((sourceHandleId ?? "o0").slice(1));
-  const v = e?.sent[slot] ?? 0;
-  const type = e?.outputs[slot]?.type ?? 0;
+  const v = e?.sentAt(slot) ?? 0;
+  const type = e?.def.out[slot]?.t ?? 0;
   const [path, lx, ly] = getSmoothStepPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, borderRadius: 6, offset: 14 });
   const cls = `el-wire el-t${type}${v > 0 ? " is-live" : ""}${selected ? " is-sel" : ""}`;
   return (
     <>
       <BaseEdge id={id} path={path} className={cls} interactionWidth={14} />
-      <EdgeLabelRenderer>
+      {/* Los cables industriales no llevan cifra: lo que mueven son objetos (lo dice el inspector de la cinta). */}
+      {type === 4 ? null : <EdgeLabelRenderer>
         <span className={`el-wlabel${v > 0 ? " is-live" : ""}`} style={{ transform: `translate(-50%, -50%) translate(${lx}px, ${ly}px)` }}>
           {v}
         </span>
-      </EdgeLabelRenderer>
+      </EdgeLabelRenderer>}
     </>
   );
 }

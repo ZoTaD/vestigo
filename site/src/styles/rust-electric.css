@@ -215,3 +215,19 @@
   .el-range input { width: 110px; }
   .el-time { margin-left: 0; }
 }
+
+/* Lo industrial del inspector (2026-10-09). */
+.el-picker { position: relative; margin: 8px 0 0; }
+.el-picker input { width: 100%; padding: 6px 8px; border: 0; background: rgba(0, 0, 0, 0.45); color: var(--rs-text); font: 400 14px "Roboto Condensed", sans-serif; }
+.el-picker ul { display: grid; gap: 1px; margin: 2px 0 0; padding: 0; list-style: none; }
+.el-picker button { display: flex; gap: 6px; align-items: center; width: 100%; padding: 4px 6px; border: 0; background: rgba(0, 0, 0, 0.55); color: var(--rs-text); font: 400 13px "Roboto Condensed", sans-serif; text-align: left; cursor: pointer; }
+.el-picker button:hover { background: #55702a; color: #fff; }
+.el-slotno { color: var(--rs-dim); font-size: 11px; }
+.el-filters { width: 100%; border-collapse: collapse; font-size: 12px; }
+.el-filters th, .el-filters td { padding: 3px 2px; text-align: left; }
+.el-filters thead th { color: var(--rs-dim); font-weight: 400; }
+.el-filters input { width: 52px; padding: 2px 4px; border: 0; background: rgba(0, 0, 0, 0.45); color: var(--rs-text); }
+.el-num select { padding: 4px; border: 0; background: rgba(0, 0, 0, 0.45); color: var(--rs-text); font: 400 14px "Roboto Condensed", sans-serif; }
+.el-canvas .el-h.el-t4 { background: #7a5a2a; }
+.el-canvas .el-h.el-t4.is-live { background: #e0a040; }
+.el-canvas .el-wire.el-t4 { stroke: #7a5a2a; }

@@ -43,13 +43,15 @@ class Forma(unittest.TestCase):
                 self.assertIn(c["useSrc"], ("field", "code", "formula", "base", "nocode"))
                 for s in c["in"] + c["out"]:
                     self.assertIn(s["t"], (0, 1, 2, 3, 4))
-                # Algo eléctrico: si no, no es de esta pestaña.
-                self.assertTrue(any(s["t"] == 0 for s in c["in"] + c["out"]))
+                # Algo de energía, agua o industrial: si no, no es de esta pestaña.
+                self.assertTrue(any(s["t"] in (0, 1, 4) for s in c["in"] + c["out"]))
+                for s in c["in"] + c["out"]:
+                    self.assertIsInstance(s["h"], (int, float))
 
     def test_ningun_componente_sin_consumo_ni_generacion(self):
         for c in self.doc["components"]:
             with self.subTest(c["id"]):
-                if c["cat"] == "source":
+                if c["cat"] == "source" and not c.get("approx"):
                     self.assertGreater(c["gen"], 0)
                 else:
                     self.assertGreaterEqual(c["use"], 0)
@@ -88,6 +90,70 @@ class Forma(unittest.TestCase):
     def test_receta_para_la_lista_de_materiales(self):
         self.assertEqual(self.c["electric.splitter"]["craft"], [{"id": "metal.fragments", "amount": 100}])
         self.assertIn("metal.fragments", self.doc["names"])
+
+
+class Agua(unittest.TestCase):
+    """La red de agua (2026-10-09)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.doc = json.loads(DATA.read_text(encoding="utf-8"))
+        cls.c = by_id(cls.doc)
+
+    def test_numeros_del_juego(self):
+        pump = self.c["waterpump"]
+        self.assertEqual((pump["use"], pump["p"]["PumpInterval"], pump["p"]["AmountPerPump"], pump["p"]["maxOutputFlow"]), (5, 10.0, 85, 12))
+        self.assertEqual(self.c["electric.sprinkler"]["use"], 2)
+        self.assertEqual(self.c["water.barrel"]["p"]["maxStackSize"], 20000)
+        self.assertEqual(self.c["water.catcher.small"]["p"]["rate_baseRate"], 0.25)
+        pur = self.c["powered.water.purifier"]
+        self.assertEqual((pur["use"], pur["p"]["freshWaterRatio"], pur["p"]["waterToProcessPerMinute"]), (5, 2, 4000))
+
+    def test_el_purificador_muestra_la_salida_de_su_deposito(self):
+        pur = self.c["powered.water.purifier"]
+        self.assertEqual(pur["child"], "powered.water.purifier#storage")
+        self.assertEqual([(s["n"], s["v"]) for s in pur["out"]], [("Water Out", 0)])
+        self.assertTrue(self.c["powered.water.purifier#storage"]["hidden"])
+
+    def test_alturas_de_los_enchufes(self):
+        self.assertEqual(self.c["water.barrel"]["in"][0]["h"], 2.03)
+        self.assertEqual(self.c["water.barrel"]["out"][0]["h"], 1.1)
+
+    def test_categoria_y_red(self):
+        for sid in ("waterpump", "fluid.splitter", "fluid.combiner", "fluid.switch", "water.barrel", "electric.sprinkler"):
+            self.assertEqual(self.c[sid]["cat"], "water", sid)
+        self.assertEqual(self.c["fluid.splitter"]["io"], 1)
+        self.assertNotIn("water.purifier", self.c)
+
+
+class PosteDeTendido(unittest.TestCase):
+    def test_el_poste_de_power_trip_es_fuente_con_seis_salidas_y_aproximado(self):
+        c = by_id(json.loads(DATA.read_text(encoding="utf-8")))["powerline.pole"]
+        self.assertEqual((c["cls"], c["cat"], len(c["out"]), c["approx"]), ("PowergridIOAccessPoint", "source", 6, True))
+
+
+class Industrial(unittest.TestCase):
+    """La red industrial (2026-10-09)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.c = by_id(json.loads(DATA.read_text(encoding="utf-8")))
+        cls.items = json.loads(electricity.OUT_IND.read_text(encoding="utf-8"))
+
+    def test_componentes(self):
+        conv = self.c["industrial.conveyor"]
+        self.assertEqual((conv["cat"], conv["io"], conv["use"], conv["p"]["MaxStackSizePerMove"]), ("industrial", 4, 1, 60))
+        self.assertEqual([s["n"] for s in conv["out"]], ["Industrial Output", "Passthrough", "Filter Fail", "Filter Pass"])
+        self.assertEqual(self.c["box.wooden.large"]["p"]["slots"], 48)
+        f = self.c["furnace"]
+        self.assertEqual((f["p"]["smeltSpeed"], f["p"]["fuelSlots"], f["p"]["inputSlots"], f["p"]["outputSlots"], f["fuel"]), (3, 1, 2, 3, "wood"))
+        self.assertEqual(self.c["furnace.large"]["p"]["IndustrialMode"], 1)
+
+    def test_objetos(self):
+        self.assertEqual(self.items["metal.ore"]["cook"], {"into": "metal.fragments", "n": 1.0, "time": 10.0, "low": 800, "high": 1200})
+        self.assertEqual(self.items["wood"]["burn"]["fuel"], 10.0)
+        self.assertEqual(self.items["gunpowder"]["craft"], {"in": [["charcoal", 30], ["sulfur", 20]], "n": 10, "time": 2, "wb": 1})
+        self.assertEqual(self.items["ammo.rifle"]["stack"], 128)
 
 
 class VistaDeFichas(unittest.TestCase):

@@ -23,7 +23,7 @@ const CIRCUIT: Circuit = {
     { from: ["p2", 0], to: ["p3", 0] },
     { from: ["p2", 1], to: ["p4", 0] },
   ],
-  env: { hour: 18.5, gust: 0.35, height: 12 },
+  env: { hour: 18.5, gust: 0.35, height: 12, rain: 0.3, fog: 0.05, snow: 0 },
 };
 
 describe("codec", () => {
@@ -36,6 +36,23 @@ describe("codec", () => {
     expect(s).toMatch(/^[A-Za-z0-9_-]+$/);
     expect(s.length).toBeLessThan(260);
     expect(await decode(s)).toEqual(CIRCUIT);
+  });
+
+  it("v2: la altura, el agua, el contenido de una caja y los filtros de una cinta viajan; la altura 0 no", () => {
+    const c: Circuit = {
+      parts: [
+        { id: "p0", type: "water.barrel", x: 0, y: 0, cfg: { height: 2.5, water: 300, salt: 1 } },
+        { id: "p1", type: "industrial.conveyor", x: 10, y: 0, cfg: { height: 0, mode: 1 }, filters: [{ item: "metal.ore", max: 100 }, { cat: "weapon", min: 2, buffer: 5 }] },
+        { id: "p2", type: "box.wooden.large", x: 20, y: 0, inv: [{ id: "metal.ore", slot: 0, n: 1000 }] },
+      ],
+      wires: [],
+      env: { hour: 12, gust: 0.5, height: 20, rain: 0, fog: 0, snow: 0 },
+    };
+    const back = fromBytes(toBytes(c));
+    expect(back.parts[0].cfg).toEqual({ height: 2.5, water: 300, salt: 1 });
+    expect(back.parts[1].cfg).toEqual({ mode: 1 });
+    expect(back.parts[1].filters).toEqual(c.parts[1].filters);
+    expect(back.parts[2].inv).toEqual(c.parts[2].inv);
   });
 
   it("un link roto no rompe: da null", async () => {

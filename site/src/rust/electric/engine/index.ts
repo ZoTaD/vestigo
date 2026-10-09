@@ -8,9 +8,11 @@ import { AutoTurret, Consumer, CustomDoorManipulator, DeployableBoomBox, Igniter
 import { ANDSwitch, ElectricalDFlipFlop, ORSwitch, PowerCounter, TimerSwitch, XORSwitch } from "./behaviors/logic";
 import { CableTunnel, ElectricalBlocker, ElectricalBranch, ElectricalCombiner, RANDSwitch, Splitter } from "./behaviors/route";
 import { HBHFSensor, LaserDetector, PressurePad, SeismicSensor, StorageMonitor } from "./behaviors/sensors";
-import { ElectricGenerator, ElectricWaterWheel, ElectricWindmill, FuelGenerator, SolarPanel } from "./behaviors/sources";
+import { ElectricGenerator, ElectricWaterWheel, ElectricWindmill, FuelGenerator, PowerlinePole, SolarPanel } from "./behaviors/sources";
 import { ElectricSwitch, PressButton, RFBroadcaster, RFReceiver, SmartSwitch } from "./behaviors/switches";
-import type { Circuit, ComponentDef, ElectricityData, Part, PartCfg, Wire } from "./types";
+import { FluidSwitch, LiquidContainer, PoweredWaterPurifier, Sprinkler, WaterCatcher, WaterPump } from "./behaviors/water";
+import { BaseOven, BoxStorage, IndustrialConveyor, IndustrialCrafter } from "./behaviors/industrial";
+import type { Circuit, ComponentDef, ElectricityData, IndItem, Part, PartCfg, Wire } from "./types";
 import { DEFAULT_ENV } from "./types";
 import { World } from "./world";
 
@@ -26,6 +28,7 @@ const BEHAVIORS: Record<string, Ctor> = {
   ElectricWaterWheel,
   FuelGenerator,
   ElectricGenerator,
+  PowergridIOAccessPoint: PowerlinePole,
   ElectricBattery,
   Splitter,
   ElectricalBranch,
@@ -56,6 +59,16 @@ const BEHAVIORS: Record<string, Ctor> = {
   CustomDoorManipulator,
   ReactiveTarget,
   DeployableBoomBox,
+  LiquidContainer,
+  WaterPump,
+  WaterCatcher,
+  PoweredWaterPurifier,
+  Sprinkler,
+  FluidSwitch,
+  IndustrialConveyor,
+  IndustrialCrafter,
+  BaseOven,
+  BoxStorage,
 };
 
 export const behaviorOf = (cls: string): Ctor => BEHAVIORS[cls] ?? Consumer;
@@ -63,6 +76,8 @@ export const behaviorOf = (cls: string): Ctor => BEHAVIORS[cls] ?? Consumer;
 /** El catálogo de componentes por shortname. */
 export class Catalog {
   readonly byId: Map<string, ComponentDef>;
+  /** Los objetos para la red industrial (`industrial-items.json`): se cargan aparte, cuando hacen falta. */
+  items: Record<string, IndItem> = {};
   constructor(readonly data: ElectricityData) {
     this.byId = new Map(data.components.map((c) => [c.id, c]));
   }
@@ -90,15 +105,18 @@ export function wireError(cat: Catalog, circuit: Circuit, w: Wire): "missing" | 
 export function buildWorld(cat: Catalog, circuit: Circuit): World {
   const world = new World();
   world.env = { ...DEFAULT_ENV, ...circuit.env };
+  world.items = cat.items;
   for (const p of circuit.parts) addEntity(cat, world, p, false);
   for (const w of circuit.wires) {
-    const a = world.get(w.from[0]);
+    const part = world.get(w.from[0]);
     const b = world.get(w.to[0]);
-    if (!a || !b || wireError(cat, circuit, w)) continue;
-    a.outputs[w.from[1]].connectedTo = b;
-    a.outputs[w.from[1]].connectedToSlot = w.to[1];
+    if (!part || !b || wireError(cat, circuit, w)) continue;
+    // La salida puede ser del hijo (el "Water Out" del purificador es de su depósito).
+    const [a, slot] = part.port(w.from[1]);
+    a.outputs[slot].connectedTo = b;
+    a.outputs[slot].connectedToSlot = w.to[1];
     b.inputs[w.to[1]].connectedTo = a;
-    b.inputs[w.to[1]].connectedToSlot = w.from[1];
+    b.inputs[w.to[1]].connectedToSlot = slot;
   }
   for (const e of world.entities.values()) e.serverInit();
   for (const e of world.entities.values()) e.init();
@@ -112,9 +130,20 @@ function addEntity(cat: Catalog, world: World, p: Part, live: boolean): IOEntity
   // La configuración vive en la parte: lo que el usuario cambia en el inspector queda guardado en el circuito.
   p.cfg ??= {};
   const e = new Cls(world, p.id, def, p.cfg);
+  e.part = p;
   world.entities.set(p.id, e);
+  // El hijo que el juego crea con la entidad (`SpawnStorageEnt`): otra entidad, con su propio inventario.
+  const cdef = def.child ? cat.get(def.child) : undefined;
+  if (cdef) {
+    const c = new (behaviorOf(cdef.cls))(world, `${p.id}#child`, cdef, {});
+    c.parent = e;
+    e.child = c;
+    world.entities.set(c.id, c);
+  }
   if (live) {
+    if (e.child) e.child.serverInit();
     e.serverInit();
+    if (e.child) e.child.init();
     e.init();
   }
   return e;
@@ -128,16 +157,25 @@ export const live = {
   removePart(world: World, id: string): void {
     const e = world.get(id);
     if (!e) return;
+    if (e.child) {
+      e.child.shutdown();
+      world.entities.delete(e.child.id);
+    }
     e.shutdown();
     world.entities.delete(id);
   },
   connect(world: World, w: Wire): void {
-    const a = world.get(w.from[0]);
+    const part = world.get(w.from[0]);
     const b = world.get(w.to[0]);
-    if (a && b) a.connectTo(b, w.from[1], w.to[1]);
+    if (!part || !b) return;
+    const [a, slot] = part.port(w.from[1]);
+    a.connectTo(b, slot, w.to[1]);
   },
   disconnect(world: World, w: Wire): void {
-    world.get(w.from[0])?.disconnect(w.from[1], false);
+    const part = world.get(w.from[0]);
+    if (!part) return;
+    const [a, slot] = part.port(w.from[1]);
+    a.disconnect(slot, false);
   },
 };
 

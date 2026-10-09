@@ -27,4 +27,6 @@ export function useSim(): number {
 /** El nombre de un componente en el idioma de la página. */
 export const nameOf = (n: { en: string; es: string | null }, lang: "en" | "es"): string => (lang === "es" ? n.es ?? n.en : n.en);
 
-export const iconOf = (id: string): string => `/rust/items/${id}.webp`;
+/** Los que usan el ícono de otro objeto (el campo `icon` de electricity.json): el poste de tendido no tiene uno. */
+const BORROWED: Record<string, string> = { "powerline.pole": "fuse.highgrade" };
+export const iconOf = (id: string): string => `/rust/items/${BORROWED[id] ?? id}.webp`;

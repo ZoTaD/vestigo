@@ -39,6 +39,11 @@ CODE_USE = {
     "ElectricWindmill": (0, "ElectricWindmill.cs (no la sobrescribe: es fuente, no tiene entrada)"),
     "FuelGenerator": (0, "FuelGenerator.cs"),
     "ElectricGenerator": (0, "ElectricGenerator.cs"),
+    # Agua (2026-10-09): el aspersor pide 2 de agua por segundo; el interruptor de fluidos hereda el 0 del interruptor.
+    "Sprinkler": (2, "Sprinkler.cs"),
+    # Industrial: el adaptador no consume (IndustrialStorageAdaptor.cs).
+    "IndustrialStorageAdaptor": (0, "IndustrialStorageAdaptor.cs"),
+    "FluidSwitch": (0, "FluidSwitch.cs"),
 }
 
 # `Mathf.CeilToInt(maxDamageOutput / powerToDamageRatio)` (TeslaCoil.cs), con los campos del prefab actual.
@@ -63,6 +68,10 @@ BASE_USE = {
     "FlasherLight": "FlasherLight.cs → IOEntity.cs",
     "SirenLight": "SirenLight.cs → IOEntity.cs",
     "ContainerIOEntity": "ContainerIOEntity.cs → IOEntity.cs",
+    "LiquidContainer": "LiquidContainer.cs → IOEntity.cs",
+    "IndustrialConveyor": "IndustrialConveyor.cs → IndustrialEntity.cs → IOEntity.cs",
+    "IndustrialCrafter": "IndustrialCrafter.cs → IndustrialEntity.cs → IOEntity.cs",
+    "WaterCatcher": "WaterCatcher.cs → LiquidContainer.cs → IOEntity.cs",
     "IOEntity": "IOEntity.cs",
 }
 
@@ -70,6 +79,9 @@ BASE_USE = {
 # `IOEntity` (1) mientras no aparezca su código. Se marcan como "sin código" en el JSON. La rueda de agua tampoco tiene
 # código: es fuente fija con `maxPowerGenerationFromWater`.
 NO_CODE_USE = {"StringLights": 1, "ChristmasLights": 1, "Chandelier": 1, "OrientableLight": 1, "ElectricWaterWheel": 0}
+
+# El poste de tendido eléctrico (Power Trip): prefab estático, sin objeto. Ver `powerline_pole` en electricity.py.
+POWERLINE_POLE = "assets/prefabs/io/electric/generators/powergrid_powerline_io.static.prefab"
 
 # Afuera de la paleta (por ahora), con el motivo.
 EXCLUDE = {
@@ -88,16 +100,15 @@ EXCLUDE = {
     "SpookySpeaker": "funciona con pilas, no con energía",
     "StrobeLight": "funciona con pilas, no con energía",
     # Industrial (plan 7) y agua sin energía (plan 6).
-    "FluidSwitch": "agua (etapa 6)",
-    "IndustrialConveyor": "industrial (etapa 7)",
-    "IndustrialCrafter": "industrial (etapa 7)",
-    "IndustrialStorageAdaptor": "industrial (etapa 7)",
+    "WaterPurifier": "el purificador sin energía necesita fuego, que el editor no tiene",
+    # El adaptador no va suelto: viene puesto en cada caja u horno de `CONTAINERS` (una sola parte en el editor).
+    "IndustrialStorageAdaptor": "va puesto en las cajas y hornos (CONTAINERS)",
 }
 # El ítem `discoball` coloca un `IOEntity` pelado: no es un componente que se arme.
 EXCLUDE_ITEMS = {"discoball", "weaponrack.light", "weaponrack.doublelight"}
 
 # La paleta: categoría por clase, en el orden en que se muestran.
-CATEGORIES = ["source", "battery", "route", "logic", "switch", "sensor", "defense", "light", "appliance"]
+CATEGORIES = ["source", "battery", "route", "logic", "switch", "sensor", "defense", "light", "appliance", "water", "industrial"]
 CATEGORY = {
     "SolarPanel": "source", "ElectricWindmill": "source", "ElectricWaterWheel": "source", "FuelGenerator": "source",
     "ElectricGenerator": "source",
@@ -116,7 +127,9 @@ CATEGORY = {
     "NeonSign": "light", "StringLights": "light", "OrientableLight": "light", "SearchLight": "light",
     "ChristmasLights": "light", "Chandelier": "light",
 }
-# Lo demás que consume (heladera, calefactor, cámaras, bomba de agua…) va a "appliance".
+# Lo demás que consume (heladera, calefactor, cámaras…) va a "appliance". Lo de la red de agua (`ioType` 1, más la
+# bomba y el purificador, que son eléctricos con salida o entrada de agua) va a "water".
+WATER_CLASSES = {"WaterPump", "PoweredWaterPurifier"}
 
 # Campos del prefab que el motor necesita, por clase (se copian tal cual a `p`).
 PARAMS = {
@@ -138,7 +151,24 @@ PARAMS = {
     "SamSite": ["lowAmmoThreshold"],
     "DeployableBoomBox": ["PowerUsageWhilePlaying"],
     "Igniter": ["IgniteRange", "IgniteFrequency"],
+    # Agua: todo `LiquidContainer` lleva los de contenedor (`LIQUID_PARAMS`) además de estos.
+    "WaterPump": ["PumpInterval", "AmountPerPump"],
+    "WaterCatcher": ["maxItemToCreate"],
+    "PoweredWaterPurifier": ["waterToProcessPerMinute", "freshWaterRatio", "stopWhenOutputFull", "ConvertInterval"],
+    "Sprinkler": ["SplashFrequency", "WaterPerSplash"],
 }
+# Industrial (2026-10-09): cajas y hornos con el adaptador de almacenamiento puesto. Cada uno es una sola parte: los
+# enchufes del adaptador (`storageadaptor.deployed.prefab`) y el inventario y las reglas de su contenedor (el prefab que
+# coloca el objeto, de `cache/industrial/`). El horno eléctrico queda afuera: su energía entra por otra entidad hija.
+ADAPTOR = "assets/prefabs/deployable/playerioents/industrialadaptors/storageadaptor.deployed.prefab"
+CONTAINERS = ["box.wooden.large", "box.wooden", "furnace", "furnace.large"]
+OVEN_PARAMS = ["smeltSpeed", "fuelSlots", "inputSlots", "outputSlots", "IndustrialMode", "temperature", "allowByproductCreation"]
+# `BaseOven.TemperatureType` → `cookingTemperature` (BaseOven.cs).
+OVEN_TEMPERATURE = {0: 15, 1: 50, 2: 200, 3: 1000, 4: 1500}
+# `IndustrialConveyor.MaxStackSizePerMove`, del prefab.
+CONVEYOR_PARAMS = ["MaxStackSizePerMove"]
+LIQUID_CLASSES = {"LiquidContainer", "WaterPump", "WaterCatcher", "PoweredWaterPurifier", "WaterPurifier"}
+LIQUID_PARAMS = ["maxStackSize", "maxOutputFlow", "autofillOutputs", "autofillTickRate", "autofillTickAmount", "startingAmount"]
 
 # Rangos que el jugador puede poner en el juego. Temporizador y sensor sísmico: los paneles `TimerConfig` y
 # `SeismicSensorConfig` de la caché (`io/configs.json`); la rama: `SetBranchOffPower` clampa a 1..10.000.000

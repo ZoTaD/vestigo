@@ -20,6 +20,7 @@ import { ELECTRIC_COPY } from "./copy";
 import { Catalog } from "./engine";
 import type { Circuit, ElectricityData } from "./engine/types";
 import { EditorStore } from "./editor/store";
+import { iconOf } from "./editor/ctx";
 import { TRY_KEY, tryCircuit } from "./trial";
 import "../../styles/rust-electric.css";
 
@@ -80,7 +81,11 @@ export default function RustElectricity({ route, navigate }: { route: Route; nav
   // Al entrar (y al pasar de un circuito listo a otro), se arma el estado con el circuito que toca.
   useEffect(() => {
     let alive = true;
-    void initialCircuit(ready?.circuit, ready === firstReady ? startHash : "").then((c) => {
+    // Los objetos de la red industrial (pila, fundir, recetas) van aparte: sólo los baja quien abre el editor.
+    const items = import("@rust/industrial-items.json").then((m) => {
+      cat.items = m.default as unknown as Catalog["items"];
+    });
+    void Promise.all([initialCircuit(ready?.circuit, ready === firstReady ? startHash : ""), items]).then(([c]) => {
       if (!alive) return;
       setStore((s) => {
         if (s) {
@@ -142,7 +147,7 @@ export default function RustElectricity({ route, navigate }: { route: Route; nav
               >
                 <span className="el-ready-icons" aria-hidden="true">
                   {[...new Set(c.circuit.parts.map((p) => p.type))].slice(0, 3).map((type) => (
-                    <img key={type} src={`/rust/items/${type}.webp`} alt="" width={28} height={28} loading="lazy" decoding="async" />
+                    <img key={type} src={iconOf(type)} alt="" width={28} height={28} loading="lazy" decoding="async" />
                   ))}
                 </span>
                 <span>{cap(c.name[lang])}</span>

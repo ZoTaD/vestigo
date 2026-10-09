@@ -275,6 +275,147 @@ export const CIRCUITS: ReadyCircuit[] = [
       wires: W("b.0>sp.0 sp.0>sw.0 sw.0>tx.0 sp.1>rx.0 rx.0>d.0"),
     },
   },
+  // ---- Agua (2026-10-09) ----
+  {
+    slug: "farm-irrigation",
+    slugEs: "riego-de-granja",
+    name: { en: "farm irrigation", es: "riego de granja" },
+    about: {
+      en: "A water pump on a river fills a barrel on the roof; a fluid splitter feeds three sprinklers below. The powered pump pushes uphill, and each sprinkler uses 2 water per second while it gets any flow.",
+      es: "Una bomba en un río llena un barril en el techo y un splitter de agua alimenta tres aspersores abajo. La bomba con energía empuja para arriba, y cada aspersor gasta 2 de agua por segundo mientras le llegue caudal.",
+    },
+    circuit: {
+      parts: [
+        P("s", "electric.solarpanel.large", X(0), 0),
+        P("p", "waterpump", X(1), 0, { fresh: 1, water: 500 }),
+        P("b", "water.barrel", X(2), 0, { height: 4 }),
+        P("sp", "fluid.splitter", X(3), 0),
+        P("k1", "electric.sprinkler", X(4), -120),
+        P("k2", "electric.sprinkler", X(4), 20),
+        P("k3", "electric.sprinkler", X(4), 160),
+      ],
+      wires: W("s.0>p.0 p.0>b.0 b.0>sp.0 sp.0>k1.0 sp.1>k2.0 sp.2>k3.0"),
+      env: { hour: 12 },
+    },
+  },
+  {
+    slug: "water-purifier-with-pump",
+    slugEs: "purificador-con-bomba",
+    name: { en: "water purifier with pump", es: "purificador con bomba" },
+    about: {
+      en: "A water pump in the sea fills a powered water purifier with salt water; the purifier turns it into fresh water at 2 to 1 and its tank pushes it into a barrel. Pump and purifier use 5 power each.",
+      es: "Una bomba en el mar llena de agua salada un purificador con energía; el purificador la convierte en agua dulce a razón de 2 a 1 y su depósito la empuja a un barril. Bomba y purificador consumen 5 cada uno.",
+    },
+    circuit: {
+      parts: [
+        P("w", "generator.wind.scrap", X(0), 0),
+        P("sp", "electric.splitter", X(1), 0),
+        P("p", "waterpump", X(2), -100),
+        P("u", "powered.water.purifier", X(3), 40),
+        P("b", "water.barrel", X(4), 40, { height: -1 }),
+      ],
+      wires: W("w.0>sp.0 sp.0>p.0 sp.1>u.1 p.0>u.0 u.0>b.0"),
+      env: { gust: 0.5, height: 20 },
+    },
+  },
+  {
+    slug: "water-catcher-to-barrel",
+    slugEs: "colector-a-barril",
+    name: { en: "water catcher to barrel", es: "colector de agua a barril" },
+    about: {
+      en: "A large water catcher on the roof drops what it collects straight into a barrel below, every minute; rain fills it much faster. Water only flows down without a pump.",
+      es: "Un colector de agua grande en el techo deja lo que junta directo en un barril de abajo, cada minuto; con lluvia se llena mucho más rápido. Sin bomba, el agua sólo baja.",
+    },
+    circuit: {
+      parts: [P("k", "water.catcher.large", X(0), 0, { height: 3 }), P("b", "water.barrel", X(1), 0)],
+      wires: W("k.0>b.0"),
+      env: { rain: 0.2 },
+    },
+  },
+  {
+    slug: "fluid-switch-pump",
+    slugEs: "interruptor-de-fluidos-como-bomba",
+    name: { en: "fluid switch pump", es: "interruptor de fluidos como bomba" },
+    about: {
+      en: "A fluid switch with power on Pump Power works as a pump: it sends water from a barrel on the ground up to a barrel 6 m higher. Cut the pump power and the water stops going up.",
+      es: "Un interruptor de fluidos con energía en Pump Power hace de bomba: manda el agua de un barril en el piso a otro 6 m más arriba. Sin energía en la bomba, el agua deja de subir.",
+    },
+    circuit: {
+      parts: [
+        P("a", "water.barrel", X(0), 100, { water: 5000 }),
+        P("g", "electric.battery.rechargable.small", X(0), -40, { charge: 400 }),
+        P("sw", "electric.switch", X(1), -40, { on: 1 }),
+        P("f", "fluid.switch", X(2), 60, { on: 1 }),
+        P("b", "water.barrel", X(3), 60, { height: 6 }),
+      ],
+      wires: W("g.0>sw.0 sw.0>f.2 a.0>f.0 f.0>b.0"),
+    },
+  },
+  // ---- Industrial (2026-10-09) ----
+  {
+    slug: "item-sorter",
+    slugEs: "clasificador",
+    name: { en: "item sorter", es: "clasificador de objetos" },
+    about: {
+      en: "An industrial splitter feeds two conveyors from the same box: one filters metal and sulfur ore into the ore box, the other is set to Not with the same filter and takes everything else. Each conveyor moves every 5 seconds.",
+      es: "Un splitter industrial alimenta dos cintas desde la misma caja: una filtra la mena de metal y la de azufre hacia la caja de menas, y la otra, en modo No con el mismo filtro, se lleva todo lo demás. Cada cinta mueve cada 5 segundos.",
+    },
+    circuit: {
+      parts: [
+        P("g", "electric.battery.rechargable.medium", X(0), -160, { charge: 9000 }),
+        P("sp", "electric.splitter", X(1), -160),
+        { ...P("a", "box.wooden.large", X(0), 60), inv: [{ id: "metal.ore", slot: 0, n: 500 }, { id: "sulfur.ore", slot: 1, n: 500 }, { id: "wood", slot: 2, n: 300 }, { id: "scrap", slot: 3, n: 100 }] },
+        P("is", "industrial.splitter", X(1), 60),
+        { ...P("k1", "industrial.conveyor", X(2), -20, { on: 1 }), filters: [{ item: "metal.ore" }, { item: "sulfur.ore" }] },
+        { ...P("k2", "industrial.conveyor", X(2), 140, { on: 1, mode: 2 }), filters: [{ item: "metal.ore" }, { item: "sulfur.ore" }] },
+        P("b1", "box.wooden.large", X(3), -20),
+        P("b2", "box.wooden.large", X(3), 140),
+      ],
+      wires: W("g.0>sp.0 sp.0>k1.1 sp.1>k2.1 a.0>is.0 is.0>k1.0 is.1>k2.0 k1.0>b1.0 k2.0>b2.0"),
+    },
+  },
+  {
+    slug: "auto-furnace",
+    slugEs: "horno-automatico",
+    name: { en: "auto furnace", es: "horno automático" },
+    about: {
+      en: "A conveyor fills a furnace from a box: wood goes into the fuel slot and ore into the input slots on their own. A second conveyor empties the output slots into another box. The furnace has to be lit with wood inside and goes out when it runs out.",
+      es: "Una cinta llena un horno desde una caja: la leña va sola a la ranura de combustible y la mena a las de entrada. Otra cinta vacía las ranuras de salida en otra caja. El horno se prende con leña adentro y se apaga cuando se le acaba.",
+    },
+    circuit: {
+      parts: [
+        P("g", "electric.battery.rechargable.medium", X(0), -160, { charge: 9000 }),
+        P("sp", "electric.splitter", X(1), -160),
+        { ...P("a", "box.wooden.large", X(0), 60), inv: [{ id: "wood", slot: 0, n: 1000 }, { id: "metal.ore", slot: 1, n: 1000 }] },
+        P("k1", "industrial.conveyor", X(1), 60, { on: 1 }),
+        { ...P("f", "furnace", X(2), 60, { on: 1 }), inv: [{ id: "wood", slot: 0, n: 20 }] },
+        P("k2", "industrial.conveyor", X(3), 60, { on: 1 }),
+        P("b", "box.wooden.large", X(4), 60),
+      ],
+      wires: W("g.0>sp.0 sp.0>k1.1 sp.1>k2.1 a.0>k1.0 k1.0>f.0 f.0>k2.0 k2.0>b.0"),
+    },
+  },
+  {
+    slug: "auto-crafting",
+    slugEs: "autocrafteo",
+    name: { en: "auto crafting", es: "autocrafteo" },
+    about: {
+      en: "A conveyor feeds charcoal and sulfur to an industrial crafter with the gun powder blueprint; every 5 seconds it starts a batch of 10 if it has 30 charcoal and 20 sulfur, and a second conveyor takes the gun powder to a box.",
+      es: "Una cinta le lleva carbón y azufre a un crafteador industrial con el plano de la pólvora; cada 5 segundos arranca una tanda de 10 si tiene 30 de carbón y 20 de azufre, y otra cinta se lleva la pólvora a una caja.",
+    },
+    circuit: {
+      parts: [
+        P("g", "electric.battery.rechargable.medium", X(0), -160, { charge: 9000 }),
+        P("sp", "electric.splitter", X(1), -160),
+        { ...P("a", "box.wooden.large", X(0), 60), inv: [{ id: "charcoal", slot: 0, n: 1000 }, { id: "sulfur", slot: 1, n: 1000 }] },
+        P("k1", "industrial.conveyor", X(1), 60, { on: 1 }),
+        { ...P("x", "industrial.crafter", X(2), 60, { on: 1 }), inv: [{ id: "bp:gunpowder", slot: 0, n: 1 }] },
+        P("k2", "industrial.conveyor", X(3), 60, { on: 1 }),
+        P("b", "box.wooden.large", X(4), 60),
+      ],
+      wires: W("g.0>sp.0 sp.0>k1.1 sp.1>k2.1 sp.2>x.1 a.0>k1.0 k1.0>x.0 x.0>k2.0 k2.0>b.0"),
+    },
+  },
 ];
 
 function gateCircuit(gate: string, a: number, b: number): Circuit {

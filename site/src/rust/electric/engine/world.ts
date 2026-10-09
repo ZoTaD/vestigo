@@ -8,7 +8,7 @@
  * intervalo sin azar.
  */
 import { IOEntity } from "./ioentity";
-import type { Env } from "./types";
+import type { Env, IndItem } from "./types";
 import { DEFAULT_ENV } from "./types";
 
 export const FRAME = 1 / 30;
@@ -37,6 +37,8 @@ export class World {
   private seq = 0;
   /** `RFManager`: emisores prendidos por frecuencia. */
   readonly rf = new Map<number, Set<IOEntity>>();
+  /** Los objetos (pila, categoría, fundir, recetas) para la red industrial. */
+  items: Record<string, IndItem> = {};
 
   // ---- Cola ----
 

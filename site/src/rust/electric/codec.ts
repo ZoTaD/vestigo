@@ -2,6 +2,9 @@
  * El circuito en el link (2026-10-09): binario compacto → `deflate-raw` (`CompressionStream`) → base64url, en el
  * `#hash` (no viaja al servidor). Plan: docs/superpowers/plans/2026-10-09-rust-electricidad.md.
  *
+ * Formato v2 (2026-10-09, agua e industrial): textos (tipos, objetos y categorías) · entorno con lluvia, niebla y nieve ·
+ * por parte, además, su inventario (objeto, ranura, cantidad) y los filtros de la cinta. La v1 sigue abriendo.
+ *
  * Formato v1 (todo en varint; los con signo en zigzag):
  *   versión · tipos (cantidad, y cada shortname con su largo en UTF-8) · entorno (hora×10, ráfaga×100, altura) ·
  *   partes (cantidad; por parte: índice de tipo, x, y, cantidad de ajustes y cada uno como índice en `CFG_KEYS` +
@@ -11,9 +14,13 @@
  */
 import type { Circuit, Part, PartCfg } from "./engine/types";
 
-export const CODEC_VERSION = 1;
+export const CODEC_VERSION = 2;
 /** Los ajustes que se guardan. Sólo se agregan al final. */
-export const CFG_KEYS = ["on", "fuel", "charge", "branchAmount", "timerLength", "target", "count", "passthrough", "frequency", "players", "detect", "vibration", "ammo", "open", "manualMode"] as const;
+export const CFG_KEYS = [
+  "on", "fuel", "charge", "branchAmount", "timerLength", "target", "count", "passthrough", "frequency", "players", "detect", "vibration", "ammo", "open", "manualMode",
+  // v2 (2026-10-09): agua e industrial.
+  "height", "water", "salt", "fresh", "mode", "crafting",
+] as const;
 
 class Writer {
   bytes: number[] = [];
@@ -62,27 +69,61 @@ class Reader {
   }
 }
 
-/** El circuito en bytes, sin comprimir. */
+/** El circuito en bytes, sin comprimir (siempre en la versión nueva). */
 export function toBytes(c: Circuit): Uint8Array {
   const w = new Writer();
   w.uint(CODEC_VERSION);
-  const types = [...new Set(c.parts.map((p) => p.type))];
-  w.uint(types.length);
-  for (const t of types) w.str(t);
+  // Tabla de textos: tipos de parte, objetos de los inventarios y de los filtros, categorías.
+  const strings: string[] = [];
+  const str = (s: string): number => {
+    let i = strings.indexOf(s);
+    if (i < 0) i = strings.push(s) - 1;
+    return i;
+  };
+  for (const p of c.parts) {
+    str(p.type);
+    for (const it of p.inv ?? []) str(it.id);
+    for (const f of p.filters ?? []) {
+      if (f.item) str(f.item);
+      if (f.cat) str(f.cat);
+    }
+  }
+  w.uint(strings.length);
+  for (const t of strings) w.str(t);
   w.uint(Math.round((c.env?.hour ?? 12) * 10));
   w.uint(Math.round((c.env?.gust ?? 0.5) * 100));
   w.uint(Math.round(c.env?.height ?? 20));
+  w.uint(Math.round((c.env?.rain ?? 0) * 100));
+  w.uint(Math.round((c.env?.fog ?? 0) * 100));
+  w.uint(Math.round((c.env?.snow ?? 0) * 100));
   w.uint(c.parts.length);
   const index = new Map(c.parts.map((p, i) => [p.id, i]));
   for (const p of c.parts) {
-    w.uint(types.indexOf(p.type));
+    w.uint(str(p.type));
     w.int(p.x);
     w.int(p.y);
-    const cfg = Object.entries(p.cfg ?? {}).filter(([k, v]) => (CFG_KEYS as readonly string[]).includes(k) && Number.isFinite(v));
+    // La altura 0 (y cualquier ajuste en 0 que sea el valor por defecto de la parte) no viaja.
+    const cfg = Object.entries(p.cfg ?? {}).filter(([k, v]) => (CFG_KEYS as readonly string[]).includes(k) && Number.isFinite(v) && !(k === "height" && v === 0));
     w.uint(cfg.length);
     for (const [k, v] of cfg) {
       w.uint((CFG_KEYS as readonly string[]).indexOf(k));
       w.int(v * 100);
+    }
+    const inv = p.inv ?? [];
+    w.uint(inv.length);
+    for (const it of inv) {
+      w.uint(str(it.id));
+      w.uint(it.slot);
+      w.uint(it.n);
+    }
+    const filters = p.filters ?? [];
+    w.uint(filters.length);
+    for (const f of filters) {
+      w.uint(f.item ? str(f.item) + 1 : 0);
+      w.uint(f.cat ? str(f.cat) + 1 : 0);
+      w.uint(f.max ?? 0);
+      w.uint(f.min ?? 0);
+      w.uint(f.buffer ?? 0);
     }
   }
   const wires = c.wires.filter((x) => index.has(x.from[0]) && index.has(x.to[0]));
@@ -99,16 +140,18 @@ export function toBytes(c: Circuit): Uint8Array {
 /** Los ids de las partes al abrir un link: cortos y en orden. */
 export const partId = (i: number): string => `p${i}`;
 
+/** Lee la v1 (sólo energía) y la v2 (con agua e industrial). */
 export function fromBytes(b: Uint8Array): Circuit {
   const r = new Reader(b);
   const version = r.uint();
-  if (version !== 1) throw new Error(`versión ${version}`);
-  const types: string[] = [];
-  for (let n = r.uint(); n > 0; n--) types.push(r.str());
-  const env = { hour: r.uint() / 10, gust: r.uint() / 100, height: r.uint() };
+  if (version !== 1 && version !== 2) throw new Error(`versión ${version}`);
+  const strings: string[] = [];
+  for (let n = r.uint(); n > 0; n--) strings.push(r.str());
+  const env: Circuit["env"] = { hour: r.uint() / 10, gust: r.uint() / 100, height: r.uint() };
+  if (version >= 2) Object.assign(env, { rain: r.uint() / 100, fog: r.uint() / 100, snow: r.uint() / 100 });
   const parts: Part[] = [];
   for (let i = 0, n = r.uint(); i < n; i++) {
-    const type = types[r.uint()];
+    const type = strings[r.uint()];
     const x = r.int();
     const y = r.int();
     const cfg: PartCfg = {};
@@ -117,7 +160,29 @@ export function fromBytes(b: Uint8Array): Circuit {
       const v = r.int() / 100;
       if (key) cfg[key] = v;
     }
-    parts.push({ id: partId(i), type, x, y, ...(Object.keys(cfg).length ? { cfg } : {}) });
+    const part: Part = { id: partId(i), type, x, y, ...(Object.keys(cfg).length ? { cfg } : {}) };
+    if (version >= 2) {
+      const inv: NonNullable<Part["inv"]> = [];
+      for (let k = r.uint(); k > 0; k--) inv.push({ id: strings[r.uint()], slot: r.uint(), n: r.uint() });
+      const filters: NonNullable<Part["filters"]> = [];
+      for (let k = r.uint(); k > 0; k--) {
+        const item = r.uint();
+        const cat = r.uint();
+        const f: NonNullable<Part["filters"]>[number] = {};
+        if (item) f.item = strings[item - 1];
+        if (cat) f.cat = strings[cat - 1];
+        const max = r.uint();
+        const min = r.uint();
+        const buffer = r.uint();
+        if (max) f.max = max;
+        if (min) f.min = min;
+        if (buffer) f.buffer = buffer;
+        filters.push(f);
+      }
+      if (inv.length) part.inv = inv;
+      if (filters.length) part.filters = filters;
+    }
+    parts.push(part);
   }
   const wires: Circuit["wires"] = [];
   for (let n = r.uint(); n > 0; n--) {

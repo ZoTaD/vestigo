@@ -19,6 +19,26 @@ export interface ElectricCopy {
   hour: string;
   wind: string;
   height: string;
+  rain: string;
+  fog: string;
+  contents: string;
+  blueprint: string;
+  empty: string;
+  addItem: string;
+  addBlueprint: string;
+  emptyIt: string;
+  refill: string;
+  filters: string;
+  mode: string;
+  modes: string[];
+  filterItem: string;
+  filterMax: string;
+  filterMin: string;
+  filterBuffer: string;
+  noFilter: string;
+  addFilter: string;
+  addCategory: string;
+  categories: Record<string, string>;
   undo: string;
   redo: string;
   remove: string;
@@ -43,7 +63,7 @@ export interface ElectricCopy {
   wireTool: string;
   notCraftable: string;
   issuesTitle: string;
-  issues: { unpowered: string; short: string; unwired: string; overload: string };
+  issues: { unpowered: string; short: string; unwired: string; uphill: string; overload: string };
   wireErrors: { type: string; taken: string; self: string; missing: string };
   readonly: string;
   ready: string;
@@ -75,7 +95,7 @@ const EN: ElectricCopy = {
   circuitH1: (name) => `Rust ${name} circuit`,
   palette: "Components",
   search: "Search components",
-  cats: { source: "Power", battery: "Batteries", route: "Splitting", logic: "Logic", switch: "Switches", sensor: "Sensors", defense: "Defense & doors", light: "Lights", appliance: "Appliances" },
+  cats: { source: "Power", battery: "Batteries", route: "Splitting", logic: "Logic", switch: "Switches", sensor: "Sensors", defense: "Defense & doors", light: "Lights", appliance: "Appliances", water: "Water", industrial: "Industrial" },
   inspector: "Inspector",
   nothing: "Select a component or a wire to see what it does and why.",
   play: "Play",
@@ -84,6 +104,26 @@ const EN: ElectricCopy = {
   hour: "Time of day",
   wind: "Wind",
   height: "Turbine height",
+  rain: "Rain",
+  fog: "Fog",
+  contents: "Contents",
+  blueprint: "Blueprint",
+  empty: "Empty.",
+  addItem: "Add an item…",
+  addBlueprint: "Add a blueprint…",
+  emptyIt: "Empty it",
+  refill: "Restore contents",
+  filters: "Filters",
+  mode: "Mode",
+  modes: ["Any", "And", "Not"],
+  filterItem: "Item",
+  filterMax: "Max at destination",
+  filterMin: "Keep at source",
+  filterBuffer: "Batch",
+  noFilter: "No filter: everything goes.",
+  addFilter: "Filter an item…",
+  addCategory: "Filter a category",
+  categories: { weapon: "Weapons", construction: "Construction", items: "Items", resources: "Resources", attire: "Attire", tool: "Tools", medical: "Medical", food: "Food", ammunition: "Ammunition", traps: "Traps", misc: "Misc", component: "Components", electrical: "Electrical", fun: "Fun" },
   undo: "Undo",
   redo: "Redo",
   remove: "Delete",
@@ -112,6 +152,7 @@ const EN: ElectricCopy = {
     unpowered: "gets power, but not enough to work",
     short: "feeds its own output back into an input: the game counts that input as 0",
     unwired: "has nothing plugged into its power input",
+    uphill: "doesn't get water: it sits too high for the water to reach it without a pump",
     overload: "A loop keeps changing every frame: the game would flicker here.",
   },
   wireErrors: {
@@ -164,6 +205,22 @@ const EN: ElectricCopy = {
     door: "Door open",
     knocked: "Knocked down",
     playing: "Playing",
+    approx: "Approximate (set it by hand)",
+    sources: "Sources",
+    targets: "Destinations",
+    movedLast: "Moved last run",
+    slotsUsed: "Slots in use",
+    smelting: "Smelting",
+    crafting: "Crafting",
+    crafted: "Made so far",
+    liquid: "Water",
+    kind: "Kind",
+    flow: "Flow",
+    drainWater: "Being used (per second)",
+    pushTo: "Pushing to",
+    fresh: "Fresh water in the tank",
+    spraying: "Watering",
+    pump: "Pump",
   },
   actions: {
     power: "On / off",
@@ -183,6 +240,12 @@ const EN: ElectricCopy = {
     ammo: "Ammo",
     knock: "Knock down",
     play: "Play music",
+    water: "Water inside",
+    salt: "Salt water",
+    fresh: "Fresh water source (river or lake)",
+    height: "Height (m)",
+    output: "Power it gives",
+    workbench: "Workbench level",
   },
   yes: "yes",
   no: "no",
@@ -201,7 +264,7 @@ const ES: ElectricCopy = {
   circuitH1: (name) => `Circuito de ${name} en Rust`,
   palette: "Componentes",
   search: "Buscar componentes",
-  cats: { source: "Energía", battery: "Baterías", route: "Reparto", logic: "Lógica", switch: "Interruptores", sensor: "Sensores", defense: "Defensa y puertas", light: "Luces", appliance: "Aparatos" },
+  cats: { source: "Energía", battery: "Baterías", route: "Reparto", logic: "Lógica", switch: "Interruptores", sensor: "Sensores", defense: "Defensa y puertas", light: "Luces", appliance: "Aparatos", water: "Agua", industrial: "Industrial" },
   inspector: "Inspector",
   nothing: "Elegí un componente o un cable para ver qué hace y por qué.",
   play: "Play",
@@ -210,6 +273,26 @@ const ES: ElectricCopy = {
   hour: "Hora del día",
   wind: "Viento",
   height: "Altura del molino",
+  rain: "Lluvia",
+  fog: "Niebla",
+  contents: "Contenido",
+  blueprint: "Plano",
+  empty: "Vacío.",
+  addItem: "Agregar un objeto…",
+  addBlueprint: "Agregar un plano…",
+  emptyIt: "Vaciar",
+  refill: "Volver a llenar",
+  filters: "Filtros",
+  mode: "Modo",
+  modes: ["Cualquiera", "Y", "No"],
+  filterItem: "Objeto",
+  filterMax: "Máximo en destino",
+  filterMin: "Dejar en origen",
+  filterBuffer: "Tanda",
+  noFilter: "Sin filtro: pasa todo.",
+  addFilter: "Filtrar un objeto…",
+  addCategory: "Filtrar una categoría",
+  categories: { weapon: "Armas", construction: "Construcción", items: "Objetos", resources: "Recursos", attire: "Ropa", tool: "Herramientas", medical: "Medicina", food: "Comida", ammunition: "Munición", traps: "Trampas", misc: "Misceláneos", component: "Componentes", electrical: "Electricidad", fun: "Diversión" },
   undo: "Deshacer",
   redo: "Rehacer",
   remove: "Borrar",
@@ -238,6 +321,7 @@ const ES: ElectricCopy = {
     unpowered: "recibe energía, pero no le alcanza para funcionar",
     short: "recibe en una entrada su propia salida: el juego la cuenta como 0",
     unwired: "no tiene nada enchufado en la entrada de energía",
+    uphill: "no recibe agua: está demasiado alto para que llegue sin bomba",
     overload: "Un lazo cambia en cada cuadro: en el juego esto parpadearía.",
   },
   wireErrors: {
@@ -290,6 +374,22 @@ const ES: ElectricCopy = {
     door: "Puerta abierta",
     knocked: "Caído",
     playing: "Sonando",
+    approx: "Aproximado (se ajusta a mano)",
+    sources: "Orígenes",
+    targets: "Destinos",
+    movedLast: "Movió en la última vuelta",
+    slotsUsed: "Ranuras usadas",
+    smelting: "Fundiendo",
+    crafting: "Fabricando",
+    crafted: "Fabricó",
+    liquid: "Agua",
+    kind: "Tipo",
+    flow: "Caudal",
+    drainWater: "Se gasta (por segundo)",
+    pushTo: "Empuja a",
+    fresh: "Agua dulce en el depósito",
+    spraying: "Riega",
+    pump: "Bomba",
   },
   actions: {
     power: "Prender / apagar",
@@ -309,6 +409,12 @@ const ES: ElectricCopy = {
     ammo: "Munición",
     knock: "Voltear",
     play: "Poner música",
+    water: "Agua adentro",
+    salt: "Agua salada",
+    fresh: "Agua dulce (río o lago)",
+    height: "Altura (m)",
+    output: "Energía que da",
+    workbench: "Nivel del banco",
   },
   yes: "sí",
   no: "no",

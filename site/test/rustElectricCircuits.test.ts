@@ -1,11 +1,13 @@
 /** Los circuitos listos (2026-10-09): cada uno hace lo que dice su texto. */
 import { describe, expect, it } from "vitest";
 import data from "@rust/electricity.json";
+import items from "@rust/industrial-items.json";
 import { CIRCUITS } from "../src/rust/electric/circuits";
 import { buildWorld, Catalog, wireError } from "../src/rust/electric/engine";
 import type { Circuit, ElectricityData } from "../src/rust/electric/engine/types";
 
 const cat = new Catalog(data as unknown as ElectricityData);
+cat.items = items as unknown as Catalog["items"];
 const get = (slug: string): Circuit => structuredClone(CIRCUITS.find((c) => c.slug === slug)!.circuit);
 const start = (c: Circuit, s = 5) => {
   const w = buildWorld(cat, c);
@@ -17,7 +19,7 @@ const on = (w: ReturnType<typeof start>, id: string) => w.get(id)!.isPowered();
 describe("circuitos listos", () => {
   it("entre 12 y 20, con slugs únicos en los dos idiomas y textos en los dos", () => {
     expect(CIRCUITS.length).toBeGreaterThanOrEqual(12);
-    expect(CIRCUITS.length).toBeLessThanOrEqual(20);
+    expect(CIRCUITS.length).toBeLessThanOrEqual(30);
     expect(new Set(CIRCUITS.map((c) => c.slug)).size).toBe(CIRCUITS.length);
     expect(new Set(CIRCUITS.map((c) => c.slugEs)).size).toBe(CIRCUITS.length);
     for (const c of CIRCUITS) {
@@ -141,5 +143,55 @@ describe("circuitos listos", () => {
     w.get("sw")!.act("power");
     w.tick(2);
     expect(w.get("d")!.hasFlag(1 << 1)).toBe(false);
+  });
+
+  it("riego de granja: los tres aspersores riegan con agua dulce", () => {
+    const w = start(get("farm-irrigation"), 30);
+    for (const k of ["k1", "k2", "k3"]) expect(w.get(k)!.isOn(), k).toBe(true);
+  });
+
+  it("purificador con bomba: agua dulce en el barril", () => {
+    const w = start(get("water-purifier-with-pump"), 90);
+    const b = w.get("b") as unknown as { liquid: { kind: string; amount: number } | null };
+    expect(b.liquid?.kind).toBe("water");
+    expect(b.liquid!.amount).toBeGreaterThan(0);
+  });
+
+  it("colector a barril: con lluvia el barril recibe el agua del colector", () => {
+    const w = start(get("water-catcher-to-barrel"), 61);
+    const b = w.get("b") as unknown as { liquid: { amount: number } | null };
+    expect(b.liquid!.amount).toBeGreaterThan(100);
+  });
+
+  it("interruptor de fluidos como bomba: sube el agua 6 m; sin la bomba, no", () => {
+    const w = start(get("fluid-switch-pump"), 30);
+    const b = w.get("b") as unknown as { liquid: { amount: number } | null };
+    expect(b.liquid!.amount).toBeGreaterThan(0);
+    const off = get("fluid-switch-pump");
+    off.parts.find((p) => p.id === "sw")!.cfg = { on: 0 };
+    const w2 = start(off, 30);
+    expect((w2.get("b") as unknown as { liquid: unknown }).liquid).toBeNull();
+  });
+
+  const amount = (w: ReturnType<typeof start>, id: string, item: string) =>
+    (w.get(id) as unknown as { container: { items: { id: string; amount: number; bp?: boolean }[] } }).container.items.filter((x) => x.id === item && !x.bp).reduce((a, x) => a + x.amount, 0);
+
+  it("clasificador: las menas a una caja y lo demás a la otra", () => {
+    const w = start(get("item-sorter"), 30);
+    expect(amount(w, "b1", "metal.ore") + amount(w, "b1", "sulfur.ore")).toBeGreaterThan(0);
+    expect(amount(w, "b1", "wood")).toBe(0);
+    expect(amount(w, "b2", "wood") + amount(w, "b2", "scrap")).toBeGreaterThan(0);
+    expect(amount(w, "b2", "metal.ore")).toBe(0);
+  });
+
+  it("horno automático: llegan fragmentos de metal y carbón a la caja de salida", () => {
+    const w = start(get("auto-furnace"), 120);
+    expect(amount(w, "b", "metal.fragments")).toBeGreaterThan(0);
+    expect(amount(w, "b", "charcoal")).toBeGreaterThan(0);
+  });
+
+  it("autocrafteo: la pólvora llega a la caja", () => {
+    const w = start(get("auto-crafting"), 40);
+    expect(amount(w, "b", "gunpowder")).toBeGreaterThan(0);
   });
 });

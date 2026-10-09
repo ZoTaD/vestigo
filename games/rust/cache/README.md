@@ -150,3 +150,11 @@ que la tienda cambia de dueño (`Server_OpenStore`) y vuelve a 1 cuando cierra p
 - `video_frames/<video>/`: un cuadro cada 4 s (104 en total) de los 31 videos del menú (outpost, oilrig, lighthouse, harbor,
   banditcamp, desertbase, nukesilo, ferryterminal, stables, arcticlabs...), a 1080p/1440p.
 - `streaming/`: nombres de animales de corral por idioma (`LivestockNames.*.json`) y licencias de terceros.
+
+## Industrial (`industrial/`, 2026-10-09)
+
+`extract_industrial.py` (~1,5 min, ~7,5 GB de RAM; uno por vez): `BaseOven`/`ElectricOven` (temperatura, `smeltSpeed`,
+ranuras de combustible/entrada/salida, `IndustrialMode`, `fuelType`), `BoxStorage` y `StorageContainer` (ranuras),
+`IndustrialConveyor` (`MaxStackSizePerMove` 60), `IndustrialCrafter`, `IndustrialStorageAdaptor`, `ItemModCookable`
+(tiempo, temperaturas y en qué se convierte cada objeto) e `ItemModBurnable` (combustible y subproducto); además
+`items.json` (shortname, `GameObject`, categoría y pila de cada objeto) y `deploys.json` (qué prefab coloca cada objeto).

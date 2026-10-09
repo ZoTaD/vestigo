@@ -20,7 +20,8 @@ export default function ElecBlock({ itemId, route }: { itemId: string; route: Ro
   const href = `${routePath({ ...route, view: "rust", rsSection: "electricity", detail: undefined })}#try=${encodeURIComponent(itemId)}`;
   return (
     <section className="rs-pnl rs-elec">
-      <h2 className="rs-hd">{t.title}</h2>
+      {/* Lo que sólo tiene enchufes de agua (barril, aspersor, splitter de agua) es "Agua", no "Electricidad". */}
+      <h2 className="rs-hd">{[...row.in, ...row.out].some(([, ty]) => ty === 0) ? t.title : t.waterTitle}</h2>
       <dl className="rs-elec-kv">
         {row.bat ? (
           <div>
