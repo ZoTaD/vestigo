@@ -57,6 +57,11 @@ export const PAGES = [
   "/en/rust/items/metal-fragments",
   "/en/rust/raid",
   "/es/rust/objetos",
+  // Granjas (2026-10-09): la portada de la granja (94 compostables), una planta y la calculadora.
+  "/en/rust/farming",
+  "/en/rust/farming/hemp",
+  "/en/rust/farming/genetics",
+  "/es/rust/granjas/genetica",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

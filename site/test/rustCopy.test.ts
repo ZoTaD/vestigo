@@ -11,7 +11,9 @@ describe("la copia de Rust", () => {
         expect(c.seo[tab].description.length, `${lang} ${tab}`).toBeGreaterThan(80);
         expect(c.seo[tab].description.length, `${lang} ${tab}`).toBeLessThanOrEqual(160);
       }
-      expect(c.soonTabs).toHaveLength(5);
+      // Las pestañas con página más las que se anuncian: cuando una se publica, sale de la lista de "pronto".
+      expect(c.soonTabs.length + RUST_TABS.length).toBe(8);
+      for (const tab of RUST_TABS) expect(c.soonTabs).not.toContain(c.tabs[tab]);
     }
   });
 

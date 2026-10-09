@@ -19,6 +19,7 @@ import { preloadItemsRoute } from "./zomboid/items/data";
 import { preloadRecipesRoute } from "./zomboid/recipes/data";
 import { preloadCraftRoute } from "./zomboid/crafting/data";
 import { preloadItemsRoute as preloadRsItemsRoute } from "./rust/items/data";
+import { preloadFarmingRoute } from "./rust/farming/data";
 
 // Igual que en `main.tsx`: la cáscara recibe `areas.ts` en vez de importarlo.
 provideAreas(allAreas);
@@ -128,6 +129,7 @@ async function preloadZomboid(route: Route, quiet: (p: Promise<unknown>) => Prom
  */
 async function preloadRust(route: Route, quiet: (p: Promise<unknown>) => Promise<unknown>): Promise<void> {
   if (route.rsSection === "items") await quiet(preloadRsItemsRoute(route));
+  if (route.rsSection === "farming") await quiet(preloadFarmingRoute(route));
 }
 
 export async function renderApp(route: Route): Promise<string> {

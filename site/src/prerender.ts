@@ -8,6 +8,7 @@ import { VALHEIM_COPY } from "./valheimCopy";
 import { D2R_COPY } from "./d2rCopy";
 import { tidyTitleName, ZOMBOID_COPY } from "./zomboidCopy";
 import { RUST_COPY, type RustHas } from "./rustCopy";
+import { FARMING_COPY } from "./rust/farming/copy";
 import { esHeadNames } from "./zomboid/headName";
 
 /** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
@@ -139,6 +140,11 @@ export function metaFor(
   if (route.view === "rust") {
     const r = RUST_COPY[lang];
     if (route.rsSection === "items" && route.detail && detailName) return r.detailSeo(detailName, rsHas ?? undefined);
+    if (route.rsSection === "farming" && route.detail) {
+      const fc = FARMING_COPY[lang].seo;
+      if (route.detail === "genetics") return fc.genetics;
+      if (detailName) return fc.plant(detailName);
+    }
     return r.seo[route.rsSection ?? "home"];
   }
   // Lo que queda son la portada y las dos páginas legales.
@@ -193,6 +199,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     out[`vh-patches/${e.slug}`] = name ? `${e.version} — ${name}` : e.version;
   }
   for (const e of data.rs?.items ?? []) out[`rs-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
 
   return out;
 }
@@ -356,9 +363,11 @@ export function jsonLdFor(
     if (sec !== "home") trail.push({ name: RUST_COPY[lang].tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "home" || sec === "raid") {
+    const genetics = sec === "farming" && route.detail === "genetics";
+    if (sec === "home" || sec === "raid" || genetics) {
+      const appName = genetics ? FARMING_COPY[lang].calc.h1 : sec === "raid" ? RUST_COPY[lang].raid.h1 : RUST_COPY[lang].home.h1;
       out.push({
-        "@context": "https://schema.org", "@type": "WebApplication", name: sec === "raid" ? RUST_COPY[lang].raid.h1 : RUST_COPY[lang].home.h1, description: page.description,
+        "@context": "https://schema.org", "@type": "WebApplication", name: appName, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Rust" },
       });

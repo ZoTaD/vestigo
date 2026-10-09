@@ -38,3 +38,25 @@ gen que ya tenía (un rojo pesa 1, un verde 0,6). La central no se suma a sí mi
 5. SEO: copia en/es (títulos con "Rust farming", "Rust genetics calculator"), prerender, sitemap, JSON-LD.
 6. Navegación de Rust y Portada (herramienta nueva), servidor local, capturas en EN/ES.
 7. Build + perf con las páginas nuevas; números al final de este plan.
+
+## Resultado (2026-10-09)
+
+- Datos: `games/rust/data/farming.json` (32 KB): 14 plantas, 5 genes, 6 jardineras, 94 compostables, gallinas,
+  colmena, vacas/ovejas y 10 razas de caballo; 13 retratos webp de 64 px en `site/public/rust/farming/`.
+- Decisiones:
+  - El orden de las vecinas en un empate no se puede saber: todos los órdenes valen lo mismo y el empate sale como
+    probabilidad. Como el mismo orden vale para los 6 casilleros, se recorren los órdenes distintos del multiconjunto
+    de vecinas y se cuenta el resultado entero (dos G contra dos Y da GGGGGG o YYYYYY, nunca mezclado).
+  - Las sumas van en float 32 como en el juego: cinco verdes (3,0) empatan con tres rojos (3,0), y gana el grupo que
+    completa antes (3/8 los verdes).
+  - Tiempos y cosecha con calidad perfecta (luz, agua, suelo y temperatura al máximo); se dice en la ficha.
+  - El buscador prueba hasta 8 vecinas con repetición y corta en el primer tamaño con resultado seguro (10 esquejes:
+    ~0,5 s).
+  - El estado de la calculadora va en la query (`?p=&c=&n=&t=&h=`), como la de raideo (`?o=`), no en el `#hash`.
+  - El decompilado es de 2024-08: Livestock (vacas/ovejas) es posterior y su genética no está; sólo se muestran sus
+    datos del cliente y una frase.
+- Build (`npm run build`, NODE_OPTIONS 6 GB): 99 s el comando, `vite build` 1 min 25 s, 24.328 páginas (+32), pico de
+  RAM del árbol de node ~2,8 GB (con el servidor de desarrollo prendido).
+- Perf (`npm run perf --only rust`, Chrome del sistema): `/en/rust/farming` 147 pedidos, 118 imágenes, 918 nodos;
+  `/en/rust/farming/hemp` 33/4/183; `/en/rust/farming/genetics` 30/1/160; `/es/rust/granjas/genetica` 30/1/161. Todo
+  dentro del presupuesto.

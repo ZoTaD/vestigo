@@ -10,6 +10,7 @@ import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, type Route } from "./src/route";
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { isRsLoadingPage } from "./src/rust/loadingGuard";
+import { farmingPages, type RustPage } from "./src/rust/sitemapPages";
 import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
 import { COPY } from "./src/i18n";
@@ -213,7 +214,16 @@ function readSitemapData(): { data: OgData } {
         items = undefined;
       }
     }
-    rs = { build: m.build, extractedAt: m.extractedAt, items };
+    // Etapa 2 (2026-10-09): las fichas de Granjas (y las pestañas que vengan), con sus slugs en español anotados antes.
+    const pages: RustPage[] = [];
+    try {
+      const farming = JSON.parse(readFileSync(`${rustDir}/farming.json`, "utf-8"));
+      registerRustSlugs(JSON.parse(readFileSync(`${rustDir}/site/farming-slugs-es.json`, "utf-8")));
+      pages.push(...farmingPages(farming));
+    } catch (e) {
+      console.warn(`[rust] sin las fichas de Granjas (${(e as Error).message})`);
+    }
+    rs = { build: m.build, extractedAt: m.extractedAt, items, pages };
   } catch {
     rs = undefined;
   }

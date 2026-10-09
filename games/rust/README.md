@@ -23,6 +23,7 @@ nunca en paralelo ni con otro proceso del juego abierto, y mirá antes la RAM li
 4. `python games/rust/tools/world.py` (botín de las cajas y tiendas de los monumentos, más `mixing.json` y `deployables.json`; ~1 min).
 5. `python games/rust/tools/raid.py` (vida, protección y daño para la calculadora de raideo; ~30 s).
 6. `python games/rust/tools/site_data.py` (los archivos que baja la pestaña Objetos; un segundo).
+6b. `python games/rust/tools/farming.py` (Granjas: lee la caché cruda `games/rust/cache/`, no el juego; un segundo).
 7. `python games/rust/tools/ui.py` (el fondo de la portada y su vista previa): sólo cuando cambia el fondo, no en cada
    parche.
 8. Los tests (ver abajo). Si un número de los tests del juego cambió, revisá en el juego que el cambio sea real antes

@@ -9,7 +9,7 @@ import type { EffectStat, HowKind, LootEvent, LootKind, ModStat, RecyclerKey } f
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
-export const RUST_TABS: RustSection[] = ["home", "items", "raid"];
+export const RUST_TABS: RustSection[] = ["home", "items", "raid", "farming"];
 
 type Seo = { title: string; description: string };
 
@@ -167,9 +167,9 @@ export interface RustCopy {
 }
 
 const EN: RustCopy = {
-  tabs: { home: "Home", items: "Items", raid: "Raid" },
+  tabs: { home: "Home", items: "Items", raid: "Raid", farming: "Farming" },
   soon: "Soon",
-  soonTabs: ["Monuments", "Electricity", "Farming", "Server", "Patches"],
+  soonTabs: ["Monuments", "Electricity", "Server", "Patches"],
   seo: {
     home: {
       title: "Rust Guide: Items, Crafting, Recycling and Raid Calculator | Vestigo",
@@ -182,6 +182,10 @@ const EN: RustCopy = {
     raid: {
       title: "Rust Raid Calculator: Sulfur Cost for Every Wall and Door | Vestigo",
       description: "How many C4, rockets, satchels or explosive ammo you need for any wall, door or deployable in Rust, the sulfur it costs and the cheapest mix.",
+    },
+    farming: {
+      title: "Rust Farming Guide: Plants, Genes, Planters and Compost | Vestigo",
+      description: "Every Rust plant with its growth stages, harvest and water needs, the genetics calculator, planters, compost, chickens, bees, cows, sheep and horse breeds.",
     },
   },
   detailSeo: (name, has = {}) => {
@@ -339,6 +343,7 @@ const EN: RustCopy = {
     tools: [
       { tab: "items", title: "Items", text: "Recipe, workbench, recycling, loot and shortname of every item." },
       { tab: "raid", title: "Raid calculator", text: "Explosives and sulfur for any wall, door or deployable." },
+      { tab: "farming", title: "Farming and genetics", text: "Plants, crossbreeding calculator, compost and animals." },
     ],
     aboutTitle: "About this guide",
     about: (items, recipes) => [
@@ -349,9 +354,9 @@ const EN: RustCopy = {
 };
 
 const ES: RustCopy = {
-  tabs: { home: "Portada", items: "Objetos", raid: "Raideo" },
+  tabs: { home: "Portada", items: "Objetos", raid: "Raideo", farming: "Granjas" },
   soon: "Pronto",
-  soonTabs: ["Monumentos", "Electricidad", "Granjas", "Servidor", "Parches"],
+  soonTabs: ["Monumentos", "Electricidad", "Servidor", "Parches"],
   seo: {
     home: {
       title: "Guía de Rust: objetos, crafteo, reciclaje y calculadora de raideo | Vestigo",
@@ -364,6 +369,10 @@ const ES: RustCopy = {
     raid: {
       title: "Calculadora de raideo de Rust: cuánto azufre cuesta cada pared y puerta | Vestigo",
       description: "Cuántos C4, cohetes, cargas de mochila o balas explosivas necesitás para cada pared, puerta o deployable de Rust, el azufre que cuesta y la mezcla más barata.",
+    },
+    farming: {
+      title: "Granjas en Rust: plantas, genes, jardineras y compost | Vestigo",
+      description: "Cada planta de Rust con sus etapas, cosecha y agua, la calculadora de genética, jardineras, compost, gallinas, abejas, vacas, ovejas y razas de caballo.",
     },
   },
   detailSeo: (name, has = {}) => {
@@ -522,6 +531,7 @@ const ES: RustCopy = {
     tools: [
       { tab: "items", title: "Objetos", text: "Receta, banco, reciclaje, loot y shortname de cada objeto." },
       { tab: "raid", title: "Calculadora de raideo", text: "Explosivos y azufre para cada pared, puerta o deployable." },
+      { tab: "farming", title: "Granjas y genética", text: "Plantas, calculadora de cruzas, compost y animales." },
     ],
     aboutTitle: "Sobre esta guía",
     about: (items, recipes) => [
