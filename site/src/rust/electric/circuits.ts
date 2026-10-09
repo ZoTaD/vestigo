@@ -4,6 +4,7 @@
  * que nombran salen de simularlos (lo prueba `test/rustElectricCircuits.test.ts`). Plan:
  * docs/superpowers/plans/2026-10-09-rust-electricidad.md.
  */
+import { registerCircuitMeta } from "./circuitMeta";
 import type { Circuit, Part, PartCfg, Wire } from "./engine/types";
 
 export interface ReadyCircuit {
@@ -291,3 +292,8 @@ function gateCircuit(gate: string, a: number, b: number): Circuit {
 }
 
 export const circuitBySlug = (slug: string | undefined): ReadyCircuit | undefined => (slug ? CIRCUITS.find((c) => c.slug === slug) : undefined);
+
+registerCircuitMeta(CIRCUITS);
+
+/** Los slugs en español de los circuitos, para `registerRustSlugs` (los que cambian). */
+export const circuitSlugsEs = (): Record<string, string> => Object.fromEntries(CIRCUITS.filter((c) => c.slugEs !== c.slug).map((c) => [c.slug, c.slugEs]));

@@ -10,6 +10,7 @@ import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, type Route } from "./src/route";
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { isRsLoadingPage } from "./src/rust/loadingGuard";
+import { CIRCUITS, circuitSlugsEs } from "./src/rust/electric/circuits";
 import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
 import { COPY } from "./src/i18n";
@@ -213,7 +214,9 @@ function readSitemapData(): { data: OgData } {
         items = undefined;
       }
     }
-    rs = { build: m.build, extractedAt: m.extractedAt, items };
+    // Los circuitos listos de Electricidad (2026-10-09): sus slugs en español y su nombre (lo anota `circuits.ts`).
+    registerRustSlugs({ electricity: circuitSlugsEs() });
+    rs = { build: m.build, extractedAt: m.extractedAt, items, circuits: CIRCUITS.map((c) => c.slug) };
   } catch {
     rs = undefined;
   }

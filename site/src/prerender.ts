@@ -8,6 +8,7 @@ import { VALHEIM_COPY } from "./valheimCopy";
 import { D2R_COPY } from "./d2rCopy";
 import { tidyTitleName, ZOMBOID_COPY } from "./zomboidCopy";
 import { RUST_COPY, type RustHas } from "./rustCopy";
+import { circuitMeta } from "./rust/electric/circuitMeta";
 import { esHeadNames } from "./zomboid/headName";
 
 /** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
@@ -139,6 +140,9 @@ export function metaFor(
   if (route.view === "rust") {
     const r = RUST_COPY[lang];
     if (route.rsSection === "items" && route.detail && detailName) return r.detailSeo(detailName, rsHas ?? undefined);
+    // Un circuito listo de Electricidad: su nombre y su explicación (los anota `circuits.ts`).
+    const circuit = route.rsSection === "electricity" ? circuitMeta(route.detail) : undefined;
+    if (circuit) return r.circuitSeo(circuit.name[lang], circuit.about[lang]);
     return r.seo[route.rsSection ?? "home"];
   }
   // Lo que queda son la portada y las dos páginas legales.
@@ -193,6 +197,11 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     out[`vh-patches/${e.slug}`] = name ? `${e.version} — ${name}` : e.version;
   }
   for (const e of data.rs?.items ?? []) out[`rs-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const slug of data.rs?.circuits ?? []) {
+    const m = circuitMeta(slug);
+    // Con mayúscula, como un título: "Torreta solar" en las migas.
+    if (m) out[`rs-electricity/${slug}`] = m.name[lang].charAt(0).toUpperCase() + m.name[lang].slice(1);
+  }
 
   return out;
 }
@@ -356,9 +365,10 @@ export function jsonLdFor(
     if (sec !== "home") trail.push({ name: RUST_COPY[lang].tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "home" || sec === "raid") {
+    if (sec === "home" || sec === "raid" || sec === "electricity") {
+      const appName = sec === "raid" ? RUST_COPY[lang].raid.h1 : sec === "electricity" ? page.title.replace(/\s*\|.*$/, "") : RUST_COPY[lang].home.h1;
       out.push({
-        "@context": "https://schema.org", "@type": "WebApplication", name: sec === "raid" ? RUST_COPY[lang].raid.h1 : RUST_COPY[lang].home.h1, description: page.description,
+        "@context": "https://schema.org", "@type": "WebApplication", name: appName, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Rust" },
       });

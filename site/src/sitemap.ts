@@ -82,6 +82,8 @@ export interface RustSitemapData {
   extractedAt: string;
   /** Las fichas de Objetos (`games/rust/data/site/list.json`): slug inglés y nombres, para el sitemap y el `<head>`. */
   items?: { slug: string; en: string; es: string | null; c?: 1; s?: 1; l?: 1; r?: 1 }[];
+  /** Los circuitos listos de Electricidad (2026-10-09), por slug inglés (`site/src/rust/electric/circuits.ts`). */
+  circuits?: string[];
 }
 
 /**
@@ -357,6 +359,9 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const s of RUST_PUBLISHED) paths.push(routePath({ ...base, lang, view: "rust", rsSection: s }));
       if (RUST_PUBLISHED.includes("items")) {
         for (const it of data.rs.items ?? []) paths.push(routePath({ ...base, lang, view: "rust", rsSection: "items", detail: it.slug }));
+      }
+      if (RUST_PUBLISHED.includes("electricity")) {
+        for (const slug of data.rs.circuits ?? []) paths.push(routePath({ ...base, lang, view: "rust", rsSection: "electricity", detail: slug }));
       }
     }
   }

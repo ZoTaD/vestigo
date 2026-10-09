@@ -9,7 +9,7 @@ import type { EffectStat, HowKind, LootEvent, LootKind, ModStat, RecyclerKey } f
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
-export const RUST_TABS: RustSection[] = ["home", "items", "raid"];
+export const RUST_TABS: RustSection[] = ["home", "items", "raid", "electricity"];
 
 type Seo = { title: string; description: string };
 
@@ -32,6 +32,8 @@ export interface RustCopy {
   seo: Record<RustSection, Seo>;
   /** El `<head>` de una ficha de Objetos. */
   detailSeo: (name: string, has?: RustHas) => Seo;
+  /** El `<head>` de un circuito listo de Electricidad: su nombre ("solar turret") y su explicación. */
+  circuitSeo: (name: string, about: string) => Seo;
   loading: string;
   loadError: string;
   retry: string;
@@ -166,10 +168,17 @@ export interface RustCopy {
   };
 }
 
+/** Una descripción para Google: hasta 160 caracteres, cortada en una palabra. */
+function clip(s: string): string {
+  if (s.length <= 160) return s;
+  const cut = s.slice(0, 157);
+  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+}
+
 const EN: RustCopy = {
-  tabs: { home: "Home", items: "Items", raid: "Raid" },
+  tabs: { home: "Home", items: "Items", raid: "Raid", electricity: "Electricity" },
   soon: "Soon",
-  soonTabs: ["Monuments", "Electricity", "Farming", "Server", "Patches"],
+  soonTabs: ["Monuments", "Farming", "Server", "Patches"],
   seo: {
     home: {
       title: "Rust Guide: Items, Crafting, Recycling and Raid Calculator | Vestigo",
@@ -183,7 +192,15 @@ const EN: RustCopy = {
       title: "Rust Raid Calculator: Sulfur Cost for Every Wall and Door | Vestigo",
       description: "How many C4, rockets, satchels or explosive ammo you need for any wall, door or deployable in Rust, the sulfur it costs and the cheapest mix.",
     },
+    electricity: {
+      title: "Rust Electricity Simulator: Circuit Builder and Wiring Guide | Vestigo",
+      description: "Build and test Rust circuits in your browser: batteries, solar, splitters, branches, logic gates, timers and turrets work like in the game.",
+    },
   },
+  circuitSeo: (name, about) => ({
+    title: `Rust ${name.replace(/\b\w/g, (c) => c.toUpperCase())} Circuit: How to Wire It | Vestigo`,
+    description: clip(about),
+  }),
   detailSeo: (name, has = {}) => {
     const topics = [...(has.craft ? ["crafting"] : []), ...(has.recycle ? ["recycling"] : []), ...(has.loot || has.shop ? ["where to find it"] : [])];
     const parts = [
@@ -339,6 +356,7 @@ const EN: RustCopy = {
     tools: [
       { tab: "items", title: "Items", text: "Recipe, workbench, recycling, loot and shortname of every item." },
       { tab: "raid", title: "Raid calculator", text: "Explosives and sulfur for any wall, door or deployable." },
+      { tab: "electricity", title: "Electricity simulator", text: "Build circuits and watch the power flow, with ready-made ones to copy." },
     ],
     aboutTitle: "About this guide",
     about: (items, recipes) => [
@@ -349,12 +367,12 @@ const EN: RustCopy = {
 };
 
 const ES: RustCopy = {
-  tabs: { home: "Portada", items: "Objetos", raid: "Raideo" },
+  tabs: { home: "Portada", items: "Objetos", raid: "Raideo", electricity: "Electricidad" },
   soon: "Pronto",
-  soonTabs: ["Monumentos", "Electricidad", "Granjas", "Servidor", "Parches"],
+  soonTabs: ["Monumentos", "Granjas", "Servidor", "Parches"],
   seo: {
     home: {
-      title: "Rust en español: objetos, crafteo, reciclaje y calculadora de raideo | Vestigo",
+      title: "Guía de Rust: objetos, crafteo, reciclaje y calculadora de raideo | Vestigo",
       description: "Todos los objetos de Rust con su crafteo, lo que dan al reciclarlos y dónde aparecen, la calculadora de raideo y la cuenta regresiva al próximo wipe.",
     },
     items: {
@@ -365,7 +383,15 @@ const ES: RustCopy = {
       title: "Calculadora de raideo de Rust: cuánto azufre cuesta cada pared y puerta | Vestigo",
       description: "Cuántos C4, cohetes, cargas de mochila o balas explosivas necesitás para cada pared, puerta o deployable de Rust, el azufre que cuesta y la mezcla más barata.",
     },
+    electricity: {
+      title: "Simulador de electricidad de Rust: armá y probá circuitos | Vestigo",
+      description: "Armá y probá circuitos de Rust en el navegador: baterías, paneles solares, splitters, ramas, compuertas, temporizadores y torretas, como en el juego.",
+    },
   },
+  circuitSeo: (name, about) => ({
+    title: `Circuito de ${name} en Rust: cómo cablearlo | Vestigo`,
+    description: clip(about),
+  }),
   detailSeo: (name, has = {}) => {
     const topics = [...(has.craft ? ["crafteo"] : []), ...(has.recycle ? ["reciclaje"] : []), ...(has.loot || has.shop ? ["dónde se encuentra"] : [])];
     const parts = [
@@ -506,7 +532,7 @@ const ES: RustCopy = {
   },
   home: {
     kicker: "Rust",
-    h1: "Guía de Rust en español",
+    h1: "Guía de Rust",
     searchLabel: "Buscar un objeto",
     lede: (items, recipes) => `${items} objetos con su crafteo, reciclaje y dónde aparecen, ${recipes} recetas y la calculadora de raideo para saber cuánto azufre cuesta entrar.`,
     slotsTitle: "Lo más buscado",
@@ -522,10 +548,11 @@ const ES: RustCopy = {
     tools: [
       { tab: "items", title: "Objetos", text: "Receta, banco, reciclaje, loot y shortname de cada objeto." },
       { tab: "raid", title: "Calculadora de raideo", text: "Explosivos y azufre para cada pared, puerta o deployable." },
+      { tab: "electricity", title: "Simulador de electricidad", text: "Armá circuitos y mirá cómo corre la energía, con circuitos listos para copiar." },
     ],
     aboutTitle: "Sobre esta guía",
     about: (items, recipes) => [
-      `Todo Rust en un lugar y en español: ${items} objetos con sus nombres oficiales, ${recipes} recetas de crafteo con el banco y el tiempo que piden, lo que da cada objeto en el reciclador y dónde aparece.`,
+      `Todo Rust en un lugar: ${items} objetos con sus nombres oficiales, ${recipes} recetas de crafteo con el banco y el tiempo que piden, lo que da cada objeto en el reciclador y dónde aparece.`,
       "La calculadora de raideo te dice cuántos explosivos lleva cada pared, puerta o deployable y cuánto azufre cuesta. Sin cuenta, y cada página tiene un link para compartir.",
     ],
   },

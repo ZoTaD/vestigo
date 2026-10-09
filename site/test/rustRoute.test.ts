@@ -16,7 +16,7 @@ describe("las direcciones de Rust", () => {
       expect(routePath({ ...parseRoute("/en/rust"), rsSection: tab })).toBe(`/en/rust/${tab}`);
       expect(routePath({ ...parseRoute("/es/rust"), rsSection: tab })).toBe(`/es/rust/${RUST_SECTION_ES[tab]}`);
     }
-    expect(RUST_SECTION_ES).toEqual({ items: "objetos", raid: "raideo" });
+    expect(RUST_SECTION_ES).toEqual({ items: "objetos", raid: "raideo", electricity: "electricidad" });
   });
 
   it("Objetos y Raideo están publicadas; lo que no existe muestra la portada", () => {
@@ -40,5 +40,15 @@ describe("las direcciones de Rust", () => {
     // El slug se traduce en los dos idiomas: un link en inglés con el slug español abre la misma ficha.
     expect(parseRoute("/en/rust/items/fusil-de-asalto").detail).toBe("assault-rifle");
     expect(parseRoute("/es/rust/items/assault-rifle")).toMatchObject({ rsSection: "items", detail: "assault-rifle" });
+  });
+
+  it("Electricidad (2026-10-09): el editor y cada circuito listo con el slug de su idioma", () => {
+    expect(routePath(parseRoute("/en/rust/electricity"))).toBe("/en/rust/electricity");
+    expect(routePath(parseRoute("/es/rust/electricidad"))).toBe("/es/rust/electricidad");
+    registerRustSlugs({ electricity: { "solar-turret": "torreta-solar" } });
+    expect(parseRoute("/es/rust/electricidad/torreta-solar")).toMatchObject({ rsSection: "electricity", detail: "solar-turret" });
+    const c = { ...parseRoute("/en/rust"), rsSection: "electricity" as const, detail: "solar-turret" };
+    expect(routePath(c)).toBe("/en/rust/electricity/solar-turret");
+    expect(routePath({ ...c, lang: "es" })).toBe("/es/rust/electricidad/torreta-solar");
   });
 });

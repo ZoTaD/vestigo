@@ -115,10 +115,17 @@ export class World {
     this.processQueue();
   }
 
+  /** Lo que quedó sin llegar a un cuadro entero en el último `tick` (la pantalla avanza de a 16 ms; el servidor, de a 33). */
+  private pending = 0;
+
   /** Avanza `dt` segundos de juego. */
   tick(dt: number): void {
-    const frames = Math.round(dt / FRAME);
-    for (let i = 0; i < frames; i++) this.step();
+    this.pending += dt;
+    // El 1e-9 absorbe el redondeo de sumar tercios: `tick(1)` son 30 cuadros, no 29.
+    while (this.pending >= FRAME - 1e-9) {
+      this.pending -= FRAME;
+      this.step();
+    }
   }
 
   // ---- Entidades ----

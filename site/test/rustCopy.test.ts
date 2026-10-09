@@ -11,13 +11,18 @@ describe("la copia de Rust", () => {
         expect(c.seo[tab].description.length, `${lang} ${tab}`).toBeGreaterThan(80);
         expect(c.seo[tab].description.length, `${lang} ${tab}`).toBeLessThanOrEqual(160);
       }
-      expect(c.soonTabs).toHaveLength(5);
+      expect(c.soonTabs).toHaveLength(4);
     }
   });
 
   it("los títulos empiezan por lo que se busca", () => {
     expect(RUST_COPY.en.seo.home.title).toMatch(/^Rust Guide/);
-    expect(RUST_COPY.es.seo.home.title).toMatch(/^Rust en español/);
+    expect(RUST_COPY.es.seo.home.title).toMatch(/^Guía de Rust/);
+    expect(RUST_COPY.es.seo.home.title).not.toMatch(/en español/);
+    expect(RUST_COPY.en.seo.electricity.title).toMatch(/^Rust Electricity Simulator/);
+    expect(RUST_COPY.es.seo.electricity.title).toMatch(/^Simulador de electricidad de Rust/);
+    expect(RUST_COPY.en.circuitSeo("solar turret", "x").title).toMatch(/^Rust Solar Turret Circuit/);
+    expect(RUST_COPY.es.circuitSeo("torreta solar", "x").title).toMatch(/^Circuito de torreta solar en Rust/);
     expect(RUST_COPY.en.seo.raid.title).toMatch(/^Rust Raid Calculator/);
     expect(RUST_COPY.es.seo.raid.title).toMatch(/^Calculadora de raideo de Rust/);
   });
