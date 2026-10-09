@@ -20,6 +20,7 @@ import { ELECTRIC_COPY } from "./copy";
 import { Catalog } from "./engine";
 import type { Circuit, ElectricityData } from "./engine/types";
 import { EditorStore } from "./editor/store";
+import { TRY_KEY, tryCircuit } from "./trial";
 import "../../styles/rust-electric.css";
 
 registerRustSlugs({ electricity: circuitSlugsEs() });
@@ -42,10 +43,17 @@ function useNarrow(): boolean {
   return narrow;
 }
 
-async function initialCircuit(ready: Circuit | undefined): Promise<Circuit> {
-  const hash = window.location.hash.slice(1);
+async function initialCircuit(ready: Circuit | undefined, startHash: string): Promise<Circuit> {
+  const hash = startHash.slice(1);
   if (hash.startsWith(HASH_KEY)) {
     const c = await decode(hash.slice(HASH_KEY.length));
+    if (c) return c;
+  }
+  // "Probarlo en el simulador" desde una ficha de Objetos (`#try=autoturret`): el componente ya cableado. Va en el
+  // `#hash` y no en `?try=` porque la app normaliza la dirección (y el query) al entrar. Se borra al usarlo.
+  if (hash.startsWith(TRY_KEY)) {
+    window.history.replaceState(window.history.state, "", `${window.location.pathname}${window.location.search}`);
+    const c = tryCircuit(cat, decodeURIComponent(hash.slice(TRY_KEY.length)));
     if (c) return c;
   }
   if (ready) return ready;
@@ -63,11 +71,16 @@ export default function RustElectricity({ route, navigate }: { route: Route; nav
   const ready = circuitBySlug(route.detail);
   const narrow = useNarrow();
   const [store, setStore] = useState<EditorStore | null>(null);
+  // El `#hash` con el que se llegó, leído una sola vez: el efecto de abajo corre dos veces en desarrollo y el de
+  // `#try=` se borra al usarse.
+  const [startHash] = useState(() => (typeof window === "undefined" ? "" : window.location.hash));
+  // El link vale para la página con la que se entró; al pasar a otro circuito listo manda ese circuito.
+  const [firstReady] = useState(ready);
 
   // Al entrar (y al pasar de un circuito listo a otro), se arma el estado con el circuito que toca.
   useEffect(() => {
     let alive = true;
-    void initialCircuit(ready?.circuit).then((c) => {
+    void initialCircuit(ready?.circuit, ready === firstReady ? startHash : "").then((c) => {
       if (!alive) return;
       setStore((s) => {
         if (s) {
@@ -80,7 +93,7 @@ export default function RustElectricity({ route, navigate }: { route: Route; nav
     return () => {
       alive = false;
     };
-  }, [ready]);
+  }, [ready, startHash, firstReady]);
 
   const title = ready ? t.circuitH1(ready.name[lang]) : t.h1;
   const steps = useMemo(() => (ready ? wiringSteps(ready.circuit, lang) : []), [ready, lang]);
@@ -166,3 +179,4 @@ function wiringSteps(c: Circuit, lang: "en" | "es"): string[] {
   };
   return c.wires.map((w) => t.steps(name(w.from[0]), slot(w.from[0], w.from[1], true), name(w.to[0]), slot(w.to[0], w.to[1], false)));
 }
+

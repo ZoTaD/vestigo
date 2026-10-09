@@ -126,6 +126,8 @@ export interface RustCopy {
     back: string;
   };
   raidBlocks: { toBreak: string; breaks: string; open: string };
+  /** El bloque "Electricidad" de las fichas de componentes (2026-10-09). */
+  elecBlock: { title: string; inputs: string; outputs: string; uses: string; noUse: string; makes: string; battery: (out: string, cap: string) => string; tryIt: string };
   raid: {
     h1: string;
     lede: string;
@@ -311,6 +313,16 @@ const EN: RustCopy = {
     back: "All items",
   },
   raidBlocks: { toBreak: "What it takes to break it", breaks: "What it breaks", open: "Open in the raid calculator" },
+  elecBlock: {
+    title: "Electricity",
+    inputs: "Inputs",
+    outputs: "Outputs",
+    uses: "Power use",
+    noUse: "none",
+    makes: "Makes up to",
+    battery: (out, cap) => `Gives up to ${out} and stores ${cap} rWm`,
+    tryIt: "Try it in the simulator",
+  },
   raid: {
     h1: "Rust Raid Calculator",
     lede: "Pick what you want to break and how many: you get how many explosives of each kind it takes, the sulfur it costs and the cheapest mix.",
@@ -503,6 +515,16 @@ const ES: RustCopy = {
     back: "Todos los objetos",
   },
   raidBlocks: { toBreak: "Lo que cuesta romperlo", breaks: "Qué rompe", open: "Abrir en la calculadora de raideo" },
+  elecBlock: {
+    title: "Electricidad",
+    inputs: "Entradas",
+    outputs: "Salidas",
+    uses: "Consumo",
+    noUse: "nada",
+    makes: "Genera hasta",
+    battery: (out, cap) => `Da hasta ${out} y guarda ${cap} rWm`,
+    tryIt: "Probarlo en el simulador",
+  },
   raid: {
     h1: "Calculadora de raideo de Rust",
     lede: "Elegí qué querés romper y cuántos: te dice cuántos explosivos de cada tipo hacen falta, el azufre que cuesta y la mezcla más barata.",

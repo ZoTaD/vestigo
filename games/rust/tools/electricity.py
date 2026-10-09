@@ -31,6 +31,8 @@ PREFABS = CACHE / "prefabs.json"
 CONFIGS = CACHE / "configs.json"
 ITEMS = ROOT / "data" / "items.json"
 OUT = ROOT / "data" / "electricity.json"
+# Lo poco que muestra el bloque "Electricidad" de las fichas de Objetos (viaja con la pestaña Objetos: tiene que ser chico).
+OUT_ITEMS = ROOT / "data" / "electricity-items.json"
 ELECTRIC = 0
 
 
@@ -116,9 +118,25 @@ def build():
     return {"categories": ov.CATEGORIES, "components": comps, "names": dict(sorted(names.items()))}
 
 
+def items_view(doc):
+    """Por shortname: enchufes (nombre y tipo), consumo y generación. Sólo lo eléctrico que tiene ficha de Objetos."""
+    out = {}
+    for c in doc["components"]:
+        if not c["slug"]:
+            continue
+        row = {"in": [[s["n"], s["t"]] for s in c["in"]], "out": [[s["n"], s["t"]] for s in c["out"]], "use": c["use"]}
+        if "gen" in c:
+            row["gen"] = c["gen"]
+        if c["cls"] == "ElectricBattery":
+            row["bat"] = [c["p"]["maxOutput"], round(c["p"]["maxCapactiySeconds"] / 60)]
+        out[c["id"]] = row
+    return out
+
+
 def main():
     doc = build()
     OUT.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    OUT_ITEMS.write_text(json.dumps(items_view(doc), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print(f"[electricity] {len(doc['components'])} componentes en {OUT}")
 
 

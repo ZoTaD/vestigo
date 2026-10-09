@@ -13,6 +13,7 @@ import { say, type Ficha, type Ref } from "./data";
 import { ContentsSection, LootSection } from "./FichaLoot";
 import { BuildingSection, DetectedSection, ObtainSection, RepairSection, SkinsSection, TurnsSection, UseSection } from "./FichaMore";
 import RaidBlocks from "./RaidBlocks";
+import ElecBlock from "./ElecBlock";
 import RecycleSection, { RecycledFrom } from "./FichaRecycle";
 import { craftTimes, formatDuration } from "./format";
 
@@ -144,6 +145,7 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
       )}
       <BuildingSection ficha={ficha} route={route} navigate={navigate} />
       <RaidBlocks itemId={ficha.id} route={route} />
+      <ElecBlock itemId={ficha.id} route={route} />
       <DetectedSection ficha={ficha} route={route} navigate={navigate} />
       <RepairSection ficha={ficha} route={route} navigate={navigate} />
       <SkinsSection ficha={ficha} />

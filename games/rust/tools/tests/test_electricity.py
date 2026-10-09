@@ -90,6 +90,18 @@ class Forma(unittest.TestCase):
         self.assertIn("metal.fragments", self.doc["names"])
 
 
+class VistaDeFichas(unittest.TestCase):
+    """`electricity-items.json`: lo que muestra la ficha de Objetos."""
+
+    def test_es_lo_mismo_que_el_json_grande(self):
+        doc = json.loads(DATA.read_text(encoding="utf-8"))
+        view = json.loads(electricity.OUT_ITEMS.read_text(encoding="utf-8"))
+        self.assertEqual(view, electricity.items_view(doc))
+        self.assertEqual(view["electric.battery.rechargable.large"]["bat"], [100, 24000])
+        self.assertEqual(view["autoturret"]["use"], 10)
+        self.assertEqual(view["electric.solarpanel.large"]["gen"], 20)
+
+
 @unittest.skipUnless(CACHE, "lee games/rust/cache/io (RUST_CACHE=1 para correrlo)")
 class DesdeLaCache(unittest.TestCase):
     def test_rehacerlo_da_lo_mismo(self):

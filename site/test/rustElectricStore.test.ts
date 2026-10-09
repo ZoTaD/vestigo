@@ -71,3 +71,16 @@ describe("EditorStore", () => {
     expect(s.circuit.parts[0].cfg).toEqual({ on: 1 });
   });
 });
+
+describe("Probarlo en el simulador", () => {
+  it("una torreta llega con el generador de prueba en su entrada y anda", async () => {
+    const { tryCircuit } = await import("../src/rust/electric/trial");
+    const { buildWorld } = await import("../src/rust/electric/engine");
+    const c = tryCircuit(cat, "autoturret")!;
+    expect(c.parts.map((p) => p.type)).toEqual(["autoturret", "electric.generator.small", "electric.simplelight"]);
+    const w = buildWorld(cat, c);
+    w.tick(3);
+    expect(w.get("p1")!.isPowered()).toBe(true);
+    expect(tryCircuit(cat, "no.existe")).toBeNull();
+  });
+});
