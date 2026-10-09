@@ -1,0 +1,27 @@
+/*
+ * Rust, ficha de monumento: la sección del puzzle paso a paso (2026-10-09, `rust/monuments/Puzzle.tsx`). Estética
+ * "Inventario": casilleros grises, números en casillero, sin bordes de color.
+ */
+.rs-pz { display: grid; gap: 4px; }
+.rs-pz-items { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+.rs-pz-items .rs-ref { display: flex; gap: 8px; align-items: center; padding: 3px 10px 3px 3px; background: var(--rs-slot); font-size: 15px; }
+.rs-pz-items .rs-slot { flex: none; width: 48px; padding: 5px; background: rgba(0, 0, 0, 0.25); }
+.rs-pz-items.is-small { margin: 6px 0 0; }
+.rs-pz-items.is-small .rs-ref { font-size: 14px; }
+.rs-pz-items.is-small .rs-slot { width: 36px; padding: 4px; }
+.rs-pz-name { min-width: 0; }
+.rs-pz-steps { display: grid; gap: 6px; margin: 4px 0 8px; padding: 0; list-style: none; }
+.rs-pz-steps li { display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: start; padding: 8px 10px 8px 8px; background: var(--rs-slot); }
+.rs-pz-n { display: grid; place-items: center; width: 40px; height: 40px; background: rgba(0, 0, 0, 0.3); font: 800 20px/1 "Roboto Condensed", sans-serif; }
+.rs-pz-body { min-width: 0; }
+.rs-pz-body p { margin: 0; max-width: 75ch; line-height: 1.5; }
+.rs-pz-body .rs-tag { white-space: nowrap; }
+.rs-pz-changes { display: grid; gap: 4px; margin: 0 0 4px; padding: 0; list-style: none; }
+.rs-pz-changes li { display: grid; grid-template-columns: minmax(130px, 170px) 1fr; gap: 10px; line-height: 1.45; }
+.rs-pz-changes time { color: var(--rs-dim); font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .rs-pz-steps li { grid-template-columns: 32px 1fr; gap: 8px; }
+  .rs-pz-n { width: 32px; height: 32px; font-size: 17px; }
+  .rs-pz-changes li { grid-template-columns: 1fr; gap: 0; }
+}

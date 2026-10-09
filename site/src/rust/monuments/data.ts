@@ -53,6 +53,8 @@ export const peekMonuments = (): Monuments | null => data.peek();
 export const loadMonuments = (): Promise<Monuments> => data.load();
 export const say = (loc: Loc, lang: "en" | "es"): string => (lang === "es" && loc.es) || loc.en;
 
-export async function preloadMonumentsRoute(_route: Route): Promise<void> {
+export async function preloadMonumentsRoute(route: Route): Promise<void> {
   await loadMonuments();
+  // La ficha trae también el puzzle paso a paso (`Puzzle.tsx`), en su propio chunk.
+  if (route.detail) await import("./puzzles").then((m) => m.loadPuzzles());
 }

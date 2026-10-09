@@ -14,6 +14,7 @@ import { Icon, RefLink } from "../items/parts";
 import RsLoading from "../RsLoading";
 import { useMonumentsCopy } from "./copy";
 import { loadMonuments, peekMonuments, say, type Card, type Monument, type Monuments } from "./data";
+import MonumentPuzzleSection from "./Puzzle";
 import "../../styles/rust-items.css";
 import "../../styles/rust-monuments.css";
 
@@ -193,6 +194,8 @@ function MonumentFicha({ d, m, route, navigate }: { d: Monuments; m: Monument; r
           </ul>
         </section>
       )}
+
+      <MonumentPuzzleSection id={m.id} route={route} navigate={navigate} />
 
       {Object.keys(m.recyclers).length > 0 && (
         <section className="rs-pnl">

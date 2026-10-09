@@ -53,7 +53,10 @@ class TestMonumentsJson(unittest.TestCase):
 
     def test_puzzle_recicladoras_y_zona_segura(self):
         self.assertEqual(self.by["launch-site"]["cards"].get("red"), 4)
-        self.assertEqual(self.by["power-plant"]["recyclers"].get("red"), 2)
+        self.assertEqual(self.by["power-plant"]["recyclers"].get("red"), 1)
+        # Las piezas de la escena de props se cuentan una vez (antes daba 5 verdes en el patio ferroviario).
+        self.assertEqual(self.by["train-yard"]["cards"], {"green": 3, "blue": 1})
+        self.assertEqual(self.by["airfield"]["fuses"], 4)
         self.assertEqual(self.by["outpost"]["recyclers"], {"yellow": 3})
         self.assertTrue(self.by["outpost"]["safeZone"])
         self.assertEqual(self.by["outpost"]["shop"], "outpost")

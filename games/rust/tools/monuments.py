@@ -131,8 +131,20 @@ def build():
     cls = lambda n: load(f"world/classes/{n}.json")
     per: dict[str, dict] = defaultdict(lambda: {"cards": Counter(), "recyclers": Counter(), "fuses": 0, "radiation": -1, "power": Counter()})
 
+    seen = set()
+
     def owner(x):
-        return monument_of(x["ctx"].get("root", ""), known)
+        """El monumento de la pieza, o None. Las piezas de la escena de props (`assets/scenes/prefabs/...`) vienen dos
+        veces: dentro del prefab del monumento y sueltas en su escena, en la misma posición local; se cuentan una vez
+        (sin esto, el patio ferroviario sumaba 5 lectores verdes en vez de 3 y la central 2 recicladoras rojas)."""
+        k = monument_of(x["ctx"].get("root", ""), known)
+        if not k:
+            return None
+        sig = (k, x["ctx"].get("go"), tuple(round(v, 1) for v in x["ctx"].get("local") or ()))
+        if sig in seen:
+            return None
+        seen.add(sig)
+        return k
 
     for x in cls("CardReader"):
         k = owner(x)
