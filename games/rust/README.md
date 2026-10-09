@@ -48,3 +48,10 @@ varios GB de bundles con UnityPy, así que se corren **de a un archivo por vez**
 
 (En PowerShell: `$env:RUST_GAME = "1"; python -m unittest ...`.) Cada módulo carga el juego una sola vez y lo suelta al
 terminar.
+
+## Caché cruda para las pestañas que faltan (2026-10-08)
+
+`extract_io.py`, `extract_world.py`, `extract_farming.py`, `extract_sprites.py` (después de los tres anteriores) y
+`extract_media.py` vuelcan del juego, sin tocar el sitio, lo que hace falta para Monumentos, Electricidad y Granjas a
+`games/rust/cache/` (no versionada salvo su `README.md`, que explica qué hay y de dónde sale). Usan la base común de
+`cache_dump.py`. Misma regla de memoria: uno por vez (~12-14 GB de RAM de pico cada uno).

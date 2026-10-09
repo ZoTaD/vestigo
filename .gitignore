@@ -37,3 +37,8 @@ __pycache__/
 # Valheim: el entorno de Python del extractor y su caché, locales.
 games/valheim/.venv/
 games/valheim/.cache/
+
+# Rust: la caché cruda del cliente (games/rust/tools/extract_*.py), cientos de MB y sacada
+# del juego instalado. Se versiona sólo su README, que dice qué hay y cómo rehacerla.
+games/rust/cache/*
+!games/rust/cache/README.md
