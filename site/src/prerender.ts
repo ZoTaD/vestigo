@@ -10,6 +10,7 @@ import { tidyTitleName, ZOMBOID_COPY } from "./zomboidCopy";
 import { RUST_COPY, type RustHas } from "./rustCopy";
 import { FARMING_COPY } from "./rust/farming/copy";
 import { PATCHES_COPY } from "./rust/patches/copy";
+import { MONUMENTS_COPY } from "./rust/monuments/copy";
 import { esHeadNames } from "./zomboid/headName";
 
 /** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
@@ -147,6 +148,7 @@ export function metaFor(
       if (detailName) return fc.plant(detailName);
     }
     if (route.rsSection === "patches" && route.detail && detailName) return PATCHES_COPY[lang].seo.edition(detailName);
+    if (route.rsSection === "monuments" && route.detail && detailName) return MONUMENTS_COPY[lang].seo.monument(detailName);
     return r.seo[route.rsSection ?? "home"];
   }
   // Lo que queda son la portada y las dos páginas legales.

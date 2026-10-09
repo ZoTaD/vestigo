@@ -188,7 +188,11 @@ class Names:
         return found
 
 
-def names_of(items: list[dict]) -> dict[str, Names]:
+def names_of(items: list[dict], monuments: list[dict] | None = None) -> dict[str, Names]:
+    """
+    Los nombres de los objetos y de los monumentos. Un monumento se anota como "m:<id>" para que el sitio sepa que va a
+    la pestaña Monumentos; si un nombre es de los dos, gana el monumento ("Outpost" es el lugar, no un cartel).
+    """
     out = {"en": [], "es": []}
     for it in items:
         if not it.get("slug"):
@@ -197,7 +201,20 @@ def names_of(items: list[dict]) -> dict[str, Names]:
             n = (it["name"].get(lang) or "").strip()
             if len(n) >= 4:
                 out[lang].append((n, it["slug"]))
+    for m in monuments or []:
+        for lang in ("en", "es"):
+            n = (m["name"].get(lang) or "").strip()
+            if len(n) >= 4:
+                out[lang] = [(x, s) for x, s in out[lang] if x.lower() != n.lower()] + [(n, f"m:{m['id']}")]
     return {lang: Names(p) for lang, p in out.items()}
+
+
+def load_monuments() -> list[dict]:
+    p = DATA / "monuments.json"
+    if not p.exists():
+        return []
+    with open(p, encoding="utf-8") as f:
+        return json.load(f)["monuments"]
 
 
 def link(block: dict, names: Names) -> dict:
@@ -244,8 +261,8 @@ def translate(ed: dict, tr: dict[str, str], names_es: Names) -> tuple[dict | Non
 
 # ---------------------------------------------------------------- armado
 
-def build(posts: list[dict], items: list[dict]) -> list[dict]:
-    names = names_of(items)
+def build(posts: list[dict], items: list[dict], monuments: list[dict] | None = None) -> list[dict]:
+    names = names_of(items, monuments)
     eds: list[dict] = []
     for n in sorted(posts, key=lambda x: x["date"]):
         date = datetime.fromtimestamp(n["date"], timezone.utc).strftime("%Y-%m-%d")
@@ -322,8 +339,9 @@ def dump(path: Path, obj):
 def main(argv: list[str]) -> None:
     with open(DATA / "items.json", encoding="utf-8") as f:
         items = json.load(f)["items"]
-    names_es = names_of(items)["es"]
-    eds = build(fetch("--offline" in argv), items)
+    mons = load_monuments()
+    names_es = names_of(items, mons)["es"]
+    eds = build(fetch("--offline" in argv), items, mons)
     todo = set(argv[argv.index("--todo") + 1].split(",")) if "--todo" in argv else set()
     OUT.mkdir(parents=True, exist_ok=True)
     for old in OUT.iterdir():

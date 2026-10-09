@@ -5,6 +5,7 @@
  */
 import type { ReactNode } from "react";
 import itemSlugsEs from "@rust/site/slugs-es.json";
+import monumentSlugsEs from "@rust/site/monuments-slugs-es.json";
 import { useLang, useLocale } from "../../i18n";
 import RouteLink from "../../RouteLink";
 import { registerRustSlugs, type Route } from "../../route";
@@ -16,6 +17,7 @@ import "../../styles/rust-patches.css";
 
 // Las notas enlazan fichas de Objetos: en español, con su slug (como Raideo).
 registerRustSlugs(itemSlugsEs);
+registerRustSlugs(monumentSlugsEs);
 
 type Nav = (r: Route) => void;
 
@@ -136,6 +138,10 @@ function EditionPage({ ed, route, navigate }: { ed: Edition; route: Route; navig
   );
 }
 
+/** "m:<id>" es un monumento; lo demás, el slug de un objeto. */
+const refRoute = (route: Route, s: string): Route =>
+  s.startsWith("m:") ? { ...route, view: "rust", rsSection: "monuments", detail: s.slice(2) } : { ...route, view: "rust", rsSection: "items", detail: s };
+
 /** Las viñetas seguidas van juntas en una lista. */
 function groupLists(lines: Block[]): (Block | Block[])[] {
   const out: (Block | Block[])[] = [];
@@ -160,7 +166,7 @@ export function withRefs(b: Block, route: Route, navigate: Nav): ReactNode {
     if (at < pos) continue;
     out.push(b.text.slice(pos, at));
     out.push(
-      <RouteLink className="rs-patch-ref" to={{ ...route, view: "rust", rsSection: "items", detail: r.s }} onNavigate={navigate} key={at}>
+      <RouteLink className="rs-patch-ref" to={refRoute(route, r.s)} onNavigate={navigate} key={at}>
         {r.n}
       </RouteLink>,
     );

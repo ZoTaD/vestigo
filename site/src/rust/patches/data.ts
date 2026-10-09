@@ -9,7 +9,7 @@ import { once } from "../../zomboid/store";
 export interface Ref {
   /** El nombre tal como aparece en el renglón. */
   n: string;
-  /** El slug de la ficha de Objetos. */
+  /** El slug de la ficha de Objetos, o "m:<id>" si es un monumento. */
   s: string;
 }
 export interface Block {

@@ -9,7 +9,7 @@ import type { EffectStat, HowKind, LootEvent, LootKind, ModStat, RecyclerKey } f
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
-export const RUST_TABS: RustSection[] = ["home", "items", "raid", "farming", "patches"];
+export const RUST_TABS: RustSection[] = ["home", "items", "raid", "monuments", "farming", "patches"];
 
 type Seo = { title: string; description: string };
 
@@ -167,9 +167,9 @@ export interface RustCopy {
 }
 
 const EN: RustCopy = {
-  tabs: { home: "Home", items: "Items", raid: "Raid", farming: "Farming", patches: "Patches" },
+  tabs: { home: "Home", items: "Items", raid: "Raid", monuments: "Monuments", farming: "Farming", patches: "Patches" },
   soon: "Soon",
-  soonTabs: ["Monuments", "Electricity", "Server"],
+  soonTabs: ["Electricity", "Server"],
   seo: {
     home: {
       title: "Rust Guide: Items, Crafting, Recycling and Raid Calculator | Vestigo",
@@ -186,6 +186,10 @@ const EN: RustCopy = {
     farming: {
       title: "Rust Farming Guide: Plants, Genes, Planters and Compost | Vestigo",
       description: "Every Rust plant with its growth stages, harvest and water needs, the genetics calculator, planters, compost, chickens, bees, cows, sheep and horse breeds.",
+    },
+    monuments: {
+      title: "Rust Monuments: Keycards, Fuses, Recyclers and the Power Grid | Vestigo",
+      description: "Every Rust monument with its keycard puzzle, fuses, recyclers, radiation, safe zone, shops and what the Power Trip grid turns on at each stage.",
     },
     patches: {
       title: "Rust Patch Notes: Every Monthly Update | Vestigo",
@@ -347,6 +351,7 @@ const EN: RustCopy = {
     tools: [
       { tab: "items", title: "Items", text: "Recipe, workbench, recycling, loot and shortname of every item." },
       { tab: "raid", title: "Raid calculator", text: "Explosives and sulfur for any wall, door or deployable." },
+      { tab: "monuments", title: "Monuments", text: "Keycards, fuses, recyclers, radiation and the Power Trip grid of every monument." },
       { tab: "farming", title: "Farming and genetics", text: "Plants, crossbreeding calculator, compost and animals." },
       { tab: "patches", title: "Patch notes", text: "Every monthly update since 2024, with links to the items it mentions." },
     ],
@@ -359,9 +364,9 @@ const EN: RustCopy = {
 };
 
 const ES: RustCopy = {
-  tabs: { home: "Portada", items: "Objetos", raid: "Raideo", farming: "Granjas", patches: "Parches" },
+  tabs: { home: "Portada", items: "Objetos", raid: "Raideo", monuments: "Monumentos", farming: "Granjas", patches: "Parches" },
   soon: "Pronto",
-  soonTabs: ["Monumentos", "Electricidad", "Servidor"],
+  soonTabs: ["Electricidad", "Servidor"],
   seo: {
     home: {
       title: "Guía de Rust: objetos, crafteo, reciclaje y calculadora de raideo | Vestigo",
@@ -378,6 +383,10 @@ const ES: RustCopy = {
     farming: {
       title: "Granjas en Rust: plantas, genes, jardineras y compost | Vestigo",
       description: "Cada planta de Rust con sus etapas, cosecha y agua, la calculadora de genética, jardineras, compost, gallinas, abejas, vacas, ovejas y razas de caballo.",
+    },
+    monuments: {
+      title: "Monumentos de Rust: tarjetas, fusibles, recicladoras y la red eléctrica | Vestigo",
+      description: "Cada monumento de Rust con su puzzle de tarjetas, fusibles, recicladoras, radiación, zona segura, tiendas y lo que prende la red de Power Trip.",
     },
     patches: {
       title: "Parches de Rust: las notas de cada actualización | Vestigo",
@@ -540,6 +549,7 @@ const ES: RustCopy = {
     tools: [
       { tab: "items", title: "Objetos", text: "Receta, banco, reciclaje, loot y shortname de cada objeto." },
       { tab: "raid", title: "Calculadora de raideo", text: "Explosivos y azufre para cada pared, puerta o deployable." },
+      { tab: "monuments", title: "Monumentos", text: "Tarjetas, fusibles, recicladoras, radiación y la red de Power Trip de cada monumento." },
       { tab: "farming", title: "Granjas y genética", text: "Plantas, calculadora de cruzas, compost y animales." },
       { tab: "patches", title: "Parches", text: "Cada actualización mensual desde 2024, con enlaces a los objetos que nombra." },
     ],

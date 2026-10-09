@@ -10,7 +10,7 @@ import { ogSpecs, type OgData } from "./og/pages";
 import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, type Route } from "./src/route";
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { isRsLoadingPage } from "./src/rust/loadingGuard";
-import { farmingPages, patchesPages, type RustPage } from "./src/rust/sitemapPages";
+import { farmingPages, monumentsPages, patchesPages, type RustPage } from "./src/rust/sitemapPages";
 import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
 import { COPY } from "./src/i18n";
@@ -222,6 +222,13 @@ function readSitemapData(): { data: OgData } {
       pages.push(...farmingPages(farming));
     } catch (e) {
       console.warn(`[rust] sin las fichas de Granjas (${(e as Error).message})`);
+    }
+    try {
+      const mons = JSON.parse(readFileSync(`${rustDir}/monuments.json`, "utf-8"));
+      registerRustSlugs(JSON.parse(readFileSync(`${rustDir}/site/monuments-slugs-es.json`, "utf-8")));
+      pages.push(...monumentsPages(mons));
+    } catch (e) {
+      console.warn(`[rust] sin las fichas de Monumentos (${(e as Error).message})`);
     }
     try {
       pages.push(...patchesPages(JSON.parse(readFileSync(`${rustDir}/patches/index.json`, "utf-8"))));

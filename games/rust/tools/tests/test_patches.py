@@ -58,6 +58,11 @@ class TestParse(unittest.TestCase):
         self.assertEqual(n.find("milk and ladder"), [])
         self.assertEqual(n.find("a Ladder"), [{"n": "Ladder", "s": "ladder"}])
 
+    def test_monumentos(self):
+        names = patches.names_of([{"slug": "outpost-sign", "name": {"en": "Outpost", "es": None}}], [{"id": "outpost", "name": {"en": "Outpost", "es": "Puesto Avanzado"}}])
+        self.assertEqual(names["en"].find("Go to the Outpost."), [{"n": "Outpost", "s": "m:outpost"}])
+        self.assertEqual(names["es"].find("Andá al Puesto Avanzado."), [{"n": "Puesto Avanzado", "s": "m:outpost"}])
+
     def test_espanol_entero_o_nada(self):
         ed = {"intro": [], "sections": [{"title": "A", "level": 1, "lines": [{"t": "p", "text": "b"}, {"t": "code", "text": "x()"}]}]}
         names = patches.Names([])

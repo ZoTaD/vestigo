@@ -65,6 +65,10 @@ export const PAGES = [
   // Parches (2026-10-09): la lista (41 portadas) y la edición más larga traducida.
   "/en/rust/patches",
   "/es/rust/parches/livestock",
+  // Monumentos (2026-10-09): la lista con la red de Power Trip y la ficha con la tienda más larga (Bandit Camp, 46).
+  "/en/rust/monuments",
+  "/en/rust/monuments/bandit-camp",
+  "/es/rust/monumentos/complejo-de-apartamentos",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */
