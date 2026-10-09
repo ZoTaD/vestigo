@@ -15,15 +15,25 @@ export interface SlotDef {
   t: IOType;
   /** `mainPowerSlot`: la entrada que alimenta (las otras son señales). */
   m: 0 | 1;
+  /** Altura del enchufe en el prefab (`handlePosition.y`, metros): la usa la gravedad del agua. */
+  h?: number;
+  /** Si está, el enchufe es de la entidad hija (el depósito del purificador): índice de la salida en el hijo. */
+  v?: number;
 }
 
-export type Category = "source" | "battery" | "route" | "logic" | "switch" | "sensor" | "defense" | "light" | "appliance";
+export type Category = "source" | "battery" | "route" | "logic" | "switch" | "sensor" | "defense" | "light" | "appliance" | "water" | "industrial";
 
 export interface ComponentDef {
   /** shortname del objeto que lo coloca. */
   id: string;
   /** Clase del juego: elige el comportamiento. */
   cls: string;
+  /** `IOEntity.ioType`: la red de la entidad (0 energía, 1 agua, 4 industrial). */
+  io?: IOType;
+  /** Una entidad que el juego crea junto con esta (el depósito del purificador): no va en la paleta. */
+  hidden?: boolean;
+  /** El id del componente hijo (`hidden`) que el juego crea con esta entidad. */
+  child?: string;
   cat: Category;
   name: { en: string; es: string | null };
   slug: string | null;
@@ -75,6 +85,10 @@ export interface Env {
   gust: number;
   /** Altura del molino sobre el terreno, en metros. */
   height: number;
+  /** Clima para los colectores de agua (0-1): `Climate.GetRain`, `GetFog`, `GetSnow`. */
+  rain: number;
+  fog: number;
+  snow: number;
 }
 
 export interface Circuit {
@@ -83,4 +97,4 @@ export interface Circuit {
   env?: Partial<Env>;
 }
 
-export const DEFAULT_ENV: Env = { hour: 12, gust: 0.5, height: 20 };
+export const DEFAULT_ENV: Env = { hour: 12, gust: 0.5, height: 20, rain: 0, fog: 0, snow: 0 };
