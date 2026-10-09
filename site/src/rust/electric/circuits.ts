@@ -275,6 +275,82 @@ export const CIRCUITS: ReadyCircuit[] = [
       wires: W("b.0>sp.0 sp.0>sw.0 sw.0>tx.0 sp.1>rx.0 rx.0>d.0"),
     },
   },
+  // ---- Agua (2026-10-09) ----
+  {
+    slug: "farm-irrigation",
+    slugEs: "riego-de-granja",
+    name: { en: "farm irrigation", es: "riego de granja" },
+    about: {
+      en: "A water pump on a river fills a barrel on the roof; a fluid splitter feeds three sprinklers below. The powered pump pushes uphill, and each sprinkler uses 2 water per second while it gets any flow.",
+      es: "Una bomba en un río llena un barril en el techo y un splitter de agua alimenta tres aspersores abajo. La bomba con energía empuja para arriba, y cada aspersor gasta 2 de agua por segundo mientras le llegue caudal.",
+    },
+    circuit: {
+      parts: [
+        P("s", "electric.solarpanel.large", X(0), 0),
+        P("p", "waterpump", X(1), 0, { fresh: 1, water: 500 }),
+        P("b", "water.barrel", X(2), 0, { height: 4 }),
+        P("sp", "fluid.splitter", X(3), 0),
+        P("k1", "electric.sprinkler", X(4), -120),
+        P("k2", "electric.sprinkler", X(4), 20),
+        P("k3", "electric.sprinkler", X(4), 160),
+      ],
+      wires: W("s.0>p.0 p.0>b.0 b.0>sp.0 sp.0>k1.0 sp.1>k2.0 sp.2>k3.0"),
+      env: { hour: 12 },
+    },
+  },
+  {
+    slug: "water-purifier-with-pump",
+    slugEs: "purificador-con-bomba",
+    name: { en: "water purifier with pump", es: "purificador con bomba" },
+    about: {
+      en: "A water pump in the sea fills a powered water purifier with salt water; the purifier turns it into fresh water at 2 to 1 and its tank pushes it into a barrel. Pump and purifier use 5 power each.",
+      es: "Una bomba en el mar llena de agua salada un purificador con energía; el purificador la convierte en agua dulce a razón de 2 a 1 y su depósito la empuja a un barril. Bomba y purificador consumen 5 cada uno.",
+    },
+    circuit: {
+      parts: [
+        P("w", "generator.wind.scrap", X(0), 0),
+        P("sp", "electric.splitter", X(1), 0),
+        P("p", "waterpump", X(2), -100),
+        P("u", "powered.water.purifier", X(3), 40),
+        P("b", "water.barrel", X(4), 40, { height: -1 }),
+      ],
+      wires: W("w.0>sp.0 sp.0>p.0 sp.1>u.1 p.0>u.0 u.0>b.0"),
+      env: { gust: 0.5, height: 20 },
+    },
+  },
+  {
+    slug: "water-catcher-to-barrel",
+    slugEs: "colector-a-barril",
+    name: { en: "water catcher to barrel", es: "colector de agua a barril" },
+    about: {
+      en: "A large water catcher on the roof drops what it collects straight into a barrel below, every minute; rain fills it much faster. Water only flows down without a pump.",
+      es: "Un colector de agua grande en el techo deja lo que junta directo en un barril de abajo, cada minuto; con lluvia se llena mucho más rápido. Sin bomba, el agua sólo baja.",
+    },
+    circuit: {
+      parts: [P("k", "water.catcher.large", X(0), 0, { height: 3 }), P("b", "water.barrel", X(1), 0)],
+      wires: W("k.0>b.0"),
+      env: { rain: 0.2 },
+    },
+  },
+  {
+    slug: "fluid-switch-pump",
+    slugEs: "interruptor-de-fluidos-como-bomba",
+    name: { en: "fluid switch pump", es: "interruptor de fluidos como bomba" },
+    about: {
+      en: "A fluid switch with power on Pump Power works as a pump: it sends water from a barrel on the ground up to a barrel 6 m higher. Cut the pump power and the water stops going up.",
+      es: "Un interruptor de fluidos con energía en Pump Power hace de bomba: manda el agua de un barril en el piso a otro 6 m más arriba. Sin energía en la bomba, el agua deja de subir.",
+    },
+    circuit: {
+      parts: [
+        P("a", "water.barrel", X(0), 100, { water: 5000 }),
+        P("g", "electric.battery.rechargable.small", X(0), -40, { charge: 400 }),
+        P("sw", "electric.switch", X(1), -40, { on: 1 }),
+        P("f", "fluid.switch", X(2), 60, { on: 1 }),
+        P("b", "water.barrel", X(3), 60, { height: 6 }),
+      ],
+      wires: W("g.0>sw.0 sw.0>f.2 a.0>f.0 f.0>b.0"),
+    },
+  },
 ];
 
 function gateCircuit(gate: string, a: number, b: number): Circuit {

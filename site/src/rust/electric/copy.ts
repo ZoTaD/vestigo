@@ -19,6 +19,8 @@ export interface ElectricCopy {
   hour: string;
   wind: string;
   height: string;
+  rain: string;
+  fog: string;
   undo: string;
   redo: string;
   remove: string;
@@ -43,7 +45,7 @@ export interface ElectricCopy {
   wireTool: string;
   notCraftable: string;
   issuesTitle: string;
-  issues: { unpowered: string; short: string; unwired: string; overload: string };
+  issues: { unpowered: string; short: string; unwired: string; uphill: string; overload: string };
   wireErrors: { type: string; taken: string; self: string; missing: string };
   readonly: string;
   ready: string;
@@ -84,6 +86,8 @@ const EN: ElectricCopy = {
   hour: "Time of day",
   wind: "Wind",
   height: "Turbine height",
+  rain: "Rain",
+  fog: "Fog",
   undo: "Undo",
   redo: "Redo",
   remove: "Delete",
@@ -112,6 +116,7 @@ const EN: ElectricCopy = {
     unpowered: "gets power, but not enough to work",
     short: "feeds its own output back into an input: the game counts that input as 0",
     unwired: "has nothing plugged into its power input",
+    uphill: "doesn't get water: it sits too high for the water to reach it without a pump",
     overload: "A loop keeps changing every frame: the game would flicker here.",
   },
   wireErrors: {
@@ -164,6 +169,14 @@ const EN: ElectricCopy = {
     door: "Door open",
     knocked: "Knocked down",
     playing: "Playing",
+    liquid: "Water",
+    kind: "Kind",
+    flow: "Flow",
+    drainWater: "Being used (per second)",
+    pushTo: "Pushing to",
+    fresh: "Fresh water in the tank",
+    spraying: "Watering",
+    pump: "Pump",
   },
   actions: {
     power: "On / off",
@@ -183,6 +196,10 @@ const EN: ElectricCopy = {
     ammo: "Ammo",
     knock: "Knock down",
     play: "Play music",
+    water: "Water inside",
+    salt: "Salt water",
+    fresh: "Fresh water source (river or lake)",
+    height: "Height (m)",
   },
   yes: "yes",
   no: "no",
@@ -210,6 +227,8 @@ const ES: ElectricCopy = {
   hour: "Hora del día",
   wind: "Viento",
   height: "Altura del molino",
+  rain: "Lluvia",
+  fog: "Niebla",
   undo: "Deshacer",
   redo: "Rehacer",
   remove: "Borrar",
@@ -238,6 +257,7 @@ const ES: ElectricCopy = {
     unpowered: "recibe energía, pero no le alcanza para funcionar",
     short: "recibe en una entrada su propia salida: el juego la cuenta como 0",
     unwired: "no tiene nada enchufado en la entrada de energía",
+    uphill: "no recibe agua: está demasiado alto para que llegue sin bomba",
     overload: "Un lazo cambia en cada cuadro: en el juego esto parpadearía.",
   },
   wireErrors: {
@@ -290,6 +310,14 @@ const ES: ElectricCopy = {
     door: "Puerta abierta",
     knocked: "Caído",
     playing: "Sonando",
+    liquid: "Agua",
+    kind: "Tipo",
+    flow: "Caudal",
+    drainWater: "Se gasta (por segundo)",
+    pushTo: "Empuja a",
+    fresh: "Agua dulce en el depósito",
+    spraying: "Riega",
+    pump: "Bomba",
   },
   actions: {
     power: "Prender / apagar",
@@ -309,6 +337,10 @@ const ES: ElectricCopy = {
     ammo: "Munición",
     knock: "Voltear",
     play: "Poner música",
+    water: "Agua adentro",
+    salt: "Agua salada",
+    fresh: "Agua dulce (río o lago)",
+    height: "Altura (m)",
   },
   yes: "sí",
   no: "no",

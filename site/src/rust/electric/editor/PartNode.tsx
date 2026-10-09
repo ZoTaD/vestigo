@@ -18,7 +18,7 @@ function PartNode({ id, selected }: NodeProps) {
   if (!e) return null;
   const def = e.def;
   const name = nameOf(def.name, lang);
-  const on = e.isPowered() || (def.cat === "source" && e.sent.some((v) => v > 0)) || (def.cat === "battery" && e.isOn());
+  const on = (def.cat === "water" && e.isOn()) || e.isPowered() || (def.cat === "source" && e.sent.some((v) => v > 0)) || (def.cat === "battery" && e.isOn());
   // Aviso: un corto, o le llega energía pero no le alcanza.
   const use = e.consumptionAmount();
   const warn = e.hasFlag(Flag.Reserved7) || (use > 0 && e.currentEnergy > 0 && e.currentEnergy < use);
@@ -37,15 +37,21 @@ function PartNode({ id, selected }: NodeProps) {
           </span>
         </div>
       ))}
-      {e.outputs.map((s, i) => (
-        <div className="el-port el-out" style={{ top: at(i, e.outputs.length) }} key={`o${i}`}>
-          <Handle type="source" position={Position.Right} id={`o${i}`} className={`el-h el-t${s.type}${e.sent[i] > 0 && s.connectedTo ? " is-live" : ""}`} isConnectable={!readOnly} />
-          <span className="el-pname">
-            {s.niceName || "—"}
-            {s.connectedTo ? <b>{e.sent[i]}</b> : null}
-          </span>
-        </div>
-      ))}
+      {def.out.map((d, i) => {
+        // La salida puede ser del hijo (el "Water Out" del purificador es de su depósito).
+        const [pe, k] = e.port(i);
+        const linked = !!pe.outputs[k]?.connectedTo;
+        const v = pe.sent[k] ?? 0;
+        return (
+          <div className="el-port el-out" style={{ top: at(i, def.out.length) }} key={`o${i}`}>
+            <Handle type="source" position={Position.Right} id={`o${i}`} className={`el-h el-t${d.t}${v > 0 && linked ? " is-live" : ""}`} isConnectable={!readOnly} />
+            <span className="el-pname">
+              {d.n || "—"}
+              {linked ? <b>{v}</b> : null}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -127,7 +127,7 @@ export interface RustCopy {
   };
   raidBlocks: { toBreak: string; breaks: string; open: string };
   /** El bloque "Electricidad" de las fichas de componentes (2026-10-09). */
-  elecBlock: { title: string; inputs: string; outputs: string; uses: string; noUse: string; makes: string; battery: (out: string, cap: string) => string; tryIt: string };
+  elecBlock: { title: string; waterTitle: string; inputs: string; outputs: string; uses: string; noUse: string; makes: string; battery: (out: string, cap: string) => string; tryIt: string };
   raid: {
     h1: string;
     lede: string;
@@ -315,6 +315,7 @@ const EN: RustCopy = {
   raidBlocks: { toBreak: "What it takes to break it", breaks: "What it breaks", open: "Open in the raid calculator" },
   elecBlock: {
     title: "Electricity",
+    waterTitle: "Water",
     inputs: "Inputs",
     outputs: "Outputs",
     uses: "Power use",
@@ -517,6 +518,7 @@ const ES: RustCopy = {
   raidBlocks: { toBreak: "Lo que cuesta romperlo", breaks: "Qué rompe", open: "Abrir en la calculadora de raideo" },
   elecBlock: {
     title: "Electricidad",
+    waterTitle: "Agua",
     inputs: "Entradas",
     outputs: "Salidas",
     uses: "Consumo",

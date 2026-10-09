@@ -10,6 +10,7 @@ export default function Toolbar({ onShare }: { onShare: () => Promise<boolean> }
   const [shared, setShared] = useState<"ok" | "fail" | null>(null);
   const env = store.world.env;
   const hasWind = store.circuit.parts.some((p) => p.type === "generator.wind.scrap");
+  const hasCatcher = store.circuit.parts.some((p) => p.type.startsWith("water.catcher"));
   const day = env.hour >= 6 && env.hour < 18;
   const h = Math.floor(env.hour);
   const clock = `${String(h).padStart(2, "0")}:${String(Math.round((env.hour - h) * 60)).padStart(2, "0")}`;
@@ -44,6 +45,22 @@ export default function Toolbar({ onShare }: { onShare: () => Promise<boolean> }
               {t.height}: <b>{env.height} m</b>
             </span>
             <input type="range" min={0} max={60} step={1} value={env.height} onChange={(e) => store.setEnv({ height: Number(e.target.value) })} />
+          </label>
+        </>
+      ) : null}
+      {hasCatcher ? (
+        <>
+          <label className="el-range">
+            <span>
+              {t.rain}: <b>{Math.round(env.rain * 100)} %</b>
+            </span>
+            <input type="range" min={0} max={1} step={0.05} value={env.rain} onChange={(e) => store.setEnv({ rain: Number(e.target.value) })} />
+          </label>
+          <label className="el-range">
+            <span>
+              {t.fog}: <b>{Math.round(env.fog * 100)} %</b>
+            </span>
+            <input type="range" min={0} max={1} step={0.05} value={env.fog} onChange={(e) => store.setEnv({ fog: Number(e.target.value) })} />
           </label>
         </>
       ) : null}

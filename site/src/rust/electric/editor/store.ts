@@ -219,6 +219,25 @@ export class EditorStore {
     this.changed();
   }
 
+  /** La altura de una parte (metros; 0 = al nivel de todo). La gravedad del agua la mira. */
+  setHeight(id: string, h: number): void {
+    const p = this.circuit.parts.find((x) => x.id === id);
+    if (!p) return;
+    this.snapshot();
+    p.cfg ??= {};
+    const v = Math.round(h * 100) / 100;
+    if (v === 0) delete p.cfg.height;
+    else p.cfg.height = v;
+    const e = this.world.get(id);
+    if (e) {
+      // La parte comparte su `cfg` con la entidad: sólo hay que avisarle al circuito que cambió la geometría.
+      e.markDirtyForceUpdateOutputs();
+      e.sendChangedToRoot(true);
+      for (const s of e.inputs) s.connectedTo?.sendChangedToRoot(true);
+    }
+    this.changed();
+  }
+
   select(sel: Selection): void {
     this.selection = sel;
     this.emit();

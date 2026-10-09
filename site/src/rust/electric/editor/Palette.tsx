@@ -18,6 +18,7 @@ export default function Palette({ onAdd }: { onAdd: (type: string) => void }) {
     const out = new Map<Category, ComponentDef[]>();
     for (const cat of store.cat.data.categories) out.set(cat, []);
     for (const c of store.cat.data.components) {
+      if (c.hidden) continue;
       if (f && !fold(`${c.name.en} ${c.name.es ?? ""} ${c.id}`).includes(f)) continue;
       out.get(c.cat)?.push(c);
     }

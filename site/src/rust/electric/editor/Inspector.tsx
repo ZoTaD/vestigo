@@ -8,6 +8,7 @@ import RouteLink from "../../../RouteLink";
 import type { Route } from "../../../route";
 import type { Action, Readout } from "../engine";
 import { duration, explainPart, explainWire, issues } from "../engine/explain";
+import { waterName } from "../engine/explainWater";
 import { iconOf, nameOf, useEditor, useSim } from "./ctx";
 import { wireKey } from "./store";
 
@@ -37,6 +38,7 @@ function PartPanel({ id, route, navigate }: { id: string; route: Route; navigate
   const fmt = (r: Readout): string => {
     if (typeof r.v === "boolean") return r.v ? t.yes : t.no;
     if (r.k === "lasts" && typeof r.v === "number") return duration(r.v, lang);
+    if (r.k === "kind") return r.v ? waterName(String(r.v), lang) : "—";
     const v = typeof r.v === "number" ? num(r.v) : r.v;
     return r.of !== undefined ? `${v} / ${num(r.of)}` : String(v);
   };
@@ -68,6 +70,16 @@ function PartPanel({ id, route, navigate }: { id: string; route: Route; navigate
         ))}
       </dl>
       <Actions id={id} actions={e.actions()} />
+      {!readOnly ? (
+        <div className="el-actions">
+          <NumField
+            key={`${id}:height`}
+            label={t.actions.height}
+            action={{ k: "height", kind: "number", value: e.height, min: -100, max: 100, step: 0.5 }}
+            onSet={(v) => store.setHeight(id, v)}
+          />
+        </div>
+      ) : null}
       <h3 className="el-sub">{t.explain}</h3>
       <div className="el-why">
         {explainPart(store.world, id, lang).map((s, i) => (
@@ -83,12 +95,15 @@ function PartPanel({ id, route, navigate }: { id: string; route: Route; navigate
               <td>{s.connectedTo ? e.received[i] : "—"}</td>
             </tr>
           ))}
-          {e.outputs.map((s, i) => (
-            <tr key={`o${i}`}>
-              <th scope="row">{s.niceName || "—"} →</th>
-              <td>{s.connectedTo ? e.sent[i] : "—"}</td>
-            </tr>
-          ))}
+          {def.out.map((d, i) => {
+            const [pe, k] = e.port(i);
+            return (
+              <tr key={`o${i}`}>
+                <th scope="row">{d.n || "—"} →</th>
+                <td>{pe.outputs[k]?.connectedTo ? pe.sent[k] : "—"}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       <div className="el-row">
@@ -242,7 +257,7 @@ function Summary() {
                     {partName(i.id)}
                   </button>
                 )}
-                {i.id !== null ? ` ${t.issues[i.kind as "unpowered" | "short" | "unwired"]}` : null}
+                {i.id !== null ? ` ${t.issues[i.kind as "unpowered" | "short" | "unwired" | "uphill"]}` : null}
               </li>
             ))}
           </ul>
