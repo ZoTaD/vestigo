@@ -57,6 +57,10 @@ export const PAGES = [
   "/en/rust/items/metal-fragments",
   "/en/rust/raid",
   "/es/rust/objetos",
+  // Electricidad (2026-10-09): el editor (en frío abre la torreta solar) y el circuito listo más grande.
+  "/en/rust/electricity",
+  "/es/rust/electricidad",
+  "/en/rust/electricity/battery-backup",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */
