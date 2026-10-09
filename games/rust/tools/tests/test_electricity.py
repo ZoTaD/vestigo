@@ -132,6 +132,30 @@ class PosteDeTendido(unittest.TestCase):
         self.assertEqual((c["cls"], c["cat"], len(c["out"]), c["approx"]), ("PowergridIOAccessPoint", "source", 6, True))
 
 
+class Industrial(unittest.TestCase):
+    """La red industrial (2026-10-09)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.c = by_id(json.loads(DATA.read_text(encoding="utf-8")))
+        cls.items = json.loads(electricity.OUT_IND.read_text(encoding="utf-8"))
+
+    def test_componentes(self):
+        conv = self.c["industrial.conveyor"]
+        self.assertEqual((conv["cat"], conv["io"], conv["use"], conv["p"]["MaxStackSizePerMove"]), ("industrial", 4, 1, 60))
+        self.assertEqual([s["n"] for s in conv["out"]], ["Industrial Output", "Passthrough", "Filter Fail", "Filter Pass"])
+        self.assertEqual(self.c["box.wooden.large"]["p"]["slots"], 48)
+        f = self.c["furnace"]
+        self.assertEqual((f["p"]["smeltSpeed"], f["p"]["fuelSlots"], f["p"]["inputSlots"], f["p"]["outputSlots"], f["fuel"]), (3, 1, 2, 3, "wood"))
+        self.assertEqual(self.c["furnace.large"]["p"]["IndustrialMode"], 1)
+
+    def test_objetos(self):
+        self.assertEqual(self.items["metal.ore"]["cook"], {"into": "metal.fragments", "n": 1.0, "time": 10.0, "low": 800, "high": 1200})
+        self.assertEqual(self.items["wood"]["burn"]["fuel"], 10.0)
+        self.assertEqual(self.items["gunpowder"]["craft"], {"in": [["charcoal", 30], ["sulfur", 20]], "n": 10, "time": 2, "wb": 1})
+        self.assertEqual(self.items["ammo.rifle"]["stack"], 128)
+
+
 class VistaDeFichas(unittest.TestCase):
     """`electricity-items.json`: lo que muestra la ficha de Objetos."""
 

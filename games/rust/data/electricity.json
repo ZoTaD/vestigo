@@ -9,7 +9,8 @@
   "defense",
   "light",
   "appliance",
-  "water"
+  "water",
+  "industrial"
  ],
  "components": [
   {
@@ -3757,6 +3758,502 @@
      "amount": 1
     }
    ]
+  },
+  {
+   "id": "furnace",
+   "cls": "BaseOven",
+   "cat": "industrial",
+   "io": 4,
+   "name": {
+    "en": "Furnace",
+    "es": "Horno"
+   },
+   "slug": "furnace",
+   "slugEs": "horno",
+   "in": [
+    {
+     "n": "Industrial In",
+     "t": 4,
+     "m": 0,
+     "h": 0.12
+    },
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1,
+     "h": 0.12
+    }
+   ],
+   "out": [
+    {
+     "n": "Industrial Out",
+     "t": 4,
+     "m": 1,
+     "h": 0.12
+    },
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1,
+     "h": 0.12
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "smeltSpeed": 3,
+    "fuelSlots": 1,
+    "inputSlots": 2,
+    "outputSlots": 3,
+    "IndustrialMode": 0,
+    "temperature": 3,
+    "allowByproductCreation": 1,
+    "slots": 6,
+    "cookingTemperature": 1000
+   },
+   "adaptor": true,
+   "craft": [
+    {
+     "id": "stones",
+     "amount": 200
+    },
+    {
+     "id": "wood",
+     "amount": 100
+    },
+    {
+     "id": "lowgradefuel",
+     "amount": 50
+    }
+   ],
+   "fuel": "wood"
+  },
+  {
+   "id": "industrial.combiner",
+   "cls": "ElectricalCombiner",
+   "cat": "industrial",
+   "io": 4,
+   "name": {
+    "en": "Industrial Combiner",
+    "es": "Combinador industrial"
+   },
+   "slug": "industrial-combiner",
+   "slugEs": "combinador-industrial",
+   "in": [
+    {
+     "n": "Industrial In 1",
+     "t": 4,
+     "m": 1,
+     "h": 0.13
+    },
+    {
+     "n": "Industrial In 2",
+     "t": 4,
+     "m": 1,
+     "h": 0.0
+    },
+    {
+     "n": "Industrial In 3",
+     "t": 4,
+     "m": 1,
+     "h": -0.13
+    }
+   ],
+   "out": [
+    {
+     "n": "Industrial Out",
+     "t": 4,
+     "m": 0,
+     "h": 0.0
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "industrial.conveyor",
+   "cls": "IndustrialConveyor",
+   "cat": "industrial",
+   "io": 4,
+   "name": {
+    "en": "Industrial Conveyor",
+    "es": "Transportador industrial"
+   },
+   "slug": "industrial-conveyor",
+   "slugEs": "transportador-industrial",
+   "in": [
+    {
+     "n": "Industrial Input",
+     "t": 4,
+     "m": 0,
+     "h": 0.0
+    },
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1,
+     "h": 0.12
+    },
+    {
+     "n": "Turn On",
+     "t": 0,
+     "m": 0,
+     "h": -0.13
+    },
+    {
+     "n": "Turn Off",
+     "t": 0,
+     "m": 0,
+     "h": -0.13
+    }
+   ],
+   "out": [
+    {
+     "n": "Industrial Output",
+     "t": 4,
+     "m": 1,
+     "h": 0.0
+    },
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1,
+     "h": 0.12
+    },
+    {
+     "n": "Filter Fail",
+     "t": 0,
+     "m": 1,
+     "h": -0.13
+    },
+    {
+     "n": "Filter Pass",
+     "t": 0,
+     "m": 1,
+     "h": -0.13
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {
+    "MaxStackSizePerMove": 60
+   },
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "industrial.crafter",
+   "cls": "IndustrialCrafter",
+   "cat": "industrial",
+   "io": 4,
+   "name": {
+    "en": "Industrial Crafter",
+    "es": "Elaborador industrial"
+   },
+   "slug": "industrial-crafter",
+   "slugEs": "elaborador-industrial",
+   "in": [
+    {
+     "n": "Industrial In",
+     "t": 4,
+     "m": 0,
+     "h": 0.07
+    },
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1,
+     "h": 0.15
+    },
+    {
+     "n": "Toggle",
+     "t": 0,
+     "m": 0,
+     "h": 0.15
+    },
+    {
+     "n": "Blueprints In",
+     "t": 4,
+     "m": 0,
+     "h": 0.21
+    },
+    {
+     "n": "Turn On",
+     "t": 0,
+     "m": 0,
+     "h": 0.15
+    },
+    {
+     "n": "Turn Off",
+     "t": 0,
+     "m": 0,
+     "h": 0.15
+    }
+   ],
+   "out": [
+    {
+     "n": "Industrial Out",
+     "t": 4,
+     "m": 1,
+     "h": 0.07
+    },
+    {
+     "n": "Blueprint Out",
+     "t": 4,
+     "m": 1,
+     "h": 0.21
+    }
+   ],
+   "use": 1,
+   "useSrc": "base",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.refined",
+     "amount": 3
+    },
+    {
+     "id": "techparts",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "id": "industrial.splitter",
+   "cls": "Splitter",
+   "cat": "industrial",
+   "io": 4,
+   "name": {
+    "en": "Industrial Splitter",
+    "es": "Divisor industrial"
+   },
+   "slug": "industrial-splitter",
+   "slugEs": "divisor-industrial",
+   "in": [
+    {
+     "n": "Industrial In",
+     "t": 4,
+     "m": 1,
+     "h": 0.18
+    }
+   ],
+   "out": [
+    {
+     "n": "Industrial Out 1",
+     "t": 4,
+     "m": 0,
+     "h": 0.0
+    },
+    {
+     "n": "Industrial Out 2",
+     "t": 4,
+     "m": 1,
+     "h": -0.22
+    },
+    {
+     "n": "Industrial Out 3",
+     "t": 4,
+     "m": 1,
+     "h": 0.0
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {},
+   "craft": [
+    {
+     "id": "metal.fragments",
+     "amount": 75
+    }
+   ]
+  },
+  {
+   "id": "furnace.large",
+   "cls": "BaseOven",
+   "cat": "industrial",
+   "io": 4,
+   "name": {
+    "en": "Large Furnace",
+    "es": "Horno grande"
+   },
+   "slug": "large-furnace",
+   "slugEs": "horno-grande",
+   "in": [
+    {
+     "n": "Industrial In",
+     "t": 4,
+     "m": 0,
+     "h": 0.12
+    },
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1,
+     "h": 0.12
+    }
+   ],
+   "out": [
+    {
+     "n": "Industrial Out",
+     "t": 4,
+     "m": 1,
+     "h": 0.12
+    },
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1,
+     "h": 0.12
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "smeltSpeed": 15,
+    "fuelSlots": 2,
+    "inputSlots": 5,
+    "outputSlots": 10,
+    "IndustrialMode": 1,
+    "temperature": 3,
+    "allowByproductCreation": 1,
+    "slots": 18,
+    "cookingTemperature": 1000
+   },
+   "adaptor": true,
+   "craft": [
+    {
+     "id": "stones",
+     "amount": 500
+    },
+    {
+     "id": "wood",
+     "amount": 600
+    },
+    {
+     "id": "lowgradefuel",
+     "amount": 75
+    }
+   ],
+   "fuel": "wood"
+  },
+  {
+   "id": "box.wooden.large",
+   "cls": "BoxStorage",
+   "cat": "industrial",
+   "io": 4,
+   "name": {
+    "en": "Large Wood Box",
+    "es": "Caja grande de madera"
+   },
+   "slug": "large-wood-box",
+   "slugEs": "caja-grande-de-madera",
+   "in": [
+    {
+     "n": "Industrial In",
+     "t": 4,
+     "m": 0,
+     "h": 0.12
+    },
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1,
+     "h": 0.12
+    }
+   ],
+   "out": [
+    {
+     "n": "Industrial Out",
+     "t": 4,
+     "m": 1,
+     "h": 0.12
+    },
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1,
+     "h": 0.12
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "slots": 48
+   },
+   "adaptor": true,
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 250
+    },
+    {
+     "id": "metal.fragments",
+     "amount": 50
+    }
+   ]
+  },
+  {
+   "id": "box.wooden",
+   "cls": "BoxStorage",
+   "cat": "industrial",
+   "io": 4,
+   "name": {
+    "en": "Wood Storage Box",
+    "es": "Caja pequeña de madera"
+   },
+   "slug": "wood-storage-box",
+   "slugEs": "caja-pequena-de-madera",
+   "in": [
+    {
+     "n": "Industrial In",
+     "t": 4,
+     "m": 0,
+     "h": 0.12
+    },
+    {
+     "n": "Power In",
+     "t": 0,
+     "m": 1,
+     "h": 0.12
+    }
+   ],
+   "out": [
+    {
+     "n": "Industrial Out",
+     "t": 4,
+     "m": 1,
+     "h": 0.12
+    },
+    {
+     "n": "Passthrough",
+     "t": 0,
+     "m": 1,
+     "h": 0.12
+    }
+   ],
+   "use": 0,
+   "useSrc": "code",
+   "p": {
+    "slots": 18
+   },
+   "adaptor": true,
+   "craft": [
+    {
+     "id": "wood",
+     "amount": 100
+    }
+   ]
   }
  ],
  "names": {
@@ -3771,6 +4268,10 @@
   "gears": {
    "en": "Gears",
    "es": "Engranajes"
+  },
+  "lowgradefuel": {
+   "en": "Low Grade Fuel",
+   "es": "Combustible de grado bajo"
   },
   "metal.fragments": {
    "en": "Metal Fragments",
@@ -3787,6 +4288,10 @@
   "sheetmetal": {
    "en": "Sheet Metal",
    "es": "Chapa metálica"
+  },
+  "stones": {
+   "en": "Stones",
+   "es": "Piedras"
   },
   "targeting.computer": {
    "en": "Targeting Computer",

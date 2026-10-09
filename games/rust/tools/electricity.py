@@ -35,8 +35,11 @@ OUT = ROOT / "data" / "electricity.json"
 OUT_ITEMS = ROOT / "data" / "electricity-items.json"
 ELECTRIC = 0
 FLUID = 1
-# Las redes que entran al editor: energía y agua (2026-10-09). Industrial (4) se suma en su plan.
-NETS = {ELECTRIC, FLUID}
+INDUSTRIAL = 4
+# Las redes que entran al editor: energía, agua e industrial (2026-10-09).
+NETS = {ELECTRIC, FLUID, INDUSTRIAL}
+IND = ROOT / "cache" / "industrial"
+OUT_IND = ROOT / "data" / "industrial-items.json"
 
 
 def slots(raw):
@@ -78,7 +81,7 @@ def config_range(configs, name):
 
 def params(cls, d, configs):
     """Los campos del prefab que usa el motor; los de contenedor de agua y las tasas del colector, si corresponde."""
-    keys = list(ov.PARAMS.get(cls, []))
+    keys = list(ov.PARAMS.get(cls, [])) + (ov.CONVEYOR_PARAMS if cls == "IndustrialConveyor" else [])
     if cls in ov.LIQUID_CLASSES:
         keys += ov.LIQUID_PARAMS
     p = {k: d[k] for k in keys if k in d}
@@ -92,6 +95,8 @@ def params(cls, d, configs):
 def category(cls, d):
     if d.get("ioType") == FLUID or cls in ov.WATER_CLASSES:
         return "water"
+    if d.get("ioType") == INDUSTRIAL:
+        return "industrial"
     return ov.CATEGORY.get(cls, "appliance")
 
 
@@ -111,6 +116,93 @@ def powerline_pole(by_path):
         "in": slots(d.get("inputs", [])), "out": slots(d.get("outputs", [])), "use": 0, "useSrc": "nocode",
         "p": {}, "craft": [], "approx": True,
     }
+
+
+def load_ind(name):
+    return json.loads((IND / f"{name}.json").read_text(encoding="utf-8"))
+
+
+def by_root(entries):
+    """La instancia que es la raíz de su prefab (no las copias puestas en los monumentos)."""
+    return {e["ctx"]["go"]: e["data"] for e in entries if e["ctx"].get("go", "").startswith("assets/") and e["ctx"].get("root") == e["ctx"]["go"]}
+
+
+def containers(by_path, items, names):
+    """Cajas y hornos con el adaptador puesto: los enchufes del adaptador y el inventario de su contenedor."""
+    ad = by_path[ov.ADAPTOR]["data"]
+    deploys = load_ind("deploys")
+    boxes, ovens = by_root(load_ind("BoxStorage")), by_root(load_ind("BaseOven"))
+    sid_of_go = {i["go"]: i["sid"] for i in load_ind("items")}
+    out = []
+    for sid in ov.CONTAINERS:
+        path = deploys[sid]["deploy"]
+        site = items[sid]
+        if path in ovens:
+            d = ovens[path]
+            cls = "BaseOven"
+            p = {k: d[k] for k in ov.OVEN_PARAMS}
+            p["slots"] = d["inventorySlots"]
+            p["cookingTemperature"] = ov.OVEN_TEMPERATURE[d["temperature"]]
+            fuel = sid_of_go.get((d.get("fuelType") or {}).get("go"))
+            fuel_type = fuel
+        else:
+            d = boxes[path]
+            cls = "BoxStorage"
+            p = {"slots": d["inventorySlots"]}
+            fuel_type = None
+        c = {
+            "id": sid, "cls": cls, "cat": "industrial", "io": ad.get("ioType", 0),
+            "name": site["name"], "slug": site["slug"], "slugEs": site["slugEs"],
+            "in": slots(ad["inputs"]), "out": slots(ad["outputs"]), "use": 0, "useSrc": "code",
+            "p": p, "adaptor": True,
+            "craft": [{"id": g["id"], "amount": g["amount"]} for g in (site.get("craft") or {}).get("ingredients", [])],
+        }
+        if fuel_type:
+            c["fuel"] = fuel_type
+        for g in c["craft"]:
+            names[g["id"]] = items[g["id"]]["name"] if g["id"] in items else {"en": g["id"], "es": None}
+        out.append(c)
+    return out
+
+
+def industrial_items(site_items):
+    """
+    Lo que la red industrial necesita de cada objeto: pila, categoría, si se funde (`ItemModCookable`: en qué, cuánto,
+    en cuánto tiempo y a qué temperatura), si es combustible (`ItemModBurnable`) y su receta (para el crafteador).
+    """
+    ind = {i["sid"]: i for i in load_ind("items")}
+    sid_of_go = {i["go"]: i["sid"] for i in ind.values()}
+    cook = {}
+    for e in load_ind("ItemModCookable"):
+        go = e["ctx"].get("go")
+        if go in sid_of_go and e["data"].get("becomeOnCooked"):
+            d = e["data"]
+            cook[sid_of_go[go]] = {"into": sid_of_go.get(d["becomeOnCooked"].get("go")), "n": d["amountOfBecome"],
+                                   "time": d["cookTime"], "low": d["lowTemp"], "high": d["highTemp"]}
+    burn = {}
+    for e in load_ind("ItemModBurnable"):
+        go = e["ctx"].get("go")
+        if go in sid_of_go:
+            d = e["data"]
+            burn[sid_of_go[go]] = {"fuel": d["fuelAmount"], "by": sid_of_go.get((d.get("byproductItem") or {}).get("go")),
+                                   "byN": d["byproductAmount"], "byChance": d["byproductChance"]}
+    out = {}
+    for i in site_items.values():
+        if not i.get("slug"):
+            continue
+        sid = i["id"]
+        row = {"stack": (ind.get(sid) or {}).get("stackable") or i.get("stack") or 1, "cat": i["category"],
+               "name": i["name"]}
+        if sid in cook and cook[sid]["into"]:
+            row["cook"] = cook[sid]
+        if sid in burn:
+            row["burn"] = burn[sid]
+        cr = i.get("craft")
+        if cr:
+            row["craft"] = {"in": [[g["id"], g["amount"]] for g in cr["ingredients"]], "n": cr["amount"], "time": cr["time"],
+                            "wb": cr["workbench"]}
+        out[sid] = row
+    return dict(sorted(out.items()))
 
 
 def build():
@@ -172,6 +264,7 @@ def build():
                 c["out"] += [{**o, "v": i} for i, o in enumerate(slots(cd.get("outputs", [])))]
             comps.append(c)
     comps.append(powerline_pole(by_path))
+    comps += containers(by_path, items, names)
     order = {k: i for i, k in enumerate(ov.CATEGORIES)}
     comps.sort(key=lambda c: (order[c["cat"]], c["name"]["en"].lower(), c["id"]))
     for w in ("water", "water.salt"):
@@ -198,6 +291,8 @@ def main():
     doc = build()
     OUT.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     OUT_ITEMS.write_text(json.dumps(items_view(doc), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    site = {i["id"]: i for i in json.loads(ITEMS.read_text(encoding="utf-8"))["items"]}
+    OUT_IND.write_text(json.dumps(industrial_items(site), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print(f"[electricity] {len(doc['components'])} componentes en {OUT}")
 
 
