@@ -17,7 +17,9 @@ describe("la copia de Rust", () => {
 
   it("los títulos empiezan por lo que se busca", () => {
     expect(RUST_COPY.en.seo.home.title).toMatch(/^Rust Guide/);
-    expect(RUST_COPY.es.seo.home.title).toMatch(/^Rust en español/);
+    expect(RUST_COPY.es.seo.home.title).toMatch(/^Guía de Rust/);
+    // Inglés primero: el español no se vende como ventaja (2026-10-09).
+    for (const lang of ["en", "es"] as const) expect(JSON.stringify(RUST_COPY[lang].home) + RUST_COPY[lang].seo.home.title).not.toMatch(/en español|in spanish/i);
     expect(RUST_COPY.en.seo.raid.title).toMatch(/^Rust Raid Calculator/);
     expect(RUST_COPY.es.seo.raid.title).toMatch(/^Calculadora de raideo de Rust/);
   });

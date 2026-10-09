@@ -77,7 +77,7 @@ describe("Rust en el sitemap y el <head>", () => {
 
   it("el título empieza por lo que se busca, en cada idioma", () => {
     expect(metaFor(parseRoute("/en/rust"), "en", null).title).toMatch(/^Rust Guide/);
-    expect(metaFor(parseRoute("/es/rust"), "es", null).title).toMatch(/^Rust en español/);
+    expect(metaFor(parseRoute("/es/rust"), "es", null).title).toMatch(/^Guía de Rust/);
   });
 
   it("la página prerenderizada tiene canonical, hreflang y el idioma", () => {

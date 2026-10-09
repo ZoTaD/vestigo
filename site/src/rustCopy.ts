@@ -354,7 +354,7 @@ const ES: RustCopy = {
   soonTabs: ["Monumentos", "Electricidad", "Granjas", "Servidor", "Parches"],
   seo: {
     home: {
-      title: "Rust en español: objetos, crafteo, reciclaje y calculadora de raideo | Vestigo",
+      title: "Guía de Rust: objetos, crafteo, reciclaje y calculadora de raideo | Vestigo",
       description: "Todos los objetos de Rust con su crafteo, lo que dan al reciclarlos y dónde aparecen, la calculadora de raideo y la cuenta regresiva al próximo wipe.",
     },
     items: {
@@ -506,7 +506,7 @@ const ES: RustCopy = {
   },
   home: {
     kicker: "Rust",
-    h1: "Guía de Rust en español",
+    h1: "Guía de Rust",
     searchLabel: "Buscar un objeto",
     lede: (items, recipes) => `${items} objetos con su crafteo, reciclaje y dónde aparecen, ${recipes} recetas y la calculadora de raideo para saber cuánto azufre cuesta entrar.`,
     slotsTitle: "Lo más buscado",
@@ -525,7 +525,7 @@ const ES: RustCopy = {
     ],
     aboutTitle: "Sobre esta guía",
     about: (items, recipes) => [
-      `Todo Rust en un lugar y en español: ${items} objetos con sus nombres oficiales, ${recipes} recetas de crafteo con el banco y el tiempo que piden, lo que da cada objeto en el reciclador y dónde aparece.`,
+      `Todo Rust en un lugar: ${items} objetos con sus nombres oficiales, ${recipes} recetas de crafteo con el banco y el tiempo que piden, lo que da cada objeto en el reciclador y dónde aparece.`,
       "La calculadora de raideo te dice cuántos explosivos lleva cada pared, puerta o deployable y cuánto azufre cuesta. Sin cuenta, y cada página tiene un link para compartir.",
     ],
   },
