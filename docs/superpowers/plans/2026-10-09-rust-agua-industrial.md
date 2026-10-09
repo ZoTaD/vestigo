@@ -52,33 +52,43 @@ Números de los prefabs y de `WaterCatcherCollectRate` de la caché del build 25
 
 ## Dudas (anotadas, no inventadas)
 
-1. `server.waterContainersLeaveWaterBehind`: se asume `false` (no se confirmó el valor por defecto).
+1. ~~`server.waterContainersLeaveWaterBehind`~~ **Resuelta:** es `false` por defecto (`ConVar/Server.cs`).
 2. El aspersor pide 2 por segundo en el decompilado (`ConsumptionAmount`); el prefab actual dice 15 por salpicada cada
    5 s. Se sigue el código.
 3. El purificador sin energía (necesita fuego) queda afuera: el editor no tiene fuego.
-4. Los valores por defecto de `server.conveyorMoveFrequency` y `server.maxItemStacksMovedPerTickIndustrial` (ver la
-   tarea de industrial).
+4. ~~Valores por defecto de las convars industriales~~ **Resuelta** (`ConVar/Server.cs`): `conveyorMoveFrequency` 5 s,
+   `industrialCrafterFrequency` 5 s, `maxItemStacksMovedPerTickIndustrial` 12, `industrialAllowQuickMove` sí.
+5. **Datos de fundir y hornos:** no estaban en la caché; salieron del juego instalado (build 25797961) con
+   `games/rust/tools/extract_industrial.py` a `games/rust/cache/industrial/` (tiempos y temperaturas de
+   `ItemModCookable`, combustible de `ItemModBurnable`, ranuras y velocidad de cada `BaseOven`, ranuras de cada caja).
+6. **Carbón:** el juego tira un dado por cada leño (`Random > byproductChance` → 75 %); el simulador lo hace sin azar
+   (un carbón cada vez que se juntan 0,75 + 0,75…), así da lo mismo en promedio y los tests son reproducibles.
+7. **Cajas y hornos con adaptador:** el adaptador es otra entidad puesta sobre el contenedor; en el editor van juntos en
+   una parte. El horno eléctrico queda afuera (su energía entra por otra entidad hija, `ElectricFurnaceIO`).
+8. **La cinta busca orígenes y destinos en cada vuelta** (el juego lo hace cuando cambia la red): mismo resultado.
+9. **El horno no se prende vacío** (`StartCooking` pide combustible) y se apaga cuando se le acaba: un horno automático
+   arranca con algo de leña adentro, como en el juego.
 
 ## Tareas
 
 ### Agua
-- [ ] **W1.** Datos: componentes de agua (`net` por enchufe, altura de cada enchufe `h`, `ioType`, parámetros de
+- [x] **W1.** Datos: componentes de agua (`net` por enchufe, altura de cada enchufe `h`, `ioType`, parámetros de
   contenedor/bomba/colector/purificador/aspersor, depósito hijo del purificador, tasas del colector). Tests Python.
-- [ ] **W2.** Motor: altura por parte, regla de gravedad en `UpdateOutputs`, `FindGravitySource`,
+- [x] **W2.** Motor: altura por parte, regla de gravedad en `UpdateOutputs`, `FindGravitySource`,
   `AllowLiquidPassthrough`, inventario de agua (tipo + cantidad). Tests.
-- [ ] **W3.** `LiquidContainer` (caudal, empuje, consumo), bomba, colector, barril, splitter/combinador de agua,
+- [x] **W3.** `LiquidContainer` (caudal, empuje, consumo), bomba, colector, barril, splitter/combinador de agua,
   interruptor de fluidos, aspersor, purificador + depósito. Tests con casos del código.
-- [ ] **W4.** Explicar, avisos (el agua no sube), codec v2 (altura, salada, lluvia/niebla/nieve; la v1 sigue abriendo).
-- [ ] **W5.** Editor: altura y agua en el inspector, lluvia/niebla en la barra, categoría "Agua" en la paleta.
-- [ ] **W6.** Circuitos listos: riego de granja, purificador con bomba, colector a barril. Páginas y tests.
+- [x] **W4.** Explicar, avisos (el agua no sube), codec v2 (altura, salada, lluvia/niebla/nieve; la v1 sigue abriendo).
+- [x] **W5.** Editor: altura y agua en el inspector, lluvia/niebla en la barra, categoría "Agua" en la paleta.
+- [x] **W6.** Circuitos listos: riego de granja, purificador con bomba, colector a barril. Páginas y tests.
 
 ### Industrial
-- [ ] **I1.** Datos: cinta, crafteador, adaptador, splitter/combinador industrial, cajas y hornos con sus rangos de
+- [x] **I1.** Datos: cinta, crafteador, adaptador, splitter/combinador industrial, cajas y hornos con sus rangos de
   ranuras; objetos (pila y categoría) y recetas.
-- [ ] **I2.** Motor: inventarios de objetos, `FindContainerSource`, cinta con filtros y modos, salidas de filtro.
-- [ ] **I3.** Horno (fundir con combustible) y crafteador industrial. Tests con casos del código.
-- [ ] **I4.** Codec (contenidos de cajas y filtros), editor (contenido e filtros en el inspector), explicar.
-- [ ] **I5.** Circuitos listos: clasificador, horno automático, autocrafteo. Páginas y tests.
+- [x] **I2.** Motor: inventarios de objetos, `FindContainerSource`, cinta con filtros y modos, salidas de filtro.
+- [x] **I3.** Horno (fundir con combustible) y crafteador industrial. Tests con casos del código.
+- [x] **I4.** Codec (contenidos de cajas y filtros), editor (contenido e filtros en el inspector), explicar.
+- [x] **I5.** Circuitos listos: clasificador, horno automático, autocrafteo. Páginas y tests.
 
 ### Cierre
 - [ ] **Z.** vitest entero, Python, build (tiempo y RAM), perf con las páginas nuevas, capturas.

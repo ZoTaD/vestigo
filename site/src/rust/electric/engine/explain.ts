@@ -154,7 +154,8 @@ export function issues(world: World, circuit: Circuit): Issue[] {
     if (!e) continue;
     const main = e.inputs.findIndex((s) => s.mainPowerSlot && s.type === 0);
     if (e.hasFlag(Flag.Reserved7)) out.push({ id: p.id, kind: "short" });
-    else if (main >= 0 && !e.inputs[main].connectedTo && e.def.cat !== "battery" && e.def.cat !== "sensor" && e.def.cat !== "switch" && e.def.cat !== "logic" && e.def.cat !== "route") out.push({ id: p.id, kind: "unwired" });
+    // La entrada de energía del adaptador de una caja u horno es opcional (sólo alimenta su "Passthrough").
+    else if (main >= 0 && !e.inputs[main].connectedTo && !e.def.adaptor && e.def.cat !== "battery" && e.def.cat !== "sensor" && e.def.cat !== "switch" && e.def.cat !== "logic" && e.def.cat !== "route") out.push({ id: p.id, kind: "unwired" });
     else if (main >= 0 && e.inputs[main].connectedTo && e.consumptionAmount() > 0 && e.currentEnergy > 0 && e.currentEnergy < e.consumptionAmount()) out.push({ id: p.id, kind: "unpowered" });
   }
   // El agua que no sube: un aviso por destino.

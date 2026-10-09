@@ -24,8 +24,9 @@ nunca en paralelo ni con otro proceso del juego abierto, y mirá antes la RAM li
 5. `python games/rust/tools/raid.py` (vida, protección y daño para la calculadora de raideo; ~30 s).
 6. `python games/rust/tools/site_data.py` (los archivos que baja la pestaña Objetos; un segundo).
    Después, `python games/rust/tools/extract_io.py` (la caché de electricidad, ~12 GB de RAM; uno por vez) y
-   `python games/rust/tools/electricity.py` (los componentes de la pestaña Electricidad, `electricity.json` y
-   `electricity-items.json`; un segundo, lee la caché y `items.json`). Si cambió el comportamiento de un componente en
+   `python games/rust/tools/extract_industrial.py` (hornos, cajas, fundir; ~7,5 GB) y
+   `python games/rust/tools/electricity.py` (los componentes de la pestaña Electricidad —energía, agua e industrial—,
+   `electricity.json`, `electricity-items.json` e `industrial-items.json`; un segundo, lee la caché y `items.json`). Si cambió el comportamiento de un componente en
    el juego, el motor (`site/src/rust/electric/engine/`) se revisa contra el código decompilado; ver
    `docs/superpowers/plans/2026-10-09-rust-electricidad.md`.
 7. `python games/rust/tools/ui.py` (el fondo de la portada y su vista previa): sólo cuando cambia el fondo, no en cada
