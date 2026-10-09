@@ -59,9 +59,9 @@ describe("la portada de Rust", () => {
     const html = render("es", "/es/rust");
     expect(html).toContain('href="/es/rust/objetos"');
     expect(html).toContain('href="/es/rust/raideo"');
-    expect(html).toMatch(/class="rs-tab is-soon"[^>]*>Servidor</);
+    expect(html).toMatch(/class="rs-tab is-soon"[^>]*>Electricidad</);
     // Las de la etapa 2 que ya tienen página (2026-10-09) enlazan, y la portada las ofrece como herramientas.
-    for (const tab of ["monumentos", "granjas", "parches"]) expect(html).toContain(`href="/es/rust/${tab}"`);
+    for (const tab of ["monumentos", "granjas", "servidor", "parches"]) expect(html).toContain(`href="/es/rust/${tab}"`);
   });
 
   it("antes de tener reloj (el prerender) muestra el día del wipe sin la cuenta", () => {

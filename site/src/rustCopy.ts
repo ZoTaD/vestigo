@@ -9,7 +9,7 @@ import type { EffectStat, HowKind, LootEvent, LootKind, ModStat, RecyclerKey } f
 import type { RustSection, RustTab } from "./route";
 
 /** Las pestañas, en el orden en que se dibujan. */
-export const RUST_TABS: RustSection[] = ["home", "items", "raid", "monuments", "farming", "patches"];
+export const RUST_TABS: RustSection[] = ["home", "items", "raid", "monuments", "farming", "server", "patches"];
 
 type Seo = { title: string; description: string };
 
@@ -167,9 +167,9 @@ export interface RustCopy {
 }
 
 const EN: RustCopy = {
-  tabs: { home: "Home", items: "Items", raid: "Raid", monuments: "Monuments", farming: "Farming", patches: "Patches" },
+  tabs: { home: "Home", items: "Items", raid: "Raid", monuments: "Monuments", farming: "Farming", server: "Server", patches: "Patches" },
   soon: "Soon",
-  soonTabs: ["Electricity", "Server"],
+  soonTabs: ["Electricity"],
   seo: {
     home: {
       title: "Rust Guide: Items, Crafting, Recycling and Raid Calculator | Vestigo",
@@ -190,6 +190,10 @@ const EN: RustCopy = {
     monuments: {
       title: "Rust Monuments: Keycards, Fuses, Recyclers and the Power Grid | Vestigo",
       description: "Every Rust monument with its keycard puzzle, fuses, recyclers, radiation, safe zone, shops and what the Power Trip grid turns on at each stage.",
+    },
+    server: {
+      title: "Rust Server Commands and Convars: Full List, Wipe Calendar and server.cfg | Vestigo",
+      description: "Every Rust console command and convar with its default value and what it does, the forced wipe calendar and a startup line and server.cfg generator.",
     },
     patches: {
       title: "Rust Patch Notes: Every Monthly Update | Vestigo",
@@ -353,6 +357,7 @@ const EN: RustCopy = {
       { tab: "raid", title: "Raid calculator", text: "Explosives and sulfur for any wall, door or deployable." },
       { tab: "monuments", title: "Monuments", text: "Keycards, fuses, recyclers, radiation and the Power Trip grid of every monument." },
       { tab: "farming", title: "Farming and genetics", text: "Plants, crossbreeding calculator, compost and animals." },
+      { tab: "server", title: "Server", text: "Every console command and convar, the wipe calendar and a server.cfg generator." },
       { tab: "patches", title: "Patch notes", text: "Every monthly update since 2024, with links to the items it mentions." },
     ],
     aboutTitle: "About this guide",
@@ -364,9 +369,9 @@ const EN: RustCopy = {
 };
 
 const ES: RustCopy = {
-  tabs: { home: "Portada", items: "Objetos", raid: "Raideo", monuments: "Monumentos", farming: "Granjas", patches: "Parches" },
+  tabs: { home: "Portada", items: "Objetos", raid: "Raideo", monuments: "Monumentos", farming: "Granjas", server: "Servidor", patches: "Parches" },
   soon: "Pronto",
-  soonTabs: ["Electricidad", "Servidor"],
+  soonTabs: ["Electricidad"],
   seo: {
     home: {
       title: "Guía de Rust: objetos, crafteo, reciclaje y calculadora de raideo | Vestigo",
@@ -387,6 +392,10 @@ const ES: RustCopy = {
     monuments: {
       title: "Monumentos de Rust: tarjetas, fusibles, recicladoras y la red eléctrica | Vestigo",
       description: "Cada monumento de Rust con su puzzle de tarjetas, fusibles, recicladoras, radiación, zona segura, tiendas y lo que prende la red de Power Trip.",
+    },
+    server: {
+      title: "Comandos y convars del servidor de Rust: lista completa, wipes y server.cfg | Vestigo",
+      description: "Todos los comandos y convars de consola de Rust con su valor por defecto y para qué sirven, el calendario de wipes y un generador de server.cfg.",
     },
     patches: {
       title: "Parches de Rust: las notas de cada actualización | Vestigo",
@@ -551,6 +560,7 @@ const ES: RustCopy = {
       { tab: "raid", title: "Calculadora de raideo", text: "Explosivos y azufre para cada pared, puerta o deployable." },
       { tab: "monuments", title: "Monumentos", text: "Tarjetas, fusibles, recicladoras, radiación y la red de Power Trip de cada monumento." },
       { tab: "farming", title: "Granjas y genética", text: "Plantas, calculadora de cruzas, compost y animales." },
+      { tab: "server", title: "Servidor", text: "Todos los comandos y convars de consola, el calendario de wipes y un generador de server.cfg." },
       { tab: "patches", title: "Parches", text: "Cada actualización mensual desde 2024, con enlaces a los objetos que nombra." },
     ],
     aboutTitle: "Sobre esta guía",

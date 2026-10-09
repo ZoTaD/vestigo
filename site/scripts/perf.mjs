@@ -69,6 +69,8 @@ export const PAGES = [
   "/en/rust/monuments",
   "/en/rust/monuments/bandit-camp",
   "/es/rust/monumentos/complejo-de-apartamentos",
+  // Servidor (2026-10-09): 1.384 convars de a tandas.
+  "/en/rust/server",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

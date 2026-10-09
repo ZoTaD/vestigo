@@ -11,6 +11,7 @@ import { RUST_COPY, type RustHas } from "./rustCopy";
 import { FARMING_COPY } from "./rust/farming/copy";
 import { PATCHES_COPY } from "./rust/patches/copy";
 import { MONUMENTS_COPY } from "./rust/monuments/copy";
+import { SERVER_COPY } from "./rust/server/copy";
 import { esHeadNames } from "./zomboid/headName";
 
 /** La copia del sitio con Deadlock y los textos de SEO adentro (viven en módulos aparte desde el 2026-09-25). */
@@ -368,8 +369,8 @@ export function jsonLdFor(
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
     const genetics = sec === "farming" && route.detail === "genetics";
-    if (sec === "home" || sec === "raid" || genetics) {
-      const appName = genetics ? FARMING_COPY[lang].calc.h1 : sec === "raid" ? RUST_COPY[lang].raid.h1 : RUST_COPY[lang].home.h1;
+    if (sec === "home" || sec === "raid" || sec === "server" || genetics) {
+      const appName = genetics ? FARMING_COPY[lang].calc.h1 : sec === "server" ? SERVER_COPY[lang].h1 : sec === "raid" ? RUST_COPY[lang].raid.h1 : RUST_COPY[lang].home.h1;
       out.push({
         "@context": "https://schema.org", "@type": "WebApplication", name: appName, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,

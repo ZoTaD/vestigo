@@ -32,6 +32,7 @@ const RsRaid = lazyWithPreload(() => import("./rust/raid/RustRaid"));
 const RsFarming = lazyWithPreload(() => import("./rust/farming/RustFarming"));
 const RsPatches = lazyWithPreload(() => import("./rust/patches/RustPatches"));
 const RsMonuments = lazyWithPreload(() => import("./rust/monuments/RustMonuments"));
+const RsServer = lazyWithPreload(() => import("./rust/server/RustServer"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá, en `RUST_TAB_FILES` y en `RUST_PUBLISHED`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `RUST_TAB_FILES`.
@@ -41,6 +42,7 @@ const TABS: Partial<Record<RustSection, LazyTab>> = {
   farming: RsFarming,
   patches: RsPatches,
   monuments: RsMonuments,
+  server: RsServer,
 };
 
 /**
@@ -53,6 +55,7 @@ const TAB_DATA: Partial<Record<RustSection, (route: Route) => Promise<void>>> = 
   farming: (route) => import("./rust/farming/data").then((m) => m.preloadFarmingRoute(route)),
   patches: (route) => import("./rust/patches/data").then((m) => m.preloadPatchesRoute(route)),
   monuments: (route) => import("./rust/monuments/data").then((m) => m.preloadMonumentsRoute(route)),
+  server: (route) => import("./rust/server/data").then((m) => m.preloadServerRoute(route)),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Rust, y sus datos (la portada ya viene con el área). */

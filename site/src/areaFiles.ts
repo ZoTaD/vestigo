@@ -85,6 +85,7 @@ export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
   farming: "src/rust/farming/RustFarming.tsx",
   patches: "src/rust/patches/RustPatches.tsx",
   monuments: "src/rust/monuments/RustMonuments.tsx",
+  server: "src/rust/server/RustServer.tsx",
 };
 
 /**
