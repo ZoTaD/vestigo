@@ -52,6 +52,63 @@
    ]
   },
   {
+   "id": "powerline.pole",
+   "cls": "PowergridIOAccessPoint",
+   "cat": "source",
+   "io": 0,
+   "icon": "fuse.highgrade",
+   "name": {
+    "en": "Powerline pole",
+    "es": "Poste de tendido eléctrico"
+   },
+   "slug": null,
+   "slugEs": null,
+   "in": [],
+   "out": [
+    {
+     "n": "Power Output 1",
+     "t": 0,
+     "m": 1,
+     "h": 7.94
+    },
+    {
+     "n": "Power Output 2",
+     "t": 0,
+     "m": 1,
+     "h": 7.77
+    },
+    {
+     "n": "Power Output 3",
+     "t": 0,
+     "m": 1,
+     "h": 7.46
+    },
+    {
+     "n": "Power Output 4",
+     "t": 0,
+     "m": 1,
+     "h": 7.94
+    },
+    {
+     "n": "Power Output 5",
+     "t": 0,
+     "m": 1,
+     "h": 7.77
+    },
+    {
+     "n": "Power Output 6",
+     "t": 0,
+     "m": 1,
+     "h": 7.46
+    }
+   ],
+   "use": 0,
+   "useSrc": "nocode",
+   "p": {},
+   "craft": [],
+   "approx": true
+  },
+  {
    "id": "electric.fuelgenerator.small",
    "cls": "FuelGenerator",
    "cat": "source",

@@ -194,6 +194,42 @@ export class FuelGenerator extends IOEntity {
   }
 }
 
+/**
+ * Poste de tendido eléctrico (Power Trip, 6/8/2026): da energía "según la potencia de la central". El número por etapa
+ * no está en el cliente ni en el decompilado: acá se ajusta a mano (aproximado). Empuja por sus 6 salidas como el
+ * generador de prueba.
+ */
+export class PowerlinePole extends IOEntity {
+  override isRootEntity(): boolean {
+    return true;
+  }
+  override getCurrentEnergy(): number {
+    return Math.max(0, Math.round(this.cfg.output ?? 0));
+  }
+  override maximalPowerOutput(): number {
+    return this.getCurrentEnergy();
+  }
+  override getPassthroughAmount(): number {
+    return this.getCurrentEnergy();
+  }
+  override updateOutputs(): void {
+    this.currentEnergy = this.getCurrentEnergy();
+    for (let i = 0; i < this.outputs.length; i++) this.send(i, this.currentEnergy);
+  }
+  override readouts(): Readout[] {
+    return [{ k: "generating", v: this.getCurrentEnergy() }, { k: "approx", v: true }];
+  }
+  override actions(): Action[] {
+    return [{ k: "output", kind: "number", value: this.getCurrentEnergy(), min: 0, max: 100000, step: 1 }];
+  }
+  override act(key: string, value?: number): void {
+    if (key === "output" && value !== undefined) {
+      this.cfg.output = Math.max(0, Math.round(value));
+      this.markDirtyForceUpdateOutputs();
+    }
+  }
+}
+
 /** `ElectricGenerator` (el generador de prueba): empuja `electricAmount` por todas sus salidas, sin esperar `responsetime`. */
 export class ElectricGenerator extends IOEntity {
   override isRootEntity(): boolean {

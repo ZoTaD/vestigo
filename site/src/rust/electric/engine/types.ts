@@ -34,6 +34,10 @@ export interface ComponentDef {
   hidden?: boolean;
   /** El id del componente hijo (`hidden`) que el juego crea con esta entidad. */
   child?: string;
+  /** Ícono prestado de otro objeto (el poste de tendido no tiene uno propio). */
+  icon?: string;
+  /** Sus números no están en los datos del juego: se ajustan a mano (el poste de tendido). */
+  approx?: boolean;
   cat: Category;
   name: { en: string; es: string | null };
   slug: string | null;

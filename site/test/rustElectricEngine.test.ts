@@ -337,3 +337,32 @@ describe("Lazos (responsetime)", () => {
   });
 });
 
+describe("Drenaje de baterías (parche del 14/3/2024, \"Fixes and Chicken Costumes\")", () => {
+  it("una compuerta sólo drena la batería de su entrada mayor", () => {
+    const w = run(
+      c([["s", "electric.battery.rechargable.small", { charge: 400 }], ["m", "electric.battery.rechargable.medium", { charge: 9000 }], ["a", "electric.orswitch"], ["l", "electric.simplelight"]], "s.0>a.0 m.0>a.1 a.0>l.0"),
+      5,
+    );
+    expect((w.get("m") as ElectricBattery).activeDrain).toBe(1);
+    expect((w.get("s") as ElectricBattery).activeDrain).toBe(0);
+  });
+
+  it("la celda de memoria sólo drena por la salida activa", () => {
+    const w = run(c([["b", "electric.battery.rechargable.large", { charge: 24000 }], ["m", "electrical.memorycell"], ["l", "electric.simplelight"], ["t", "autoturret"]], "b.0>m.0 m.0>l.0 m.1>t.0"), 5);
+    // Apagada: la energía sale por "Inverted Output" (la torreta): drena 10, no 11.
+    expect((w.get("b") as ElectricBattery).activeDrain).toBe(10);
+  });
+
+  it("lo que está detrás de un interruptor apagado no drena, y una torreta a la que no le alcanza tampoco", () => {
+    const w = run(c([["b", "electric.battery.rechargable.small", { charge: 400 }], ["sp", "electric.splitter"], ["sw", "electric.switch"], ["l", "electric.simplelight"], ["t", "autoturret"]], "b.0>sp.0 sp.0>sw.0 sw.0>l.0 sp.1>t.0"), 5);
+    expect((w.get("b") as ElectricBattery).activeDrain).toBe(0);
+  });
+});
+
+describe("Poste de tendido eléctrico (Power Trip)", () => {
+  it("da lo que se le ajusta por sus 6 salidas", () => {
+    const w = run(c([["p", "powerline.pole", { output: 40 }], ["l", "electric.simplelight"], ["l2", "electric.simplelight"]], "p.0>l.0 p.5>l2.0"), 3);
+    expect([w.get("l")!.received[0], w.get("l2")!.received[0]]).toEqual([40, 40]);
+  });
+});
+

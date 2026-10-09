@@ -74,8 +74,10 @@ prefabs (salida de las baterías, consumo cuando es un campo, duración del bot�
    consumo como campo del prefab (heladera 5, minibar 2, luces 1…) usan ese campo con la lógica de `IOEntity`; la rueda
    de agua usa `maxPowerGenerationFromWater` (30) como generador fijo; el reloj digital, el biocombustible y la tolva
    quedan **afuera** de la paleta hasta tener su código.
-2. **Salida "Fully Charged" de la batería** (feb. 2025, posterior al decompilado): no hay código. Se simula como las
-   salidas de estado de la torreta (`min(1, …)`): 1 cuando la carga llega al máximo. Marcada como aproximación.
+2. **Salida "Fully Charged" de la batería** (feb. 2025, posterior al decompilado): no hay código. La wiki oficial
+   (https://wiki.facepunch.com/rust/item/electric.battery.rechargable.large) la lista como salida de señal ("emite
+   una señal cuando la batería está completamente cargada"). Se simula como las salidas de estado de la torreta
+   (`min(1, …)`): 1 cuando la carga llega al máximo. Aproximación documentada.
 3. **Sol:** el juego usa `TOD_Sky` y el ángulo del panel (`dot` entre el frente del panel y el sol, de 0,3 a 0,7). El
    editor modela el panel bien orientado y la altura del sol como `sin(π·(h − 6) / 12)` entre las 6 y las 18; de noche,
    0. Es aproximado (latitud y orientación reales cambian la curva).
@@ -83,7 +85,13 @@ prefabs (salida de las baterías, consumo cuando es un campo, duración del bot�
    (0-1, 0,5 por defecto) y la altura sobre el terreno por un control (m).
 5. **Cuadros por segundo del servidor:** 30. El orden de procesamiento dentro de un cuadro es el de la cola del juego,
    pero el tope de milisegundos por cuadro no se emula (procesa toda la cola, con un tope de seguridad).
-6. **Interruptor y temporizador con consumo 0:** el decompilado dice 0; rustlabs y la wiki dicen 1. Se sigue el código.
+6. ~~**Interruptor y temporizador con consumo 0**~~ **Resuelta (9/10):** el consumo 0 es correcto. En el parche del
+   14/3/2024 ("Fixes and Chicken Costumes", https://www.rustafied.com/updates/2024/3/14/fixes-and-chicken-costumes)
+   Facepunch sacó el consumo de AND, OR, XOR, celda de memoria, temporizador, bloqueador, RAND, contador, interruptor,
+   interruptor inteligente, splitters, root combiners y ramas; el botón dejó de consumir; las luces apagadas ya no
+   piden 1; la luz de techo usa 2; AND/OR/XOR y la memoria drenan sólo del lado activo o de mayor entrada; una rama sin
+   nada a la izquierda no drena. rustlabs quedó viejo. Los tests "Drenaje de baterías" de
+   `site/test/rustElectricEngine.test.ts` lo verifican en el motor.
 7. **HBHF / sensores / torreta / SAM:** lo que detectan lo pone el usuario en el inspector (jugadores, objetivo,
    munición), no hay mundo.
 8. **`Invoke` repetido:** si el código llama dos veces a `Invoke` con el mismo método, acá el segundo reemplaza al
@@ -95,6 +103,11 @@ prefabs (salida de las baterías, consumo cuando es un campo, duración del bot�
     mismo cuadro en que le alcanza la energía.
 11. **Controlador de puerta:** la puerta se abre y se cierra al instante; en el juego tarda (y `IsBusy` demora la
     acción siguiente 1 s).
+13. **Poste de tendido eléctrico** (Power Trip, 6/8/2026, https://rust.facepunch.com/news/power-trip: "Powerline
+    poles can now provide electricity, amount dependent on power plant power"): está en la caché como prefab estático
+    (`powergrid_powerline_io.static.prefab`, `PowergridIOAccessPoint`, 6 salidas) y las etapas de la red (1/4/10/18
+    fusibles) en `PowergridStageConfig`, pero cuánta energía da por etapa no está ni en el cliente ni en el
+    decompilado: en el editor la salida se ajusta a mano y se muestra como aproximada.
 12. **Afuera de la paleta por ahora:** reloj digital, generador de biocombustible y tolva (sin código), bloque de
     comandos (admin), ascensor y teléfono (no se modelan), lo de audio (parlante conectado, luces de sonido, piso de
     baile) y lo que anda con combustible o pilas (máquinas de niebla y nieve, estroboscópica, parlante de Halloween).

@@ -76,6 +76,9 @@ BASE_USE = {
 # código: es fuente fija con `maxPowerGenerationFromWater`.
 NO_CODE_USE = {"StringLights": 1, "ChristmasLights": 1, "Chandelier": 1, "OrientableLight": 1, "ElectricWaterWheel": 0}
 
+# El poste de tendido eléctrico (Power Trip): prefab estático, sin objeto. Ver `powerline_pole` en electricity.py.
+POWERLINE_POLE = "assets/prefabs/io/electric/generators/powergrid_powerline_io.static.prefab"
+
 # Afuera de la paleta (por ahora), con el motivo.
 EXCLUDE = {
     "DigitalClock": "sin código: no se sabe cómo arma sus pulsos de alarma",

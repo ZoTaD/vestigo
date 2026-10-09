@@ -20,6 +20,7 @@ import { ELECTRIC_COPY } from "./copy";
 import { Catalog } from "./engine";
 import type { Circuit, ElectricityData } from "./engine/types";
 import { EditorStore } from "./editor/store";
+import { iconOf } from "./editor/ctx";
 import { TRY_KEY, tryCircuit } from "./trial";
 import "../../styles/rust-electric.css";
 
@@ -142,7 +143,7 @@ export default function RustElectricity({ route, navigate }: { route: Route; nav
               >
                 <span className="el-ready-icons" aria-hidden="true">
                   {[...new Set(c.circuit.parts.map((p) => p.type))].slice(0, 3).map((type) => (
-                    <img key={type} src={`/rust/items/${type}.webp`} alt="" width={28} height={28} loading="lazy" decoding="async" />
+                    <img key={type} src={iconOf(type)} alt="" width={28} height={28} loading="lazy" decoding="async" />
                   ))}
                 </span>
                 <span>{cap(c.name[lang])}</span>

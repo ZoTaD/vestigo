@@ -51,7 +51,7 @@ class Forma(unittest.TestCase):
     def test_ningun_componente_sin_consumo_ni_generacion(self):
         for c in self.doc["components"]:
             with self.subTest(c["id"]):
-                if c["cat"] == "source":
+                if c["cat"] == "source" and not c.get("approx"):
                     self.assertGreater(c["gen"], 0)
                 else:
                     self.assertGreaterEqual(c["use"], 0)
@@ -124,6 +124,12 @@ class Agua(unittest.TestCase):
             self.assertEqual(self.c[sid]["cat"], "water", sid)
         self.assertEqual(self.c["fluid.splitter"]["io"], 1)
         self.assertNotIn("water.purifier", self.c)
+
+
+class PosteDeTendido(unittest.TestCase):
+    def test_el_poste_de_power_trip_es_fuente_con_seis_salidas_y_aproximado(self):
+        c = by_id(json.loads(DATA.read_text(encoding="utf-8")))["powerline.pole"]
+        self.assertEqual((c["cls"], c["cat"], len(c["out"]), c["approx"]), ("PowergridIOAccessPoint", "source", 6, True))
 
 
 class VistaDeFichas(unittest.TestCase):

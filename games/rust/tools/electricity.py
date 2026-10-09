@@ -95,6 +95,24 @@ def category(cls, d):
     return ov.CATEGORY.get(cls, "appliance")
 
 
+def powerline_pole(by_path):
+    """
+    El poste de tendido eléctrico de Power Trip (6/8/2026: "Powerline poles can now provide electricity, amount
+    dependent on power plant power", rust.facepunch.com/news/power-trip). No es un objeto: es el prefab estático
+    `powergrid_powerline_io.static.prefab` (`PowergridIOAccessPoint`, 6 salidas). Cuánto da según la etapa de la red no
+    está en el cliente ni en el decompilado (es posterior): en el editor es un número que se ajusta, marcado como
+    aproximado. Ícono prestado del fusible de alto grado (no hay uno propio).
+    """
+    e = by_path[ov.POWERLINE_POLE]
+    d = e["data"]
+    return {
+        "id": "powerline.pole", "cls": e["class"], "cat": "source", "io": d.get("ioType", 0), "icon": "fuse.highgrade",
+        "name": {"en": "Powerline pole", "es": "Poste de tendido eléctrico"}, "slug": None, "slugEs": None,
+        "in": slots(d.get("inputs", [])), "out": slots(d.get("outputs", [])), "use": 0, "useSrc": "nocode",
+        "p": {}, "craft": [], "approx": True,
+    }
+
+
 def build():
     prefabs = json.loads(PREFABS.read_text(encoding="utf-8"))
     configs = json.loads(CONFIGS.read_text(encoding="utf-8"))
@@ -153,6 +171,7 @@ def build():
                 c["child"] = cid
                 c["out"] += [{**o, "v": i} for i, o in enumerate(slots(cd.get("outputs", [])))]
             comps.append(c)
+    comps.append(powerline_pole(by_path))
     order = {k: i for i, k in enumerate(ov.CATEGORIES)}
     comps.sort(key=lambda c: (order[c["cat"]], c["name"]["en"].lower(), c["id"]))
     for w in ("water", "water.salt"):

@@ -8,7 +8,7 @@ import { AutoTurret, Consumer, CustomDoorManipulator, DeployableBoomBox, Igniter
 import { ANDSwitch, ElectricalDFlipFlop, ORSwitch, PowerCounter, TimerSwitch, XORSwitch } from "./behaviors/logic";
 import { CableTunnel, ElectricalBlocker, ElectricalBranch, ElectricalCombiner, RANDSwitch, Splitter } from "./behaviors/route";
 import { HBHFSensor, LaserDetector, PressurePad, SeismicSensor, StorageMonitor } from "./behaviors/sensors";
-import { ElectricGenerator, ElectricWaterWheel, ElectricWindmill, FuelGenerator, SolarPanel } from "./behaviors/sources";
+import { ElectricGenerator, ElectricWaterWheel, ElectricWindmill, FuelGenerator, PowerlinePole, SolarPanel } from "./behaviors/sources";
 import { ElectricSwitch, PressButton, RFBroadcaster, RFReceiver, SmartSwitch } from "./behaviors/switches";
 import { FluidSwitch, LiquidContainer, PoweredWaterPurifier, Sprinkler, WaterCatcher, WaterPump } from "./behaviors/water";
 import type { Circuit, ComponentDef, ElectricityData, Part, PartCfg, Wire } from "./types";
@@ -27,6 +27,7 @@ const BEHAVIORS: Record<string, Ctor> = {
   ElectricWaterWheel,
   FuelGenerator,
   ElectricGenerator,
+  PowergridIOAccessPoint: PowerlinePole,
   ElectricBattery,
   Splitter,
   ElectricalBranch,
