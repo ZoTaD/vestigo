@@ -69,6 +69,9 @@ export const PAGES = [
   "/en/rust/monuments",
   "/en/rust/monuments/bandit-camp",
   "/es/rust/monumentos/complejo-de-apartamentos",
+  // Lo que aparece en cada monumento (2026-10-09): la que más cajas tiene y la de los científicos nuevos.
+  "/en/rust/monuments/launch-site",
+  "/es/rust/monumentos/plataforma-petrolifera",
   // Servidor (2026-10-09): 1.384 convars de a tandas.
   "/en/rust/server",
   // Electricidad (2026-10-09): el editor (en frío abre la torreta solar) y el circuito listo más grande.

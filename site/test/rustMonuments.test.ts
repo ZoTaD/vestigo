@@ -50,6 +50,31 @@ describe("la pestaña Monumentos de Rust", () => {
     expect(outpost).toContain('href="/es/rust/objetos/');
     const flats = render("en", "/en/rust/monuments/apartment-complex");
     expect(flats).toContain("Penthouse");
+    expect(flats).toContain("Opening one costs 220 scrap");
+    expect(flats).toContain("master key for 1000 scrap");
+    expect(flats).toContain("Off by default");
+  });
+
+  it("la ficha dice qué cajas, NPC y objetos sueltos aparecen y cuántos, sin dibujar el botín hasta abrirlo", () => {
+    const launch = render("en", "/en/rust/monuments/launch-site");
+    expect(launch).toContain("Crates and barrels");
+    expect(launch).toContain("Elite Crate");
+    expect(launch).toContain("with power");
+    expect(launch).toContain("<details>");
+    expect(launch).not.toContain("rs-mon-loot");
+    const rig = render("es", "/es/rust/monumentos/plataforma-petrolifera");
+    expect(rig).toContain("Científico de la plataforma petrolera");
+    expect(rig).toContain("Caja bloqueada");
+    const bandit = render("es", "/es/rust/monumentos/campamento-de-bandoleros");
+    expect(bandit).toContain("Guardia bandolero");
+    expect(bandit).not.toContain("Cajas y barriles");
+    const plant = render("en", "/en/rust/monuments/power-plant");
+    expect(plant).toContain("On the ground");
+    expect(plant).toContain('href="/en/rust/items/');
+  });
+
+  it("la red de Power Trip dice cuánto dura un fusible", () => {
+    expect(render("en", "/en/rust/monuments")).toContain("last 2 h 40 min with 100 or more players online");
   });
 
   it("un monumento que no existe muestra la lista con una nota", () => {
@@ -70,7 +95,7 @@ describe("Monumentos de Rust en el sitemap y el <head>", () => {
     expect(paths).toContain("/en/rust/monuments/launch-site");
     expect(paths).toContain("/es/rust/monumentos/zona-de-lanzamiento");
     expect(page("/en/rust/monuments").title).toMatch(/^Rust Monuments/);
-    expect(page("/en/rust/monuments/launch-site").title).toBe("Launch Site — Rust Monument: Keycards, Fuses and Recyclers | Vestigo");
+    expect(page("/en/rust/monuments/launch-site").title).toBe("Launch Site — Rust Monument: Loot, Keycards and Fuses | Vestigo");
     expect(page("/es/rust/monumentos/zona-de-lanzamiento").title).toMatch(/^Zona de lanzamiento en Rust/);
     for (const p of ["/en/rust/monuments/water-treatment-plant", "/es/rust/monumentos/gran-plataforma-petrolifera"]) {
       expect(page(p).description.length, p).toBeLessThanOrEqual(160);

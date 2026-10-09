@@ -47,3 +47,18 @@
 @media (max-width: 640px) {
   .rs-grid-stages li { grid-template-columns: 1fr; }
 }
+
+/* Lo que aparece (2026-10-09): una fila por caja o NPC; la que tiene botín se abre y muestra su tabla. */
+.rs-mon-srcs { display: grid; gap: 4px; margin: 0 0 10px; padding: 0; list-style: none; }
+.rs-mon-srcs > li { background: var(--rs-slot); }
+.rs-mon-src-head { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; justify-content: space-between; padding: 8px 10px; }
+summary.rs-mon-src-head { cursor: pointer; list-style: none; }
+summary.rs-mon-src-head::-webkit-details-marker { display: none; }
+summary.rs-mon-src-head::before { content: "▸"; margin-right: -6px; color: var(--rs-dim); }
+details[open] > summary.rs-mon-src-head::before { content: "▾"; }
+summary.rs-mon-src-head:hover { background: rgba(255, 255, 255, 0.06); }
+.rs-mon-src-name { flex: 1 1 12em; font-weight: 700; }
+.rs-mon-src-n { display: flex; gap: 8px; align-items: baseline; }
+.rs-mon-src-n b { font: 800 18px/1 "Roboto Condensed", sans-serif; }
+.rs-mon-loot { padding: 0 10px 10px; overflow-x: auto; }
+.rs-mon-loot .rs-ref { display: inline-flex; gap: 6px; align-items: center; }
