@@ -138,8 +138,10 @@
 # el comodín sólo hacía falta para tres cosas, y ahora cada una tiene su regla:
 #
 #  1. Las páginas que no se pueden escribir de antemano: el perfil de un jugador
-#     y una partida de Deadlock. Reciben `shell.html`, la app sin cuerpo, con
-#     `noindex` y sin canonical (lo escribe el build, ver `vite.config.ts`).
+#     y una partida de Deadlock, y la hoja de ruta del Planificador de Valheim
+#     (que depende de lo que se eligió y ya iba con `noindex`). Reciben
+#     `shell.html`, la app sin cuerpo, con `noindex` y sin canonical (lo escribe
+#     el build, ver `vite.config.ts`).
 #  2. Las direcciones sin idioma (`/deadlock/paige`), que la app entendía como
 #     inglés: ahora mandan con 301 a `/en/...`. Sin `force`, así que un archivo
 #     que existe (los assets de `/deadlock/game/...`) se sirve antes.
@@ -162,6 +164,14 @@
   status = 200
 [[redirects]]
   from = "/es/deadlock/match/*"
+  to = "/shell.html"
+  status = 200
+[[redirects]]
+  from = "/en/valheim/planner/route"
+  to = "/shell.html"
+  status = 200
+[[redirects]]
+  from = "/es/valheim/planner/route"
   to = "/shell.html"
   status = 200
 
