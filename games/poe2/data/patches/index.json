@@ -1,6 +1,40 @@
 {
- "updated": "2026-09-24T01:06:06.815Z",
+ "updated": "2026-10-11T22:57:20.592Z",
  "editions": [
+  {
+   "version": "0.5.5e",
+   "slug": "0-5-5e",
+   "date": "2026-10-05",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.5e Patch Notes",
+    "es": "Notas del parche 0.5.5e"
+   },
+   "counts": {
+    "lines": 5,
+    "up": 0,
+    "down": 0,
+    "fix": 4,
+    "new": 1
+   }
+  },
+  {
+   "version": "0.5.5d",
+   "slug": "0-5-5d",
+   "date": "2026-09-27",
+   "kind": "patch",
+   "title": {
+    "en": "0.5.5d Patch Notes",
+    "es": "Notas del parche 0.5.5d"
+   },
+   "counts": {
+    "lines": 16,
+    "up": 0,
+    "down": 2,
+    "fix": 13,
+    "new": 0
+   }
+  },
   {
    "version": "0.5.5c",
    "slug": "0-5-5c",
