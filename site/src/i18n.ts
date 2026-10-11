@@ -64,6 +64,7 @@ const EN = {
     searchFor: (game: string) => `Search a ${game} player`,
     searchItem: "Search an item",
     searchItemFor: (game: string) => `Search a ${game} item`,
+    searchNone: "Nothing matches.",
     how: "How it's measured",
     menu: "Menu",
     measuredAt: (when: string) => `Measured ${when}`,
@@ -226,7 +227,7 @@ const EN = {
     sourcesDeadlock:
       "Match data from the public deadlock-api.com snapshot · Hero and item art from Valve",
     sourcesPoe2: "Fontin typeface by Jos Buivenga (exljbris)",
-    sourcesValheim: "Data and pictures from the Valheim game files. Averia typeface by Dan Sayers (SIL Open Font License).",
+    sourcesValheim: "Averia typeface by Dan Sayers (SIL Open Font License).",
     privacy: "Privacy Policy",
     terms: "Terms of Service",
     // Both documents are English-only, so a Spanish reader deserves fair warning
@@ -247,6 +248,9 @@ const EN = {
     disclaimerGgg:
       "Vestigo is a fan site and isn't endorsed by or affiliated with Grinding Gear Games. Path of Exile is a " +
       "trademark of Grinding Gear Games.",
+    disclaimerIronGate:
+      "Vestigo is a fan site and isn't endorsed by or affiliated with Iron Gate or Coffee Stain. Valheim is a " +
+      "trademark of its owners.",
   },
 
   // Said plainly, and without a pre-ticked box or a greyed-out "decline": the
@@ -304,6 +308,7 @@ const ES: typeof EN = {
     searchFor: (game: string) => `Buscar un jugador de ${game}`,
     searchItem: "Buscar un objeto",
     searchItemFor: (game: string) => `Buscar un objeto de ${game}`,
+    searchNone: "No hay nada con ese nombre.",
     how: "Cómo se mide",
     menu: "Menú",
     measuredAt: (when: string) => `Medido ${when}`,
@@ -445,7 +450,7 @@ const ES: typeof EN = {
     sourcesDeadlock:
       "Datos de partidas del snapshot público de deadlock-api.com · Arte de héroes y objetos de Valve",
     sourcesPoe2: "Tipografía Fontin de Jos Buivenga (exljbris)",
-    sourcesValheim: "Datos e imágenes de los archivos del juego Valheim. Tipografía Averia de Dan Sayers (SIL Open Font License).",
+    sourcesValheim: "Tipografía Averia de Dan Sayers (SIL Open Font License).",
     privacy: "Política de Privacidad",
     terms: "Términos del Servicio",
     englishOnly: "(en inglés)",
@@ -464,6 +469,9 @@ const ES: typeof EN = {
     disclaimerGgg:
       "Vestigo es un sitio de fans y no está avalado por Grinding Gear Games ni afiliado a ella. Path of Exile es " +
       "una marca comercial de Grinding Gear Games.",
+    disclaimerIronGate:
+      "Vestigo es un sitio de fans y no está avalado por Iron Gate ni Coffee Stain, ni afiliado a ellas. Valheim es " +
+      "una marca comercial de sus dueños.",
   },
 
   consent: {

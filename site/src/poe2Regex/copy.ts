@@ -52,10 +52,10 @@ const EN = {
   whatTitle: "What is this for",
   what: [
     "Path of Exile 2 lets you search items with a regular expression: a short formula that lights up only what matches. It is the fastest way to find the waystones worth running, the tablets you want or the boots with movement speed in a vendor.",
-    "Each modifier is found by the shortest piece of its text that no other modifier has, taken from the game's own texts in English and Spanish. Numbers allow for the roll range the game shows next to them, like 12(5-20)%.",
+    "Each modifier is found by the shortest piece of its text that no other modifier has, in English and in Spanish. Numbers allow for the roll range the game shows next to them, like 12(5-20)%.",
     "Choose the language your game is in: the search only understands the texts of your client's language.",
   ],
-  fromGame: "Texts from the game, current version. Up to 250 characters, the in-game limit since 0.5.0.",
+  fromGame: "Current game version. Up to 250 characters, the in-game limit since 0.5.0.",
 };
 
 const ES: typeof EN = {
@@ -106,10 +106,10 @@ const ES: typeof EN = {
   whatTitle: "Para qué sirve",
   what: [
     "Path of Exile 2 deja buscar objetos con una expresión regular: una fórmula corta que ilumina sólo lo que cumple. Es la forma más rápida de encontrar las piedras guía que conviene correr, las tablillas que buscás o las botas con velocidad de movimiento en un vendedor.",
-    "Cada modificador se encuentra con el pedazo más corto de su texto que no tiene ningún otro, sacado de los textos del juego en español y en inglés. Los números admiten el rango de la tirada que el juego muestra al lado, como 12(5-20)%.",
+    "Cada modificador se encuentra con el pedazo más corto de su texto que no tiene ningún otro, en español y en inglés. Los números admiten el rango de la tirada que el juego muestra al lado, como 12(5-20)%.",
     "Elegí el idioma de tu juego: la búsqueda sólo entiende los textos del idioma del cliente.",
   ],
-  fromGame: "Textos del juego, versión actual. Hasta 250 caracteres, el límite del juego desde la 0.5.0.",
+  fromGame: "Versión actual del juego. Hasta 250 caracteres, el límite del juego desde la 0.5.0.",
 };
 
 export const useRegexCopy = () => (useLang().lang === "es" ? ES : EN);

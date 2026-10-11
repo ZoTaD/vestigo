@@ -126,6 +126,8 @@
 .p2-lvl .p2-lvl-n { color: var(--p2-sand); }
 .p2-lvl tr.is-on td { background: rgba(201, 171, 102, .12); color: var(--p2-gold-1); }
 .p2-enc-mini { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px; }
+/* La línea que presenta las bases vecinas (2026-10-11). */
+.p2-enc-blurb { margin: 0; padding: 12px 14px 0; font-size: 0.86rem; line-height: 1.45; color: var(--text-dim); }
 .p2-enc-minicard { width: 104px; display: flex; flex-direction: column; align-items: center; gap: 5px; text-decoration: none; padding: 6px 4px; }
 .p2-enc-minicard:hover { background: rgba(255, 239, 215, .045); }
 .p2-enc-minicard .p2-enc-art { height: 72px; }

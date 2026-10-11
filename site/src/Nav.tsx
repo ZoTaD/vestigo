@@ -3,8 +3,7 @@ import { useCopy, useLang, type Lang } from "./i18n";
 import RouteLink from "./RouteLink";
 import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
-import { artUrl, iconUrl, loadIndex, peekIndex, searchIndex, type IndexEntry } from "./valheimData";
-import type { ValheimCopy } from "./valheimCopy";
+import { hasNavSearch, loadNavSearcher, type NavHit, type NavSearcher } from "./navSearch";
 
 export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
@@ -48,54 +47,53 @@ export default function Nav({
   // Dentro de Valheim también se buscan objetos: el texto lo recoge el buscador
   // de la portada de la sección.
   const inValheim = active === "valheim";
-  const itemSearch = inPoe2 || inValheim;
-  const searchGame = inPoe2 ? copy.games.poe2Short : inValheim ? copy.games.valheim : copy.games.deadlock;
-  const searchLabel = inPoe2
-    ? copy.shell.searchItemFor(copy.games.poe2)
-    : inValheim
-      ? copy.shell.searchItemFor(copy.games.valheim)
-      : copy.shell.searchFor(copy.games.deadlock);
-
   /**
-   * En Valheim la barra muestra los resultados mientras se escribe, igual que
-   * el "Buscar en todo" de la sección, y cada uno lleva a su ficha (pedido de
-   * ZoTaD, 2026-09-24). El índice se pide recién al enfocar la barra.
+   * En Valheim, Diablo II, Project Zomboid y Rust la barra busca las fichas del juego y muestra los resultados mientras
+   * se escribe; cada uno lleva a su ficha (Valheim desde el 2026-09-24, pedido de ZoTaD; los otros tres desde el
+   * 2026-10-11, que hasta entonces decían "Buscar un jugador" y mandaban a Deadlock). Ver `navSearch.ts`.
    */
-  const [vhIndex, setVhIndex] = useState<IndexEntry[] | null>(() => (inValheim ? peekIndex() : null));
+  const liveGame = hasNavSearch(active) ? active : null;
+  const itemSearch = inPoe2 || !!liveGame;
+  const gameName: Partial<Record<View, [short: string, full: string]>> = {
+    poe2: [copy.games.poe2Short, copy.games.poe2],
+    valheim: [copy.games.valheim, copy.games.valheim],
+    d2r: [copy.games.diablo2Short, copy.games.diablo2],
+    zomboid: [copy.games.zomboidShort, copy.games.zomboid],
+    rust: [copy.games.rust, copy.games.rust],
+  };
+  const [searchGame, searchGameFull] = (itemSearch && gameName[active]) || [copy.games.deadlock, copy.games.deadlock];
+  const searchLabel = itemSearch ? copy.shell.searchItemFor(searchGameFull) : copy.shell.searchFor(searchGameFull);
+
+  /** El buscador del juego, pedido recién al enfocar la barra. Al cambiar de juego se suelta el anterior. */
+  const [searcher, setSearcher] = useState<{ game: View; run: NavSearcher } | null>(null);
+  const run = searcher?.game === active ? searcher.run : null;
   const [open, setOpen] = useState(false);
   const [sel, setSel] = useState(0);
   const box = useRef<HTMLFormElement>(null);
-  /**
-   * Los textos de Valheim (35 KB) se piden recién adentro de Valheim: antes se
-   * importaban arriba y viajaban en el JS de entrada de todo el sitio. Para
-   * entonces el chunk de Valheim ya los trajo, así que la promesa es inmediata.
-   */
-  const [vhCopy, setVhCopy] = useState<Record<Lang, ValheimCopy> | null>(null);
-  useEffect(() => {
-    if (inValheim && !vhCopy) import("./valheimCopy").then((m) => setVhCopy(m.VALHEIM_COPY)).catch(() => undefined);
-  }, [inValheim, vhCopy]);
   const wantIndex = () => {
-    if (inValheim && !vhIndex) loadIndex().then(setVhIndex).catch(() => undefined);
+    if (liveGame && !run) loadNavSearcher(liveGame).then((r) => setSearcher({ game: liveGame, run: r }), () => undefined);
   };
-  const hits = useMemo(() => (inValheim && vhIndex ? searchIndex(vhIndex, query, lang, 10) : []), [inValheim, vhIndex, query, lang]);
+  const hits = useMemo<NavHit[]>(() => (run ? run(query, lang, 10) : []), [run, query, lang]);
   useEffect(() => setSel(0), [query]);
   useEffect(() => {
     const close = (e: MouseEvent) => { if (box.current && !box.current.contains(e.target as Node)) setOpen(false); };
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
   }, []);
-  const goTo = (h: IndexEntry) => {
+  const hitRoute = (h: NavHit): Route => ({ ...route, detail: undefined, ...h.to });
+  const goTo = (h: NavHit) => {
     setQuery("");
     setOpen(false);
-    onNavigate({ ...route, view: "valheim", vhSection: h.tab, detail: h.slug });
+    onNavigate(hitRoute(h));
   };
-  const vhTabs = vhCopy?.[lang].tabs;
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const q = query.trim();
     if (!q) return;
-    if (inValheim && hits.length) return goTo(hits[Math.min(sel, hits.length - 1)]);
+    if (liveGame && hits.length) return goTo(hits[Math.min(sel, hits.length - 1)]);
+    // Diablo II, Zomboid y Rust no tienen a dónde llevar un texto sin resultados: la lista ya dice que no hay nada.
+    if (liveGame && !inValheim) return;
     setPendingSearch(q);
     setQuery("");
     onNavigate(
@@ -204,9 +202,9 @@ export default function Nav({
                 if (e.key === "ArrowUp") { e.preventDefault(); setSel((i) => (i - 1 + hits.length) % hits.length); }
                 if (e.key === "Escape") setOpen(false);
               }}
-              role={inValheim ? "combobox" : undefined}
-              aria-expanded={inValheim ? open && hits.length > 0 : undefined}
-              aria-controls={inValheim ? "top-hits" : undefined}
+              role={liveGame ? "combobox" : undefined}
+              aria-expanded={liveGame ? open && hits.length > 0 : undefined}
+              aria-controls={liveGame ? "top-hits" : undefined}
               placeholder={itemSearch ? copy.shell.searchItem : copy.shell.search}
               aria-label={searchLabel}
               autoComplete="off"
@@ -215,25 +213,19 @@ export default function Nav({
               {searchGame}
             </span>
           </label>
-          {inValheim && open && query.trim().length >= 2 && vhIndex && vhCopy && (
+          {liveGame && open && query.trim().length >= 2 && run && (
             <div className="top-hits" id="top-hits" role="listbox">
-              {hits.length === 0 && <div className="top-hit is-empty">{vhCopy[lang].noResults}</div>}
+              {hits.length === 0 && <div className="top-hit is-empty">{copy.shell.searchNone}</div>}
               {hits.map((h, i) => (
-                <RouteLink
-                  key={`${h.tab}/${h.slug}`}
-                  className={`top-hit${i === sel ? " is-on" : ""}`}
-                  to={{ ...route, view: "valheim", vhSection: h.tab, detail: h.slug }}
-                  onNavigate={() => goTo(h)}
-                >
+                <RouteLink key={h.key} className={`top-hit${i === sel ? " is-on" : ""}`} to={hitRoute(h)} onNavigate={() => goTo(h)}>
                   <span className="top-hit-ic">
-                    {h.icon ? <img src={iconUrl(h.icon)} alt="" width={28} height={28} loading="lazy" decoding="async" />
-                      : h.art || h.photo ? <img src={h.photo ?? artUrl(h.art)} alt="" width={28} height={28} loading="lazy" decoding="async" className="is-art" /> : null}
+                    {h.img && <img src={h.img} alt="" width={28} height={28} loading="lazy" decoding="async" className={h.art ? "is-art" : undefined} />}
                   </span>
                   <span className="top-hit-n">
-                    {lang === "es" ? h.es : h.en}
-                    <small>{lang === "es" ? h.en : h.es}</small>
+                    {h.name}
+                    {h.alt && <small>{h.alt}</small>}
                   </span>
-                  <small className="top-hit-tab">{vhTabs?.[h.tab]}</small>
+                  <small className="top-hit-tab">{h.tab}</small>
                 </RouteLink>
               ))}
             </div>

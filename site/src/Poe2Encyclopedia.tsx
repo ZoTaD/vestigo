@@ -301,6 +301,7 @@ function Detail({ cat, slug, to, route, navigate }: { cat: Cat; slug: string; to
           {g && g.supports.length > 0 && <Supports ids={g.supports} rows={rows as Gem[]} to={to} navigate={navigate} />}
           {cat === "uniques" && <UniqueSide u={e as Unique} to={to} route={route} navigate={navigate} />}
           {cat === "bases" && <UniquesOnBase slug={slug} to={to} navigate={navigate} />}
+          {cat === "bases" && <SameClass base={e as Base} rows={rows as Base[]} to={to} navigate={navigate} />}
           <EntryHistory id={`${cat}/${slug}`} route={route} navigate={navigate} />
         </div>
       </div>
@@ -410,6 +411,38 @@ function UniqueSide({ u, to, route, navigate }: { u: Unique; to: (d?: string) =>
         </section>
       )}
     </>
+  );
+}
+
+/**
+ * Las bases vecinas de la misma clase (2026-10-11): las que caen justo antes y justo después, que es la escalera por la
+ * que se sube al subir de nivel. Hasta ese día la ficha de una base eran tres números y ningún enlace a otra ficha
+ * (auditoría de indexación): ahora dice qué es, desde cuándo cae y a cuáles se pasa.
+ */
+const NEIGHBOURS = 6;
+function SameClass({ base, rows, to, navigate }: { base: Base; rows: Base[]; to: (d?: string) => Route; navigate: Nav }) {
+  const t = usePoe2Copy().enc;
+  const { lang } = useLang();
+  const { bind, node } = useItemTip();
+  const peers = rows.filter((r) => r.cls.en === base.cls.en).sort((a, b) => a.drop - b.drop || a.en.localeCompare(b.en));
+  const at = peers.findIndex((r) => r.slug === base.slug);
+  const near = peers.slice(Math.max(0, at - NEIGHBOURS), at + NEIGHBOURS + 1).filter((r) => r.slug !== base.slug);
+  if (near.length === 0) return null;
+  return (
+    <section className="p2-panel">
+      <div className="p2-plate-head is-small"><h2 className="p2-plate">{t.sameClass(tx(base.cls, lang))}</h2></div>
+      <p className="p2-enc-blurb">{t.baseBlurb(nameOf(base, lang), tx(base.cls, lang), base.drop, peers.length)}</p>
+      <div className="p2-enc-mini">
+        {near.map((r) => (
+          <RouteLink key={r.slug} to={to(`bases/${r.slug}`)} onNavigate={navigate} className="p2-enc-minicard is-normal" {...bind(`bases/${r.slug}`)}>
+            <span className="p2-enc-art">{r.icon && <img src={r.icon} alt="" loading="lazy" decoding="async" />}</span>
+            <span className="p2-enc-name">{nameOf(r, lang)}</span>
+            <small className="p2-tt-k">{t.dropsFrom(r.drop)}</small>
+          </RouteLink>
+        ))}
+      </div>
+      {node}
+    </section>
   );
 }
 
