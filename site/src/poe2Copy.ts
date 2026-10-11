@@ -61,6 +61,10 @@ const EN = {
     },
     basedOn: "Base type",
     onThisBase: "Uniques on this base",
+    sameClass: (cls: string) => `Other ${cls}`,
+    baseBlurb: (name: string, cls: string, drop: number, n: number) =>
+      `${name} is one of ${n} base types in ${cls}. It starts dropping in level ${drop} areas; these are the ones that drop just before and just after it.`,
+    dropsFrom: (drop: number) => `Level ${drop}`,
     price: "Price",
     priceIn: (league: string) => `In ${league}`,
     seeEconomy: "See it in the economy",
@@ -151,6 +155,10 @@ const ES: typeof EN = {
     },
     basedOn: "Base",
     onThisBase: "Únicos sobre esta base",
+    sameClass: (cls: string) => `Otras bases de ${cls}`,
+    baseBlurb: (name: string, cls: string, drop: number, n: number) =>
+      `${name} es una de las ${n} bases de ${cls}. Empieza a caer en zonas de nivel ${drop}; estas son las que caen justo antes y justo después.`,
+    dropsFrom: (drop: number) => `Nivel ${drop}`,
     price: "Precio",
     priceIn: (league: string) => `En ${league}`,
     seeEconomy: "Verlo en la economía",

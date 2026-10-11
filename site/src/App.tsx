@@ -206,8 +206,9 @@ function Shell({
             arriba de este, se fue con TFT el 2026-09-25. En Diablo II va el de
             Blizzard: nombrar a Valve en un juego de Blizzard no avisa nada. En
             Rust, el de Facepunch: su política de UGC pide que quede claro que
-            no es oficial (2026-10-05). En PoE2, el de Grinding Gear Games:
-            salía el de Valve, que no es su juego (2026-10-11). */}
+            no es oficial (2026-10-05). En PoE2, el de Grinding Gear Games, y
+            en Valheim, el de Iron Gate: salía el de Valve, que no es su juego
+            (2026-10-11). */}
         <p className="foot-legal">
           {place === "d2r"
             ? copy.footer.disclaimerBlizzard
@@ -217,7 +218,9 @@ function Shell({
                 ? copy.footer.disclaimerFacepunch
                 : place === "poe2"
                   ? copy.footer.disclaimerGgg
-                  : copy.footer.disclaimerValve}
+                  : place === "valheim"
+                    ? copy.footer.disclaimerIronGate
+                    : copy.footer.disclaimerValve}
         </p>
 
         <p className="foot-copy">
