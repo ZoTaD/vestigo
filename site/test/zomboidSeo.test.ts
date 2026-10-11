@@ -29,11 +29,12 @@ describe("Project Zomboid en el sitemap y el <head>", () => {
     const paths = sitemapPaths(data);
     expect(paths).toContain("/en/project-zomboid");
     expect(paths).toContain("/es/project-zomboid");
-    expect(sitemapXml(data, "zomboid")).toContain("<loc>https://vestigo.gg/es/project-zomboid</loc>");
-    expect(sitemapXml(data, "site")).not.toContain("project-zomboid");
+    // La portada es una página principal: va en `main`, no con las fichas (2026-10-11).
+    expect(sitemapXml(data, "main")).toContain("<loc>https://vestigo.gg/es/project-zomboid</loc>");
+    expect(sitemapXml(data, "zomboid")).not.toContain("<loc>https://vestigo.gg/es/project-zomboid</loc>");
     expect(sitemapLastmod("/es/project-zomboid", data)).toBe(pzMeta.extractedAt.slice(0, 10));
-    // Y el índice de /sitemap.xml apunta a su sitemap.
-    expect(sitemapIndexXml(data)).toContain("<loc>https://vestigo.gg/sitemaps/zomboid.xml</loc>");
+    // Y el índice de /sitemap.xml apunta al sitemap donde va (el de Zomboid aparece cuando hay fichas).
+    expect(sitemapIndexXml(data)).toContain("<loc>https://vestigo.gg/sitemaps/main.xml</loc>");
   });
 
   it("las pestañas que todavía no se publicaron no entran", () => {
@@ -111,7 +112,7 @@ describe("las fichas de Project Zomboid en el sitemap y el <head>", () => {
     const xml = sitemapXml(withIndex, "zomboid");
     expect(xml).toContain("<loc>https://vestigo.gg/en/project-zomboid/items/crowbar</loc>");
     expect(xml).toContain("<loc>https://vestigo.gg/es/project-zomboid/objetos/palanca</loc>");
-    expect(sitemapXml(withIndex, "site")).not.toContain("project-zomboid");
+    expect(sitemapXml(withIndex, "main")).not.toContain("/items/crowbar");
     // Las dos versiones de la palanca se nombran entre sí: son la misma página en dos idiomas.
     const palanca = xml.split("</url>").find((u) => u.includes("<loc>https://vestigo.gg/es/project-zomboid/objetos/palanca</loc>"))!;
     expect(palanca).toContain('hreflang="en" href="https://vestigo.gg/en/project-zomboid/items/crowbar"');

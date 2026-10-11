@@ -108,7 +108,8 @@ describe("el sitemap, el <head> y las redirecciones", () => {
   });
 
   it("en el sitemap, cada página en español lista a su par en inglés aunque las palabras sean otras", () => {
-    const xml = sitemapXml(data, "d2r");
+    // Las fichas van en el sitemap de Diablo II y las pestañas en `main` (2026-10-11): se miran los dos.
+    const xml = sitemapXml(data, "d2r") + sitemapXml(data, "main");
     const entry = (loc: string) => {
       const start = xml.indexOf(`<loc>https://vestigo.gg${loc}</loc>`);
       return xml.slice(start, xml.indexOf("</url>", start));

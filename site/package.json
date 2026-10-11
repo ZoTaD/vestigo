@@ -4,10 +4,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/check-links.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "perf": "node scripts/perf.mjs --budget",
+    "check:links": "node scripts/check-links.mjs",
     "d2:drops": "vite-node -c scripts/node.config.ts scripts/d2-drops.ts"
   },
   "dependencies": {

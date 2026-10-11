@@ -147,9 +147,11 @@ function ItemRow({
       {/* La ficha se monta sólo al abrir. Con 156 filas, montarlas todas sería
           pedir el archivo de fichas en cuanto carga la página, que es
           exactamente lo que este reparto evita. */}
+      {/* La fila abierta es la que nombra la URL, una sola por página: el nombre
+          de su ficha es el h1 y el título de la pestaña deja de serlo (abajo). */}
       {open && (
         <div className="dl-irow-fold">
-          <ItemDetailPanel item={item} cost={cost} />
+          <ItemDetailPanel item={item} cost={cost} as="h1" />
         </div>
       )}
     </li>
@@ -360,6 +362,7 @@ export default function DeadlockItems({
         accent={c.titleBreak}
         lead={[c.lead, copy.deadlock.note]}
         controls={picker}
+        as={openCost !== undefined ? "p" : "h1"}
         meta={
           meta && (
             <span className="dl-meta-line">

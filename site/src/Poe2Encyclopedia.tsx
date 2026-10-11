@@ -52,10 +52,15 @@ export default function Poe2Encyclopedia({ route, navigate }: { route: Route; na
 
   if (!index) return <main className="p2 p2-page"><p className="p2-loading">{t.loading}</p></main>;
 
+  // Un solo h1 por página: en una ficha es el nombre del objeto (lo pone el
+  // tooltip quieto de `Detail`) y el rótulo de la pestaña baja a un `div` con
+  // el mismo aspecto. Una ficha que no existe se queda con el h1 de la pestaña.
+  const isDetail = isCat(cat) && !!slug && index.some((e) => e.id === `${cat}/${slug}`);
+
   return (
     <main className="p2 p2-page p2-enc">
       <header className="p2-title">
-        <h1>{t.title}</h1>
+        {isDetail ? <div className="p2-title-h">{t.title}</div> : <h1>{t.title}</h1>}
         <p>{isCat(cat) ? t.catLede[cat] : t.lede}</p>
         <GlobalSearch index={index} to={to} navigate={navigate} />
       </header>
@@ -283,7 +288,7 @@ function Detail({ cat, slug, to, route, navigate }: { cat: Cat; slug: string; to
           <div className={`p2-enc-hero is-${RARITY[cat]}`} style={{ ["--cw" as string]: w, ["--ch" as string]: h }}>
             {e.icon && <img src={e.icon} alt={nameOf(e, lang)} />}
           </div>
-          <ItemTooltip cat={cat} entry={e} level={level} />
+          <ItemTooltip cat={cat} entry={e} level={level} heading />
           {g && g.nlev > 1 && (
             <label className="p2-enc-level">
               <span>{t.gemLevel(level)}</span>
@@ -386,7 +391,8 @@ function UniqueSide({ u, to, route, navigate }: { u: Unique; to: (d?: string) =>
           <div className="p2-enc-price-in">
             <div className="p2-coin-v num">{fmt(u.price.v)} <small>div</small></div>
             <div className="p2-tt-k">{t.priceIn(league.name)}</div>
-            <RouteLink to={{ ...route, view: "poe2", p2Section: "economy", detail: league.slug }} onNavigate={navigate} className="p2-enc-link">
+            {/* La liga por defecto es `/poe2` a secas: con su slug la dirección no tiene página (ver `sitemapPaths`). */}
+            <RouteLink to={{ ...route, view: "poe2", p2Section: "economy", detail: league.slug === LEAGUES[0]?.slug ? undefined : league.slug }} onNavigate={navigate} className="p2-enc-link">
               {t.seeEconomy} →
             </RouteLink>
           </div>

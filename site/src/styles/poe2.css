@@ -93,7 +93,8 @@ a.p2-sub-item:hover { color: var(--p2-sand-lt); }
 .p2 .num { font-variant-numeric: tabular-nums; }
 .p2-loading { padding: 80px 0; text-align: center; color: var(--p2-text-dim); font-size: 18px; }
 .p2-title { margin: 26px 0 18px; display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
-.p2-title h1 { margin: 0; font: 400 34px var(--p2-title); color: var(--p2-sand-lt); letter-spacing: .04em; }
+/* `.p2-title-h` es el mismo rótulo cuando no es el h1 de la página (la ficha de la enciclopedia, cuyo h1 es el nombre). */
+.p2-title h1, .p2-title-h { margin: 0; font: 400 34px var(--p2-title); color: var(--p2-sand-lt); letter-spacing: .04em; }
 .p2-title p { margin: 0; color: var(--p2-text-dim); font-size: 15px; }
 /* Selector de liga: la liga como pestañas del alijo y el modo aparte, a la derecha. */
 .p2-league { display: flex; align-items: flex-end; gap: 0 14px; flex-wrap: wrap; margin: -6px 0 18px; }
@@ -280,6 +281,8 @@ a.p2-sub-item:hover { color: var(--p2-sand-lt); }
     var(--tt-r) right top / auto 100% no-repeat,
     var(--tt-m) left top / auto 100% repeat-x;
 }
+/* El nombre como h1 (la ficha): hereda todo de la cabecera, igual que el `div` del tooltip flotante. */
+.p2-tt-name { margin: 0; font: inherit; color: inherit; letter-spacing: inherit; }
 .p2-tt-base { font-size: 18px; }
 .p2-tt-body { padding: 6px 16px 12px; }
 .p2-tt-sep { height: 9px; margin: 4px 0; background: var(--tt-sep) center / auto 100% no-repeat; }

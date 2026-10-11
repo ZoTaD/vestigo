@@ -60,8 +60,9 @@ describe("Rust en el sitemap y el <head>", () => {
     const paths = sitemapPaths(data);
     expect(paths).toContain("/en/rust");
     expect(paths).toContain("/es/rust");
-    expect(sitemapXml(data, "rust")).toContain("<loc>https://vestigo.gg/es/rust</loc>");
-    expect(sitemapXml(data, "site")).not.toContain("/rust");
+    // La portada es una página principal: va en `main`, no con las fichas (2026-10-11).
+    expect(sitemapXml(data, "main")).toContain("<loc>https://vestigo.gg/es/rust</loc>");
+    expect(sitemapXml(data, "rust")).not.toContain("<loc>https://vestigo.gg/es/rust</loc>");
     expect(sitemapLastmod("/es/rust", data)).toBe(rsMeta.extractedAt.slice(0, 10));
   });
 

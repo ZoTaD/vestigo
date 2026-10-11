@@ -837,6 +837,13 @@ function prerenderRoutes(): Plugin {
         // Pase lo que pase: un servidor sin cerrar deja el proceso del build vivo.
         await ssr.close();
       }
+      /**
+       * `shell.html` (2026-10-11): la app sin cuerpo, para las páginas que no se pueden escribir de antemano —un
+       * jugador, una partida— y que `netlify.toml` manda acá. Antes recibían `index.html`, que es la portada en inglés
+       * con su canonical: Google leía cada perfil como una copia de `/en`. Va con `noindex` y sin canonical; el título
+       * y lo demás los pone `PageMeta` al cargar.
+       */
+      writeFileSync(join(outDir, "shell.html"), html.replace("</head>", () => `  <meta name="robots" content="noindex">\n  </head>`));
       writeFileSync(join(outDir, "app.js"), appJs(split.entry, split.base, preloads));
       this.info?.(`Prerenderizadas ${escritas} rutas en ${((Date.now() - t0) / 1000).toFixed(1)}s.`);
     },

@@ -179,6 +179,18 @@
   margin-top: clamp(1.8rem, 4vw, 2.8rem);
 }
 
+/* Las herramientas (2026-10-11): las mismas tarjetas de "Hoy en el meta", con una línea de qué hace cada una. */
+
+[data-theme="codex"][data-place="home"] .home-tools {
+  margin-top: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+[data-theme="codex"][data-place="home"] .tool-note {
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--text-dim);
+}
+
 [data-theme="codex"][data-place="home"] .today-cards {
   list-style: none;
   margin: 0;
@@ -472,6 +484,19 @@
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] .game-figure.is-second b { color: #82a845; }
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] .game-figure span { color: #7d776e; }
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] .game-cta { background: #55702a; border-color: #55702a; color: #ffffff; }
+
+/* --- Path of Exile 2: el oro viejo de su interfaz, sobre negro (2026-10-11) --- */
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] {
+  background: linear-gradient(180deg, #1b1712 0%, #110e0a 100%);
+  color: #968a76;
+}
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-panel-name { color: #e8dcc2; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-figure b { color: #d6a551; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-figure.is-second b { color: #e8dcc2; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-figure span { color: #857a67; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-cta { background: #b8893d; border-color: #b8893d; color: #17110a; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-cta.is-ghost { background: transparent; border-color: rgba(184, 137, 61, 0.5); color: #d6a551; }
 
 /* --- Los que vienen: apagados a propósito ----------------------------------
    Una fila de cuatro, chicos, debajo del juego que ya existe (2026-09-23).

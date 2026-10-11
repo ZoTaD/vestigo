@@ -154,16 +154,24 @@ export interface SitemapData {
   dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string };
 }
 
-/** Los sitemaps en que se parte el sitio: uno por juego y uno para lo demás. */
-export const SITEMAP_GROUPS = ["site", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust"] as const;
+/**
+ * Los sitemaps en que se parte el sitio: `main` y uno por juego.
+ *
+ * **`main` son las páginas principales de todo el sitio** (2026-10-11): la portada, la de cada juego, cada pestaña y
+ * cada herramienta, o sea todo lo que no es la ficha de una cosa. Son ~130 de 24.500 y hasta ese día iban mezcladas
+ * con las fichas en el sitemap de su juego, así que Search Console no decía cuántas de las que importan estaban
+ * indexadas. El de cada juego se queda con sus fichas y sus ediciones de parches.
+ */
+export const SITEMAP_GROUPS = ["main", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust"] as const;
 export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];
 
 function sitemapGroup(path: string): SitemapGroup {
+  if (!parseRoute(path).detail) return "main";
   const game = path.split("/")[2];
   // Zomboid se llama distinto en la dirección (`/project-zomboid`) que en el grupo.
   if (game === PZ_SEGMENT) return "zomboid";
   if (game === RUST_SEGMENT) return "rust";
-  return game === "deadlock" || game === "poe2" || game === "valheim" || game === "d2r" ? game : "site";
+  return game === "deadlock" || game === "poe2" || game === "valheim" || game === "d2r" ? game : "main";
 }
 
 /** La más nueva de unas fechas, o nada si no hay ninguna. */
@@ -399,9 +407,13 @@ export function sitemapPaths(data: SitemapData): string[] {
  * - La tier list de Deadlock: `/deadlock` → `/deadlock/tier-list` (ver `DL_TIER_LIST`).
  * - Cada página de Diablo II en español con la dirección de las palabras en inglés (`/es/d2r/runewords/enigma`,
  *   publicada el 29/9) → la de ahora (`/es/d2r/palabras-runicas/enigma`).
+ * - La liga por defecto de PoE2 con su nombre (`/poe2/economy/forbidden-rites`) → `/poe2`, que es su página
+ *   (2026-10-11): la app armaba esa dirección al elegir la liga y las fichas de únicos la enlazaban.
  */
 export function redirectsFile(data: SitemapData): string {
   const lines = LANGS.map((lang) => `/${lang}/deadlock  ${routePath({ lang, view: "deadlock", dlSection: "meta" })}  301`);
+  const league = data.p2?.leagues[0]?.slug;
+  if (league) for (const lang of LANGS) lines.push(`/${lang}/poe2/economy/${league}  /${lang}/poe2  301`);
   for (const path of sitemapPaths(data)) {
     if (!path.startsWith("/es/d2r/")) continue;
     const old = "/es" + routePath({ ...parseRoute(path), lang: "en" }).slice("/en".length);
