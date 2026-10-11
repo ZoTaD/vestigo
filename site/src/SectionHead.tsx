@@ -36,7 +36,8 @@ export default function SectionHead({
   controls?: ReactNode;
   /** Metadatos de la medición, en la línea de abajo. */
   meta?: ReactNode;
-  as?: "h1" | "h2";
+  /** `p` cuando el h1 de la página es otro (la ficha de un objeto): mismo aspecto, sin ser encabezado. */
+  as?: "h1" | "h2" | "p";
 }) {
   const copy = useCopy();
   const leads = lead === undefined ? [] : Array.isArray(lead) ? lead : [lead];

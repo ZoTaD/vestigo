@@ -13,6 +13,7 @@ import vhMeta from "@valheim/meta.json";
 import d2Meta from "@d2r/meta.json";
 import pzMeta from "@zomboid/meta.json";
 import rsMeta from "@rust/meta.json";
+import p2Patches from "@poe2/patches/index.json";
 
 /** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
 const VH_ENTRIES = Object.entries(vhMeta.counts).reduce((n, [k, v]) => (k === "biomes" || k === "bosses" ? n : n + v), 0);
@@ -233,6 +234,34 @@ export default function Home({
         </ul>
       </section>
 
+      {/* Las herramientas, a un clic (2026-10-11). Antes quedaban a dos: había que entrar al juego y encontrar la
+          pestaña, y son lo que más se comparte y lo que alguien llega buscando. */}
+      <section className="home-tools">
+        <h2 className="home-h2">{copy.home.tools.heading}</h2>
+        <ul className="today-cards">
+          {(
+            [
+              ["valheim", copy.games.valheim, copy.home.tools.vhMap, { view: "valheim", vhSection: "map" }],
+              ["valheim", copy.games.valheim, copy.home.tools.vhPlanner, { view: "valheim", vhSection: "planner" }],
+              ["d2r", copy.games.diablo2, copy.home.tools.d2Drops, { view: "d2r", d2Section: "drops" }],
+              ["rust", copy.games.rust, copy.home.tools.rsRaid, { view: "rust", rsSection: "raid" }],
+              ["poe2", copy.games.poe2, copy.home.tools.p2Tree, { view: "poe2", p2Section: "tree" }],
+              ["poe2", copy.games.poe2, copy.home.tools.p2Regex, { view: "poe2", p2Section: "regex" }],
+              ["deadlock", copy.games.deadlock, copy.home.tools.dlBuilder, { view: "deadlock", dlSection: "builder" }],
+              ["zomboid", copy.games.zomboid, copy.home.tools.pzMap, { view: "zomboid", pzSection: "map" }],
+            ] as const
+          ).map(([game, nombre, tool, to]) => (
+            <li className="today-card" data-game={game} key={`${game}-${tool.name}`}>
+              <RouteLink className="today-link" to={{ ...route, detail: undefined, ...to }} onNavigate={navigate}>
+                <span className="today-kicker">{nombre}</span>
+                <span className="today-name">{tool.name}</span>
+                <span className="tool-note">{tool.note}</span>
+              </RouteLink>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {/* Los juegos ------------------------------------------------------ */}
       <section className="home-games">
         <h2 className="home-h2">{copy.home.games.heading}</h2>
@@ -271,6 +300,34 @@ export default function Home({
               <p className="game-figure is-second">
                 <b>{num(heroesJson.matches)}</b>
                 <span>{copy.home.figures.matchesBand(copy.home.figures.topBand)}</span>
+              </p>
+            </div>
+          </li>
+
+          {/* Path of Exile 2 salió de "Pronto" el 2026-10-11: la sección existía desde el 23/9 y la portada la seguía
+              anunciando sin enlazarla. */}
+          <li className="game-panel" data-panel="poe2">
+            <div className="game-panel-main">
+              <h3 className="game-panel-name">{copy.games.poe2}</h3>
+              <p className="game-panel-note">{copy.home.games.poe2Live}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "poe2", p2Section: "economy", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.poe2Cta}
+                  <Arrow />
+                </RouteLink>
+                <RouteLink className="game-cta is-ghost" to={{ ...route, view: "poe2", p2Section: "patches", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.poe2Patches}
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{p2Patches.editions[0]?.version ?? "—"}</b>
+                <span>{copy.home.games.poe2Latest}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(p2Patches.editions.length)}</b>
+                <span>{copy.home.games.poe2Editions}</span>
               </p>
             </div>
           </li>
@@ -386,7 +443,6 @@ export default function Home({
           {(
             [
               ["dota", copy.games.dota, copy.home.games.dota],
-              ["poe2", copy.games.poe2, copy.home.games.poe2],
             ] as const
           ).map(([id, nombre, nota]) => (
             <li className="game-soon" data-panel={id} key={id}>

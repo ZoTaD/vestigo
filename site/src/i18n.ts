@@ -132,7 +132,6 @@ const EN = {
       soonCta: "Coming soon",
       deadlock: "Hero and item tier lists, live now.",
       dota: "Match analysis, each patch's meta, and the heroes and items that win.",
-      poe2: "Each league's meta and the builds that top players actually run.",
       valheim: "A wiki and tools for Valheim 1.0.",
       diablo2: "Breakpoints, runewords and terror zones.",
       soonHeading: "On the way",
@@ -155,6 +154,22 @@ const EN = {
       rustCta: "Open the inventory",
       rustItems: "items",
       rustRecipes: "recipes",
+      poe2Live: "Currency and unique prices for every league, the passive tree with build export, the item encyclopedia and every patch.",
+      poe2Cta: "League prices",
+      poe2Patches: "Patch notes",
+      poe2Latest: "latest patch, change by change",
+      poe2Editions: "patches broken down since 0.5",
+    },
+    tools: {
+      heading: "Tools",
+      vhMap: { name: "World map", note: "Any seed: biomes, bosses and every place." },
+      vhPlanner: { name: "Gear planner", note: "Pick what to craft and get the route." },
+      d2Drops: { name: "Drop calculator", note: "Odds per monster, with magic find." },
+      rsRaid: { name: "Raid calculator", note: "What it costs to break each wall and door." },
+      p2Tree: { name: "Passive tree", note: "Plan your points and export the build." },
+      p2Regex: { name: "Regex builder", note: "Search strings for maps, vendors and stash." },
+      dlBuilder: { name: "Build maker", note: "The in-game shop, to plan and share a build." },
+      pzMap: { name: "Knox County map", note: "The whole map, with what spawns where." },
     },
   },
 
@@ -229,6 +244,9 @@ const EN = {
     disclaimerFacepunch:
       "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Facepunch Studios. Rust and its " +
       "content belong to Facepunch Studios.",
+    disclaimerGgg:
+      "Vestigo is a fan site and isn't endorsed by or affiliated with Grinding Gear Games. Path of Exile is a " +
+      "trademark of Grinding Gear Games.",
   },
 
   // Said plainly, and without a pre-ticked box or a greyed-out "decline": the
@@ -337,7 +355,6 @@ const ES: typeof EN = {
       soonCta: "Muy pronto",
       deadlock: "Tier list de héroes e ítems, funcionando ya.",
       dota: "Análisis de tus partidas, la meta de cada parche y los héroes y objetos que ganan.",
-      poe2: "La meta de cada liga y las builds que usan de verdad los de arriba.",
       valheim: "Una wiki y herramientas para Valheim 1.0.",
       diablo2: "Breakpoints, palabras rúnicas y zonas de terror.",
       soonHeading: "En camino",
@@ -360,6 +377,22 @@ const ES: typeof EN = {
       rustCta: "Abrir el inventario",
       rustItems: "objetos",
       rustRecipes: "recetas",
+      poe2Live: "Los precios de monedas y únicos de cada liga, el árbol de pasivas con exportación de build, la enciclopedia de objetos y cada parche.",
+      poe2Cta: "Precios de la liga",
+      poe2Patches: "Parches",
+      poe2Latest: "último parche, cambio por cambio",
+      poe2Editions: "parches desglosados desde la 0.5",
+    },
+    tools: {
+      heading: "Herramientas",
+      vhMap: { name: "Mapa del mundo", note: "Cualquier semilla: biomas, jefes y cada lugar." },
+      vhPlanner: { name: "Planificador", note: "Elegí qué fabricar y te arma la ruta." },
+      d2Drops: { name: "Calculadora de drops", note: "Probabilidad por monstruo, con hallazgo mágico." },
+      rsRaid: { name: "Calculadora de raideo", note: "Cuánto cuesta romper cada pared y puerta." },
+      p2Tree: { name: "Árbol de pasivas", note: "Planeá tus puntos y exportá la build." },
+      p2Regex: { name: "Armador de regex", note: "Cadenas de búsqueda para mapas, vendedores y alijo." },
+      dlBuilder: { name: "Armador de builds", note: "La tienda del juego, para planear y compartir una build." },
+      pzMap: { name: "Mapa de Knox County", note: "El mapa entero, con qué aparece en cada lugar." },
     },
   },
 
@@ -428,6 +461,9 @@ const ES: typeof EN = {
     disclaimerFacepunch:
       "Vestigo es un sitio de fans no oficial y no está avalado por Facepunch Studios ni afiliado a ella. Rust y su " +
       "contenido pertenecen a Facepunch Studios.",
+    disclaimerGgg:
+      "Vestigo es un sitio de fans y no está avalado por Grinding Gear Games ni afiliado a ella. Path of Exile es " +
+      "una marca comercial de Grinding Gear Games.",
   },
 
   consent: {

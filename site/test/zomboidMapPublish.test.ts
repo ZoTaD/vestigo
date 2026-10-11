@@ -30,7 +30,7 @@ describe("el Mapa publicado", () => {
     const paths = sitemapPaths(data);
     expect(paths).toContain("/en/project-zomboid/map");
     expect(paths).toContain("/es/project-zomboid/mapa");
-    expect(sitemapXml(data, "zomboid")).toContain("<loc>https://vestigo.gg/es/project-zomboid/mapa</loc>");
+    expect(sitemapXml(data, "main")).toContain("<loc>https://vestigo.gg/es/project-zomboid/mapa</loc>");
   });
 
   it("lleva el lastmod de los datos del mapa, no el del extractor general", () => {
@@ -40,7 +40,7 @@ describe("el Mapa publicado", () => {
     // Las demás pestañas y la portada siguen con la fecha del extractor.
     expect(sitemapLastmod("/es/project-zomboid", data)).toBe(pzMeta.extractedAt.slice(0, 10));
     expect(sitemapLastmod("/es/project-zomboid/objetos", data)).toBe(pzMeta.extractedAt.slice(0, 10));
-    expect(sitemapXml(data, "zomboid")).toMatch(
+    expect(sitemapXml(data, "main")).toMatch(
       new RegExp(String.raw`<loc>https://vestigo.gg/es/project-zomboid/mapa</loc>\s*<lastmod>${day}</lastmod>`),
     );
   });

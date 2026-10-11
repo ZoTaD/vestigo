@@ -23,7 +23,18 @@ import { PopularHeroContext, usePopularOf } from "./deadlockPopularData";
  * `dangerouslySetInnerHTML`: las descripciones del juego traen `<svg>` e `<img>`
  * incrustados, y eso no vuelve a ser markup en nuestra página.
  */
-export function ItemDetailPanel({ item, cost, footer }: { item: Item; cost: string; footer?: ReactNode }) {
+export function ItemDetailPanel({
+  item,
+  cost,
+  footer,
+  as: Name = "h4",
+}: {
+  item: Item;
+  cost: string;
+  footer?: ReactNode;
+  /** `h1` sólo en la ficha propia del objeto (`/deadlock/items/<objeto>`), donde el nombre titula la página. */
+  as?: "h1" | "h4";
+}) {
   const copy = useCopy();
   const { lang } = useLang();
   const c = copy.deadlock.itemsPage;
@@ -58,7 +69,7 @@ export function ItemDetailPanel({ item, cost, footer }: { item: Item; cost: stri
       {/* El encabezado de la tarjeta del juego: nombre y precio con el símbolo de
           alma. El color sale de la categoría, que es como el juego las pinta. */}
       <header className="dl-card-head">
-        <h4 className="dl-card-name">{item.name}</h4>
+        <Name className="dl-card-name">{item.name}</Name>
         <p className="dl-card-cost">
           {soulIcon() && <GameImg src={soulIcon()} alt="" width={17} height={17} />}
           {cost}

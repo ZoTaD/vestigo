@@ -35,12 +35,15 @@ export function ItemTooltip({
   level = 1,
   floating,
   footer,
+  heading = false,
 }: {
   cat: Cat;
   entry: Entry;
   level?: number;
   floating?: { x: number; y: number };
   footer?: ReactNode;
+  /** El nombre es el `<h1>` de la página: sólo en la ficha, nunca en un tooltip flotante. */
+  heading?: boolean;
 }) {
   const { lang } = useLang();
   const t = usePoe2Copy().enc;
@@ -76,7 +79,7 @@ export function ItemTooltip({
       role={floating ? "tooltip" : undefined}
     >
       <div className="p2-tt-head">
-        <div>{nameOf(entry, lang)}</div>
+        {heading ? <h1 className="p2-tt-name">{nameOf(entry, lang)}</h1> : <div>{nameOf(entry, lang)}</div>}
         {base && <div className="p2-tt-base">{base}</div>}
       </div>
       <div className="p2-tt-body">

@@ -163,15 +163,16 @@ describe("sitemapLastmod", () => {
     expect(sitemapLastmod("/en", conFechas)).toBeUndefined();
     expect(sitemapLastmod("/en/privacy", conFechas)).toBeUndefined();
     expect(sitemapLastmod("/en/poe2/encyclopedia/gems/abiding-hex", conFechas)).toBeUndefined();
-    const xml = sitemapXml(conFechas, "site");
-    expect(xml).toContain("<loc>https://vestigo.gg/en</loc>");
-    expect(xml).not.toContain("<lastmod>");
+    // La portada va en `main` con las pestañas de cada juego, que sí tienen sello: se mira su entrada y no el archivo.
+    const portada = sitemapXml(conFechas, "main").split("</url>").find((u) => u.includes("<loc>https://vestigo.gg/en</loc>"));
+    expect(portada).toBeDefined();
+    expect(portada).not.toContain("<lastmod>");
   });
 
   it("parte el sitio en un sitemap por juego, con un índice en /sitemap.xml", () => {
     const index = sitemapIndexXml(conFechas);
     expect(index).toContain("<sitemapindex");
-    for (const g of ["site", "deadlock", "poe2", "valheim"]) {
+    for (const g of ["main", "deadlock", "poe2", "valheim"]) {
       expect(index).toContain(`<loc>https://vestigo.gg/sitemaps/${g}.xml</loc>`);
     }
     expect(index).toContain("<lastmod>2026-09-26</lastmod>");
@@ -179,6 +180,11 @@ describe("sitemapLastmod", () => {
     const locs = SITEMAP_GROUPS.flatMap((g) => sitemapXml(conFechas, g).match(/<loc>[^<]+/g) ?? []);
     expect(locs.length).toBe(sitemapPaths(conFechas).length);
     expect(sitemapXml(conFechas, "valheim")).not.toContain("/deadlock");
+    // `main` son las páginas principales de todos los juegos (2026-10-11); el de cada juego, sus fichas y ediciones.
+    const main = sitemapXml(conFechas, "main");
+    expect(main).toContain("<loc>https://vestigo.gg/en/valheim</loc>");
+    expect(main).toContain("<loc>https://vestigo.gg/en/deadlock/tier-list</loc>");
+    expect(sitemapXml(conFechas, "valheim")).not.toContain("<loc>https://vestigo.gg/en/valheim</loc>");
   });
 });
 
