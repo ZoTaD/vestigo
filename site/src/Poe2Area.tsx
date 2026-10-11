@@ -7,6 +7,7 @@
 import { useCopy } from "./i18n";
 import RouteLink from "./RouteLink";
 import Poe2Economy from "./Poe2Economy";
+import { DEFAULT_LEAGUE } from "./poe2EconomyData";
 import Poe2Encyclopedia from "./Poe2Encyclopedia";
 import Poe2Patches from "./Poe2Patches";
 import Poe2TreePage from "./poe2Tree/Poe2TreePage";
@@ -49,7 +50,8 @@ export default function Poe2Area({ route, navigate }: { route: Route; navigate: 
       {section === "economy" && (
         <Poe2Economy
           league={route.detail}
-          onLeague={(l) => navigate({ ...route, view: "poe2", p2Section: "economy", detail: l.slug })}
+          // La liga por defecto es `/poe2` a secas: con su slug la dirección no tiene página y al recargar daba 404.
+          onLeague={(l) => navigate({ ...route, view: "poe2", p2Section: "economy", detail: l.slug === DEFAULT_LEAGUE.slug ? undefined : l.slug })}
         />
       )}
     </>
