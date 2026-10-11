@@ -1,0 +1,111 @@
+name: publish poe2 prices and patches
+
+# La economía y las notas de parche de Path of Exile 2, una vez por día.
+#
+# Hasta el 2026-10-11 las dos se corrían a mano: los precios quedaron clavados
+# en el 23/9 con la página mostrando esa fecha, y la pestaña Parches llegaba al
+# 0.5.5c con el 0.5.5d y el 0.5.5e ya publicados en el foro. Las notas de parche
+# son además lo único por lo que Google muestra el sitio, y esa búsqueda vence
+# en días.
+#
+# **Una vez por día y no más.** Los precios pesan 3,5 MB por corrida (~720 KB
+# comprimidos, que es lo que guarda git): una por día son ~260 MB de historia al
+# año, y la historia de git no se recorta después. Es el mismo argumento que
+# frenó las builds de Deadlock por banda.
+on:
+  schedule:
+    # Lejos de `publish-deadlock` (00:30, 06:30, 12:30 y 18:30) y de `tests`
+    # (09:15), para que no se peleen por el push a `main`. El reintento de abajo
+    # lo resuelve igual.
+    - cron: "45 8 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: publish-poe2
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # El trabajo real son ~3 minutos, casi todo la pausa entre pedidos a
+    # poe.ninja. Veinte evita que un pedido colgado deje el run vivo seis horas.
+    timeout-minutes: 20
+    steps:
+      # Sin credenciales guardadas y con las actions fijadas por commit, igual
+      # que `publish-deadlock` (auditoría de seguridad del 2026-09-28).
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      # Los dos scripts no tienen dependencias: Node trae fetch. No hay `npm ci`.
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+
+      # Las ediciones nuevas y la última (GGG le suma "Updated Patch Notes" los
+      # primeros días). Baja los foros en inglés y en español, a un pedido por
+      # segundo.
+      #
+      # **Ninguno de los dos pasos corta la corrida**: si el foro no contesta,
+      # los precios se publican igual, y al revés. El último paso deja la
+      # corrida en rojo si alguno falló, para que no pase en silencio.
+      - name: patches
+        id: patches
+        continue-on-error: true
+        run: node games/poe2/pipeline/patches.mjs
+
+      - name: economy
+        id: economy
+        continue-on-error: true
+        run: node games/poe2/pipeline/economy.mjs
+
+      # `patches.mjs` reescribe la fecha del índice aunque no haya nada nuevo.
+      # Si eso es lo único que cambió en el archivo, se deja como estaba: así un
+      # día sin parches y sin precios no commitea una fecha y nada más.
+      - name: guard
+        id: guard
+        run: |
+          indice=games/poe2/data/patches/index.json
+          if git diff --quiet -I'^ "updated":' -- "$indice"; then git checkout -- "$indice"; fi
+          if [ -z "$(git status --porcelain -- games/poe2/data)" ]; then
+            echo "nada cambió; no hay commit"
+            echo "publish=no" >> "$GITHUB_OUTPUT"
+          else
+            git status --short -- games/poe2/data
+            echo "publish=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: commit
+        if: steps.guard.outputs.publish == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # El token, sólo acá y sólo para este comando (ver el checkout).
+          auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git_auth() { git -c "http.https://github.com/.extraheader=$auth" "$@"; }
+          git config user.name "vestigo-bot"
+          git config user.email "67348048+ZoTaD@users.noreply.github.com"
+          git add games/poe2/data
+          git commit -m "chore: publish today's PoE2 prices and patch notes"
+          # El push se reintenta rebaseando sobre lo que llegó, igual que en
+          # `publish-deadlock`: esta corrida sólo toca `games/poe2/data`.
+          empujado=0
+          for intento in 1 2 3; do
+            if git_auth push origin "HEAD:$GITHUB_REF_NAME"; then empujado=1; break; fi
+            echo "push rechazado (intento $intento): traigo lo que llegó y reintento"
+            git_auth fetch origin "$GITHUB_REF_NAME" || break
+            git rebase "origin/$GITHUB_REF_NAME" || break
+          done
+          if [ "$empujado" != 1 ]; then
+            echo "::error::no se pudo publicar después de 3 intentos"
+            exit 1
+          fi
+
+      - name: check
+        if: steps.patches.outcome == 'failure' || steps.economy.outcome == 'failure'
+        run: |
+          echo "::error::patches=${{ steps.patches.outcome }} economy=${{ steps.economy.outcome }}"
+          exit 1
