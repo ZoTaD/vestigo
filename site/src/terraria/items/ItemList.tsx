@@ -10,7 +10,7 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { KINDS, useTerrariaCopy, type Kind } from "../../terrariaCopy";
 import type { Row } from "../data";
-import { itemRoute, rare, Slot, Sprite, type Nav } from "../ui";
+import { itemRoute, rare, skipSprite, Slot, Sprite, type Nav } from "../ui";
 import { normalize, RARITIES } from "./stats";
 
 /** El alto de un casillero de la grilla, en px, medido en el navegador a 1.400 px (2026-10-12). */
@@ -89,12 +89,10 @@ export default function ItemList({ rows, route, navigate, missing }: { rows: Row
             // Las tandas se piden más cerca de la pantalla que en otras listas: con 9 columnas, el margen de siempre
             // (1.200 px) traía ~190 sprites al abrir, al borde del presupuesto de 200 imágenes.
             margin={600}
-            render={(r) => (
+            render={(r, i) => (
               <li key={r.id}>
                 <RouteLink className="tr-cell" to={itemRoute(route, r.slug)} onNavigate={navigate} prefetch="press">
-                  <Slot>
-                    <Sprite id={r.id} w={r.w} h={r.h} />
-                  </Slot>
+                  <Slot>{!skipSprite(i, 60) && <Sprite id={r.id} w={r.w} h={r.h} />}</Slot>
                   <span style={rare(r.rare)}>{r.name}</span>
                   {r.figure > 0 && (
                     <small>

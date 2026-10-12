@@ -10,7 +10,7 @@ import RouteLink from "../../RouteLink";
 import { routePath, type Route } from "../../route";
 import { useTerrariaCopy, type TerrariaCopy } from "../../terrariaCopy";
 import { refName, say, type Ficha, type Recipe, type Ref } from "../data";
-import { itemRoute, rare, Slot, Sprite, type Nav } from "../ui";
+import { itemRoute, rare, skipSprite, Slot, Sprite, type Nav } from "../ui";
 import { knockbackTier, percent, sellCoins, speedTier } from "./stats";
 
 /** El alto de una fila de "se usa en" y de botín, en px, medido en el navegador (2026-10-12). */
@@ -28,14 +28,12 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
   const s = ficha.stats;
 
   /** Otro objeto, con su casillero y su nombre, enlazado a su ficha. */
-  const link = (id: number, extra?: ReactNode) => {
+  const link = (id: number, extra?: ReactNode, bare = false) => {
     const r: Ref | undefined = id === ficha.id ? [ficha.slug, ficha.slugEs, ficha.name[0], ficha.name[1], ficha.rare, ...ficha.size] : ficha.refs[String(id)];
     if (!r) return null;
     return (
       <RouteLink className="tr-ref" to={itemRoute(route, r[0])} onNavigate={navigate} prefetch="press">
-        <Slot size={36}>
-          <Sprite id={id} w={r[5]} h={r[6]} max={28} />
-        </Slot>
+        <Slot size={36}>{!bare && <Sprite id={id} w={r[5]} h={r[6]} max={28} />}</Slot>
         <span style={rare(r[4])}>{refName(r, lang)}</span>
         {extra}
       </RouteLink>
@@ -139,7 +137,7 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                 rowHeight={TR_ROW}
                 tag="li"
                 chunk={40}
-                render={([out, need], i) => <li key={`${out}-${i}`}>{link(out, <small>{t.items.needs(need)}</small>)}</li>}
+                render={([out, need], i) => <li key={`${out}-${i}`}>{link(out, <small>{t.items.needs(need)}</small>, skipSprite(i, 0))}</li>}
               />
             </ul>
           </section>
