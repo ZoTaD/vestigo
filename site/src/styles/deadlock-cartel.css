@@ -1331,37 +1331,28 @@
 
 /* ---------- la pestaña Mapa (DeadlockMap) ---------- */
 [data-theme="codex"][data-game="deadlock"] .deadlock-map {
-  --map-small: #8fd26a;
-  --map-medium: #f2c94c;
-  --map-large: #ef6a3a;
-  --map-vault: #35d0c4;
-  --map-boss: #ffffff;
-  --map-crate: #c9a36a;
-  --map-statue: #ffd84a;
-  --map-health: #ff7d9c;
-  --map-buff: #c58bf2;
-  --map-amber: #f0a030;
-  --map-sapphire: #4f8fe8;
-  --map-shop: #e8e2d4;
+  --map-small: #6dbb45;
+  --map-medium: #e2ab12;
+  --map-large: #dd4f24;
+  --map-vault: #169c93;
+  --map-boss: #1e1a14;
+  --map-crate: #9a6b35;
+  --map-statue: #d99a00;
+  --map-health: #e0457a;
+  --map-buff: #8a48d8;
+  --map-amber: #d98312;
+  --map-sapphire: #2f6fd6;
+  --map-shop: #5b5346;
 }
 
-/* El mapa va sobre papel oscuro, como la pizarra: sin cantos rasgados. */
-[data-theme="codex"][data-game="deadlock"] .box.dl-map-box {
-  color: #eeeae2;
-  background: #14110d;
-}
-
-[data-theme="codex"][data-game="deadlock"] .box.dl-map-box::before,
-[data-theme="codex"][data-game="deadlock"] .box.dl-map-box::after {
-  display: none;
-}
-
+/* El mapa es un plano sobre papel: el suelo claro, los edificios en tinta. */
 [data-theme="codex"][data-game="deadlock"] .dl-map-frame {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
-  background: #0c0a08;
+  background: #b9a57f;
+  box-shadow: inset 0 0 0 1px rgba(30, 26, 20, 0.35);
   touch-action: none;
   cursor: grab;
   user-select: none;
@@ -1371,13 +1362,16 @@
   cursor: grabbing;
 }
 
+[data-theme="codex"][data-game="deadlock"] .dl-map-frame[data-mode="route"] .dl-map-mark {
+  cursor: copy;
+}
+
 [data-theme="codex"][data-game="deadlock"] .dl-map-canvas {
   position: absolute;
   inset: 0;
   transform-origin: 0 0;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-map-canvas > img,
 [data-theme="codex"][data-game="deadlock"] .dl-map-marks {
   position: absolute;
   inset: 0;
@@ -1385,89 +1379,89 @@
   height: 100%;
 }
 
-/* El minimapa del juego es casi negro: se aclara para que se lean los edificios. */
-[data-theme="codex"][data-game="deadlock"] .dl-map-canvas > img {
-  filter: invert(1) brightness(0.62) contrast(1.5) sepia(0.35);
-  pointer-events: none;
+[data-theme="codex"][data-game="deadlock"] .dl-map-buildings {
+  fill: #4a4033;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-ground {
+  fill: #efe3c8;
+  stroke: #2b251c;
+  stroke-width: calc(1.6px / var(--k, 1));
+  stroke-linejoin: round;
 }
 
 /* Cada carril con su color del juego: amarillo, azul y verde. */
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-zip, .dl-map-lanes li)[data-lane="1"] { --lane: #f5c518; }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-zip, .dl-map-lanes li)[data-lane="4"] { --lane: #2f7df6; }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-zip, .dl-map-lanes li)[data-lane="6"] { --lane: #3fbf4f; }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-lane, .dl-map-lanes li)[data-lane="1"] { --lane: #e6b400; }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-lane, .dl-map-lanes li)[data-lane="4"] { --lane: #2f7df6; }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-lane, .dl-map-lanes li)[data-lane="6"] { --lane: #2fa843; }
 
-[data-theme="codex"][data-game="deadlock"] .dl-map-zip polyline {
+[data-theme="codex"][data-game="deadlock"] .dl-map-lane {
   fill: none;
+  stroke: var(--lane, #888);
+  stroke-width: calc(9px / var(--k, 1));
   stroke-linejoin: round;
   stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
+  opacity: 0.55;
   pointer-events: none;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-map-zip-case {
-  stroke: rgba(12, 10, 8, 0.75);
-  stroke-width: calc(7px / var(--k, 1));
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-map-zip-line {
-  stroke: var(--lane, #e8e2d4);
-  stroke-width: calc(4px / var(--k, 1));
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-map-lanes {
-  list-style: none;
-  margin: 0.15rem 0 0 1.45rem;
-  padding: 0;
-  display: grid;
-  gap: 0.15rem;
-  font-size: 0.8rem;
-  color: rgba(30, 26, 20, 0.78);
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-map-lanes li::before {
-  content: "";
-  display: inline-block;
-  width: 1.1rem;
-  height: 0.28rem;
-  margin-right: 0.45rem;
-  vertical-align: middle;
-  background: var(--lane);
-  box-shadow: 0 0 0 1px rgba(30, 26, 20, 0.55);
-}
-
 [data-theme="codex"][data-game="deadlock"] .dl-map-mark {
-  fill: var(--mark, #fff);
-  stroke: #0c0a08;
-  stroke-width: calc(1px / var(--k, 1));
-  vector-effect: non-scaling-stroke;
+  fill: var(--mark, #1e1a14);
+  stroke: #fff8e8;
+  stroke-width: 0.16;
+  stroke-linejoin: round;
+  paint-order: stroke;
   cursor: pointer;
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-mark[data-up="false"] {
-  fill-opacity: 0.22;
-  stroke-opacity: 0.5;
+  fill-opacity: 0.25;
+  stroke-opacity: 0.4;
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-mark[data-on] {
-  stroke: #fff;
-  stroke-width: calc(2.5px / var(--k, 1));
+  stroke: #1e1a14;
+  stroke-width: 0.34;
 }
 
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="camp-small"] { --mark: var(--map-small); }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="camp-medium"] { --mark: var(--map-medium); }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="camp-large"] { --mark: var(--map-large); }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="vault"] { --mark: var(--map-vault); }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="midboss"] { --mark: var(--map-boss); }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch)[data-kind="crate"] { --mark: var(--map-crate); }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch)[data-kind="statue"] { --mark: var(--map-statue); }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch)[data-kind="health"] { --mark: var(--map-health); }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch)[data-kind="buff"] { --mark: var(--map-buff); }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch)[data-kind="shop"] { --mark: var(--map-shop); }
-[data-theme="codex"][data-game="deadlock"] .dl-map-swatch:is([data-kind="walker"], [data-kind="base-guardian"], [data-kind="shrine"], [data-kind="patron"]) {
-  background: linear-gradient(90deg, var(--map-amber) 50%, var(--map-sapphire) 50%);
-}
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch, .dl-map-icon)[data-kind="camp-small"] { --mark: var(--map-small); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch, .dl-map-icon)[data-kind="camp-medium"] { --mark: var(--map-medium); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch, .dl-map-icon)[data-kind="camp-large"] { --mark: var(--map-large); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch, .dl-map-icon)[data-kind="vault"] { --mark: var(--map-vault); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch, .dl-map-icon)[data-kind="midboss"] { --mark: var(--map-boss); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch, .dl-map-icon)[data-kind="crate"] { --mark: var(--map-crate); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch, .dl-map-icon)[data-kind="statue"] { --mark: var(--map-statue); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch, .dl-map-icon)[data-kind="health"] { --mark: var(--map-health); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch, .dl-map-icon)[data-kind="buff"] { --mark: var(--map-buff); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch, .dl-map-icon)[data-kind="shop"] { --mark: var(--map-shop); }
+[data-theme="codex"][data-game="deadlock"] .dl-map-icon:is([data-kind="walker"], [data-kind="base-guardian"], [data-kind="shrine"], [data-kind="patron"]) { --mark: var(--map-amber); }
 [data-theme="codex"][data-game="deadlock"] .dl-map-mark[data-team="2"] { --mark: var(--map-amber); }
 [data-theme="codex"][data-game="deadlock"] .dl-map-mark[data-team="3"] { --mark: var(--map-sapphire); }
+
+/* La ruta: una línea de tinta punteada y las paradas numeradas. */
+[data-theme="codex"][data-game="deadlock"] .dl-map-route {
+  pointer-events: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-route polyline {
+  fill: none;
+  stroke: #1e1a14;
+  stroke-width: calc(4px / var(--k, 1));
+  stroke-dasharray: calc(10px / var(--k, 1)) calc(7px / var(--k, 1));
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-route circle {
+  fill: #1e1a14;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-route text {
+  fill: #fff8e8;
+  font-family: var(--font-data-narrow);
+  font-weight: 700;
+  text-anchor: middle;
+}
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-zoom {
   position: absolute;
@@ -1481,8 +1475,8 @@
   width: 2rem;
   height: 2rem;
   border: 0;
-  background: rgba(238, 234, 226, 0.92);
-  color: #1e1a14;
+  background: #1e1a14;
+  color: #f1e4cc;
   font: 700 1.1rem/1 var(--font-data-narrow);
   cursor: pointer;
 }
@@ -1500,12 +1494,12 @@
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(238, 234, 226, 0.7);
+  color: rgba(30, 26, 20, 0.65);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-time input {
   width: 100%;
-  accent-color: #f59a6c;
+  accent-color: #c2512a;
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-time output {
@@ -1515,8 +1509,8 @@
   text-align: right;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-map-box .dl-tier-note {
-  color: rgba(238, 234, 226, 0.6);
+[data-theme="codex"][data-game="deadlock"] .dl-map-route-box {
+  margin-top: 1.4rem;
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-group {
@@ -1537,7 +1531,7 @@
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-layer {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  grid-template-columns: auto 1.1rem minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.45rem;
   padding: 0.18rem 0;
@@ -1549,26 +1543,54 @@
   accent-color: #1e1a14;
 }
 
+[data-theme="codex"][data-game="deadlock"] .dl-map-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: var(--mark, #1e1a14);
+  stroke: rgba(30, 26, 20, 0.7);
+  stroke-width: 0.1;
+  vertical-align: middle;
+}
+
 [data-theme="codex"][data-game="deadlock"] .dl-map-swatch {
   display: inline-block;
   width: 0.7rem;
   height: 0.7rem;
   border-radius: 50%;
   background: var(--mark, #888);
-  box-shadow: 0 0 0 1px rgba(30, 26, 20, 0.55);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-swatch[data-kind="zipline"] {
-  height: 0.16rem;
+  width: 1.1rem;
+  height: 0.28rem;
   border-radius: 0;
-  background: rgba(30, 26, 20, 0.6);
-  box-shadow: none;
+  background: linear-gradient(90deg, #e6b400 33%, #2f7df6 33% 66%, #2fa843 66%);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-layer-n {
   font-family: var(--font-data-narrow);
   font-variant-numeric: tabular-nums;
   color: rgba(30, 26, 20, 0.6);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-lanes {
+  list-style: none;
+  margin: 0.15rem 0 0 1.45rem;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.8rem;
+  color: rgba(30, 26, 20, 0.78);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-lanes li::before {
+  content: "";
+  display: inline-block;
+  width: 1.1rem;
+  height: 0.28rem;
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  background: var(--lane);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-facts {
@@ -1588,6 +1610,176 @@
   font-family: var(--font-data-narrow);
   font-weight: 700;
   text-align: right;
+}
+
+/* El armador de rutas. */
+[data-theme="codex"][data-game="deadlock"] .dl-map-route-setup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.8rem 1.4rem;
+  margin: 0.8rem 0 0.5rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-route-setup label,
+[data-theme="codex"][data-game="deadlock"] .dl-map-suggest {
+  display: grid;
+  gap: 0.25rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-route-setup label > span:first-child,
+[data-theme="codex"][data-game="deadlock"] .dl-map-suggest > span {
+  font-family: var(--font-data-narrow);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(30, 26, 20, 0.62);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-suggest {
+  grid-template-columns: repeat(3, auto);
+  align-items: center;
+  column-gap: 0.4rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-suggest > span {
+  grid-column: 1 / -1;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-hero {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-route-setup :is(select, input) {
+  height: 2.1rem;
+  padding: 0 0.5rem;
+  border: 0;
+  background: rgba(30, 26, 20, 0.1);
+  color: #1e1a14;
+  font: inherit;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-route-setup input {
+  width: 6rem;
+  font-family: var(--font-data-narrow);
+  font-weight: 700;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-btn {
+  height: 2.1rem;
+  padding: 0 0.8rem;
+  border: 0;
+  background: #1e1a14;
+  color: #f1e4cc;
+  font: 700 0.8rem/1 var(--font-data-narrow);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-btn:hover {
+  background: #c2512a;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-legs {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-legs li {
+  display: grid;
+  grid-template-columns: 1.6rem 0.8rem minmax(0, 1fr) 4rem 4rem 4rem 1.6rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.32rem 0.3rem;
+  font-size: 0.88rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-legs li:nth-child(odd) {
+  background: rgba(30, 26, 20, 0.06);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-legs li[data-up="false"] .dl-map-leg-name {
+  color: var(--bad);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-leg-n {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: #1e1a14;
+  color: #f1e4cc;
+  font: 700 0.8rem/1.5rem var(--font-data-narrow);
+  text-align: center;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-leg-name em {
+  font-style: normal;
+  font-size: 0.8rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-leg-num {
+  font-family: var(--font-data-narrow);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: rgba(30, 26, 20, 0.72);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-leg-num.is-souls {
+  font-weight: 700;
+  color: #1e1a14;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-leg-x {
+  border: 0;
+  background: none;
+  color: rgba(30, 26, 20, 0.6);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.6rem;
+  margin: 0.9rem 0;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-totals > div {
+  padding: 0.5rem 0.7rem;
+  background: rgba(30, 26, 20, 0.07);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-totals > div.is-main {
+  background: #1e1a14;
+  color: #f1e4cc;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-totals dt {
+  font-family: var(--font-data-narrow);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-totals dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-data-narrow);
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-route-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-table-wrap {
@@ -1623,16 +1815,11 @@
   font-weight: 600;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-map-table th[scope="row"] .dl-map-swatch {
+[data-theme="codex"][data-game="deadlock"] .dl-map-table th[scope="row"] .dl-map-icon {
   margin-right: 0.5rem;
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-table td {
   font-family: var(--font-data-narrow);
   font-variant-numeric: tabular-nums;
-}
-
-/* Las marcas chicas llevan un borde fino: con el de las grandes se las comía. */
-[data-theme="codex"][data-game="deadlock"] .dl-map-kind:is([data-kind="crate"], [data-kind="statue"], [data-kind="health"]) .dl-map-mark {
-  stroke-width: calc(0.5px / var(--k, 1));
 }

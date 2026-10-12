@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import SectionHead from "./SectionHead";
-import { useLocale } from "./i18n";
+import { useLang, useLocale } from "./i18n";
 import { useCopy } from "./deadlockCopy";
+import { text } from "./localized";
+import { catalog } from "./deadlockData";
+import { useHeroKit } from "./deadlockHeroKitData";
+import GameImg from "./GameImg";
 import {
   DEFAULT_LAYERS,
   MAP,
@@ -18,41 +22,80 @@ import {
   type MapKindId,
   type UnitSize,
 } from "./deadlockMapData";
+import {
+  STOP_PREFIX,
+  formatRoute,
+  parseRoute,
+  routeTotals,
+  suggestRoute,
+  type RouteHero,
+  type Side,
+  type Stop,
+  type Wing,
+} from "./deadlockRoutes";
 
 /**
- * La pestaña Mapa: el minimapa del juego con lo que hay en cada lugar.
+ * La pestaña Mapa: nuestro mapa de Deadlock, con lo que hay en cada lugar y un
+ * armador de rutas de farmeo.
  *
- * Tres controles sobre una sola imagen: **capas** (qué tipos se dibujan),
- * **minuto** (qué apareció ya, y cuánto dan los campamentos a esa altura) y
- * **el punto elegido**, que abre su ficha. Debajo va la misma información en
- * una tabla, que es lo que se lee en el teléfono y lo que indexa un buscador.
+ * El mapa es propio: la forma se calca del minimapa del juego a vectores
+ * (`map_data.py`), así que no se pixela al acercar y se pinta con el estilo del
+ * sitio. Cada cosa lleva su ícono —los campamentos usan el triángulo con barras
+ * del juego— y su color.
  *
- * El zoom y el arrastre son propios: es una imagen de 1024 px, no un mapa de
- * teselas, y una librería de mapas pesaría más que la página entera. Una capa
+ * Dos modos sobre el mismo mapa: **mirar** (tocar una marca abre su ficha) y
+ * **armar una ruta** (tocar una marca la suma como parada). La ruta se mide con
+ * el héroe y el minuto elegidos; ver `deadlockRoutes.ts` para lo que esa
+ * estimación cuenta y lo que no.
+ *
+ * El zoom y el arrastre son propios: es un SVG, no un mapa de teselas. Una capa
  * apagada no se monta: con las 665 cajas y estatuas prendidas el SVG pasa de
  * cien nodos a ochocientos.
  */
 
 /** El lado del SVG: las posiciones van de 0 a 1 y se multiplican por esto. */
 const SIZE = 1000;
-const MAX_ZOOM = 6;
+const MAX_ZOOM = 12;
 
-/** El radio de cada marca con la vista entera, en unidades del SVG. Ver `r` para el zoom. */
-const RADIUS: Record<MapKindId, number> = {
-  "camp-small": 6,
-  "camp-medium": 7.5,
-  "camp-large": 9,
-  vault: 7.5,
-  midboss: 11,
-  crate: 2.6,
-  statue: 3.2,
-  health: 4.5,
-  buff: 7,
-  walker: 7,
-  "base-guardian": 5,
-  shrine: 6,
-  patron: 9,
-  shop: 6,
+/** El tamaño de cada ícono con la vista entera, en unidades del SVG. Ver `iconSize`. */
+const ICON: Record<MapKindId, number> = {
+  "camp-small": 15,
+  "camp-medium": 17,
+  "camp-large": 19,
+  vault: 16,
+  midboss: 26,
+  crate: 6,
+  statue: 7.5,
+  health: 10,
+  buff: 15,
+  walker: 17,
+  "base-guardian": 12,
+  shrine: 14,
+  patron: 22,
+  shop: 14,
+};
+
+/**
+ * Los íconos, dibujados en una caja de 2×2 centrada en el origen.
+ *
+ * Los campamentos son el triángulo del minimapa del juego: solo el chico, con
+ * una barra el mediano y con dos el grande.
+ */
+const GLYPH: Record<MapKindId, string> = {
+  "camp-small": "M0 -0.85L0.85 0.7H-0.85Z",
+  "camp-medium": "M0 -1L0.8 0.3H-0.8ZM-0.8 0.55H0.8V0.95H-0.8Z",
+  "camp-large": "M0 -1L0.72 0H-0.72ZM-0.8 0.2H0.8V0.52H-0.8ZM-0.8 0.68H0.8V1H-0.8Z",
+  vault: "M-0.8 -0.9H0.8V0.9H-0.8ZM0 -0.42A0.42 0.42 0 1 0 0 0.42A0.42 0.42 0 1 0 0 -0.42Z",
+  midboss: "M0 -1L0.3 -0.4L0.95 -0.3L0.48 0.15L0.6 0.8L0 0.5L-0.6 0.8L-0.48 0.15L-0.95 -0.3L-0.3 -0.4Z",
+  crate: "M-0.8 -0.8H0.8V0.8H-0.8Z",
+  statue: "M0 -1L0.8 0L0 1L-0.8 0Z",
+  health: "M-0.32 -0.95H0.32V-0.32H0.95V0.32H0.32V0.95H-0.32V0.32H-0.95V-0.32H-0.32Z",
+  buff: "M0.2 -1L-0.7 0.15H-0.05L-0.25 1L0.7 -0.2H0.05Z",
+  walker: "M-0.75 -0.9H0.75V0.25L0 1L-0.75 0.25Z",
+  "base-guardian": "M-0.75 -0.9H0.75V0.25L0 1L-0.75 0.25Z",
+  shrine: "M0 -1L0.75 -0.35V0.9H-0.75V-0.35Z",
+  patron: "M-0.95 -0.7L-0.45 -0.1L0 -0.95L0.45 -0.1L0.95 -0.7V0.85H-0.95Z",
+  shop: "M-0.9 -0.15L0 -0.95L0.9 -0.15H0.65V0.9H-0.65V-0.15Z",
 };
 
 /** Los que llevan equipo en el tercer número del punto: 2 Hidden King, 3 Archmother. */
@@ -64,25 +107,93 @@ interface View {
   y: number;
 }
 
-/** Lo elegido: un campamento por índice, o un tipo entero. */
+/** Lo elegido para la ficha: un campamento por índice, o un tipo entero. */
 type Selection = { camp: number } | { kind: MapKindId } | null;
+type Mode = "inspect" | "route";
+
+/** Lo que la dirección guarda de una ruta: paradas, héroe y minuto. */
+function readQuery(): { route: Stop[]; hero: number | null; minute: number | null } {
+  if (typeof window === "undefined") return { route: [], hero: null, minute: null };
+  const q = new URLSearchParams(window.location.search);
+  const minute = Number(q.get("m"));
+  return {
+    route: parseRoute(q.get("r") ?? ""),
+    hero: q.get("h") ? Number(q.get("h")) : null,
+    minute: q.get("m") !== null && Number.isFinite(minute) ? Math.min(TIMELINE_MAX_MIN, Math.max(0, minute)) : null,
+  };
+}
 
 export default function DeadlockMap() {
   const copy = useCopy();
   const t = copy.deadlock.map;
   const sides = copy.deadlock.ladder.sides;
+  const { lang } = useLang();
   const locale = useLocale();
   const n = (x: number) => Math.round(x).toLocaleString(locale);
+  const kit = useHeroKit();
 
   const [layers, setLayers] = useState<Set<MapKindId>>(() => new Set(DEFAULT_LAYERS));
-  const [ziplines, setZiplines] = useState(true);
+  const [lanes, setLanes] = useState(true);
   const [minute, setMinute] = useState(10);
   const [selected, setSelected] = useState<Selection>(null);
   const [view, setView] = useState<View>({ k: 1, x: 0, y: 0 });
+  const [mode, setMode] = useState<Mode>("inspect");
+  const [route, setRoute] = useState<Stop[]>([]);
+  const [heroId, setHeroId] = useState<number | null>(null);
+  /** El daño por segundo escrito a mano; `null` usa el del arma base del héroe. */
+  const [dpsOverride, setDpsOverride] = useState<number | null>(null);
+  const [side, setSide] = useState<Side>("amber");
+  const [copied, setCopied] = useState(false);
 
   const frame = useRef<HTMLDivElement>(null);
   const drag = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const seconds = minute * 60;
+
+  // Una ruta compartida llega en la dirección. Se lee después de montar para
+  // que el HTML prerenderizado y el primer render del navegador coincidan.
+  useEffect(() => {
+    const q = readQuery();
+    if (q.route.length > 0) {
+      setRoute(q.route);
+      setMode("route");
+      setLayers((prev) => new Set([...prev, ...q.route.map((s) => s.kind)]));
+    }
+    if (q.hero !== null) setHeroId(q.hero);
+    if (q.minute !== null) setMinute(q.minute);
+  }, []);
+
+  /** Los héroes que tienen stats, por nombre. */
+  const heroes = useMemo(() => {
+    if (!kit) return [];
+    return Object.entries(kit.heroes)
+      .filter(([id, row]) => row.stats && catalog.heroes[id])
+      .map(([id, row]) => ({
+        id: Number(id),
+        name: text(catalog.heroes[id].name, lang, id),
+        img: catalog.heroes[id].img,
+        speed: row.stats.moveSpeed + row.stats.sprintSpeed,
+        // Sin arma medida (un héroe recién salido) se usa un daño genérico.
+        dps: row.stats.weapon?.sustainedDps || row.stats.weapon?.dps || 40,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name, locale));
+  }, [kit, lang, locale]);
+  const heroRow = heroes.find((h) => h.id === heroId) ?? heroes[0];
+  const hero: RouteHero = { speed: heroRow?.speed ?? 8, dps: dpsOverride ?? heroRow?.dps ?? 40 };
+  const totals = useMemo(() => routeTotals(route, hero, minute), [route, hero.speed, hero.dps, minute]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // La dirección sigue a la ruta, para poder copiarla tal cual.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    if (route.length > 0) {
+      url.searchParams.set("r", formatRoute(route));
+      url.searchParams.set("m", String(minute));
+      if (heroRow) url.searchParams.set("h", String(heroRow.id));
+    } else {
+      for (const key of ["r", "m", "h"]) url.searchParams.delete(key);
+    }
+    window.history.replaceState(window.history.state, "", url);
+  }, [route, minute, heroRow?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /** Deja la vista adentro del cuadro: sin esto un arrastre largo pierde el mapa. */
   const clamp = (v: View, side: number): View => {
@@ -93,14 +204,14 @@ export default function DeadlockMap() {
 
   /** Acerca o aleja dejando quieto el punto que está bajo (cx, cy). */
   const zoomAt = (factor: number, cx?: number, cy?: number) => {
-    const side = frame.current?.clientWidth ?? 0;
-    if (side === 0) return;
+    const size = frame.current?.clientWidth ?? 0;
+    if (size === 0) return;
     setView((v) => {
       const k = Math.min(MAX_ZOOM, Math.max(1, v.k * factor));
-      const px = cx ?? side / 2;
-      const py = cy ?? side / 2;
+      const px = cx ?? size / 2;
+      const py = cy ?? size / 2;
       const ratio = k / v.k;
-      return clamp({ k, x: px - (px - v.x) * ratio, y: py - (py - v.y) * ratio }, side);
+      return clamp({ k, x: px - (px - v.x) * ratio, y: py - (py - v.y) * ratio }, size);
     });
   };
 
@@ -132,16 +243,22 @@ export default function DeadlockMap() {
     d.moved = true;
     d.x = e.clientX;
     d.y = e.clientY;
-    const side = frame.current?.clientWidth ?? 0;
-    setView((v) => clamp({ ...v, x: v.x + dx, y: v.y + dy }, side));
+    const size = frame.current?.clientWidth ?? 0;
+    setView((v) => clamp({ ...v, x: v.x + dx, y: v.y + dy }, size));
   };
   const onPointerUp = () => {
     // El click que sigue a un arrastre no elige nada: lo frena `pick`.
     setTimeout(() => (drag.current = null), 0);
   };
-  const pick = (s: Selection) => {
+
+  /** Tocar una marca: abre su ficha y, armando una ruta, la suma o la saca. */
+  const pick = (s: Selection, stopId?: string) => {
     if (drag.current?.moved) return;
     setSelected(s);
+    if (mode !== "route" || !stopId) return;
+    const stop = parseRoute(stopId)[0];
+    if (!stop) return;
+    setRoute((prev) => (prev.some((p) => p.id === stop.id) ? prev.filter((p) => p.id !== stop.id) : [...prev, stop]));
   };
 
   const toggle = (kind: MapKindId) =>
@@ -151,6 +268,23 @@ export default function DeadlockMap() {
       else next.add(kind);
       return next;
     });
+
+  const suggest = (wing: Wing) => {
+    const stops = suggestRoute(side, wing, hero, minute);
+    setRoute(stops);
+    setMode("route");
+    setLayers((prev) => new Set([...prev, ...stops.map((s) => s.kind)]));
+  };
+
+  const share = () => {
+    navigator.clipboard?.writeText(window.location.href).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      },
+      () => {}
+    );
+  };
 
   const unitsText = (units: MapCamp["units"]) =>
     (Object.entries(units) as [UnitSize, number][]).map(([size, count]) => t.units[size](count)).join(" · ");
@@ -170,67 +304,87 @@ export default function DeadlockMap() {
     return key === "initial" && timer.initial === 0 ? t.fromStart : clock(timer[key]);
   };
 
+  // Al acercar, el ícono crece en pantalla pero menos que el mapa (raíz del
+  // zoom): así de lejos se ve y de cerca no tapa lo que tiene al lado.
+  const iconSize = (kind: MapKindId) => (ICON[kind] * 1.25) / Math.sqrt(view.k);
+  const glyph = (kind: MapKindId, x: number, y: number) =>
+    `translate(${(x * SIZE).toFixed(1)} ${(y * SIZE).toFixed(1)}) scale(${(iconSize(kind) / 2).toFixed(2)})`;
+
   const camps = useMemo(() => MAP.camps.map((c, i) => ({ c, i })).filter(({ c }) => layers.has(c.kind)), [layers]);
-  // Al acercar, la marca crece en pantalla pero menos que el mapa (raíz del
-  // zoom): dividir por el zoom entero la dejaba más chica que su propio borde
-  // y las cajas se veían como puntos negros.
-  const r = (kind: MapKindId) => (RADIUS[kind] * 1.6) / Math.sqrt(view.k);
+  const inRoute = useMemo(() => new Map(route.map((s, i) => [s.id, i + 1])), [route]);
   const chosenCamp = selected && "camp" in selected ? MAP.camps[selected.camp] : null;
   const chosenKind: MapKindId | null = chosenCamp ? chosenCamp.kind : selected && "kind" in selected ? selected.kind : null;
+  const badge = 15 / Math.sqrt(view.k);
 
   return (
     <main className="deadlock deadlock-map">
-      <SectionHead eyebrow={copy.deadlock.eyebrow} title={t.title} accent={t.accent} lead={t.lead} />
+      <SectionHead
+        eyebrow={copy.deadlock.eyebrow}
+        title={t.title}
+        accent={t.accent}
+        lead={t.lead}
+        controls={
+          <div className="seg" role="group" aria-label={t.mode.label}>
+            {(["inspect", "route"] as Mode[]).map((id) => (
+              <button key={id} type="button" data-active={mode === id} aria-pressed={mode === id} onClick={() => setMode(id)}>
+                {t.mode[id]}
+              </button>
+            ))}
+          </div>
+        }
+      />
 
       <div className="page has-rail dl-map-page">
         <div className="page-main">
           <section className="box dl-map-box">
             <div
               className="dl-map-frame"
+              data-mode={mode}
               ref={frame}
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
               onPointerCancel={onPointerUp}
             >
-              <div
-                className="dl-map-canvas"
-                style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.k})` }}
-              >
-                {/* La imagen principal de la página: sin `lazy`. */}
-                <img src="/deadlock/game/minimap/midtown.webp" alt={t.alt} width={1024} height={1024} draggable={false} />
+              <div className="dl-map-canvas" style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.k})` }}>
                 {/* `--k` es el zoom: los trazos se dividen por él en el CSS, porque
                     `non-scaling-stroke` no descuenta la escala que pone el contenedor. */}
-                <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="dl-map-marks" style={{ "--k": view.k } as CSSProperties}>
-                  {ziplines &&
-                    MAP.ziplines.map((z) => {
-                      const points = z.points.map(([x, y]) => `${(x * SIZE).toFixed(1)},${(y * SIZE).toFixed(1)}`).join(" ");
-                      // Dos trazos: uno oscuro debajo para que el color del carril
-                      // se lea igual sobre la calle clara y sobre un edificio.
-                      return (
-                        <g key={z.lane} className="dl-map-zip" data-lane={z.lane}>
-                          <polyline className="dl-map-zip-case" points={points} />
-                          <polyline className="dl-map-zip-line" points={points} />
-                        </g>
-                      );
-                    })}
+                <svg
+                  viewBox={`0 0 ${SIZE} ${SIZE}`}
+                  className="dl-map-marks"
+                  style={{ "--k": view.k } as CSSProperties}
+                  role="img"
+                  aria-label={t.alt}
+                >
+                  <path className="dl-map-buildings" d={MAP.shape.silhouette} fillRule="evenodd" />
+                  <path className="dl-map-ground" d={MAP.shape.ground} fillRule="evenodd" />
+
+                  {lanes &&
+                    MAP.ziplines.map((z) => (
+                      <polyline
+                        key={z.lane}
+                        className="dl-map-lane"
+                        data-lane={z.lane}
+                        points={z.points.map(([x, y]) => `${(x * SIZE).toFixed(1)},${(y * SIZE).toFixed(1)}`).join(" ")}
+                      />
+                    ))}
 
                   {MAP_KINDS.filter((kind) => layers.has(kind) && MAP.points[kind]).map((kind) => (
                     <g key={kind} className="dl-map-kind" data-kind={kind}>
                       {MAP.points[kind]!.map(([x, y, extra], i) => {
-                        const team = TEAM_KINDS.includes(kind) ? extra : undefined;
-                        const up = isUpAt(MAP.kinds[kind], seconds, TEAM_KINDS.includes(kind) ? 0 : extra);
+                        const isTeam = TEAM_KINDS.includes(kind);
+                        const prefix = STOP_PREFIX[kind];
+                        const stopId = prefix ? `${prefix}${i}` : undefined;
                         return (
-                          <circle
+                          <path
                             key={i}
                             className="dl-map-mark"
-                            data-team={team}
-                            data-up={up}
-                            data-on={chosenKind === kind && !chosenCamp ? "" : undefined}
-                            cx={x * SIZE}
-                            cy={y * SIZE}
-                            r={r(kind)}
-                            onClick={() => pick({ kind })}
+                            d={GLYPH[kind]}
+                            transform={glyph(kind, x, y)}
+                            data-team={isTeam ? extra : undefined}
+                            data-up={isUpAt(MAP.kinds[kind], seconds, isTeam ? 0 : extra)}
+                            data-on={(chosenKind === kind && !chosenCamp) || (stopId && inRoute.has(stopId)) ? "" : undefined}
+                            onClick={() => pick({ kind }, stopId)}
                           />
                         );
                       })}
@@ -238,20 +392,33 @@ export default function DeadlockMap() {
                   ))}
 
                   {camps.map(({ c, i }) => (
-                    <circle
+                    <path
                       key={i}
                       className="dl-map-mark"
+                      d={GLYPH[c.kind]}
+                      transform={glyph(c.kind, c.x, c.y)}
                       data-kind={c.kind}
                       data-up={isUpAt(MAP.kinds[c.kind], seconds)}
-                      data-on={chosenCamp === c ? "" : undefined}
-                      cx={c.x * SIZE}
-                      cy={c.y * SIZE}
-                      r={r(c.kind)}
-                      onClick={() => pick({ camp: i })}
+                      data-on={chosenCamp === c || inRoute.has(`c${i}`) ? "" : undefined}
+                      onClick={() => pick({ camp: i }, `c${i}`)}
                     >
                       <title>{t.kinds[c.kind][0]}</title>
-                    </circle>
+                    </path>
                   ))}
+
+                  {route.length > 0 && (
+                    <g className="dl-map-route">
+                      <polyline points={route.map((s) => `${(s.x * SIZE).toFixed(1)},${(s.y * SIZE).toFixed(1)}`).join(" ")} />
+                      {route.map((s, i) => (
+                        <g key={s.id} transform={`translate(${(s.x * SIZE + badge * 0.9).toFixed(1)} ${(s.y * SIZE - badge * 0.9).toFixed(1)})`}>
+                          <circle r={badge * 0.62} />
+                          <text fontSize={badge * 0.8} dy="0.35em">
+                            {i + 1}
+                          </text>
+                        </g>
+                      ))}
+                    </g>
+                  )}
                 </svg>
               </div>
 
@@ -281,7 +448,135 @@ export default function DeadlockMap() {
               />
               <output htmlFor="dl-map-minute">{clock(seconds)}</output>
             </div>
-            <p className="dl-tier-note">{t.timeNote}</p>
+            <p className="dl-tier-note">{mode === "route" ? t.route.hint : t.timeNote}</p>
+          </section>
+
+          {/* La ruta va debajo del mapa y a lo ancho: es una lista de tramos con
+              cuatro cifras cada uno, y en el costado no entraba. */}
+          <section className="box dl-map-route-box">
+            <div className="box-head">
+              <h2 className="box-title">{t.route.title}</h2>
+            </div>
+            <p className="detail-note">{t.route.lead}</p>
+
+            <div className="dl-map-route-setup">
+              <label>
+                <span>{t.route.hero}</span>
+                <span className="dl-map-hero">
+                  {heroRow && <GameImg src={heroRow.img} alt="" width={24} height={24} loading="lazy" decoding="async" />}
+                  <select
+                    value={heroRow?.id ?? ""}
+                    onChange={(e) => {
+                      setHeroId(Number(e.target.value));
+                      setDpsOverride(null);
+                    }}
+                  >
+                    {heroes.map((h) => (
+                      <option key={h.id} value={h.id}>
+                        {h.name}
+                      </option>
+                    ))}
+                  </select>
+                </span>
+              </label>
+              <label>
+                <span>{t.route.dps}</span>
+                <input
+                  type="number"
+                  min={1}
+                  step={1}
+                  value={Math.round(hero.dps)}
+                  onChange={(e) => setDpsOverride(e.target.value === "" ? null : Math.max(1, Number(e.target.value)))}
+                />
+              </label>
+              <div className="dl-map-suggest">
+                <span>{t.route.suggest}</span>
+                <div className="seg" role="group" aria-label={t.route.side}>
+                  {(["amber", "sapphire"] as Side[]).map((id) => (
+                    <button key={id} type="button" data-active={side === id} aria-pressed={side === id} onClick={() => setSide(id)}>
+                      {id === "amber" ? sides.team0 : sides.team1}
+                    </button>
+                  ))}
+                </div>
+                <button type="button" className="dl-map-btn" onClick={() => suggest("west")}>
+                  {t.route.west}
+                </button>
+                <button type="button" className="dl-map-btn" onClick={() => suggest("east")}>
+                  {t.route.east}
+                </button>
+              </div>
+            </div>
+            <p className="dl-tier-note">{t.route.speed(hero.speed.toLocaleString(locale, { maximumFractionDigits: 1 }))}</p>
+
+            {route.length === 0 ? (
+              <p className="box-empty">{t.route.empty}</p>
+            ) : (
+              <>
+                <ol className="dl-map-legs">
+                  {totals.legs.map((leg, i) => (
+                    <li key={leg.stop.id} data-up={leg.up}>
+                      <span className="dl-map-leg-n">{i + 1}</span>
+                      <span className="dl-map-swatch" data-kind={leg.stop.kind} aria-hidden="true" />
+                      <span className="dl-map-leg-name">
+                        {t.kinds[leg.stop.kind][0]}
+                        {!leg.up && <em> · {t.route.notUp}</em>}
+                      </span>
+                      <span className="dl-map-leg-num" title={t.route.walk}>
+                        {i === 0 ? "—" : `${n(leg.travel)} s`}
+                      </span>
+                      <span className="dl-map-leg-num" title={t.route.clear}>
+                        {n(leg.clear)} s
+                      </span>
+                      <span className="dl-map-leg-num is-souls">{n(leg.souls)}</span>
+                      <button
+                        type="button"
+                        className="dl-map-leg-x"
+                        aria-label={t.route.remove}
+                        onClick={() => setRoute((prev) => prev.filter((p) => p.id !== leg.stop.id))}
+                      >
+                        ×
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+
+                <dl className="dl-map-totals">
+                  <div>
+                    <dt>{t.route.time}</dt>
+                    <dd>{clock(totals.total)}</dd>
+                  </div>
+                  <div>
+                    <dt>{t.route.walk}</dt>
+                    <dd>{clock(totals.travel)}</dd>
+                  </div>
+                  <div>
+                    <dt>{t.route.clear}</dt>
+                    <dd>{clock(totals.clear)}</dd>
+                  </div>
+                  <div>
+                    <dt>{t.route.souls}</dt>
+                    <dd>{n(totals.souls)}</dd>
+                  </div>
+                  <div className="is-main">
+                    <dt>{t.route.rate}</dt>
+                    <dd>{n(totals.soulsPerMin)}</dd>
+                  </div>
+                </dl>
+
+                <div className="dl-map-route-actions">
+                  <button type="button" className="dl-map-btn" onClick={share}>
+                    {copied ? t.route.copied : t.route.share}
+                  </button>
+                  <button type="button" className="dl-map-btn" onClick={() => setRoute((prev) => prev.slice(0, -1))}>
+                    {t.route.undo}
+                  </button>
+                  <button type="button" className="dl-map-btn" onClick={() => setRoute([])}>
+                    {t.route.clearAll}
+                  </button>
+                </div>
+              </>
+            )}
+            <p className="dl-tier-note">{t.route.note}</p>
           </section>
         </div>
 
@@ -294,14 +589,16 @@ export default function DeadlockMap() {
                 {MAP_KINDS.filter((kind) => MAP.kinds[kind].group === group).map((kind) => (
                   <label key={kind} className="dl-map-layer">
                     <input type="checkbox" checked={layers.has(kind)} onChange={() => toggle(kind)} />
-                    <span className="dl-map-swatch" data-kind={kind} aria-hidden="true" />
+                    <svg className="dl-map-icon" data-kind={kind} viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true">
+                      <path d={GLYPH[kind]} />
+                    </svg>
                     <span className="dl-map-layer-name">{t.kinds[kind][1]}</span>
                     <span className="dl-map-layer-n">{MAP.kinds[kind].count}</span>
                   </label>
                 ))}
                 {group === "places" && (
                   <label className="dl-map-layer">
-                    <input type="checkbox" checked={ziplines} onChange={() => setZiplines((v) => !v)} />
+                    <input type="checkbox" checked={lanes} onChange={() => setLanes((v) => !v)} />
                     <span className="dl-map-swatch" data-kind="zipline" aria-hidden="true" />
                     <span className="dl-map-layer-name">{t.ziplines}</span>
                     <span className="dl-map-layer-n">{MAP.ziplines.length}</span>
@@ -389,12 +686,14 @@ export default function DeadlockMap() {
                   return (
                     <tr key={kind}>
                       <th scope="row">
-                        <span className="dl-map-swatch" data-kind={kind} aria-hidden="true" />
+                        <svg className="dl-map-icon" data-kind={kind} viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true">
+                          <path d={GLYPH[kind]} />
+                        </svg>
                         {t.kinds[kind][1]}
                       </th>
                       <td>{k.count}</td>
                       <td>{isCamp ? range(campRange(kind, (c) => c.health)) : k.health !== undefined ? n(k.health) : "—"}</td>
-                      <td>{souls && souls[1] > 0 ? range(souls) : "—"}</td>
+                      <td>{souls && souls[1] > 0 ? range(souls) : k.souls ? t.table.crateSouls(n(k.souls)) : "—"}</td>
                       <td>{timing(kind, "initial")}</td>
                       <td>{timing(kind, "respawn")}</td>
                     </tr>
@@ -403,9 +702,7 @@ export default function DeadlockMap() {
               </tbody>
             </table>
           </div>
-          <p className="dl-tier-note">
-            {t.table.note(sides.team0, sides.team1)}
-          </p>
+          <p className="dl-tier-note">{t.table.note(sides.team0, sides.team1)}</p>
         </section>
       </div>
     </main>

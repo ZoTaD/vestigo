@@ -120,10 +120,10 @@ const EN = {
           "gives by win streak, with demotion shields and calibration, measured on a million games.",
       },
       map: {
-        title: () => "Deadlock Map — Jungle Camps, Crates and Spawn Timers | Vestigo",
+        title: () => "Deadlock Map — Jungle Camps, Spawn Timers and Farming Routes | Vestigo",
         description: () =>
-          "Interactive Deadlock map: every jungle camp, Sinner's Sacrifice, crate, golden statue and " +
-          "objective, with health, souls and the minute each one spawns and respawns.",
+          "Interactive Deadlock map: every jungle camp, Sinner's Sacrifice, crate and golden statue with " +
+          "health, souls and spawn timers. Build a farming route and time it with any hero.",
       },
       comebacks: {
         title: () => "Deadlock Comebacks — What a Soul Lead Is Worth | Vestigo",
@@ -306,10 +306,10 @@ const ES: typeof EN = {
           "racha, con escudos de descenso y calibración, medido en un millón de partidas.",
       },
       map: {
-        title: () => "Mapa de Deadlock — Campamentos, cajas y tiempos de aparición | Vestigo",
+        title: () => "Mapa de Deadlock — Campamentos, tiempos y rutas de farmeo | Vestigo",
         description: () =>
-          "Mapa interactivo de Deadlock: cada campamento de la jungla, Sacrificio del Pecador, caja, " +
-          "estatua dorada y objetivo, con su vida, sus almas y el minuto en que aparece y reaparece.",
+          "Mapa interactivo de Deadlock: cada campamento de la jungla, Sacrificio del Pecador, caja y " +
+          "estatua dorada con su vida, sus almas y sus tiempos. Armá una ruta de farmeo y medila con cualquier héroe.",
       },
       comebacks: {
         title: () => "Remontadas en Deadlock — cuánto vale una ventaja de almas | Vestigo",

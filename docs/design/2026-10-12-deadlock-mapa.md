@@ -130,3 +130,28 @@ Con posiciones, almas y reaparición ya en `map.json`, calcular rutas de farmeo
 (almas por minuto según distancia y reaparición, por lado y por tramo de la
 partida) y contrastarlas con guías. No se copia una ruta de una guía como
 "óptima".
+
+## Etapa 2, hecha el mismo día: mapa propio y rutas
+
+Pedido de ZoTaD al ver la etapa 1: el minimapa del juego se pixela al acercar y
+con puntos no se entiende qué es cada cosa.
+
+- **Mapa propio.** `map_data.py` calca el minimapa a vectores (`shape` en
+  `map.json`: el suelo y la silueta) con `potracer`. La página lo dibuja como un
+  plano sobre papel; ya no usa ninguna imagen.
+- **Íconos.** Cada tipo tiene su forma (`GLYPH` en `DeadlockMap.tsx`); los
+  campamentos usan el triángulo con barras del minimapa del juego.
+- **Armador de rutas.** En modo "Armar una ruta", tocar una marca la suma como
+  parada. La ruta se mide con un héroe y un minuto, y viaja en la dirección
+  (`?r=c40.c10&m=10&h=6`) para compartirla.
+- **Tiempos** (`deadlockRoutes.ts`): caminar es línea recta × 1,35 a la velocidad
+  de carrera del héroe; limpiar es vida ÷ daño por segundo (el del arma base con
+  recargas, o el que escriba el jugador) más 1,5 s por parada. Es una estimación
+  y la página lo dice.
+- **Rutas sugeridas.** Por lado y por mitad de la jungla: golosa desde cada
+  campamento, se queda con la de más almas por minuto. Sólo campamentos que ya
+  aparecieron; sin cajas.
+
+Lo que no cuenta todavía: el camino real (malla de navegación), las tirolesas,
+los objetos y habilidades del héroe, y que un campamento limpiado tarda en
+volver (una ruta sugerida es una pasada, no un ciclo).

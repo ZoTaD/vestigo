@@ -1,6 +1,5 @@
 """
-El mapa de Deadlock sacado del juego instalado → games/deadlock/data/map.json
-y site/public/deadlock/game/minimap/.
+El mapa de Deadlock sacado del juego instalado → games/deadlock/data/map.json.
 
 Qué hay en cada lugar (campamentos de la jungla, cajas, estatuas, vida
 flotante, jefe del medio, objetivos, tiendas, tirolesas), cuánto aguanta,
@@ -11,6 +10,7 @@ Uso (una vez por parche, en la PC que tiene el juego):
 
 Source2Viewer-CLI: github.com/ValveResourceFormat/ValveResourceFormat/releases
 (cli-windows-x64.zip). Sólo LEE los paks del juego; no modifica nada.
+Para calcar el minimapa hacen falta `numpy`, `Pillow` y `potracer`.
 """
 import argparse, json, math, os, re, struct, subprocess, sys
 from collections import Counter, defaultdict
@@ -18,7 +18,6 @@ from datetime import datetime, timezone
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 OUT_JSON = os.path.join(ROOT, "games", "deadlock", "data", "map.json")
-OUT_IMG = os.path.join(ROOT, "site", "public", "deadlock", "game", "minimap")
 GAME = r"C:/Program Files (x86)/Steam/steamapps/common/Deadlock/game/citadel"
 MAP_VPK = GAME + "/maps/dl_midtown.vpk"
 MAP_ENTS = "maps/dl_midtown/entities/default_ents.vents_c"
@@ -196,6 +195,10 @@ def build(ents, misc, units, generic_text):
     for kind in ("crate", "statue"):
         kinds[kind] = {"group": "loot", "count": len(points[kind]),
                        "timers": [{"initial": a, "respawn": b} for a, b in groups]}
+    # Lo que suelta una caja: almas base, lo que suma por minuto y con qué probabilidad.
+    kinds["crate"]["souls"] = num(field(misc, "small_gold_pickup", "m_flGoldAmount"))
+    kinds["crate"]["soulsPerMinute"] = num(field(misc, "small_gold_pickup", "m_flGoldPerMinuteAmount"))
+    kinds["crate"]["dropChance"] = num(field(misc, "citadel_breakable_prop_wooden_crate", "m_flPowerupDropChance")) / 100
 
     for e in by["citadel_pickup_spawner"]:
         points["health"].append(at(e))
@@ -315,13 +318,47 @@ def extract(vrf, cache):
     return ents
 
 
-def images(cache):
-    from PIL import Image
+def trace(mask):
+    """Una máscara booleana → el `d` de un path SVG en coordenadas 0..1000."""
+    import potrace  # `pip install potracer`
 
-    src = os.path.join(cache, "panorama", "images", "minimap")
-    os.makedirs(OUT_IMG, exist_ok=True)
-    Image.open(os.path.join(src, "base", "minimap_midtown_mid_psd.png")).save(
-        os.path.join(OUT_IMG, "midtown.webp"), quality=82, method=6)
+    scale = 1000.0 / mask.shape[0]
+    p = lambda pt: f"{pt.x * scale:.1f} {pt.y * scale:.1f}"
+    out = []
+    # `alphamax` bajo: el mapa es de esquinas rectas, no de curvas.
+    # potracer calca lo que vale 0: se le pasa la máscara al revés.
+    for curve in potrace.Bitmap((~mask).astype("uint8") * 255).trace(turdsize=12, alphamax=0.45, opticurve=True, opttolerance=0.4):
+        out.append(f"M{p(curve.start_point)}")
+        for seg in curve.segments:
+            if seg.is_corner:
+                out.append(f"L{p(seg.c)}L{p(seg.end_point)}")
+            else:
+                out.append(f"C{p(seg.c1)} {p(seg.c2)} {p(seg.end_point)}")
+        out.append("Z")
+    return "".join(out)
+
+
+def shape(cache):
+    """
+    El mapa propio: el minimapa del juego calcado a vectores.
+
+    En la imagen del juego el suelo es opaco y tanto los edificios como el
+    afuera son transparentes. Se calcan dos formas: el suelo (con los edificios
+    como huecos) y la silueta entera (el suelo con los huecos rellenos), para
+    poder pintar los edificios distinto del afuera.
+    """
+    import numpy as np
+    from PIL import Image, ImageDraw
+
+    src = os.path.join(cache, "panorama", "images", "minimap", "base", "minimap_midtown_mid_psd.png")
+    ground = np.array(Image.open(src).convert("RGBA"))[:, :, 3] > 100
+    # El afuera es lo transparente que se alcanza desde el borde.
+    flood = Image.fromarray((~ground).astype("uint8") * 255).convert("L")
+    padded = Image.new("L", (flood.width + 2, flood.height + 2), 255)
+    padded.paste(flood, (1, 1))
+    ImageDraw.floodfill(padded, (0, 0), 128)
+    outside = np.array(padded)[1:-1, 1:-1] == 128
+    return {"ground": trace(ground), "silhouette": trace(~outside)}
 
 
 def main():
@@ -336,10 +373,9 @@ def main():
                  parse_vdata(read("scripts", "misc.vdata")),
                  parse_vdata(read("scripts", "npc_units.vdata")),
                  read("scripts", "generic_data.vdata"))
-    data = {"generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%d"), **data}
+    data = {"generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%d"), **data, "shape": shape(args.cache)}
     with open(OUT_JSON, "w", encoding="utf-8", newline="\n") as f:
         json.dump(data, f, separators=(",", ":"))
-    images(args.cache)
 
     for k, v in data["kinds"].items():
         print(f"  {k:14} {v}")

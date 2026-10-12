@@ -45,6 +45,10 @@ export interface MapKind extends Partial<MapTimer> {
   respawnMin?: number;
   /** Los rompibles reaparecen por grupo: un par de tiempos por grupo. */
   timers?: MapTimer[];
+  /** Una caja: las almas que suelta, lo que suma por minuto y con qué probabilidad. */
+  souls?: number;
+  soulsPerMinute?: number;
+  dropChance?: number;
 }
 
 export type UnitSize = "weak" | "normal" | "strong" | "vault" | "boss";
@@ -72,6 +76,8 @@ export interface MapFile {
   /** Por tipo: `[x, y]` y, según el tipo, un tercer número (grupo de reaparición o equipo). */
   points: Partial<Record<MapKindId, number[][]>>;
   ziplines: { lane: number; points: number[][] }[];
+  /** El mapa calcado a vectores, en coordenadas de 0 a 1000: el suelo y la silueta entera. */
+  shape: { ground: string; silhouette: string };
 }
 
 export const MAP = mapJson as unknown as MapFile;
