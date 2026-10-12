@@ -1978,3 +1978,12 @@
   line-height: 1.4;
   color: rgba(30, 26, 20, 0.78);
 }
+
+/* Lo que no tiene imagen del juego (el potenciador del puente) va con su círculo, no con una placa vacía. */
+[data-theme="codex"][data-game="deadlock"] .dl-map-leg-ic:empty {
+  width: 16px;
+  height: 16px;
+  margin: 9px;
+  border-radius: 50%;
+  background: #c58bf2;
+}
