@@ -903,44 +903,53 @@ export default function DeadlockPlayer({
             </aside>
           </div>
 
-          <div className="dl-profile-aside dl-profile-more">
-            {heroesTop.length > 0 && (
-              <div className="box dl-pcard">
-                <h2 className="box-title dl-pcard-title">{c.cards.heroes}</h2>
-                <TopHeroes
-                  heroes={heroesTop}
-                  activeHero={heroFiltro}
-                  onToggleHero={alternarHeroe}
-                />
-              </div>
-            )}
+          {/* Tres columnas fijas y no `columns` de CSS: al repartir las tarjetas,
+              el navegador partía su canto rasgado y dejaba tiras sueltas al pie
+              de las columnas. Una columna sin tarjetas no ocupa lugar. */}
+          <div className="dl-profile-more">
+            <div className="dl-profile-aside">
+              {heroesTop.length > 0 && (
+                <div className="box dl-pcard">
+                  <h2 className="box-title dl-pcard-title">{c.cards.heroes}</h2>
+                  <TopHeroes
+                    heroes={heroesTop}
+                    activeHero={heroFiltro}
+                    onToggleHero={alternarHeroe}
+                  />
+                </div>
+              )}
 
-            {/* Cuáles son tus héroes y qué tan bien te va con cada uno: los
-                botones de "Más jugados" filtran la lista; esta tabla mide la
-                carrera. */}
-            <DeadlockCareerHeroes stats={carrera} />
+              {/* Cuáles son tus héroes y qué tan bien te va con cada uno: los
+                  botones de "Más jugados" filtran la lista; esta tabla mide la
+                  carrera. */}
+              <DeadlockCareerHeroes stats={carrera} />
+            </div>
 
             {/* La misma carrera, leída contra tu rango: de "cómo te va con cada
                 héroe" a "con cuál te conviene jugar más". */}
-            <DeadlockHeroFitCard stats={carrera} badge={rango?.badge ?? 0} />
+            <div className="dl-profile-aside">
+              <DeadlockHeroFitCard stats={carrera} badge={rango?.badge ?? 0} />
+            </div>
 
             {/* Las dos reciben `enModo` y no `filtrado`: son preguntas sobre
                 personas, no sobre un héroe. Filtrar "con quién jugás" por el
                 héroe que se está mirando en la lista contestaría "con quién
                 jugás cuando jugás a Lash", que es otra cosa — el mismo criterio
                 que ya rige la racha y la forma. */}
-            <DeadlockPeerCard
-              kind="mates"
-              peers={mates}
-              rows={enModo}
-              onOpenAccount={onOpenAccount}
-            />
-            <DeadlockPeerCard
-              kind="enemies"
-              peers={enemies}
-              rows={enModo}
-              onOpenAccount={onOpenAccount}
-            />
+            <div className="dl-profile-aside">
+              <DeadlockPeerCard
+                kind="mates"
+                peers={mates}
+                rows={enModo}
+                onOpenAccount={onOpenAccount}
+              />
+              <DeadlockPeerCard
+                kind="enemies"
+                peers={enemies}
+                rows={enModo}
+                onOpenAccount={onOpenAccount}
+              />
+            </div>
           </div>
         </>
       )}

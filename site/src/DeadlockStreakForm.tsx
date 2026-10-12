@@ -30,7 +30,7 @@ export default function DeadlockStreakForm({
 
   return (
     <div className="dl-rep-form">
-      <span className="dl-rep-form-title">{c.title}</span>
+      <h2 className="box-title dl-pcard-title">{c.title}</h2>
       {streak && (
         <p className={`dl-rep-streak ${streak.won ? "is-win" : "is-loss"}`}>
           {streak.won ? c.streakWin(streak.length) : c.streakLoss(streak.length)}
