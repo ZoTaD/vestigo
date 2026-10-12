@@ -156,8 +156,9 @@ export default function DeadlockMap() {
   const [view, setView] = useState<View>({ k: 1, x: 0, y: 0 });
   /** El lado del mapa en pantalla: el menor entre el ancho y el alto del cuadro. */
   const [side, setSide] = useState(DESIGN_SIDE);
-  const [mode, setMode] = useState<Mode>("inspect");
-  const [panel, setPanel] = useState<Panel>("info");
+  // Se abre armando una ruta (ZoTaD, 2026-10-12): es para lo que se viene. "Mirar" queda a un click.
+  const [mode, setMode] = useState<Mode>("route");
+  const [panel, setPanel] = useState<Panel>("route");
   const [route, setRoute] = useState<Stop[]>([]);
   const [heroId, setHeroId] = useState<number | null>(null);
   /** El daño por segundo escrito a mano; `null` usa el del arma base del héroe. */
@@ -384,7 +385,7 @@ export default function DeadlockMap() {
         lead={t.lead}
         controls={
           <div className="seg" role="group" aria-label={t.mode.label}>
-            {(["inspect", "route"] as Mode[]).map((id) => (
+            {(["route", "inspect"] as Mode[]).map((id) => (
               <button
                 key={id}
                 type="button"
@@ -392,7 +393,7 @@ export default function DeadlockMap() {
                 aria-pressed={mode === id}
                 onClick={() => {
                   setMode(id);
-                  if (id === "route") setPanel("route");
+                  setPanel(id === "route" ? "route" : "info");
                 }}
               >
                 {t.mode[id]}
