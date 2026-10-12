@@ -1978,3 +1978,10 @@
 [data-theme="codex"][data-game="deadlock"] .dl-map-pane :is(.detail-note, .box-empty) {
   color: rgba(30, 26, 20, 0.78);
 }
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-repeat {
+  margin: -0.3rem 0 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: rgba(30, 26, 20, 0.78);
+}

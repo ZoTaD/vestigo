@@ -849,7 +849,9 @@ const EN = {
         clear: "clear",
         time: "Total time",
         souls: "Souls",
-        rate: "Souls per minute",
+        repeat: "Whole route back in",
+        repeatNote: (wait: string, last: string) =>
+          `Counted from when you start. After you finish, that is a ${wait} wait; the last stop to come back is the ${last}.`,
         remove: "Remove this stop",
         addStop: "Add to route",
         removeStop: "Remove from route",
@@ -858,7 +860,7 @@ const EN = {
         undo: "Remove last stop",
         clearAll: "Clear route",
         note:
-          "Times are estimates: walking is the straight-line distance plus 35% for walls and stairs, with no ziplines; clearing is the stop's health divided by the damage per second above. Crate souls are the average drop. Suggested routes only use camps that are up at the chosen minute.",
+          "Times are estimates: walking is the straight-line distance plus 35% for walls and stairs, with no ziplines; clearing is the stop's health divided by the damage per second above. Crate souls are the average drop. Each stop starts its respawn clock when you clear it. Suggested routes only use camps that are up at the chosen minute.",
       },
       ziplines: "Lanes and ziplines",
       /** Por número de carril del juego: 1 amarillo, 4 azul, 6 verde. */
@@ -2213,7 +2215,9 @@ const ES: typeof EN = {
         clear: "limpia",
         time: "Tiempo total",
         souls: "Almas",
-        rate: "Almas por minuto",
+        repeat: "La ruta entera vuelve en",
+        repeatNote: (wait: string, last: string) =>
+          `Contado desde que arrancás. Al terminar son ${wait} de espera; la última parada en volver es: ${last}.`,
         remove: "Sacar esta parada",
         addStop: "Sumar a la ruta",
         removeStop: "Sacar de la ruta",
@@ -2222,7 +2226,7 @@ const ES: typeof EN = {
         undo: "Sacar la última parada",
         clearAll: "Borrar la ruta",
         note:
-          "Los tiempos son estimados: caminar es la distancia en línea recta más un 35% por paredes y escaleras, sin tirolesas; limpiar es la vida de la parada dividida por el daño por segundo de arriba. Las almas de una caja son el promedio de lo que suelta. Las rutas sugeridas sólo usan campamentos que ya aparecieron al minuto elegido.",
+          "Los tiempos son estimados: caminar es la distancia en línea recta más un 35% por paredes y escaleras, sin tirolesas; limpiar es la vida de la parada dividida por el daño por segundo de arriba. Las almas de una caja son el promedio de lo que suelta. Cada parada arranca su reloj de reaparición cuando la limpiás. Las rutas sugeridas sólo usan campamentos que ya aparecieron al minuto elegido.",
       },
       ziplines: "Carriles y tirolesas",
       lanes: { "1": "Carril amarillo", "4": "Carril azul", "6": "Carril verde" },

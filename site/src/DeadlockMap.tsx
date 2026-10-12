@@ -677,20 +677,28 @@ export default function DeadlockMap() {
                     })}
                   </ol>
 
+                  {/* La cifra es lo que deja la ruta, no un ritmo por minuto: nada
+                      reaparece cada minuto (ZoTaD, 2026-10-12). Lo que sí se puede
+                      decir es cuándo vuelve a estar entera para repetirla. */}
                   <dl className="dl-map-totals">
                     <div className="is-main">
-                      <dt>{t.route.rate}</dt>
-                      <dd>{n(totals.soulsPerMin)}</dd>
+                      <dt>{t.route.souls}</dt>
+                      <dd>+{n(totals.souls)}</dd>
                     </div>
                     <div>
                       <dt>{t.route.time}</dt>
                       <dd>{clock(totals.total)}</dd>
                     </div>
                     <div>
-                      <dt>{t.route.souls}</dt>
-                      <dd>{n(totals.souls)}</dd>
+                      <dt>{t.route.repeat}</dt>
+                      <dd>{clock(totals.repeatIn)}</dd>
                     </div>
                   </dl>
+                  {totals.lastBack && (
+                    <p className="dl-map-repeat">
+                      {t.route.repeatNote(clock(Math.max(0, totals.repeatIn - totals.total)), t.kinds[totals.lastBack.kind][0])}
+                    </p>
+                  )}
 
                   <div className="dl-map-row">
                     <button type="button" className="dl-map-btn" onClick={share}>
