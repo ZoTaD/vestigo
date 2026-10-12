@@ -72,6 +72,11 @@ describe("Deadlock: rutas del mapa", () => {
     const k = MAP.kinds.crate;
     expect(stopSouls(crate, 0)).toBeCloseTo(k.souls! * k.dropChance!, 5);
     expect(stopSouls(crate, 10)).toBeGreaterThan(stopSouls(crate, 0));
+    // La reforzada suelta siempre, y más: sólo se rompe con un golpe pesado.
+    const tough = allStops().find((s) => s.kind === "tough-crate")!;
+    expect(MAP.kinds["tough-crate"].heavyMeleeOnly).toBe(true);
+    expect(MAP.kinds["tough-crate"].dropChance).toBe(1);
+    expect(stopSouls(tough, 0)).toBeGreaterThan(2 * stopSouls(crate, 0));
   });
 
   it("la ruta sugerida se queda en su lado y su mitad, sin repetir y con lo que ya apareció", () => {

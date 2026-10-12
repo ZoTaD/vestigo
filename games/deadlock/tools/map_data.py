@@ -3,6 +3,10 @@ El mapa de Deadlock sacado del juego instalado → games/deadlock/data/map.json
 y los íconos y retratos de site/public/deadlock/game/map/. El relieve de fondo
 lo hace `map_relief.py`, aparte, porque pesa.
 
+Dos imágenes de esa carpeta NO salen de acá: `crate-photo.webp` y
+`tough-crate-photo.webp` son capturas del juego que pasó ZoTaD (2026-10-12),
+porque el juego no trae una imagen 2D de las cajas. Este script no las toca.
+
 Qué hay en cada lugar (campamentos de la jungla, cajas, estatuas, vida
 flotante, jefe del medio, objetivos, tiendas, tirolesas), cuánto aguanta,
 cuánto da y a qué minuto aparece. Diseño: docs/design/2026-10-12-deadlock-mapa.md.
@@ -35,7 +39,7 @@ CAMP_KIND = {"neutral_camp_weak": "camp-small", "neutral_camp_medium": "camp-med
              "neutral_camp_strong": "camp-large", "neutral_camp_vaults": "vault",
              "neutral_camp_midboss": "midboss"}
 BREAKABLE_KIND = {"citadel_breakable_prop_wooden_crate": "crate",
-                  "citadel_breakable_prop_tough_crate": "crate",
+                  "citadel_breakable_prop_tough_crate": "tough-crate",
                   "citadel_breakable_item_container": "statue"}
 # Hasta dónde se busca el campamento de una criatura cuando el nombre no calza.
 CAMP_RADIUS = 700.0
@@ -218,13 +222,19 @@ def build(ents, misc, units, generic_text):
             continue
         g = int(num(e.get("breakable_spawn_group")))
         points[kind].append(at(e) + [g])
-    for kind in ("crate", "statue"):
+    for kind in ("crate", "tough-crate", "statue"):
         kinds[kind] = {"group": "loot", "count": len(points[kind]),
                        "timers": [{"initial": a, "respawn": b} for a, b in groups]}
-    # Lo que suelta una caja: almas base, lo que suma por minuto y con qué probabilidad.
-    kinds["crate"]["souls"] = num(field(misc, "small_gold_pickup", "m_flGoldAmount"))
-    kinds["crate"]["soulsPerMinute"] = num(field(misc, "small_gold_pickup", "m_flGoldPerMinuteAmount"))
-    kinds["crate"]["dropChance"] = num(field(misc, "citadel_breakable_prop_wooden_crate", "m_flPowerupDropChance")) / 100
+    # Lo que suelta una caja: almas base, lo que suma por minuto y con qué
+    # probabilidad. La caja dura (sólo se rompe con un golpe pesado cuerpo a
+    # cuerpo) suelta la bolsa grande, y siempre.
+    for kind, sub, pickup in (("crate", "citadel_breakable_prop_wooden_crate", "small_gold_pickup"),
+                              ("tough-crate", "citadel_breakable_prop_tough_crate", "big_gold_pickup")):
+        kinds[kind]["souls"] = num(field(misc, pickup, "m_flGoldAmount"))
+        kinds[kind]["soulsPerMinute"] = num(field(misc, pickup, "m_flGoldPerMinuteAmount"))
+        kinds[kind]["dropChance"] = num(field(misc, sub, "m_flPowerupDropChance")) / 100
+        if field(misc, sub, "m_bHeavyMeleeOnly") == "true":
+            kinds[kind]["heavyMeleeOnly"] = True
 
     for e in by["citadel_pickup_spawner"]:
         points["health"].append(at(e))
@@ -373,6 +383,14 @@ def images(cache):
     for name, rel in ICONS.items():
         im = load(rel)
         im.resize((im.width * 3, im.height * 3), Image.LANCZOS).save(os.path.join(OUT_IMG, name + ".webp"), quality=92, method=6)
+    # Las cajas usan el cubo del minimapa, que viene blanco: se tiñe de madera
+    # la común y de verde la dura, que es el color con que el juego la resalta.
+    cube = load("minimap/item_crate_spawn_psd")
+    cube = cube.resize((cube.width * 4, cube.height * 4), Image.LANCZOS)
+    for name, tint in (("crate", (226, 172, 98)), ("tough-crate", (88, 214, 96))):
+        r, g, b, a = cube.split()
+        tinted = Image.merge("RGBA", tuple(ch.point(lambda v, t=t: v * t // 255) for ch, t in zip((r, g, b), tint)) + (a,))
+        tinted.save(os.path.join(OUT_IMG, name + ".webp"), quality=92, method=6)
     for name, rel in ART.items():
         im = load(rel)
         im.thumbnail((160, 160))

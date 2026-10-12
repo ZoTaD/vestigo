@@ -26,7 +26,7 @@ export const STOP_OVERHEAD_S = 1.5;
 export const SUGGESTED_STOPS = 6;
 
 /** Los tipos que pueden ser parada de una ruta, con la letra que los nombra en la dirección. */
-export const STOP_PREFIX: Partial<Record<MapKindId, string>> = { crate: "k", statue: "s", health: "h", buff: "b" };
+export const STOP_PREFIX: Partial<Record<MapKindId, string>> = { crate: "k", "tough-crate": "t", statue: "s", health: "h", buff: "b" };
 
 export interface Stop {
   /** `c12` es el campamento 12; `k45`, la caja 45. Es lo que viaja en la dirección. */
@@ -76,8 +76,8 @@ export function distanceM(a: { x: number; y: number }, b: { x: number; y: number
 /** Las almas que deja una parada al minuto `minute`. Una caja, lo que da en promedio. */
 export function stopSouls(stop: Stop, minute: number): number {
   if (stop.camp !== undefined) return campSoulsAt(MAP.camps[stop.camp], minute);
-  if (stop.kind === "crate") {
-    const k = MAP.kinds.crate;
+  const k = MAP.kinds[stop.kind];
+  if (k.souls !== undefined) {
     return ((k.souls ?? 0) + (k.soulsPerMinute ?? 0) * minute) * (k.dropChance ?? 1);
   }
   return 0;
