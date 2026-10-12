@@ -76,6 +76,26 @@ def main() -> None:
         texture(IMAGES / f"{src}.xnb").save(art / f"{name}.png", optimize=True)
     grass().save(art / "grass.png", optimize=True)
     print(f"{len(sizes)} sprites de objeto, {len(ART) + 1} piezas de arte")
+    heads()
+
+
+def heads() -> None:
+    """Las caras del mapa de los jefes y de los NPC del pueblo, según `data/bosses.json` y `data/npcs.json`
+    (los escribe `world_data.py`; si todavía no están, no hace nada)."""
+    data = ROOT / "data"
+    if not (data / "bosses.json").exists():
+        return
+    bosses = json.loads((data / "bosses.json").read_text(encoding="utf-8"))["bosses"]
+    out = PUBLIC / "bosses"
+    out.mkdir(parents=True, exist_ok=True)
+    for b in bosses:
+        first_frame(texture(IMAGES / f"NPC_Head_Boss_{b['head']}.xnb"), 1).save(out / f"{b['key']}.png", optimize=True)
+    npcs = json.loads((data / "npcs.json").read_text(encoding="utf-8"))["npcs"]
+    out = PUBLIC / "npcs"
+    out.mkdir(parents=True, exist_ok=True)
+    for n in npcs:
+        first_frame(texture(IMAGES / f"NPC_Head_{n['head']}.xnb"), 1).save(out / f"{n['id']}.png", optimize=True)
+    print(f"{len(bosses)} caras de jefes, {len(npcs)} de NPC")
 
 
 if __name__ == "__main__":

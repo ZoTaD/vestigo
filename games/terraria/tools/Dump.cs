@@ -598,7 +598,30 @@ static class Dump
                 }
                 b.Append("}}");
             }
-            b.Append("}");
+            // Cuánto pesa la cantidad de vecinos: el precio del primer NPC con 0, 1, 2… vecinos que le dan igual.
+            b.Append(",\n\"crowd\":[");
+            {
+                int who = town[0];
+                List<int> neutral = new List<int>();
+                npcs.SetValue(Activator.CreateInstance(npcT), 1);
+                double alone = price(place(0, who, 500));
+                foreach (int other in town)
+                {
+                    if (other == who) continue;
+                    object na = place(0, who, 500);
+                    place(1, other, 503);
+                    if (Math.Abs(price(na) / alone - 1) < 0.005) neutral.Add(other);
+                }
+                for (int k = 0; k <= 8 && k <= neutral.Count; k++)
+                {
+                    for (int slot = 1; slot <= 9; slot++) npcs.SetValue(Activator.CreateInstance(npcT), slot);
+                    object na = place(0, who, 500);
+                    for (int j = 0; j < k; j++) place(1 + j, neutral[j], 501 + j);
+                    if (k > 0) b.Append(',');
+                    b.Append(price(na).ToString("R", CultureInfo.InvariantCulture));
+                }
+            }
+            b.Append("]}");
             Write("neighbors.json", b);
             Console.WriteLine("vecinos: " + town.Count + " NPC, " + errors + " errores");
         });
