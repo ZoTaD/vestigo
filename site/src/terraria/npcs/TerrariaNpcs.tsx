@@ -28,14 +28,16 @@ export default function TerrariaNpcs({ route, navigate }: { route: Route; naviga
   const pylon = db.biomes[biome]?.pylon ? db.refs[String(db.biomes[biome].pylon)] : undefined;
 
   const say = (f: Factor): string =>
-    f.kind === "solitude"
+    f.kind === "ruined"
+      ? t.npcs.factors.ruined
+      : f.kind === "solitude"
       ? t.npcs.factors.solitude
       : f.kind === "crowd"
         ? t.npcs.factors.crowd(f.neighbors)
         : f.kind === "biome"
           ? t.npcs.factors.biome(t.npcs.levels[f.level], biomeName(biome))
           : t.npcs.factors.npc(t.npcs.levels[f.level], name(f.npc));
-  const tone = (f: Factor): string => (f.kind === "solitude" ? "good" : f.kind === "crowd" ? "bad" : f.level === "love" || f.level === "like" ? "good" : "bad");
+  const tone = (f: Factor): string => (f.kind === "solitude" ? "good" : f.kind === "crowd" || f.kind === "ruined" ? "bad" : f.level === "love" || f.level === "like" ? "good" : "bad");
 
   return (
     <main className="tr-main tr-npcs">

@@ -16,8 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "cache"
 DATA = ROOT / "data"
 
-# Los jefes, en el orden en que se suelen pelear. Cada uno: clave (su slug), ids de enemigo (el primero da el nombre y
-# las estadísticas; todos suman botín), cara del mapa si el juego no la da, objeto que lo invoca (nombre interno) o
+# Los jefes, en el orden en que se suelen pelear. Cada uno: clave (su slug), ids de enemigo (el primero da el nombre;
+# todos suman botín y vida; uno que aparece varias veces va como `(id, cantidad)`), cara del mapa si el juego no la da, objeto que lo invoca (nombre interno) o
 # None, si es de Hardmode, y dos textos cortos en inglés y español: cómo aparece y qué destraba.
 #
 # Los nombres propios no se escriben a mano (la traducción oficial no es la que uno supone): van como marcas que se
@@ -30,7 +30,7 @@ BOSSES = [
     ("eye-of-cthulhu", [4], None, "SuspiciousLookingEye", False,
      ("Use it at night. It can also show up on its own.", "Usalo de noche. También puede aparecer solo."),
      ("{i:DemoniteOre} or {i:CrimtaneOre} for your first evil-biome gear.", "{i:DemoniteOre} o {i:CrimtaneOre} para tu primer equipo del bioma maligno.")),
-    ("eater-of-worlds", [13, 14, 15], None, "WormFood", False,
+    ("eater-of-worlds", [13, (14, 65), 15], None, "WormFood", False,
      ("Only in worlds with {b:TheCorruption}: use it there, or break three shadow orbs.", "Sólo en mundos con {b:TheCorruption}: usalo ahí, o rompé tres orbes del bioma."),
      ("{i:ShadowScale}, and meteorites can start falling.", "{i:ShadowScale}, y empiezan a caer meteoritos.")),
     ("brain-of-cthulhu", [266], None, "BloodySpine", False,
@@ -39,7 +39,7 @@ BOSSES = [
     ("queen-bee", [222], None, "Abeemination", False,
      ("Break the larva inside a hive in {b:UndergroundJungle}, or use it there.", "Rompé la larva de una colmena en {b:UndergroundJungle}, o usalo ahí."),
      ("Optional. The {n:228} moves in.", "Opcional. Llega el {n:228}.")),
-    ("skeletron", [35], None, "ClothierVoodooDoll", False,
+    ("skeletron", [35, (36, 2)], None, "ClothierVoodooDoll", False,
      ("Talk to the {n:37} at the entrance of {b:TheDungeon} at night.", "Hablá con el {n:37} en la entrada de {b:TheDungeon} de noche."),
      ("Opens {b:TheDungeon}, and the {n:54} moves in.", "Abre {b:TheDungeon}, y llega el {n:54}.")),
     ("deerclops", [668], None, "DeerThing", False,
@@ -57,13 +57,13 @@ BOSSES = [
     ("the-destroyer", [134], None, "MechanicalWorm", True,
      ("Use it at night.", "Usalo de noche."),
      ("{i:SoulofMight}. One of the three mechanical bosses {n:262} needs.", "{i:SoulofMight}. Uno de los tres jefes mecánicos que hacen falta para {n:262}.")),
-    ("skeletron-prime", [127], None, "MechanicalSkull", True,
+    ("skeletron-prime", [127, 128, 129, 130, 131], None, "MechanicalSkull", True,
      ("Use it at night.", "Usalo de noche."),
      ("{i:SoulofFright}. One of the three mechanical bosses {n:262} needs.", "{i:SoulofFright}. Uno de los tres jefes mecánicos que hacen falta para {n:262}.")),
     ("plantera", [262], None, None, True,
      ("Break one of its pink bulbs in {b:UndergroundJungle}. They grow after the three mechanical bosses.", "Rompé uno de sus bulbos rosas en {b:UndergroundJungle}. Crecen después de los tres jefes mecánicos."),
      ("The {i:TempleKey}, and {b:TheDungeon} gets its Hardmode enemies.", "{i:TempleKey}, y {b:TheDungeon} recibe sus enemigos de Hardmode.")),
-    ("golem", [245], 5, "LihzahrdPowerCell", True,
+    ("golem", [245, 246, (247, 2)], 5, "LihzahrdPowerCell", True,
      ("Use it on the altar inside {b:TheTemple}.", "Usalo en el altar de {b:TheTemple}."),
      ("{i:BeetleHusk}, and the cultists appear at {b:TheDungeon}.", "{i:BeetleHusk}, y aparecen los sectarios en {b:TheDungeon}.")),
     ("duke-fishron", [370], None, "TruffleWorm", True,
@@ -75,7 +75,7 @@ BOSSES = [
     ("lunatic-cultist", [439], None, None, True,
      ("Kill the four cultists at the entrance of {b:TheDungeon}, after {n:245}.", "Matá a los cuatro sectarios de la entrada de {b:TheDungeon}, después de {n:245}."),
      ("Starts the four pillars: {b:SolarPillar}, {b:VortexPillar}, {b:NebulaPillar} and {b:StardustPillar}.", "Empiezan las cuatro columnas: {b:SolarPillar}, {b:VortexPillar}, {b:NebulaPillar} y {b:StardustPillar}.")),
-    ("moon-lord", [398, 396, 397], 8, "CelestialSigil", True,
+    ("moon-lord", [398, 396, (397, 2)], 8, "CelestialSigil", True,
      ("Destroy the four pillars, or use it afterwards.", "Destruí las cuatro columnas, o usalo después."),
      ("{i:LunarOre} and the endgame weapons. The final boss.", "{i:LunarOre} y las armas del final del juego. El jefe final.")),
 ]
@@ -158,7 +158,9 @@ def build_bosses(cache: dict, slugs: dict[int, list]) -> dict:
         refs[str(item)] = slugs[item]
         return True
 
-    for key, ids, head, summon, hardmode, how, unlocks in BOSSES:
+    for key, parts, head, summon, hardmode, how, unlocks in BOSSES:
+        counts = dict(p if isinstance(p, tuple) else (p, 1) for p in parts)
+        ids = list(counts)
         main = stats[ids[0]]
         summon_id = by_internal[summon] if summon else 0
         if summon_id and not ref(summon_id):
@@ -182,7 +184,8 @@ def build_bosses(cache: dict, slugs: dict[int, list]) -> dict:
             "name": [fmt(name[0], "en"), fmt(name[1], "es")],
             "head": head if head is not None else main["bossHead"],
             "hardmode": hardmode,
-            "parts": [[names["en-US"][str(i)], names["es-ES"].get(str(i)) or names["en-US"][str(i)], stats[i]["lifeMax"], stats[i]["damage"], stats[i]["defense"]] for i in ids],
+            "parts": [[names["en-US"][str(i)], names["es-ES"].get(str(i)) or names["en-US"][str(i)], stats[i]["lifeMax"], stats[i]["damage"], stats[i]["defense"], counts[i]] for i in ids],
+            "life": sum(stats[i]["lifeMax"] * counts[i] for i in ids),
             "summon": summon_id,
             "how": [fmt(how[0], "en"), fmt(how[1], "es")],
             "unlocks": [fmt(unlocks[0], "en"), fmt(unlocks[1], "es")],

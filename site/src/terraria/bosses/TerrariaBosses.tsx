@@ -18,7 +18,9 @@ interface Boss {
   key: string;
   name: [string, string];
   hardmode: boolean;
-  parts: [en: string, es: string, life: number, damage: number, defense: number][];
+  parts: [en: string, es: string, life: number, damage: number, defense: number, count: number][];
+  /** La vida de todas sus partes sumada. */
+  life: number;
   summon: number;
   how: [string, string];
   unlocks: [string, string];
@@ -104,12 +106,23 @@ export default function TerrariaBosses({ route, navigate }: { route: Route; navi
             <tbody>
               {b.parts.map((p, i) => (
                 <tr key={i}>
-                  <th scope="row">{p[li]}</th>
+                  <th scope="row">
+                    {p[li]}
+                    {p[5] > 1 && ` ×${p[5]}`}
+                  </th>
                   <td>{p[2].toLocaleString(locale)}</td>
                   <td>{p[3] || "—"}</td>
                   <td>{p[4]}</td>
                 </tr>
               ))}
+              {(b.parts.length > 1 || b.parts[0][5] > 1) && (
+                <tr>
+                  <th scope="row">{t.bosses.stats.total}</th>
+                  <td>{b.life.toLocaleString(locale)}</td>
+                  <td />
+                  <td />
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

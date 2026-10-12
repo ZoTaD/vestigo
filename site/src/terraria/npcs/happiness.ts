@@ -1,7 +1,7 @@
 /**
  * La cuenta de felicidad de un NPC de Terraria (2026-10-12), sin React. Las reglas están medidas en el propio juego
- * (`games/terraria/tools/Dump.cs`, bloque "vecinos"): cada gusto multiplica el precio, vivir con pocos vecinos lo
- * baja y amontonarse lo sube; al final se redondea a dos decimales y se acota.
+ * (`games/terraria/tools/Dump.cs`, bloque "vecinos") y cotejadas con la wiki: cada gusto multiplica el precio, vivir
+ * con pocos vecinos lo baja y amontonarse lo sube; al final se redondea a dos decimales y se acota.
  */
 
 export type Level = "love" | "like" | "dislike" | "hate";
@@ -13,16 +13,18 @@ export interface NpcData {
   refs: Record<string, [slug: string, slugEs: string, en: string, es: string, rare: number, w: number, h: number]>;
 }
 
-/** El precio hasta el que un NPC vende el pilón del bioma donde vive. */
-export const PYLON_MAX = 0.9;
+/** Los biomas donde el juego ni hace la cuenta: en la Mazmorra, la Corrupción y el Carmesí todo cuesta el máximo. */
+export const RUINED_BIOMES = ["Dungeon", "Corruption", "Crimson"];
+/** El Tabernero no vende pilones, viva donde viva. */
+export const NO_PYLON_NPCS = [550];
 
-export type Factor = { kind: "biome"; level: Level } | { kind: "npc"; level: Level; npc: number } | { kind: "solitude" } | { kind: "crowd"; neighbors: number };
+export type Factor = { kind: "biome"; level: Level } | { kind: "npc"; level: Level; npc: number } | { kind: "solitude" } | { kind: "crowd"; neighbors: number } | { kind: "ruined" };
 
 export interface Mood {
   /** El multiplicador del precio de su tienda: 0,75 es lo más barato y 1,5 lo más caro. */
   price: number;
   factors: Factor[];
-  /** ¿Vende el pilón de este bioma? */
+  /** ¿Vende el pilón de este bioma? Desde la 1.4.5 no depende del precio: alcanza con tener otro NPC cerca. */
   pylon: boolean;
 }
 
@@ -31,9 +33,10 @@ export function moodOf(data: NpcData, npc: number, biome: string, others: readon
   const c = data.consts;
   const me = data.npcs.find((n) => n.id === npc);
   if (!me) return { price: 1, factors: [], pylon: false };
+  const neighbors = others.filter((o) => o !== npc);
+  if (RUINED_BIOMES.includes(biome)) return { price: c.max, factors: [{ kind: "ruined" }], pylon: false };
   const factors: Factor[] = [];
   let m = 1;
-  const neighbors = others.filter((o) => o !== npc);
   if (neighbors.length <= c.solitudeUpTo) {
     m *= c.solitude;
     factors.push({ kind: "solitude" });
@@ -54,5 +57,6 @@ export function moodOf(data: NpcData, npc: number, biome: string, others: readon
     }
   }
   const price = Math.min(c.max, Math.max(c.min, Math.round(m * 100) / 100));
-  return { price, factors, pylon: price <= PYLON_MAX && (data.biomes[biome]?.pylon ?? 0) > 0 };
+  const pylon = neighbors.length > 0 && !NO_PYLON_NPCS.includes(npc) && (data.biomes[biome]?.pylon ?? 0) > 0;
+  return { price, factors, pylon };
 }

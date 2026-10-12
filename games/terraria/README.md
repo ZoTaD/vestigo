@@ -44,8 +44,9 @@ En 1.4.5 a quién quiere cada NPC de vecino no está en una tabla: lo decide el 
 el precio. Igual con el hacinamiento (0, 1, 2… vecinos indiferentes). `world_data.py` falla si un cociente no
 corresponde a ningún gusto, así un cambio de reglas en un parche se nota al regenerar.
 
-La regla del pilón (lo vende con precio de 0,90 o menos) no sale del juego: está escrita en
-`site/src/terraria/npcs/happiness.ts` (`PYLON_MAX`).
+Dos reglas no salen del juego sino de la wiki, y están en `site/src/terraria/npcs/happiness.ts`: desde la 1.4.5 el pilón
+se vende con sólo tener otro NPC cerca (ya no depende del precio; el Tabernero no vende), y en la Mazmorra, la
+Corrupción y el Carmesí el precio es siempre el máximo. Cotejado el 2026-10-12 con terraria.wiki.gg.
 
 ## Lo que falta sacar
 

@@ -132,7 +132,7 @@ export interface TerrariaCopy {
     defeated: string;
     summon: string;
     unlocks: string;
-    stats: { life: string; damage: string; defense: string };
+    stats: { life: string; damage: string; defense: string; total: string };
     classic: string;
     drops: string;
     expertOnly: string;
@@ -152,7 +152,7 @@ export interface TerrariaCopy {
     pylonNo: string;
     pylonRule: string;
     levels: Record<"love" | "like" | "dislike" | "hate", string>;
-    factors: { biome: (level: string, biome: string) => string; npc: (level: string, npc: string) => string; solitude: string; crowd: (n: number) => string };
+    factors: { biome: (level: string, biome: string) => string; npc: (level: string, npc: string) => string; solitude: string; crowd: (n: number) => string; ruined: string };
     table: string;
     tableBiomes: string;
     tableNpcs: string;
@@ -350,7 +350,7 @@ const EN: TerrariaCopy = {
     defeated: "Defeated",
     summon: "Summon",
     unlocks: "Unlocks",
-    stats: { life: "Life", damage: "Damage", defense: "Defense" },
+    stats: { life: "Life", damage: "Damage", defense: "Defense", total: "Total" },
     classic: "Classic mode values",
     drops: "Drops",
     expertOnly: "Expert",
@@ -361,20 +361,21 @@ const EN: TerrariaCopy = {
     lede: "Pick a biome and who lives together. You get each NPC's shop price and whether they sell the pylon there.",
     biome: "Biome",
     who: "Who lives here",
-    whoHint: "NPCs within 25 blocks of each other count as neighbors.",
+    whoHint: "NPCs within 25 blocks of each other count as neighbors. The discount for having few neighbors also needs no more than three other NPCs within 120 blocks.",
     result: "Prices in this house",
     empty: "Pick at least one NPC.",
     price: "Price",
     pylon: "Pylon",
     pylonYes: (name) => `Sells the ${name}`,
     pylonNo: "No pylon",
-    pylonRule: "An NPC sells the biome's pylon when their price is 90% or lower.",
+    pylonRule: "An NPC sells the biome's pylon when at least one other NPC lives nearby. The Tavernkeep never sells one, and there is none in the Dungeon, Corruption or Crimson.",
     levels: { love: "loves", like: "likes", dislike: "dislikes", hate: "hates" },
     factors: {
       biome: (level, biome) => `${level} ${biome}`,
       npc: (level, npc) => `${level} the ${npc}`,
       solitude: "few neighbors",
       crowd: (n) => `crowded (${n} neighbors)`,
+      ruined: "prices are always at their highest here",
     },
     table: "What every NPC likes",
     tableBiomes: "Biomes",
@@ -567,7 +568,7 @@ const ES: TerrariaCopy = {
     defeated: "Vencido",
     summon: "Invocación",
     unlocks: "Destraba",
-    stats: { life: "Vida", damage: "Daño", defense: "Defensa" },
+    stats: { life: "Vida", damage: "Daño", defense: "Defensa", total: "Total" },
     classic: "Valores del modo Clásico",
     drops: "Botín",
     expertOnly: "Experto",
@@ -578,20 +579,21 @@ const ES: TerrariaCopy = {
     lede: "Elegí un bioma y quiénes viven juntos. Sale el precio de la tienda de cada NPC y si vende el pilón de ese bioma.",
     biome: "Bioma",
     who: "Quiénes viven acá",
-    whoHint: "Los NPC a 25 bloques o menos entre sí cuentan como vecinos.",
+    whoHint: "Los NPC a 25 bloques o menos entre sí cuentan como vecinos. El descuento por pocos vecinos pide además no tener más de tres NPC a 120 bloques.",
     result: "Precios en esta casa",
     empty: "Elegí al menos un NPC.",
     price: "Precio",
     pylon: "Pilón",
     pylonYes: (name) => `Vende: ${name}`,
     pylonNo: "Sin pilón",
-    pylonRule: "Un NPC vende el pilón del bioma cuando su precio es del 90 % o menos.",
+    pylonRule: "Un NPC vende el pilón del bioma cuando tiene al menos otro NPC viviendo cerca. El Tabernero no vende ninguno, y en la Mazmorra, la Corrupción y el Carmesí no hay.",
     levels: { love: "adora", like: "le gusta", dislike: "no le gusta", hate: "odia" },
     factors: {
       biome: (level, biome) => `${level}: ${biome}`,
       npc: (level, npc) => `${level}: ${npc}`,
       solitude: "pocos vecinos",
       crowd: (n) => `amontonado (${n} vecinos)`,
+      ruined: "acá los precios siempre están al máximo",
     },
     table: "Qué prefiere cada NPC",
     tableBiomes: "Biomas",

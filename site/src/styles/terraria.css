@@ -86,7 +86,7 @@ a.tr-ref:hover > span, a.tr-cell:hover > span:last-of-type { text-decoration: un
 .tr[data-layer="npcs"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, url(/terraria/art/dirt.png); image-rendering: pixelated; }
 .tr[data-layer="items"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, url(/terraria/art/stone.png); image-rendering: pixelated; }
 .tr[data-layer="crafting"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(/terraria/art/cavern.png); image-rendering: pixelated; }
-.tr[data-layer="bosses"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, linear-gradient(rgba(20, 0, 0, 0.45), rgba(20, 0, 0, 0.3)), url(/terraria/art/underworld.png); image-rendering: pixelated; }
+.tr[data-layer="bosses"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, linear-gradient(rgba(12, 0, 0, 0.74), rgba(12, 0, 0, 0.62)), url(/terraria/art/underworld.png); image-rendering: pixelated; }
 .tr[data-layer="fishing"] .tr-main { background: linear-gradient(#2f6fd6 0, #1d3f8f 220px, #0f2456 100%); }
 .tr[data-layer="patches"] .tr-main { background: radial-gradient(900px 400px at 70% 0, #24348a 0%, transparent 70%), linear-gradient(#070a22 0%, #101a52 100%); }
 .tr:not([data-layer="home"]) .tr-wrap { padding-top: 16px; }
@@ -138,3 +138,18 @@ a.tr-ref:hover > span, a.tr-cell:hover > span:last-of-type { text-decoration: un
   .tr-figures { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tr-sky { padding-bottom: 170px; }
 }
+
+/* --- La cáscara alrededor de la sección ------------------------------------------------------------------------------
+   El fondo de la página entera es la tierra oscura (si no, debajo de la primera pantalla quedaba el blanco del
+   navegador), sin el grano del sitio, y la sección ocupa todo el ancho: el cielo y las capas llegan a los bordes. */
+[data-theme="codex"][data-game="terraria"] { background: #17110f; }
+[data-theme="codex"][data-game="terraria"] .grain { opacity: 0; }
+:root:has(.app[data-game="terraria"]) {
+  --sb-track: #17110f;
+  --sb-hatch: rgba(255, 255, 255, 0.06);
+  --sb-paper: #7a4a30;
+  --sb-ink: #17110f;
+  --sb-hover: #ffe36a;
+  background: #17110f;
+}
+.tr { margin-inline: calc(-1 * clamp(1rem, 4vw, 4rem)); }
