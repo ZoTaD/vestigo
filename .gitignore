@@ -42,3 +42,4 @@ games/valheim/.cache/
 # del juego instalado. Se versiona sólo su README, que dice qué hay y cómo rehacerla.
 games/rust/cache/*
 !games/rust/cache/README.md
+games/terraria/cache/
