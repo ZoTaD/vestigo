@@ -14,7 +14,7 @@ import { itemRoute, rare, Slot, Sprite, type Nav } from "../ui";
 import { normalize, RARITIES } from "./stats";
 
 /** El alto de un casillero de la grilla, en px, medido en el navegador a 1.400 px (2026-10-12). */
-const TR_CELL = 92;
+const TR_CELL = 90;
 
 const kindFromHash = (): Kind | null => {
   if (typeof window === "undefined") return null;
@@ -86,6 +86,9 @@ export default function ItemList({ rows, route, navigate, missing }: { rows: Row
             rowHeight={TR_CELL}
             tag="li"
             eager
+            // Las tandas se piden más cerca de la pantalla que en otras listas: con 9 columnas, el margen de siempre
+            // (1.200 px) traía ~190 sprites al abrir, al borde del presupuesto de 200 imágenes.
+            margin={600}
             render={(r) => (
               <li key={r.id}>
                 <RouteLink className="tr-cell" to={itemRoute(route, r.slug)} onNavigate={navigate} prefetch="press">
