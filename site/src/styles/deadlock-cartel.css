@@ -1343,7 +1343,6 @@
   --map-amber: #f0a030;
   --map-sapphire: #4f8fe8;
   --map-shop: #e8e2d4;
-  --map-zip: rgba(232, 226, 212, 0.55);
 }
 
 /* El mapa va sobre papel oscuro, como la pizarra: sin cantos rasgados. */
@@ -1392,13 +1391,48 @@
   pointer-events: none;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-map-zip {
+/* Cada carril con su color del juego: amarillo, azul y violeta. */
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-zip, .dl-map-lanes li)[data-lane="1"] { --lane: #f5c518; }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-zip, .dl-map-lanes li)[data-lane="4"] { --lane: #2f7df6; }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-zip, .dl-map-lanes li)[data-lane="6"] { --lane: #b14fe6; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-zip polyline {
   fill: none;
-  stroke: var(--map-zip);
-  stroke-width: 2;
-  stroke-dasharray: 6 5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
   vector-effect: non-scaling-stroke;
   pointer-events: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-zip-case {
+  stroke: rgba(12, 10, 8, 0.75);
+  stroke-width: 5;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-zip-line {
+  stroke: var(--lane, #e8e2d4);
+  stroke-width: 3;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-lanes {
+  list-style: none;
+  margin: 0.15rem 0 0 1.45rem;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.8rem;
+  color: rgba(30, 26, 20, 0.78);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-lanes li::before {
+  content: "";
+  display: inline-block;
+  width: 1.1rem;
+  height: 0.28rem;
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  background: var(--lane);
+  box-shadow: 0 0 0 1px rgba(30, 26, 20, 0.55);
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-mark {

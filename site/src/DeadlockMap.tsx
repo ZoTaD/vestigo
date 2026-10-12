@@ -198,13 +198,17 @@ export default function DeadlockMap() {
                 <img src="/deadlock/game/minimap/midtown.webp" alt={t.alt} width={1024} height={1024} draggable={false} />
                 <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="dl-map-marks">
                   {ziplines &&
-                    MAP.ziplines.map((z) => (
-                      <polyline
-                        key={z.lane}
-                        className="dl-map-zip"
-                        points={z.points.map(([x, y]) => `${(x * SIZE).toFixed(1)},${(y * SIZE).toFixed(1)}`).join(" ")}
-                      />
-                    ))}
+                    MAP.ziplines.map((z) => {
+                      const points = z.points.map(([x, y]) => `${(x * SIZE).toFixed(1)},${(y * SIZE).toFixed(1)}`).join(" ");
+                      // Dos trazos: uno oscuro debajo para que el color del carril
+                      // se lea igual sobre la calle clara y sobre un edificio.
+                      return (
+                        <g key={z.lane} className="dl-map-zip" data-lane={z.lane}>
+                          <polyline className="dl-map-zip-case" points={points} />
+                          <polyline className="dl-map-zip-line" points={points} />
+                        </g>
+                      );
+                    })}
 
                   {MAP_KINDS.filter((kind) => layers.has(kind) && MAP.points[kind]).map((kind) => (
                     <g key={kind} className="dl-map-kind" data-kind={kind}>
@@ -297,6 +301,15 @@ export default function DeadlockMap() {
                     <span className="dl-map-layer-name">{t.ziplines}</span>
                     <span className="dl-map-layer-n">{MAP.ziplines.length}</span>
                   </label>
+                )}
+                {group === "places" && (
+                  <ul className="dl-map-lanes">
+                    {MAP.ziplines.map((z) => (
+                      <li key={z.lane} data-lane={z.lane}>
+                        {t.lanes[String(z.lane) as keyof typeof t.lanes] ?? z.lane}
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </fieldset>
             ))}
