@@ -3,7 +3,7 @@
 // mayúsculas son el mismo archivo para el compilador (ver DeadlockPeerCard).
 import { useLocale } from "./i18n";
 import { useCopy } from "./deadlockCopy";
-import { useVsBand } from "./deadlockVsBand";
+import type { VsState } from "./deadlockVsBand";
 
 /**
  * "Vos contra tu banda": seis métricas, tu promedio contra la mediana de los
@@ -15,17 +15,14 @@ import { useVsBand } from "./deadlockVsBand";
  * Ver docs/design/2026-08-25-que-mas-podemos-hacer-en-deadlock.md, punto 10.
  */
 export default function DeadlockVsBandCard({
-  accountId,
-  badge,
+  state,
 }: {
-  accountId: number | null;
-  /** `rango*10 + subnivel`; 0 sin rango, y entonces la tarjeta no se dibuja. */
-  badge: number;
+  /** Viene del perfil (`useVsBand`), que lo comparte con los rasgos. */
+  state: VsState;
 }) {
   const copy = useCopy();
   const locale = useLocale();
   const c = copy.deadlock.report.vsBand;
-  const state = useVsBand(accountId, badge);
 
   if (state.status === "idle") return null;
 

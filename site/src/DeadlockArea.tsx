@@ -5,7 +5,7 @@
  * entraba a Valheim bajaba también el armador de Deadlock. Ahora `areas.ts`
  * carga este módulo aparte, con su CSS, y sólo cuando la ruta es de Deadlock.
  */
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useCopy } from "./deadlockCopy";
 import RouteLink from "./RouteLink";
 import Deadlock, { PatchHistory } from "./Deadlock";
@@ -91,6 +91,21 @@ export default function DeadlockArea({
 
   const picker = <DeadlockBandPicker band={band} onChange={onBand} />;
 
+  // "Todos los rangos" existe sólo en la tabla de Héroes, así que no viaja con
+  // la banda a las otras pestañas: elegir una banda lo apaga.
+  const [allRanks, setAllRanks] = useState(false);
+  const heroesPicker = (
+    <DeadlockBandPicker
+      band={band}
+      all={allRanks}
+      onChange={(b) => {
+        setAllRanks(false);
+        onBand(b);
+      }}
+      onAll={() => setAllRanks(true)}
+    />
+  );
+
   /** Opening or closing a detail is a navigation, so it gets its own URL. */
   const goDetail = (next: DeadlockSection, slug?: string) =>
     navigate({ ...route, view: "deadlock", dlSection: next, detail: slug });
@@ -139,7 +154,7 @@ export default function DeadlockArea({
       ) : route.dlSection === "items" ? (
         <DeadlockItems band={band} picker={picker} open={route.detail} onOpen={(slug) => goDetail("items", slug)} />
       ) : route.dlSection === "heroes" ? (
-        <DeadlockHeroes route={route} navigate={navigate} band={band} picker={picker} open={route.detail} />
+        <DeadlockHeroes route={route} navigate={navigate} band={band} all={allRanks} picker={picker} tablePicker={heroesPicker} open={route.detail} />
       ) : route.dlSection === "builder" ? (
         <DeadlockBuilder />
       ) : route.dlSection === "ranks" ? (

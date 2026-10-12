@@ -185,6 +185,13 @@ export interface DayRow {
 }
 
 /**
+ * Cuántos días muestra la serie diaria, contando desde el último. El archivo
+ * suma un día por corrida; sin tope la lista crece para abajo sin fin (ZoTaD,
+ * 2026-10-12). La escala se calcula sobre los días que se ven.
+ */
+export const MAX_DAYS = 15;
+
+/**
  * La serie diaria, como una barra apilada por día.
  *
  * **Cada día se normaliza a su propio total y la barra entera se escala contra el
@@ -194,10 +201,11 @@ export interface DayRow {
  * una décima parte de las partidas.
  */
 export function dayRows(file: RanksFile, view: RankView, lang: Lang): DayRow[] {
-  const totales = file.days.map((d) => d[view].reduce((a, b) => a + b, 0));
+  const days = file.days.slice(-MAX_DAYS);
+  const totales = days.map((d) => d[view].reduce((a, b) => a + b, 0));
   const mayor = Math.max(1, ...totales);
 
-  return file.days.map((d, i) => {
+  return days.map((d, i) => {
     const total = totales[i];
     const segments: DaySegment[] = [];
     d[view].forEach((value, tier) => {

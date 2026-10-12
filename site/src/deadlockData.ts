@@ -25,8 +25,14 @@ export type BandId = "phantom-above" | "archon-oracle" | "ritualist-emissary" | 
  * página y la tabla la dibujen con el mismo código.
  */
 export const BRAWL = "street-brawl";
-/** Qué lista de héroes: una banda de la rankeada, o Street Brawl. */
-export type HeroListId = BandId | typeof BRAWL;
+/**
+ * Todos los rangos juntos (2026-10-12), sólo para la pestaña Héroes. No es un
+ * archivo más: las cuatro bandas parten la escalera sin solaparse, así que la
+ * lista entera sale de sumarlas acá (ver `mergeBands`).
+ */
+export const ALL = "all";
+/** Qué lista de héroes: una banda de la rankeada, todas juntas, o Street Brawl. */
+export type HeroListId = BandId | typeof ALL | typeof BRAWL;
 
 /**
  * La tabla de bandas, copia de la del pipeline
@@ -281,8 +287,85 @@ const LOADERS: Record<string, () => Promise<{ default: unknown }>> = {
   [BRAWL]: () => import("@deadlock/brawl.json"),
 };
 
+/**
+ * Las cuatro bandas en una sola lista.
+ *
+ * Cada cifra se promedia con el peso de su propio denominador: las victorias
+ * con las partidas del héroe en cada banda, el uso con las partidas de la
+ * banda y los baneos con la muestra de baneos de la banda. Como las bandas no
+ * comparten partidas, es lo mismo que haber medido todo junto.
+ */
+export function mergeBands(bands: HeroesFile[]): HeroesFile {
+  const first = bands[0];
+  const matches = bands.reduce((a, f) => a + f.matches, 0);
+  const banMatches = bands.reduce((a, f) => a + (f.bans?.matches ?? 0), 0);
+  const ids = [...new Set(bands.flatMap((f) => f.heroes.map((h) => h.heroId)))];
+
+  const heroes = ids.map((heroId): RawHero => {
+    const rows = bands.flatMap((f) => {
+      const h = f.heroes.find((x) => x.heroId === heroId);
+      return h ? [{ f, h }] : [];
+    });
+    type Row = (typeof rows)[number];
+    /** Promedio de un campo del héroe, pesado por `weight`; sin dato si a alguna banda le falta. */
+    const mean = (pick: (h: RawHero) => number | undefined, weight: (r: Row) => number) => {
+      let sum = 0;
+      let total = 0;
+      for (const r of rows) {
+        const v = pick(r.h);
+        if (v === undefined) return undefined;
+        sum += v * weight(r);
+        total += weight(r);
+      }
+      return total > 0 ? sum / total : undefined;
+    };
+    const byHero = (r: Row) => r.h.matches;
+    const byBand = (r: Row) => r.f.matches;
+    const before = mean((h) => h.winRateBefore, byHero);
+    const winRate = mean((h) => h.winRate, byHero) ?? 0.5;
+    return {
+      heroId,
+      matches: rows.reduce((a, r) => a + r.h.matches, 0),
+      winRate,
+      winRateRaw: mean((h) => h.winRateRaw, byHero) ?? winRate,
+      // El uso se divide por todas las partidas: una banda donde el héroe no
+      // aparece cuenta como cero, no como si no existiera.
+      pickRate: matches > 0 ? rows.reduce((a, r) => a + r.h.pickRate * r.f.matches, 0) / matches : 0,
+      skillGap: rows[0]?.h.skillGap,
+      trend: before === undefined ? undefined : (winRate - before) * 100,
+      winRateBefore: before,
+      pickRateBefore: mean((h) => h.pickRateBefore, byBand),
+      thinData: rows.every((r) => r.h.thinData) || undefined,
+      banRate:
+        banMatches > 0
+          ? rows.reduce((a, r) => a + (r.h.banRate ?? 0) * (r.f.bans?.matches ?? 0), 0) / banMatches
+          : undefined,
+    };
+  });
+  heroes.sort((a, b) => b.winRate - a.winRate);
+
+  return {
+    ...first,
+    band: ALL,
+    provisional: bands.every((f) => f.provisional) || undefined,
+    crossesPatch: bands.some((f) => f.crossesPatch) || undefined,
+    patchShare: undefined,
+    matches,
+    boards: bands.reduce((a, f) => a + f.boards, 0),
+    from: bands.map((f) => f.from).sort()[0],
+    to: bands.map((f) => f.to).sort().pop()!,
+    bans: first.bans && banMatches > 0 ? { ...first.bans, matches: banMatches } : undefined,
+    heroes,
+  };
+}
+
 export async function loadBand(band: HeroListId): Promise<void> {
   if (files.has(band)) return;
+  if (band === ALL) {
+    await Promise.all(BANDS.map((b) => loadBand(b.id)));
+    files.set(ALL, mergeBands(BANDS.map((b) => files.get(b.id)!)));
+    return;
+  }
   const mod = await LOADERS[band]();
   files.set(band, mod.default as HeroesFile);
 }
