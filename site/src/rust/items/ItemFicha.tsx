@@ -5,7 +5,7 @@
  */
 import { useState, type CSSProperties, type ReactNode } from "react";
 import { useLang, useLocale } from "../../i18n";
-import { LazyRows } from "../../LazyRows";
+import { LazyRows, skipSprite } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
@@ -113,8 +113,8 @@ export default function ItemFicha({ ficha, route, navigate }: { ficha: Ficha; ro
           <h2 className="rs-hd">{t.usedIn}</h2>
           <ul className="rs-refs">
             {/* Los fragmentos de metal se usan en 303 objetos: de a tandas (2026-10-08). */}
-            <LazyRows items={ficha.usedIn} rowHeight={RS_REF} tag="li" chunk={40} render={(u) => (
-              <li key={u.id}>{link(u, <>{icon(u.id, 32)}<span>{say(u.name, lang)}</span></>)}</li>
+            <LazyRows items={ficha.usedIn} rowHeight={RS_REF} tag="li" chunk={40} render={(u, i) => (
+              <li key={u.id}>{link(u, <>{!skipSprite(i, 0) && icon(u.id, 32)}<span>{say(u.name, lang)}</span></>)}</li>
             )} />
           </ul>
         </section>

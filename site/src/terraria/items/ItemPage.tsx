@@ -5,12 +5,12 @@
  */
 import type { CSSProperties, ReactNode } from "react";
 import { useLang, useLocale } from "../../i18n";
-import { LazyRows } from "../../LazyRows";
+import { LazyRows, skipSprite } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import { routePath, type Route } from "../../route";
 import { useTerrariaCopy, type TerrariaCopy } from "../../terrariaCopy";
 import { refName, say, type Ficha, type Recipe, type Ref } from "../data";
-import { itemRoute, rare, skipSprite, Slot, Sprite, type Nav } from "../ui";
+import { itemRoute, rare, Slot, Sprite, type Nav } from "../ui";
 import { knockbackTier, percent, sellCoins, speedTier } from "./stats";
 
 /** El alto de una fila de "se usa en" y de botín, en px, medido en el navegador (2026-10-12). */
