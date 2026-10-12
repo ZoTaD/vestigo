@@ -411,6 +411,220 @@ static class Dump
             Write("npcs.json", nb);
             Console.WriteLine("botín: " + rows + " filas");
         });
+
+        // Las estadísticas de cada enemigo y NPC, y qué cara usa en el mapa.
+        Step("npc", delegate
+        {
+            Type npcT = T("Terraria.NPC");
+            int npcCount = Convert.ToInt32(T("Terraria.ID.NPCID").GetField("Count").GetValue(null));
+            MethodInfo set = null;
+            foreach (MethodInfo m in npcT.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                if (m.Name == "SetDefaults" && m.GetParameters().Length >= 1 && m.GetParameters()[0].ParameterType == typeof(int)) set = m;
+            StringBuilder b = new StringBuilder("[");
+            int ok = 0, bad = 0;
+            for (int i = 1; i < npcCount; i++)
+            {
+                try
+                {
+                    object n = Activator.CreateInstance(npcT);
+                    object[] args = new object[set.GetParameters().Length];
+                    args[0] = i;
+                    for (int k = 1; k < args.Length; k++) { ParameterInfo p = set.GetParameters()[k]; args[k] = p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null; }
+                    set.Invoke(n, args);
+                    int head = -1, bossHead = -1;
+                    try { head = Convert.ToInt32(Call(npcT, "TypeToDefaultHeadIndex", null, i)); } catch (Exception) { }
+                    try { bossHead = Convert.ToInt32(Call(npcT, "GetBossHeadTextureIndex", n)); } catch (Exception) { }
+                    StringBuilder one = new StringBuilder();
+                    one.Append("{\"id\":").Append(i).Append(",\"head\":").Append(head).Append(",\"bossHead\":").Append(bossHead);
+                    foreach (string f in new[] { "lifeMax", "damage", "defense", "boss", "townNPC", "friendly", "value", "knockBackResist", "aiStyle" })
+                        one.Append(",\"").Append(f).Append("\":").Append(Prim(Get(npcT, f, n)));
+                    one.Append('}');
+                    if (ok++ > 0) b.Append(",\n");
+                    b.Append(one);
+                }
+                catch (Exception e) { if (bad++ < 3) Console.WriteLine("   npc " + i + ": " + (e.InnerException ?? e).Message); }
+            }
+            b.Append("]");
+            Write("npcstats.json", b);
+            Console.WriteLine("npc: " + ok + " bien, " + bad + " con error");
+        });
+
+        // La felicidad de los NPC: a quién y qué bioma quiere cada uno, y las constantes de la tienda.
+        Step("felicidad", delegate
+        {
+            Type dbT = T("Terraria.GameContent.Personalities.PersonalityDatabase");
+            object db = Activator.CreateInstance(dbT);
+            Type popT = T("Terraria.GameContent.Personalities.PersonalityDatabasePopulator");
+            Call(popT, "Populate", Activator.CreateInstance(popT), db);
+            IDictionary profiles = null;
+            foreach (FieldInfo f in dbT.GetFields(All)) { object v = f.GetValue(db); if (v is IDictionary) profiles = (IDictionary)v; }
+            StringBuilder b = new StringBuilder("{\"npcs\":{");
+            bool first = true;
+            HashSet<string> shapes = new HashSet<string>();
+            foreach (DictionaryEntry e in profiles)
+            {
+                object profile = e.Value;
+                IEnumerable traits = null;
+                foreach (FieldInfo f in profile.GetType().GetFields(All)) { object v = f.GetValue(profile); if (v is IEnumerable && !(v is string)) traits = (IEnumerable)v; }
+                foreach (PropertyInfo p in profile.GetType().GetProperties(All)) { if (traits != null) break; object v = p.GetValue(profile, null); if (v is IEnumerable && !(v is string)) traits = (IEnumerable)v; }
+                if (!first) b.Append(",\n");
+                first = false;
+                b.Append('"').Append(e.Key).Append("\":[");
+                bool f2 = true;
+                if (traits != null)
+                    foreach (object trait in traits)
+                    {
+                        Type tt = trait.GetType();
+                        if (shapes.Add(tt.Name)) Console.WriteLine("   rasgo " + Shape(tt));
+                        List<string[]> rows = new List<string[]>();
+                        FieldInfo npcF = tt.GetField("NpcId", All), levelF = tt.GetField("Level", All);
+                        if (npcF != null && levelF != null) rows.Add(new[] { "npc", Convert.ToString(npcF.GetValue(trait)), levelF.GetValue(trait).ToString() });
+                        else
+                        {
+                            object prefs = null;
+                            foreach (FieldInfo f in tt.GetFields(All)) { object v = f.GetValue(trait); if (v is IEnumerable && !(v is string)) prefs = v; }
+                            if (prefs == null) foreach (PropertyInfo p in tt.GetProperties(All)) { if (p.GetIndexParameters().Length > 0) continue; object v = p.GetValue(trait, null); if (v is IEnumerable && !(v is string)) prefs = v; }
+                            if (prefs != null)
+                                foreach (object pref in (IEnumerable)prefs)
+                                {
+                                    Type pt = pref.GetType();
+                                    if (shapes.Add(pt.Name)) Console.WriteLine("   preferencia " + Shape(pt));
+                                    object biome = null, level = null;
+                                    foreach (FieldInfo f in pt.GetFields(All)) { object v = f.GetValue(pref); if (v == null) continue; if (v is Enum) level = v; else if (!v.GetType().IsPrimitive) biome = v; }
+                                    string key = biome == null ? "" : biome.GetType().Name;
+                                    try { key = Convert.ToString(Get(biome.GetType(), "NameKey", biome)); } catch (Exception) { }
+                                    rows.Add(new[] { "biome", key, Convert.ToString(level) });
+                                }
+                        }
+                        foreach (string[] r in rows)
+                        {
+                            if (!f2) b.Append(',');
+                            f2 = false;
+                            b.Append('[').Append(Esc(r[0])).Append(',').Append(Esc(r[1])).Append(',').Append(Esc(r[2])).Append(']');
+                        }
+                    }
+                b.Append(']');
+            }
+            b.Append("},\"consts\":{");
+            first = true;
+            foreach (FieldInfo f in T("Terraria.GameContent.ShopHelper").GetFields(All))
+                if (f.IsLiteral && (f.FieldType == typeof(float) || f.FieldType == typeof(int) || f.FieldType == typeof(double)))
+                {
+                    if (!first) b.Append(',');
+                    first = false;
+                    b.Append(Esc(f.Name)).Append(':').Append(Prim(f.GetRawConstantValue()));
+                }
+            b.Append("}}");
+            Write("happiness.json", b);
+            Console.WriteLine("felicidad: " + profiles.Count + " NPC");
+        });
+        // A quién quiere cada NPC de vecino. En 1.4.5 eso no está en una tabla: lo decide el código de la tienda. Se le
+        // pregunta a la tienda misma: el precio de A solo, y el de A con B viviendo al lado; el cociente dice el gusto.
+        Step("vecinos", delegate
+        {
+            Type npcT = T("Terraria.NPC"), shT = T("Terraria.GameContent.ShopHelper");
+            object shop = Activator.CreateInstance(shT);
+            Array npcs = (Array)Get(main, "npc");
+            for (int i = 0; i < npcs.Length; i++) if (npcs.GetValue(i) == null) npcs.SetValue(Activator.CreateInstance(npcT), i);
+            Array players = (Array)Get(main, "player");
+            object player = players.GetValue(0);
+            main.GetField("myPlayer", All).SetValue(null, 0);
+            MethodInfo set = null;
+            foreach (MethodInfo m in npcT.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                if (m.Name == "SetDefaults" && m.GetParameters().Length >= 1 && m.GetParameters()[0].ParameterType == typeof(int)) set = m;
+            FieldInfo posF = T("Terraria.Entity").GetField("position", All);
+            Type vec = posF.FieldType;
+
+            // Un NPC con casa en la columna `tileX`, parado en su casa.
+            Func<int, int, int, object> place = delegate (int slot, int type, int tileX)
+            {
+                object n = Activator.CreateInstance(npcT);
+                object[] args = new object[set.GetParameters().Length];
+                args[0] = type;
+                for (int k = 1; k < args.Length; k++) { ParameterInfo p = set.GetParameters()[k]; args[k] = p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null; }
+                set.Invoke(n, args);
+                SetAny(n, "homeless", false);
+                SetAny(n, "homeTileX", tileX);
+                SetAny(n, "homeTileY", 300);
+                SetAny(n, "active", true);
+                SetAny(n, "whoAmI", slot);
+                posF.SetValue(n, Activator.CreateInstance(vec, (float)(tileX * 16), (float)(300 * 16)));
+                npcs.SetValue(n, slot);
+                return n;
+            };
+            Func<object, double> price = delegate (object npc)
+            {
+                object settings = Call(shT, "GetShoppingSettings", shop, player, npc);
+                return Convert.ToDouble(Get(settings.GetType(), "PriceAdjustment", settings));
+            };
+
+            Type dbT = T("Terraria.GameContent.Personalities.PersonalityDatabase");
+            object db = Activator.CreateInstance(dbT);
+            Type popT = T("Terraria.GameContent.Personalities.PersonalityDatabasePopulator");
+            Call(popT, "Populate", Activator.CreateInstance(popT), db);
+            List<int> town = new List<int>();
+            foreach (object k in ((IDictionary)Get(dbT, "_personalityProfiles", db)).Keys) town.Add(Convert.ToInt32(k));
+            town.Sort();
+
+            StringBuilder b = new StringBuilder("{");
+            bool first = true;
+            int errors = 0;
+            foreach (int who in town)
+            {
+                double alone = 0;
+                try
+                {
+                    npcs.SetValue(Activator.CreateInstance(npcT), 1);
+                    alone = price(place(0, who, 500));
+                }
+                catch (Exception e) { if (errors++ < 2) { Exception x = e; while (x.InnerException != null) x = x.InnerException; Console.WriteLine("   " + who + " solo: " + x.Message + "\n" + x.StackTrace.Split('\n')[0]); } continue; }
+                if (!first) b.Append(",\n");
+                first = false;
+                b.Append((char)34).Append(who).Append("\":{\"alone\":").Append(alone.ToString("R", CultureInfo.InvariantCulture)).Append(",\"with\":{");
+                bool f2 = true;
+                foreach (int other in town)
+                {
+                    if (other == who) continue;
+                    try
+                    {
+                        object na = place(0, who, 500);
+                        place(1, other, 503);
+                        double both = price(na);
+                        if (!f2) b.Append(',');
+                        f2 = false;
+                        b.Append('"').Append(other).Append("\":").Append(both.ToString("R", CultureInfo.InvariantCulture));
+                    }
+                    catch (Exception) { errors++; }
+                }
+                b.Append("}}");
+            }
+            b.Append("}");
+            Write("neighbors.json", b);
+            Console.WriteLine("vecinos: " + town.Count + " NPC, " + errors + " errores");
+        });
         return 0;
     }
+
+    /// Pone un campo o una propiedad, se llame como se llame en esta versión del juego, buscando por la jerarquía.
+    static void SetAny(object o, string name, object value)
+    {
+        for (Type t = o.GetType(); t != null; t = t.BaseType)
+        {
+            FieldInfo f = t.GetField(name, All | BindingFlags.DeclaredOnly);
+            if (f != null) { f.SetValue(o, Convert.ChangeType(value, f.FieldType)); return; }
+            PropertyInfo p = t.GetProperty(name, All | BindingFlags.DeclaredOnly);
+            if (p != null && p.CanWrite) { p.SetValue(o, Convert.ChangeType(value, p.PropertyType), null); return; }
+        }
+        throw new Exception("no hay " + o.GetType().Name + "." + name);
+    }
+
+    /// Los campos y propiedades de un tipo, para ver por consola cómo viene un dato que no se conoce.
+    static string Shape(Type t)
+    {
+        StringBuilder sh = new StringBuilder(t.Name + ":");
+        foreach (FieldInfo f in t.GetFields(All)) sh.Append(" " + f.FieldType.Name + " " + f.Name);
+        foreach (PropertyInfo p in t.GetProperties(All)) sh.Append(" [" + p.PropertyType.Name + " " + p.Name + "]");
+        return sh.ToString();
+    }
 }
+
