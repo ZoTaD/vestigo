@@ -56,14 +56,15 @@ export default function TerrariaBosses({ route, navigate }: { route: Route; navi
   const toggle = (key: string) => save(done.includes(key) ? done.filter((k) => k !== key) : [...done, key]);
   const beaten = db.bosses.filter((b) => done.includes(b.key)).length;
 
-  const item = (id: number, extra?: string) => {
+  /** Los jefes con el botín desplegado: sólo ésos dibujan los sprites de su botín. */
+  const [open, setOpen] = useState<string[]>([]);
+
+  const item = (id: number, extra?: string, bare = false) => {
     const r = db.refs[String(id)];
     if (!r) return null;
     return (
       <RouteLink className="tr-ref" to={itemRoute(route, r[0])} onNavigate={navigate} prefetch="press">
-        <Slot size={36}>
-          <Sprite id={id} w={r[5]} h={r[6]} max={28} />
-        </Slot>
+        <Slot size={36}>{!bare && <Sprite id={id} w={r[5]} h={r[6]} max={28} />}</Slot>
         <span style={rare(r[4])}>{(li && r[3]) || r[2]}</span>
         {extra && <small>{extra}</small>}
       </RouteLink>
@@ -113,16 +114,21 @@ export default function TerrariaBosses({ route, navigate }: { route: Route; navi
           </table>
         </div>
         {b.drops.length > 0 && (
-          <>
-            <p className="tr-label tr-gap">{t.bosses.drops}</p>
+          // Cerrado al abrir, y sin sprites hasta que se despliega: son más de doscientos entre todos los jefes (el
+          // navegador pedía igual los de un desplegable cerrado, medido el 2026-10-12). El texto y los enlaces están
+          // siempre en el HTML.
+          <details className="tr-drops" onToggle={(e) => e.currentTarget.open && !open.includes(b.key) && setOpen([...open, b.key])}>
+            <summary>
+              {t.bosses.drops} ({b.drops.length})
+            </summary>
             <ul className="tr-rows">
               {b.drops.map(([id, min, max, rate, mode]) => (
                 <li key={`${id}-${mode}`}>
-                  {item(id, [percent(rate, locale), max > 1 ? (min === max ? `×${min}` : `×${min}–${max}`) : "", mode === "e" ? t.bosses.expertOnly : mode === "m" ? t.bosses.masterOnly : ""].filter(Boolean).join(" · "))}
+                  {item(id, [percent(rate, locale), max > 1 ? (min === max ? `×${min}` : `×${min}–${max}`) : "", mode === "e" ? t.bosses.expertOnly : mode === "m" ? t.bosses.masterOnly : ""].filter(Boolean).join(" · "), !open.includes(b.key))}
                 </li>
               ))}
             </ul>
-          </>
+          </details>
         )}
       </li>
     );

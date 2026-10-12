@@ -74,3 +74,8 @@
   .tr-patch-row { grid-template-columns: minmax(0, 1fr) auto; }
   .tr-patch-row span { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* El botín de un jefe, plegado. */
+.tr-drops { margin-top: 12px; }
+.tr-drops summary { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border: 2px solid #000; border-radius: 99px; background: rgba(255, 255, 255, 0.08); font: 700 14px/1 "Barlow", sans-serif; cursor: pointer; }
+.tr-drops[open] summary { margin-bottom: 10px; background: #e7c21b; color: #000; }
