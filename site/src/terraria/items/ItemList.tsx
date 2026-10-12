@@ -5,12 +5,12 @@
  */
 import { useEffect, useMemo, useState } from "react";
 import { useLocale } from "../../i18n";
-import { LazyRows } from "../../LazyRows";
+import { LazyRows, skipSprite } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { KINDS, useTerrariaCopy, type Kind } from "../../terrariaCopy";
 import type { Row } from "../data";
-import { itemRoute, rare, skipSprite, Slot, Sprite, type Nav } from "../ui";
+import { itemRoute, rare, Slot, Sprite, type Nav } from "../ui";
 import { normalize, RARITIES } from "./stats";
 
 /** El alto de un casillero de la grilla, en px, medido en el navegador a 1.400 px (2026-10-12). */

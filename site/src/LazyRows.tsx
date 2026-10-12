@@ -53,6 +53,13 @@ export function LazyRows<T>({
   );
 }
 
+/**
+ * ¿Esta fila de una lista larga se dibuja sin su imagen? Sólo en el prerender y pasada la primera tanda: ahí van todas
+ * las filas (por el texto y los enlaces), y el navegador pedía cientos de imágenes `lazy` de ese HTML antes de que
+ * React lo cambiara por la lista de a tandas (272 imágenes al abrir Objetos de Terraria, medido el 2026-10-12).
+ */
+export const skipSprite = (index: number, firstChunk: number): boolean => typeof window === "undefined" && index >= firstChunk;
+
 const canObserve = typeof window !== "undefined" && "IntersectionObserver" in window;
 // En el prerender (sin `window`) no hay nada que medir, y así React no avisa por `useLayoutEffect` en el servidor.
 const useMeasure = typeof window !== "undefined" ? useLayoutEffect : useEffect;

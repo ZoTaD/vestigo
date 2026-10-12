@@ -6,7 +6,7 @@
  */
 import { useMemo, useState } from "react";
 import { useLang, useLocale } from "../../i18n";
-import { LazyRows } from "../../LazyRows";
+import { LazyRows, skipSprite } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
@@ -50,13 +50,14 @@ export default function ItemList({ list, route, navigate, missing }: { list: Ite
         <p className="rs-count-line">{t.count(rows.length, rows.length.toLocaleString(locale))}</p>
         {rows.length === 0 && <p className="rs-empty">{t.empty}</p>}
         <ul className="rs-grid">
-          <LazyRows items={rows} rowHeight={RS_CELL} tag="li" eager render={(r) => {
+          <LazyRows items={rows} rowHeight={RS_CELL} tag="li" eager render={(r, i) => {
             const name = (lang === "es" && r.es) || r.en;
             return (
               <li key={r.id}>
                 <RouteLink className="rs-cell" to={{ ...route, view: "rust", rsSection: "items", detail: r.slug }} onNavigate={navigate} prefetch="press">
                   <span className="rs-slot">
-                    <img src={`/rust/items/${r.id}.webp`} alt="" width={64} height={64} loading="lazy" decoding="async" />
+                    {/* En el prerender, pasada la primera tanda, el casillero va sin ícono (`skipSprite`). */}
+                    {!skipSprite(i, 60) && <img src={`/rust/items/${r.id}.webp`} alt="" width={64} height={64} loading="lazy" decoding="async" />}
                   </span>
                   <span className="rs-cell-name">{name}</span>
                 </RouteLink>

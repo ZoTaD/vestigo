@@ -7,7 +7,7 @@
  * navegador; el HTML prerenderizado (sin filtro) las tiene todas.
  */
 import { useDeferredValue, useMemo, useState } from "react";
-import { LazyRows } from "../../LazyRows";
+import { LazyRows, skipSprite } from "../../LazyRows";
 import meta from "@zomboid/meta.json";
 import RouteLink from "../../RouteLink";
 import { useLang, useLocale } from "../../i18n";
@@ -133,9 +133,10 @@ export default function ItemList({ list, route, navigate, missing }: { list: Ite
           <div className="pzi-rows">
             {/* `press`: la ficha baja al apretar la fila, no al pasar el mouse por encima; si no, cruzar la lista bajaba
                 un archivo de fichas por cada fila tocada. */}
-            <LazyRows items={rows} rowHeight={40} eager={n === 0} render={(r) => (
+            <LazyRows items={rows} rowHeight={40} eager={n === 0} render={(r, i) => (
               <RouteLink className="pzi-row" to={toItem(r.id)} onNavigate={navigate} prefetch="press" key={r.id}>
-                <ItemIcon icon={r.icon} />
+                {/* En el prerender sólo la primera tanda lleva ícono; el resto, el cuadrado vacío (`skipSprite`). */}
+                <ItemIcon icon={skipSprite(i, n === 0 ? 60 : 0) ? null : r.icon} />
                 <span className="pzi-name">{name(r)}</span>
                 {r.n > 1 && <em className="pzi-var">{t.variantsN(r.n)}</em>}
                 {r.w !== null && <b className="pzi-w">{weightText(r.w, locale)}</b>}
