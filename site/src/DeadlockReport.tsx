@@ -10,6 +10,7 @@ import {
   type MatchPlayer,
   type ParsedMatch,
   type SteamAccount,
+  soulsAt,
 } from "./deadlockMatch";
 import {
   adviceFor,
@@ -25,6 +26,8 @@ import RankBadge from "./DeadlockRankBadge";
 import { lastAccount } from "./DeadlockPlayer";
 import { ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
+import DeadlockTraits from "./DeadlockTraitList";
+import { matchTraits } from "./deadlockTraits";
 
 /**
  * El informe de una partida.
@@ -165,22 +168,6 @@ function BuildOrder({ player, lang }: { player: MatchPlayer; lang: Lang }) {
 }
 
 /* ── Las almas: quién iba arriba ──────────────────────────────────────────── */
-
-/**
- * Las almas de un jugador en un segundo cualquiera.
- *
- * La partida trae el patrimonio muestreado cada ~4 minutos. Entre dos muestras
- * se interpola en línea recta (y desde cero hasta la primera): así la lectura
- * acompaña al puntero en vez de saltar de muestra en muestra.
- */
-function soulsAt(p: MatchPlayer, t: number): number {
-  let prev = { t: 0, netWorth: 0 };
-  for (const s of p.souls) {
-    if (t <= s.t) return prev.netWorth + ((t - prev.t) / (s.t - prev.t)) * (s.netWorth - prev.netWorth);
-    prev = s;
-  }
-  return prev.netWorth;
-}
 
 /**
  * La ventaja de almas entre los dos equipos, y las de cada jugador.
@@ -625,6 +612,10 @@ export default function DeadlockReport({
               {c.you} {nombreHeroe(jugador.heroId)}
             </h2>
           </div>
+
+          {/* Los rasgos de este jugador en esta partida, antes de la nota: son
+              la lectura rápida, la nota es la medición. */}
+          <DeadlockTraits traits={matchTraits(jugador, match)} />
 
           {nota ? (
             <>

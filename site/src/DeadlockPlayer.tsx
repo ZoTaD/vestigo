@@ -32,14 +32,17 @@ import DeadlockStreakForm from "./DeadlockStreakForm";
 import DeadlockActivity from "./DeadlockActivity";
 import DeadlockScopePicker from "./DeadlockScopePicker";
 import DeadlockPeerCard from "./DeadlockPeerCard";
-import { usePeers } from "./deadlockPeers";
+import { peersInScope, usePeers } from "./deadlockPeers";
 import DeadlockCareerHeroes from "./DeadlockCareerHeroes";
 import DeadlockHeroFitCard from "./DeadlockHeroFitCard";
 import DeadlockVsBand from "./DeadlockVsBandCard";
 import DeadlockRankTrail from "./DeadlockRankTrail";
-import { rankSteps, type RankPoint } from "./deadlockRankHistory";
+import { rankSteps, trailOf, type RankPoint } from "./deadlockRankHistory";
 import { useHeroStats } from "./deadlockHeroStats";
 import GameImg from "./GameImg";
+import DeadlockTraits from "./DeadlockTraitList";
+import { profileTraits } from "./deadlockTraits";
+import { useVsBand } from "./deadlockVsBand";
 import { flagUrl } from "./flags";
 import { safeHref } from "./safeHref";
 import {
@@ -607,6 +610,27 @@ export default function DeadlockPlayer({
   const streak = corpus ? streakOf(corpus.rows) : null;
   const forma = corpus ? formOf(corpus.rows) : null;
 
+  // Tus promedios contra tu banda se piden acá y no en su tarjeta: los leen la
+  // tarjeta y los rasgos, y así es un solo pedido.
+  const vs = useVsBand(id, rango?.badge ?? 0);
+  const rasgos = useMemo(
+    () =>
+      corpus
+        ? profileTraits({
+            rows: corpus.rows,
+            vs: vs.status === "ready" ? vs.rows : [],
+            streak,
+            forma,
+            rankNet: trailOf(serie)?.net ?? null,
+            mates: peersInScope(mates, corpus.rows),
+            now: Date.now() / 1000,
+          })
+        : [],
+    // `streak` y `forma` salen de `corpus`: con él alcanza.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [corpus?.rows, vs, serie, mates]
+  );
+
   /**
    * Las notas de las partidas que se están viendo.
    *
@@ -716,6 +740,14 @@ export default function DeadlockPlayer({
             {/* "Sos el #56 del mundo con Abrams" es más fuerte que "ganaste 2
                 seguidas": va en la ficha. */}
             <HeroPlacings placings={placings} />
+
+            {rasgos.length > 0 && (
+              <div className="box dl-pcard">
+                <h2 className="box-title dl-pcard-title">{copy.deadlock.report.traits.title}</h2>
+                <p className="detail-note dl-traits-lead">{copy.deadlock.report.traits.lead}</p>
+                <DeadlockTraits traits={rasgos} />
+              </div>
+            )}
           </div>
 
           <div className="page has-rail dl-profile-grid">
@@ -884,7 +916,7 @@ export default function DeadlockPlayer({
             <aside className="page-rail is-first dl-profile-aside">
               {/* Tus promedios contra tu banda: contesta "¿soy bueno para mi
                   rango?" al lado de las partidas que lo miden. Sólo con rango. */}
-              <DeadlockVsBand accountId={id} badge={rango?.badge ?? 0} />
+              <DeadlockVsBand state={vs} />
 
               {corpus && (
                 <div className="box dl-pcard">

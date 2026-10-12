@@ -584,6 +584,22 @@ export interface SoulPoint {
   netWorth: number;
 }
 
+/**
+ * Las almas de un jugador en un segundo cualquiera.
+ *
+ * La partida trae el patrimonio muestreado cada ~4 minutos. Entre dos muestras
+ * se interpola en línea recta (y desde cero hasta la primera): así la lectura
+ * acompaña al puntero en vez de saltar de muestra en muestra.
+ */
+export function soulsAt(p: MatchPlayer, t: number): number {
+  let prev = { t: 0, netWorth: 0 };
+  for (const s of p.souls) {
+    if (t <= s.t) return prev.netWorth + ((t - prev.t) / (s.t - prev.t)) * (s.netWorth - prev.netWorth);
+    prev = s;
+  }
+  return prev.netWorth;
+}
+
 export interface MatchPlayer {
   accountId: number;
   slot: number;
