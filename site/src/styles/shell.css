@@ -83,31 +83,84 @@
   background: rgba(var(--accent-rgb), 0.13);
 }
 
-.top-place.is-soon {
-  cursor: default;
-  opacity: 0.55;
+/* El botón "Juegos" y su menú (2026-10-12). El menú cuelga de `.top-in`, no del botón: así ocupa el ancho que
+   necesita debajo de la barra y en el teléfono no lo recorta la fila de lugares. */
+.top-in {
+  position: relative;
+}
+
+.top-games-caret {
+  width: 0.62rem;
+  height: 0.4rem;
+  transition: transform 140ms ease;
+}
+
+.top-games-btn[aria-expanded="true"] {
+  color: var(--text);
+}
+
+.top-games-btn[aria-expanded="true"] .top-games-caret {
+  transform: rotate(180deg);
+}
+
+.top-games {
+  position: absolute;
+  z-index: 70;
+  top: calc(100% - 4px);
+  left: var(--pad);
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  gap: 0.4rem 2.2rem;
+  padding: 1rem 1.2rem 1.1rem;
+  /* `--surface` es translúcida en los juegos oscuros: va sobre el fondo de la página para que el menú tape lo de abajo. */
+  background: linear-gradient(var(--surface), var(--surface)), var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+}
+
+.top-games[hidden] {
+  display: none;
+}
+
+.top-games-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 10rem;
+}
+
+.top-games-title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.top-games-link {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  margin: 0 -0.55rem;
+  padding: 0 0.55rem;
+  border-radius: var(--radius);
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text);
+  text-decoration: none;
   white-space: nowrap;
 }
 
-/* Los cuatro juegos que vienen (2026-09-23) necesitan unos 520 px: entran
-   enteros o no entran. Medido: el buscador necesita ~270 px y a 1248 px de
-   ancho quedaba en 104, con la etiqueta "Deadlock" encima del texto; recién
-   desde ~1420 px entra todo. Por debajo se van de la barra; en la portada
-   siguen anunciados. */
-@media (max-width: 89rem) {
-  .top-place.is-soon {
-    display: none;
-  }
+.top-games-link:hover {
+  background: rgba(var(--accent-rgb), 0.13);
 }
 
-.top-soon {
-  font-style: normal;
-  font-size: 0.56rem;
-  letter-spacing: 0.14em;
-  padding: 0.15em 0.5em;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--line-strong);
-  color: var(--accent);
+.top-games-link[data-active="true"] {
+  color: var(--accent-lit);
 }
 
 /* Buscador de jugador: a un tap desde cualquier página del sitio. */
@@ -218,6 +271,7 @@
   border-color: var(--line-strong);
 }
 
+
 /* Móvil: arriba la marca y el idioma, debajo los juegos y al final el buscador.
    **Los juegos bajan a otra fila cuando no entran** (2026-09-29, capturas de
    usuarios): eran una fila que se deslizaba de costado y cortaba "DIABLO II"
@@ -252,10 +306,11 @@
     letter-spacing: 0.06em;
   }
 
-  /* El juego anunciado no entra en un teléfono al lado de los que sí existen;
-     vuelve en cuanto tenga ruta. */
-  .top-place.is-soon {
-    display: none;
+  /* En el teléfono el menú va a todo el ancho, con las categorías una abajo de la otra. */
+  .top-games {
+    right: var(--pad);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
   }
 
   .top-lang {

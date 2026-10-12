@@ -3,6 +3,7 @@ import { useCopy, useLang, type Lang } from "./i18n";
 import RouteLink from "./RouteLink";
 import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
+import { GAME_GROUPS } from "./gameGroups";
 import { hasNavSearch, loadNavSearcher, type NavHit, type NavSearcher } from "./navSearch";
 
 export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust";
@@ -13,7 +14,10 @@ export type View = Place | "privacy" | "terms";
 
 /**
  * La barra superior del rediseño del 2026-09-06: marca · lugares · buscador ·
- * idioma. Fija arriba, igual en la portada y en los dos juegos.
+ * idioma. Igual en la portada y en todos los juegos.
+ *
+ * **Los juegos van en un menú, por categoría** (2026-10-12): con seis sueltos la barra ya no daba para el
+ * séptimo. Quedan "Inicio", el botón "Juegos" y, adentro de un juego, su nombre.
  *
  * **El buscador está en todas las páginas** porque buscarse es el caso de uso
  * número uno de un sitio de stats y la competencia entera lo tiene a un tap
@@ -80,6 +84,37 @@ export default function Nav({
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
   }, []);
+  /* --- El menú de juegos -------------------------------------------------- */
+  const [menu, setMenu] = useState(false);
+  const bar = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!menu) return;
+    const out = (e: MouseEvent) => { if (bar.current && !bar.current.contains(e.target as Node)) setMenu(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") setMenu(false); };
+    document.addEventListener("mousedown", out);
+    document.addEventListener("keydown", esc);
+    return () => { document.removeEventListener("mousedown", out); document.removeEventListener("keydown", esc); };
+  }, [menu]);
+  /** La portada de cada juego: a dónde lleva su nombre en el menú. */
+  const gameHome: Record<Game, Route> = {
+    deadlock: a("deadlock"),
+    poe2: { ...a("poe2"), p2Section: "economy" },
+    valheim: { ...a("valheim"), vhSection: "home" },
+    d2r: { ...a("d2r"), d2Section: "home" },
+    zomboid: { ...a("zomboid"), pzSection: "home" },
+    rust: { ...a("rust"), rsSection: "home" },
+  };
+  const gameFull: Record<Game, string> = {
+    deadlock: copy.games.deadlock,
+    poe2: copy.games.poe2,
+    valheim: copy.games.valheim,
+    d2r: copy.games.diablo2,
+    zomboid: copy.games.zomboid,
+    rust: copy.games.rust,
+  };
+  const gameShort: Record<Game, string> = { ...gameFull, poe2: copy.games.poe2Short, d2r: copy.games.diablo2Short, zomboid: copy.games.zomboidShort };
+  const activeGame = active in gameHome ? (active as Game) : null;
+
   const hitRoute = (h: NavHit): Route => ({ ...route, detail: undefined, ...h.to });
   const goTo = (h: NavHit) => {
     setQuery("");
@@ -108,7 +143,7 @@ export default function Nav({
 
   return (
     <nav className="top" aria-label={copy.brand}>
-      <div className="top-in">
+      <div className="top-in" ref={bar}>
         <RouteLink className="top-brand" to={a("home")} onNavigate={onNavigate}>
           {copy.brand}
         </RouteLink>
@@ -122,67 +157,46 @@ export default function Nav({
           >
             {copy.sections.home}
           </RouteLink>
-          <RouteLink
-            className="top-place"
-            to={a("deadlock")}
-            active={active === "deadlock"}
-            onNavigate={onNavigate}
+          <button
+            type="button"
+            className="top-place top-games-btn"
+            aria-expanded={menu}
+            aria-controls="top-games"
+            onClick={() => setMenu((v) => !v)}
           >
-            {copy.games.deadlock}
-          </RouteLink>
-          <RouteLink
-            className="top-place"
-            to={{ ...a("poe2"), p2Section: "economy" }}
-            active={active === "poe2"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.poe2Short}
-          </RouteLink>
-          <RouteLink
-            className="top-place"
-            to={{ ...a("valheim"), vhSection: "home" }}
-            active={active === "valheim"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.valheim}
-          </RouteLink>
-          {/* Diablo II salió de "Pronto" el 2026-09-29, con su portada. */}
-          <RouteLink
-            className="top-place"
-            to={{ ...a("d2r"), d2Section: "home" }}
-            active={active === "d2r"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.diablo2Short}
-          </RouteLink>
-          {/* Project Zomboid entra el 2026-09-30, con la portada de la libreta. */}
-          <RouteLink
-            className="top-place"
-            to={{ ...a("zomboid"), pzSection: "home" }}
-            active={active === "zomboid"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.zomboidShort}
-          </RouteLink>
-          {/* Rust entra el 2026-10-05, con la portada del inventario. */}
-          <RouteLink
-            className="top-place"
-            to={{ ...a("rust"), rsSection: "home" }}
-            active={active === "rust"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.rust}
-          </RouteLink>
-          {/* Los juegos que vienen se anuncian, no se enlazan: no existe la
-              ruta, así que un enlace llevaría a un 404 y de paso entraría al
-              sitemap. En el orden de la hoja de ruta (2026-09-23). */}
-          {[copy.games.dota].map((nombre) => (
-            <span className="top-place is-soon" aria-disabled="true" key={nombre}>
-              {nombre}
-              <em className="top-soon">{copy.games.soon}</em>
-            </span>
-          ))}
+            {copy.games.menu}
+            <svg className="top-games-caret" viewBox="0 0 10 6" aria-hidden="true">
+              <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          {/* El juego en el que se está, al lado del botón: dice dónde estás y vuelve a su portada. */}
+          {activeGame && (
+            <RouteLink className="top-place" to={gameHome[activeGame]} active onNavigate={onNavigate}>
+              {gameShort[activeGame]}
+            </RouteLink>
+          )}
         </span>
+
+        {/* El menú con todos los juegos, por categoría (2026-10-12). Va siempre en el HTML, abierto o no: son los
+            enlaces a cada juego que antes estaban sueltos en la barra, y el prerender y Google los tienen que ver. */}
+        <div className="top-games" id="top-games" hidden={!menu}>
+          {GAME_GROUPS.map((g) => (
+            <div className="top-games-group" key={g.id}>
+              <p className="top-games-title">{copy.games.groups[g.id]}</p>
+              {g.games.map((game) => (
+                <RouteLink
+                  className="top-games-link"
+                  key={game}
+                  to={gameHome[game]}
+                  active={active === game}
+                  onNavigate={(r) => { setMenu(false); onNavigate(r); }}
+                >
+                  {gameFull[game]}
+                </RouteLink>
+              ))}
+            </div>
+          ))}
+        </div>
 
         <form className="top-search" role="search" onSubmit={submit} ref={box}>
           <label className="top-search-field">

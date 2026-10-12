@@ -31,7 +31,6 @@ const EN = {
   brand: "Vestigo",
   games: {
     deadlock: "Deadlock",
-    dota: "Dota 2",
     poe2: "Path of Exile 2",
     poe2Short: "PoE 2",
     valheim: "Valheim",
@@ -40,7 +39,10 @@ const EN = {
     zomboid: "Project Zomboid",
     zomboidShort: "Zomboid",
     rust: "Rust",
-    soon: "Soon",
+    /** El botón de la barra que abre el menú con todos los juegos. */
+    menu: "Games",
+    /** Las categorías del menú y de la portada (`gameGroups.ts`). */
+    groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
   },
@@ -127,12 +129,9 @@ const EN = {
     games: {
       heading: "Where you can use it",
       cta: "Open",
-      soonCta: "Coming soon",
       deadlock: "Hero and item tier lists, live now.",
-      dota: "Match analysis, each patch's meta, and the heroes and items that win.",
       valheim: "A wiki and tools for Valheim 1.0.",
       diablo2: "Breakpoints, runewords and terror zones.",
-      soonHeading: "On the way",
       deadlockCta: (n: string) => `Hero tier list · ${n}`,
       profile: "Your profile",
       valheimLive: "Every recipe, food, weapon, piece and creature in Valheim 1.0, where each thing comes from, and every patch.",
@@ -273,7 +272,6 @@ const ES: typeof EN = {
   brand: "Vestigo",
   games: {
     deadlock: "Deadlock",
-    dota: "Dota 2",
     poe2: "Path of Exile 2",
     poe2Short: "PoE 2",
     valheim: "Valheim",
@@ -282,7 +280,8 @@ const ES: typeof EN = {
     zomboid: "Project Zomboid",
     zomboidShort: "Zomboid",
     rust: "Rust",
-    soon: "Pronto",
+    menu: "Juegos",
+    groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
   },
@@ -351,12 +350,9 @@ const ES: typeof EN = {
     games: {
       heading: "Dónde puedes usarlo",
       cta: "Entrar",
-      soonCta: "Muy pronto",
       deadlock: "Tier list de héroes e ítems, funcionando ya.",
-      dota: "Análisis de tus partidas, la meta de cada parche y los héroes y objetos que ganan.",
       valheim: "Una wiki y herramientas para Valheim 1.0.",
       diablo2: "Breakpoints, palabras rúnicas y zonas de terror.",
-      soonHeading: "En camino",
       deadlockCta: (n: string) => `Tier list de héroes · ${n}`,
       profile: "Tu perfil",
       valheimLive: "Cada receta, comida, arma, pieza y criatura de Valheim 1.0, de dónde sale cada cosa y todos los parches.",
