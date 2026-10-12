@@ -1,0 +1,1 @@
+{"v":"1.4.5.2","sections":[{"t":"Bug Fixes","lines":[[0,"Fixed situation that prevented all Villagers from moving in if the Merchant is present and the Nurse can arrive."],[0,"Fixed Toybreaker Block not breaking glowsticks, golfballs, nor kites."]]}]}

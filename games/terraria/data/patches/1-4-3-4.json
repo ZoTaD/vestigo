@@ -1,0 +1,1 @@
+{"v":"1.4.3.4","sections":[{"t":"Bug Fixes","lines":[[0,"Fixed certain combinations of in-game gamepad and mouse inputs causing cursor-style flicker on Steam Deck"],[0,"Fixed certain gamepad UI actions not executing properly"]]}]}

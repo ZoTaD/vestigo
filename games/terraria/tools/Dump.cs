@@ -625,6 +625,17 @@ static class Dump
             Write("neighbors.json", b);
             Console.WriteLine("vecinos: " + town.Count + " NPC, " + errors + " errores");
         });
+
+        // Los peces que pide el Pescador en sus misiones.
+        Step("pesca", delegate
+        {
+            Array quest = (Array)Get(main, "anglerQuestItemNetIDs");
+            StringBuilder b = new StringBuilder("{\"quest\":");
+            Value(b, quest, itemT);
+            b.Append("}");
+            Write("fishing.json", b);
+            Console.WriteLine("pesca: " + (quest == null ? 0 : quest.Length) + " peces de misión");
+        });
         return 0;
     }
 

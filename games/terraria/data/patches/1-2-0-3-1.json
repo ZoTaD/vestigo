@@ -1,0 +1,1 @@
+{"v":"1.2.0.3.1","sections":[{"t":"","lines":[[0,"Fixed random crashing when in a snow biome in multiplayer"],[0,"Fixed a problem with painted tiles not being painted in multiplayer"],[0,"Fixed a problem that defeating plantera would force serverside characters"]]}]}
