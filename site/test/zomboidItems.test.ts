@@ -65,8 +65,12 @@ describe("la lista de objetos", () => {
     expect(html).toContain(`${ROWS.length.toLocaleString("es-AR")} objetos`);
     expect(html).toContain("/additem");
     // Los íconos no frenan la página: diferidos y con su tamaño.
-    expect(html).toMatch(/<img[^>]*src="\/zomboid\/items\/Crowbar\.webp"[^>]*>/);
-    expect(html).toMatch(/<img(?=[^>]*loading="lazy")(?=[^>]*width="32")(?=[^>]*height="32")[^>]*src="\/zomboid\/items\/Crowbar\.webp"/);
+    const icons = html.match(/<img[^>]*src="\/zomboid\/items\/[^"]+\.webp"[^>]*>/g) ?? [];
+    for (const img of icons) expect(img).toMatch(/^<img(?=[^>]*loading="lazy")(?=[^>]*width="32")(?=[^>]*height="32")/);
+    // En el prerender sólo la primera tanda lleva ícono (`skipSprite`): si van todos, el navegador pide cientos antes
+    // de que React cambie la lista por tandas (209 imágenes al abrir, medido el 2026-10-12).
+    expect(icons.length).toBeGreaterThan(0);
+    expect(icons.length).toBeLessThanOrEqual(60);
   });
 
   it("en inglés, con los textos en inglés", () => {
