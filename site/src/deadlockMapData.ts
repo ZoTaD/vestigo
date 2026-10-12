@@ -20,6 +20,7 @@ export type MapKindId =
   | "vault"
   | "midboss"
   | "crate"
+  | "tough-crate"
   | "statue"
   | "health"
   | "buff"
@@ -49,6 +50,8 @@ export interface MapKind extends Partial<MapTimer> {
   souls?: number;
   soulsPerMinute?: number;
   dropChance?: number;
+  /** La caja dura: sólo la rompe un golpe pesado cuerpo a cuerpo. */
+  heavyMeleeOnly?: boolean;
 }
 
 export type UnitSize = "weak" | "normal" | "strong" | "vault" | "boss";
@@ -92,6 +95,7 @@ export const MAP_KINDS: MapKindId[] = [
   "vault",
   "midboss",
   "crate",
+  "tough-crate",
   "statue",
   "health",
   "buff",

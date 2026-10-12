@@ -82,7 +82,7 @@ describe("Deadlock: el mapa", () => {
       for (const lang of ["en", "es"] as const) expect(Object.keys(DEADLOCK_COPY[lang].deadlock.map.creatures), slug).toContain(family);
     }
     // Y el fondo y los íconos que dibuja el mapa.
-    for (const name of ["relief", "camp-small", "camp-medium", "camp-large", "vault", "shop", "health", "midboss", "statue"]) {
+    for (const name of ["relief", "camp-small", "camp-medium", "camp-large", "vault", "shop", "health", "midboss", "statue", "crate", "tough-crate"]) {
       expect(existsSync(new URL(`../public/deadlock/game/map/${name}.webp`, import.meta.url)), name).toBe(true);
     }
   });

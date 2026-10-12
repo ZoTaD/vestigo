@@ -1469,13 +1469,6 @@
   text-align: center;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-mk[data-kind="crate"] {
-  width: 7px;
-  height: 7px;
-  background: #b98a4c;
-  outline: 1px solid #0b0907;
-}
-
 [data-theme="codex"][data-game="deadlock"] .dl-mk[data-kind="buff"] {
   width: 16px;
   height: 16px;

@@ -76,6 +76,8 @@ const IMAGE: Partial<Record<MapKindId, number>> = {
   health: 12,
   midboss: 44,
   statue: 13,
+  crate: 11,
+  "tough-crate": 15,
 };
 
 /** Los que llevan equipo en el tercer número del punto: 2 Hidden King, 3 Archmother. */
@@ -556,6 +558,14 @@ export default function DeadlockMap() {
                         <dd>{n(campSoulsAt(chosen.camp, minute))}</dd>
                       </>
                     )}
+                    {MAP.kinds[chosen.kind].souls !== undefined && (
+                      <>
+                        <dt>{t.facts.soulsAt(clock(seconds))}</dt>
+                        <dd>{n((MAP.kinds[chosen.kind].souls ?? 0) + (MAP.kinds[chosen.kind].soulsPerMinute ?? 0) * minute)}</dd>
+                        <dt>{t.facts.dropChance}</dt>
+                        <dd>{Math.round((MAP.kinds[chosen.kind].dropChance ?? 1) * 100)}%</dd>
+                      </>
+                    )}
                     {!chosen.camp && MAP.kinds[chosen.kind].health !== undefined && (
                       <>
                         <dt>{t.facts.health}</dt>
@@ -779,7 +789,7 @@ export default function DeadlockMap() {
                       <th scope="row">{t.kinds[kind][1]}</th>
                       <td>{k.count}</td>
                       <td>{isCamp ? range(campRange(kind, (c) => c.health)) : k.health !== undefined ? n(k.health) : "—"}</td>
-                      <td>{souls && souls[1] > 0 ? range(souls) : k.souls ? t.table.crateSouls(n(k.souls)) : "—"}</td>
+                      <td>{souls && souls[1] > 0 ? range(souls) : k.souls ? t.table.crateSouls(n(k.souls), n(k.soulsPerMinute ?? 0), Math.round((k.dropChance ?? 1) * 100)) : "—"}</td>
                       <td>{timing(kind, "initial")}</td>
                       <td>{timing(kind, "respawn")}</td>
                     </tr>
