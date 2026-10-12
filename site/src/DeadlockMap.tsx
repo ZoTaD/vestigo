@@ -80,6 +80,12 @@ const IMAGE: Partial<Record<MapKindId, number>> = {
   "tough-crate": 15,
 };
 
+/**
+ * Los que tienen una foto del juego para la ficha y la lista de la ruta. En el
+ * mapa siguen con su ícono: a 12 px una foto es una mancha.
+ */
+const PHOTO: Partial<Record<MapKindId, string>> = { crate: "crate-photo", "tough-crate": "tough-crate-photo" };
+
 /** Los que llevan equipo en el tercer número del punto: 2 Hidden King, 3 Archmother. */
 const TEAM_KINDS: MapKindId[] = ["walker", "base-guardian", "shrine", "patron"];
 
@@ -527,6 +533,11 @@ export default function DeadlockMap() {
                       ))}
                     </div>
                   )}
+                  {PHOTO[chosen.kind] && (
+                    <div className="dl-map-portraits">
+                      <img className="is-photo" src={`${ART}/${PHOTO[chosen.kind]}.webp`} alt="" width={84} height={84} loading="lazy" decoding="async" />
+                    </div>
+                  )}
                   {!chosen.camp && TEAM_KINDS.includes(chosen.kind) && (
                     <div className="dl-map-portraits">
                       <img
@@ -668,6 +679,8 @@ export default function DeadlockMap() {
                           <b className="dl-map-leg-n">{i + 1}</b>
                           {camp?.creatures[0] ? (
                             <img src={`${ART}/${camp.creatures[0]}.webp`} alt="" width={34} height={34} loading="lazy" decoding="async" />
+                          ) : PHOTO[leg.stop.kind] ? (
+                            <img className="is-photo" src={`${ART}/${PHOTO[leg.stop.kind]}.webp`} alt="" width={34} height={34} loading="lazy" decoding="async" />
                           ) : (
                             <span className="dl-map-leg-ic">{icon(leg.stop.kind)}</span>
                           )}

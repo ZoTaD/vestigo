@@ -3,6 +3,10 @@ El mapa de Deadlock sacado del juego instalado → games/deadlock/data/map.json
 y los íconos y retratos de site/public/deadlock/game/map/. El relieve de fondo
 lo hace `map_relief.py`, aparte, porque pesa.
 
+Dos imágenes de esa carpeta NO salen de acá: `crate-photo.webp` y
+`tough-crate-photo.webp` son capturas del juego que pasó ZoTaD (2026-10-12),
+porque el juego no trae una imagen 2D de las cajas. Este script no las toca.
+
 Qué hay en cada lugar (campamentos de la jungla, cajas, estatuas, vida
 flotante, jefe del medio, objetivos, tiendas, tirolesas), cuánto aguanta,
 cuánto da y a qué minuto aparece. Diseño: docs/design/2026-10-12-deadlock-mapa.md.

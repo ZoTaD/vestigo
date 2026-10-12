@@ -1987,3 +1987,8 @@
   border-radius: 50%;
   background: #c58bf2;
 }
+
+/* Las fotos (las cajas) llenan su cuadro; los retratos recortados no. */
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-portraits, .dl-map-legs) img.is-photo {
+  object-fit: cover;
+}
