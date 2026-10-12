@@ -76,7 +76,15 @@ const IMAGE: Partial<Record<MapKindId, number>> = {
   health: 12,
   midboss: 44,
   statue: 13,
+  crate: 11,
+  "tough-crate": 15,
 };
+
+/**
+ * Los que tienen una foto del juego para la ficha y la lista de la ruta. En el
+ * mapa siguen con su ícono: a 12 px una foto es una mancha.
+ */
+const PHOTO: Partial<Record<MapKindId, string>> = { crate: "crate-photo", "tough-crate": "tough-crate-photo" };
 
 /** Los que llevan equipo en el tercer número del punto: 2 Hidden King, 3 Archmother. */
 const TEAM_KINDS: MapKindId[] = ["walker", "base-guardian", "shrine", "patron"];
@@ -525,6 +533,11 @@ export default function DeadlockMap() {
                       ))}
                     </div>
                   )}
+                  {PHOTO[chosen.kind] && (
+                    <div className="dl-map-portraits">
+                      <img className="is-photo" src={`${ART}/${PHOTO[chosen.kind]}.webp`} alt="" width={84} height={84} loading="lazy" decoding="async" />
+                    </div>
+                  )}
                   {!chosen.camp && TEAM_KINDS.includes(chosen.kind) && (
                     <div className="dl-map-portraits">
                       <img
@@ -554,6 +567,14 @@ export default function DeadlockMap() {
                       <>
                         <dt>{t.facts.soulsAt(clock(seconds))}</dt>
                         <dd>{n(campSoulsAt(chosen.camp, minute))}</dd>
+                      </>
+                    )}
+                    {MAP.kinds[chosen.kind].souls !== undefined && (
+                      <>
+                        <dt>{t.facts.soulsAt(clock(seconds))}</dt>
+                        <dd>{n((MAP.kinds[chosen.kind].souls ?? 0) + (MAP.kinds[chosen.kind].soulsPerMinute ?? 0) * minute)}</dd>
+                        <dt>{t.facts.dropChance}</dt>
+                        <dd>{Math.round((MAP.kinds[chosen.kind].dropChance ?? 1) * 100)}%</dd>
                       </>
                     )}
                     {!chosen.camp && MAP.kinds[chosen.kind].health !== undefined && (
@@ -658,6 +679,8 @@ export default function DeadlockMap() {
                           <b className="dl-map-leg-n">{i + 1}</b>
                           {camp?.creatures[0] ? (
                             <img src={`${ART}/${camp.creatures[0]}.webp`} alt="" width={34} height={34} loading="lazy" decoding="async" />
+                          ) : PHOTO[leg.stop.kind] ? (
+                            <img className="is-photo" src={`${ART}/${PHOTO[leg.stop.kind]}.webp`} alt="" width={34} height={34} loading="lazy" decoding="async" />
                           ) : (
                             <span className="dl-map-leg-ic">{icon(leg.stop.kind)}</span>
                           )}
@@ -779,7 +802,7 @@ export default function DeadlockMap() {
                       <th scope="row">{t.kinds[kind][1]}</th>
                       <td>{k.count}</td>
                       <td>{isCamp ? range(campRange(kind, (c) => c.health)) : k.health !== undefined ? n(k.health) : "—"}</td>
-                      <td>{souls && souls[1] > 0 ? range(souls) : k.souls ? t.table.crateSouls(n(k.souls)) : "—"}</td>
+                      <td>{souls && souls[1] > 0 ? range(souls) : k.souls ? t.table.crateSouls(n(k.souls), n(k.soulsPerMinute ?? 0), Math.round((k.dropChance ?? 1) * 100)) : "—"}</td>
                       <td>{timing(kind, "initial")}</td>
                       <td>{timing(kind, "respawn")}</td>
                     </tr>
