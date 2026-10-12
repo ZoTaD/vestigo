@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import SectionHead from "./SectionHead";
 import { useLocale } from "./i18n";
 import { useCopy } from "./deadlockCopy";
@@ -37,7 +37,7 @@ import {
 const SIZE = 1000;
 const MAX_ZOOM = 6;
 
-/** El radio de cada marca, en píxeles de pantalla (no crece con el zoom). */
+/** El radio de cada marca con la vista entera, en unidades del SVG. Ver `r` para el zoom. */
 const RADIUS: Record<MapKindId, number> = {
   "camp-small": 6,
   "camp-medium": 7.5,
@@ -171,7 +171,10 @@ export default function DeadlockMap() {
   };
 
   const camps = useMemo(() => MAP.camps.map((c, i) => ({ c, i })).filter(({ c }) => layers.has(c.kind)), [layers]);
-  const r = (kind: MapKindId) => RADIUS[kind] / view.k;
+  // Al acercar, la marca crece en pantalla pero menos que el mapa (raíz del
+  // zoom): dividir por el zoom entero la dejaba más chica que su propio borde
+  // y las cajas se veían como puntos negros.
+  const r = (kind: MapKindId) => (RADIUS[kind] * 1.6) / Math.sqrt(view.k);
   const chosenCamp = selected && "camp" in selected ? MAP.camps[selected.camp] : null;
   const chosenKind: MapKindId | null = chosenCamp ? chosenCamp.kind : selected && "kind" in selected ? selected.kind : null;
 
@@ -196,7 +199,9 @@ export default function DeadlockMap() {
               >
                 {/* La imagen principal de la página: sin `lazy`. */}
                 <img src="/deadlock/game/minimap/midtown.webp" alt={t.alt} width={1024} height={1024} draggable={false} />
-                <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="dl-map-marks">
+                {/* `--k` es el zoom: los trazos se dividen por él en el CSS, porque
+                    `non-scaling-stroke` no descuenta la escala que pone el contenedor. */}
+                <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="dl-map-marks" style={{ "--k": view.k } as CSSProperties}>
                   {ziplines &&
                     MAP.ziplines.map((z) => {
                       const points = z.points.map(([x, y]) => `${(x * SIZE).toFixed(1)},${(y * SIZE).toFixed(1)}`).join(" ");

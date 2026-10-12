@@ -1391,10 +1391,10 @@
   pointer-events: none;
 }
 
-/* Cada carril con su color del juego: amarillo, azul y violeta. */
+/* Cada carril con su color del juego: amarillo, azul y verde. */
 [data-theme="codex"][data-game="deadlock"] :is(.dl-map-zip, .dl-map-lanes li)[data-lane="1"] { --lane: #f5c518; }
 [data-theme="codex"][data-game="deadlock"] :is(.dl-map-zip, .dl-map-lanes li)[data-lane="4"] { --lane: #2f7df6; }
-[data-theme="codex"][data-game="deadlock"] :is(.dl-map-zip, .dl-map-lanes li)[data-lane="6"] { --lane: #b14fe6; }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-zip, .dl-map-lanes li)[data-lane="6"] { --lane: #3fbf4f; }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-zip polyline {
   fill: none;
@@ -1406,12 +1406,12 @@
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-zip-case {
   stroke: rgba(12, 10, 8, 0.75);
-  stroke-width: 5;
+  stroke-width: calc(7px / var(--k, 1));
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-zip-line {
   stroke: var(--lane, #e8e2d4);
-  stroke-width: 3;
+  stroke-width: calc(4px / var(--k, 1));
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-lanes {
@@ -1438,7 +1438,7 @@
 [data-theme="codex"][data-game="deadlock"] .dl-map-mark {
   fill: var(--mark, #fff);
   stroke: #0c0a08;
-  stroke-width: 1.2;
+  stroke-width: calc(1px / var(--k, 1));
   vector-effect: non-scaling-stroke;
   cursor: pointer;
 }
@@ -1450,7 +1450,7 @@
 
 [data-theme="codex"][data-game="deadlock"] .dl-map-mark[data-on] {
   stroke: #fff;
-  stroke-width: 2.5;
+  stroke-width: calc(2.5px / var(--k, 1));
 }
 
 [data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="camp-small"] { --mark: var(--map-small); }
@@ -1630,4 +1630,9 @@
 [data-theme="codex"][data-game="deadlock"] .dl-map-table td {
   font-family: var(--font-data-narrow);
   font-variant-numeric: tabular-nums;
+}
+
+/* Las marcas chicas llevan un borde fino: con el de las grandes se las comía. */
+[data-theme="codex"][data-game="deadlock"] .dl-map-kind:is([data-kind="crate"], [data-kind="statue"], [data-kind="health"]) .dl-map-mark {
+  stroke-width: calc(0.5px / var(--k, 1));
 }

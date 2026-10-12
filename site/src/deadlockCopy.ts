@@ -817,8 +817,8 @@ const EN = {
         boss: () => "1 boss",
       },
       ziplines: "Lanes and ziplines",
-      /** Por número de carril del juego: 1 amarillo, 4 azul, 6 violeta. */
-      lanes: { "1": "Yellow lane", "4": "Blue lane", "6": "Purple lane" },
+      /** Por número de carril del juego: 1 amarillo, 4 azul, 6 verde. */
+      lanes: { "1": "Yellow lane", "4": "Blue lane", "6": "Green lane" },
       minute: "Match time",
       timeNote:
         "Faded marks have not spawned yet at that time. Scroll or use the buttons to zoom, drag to move, click a mark for its details.",
@@ -2137,7 +2137,7 @@ const ES: typeof EN = {
         boss: () => "1 jefe",
       },
       ziplines: "Carriles y tirolesas",
-      lanes: { "1": "Carril amarillo", "4": "Carril azul", "6": "Carril violeta" },
+      lanes: { "1": "Carril amarillo", "4": "Carril azul", "6": "Carril verde" },
       minute: "Minuto de partida",
       timeNote:
         "Las marcas apagadas todavía no aparecieron a esa altura. Rueda o botones para acercar, arrastrá para mover, y tocá una marca para ver su ficha.",
