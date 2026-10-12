@@ -371,7 +371,6 @@ const EN = {
       helpedMost: (p: { signal: string; mine: string; typical: string; hero: string }) =>
         `Nothing dragged the grade down — all three landed on the good side. The one that helped ` +
         `most was ${p.signal.toLowerCase()}: ${p.mine} of the team's, against ${p.typical} for a typical ${p.hero}.`,
-      toggleCurve: "Show or hide this player's curve",
       backToMatches: "Back to the match list",
       backToSearch: "Search a player",
       noRank: "No ranked matches yet",
@@ -627,9 +626,10 @@ const EN = {
         heal: "Healing",
         items: "Items",
       },
-      soulsTitle: "Souls, minute by minute",
-      soulsNote: (duration: string, max: string) =>
-        `Every player's net worth across the ${duration}, up to ${max}. Amber is Hidden King, sapphire is Archmother.`,
+      soulsTitle: "Who was ahead on souls",
+      soulsLead: (team: string, souls: string) => `${team} ahead by ${souls}`,
+      soulsNote:
+        "The chart is the gap between both teams' total souls: above the line Hidden King leads, below it Archmother. Move over it to read any moment; the bars show each player's souls at that time.",
       buildTitle: "What they bought, in order",
       boughtAt: (m: string) => `bought at minute ${m}`,
       adviceTitle: "What the shopping cost",
@@ -1660,7 +1660,6 @@ const ES: typeof EN = {
       helpedMost: (p: { signal: string; mine: string; typical: string; hero: string }) =>
         `Nada te bajó la nota: las tres señales quedaron del lado bueno. La que más sumó fue ` +
         `${p.signal.toLowerCase()}: ${p.mine} de la de tu equipo, contra ${p.typical} de un ${p.hero} típico.`,
-      toggleCurve: "Mostrar u ocultar la curva de este jugador",
       backToMatches: "Volver a la lista de partidas",
       backToSearch: "Buscar un jugador",
       noRank: "Todavía sin partidas rankeadas",
@@ -1829,9 +1828,10 @@ const ES: typeof EN = {
         heal: "Curación",
         items: "Objetos",
       },
-      soulsTitle: "Las almas, minuto a minuto",
-      soulsNote: (duration: string, max: string) =>
-        `El patrimonio de cada jugador a lo largo de los ${duration}, hasta ${max}. Ámbar es Hidden King; zafiro, Archmother.`,
+      soulsTitle: "Quién iba arriba en almas",
+      soulsLead: (team: string, souls: string) => `${team} arriba por ${souls}`,
+      soulsNote:
+        "El gráfico es la diferencia entre las almas totales de los dos equipos: arriba de la línea manda Hidden King, abajo Archmother. Pasá por encima para leer cualquier momento; las barras muestran las almas de cada jugador en ese instante.",
       buildTitle: "Qué compró, en orden",
       boughtAt: (m: string) => `comprado en el minuto ${m}`,
       adviceTitle: "Qué costaron las compras",

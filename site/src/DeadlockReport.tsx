@@ -164,31 +164,37 @@ function BuildOrder({ player, lang }: { player: MatchPlayer; lang: Lang }) {
   );
 }
 
-/* ── Las almas de los doce ────────────────────────────────────────────────── */
+/* ── Las almas: quién iba arriba ──────────────────────────────────────────── */
 
 /**
- * La curva de patrimonio de cada jugador.
+ * Las almas de un jugador en un segundo cualquiera.
  *
- * **Adentro del SVG no va ni una palabra**, que es la regla que salió de la
- * dispersión de ítems: los rótulos se pisan entre sí y con las marcas. Los
- * números van debajo como texto real, que además se selecciona y lo agranda el
- * zoom del navegador.
- *
- * El color es el del equipo —ámbar para `Team0`, que es Hidden King, y zafiro
- * para `Team1`, que es Archmother— y no uno por jugador: doce colores no se
- * distinguen, y lo que la curva contesta es quién iba arriba y desde cuándo. El
- * jugador elegido se dibuja grueso encima de todos.
+ * La partida trae el patrimonio muestreado cada ~4 minutos. Entre dos muestras
+ * se interpola en línea recta (y desde cero hasta la primera): así la lectura
+ * acompaña al puntero en vez de saltar de muestra en muestra.
  */
-/** Las almas de un jugador en el momento señalado, del punto más cercano. */
 function soulsAt(p: MatchPlayer, t: number): number {
-  if (p.souls.length === 0) return 0;
-  let mejor = p.souls[0];
+  let prev = { t: 0, netWorth: 0 };
   for (const s of p.souls) {
-    if (Math.abs(s.t - t) < Math.abs(mejor.t - t)) mejor = s;
+    if (t <= s.t) return prev.netWorth + ((t - prev.t) / (s.t - prev.t)) * (s.netWorth - prev.netWorth);
+    prev = s;
   }
-  return mejor.netWorth;
+  return prev.netWorth;
 }
 
+/**
+ * La ventaja de almas entre los dos equipos, y las de cada jugador.
+ *
+ * Antes eran doce curvas de patrimonio encimadas: con doce líneas de dos
+ * colores no se sabía cuál era de quién (ZoTaD, 2026-10-12). Lo que esas
+ * curvas querían contestar es quién iba arriba y desde cuándo, y eso es una
+ * sola serie: la suma de un equipo menos la del otro. Arriba del medio manda
+ * Hidden King, abajo Archmother.
+ *
+ * "Quién es quién" va debajo, en barras con retrato y nombre, una columna por
+ * equipo. El orden es el del final de la partida y no cambia al mover el
+ * puntero: lo que se mueve es el largo de cada barra.
+ */
 function SoulsChart({
   match,
   selected,
@@ -204,84 +210,49 @@ function SoulsChart({
 }) {
   const copy = useCopy();
   const c = copy.deadlock.report;
-  const [ocultos, setOcultos] = useState<Set<number>>(new Set());
-  /** El segundo que está señalando el puntero. `null` = no está encima. */
+  const sides = copy.deadlock.ladder.sides;
+  /** El segundo que está señalando el puntero. `null` = el final de la partida. */
   const [señalado, setSeñalado] = useState<number | null>(null);
 
   const W = 700;
-  const H = 220;
-  const visibles = match.players.filter((p) => !ocultos.has(p.slot));
+  const H = 160;
   const maxT = Math.max(match.durationS, ...match.players.flatMap((p) => p.souls.map((s) => s.t)));
-  // La escala se ajusta a lo visible: esconder al más rico es justamente lo que
-  // se hace para poder comparar a los demás entre sí.
-  const maxNW = Math.max(1, ...visibles.flatMap((p) => p.souls.map((s) => s.netWorth)));
+  const team = (n: number) => match.players.filter((p) => p.team === n);
+  const total = (n: number, t: number) => team(n).reduce((a, p) => a + soulsAt(p, t), 0);
+  const lead = (t: number) => total(0, t) - total(1, t);
+
+  const tiempos = [0, ...new Set(match.players.flatMap((p) => p.souls.map((s) => s.t)))].sort((a, b) => a - b);
+  const maxLead = Math.max(1, ...tiempos.map((t) => Math.abs(lead(t))));
   const x = (t: number) => (t / maxT) * W;
-  const y = (nw: number) => H - (nw / maxNW) * H;
-
-  const linea = (p: MatchPlayer) =>
-    p.souls.map((s, i) => `${i === 0 ? "M" : "L"}${x(s.t).toFixed(1)},${y(s.netWorth).toFixed(1)}`).join(" ");
-
-  // El elegido al final para que quede arriba de todos: en SVG pinta el orden
-  // del documento, no un z-index.
-  const orden = [...visibles].sort((a, b) => (a.slot === selected ? 1 : b.slot === selected ? -1 : 0));
+  const y = (d: number) => H / 2 - (d / maxLead) * (H / 2 - 6);
+  const puntos = tiempos.map((t) => `${x(t).toFixed(1)},${y(lead(t)).toFixed(1)}`);
+  const area = `M0,${H / 2} L${puntos.join(" L")} L${x(tiempos[tiempos.length - 1]).toFixed(1)},${H / 2} Z`;
 
   const nombre = (p: MatchPlayer) => {
     const n = heroName(p.heroId);
     return names.get(p.accountId)?.name ?? (n ? text(n, lang, "") : String(p.heroId));
   };
 
-  /**
-   * De dónde está el puntero al segundo de partida.
-   *
-   * `pointer` y no `mouse` para que el dedo también lo mueva: en el teléfono no
-   * hay hover, y sin esto el gráfico sería un dibujo.
-   */
+  /** `pointer` y no `mouse` para que el dedo también lo mueva. */
   const señalar = (e: React.PointerEvent<SVGSVGElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
     if (r.width === 0) return;
-    const frac = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
-    setSeñalado(frac * maxT);
+    setSeñalado(Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * maxT);
   };
 
-  const lectura =
-    señalado === null
-      ? []
-      : visibles
-          .map((p) => ({ p, nw: soulsAt(p, señalado) }))
-          .sort((a, b) => b.nw - a.nw);
+  const t = señalado ?? maxT;
+  const ventaja = lead(t);
+  const maxNW = Math.max(1, ...match.players.map((p) => soulsAt(p, maxT)));
 
   return (
-    <div className="dl-rep-chart">
-      {/* La leyenda es el filtro: apretar un jugador lo saca del gráfico, y
-          apretar su retrato en el marcador lo pone en primer plano. Dos gestos
-          distintos porque son dos preguntas distintas. */}
-      <ul className="dl-rep-legend">
-        {match.players.map((p) => (
-          <li key={p.slot}>
-            <button
-              className={`dl-rep-key ${p.team === 0 ? "is-amber" : "is-sapphire"} ${
-                ocultos.has(p.slot) ? "is-off" : ""
-              } ${p.slot === selected ? "is-open" : ""}`}
-              aria-pressed={!ocultos.has(p.slot)}
-              onClick={() =>
-                setOcultos((antes) => {
-                  const next = new Set(antes);
-                  if (next.has(p.slot)) next.delete(p.slot);
-                  else next.add(p.slot);
-                  return next;
-                })
-              }
-              title={c.toggleCurve}
-            >
-              <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={20} height={20} loading="lazy" decoding="async" />
-              <span>{nombre(p)}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="dl-lead">
+      <p className="dl-lead-read" data-side={ventaja >= 0 ? "amber" : "sapphire"}>
+        <span className="dl-lead-time">{mmss(t)}</span>
+        <b>{c.soulsLead(ventaja >= 0 ? sides.team0 : sides.team1, corto(Math.abs(Math.round(ventaja)), lang))}</b>
+      </p>
 
       <svg
-        className="dl-rep-souls"
+        className="dl-lead-chart"
         viewBox={`0 0 ${W} ${H}`}
         preserveAspectRatio="none"
         aria-hidden="true"
@@ -289,59 +260,59 @@ function SoulsChart({
         onPointerDown={señalar}
         onPointerLeave={() => setSeñalado(null)}
       >
-        {orden.map((p) => (
-          <path
-            key={p.slot}
-            d={linea(p)}
-            className={`dl-rep-curve ${p.team === 0 ? "is-amber" : "is-sapphire"} ${
-              p.slot === selected ? "is-open" : ""
-            }`}
-          />
-        ))}
-        {señalado !== null && (
-          <>
-            <line className="dl-rep-guide" x1={x(señalado)} x2={x(señalado)} y1={0} y2={H} />
-            {visibles.map((p) => (
-              <circle
-                key={p.slot}
-                className={`dl-rep-dot ${p.team === 0 ? "is-amber" : "is-sapphire"}`}
-                cx={x(señalado)}
-                cy={y(soulsAt(p, señalado))}
-                r={3}
-              />
-            ))}
-          </>
-        )}
+        <defs>
+          <clipPath id="dl-lead-up">
+            <rect x={0} y={0} width={W} height={H / 2} />
+          </clipPath>
+          <clipPath id="dl-lead-down">
+            <rect x={0} y={H / 2} width={W} height={H / 2} />
+          </clipPath>
+        </defs>
+        <path d={area} className="dl-lead-area is-amber" clipPath="url(#dl-lead-up)" />
+        <path d={area} className="dl-lead-area is-sapphire" clipPath="url(#dl-lead-down)" />
+        <line className="dl-lead-zero" x1={0} x2={W} y1={H / 2} y2={H / 2} />
+        {señalado !== null && <line className="dl-lead-guide" x1={x(t)} x2={x(t)} y1={0} y2={H} />}
       </svg>
+      <p className="dl-lead-axis" aria-hidden="true">
+        <span>0:00</span>
+        <span>{mmss(maxT)}</span>
+      </p>
 
-      {/* La lectura va DEBAJO y como texto real, no adentro del SVG: los rótulos
-          se pisan entre sí y con las marcas, y así además se selecciona y la
-          agranda el zoom del navegador. */}
-      {señalado === null ? (
-        <p className="dl-tier-note">
-          {c.soulsNote(mmss(match.durationS), Math.round(maxNW).toLocaleString(lang))}
-        </p>
-      ) : (
-        <div className="dl-rep-readout">
-          <span className="dl-rep-readout-t">{mmss(señalado)}</span>
-          <ul>
-            {lectura.map(({ p, nw }) => (
-              <li key={p.slot}>
-                <button
-                  className={`dl-rep-read ${p.team === 0 ? "is-amber" : "is-sapphire"} ${
-                    p.slot === selected ? "is-open" : ""
-                  }`}
-                  onClick={() => onPick(p.slot)}
-                >
-                  <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={18} height={18} loading="lazy" decoding="async" />
-                  <span className="dl-rep-read-name">{nombre(p)}</span>
-                  <span className="dl-rep-read-num">{corto(nw, lang)}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div className="dl-lead-teams">
+        {[0, 1].map((n) => (
+          <div key={n} className={`dl-lead-team ${n === 0 ? "is-amber" : "is-sapphire"}`}>
+            <h3 className="dl-lead-team-name">
+              <span>{n === 0 ? sides.team0 : sides.team1}</span>
+              <b>{corto(Math.round(total(n, t)), lang)}</b>
+            </h3>
+            <ul>
+              {team(n)
+                .sort((a, b) => soulsAt(b, maxT) - soulsAt(a, maxT))
+                .map((p) => {
+                  const nw = soulsAt(p, t);
+                  return (
+                    <li key={p.slot}>
+                      <button
+                        type="button"
+                        className={`dl-lead-row ${p.slot === selected ? "is-open" : ""}`}
+                        onClick={() => onPick(p.slot)}
+                      >
+                        <GameImg src={heroImg(p.heroId) ?? ""} alt="" width={22} height={22} loading="lazy" decoding="async" />
+                        <span className="dl-lead-name">{nombre(p)}</span>
+                        <span className="dl-lead-track">
+                          <span className="dl-lead-bar" style={{ width: `${((nw / maxNW) * 100).toFixed(1)}%` }} />
+                        </span>
+                        <span className="dl-lead-num">{corto(Math.round(nw), lang)}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <p className="dl-tier-note">{c.soulsNote}</p>
     </div>
   );
 }

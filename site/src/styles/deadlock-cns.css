@@ -1040,9 +1040,6 @@
   background: rgba(221, 102, 56, 0.45);
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-rep-souls {
-  border: 1px solid rgba(221, 102, 56, 0.14);
-}
 
 [data-theme="codex"][data-game="deadlock"] .dl-rep-progress {
   border: 1px solid rgba(221, 102, 56, 0.3);
@@ -1060,13 +1057,7 @@
   border-color: rgba(221, 102, 56, 0.6);
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-rep-key.is-open {
-  border-color: rgba(221, 102, 56, 0.6);
-}
 
-[data-theme="codex"][data-game="deadlock"] .dl-rep-read.is-open {
-  border-color: rgba(221, 102, 56, 0.5);
-}
 
 [data-theme="codex"][data-game="deadlock"] .dl-rank-badge {
   border-top: 1px solid rgba(221, 102, 56, 0.18);
