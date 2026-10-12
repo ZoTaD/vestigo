@@ -504,7 +504,7 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
 
   // Lo mismo en Terraria (receta, usos, botín).
   const trHas = new Map<string, TerrariaHas>();
-  for (const e of data.tr?.items ?? []) trHas.set(`tr-items/${e.slug}`, { craft: (e.has & 1) > 0, uses: (e.has & 2) > 0, drops: (e.has & 4) > 0 });
+  for (const e of data.tr?.items ?? []) trHas.set(`tr-items/${e.slug}`, { craft: (e.has & 1) > 0, uses: (e.has & 2) > 0, drops: (e.has & 4) > 0, sources: (e.has & 8) > 0 });
 
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);

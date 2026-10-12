@@ -14,6 +14,8 @@ from collections import defaultdict
 from datetime import date
 from pathlib import Path
 
+from sources import build_sources, load as load_sources
+
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "cache"
 DATA = ROOT / "data"
@@ -127,9 +129,11 @@ def unique_slugs(pairs: list[tuple[int, str]], anchor: dict[int, str], foreign: 
     return out
 
 
-def build(cache: dict, prev_slugs: dict | None = None, today: str | None = None) -> dict[str, object]:
+def build(cache: dict, prev_slugs: dict | None = None, today: str | None = None, sources: dict | None = None) -> dict[str, object]:
     """`cache`: items, recipes, texts_en, texts_es, drops, npcs, sprites, loc_en, loc_es (los JSON de la caché ya leídos).
-    `prev_slugs`: el `site/slugs.json` publicado, `{id: [en, es]}`. Devuelve archivo → contenido."""
+    `prev_slugs`: el `site/slugs.json` publicado, `{id: [en, es]}`. `sources`: lo que devuelve `sources.build_sources`
+    (id → tiendas, cofres, bolsas…). Devuelve archivo → contenido."""
+    sources = sources or {}
     prev = {int(k): v for k, v in (prev_slugs or {}).items()}
     es_text = cache["texts_es"]["items"]
     en_text = cache["texts_en"]["items"]
@@ -245,7 +249,12 @@ def build(cache: dict, prev_slugs: dict | None = None, today: str | None = None)
             uses.append([out, qty])
             need.add(out)
         item_drops = sorted(drops[i].values(), key=lambda r: (-r[3], r[0]))
-        npcs = {str(row[0]): [npc_en[str(row[0])], npc_es.get(str(row[0])) or npc_en[str(row[0])]] for row in item_drops}
+        # Las otras fuentes: se quedan las que nombran objetos con ficha, y esos objetos van a las referencias.
+        item_sources = [s for s in sources.get(i, []) if all(s.get(k, i) in ids for k in ("i", "t", "c"))]
+        for s in item_sources:
+            need.update(s[k] for k in ("i", "t", "c") if k in s)
+        named = [row[0] for row in item_drops] + [s["n"] for s in item_sources if "n" in s]
+        npcs = {str(n): [npc_en[str(n)], npc_es.get(str(n)) or npc_en[str(n)]] for n in named}
         # Las estaciones y los grupos que nombran sus recetas: [objeto que la coloca (0 si ninguno), nombres] y
         # [nombres, objeto que hace de ícono].
         stations = {}
@@ -274,13 +283,15 @@ def build(cache: dict, prev_slugs: dict | None = None, today: str | None = None)
             "groups": item_groups,
             "uses": uses,
             "drops": item_drops,
+            "sources": item_sources,
             # Todo lo que la ficha nombra, para dibujarla sin bajar la lista entera.
             "refs": {str(n): ref(n) for n in sorted(need - {i})},
             "npcs": npcs,
         }
         figure = it.get("damage", 0) if it.get("damage", 0) > 0 else it.get("defense", 0)
-        # Qué tiene la ficha, en bits (1 se fabrica, 2 se usa, 4 lo sueltan): de ahí sale el título de cada página.
-        has = (1 if made_by[i] else 0) | (2 if uses else 0) | (4 if item_drops else 0)
+        # Qué tiene la ficha, en bits (1 se fabrica, 2 se usa, 4 lo sueltan, 8 se consigue de otra forma): de ahí sale
+        # el título de cada página.
+        has = (1 if made_by[i] else 0) | (2 if uses else 0) | (4 if item_drops else 0) | (8 if item_sources else 0)
         rows.append([i, slug_en[i], kind, it.get("rare", 0), w, h, figure, has])
 
     out: dict[str, object] = {
@@ -292,7 +303,8 @@ def build(cache: dict, prev_slugs: dict | None = None, today: str | None = None)
         "meta.json": {
             "version": VERSION,
             "generatedAt": today or date.today().isoformat(),
-            "counts": {"items": len(rows), "recipes": len(recipes), "craftable": sum(1 for v in made_by.values() if v), "drops": sum(len(v) for v in drops.values())},
+            "counts": {"items": len(rows), "recipes": len(recipes), "craftable": sum(1 for v in made_by.values() if v), "drops": sum(len(v) for v in drops.values()),
+                       "sources": sum(len(v) for v in sources.values())},
         },
         # Los destacados llevan todo lo que hace falta para dibujarlos: la portada no baja la lista.
         "home.json": {"featured": [[it["id"], *ref(it["id"])] for name in FEATURED for it in items if it["internal"] == name]},
@@ -334,7 +346,7 @@ def main() -> None:
     }
     prev_file = DATA / "site" / "slugs.json"
     prev = json.loads(prev_file.read_text(encoding="utf-8")) if prev_file.exists() else None
-    out = build(cache, prev)
+    out = build(cache, prev, sources=build_sources(load_sources(CACHE)))
     for name, content in out.items():
         path = DATA / name
         path.parent.mkdir(parents=True, exist_ok=True)

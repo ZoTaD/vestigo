@@ -24,6 +24,11 @@ export function sellCoins(value: number): [platinum: number, gold: number, silve
   return [Math.floor(v / 1_000_000), Math.floor(v / 10_000) % 100, Math.floor(v / 100) % 100, v % 100];
 }
 
+/** Un precio de compra en platino, oro, plata y cobre. */
+export function buyCoins(value: number): [platinum: number, gold: number, silver: number, copper: number] {
+  return [Math.floor(value / 1_000_000), Math.floor(value / 10_000) % 100, Math.floor(value / 100) % 100, value % 100];
+}
+
 /** El color del nombre según la rareza, como en el juego. Experto y Maestro (arcoíris y fuego) van con un color fijo. */
 const RARITY: Record<number, string> = {
   [-13]: "#ff8c1a",

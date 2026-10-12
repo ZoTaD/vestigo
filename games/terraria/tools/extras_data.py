@@ -2,7 +2,8 @@
 
 Uso: python games/terraria/tools/extras_data.py ["C:/.../Terraria"]   (después de site_data.py: usa sus slugs)
 
-- Pesca: cañas y cebos con su poder, las cajas y los peces de misión del Pescador.
+- Pesca: cañas y cebos con su poder, las cajas, los peces de misión del Pescador y qué pica en cada lugar (las
+  reglas de pesca del juego, con las condiciones ya escritas por `sources.py`).
 - Parches: el `changelog.txt` que trae el juego, partido por versión.
 
 Las funciones `build_*` y `parse_changelog` son puras y son lo que prueban los tests.
@@ -14,6 +15,7 @@ import re
 import sys
 from pathlib import Path
 
+from sources import build_sources, load as load_sources
 from world_data import item_refs
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,7 +23,7 @@ CACHE = ROOT / "cache"
 DATA = ROOT / "data"
 GAME = Path(sys.argv[1] if len(sys.argv) > 1 else r"C:\Program Files (x86)\Steam\steamapps\common\Terraria")
 
-def build_fishing(items: list[dict], quest: list[int], slugs: dict[int, list]) -> dict:
+def build_fishing(items: list[dict], quest: list[int], slugs: dict[int, list], sources: dict | None = None) -> dict:
     have = [it for it in items if it["id"] in slugs]
     refs: dict[str, list] = {}
 
@@ -39,6 +41,12 @@ def build_fishing(items: list[dict], quest: list[int], slugs: dict[int, list]) -
         "crates": keep([[it["id"]] for it in crates if not it["internal"].endswith("Hard")]),
         "cratesHard": keep([[it["id"]] for it in crates if it["internal"].endswith("Hard")]),
         "quest": keep([[i] for i in quest if i in slugs]),
+        # Qué pica y dónde: [objeto, rareza de la captura ("" = cualquiera), condición [en, es] o None], sin los peces
+        # de misión (van arriba) y juntando por lugar.
+        "catches": keep(sorted(
+            ([i, row.get("tier", ""), row.get("if")] for i, rows in (sources or {}).items() if i in slugs and i not in quest for row in rows if row["k"] == "fish"),
+            key=lambda r: ((r[2] or [""])[0], r[0]),
+        )),
         "refs": refs,
     }
 
@@ -93,7 +101,7 @@ def main() -> None:
     items = json.loads((CACHE / "items.json").read_text(encoding="utf-8-sig"))
     quest = json.loads((CACHE / "fishing.json").read_text(encoding="utf-8-sig"))["quest"]
     slugs = item_refs()
-    out: dict[str, object] = {"fishing.json": build_fishing(items, quest, slugs)}
+    out: dict[str, object] = {"fishing.json": build_fishing(items, quest, slugs, build_sources(load_sources(CACHE)))}
     out.update(build_patches((GAME / "changelog.txt").read_text(encoding="utf-8-sig", errors="replace")))
     (DATA / "patches").mkdir(parents=True, exist_ok=True)
     wanted = {DATA / n for n in out}

@@ -12,7 +12,7 @@ const read = (name: string) => JSON.parse(readFileSync(new URL(name, dir), "utf-
 
 describe("rutas de Terraria", () => {
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {
-    expect(TERRARIA_SECTION_ES).toEqual({ items: "objetos", crafting: "crafteo", bosses: "jefes", npcs: "npc", fishing: "pesca", patches: "parches" });
+    expect(TERRARIA_SECTION_ES).toEqual({ items: "objetos", crafting: "crafteo", bosses: "jefes", npcs: "npc", fishing: "pesca", classes: "clases", patches: "parches" });
     expect(routePath({ ...base, trSection: "home" })).toBe("/en/terraria");
     expect(routePath({ ...base, trSection: "items" })).toBe("/en/terraria/items");
     expect(routePath({ ...base, lang: "es", trSection: "crafting" })).toBe("/es/terraria/crafteo");
@@ -22,8 +22,9 @@ describe("rutas de Terraria", () => {
   });
 
   it("una pestaña que no existe muestra la portada", () => {
-    expect(parseRoute("/en/terraria/classes")).toMatchObject({ view: "terraria", trSection: "home" });
-    expect(parseRoute("/en/terraria/classes").detail).toBeUndefined();
+    expect(parseRoute("/en/terraria/mounts")).toMatchObject({ view: "terraria", trSection: "home" });
+    expect(parseRoute("/en/terraria/mounts").detail).toBeUndefined();
+    expect(parseRoute("/es/terraria/clases")).toMatchObject({ trSection: "classes" });
     expect(parseRoute("/es/terraria/pesca")).toMatchObject({ trSection: "fishing" });
     expect(parseRoute("/es/terraria/parches/1-4-5-8")).toMatchObject({ trSection: "patches", detail: "1-4-5-8" });
     expect(parseRoute("/es/terraria/jefes")).toMatchObject({ trSection: "bosses" });

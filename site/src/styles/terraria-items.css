@@ -35,8 +35,19 @@
 .tr-drop small { color: var(--tr-gold); font-weight: 700; }
 .tr-drop span { color: var(--tr-dim); font-weight: 600; }
 .tr-drop strong { min-width: 4ch; text-align: right; }
+/* Dónde más se consigue: una fila por fuente, con su condición debajo del nombre. */
+.tr-sources { display: grid; gap: 4px; }
+.tr-source { display: flex; align-items: center; gap: 6px 12px; min-height: 44px; padding: 4px 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.05); }
+.tr-source > .tr-label { flex: 0 0 132px; }
+.tr-source-who { flex: 1; min-width: 0; }
+.tr-source-who em { display: block; color: var(--tr-dim); font-style: normal; font-weight: 600; font-size: 14px; line-height: 1.3; }
+.tr-source > span { color: var(--tr-dim); font-weight: 600; white-space: nowrap; }
+.tr-source > strong { text-align: right; white-space: nowrap; }
+.tr-source-note { margin-top: 10px; color: var(--tr-dim); font-size: 14px; line-height: 1.4; }
 
 @media (max-width: 760px) {
+  .tr-source { flex-wrap: wrap; }
+  .tr-source > .tr-label { flex-basis: 100%; }
   .tr-filters { grid-template-columns: minmax(0, 1fr); }
   .tr-top { gap: 12px; }
   .tr-grid { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); padding: 12px 8px; }

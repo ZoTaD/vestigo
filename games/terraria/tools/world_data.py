@@ -102,7 +102,8 @@ LEVELS = {"Love": "love", "Like": "like", "Dislike": "dislike", "Hate": "hate"}
 
 
 def resolver(cache: dict):
-    """Devuelve `fmt(texto, idioma)`, que cambia las marcas {i:…}, {n:…}, {b:…} y {e:…} por los nombres oficiales."""
+    """Devuelve `fmt(texto, idioma)`, que cambia las marcas {i:…}, {n:…}, {b:…} y {e:…} por los nombres oficiales.
+    `sources.py` usa además {v:…} (invasión del Bestiario) y {m:…} (fase de la luna)."""
     item_id = {it["internal"]: str(it["id"]) for it in cache["items"]}
     code = {"en": "en-US", "es": "es-ES"}
 
@@ -111,11 +112,11 @@ def resolver(cache: dict):
             return cache[f"texts_{lang}"]["items"][item_id[key]][0]
         if kind == "n":
             return cache["npcs"][code[lang]][key]
-        table = {"b": "Bestiary_Biomes", "e": "Bestiary_Events"}[kind]
+        table = {"b": "Bestiary_Biomes", "e": "Bestiary_Events", "v": "Bestiary_Invasions", "m": "GameUI"}[kind]
         return cache[f"loc_{lang}"][table][key]
 
     def fmt(text: str, lang: str) -> str:
-        out = re.sub(r"\{([inbe]):(\w+)\}", lambda m: one(m.group(1), m.group(2), lang), text)
+        out = re.sub(r"\{([inbevm]):(\w+)\}", lambda m: one(m.group(1), m.group(2), lang), text)
         # Los nombres del Bestiario traen su artículo ("La Mazmorra"): en medio de la frase va en minúscula.
         out = re.sub(r"(?<=[a-záéíóú,:] )(The|La|El|Lo|Los|Las) (?=[A-ZÁÉÍÓÚ])", lambda m: m.group(1).lower() + " ", out)
         if lang == "es":
