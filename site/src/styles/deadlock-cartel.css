@@ -346,15 +346,26 @@
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-profile-more {
-  display: block;
-  columns: 3 19rem;
-  column-gap: 1.4rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 1.4rem;
+  align-items: start;
   margin-top: 1.8rem;
 }
 
 [data-theme="codex"][data-game="deadlock"] .dl-profile-more > * {
-  break-inside: avoid;
-  margin-bottom: 1.4rem;
+  gap: 1.4rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-profile-more > :empty {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-profile-more {
+    grid-auto-flow: row;
+  }
 }
 
 @media (max-width: 1100px) {
@@ -475,6 +486,13 @@
 [data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-rep-form {
   background: rgba(30, 26, 20, 0.05);
   border-color: var(--line);
+}
+
+/* En el costado del perfil la forma ya vive adentro de una tarjeta: sin marco
+   ni fondo propios, como las demás. */
+[data-theme="codex"][data-game="deadlock"] .dl-profile-aside .dl-rep-form {
+  border: 0;
+  background: none;
 }
 
 [data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-rep-streak.is-win { color: var(--good); }
@@ -789,20 +807,6 @@
 [data-theme="codex"][data-game="deadlock"] .box .dl-callout-num { color: #2f7a1f; }
 [data-theme="codex"][data-game="deadlock"] .box .dl-callout-num[data-kind="overbought"],
 [data-theme="codex"][data-game="deadlock"] .box .dl-callout-num[data-kind="trap"] { color: #b2261c; }
-
-/* ---------- el informe de partida sobre papel ---------- */
-[data-theme="codex"][data-game="deadlock"] .box .dl-rep-souls {
-  background: rgba(30, 26, 20, 0.05);
-  box-shadow: inset 0 0 0 1px rgba(30, 26, 20, 0.12);
-}
-
-[data-theme="codex"][data-game="deadlock"] .box .dl-rep-curve {
-  opacity: 0.7;
-}
-
-[data-theme="codex"][data-game="deadlock"] .box .dl-rep-curve.is-sapphire {
-  stroke: #2b6aa6;
-}
 
 /* Las notas al pie de las cajas, en tinta. La regla de la tier list las deja
    crema porque allá van sobre la ciudad. */
@@ -1127,4 +1131,200 @@
 [data-theme="codex"][data-game="deadlock"] .dl-cb-grid tbody th,
 [data-theme="codex"][data-game="deadlock"] .dl-cb-grid thead tr:last-child th:first-child {
   background: #cdb88f;
+}
+
+/* ---------- el informe: quién iba arriba en almas (SoulsChart) ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-lead {
+  --lead-amber: #c2701a;
+  --lead-sapphire: #2b6aa6;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-read {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.4rem;
+  font-family: var(--font-data-narrow);
+  font-size: 1.05rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-time {
+  min-width: 3.2rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(30, 26, 20, 0.6);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-read[data-side="amber"] b { color: var(--lead-amber); }
+[data-theme="codex"][data-game="deadlock"] .dl-lead-read[data-side="sapphire"] b { color: var(--lead-sapphire); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-chart {
+  display: block;
+  width: 100%;
+  height: 10rem;
+  background: rgba(30, 26, 20, 0.05);
+  touch-action: none;
+  cursor: crosshair;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-area.is-amber { fill: var(--lead-amber); }
+[data-theme="codex"][data-game="deadlock"] .dl-lead-area.is-sapphire { fill: var(--lead-sapphire); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-area {
+  opacity: 0.8;
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.dl-lead-zero, .dl-lead-guide) {
+  stroke: #1e1a14;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-zero {
+  opacity: 0.35;
+  stroke-dasharray: 3 3;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-axis {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.15rem 0 0.9rem;
+  font-family: var(--font-data-narrow);
+  font-size: 0.72rem;
+  color: rgba(30, 26, 20, 0.6);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-teams {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem 1.6rem;
+}
+
+@media (max-width: 700px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-lead-teams {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-team-name {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-team.is-amber { --lead: var(--lead-amber); }
+[data-theme="codex"][data-game="deadlock"] .dl-lead-team.is-sapphire { --lead: var(--lead-sapphire); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-team-name {
+  color: var(--lead);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-team ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-row {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 7.5rem) minmax(0, 1fr) 3.2rem;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.2rem 0.3rem;
+  border: 0;
+  background: none;
+  color: #1e1a14;
+  font: inherit;
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-row:hover,
+[data-theme="codex"][data-game="deadlock"] .dl-lead-row.is-open {
+  background: rgba(30, 26, 20, 0.09);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-row.is-open .dl-lead-name {
+  font-weight: 700;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-track {
+  height: 0.6rem;
+  background: rgba(30, 26, 20, 0.08);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-bar {
+  display: block;
+  height: 100%;
+  background: var(--lead);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead-num {
+  font-family: var(--font-data-narrow);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-lead > .dl-tier-note {
+  margin-top: 0.8rem;
+}
+
+/* ---------- los rasgos del jugador (DeadlockTraitList) ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-traits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-rep-block > .dl-traits {
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  margin-bottom: 1rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-traits-lead {
+  margin-bottom: 0.7rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-trait {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1rem 0.5rem;
+  padding: 0.3rem 0.5rem;
+  background: rgba(30, 26, 20, 0.07);
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-trait[data-tone="good"] { background: rgba(47, 122, 31, 0.16); }
+[data-theme="codex"][data-game="deadlock"] .dl-trait[data-tone="bad"] { background: rgba(178, 38, 28, 0.14); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-trait-name {
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-trait[data-tone="good"] .dl-trait-name { color: var(--good); }
+[data-theme="codex"][data-game="deadlock"] .dl-trait[data-tone="bad"] .dl-trait-name { color: var(--bad); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-trait-why {
+  color: rgba(30, 26, 20, 0.78);
 }

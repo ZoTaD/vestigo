@@ -4,7 +4,7 @@ import SectionHead from "./SectionHead";
 import type { Route } from "./route";
 import { useLocale } from "./i18n";
 import { useCopy } from "./deadlockCopy";
-import { useHeroes, bandBadge, type BandId } from "./deadlockData";
+import { ALL, useHeroes, bandBadge, type BandId } from "./deadlockData";
 import { heroes as heroSlugs } from "./deadlockSlugs";
 import DeadlockHeroPage from "./DeadlockHeroPage";
 import GameImg from "./GameImg";
@@ -80,20 +80,31 @@ export default function DeadlockHeroes({
   route,
   navigate,
   band,
+  all,
   picker,
+  tablePicker,
   open,
 }: {
   route: Route;
   navigate: (route: Route) => void;
   band: BandId;
+  /** La tabla mide todos los rangos juntos en vez de la banda. */
+  all: boolean;
+  /** El selector de la ficha de un héroe: sólo bandas. */
   picker: ReactNode;
+  /** El de la tabla, que suma "todos los rangos". */
+  tablePicker: ReactNode;
   /** El slug del héroe abierto (`/deadlock/heroes/<héroe>`), si hay uno. */
   open?: string;
 }) {
   const copy = useCopy();
   const t = copy.deadlock.heroes;
   const locale = useLocale();
-  const meta = useHeroes(band);
+  // La ficha de un héroe siempre se lee en una banda; "todos los rangos" es de
+  // la tabla.
+  const bandMeta = useHeroes(band);
+  const allMeta = useHeroes(all ? ALL : band);
+  const meta = all ? allMeta : bandMeta;
   const kit = useHeroKit();
   const [sort, setSort] = useState<{ key: SortKey; dir: "asc" | "desc" }>({ key: "winRate", dir: "desc" });
   const hidden = useHiddenColumns();
@@ -196,8 +207,8 @@ export default function DeadlockHeroes({
     else groups.push({ group: c.group, span: 1 });
   }
 
-  const insignia = bandBadge(band);
-  const bandName = copy.deadlock.bands[band];
+  const insignia = all ? { img: "", color: "" } : bandBadge(band);
+  const bandName = all ? copy.deadlock.allRanks : copy.deadlock.bands[band];
   const toHero = (heroId: number): Route => ({
     ...route,
     view: "deadlock",
@@ -228,10 +239,10 @@ export default function DeadlockHeroes({
 
   // La ficha entera del héroe. Se decide después de los hooks, que corren
   // siempre en el mismo orden.
-  const abierto = open && meta ? meta.heroes.find((h) => heroSlugs.toSlug.get(String(h.heroId)) === open) : undefined;
-  if (meta && abierto) {
+  const abierto = open && bandMeta ? bandMeta.heroes.find((h) => heroSlugs.toSlug.get(String(h.heroId)) === open) : undefined;
+  if (bandMeta && abierto) {
     return (
-      <DeadlockHeroPage hero={abierto} heroes={meta.heroes} route={route} navigate={navigate} picker={picker} band={band} />
+      <DeadlockHeroPage hero={abierto} heroes={bandMeta.heroes} route={route} navigate={navigate} picker={picker} band={band} />
     );
   }
 
@@ -242,7 +253,7 @@ export default function DeadlockHeroes({
         title={t.title}
         accent={t.accent}
         lead={[t.lead, t.source]}
-        controls={picker}
+        controls={tablePicker}
         meta={
           meta && (
             <span className="dl-meta-line">

@@ -130,7 +130,7 @@ export default function DeadlockRankTrail({ points }: { points: RankPoint[] }) {
 
         {drawn.map(({ p, i }) => (
           <span
-            key={p.matchId}
+            key={`${p.matchId}-${i}`}
             className={`dl-trail-dot${i === 0 || i === n - 1 ? " is-end" : ""}${i === peakIndex ? " is-peak" : ""}`}
             style={{
               left: `${((xOf(i) / W) * 100).toFixed(2)}%`,

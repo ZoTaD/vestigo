@@ -1645,56 +1645,15 @@
 
 /* La leyenda del gráfico: el bando va en un cuadradito de color, no en una
    raya debajo del botón. */
-[data-theme="codex"] .dl-rep-key {
-  gap: 0.35rem;
-  padding: 0.2rem 0.45rem 0.2rem 0.4rem;
-  border: 0;
-  border-radius: var(--radius);
-  background: var(--surface-2);
-  color: var(--text);
-}
 
-[data-theme="codex"] .dl-rep-key::before {
-  content: "";
-  flex: 0 0 auto;
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 2px;
-  background: var(--text-faint);
-}
 
-[data-theme="codex"] .dl-rep-key.is-amber::before {
-  background: var(--accent);
-}
 
-[data-theme="codex"] .dl-rep-key.is-sapphire::before {
-  background: #6aa9d8;
-}
 
-[data-theme="codex"] .dl-rep-key img,
-[data-theme="codex"] .dl-rep-read img {
-  border-radius: var(--radius);
-}
 
-[data-theme="codex"] .dl-rep-key.is-open {
-  background: rgba(var(--accent-rgb), 0.2);
-}
 
-[data-theme="codex"] .dl-rep-read {
-  border: 0;
-  border-radius: var(--radius);
-}
 
-[data-theme="codex"] .dl-rep-read.is-open {
-  background: rgba(var(--accent-rgb), 0.16);
-  color: var(--text);
-}
 
-[data-theme="codex"] .dl-rep-readout-t,
-[data-theme="codex"] .dl-rep-read-num {
-  font-family: var(--font-data-narrow);
-  font-weight: 700;
-}
+
 
 /* El veredicto, los consejos y el "nada que decir": tinte, no filo. */
 [data-theme="codex"] .dl-rep-verdict,

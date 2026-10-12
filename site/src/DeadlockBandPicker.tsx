@@ -14,9 +14,15 @@ import GameImg from "./GameImg";
 export default function DeadlockBandPicker({
   band,
   onChange,
+  all,
+  onAll,
 }: {
   band: BandId;
   onChange: (band: BandId) => void;
+  /** True cuando lo elegido es "todos los rangos" y no una banda. */
+  all?: boolean;
+  /** Con esto el selector suma la opción "todos los rangos" (sólo Héroes). */
+  onAll?: () => void;
 }) {
   const copy = useCopy();
 
@@ -28,8 +34,8 @@ export default function DeadlockBandPicker({
           <button
             key={b.id}
             type="button"
-            data-active={band === b.id}
-            aria-pressed={band === b.id}
+            data-active={!all && band === b.id}
+            aria-pressed={!all && band === b.id}
             onClick={() => onChange(b.id)}
           >
             {insignia.img && <GameImg src={insignia.img} alt="" width={20} height={20} />}
@@ -37,6 +43,11 @@ export default function DeadlockBandPicker({
           </button>
         );
       })}
+      {onAll && (
+        <button type="button" data-active={!!all} aria-pressed={!!all} onClick={onAll}>
+          {copy.deadlock.allRanks}
+        </button>
+      )}
     </div>
   );
 }
