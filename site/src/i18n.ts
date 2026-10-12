@@ -39,8 +39,8 @@ const EN = {
     zomboid: "Project Zomboid",
     zomboidShort: "Zomboid",
     rust: "Rust",
-    /** El botón de la barra que abre el menú con todos los juegos. */
-    menu: "Games",
+    /** El botón de tres puntos de la barra: los juegos que no entraron. */
+    more: "More games",
     /** Las categorías del menú y de la portada (`gameGroups.ts`). */
     groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
@@ -280,7 +280,7 @@ const ES: typeof EN = {
     zomboid: "Project Zomboid",
     zomboidShort: "Zomboid",
     rust: "Rust",
-    menu: "Juegos",
+    more: "Más juegos",
     groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
