@@ -90,5 +90,6 @@ describe("Deadlock: el mapa", () => {
   it("el reloj se escribe m:ss", () => {
     expect(clock(0)).toBe("0:00");
     expect(clock(335)).toBe("5:35");
+    expect(clock(419.6)).toBe("7:00");
   });
 });

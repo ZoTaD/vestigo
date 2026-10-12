@@ -143,4 +143,8 @@ export function campRange(kind: MapKindId, pick: (c: MapCamp) => number): [numbe
 }
 
 /** `m:ss` de un tiempo en segundos. */
-export const clock = (s: number): string => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, "0")}`;
+export const clock = (s: number): string => {
+  // Se redondea el total, no el resto: 419,6 s es 7:00 y no "6:60".
+  const total = Math.round(s);
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
+};

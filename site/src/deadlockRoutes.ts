@@ -1,4 +1,4 @@
-import { MAP, campHealthAt, campSoulsAt, isUpAt, type MapKindId } from "./deadlockMapData";
+import { MAP, campHealthAt, campSoulsAt, isUpAt, timerOf, type MapKindId } from "./deadlockMapData";
 
 /**
  * Las rutas de farmeo sobre el mapa: qué paradas hay, cuánto se tarda entre una
@@ -97,6 +97,8 @@ export interface Leg {
   clear: number;
   souls: number;
   up: boolean;
+  /** Segundos desde que arranca la ruta hasta que esta parada vuelve a estar: cuando se la limpia más su reaparición. */
+  backAt: number;
 }
 
 export interface RouteTotals {
@@ -105,25 +107,49 @@ export interface RouteTotals {
   clear: number;
   total: number;
   souls: number;
-  /** Almas por minuto de la ruta entera. 0 si no dura nada. */
+  /**
+   * Almas por minuto de UNA pasada. Sirve para comparar rutas entre sí (es lo
+   * que usa `suggestRoute`), pero no se muestra: nada reaparece cada minuto, así
+   * que no es un ritmo que se pueda sostener.
+   */
   soulsPerMin: number;
+  /**
+   * Segundos desde que arranca la ruta hasta que TODA vuelve a estar para
+   * repetirla: la parada que más tarda en volver, contando desde que se la
+   * limpió. 0 si la ruta está vacía.
+   */
+  repeatIn: number;
+  /** La parada que marca ese tiempo: la última en volver. */
+  lastBack: Stop | null;
 }
 
 export function routeTotals(stops: Stop[], hero: RouteHero, minute: number): RouteTotals {
   const speed = Math.max(0.1, hero.speed);
   const dps = Math.max(1, hero.dps);
-  const legs: Leg[] = stops.map((stop, i) => ({
-    stop,
-    travel: i === 0 ? 0 : distanceM(stops[i - 1], stop) / speed,
-    clear: stopHealth(stop, minute) / dps + STOP_OVERHEAD_S,
-    souls: stopSouls(stop, minute),
-    up: stopIsUp(stop, minute),
-  }));
+  let elapsed = 0;
+  const legs: Leg[] = stops.map((stop, i) => {
+    const travel = i === 0 ? 0 : distanceM(stops[i - 1], stop) / speed;
+    const clear = stopHealth(stop, minute) / dps + STOP_OVERHEAD_S;
+    elapsed += travel + clear;
+    // El reloj de reaparición arranca cuando la parada queda limpia.
+    const respawn = timerOf(MAP.kinds[stop.kind], stop.group)?.respawn ?? 0;
+    return { stop, travel, clear, souls: stopSouls(stop, minute), up: stopIsUp(stop, minute), backAt: elapsed + respawn };
+  });
   const travel = legs.reduce((a, l) => a + l.travel, 0);
   const clear = legs.reduce((a, l) => a + l.clear, 0);
   const souls = legs.reduce((a, l) => a + l.souls, 0);
   const total = travel + clear;
-  return { legs, travel, clear, total, souls, soulsPerMin: total > 0 ? souls / (total / 60) : 0 };
+  const last = legs.reduce<Leg | null>((a, l) => (a === null || l.backAt > a.backAt ? l : a), null);
+  return {
+    legs,
+    travel,
+    clear,
+    total,
+    souls,
+    soulsPerMin: total > 0 ? souls / (total / 60) : 0,
+    repeatIn: last?.backAt ?? 0,
+    lastBack: last?.stop ?? null,
+  };
 }
 
 /** De qué lado es la jungla: Hidden King tiene la base abajo; Archmother, arriba. */

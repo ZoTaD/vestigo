@@ -44,6 +44,22 @@ describe("Deadlock: rutas del mapa", () => {
     expect(routeTotals([], hero, 10).soulsPerMin).toBe(0);
   });
 
+  it("la ruta vuelve a estar entera cuando reaparece su parada más lenta, contando desde que se la limpió", () => {
+    const [a, b] = allStops().filter((s) => s.kind === "camp-medium");
+    const t = routeTotals([a, b], hero, 10);
+    const respawn = MAP.kinds["camp-medium"].respawn!;
+    // La primera queda limpia antes, así que vuelve antes: manda la segunda.
+    expect(t.legs[0].backAt).toBeCloseTo(t.legs[0].clear + respawn, 5);
+    expect(t.repeatIn).toBeCloseTo(t.total + respawn, 5);
+    expect(t.lastBack).toBe(b);
+    // Con una parada de reaparición corta al final, sigue mandando la lenta.
+    const small = allStops().find((s) => s.kind === "camp-small")!;
+    const mixed = routeTotals([a, small], hero, 10);
+    expect(mixed.lastBack).toBe(a);
+    expect(mixed.repeatIn).toBeCloseTo(mixed.legs[0].clear + respawn, 5);
+    expect(routeTotals([], hero, 10).repeatIn).toBe(0);
+  });
+
   it("más daño limpia antes y más velocidad camina antes", () => {
     const stops = allStops().filter((s) => s.camp !== undefined).slice(0, 4);
     const slow = routeTotals(stops, hero, 10);
