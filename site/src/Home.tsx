@@ -1,12 +1,9 @@
-import { useState, type FormEvent } from "react";
 import heroesJson from "@deadlock/heroes.json";
 import { buildHeroes, patchMovers, PUBLISHED_BAND, type Hero } from "./deadlockData";
 import { buildItems as buildDlItems } from "./deadlockItemsData";
 import { heroes as heroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
 import { DL_BAND_NAMES } from "./deadlockBandNames";
 import { useCopy, useLang, useLocale } from "./i18n";
-import { lastProfile } from "./lastProfile";
-import { setPendingSearch } from "./pendingSearch";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import vhMeta from "@valheim/meta.json";
@@ -26,11 +23,12 @@ const VH_ENTRIES = Object.entries(vhMeta.counts).reduce((n, [k, v]) => (k === "b
  * hacer en el primer pantallazo. Ahora, en orden de lectura:
  *
  * 1. El eslogan, a un tercio del tamaño.
- * 2. **El buscador**, grande, con el juego a elegir y "último visto" a un
- *    clic: buscarse es el caso de uso número uno de un sitio de stats.
- * 3. **"Hoy en el meta"**: cinco datos que cambian todos los días y enlazan a
+ * 2. **"Hoy en el meta"**: cinco datos que cambian todos los días y enlazan a
  *    la página que los explica. Es el motivo de volver que la portada no tenía.
- * 4. Los juegos, con un botón que dice a dónde va.
+ * 3. Los juegos, con un botón que dice a dónde va.
+ *
+ * El buscador de perfiles salió de la portada el 2026-10-12: sólo servía para
+ * Deadlock y el sitio ya tiene seis juegos. Sigue en la barra y en Deadlock.
  *
  * Todo lo que muestra sale de los archivos que ya viajan en el bundle, así que
  * está en el HTML prerenderizado y no puede desviarse de las tier lists que
@@ -68,18 +66,6 @@ export default function Home({
 
   const bandName = DL_BAND_NAMES[lang][PUBLISHED_BAND];
 
-  /* --- Buscador ---------------------------------------------------------- */
-  // Sólo Deadlock: es el único juego con perfiles de jugador.
-  const [query, setQuery] = useState("");
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    const q = query.trim();
-    if (!q) return;
-    setPendingSearch(q);
-    navigate({ ...route, view: "deadlock", dlSection: "player", detail: undefined });
-  };
-  const lastDl = lastProfile();
-
   /* --- Cifras del pie ---------------------------------------------------- */
   const matchesRead = heroesJson.matches;
   const measuredAt = Date.parse(heroesJson.generatedAt);
@@ -104,7 +90,7 @@ export default function Home({
 
   return (
     <main className="home">
-      {/* Cabecera: el eslogan y el buscador, lado a lado ---------------- */}
+      {/* Cabecera: el eslogan ------------------------------------------ */}
       <section className="home-hero">
         <div className="home-hero-text">
           <p className="home-eyebrow">{copy.home.eyebrow}</p>
@@ -113,37 +99,6 @@ export default function Home({
           </h1>
           <p className="home-lead">{copy.home.lead}</p>
         </div>
-
-        <form className="home-search box" onSubmit={submit} role="search">
-          <p className="box-title">{copy.home.search.label}</p>
-          <div className="home-search-row">
-            <label className="field home-search-field">
-              <input
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={copy.home.search.placeholder.deadlock}
-                aria-label={copy.home.search.placeholder.deadlock}
-                autoComplete="off"
-              />
-            </label>
-            <button className="btn" type="submit">
-              {copy.home.search.go}
-            </button>
-          </div>
-          {lastDl && (
-            <p className="home-last">
-              <span className="home-last-label">{copy.home.search.lastSeen}</span>
-              <RouteLink
-                className="home-last-link"
-                to={{ ...route, view: "deadlock", dlSection: "player", detail: String(lastDl.accountId) }}
-                onNavigate={navigate}
-              >
-                {lastDl.name} <small>· {copy.games.deadlock}</small>
-              </RouteLink>
-            </p>
-          )}
-        </form>
       </section>
 
       {/* Hoy en el meta ------------------------------------------------- */}

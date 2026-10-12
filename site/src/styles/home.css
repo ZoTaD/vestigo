@@ -31,13 +31,9 @@
   padding: 0 var(--pad);
 }
 
-/* Cabecera: eslogan a la izquierda, buscador a la derecha ------------------ */
+/* Cabecera: el eslogan ------------------------------------------------------ */
 
 [data-theme="codex"][data-place="home"] .home-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 6fr) minmax(20rem, 5fr);
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  align-items: center;
   padding-top: clamp(1.6rem, 4vw, 3rem);
 }
 
@@ -77,65 +73,6 @@
   margin: 1.1rem 0 0;
   font-size: 1.02rem;
   line-height: 1.55;
-  color: var(--text-dim);
-}
-
-/* El buscador grande. `.box` pone la caja; acá sólo el reparto. */
-[data-theme="codex"][data-place="home"] .home-search {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  padding: 1.1rem 1.2rem 1.2rem;
-  border-color: var(--line-strong);
-  box-shadow: 0 8px 30px rgba(20, 20, 15, 0.06);
-}
-
-[data-theme="codex"][data-place="home"] .home-search .box-title {
-  margin: 0;
-}
-
-[data-theme="codex"][data-place="home"] .home-search-row {
-  display: flex;
-  gap: 0.5rem;
-}
-
-[data-theme="codex"][data-place="home"] .home-search-field {
-  flex: 1 1 auto;
-  min-height: 44px;
-}
-
-[data-theme="codex"][data-place="home"] .home-search-row .btn {
-  min-height: 44px;
-  flex: 0 0 auto;
-}
-
-[data-theme="codex"][data-place="home"] .home-last {
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.3rem 0.9rem;
-  font-size: 0.8rem;
-}
-
-[data-theme="codex"][data-place="home"] .home-last-label {
-  font-weight: 600;
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-[data-theme="codex"][data-place="home"] .home-last-link {
-  font-weight: 700;
-  color: var(--text);
-  text-decoration: underline;
-  text-decoration-color: var(--line-strong);
-  text-underline-offset: 0.2em;
-}
-
-[data-theme="codex"][data-place="home"] .home-last-link small {
-  font-weight: 500;
   color: var(--text-dim);
 }
 
@@ -632,7 +569,6 @@
 /* Teléfono ----------------------------------------------------------------- */
 
 @media (max-width: 860px) {
-  [data-theme="codex"][data-place="home"] .home-hero,
   [data-theme="codex"][data-place="home"] .game-panel {
     grid-template-columns: minmax(0, 1fr);
   }

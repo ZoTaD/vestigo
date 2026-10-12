@@ -108,11 +108,8 @@ const EN = {
       topBand: "Phantom+",
       unmeasured: "not measured yet",
     },
-    /** El buscador grande de la portada (rediseño del 2026-09-06). */
+    /** El "último visto" de la página de jugador de Deadlock. */
     search: {
-      label: "Find your profile",
-      placeholder: { deadlock: "Steam name" },
-      go: "Search",
       lastSeen: "Last seen",
     },
     /** "Hoy en el meta": tres datos por juego que cambian todos los días. */
@@ -338,9 +335,6 @@ const ES: typeof EN = {
       unmeasured: "todavía sin medir",
     },
     search: {
-      label: "Buscá tu perfil",
-      placeholder: { deadlock: "Nombre de Steam" },
-      go: "Buscar",
       lastSeen: "Último visto",
     },
     today: {
