@@ -12,7 +12,7 @@ const read = (name: string) => JSON.parse(readFileSync(new URL(name, dir), "utf-
 
 describe("rutas de Terraria", () => {
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {
-    expect(TERRARIA_SECTION_ES).toEqual({ items: "objetos", crafting: "crafteo", bosses: "jefes", npcs: "npc" });
+    expect(TERRARIA_SECTION_ES).toEqual({ items: "objetos", crafting: "crafteo", bosses: "jefes", npcs: "npc", fishing: "pesca", patches: "parches" });
     expect(routePath({ ...base, trSection: "home" })).toBe("/en/terraria");
     expect(routePath({ ...base, trSection: "items" })).toBe("/en/terraria/items");
     expect(routePath({ ...base, lang: "es", trSection: "crafting" })).toBe("/es/terraria/crafteo");
@@ -22,8 +22,10 @@ describe("rutas de Terraria", () => {
   });
 
   it("una pestaña que no existe muestra la portada", () => {
-    expect(parseRoute("/en/terraria/fishing")).toMatchObject({ view: "terraria", trSection: "home" });
-    expect(parseRoute("/en/terraria/fishing").detail).toBeUndefined();
+    expect(parseRoute("/en/terraria/classes")).toMatchObject({ view: "terraria", trSection: "home" });
+    expect(parseRoute("/en/terraria/classes").detail).toBeUndefined();
+    expect(parseRoute("/es/terraria/pesca")).toMatchObject({ trSection: "fishing" });
+    expect(parseRoute("/es/terraria/parches/1-4-5-8")).toMatchObject({ trSection: "patches", detail: "1-4-5-8" });
     expect(parseRoute("/es/terraria/jefes")).toMatchObject({ trSection: "bosses" });
     expect(parseRoute("/es/terraria/npc")).toMatchObject({ trSection: "npcs" });
   });
@@ -87,7 +89,7 @@ describe("textos y guardia de Terraria", () => {
   it("títulos con la marca y descripciones de un largo razonable", () => {
     for (const lang of ["en", "es"] as const) {
       const c = TERRARIA_COPY[lang];
-      const pages = [...Object.values(c.seo), c.detailSeo("Terra Blade", { craft: true, uses: true, drops: true }), c.detailSeo("Dirt Block"), c.detailSeo("The Horseman's Blade", { drops: true })];
+      const pages = [...Object.values(c.seo), c.patchSeo("1.4.5.8"), c.detailSeo("Terra Blade", { craft: true, uses: true, drops: true }), c.detailSeo("Dirt Block"), c.detailSeo("The Horseman's Blade", { drops: true })];
       for (const p of pages) {
         expect(p.title.endsWith("| Vestigo"), p.title).toBe(true);
         expect(p.description.length, p.description).toBeGreaterThanOrEqual(80);

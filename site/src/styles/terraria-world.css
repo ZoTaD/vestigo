@@ -55,3 +55,22 @@
   .tr-moods li { grid-template-columns: 28px minmax(0, 1fr) 64px; }
   .tr-factors, .tr-pylon { grid-column: 1 / -1; }
 }
+
+/* --- Pesca y Parches (2026-10-12) ---------------------------------------------------------------------------------- */
+.tr-fishing .tr-dug + .tr-dug, .tr-patches .tr-dug + .tr-dug { margin-top: 12px; }
+.tr-fishing .tr-hint { margin: 0 0 10px; }
+.tr-fishing .tr-ref small { color: var(--tr-gold); font-weight: 700; }
+.tr-back { display: inline-flex; align-items: center; min-height: 40px; margin: 6px 0; font: 700 16px/1 "Comic Neue", "Barlow", sans-serif; text-shadow: 0 1px 0 #000; }
+.tr-patch-list { display: grid; gap: 8px; }
+.tr-patch-row { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 6px 16px; align-items: center; }
+.tr-patch-row b { font-size: 22px; color: var(--tr-gold); }
+.tr-patch-row span { font-weight: 600; }
+.tr-patch-row small { color: var(--tr-dim); font-weight: 600; white-space: nowrap; }
+.tr-patch-row:hover b { text-decoration: underline; }
+.tr-notes ul { display: grid; gap: 6px; padding-left: 20px !important; list-style: disc !important; line-height: 1.5; }
+.tr-notes li[data-depth="1"] { margin-left: 22px; list-style: circle; }
+.tr-notes li[data-depth="2"] { margin-left: 44px; list-style: square; }
+@media (max-width: 760px) {
+  .tr-patch-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .tr-patch-row span { grid-column: 1 / -1; grid-row: 2; }
+}

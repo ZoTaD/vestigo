@@ -7,7 +7,7 @@ import type { TerrariaSection } from "./route";
 
 /** El orden de las pestañas en la regla de profundidad. */
 /** De arriba abajo, como las capas del mundo. */
-export const TERRARIA_TABS: TerrariaSection[] = ["home", "npcs", "items", "crafting", "bosses"];
+export const TERRARIA_TABS: TerrariaSection[] = ["home", "npcs", "fishing", "items", "crafting", "bosses", "patches"];
 
 export type Kind = "melee" | "ranged" | "magic" | "summon" | "ammo" | "armor" | "accessory" | "tool" | "consumable" | "material" | "block" | "vanity" | "misc";
 export const KINDS: Kind[] = ["melee", "ranged", "magic", "summon", "ammo", "armor", "accessory", "tool", "consumable", "material", "block", "vanity", "misc"];
@@ -25,6 +25,8 @@ export interface TerrariaCopy {
   soon: string;
   seo: Record<TerrariaSection, Seo>;
   detailSeo: (name: string, has?: TerrariaHas) => Seo;
+  /** El título de las notas de una versión. */
+  patchSeo: (version: string) => Seo;
   loading: string;
   loadError: string;
   retry: string;
@@ -100,6 +102,26 @@ export interface TerrariaCopy {
     dropModes: Record<string, string>;
     openTree: string;
   };
+  fishing: {
+    h1: string;
+    lede: string;
+    poles: string;
+    polesHint: string;
+    baits: string;
+    baitsHint: string;
+    crates: string;
+    cratesHint: string;
+    quest: (n: number) => string;
+    questHint: string;
+  };
+  patches: {
+    h1: string;
+    lede: (n: number) => string;
+    english: string;
+    changes: (n: string) => string;
+    back: string;
+    title: (version: string) => string;
+  };
   bosses: {
     h1: string;
     lede: string;
@@ -165,9 +187,9 @@ const RARITY_EN: Record<number, string> = { [-13]: "Master", [-12]: "Expert", [-
 const RARITY_ES: Record<number, string> = { [-13]: "Maestro", [-12]: "Experto", [-11]: "Misión", [-1]: "Gris", 0: "Blanco", 1: "Azul", 2: "Verde", 3: "Naranja", 4: "Rojo claro", 5: "Rosa", 6: "Violeta claro", 7: "Lima", 8: "Amarillo", 9: "Cian", 10: "Rojo", 11: "Violeta" };
 
 const EN: TerrariaCopy = {
-  tabs: { home: "Home", items: "Items", crafting: "Crafting tree", bosses: "Bosses", npcs: "NPCs" },
-  layers: { home: "Sky", npcs: "Surface", items: "Underground", crafting: "Caverns", bosses: "Underworld" },
-  soonTabs: [],
+  tabs: { home: "Home", items: "Items", crafting: "Crafting tree", bosses: "Bosses", npcs: "NPCs", fishing: "Fishing", patches: "Patches" },
+  layers: { home: "Sky", npcs: "Surface", fishing: "Ocean", items: "Underground", crafting: "Caverns", bosses: "Underworld", patches: "Space" },
+  soonTabs: [["Sky", "Classes"]],
   soon: "Soon",
   seo: {
     home: {
@@ -177,6 +199,14 @@ const EN: TerrariaCopy = {
     items: {
       title: "Terraria Items List: Stats, Recipes and Drops | Vestigo",
       description: "All Terraria 1.4.5 items by type and rarity: weapons, armor, accessories, tools and materials, each with its stats, recipe and where it drops.",
+    },
+    fishing: {
+      title: "Terraria Fishing: Poles, Bait Power, Crates and Quest Fish | Vestigo",
+      description: "Every Terraria fishing pole and bait with its fishing power, all the crates before and after Hardmode, and the quest fish the Angler asks for.",
+    },
+    patches: {
+      title: "Terraria Patch Notes: Every Version's Changelog | Vestigo",
+      description: "The full Terraria changelog, version by version, from 1.0.1 to the latest 1.4.5 update: additions, balance changes and bug fixes.",
     },
     bosses: {
       title: "Terraria Boss Checklist: Order, Summons and Drops | Vestigo",
@@ -203,6 +233,10 @@ const EN: TerrariaCopy = {
       description: clip(`${name} in Terraria 1.4.5: its stats and rarity${parts.length ? `, ${join(parts, "and")}` : ", sell price and what it is for"}.`),
     };
   },
+  patchSeo: (version) => ({
+    title: `Terraria ${version} Patch Notes: Changes and Fixes | Vestigo`,
+    description: `Everything that changed in Terraria ${version}: new content, balance changes and bug fixes, straight from the game's changelog.`,
+  }),
   loading: "Loading…",
   loadError: "The data didn't load.",
   retry: "Try again",
@@ -286,6 +320,26 @@ const EN: TerrariaCopy = {
     dropModes: { n: "Classic", e: "Expert", m: "Master", "": "" },
     openTree: "See the full crafting tree",
   },
+  fishing: {
+    h1: "Terraria fishing",
+    lede: "Poles, bait, crates and the Angler's quest fish. Fishing power is your pole plus your bait: more power, better catches.",
+    poles: "Fishing poles",
+    polesHint: "By fishing power, weakest first.",
+    baits: "Bait",
+    baitsHint: "By bait power, strongest first. Each cast has a chance to use up the bait: the stronger it is, the longer it lasts.",
+    crates: "Crates",
+    cratesHint: "After Hardmode starts, every crate you fish is its Hardmode version.",
+    quest: (n) => `Quest fish (${n})`,
+    questHint: "The Angler asks for one of these each day. They can't be sold or stored for later quests.",
+  },
+  patches: {
+    h1: "Terraria patch notes",
+    lede: (n) => `The game's changelog, ${n} versions from the first patch to the latest.`,
+    english: "",
+    changes: (n) => `${n} changes`,
+    back: "All versions",
+    title: (version) => `Terraria ${version} patch notes`,
+  },
   bosses: {
     h1: "Terraria boss checklist",
     lede: "Every boss in the order you usually fight them: how it shows up, what it drops and what it unlocks. Your ticks are saved in this browser.",
@@ -350,9 +404,9 @@ const EN: TerrariaCopy = {
 };
 
 const ES: TerrariaCopy = {
-  tabs: { home: "Portada", items: "Objetos", crafting: "Árbol de crafteo", bosses: "Jefes", npcs: "NPC" },
-  layers: { home: "Cielo", npcs: "Superficie", items: "Subsuelo", crafting: "Cavernas", bosses: "Inframundo" },
-  soonTabs: [],
+  tabs: { home: "Portada", items: "Objetos", crafting: "Árbol de crafteo", bosses: "Jefes", npcs: "NPC", fishing: "Pesca", patches: "Parches" },
+  layers: { home: "Cielo", npcs: "Superficie", fishing: "Océano", items: "Subsuelo", crafting: "Cavernas", bosses: "Inframundo", patches: "Espacio" },
+  soonTabs: [["Cielo", "Clases"]],
   soon: "Pronto",
   seo: {
     home: {
@@ -362,6 +416,14 @@ const ES: TerrariaCopy = {
     items: {
       title: "Objetos de Terraria: estadísticas, recetas y botín | Vestigo",
       description: "Todos los objetos de Terraria 1.4.5 por tipo y rareza: armas, armaduras, accesorios, herramientas y materiales, con sus estadísticas, receta y botín.",
+    },
+    fishing: {
+      title: "Pesca en Terraria: cañas, cebos, cajas y peces de misión | Vestigo",
+      description: "Todas las cañas y cebos de Terraria con su poder de pesca, las cajas de antes y después del Hardmode, y los peces de misión que pide el Pescador.",
+    },
+    patches: {
+      title: "Parches de Terraria: las notas de cada versión | Vestigo",
+      description: "El registro de cambios completo de Terraria, versión por versión, de la 1.0.1 a la última 1.4.5: novedades, cambios de balance y errores corregidos.",
     },
     bosses: {
       title: "Jefes de Terraria: orden, invocación y botín | Vestigo",
@@ -388,6 +450,10 @@ const ES: TerrariaCopy = {
       description: clip(`${name} en Terraria 1.4.5: sus estadísticas y rareza${parts.length ? `, ${join(parts, "y")}` : ", precio de venta y para qué sirve"}.`),
     };
   },
+  patchSeo: (version) => ({
+    title: `Terraria ${version}: notas del parche, cambios y arreglos | Vestigo`,
+    description: `Todo lo que cambió en Terraria ${version}: contenido nuevo, cambios de balance y errores corregidos, del registro de cambios del propio juego.`,
+  }),
   loading: "Cargando…",
   loadError: "Los datos no cargaron.",
   retry: "Reintentar",
@@ -470,6 +536,26 @@ const ES: TerrariaCopy = {
     dropsTitle: "Lo sueltan",
     dropModes: { n: "Clásico", e: "Experto", m: "Maestro", "": "" },
     openTree: "Ver el árbol de crafteo completo",
+  },
+  fishing: {
+    h1: "Pesca en Terraria",
+    lede: "Cañas, cebos, cajas y los peces de misión del Pescador. El poder de pesca es el de tu caña más el de tu cebo: con más poder, mejores capturas.",
+    poles: "Cañas de pescar",
+    polesHint: "Por poder de pesca, de la más floja a la mejor.",
+    baits: "Cebos",
+    baitsHint: "Por poder de cebo, del más fuerte al más flojo. Cada lanzamiento puede gastar el cebo: cuanto más fuerte, más dura.",
+    crates: "Cajas",
+    cratesHint: "Cuando empieza el Hardmode, cada caja que pescás es su versión de Hardmode.",
+    quest: (n) => `Peces de misión (${n})`,
+    questHint: "El Pescador pide uno por día. No se pueden vender ni guardar para otra misión.",
+  },
+  patches: {
+    h1: "Parches de Terraria",
+    lede: (n) => `El registro de cambios del juego: ${n} versiones, del primer parche al último.`,
+    english: "Las notas son las originales del juego, en inglés.",
+    changes: (n) => `${n} cambios`,
+    back: "Todas las versiones",
+    title: (version) => `Notas del parche ${version} de Terraria`,
   },
   bosses: {
     h1: "Jefes de Terraria",

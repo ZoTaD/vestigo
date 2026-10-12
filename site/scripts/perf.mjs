@@ -90,6 +90,10 @@ export const PAGES = [
   "/en/terraria/crafting",
   "/en/terraria/bosses",
   "/es/terraria/npc",
+  "/en/terraria/fishing",
+  "/en/terraria/patches",
+  // La versión más larga: 1.4, con 1.476 puntos.
+  "/en/terraria/patches/1-4",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

@@ -20,6 +20,7 @@ import { preloadRecipesRoute } from "./zomboid/recipes/data";
 import { preloadCraftRoute } from "./zomboid/crafting/data";
 import { preloadItemsRoute as preloadRsItemsRoute } from "./rust/items/data";
 import { preloadCraftingRoute as preloadTrCraftingRoute, preloadItemsRoute as preloadTrItemsRoute } from "./terraria/data";
+import { preloadPatchesRoute as preloadTrPatchesRoute } from "./terraria/patches/data";
 import { preloadFarmingRoute } from "./rust/farming/data";
 import { preloadPatchesRoute } from "./rust/patches/data";
 import { preloadMonumentsRoute } from "./rust/monuments/data";
@@ -48,6 +49,7 @@ async function preload(route: Route): Promise<void> {
   if (route.view === "terraria") {
     if (route.trSection === "items") await quiet(preloadTrItemsRoute(route));
     if (route.trSection === "crafting") await quiet(preloadTrCraftingRoute(route));
+    if (route.trSection === "patches") await quiet(preloadTrPatchesRoute(route));
     return;
   }
   if (route.view !== "deadlock") return;

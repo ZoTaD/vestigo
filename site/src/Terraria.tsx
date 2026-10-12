@@ -31,6 +31,8 @@ const TrItems = lazyWithPreload(() => import("./terraria/items/TerrariaItems"));
 const TrCrafting = lazyWithPreload(() => import("./terraria/crafting/TerrariaCrafting"));
 const TrBosses = lazyWithPreload(() => import("./terraria/bosses/TerrariaBosses"));
 const TrNpcs = lazyWithPreload(() => import("./terraria/npcs/TerrariaNpcs"));
+const TrFishing = lazyWithPreload(() => import("./terraria/fishing/TerrariaFishing"));
+const TrPatches = lazyWithPreload(() => import("./terraria/patches/TerrariaPatches"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá, en `TERRARIA_TAB_FILES` y en `TERRARIA_PUBLISHED`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `TERRARIA_TAB_FILES`.
@@ -39,6 +41,8 @@ const TABS: Partial<Record<TerrariaSection, LazyTab>> = {
   crafting: TrCrafting,
   bosses: TrBosses,
   npcs: TrNpcs,
+  fishing: TrFishing,
+  patches: TrPatches,
 };
 
 /**
@@ -49,6 +53,7 @@ const TAB_DATA: Partial<Record<TerrariaSection, (route: Route) => Promise<void>>
   items: (route) =>
     Promise.all([TrItems.preload(), import("./terraria/data")]).then(([, m]) => m.preloadItemsRoute(route).then(() => m.preloadItemsRoute(parseRoute(routePath(route))))),
   crafting: (route) => Promise.all([TrCrafting.preload(), import("./terraria/data")]).then(([, m]) => m.preloadCraftingRoute(route)),
+  patches: (route) => import("./terraria/patches/data").then((m) => m.preloadPatchesRoute(route)),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Terraria, y sus datos (la portada ya viene con el área). */

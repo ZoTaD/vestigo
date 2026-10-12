@@ -254,7 +254,13 @@ function readSitemapData(): { data: OgData } {
     const en: string[] = JSON.parse(readFileSync(`${terrariaDir}/site/names-en.json`, "utf-8"));
     const es: [string, string][] = JSON.parse(readFileSync(`${terrariaDir}/site/names-es.json`, "utf-8"));
     registerTerrariaSlugs({ items: Object.fromEntries(rows.flatMap((r, i) => (es[i][1] !== r[1] ? [[r[1], es[i][1]]] : []))) });
-    tr = { version: m.version, generatedAt: m.generatedAt, items: rows.map((r, i) => ({ slug: r[1], en: en[i], es: es[i][0], has: r[7] })) };
+    let patches: { slug: string; v: string }[] | undefined;
+    try {
+      patches = (JSON.parse(readFileSync(`${terrariaDir}/patches/index.json`, "utf-8")) as { slug: string; v: string }[]).map(({ slug, v }) => ({ slug, v }));
+    } catch {
+      patches = undefined; // sin extras_data.py corrido: sin versiones, y está bien
+    }
+    tr = { version: m.version, generatedAt: m.generatedAt, items: rows.map((r, i) => ({ slug: r[1], en: en[i], es: es[i][0], has: r[7] })), patches };
   } catch (e) {
     console.warn(`[terraria] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     tr = undefined;

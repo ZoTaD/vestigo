@@ -82,6 +82,8 @@ export interface TerrariaSitemapData {
   generatedAt: string;
   /** Slug inglés, nombres y qué tiene la ficha (1 se fabrica, 2 se usa, 4 lo sueltan). */
   items?: { slug: string; en: string; es: string; has: number }[];
+  /** Las versiones de Parches (`patches/index.json`): slug y número de versión. */
+  patches?: { slug: string; v: string }[];
 }
 
 /** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
@@ -396,6 +398,9 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const s of TERRARIA_PUBLISHED) paths.push(routePath({ ...base, lang, view: "terraria", trSection: s }));
       if (TERRARIA_PUBLISHED.includes("items")) {
         for (const it of data.tr.items ?? []) paths.push(routePath({ ...base, lang, view: "terraria", trSection: "items", detail: it.slug }));
+      }
+      if (TERRARIA_PUBLISHED.includes("patches")) {
+        for (const pt of data.tr.patches ?? []) paths.push(routePath({ ...base, lang, view: "terraria", trSection: "patches", detail: pt.slug }));
       }
     }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).

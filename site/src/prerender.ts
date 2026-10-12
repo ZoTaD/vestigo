@@ -146,6 +146,7 @@ export function metaFor(
   if (route.view === "terraria") {
     const c = TERRARIA_COPY[lang];
     if (route.trSection === "items" && route.detail && detailName) return c.detailSeo(detailName, trHas ?? undefined);
+    if (route.trSection === "patches" && route.detail && detailName) return c.patchSeo(detailName);
     return c.seo[route.trSection ?? "home"];
   }
   if (route.view === "rust") {
@@ -216,6 +217,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   }
   for (const e of data.rs?.items ?? []) out[`rs-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.tr?.items ?? []) out[`tr-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.tr?.patches ?? []) out[`tr-patches/${e.slug}`] = e.v;
   for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const slug of data.rs?.circuits ?? []) {
     const m = circuitMeta(slug);
@@ -411,7 +413,7 @@ export function jsonLdFor(
     if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec !== "items") {
+    if (sec === "home" || sec === "crafting" || sec === "bosses" || sec === "npcs") {
       out.push({
         "@context": "https://schema.org", "@type": "WebApplication", name: sec === "home" ? copy.home.h1 : copy[sec].h1, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,

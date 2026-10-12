@@ -15,6 +15,7 @@ import { loadPzNames, peekPzName } from "./zomboid/index";
 import { pzPatchName } from "./zomboid/patches/slug";
 import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/data";
 import { loadItem as loadTrItem, peekItem as peekTrItem } from "./terraria/data";
+import { loadPatch as loadTrPatch, peekPatch as peekTrPatch } from "./terraria/patches/data";
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
 import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
@@ -139,6 +140,8 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const e = peekPzName(pz.sec, pz.id);
     return e ? (lang === "es" ? e.esHead || e.es || e.en : e.en) : null;
   }
+  // Una versión de Parches de Terraria: su número.
+  if (route.view === "terraria" && route.trSection === "patches" && route.detail) return peekTrPatch(route.detail)?.v ?? null;
   // Una ficha de Objetos de Terraria: igual, de su archivo.
   if (route.view === "terraria" && route.trSection === "items" && route.detail) {
     const f = peekTrItem(route.detail);
@@ -251,6 +254,11 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "rust" && route.rsSection === "electricity" && route.detail && !circuitMeta(route.detail)) {
       let vivo = true;
       import("./rust/electric/circuits").then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    if (route.view === "terraria" && route.trSection === "patches" && route.detail && peekTrPatch(route.detail) === undefined) {
+      let vivo = true;
+      loadTrPatch(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una ficha de Terraria, igual.
