@@ -105,11 +105,13 @@ def raw_tip(loc: dict, internal: str, lang: str) -> str:
     return "\n".join(line for line in raw.split("\n") if "{" not in line and "<" not in line)
 
 
-def unique_slugs(pairs: list[tuple[int, str]], anchor: dict[int, str]) -> dict[int, str]:
+def unique_slugs(pairs: list[tuple[int, str]], anchor: dict[int, str], foreign: dict[str, int] | None = None) -> dict[int, str]:
     """Un slug por id, sin repetidos. Los que ya estaban publicados (`anchor`) no cambian; de los nuevos, el de id más
-    bajo se queda con el slug limpio y los demás llevan el id."""
+    bajo se queda con el slug limpio y los demás llevan el id. `foreign` son los slugs del otro idioma (slug → id): el
+    español de un objeto no puede ser el inglés de otro, porque la dirección se lee en los dos idiomas."""
     out: dict[int, str] = {}
     taken: set[str] = set()
+    foreign = foreign or {}
     for i, _ in pairs:
         if i in anchor:
             out[i] = anchor[i]
@@ -118,7 +120,7 @@ def unique_slugs(pairs: list[tuple[int, str]], anchor: dict[int, str]) -> dict[i
         if i in out:
             continue
         slug = slugify(name) or f"item-{i}"
-        if slug in taken:
+        if slug in taken or foreign.get(slug, i) != i:
             slug = f"{slug}-{i}"
         out[i] = slug
         taken.add(slug)
@@ -138,7 +140,9 @@ def build(cache: dict, prev_slugs: dict | None = None, today: str | None = None)
 
     name_es = {it["id"]: (es_text.get(str(it["id"]), ["", ""])[0] or it["name"]) for it in items}
     slug_en = unique_slugs([(it["id"], it["name"]) for it in items], {i: v[0] for i, v in prev.items() if i in ids})
-    slug_es = unique_slugs([(i, n) for i, n in name_es.items()], {i: v[1] for i, v in prev.items() if i in ids})
+    slug_es = unique_slugs(
+        [(i, n) for i, n in name_es.items()], {i: v[1] for i, v in prev.items() if i in ids}, {v: k for k, v in slug_en.items()}
+    )
 
     # --- grupos de receta -------------------------------------------------------------------------------------
     groups = {}
@@ -263,14 +267,14 @@ def build(cache: dict, prev_slugs: dict | None = None, today: str | None = None)
             "npcs": npcs,
         }
         figure = it.get("damage", 0) if it.get("damage", 0) > 0 else it.get("defense", 0)
-        rows.append([i, slug_en[i], kind, it.get("rare", 0), w, h, figure])
+        # Qué tiene la ficha, en bits (1 se fabrica, 2 se usa, 4 lo sueltan): de ahí sale el título de cada página.
+        has = (1 if made_by[i] else 0) | (2 if uses else 0) | (4 if item_drops else 0)
+        rows.append([i, slug_en[i], kind, it.get("rare", 0), w, h, figure, has])
 
     out: dict[str, object] = {
         "site/list.json": rows,
         "site/names-en.json": [by_id[r[0]]["name"] for r in rows],
         "site/names-es.json": [[name_es[r[0]], slug_es[r[0]]] for r in rows],
-        # Inglés → español, sólo los que cambian: la forma que recibe `registerTerrariaSlugs`.
-        "site/slugs-es.json": {"items": {r[1]: slug_es[r[0]] for r in rows if slug_es[r[0]] != r[1]}},
         "site/slugs.json": {str(r[0]): [r[1], slug_es[r[0]]] for r in rows},
         "site/recipes.json": {"recipes": recipes, "groups": {str(k): v for k, v in groups.items()}, "tiles": {str(k): v for k, v in tiles.items()}},
         "meta.json": {
@@ -283,6 +287,14 @@ def build(cache: dict, prev_slugs: dict | None = None, today: str | None = None)
     }
     for n, chunk in chunks.items():
         out[f"site/items/{n}.json"] = chunk
+    # Español → inglés, sólo los que cambian, repartidos igual que las fichas pero por el slug en español: una ficha
+    # abierta en frío en español baja su pedacito para saber cuál es, sin traer la lista entera.
+    es_map: dict[str, dict] = {f"{n:02d}": {} for n in range(CHUNKS)}
+    for r in rows:
+        if slug_es[r[0]] != r[1]:
+            es_map[chunk_of(slug_es[r[0]])][slug_es[r[0]]] = r[1]
+    for n, chunk in es_map.items():
+        out[f"site/es/{n}.json"] = chunk
     return out
 
 

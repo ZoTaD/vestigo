@@ -75,9 +75,23 @@ class SiteData(unittest.TestCase):
         es = [n[1] for n in out["site/names-es.json"]]
         assert len(set(es)) == len(es)
         assert "caja-de-musica" in es and "caja-de-musica-6" in es
-        assert out["site/slugs-es.json"]["items"]["terra-blade"] == "espada-terra"
-        assert "work-bench" not in out["site/slugs-es.json"]["items"]  # se llama igual en los dos idiomas
+        assert out[f"site/es/{chunk_of('espada-terra')}.json"]["espada-terra"] == "terra-blade"
+        # Se llama igual en los dos idiomas: no hace falta anotarlo.
+        assert all("work-bench" not in out[f"site/es/{n:02d}.json"] for n in range(CHUNKS))
 
+
+    def test_el_slug_espanol_de_uno_no_es_el_ingles_de_otro(self):
+        c = cache()
+        c["texts_es"]["items"]["10"] = ["Wood", ""]  # la espada del altar se llama "Wood" en español
+        out = build(c, today="2026-10-12")
+        es = {r[0]: n[1] for r, n in zip(out["site/list.json"], out["site/names-es.json"])}
+        assert es[10] == "wood-10" and es[1] == "madera"
+
+    def test_la_fila_dice_que_tiene_la_ficha(self):
+        by_id = {r[0]: r[7] for r in self.out["site/list.json"]}
+        assert by_id[7] == 1 | 4  # se fabrica y la sueltan
+        assert by_id[1] == 1 | 2  # se fabrica y se usa
+        assert by_id[5] == 0
 
     def test_los_slugs_publicados_no_cambian(self):
         prev = {"6": ["music-box", "caja-de-musica"], "7": ["old-terra-blade", "espada-vieja"]}
