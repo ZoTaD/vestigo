@@ -119,6 +119,12 @@ const EN = {
           "How many players sit at every Deadlock rank, and how many rank points a win or a loss " +
           "gives by win streak, with demotion shields and calibration, measured on a million games.",
       },
+      map: {
+        title: () => "Deadlock Map — Jungle Camps, Crates and Spawn Timers | Vestigo",
+        description: () =>
+          "Interactive Deadlock map: every jungle camp, Sinner's Sacrifice, crate, golden statue and " +
+          "objective, with health, souls and the minute each one spawns and respawns.",
+      },
       comebacks: {
         title: () => "Deadlock Comebacks — What a Soul Lead Is Worth | Vestigo",
         description: () =>
@@ -298,6 +304,12 @@ const ES: typeof EN = {
         description: () =>
           "Cuánta gente hay en cada rango de Deadlock y cuántos puntos da ganar o perder según la " +
           "racha, con escudos de descenso y calibración, medido en un millón de partidas.",
+      },
+      map: {
+        title: () => "Mapa de Deadlock — Campamentos, cajas y tiempos de aparición | Vestigo",
+        description: () =>
+          "Mapa interactivo de Deadlock: cada campamento de la jungla, Sacrificio del Pecador, caja, " +
+          "estatua dorada y objetivo, con su vida, sus almas y el minuto en que aparece y reaparece.",
       },
       comebacks: {
         title: () => "Remontadas en Deadlock — cuánto vale una ventaja de almas | Vestigo",

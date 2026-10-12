@@ -1328,3 +1328,272 @@
 [data-theme="codex"][data-game="deadlock"] .dl-trait-why {
   color: rgba(30, 26, 20, 0.78);
 }
+
+/* ---------- la pestaña Mapa (DeadlockMap) ---------- */
+[data-theme="codex"][data-game="deadlock"] .deadlock-map {
+  --map-small: #8fd26a;
+  --map-medium: #f2c94c;
+  --map-large: #ef6a3a;
+  --map-vault: #35d0c4;
+  --map-boss: #ffffff;
+  --map-crate: #c9a36a;
+  --map-statue: #ffd84a;
+  --map-health: #ff7d9c;
+  --map-buff: #c58bf2;
+  --map-amber: #f0a030;
+  --map-sapphire: #4f8fe8;
+  --map-shop: #e8e2d4;
+  --map-zip: rgba(232, 226, 212, 0.55);
+}
+
+/* El mapa va sobre papel oscuro, como la pizarra: sin cantos rasgados. */
+[data-theme="codex"][data-game="deadlock"] .box.dl-map-box {
+  color: #eeeae2;
+  background: #14110d;
+}
+
+[data-theme="codex"][data-game="deadlock"] .box.dl-map-box::before,
+[data-theme="codex"][data-game="deadlock"] .box.dl-map-box::after {
+  display: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #0c0a08;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-frame:active {
+  cursor: grabbing;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-canvas {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-canvas > img,
+[data-theme="codex"][data-game="deadlock"] .dl-map-marks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* El minimapa del juego es casi negro: se aclara para que se lean los edificios. */
+[data-theme="codex"][data-game="deadlock"] .dl-map-canvas > img {
+  filter: invert(1) brightness(0.62) contrast(1.5) sepia(0.35);
+  pointer-events: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-zip {
+  fill: none;
+  stroke: var(--map-zip);
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-mark {
+  fill: var(--mark, #fff);
+  stroke: #0c0a08;
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-mark[data-up="false"] {
+  fill-opacity: 0.22;
+  stroke-opacity: 0.5;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-mark[data-on] {
+  stroke: #fff;
+  stroke-width: 2.5;
+}
+
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="camp-small"] { --mark: var(--map-small); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="camp-medium"] { --mark: var(--map-medium); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="camp-large"] { --mark: var(--map-large); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="vault"] { --mark: var(--map-vault); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-mark, .dl-map-kind, .dl-map-swatch)[data-kind="midboss"] { --mark: var(--map-boss); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch)[data-kind="crate"] { --mark: var(--map-crate); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch)[data-kind="statue"] { --mark: var(--map-statue); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch)[data-kind="health"] { --mark: var(--map-health); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch)[data-kind="buff"] { --mark: var(--map-buff); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-map-kind, .dl-map-swatch)[data-kind="shop"] { --mark: var(--map-shop); }
+[data-theme="codex"][data-game="deadlock"] .dl-map-swatch:is([data-kind="walker"], [data-kind="base-guardian"], [data-kind="shrine"], [data-kind="patron"]) {
+  background: linear-gradient(90deg, var(--map-amber) 50%, var(--map-sapphire) 50%);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-map-mark[data-team="2"] { --mark: var(--map-amber); }
+[data-theme="codex"][data-game="deadlock"] .dl-map-mark[data-team="3"] { --mark: var(--map-sapphire); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-zoom {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-zoom button {
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  background: rgba(238, 234, 226, 0.92);
+  color: #1e1a14;
+  font: 700 1.1rem/1 var(--font-data-narrow);
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-time {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 3.2rem;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0.9rem 0 0.4rem;
+  font-family: var(--font-data-narrow);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-time label {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(238, 234, 226, 0.7);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-time input {
+  width: 100%;
+  accent-color: #f59a6c;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-time output {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-box .dl-tier-note {
+  color: rgba(238, 234, 226, 0.6);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-group {
+  margin: 0 0 0.8rem;
+  padding: 0;
+  border: 0;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-group legend {
+  padding: 0;
+  margin-bottom: 0.25rem;
+  font-family: var(--font-data-narrow);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(30, 26, 20, 0.6);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-layer {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.18rem 0;
+  font-size: 0.86rem;
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-layer input {
+  accent-color: #1e1a14;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-swatch {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--mark, #888);
+  box-shadow: 0 0 0 1px rgba(30, 26, 20, 0.55);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-swatch[data-kind="zipline"] {
+  height: 0.16rem;
+  border-radius: 0;
+  background: rgba(30, 26, 20, 0.6);
+  box-shadow: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-layer-n {
+  font-family: var(--font-data-narrow);
+  font-variant-numeric: tabular-nums;
+  color: rgba(30, 26, 20, 0.6);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-facts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.3rem 0.8rem;
+  margin: 0.7rem 0 0;
+  font-size: 0.86rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-facts dt {
+  color: rgba(30, 26, 20, 0.68);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-facts dd {
+  margin: 0;
+  font-family: var(--font-data-narrow);
+  font-weight: 700;
+  text-align: right;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-table-wrap {
+  overflow-x: auto;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-table :is(th, td) {
+  padding: 0.42rem 0.6rem;
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(30, 26, 20, 0.14);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-table :is(th[scope="row"], thead th:first-child) {
+  text-align: left;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-table thead th {
+  font-family: var(--font-data-narrow);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(30, 26, 20, 0.62);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-table th[scope="row"] {
+  font-weight: 600;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-table th[scope="row"] .dl-map-swatch {
+  margin-right: 0.5rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-map-table td {
+  font-family: var(--font-data-narrow);
+  font-variant-numeric: tabular-nums;
+}
