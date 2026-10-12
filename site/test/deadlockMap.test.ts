@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   DEFAULT_LAYERS,
@@ -70,6 +71,20 @@ describe("Deadlock: el mapa", () => {
     expect(DEFAULT_LAYERS).not.toContain("crate");
     expect(DEFAULT_LAYERS).not.toContain("statue");
     expect(DEFAULT_LAYERS).toContain("camp-medium");
+  });
+
+  it("cada criatura de un campamento tiene su retrato en el sitio y su nombre en los dos idiomas", () => {
+    const slugs = new Set(MAP.camps.flatMap((c) => c.creatures));
+    expect(slugs.size).toBeGreaterThan(10);
+    for (const slug of slugs) {
+      expect(existsSync(new URL(`../public/deadlock/game/map/${slug}.webp`, import.meta.url)), slug).toBe(true);
+      const family = slug.replace(/_(weak|normal|strong|heavy)$/, "");
+      for (const lang of ["en", "es"] as const) expect(Object.keys(DEADLOCK_COPY[lang].deadlock.map.creatures), slug).toContain(family);
+    }
+    // Y el fondo y los íconos que dibuja el mapa.
+    for (const name of ["relief", "camp-small", "camp-medium", "camp-large", "vault", "shop", "health", "midboss", "statue"]) {
+      expect(existsSync(new URL(`../public/deadlock/game/map/${name}.webp`, import.meta.url)), name).toBe(true);
+    }
   });
 
   it("el reloj se escribe m:ss", () => {

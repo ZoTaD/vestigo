@@ -155,3 +155,28 @@ con puntos no se entiende qué es cada cosa.
 Lo que no cuenta todavía: el camino real (malla de navegación), las tirolesas,
 los objetos y habilidades del héroe, y que un campamento limpiado tarda en
 volver (una ruta sugerida es una pasada, no un ciclo).
+
+## Etapa 3: la versión que quedó (maqueta A)
+
+El mapa calcado de la etapa 2 no convenció ("le faltan cosas, el puente, las
+imágenes"). Se hicieron dos maquetas con datos reales —A, el idioma del
+minimapa del juego; B, una guía de rutas ilustrada con retratos— y ZoTaD eligió
+la A el 2026-10-12.
+
+- **Aspecto**: escenario oscuro con los íconos del minimapa del juego (los
+  triángulos con barras, las bóvedas, las tiendas), rombos para los objetivos y
+  los carriles en su color. Al costado, un panel de papel con tres solapas:
+  Ficha, Ruta y Capas. Debajo, el reloj con los hitos como botones.
+- **Relieve**: `map_relief.py` exporta las mallas del nivel a glTF (2,7 GB,
+  24 millones de triángulos), las mira desde arriba y las sombrea. Es lo que
+  trae los techos, los árboles y el puente del tren. La geometría sale girada un
+  cuarto de vuelta respecto del minimapa; el giro está comprobado con la altura
+  de 771 entidades.
+- **Retratos**: el juego trae la imagen de cada criatura de la jungla
+  (`panorama/images/npcs/neutrals/`). `map_data.py` anota qué criaturas tiene
+  cada campamento y copia sus retratos; se ven en la ficha y en la lista de la
+  ruta.
+- Medido contra el build: 36 pedidos, 12 imágenes, 383 nodos al abrir y 1.378
+  con todas las capas.
+
+Sigue faltando: los guardianes de carril (no están en las entidades del mapa).

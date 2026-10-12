@@ -1,5 +1,7 @@
 """
-El mapa de Deadlock sacado del juego instalado → games/deadlock/data/map.json.
+El mapa de Deadlock sacado del juego instalado → games/deadlock/data/map.json
+y los íconos y retratos de site/public/deadlock/game/map/. El relieve de fondo
+lo hace `map_relief.py`, aparte, porque pesa.
 
 Qué hay en cada lugar (campamentos de la jungla, cajas, estatuas, vida
 flotante, jefe del medio, objetivos, tiendas, tirolesas), cuánto aguanta,
@@ -18,6 +20,7 @@ from datetime import datetime, timezone
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 OUT_JSON = os.path.join(ROOT, "games", "deadlock", "data", "map.json")
+OUT_IMG = os.path.join(ROOT, "site", "public", "deadlock", "game", "map")
 GAME = r"C:/Program Files (x86)/Steam/steamapps/common/Deadlock/game/citadel"
 MAP_VPK = GAME + "/maps/dl_midtown.vpk"
 MAP_ENTS = "maps/dl_midtown/entities/default_ents.vents_c"
@@ -94,6 +97,26 @@ def num(x, default=0.0):
 
 # ── Armar el mapa ───────────────────────────────────────────────────────────
 
+# La subclase de una criatura → su retrato en `panorama/images/npcs/neutrals/`.
+# Los nombres no calzan uno a uno: el teatro es "stagehand", la biblioteca
+# "book", y la más grande se llama "heavy" salvo en dos familias.
+PORTRAIT_FAMILY = {"theater": "stagehand", "library": "book", "barrel_01": "barrel", "barrel_02": "barrel"}
+PORTRAITS = {"barrel_heavy", "barrel_normal", "book_normal", "book_weak", "drain_creature_normal",
+             "drain_creature_strong", "drain_creature_weak", "lantern_normal", "lantern_strong", "mushroom_heavy",
+             "mushroom_normal", "plant_heavy", "plant_normal", "plant_weak", "specimen_normal", "specimen_weak",
+             "stagehand_heavy", "stagehand_normal", "underground_heavy", "underground_normal"}
+
+
+def portrait(sub):
+    """`neutral_theater_strong` → `stagehand_heavy`; None si no hay retrato de esa criatura."""
+    m = re.match(r"neutral_(.+)_(weak|normal|strong)$", sub or "")
+    if not m:
+        return None
+    family = PORTRAIT_FAMILY.get(m.group(1), m.group(1))
+    sizes = {"weak": ["weak", "normal"], "normal": ["normal", "weak"], "strong": ["strong", "heavy", "normal"]}[m.group(2)]
+    return next((f"{family}_{z}" for z in sizes if f"{family}_{z}" in PORTRAITS), None)
+
+
 def base_name(name):
     """`[PR#]1376238_amber_sewer_a1_neutrals` → `amber_sewer_a1_neutrals`."""
     return re.sub(r"^\[PR#\](\d+_)?", "", name or "")
@@ -162,6 +185,9 @@ def build(ents, misc, units, generic_text):
             "kind": CAMP_KIND[c["subclass_name"]],
             "x": x, "y": y,
             "units": dict(sorted(sizes.items())),
+            # Qué criaturas son, de la más grande a la más chica: es el retrato que se muestra.
+            "creatures": list(dict.fromkeys(
+                portrait(sub) for (t, sub), _ in sorted(members[i].items(), key=lambda kv: -int(kv[0][0])) if portrait(sub))),
             "health": int(health),
             "souls": round(souls),
             "growth": growth,
@@ -315,7 +341,46 @@ def extract(vrf, cache):
         print("Sacando el minimapa…")
         subprocess.run([vrf, "-i", GAME_VPK, "-o", cache, "-d", "-f", "panorama/images/minimap/",
                         "-e", "vtex_c,vsvg_c", "--threads", "4"], check=True, stdout=subprocess.DEVNULL)
+    if not os.path.isdir(os.path.join(cache, "panorama", "images", "npcs")):
+        print("Sacando los retratos…")
+        for path in ("panorama/images/npcs/", "panorama/images/hud/data_feed_golden_idol_png.vtex_c"):
+            subprocess.run([vrf, "-i", GAME_VPK, "-o", cache, "-d", "-f", path, "-e", "vtex_c", "--threads", "4"],
+                           check=True, stdout=subprocess.DEVNULL)
     return ents
+
+
+# Las imágenes del juego que usa la pestaña: archivo de salida → archivo de `panorama/images/`.
+# Los íconos del minimapa se agrandan (vienen de 20 px); los retratos se achican.
+ICONS = {"camp-small": "minimap/neutral_small_psd", "camp-medium": "minimap/neutral_medium_psd",
+         "camp-large": "minimap/neutral_large_psd", "vault": "minimap/neutral_vault_psd",
+         "shop": "minimap/minimap_shop_psd", "health": "minimap/health_pad_psd"}
+ART = {"midboss": "minimap/super_neutral_marker_psd", "statue": "hud/data_feed_golden_idol_png",
+       "walker": "npcs/tier_2_boss_psd", "base-guardian": "npcs/tier_1_boss_psd", "shrine": "npcs/shield_generator_psd",
+       "patron-2": "npcs/patron_hiddenking_psd", "patron-3": "npcs/patron_archmother_psd"}
+
+
+def images(cache):
+    """Íconos del minimapa y retratos de criaturas y objetivos → site/public/deadlock/game/map/."""
+    from PIL import Image
+
+    src = os.path.join(cache, "panorama", "images")
+    os.makedirs(OUT_IMG, exist_ok=True)
+
+    def load(rel):
+        im = Image.open(os.path.join(src, rel + ".png")).convert("RGBA")
+        return im.crop(im.getbbox())
+
+    for name, rel in ICONS.items():
+        im = load(rel)
+        im.resize((im.width * 3, im.height * 3), Image.LANCZOS).save(os.path.join(OUT_IMG, name + ".webp"), quality=92, method=6)
+    for name, rel in ART.items():
+        im = load(rel)
+        im.thumbnail((160, 160))
+        im.save(os.path.join(OUT_IMG, name + ".webp"), quality=88, method=6)
+    for slug in sorted(PORTRAITS):
+        im = load(f"npcs/neutrals/neutral_{slug}_psd")
+        im.thumbnail((160, 160))
+        im.save(os.path.join(OUT_IMG, slug + ".webp"), quality=88, method=6)
 
 
 def trace(mask):
@@ -376,6 +441,7 @@ def main():
     data = {"generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%d"), **data, "shape": shape(args.cache)}
     with open(OUT_JSON, "w", encoding="utf-8", newline="\n") as f:
         json.dump(data, f, separators=(",", ":"))
+    images(args.cache)
 
     for k, v in data["kinds"].items():
         print(f"  {k:14} {v}")

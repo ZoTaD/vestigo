@@ -58,6 +58,8 @@ export interface MapCamp {
   x: number;
   y: number;
   units: Partial<Record<UnitSize, number>>;
+  /** Qué criaturas son, de la más grande a la más chica: el nombre de su retrato. */
+  creatures: string[];
   /** La vida de todas sus criaturas juntas. */
   health: number;
   /** Las almas que da entero, al minuto cero. */
