@@ -27,7 +27,7 @@
   #
   # Un juego nuevo suma acá su `games/<juego>/data`: si no, la Action que lo
   # actualiza queda en verde con el sitio sirviendo los datos viejos.
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/games/d2r/data :/games/zomboid/data :/games/rust/data :/netlify.toml"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/games/d2r/data :/games/zomboid/data :/games/rust/data :/games/terraria/data :/netlify.toml"
 
 [build.environment]
   # Pinned so a Netlify default upgrade never changes the build under us.
@@ -106,6 +106,12 @@
 [[redirects]]
   from = "/es/zomboid"
   to = "/es/project-zomboid"
+  status = 301
+
+# `/terraria` sin idioma tampoco (2026-10-12): la carpeta `/terraria/...` es de assets (sprites y arte).
+[[redirects]]
+  from = "/terraria"
+  to = "/en/terraria"
   status = 301
 
 # `/rust` sin idioma no es una página (2026-10-05): la carpeta `/rust/...` es de
@@ -370,6 +376,14 @@
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 [[headers]]
   for = "/zomboid/3d/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/terraria/items/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/terraria/art/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 [[headers]]

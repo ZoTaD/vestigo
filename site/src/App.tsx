@@ -45,7 +45,7 @@ function Shell({
 }) {
   const copy = useCopy();
   const { view: place } = route;
-  const { D2rArea, DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, RustArea, TermsPage, ValheimArea, ZomboidArea } = areas();
+  const { D2rArea, DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, RustArea, TermsPage, TerrariaArea, ValheimArea, ZomboidArea } = areas();
   const [consent, setConsent] = useState<Consent | null>(storedConsent);
   // Reopening the notice from the footer is how a decision gets withdrawn,
   // which the GDPR requires to be as easy as giving it.
@@ -112,7 +112,7 @@ function Shell({
     <div
       className="app"
       data-theme="codex"
-      data-game={place === "deadlock" || place === "poe2" || place === "valheim" || place === "d2r" || place === "zomboid" || place === "rust" ? place : undefined}
+      data-game={place === "deadlock" || place === "poe2" || place === "valheim" || place === "d2r" || place === "zomboid" || place === "rust" || place === "terraria" ? place : undefined}
       /**
        * La home es el único lugar que no es el códex.
        *
@@ -148,6 +148,7 @@ function Shell({
         {place === "d2r" && <D2rArea route={route} navigate={navigate} />}
         {place === "zomboid" && <ZomboidArea route={route} navigate={navigate} />}
         {place === "rust" && <RustArea route={route} navigate={navigate} />}
+        {place === "terraria" && <TerrariaArea route={route} navigate={navigate} />}
         {place === "privacy" && <PrivacyPage />}
         {place === "terms" && <TermsPage />}
       </Suspense>
@@ -185,7 +186,7 @@ function Shell({
             peor que no nombrar ninguna. En PoE2 no se nombra a Valve (no es su juego) ni a los proveedores
             de datos, a pedido de ZoTaD; sí el crédito que pide la licencia de
             la tipografía Fontin. */}
-        {place !== "d2r" && place !== "zomboid" && place !== "rust" && (
+        {place !== "d2r" && place !== "zomboid" && place !== "rust" && place !== "terraria" && (
           <p className="foot-sources">
             {place === "poe2" ? copy.footer.sourcesPoe2 : place === "valheim" ? copy.footer.sourcesValheim : copy.footer.sourcesDeadlock}
           </p>
@@ -216,7 +217,9 @@ function Shell({
               ? copy.footer.disclaimerTis
               : place === "rust"
                 ? copy.footer.disclaimerFacepunch
-                : place === "poe2"
+                : place === "terraria"
+                  ? copy.footer.disclaimerReLogic
+                  : place === "poe2"
                   ? copy.footer.disclaimerGgg
                   : place === "valheim"
                     ? copy.footer.disclaimerIronGate

@@ -82,6 +82,19 @@ export const PAGES = [
   // Agua e industrial (2026-10-09): un circuito de cada uno.
   "/en/rust/electricity/farm-irrigation",
   "/es/rust/electricidad/horno-automatico",
+  // Terraria (2026-10-12): la portada, la lista (6.166 objetos de a tandas), la ficha más pesada (la madera se usa
+  // en cientos de recetas), una en español y el árbol.
+  "/en/terraria",
+  "/en/terraria/items",
+  "/en/terraria/items/wood",
+  "/es/terraria/objetos/espada-terra",
+  "/en/terraria/crafting",
+  "/en/terraria/bosses",
+  "/es/terraria/npc",
+  "/en/terraria/fishing",
+  "/en/terraria/patches",
+  // La versión más larga: 1.4, con 1.476 puntos.
+  "/en/terraria/patches/1-4",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

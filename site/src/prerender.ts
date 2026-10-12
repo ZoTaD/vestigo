@@ -1,3 +1,4 @@
+import { TERRARIA_COPY, type TerrariaHas } from "./terrariaCopy";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
 import { SEO_COPY } from "./seoCopy";
@@ -59,7 +60,8 @@ export function metaFor(
   lang: Lang,
   detailName: string | null,
   via?: string[] | null,
-  rsHas?: RustHas | null
+  rsHas?: RustHas | null,
+  trHas?: TerrariaHas | null
 ): { title: string; description: string } {
   const copy = copyOf(lang);
   const seo = copy.seo;
@@ -141,6 +143,12 @@ export function metaFor(
   }
   // Rust (2026-10-05): la portada, cada pestaña y cada ficha de Objetos. Una ficha sin nombre todavía (el archivo no
   // llegó al navegador) lleva el de su pestaña.
+  if (route.view === "terraria") {
+    const c = TERRARIA_COPY[lang];
+    if (route.trSection === "items" && route.detail && detailName) return c.detailSeo(detailName, trHas ?? undefined);
+    if (route.trSection === "patches" && route.detail && detailName) return c.patchSeo(detailName);
+    return c.seo[route.trSection ?? "home"];
+  }
   if (route.view === "rust") {
     const r = RUST_COPY[lang];
     if (route.rsSection === "items" && route.detail && detailName) return r.detailSeo(detailName, rsHas ?? undefined);
@@ -208,6 +216,8 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     out[`vh-patches/${e.slug}`] = name ? `${e.version} — ${name}` : e.version;
   }
   for (const e of data.rs?.items ?? []) out[`rs-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.tr?.items ?? []) out[`tr-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.tr?.patches ?? []) out[`tr-patches/${e.slug}`] = e.v;
   for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const slug of data.rs?.circuits ?? []) {
     const m = circuitMeta(slug);
@@ -396,6 +406,22 @@ export function jsonLdFor(
     }
     return out;
   }
+  if (route.view === "terraria") {
+    const sec = route.trSection ?? "home";
+    const copy = TERRARIA_COPY[lang];
+    const trail = [{ name: brand, url: home }, { name: "Terraria", url: routeUrl({ ...route, trSection: "home", detail: undefined }) }];
+    if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
+    if (sec === "home" || sec === "crafting" || sec === "bosses" || sec === "npcs") {
+      out.push({
+        "@context": "https://schema.org", "@type": "WebApplication", name: sec === "home" ? copy.home.h1 : copy[sec].h1, description: page.description,
+        url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Terraria" },
+      });
+    }
+    return out;
+  }
   if (route.view !== "deadlock") return [];
 
   const deadlockUrl = routeUrl({ ...route, dlSection: "meta", detail: undefined });
@@ -476,6 +502,10 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
   const rsHas = new Map<string, RustHas>();
   for (const e of data.rs?.items ?? []) rsHas.set(`rs-items/${e.slug}`, { craft: !!e.c, shop: !!e.s, loot: !!e.l, recycle: !!e.r });
 
+  // Lo mismo en Terraria (receta, usos, botín).
+  const trHas = new Map<string, TerrariaHas>();
+  for (const e of data.tr?.items ?? []) trHas.set(`tr-items/${e.slug}`, { craft: (e.has & 1) > 0, uses: (e.has & 2) > 0, drops: (e.has & 4) > 0 });
+
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);
     const lang = route.lang;
@@ -493,9 +523,11 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
                 ? `zb-${route.pzSection ?? "home"}/${route.detail}`
                 : route.view === "rust"
                   ? `rs-${route.rsSection ?? "home"}/${route.detail}`
-                  : null;
+                  : route.view === "terraria"
+                    ? `tr-${route.trSection ?? "home"}/${route.detail}`
+                    : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
-    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""));
+    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""), trHas.get(detailKey ?? ""));
 
     const alternates = LANGS.map((l) => ({
       hreflang: l as string,

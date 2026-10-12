@@ -32,7 +32,7 @@ export type DeadlockSection =
   | "patches"
   | "player"
   | "match";
-export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "privacy" | "terms";
+export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -302,6 +302,25 @@ const DEFAULT_DL_SECTION: DeadlockSection = "meta";
 export const DL_TIER_LIST = "tier-list";
 const DEFAULT_P2_SECTION: Poe2Section = "economy";
 
+/** Terraria (2026-10-12). Diseño: docs/superpowers/specs/2026-10-12-terraria-etapa-1-design.md. */
+export type TerrariaTab = "items" | "crafting" | "bosses" | "npcs" | "fishing" | "patches";
+export type TerrariaSection = "home" | TerrariaTab;
+export const TERRARIA_SEGMENT = "terraria";
+export const TERRARIA_SECTIONS: TerrariaTab[] = ["items", "crafting", "bosses", "npcs", "fishing", "patches"];
+/** Las pestañas con fichas: su tercer segmento es el slug de una. El árbol de crafteo lleva su objeto en el `#hash`. */
+export const TERRARIA_DETAIL_SECTIONS: TerrariaTab[] = ["items", "patches"];
+/** Las pestañas que ya tienen página: las demás se anuncian apagadas y su dirección muestra la portada. */
+export const TERRARIA_PUBLISHED: TerrariaTab[] = ["items", "crafting", "bosses", "npcs", "fishing", "patches"];
+export const TERRARIA_SECTION_ES: Record<TerrariaTab, string> = { items: "objetos", crafting: "crafteo", bosses: "jefes", npcs: "npc", fishing: "pesca", patches: "parches" };
+const TERRARIA_SECTION_BY_ES = new Map(Object.entries(TERRARIA_SECTION_ES).map(([tab, es]) => [es, tab as TerrariaTab]));
+
+/** Los slugs en español de las fichas de Terraria. */
+const terrariaSlugsEs = new LocalSlugs<TerrariaTab>();
+
+export function registerTerrariaSlugs(slugs: Partial<Record<TerrariaTab, Record<string, string>>>): void {
+  terrariaSlugsEs.register(slugs);
+}
+
 export interface Route {
   lang: Lang;
   view: View;
@@ -317,6 +336,8 @@ export interface Route {
   pzSection?: PzSection;
   /** Qué pestaña de Rust. Sin ella es la portada de la sección. */
   rsSection?: RustSection;
+  /** Qué pestaña de Terraria. Sin ella es la portada de la sección. */
+  trSection?: TerrariaSection;
   /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
   detail?: string;
 }
@@ -345,6 +366,11 @@ const pzTab = (v: string | undefined): PzTab | undefined => (isPzTab(v) ? v : v 
 const isRustTab = (v: string | undefined): v is RustTab => !!v && (RUST_SECTIONS as string[]).includes(v);
 /** La pestaña de Rust de un segmento, escrito en cualquiera de los dos idiomas. */
 const rustTab = (v: string | undefined): RustTab | undefined => (isRustTab(v) ? v : v ? RUST_SECTION_BY_ES.get(v) : undefined);
+
+const isTerrariaTab = (v: string | undefined): v is TerrariaTab => !!v && (TERRARIA_SECTIONS as string[]).includes(v);
+/** La pestaña de Terraria de un segmento, escrito en cualquiera de los dos idiomas. */
+const terrariaTab = (v: string | undefined): TerrariaTab | undefined =>
+  isTerrariaTab(v) ? v : v ? TERRARIA_SECTION_BY_ES.get(v) : undefined;
 
 /**
  * A name as it appears in a URL: lowercase, ASCII, hyphen-separated.
@@ -416,6 +442,15 @@ export function parseRoute(pathname: string): Route {
     // El slug se traduce en los dos idiomas (el extractor cuida que el español de uno no sea el inglés de otro).
     const detail = slug ? rustSlugsEs.toId(tab, slug) : undefined;
     return { ...base, view: "rust", rsSection: tab, detail };
+  }
+
+  if (head === TERRARIA_SEGMENT) {
+    const tab = terrariaTab(rest[1]);
+    // Como Rust: una pestaña sin publicar (o que no se conoce) muestra la portada.
+    if (!tab || !TERRARIA_PUBLISHED.includes(tab)) return { ...base, view: "terraria", trSection: "home" };
+    const slug = TERRARIA_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
+    const detail = slug ? terrariaSlugsEs.toId(tab, slug) : undefined;
+    return { ...base, view: "terraria", trSection: tab, detail };
   }
 
   if (!head || !isView(head)) return { ...base, view: "home" };
@@ -507,6 +542,14 @@ export function routePath(route: Route): string {
     if (lang !== "es") return detail ? `${root}/${sec}/${detail}` : `${root}/${sec}`;
     const path = `${root}/${PZ_SECTION_ES[sec]}`;
     return detail ? `${path}/${pzSlugsEs.toEs(sec, detail)}` : path;
+  }
+  if (view === "terraria") {
+    const sec = route.trSection ?? "home";
+    const root = `/${lang}/${TERRARIA_SEGMENT}`;
+    if (sec === "home") return root;
+    if (lang !== "es") return detail ? `${root}/${sec}/${detail}` : `${root}/${sec}`;
+    const path = `${root}/${TERRARIA_SECTION_ES[sec]}`;
+    return detail ? `${path}/${terrariaSlugsEs.toEs(sec, detail)}` : path;
   }
   if (view === "rust") {
     const sec = route.rsSection ?? "home";

@@ -31,7 +31,6 @@ const EN = {
   brand: "Vestigo",
   games: {
     deadlock: "Deadlock",
-    dota: "Dota 2",
     poe2: "Path of Exile 2",
     poe2Short: "PoE 2",
     valheim: "Valheim",
@@ -40,7 +39,11 @@ const EN = {
     zomboid: "Project Zomboid",
     zomboidShort: "Zomboid",
     rust: "Rust",
-    soon: "Soon",
+    terraria: "Terraria",
+    /** El botón de tres puntos de la barra: los juegos que no entraron. */
+    more: "More games",
+    /** Las categorías del menú y de la portada (`gameGroups.ts`). */
+    groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
   },
@@ -108,11 +111,8 @@ const EN = {
       topBand: "Phantom+",
       unmeasured: "not measured yet",
     },
-    /** El buscador grande de la portada (rediseño del 2026-09-06). */
+    /** El "último visto" de la página de jugador de Deadlock. */
     search: {
-      label: "Find your profile",
-      placeholder: { deadlock: "Steam name" },
-      go: "Search",
       lastSeen: "Last seen",
     },
     /** "Hoy en el meta": tres datos por juego que cambian todos los días. */
@@ -130,12 +130,9 @@ const EN = {
     games: {
       heading: "Where you can use it",
       cta: "Open",
-      soonCta: "Coming soon",
       deadlock: "Hero and item tier lists, live now.",
-      dota: "Match analysis, each patch's meta, and the heroes and items that win.",
       valheim: "A wiki and tools for Valheim 1.0.",
       diablo2: "Breakpoints, runewords and terror zones.",
-      soonHeading: "On the way",
       deadlockCta: (n: string) => `Hero tier list · ${n}`,
       profile: "Your profile",
       valheimLive: "Every recipe, food, weapon, piece and creature in Valheim 1.0, where each thing comes from, and every patch.",
@@ -155,6 +152,10 @@ const EN = {
       rustCta: "Open the inventory",
       rustItems: "items",
       rustRecipes: "recipes",
+      terrariaLive: "Every item with its stats, recipe, uses and drops, and the full crafting tree of anything down to the ore.",
+      terrariaCta: "Dig in",
+      terrariaItems: "items",
+      terrariaRecipes: "recipes",
       poe2Live: "Currency and unique prices for every league, the passive tree with build export, the item encyclopedia and every patch.",
       poe2Cta: "League prices",
       poe2Patches: "Patch notes",
@@ -167,6 +168,7 @@ const EN = {
       vhPlanner: { name: "Gear planner", note: "Pick what to craft and get the route." },
       d2Drops: { name: "Drop calculator", note: "Odds per monster, with magic find." },
       rsRaid: { name: "Raid calculator", note: "What it costs to break each wall and door." },
+      trTree: { name: "Crafting tree", note: "Every material of any item, down to the ore." },
       p2Tree: { name: "Passive tree", note: "Plan your points and export the build." },
       p2Regex: { name: "Regex builder", note: "Search strings for maps, vendors and stash." },
       dlBuilder: { name: "Build maker", note: "The in-game shop, to plan and share a build." },
@@ -242,6 +244,9 @@ const EN = {
     disclaimerTis:
       "Vestigo is a fan site and isn't endorsed by or affiliated with The Indie Stone. Project Zomboid and its " +
       "content belong to The Indie Stone.",
+    disclaimerReLogic:
+      "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Re-Logic. Terraria and its " +
+      "content belong to Re-Logic.",
     disclaimerFacepunch:
       "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Facepunch Studios. Rust and its " +
       "content belong to Facepunch Studios.",
@@ -276,7 +281,6 @@ const ES: typeof EN = {
   brand: "Vestigo",
   games: {
     deadlock: "Deadlock",
-    dota: "Dota 2",
     poe2: "Path of Exile 2",
     poe2Short: "PoE 2",
     valheim: "Valheim",
@@ -285,7 +289,9 @@ const ES: typeof EN = {
     zomboid: "Project Zomboid",
     zomboidShort: "Zomboid",
     rust: "Rust",
-    soon: "Pronto",
+    terraria: "Terraria",
+    more: "Más juegos",
+    groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
   },
@@ -338,9 +344,6 @@ const ES: typeof EN = {
       unmeasured: "todavía sin medir",
     },
     search: {
-      label: "Buscá tu perfil",
-      placeholder: { deadlock: "Nombre de Steam" },
-      go: "Buscar",
       lastSeen: "Último visto",
     },
     today: {
@@ -357,12 +360,9 @@ const ES: typeof EN = {
     games: {
       heading: "Dónde puedes usarlo",
       cta: "Entrar",
-      soonCta: "Muy pronto",
       deadlock: "Tier list de héroes e ítems, funcionando ya.",
-      dota: "Análisis de tus partidas, la meta de cada parche y los héroes y objetos que ganan.",
       valheim: "Una wiki y herramientas para Valheim 1.0.",
       diablo2: "Breakpoints, palabras rúnicas y zonas de terror.",
-      soonHeading: "En camino",
       deadlockCta: (n: string) => `Tier list de héroes · ${n}`,
       profile: "Tu perfil",
       valheimLive: "Cada receta, comida, arma, pieza y criatura de Valheim 1.0, de dónde sale cada cosa y todos los parches.",
@@ -382,6 +382,10 @@ const ES: typeof EN = {
       rustCta: "Abrir el inventario",
       rustItems: "objetos",
       rustRecipes: "recetas",
+      terrariaLive: "Cada objeto con sus estadísticas, receta, usos y botín, y el árbol de crafteo completo hasta el mineral.",
+      terrariaCta: "A cavar",
+      terrariaItems: "objetos",
+      terrariaRecipes: "recetas",
       poe2Live: "Los precios de monedas y únicos de cada liga, el árbol de pasivas con exportación de build, la enciclopedia de objetos y cada parche.",
       poe2Cta: "Precios de la liga",
       poe2Patches: "Parches",
@@ -394,6 +398,7 @@ const ES: typeof EN = {
       vhPlanner: { name: "Planificador", note: "Elegí qué fabricar y te arma la ruta." },
       d2Drops: { name: "Calculadora de drops", note: "Probabilidad por monstruo, con hallazgo mágico." },
       rsRaid: { name: "Calculadora de raideo", note: "Cuánto cuesta romper cada pared y puerta." },
+      trTree: { name: "Árbol de crafteo", note: "Cada material de cualquier objeto, hasta el mineral." },
       p2Tree: { name: "Árbol de pasivas", note: "Planeá tus puntos y exportá la build." },
       p2Regex: { name: "Armador de regex", note: "Cadenas de búsqueda para mapas, vendedores y alijo." },
       dlBuilder: { name: "Armador de builds", note: "La tienda del juego, para planear y compartir una build." },
@@ -463,6 +468,9 @@ const ES: typeof EN = {
     disclaimerTis:
       "Vestigo es un sitio de fans y no está avalado por The Indie Stone ni afiliado a ella. Project Zomboid y su " +
       "contenido pertenecen a The Indie Stone.",
+    disclaimerReLogic:
+      "Vestigo es un sitio de fans no oficial: Re-Logic no lo avala ni está afiliado a él. Terraria y su " +
+      "contenido pertenecen a Re-Logic.",
     disclaimerFacepunch:
       "Vestigo es un sitio de fans no oficial y no está avalado por Facepunch Studios ni afiliado a ella. Rust y su " +
       "contenido pertenecen a Facepunch Studios.",

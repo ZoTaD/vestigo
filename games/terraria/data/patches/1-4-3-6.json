@@ -1,0 +1,1 @@
+{"v":"1.4.3.6","sections":[{"t":"Bug Fixes","lines":[[0,"Fixed numerous issues that caused the game to hang indefinitely when you quit it, on Mac & Linux."],[0,"Fixed steam overlay issues on Linux."],[0,"Updated FNA. (Mac/Linux related)"]]}]}

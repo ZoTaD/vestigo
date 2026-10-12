@@ -1,4 +1,4 @@
-import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, View } from "./route";
+import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, TerrariaSection, View } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -17,6 +17,7 @@ export const AREA_FILES: Partial<Record<View, string>> = {
   d2r: "src/D2r.tsx",
   zomboid: "src/Zomboid.tsx",
   rust: "src/Rust.tsx",
+  terraria: "src/Terraria.tsx",
   privacy: "src/Privacy.tsx",
   terms: "src/Terms.tsx",
 };
@@ -79,6 +80,16 @@ export const PZ_TAB_FILES: Partial<Record<PzSection, string>> = {
   patches: "src/zomboid/patches/ZomboidPatches.tsx",
 };
 
+/** Las pestañas de Terraria que viajan en su propio chunk, igual que `TABS` en `Terraria.tsx` (2026-10-12). */
+export const TERRARIA_TAB_FILES: Partial<Record<TerrariaSection, string>> = {
+  items: "src/terraria/items/TerrariaItems.tsx",
+  crafting: "src/terraria/crafting/TerrariaCrafting.tsx",
+  bosses: "src/terraria/bosses/TerrariaBosses.tsx",
+  npcs: "src/terraria/npcs/TerrariaNpcs.tsx",
+  fishing: "src/terraria/fishing/TerrariaFishing.tsx",
+  patches: "src/terraria/patches/TerrariaPatches.tsx",
+};
+
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */
 export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
   items: "src/rust/items/RustItems.tsx",
@@ -117,6 +128,8 @@ export function filesFor(route: Route): string[] {
           ? PZ_TAB_FILES[route.pzSection ?? "home"]
           : route.view === "rust"
             ? RUST_TAB_FILES[route.rsSection ?? "home"]
-            : undefined;
+            : route.view === "terraria"
+              ? TERRARIA_TAB_FILES[route.trSection ?? "home"]
+              : undefined;
   return tab ? [area, tab] : [area];
 }

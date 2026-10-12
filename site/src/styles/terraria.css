@@ -1,0 +1,155 @@
+/*
+ * Terraria (2026-10-12): estética C "World slice". Diseño: docs/superpowers/specs/2026-10-12-terraria-etapa-1-design.md.
+ *
+ * La página es un corte del mundo: cielo arriba, pasto, y abajo las capas (tierra, piedra, caverna, inframundo), todo
+ * con el arte del juego. Las tarjetas son huecos oscuros cavados en el bloque, con filo negro. Sin bordes de color: el
+ * estado va por tinte o por el color de rareza del nombre. Todo cuelga de `.tr` y de clases `tr-`.
+ */
+.tr {
+  --tr-text: #fff;
+  --tr-dim: #d9cfc6;
+  --tr-hole: rgba(14, 10, 9, 0.86);
+  --tr-slot: rgba(255, 255, 255, 0.07);
+  --tr-gold: #ffe36a;
+  --tr-sky: linear-gradient(#352bf3 0%, #5b7af6 45%, #84aaf8 100%);
+  position: relative;
+  color: var(--tr-text);
+  overflow-x: clip;
+}
+.tr a { color: inherit; text-decoration: none; }
+.tr h1, .tr h2, .tr h3, .tr p, .tr ul, .tr dl, .tr dd { margin: 0; }
+.tr ul { padding: 0; list-style: none; }
+
+/* El texto del juego: redondo, gordo y con filo negro (Comic Neue en lugar de Andy, que es comercial). */
+.tr-andy {
+  font-family: "Comic Neue", "Barlow", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-shadow: -2px 0 #000, 2px 0 #000, 0 -2px #000, 0 2px #000, -1px -1px #000, 1px 1px #000, -1px 1px #000, 1px -1px #000;
+}
+.tr-sprite { image-rendering: pixelated; display: block; }
+
+.tr-wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; container-type: inline-size; }
+.tr-main { min-height: 70vh; padding-bottom: 72px; }
+
+/* --- La regla de profundidad: una fila arriba; fija a la izquierda cuando sobra margen ------------------------------ */
+.tr-depth { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 24px; background: rgba(0, 0, 0, 0.6); justify-content: center; }
+.tr-depth-tab { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; border-radius: 8px; background: rgba(255, 255, 255, 0.07); font: 700 15px/1.1 "Comic Neue", "Barlow", sans-serif; }
+.tr-depth-tab i { flex: none; width: 14px; height: 14px; border: 2px solid #000; border-radius: 3px; background: #5d5d63; }
+.tr-depth-tab[data-layer="home"] i { background: #84aaf8; }
+.tr-depth-tab[data-layer="items"] i { background: #8a8a90; }
+.tr-depth-tab[data-layer="crafting"] i { background: #4a4038; }
+.tr-depth-tab[data-layer="npcs"] i { background: #3d8a2e; }
+.tr-depth-tab[data-layer="bosses"] i { background: #c2410c; }
+.tr-depth-tab[data-layer="fishing"] i { background: #2f6fd6; }
+.tr-depth-tab[data-layer="patches"] i { background: #1b1f4a; }
+.tr-depth-tab small { display: block; font: 600 10px/1.2 "Barlow", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tr-dim); }
+.tr-depth-tab.is-on { background: #000; color: var(--tr-gold); }
+.tr-depth-tab.is-soon { opacity: 0.5; }
+@media (min-width: 1500px) {
+  .tr-depth { position: fixed; z-index: 20; left: 18px; top: 50%; transform: translateY(-50%); flex-direction: column; padding: 0; background: none; }
+  .tr-depth-tab { background: rgba(0, 0, 0, 0.6); }
+}
+
+/* --- Piezas ------------------------------------------------------------------------------------------------------- */
+.tr-dug { display: block; padding: 14px 16px; border: 2px solid #000; border-radius: 10px; background: radial-gradient(260px 120px at 30px 0, rgba(255, 190, 90, 0.14), transparent 70%), var(--tr-hole); }
+.tr-slot { flex: none; display: inline-grid; place-items: center; border: 2px solid rgba(0, 0, 0, 0.8); border-radius: 8px; background: var(--tr-slot); }
+.tr-label { display: block; font: 700 11px/1.3 "Barlow", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tr-dim); }
+.tr-h1 { font-size: clamp(26px, 6cqi, 40px); line-height: 1.1; }
+.tr-h2 { font-size: 22px; line-height: 1.15; margin-bottom: 10px; }
+.tr-lede { max-width: 62ch; margin-top: 10px; font-size: 17px; font-weight: 600; line-height: 1.45; text-shadow: 0 1px 0 #000, 0 0 8px rgba(0, 0, 30, 0.7); }
+.tr-btn { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 2px solid #000; border-radius: 10px; background: #e7c21b; color: #000 !important; font: 700 16px/1 "Comic Neue", "Barlow", sans-serif; cursor: pointer; }
+.tr-note { margin: 12px 0; font-weight: 600; }
+.tr-chip { display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; border: 2px solid #000; border-radius: 99px; background: rgba(255, 255, 255, 0.08); color: var(--tr-text); font: 600 14px/1 "Barlow", sans-serif; cursor: pointer; }
+.tr-chip.is-on { background: #e7c21b; color: #000; }
+.tr-ref { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; font-weight: 600; }
+.tr-ref small { color: var(--tr-dim); font-weight: 600; }
+a.tr-ref:hover > span, a.tr-cell:hover > span:last-of-type { text-decoration: underline; }
+
+/* El buscador: campo oscuro y la lista de resultados colgando. */
+.tr-find { position: relative; display: block; max-width: 520px; }
+.tr-find label { display: block; }
+.tr-find input { width: 100%; height: 46px; margin-top: 4px; padding: 0 14px; border: 2px solid #000; border-radius: 10px; background: rgba(0, 0, 0, 0.55); color: #fff; font: 600 16px/1 "Barlow", sans-serif; }
+.tr-find input::placeholder { color: #c3c9ee; }
+.tr-find-hits { position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 4px); padding: 6px; border: 2px solid #000; border-radius: 10px; background: #17110f; }
+.tr-hit { display: flex; align-items: center; gap: 10px; padding: 4px 6px; border-radius: 6px; font-weight: 600; }
+.tr-hit:hover { background: rgba(255, 255, 255, 0.08); }
+.tr-find-none { padding: 8px; color: var(--tr-dim); }
+
+/* Casilleros con nombre: los destacados de la portada y la grilla de objetos. */
+.tr-cells { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 10px 8px; margin-top: 10px; }
+.tr-cell { display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; font: 600 12.5px/1.2 "Barlow", sans-serif; }
+.tr-cell small { color: var(--tr-dim); font-weight: 600; }
+
+/* --- Páginas de adentro: el pasto arriba y la capa de la pestaña --------------------------------------------------- */
+.tr-head { padding: 26px 0 18px; }
+.tr[data-layer="npcs"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, url(/terraria/art/dirt.png); image-rendering: pixelated; }
+.tr[data-layer="items"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, url(/terraria/art/stone.png); image-rendering: pixelated; }
+.tr[data-layer="crafting"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(/terraria/art/cavern.png); image-rendering: pixelated; }
+.tr[data-layer="bosses"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, linear-gradient(rgba(12, 0, 0, 0.74), rgba(12, 0, 0, 0.62)), url(/terraria/art/underworld.png); image-rendering: pixelated; }
+.tr[data-layer="fishing"] .tr-main { background: linear-gradient(#2f6fd6 0, #1d3f8f 220px, #0f2456 100%); }
+.tr[data-layer="patches"] .tr-main { background: radial-gradient(900px 400px at 70% 0, #24348a 0%, transparent 70%), linear-gradient(#070a22 0%, #101a52 100%); }
+.tr:not([data-layer="home"]) .tr-wrap { padding-top: 16px; }
+.tr-loading .tr-dug { max-width: 1072px; margin: 40px auto; }
+
+/* --- Portada -------------------------------------------------------------------------------------------------------- */
+.tr-home { padding-bottom: 0; }
+.tr-sky {
+  padding: 34px 0 230px;
+  background:
+    url(/terraria/art/sky-trees-near.png) repeat-x 0 calc(100% + 190px),
+    url(/terraria/art/sky-trees-far.png) repeat-x 120px calc(100% + 10px),
+    url(/terraria/art/sky-hills.png) repeat-x 0 calc(100% - 60px),
+    url(/terraria/art/sky-mountains.png) repeat-x 0 calc(100% - 150px),
+    var(--tr-sky);
+  image-rendering: pixelated;
+}
+.tr-logo { display: block; width: min(420px, 100%); height: auto; image-rendering: pixelated; }
+.tr-sky .tr-h1 { margin-top: 8px; }
+.tr-sky .tr-find { margin-top: 20px; }
+.tr-grass { height: 16px; background: url(/terraria/art/grass.png) repeat-x; image-rendering: pixelated; }
+.tr-band { padding: 30px 0 46px; image-rendering: pixelated; }
+.tr-band[data-layer="surface"] { background: url(/terraria/art/dirt.png); }
+.tr-band[data-layer="underground"] { background: url(/terraria/art/stone.png); }
+.tr-band[data-layer="caverns"] { background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(/terraria/art/cavern.png); }
+.tr-band[data-layer="underworld"] { padding-bottom: 90px; background: linear-gradient(rgba(20, 0, 0, 0.35), rgba(20, 0, 0, 0.15)), url(/terraria/art/underworld.png); }
+.tr-tag { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; font-size: 24px; }
+.tr-tag small { padding: 3px 9px; border-radius: 99px; background: rgba(0, 0, 0, 0.6); color: var(--tr-gold); font: 700 11px/1.4 "Barlow", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; text-shadow: none; }
+.tr-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tr-tool { display: flex; align-items: center; gap: 12px; height: 100%; }
+.tr-tool b { display: block; font-size: 19px; }
+.tr-tool span span { display: block; font-size: 14px; color: var(--tr-dim); }
+.tr-tool em { display: inline-block; margin-top: 4px; font: 700 11px/1 "Barlow", sans-serif; font-style: normal; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tr-gold); }
+.tr-tool.is-soon { opacity: 0.72; }
+.tr-two { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 12px; align-items: start; }
+.tr-kinds { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tr-figures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; text-align: center; }
+.tr-figures dd { font-size: clamp(26px, 5cqi, 40px); line-height: 1; }
+.tr-figures dt { margin-top: 6px; font: 700 11px/1.3 "Barlow", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tr-dim); }
+.tr-about p { max-width: 80ch; line-height: 1.55; }
+.tr-about p + p { margin-top: 10px; }
+
+@media (max-width: 760px) {
+  .tr-wrap { padding: 0 16px; }
+  .tr-depth { padding: 8px 12px; justify-content: flex-start; }
+  .tr-depth-tab { font-size: 14px; padding: 5px 10px 5px 7px; }
+  .tr-depth-tab small { display: none; }
+  .tr-tools, .tr-two { grid-template-columns: minmax(0, 1fr); }
+  .tr-figures { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tr-sky { padding-bottom: 170px; }
+}
+
+/* --- La cáscara alrededor de la sección ------------------------------------------------------------------------------
+   El fondo de la página entera es la tierra oscura (si no, debajo de la primera pantalla quedaba el blanco del
+   navegador), sin el grano del sitio, y la sección ocupa todo el ancho: el cielo y las capas llegan a los bordes. */
+[data-theme="codex"][data-game="terraria"] { background: #17110f; }
+[data-theme="codex"][data-game="terraria"] .grain { opacity: 0; }
+:root:has(.app[data-game="terraria"]) {
+  --sb-track: #17110f;
+  --sb-hatch: rgba(255, 255, 255, 0.06);
+  --sb-paper: #7a4a30;
+  --sb-ink: #17110f;
+  --sb-hover: #ffe36a;
+  background: #17110f;
+}
+.tr { margin-inline: calc(-1 * clamp(1rem, 4vw, 4rem)); }

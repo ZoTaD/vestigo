@@ -19,6 +19,8 @@ import { preloadItemsRoute } from "./zomboid/items/data";
 import { preloadRecipesRoute } from "./zomboid/recipes/data";
 import { preloadCraftRoute } from "./zomboid/crafting/data";
 import { preloadItemsRoute as preloadRsItemsRoute } from "./rust/items/data";
+import { preloadCraftingRoute as preloadTrCraftingRoute, preloadItemsRoute as preloadTrItemsRoute } from "./terraria/data";
+import { preloadPatchesRoute as preloadTrPatchesRoute } from "./terraria/patches/data";
 import { preloadFarmingRoute } from "./rust/farming/data";
 import { preloadPatchesRoute } from "./rust/patches/data";
 import { preloadMonumentsRoute } from "./rust/monuments/data";
@@ -43,6 +45,13 @@ async function preload(route: Route): Promise<void> {
   if (route.view === "valheim") return preloadValheim(route, quiet);
   if (route.view === "zomboid") return preloadZomboid(route, quiet);
   if (route.view === "rust") return preloadRust(route, quiet);
+  // Terraria (2026-10-12): la ficha o la lista de Objetos, y las recetas y la lista para el árbol.
+  if (route.view === "terraria") {
+    if (route.trSection === "items") await quiet(preloadTrItemsRoute(route));
+    if (route.trSection === "crafting") await quiet(preloadTrCraftingRoute(route));
+    if (route.trSection === "patches") await quiet(preloadTrPatchesRoute(route));
+    return;
+  }
   if (route.view !== "deadlock") return;
   if (route.dlSection === "meta" && route.detail) await Promise.all([quiet(loadBuilds()), quiet(loadMastery())]);
   if (route.dlSection === "heroes" && route.detail) {

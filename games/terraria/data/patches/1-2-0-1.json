@@ -1,0 +1,1 @@
+{"v":"1.2.0.1","sections":[{"t":"","lines":[[0,"Bug Fixes:"],[0,"Configuration settings will be set to default to fix problems with loading incorrect configurations from previous versions"],[0,"Fixed a bug that was causing some players to crash on startup with the message: System.OutOfMemoryException: Insufficient memory to continue the execution of the program."]]}]}

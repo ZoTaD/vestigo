@@ -20,7 +20,8 @@
       "@valheimMap/*": ["../games/valheim/data/map/*"],
       "@d2r/*": ["../games/d2r/data/*"],
       "@zomboid/*": ["../games/zomboid/data/*"],
-      "@rust/*": ["../games/rust/data/*"]
+      "@rust/*": ["../games/rust/data/*"],
+      "@terraria/*": ["../games/terraria/data/*"]
     }
   },
   "include": ["src", "vite.config.ts"]
