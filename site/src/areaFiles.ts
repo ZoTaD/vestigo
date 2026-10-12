@@ -83,6 +83,8 @@ export const PZ_TAB_FILES: Partial<Record<PzSection, string>> = {
 export const TERRARIA_TAB_FILES: Partial<Record<TerrariaSection, string>> = {
   items: "src/terraria/items/TerrariaItems.tsx",
   crafting: "src/terraria/crafting/TerrariaCrafting.tsx",
+  bosses: "src/terraria/bosses/TerrariaBosses.tsx",
+  npcs: "src/terraria/npcs/TerrariaNpcs.tsx",
 };
 
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */

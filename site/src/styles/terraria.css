@@ -37,8 +37,10 @@
 .tr-depth-tab { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; border-radius: 8px; background: rgba(255, 255, 255, 0.07); font: 700 15px/1.1 "Comic Neue", "Barlow", sans-serif; }
 .tr-depth-tab i { flex: none; width: 14px; height: 14px; border: 2px solid #000; border-radius: 3px; background: #5d5d63; }
 .tr-depth-tab[data-layer="home"] i { background: #84aaf8; }
-.tr-depth-tab[data-layer="items"] i { background: #7a4a30; }
-.tr-depth-tab[data-layer="crafting"] i { background: #5d5d63; }
+.tr-depth-tab[data-layer="items"] i { background: #8a8a90; }
+.tr-depth-tab[data-layer="crafting"] i { background: #4a4038; }
+.tr-depth-tab[data-layer="npcs"] i { background: #3d8a2e; }
+.tr-depth-tab[data-layer="bosses"] i { background: #c2410c; }
 .tr-depth-tab small { display: block; font: 600 10px/1.2 "Barlow", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tr-dim); }
 .tr-depth-tab.is-on { background: #000; color: var(--tr-gold); }
 .tr-depth-tab.is-soon { opacity: 0.5; }
@@ -79,9 +81,11 @@ a.tr-ref:hover > span, a.tr-cell:hover > span:last-of-type { text-decoration: un
 
 /* --- Páginas de adentro: el pasto arriba y la capa de la pestaña --------------------------------------------------- */
 .tr-head { padding: 26px 0 18px; }
-.tr[data-layer="items"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, url(/terraria/art/dirt.png); image-rendering: pixelated; }
+.tr[data-layer="npcs"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, url(/terraria/art/dirt.png); image-rendering: pixelated; }
+.tr[data-layer="items"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, url(/terraria/art/stone.png); image-rendering: pixelated; }
 .tr[data-layer="crafting"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(/terraria/art/cavern.png); image-rendering: pixelated; }
-.tr[data-layer="items"] .tr-wrap, .tr[data-layer="crafting"] .tr-wrap { padding-top: 16px; }
+.tr[data-layer="bosses"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, linear-gradient(rgba(20, 0, 0, 0.45), rgba(20, 0, 0, 0.3)), url(/terraria/art/underworld.png); image-rendering: pixelated; }
+.tr:not([data-layer="home"]) .tr-wrap { padding-top: 16px; }
 .tr-loading .tr-dug { max-width: 1072px; margin: 40px auto; }
 
 /* --- Portada -------------------------------------------------------------------------------------------------------- */

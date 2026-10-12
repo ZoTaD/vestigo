@@ -411,9 +411,9 @@ export function jsonLdFor(
     if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "home" || sec === "crafting") {
+    if (sec !== "items") {
       out.push({
-        "@context": "https://schema.org", "@type": "WebApplication", name: sec === "crafting" ? copy.crafting.h1 : copy.home.h1, description: page.description,
+        "@context": "https://schema.org", "@type": "WebApplication", name: sec === "home" ? copy.home.h1 : copy[sec].h1, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Terraria" },
       });

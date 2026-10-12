@@ -88,6 +88,8 @@ export const PAGES = [
   "/en/terraria/items/wood",
   "/es/terraria/objetos/espada-terra",
   "/en/terraria/crafting",
+  "/en/terraria/bosses",
+  "/es/terraria/npc",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

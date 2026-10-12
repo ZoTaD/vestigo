@@ -12,7 +12,7 @@ const read = (name: string) => JSON.parse(readFileSync(new URL(name, dir), "utf-
 
 describe("rutas de Terraria", () => {
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {
-    expect(TERRARIA_SECTION_ES).toEqual({ items: "objetos", crafting: "crafteo" });
+    expect(TERRARIA_SECTION_ES).toEqual({ items: "objetos", crafting: "crafteo", bosses: "jefes", npcs: "npc" });
     expect(routePath({ ...base, trSection: "home" })).toBe("/en/terraria");
     expect(routePath({ ...base, trSection: "items" })).toBe("/en/terraria/items");
     expect(routePath({ ...base, lang: "es", trSection: "crafting" })).toBe("/es/terraria/crafteo");
@@ -22,8 +22,10 @@ describe("rutas de Terraria", () => {
   });
 
   it("una pestaña que no existe muestra la portada", () => {
-    expect(parseRoute("/en/terraria/bosses")).toMatchObject({ view: "terraria", trSection: "home" });
-    expect(parseRoute("/en/terraria/bosses").detail).toBeUndefined();
+    expect(parseRoute("/en/terraria/fishing")).toMatchObject({ view: "terraria", trSection: "home" });
+    expect(parseRoute("/en/terraria/fishing").detail).toBeUndefined();
+    expect(parseRoute("/es/terraria/jefes")).toMatchObject({ trSection: "bosses" });
+    expect(parseRoute("/es/terraria/npc")).toMatchObject({ trSection: "npcs" });
   });
 
   it("la ficha va y vuelve entre idiomas con su slug de cada uno", () => {

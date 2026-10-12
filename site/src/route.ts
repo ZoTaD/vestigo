@@ -301,15 +301,15 @@ export const DL_TIER_LIST = "tier-list";
 const DEFAULT_P2_SECTION: Poe2Section = "economy";
 
 /** Terraria (2026-10-12). Diseño: docs/superpowers/specs/2026-10-12-terraria-etapa-1-design.md. */
-export type TerrariaTab = "items" | "crafting";
+export type TerrariaTab = "items" | "crafting" | "bosses" | "npcs";
 export type TerrariaSection = "home" | TerrariaTab;
 export const TERRARIA_SEGMENT = "terraria";
-export const TERRARIA_SECTIONS: TerrariaTab[] = ["items", "crafting"];
+export const TERRARIA_SECTIONS: TerrariaTab[] = ["items", "crafting", "bosses", "npcs"];
 /** Las pestañas con fichas: su tercer segmento es el slug de una. El árbol de crafteo lleva su objeto en el `#hash`. */
 export const TERRARIA_DETAIL_SECTIONS: TerrariaTab[] = ["items"];
 /** Las pestañas que ya tienen página: las demás se anuncian apagadas y su dirección muestra la portada. */
-export const TERRARIA_PUBLISHED: TerrariaTab[] = ["items", "crafting"];
-export const TERRARIA_SECTION_ES: Record<TerrariaTab, string> = { items: "objetos", crafting: "crafteo" };
+export const TERRARIA_PUBLISHED: TerrariaTab[] = ["items", "crafting", "bosses", "npcs"];
+export const TERRARIA_SECTION_ES: Record<TerrariaTab, string> = { items: "objetos", crafting: "crafteo", bosses: "jefes", npcs: "npc" };
 const TERRARIA_SECTION_BY_ES = new Map(Object.entries(TERRARIA_SECTION_ES).map(([tab, es]) => [es, tab as TerrariaTab]));
 
 /** Los slugs en español de las fichas de Terraria. */

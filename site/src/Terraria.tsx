@@ -29,12 +29,16 @@ type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
 const TrItems = lazyWithPreload(() => import("./terraria/items/TerrariaItems"));
 const TrCrafting = lazyWithPreload(() => import("./terraria/crafting/TerrariaCrafting"));
+const TrBosses = lazyWithPreload(() => import("./terraria/bosses/TerrariaBosses"));
+const TrNpcs = lazyWithPreload(() => import("./terraria/npcs/TerrariaNpcs"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá, en `TERRARIA_TAB_FILES` y en `TERRARIA_PUBLISHED`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `TERRARIA_TAB_FILES`.
 const TABS: Partial<Record<TerrariaSection, LazyTab>> = {
   items: TrItems,
   crafting: TrCrafting,
+  bosses: TrBosses,
+  npcs: TrNpcs,
 };
 
 /**

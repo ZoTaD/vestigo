@@ -6,7 +6,8 @@ import { useLang } from "./i18n";
 import type { TerrariaSection } from "./route";
 
 /** El orden de las pestañas en la regla de profundidad. */
-export const TERRARIA_TABS: TerrariaSection[] = ["home", "items", "crafting"];
+/** De arriba abajo, como las capas del mundo. */
+export const TERRARIA_TABS: TerrariaSection[] = ["home", "npcs", "items", "crafting", "bosses"];
 
 export type Kind = "melee" | "ranged" | "magic" | "summon" | "ammo" | "armor" | "accessory" | "tool" | "consumable" | "material" | "block" | "vanity" | "misc";
 export const KINDS: Kind[] = ["melee", "ranged", "magic", "summon", "ammo", "armor", "accessory", "tool", "consumable", "material", "block", "vanity", "misc"];
@@ -99,6 +100,42 @@ export interface TerrariaCopy {
     dropModes: Record<string, string>;
     openTree: string;
   };
+  bosses: {
+    h1: string;
+    lede: string;
+    progress: (done: number, total: number) => string;
+    reset: string;
+    pre: string;
+    hard: string;
+    defeated: string;
+    summon: string;
+    unlocks: string;
+    stats: { life: string; damage: string; defense: string };
+    classic: string;
+    drops: string;
+    expertOnly: string;
+    masterOnly: string;
+  };
+  npcs: {
+    h1: string;
+    lede: string;
+    biome: string;
+    who: string;
+    whoHint: string;
+    result: string;
+    empty: string;
+    price: string;
+    pylon: string;
+    pylonYes: (name: string) => string;
+    pylonNo: string;
+    pylonRule: string;
+    levels: Record<"love" | "like" | "dislike" | "hate", string>;
+    factors: { biome: (level: string, biome: string) => string; npc: (level: string, npc: string) => string; solitude: string; crowd: (n: number) => string };
+    table: string;
+    tableBiomes: string;
+    tableNpcs: string;
+    clear: string;
+  };
   crafting: {
     h1: string;
     lede: string;
@@ -128,9 +165,9 @@ const RARITY_EN: Record<number, string> = { [-13]: "Master", [-12]: "Expert", [-
 const RARITY_ES: Record<number, string> = { [-13]: "Maestro", [-12]: "Experto", [-11]: "Misión", [-1]: "Gris", 0: "Blanco", 1: "Azul", 2: "Verde", 3: "Naranja", 4: "Rojo claro", 5: "Rosa", 6: "Violeta claro", 7: "Lima", 8: "Amarillo", 9: "Cian", 10: "Rojo", 11: "Violeta" };
 
 const EN: TerrariaCopy = {
-  tabs: { home: "Home", items: "Items", crafting: "Crafting tree" },
-  layers: { home: "Sky", items: "Underground", crafting: "Caverns" },
-  soonTabs: [["Surface", "Bosses"], ["Surface", "NPCs"], ["Underworld", "Classes"]],
+  tabs: { home: "Home", items: "Items", crafting: "Crafting tree", bosses: "Bosses", npcs: "NPCs" },
+  layers: { home: "Sky", npcs: "Surface", items: "Underground", crafting: "Caverns", bosses: "Underworld" },
+  soonTabs: [],
   soon: "Soon",
   seo: {
     home: {
@@ -140,6 +177,14 @@ const EN: TerrariaCopy = {
     items: {
       title: "Terraria Items List: Stats, Recipes and Drops | Vestigo",
       description: "All Terraria 1.4.5 items by type and rarity: weapons, armor, accessories, tools and materials, each with its stats, recipe and where it drops.",
+    },
+    bosses: {
+      title: "Terraria Boss Checklist: Order, Summons and Drops | Vestigo",
+      description: "Every Terraria boss in progression order: how to summon it, its life, damage and defense, what it drops and what beating it unlocks. Tick them off as you go.",
+    },
+    npcs: {
+      title: "Terraria NPC Happiness Calculator: Biomes, Neighbors and Pylons | Vestigo",
+      description: "Pick a biome and who lives together and see each Terraria NPC's shop price and whether they sell the pylon, with every NPC's liked biomes and neighbors.",
     },
     crafting: {
       title: "Terraria Crafting Tree Calculator: Every Material You Need | Vestigo",
@@ -174,8 +219,8 @@ const EN: TerrariaCopy = {
     tools: [
       { tab: "crafting", title: "Crafting tree", text: "Pick an item and get every material, down to the ore." },
       { tab: "items", title: "Item list", text: "Everything by type and rarity, with stats, recipe and drops." },
-      { tab: null, title: "Boss checklist", text: "What to fight next and the gear that beats it." },
-      { tab: null, title: "NPC happiness", text: "Who lives where, for the best prices and pylons." },
+      { tab: "bosses", title: "Boss checklist", text: "What to fight next, how to summon it and what it drops." },
+      { tab: "npcs", title: "NPC happiness", text: "Who lives where, for the best prices and pylons." },
     ],
     underground: "Underground",
     undergroundTag: (items) => `${items} items`,
@@ -241,6 +286,47 @@ const EN: TerrariaCopy = {
     dropModes: { n: "Classic", e: "Expert", m: "Master", "": "" },
     openTree: "See the full crafting tree",
   },
+  bosses: {
+    h1: "Terraria boss checklist",
+    lede: "Every boss in the order you usually fight them: how it shows up, what it drops and what it unlocks. Your ticks are saved in this browser.",
+    progress: (done, total) => `${done} of ${total} defeated`,
+    reset: "Clear ticks",
+    pre: "Pre-Hardmode",
+    hard: "Hardmode",
+    defeated: "Defeated",
+    summon: "Summon",
+    unlocks: "Unlocks",
+    stats: { life: "Life", damage: "Damage", defense: "Defense" },
+    classic: "Classic mode values",
+    drops: "Drops",
+    expertOnly: "Expert",
+    masterOnly: "Master",
+  },
+  npcs: {
+    h1: "Terraria NPC happiness calculator",
+    lede: "Pick a biome and who lives together. You get each NPC's shop price and whether they sell the pylon there.",
+    biome: "Biome",
+    who: "Who lives here",
+    whoHint: "NPCs within 25 blocks of each other count as neighbors.",
+    result: "Prices in this house",
+    empty: "Pick at least one NPC.",
+    price: "Price",
+    pylon: "Pylon",
+    pylonYes: (name) => `Sells the ${name}`,
+    pylonNo: "No pylon",
+    pylonRule: "An NPC sells the biome's pylon when their price is 90% or lower.",
+    levels: { love: "loves", like: "likes", dislike: "dislikes", hate: "hates" },
+    factors: {
+      biome: (level, biome) => `${level} ${biome}`,
+      npc: (level, npc) => `${level} the ${npc}`,
+      solitude: "few neighbors",
+      crowd: (n) => `crowded (${n} neighbors)`,
+    },
+    table: "What every NPC likes",
+    tableBiomes: "Biomes",
+    tableNpcs: "Neighbors",
+    clear: "Clear",
+  },
   crafting: {
     h1: "Terraria crafting tree",
     lede: "Pick an item and get everything it takes, down to the raw materials.",
@@ -264,9 +350,9 @@ const EN: TerrariaCopy = {
 };
 
 const ES: TerrariaCopy = {
-  tabs: { home: "Portada", items: "Objetos", crafting: "Árbol de crafteo" },
-  layers: { home: "Cielo", items: "Subsuelo", crafting: "Cavernas" },
-  soonTabs: [["Superficie", "Jefes"], ["Superficie", "NPC"], ["Inframundo", "Clases"]],
+  tabs: { home: "Portada", items: "Objetos", crafting: "Árbol de crafteo", bosses: "Jefes", npcs: "NPC" },
+  layers: { home: "Cielo", npcs: "Superficie", items: "Subsuelo", crafting: "Cavernas", bosses: "Inframundo" },
+  soonTabs: [],
   soon: "Pronto",
   seo: {
     home: {
@@ -276,6 +362,14 @@ const ES: TerrariaCopy = {
     items: {
       title: "Objetos de Terraria: estadísticas, recetas y botín | Vestigo",
       description: "Todos los objetos de Terraria 1.4.5 por tipo y rareza: armas, armaduras, accesorios, herramientas y materiales, con sus estadísticas, receta y botín.",
+    },
+    bosses: {
+      title: "Jefes de Terraria: orden, invocación y botín | Vestigo",
+      description: "Todos los jefes de Terraria en orden de progresión: cómo invocarlo, su vida, daño y defensa, qué suelta y qué destraba vencerlo. Marcalos a medida que avanzás.",
+    },
+    npcs: {
+      title: "Felicidad de los NPC de Terraria: biomas, vecinos y pilones | Vestigo",
+      description: "Elegí un bioma y quiénes viven juntos y mirá el precio de la tienda de cada NPC de Terraria y si vende el pilón, con los biomas y vecinos que prefiere cada uno.",
     },
     crafting: {
       title: "Árbol de crafteo de Terraria: todos los materiales | Vestigo",
@@ -310,8 +404,8 @@ const ES: TerrariaCopy = {
     tools: [
       { tab: "crafting", title: "Árbol de crafteo", text: "Elegí un objeto y mirá cada material, hasta el mineral." },
       { tab: "items", title: "Lista de objetos", text: "Todo por tipo y rareza, con estadísticas, receta y botín." },
-      { tab: null, title: "Lista de jefes", text: "Con quién pelear después y el equipo que lo vence." },
-      { tab: null, title: "Felicidad de los NPC", text: "Quién vive dónde, para los mejores precios y pilones." },
+      { tab: "bosses", title: "Lista de jefes", text: "Con quién pelear después, cómo invocarlo y qué suelta." },
+      { tab: "npcs", title: "Felicidad de los NPC", text: "Quién vive dónde, para los mejores precios y pilones." },
     ],
     underground: "Subsuelo",
     undergroundTag: (items) => `${items} objetos`,
@@ -376,6 +470,47 @@ const ES: TerrariaCopy = {
     dropsTitle: "Lo sueltan",
     dropModes: { n: "Clásico", e: "Experto", m: "Maestro", "": "" },
     openTree: "Ver el árbol de crafteo completo",
+  },
+  bosses: {
+    h1: "Jefes de Terraria",
+    lede: "Todos los jefes en el orden en que se suelen pelear: cómo aparece cada uno, qué suelta y qué destraba. Tus marcas se guardan en este navegador.",
+    progress: (done, total) => `${done} de ${total} vencidos`,
+    reset: "Borrar marcas",
+    pre: "Antes del Hardmode",
+    hard: "Hardmode",
+    defeated: "Vencido",
+    summon: "Invocación",
+    unlocks: "Destraba",
+    stats: { life: "Vida", damage: "Daño", defense: "Defensa" },
+    classic: "Valores del modo Clásico",
+    drops: "Botín",
+    expertOnly: "Experto",
+    masterOnly: "Maestro",
+  },
+  npcs: {
+    h1: "Felicidad de los NPC de Terraria",
+    lede: "Elegí un bioma y quiénes viven juntos. Sale el precio de la tienda de cada NPC y si vende el pilón de ese bioma.",
+    biome: "Bioma",
+    who: "Quiénes viven acá",
+    whoHint: "Los NPC a 25 bloques o menos entre sí cuentan como vecinos.",
+    result: "Precios en esta casa",
+    empty: "Elegí al menos un NPC.",
+    price: "Precio",
+    pylon: "Pilón",
+    pylonYes: (name) => `Vende: ${name}`,
+    pylonNo: "Sin pilón",
+    pylonRule: "Un NPC vende el pilón del bioma cuando su precio es del 90 % o menos.",
+    levels: { love: "adora", like: "le gusta", dislike: "no le gusta", hate: "odia" },
+    factors: {
+      biome: (level, biome) => `${level}: ${biome}`,
+      npc: (level, npc) => `${level}: ${npc}`,
+      solitude: "pocos vecinos",
+      crowd: (n) => `amontonado (${n} vecinos)`,
+    },
+    table: "Qué prefiere cada NPC",
+    tableBiomes: "Biomas",
+    tableNpcs: "Vecinos",
+    clear: "Limpiar",
   },
   crafting: {
     h1: "Árbol de crafteo de Terraria",
