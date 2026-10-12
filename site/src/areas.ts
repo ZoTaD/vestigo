@@ -30,6 +30,8 @@ const loadZomboid = () => import("./Zomboid");
 export const ZomboidArea = lazyWithPreload(loadZomboid);
 const loadRust = () => import("./Rust");
 export const RustArea = lazyWithPreload(loadRust);
+const loadTerraria = () => import("./Terraria");
+export const TerrariaArea = lazyWithPreload(loadTerraria);
 export const PrivacyPage = lazyWithPreload(() => import("./Privacy"));
 export const TermsPage = lazyWithPreload(() => import("./Terms"));
 
@@ -48,6 +50,7 @@ const BY_VIEW: Partial<Record<View, { preload: () => Promise<void> }>> = {
   d2r: D2rArea,
   zomboid: ZomboidArea,
   rust: RustArea,
+  terraria: TerrariaArea,
   privacy: PrivacyPage,
   terms: TermsPage,
 };
@@ -73,4 +76,5 @@ export const preloadRoute = async (route: Route): Promise<void> => {
   if (route.view === "d2r") await loadD2r().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "zomboid") await loadZomboid().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "rust") await loadRust().then((m) => m.preloadTab(route)).catch(() => undefined);
+  if (route.view === "terraria") await loadTerraria().then((m) => m.preloadTab(route)).catch(() => undefined);
 };

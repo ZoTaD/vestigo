@@ -127,12 +127,19 @@ class SiteData(unittest.TestCase):
     def test_usos_incluyen_los_que_entran_por_grupo(self):
         out = self.out
         ebon = out[f"site/items/{chunk_of('ebonwood')}.json"]["ebonwood"]
-        assert [3, 10, -1] in ebon["uses"]
+        assert [3, 10] in ebon["uses"]
         wood = out[f"site/items/{chunk_of('wood')}.json"]["wood"]
         assert {u[0] for u in wood["uses"]} == {3, 4, 7, 10}
         # Todo lo que la ficha nombra viene en sus referencias.
         assert {"3", "4", "7", "10"} <= set(wood["refs"])
         assert wood["refs"]["7"] == ["terra-blade", "espada-terra", "Terra Blade", "Espada Terra", 8, 46, 54]
+        # La ficha trae sus estaciones y sus grupos: no baja `recipes.json` para dibujarse.
+        terra = out[f"site/items/{chunk_of('terra-blade')}.json"]["terra-blade"]
+        assert terra["stations"] == {"18": [3, "Work Bench", "Work Bench"]} and "3" in terra["refs"]
+        altar = out[f"site/items/{chunk_of('altar-sword')}.json"]["altar-sword"]
+        assert altar["stations"] == {"26": [0, "Demon Altar", "Altar demoníaco"]}
+        bench = out[f"site/items/{chunk_of('work-bench')}.json"]["work-bench"]
+        assert bench["groups"] == {"0": ["Any Wood", "Cualquier madera", 1]} and "1" in bench["refs"]
 
 
     def test_botin_una_fila_por_enemigo_y_modo(self):

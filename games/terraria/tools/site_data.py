@@ -242,13 +242,23 @@ def build(cache: dict, prev_slugs: dict | None = None, today: str | None = None)
         for n in used_in[i]:
             out, _, tile, _, ings = recipes[n]
             qty = next(q for key, q in ings if key == i or (key < 0 and i in groups[-key - 1]["items"]))
-            uses.append([out, qty, tile])
+            uses.append([out, qty])
             need.add(out)
         item_drops = sorted(drops[i].values(), key=lambda r: (-r[3], r[0]))
         npcs = {str(row[0]): [npc_en[str(row[0])], npc_es.get(str(row[0])) or npc_en[str(row[0])]] for row in item_drops}
-        for t in {recipes[n][2] for n in made_by[i]} | {u[2] for u in uses}:
-            if t in tiles and tiles[t]["item"]:
+        # Las estaciones y los grupos que nombran sus recetas: [objeto que la coloca (0 si ninguno), nombres] y
+        # [nombres, objeto que hace de ícono].
+        stations = {}
+        for t in sorted({recipes[n][2] for n in made_by[i]} - {-1}):
+            stations[str(t)] = [tiles[t]["item"], tiles[t]["en"], tiles[t]["es"]]
+            if tiles[t]["item"]:
                 need.add(tiles[t]["item"])
+        item_groups = {}
+        for n in made_by[i]:
+            for key, _ in recipes[n][4]:
+                if key < 0:
+                    g = groups[-key - 1]
+                    item_groups[str(-key - 1)] = [g["en"], g["es"], g["items"][0]]
         chunk[slug_en[i]] = {
             "id": i,
             "slug": slug_en[i],
@@ -260,6 +270,8 @@ def build(cache: dict, prev_slugs: dict | None = None, today: str | None = None)
             "tip": [tip_en, tip_es],
             "stats": {k: it[k] for k in STAT_KEYS if k in it},
             "recipes": [recipes[n] for n in made_by[i]],
+            "stations": stations,
+            "groups": item_groups,
             "uses": uses,
             "drops": item_drops,
             # Todo lo que la ficha nombra, para dibujarla sin bajar la lista entera.

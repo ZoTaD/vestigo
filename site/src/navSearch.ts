@@ -29,7 +29,7 @@ export interface NavHit {
 export type NavSearcher = (query: string, lang: Lang, max: number) => NavHit[];
 
 /** Los juegos donde la barra busca fichas mientras se escribe. */
-export const NAV_SEARCH_GAMES = ["valheim", "d2r", "zomboid", "rust"] as const;
+export const NAV_SEARCH_GAMES = ["valheim", "d2r", "zomboid", "rust", "terraria"] as const;
 export type NavSearchGame = (typeof NAV_SEARCH_GAMES)[number];
 export const hasNavSearch = (game: string): game is NavSearchGame => (NAV_SEARCH_GAMES as readonly string[]).includes(game);
 
@@ -131,6 +131,22 @@ const LOADERS: Record<NavSearchGame, () => Promise<NavSearcher>> = {
     return (query, lang, max) => searchEntries(entries, query, lang, max);
   },
 
+  async terraria() {
+    const [data, copy] = await Promise.all([import("./terraria/data"), import("./terrariaCopy")]);
+    const tab = { en: copy.TERRARIA_COPY.en.tabs.items, es: copy.TERRARIA_COPY.es.tabs.items };
+    // Las dos listas: el buscador se arma una vez y sirve en los dos idiomas.
+    const [en, es] = await Promise.all([data.loadList("en"), data.loadList("es")]);
+    const esName = new Map(es.map((r) => [r.id, r.name]));
+    const entries: Entry[] = en.map((r) => ({
+      key: String(r.id),
+      en: r.name,
+      es: esName.get(r.id) ?? r.name,
+      tab,
+      img: r.w ? `/terraria/items/${r.id}.png` : undefined,
+      to: { view: "terraria", trSection: "items", detail: r.slug },
+    }));
+    return (query, lang, max) => searchEntries(entries, query, lang, max);
+  },
   async rust() {
     const [data, copy] = await Promise.all([import("./rust/items/data"), import("./rustCopy")]);
     const tab = { en: copy.RUST_COPY.en.tabs.items, es: copy.RUST_COPY.es.tabs.items };

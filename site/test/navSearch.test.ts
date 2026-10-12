@@ -40,7 +40,7 @@ describe("searchEntries", () => {
 
 describe("hasNavSearch", () => {
   it("los cuatro juegos con fichas buscan en la barra; Deadlock y PoE2 siguen con lo suyo", () => {
-    for (const g of ["valheim", "d2r", "zomboid", "rust"]) expect(hasNavSearch(g)).toBe(true);
+    for (const g of ["valheim", "d2r", "zomboid", "rust", "terraria"]) expect(hasNavSearch(g)).toBe(true);
     for (const g of ["deadlock", "poe2", "home"]) expect(hasNavSearch(g)).toBe(false);
   });
 });

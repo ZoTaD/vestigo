@@ -247,6 +247,29 @@
   --radius-pill: 2px;
 }
 
+/* Terraria (2026-10-12): la cáscara (barra y pie) en la tierra oscura del subsuelo, con el amarillo del juego. */
+[data-theme="codex"][data-game="terraria"] {
+  --bg: #17110f;
+  --bg-2: #1f1714;
+  --bg-glow: #2a1f1a;
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-2: rgba(255, 255, 255, 0.1);
+  --surface-solid: #211815;
+  --text: #ffffff;
+  --text-dim: #d9cfc6;
+  --text-faint: #a89c92;
+  --accent: #e7c21b;
+  --accent-lit: #ffe36a;
+  --accent-dark: #b8960f;
+  --accent-rgb: 231, 194, 27;
+  --accent-2: #84aaf8;
+  --good: #96ff96;
+  --bad: #ff9696;
+  --line: rgba(255, 255, 255, 0.14);
+  --line-strong: rgba(255, 255, 255, 0.32);
+  --on-accent: #000000;
+}
+
 /* Portada: papel. La marca es clara y los juegos son oscuros; ese contraste es
    el que hace que cada juego pegue el salto al entrar. */
 [data-theme="codex"][data-place="home"] {

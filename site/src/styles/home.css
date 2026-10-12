@@ -485,6 +485,20 @@
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] .game-figure span { color: #7d776e; }
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] .game-cta { background: #55702a; border-color: #55702a; color: #ffffff; }
 
+/* --- Terraria: el subsuelo de tierra del juego, oscurecido (2026-10-12) --- */
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] {
+  background:
+    linear-gradient(180deg, rgba(23, 17, 15, 0.8) 0%, rgba(23, 17, 15, 0.93) 100%),
+    url(/terraria/art/dirt.png);
+  color: #d9cfc6;
+}
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-panel-name { color: #ffffff; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-figure b { color: #ffe36a; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-figure.is-second b { color: #ffffff; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-figure span { color: #a89c92; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-cta { background: #e7c21b; border-color: #e7c21b; color: #17110f; }
+
 /* --- Path of Exile 2: el oro viejo de su interfaz, sobre negro (2026-10-11) --- */
 
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] {

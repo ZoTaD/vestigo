@@ -1,0 +1,32 @@
+/* Terraria · Árbol de crafteo (2026-10-12). Viaja con el chunk de la pestaña; no depende de la hoja de Objetos. */
+.tr-pick .tr-label { margin-top: 14px; }
+.tr-pick .tr-find .tr-label { margin-top: 0; }
+.tr-tree-cols { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 12px; align-items: start; margin-top: 12px; }
+.tr-tree-side { display: grid; gap: 12px; }
+.tr-tree-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.tr-tree-head .tr-h2 { margin: 0; }
+.tr-qty input { display: block; width: 96px; height: 40px; margin-top: 4px; padding: 0 10px; border: 2px solid #000; border-radius: 10px; background: rgba(0, 0, 0, 0.55); color: #fff; font: 700 16px/1 "Barlow", sans-serif; }
+
+/* El árbol: listas anidadas con una guía gris a la izquierda de cada nivel. */
+.tr-tree, .tr-tree ul { display: grid; gap: 2px; }
+.tr-tree ul { margin: 2px 0 2px 17px; padding-left: 14px; border-left: 2px solid rgba(255, 255, 255, 0.14); }
+.tr-node { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 42px; padding: 2px 6px; border-radius: 6px; }
+.tr-node:hover { background: rgba(255, 255, 255, 0.05); }
+.tr-fold { flex: none; width: 26px; height: 26px; border: 2px solid #000; border-radius: 6px; background: rgba(255, 255, 255, 0.12); color: #fff; font: 700 16px/1 "Barlow", sans-serif; cursor: pointer; }
+.tr-fold.is-leaf { border-color: transparent; background: none; }
+.tr-node-name { font-weight: 700; }
+a.tr-node-name:hover { text-decoration: underline; }
+.tr-node-qty { font-weight: 700; color: var(--tr-gold); }
+.tr-node small { color: var(--tr-dim); font-weight: 600; }
+.tr-node-recipe { height: 30px; padding: 0 6px; border: 2px solid #000; border-radius: 6px; background: rgba(0, 0, 0, 0.55); color: #fff; font: 600 13px/1 "Barlow", sans-serif; }
+.tr-tree .is-base > .tr-node .tr-node-name { font-weight: 600; }
+
+.tr-crafting .tr-rows { display: grid; gap: 2px; }
+.tr-crafting .tr-rows .tr-ref { display: flex; }
+.tr-crafting .tr-rows .tr-ref > span { flex: 1; min-width: 0; }
+.tr-crafting .tr-rows small { color: var(--tr-gold); font-weight: 700; }
+
+@media (max-width: 900px) {
+  .tr-tree-cols { grid-template-columns: minmax(0, 1fr); }
+  .tr-tree ul { margin-left: 8px; padding-left: 8px; }
+}

@@ -7,15 +7,16 @@ import { redirectsFile, ROBOTS_TXT, SITEMAP_GROUPS, sitemapFile, sitemapIndexXml
 import { prerenderPages, renderHtml, ogImagePath, stripComments } from "./src/prerender";
 import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
-import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, type Route } from "./src/route";
+import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, registerTerrariaSlugs, type Route } from "./src/route";
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { isRsLoadingPage } from "./src/rust/loadingGuard";
+import { isTrLoadingPage } from "./src/terraria/loadingGuard";
 import { farmingPages, monumentsPages, patchesPages, type RustPage } from "./src/rust/sitemapPages";
 import { CIRCUITS, circuitSlugsEs } from "./src/rust/electric/circuits";
 import { buildEsSlugs } from "./src/esSlugs";
 import type { D2IndexEntry } from "./src/d2r/index";
 import { COPY } from "./src/i18n";
-import { AREA_FILES, D2R_TAB_FILES, DEADLOCK_TAB_FILES, filesFor, originsFor, PZ_TAB_FILES, RUST_TAB_FILES } from "./src/areaFiles";
+import { AREA_FILES, D2R_TAB_FILES, DEADLOCK_TAB_FILES, filesFor, originsFor, PZ_TAB_FILES, RUST_TAB_FILES, TERRARIA_TAB_FILES } from "./src/areaFiles";
 
 /** El nombre del producto sale de la copia, como todo el resto del texto. */
 const BRAND = COPY.en.brand;
@@ -32,6 +33,8 @@ const d2rDir = fileURLToPath(new URL("../games/d2r/data", import.meta.url));
 const zomboidDir = fileURLToPath(new URL("../games/zomboid/data", import.meta.url));
 // Rust (2026-10-05): lo que escribe `games/rust/tools/extract.py`.
 const rustDir = fileURLToPath(new URL("../games/rust/data", import.meta.url));
+// Terraria (2026-10-12): lo que escribe `games/terraria/tools/site_data.py`.
+const terrariaDir = fileURLToPath(new URL("../games/terraria/data", import.meta.url));
 
 /**
  * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.
@@ -242,6 +245,20 @@ function readSitemapData(): { data: OgData } {
   } catch {
     rs = undefined;
   }
+  // Terraria (2026-10-12): `meta.json` y las fichas de la lista con sus nombres. Los slugs en español se anotan acá
+  // para que el sitemap y el prerender escriban las direcciones en español.
+  let tr: SitemapData["tr"];
+  try {
+    const m = JSON.parse(readFileSync(`${terrariaDir}/meta.json`, "utf-8"));
+    const rows: [number, string, string, number, number, number, number, number][] = JSON.parse(readFileSync(`${terrariaDir}/site/list.json`, "utf-8"));
+    const en: string[] = JSON.parse(readFileSync(`${terrariaDir}/site/names-en.json`, "utf-8"));
+    const es: [string, string][] = JSON.parse(readFileSync(`${terrariaDir}/site/names-es.json`, "utf-8"));
+    registerTerrariaSlugs({ items: Object.fromEntries(rows.flatMap((r, i) => (es[i][1] !== r[1] ? [[r[1], es[i][1]]] : []))) });
+    tr = { version: m.version, generatedAt: m.generatedAt, items: rows.map((r, i) => ({ slug: r[1], en: en[i], es: es[i][0], has: r[7] })) };
+  } catch (e) {
+    console.warn(`[terraria] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
+    tr = undefined;
+  }
   return {
     data: {
       p2,
@@ -249,6 +266,7 @@ function readSitemapData(): { data: OgData } {
       d2,
       zb,
       rs,
+      tr,
       // Los sellos de cada pipeline, para el `lastmod` del sitemap. La
       // enciclopedia de PoE2 no tiene sello y va sin fecha.
       dates: {
@@ -258,6 +276,7 @@ function readSitemapData(): { data: OgData } {
         d2r: d2?.extractedAt,
         zomboid: zb?.extractedAt,
         rust: rs?.extractedAt,
+        terraria: tr?.generatedAt,
       },
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
@@ -652,7 +671,7 @@ function areaTags(bundle: Record<string, { type: string } & Record<string, any>>
     return root;
   };
   // Que falte un chunk tiene que romper el build ahora, no en la página que lo use.
-  for (const file of [...Object.values(AREA_FILES), ...Object.values(DEADLOCK_TAB_FILES), ...Object.values(D2R_TAB_FILES), ...Object.values(PZ_TAB_FILES), ...Object.values(RUST_TAB_FILES)]) chunkOf(file!);
+  for (const file of [...Object.values(AREA_FILES), ...Object.values(DEADLOCK_TAB_FILES), ...Object.values(D2R_TAB_FILES), ...Object.values(PZ_TAB_FILES), ...Object.values(RUST_TAB_FILES), ...Object.values(TERRARIA_TAB_FILES)]) chunkOf(file!);
   const fresh = (f: string) => !html.includes(`/${f}"`);
   const cache = new Map<string, { css: string; js: string[] }>();
   return (files) => {
@@ -795,6 +814,9 @@ function prerenderRoutes(): Plugin {
           // Lo mismo en Rust: una ficha cuyo slug en español no se anotó (ver `readSitemapData`) o cuyo archivo no se
           // pidió en `entry-server.tsx` sale vacía.
           if (route.view === "rust" && isRsLoadingPage(cuerpo)) {
+            throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
+          }
+          if (route.view === "terraria" && isTrLoadingPage(cuerpo)) {
             throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
           }
           const conexiones = originsFor(route)
@@ -953,7 +975,7 @@ export default defineConfig({
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
     // juego y no uno genérico, para que un import diga de qué juego habla.
-    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir },
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

@@ -5,7 +5,7 @@ import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
 import { hasNavSearch, loadNavSearcher, type NavHit, type NavSearcher } from "./navSearch";
 
-export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust";
+export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
 export type Place = "home" | Game;
 /** The legal pages are reachable from the footer and highlight no tab. */
@@ -60,6 +60,7 @@ export default function Nav({
     d2r: [copy.games.diablo2Short, copy.games.diablo2],
     zomboid: [copy.games.zomboidShort, copy.games.zomboid],
     rust: [copy.games.rust, copy.games.rust],
+    terraria: [copy.games.terraria, copy.games.terraria],
   };
   const [searchGame, searchGameFull] = (itemSearch && gameName[active]) || [copy.games.deadlock, copy.games.deadlock];
   const searchLabel = itemSearch ? copy.shell.searchItemFor(searchGameFull) : copy.shell.searchFor(searchGameFull);
@@ -172,6 +173,15 @@ export default function Nav({
             onNavigate={onNavigate}
           >
             {copy.games.rust}
+          </RouteLink>
+          {/* Terraria entra el 2026-10-12, con la portada del corte del mundo. */}
+          <RouteLink
+            className="top-place"
+            to={{ ...a("terraria"), trSection: "home" }}
+            active={active === "terraria"}
+            onNavigate={onNavigate}
+          >
+            {copy.games.terraria}
           </RouteLink>
           {/* Los juegos que vienen se anuncian, no se enlazan: no existe la
               ruta, así que un enlace llevaría a un 404 y de paso entraría al

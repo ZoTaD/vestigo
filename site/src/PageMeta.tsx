@@ -14,6 +14,7 @@ import { loadD2Index, peekD2Index } from "./d2r/index";
 import { loadPzNames, peekPzName } from "./zomboid/index";
 import { pzPatchName } from "./zomboid/patches/slug";
 import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/data";
+import { loadItem as loadTrItem, peekItem as peekTrItem } from "./terraria/data";
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
 import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
@@ -138,6 +139,11 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const e = peekPzName(pz.sec, pz.id);
     return e ? (lang === "es" ? e.esHead || e.es || e.en : e.en) : null;
   }
+  // Una ficha de Objetos de Terraria: igual, de su archivo.
+  if (route.view === "terraria" && route.trSection === "items" && route.detail) {
+    const f = peekTrItem(route.detail);
+    return f ? (lang === "es" && f.name[1]) || f.name[0] : null;
+  }
   // Una ficha de Objetos de Rust: el nombre sale de su archivo (uno de los 32 repartidos), que la pestaña pide igual.
   if (route.view === "rust" && route.rsSection === "items" && route.detail) {
     const f = peekRsItem(route.detail);
@@ -174,7 +180,9 @@ export default function PageMeta({ route }: { route: Route }) {
     const via = key ? peekPzName(key.sec, key.id)?.via?.[lang] : null;
     const rsItem = route.view === "rust" && route.rsSection === "items" && route.detail ? peekRsItem(route.detail) : null;
     const rsHas = rsItem ? { craft: !!rsItem.craft, shop: rsItem.shops.length > 0, loot: rsItem.loot.length > 0, recycle: !!rsItem.recycle } : null;
-    const { title, description } = metaFor(route, lang, detail, via, rsHas);
+    const trItem = route.view === "terraria" && route.trSection === "items" && route.detail ? peekTrItem(route.detail) : null;
+    const trHas = trItem ? { craft: trItem.recipes.length > 0, uses: trItem.uses.length > 0, drops: trItem.drops.length > 0 } : null;
+    const { title, description } = metaFor(route, lang, detail, via, rsHas, trHas);
     const url = routeUrl(route);
 
     document.title = title;
@@ -243,6 +251,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "rust" && route.rsSection === "electricity" && route.detail && !circuitMeta(route.detail)) {
       let vivo = true;
       import("./rust/electric/circuits").then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una ficha de Terraria, igual.
+    if (route.view === "terraria" && route.trSection === "items" && route.detail && peekTrItem(route.detail) === undefined) {
+      let vivo = true;
+      loadTrItem(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una ficha de Rust, con el archivo de la ficha (que la pestaña ya pidió).
