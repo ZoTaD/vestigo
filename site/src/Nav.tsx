@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useCopy, useLang, type Lang } from "./i18n";
 import RouteLink from "./RouteLink";
 import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
+import { GAME_GROUPS, GAME_ORDER } from "./gameGroups";
 import { hasNavSearch, loadNavSearcher, type NavHit, type NavSearcher } from "./navSearch";
 
 export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria";
@@ -13,7 +14,11 @@ export type View = Place | "privacy" | "terms";
 
 /**
  * La barra superior del rediseño del 2026-09-06: marca · lugares · buscador ·
- * idioma. Fija arriba, igual en la portada y en los dos juegos.
+ * idioma. Igual en la portada y en todos los juegos.
+ *
+ * **La barra se llena de juegos y los que no entran van a un menú** (2026-10-12): se muestran todos los que
+ * caben en el ancho que hay y el resto queda detrás del botón de tres puntos, por categoría. El juego en el
+ * que se está nunca se va al menú.
  *
  * **El buscador está en todas las páginas** porque buscarse es el caso de uso
  * número uno de un sitio de stats y la competencia entera lo tiene a un tap
@@ -81,6 +86,85 @@ export default function Nav({
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
   }, []);
+  /* --- Los juegos de la barra y el menú de los que no entran -------------- */
+  const activeGame = (GAME_ORDER as string[]).includes(active) ? (active as Game) : null;
+  const [menu, setMenu] = useState(false);
+  /** Los juegos que no entraron en la barra. Vacío en el prerender: ahí están todos a la vista. */
+  const [over, setOver] = useState<Game[]>([]);
+  const [menuLeft, setMenuLeft] = useState(0);
+  const bar = useRef<HTMLDivElement>(null);
+  const places = useRef<HTMLSpanElement>(null);
+  const more = useRef<HTMLButtonElement>(null);
+  const games = useRef<HTMLDivElement>(null);
+  /**
+   * Cuántos juegos entran. Los que no entran siguen en la fila, fuera de flujo e invisibles, así se los puede
+   * seguir midiendo cuando la ventana se agranda. Se llena en orden, salvo el juego activo, que entra primero.
+   */
+  useLayoutEffect(() => {
+    const row = places.current;
+    if (!row) return;
+    const measure = () => {
+      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+      const width = new Map<Game, number>();
+      row.querySelectorAll<HTMLElement>("[data-game]").forEach((el) => width.set(el.dataset.game as Game, el.offsetWidth + gap));
+      const home = row.querySelector<HTMLElement>("[data-home]")?.offsetWidth ?? 0;
+      const all = GAME_ORDER.reduce((n, g) => n + (width.get(g) ?? 0), home);
+      let out: Game[] = [];
+      if (all > row.clientWidth) {
+        let used = home + (more.current?.offsetWidth ?? 0) + gap;
+        const keep = new Set<Game>();
+        let full = false;
+        for (const g of activeGame ? [activeGame, ...GAME_ORDER.filter((x) => x !== activeGame)] : GAME_ORDER) {
+          const w = width.get(g) ?? 0;
+          if (!full && used + w <= row.clientWidth) { used += w; keep.add(g); } else full = true;
+        }
+        out = GAME_ORDER.filter((g) => !keep.has(g));
+      }
+      setOver((prev) => (prev.join() === out.join() ? prev : out));
+    };
+    measure();
+    const watch = new ResizeObserver(measure);
+    watch.observe(row);
+    // Las tipografías llegan después del primer dibujo y cambian el ancho de cada nombre.
+    document.fonts?.ready.then(measure, () => undefined);
+    return () => watch.disconnect();
+  }, [activeGame, lang]);
+  useEffect(() => { if (!over.length) setMenu(false); }, [over]);
+  /** El menú cuelga del botón, alineado a su derecha y sin salirse de la barra por la izquierda. */
+  useLayoutEffect(() => {
+    if (!menu || !more.current || !games.current || !bar.current) return;
+    const pad = parseFloat(getComputedStyle(bar.current).paddingLeft) || 0;
+    setMenuLeft(Math.max(pad, more.current.offsetLeft + more.current.offsetWidth - games.current.offsetWidth));
+  }, [menu, over]);
+  useEffect(() => {
+    if (!menu) return;
+    const out = (e: MouseEvent) => { if (bar.current && !bar.current.contains(e.target as Node)) setMenu(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") setMenu(false); };
+    document.addEventListener("mousedown", out);
+    document.addEventListener("keydown", esc);
+    return () => { document.removeEventListener("mousedown", out); document.removeEventListener("keydown", esc); };
+  }, [menu]);
+  /** La portada de cada juego: a dónde lleva su nombre en el menú. */
+  const gameHome: Record<Game, Route> = {
+    deadlock: a("deadlock"),
+    poe2: { ...a("poe2"), p2Section: "economy" },
+    valheim: { ...a("valheim"), vhSection: "home" },
+    d2r: { ...a("d2r"), d2Section: "home" },
+    zomboid: { ...a("zomboid"), pzSection: "home" },
+    rust: { ...a("rust"), rsSection: "home" },
+    terraria: { ...a("terraria"), trSection: "home" },
+  };
+  const gameFull: Record<Game, string> = {
+    deadlock: copy.games.deadlock,
+    poe2: copy.games.poe2,
+    valheim: copy.games.valheim,
+    d2r: copy.games.diablo2,
+    zomboid: copy.games.zomboid,
+    rust: copy.games.rust,
+    terraria: copy.games.terraria,
+  };
+  const gameShort: Record<Game, string> = { ...gameFull, poe2: copy.games.poe2Short, d2r: copy.games.diablo2Short, zomboid: copy.games.zomboidShort };
+
   const hitRoute = (h: NavHit): Route => ({ ...route, detail: undefined, ...h.to });
   const goTo = (h: NavHit) => {
     setQuery("");
@@ -109,90 +193,70 @@ export default function Nav({
 
   return (
     <nav className="top" aria-label={copy.brand}>
-      <div className="top-in">
+      <div className="top-in" ref={bar}>
         <RouteLink className="top-brand" to={a("home")} onNavigate={onNavigate}>
           {copy.brand}
         </RouteLink>
 
-        <span className="top-places">
+        <span className="top-places" ref={places}>
           <RouteLink
             className="top-place"
             to={a("home")}
             active={active === "home"}
             onNavigate={onNavigate}
+            data-home=""
           >
             {copy.sections.home}
           </RouteLink>
-          <RouteLink
-            className="top-place"
-            to={a("deadlock")}
-            active={active === "deadlock"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.deadlock}
-          </RouteLink>
-          <RouteLink
-            className="top-place"
-            to={{ ...a("poe2"), p2Section: "economy" }}
-            active={active === "poe2"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.poe2Short}
-          </RouteLink>
-          <RouteLink
-            className="top-place"
-            to={{ ...a("valheim"), vhSection: "home" }}
-            active={active === "valheim"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.valheim}
-          </RouteLink>
-          {/* Diablo II salió de "Pronto" el 2026-09-29, con su portada. */}
-          <RouteLink
-            className="top-place"
-            to={{ ...a("d2r"), d2Section: "home" }}
-            active={active === "d2r"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.diablo2Short}
-          </RouteLink>
-          {/* Project Zomboid entra el 2026-09-30, con la portada de la libreta. */}
-          <RouteLink
-            className="top-place"
-            to={{ ...a("zomboid"), pzSection: "home" }}
-            active={active === "zomboid"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.zomboidShort}
-          </RouteLink>
-          {/* Rust entra el 2026-10-05, con la portada del inventario. */}
-          <RouteLink
-            className="top-place"
-            to={{ ...a("rust"), rsSection: "home" }}
-            active={active === "rust"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.rust}
-          </RouteLink>
-          {/* Terraria entra el 2026-10-12, con la portada del corte del mundo. */}
-          <RouteLink
-            className="top-place"
-            to={{ ...a("terraria"), trSection: "home" }}
-            active={active === "terraria"}
-            onNavigate={onNavigate}
-          >
-            {copy.games.terraria}
-          </RouteLink>
-          {/* Los juegos que vienen se anuncian, no se enlazan: no existe la
-              ruta, así que un enlace llevaría a un 404 y de paso entraría al
-              sitemap. En el orden de la hoja de ruta (2026-09-23). */}
-          {[copy.games.dota].map((nombre) => (
-            <span className="top-place is-soon" aria-disabled="true" key={nombre}>
-              {nombre}
-              <em className="top-soon">{copy.games.soon}</em>
-            </span>
+          {GAME_ORDER.map((game) => (
+            <RouteLink
+              className={`top-place${over.includes(game) ? " is-over" : ""}`}
+              key={game}
+              to={gameHome[game]}
+              active={active === game}
+              onNavigate={onNavigate}
+              data-game={game}
+            >
+              {gameShort[game]}
+            </RouteLink>
           ))}
+          <button
+            type="button"
+            className={`top-place top-more${over.length ? "" : " is-over"}`}
+            ref={more}
+            aria-label={copy.games.more}
+            title={copy.games.more}
+            aria-expanded={menu}
+            aria-controls="top-games"
+            onClick={() => setMenu((v) => !v)}
+          >
+            <svg viewBox="0 0 18 4" aria-hidden="true">
+              <circle cx="2" cy="2" r="2" /><circle cx="9" cy="2" r="2" /><circle cx="16" cy="2" r="2" />
+            </svg>
+          </button>
         </span>
+
+        {/* Los juegos que no entraron en la barra, por categoría. */}
+        <div className="top-games" id="top-games" ref={games} hidden={!menu} style={{ left: menuLeft }}>
+          {GAME_GROUPS.map((g) => ({ ...g, games: g.games.filter((game) => over.includes(game)) }))
+            .filter((g) => g.games.length)
+            .map((g) => (
+              <div className="top-games-group" key={g.id}>
+                <p className="top-games-title">{copy.games.groups[g.id]}</p>
+                {g.games.map((game) => (
+                  <RouteLink
+                    className="top-games-link"
+                    key={game}
+                    to={gameHome[game]}
+                    active={active === game}
+                    onNavigate={(r) => { setMenu(false); onNavigate(r); }}
+                  >
+                    {gameFull[game]}
+                  </RouteLink>
+                ))}
+              </div>
+            ))}
+        </div>
 
         <form className="top-search" role="search" onSubmit={submit} ref={box}>
           <label className="top-search-field">

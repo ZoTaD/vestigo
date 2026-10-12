@@ -1,12 +1,9 @@
-import { useState, type FormEvent } from "react";
 import heroesJson from "@deadlock/heroes.json";
 import { buildHeroes, patchMovers, PUBLISHED_BAND, type Hero } from "./deadlockData";
 import { buildItems as buildDlItems } from "./deadlockItemsData";
 import { heroes as heroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
 import { DL_BAND_NAMES } from "./deadlockBandNames";
 import { useCopy, useLang, useLocale } from "./i18n";
-import { lastProfile } from "./lastProfile";
-import { setPendingSearch } from "./pendingSearch";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import vhMeta from "@valheim/meta.json";
@@ -27,11 +24,12 @@ const VH_ENTRIES = Object.entries(vhMeta.counts).reduce((n, [k, v]) => (k === "b
  * hacer en el primer pantallazo. Ahora, en orden de lectura:
  *
  * 1. El eslogan, a un tercio del tamaño.
- * 2. **El buscador**, grande, con el juego a elegir y "último visto" a un
- *    clic: buscarse es el caso de uso número uno de un sitio de stats.
- * 3. **"Hoy en el meta"**: cinco datos que cambian todos los días y enlazan a
+ * 2. **"Hoy en el meta"**: cinco datos que cambian todos los días y enlazan a
  *    la página que los explica. Es el motivo de volver que la portada no tenía.
- * 4. Los juegos, con un botón que dice a dónde va.
+ * 3. Los juegos, con un botón que dice a dónde va.
+ *
+ * El buscador de perfiles salió de la portada el 2026-10-12: sólo servía para
+ * Deadlock y el sitio ya tiene seis juegos. Sigue en la barra y en Deadlock.
  *
  * Todo lo que muestra sale de los archivos que ya viajan en el bundle, así que
  * está en el HTML prerenderizado y no puede desviarse de las tier lists que
@@ -69,18 +67,6 @@ export default function Home({
 
   const bandName = DL_BAND_NAMES[lang][PUBLISHED_BAND];
 
-  /* --- Buscador ---------------------------------------------------------- */
-  // Sólo Deadlock: es el único juego con perfiles de jugador.
-  const [query, setQuery] = useState("");
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    const q = query.trim();
-    if (!q) return;
-    setPendingSearch(q);
-    navigate({ ...route, view: "deadlock", dlSection: "player", detail: undefined });
-  };
-  const lastDl = lastProfile();
-
   /* --- Cifras del pie ---------------------------------------------------- */
   const matchesRead = heroesJson.matches;
   const measuredAt = Date.parse(heroesJson.generatedAt);
@@ -105,7 +91,7 @@ export default function Home({
 
   return (
     <main className="home">
-      {/* Cabecera: el eslogan y el buscador, lado a lado ---------------- */}
+      {/* Cabecera: el eslogan ------------------------------------------ */}
       <section className="home-hero">
         <div className="home-hero-text">
           <p className="home-eyebrow">{copy.home.eyebrow}</p>
@@ -114,37 +100,6 @@ export default function Home({
           </h1>
           <p className="home-lead">{copy.home.lead}</p>
         </div>
-
-        <form className="home-search box" onSubmit={submit} role="search">
-          <p className="box-title">{copy.home.search.label}</p>
-          <div className="home-search-row">
-            <label className="field home-search-field">
-              <input
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={copy.home.search.placeholder.deadlock}
-                aria-label={copy.home.search.placeholder.deadlock}
-                autoComplete="off"
-              />
-            </label>
-            <button className="btn" type="submit">
-              {copy.home.search.go}
-            </button>
-          </div>
-          {lastDl && (
-            <p className="home-last">
-              <span className="home-last-label">{copy.home.search.lastSeen}</span>
-              <RouteLink
-                className="home-last-link"
-                to={{ ...route, view: "deadlock", dlSection: "player", detail: String(lastDl.accountId) }}
-                onNavigate={navigate}
-              >
-                {lastDl.name} <small>· {copy.games.deadlock}</small>
-              </RouteLink>
-            </p>
-          )}
-        </form>
       </section>
 
       {/* Hoy en el meta ------------------------------------------------- */}
@@ -268,10 +223,171 @@ export default function Home({
       <section className="home-games">
         <h2 className="home-h2">{copy.home.games.heading}</h2>
 
+        {/* Agrupados por categoría desde el 2026-10-12, en el mismo orden que el menú de la barra (`gameGroups.ts`). */}
+        <h3 className="home-group">{copy.games.groups.survival}</h3>
+        <ul className="game-list">
+          {/* Valheim salió de "Pronto" el 2026-09-24: la enciclopedia y la Crónica. */}
+          <li className="game-panel" data-panel="valheim">
+            <div className="game-panel-main">
+              <h4 className="game-panel-name">{copy.games.valheim}</h4>
+              <p className="game-panel-note">{copy.home.games.valheimLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "valheim", vhSection: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.valheimCta(num(VH_ENTRIES))}
+                  <Arrow />
+                </RouteLink>
+                <RouteLink className="game-cta is-ghost" to={{ ...route, view: "valheim", vhSection: "patches", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.valheimPatches}
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(VH_ENTRIES)}</b>
+                <span>{copy.home.games.valheimEntries}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{vhMeta.counts.biomes}</b>
+                <span>{copy.home.games.valheimBiomes}</span>
+              </p>
+            </div>
+          </li>
+
+          {/* Project Zomboid entra el 2026-09-30, con la portada de la libreta. */}
+          <li className="game-panel" data-panel="zomboid">
+            <div className="game-panel-main">
+              <h4 className="game-panel-name">{copy.games.zomboid}</h4>
+              <p className="game-panel-note">{copy.home.games.zomboidLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "zomboid", pzSection: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.zomboidCta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(pzMeta.counts.items)}</b>
+                <span>{copy.home.games.zomboidItems}</span>
+              </p>
+              <p className="game-figure is-second">
+                {/* Las de fabricar y las de construir: las 1.170 que lista la pestaña Recetas (igual que la portada de
+                    Project Zomboid), no sólo las 969 primeras. */}
+                <b>{num(pzMeta.counts.recipes + pzMeta.counts.buildRecipes)}</b>
+                <span>{copy.home.games.zomboidRecipes}</span>
+              </p>
+            </div>
+          </li>
+
+          {/* Rust entra el 2026-10-05, con la portada del inventario. */}
+          <li className="game-panel" data-panel="rust">
+            <div className="game-panel-main">
+              <h4 className="game-panel-name">{copy.games.rust}</h4>
+              <p className="game-panel-note">{copy.home.games.rustLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "rust", rsSection: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.rustCta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(rsMeta.counts.items)}</b>
+                <span>{copy.home.games.rustItems}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(rsMeta.counts.recipes)}</b>
+                <span>{copy.home.games.rustRecipes}</span>
+              </p>
+            </div>
+          </li>
+
+          {/* Terraria entra el 2026-10-12, con la portada del corte del mundo. */}
+          <li className="game-panel" data-panel="terraria">
+            <div className="game-panel-main">
+              <h4 className="game-panel-name">{copy.games.terraria}</h4>
+              <p className="game-panel-note">{copy.home.games.terrariaLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "terraria", trSection: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.terrariaCta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(trMeta.counts.items)}</b>
+                <span>{copy.home.games.terrariaItems}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(trMeta.counts.recipes)}</b>
+                <span>{copy.home.games.terrariaRecipes}</span>
+              </p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 className="home-group">{copy.games.groups.arpg}</h3>
+        <ul className="game-list">
+          {/* Path of Exile 2 salió de "Pronto" el 2026-10-11: la sección existía desde el 23/9 y la portada la seguía
+              anunciando sin enlazarla. */}
+          <li className="game-panel" data-panel="poe2">
+            <div className="game-panel-main">
+              <h4 className="game-panel-name">{copy.games.poe2}</h4>
+              <p className="game-panel-note">{copy.home.games.poe2Live}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "poe2", p2Section: "economy", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.poe2Cta}
+                  <Arrow />
+                </RouteLink>
+                <RouteLink className="game-cta is-ghost" to={{ ...route, view: "poe2", p2Section: "patches", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.poe2Patches}
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{p2Patches.editions[0]?.version ?? "—"}</b>
+                <span>{copy.home.games.poe2Latest}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(p2Patches.editions.length)}</b>
+                <span>{copy.home.games.poe2Editions}</span>
+              </p>
+            </div>
+          </li>
+
+          {/* Diablo II salió de "Pronto" el 2026-09-29, con la portada de la sección. */}
+          <li className="game-panel" data-panel="d2r">
+            <div className="game-panel-main">
+              <h4 className="game-panel-name">{copy.games.diablo2}</h4>
+              <p className="game-panel-note">{copy.home.games.d2rLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "d2r", d2Section: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.d2rCta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(d2Meta.counts.runewords)}</b>
+                <span>{copy.home.games.d2rRunewords}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(d2Meta.counts.uniques)}</b>
+                <span>{copy.home.games.d2rUniques}</span>
+              </p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 className="home-group">{copy.games.groups.shooters}</h3>
         <ul className="game-list">
           <li className="game-panel" data-panel="deadlock">
             <div className="game-panel-main">
-              <h3 className="game-panel-name">{copy.games.deadlock}</h3>
+              <h4 className="game-panel-name">{copy.games.deadlock}</h4>
               <p className="game-panel-note">{copy.home.games.deadlock}</p>
               <div className="game-panel-ctas">
                 <RouteLink
@@ -305,178 +421,6 @@ export default function Home({
               </p>
             </div>
           </li>
-
-          {/* Path of Exile 2 salió de "Pronto" el 2026-10-11: la sección existía desde el 23/9 y la portada la seguía
-              anunciando sin enlazarla. */}
-          <li className="game-panel" data-panel="poe2">
-            <div className="game-panel-main">
-              <h3 className="game-panel-name">{copy.games.poe2}</h3>
-              <p className="game-panel-note">{copy.home.games.poe2Live}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "poe2", p2Section: "economy", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.poe2Cta}
-                  <Arrow />
-                </RouteLink>
-                <RouteLink className="game-cta is-ghost" to={{ ...route, view: "poe2", p2Section: "patches", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.poe2Patches}
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{p2Patches.editions[0]?.version ?? "—"}</b>
-                <span>{copy.home.games.poe2Latest}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(p2Patches.editions.length)}</b>
-                <span>{copy.home.games.poe2Editions}</span>
-              </p>
-            </div>
-          </li>
-
-          {/* Valheim salió de "Pronto" el 2026-09-24: la enciclopedia y la Crónica. */}
-          <li className="game-panel" data-panel="valheim">
-            <div className="game-panel-main">
-              <h3 className="game-panel-name">{copy.games.valheim}</h3>
-              <p className="game-panel-note">{copy.home.games.valheimLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "valheim", vhSection: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.valheimCta(num(VH_ENTRIES))}
-                  <Arrow />
-                </RouteLink>
-                <RouteLink className="game-cta is-ghost" to={{ ...route, view: "valheim", vhSection: "patches", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.valheimPatches}
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(VH_ENTRIES)}</b>
-                <span>{copy.home.games.valheimEntries}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{vhMeta.counts.biomes}</b>
-                <span>{copy.home.games.valheimBiomes}</span>
-              </p>
-            </div>
-          </li>
-
-          {/* Diablo II salió de "Pronto" el 2026-09-29, con la portada de la sección. */}
-          <li className="game-panel" data-panel="d2r">
-            <div className="game-panel-main">
-              <h3 className="game-panel-name">{copy.games.diablo2}</h3>
-              <p className="game-panel-note">{copy.home.games.d2rLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "d2r", d2Section: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.d2rCta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(d2Meta.counts.runewords)}</b>
-                <span>{copy.home.games.d2rRunewords}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(d2Meta.counts.uniques)}</b>
-                <span>{copy.home.games.d2rUniques}</span>
-              </p>
-            </div>
-          </li>
-
-          {/* Project Zomboid entra el 2026-09-30, con la portada de la libreta. */}
-          <li className="game-panel" data-panel="zomboid">
-            <div className="game-panel-main">
-              <h3 className="game-panel-name">{copy.games.zomboid}</h3>
-              <p className="game-panel-note">{copy.home.games.zomboidLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "zomboid", pzSection: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.zomboidCta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(pzMeta.counts.items)}</b>
-                <span>{copy.home.games.zomboidItems}</span>
-              </p>
-              <p className="game-figure is-second">
-                {/* Las de fabricar y las de construir: las 1.170 que lista la pestaña Recetas (igual que la portada de
-                    Project Zomboid), no sólo las 969 primeras. */}
-                <b>{num(pzMeta.counts.recipes + pzMeta.counts.buildRecipes)}</b>
-                <span>{copy.home.games.zomboidRecipes}</span>
-              </p>
-            </div>
-          </li>
-
-          {/* Rust entra el 2026-10-05, con la portada del inventario. */}
-          <li className="game-panel" data-panel="rust">
-            <div className="game-panel-main">
-              <h3 className="game-panel-name">{copy.games.rust}</h3>
-              <p className="game-panel-note">{copy.home.games.rustLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "rust", rsSection: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.rustCta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(rsMeta.counts.items)}</b>
-                <span>{copy.home.games.rustItems}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(rsMeta.counts.recipes)}</b>
-                <span>{copy.home.games.rustRecipes}</span>
-              </p>
-            </div>
-          </li>
-
-          {/* Terraria entra el 2026-10-12, con la portada del corte del mundo. */}
-          <li className="game-panel" data-panel="terraria">
-            <div className="game-panel-main">
-              <h3 className="game-panel-name">{copy.games.terraria}</h3>
-              <p className="game-panel-note">{copy.home.games.terrariaLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "terraria", trSection: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.terrariaCta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(trMeta.counts.items)}</b>
-                <span>{copy.home.games.terrariaItems}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(trMeta.counts.recipes)}</b>
-                <span>{copy.home.games.terrariaRecipes}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-
-        {/* Los que vienen, en el orden de la hoja de ruta (2026-09-23). Se
-            anuncian y no se enlazan: no existe la ruta todavía. Van chicos y
-            en fila, debajo del que ya existe: cuatro paneles del tamaño del de
-            Deadlock taparían el único juego que se puede usar. */}
-        <h3 className="home-soon-heading">{copy.home.games.soonHeading}</h3>
-        <ul className="game-soon-list">
-          {(
-            [
-              ["dota", copy.games.dota, copy.home.games.dota],
-            ] as const
-          ).map(([id, nombre, nota]) => (
-            <li className="game-soon" data-panel={id} key={id}>
-              <h4 className="game-soon-name">{nombre}</h4>
-              <p className="game-soon-note">{nota}</p>
-              <span className="game-soon-tag">{copy.home.games.soonCta}</span>
-            </li>
-          ))}
         </ul>
       </section>
 
