@@ -1266,6 +1266,7 @@ const EN = {
       of: (n: string) => `of ${n}`,
     },
     bands: DL_BAND_NAMES.en,
+    allRanks: "All ranks",
     note: "Each band is measured on its own matches, not on the ranks above it.",
     /**
      * Sólo aparece mientras la banda publicada no sea la preferida. No es una
@@ -2278,6 +2279,7 @@ const ES: typeof EN = {
       of: (n: string) => `de ${n}`,
     },
     bands: DL_BAND_NAMES.es,
+    allRanks: "Todos los rangos",
     note: "Cada banda se mide con sus propias partidas, no con las de los rangos de arriba.",
     fallback: (shown: string) =>
       `Fantasma+ todavía no tiene partidas clasificatorias suficientes en esta ventana. ` +
