@@ -1,6 +1,7 @@
 /**
  * La ficha de un objeto de Terraria (2026-10-12): nombre en su color de rareza, las estadísticas como las escribe el
- * tooltip del juego, sus recetas, en qué se usa y quién lo suelta. Recibe la ficha ya cargada; todo lo que nombra
+ * tooltip del juego, sus recetas, en qué se usa, quién lo suelta y de qué otra forma se consigue (tiendas, cofres,
+ * bolsas, cajas, pesca). Recibe la ficha ya cargada; todo lo que nombra
  * viene en sus `refs`, así no pide nada más.
  */
 import type { CSSProperties, ReactNode } from "react";
@@ -9,12 +10,16 @@ import { LazyRows, skipSprite } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import { routePath, type Route } from "../../route";
 import { useTerrariaCopy, type TerrariaCopy } from "../../terrariaCopy";
-import { refName, say, type Ficha, type Recipe, type Ref } from "../data";
+import { refName, say, type Ficha, type Recipe, type Ref, type Source } from "../data";
 import { itemRoute, rare, Slot, Sprite, type Nav } from "../ui";
-import { knockbackTier, percent, sellCoins, speedTier } from "./stats";
+import { buyCoins, knockbackTier, percent, sellCoins, speedTier } from "./stats";
 
 /** El alto de una fila de "se usa en" y de botín, en px, medido en el navegador (2026-10-12). */
 const TR_ROW = 44;
+/** Las fuentes cuya probabilidad está medida (miles de intentos) y no leída de una tabla: llevan la aclaración al pie. */
+const MEASURED = new Set<Source["k"]>(["chest", "pot", "tree", "bag", "crate", "open", "extract", "angler"]);
+/** El alto de una fila de "dónde se consigue" sin condición, en px (2026-10-12). */
+const TR_SOURCE_ROW = 44;
 
 /** Las letras de la palabra más larga del nombre: el título se achica para que entre entera, sin cortarla. */
 const longestWord = (name: string): number => Math.max(...name.split(/\s+/).map((w) => w.length), 1);
@@ -46,6 +51,25 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
     if (!st) return null;
     // Una estación que no coloca ningún objeto (un altar) no tiene ficha que enlazar: va su nombre.
     return (st[0] && link(st[0])) || <b>{say([st[1], st[2]], lang)}</b>;
+  };
+
+  /** Quién o qué da el objeto en una fuente: el NPC, el cofre, o el objeto del que sale (enlazado a su ficha). */
+  const origin = (s: Source, i: number): ReactNode => {
+    if (s.k === "pylon") return <b>{t.items.sources.anyNpc}</b>;
+    if (s.k === "pot" || s.k === "tree") return <b>{s.k === "pot" ? t.items.sources.pots : t.items.sources.trees}</b>;
+    if (s.k === "fish") return <b>{s.tier ? t.items.sources.tiers[s.tier] : t.items.sources.anyCatch}</b>;
+    if (s.n != null) return <b>{say(ficha.npcs[String(s.n)] ?? ["?", ""], lang)}</b>;
+    if (s.l) return <b>{say(s.l, lang)}</b>;
+    if (s.i == null) return null;
+    const station = s.t != null ? ficha.refs[String(s.t)] : undefined;
+    return link(s.i, station && <small>{t.items.sources.inStation(refName(station, lang))}</small>, skipSprite(i, 12));
+  };
+  const price = (s: Source): string | null => {
+    if (s.p == null) return null;
+    const coin = s.c != null ? ficha.refs[String(s.c)] : undefined;
+    if (coin) return `${s.p} × ${refName(coin, lang)}`;
+    const coins = buyCoins(s.p);
+    return coins.flatMap((n, j) => (n ? [`${n} ${t.items.coins[j]}`] : [])).join(", ") || null;
   };
 
   const tree = `${routePath({ ...route, view: "terraria", trSection: "crafting", detail: undefined })}#${ficha.slug}`;
@@ -125,6 +149,33 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                 )}
               />
             </ul>
+          </section>
+        )}
+
+        {ficha.sources.length > 0 && (
+          <section className="tr-dug">
+            <h2 className="tr-h2 tr-andy">{t.items.sources.title}</h2>
+            <ul className="tr-sources">
+              <LazyRows
+                items={ficha.sources}
+                rowHeight={TR_SOURCE_ROW}
+                tag="li"
+                chunk={30}
+                render={(s, i) => (
+                  <li className="tr-source" key={i}>
+                    <small className="tr-label">{t.items.sources.kinds[s.k]}</small>
+                    <div className="tr-source-who">
+                      {origin(s, i)}
+                      {(s.if || s.k === "pylon") && <em>{s.if ? say(s.if, lang) : t.items.sources.pylon}</em>}
+                    </div>
+                    {s.q && (s.q[1] > 1 || s.q[0] !== s.q[1]) && <span>{s.q[0] === s.q[1] ? `×${s.q[0]}` : `×${s.q[0]}–${s.q[1]}`}</span>}
+                    {s.r != null && s.r < 1 && <strong>{percent(s.r, locale)}</strong>}
+                    {s.p != null && <strong>{price(s)}</strong>}
+                  </li>
+                )}
+              />
+            </ul>
+            {ficha.sources.some((s) => MEASURED.has(s.k)) && <p className="tr-source-note">{t.items.sources.note}</p>}
           </section>
         )}
 

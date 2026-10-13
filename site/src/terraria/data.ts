@@ -50,6 +50,30 @@ export type Stats = Partial<
     Record<"consumable" | "expert" | "master" | "melee" | "ranged" | "magic" | "summon" | "sentry" | "accessory" | "vanity" | "material" | "autoReuse", boolean>
 >;
 
+/** De qué otra forma se consigue: lo que escribe `games/terraria/tools/sources.py`. */
+export interface Source {
+  k: "shop" | "travel" | "pylon" | "angler" | "chest" | "pot" | "tree" | "bag" | "crate" | "open" | "fish" | "extract" | "shimmer";
+  /** El NPC que lo vende (su nombre está en `npcs`). */
+  n?: number;
+  /** El objeto del que sale: la bolsa, la caja, lo que se pasa por el extractor o por el Shimmer. */
+  i?: number;
+  /** La estación (el extractor). */
+  t?: number;
+  /** El nombre del cofre. */
+  l?: [en: string, es: string];
+  /** El precio, en monedas de cobre; con `c`, en unidades de ese objeto. */
+  p?: number;
+  c?: number;
+  /** Cantidad mínima y máxima. */
+  q?: [min: number, max: number];
+  /** Probabilidad, de 0 a 1. */
+  r?: number;
+  /** La rareza de la captura, en pesca. */
+  tier?: "common" | "uncommon" | "rare" | "veryrare" | "legendary";
+  /** La condición, ya escrita. */
+  if?: [en: string, es: string];
+}
+
 export interface Ficha {
   id: number;
   slug: string;
@@ -69,6 +93,8 @@ export interface Ficha {
   uses: [out: number, need: number][];
   /** Quién lo suelta: enemigo, cantidad mínima y máxima, probabilidad (0–1) y modo ("n", "e", "m" o ""). */
   drops: [npc: number, min: number, max: number, rate: number, mode: string][];
+  /** Tiendas, cofres, bolsas de jefe, cajas, pesca, extractor y Shimmer. */
+  sources: Source[];
   refs: Record<string, Ref>;
   npcs: Record<string, [en: string, es: string]>;
 }

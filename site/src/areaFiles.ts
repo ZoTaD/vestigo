@@ -87,6 +87,7 @@ export const TERRARIA_TAB_FILES: Partial<Record<TerrariaSection, string>> = {
   bosses: "src/terraria/bosses/TerrariaBosses.tsx",
   npcs: "src/terraria/npcs/TerrariaNpcs.tsx",
   fishing: "src/terraria/fishing/TerrariaFishing.tsx",
+  classes: "src/terraria/classes/TerrariaClasses.tsx",
   patches: "src/terraria/patches/TerrariaPatches.tsx",
 };
 

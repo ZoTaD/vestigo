@@ -7,14 +7,14 @@ import type { TerrariaSection } from "./route";
 
 /** El orden de las pestañas en la regla de profundidad. */
 /** De arriba abajo, como las capas del mundo. */
-export const TERRARIA_TABS: TerrariaSection[] = ["home", "npcs", "fishing", "items", "crafting", "bosses", "patches"];
+export const TERRARIA_TABS: TerrariaSection[] = ["home", "classes", "npcs", "fishing", "items", "crafting", "bosses", "patches"];
 
 export type Kind = "melee" | "ranged" | "magic" | "summon" | "ammo" | "armor" | "accessory" | "tool" | "consumable" | "material" | "block" | "vanity" | "misc";
 export const KINDS: Kind[] = ["melee", "ranged", "magic", "summon", "ammo", "armor", "accessory", "tool", "consumable", "material", "block", "vanity", "misc"];
 
 type Seo = { title: string; description: string };
 /** Qué tiene una ficha: de ahí sale su título. */
-export type TerrariaHas = { craft?: boolean; uses?: boolean; drops?: boolean };
+export type TerrariaHas = { craft?: boolean; uses?: boolean; drops?: boolean; sources?: boolean };
 
 export interface TerrariaCopy {
   /** Cada pestaña: su nombre y la capa del mundo donde vive. */
@@ -100,6 +100,18 @@ export interface TerrariaCopy {
     needs: (n: number) => string;
     dropsTitle: string;
     dropModes: Record<string, string>;
+    sources: {
+      title: string;
+      kinds: Record<"shop" | "travel" | "pylon" | "angler" | "chest" | "pot" | "tree" | "bag" | "crate" | "open" | "fish" | "extract" | "shimmer", string>;
+      pots: string;
+      trees: string;
+      tiers: Record<"common" | "uncommon" | "rare" | "veryrare" | "legendary", string>;
+      anyCatch: string;
+      anyNpc: string;
+      pylon: string;
+      inStation: (station: string) => string;
+      note: string;
+    };
     openTree: string;
   };
   fishing: {
@@ -113,6 +125,22 @@ export interface TerrariaCopy {
     cratesHint: string;
     quest: (n: number) => string;
     questHint: string;
+    catches: (n: number) => string;
+    catchesHint: string;
+    anywhere: string;
+  };
+  classes: {
+    h1: string;
+    lede: string;
+    pick: string;
+    names: Record<"melee" | "ranged" | "magic" | "summon", string>;
+    about: Record<"melee" | "ranged" | "magic" | "summon", string>;
+    /** El título de un tramo; `boss` es el jefe hasta el que llega, si tiene. */
+    stage: (key: string, boss: string) => string;
+    weapons: string;
+    armor: string;
+    accessories: string;
+    note: string;
   };
   patches: {
     h1: string;
@@ -187,9 +215,9 @@ const RARITY_EN: Record<number, string> = { [-13]: "Master", [-12]: "Expert", [-
 const RARITY_ES: Record<number, string> = { [-13]: "Maestro", [-12]: "Experto", [-11]: "Misión", [-1]: "Gris", 0: "Blanco", 1: "Azul", 2: "Verde", 3: "Naranja", 4: "Rojo claro", 5: "Rosa", 6: "Violeta claro", 7: "Lima", 8: "Amarillo", 9: "Cian", 10: "Rojo", 11: "Violeta" };
 
 const EN: TerrariaCopy = {
-  tabs: { home: "Home", items: "Items", crafting: "Crafting tree", bosses: "Bosses", npcs: "NPCs", fishing: "Fishing", patches: "Patches" },
-  layers: { home: "Sky", npcs: "Surface", fishing: "Ocean", items: "Underground", crafting: "Caverns", bosses: "Underworld", patches: "Space" },
-  soonTabs: [["Sky", "Classes"]],
+  tabs: { home: "Home", items: "Items", crafting: "Crafting tree", bosses: "Bosses", npcs: "NPCs", fishing: "Fishing", classes: "Classes", patches: "Patches" },
+  layers: { home: "Sky", classes: "Floating islands", npcs: "Surface", fishing: "Ocean", items: "Underground", crafting: "Caverns", bosses: "Underworld", patches: "Space" },
+  soonTabs: [],
   soon: "Soon",
   seo: {
     home: {
@@ -201,8 +229,12 @@ const EN: TerrariaCopy = {
       description: "All Terraria 1.4.5 items by type and rarity: weapons, armor, accessories, tools and materials, each with its stats, recipe and where it drops.",
     },
     fishing: {
-      title: "Terraria Fishing: Poles, Bait Power, Crates and Quest Fish | Vestigo",
-      description: "Every Terraria fishing pole and bait with its fishing power, all the crates before and after Hardmode, and the quest fish the Angler asks for.",
+      title: "Terraria Fishing: What Bites in Each Biome, Poles, Bait and Crates | Vestigo",
+      description: "What you catch in each Terraria biome and layer, every fishing pole and bait with its power, all the crates and the Angler's quest fish.",
+    },
+    classes: {
+      title: "Terraria Class Setups: Best Weapons, Armor and Accessories by Stage | Vestigo",
+      description: "Melee, ranged, magic and summoner loadouts for Terraria 1.4.5, stage by stage: what to carry before each boss, from your first night to the Moon Lord.",
     },
     patches: {
       title: "Terraria Patch Notes: Every Version's Changelog | Vestigo",
@@ -222,10 +254,11 @@ const EN: TerrariaCopy = {
     },
   },
   detailSeo: (name, has = {}) => {
-    const topics = [...(has.craft ? ["recipe"] : []), "stats", ...(has.uses ? ["uses"] : []), ...(has.drops ? ["drops"] : [])];
+    const topics = [...(has.craft ? ["recipe"] : []), "stats", ...(has.uses ? ["uses"] : []), ...(has.drops ? ["drops"] : has.sources ? ["where to find it"] : [])];
     const parts = [
       ...(has.craft ? ["how to craft it and at which station"] : []),
       ...(has.drops ? ["which enemies drop it and how often"] : []),
+      ...(has.sources ? ["who sells it or where it is found"] : []),
       ...(has.uses ? ["what you can make with it"] : []),
     ];
     return {
@@ -255,6 +288,7 @@ const EN: TerrariaCopy = {
       { tab: "items", title: "Item list", text: "Everything by type and rarity, with stats, recipe and drops." },
       { tab: "bosses", title: "Boss checklist", text: "What to fight next, how to summon it and what it drops." },
       { tab: "npcs", title: "NPC happiness", text: "Who lives where, for the best prices and pylons." },
+      { tab: "classes", title: "Class setups", text: "What to carry with each class, stage by stage." },
     ],
     underground: "Underground",
     undergroundTag: (items) => `${items} items`,
@@ -318,6 +352,18 @@ const EN: TerrariaCopy = {
     needs: (n) => `needs ${n}`,
     dropsTitle: "Dropped by",
     dropModes: { n: "Classic", e: "Expert", m: "Master", "": "" },
+    sources: {
+      title: "Where to get it",
+      kinds: { shop: "Sold by", travel: "Sold by", pylon: "Sold by", angler: "Quest reward", chest: "In chests", pot: "Breaking", tree: "Shaking", bag: "Treasure bag", crate: "Fishing crate", open: "Inside", fish: "Fishing", extract: "Extracted from", shimmer: "Shimmer from" },
+      tiers: { common: "Common catch", uncommon: "Uncommon catch", rare: "Rare catch", veryrare: "Very rare catch", legendary: "Legendary catch" },
+      anyCatch: "Any catch",
+      anyNpc: "Any NPC",
+      pots: "Pots",
+      trees: "Trees",
+      pylon: "Living in its biome, with another NPC nearby",
+      inStation: (station) => `in the ${station}`,
+      note: "Chances for chests, pots, trees, bags, crates, quest rewards and the extractor are measured over thousands of tries, so they are close but not exact. A chest percentage is the share of chests of that type that hold the item.",
+    },
     openTree: "See the full crafting tree",
   },
   fishing: {
@@ -331,6 +377,27 @@ const EN: TerrariaCopy = {
     cratesHint: "After Hardmode starts, every crate you fish is its Hardmode version.",
     quest: (n) => `Quest fish (${n})`,
     questHint: "The Angler asks for one of these each day. They can't be sold or stored for later quests.",
+    catches: (n) => `What bites where (${n})`,
+    catchesHint: "Where each catch shows up. The tier is how good the roll has to be: more fishing power makes the rare ones bite more often.",
+    anywhere: "Anywhere",
+  },
+  classes: {
+    h1: "Terraria class setups",
+    lede: "What to carry with each class at every stage of the game: a handful of weapons, an armor set and the accessories that go with it.",
+    pick: "Class",
+    names: { melee: "Melee", ranged: "Ranged", magic: "Magic", summon: "Summoner" },
+    about: {
+      melee: "Swords, spears, yoyos and flails. The toughest class: the best defense, and you fight up close.",
+      ranged: "Bows, guns and launchers. Strong damage from far away, as long as you keep ammo on you.",
+      magic: "Staves, tomes and magic guns. Hits hard and wide, runs on mana and has the least defense.",
+      summon: "Minions and sentries fight for you while your whip marks the target. Low defense, so keep moving.",
+    },
+    stage: (key, boss) =>
+      ({ start: "Starting out", prehard: `Before the ${boss}`, premech: "Early Hardmode", preplant: `Before ${boss}`, pregolem: `Before ${boss}`, prelunar: `Before the ${boss}`, end: "Endgame" })[key] ?? key,
+    weapons: "Weapons",
+    armor: "Armor",
+    accessories: "Accessories",
+    note: "These are picks, not rankings: solid choices you can get at each stage. Early Hardmode is before the mechanical bosses; the stage before Plantera assumes all three are down.",
   },
   patches: {
     h1: "Terraria patch notes",
@@ -405,9 +472,9 @@ const EN: TerrariaCopy = {
 };
 
 const ES: TerrariaCopy = {
-  tabs: { home: "Portada", items: "Objetos", crafting: "Árbol de crafteo", bosses: "Jefes", npcs: "NPC", fishing: "Pesca", patches: "Parches" },
-  layers: { home: "Cielo", npcs: "Superficie", fishing: "Océano", items: "Subsuelo", crafting: "Cavernas", bosses: "Inframundo", patches: "Espacio" },
-  soonTabs: [["Cielo", "Clases"]],
+  tabs: { home: "Portada", items: "Objetos", crafting: "Árbol de crafteo", bosses: "Jefes", npcs: "NPC", fishing: "Pesca", classes: "Clases", patches: "Parches" },
+  layers: { home: "Cielo", classes: "Islas flotantes", npcs: "Superficie", fishing: "Océano", items: "Subsuelo", crafting: "Cavernas", bosses: "Inframundo", patches: "Espacio" },
+  soonTabs: [],
   soon: "Pronto",
   seo: {
     home: {
@@ -419,8 +486,12 @@ const ES: TerrariaCopy = {
       description: "Todos los objetos de Terraria 1.4.5 por tipo y rareza: armas, armaduras, accesorios, herramientas y materiales, con sus estadísticas, receta y botín.",
     },
     fishing: {
-      title: "Pesca en Terraria: cañas, cebos, cajas y peces de misión | Vestigo",
-      description: "Todas las cañas y cebos de Terraria con su poder de pesca, las cajas de antes y después del Hardmode, y los peces de misión que pide el Pescador.",
+      title: "Pesca en Terraria: qué pica en cada bioma, cañas, cebos y cajas | Vestigo",
+      description: "Qué se pesca en cada bioma y capa de Terraria, las cañas y cebos con su poder de pesca, todas las cajas y los peces de misión del Pescador.",
+    },
+    classes: {
+      title: "Clases de Terraria: mejores armas, armadura y accesorios por etapa | Vestigo",
+      description: "Equipo de cuerpo a cuerpo, a distancia, mago e invocador para Terraria 1.4.5, etapa por etapa: qué llevar antes de cada jefe, hasta el Señor de la Luna.",
     },
     patches: {
       title: "Parches de Terraria: las notas de cada versión | Vestigo",
@@ -440,10 +511,11 @@ const ES: TerrariaCopy = {
     },
   },
   detailSeo: (name, has = {}) => {
-    const topics = [...(has.craft ? ["receta"] : []), "estadísticas", ...(has.uses ? ["usos"] : []), ...(has.drops ? ["botín"] : [])];
+    const topics = [...(has.craft ? ["receta"] : []), "estadísticas", ...(has.uses ? ["usos"] : []), ...(has.drops ? ["botín"] : has.sources ? ["dónde se consigue"] : [])];
     const parts = [
       ...(has.craft ? ["cómo se fabrica y en qué estación"] : []),
       ...(has.drops ? ["qué enemigos lo sueltan y con qué probabilidad"] : []),
+      ...(has.sources ? ["quién lo vende o dónde aparece"] : []),
       ...(has.uses ? ["qué se puede fabricar con él"] : []),
     ];
     return {
@@ -473,6 +545,7 @@ const ES: TerrariaCopy = {
       { tab: "items", title: "Lista de objetos", text: "Todo por tipo y rareza, con estadísticas, receta y botín." },
       { tab: "bosses", title: "Lista de jefes", text: "Con quién pelear después, cómo invocarlo y qué suelta." },
       { tab: "npcs", title: "Felicidad de los NPC", text: "Quién vive dónde, para los mejores precios y pilones." },
+      { tab: "classes", title: "Clases", text: "Qué llevar con cada clase, etapa por etapa." },
     ],
     underground: "Subsuelo",
     undergroundTag: (items) => `${items} objetos`,
@@ -536,6 +609,18 @@ const ES: TerrariaCopy = {
     needs: (n) => `pide ${n}`,
     dropsTitle: "Lo sueltan",
     dropModes: { n: "Clásico", e: "Experto", m: "Maestro", "": "" },
+    sources: {
+      title: "Dónde se consigue",
+      kinds: { shop: "Lo vende", travel: "Lo vende", pylon: "Lo vende", angler: "Premio de misión", chest: "En cofres", pot: "Al romper", tree: "Al sacudir", bag: "Bolsa del tesoro", crate: "Caja de pesca", open: "Adentro de", fish: "Pesca", extract: "Se extrae de", shimmer: "Fulgor, a partir de" },
+      tiers: { common: "Captura común", uncommon: "Captura poco común", rare: "Captura rara", veryrare: "Captura muy rara", legendary: "Captura legendaria" },
+      anyCatch: "Cualquier captura",
+      anyNpc: "Cualquier NPC",
+      pots: "Vasijas",
+      trees: "Árboles",
+      pylon: "Que viva en su bioma, con otro NPC cerca",
+      inStation: (station) => `en ${station}`,
+      note: "Las probabilidades de cofres, vasijas, árboles, bolsas, cajas, premios de misión y extractor están medidas sobre miles de intentos: son cercanas, no exactas. El porcentaje de un cofre es qué parte de los cofres de ese tipo trae el objeto.",
+    },
     openTree: "Ver el árbol de crafteo completo",
   },
   fishing: {
@@ -549,6 +634,27 @@ const ES: TerrariaCopy = {
     cratesHint: "Cuando empieza el Hardmode, cada caja que pescás es su versión de Hardmode.",
     quest: (n) => `Peces de misión (${n})`,
     questHint: "El Pescador pide uno por día. No se pueden vender ni guardar para otra misión.",
+    catches: (n) => `Qué pica y dónde (${n})`,
+    catchesHint: "Dónde aparece cada captura. La rareza dice qué tan buena tiene que ser la tirada: con más poder de pesca, las raras pican más seguido.",
+    anywhere: "En cualquier lado",
+  },
+  classes: {
+    h1: "Clases de Terraria",
+    lede: "Qué llevar con cada clase en cada etapa del juego: unas pocas armas, una armadura y los accesorios que la acompañan.",
+    pick: "Clase",
+    names: { melee: "Cuerpo a cuerpo", ranged: "A distancia", magic: "Mago", summon: "Invocador" },
+    about: {
+      melee: "Espadas, lanzas, yoyós y manguales. La clase más resistente: la mejor defensa, y se pelea de cerca.",
+      ranged: "Arcos, armas de fuego y lanzadores. Mucho daño desde lejos, mientras no te quedes sin munición.",
+      magic: "Bastones, tomos y armas mágicas. Pega fuerte y en área, gasta maná y es la que menos defensa tiene.",
+      summon: "Los súbditos y centinelas pelean por vos mientras el látigo les marca a quién. Poca defensa: hay que moverse.",
+    },
+    stage: (key, boss) =>
+      ({ start: "Al empezar", prehard: `Antes del ${boss}`, premech: "Comienzo del Hardmode", preplant: `Antes de ${boss}`, pregolem: `Antes del ${boss}`, prelunar: `Antes del ${boss}`, end: "Final del juego" })[key] ?? key,
+    weapons: "Armas",
+    armor: "Armadura",
+    accessories: "Accesorios",
+    note: "Son elecciones, no un ranking: opciones sólidas que se consiguen en cada etapa. El comienzo del Hardmode es antes de los jefes mecánicos; la etapa anterior a Plantera supone a los tres vencidos.",
   },
   patches: {
     h1: "Parches de Terraria",

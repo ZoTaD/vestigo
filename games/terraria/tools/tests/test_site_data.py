@@ -164,7 +164,7 @@ class SiteData(unittest.TestCase):
 
     def test_meta(self):
         out = self.out
-        assert out["meta.json"] == {"version": "1.4.5.8", "generatedAt": "2026-10-12", "counts": {"items": 8, "recipes": 5, "craftable": 5, "drops": 2}}
+        assert out["meta.json"] == {"version": "1.4.5.8", "generatedAt": "2026-10-12", "counts": {"items": 8, "recipes": 5, "craftable": 5, "drops": 2, "sources": 0}}
 
 
     def test_tipos(self):

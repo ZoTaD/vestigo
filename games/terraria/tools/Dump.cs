@@ -169,6 +169,19 @@ static class Dump
 
     static int Main(string[] a)
     {
+        // `--server <TerrariaServer.exe> <XNA> <argumentos del servidor…>`: arranca el servidor adentro de este proceso,
+        // que sabe dónde está XNA. Lo usa `worlds.ps1` para generar mundos.
+        if (a[0] == "--server")
+        {
+            xna = a[2];
+            AppDomain.CurrentDomain.AssemblyResolve += Resolve;
+            game = Assembly.LoadFrom(a[1]);
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(a[1]));
+            string[] rest = new string[a.Length - 3];
+            Array.Copy(a, 3, rest, 0, rest.Length);
+            game.EntryPoint.Invoke(null, new object[] { rest });
+            return 0;
+        }
         xna = a[1];
         outDir = a[2];
         Directory.CreateDirectory(outDir);
@@ -636,7 +649,863 @@ static class Dump
             Write("fishing.json", b);
             Console.WriteLine("pesca: " + (quest == null ? 0 : quest.Length) + " peces de misión");
         });
+        Fishing(itemT);
+        Containers(main, itemT);
+        Shops(main, itemT);
+        Chests(main, itemT);
         return 0;
+    }
+
+    static object NewRandom(int seed) { return Activator.CreateInstance(T("Terraria.Utilities.UnifiedRandom"), seed); }
+
+    /// Qué se pesca y dónde: en 1.4.5 es una tabla de reglas (objetos, chance, condiciones y rareza), y sale tal cual.
+    /// El orden importa: el juego prueba las reglas de arriba abajo y se queda con la primera que sale.
+    static void Fishing(Type itemT)
+    {
+        Step("reglas de pesca", delegate
+        {
+            string ns = "Terraria.GameContent.FishDropRules.";
+            Type listT = T(ns + "FishDropRuleList"), popT = T(ns + "GameContentFishDropPopulator"), baseT = T(ns + "AFishDropRulePopulator"), ruleT = T(ns + "FishDropRule");
+            object list = Activator.CreateInstance(listT, true);
+            object pop = null;
+            foreach (ConstructorInfo c in popT.GetConstructors(All))
+            {
+                ParameterInfo[] ps = c.GetParameters();
+                object[] args = new object[ps.Length];
+                for (int k = 0; k < ps.Length; k++) args[k] = ps[k].ParameterType == listT ? list : null;
+                pop = c.Invoke(args);
+                break;
+            }
+            FieldInfo lf = baseT.GetField("_list", All);
+            if (lf.GetValue(pop) == null) lf.SetValue(pop, list); else list = lf.GetValue(pop);
+            Call(popT, "Populate", pop);
+
+            // Las condiciones y las rarezas no llevan nombre: se reconocen por ser el mismo objeto que un campo del armador.
+            Dictionary<object, string> names = new Dictionary<object, string>();
+            foreach (Type t in new[] { baseT, T(ns + "AFishDropRulePopulator+Rarity"), T(ns + "FishingConditions") })
+                foreach (FieldInfo f in t.GetFields(All))
+                {
+                    object v = f.IsStatic ? f.GetValue(null) : (t.IsInstanceOfType(pop) ? f.GetValue(pop) : null);
+                    if (v != null && !v.GetType().IsValueType && !(v is string) && !names.ContainsKey(v)) names[v] = f.Name;
+                }
+            Func<object, string> nameOf = delegate (object c)
+            {
+                if (c == null) return "";
+                if (names.ContainsKey(c)) return names[c];
+                FieldInfo ct = c.GetType().GetField("CheckedType", All);
+                return c.GetType().Name + (ct == null ? "" : ":" + ct.GetValue(c));
+            };
+
+            StringBuilder b = new StringBuilder("[");
+            int n = 0;
+            foreach (object rule in (IEnumerable)Get(listT, "_rules", list))
+            {
+                if (n++ > 0) b.Append(",\n");
+                b.Append("{\"items\":");
+                Value(b, Get(ruleT, "PossibleItems", rule) ?? new int[0], itemT);
+                b.Append(",\"num\":").Append(Get(ruleT, "ChanceNumerator", rule)).Append(",\"den\":").Append(Get(ruleT, "ChanceDenominator", rule));
+                b.Append(",\"rarity\":").Append(Esc(nameOf(Get(ruleT, "Rarity", rule)))).Append(",\"if\":[");
+                bool first = true;
+                IEnumerable conds = (IEnumerable)Get(ruleT, "Conditions", rule);
+                if (conds != null)
+                    foreach (object c in conds)
+                    {
+                        if (!first) b.Append(',');
+                        first = false;
+                        b.Append(Esc(nameOf(c)));
+                    }
+                b.Append("]}");
+            }
+            b.Append("]");
+            Write("fishrules.json", b);
+            Console.WriteLine("reglas de pesca: " + n);
+        });
+    }
+
+    /// Lo que sale al abrir bolsas de jefe, cajas de pesca y demás: en 1.4.5 es código, no una tabla. Se abre cada una
+    /// miles de veces con un jugador de mentira y se cuenta lo que cae. La semilla es fija: el volcado sale siempre igual.
+    static void Containers(Type main, Type itemT)
+    {
+        Step("bolsas y cajas", delegate
+        {
+            const int Opens = 20000;
+            Type playerT = T("Terraria.Player"), sets = T("Terraria.ID.ItemID+Sets");
+            main.GetField("rand", All).SetValue(null, NewRandom(20261012));
+            main.GetField("myPlayer", All).SetValue(null, 0);
+            Array players = (Array)Get(main, "player");
+            object player = players.GetValue(0);
+            SetAny(player, "active", true);
+            Step("mundo en modo difícil y experto", delegate
+            {
+                main.GetField("hardMode", All).SetValue(null, true);
+                PropertyInfo wf = main.GetProperty("ActiveWorldFileData", All);
+                FieldInfo wff = main.GetField("ActiveWorldFileData", All);
+                object data = wf != null ? wf.GetValue(null, null) : wff.GetValue(null);
+                if (data == null)
+                {
+                    data = Activator.CreateInstance(T("Terraria.IO.WorldFileData"), true);
+                    if (wf != null) wf.SetValue(null, data, null); else wff.SetValue(null, data);
+                }
+                main.GetProperty("GameMode", All).SetValue(null, 1, null);
+            });
+
+            Array world = (Array)Get(main, "item");
+            Type wT = world.GetType().GetElementType();
+            for (int i = 0; i < world.Length; i++) if (world.GetValue(i) == null) world.SetValue(Activator.CreateInstance(wT), i);
+            PropertyInfo activeP = wT.GetProperty("active", All), typeP = wT.GetProperty("type", All), stackP = wT.GetProperty("stack", All);
+            MethodInfo toAir = wT.GetMethod("TurnToAir", All);
+
+            int count = Convert.ToInt32(T("Terraria.ID.ItemID").GetField("Count").GetValue(null));
+            bool[] bossBag = (bool[])Get(sets, "BossBag"), crate = (bool[])Get(sets, "IsFishingCrate");
+            int[] extract = (int[])Get(sets, "ExtractinatorMode");
+            MethodInfo grant = T("Terraria.UI.ItemSlot").GetMethod("TryOpenContainer_GrantItems", All);
+            MethodInfo extractinate = null, setDefaults = null;
+            foreach (MethodInfo m in playerT.GetMethods(All)) if (m.Name == "DropItemFromExtractinator" && m.GetParameters().Length == 2) extractinate = m;
+            foreach (MethodInfo m in itemT.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                if (m.Name == "SetDefaults" && m.GetParameters().Length >= 1 && m.GetParameters()[0].ParameterType == typeof(int) && (setDefaults == null || m.GetParameters().Length < setDefaults.GetParameters().Length)) setDefaults = m;
+
+            // Lo que dejó abrir: va al inventario del jugador y, si no entra, al piso. Se cuenta y se vacía.
+            main.GetField("showItemText", All).SetValue(null, false);
+            Array inv = (Array)Get(playerT, "inventory", player);
+            FieldInfo typeF = itemT.GetField("type", All), stackF = itemT.GetField("stack", All);
+            MethodInfo airItem = itemT.GetMethod("TurnToAir", All);
+            Func<Dictionary<int, int[]>, bool> collect = delegate (Dictionary<int, int[]> seen)
+            {
+                Dictionary<int, int> got = new Dictionary<int, int>();
+                for (int s = 0; s < inv.Length; s++)
+                {
+                    object it = inv.GetValue(s);
+                    int type = (int)typeF.GetValue(it);
+                    if (type <= 0) continue;
+                    int c; got.TryGetValue(type, out c); got[type] = c + (int)stackF.GetValue(it);
+                    airItem.Invoke(it, airItem.GetParameters().Length == 0 ? null : new object[] { false });
+                }
+                for (int s = 0; s < world.Length; s++)
+                {
+                    object it = world.GetValue(s);
+                    if (!(bool)activeP.GetValue(it, null)) break;
+                    int type = (int)typeP.GetValue(it, null);
+                    int c; got.TryGetValue(type, out c); got[type] = c + (int)stackP.GetValue(it, null);
+                    toAir.Invoke(it, null);
+                }
+                if (seen != null)
+                    foreach (KeyValuePair<int, int> kv in got)
+                    {
+                        int[] row;
+                        if (!seen.TryGetValue(kv.Key, out row)) seen[kv.Key] = row = new[] { 0, kv.Value, kv.Value };
+                        row[0]++;
+                        if (kv.Value < row[1]) row[1] = kv.Value;
+                        if (kv.Value > row[2]) row[2] = kv.Value;
+                    }
+                return got.Count > 0;
+            };
+            for (int i = 0; i < inv.Length; i++) if (inv.GetValue(i) == null) inv.SetValue(Activator.CreateInstance(itemT), i);
+            collect(null);
+
+            StringBuilder b = new StringBuilder("{");
+            int done = 0;
+            Action<string, string, int, MethodInfo, object, object[]> run = delegate (string key, string kind, int opens, MethodInfo open, object target, object[] args)
+            {
+                Dictionary<int, int[]> seen = new Dictionary<int, int[]>();
+                int fails = 0;
+                for (int k = 0; k < opens; k++)
+                {
+                    try { open.Invoke(target, args); }
+                    catch (Exception e) { if (fails++ == 0) { Exception x = e; while (x.InnerException != null) x = x.InnerException; Console.WriteLine("   abrir " + key + ": " + x.Message + " " + (x.StackTrace ?? "").Split('\n')[0].Trim()); } if (fails > 20) break; }
+                    collect(seen);
+                }
+                if (done++ > 0) b.Append(",\n");
+                b.Append(Esc(key)).Append(":{\"kind\":").Append(Esc(kind)).Append(",\"opens\":").Append(opens).Append(",\"fails\":").Append(fails).Append(",\"items\":{");
+                bool first = true;
+                foreach (KeyValuePair<int, int[]> kv in seen)
+                {
+                    if (!first) b.Append(',');
+                    first = false;
+                    b.Append('"').Append(kv.Key).Append("\":[").Append(kv.Value[0]).Append(',').Append(kv.Value[1]).Append(',').Append(kv.Value[2]).Append(']');
+                }
+                b.Append("}}");
+            };
+            // Los cofres con candado piden la llave en el inventario: se abren con su método, sin pasar por ahí.
+            MethodInfo lockBox = playerT.GetMethod("OpenLockBox", All), shadowBox = playerT.GetMethod("OpenShadowLockbox", All);
+            FieldInfo crimsonF = T("Terraria.WorldGen").GetField("crimson", All);
+            // Dos pasadas: mundo con Corrupción y mundo con Carmesí (cambia, por ejemplo, la bolsa del Ojo de Cthulhu).
+            foreach (bool crimson in new[] { false, true })
+            {
+                crimsonF.SetValue(null, crimson);
+                for (int id = 1; id < count; id++)
+                {
+                    object item = Activator.CreateInstance(itemT);
+                    object[] sd = new object[setDefaults.GetParameters().Length];
+                    sd[0] = id;
+                    for (int k = 1; k < sd.Length; k++) { ParameterInfo p = setDefaults.GetParameters()[k]; sd[k] = p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null; }
+                    setDefaults.Invoke(item, sd);
+                    string key = id + (crimson ? ":crimson" : "");
+                    if (id == 3085 || id == 4879) { run(key, "open", Opens, id == 3085 ? lockBox : shadowBox, player, new object[] { id }); continue; }
+                    object[] args = new object[] { item, player };
+                    // ¿Se abre? Se prueba unas veces: lo que no es un contenedor no devuelve nada.
+                    bool opens = false;
+                    try { for (int k = 0; k < 3 && !opens; k++) { object r = grant.Invoke(null, args); opens = collect(null) || (r is bool && (bool)r); } }
+                    catch (Exception e) { collect(null); if (bossBag[id] || crate[id]) { Exception x = e; while (x.InnerException != null) x = x.InnerException; Console.WriteLine("   probar " + id + ": " + x.Message + " " + (x.StackTrace ?? "").Split('\n')[0].Trim()); } }
+                    if (opens) run(key, bossBag[id] ? "bag" : crate[id] ? "crate" : "open", Opens, grant, null, args);
+                }
+            }
+            crimsonF.SetValue(null, false);
+            // El extractor (219) y el de clorofita (642), con cada tabla de materiales.
+            MethodInfo use = null;
+            foreach (MethodInfo m in playerT.GetMethods(All)) if (m.Name == "ExtractinatorUse" && m.GetParameters().Length == 2) use = m;
+            HashSet<int> modes = new HashSet<int>();
+            for (int id = 1; id < count; id++) if (extract[id] >= 0) modes.Add(extract[id]);
+            foreach (int mode in modes)
+                foreach (int block in new[] { 219, 642 })
+                    run("x" + mode + "_" + block, "extract", 200000, use, player, new object[] { mode, block });
+            // Las recompensas del Pescador: dependen de cuántas misiones lleva hechas el jugador y de si es Hardmode.
+            Step("recompensas del Pescador", delegate
+            {
+                Type npcT = T("Terraria.NPC");
+                object angler = Activator.CreateInstance(npcT);
+                MethodInfo npcSet = null;
+                foreach (MethodInfo m in npcT.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                    if (m.Name == "SetDefaults" && m.GetParameters().Length >= 1 && m.GetParameters()[0].ParameterType == typeof(int)) npcSet = m;
+                object[] na = new object[npcSet.GetParameters().Length];
+                na[0] = 369;
+                for (int k = 1; k < na.Length; k++) { ParameterInfo p = npcSet.GetParameters()[k]; na[k] = p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null; }
+                npcSet.Invoke(angler, na);
+                MethodInfo reward = playerT.GetMethod("GetAnglerReward", All);
+                FieldInfo quests = playerT.GetField("anglerQuestsFinished", All), hard = main.GetField("hardMode", All);
+                int fish = ((int[])Get(main, "anglerQuestItemNetIDs"))[0];
+                foreach (bool hm in new[] { false, true })
+                {
+                    hard.SetValue(null, hm);
+                    // Las primeras 51 de a una (hay premios fijos en algunas, y otros que aparecen a partir de cierta cantidad).
+                    List<int> counts = new List<int>();
+                    for (int q = 1; q <= 51; q++) counts.Add(q);
+                    counts.AddRange(new[] { 75, 100, 125, 150, 151, 200 });
+                    foreach (int q in counts)
+                    {
+                        quests.SetValue(player, q);
+                        run("angler" + q + (hm ? ":hm" : ""), "angler", 5000, reward, player, new object[] { angler, fish });
+                    }
+                }
+                hard.SetValue(null, true);
+                quests.SetValue(player, 0);
+            });
+            // Qué objetos van al extractor y con qué tabla, y en qué se convierte cada objeto en el Shimmer.
+            b.Append(",\n\"extractMode\":{");
+            bool f1 = true;
+            for (int id = 1; id < count; id++) if (extract[id] >= 0) { if (!f1) b.Append(','); f1 = false; b.Append('"').Append(id).Append("\":").Append(extract[id]); }
+            b.Append("},\"shimmer\":{");
+            f1 = true;
+            int[] shimmer = (int[])Get(sets, "ShimmerTransformToItem");
+            for (int id = 1; id < count; id++) if (shimmer[id] > 0) { if (!f1) b.Append(','); f1 = false; b.Append('"').Append(id).Append("\":").Append(shimmer[id]); }
+            b.Append("}}");
+            Write("containers.json", b);
+            Console.WriteLine("bolsas y cajas: " + done);
+        });
+    }
+
+    /// Qué trae cada cofre: lo decide la generación del mundo, así que se abren los mundos que generó `worlds.ps1`
+    /// (cache/worlds/*.wld) con el lector del juego y se anota cada cofre con su tipo, su profundidad y su contenido.
+    static void Chests(Type main, Type itemT)
+    {
+        string dir = Path.Combine(outDir, "worlds");
+        if (!Directory.Exists(dir)) { Console.WriteLine("cofres: no hay mundos (correr worlds.ps1)"); return; }
+        Step("cofres", delegate
+        {
+            Type wf = T("Terraria.IO.WorldFile"), tileT = T("Terraria.Tile"), chestT = T("Terraria.Chest");
+            FieldInfo tileF = main.GetField("tile", All), typeF = tileT.GetField("type", All), frameF = tileT.GetField("frameX", All), wallF = tileT.GetField("wall", All);
+            FieldInfo itemsF = chestT.GetField("item", All), cx = chestT.GetField("x", All), cy = chestT.GetField("y", All);
+            FieldInfo itF = itemT.GetField("type", All), stF = itemT.GetField("stack", All);
+            MethodInfo load = wf.GetMethod("LoadWorld_Version2", All), locked = chestT.GetMethod("IsLocked", All, null, new[] { typeof(int), typeof(int) }, null);
+            // El lector limpia el mundo anterior antes de cargar, y eso pide el juego inicializado como lo deja el servidor.
+            Step("inicialización del juego", delegate
+            {
+                object instance = Get(main, "instance");
+                if (instance == null) instance = Activator.CreateInstance(main, true);
+                main.GetMethod("Initialize", All, null, Type.EmptyTypes, null).Invoke(instance, null);
+            });
+            StringBuilder b = new StringBuilder("[");
+            int total = 0;
+            string[] files = Directory.GetFiles(dir, "*.wld");
+            Array.Sort(files);
+            // Qué sale de romper cada vasija y de sacudir cada árbol: se prueba en cada mundo, recién cargado. Lo que
+            // cae queda en el piso (`Main.item`); se cuenta y se limpia.
+            Dictionary<string, int> tries = new Dictionary<string, int>();
+            Dictionary<string, Dictionary<int, int[]>> seen = new Dictionary<string, Dictionary<int, int[]>>();
+            int fails = 0, treeFails = 0;
+            Action breakables = delegate
+            {
+                Array tiles = (Array)tileF.GetValue(null);
+                Array world = (Array)Get(main, "item");
+                Type wT = world.GetType().GetElementType();
+                for (int i = 0; i < world.Length; i++) if (world.GetValue(i) == null) world.SetValue(Activator.CreateInstance(wT), i);
+                PropertyInfo activeP = wT.GetProperty("active", All), typeP = wT.GetProperty("type", All), stackP = wT.GetProperty("stack", All);
+                MethodInfo toAir = wT.GetMethod("TurnToAir", All);
+                FieldInfo frameYF = tileT.GetField("frameY", All);
+                Type wg = T("Terraria.WorldGen");
+                MethodInfo pot = wg.GetMethod("SpawnThingsFromPot", All), shake = wg.GetMethod("ShakeTree", All), resetShakes = wg.GetMethod("ResetTreeShakes", All);
+                MethodInfo kindOf = wg.GetMethod("GetTreeTypeAndTreeBottom", All);
+                main.GetField("rand", All).SetValue(null, NewRandom(20261013));
+                // Inicializado como servidor, el juego quiere avisar por red de cada objeto que cae: se lo deja en un jugador.
+                main.GetField("netMode", All).SetValue(null, 0);
+                int maxX = Convert.ToInt32(Get(main, "maxTilesX")), maxY = Convert.ToInt32(Get(main, "maxTilesY"));
+                // Las fiestas cambian lo que cae (y el juego las prende solo según la fecha de la máquina), y el Hardmode también.
+                foreach (string flag in new[] { "halloween", "xMas", "hardMode" }) main.GetField(flag, All).SetValue(null, false);
+                Action<string> collect = delegate (string group)
+                {
+                    int n; tries.TryGetValue(group, out n); tries[group] = n + 1;
+                    if (!seen.ContainsKey(group)) seen[group] = new Dictionary<int, int[]>();
+                    Dictionary<int, int> got = new Dictionary<int, int>();
+                    for (int k = 0; k < world.Length; k++)
+                    {
+                        object it = world.GetValue(k);
+                        if (!(bool)activeP.GetValue(it, null)) continue;
+                        int type = (int)typeP.GetValue(it, null);
+                        int c; got.TryGetValue(type, out c); got[type] = c + (int)stackP.GetValue(it, null);
+                        toAir.Invoke(it, null);
+                    }
+                    foreach (KeyValuePair<int, int> kv in got)
+                    {
+                        int[] row;
+                        if (!seen[group].TryGetValue(kv.Key, out row)) seen[group][kv.Key] = row = new[] { 0, kv.Value, kv.Value };
+                        row[0]++;
+                        if (kv.Value < row[1]) row[1] = kv.Value;
+                        if (kv.Value > row[2]) row[2] = kv.Value;
+                    }
+                };
+                // Lo que haya quedado tirado de antes no cuenta.
+                for (int k = 0; k < world.Length; k++) if ((bool)activeP.GetValue(world.GetValue(k), null)) toAir.Invoke(world.GetValue(k), null);
+                for (int x = 5; x < maxX - 5; x++)
+                    for (int y = 5; y < maxY - 5; y++)
+                    {
+                        object tile = tiles.GetValue(x, y);
+                        int type = Convert.ToInt32(typeF.GetValue(tile));
+                        if (type == 28 || type == 653)
+                        {
+                            // Una vasija ocupa 2×2: se toma su esquina de arriba a la izquierda. El estilo es la fila.
+                            int fx = Convert.ToInt32(frameF.GetValue(tile)), fy = Convert.ToInt32(frameYF.GetValue(tile));
+                            if (fx % 36 != 0 || fy % 36 != 0) continue;
+                            for (int k = 0; k < 4; k++)
+                            {
+                                try { pot.Invoke(null, new object[] { x, y, x, y, fy / 36 }); }
+                                catch (Exception e) { if (fails++ < 3) { Exception ex = e; while (ex.InnerException != null) ex = ex.InnerException; Console.WriteLine("   vasija: " + ex.Message + " " + string.Join(" < ", (ex.StackTrace ?? "").Split((char)10)).Replace("   at ", "")); } }
+                                collect("pot:" + (fy / 36));
+                            }
+                        }
+                        else if (type == 5 || type == 323 || type == 596 || type == 616 || type == 634 || (type >= 583 && type <= 589))
+                        {
+                            // Sólo la copa: el bloque de arriba ya no es árbol. El grupo es la clase de árbol, según el juego.
+                            if (Convert.ToInt32(typeF.GetValue(tiles.GetValue(x, y - 1))) == type) continue;
+                            string ground = "?";
+                            try { ground = Convert.ToString(kindOf.Invoke(null, new object[] { x, y, 0, 0 })); } catch (Exception) { }
+                            for (int k = 0; k < 6; k++)
+                            {
+                                try { resetShakes.Invoke(null, null); shake.Invoke(null, new object[] { x, y }); }
+                                catch (Exception e) { if (treeFails++ < 3) { Exception ex = e; while (ex.InnerException != null) ex = ex.InnerException; Console.WriteLine("   árbol: " + ex.Message + " " + (ex.StackTrace ?? "").Split((char)10)[0].Trim()); } }
+                                collect("tree:" + type + ":" + ground);
+                            }
+                        }
+                    }
+            };
+            foreach (string file in files)
+            {
+                Array tiles = (Array)tileF.GetValue(null);
+                int w = tiles.GetLength(0), h = tiles.GetLength(1);
+                for (int x = 0; x < w; x++) for (int y = 0; y < h; y++) if (tiles.GetValue(x, y) == null) tiles.SetValue(Activator.CreateInstance(tileT), x, y);
+                Array chests = (Array)Get(main, "chest");
+                for (int i = 0; i < chests.Length; i++) chests.SetValue(null, i);
+                // Lo que viene después de los cofres en el archivo (carteles, NPC, entidades) puede fallar sin mundo
+                // armado: para entonces los cofres ya están leídos.
+                using (BinaryReader reader = new BinaryReader(File.OpenRead(file)))
+                    Step("lectura de " + Path.GetFileName(file) + " (lo que sigue a los cofres puede fallar sin consecuencias)", delegate { load.Invoke(null, new object[] { reader }); });
+                double surface = Convert.ToDouble(Get(main, "worldSurface")), rock = Convert.ToDouble(Get(main, "rockLayer"));
+                int hell = Convert.ToInt32(Get(main, "UnderworldLayer")), maxX = Convert.ToInt32(Get(main, "maxTilesX"));
+                int n = 0;
+                foreach (object chest in chests)
+                {
+                    if (chest == null) continue;
+                    int x = (int)cx.GetValue(chest), y = (int)cy.GetValue(chest);
+                    object tile = tiles.GetValue(x, y);
+                    if (total++ > 0) b.Append(",\n");
+                    n++;
+                    b.Append("{\"world\":").Append(Esc(Path.GetFileNameWithoutExtension(file)))
+                        .Append(",\"tile\":").Append(Convert.ToInt32(typeF.GetValue(tile)))
+                        .Append(",\"style\":").Append(Convert.ToInt32(frameF.GetValue(tile)) / 36)
+                        .Append(",\"wall\":").Append(Convert.ToInt32(wallF.GetValue(tile)))
+                        .Append(",\"locked\":").Append((bool)locked.Invoke(null, new object[] { x, y }) ? "true" : "false")
+                        // 0 cielo y superficie, 1 subsuelo, 2 cavernas, 3 inframundo
+                        .Append(",\"layer\":").Append(y >= hell ? 3 : y >= rock ? 2 : y >= surface ? 1 : 0)
+                        .Append(",\"edge\":").Append(x < 380 || x > maxX - 380 ? "true" : "false")
+                        .Append(",\"items\":[");
+                    bool first = true;
+                    foreach (object it in (Array)itemsF.GetValue(chest))
+                    {
+                        if (it == null) continue;
+                        int type = (int)itF.GetValue(it);
+                        if (type <= 0) continue;
+                        if (!first) b.Append(',');
+                        first = false;
+                        b.Append('[').Append(type).Append(',').Append(stF.GetValue(it)).Append(']');
+                    }
+                    b.Append("]}");
+                }
+                Console.WriteLine("   " + Path.GetFileName(file) + ": " + n + " cofres");
+                Step("vasijas y árboles de " + Path.GetFileName(file), delegate { breakables(); });
+            }
+            b.Append("]");
+            Write("chests.json", b);
+
+            StringBuilder wb = new StringBuilder("{");
+            bool f0 = true;
+            foreach (KeyValuePair<string, Dictionary<int, int[]>> g in seen)
+            {
+                if (!f0) wb.Append(",\n");
+                f0 = false;
+                wb.Append(Esc(g.Key)).Append(":{\"tries\":").Append(tries[g.Key]).Append(",\"items\":{");
+                bool f2 = true;
+                foreach (KeyValuePair<int, int[]> kv in g.Value)
+                {
+                    if (!f2) wb.Append(',');
+                    f2 = false;
+                    wb.Append('"').Append(kv.Key).Append("\":[").Append(kv.Value[0]).Append(',').Append(kv.Value[1]).Append(',').Append(kv.Value[2]).Append(']');
+                }
+                wb.Append("}}");
+            }
+            wb.Append("}");
+            Write("breakables.json", wb);
+            Console.WriteLine("vasijas y árboles: " + seen.Count + " grupos, " + fails + " y " + treeFails + " fallos");
+
+            // Qué objeto deja cada tipo de cofre al romperlo: de ahí sale su nombre.
+            StringBuilder nb = new StringBuilder("{");
+            MethodInfo drop = T("Terraria.WorldGen").GetMethod("GetItemDrop_Chests", All, null, new[] { typeof(int), typeof(bool) }, null);
+            bool f1 = true;
+            foreach (bool second in new[] { false, true })
+                for (int style = 0; style < 60; style++)
+                {
+                    int item = 0;
+                    try { item = (int)drop.Invoke(null, new object[] { style, second }); } catch (Exception) { }
+                    if (item <= 0) continue;
+                    if (!f1) nb.Append(',');
+                    f1 = false;
+                    nb.Append('"').Append(second ? 467 : 21).Append(':').Append(style).Append("\":").Append(item);
+                }
+            nb.Append("}");
+            Write("chestnames.json", nb);
+            Console.WriteLine("cofres: " + total + " en " + files.Length + " mundos");
+        });
+    }
+
+    /// Qué vende cada NPC. La tienda es código (`Chest.SetupShop`), así que se le pregunta: primero con el mundo recién
+    /// creado, después prendiendo de a una cada condición (jefe vencido, bioma, fase de la luna…). Lo que aparece o
+    /// desaparece en cada caso dice de qué depende. `shops_data.py` lo traduce.
+    static void Shops(Type main, Type itemT)
+    {
+        Step("tiendas", delegate
+        {
+            Type npcT = T("Terraria.NPC"), chestT = T("Terraria.Chest"), playerT = T("Terraria.Player");
+            main.GetField("rand", All).SetValue(null, NewRandom(20261012));
+            main.GetField("myPlayer", All).SetValue(null, 0);
+            object player = ((Array)Get(main, "player")).GetValue(0);
+            Array npcs = (Array)Get(main, "npc");
+            for (int i = 0; i < npcs.Length; i++) npcs.SetValue(Activator.CreateInstance(npcT), i);
+            // La Zoóloga mira cuánto del Bestiario está completo: sin mundo no hay Bestiario, se arma uno.
+            FieldInfo dbF = main.GetField("BestiaryDB", All), trackF = main.GetField("BestiaryTracker", All);
+            bool bestiary = Step("bestiario", delegate
+            {
+                Step("muestras de contenido", delegate { Call(T("Terraria.ID.ContentSamples"), "Initialize", null); });
+                object db = Activator.CreateInstance(dbF.FieldType, true);
+                Type popT = T("Terraria.GameContent.Bestiary.BestiaryDatabaseNPCsPopulator");
+                Call(popT, "Populate", Activator.CreateInstance(popT, true), db);
+                dbF.SetValue(null, db);
+                trackF.SetValue(null, Activator.CreateInstance(trackF.FieldType, true));
+            });
+            if (!bestiary)
+            {
+                if (dbF.GetValue(null) == null) dbF.SetValue(null, Activator.CreateInstance(dbF.FieldType, true));
+                if (trackF.GetValue(null) == null) trackF.SetValue(null, Activator.CreateInstance(trackF.FieldType, true));
+            }
+
+            // Las condiciones: nombre → cómo se prende y se apaga.
+            List<string> names = new List<string>();
+            Dictionary<string, Action<bool>> set = new Dictionary<string, Action<bool>>();
+            Action<string, Action<bool>> add = delegate (string n, Action<bool> s) { names.Add(n); set[n] = s; };
+            foreach (FieldInfo f0 in npcT.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
+            {
+                FieldInfo f = f0;
+                if (f.FieldType == typeof(bool) && !f.IsLiteral && !f.IsInitOnly) add("NPC." + f.Name, delegate (bool on) { f.SetValue(null, on); });
+            }
+            System.Text.RegularExpressions.Regex mainOk = new System.Text.RegularExpressions.Regex("^(hardMode|bloodMoon|eclipse|xMas|halloween|pumpkinMoon|snowMoon|raining|slimeRain|.*World)$");
+            foreach (FieldInfo f0 in main.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
+            {
+                FieldInfo f = f0;
+                if (f.FieldType == typeof(bool) && !f.IsLiteral && !f.IsInitOnly && mainOk.IsMatch(f.Name)) add("Main." + f.Name, delegate (bool on) { f.SetValue(null, on); });
+            }
+            FieldInfo day = main.GetField("dayTime", All);
+            add("night", delegate (bool on) { day.SetValue(null, !on); });
+            FieldInfo crimson = T("Terraria.WorldGen").GetField("crimson", All);
+            add("WorldGen.crimson", delegate (bool on) { crimson.SetValue(null, on); });
+            foreach (FieldInfo f0 in T("Terraria.GameContent.Events.DD2Event").GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
+            {
+                FieldInfo f = f0;
+                if (f.FieldType == typeof(bool) && !f.IsLiteral && !f.IsInitOnly && f.Name.StartsWith("Downed")) add("DD2." + f.Name, delegate (bool on) { f.SetValue(null, on); });
+            }
+            foreach (FieldInfo f0 in T("Terraria.GameContent.Events.BirthdayParty").GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
+            {
+                FieldInfo f = f0;
+                if (f.FieldType == typeof(bool) && !f.IsLiteral && !f.IsInitOnly && f.Name.Contains("Party")) add("Party." + f.Name, delegate (bool on) { f.SetValue(null, on); });
+            }
+            foreach (PropertyInfo p0 in playerT.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                PropertyInfo p = p0;
+                if (p.PropertyType == typeof(bool) && p.CanWrite && p.Name.StartsWith("Zone")) add("Player." + p.Name, delegate (bool on) { p.SetValue(player, on, null); });
+            }
+            FieldInfo golf = playerT.GetField("golferScoreAccumulated", All);
+            if (golf != null) add("golf", delegate (bool on) { golf.SetValue(player, on ? 100000 : 0); });
+            // Cada NPC del pueblo presente en el mundo: algunos venden cosas según quién más vive ahí.
+            int npcCount = Convert.ToInt32(T("Terraria.ID.NPCID").GetField("Count").GetValue(null));
+            MethodInfo npcSet = null;
+            foreach (MethodInfo m in npcT.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                if (m.Name == "SetDefaults" && m.GetParameters().Length >= 1 && m.GetParameters()[0].ParameterType == typeof(int)) npcSet = m;
+            int slots = 5;
+            for (int t0 = 1; t0 < npcCount; t0++)
+            {
+                int t = t0, slot = slots;
+                object probe = Activator.CreateInstance(npcT);
+                try
+                {
+                    object[] args = new object[npcSet.GetParameters().Length];
+                    args[0] = t;
+                    for (int k = 1; k < args.Length; k++) { ParameterInfo p = npcSet.GetParameters()[k]; args[k] = p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null; }
+                    npcSet.Invoke(probe, args);
+                    if (!(bool)Get(npcT, "townNPC", probe)) continue;
+                }
+                catch (Exception) { continue; }
+                slots++;
+                add("npc:" + t, delegate (bool on)
+                {
+                    object n = Activator.CreateInstance(npcT);
+                    if (on)
+                    {
+                        object[] args = new object[npcSet.GetParameters().Length];
+                        args[0] = t;
+                        for (int k = 1; k < args.Length; k++) { ParameterInfo p = npcSet.GetParameters()[k]; args[k] = p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null; }
+                        npcSet.Invoke(n, args);
+                        SetAny(n, "active", true);
+                    }
+                    npcs.SetValue(n, slot);
+                });
+            }
+
+            FieldInfo moon = main.GetField("moonPhase", All);
+            FieldInfo itemsF = chestT.GetField("item", All), typeF = itemT.GetField("type", All), curF = itemT.GetField("shopSpecialCurrency", All);
+            MethodInfo storeValue = itemT.GetMethod("GetStoreValue", All);
+            Dictionary<int, Dictionary<int, long[]>> prices = new Dictionary<int, Dictionary<int, long[]>>();
+            int errors = 0;
+            Func<int, List<int>> stock = delegate (int shop)
+            {
+                object chest = Call(chestT, "CreateShop", null);
+                List<int> got = new List<int>();
+                try { Call(chestT, "SetupShop", chest, shop); }
+                catch (Exception e) { if (errors++ < 6) { Exception x = e; while (x.InnerException != null) x = x.InnerException; Console.WriteLine("   tienda " + shop + ": " + x.Message + " " + (x.StackTrace ?? "").Split('\n')[0].Trim()); } }
+                foreach (object it in (Array)itemsF.GetValue(chest))
+                {
+                    if (it == null) continue;
+                    int type = (int)typeF.GetValue(it);
+                    if (type <= 0) continue;
+                    got.Add(type);
+                    if (!prices.ContainsKey(shop)) prices[shop] = new Dictionary<int, long[]>();
+                    if (!prices[shop].ContainsKey(type)) prices[shop][type] = new[] { Convert.ToInt64(storeValue.Invoke(it, null)), Convert.ToInt64(curF.GetValue(it)) };
+                }
+                return got;
+            };
+
+            const int MaxShop = 30;
+            Action reset = delegate { foreach (string n in names) set[n](false); moon.SetValue(null, 0); };
+            StringBuilder b = new StringBuilder("{\"states\":{");
+            int states = 0;
+            Action<string> snap = delegate (string state)
+            {
+                if (states++ > 0) b.Append(",\n");
+                b.Append(Esc(state)).Append(":{");
+                bool first = true;
+                for (int shop = 1; shop <= MaxShop; shop++)
+                {
+                    List<int> got = stock(shop);
+                    if (got.Count == 0) continue;
+                    if (!first) b.Append(',');
+                    first = false;
+                    b.Append('"').Append(shop).Append("\":[");
+                    for (int k = 0; k < got.Count; k++) { if (k > 0) b.Append(','); b.Append(got[k]); }
+                    b.Append(']');
+                }
+                b.Append('}');
+            };
+            reset();
+            snap("base");
+            foreach (string n in names)
+            {
+                reset();
+                try { set[n](true); } catch (Exception) { Console.WriteLine("   no se pudo prender " + n); continue; }
+                snap(n);
+            }
+            for (int phase = 1; phase < 8; phase++) { reset(); moon.SetValue(null, phase); snap("moon:" + phase); }
+            // Los pilones: con dos NPC en el pueblo, qué pilón aparece en cada bioma (y sin bioma).
+            {
+                List<string> town = names.FindAll(delegate (string n) { return n.StartsWith("npc:"); });
+                List<string> zones = names.FindAll(delegate (string n) { return n.StartsWith("Player.Zone"); });
+                zones.Insert(0, "");
+                foreach (string zone in zones)
+                {
+                    reset();
+                    set[town[0]](true);
+                    set[town[1]](true);
+                    if (zone != "") set[zone](true);
+                    snap("pylon:" + zone);
+                }
+            }
+            for (int phase0 = 1; phase0 < 8; phase0++) { int phase = phase0; add("moon:" + phase, delegate (bool on) { if (on) moon.SetValue(null, phase); }); }
+            // Todo prendido a la vez (de día y de noche, en cada fase de la luna): lo que sólo aparece acá depende de más
+            // de una condición.
+            for (int phase = 0; phase < 8; phase++)
+                foreach (bool night in new[] { false, true })
+                    foreach (bool crim in new[] { false, true })
+                    {
+                        foreach (string n in names) if (!n.StartsWith("npc:") && !n.StartsWith("moon:") && !n.EndsWith("World")) try { set[n](true); } catch (Exception) { }
+                        set["night"](night);
+                        set["WorldGen.crimson"](crim);
+                        moon.SetValue(null, phase);
+                        snap("all:" + phase + (night ? ":night" : ":day") + (crim ? ":crimson" : ":corruption"));
+                    }
+            reset();
+            // De a dos: sólo se anota lo que no aparece con el mundo recién creado ni con ninguna de las dos por separado.
+            b.Append("},\n\"pairs\":[");
+            {
+                Dictionary<string, HashSet<int>[]> alone = new Dictionary<string, HashSet<int>[]>();
+                Func<HashSet<int>[]> all = delegate
+                {
+                    HashSet<int>[] r = new HashSet<int>[MaxShop + 1];
+                    for (int shop = 1; shop <= MaxShop; shop++) r[shop] = new HashSet<int>(stock(shop));
+                    return r;
+                };
+                HashSet<int>[] zero = all();
+                foreach (string n in names) { reset(); set[n](true); alone[n] = all(); }
+                int found = 0;
+                HashSet<long> pairFound = new HashSet<long>();
+                StringBuilder minus = new StringBuilder();
+                System.Text.RegularExpressions.Regex when = new System.Text.RegularExpressions.Regex("^(night|moon:.*|Main.bloodMoon|Main.eclipse)$");
+                for (int i = 0; i < names.Count; i++)
+                    for (int j = i + 1; j < names.Count; j++)
+                    {
+                        string x = names[i], y = names[j];
+                        if (x.StartsWith("moon:") && y.StartsWith("moon:")) continue;
+                        reset();
+                        set[x](true);
+                        set[y](true);
+                        for (int shop = 1; shop <= MaxShop; shop++)
+                        {
+                            HashSet<int> cur = new HashSet<int>(stock(shop));
+                            foreach (int type in cur)
+                                if (!zero[shop].Contains(type) && !alone[x][shop].Contains(type) && !alone[y][shop].Contains(type))
+                                {
+                                    pairFound.Add(shop * 100000L + type);
+                                    if (found++ > 0) b.Append(",\n");
+                                    b.Append('[').Append(shop).Append(',').Append(type).Append(',').Append(Esc(x)).Append(',').Append(Esc(y)).Append(']');
+                                }
+                            // Y al revés: lo que una condición trae y la hora, la luna o un evento le sacan.
+                            foreach (string[] xy in new[] { new[] { x, y }, new[] { y, x } })
+                                if (when.IsMatch(xy[1]) && !when.IsMatch(xy[0]))
+                                    foreach (int type in alone[xy[0]][shop])
+                                        if (!zero[shop].Contains(type) && !cur.Contains(type))
+                                            minus.Append(minus.Length > 0 ? ",\n" : "").Append('[').Append(shop).Append(',').Append(type).Append(',').Append(Esc(xy[0])).Append(',').Append(Esc(xy[1])).Append(']');
+                        }
+                    }
+                b.Append("],\n\"minus\":[").Append(minus);
+                reset();
+
+                // Lo que pide tres o más: se parte de todo prendido y se apaga de a una; lo que no se puede apagar sin
+                // que el objeto desaparezca es lo que hace falta.
+                b.Append("],\n\"reduced\":[");
+                HashSet<long> explained = new HashSet<long>();
+                for (int shop = 1; shop <= MaxShop; shop++)
+                {
+                    foreach (int type in zero[shop]) explained.Add(shop * 100000L + type);
+                    foreach (string n in names) foreach (int type in alone[n][shop]) explained.Add(shop * 100000L + type);
+                }
+                foreach (long key in pairFound) explained.Add(key);
+                int reduced = 0;
+                foreach (bool night in new[] { false, true })
+                    foreach (bool crim in new[] { false, true })
+                        for (int phase = 0; phase < 8; phase++)
+                        {
+                            Action everything = delegate
+                            {
+                                reset();
+                                foreach (string n in names) if (!n.StartsWith("npc:") && !n.StartsWith("moon:") && !n.EndsWith("World")) set[n](true);
+                                set["night"](night);
+                                set["WorldGen.crimson"](crim);
+                                moon.SetValue(null, phase);
+                            };
+                            everything();
+                            for (int shop = 1; shop <= MaxShop; shop++)
+                                foreach (int type in stock(shop))
+                                {
+                                    if (!explained.Add(shop * 100000L + type)) continue;
+                                    List<string> on = new List<string>();
+                                    foreach (string n in names) if (!n.StartsWith("npc:") && !n.StartsWith("moon:") && !n.EndsWith("World") && (n != "night" || night) && (n != "WorldGen.crimson" || crim)) on.Add(n);
+                                    List<string> need = new List<string>();
+                                    foreach (string n in new List<string>(on))
+                                    {
+                                        set[n](false);
+                                        if (stock(shop).Contains(type)) on.Remove(n);
+                                        else { set[n](true); need.Add(n); }
+                                    }
+                                    // ¿Importa la fase de la luna?
+                                    List<int> phases = new List<int>();
+                                    for (int ph = 0; ph < 8; ph++) { moon.SetValue(null, ph); if (stock(shop).Contains(type)) phases.Add(ph); }
+                                    if (reduced++ > 0) b.Append(",\n");
+                                    b.Append('[').Append(shop).Append(',').Append(type).Append(",[");
+                                    for (int k = 0; k < need.Count; k++) { if (k > 0) b.Append(','); b.Append(Esc(need[k])); }
+                                    b.Append("],[");
+                                    for (int k = 0; k < phases.Count; k++) { if (k > 0) b.Append(','); b.Append(phases[k]); }
+                                    b.Append("]]");
+                                    everything();
+                                }
+                        }
+                reset();
+            }
+            // La Zoóloga: se va completando el Bestiario de a un bicho y se anota con qué porcentaje aparece cada cosa.
+            b.Append("],\n\"bestiary\":[");
+            if (bestiary)
+                Step("barrido del bestiario", delegate
+                {
+                    object tracker = trackF.GetValue(null);
+                    Type tt = tracker.GetType();
+                    object kills = Get(tt, "Kills", tracker), sights = Get(tt, "Sights", tracker), chats = Get(tt, "Chats", tracker);
+                    HashSet<string> done = new HashSet<string>();
+                    HashSet<int> have = new HashSet<int>();
+                    int rows = 0;
+                    reset();
+                    for (int t = -66; t < npcCount; t++)
+                    {
+                        if (t != -66)
+                        {
+                            if (t == 0) continue;
+                            string id;
+                            try
+                            {
+                                object n = Activator.CreateInstance(npcT);
+                                object[] args = new object[npcSet.GetParameters().Length];
+                                args[0] = t;
+                                for (int k = 1; k < args.Length; k++) { ParameterInfo p = npcSet.GetParameters()[k]; args[k] = p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null; }
+                                npcSet.Invoke(n, args);
+                                id = (string)Call(npcT, "GetBestiaryCreditId", n);
+                            }
+                            catch (Exception) { continue; }
+                            if (id == null || !done.Add(id)) continue;
+                            Call(kills.GetType(), "SetKillCountDirectly", kills, id, 9999);
+                            Call(sights.GetType(), "SetWasSeenDirectly", sights, id);
+                            Call(chats.GetType(), "SetWasChatWithDirectly", chats, id);
+                        }
+                        List<int> got = stock(23);
+                        bool news = false;
+                        foreach (int type in got) if (have.Add(type)) news = true;
+                        if (!news) continue;
+                        object report = Call(main, "GetBestiaryProgressReport", null);
+                        if (rows++ > 0) b.Append(",\n");
+                        b.Append('[').Append(Prim(Get(report.GetType(), "CompletionPercent", report))).Append(",[");
+                        for (int k = 0; k < got.Count; k++) { if (k > 0) b.Append(','); b.Append(got[k]); }
+                        b.Append("]]");
+                    }
+                    trackF.SetValue(null, Activator.CreateInstance(trackF.FieldType, true));
+                });
+            b.Append("],\n\"prices\":{");
+            bool f1 = true;
+            foreach (KeyValuePair<int, Dictionary<int, long[]>> s in prices)
+            {
+                if (!f1) b.Append(",\n");
+                f1 = false;
+                b.Append('"').Append(s.Key).Append("\":{");
+                bool f2 = true;
+                foreach (KeyValuePair<int, long[]> kv in s.Value)
+                {
+                    if (!f2) b.Append(',');
+                    f2 = false;
+                    b.Append('"').Append(kv.Key).Append("\":[").Append(kv.Value[0]).Append(',').Append(kv.Value[1]).Append(']');
+                }
+                b.Append('}');
+            }
+            b.Append("}");
+
+            // El Mercader ambulante trae una selección al azar: se le arma la tienda miles de veces en cada estado.
+            Step("mercader ambulante", delegate
+            {
+                const int Visits = 4000;
+                FieldInfo travelF = main.GetField("travelShop", All);
+                b.Append(",\n\"travel\":{\"visits\":").Append(Visits).Append(",\"states\":{");
+                int tstates = 0;
+                HashSet<int> everSeen = new HashSet<int>(), allSeen = new HashSet<int>();
+                Action<string> visit = delegate (string state)
+                {
+                    Dictionary<int, int> seen = new Dictionary<int, int>();
+                    for (int k = 0; k < Visits; k++)
+                    {
+                        Call(chestT, "SetupTravelShop", null);
+                        foreach (int type in (int[])travelF.GetValue(null))
+                            if (type > 0) { int c; seen.TryGetValue(type, out c); seen[type] = c + 1; }
+                    }
+                    if (tstates++ > 0) b.Append(",\n");
+                    b.Append(Esc(state)).Append(":{");
+                    bool first = true;
+                    foreach (KeyValuePair<int, int> kv in seen) { if (!first) b.Append(','); first = false; b.Append('"').Append(kv.Key).Append("\":").Append(kv.Value); (state == "all" ? allSeen : everSeen).Add(kv.Key); }
+                    b.Append('}');
+                };
+                reset();
+                visit("base");
+                foreach (string n in names)
+                {
+                    if (n.StartsWith("npc:") || n.StartsWith("Player.") || n.StartsWith("moon:")) continue;
+                    reset();
+                    set[n](true);
+                    visit(n);
+                }
+                foreach (string n in names) if (!n.StartsWith("npc:") && !n.StartsWith("moon:") && !n.EndsWith("World")) set[n](true);
+                visit("all");
+                b.Append("},\"reduced\":{");
+                {
+                    HashSet<int> known = new HashSet<int>(everSeen);
+                    Func<int, int, bool> shows = delegate (int type, int tries)
+                    {
+                        for (int k = 0; k < tries; k++)
+                        {
+                            Call(chestT, "SetupTravelShop", null);
+                            if (Array.IndexOf((int[])travelF.GetValue(null), type) >= 0) return true;
+                        }
+                        return false;
+                    };
+                    int n2 = 0;
+                    foreach (int type in new List<int>(allSeen))
+                    {
+                        if (known.Contains(type)) continue;
+                        List<string> need = new List<string>();
+                        foreach (string n in names)
+                        {
+                            if (n.StartsWith("npc:") || n.StartsWith("moon:") || n.StartsWith("Player.") || n.EndsWith("World")) continue;
+                            set[n](false);
+                            if (!shows(type, 3000)) { set[n](true); need.Add(n); }
+                        }
+                        if (n2++ > 0) b.Append(',');
+                        b.Append('"').Append(type).Append("\":[");
+                        for (int k = 0; k < need.Count; k++) { if (k > 0) b.Append(','); b.Append(Esc(need[k])); }
+                        b.Append(']');
+                        foreach (string n in names) if (!n.StartsWith("npc:") && !n.StartsWith("moon:") && !n.EndsWith("World")) set[n](true);
+                    }
+                }
+                reset();
+                b.Append("}}");
+            });
+            b.Append("}");
+            Write("shops.json", b);
+            Console.WriteLine("tiendas: " + prices.Count + " con mercadería, " + names.Count + " condiciones, " + errors + " errores");
+        });
     }
 
     /// Pone un campo o una propiedad, se llame como se llame en esta versión del juego, buscando por la jerarquía.

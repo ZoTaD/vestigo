@@ -258,6 +258,8 @@ export function ogImageUrl(route: Route, latestEdition?: string, available: (pat
   if (route.view === "d2r") return `${SITE_ORIGIN}/d2r/og.jpg`;
   // Rust tiene la suya (un cuadro del juego con el título, `games/rust/tools/ui.py`).
   if (route.view === "rust") return `${SITE_ORIGIN}/rust/og.jpg`;
+  // Terraria también (el paisaje de su portada con el logo, `games/terraria/tools/og.py`).
+  if (route.view === "terraria") return `${SITE_ORIGIN}/terraria/og.jpg`;
   const path = ogImagePath(route, latestEdition);
   return path && available(path) ? `${SITE_ORIGIN}${path}` : DEFAULT_OG;
 }
@@ -504,7 +506,7 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
 
   // Lo mismo en Terraria (receta, usos, botín).
   const trHas = new Map<string, TerrariaHas>();
-  for (const e of data.tr?.items ?? []) trHas.set(`tr-items/${e.slug}`, { craft: (e.has & 1) > 0, uses: (e.has & 2) > 0, drops: (e.has & 4) > 0 });
+  for (const e of data.tr?.items ?? []) trHas.set(`tr-items/${e.slug}`, { craft: (e.has & 1) > 0, uses: (e.has & 2) > 0, drops: (e.has & 4) > 0, sources: (e.has & 8) > 0 });
 
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);

@@ -184,7 +184,7 @@ export default function PageMeta({ route }: { route: Route }) {
     const rsItem = route.view === "rust" && route.rsSection === "items" && route.detail ? peekRsItem(route.detail) : null;
     const rsHas = rsItem ? { craft: !!rsItem.craft, shop: rsItem.shops.length > 0, loot: rsItem.loot.length > 0, recycle: !!rsItem.recycle } : null;
     const trItem = route.view === "terraria" && route.trSection === "items" && route.detail ? peekTrItem(route.detail) : null;
-    const trHas = trItem ? { craft: trItem.recipes.length > 0, uses: trItem.uses.length > 0, drops: trItem.drops.length > 0 } : null;
+    const trHas = trItem ? { craft: trItem.recipes.length > 0, uses: trItem.uses.length > 0, drops: trItem.drops.length > 0, sources: trItem.sources.length > 0 } : null;
     const { title, description } = metaFor(route, lang, detail, via, rsHas, trHas);
     const url = routeUrl(route);
 

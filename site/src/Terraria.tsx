@@ -32,6 +32,7 @@ const TrCrafting = lazyWithPreload(() => import("./terraria/crafting/TerrariaCra
 const TrBosses = lazyWithPreload(() => import("./terraria/bosses/TerrariaBosses"));
 const TrNpcs = lazyWithPreload(() => import("./terraria/npcs/TerrariaNpcs"));
 const TrFishing = lazyWithPreload(() => import("./terraria/fishing/TerrariaFishing"));
+const TrClasses = lazyWithPreload(() => import("./terraria/classes/TerrariaClasses"));
 const TrPatches = lazyWithPreload(() => import("./terraria/patches/TerrariaPatches"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá, en `TERRARIA_TAB_FILES` y en `TERRARIA_PUBLISHED`. */
@@ -42,6 +43,7 @@ const TABS: Partial<Record<TerrariaSection, LazyTab>> = {
   bosses: TrBosses,
   npcs: TrNpcs,
   fishing: TrFishing,
+  classes: TrClasses,
   patches: TrPatches,
 };
 

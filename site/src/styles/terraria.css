@@ -42,6 +42,7 @@
 .tr-depth-tab[data-layer="npcs"] i { background: #3d8a2e; }
 .tr-depth-tab[data-layer="bosses"] i { background: #c2410c; }
 .tr-depth-tab[data-layer="fishing"] i { background: #2f6fd6; }
+.tr-depth-tab[data-layer="classes"] i { background: #bfd8ff; }
 .tr-depth-tab[data-layer="patches"] i { background: #1b1f4a; }
 .tr-depth-tab small { display: block; font: 600 10px/1.2 "Barlow", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tr-dim); }
 .tr-depth-tab.is-on { background: #000; color: var(--tr-gold); }
@@ -88,6 +89,7 @@ a.tr-ref:hover > span, a.tr-cell:hover > span:last-of-type { text-decoration: un
 .tr[data-layer="crafting"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(/terraria/art/cavern.png); image-rendering: pixelated; }
 .tr[data-layer="bosses"] .tr-main { background: url(/terraria/art/grass.png) repeat-x 0 0, linear-gradient(rgba(12, 0, 0, 0.74), rgba(12, 0, 0, 0.62)), url(/terraria/art/underworld.png); image-rendering: pixelated; }
 .tr[data-layer="fishing"] .tr-main { background: linear-gradient(#2f6fd6 0, #1d3f8f 220px, #0f2456 100%); }
+.tr[data-layer="classes"] .tr-main { background: linear-gradient(#5d8ae6 0, #3b5fb8 260px, #27408a 100%); }
 .tr[data-layer="patches"] .tr-main { background: radial-gradient(900px 400px at 70% 0, #24348a 0%, transparent 70%), linear-gradient(#070a22 0%, #101a52 100%); }
 .tr:not([data-layer="home"]) .tr-wrap { padding-top: 16px; }
 .tr-loading .tr-dug { max-width: 1072px; margin: 40px auto; }

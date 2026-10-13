@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parseRoute, registerTerrariaSlugs, routePath, TERRARIA_SECTION_ES, type Route } from "../src/route";
+import { ogImageUrl } from "../src/prerender";
 import { TR_SHARDS } from "../src/terraria/data";
 import { isTrLoadingPage } from "../src/terraria/loadingGuard";
 import { TERRARIA_COPY } from "../src/terrariaCopy";
@@ -10,9 +11,16 @@ const base: Route = { lang: "en", view: "terraria", dlSection: "meta" };
 const dir = new URL("../../games/terraria/data/site/", import.meta.url);
 const read = (name: string) => JSON.parse(readFileSync(new URL(name, dir), "utf-8"));
 
+describe("vista previa de Terraria", () => {
+  it("toda la sección comparte su imagen", () => {
+    expect(ogImageUrl(parseRoute("/es/terraria"))).toBe("https://vestigo.gg/terraria/og.jpg");
+    expect(ogImageUrl(parseRoute("/en/terraria/items/terra-blade"))).toBe("https://vestigo.gg/terraria/og.jpg");
+  });
+});
+
 describe("rutas de Terraria", () => {
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {
-    expect(TERRARIA_SECTION_ES).toEqual({ items: "objetos", crafting: "crafteo", bosses: "jefes", npcs: "npc", fishing: "pesca", patches: "parches" });
+    expect(TERRARIA_SECTION_ES).toEqual({ items: "objetos", crafting: "crafteo", bosses: "jefes", npcs: "npc", fishing: "pesca", classes: "clases", patches: "parches" });
     expect(routePath({ ...base, trSection: "home" })).toBe("/en/terraria");
     expect(routePath({ ...base, trSection: "items" })).toBe("/en/terraria/items");
     expect(routePath({ ...base, lang: "es", trSection: "crafting" })).toBe("/es/terraria/crafteo");
@@ -22,8 +30,9 @@ describe("rutas de Terraria", () => {
   });
 
   it("una pestaña que no existe muestra la portada", () => {
-    expect(parseRoute("/en/terraria/classes")).toMatchObject({ view: "terraria", trSection: "home" });
-    expect(parseRoute("/en/terraria/classes").detail).toBeUndefined();
+    expect(parseRoute("/en/terraria/mounts")).toMatchObject({ view: "terraria", trSection: "home" });
+    expect(parseRoute("/en/terraria/mounts").detail).toBeUndefined();
+    expect(parseRoute("/es/terraria/clases")).toMatchObject({ trSection: "classes" });
     expect(parseRoute("/es/terraria/pesca")).toMatchObject({ trSection: "fishing" });
     expect(parseRoute("/es/terraria/parches/1-4-5-8")).toMatchObject({ trSection: "patches", detail: "1-4-5-8" });
     expect(parseRoute("/es/terraria/jefes")).toMatchObject({ trSection: "bosses" });
