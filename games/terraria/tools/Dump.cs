@@ -858,6 +858,37 @@ static class Dump
             foreach (int mode in modes)
                 foreach (int block in new[] { 219, 642 })
                     run("x" + mode + "_" + block, "extract", 200000, use, player, new object[] { mode, block });
+            // Las recompensas del Pescador: dependen de cuántas misiones lleva hechas el jugador y de si es Hardmode.
+            Step("recompensas del Pescador", delegate
+            {
+                Type npcT = T("Terraria.NPC");
+                object angler = Activator.CreateInstance(npcT);
+                MethodInfo npcSet = null;
+                foreach (MethodInfo m in npcT.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                    if (m.Name == "SetDefaults" && m.GetParameters().Length >= 1 && m.GetParameters()[0].ParameterType == typeof(int)) npcSet = m;
+                object[] na = new object[npcSet.GetParameters().Length];
+                na[0] = 369;
+                for (int k = 1; k < na.Length; k++) { ParameterInfo p = npcSet.GetParameters()[k]; na[k] = p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null; }
+                npcSet.Invoke(angler, na);
+                MethodInfo reward = playerT.GetMethod("GetAnglerReward", All);
+                FieldInfo quests = playerT.GetField("anglerQuestsFinished", All), hard = main.GetField("hardMode", All);
+                int fish = ((int[])Get(main, "anglerQuestItemNetIDs"))[0];
+                foreach (bool hm in new[] { false, true })
+                {
+                    hard.SetValue(null, hm);
+                    // Las primeras 51 de a una (hay premios fijos en algunas, y otros que aparecen a partir de cierta cantidad).
+                    List<int> counts = new List<int>();
+                    for (int q = 1; q <= 51; q++) counts.Add(q);
+                    counts.AddRange(new[] { 75, 100, 125, 150, 151, 200 });
+                    foreach (int q in counts)
+                    {
+                        quests.SetValue(player, q);
+                        run("angler" + q + (hm ? ":hm" : ""), "angler", 5000, reward, player, new object[] { angler, fish });
+                    }
+                }
+                hard.SetValue(null, true);
+                quests.SetValue(player, 0);
+            });
             // Qué objetos van al extractor y con qué tabla, y en qué se convierte cada objeto en el Shimmer.
             b.Append(",\n\"extractMode\":{");
             bool f1 = true;
@@ -896,6 +927,85 @@ static class Dump
             int total = 0;
             string[] files = Directory.GetFiles(dir, "*.wld");
             Array.Sort(files);
+            // Qué sale de romper cada vasija y de sacudir cada árbol: se prueba en cada mundo, recién cargado. Lo que
+            // cae queda en el piso (`Main.item`); se cuenta y se limpia.
+            Dictionary<string, int> tries = new Dictionary<string, int>();
+            Dictionary<string, Dictionary<int, int[]>> seen = new Dictionary<string, Dictionary<int, int[]>>();
+            int fails = 0, treeFails = 0;
+            Action breakables = delegate
+            {
+                Array tiles = (Array)tileF.GetValue(null);
+                Array world = (Array)Get(main, "item");
+                Type wT = world.GetType().GetElementType();
+                for (int i = 0; i < world.Length; i++) if (world.GetValue(i) == null) world.SetValue(Activator.CreateInstance(wT), i);
+                PropertyInfo activeP = wT.GetProperty("active", All), typeP = wT.GetProperty("type", All), stackP = wT.GetProperty("stack", All);
+                MethodInfo toAir = wT.GetMethod("TurnToAir", All);
+                FieldInfo frameYF = tileT.GetField("frameY", All);
+                Type wg = T("Terraria.WorldGen");
+                MethodInfo pot = wg.GetMethod("SpawnThingsFromPot", All), shake = wg.GetMethod("ShakeTree", All), resetShakes = wg.GetMethod("ResetTreeShakes", All);
+                MethodInfo kindOf = wg.GetMethod("GetTreeTypeAndTreeBottom", All);
+                main.GetField("rand", All).SetValue(null, NewRandom(20261013));
+                // Inicializado como servidor, el juego quiere avisar por red de cada objeto que cae: se lo deja en un jugador.
+                main.GetField("netMode", All).SetValue(null, 0);
+                int maxX = Convert.ToInt32(Get(main, "maxTilesX")), maxY = Convert.ToInt32(Get(main, "maxTilesY"));
+                // Las fiestas cambian lo que cae (y el juego las prende solo según la fecha de la máquina), y el Hardmode también.
+                foreach (string flag in new[] { "halloween", "xMas", "hardMode" }) main.GetField(flag, All).SetValue(null, false);
+                Action<string> collect = delegate (string group)
+                {
+                    int n; tries.TryGetValue(group, out n); tries[group] = n + 1;
+                    if (!seen.ContainsKey(group)) seen[group] = new Dictionary<int, int[]>();
+                    Dictionary<int, int> got = new Dictionary<int, int>();
+                    for (int k = 0; k < world.Length; k++)
+                    {
+                        object it = world.GetValue(k);
+                        if (!(bool)activeP.GetValue(it, null)) continue;
+                        int type = (int)typeP.GetValue(it, null);
+                        int c; got.TryGetValue(type, out c); got[type] = c + (int)stackP.GetValue(it, null);
+                        toAir.Invoke(it, null);
+                    }
+                    foreach (KeyValuePair<int, int> kv in got)
+                    {
+                        int[] row;
+                        if (!seen[group].TryGetValue(kv.Key, out row)) seen[group][kv.Key] = row = new[] { 0, kv.Value, kv.Value };
+                        row[0]++;
+                        if (kv.Value < row[1]) row[1] = kv.Value;
+                        if (kv.Value > row[2]) row[2] = kv.Value;
+                    }
+                };
+                // Lo que haya quedado tirado de antes no cuenta.
+                for (int k = 0; k < world.Length; k++) if ((bool)activeP.GetValue(world.GetValue(k), null)) toAir.Invoke(world.GetValue(k), null);
+                for (int x = 5; x < maxX - 5; x++)
+                    for (int y = 5; y < maxY - 5; y++)
+                    {
+                        object tile = tiles.GetValue(x, y);
+                        int type = Convert.ToInt32(typeF.GetValue(tile));
+                        if (type == 28 || type == 653)
+                        {
+                            // Una vasija ocupa 2×2: se toma su esquina de arriba a la izquierda. El estilo es la fila.
+                            int fx = Convert.ToInt32(frameF.GetValue(tile)), fy = Convert.ToInt32(frameYF.GetValue(tile));
+                            if (fx % 36 != 0 || fy % 36 != 0) continue;
+                            for (int k = 0; k < 4; k++)
+                            {
+                                try { pot.Invoke(null, new object[] { x, y, x, y, fy / 36 }); }
+                                catch (Exception e) { if (fails++ < 3) { Exception ex = e; while (ex.InnerException != null) ex = ex.InnerException; Console.WriteLine("   vasija: " + ex.Message + " " + string.Join(" < ", (ex.StackTrace ?? "").Split((char)10)).Replace("   at ", "")); } }
+                                collect("pot:" + (fy / 36));
+                            }
+                        }
+                        else if (type == 5 || type == 323 || type == 596 || type == 616 || type == 634 || (type >= 583 && type <= 589))
+                        {
+                            // Sólo la copa: el bloque de arriba ya no es árbol. El grupo es la clase de árbol, según el juego.
+                            if (Convert.ToInt32(typeF.GetValue(tiles.GetValue(x, y - 1))) == type) continue;
+                            string ground = "?";
+                            try { ground = Convert.ToString(kindOf.Invoke(null, new object[] { x, y, 0, 0 })); } catch (Exception) { }
+                            for (int k = 0; k < 6; k++)
+                            {
+                                try { resetShakes.Invoke(null, null); shake.Invoke(null, new object[] { x, y }); }
+                                catch (Exception e) { if (treeFails++ < 3) { Exception ex = e; while (ex.InnerException != null) ex = ex.InnerException; Console.WriteLine("   árbol: " + ex.Message + " " + (ex.StackTrace ?? "").Split((char)10)[0].Trim()); } }
+                                collect("tree:" + type + ":" + ground);
+                            }
+                        }
+                    }
+            };
             foreach (string file in files)
             {
                 Array tiles = (Array)tileF.GetValue(null);
@@ -939,9 +1049,31 @@ static class Dump
                     b.Append("]}");
                 }
                 Console.WriteLine("   " + Path.GetFileName(file) + ": " + n + " cofres");
+                Step("vasijas y árboles de " + Path.GetFileName(file), delegate { breakables(); });
             }
             b.Append("]");
             Write("chests.json", b);
+
+            StringBuilder wb = new StringBuilder("{");
+            bool f0 = true;
+            foreach (KeyValuePair<string, Dictionary<int, int[]>> g in seen)
+            {
+                if (!f0) wb.Append(",\n");
+                f0 = false;
+                wb.Append(Esc(g.Key)).Append(":{\"tries\":").Append(tries[g.Key]).Append(",\"items\":{");
+                bool f2 = true;
+                foreach (KeyValuePair<int, int[]> kv in g.Value)
+                {
+                    if (!f2) wb.Append(',');
+                    f2 = false;
+                    wb.Append('"').Append(kv.Key).Append("\":[").Append(kv.Value[0]).Append(',').Append(kv.Value[1]).Append(',').Append(kv.Value[2]).Append(']');
+                }
+                wb.Append("}}");
+            }
+            wb.Append("}");
+            Write("breakables.json", wb);
+            Console.WriteLine("vasijas y árboles: " + seen.Count + " grupos, " + fails + " y " + treeFails + " fallos");
+
             // Qué objeto deja cada tipo de cofre al romperlo: de ahí sale su nombre.
             StringBuilder nb = new StringBuilder("{");
             MethodInfo drop = T("Terraria.WorldGen").GetMethod("GetItemDrop_Chests", All, null, new[] { typeof(int), typeof(bool) }, null);
@@ -1116,6 +1248,20 @@ static class Dump
                 snap(n);
             }
             for (int phase = 1; phase < 8; phase++) { reset(); moon.SetValue(null, phase); snap("moon:" + phase); }
+            // Los pilones: con dos NPC en el pueblo, qué pilón aparece en cada bioma (y sin bioma).
+            {
+                List<string> town = names.FindAll(delegate (string n) { return n.StartsWith("npc:"); });
+                List<string> zones = names.FindAll(delegate (string n) { return n.StartsWith("Player.Zone"); });
+                zones.Insert(0, "");
+                foreach (string zone in zones)
+                {
+                    reset();
+                    set[town[0]](true);
+                    set[town[1]](true);
+                    if (zone != "") set[zone](true);
+                    snap("pylon:" + zone);
+                }
+            }
             for (int phase0 = 1; phase0 < 8; phase0++) { int phase = phase0; add("moon:" + phase, delegate (bool on) { if (on) moon.SetValue(null, phase); }); }
             // Todo prendido a la vez (de día y de noche, en cada fase de la luna): lo que sólo aparece acá depende de más
             // de una condición.

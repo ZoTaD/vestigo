@@ -102,7 +102,9 @@ export interface TerrariaCopy {
     dropModes: Record<string, string>;
     sources: {
       title: string;
-      kinds: Record<"shop" | "travel" | "pylon" | "chest" | "bag" | "crate" | "open" | "fish" | "extract" | "shimmer", string>;
+      kinds: Record<"shop" | "travel" | "pylon" | "angler" | "chest" | "pot" | "tree" | "bag" | "crate" | "open" | "fish" | "extract" | "shimmer", string>;
+      pots: string;
+      trees: string;
       tiers: Record<"common" | "uncommon" | "rare" | "veryrare" | "legendary", string>;
       anyCatch: string;
       anyNpc: string;
@@ -352,13 +354,15 @@ const EN: TerrariaCopy = {
     dropModes: { n: "Classic", e: "Expert", m: "Master", "": "" },
     sources: {
       title: "Where to get it",
-      kinds: { shop: "Sold by", travel: "Sold by", pylon: "Sold by", chest: "In chests", bag: "Treasure bag", crate: "Fishing crate", open: "Inside", fish: "Fishing", extract: "Extracted from", shimmer: "Shimmer from" },
+      kinds: { shop: "Sold by", travel: "Sold by", pylon: "Sold by", angler: "Quest reward", chest: "In chests", pot: "Breaking", tree: "Shaking", bag: "Treasure bag", crate: "Fishing crate", open: "Inside", fish: "Fishing", extract: "Extracted from", shimmer: "Shimmer from" },
       tiers: { common: "Common catch", uncommon: "Uncommon catch", rare: "Rare catch", veryrare: "Very rare catch", legendary: "Legendary catch" },
       anyCatch: "Any catch",
       anyNpc: "Any NPC",
+      pots: "Pots",
+      trees: "Trees",
       pylon: "Living in its biome, with another NPC nearby",
       inStation: (station) => `in the ${station}`,
-      note: "Chances for chests, bags, crates and the extractor are measured over thousands of tries, so they are close but not exact. A chest percentage is the share of chests of that type that hold the item.",
+      note: "Chances for chests, pots, trees, bags, crates, quest rewards and the extractor are measured over thousands of tries, so they are close but not exact. A chest percentage is the share of chests of that type that hold the item.",
     },
     openTree: "See the full crafting tree",
   },
@@ -607,13 +611,15 @@ const ES: TerrariaCopy = {
     dropModes: { n: "Clásico", e: "Experto", m: "Maestro", "": "" },
     sources: {
       title: "Dónde se consigue",
-      kinds: { shop: "Lo vende", travel: "Lo vende", pylon: "Lo vende", chest: "En cofres", bag: "Bolsa del tesoro", crate: "Caja de pesca", open: "Adentro de", fish: "Pesca", extract: "Se extrae de", shimmer: "Fulgor, a partir de" },
+      kinds: { shop: "Lo vende", travel: "Lo vende", pylon: "Lo vende", angler: "Premio de misión", chest: "En cofres", pot: "Al romper", tree: "Al sacudir", bag: "Bolsa del tesoro", crate: "Caja de pesca", open: "Adentro de", fish: "Pesca", extract: "Se extrae de", shimmer: "Fulgor, a partir de" },
       tiers: { common: "Captura común", uncommon: "Captura poco común", rare: "Captura rara", veryrare: "Captura muy rara", legendary: "Captura legendaria" },
       anyCatch: "Cualquier captura",
       anyNpc: "Cualquier NPC",
+      pots: "Vasijas",
+      trees: "Árboles",
       pylon: "Que viva en su bioma, con otro NPC cerca",
       inStation: (station) => `en ${station}`,
-      note: "Las probabilidades de cofres, bolsas, cajas y extractor están medidas sobre miles de intentos: son cercanas, no exactas. El porcentaje de un cofre es qué parte de los cofres de ese tipo trae el objeto.",
+      note: "Las probabilidades de cofres, vasijas, árboles, bolsas, cajas, premios de misión y extractor están medidas sobre miles de intentos: son cercanas, no exactas. El porcentaje de un cofre es qué parte de los cofres de ese tipo trae el objeto.",
     },
     openTree: "Ver el árbol de crafteo completo",
   },

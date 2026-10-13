@@ -258,6 +258,8 @@ export function ogImageUrl(route: Route, latestEdition?: string, available: (pat
   if (route.view === "d2r") return `${SITE_ORIGIN}/d2r/og.jpg`;
   // Rust tiene la suya (un cuadro del juego con el título, `games/rust/tools/ui.py`).
   if (route.view === "rust") return `${SITE_ORIGIN}/rust/og.jpg`;
+  // Terraria también (el paisaje de su portada con el logo, `games/terraria/tools/og.py`).
+  if (route.view === "terraria") return `${SITE_ORIGIN}/terraria/og.jpg`;
   const path = ogImagePath(route, latestEdition);
   return path && available(path) ? `${SITE_ORIGIN}${path}` : DEFAULT_OG;
 }

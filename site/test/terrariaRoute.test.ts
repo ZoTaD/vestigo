@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parseRoute, registerTerrariaSlugs, routePath, TERRARIA_SECTION_ES, type Route } from "../src/route";
+import { ogImageUrl } from "../src/prerender";
 import { TR_SHARDS } from "../src/terraria/data";
 import { isTrLoadingPage } from "../src/terraria/loadingGuard";
 import { TERRARIA_COPY } from "../src/terrariaCopy";
@@ -9,6 +10,13 @@ import { pzShardOf } from "../src/zomboid/shard";
 const base: Route = { lang: "en", view: "terraria", dlSection: "meta" };
 const dir = new URL("../../games/terraria/data/site/", import.meta.url);
 const read = (name: string) => JSON.parse(readFileSync(new URL(name, dir), "utf-8"));
+
+describe("vista previa de Terraria", () => {
+  it("toda la sección comparte su imagen", () => {
+    expect(ogImageUrl(parseRoute("/es/terraria"))).toBe("https://vestigo.gg/terraria/og.jpg");
+    expect(ogImageUrl(parseRoute("/en/terraria/items/terra-blade"))).toBe("https://vestigo.gg/terraria/og.jpg");
+  });
+});
 
 describe("rutas de Terraria", () => {
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {

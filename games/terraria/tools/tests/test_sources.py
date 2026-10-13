@@ -21,7 +21,9 @@ ITEMS = [
     item(6, "TeleportationPylonSnow"), item(7, "DefenderMedal"), item(8, "Ale"), item(9, "SquireGreatHelm"),
     item(10, "BossBag"), item(11, "DemoniteOre"), item(12, "CrimtaneOre"), item(13, "SiltBlock"), item(14, "Extractinator"),
     item(15, "ChlorophyteExtractinator"), item(16, "Amber"), item(17, "Bass"), item(18, "Obsidifish"), item(19, "Muramasa"),
-    item(20, "TimeHairDye"), item(21, "Code1"), item(24, "HairDyeRemover"), item(71, "CopperCoin"), item(22, "Lens"), item(23, "BlackLens"),
+    item(20, "TimeHairDye"), item(21, "Code1"), item(24, "HairDyeRemover"),
+    item(25, "TeleportationPylonUnderground"), item(26, "TeleportationPylonPurity"), item(27, "TeleportationPylonVictory"),
+    item(28, "FuzzyCarrot"), item(29, "FinWings"), item(30, "GoldenFishingRod"), item(31, "Apple"), item(32, "GoldenKey"), item(71, "CopperCoin"), item(22, "Lens"), item(23, "BlackLens"),
 ]
 
 
@@ -29,7 +31,7 @@ def cache(**extra):
     npc = {"17": "Merchant", "550": "Tavernkeep", "353": "Stylist", "368": "Traveling Merchant", "228": "Witch Doctor",
            "13": "Eater of Worlds", "266": "Brain of Cthulhu", "35": "Skeletron", "262": "Plantera", "4": "Eye of Cthulhu", "369": "Angler"}
     loc = {
-        "Bestiary_Biomes": {"Jungle": "The Jungle", "TheCorruption": "The Corruption", "Crimson": "The Crimson"},
+        "Bestiary_Biomes": {"Jungle": "The Jungle", "TheCorruption": "The Corruption", "Crimson": "The Crimson", "Snow": "Snow", "Surface": "Surface", "TheDungeon": "The Dungeon"},
         "Bestiary_Events": {"BloodMoon": "Blood Moon"},
         "Bestiary_Invasions": {},
         "GameUI": {"FullMoon": "Full Moon", "ThirdQuarter": "Third Quarter", "NewMoon": "New Moon", "FirstQuarter": "First Quarter",
@@ -56,6 +58,10 @@ def shops():
     }
     for k in range(1, 8):
         states[f"moon:{k}"] = {"1": [1, 3], "18": [20] if k % 2 == 0 else [], "21": [8]}
+    states["pylon:"] = {"1": [1, 3, 25]}
+    states["pylon:Player.ZoneSnow"] = {"1": [1, 3, 6]}
+    for name in ("pylon:", "pylon:Player.ZoneSnow"):
+        states[name].update({"18": [20], "21": [8]})
     # Lo que la Estilista vende siempre (su firma).
     for st in states.values():
         st["18"] = st["18"] + [24]
@@ -107,8 +113,12 @@ class Shops(unittest.TestCase):
     def test_fases_de_la_luna_y_de_dia(self):
         assert self.only(20)["if"][0] == "During the day, moon: Full Moon, Third Quarter, New Moon, First Quarter"
 
-    def test_los_pilones_van_aparte(self):
-        assert self.src[6] == [{"k": "pylon"}]
+    def test_los_pilones_dicen_su_bioma(self):
+        # El de nieve aparece con dos NPC en la nieve; el de la superficie va a mano; el universal queda sin fuente.
+        assert self.src[6] == [{"k": "pylon", "if": ["Living in Snow, with another NPC nearby", "Que viva en Snow, con otro NPC cerca"]}]
+        assert self.src[25][0]["if"][0] == "Living underground, with another NPC nearby"
+        assert self.src[26][0]["if"][0] == "Living on Surface, away from other biomes, with another NPC nearby"
+        assert 27 not in self.src
 
     def test_mercader_ambulante(self):
         assert self.only(22, "travel") == {"k": "travel", "n": 368, "p": 100, "r": 0.25}
@@ -139,6 +149,32 @@ class Others(unittest.TestCase):
         assert 71 not in src
         assert src[16] == [{"k": "extract", "i": 13, "t": 14, "r": 0.02}]
         assert src[23] == [{"k": "bag", "i": 10, "q": [1, 1], "r": 0.25}, {"k": "shimmer", "i": 22}]
+
+    def test_premios_del_pescador(self):
+        box = lambda items: {"kind": "angler", "opens": 1000, "fails": 0, "items": items}  # noqa: E731
+        boxes = {
+            "angler1": box({"71": [1000, 1, 5]}), "angler5": box({"28": [1000, 1, 1]}), "angler11:hm": box({"29": [20, 1, 1]}),
+            "angler30": box({"30": [1000, 1, 1]}), "angler150": box({"30": [30, 1, 1]}), "angler150:hm": box({"29": [100, 1, 1], "30": [30, 1, 1]}),
+        }
+        src = build_sources(cache(containers=boxes))
+        assert src[28] == [{"k": "angler", "n": 369, "if": ["Guaranteed on quest number 5", "Seguro en tu misión número 5"]}]
+        assert src[29] == [{"k": "angler", "n": 369, "r": 0.1, "if": ["From 11 quests completed, in Hardmode, odds grow with every quest", "Desde 11 misiones hechas, en Hardmode, mejora con cada misión"]}]
+        assert src[30][0]["if"][0] == "Guaranteed on quest number 30, from 150 quests completed" and src[30][0]["r"] == 0.03
+        assert 71 not in src
+
+    def test_vasijas_y_arboles(self):
+        found = {
+            "pot:0": {"tries": 500, "items": {"32": [5, 1, 1], "71": [400, 1, 9]}}, "pot:3": {"tries": 500, "items": {"32": [5, 1, 1]}},
+            "pot:10": {"tries": 100, "items": {"32": [10, 1, 1]}}, "pot:11": {"tries": 100, "items": {"32": [10, 1, 2]}},
+            "tree:5:Forest": {"tries": 1000, "items": {"31": [10, 1, 1]}}, "tree:596:Forest": {"tries": 1000, "items": {"31": [10, 1, 1]}},
+            "tree:583:None": {"tries": 50, "items": {}}, "tree:5:Snow": {"tries": 100, "items": {"31": [2, 1, 1]}},
+        }
+        src = build_sources(cache(breakables=found))
+        # Las vasijas del mismo lugar se juntan; lo que casi no salió (2 veces en la nieve) no se anota; sin monedas.
+        assert src[32] == [{"k": "pot", "q": [1, 2], "r": 0.1, "if": ["In the Dungeon", "En the Dungeon"]}, {"k": "pot", "q": [1, 1], "r": 0.01}]
+        assert src[31] == [{"k": "tree", "q": [1, 1], "r": 0.01}] and 71 not in src
+        with self.assertRaises(KeyError):
+            build_sources(cache(breakables={"tree:5:Alien": {"tries": 10, "items": {}}}))
 
     def test_pesca(self):
         rules = [

@@ -16,6 +16,8 @@ import { buyCoins, knockbackTier, percent, sellCoins, speedTier } from "./stats"
 
 /** El alto de una fila de "se usa en" y de botín, en px, medido en el navegador (2026-10-12). */
 const TR_ROW = 44;
+/** Las fuentes cuya probabilidad está medida (miles de intentos) y no leída de una tabla: llevan la aclaración al pie. */
+const MEASURED = new Set<Source["k"]>(["chest", "pot", "tree", "bag", "crate", "open", "extract", "angler"]);
 /** El alto de una fila de "dónde se consigue" sin condición, en px (2026-10-12). */
 const TR_SOURCE_ROW = 44;
 
@@ -54,6 +56,7 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
   /** Quién o qué da el objeto en una fuente: el NPC, el cofre, o el objeto del que sale (enlazado a su ficha). */
   const origin = (s: Source, i: number): ReactNode => {
     if (s.k === "pylon") return <b>{t.items.sources.anyNpc}</b>;
+    if (s.k === "pot" || s.k === "tree") return <b>{s.k === "pot" ? t.items.sources.pots : t.items.sources.trees}</b>;
     if (s.k === "fish") return <b>{s.tier ? t.items.sources.tiers[s.tier] : t.items.sources.anyCatch}</b>;
     if (s.n != null) return <b>{say(ficha.npcs[String(s.n)] ?? ["?", ""], lang)}</b>;
     if (s.l) return <b>{say(s.l, lang)}</b>;
@@ -163,7 +166,7 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                     <small className="tr-label">{t.items.sources.kinds[s.k]}</small>
                     <div className="tr-source-who">
                       {origin(s, i)}
-                      {(s.if || s.k === "pylon") && <em>{s.k === "pylon" ? t.items.sources.pylon : say(s.if!, lang)}</em>}
+                      {(s.if || s.k === "pylon") && <em>{s.if ? say(s.if, lang) : t.items.sources.pylon}</em>}
                     </div>
                     {s.q && (s.q[1] > 1 || s.q[0] !== s.q[1]) && <span>{s.q[0] === s.q[1] ? `×${s.q[0]}` : `×${s.q[0]}–${s.q[1]}`}</span>}
                     {s.r != null && s.r < 1 && <strong>{percent(s.r, locale)}</strong>}
@@ -172,7 +175,7 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                 )}
               />
             </ul>
-            {ficha.sources.some((s) => s.k === "chest" || s.k === "bag" || s.k === "crate" || s.k === "open" || s.k === "extract") && <p className="tr-source-note">{t.items.sources.note}</p>}
+            {ficha.sources.some((s) => MEASURED.has(s.k)) && <p className="tr-source-note">{t.items.sources.note}</p>}
           </section>
         )}
 

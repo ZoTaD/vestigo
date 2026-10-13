@@ -6,7 +6,7 @@ se dice cada condición ("de noche", "después de Plantera"), con las mismas mar
 propios los pone el juego. `build_sources` es pura y es lo que prueban los tests.
 
 Cada fuente es un diccionario corto:
-  k    tipo: shop, travel, pylon, chest, bag, crate, open, fish, extract, shimmer
+  k    tipo: shop, travel, pylon, angler, chest, pot, tree, bag, crate, open, fish, extract, shimmer
   n    NPC que lo vende (id)                    i    objeto del que sale (la bolsa, la caja, lo que se transmuta)
   t    estación (el extractor)                  l    nombre del cofre [en, es]
   p    precio en monedas de cobre               c    objeto que hace de moneda, si no son monedas
@@ -142,7 +142,28 @@ TIER_ORDER = ["", "common", "uncommon", "rare", "veryrare", "legendary"]
 
 COINS = {71, 72, 73, 74}
 EXTRACTORS = {219: "Extractinator", 642: "ChlorophyteExtractinator"}
-ORDER = ["shop", "travel", "pylon", "chest", "bag", "crate", "open", "fish", "extract", "shimmer"]
+ORDER = ["shop", "travel", "pylon", "angler", "chest", "pot", "tree", "bag", "crate", "open", "fish", "extract", "shimmer"]
+ANGLER = 369
+
+# Los pilones: la frase de cada uno sale de en qué bioma lo ofrece la tienda con dos NPC en el pueblo. Los que esa
+# prueba no alcanza a mostrar (piden estar en la superficie o en la playa de verdad) van a mano; los que no figuran
+# en ninguno de los dos lados (el universal y el del Éter) quedan sin fuente antes que con una inventada.
+PYLON = ("living {}, with another NPC nearby", "que viva {}, con otro NPC cerca")
+PYLON_DEFAULT = ("underground", "bajo tierra")
+PYLON_BY_HAND = {
+    "TeleportationPylonPurity": ("on {b:Surface}, away from other biomes", "en {b:Surface}, lejos de otros biomas"),
+    "TeleportationPylonOcean": ("in {b:Ocean}", "en {b:Ocean}"),
+}
+
+# Las vasijas, por su dibujo (de a tres estilos, salvo las comunes que son cuatro), y los árboles, por la clase que
+# les da el juego (`TreeTypes`). None = sin lugar que decir.
+POTS = [None, "Player.ZoneSnow", "Player.ZoneJungle", "Player.ZoneDungeon", "Player.ZoneUnderworldHeight", "Player.ZoneCorrupt",
+        ("in a {b:SpiderNest}", "en un {b:SpiderNest}"), "Player.ZoneCrimson", ("in a pyramid", "en una pirámide"), "Player.ZoneLihzhardTemple",
+        ("in {b:Marble}", "en {b:Marble}"), "Player.ZoneUndergroundDesert"]
+TREES = {"Forest": None, "Corrupt": "Player.ZoneCorrupt", "Crimson": "Player.ZoneCrimson", "Jungle": "Player.ZoneJungle", "Snow": "Player.ZoneSnow",
+         "Mushroom": "Player.ZoneGlowshroom", "Palm": "Player.ZoneBeach", "Ash": "Player.ZoneUnderworldHeight", "Hallowed": "Player.ZoneHallow"}
+# Lo que sale menos de una vez cada tantas no se anota: con pocas pruebas es ruido.
+BREAK_MIN = 8
 
 
 def load(cache_dir: Path) -> dict:
@@ -150,7 +171,7 @@ def load(cache_dir: Path) -> dict:
     se corrió `worlds.ps1`) simplemente no aporta fuentes."""
     read = lambda name: json.loads((cache_dir / name).read_text(encoding="utf-8-sig"))  # noqa: E731
     cache = {"items": read("items.json"), "npcs": read("npcs.json"), "texts_en": read("texts.en-US.json"), "texts_es": read("texts.es-ES.json")}
-    for key in ("shops", "containers", "fishrules", "chests", "chestnames"):
+    for key in ("shops", "containers", "fishrules", "chests", "chestnames", "breakables"):
         if (cache_dir / f"{key}.json").exists():
             cache[key] = read(f"{key}.json")
     # Todos los textos del juego (biomas, eventos, cofres), con sus comas de más.
@@ -210,6 +231,9 @@ def build_sources(cache: dict) -> dict[int, list[dict]]:
         _shops(shops, cache, internal, by_id, out, phrase, moon, join, note, AND, OR)
     if cache.get("containers"):
         _containers(cache["containers"], internal, out, note)
+        _angler(cache["containers"], out, note)
+    if cache.get("breakables"):
+        _breakables(cache["breakables"], out, note)
     if cache.get("fishrules"):
         _fishing(cache["fishrules"], out, join, note, AND)
     if cache.get("chests"):
@@ -223,7 +247,7 @@ def _shops(shops, cache, internal, by_id, out, phrase, moon, join, note, AND, OR
     states = shops["states"]
     pylons = {i for name, i in internal.items() if name.startswith("TeleportationPylon")}
     victory = internal.get("TeleportationPylonVictory")
-    singles = [n for n in states if n != "base" and not n.startswith(("all:", "moon:")) and not ignored(n)]
+    singles = [n for n in states if n != "base" and not n.startswith(("all:", "moon:", "pylon:")) and not ignored(n)]
     pairs: dict[tuple[int, int], list[tuple[str, str]]] = defaultdict(list)
     for shop, item, x, y in shops.get("pairs", []):
         if not ignored(x) and not ignored(y) and not (x.startswith("npc:") and y.startswith("npc:")):
@@ -313,8 +337,20 @@ def _shops(shops, cache, internal, by_id, out, phrase, moon, join, note, AND, OR
                     price, _ = shops["prices"].get(key, {}).get(str(item), [by_id[item].get("value", 0), -1])
                     out[item].append(note({"k": "shop", "n": npc, "p": price}, ("with the Bestiary %d%% complete" % p, "con el Bestiario al %d%%" % p)))
 
-    for item in sorted(pylons - {victory}):
-        out[item].append({"k": "pylon"})
+    # Los pilones: en qué bioma lo ofrece la tienda (cualquiera sirve: se mira la del Mercader) con dos NPC en el pueblo.
+    where: dict[int, tuple[str, str]] = {}
+    default = set(states.get("pylon:", {}).get("1", []))
+    for name, st in states.items():
+        if name.startswith("pylon:Player."):
+            for item in set(st.get("1", [])) & pylons - default:
+                where[item] = phrase(COND, name[6:])
+    for item in default & pylons:
+        where[item] = PYLON_DEFAULT
+    for name, text in PYLON_BY_HAND.items():
+        if name in internal:
+            where.setdefault(internal[name], text)
+    for item, (en, es) in sorted(where.items()):
+        out[item].append(note({"k": "pylon"}, (PYLON[0].format(en), PYLON[1].format(es))))
 
     travel = shops.get("travel")
     if travel:
@@ -356,7 +392,7 @@ def _containers(containers, internal, out, note) -> None:
     for item, mode in containers.get("extractMode", {}).items():
         modes[mode].append(int(item))
     for key, box in containers.items():
-        if key in ("extractMode", "shimmer") or key.endswith(":crimson"):
+        if key in ("extractMode", "shimmer") or key.endswith(":crimson") or key.startswith("angler"):
             continue
         other = containers.get(key + ":crimson", box)["items"]
         every = {**other, **box["items"]}
@@ -377,6 +413,69 @@ def _containers(containers, internal, out, note) -> None:
             out[item].append(note({"k": box["kind"], "i": int(key), "q": [low, high], "r": rate}, cond))
     for source, result in containers.get("shimmer", {}).items():
         out[result].append({"k": "shimmer", "i": int(source)})
+
+
+def _angler(containers, out, note) -> None:
+    """Las recompensas del Pescador: con cuántas misiones hechas aparece cada una, y si pide Hardmode."""
+    rates: dict[int, dict[tuple[int, bool], float]] = defaultdict(dict)
+    for key, box in containers.items():
+        if not key.startswith("angler"):
+            continue
+        hard = key.endswith(":hm")
+        quests = int(key[6:].split(":")[0])
+        for item, (count, _, _) in box["items"].items():
+            if int(item) not in COINS:
+                rates[int(item)][(quests, hard)] = count / box["opens"]
+    for item, seen in sorted(rates.items()):
+        normal = {q for q, hard in seen if not hard}
+        at = sorted(normal or {q for q, _ in seen})
+        # Un premio fijo sale siempre en una misión; algunos, además, pueden tocar de casualidad en las demás.
+        fixed = sorted({q for (q, _), rate in seen.items() if rate > 0.99})
+        chance = [rate for rate in seen.values() if rate <= 0.99]
+        parts = []
+        if fixed:
+            parts.append(("guaranteed on quest number %d" % fixed[0], "seguro en tu misión número %d" % fixed[0]))
+        if chance:
+            first = min(q for (q, _), rate in seen.items() if rate <= 0.99)
+            if first > 1:
+                parts.append(("from %d quests completed" % first, "desde %d misiones hechas" % first))
+            if not normal:
+                parts.append(COND["Main.hardMode"])
+            # La probabilidad que se muestra es la mejor (con muchas misiones hechas): se avisa si arranca bastante más baja.
+            if max(chance) > 2 * min(chance):
+                parts.append(("odds grow with every quest", "mejora con cada misión"))
+        row = {"k": "angler", "n": ANGLER}
+        if chance:
+            row["r"] = round(max(chance), 4)
+        cond = (", ".join(p[0] for p in parts), ", ".join(p[1] for p in parts)) if parts else None
+        out[item].append(note(row, cond))
+
+
+def _breakables(found, out, note) -> None:
+    """Lo que sale de romper vasijas y de sacudir árboles, juntando las que son del mismo lugar."""
+    groups: dict[tuple[str, object], dict] = {}
+    for key, data in found.items():
+        kind, *rest = key.split(":")
+        if kind == "pot":
+            style = int(rest[0])
+            place = POTS[0 if style < 4 else (style - 1) // 3]
+        else:
+            if rest[1] == "None":
+                continue
+            if rest[1] not in TREES:
+                raise KeyError(f"falta cómo decir la clase de árbol {rest[1]!r} (TREES en sources.py)")
+            place = TREES[rest[1]]
+        g = groups.setdefault((kind, place), {"tries": 0, "items": {}})
+        g["tries"] += data["tries"]
+        for item, (count, low, high) in data["items"].items():
+            row = g["items"].setdefault(int(item), [0, low, high])
+            row[0] += count
+            row[1], row[2] = min(row[1], low), max(row[2], high)
+    for (kind, place), g in groups.items():
+        cond = COND[place] if isinstance(place, str) else place
+        for item, (count, low, high) in g["items"].items():
+            if item not in COINS and count >= BREAK_MIN:
+                out[item].append(note({"k": kind, "q": [low, high], "r": round(count / g["tries"], 4)}, cond))
 
 
 def _fishing(rules, out, join, note, AND) -> None:

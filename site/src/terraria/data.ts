@@ -52,7 +52,7 @@ export type Stats = Partial<
 
 /** De qué otra forma se consigue: lo que escribe `games/terraria/tools/sources.py`. */
 export interface Source {
-  k: "shop" | "travel" | "pylon" | "chest" | "bag" | "crate" | "open" | "fish" | "extract" | "shimmer";
+  k: "shop" | "travel" | "pylon" | "angler" | "chest" | "pot" | "tree" | "bag" | "crate" | "open" | "fish" | "extract" | "shimmer";
   /** El NPC que lo vende (su nombre está en `npcs`). */
   n?: number;
   /** El objeto del que sale: la bolsa, la caja, lo que se pasa por el extractor o por el Shimmer. */

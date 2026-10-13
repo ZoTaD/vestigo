@@ -14,6 +14,7 @@ Los datos de la sección Terraria de Vestigo. Diseño: `docs/superpowers/specs/2
   está escrita ahí a mano, por nombre en inglés; falla si un nombre no existe.
 - `tools/xnb.py`: lector de las texturas `.xnb` del juego, con su descompresor LZX.
 - `tools/sprites.py`: saca los sprites de objeto y el arte de la sección a `site/public/terraria`.
+- `tools/og.py`: arma con ese arte la vista previa de la sección (`site/public/terraria/og.jpg`).
 - `tools/site_data.py`: arma `data/` (lo que lee el sitio) a partir de `cache/`. No lee el juego.
 - `tools/world_data.py`: arma `data/bosses.json` y `data/npcs.json` (Jefes y NPC). El orden de los jefes, con qué se
   invocan y qué destraban se escribe ahí a mano, con marcas (`{i:…}`, `{n:…}`, `{b:…}`, `{e:…}`) que se resuelven a
@@ -34,6 +35,7 @@ python games/terraria/tools/site_data.py
 python games/terraria/tools/world_data.py
 python games/terraria/tools/extras_data.py
 python games/terraria/tools/classes_data.py
+python games/terraria/tools/og.py
 python games/terraria/tools/sprites.py
 python -m unittest discover -s games/terraria/tools/tests
 ```
@@ -72,6 +74,11 @@ Nada de esto es una tabla en 1.4.5 (salvo la pesca): es código. `Dump.cs` se lo
 - **Bolsas de jefe, cajas, cofres con candado, extractor**: se abren 20.000 veces (200.000 el extractor) con un jugador
   de mentira y semilla fija, en mundo con Corrupción y con Carmesí. Las probabilidades son medidas, no exactas.
 - **Cofres**: el contenido de los 6.042 cofres de los 18 mundos, por tipo de cofre.
+- **Vasijas y árboles**: con cada mundo cargado, se rompe cada vasija 4 veces y se sacude cada árbol 6, sin fiestas ni
+  Hardmode. Las vasijas se juntan por su dibujo (el lugar) y los árboles por la clase que les da el juego.
+- **Premios del Pescador**: 5.000 entregas con cada cantidad de misiones hechas (de 1 a 51, y algunas más hasta 200),
+  antes y después del Hardmode. La probabilidad que se muestra es la mejor; la frase dice desde cuándo y si mejora.
+- **Pilones**: qué pilón ofrece la tienda en cada bioma con dos NPC en el pueblo.
 - **Pesca**: las reglas del juego tal cual (`FishDropRuleList`).
 
 `sources.py` falla si aparece una condición que no sabe decir o si una tienda deja de vender su objeto de siempre
@@ -79,7 +86,8 @@ Nada de esto es una tabla en 1.4.5 (salvo la pesca): es código. `Dump.cs` se lo
 
 ## Lo que falta sacar
 
-- Los pilones van con una frase fija ("cualquier NPC que viva en su bioma, con otro NPC cerca").
-- Lo que sale de romper vasijas, sacudir árboles o cortar pasto, y las recompensas del Pescador.
+- Los pilones de la superficie y del océano llevan su frase a mano (`PYLON_BY_HAND` en `sources.py`): la prueba de la
+  tienda no alcanza a mostrarlos. El universal y el del Éter quedan sin fuente.
+- Los árboles de lo Sagrado: los mundos generados son de antes del Hardmode y no tienen.
 - El nombre propio de cada estación de crafteo (`Recipe.GetRequiredTileName` devuelve vacío sin el mapa cargado): se
   usa el nombre del objeto que la coloca, y `TILE_NAMES` en `site_data.py` para las que no coloca ninguno.
