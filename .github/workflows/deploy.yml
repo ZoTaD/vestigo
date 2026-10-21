@@ -1,0 +1,103 @@
+name: deploy
+
+# **El sitio se compila acá y Netlify sólo lo sirve** (2026-10-21).
+#
+# Hasta hoy compilaba Netlify en cada push a `main`, y el 21/10 el plan gratis
+# llegó a sus 300 minutos de build del mes y pausó todo: Deadlock publica cuatro
+# veces por día y PoE2 una, ~150 builds al mes de varios minutos cada uno. El
+# repo es público, así que los minutos de Actions no se cobran; Netlify recibe el
+# `dist` ya armado con su CLI, que no gasta minutos de build. Los builds en
+# Netlify quedaron apagados ("Stop builds" en el sitio), así que esto es lo
+# único que publica.
+#
+# Pasar a Cloudflare no servía gratis: el build son ~48 mil archivos y el plan
+# gratis de Pages/Workers acepta 20 mil.
+#
+# Las redirecciones y cabeceras siguen saliendo de `netlify.toml`: el CLI lo lee
+# al publicar, igual que lo leía el build de Netlify.
+on:
+  push:
+    branches: [main]
+    # Lo mismo que vigilaba el `ignore` de `netlify.toml`. **Un juego nuevo suma
+    # acá su `games/<juego>/data`**, si no, sus cambios no se publican.
+    paths:
+      - site/**
+      - games/deadlock/data/**
+      - games/poe2/data/**
+      - games/valheim/data/**
+      - games/d2r/data/**
+      - games/zomboid/data/**
+      - games/rust/data/**
+      - games/terraria/data/**
+      - netlify.toml
+      - .github/workflows/deploy.yml
+  # Los commits de las Actions de publicación los empuja el GITHUB_TOKEN, y
+  # GitHub no dispara workflows por pushes de ese token: sin esto, los datos
+  # nuevos de Deadlock y PoE2 nunca llegarían al sitio.
+  workflow_run:
+    workflows: [publish deadlock tier list, publish poe2 prices and patches]
+    types: [completed]
+  workflow_dispatch:
+
+# Una publicación a la vez, y la que llega reemplaza a la que espera, así que siempre se
+# publica lo último de `main`.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: main
+          persist-credentials: false
+          # Historia entera pero sin contenidos: alcanza para el `git diff` de
+          # abajo sin bajar los GB de datos viejos.
+          fetch-depth: 0
+          filter: blob:none
+
+      # Tras una Action de publicación: si no commiteó nada (su guardián lo
+      # frena cuando los datos no cambiaron, que es lo más común), no hay nada
+      # que publicar.
+      - name: guard
+        id: guard
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ] \
+            && git diff --quiet "${{ github.event.workflow_run.head_sha }}" HEAD -- site games netlify.toml; then
+            echo "nada cambió desde ${{ github.event.workflow_run.head_sha }}; no se publica"
+            echo "deploy=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        if: steps.guard.outputs.deploy == 'yes'
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: build
+        if: steps.guard.outputs.deploy == 'yes'
+        env:
+          # El mismo tope que tenía Netlify (ver `netlify.toml`).
+          NODE_OPTIONS: --max-old-space-size=6144
+        run: |
+          npm ci --prefix site
+          npm run build --prefix site
+
+      # Fijado por versión, como las actions por commit.
+      - name: publish
+        if: steps.guard.outputs.deploy == 'yes'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npx --yes netlify-cli@27.11.2 deploy --prod --no-build --dir site/dist \
+            --message "${{ github.event_name }} $(git rev-parse --short HEAD)"
