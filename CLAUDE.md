@@ -28,8 +28,12 @@ producción. Antes de publicar un juego o una pestaña nueva:
 4. **Datos**: nunca en el chunk de entrada. Cada pestaña importa los suyos con
    `import()`; los archivos grandes van partidos (como las fichas de Zomboid en
    `store.ts`) para que una ficha baje sólo su pedazo.
-5. **Netlify**: sumar `games/<juego>/data` al `ignore` de `netlify.toml`, si
-   no, las publicaciones automáticas no reconstruyen el sitio.
+5. **Publicación**: desde el 2026-10-21 el sitio se compila en GitHub Actions
+   (`.github/workflows/deploy.yml`) y se sube a Netlify con su CLI; los builds
+   de Netlify están apagados. Sumar `games/<juego>/data` a los `paths` de
+   `deploy.yml` (y al `ignore` de `netlify.toml`, por si se vuelve a compilar
+   allá); si no, los cambios de datos no se publican. Si el juego tiene una
+   Action de publicación, sumarla también a `workflow_run`.
 6. **Build**: el tope de memoria en Netlify es 6 GB (`NODE_OPTIONS` en
    `netlify.toml`). Medir el pico de RAM y el tiempo de `npm run build` antes y
    después de sumar un juego, y anotarlo en el plan del juego. Referencia del
