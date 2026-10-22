@@ -29,7 +29,7 @@ export interface NavHit {
 export type NavSearcher = (query: string, lang: Lang, max: number) => NavHit[];
 
 /** Los juegos donde la barra busca fichas mientras se escribe. */
-export const NAV_SEARCH_GAMES = ["valheim", "d2r", "zomboid", "rust", "terraria"] as const;
+export const NAV_SEARCH_GAMES = ["valheim", "d2r", "zomboid", "rust", "terraria", "stardew"] as const;
 export type NavSearchGame = (typeof NAV_SEARCH_GAMES)[number];
 export const hasNavSearch = (game: string): game is NavSearchGame => (NAV_SEARCH_GAMES as readonly string[]).includes(game);
 
@@ -145,6 +145,33 @@ const LOADERS: Record<NavSearchGame, () => Promise<NavSearcher>> = {
       img: r.w ? `/terraria/items/${r.id}.png` : undefined,
       to: { view: "terraria", trSection: "items", detail: r.slug },
     }));
+    return (query, lang, max) => searchEntries(entries, query, lang, max);
+  },
+  // Stardew Valley (2026-10-22): los objetos y los aldeanos, cada uno a su ficha.
+  async stardew() {
+    const [data, ui, copy] = await Promise.all([import("./stardew/data"), import("./stardew/ui"), import("./stardewCopy")]);
+    const tabs = (sec: "items" | "villagers") => ({ en: copy.STARDEW_COPY.en.tabs[sec], es: copy.STARDEW_COPY.es.tabs[sec] });
+    // Las dos listas, como en Terraria: el buscador se arma una vez y sirve en los dos idiomas.
+    const [en, es, people] = await Promise.all([data.loadList("en"), data.loadList("es"), data.loadVillagers()]);
+    const esName = new Map(es.map((r) => [r.id, r.name]));
+    const entries: Entry[] = en.map((r) => ({
+      key: `items/${r.id}`,
+      en: r.name,
+      es: esName.get(r.id) ?? r.name,
+      tab: tabs("items"),
+      img: `/stardew/items/${ui.spriteFile(r.id)}`,
+      to: { view: "stardew", sdSection: "items", detail: r.slug },
+    }));
+    for (const v of people) {
+      entries.push({
+        key: `villagers/${v.key}`,
+        en: v.name[0],
+        es: v.name[1] || v.name[0],
+        tab: tabs("villagers"),
+        img: `/stardew/portraits/${v.key.toLowerCase()}.png`,
+        to: { view: "stardew", sdSection: "villagers", detail: v.slug },
+      });
+    }
     return (query, lang, max) => searchEntries(entries, query, lang, max);
   },
   async rust() {

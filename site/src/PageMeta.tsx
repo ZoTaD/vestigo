@@ -16,6 +16,7 @@ import { pzPatchName } from "./zomboid/patches/slug";
 import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/data";
 import { loadItem as loadTrItem, peekItem as peekTrItem } from "./terraria/data";
 import { loadPatch as loadTrPatch, peekPatch as peekTrPatch } from "./terraria/patches/data";
+import { findVillager as findSdVillager, loadItem as loadSdItem, loadVillagers as loadSdVillagers, HAS as SD_HAS, peekItem as peekSdItem, peekVillagers as peekSdVillagers } from "./stardew/data";
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
 import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
@@ -147,6 +148,18 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const f = peekTrItem(route.detail);
     return f ? (lang === "es" && f.name[1]) || f.name[0] : null;
   }
+  // Una ficha de Objetos de Stardew Valley: el nombre sale de su archivo (uno de los 64 repartidos), que la pestaña pide
+  // igual. Una que no existe (`null`) no tiene nombre y el <head> queda el de la lista, como la página.
+  if (route.view === "stardew" && route.sdSection === "items" && route.detail) {
+    const f = peekSdItem(route.detail);
+    return f ? (lang === "es" && f.name[1]) || f.name[0] : null;
+  }
+  // Un aldeano, de `villagers.json`; por su slug en cualquiera de los dos idiomas, como la pestaña.
+  if (route.view === "stardew" && route.sdSection === "villagers" && route.detail) {
+    const list = peekSdVillagers();
+    const v = list && findSdVillager(list, route.detail);
+    return v ? (lang === "es" && v.name[1]) || v.name[0] : null;
+  }
   // Una ficha de Objetos de Rust: el nombre sale de su archivo (uno de los 32 repartidos), que la pestaña pide igual.
   if (route.view === "rust" && route.rsSection === "items" && route.detail) {
     const f = peekRsItem(route.detail);
@@ -185,7 +198,17 @@ export default function PageMeta({ route }: { route: Route }) {
     const rsHas = rsItem ? { craft: !!rsItem.craft, shop: rsItem.shops.length > 0, loot: rsItem.loot.length > 0, recycle: !!rsItem.recycle } : null;
     const trItem = route.view === "terraria" && route.trSection === "items" && route.detail ? peekTrItem(route.detail) : null;
     const trHas = trItem ? { craft: trItem.recipes.length > 0, uses: trItem.uses.length > 0, drops: trItem.drops.length > 0, sources: trItem.sources.length > 0 } : null;
-    const { title, description } = metaFor(route, lang, detail, via, rsHas, trHas);
+    // Lo que tiene una ficha de Stardew Valley, con los mismos bits que `has` en list.json (los arma site_data.py igual):
+    // sale de la ficha y no de la lista, que en frío no bajó, así el título es el mismo que el del prerender.
+    const sdItem = route.view === "stardew" && route.sdSection === "items" && route.detail ? peekSdItem(route.detail) : null;
+    const sdHas = sdItem
+      ? (Object.keys(sdItem.tastes).length ? SD_HAS.gift : 0) |
+        (sdItem.bundles.length ? SD_HAS.bundle : 0) |
+        (sdItem.machines.in.length || sdItem.machines.madeIn.length ? SD_HAS.machine : 0) |
+        (sdItem.recipes.make.length || sdItem.recipes.use.length ? SD_HAS.recipe : 0) |
+        (sdItem.sources.length ? SD_HAS.shop : 0)
+      : null;
+    const { title, description } = metaFor(route, lang, detail, via, rsHas, trHas, sdHas);
     const url = routeUrl(route);
 
     document.title = title;
@@ -265,6 +288,17 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "terraria" && route.trSection === "items" && route.detail && peekTrItem(route.detail) === undefined) {
       let vivo = true;
       loadTrItem(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una ficha de Stardew Valley: el archivo del objeto, o los aldeanos.
+    if (route.view === "stardew" && route.sdSection === "items" && route.detail && peekSdItem(route.detail) === undefined) {
+      let vivo = true;
+      loadSdItem(route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    if (route.view === "stardew" && route.sdSection === "villagers" && route.detail && !peekSdVillagers()) {
+      let vivo = true;
+      loadSdVillagers().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una ficha de Rust, con el archivo de la ficha (que la pestaña ya pidió).

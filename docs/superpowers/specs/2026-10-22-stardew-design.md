@@ -98,3 +98,37 @@ infestados), que obliga a replicar el generador aleatorio de la 1.6.
 - La calculadora de cultivos usa las reglas de precio del juego (calidad,
   profesiones Labrador/Artesano, multiplicadores de máquinas) leídas de los
   datos, no de la wiki.
+
+## Mediciones del build (etapa 1, 2026-10-22)
+
+`npm run build` completo (`tsc -b`, `vite build` con el prerender y `check-links`), con
+`NODE_OPTIONS=--max-old-space-size=6144` como en Actions, en la PC de ZoTaD. El pico de RAM es la suma del working
+set de los procesos `node` del build, muestreada cada medio segundo desde PowerShell (en Git Bash no hay
+`/usr/bin/time`).
+
+| | `main` (88a31d4c, sin Stardew) | `feat/stardew` |
+|---|---|---|
+| Páginas prerenderizadas | 37.082 | 38.934 (+1.852) |
+| Prerender | 64,8 s | 71,3 s |
+| `vite build` | 1 min 48 s | 1 min 58 s |
+| `npm run build` entero | 144,6 s | 157,5 s |
+| Pico de RAM (suma de procesos) | 2,70 GB | 2,80 GB |
+| Pico de un solo proceso | 2,59 GB | 2,69 GB |
+| `check-links` | 0 sin destino | 0 sin destino |
+
+Las 1.852 páginas nuevas: (888 objetos + 34 aldeanos + portada + 3 pestañas) × 2 idiomas. Lejos del tope de 6 GB.
+
+`npm run perf -- --only stardew --budget` contra `vite preview` (Chromium headless shell), en frío:
+
+| Página | Pedidos | Imágenes | Nodos |
+|---|---|---|---|
+| `/en/stardew-valley` | 48 | 25 | 251 |
+| `/en/stardew-valley/items` | 152 | 123 | 621 |
+| `/en/stardew-valley/items/melon` | 57 | 28 | 308 |
+| `/es/stardew-valley/objetos/pastel-rosa` | 71 | 41 | 316 |
+| `/en/stardew-valley/villagers` | 65 | 37 | 355 |
+| `/es/stardew-valley/aldeanos/abigail` | 127 | 97 | 421 |
+| `/en/stardew-valley/bundles` | 179 | 151 | 1.490 |
+| `/es/stardew-valley/centro-comunitario` | 179 | 151 | 1.491 |
+
+Todas dentro del presupuesto (≤ 250 pedidos, ≤ 200 imágenes, ≤ 3.000 nodos, sin errores).

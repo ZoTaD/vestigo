@@ -11,6 +11,8 @@ import { parseRoute, registerD2rSlugs, registerPzSlugs, registerRustSlugs, regis
 import { buildD2rEsSlugs } from "./src/d2r/slugs";
 import { isRsLoadingPage } from "./src/rust/loadingGuard";
 import { isTrLoadingPage } from "./src/terraria/loadingGuard";
+import { isSdLoadingPage } from "./src/stardew/loadingGuard";
+import { stardewSitemapData } from "./src/stardew/sitemapData";
 import { farmingPages, monumentsPages, patchesPages, type RustPage } from "./src/rust/sitemapPages";
 import { CIRCUITS, circuitSlugsEs } from "./src/rust/electric/circuits";
 import { buildEsSlugs } from "./src/esSlugs";
@@ -267,6 +269,16 @@ function readSitemapData(): { data: OgData } {
     console.warn(`[terraria] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     tr = undefined;
   }
+  // Stardew Valley (2026-10-22): `meta.json`, la lista con sus nombres y los aldeanos. `stardewSitemapData` anota los
+  // slugs en español (objetos y aldeanos), igual que arriba Terraria.
+  let sd: SitemapData["sd"];
+  try {
+    const read = (f: string) => JSON.parse(readFileSync(`${stardewDir}/${f}`, "utf-8"));
+    sd = stardewSitemapData(read("meta.json"), read("site/list.json"), read("site/names-en.json"), read("site/names-es.json"), read("villagers.json"));
+  } catch (e) {
+    console.warn(`[stardew] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
+    sd = undefined;
+  }
   return {
     data: {
       p2,
@@ -275,6 +287,7 @@ function readSitemapData(): { data: OgData } {
       zb,
       rs,
       tr,
+      sd,
       // Los sellos de cada pipeline, para el `lastmod` del sitemap. La
       // enciclopedia de PoE2 no tiene sello y va sin fecha.
       dates: {
@@ -285,6 +298,7 @@ function readSitemapData(): { data: OgData } {
         zomboid: zb?.extractedAt,
         rust: rs?.extractedAt,
         terraria: tr?.generatedAt,
+        stardew: sd?.generatedAt,
       },
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
@@ -825,6 +839,9 @@ function prerenderRoutes(): Plugin {
             throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
           }
           if (route.view === "terraria" && isTrLoadingPage(cuerpo)) {
+            throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
+          }
+          if (route.view === "stardew" && isSdLoadingPage(cuerpo)) {
             throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
           }
           const conexiones = originsFor(route)

@@ -21,6 +21,30 @@ export type Profession = "tiller" | "artisan" | "rancher" | "fisher" | "angler" 
 export type Taste = "love" | "like" | "neutral" | "dislike" | "hate";
 export const TASTES: Taste[] = ["love", "like", "neutral", "dislike", "hate"];
 
+type Seo = { title: string; description: string };
+
+/**
+ * Qué tiene la ficha de un objeto, para que su `<head>` sólo prometa eso: los bits `has` de `list.json` (`HAS` en
+ * `stardew/data.ts`; no se importa de ahí para no meter los datos en el chunk del prerender).
+ */
+const HAS_GIFT = 1, HAS_BUNDLE = 2, HAS_MACHINE = 4, HAS_RECIPE = 8, HAS_SOURCES = ~15;
+
+/** Cortada a 160 caracteres en una palabra entera, como en Terraria. */
+const clip = (s: string): string => (s.length <= 160 ? s : `${s.slice(0, 157).replace(/[\s,;:]+\S*$/, "")}…`);
+const join = (parts: string[], and: string): string => (parts.length > 1 ? `${parts.slice(0, -1).join(", ")} ${and} ${parts[parts.length - 1]}` : parts[0] ?? "");
+
+/** Lo que se busca de un objeto, en el orden en que la ficha lo muestra. */
+function itemTopics(has: number) {
+  return {
+    gift: (has & HAS_GIFT) > 0,
+    bundle: (has & HAS_BUNDLE) > 0,
+    uses: (has & (HAS_MACHINE | HAS_RECIPE)) > 0,
+    machine: (has & HAS_MACHINE) > 0,
+    recipe: (has & HAS_RECIPE) > 0,
+    sources: (has & HAS_SOURCES) > 0,
+  };
+}
+
 /** Los textos de la pestaña Objetos: la lista y la ficha. */
 export interface ItemsCopy {
   h1: string;
@@ -132,6 +156,12 @@ export interface BundlesCopy {
 
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
+  /** El `<head>` de la portada y de cada pestaña: lo que se busca primero. */
+  seo: Record<StardewSection, Seo>;
+  /** El de una ficha de objeto; `has` son los bits de `list.json` y la ficha sólo promete lo que tiene. */
+  itemSeo: (name: string, has?: number) => Seo;
+  /** El de una ficha de aldeano. */
+  villagerSeo: (name: string) => Seo;
   /** La insignia de una pestaña que todavía no tiene página. */
   soon: string;
   loading: string;
@@ -166,6 +196,44 @@ export interface StardewCopy {
 
 const EN: StardewCopy = {
   tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center" },
+  seo: {
+    home: {
+      title: "Stardew Valley Guide: Item Prices, Villager Gifts and Bundles | Vestigo",
+      description: "Every Stardew Valley 1.6 item with its price by quality and where to get it, what each villager loves and hates, and a Community Center bundle checklist.",
+    },
+    items: {
+      title: "Stardew Valley Items List: Prices, Gifts and Uses | Vestigo",
+      description: "Every Stardew Valley 1.6 item by category: sell price by quality, who loves it as a gift, which bundle takes it, what machines make of it and where to get it.",
+    },
+    villagers: {
+      title: "Stardew Valley Villagers: Gift Guide and Birthdays | Vestigo",
+      description: "Every Stardew Valley 1.6 villager with their birthday and the full list of gifts they love, like, dislike and hate. Filter by marriage candidates or season.",
+    },
+    bundles: {
+      title: "Stardew Valley Community Center Bundles Checklist | Vestigo",
+      description: "Every Stardew Valley Community Center bundle, room by room: what goes in each one, the reward, and what you can still get this season. Tick them off as you go.",
+    },
+  },
+  itemSeo: (name, has = 0) => {
+    const t = itemTopics(has);
+    const topics = ["price", ...(t.gift ? ["gifts"] : []), ...(t.bundle ? ["bundles"] : []), ...(t.uses ? ["uses"] : [])];
+    const head = topics.length > 1 ? join(topics, "and") : t.sources ? "price and where to get it" : "sell price";
+    const parts = [
+      ...(t.gift ? ["which villagers love or hate it"] : []),
+      ...(t.bundle ? ["the bundles that need it"] : []),
+      ...(t.machine ? ["what machines turn it into"] : []),
+      ...(t.recipe ? ["the recipes that make or use it"] : []),
+      ...(t.sources ? ["where to get it"] : []),
+    ];
+    return {
+      title: `${name} — Stardew Valley ${head} | Vestigo`,
+      description: clip(`${name} in Stardew Valley 1.6: its sell price by quality${parts.length ? `, ${join(parts, "and")}` : ""}.`),
+    };
+  },
+  villagerSeo: (name) => ({
+    title: `${name} — Stardew Valley best gifts and birthday | Vestigo`,
+    description: clip(`Every gift ${name} loves, likes, dislikes and hates in Stardew Valley 1.6, the birthday, and the loved gifts you can grow or buy.`),
+  }),
   soon: "Soon",
   loading: "Loading…",
   loadError: "This page couldn't load.",
@@ -288,6 +356,44 @@ const EN: StardewCopy = {
 
 const ES: StardewCopy = {
   tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario" },
+  seo: {
+    home: {
+      title: "Guía de Stardew Valley: precios, regalos de aldeanos y paquetes | Vestigo",
+      description: "Cada objeto de Stardew Valley 1.6 con su precio y dónde se consigue, lo que a cada aldeano le encanta y odia, y los paquetes del Centro Comunitario.",
+    },
+    items: {
+      title: "Objetos de Stardew Valley: precios, regalos y usos | Vestigo",
+      description: "Los objetos de Stardew Valley 1.6 por categoría: precio por calidad, a quién le encanta, en qué paquete va, qué sale de las máquinas y dónde se consigue.",
+    },
+    villagers: {
+      title: "Aldeanos de Stardew Valley: regalos favoritos y cumpleaños | Vestigo",
+      description: "Cada aldeano de Stardew Valley 1.6 con su cumpleaños y todos los regalos que le encantan, le gustan, no le gustan y odia. Filtrá por candidatos o estación.",
+    },
+    bundles: {
+      title: "Paquetes del Centro Comunitario de Stardew Valley: lista para tildar | Vestigo",
+      description: "Los paquetes del Centro Comunitario de Stardew Valley, sala por sala: qué lleva cada uno, la recompensa y qué se consigue esta estación. Tildalos al avanzar.",
+    },
+  },
+  itemSeo: (name, has = 0) => {
+    const t = itemTopics(has);
+    const topics = ["precio", ...(t.gift ? ["regalos"] : []), ...(t.bundle ? ["paquetes"] : []), ...(t.uses ? ["usos"] : [])];
+    const head = topics.length > 1 ? join(topics, "y") : t.sources ? "precio y dónde se consigue" : "precio de venta";
+    const parts = [
+      ...(t.gift ? ["a qué aldeanos les encanta o lo odian"] : []),
+      ...(t.bundle ? ["los paquetes que lo piden"] : []),
+      ...(t.machine ? ["en qué lo transforman las máquinas"] : []),
+      ...(t.recipe ? ["las recetas que lo hacen o lo usan"] : []),
+      ...(t.sources ? ["dónde se consigue"] : []),
+    ];
+    return {
+      title: `${name} — Stardew Valley: ${head} | Vestigo`,
+      description: clip(`${name} en Stardew Valley 1.6: su precio de venta por calidad${parts.length ? `, ${join(parts, "y")}` : ""}.`),
+    };
+  },
+  villagerSeo: (name) => ({
+    title: `${name} — Stardew Valley: regalos favoritos y cumpleaños | Vestigo`,
+    description: clip(`Todo lo que a ${name} le encanta, le gusta, no le gusta y odia de regalo en Stardew Valley 1.6, su cumpleaños y los favoritos que se cultivan o se compran.`),
+  }),
   soon: "Pronto",
   loading: "Cargando…",
   loadError: "Esta página no se pudo cargar.",
