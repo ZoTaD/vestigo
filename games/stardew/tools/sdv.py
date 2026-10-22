@@ -38,7 +38,7 @@ def _buscar(archivo: str, clave: str, lang: str):
 
 
 def text(token: str | None, lang: str) -> str:
-    """Resuelve los `[LocalizedText Strings\X:Clave]` de una cadena.
+    r"""Resuelve los `[LocalizedText Strings\X:Clave]` de una cadena.
 
     En español cae al inglés si el juego no trae la traducción. Si no hay
     tokens, devuelve la cadena tal cual.
