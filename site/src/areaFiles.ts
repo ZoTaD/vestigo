@@ -1,4 +1,4 @@
-import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, TerrariaSection, View } from "./route";
+import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, View } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -18,6 +18,7 @@ export const AREA_FILES: Partial<Record<View, string>> = {
   zomboid: "src/Zomboid.tsx",
   rust: "src/Rust.tsx",
   terraria: "src/Terraria.tsx",
+  stardew: "src/Stardew.tsx",
   privacy: "src/Privacy.tsx",
   terms: "src/Terms.tsx",
 };
@@ -91,6 +92,12 @@ export const TERRARIA_TAB_FILES: Partial<Record<TerrariaSection, string>> = {
   patches: "src/terraria/patches/TerrariaPatches.tsx",
 };
 
+/**
+ * Las pestañas de Stardew Valley que viajan en su propio chunk, igual que `TABS` en `Stardew.tsx` (2026-10-22; lo cuida
+ * `test/areas.test.ts`). Cada una suma acá su línea el día que tiene página. La portada viene con el área.
+ */
+export const STARDEW_TAB_FILES: Partial<Record<StardewSection, string>> = {};
+
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */
 export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
   items: "src/rust/items/RustItems.tsx",
@@ -131,6 +138,8 @@ export function filesFor(route: Route): string[] {
             ? RUST_TAB_FILES[route.rsSection ?? "home"]
             : route.view === "terraria"
               ? TERRARIA_TAB_FILES[route.trSection ?? "home"]
-              : undefined;
+              : route.view === "stardew"
+                ? STARDEW_TAB_FILES[route.sdSection ?? "home"]
+                : undefined;
   return tab ? [area, tab] : [area];
 }

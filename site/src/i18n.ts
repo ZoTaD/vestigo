@@ -40,6 +40,7 @@ const EN = {
     zomboidShort: "Zomboid",
     rust: "Rust",
     terraria: "Terraria",
+    stardew: "Stardew Valley",
     /** El botón de tres puntos de la barra: los juegos que no entraron. */
     more: "More games",
     /** Las categorías del menú y de la portada (`gameGroups.ts`). */
@@ -156,6 +157,10 @@ const EN = {
       terrariaCta: "Dig in",
       terrariaItems: "items",
       terrariaRecipes: "recipes",
+      stardewLive: "Every item with its price by quality, who loves it and which bundle takes it, all the villagers and the Community Center checklist.",
+      stardewCta: "Open the menu",
+      stardewItems: "items",
+      stardewVillagers: "villagers",
       poe2Live: "Currency and unique prices for every league, the passive tree with build export, the item encyclopedia and every patch.",
       poe2Cta: "League prices",
       poe2Patches: "Patch notes",
@@ -247,6 +252,9 @@ const EN = {
     disclaimerReLogic:
       "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Re-Logic. Terraria and its " +
       "content belong to Re-Logic.",
+    disclaimerConcernedApe:
+      "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with ConcernedApe. Stardew Valley and its " +
+      "content belong to ConcernedApe LLC.",
     disclaimerFacepunch:
       "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Facepunch Studios. Rust and its " +
       "content belong to Facepunch Studios.",
@@ -290,6 +298,7 @@ const ES: typeof EN = {
     zomboidShort: "Zomboid",
     rust: "Rust",
     terraria: "Terraria",
+    stardew: "Stardew Valley",
     more: "Más juegos",
     groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
@@ -386,6 +395,10 @@ const ES: typeof EN = {
       terrariaCta: "A cavar",
       terrariaItems: "objetos",
       terrariaRecipes: "recetas",
+      stardewLive: "Cada objeto con su precio por calidad, a quién le encanta y en qué paquete va, todos los aldeanos y la lista del Centro Comunitario.",
+      stardewCta: "Abrir el menú",
+      stardewItems: "objetos",
+      stardewVillagers: "aldeanos",
       poe2Live: "Los precios de monedas y únicos de cada liga, el árbol de pasivas con exportación de build, la enciclopedia de objetos y cada parche.",
       poe2Cta: "Precios de la liga",
       poe2Patches: "Parches",
@@ -471,6 +484,9 @@ const ES: typeof EN = {
     disclaimerReLogic:
       "Vestigo es un sitio de fans no oficial: Re-Logic no lo avala ni está afiliado a él. Terraria y su " +
       "contenido pertenecen a Re-Logic.",
+    disclaimerConcernedApe:
+      "Vestigo es un sitio de fans no oficial: ConcernedApe no lo avala ni está afiliado a él. Stardew Valley y su " +
+      "contenido pertenecen a ConcernedApe LLC.",
     disclaimerFacepunch:
       "Vestigo es un sitio de fans no oficial y no está avalado por Facepunch Studios ni afiliado a ella. Rust y su " +
       "contenido pertenecen a Facepunch Studios.",

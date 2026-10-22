@@ -1,4 +1,5 @@
 import { TERRARIA_COPY, type TerrariaHas } from "./terrariaCopy";
+import { STARDEW_COPY } from "./stardewCopy";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
 import { SEO_COPY } from "./seoCopy";
@@ -163,6 +164,14 @@ export function metaFor(
     const circuit = route.rsSection === "electricity" ? circuitMeta(route.detail) : undefined;
     if (circuit) return r.circuitSeo(circuit.name[lang], circuit.about[lang]);
     return r.seo[route.rsSection ?? "home"];
+  }
+  // Stardew Valley: provisorio, para que compile. Los títulos con lo que se busca, las fichas y el JSON-LD llegan con
+  // la tarea 8 del plan (docs/superpowers/plans/2026-10-22-stardew-etapa-1.md).
+  if (route.view === "stardew") {
+    const c = STARDEW_COPY[lang];
+    const sec = route.sdSection ?? "home";
+    if (sec === "home") return { title: `Stardew Valley: ${c.home.h1} | Vestigo`, description: c.home.kicker };
+    return { title: `${c[sec].h1} | Vestigo`, description: c.home.cards[sec] };
   }
   // Lo que queda son la portada y las dos páginas legales.
   const page = seo[route.view];
