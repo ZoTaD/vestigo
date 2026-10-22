@@ -121,6 +121,8 @@ export interface Room {
   name: Pair;
   bundles: Bundle[];
   refs: Record<string, Ref>;
+  /** Las estaciones (0 a 3) de los objetos que se consiguen por temporada; los que no están valen todo el año o no se sabe. */
+  seasons: Record<string, number[]>;
 }
 
 const rows = once<RawRow[]>(() => import("@stardew/site/list.json"));

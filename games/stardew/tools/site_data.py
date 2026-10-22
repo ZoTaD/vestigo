@@ -215,6 +215,18 @@ def _slugs_unicos(ids: list[str], en: dict[str, str], es: dict[str, str]) -> tup
     return slug, slug_es
 
 
+def estaciones_de(fuentes: list[dict]) -> list[int] | None:
+    """Las estaciones en que se consigue un objeto, o None si no se sabe (o si es todo el año).
+
+    Sólo cuenta si todas sus fuentes son por temporada (cultivo, árbol, pesca, recolección): con una tienda o un
+    monstruo se consigue en cualquier estación. Es lo que usa el filtro de estación del Centro Comunitario.
+    """
+    if not fuentes or any(f["k"] not in ("crop", "tree", "fish", "forage") for f in fuentes):
+        return None
+    est = sorted({e for f in fuentes for e in f["seasons"]})
+    return est if 0 < len(est) < 4 else None
+
+
 def build(write: bool = False) -> dict:
     objs = relations.objects()
     grandes = sdv.raw("Data/BigCraftables")
@@ -367,10 +379,17 @@ def build(write: bool = False) -> dict:
                     refs[item_id] = ref(item_id)
             if b["reward"] and b["reward"][0] in slug:
                 refs[b["reward"][0]] = ref(b["reward"][0])
+        estaciones = {}
+        for b in bs:
+            for item_id, _, _ in b["items"]:
+                est = estaciones_de(fuentes.get(item_id, []))
+                if est is not None:
+                    estaciones[item_id] = est
         salas.append({
             "room": room, "name": bs[0]["room_name"],
             "bundles": [{k: b[k] for k in ("index", "name", "items", "need", "reward")} for b in bs],
             "refs": dict(sorted(refs.items())),
+            "seasons": dict(sorted(estaciones.items())),
         })
     if len(todos) != sum(len(s["bundles"]) for s in salas):
         raise ValueError("hay paquetes en una sala que no está en ROOMS")

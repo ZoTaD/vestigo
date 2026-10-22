@@ -16,6 +16,7 @@ import type { Route } from "../../route";
 import { QUALITIES, useStardewCopy, type Profession, type Taste } from "../../stardewCopy";
 import { useLoad } from "../../useLoad";
 import { loadBundles, machineTime, peekBundles, refName, say, type Ficha, type MachineIn, type Pair, type Ref, type Source } from "../data";
+import { roomAnchor } from "../bundles/progress";
 import { Box, Gold, Slot, Sprite, type Nav } from "../ui";
 
 const CATEGORIES = meta.categories as unknown as Record<string, Pair>;
@@ -254,6 +255,7 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                           detail: undefined,
                         }}
                         onNavigate={navigate}
+                        hash={roomAnchor(room)}
                       >
                         <b>{bundle ? say(bundle.name, lang) : room}</b>
                         <span className="sd-muted">{sala ? say(sala.name, lang) : ""}</span>

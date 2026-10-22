@@ -96,6 +96,16 @@ class TestSiteData(unittest.TestCase):
         self.assertEqual([s["room"] for s in self.out["bundles"]],
                          ["Pantry", "Crafts Room", "Fish Tank", "Boiler Room", "Bulletin Board", "Vault", "Abandoned Joja Mart"])
 
+    def test_estaciones_de_los_paquetes(self):
+        # Las estaciones de cada objeto de la sala: sólo las de lo que se consigue por temporada.
+        pantry = self.out["bundles"][0]
+        self.assertEqual(pantry["seasons"]["24"], [0])  # chirivía: primavera
+        self.assertEqual(pantry["seasons"]["256"], [1])  # tomate: verano
+        self.assertNotIn("186", pantry["seasons"])  # leche XXL: no se sabe, queda visible
+        for sala in self.out["bundles"]:
+            for estaciones in sala["seasons"].values():
+                self.assertTrue(0 < len(estaciones) < 4)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -105,6 +105,31 @@ export interface VillagersCopy {
   tasteCount: (n: string) => string;
 }
 
+/** Los textos de la pestaña Centro Comunitario: las salas, los paquetes y la lista para tildar. */
+export interface BundlesCopy {
+  h1: string;
+  lede: (n: string) => string;
+  /** Aviso de que la lista queda en este navegador. */
+  saved: string;
+  /** "3 de 6 paquetes". */
+  progress: (done: string, total: string) => string;
+  /** "Pide 4 de 6" (o "Pide los 4" si piden todos). */
+  needs: (need: number, total: number) => string;
+  /** "2 / 4": lo tildado y lo que pide. */
+  have: (have: number, need: number) => string;
+  complete: string;
+  reward: string;
+  onlyMissing: string;
+  season: string;
+  allSeasons: string;
+  /** Nada que mostrar con los filtros puestos. */
+  empty: string;
+  /** El nombre accesible de un casillero tildable: "Tomate × 1, calidad Oro". */
+  tick: (name: string, qty: number, quality: string | null) => string;
+  /** El nombre de la cifra en oro de un paquete de la Bóveda. */
+  gold: string;
+}
+
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
   /** La insignia de una pestaña que todavía no tiene página. */
@@ -131,7 +156,7 @@ export interface StardewCopy {
   };
   items: ItemsCopy;
   villagers: VillagersCopy;
-  bundles: { h1: string; lede: (n: string) => string };
+  bundles: BundlesCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
   tastes: Record<Taste, string>;
@@ -229,7 +254,22 @@ const EN: StardewCopy = {
     tasteHeads: { love: "Loves", like: "Likes", dislike: "Dislikes", hate: "Hates" },
     tasteCount: (n) => `${n} items`,
   },
-  bundles: { h1: "Community Center bundles", lede: (n) => `The ${n} bundles of the Community Center, room by room.` },
+  bundles: {
+    h1: "Community Center bundles",
+    lede: (n) => `The ${n} bundles of the Community Center, room by room.`,
+    saved: "Tick what you already handed in. Your list stays in this browser.",
+    progress: (done, total) => `${done} of ${total} bundles`,
+    needs: (need, total) => (need >= total ? `Needs all ${total}` : `Needs ${need} of ${total}`),
+    have: (have, need) => `${have} / ${need}`,
+    complete: "Done",
+    reward: "Reward",
+    onlyMissing: "Only what's missing",
+    season: "In season",
+    allSeasons: "Any season",
+    empty: "Nothing left to show here.",
+    tick: (name, qty, quality) => `${name} × ${qty}${quality ? `, ${quality} quality` : ""}`,
+    gold: "Gold",
+  },
   qualities: { normal: "Normal", silver: "Silver", gold: "Gold", iridium: "Iridium" },
   // `LevelUp_ProfessionName_*` de `Strings/UI`.
   professions: {
@@ -336,7 +376,22 @@ const ES: StardewCopy = {
     tasteHeads: { love: "Le encanta", like: "Le gusta", dislike: "No le gusta", hate: "Lo odia" },
     tasteCount: (n) => `${n} objetos`,
   },
-  bundles: { h1: "Paquetes del Centro Comunitario", lede: (n) => `Los ${n} paquetes del Centro Comunitario, sala por sala.` },
+  bundles: {
+    h1: "Paquetes del Centro Comunitario",
+    lede: (n) => `Los ${n} paquetes del Centro Comunitario, sala por sala.`,
+    saved: "Tildá lo que ya entregaste. Tu lista queda en este navegador.",
+    progress: (done, total) => `${done} de ${total} paquetes`,
+    needs: (need, total) => (need >= total ? `Pide los ${total}` : `Pide ${need} de ${total}`),
+    have: (have, need) => `${have} / ${need}`,
+    complete: "Listo",
+    reward: "Recompensa",
+    onlyMissing: "Sólo lo que falta",
+    season: "De temporada",
+    allSeasons: "Cualquier estación",
+    empty: "No queda nada para mostrar acá.",
+    tick: (name, qty, quality) => `${name} × ${qty}${quality ? `, calidad ${quality}` : ""}`,
+    gold: "Oro",
+  },
   qualities: { normal: "Normal", silver: "Plata", gold: "Oro", iridium: "Iridio" },
   // `LevelUp_ProfessionName_*` de `Strings/UI.es-ES`.
   professions: {

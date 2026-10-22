@@ -141,7 +141,7 @@ describe("la ficha de un objeto", () => {
     expect(html).toContain('href="/es/stardew-valley/aldeanos/penny"');
     expect(html).toContain("/stardew/portraits/penny.png");
     expect(html).toContain("Centro Comunitario");
-    expect(html).toContain('href="/es/stardew-valley/centro-comunitario"');
+    expect(html).toContain('href="/es/stardew-valley/centro-comunitario#pantry"');
     expect(html).toContain("Se transforma en");
     expect(html).toContain("Vino de Melón");
     expect(html).toContain('href="/es/stardew-valley/objetos/barril"');

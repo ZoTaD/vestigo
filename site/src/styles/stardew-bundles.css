@@ -1,0 +1,39 @@
+/*
+ * Centro Comunitario de Stardew Valley (2026-10-22): una caja del menú por sala, los paquetes como tarjetas de papel y
+ * los casilleros tildables. Viaja con la pestaña (StardewBundles.tsx); lo común está en stardew.css y stardew-items.css.
+ * Sin bordes ni barras de color: lo tildado se marca con la palomita, el tinte y el texto.
+ */
+.sd-room-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 10px; }
+.sd-room-head .sd-h2 { margin-bottom: 0; }
+.sd-room { scroll-margin-top: 12px; }
+.sd-bundle-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 10px; }
+.sd-bundle-list > li { min-width: 0; }
+.sd-bundle { height: 100%; padding: 10px 12px 12px; border-radius: 6px; background: var(--sd-paper); }
+.sd-bundle.is-done { background: var(--sd-paper-2); }
+.sd-bundle-head .sd-h3 { margin: 0; }
+.sd-bundle-meta { display: flex; justify-content: space-between; gap: 8px; margin: 2px 0 8px; color: var(--sd-dim); font-size: 14px; font-weight: 800; }
+.sd-have { font: 700 15px/1.2 var(--sd-pixel); color: var(--sd-ink); white-space: nowrap; }
+.sd-bundle.is-done .sd-have { color: var(--sd-wood); }
+
+.sd-bundle-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px 4px; }
+.sd-bundle-items > li { min-width: 0; }
+.sd-tickable { display: grid; justify-items: center; align-content: start; gap: 4px; width: 100%; padding: 2px 0; font: inherit; color: inherit; text-align: center; background: none; border: 0; border-radius: 6px; cursor: pointer; }
+.sd-tickable:hover .sd-slot { filter: brightness(1.1); }
+.sd-tickable:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; }
+.sd-tickable .sd-slot { position: relative; }
+.sd-tickable.is-on .sd-sprite { opacity: 0.45; }
+.sd-tickable.is-on .sd-tname { opacity: 0.6; }
+.sd-tname { display: grid; gap: 1px; max-width: 100%; font-size: 13px; line-height: 1.2; }
+.sd-tname b { font-weight: 800; hyphens: manual; }
+.sd-tname small { color: var(--sd-dim); font-size: 13px; font-weight: 800; }
+.sd-check { position: absolute; inset: 0; display: grid; place-items: center; font: 700 34px/1 var(--sd-pixel); color: #2f7d1e; text-shadow: 2px 2px 0 #fff3d6; }
+.sd-coin { font: 700 24px/1 var(--sd-pixel); color: var(--sd-gold); }
+/* La estrella de calidad en el rincón del casillero: texto de color, sin filo. */
+.sd-star { position: absolute; left: 6px; bottom: 4px; font: 700 18px/1 var(--sd-pixel); text-shadow: 1px 1px 0 #3b1f12; }
+.sd-q1 { color: #d8dde3; }
+.sd-q2 { color: #ffc61a; }
+.sd-q3 { color: #c58bff; }
+
+.sd-reward { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 10px; font-size: 14px; }
+.sd-reward .sd-sprite { flex: none; }
+.sd-reward small { color: var(--sd-dim); font-weight: 800; }
