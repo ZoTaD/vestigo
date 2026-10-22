@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { LangContext } from "../src/i18n";
 import { loadBundles } from "../src/stardew/data";
 import { BundleRooms } from "../src/stardew/bundles/StardewBundles";
-import { bundleState, doneKey, inSeason, readDone, roomAnchor, roomState, toggle, writeDone } from "../src/stardew/bundles/progress";
+import { bundleState, doneKey, inSeason, readDone, roomAnchor, roomState, tick, toggle, writeDone } from "../src/stardew/bundles/progress";
 import type { Route } from "../src/route";
 
 describe("progreso del Centro Comunitario", () => {
@@ -46,6 +46,17 @@ describe("progreso del Centro Comunitario", () => {
     expect(toggle(b, "Vault/2:0")).toEqual({});
   });
 
+  it("sin localStorage se puede tildar y destildar: parte del estado en memoria", () => {
+    const orig = globalThis.localStorage;
+    Object.defineProperty(globalThis, "localStorage", { get() { throw new Error("bloqueado"); }, configurable: true });
+    let d = tick({}, "Pantry/0:0");
+    d = tick(d, "Pantry/0:1");
+    expect(d).toEqual({ "Pantry/0:0": true, "Pantry/0:1": true });
+    d = tick(d, "Pantry/0:0");
+    expect(d).toEqual({ "Pantry/0:1": true });
+    Object.defineProperty(globalThis, "localStorage", { value: orig, configurable: true });
+  });
+
   it("una sala cuenta los paquetes completos", () => {
     const room = {
       room: "Vault",
@@ -75,7 +86,7 @@ describe("pantalla del Centro Comunitario", () => {
   const route = { lang: "en", view: "stardew", sdSection: "bundles" } as Route;
   it("dibuja todas las salas y los paquetes destildados", async () => {
     const rooms = await loadBundles();
-    const html = renderToStaticMarkup(createElement(LangContext.Provider, { value: { lang: "en", setLang: () => undefined } }, createElement(BundleRooms, { rooms, route, navigate: () => {} })));
+    const html = renderToStaticMarkup(createElement(LangContext.Provider, { value: { lang: "en", setLang: () => undefined } }, createElement(BundleRooms, { rooms })));
     for (const r of rooms) expect(html).toContain(`id="${roomAnchor(r.room)}"`);
     expect(html).toContain("0 of 6 bundles");
     expect(html).not.toContain("sd-tickable is-on");

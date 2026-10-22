@@ -14,21 +14,21 @@ import { QUALITIES, useStardewCopy } from "../../stardewCopy";
 import { useLoad } from "../../useLoad";
 import { loadBundles, peekBundles, refName, say, type Bundle, type Ref, type Room } from "../data";
 import { Box, Gold, Slot, Sprite, SdLoading, type Nav } from "../ui";
-import { bundleState, doneKey, inSeason, qualityIndex, readDone, roomAnchor, roomState, toggle, writeDone, type Done } from "./progress";
+import { bundleState, doneKey, inSeason, qualityIndex, readDone, roomAnchor, roomState, tick, type Done } from "./progress";
 import "../../styles/stardew-items.css";
 import "../../styles/stardew-bundles.css";
 
-export default function StardewBundles({ route, navigate }: { route: Route; navigate: Nav }) {
+export default function StardewBundles(_props: { route: Route; navigate: Nav }) {
   const rooms = useLoad("bundles", () => peekBundles() ?? undefined, loadBundles);
   if (rooms.failed) return <SdLoading onRetry={rooms.retry} />;
   if (!rooms.value) return <SdLoading />;
-  return <BundleRooms rooms={rooms.value} route={route} navigate={navigate} />;
+  return <BundleRooms rooms={rooms.value} />;
 }
 
 /** El id del oro en los paquetes de la Bóveda. */
 const GOLD = "-1";
 
-export function BundleRooms({ rooms }: { rooms: Room[]; route: Route; navigate: Nav }) {
+export function BundleRooms({ rooms }: { rooms: Room[] }) {
   const t = useStardewCopy();
   const c = t.bundles;
   const { lang } = useLang();
@@ -52,11 +52,7 @@ export function BundleRooms({ rooms }: { rooms: Room[]; route: Route; navigate: 
     return () => window.clearTimeout(timer);
   }, []);
 
-  const tick = (key: string) => {
-    const next = toggle(readDone(), key);
-    setDone(next);
-    writeDone(next);
-  };
+  const onTick = (key: string) => setDone((prev) => tick(prev, key));
 
   const total = useMemo(() => rooms.reduce((n, r) => n + r.bundles.length, 0), [rooms]);
   const complete = useMemo(() => rooms.reduce((n, r) => n + roomState(r, done).done, 0), [rooms, done]);
@@ -108,7 +104,7 @@ export function BundleRooms({ rooms }: { rooms: Room[]; route: Route; navigate: 
               <ul className="sd-bundle-list">
                 {bundles.map((b) => (
                   <li key={b.index}>
-                    <BundleCard room={room} bundle={b} done={done} onlyMissing={onlyMissing} season={season} onTick={tick} />
+                    <BundleCard room={room} bundle={b} done={done} onlyMissing={onlyMissing} season={season} onTick={onTick} />
                   </li>
                 ))}
               </ul>

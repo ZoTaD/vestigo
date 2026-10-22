@@ -42,6 +42,16 @@ export function toggle(d: Done, key: string): Done {
   return { ...d, [key]: true };
 }
 
+/**
+ * Tilda o destilda partiendo del estado que se está mostrando (no de lo guardado: sin almacenamiento eso sería siempre
+ * `{}`), y después intenta guardarlo. Devuelve el estado nuevo.
+ */
+export function tick(d: Done, key: string): Done {
+  const next = toggle(d, key);
+  writeDone(next);
+  return next;
+}
+
 /** Un paquete con la sala a la que pertenece (en los datos la sala lo contiene, el paquete no la nombra). */
 export type RoomBundle = Pick<Bundle, "index" | "items" | "need"> & { room: string };
 
