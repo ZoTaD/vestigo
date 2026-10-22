@@ -1,0 +1,114 @@
+/*
+ * Objetos de Stardew Valley (2026-10-22): la lista (buscador, chips y la grilla de casilleros del inventario con el
+ * cartelito crema del juego) y la ficha de la maqueta A. Viaja con la pestaña (StardewItems.tsx); lo común está en
+ * stardew.css. Sin bordes ni barras de color en filas o tarjetas: tinte de papel, texto y cifras.
+ */
+
+/* --- Lista: buscador y chips ---------------------------------------------------------------------------------------- */
+.sd-label { font: 700 12px/1 var(--sd-pixel); letter-spacing: 0.08em; text-transform: uppercase; color: var(--sd-dim); }
+.sd-note { margin-top: 10px; padding: 8px 12px; border-radius: 6px; background: var(--sd-paper); }
+.sd-filters { display: grid; gap: 12px; margin-top: 16px; }
+.sd-find { display: grid; gap: 6px; max-width: 420px; }
+.sd-find input {
+  font: 700 16px/1.2 "Nunito", sans-serif;
+  color: var(--sd-ink);
+  padding: 9px 12px;
+  border: 3px solid #b4560f;
+  border-radius: 4px;
+  background: var(--sd-paper-2);
+}
+.sd-find input:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; }
+.sd-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.sd-chips .sd-label { flex-basis: 100%; }
+.sd-count { font: 700 15px/1 var(--sd-pixel); color: var(--sd-dim); }
+
+/* --- Lista: la grilla del inventario -------------------------------------------------------------------------------- */
+/* Casilleros de 64 px pegados como los del juego; el alto de fila (64) es `SD_CELL` de ItemList.tsx. */
+.sd-inv-grid { position: relative; display: grid; grid-template-columns: repeat(auto-fill, 64px); gap: 4px; justify-content: center; }
+.sd-icell { position: relative; display: block; width: 64px; height: 64px; border-radius: 4px; }
+.sd-icell:hover .sd-slot, .sd-icell:focus-visible .sd-slot { filter: brightness(1.12); }
+.sd-icell:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; }
+
+/* El cartelito crema del juego: uno solo, encima del casillero que tiene el mouse o el foco. */
+.sd-tip {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, calc(-100% - 6px));
+  display: grid;
+  gap: 4px;
+  min-width: 120px;
+  max-width: 240px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #fff3d6;
+  box-shadow: 0 0 0 3px #5b2b29, 0 0 0 5px #e8a54d, 0 6px 12px rgba(59, 31, 18, 0.35);
+  pointer-events: none;
+  text-align: center;
+}
+.sd-tip b { font: 700 16px/1.15 var(--sd-pixel); }
+.sd-tip .sd-gold { font-size: 15px; }
+
+/* --- Ficha ---------------------------------------------------------------------------------------------------------
+   La cabecera, los precios, los regalos y las máquinas a lo ancho; paquetes, recetas y fuentes, de a dos si entran. */
+.sd-more { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; align-items: start; }
+.sd-back { justify-self: start; font: 700 17px/1 var(--sd-pixel); color: #fff7e0; text-shadow: 2px 2px 0 #3b2312, -1px -1px 0 #3b2312; padding: 4px 2px; }
+.sd-back:hover { text-decoration: underline; }
+
+.sd-top > * { vertical-align: top; }
+.sd-top { display: block; }
+.sd-top .sd-slot-big { float: left; width: 128px; height: 128px; margin: 0 18px 6px 0; background-size: 128px; }
+.sd-title { container-type: inline-size; overflow: hidden; }
+/* El nombre se achica para que su palabra más larga entre entera (`--sd-word` son sus letras, ItemPage.tsx): 0,62 em por
+   letra es lo que mide Pixelify Sans 700. Nunca se corta una palabra. */
+.sd-ficha .sd-name { margin-top: 0; font-size: max(20px, min(clamp(28px, 9cqi, 44px), calc(100cqi / (var(--sd-word, 8) * 0.62)))); }
+.sd-desc { margin-top: 8px; font-size: 17px; max-width: 60ch; }
+.sd-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.sd-tags li { padding: 4px 10px; border-radius: 999px; background: var(--sd-paper); font-size: 14px; font-weight: 800; }
+.sd-tags .sd-tag-food { background: #e3f3cf; }
+
+.sd-prices-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.sd-prices-head .sd-h2 { margin-bottom: 0; }
+.sd-pro .sd-pill { font-size: 13px; padding: 5px 9px; }
+.sd-quality { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; }
+.sd-quality div { display: grid; gap: 4px; padding: 10px 12px; border-radius: 6px; background: var(--sd-paper); text-align: center; }
+.sd-quality dt { font-size: 14px; font-weight: 800; color: var(--sd-dim); }
+.sd-quality dd { margin: 0; font-size: 22px; }
+@container (max-width: 480px) { .sd-quality { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Gustos de regalo: retratos con el nombre abajo, enlazados a la ficha del aldeano. */
+.sd-taste + .sd-taste { margin-top: 6px; }
+.sd-taste .sd-h3 { margin-top: 4px; }
+.sd-people { display: flex; flex-wrap: wrap; gap: 6px; }
+.sd-person { display: grid; justify-items: center; gap: 2px; width: 72px; padding: 6px 2px 4px; border-radius: 6px; background: var(--sd-paper); font-size: 12px; font-weight: 800; text-align: center; line-height: 1.15; }
+a.sd-person:hover { background: var(--sd-paper-2); }
+.sd-taste[data-taste="dislike"] .sd-person, .sd-taste[data-taste="hate"] .sd-person { background: #f3dcc4; }
+
+/* Filas: paquetes, máquinas y fuentes. */
+.sd-rows { display: grid; gap: 6px; }
+.sd-row, .sd-flow, .sd-source { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 6px 10px; border-radius: 6px; background: var(--sd-paper); }
+a.sd-row:hover { background: var(--sd-paper-2); }
+.sd-row b, .sd-source > b { font-weight: 800; }
+.sd-row-end { margin-left: auto; display: flex; align-items: center; gap: 10px; font-weight: 800; }
+.sd-row-end small { color: var(--sd-dim); font-size: 13px; }
+.sd-flow { padding: 4px 10px 4px 4px; }
+.sd-arrow { font: 700 22px/1 var(--sd-pixel); color: var(--sd-wood); }
+.sd-src-k { min-width: 120px; font: 700 13px/1.2 var(--sd-pixel); text-transform: uppercase; letter-spacing: 0.05em; color: var(--sd-dim); }
+
+/* Un objeto nombrado: casillero chico y nombre, con un dato abajo. */
+.sd-ref { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.sd-ref .sd-slot { width: 48px; height: 48px; background-size: 48px; }
+.sd-ref > span:last-child { display: grid; line-height: 1.2; }
+.sd-ref b { font-weight: 800; }
+.sd-ref small { color: var(--sd-dim); font-size: 13px; }
+a.sd-ref:hover b { text-decoration: underline; }
+
+.sd-recipe + .sd-recipe { margin-top: 10px; }
+.sd-ings { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 6px; margin-top: 6px; }
+.sd-ings li { padding: 4px 8px 4px 4px; border-radius: 6px; background: var(--sd-paper); }
+
+@media (max-width: 560px) {
+  .sd-top .sd-slot-big { width: 96px; height: 96px; background-size: 96px; margin-right: 12px; }
+  .sd-src-k { min-width: 0; flex-basis: 100%; }
+  .sd-people { gap: 4px; }
+  .sd-person { width: 62px; }
+}

@@ -96,7 +96,9 @@ export const TERRARIA_TAB_FILES: Partial<Record<TerrariaSection, string>> = {
  * Las pestañas de Stardew Valley que viajan en su propio chunk, igual que `TABS` en `Stardew.tsx` (2026-10-22; lo cuida
  * `test/areas.test.ts`). Cada una suma acá su línea el día que tiene página. La portada viene con el área.
  */
-export const STARDEW_TAB_FILES: Partial<Record<StardewSection, string>> = {};
+export const STARDEW_TAB_FILES: Partial<Record<StardewSection, string>> = {
+  items: "src/stardew/items/StardewItems.tsx",
+};
 
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */
 export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {

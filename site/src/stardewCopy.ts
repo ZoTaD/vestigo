@@ -8,6 +8,7 @@
  */
 import { useLang } from "./i18n";
 import type { StardewSection, StardewTab } from "./route";
+import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
 export const STARDEW_TABS: StardewSection[] = ["home", "items", "villagers", "bundles"];
@@ -19,6 +20,60 @@ export type Profession = "tiller" | "artisan" | "rancher" | "fisher" | "angler" 
 /** Los gustos de regalo, del que más suma al que más resta. */
 export type Taste = "love" | "like" | "neutral" | "dislike" | "hate";
 export const TASTES: Taste[] = ["love", "like", "neutral", "dislike", "hate"];
+
+/** Los textos de la pestaña Objetos: la lista y la ficha. */
+export interface ItemsCopy {
+  h1: string;
+  lede: (n: string) => string;
+  /** La dirección traía un objeto que no existe: se muestra la lista con este aviso. */
+  missing: string;
+  back: string;
+  search: string;
+  searchPlaceholder: string;
+  category: string;
+  all: string;
+  groups: Record<Group, string>;
+  from: string;
+  anySource: string;
+  sources: Record<SourceFilter, string>;
+  count: (n: string) => string;
+  none: string;
+  // La ficha.
+  sellPrice: string;
+  profession: string;
+  noProfession: string;
+  energy: string;
+  health: string;
+  /** Los títulos de los gustos de regalo: "Le encanta a" y la fila de retratos. */
+  tasteHeads: Record<Exclude<Taste, "neutral">, string>;
+  bundlesTitle: string;
+  /** Lo que pide un paquete: "5 de calidad Oro". */
+  bundleNeed: (qty: number, quality: string | null) => string;
+  turnsInto: string;
+  madeIn: string;
+  /** Cuántos entran por vez en la máquina, si es más de uno. */
+  perBatch: (n: number) => string;
+  /** Cuánto tarda: minutos, horas o días, con "≈" si está redondeado. */
+  time: (t: { unit: "m" | "h" | "d"; n: number; approx: boolean }) => string;
+  usedIn: string;
+  madeWith: string;
+  kinds: Record<"cook" | "craft", string>;
+  /** Cuántos salen de una receta, si es más de uno. */
+  yields: (n: number) => string;
+  whereTitle: string;
+  src: {
+    crop: string;
+    tree: string;
+    shop: string;
+    fish: string;
+    forage: string;
+    monster: string;
+    grow: (days: number) => string;
+    regrow: (days: number) => string;
+    mature: (days: number) => string;
+    allYear: string;
+  };
+}
 
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
@@ -44,7 +99,7 @@ export interface StardewCopy {
     day: (n: number) => string;
     about: (version: string) => string;
   };
-  items: { h1: string; lede: (n: string) => string };
+  items: ItemsCopy;
   villagers: { h1: string; lede: (n: string) => string };
   bundles: { h1: string; lede: (n: string) => string };
   qualities: Record<Quality, string>;
@@ -80,7 +135,51 @@ const EN: StardewCopy = {
     day: (n) => `Day ${n}`,
     about: (version) => `Updated for version ${version}.`,
   },
-  items: { h1: "Stardew Valley items", lede: (n) => `All ${n} items with their price by quality, gifts, bundles and uses.` },
+  items: {
+    h1: "Stardew Valley items",
+    lede: (n) => `All ${n} items with their price by quality, gifts, bundles and uses.`,
+    missing: "That item isn't in the game: here's the whole list.",
+    back: "All items",
+    search: "Search",
+    searchPlaceholder: "Melon, Keg, Pufferfish…",
+    category: "Category",
+    all: "All",
+    groups: { crops: "Crops", fish: "Fish", artisan: "Artisan goods", minerals: "Minerals & gems", cooking: "Cooking", forage: "Forage", machines: "Machines" },
+    from: "Where it comes from",
+    anySource: "Anywhere",
+    sources: { grown: "Grown", fished: "Fished", bought: "Sold in shops", bundle: "For the Community Center" },
+    count: (n) => `${n} items`,
+    none: "No item matches.",
+    sellPrice: "Sell price",
+    profession: "Profession",
+    noProfession: "None",
+    energy: "Energy",
+    health: "Health",
+    tasteHeads: { love: "Loved by", like: "Liked by", dislike: "Disliked by", hate: "Hated by" },
+    bundlesTitle: "Community Center",
+    bundleNeed: (qty, quality) => `${qty}${quality ? ` · ${quality} quality` : ""}`,
+    turnsInto: "Turns into",
+    madeIn: "Comes out of",
+    perBatch: (n) => `takes ${n}`,
+    time: ({ unit, n, approx }) => `${approx ? "≈ " : ""}${unit === "m" ? `${n} min` : unit === "h" ? `${n} h` : n === 1 ? "1 day" : `${n} days`}`,
+    usedIn: "Used in",
+    madeWith: "Recipe",
+    kinds: { cook: "Cooking", craft: "Crafting" },
+    yields: (n) => `makes ${n}`,
+    whereTitle: "Where to get it",
+    src: {
+      crop: "Grows from",
+      tree: "Fruit tree",
+      shop: "Sold by",
+      fish: "Caught in",
+      forage: "Found in",
+      monster: "Dropped by",
+      grow: (d) => `${d} days to grow`,
+      regrow: (d) => `regrows every ${d} days`,
+      mature: (d) => `${d} days to mature`,
+      allYear: "All year",
+    },
+  },
   villagers: { h1: "Stardew Valley villagers", lede: (n) => `All ${n} villagers with their birthday and the gifts they love and hate.` },
   bundles: { h1: "Community Center bundles", lede: (n) => `The ${n} bundles of the Community Center, room by room.` },
   qualities: { normal: "Normal", silver: "Silver", gold: "Gold", iridium: "Iridium" },
@@ -125,7 +224,51 @@ const ES: StardewCopy = {
     day: (n) => `Día ${n}`,
     about: (version) => `Al día con la versión ${version}.`,
   },
-  items: { h1: "Objetos de Stardew Valley", lede: (n) => `Los ${n} objetos con su precio por calidad, regalos, paquetes y usos.` },
+  items: {
+    h1: "Objetos de Stardew Valley",
+    lede: (n) => `Los ${n} objetos con su precio por calidad, regalos, paquetes y usos.`,
+    missing: "Ese objeto no está en el juego: acá está la lista entera.",
+    back: "Todos los objetos",
+    search: "Buscar",
+    searchPlaceholder: "Melón, barril, pez globo…",
+    category: "Categoría",
+    all: "Todo",
+    groups: { crops: "Cultivos", fish: "Peces", artisan: "Artesanía", minerals: "Minerales y gemas", cooking: "Cocina", forage: "Forraje", machines: "Máquinas" },
+    from: "De dónde sale",
+    anySource: "De cualquier lado",
+    sources: { grown: "Se cultiva", fished: "Se pesca", bought: "Se compra", bundle: "Para el Centro Comunitario" },
+    count: (n) => `${n} objetos`,
+    none: "Ningún objeto coincide.",
+    sellPrice: "Precio de venta",
+    profession: "Profesión",
+    noProfession: "Ninguna",
+    energy: "Energía",
+    health: "Salud",
+    tasteHeads: { love: "Le encanta a", like: "Le gusta a", dislike: "No le gusta a", hate: "Lo odian" },
+    bundlesTitle: "Centro Comunitario",
+    bundleNeed: (qty, quality) => `${qty}${quality ? ` · calidad ${quality}` : ""}`,
+    turnsInto: "Se transforma en",
+    madeIn: "Sale de",
+    perBatch: (n) => `entran ${n}`,
+    time: ({ unit, n, approx }) => `${approx ? "≈ " : ""}${unit === "m" ? `${n} min` : unit === "h" ? `${n} h` : n === 1 ? "1 día" : `${n} días`}`,
+    usedIn: "Se usa en",
+    madeWith: "Se fabrica con",
+    kinds: { cook: "Cocina", craft: "Fabricación" },
+    yields: (n) => `salen ${n}`,
+    whereTitle: "Dónde se consigue",
+    src: {
+      crop: "Se cultiva con",
+      tree: "Árbol frutal",
+      shop: "Lo vende",
+      fish: "Se pesca en",
+      forage: "Se encuentra en",
+      monster: "Lo suelta",
+      grow: (d) => `${d} días hasta la cosecha`,
+      regrow: (d) => `vuelve a dar cada ${d} días`,
+      mature: (d) => `${d} días hasta dar fruto`,
+      allYear: "Todo el año",
+    },
+  },
   villagers: { h1: "Aldeanos de Stardew Valley", lede: (n) => `Los ${n} aldeanos con su cumpleaños y los regalos que les encantan y que odian.` },
   bundles: { h1: "Paquetes del Centro Comunitario", lede: (n) => `Los ${n} paquetes del Centro Comunitario, sala por sala.` },
   qualities: { normal: "Normal", silver: "Plata", gold: "Oro", iridium: "Iridio" },

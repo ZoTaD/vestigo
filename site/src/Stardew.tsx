@@ -11,7 +11,7 @@
 import { Suspense, useEffect } from "react";
 import { lazyWithPreload } from "./lazyWithPreload";
 import RouteLink from "./RouteLink";
-import type { Route, StardewSection, StardewTab } from "./route";
+import { parseRoute, routePath, type Route, type StardewSection, type StardewTab } from "./route";
 import { STARDEW_TABS, useStardewCopy } from "./stardewCopy";
 import StardewHome from "./stardew/StardewHome";
 import { loadHome } from "./stardew/homeData";
@@ -26,17 +26,26 @@ type Nav = (route: Route) => void;
 type TabProps = { route: Route; navigate: Nav };
 type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
+const SdItems = lazyWithPreload(() => import("./stardew/items/StardewItems"));
+
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `STARDEW_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `STARDEW_TAB_FILES`.
 const TABS: Partial<Record<StardewSection, LazyTab>> = {
+  items: SdItems,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
 const hasPage = (tab: StardewSection): boolean => tab === "home" || !!TABS[tab];
 
-/** Los datos que una pestaña baja aparte de su chunk, pedidos junto con él. La portada, los nombres de lo que muestra. */
+/**
+ * Los datos que una pestaña baja aparte de su chunk, pedidos junto con él. La portada, los nombres de lo que muestra.
+ * Objetos, igual que en Terraria: en frío, `main.tsx` lee la dirección antes de que se conozca el slug en español de la
+ * ficha; primero se anota, y la ficha se busca con la dirección leída de nuevo.
+ */
 const TAB_DATA: Partial<Record<StardewSection, (route: Route) => Promise<unknown>>> = {
   home: (route) => loadHome(route.lang),
+  items: (route) =>
+    Promise.all([SdItems.preload(), import("./stardew/data")]).then(([, m]) => m.preloadItemsRoute(route).then(() => m.preloadItemsRoute(parseRoute(routePath(route))))),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Stardew Valley, y sus datos. */
