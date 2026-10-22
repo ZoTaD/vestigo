@@ -124,6 +124,10 @@
   from = "/stardew-valley"
   to = "/en/stardew-valley"
   status = 301
+[[redirects]]
+  from = "/stardew-valley/*"
+  to = "/en/stardew-valley/:splat"
+  status = 301
 
 # `/rust` sin idioma no es una página (2026-10-05): la carpeta `/rust/...` es de
 # assets (íconos, fondo). Manda con 301 a la portada en inglés, como `/zomboid`.

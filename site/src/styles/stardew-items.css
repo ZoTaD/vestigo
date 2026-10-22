@@ -5,7 +5,7 @@
  */
 
 /* --- Lista: buscador y chips ---------------------------------------------------------------------------------------- */
-.sd-label { font: 700 12px/1 var(--sd-pixel); letter-spacing: 0.08em; text-transform: uppercase; color: var(--sd-dim); }
+.sd-label { font: 800 13px/1.2 var(--sd-text); color: var(--sd-dim); }
 .sd-note { margin-top: 10px; padding: 8px 12px; border-radius: 6px; background: var(--sd-paper); }
 .sd-filters { display: grid; gap: 12px; margin-top: 16px; }
 .sd-find { display: grid; gap: 6px; max-width: 420px; }
@@ -20,7 +20,7 @@
 .sd-find input:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; }
 .sd-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .sd-chips .sd-label { flex-basis: 100%; }
-.sd-count { font: 700 15px/1 var(--sd-pixel); color: var(--sd-dim); }
+.sd-count { font: 800 14px/1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-dim); }
 
 /* --- Lista: la grilla del inventario -------------------------------------------------------------------------------- */
 /* Casilleros de 64 px pegados como los del juego; el alto de fila (64) es `SD_CELL` de ItemList.tsx. */
@@ -45,7 +45,7 @@
   pointer-events: none;
   text-align: center;
 }
-.sd-tip b { font: 700 16px/1.15 var(--sd-pixel); }
+.sd-tip b { font: 800 16px/1.15 var(--sd-text); }
 .sd-tip .sd-gold { font-size: 15px; }
 
 /* --- Ficha ---------------------------------------------------------------------------------------------------------
@@ -54,10 +54,11 @@
 .sd-head { display: flow-root; }
 .sd-prices { margin-top: 18px; }
 .sd-sec + .sd-sec { margin-top: 26px; }
-.sd-cross .sd-h2 { font-size: 22px; margin-bottom: 8px; }
+.sd-cross .sd-h2 { font-size: 32px; margin-bottom: 8px; }
 .sd-machines .sd-rows + .sd-h2 { margin-top: 18px; }
-.sd-back { justify-self: start; font: 700 17px/1 var(--sd-pixel); color: #fff7e0; text-shadow: 2px 2px 0 #3b2312, -1px -1px 0 #3b2312; padding: 4px 2px; }
-.sd-back:hover { text-decoration: underline; }
+/* "← Todos los objetos" queda sobre el pasto: un botoncito crema con letra oscura, sin sombra, para que se lea. */
+.sd-back { justify-self: start; font: 800 15px/1 var(--sd-text); color: var(--sd-ink); background: var(--sd-paper); border: 3px solid #5b2b29; border-radius: 4px; padding: 7px 11px 9px; box-shadow: inset 0 -3px #e8b866; }
+.sd-back:hover { background: #fff; }
 
 .sd-top .sd-slot-big { float: left; width: 128px; height: 128px; margin: 0 18px 6px 0; background-size: 128px; }
 .sd-title { container-type: inline-size; overflow: hidden; }
@@ -94,8 +95,8 @@ a.sd-row:hover { background: var(--sd-paper-2); }
 .sd-row-end { margin-left: auto; display: flex; align-items: center; gap: 10px; font-weight: 800; }
 .sd-row-end small { color: var(--sd-dim); font-size: 13px; }
 .sd-flow { padding: 4px 10px 4px 4px; }
-.sd-arrow { font: 700 22px/1 var(--sd-pixel); color: var(--sd-wood); }
-.sd-src-k { min-width: 120px; font: 700 13px/1.2 var(--sd-pixel); text-transform: uppercase; letter-spacing: 0.05em; color: var(--sd-dim); }
+.sd-arrow { font: 800 18px/1 var(--sd-text); color: var(--sd-wood); }
+.sd-src-k { min-width: 120px; font: 800 13px/1.2 var(--sd-text); color: var(--sd-dim); }
 
 /* Un objeto nombrado: casillero chico y nombre, con un dato abajo. */
 .sd-ref { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }

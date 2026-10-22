@@ -12,7 +12,7 @@
 .sd-bundle.is-done { background: var(--sd-paper-2); }
 .sd-bundle-head .sd-h3 { margin: 0; }
 .sd-bundle-meta { display: flex; justify-content: space-between; gap: 8px; margin: 2px 0 8px; color: var(--sd-dim); font-size: 14px; font-weight: 800; }
-.sd-have { font: 700 15px/1.2 var(--sd-pixel); color: var(--sd-ink); white-space: nowrap; }
+.sd-have { font: 800 15px/1.2 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-ink); white-space: nowrap; }
 .sd-bundle.is-done .sd-have { color: var(--sd-wood); }
 
 .sd-bundle-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px 4px; }
@@ -26,10 +26,10 @@
 .sd-tname { display: grid; gap: 1px; max-width: 100%; font-size: 13px; line-height: 1.2; }
 .sd-tname b { font-weight: 800; hyphens: manual; }
 .sd-tname small { color: var(--sd-dim); font-size: 13px; font-weight: 800; }
-.sd-check { position: absolute; inset: 0; display: grid; place-items: center; font: 700 34px/1 var(--sd-pixel); color: #2f7d1e; text-shadow: 2px 2px 0 #fff3d6; }
-.sd-coin { font: 700 24px/1 var(--sd-pixel); color: var(--sd-gold); }
+.sd-check { position: absolute; inset: 0; display: grid; place-items: center; font: 400 32px/1 var(--sd-pixel); color: #2f7d1e; text-shadow: 2px 2px 0 #fff3d6; }
+.sd-coin { font: 800 22px/1 var(--sd-text); color: var(--sd-gold); }
 /* La estrella de calidad en el rincón del casillero: texto de color, sin filo. */
-.sd-star { position: absolute; left: 6px; bottom: 4px; font: 700 18px/1 var(--sd-pixel); text-shadow: 1px 1px 0 #3b1f12; }
+.sd-star { position: absolute; left: 6px; bottom: 4px; font: 800 16px/1 var(--sd-text); text-shadow: 1px 1px 0 #3b1f12; }
 .sd-q1 { color: #d8dde3; }
 .sd-q2 { color: #ffc61a; }
 .sd-q3 { color: #c58bff; }

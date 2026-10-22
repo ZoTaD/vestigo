@@ -16,8 +16,6 @@ import { STARDEW_TABS, useStardewCopy } from "./stardewCopy";
 import StardewHome from "./stardew/StardewHome";
 import { loadHome } from "./stardew/homeData";
 import { SdLoading } from "./stardew/ui";
-import "@fontsource/pixelify-sans/500.css";
-import "@fontsource/pixelify-sans/700.css";
 import "@fontsource/nunito/600.css";
 import "@fontsource/nunito/800.css";
 import "./styles/stardew.css";
@@ -88,8 +86,9 @@ export default function Stardew({ route, navigate }: TabProps) {
   return (
     <div className="sd" data-section={section}>
       <header className="sd-hero">
+        {/* El nombre con la letra de los menús del juego (`texto_juego` de sprites.py), sobre un cartel de menú. */}
         <RouteLink className="sd-brand" to={{ ...route, view: "stardew", sdSection: "home", detail: undefined }} onNavigate={navigate}>
-          Stardew Valley
+          <img src="/stardew/ui/title.png" alt="Stardew Valley" width={109} height={15} />
         </RouteLink>
       </header>
       <div className="sd-wrap">

@@ -6,6 +6,11 @@
  * El marco es el arte del juego, no un filo de color; las tarjetas y filas de adentro van sin bordes, con tinte.
  * Pixelify Sans para títulos y cifras, Nunito para el texto. Todo cuelga de `.sd` y de clases `sd-`.
  */
+@font-face {
+  font-family: "SV Menu";
+  src: url(/stardew/ui/menu-font.woff2) format("woff2");
+  font-display: swap;
+}
 .sd {
   --sd-ink: #3b1f12;
   --sd-dim: #8a5a2b;
@@ -16,7 +21,12 @@
   --sd-sky1: #6ec6ff;
   --sd-sky2: #c9ecff;
   --sd-gold: #7a4a00;
-  --sd-pixel: "Pixelify Sans", "Nunito", sans-serif;
+  /* La letra de los menús del juego (`fuente_juego` de sprites.py) para títulos y pestañas, siempre en múltiplos de
+     16 px y nunca menos de 32 (a 16 las minúsculas miden 6 px), para que cada píxel caiga entero. Pestañas,
+     números y rótulos chicos van en Nunito. (Pixelify Sans, la de antes,
+     confundía la C con la O y el 5 con el 8.) */
+  --sd-pixel: "SV Menu", "Nunito", sans-serif;
+  --sd-text: "Nunito", sans-serif;
   --sd-hero: 220px;
   position: relative;
   min-height: 80vh;
@@ -44,40 +54,43 @@
   background: url(/stardew/ui/panorama.png) center bottom / auto 440px repeat-x;
   image-rendering: pixelated;
 }
+/* El cartel: un marco de menú chico con el nombre en la letra del juego, a 4x (3x en el celular). */
 .sd-brand {
-  font: 700 clamp(34px, 10cqi, 76px) / 1 var(--sd-pixel);
-  color: #fff7e0;
-  white-space: nowrap;
-  letter-spacing: 0.02em;
-  text-shadow: 3px 3px 0 #6b2c06, -2px -2px 0 #6b2c06, 2px -2px 0 #6b2c06, -2px 2px 0 #6b2c06, 0 6px 0 rgba(59, 31, 18, 0.35);
+  display: block;
+  padding: 14px 22px 12px;
+  border: 20px solid transparent;
+  border-image: url(/stardew/ui/frame.png) 64 fill / 20px stretch;
+  image-rendering: pixelated;
 }
+.sd-brand img { display: block; width: 436px; height: 60px; max-width: 100%; object-fit: contain; }
+a.sd-brand:hover { filter: brightness(1.04); }
 
 .sd-wrap { position: relative; max-width: 1100px; margin: -30px auto 0; padding: 0 16px; }
 .sd-main { display: grid; gap: 16px; }
 
 /* --- Las pestañas del menú: madera naranja, la activa crema --------------------------------------------------------- */
 .sd-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+/* Sin sombra en la letra: con Pixelify chica la sombra tapaba el trazo. El relieve lo da la madera (borde y base). */
 .sd-tab {
-  font: 700 17px/1 var(--sd-pixel);
-  padding: 9px 14px;
-  background: #e78b2c;
-  color: #fff7e0;
-  text-shadow: 2px 2px 0 #6b2c06;
+  font: 800 16px/1 var(--sd-text);
+  padding: 9px 14px 10px;
+  background: #f0b462;
+  color: var(--sd-ink);
   border: 3px solid #5b2b29;
   border-radius: 4px;
-  box-shadow: inset 0 -4px #b4560f;
+  box-shadow: inset 0 -4px #c9772a, inset 0 2px #ffd28f;
 }
-a.sd-tab:hover { background: #f09a3e; }
-.sd-tab.is-on { background: var(--sd-cream); color: var(--sd-ink); text-shadow: none; box-shadow: inset 0 -4px #e8a54d; }
+a.sd-tab:hover { background: #f6c37a; }
+.sd-tab.is-on { background: var(--sd-paper); box-shadow: inset 0 -4px #e8b866; }
 .sd-tab.is-soon { opacity: 0.55; cursor: default; }
 
 /* --- Piezas --------------------------------------------------------------------------------------------------------- */
 .sd-box {
   container-type: inline-size;
+  /* `fill`: el centro del marco ya trae pintado el fondo de menú (ver `marco()` en sprites.py), así no queda un
+     hueco entre la madera y el contenido. */
   border: 32px solid transparent;
-  border-image: url(/stardew/ui/frame.png) 64 / 32px stretch;
-  background: linear-gradient(#ffe0a6, #f8c574);
-  background-clip: padding-box;
+  border-image: url(/stardew/ui/frame.png) 64 fill / 32px stretch;
   padding: 4px;
   min-width: 0;
 }
@@ -90,15 +103,17 @@ a.sd-tab:hover { background: #f09a3e; }
   background: url(/stardew/ui/slot.png) center / 64px;
   image-rendering: pixelated;
 }
-.sd-gold { font: 700 1em/1 var(--sd-pixel); color: var(--sd-gold); white-space: nowrap; }
+.sd-gold { font: 800 1em/1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-gold); white-space: nowrap; }
 .sd-gold small { margin-left: 1px; font-size: 0.85em; }
-.sd-btn { font: 700 15px/1 var(--sd-pixel); padding: 8px 12px; background: #e78b2c; color: #fff7e0; border: 3px solid #5b2b29; border-radius: 4px; box-shadow: inset 0 -4px #b4560f; cursor: pointer; }
+.sd-btn { font: 800 15px/1 var(--sd-text); padding: 8px 12px 10px; background: #f0b462; color: var(--sd-ink); border: 3px solid #5b2b29; border-radius: 4px; box-shadow: inset 0 -4px #c9772a, inset 0 2px #ffd28f; cursor: pointer; }
+.sd-btn:hover { background: #f6c37a; }
 .sd-muted { color: var(--sd-dim); font-size: 14px; }
 
-.sd-kicker { font: 700 13px/1.2 var(--sd-pixel); letter-spacing: 0.08em; text-transform: uppercase; color: var(--sd-wood); }
-.sd-h1 { margin-top: 4px; font: 700 clamp(24px, 6cqi, 40px) / 1.1 var(--sd-pixel); text-wrap: balance; }
-.sd-h2 { font: 700 26px/1.1 var(--sd-pixel); margin-bottom: 6px; }
-.sd-h3 { font: 700 18px/1.2 var(--sd-pixel); margin: 14px 0 6px; }
+.sd-kicker { font: 800 14px/1.2 var(--sd-text); color: var(--sd-wood); }
+.sd-h1 { margin-top: 4px; font: 400 48px/1.1 var(--sd-pixel); text-wrap: balance; }
+@container (max-width: 520px) { .sd-h1 { font-size: 32px; } }
+.sd-h2 { font: 400 32px/1.1 var(--sd-pixel); margin-bottom: 6px; }
+.sd-h3 { font: 800 17px/1.2 var(--sd-text); margin: 14px 0 6px; }
 .sd-lede { max-width: 70ch; margin-top: 8px; font-size: 17px; }
 
 /* --- Portada: una tarjeta por pestaña ------------------------------------------------------------------------------- */
@@ -106,8 +121,8 @@ a.sd-tab:hover { background: #f09a3e; }
 .sd-card { display: flex; gap: 12px; align-items: center; height: 100%; padding: 8px 12px 8px 8px; border-radius: 6px; background: var(--sd-paper); }
 a.sd-card:hover { background: var(--sd-paper-2); }
 .sd-card > span:last-child { display: grid; gap: 2px; font-size: 14px; }
-.sd-card b { font: 700 19px/1.1 var(--sd-pixel); }
-.sd-card em { font: 700 12px/1 var(--sd-pixel); font-style: normal; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sd-dim); }
+.sd-card b { font: 400 32px/1 var(--sd-pixel); }
+.sd-card em { font: 800 12px/1 var(--sd-text); font-style: normal; color: var(--sd-dim); }
 .sd-card.is-soon { opacity: 0.7; }
 @container (max-width: 760px) { .sd-cards { grid-template-columns: minmax(0, 1fr); } }
 
@@ -122,8 +137,9 @@ a.sd-cell:hover > span:last-child { text-decoration: underline; }
 
 /* Esta temporada: el selector de estación, los cumpleaños con su retrato y los festivales. */
 .sd-pick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-.sd-pill { font: 700 15px/1 var(--sd-pixel); padding: 7px 11px; background: #e78b2c; color: #fff7e0; text-shadow: 1px 1px 0 #6b2c06; border: 3px solid #5b2b29; border-radius: 4px; box-shadow: inset 0 -3px #b4560f; cursor: pointer; }
-.sd-pill.is-on { background: var(--sd-cream); color: var(--sd-ink); text-shadow: none; box-shadow: inset 0 -3px #e8a54d; }
+.sd-pill { font: 800 15px/1 var(--sd-text); padding: 7px 11px 9px; background: #f0b462; color: var(--sd-ink); border: 3px solid #5b2b29; border-radius: 4px; box-shadow: inset 0 -3px #c9772a, inset 0 2px #ffd28f; cursor: pointer; }
+.sd-pill:hover { background: #f6c37a; }
+.sd-pill.is-on { background: var(--sd-paper); box-shadow: inset 0 -3px #e8b866; }
 .sd-bdays { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
 .sd-bday { display: flex; align-items: center; gap: 10px; padding: 4px 8px 4px 4px; border-radius: 6px; background: var(--sd-paper); }
 a.sd-bday:hover { background: var(--sd-paper-2); }
@@ -132,7 +148,7 @@ a.sd-bday:hover { background: var(--sd-paper-2); }
 .sd-portrait { flex: none; width: 48px; height: 48px; border-radius: 4px; background: #e9c891; }
 .sd-fests { display: grid; gap: 6px; }
 .sd-fests li { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 6px; background: var(--sd-paper); }
-.sd-day { flex: none; min-width: 34px; font: 700 20px/1 var(--sd-pixel); color: var(--sd-wood); text-align: center; }
+.sd-day { flex: none; min-width: 34px; font: 800 20px/1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-wood); text-align: center; }
 .sd-about { margin-top: 14px; }
 
 .sd-loading p { padding: 12px 4px; }
@@ -140,9 +156,11 @@ a.sd-bday:hover { background: var(--sd-paper-2); }
 /* En pantallas angostas el marco se achica, así queda más lugar adentro. */
 @media (max-width: 560px) {
   .sd-box { border-width: 22px; border-image-width: 22px; }
+  .sd-brand { padding: 10px 14px 8px; border-width: 14px; border-image-width: 14px; }
+  .sd-brand img { width: 327px; height: 45px; }
   .sd { --sd-hero: 170px; }
   .sd-hero { background-size: auto 340px; }
-  .sd-tab { font-size: 15px; padding: 8px 10px; }
+  .sd-tab { padding: 8px 10px 9px; }
 }
 
 /* --- La cáscara alrededor de la sección ------------------------------------------------------------------------------

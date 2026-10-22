@@ -13,7 +13,7 @@ a.sd-vcard:hover { background: var(--sd-paper-2); }
 .sd-vframe { flex: none; display: grid; place-items: center; width: 72px; height: 72px; background: url(/stardew/ui/slot.png) center / 72px; image-rendering: pixelated; }
 .sd-vframe .sd-portrait { width: 56px; height: 56px; background: none; }
 .sd-vtext { display: grid; gap: 2px; min-width: 0; line-height: 1.2; }
-.sd-vtext b { font: 700 18px/1.15 var(--sd-pixel); }
+.sd-vtext b { font: 800 16px/1.15 var(--sd-text); }
 .sd-vtext small { color: var(--sd-dim); font-size: 14px; font-weight: 800; }
 
 /* --- Ficha ---------------------------------------------------------------------------------------------------------- */
