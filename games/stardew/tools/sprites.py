@@ -55,8 +55,19 @@ def sprite_box(item_id: str) -> tuple[str, int, int, int, int]:
     return hoja, (n % por_fila) * 16, (n // por_fila) * 16, 16, 16
 
 
+def plantillas() -> set[str]:
+    """Objetos plantilla (el nombre o la descripción llevan "{0}", o son el seco de hongos): el sitio los nombra
+    armados, sobre el ingrediente, y no los lista."""
+    fuera = {"DriedMushrooms"}
+    for i, o in relations.objects().items():
+        if any("{0}" in sdv.text(o.get(c), "en") for c in ("DisplayName", "Description")):
+            fuera.add(i)
+    return fuera
+
+
 def ids_con_sprite() -> list[str]:
-    return list(relations.objects()) + ["(BC)" + k for k in sdv.raw("Data/BigCraftables")]
+    fuera = plantillas()
+    return [i for i in relations.objects() if i not in fuera] + ["(BC)" + k for k in sdv.raw("Data/BigCraftables")]
 
 
 def marco() -> Image.Image:
@@ -74,7 +85,12 @@ def main() -> None:
     for d in (items, retratos, ui):
         d.mkdir(parents=True, exist_ok=True)
     hojas: dict[str, Image.Image] = {}
-    for item_id in ids_con_sprite():
+    ids = ids_con_sprite()
+    vigentes = {sprite_file(i) for i in ids}
+    for viejo in items.glob("*.png"):
+        if viejo.name not in vigentes:
+            viejo.unlink()
+    for item_id in ids:
         hoja, x, y, w, h = sprite_box(item_id)
         if hoja not in hojas:
             hojas[hoja] = Image.open(TEXTURAS / f"{hoja}.png").convert("RGBA")

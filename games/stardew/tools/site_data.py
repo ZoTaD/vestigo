@@ -15,6 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import relations  # noqa: E402
 import sdv  # noqa: E402
+from sprites import plantillas  # noqa: E402
 
 DATA = Path(__file__).resolve().parents[1] / "data"
 
@@ -54,6 +55,13 @@ _TEXTO_TIENDA = {
     "IceCreamStand": ("Strings/Objects", "IceCream_Name"),
     "VolcanoShop": ("Strings/WorldMap", "GingerIsland_North_Volcano"),
 }
+# Producto de máquina con sabor -> clave de su plantilla en Strings/Objects (`<clave>_Flavored_Name`).
+_PLANTILLA_SABOR = {
+    "348": "Wine", "350": "Juice", "344": "Jelly", "342": "Pickles", "447": "AgedRoe", "340": "Honey",
+    "DriedFruit": "DriedFruit", "DriedMushrooms": "DriedFruit", "SmokedFish": "SmokedFish", "SpecificBait": "SpecificBait",
+}
+# Los destacados de la portada, en este orden.
+FEATURED = ["24", "254", "276", "128", "163", "72", "74", "340", "424", "432", "395", "(BC)12"]
 # Festival de cada tienda `Festival_<clave>_...` -> día en Data/Festivals/FestivalDates.
 _FESTIVAL_TIENDA = {
     "EggFestival": "spring13", "FlowerDance": "spring24", "Luau": "summer11",
@@ -154,9 +162,30 @@ class Nombres:
             return self._npc[m.group(1)]
         return None
 
+    def monstruo(self, clave: str) -> list[str]:
+        """[en, es] del monstruo. El nombre es el último campo de Data/Monsters; el español sale siempre de la
+        misma fuente: la traducción de ese mismo nombre en Data/Monsters.es-ES (hay claves, como "Iridium Golem",
+        que llevan el nombre de otro monstruo sin traducir en su propia línea)."""
+        if not hasattr(self, "_monstruos"):
+            es = sdv.raw("Data/Monsters.es-ES")
+            self._monstruos: dict[str, str] = {}
+            for k, linea in sdv.raw("Data/Monsters").items():
+                en_n, es_n = linea.split("/")[-1], es.get(k, linea).split("/")[-1]
+                if es_n != en_n or en_n not in self._monstruos:
+                    self._monstruos[en_n] = es_n
+        en = sdv.raw("Data/Monsters")[clave].split("/")[-1]
+        return [en, self._monstruos[en]]
+
     @staticmethod
-    def monstruo(clave: str, es: str) -> list[str]:
-        return [sdv.raw("Data/Monsters")[clave].split("/")[-1], es]
+    def producto(out: str, flavor: str, nombre: dict) -> list[str]:
+        """Nombre armado de un producto con sabor: la plantilla del juego aplicada al ingrediente."""
+        clave = _PLANTILLA_SABOR[out]
+        en, es = sdv.raw("Strings/Objects"), sdv.raw("Strings/Objects.es-ES")
+        if out == "447" and flavor == "812":  # hueva sin pez: "Aged Roe" a secas
+            return list(nombre[out])
+        t_en = en.get(f"{clave}_Flavored_(O){flavor}_Name") or en[f"{clave}_Flavored_Name"]  # p. ej. "Cranberry Wine"
+        t_es = es.get(f"{clave}_Flavored_(O){flavor}_Name") or es.get(f"{clave}_Flavored_Name") or t_en
+        return [t_en.replace("{0}", nombre[flavor][0]).strip(), t_es.replace("{0}", nombre[flavor][1]).strip()]
 
 
 def _slugs_unicos(ids: list[str], en: dict[str, str], es: dict[str, str]) -> tuple[dict[str, str], dict[str, str]]:
@@ -189,7 +218,8 @@ def _slugs_unicos(ids: list[str], en: dict[str, str], es: dict[str, str]) -> tup
 def build(write: bool = False) -> dict:
     objs = relations.objects()
     grandes = sdv.raw("Data/BigCraftables")
-    ids = list(objs) + ["(BC)" + k for k in grandes]
+    fuera = plantillas()
+    ids = [i for i in objs if i not in fuera] + ["(BC)" + k for k in grandes]
 
     def dato(i: str) -> dict:
         return grandes[i[4:]] if i.startswith("(BC)") else objs[i]
@@ -201,6 +231,10 @@ def build(write: bool = False) -> dict:
     tam = {i: (16, 32) if i.startswith("(BC)") else (16, 16) for i in ids}
     cat = {i: CAT_BIG if i.startswith("(BC)") else dato(i).get("Category", 0) for i in ids}
     nombres = Nombres()
+    nombre_producto = {i: [name_en[i], name_es[i]] for i in ids}
+    for out_id in _PLANTILLA_SABOR:  # los productos plantilla no están en la lista, pero sí su nombre genérico
+        o = objs[out_id]
+        nombre_producto.setdefault(out_id, [sdv.text(o["DisplayName"], "en"), sdv.text(o["DisplayName"], "es")])
 
     # --- aldeanos ----------------------------------------------------------------------------------------------
     aldeanos = relations.villagers()
@@ -232,7 +266,7 @@ def build(write: bool = False) -> dict:
     hecho_en: dict[str, dict[tuple, list]] = {}
     for entrada, lista in maquinas.items():
         for m in lista:
-            if m["out"] != entrada:
+            if m["out"] != entrada and m["out"] in slug:
                 hecho_en.setdefault(m["out"], {})[(m["machine"], m["minutes"], m["days"])] = [m["machine"], m["minutes"], m["days"]]
 
     fichas: dict[str, dict] = {}
@@ -257,8 +291,10 @@ def build(write: bool = False) -> dict:
         entradas = [dict(m) for m in maquinas.get(i, [])]
         for e in entradas:
             for k in ("machine", "out", "flavor"):
-                if k in e:
+                if k in e and not (k == "out" and e[k] in fuera):
                     sumar_ref(e[k])
+            if "flavor" in e:  # el nombre ya armado, para que el sitio no componga plantillas
+                e["outName"] = Nombres.producto(e["out"], e["flavor"], nombre_producto)
         hecho = list(hecho_en.get(i, {}).values())
         for maq, _, _ in hecho:
             sumar_ref(maq)
@@ -281,7 +317,7 @@ def build(write: bool = False) -> dict:
             elif s["k"] in ("fish", "forage"):
                 s["where"] = [list(n) for n in dict.fromkeys(tuple(nombres.lugar(w)) for w in s["where"])]  # sin repetir (varios lugares de la isla)
             elif s["k"] == "monster":
-                s["who"] = nombres.monstruo(*s["who"])
+                s["who"] = nombres.monstruo(s["who"][0])
             fuentes_i.append(s)
 
         has = 0
@@ -313,7 +349,7 @@ def build(write: bool = False) -> dict:
     # --- aldeanos para el sitio ---------------------------------------------------------------------------------
     villagers = []
     for v in aldeanos:
-        t = {g: [i for i in objs if v["key"] in gustos.get(i, {}).get(g, [])] for g in ("love", "like", "dislike", "hate")}
+        t = {g: [i for i in objs if i in slug and v["key"] in gustos.get(i, {}).get(g, [])] for g in ("love", "like", "dislike", "hate")}
         villagers.append({
             "key": v["key"], "slug": v_slug[v["key"]], "slugEs": v_slug_es[v["key"]], "name": v["name"],
             "birthday": v["birthday"], "romance": v["romance"], "region": v["region"], "tastes": t,
@@ -340,13 +376,10 @@ def build(write: bool = False) -> dict:
         raise ValueError("hay paquetes en una sala que no está en ROOMS")
 
     # --- portada ------------------------------------------------------------------------------------------------
-    por_cat = Counter(cat[i] for i in objs if cat[i] != 0)
-    tiene = {r[0]: r[6] for r in filas}
-    destacados = []
-    for c, _ in por_cat.most_common(12):
-        candidatos = [i for i in objs if cat[i] == c]
-        regalos = [i for i in candidatos if tiene[i] & GIFT]
-        destacados.append(max(regalos or candidatos, key=lambda i: objs[i].get("Price", 0)))
+    destacados = list(FEATURED)
+    ausentes = [i for i in destacados if i not in slug]
+    if ausentes:
+        raise ValueError(f"destacados que no están en la lista del sitio: {ausentes}")
     fechas = sdv.raw("Data/Festivals/FestivalDates")
     estaciones = []
     for n, est in enumerate(SEASONS):

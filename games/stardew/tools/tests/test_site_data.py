@@ -52,7 +52,7 @@ class TestSiteData(unittest.TestCase):
 
     def test_ficha_refs_incluye_objetos_y_aldeanos(self):
         f = self.out["fichas"]["melon"]
-        self.assertIn("254", f["refs"] if "254" in f["refs"] else {"254": 1})
+        self.assertEqual(f["refs"]["254"][:4], ["melon", "melon", "Melon", "Melón"])
         for npc in f["tastes"].get("love", []) + f["tastes"].get("like", []):
             self.assertIn(npc, f["refs"])
 
@@ -67,6 +67,30 @@ class TestSiteData(unittest.TestCase):
         self.assertEqual(len(self.out["home"]["featured"]), 12)
         self.assertEqual(len(self.out["home"]["seasons"]), 4)
         self.assertEqual(self.out["meta"]["version"], "1.6.15")
+
+    def test_plantillas_fuera_y_productos_con_nombre_armado(self):
+        ids = {r[0] for r in self.out["list"]}
+        for t in ("DriedFruit", "DriedMushrooms", "SmokedFish", "SpecificBait"):
+            self.assertNotIn(t, ids)
+        for f in self.out["fichas"].values():
+            self.assertNotIn("{0}", f["name"][0] + f["name"][1] + f["desc"][0] + f["desc"][1])
+        nombres = {(e["machine"], e["out"]): e["outName"] for e in self.out["fichas"]["melon"]["machines"]["in"]}
+        self.assertEqual(nombres[("(BC)12", "348")], ["Melon Wine", "Vino de Melón"])
+        self.assertEqual(nombres[("(BC)Dehydrator", "DriedFruit")][0], "Dried Melon")
+        self.assertNotIn("DriedFruit", self.out["fichas"]["melon"]["refs"])
+
+    def test_destacados_fijos(self):
+        self.assertEqual(self.out["home"]["featured"],
+                         ["24", "254", "276", "128", "163", "72", "74", "340", "424", "432", "395", "(BC)12"])
+
+    def test_monstruos_con_el_mismo_nombre_en_espanol(self):
+        vistos = {}
+        for f in self.out["fichas"].values():
+            for s in f["sources"]:
+                if s["k"] == "monster":
+                    vistos.setdefault(s["who"][0], set()).add(s["who"][1])
+        self.assertEqual(vistos["Wilderness Golem"], {"Gólem salvaje"})
+        self.assertTrue(all(len(v) == 1 for v in vistos.values()))
 
     def test_salas_en_el_orden_del_juego(self):
         self.assertEqual([s["room"] for s in self.out["bundles"]],
