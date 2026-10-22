@@ -75,6 +75,36 @@ export interface ItemsCopy {
   };
 }
 
+/** Los textos de la pestaña Aldeanos: la lista y la ficha. */
+export interface VillagersCopy {
+  h1: string;
+  lede: (n: string) => string;
+  /** La dirección traía un aldeano que no existe: se muestra la lista con este aviso. */
+  missing: string;
+  back: string;
+  count: (n: string) => string;
+  /** Los filtros: cortejables y estación del cumpleaños. */
+  filterBirthday: string;
+  filterRomance: string;
+  allSeasons: string;
+  /** "Otoño 13". */
+  birthday: (season: string, day: number) => string;
+  birthdayLabel: string;
+  romanceable: string;
+  region: string;
+  /**
+   * Dónde vive, por la `HomeRegion` del juego. `Other` (el Mago, Krobus, el Enano, Leo) no tiene un lugar que nombrar
+   * y no se muestra. `Town` y `Desert` son los nombres del mapa del juego (`Utility.cs.5786` y `5861`).
+   */
+  regions: Record<string, string>;
+  easyTitle: string;
+  easyHint: string;
+  /** Los títulos de las filas de gustos. */
+  tasteHeads: Record<Exclude<Taste, "neutral">, string>;
+  /** Cuántos objetos hay en una fila de gustos. */
+  tasteCount: (n: string) => string;
+}
+
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
   /** La insignia de una pestaña que todavía no tiene página. */
@@ -100,7 +130,7 @@ export interface StardewCopy {
     about: (version: string) => string;
   };
   items: ItemsCopy;
-  villagers: { h1: string; lede: (n: string) => string };
+  villagers: VillagersCopy;
   bundles: { h1: string; lede: (n: string) => string };
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
@@ -180,7 +210,25 @@ const EN: StardewCopy = {
       allYear: "All year",
     },
   },
-  villagers: { h1: "Stardew Valley villagers", lede: (n) => `All ${n} villagers with their birthday and the gifts they love and hate.` },
+  villagers: {
+    h1: "Stardew Valley villagers",
+    lede: (n) => `All ${n} villagers with their birthday and the gifts they love and hate.`,
+    missing: "That villager does not exist. Here are all of them.",
+    back: "All villagers",
+    count: (n) => `${n} villagers`,
+    filterBirthday: "Birthday",
+    filterRomance: "Romanceable",
+    allSeasons: "Any season",
+    birthday: (season, day) => `${season} ${day}`,
+    birthdayLabel: "Birthday",
+    romanceable: "Romanceable",
+    region: "Lives in",
+    regions: { Town: "Pelican Town", Desert: "Calico Desert" },
+    easyTitle: "Easy gifts",
+    easyHint: "Loved gifts you can grow or buy.",
+    tasteHeads: { love: "Loves", like: "Likes", dislike: "Dislikes", hate: "Hates" },
+    tasteCount: (n) => `${n} items`,
+  },
   bundles: { h1: "Community Center bundles", lede: (n) => `The ${n} bundles of the Community Center, room by room.` },
   qualities: { normal: "Normal", silver: "Silver", gold: "Gold", iridium: "Iridium" },
   // `LevelUp_ProfessionName_*` de `Strings/UI`.
@@ -269,7 +317,25 @@ const ES: StardewCopy = {
       allYear: "Todo el año",
     },
   },
-  villagers: { h1: "Aldeanos de Stardew Valley", lede: (n) => `Los ${n} aldeanos con su cumpleaños y los regalos que les encantan y que odian.` },
+  villagers: {
+    h1: "Aldeanos de Stardew Valley",
+    lede: (n) => `Los ${n} aldeanos con su cumpleaños y los regalos que les encantan y que odian.`,
+    missing: "Ese aldeano no existe. Acá están todos.",
+    back: "Todos los aldeanos",
+    count: (n) => `${n} aldeanos`,
+    filterBirthday: "Cumpleaños",
+    filterRomance: "Cortejables",
+    allSeasons: "Cualquier estación",
+    birthday: (season, day) => `${season} ${day}`,
+    birthdayLabel: "Cumpleaños",
+    romanceable: "Se puede cortejar",
+    region: "Vive en",
+    regions: { Town: "Pueblo Pelícano", Desert: "Desierto de Calico" },
+    easyTitle: "Regalos fáciles",
+    easyHint: "Lo que le encanta y podés cultivar o comprar.",
+    tasteHeads: { love: "Le encanta", like: "Le gusta", dislike: "No le gusta", hate: "Lo odia" },
+    tasteCount: (n) => `${n} objetos`,
+  },
   bundles: { h1: "Paquetes del Centro Comunitario", lede: (n) => `Los ${n} paquetes del Centro Comunitario, sala por sala.` },
   qualities: { normal: "Normal", silver: "Plata", gold: "Oro", iridium: "Iridio" },
   // `LevelUp_ProfessionName_*` de `Strings/UI.es-ES`.

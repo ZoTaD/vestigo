@@ -27,11 +27,13 @@ type TabProps = { route: Route; navigate: Nav };
 type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
 const SdItems = lazyWithPreload(() => import("./stardew/items/StardewItems"));
+const SdVillagers = lazyWithPreload(() => import("./stardew/villagers/StardewVillagers"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `STARDEW_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `STARDEW_TAB_FILES`.
 const TABS: Partial<Record<StardewSection, LazyTab>> = {
   items: SdItems,
+  villagers: SdVillagers,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -46,6 +48,8 @@ const TAB_DATA: Partial<Record<StardewSection, (route: Route) => Promise<unknown
   home: (route) => loadHome(route.lang),
   items: (route) =>
     Promise.all([SdItems.preload(), import("./stardew/data")]).then(([, m]) => m.preloadItemsRoute(route).then(() => m.preloadItemsRoute(parseRoute(routePath(route))))),
+  // Los aldeanos anotan sus slugs en español al bajar; la ficha se resuelve por cualquiera de los dos, así que no hace falta leer la dirección de nuevo.
+  villagers: (route) => Promise.all([SdVillagers.preload(), import("./stardew/data")]).then(([, m]) => m.preloadVillagersRoute(route)),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Stardew Valley, y sus datos. */

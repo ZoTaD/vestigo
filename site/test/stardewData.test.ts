@@ -5,9 +5,13 @@ import { describe, expect, it } from "vitest";
 import { LangContext } from "../src/i18n";
 import ItemList from "../src/stardew/items/ItemList";
 import ItemPage from "../src/stardew/items/ItemPage";
+import VillagerList from "../src/stardew/villagers/VillagerList";
+import VillagerPage from "../src/stardew/villagers/VillagerPage";
 import { routePath, type Route } from "../src/route";
 import {
   filterRows,
+  filterVillagers,
+  giftIdeas,
   loadBundles,
   loadItem,
   loadList,
@@ -17,6 +21,8 @@ import {
   peekList,
   preloadItemsRoute,
   readFilters,
+  readVillagerFilters,
+  writeVillagerFilters,
   SD_SHARDS,
   say,
 } from "../src/stardew/data";
@@ -191,5 +197,89 @@ describe("la lista de objetos", () => {
     expect(html).toContain("888 items");
     // Los casilleros de más allá de la primera tanda van sin imagen en el prerender.
     expect((html.match(/<img/g) ?? []).length).toBeLessThanOrEqual(120);
+  });
+});
+
+describe("aldeanos", () => {
+  const abigail = async () => (await loadVillagers()).find((x) => x.key === "Abigail")!;
+
+  it("Abigail tiene cumpleaños, se puede cortejar y le encanta la calabaza", async () => {
+    const v = await abigail();
+    expect(v.birthday).toEqual([2, 13]);
+    expect(v.romance).toBe(true);
+    expect(v.tastes.love).toContain("276");
+  });
+
+  it("al cargarlos se anotan los slugs en español de las direcciones", async () => {
+    await loadVillagers();
+    expect(routePath({ lang: "es", view: "stardew", sdSection: "villagers", detail: "wizard" } as Route)).toBe("/es/stardew-valley/aldeanos/rasmodius");
+    expect(routePath({ lang: "en", view: "stardew", sdSection: "villagers", detail: "wizard" } as Route)).toBe("/en/stardew-valley/villagers/wizard");
+  });
+
+  it("regalos fáciles: lo que le encanta y se cultiva o se compra", async () => {
+    const rows = await loadList("en");
+    const easy = giftIdeas(await abigail(), rows).map((r) => r.id);
+    expect(easy).toContain("276");
+    // Todos le encantan y tienen una fuente que el jugador controla.
+    const loved = (await abigail()).tastes.love;
+    const byId = new Map(rows.map((r) => [r.id, r]));
+    for (const id of easy) {
+      expect(loved).toContain(id);
+      expect(byId.get(id)!.has & (16 | 32)).toBeGreaterThan(0);
+    }
+    // Lo que sólo se obtiene de otra forma (un libro del botín) queda fuera.
+    expect(easy).not.toContain("Book_Void");
+  });
+
+  it("filtros: cortejables y estación del cumpleaños, también en la dirección", async () => {
+    const all = await loadVillagers();
+    const romance = filterVillagers(all, { romance: true, season: null });
+    expect(romance.every((v) => v.romance)).toBe(true);
+    expect(romance.some((v) => v.key === "Abigail")).toBe(true);
+    const fall = filterVillagers(all, { romance: false, season: 2 });
+    expect(fall.every((v) => v.birthday[0] === 2)).toBe(true);
+    expect(fall.some((v) => v.key === "Abigail")).toBe(true);
+    expect(filterVillagers(all, { romance: false, season: null })).toHaveLength(34);
+    expect(readVillagerFilters("?romance=1&season=3")).toEqual({ romance: true, season: 3 });
+    expect(readVillagerFilters("?season=9&romance=x")).toEqual({ romance: false, season: null });
+    expect(writeVillagerFilters({ romance: true, season: 3 })).toBe("?romance=1&season=3");
+    expect(writeVillagerFilters({ romance: false, season: null })).toBe("");
+  });
+
+  it("la lista dibuja los 34 retratos enlazados, con el cumpleaños", async () => {
+    const villagers = await loadVillagers();
+    const route = { lang: "es", view: "stardew", sdSection: "villagers" } as Route;
+    const html = inLang("es", createElement(VillagerList, { villagers, route, navigate: nav, missing: false }));
+    expect(html).toContain('href="/es/stardew-valley/aldeanos/abigail"');
+    expect(html).toContain("/stardew/portraits/abigail.png");
+    expect(html).toContain("Otoño 13");
+    expect(html).toContain("Cortejables");
+    expect(html.match(/<img/g) ?? []).toHaveLength(34);
+  });
+
+  it("la ficha de Abigail: dos cajas, regalos fáciles arriba y las cuatro filas de gustos", async () => {
+    const rows = await loadList("es");
+    const villager = await abigail();
+    const route = { lang: "es", view: "stardew", sdSection: "villagers", detail: "abigail" } as Route;
+    const html = inLang("es", createElement(VillagerPage, { villager, rows, route, navigate: nav }));
+    expect(html).toMatch(/<h1[^>]*>Abigail<\/h1>/);
+    expect(html).toContain("Otoño 13");
+    expect(html).toContain("Pueblo Pelícano");
+    expect(html.match(/class="sd-box[ "]/g) ?? []).toHaveLength(2);
+    const order = ["Regalos fáciles", "Le encanta", "Le gusta", "No le gusta", "Lo odia"].map((h) => html.indexOf(`>${h}<`));
+    expect(order.every((i) => i > 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    // La calabaza (Pumpkin) enlazada a su ficha de Objetos, con el nombre del juego.
+    expect(html).toContain('href="/es/stardew-valley/objetos/calabaza"');
+    // El retrato grande va sin `lazy`.
+    expect(html).toMatch(/<img[^>]*src="\/stardew\/portraits\/abigail.png"(?![^>]*loading)[^>]*>/);
+  });
+
+  it("un aldeano que no se corteja no dice que se pueda cortejar, y el que no tiene región conocida no la muestra", async () => {
+    const rows = await loadList("en");
+    const krobus = (await loadVillagers()).find((x) => x.key === "Krobus")!;
+    const html = inLang("en", createElement(VillagerPage, { villager: krobus, rows, route: { lang: "en", view: "stardew", sdSection: "villagers", detail: "krobus" } as Route, navigate: nav }));
+    expect(html).not.toContain("Romanceable");
+    expect(html).not.toContain("Other");
   });
 });

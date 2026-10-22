@@ -100,7 +100,8 @@ export interface Villager {
   slug: string;
   slugEs: string;
   name: Pair;
-  birthday: [season: string, day: number];
+  /** Estación (0 primavera a 3 invierno) y día. */
+  birthday: [season: number, day: number];
   romance: boolean;
   region: string;
   tastes: Record<Exclude<Taste, "neutral">, string[]>;
@@ -126,6 +127,12 @@ const rows = once<RawRow[]>(() => import("@stardew/site/list.json"));
 const namesEn = once<string[]>(() => import("@stardew/site/names-en.json"));
 const namesEs = once<[name: string, slug: string][]>(() => import("@stardew/site/names-es.json"));
 const villagers = once<Villager[]>(() => import("@stardew/villagers.json"));
+
+/** Anota los slugs en español de los aldeanos (sólo los que cambian: Rasmodius, Enano): sus fichas y los enlaces de afuera. */
+function noteVillagers(list: Villager[]): Villager[] {
+  registerStardewSlugs({ villagers: Object.fromEntries(list.filter((v) => v.slugEs !== v.slug).map((v) => [v.slug, v.slugEs])) });
+  return list;
+}
 const rooms = once<Room[]>(() => import("@stardew/bundles.json"));
 const fichas = shardedFichas<Ficha>(import.meta.glob<{ default: Record<string, Ficha> }>("@stardew/site/items/*.json"), shard);
 const esToEn = shardedFichas<string>(import.meta.glob<{ default: Record<string, string> }>("@stardew/site/es/*.json"), shard);
@@ -183,14 +190,47 @@ function note(f: Ficha | null): Ficha | null {
 export const peekItem = (slug: string): Ficha | null | undefined => fichas.peek(slug);
 export const loadItem = (slug: string): Promise<Ficha | null> => fichas.load(slug).then(note);
 
-export const peekVillagers = (): Villager[] | null => villagers.peek();
-export const loadVillagers = (): Promise<Villager[]> => villagers.load();
+export const peekVillagers = (): Villager[] | null => {
+  const list = villagers.peek();
+  return list && noteVillagers(list);
+};
+export const loadVillagers = (): Promise<Villager[]> => villagers.load().then(noteVillagers);
 export const peekBundles = (): Room[] | null => rooms.peek();
 export const loadBundles = (): Promise<Room[]> => rooms.load();
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */
 export const refName = (r: Ref, lang: Lang): string => (lang === "es" && r[3]) || r[2];
+
+/** El aldeano de una dirección: por su slug inglés o por el español (en frío todavía no se anotó cuál es cuál). */
+export const findVillager = (list: readonly Villager[], slug: string): Villager | undefined => list.find((v) => v.slug === slug || v.slugEs === slug);
+
+/**
+ * Lo que una dirección de Aldeanos necesita antes de dibujarse: los aldeanos (que anotan los slugs en español) y, si es
+ * una ficha, la lista de objetos del idioma, de donde salen los nombres y sprites de sus gustos.
+ */
+export async function preloadVillagersRoute(route: Route): Promise<void> {
+  const list = await loadVillagers();
+  if (route.detail && findVillager(list, route.detail)) await loadList(route.lang);
+}
+
+/**
+ * Lo que le encanta y se consigue sin suerte: lo que se cultiva o se compra (bits `grows` y `shop` de `has`), en el
+ * orden de la lista. Es lo que se regala sin salir a buscarlo.
+ */
+export function giftIdeas(v: Villager, rows: readonly Row[]): Row[] {
+  const loved = new Set(v.tastes.love);
+  return rows.filter((r) => loved.has(r.id) && (r.has & (HAS.grows | HAS.shop)) > 0);
+}
+
+/**
+ * Lo que le gusta a un aldeano por gusto, ya con los objetos de la lista (se pierden los ids que la lista no tiene), en
+ * el orden de la lista: por categoría y nombre, no por id.
+ */
+export function tasteRows(v: Villager, taste: Exclude<Taste, "neutral">, rows: readonly Row[]): Row[] {
+  const ids = new Set(v.tastes[taste]);
+  return rows.filter((r) => ids.has(r.id));
+}
 
 /**
  * Lo que una dirección de Objetos necesita antes de dibujarse: la ficha (y los nombres de las salas si va en un
@@ -283,3 +323,28 @@ export function machineTime(minutes: number, days: number): { unit: "m" | "h" | 
   if (minutes < DAY_MINUTES) return { unit: "h", n: Math.round(minutes / 60), approx: minutes % 60 !== 0 };
   return { unit: "d", n: Math.round(minutes / DAY_MINUTES), approx: minutes % DAY_MINUTES !== 0 };
 }
+
+// --- Filtros de la lista de aldeanos --------------------------------------------------------------------------------
+
+export interface VillagerFilters {
+  /** Sólo los que se pueden cortejar. */
+  romance: boolean;
+  /** Estación del cumpleaños (0 a 3). */
+  season: number | null;
+}
+
+/** Los filtros escritos en la dirección (`?romance=1&season=2`); lo que no se conoce se ignora. */
+export function readVillagerFilters(search: string): VillagerFilters {
+  const q = new URLSearchParams(search);
+  const season = q.get("season");
+  return { romance: q.get("romance") === "1", season: season && /^[0-3]$/.test(season) ? Number(season) : null };
+}
+export function writeVillagerFilters(f: VillagerFilters): string {
+  const q = new URLSearchParams();
+  if (f.romance) q.set("romance", "1");
+  if (f.season !== null) q.set("season", String(f.season));
+  const s = q.toString();
+  return s ? `?${s}` : "";
+}
+export const filterVillagers = (list: readonly Villager[], f: VillagerFilters): Villager[] =>
+  list.filter((v) => (!f.romance || v.romance) && (f.season === null || v.birthday[0] === f.season));
