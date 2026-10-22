@@ -46,6 +46,15 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
   const rooms = useLoad(ficha.bundles.length ? "bundles" : null, () => peekBundles() ?? undefined, loadBundles);
   const tastes = GIFT_TASTES.filter((g) => ficha.tastes[g]?.length);
   const { make, use } = ficha.recipes;
+  // Los cruces van en una sola caja, como en la maqueta A: sin ninguno, la ficha es la cabecera con los precios.
+  const hasCross =
+    tastes.length > 0 ||
+    ficha.bundles.length > 0 ||
+    ficha.machines.in.length > 0 ||
+    ficha.machines.madeIn.length > 0 ||
+    use.length > 0 ||
+    make.length > 0 ||
+    ficha.sources.length > 0;
 
   const itemRoute = (slug: string): Route => ({
     ...route,
@@ -114,150 +123,119 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
       </RouteLink>
 
       <Box className="sd-top">
-        <span className="sd-slot sd-slot-big">
-          {/* Los objetos grandes (máquinas, muebles) miden 16×32; el resto, 16×16. */}
-          <Sprite id={ficha.id} w={16} h={ficha.id.startsWith("(BC)") ? 32 : 16} size={96} lazy={false} />
-        </span>
-        <div className="sd-title">
-          <h1 className="sd-h1 sd-name" style={{ "--sd-word": longestWord(name) } as CSSProperties}>
-            {name}
-          </h1>
-          {desc && <p className="sd-desc">{desc}</p>}
-          <ul className="sd-tags">
-            {cat && <li>{say(cat, lang)}</li>}
-            {seasons.length > 0 && <li>{seasonNames(seasons)}</li>}
-            {ficha.energy && (
-              <li className="sd-tag-food">
-                +{ficha.energy[0]} {c.energy} · +{ficha.energy[1]} {c.health}
-              </li>
-            )}
-          </ul>
+        <div className="sd-head">
+          <span className="sd-slot sd-slot-big">
+            {/* Los objetos grandes (máquinas, muebles) miden 16×32; el resto, 16×16. */}
+            <Sprite id={ficha.id} w={16} h={ficha.id.startsWith("(BC)") ? 32 : 16} size={96} lazy={false} />
+          </span>
+          <div className="sd-title">
+            <h1 className="sd-h1 sd-name" style={{ "--sd-word": longestWord(name) } as CSSProperties}>
+              {name}
+            </h1>
+            {desc && <p className="sd-desc">{desc}</p>}
+            <ul className="sd-tags">
+              {cat && <li>{say(cat, lang)}</li>}
+              {seasons.length > 0 && <li>{seasonNames(seasons)}</li>}
+              {ficha.energy && (
+                <li className="sd-tag-food">
+                  +{ficha.energy[0]} {c.energy} · +{ficha.energy[1]} {c.health}
+                </li>
+              )}
+            </ul>
+          </div>
         </div>
+        {ficha.prices.base[0] > 0 && (
+          <section className="sd-prices" aria-labelledby="sd-prices-h">
+            <div className="sd-prices-head">
+              <h2 className="sd-h2" id="sd-prices-h">
+                {c.sellPrice}
+              </h2>
+              {pros.length > 0 && (
+                <div className="sd-pick sd-pro" role="group" aria-label={c.profession}>
+                  {[null, ...pros].map((p) => (
+                    <button
+                      type="button"
+                      className={`sd-pill${p === pro ? " is-on" : ""}`}
+                      aria-pressed={p === pro}
+                      onClick={() => setPro(p)}
+                      key={p ?? "none"}
+                    >
+                      {p ? t.professions[p] : c.noProfession}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <dl className="sd-quality">
+              {QUALITIES.map((q, i) => (
+                <div key={q} data-q={q}>
+                  <dt>{t.qualities[q]}</dt>
+                  <dd>
+                    <Gold n={prices[i]} />
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
       </Box>
 
-      {ficha.prices.base[0] > 0 && (
-        <Box className="sd-prices" aria-labelledby="sd-prices-h">
-          <div className="sd-prices-head">
-            <h2 className="sd-h2" id="sd-prices-h">
-              {c.sellPrice}
-            </h2>
-            {pros.length > 0 && (
-              <div className="sd-pick sd-pro" role="group" aria-label={c.profession}>
-                {[null, ...pros].map((p) => (
-                  <button type="button" className={`sd-pill${p === pro ? " is-on" : ""}`} aria-pressed={p === pro} onClick={() => setPro(p)} key={p ?? "none"}>
-                    {p ? t.professions[p] : c.noProfession}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          <dl className="sd-quality">
-            {QUALITIES.map((q, i) => (
-              <div key={q} data-q={q}>
-                <dt>{t.qualities[q]}</dt>
-                <dd>
-                  <Gold n={prices[i]} />
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </Box>
-      )}
-
-      {tastes.length > 0 && (
-        <Box className="sd-gifts">
-          {tastes.map((g) => (
-            <section key={g} className="sd-taste" data-taste={g}>
-              <h2 className="sd-h3">{c.tasteHeads[g]}</h2>
-              <ul className="sd-people">
-                {ficha.tastes[g]!.map((key) => {
-                  const r = ficha.refs[key];
-                  const who = r ? refName(r, lang) : key;
-                  const face = (
-                    <img
-                      className="sd-portrait"
-                      src={`/stardew/portraits/${key.toLowerCase()}.png`}
-                      alt=""
-                      width={48}
-                      height={48}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  );
-                  return (
-                    <li key={key}>
-                      {r ? (
-                        <RouteLink
-                          className="sd-person"
-                          to={{
-                            ...route,
-                            view: "stardew",
-                            sdSection: "villagers",
-                            detail: r[0],
-                          }}
-                          onNavigate={navigate}
-                          title={who}
-                        >
-                          {face}
-                          <span>{who}</span>
-                        </RouteLink>
-                      ) : (
-                        <span className="sd-person">
-                          {face}
-                          <span>{who}</span>
-                        </span>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
+      {hasCross && (
+        <Box className="sd-cross">
+          {tastes.length > 0 && (
+            <section className="sd-sec sd-gifts">
+              {tastes.map((g) => (
+                <div key={g} className="sd-taste" data-taste={g}>
+                  <h2 className="sd-h3">{c.tasteHeads[g]}</h2>
+                  <ul className="sd-people">
+                    {ficha.tastes[g]!.map((key) => {
+                      const r = ficha.refs[key];
+                      const who = r ? refName(r, lang) : key;
+                      const face = (
+                        <img
+                          className="sd-portrait"
+                          src={`/stardew/portraits/${key.toLowerCase()}.png`}
+                          alt=""
+                          width={48}
+                          height={48}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      );
+                      return (
+                        <li key={key}>
+                          {r ? (
+                            <RouteLink
+                              className="sd-person"
+                              to={{
+                                ...route,
+                                view: "stardew",
+                                sdSection: "villagers",
+                                detail: r[0],
+                              }}
+                              onNavigate={navigate}
+                              title={who}
+                            >
+                              {face}
+                              <span>{who}</span>
+                            </RouteLink>
+                          ) : (
+                            <span className="sd-person">
+                              {face}
+                              <span>{who}</span>
+                            </span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
             </section>
-          ))}
-        </Box>
-      )}
-
-      {(ficha.machines.in.length > 0 || ficha.machines.madeIn.length > 0) && (
-        <Box className="sd-machines">
-          {ficha.machines.in.length > 0 && (
-            <>
-              <h2 className="sd-h2">{c.turnsInto}</h2>
-              <ul className="sd-rows">
-                {ficha.machines.in.map((m, i) => (
-                  <li className="sd-flow" key={i}>
-                    {item(m.machine, undefined, m.count > 1 && <small>{c.perBatch(m.count)}</small>)}
-                    <span className="sd-arrow" aria-hidden="true">
-                      →
-                    </span>
-                    {product(m)}
-                    <span className="sd-row-end">
-                      {m.price > 0 && <Gold n={m.price} />}
-                      {time(m.minutes, m.days) && <small>{time(m.minutes, m.days)}</small>}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </>
           )}
-          {ficha.machines.madeIn.length > 0 && (
-            <>
-              <h2 className="sd-h2">{c.madeIn}</h2>
-              <ul className="sd-rows">
-                {ficha.machines.madeIn.map(([machine, minutes, days]) => (
-                  <li className="sd-flow" key={machine}>
-                    {item(machine)}
-                    <span className="sd-row-end">{time(minutes, days) && <small>{time(minutes, days)}</small>}</span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </Box>
-      )}
 
-      {(ficha.bundles.length > 0 || make.length > 0 || use.length > 0 || ficha.sources.length > 0) && (
-        <div className="sd-more">
           {ficha.bundles.length > 0 && (
-            <Box aria-labelledby="sd-bundles-h">
+            <section className="sd-sec" aria-labelledby="sd-bundles-h">
               <h2 className="sd-h2" id="sd-bundles-h">
                 {c.bundlesTitle}
               </h2>
@@ -285,11 +263,60 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                   );
                 })}
               </ul>
-            </Box>
+            </section>
+          )}
+
+          {(ficha.machines.in.length > 0 || ficha.machines.madeIn.length > 0) && (
+            <section className="sd-sec sd-machines">
+              {ficha.machines.in.length > 0 && (
+                <>
+                  <h2 className="sd-h2">{c.turnsInto}</h2>
+                  <ul className="sd-rows">
+                    {ficha.machines.in.map((m, i) => (
+                      <li className="sd-flow" key={i}>
+                        {item(m.machine, undefined, m.count > 1 && <small>{c.perBatch(m.count)}</small>)}
+                        <span className="sd-arrow" aria-hidden="true">
+                          →
+                        </span>
+                        {product(m)}
+                        <span className="sd-row-end">
+                          {m.price > 0 && <Gold n={m.price} />}
+                          {time(m.minutes, m.days) && <small>{time(m.minutes, m.days)}</small>}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {ficha.machines.madeIn.length > 0 && (
+                <>
+                  <h2 className="sd-h2">{c.madeIn}</h2>
+                  <ul className="sd-rows">
+                    {ficha.machines.madeIn.map(([machine, minutes, days]) => (
+                      <li className="sd-flow" key={machine}>
+                        {item(machine)}
+                        <span className="sd-row-end">{time(minutes, days) && <small>{time(minutes, days)}</small>}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </section>
+          )}
+
+          {use.length > 0 && (
+            <section className="sd-sec">
+              <h2 className="sd-h2">{c.usedIn}</h2>
+              <ul className="sd-ings">
+                {use.map(([kind, key, out]) => (
+                  <li key={`${kind}-${key}`}>{item(out, undefined, <small>{c.kinds[kind]}</small>)}</li>
+                ))}
+              </ul>
+            </section>
           )}
 
           {make.length > 0 && (
-            <Box>
+            <section className="sd-sec">
               <h2 className="sd-h2">{c.madeWith}</h2>
               {make.map(([kind, key, qty, ings]) => (
                 <div className="sd-recipe" key={key}>
@@ -304,22 +331,11 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                   </ul>
                 </div>
               ))}
-            </Box>
-          )}
-
-          {use.length > 0 && (
-            <Box>
-              <h2 className="sd-h2">{c.usedIn}</h2>
-              <ul className="sd-ings">
-                {use.map(([kind, key, out]) => (
-                  <li key={`${kind}-${key}`}>{item(out, undefined, <small>{c.kinds[kind]}</small>)}</li>
-                ))}
-              </ul>
-            </Box>
+            </section>
           )}
 
           {ficha.sources.length > 0 && (
-            <Box>
+            <section className="sd-sec">
               <h2 className="sd-h2">{c.whereTitle}</h2>
               <ul className="sd-rows">
                 {ficha.sources.map((s, i) => (
@@ -328,9 +344,9 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                   </li>
                 ))}
               </ul>
-            </Box>
+            </section>
           )}
-        </div>
+        </Box>
       )}
     </main>
   );

@@ -146,6 +146,24 @@ describe("la ficha de un objeto", () => {
     expect(html).toMatch(/<img[^>]*src="\/stardew\/items\/254.png"(?![^>]*loading)[^>]*>/);
   });
 
+  it("la ficha son dos cajas del menú (maqueta A) y los cruces van en el orden de la consigna", async () => {
+    const ficha = (await loadItem("melon"))!;
+    const html = inLang("es", createElement(ItemPage, { ficha, route: { lang: "es", view: "stardew", sdSection: "items" } as Route, navigate: nav }));
+    expect(html.match(/class="sd-box[ "]/g) ?? []).toHaveLength(2);
+    const order = ["Le encanta a", "Le gusta a", "No le gusta a", "Centro Comunitario", "Se transforma en", "Se usa en", "Dónde se consigue"].map((h) => html.indexOf(`>${h}<`));
+    expect(order.every((i) => i > 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    // Se fabrica con va entre Se usa en y Dónde se consigue.
+    const cake = inLang("es", createElement(ItemPage, { ficha: (await loadItem("pink-cake"))!, route: { lang: "es", view: "stardew", sdSection: "items" } as Route, navigate: nav }));
+    expect(cake.indexOf(">Se fabrica con<")).toBeGreaterThan(cake.indexOf(">No le gusta a<"));
+  });
+
+  it("los rótulos de gustos van en singular, como en la consigna", async () => {
+    const { STARDEW_COPY } = await import("../src/stardewCopy");
+    expect(STARDEW_COPY.es.items.tasteHeads).toEqual({ love: "Le encanta a", like: "Le gusta a", dislike: "No le gusta a", hate: "Lo odia" });
+    expect(STARDEW_COPY.en.items.tasteHeads.hate).toBe("Hated by");
+  });
+
   it("un objeto sin relaciones no muestra secciones vacías", async () => {
     const ficha = (await loadItem("sweet-gem-berry"))!;
     const route = { lang: "en", view: "stardew", sdSection: "items", detail: "sweet-gem-berry" } as Route;

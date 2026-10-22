@@ -244,7 +244,7 @@ const ES: StardewCopy = {
     noProfession: "Ninguna",
     energy: "Energía",
     health: "Salud",
-    tasteHeads: { love: "Le encanta a", like: "Le gusta a", dislike: "No le gusta a", hate: "Lo odian" },
+    tasteHeads: { love: "Le encanta a", like: "Le gusta a", dislike: "No le gusta a", hate: "Lo odia" },
     bundlesTitle: "Centro Comunitario",
     bundleNeed: (qty, quality) => `${qty}${quality ? ` · calidad ${quality}` : ""}`,
     turnsInto: "Se transforma en",

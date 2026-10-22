@@ -49,13 +49,16 @@
 .sd-tip .sd-gold { font-size: 15px; }
 
 /* --- Ficha ---------------------------------------------------------------------------------------------------------
-   La cabecera, los precios, los regalos y las máquinas a lo ancho; paquetes, recetas y fuentes, de a dos si entran. */
-.sd-more { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; align-items: start; }
+   Como en la maqueta A: dos cajas del menú, la cabecera con los precios y los cruces. Adentro, cada sección se separa
+   por espacio, sin filos. */
+.sd-head { display: flow-root; }
+.sd-prices { margin-top: 18px; }
+.sd-sec + .sd-sec { margin-top: 26px; }
+.sd-cross .sd-h2 { font-size: 22px; margin-bottom: 8px; }
+.sd-machines .sd-rows + .sd-h2 { margin-top: 18px; }
 .sd-back { justify-self: start; font: 700 17px/1 var(--sd-pixel); color: #fff7e0; text-shadow: 2px 2px 0 #3b2312, -1px -1px 0 #3b2312; padding: 4px 2px; }
 .sd-back:hover { text-decoration: underline; }
 
-.sd-top > * { vertical-align: top; }
-.sd-top { display: block; }
 .sd-top .sd-slot-big { float: left; width: 128px; height: 128px; margin: 0 18px 6px 0; background-size: 128px; }
 .sd-title { container-type: inline-size; overflow: hidden; }
 /* El nombre se achica para que su palabra más larga entre entera (`--sd-word` son sus letras, ItemPage.tsx): 0,62 em por
@@ -76,7 +79,7 @@
 @container (max-width: 480px) { .sd-quality { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* Gustos de regalo: retratos con el nombre abajo, enlazados a la ficha del aldeano. */
-.sd-taste + .sd-taste { margin-top: 6px; }
+.sd-taste + .sd-taste { margin-top: 8px; }
 .sd-taste .sd-h3 { margin-top: 4px; }
 .sd-people { display: flex; flex-wrap: wrap; gap: 6px; }
 .sd-person { display: grid; justify-items: center; gap: 2px; width: 72px; padding: 6px 2px 4px; border-radius: 6px; background: var(--sd-paper); font-size: 12px; font-weight: 800; text-align: center; line-height: 1.15; }
