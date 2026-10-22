@@ -43,3 +43,4 @@ games/valheim/.cache/
 games/rust/cache/*
 !games/rust/cache/README.md
 games/terraria/cache/
+games/stardew/raw/
