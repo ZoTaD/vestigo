@@ -61,9 +61,12 @@ describe("los objetos populares de un héroe", () => {
     expect(popularOf(1, 123)).toBeNull();
   });
 
-  it("un héroe sin archivo (Deadman Danny, no jugable) da null", async () => {
-    expect(await loadPopular(78)).toBeNull();
-    expect(popularOf(78, 968099481)).toBeNull();
+  // Un id que no existe y no uno real sin jugar: Deadman Danny (78) servía hasta
+  // que salió el 13/10 y el test quedó en rojo. Cualquier héroe real termina
+  // saliendo.
+  it("un héroe sin archivo da null", async () => {
+    expect(await loadPopular(9999)).toBeNull();
+    expect(popularOf(9999, 968099481)).toBeNull();
   });
 
   it("el hook devuelve lo cargado, y null sin héroe", async () => {
