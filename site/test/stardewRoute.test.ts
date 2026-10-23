@@ -19,7 +19,7 @@ describe("rutas de Stardew Valley", () => {
   });
 
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {
-    expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario" });
+    expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos" });
     expect(routePath({ ...base, sdSection: "home" })).toBe("/en/stardew-valley");
     expect(routePath({ ...base, lang: "es", sdSection: "home" })).toBe("/es/stardew-valley");
     expect(routePath({ ...base, sdSection: "bundles" })).toBe("/en/stardew-valley/bundles");

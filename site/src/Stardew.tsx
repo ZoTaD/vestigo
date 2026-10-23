@@ -27,6 +27,7 @@ type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 const SdItems = lazyWithPreload(() => import("./stardew/items/StardewItems"));
 const SdVillagers = lazyWithPreload(() => import("./stardew/villagers/StardewVillagers"));
 const SdBundles = lazyWithPreload(() => import("./stardew/bundles/StardewBundles"));
+const SdCrops = lazyWithPreload(() => import("./stardew/crops/StardewCrops"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `STARDEW_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `STARDEW_TAB_FILES`.
@@ -34,6 +35,7 @@ const TABS: Partial<Record<StardewSection, LazyTab>> = {
   items: SdItems,
   villagers: SdVillagers,
   bundles: SdBundles,
+  crops: SdCrops,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -52,6 +54,8 @@ const TAB_DATA: Partial<Record<StardewSection, (route: Route) => Promise<unknown
   villagers: (route) => Promise.all([SdVillagers.preload(), import("./stardew/data")]).then(([, m]) => m.preloadVillagersRoute(route)),
   // Las salas y paquetes son un solo archivo: bajan con el chunk, y la pestaña los dibuja ya, sin pantalla de carga.
   bundles: () => Promise.all([SdBundles.preload(), import("./stardew/data").then((m) => m.loadBundles())]),
+  // Cultivos y frutales son un solo archivo chico: bajan con el chunk y la calculadora se dibuja ya.
+  crops: () => Promise.all([SdCrops.preload(), import("./stardew/data").then((m) => m.loadCrops())]),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Stardew Valley, y sus datos. */

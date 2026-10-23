@@ -13,6 +13,7 @@
  */
 import { registerStardewSlugs, type Route } from "../route";
 import type { Profession, Taste } from "../stardewCopy";
+import type { CropsData } from "./crops/calc";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 
@@ -199,6 +200,20 @@ export const peekVillagers = (): Villager[] | null => {
 export const loadVillagers = (): Promise<Villager[]> => villagers.load().then(noteVillagers);
 export const peekBundles = (): Room[] | null => rooms.peek();
 export const loadBundles = (): Promise<Room[]> => rooms.load();
+
+/** Los cultivos y frutales de la calculadora (`crops.json`, un solo archivo chico). */
+const crops = once<CropsData>(() => import("@stardew/crops.json"));
+/** Anota los slugs en español de lo que se cosecha: cada fila enlaza a la ficha del objeto. */
+function noteCrops(d: CropsData): CropsData {
+  const all = [...d.crops, ...d.fruitTrees];
+  registerStardewSlugs({ items: Object.fromEntries(all.filter((c) => c.slugEs !== c.slug).map((c) => [c.slug, c.slugEs])) });
+  return d;
+}
+export const peekCrops = (): CropsData | null => {
+  const d = crops.peek();
+  return d && noteCrops(d);
+};
+export const loadCrops = (): Promise<CropsData> => crops.load().then(noteCrops);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */

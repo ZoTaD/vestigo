@@ -3,20 +3,22 @@
  * buscador de la barra) se usa `STARDEW_COPY[lang]`; adentro, `useStardewCopy()`.
  *
  * Acá van sólo los textos de la interfaz del sitio. Los nombres de las cosas del juego (objetos, aldeanos, festivales,
- * paquetes) salen de sus textos, en los datos. Las excepciones son las estaciones y las profesiones, que la interfaz
- * nombra sin dato al lado: van copiadas tal cual de los textos del juego, con la clave de donde salen.
+ * paquetes) salen de sus textos, en los datos. Las excepciones son las estaciones, las profesiones y los fertilizantes,
+ * que la interfaz nombra sin dato al lado: van copiadas tal cual de los textos del juego, con la clave de donde salen.
  */
 import { useLang } from "./i18n";
 import type { StardewSection, StardewTab } from "./route";
+import type { Fert } from "./stardew/crops/calc";
+import type { SortKey } from "./stardew/crops/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "villagers", "bundles"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "villagers", "bundles"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
 /** Las profesiones que cambian el precio de venta. */
-export type Profession = "tiller" | "artisan" | "rancher" | "fisher" | "angler" | "blacksmith" | "gemologist" | "tapper";
+export type Profession = "tiller" | "agriculturist" | "artisan" | "rancher" | "fisher" | "angler" | "blacksmith" | "gemologist" | "tapper";
 /** Los gustos de regalo, del que más suma al que más resta. */
 export type Taste = "love" | "like" | "neutral" | "dislike" | "hate";
 export const TASTES: Taste[] = ["love", "like", "neutral", "dislike", "hate"];
@@ -154,6 +156,49 @@ export interface BundlesCopy {
   gold: string;
 }
 
+/** Los textos de la pestaña Cultivos: la calculadora, la tabla y los frutales. */
+export interface CropsCopy {
+  h1: string;
+  lede: string;
+  season: string;
+  day: string;
+  level: string;
+  fert: string;
+  /** Los nombres de los fertilizantes: `DisplayName` de `Data/Objects` (368, 369, 919, 465, 466, 918). */
+  ferts: Record<Fert, string>;
+  professions: string;
+  sell: string;
+  sellBest: string;
+  sellRaw: string;
+  seeds: string;
+  seedsBuy: string;
+  seedsOwn: string;
+  greenhouse: string;
+  /** Qué cuenta la tabla, con el invernadero o sin él. */
+  hint: (greenhouse: boolean) => string;
+  /** Los títulos de las columnas. */
+  cols: Record<SortKey, string>;
+  sortBy: string;
+  /** El que rebrota: "y cada 3". */
+  regrow: (n: number) => string;
+  /** No da ni una cosecha antes de que termine la estación. */
+  late: string;
+  raw: string;
+  /** La semilla no se vende siempre en una tienda: se tiene o sale del carro. */
+  seedMark: string;
+  seedMarkTip: string;
+  count: (n: string) => string;
+  none: string;
+  trees: {
+    h2: string;
+    hint: string;
+    cols: { tree: string; season: string; days: string; sapling: string; perSeason: string; sell: string; payback: string };
+    days: (n: number) => string;
+    payback: (n: number) => string;
+    noSapling: string;
+  };
+}
+
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
   /** El `<head>` de la portada y de cada pestaña: lo que se busca primero. */
@@ -187,6 +232,7 @@ export interface StardewCopy {
   items: ItemsCopy;
   villagers: VillagersCopy;
   bundles: BundlesCopy;
+  crops: CropsCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
   tastes: Record<Taste, string>;
@@ -195,7 +241,7 @@ export interface StardewCopy {
 }
 
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops" },
   seo: {
     home: {
       title: "Stardew Valley Guide: Item Prices, Villager Gifts and Bundles | Vestigo",
@@ -212,6 +258,10 @@ const EN: StardewCopy = {
     bundles: {
       title: "Stardew Valley Community Center Bundles Checklist | Vestigo",
       description: "Every Stardew Valley Community Center bundle, room by room: what goes in each one, the reward, and what you can still get this season. Tick them off as you go.",
+    },
+    crops: {
+      title: "Stardew Valley Crop Profit Calculator: Best Crops by Season | Vestigo",
+      description: "Which Stardew Valley 1.6 crop makes the most gold per day this season: pick the planting day, farming level, fertilizer and professions. Fruit trees too.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -248,6 +298,7 @@ const EN: StardewCopy = {
       items: "Price by quality, gifts, bundles, machines and where to find each one.",
       villagers: "Birthdays, loved gifts and the whole list of what each villager likes.",
       bundles: "Every room and bundle with what goes in it. Tick them off as you go.",
+      crops: "Gold per day of every crop with your planting day, level, fertilizer and professions.",
     },
     featured: "Most looked up",
     featuredHint: "Open an item to see its prices, who loves it and what it turns into.",
@@ -338,10 +389,49 @@ const EN: StardewCopy = {
     tick: (name, qty, quality) => `${name} × ${qty}${quality ? `, ${quality} quality` : ""}`,
     gold: "Gold",
   },
+  crops: {
+    h1: "Stardew Valley crop profits",
+    lede: "Which crop makes the most gold per day, from the day you plant it to the end of its season.",
+    season: "Season",
+    day: "Planting day",
+    level: "Farming level",
+    fert: "Fertilizer",
+    ferts: { none: "None", basic: "Basic Fertilizer", quality: "Quality Fertilizer", deluxe: "Deluxe Fertilizer", speed: "Speed-Gro", deluxeSpeed: "Deluxe Speed-Gro", hyper: "Hyper Speed-Gro" },
+    professions: "Professions",
+    sell: "Sell",
+    sellBest: "The best way",
+    sellRaw: "Raw",
+    seeds: "Seeds",
+    seedsBuy: "Bought",
+    seedsOwn: "Your own",
+    greenhouse: "Greenhouse",
+    hint: (gh) =>
+      gh
+        ? "In the greenhouse everything grows: one year from the planting day. Rice and Taro planted next to water."
+        : "Until the last day of the season (or of the next one, if the crop keeps growing). Rice and Taro planted next to water.",
+    cols: { name: "Crop", harvests: "Harvests", days: "Days", gross: "Gross", seeds: "Seeds", net: "Net", perDay: "Gold / day", sell: "Sell as" },
+    sortBy: "Sort by",
+    regrow: (n) => `then every ${n}`,
+    late: "Too late",
+    raw: "Raw",
+    seedMark: "Own / cart",
+    seedMarkTip: "The seed isn't always sold in a shop: your own, the Traveling Cart or a festival. Counted as free.",
+    count: (n) => `${n} crops`,
+    none: "Nothing grows this season outside the greenhouse.",
+    trees: {
+      h2: "Fruit trees",
+      hint: "A grown tree gives one fruit a day in its season, normal quality the first year. The sapling isn't counted.",
+      cols: { tree: "Tree", season: "Season", days: "Fruits in", sapling: "Sapling", perSeason: "Per season", sell: "Sell as", payback: "Pays off in" },
+      days: (n) => `${n} days`,
+      payback: (n) => (n === 1 ? "1 season" : `${n} seasons`),
+      noSapling: "Not sold",
+    },
+  },
   qualities: { normal: "Normal", silver: "Silver", gold: "Gold", iridium: "Iridium" },
   // `LevelUp_ProfessionName_*` de `Strings/UI`.
   professions: {
     tiller: "Tiller",
+    agriculturist: "Agriculturist",
     artisan: "Artisan",
     rancher: "Rancher",
     fisher: "Fisher",
@@ -355,7 +445,7 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos" },
   seo: {
     home: {
       title: "Guía de Stardew Valley: precios, regalos de aldeanos y paquetes | Vestigo",
@@ -372,6 +462,10 @@ const ES: StardewCopy = {
     bundles: {
       title: "Paquetes del Centro Comunitario de Stardew Valley: lista para tildar | Vestigo",
       description: "Los paquetes del Centro Comunitario de Stardew Valley, sala por sala: qué lleva cada uno, la recompensa y qué se consigue esta estación. Tildalos al avanzar.",
+    },
+    crops: {
+      title: "Calculadora de cultivos de Stardew Valley: los que más ganan por estación | Vestigo",
+      description: "Qué cultivo de Stardew Valley 1.6 da más oro por día esta estación: elegí el día de siembra, el nivel, el fertilizante y las profesiones. Con los frutales.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -408,6 +502,7 @@ const ES: StardewCopy = {
       items: "Precio por calidad, regalos, paquetes, máquinas y dónde se consigue cada uno.",
       villagers: "Cumpleaños, regalos favoritos y la lista entera de lo que le gusta a cada aldeano.",
       bundles: "Cada sala y cada paquete con lo que lleva. Tachalos a medida que los completás.",
+      crops: "El oro por día de cada cultivo con tu día de siembra, nivel, fertilizante y profesiones.",
     },
     featured: "Los más buscados",
     featuredHint: "Abrí un objeto para ver sus precios, a quién le encanta y en qué se transforma.",
@@ -498,10 +593,49 @@ const ES: StardewCopy = {
     tick: (name, qty, quality) => `${name} × ${qty}${quality ? `, calidad ${quality}` : ""}`,
     gold: "Oro",
   },
+  crops: {
+    h1: "Ganancias de los cultivos",
+    lede: "Qué cultivo da más oro por día, desde el día en que lo plantás hasta el fin de su estación.",
+    season: "Estación",
+    day: "Día de siembra",
+    level: "Nivel de agricultura",
+    fert: "Fertilizante",
+    ferts: { none: "Ninguno", basic: "Fertilizante básico", quality: "Fertilizante deluxe", deluxe: "Fertilizante de lujo", speed: "Acelerador básico", deluxeSpeed: "Acelerador deluxe", hyper: "Fertilizante ultra-rápido" },
+    professions: "Profesiones",
+    sell: "Venta",
+    sellBest: "Lo mejor",
+    sellRaw: "Crudo",
+    seeds: "Semillas",
+    seedsBuy: "Compradas",
+    seedsOwn: "Propias",
+    greenhouse: "Invernadero",
+    hint: (gh) =>
+      gh
+        ? "En el invernadero crece todo: un año desde el día de siembra. Arroz y Taro plantados junto al agua."
+        : "Hasta el último día de la estación (o de la siguiente, si el cultivo sigue creciendo). Arroz y Taro plantados junto al agua.",
+    cols: { name: "Cultivo", harvests: "Cosechas", days: "Días", gross: "Bruto", seeds: "Semillas", net: "Neto", perDay: "Oro / día", sell: "Se vende" },
+    sortBy: "Ordenar por",
+    regrow: (n) => `y cada ${n}`,
+    late: "No llega",
+    raw: "Crudo",
+    seedMark: "Propia / carro",
+    seedMarkTip: "La semilla no se vende siempre en una tienda: propia, del carro ambulante o de un festival. Se cuenta gratis.",
+    count: (n) => `${n} cultivos`,
+    none: "Fuera del invernadero no crece nada en esta estación.",
+    trees: {
+      h2: "Frutales",
+      hint: "Un árbol adulto da una fruta por día en su estación, de calidad normal el primer año. El retoño no se cuenta.",
+      cols: { tree: "Árbol", season: "Estación", days: "Da fruto en", sapling: "Retoño", perSeason: "Por estación", sell: "Se vende", payback: "Se paga en" },
+      days: (n) => `${n} días`,
+      payback: (n) => (n === 1 ? "1 estación" : `${n} estaciones`),
+      noSapling: "No se vende",
+    },
+  },
   qualities: { normal: "Normal", silver: "Plata", gold: "Oro", iridium: "Iridio" },
   // `LevelUp_ProfessionName_*` de `Strings/UI.es-ES`.
   professions: {
     tiller: "Labrador",
+    agriculturist: "Agricultor",
     artisan: "Artesano",
     rancher: "Ranchero",
     fisher: "Pescador",
