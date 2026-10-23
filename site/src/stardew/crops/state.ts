@@ -115,11 +115,12 @@ const VALUE: Record<Exclude<SortKey, "name" | "sell">, (r: CropRow) => number> =
 
 /**
  * La tabla de cultivos: sin los que no se plantan en la estación elegida, ordenada por la columna pedida, y los que no
- * llegan a cosecharse al final (en el mismo orden entre ellos). Los empates se resuelven por nombre. Con semillas
- * compradas, los que no tienen semilla en ninguna tienda quedan afuera: van en `noShopTable`.
+ * llegan a cosecharse al final (en el mismo orden entre ellos). Los empates se resuelven por nombre. Las semillas
+ * silvestres nunca compiten (`wildTable`); con semillas compradas, tampoco las que no se venden en ninguna tienda
+ * (`noShopTable`).
  */
 export function cropTable(crops: readonly Crop[], s: CropState, lang: Lang): CropRow[] {
-  return ranked(s.seeds === "buy" ? crops.filter((c) => !noShopSeed(c)) : crops, s, lang);
+  return ranked(crops.filter((c) => !c.wild && !(s.seeds === "buy" && noShopSeed(c))), s, lang);
 }
 
 /** La semilla no se vende en ninguna tienda, ni de festival: con "Compradas" no compite en el ranking. */
@@ -130,7 +131,15 @@ export const noShopSeed = (crop: Crop): boolean => crop.seedPrice == null;
  * cuentas de semillas propias, en el mismo orden que la tabla. Con semillas propias, ninguno: compiten todos.
  */
 export function noShopTable(crops: readonly Crop[], s: CropState, lang: Lang): CropRow[] {
-  return s.seeds === "buy" ? ranked(crops.filter(noShopSeed), { ...s, seeds: "own" }, lang) : [];
+  return s.seeds === "buy" ? ranked(crops.filter((c) => !c.wild && noShopSeed(c)), { ...s, seeds: "own" }, lang) : [];
+}
+
+/**
+ * Las semillas silvestres (de primavera, verano, otoño e invierno): dan una recolección al azar de la estación, así que
+ * no compiten en el ranking. Van aparte, con las cuentas del objeto de su fila y semillas propias (se fabrican).
+ */
+export function wildTable(crops: readonly Crop[], s: CropState, lang: Lang): CropRow[] {
+  return ranked(crops.filter((c) => c.wild), { ...s, seeds: "own" }, lang);
 }
 
 function ranked(crops: readonly Crop[], s: CropState, lang: Lang): CropRow[] {

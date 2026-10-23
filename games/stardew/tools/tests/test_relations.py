@@ -62,6 +62,23 @@ class TestRelations(unittest.TestCase):
         crop = next(s for s in relations.sources_by_item()["254"] if s["k"] == "crop")
         self.assertEqual((crop["seed"], crop["days"], crop["seasons"]), ("479", 12, [1]))
 
+    def _tiendas(self, item: str) -> dict[str, int]:
+        return {s["shop"]: s["price"] for s in relations.sources_by_item()[item] if s["k"] == "shop"}
+
+    def test_recargo_de_pierre_en_precio_fijo(self):
+        # El retoño de cerezo trae Price 1700 y Pierre (`DefaultMarkup` ×2) lo cobra 3.400; el fertilizante, 50 → 100.
+        self.assertEqual(self._tiendas("628")["SeedShop"], 3400)
+        self.assertEqual(self._tiendas("368")["SeedShop"], 100)
+
+    def test_semillas_sin_recargo_en_pierre_y_con_el_de_joja(self):
+        # Las semillas de Pierre ignoran el recargo (`IgnoreShopPriceModifiers`); Joja sin membresía cobra ×1,25.
+        melon = self._tiendas("479")
+        self.assertEqual(melon["SeedShop"], 80)
+        self.assertEqual(melon["Joja"], 100)
+
+    def test_otra_tienda_no_cambia(self):
+        self.assertEqual(self._tiendas("685")["FishShop"], 5)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -56,6 +56,8 @@ export interface Crop {
   seedShop: Pair | null;
   /** La semilla sólo se vende en un festival (la Fresa en el Festival del Huevo). */
   seedFestival?: boolean;
+  /** Semilla silvestre: da una recolección al azar de la estación; `harvest` es sólo una de las posibles. */
+  wild?: boolean;
   products: Product[];
   /** Calidad máxima de la cosecha (0 = siempre normal: Fibra y Fruta Qi). Si falta, no hay tope. */
   maxQuality?: number | null;

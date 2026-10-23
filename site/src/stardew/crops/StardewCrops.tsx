@@ -10,7 +10,8 @@
  *
  * Con semillas compradas, los cultivos cuya semilla no se vende en ninguna tienda (ni de festival) salen del ranking y
  * van en una caja aparte, con las cuentas de semillas propias; con semillas propias compiten todos. La semilla que sólo
- * vende un festival (la Fresa) compite con ese precio, y el nombre del festival va debajo del costo.
+ * vende un festival (la Fresa) compite con ese precio, y el nombre del festival va debajo del costo. Las semillas
+ * silvestres (una recolección al azar) nunca compiten: van en su propia caja.
  */
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useLang, useLocale } from "../../i18n";
@@ -21,7 +22,7 @@ import { useLoad } from "../../useLoad";
 import { loadCrops, peekCrops, say } from "../data";
 import { Box, Gold, SdLoading, Sprite, type Nav } from "../ui";
 import type { Best, CropsData, Fert, Product } from "./calc";
-import { cropTable, DEFAULT_STATE, FERTS, firstDir, noShopTable, readCropState, SORT_KEYS, TREE_DAYS, treeTable, writeCropState, type CropRow, type CropState, type SortKey } from "./state";
+import { cropTable, DEFAULT_STATE, FERTS, firstDir, noShopTable, readCropState, SORT_KEYS, TREE_DAYS, treeTable, wildTable, writeCropState, type CropRow, type CropState, type SortKey } from "./state";
 import "../../styles/stardew-items.css";
 import "../../styles/stardew-crops.css";
 
@@ -97,8 +98,11 @@ export function CropCalc({ data, route, navigate, initial = DEFAULT_STATE }: { d
 
   const rows = useMemo(() => cropTable(data.crops, state, lang), [data, state, lang]);
   const apart = useMemo(() => noShopTable(data.crops, state, lang), [data, state, lang]);
+  const wild = useMemo(() => wildTable(data.crops, state, lang), [data, state, lang]);
   const trees = useMemo(() => treeTable(data.fruitTrees, state, lang), [data, state, lang]);
-  const top = rows.find((r) => r.p.harvests > 0);
+  // El tinte va al que más oro por día da (con cosechas), se ordene por la columna que se ordene.
+  const top = rows.reduce<CropRow | undefined>((best, r) => (r.p.harvests > 0 && (!best || r.p.perDay > best.p.perDay) ? r : best), undefined);
+  const showStrawberry = rows.some((r) => r.crop.seedFestival);
   const item = (slug: string): Route => ({ ...route, view: "stardew", sdSection: "items", detail: slug });
 
   const head = (key: SortKey, cls = "") => {
@@ -114,10 +118,10 @@ export function CropCalc({ data, route, navigate, initial = DEFAULT_STATE }: { d
   };
 
   /**
-   * Una tabla de cultivos: el ranking, o el grupo aparte de los que no tienen semilla en tienda (`noShop`, con las
-   * cuentas de semillas propias). Las filas del grupo llevan `data-noshop` en vez de `data-crop`.
+   * Una tabla de cultivos: el ranking (`data-crop`), o uno de los grupos aparte, con las cuentas de semillas propias:
+   * los que no tienen semilla en tienda (`data-noshop`) y las semillas silvestres (`data-wild`).
    */
-  const table = (list: CropRow[], noShop: boolean) => (
+  const table = (list: CropRow[], group: "rank" | "noshop" | "wild") => (
     <table className="sd-ctable">
       <thead>
         <tr>
@@ -134,12 +138,14 @@ export function CropCalc({ data, route, navigate, initial = DEFAULT_STATE }: { d
       <tbody>
         {list.map((r) => {
           const late = r.p.harvests === 0;
-          const festival = !noShop && state.seeds === "buy" && r.crop.seedFestival && r.crop.seedShop;
+          const rank = group === "rank";
+          const festival = rank && state.seeds === "buy" && r.crop.seedFestival && r.crop.seedShop;
           return (
             <tr
-              className={late ? "is-late" : !noShop && r === top ? "is-top" : undefined}
-              data-crop={noShop ? undefined : r.crop.slug}
-              data-noshop={noShop ? r.crop.slug : undefined}
+              className={late ? "is-late" : rank && r === top ? "is-top" : undefined}
+              data-crop={rank ? r.crop.slug : undefined}
+              data-noshop={group === "noshop" ? r.crop.slug : undefined}
+              data-wild={group === "wild" ? r.crop.slug : undefined}
               key={r.crop.slug}
             >
               <th scope="row" className="c-name">
@@ -157,7 +163,7 @@ export function CropCalc({ data, route, navigate, initial = DEFAULT_STATE }: { d
                 <Gold n={round(r.p.gross)} />
               </td>
               <td data-label={c.cols.seeds}>
-                {noShop || state.seeds === "own" ? "—" : <Gold n={round(r.p.seedCost)} />}
+                {!rank || state.seeds === "own" ? "—" : <Gold n={round(r.p.seedCost)} />}
                 {festival && <small className="sd-regrow">{say(festival, lang)}</small>}
               </td>
               <td data-label={c.cols.net} className={r.p.net < 0 ? "is-neg" : undefined}>
@@ -270,14 +276,23 @@ export function CropCalc({ data, route, navigate, initial = DEFAULT_STATE }: { d
             </select>
           </label>
         </div>
-        {rows.length === 0 ? <p className="sd-note">{c.none}</p> : table(rows, false)}
+        {rows.length === 0 ? <p className="sd-note">{c.none}</p> : table(rows, "rank")}
+        {showStrawberry && state.seeds === "buy" && <p className="sd-muted sd-foot">{c.notes.strawberry}</p>}
       </Box>
 
       {apart.length > 0 && (
         <Box className="sd-ctable-box sd-noshop">
           <h2 className="sd-h2">{c.noShop.h2}</h2>
           <p className="sd-muted">{c.noShop.hint}</p>
-          {table(apart, true)}
+          {table(apart, "noshop")}
+        </Box>
+      )}
+
+      {wild.length > 0 && (
+        <Box className="sd-ctable-box sd-wild">
+          <h2 className="sd-h2">{c.wild.h2}</h2>
+          <p className="sd-muted">{c.wild.hint}</p>
+          {table(wild, "wild")}
         </Box>
       )}
 
@@ -321,6 +336,7 @@ export function CropCalc({ data, route, navigate, initial = DEFAULT_STATE }: { d
             ))}
           </tbody>
         </table>
+        <p className="sd-muted sd-foot">{c.notes.island}</p>
       </Box>
     </main>
   );

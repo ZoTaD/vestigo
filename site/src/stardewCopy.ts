@@ -186,6 +186,10 @@ export interface CropsCopy {
   raw: string;
   /** Con semillas compradas, los cultivos cuya semilla no se vende en ninguna tienda van aparte. */
   noShop: { h2: string; hint: string };
+  /** Las semillas silvestres, que dan una recolección al azar: fuera del ranking. */
+  wild: { h2: string; hint: string };
+  /** Notas al pie: la Fresa (bajo la tabla de cultivos) y los frutales de la isla (bajo la de frutales). */
+  notes: { strawberry: string; island: string };
   count: (n: string) => string;
   none: string;
   trees: {
@@ -415,7 +419,15 @@ const EN: StardewCopy = {
     raw: "Raw",
     noShop: {
       h2: "Seeds not sold in shops",
-      hint: "No shop sells these seeds: they come from the Traveling Cart, monsters or your own harvest. They're counted as your own seeds, free, so they don't compete with the ones you buy.",
+      hint: "No shop sells these seeds: they're crafted, or come from the Traveling Cart, monsters, Mr. Qi or your own harvest. They're counted as your own seeds, free, so they don't compete with the ones you buy.",
+    },
+    wild: {
+      h2: "Wild seeds",
+      hint: "They give a random forage item of the season, so they stay out of the ranking. The numbers use the item on each row.",
+    },
+    notes: {
+      strawberry: "Strawberry seeds are sold at the Egg Festival (Spring 13): planting them on day 1 works from the second year.",
+      island: "Banana and Mango fruit all year round on Ginger Island.",
     },
     count: (n) => `${n} crops`,
     none: "Nothing grows this season outside the greenhouse.",
@@ -621,7 +633,15 @@ const ES: StardewCopy = {
     raw: "Crudo",
     noShop: {
       h2: "Sin semilla en tienda",
-      hint: "Ninguna tienda vende estas semillas: salen del carro ambulante, de monstruos o de tu propia cosecha. Se cuentan como propias, sin costo, así no compiten con las que se compran.",
+      hint: "Ninguna tienda vende estas semillas: se fabrican o salen del carro ambulante, de monstruos, del Sr. Qi o de tu propia cosecha. Se cuentan como propias, sin costo, así no compiten con las que se compran.",
+    },
+    wild: {
+      h2: "Semillas silvestres",
+      hint: "Dan una recolección al azar de la estación, así que quedan fuera del ranking. Las cuentas usan el objeto de cada fila.",
+    },
+    notes: {
+      strawberry: "Las semillas de fresa se compran en el Festival del huevo (13 de primavera): plantarlas el día 1 vale desde el segundo año.",
+      island: "La Banana y el Mango dan fruto todo el año en la Isla Jengibre.",
     },
     count: (n) => `${n} cultivos`,
     none: "Fuera del invernadero no crece nada en esta estación.",

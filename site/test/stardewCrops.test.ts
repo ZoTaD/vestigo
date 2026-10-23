@@ -10,7 +10,7 @@ import { LangContext } from "../src/i18n";
 import { parseRoute, routePath, type Route } from "../src/route";
 import type { CropsData } from "../src/stardew/crops/calc";
 import { CropCalc } from "../src/stardew/crops/StardewCrops";
-import { cropTable, DEFAULT_STATE, noShopTable, readCropState, treeTable, writeCropState, type CropState } from "../src/stardew/crops/state";
+import { cropTable, DEFAULT_STATE, noShopTable, readCropState, treeTable, wildTable, writeCropState, type CropState } from "../src/stardew/crops/state";
 
 const all = data as CropsData;
 const route = { lang: "en", view: "stardew", sdSection: "crops" } as Route;
@@ -24,8 +24,48 @@ function screen(state: CropState, lang: "en" | "es" = "en") {
   );
   const rows = [...html.matchAll(/data-crop="([\w-]+)"/g)].map((m) => m[1]);
   const noShop = [...html.matchAll(/data-noshop="([\w-]+)"/g)].map((m) => m[1]);
-  return { html, rows, noShop };
+  const wild = [...html.matchAll(/data-wild="([\w-]+)"/g)].map((m) => m[1]);
+  /** La fila con el tinte de "la mejor". */
+  const top = html.match(/<tr class="is-top" data-crop="([\w-]+)"/)?.[1];
+  return { html, rows, noShop, wild, top };
 }
+
+describe("semillas silvestres", () => {
+  it("nunca compiten en el ranking, con Compradas ni con Propias, y van en su caja", () => {
+    for (const seeds of ["buy", "own"] as const) {
+      expect(slugs(st({ seeds }))).not.toContain("wild-horseradish");
+      expect(noShopTable(all.crops, st({ seeds }), "en").map((r) => r.crop.slug)).not.toContain("wild-horseradish");
+      expect(wildTable(all.crops, st({ seeds }), "en").map((r) => r.crop.slug)).toEqual(["wild-horseradish"]);
+    }
+    expect(wildTable(all.crops, st({ season: 2 }), "en").map((r) => r.crop.slug)).toEqual(["common-mushroom"]);
+  });
+
+  it("en pantalla: su caja con el título y la línea que lo explica", () => {
+    const { html, rows, wild } = screen(st({ seeds: "own" }), "es");
+    expect(html).toContain("Semillas silvestres");
+    expect(html).toContain("recolección al azar");
+    expect(rows).not.toContain("wild-horseradish");
+    expect(wild).toEqual(["wild-horseradish"]);
+  });
+});
+
+describe("la mejor fila y las notas", () => {
+  it("el tinte va a la de más oro por día aunque se ordene por otra columna", () => {
+    const best = cropTable(all.crops, DEFAULT_STATE, "en")[0].crop.slug;
+    expect(screen(DEFAULT_STATE).top).toBe(best);
+    const byName = screen(st({ sort: { key: "name", dir: "asc" } }));
+    expect(byName.rows[0]).not.toBe(best);
+    expect(byName.top).toBe(best);
+  });
+
+  it("la nota de la Fresa y la de los frutales de la isla", () => {
+    const { html } = screen(DEFAULT_STATE, "es");
+    expect(html).toContain("13 de primavera");
+    expect(html).toContain("Isla Jengibre");
+    // Fuera de primavera no hay Fresa: tampoco su nota.
+    expect(screen(st({ season: 1 }), "es").html).not.toContain("13 de primavera");
+  });
+});
 
 describe("semillas que no se venden en tienda", () => {
   it("con Compradas salen del ranking y van aparte, con las cuentas de propias", () => {
@@ -129,7 +169,9 @@ describe("tabla de cultivos", () => {
     const cherry = trees.find((r) => r.tree.slug === "cherry")!;
     expect(cherry.p.harvests).toBe(28);
     expect(cherry.p.gross).toBe(28 * 80);
-    expect(cherry.payback).toBe(Math.ceil(1700 / (28 * 80)));
+    // El retoño cuesta 3.400 en Pierre (1.700 de los datos con su recargo ×2): se paga en 2 estaciones.
+    expect(cherry.tree.saplingPrice).toBe(3400);
+    expect(cherry.payback).toBe(2);
   });
 });
 

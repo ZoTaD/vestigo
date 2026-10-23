@@ -89,8 +89,14 @@ class TestCropsData(unittest.TestCase):
     def test_arbol_cerezo(self):
         t = self.arboles["628"]
         self.assertEqual(t["seasons"], [0])
-        self.assertEqual(t["saplingPrice"], 1700)
+        # 1.700 en los datos, ×2 del recargo de Pierre (`DefaultMarkup`).
+        self.assertEqual(t["saplingPrice"], 3400)
         self.assertTrue(t["products"])
+
+    def test_semillas_silvestres(self):
+        silvestres = {s for s, c in self.crops.items() if c["wild"]}
+        self.assertEqual(silvestres, {"495", "496", "497", "498"})
+        self.assertFalse(self.crops["479"]["wild"])
 
     def test_mercado_nocturno_en_el_calendario(self):
         for d in ("15", "16", "17"):

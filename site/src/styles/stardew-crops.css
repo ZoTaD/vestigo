@@ -28,6 +28,8 @@
 .sd-calc .sd-pill:disabled { opacity: 0.5; cursor: default; }
 .sd-calc .sd-pill:disabled:hover { background: #f0b462; }
 .sd-calc-hint { margin-top: 12px; }
+/* Las notas al pie de las tablas (la Fresa, los frutales de la isla). */
+.sd-ctable-box .sd-foot { margin: 8px 0 0; font-size: 13px; }
 
 /* --- Las tablas ----------------------------------------------------------------------------------------------------- */
 .sd-ctable-top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px; margin-bottom: 8px; }

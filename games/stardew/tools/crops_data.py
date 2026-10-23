@@ -19,6 +19,9 @@ DATA = Path(__file__).resolve().parents[1] / "data"
 SEASONS = ["spring", "summer", "fall", "winter"]
 # Tiendas que venden las semillas todo el año. El carro de viaje queda fuera: su precio es al azar.
 TIENDAS_SEMILLAS = ("SeedShop", "Joja", "Sandy")
+# Semillas silvestres (`Crop.isWildSeedCrop` del código del juego, no está en los datos): dan una recolección al azar
+# de la estación, así que su `HarvestItemId` es sólo una de las posibles.
+SEMILLAS_SILVESTRES = ("495", "496", "497", "498")
 MINUTOS_POR_DIA = 1440
 
 
@@ -120,6 +123,7 @@ def crops() -> dict:
             "maxQuality": c.get("HarvestMaxQuality"),
             "price": objs[h]["Price"], "cat": objs[h].get("Category", 0),
             "seedPrice": precio, "seedShop": tienda, "seedFestival": festival,
+            "wild": semilla in SEMILLAS_SILVESTRES,
             "products": _productos(h, nom, nombres),
         })
     arboles = []
