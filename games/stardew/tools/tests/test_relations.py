@@ -17,6 +17,13 @@ class TestRelations(unittest.TestCase):
         self.assertEqual(relations.gift_taste("Abigail", "SkillBook_4"), "like")
         self.assertIn("Abigail", relations.tastes_by_item()["Book_Void"]["love"])
 
+    def test_objetos_sin_dibujo_ni_uso_fuera(self):
+        # Slime Crate, Camping Stove y Hedge: casilla vacía en springobjects y nada del juego los crea.
+        objs = relations.objects()
+        for item_id in ("925", "927", "929"):
+            self.assertNotIn(item_id, objs)
+        self.assertIn("924", objs)  # el cajón de suministros de al lado sí está
+
     def test_no_sociables_fuera(self):
         keys = {v["key"] for v in relations.villagers()}
         self.assertEqual(len(keys), 34)
