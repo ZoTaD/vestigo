@@ -32,7 +32,7 @@ export type DeadlockSection =
   | "patches"
   | "player"
   | "match";
-export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "privacy" | "terms";
+export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -321,6 +321,30 @@ export function registerTerrariaSlugs(slugs: Partial<Record<TerrariaTab, Record<
   terrariaSlugsEs.register(slugs);
 }
 
+/** Stardew Valley (2026-10-22). Diseño: docs/superpowers/specs/2026-10-22-stardew-design.md. */
+export type StardewTab = "items" | "villagers" | "bundles";
+export type StardewSection = "home" | StardewTab;
+/** El nombre completo: `/stardew` a secas es la carpeta de los sprites y retratos (`public/stardew/`). */
+export const STARDEW_SEGMENT = "stardew-valley";
+export const STARDEW_SECTIONS: StardewTab[] = ["items", "villagers", "bundles"];
+/** Las pestañas con fichas: su tercer segmento es el slug de una. El Centro Comunitario es una sola página. */
+export const STARDEW_DETAIL_SECTIONS: StardewTab[] = ["items", "villagers"];
+/**
+ * Las pestañas que ya tienen página: las demás se anuncian apagadas y su dirección muestra la portada. Las tres van
+ * acá desde el armazón (tarea 4) para que las direcciones queden fijas; la barra las apaga mientras no tengan su
+ * línea en `TABS` de `Stardew.tsx`.
+ */
+export const STARDEW_PUBLISHED: StardewTab[] = ["items", "villagers", "bundles"];
+export const STARDEW_SECTION_ES: Record<StardewTab, string> = { items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario" };
+const STARDEW_SECTION_BY_ES = new Map(Object.entries(STARDEW_SECTION_ES).map(([tab, es]) => [es, tab as StardewTab]));
+
+/** Los slugs en español de las fichas de Stardew Valley (objetos y aldeanos). */
+const stardewSlugsEs = new LocalSlugs<StardewTab>();
+
+export function registerStardewSlugs(slugs: Partial<Record<StardewTab, Record<string, string>>>): void {
+  stardewSlugsEs.register(slugs);
+}
+
 export interface Route {
   lang: Lang;
   view: View;
@@ -338,6 +362,8 @@ export interface Route {
   rsSection?: RustSection;
   /** Qué pestaña de Terraria. Sin ella es la portada de la sección. */
   trSection?: TerrariaSection;
+  /** Qué pestaña de Stardew Valley. Sin ella es la portada de la sección. */
+  sdSection?: StardewSection;
   /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
   detail?: string;
 }
@@ -371,6 +397,11 @@ const isTerrariaTab = (v: string | undefined): v is TerrariaTab => !!v && (TERRA
 /** La pestaña de Terraria de un segmento, escrito en cualquiera de los dos idiomas. */
 const terrariaTab = (v: string | undefined): TerrariaTab | undefined =>
   isTerrariaTab(v) ? v : v ? TERRARIA_SECTION_BY_ES.get(v) : undefined;
+
+const isStardewTab = (v: string | undefined): v is StardewTab => !!v && (STARDEW_SECTIONS as string[]).includes(v);
+/** La pestaña de Stardew Valley de un segmento, escrito en cualquiera de los dos idiomas. */
+const stardewTab = (v: string | undefined): StardewTab | undefined =>
+  isStardewTab(v) ? v : v ? STARDEW_SECTION_BY_ES.get(v) : undefined;
 
 /**
  * A name as it appears in a URL: lowercase, ASCII, hyphen-separated.
@@ -451,6 +482,15 @@ export function parseRoute(pathname: string): Route {
     const slug = TERRARIA_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
     const detail = slug ? terrariaSlugsEs.toId(tab, slug) : undefined;
     return { ...base, view: "terraria", trSection: tab, detail };
+  }
+
+  if (head === STARDEW_SEGMENT) {
+    const tab = stardewTab(rest[1]);
+    // Como Terraria: una pestaña sin publicar (o que no se conoce) muestra la portada.
+    if (!tab || !STARDEW_PUBLISHED.includes(tab)) return { ...base, view: "stardew", sdSection: "home" };
+    const slug = STARDEW_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
+    const detail = slug ? stardewSlugsEs.toId(tab, slug) : undefined;
+    return { ...base, view: "stardew", sdSection: tab, detail };
   }
 
   if (!head || !isView(head)) return { ...base, view: "home" };
@@ -550,6 +590,15 @@ export function routePath(route: Route): string {
     if (lang !== "es") return detail ? `${root}/${sec}/${detail}` : `${root}/${sec}`;
     const path = `${root}/${TERRARIA_SECTION_ES[sec]}`;
     return detail ? `${path}/${terrariaSlugsEs.toEs(sec, detail)}` : path;
+  }
+  if (view === "stardew") {
+    const sec = route.sdSection ?? "home";
+    const root = `/${lang}/${STARDEW_SEGMENT}`;
+    if (sec === "home") return root;
+    const ficha = STARDEW_DETAIL_SECTIONS.includes(sec) ? detail : undefined;
+    if (lang !== "es") return ficha ? `${root}/${sec}/${ficha}` : `${root}/${sec}`;
+    const path = `${root}/${STARDEW_SECTION_ES[sec]}`;
+    return ficha ? `${path}/${stardewSlugsEs.toEs(sec, ficha)}` : path;
   }
   if (view === "rust") {
     const sec = route.rsSection ?? "home";

@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor, PZ_TAB_FILES, RUST_TAB_FILES, TERRARIA_TAB_FILES } from "../src/areaFiles";
-import { PZ_SECTIONS, RUST_SECTIONS, TERRARIA_SECTIONS } from "../src/route";
+import { AREA_FILES, DEADLOCK_TAB_FILES, filesFor, PZ_TAB_FILES, RUST_TAB_FILES, STARDEW_TAB_FILES, TERRARIA_TAB_FILES } from "../src/areaFiles";
+import { PZ_SECTIONS, RUST_SECTIONS, STARDEW_SECTIONS, TERRARIA_SECTIONS } from "../src/route";
 import pzIndex from "@zomboid/index.json";
 import pzSlugsEs from "virtual:pz-slugs-es";
 
@@ -30,7 +30,7 @@ describe("cada vista en su chunk (2026-09-25)", () => {
   });
 
   it("hay un área por cada vista que sirve el sitio", () => {
-    expect(Object.keys(byView).sort()).toEqual(["d2r", "deadlock", "home", "poe2", "privacy", "rust", "terms", "terraria", "valheim", "zomboid"]);
+    expect(Object.keys(byView).sort()).toEqual(["d2r", "deadlock", "home", "poe2", "privacy", "rust", "stardew", "terms", "terraria", "valheim", "zomboid"]);
   });
 
   it("DEADLOCK_TAB_FILES nombra el mismo archivo que TABS en DeadlockArea.tsx", () => {
@@ -69,6 +69,7 @@ describe("cada vista en su chunk (2026-09-25)", () => {
     expect(filesFor({ ...base, view: "deadlock", dlSection: "player" })).toEqual(["src/DeadlockArea.tsx", "src/DeadlockPlayer.tsx"]);
     expect(filesFor({ ...base, view: "zomboid", pzSection: "home" })).toEqual(["src/Zomboid.tsx"]);
     expect(filesFor({ ...base, view: "rust", rsSection: "home" })).toEqual(["src/Rust.tsx"]);
+    expect(filesFor({ ...base, view: "stardew", sdSection: "home" })).toEqual(["src/Stardew.tsx"]);
   });
 });
 
@@ -152,6 +153,26 @@ describe("Terraria: cada pestaña en su chunk", () => {
     const tabs = src.slice(start, src.indexOf("};", start));
     const bySection = Object.fromEntries([...tabs.matchAll(/^\s+"?([\w-]+)"?: (\w+),$/gm)].filter((m) => lazies.has(m[2])).map((m) => [m[1], lazies.get(m[2])]));
     const files = Object.fromEntries(Object.entries(TERRARIA_TAB_FILES).map(([s, f]) => [s, f!.replace(/^src\//, "").replace(/\.tsx?$/, "")]));
+    expect(files).toEqual(bySection);
+  });
+});
+
+describe("Stardew Valley: cada pestaña en su chunk", () => {
+  it("toda pestaña de STARDEW_TAB_FILES es una sección de la ruta, y su archivo existe", () => {
+    for (const [sec, file] of Object.entries(STARDEW_TAB_FILES)) {
+      expect(STARDEW_SECTIONS, sec).toContain(sec);
+      expect(existsSync(new URL(`../${file}`, import.meta.url)), file).toBe(true);
+    }
+  });
+
+  it("STARDEW_TAB_FILES nombra el mismo archivo que TABS en Stardew.tsx: si no, el HTML de la pestaña sale sin su JS ni su CSS", () => {
+    const src = readFileSync(new URL("../src/Stardew.tsx", import.meta.url), "utf-8");
+    const lazies = new Map([...src.matchAll(/const (\w+) = lazyWithPreload\(\(\) => import\("\.\/([\w/]+)"\)\);/g)].map((m) => [m[1], m[2]]));
+    const start = src.indexOf("const TABS");
+    expect(start).toBeGreaterThan(-1);
+    const tabs = src.slice(start, src.indexOf("};", start));
+    const bySection = Object.fromEntries([...tabs.matchAll(/^\s+"?([\w-]+)"?: (\w+),$/gm)].filter((m) => lazies.has(m[2])).map((m) => [m[1], lazies.get(m[2])]));
+    const files = Object.fromEntries(Object.entries(STARDEW_TAB_FILES).map(([s, f]) => [s, f!.replace(/^src\//, "").replace(/\.tsx?$/, "")]));
     expect(files).toEqual(bySection);
   });
 });

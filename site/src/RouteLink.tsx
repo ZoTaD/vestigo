@@ -34,6 +34,7 @@ export default function RouteLink({
   className,
   active,
   prefetch = "hover",
+  hash,
   children,
   ...rest
 }: {
@@ -51,6 +52,8 @@ export default function RouteLink({
    * decenas de descargas que nadie pidió. El foco del teclado baja siempre.
    */
   prefetch?: "hover" | "press";
+  /** Un ancla de la página de destino (`pantry`, sin el `#`): va en el `href` y, al navegar, queda en la dirección. */
+  hash?: string;
   children: React.ReactNode;
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className">) {
   // Cada juego (y cada pestaña de Deadlock) es un chunk aparte (`areas.ts`): se
@@ -59,7 +62,7 @@ export default function RouteLink({
   const warm = () => void areas().preloadRoute(to);
   return (
     <a
-      href={routePath(to)}
+      href={hash ? `${routePath(to)}#${hash}` : routePath(to)}
       className={className}
       data-active={active}
       aria-current={active ? "page" : undefined}
@@ -70,6 +73,8 @@ export default function RouteLink({
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
         e.preventDefault();
         onNavigate(to);
+        // `navigate` ya escribió la dirección nueva: se le suma el ancla, que la pestaña de destino busca al dibujarse.
+        if (hash) window.history.replaceState(window.history.state, "", `${window.location.pathname}${window.location.search}#${hash}`);
       }}
       {...rest}
       onPointerEnter={(e) => {

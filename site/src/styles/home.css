@@ -451,6 +451,22 @@
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-figure span { color: #a89c92; }
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-cta { background: #e7c21b; border-color: #e7c21b; color: #17110f; }
 
+/* --- Stardew Valley: el cielo y el valle de la pantalla de título, con la madera del menú (2026-10-22) --- */
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] {
+  /* El paisaje entero estirado sin suavizar, con un velo crema del lado del texto para que se lea sobre las colinas. */
+  background:
+    linear-gradient(90deg, rgba(255, 243, 214, 0.9) 0%, rgba(255, 243, 214, 0.6) 45%, rgba(255, 243, 214, 0) 80%),
+    url(/stardew/ui/panorama.png) center 62% / cover no-repeat;
+  image-rendering: pixelated;
+  color: #3b1f12;
+}
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-panel-name { color: #3b1f12; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-figure b { color: #3b1f12; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-figure.is-second b { color: #7a4a00; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-figure span { color: #3b1f12; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-cta { background: #e78b2c; border-color: #5b2b29; color: #fff7e0; }
+
 /* --- Path of Exile 2: el oro viejo de su interfaz, sobre negro (2026-10-11) --- */
 
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] {

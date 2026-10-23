@@ -11,6 +11,7 @@ import d2Meta from "@d2r/meta.json";
 import pzMeta from "@zomboid/meta.json";
 import rsMeta from "@rust/meta.json";
 import trMeta from "@terraria/meta.json";
+import sdMeta from "@stardew/meta.json";
 import p2Patches from "@poe2/patches/index.json";
 
 /** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
@@ -323,6 +324,30 @@ export default function Home({
               <p className="game-figure is-second">
                 <b>{num(trMeta.counts.recipes)}</b>
                 <span>{copy.home.games.terrariaRecipes}</span>
+              </p>
+            </div>
+          </li>
+
+          {/* Stardew Valley entra el 2026-10-22, con el valle de la pantalla de título. */}
+          <li className="game-panel" data-panel="stardew">
+            <div className="game-panel-main">
+              <h4 className="game-panel-name">{copy.games.stardew}</h4>
+              <p className="game-panel-note">{copy.home.games.stardewLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "stardew", sdSection: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.stardewCta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(sdMeta.counts.items)}</b>
+                <span>{copy.home.games.stardewItems}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(sdMeta.counts.villagers)}</b>
+                <span>{copy.home.games.stardewVillagers}</span>
               </p>
             </div>
           </li>

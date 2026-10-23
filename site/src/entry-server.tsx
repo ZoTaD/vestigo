@@ -21,6 +21,8 @@ import { preloadCraftRoute } from "./zomboid/crafting/data";
 import { preloadItemsRoute as preloadRsItemsRoute } from "./rust/items/data";
 import { preloadCraftingRoute as preloadTrCraftingRoute, preloadItemsRoute as preloadTrItemsRoute } from "./terraria/data";
 import { preloadPatchesRoute as preloadTrPatchesRoute } from "./terraria/patches/data";
+import { loadBundles as loadSdBundles, preloadItemsRoute as preloadSdItemsRoute, preloadVillagersRoute as preloadSdVillagersRoute } from "./stardew/data";
+import { loadHome as loadSdHome } from "./stardew/homeData";
 import { preloadFarmingRoute } from "./rust/farming/data";
 import { preloadPatchesRoute } from "./rust/patches/data";
 import { preloadMonumentsRoute } from "./rust/monuments/data";
@@ -50,6 +52,17 @@ async function preload(route: Route): Promise<void> {
     if (route.trSection === "items") await quiet(preloadTrItemsRoute(route));
     if (route.trSection === "crafting") await quiet(preloadTrCraftingRoute(route));
     if (route.trSection === "patches") await quiet(preloadTrPatchesRoute(route));
+    return;
+  }
+  // Stardew Valley (2026-10-22): lo de la portada, la ficha o la lista de Objetos, los aldeanos (y la lista para los
+  // regalos de una ficha) y las salas del Centro Comunitario. Sin esto la página sale con "cargando…" y el prerender
+  // corta el build (`isSdLoadingPage` en vite.config.ts).
+  if (route.view === "stardew") {
+    const sec = route.sdSection ?? "home";
+    if (sec === "home") await quiet(loadSdHome(route.lang));
+    if (sec === "items") await quiet(preloadSdItemsRoute(route));
+    if (sec === "villagers") await quiet(preloadSdVillagersRoute(route));
+    if (sec === "bundles") await quiet(loadSdBundles());
     return;
   }
   if (route.view !== "deadlock") return;

@@ -27,7 +27,7 @@
   #
   # Un juego nuevo suma acá su `games/<juego>/data`: si no, la Action que lo
   # actualiza queda en verde con el sitio sirviendo los datos viejos.
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/games/d2r/data :/games/zomboid/data :/games/rust/data :/games/terraria/data :/netlify.toml"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/games/d2r/data :/games/zomboid/data :/games/rust/data :/games/terraria/data :/games/stardew/data :/netlify.toml"
 
 [build.environment]
   # Pinned so a Netlify default upgrade never changes the build under us.
@@ -112,6 +112,21 @@
 [[redirects]]
   from = "/terraria"
   to = "/en/terraria"
+  status = 301
+
+# Stardew Valley (2026-10-22): `/stardew` sin idioma es la carpeta de assets (sprites, retratos y el menú), y
+# `/stardew-valley` sin idioma tampoco es una página. Los dos mandan con 301 a la portada en inglés.
+[[redirects]]
+  from = "/stardew"
+  to = "/en/stardew-valley"
+  status = 301
+[[redirects]]
+  from = "/stardew-valley"
+  to = "/en/stardew-valley"
+  status = 301
+[[redirects]]
+  from = "/stardew-valley/*"
+  to = "/en/stardew-valley/:splat"
   status = 301
 
 # `/rust` sin idioma no es una página (2026-10-05): la carpeta `/rust/...` es de
@@ -384,6 +399,18 @@
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 [[headers]]
   for = "/terraria/art/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/stardew/items/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/stardew/portraits/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/stardew/ui/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 [[headers]]

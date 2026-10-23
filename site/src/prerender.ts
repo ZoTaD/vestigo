@@ -1,4 +1,5 @@
 import { TERRARIA_COPY, type TerrariaHas } from "./terrariaCopy";
+import { STARDEW_COPY } from "./stardewCopy";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
 import { SEO_COPY } from "./seoCopy";
@@ -61,7 +62,8 @@ export function metaFor(
   detailName: string | null,
   via?: string[] | null,
   rsHas?: RustHas | null,
-  trHas?: TerrariaHas | null
+  trHas?: TerrariaHas | null,
+  sdHas?: number | null
 ): { title: string; description: string } {
   const copy = copyOf(lang);
   const seo = copy.seo;
@@ -164,6 +166,16 @@ export function metaFor(
     if (circuit) return r.circuitSeo(circuit.name[lang], circuit.about[lang]);
     return r.seo[route.rsSection ?? "home"];
   }
+  // Stardew Valley (2026-10-22): la portada, cada pestaña y cada ficha de objeto o aldeano. Una ficha sin nombre todavía
+  // (el archivo no llegó al navegador, o no existe) lleva el de su pestaña. `sdHas` son los bits de la lista: la ficha
+  // de objeto sólo promete lo que tiene.
+  if (route.view === "stardew") {
+    const c = STARDEW_COPY[lang];
+    const sec = route.sdSection ?? "home";
+    if (sec === "items" && route.detail && detailName) return c.itemSeo(detailName, sdHas ?? undefined);
+    if (sec === "villagers" && route.detail && detailName) return c.villagerSeo(detailName);
+    return c.seo[sec];
+  }
   // Lo que queda son la portada y las dos páginas legales.
   const page = seo[route.view];
   return { title: page.title(), description: page.description() };
@@ -218,6 +230,8 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const e of data.rs?.items ?? []) out[`rs-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.tr?.items ?? []) out[`tr-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.tr?.patches ?? []) out[`tr-patches/${e.slug}`] = e.v;
+  for (const e of data.sd?.items ?? []) out[`sd-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.sd?.villagers ?? []) out[`sd-villagers/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const slug of data.rs?.circuits ?? []) {
     const m = circuitMeta(slug);
@@ -260,6 +274,8 @@ export function ogImageUrl(route: Route, latestEdition?: string, available: (pat
   if (route.view === "rust") return `${SITE_ORIGIN}/rust/og.jpg`;
   // Terraria también (el paisaje de su portada con el logo, `games/terraria/tools/og.py`).
   if (route.view === "terraria") return `${SITE_ORIGIN}/terraria/og.jpg`;
+  // Y Stardew Valley (el paisaje de la pantalla de título con el nombre en pixel, sin el logo: `games/stardew/tools/og.py`).
+  if (route.view === "stardew") return `${SITE_ORIGIN}/stardew/og.jpg`;
   const path = ogImagePath(route, latestEdition);
   return path && available(path) ? `${SITE_ORIGIN}${path}` : DEFAULT_OG;
 }
@@ -424,6 +440,24 @@ export function jsonLdFor(
     }
     return out;
   }
+  // Stardew Valley (2026-10-22): migas hasta la ficha, y la portada y el Centro Comunitario (la lista para tildar) como
+  // aplicación web gratuita.
+  if (route.view === "stardew") {
+    const sec = route.sdSection ?? "home";
+    const copy = STARDEW_COPY[lang];
+    const trail = [{ name: brand, url: home }, { name: "Stardew Valley", url: routeUrl({ ...route, sdSection: "home", detail: undefined }) }];
+    if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
+    if (sec === "home" || sec === "bundles") {
+      out.push({
+        "@context": "https://schema.org", "@type": "WebApplication", name: sec === "home" ? copy.home.h1 : copy.bundles.h1, description: page.description,
+        url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Stardew Valley" },
+      });
+    }
+    return out;
+  }
   if (route.view !== "deadlock") return [];
 
   const deadlockUrl = routeUrl({ ...route, dlSection: "meta", detail: undefined });
@@ -507,6 +541,9 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
   // Lo mismo en Terraria (receta, usos, botín).
   const trHas = new Map<string, TerrariaHas>();
   for (const e of data.tr?.items ?? []) trHas.set(`tr-items/${e.slug}`, { craft: (e.has & 1) > 0, uses: (e.has & 2) > 0, drops: (e.has & 4) > 0, sources: (e.has & 8) > 0 });
+  // Y en Stardew Valley (regalos, paquetes, máquinas, recetas, fuentes): los bits tal cual, `itemSeo` los lee.
+  const sdHas = new Map<string, number>();
+  for (const e of data.sd?.items ?? []) sdHas.set(`sd-items/${e.slug}`, e.has);
 
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);
@@ -527,9 +564,11 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
                   ? `rs-${route.rsSection ?? "home"}/${route.detail}`
                   : route.view === "terraria"
                     ? `tr-${route.trSection ?? "home"}/${route.detail}`
-                    : null;
+                    : route.view === "stardew"
+                      ? `sd-${route.sdSection ?? "home"}/${route.detail}`
+                      : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
-    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""), trHas.get(detailKey ?? ""));
+    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""), trHas.get(detailKey ?? ""), sdHas.get(detailKey ?? ""));
 
     const alternates = LANGS.map((l) => ({
       hreflang: l as string,

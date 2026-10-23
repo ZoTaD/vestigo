@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hasNavSearch, searchEntries } from "../src/navSearch";
+import { hasNavSearch, loadNavSearcher, searchEntries } from "../src/navSearch";
 
 /**
  * El buscador de la barra dentro de cada juego (2026-10-11). Antes, en Diablo II, Project Zomboid y Rust decía "Buscar
@@ -40,7 +40,19 @@ describe("searchEntries", () => {
 
 describe("hasNavSearch", () => {
   it("los cuatro juegos con fichas buscan en la barra; Deadlock y PoE2 siguen con lo suyo", () => {
-    for (const g of ["valheim", "d2r", "zomboid", "rust", "terraria"]) expect(hasNavSearch(g)).toBe(true);
+    for (const g of ["valheim", "d2r", "zomboid", "rust", "terraria", "stardew"]) expect(hasNavSearch(g)).toBe(true);
     for (const g of ["deadlock", "poe2", "home"]) expect(hasNavSearch(g)).toBe(false);
+  });
+});
+
+describe("el buscador de Stardew Valley (2026-10-22)", () => {
+  it("busca objetos y aldeanos en los dos idiomas, y cada uno lleva a su ficha", async () => {
+    const run = await loadNavSearcher("stardew");
+    const [melon] = run("melon", "en", 10);
+    expect(melon).toMatchObject({ name: "Melon", alt: "Melón", img: "/stardew/items/254.png", to: { view: "stardew", sdSection: "items", detail: "melon" } });
+    expect(run("pastel ro", "es", 10)[0]).toMatchObject({ name: "Pastel rosa", to: { view: "stardew", sdSection: "items", detail: "pink-cake" } });
+    const abigail = run("abigail", "es", 10).find((h) => h.to.sdSection === "villagers");
+    expect(abigail).toMatchObject({ name: "Abigail", tab: "Aldeanos", img: "/stardew/portraits/abigail.png", to: { view: "stardew", sdSection: "villagers", detail: "abigail" } });
+    expect(run("rasmodius", "es", 10)[0]).toMatchObject({ to: { sdSection: "villagers", detail: "wizard" } });
   });
 });

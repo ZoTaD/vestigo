@@ -1,0 +1,29 @@
+/*
+ * Aldeanos de Stardew Valley (2026-10-22): la lista de retratos y la ficha. Viaja con la pestaña (StardewVillagers.tsx);
+ * los filtros, las etiquetas y la cabecera de la ficha son los de Objetos (stardew-items.css). Sin bordes ni barras de
+ * color en filas o tarjetas: tinte de papel, texto y cifras.
+ */
+
+/* --- Lista: los retratos ---------------------------------------------------------------------------------------------- */
+.sd-vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.sd-vcard { display: flex; align-items: center; gap: 10px; padding: 6px 10px 6px 6px; border-radius: 6px; background: var(--sd-paper); }
+a.sd-vcard:hover { background: var(--sd-paper-2); }
+.sd-vcard:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; }
+/* El marco del retrato: el casillero del juego, con la cara adentro. */
+.sd-vframe { flex: none; display: grid; place-items: center; width: 72px; height: 72px; background: url(/stardew/ui/slot.png) center / 72px; image-rendering: pixelated; }
+.sd-vframe .sd-portrait { width: 56px; height: 56px; background: none; }
+.sd-vtext { display: grid; gap: 2px; min-width: 0; line-height: 1.2; }
+.sd-vtext b { font: 800 16px/1.15 var(--sd-text); }
+.sd-vtext small { color: var(--sd-dim); font-size: 14px; font-weight: 800; }
+
+/* --- Ficha ---------------------------------------------------------------------------------------------------------- */
+.sd-portrait-big { width: 75%; height: auto; image-rendering: pixelated; }
+.sd-vficha .sd-top .sd-slot-big { place-items: center; }
+.sd-vficha .sd-muted { margin-bottom: 10px; }
+
+/* Los regalos: casilleros con el nombre abajo (el nombre no se corta: la columna es más ancha que la palabra más larga). */
+.sd-gifts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px 6px; }
+.sd-gift { align-content: start; }
+.sd-gift:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; }
+.sd-gift > span:last-child { max-width: 100%; hyphens: manual; }
+.sd-vficha .sd-gifts-grid li { min-width: 0; }

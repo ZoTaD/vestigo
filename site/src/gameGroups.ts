@@ -8,10 +8,10 @@ export type GameGroup = "survival" | "arpg" | "shooters";
  * `GAME_ORDER`, y aparece solo en la barra; en la portada además hay que escribirle el panel.
  */
 export const GAME_GROUPS: { id: GameGroup; games: Game[] }[] = [
-  { id: "survival", games: ["valheim", "zomboid", "rust", "terraria"] },
+  { id: "survival", games: ["valheim", "zomboid", "rust", "terraria", "stardew"] },
   { id: "arpg", games: ["poe2", "d2r"] },
   { id: "shooters", games: ["deadlock"] },
 ];
 
 /** El orden de los juegos en la barra: los primeros son los últimos en irse al menú "Más juegos" cuando no entran. */
-export const GAME_ORDER: Game[] = ["deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria"];
+export const GAME_ORDER: Game[] = ["deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria", "stardew"];

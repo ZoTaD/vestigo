@@ -97,6 +97,16 @@ export const PAGES = [
   "/en/terraria/patches",
   // La versión más larga: 1.4, con 1.476 puntos.
   "/en/terraria/patches/1-4",
+  // Stardew Valley (2026-10-22): la portada, la lista (888 objetos de a tandas), una ficha en cada idioma, los
+  // aldeanos y una ficha, y el Centro Comunitario en los dos idiomas.
+  "/en/stardew-valley",
+  "/en/stardew-valley/items",
+  "/en/stardew-valley/items/melon",
+  "/es/stardew-valley/objetos/pastel-rosa",
+  "/en/stardew-valley/villagers",
+  "/es/stardew-valley/aldeanos/abigail",
+  "/en/stardew-valley/bundles",
+  "/es/stardew-valley/centro-comunitario",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

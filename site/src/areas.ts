@@ -32,6 +32,8 @@ const loadRust = () => import("./Rust");
 export const RustArea = lazyWithPreload(loadRust);
 const loadTerraria = () => import("./Terraria");
 export const TerrariaArea = lazyWithPreload(loadTerraria);
+const loadStardew = () => import("./Stardew");
+export const StardewArea = lazyWithPreload(loadStardew);
 export const PrivacyPage = lazyWithPreload(() => import("./Privacy"));
 export const TermsPage = lazyWithPreload(() => import("./Terms"));
 
@@ -51,6 +53,7 @@ const BY_VIEW: Partial<Record<View, { preload: () => Promise<void> }>> = {
   zomboid: ZomboidArea,
   rust: RustArea,
   terraria: TerrariaArea,
+  stardew: StardewArea,
   privacy: PrivacyPage,
   terms: TermsPage,
 };
@@ -77,4 +80,5 @@ export const preloadRoute = async (route: Route): Promise<void> => {
   if (route.view === "zomboid") await loadZomboid().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "rust") await loadRust().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "terraria") await loadTerraria().then((m) => m.preloadTab(route)).catch(() => undefined);
+  if (route.view === "stardew") await loadStardew().then((m) => m.preloadTab(route)).catch(() => undefined);
 };
