@@ -21,10 +21,13 @@ import { CONTACT_EMAIL, LegalPage, Section } from "./Legal";
  * Valheim save files are read in the browser (`SaveLoader.tsx`, a Worker) and
  * never uploaded.
  *
- * The browser keeps six keys of its own in localStorage — vestigo.lang,
- * vestigo.consent, vestigo.lastProfile, vestigo.dlItemsView and the Valheim
- * Planner's two — and two in sessionStorage. `test/privacyStorage.test.ts`
- * counts the localStorage ones: add a key without saying so here and it fails.
+ * The browser keeps keys of its own in localStorage — vestigo.lang,
+ * vestigo.consent, vestigo.lastProfile, vestigo.dlItemsView, the Valheim
+ * Planner's two, Stardew's sdv-cc-v1 (checklist) and sdv-save-v1 (the save
+ * reader, only what the page shows) and the other game tools' progress — and
+ * two in sessionStorage. The policy no longer states a count (2026-10-23): the
+ * game tools kept adding keys and the number drifted. `test/privacyStorage.test.ts`
+ * still lists the site-wide keys and checks the policy names the Stardew ones.
  * If any of the above changes, this document changes in the same commit.
  */
 export default function Privacy() {
@@ -74,16 +77,24 @@ export default function Privacy() {
           On the Valheim map you can open your own world and character files to see your
           explored map. They are read inside your browser and are never uploaded anywhere.
         </p>
+        <p>
+          On the Stardew Valley save reader you can open your own save file. It is read inside
+          your browser and is never uploaded anywhere; your browser keeps only what the page
+          shows, until you choose to forget it.
+        </p>
 
         <h3 className="legal-subheading">Information stored in your browser</h3>
         <p>
-          Six items of local storage: your language choice, so the site opens in the language
-          you picked; your answer to the analytics question, so we stop asking; the last
-          Deadlock profile you opened (its public account number and name), so the home page
-          can offer it again; whether you prefer the Deadlock items page as a shop or as a
-          list; and the list you build in the Valheim Planner, with the items you marked as
-          already owned. None of them is sent to us, and clearing your browser data removes all
-          six.
+          Items of local storage, each one there for something you use: your language choice, so
+          the site opens in the language you picked; your answer to the analytics question, so we
+          stop asking; the last Deadlock profile you opened (its public account number and name),
+          so the home page can offer it again; whether you prefer the Deadlock items page as a shop
+          or as a list; the list you build in the Valheim Planner, with the items you marked as
+          already owned; on Stardew Valley, the Community Center bundles you tick and, if you open
+          a save file in the save reader, what the page shows of it (never the file itself), until
+          you choose to forget it; and the progress you keep in the other game tools, such as
+          checklists and planners. None of them is sent to us, and clearing your browser data
+          removes all of them.
         </p>
         <p>
           The site also keeps two short-lived values in session storage, which your browser

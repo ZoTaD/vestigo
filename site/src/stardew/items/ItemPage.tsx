@@ -400,8 +400,16 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
         return (
           <>
             <span className="sd-src-k">{c.src.monster}</span>
-            <b>{say(s.who, lang)}</b>
+            {s.slug ? (
+              <RouteLink className="sd-src-link" to={{ ...route, view: "stardew", sdSection: "mines", detail: s.slug }} onNavigate={navigate} prefetch="press">
+                {say(s.who, lang)}
+              </RouteLink>
+            ) : (
+              <b>{say(s.who, lang)}</b>
+            )}
             <span className="sd-row-end">
+              {/* Al menos uno con esta probabilidad; con varias tiradas, pueden caer hasta `n`. */}
+              {s.n != null && s.n > 1 && <small>{t.mines.upTo(s.n)}</small>}
               {(s.rate * 100).toLocaleString(locale, {
                 maximumFractionDigits: 1,
               })}{" "}

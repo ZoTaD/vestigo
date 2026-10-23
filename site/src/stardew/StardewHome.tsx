@@ -28,6 +28,10 @@ const TAB_ICON: Record<StardewTab, { id: string; w: number; h: number }> = {
   // La caja de regalo: cumpleaños y festivales. La Torta de chocolate (220) se leía como otra cosa a ese tamaño.
   calendar: { id: "MysteryBox", w: 16, h: 16 },
   bundles: { id: "(BC)55", w: 16, h: 32 },
+  // La geoda: lo que se sale a buscar a las Minas.
+  mines: { id: "535", w: 16, h: 16 },
+  // El cofre: lo que la partida tiene guardado.
+  save: { id: "(BC)130", w: 16, h: 32 },
 };
 
 /** Los datos de la portada en el idioma que se lee: los ya bajados en el primer render, y si faltan, se piden. */

@@ -269,12 +269,19 @@ function readSitemapData(): { data: OgData } {
     console.warn(`[terraria] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     tr = undefined;
   }
-  // Stardew Valley (2026-10-22): `meta.json`, la lista con sus nombres y los aldeanos. `stardewSitemapData` anota los
-  // slugs en español (objetos y aldeanos), igual que arriba Terraria.
+  // Stardew Valley (2026-10-22): `meta.json`, la lista con sus nombres, los aldeanos y los monstruos. `stardewSitemapData`
+  // anota los slugs en español (objetos, aldeanos y monstruos), igual que arriba Terraria.
   let sd: SitemapData["sd"];
   try {
     const read = (f: string) => JSON.parse(readFileSync(`${stardewDir}/${f}`, "utf-8"));
-    sd = stardewSitemapData(read("meta.json"), read("site/list.json"), read("site/names-en.json"), read("site/names-es.json"), read("villagers.json"));
+    // Sin `mines.json` sólo se pierden las fichas de monstruo del sitemap, no la sección entera.
+    let monsters = [];
+    try {
+      monsters = read("mines.json").monsters ?? [];
+    } catch (e) {
+      console.warn(`[stardew] sin mines.json (${(e as Error).message}); el sitemap sale sin las fichas de monstruo.`);
+    }
+    sd = stardewSitemapData(read("meta.json"), read("site/list.json"), read("site/names-en.json"), read("site/names-es.json"), read("villagers.json"), monsters);
   } catch (e) {
     console.warn(`[stardew] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     sd = undefined;

@@ -166,7 +166,7 @@ export function metaFor(
     if (circuit) return r.circuitSeo(circuit.name[lang], circuit.about[lang]);
     return r.seo[route.rsSection ?? "home"];
   }
-  // Stardew Valley (2026-10-22): la portada, cada pestaña y cada ficha de objeto o aldeano. Una ficha sin nombre todavía
+  // Stardew Valley (2026-10-22): la portada, cada pestaña y cada ficha de objeto, aldeano o monstruo. Una ficha sin nombre todavía
   // (el archivo no llegó al navegador, o no existe) lleva el de su pestaña. `sdHas` son los bits de la lista: la ficha
   // de objeto sólo promete lo que tiene.
   if (route.view === "stardew") {
@@ -174,6 +174,7 @@ export function metaFor(
     const sec = route.sdSection ?? "home";
     if (sec === "items" && route.detail && detailName) return c.itemSeo(detailName, sdHas ?? undefined);
     if (sec === "villagers" && route.detail && detailName) return c.villagerSeo(detailName);
+    if (sec === "mines" && route.detail && detailName) return c.monsterSeo(detailName);
     return c.seo[sec];
   }
   // Lo que queda son la portada y las dos páginas legales.
@@ -232,6 +233,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const e of data.tr?.patches ?? []) out[`tr-patches/${e.slug}`] = e.v;
   for (const e of data.sd?.items ?? []) out[`sd-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.sd?.villagers ?? []) out[`sd-villagers/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const e of data.sd?.monsters ?? []) out[`sd-mines/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const slug of data.rs?.circuits ?? []) {
     const m = circuitMeta(slug);
@@ -440,8 +442,8 @@ export function jsonLdFor(
     }
     return out;
   }
-  // Stardew Valley (2026-10-22): migas hasta la ficha, y la portada, el Centro Comunitario (la lista para tildar) y la
-  // calculadora de Cultivos y el buscador de Pesca como aplicación web gratuita.
+  // Stardew Valley (2026-10-22): migas hasta la ficha, y la portada, el Centro Comunitario (la lista para tildar), la
+  // calculadora de Cultivos, el buscador de Pesca y el Lector de partida como aplicación web gratuita.
   if (route.view === "stardew") {
     const sec = route.sdSection ?? "home";
     const copy = STARDEW_COPY[lang];
@@ -449,7 +451,7 @@ export function jsonLdFor(
     if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "home" || sec === "bundles" || sec === "crops" || sec === "fishing") {
+    if (sec === "home" || sec === "bundles" || sec === "crops" || sec === "fishing" || sec === "save") {
       out.push({
         "@context": "https://schema.org", "@type": "WebApplication", name: sec === "home" ? copy.home.h1 : copy[sec].h1, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,

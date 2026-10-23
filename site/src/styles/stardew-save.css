@@ -1,0 +1,116 @@
+/*
+ * Lector de partida de Stardew Valley (etapa 3, tarea 5): la caja para elegir el archivo y las cajas de la partida
+ * leída. Viaja con la pestaña (StardewSave.tsx); lo común está en stardew.css, stardew-items.css y stardew-bundles.css.
+ * Sin bordes ni barras de color en filas o tarjetas: tinte de papel, texto y cifras. La letra del juego sólo en los
+ * títulos de 32 px o más; lo demás en Nunito.
+ */
+
+/* --- Sin partida: soltar o elegir el archivo ------------------------------------------------------------------------ */
+.sd-sv-drop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 6px;
+  background: var(--sd-paper);
+}
+.sd-sv-drop.is-over { background: #f3e2b4; }
+.sd-sv-dropmsg { flex: 1 1 200px; font: 800 18px/1.3 var(--sd-text); }
+.sd-sv-file { position: relative; display: inline-block; cursor: pointer; }
+.sd-sv-file:focus-within { outline: 3px solid #6ec6ff; outline-offset: 2px; }
+.sd-sv-error { font-weight: 800; }
+.sd-sv-private { margin-top: 12px; font-weight: 700; }
+.sd-sv-where { display: grid; gap: 6px; margin: 0 0 8px; }
+.sd-sv-where > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 2px 12px; align-items: baseline; }
+.sd-sv-where dt { font-weight: 800; }
+.sd-sv-where code { font: 600 14px/1.4 ui-monospace, "Cascadia Mono", Consolas, monospace; padding: 2px 6px; border-radius: 4px; background: var(--sd-paper-2); }
+@container (max-width: 520px) { .sd-sv-where > div { grid-template-columns: minmax(0, 1fr); } }
+
+/* --- La cabecera de la partida -------------------------------------------------------------------------------------- */
+.sd-sv-date { margin-top: 6px; font: 800 18px/1.3 var(--sd-text); }
+.sd-sv-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 14px 0 6px; }
+.sd-sv-head .sd-muted { margin-top: 4px; }
+.sd-sv-link { font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+
+/* --- Casilleros ----------------------------------------------------------------------------------------------------- */
+.sd-sv-grid { margin-top: 6px; }
+.sd-sv-grid > li { min-width: 0; }
+.sd-sv-cell { padding: 2px 2px 6px; border-radius: 6px; }
+.sd-sv-cell > span:not(.sd-slot) { max-width: 100%; hyphens: manual; }
+.sd-sv-cell small { color: var(--sd-dim); font-size: 13px; font-weight: 800; line-height: 1.25; }
+/* Lo que la granja ya tiene: un tinte verde de papel, no un filo. */
+.sd-sv-cell.is-have { background: #e4efc4; }
+.sd-sv-cell.is-have small { color: #3c6b1d; }
+
+/* --- Hoy ------------------------------------------------------------------------------------------------------------ */
+.sd-sv-tips { display: grid; gap: 8px; }
+.sd-sv-tip { padding: 10px 12px; border-radius: 6px; background: var(--sd-paper); }
+.sd-sv-tiphead { display: flex; align-items: center; gap: 10px; font-size: 16px; line-height: 1.3; }
+.sd-sv-tiphead a:hover b { text-decoration: underline; }
+.sd-sv-tiptext { margin-top: 6px; color: var(--sd-dim); font-size: 14px; font-weight: 800; }
+
+/* --- Perfección ----------------------------------------------------------------------------------------------------- */
+.sd-sv-perfhead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.sd-sv-perfhead .sd-h2 { margin-bottom: 0; }
+.sd-sv-total { font: 800 44px/1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-wood); }
+.sd-sv-total small { margin-left: 2px; font-size: 0.6em; }
+.sd-sv-parts { display: grid; gap: 6px; margin-top: 10px; }
+.sd-sv-part { border-radius: 6px; background: var(--sd-paper); }
+.sd-sv-part.is-done { background: var(--sd-paper-2); }
+.sd-sv-part > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 9.5em;
+  align-items: baseline;
+  gap: 2px 16px;
+  padding: 9px 12px;
+  cursor: pointer;
+  list-style: none;
+}
+.sd-sv-part > summary { position: relative; padding-left: 28px; }
+.sd-sv-part > summary::-webkit-details-marker { display: none; }
+/* El triángulo de abrir y cerrar, en texto: el de `summary` se apaga con `list-style: none`. */
+.sd-sv-part > summary::before { content: "▸"; position: absolute; left: 12px; top: 9px; font: 800 15px/1.3 var(--sd-text); color: var(--sd-dim); }
+.sd-sv-part[open] > summary::before { content: "▾"; }
+.sd-sv-part > summary:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; border-radius: 6px; }
+.sd-sv-pname { font: 800 16px/1.3 var(--sd-text); }
+.sd-sv-pcount { font: 800 16px/1.3 var(--sd-text); font-variant-numeric: tabular-nums; text-align: right; }
+.sd-sv-ppoints { color: var(--sd-dim); font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; }
+.sd-sv-part.is-done .sd-sv-pcount { color: var(--sd-wood); }
+.sd-sv-part > :not(summary) { margin: 0 12px 12px; }
+.sd-sv-pmore { font-size: 15px; }
+/* De qué granjero es la cuenta (con más de uno), arriba de lo que falta. */
+.sd-sv-pwho { color: var(--sd-dim); font-weight: 800; }
+@container (max-width: 560px) {
+  .sd-sv-part > summary { grid-template-columns: minmax(0, 1fr) auto; }
+  .sd-sv-ppoints { grid-column: 1 / -1; text-align: left; }
+}
+.sd-sv-list { display: grid; gap: 4px; }
+.sd-sv-list li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; padding: 6px 10px; border-radius: 4px; background: var(--sd-paper-2); }
+.sd-sv-num { font-weight: 800; font-variant-numeric: tabular-nums; }
+.sd-sv-people { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr)); gap: 6px; }
+.sd-sv-people li { display: flex; align-items: center; gap: 10px; padding: 4px 8px 4px 4px; border-radius: 6px; background: var(--sd-paper-2); }
+.sd-sv-people span { display: grid; gap: 1px; min-width: 0; }
+.sd-sv-people small { color: var(--sd-dim); font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* --- Regalos de la semana ------------------------------------------------------------------------------------------- */
+.sd-sv-bdays { display: grid; gap: 10px; }
+.sd-sv-bday { padding: 10px 12px; border-radius: 6px; background: var(--sd-paper); }
+.sd-sv-who { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.sd-sv-who > span { display: grid; gap: 2px; flex: 1 1 160px; }
+.sd-sv-who b { font: 800 17px/1.2 var(--sd-text); }
+.sd-sv-who a:hover b { text-decoration: underline; }
+.sd-sv-who small { color: var(--sd-dim); font-size: 14px; font-weight: 800; }
+.sd-sv-heart { color: #b0243a; font-variant-numeric: tabular-nums; }
+
+/* --- Centro Comunitario y lo que falta ------------------------------------------------------------------------------ */
+.sd-sv-room, .sd-sv-half { margin-top: 12px; }
+.sd-sv-roomhead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; }
+.sd-sv-roomhead .sd-h3 { margin: 0; }
+.sd-sv-roomhead a:hover { text-decoration: underline; }
+.sd-sv-bundles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 8px; margin-top: 6px; }
+.sd-sv-bundle { min-width: 0; padding: 8px 10px 10px; border-radius: 6px; background: var(--sd-paper); }
+.sd-sv-bhead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 10px; font-size: 15px; }
+.sd-sv-bhead span { color: var(--sd-dim); font-size: 14px; font-weight: 800; }
+.sd-sv-half .sd-label { display: block; margin-top: 10px; }

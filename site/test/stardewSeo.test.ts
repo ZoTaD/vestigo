@@ -6,6 +6,7 @@ import list from "../../games/stardew/data/site/list.json";
 import namesEn from "../../games/stardew/data/site/names-en.json";
 import namesEs from "../../games/stardew/data/site/names-es.json";
 import villagers from "../../games/stardew/data/villagers.json";
+import mines from "../../games/stardew/data/mines.json";
 import { parseRoute } from "../src/route";
 import { SITEMAP_GROUPS, sitemapLastmod, sitemapPaths, sitemapXml, type SitemapData } from "../src/sitemap";
 import { jsonLdFor, metaFor, ogImageUrl, prerenderPages } from "../src/prerender";
@@ -14,7 +15,7 @@ import { isSdLoadingPage } from "../src/stardew/loadingGuard";
 import { SdLoading } from "../src/stardew/ui";
 
 // Como en el build: `stardewSitemapData` anota los slugs en español antes de armar ninguna dirección.
-const sd = stardewSitemapData(sdMeta, list as never, namesEn, namesEs as never, villagers as never);
+const sd = stardewSitemapData(sdMeta, list as never, namesEn, namesEs as never, villagers as never, mines.monsters as never);
 const data = {
   dlHeroes: {}, dlItems: {}, dlHeroIds: [], dlItemIds: [],
   sd,
@@ -166,6 +167,54 @@ describe("el <head> de Stardew Valley", () => {
   it("toda la sección usa su propia vista previa", () => {
     expect(ogImageUrl(parseRoute("/es/stardew-valley"))).toBe("https://vestigo.gg/stardew/og.jpg");
     expect(ogImageUrl(parseRoute("/en/stardew-valley/items/melon"))).toBe("https://vestigo.gg/stardew/og.jpg");
+  });
+});
+
+describe("Stardew Valley: Minas y combate y Lector de partida (etapa 3)", () => {
+  const paths = sitemapPaths(data);
+  const monstruos = mines.monsters as { slug: string; slugEs: string; name: [string, string] }[];
+
+  it("las dos pestañas, en los dos idiomas y en main con la fecha de los datos", () => {
+    const main = sitemapXml(data, "main");
+    for (const p of ["/en/stardew-valley/mines", "/es/stardew-valley/minas", "/en/stardew-valley/save", "/es/stardew-valley/partida"]) {
+      expect(paths).toContain(p);
+      expect(main).toContain(`<loc>https://vestigo.gg${p}</loc>`);
+      expect(sitemapLastmod(p, data)).toBe(sdMeta.generatedAt.slice(0, 10));
+    }
+  });
+
+  it("una ficha por monstruo, con el slug de cada idioma, en el grupo stardew; el Lector no tiene fichas", () => {
+    expect(paths.filter((p) => p.startsWith("/en/stardew-valley/mines/")).length).toBe(monstruos.length);
+    expect(paths.filter((p) => p.startsWith("/es/stardew-valley/minas/")).length).toBe(monstruos.length);
+    expect(paths).toContain("/en/stardew-valley/mines/green-slime");
+    expect(paths).toContain("/es/stardew-valley/minas/baba-verde");
+    expect(sitemapXml(data, "stardew")).toContain("<loc>https://vestigo.gg/es/stardew-valley/minas/baba-verde</loc>");
+    expect(sitemapLastmod("/es/stardew-valley/minas/baba-verde", data)).toBe(sdMeta.generatedAt.slice(0, 10));
+    expect(paths.some((p) => /\/stardew-valley\/(save|partida)\//.test(p))).toBe(false);
+    expect(new Set(paths).size).toBe(paths.length);
+  });
+
+  it("los títulos dicen lo que se busca y las descripciones entran en 160 caracteres", () => {
+    expect(metaFor(parseRoute("/en/stardew-valley/mines"), "en", null).title).toMatch(/^Stardew Valley Mines Guide: Monsters, Weapons/);
+    expect(metaFor(parseRoute("/en/stardew-valley/mines"), "en", null).description).toMatch(/Skull Cavern floor/);
+    expect(metaFor(parseRoute("/es/stardew-valley/minas"), "es", null).title).toMatch(/^Minas de Stardew Valley/);
+    expect(metaFor(parseRoute("/en/stardew-valley/save"), "en", null).title).toMatch(/^Stardew Valley Save File Reader: Perfection Tracker/);
+    expect(metaFor(parseRoute("/es/stardew-valley/partida"), "es", null).title).toMatch(/^Lector de partida de Stardew Valley/);
+    for (const p of ["/en/stardew-valley/mines", "/es/stardew-valley/minas", "/en/stardew-valley/save", "/es/stardew-valley/partida", "/en/stardew-valley/mines/green-slime", "/es/stardew-valley/minas/baba-verde"]) {
+      expect(page(p).description.length, p).toBeLessThanOrEqual(160);
+    }
+    expect(page("/en/stardew-valley/mines/green-slime").title).toBe("Green Slime — Stardew Valley monster drops and floors | Vestigo");
+    expect(page("/es/stardew-valley/minas/baba-verde").alternates).toContainEqual({ hreflang: "en", href: "https://vestigo.gg/en/stardew-valley/mines/green-slime" });
+  });
+
+  it("migas hasta la ficha del monstruo y el Lector como aplicación web gratuita", () => {
+    expect(crumbNames(page("/es/stardew-valley/minas/baba-verde"))).toEqual(["Vestigo", "Stardew Valley", "Minas y combate", "Baba verde"]);
+    expect(crumbNames(page("/en/stardew-valley/save"))).toEqual(["Vestigo", "Stardew Valley", "Save reader"]);
+    for (const path of ["/en/stardew-valley/save", "/es/stardew-valley/partida"]) {
+      const route = parseRoute(path);
+      const ld = jsonLdFor(route, route.lang, { title: "t", description: "d", canonical: `https://vestigo.gg${path}`, image: "i" }, data, null);
+      expect(ld).toContainEqual(expect.objectContaining({ "@type": "WebApplication", isAccessibleForFree: true }));
+    }
   });
 });
 

@@ -177,3 +177,54 @@ máquina. Lejos del tope de 6 GB.
 
 Todas dentro del presupuesto, sin errores. La más cerca del tope es la vista Máquinas de Recetas (2.517 de 3.000
 nodos): si se le suman máquinas o filas visibles por máquina, volver a medirla.
+
+## Mediciones del build (etapa 3, 2026-10-23)
+
+Mismo método que en la etapa 2 (`npm run build` entero, sin `NODE_OPTIONS`, pico de RAM sumando los procesos `node` y
+`esbuild` nuevos cada medio segundo desde PowerShell, un lado detrás del otro). El "antes" es `main` con la etapa 2
+(9e05b13f), compilado en un worktree temporal con su propio `npm ci`; el "después" es `claude/stardew-etapa-3-803b08`.
+Dos corridas por lado y una tercera del "después" para ver el ruido.
+
+| | 9e05b13f (etapa 2) | etapa 3 |
+|---|---|---|
+| Páginas prerenderizadas | 38.942 | 39.032 (+90) |
+| Prerender | 70,2 s / 70,8 s | 94,1 s / 80,9 s / 77,2 s |
+| `vite build` | 1 min 46 s / 1 min 50 s | 2 min 25 s / 2 min 11 s / 2 min 3 s |
+| `npm run build` entero | 141,5 s / 148,9 s | 237,6 s / 174,5 s / 162,3 s |
+| Pico de RAM (suma de procesos) | 3,15 GB / 3,14 GB | 2,66 GB / 2,68 GB / 2,64 GB |
+| Pico de un solo proceso | 3,03 GB / 3,04 GB | 2,55 GB / 2,57 GB / 2,52 GB |
+| `check-links` | 0 sin destino | 0 sin destino |
+
+Las 90 páginas nuevas: las pestañas Minas y combate (`/mines`, `/minas`) y Lector de partida (`/save`, `/partida`) en los
+dos idiomas, más una ficha por cada uno de los 43 monstruos en cada idioma (`/mines/<slug>`, `/minas/<slug-es>`):
+(43 + 2) × 2. El Lector no tiene fichas.
+
+El tiempo sube aun sin contar la primera corrida del "después" (237,6 s, la más lenta, que no se explicó): las otras dos,
+174,5 s y 162,3 s, quedan entre 9 y 20 % arriba de las del "antes" (141,5 s y 148,9 s), más de lo que pesan 90 páginas
+sobre 39 mil. La causa no está medida; las candidatas son los datos nuevos de Minas y del Lector y los chunks que se
+suman. La RAM bajó (de 3,15 a 2,66 GB en la suma de procesos) y esa baja tampoco está explicada: no se probó de dónde
+sale. Las dos cosas quedan lejos del tope de 6 GB; si el build sigue creciendo, volver a medir y buscar la causa del
+tiempo antes de sumar otra etapa.
+
+`npm run perf -- --only stardew --budget` contra `vite preview` (Chromium headless shell), en frío, páginas nuevas de la
+etapa 3 (las de las etapas 1 y 2 quedaron como estaban, entre 35 y 181 pedidos y hasta 2.519 nodos):
+
+| Página | Pedidos | Imágenes | Nodos |
+|---|---|---|---|
+| `/en/stardew-valley/mines` | 123 | 96 | 801 |
+| `/en/stardew-valley/mines/green-slime` | 40 | 13 | 213 |
+| `/es/stardew-valley/minas/baba-verde` | 40 | 13 | 214 |
+| `/en/stardew-valley/mines?v=monsters` | 174 | 147 | 1.994 |
+| `/en/stardew-valley/mines?v=weapons` | 159 | 132 | 1.256 |
+| `/en/stardew-valley/save` | 35 | 5 | 142 |
+| `/es/stardew-valley/partida` | 35 | 5 | 143 |
+
+Todas dentro del presupuesto, sin errores. La más pesada de las nuevas es la grilla de monstruos de Minas (1.994 de
+3.000 nodos, 174 de 250 pedidos).
+
+El Lector con una partida real cargada (6,5 MB de XML, la de ZoTaD; no se copia al repo), medido con Playwright subiendo
+el archivo a la página servida por `vite preview`: la lectura y el dibujo de las cajas tardan entre 0,34 y 0,38 s
+(dos corridas por idioma). Nodos de DOM: 142 antes de subir el archivo, 1.897 con la partida recién leída, 2.944 después
+de recorrer la página entera (las listas largas se dibujan de a tandas con `LazyRows`) y 3.202 con todas las cajas
+desplegadas a la vez, 202 sobre los 3.000. Ese último caso no es el de abrir en frío (el presupuesto es de la página
+vacía), y quien despliega todo ve una página larga; si se le suman cajas al Lector, volver a medirlo.

@@ -17,6 +17,8 @@ import type { CropsData } from "./crops/calc";
 import { withPrices, type FishData } from "./fishing/state";
 import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
+import type { MinesData, Monster } from "./mines/state";
+import type { SaveData } from "./save/progress";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 
@@ -70,7 +72,11 @@ export type Source =
   | { k: "tree"; sapling: string; days: number; seasons: number[] }
   | { k: "shop"; shop: Pair; price: number }
   | { k: "fish" | "forage"; where: Pair[]; seasons: number[] }
-  | { k: "monster"; who: Pair; rate: number };
+  /**
+   * `rate`: la probabilidad de que caiga al menos uno; `n`: cuántas tiradas hay (hasta cuántos caen), si es más de una.
+   * `slug`/`slugEs`: la ficha del monstruo en Minas y combate, si la tiene.
+   */
+  | { k: "monster"; who: Pair; rate: number; n?: number; slug?: string; slugEs?: string };
 
 /** Receta de la que sale: tipo, clave, cuántos salen e ingredientes (id, o categoría en negativo, y cantidad). */
 export type MakeRecipe = [kind: "cook" | "craft", key: string, qty: number, ings: [id: string, n: number][]];
@@ -188,7 +194,10 @@ function note(f: Ficha | null): Ficha | null {
     const items: Record<string, string> = f.slugEs !== f.slug ? { [f.slug]: f.slugEs } : {};
     const villagersEs: Record<string, string> = {};
     for (const [key, r] of Object.entries(f.refs)) if (r[1] !== r[0]) (people.has(key) ? villagersEs : items)[r[0]] = r[1];
-    registerStardewSlugs({ items, villagers: villagersEs });
+    // Los monstruos que lo sueltan enlazan a su ficha de Minas y combate.
+    const mines: Record<string, string> = {};
+    for (const s of f.sources) if (s.k === "monster" && s.slug && s.slugEs && s.slugEs !== s.slug) mines[s.slug] = s.slugEs;
+    registerStardewSlugs({ items, villagers: villagersEs, mines });
   }
   return f;
 }
@@ -278,12 +287,38 @@ export function peekCalendar(lang: Lang): CalendarBundle | null {
 export const loadCalendar = (lang: Lang): Promise<CalendarBundle> =>
   Promise.all([calendar.load(), loadVillagers(), loadList(lang)]).then(() => peekCalendar(lang)!);
 
+/**
+ * Minas y combate (`mines.json`, un solo archivo): armas, botas, anillos, baratijas, monstruos, pisos y cofres. Anota los
+ * slugs en español de los monstruos (sus fichas) y de los objetos que nombra (botín, minerales, anillos y premios), que
+ * enlazan a Objetos.
+ */
+const minesRaw = once<MinesData>(() => import("@stardew/mines.json"));
+let minesNoted = false;
+function noteMines(d: MinesData): MinesData {
+  if (!minesNoted) {
+    const items = [...Object.values(d.refs).map((r) => [r[0], r[1]]), ...d.rings.map((r) => [r.slug, r.slugEs])].filter(([en, es]) => en !== es);
+    registerStardewSlugs({
+      items: Object.fromEntries(items),
+      mines: Object.fromEntries(d.monsters.filter((m) => m.slugEs !== m.slug).map((m) => [m.slug, m.slugEs])),
+    });
+    minesNoted = true;
+  }
+  return d;
+}
+export const peekMines = (): MinesData | null => {
+  const d = minesRaw.peek();
+  return d && noteMines(d);
+};
+export const loadMines = (): Promise<MinesData> => minesRaw.load().then(noteMines);
+
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */
 export const refName = (r: Ref, lang: Lang): string => (lang === "es" && r[3]) || r[2];
 
 /** El aldeano de una dirección: por su slug inglés o por el español (en frío todavía no se anotó cuál es cuál). */
 export const findVillager = (list: readonly Villager[], slug: string): Villager | undefined => list.find((v) => v.slug === slug || v.slugEs === slug);
+/** El monstruo de una dirección de Minas y combate, igual: por su slug inglés o por el español. */
+export const findMonster = (data: MinesData, slug: string): Monster | undefined => data.monsters.find((m) => m.slug === slug || m.slugEs === slug);
 
 /**
  * Lo que una dirección de Aldeanos necesita antes de dibujarse: los aldeanos (que anotan los slugs en español) y, si es
@@ -428,3 +463,44 @@ export function writeVillagerFilters(f: VillagerFilters): string {
 }
 export const filterVillagers = (list: readonly Villager[], f: VillagerFilters): Villager[] =>
   list.filter((v) => (!f.romance || v.romance) && (f.season === null || v.birthday[0] === f.season));
+
+// --- Lector de partida ----------------------------------------------------------------------------------------------
+
+/** `save.json` (`save_data.py`): lo de la perfección, más el nombre de los obeliscos y del reloj de oro. */
+export type SaveJson = SaveData & { buildingNames: Record<string, Pair> };
+const saveRaw = once<SaveJson>(() => import("@stardew/save.json"));
+
+/**
+ * Todo lo que el Lector de partida cruza con la partida: la perfección (`save.json`), los aldeanos, el calendario, los
+ * cultivos, los peces, las recetas, el Centro Comunitario y la lista de objetos del idioma (nombre, sprite y ficha de
+ * cada id). Son los mismos archivos de las otras pestañas: los que ya bajaron no se piden de nuevo. Se pide recién al
+ * leer una partida; la pestaña sin partida no baja nada.
+ */
+export interface SaveBundle {
+  save: SaveJson;
+  villagers: Villager[];
+  calendar: CalendarData;
+  crops: CropsData;
+  fish: FishData;
+  recipes: RecipesData;
+  rooms: Room[];
+  rows: Row[];
+}
+const saveBundles: Partial<Record<Lang, SaveBundle>> = {};
+export function peekSaveBundle(lang: Lang): SaveBundle | null {
+  if (saveBundles[lang]) return saveBundles[lang]!;
+  const save = saveRaw.peek();
+  const cal = calendar.peek();
+  const people = peekVillagers();
+  const cropsData = peekCrops();
+  const fishData = peekFish();
+  const recipes = peekRecipes();
+  const roomList = rooms.peek();
+  const list = peekList(lang);
+  if (!save || !cal || !people || !cropsData || !fishData || !recipes || !roomList || !list) return null;
+  return (saveBundles[lang] = { save, villagers: people, calendar: cal, crops: cropsData, fish: fishData, recipes, rooms: roomList, rows: list });
+}
+export const loadSaveBundle = (lang: Lang): Promise<SaveBundle> =>
+  Promise.all([saveRaw.load(), calendar.load(), loadVillagers(), loadCrops(), loadFish(), loadRecipes(), loadBundles(), loadList(lang)]).then(
+    () => peekSaveBundle(lang)!,
+  );

@@ -475,13 +475,21 @@ def sources_by_item() -> dict[str, list[dict]]:
         sumar(iid, {"k": "forage", "where": d["where"], "seasons": estaciones})
 
     # Botín de monstruos: campo 6 de Data/Monsters, pares `id probabilidad`;
-    # el nombre en español es el último campo de Data/Monsters.es-ES.
+    # el nombre en español es el último campo de Data/Monsters.es-ES. Cada par es una tirada aparte
+    # (`Monster.parseMonsterInfo`): `rate` es la probabilidad de que caiga al menos uno, 1 − ∏(1 − p), y `n` cuántas
+    # tiradas hay (hasta cuántos caen) cuando es más de una.
     es = sdv.raw("Data/Monsters.es-ES")
     for clave, linea in sdv.raw("Data/Monsters").items():
-        botin: dict[str, float] = {}
+        botin: dict[str, list[float]] = {}
         for iid, p in _pares(linea.split("/")[6]):
-            botin[iid] = botin.get(iid, 0) + p
+            botin.setdefault(iid, []).append(p)
         nombre_es = es.get(clave, linea).split("/")[-1]
-        for iid, p in botin.items():
-            sumar(iid, {"k": "monster", "who": [clave, nombre_es], "rate": min(p, 1.0)})
+        for iid, ps in botin.items():
+            nada = 1.0
+            for p in ps:
+                nada *= 1 - min(p, 1.0)
+            fuente = {"k": "monster", "who": [clave, nombre_es], "rate": round(1 - nada, 6)}
+            if len(ps) > 1:
+                fuente["n"] = len(ps)
+            sumar(iid, fuente)
     return out

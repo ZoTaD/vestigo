@@ -14,6 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import crops_data  # noqa: E402
+import mines_data  # noqa: E402
 import relations  # noqa: E402
 import sdv  # noqa: E402
 from sprites import plantillas  # noqa: E402
@@ -269,6 +270,8 @@ def build(write: bool = False) -> dict:
     paquetes = relations.bundles_by_item()
     maquinas = relations.machines_by_input()
     fuentes = relations.sources_by_item()
+    # Los monstruos con ficha en Minas y combate (`mines_data`): clave -> (slug, slug español).
+    con_ficha = {m["key"]: (m["slug"], m["slugEs"]) for m in mines_data.monsters()}
     hace: dict[str, list] = {}
     usa: dict[str, list] = {}
     for r in relations.recipes():
@@ -330,7 +333,10 @@ def build(write: bool = False) -> dict:
             elif s["k"] in ("fish", "forage"):
                 s["where"] = [list(n) for n in dict.fromkeys(tuple(nombres.lugar(w)) for w in s["where"])]  # sin repetir (varios lugares de la isla)
             elif s["k"] == "monster":
-                s["who"] = nombres.monstruo(s["who"][0])
+                clave = s["who"][0]
+                s["who"] = nombres.monstruo(clave)
+                if clave in con_ficha:  # el monstruo tiene ficha en Minas y combate: la fuente enlaza a ella
+                    s["slug"], s["slugEs"] = con_ficha[clave]
             fuentes_i.append(s)
 
         has = 0

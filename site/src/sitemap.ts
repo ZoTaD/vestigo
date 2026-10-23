@@ -97,6 +97,8 @@ export interface StardewSitemapData {
   items?: { slug: string; en: string; es: string; has: number }[];
   /** Los aldeanos con ficha: slug inglés y nombres. */
   villagers?: { slug: string; en: string; es: string }[];
+  /** Los monstruos con ficha en Minas y combate (`mines.json`): slug inglés y nombres. */
+  monsters?: { slug: string; en: string; es: string }[];
 }
 
 /** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
@@ -420,11 +422,11 @@ export function sitemapPaths(data: SitemapData): string[] {
         for (const pt of data.tr.patches ?? []) paths.push(routePath({ ...base, lang, view: "terraria", trSection: "patches", detail: pt.slug }));
       }
     }
-    // Stardew Valley (2026-10-22): la portada, las pestañas publicadas y una ficha por objeto y por aldeano.
+    // Stardew Valley (2026-10-22): la portada, las pestañas publicadas y una ficha por objeto, por aldeano y por monstruo.
     if (data.sd) {
       paths.push(routePath({ ...base, lang, view: "stardew", sdSection: "home" }));
       for (const s of STARDEW_PUBLISHED) paths.push(routePath({ ...base, lang, view: "stardew", sdSection: s }));
-      const fichas = { items: data.sd.items ?? [], villagers: data.sd.villagers ?? [] };
+      const fichas = { items: data.sd.items ?? [], villagers: data.sd.villagers ?? [], mines: data.sd.monsters ?? [] };
       for (const s of STARDEW_PUBLISHED) {
         if (!STARDEW_DETAIL_SECTIONS.includes(s) || !(s in fichas)) continue;
         for (const f of fichas[s as keyof typeof fichas]) paths.push(routePath({ ...base, lang, view: "stardew", sdSection: s, detail: f.slug }));

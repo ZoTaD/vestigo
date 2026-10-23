@@ -31,6 +31,8 @@ const SdCrops = lazyWithPreload(() => import("./stardew/crops/StardewCrops"));
 const SdFishing = lazyWithPreload(() => import("./stardew/fishing/StardewFishing"));
 const SdRecipes = lazyWithPreload(() => import("./stardew/recipes/StardewRecipes"));
 const SdCalendar = lazyWithPreload(() => import("./stardew/calendar/StardewCalendar"));
+const SdMines = lazyWithPreload(() => import("./stardew/mines/StardewMines"));
+const SdSave = lazyWithPreload(() => import("./stardew/save/StardewSave"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `STARDEW_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `STARDEW_TAB_FILES`.
@@ -42,6 +44,8 @@ const TABS: Partial<Record<StardewSection, LazyTab>> = {
   fishing: SdFishing,
   recipes: SdRecipes,
   calendar: SdCalendar,
+  mines: SdMines,
+  save: SdSave,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -68,6 +72,12 @@ const TAB_DATA: Partial<Record<StardewSection, (route: Route) => Promise<unknown
   recipes: () => Promise.all([SdRecipes.preload(), import("./stardew/data").then((m) => m.loadRecipes())]),
   // El calendario (chico), los aldeanos y la lista de objetos del idioma, para los regalos del día elegido.
   calendar: (route) => Promise.all([SdCalendar.preload(), import("./stardew/data").then((m) => m.loadCalendar(route.lang))]),
+  // Minas y combate: un solo archivo (armas, monstruos, pisos) que baja con el chunk; anota los slugs en español de los
+  // monstruos, así una ficha en español se resuelve sin leer la dirección de nuevo.
+  mines: () => Promise.all([SdMines.preload(), import("./stardew/data").then((m) => m.loadMines())]),
+  // El Lector de partida sin partida es sólo la caja para elegir el archivo: baja el chunk y nada más. Los datos se
+  // piden al leer una partida (o al volver con una guardada).
+  save: () => SdSave.preload(),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Stardew Valley, y sus datos. */

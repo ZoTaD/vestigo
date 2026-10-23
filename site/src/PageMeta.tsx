@@ -16,7 +16,7 @@ import { pzPatchName } from "./zomboid/patches/slug";
 import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/data";
 import { loadItem as loadTrItem, peekItem as peekTrItem } from "./terraria/data";
 import { loadPatch as loadTrPatch, peekPatch as peekTrPatch } from "./terraria/patches/data";
-import { findVillager as findSdVillager, loadItem as loadSdItem, loadVillagers as loadSdVillagers, HAS as SD_HAS, peekItem as peekSdItem, peekVillagers as peekSdVillagers } from "./stardew/data";
+import { findMonster as findSdMonster, findVillager as findSdVillager, loadItem as loadSdItem, loadMines as loadSdMines, loadVillagers as loadSdVillagers, HAS as SD_HAS, peekItem as peekSdItem, peekMines as peekSdMines, peekVillagers as peekSdVillagers } from "./stardew/data";
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
 import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
@@ -160,6 +160,12 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const v = list && findSdVillager(list, route.detail);
     return v ? (lang === "es" && v.name[1]) || v.name[0] : null;
   }
+  // Un monstruo de Minas y combate, de `mines.json`; por su slug en cualquiera de los dos idiomas, como la pestaña.
+  if (route.view === "stardew" && route.sdSection === "mines" && route.detail) {
+    const d = peekSdMines();
+    const m = d && findSdMonster(d, route.detail);
+    return m ? (lang === "es" && m.name[1]) || m.name[0] : null;
+  }
   // Una ficha de Objetos de Rust: el nombre sale de su archivo (uno de los 32 repartidos), que la pestaña pide igual.
   if (route.view === "rust" && route.rsSection === "items" && route.detail) {
     const f = peekRsItem(route.detail);
@@ -299,6 +305,11 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "stardew" && route.sdSection === "villagers" && route.detail && !peekSdVillagers()) {
       let vivo = true;
       loadSdVillagers().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    if (route.view === "stardew" && route.sdSection === "mines" && route.detail && !peekSdMines()) {
+      let vivo = true;
+      loadSdMines().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una ficha de Rust, con el archivo de la ficha (que la pestaña ya pidió).
