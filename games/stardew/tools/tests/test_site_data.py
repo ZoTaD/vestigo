@@ -100,6 +100,20 @@ class TestSiteData(unittest.TestCase):
         sin = [s for f in self.out["fichas"].values() for s in f["sources"] if s["k"] == "monster" and "slug" not in s]
         self.assertTrue(all(s["who"][0] not in ("Green Slime", "Bat") for s in sin))
 
+    def test_botin_probabilidad_de_al_menos_uno(self):
+        # `Monster.parseMonsterInfo`: cada par id/probabilidad es una tirada aparte. La Baba verde tira la Baba (766) dos
+        # veces, 75 % y 5 %: cae al menos una con 1 − 0,25 × 0,95 = 76,25 %, y pueden caer hasta 2.
+        baba = [s for s in self.out["fichas"]["slime"]["sources"] if s["k"] == "monster" and s["who"][0] == "Green Slime"][0]
+        self.assertAlmostEqual(baba["rate"], 0.7625)
+        self.assertEqual(baba["n"], 2)
+        # El Cangrejo de iridio tira el mineral de iridio tres veces al 50 %: 87,5 %, hasta 3.
+        iridio = [s for s in self.out["fichas"]["iridium-ore"]["sources"] if s["k"] == "monster" and s["who"][0] == "Iridium Crab"][0]
+        self.assertAlmostEqual(iridio["rate"], 0.875)
+        self.assertEqual(iridio["n"], 3)
+        # Con una sola tirada no va `n`.
+        savia = [s for s in self.out["fichas"]["sap"]["sources"] if s["k"] == "monster" and s["who"][0] == "Green Slime"][0]
+        self.assertNotIn("n", savia)
+
     def test_salas_en_el_orden_del_juego(self):
         self.assertEqual([s["room"] for s in self.out["bundles"]],
                          ["Pantry", "Crafts Room", "Fish Tank", "Boiler Room", "Bulletin Board", "Vault", "Abandoned Joja Mart"])

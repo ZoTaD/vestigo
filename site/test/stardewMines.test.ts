@@ -3,6 +3,7 @@
  * armas, la ficha de un monstruo en los dos idiomas, y el enlace de una ficha de Objetos a la del monstruo que la
  * suelta. Las pantallas se dibujan sin navegador, como el prerender.
  */
+import { readFileSync } from "node:fs";
 import { createElement, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
@@ -10,14 +11,13 @@ import raw from "../../games/stardew/data/mines.json";
 import { LangContext } from "../src/i18n";
 import { parseRoute, routePath, type Route } from "../src/route";
 import { STARDEW_COPY } from "../src/stardewCopy";
-import { loadItem, loadMines } from "../src/stardew/data";
+import { findMonster, loadItem, loadMines } from "../src/stardew/data";
 import ItemPage from "../src/stardew/items/ItemPage";
 import MonsterPage from "../src/stardew/mines/MonsterPage";
-import { MinesBook } from "../src/stardew/mines/StardewMines";
+import StardewMines, { MinesBook } from "../src/stardew/mines/StardewMines";
 import {
   avgDamage,
   DEFAULT_MINES_STATE,
-  findMonster,
   gearSprite,
   lootRows,
   monsterOrder,
@@ -126,12 +126,43 @@ describe("la ficha de un monstruo", () => {
     const es = inLang("es", createElement(MonsterPage, { data, monster: slime, route: route("es", "green-slime"), navigate: nav }));
     expect(en).toContain(">Green Slime</h1>");
     expect(es).toContain(">Baba verde</h1>");
-    // El botín enlaza a Objetos (la Baba, 766: 75 % + 5 % = 80 %), y la meta del Gremio trae su premio.
-    expect(lootRows(slime)[0]).toEqual(["766", 0.8]);
+    // El botín enlaza a Objetos. Cada par es una tirada aparte (`Monster.parseMonsterInfo`): la Baba (766) sale dos
+    // veces, 75 % y 5 %; al menos una con 1 − 0,25 × 0,95 = 76,25 %, y hasta 2. La meta del Gremio trae su premio.
+    const [id, p, n] = lootRows(slime)[0];
+    expect([id, n]).toEqual(["766", 2]);
+    expect(p).toBeCloseTo(0.7625);
     expect(es).toContain('href="/es/stardew-valley/objetos/');
-    expect(en).toContain("80 %");
+    expect(en).toContain("76.3 %");
+    expect(en).toContain(STARDEW_COPY.en.mines.upTo(2));
+    expect(es).toContain("76,3 %");
+    expect(es).toContain(STARDEW_COPY.es.mines.upTo(2));
+    // Es en la ficha donde se dice si tiene versión peligrosa.
+    expect(en).toContain(STARDEW_COPY.en.mines.dangerousTag);
     expect(en).toContain("Slay 1,000 in total of:");
     expect(en).toContain("Slime Charmer Ring");
+  });
+
+  it("el Cangrejo de iridio suelta mineral de iridio en tres tiradas al 50 %: 87,5 %, hasta 3", () => {
+    const crab = findMonster(data, "iridium-crab")!;
+    const row = lootRows(crab).find(([id]) => id === "386")!;
+    expect(row[1]).toBeCloseTo(0.875);
+    expect(row[2]).toBe(3);
+  });
+
+  it("un slug desconocido abre la vista Monstruos con el aviso", async () => {
+    await loadMines();
+    const html = inLang("es", createElement(StardewMines, { route: route("es", "nope"), navigate: nav }));
+    expect(html).toContain(STARDEW_COPY.es.mines.monster.missing);
+    expect(html.match(/data-monster=/g)).toHaveLength(data.monsters.length);
+  });
+
+  it("la grilla de Monstruos no repite la etiqueta de versión peligrosa", () => {
+    expect(book({ view: "monsters" })).not.toContain(STARDEW_COPY.en.mines.dangerousTag);
+  });
+
+  it("la letra del juego (títulos) nunca baja de 32 px en Minas", () => {
+    const css = readFileSync(new URL("../src/styles/stardew-mines.css", import.meta.url), "utf-8");
+    for (const m of css.matchAll(/\.sd-h[12][^{]*\{[^}]*font-size:\s*(\d+)px/g)) expect(Number(m[1])).toBeGreaterThanOrEqual(32);
   });
 
   it("el sprite grande es un múltiplo entero de su tamaño", () => {
@@ -148,9 +179,12 @@ describe("el cruce con Objetos", () => {
   it("un objeto que suelta un monstruo enlaza a su ficha", async () => {
     const ficha = (await loadItem("slime"))!;
     const src = ficha.sources.find((s) => s.k === "monster" && s.who[0] === "Green Slime");
-    expect(src).toMatchObject({ slug: "green-slime", slugEs: "baba-verde" });
+    expect(src).toMatchObject({ slug: "green-slime", slugEs: "baba-verde", n: 2 });
     const en = inLang("en", createElement(ItemPage, { ficha, route: { lang: "en", view: "stardew", sdSection: "items" } as Route, navigate: nav }));
     expect(en).toContain('href="/en/stardew-valley/mines/green-slime"');
+    // La misma probabilidad que la ficha del monstruo: al menos una, y hasta cuántas.
+    expect(en).toContain("76.3 %");
+    expect(en).toContain(STARDEW_COPY.en.mines.upTo(2));
     const es = inLang("es", createElement(ItemPage, { ficha, route: { lang: "es", view: "stardew", sdSection: "items" } as Route, navigate: nav }));
     expect(es).toContain('href="/es/stardew-valley/minas/baba-verde"');
   });

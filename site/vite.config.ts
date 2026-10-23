@@ -274,7 +274,14 @@ function readSitemapData(): { data: OgData } {
   let sd: SitemapData["sd"];
   try {
     const read = (f: string) => JSON.parse(readFileSync(`${stardewDir}/${f}`, "utf-8"));
-    sd = stardewSitemapData(read("meta.json"), read("site/list.json"), read("site/names-en.json"), read("site/names-es.json"), read("villagers.json"), read("mines.json").monsters);
+    // Sin `mines.json` sólo se pierden las fichas de monstruo del sitemap, no la sección entera.
+    let monsters = [];
+    try {
+      monsters = read("mines.json").monsters ?? [];
+    } catch (e) {
+      console.warn(`[stardew] sin mines.json (${(e as Error).message}); el sitemap sale sin las fichas de monstruo.`);
+    }
+    sd = stardewSitemapData(read("meta.json"), read("site/list.json"), read("site/names-en.json"), read("site/names-es.json"), read("villagers.json"), monsters);
   } catch (e) {
     console.warn(`[stardew] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     sd = undefined;

@@ -408,6 +408,8 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
               <b>{say(s.who, lang)}</b>
             )}
             <span className="sd-row-end">
+              {/* Al menos uno con esta probabilidad; con varias tiradas, pueden caer hasta `n`. */}
+              {s.n != null && s.n > 1 && <small>{t.mines.upTo(s.n)}</small>}
               {(s.rate * 100).toLocaleString(locale, {
                 maximumFractionDigits: 1,
               })}{" "}

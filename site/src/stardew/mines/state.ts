@@ -213,14 +213,19 @@ export function weaponList(data: MinesData, sort: WeaponSort, type: WeaponType, 
     .sort((a, b) => value(b) - value(a) || avgDamage(b) - avgDamage(a) || say(a.name, lang).localeCompare(say(b.name, lang), lang));
 }
 
-/** El monstruo de una dirección: por su slug inglés o por el español (en frío todavía no se anotó cuál es cuál). */
-export const findMonster = (data: MinesData, slug: string): Monster | undefined => data.monsters.find((m) => m.slug === slug || m.slugEs === slug);
-
-/** El botín sin repetir: el mismo objeto en dos tiradas suma sus probabilidades (hasta 1), igual que la ficha del objeto. */
-export function lootRows(m: Monster): [id: string, chance: number][] {
-  const out = new Map<string, number>();
-  for (const [id, p] of m.loot) out.set(id, Math.min(1, (out.get(id) ?? 0) + p));
-  return [...out.entries()].sort((a, b) => b[1] - a[1]);
+/**
+ * El botín sin repetir. Cada par id/probabilidad es una tirada aparte (`Monster.parseMonsterInfo`): por objeto, la
+ * probabilidad de que caiga al menos uno, 1 − ∏(1 − p), y cuántas tiradas hay (hasta cuántos caen). Igual que la fuente
+ * `{k:"monster"}` de la ficha del objeto (`relations.py`). De la más probable a la menos.
+ */
+export function lootRows(m: Monster): [id: string, chance: number, rolls: number][] {
+  const none = new Map<string, number>();
+  const rolls = new Map<string, number>();
+  for (const [id, p] of m.loot) {
+    none.set(id, (none.get(id) ?? 1) * (1 - Math.min(1, p)));
+    rolls.set(id, (rolls.get(id) ?? 0) + 1);
+  }
+  return [...none.entries()].map(([id, q]): [string, number, number] => [id, 1 - q, rolls.get(id)!]).sort((a, b) => b[1] - a[1]);
 }
 
 /** El piso de las Minas donde un cofre da esta arma o estas botas, o null. */

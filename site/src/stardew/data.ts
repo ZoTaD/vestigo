@@ -17,7 +17,7 @@ import type { CropsData } from "./crops/calc";
 import { withPrices, type FishData } from "./fishing/state";
 import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
-import type { MinesData } from "./mines/state";
+import type { MinesData, Monster } from "./mines/state";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 
@@ -71,8 +71,11 @@ export type Source =
   | { k: "tree"; sapling: string; days: number; seasons: number[] }
   | { k: "shop"; shop: Pair; price: number }
   | { k: "fish" | "forage"; where: Pair[]; seasons: number[] }
-  /** `slug`/`slugEs`: la ficha del monstruo en Minas y combate, si la tiene. */
-  | { k: "monster"; who: Pair; rate: number; slug?: string; slugEs?: string };
+  /**
+   * `rate`: la probabilidad de que caiga al menos uno; `n`: cuántas tiradas hay (hasta cuántos caen), si es más de una.
+   * `slug`/`slugEs`: la ficha del monstruo en Minas y combate, si la tiene.
+   */
+  | { k: "monster"; who: Pair; rate: number; n?: number; slug?: string; slugEs?: string };
 
 /** Receta de la que sale: tipo, clave, cuántos salen e ingredientes (id, o categoría en negativo, y cantidad). */
 export type MakeRecipe = [kind: "cook" | "craft", key: string, qty: number, ings: [id: string, n: number][]];
@@ -313,6 +316,8 @@ export const refName = (r: Ref, lang: Lang): string => (lang === "es" && r[3]) |
 
 /** El aldeano de una dirección: por su slug inglés o por el español (en frío todavía no se anotó cuál es cuál). */
 export const findVillager = (list: readonly Villager[], slug: string): Villager | undefined => list.find((v) => v.slug === slug || v.slugEs === slug);
+/** El monstruo de una dirección de Minas y combate, igual: por su slug inglés o por el español. */
+export const findMonster = (data: MinesData, slug: string): Monster | undefined => data.monsters.find((m) => m.slug === slug || m.slugEs === slug);
 
 /**
  * Lo que una dirección de Aldeanos necesita antes de dibujarse: los aldeanos (que anotan los slugs en español) y, si es

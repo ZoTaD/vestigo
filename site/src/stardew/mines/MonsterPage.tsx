@@ -101,10 +101,13 @@ export default function MonsterPage({ data, monster, route, navigate }: { data: 
             <>
               <p className="sd-muted">{c.lootHint}</p>
               <ul className="sd-rows">
-                {loot.map(([id, p]) => (
+                {loot.map(([id, p, n]) => (
                   <li className="sd-source" data-loot={id} key={id}>
                     {thing(id)}
-                    <span className="sd-row-end">{pct(p, locale)}</span>
+                    <span className="sd-row-end">
+                      {n > 1 && <small>{m.upTo(n)}</small>}
+                      {pct(p, locale)}
+                    </span>
                   </li>
                 ))}
               </ul>

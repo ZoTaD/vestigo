@@ -315,6 +315,8 @@ export interface MinesCopy {
   noLoot: string;
   monstersCount: (n: string) => string;
   dangerousTag: string;
+  /** Cuántos pueden caer de un objeto que el monstruo tira más de una vez. */
+  upTo: (n: number) => string;
   weapons: {
     sortBy: string;
     sorts: Record<WeaponSort, string>;
@@ -335,13 +337,11 @@ export interface MinesCopy {
   gear: { rings: string; ringsHint: string; trinkets: string; trinketsHint: string; drops: string; noDrops: string };
   boots: { cols: { boots: string; defense: string; immunity: string; where: string } };
   monster: {
-    back: string;
     missing: string;
     statsTitle: string;
     lootTitle: string;
     lootHint: string;
     whereTitle: string;
-    nowhere: string;
     dangerous: string;
     slayerTitle: string;
     /** "Matá 1.000 entre:", y después los monstruos que cuentan. */
@@ -720,6 +720,7 @@ const EN: StardewCopy = {
     noLoot: "Drops nothing.",
     monstersCount: (n) => `${n} monsters`,
     dangerousTag: "Dangerous version",
+    upTo: (n) => `up to ${n}`,
     weapons: {
       sortBy: "Sort by",
       sorts: { dmg: "Damage", speed: "Speed", crit: "Critical" },
@@ -745,13 +746,11 @@ const EN: StardewCopy = {
     },
     boots: { cols: { boots: "Boots", defense: "Defense", immunity: "Immunity", where: "Where to get them" } },
     monster: {
-      back: "All monsters",
       missing: "That monster isn't here. These are all of them.",
       statsTitle: "Stats",
       lootTitle: "Drops",
-      lootHint: "The chance of each drop per kill.",
+      lootHint: "The chance of getting at least one per kill; some drops roll more than once.",
       whereTitle: "Where it shows up",
-      nowhere: "Not on any floor.",
       dangerous: "It also has a stronger version in dangerous mode, after Mr. Qi's challenge.",
       slayerTitle: "Adventurer's Guild",
       slayerGoal: (n) => `Slay ${n} in total of:`,
@@ -1098,6 +1097,7 @@ const ES: StardewCopy = {
     noLoot: "No suelta nada.",
     monstersCount: (n) => `${n} monstruos`,
     dangerousTag: "Versión peligrosa",
+    upTo: (n) => `hasta ${n}`,
     weapons: {
       sortBy: "Ordenar por",
       sorts: { dmg: "Daño", speed: "Velocidad", crit: "Crítico" },
@@ -1123,13 +1123,11 @@ const ES: StardewCopy = {
     },
     boots: { cols: { boots: "Botas", defense: "Defensa", immunity: "Inmunidad", where: "Dónde se consiguen" } },
     monster: {
-      back: "Todos los monstruos",
       missing: "Ese monstruo no está. Estos son todos.",
       statsTitle: "Estadísticas",
       lootTitle: "Botín",
-      lootHint: "La probabilidad de cada cosa por monstruo muerto.",
+      lootHint: "La probabilidad de que caiga al menos uno por monstruo muerto; algunas cosas salen en más de una tirada.",
       whereTitle: "Dónde sale",
-      nowhere: "En ningún piso.",
       dangerous: "Tiene además una versión más fuerte en el modo peligroso, después del desafío del Sr. Qi.",
       slayerTitle: "Gremio de Aventureros",
       slayerGoal: (n) => `Matá ${n} entre:`,

@@ -19,14 +19,13 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useStardewCopy, type MinesCopy } from "../../stardewCopy";
 import { useLoad } from "../../useLoad";
-import { loadMines, peekMines, say } from "../data";
+import { findMonster, loadMines, peekMines, say } from "../data";
 import { Box, Gold, Group, Pill, SdLoading, Slot, type Nav } from "../ui";
 import MonsterPage from "./MonsterPage";
 import { GearPix, MonsterPix, pct, signed } from "./pix";
 import {
   chestFloorOf,
   DEFAULT_MINES_STATE,
-  findMonster,
   gearName,
   isSlingshot,
   itemSlug,
@@ -54,7 +53,9 @@ export default function StardewMines({ route, navigate }: { route: Route; naviga
   if (!data.value) return <SdLoading />;
   const monster = route.detail ? findMonster(data.value, route.detail) : undefined;
   if (monster) return <MonsterPage data={data.value} monster={monster} route={route} navigate={navigate} key={monster.key} />;
-  return <MinesBook data={data.value} route={route} navigate={navigate} missing={!!route.detail} />;
+  // Un monstruo que no existe: la grilla de Monstruos, con el aviso ("estos son todos").
+  if (route.detail) return <MinesBook data={data.value} route={route} navigate={navigate} missing initial={{ ...DEFAULT_MINES_STATE, view: "monsters" }} />;
+  return <MinesBook data={data.value} route={route} navigate={navigate} />;
 }
 
 /** Dónde se consigue un arma o unas botas: la tienda (precio y desde cuándo), el cofre del piso y los pisos donde sale. */
@@ -267,20 +268,21 @@ function Monsters({ data, route, navigate }: { data: MinesData; route: Route; na
               </span>
               <span className="sd-mn-cname">
                 <b>{say(x.name, lang)}</b>
-                {x.dangerous && <span className="sd-mn-tag">{m.dangerousTag}</span>}
               </span>
             </RouteLink>
             <MonsterStats x={x} m={m} />
             <span className="sd-label">{m.loot}</span>
             {x.loot.length ? (
               <ul className="sd-mn-loot">
-                {lootRows(x).map(([id, p]) => {
+                {lootRows(x).map(([id, p, n]) => {
                   const slug = itemSlug(data, id);
-                  const name = gearName(data, id, lang);
+                  // El nombre, la probabilidad de al menos uno y, si sale en varias tiradas, hasta cuántos.
+                  const name = `${gearName(data, id, lang)} · ${pct(p, locale)}${n > 1 ? ` · ${m.upTo(n)}` : ""}`;
                   const body = (
                     <>
                       <span className="sd-mn-dslot">
                         <GearPix id={id} box={32} />
+                        {n > 1 && <i className="sd-mn-upto">≤{n}</i>}
                       </span>
                       <small>{pct(p, locale)}</small>
                     </>
@@ -288,7 +290,7 @@ function Monsters({ data, route, navigate }: { data: MinesData; route: Route; na
                   return (
                     <li key={id}>
                       {slug ? (
-                        <RouteLink className="sd-mn-drop" to={{ ...route, view: "stardew", sdSection: "items", detail: slug }} onNavigate={navigate} prefetch="press" title={name} aria-label={`${name} · ${pct(p, locale)}`}>
+                        <RouteLink className="sd-mn-drop" to={{ ...route, view: "stardew", sdSection: "items", detail: slug }} onNavigate={navigate} prefetch="press" title={name} aria-label={name}>
                           {body}
                         </RouteLink>
                       ) : (
