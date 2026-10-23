@@ -109,6 +109,15 @@ const say = (pair: readonly [string, string], lang: Lang): string => (lang === "
 /** Sin acentos ni mayúsculas, para buscar "melon" y encontrar "Melón" (igual que `normalize` de data.ts). */
 const fold = (s: string): string => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 
+/**
+ * El sprite que representa a una categoría de ingrediente en su casillero: el objeto más común de esa categoría (el
+ * Pez sol, el Huevo, la Leche, las Semillas de primavera). El nombre sigue siendo el de la categoría.
+ */
+export const CAT_ICON: Record<string, string> = { "-4": "145", "-5": "176", "-6": "184", "-777": "495" };
+
+/** El sprite de un ingrediente: el del objeto, el representativo de su categoría o ninguno. */
+export const ingSprite = (data: RecipesData, id: string): string | null => (id.startsWith("-") ? (CAT_ICON[id] ?? null) : data.refs.items[id] ? id : null);
+
 /** El nombre de un ingrediente: el del objeto o el de su categoría ("Huevo (cualquiera)"). */
 export function ingName(data: RecipesData, id: string, lang: Lang): string {
   if (id.startsWith("-")) {

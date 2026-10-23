@@ -12,6 +12,7 @@ import { parseRoute, registerStardewSlugs, routePath, type Route } from "../src/
 import { RecipeBook } from "../src/stardew/recipes/StardewRecipes";
 import {
   DEFAULT_RECIPE_STATE,
+  ingSprite,
   machineList,
   readRecipeState,
   recipeList,
@@ -128,6 +129,21 @@ describe("la pantalla", () => {
     const es = screen(DEFAULT_RECIPE_STATE, "es");
     expect(card(es.html, "pink-cake")).toContain("Huevo (cualquiera)");
     expect(card(es.html, "pink-cake")).toContain("Melón");
+  });
+
+  it("una categoría de ingrediente lleva el sprite de su objeto más común, sin perder su nombre", () => {
+    // Buscado, así cae en la primera tanda (la que lleva sprites en el prerender).
+    const { html } = screen(st({ q: "arroz con leche" }), "es");
+    const at = html.indexOf('data-recipe="rice-pudding"');
+    const rice = html.slice(at, html.indexOf("</li></ul></li>", at));
+    expect(rice).toContain("Leche (cualquiera)");
+    expect(rice).toContain("/stardew/items/184.png");
+    expect(ingSprite(data, "-5")).toBe("176");
+    expect(ingSprite(data, "-4")).toBe("145");
+    expect(ingSprite(data, "-777")).toBe("495");
+    // Toda categoría que usan las recetas tiene su sprite.
+    const cats = new Set(data.recipes.flatMap((r) => r.ings.map(([id]) => id)).filter((id) => id.startsWith("-")));
+    for (const c of cats) expect(ingSprite(data, c)).not.toBeNull();
   });
 
   it("cómo se aprende: TV, amistad, habilidad, desde el principio y otra forma", () => {

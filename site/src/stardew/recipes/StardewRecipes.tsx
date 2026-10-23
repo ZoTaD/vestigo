@@ -21,6 +21,7 @@ import { Box, Gold, Group, Pill, SdLoading, Slot, Sprite, type Nav } from "../ui
 import {
   DEFAULT_RECIPE_STATE,
   ingName,
+  ingSprite,
   machineList,
   readRecipeState,
   recipeList,
@@ -98,10 +99,11 @@ export function RecipeBook({ data, route, navigate, initial = DEFAULT_RECIPE_STA
   /** Un ingrediente: casillero chico con el sprite y la cantidad, y el nombre; una categoría ("Huevo (cualquiera)") sin enlace. */
   const ingredient = ([id, n]: [string, number], sprite: boolean) => {
     const ref = data.refs.items[id];
+    const icon = ingSprite(data, id);
     const body = (
       <>
         <span className="sd-islot">
-          {sprite && ref && <Sprite id={id} h={isBig(id) ? 32 : 16} size={32} />}
+          {sprite && icon && <Sprite id={icon} h={isBig(icon) ? 32 : 16} size={32} />}
           <i className="sd-qty">{n.toLocaleString(locale)}</i>
         </span>
         <span className="sd-ing-name">{ingName(data, id, lang)}</span>
