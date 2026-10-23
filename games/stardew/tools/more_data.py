@@ -25,6 +25,11 @@ _HABILIDADES = {
 _LUGARES_FUERA = {"Temp", "fishingGame"}
 # Peces de las Minas: el juego los reparte por piso en el código (`MineShaft.getFish`), no en Data/Locations.
 _PECES_DE_LAS_MINAS = {"158", "161"}
+# Zonas de la Isla Jengibre: el juego las nombra igual; la zona es texto nuestro [en, es].
+_ZONAS_ISLA = {
+    "IslandNorth": ["north", "norte"], "IslandSouth": ["south", "sur"],
+    "IslandSouthEast": ["southeast", "sureste"], "IslandWest": ["west", "oeste"],
+}
 # Granjas con nombre propio en Strings/UI (`<Nombre>_<descripción>`).
 _GRANJAS = {"Farm_Forest": "Character_FarmForaging", "Farm_Beach": "Character_FarmBeach"}
 
@@ -81,6 +86,9 @@ def fish() -> dict:
             rio = _texto("Strings/StringsFromCSFiles", "TV_Fishing_Channel_River")
             lago = _texto("Strings/StringsFromCSFiles", "TV_Fishing_Channel_Lake")
             return [f"{base[i]} ({rio[i].lower()} / {lago[i].lower()})" for i in (0, 1)]
+        if clave in _ZONAS_ISLA:
+            isla = nombres.lugar(clave)
+            return [f"{isla[i]} ({_ZONAS_ISLA[clave][i]})" for i in (0, 1)]
         return nombres.lugar(clave)
 
     def lugar(clave: str, estaciones) -> dict:
@@ -121,8 +129,10 @@ def _desbloqueo(clave: str, tipo: str, campo: str, tv: set[str]) -> dict:
         return {"type": "skill", "skill": p[1], "level": int(p[2])}
     if p[0] == "f" and len(p) == 3:
         return {"type": "friend", "npc": p[1], "hearts": int(p[2])}
-    if tipo == "cook" and clave in tv:
+    if tipo == "cook" and (clave in tv or p[0] == "l"):  # `l N` en cocina es el programa de TV
         return {"type": "tv"}
+    if p == ["l", "0"]:  # recetas de fabricación que se saben desde el principio
+        return {"type": "default"}
     if p[0] == "l" and len(p) == 2:
         return {"type": "other", "level": int(p[1])}
     return {"type": "other"}

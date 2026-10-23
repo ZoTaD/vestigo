@@ -83,6 +83,25 @@ class TestMoreData(unittest.TestCase):
         self.assertEqual((amigo["type"], amigo["npc"], amigo["hearts"]), ("friend", "Emily", 3))
         self.assertEqual(por_nombre["Cask"]["unlock"]["type"], "other")
 
+    def test_l_n_en_cocina_es_tv_y_l_0_en_fabricacion_es_default(self):
+        omelet = next(r for r in self.rec["recipes"] if r["kind"] == "cook" and r["name"][0] == "Omelet")
+        self.assertEqual(omelet["unlock"]["type"], "tv")
+        piso = next(r for r in self.rec["recipes"] if r["name"][0] == "Wood Floor")
+        self.assertEqual(piso["unlock"], {"type": "default"})
+
+    def test_isla_jengibre_por_zona(self):
+        nombres = {x["key"]: x["name"] for x in self.pesca["places"]}
+        self.assertEqual(nombres["IslandSouth"], ["Ginger Island (south)", "Isla Jengibre (sur)"])
+        self.assertEqual(nombres["IslandWest"][1], "Isla Jengibre (oeste)")
+        self.assertEqual(nombres["IslandSouthEast"][1], "Isla Jengibre (sureste)")
+
+    def test_ningun_nombre_de_lugar_se_repite(self):
+        for i in (0, 1):
+            nombres = [x["name"][i] for x in self.pesca["places"]]
+            self.assertEqual(len(nombres), len(set(nombres)))
+        todos = [x["name"][0] for p in self.pesca["fish"] for x in p["places"]]
+        self.assertTrue(todos)
+
     def test_refs(self):
         self.assertEqual(self.rec["refs"]["items"]["254"][0], "melon")
         self.assertEqual(self.rec["refs"]["skills"]["Farming"], ["Farming", "Agricultura"])
