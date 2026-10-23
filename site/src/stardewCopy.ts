@@ -207,7 +207,7 @@ export interface CropsCopy {
 export interface FishingCopy {
   h1: string;
   lede: string;
-  now: { h2: string; place: string; anyPlace: string; water: string; traps: string; season: string; weather: string; time: string; anyTime: string };
+  now: { h2: string; place: string; anyPlace: string; island: string; water: string; traps: string; season: string; weather: string; time: string; anyTime: string };
   /** Sol y lluvia, como botones; "both" es lo que dice la tabla del pez que sale con cualquiera. */
   weathers: { sunny: string; rainy: string; both: string };
   count: (n: string) => string;
@@ -481,7 +481,8 @@ const EN: StardewCopy = {
     now: {
       h2: "What can I catch now?",
       place: "Place",
-      anyPlace: "Anywhere",
+      anyPlace: "Anywhere in the valley",
+      island: "Ginger Island (all)",
       water: "Fishing rod",
       traps: "Crab Pot",
       season: "Season",
@@ -733,7 +734,8 @@ const ES: StardewCopy = {
     now: {
       h2: "¿Qué puedo pescar ahora?",
       place: "Lugar",
-      anyPlace: "Cualquier lugar",
+      anyPlace: "Cualquier lugar del valle",
+      island: "Isla Jengibre (todas)",
       water: "Caña de pescar",
       traps: "Trampa para cangrejos",
       season: "Estación",

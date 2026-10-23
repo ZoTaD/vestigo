@@ -123,6 +123,30 @@ describe("canCatch", () => {
     expect(canCatch(fish("angler"), { ...when, season: 2, place: "Town" })).toBe(true);
   });
 
+  it("\"cualquier lugar\" es el valle sin la isla; la isla tiene su opción", () => {
+    const tuna = fish("tuna");
+    expect(canCatch(tuna, { ...when, season: 0 })).toBe(false);
+    expect(canCatch(tuna, { ...when, season: 0, place: "island" })).toBe(true);
+    expect(canCatch(tuna, { ...when, season: 1 })).toBe(true);
+    expect(canCatch(fish("lionfish"), when)).toBe(false);
+    expect(canCatch(fish("lionfish"), { ...when, place: "island" })).toBe(true);
+    // Las trampas siguen en "cualquier lugar".
+    expect(canCatch(fish("lobster"), when)).toBe(true);
+  });
+
+  it("el legendario que ignora los requisitos del pez: vale su entrada del lugar", () => {
+    const glacier = fish("glacierfish");
+    // `Data/Fish` dice sol y de 6 a 8 pm; su entrada del Bosque, cualquier clima y hora, en invierno.
+    expect(canCatch(glacier, { place: "Forest", season: 3, weather: "rainy", time: 2400 })).toBe(true);
+    expect(canCatch(glacier, { place: "Forest", season: 2, weather: "rainy", time: 2400 })).toBe(false);
+    const legend = fish("legend");
+    expect(canCatch(legend, { place: "Mountain", season: 0, weather: "rainy", time: 2400 })).toBe(true);
+    expect(canCatch(legend, { place: "Mountain", season: 0, weather: "sunny", time: 1000 })).toBe(false);
+    // En el Bosque trasero rigen las del pez: lluvia y de 6 am a 8 pm.
+    expect(canCatch(legend, { place: "Backwoods", season: 0, weather: "rainy", time: 2400 })).toBe(false);
+    expect(canCatch(legend, { place: "Backwoods", season: 0, weather: "rainy", time: 1000 })).toBe(true);
+  });
+
   it("el submarino y el Mercado nocturno son de invierno", () => {
     expect(canCatch(fish("blobfish"), { ...when, season: 3, place: "Submarine" })).toBe(true);
     expect(canCatch(fish("blobfish"), { ...when, season: 0, place: "Submarine" })).toBe(false);
@@ -179,6 +203,7 @@ describe("la dirección de Pesca", () => {
   });
 
   it("conserva los filtros", () => {
+    expect(readFishState("?place=island", placeKeys).place).toBe("island");
     const s = st({ place: "CrabPot:ocean", season: 3, weather: "rainy", time: 2400, kind: "legendary", tseason: 2 });
     const q = writeFishState(s);
     expect(q.startsWith("?")).toBe(true);
@@ -221,6 +246,10 @@ describe("pantalla de Pesca", () => {
     expect(html).toContain('href="/es/stardew-valley/objetos/pez-globo"');
     expect(html).toContain("10:00 pm a 2:00 am");
     expect(html).toContain("Encargo del Sr. Qi");
+    // El Pez glacial no muestra las horas ni el sol de `Data/Fish`.
+    const glacier = html.slice(html.indexOf('data-fish="glacierfish"'), html.indexOf("</tr>", html.indexOf('data-fish="glacierfish"')));
+    expect(glacier).toContain("Cualquier hora");
+    expect(glacier).not.toContain(">Sol<");
   });
 
   it("filtrar la tabla no toca la grilla", () => {

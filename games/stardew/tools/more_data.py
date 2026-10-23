@@ -60,24 +60,64 @@ def _estaciones(texto: str) -> list[int]:
     return [relations.SEASONS.index(s) for s in texto.split() if s in relations.SEASONS]
 
 
-def _lugares_por_pez() -> tuple[dict[str, dict[str, set | None]], set[str]]:
-    """pez -> lugar -> estaciones (None si alguna entrada vale todo el año), y los legendarios."""
+_QI = "PLAYER_SPECIAL_ORDER_RULE_ACTIVE Current LEGENDARY_FAMILY"
+
+
+def _clima_de_condicion(cond: str) -> str:
+    """El clima que pide la condición de una entrada (`WEATHER Here Rain Storm GreenRain`); "both" si no pide."""
+    for parte in cond.split(","):
+        p = parte.split()
+        if len(p) >= 3 and p[0] == "WEATHER":
+            lluvia = any(x in ("Rain", "Storm", "GreenRain") for x in p[2:])
+            sol = "Sun" in p[2:]
+            return "rainy" if lluvia and not sol else "sunny" if sol and not lluvia else "both"
+    return "both"
+
+
+def _lugares_por_pez() -> tuple[dict[str, dict[str, dict]], set[str], set[str]]:
+    """pez -> lugar -> {estaciones (None: todo el año o la del pez), reglas propias}, los legendarios y los del Sr. Qi.
+
+    Una entrada con `IgnoreFishDataRequirements` no usa las horas, el clima ni la estación de `Data/Fish`: vale la
+    estación de la entrada (todo el año si no tiene) y el clima de su `Condition`, a cualquier hora (`own`). Las
+    entradas de festival (`IS_PASSIVE_FESTIVAL_OPEN`: Derby de truchas, SquidFest) repiten la normal y no cuentan.
+    """
     fish = sdv.raw("Data/Fish")
-    lugares: dict[str, dict[str, set | None]] = {}
+    lugares: dict[str, dict[str, dict]] = {}
     legendarios: set[str] = set()
+    qi_si: set[str] = set()
+    qi_no: set[str] = set()
     for lugar, loc in sdv.raw("Data/Locations").items():
         for e in loc.get("Fish") or []:
             iid = relations._sin_prefijo(e.get("ItemId") or "")
             if iid not in fish or lugar in _LUGARES_FUERA:
                 continue
-            if e.get("IsBossFish") or "LEGENDARY_FAMILY" in (e.get("Condition") or ""):
+            cond = e.get("Condition") or ""
+            if "IS_PASSIVE_FESTIVAL_OPEN" in cond:
+                continue
+            if e.get("IsBossFish") or "LEGENDARY_FAMILY" in cond:
                 legendarios.add(iid)
-            por_lugar = lugares.setdefault(iid, {})
-            if e.get("Season") is None:
-                por_lugar[lugar] = None
-            elif por_lugar.get(lugar, set()) is not None:
-                por_lugar.setdefault(lugar, set()).add(e["Season"])
-    return lugares, legendarios
+            (qi_si if _QI in cond and "!" + _QI not in cond else qi_no).add(iid)
+            ign = bool(e.get("IgnoreFishDataRequirements"))
+            temporada = e.get("Season")
+            if temporada is None and ign:
+                estaciones = {0, 1, 2, 3}
+            else:
+                estaciones = None if temporada is None else {temporada}
+            r = lugares.setdefault(iid, {}).setdefault(lugar, {"seasons": set(), "own": None, "normal": False})
+            if r["seasons"] is not None:
+                r["seasons"] = None if estaciones is None else r["seasons"] | estaciones
+            if ign:
+                clima = _clima_de_condicion(cond)
+                r["own"] = clima if r["own"] in (None, clima) else "both"
+            else:
+                r["normal"] = True
+    for por_lugar in lugares.values():
+        for r in por_lugar.values():
+            # Con una entrada común en el mismo lugar, rigen las del pez.
+            r["own"] = None if r["normal"] or r["own"] is None else {"weather": r["own"]}
+            if r["seasons"] == set():
+                r["seasons"] = None
+    return lugares, legendarios, qi_si - qi_no
 
 
 def fish() -> dict:
@@ -86,7 +126,7 @@ def fish() -> dict:
     slugs, _ = crops_data._sitio()
     nom = crops_data._nombres_objetos()
     nombres = Nombres()
-    lugares, legendarios = _lugares_por_pez()
+    lugares, legendarios, qi = _lugares_por_pez()
     peces, usados = [], {}
 
     def nombre_lugar(clave: str) -> list[str]:
@@ -103,10 +143,13 @@ def fish() -> dict:
             return [f"{isla[i]} ({_ZONAS_ISLA[clave][i]})" for i in (0, 1)]
         return nombres.lugar(clave)
 
-    def lugar(clave: str, estaciones) -> dict:
+    def lugar(clave: str, estaciones, own=None) -> dict:
         usados.setdefault(clave, nombre_lugar(clave))
-        return {"key": clave, "name": usados[clave],
-                "seasons": None if estaciones is None else sorted(estaciones)}
+        out = {"key": clave, "name": usados[clave],
+               "seasons": None if estaciones is None else sorted(estaciones)}
+        if own:
+            out["own"] = own
+        return out
 
     for iid, linea in sdv.raw("Data/Fish").items():
         if iid not in slugs or iid not in nom:
@@ -124,7 +167,8 @@ def fish() -> dict:
             **base, "difficulty": int(c[1]), "behavior": c[2], "times": _horas(c[5]),
             "seasons": _estaciones(c[6]), "weather": c[7], "minLevel": int(c[12]),
             "legendary": iid in legendarios, "crabPot": False,
-            "places": [lugar(k, s) for k, s in lugares.get(iid, {}).items()]
+            **({"qiOrder": True} if iid in qi else {}),
+            "places": [lugar(k, r["seasons"], r["own"]) for k, r in lugares.get(iid, {}).items()]
             or ([lugar("UndergroundMine", None)] if iid in _PECES_DE_LAS_MINAS else []),
         })
     if nombres.sin_texto:

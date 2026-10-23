@@ -22,8 +22,10 @@ import {
   fishTable,
   fmtRange,
   isQiFamily,
+  ISLAND,
   KINDS,
   readFishState,
+  shownRules,
   SLOTS,
   slotLabel,
   writeFishState,
@@ -77,17 +79,19 @@ export function FishFinder({ data, route, navigate, initial = DEFAULT_FISH_STATE
   // Los lugares por nombre: el agua primero y las dos trampas aparte.
   const places = useMemo(() => [...data.places].sort((a, b) => say(a.name, lang).localeCompare(say(b.name, lang), lang)), [data, lang]);
   const item = (fish: Fish): Route => ({ ...route, view: "stardew", sdSection: "items", detail: fish.slug });
-  // Los del Sr. Qi ignoran las horas del pez: pican a cualquiera mientras dure el encargo.
-  // Cada franja entera en su renglón si no entra: "6:00 am a 11:00 am, 6:00 pm a 2:00 am" no se corta en el medio.
-  const hours = (fish: Fish) =>
-    fish.times.length && !isQiFamily(fish)
-      ? fish.times.map((r, i) => (
-          <span className="sd-hours" key={r[0]}>
-            {fmtRange(r, lang)}
-            {i < fish.times.length - 1 && ", "}
-          </span>
-        ))
-      : f.anyHour;
+  // Las horas que se muestran (`shownRules`): las del pez, o cualquier hora si sus lugares ignoran las del pez (los
+  // legendarios, los del Sr. Qi). Cada franja entera: en la tabla separadas por coma y sin cortarse en el medio; en la
+  // tarjeta, una por renglón.
+  const hours = (fish: Fish, card = false) => {
+    const times = shownRules(fish).times;
+    if (!times.length) return f.anyHour;
+    return times.map((r, i) => (
+      <span className={card ? "sd-hours is-line" : "sd-hours"} key={r[0]}>
+        {fmtRange(r, lang)}
+        {!card && i < times.length - 1 && ", "}
+      </span>
+    ));
+  };
   const seasons = (fish: Fish) => {
     const s = fishSeasons(fish);
     return s.length === 4 ? f.allYear : s.map((i) => t.seasons[i]).join(", ");
@@ -107,6 +111,7 @@ export function FishFinder({ data, route, navigate, initial = DEFAULT_FISH_STATE
             <span className="sd-label">{f.now.place}</span>
             <select className="sd-select sd-fplace" value={state.place} onChange={(e) => pick({ place: e.target.value })}>
               <option value="any">{f.now.anyPlace}</option>
+              <option value={ISLAND}>{f.now.island}</option>
               <optgroup label={f.now.water}>
                 {places
                   .filter((p) => !p.key.startsWith("CrabPot:"))
@@ -167,7 +172,7 @@ export function FishFinder({ data, route, navigate, initial = DEFAULT_FISH_STATE
                   </Slot>
                   <span className="sd-fcard-txt">
                     <b>{say(fish.name, lang)}</b>
-                    <span>{hours(fish)}</span>
+                    <span>{hours(fish, true)}</span>
                     {!fish.crabPot && (
                       <span>
                         {f.difficulty(fish.difficulty)}
@@ -234,7 +239,7 @@ export function FishFinder({ data, route, navigate, initial = DEFAULT_FISH_STATE
                   {fish.places.map((p) => say(p.name, lang)).join(", ")}
                 </td>
                 <td data-label={f.all.cols.seasons}>{seasons(fish)}</td>
-                <td data-label={f.all.cols.weather}>{f.weathers[isQiFamily(fish) ? "both" : fish.weather]}</td>
+                <td data-label={f.all.cols.weather}>{f.weathers[shownRules(fish).weather]}</td>
                 <td data-label={f.all.cols.hours}>{hours(fish)}</td>
                 <td data-label={f.all.cols.difficulty} className="c-num">
                   {fish.crabPot ? "—" : fish.difficulty}

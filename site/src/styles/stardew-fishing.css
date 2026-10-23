@@ -41,6 +41,8 @@ a.sd-fcard:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .sd-ftable td.c-num { font-weight: 800; }
 .sd-ftable .sd-gold { font-size: 15px; }
 .sd-hours { white-space: nowrap; }
+/* En la tarjeta, una franja por renglón: "6:00 am a 11:00 am" y debajo "7:00 pm a 2:00 am". */
+.sd-hours.is-line { display: block; }
 
 /* --- Angosto: cada fila es una tarjeta, con el nombre arriba y el resto de a dos ------------------------------------ */
 @container (max-width: 720px) {

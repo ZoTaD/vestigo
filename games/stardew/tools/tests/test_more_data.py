@@ -56,6 +56,36 @@ class TestMoreData(unittest.TestCase):
         self.assertLessEqual({"159", "160", "163", "775", "682"}, leg)
         self.assertNotIn("128", leg)
 
+    def test_legendario_que_ignora_los_requisitos_del_pez(self):
+        # Pez glacial: su entrada del Bosque ignora `Data/Fish` (horas y sol); vale la estación de la entrada.
+        g = self.peces["775"]
+        bosque = next(x for x in g["places"] if x["key"] == "Forest")
+        self.assertEqual(bosque["seasons"], [3])
+        self.assertEqual(bosque["own"], {"weather": "both"})
+        # Leyenda: en la montaña ignora `Data/Fish` pero su condición pide lluvia; en el bosque trasero rigen las del pez.
+        leyenda = {x["key"]: x for x in self.peces["163"]["places"]}
+        self.assertEqual(leyenda["Mountain"]["own"], {"weather": "rainy"})
+        self.assertEqual(leyenda["Mountain"]["seasons"], [0])
+        self.assertIsNone(leyenda["Backwoods"].get("own"))
+        # Un pez común no lleva reglas propias.
+        self.assertTrue(all(x.get("own") is None for x in self.peces["128"]["places"]))
+
+    def test_entrada_que_ignora_sin_estacion_vale_todo_el_ano(self):
+        carpa = next(x for x in self.peces["682"]["places"] if x["key"] == "Sewer")
+        self.assertEqual(carpa["seasons"], [0, 1, 2, 3])
+
+    def test_festival_no_cambia_las_reglas_del_lugar(self):
+        # La trucha arcoíris tiene una entrada del Derby de truchas que ignora el pez: no cuenta.
+        bosque = next(x for x in self.peces["138"]["places"] if x["key"] == "Forest")
+        self.assertIsNone(bosque.get("own"))
+        calamar = next(x for x in self.peces["151"]["places"] if x["key"] == "Beach")
+        self.assertIsNone(calamar.get("own"))
+        self.assertEqual(calamar["seasons"], [3])
+
+    def test_familia_legendaria_del_sr_qi(self):
+        qi = {p["id"] for p in self.pesca["fish"] if p.get("qiOrder")}
+        self.assertEqual(qi, {"898", "899", "900", "901", "902"})
+
     def test_lugares_con_nombre(self):
         claves = {x["key"] for x in self.pesca["places"]}
         usados = {x["key"] for p in self.pesca["fish"] for x in p["places"]}

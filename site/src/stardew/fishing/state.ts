@@ -14,8 +14,13 @@ type Pair = [en: string, es: string];
 export interface FishPlace {
   key: string;
   name: Pair;
-  /** Las estaciones de la entrada del lugar; null si vale todo el año (manda la del pez). */
+  /** Las estaciones de la entrada del lugar; null si no tiene (manda la del pez). */
   seasons: number[] | null;
+  /**
+   * La entrada ignora los requisitos de `Data/Fish` (`IgnoreFishDataRequirements`, los legendarios): a cualquier hora,
+   * con el clima de su condición y la estación de la entrada. Sin esto rigen las horas y el clima del pez.
+   */
+  own?: { weather: "sunny" | "rainy" | "both" };
 }
 export interface Fish {
   id: string;
@@ -31,6 +36,8 @@ export interface Fish {
   minLevel: number;
   legendary: boolean;
   crabPot: boolean;
+  /** Sólo pica con el encargo especial "Familia legendaria" del Sr. Qi activo. */
+  qiOrder?: boolean;
   places: FishPlace[];
 }
 export interface FishData {
@@ -64,8 +71,11 @@ const ALL_SEASONS = [0, 1, 2, 3];
  * estación (su entrada en `Data/Locations` pide `PLAYER_SPECIAL_ORDER_RULE_ACTIVE Current LEGENDARY_FAMILY` e ignora
  * horas, clima y estación del pez). No salen en "¿qué puedo pescar ahora?": la tabla los muestra con su etiqueta.
  */
-const QI_FAMILY = new Set(["898", "899", "900", "901", "902"]);
-export const isQiFamily = (fish: Fish): boolean => QI_FAMILY.has(fish.id);
+export const isQiFamily = (fish: Fish): boolean => !!fish.qiOrder;
+
+/** "Isla Jengibre (todas)": las zonas de la isla juntas. "Cualquier lugar" es el valle, sin la isla. */
+export const ISLAND = "island";
+export const isIsland = (key: string): boolean => key.startsWith("Island");
 
 /**
  * Las estaciones en que un lugar da el pez. Manda la de la entrada del lugar; si no tiene, la del pez. La isla es
@@ -74,9 +84,9 @@ export const isQiFamily = (fish: Fish): boolean => QI_FAMILY.has(fish.id);
  */
 export function placeSeasons(fish: Fish, place: FishPlace): number[] {
   if (isQiFamily(fish)) return ALL_SEASONS;
-  if (place.seasons) return place.seasons;
-  if (place.key.startsWith("Island")) return ALL_SEASONS;
   if (place.key === "Submarine" || place.key === "BeachNightMarket") return [3];
+  if (place.seasons) return place.seasons;
+  if (isIsland(place.key)) return ALL_SEASONS;
   return fish.seasons;
 }
 
@@ -87,17 +97,33 @@ export const fishSeasons = (fish: Fish): number[] => ALL_SEASONS.filter((s) => f
 const inHours = (fish: Fish, time: number | null): boolean =>
   time == null || fish.times.length === 0 || fish.times.some(([from, to]) => from < time + 200 && to > time);
 
+/** Los lugares que cuenta lo elegido: uno, las zonas de la isla, o el valle entero (sin la isla). */
+const placesFor = (fish: Fish, place: string): FishPlace[] =>
+  place === "any" ? fish.places.filter((p) => !isIsland(p.key)) : place === ISLAND ? fish.places.filter((p) => isIsland(p.key)) : fish.places.filter((p) => p.key === place);
+
+/** El horario y el clima que se muestran: los de la entrada si todos sus lugares ignoran los del pez, si no los del pez. */
+export function shownRules(fish: Fish): { times: [number, number][]; weather: Fish["weather"] } {
+  if (isQiFamily(fish)) return { times: [], weather: "both" };
+  const own = fish.places.map((p) => p.own);
+  if (!own.length || own.some((o) => !o)) return { times: fish.times, weather: fish.weather };
+  const ws = new Set(own.map((o) => o!.weather));
+  return { times: [], weather: ws.size === 1 ? [...ws][0] : "both" };
+}
+
 /**
  * ¿Se pesca este pez ahí, en esa estación, con ese clima y a esa hora? Los de trampa, en su trampa (o en "cualquier
- * lugar") a cualquier hora, con cualquier clima y todo el año. Los del encargo del Sr. Qi, nunca. El nivel mínimo no filtra: se muestra al lado.
+ * lugar") a cualquier hora, con cualquier clima y todo el año. Una entrada que ignora los requisitos del pez (`own`)
+ * vale a cualquier hora y con el clima de su condición. "Cualquier lugar" no incluye la isla. Los del encargo del Sr. Qi, nunca. El nivel mínimo no filtra: se muestra al lado.
  */
 export function canCatch(fish: Fish, when: When): boolean {
   if (isQiFamily(fish)) return false;
-  const places = when.place === "any" ? fish.places : fish.places.filter((p) => p.key === when.place);
-  if (!places.some((p) => placeSeasons(fish, p).includes(when.season))) return false;
-  if (fish.crabPot) return true;
-  if (fish.weather !== "both" && fish.weather !== when.weather) return false;
-  return inHours(fish, when.time);
+  return placesFor(fish, when.place).some((p) => {
+    if (!placeSeasons(fish, p).includes(when.season)) return false;
+    if (fish.crabPot) return true;
+    const weather = p.own ? p.own.weather : fish.weather;
+    if (weather !== "both" && weather !== when.weather) return false;
+    return p.own ? true : inHours(fish, when.time);
+  });
 }
 
 // --- Las horas como se ven ------------------------------------------------------------------------------------------
@@ -145,7 +171,7 @@ export function readFishState(search: string, places: readonly string[]): FishSt
   const kind = q.get("kind");
   const weather = q.get("weather");
   return {
-    place: place && places.includes(place) ? place : d.place,
+    place: place && (place === ISLAND || places.includes(place)) ? place : d.place,
     season: seasonOf(q.get("season")) ?? d.season,
     weather: weather === "rain" ? "rainy" : weather === "sun" ? "sunny" : d.weather,
     time: time === "any" ? null : time && (SLOTS as readonly number[]).includes(+time) && /^\d+$/.test(time) ? +time : d.time,
