@@ -1,0 +1,88 @@
+/*
+ * Calendario de Stardew Valley (etapa 2, tarea 7): el tablón de 4 semanas de 7 días y el detalle del día elegido.
+ * Viaja con la pestaña (StardewCalendar.tsx); los botones y los casilleros son los de stardew.css. Sin bordes ni barras
+ * de color: un festival es un tinte de fondo con su nombre, y el de varios días tiñe cada celda de su rango con el tinte
+ * pegado de una a la otra (el `::after` tapa el hueco). Todo en Nunito; la letra del juego sólo en los títulos de 32 px.
+ */
+.sd-calendar { --sd-fest: #ffd27a; --sd-passive: #cfe6f2; }
+.sd-cal-pick { margin-top: 14px; }
+
+/* --- El tablón ------------------------------------------------------------------------------------------------------ */
+.sd-cal { --cal-gap: 6px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--cal-gap); margin-top: 6px; }
+.sd-cal-wd { padding-bottom: 2px; font: 800 13px/1.2 var(--sd-text); color: var(--sd-dim); text-align: center; }
+
+.sd-cal-day {
+  position: relative;
+  display: grid;
+  grid-template: "n face" auto "txt txt" 1fr / minmax(0, 1fr) auto;
+  gap: 4px;
+  min-height: 116px;
+  padding: 6px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--sd-paper);
+  color: var(--sd-ink);
+  text-align: left;
+  cursor: pointer;
+}
+.sd-cal-day:hover { background: var(--sd-paper-2); }
+.sd-cal-day.is-fest { background: var(--sd-fest); }
+.sd-cal-day.is-passive { background: var(--sd-passive); }
+.sd-cal-day.is-fest:hover, .sd-cal-day.is-passive:hover { filter: brightness(1.05); }
+/* El rango de varios días: la celda pega con la de al lado y el tinte cruza el hueco. */
+.sd-cal-day.joins-next { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.sd-cal-day.joins-prev { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.sd-cal-day.joins-next::after { content: ""; position: absolute; top: 0; bottom: 0; right: calc(-1 * var(--cal-gap)); width: var(--cal-gap); background: inherit; }
+/* El día elegido: el contorno de madera oscura de los botones del juego. */
+.sd-cal-day.is-on { outline: 3px solid #5b2b29; outline-offset: -3px; z-index: 1; }
+.sd-cal-day:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; z-index: 2; }
+
+.sd-cal-n { grid-area: n; font: 800 18px/1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-wood); }
+.sd-cal-face { grid-area: face; width: 48px; height: 48px; border-radius: 4px; background: #e9c891; }
+.sd-cal-txt { grid-area: txt; align-self: end; display: grid; gap: 2px; min-width: 0; font: 700 12px/1.2 var(--sd-text); }
+.sd-cal-txt b { font: 800 13px/1.2 var(--sd-text); }
+.sd-cal-txt i { font: 800 12px/1.2 var(--sd-text); font-style: normal; }
+
+/* Qué es cada tinte, en texto. */
+.sd-cal-key { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.sd-cal-key li { padding: 2px 10px; border-radius: 999px; font: 800 13px/1.4 var(--sd-text); }
+.sd-cal-key .is-fest { background: var(--sd-fest); }
+.sd-cal-key .is-passive { background: var(--sd-passive); }
+
+/* --- Angosto: el número, el retrato chico y el tinte; los nombres van en el detalle -------------------------------- */
+@container (max-width: 620px) {
+  .sd-cal { --cal-gap: 3px; }
+  .sd-cal-wd { font-size: 11px; }
+  .sd-cal-day { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 58px; padding: 4px 1px; border-radius: 4px; }
+  .sd-cal-n { font-size: 14px; }
+  .sd-cal-face { width: 28px; height: 28px; border-radius: 3px; }
+  .sd-cal-txt { display: none; }
+}
+
+/* --- El detalle del día --------------------------------------------------------------------------------------------- */
+.sd-cal-dhead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.sd-cal-dhead .sd-h2 { margin: 0; }
+
+.sd-cal-fest { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; margin-bottom: 8px; padding: 8px 12px; border-radius: 6px; }
+.sd-cal-fest.is-fest { background: var(--sd-fest); }
+.sd-cal-fest.is-passive { background: var(--sd-passive); }
+.sd-cal-fest b { font: 800 18px/1.2 var(--sd-text); }
+.sd-cal-range { font: 800 16px/1.2 var(--sd-text); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.sd-cal-tag { font: 800 13px/1.2 var(--sd-text); }
+.sd-cal-fest small { grid-column: 1 / -1; font: 600 14px/1.3 var(--sd-text); }
+
+.sd-cal-bday { margin-top: 10px; }
+.sd-cal-who { display: inline-flex; align-items: center; gap: 12px; max-width: 100%; padding: 6px 14px 6px 6px; border-radius: 6px; background: var(--sd-paper); color: var(--sd-ink); }
+a.sd-cal-who:hover { background: var(--sd-paper-2); }
+a.sd-cal-who:hover b { text-decoration: underline; text-underline-offset: 3px; }
+a.sd-cal-who:focus-visible, .sd-cal-gifts a:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; border-radius: 4px; }
+.sd-cal-big { flex: none; width: 96px; height: 96px; border-radius: 4px; background: #e9c891; }
+.sd-cal-who b { display: block; font: 800 19px/1.2 var(--sd-text); }
+.sd-cal-who small { font: 700 14px/1.3 var(--sd-text); color: var(--sd-dim); }
+.sd-cal-gifts { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+.sd-cal-gifts li { min-width: 0; }
+.sd-cal-gifts .sd-cell > span:last-child { max-width: 100%; }
+@container (max-width: 520px) {
+  .sd-cal-big { width: 64px; height: 64px; }
+  .sd-cal-gifts { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); }
+}

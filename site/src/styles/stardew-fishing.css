@@ -1,0 +1,73 @@
+/*
+ * Pesca de Stardew Valley (etapa 2, tarea 5): los filtros de "¿qué puedo pescar ahora?", la grilla de casilleros y la
+ * tabla de todos los peces. Viaja con la pestaña (StardewFishing.tsx); los botones, desplegables y rótulos son los de
+ * stardew-crops.css y stardew-items.css. Sin bordes ni barras de color: legendario y trampa son una pastilla de texto
+ * con tinte. Todo en Nunito.
+ */
+
+/* --- Los filtros ---------------------------------------------------------------------------------------------------- */
+.sd-fpick { margin-top: 10px; }
+.sd-fplace { min-width: min(100%, 280px); }
+.sd-fcount { margin: 16px 0 10px; }
+
+/* --- La grilla de "ahora": casillero, nombre, horario y dificultad -------------------------------------------------- */
+.sd-fgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 8px; padding: 0; list-style: none; }
+.sd-fcard { display: flex; gap: 10px; align-items: center; height: 100%; padding: 6px 10px 6px 6px; border-radius: 6px; background: var(--sd-paper); }
+a.sd-fcard:hover { background: var(--sd-paper-2); }
+a.sd-fcard:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; }
+.sd-fcard-txt { display: grid; gap: 2px; min-width: 0; font: 700 13px/1.25 var(--sd-text); color: var(--sd-dim); font-variant-numeric: tabular-nums; }
+.sd-fcard-txt b { font: 800 16px/1.2 var(--sd-text); color: var(--sd-ink); }
+a.sd-fcard:hover b { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Las etiquetas: una pastilla con tinte, el texto dice qué es. */
+.sd-ftags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+.sd-ftag { padding: 2px 8px; border-radius: 999px; font: 800 12px/1.3 var(--sd-text); color: var(--sd-ink); white-space: nowrap; }
+.sd-ftag.is-legend { background: #ffd27a; }
+.sd-ftag.is-trap { background: #cfe6f2; }
+.sd-ftag.is-qi { background: #e3d4f2; }
+
+/* --- La tabla de todos los peces ------------------------------------------------------------------------------------ */
+.sd-ftable-box .sd-muted { margin-bottom: 4px; }
+.sd-ftable { width: 100%; border-collapse: separate; border-spacing: 0 4px; font: 600 14px/1.3 var(--sd-text); }
+.sd-ftable th, .sd-ftable td { padding: 6px 10px; text-align: left; vertical-align: middle; font-variant-numeric: tabular-nums; }
+.sd-ftable thead th { padding-block: 0 2px; font: 800 13px/1.2 var(--sd-text); color: var(--sd-dim); white-space: nowrap; }
+.sd-ftable .c-num { text-align: right; }
+.sd-ftable tbody th, .sd-ftable tbody td { background: var(--sd-paper); }
+.sd-ftable tbody tr > :first-child { border-radius: 6px 0 0 6px; }
+.sd-ftable tbody tr > :last-child { border-radius: 0 6px 6px 0; }
+.sd-ftable tbody .c-name { min-width: 170px; }
+.sd-ftable tbody .c-name .sd-ftags { margin: 4px 0 0 42px; }
+.sd-ftable .c-place { max-width: 260px; font-size: 13px; color: var(--sd-dim); }
+.sd-ftable td.c-num { font-weight: 800; }
+.sd-ftable .sd-gold { font-size: 15px; }
+.sd-hours { white-space: nowrap; }
+/* "· isla: todo el año", debajo de las estaciones del valle y entera. */
+.sd-isle { display: block; font: 700 12px/1.2 var(--sd-text); color: var(--sd-dim); white-space: nowrap; }
+/* En la tarjeta, una franja por renglón: "6:00 am a 11:00 am" y debajo "7:00 pm a 2:00 am". */
+.sd-hours.is-line { display: block; }
+
+/* --- Angosto: cada fila es una tarjeta, con el nombre arriba y el resto de a dos ------------------------------------ */
+@container (max-width: 720px) {
+  .sd-ftable, .sd-ftable tbody { display: block; }
+  .sd-ftable thead { display: none; }
+  .sd-ftable tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px 12px;
+    margin-bottom: 6px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: var(--sd-paper);
+  }
+  .sd-ftable tbody tr > * { padding: 0; text-align: left; background: none !important; border-radius: 0 !important; }
+  /* El nombre arriba a la izquierda y el precio a su derecha; debajo, el lugar entero y el resto de a dos. */
+  .sd-ftable tbody .c-name { grid-column: 1; grid-row: 1; min-width: 0; }
+  .sd-ftable tbody td.c-price { grid-column: 2; grid-row: 1; text-align: right; align-self: center; }
+  .sd-ftable tbody td.c-price::before { display: none; }
+  .sd-ftable tbody td.c-price .sd-gold { font-size: 18px; }
+  .sd-ftable tbody .c-place { grid-column: 1 / -1; max-width: none; }
+  .sd-ftable td.c-num:not(.c-price) { text-align: left; }
+  /* Media tarjeta no alcanza para dos franjas seguidas: una por renglón. */
+  .sd-ftable .sd-hours { display: block; }
+  .sd-ftable td::before { content: attr(data-label); display: block; margin-bottom: 2px; font: 800 12px/1.2 var(--sd-text); color: var(--sd-dim); }
+}

@@ -13,6 +13,10 @@
  */
 import { registerStardewSlugs, type Route } from "../route";
 import type { Profession, Taste } from "../stardewCopy";
+import type { CropsData } from "./crops/calc";
+import { withPrices, type FishData } from "./fishing/state";
+import type { CalendarData } from "./calendar/state";
+import type { RecipesData } from "./recipes/state";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 
@@ -199,6 +203,80 @@ export const peekVillagers = (): Villager[] | null => {
 export const loadVillagers = (): Promise<Villager[]> => villagers.load().then(noteVillagers);
 export const peekBundles = (): Room[] | null => rooms.peek();
 export const loadBundles = (): Promise<Room[]> => rooms.load();
+
+/** Los cultivos y frutales de la calculadora (`crops.json`, un solo archivo chico). */
+const crops = once<CropsData>(() => import("@stardew/crops.json"));
+/** Anota los slugs en español de lo que se cosecha: cada fila enlaza a la ficha del objeto. */
+function noteCrops(d: CropsData): CropsData {
+  const all = [...d.crops, ...d.fruitTrees];
+  registerStardewSlugs({ items: Object.fromEntries(all.filter((c) => c.slugEs !== c.slug).map((c) => [c.slug, c.slugEs])) });
+  return d;
+}
+export const peekCrops = (): CropsData | null => {
+  const d = crops.peek();
+  return d && noteCrops(d);
+};
+export const loadCrops = (): Promise<CropsData> => crops.load().then(noteCrops);
+
+/**
+ * Los peces de la pestaña Pesca (`fish.json`), con el precio de cada uno sacado de la lista de objetos (`list.json`, la
+ * misma que usa Objetos: si ya bajó, no se pide de nuevo). Anota los slugs en español: cada pez enlaza a su ficha.
+ */
+const fishRaw = once<Omit<FishData, "prices">>(() => import("@stardew/fish.json"));
+let fishData: FishData | null = null;
+function buildFish(): FishData | null {
+  if (fishData) return fishData;
+  const raw = fishRaw.peek();
+  const list = rows.peek();
+  if (!raw || !list) return null;
+  registerStardewSlugs({ items: Object.fromEntries(raw.fish.filter((f) => f.slugEs !== f.slug).map((f) => [f.slug, f.slugEs])) });
+  return (fishData = withPrices(raw, list));
+}
+export const peekFish = (): FishData | null => buildFish();
+export const loadFish = (): Promise<FishData> => Promise.all([fishRaw.load(), rows.load()]).then(() => buildFish()!);
+
+/**
+ * Las recetas y las máquinas de la pestaña Recetas (`recipes.json`, un solo archivo). Anota los slugs en español de todo
+ * lo que nombra: cada plato, ingrediente, producto y máquina enlaza a su ficha de Objetos.
+ */
+const recipesRaw = once<RecipesData>(() => import("@stardew/recipes.json"));
+let recipesNoted = false;
+function noteRecipes(d: RecipesData): RecipesData {
+  if (!recipesNoted) {
+    const items = Object.values(d.refs.items).filter((r) => r[1] !== r[0]);
+    registerStardewSlugs({ items: Object.fromEntries([...items.map((r) => [r[0], r[1]]), ...d.machines.filter((m) => m.slugEs !== m.slug).map((m) => [m.slug, m.slugEs])]) });
+    recipesNoted = true;
+  }
+  return d;
+}
+export const peekRecipes = (): RecipesData | null => {
+  const d = recipesRaw.peek();
+  return d && noteRecipes(d);
+};
+export const loadRecipes = (): Promise<RecipesData> => recipesRaw.load().then(noteRecipes);
+
+/**
+ * El Calendario: los días de cada estación (`calendar.json`, chico), los aldeanos (nombre, ficha y lo que les encanta) y
+ * la lista de objetos del idioma, de donde salen el nombre y el sprite de cada regalo. Aldeanos y lista son los mismos
+ * archivos de Aldeanos y Objetos: si ya bajaron, no se piden de nuevo.
+ */
+const calendar = once<CalendarData>(() => import("@stardew/calendar.json"));
+export interface CalendarBundle {
+  cal: CalendarData;
+  villagers: Villager[];
+  rows: Row[];
+}
+/** Uno por idioma, el mismo objeto en cada dibujo. */
+const calendars: Partial<Record<Lang, CalendarBundle>> = {};
+export function peekCalendar(lang: Lang): CalendarBundle | null {
+  if (calendars[lang]) return calendars[lang]!;
+  const cal = calendar.peek();
+  const people = peekVillagers();
+  const list = peekList(lang);
+  return cal && people && list ? (calendars[lang] = { cal, villagers: people, rows: list }) : null;
+}
+export const loadCalendar = (lang: Lang): Promise<CalendarBundle> =>
+  Promise.all([calendar.load(), loadVillagers(), loadList(lang)]).then(() => peekCalendar(lang)!);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */
