@@ -208,6 +208,20 @@ describe("missingFish y missingRecipes", () => {
     expect(m.some((x) => x.id === "898")).toBe(false);
   });
 
+  it("con la colección de save.json suma al final las medusas, que no están en fish.json", () => {
+    const s = leer();
+    expect(fish.some((f) => f.id === "SeaJelly")).toBe(false);
+    s.players[0].fish.CaveJelly = 1;
+    const m = missingFish(s.players[0], fish, s.season, data.fish);
+    const jellies = m.filter((x) => !fish.some((f) => f.id === x.id));
+    expect(jellies).toEqual([
+      { id: "SeaJelly", now: false, leaving: false },
+      { id: "RiverJelly", now: false, leaving: false },
+    ].sort((a, b) => data.fish.indexOf(a.id) - data.fish.indexOf(b.id)));
+    expect(m.slice(-jellies.length)).toEqual(jellies);
+    expect(m.some((x) => x.id === "131")).toBe(false);
+  });
+
   it("las recetas que faltan, primero las que ya se pueden hacer", () => {
     const s = leer();
     const m = missingRecipes(s.players[0], recipes, data, s);
@@ -242,12 +256,27 @@ describe("today", () => {
     expect(p.ids).toContain("24");
   });
 
+  it("plantar: no da lo que todavía llega si se planta mañana, ni las semillas silvestres", () => {
+    const s = en(leer(), 0, 21);
+    const p = today(s, s.players[0], todayData).find((x) => x.kind === "plant")!;
+    // El 21 es el último día del Jazz azul (7 días); la Chirivía (4) todavía llega el 22.
+    expect(p.ids).toContain("597");
+    expect(p.ids).not.toContain("24");
+    // Las semillas de primavera también tardan 7, pero su cosecha (16) es una de varias al azar.
+    expect(p.ids).not.toContain("16");
+  });
+
   it("peces que se van al terminar la estación y objetos de paquetes de la estación", () => {
     const s = leer();
     const t = today(s, s.players[0], todayData);
     const f = t.find((x) => x.kind === "fish")!;
     expect(f.ids).toContain("128"); // el pez globo es sólo de verano
     expect(f.ids).not.toContain("131");
+    // Sólo en la última semana de la estación (del 22 al 28).
+    const antes = en(leer(), 1, 21);
+    expect(today(antes, antes.players[0], todayData).some((x) => x.kind === "fish")).toBe(false);
+    const ultimo = en(leer(), 1, 22);
+    expect(today(ultimo, ultimo.players[0], todayData).some((x) => x.kind === "fish")).toBe(true);
     const b = t.find((x) => x.kind === "bundle");
     // Los paquetes de esta partida que faltan son de primavera: en verano no hay objetos de la estación.
     expect(b).toBeUndefined();

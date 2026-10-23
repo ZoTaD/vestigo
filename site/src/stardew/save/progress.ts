@@ -291,15 +291,28 @@ export interface MissingFish {
   leaving: boolean;
 }
 
-/** Los peces que no pescó, primero los de la estación. Sin los del encargo del Sr. Qi, que no son de la colección. */
-export function missingFish(player: Player, fish: readonly Fish[], season: number): MissingFish[] {
+/**
+ * Los peces que no pescó, primero los de la estación. Sin los del encargo del Sr. Qi, que no son de la colección. Con
+ * `collection` (`save.json`, la lista de la perfección) suma al final los que no están en `fish.json` (las medusas), sin
+ * estación.
+ */
+export function missingFish(
+  player: Player,
+  fish: readonly Fish[],
+  season: number,
+  collection: readonly string[] = [],
+): MissingFish[] {
   const out = fish
     .filter((f) => !f.qiOrder && !has(player.fish, f.id))
     .map((f) => {
       const now = f.seasons.includes(season);
       return { id: f.id, now, leaving: now && !f.seasons.includes((season + 1) % 4) };
     });
-  return [...out.filter((f) => f.now), ...out.filter((f) => !f.now)];
+  const known = new Set(fish.map((f) => f.id));
+  const extra = collection
+    .filter((id) => !known.has(id) && !has(player.fish, id))
+    .map((id) => ({ id, now: false, leaving: false }));
+  return [...out.filter((f) => f.now), ...out.filter((f) => !f.now), ...extra];
 }
 
 export interface MissingRecipe {
@@ -390,13 +403,16 @@ const PLANT_OPTS: Omit<Opts, "season" | "day" | "level"> = {
   greenhouse: false, paddyBonus: false,
 };
 
+/** Desde qué día de la estación se avisa de los peces que se van: la última semana. */
+const LEAVING_FROM = 22;
+
 const festivalsOn = (cal: CalendarData, season: number, day: number): Festival[] =>
   cal.seasons[season]?.days[String(day)]?.festivals ?? [];
 
 /**
  * Los consejos del día, en este orden: cumpleaños de hoy, festival hoy o mañana, últimos días para plantar, peces que
- * se van con la estación, objetos de paquetes de la estación que faltan y no tiene, la Reina de la Salsa (domingo) y el
- * carro ambulante (viernes y domingo).
+ * se van con la estación (en la última semana), objetos de paquetes de la estación que faltan y no tiene, la Reina de
+ * la Salsa (domingo) y el carro ambulante (viernes y domingo).
  */
 export function today(save: Save, player: Player, data: TodayData): Tip[] {
   const tips: Tip[] = [];
@@ -419,18 +435,21 @@ export function today(save: Save, player: Player, data: TodayData): Tip[] {
     }
   }
 
-  // Últimos días para plantar: llega a cosecharse si se planta hoy y ya no si se planta mañana.
+  // Últimos días para plantar: llega a cosecharse si se planta hoy y ya no si se planta mañana. Sin las semillas
+  // silvestres: su cosecha es una al azar de la estación.
   if (day < SEASON_DAYS) {
     const opts = { ...PLANT_OPTS, season, level: player.skills[0] };
     const plant = data.crops.crops
-      .filter((c) => harvests(c, { ...opts, day }).length > 0 && harvests(c, { ...opts, day: day + 1 }).length === 0)
+      .filter((c) => !c.wild && harvests(c, { ...opts, day }).length > 0 && harvests(c, { ...opts, day: day + 1 }).length === 0)
       .map((c) => c.harvest);
     if (plant.length) tips.push({ kind: "plant", ids: [...new Set(plant)] });
   }
 
-  // Peces de la estación que le faltan y se van al terminar.
-  const leaving = missingFish(player, data.fish, season).filter((f) => f.leaving).map((f) => f.id);
-  if (leaving.length) tips.push({ kind: "fish", ids: leaving });
+  // Peces de la estación que le faltan y se van al terminar (sólo la última semana).
+  if (day >= LEAVING_FROM) {
+    const leaving = missingFish(player, data.fish, season).filter((f) => f.leaving).map((f) => f.id);
+    if (leaving.length) tips.push({ kind: "fish", ids: leaving });
+  }
 
   // Objetos de paquetes de esta estación que faltan y no hay en la granja.
   const status = bundleStatus(save, data.bundles);
