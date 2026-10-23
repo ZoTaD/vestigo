@@ -337,6 +337,12 @@
     width: 100%;
     height: var(--tap);
   }
+
+  /* El buscador ya ocupa toda la fila: la lista va a su ancho. Con los 22rem de escritorio se salía por la izquierda a
+     375 px (2026-10-23). */
+  .top-hits {
+    width: 100%;
+  }
 }
 
 /* Tablet y ventanas angostas: con Diablo II son cinco lugares y el buscador ya
