@@ -64,6 +64,15 @@ class TestCropsData(unittest.TestCase):
             self.assertEqual((mn["from"], mn["to"]), (15, 17))
         self.assertNotIn("18", self.cal["seasons"][3]["days"])
 
+    def test_pesca_del_calamar_en_invierno(self):
+        sq = self.cal["seasons"][3]["days"]["12"]["festivals"]
+        f = next(f for f in sq if f["id"] == "SquidFest")
+        self.assertTrue(f["passive"])
+        self.assertEqual((f["from"], f["to"]), (12, 13))
+        self.assertEqual(f["name"], ["SquidFest", "Fiesta del Calamar"])
+        verano = self.cal["seasons"][1]["days"]["20"]["festivals"]
+        self.assertTrue(any(f["id"] == "TroutDerby" for f in verano))
+
     def test_festival_activo_y_cumple(self):
         dia = self.cal["seasons"][0]["days"]["13"]
         self.assertFalse(dia["festivals"][0]["passive"])

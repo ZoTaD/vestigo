@@ -110,13 +110,19 @@ def crops() -> dict:
 
 
 def passive_festivals() -> list[dict]:
-    """Festivales de `Data/PassiveFestivals` que el juego muestra en el calendario."""
+    """Todos los festivales de `Data/PassiveFestivals`, también los que el juego no marca en el calendario.
+
+    Los que no traen `DisplayName` (Derby de la Trucha, Fiesta del Calamar) toman el nombre de
+    `Strings/1_6_Strings:<clave>`.
+    """
     out = []
     for clave, f in sdv.raw("Data/PassiveFestivals").items():
-        if not f.get("ShowOnCalendar") or not f.get("DisplayName"):
-            continue
+        token = f.get("DisplayName") or f"[LocalizedText Strings/1_6_Strings:{clave}]"
+        nombre = _nombre(token)
+        if "[" in nombre[0]:
+            raise ValueError(f"festival pasivo sin nombre en el juego: {clave}")
         out.append({
-            "id": clave, "name": _nombre(f["DisplayName"]), "season": f["Season"],
+            "id": clave, "name": nombre, "season": f["Season"],
             "from": f["StartDay"], "to": f["EndDay"], "passive": True,
         })
     return out
