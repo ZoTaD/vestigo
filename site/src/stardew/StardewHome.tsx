@@ -16,7 +16,7 @@ import { STARDEW_TABS, useStardewCopy } from "../stardewCopy";
 import { loadHome, peekHome, type HomeData } from "./homeData";
 import { Box, Slot, Sprite, type Nav } from "./ui";
 
-type Season = { birthdays: [number, string][]; festivals: [number, [string, string]][] };
+type Season = { birthdays: [number, string][]; festivals: [number, number, [string, string]][] };
 
 /** El sprite que representa a cada pestaña en su tarjeta: el melón, el ramo y el Junimo de piedra. */
 const TAB_ICON: Record<StardewTab, { id: string; w: number; h: number }> = {
@@ -155,9 +155,9 @@ export default function StardewHome({ route, navigate, live }: { route: Route; n
           </ul>
           <h3 className="sd-h3">{t.home.festivals}</h3>
           <ul className="sd-fests">
-            {shown.festivals.map(([day, name]) => (
-              <li key={day}>
-                <span className="sd-day">{day}</span>
+            {shown.festivals.map(([from, to, name]) => (
+              <li key={`${from}-${name[0]}`}>
+                <span className="sd-day">{to > from ? `${from}–${to}` : from}</span>
                 <b>{name[lang === "es" ? 1 : 0]}</b>
               </li>
             ))}

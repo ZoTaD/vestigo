@@ -13,6 +13,7 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import crops_data  # noqa: E402
 import relations  # noqa: E402
 import sdv  # noqa: E402
 from sprites import plantillas  # noqa: E402
@@ -399,12 +400,14 @@ def build(write: bool = False) -> dict:
     ausentes = [i for i in destacados if i not in slug]
     if ausentes:
         raise ValueError(f"destacados que no están en la lista del sitio: {ausentes}")
-    fechas = sdv.raw("Data/Festivals/FestivalDates")
     estaciones = []
     for n, est in enumerate(SEASONS):
         estaciones.append({
             "birthdays": sorted([v["birthday"][1], v["key"]] for v in aldeanos if v["birthday"][0] == n),
-            "festivals": sorted([int(k[len(est):]), _festival(k)] for k in fechas if k.startswith(est)),
+            "festivals": sorted(
+                [f["from"], f["to"], f["name"]]
+                for f in crops_data.active_festivals() + crops_data.passive_festivals() if f["season"] == n
+            ),
         })
 
     categorias = {str(k): list(v) for k, v in sdv.CATEGORIES.items()}
