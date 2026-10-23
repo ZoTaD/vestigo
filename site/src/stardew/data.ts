@@ -14,6 +14,7 @@
 import { registerStardewSlugs, type Route } from "../route";
 import type { Profession, Taste } from "../stardewCopy";
 import type { CropsData } from "./crops/calc";
+import { withPrices, type FishData } from "./fishing/state";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 
@@ -214,6 +215,23 @@ export const peekCrops = (): CropsData | null => {
   return d && noteCrops(d);
 };
 export const loadCrops = (): Promise<CropsData> => crops.load().then(noteCrops);
+
+/**
+ * Los peces de la pestaña Pesca (`fish.json`), con el precio de cada uno sacado de la lista de objetos (`list.json`, la
+ * misma que usa Objetos: si ya bajó, no se pide de nuevo). Anota los slugs en español: cada pez enlaza a su ficha.
+ */
+const fishRaw = once<Omit<FishData, "prices">>(() => import("@stardew/fish.json"));
+let fishData: FishData | null = null;
+function buildFish(): FishData | null {
+  if (fishData) return fishData;
+  const raw = fishRaw.peek();
+  const list = rows.peek();
+  if (!raw || !list) return null;
+  registerStardewSlugs({ items: Object.fromEntries(raw.fish.filter((f) => f.slugEs !== f.slug).map((f) => [f.slug, f.slugEs])) });
+  return (fishData = withPrices(raw, list));
+}
+export const peekFish = (): FishData | null => buildFish();
+export const loadFish = (): Promise<FishData> => Promise.all([fishRaw.load(), rows.load()]).then(() => buildFish()!);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */

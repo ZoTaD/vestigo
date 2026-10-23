@@ -322,20 +322,20 @@ export function registerTerrariaSlugs(slugs: Partial<Record<TerrariaTab, Record<
 }
 
 /** Stardew Valley (2026-10-22). Diseño: docs/superpowers/specs/2026-10-22-stardew-design.md. */
-export type StardewTab = "items" | "villagers" | "bundles" | "crops";
+export type StardewTab = "items" | "villagers" | "bundles" | "crops" | "fishing";
 export type StardewSection = "home" | StardewTab;
 /** El nombre completo: `/stardew` a secas es la carpeta de los sprites y retratos (`public/stardew/`). */
 export const STARDEW_SEGMENT = "stardew-valley";
-export const STARDEW_SECTIONS: StardewTab[] = ["items", "villagers", "bundles", "crops"];
-/** Las pestañas con fichas: su tercer segmento es el slug de una. El Centro Comunitario y Cultivos son una sola página. */
+export const STARDEW_SECTIONS: StardewTab[] = ["items", "villagers", "bundles", "crops", "fishing"];
+/** Las pestañas con fichas: su tercer segmento es el slug de una. El Centro Comunitario, Cultivos y Pesca son una sola página. */
 export const STARDEW_DETAIL_SECTIONS: StardewTab[] = ["items", "villagers"];
 /**
  * Las pestañas que ya tienen página: las demás se anuncian apagadas y su dirección muestra la portada. Las tres van
  * acá desde el armazón (tarea 4) para que las direcciones queden fijas; la barra las apaga mientras no tengan su
  * línea en `TABS` de `Stardew.tsx`.
  */
-export const STARDEW_PUBLISHED: StardewTab[] = ["items", "villagers", "bundles", "crops"];
-export const STARDEW_SECTION_ES: Record<StardewTab, string> = { items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos" };
+export const STARDEW_PUBLISHED: StardewTab[] = ["items", "villagers", "bundles", "crops", "fishing"];
+export const STARDEW_SECTION_ES: Record<StardewTab, string> = { items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca" };
 const STARDEW_SECTION_BY_ES = new Map(Object.entries(STARDEW_SECTION_ES).map(([tab, es]) => [es, tab as StardewTab]));
 
 /** Los slugs en español de las fichas de Stardew Valley (objetos y aldeanos). */

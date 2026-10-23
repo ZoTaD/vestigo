@@ -10,10 +10,11 @@ import { useLang } from "./i18n";
 import type { StardewSection, StardewTab } from "./route";
 import type { Fert } from "./stardew/crops/calc";
 import type { SortKey } from "./stardew/crops/state";
+import type { Kind } from "./stardew/fishing/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "villagers", "bundles"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "villagers", "bundles"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -202,6 +203,34 @@ export interface CropsCopy {
   };
 }
 
+/** Los textos de la pestaña Pesca: "¿qué puedo pescar ahora?" y la tabla de todos los peces. */
+export interface FishingCopy {
+  h1: string;
+  lede: string;
+  now: { h2: string; place: string; anyPlace: string; water: string; traps: string; season: string; weather: string; time: string; anyTime: string };
+  /** Sol y lluvia, como botones; "both" es lo que dice la tabla del pez que sale con cualquiera. */
+  weathers: { sunny: string; rainy: string; both: string };
+  count: (n: string) => string;
+  none: string;
+  /** Lo que pide el pez: dificultad (0 a 100) y nivel mínimo. */
+  difficulty: (n: number) => string;
+  level: (n: number) => string;
+  anyHour: string;
+  allYear: string;
+  /** Las etiquetas de texto: legendario y trampa para cangrejos. */
+  tags: { legendary: string; crabPot: string; qi: string };
+  all: {
+    h2: string;
+    hint: string;
+    kind: string;
+    kinds: Record<Kind, string>;
+    season: string;
+    anySeason: string;
+    cols: { fish: string; place: string; seasons: string; weather: string; hours: string; difficulty: string; price: string };
+    count: (n: string) => string;
+  };
+}
+
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
   /** El `<head>` de la portada y de cada pestaña: lo que se busca primero. */
@@ -236,6 +265,7 @@ export interface StardewCopy {
   villagers: VillagersCopy;
   bundles: BundlesCopy;
   crops: CropsCopy;
+  fishing: FishingCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
   tastes: Record<Taste, string>;
@@ -244,7 +274,7 @@ export interface StardewCopy {
 }
 
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing" },
   seo: {
     home: {
       title: "Stardew Valley Guide: Item Prices, Villager Gifts and Bundles | Vestigo",
@@ -265,6 +295,10 @@ const EN: StardewCopy = {
     crops: {
       title: "Stardew Valley Crop Profit Calculator: Best Crops by Season | Vestigo",
       description: "Which Stardew Valley 1.6 crop makes the most gold per day this season: pick the planting day, farming level, fertilizer and professions. Fruit trees too.",
+    },
+    fishing: {
+      title: "Stardew Valley Fish Guide: What Fish Can I Catch Now? | Vestigo",
+      description: "What fish you can catch in Stardew Valley 1.6 right now: pick the place, season, weather and time. Every fish with its location, hours, difficulty and price.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -302,6 +336,7 @@ const EN: StardewCopy = {
       villagers: "Birthdays, loved gifts and the whole list of what each villager likes.",
       bundles: "Every room and bundle with what goes in it. Tick them off as you go.",
       crops: "Gold per day of every crop with your planting day, level, fertilizer and professions.",
+      fishing: "What bites right now by place, season, weather and time, and every fish with its hours.",
     },
     featured: "Most looked up",
     featuredHint: "Open an item to see its prices, who loves it and what it turns into.",
@@ -440,6 +475,39 @@ const EN: StardewCopy = {
       noSapling: "Not sold",
     },
   },
+  fishing: {
+    h1: "Stardew Valley fish",
+    lede: "What you can catch right now, and every fish with where, when and how hard it is.",
+    now: {
+      h2: "What can I catch now?",
+      place: "Place",
+      anyPlace: "Anywhere",
+      water: "Fishing rod",
+      traps: "Crab Pot",
+      season: "Season",
+      weather: "Weather",
+      time: "Time",
+      anyTime: "Any time",
+    },
+    weathers: { sunny: "Sun", rainy: "Rain", both: "Any" },
+    count: (n) => `${n} fish`,
+    none: "Nothing bites here with this season, weather and time.",
+    difficulty: (n) => `Difficulty ${n}`,
+    level: (n) => `Level ${n}+`,
+    anyHour: "Any time",
+    allYear: "All year",
+    tags: { legendary: "Legendary", crabPot: "Crab Pot", qi: "Mr. Qi's special order" },
+    all: {
+      h2: "Every fish",
+      hint: "Crab Pot catches don't depend on the time or the weather. Legendary fish bite once per save; their Mr. Qi versions only during his special order.",
+      kind: "Kind",
+      kinds: { all: "All", rod: "Fishing rod", crabPot: "Crab Pot", legendary: "Legendary" },
+      season: "Season",
+      anySeason: "Any season",
+      cols: { fish: "Fish", place: "Where", seasons: "Seasons", weather: "Weather", hours: "Hours", difficulty: "Difficulty", price: "Price" },
+      count: (n) => `${n} fish`,
+    },
+  },
   qualities: { normal: "Normal", silver: "Silver", gold: "Gold", iridium: "Iridium" },
   // `LevelUp_ProfessionName_*` de `Strings/UI`.
   professions: {
@@ -458,7 +526,7 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca" },
   seo: {
     home: {
       title: "Guía de Stardew Valley: precios, regalos de aldeanos y paquetes | Vestigo",
@@ -479,6 +547,10 @@ const ES: StardewCopy = {
     crops: {
       title: "Calculadora de cultivos de Stardew Valley: los que más ganan por estación | Vestigo",
       description: "Qué cultivo de Stardew Valley 1.6 da más oro por día esta estación: elegí el día de siembra, el nivel, el fertilizante y las profesiones. Con los frutales.",
+    },
+    fishing: {
+      title: "Peces de Stardew Valley: qué se puede pescar ahora | Vestigo",
+      description: "Qué peces se pescan en Stardew Valley 1.6 ahora mismo: elegí el lugar, la estación, el clima y la hora. Cada pez con su lugar, horario, dificultad y precio.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -516,6 +588,7 @@ const ES: StardewCopy = {
       villagers: "Cumpleaños, regalos favoritos y la lista entera de lo que le gusta a cada aldeano.",
       bundles: "Cada sala y cada paquete con lo que lleva. Tachalos a medida que los completás.",
       crops: "El oro por día de cada cultivo con tu día de siembra, nivel, fertilizante y profesiones.",
+      fishing: "Qué pica ahora según el lugar, la estación, el clima y la hora, y cada pez con su horario.",
     },
     featured: "Los más buscados",
     featuredHint: "Abrí un objeto para ver sus precios, a quién le encanta y en qué se transforma.",
@@ -652,6 +725,39 @@ const ES: StardewCopy = {
       days: (n) => `${n} días`,
       payback: (n) => (n === 1 ? "1 estación" : `${n} estaciones`),
       noSapling: "No se vende",
+    },
+  },
+  fishing: {
+    h1: "Peces de Stardew Valley",
+    lede: "Qué podés pescar ahora mismo, y cada pez con dónde, cuándo y qué tan difícil es.",
+    now: {
+      h2: "¿Qué puedo pescar ahora?",
+      place: "Lugar",
+      anyPlace: "Cualquier lugar",
+      water: "Caña de pescar",
+      traps: "Trampa para cangrejos",
+      season: "Estación",
+      weather: "Clima",
+      time: "Hora",
+      anyTime: "Cualquier hora",
+    },
+    weathers: { sunny: "Sol", rainy: "Lluvia", both: "Cualquiera" },
+    count: (n) => `${n} peces`,
+    none: "Acá no pica nada con esta estación, este clima y esta hora.",
+    difficulty: (n) => `Dificultad ${n}`,
+    level: (n) => `Nivel ${n}+`,
+    anyHour: "Cualquier hora",
+    allYear: "Todo el año",
+    tags: { legendary: "Legendario", crabPot: "Trampa", qi: "Encargo del Sr. Qi" },
+    all: {
+      h2: "Todos los peces",
+      hint: "Lo de la trampa para cangrejos no depende de la hora ni del clima. Los legendarios se pescan una sola vez por partida; sus versiones del Sr. Qi, sólo durante su encargo especial.",
+      kind: "Tipo",
+      kinds: { all: "Todos", rod: "Con caña", crabPot: "Con trampa", legendary: "Legendarios" },
+      season: "Estación",
+      anySeason: "Cualquier estación",
+      cols: { fish: "Pez", place: "Dónde", seasons: "Estaciones", weather: "Clima", hours: "Horario", difficulty: "Dificultad", price: "Precio" },
+      count: (n) => `${n} peces`,
     },
   },
   qualities: { normal: "Normal", silver: "Plata", gold: "Oro", iridium: "Iridio" },

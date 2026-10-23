@@ -18,10 +18,11 @@ import { Box, Slot, Sprite, type Nav } from "./ui";
 
 type Season = { birthdays: [number, string][]; festivals: [number, number, [string, string]][] };
 
-/** El sprite que representa a cada pestaña en su tarjeta: el melón, la chirivía, el ramo y el Junimo de piedra. */
+/** El sprite que representa a cada pestaña en su tarjeta: el melón, la chirivía, el pez globo, el ramo y el Junimo de piedra. */
 const TAB_ICON: Record<StardewTab, { id: string; w: number; h: number }> = {
   items: { id: "254", w: 16, h: 16 },
   crops: { id: "24", w: 16, h: 16 },
+  fishing: { id: "128", w: 16, h: 16 },
   villagers: { id: "458", w: 16, h: 16 },
   bundles: { id: "(BC)55", w: 16, h: 32 },
 };

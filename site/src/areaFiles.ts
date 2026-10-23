@@ -101,6 +101,7 @@ export const STARDEW_TAB_FILES: Partial<Record<StardewSection, string>> = {
   villagers: "src/stardew/villagers/StardewVillagers.tsx",
   bundles: "src/stardew/bundles/StardewBundles.tsx",
   crops: "src/stardew/crops/StardewCrops.tsx",
+  fishing: "src/stardew/fishing/StardewFishing.tsx",
 };
 
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */

@@ -13,14 +13,14 @@
  * vende un festival (la Fresa) compite con ese precio, y el nombre del festival va debajo del costo. Las semillas
  * silvestres (una recolección al azar) nunca compiten: van en su propia caja.
  */
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLang, useLocale } from "../../i18n";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useStardewCopy } from "../../stardewCopy";
 import { useLoad } from "../../useLoad";
 import { loadCrops, peekCrops, say } from "../data";
-import { Box, Gold, SdLoading, Sprite, type Nav } from "../ui";
+import { Box, Gold, Group, Pill, SdLoading, Sprite, type Nav } from "../ui";
 import type { Best, CropsData, Fert, Product } from "./calc";
 import { cropTable, DEFAULT_STATE, FERTS, firstDir, noShopTable, readCropState, SORT_KEYS, TREE_DAYS, treeTable, wildTable, writeCropState, type CropRow, type CropState, type SortKey } from "./state";
 import "../../styles/stardew-items.css";
@@ -43,28 +43,6 @@ const round = (n: number, digits = 0): number => {
   const k = 10 ** digits;
   return Math.round(n * k) / k || 0;
 };
-
-/** Un grupo de botones con su rótulo arriba. */
-function Group({ label, children, extra }: { label: string; children: ReactNode; extra?: ReactNode }) {
-  return (
-    <div className="sd-chips" role="group" aria-label={label}>
-      <span className="sd-label">
-        {label}
-        {extra}
-      </span>
-      {children}
-    </div>
-  );
-}
-
-/** El botón de un grupo: prendido o apagado. */
-function Pill({ on, onClick, children, label, disabled }: { on: boolean; onClick: () => void; children: ReactNode; label?: string; disabled?: boolean }) {
-  return (
-    <button type="button" className={`sd-pill${on ? " is-on" : ""}`} aria-pressed={on} aria-label={label} title={label} onClick={onClick} disabled={disabled}>
-      {children}
-    </button>
-  );
-}
 
 /** Cómo conviene venderlo: "Crudo", o el sprite de la máquina con su nombre (y el producto al pasar el mouse). */
 function SellAs({ best, products, raw, lang }: { best: Best; products: Product[]; raw: string; lang: "en" | "es" }) {
