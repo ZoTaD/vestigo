@@ -217,6 +217,9 @@ export interface FishingCopy {
   level: (n: number) => string;
   anyHour: string;
   allYear: string;
+  /** La marca de las estaciones de un pez que también vive en la isla, y la de uno que vive sólo ahí. */
+  islandAllYear: string;
+  onlyIsland: string;
   /** Las etiquetas de texto: legendario y trampa para cangrejos. */
   tags: { legendary: string; crabPot: string; qi: string };
   all: {
@@ -497,6 +500,8 @@ const EN: StardewCopy = {
     level: (n) => `Level ${n}+`,
     anyHour: "Any time",
     allYear: "All year",
+    islandAllYear: "· island: all year",
+    onlyIsland: "Island: all year",
     tags: { legendary: "Legendary", crabPot: "Crab Pot", qi: "Mr. Qi's special order" },
     all: {
       h2: "Every fish",
@@ -750,6 +755,8 @@ const ES: StardewCopy = {
     level: (n) => `Nivel ${n}+`,
     anyHour: "Cualquier hora",
     allYear: "Todo el año",
+    islandAllYear: "· isla: todo el año",
+    onlyIsland: "Isla: todo el año",
     tags: { legendary: "Legendario", crabPot: "Trampa", qi: "Encargo del Sr. Qi" },
     all: {
       h2: "Todos los peces",

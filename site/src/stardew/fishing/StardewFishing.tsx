@@ -93,8 +93,18 @@ export function FishFinder({ data, route, navigate, initial = DEFAULT_FISH_STATE
     ));
   };
   const seasons = (fish: Fish) => {
+    // Las del valle; si además vive en la isla, una marca corta debajo (allá es verano todo el año). Si en el valle ya
+    // es todo el año, la marca sobra.
     const s = fishSeasons(fish);
-    return s.length === 4 ? f.allYear : s.map((i) => t.seasons[i]).join(", ");
+    const valley = s.length === 4 ? f.allYear : s.map((i) => t.seasons[i]).join(", ");
+    const island = fishSeasons(fish, "island").length > 0;
+    if (!island || s.length === 4) return valley;
+    if (!s.length) return f.onlyIsland;
+    return (
+      <>
+        {valley} <small className="sd-isle">{f.islandAllYear}</small>
+      </>
+    );
   };
 
   return (

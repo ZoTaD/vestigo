@@ -41,6 +41,8 @@ a.sd-fcard:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .sd-ftable td.c-num { font-weight: 800; }
 .sd-ftable .sd-gold { font-size: 15px; }
 .sd-hours { white-space: nowrap; }
+/* "· isla: todo el año", debajo de las estaciones del valle y entera. */
+.sd-isle { display: block; font: 700 12px/1.2 var(--sd-text); color: var(--sd-dim); white-space: nowrap; }
 /* En la tarjeta, una franja por renglón: "6:00 am a 11:00 am" y debajo "7:00 pm a 2:00 am". */
 .sd-hours.is-line { display: block; }
 
@@ -65,5 +67,7 @@ a.sd-fcard:hover b { text-decoration: underline; text-underline-offset: 3px; }
   .sd-ftable tbody td.c-price .sd-gold { font-size: 18px; }
   .sd-ftable tbody .c-place { grid-column: 1 / -1; max-width: none; }
   .sd-ftable td.c-num:not(.c-price) { text-align: left; }
+  /* Media tarjeta no alcanza para dos franjas seguidas: una por renglón. */
+  .sd-ftable .sd-hours { display: block; }
   .sd-ftable td::before { content: attr(data-label); display: block; margin-bottom: 2px; font: 800 12px/1.2 var(--sd-text); color: var(--sd-dim); }
 }

@@ -106,7 +106,8 @@ describe("canCatch", () => {
     const lion = fish("lionfish");
     for (const season of [0, 1, 2, 3]) expect(canCatch(lion, { ...when, season, place: "IslandSouth" })).toBe(true);
     expect(canCatch(lion, { ...when, place: "Beach" })).toBe(false);
-    expect(fishSeasons(lion)).toEqual([0, 1, 2, 3]);
+    expect(fishSeasons(lion, "island")).toEqual([0, 1, 2, 3]);
+    expect(fishSeasons(lion)).toEqual([]);
     // El Pez globo es de verano en la playa, pero en la isla todo el año.
     expect(canCatch(fish("pufferfish"), { ...when, season: 0, time: 1200, place: "Beach" })).toBe(false);
     expect(canCatch(fish("pufferfish"), { ...when, season: 0, time: 1200, place: "IslandWest" })).toBe(true);
@@ -145,6 +146,22 @@ describe("canCatch", () => {
     // En el Bosque trasero rigen las del pez: lluvia y de 6 am a 8 pm.
     expect(canCatch(legend, { place: "Backwoods", season: 0, weather: "rainy", time: 2400 })).toBe(false);
     expect(canCatch(legend, { place: "Backwoods", season: 0, weather: "rainy", time: 1000 })).toBe(true);
+  });
+
+  it("el Volcán va con la isla; la Anguila de lava sigue en el valle por las minas", () => {
+    const eel = fish("lava-eel");
+    expect(canCatch(eel, { ...when, place: "Caldera" })).toBe(true);
+    expect(canCatch(eel, { ...when, place: "island" })).toBe(true);
+    expect(canCatch(eel, when)).toBe(true);
+    expect(canCatch(eel, { ...when, place: "UndergroundMine" })).toBe(true);
+  });
+
+  it("las estaciones del Atún: las del valle, y la isla aparte", () => {
+    const tuna = fish("tuna");
+    expect(fishSeasons(tuna)).toEqual([1, 3]);
+    expect(fishSeasons(tuna, "island")).toEqual([0, 1, 2, 3]);
+    expect(fishTable(data, st({ tseason: 0 }), "en").map((f) => f.slug)).not.toContain("tuna");
+    expect(fishTable(data, st({ tseason: 0, place: "island" }), "en").map((f) => f.slug)).toContain("tuna");
   });
 
   it("el submarino y el Mercado nocturno son de invierno", () => {
@@ -246,6 +263,10 @@ describe("pantalla de Pesca", () => {
     expect(html).toContain('href="/es/stardew-valley/objetos/pez-globo"');
     expect(html).toContain("10:00 pm a 2:00 am");
     expect(html).toContain("Encargo del Sr. Qi");
+    const tuna = html.slice(html.indexOf('data-fish="tuna"'), html.indexOf("</tr>", html.indexOf('data-fish="tuna"')));
+    expect(tuna).toContain("Verano, Invierno");
+    expect(tuna).toContain("· isla: todo el año");
+    expect(tuna).not.toContain("Todo el año");
     // El Pez glacial no muestra las horas ni el sol de `Data/Fish`.
     const glacier = html.slice(html.indexOf('data-fish="glacierfish"'), html.indexOf("</tr>", html.indexOf('data-fish="glacierfish"')));
     expect(glacier).toContain("Cualquier hora");

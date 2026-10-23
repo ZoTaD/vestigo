@@ -82,6 +82,15 @@ class TestMoreData(unittest.TestCase):
         self.assertIsNone(calamar.get("own"))
         self.assertEqual(calamar["seasons"], [3])
 
+    def test_anguila_de_lava_tambien_en_las_minas(self):
+        lugares = {x["key"]: x for x in self.peces["162"]["places"]}
+        self.assertIn("Caldera", lugares)
+        self.assertIn("UndergroundMine", lugares)
+        self.assertIsNone(lugares["UndergroundMine"]["seasons"])
+        # Piedrapez e Ice Pip siguen con sus minas, una sola vez.
+        for iid in ("158", "161"):
+            self.assertEqual([x["key"] for x in self.peces[iid]["places"]].count("UndergroundMine"), 1)
+
     def test_familia_legendaria_del_sr_qi(self):
         qi = {p["id"] for p in self.pesca["fish"] if p.get("qiOrder")}
         self.assertEqual(qi, {"898", "899", "900", "901", "902"})

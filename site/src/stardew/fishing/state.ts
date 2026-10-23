@@ -73,9 +73,9 @@ const ALL_SEASONS = [0, 1, 2, 3];
  */
 export const isQiFamily = (fish: Fish): boolean => !!fish.qiOrder;
 
-/** "Isla Jengibre (todas)": las zonas de la isla juntas. "Cualquier lugar" es el valle, sin la isla. */
+/** "Isla Jengibre (todas)": las zonas de la isla y el Volcán, que está en ella. "Cualquier lugar" es el valle, sin la isla. */
 export const ISLAND = "island";
-export const isIsland = (key: string): boolean => key.startsWith("Island");
+export const isIsland = (key: string): boolean => key.startsWith("Island") || key === "Caldera";
 
 /**
  * Las estaciones en que un lugar da el pez. Manda la de la entrada del lugar; si no tiene, la del pez. La isla es
@@ -90,8 +90,12 @@ export function placeSeasons(fish: Fish, place: FishPlace): number[] {
   return fish.seasons;
 }
 
-/** Todas las estaciones en que se pesca en algún lado, de primavera a invierno. */
-export const fishSeasons = (fish: Fish): number[] => ALL_SEASONS.filter((s) => fish.places.some((p) => placeSeasons(fish, p).includes(s)));
+/**
+ * Las estaciones en que se pesca, de primavera a invierno: en el valle (por defecto) o en la isla. Separadas porque la
+ * isla es verano todo el año y, sumada, haría "todo el año" a cualquier pez que también vive ahí (el Atún).
+ */
+export const fishSeasons = (fish: Fish, where: "valley" | "island" = "valley"): number[] =>
+  ALL_SEASONS.filter((s) => fish.places.some((p) => isIsland(p.key) === (where === "island") && placeSeasons(fish, p).includes(s)));
 
 /** ¿Alguna franja del pez se pisa con la franja de dos horas que arranca en `time`? */
 const inHours = (fish: Fish, time: number | null): boolean =>
@@ -206,6 +210,7 @@ export const catchNow = (data: FishData, s: FishState, lang: Lang): Fish[] => da
 export function fishTable(data: FishData, s: FishState, lang: Lang): Fish[] {
   return data.fish
     .filter((f) => (s.kind === "all" ? true : s.kind === "rod" ? !f.crabPot : s.kind === "crabPot" ? f.crabPot : f.legendary))
-    .filter((f) => s.tseason == null || fishSeasons(f).includes(s.tseason))
+    // La estación de la tabla mira el valle, o la isla si arriba se eligió la isla.
+    .filter((f) => s.tseason == null || fishSeasons(f, s.place === ISLAND ? "island" : "valley").includes(s.tseason))
     .sort(byName(lang));
 }

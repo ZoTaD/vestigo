@@ -31,6 +31,8 @@ _INGREDIENTES = {
 }
 # Peces de las Minas: el juego los reparte por piso en el código (`MineShaft.getFish`), no en Data/Locations.
 _PECES_DE_LAS_MINAS = {"158", "161"}
+# Peces que además de su lugar en Data/Locations se pescan en las Minas: la Anguila de lava (piso 100).
+_TAMBIEN_EN_LAS_MINAS = {"162"}
 # Zonas de la Isla Jengibre: el juego las nombra igual; la zona es texto nuestro [en, es].
 _ZONAS_ISLA = {
     "IslandNorth": ["north", "norte"], "IslandSouth": ["south", "sur"],
@@ -171,6 +173,8 @@ def fish() -> dict:
             "places": [lugar(k, r["seasons"], r["own"]) for k, r in lugares.get(iid, {}).items()]
             or ([lugar("UndergroundMine", None)] if iid in _PECES_DE_LAS_MINAS else []),
         })
+        if iid in _TAMBIEN_EN_LAS_MINAS:
+            peces[-1]["places"].append(lugar("UndergroundMine", None))
     if nombres.sin_texto:
         print("lugares sin texto del juego:", sorted(nombres.sin_texto))
     return {"fish": peces, "places": [{"key": k, "name": n} for k, n in sorted(usados.items())]}
