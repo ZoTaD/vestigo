@@ -122,6 +122,9 @@ export const PAGES = [
   // Las vistas más pesadas de Minas y combate: la grilla de monstruos (en dev, 1.988 nodos y 147 imágenes) y las armas.
   "/en/stardew-valley/mines?v=monsters",
   "/en/stardew-valley/mines?v=weapons",
+  // El Lector de partida sin partida (lo que se abre en frío): la caja para elegir el archivo.
+  "/en/stardew-valley/save",
+  "/es/stardew-valley/partida",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

@@ -74,6 +74,11 @@ export default function Privacy() {
           On the Valheim map you can open your own world and character files to see your
           explored map. They are read inside your browser and are never uploaded anywhere.
         </p>
+        <p>
+          On the Stardew Valley save reader you can open your own save file. It is read inside
+          your browser and is never uploaded anywhere; your browser keeps only what the page
+          shows, until you choose to forget it.
+        </p>
 
         <h3 className="legal-subheading">Information stored in your browser</h3>
         <p>

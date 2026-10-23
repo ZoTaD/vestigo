@@ -73,9 +73,15 @@ a.sd-brand:hover { filter: brightness(1.04); }
 .sd-main { display: grid; gap: 16px; }
 
 /* --- Las pestañas del menú: madera naranja, la activa crema --------------------------------------------------------- */
-.sd-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+/*
+ * Las pestañas no entran en una fila: van en renglones parejos (`text-wrap: balance` sobre botones en línea), así
+ * ninguna queda sola abajo. Cada botón es un `inline-block`; entre dos se puede cortar el renglón aunque no haya espacio.
+ */
+.sd-tabs { margin-bottom: 8px; text-wrap: balance; }
 /* Sin sombra en la letra: con Pixelify chica la sombra tapaba el trazo. El relieve lo da la madera (borde y base). */
 .sd-tab {
+  display: inline-block;
+  margin: 0 6px 6px 0;
   font: 800 16px/1 var(--sd-text);
   padding: 9px 14px 10px;
   background: #f0b462;

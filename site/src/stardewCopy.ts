@@ -16,7 +16,7 @@ import type { MinesView, WeaponSort, WeaponType } from "./stardew/mines/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "mines", "recipes", "villagers", "calendar", "bundles"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "mines", "recipes", "villagers", "calendar", "bundles", "save"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -351,6 +351,82 @@ export interface MinesCopy {
   };
 }
 
+/** Los textos del Lector de partida: la caja para elegir el archivo y las cajas de la partida leída. */
+export interface SaveCopy {
+  h1: string;
+  lede: string;
+  drop: string;
+  pick: string;
+  reading: string;
+  whereTitle: string;
+  /** Dónde está el archivo en cada sistema: el rótulo y la carpeta. */
+  where: { os: string; path: string }[];
+  fileHint: string;
+  private: string;
+  errors: Record<"not-xml" | "save-info" | "not-save" | "read", string>;
+  old: (version: string) => string;
+  farm: (name: string) => string;
+  date: (day: number, season: string, year: number) => string;
+  farmer: string;
+  host: string;
+  other: string;
+  forget: string;
+  today: {
+    title: string;
+    empty: string;
+    birthday: (name: string) => string;
+    lovedHave: string;
+    festival: (name: string, when: 0 | 1) => string;
+    plant: string;
+    fish: string;
+    bundle: string;
+    tv: (show: string, recipe: string) => string;
+    cart: string;
+  };
+  perfection: {
+    title: string;
+    hint: string;
+    points: (got: string, weight: string) => string;
+    level: (level: number) => string;
+    walnuts: string;
+    allDone: string;
+    hearts: (have: number, need: number) => string;
+  };
+  gifts: {
+    title: string;
+    empty: string;
+    today: string;
+    inDays: (n: number) => string;
+    on: (day: number, season: string) => string;
+    hearts: (n: number) => string;
+    giftsWeek: (n: number) => string;
+    have: (n: string) => string;
+  };
+  cc: {
+    title: string;
+    joja: string;
+    complete: string;
+    roomDone: string;
+    left: (n: number) => string;
+    inFarm: (n: string) => string;
+    sync: string;
+    synced: (n: number) => string;
+    gold: string;
+  };
+  missing: {
+    title: string;
+    fish: string;
+    now: string;
+    later: string;
+    leaving: string;
+    cook: string;
+    craft: string;
+    tv: string;
+    count: (n: string) => string;
+    none: string;
+  };
+}
+
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
   /** El `<head>` de la portada y de cada pestaña: lo que se busca primero. */
@@ -391,6 +467,7 @@ export interface StardewCopy {
   recipes: RecipesCopy;
   calendar: CalendarCopy;
   mines: MinesCopy;
+  save: SaveCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
   tastes: Record<Taste, string>;
@@ -399,7 +476,7 @@ export interface StardewCopy {
 }
 
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat", save: "Save reader" },
   seo: {
     home: {
       title: "Stardew Valley Guide: Crop Calculator, Fish, Gifts and Bundles | Vestigo",
@@ -436,6 +513,10 @@ const EN: StardewCopy = {
     mines: {
       title: "Stardew Valley Mines Guide: Monsters, Weapons and Floors | Vestigo",
       description: "Stardew Valley 1.6 Mines and Skull Cavern floor by floor: monsters with their drops, every weapon sortable by damage, boots, rings and the chest rewards.",
+    },
+    save: {
+      title: "Stardew Valley Save File Reader: Perfection Tracker | Vestigo",
+      description: "Open your Stardew Valley 1.6 save to see your perfection, what the Community Center still needs, this week's birthdays and the fish and recipes you're missing.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -481,6 +562,7 @@ const EN: StardewCopy = {
       recipes: "Every cooking and crafting recipe with how to learn it, and what each machine makes.",
       calendar: "Every birthday and festival of the year, with the gifts each villager loves.",
       mines: "Floors, monsters and their drops, every weapon by damage, boots and rings.",
+      save: "Open your save file: perfection, what's left for each bundle and this week's birthdays.",
     },
     featured: "Most looked up",
     featuredHint: "Open an item to see its prices, who loves it and what it turns into.",
@@ -758,6 +840,88 @@ const EN: StardewCopy = {
       phone: "Marlon's phone number, to use the Item Recovery Service by phone",
     },
   },
+  save: {
+    h1: "Save file reader",
+    lede: "Open your save file to see how close you are to perfection, what each Community Center bundle still needs, whose birthday is coming up this week and which fish and recipes you're missing.",
+    drop: "Drop your save file here",
+    pick: "or choose it",
+    reading: "Reading…",
+    whereTitle: "Where your save is",
+    where: [
+      { os: "Windows", path: "%AppData%\\StardewValley\\Saves\\<farm>\\<farm>" },
+      { os: "Mac and Linux", path: "~/.config/StardewValley/Saves/<farm>/<farm>" },
+    ],
+    fileHint: "Inside the farm's folder, open the file with the same name as the folder (not SaveGameInfo).",
+    private: "The file is read right here in your browser and isn't uploaded anywhere. This page only remembers what it shows, until you forget it.",
+    errors: {
+      "not-xml": "That file isn't a Stardew Valley save. Open the file with the same name as the farm's folder.",
+      "save-info": "That's SaveGameInfo, which only has the farmer. Open the other file in the same folder, the one named like the folder.",
+      "not-save": "That file doesn't look like a Stardew Valley save. Open the file with the same name as the farm's folder.",
+      read: "The browser couldn't read that file. Try choosing it again.",
+    },
+    old: (version) =>
+      `This save is from ${version.startsWith("<") ? `before version ${version.slice(1)}` : `version ${version}`}. It reads fine, but the 1.6 perfection can differ from what your game shows.`,
+    farm: (name) => `${name} Farm`,
+    date: (day, season, year) => `${season} ${day}, year ${year}`,
+    farmer: "Farmer",
+    host: "host",
+    other: "Open another save",
+    forget: "Forget this save",
+    today: {
+      title: "Today",
+      empty: "Nothing special today.",
+      birthday: (name) => `It's ${name}'s birthday`,
+      lovedHave: "Loved gifts you have:",
+      festival: (name, when) => (when === 0 ? `${name} is today` : `${name} is tomorrow`),
+      plant: "Last day to plant these and still harvest them this season:",
+      fish: "Fish you're missing that leave when the season ends:",
+      bundle: "Bundle items of this season you don't have yet:",
+      tv: (show, recipe) => `${show} teaches ${recipe} on TV today.`,
+      cart: "The traveling merchant's cart is in the forest today, south of the farm.",
+    },
+    perfection: {
+      title: "Perfection",
+      hint: "Open a part to see what's left. The farm counts as one: in each part, the farmer who has the most.",
+      points: (got, weight) => `${got} of ${weight} points`,
+      level: (level) => `Farmer level ${level} of 25: the sum of your six skills, halved.`,
+      walnuts: "Golden Walnuts are found on Ginger Island.",
+      allDone: "Done.",
+      hearts: (have, need) => `${have} / ${need} ♥`,
+    },
+    gifts: {
+      title: "Gifts this week",
+      empty: "No birthdays in the next 7 days.",
+      today: "Today",
+      inDays: (n) => (n === 1 ? "Tomorrow" : `In ${n} days`),
+      on: (day, season) => `${season} ${day}`,
+      hearts: (n) => `${n} ♥`,
+      giftsWeek: (n) => `${n} of 2 gifts this week`,
+      have: (n) => `You have ${n}`,
+    },
+    cc: {
+      title: "Community Center",
+      joja: "You joined Joja: the Community Center won't be restored, so there are no bundles left.",
+      complete: "The Community Center is restored: every bundle is done.",
+      roomDone: "Done.",
+      left: (n) => (n === 1 ? "1 more item" : `${n} more items`),
+      inFarm: (n) => `${n} on the farm`,
+      sync: "Copy what's done to the checklist",
+      synced: (n) => (n === 0 ? "The checklist was already up to date." : n === 1 ? "1 slot ticked in the checklist." : `${n} slots ticked in the checklist.`),
+      gold: "Gold",
+    },
+    missing: {
+      title: "Fish and recipes left",
+      fish: "Fish",
+      now: "You can get these now",
+      later: "Later",
+      leaving: "Leaves this season",
+      cook: "Cooking",
+      craft: "Crafting",
+      tv: "On TV this season",
+      count: (n) => `${n} left`,
+      none: "None left.",
+    },
+  },
   qualities: { normal: "Normal", silver: "Silver", gold: "Gold", iridium: "Iridium" },
   // `LevelUp_ProfessionName_*` de `Strings/UI`.
   professions: {
@@ -776,7 +940,7 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate", save: "Lector de partida" },
   seo: {
     home: {
       title: "Guía de Stardew Valley: cultivos, peces, regalos y paquetes | Vestigo",
@@ -813,6 +977,10 @@ const ES: StardewCopy = {
     mines: {
       title: "Minas de Stardew Valley: monstruos, armas y pisos | Vestigo",
       description: "Las Minas y la Caverna Calavera de Stardew Valley 1.6 piso por piso: monstruos con su botín, cada arma ordenada por daño, botas, anillos y los cofres.",
+    },
+    save: {
+      title: "Lector de partida de Stardew Valley: perfección y lo que falta | Vestigo",
+      description: "Abrí tu partida de Stardew Valley 1.6 y mirá tu perfección, lo que le falta al Centro Comunitario, los cumpleaños de la semana y los peces y recetas.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -858,6 +1026,7 @@ const ES: StardewCopy = {
       recipes: "Cada receta de cocina y fabricación con cómo se aprende, y qué hace cada máquina.",
       calendar: "Cada cumpleaños y festival del año, con los regalos que le encantan a cada aldeano.",
       mines: "Pisos, monstruos y lo que sueltan, cada arma por daño, botas y anillos.",
+      save: "Abrí tu partida: la perfección, lo que falta de cada paquete y los cumpleaños de la semana.",
     },
     featured: "Los más buscados",
     featuredHint: "Abrí un objeto para ver sus precios, a quién le encanta y en qué se transforma.",
@@ -1133,6 +1302,88 @@ const ES: StardewCopy = {
       slayerGoal: (n) => `Matá ${n} entre:`,
       reward: "Premio",
       phone: "El teléfono de Marlon, para usar el Servicio de Recuperación de Objetos por teléfono",
+    },
+  },
+  save: {
+    h1: "Lector de partida",
+    lede: "Abrí el archivo de tu partida para ver cuánto te falta para la perfección, qué pide todavía cada paquete del Centro Comunitario, quién cumple años esta semana y qué peces y recetas te faltan.",
+    drop: "Soltá acá el archivo de tu partida",
+    pick: "o elegilo",
+    reading: "Leyendo…",
+    whereTitle: "Dónde está tu partida",
+    where: [
+      { os: "Windows", path: "%AppData%\\StardewValley\\Saves\\<granja>\\<granja>" },
+      { os: "Mac y Linux", path: "~/.config/StardewValley/Saves/<granja>/<granja>" },
+    ],
+    fileHint: "Adentro de la carpeta de la granja, abrí el archivo que se llama igual que la carpeta (no SaveGameInfo).",
+    private: "El archivo se lee acá, en tu navegador, y no se sube a ningún lado. Esta página sólo recuerda lo que muestra, hasta que lo olvides.",
+    errors: {
+      "not-xml": "Ese archivo no es una partida de Stardew Valley. Abrí el que se llama igual que la carpeta de la granja.",
+      "save-info": "Ese es SaveGameInfo, que sólo tiene al granjero. Abrí el otro archivo de la misma carpeta, el que se llama como la carpeta.",
+      "not-save": "Ese archivo no parece una partida de Stardew Valley. Abrí el que se llama igual que la carpeta de la granja.",
+      read: "El navegador no pudo leer ese archivo. Probá elegirlo de nuevo.",
+    },
+    old: (version) =>
+      `Esta partida es ${version.startsWith("<") ? `anterior a la versión ${version.slice(1)}` : `de la versión ${version}`}. Se lee igual, pero la perfección de la 1.6 puede no coincidir con la de tu juego.`,
+    farm: (name) => `Granja ${name}`,
+    date: (day, season, year) => `${day} de ${season.toLowerCase()}, año ${year}`,
+    farmer: "Granjero",
+    host: "anfitrión",
+    other: "Abrir otra partida",
+    forget: "Olvidar esta partida",
+    today: {
+      title: "Hoy",
+      empty: "Hoy no hay nada especial.",
+      birthday: (name) => `Hoy cumple años ${name}`,
+      lovedHave: "Regalos que le encantan y tenés:",
+      festival: (name, when) => (when === 0 ? `Hoy es ${name}` : `Mañana es ${name}`),
+      plant: "Último día para plantar estos y cosecharlos en esta estación:",
+      fish: "Peces que te faltan y se van al terminar la estación:",
+      bundle: "Objetos de paquetes de esta estación que todavía no tenés:",
+      tv: (show, recipe) => `Hoy ${show} enseña ${recipe} en la tele.`,
+      cart: "Hoy está el carro de la mercader en el bosque, al sur de la granja.",
+    },
+    perfection: {
+      title: "Perfección",
+      hint: "Abrí una parte para ver lo que falta. La granja cuenta como una: en cada parte, el granjero que más tiene.",
+      points: (got, weight) => `${got} de ${weight} puntos`,
+      level: (level) => `Nivel de granjero ${level} de 25: la suma de tus seis habilidades, dividida por dos.`,
+      walnuts: "Las nueces doradas se encuentran en la Isla Jengibre.",
+      allDone: "Hecho.",
+      hearts: (have, need) => `${have} / ${need} ♥`,
+    },
+    gifts: {
+      title: "Regalos de la semana",
+      empty: "Nadie cumple años en los próximos 7 días.",
+      today: "Hoy",
+      inDays: (n) => (n === 1 ? "Mañana" : `En ${n} días`),
+      on: (day, season) => `${day} de ${season.toLowerCase()}`,
+      hearts: (n) => `${n} ♥`,
+      giftsWeek: (n) => `${n} de 2 regalos esta semana`,
+      have: (n) => `Tenés ${n}`,
+    },
+    cc: {
+      title: "Centro Comunitario",
+      joja: "Te uniste a Joja: el Centro Comunitario no se va a restaurar, así que no quedan paquetes.",
+      complete: "El Centro Comunitario está restaurado: todos los paquetes están hechos.",
+      roomDone: "Hecho.",
+      left: (n) => (n === 1 ? "Falta 1 objeto" : `Faltan ${n} objetos`),
+      inFarm: (n) => `${n} en la granja`,
+      sync: "Pasar lo hecho al checklist",
+      synced: (n) => (n === 0 ? "El checklist ya estaba al día." : n === 1 ? "Se tildó 1 casillero en el checklist." : `Se tildaron ${n} casilleros en el checklist.`),
+      gold: "Oro",
+    },
+    missing: {
+      title: "Peces y recetas que faltan",
+      fish: "Peces",
+      now: "Se consiguen ya",
+      later: "Más adelante",
+      leaving: "Se va esta estación",
+      cook: "Cocina",
+      craft: "Fabricación",
+      tv: "En la tele esta estación",
+      count: (n) => `Faltan ${n}`,
+      none: "No falta ninguno.",
     },
   },
   qualities: { normal: "Normal", silver: "Plata", gold: "Oro", iridium: "Iridio" },

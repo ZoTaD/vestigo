@@ -35,6 +35,12 @@ class TestSaveData(unittest.TestCase):
         self.assertEqual(t["cooking"], len(self.d["cooking"]))
         self.assertEqual(t["crafting"], len(self.d["crafting"]))
 
+    def test_nombres_de_obeliscos_y_reloj(self):
+        n = self.d["buildingNames"]
+        self.assertEqual(set(n), {*self.d["obelisks"], self.d["clock"]})
+        self.assertEqual(n["Gold Clock"], ["Gold Clock", "Reloj de oro"])
+        self.assertEqual(n["Water Obelisk"][1], "Obelisco marino")
+
     def test_enviados(self):
         e = set(self.d["shippable"])
         self.assertIn("24", e)       # Chirivía

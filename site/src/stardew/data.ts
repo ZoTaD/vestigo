@@ -18,6 +18,7 @@ import { withPrices, type FishData } from "./fishing/state";
 import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
 import type { MinesData, Monster } from "./mines/state";
+import type { SaveData } from "./save/progress";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 
@@ -462,3 +463,44 @@ export function writeVillagerFilters(f: VillagerFilters): string {
 }
 export const filterVillagers = (list: readonly Villager[], f: VillagerFilters): Villager[] =>
   list.filter((v) => (!f.romance || v.romance) && (f.season === null || v.birthday[0] === f.season));
+
+// --- Lector de partida ----------------------------------------------------------------------------------------------
+
+/** `save.json` (`save_data.py`): lo de la perfección, más el nombre de los obeliscos y del reloj de oro. */
+export type SaveJson = SaveData & { buildingNames: Record<string, Pair> };
+const saveRaw = once<SaveJson>(() => import("@stardew/save.json"));
+
+/**
+ * Todo lo que el Lector de partida cruza con la partida: la perfección (`save.json`), los aldeanos, el calendario, los
+ * cultivos, los peces, las recetas, el Centro Comunitario y la lista de objetos del idioma (nombre, sprite y ficha de
+ * cada id). Son los mismos archivos de las otras pestañas: los que ya bajaron no se piden de nuevo. Se pide recién al
+ * leer una partida; la pestaña sin partida no baja nada.
+ */
+export interface SaveBundle {
+  save: SaveJson;
+  villagers: Villager[];
+  calendar: CalendarData;
+  crops: CropsData;
+  fish: FishData;
+  recipes: RecipesData;
+  rooms: Room[];
+  rows: Row[];
+}
+const saveBundles: Partial<Record<Lang, SaveBundle>> = {};
+export function peekSaveBundle(lang: Lang): SaveBundle | null {
+  if (saveBundles[lang]) return saveBundles[lang]!;
+  const save = saveRaw.peek();
+  const cal = calendar.peek();
+  const people = peekVillagers();
+  const cropsData = peekCrops();
+  const fishData = peekFish();
+  const recipes = peekRecipes();
+  const roomList = rooms.peek();
+  const list = peekList(lang);
+  if (!save || !cal || !people || !cropsData || !fishData || !recipes || !roomList || !list) return null;
+  return (saveBundles[lang] = { save, villagers: people, calendar: cal, crops: cropsData, fish: fishData, recipes, rooms: roomList, rows: list });
+}
+export const loadSaveBundle = (lang: Lang): Promise<SaveBundle> =>
+  Promise.all([saveRaw.load(), calendar.load(), loadVillagers(), loadCrops(), loadFish(), loadRecipes(), loadBundles(), loadList(lang)]).then(
+    () => peekSaveBundle(lang)!,
+  );

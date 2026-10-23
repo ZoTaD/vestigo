@@ -130,6 +130,12 @@ def friends() -> list[dict]:
     return out
 
 
+def building_names() -> dict[str, list[str]]:
+    """Nombre de los obeliscos y del reloj de oro en [inglés, español] (`Data/Buildings`, con sus textos)."""
+    edificios = sdv.raw("Data/Buildings")
+    return {b: [sdv.text(edificios[b]["Name"], "en"), sdv.text(edificios[b]["Name"], "es")] for b in [*_OBELISCOS, _RELOJ]}
+
+
 def queen_of_sauce() -> dict[str, str]:
     """Semana -> receta que enseña la Reina de la Salsa (`Data/TV/CookingChannel`; la clave es la de la receta)."""
     return {sem: v.split("/")[0] for sem, v in sdv.raw("Data/TV/CookingChannel").items()}
@@ -153,6 +159,7 @@ def save() -> dict:
         "stardrops": stardrops(),
         "obelisks": list(_OBELISCOS),
         "clock": _RELOJ,
+        "buildingNames": building_names(),
         "slayer": cazador,
         "friends": amigos,
         "walnuts": _NUECES,
