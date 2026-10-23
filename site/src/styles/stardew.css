@@ -136,6 +136,15 @@ a.sd-card:hover { background: var(--sd-paper-2); }
 /* Los destacados: casilleros del inventario con el nombre abajo. */
 .sd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px 6px; margin-top: 10px; }
 .sd-cell { display: grid; justify-items: center; gap: 4px; text-align: center; font-size: 13px; font-weight: 800; line-height: 1.2; }
+/*
+ * En escritorio la caja de destacados se estira al alto de "Esta estación" (la fila de `.sd-cols`). Para que no quede
+ * un hueco abajo, la grilla ocupa todo el alto: cuatro columnas (los 12 destacados en tres filas llenas) y las filas
+ * repartidas en el espacio que sobra.
+ */
+@media (min-width: 861px) {
+  .sd-featured { display: flex; flex-direction: column; }
+  .sd-featured .sd-grid { flex: 1; grid-template-columns: repeat(4, minmax(0, 1fr)); align-content: space-evenly; }
+}
 a.sd-cell:hover .sd-slot { filter: brightness(1.08); }
 a.sd-cell:hover > span:last-child { text-decoration: underline; }
 
