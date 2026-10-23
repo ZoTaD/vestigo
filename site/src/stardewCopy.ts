@@ -36,6 +36,8 @@ const HAS_GIFT = 1, HAS_BUNDLE = 2, HAS_MACHINE = 4, HAS_RECIPE = 8, HAS_SOURCES
 
 /** Cortada a 160 caracteres en una palabra entera, como en Terraria. */
 const clip = (s: string): string => (s.length <= 160 ? s : `${s.slice(0, 157).replace(/[\s,;:]+\S*$/, "")}…`);
+/** En español, un nombre de objeto en medio de la oración va en minúscula ("con una esquirla prismática"). */
+const minus = (s: string): string => s.toLocaleLowerCase("es");
 const join = (parts: string[], and: string): string => (parts.length > 1 ? `${parts.slice(0, -1).join(", ")} ${and} ${parts[parts.length - 1]}` : parts[0] ?? "");
 
 /** Lo que se busca de un objeto, en el orden en que la ficha lo muestra. */
@@ -330,6 +332,23 @@ export interface MinesCopy {
     shop: (floor: number | null) => string;
     galaxy: string;
     chest: (n: number) => string;
+    /** Las otras fuentes de un arma (`WeaponSource`), con los nombres del juego ya en el idioma. */
+    source: {
+      special: (from: number, to: number | null) => string;
+      specialDangerous: string;
+      remixed: (n: number) => string;
+      volcano: (rare: boolean) => string;
+      forge: (weapon: string, item: string, n: number) => string;
+      desert: (place: string, item: string) => string;
+      /** La calavera embrujada: la mina de la cantera y la invasión de estatuas de Calico del festival. */
+      hauntedSkull: (festival: string) => string;
+      fishing: string;
+      slayer: (goal: string) => string;
+      festival: (festival: string, npc: string, price: number, currency: string) => string;
+      start: string;
+      quarry: string;
+      mastery: (name: string) => string;
+    };
     other: string;
     ammo: string;
     critMult: (n: string) => string;
@@ -816,6 +835,21 @@ const EN: StardewCopy = {
       shop: (floor) => (floor ? `after floor ${floor}` : "from the start"),
       galaxy: "after the Galaxy Sword",
       chest: (n) => `Chest on floor ${n}`,
+      source: {
+        special: (from, to) => (to == null ? `Barrels and glowing monsters from floor ${from} down` : `Barrels and glowing monsters, floors ${from} to ${to}`),
+        specialDangerous: "Barrels and glowing monsters in dangerous mode",
+        remixed: (n) => `Remixed chest on floor ${n}`,
+        volcano: (rare) => (rare ? "Rare Volcano Dungeon chest" : "Volcano Dungeon chest"),
+        forge: (weapon, item, n) => `Forge: ${weapon} + ${item} × ${n}`,
+        desert: (place, item) => `${place}: hold a ${item} on the pedestal`,
+        hauntedSkull: (festival) => `Dropped by the Haunted Skull: in the Quarry Mine, and in the Skull Cavern during the ${festival} Calico statue invasion`,
+        fishing: "Fishing treasure chests (only once)",
+        slayer: (goal) => `Adventurer's Guild goal: ${goal}`,
+        festival: (festival, npc, price, currency) => `${festival}, ${npc}'s stall: ${currency} × ${price}`,
+        start: "You start the game with it",
+        quarry: "The statue in the Quarry Mine",
+        mastery: (name) => `${name} reward`,
+      },
       other: "Another way (quest, event or special drop)",
       ammo: "Ammo",
       critMult: (n) => `× ${n}`,
@@ -1280,8 +1314,23 @@ const ES: StardewCopy = {
       cols: { weapon: "Arma", damage: "Daño", speed: "Velocidad", crit: "Crítico", where: "Dónde se consigue" },
       nearFloor: (base, min) => `Sale en las minas cerca del piso ${base}${min ? ` (desde el ${min})` : ""}`,
       shop: (floor) => (floor ? `después del piso ${floor}` : "desde el principio"),
-      galaxy: "después de la Espada galáctica",
+      galaxy: "después de la Espada galaxia",
       chest: (n) => `Cofre del piso ${n}`,
+      source: {
+        special: (from, to) => (to == null ? `Barriles y monstruos que brillan, del piso ${from} para abajo` : `Barriles y monstruos que brillan, pisos ${from} a ${to}`),
+        specialDangerous: "Barriles y monstruos que brillan en el modo peligroso",
+        remixed: (n) => `Cofre remezclado del piso ${n}`,
+        volcano: (rare) => (rare ? "Cofre raro de la mazmorra del volcán" : "Cofre de la mazmorra del volcán"),
+        forge: (weapon, item, n) => `Forja: ${weapon} + ${minus(item)} × ${n}`,
+        desert: (place, item) => `${place}: con una ${minus(item)} en la mano, sobre el pedestal`,
+        hauntedSkull: (festival) => `La suelta la calavera embrujada: en la mina de la cantera y, en la Caverna Calavera, durante la invasión de estatuas de Calico del ${festival}`,
+        fishing: "Cofres del tesoro de la pesca (una sola vez)",
+        slayer: (goal) => `Meta del Gremio de Aventureros: ${goal}`,
+        festival: (festival, npc, price, currency) => `${festival}, puesto de ${npc}: ${minus(currency)} × ${price}`,
+        start: "Se empieza el juego con ella",
+        quarry: "La estatua de la mina de la cantera",
+        mastery: (name) => `Premio de la ${minus(name)}`,
+      },
       other: "Otra forma (misión, evento o botín especial)",
       ammo: "Munición",
       critMult: (n) => `× ${n}`,

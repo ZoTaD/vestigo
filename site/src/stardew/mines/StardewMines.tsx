@@ -14,7 +14,7 @@
  * imágenes van `lazy` y con tamaño fijo (y los sprites pixel a múltiplos enteros de su tamaño).
  */
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { useLang, useLocale } from "../../i18n";
+import { useLang, useLocale, type Lang } from "../../i18n";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useStardewCopy, type MinesCopy } from "../../stardewCopy";
@@ -42,6 +42,7 @@ import {
   type MinesData,
   type MinesState,
   type Monster,
+  type WeaponSource,
   type WeaponType,
 } from "./state";
 import "../../styles/stardew-items.css";
@@ -58,8 +59,41 @@ export default function StardewMines({ route, navigate }: { route: Route; naviga
   return <MinesBook data={data.value} route={route} navigate={navigate} />;
 }
 
-/** Dónde se consigue un arma o unas botas: la tienda (precio y desde cuándo), el cofre del piso y los pisos donde sale. */
-function WhereList({ data, id, shop, floors, m }: { data: MinesData; id: string; shop: GearShop | null; floors?: [number, number] | null; m: MinesCopy }) {
+/** Una fuente de `WeaponSource` en palabras, con los nombres del juego en el idioma. */
+function sourceText(f: WeaponSource, lang: Lang, s: MinesCopy["weapons"]["source"]): string {
+  switch (f.k) {
+    case "special":
+      return "dangerous" in f ? s.specialDangerous : s.special(f.floors[0], f.floors[1]);
+    case "remixed":
+      return s.remixed(f.floor);
+    case "volcano":
+      return s.volcano(f.rare);
+    case "forge":
+      return s.forge(say(f.fromName, lang), say(f.item, lang), f.count);
+    case "desert":
+      return s.desert(say(f.place, lang), say(f.item, lang));
+    case "drop":
+      return s.hauntedSkull(say(f.festival, lang));
+    case "fishing":
+      return s.fishing;
+    case "slayer":
+      return s.slayer(say(f.name, lang));
+    case "festival":
+      return s.festival(say(f.name, lang), say(f.npc, lang), f.price, say(f.currency, lang));
+    case "start":
+      return s.start;
+    case "quarry":
+      return s.quarry;
+    case "mastery":
+      return s.mastery(say(f.name, lang));
+  }
+}
+
+/**
+ * Dónde se consigue un arma o unas botas: la tienda (precio y desde cuándo), el cofre del piso, los pisos donde sale y,
+ * en las armas, las otras fuentes (`sources`). Sólo sin nada de eso dice "Otra forma".
+ */
+function WhereList({ data, id, shop, floors, sources = [], m }: { data: MinesData; id: string; shop: GearShop | null; floors?: [number, number] | null; sources?: WeaponSource[]; m: MinesCopy }) {
   const { lang } = useLang();
   const chest = chestFloorOf(data, id);
   const parts: ReactNode[] = [];
@@ -71,6 +105,7 @@ function WhereList({ data, id, shop, floors, m }: { data: MinesData; id: string;
     );
   if (chest != null) parts.push(<li key="chest">{m.weapons.chest(chest)}</li>);
   if (floors) parts.push(<li key="floors">{m.weapons.nearFloor(floors[0], floors[1] > 0 ? floors[1] : null)}</li>);
+  sources.forEach((f, i) => parts.push(<li key={`src-${i}`}>{sourceText(f, lang, m.weapons.source)}</li>));
   if (!parts.length) parts.push(<li key="other" className="is-other">{m.weapons.other}</li>);
   return <ul className="sd-mn-where">{parts}</ul>;
 }
@@ -387,7 +422,7 @@ function Weapons({ data, state, pick }: { data: MinesData; state: MinesState; pi
                 {pct(x.crit[0], locale)} <small>{w.critMult(x.crit[1].toLocaleString(locale))}</small>
               </td>
               <td className="c-where" data-label={w.cols.where}>
-                <WhereList data={data} id={x.id} shop={x.shop} floors={x.floors} m={m} />
+                <WhereList data={data} id={x.id} shop={x.shop} floors={x.floors} sources={x.sources} m={m} />
               </td>
             </tr>
           ))}

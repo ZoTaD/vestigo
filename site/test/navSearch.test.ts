@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { hasNavSearch, loadNavSearcher, searchEntries } from "../src/navSearch";
+import { readFileSync } from "node:fs";
+import { hasNavSearch, hitIconSize, loadNavSearcher, searchEntries } from "../src/navSearch";
 
 /**
  * El buscador de la barra dentro de cada juego (2026-10-11). Antes, en Diablo II, Project Zomboid y Rust decía "Buscar
@@ -54,5 +55,24 @@ describe("el buscador de Stardew Valley (2026-10-22)", () => {
     const abigail = run("abigail", "es", 10).find((h) => h.to.sdSection === "villagers");
     expect(abigail).toMatchObject({ name: "Abigail", tab: "Aldeanos", img: "/stardew/portraits/abigail.png", to: { view: "stardew", sdSection: "villagers", detail: "abigail" } });
     expect(run("rasmodius", "es", 10)[0]).toMatchObject({ to: { sdSection: "villagers", detail: "wizard" } });
+  });
+
+  it("también busca los monstruos de Minas y combate, cada uno a su ficha", async () => {
+    const run = await loadNavSearcher("stardew");
+    // El ícono recortado a lo opaco (14x11), con su tamaño para dibujarlo a escala entera.
+    const verde = { img: "/stardew/combat/i-green-slime.png", pix: [14, 11], to: { view: "stardew", sdSection: "mines", detail: "green-slime" } };
+    expect(run("slime", "en", 10).find((h) => h.to.sdSection === "mines")).toMatchObject({ name: "Green Slime", alt: "Baba verde", tab: "Mines & combat", ...verde });
+    expect(run("baba", "es", 10).find((h) => h.to.sdSection === "mines")).toMatchObject({ name: "Baba verde", tab: "Minas y combate", ...verde });
+    // Los objetos siguen sin `pix`: se dibujan como siempre.
+    expect(run("melon", "en", 10)[0].pix).toBeUndefined();
+  });
+
+  it("un ícono pixel va a escala entera, sin pasar de 30 px", () => {
+    expect(hitIconSize([14, 11])).toEqual([28, 22]);
+    expect(hitIconSize([16, 16])).toEqual([16, 16]);
+    expect(hitIconSize([32, 30])).toEqual([32, 30]);
+    expect(hitIconSize([7, 5])).toEqual([28, 20]);
+    const css = readFileSync(new URL("../src/styles/shell.css", import.meta.url), "utf8");
+    expect(css).toMatch(/\.top-hit-ic img\.is-pix\s*\{[^}]*image-rendering:\s*pixelated[^}]*object-fit:\s*fill/);
   });
 });

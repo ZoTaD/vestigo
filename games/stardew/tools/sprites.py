@@ -74,21 +74,12 @@ def ids_con_sprite() -> list[str]:
 
 def sprite_combate(tipo: str, clave: str) -> str:
     """Nombre del PNG de combate: armas `w-<n>.png`, botas `b-<id>.png`, baratijas `tr-<clave>.png`, monstruos
-    `m-<slug>.png` y sombreros `h-<n>.png`."""
+    `m-<slug>.png` (y su ícono recortado `i-<slug>.png`) y sombreros `h-<n>.png`."""
     return f"{tipo}-{clave}.png"
-
-
-def _mas_lleno(hoja: Image.Image, x: int, y: int, w: int, h: int) -> Image.Image:
-    """El cuadro de la primera fila con más píxeles opacos: el primero suele ser un cuadro de descanso (alas
-    plegadas, el agujero del Duggy) y el sitio muestra al monstruo en pie."""
-    cuadros = [hoja.crop((x + i * w, y, x + (i + 1) * w, y + h)) for i in range(max(1, min(4, hoja.width // w)))]
-    return max(cuadros, key=lambda c: sum(c.getchannel("A").histogram()[1:]))
 
 
 def sprites_combate(salida: Path) -> int:
     """Armas, botas, baratijas y monstruos de `mines_data` en `site/public/stardew/combat/`. Devuelve cuántos escribió."""
-    from PIL import ImageChops
-
     salida.mkdir(parents=True, exist_ok=True)
     datos = mines_data.mines()
     armas = Image.open(TEXTURAS / "TileSheets/weapons.png").convert("RGBA")
@@ -113,19 +104,11 @@ def sprites_combate(salida: Path) -> int:
             n = int(q["reward"][3:])
             x, y = (n % 12) * 20, (n // 12) * 80
             hechos[sprite_combate("h", str(n))] = sombreros.crop((x, y, x + 20, y + 20))
+    # Monstruos: el cuadro entero (`m-<slug>.png`, fichas y grillas) y recortado a lo opaco (`i-<slug>.png`, el ícono
+    # del buscador de la barra, que lo dibuja a escala entera con el tamaño `icon` de mines.json).
     for m in datos["monsters"]:
-        o = mines_data.monster_sprite(m["key"])
-        hoja = Image.open(TEXTURAS / f"Characters/Monsters/{o['sheet']}.png").convert("RGBA")
-        if o.get("frame") is not None:
-            x = o["x"] + o["frame"] * o["w"]
-            im = hoja.crop((x, o["y"], x + o["w"], o["y"] + o["h"]))
-        else:
-            im = _mas_lleno(hoja, o["x"], o["y"], o["w"], o["h"])
-        if o["tint"]:  # la baba helada y la de lodo son la baba verde con otro color (multiplicar)
-            r, g, b, a = im.split()
-            tinte = Image.new("RGB", im.size, tuple(o["tint"]))
-            im = Image.merge("RGBA", (*ImageChops.multiply(Image.merge("RGB", (r, g, b)), tinte).split(), a))
-        hechos[sprite_combate("m", m["slug"])] = im
+        hechos[sprite_combate("m", m["slug"])] = mines_data.monster_image(m["key"])
+        hechos[sprite_combate("i", m["slug"])] = mines_data.monster_icon(m["key"])
     for viejo in salida.glob("*.png"):
         if viejo.name not in hechos:
             viejo.unlink()
@@ -232,6 +215,10 @@ _BASE = 11
 _TRAZO = (86, 22, 12)
 
 
+# La fecha que lleva la fuente: fija, para que el archivo no cambie entre corridas.
+_FECHA_FUENTE = "Fri Oct 23 00:00:00 2026"
+
+
 def _letra(hoja: Image.Image, c: str) -> Image.Image:
     i = ord(c) - 32
     return hoja.crop(((i % 16) * 8, (i // 16) * 16, (i % 16) * 8 + 8, (i // 16) * 16 + 16))
@@ -246,6 +233,7 @@ def fuente_juego(destino: Path) -> int:
     letras tiene.
     """
     from fontTools.fontBuilder import FontBuilder
+    from fontTools.misc.timeTools import timestampFromString
     from fontTools.pens.ttGlyphPen import TTGlyphPen
 
     u = 100
@@ -287,6 +275,10 @@ def fuente_juego(destino: Path) -> int:
     fb.setupNameTable({"familyName": "Vestigo Stardew Menu", "styleName": "Regular"})
     fb.setupOS2(sTypoAscender=14 * u, sTypoDescender=-4 * u, usWinAscent=14 * u, usWinDescent=4 * u)
     fb.setupPost()
+    # Fecha fija en `head`, sin la hora del reloj, y sin que `save` la recalcule: así el archivo sale igual, byte a
+    # byte, en cada corrida en que no cambia nada.
+    fb.font["head"].created = fb.font["head"].modified = timestampFromString(_FECHA_FUENTE)
+    fb.font.recalcTimestamp = False
     fb.font.flavor = "woff2"
     fb.save(str(destino))
     return len(cmap)

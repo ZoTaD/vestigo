@@ -22,6 +22,25 @@ export interface GearShop {
   needs?: string;
 }
 
+/**
+ * De dónde más sale un arma, aparte de la tienda del Gremio, el cofre fijo y los pisos (`mines_data._fuentes_armas`):
+ * los nombres del juego vienen como par y el resto del texto lo arma `MinesCopy.weapons.source`.
+ */
+export type WeaponSource =
+  | { k: "special"; floors: [number, number | null] }
+  | { k: "special"; dangerous: true }
+  | { k: "remixed"; floor: number }
+  | { k: "volcano"; rare: boolean }
+  | { k: "forge"; from: string; fromName: Pair; item: Pair; count: number }
+  | { k: "desert"; place: Pair; item: Pair }
+  | { k: "drop"; monster: "hauntedSkull"; festival: Pair }
+  | { k: "fishing" }
+  | { k: "slayer"; goal: string; name: Pair }
+  | { k: "festival"; name: Pair; npc: Pair; price: number; currency: Pair }
+  | { k: "start" }
+  | { k: "quarry" }
+  | { k: "mastery"; name: Pair };
+
 export interface Weapon {
   id: string;
   slug: string;
@@ -41,6 +60,7 @@ export interface Weapon {
   /** En qué pisos sale en los cofres y barriles de las Minas: el piso de referencia y el mínimo (-1 sin mínimo). */
   floors: [base: number, min: number] | null;
   shop: GearShop | null;
+  sources: WeaponSource[];
   sprite: number;
 }
 
@@ -100,6 +120,8 @@ export interface Monster {
   slayer: string | null;
   /** Ancho y alto del sprite, en px del juego. */
   sprite: [w: number, h: number];
+  /** El sprite recortado a lo opaco (`i-<slug>.png`): el ícono del buscador de la barra. */
+  icon: [w: number, h: number];
 }
 
 export interface Zone {

@@ -87,6 +87,36 @@ describe("las armas", () => {
     expect(row.replace(/<[^>]+>/g, "")).toContain("after floor 20");
     expect(row.replace(/<[^>]+>/g, "")).toContain("near floor 50 (from floor 45)");
   });
+
+  it("las que no vende nadie dicen de dónde salen, con los nombres del juego", () => {
+    const fila = (html: string, slug: string) => {
+      const i = html.indexOf(`data-weapon="${slug}"`);
+      return html.slice(i, html.indexOf("</tr>", i)).replace(/<[^>]+>/g, "");
+    };
+    const en = book({ view: "weapons" });
+    const es = book({ view: "weapons" }, "es");
+    expect(fila(en, "galaxy-sword")).toContain("Calico Desert");
+    expect(fila(en, "galaxy-sword")).toContain("Prismatic Shard");
+    expect(fila(es, "galaxy-sword")).toContain("Desierto de Calico");
+    expect(fila(en, "dwarf-sword")).toContain("Volcano Dungeon chest");
+    expect(fila(es, "dragontooth-cutlass")).toContain("Cofre raro de la mazmorra del volcán");
+    expect(fila(en, "infinity-blade")).toContain("Galaxy Sword");
+    expect(fila(en, "infinity-blade")).toContain("Galaxy Soul × 3");
+    expect(fila(en, "abbys-planchette")).toContain("Desert Festival");
+    expect(fila(en, "insect-head")).toContain("Cave Insects");
+    expect(fila(en, "holy-blade")).toContain("floors 80 to 119");
+    // La espada oscura: la calavera embrujada de la cantera y la de la invasión de Calico del Festival del Desierto.
+    expect(fila(en, "dark-sword")).toContain("Desert Festival");
+    expect(fila(es, "dark-sword")).toContain("Festival del Desierto");
+    // En español, los nombres de objeto en medio de la oración van en minúscula.
+    expect(fila(es, "galaxy-sword")).toContain("con una esquirla prismática");
+    expect(fila(es, "infinity-blade")).toContain("alma galáctica × 3");
+    expect(fila(es, "abbys-planchette")).toContain("huevo calicó × 70");
+    expect(fila(es, "iridium-scythe")).toContain("maestría de granja");
+    // Ninguna sin fuente, salvo la tirachinas galaxia.
+    expect(en.match(/class="is-other"/g)).toHaveLength(1);
+    expect(fila(en, "galaxy-slingshot")).toContain("Another way");
+  });
 });
 
 describe("los pisos", () => {

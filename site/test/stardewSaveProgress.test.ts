@@ -331,10 +331,13 @@ describe("today", () => {
     // Los paquetes de esta partida que faltan son de primavera: en verano no hay objetos de la estación.
     expect(b).toBeUndefined();
     const sp = en(leer(), 0, 10);
-    // De los que faltan (18, 20, 22), bundles.json marca de primavera sólo el Puerro (20).
-    expect(today(sp, sp.players[0], todayData).find((x) => x.kind === "bundle")!.ids).toEqual(["20"]);
-    // Si ya tiene uno en los cofres, no se lo recuerda.
+    // Los que faltan (narciso 18, puerro 20 y diente de león 22) son los tres de primavera: la tienda de Pierre en la
+    // Danza de las Flores ya no le quita la estación al narciso ni al diente de león.
+    expect(today(sp, sp.players[0], todayData).find((x) => x.kind === "bundle")!.ids).toEqual(["18", "20", "22"]);
+    // Si ya tiene uno en los cofres, no se lo recuerda; con los tres, no queda nada que recordar.
     sp.items["20"] = 1;
+    expect(today(sp, sp.players[0], todayData).find((x) => x.kind === "bundle")!.ids).toEqual(["18", "22"]);
+    sp.items["18"] = sp.items["22"] = 1;
     expect(today(sp, sp.players[0], todayData).find((x) => x.kind === "bundle")).toBeUndefined();
   });
 

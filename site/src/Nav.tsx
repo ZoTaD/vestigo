@@ -4,7 +4,7 @@ import RouteLink from "./RouteLink";
 import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
 import { GAME_GROUPS, GAME_ORDER } from "./gameGroups";
-import { hasNavSearch, loadNavSearcher, type NavHit, type NavSearcher } from "./navSearch";
+import { hasNavSearch, hitIconSize, loadNavSearcher, type NavHit, type NavSearcher } from "./navSearch";
 
 export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
@@ -296,7 +296,11 @@ export default function Nav({
               {hits.map((h, i) => (
                 <RouteLink key={h.key} className={`top-hit${i === sel ? " is-on" : ""}`} to={hitRoute(h)} onNavigate={() => goTo(h)}>
                   <span className="top-hit-ic">
-                    {h.img && <img src={h.img} alt="" width={28} height={28} loading="lazy" decoding="async" className={h.art ? "is-art" : undefined} />}
+                    {h.img && (h.pix ? (
+                      <img src={h.img} alt="" width={hitIconSize(h.pix)[0]} height={hitIconSize(h.pix)[1]} loading="lazy" decoding="async" className="is-pix" />
+                    ) : (
+                      <img src={h.img} alt="" width={28} height={28} loading="lazy" decoding="async" className={h.art ? "is-art" : undefined} />
+                    ))}
                   </span>
                   <span className="top-hit-n">
                     {h.name}

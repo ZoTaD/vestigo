@@ -21,8 +21,16 @@ export interface NavHit {
   img?: string | null;
   /** La imagen es una foto y no un ícono: llena el recuadro. */
   art?: boolean;
+  /** La imagen es pixel art recortado de este tamaño: se dibuja a escala entera (`hitIconSize`), sin suavizar. */
+  pix?: [w: number, h: number];
   /** Lo que cambia en la ruta para abrir la ficha. */
   to: Partial<Route>;
+}
+
+/** El tamaño de un ícono pixel en el recuadro de 32 px: el mayor múltiplo entero que no pasa de 30 px (y al menos 1). */
+export function hitIconSize([w, h]: [number, number]): [number, number] {
+  const k = Math.max(1, Math.floor(30 / Math.max(w, h)));
+  return [w * k, h * k];
 }
 
 /** Lo que devuelve un juego ya cargado: busca al instante, sin red. */
@@ -147,12 +155,13 @@ const LOADERS: Record<NavSearchGame, () => Promise<NavSearcher>> = {
     }));
     return (query, lang, max) => searchEntries(entries, query, lang, max);
   },
-  // Stardew Valley (2026-10-22): los objetos y los aldeanos, cada uno a su ficha.
+  // Stardew Valley (2026-10-22): los objetos, los aldeanos y (2026-10-23) los monstruos de Minas y combate, cada uno a
+  // su ficha. `mines.json` llega con el mismo `import()` de la pestaña, que además anota los slugs en español.
   async stardew() {
     const [data, ui, copy] = await Promise.all([import("./stardew/data"), import("./stardew/ui"), import("./stardewCopy")]);
-    const tabs = (sec: "items" | "villagers") => ({ en: copy.STARDEW_COPY.en.tabs[sec], es: copy.STARDEW_COPY.es.tabs[sec] });
+    const tabs = (sec: "items" | "villagers" | "mines") => ({ en: copy.STARDEW_COPY.en.tabs[sec], es: copy.STARDEW_COPY.es.tabs[sec] });
     // Las dos listas, como en Terraria: el buscador se arma una vez y sirve en los dos idiomas.
-    const [en, es, people] = await Promise.all([data.loadList("en"), data.loadList("es"), data.loadVillagers()]);
+    const [en, es, people, mines] = await Promise.all([data.loadList("en"), data.loadList("es"), data.loadVillagers(), data.loadMines()]);
     const esName = new Map(es.map((r) => [r.id, r.name]));
     const entries: Entry[] = en.map((r) => ({
       key: `items/${r.id}`,
@@ -172,6 +181,20 @@ const LOADERS: Record<NavSearchGame, () => Promise<NavSearcher>> = {
         to: { view: "stardew", sdSection: "villagers", detail: v.slug },
       });
     }
+    // Los monstruos van adelante: son 43 contra casi 900 objetos, y "slime" los dejaría detrás de los huevos de baba,
+    // fuera de los 10 que muestra la barra.
+    entries.unshift(
+      ...mines.monsters.map((m) => ({
+        key: `mines/${m.key}`,
+        en: m.name[0],
+        es: m.name[1] || m.name[0],
+        tab: tabs("mines"),
+        // El sprite recortado a lo opaco (`i-<slug>.png`): el cuadro entero dejaba a la baba chiquita en el recuadro.
+        img: `/stardew/combat/i-${m.slug}.png`,
+        pix: m.icon,
+        to: { view: "stardew", sdSection: "mines", detail: m.slug } as Partial<Route>,
+      })),
+    );
     return (query, lang, max) => searchEntries(entries, query, lang, max);
   },
   async rust() {
