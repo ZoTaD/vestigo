@@ -128,6 +128,17 @@ class TestSiteData(unittest.TestCase):
             for estaciones in sala["seasons"].values():
                 self.assertTrue(0 < len(estaciones) < 4)
 
+    def test_lo_de_una_tienda_de_festival_sigue_siendo_de_temporada(self):
+        # Narciso y diente de león: recolección de primavera que también vende Pierre en la Danza de las Flores
+        # (24 de primavera); la tienda del festival no los vuelve "de todo el año".
+        artesania = self.out["bundles"][1]
+        self.assertEqual(artesania["seasons"]["18"], [0])
+        self.assertEqual(artesania["seasons"]["22"], [0])
+        self.assertEqual(site_data.estaciones_de([{"k": "shop", "shop": "Festival_FlowerDance_Pierre"}]), [0])
+        self.assertEqual(site_data.estaciones_de([{"k": "shop", "shop": "Festival_NightMarket_MagicBoat_Day1"}]), [3])
+        self.assertEqual(site_data.estaciones_de([{"k": "shop", "shop": "DesertFestival_Pierre"}]), [0])
+        self.assertIsNone(site_data.estaciones_de([{"k": "shop", "shop": "SeedShop"}]))
+
 
 if __name__ == "__main__":
     unittest.main()

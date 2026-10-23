@@ -220,12 +220,19 @@ def _slugs_unicos(ids: list[str], en: dict[str, str], es: dict[str, str]) -> tup
 def estaciones_de(fuentes: list[dict]) -> list[int] | None:
     """Las estaciones en que se consigue un objeto, o None si no se sabe (o si es todo el año).
 
-    Sólo cuenta si todas sus fuentes son por temporada (cultivo, árbol, pesca, recolección): con una tienda o un
-    monstruo se consigue en cualquier estación. Es lo que usa el filtro de estación del Centro Comunitario.
+    Sólo cuenta si todas sus fuentes son por temporada (cultivo, árbol, pesca, recolección o la tienda de un
+    festival): con otra tienda o un monstruo se consigue en cualquier estación. Es lo que usa el filtro de estación
+    del Centro Comunitario.
     """
-    if not fuentes or any(f["k"] not in ("crop", "tree", "fish", "forage") for f in fuentes):
-        return None
-    est = sorted({e for f in fuentes for e in f["seasons"]})
+    est: set[int] = set()
+    for f in fuentes:
+        if f["k"] in ("crop", "tree", "fish", "forage"):
+            est.update(f["seasons"])
+        elif f["k"] == "shop" and (e := relations.shop_season(f["shop"])) is not None:
+            est.add(e)
+        else:
+            return None
+    est = sorted(est)
     return est if 0 < len(est) < 4 else None
 
 

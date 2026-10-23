@@ -374,6 +374,37 @@ def _por_lugar(campo: str, valido) -> dict[str, dict]:
     return res
 
 
+# Las tiendas que sólo abren un día de festival, con su fecha (`Data/Festivals/FestivalDates`): las de Pierre y del
+# mercader del Festival del Hielo salen de `Event.checkAction` (la acción "shop" de cada festival) y la de estrellas de
+# la Feria, de `Event.answerDialogue` ("starTokenShop").
+_TIENDAS_DE_FESTIVAL = {
+    "Festival_EggFestival_Pierre": "spring13",
+    "Festival_FlowerDance_Pierre": "spring24",
+    "Festival_Luau_Pierre": "summer11",
+    "Festival_DanceOfTheMoonlightJellies_Pierre": "summer28",
+    "Festival_StardewValleyFair_StarTokens": "fall16",
+    "Festival_SpiritsEve_Pierre": "fall27",
+    "Festival_FestivalOfIce_TravelingMerchant": "winter8",
+    "Festival_FeastOfTheWinterStar_Pierre": "winter25",
+}
+# Las de los festivales de varios días (`Data/PassiveFestivals`) llevan el id del festival adelante.
+_PREFIJOS_DE_FESTIVAL_PASIVO = {"Festival_NightMarket_": "NightMarket", "DesertFestival_": "DesertFestival"}
+
+
+def shop_season(tienda: str) -> int | None:
+    """La estación en que abre una tienda de festival, o None si la tienda abre todo el año."""
+    fecha = _TIENDAS_DE_FESTIVAL.get(tienda)
+    if fecha is not None:
+        fechas = sdv.raw("Data/Festivals/FestivalDates")
+        if fecha not in fechas:
+            raise ValueError(f"{tienda}: el festival {fecha} no está en FestivalDates")
+        return next(n for n, e in enumerate(SEASONS) if fecha.startswith(e))
+    for prefijo, festival in _PREFIJOS_DE_FESTIVAL_PASIVO.items():
+        if tienda.startswith(prefijo):
+            return sdv.raw("Data/PassiveFestivals")[festival]["Season"]
+    return None
+
+
 # Condiciones de recargo que se dan por ciertas: el jugador sin membresía de Joja.
 _CONDICIONES_SUPUESTAS = {"!PLAYER_HAS_MAIL Current JojaMember"}
 
