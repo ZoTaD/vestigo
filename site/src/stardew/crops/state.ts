@@ -115,9 +115,25 @@ const VALUE: Record<Exclude<SortKey, "name" | "sell">, (r: CropRow) => number> =
 
 /**
  * La tabla de cultivos: sin los que no se plantan en la estación elegida, ordenada por la columna pedida, y los que no
- * llegan a cosecharse al final (en el mismo orden entre ellos). Los empates se resuelven por nombre.
+ * llegan a cosecharse al final (en el mismo orden entre ellos). Los empates se resuelven por nombre. Con semillas
+ * compradas, los que no tienen semilla en ninguna tienda quedan afuera: van en `noShopTable`.
  */
 export function cropTable(crops: readonly Crop[], s: CropState, lang: Lang): CropRow[] {
+  return ranked(s.seeds === "buy" ? crops.filter((c) => !noShopSeed(c)) : crops, s, lang);
+}
+
+/** La semilla no se vende en ninguna tienda, ni de festival: con "Compradas" no compite en el ranking. */
+export const noShopSeed = (crop: Crop): boolean => crop.seedPrice == null;
+
+/**
+ * Con semillas compradas, los cultivos sin semilla en tienda (Fruta milenaria, Café, Zanahoria…), aparte y con las
+ * cuentas de semillas propias, en el mismo orden que la tabla. Con semillas propias, ninguno: compiten todos.
+ */
+export function noShopTable(crops: readonly Crop[], s: CropState, lang: Lang): CropRow[] {
+  return s.seeds === "buy" ? ranked(crops.filter(noShopSeed), { ...s, seeds: "own" }, lang) : [];
+}
+
+function ranked(crops: readonly Crop[], s: CropState, lang: Lang): CropRow[] {
   const opts = toOpts(s);
   const rows = crops
     .map((crop): CropRow => ({ crop, p: profit(crop, opts), days: growDays(crop.phases, speedOf(opts, crop.paddy)), name: say(crop.name, lang) }))

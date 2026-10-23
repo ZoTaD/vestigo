@@ -69,6 +69,17 @@ class TestCropsData(unittest.TestCase):
     def test_semilla_sin_tienda(self):
         self.assertIsNone(self.crops["499"]["seedPrice"])
         self.assertIsNone(self.crops["499"]["seedShop"])
+        self.assertFalse(self.crops["499"]["seedFestival"])
+
+    def test_semilla_de_festival(self):
+        # La Fresa no se vende en ninguna tienda fija, pero Pierre la vende en el Festival del Huevo a 100 g.
+        fresa = self.crops["745"]
+        self.assertEqual(fresa["seedPrice"], 100)
+        self.assertEqual(fresa["seedShop"], ["Egg Festival", "Festival del huevo"])
+        self.assertTrue(fresa["seedFestival"])
+        # Una semilla de tienda fija no es de festival.
+        self.assertEqual(self.crops["479"]["seedPrice"], 80)
+        self.assertFalse(self.crops["479"]["seedFestival"])
 
     def test_todos_con_slug_del_sitio(self):
         slugs = {r[1] for r in site_data.build()["list"]}

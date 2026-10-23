@@ -7,6 +7,10 @@
  * (`?season=1&fert=deluxe&sort=gross&dir=asc`), así se puede compartir. Se lee después del primer dibujo: el HTML
  * prerenderizado sale con los valores por defecto. Son 50 cultivos y 8 frutales: no hace falta `LazyRows`; los sprites
  * van `lazy` y con tamaño fijo.
+ *
+ * Con semillas compradas, los cultivos cuya semilla no se vende en ninguna tienda (ni de festival) salen del ranking y
+ * van en una caja aparte, con las cuentas de semillas propias; con semillas propias compiten todos. La semilla que sólo
+ * vende un festival (la Fresa) compite con ese precio, y el nombre del festival va debajo del costo.
  */
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useLang, useLocale } from "../../i18n";
@@ -17,7 +21,7 @@ import { useLoad } from "../../useLoad";
 import { loadCrops, peekCrops, say } from "../data";
 import { Box, Gold, SdLoading, Sprite, type Nav } from "../ui";
 import type { Best, CropsData, Fert, Product } from "./calc";
-import { cropTable, DEFAULT_STATE, FERTS, firstDir, readCropState, SORT_KEYS, TREE_DAYS, treeTable, writeCropState, type CropState, type SortKey } from "./state";
+import { cropTable, DEFAULT_STATE, FERTS, firstDir, noShopTable, readCropState, SORT_KEYS, TREE_DAYS, treeTable, writeCropState, type CropRow, type CropState, type SortKey } from "./state";
 import "../../styles/stardew-items.css";
 import "../../styles/stardew-crops.css";
 
@@ -92,6 +96,7 @@ export function CropCalc({ data, route, navigate, initial = DEFAULT_STATE }: { d
   const sortBy = (key: SortKey) => pick({ sort: { key, dir: state.sort.key === key ? (state.sort.dir === "asc" ? "desc" : "asc") : firstDir(key) } });
 
   const rows = useMemo(() => cropTable(data.crops, state, lang), [data, state, lang]);
+  const apart = useMemo(() => noShopTable(data.crops, state, lang), [data, state, lang]);
   const trees = useMemo(() => treeTable(data.fruitTrees, state, lang), [data, state, lang]);
   const top = rows.find((r) => r.p.harvests > 0);
   const item = (slug: string): Route => ({ ...route, view: "stardew", sdSection: "items", detail: slug });
@@ -107,6 +112,69 @@ export function CropCalc({ data, route, navigate, initial = DEFAULT_STATE }: { d
       </th>
     );
   };
+
+  /**
+   * Una tabla de cultivos: el ranking, o el grupo aparte de los que no tienen semilla en tienda (`noShop`, con las
+   * cuentas de semillas propias). Las filas del grupo llevan `data-noshop` en vez de `data-crop`.
+   */
+  const table = (list: CropRow[], noShop: boolean) => (
+    <table className="sd-ctable">
+      <thead>
+        <tr>
+          {head("name", "c-name")}
+          {head("harvests")}
+          {head("days")}
+          {head("gross")}
+          {head("seeds")}
+          {head("net")}
+          {head("perDay", "c-perday")}
+          {head("sell", "c-sell")}
+        </tr>
+      </thead>
+      <tbody>
+        {list.map((r) => {
+          const late = r.p.harvests === 0;
+          const festival = !noShop && state.seeds === "buy" && r.crop.seedFestival && r.crop.seedShop;
+          return (
+            <tr
+              className={late ? "is-late" : !noShop && r === top ? "is-top" : undefined}
+              data-crop={noShop ? undefined : r.crop.slug}
+              data-noshop={noShop ? r.crop.slug : undefined}
+              key={r.crop.slug}
+            >
+              <th scope="row" className="c-name">
+                <RouteLink className="sd-cname" to={item(r.crop.slug)} onNavigate={navigate} prefetch="press">
+                  <Sprite id={r.crop.harvest} size={32} />
+                  <span>{r.name}</span>
+                </RouteLink>
+              </th>
+              <td data-label={c.cols.harvests}>{late ? <span className="sd-late">{c.late}</span> : r.p.harvests}</td>
+              <td data-label={c.cols.days}>
+                {r.days}
+                {r.crop.regrow > 0 && <small className="sd-regrow">{c.regrow(r.crop.regrow)}</small>}
+              </td>
+              <td data-label={c.cols.gross}>
+                <Gold n={round(r.p.gross)} />
+              </td>
+              <td data-label={c.cols.seeds}>
+                {noShop || state.seeds === "own" ? "—" : <Gold n={round(r.p.seedCost)} />}
+                {festival && <small className="sd-regrow">{say(festival, lang)}</small>}
+              </td>
+              <td data-label={c.cols.net} className={r.p.net < 0 ? "is-neg" : undefined}>
+                <Gold n={round(r.p.net)} />
+              </td>
+              <td data-label={c.cols.perDay} className={`c-perday${r.p.perDay < 0 ? " is-neg" : ""}`}>
+                <Gold n={round(r.p.perDay, 1)} />
+              </td>
+              <td data-label={c.cols.sell} className="c-sell">
+                {late ? "—" : <SellAs best={r.p.best} products={r.crop.products} raw={c.raw} lang={lang} />}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
 
   return (
     <main className="sd-main sd-crops">
@@ -202,68 +270,16 @@ export function CropCalc({ data, route, navigate, initial = DEFAULT_STATE }: { d
             </select>
           </label>
         </div>
-        {rows.length === 0 ? (
-          <p className="sd-note">{c.none}</p>
-        ) : (
-          <table className="sd-ctable">
-            <thead>
-              <tr>
-                {head("name", "c-name")}
-                {head("harvests")}
-                {head("days")}
-                {head("gross")}
-                {head("seeds")}
-                {head("net")}
-                {head("perDay", "c-perday")}
-                {head("sell", "c-sell")}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => {
-                const late = r.p.harvests === 0;
-                return (
-                  <tr className={late ? "is-late" : r === top ? "is-top" : undefined} data-crop={r.crop.slug} key={r.crop.slug}>
-                    <th scope="row" className="c-name">
-                      <RouteLink className="sd-cname" to={item(r.crop.slug)} onNavigate={navigate} prefetch="press">
-                        <Sprite id={r.crop.harvest} size={32} />
-                        <span>{r.name}</span>
-                      </RouteLink>
-                    </th>
-                    <td data-label={c.cols.harvests}>{late ? <span className="sd-late">{c.late}</span> : r.p.harvests}</td>
-                    <td data-label={c.cols.days}>
-                      {r.days}
-                      {r.crop.regrow > 0 && <small className="sd-regrow">{c.regrow(r.crop.regrow)}</small>}
-                    </td>
-                    <td data-label={c.cols.gross}>
-                      <Gold n={round(r.p.gross)} />
-                    </td>
-                    <td data-label={c.cols.seeds}>
-                      {state.seeds === "own" ? (
-                        "—"
-                      ) : r.p.seedUnknown ? (
-                        <span className="sd-seedmark" title={c.seedMarkTip}>
-                          {c.seedMark}
-                        </span>
-                      ) : (
-                        <Gold n={round(r.p.seedCost)} />
-                      )}
-                    </td>
-                    <td data-label={c.cols.net} className={r.p.net < 0 ? "is-neg" : undefined}>
-                      <Gold n={round(r.p.net)} />
-                    </td>
-                    <td data-label={c.cols.perDay} className={`c-perday${r.p.perDay < 0 ? " is-neg" : ""}`}>
-                      <Gold n={round(r.p.perDay, 1)} />
-                    </td>
-                    <td data-label={c.cols.sell} className="c-sell">
-                      {late ? "—" : <SellAs best={r.p.best} products={r.crop.products} raw={c.raw} lang={lang} />}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
+        {rows.length === 0 ? <p className="sd-note">{c.none}</p> : table(rows, false)}
       </Box>
+
+      {apart.length > 0 && (
+        <Box className="sd-ctable-box sd-noshop">
+          <h2 className="sd-h2">{c.noShop.h2}</h2>
+          <p className="sd-muted">{c.noShop.hint}</p>
+          {table(apart, true)}
+        </Box>
+      )}
 
       <Box className="sd-ctable-box">
         <h2 className="sd-h2">{c.trees.h2}</h2>

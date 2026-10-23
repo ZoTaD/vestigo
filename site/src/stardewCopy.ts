@@ -184,9 +184,8 @@ export interface CropsCopy {
   /** No da ni una cosecha antes de que termine la estación. */
   late: string;
   raw: string;
-  /** La semilla no se vende siempre en una tienda: se tiene o sale del carro. */
-  seedMark: string;
-  seedMarkTip: string;
+  /** Con semillas compradas, los cultivos cuya semilla no se vende en ninguna tienda van aparte. */
+  noShop: { h2: string; hint: string };
   count: (n: string) => string;
   none: string;
   trees: {
@@ -414,8 +413,10 @@ const EN: StardewCopy = {
     regrow: (n) => `then every ${n}`,
     late: "Too late",
     raw: "Raw",
-    seedMark: "Own / cart",
-    seedMarkTip: "The seed isn't always sold in a shop: your own, the Traveling Cart or a festival. Counted as free.",
+    noShop: {
+      h2: "Seeds not sold in shops",
+      hint: "No shop sells these seeds: they come from the Traveling Cart, monsters or your own harvest. They're counted as your own seeds, free, so they don't compete with the ones you buy.",
+    },
     count: (n) => `${n} crops`,
     none: "Nothing grows this season outside the greenhouse.",
     trees: {
@@ -618,8 +619,10 @@ const ES: StardewCopy = {
     regrow: (n) => `y cada ${n}`,
     late: "No llega",
     raw: "Crudo",
-    seedMark: "Propia / carro",
-    seedMarkTip: "La semilla no se vende siempre en una tienda: propia, del carro ambulante o de un festival. Se cuenta gratis.",
+    noShop: {
+      h2: "Sin semilla en tienda",
+      hint: "Ninguna tienda vende estas semillas: salen del carro ambulante, de monstruos o de tu propia cosecha. Se cuentan como propias, sin costo, así no compiten con las que se compran.",
+    },
     count: (n) => `${n} cultivos`,
     none: "Fuera del invernadero no crece nada en esta estación.",
     trees: {

@@ -47,9 +47,15 @@ export interface Crop {
   paddy: boolean;
   price: number;
   cat: number;
-  /** null si la semilla no se compra siempre (carro ambulante, festivales…). */
+  /**
+   * Lo que cuesta la semilla en una tienda fija o, si sólo la vende un festival, ahí (`seedFestival`); null si no se
+   * vende en ninguna (carro ambulante, monstruos…).
+   */
   seedPrice: number | null;
+  /** La tienda, o el nombre del festival si `seedFestival`. */
   seedShop: Pair | null;
+  /** La semilla sólo se vende en un festival (la Fresa en el Festival del Huevo). */
+  seedFestival?: boolean;
   products: Product[];
   /** Calidad máxima de la cosecha (0 = siempre normal: Fibra y Fruta Qi). Si falta, no hay tope. */
   maxQuality?: number | null;

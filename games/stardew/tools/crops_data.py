@@ -7,6 +7,7 @@ Escribe `games/stardew/data/crops.json` y `calendar.json`. Los slugs son los de 
 de los textos del juego (`sdv.text`).
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -41,6 +42,23 @@ def _tienda_mas_barata(item: str, nombres) -> tuple[int | None, list[str] | None
         return None, None
     mejor = min(ofertas, key=lambda s: (s["price"], TIENDAS_SEMILLAS.index(s["shop"])))
     return mejor["price"], nombres.tienda(mejor["shop"])
+
+
+def _tienda_de_festival(item: str) -> tuple[int | None, list[str] | None]:
+    """La semilla que sólo se vende en un festival (la Fresa en el Festival del Huevo): el precio más barato y el
+    nombre del festival [en, es], de `Data/Festivals/FestivalDates`. El Mercado Nocturno no cuenta: sus barcos cambian
+    lo que venden cada noche."""
+    from site_data import _FESTIVAL_TIENDA, _festival  # import tardío: site_data importa este módulo
+
+    ofertas = []
+    for s in relations.sources_by_item().get(item, []):
+        m = re.match(r"Festival_(\w+?)_", s["shop"]) if s["k"] == "shop" else None
+        if m and m.group(1) in _FESTIVAL_TIENDA:
+            ofertas.append((s["price"], m.group(1)))
+    if not ofertas:
+        return None, None
+    precio, festival = min(ofertas)
+    return precio, _festival(_FESTIVAL_TIENDA[festival])
 
 
 def _productos(cosechado: str, nombres_obj: dict[str, list[str]], nombres) -> list[dict]:
@@ -88,6 +106,10 @@ def crops() -> dict:
         if h not in slugs or h not in objs:
             continue
         precio, tienda = _tienda_mas_barata(semilla, nombres)
+        festival = False
+        if precio is None:
+            precio, tienda = _tienda_de_festival(semilla)
+            festival = precio is not None
         cultivos.append({
             "seed": semilla, "harvest": h, "slug": slugs[h][0], "slugEs": slugs[h][1], "name": nom[h],
             "seasons": list(c["Seasons"]), "phases": list(c["DaysInPhase"]),
@@ -97,7 +119,7 @@ def crops() -> dict:
             "raised": bool(c["IsRaised"]), "paddy": bool(c["IsPaddyCrop"]),
             "maxQuality": c.get("HarvestMaxQuality"),
             "price": objs[h]["Price"], "cat": objs[h].get("Category", 0),
-            "seedPrice": precio, "seedShop": tienda,
+            "seedPrice": precio, "seedShop": tienda, "seedFestival": festival,
             "products": _productos(h, nom, nombres),
         })
     arboles = []

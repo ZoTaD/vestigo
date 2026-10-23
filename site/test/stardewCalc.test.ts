@@ -252,9 +252,17 @@ describe("profit", () => {
   });
 
   it("semilla sin precio fijo: costo 0 y lo marca", () => {
-    const p = profit(crop("strawberry"), base);
+    // La Zanahoria (sus semillas salen de las cajas misteriosas); la Fresa ya trae el precio del Festival del Huevo.
+    const p = profit(crop("carrot"), base);
     expect(p.seedCost).toBe(0);
     expect(p.seedUnknown).toBe(true);
+  });
+
+  it("semilla de festival: paga el precio del festival", () => {
+    // Fresa: 100 g en el Festival del Huevo; rebrota, así que se compra una sola semilla.
+    const p = profit(crop("strawberry"), base);
+    expect(p.seedCost).toBe(100);
+    expect(p.seedUnknown).toBe(false);
   });
 
   it("con semillas propias no hay costo ni marca", () => {

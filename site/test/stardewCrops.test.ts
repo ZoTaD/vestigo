@@ -10,7 +10,7 @@ import { LangContext } from "../src/i18n";
 import { parseRoute, routePath, type Route } from "../src/route";
 import type { CropsData } from "../src/stardew/crops/calc";
 import { CropCalc } from "../src/stardew/crops/StardewCrops";
-import { cropTable, DEFAULT_STATE, readCropState, treeTable, writeCropState, type CropState } from "../src/stardew/crops/state";
+import { cropTable, DEFAULT_STATE, noShopTable, readCropState, treeTable, writeCropState, type CropState } from "../src/stardew/crops/state";
 
 const all = data as CropsData;
 const route = { lang: "en", view: "stardew", sdSection: "crops" } as Route;
@@ -23,8 +23,50 @@ function screen(state: CropState, lang: "en" | "es" = "en") {
     createElement(LangContext.Provider, { value: { lang, setLang: () => undefined } }, createElement(CropCalc, { data: all, route: { ...route, lang }, navigate: () => undefined, initial: state })),
   );
   const rows = [...html.matchAll(/data-crop="([\w-]+)"/g)].map((m) => m[1]);
-  return { html, rows };
+  const noShop = [...html.matchAll(/data-noshop="([\w-]+)"/g)].map((m) => m[1]);
+  return { html, rows, noShop };
 }
+
+describe("semillas que no se venden en tienda", () => {
+  it("con Compradas salen del ranking y van aparte, con las cuentas de propias", () => {
+    const ranked = slugs(DEFAULT_STATE);
+    expect(ranked).not.toContain("ancient-fruit");
+    expect(ranked).not.toContain("coffee-bean");
+    for (const r of cropTable(all.crops, DEFAULT_STATE, "en")) expect(r.p.seedUnknown).toBe(false);
+    const apart = noShopTable(all.crops, DEFAULT_STATE, "en");
+    expect(apart.map((r) => r.crop.slug)).toContain("ancient-fruit");
+    for (const r of apart) {
+      expect(r.p.seedCost).toBe(0);
+      expect(r.p.seedUnknown).toBe(false);
+      expect(r.crop.seasons).toContain(0);
+    }
+  });
+
+  it("con Propias compiten todos y no hay grupo aparte", () => {
+    expect(slugs(st({ seeds: "own" }))).toContain("ancient-fruit");
+    expect(noShopTable(all.crops, st({ seeds: "own" }), "en")).toEqual([]);
+  });
+
+  it("la Fresa, con precio del Festival del Huevo, compite y paga su semilla", () => {
+    const fresa = cropTable(all.crops, DEFAULT_STATE, "en").find((r) => r.crop.slug === "strawberry")!;
+    expect(fresa.crop.seedFestival).toBe(true);
+    expect(fresa.p.seedCost).toBe(100);
+  });
+
+  it("en pantalla: el grupo aparte con su título, y el festival donde va el costo", () => {
+    const { html, rows, noShop } = screen(DEFAULT_STATE, "es");
+    expect(html).toContain("Sin semilla en tienda");
+    expect(rows).not.toContain("ancient-fruit");
+    expect(rows).toContain("strawberry");
+    expect(noShop).toContain("ancient-fruit");
+    expect(html).toContain("Festival del huevo");
+    const own = screen(st({ seeds: "own" }));
+    expect(own.html).not.toContain("Seeds not sold in shops");
+    expect(own.rows).toContain("ancient-fruit");
+    expect(own.noShop).toEqual([]);
+    expect(screen(DEFAULT_STATE).html).toContain("Seeds not sold in shops");
+  });
+});
 
 describe("tabla de cultivos", () => {
   it("por defecto es primavera día 1, sin fertilizante ni profesiones, lo mejor y semillas compradas", () => {
@@ -133,9 +175,8 @@ describe("pantalla de Cultivos", () => {
     expect(screen(st({ season: 1 })).rows).not.toEqual(screen(DEFAULT_STATE).rows);
   });
 
-  it("una semilla sin precio fijo lleva la marca en vez del costo, y el que no llega dice que no llega", () => {
+  it("el que no llega dice que no llega", () => {
     const { html } = screen(st({ season: 1, day: 20 }), "es");
-    expect(html).toContain("sd-seedmark");
     expect(html).toContain("No llega");
   });
 
