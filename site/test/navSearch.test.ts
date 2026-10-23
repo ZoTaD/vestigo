@@ -55,4 +55,11 @@ describe("el buscador de Stardew Valley (2026-10-22)", () => {
     expect(abigail).toMatchObject({ name: "Abigail", tab: "Aldeanos", img: "/stardew/portraits/abigail.png", to: { view: "stardew", sdSection: "villagers", detail: "abigail" } });
     expect(run("rasmodius", "es", 10)[0]).toMatchObject({ to: { sdSection: "villagers", detail: "wizard" } });
   });
+
+  it("también busca los monstruos de Minas y combate, cada uno a su ficha", async () => {
+    const run = await loadNavSearcher("stardew");
+    const verde = { img: "/stardew/combat/m-green-slime.png", to: { view: "stardew", sdSection: "mines", detail: "green-slime" } };
+    expect(run("slime", "en", 10).find((h) => h.to.sdSection === "mines")).toMatchObject({ name: "Green Slime", alt: "Baba verde", tab: "Mines & combat", ...verde });
+    expect(run("baba", "es", 10).find((h) => h.to.sdSection === "mines")).toMatchObject({ name: "Baba verde", tab: "Minas y combate", ...verde });
+  });
 });
