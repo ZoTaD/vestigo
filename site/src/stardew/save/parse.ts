@@ -25,9 +25,9 @@
  *
  * Partidas viejas (antes de la 1.6): se leen igual con lo que traigan. Sin `<gameVersion>` la versión se deduce por
  * `hasApplied1_4_UpdateChanges` ("1.4") y `hasApplied1_3_UpdateChanges` ("1.3"); sin ninguna es "<1.3". Antes de la
- * 1.6 los objetos no tienen `itemId` (se usa `parentSheetIndex` y compañía), la amistad es `friendships` con un arreglo
- * de números y los monstruos están en el `stats` de la raíz; si no hay `<bundleData>` (antes de la 1.5), `defs` queda
- * vacío y manda `bundles.json`.
+ * 1.6 los objetos no tienen `itemId` (se usa `parentSheetIndex` y compañía), los monstruos están en el `stats` de la
+ * raíz y los cofres Junimo en `<junimoChest>`; antes de la 1.3 la amistad es `friendships` con un arreglo de números; si
+ * no hay `<bundleData>` (antes de la 1.5), `defs` queda vacío y manda `bundles.json`.
  */
 
 export type SaveError = { error: "not-xml" | "save-info" | "not-save" };
@@ -299,9 +299,14 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
     return { error: "not-xml" };
   }
   const root = doc?.documentElement;
-  // El DOMParser del navegador no tira: devuelve un documento con <parsererror>.
-  if (!root || root.nodeName === "parsererror" || doc.getElementsByTagName("parsererror").length > 0) {
-    return { error: "not-xml" };
+  // El DOMParser del navegador no tira: devuelve un <parsererror>, como raíz (Firefox) o al principio de la raíz
+  // (Chrome). Se mira sólo ahí: buscarlo en todo el documento recorre los megas de una partida buena.
+  if (!root || root.nodeName === "parsererror") return { error: "not-xml" };
+  let n = 0;
+  for (let c = root.firstChild; c && n < 3; c = c.nextSibling) {
+    if (c.nodeType !== 1) continue;
+    if (c.nodeName === "parsererror") return { error: "not-xml" };
+    n++;
   }
   if (root.nodeName === "Farmer") return { error: "save-info" };
   if (root.nodeName !== "SaveGame") return { error: "not-save" };
@@ -313,13 +318,15 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
   const tt = (tag: string) => str(t(tag));
 
   const hostEl = t("player");
+  // Sin anfitrión no hay partida que mostrar (la perfección y lo demás leen players[0]).
+  if (!hostEl) return { error: "not-save" };
   const locations = t("locations");
 
   // Granjeros: los de `<farmhands>` (1.6) o el `<farmhand>` de cada cabaña (antes).
   let hands = kids(t("farmhands"));
   if (hands.length === 0 && locations) hands = Array.from(locations.getElementsByTagName("farmhand"));
   const players: Player[] = [];
-  if (hostEl) players.push(readPlayer(hostEl, true, t("stats")));
+  players.push(readPlayer(hostEl, true, t("stats")));
   for (const h of hands) {
     if (nil(h) || text(h, "isCustomized") === "false" || !text(h, "name")) continue;
     players.push(readPlayer(h, false, null));
@@ -337,6 +344,8 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
       const owner = list.parentNode as Element | null;
       if (!owner || owner.nodeType !== 1) continue;
       if (xsiType(owner) !== "Chest" && owner.nodeName !== "Chest" && owner.nodeName !== "fridge") continue;
+      // La caja de envíos chica es un Chest, pero lo de adentro se vende a la noche: no es almacenamiento.
+      if (text(owner, "specialChestType") === "MiniShippingBin") continue;
       for (const it of kids(list)) addItem(items, it);
     }
     const blds = locations.getElementsByTagName("Building");
@@ -350,6 +359,8 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
   }
   // Cofres Junimo: un inventario global por id.
   for (const [, v] of dict(t("globalInventories"))) for (const it of kids(v)) addItem(items, it);
+  // Antes de la 1.6 los cofres Junimo eran una lista suelta en la raíz (`SaveGame.junimoChest`, hoy obsoleta).
+  for (const it of kids(t("junimoChest"))) addItem(items, it);
 
   // Paquetes.
   const defs: BundleDef[] = [];
@@ -364,8 +375,10 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
   }
 
   const mailAll = new Set(players.flatMap((p) => p.mail));
+  // El granjero puede traer "-1", el valor por defecto de `Farmer.gameVersion`: no dice nada.
+  const hostVersion = text(hostEl, "gameVersion");
   const version =
-    tt("gameVersion") || text(hostEl, "gameVersion") ||
+    tt("gameVersion") || (hostVersion && hostVersion !== "-1" ? hostVersion : "") ||
     (tt("hasApplied1_4_UpdateChanges") === "true" ? "1.4" : tt("hasApplied1_3_UpdateChanges") === "true" ? "1.3" : "<1.3");
 
   return {

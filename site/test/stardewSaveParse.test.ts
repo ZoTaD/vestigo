@@ -139,6 +139,47 @@ describe("parseSave: casos especiales", () => {
   });
 });
 
+describe("parseSave: arreglos de la revisión", () => {
+  it("una <SaveGame> sin <player> da not-save", () => {
+    const sin = mini.replace(/<player>[\s\S]*<\/player>/, "");
+    expect(parseSave(sin, parser)).toEqual<SaveError>({ error: "not-save" });
+  });
+
+  it("<parsererror> como raíz (Firefox) o al principio de la raíz (Chrome) da not-xml; uno hondo no", () => {
+    expect(parseSave(`<parsererror>mal</parsererror>`, parser)).toEqual<SaveError>({ error: "not-xml" });
+    const chrome = mini.replace("<player>", "<parsererror>mal</parsererror><player>");
+    expect(parseSave(chrome, parser)).toEqual<SaveError>({ error: "not-xml" });
+    const hondo = mini.replace("<name>Farm</name>", "<name>Farm</name><parsererror>no es del lector</parsererror>");
+    expect("error" in parseSave(hondo, parser)).toBe(false);
+  });
+
+  it("la versión -1 del granjero (el valor por defecto) se ignora", () => {
+    const sin = mini
+      .replace(/<gameVersion>1\.6\.15<\/gameVersion>\s*<\/SaveGame>/, "</SaveGame>")
+      .replace("<gameVersion>1.6.15</gameVersion>", "<gameVersion>-1</gameVersion>");
+    expect(leer(sin).version).toBe("<1.3");
+  });
+
+  it("la caja de envíos chica no es un cofre: no se suma", () => {
+    const caja = mini.replace(
+      "<name>Farm</name>",
+      `<name>Farm</name><objects><item><key><Vector2><X>1</X><Y>1</Y></Vector2></key><value>
+        <Object xsi:type="Chest"><name>Mini-Shipping Bin</name><itemId>248</itemId><bigCraftable>true</bigCraftable>
+        <items><Item xsi:type="Object"><itemId>388</itemId><stack>50</stack></Item></items>
+        <specialChestType>MiniShippingBin</specialChestType></Object></value></item></objects>`,
+    );
+    expect(leer(caja).items["388"]).toBe(105);
+  });
+
+  it("antes de la 1.6, suma el <junimoChest> de la raíz", () => {
+    const vieja = mini.replace(
+      "<weatherForTomorrow>",
+      `<junimoChest><Item xsi:type="Object"><parentSheetIndex>388</parentSheetIndex><Stack>8</Stack></Item></junimoChest><weatherForTomorrow>`,
+    );
+    expect(leer(vieja).items["388"]).toBe(113);
+  });
+});
+
 describe("parseSave: una partida real", () => {
   it.skipIf(!process.env.SDV_SAVE)("la lee sin error y en menos de 2 s (SDV_SAVE)", () => {
     const xml = readFileSync(process.env.SDV_SAVE!, "utf8");
