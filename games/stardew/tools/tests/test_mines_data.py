@@ -160,6 +160,27 @@ class TestMinesData(unittest.TestCase):
             self.assertTrue((sdv.RAW / f"textures/Characters/Monsters/{src['sheet']}.png").exists(), k)
             self.assertEqual(m["sprite"], [src["w"], src["h"]])
 
+    def test_icono_de_monstruo_recortado_a_lo_opaco(self):
+        # La Baba verde: el cuadro es de 16x24, pero lo opaco es 14x11; el buscador dibuja el ícono recortado.
+        self.assertEqual(self.mons["Green Slime"]["icon"], [14, 11])
+        for k, m in self.mons.items():
+            w, h = m["icon"]
+            self.assertTrue(0 < w <= m["sprite"][0] and 0 < h <= m["sprite"][1], k)
+            im = mines_data.monster_image(k)
+            self.assertEqual(list(im.getbbox()[2:]), [im.getbbox()[0] + w, im.getbbox()[1] + h], k)
+
+    def test_icono_de_monstruo_en_el_sitio(self):
+        from PIL import Image
+        carpeta = Path(__file__).resolve().parents[4] / "site/public/stardew/combat"
+        for m in self.d["monsters"]:
+            with Image.open(carpeta / f"i-{m['slug']}.png") as im:
+                self.assertEqual(list(im.size), m["icon"], m["key"])
+
+    def test_la_calavera_embrujada_tambien_en_la_invasion_de_calico(self):
+        drop = next(f for f in self.armas["(W)2"]["sources"] if f["k"] == "drop")
+        self.assertEqual(drop["monster"], "hauntedSkull")
+        self.assertEqual(drop["festival"], ["Desert Festival", "Festival del Desierto"])
+
     def test_refs_con_la_forma_de_ref(self):
         for i, r in self.d["refs"].items():
             self.assertEqual(len(r), 6, i)

@@ -105,6 +105,14 @@ describe("las armas", () => {
     expect(fila(en, "abbys-planchette")).toContain("Desert Festival");
     expect(fila(en, "insect-head")).toContain("Cave Insects");
     expect(fila(en, "holy-blade")).toContain("floors 80 to 119");
+    // La espada oscura: la calavera embrujada de la cantera y la de la invasión de Calico del Festival del Desierto.
+    expect(fila(en, "dark-sword")).toContain("Desert Festival");
+    expect(fila(es, "dark-sword")).toContain("Festival del Desierto");
+    // En español, los nombres de objeto en medio de la oración van en minúscula.
+    expect(fila(es, "galaxy-sword")).toContain("con una esquirla prismática");
+    expect(fila(es, "infinity-blade")).toContain("alma galáctica × 3");
+    expect(fila(es, "abbys-planchette")).toContain("huevo calicó × 70");
+    expect(fila(es, "iridium-scythe")).toContain("maestría de granja");
     // Ninguna sin fuente, salvo la tirachinas galaxia.
     expect(en.match(/class="is-other"/g)).toHaveLength(1);
     expect(fila(en, "galaxy-slingshot")).toContain("Another way");

@@ -36,6 +36,8 @@ const HAS_GIFT = 1, HAS_BUNDLE = 2, HAS_MACHINE = 4, HAS_RECIPE = 8, HAS_SOURCES
 
 /** Cortada a 160 caracteres en una palabra entera, como en Terraria. */
 const clip = (s: string): string => (s.length <= 160 ? s : `${s.slice(0, 157).replace(/[\s,;:]+\S*$/, "")}…`);
+/** En español, un nombre de objeto en medio de la oración va en minúscula ("con una esquirla prismática"). */
+const minus = (s: string): string => s.toLocaleLowerCase("es");
 const join = (parts: string[], and: string): string => (parts.length > 1 ? `${parts.slice(0, -1).join(", ")} ${and} ${parts[parts.length - 1]}` : parts[0] ?? "");
 
 /** Lo que se busca de un objeto, en el orden en que la ficha lo muestra. */
@@ -338,7 +340,8 @@ export interface MinesCopy {
       volcano: (rare: boolean) => string;
       forge: (weapon: string, item: string, n: number) => string;
       desert: (place: string, item: string) => string;
-      hauntedSkull: string;
+      /** La calavera embrujada: la mina de la cantera y la invasión de estatuas de Calico del festival. */
+      hauntedSkull: (festival: string) => string;
       fishing: string;
       slayer: (goal: string) => string;
       festival: (festival: string, npc: string, price: number, currency: string) => string;
@@ -839,7 +842,7 @@ const EN: StardewCopy = {
         volcano: (rare) => (rare ? "Rare Volcano Dungeon chest" : "Volcano Dungeon chest"),
         forge: (weapon, item, n) => `Forge: ${weapon} + ${item} × ${n}`,
         desert: (place, item) => `${place}: hold a ${item} on the pedestal`,
-        hauntedSkull: "Dropped by the Haunted Skull in the Quarry Mine",
+        hauntedSkull: (festival) => `Dropped by the Haunted Skull: in the Quarry Mine, and in the Skull Cavern during the ${festival} Calico statue invasion`,
         fishing: "Fishing treasure chests (only once)",
         slayer: (goal) => `Adventurer's Guild goal: ${goal}`,
         festival: (festival, npc, price, currency) => `${festival}, ${npc}'s stall: ${currency} × ${price}`,
@@ -1318,15 +1321,15 @@ const ES: StardewCopy = {
         specialDangerous: "Barriles y monstruos que brillan en el modo peligroso",
         remixed: (n) => `Cofre remezclado del piso ${n}`,
         volcano: (rare) => (rare ? "Cofre raro de la mazmorra del volcán" : "Cofre de la mazmorra del volcán"),
-        forge: (weapon, item, n) => `Forja: ${weapon} + ${item} × ${n}`,
-        desert: (place, item) => `${place}: con una ${item} en la mano, sobre el pedestal`,
-        hauntedSkull: "La suelta la calavera embrujada de la mina de la cantera",
+        forge: (weapon, item, n) => `Forja: ${weapon} + ${minus(item)} × ${n}`,
+        desert: (place, item) => `${place}: con una ${minus(item)} en la mano, sobre el pedestal`,
+        hauntedSkull: (festival) => `La suelta la calavera embrujada: en la mina de la cantera y, en la Caverna Calavera, durante la invasión de estatuas de Calico del ${festival}`,
         fishing: "Cofres del tesoro de la pesca (una sola vez)",
         slayer: (goal) => `Meta del Gremio de Aventureros: ${goal}`,
-        festival: (festival, npc, price, currency) => `${festival}, puesto de ${npc}: ${currency} × ${price}`,
+        festival: (festival, npc, price, currency) => `${festival}, puesto de ${npc}: ${minus(currency)} × ${price}`,
         start: "Se empieza el juego con ella",
         quarry: "La estatua de la mina de la cantera",
-        mastery: (name) => `Premio de la ${name}`,
+        mastery: (name) => `Premio de la ${minus(name)}`,
       },
       other: "Otra forma (misión, evento o botín especial)",
       ammo: "Munición",

@@ -8,6 +8,7 @@ como valores a las tablas de abajo, y cada una nombra el método de origen.
 """
 import json
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -197,6 +198,44 @@ def monster_sprite(key: str) -> dict:
     return {"sheet": hoja, "x": 0, "y": 8 if key == "Dust Spirit" else 0, "w": w, "h": h, "tint": _TINTES.get(key), "frame": cuadro}
 
 
+@lru_cache(maxsize=None)
+def _hoja_monstruo(nombre: str):
+    from PIL import Image
+
+    return Image.open(sdv.RAW / f"textures/Characters/Monsters/{nombre}.png").convert("RGBA")
+
+
+def _mas_lleno(hoja, x: int, y: int, w: int, h: int):
+    """El cuadro de la primera fila con más píxeles opacos: el primero suele ser un cuadro de descanso (alas
+    plegadas, el agujero del Duggy) y el sitio muestra al monstruo en pie."""
+    cuadros = [hoja.crop((x + i * w, y, x + (i + 1) * w, y + h)) for i in range(max(1, min(4, hoja.width // w)))]
+    return max(cuadros, key=lambda c: sum(c.getchannel("A").histogram()[1:]))
+
+
+def monster_image(key: str):
+    """El sprite de un monstruo como imagen RGBA (el cuadro entero), como lo escribe `sprites.py` en `m-<slug>.png`."""
+    from PIL import Image, ImageChops
+
+    o = monster_sprite(key)
+    hoja = _hoja_monstruo(o["sheet"])
+    if o.get("frame") is not None:
+        x = o["x"] + o["frame"] * o["w"]
+        im = hoja.crop((x, o["y"], x + o["w"], o["y"] + o["h"]))
+    else:
+        im = _mas_lleno(hoja, o["x"], o["y"], o["w"], o["h"])
+    if o["tint"]:  # la baba helada y la de lodo son la baba verde con otro color (multiplicar)
+        r, g, b, a = im.split()
+        tinte = Image.new("RGB", im.size, tuple(o["tint"]))
+        im = Image.merge("RGBA", (*ImageChops.multiply(Image.merge("RGB", (r, g, b)), tinte).split(), a))
+    return im
+
+
+def monster_icon(key: str):
+    """El sprite recortado a lo opaco (`i-<slug>.png`): el ícono del buscador, que se dibuja a escala entera."""
+    im = monster_image(key)
+    return im.crop(im.getbbox())
+
+
 def _texto(archivo: str, clave: str) -> list[str]:
     en = sdv.raw(archivo)[clave]
     return [en, sdv.raw(archivo + ".es-ES").get(clave) or en]
@@ -269,8 +308,11 @@ def _fuentes_armas() -> dict[str, list[dict]]:
         sumar(n, {"k": "forge", "from": f"(W){base}", "fromName": _arma(base), "item": _objeto(_ALMA_GALACTICA), "count": 3})
     sumar("4", {"k": "desert", "place": _texto("Strings/StringsFromCSFiles", "MapPage.cs.11062"),
                 "item": _objeto(_FRAGMENTO_PRISMATICO)})
+    # La calavera embrujada sale en la mina de la cantera y también en la Caverna Calavera durante la invasión de
+    # estatuas de Calico del Festival del Desierto (`MineShaft.populateLevel`: `Bat(position, 77377)` con
+    # `getMineArea() == 121` y el festival en curso).
     for n in _DE_LA_CALAVERA_EMBRUJADA:
-        sumar(n, {"k": "drop", "monster": "hauntedSkull"})
+        sumar(n, {"k": "drop", "monster": "hauntedSkull", "festival": _texto("Strings/1_6_Strings", "DesertFestival")})
     for n in _DEL_TESORO_DE_PESCA:
         sumar(n, {"k": "fishing"})
     for n in _DEL_PRINCIPIO:
@@ -418,6 +460,7 @@ def monsters() -> list[dict]:
             "dangerous": (sdv.RAW / f"textures/Characters/Monsters/{k}_dangerous.png").exists(),
             "slayer": cazador.get(k),
             "sprite": [sp["w"], sp["h"]],
+            "icon": list(monster_icon(k).size),
         })
     return out
 

@@ -33,7 +33,7 @@ export type WeaponSource =
   | { k: "volcano"; rare: boolean }
   | { k: "forge"; from: string; fromName: Pair; item: Pair; count: number }
   | { k: "desert"; place: Pair; item: Pair }
-  | { k: "drop"; monster: "hauntedSkull" }
+  | { k: "drop"; monster: "hauntedSkull"; festival: Pair }
   | { k: "fishing" }
   | { k: "slayer"; goal: string; name: Pair }
   | { k: "festival"; name: Pair; npc: Pair; price: number; currency: Pair }
@@ -120,6 +120,8 @@ export interface Monster {
   slayer: string | null;
   /** Ancho y alto del sprite, en px del juego. */
   sprite: [w: number, h: number];
+  /** El sprite recortado a lo opaco (`i-<slug>.png`): el ícono del buscador de la barra. */
+  icon: [w: number, h: number];
 }
 
 export interface Zone {

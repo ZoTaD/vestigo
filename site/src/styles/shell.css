@@ -252,8 +252,11 @@
 .top-hit:hover, .top-hit.is-on { background: rgba(var(--accent-rgb), 0.14); }
 .top-hit.is-empty { display: block; color: var(--text-dim); }
 .top-hit-ic { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 6px; background: rgba(0, 0, 0, 0.35); overflow: hidden; }
-.top-hit-ic img { width: 26px; height: 26px; object-fit: contain; }
+.top-hit-ic img:not(.is-pix) { width: 26px; height: 26px; object-fit: contain; }
 .top-hit-ic img.is-art { width: 100%; height: 100%; object-fit: cover; }
+/* Pixel art recortado (los monstruos de Stardew): el tamaño de sus atributos `width`/`height` (`hitIconSize`, a escala
+   entera), sin suavizar. */
+.top-hit-ic img.is-pix { image-rendering: pixelated; object-fit: fill; }
 .top-hit-n { display: grid; line-height: 1.2; }
 .top-hit-n small, .top-hit-tab { color: var(--text-dim); font-size: 0.72rem; }
 /* En Valheim, el interior oscuro de los paneles del juego. */

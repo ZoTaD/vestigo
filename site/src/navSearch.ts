@@ -21,8 +21,16 @@ export interface NavHit {
   img?: string | null;
   /** La imagen es una foto y no un ícono: llena el recuadro. */
   art?: boolean;
+  /** La imagen es pixel art recortado de este tamaño: se dibuja a escala entera (`hitIconSize`), sin suavizar. */
+  pix?: [w: number, h: number];
   /** Lo que cambia en la ruta para abrir la ficha. */
   to: Partial<Route>;
+}
+
+/** El tamaño de un ícono pixel en el recuadro de 32 px: el mayor múltiplo entero que no pasa de 30 px (y al menos 1). */
+export function hitIconSize([w, h]: [number, number]): [number, number] {
+  const k = Math.max(1, Math.floor(30 / Math.max(w, h)));
+  return [w * k, h * k];
 }
 
 /** Lo que devuelve un juego ya cargado: busca al instante, sin red. */
@@ -181,7 +189,9 @@ const LOADERS: Record<NavSearchGame, () => Promise<NavSearcher>> = {
         en: m.name[0],
         es: m.name[1] || m.name[0],
         tab: tabs("mines"),
-        img: `/stardew/combat/m-${m.slug}.png`,
+        // El sprite recortado a lo opaco (`i-<slug>.png`): el cuadro entero dejaba a la baba chiquita en el recuadro.
+        img: `/stardew/combat/i-${m.slug}.png`,
+        pix: m.icon,
         to: { view: "stardew", sdSection: "mines", detail: m.slug } as Partial<Route>,
       })),
     );

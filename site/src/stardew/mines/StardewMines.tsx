@@ -73,7 +73,7 @@ function sourceText(f: WeaponSource, lang: Lang, s: MinesCopy["weapons"]["source
     case "desert":
       return s.desert(say(f.place, lang), say(f.item, lang));
     case "drop":
-      return s.hauntedSkull;
+      return s.hauntedSkull(say(f.festival, lang));
     case "fishing":
       return s.fishing;
     case "slayer":
