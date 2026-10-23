@@ -25,7 +25,8 @@ const TAB_ICON: Record<StardewTab, { id: string; w: number; h: number }> = {
   fishing: { id: "128", w: 16, h: 16 },
   recipes: { id: "221", w: 16, h: 16 },
   villagers: { id: "458", w: 16, h: 16 },
-  calendar: { id: "220", w: 16, h: 16 },
+  // La caja de regalo: cumpleaños y festivales. La Torta de chocolate (220) se leía como otra cosa a ese tamaño.
+  calendar: { id: "MysteryBox", w: 16, h: 16 },
   bundles: { id: "(BC)55", w: 16, h: 32 },
 };
 
