@@ -132,3 +132,48 @@ Las 1.852 páginas nuevas: (888 objetos + 34 aldeanos + portada + 3 pestañas) �
 | `/es/stardew-valley/centro-comunitario` | 179 | 151 | 1.491 |
 
 Todas dentro del presupuesto (≤ 250 pedidos, ≤ 200 imágenes, ≤ 3.000 nodos, sin errores).
+
+## Mediciones del build (etapa 2, 2026-10-23)
+
+Igual que en la etapa 1 (`npm run build` entero, pico de RAM sumando los procesos `node` y `esbuild` nuevos cada medio
+segundo desde PowerShell), pero sin `NODE_OPTIONS`: el heap por defecto alcanzó. El "antes" es la base de la rama
+(93618582, `main` con la etapa 1), compilada en un worktree temporal; cada lado se corrió dos veces, uno detrás del otro.
+
+| | 93618582 (etapa 1) | `feat/stardew-etapa-2` |
+|---|---|---|
+| Páginas prerenderizadas | 38.934 | 38.942 (+8) |
+| Prerender | 66,5 s / 61,2 s | 54,4 s / 55,4 s |
+| `vite build` | 1 min 36 s / 1 min 36 s | 1 min 30 s / 1 min 30 s |
+| `npm run build` entero | 129,3 s / 125,9 s | 119,9 s / 120,5 s |
+| Pico de RAM (suma de procesos) | 3,43 GB / 2,69 GB | 2,76 GB / 2,76 GB |
+| Pico de un solo proceso | 3,32 GB / 2,57 GB | 2,65 GB / 2,65 GB |
+| `check-links` | 0 sin destino | 0 sin destino |
+
+Las 8 páginas nuevas son las cuatro pestañas en los dos idiomas: no tienen fichas propias. El build no cambia de
+escala; las diferencias de tiempo y el 3,43 GB de la primera corrida del "antes" (con la caché fría) son ruido de la
+máquina. Lejos del tope de 6 GB.
+
+`npm run perf -- --only stardew --budget` contra `vite preview` (Chromium headless shell), en frío:
+
+| Página | Pedidos | Imágenes | Nodos |
+|---|---|---|---|
+| `/en/stardew-valley` | 52 | 29 | 287 |
+| `/en/stardew-valley/items` | 94 | 65 | 387 |
+| `/en/stardew-valley/items/melon` | 59 | 30 | 313 |
+| `/es/stardew-valley/objetos/pastel-rosa` | 73 | 43 | 321 |
+| `/en/stardew-valley/villagers` | 67 | 39 | 360 |
+| `/es/stardew-valley/aldeanos/abigail` | 129 | 99 | 227 |
+| `/en/stardew-valley/bundles` | 181 | 153 | 1.495 |
+| `/es/stardew-valley/centro-comunitario` | 181 | 153 | 1.496 |
+| `/en/stardew-valley/crops` | 65 | 38 | 864 |
+| `/es/stardew-valley/cultivos` | 65 | 38 | 865 |
+| `/en/stardew-valley/fishing` | 108 | 79 | 1.600 |
+| `/es/stardew-valley/pesca` | 108 | 79 | 1.601 |
+| `/en/stardew-valley/recipes` | 91 | 63 | 647 |
+| `/es/stardew-valley/recetas` | 100 | 72 | 642 |
+| `/en/stardew-valley/recipes?view=machines` | 133 | 105 | 2.517 |
+| `/en/stardew-valley/calendar` | 42 | 12 | 236 |
+| `/es/stardew-valley/calendario` | 42 | 12 | 237 |
+
+Todas dentro del presupuesto, sin errores. La más cerca del tope es la vista Máquinas de Recetas (2.517 de 3.000
+nodos): si se le suman máquinas o filas visibles por máquina, volver a medirla.

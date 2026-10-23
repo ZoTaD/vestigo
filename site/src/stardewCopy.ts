@@ -340,8 +340,8 @@ const EN: StardewCopy = {
   tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar" },
   seo: {
     home: {
-      title: "Stardew Valley Guide: Item Prices, Villager Gifts and Bundles | Vestigo",
-      description: "Every Stardew Valley 1.6 item with its price by quality and where to get it, what each villager loves and hates, and a Community Center bundle checklist.",
+      title: "Stardew Valley Guide: Crop Calculator, Fish, Gifts and Bundles | Vestigo",
+      description: "Stardew Valley 1.6: crop profit calculator, what fish to catch now, recipes, birthdays and festivals, item prices, villager gifts and a bundle checklist.",
     },
     items: {
       title: "Stardew Valley Items List: Prices, Gifts and Uses | Vestigo",
@@ -369,7 +369,7 @@ const EN: StardewCopy = {
     },
     calendar: {
       title: "Stardew Valley Calendar: Birthdays and Festivals | Vestigo",
-      description: "The Stardew Valley 1.6 calendar by season: every villager birthday with the gifts they love, and every festival, Night Market, Desert Festival and SquidFest included.",
+      description: "The Stardew Valley 1.6 calendar by season: every villager birthday with the gifts they love, and every festival, from the Night Market to SquidFest.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -651,8 +651,8 @@ const ES: StardewCopy = {
   tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario" },
   seo: {
     home: {
-      title: "Guía de Stardew Valley: precios, regalos de aldeanos y paquetes | Vestigo",
-      description: "Cada objeto de Stardew Valley 1.6 con su precio y dónde se consigue, lo que a cada aldeano le encanta y odia, y los paquetes del Centro Comunitario.",
+      title: "Guía de Stardew Valley: cultivos, peces, regalos y paquetes | Vestigo",
+      description: "Stardew Valley 1.6: calculadora de cultivos, qué pescar ahora, recetas, cumpleaños y festivales, precios, regalos de aldeanos y paquetes para tildar.",
     },
     items: {
       title: "Objetos de Stardew Valley: precios, regalos y usos | Vestigo",
@@ -680,7 +680,7 @@ const ES: StardewCopy = {
     },
     calendar: {
       title: "Calendario de Stardew Valley: cumpleaños y festivales | Vestigo",
-      description: "El calendario de Stardew Valley 1.6 por estación: el cumpleaños de cada aldeano con los regalos que le encantan y cada festival, con el Mercado nocturno y la Fiesta del Calamar.",
+      description: "Calendario de Stardew Valley 1.6: el cumpleaños de cada aldeano con los regalos que le encantan y cada festival, del Mercado nocturno a la Fiesta del Calamar.",
     },
   },
   itemSeo: (name, has = 0) => {

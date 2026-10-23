@@ -113,6 +113,8 @@ export const PAGES = [
   "/es/stardew-valley/pesca",
   "/en/stardew-valley/recipes",
   "/es/stardew-valley/recetas",
+  // La vista más pesada de Recetas: todas las máquinas con sus tablas (en dev daba ~2.525 nodos).
+  "/en/stardew-valley/recipes?view=machines",
   "/en/stardew-valley/calendar",
   "/es/stardew-valley/calendario",
 ];
