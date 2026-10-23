@@ -3,20 +3,24 @@
  * buscador de la barra) se usa `STARDEW_COPY[lang]`; adentro, `useStardewCopy()`.
  *
  * Acá van sólo los textos de la interfaz del sitio. Los nombres de las cosas del juego (objetos, aldeanos, festivales,
- * paquetes) salen de sus textos, en los datos. Las excepciones son las estaciones y las profesiones, que la interfaz
- * nombra sin dato al lado: van copiadas tal cual de los textos del juego, con la clave de donde salen.
+ * paquetes) salen de sus textos, en los datos. Las excepciones son las estaciones, las profesiones y los fertilizantes,
+ * que la interfaz nombra sin dato al lado: van copiadas tal cual de los textos del juego, con la clave de donde salen.
  */
 import { useLang } from "./i18n";
 import type { StardewSection, StardewTab } from "./route";
+import type { Fert } from "./stardew/crops/calc";
+import type { SortKey } from "./stardew/crops/state";
+import type { Kind } from "./stardew/fishing/state";
+import type { View } from "./stardew/recipes/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "villagers", "bundles"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "recipes", "villagers", "calendar", "bundles"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
 /** Las profesiones que cambian el precio de venta. */
-export type Profession = "tiller" | "artisan" | "rancher" | "fisher" | "angler" | "blacksmith" | "gemologist" | "tapper";
+export type Profession = "tiller" | "agriculturist" | "artisan" | "rancher" | "fisher" | "angler" | "blacksmith" | "gemologist" | "tapper";
 /** Los gustos de regalo, del que más suma al que más resta. */
 export type Taste = "love" | "like" | "neutral" | "dislike" | "hate";
 export const TASTES: Taste[] = ["love", "like", "neutral", "dislike", "hate"];
@@ -154,6 +158,140 @@ export interface BundlesCopy {
   gold: string;
 }
 
+/** Los textos de la pestaña Cultivos: la calculadora, la tabla y los frutales. */
+export interface CropsCopy {
+  h1: string;
+  lede: string;
+  season: string;
+  day: string;
+  level: string;
+  fert: string;
+  /** Los nombres de los fertilizantes: `DisplayName` de `Data/Objects` (368, 369, 919, 465, 466, 918). */
+  ferts: Record<Fert, string>;
+  professions: string;
+  sell: string;
+  sellBest: string;
+  sellRaw: string;
+  seeds: string;
+  seedsBuy: string;
+  seedsOwn: string;
+  greenhouse: string;
+  /** Qué cuenta la tabla, con el invernadero o sin él. */
+  hint: (greenhouse: boolean) => string;
+  /** Los títulos de las columnas. */
+  cols: Record<SortKey, string>;
+  sortBy: string;
+  /** El que rebrota: "y cada 3". */
+  regrow: (n: number) => string;
+  /** No da ni una cosecha antes de que termine la estación. */
+  late: string;
+  raw: string;
+  /** Con semillas compradas, los cultivos cuya semilla no se vende en ninguna tienda van aparte. */
+  noShop: { h2: string; hint: string };
+  /** Las semillas silvestres, que dan una recolección al azar: fuera del ranking. */
+  wild: { h2: string; hint: string };
+  /** Notas al pie: la Fresa (bajo la tabla de cultivos) y los frutales de la isla (bajo la de frutales). */
+  notes: { strawberry: string; island: string };
+  count: (n: string) => string;
+  none: string;
+  trees: {
+    h2: string;
+    hint: string;
+    cols: { tree: string; season: string; days: string; sapling: string; perSeason: string; sell: string; payback: string };
+    days: (n: number) => string;
+    payback: (n: number) => string;
+    noSapling: string;
+  };
+}
+
+/** Los textos de la pestaña Pesca: "¿qué puedo pescar ahora?" y la tabla de todos los peces. */
+export interface FishingCopy {
+  h1: string;
+  lede: string;
+  now: { h2: string; place: string; anyPlace: string; island: string; water: string; traps: string; season: string; weather: string; time: string; anyTime: string };
+  /** Sol y lluvia, como botones; "both" es lo que dice la tabla del pez que sale con cualquiera. */
+  weathers: { sunny: string; rainy: string; both: string };
+  count: (n: string) => string;
+  none: string;
+  /** Lo que pide el pez: dificultad (0 a 100) y nivel mínimo. */
+  difficulty: (n: number) => string;
+  level: (n: number) => string;
+  anyHour: string;
+  allYear: string;
+  /** La marca de las estaciones de un pez que también vive en la isla, y la de uno que vive sólo ahí. */
+  islandAllYear: string;
+  onlyIsland: string;
+  /** Las etiquetas de texto: legendario y trampa para cangrejos. */
+  tags: { legendary: string; crabPot: string; qi: string };
+  all: {
+    h2: string;
+    hint: string;
+    kind: string;
+    kinds: Record<Kind, string>;
+    season: string;
+    anySeason: string;
+    cols: { fish: string; place: string; seasons: string; weather: string; hours: string; difficulty: string; price: string };
+    count: (n: string) => string;
+  };
+}
+
+/** Los textos de la pestaña Recetas y máquinas: las tres vistas, el buscador, cómo se aprende y las tablas de las máquinas. */
+export interface RecipesCopy {
+  h1: string;
+  lede: string;
+  view: string;
+  views: Record<View, string>;
+  search: string;
+  searchPlaceholder: string;
+  count: (n: string) => string;
+  machinesCount: (n: string) => string;
+  none: string;
+  /** Cómo se aprende, con los nombres del juego (habilidad, aldeano, programa de TV) al lado. */
+  unlock: {
+    label: string;
+    default: string;
+    skill: (skill: string, level: number) => string;
+    friend: (npc: string, hearts: number) => string;
+    tv: (show: string) => string;
+    other: string;
+  };
+  /** Cuántos salen de una receta, en el casillero ("× 10"). */
+  makes: (n: number) => string;
+  machine: {
+    made: string;
+    notMade: string;
+    cols: { input: string; output: string; price: string; time: string };
+    /** La colmena no recibe nada: hace miel con la flor que tenga cerca. */
+    nearby: string;
+    instant: string;
+    more: (n: string) => string;
+    less: string;
+  };
+}
+
+/** Los textos de la pestaña Calendario: el tablón, los días de la semana y el detalle de un día. */
+export interface CalendarCopy {
+  h1: string;
+  lede: string;
+  season: string;
+  /** Los días de la semana, de lunes a domingo: el día 1 de cada estación es lunes. */
+  weekdays: [string, string, string, string, string, string, string];
+  hint: string;
+  /** "13 de otoño". */
+  dayTitle: (day: number, season: string) => string;
+  /** "15–17 de invierno", o el día solo. */
+  range: (range: string, season: string) => string;
+  birthday: (name: string) => string;
+  profile: string;
+  festival: string;
+  passive: string;
+  /** Qué pasa ese día: el festival ocupa el día, o se va y se viene. */
+  festivalNote: string;
+  passiveNote: string;
+  empty: string;
+  close: string;
+}
+
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
   /** El `<head>` de la portada y de cada pestaña: lo que se busca primero. */
@@ -187,6 +325,10 @@ export interface StardewCopy {
   items: ItemsCopy;
   villagers: VillagersCopy;
   bundles: BundlesCopy;
+  crops: CropsCopy;
+  fishing: FishingCopy;
+  recipes: RecipesCopy;
+  calendar: CalendarCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
   tastes: Record<Taste, string>;
@@ -195,11 +337,11 @@ export interface StardewCopy {
 }
 
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar" },
   seo: {
     home: {
-      title: "Stardew Valley Guide: Item Prices, Villager Gifts and Bundles | Vestigo",
-      description: "Every Stardew Valley 1.6 item with its price by quality and where to get it, what each villager loves and hates, and a Community Center bundle checklist.",
+      title: "Stardew Valley Guide: Crop Calculator, Fish, Gifts and Bundles | Vestigo",
+      description: "Stardew Valley 1.6: crop profit calculator, what fish to catch now, recipes, birthdays and festivals, item prices, villager gifts and a bundle checklist.",
     },
     items: {
       title: "Stardew Valley Items List: Prices, Gifts and Uses | Vestigo",
@@ -212,6 +354,22 @@ const EN: StardewCopy = {
     bundles: {
       title: "Stardew Valley Community Center Bundles Checklist | Vestigo",
       description: "Every Stardew Valley Community Center bundle, room by room: what goes in each one, the reward, and what you can still get this season. Tick them off as you go.",
+    },
+    crops: {
+      title: "Stardew Valley Crop Profit Calculator: Best Crops by Season | Vestigo",
+      description: "Which Stardew Valley 1.6 crop makes the most gold per day this season: pick the planting day, farming level, fertilizer and professions. Fruit trees too.",
+    },
+    fishing: {
+      title: "Stardew Valley Fish Guide: What Fish Can I Catch Now? | Vestigo",
+      description: "What fish you can catch in Stardew Valley 1.6 right now: pick the place, season, weather and time. Every fish with its location, hours, difficulty and price.",
+    },
+    recipes: {
+      title: "Stardew Valley Recipes: Cooking, Crafting and Machines | Vestigo",
+      description: "Every Stardew Valley 1.6 cooking and crafting recipe with its ingredients and how to learn it, and what each machine makes, how long it takes and its price.",
+    },
+    calendar: {
+      title: "Stardew Valley Calendar: Birthdays and Festivals | Vestigo",
+      description: "The Stardew Valley 1.6 calendar by season: every villager birthday with the gifts they love, and every festival, from the Night Market to SquidFest.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -248,6 +406,10 @@ const EN: StardewCopy = {
       items: "Price by quality, gifts, bundles, machines and where to find each one.",
       villagers: "Birthdays, loved gifts and the whole list of what each villager likes.",
       bundles: "Every room and bundle with what goes in it. Tick them off as you go.",
+      crops: "Gold per day of every crop with your planting day, level, fertilizer and professions.",
+      fishing: "What bites right now by place, season, weather and time, and every fish with its hours.",
+      recipes: "Every cooking and crafting recipe with how to learn it, and what each machine makes.",
+      calendar: "Every birthday and festival of the year, with the gifts each villager loves.",
     },
     featured: "Most looked up",
     featuredHint: "Open an item to see its prices, who loves it and what it turns into.",
@@ -338,10 +500,141 @@ const EN: StardewCopy = {
     tick: (name, qty, quality) => `${name} × ${qty}${quality ? `, ${quality} quality` : ""}`,
     gold: "Gold",
   },
+  crops: {
+    h1: "Stardew Valley crop profits",
+    lede: "Which crop makes the most gold per day, from the day you plant it to the end of its season.",
+    season: "Season",
+    day: "Planting day",
+    level: "Farming level",
+    fert: "Fertilizer",
+    ferts: { none: "None", basic: "Basic Fertilizer", quality: "Quality Fertilizer", deluxe: "Deluxe Fertilizer", speed: "Speed-Gro", deluxeSpeed: "Deluxe Speed-Gro", hyper: "Hyper Speed-Gro" },
+    professions: "Professions",
+    sell: "Sell",
+    sellBest: "The best way",
+    sellRaw: "Raw",
+    seeds: "Seeds",
+    seedsBuy: "Bought",
+    seedsOwn: "Your own",
+    greenhouse: "Greenhouse",
+    hint: (gh) =>
+      gh
+        ? "In the greenhouse everything grows: one year from the planting day. Rice and Taro planted next to water."
+        : "Until the last day of the season (or of the next one, if the crop keeps growing). Rice and Taro planted next to water.",
+    cols: { name: "Crop", harvests: "Harvests", days: "Days", gross: "Gross", seeds: "Seeds", net: "Net", perDay: "Gold / day", sell: "Sell as" },
+    sortBy: "Sort by",
+    regrow: (n) => `then every ${n}`,
+    late: "Too late",
+    raw: "Raw",
+    noShop: {
+      h2: "Seeds not sold in shops",
+      hint: "No shop sells these seeds: they're crafted, or come from the Traveling Cart, monsters, Mr. Qi or your own harvest. They're counted as your own seeds, free, so they don't compete with the ones you buy.",
+    },
+    wild: {
+      h2: "Wild seeds",
+      hint: "They give a random forage item of the season, so they stay out of the ranking. The numbers use the item on each row.",
+    },
+    notes: {
+      strawberry: "Strawberry seeds are sold at the Egg Festival (Spring 13): planting them on day 1 works from the second year.",
+      island: "Banana and Mango fruit all year round on Ginger Island.",
+    },
+    count: (n) => `${n} crops`,
+    none: "Nothing grows this season outside the greenhouse.",
+    trees: {
+      h2: "Fruit trees",
+      hint: "A grown tree gives one fruit a day in its season, normal quality the first year. The sapling isn't counted.",
+      cols: { tree: "Tree", season: "Season", days: "Fruits in", sapling: "Sapling", perSeason: "Per season", sell: "Sell as", payback: "Pays off in" },
+      days: (n) => `${n} days`,
+      payback: (n) => (n === 1 ? "1 season" : `${n} seasons`),
+      noSapling: "Not sold",
+    },
+  },
+  fishing: {
+    h1: "Stardew Valley fish",
+    lede: "What you can catch right now, and every fish with where, when and how hard it is.",
+    now: {
+      h2: "What can I catch now?",
+      place: "Place",
+      anyPlace: "Anywhere in the valley",
+      island: "Ginger Island (all)",
+      water: "Fishing rod",
+      traps: "Crab Pot",
+      season: "Season",
+      weather: "Weather",
+      time: "Time",
+      anyTime: "Any time",
+    },
+    weathers: { sunny: "Sun", rainy: "Rain", both: "Any" },
+    count: (n) => `${n} fish`,
+    none: "Nothing bites here with this season, weather and time.",
+    difficulty: (n) => `Difficulty ${n}`,
+    level: (n) => `Level ${n}+`,
+    anyHour: "Any time",
+    allYear: "All year",
+    islandAllYear: "· island: all year",
+    onlyIsland: "Island: all year",
+    tags: { legendary: "Legendary", crabPot: "Crab Pot", qi: "Mr. Qi's special order" },
+    all: {
+      h2: "Every fish",
+      hint: "Crab Pot catches don't depend on the time or the weather. Legendary fish bite once per save; their Mr. Qi versions only during his special order.",
+      kind: "Kind",
+      kinds: { all: "All", rod: "Fishing rod", crabPot: "Crab Pot", legendary: "Legendary" },
+      season: "Season",
+      anySeason: "Any season",
+      cols: { fish: "Fish", place: "Where", seasons: "Seasons", weather: "Weather", hours: "Hours", difficulty: "Difficulty", price: "Price" },
+      count: (n) => `${n} fish`,
+    },
+  },
+  recipes: {
+    h1: "Recipes and machines",
+    lede: "Every dish and every crafted item with its ingredients and how you learn it, and what each machine turns things into.",
+    view: "Show",
+    views: { cook: "Cooking", craft: "Crafting", machines: "Machines" },
+    search: "Search by name or ingredient",
+    searchPlaceholder: "Pink Cake, Melon, Keg…",
+    count: (n) => `${n} recipes`,
+    machinesCount: (n) => `${n} machines`,
+    none: "Nothing matches that search.",
+    unlock: {
+      label: "How to learn it",
+      default: "From the start",
+      skill: (skill, level) => `${skill} level ${level}`,
+      friend: (npc, hearts) => `${npc} · ${hearts} ${hearts === 1 ? "heart" : "hearts"}`,
+      tv: (show) => `TV (${show})`,
+      other: "Other way",
+    },
+    makes: (n) => `× ${n}`,
+    machine: {
+      made: "Crafted with",
+      notMade: "Not crafted: bought or earned.",
+      cols: { input: "Goes in", output: "Comes out", price: "Price", time: "Time" },
+      nearby: "nearby flower",
+      instant: "Instant",
+      more: (n) => `See all ${n}`,
+      less: "Show fewer",
+    },
+  },
+  calendar: {
+    h1: "Calendar",
+    lede: "Every birthday and festival of the year, laid out like the town board. Tap a day to see what the birthday villager loves and how long a festival lasts.",
+    season: "Season",
+    weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    hint: "Tap a day to see its birthday gifts and festivals.",
+    dayTitle: (day, season) => `${season} ${day}`,
+    range: (range, season) => `${season} ${range}`,
+    birthday: (name) => `${name}'s birthday`,
+    profile: "Villager page",
+    festival: "Festival",
+    passive: "Passive festival",
+    festivalNote: "The day is spent at the festival.",
+    passiveNote: "Come and go as you like: the day goes on as usual.",
+    empty: "No birthdays or festivals on this day.",
+    close: "Close",
+  },
   qualities: { normal: "Normal", silver: "Silver", gold: "Gold", iridium: "Iridium" },
   // `LevelUp_ProfessionName_*` de `Strings/UI`.
   professions: {
     tiller: "Tiller",
+    agriculturist: "Agriculturist",
     artisan: "Artisan",
     rancher: "Rancher",
     fisher: "Fisher",
@@ -355,11 +648,11 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario" },
   seo: {
     home: {
-      title: "Guía de Stardew Valley: precios, regalos de aldeanos y paquetes | Vestigo",
-      description: "Cada objeto de Stardew Valley 1.6 con su precio y dónde se consigue, lo que a cada aldeano le encanta y odia, y los paquetes del Centro Comunitario.",
+      title: "Guía de Stardew Valley: cultivos, peces, regalos y paquetes | Vestigo",
+      description: "Stardew Valley 1.6: calculadora de cultivos, qué pescar ahora, recetas, cumpleaños y festivales, precios, regalos de aldeanos y paquetes para tildar.",
     },
     items: {
       title: "Objetos de Stardew Valley: precios, regalos y usos | Vestigo",
@@ -372,6 +665,22 @@ const ES: StardewCopy = {
     bundles: {
       title: "Paquetes del Centro Comunitario de Stardew Valley: lista para tildar | Vestigo",
       description: "Los paquetes del Centro Comunitario de Stardew Valley, sala por sala: qué lleva cada uno, la recompensa y qué se consigue esta estación. Tildalos al avanzar.",
+    },
+    crops: {
+      title: "Calculadora de cultivos de Stardew Valley: los que más ganan por estación | Vestigo",
+      description: "Qué cultivo de Stardew Valley 1.6 da más oro por día esta estación: elegí el día de siembra, el nivel, el fertilizante y las profesiones. Con los frutales.",
+    },
+    fishing: {
+      title: "Peces de Stardew Valley: qué se puede pescar ahora | Vestigo",
+      description: "Qué peces se pescan en Stardew Valley 1.6 ahora mismo: elegí el lugar, la estación, el clima y la hora. Cada pez con su lugar, horario, dificultad y precio.",
+    },
+    recipes: {
+      title: "Recetas de Stardew Valley: cocina, fabricación y máquinas | Vestigo",
+      description: "Todas las recetas de cocina y fabricación de Stardew Valley 1.6 con sus ingredientes y cómo se aprenden, y qué hace cada máquina, cuánto tarda y su precio.",
+    },
+    calendar: {
+      title: "Calendario de Stardew Valley: cumpleaños y festivales | Vestigo",
+      description: "Calendario de Stardew Valley 1.6: el cumpleaños de cada aldeano con los regalos que le encantan y cada festival, del Mercado nocturno a la Fiesta del Calamar.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -408,6 +717,10 @@ const ES: StardewCopy = {
       items: "Precio por calidad, regalos, paquetes, máquinas y dónde se consigue cada uno.",
       villagers: "Cumpleaños, regalos favoritos y la lista entera de lo que le gusta a cada aldeano.",
       bundles: "Cada sala y cada paquete con lo que lleva. Tachalos a medida que los completás.",
+      crops: "El oro por día de cada cultivo con tu día de siembra, nivel, fertilizante y profesiones.",
+      fishing: "Qué pica ahora según el lugar, la estación, el clima y la hora, y cada pez con su horario.",
+      recipes: "Cada receta de cocina y fabricación con cómo se aprende, y qué hace cada máquina.",
+      calendar: "Cada cumpleaños y festival del año, con los regalos que le encantan a cada aldeano.",
     },
     featured: "Los más buscados",
     featuredHint: "Abrí un objeto para ver sus precios, a quién le encanta y en qué se transforma.",
@@ -498,10 +811,141 @@ const ES: StardewCopy = {
     tick: (name, qty, quality) => `${name} × ${qty}${quality ? `, calidad ${quality}` : ""}`,
     gold: "Oro",
   },
+  crops: {
+    h1: "Ganancias de los cultivos",
+    lede: "Qué cultivo da más oro por día, desde el día en que lo plantás hasta el fin de su estación.",
+    season: "Estación",
+    day: "Día de siembra",
+    level: "Nivel de agricultura",
+    fert: "Fertilizante",
+    ferts: { none: "Ninguno", basic: "Fertilizante básico", quality: "Fertilizante deluxe", deluxe: "Fertilizante de lujo", speed: "Acelerador básico", deluxeSpeed: "Acelerador deluxe", hyper: "Fertilizante ultra-rápido" },
+    professions: "Profesiones",
+    sell: "Venta",
+    sellBest: "Lo mejor",
+    sellRaw: "Crudo",
+    seeds: "Semillas",
+    seedsBuy: "Compradas",
+    seedsOwn: "Propias",
+    greenhouse: "Invernadero",
+    hint: (gh) =>
+      gh
+        ? "En el invernadero crece todo: un año desde el día de siembra. Arroz y Taro plantados junto al agua."
+        : "Hasta el último día de la estación (o de la siguiente, si el cultivo sigue creciendo). Arroz y Taro plantados junto al agua.",
+    cols: { name: "Cultivo", harvests: "Cosechas", days: "Días", gross: "Bruto", seeds: "Semillas", net: "Neto", perDay: "Oro / día", sell: "Se vende" },
+    sortBy: "Ordenar por",
+    regrow: (n) => `y cada ${n}`,
+    late: "No llega",
+    raw: "Crudo",
+    noShop: {
+      h2: "Sin semilla en tienda",
+      hint: "Ninguna tienda vende estas semillas: se fabrican o salen del carro ambulante, de monstruos, del Sr. Qi o de tu propia cosecha. Se cuentan como propias, sin costo, así no compiten con las que se compran.",
+    },
+    wild: {
+      h2: "Semillas silvestres",
+      hint: "Dan una recolección al azar de la estación, así que quedan fuera del ranking. Las cuentas usan el objeto de cada fila.",
+    },
+    notes: {
+      strawberry: "Las semillas de fresa se compran en el Festival del huevo (13 de primavera): plantarlas el día 1 vale desde el segundo año.",
+      island: "La Banana y el Mango dan fruto todo el año en la Isla Jengibre.",
+    },
+    count: (n) => `${n} cultivos`,
+    none: "Fuera del invernadero no crece nada en esta estación.",
+    trees: {
+      h2: "Frutales",
+      hint: "Un árbol adulto da una fruta por día en su estación, de calidad normal el primer año. El retoño no se cuenta.",
+      cols: { tree: "Árbol", season: "Estación", days: "Da fruto en", sapling: "Retoño", perSeason: "Por estación", sell: "Se vende", payback: "Se paga en" },
+      days: (n) => `${n} días`,
+      payback: (n) => (n === 1 ? "1 estación" : `${n} estaciones`),
+      noSapling: "No se vende",
+    },
+  },
+  fishing: {
+    h1: "Peces de Stardew Valley",
+    lede: "Qué podés pescar ahora mismo, y cada pez con dónde, cuándo y qué tan difícil es.",
+    now: {
+      h2: "¿Qué puedo pescar ahora?",
+      place: "Lugar",
+      anyPlace: "Cualquier lugar del valle",
+      island: "Isla Jengibre (todas)",
+      water: "Caña de pescar",
+      traps: "Trampa para cangrejos",
+      season: "Estación",
+      weather: "Clima",
+      time: "Hora",
+      anyTime: "Cualquier hora",
+    },
+    weathers: { sunny: "Sol", rainy: "Lluvia", both: "Cualquiera" },
+    count: (n) => `${n} peces`,
+    none: "Acá no pica nada con esta estación, este clima y esta hora.",
+    difficulty: (n) => `Dificultad ${n}`,
+    level: (n) => `Nivel ${n}+`,
+    anyHour: "Cualquier hora",
+    allYear: "Todo el año",
+    islandAllYear: "· isla: todo el año",
+    onlyIsland: "Isla: todo el año",
+    tags: { legendary: "Legendario", crabPot: "Trampa", qi: "Encargo del Sr. Qi" },
+    all: {
+      h2: "Todos los peces",
+      hint: "Lo de la trampa para cangrejos no depende de la hora ni del clima. Los legendarios se pescan una sola vez por partida; sus versiones del Sr. Qi, sólo durante su encargo especial.",
+      kind: "Tipo",
+      kinds: { all: "Todos", rod: "Con caña", crabPot: "Con trampa", legendary: "Legendarios" },
+      season: "Estación",
+      anySeason: "Cualquier estación",
+      cols: { fish: "Pez", place: "Dónde", seasons: "Estaciones", weather: "Clima", hours: "Horario", difficulty: "Dificultad", price: "Precio" },
+      count: (n) => `${n} peces`,
+    },
+  },
+  recipes: {
+    h1: "Recetas y máquinas",
+    lede: "Cada plato y cada objeto que se fabrica con sus ingredientes y cómo se aprende, y en qué transforma las cosas cada máquina.",
+    view: "Ver",
+    views: { cook: "Cocina", craft: "Fabricación", machines: "Máquinas" },
+    search: "Buscar por nombre o ingrediente",
+    searchPlaceholder: "Pastel rosa, Melón, Barril…",
+    count: (n) => `${n} recetas`,
+    machinesCount: (n) => `${n} máquinas`,
+    none: "No hay nada con esa búsqueda.",
+    unlock: {
+      label: "Cómo se aprende",
+      default: "Desde el principio",
+      skill: (skill, level) => `${skill} nivel ${level}`,
+      friend: (npc, hearts) => `${npc} · ${hearts} ${hearts === 1 ? "corazón" : "corazones"}`,
+      tv: (show) => `TV (${show})`,
+      other: "Otra forma",
+    },
+    makes: (n) => `× ${n}`,
+    machine: {
+      made: "Se fabrica con",
+      notMade: "No se fabrica: se compra o se gana.",
+      cols: { input: "Entra", output: "Sale", price: "Precio", time: "Tiempo" },
+      nearby: "flor cercana",
+      instant: "Al instante",
+      more: (n) => `Ver las ${n}`,
+      less: "Ver menos",
+    },
+  },
+  calendar: {
+    h1: "Calendario",
+    lede: "Cada cumpleaños y festival del año, como en el tablón del pueblo. Tocá un día para ver qué le encanta al cumpleañero y cuánto dura un festival.",
+    season: "Estación",
+    weekdays: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+    hint: "Tocá un día para ver los regalos del cumpleaños y los festivales.",
+    dayTitle: (day, season) => `${day} de ${season.toLowerCase()}`,
+    range: (range, season) => `${range} de ${season.toLowerCase()}`,
+    birthday: (name) => `Cumpleaños de ${name}`,
+    profile: "Ver su ficha",
+    festival: "Festival",
+    passive: "Festival pasivo",
+    festivalNote: "Ese día se pasa en el festival.",
+    passiveNote: "Se va y se viene cuando uno quiere: el día sigue como siempre.",
+    empty: "Ese día no hay cumpleaños ni festivales.",
+    close: "Cerrar",
+  },
   qualities: { normal: "Normal", silver: "Plata", gold: "Oro", iridium: "Iridio" },
   // `LevelUp_ProfessionName_*` de `Strings/UI.es-ES`.
   professions: {
     tiller: "Labrador",
+    agriculturist: "Agricultor",
     artisan: "Artesano",
     rancher: "Ranchero",
     fisher: "Pescador",

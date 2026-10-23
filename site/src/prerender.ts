@@ -440,8 +440,8 @@ export function jsonLdFor(
     }
     return out;
   }
-  // Stardew Valley (2026-10-22): migas hasta la ficha, y la portada y el Centro Comunitario (la lista para tildar) como
-  // aplicación web gratuita.
+  // Stardew Valley (2026-10-22): migas hasta la ficha, y la portada, el Centro Comunitario (la lista para tildar) y la
+  // calculadora de Cultivos y el buscador de Pesca como aplicación web gratuita.
   if (route.view === "stardew") {
     const sec = route.sdSection ?? "home";
     const copy = STARDEW_COPY[lang];
@@ -449,9 +449,9 @@ export function jsonLdFor(
     if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "home" || sec === "bundles") {
+    if (sec === "home" || sec === "bundles" || sec === "crops" || sec === "fishing") {
       out.push({
-        "@context": "https://schema.org", "@type": "WebApplication", name: sec === "home" ? copy.home.h1 : copy.bundles.h1, description: page.description,
+        "@context": "https://schema.org", "@type": "WebApplication", name: sec === "home" ? copy.home.h1 : copy[sec].h1, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Stardew Valley" },
       });

@@ -65,6 +65,28 @@ export function Gold({ n }: { n: number }) {
   );
 }
 
+/** Un grupo de botones con su rótulo arriba (los filtros de Cultivos y de Pesca). */
+export function Group({ label, children, extra }: { label: string; children: ReactNode; extra?: ReactNode }) {
+  return (
+    <div className="sd-chips" role="group" aria-label={label}>
+      <span className="sd-label">
+        {label}
+        {extra}
+      </span>
+      {children}
+    </div>
+  );
+}
+
+/** El botón de un grupo (`.sd-pill`): prendido o apagado. */
+export function Pill({ on, onClick, children, label, disabled }: { on: boolean; onClick: () => void; children: ReactNode; label?: string; disabled?: boolean }) {
+  return (
+    <button type="button" className={`sd-pill${on ? " is-on" : ""}`} aria-pressed={on} aria-label={label} title={label} onClick={onClick} disabled={disabled}>
+      {children}
+    </button>
+  );
+}
+
 /** La hoja de "cargando…" (o del error, con el botón para reintentar). */
 export function SdLoading({ onRetry }: { onRetry?: () => void }) {
   const t = useStardewCopy();

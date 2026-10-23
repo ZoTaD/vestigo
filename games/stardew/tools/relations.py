@@ -374,6 +374,37 @@ def _por_lugar(campo: str, valido) -> dict[str, dict]:
     return res
 
 
+# Condiciones de recargo que se dan por ciertas: el jugador sin membresía de Joja.
+_CONDICIONES_SUPUESTAS = {"!PLAYER_HAS_MAIL Current JojaMember"}
+
+
+def _aplicar_recargos(precio: int, recargos: list[dict] | None, modo: int) -> int:
+    """`Utility.ApplyQuantityModifiers` del juego sobre un precio, truncado a entero como en `ShopBuilder`.
+
+    `Modification`: 0 suma, 1 resta, 2 multiplica, 3 divide, 4 fija. `modo` (`PriceModifierMode`): 0 se encadenan,
+    1 el menor resultado, 2 el mayor. Un recargo al azar (`RandomAmount`, el carro ambulante) deja el precio como está,
+    y uno con otra condición no se aplica.
+    """
+    if not recargos or any(r.get("RandomAmount") for r in recargos):
+        return precio
+    activos = [r for r in recargos if not r.get("Condition") or r["Condition"] in _CONDICIONES_SUPUESTAS]
+    if not activos:
+        return precio
+
+    def uno(base: float, r: dict) -> float:
+        m, a = r.get("Modification", 0), r.get("Amount", 0)
+        return {0: base + a, 1: base - a, 2: base * a, 3: base / a if a else base, 4: a}.get(m, base)
+
+    if modo == 0:
+        valor = float(precio)
+        for r in activos:
+            valor = uno(valor, r)
+    else:
+        valores = [uno(float(precio), r) for r in activos]
+        valor = min(valores) if modo == 1 else max(valores)
+    return int(valor)
+
+
 @lru_cache(maxsize=None)
 def sources_by_item() -> dict[str, list[dict]]:
     """De dónde sale cada objeto: cultivo, árbol, tienda, pesca, recolección o botín."""
@@ -401,7 +432,9 @@ def sources_by_item() -> dict[str, list[dict]]:
             )
 
     # Tiendas: sólo ítems de id fijo, en moneda común y sin trueque. Sin precio
-    # propio vale el del objeto por dos (`salePrice`).
+    # propio vale el del objeto por dos (`salePrice`). Después, como el juego
+    # (`ShopBuilder`), los recargos de la tienda (salvo `IgnoreShopPriceModifiers`)
+    # y los del ítem: Pierre ×2 a lo que no son semillas, Joja ×1,25 sin membresía.
     for tienda, t in sdv.raw("Data/Shops").items():
         if t.get("Currency", 0) != 0:
             continue
@@ -416,6 +449,9 @@ def sources_by_item() -> dict[str, list[dict]]:
                 if sid not in objs:
                     continue
                 precio = objs[sid]["Price"] * 2
+            if not it.get("IgnoreShopPriceModifiers"):
+                precio = _aplicar_recargos(precio, t.get("PriceModifiers"), t.get("PriceModifierMode", 0))
+            precio = _aplicar_recargos(precio, it.get("PriceModifiers"), it.get("PriceModifierMode", 0))
             if (sid, precio) not in vistos:
                 vistos.add((sid, precio))
                 sumar(sid, {"k": "shop", "shop": tienda, "price": precio})

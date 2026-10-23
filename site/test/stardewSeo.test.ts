@@ -49,6 +49,27 @@ describe("Stardew Valley en el sitemap", () => {
     expect(new Set(paths).size).toBe(paths.length);
   });
 
+  it("las cuatro pestañas de la etapa 2, en los dos idiomas y en main con la fecha de los datos", () => {
+    const nuevas = [
+      "/en/stardew-valley/crops", "/es/stardew-valley/cultivos",
+      "/en/stardew-valley/fishing", "/es/stardew-valley/pesca",
+      "/en/stardew-valley/recipes", "/es/stardew-valley/recetas",
+      "/en/stardew-valley/calendar", "/es/stardew-valley/calendario",
+    ];
+    const main = sitemapXml(data, "main");
+    for (const p of nuevas) {
+      expect(paths).toContain(p);
+      expect(main).toContain(`<loc>https://vestigo.gg${p}</loc>`);
+      expect(sitemapLastmod(p, data)).toBe(sdMeta.generatedAt.slice(0, 10));
+    }
+  });
+
+  it("Cultivos, Pesca, Recetas y Calendario no tienen fichas propias", () => {
+    for (const seg of ["crops", "cultivos", "fishing", "pesca", "recipes", "recetas", "calendar", "calendario"]) {
+      expect(paths.some((p) => p.includes(`/stardew-valley/${seg}/`)), seg).toBe(false);
+    }
+  });
+
   it("el Centro Comunitario no tiene fichas", () => {
     expect(paths.some((p) => p.startsWith("/en/stardew-valley/bundles/"))).toBe(false);
   });
@@ -106,10 +127,26 @@ describe("el <head> de Stardew Valley", () => {
     expect(metaFor(parseRoute("/en/stardew-valley/villagers"), "en", null).title).toMatch(/^Stardew Valley Villagers/);
     expect(metaFor(parseRoute("/en/stardew-valley/bundles"), "en", null).title).toMatch(/^Stardew Valley Community Center Bundles/);
     expect(metaFor(parseRoute("/es/stardew-valley/centro-comunitario"), "es", null).title).toMatch(/^Paquetes del Centro Comunitario/);
+    expect(metaFor(parseRoute("/en/stardew-valley/crops"), "en", null).title).toMatch(/^Stardew Valley Crop Profit Calculator/);
+    expect(metaFor(parseRoute("/es/stardew-valley/cultivos"), "es", null).title).toMatch(/^Calculadora de cultivos de Stardew Valley/);
+    expect(metaFor(parseRoute("/en/stardew-valley/fishing"), "en", null).title).toMatch(/What Fish Can I Catch/);
+    expect(metaFor(parseRoute("/en/stardew-valley/recipes"), "en", null).title).toMatch(/^Stardew Valley Recipes: Cooking/);
+    expect(metaFor(parseRoute("/en/stardew-valley/calendar"), "en", null).title).toMatch(/^Stardew Valley Calendar: Birthdays and Festivals/);
+    expect(metaFor(parseRoute("/es/stardew-valley/calendario"), "es", null).title).toMatch(/^Calendario de Stardew Valley: cumpleaños y festivales/);
+  });
+
+  it("las pestañas nuevas llevan migas hasta la pestaña, en su idioma", () => {
+    expect(crumbNames(page("/es/stardew-valley/cultivos"))).toEqual(["Vestigo", "Stardew Valley", "Cultivos"]);
+    expect(crumbNames(page("/en/stardew-valley/fishing"))).toEqual(["Vestigo", "Stardew Valley", "Fishing"]);
+    expect(crumbNames(page("/es/stardew-valley/recetas"))).toEqual(["Vestigo", "Stardew Valley", "Recetas"]);
+    expect(crumbNames(page("/en/stardew-valley/calendar"))).toEqual(["Vestigo", "Stardew Valley", "Calendar"]);
   });
 
   it("ninguna descripción de pestaña pasa de 160 caracteres, en ningún idioma", () => {
-    for (const path of ["/en/stardew-valley", "/es/stardew-valley", "/en/stardew-valley/items", "/es/stardew-valley/objetos", "/en/stardew-valley/villagers", "/es/stardew-valley/aldeanos", "/en/stardew-valley/bundles", "/es/stardew-valley/centro-comunitario"]) {
+    for (const path of [
+      "/en/stardew-valley", "/es/stardew-valley", "/en/stardew-valley/items", "/es/stardew-valley/objetos", "/en/stardew-valley/villagers", "/es/stardew-valley/aldeanos", "/en/stardew-valley/bundles", "/es/stardew-valley/centro-comunitario",
+      "/en/stardew-valley/crops", "/es/stardew-valley/cultivos", "/en/stardew-valley/fishing", "/es/stardew-valley/pesca", "/en/stardew-valley/recipes", "/es/stardew-valley/recetas", "/en/stardew-valley/calendar", "/es/stardew-valley/calendario",
+    ]) {
       expect(page(path).description.length, path).toBeLessThanOrEqual(160);
     }
   });
@@ -118,8 +155,8 @@ describe("el <head> de Stardew Valley", () => {
     expect(metaFor(parseRoute("/en/stardew-valley/items/melon"), "en", null).title).toBe(metaFor(parseRoute("/en/stardew-valley/items"), "en", null).title);
   });
 
-  it("la portada y el Centro Comunitario se presentan como aplicación web gratuita", () => {
-    for (const path of ["/es/stardew-valley", "/en/stardew-valley/bundles"]) {
+  it("la portada, el Centro Comunitario, la calculadora y el buscador de Pesca se presentan como aplicación web gratuita", () => {
+    for (const path of ["/es/stardew-valley", "/en/stardew-valley/bundles", "/en/stardew-valley/crops", "/es/stardew-valley/cultivos", "/en/stardew-valley/fishing"]) {
       const route = parseRoute(path);
       const ld = jsonLdFor(route, route.lang, { title: "t", description: "d", canonical: `https://vestigo.gg${path}`, image: "i" }, data, null);
       expect(ld).toContainEqual(expect.objectContaining({ "@type": "WebApplication", isAccessibleForFree: true, about: { "@type": "VideoGame", name: "Stardew Valley" } }));
