@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Partida mínima escrita a mano con la forma de una partida de 1.6 (XmlSerializer de SaveGame). Nombres inventados.
+  Sólo trae las etiquetas que lee site/src/stardew/save/parse.ts.
+-->
+<SaveGame xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <player>
+    <name>Fulana</name>
+    <experiencePoints><int>2500</int><int>380</int><int>1000</int><int>770</int><int>100</int><int>0</int></experiencePoints>
+    <items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Item xsi:type="Pickaxe">
+        <name>Pickaxe</name>
+        <itemId>Pickaxe</itemId>
+        <quality>0</quality>
+        <stack>1</stack>
+      </Item>
+      <Item xsi:type="Object">
+        <name>Parsnip</name>
+        <parentSheetIndex>24</parentSheetIndex>
+        <itemId>24</itemId>
+        <quality>0</quality>
+        <stack>7</stack>
+        <bigCraftable>false</bigCraftable>
+      </Item>
+      <Item xsi:type="Object">
+        <name>Furnace</name>
+        <parentSheetIndex>13</parentSheetIndex>
+        <itemId>13</itemId>
+        <quality>0</quality>
+        <stack>1</stack>
+        <bigCraftable>true</bigCraftable>
+      </Item>
+      <Item xsi:nil="true" />
+      <Item xsi:nil="true" />
+    </items>
+    <cookingRecipes>
+      <item><key><string>Fried Egg</string></key><value><int>0</int></value></item>
+      <item><key><string>Omelet</string></key><value><int>0</int></value></item>
+    </cookingRecipes>
+    <craftingRecipes>
+      <item><key><string>Chest</string></key><value><int>2</int></value></item>
+      <item><key><string>Torch</string></key><value><int>0</int></value></item>
+    </craftingRecipes>
+    <mailReceived>
+      <string>Robin_Introduction</string>
+      <string>CF_Fair</string>
+    </mailReceived>
+    <mailForTomorrow>
+      <string>CF_Fish%&amp;NL&amp;%</string>
+    </mailForTomorrow>
+    <mailbox>
+      <string>spring_2_1</string>
+    </mailbox>
+    <stats xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <specificMonstersKilled>
+        <item><key><string>Green Slime</string></key><value><int>12</int></value></item>
+        <item><key><string>Bat</string></key><value><int>3</int></value></item>
+      </specificMonstersKilled>
+      <Values>
+        <item><key><string>daysPlayed</string></key><value><unsignedInt>40</unsignedInt></value></item>
+      </Values>
+    </stats>
+    <farmName>Los Sauces</farmName>
+    <gameVersion>1.6.15</gameVersion>
+    <farmingLevel>4</farmingLevel>
+    <miningLevel>3</miningLevel>
+    <combatLevel>1</combatLevel>
+    <foragingLevel>2</foragingLevel>
+    <fishingLevel>2</fishingLevel>
+    <luckLevel>0</luckLevel>
+    <basicShipped>
+      <item><key><string>24</string></key><value><int>15</int></value></item>
+      <item><key><string>(O)188</string></key><value><int>2</int></value></item>
+    </basicShipped>
+    <recipesCooked>
+      <item><key><string>194</string></key><value><int>3</int></value></item>
+    </recipesCooked>
+    <fishCaught>
+      <item><key><string>(O)131</string></key><value><ArrayOfInt><int>4</int><int>12</int></ArrayOfInt></value></item>
+      <item><key><string>(O)145</string></key><value><ArrayOfInt><int>1</int><int>6</int></ArrayOfInt></value></item>
+    </fishCaught>
+    <friendshipData>
+      <item>
+        <key><string>Robin</string></key>
+        <value>
+          <Friendship>
+            <Points>520</Points>
+            <GiftsThisWeek>1</GiftsThisWeek>
+            <GiftsToday>1</GiftsToday>
+            <TalkedToToday>true</TalkedToToday>
+            <ProposalRejected>false</ProposalRejected>
+            <Status>Friendly</Status>
+            <Proposer>0</Proposer>
+            <RoommateMarriage>false</RoommateMarriage>
+          </Friendship>
+        </value>
+      </item>
+      <item>
+        <key><string>Linus</string></key>
+        <value>
+          <Friendship>
+            <Points>80</Points>
+            <GiftsThisWeek>0</GiftsThisWeek>
+            <GiftsToday>0</GiftsToday>
+            <TalkedToToday>false</TalkedToToday>
+            <ProposalRejected>false</ProposalRejected>
+            <Status>Friendly</Status>
+            <Proposer>0</Proposer>
+            <RoommateMarriage>false</RoommateMarriage>
+          </Friendship>
+        </value>
+      </item>
+    </friendshipData>
+    <chestConsumedLevels>
+      <item><key><int>10</int></key><value><boolean>true</boolean></value></item>
+      <item><key><int>20</int></key><value><boolean>true</boolean></value></item>
+    </chestConsumedLevels>
+    <isCustomized>true</isCustomized>
+  </player>
+  <farmhands>
+    <Farmer>
+      <name>Mengano</name>
+      <experiencePoints><int>0</int><int>0</int><int>0</int><int>0</int><int>0</int><int>0</int></experiencePoints>
+      <items>
+        <Item xsi:type="Object">
+          <name>Parsnip</name>
+          <itemId>24</itemId>
+          <quality>0</quality>
+          <stack>3</stack>
+          <bigCraftable>false</bigCraftable>
+        </Item>
+        <Item xsi:type="MeleeWeapon">
+          <name>Rusty Sword</name>
+          <itemId>0</itemId>
+          <quality>0</quality>
+          <stack>1</stack>
+        </Item>
+      </items>
+      <cookingRecipes>
+        <item><key><string>Fried Egg</string></key><value><int>0</int></value></item>
+      </cookingRecipes>
+      <craftingRecipes />
+      <mailReceived>
+        <string>Robin_Introduction</string>
+      </mailReceived>
+      <mailForTomorrow />
+      <mailbox />
+      <stats>
+        <specificMonstersKilled />
+      </stats>
+      <farmName>Los Sauces</farmName>
+      <farmingLevel>1</farmingLevel>
+      <miningLevel>0</miningLevel>
+      <combatLevel>0</combatLevel>
+      <foragingLevel>0</foragingLevel>
+      <fishingLevel>0</fishingLevel>
+      <luckLevel>0</luckLevel>
+      <basicShipped />
+      <recipesCooked />
+      <fishCaught>
+        <item><key><string>(O)131</string></key><value><ArrayOfInt><int>1</int><int>10</int></ArrayOfInt></value></item>
+      </fishCaught>
+      <friendshipData>
+        <item>
+          <key><string>Robin</string></key>
+          <value>
+            <Friendship>
+              <Points>30</Points>
+              <GiftsThisWeek>0</GiftsThisWeek>
+              <GiftsToday>0</GiftsToday>
+              <Status>Friendly</Status>
+            </Friendship>
+          </value>
+        </item>
+      </friendshipData>
+      <chestConsumedLevels />
+      <isCustomized>true</isCustomized>
+    </Farmer>
+    <Farmer>
+      <name />
+      <items />
+      <isCustomized>false</isCustomized>
+    </Farmer>
+  </farmhands>
+  <locations>
+    <GameLocation xsi:type="Farm">
+      <buildings>
+        <Building>
+          <daysOfConstructionLeft>0</daysOfConstructionLeft>
+          <buildingType>Farmhouse</buildingType>
+          <buildingChests />
+        </Building>
+        <Building>
+          <daysOfConstructionLeft>0</daysOfConstructionLeft>
+          <buildingType>Earth Obelisk</buildingType>
+          <buildingChests />
+        </Building>
+        <Building>
+          <daysOfConstructionLeft>2</daysOfConstructionLeft>
+          <buildingType>Gold Clock</buildingType>
+          <buildingChests />
+        </Building>
+        <Building>
+          <indoors xsi:type="Cabin">
+            <objects />
+            <name>Cabin1</name>
+          </indoors>
+          <daysOfConstructionLeft>0</daysOfConstructionLeft>
+          <buildingType>Log Cabin</buildingType>
+          <buildingChests />
+        </Building>
+      </buildings>
+      <objects>
+        <item>
+          <key><Vector2><X>60</X><Y>15</Y></Vector2></key>
+          <value>
+            <Object xsi:type="Chest">
+              <name>Chest</name>
+              <itemId>130</itemId>
+              <stack>1</stack>
+              <bigCraftable>true</bigCraftable>
+              <items>
+                <Item xsi:type="Object">
+                  <name>Parsnip</name>
+                  <itemId>24</itemId>
+                  <quality>1</quality>
+                  <stack>10</stack>
+                  <bigCraftable>false</bigCraftable>
+                </Item>
+                <Item xsi:type="Object">
+                  <name>Wood</name>
+                  <itemId>388</itemId>
+                  <quality>0</quality>
+                  <stack>99</stack>
+                  <bigCraftable>false</bigCraftable>
+                </Item>
+                <Item xsi:type="Ring">
+                  <name>Small Glow Ring</name>
+                  <itemId>516</itemId>
+                  <stack>1</stack>
+                </Item>
+              </items>
+            </Object>
+          </value>
+        </item>
+        <item>
+          <key><Vector2><X>61</X><Y>15</Y></Vector2></key>
+          <value>
+            <Object xsi:type="Object">
+              <name>Stone</name>
+              <itemId>450</itemId>
+              <stack>1</stack>
+              <bigCraftable>false</bigCraftable>
+            </Object>
+          </value>
+        </item>
+      </objects>
+      <name>Farm</name>
+    </GameLocation>
+    <GameLocation xsi:type="FarmHouse">
+      <objects>
+        <item>
+          <key><Vector2><X>5</X><Y>8</Y></Vector2></key>
+          <value>
+            <Object xsi:type="Chest">
+              <name>Chest</name>
+              <itemId>130</itemId>
+              <stack>1</stack>
+              <bigCraftable>true</bigCraftable>
+              <items>
+                <Item xsi:type="Object">
+                  <name>Wood</name>
+                  <itemId>388</itemId>
+                  <quality>0</quality>
+                  <stack>1</stack>
+                  <bigCraftable>false</bigCraftable>
+                </Item>
+                <Item xsi:type="Object">
+                  <name>Sunflower</name>
+                  <itemId>421</itemId>
+                  <quality>0</quality>
+                  <stack>2</stack>
+                  <bigCraftable>false</bigCraftable>
+                </Item>
+                <Item xsi:nil="true" />
+              </items>
+            </Object>
+          </value>
+        </item>
+      </objects>
+      <name>FarmHouse</name>
+      <fridge>
+        <name>Chest</name>
+        <itemId>130</itemId>
+        <items>
+          <Item xsi:type="Object">
+            <name>Egg</name>
+            <itemId>176</itemId>
+            <quality>0</quality>
+            <stack>4</stack>
+            <bigCraftable>false</bigCraftable>
+          </Item>
+        </items>
+      </fridge>
+    </GameLocation>
+    <GameLocation xsi:type="CommunityCenter">
+      <objects />
+      <name>CommunityCenter</name>
+      <areasComplete>
+        <boolean>false</boolean><boolean>false</boolean><boolean>false</boolean>
+        <boolean>false</boolean><boolean>false</boolean><boolean>false</boolean>
+      </areasComplete>
+      <bundles>
+        <item>
+          <key><int>0</int></key>
+          <value><ArrayOfBoolean>
+            <boolean>true</boolean><boolean>true</boolean><boolean>true</boolean>
+            <boolean>true</boolean><boolean>true</boolean><boolean>true</boolean>
+            <boolean>true</boolean><boolean>true</boolean><boolean>true</boolean>
+          </ArrayOfBoolean></value>
+        </item>
+        <item>
+          <key><int>1</int></key>
+          <value><ArrayOfBoolean>
+            <boolean>true</boolean><boolean>true</boolean><boolean>true</boolean>
+            <boolean>true</boolean><boolean>true</boolean><boolean>true</boolean>
+          </ArrayOfBoolean></value>
+        </item>
+        <item>
+          <key><int>2</int></key>
+          <value><ArrayOfBoolean>
+            <boolean>true</boolean><boolean>false</boolean><boolean>false</boolean>
+            <boolean>false</boolean><boolean>false</boolean><boolean>false</boolean>
+            <boolean>false</boolean><boolean>false</boolean><boolean>false</boolean>
+            <boolean>false</boolean><boolean>false</boolean><boolean>false</boolean>
+          </ArrayOfBoolean></value>
+        </item>
+      </bundles>
+      <bundleRewards>
+        <item><key><int>0</int></key><value><boolean>true</boolean></value></item>
+        <item><key><int>1</int></key><value><boolean>false</boolean></value></item>
+        <item><key><int>2</int></key><value><boolean>false</boolean></value></item>
+      </bundleRewards>
+    </GameLocation>
+  </locations>
+  <currentSeason>summer</currentSeason>
+  <goldenWalnutsFound>17</goldenWalnutsFound>
+  <dayOfMonth>26</dayOfMonth>
+  <year>2</year>
+  <isRaining>true</isRaining>
+  <bundleData>
+    <item>
+      <key><string>Pantry/0</string></key>
+      <value><string>Spring Crops/O 465 20/24 1 0 188 1 0 192 1 0/0/3//Spring Crops</string></value>
+    </item>
+    <item>
+      <key><string>Pantry/1</string></key>
+      <value><string>Summer Crops/O 621 1/256 1 0 260 1 0/0///Summer Crops</string></value>
+    </item>
+    <item>
+      <key><string>Crafts Room/2</string></key>
+      <value><string>Spring Foraging/O 495 30/16 1 0 18 1 0 20 1 0 22 1 0/0///Spring Foraging</string></value>
+    </item>
+  </bundleData>
+  <weatherForTomorrow>Sun</weatherForTomorrow>
+  <globalInventories>
+    <item>
+      <key><string>JunimoChests</string></key>
+      <value><ArrayOfItem>
+        <Item xsi:type="Object">
+          <name>Wood</name>
+          <itemId>388</itemId>
+          <stack>5</stack>
+          <bigCraftable>false</bigCraftable>
+        </Item>
+      </ArrayOfItem></value>
+    </item>
+  </globalInventories>
+  <gameVersion>1.6.15</gameVersion>
+</SaveGame>
