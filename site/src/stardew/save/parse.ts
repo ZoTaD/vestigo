@@ -88,6 +88,10 @@ export interface SaveBundles {
   done: Record<number, boolean[]>;
 }
 
+/**
+ * La partida leída. El Lector la guarda en el navegador tal cual (`store.ts`, `{ v: 1, save }`): si se cambia su forma
+ * (un campo nuevo, otro tipo), subir `v` ahí y en `looksLikeSave`, así no se dibuja una guardada con la forma vieja.
+ */
 export interface Save {
   version: string;
   farm: string;

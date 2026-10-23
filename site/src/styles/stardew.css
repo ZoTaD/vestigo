@@ -181,7 +181,8 @@ a.sd-bday:hover { background: var(--sd-paper-2); }
   .sd-brand { padding: 10px 14px 8px; border-width: 14px; border-image-width: 14px; }
   .sd-brand img { width: 327px; height: 45px; }
   .sd { --sd-hero: 260px; }
-  .sd-tab { padding: 8px 10px 9px; }
+  /* Menos relleno y menos espacio en angosto: con 10 pestañas, así la última no queda sola en su renglón. */
+  .sd-tab { padding: 8px 8px 9px; margin: 0 4px 4px 0; }
 }
 
 /* --- La cáscara alrededor de la sección ------------------------------------------------------------------------------

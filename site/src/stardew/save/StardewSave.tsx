@@ -16,14 +16,14 @@
  * que pueden pasar de ~150 casilleros van con `LazyRows`, y lo que falta de cada parte de la perfección se dibuja
  * recién al abrirla: así una partida recién empezada (donde falta todo) no llena la página de nodos.
  */
-import { useEffect, useMemo, useState, type DragEvent, type ReactNode } from "react";
+import { Component, useEffect, useMemo, useState, type DragEvent, type ReactNode } from "react";
 import { useLang, useLocale } from "../../i18n";
 import { LazyRows } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { QUALITIES, useStardewCopy, type SaveCopy } from "../../stardewCopy";
 import { useLoad } from "../../useLoad";
-import { roomAnchor } from "../bundles/progress";
+import { qualityIndex, roomAnchor } from "../bundles/progress";
 import { loadSaveBundle, peekSaveBundle, say, type Lang, type Row, type SaveBundle, type Villager } from "../data";
 import { Box, Gold, Group, Pill, Slot, Sprite, type Nav } from "../ui";
 import { normId, type Player, type Save } from "./parse";
@@ -59,12 +59,36 @@ export default function StardewSave({ route, navigate }: { route: Route; navigat
     setScreen({ kind: "empty" });
   };
 
-  if (screen.kind === "save") return <SaveLoader save={screen.save} route={route} navigate={navigate} onFile={onFile} onForget={onForget} />;
+  if (screen.kind === "save")
+    return (
+      <SaveBoundary onError={() => setScreen({ kind: "error", error: "broken" })}>
+        <SaveLoader save={screen.save} route={route} navigate={navigate} onFile={onFile} onForget={onForget} />
+      </SaveBoundary>
+    );
   return (
     <main className="sd-main sd-save">
       <SavePicker reading={screen.kind === "reading"} error={screen.kind === "error" ? screen.error : null} onFile={onFile} />
     </main>
   );
+}
+
+/**
+ * El sitio no tiene un límite de errores general: si una partida (guardada con otra forma, o un caso que el lector no
+ * previó) rompe al dibujarse, la pestaña quedaría en blanco en cada visita y sin el botón de olvidarla. Este la olvida y
+ * vuelve a la caja vacía con el aviso.
+ */
+export class SaveBoundary extends Component<{ onError: () => void; children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch() {
+    forgetSave();
+    this.props.onError();
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
 }
 
 /** La partida ya leída, mientras bajan los datos con los que se cruza. */
@@ -698,7 +722,8 @@ function BundleCell({ it, have, x }: { it: BundleItem; have: number; x: Ctx }) {
         </small>
       </span>
     );
-  const q = quality >= 4 ? 3 : quality;
+  // La calidad del juego (0, 1, 2 y 4 el iridio) como índice de QUALITIES: la misma cuenta que el checklist.
+  const q = qualityIndex(quality);
   const note = (
     <>
       × {num(qty, x.locale)}

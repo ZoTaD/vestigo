@@ -363,7 +363,7 @@ export interface SaveCopy {
   where: { os: string; path: string }[];
   fileHint: string;
   private: string;
-  errors: Record<"not-xml" | "save-info" | "not-save" | "read", string>;
+  errors: Record<"not-xml" | "save-info" | "not-save" | "read" | "broken", string>;
   old: (version: string) => string;
   farm: (name: string) => string;
   date: (day: number, season: string, year: number) => string;
@@ -858,6 +858,7 @@ const EN: StardewCopy = {
       "save-info": "That's SaveGameInfo, which only has the farmer. Open the other file in the same folder, the one named like the folder.",
       "not-save": "That file doesn't look like a Stardew Valley save. Open the file with the same name as the farm's folder.",
       read: "The browser couldn't read that file. Try choosing it again.",
+      broken: "That save couldn't be shown, so it was forgotten. Try opening the file again.",
     },
     old: (version) =>
       `This save is from ${version.startsWith("<") ? `before version ${version.slice(1)}` : `version ${version}`}. It reads fine, but the 1.6 perfection can differ from what your game shows.`,
@@ -1322,6 +1323,7 @@ const ES: StardewCopy = {
       "save-info": "Ese es SaveGameInfo, que sólo tiene al granjero. Abrí el otro archivo de la misma carpeta, el que se llama como la carpeta.",
       "not-save": "Ese archivo no parece una partida de Stardew Valley. Abrí el que se llama igual que la carpeta de la granja.",
       read: "El navegador no pudo leer ese archivo. Probá elegirlo de nuevo.",
+      broken: "Esa partida no se pudo mostrar, así que se olvidó. Probá abrir el archivo de nuevo.",
     },
     old: (version) =>
       `Esta partida es ${version.startsWith("<") ? `anterior a la versión ${version.slice(1)}` : `de la versión ${version}`}. Se lee igual, pero la perfección de la 1.6 puede no coincidir con la de tu juego.`,

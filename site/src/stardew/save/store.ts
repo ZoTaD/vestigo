@@ -9,8 +9,9 @@
  */
 import type { Room } from "../data";
 import { doneKey, readDone, writeDone, type Done } from "../bundles/progress";
-import { parseSave, type Save, type SaveError } from "./parse";
+import { parseSave, type Player, type Save, type SaveError } from "./parse";
 
+/** La clave del navegador. La `v` de adentro es la forma de `Save`: si cambia, subirla (ver `parse.ts`). */
 const STORAGE_KEY = "sdv-save-v1";
 
 /** Lo que se guarda: la versión del formato y la partida leída. */
@@ -19,21 +20,58 @@ interface Stored {
   save: Save;
 }
 
-/** ¿Tiene la forma de un `Save`? Lo guardado puede venir de otra versión del sitio o estar roto. */
-function looksLikeSave(x: unknown): x is Save {
-  if (!x || typeof x !== "object") return false;
-  const s = x as Partial<Save>;
+const isObj = (x: unknown): x is Record<string, unknown> => !!x && typeof x === "object" && !Array.isArray(x);
+const isNum = (x: unknown): x is number => typeof x === "number" && Number.isFinite(x);
+
+/** ¿Un granjero con todo lo que leen `progress.ts` y la pantalla? (los diccionarios y las listas, uno por uno). */
+function looksLikePlayer(x: unknown): x is Player {
+  if (!isObj(x)) return false;
   return (
-    typeof s.version === "string" &&
-    typeof s.farm === "string" &&
-    typeof s.day === "number" &&
-    Array.isArray(s.players) &&
-    s.players.length > 0 &&
-    typeof s.players[0]?.name === "string" &&
-    !!s.bundles &&
-    Array.isArray(s.bundles.defs) &&
-    !!s.items &&
-    typeof s.items === "object"
+    typeof x.name === "string" &&
+    typeof x.host === "boolean" &&
+    Array.isArray(x.skills) &&
+    x.skills.length === 6 &&
+    x.skills.every(isNum) &&
+    isObj(x.shipped) &&
+    isObj(x.fish) &&
+    Array.isArray(x.cooking) &&
+    isObj(x.cooked) &&
+    isObj(x.crafting) &&
+    Array.isArray(x.mail) &&
+    isObj(x.friends) &&
+    Object.values(x.friends).every((f) => isObj(f) && isNum(f.points) && isNum(f.giftsWeek)) &&
+    isObj(x.kills) &&
+    Array.isArray(x.minesChests) &&
+    isObj(x.inventory)
+  );
+}
+
+/**
+ * ¿Tiene la forma de un `Save`? Lo guardado puede venir de otra versión del sitio o estar roto, y una partida a medias
+ * rompe al dibujarse: se mira cada campo que se usa, granjero por granjero. Si `Save` cambia de forma, subir `v`.
+ */
+function looksLikeSave(x: unknown): x is Save {
+  if (!isObj(x)) return false;
+  const b = x.bundles;
+  return (
+    typeof x.version === "string" &&
+    typeof x.farm === "string" &&
+    isNum(x.season) &&
+    isNum(x.day) &&
+    isNum(x.year) &&
+    isNum(x.walnuts) &&
+    typeof x.joja === "boolean" &&
+    typeof x.ccComplete === "boolean" &&
+    Array.isArray(x.buildings) &&
+    isObj(x.items) &&
+    Array.isArray(x.players) &&
+    x.players.length > 0 &&
+    x.players.every(looksLikePlayer) &&
+    isObj(b) &&
+    Array.isArray(b.defs) &&
+    b.defs.every((d) => isObj(d) && typeof d.room === "string" && isNum(d.index) && Array.isArray(d.items) && isNum(d.need)) &&
+    isObj(b.done) &&
+    Object.values(b.done).every(Array.isArray)
   );
 }
 
@@ -68,7 +106,8 @@ export function forgetSave(): void {
   }
 }
 
-export type ReadError = SaveError["error"] | "read";
+/** "read": el navegador no pudo leer el archivo; "broken": la partida guardada no se pudo dibujar y se olvidó. */
+export type ReadError = SaveError["error"] | "read" | "broken";
 
 /** Lee el archivo elegido en el navegador. "read" si el navegador no pudo leerlo (permiso, archivo movido). */
 export async function readSaveFile(file: Blob): Promise<Save | { error: ReadError }> {

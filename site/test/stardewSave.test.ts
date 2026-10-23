@@ -15,7 +15,7 @@ import { STARDEW_COPY } from "../src/stardewCopy";
 import { readDone } from "../src/stardew/bundles/progress";
 import { loadSaveBundle, type SaveBundle } from "../src/stardew/data";
 import { parseSave, type Save } from "../src/stardew/save/parse";
-import StardewSave, { SavePicker, SaveView } from "../src/stardew/save/StardewSave";
+import StardewSave, { SaveBoundary, SavePicker, SaveView } from "../src/stardew/save/StardewSave";
 import { checklistFromSave, forgetSave, isOldVersion, readStoredSave, storeSave, syncChecklist } from "../src/stardew/save/store";
 
 const parser = new DOMParser({ onError: () => {} }) as unknown as { parseFromString(s: string, type: string): Document };
@@ -167,6 +167,15 @@ describe("la partida leída", () => {
     expect(html).toContain("You can get these now");
   });
 
+  it("la calidad del juego (4 es iridio) sale con su nombre en el objeto que falta", () => {
+    const s = leer();
+    s.bundles.defs = [{ room: "Pantry", index: 0, name: "Spring Crops", items: [["24", 5, 4], ["188", 1, 2]], need: 2 }];
+    s.bundles.done = {};
+    const html = view(s);
+    expect(html).toContain("× 5 · Iridium");
+    expect(html).toContain("× 1 · Gold");
+  });
+
   it("una partida de la 1.5 avisa que la perfección puede no coincidir", () => {
     expect(view({ ...leer(), version: "1.5.6" })).toContain("This save is from version 1.5.6");
     expect(view(leer())).not.toContain("This save is from version");
@@ -174,6 +183,10 @@ describe("la partida leída", () => {
 });
 
 describe("lo que se guarda en el navegador", () => {
+  let dataEn: SaveBundle;
+  beforeAll(async () => {
+    dataEn = await loadSaveBundle("en");
+  });
   it("sólo la partida leída, no el XML; se lee de vuelta y se olvida", () => {
     const store = fakeStorage();
     const s = leer();
@@ -195,6 +208,40 @@ describe("lo que se guarda en el navegador", () => {
     expect(readStoredSave()).toBeNull();
     store["sdv-save-v1"] = JSON.stringify({ v: 2, save: leer() });
     expect(readStoredSave()).toBeNull();
+  });
+
+  it("una partida guardada de otra forma (sin minesChests, sin kills, sin bundles.done) no se usa", () => {
+    const store = fakeStorage();
+    const s = leer();
+    const sin = (quitar: (x: any) => void) => {
+      const copia = JSON.parse(JSON.stringify(s));
+      quitar(copia);
+      store["sdv-save-v1"] = JSON.stringify({ v: 1, save: copia });
+      return readStoredSave();
+    };
+    expect(sin(() => undefined)).toEqual(s);
+    expect(sin((x) => delete x.players[0].minesChests)).toBeNull();
+    expect(sin((x) => delete x.players[1].kills)).toBeNull();
+    expect(sin((x) => (x.players[0].friends = null))).toBeNull();
+    expect(sin((x) => (x.players[0].skills = [1, 2]))).toBeNull();
+    expect(sin((x) => delete x.bundles.done)).toBeNull();
+    expect(sin((x) => delete x.buildings)).toBeNull();
+  });
+
+  it("si la partida igual rompe al dibujarse, el límite de errores la olvida y vuelve a la caja vacía", () => {
+    const store = fakeStorage();
+    storeSave(leer());
+    let avisos = 0;
+    const b = new SaveBoundary({ onError: () => void avisos++, children: null });
+    expect(SaveBoundary.getDerivedStateFromError()).toEqual({ failed: true });
+    b.componentDidCatch();
+    expect(avisos).toBe(1);
+    expect(store["sdv-save-v1"]).toBeUndefined();
+    // Una partida rota de verdad sí tira al dibujarse: por eso hace falta el límite.
+    const rota = { ...leer(), players: leer().players.map((p) => ({ ...p, minesChests: undefined as unknown as number[] })) };
+    expect(() => inLang("en", createElement(SaveView, { save: rota, data: dataEn, route: route("en"), navigate: nav }))).toThrow();
+    // Y el texto del error sale en la caja vacía.
+    expect(inLang("es", createElement(SavePicker, { error: "broken", onFile: () => undefined }))).toContain(STARDEW_COPY.es.save.errors.broken);
   });
 
   it("sin localStorage (bloqueado) nada tira", () => {

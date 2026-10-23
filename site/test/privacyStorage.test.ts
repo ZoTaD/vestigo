@@ -9,7 +9,8 @@ import { join } from "node:path";
  * compile.
  *
  * So the source is the referee. Add a localStorage key without saying so in the
- * policy and this test is what stops it.
+ * policy and this test is what stops it. Since 2026-10-23 the policy lists the
+ * keys without a number (the game tools kept adding them).
  */
 
 const SRC = join(__dirname, "..", "src");
@@ -36,15 +37,6 @@ function storageKeys(): string[] {
   return [...keys].sort();
 }
 
-const NUMBER_WORDS: Record<number, string> = {
-  1: "One",
-  2: "Two",
-  3: "Three",
-  4: "Four",
-  5: "Five",
-  6: "Six",
-};
-
 describe("the privacy policy's account of local storage", () => {
   it("finds every key the app actually writes", () => {
     // Fails loudly if a key is added, so the list below has to be revisited
@@ -59,11 +51,14 @@ describe("the privacy policy's account of local storage", () => {
     ]);
   });
 
-  it("states the same number of items the code stores", () => {
-    const policy = readFileSync(join(SRC, "Privacy.tsx"), "utf-8");
-    const expected = NUMBER_WORDS[storageKeys().length];
-    expect(expected, "no word for that many keys — extend NUMBER_WORDS").toBeDefined();
-    expect(policy).toContain(`${expected} items of local storage`);
+  // La política ya no dice cuántas son (2026-10-23): las herramientas de cada juego sumaban claves (el checklist y el
+  // lector de partida de Stardew, entre otras) y el número quedaba viejo. Que no vuelva un número, y que nombre lo de
+  // Stardew.
+  it("doesn't state a count that can drift, and names what Stardew keeps", () => {
+    const policy = readFileSync(join(SRC, "Privacy.tsx"), "utf-8").replace(/\s+/g, " ");
+    expect(policy).not.toMatch(/(One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve) items of local storage/);
+    expect(policy).toContain("Community Center bundles you tick");
+    expect(policy).toContain("save reader, what the page shows of it (never the file itself)");
   });
 
   // The claim that matters most to a reader: none of it leaves their machine.
