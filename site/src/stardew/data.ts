@@ -15,6 +15,7 @@ import { registerStardewSlugs, type Route } from "../route";
 import type { Profession, Taste } from "../stardewCopy";
 import type { CropsData } from "./crops/calc";
 import { withPrices, type FishData } from "./fishing/state";
+import type { RecipesData } from "./recipes/state";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 
@@ -232,6 +233,26 @@ function buildFish(): FishData | null {
 }
 export const peekFish = (): FishData | null => buildFish();
 export const loadFish = (): Promise<FishData> => Promise.all([fishRaw.load(), rows.load()]).then(() => buildFish()!);
+
+/**
+ * Las recetas y las máquinas de la pestaña Recetas (`recipes.json`, un solo archivo). Anota los slugs en español de todo
+ * lo que nombra: cada plato, ingrediente, producto y máquina enlaza a su ficha de Objetos.
+ */
+const recipesRaw = once<RecipesData>(() => import("@stardew/recipes.json"));
+let recipesNoted = false;
+function noteRecipes(d: RecipesData): RecipesData {
+  if (!recipesNoted) {
+    const items = Object.values(d.refs.items).filter((r) => r[1] !== r[0]);
+    registerStardewSlugs({ items: Object.fromEntries([...items.map((r) => [r[0], r[1]]), ...d.machines.filter((m) => m.slugEs !== m.slug).map((m) => [m.slug, m.slugEs])]) });
+    recipesNoted = true;
+  }
+  return d;
+}
+export const peekRecipes = (): RecipesData | null => {
+  const d = recipesRaw.peek();
+  return d && noteRecipes(d);
+};
+export const loadRecipes = (): Promise<RecipesData> => recipesRaw.load().then(noteRecipes);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */

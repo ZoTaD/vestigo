@@ -257,10 +257,13 @@ def recipes() -> dict:
         usados_items.add(mid)
 
     refs = {
-        "items": {i: [slugs[i][0], slugs[i][1]] for i in sorted(usados_items) if i in slugs},
+        # slug, slug en español y nombre [en, es]: la pestaña nombra los ingredientes sin bajar la lista de objetos.
+        "items": {i: [slugs[i][0], slugs[i][1], *nombre_id(i)] for i in sorted(usados_items) if i in slugs},
         "cats": {c: _nombre_categoria(c) for c in sorted(usados_cats) if c in _INGREDIENTES or int(c) in sdv.CATEGORIES},
         "skills": {s: _texto("Strings/StringsFromCSFiles", _HABILIDADES[s]) for s in sorted(skills)},
         "npcs": {n: _texto("Strings/NPCNames", n) for n in sorted(npcs)},
+        # El programa de cocina de la TV ("The Queen Of Sauce"), que enseña las recetas de tipo `tv`.
+        "tv": _texto("Strings/StringsFromCSFiles", "TV.cs.13114"),
     }
     return {"recipes": lista, "machines": maquinas, "refs": refs}
 

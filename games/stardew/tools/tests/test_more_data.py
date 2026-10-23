@@ -154,7 +154,9 @@ class TestMoreData(unittest.TestCase):
         self.assertEqual(cats["-777"][0], "Wild Seeds (Any)")
 
     def test_refs(self):
-        self.assertEqual(self.rec["refs"]["items"]["254"][0], "melon")
+        self.assertEqual(self.rec["refs"]["items"]["254"], ["melon", "melon", "Melon", "Melón"])
+        self.assertEqual(self.rec["refs"]["items"]["(BC)12"][2], "Keg")
+        self.assertEqual(self.rec["refs"]["tv"], ["The Queen Of Sauce", "La reina de la salsa"])
         self.assertEqual(self.rec["refs"]["skills"]["Farming"], ["Farming", "Agricultura"])
         self.assertEqual(self.rec["refs"]["npcs"]["Emily"][0], "Emily")
 

@@ -11,10 +11,11 @@ import type { StardewSection, StardewTab } from "./route";
 import type { Fert } from "./stardew/crops/calc";
 import type { SortKey } from "./stardew/crops/state";
 import type { Kind } from "./stardew/fishing/state";
+import type { View } from "./stardew/recipes/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "villagers", "bundles"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "recipes", "villagers", "bundles"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -234,6 +235,40 @@ export interface FishingCopy {
   };
 }
 
+/** Los textos de la pestaña Recetas y máquinas: las tres vistas, el buscador, cómo se aprende y las tablas de las máquinas. */
+export interface RecipesCopy {
+  h1: string;
+  lede: string;
+  view: string;
+  views: Record<View, string>;
+  search: string;
+  searchPlaceholder: string;
+  count: (n: string) => string;
+  machinesCount: (n: string) => string;
+  none: string;
+  /** Cómo se aprende, con los nombres del juego (habilidad, aldeano, programa de TV) al lado. */
+  unlock: {
+    label: string;
+    default: string;
+    skill: (skill: string, level: number) => string;
+    friend: (npc: string, hearts: number) => string;
+    tv: (show: string) => string;
+    other: string;
+  };
+  /** Cuántos salen de una receta, en el casillero ("× 10"). */
+  makes: (n: number) => string;
+  machine: {
+    made: string;
+    notMade: string;
+    cols: { input: string; output: string; price: string; time: string };
+    /** La colmena no recibe nada: hace miel con la flor que tenga cerca. */
+    nearby: string;
+    instant: string;
+    more: (n: string) => string;
+    less: string;
+  };
+}
+
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
   /** El `<head>` de la portada y de cada pestaña: lo que se busca primero. */
@@ -269,6 +304,7 @@ export interface StardewCopy {
   bundles: BundlesCopy;
   crops: CropsCopy;
   fishing: FishingCopy;
+  recipes: RecipesCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
   tastes: Record<Taste, string>;
@@ -277,7 +313,7 @@ export interface StardewCopy {
 }
 
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes" },
   seo: {
     home: {
       title: "Stardew Valley Guide: Item Prices, Villager Gifts and Bundles | Vestigo",
@@ -302,6 +338,10 @@ const EN: StardewCopy = {
     fishing: {
       title: "Stardew Valley Fish Guide: What Fish Can I Catch Now? | Vestigo",
       description: "What fish you can catch in Stardew Valley 1.6 right now: pick the place, season, weather and time. Every fish with its location, hours, difficulty and price.",
+    },
+    recipes: {
+      title: "Stardew Valley Recipes: Cooking, Crafting and Machines | Vestigo",
+      description: "Every Stardew Valley 1.6 cooking and crafting recipe with its ingredients and how to learn it, and what each machine makes, how long it takes and its price.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -340,6 +380,7 @@ const EN: StardewCopy = {
       bundles: "Every room and bundle with what goes in it. Tick them off as you go.",
       crops: "Gold per day of every crop with your planting day, level, fertilizer and professions.",
       fishing: "What bites right now by place, season, weather and time, and every fish with its hours.",
+      recipes: "Every cooking and crafting recipe with how to learn it, and what each machine makes.",
     },
     featured: "Most looked up",
     featuredHint: "Open an item to see its prices, who loves it and what it turns into.",
@@ -514,6 +555,35 @@ const EN: StardewCopy = {
       count: (n) => `${n} fish`,
     },
   },
+  recipes: {
+    h1: "Recipes and machines",
+    lede: "Every dish and every crafted item with its ingredients and how you learn it, and what each machine turns things into.",
+    view: "Show",
+    views: { cook: "Cooking", craft: "Crafting", machines: "Machines" },
+    search: "Search by name or ingredient",
+    searchPlaceholder: "Pink Cake, Melon, Keg…",
+    count: (n) => `${n} recipes`,
+    machinesCount: (n) => `${n} machines`,
+    none: "Nothing matches that search.",
+    unlock: {
+      label: "How to learn it",
+      default: "From the start",
+      skill: (skill, level) => `${skill} level ${level}`,
+      friend: (npc, hearts) => `${npc} · ${hearts} ${hearts === 1 ? "heart" : "hearts"}`,
+      tv: (show) => `TV (${show})`,
+      other: "Other way",
+    },
+    makes: (n) => `× ${n}`,
+    machine: {
+      made: "Crafted with",
+      notMade: "Not crafted: bought or earned.",
+      cols: { input: "Goes in", output: "Comes out", price: "Price", time: "Time" },
+      nearby: "nearby flower",
+      instant: "Instant",
+      more: (n) => `See all ${n}`,
+      less: "Show fewer",
+    },
+  },
   qualities: { normal: "Normal", silver: "Silver", gold: "Gold", iridium: "Iridium" },
   // `LevelUp_ProfessionName_*` de `Strings/UI`.
   professions: {
@@ -532,7 +602,7 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas" },
   seo: {
     home: {
       title: "Guía de Stardew Valley: precios, regalos de aldeanos y paquetes | Vestigo",
@@ -557,6 +627,10 @@ const ES: StardewCopy = {
     fishing: {
       title: "Peces de Stardew Valley: qué se puede pescar ahora | Vestigo",
       description: "Qué peces se pescan en Stardew Valley 1.6 ahora mismo: elegí el lugar, la estación, el clima y la hora. Cada pez con su lugar, horario, dificultad y precio.",
+    },
+    recipes: {
+      title: "Recetas de Stardew Valley: cocina, fabricación y máquinas | Vestigo",
+      description: "Todas las recetas de cocina y fabricación de Stardew Valley 1.6 con sus ingredientes y cómo se aprenden, y qué hace cada máquina, cuánto tarda y su precio.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -595,6 +669,7 @@ const ES: StardewCopy = {
       bundles: "Cada sala y cada paquete con lo que lleva. Tachalos a medida que los completás.",
       crops: "El oro por día de cada cultivo con tu día de siembra, nivel, fertilizante y profesiones.",
       fishing: "Qué pica ahora según el lugar, la estación, el clima y la hora, y cada pez con su horario.",
+      recipes: "Cada receta de cocina y fabricación con cómo se aprende, y qué hace cada máquina.",
     },
     featured: "Los más buscados",
     featuredHint: "Abrí un objeto para ver sus precios, a quién le encanta y en qué se transforma.",
@@ -767,6 +842,35 @@ const ES: StardewCopy = {
       anySeason: "Cualquier estación",
       cols: { fish: "Pez", place: "Dónde", seasons: "Estaciones", weather: "Clima", hours: "Horario", difficulty: "Dificultad", price: "Precio" },
       count: (n) => `${n} peces`,
+    },
+  },
+  recipes: {
+    h1: "Recetas y máquinas",
+    lede: "Cada plato y cada objeto que se fabrica con sus ingredientes y cómo se aprende, y en qué transforma las cosas cada máquina.",
+    view: "Ver",
+    views: { cook: "Cocina", craft: "Fabricación", machines: "Máquinas" },
+    search: "Buscar por nombre o ingrediente",
+    searchPlaceholder: "Pastel rosa, Melón, Barril…",
+    count: (n) => `${n} recetas`,
+    machinesCount: (n) => `${n} máquinas`,
+    none: "No hay nada con esa búsqueda.",
+    unlock: {
+      label: "Cómo se aprende",
+      default: "Desde el principio",
+      skill: (skill, level) => `${skill} nivel ${level}`,
+      friend: (npc, hearts) => `${npc} · ${hearts} ${hearts === 1 ? "corazón" : "corazones"}`,
+      tv: (show) => `TV (${show})`,
+      other: "Otra forma",
+    },
+    makes: (n) => `× ${n}`,
+    machine: {
+      made: "Se fabrica con",
+      notMade: "No se fabrica: se compra o se gana.",
+      cols: { input: "Entra", output: "Sale", price: "Precio", time: "Tiempo" },
+      nearby: "flor cercana",
+      instant: "Al instante",
+      more: (n) => `Ver las ${n}`,
+      less: "Ver menos",
     },
   },
   qualities: { normal: "Normal", silver: "Plata", gold: "Oro", iridium: "Iridio" },

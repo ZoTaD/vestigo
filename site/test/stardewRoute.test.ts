@@ -19,7 +19,7 @@ describe("rutas de Stardew Valley", () => {
   });
 
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {
-    expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca" });
+    expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca", recipes: "recetas" });
     expect(routePath({ ...base, sdSection: "home" })).toBe("/en/stardew-valley");
     expect(routePath({ ...base, lang: "es", sdSection: "home" })).toBe("/es/stardew-valley");
     expect(routePath({ ...base, sdSection: "bundles" })).toBe("/en/stardew-valley/bundles");
@@ -28,8 +28,8 @@ describe("rutas de Stardew Valley", () => {
   });
 
   it("una pestaña que no existe muestra la portada, y el Centro Comunitario no lleva ficha", () => {
-    expect(parseRoute("/en/stardew-valley/recipes")).toMatchObject({ view: "stardew", sdSection: "home" });
-    expect(parseRoute("/en/stardew-valley/recipes").detail).toBeUndefined();
+    expect(parseRoute("/en/stardew-valley/museum")).toMatchObject({ view: "stardew", sdSection: "home" });
+    expect(parseRoute("/en/stardew-valley/museum").detail).toBeUndefined();
     // Pesca es una sola página: lo que sigue no es una ficha.
     expect(parseRoute("/en/stardew-valley/fishing/carp").detail).toBeUndefined();
     expect(parseRoute("/en/stardew-valley/bundles/pantry").detail).toBeUndefined();
