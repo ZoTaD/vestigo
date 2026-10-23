@@ -118,6 +118,7 @@ export const PAGES = [
   "/en/stardew-valley/calendar",
   "/es/stardew-valley/calendario",
   "/en/stardew-valley/mines",
+  "/es/stardew-valley/minas",
   "/en/stardew-valley/mines/green-slime",
   "/es/stardew-valley/minas/baba-verde",
   // Las vistas más pesadas de Minas y combate: la grilla de monstruos (en dev, 1.988 nodos y 147 imágenes) y las armas.
