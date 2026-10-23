@@ -128,6 +128,41 @@ _COFRES_REMEZCLADOS = {
     90: ["(W)8", "(W)52", "(W)45", "(W)5", "(W)60"],
     110: ["(B)514", "(B)878", "(W)50", "(W)28"],
 }
+# Las armas que tira un monstruo que brilla o un barril de las Minas (`MineShaft.getSpecialItemForThisMineLevel`, que
+# llaman `MineShaft.monsterDrop` con `hasSpecialItem` y `BreakableContainer`): tramo de pisos -> armas. El último tramo
+# (del 120 para abajo) sigue en la Caverna Calavera; en el modo peligroso, en cualquier piso, sólo la aguja de iridio.
+_ESPECIALES = [
+    ((1, 19), ["16", "24"]),
+    ((20, 39), ["22", "24", "15"]),
+    ((40, 59), ["6", "26", "15", "27"]),
+    ((60, 79), ["26", "27", "19"]),
+    ((80, 99), ["48", "18", "28", "52", "3"]),
+    ((100, 119), ["19", "50", "18", "46", "3"]),
+    ((120, None), ["45", "50", "18", "28", "52"]),
+]
+_ESPECIAL_PELIGROSO = ["61"]
+# Fuentes del código, una por arma:
+# - Cofres del volcán (`VolcanoDungeon.PopulateChest`): los comunes (tipo 0) dan una enana, 54 a 56; los raros (tipo 1),
+#   una de diente de dragón, 57 a 59.
+# - La forja (`Tool.Forge`): un arma galáctica con tres almas galácticas ("896") se vuelve la infinita.
+# - La Espada galáctica: en el Desierto de Calico, con un fragmento prismático ("74") en la mano sobre el pedestal
+#   (`GameLocation.performTouchAction` "legendarySword", `getGalaxySword`).
+# - La espada oscura: la tira la calavera embrujada de la mina de la cantera (`Bat.getExtraDropItems`, `Bat(…, 77377)`).
+# - La guja de Neptuno y el tridente roto: los cofres del tesoro de la pesca, una vez cada uno
+#   (`FishingRod.openTreasureMenuEndFunction`).
+# - La guadaña: una de las herramientas del principio (`Farmer.initialTools`).
+# - La guadaña dorada: la estatua de la mina de la cantera (`GameLocation.performAction` "GoldenScythe").
+# - La guadaña de iridio: el premio de la maestría de granja (`MasteryTrackerMenu`, habilidad 0).
+_VOLCAN = {**{n: False for n in ("54", "55", "56")}, **{n: True for n in ("57", "58", "59")}}
+_FORJA = {"62": "4", "63": "29", "64": "23"}
+_ALMA_GALACTICA = "896"
+_FRAGMENTO_PRISMATICO = "74"
+_DE_LA_CALAVERA_EMBRUJADA = {"2"}
+_DEL_TESORO_DE_PESCA = {"14", "51"}
+_DEL_PRINCIPIO = {"47"}
+_DE_LA_CANTERA = {"53"}
+_MAESTRIA = {"66": 0}
+
 # El ascensor (`MineShaft.setElevatorLit`, `prepareElevator`): se enciende en los pisos múltiplos de 5.
 _ASCENSOR = {"every": 5, "last": 120}
 
@@ -205,12 +240,93 @@ def _tiendas() -> dict[str, dict]:
     return out
 
 
+def _objeto(n: str) -> list[str]:
+    o = sdv.raw("Data/Objects")[n]["DisplayName"]
+    return [sdv.text(o, "en").strip(), sdv.text(o, "es").strip()]  # "Huevo calicó " trae un espacio al final
+
+
+def _arma(n: str) -> list[str]:
+    w = sdv.raw("Data/Weapons")[n]["DisplayName"]
+    return [sdv.text(w, "en"), sdv.text(w, "es")]
+
+
+def _fuentes_armas() -> dict[str, list[dict]]:
+    """id de arma (sin prefijo) -> de dónde más sale, aparte de la tienda del Gremio, el cofre fijo y los pisos.
+
+    Cada fuente lleva su tipo en `k`; los nombres que el juego trae van como [en, es] y el resto del texto lo arma el
+    sitio. De los datos: las metas del Gremio, las tiendas del Festival del Desierto y los cofres remezclados; del
+    código, las tablas de arriba.
+    """
+    out: dict[str, list[dict]] = {}
+
+    def sumar(n: str, f: dict) -> None:
+        if f not in out.setdefault(n, []):
+            out[n].append(f)
+
+    for n, rara in _VOLCAN.items():
+        sumar(n, {"k": "volcano", "rare": rara})
+    for n, base in _FORJA.items():
+        sumar(n, {"k": "forge", "from": f"(W){base}", "fromName": _arma(base), "item": _objeto(_ALMA_GALACTICA), "count": 3})
+    sumar("4", {"k": "desert", "place": _texto("Strings/StringsFromCSFiles", "MapPage.cs.11062"),
+                "item": _objeto(_FRAGMENTO_PRISMATICO)})
+    for n in _DE_LA_CALAVERA_EMBRUJADA:
+        sumar(n, {"k": "drop", "monster": "hauntedSkull"})
+    for n in _DEL_TESORO_DE_PESCA:
+        sumar(n, {"k": "fishing"})
+    for n in _DEL_PRINCIPIO:
+        sumar(n, {"k": "start"})
+    for n in _DE_LA_CANTERA:
+        sumar(n, {"k": "quarry"})
+    for n, habilidad in _MAESTRIA.items():
+        sumar(n, {"k": "mastery", "name": _texto("Strings/1_6_Strings", f"{habilidad}_Mastery")})
+    # Los tramos seguidos de una misma arma van juntos (del 80 al 99 y del 100 al 119 es del 80 al 119).
+    tramos: dict[str, list[list]] = {}
+    for (desde, hasta), armas in _ESPECIALES:
+        for n in dict.fromkeys(armas):
+            t = tramos.setdefault(n, [])
+            if t and t[-1][1] == desde - 1:
+                t[-1][1] = hasta
+            else:
+                t.append([desde, hasta])
+    for n, t in tramos.items():
+        for pisos in t:
+            sumar(n, {"k": "special", "floors": pisos})
+    for n in _ESPECIAL_PELIGROSO:
+        sumar(n, {"k": "special", "dangerous": True})
+    for piso, premios in _COFRES_REMEZCLADOS.items():
+        for item in premios:
+            if item.startswith("(W)"):
+                sumar(item[3:], {"k": "remixed", "floor": piso})
+    for k, q in sdv.raw("Data/MonsterSlayerQuests").items():
+        premio = q.get("RewardItemId") or ""
+        if premio.startswith("(W)"):
+            sumar(premio[3:], {"k": "slayer", "goal": k, "name": [sdv.text(q["DisplayName"], "en"), sdv.text(q["DisplayName"], "es")]})
+    # Las tiendas del Festival del Desierto (una por aldeano, `DesertFestival_<aldeano>`): se paga con huevos de Calico.
+    festival = _texto("Strings/1_6_Strings", "DesertFestival")
+    personajes = sdv.raw("Data/Characters")
+    for tienda, t in sdv.raw("Data/Shops").items():
+        if not tienda.startswith("DesertFestival_"):
+            continue
+        for it in t["Items"]:
+            iid = it.get("ItemId") or ""
+            if iid.startswith("(W)") and it.get("TradeItemId"):
+                npc = tienda.removeprefix("DesertFestival_")
+                nombre = personajes[npc]["DisplayName"] if npc in personajes else npc
+                sumar(iid[3:], {"k": "festival", "name": festival, "npc": [sdv.text(nombre, "en"), sdv.text(nombre, "es")],
+                                "price": it.get("TradeItemAmount", 1), "currency": _objeto(it["TradeItemId"])})
+    return out
+
+
 def weapons() -> list[dict]:
     tiendas = _tiendas()
+    fuentes = _fuentes_armas()
+    armas = sdv.raw("Data/Weapons")
+    if not set(fuentes) <= set(armas):
+        raise ValueError(f"fuentes de armas que no existen: {sorted(set(fuentes) - set(armas))}")
     nombres: set[str] = set()
     nombres_es: set[str] = set()
     out = []
-    for n, w in sdv.raw("Data/Weapons").items():
+    for n, w in armas.items():
         en, es = sdv.text(w["DisplayName"], "en"), sdv.text(w["DisplayName"], "es")
         out.append({
             "id": f"(W){n}",
@@ -230,6 +346,7 @@ def weapons() -> list[dict]:
             "aoe": w["AreaOfEffect"],
             "floors": None if w["MineBaseLevel"] == -1 else [w["MineBaseLevel"], w["MineMinLevel"]],
             "shop": tiendas.get(f"(W){n}"),
+            "sources": fuentes.get(n, []),
             "sprite": w["SpriteIndex"],
         })
     return out

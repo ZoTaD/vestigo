@@ -60,6 +60,55 @@ class TestMinesData(unittest.TestCase):
         self.assertEqual(self.d["slayer"]["Skeletons"]["rewardName"][0], "Skeleton Mask")
         self.assertTrue(self.d["slayer"]["FlameSpirits"]["phone"])
 
+    def test_espada_galactica_del_desierto(self):
+        fuentes = self.armas["(W)4"]["sources"]
+        desierto = next(f for f in fuentes if f["k"] == "desert")
+        self.assertEqual(desierto["place"], ["Calico Desert", "Desierto de Calico"])
+        self.assertEqual(desierto["item"], ["Prismatic Shard", "Esquirla prismática"])
+
+    def test_armas_enanas_y_de_diente_de_dragon_en_los_cofres_del_volcan(self):
+        for n in ("54", "55", "56"):
+            self.assertIn({"k": "volcano", "rare": False}, self.armas[f"(W){n}"]["sources"])
+        for n in ("57", "58", "59"):
+            self.assertIn({"k": "volcano", "rare": True}, self.armas[f"(W){n}"]["sources"])
+
+    def test_armas_infinitas_en_la_forja(self):
+        forja = next(f for f in self.armas["(W)62"]["sources"] if f["k"] == "forge")
+        self.assertEqual(forja["from"], "(W)4")
+        self.assertEqual(forja["fromName"], ["Galaxy Sword", "Espada galaxia"])
+        self.assertEqual(forja["count"], 3)
+        self.assertEqual(forja["item"][0], "Galaxy Soul")
+        self.assertEqual(next(f for f in self.armas["(W)63"]["sources"] if f["k"] == "forge")["from"], "(W)29")
+        self.assertEqual(next(f for f in self.armas["(W)64"]["sources"] if f["k"] == "forge")["from"], "(W)23")
+
+    def test_otras_fuentes_del_codigo_y_los_datos(self):
+        tipos = lambda n: [f["k"] for f in self.armas[f"(W){n}"]["sources"]]  # noqa: E731
+        self.assertIn("drop", tipos("2"))  # espada oscura: la calavera embrujada
+        self.assertEqual(next(f for f in self.armas["(W)3"]["sources"] if f["k"] == "special")["floors"], [80, 119])
+        self.assertIn("slayer", tipos("13"))
+        self.assertEqual(next(f for f in self.armas["(W)13"]["sources"] if f["k"] == "slayer")["goal"], "Insects")
+        self.assertIn("fishing", tipos("14"))
+        self.assertIn("fishing", tipos("51"))
+        self.assertIn({"k": "remixed", "floor": 10}, self.armas["(W)22"]["sources"])
+        abby = next(f for f in self.armas["(W)40"]["sources"] if f["k"] == "festival")
+        self.assertEqual((abby["npc"], abby["price"]), (["Abigail", "Abigail"], 70))
+        self.assertEqual(abby["name"], ["Desert Festival", "Festival del Desierto"])
+        self.assertEqual(abby["currency"][0], "Calico Egg")
+        self.assertIn("start", tipos("47"))
+        self.assertIn("quarry", tipos("53"))
+        self.assertEqual(next(f for f in self.armas["(W)66"]["sources"] if f["k"] == "mastery")["name"],
+                         ["Farming Mastery", "Maestría de Granja"])
+        self.assertIn({"k": "special", "dangerous": True}, self.armas["(W)61"]["sources"])
+        # Los tramos seguidos de los barriles y monstruos que brillan se juntan: la espada templaria, del 80 al fondo.
+        self.assertIn({"k": "special", "floors": [80, None]}, self.armas["(W)18"]["sources"])
+
+    def test_casi_todas_las_armas_tienen_de_donde_salir(self):
+        # Las que siguen sin fuente: sólo la tirachinas galaxia, que el juego no da en ningún lado.
+        cofres = {c["item"] for c in self.d["chests"]}
+        sin = [w["id"] for w in self.d["weapons"]
+               if not (w["shop"] or w["floors"] or w["sources"] or w["id"] in cofres)]
+        self.assertEqual(sin, ["(W)34"])
+
     def test_notas_de_zona_en_ingles_y_espanol(self):
         self.assertEqual(self.zonas["mines1"]["note"][0], "Copper at first, iron from floor 20.")
 
