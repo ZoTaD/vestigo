@@ -47,7 +47,7 @@
   - `queenOfSauce: {"<semana>": key}`: la receta que da la Reina de la Salsa cada semana, de `Data/TV/CookingChannel`, para "qué conviene hacer hoy".
 
 - [ ] Test que falla: los pesos suman 100; `shippable` incluye la Chirivía (`24`) y no el Pastel rosa (`221`); `fish` incluye el Pez globo (`128`) y no la Basura (`168`); `cooking` tiene una entrada con `out "221"`; hay 7 `stardrops`; `slayer` incluye `Slimes` con 1000 y sus 4 objetivos; `friends` incluye a Abigail y no al Enano si el código no lo cuenta.
-- [ ] Implementar, regenerar y correr toda la suite de Python (`python -m pytest games/stardew/tools/tests`).
+- [ ] Implementar, regenerar y correr toda la suite de Python (`python -m unittest discover -s games/stardew/tools/tests`).
 - [ ] Commit: `feat(stardew): datos de la perfección y de la partida para el lector`.
 
 ### Tarea 2: Datos de minas y combate (`mines_data.py`) y sus sprites
