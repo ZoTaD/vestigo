@@ -16,7 +16,7 @@ const crop = (slug: string): Crop => {
 
 const base: Opts = {
   season: 0, day: 1, level: 0, fert: "none", tiller: false, agriculturist: false, artisan: false,
-  sell: "raw", seeds: "buy", greenhouse: false,
+  sell: "raw", seeds: "buy", greenhouse: false, paddyBonus: true,
 };
 const o = (x: Partial<Opts>): Opts => ({ ...base, ...x });
 
@@ -124,6 +124,17 @@ describe("harvests", () => {
     expect(harvests(crop("melon"), o({ season: 3, greenhouse: true }))).toEqual([13, 25]);
   });
 
+  it("Arroz con y sin el bonus del arrozal", () => {
+    // [1,2,2,3] = 8. Sin bonus: 9, 17, 25.
+    expect(harvests(crop("unmilled-rice"), o({ paddyBonus: false }))).toEqual([9, 17, 25]);
+    // Con bonus 0,25: ceil(2) = 2 → 6 días: 7, 13, 19, 25.
+    expect(harvests(crop("unmilled-rice"), base)).toEqual([7, 13, 19, 25]);
+    // Bonus + Agricultor = 0,25f + 0,1f = 0,35f; ceil(8·0,35f = 2,8) = 3 → 5 días: 6, 11, 16, 21, 26.
+    expect(harvests(crop("unmilled-rice"), o({ agriculturist: true }))).toEqual([6, 11, 16, 21, 26]);
+    // A un cultivo que no es de arrozal no le cambia nada.
+    expect(harvests(crop("parsnip"), o({ paddyBonus: false }))).toEqual(harvests(crop("parsnip"), base));
+  });
+
   it("el fertilizante de velocidad acorta la primera cosecha y no el rebrote", () => {
     // Arándano [1,3,3,4,2] = 13; Speed-Gro ceil(1,3) = 2 → 11: 12, 16, 20, 24, 28.
     expect(harvests(crop("blueberry"), o({ season: 1, fert: "speed" }))).toEqual([12, 16, 20, 24, 28]);
@@ -206,6 +217,16 @@ describe("profit", () => {
     expect(p.seedCost).toBe(0);
     expect(p.seedUnknown).toBe(false);
     expect(p.net).toBeCloseTo(p.gross, 10);
+  });
+
+  it("Fibra (tope de calidad 0 en los datos): todo a precio normal aun con nivel 10 y abono de lujo", () => {
+    // Las 4 estaciones (días 1–112), 7 días: 8, 15, …, 106 → 15 cosechas. Unidades = (4 + 7)/2 + 0,01/0,99.
+    // Precio 1 en todas; sin el tope, el iridio (×2) subiría la primera unidad.
+    const fibra = crop("fiber");
+    expect(fibra.maxQuality).toBe(0);
+    const p = profit(fibra, o({ level: 10, fert: "deluxe", seeds: "own" }));
+    expect(p.harvests).toBe(15);
+    expect(p.gross).toBeCloseTo(15 * (5.5 + 0.01 / 0.99), 10);
   });
 
   it("un cultivo con tope de calidad 0 vende todo en normal", () => {

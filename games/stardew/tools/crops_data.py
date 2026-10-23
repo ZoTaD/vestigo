@@ -88,6 +88,7 @@ def crops() -> dict:
             "stack": [c["HarvestMinStack"], c["HarvestMaxStack"]],
             "extraChance": c["ExtraHarvestChance"], "perLevel": c["HarvestMaxIncreasePerFarmingLevel"],
             "raised": bool(c["IsRaised"]), "paddy": bool(c["IsPaddyCrop"]),
+            "maxQuality": c.get("HarvestMaxQuality"),
             "price": objs[h]["Price"], "cat": objs[h].get("Category", 0),
             "seedPrice": precio, "seedShop": tienda,
             "products": _productos(h, nom, nombres),

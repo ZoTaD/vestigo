@@ -41,6 +41,12 @@ class TestCropsData(unittest.TestCase):
         self.assertIn("499", self.crops)
         self.assertIn("433", self.crops)
 
+    def test_tope_de_calidad(self):
+        # Fibra (885) y Fruta Qi (890) salen siempre en calidad normal; el resto no tiene tope.
+        self.assertEqual(self.crops["885"]["maxQuality"], 0)
+        self.assertEqual(self.crops["890"]["maxQuality"], 0)
+        self.assertIsNone(self.crops["479"]["maxQuality"])
+
     def test_semilla_sin_tienda(self):
         self.assertIsNone(self.crops["499"]["seedPrice"])
         self.assertIsNone(self.crops["499"]["seedShop"])

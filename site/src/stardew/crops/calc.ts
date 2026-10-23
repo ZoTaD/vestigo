@@ -50,7 +50,7 @@ export interface Crop {
   seedShop: Pair | null;
   products: Product[];
   /** Calidad máxima de la cosecha (0 = siempre normal: Fibra y Fruta Qi). Si falta, no hay tope. */
-  maxQuality?: number;
+  maxQuality?: number | null;
 }
 
 export interface FruitTree {
@@ -89,6 +89,11 @@ export interface Opts {
   sell: "raw" | "best";
   seeds: "buy" | "own";
   greenhouse: boolean;
+  /**
+   * Arrozal: +0,25 de velocidad a los cultivos `paddy` (Arroz, Taro), como en el juego cuando la tierra está regada
+   * y junto al agua. La pestaña lo exporta prendido por defecto.
+   */
+  paddyBonus: boolean;
 }
 
 export type Best = "raw" | `(BC)${string}`;
@@ -119,9 +124,13 @@ const TILLER_CATS = new Set([-75, -79, -80]);
 /** Multiplicador de precio por calidad: normal, plata, oro, iridio (el juego guarda el iridio como calidad 4). */
 const QUALITY_LEVEL = [0, 1, 2, 4];
 
-/** Velocidad de crecimiento con las opciones: fertilizante más 0,10 de Agricultor, sumados en `float`. */
-export function speedOf(opts: Pick<Opts, "fert" | "agriculturist">): number {
+/**
+ * Velocidad de crecimiento con las opciones, sumada en `float` y en el orden del juego: fertilizante, +0,25 del arrozal
+ * (si el cultivo es `paddy` y `paddyBonus` está prendido) y +0,10 de Agricultor.
+ */
+export function speedOf(opts: Pick<Opts, "fert" | "agriculturist" | "paddyBonus">, paddy = false): number {
   let s = f(FERT_SPEED[opts.fert]);
+  if (paddy && opts.paddyBonus) s = f(s + f(0.25));
   if (opts.agriculturist) s = f(s + f(0.1));
   return s;
 }
@@ -175,7 +184,7 @@ export function harvests(crop: Crop, opts: Opts): number[] {
   const end = lastDay(crop, opts);
   const out: number[] = [];
   if (end < opts.day) return out;
-  const grow = growDays(crop.phases, speedOf(opts));
+  const grow = growDays(crop.phases, speedOf(opts, crop.paddy));
   if (crop.regrow > 0) {
     for (let d = opts.day + grow; d <= end; d += crop.regrow) out.push(d);
   } else {
@@ -192,7 +201,7 @@ function rawPrice(crop: Crop, qi: number, tiller: boolean): number {
 }
 
 /** Aplica el tope de calidad del cultivo: lo que pase del tope cae en el tope (como el `Clamp` del juego). */
-function capQuality(odds: [number, number, number, number], max: number | undefined): [number, number, number, number] {
+function capQuality(odds: [number, number, number, number], max: number | null | undefined): [number, number, number, number] {
   if (max == null) return odds;
   let top = 0;
   QUALITY_LEVEL.forEach((l, qi) => { if (l <= max) top = qi; });
