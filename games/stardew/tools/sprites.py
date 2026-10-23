@@ -14,6 +14,7 @@ from pathlib import Path
 from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import mines_data  # noqa: E402
 import relations  # noqa: E402
 import sdv  # noqa: E402
 
@@ -69,6 +70,55 @@ def plantillas() -> set[str]:
 def ids_con_sprite() -> list[str]:
     fuera = plantillas()
     return [i for i in relations.objects() if i not in fuera] + ["(BC)" + k for k in sdv.raw("Data/BigCraftables")]
+
+
+def sprite_combate(tipo: str, clave: str) -> str:
+    """Nombre del PNG de combate: armas `w-<n>.png`, botas `b-<id>.png`, baratijas `tr-<clave>.png`, monstruos `m-<slug>.png`."""
+    return f"{tipo}-{clave}.png"
+
+
+def _mas_lleno(hoja: Image.Image, x: int, y: int, w: int, h: int) -> Image.Image:
+    """El cuadro de la primera fila con más píxeles opacos: el primero suele ser un cuadro de descanso (alas
+    plegadas, el agujero del Duggy) y el sitio muestra al monstruo en pie."""
+    cuadros = [hoja.crop((x + i * w, y, x + (i + 1) * w, y + h)) for i in range(max(1, min(4, hoja.width // w)))]
+    return max(cuadros, key=lambda c: sum(c.getchannel("A").histogram()[1:]))
+
+
+def sprites_combate(salida: Path) -> int:
+    """Armas, botas, baratijas y monstruos de `mines_data` en `site/public/stardew/combat/`. Devuelve cuántos escribió."""
+    from PIL import ImageChops
+
+    salida.mkdir(parents=True, exist_ok=True)
+    datos = mines_data.mines()
+    armas = Image.open(TEXTURAS / "TileSheets/weapons.png").convert("RGBA")
+    objetos = Image.open(TEXTURAS / f"{OBJETOS[0]}.png").convert("RGBA")
+    otros = Image.open(TEXTURAS / f"{OBJETOS_2[0]}.png").convert("RGBA")
+
+    def celda(hoja: Image.Image, n: int, por_fila: int) -> Image.Image:
+        return hoja.crop(((n % por_fila) * 16, (n // por_fila) * 16, (n % por_fila) * 16 + 16, (n // por_fila) * 16 + 16))
+
+    hechos = {}
+    for w in datos["weapons"]:
+        hechos[sprite_combate("w", w["id"][3:])] = celda(armas, w["sprite"], 8)
+    for b in datos["boots"]:  # el sprite de unas botas es el objeto con su mismo número (`BootsDataDefinition`)
+        hechos[sprite_combate("b", b["id"][3:])] = celda(objetos, int(b["id"][3:]), OBJETOS[1])
+    for t in datos["trinkets"]:
+        hechos[sprite_combate("tr", t["id"][4:])] = celda(otros, t["sprite"], OBJETOS_2[1])
+    for m in datos["monsters"]:
+        o = mines_data.monster_sprite(m["key"])
+        hoja = Image.open(TEXTURAS / f"Characters/Monsters/{o['sheet']}.png").convert("RGBA")
+        im = _mas_lleno(hoja, o["x"], o["y"], o["w"], o["h"])
+        if o["tint"]:  # la baba helada y la de lodo son la baba verde con otro color (multiplicar)
+            r, g, b, a = im.split()
+            tinte = Image.new("RGB", im.size, tuple(o["tint"]))
+            im = Image.merge("RGBA", (*ImageChops.multiply(Image.merge("RGB", (r, g, b)), tinte).split(), a))
+        hechos[sprite_combate("m", m["slug"])] = im
+    for viejo in salida.glob("*.png"):
+        if viejo.name not in hechos:
+            viejo.unlink()
+    for nombre, im in hechos.items():
+        im.save(salida / nombre, optimize=True)
+    return len(hechos)
 
 
 def marco() -> Image.Image:
@@ -257,6 +307,7 @@ def main() -> None:
     suelo().save(ui / "ground.png", optimize=True)
     fuente_juego(ui / "menu-font.woff2")
     print(f"{len(list(items.glob('*.png')))} sprites, {len(list(retratos.glob('*.png')))} retratos")
+    print(f"{sprites_combate(SALIDA / 'combat')} sprites de combate")
 
 
 if __name__ == "__main__":
