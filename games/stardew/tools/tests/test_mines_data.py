@@ -52,6 +52,17 @@ class TestMinesData(unittest.TestCase):
         self.assertEqual(m["slayer"], "Slimes")
         self.assertIn("766", self.d["refs"])
 
+    def test_metas_del_gremio(self):
+        q = self.d["slayer"]["Slimes"]
+        self.assertEqual((q["count"], q["reward"]), (1000, "(O)520"))
+        self.assertEqual(q["name"], ["Slimes", "Babas"])
+        self.assertIn("520", self.d["refs"])
+        self.assertEqual(self.d["slayer"]["Skeletons"]["rewardName"][0], "Skeleton Mask")
+        self.assertTrue(self.d["slayer"]["FlameSpirits"]["phone"])
+
+    def test_notas_de_zona_en_ingles_y_espanol(self):
+        self.assertEqual(self.zonas["mines1"]["note"][0], "Copper at first, iron from floor 20.")
+
     def test_baba_verde_llega_hasta_el_piso_30_en_las_minas(self):
         # `MineShaft.getMonsterForThisLevel`, área 0: del piso 31 para arriba sólo salen Bat y RockGolem.
         donde = {w["zone"]: w["floors"] for w in self.mons["Green Slime"]["where"]}

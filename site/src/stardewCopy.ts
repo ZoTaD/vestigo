@@ -12,10 +12,11 @@ import type { Fert } from "./stardew/crops/calc";
 import type { SortKey } from "./stardew/crops/state";
 import type { Kind } from "./stardew/fishing/state";
 import type { View } from "./stardew/recipes/state";
+import type { MinesView, WeaponSort, WeaponType } from "./stardew/mines/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "recipes", "villagers", "calendar", "bundles"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "mines", "recipes", "villagers", "calendar", "bundles"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -292,6 +293,64 @@ export interface CalendarCopy {
   close: string;
 }
 
+/** Los textos de la pestaña Minas y combate: las cinco vistas y la ficha de un monstruo. */
+export interface MinesCopy {
+  h1: string;
+  lede: string;
+  view: string;
+  views: Record<MinesView, string>;
+  /** "El ascensor para cada 5 pisos, hasta el 120." */
+  elevator: (every: number, last: number) => string;
+  /** Los pisos de una zona o de un lugar; `to` null es sin fondo. */
+  floors: (from: number, to: number | null) => string;
+  noFloors: string;
+  monsters: string;
+  ores: string;
+  chests: string;
+  chestFloor: (n: number) => string;
+  remixed: string;
+  usualMonsters: string;
+  stats: { hp: string; dmg: string; def: string; speed: string; xp: string };
+  loot: string;
+  noLoot: string;
+  monstersCount: (n: string) => string;
+  dangerousTag: string;
+  weapons: {
+    sortBy: string;
+    sorts: Record<WeaponSort, string>;
+    type: string;
+    types: Record<WeaponType, string>;
+    count: (n: string) => string;
+    cols: { weapon: string; damage: string; speed: string; crit: string; where: string };
+    /** Sale en los cofres y barriles de las Minas cerca de este piso (y desde cuál). */
+    nearFloor: (base: number, min: number | null) => string;
+    /** Cuándo la vende el Gremio: desde el principio o después de un piso. */
+    shop: (floor: number | null) => string;
+    galaxy: string;
+    chest: (n: number) => string;
+    other: string;
+    ammo: string;
+    critMult: (n: string) => string;
+  };
+  gear: { rings: string; ringsHint: string; trinkets: string; trinketsHint: string; drops: string; noDrops: string };
+  boots: { cols: { boots: string; defense: string; immunity: string; where: string } };
+  monster: {
+    back: string;
+    missing: string;
+    statsTitle: string;
+    lootTitle: string;
+    lootHint: string;
+    whereTitle: string;
+    nowhere: string;
+    dangerous: string;
+    slayerTitle: string;
+    /** "Matá 1.000 entre:", y después los monstruos que cuentan. */
+    slayerGoal: (n: string) => string;
+    reward: string;
+    phone: string;
+  };
+}
+
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
   /** El `<head>` de la portada y de cada pestaña: lo que se busca primero. */
@@ -300,6 +359,8 @@ export interface StardewCopy {
   itemSeo: (name: string, has?: number) => Seo;
   /** El de una ficha de aldeano. */
   villagerSeo: (name: string) => Seo;
+  /** El de una ficha de monstruo. */
+  monsterSeo: (name: string) => Seo;
   /** La insignia de una pestaña que todavía no tiene página. */
   soon: string;
   loading: string;
@@ -329,6 +390,7 @@ export interface StardewCopy {
   fishing: FishingCopy;
   recipes: RecipesCopy;
   calendar: CalendarCopy;
+  mines: MinesCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
   tastes: Record<Taste, string>;
@@ -337,7 +399,7 @@ export interface StardewCopy {
 }
 
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat" },
   seo: {
     home: {
       title: "Stardew Valley Guide: Crop Calculator, Fish, Gifts and Bundles | Vestigo",
@@ -371,6 +433,10 @@ const EN: StardewCopy = {
       title: "Stardew Valley Calendar: Birthdays and Festivals | Vestigo",
       description: "The Stardew Valley 1.6 calendar by season: every villager birthday with the gifts they love, and every festival, from the Night Market to SquidFest.",
     },
+    mines: {
+      title: "Stardew Valley Mines Guide: Monsters, Weapons and Floors | Vestigo",
+      description: "Stardew Valley 1.6 Mines and Skull Cavern floor by floor: monsters with their drops, every weapon sortable by damage, boots, rings and the chest rewards.",
+    },
   },
   itemSeo: (name, has = 0) => {
     const t = itemTopics(has);
@@ -392,6 +458,10 @@ const EN: StardewCopy = {
     title: `${name} — Stardew Valley best gifts and birthday | Vestigo`,
     description: clip(`Every gift ${name} loves, likes, dislikes and hates in Stardew Valley 1.6, the birthday, and the loved gifts you can grow or buy.`),
   }),
+  monsterSeo: (name) => ({
+    title: `${name} — Stardew Valley monster drops and floors | Vestigo`,
+    description: clip(`${name} in Stardew Valley 1.6: health, damage and XP, every drop with its chance, the floors where it shows up and its Adventurer's Guild goal.`),
+  }),
   soon: "Soon",
   loading: "Loading…",
   loadError: "This page couldn't load.",
@@ -410,6 +480,7 @@ const EN: StardewCopy = {
       fishing: "What bites right now by place, season, weather and time, and every fish with its hours.",
       recipes: "Every cooking and crafting recipe with how to learn it, and what each machine makes.",
       calendar: "Every birthday and festival of the year, with the gifts each villager loves.",
+      mines: "Floors, monsters and their drops, every weapon by damage, boots and rings.",
     },
     featured: "Most looked up",
     featuredHint: "Open an item to see its prices, who loves it and what it turns into.",
@@ -630,6 +701,64 @@ const EN: StardewCopy = {
     empty: "No birthdays or festivals on this day.",
     close: "Close",
   },
+  mines: {
+    h1: "Mines and combat",
+    lede: "The Mines and the Skull Cavern floor by floor, every monster with what it drops, and the weapons, boots and rings to get through them.",
+    view: "Show",
+    views: { floors: "Floors", monsters: "Monsters", weapons: "Weapons", gear: "Rings and trinkets", boots: "Boots" },
+    elevator: (every, last) => `The elevator stops every ${every} floors, down to floor ${last}.`,
+    floors: (from, to) => (to == null ? `Floor ${from} and below` : from === to ? `Floor ${from}` : `Floors ${from} to ${to}`),
+    noFloors: "No floors",
+    monsters: "Monsters",
+    ores: "Ores and geodes",
+    chests: "Chests",
+    chestFloor: (n) => `Floor ${n}`,
+    remixed: "With remixed chests, one of:",
+    usualMonsters: "The usual monsters of that stretch of floors.",
+    stats: { hp: "Health", dmg: "Damage", def: "Defense", speed: "Speed", xp: "XP" },
+    loot: "Drops",
+    noLoot: "Drops nothing.",
+    monstersCount: (n) => `${n} monsters`,
+    dangerousTag: "Dangerous version",
+    weapons: {
+      sortBy: "Sort by",
+      sorts: { dmg: "Damage", speed: "Speed", crit: "Critical" },
+      type: "Type",
+      types: { all: "All", sword: "Swords", dagger: "Daggers", club: "Clubs", slingshot: "Slingshots" },
+      count: (n) => `${n} weapons`,
+      cols: { weapon: "Weapon", damage: "Damage", speed: "Speed", crit: "Critical", where: "Where to get it" },
+      nearFloor: (base, min) => `Found in the mines near floor ${base}${min ? ` (from floor ${min})` : ""}`,
+      shop: (floor) => (floor ? `after floor ${floor}` : "from the start"),
+      galaxy: "after the Galaxy Sword",
+      chest: (n) => `Chest on floor ${n}`,
+      other: "Another way (quest, event or special drop)",
+      ammo: "Ammo",
+      critMult: (n) => `× ${n}`,
+    },
+    gear: {
+      rings: "Rings",
+      ringsHint: "Up to two at a time, one on each hand. Open a ring to see how it's crafted or what drops it.",
+      trinkets: "Trinkets",
+      trinketsHint: "One at a time, after the Combat Mastery. X is a number each trinket rolls on its own.",
+      drops: "Dropped by monsters",
+      noDrops: "Doesn't drop",
+    },
+    boots: { cols: { boots: "Boots", defense: "Defense", immunity: "Immunity", where: "Where to get them" } },
+    monster: {
+      back: "All monsters",
+      missing: "That monster isn't here. These are all of them.",
+      statsTitle: "Stats",
+      lootTitle: "Drops",
+      lootHint: "The chance of each drop per kill.",
+      whereTitle: "Where it shows up",
+      nowhere: "Not on any floor.",
+      dangerous: "It also has a stronger version in dangerous mode, after Mr. Qi's challenge.",
+      slayerTitle: "Adventurer's Guild",
+      slayerGoal: (n) => `Slay ${n} in total of:`,
+      reward: "Reward",
+      phone: "Marlon's phone number, to use the Item Recovery Service by phone",
+    },
+  },
   qualities: { normal: "Normal", silver: "Silver", gold: "Gold", iridium: "Iridium" },
   // `LevelUp_ProfessionName_*` de `Strings/UI`.
   professions: {
@@ -648,7 +777,7 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate" },
   seo: {
     home: {
       title: "Guía de Stardew Valley: cultivos, peces, regalos y paquetes | Vestigo",
@@ -682,6 +811,10 @@ const ES: StardewCopy = {
       title: "Calendario de Stardew Valley: cumpleaños y festivales | Vestigo",
       description: "Calendario de Stardew Valley 1.6: el cumpleaños de cada aldeano con los regalos que le encantan y cada festival, del Mercado nocturno a la Fiesta del Calamar.",
     },
+    mines: {
+      title: "Minas de Stardew Valley: monstruos, armas y pisos | Vestigo",
+      description: "Las Minas y la Caverna Calavera de Stardew Valley 1.6 piso por piso: monstruos con su botín, cada arma ordenada por daño, botas, anillos y los cofres.",
+    },
   },
   itemSeo: (name, has = 0) => {
     const t = itemTopics(has);
@@ -699,6 +832,10 @@ const ES: StardewCopy = {
       description: clip(`${name} en Stardew Valley 1.6: su precio de venta por calidad${parts.length ? `, ${join(parts, "y")}` : ""}.`),
     };
   },
+  monsterSeo: (name) => ({
+    title: `${name} — Stardew Valley: botín y pisos donde sale | Vestigo`,
+    description: clip(`${name} en Stardew Valley 1.6: salud, daño y experiencia, todo lo que suelta con su probabilidad, los pisos donde sale y su meta del Gremio de Aventureros.`),
+  }),
   villagerSeo: (name) => ({
     title: `${name} — Stardew Valley: regalos favoritos y cumpleaños | Vestigo`,
     description: clip(`Todo lo que a ${name} le encanta, le gusta, no le gusta y odia de regalo en Stardew Valley 1.6, su cumpleaños y los favoritos que se cultivan o se compran.`),
@@ -721,6 +858,7 @@ const ES: StardewCopy = {
       fishing: "Qué pica ahora según el lugar, la estación, el clima y la hora, y cada pez con su horario.",
       recipes: "Cada receta de cocina y fabricación con cómo se aprende, y qué hace cada máquina.",
       calendar: "Cada cumpleaños y festival del año, con los regalos que le encantan a cada aldeano.",
+      mines: "Pisos, monstruos y lo que sueltan, cada arma por daño, botas y anillos.",
     },
     featured: "Los más buscados",
     featuredHint: "Abrí un objeto para ver sus precios, a quién le encanta y en qué se transforma.",
@@ -940,6 +1078,64 @@ const ES: StardewCopy = {
     passiveNote: "Se va y se viene cuando uno quiere: el día sigue como siempre.",
     empty: "Ese día no hay cumpleaños ni festivales.",
     close: "Cerrar",
+  },
+  mines: {
+    h1: "Minas y combate",
+    lede: "Las Minas y la Caverna Calavera piso por piso, cada monstruo con lo que suelta, y las armas, botas y anillos para atravesarlas.",
+    view: "Mostrar",
+    views: { floors: "Pisos", monsters: "Monstruos", weapons: "Armas", gear: "Anillos y baratijas", boots: "Botas" },
+    elevator: (every, last) => `El ascensor para cada ${every} pisos, hasta el ${last}.`,
+    floors: (from, to) => (to == null ? `Del piso ${from} para abajo` : from === to ? `Piso ${from}` : `Pisos ${from} a ${to}`),
+    noFloors: "Sin pisos",
+    monsters: "Monstruos",
+    ores: "Minerales y geodas",
+    chests: "Cofres",
+    chestFloor: (n) => `Piso ${n}`,
+    remixed: "Con los cofres remezclados, uno de estos:",
+    usualMonsters: "Los monstruos de siempre de ese tramo de pisos.",
+    stats: { hp: "Salud", dmg: "Daño", def: "Defensa", speed: "Velocidad", xp: "Experiencia" },
+    loot: "Botín",
+    noLoot: "No suelta nada.",
+    monstersCount: (n) => `${n} monstruos`,
+    dangerousTag: "Versión peligrosa",
+    weapons: {
+      sortBy: "Ordenar por",
+      sorts: { dmg: "Daño", speed: "Velocidad", crit: "Crítico" },
+      type: "Tipo",
+      types: { all: "Todas", sword: "Espadas", dagger: "Dagas", club: "Porras", slingshot: "Tirachinas" },
+      count: (n) => `${n} armas`,
+      cols: { weapon: "Arma", damage: "Daño", speed: "Velocidad", crit: "Crítico", where: "Dónde se consigue" },
+      nearFloor: (base, min) => `Sale en las minas cerca del piso ${base}${min ? ` (desde el ${min})` : ""}`,
+      shop: (floor) => (floor ? `después del piso ${floor}` : "desde el principio"),
+      galaxy: "después de la Espada galáctica",
+      chest: (n) => `Cofre del piso ${n}`,
+      other: "Otra forma (misión, evento o botín especial)",
+      ammo: "Munición",
+      critMult: (n) => `× ${n}`,
+    },
+    gear: {
+      rings: "Anillos",
+      ringsHint: "Hasta dos a la vez, uno en cada mano. Abrí un anillo para ver cómo se fabrica o quién lo suelta.",
+      trinkets: "Baratijas",
+      trinketsHint: "Una a la vez, después de la maestría de Combate. X es un número que cada baratija trae a su suerte.",
+      drops: "La sueltan los monstruos",
+      noDrops: "No la sueltan",
+    },
+    boots: { cols: { boots: "Botas", defense: "Defensa", immunity: "Inmunidad", where: "Dónde se consiguen" } },
+    monster: {
+      back: "Todos los monstruos",
+      missing: "Ese monstruo no está. Estos son todos.",
+      statsTitle: "Estadísticas",
+      lootTitle: "Botín",
+      lootHint: "La probabilidad de cada cosa por monstruo muerto.",
+      whereTitle: "Dónde sale",
+      nowhere: "En ningún piso.",
+      dangerous: "Tiene además una versión más fuerte en el modo peligroso, después del desafío del Sr. Qi.",
+      slayerTitle: "Gremio de Aventureros",
+      slayerGoal: (n) => `Matá ${n} entre:`,
+      reward: "Premio",
+      phone: "El teléfono de Marlon, para usar el Servicio de Recuperación de Objetos por teléfono",
+    },
   },
   qualities: { normal: "Normal", silver: "Plata", gold: "Oro", iridium: "Iridio" },
   // `LevelUp_ProfessionName_*` de `Strings/UI.es-ES`.

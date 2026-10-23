@@ -17,6 +17,7 @@ import type { CropsData } from "./crops/calc";
 import { withPrices, type FishData } from "./fishing/state";
 import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
+import type { MinesData } from "./mines/state";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 
@@ -70,7 +71,8 @@ export type Source =
   | { k: "tree"; sapling: string; days: number; seasons: number[] }
   | { k: "shop"; shop: Pair; price: number }
   | { k: "fish" | "forage"; where: Pair[]; seasons: number[] }
-  | { k: "monster"; who: Pair; rate: number };
+  /** `slug`/`slugEs`: la ficha del monstruo en Minas y combate, si la tiene. */
+  | { k: "monster"; who: Pair; rate: number; slug?: string; slugEs?: string };
 
 /** Receta de la que sale: tipo, clave, cuántos salen e ingredientes (id, o categoría en negativo, y cantidad). */
 export type MakeRecipe = [kind: "cook" | "craft", key: string, qty: number, ings: [id: string, n: number][]];
@@ -188,7 +190,10 @@ function note(f: Ficha | null): Ficha | null {
     const items: Record<string, string> = f.slugEs !== f.slug ? { [f.slug]: f.slugEs } : {};
     const villagersEs: Record<string, string> = {};
     for (const [key, r] of Object.entries(f.refs)) if (r[1] !== r[0]) (people.has(key) ? villagersEs : items)[r[0]] = r[1];
-    registerStardewSlugs({ items, villagers: villagersEs });
+    // Los monstruos que lo sueltan enlazan a su ficha de Minas y combate.
+    const mines: Record<string, string> = {};
+    for (const s of f.sources) if (s.k === "monster" && s.slug && s.slugEs && s.slugEs !== s.slug) mines[s.slug] = s.slugEs;
+    registerStardewSlugs({ items, villagers: villagersEs, mines });
   }
   return f;
 }
@@ -277,6 +282,30 @@ export function peekCalendar(lang: Lang): CalendarBundle | null {
 }
 export const loadCalendar = (lang: Lang): Promise<CalendarBundle> =>
   Promise.all([calendar.load(), loadVillagers(), loadList(lang)]).then(() => peekCalendar(lang)!);
+
+/**
+ * Minas y combate (`mines.json`, un solo archivo): armas, botas, anillos, baratijas, monstruos, pisos y cofres. Anota los
+ * slugs en español de los monstruos (sus fichas) y de los objetos que nombra (botín, minerales, anillos y premios), que
+ * enlazan a Objetos.
+ */
+const minesRaw = once<MinesData>(() => import("@stardew/mines.json"));
+let minesNoted = false;
+function noteMines(d: MinesData): MinesData {
+  if (!minesNoted) {
+    const items = [...Object.values(d.refs).map((r) => [r[0], r[1]]), ...d.rings.map((r) => [r.slug, r.slugEs])].filter(([en, es]) => en !== es);
+    registerStardewSlugs({
+      items: Object.fromEntries(items),
+      mines: Object.fromEntries(d.monsters.filter((m) => m.slugEs !== m.slug).map((m) => [m.slug, m.slugEs])),
+    });
+    minesNoted = true;
+  }
+  return d;
+}
+export const peekMines = (): MinesData | null => {
+  const d = minesRaw.peek();
+  return d && noteMines(d);
+};
+export const loadMines = (): Promise<MinesData> => minesRaw.load().then(noteMines);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */

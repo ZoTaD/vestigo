@@ -21,7 +21,7 @@ import { preloadCraftRoute } from "./zomboid/crafting/data";
 import { preloadItemsRoute as preloadRsItemsRoute } from "./rust/items/data";
 import { preloadCraftingRoute as preloadTrCraftingRoute, preloadItemsRoute as preloadTrItemsRoute } from "./terraria/data";
 import { preloadPatchesRoute as preloadTrPatchesRoute } from "./terraria/patches/data";
-import { loadBundles as loadSdBundles, loadCalendar as loadSdCalendar, loadCrops as loadSdCrops, loadFish as loadSdFish, loadRecipes as loadSdRecipes, preloadItemsRoute as preloadSdItemsRoute, preloadVillagersRoute as preloadSdVillagersRoute } from "./stardew/data";
+import { loadBundles as loadSdBundles, loadCalendar as loadSdCalendar, loadCrops as loadSdCrops, loadFish as loadSdFish, loadMines as loadSdMines, loadRecipes as loadSdRecipes, preloadItemsRoute as preloadSdItemsRoute, preloadVillagersRoute as preloadSdVillagersRoute } from "./stardew/data";
 import { loadHome as loadSdHome } from "./stardew/homeData";
 import { preloadFarmingRoute } from "./rust/farming/data";
 import { preloadPatchesRoute } from "./rust/patches/data";
@@ -55,7 +55,7 @@ async function preload(route: Route): Promise<void> {
     return;
   }
   // Stardew Valley (2026-10-22): lo de la portada, la ficha o la lista de Objetos, los aldeanos (y la lista para los
-  // regalos de una ficha), las salas del Centro Comunitario, los cultivos, los peces, las recetas y el calendario. Sin esto la página sale con "cargando…" y
+  // regalos de una ficha), las salas del Centro Comunitario, los cultivos, los peces, las recetas, el calendario y Minas y combate. Sin esto la página sale con "cargando…" y
   // el prerender corta el build (`isSdLoadingPage` en vite.config.ts).
   if (route.view === "stardew") {
     const sec = route.sdSection ?? "home";
@@ -67,6 +67,7 @@ async function preload(route: Route): Promise<void> {
     if (sec === "fishing") await quiet(loadSdFish());
     if (sec === "recipes") await quiet(loadSdRecipes());
     if (sec === "calendar") await quiet(loadSdCalendar(route.lang));
+    if (sec === "mines") await quiet(loadSdMines());
     return;
   }
   if (route.view !== "deadlock") return;

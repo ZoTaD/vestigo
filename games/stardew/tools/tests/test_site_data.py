@@ -92,6 +92,14 @@ class TestSiteData(unittest.TestCase):
         self.assertEqual(vistos["Wilderness Golem"], {"Gólem salvaje"})
         self.assertTrue(all(len(v) == 1 for v in vistos.values()))
 
+    def test_el_botin_de_un_monstruo_enlaza_a_su_ficha(self):
+        # La Baba verde suelta Baba (766): la fuente lleva el slug de su ficha en Minas y combate.
+        baba = [s for s in self.out["fichas"]["slime"]["sources"] if s["k"] == "monster" and s["who"][0] == "Green Slime"]
+        self.assertEqual((baba[0]["slug"], baba[0]["slugEs"]), ("green-slime", "baba-verde"))
+        # Un monstruo que el juego no pone en ningún lado (Shadow Guy) no tiene ficha: va sin slug.
+        sin = [s for f in self.out["fichas"].values() for s in f["sources"] if s["k"] == "monster" and "slug" not in s]
+        self.assertTrue(all(s["who"][0] not in ("Green Slime", "Bat") for s in sin))
+
     def test_salas_en_el_orden_del_juego(self):
         self.assertEqual([s["room"] for s in self.out["bundles"]],
                          ["Pantry", "Crafts Room", "Fish Tank", "Boiler Room", "Bulletin Board", "Vault", "Abandoned Joja Mart"])

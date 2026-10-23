@@ -73,7 +73,8 @@ def ids_con_sprite() -> list[str]:
 
 
 def sprite_combate(tipo: str, clave: str) -> str:
-    """Nombre del PNG de combate: armas `w-<n>.png`, botas `b-<id>.png`, baratijas `tr-<clave>.png`, monstruos `m-<slug>.png`."""
+    """Nombre del PNG de combate: armas `w-<n>.png`, botas `b-<id>.png`, baratijas `tr-<clave>.png`, monstruos
+    `m-<slug>.png` y sombreros `h-<n>.png`."""
     return f"{tipo}-{clave}.png"
 
 
@@ -104,10 +105,22 @@ def sprites_combate(salida: Path) -> int:
         hechos[sprite_combate("b", b["id"][3:])] = celda(objetos, int(b["id"][3:]), OBJETOS[1])
     for t in datos["trinkets"]:
         hechos[sprite_combate("tr", t["id"][4:])] = celda(otros, t["sprite"], OBJETOS_2[1])
+    # Los sombreros que da el Gremio de Aventureros: `hats.png`, 12 por fila de 20x20 y cuatro filas por sombrero (una
+    # por dirección); el primer cuadro es el de frente (`FarmerRenderer.drawHatAccessory`).
+    sombreros = Image.open(TEXTURAS / "Characters/Farmer/hats.png").convert("RGBA")
+    for q in datos["slayer"].values():
+        if (q["reward"] or "").startswith("(H)"):
+            n = int(q["reward"][3:])
+            x, y = (n % 12) * 20, (n // 12) * 80
+            hechos[sprite_combate("h", str(n))] = sombreros.crop((x, y, x + 20, y + 20))
     for m in datos["monsters"]:
         o = mines_data.monster_sprite(m["key"])
         hoja = Image.open(TEXTURAS / f"Characters/Monsters/{o['sheet']}.png").convert("RGBA")
-        im = _mas_lleno(hoja, o["x"], o["y"], o["w"], o["h"])
+        if o.get("frame") is not None:
+            x = o["x"] + o["frame"] * o["w"]
+            im = hoja.crop((x, o["y"], x + o["w"], o["y"] + o["h"]))
+        else:
+            im = _mas_lleno(hoja, o["x"], o["y"], o["w"], o["h"])
         if o["tint"]:  # la baba helada y la de lodo son la baba verde con otro color (multiplicar)
             r, g, b, a = im.split()
             tinte = Image.new("RGB", im.size, tuple(o["tint"]))
