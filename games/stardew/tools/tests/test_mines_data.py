@@ -52,6 +52,11 @@ class TestMinesData(unittest.TestCase):
         self.assertEqual(m["slayer"], "Slimes")
         self.assertIn("766", self.d["refs"])
 
+    def test_baba_verde_llega_hasta_el_piso_30_en_las_minas(self):
+        # `MineShaft.getMonsterForThisLevel`, área 0: del piso 31 para arriba sólo salen Bat y RockGolem.
+        donde = {w["zone"]: w["floors"] for w in self.mons["Green Slime"]["where"]}
+        self.assertEqual(donde["mines1"], [2, 30])
+
     def test_bruto_de_las_sombras_segun_el_codigo(self):
         # `MineShaft.getMonsterForThisLevel`: sale en el área 80 (pisos 80 a 120); la rama de la Calavera no lo trae.
         zonas = {w["zone"]: w["floors"] for w in self.mons["Shadow Brute"]["where"]}

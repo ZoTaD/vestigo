@@ -72,7 +72,7 @@ _MINERALES = {
 # lava, de iridio), `VolcanoDungeon.populateLevel` y `RockGolem(position, difficultyMod)`. Quedan afuera los que el juego
 # no pone en ningún lado: Shadow Guy, Fireball, Crow, Frog, Cat, Dwarvish Sentry, Truffle Crab y Skeleton Warrior.
 _DONDE = {
-    "Green Slime": [("mines1", 2, 39), ("slimes", 6, 29)],
+    "Green Slime": [("mines1", 2, 30), ("slimes", 6, 29)],
     "Frost Jelly": [("mines2", 40, 79), ("slimes", 46, 69)],
     "Sludge": [("mines3", 80, 120), ("slimes", 86, 109), ("skull", 121, None), ("quarry", None, None)],
     "Big Slime": [("slimes", 6, 109), ("skull", 121, None)],
