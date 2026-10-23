@@ -15,7 +15,7 @@ import type { View } from "./stardew/recipes/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "recipes", "villagers", "bundles"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "recipes", "villagers", "calendar", "bundles"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -269,6 +269,29 @@ export interface RecipesCopy {
   };
 }
 
+/** Los textos de la pestaña Calendario: el tablón, los días de la semana y el detalle de un día. */
+export interface CalendarCopy {
+  h1: string;
+  lede: string;
+  season: string;
+  /** Los días de la semana, de lunes a domingo: el día 1 de cada estación es lunes. */
+  weekdays: [string, string, string, string, string, string, string];
+  hint: string;
+  /** "13 de otoño". */
+  dayTitle: (day: number, season: string) => string;
+  /** "15–17 de invierno", o el día solo. */
+  range: (range: string, season: string) => string;
+  birthday: (name: string) => string;
+  profile: string;
+  festival: string;
+  passive: string;
+  /** Qué pasa ese día: el festival ocupa el día, o se va y se viene. */
+  festivalNote: string;
+  passiveNote: string;
+  empty: string;
+  close: string;
+}
+
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
   /** El `<head>` de la portada y de cada pestaña: lo que se busca primero. */
@@ -305,6 +328,7 @@ export interface StardewCopy {
   crops: CropsCopy;
   fishing: FishingCopy;
   recipes: RecipesCopy;
+  calendar: CalendarCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
   tastes: Record<Taste, string>;
@@ -313,7 +337,7 @@ export interface StardewCopy {
 }
 
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar" },
   seo: {
     home: {
       title: "Stardew Valley Guide: Item Prices, Villager Gifts and Bundles | Vestigo",
@@ -342,6 +366,10 @@ const EN: StardewCopy = {
     recipes: {
       title: "Stardew Valley Recipes: Cooking, Crafting and Machines | Vestigo",
       description: "Every Stardew Valley 1.6 cooking and crafting recipe with its ingredients and how to learn it, and what each machine makes, how long it takes and its price.",
+    },
+    calendar: {
+      title: "Stardew Valley Calendar: Birthdays and Festivals | Vestigo",
+      description: "The Stardew Valley 1.6 calendar by season: every villager birthday with the gifts they love, and every festival, Night Market, Desert Festival and SquidFest included.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -381,6 +409,7 @@ const EN: StardewCopy = {
       crops: "Gold per day of every crop with your planting day, level, fertilizer and professions.",
       fishing: "What bites right now by place, season, weather and time, and every fish with its hours.",
       recipes: "Every cooking and crafting recipe with how to learn it, and what each machine makes.",
+      calendar: "Every birthday and festival of the year, with the gifts each villager loves.",
     },
     featured: "Most looked up",
     featuredHint: "Open an item to see its prices, who loves it and what it turns into.",
@@ -584,6 +613,23 @@ const EN: StardewCopy = {
       less: "Show fewer",
     },
   },
+  calendar: {
+    h1: "Calendar",
+    lede: "Every birthday and festival of the year, laid out like the town board. Tap a day to see what the birthday villager loves and how long a festival lasts.",
+    season: "Season",
+    weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    hint: "Tap a day to see its birthday gifts and festivals.",
+    dayTitle: (day, season) => `${season} ${day}`,
+    range: (range, season) => `${season} ${range}`,
+    birthday: (name) => `${name}'s birthday`,
+    profile: "Villager page",
+    festival: "Festival",
+    passive: "Passive festival",
+    festivalNote: "The day is spent at the festival.",
+    passiveNote: "Come and go as you like: the day goes on as usual.",
+    empty: "No birthdays or festivals on this day.",
+    close: "Close",
+  },
   qualities: { normal: "Normal", silver: "Silver", gold: "Gold", iridium: "Iridium" },
   // `LevelUp_ProfessionName_*` de `Strings/UI`.
   professions: {
@@ -602,7 +648,7 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario" },
   seo: {
     home: {
       title: "Guía de Stardew Valley: precios, regalos de aldeanos y paquetes | Vestigo",
@@ -631,6 +677,10 @@ const ES: StardewCopy = {
     recipes: {
       title: "Recetas de Stardew Valley: cocina, fabricación y máquinas | Vestigo",
       description: "Todas las recetas de cocina y fabricación de Stardew Valley 1.6 con sus ingredientes y cómo se aprenden, y qué hace cada máquina, cuánto tarda y su precio.",
+    },
+    calendar: {
+      title: "Calendario de Stardew Valley: cumpleaños y festivales | Vestigo",
+      description: "El calendario de Stardew Valley 1.6 por estación: el cumpleaños de cada aldeano con los regalos que le encantan y cada festival, con el Mercado nocturno y la Fiesta del Calamar.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -670,6 +720,7 @@ const ES: StardewCopy = {
       crops: "El oro por día de cada cultivo con tu día de siembra, nivel, fertilizante y profesiones.",
       fishing: "Qué pica ahora según el lugar, la estación, el clima y la hora, y cada pez con su horario.",
       recipes: "Cada receta de cocina y fabricación con cómo se aprende, y qué hace cada máquina.",
+      calendar: "Cada cumpleaños y festival del año, con los regalos que le encantan a cada aldeano.",
     },
     featured: "Los más buscados",
     featuredHint: "Abrí un objeto para ver sus precios, a quién le encanta y en qué se transforma.",
@@ -872,6 +923,23 @@ const ES: StardewCopy = {
       more: (n) => `Ver las ${n}`,
       less: "Ver menos",
     },
+  },
+  calendar: {
+    h1: "Calendario",
+    lede: "Cada cumpleaños y festival del año, como en el tablón del pueblo. Tocá un día para ver qué le encanta al cumpleañero y cuánto dura un festival.",
+    season: "Estación",
+    weekdays: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+    hint: "Tocá un día para ver los regalos del cumpleaños y los festivales.",
+    dayTitle: (day, season) => `${day} de ${season.toLowerCase()}`,
+    range: (range, season) => `${range} de ${season.toLowerCase()}`,
+    birthday: (name) => `Cumpleaños de ${name}`,
+    profile: "Ver su ficha",
+    festival: "Festival",
+    passive: "Festival pasivo",
+    festivalNote: "Ese día se pasa en el festival.",
+    passiveNote: "Se va y se viene cuando uno quiere: el día sigue como siempre.",
+    empty: "Ese día no hay cumpleaños ni festivales.",
+    close: "Cerrar",
   },
   qualities: { normal: "Normal", silver: "Plata", gold: "Oro", iridium: "Iridio" },
   // `LevelUp_ProfessionName_*` de `Strings/UI.es-ES`.

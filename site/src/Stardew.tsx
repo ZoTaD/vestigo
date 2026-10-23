@@ -30,6 +30,7 @@ const SdBundles = lazyWithPreload(() => import("./stardew/bundles/StardewBundles
 const SdCrops = lazyWithPreload(() => import("./stardew/crops/StardewCrops"));
 const SdFishing = lazyWithPreload(() => import("./stardew/fishing/StardewFishing"));
 const SdRecipes = lazyWithPreload(() => import("./stardew/recipes/StardewRecipes"));
+const SdCalendar = lazyWithPreload(() => import("./stardew/calendar/StardewCalendar"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `STARDEW_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `STARDEW_TAB_FILES`.
@@ -40,6 +41,7 @@ const TABS: Partial<Record<StardewSection, LazyTab>> = {
   crops: SdCrops,
   fishing: SdFishing,
   recipes: SdRecipes,
+  calendar: SdCalendar,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -64,6 +66,8 @@ const TAB_DATA: Partial<Record<StardewSection, (route: Route) => Promise<unknown
   fishing: () => Promise.all([SdFishing.preload(), import("./stardew/data").then((m) => m.loadFish())]),
   // Las recetas y las máquinas: un solo archivo que baja con el chunk.
   recipes: () => Promise.all([SdRecipes.preload(), import("./stardew/data").then((m) => m.loadRecipes())]),
+  // El calendario (chico), los aldeanos y la lista de objetos del idioma, para los regalos del día elegido.
+  calendar: (route) => Promise.all([SdCalendar.preload(), import("./stardew/data").then((m) => m.loadCalendar(route.lang))]),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Stardew Valley, y sus datos. */

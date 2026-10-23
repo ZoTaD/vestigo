@@ -15,6 +15,7 @@ import { registerStardewSlugs, type Route } from "../route";
 import type { Profession, Taste } from "../stardewCopy";
 import type { CropsData } from "./crops/calc";
 import { withPrices, type FishData } from "./fishing/state";
+import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
@@ -253,6 +254,29 @@ export const peekRecipes = (): RecipesData | null => {
   return d && noteRecipes(d);
 };
 export const loadRecipes = (): Promise<RecipesData> => recipesRaw.load().then(noteRecipes);
+
+/**
+ * El Calendario: los días de cada estación (`calendar.json`, chico), los aldeanos (nombre, ficha y lo que les encanta) y
+ * la lista de objetos del idioma, de donde salen el nombre y el sprite de cada regalo. Aldeanos y lista son los mismos
+ * archivos de Aldeanos y Objetos: si ya bajaron, no se piden de nuevo.
+ */
+const calendar = once<CalendarData>(() => import("@stardew/calendar.json"));
+export interface CalendarBundle {
+  cal: CalendarData;
+  villagers: Villager[];
+  rows: Row[];
+}
+/** Uno por idioma, el mismo objeto en cada dibujo. */
+const calendars: Partial<Record<Lang, CalendarBundle>> = {};
+export function peekCalendar(lang: Lang): CalendarBundle | null {
+  if (calendars[lang]) return calendars[lang]!;
+  const cal = calendar.peek();
+  const people = peekVillagers();
+  const list = peekList(lang);
+  return cal && people && list ? (calendars[lang] = { cal, villagers: people, rows: list }) : null;
+}
+export const loadCalendar = (lang: Lang): Promise<CalendarBundle> =>
+  Promise.all([calendar.load(), loadVillagers(), loadList(lang)]).then(() => peekCalendar(lang)!);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */
