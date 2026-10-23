@@ -25,7 +25,8 @@
      confundía la C con la O y el 5 con el 8.) */
   --sd-pixel: "SV Menu", "Nunito", sans-serif;
   --sd-text: "Nunito", sans-serif;
-  --sd-hero: clamp(300px, 34vw, 500px);
+  /* Hasta 420: más alto, en una notebook el título y la herramienta de cada pestaña quedaban fuera de la pantalla. */
+  --sd-hero: clamp(280px, 30vw, 420px);
   position: relative;
   min-height: 80vh;
   padding-bottom: 56px;
@@ -34,6 +35,8 @@
   /* Debajo del cielo, el pasto de la granja: baldosas del juego sorteadas (`suelo()` de sprites.py) a 3x, para que
      las cajas se apoyen en el campo y no en un color plano. */
   background: #5aa83a url(/stardew/ui/ground.png) 0 0 / 768px repeat;
+  /* Rige también para la imagen de fondo: sin esto, el pasto agrandado ×3 sale borroso. Toda la sección es pixel art. */
+  image-rendering: pixelated;
   overflow-x: clip;
 }
 .sd a { color: inherit; text-decoration: none; }
