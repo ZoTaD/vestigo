@@ -23,6 +23,12 @@ _HABILIDADES = {
 }
 # Lugares de Data/Locations que no son sitios del mapa: la pesca de los festivales.
 _LUGARES_FUERA = {"Temp", "fishingGame"}
+# Categorías de ingrediente con nombre propio en `CraftingRecipe.cs.568-574` ("Egg (Any)", …).
+_INGREDIENTES = {
+    "-81": "CraftingRecipe.cs.568", "-2": "CraftingRecipe.cs.569", "-75": "CraftingRecipe.cs.570",
+    "-4": "CraftingRecipe.cs.571", "-5": "CraftingRecipe.cs.572", "-6": "CraftingRecipe.cs.573",
+    "-777": "CraftingRecipe.cs.574",
+}
 # Peces de las Minas: el juego los reparte por piso en el código (`MineShaft.getFish`), no en Data/Locations.
 _PECES_DE_LAS_MINAS = {"158", "161"}
 # Zonas de la Isla Jengibre: el juego las nombra igual; la zona es texto nuestro [en, es].
@@ -37,6 +43,12 @@ _GRANJAS = {"Farm_Forest": "Character_FarmForaging", "Farm_Beach": "Character_Fa
 def _texto(archivo: str, clave: str) -> list[str]:
     en = sdv.raw(archivo)[clave]
     return [en, sdv.raw(archivo + ".es-ES").get(clave) or en]
+
+
+def _nombre_categoria(cat: str) -> list[str]:
+    if cat in _INGREDIENTES:
+        return _texto("Strings/StringsFromCSFiles", _INGREDIENTES[cat])
+    return list(sdv.CATEGORIES[int(cat)])
 
 
 def _horas(texto: str) -> list[list[int]]:
@@ -198,7 +210,7 @@ def recipes() -> dict:
 
     refs = {
         "items": {i: [slugs[i][0], slugs[i][1]] for i in sorted(usados_items) if i in slugs},
-        "cats": {c: list(sdv.CATEGORIES[int(c)]) for c in sorted(usados_cats) if int(c) in sdv.CATEGORIES},
+        "cats": {c: _nombre_categoria(c) for c in sorted(usados_cats) if c in _INGREDIENTES or int(c) in sdv.CATEGORIES},
         "skills": {s: _texto("Strings/StringsFromCSFiles", _HABILIDADES[s]) for s in sorted(skills)},
         "npcs": {n: _texto("Strings/NPCNames", n) for n in sorted(npcs)},
     }

@@ -33,9 +33,9 @@ class TestMoreData(unittest.TestCase):
         self.assertIn("Mountain", [x["key"] for x in p["places"]])
 
     def test_rey_rata_no_es_pez(self):
-        self.assertNotIn("Rat King", [p["name"][0] for p in self.pesca["fish"]])
         nombres = {p["name"][0] for p in self.pesca["fish"]}
         self.assertNotIn("Rat King", nombres)
+        self.assertIn("Pufferfish", nombres)
 
     def test_hora_pasada_la_medianoche(self):
         self.assertEqual(self.peces["800"]["times"], [[600, 2600]])
@@ -99,8 +99,20 @@ class TestMoreData(unittest.TestCase):
         for i in (0, 1):
             nombres = [x["name"][i] for x in self.pesca["places"]]
             self.assertEqual(len(nombres), len(set(nombres)))
-        todos = [x["name"][0] for p in self.pesca["fish"] for x in p["places"]]
-        self.assertTrue(todos)
+        claves = [x["key"] for x in self.pesca["places"]]
+        self.assertEqual(len(claves), len(set(claves)))
+        self.assertGreater(len(claves), 10)
+
+    def test_categorias_de_ingrediente_con_nombre(self):
+        cats = self.rec["refs"]["cats"]
+        negativos = {i for r in self.rec["recipes"] for i, _ in r["ings"] if i.startswith("-")}
+        self.assertTrue(negativos)
+        for c in negativos:
+            self.assertEqual(len(cats[c]), 2, c)
+            self.assertTrue(all(n and "[" not in n for n in cats[c]), c)
+        self.assertNotEqual(cats["-5"], cats["-6"])
+        self.assertEqual(cats["-5"][0], "Egg (Any)")
+        self.assertEqual(cats["-777"][0], "Wild Seeds (Any)")
 
     def test_refs(self):
         self.assertEqual(self.rec["refs"]["items"]["254"][0], "melon")
