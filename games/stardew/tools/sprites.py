@@ -6,6 +6,7 @@ cambia con un parche del juego.
 
 Uso: python games/stardew/tools/sprites.py
 """
+import random
 import shutil
 import sys
 from pathlib import Path
@@ -95,6 +96,43 @@ def marco() -> Image.Image:
         t = y / 191
         px[x, y] = tuple(round(a + (b - a) * t) for a, b in zip(arriba[:3], abajo[:3])) + (255,)
         pendientes += [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+    return im
+
+
+def suelo(lado: int = 16, semilla: int = 7) -> Image.Image:
+    """El pasto de fondo de la sección: `lado`×`lado` baldosas de 16 px del pasto común del juego, al azar.
+
+    Se toman de `Maps/spring_outdoorsTileSheet.png` las baldosas opacas del mismo verde que el pasto de la granja
+    (la (0,7) de la hoja) y sin píxeles amarillos o naranjas (palitos y bordes de camino, que repetidos se ven como
+    rayas). Sorteadas con semilla fija, así el archivo no cambia de una corrida a otra; repetido en la página no se
+    nota el patrón porque cada baldosa ya es distinta.
+    """
+    hoja = Image.open(TEXTURAS / "Maps/spring_outdoorsTileSheet.png").convert("RGBA")
+    ancho, alto = hoja.size
+
+    def baldosa(tx: int, ty: int) -> Image.Image:
+        return hoja.crop((tx * 16, ty * 16, tx * 16 + 16, ty * 16 + 16))
+
+    def promedio(t: Image.Image) -> list[float]:
+        px = t.load()
+        return [sum(px[x, y][i] for y in range(16) for x in range(16)) / 256 for i in range(3)]
+
+    ref = promedio(baldosa(0, 7))
+    limpias = []
+    for ty in range(alto // 16):
+        for tx in range(ancho // 16):
+            t = baldosa(tx, ty)
+            px = t.load()
+            pixeles = [px[x, y] for y in range(16) for x in range(16)]
+            if any(p[3] < 255 for p in pixeles) or any(p[0] > 120 for p in pixeles):
+                continue
+            if sum(abs(a - b) for a, b in zip(promedio(t), ref)) < 18:
+                limpias.append(t)
+    azar = random.Random(semilla)
+    im = Image.new("RGBA", (lado * 16, lado * 16))
+    for y in range(lado):
+        for x in range(lado):
+            im.paste(azar.choice(limpias), (x * 16, y * 16))
     return im
 
 
@@ -216,6 +254,7 @@ def main() -> None:
     Image.open(TEXTURAS / "Maps/MenuTiles.png").convert("RGBA").crop(_CASILLERO).save(ui / "slot.png", optimize=True)
     shutil.copyfile(TEXTURAS / "LooseSprites/stardewPanorama.png", ui / "panorama.png")
     texto_juego("Stardew Valley").save(ui / "title.png", optimize=True)
+    suelo().save(ui / "ground.png", optimize=True)
     fuente_juego(ui / "menu-font.woff2")
     print(f"{len(list(items.glob('*.png')))} sprites, {len(list(retratos.glob('*.png')))} retratos")
 
