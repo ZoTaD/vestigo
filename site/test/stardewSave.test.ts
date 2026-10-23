@@ -8,14 +8,15 @@ import { readFileSync } from "node:fs";
 import { DOMParser } from "@xmldom/xmldom";
 import { createElement, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { afterEach, beforeAll, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { LangContext } from "../src/i18n";
 import { parseRoute, routePath, type Route } from "../src/route";
 import { STARDEW_COPY } from "../src/stardewCopy";
 import { readDone } from "../src/stardew/bundles/progress";
 import { loadSaveBundle, type SaveBundle } from "../src/stardew/data";
 import { parseSave, type Save } from "../src/stardew/save/parse";
-import StardewSave, { SaveBoundary, SavePicker, SaveView } from "../src/stardew/save/StardewSave";
+import StardewSave, { PartMissing, SaveBoundary, SavePicker, SaveView } from "../src/stardew/save/StardewSave";
+import { perfection, type SaveData } from "../src/stardew/save/progress";
 import { checklistFromSave, forgetSave, isOldVersion, readStoredSave, storeSave, syncChecklist } from "../src/stardew/save/store";
 
 const parser = new DOMParser({ onError: () => {} }) as unknown as { parseFromString(s: string, type: string): Document };
@@ -176,9 +177,85 @@ describe("la partida leída", () => {
     expect(html).toContain("× 1 · Gold");
   });
 
+  it("el tinte de \"ya lo tenés\" no sale si el paquete pide calidad (la granja no la guarda)", () => {
+    const s = leer();
+    s.bundles.defs = [{ room: "Pantry", index: 0, name: "Spring Crops", items: [["24", 5, 2], ["188", 1, 0]], need: 2 }];
+    s.bundles.done = {};
+    s.items["24"] = 9;
+    s.items["188"] = 3;
+    const html = view(s);
+    // La clase del casillero de cada objeto que falta (el de calidad oro es la Chirivía, 24).
+    const cls = (slug: string) => html.match(new RegExp(`href="/en/stardew-valley/items/${slug}" class="([^"]*)"`))?.[1];
+    expect(cls("parsnip")).toBe("sd-cell sd-sv-cell");
+    expect(cls("green-bean")).toBe("sd-cell sd-sv-cell is-have");
+  });
+
   it("una partida de la 1.5 avisa que la perfección puede no coincidir", () => {
     expect(view({ ...leer(), version: "1.5.6" })).toContain("This save is from version 1.5.6");
     expect(view(leer())).not.toContain("This save is from version");
+  });
+});
+
+describe("lo que falta de una parte de la perfección, con dos granjeros", () => {
+  let data: SaveBundle;
+  beforeAll(async () => {
+    data = await loadSaveBundle("en");
+  });
+  const ctx = (lang: "en" | "es") =>
+    ({
+      data,
+      byId: new Map(data.rows.map((r) => [r.id, r])),
+      people: new Map(data.villagers.map((v) => [v.key, v])),
+      route: route(lang),
+      navigate: nav,
+      lang,
+      locale: lang,
+    }) as Parameters<typeof PartMissing>[0]["x"];
+
+  /** El invitado con todos los amigos a 8 ♥ salvo Robin (a 2); el anfitrión, sin ninguno. */
+  const variante = () => {
+    const s = leer();
+    s.players[0].friends = {};
+    s.players[1].friends = Object.fromEntries(
+      (data.save as SaveData).friends.map((f) => [f.key, { points: (f.key === "Robin" ? 2 : f.max) * 250, giftsWeek: 0, giftToday: false, status: "Friendly" }]),
+    );
+    return s;
+  };
+
+  it("los corazones salen del granjero del que sale la parte, y dice de quién es la cuenta", () => {
+    const s = variante();
+    const part = perfection(s, data.save).parts.find((p) => p.key === "friends")!;
+    expect(part.who).toBe(1);
+    expect(part.missing).toEqual(["Robin"]);
+    const html = inLang("en", createElement(PartMissing, { part, save: s, x: ctx("en") })).replaceAll("&#x27;", "'");
+    // Robin con los 2 ♥ del invitado, no los 0 del anfitrión.
+    expect(html).toContain("2 / 10 ♥");
+    expect(html).toContain(STARDEW_COPY.en.save.perfection.from(s.players[1].name));
+    const es = inLang("es", createElement(PartMissing, { part, save: s, x: ctx("es") }));
+    expect(es).toContain(STARDEW_COPY.es.save.perfection.from(s.players[1].name));
+  });
+
+  it("las muertes del Gremio salen del mismo granjero que la parte", () => {
+    const s = leer();
+    s.players[0].kills = {};
+    const q = (data.save as SaveData).slayer[0];
+    s.players[1].kills = { [q.targets[0]]: 7 };
+    const part = perfection(s, data.save).parts.find((p) => p.key === "slayer")!;
+    // Nadie la cumple: es la del anfitrión, con sus 0.
+    expect(part.who).toBe(0);
+    const html = inLang("en", createElement(PartMissing, { part, save: s, x: ctx("en") }));
+    expect(html).toContain(`<span class="sd-sv-num">0 / ${q.count.toLocaleString("en")}</span>`);
+    // Con un solo granjero no dice de quién es.
+    const solo = { ...s, players: [s.players[0]] };
+    const p1 = perfection(solo, data.save).parts.find((p) => p.key === "slayer")!;
+    expect(inLang("en", createElement(PartMissing, { part: p1, save: solo, x: ctx("en") }))).not.toContain(STARDEW_COPY.en.save.perfection.from(s.players[0].name));
+  });
+
+  it("la cifra total se trunca a un decimal", () => {
+    const html = inLang("en", createElement(SaveView, { save: leer(), data, route: route("en"), navigate: nav }));
+    const total = Number(html.match(/data-total="([0-9.]+)"/)![1]);
+    const shown = Number(html.match(/class="sd-sv-total"[^>]*>([0-9.]+)/)![1]);
+    expect(shown).toBe(Math.floor(total * 10) / 10);
   });
 });
 
@@ -234,7 +311,12 @@ describe("lo que se guarda en el navegador", () => {
     let avisos = 0;
     const b = new SaveBoundary({ onError: () => void avisos++, children: null });
     expect(SaveBoundary.getDerivedStateFromError()).toEqual({ failed: true });
-    b.componentDidCatch();
+    const err = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const e = new Error("rota");
+    b.componentDidCatch(e);
+    // Antes de olvidarla deja el error en la consola, para poder diagnosticarlo.
+    expect(err).toHaveBeenCalledWith(expect.any(String), e);
+    err.mockRestore();
     expect(avisos).toBe(1);
     expect(store["sdv-save-v1"]).toBeUndefined();
     // Una partida rota de verdad sí tira al dibujarse: por eso hace falta el límite.

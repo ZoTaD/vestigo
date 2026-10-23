@@ -27,7 +27,7 @@ import { qualityIndex, roomAnchor } from "../bundles/progress";
 import { loadSaveBundle, peekSaveBundle, say, type Lang, type Row, type SaveBundle, type Villager } from "../data";
 import { Box, Gold, Group, Pill, Slot, Sprite, type Nav } from "../ui";
 import { normId, type Player, type Save } from "./parse";
-import { bundleStatus, missingFish, missingRecipes, perfection, today, weekGifts, type BundleItem, type Part, type Tip } from "./progress";
+import { bundleStatus, missingFish, missingRecipes, perfection, shownPercent, today, weekGifts, type BundleItem, type Part, type Tip } from "./progress";
 import { forgetSave, isOldVersion, readSaveFile, readStoredSave, storeSave, syncChecklist, type ReadError } from "./store";
 import "../../styles/stardew-items.css";
 import "../../styles/stardew-bundles.css";
@@ -82,7 +82,9 @@ export class SaveBoundary extends Component<{ onError: () => void; children: Rea
   static getDerivedStateFromError() {
     return { failed: true };
   }
-  componentDidCatch() {
+  componentDidCatch(error?: unknown) {
+    // Antes de olvidarla, el error a la consola: sin esto no queda rastro de qué la rompió.
+    console.error("Lector de partida: la partida rompió al dibujarse y se olvida", error);
     forgetSave();
     this.props.onError();
   }
@@ -279,7 +281,7 @@ export function SaveView({
         <p className="sd-muted">{c.private}</p>
       </Box>
       <TodayBox save={save} player={player} x={x} />
-      <PerfectionBox save={save} player={player} x={x} />
+      <PerfectionBox save={save} x={x} />
       <GiftsBox save={save} player={player} x={x} />
       <BundlesBox save={save} x={x} />
       <MissingBox save={save} player={player} x={x} />
@@ -441,7 +443,7 @@ function TipBody({ tip, x, c }: { tip: Tip; x: Ctx; c: SaveCopy["today"] }) {
 
 // --- Perfección -----------------------------------------------------------------------------------------------------
 
-function PerfectionBox({ save, player, x }: { save: Save; player: Player; x: Ctx }) {
+function PerfectionBox({ save, x }: { save: Save; x: Ctx }) {
   const t = useStardewCopy();
   const c = t.save.perfection;
   const p = useMemo(() => perfection(save, x.data.save), [save, x.data.save]);
@@ -453,7 +455,7 @@ function PerfectionBox({ save, player, x }: { save: Save; player: Player; x: Ctx
           {c.title}
         </h2>
         <p className="sd-sv-total" data-total={p.total.toFixed(2)}>
-          {num(p.total, x.locale, 1)}
+          {num(shownPercent(p.total), x.locale, 1)}
           <small>%</small>
         </p>
       </header>
@@ -461,7 +463,7 @@ function PerfectionBox({ save, player, x }: { save: Save; player: Player; x: Ctx
       <ul className="sd-sv-parts">
         {p.parts.map((part) => (
           <li key={part.key}>
-            <PartRow part={part} name={say(names.get(part.key) ?? [part.key, part.key], x.lang)} player={player} x={x} />
+            <PartRow part={part} name={say(names.get(part.key) ?? [part.key, part.key], x.lang)} save={save} x={x} />
           </li>
         ))}
       </ul>
@@ -469,7 +471,7 @@ function PerfectionBox({ save, player, x }: { save: Save; player: Player; x: Ctx
   );
 }
 
-function PartRow({ part, name, player, x }: { part: Part; name: string; player: Player; x: Ctx }) {
+function PartRow({ part, name, save, x }: { part: Part; name: string; save: Save; x: Ctx }) {
   const c = useStardewCopy().save.perfection;
   const [open, setOpen] = useState(false);
   const got = (part.weight * part.pct) / 100;
@@ -483,13 +485,28 @@ function PartRow({ part, name, player, x }: { part: Part; name: string; player: 
         </span>
         <span className="sd-sv-ppoints">{c.points(num(got, x.locale, 1), num(part.weight, x.locale))}</span>
       </summary>
-      {open && <PartMissing part={part} player={player} x={x} />}
+      {open && <PartMissing part={part} save={save} x={x} />}
     </details>
   );
 }
 
-/** Lo que falta de una parte de la perfección, con lo que haga falta para nombrarlo. */
-function PartMissing({ part, player, x }: { part: Part; player: Player; x: Ctx }) {
+/**
+ * Lo que falta de una parte de la perfección, con lo que haga falta para nombrarlo. Los corazones y las muertes salen
+ * del mismo granjero que la parte (`part.who`), no del elegido arriba: si no, la lista sería de uno y las cifras de otro.
+ * Con más de un granjero dice de quién es la cuenta.
+ */
+export function PartMissing({ part, save, x }: { part: Part; save: Save; x: Ctx }) {
+  const c = useStardewCopy().save.perfection;
+  const who = part.who !== null && save.players.length > 1 ? save.players[part.who] : undefined;
+  return (
+    <>
+      {who && <p className="sd-sv-pmore sd-sv-pwho">{c.from(who.name)}</p>}
+      <PartList part={part} player={save.players[part.who ?? 0] ?? save.players[0]} x={x} />
+    </>
+  );
+}
+
+function PartList({ part, player, x }: { part: Part; player: Player; x: Ctx }) {
   const c = useStardewCopy().save.perfection;
   const s = x.data.save;
   if (part.key === "level") return <p className="sd-sv-pmore">{c.level(part.done)}</p>;
@@ -736,8 +753,9 @@ function BundleCell({ it, have, x }: { it: BundleItem; have: number; x: Ctx }) {
       )}
     </>
   );
-  // El tinte de "ya lo tenés" sólo si alcanza: 13 maderas de 99 se anotan, pero no se pintan.
-  return <ItemCell id={id} x={x} note={note} have={have >= qty} />;
+  // El tinte de "ya lo tenés" sólo si alcanza: 13 maderas de 99 se anotan, pero no se pintan. Y sólo sin calidad: la
+  // granja (`save.items`) no guarda de qué calidad es cada uno, así que 9 chirivías no dicen que haya 5 de oro.
+  return <ItemCell id={id} x={x} note={note} have={quality === 0 && have >= qty} />;
 }
 
 // --- Peces y recetas que faltan -------------------------------------------------------------------------------------

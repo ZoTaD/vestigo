@@ -54,6 +54,11 @@ export interface Part {
   pct: number;
   /** Ids o claves de lo que falta (vacío en el nivel y las nueces, que son un número). */
   missing: string[];
+  /**
+   * Índice en `save.players` del granjero del que sale la parte (lo que falta, los corazones, las muertes); `null` en las
+   * de la granja (obeliscos, reloj de oro y nueces).
+   */
+  who: number | null;
 }
 
 export interface Perfection {
@@ -95,20 +100,29 @@ function count<T>(list: readonly T[], ok: (x: T) => boolean, id: (x: T) => strin
   return { done, missing };
 }
 
+/** Una cuenta con el granjero del que sale (índice en `save.players`; `null` si es de la granja). */
+type Counted = Count & { who: number | null };
+
 /** El granjero que más tiene; ante un empate, el primero (el anfitrión), como `GetFarmCompletion` con número. */
-function best(players: readonly Player[], f: (p: Player) => Count): Count {
-  let out = f(players[0]);
-  for (const p of players.slice(1)) {
+function best(players: readonly Player[], f: (p: Player) => Count): Counted {
+  let out: Counted = { ...f(players[0]), who: 0 };
+  players.forEach((p, i) => {
+    if (i === 0) return;
     const c = f(p);
-    if (c.done > out.done) out = c;
-  }
+    if (c.done > out.done) out = { ...c, who: i };
+  });
   return out;
 }
 
 /** El anfitrión si cumple; si no, el primero que cumpla; si nadie, el anfitrión (`GetFarmCompletion` con sí o no). */
-function firstDone(players: readonly Player[], f: (p: Player) => Count, total: number): Count {
-  return players.map(f).find((c) => c.done >= total) ?? f(players[0]);
+function firstDone(players: readonly Player[], f: (p: Player) => Count, total: number): Counted {
+  const all = players.map(f);
+  const i = all.findIndex((c) => c.done >= total);
+  return i >= 0 ? { ...all[i], who: i } : { ...all[0], who: 0 };
 }
+
+/** Lo que se muestra del total: truncado a un decimal, para no decir 100 sin estarlo (99,96 → 99,9). */
+export const shownPercent = (total: number): number => Math.floor(total * 10 + 1e-6) / 10;
 
 function slayerOf(p: Player, data: SaveData): Count {
   return count(
@@ -136,10 +150,11 @@ export function perfection(save: Save, data: SaveData): Perfection {
     friends: data.friends.length, level: 25, stardrops: data.stardrops.length, cooking: data.cooking.length,
     crafting: data.crafting.length, fish: data.fish.length, walnuts: data.walnuts,
   };
-  const counts: Record<string, () => Count> = {
+  const farm = (c: Count): Counted => ({ ...c, who: null });
+  const counts: Record<string, () => Counted> = {
     shipped: () => best(ps, (p) => count(data.shippable, (id) => has(p.shipped, id), (id) => id)),
-    obelisks: () => count(data.obelisks, (b) => built.has(b), (b) => b),
-    clock: () => (built.has(data.clock) ? { done: 1, missing: [] } : { done: 0, missing: [data.clock] }),
+    obelisks: () => farm(count(data.obelisks, (b) => built.has(b), (b) => b)),
+    clock: () => farm(built.has(data.clock) ? { done: 1, missing: [] } : { done: 0, missing: [data.clock] }),
     slayer: () => firstDone(ps, (p) => slayerOf(p, data), total.slayer),
     friends: () =>
       best(ps, (p) => count(data.friends, (f) => (p.friends[f.key]?.points ?? 0) >= f.max * HEART, (f) => f.key)),
@@ -152,17 +167,17 @@ export function perfection(save: Save, data: SaveData): Perfection {
       }),
     crafting: () => best(ps, (p) => count(data.crafting, (r) => (p.crafting[r.key] ?? 0) > 0, (r) => r.key)),
     fish: () => best(ps, (p) => count(data.fish, (id) => has(p.fish, id), (id) => id)),
-    walnuts: () => ({ done: Math.min(save.walnuts, data.walnuts), missing: [] }),
+    walnuts: () => farm({ done: Math.min(save.walnuts, data.walnuts), missing: [] }),
   };
   /** Las de sí o no: el juego da todo el peso o nada. */
   const allOrNothing = new Set(["clock", "slayer", "stardrops"]);
 
   const parts: Part[] = data.perfection.map(({ key, weight }) => {
-    const c = counts[key]?.() ?? { done: 0, missing: [] };
+    const c = counts[key]?.() ?? { done: 0, missing: [], who: null };
     const t = total[key] ?? 0;
     const share = t > 0 ? c.done / t : 0;
     const pct = allOrNothing.has(key) ? (c.done >= t && t > 0 ? 100 : 0) : share * 100;
-    return { key, weight, done: c.done, total: t, pct, missing: c.missing };
+    return { key, weight, done: c.done, total: t, pct, missing: c.missing, who: c.who };
   });
   const sum = parts.reduce((a, p) => a + (p.weight * p.pct) / 100, 0);
   const weights = parts.reduce((a, p) => a + p.weight, 0);
@@ -251,6 +266,8 @@ export interface WeekGift {
   inDays: number;
   hearts: number;
   giftsWeek: number;
+  /** Ya le regaló hoy. */
+  giftToday: boolean;
   /** Lo que le encanta, primero lo que hay en la granja. */
   loved: { id: string; have: number }[];
 }
@@ -274,6 +291,7 @@ export function weekGifts(save: Save, player: Player, villagers: readonly Villag
         inDays: n,
         hearts: Math.floor((f?.points ?? 0) / HEART),
         giftsWeek: f?.giftsWeek ?? 0,
+        giftToday: f?.giftToday ?? false,
         loved,
       });
     }
@@ -410,7 +428,7 @@ const festivalsOn = (cal: CalendarData, season: number, day: number): Festival[]
   cal.seasons[season]?.days[String(day)]?.festivals ?? [];
 
 /**
- * Los consejos del día, en este orden: cumpleaños de hoy, festival hoy o mañana, últimos días para plantar, peces que
+ * Los consejos del día, en este orden: cumpleaños de hoy (si todavía no le regaló), festival hoy o mañana, últimos días para plantar, peces que
  * se van con la estación (en la última semana), objetos de paquetes de la estación que faltan y no tiene, la Reina de
  * la Salsa (domingo) y el carro ambulante (viernes y domingo).
  */
@@ -418,9 +436,9 @@ export function today(save: Save, player: Player, data: TodayData): Tip[] {
   const tips: Tip[] = [];
   const { season, day } = save;
 
-  // Cumpleaños de hoy, con lo que le encanta y hay en la granja.
+  // Cumpleaños de hoy, con lo que le encanta y hay en la granja; si ya le regaló hoy, no hace falta recordarlo.
   for (const g of weekGifts(save, player, data.villagers)) {
-    if (g.inDays !== 0) continue;
+    if (g.inDays !== 0 || g.giftToday) continue;
     tips.push({ kind: "birthday", ids: [g.key, ...g.loved.filter((l) => l.have > 0).map((l) => l.id)] });
   }
 

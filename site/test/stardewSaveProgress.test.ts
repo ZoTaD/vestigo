@@ -25,6 +25,7 @@ import {
   missingFish,
   missingRecipes,
   perfection,
+  shownPercent,
   today,
   weekGifts,
   type SaveData,
@@ -125,6 +126,47 @@ describe("perfection", () => {
     delete kills[data.slayer[0].targets[0]];
     const sl2 = perfection(t, data).parts.find((x) => x.key === "slayer")!;
     expect(sl2.pct).toBe(0);
+  });
+});
+
+describe("perfection: de qué granjero sale cada parte", () => {
+  it("cada parte dice de quién sale (who): el que más tiene, o el anfitrión si empatan; las de la granja, null", () => {
+    const t = leer();
+    // El invitado tiene a todos los amigos al máximo; el anfitrión, a nadie.
+    t.players[1].friends = Object.fromEntries(
+      data.friends.map((f) => [f.key, { points: f.max * 250, giftsWeek: 0, giftToday: false, status: "Friendly" }]),
+    );
+    t.players[0].friends = {};
+    const p = perfection(t, data);
+    const part = (k: string) => p.parts.find((x) => x.key === k)!;
+    expect(part("friends").who).toBe(1);
+    expect(part("friends").missing).toEqual([]);
+    // Empate en peces (los dos pescaron lo mismo): el anfitrión.
+    t.players[1].fish = { ...t.players[0].fish };
+    expect(perfection(t, data).parts.find((x) => x.key === "fish")!.who).toBe(0);
+    for (const k of ["obelisks", "clock", "walnuts"]) expect(part(k).who).toBeNull();
+  });
+
+  it("en las de sí o no, el primero que la cumple aunque no sea el anfitrión", () => {
+    const t = leer();
+    const kills: Record<string, number> = {};
+    for (const q of data.slayer) kills[q.targets[0]] = q.count;
+    t.players[1].kills = kills;
+    expect(perfection(t, data).parts.find((x) => x.key === "slayer")!.who).toBe(1);
+    // Si nadie la cumple, el anfitrión.
+    expect(perfection(leer(), data).parts.find((x) => x.key === "slayer")!.who).toBe(0);
+  });
+});
+
+describe("shownPercent", () => {
+  it("trunca a un decimal: nunca dice 100 sin estarlo", () => {
+    expect(shownPercent(99.96)).toBe(99.9);
+    expect(shownPercent(99.99999)).toBe(99.9);
+    expect(shownPercent(12.38)).toBe(12.3);
+    expect(shownPercent(100)).toBe(100);
+    // Un 100 que la suma de flotantes deja apenas por debajo sigue siendo 100.
+    expect(shownPercent(100 - 1e-12)).toBe(100);
+    expect(shownPercent(0)).toBe(0);
   });
 });
 
@@ -241,6 +283,14 @@ describe("today", () => {
     const t = today(s, s.players[0], todayData);
     expect(t[0].kind).toBe("birthday");
     expect(t[0].ids).toEqual(["Leo", leo.tastes.love[0]]);
+  });
+
+  it("el cumpleaños de hoy no sale si ya se le regaló hoy", () => {
+    const s = leer();
+    s.players[0].friends.Leo = { points: 0, giftsWeek: 1, giftToday: true, status: "Friendly" };
+    expect(today(s, s.players[0], todayData).some((x) => x.kind === "birthday")).toBe(false);
+    // Al otro granjero, que no le regaló, sí se lo recuerda.
+    expect(today(s, s.players[1], todayData).some((x) => x.kind === "birthday")).toBe(true);
   });
 
   it("el festival de mañana (Danza de las medusas el 28 de verano)", () => {

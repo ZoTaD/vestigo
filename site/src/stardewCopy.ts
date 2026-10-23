@@ -391,6 +391,8 @@ export interface SaveCopy {
     walnuts: string;
     allDone: string;
     hearts: (have: number, need: number) => string;
+    /** Con más de un granjero: de quién sale lo que se muestra de la parte. */
+    from: (name: string) => string;
   };
   gifts: {
     title: string;
@@ -888,6 +890,7 @@ const EN: StardewCopy = {
       walnuts: "Golden Walnuts are found on Ginger Island.",
       allDone: "Done.",
       hearts: (have, need) => `${have} / ${need} ♥`,
+      from: (name) => `This part counts ${name}'s progress.`,
     },
     gifts: {
       title: "Gifts this week",
@@ -1353,6 +1356,7 @@ const ES: StardewCopy = {
       walnuts: "Las nueces doradas se encuentran en la Isla Jengibre.",
       allDone: "Hecho.",
       hearts: (have, need) => `${have} / ${need} ♥`,
+      from: (name) => `Esta parte cuenta lo de ${name}.`,
     },
     gifts: {
       title: "Regalos de la semana",

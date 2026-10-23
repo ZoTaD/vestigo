@@ -80,6 +80,8 @@
 .sd-sv-part.is-done .sd-sv-pcount { color: var(--sd-wood); }
 .sd-sv-part > :not(summary) { margin: 0 12px 12px; }
 .sd-sv-pmore { font-size: 15px; }
+/* De qué granjero es la cuenta (con más de uno), arriba de lo que falta. */
+.sd-sv-pwho { color: var(--sd-dim); font-weight: 800; }
 @container (max-width: 560px) {
   .sd-sv-part > summary { grid-template-columns: minmax(0, 1fr) auto; }
   .sd-sv-ppoints { grid-column: 1 / -1; text-align: left; }
