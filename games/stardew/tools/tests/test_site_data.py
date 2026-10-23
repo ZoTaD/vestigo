@@ -6,7 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import site_data  # noqa: E402
-from sprites import sprite_file  # noqa: E402
+from sprites import fuente_juego, sprite_file  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[4]
 SPRITES = ROOT / "site/public/stardew/items"
@@ -138,6 +138,21 @@ class TestSiteData(unittest.TestCase):
         self.assertEqual(site_data.estaciones_de([{"k": "shop", "shop": "Festival_NightMarket_MagicBoat_Day1"}]), [3])
         self.assertEqual(site_data.estaciones_de([{"k": "shop", "shop": "DesertFestival_Pierre"}]), [0])
         self.assertIsNone(site_data.estaciones_de([{"k": "shop", "shop": "SeedShop"}]))
+
+
+
+class TestFuente(unittest.TestCase):
+    def test_la_fuente_sale_igual_en_dos_corridas(self):
+        # Sin la hora del reloj adentro: dos corridas seguidas dan el mismo archivo, byte a byte.
+        import tempfile
+        import time
+
+        with tempfile.TemporaryDirectory() as tmp:
+            a, b = Path(tmp) / "a.woff2", Path(tmp) / "b.woff2"
+            fuente_juego(a)
+            time.sleep(1.1)  # la fecha de `head` va en segundos
+            fuente_juego(b)
+            self.assertEqual(a.read_bytes(), b.read_bytes())
 
 
 if __name__ == "__main__":

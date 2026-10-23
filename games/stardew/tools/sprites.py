@@ -232,6 +232,10 @@ _BASE = 11
 _TRAZO = (86, 22, 12)
 
 
+# La fecha que lleva la fuente: fija, para que el archivo no cambie entre corridas.
+_FECHA_FUENTE = "Fri Oct 23 00:00:00 2026"
+
+
 def _letra(hoja: Image.Image, c: str) -> Image.Image:
     i = ord(c) - 32
     return hoja.crop(((i % 16) * 8, (i // 16) * 16, (i % 16) * 8 + 8, (i // 16) * 16 + 16))
@@ -246,6 +250,7 @@ def fuente_juego(destino: Path) -> int:
     letras tiene.
     """
     from fontTools.fontBuilder import FontBuilder
+    from fontTools.misc.timeTools import timestampFromString
     from fontTools.pens.ttGlyphPen import TTGlyphPen
 
     u = 100
@@ -287,6 +292,10 @@ def fuente_juego(destino: Path) -> int:
     fb.setupNameTable({"familyName": "Vestigo Stardew Menu", "styleName": "Regular"})
     fb.setupOS2(sTypoAscender=14 * u, sTypoDescender=-4 * u, usWinAscent=14 * u, usWinDescent=4 * u)
     fb.setupPost()
+    # Fecha fija en `head`, sin la hora del reloj, y sin que `save` la recalcule: así el archivo sale igual, byte a
+    # byte, en cada corrida en que no cambia nada.
+    fb.font["head"].created = fb.font["head"].modified = timestampFromString(_FECHA_FUENTE)
+    fb.font.recalcTimestamp = False
     fb.font.flavor = "woff2"
     fb.save(str(destino))
     return len(cmap)
