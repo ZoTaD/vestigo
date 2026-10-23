@@ -22,8 +22,10 @@ export interface Product {
   name: Pair;
   price: number;
   days: number;
-  /** Unidades de cultivo por producto (5 en el deshidratador). */
+  /** Unidades de cultivo por producto (5 en el deshidratador y en el Café). */
   per: number;
+  /** Producto artesanal (categoría −26): el Artesano le suma 40 %. El Café no lo es. */
+  artisan: boolean;
 }
 
 export interface Crop {
@@ -109,10 +111,14 @@ export interface Profit {
   best: Best;
   /** Se pidió comprar semillas y la semilla no tiene precio fijo: el costo se tomó como 0. */
   seedUnknown: boolean;
+  /** Fuera del invernadero, la estación elegida no está en `seasons`: no se planta (0 cosechas, sin costo). */
+  outOfSeason: boolean;
 }
 
 const f = Math.fround;
 const SEASON_DAYS = 28;
+/** En el invernadero se cuenta un año desde la siembra: 4 estaciones de 28 días. */
+const GREENHOUSE_DAYS = 4 * SEASON_DAYS;
 
 /** Nivel de calidad del fertilizante (0–3). */
 const FERT_QUALITY: Record<Fert, number> = { none: 0, basic: 1, quality: 2, deluxe: 3, speed: 0, deluxeSpeed: 0, hyper: 0 };
@@ -167,9 +173,12 @@ export function qualityOdds(level: number, fert: Fert): [number, number, number,
   return [rest, s, g, iridium];
 }
 
-/** Último día (contado desde el 1 de la estación de siembra) en que todavía se puede cosechar; 0 si no se puede plantar. */
+/**
+ * Último día (contado desde el 1 de la estación de siembra) en que todavía se puede cosechar; 0 si no se puede plantar.
+ * En el invernadero, un año: del día de siembra a 111 días después.
+ */
 function lastDay(crop: Crop, opts: Opts): number {
-  if (opts.greenhouse) return opts.day + SEASON_DAYS - 1;
+  if (opts.greenhouse) return opts.day + GREENHOUSE_DAYS - 1;
   if (!crop.seasons.includes(opts.season)) return 0;
   let n = 1;
   while (n < 4 && crop.seasons.includes((opts.season + n) % 4)) n++;
@@ -221,6 +230,7 @@ function unitsPerHarvest(crop: Crop, level: number): number {
 }
 
 export function profit(crop: Crop, opts: Opts): Profit {
+  const outOfSeason = !opts.greenhouse && !crop.seasons.includes(opts.season);
   const days = harvests(crop, opts);
   const n = days.length;
   const units = unitsPerHarvest(crop, opts.level);
@@ -234,7 +244,7 @@ export function profit(crop: Crop, opts: Opts): Profit {
 
   if (opts.sell === "best") {
     for (const pr of crop.products) {
-      const each = opts.artisan ? Math.trunc(f(f(pr.price) * f(1.4))) : pr.price;
+      const each = opts.artisan && pr.artisan ? Math.trunc(f(f(pr.price) * f(1.4))) : pr.price;
       const value = (units * each) / pr.per;
       if (value > perHarvest) {
         perHarvest = value;
@@ -246,11 +256,11 @@ export function profit(crop: Crop, opts: Opts): Profit {
   const gross = n * perHarvest;
   let seedCost = 0;
   let seedUnknown = false;
-  if (opts.seeds === "buy") {
+  if (opts.seeds === "buy" && !outOfSeason) {
     if (crop.seedPrice == null) seedUnknown = true;
     else seedCost = crop.seedPrice * (crop.regrow > 0 ? 1 : Math.max(1, n));
   }
   const net = gross - seedCost;
   const span = n > 0 ? days[n - 1] - opts.day : lastDay(crop, opts) - opts.day;
-  return { harvests: n, yield: n * units, gross, seedCost, net, perDay: net / Math.max(1, span), best, seedUnknown };
+  return { harvests: n, yield: n * units, gross, seedCost, net, perDay: net / Math.max(1, span), best, seedUnknown, outOfSeason };
 }

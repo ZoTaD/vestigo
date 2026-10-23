@@ -47,6 +47,25 @@ class TestCropsData(unittest.TestCase):
         self.assertEqual(self.crops["890"]["maxQuality"], 0)
         self.assertIsNone(self.crops["479"]["maxQuality"])
 
+    def test_cafe_en_barril(self):
+        # 5 granos de café dan un Café (150) en el barril; el Café no es artesanal.
+        barril = next(p for p in self.crops["433"]["products"] if p["machine"] == "(BC)12")
+        self.assertEqual(barril["per"], 5)
+        self.assertEqual(barril["price"], 150)
+        self.assertFalse(barril["artisan"])
+        self.assertEqual(barril["name"][0], "Coffee")
+
+    def test_productos_fijos(self):
+        # Trigo → Cerveza, Lúpulo → Pale Ale, Uva → Pasas (5 por 1): artesanales y sin sabor.
+        def prod(semilla, maquina):
+            return next(p for p in self.crops[semilla]["products"] if p["machine"] == maquina)
+        self.assertEqual(prod("483", "(BC)12")["price"], 200)
+        self.assertEqual(prod("302", "(BC)12")["price"], 300)
+        pasas = prod("301", "(BC)Dehydrator")
+        self.assertEqual((pasas["price"], pasas["per"]), (600, 5))
+        self.assertTrue(pasas["artisan"])
+        self.assertTrue(all(p["artisan"] for p in self.crops["479"]["products"]))
+
     def test_semilla_sin_tienda(self):
         self.assertIsNone(self.crops["499"]["seedPrice"])
         self.assertIsNone(self.crops["499"]["seedShop"])

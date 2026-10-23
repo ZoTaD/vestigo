@@ -44,22 +44,29 @@ def _tienda_mas_barata(item: str, nombres) -> tuple[int | None, list[str] | None
 
 
 def _productos(cosechado: str, nombres_obj: dict[str, list[str]], nombres) -> list[dict]:
-    """Lo que hacen las máquinas con el cosechado: barril, envasadora y deshidratador."""
+    """Lo que hacen las máquinas con el cosechado: barril, envasadora y deshidratador.
+
+    Entran los productos con sabor (Vino de Melón) y los fijos (Cerveza, Pale Ale, Pasas, Café: 5 granos por café).
+    `artisan` dice si el producto es artesanal (categoría −26), que es a lo que el Artesano le suma 40 %: el Café no lo es.
+    """
     from site_data import Nombres  # import tardío: site_data importa este módulo
 
     grandes = sdv.raw("Data/BigCraftables")
+    objs = relations.objects()
     out = []
     for m in relations.machines_by_input().get(cosechado, []):
-        if m["machine"] not in ("(BC)12", "(BC)15", "(BC)Dehydrator") or "flavor" not in m:
+        if m["machine"] not in ("(BC)12", "(BC)15", "(BC)Dehydrator"):
             continue
         maq = grandes[m["machine"][4:]]
+        nombre = Nombres.producto(m["out"], m["flavor"], nombres_obj) if "flavor" in m else list(nombres_obj[m["out"]])
         out.append({
             "machine": m["machine"],
             "machineName": _nombre(maq["DisplayName"]),
-            "name": Nombres.producto(m["out"], m["flavor"], nombres_obj),
+            "name": nombre,
             "price": m["price"],
             "days": round(m["minutes"] / MINUTOS_POR_DIA + m["days"], 2),
             "per": m["count"],
+            "artisan": objs[m["out"]].get("Category") == -26,
         })
     return out
 

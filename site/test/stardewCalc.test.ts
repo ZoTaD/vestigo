@@ -119,9 +119,18 @@ describe("harvests", () => {
     expect(harvests(crop("melon"), o({ season: 0 }))).toEqual([]);
   });
 
-  it("invernadero: 28 días desde la siembra sin mirar la estación", () => {
-    // Melón en invierno, día 1, 12 días: 13, 25.
-    expect(harvests(crop("melon"), o({ season: 3, greenhouse: true }))).toEqual([13, 25]);
+  it("invernadero: un año (112 días) desde la siembra sin mirar la estación", () => {
+    // Melón en invierno, día 1, 12 días: 13, 25, …, 109 (≤ 1 + 111 = 112) → 9 cosechas.
+    expect(harvests(crop("melon"), o({ season: 3, greenhouse: true }))).toEqual([13, 25, 37, 49, 61, 73, 85, 97, 109]);
+  });
+
+  it("Café de primavera sigue cosechando en verano", () => {
+    // [1,2,2,3,2] = 10 → 11; rebrota cada 2 hasta el 28 de verano (56): 11, 13, …, 55 → 23 cosechas, 14 en verano.
+    const h = harvests(crop("coffee-bean"), base);
+    expect(h.length).toBe(23);
+    expect(h[0]).toBe(11);
+    expect(h.at(-1)).toBe(55);
+    expect(h.filter((d) => d > 28).length).toBe(14);
   });
 
   it("Arroz con y sin el bonus del arrozal", () => {
@@ -202,8 +211,44 @@ describe("profit", () => {
   });
 
   it("con 'best', si el crudo rinde más se queda crudo", () => {
-    // Café: no tiene productos en los datos.
-    expect(profit(crop("coffee-bean"), o({ season: 0, sell: "best", seeds: "own" })).best).toBe("raw");
+    // Fibra: no tiene productos en los datos.
+    expect(profit(crop("fiber"), o({ sell: "best", seeds: "own" })).best).toBe("raw");
+  });
+
+  it("perDay de la Fruta milenaria plantada el 1 de primavera", () => {
+    // 8 cosechas (29 … 78). Precio esperado: 0,9702·550 + 0,0198·687 + 0,01·825 = 533,61 + 13,6026 + 8,25 = 555,4626.
+    // Semillas propias: neto 8 × 555,4626 = 4443,7008; ÷ (78 − 1) = 57,7104…
+    const p = profit(crop("ancient-fruit"), o({ seeds: "own" }));
+    expect(p.harvests).toBe(8);
+    expect(p.net).toBeCloseTo(4443.7008, 6);
+    expect(p.perDay).toBeCloseTo(4443.7008 / 77, 6);
+  });
+
+  it("Fruta milenaria en invernadero: varias cosechas en el año", () => {
+    // 1 + 28 = 29; cada 7 hasta 112: 29, 36, …, 106 → 12 cosechas. Neto 12 × 555,4626 = 6665,5512; ÷ (106 − 1).
+    const p = profit(crop("ancient-fruit"), o({ season: 3, greenhouse: true, seeds: "own" }));
+    expect(p.harvests).toBe(12);
+    expect(p.net).toBeCloseTo(6665.5512, 6);
+    expect(p.perDay).toBeCloseTo(6665.5512 / 105, 6);
+  });
+
+  it("fuera de estación: 0 cosechas, sin costo de semilla y lo marca", () => {
+    const p = profit(crop("melon"), o({ season: 0 }));
+    expect(p.harvests).toBe(0);
+    expect(p.seedCost).toBe(0);
+    expect(p.net).toBe(0);
+    expect(p.outOfSeason).toBe(true);
+    expect(Number.isFinite(p.perDay)).toBe(true);
+    expect(profit(crop("melon"), o({ season: 1 })).outOfSeason).toBe(false);
+    expect(profit(crop("melon"), o({ season: 0, greenhouse: true })).outOfSeason).toBe(false);
+  });
+
+  it("Café con 'best' elige el Barril, y el Artesano no lo sube (el Café no es artesanal)", () => {
+    // Unidades por cosecha = 4 + 0,02/0,98. Barril: 5 granos → 150, o sea 30 por grano; crudo ≈ 15 por grano.
+    const u = 4 + 0.02 / 0.98;
+    const p = profit(crop("coffee-bean"), o({ sell: "best", artisan: true, seeds: "own" }));
+    expect(p.best).toBe("(BC)12");
+    expect(p.gross).toBeCloseTo(23 * u * 30, 6);
   });
 
   it("semilla sin precio fijo: costo 0 y lo marca", () => {
