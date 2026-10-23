@@ -197,10 +197,14 @@ Dos corridas por lado y una tercera del "después" para ver el ruido.
 
 Las 90 páginas nuevas: las pestañas Minas y combate (`/mines`, `/minas`) y Lector de partida (`/save`, `/partida`) en los
 dos idiomas, más una ficha por cada uno de los 43 monstruos en cada idioma (`/mines/<slug>`, `/minas/<slug-es>`):
-(43 + 2) × 2. El Lector no tiene fichas. La RAM no sube (la medición del "antes" con la caché fría salió más alta);
-el tiempo sí subió entre 15 y 30 s sobre unos 145 s, más que las 90 páginas (el prerender tardó entre 7 y 24 s más): la
-primera corrida del "después" (237 s) coincidió con el disco ocupado. Lejos del tope de 6 GB; si el build sigue
-creciendo, volver a medir el tiempo.
+(43 + 2) × 2. El Lector no tiene fichas.
+
+El tiempo sube aun sin contar la primera corrida del "después" (237,6 s, la más lenta, que no se explicó): las otras dos,
+174,5 s y 162,3 s, quedan entre 9 y 20 % arriba de las del "antes" (141,5 s y 148,9 s), más de lo que pesan 90 páginas
+sobre 39 mil. La causa no está medida; las candidatas son los datos nuevos de Minas y del Lector y los chunks que se
+suman. La RAM bajó (de 3,15 a 2,66 GB en la suma de procesos) y esa baja tampoco está explicada: no se probó de dónde
+sale. Las dos cosas quedan lejos del tope de 6 GB; si el build sigue creciendo, volver a medir y buscar la causa del
+tiempo antes de sumar otra etapa.
 
 `npm run perf -- --only stardew --budget` contra `vite preview` (Chromium headless shell), en frío, páginas nuevas de la
 etapa 3 (las de las etapas 1 y 2 quedaron como estaban, entre 35 y 181 pedidos y hasta 2.519 nodos):
