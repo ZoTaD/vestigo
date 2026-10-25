@@ -42,7 +42,7 @@ function esperado(finales: Set<string>): DayWeather {
   if (xs.length === 1) return { kind: TIPO[xs[0]] };
   const clave = xs.join("+");
   if (clave === "Rain+Storm") return { kind: "rain", maybe: "storm" };
-  if (clave === "Storm+Sun") return { kind: "sun", maybe: "storm" };
+  if (clave === "Storm+Sun") return { kind: "storm", maybe: "sun" };
   if (clave === "Sun+Wind") return { kind: "sun", maybe: "wind" };
   throw new Error(`combinación inesperada en el fixture: ${clave}`);
 }

@@ -208,7 +208,7 @@ export interface ManualOpts {
 }
 
 export interface PredictOpts {
-  /** Aceite de ajo tomado hoy. */
+  /** Aceite de ajo tomado hoy (el buff dura el día: sólo cambia los pisos de hoy). */
   garlicOil?: boolean;
   /** Rosa de hadas madura en la granja: sí, no, o sin dar (no sé: las noches que cambian salen con las dos ramas). */
   fairyRose?: boolean;
@@ -297,9 +297,10 @@ export function predictAll(input: PredictInput, data: PredictData, opts: Predict
   })() : null;
 
   const lowestMineLevel = save ? save.lowestMineLevel : man.lowest120 ? 120 : 0;
-  const mines = predictMines(seed, today.daysPlayed, DIAS_DE_MINAS, { lowestMineLevel, quarry: flags.quarry, garlicOil: opts.garlicOil ?? false }).map(
-    (d, k) => ({ ...d, date: addDays(today, k) }),
-  );
+  // El Aceite de ajo (buff "23") dura el día en que se toma: hoy con ajo si se eligió, los demás días sin él.
+  const sinAjo = predictMines(seed, today.daysPlayed, DIAS_DE_MINAS, { lowestMineLevel, quarry: flags.quarry, garlicOil: false });
+  const conAjo = opts.garlicOil ? predictMines(seed, today.daysPlayed, 1, { lowestMineLevel, quarry: flags.quarry, garlicOil: true }) : [];
+  const mines = sinAjo.map((d, k) => ({ ...(k === 0 && conAjo[0] ? conAjo[0] : d), date: addDays(today, k) }));
 
   const multiplayer = save ? save.multiplayer : false;
   const dias = cartDays(today, VISITAS, { desertOpen: flags.desertOpen });

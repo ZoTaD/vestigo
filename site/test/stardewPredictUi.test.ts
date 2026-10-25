@@ -7,13 +7,13 @@ import { readFileSync } from "node:fs";
 import { DOMParser } from "@xmldom/xmldom";
 import { createElement, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import raw from "../../games/stardew/data/predict.json";
 import { LangContext } from "../src/i18n";
 import type { Route } from "../src/route";
 import { STARDEW_COPY } from "../src/stardewCopy";
 import { loadList, loadSaveBundle, type Row } from "../src/stardew/data";
-import StardewPredict, { PredictView, predictSpriteFile, type PredictBundle } from "../src/stardew/predict/StardewPredict";
+import StardewPredict, { PredictBoundary, PredictView, predictSpriteFile, type PredictBundle } from "../src/stardew/predict/StardewPredict";
 import type { PredictData } from "../src/stardew/predict/query";
 import { parseSave, type Save } from "../src/stardew/save/parse";
 import { SaveView } from "../src/stardew/save/StardewSave";
@@ -124,6 +124,31 @@ describe("Predictor con una partida guardada", () => {
     const html = view(solo, "es");
     expect(html).toContain(c.cart.ringManual);
     expect(html).toMatch(/aria-label="\d+: (Sol|Lluvia|Tormenta|Nieve|Festival|Viento|Boda|Lluvia verde)/);
+  });
+
+  it("una partida que hace tirar al predictor: el límite muestra el aviso y deja el error en la consola", () => {
+    const s = leer(conPredict);
+    const rara = { ...s, predict: { ...s.predict!, weatherTomorrow: "Granizo" } };
+    // Sin el límite, la predicción tira (el renderizado del servidor no tiene límites de errores: se ve acá).
+    expect(() => view(rara, "es")).toThrow(/clima desconocido/);
+    expect(PredictBoundary.getDerivedStateFromError()).toEqual({ failed: true });
+    const b = new PredictBoundary({ message: STARDEW_COPY.es.loadError, children: null });
+    const err = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const e = new Error("rota");
+    b.componentDidCatch(e);
+    expect(err).toHaveBeenCalledWith(expect.any(String), e);
+    err.mockRestore();
+    b.state = { failed: true };
+    const html = inLang("es", b.render() as ReactElement);
+    expect(html).toContain('role="alert"');
+    expect(html).toContain(STARDEW_COPY.es.loadError);
+  });
+
+  it("con partida: la suerte de mañana no se puede predecir; el Aceite de ajo dice que dura el día", () => {
+    const c = STARDEW_COPY.en.predict;
+    const html = view(leer(conPredict), "en");
+    expect(html).toContain(c.today.luckTomorrow);
+    expect(html).toContain(c.mines.garlicNote);
   });
 
   it("una semilla en la dirección manda sobre la partida: sin geodas ni suerte, con los avisos de lo que se supone", () => {

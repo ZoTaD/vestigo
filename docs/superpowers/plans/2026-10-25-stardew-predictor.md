@@ -73,7 +73,7 @@ predicción tiene un test contra el código real del juego 1.6.15.
 
 ## Revisión: lo que ningún test de tarea cubre y más puede morder
 
-1. Una partida con `UniqueMultiplayerID` negativo y mayor que 2^53 (la de ZoTaD: `-6368268736843601728`): `(int)` de
+1. Una partida con `UniqueMultiplayerID` negativo y mayor que 2^53 (una partida 1.6.15 real: `-6368268736843601728`): `(int)` de
    un `long` son los 32 bits de abajo con signo, y `/ 2` trunca hacia cero. Test en la tarea 2 con ese valor exacto.
 2. `useLegacyRandom` en true (speedrunners): `CreateRandomSeed` suma en vez de hashear. Fixture del oráculo con las dos
    ramas en la tarea 1 y un caso de geodas en legacy en la tarea 4.

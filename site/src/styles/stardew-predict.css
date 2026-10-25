@@ -65,7 +65,7 @@
 .sd-predict .is-wind { background-color: var(--pr-wind); }
 .sd-predict .is-wedding { background-color: var(--pr-wedding); }
 .sd-predict .is-rain.or-storm { background-image: linear-gradient(135deg, var(--pr-rain) 50%, var(--pr-storm) 50%); }
-.sd-predict .is-sun.or-storm { background-image: linear-gradient(135deg, var(--pr-sun) 50%, var(--pr-storm) 50%); }
+.sd-predict .is-storm.or-sun { background-image: linear-gradient(135deg, var(--pr-storm) 50%, var(--pr-sun) 50%); }
 .sd-predict .is-sun.or-wind { background-image: linear-gradient(135deg, var(--pr-sun) 50%, var(--pr-wind) 50%); }
 
 .sd-pr-key { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }

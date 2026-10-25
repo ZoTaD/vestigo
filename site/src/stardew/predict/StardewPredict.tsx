@@ -13,7 +13,7 @@
  * van `lazy` y con tamaño fijo. Cada objeto enlaza a su ficha si la lista de Objetos lo tiene (lo mismo que `itemSlug`
  * de Minas: el slug de su fila); si no (muebles, sombreros, papeles), su nombre de `predict.json` sin enlace.
  */
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { Component, useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { useLang } from "../../i18n";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
@@ -187,7 +187,10 @@ export function PredictView({
       </Box>
       {input &&
         (data ? (
-          <Predictions input={input} data={data} route={route} navigate={navigate} />
+          // La clave vuelve a probar con otra entrada (otra semilla, otro granjero) después de un error.
+          <PredictBoundary message={t.loadError} key={inputKey(input)}>
+            <Predictions input={input} data={data} route={route} navigate={navigate} />
+          </PredictBoundary>
         ) : (
           <Box>
             {loaded.failed ? (
@@ -204,6 +207,37 @@ export function PredictView({
         ))}
     </main>
   );
+}
+
+/** Lo que identifica una entrada, para rearmar el límite de errores cuando cambia. */
+const inputKey = (i: PredictInput): string =>
+  i.from === "save"
+    ? `save-${i.save.gameId}-${i.farmer}-${i.season}-${i.day}-${i.year}`
+    : `manual-${i.seed.gameId}-${i.seed.legacy}-${i.season}-${i.day}-${i.year}`;
+
+/**
+ * El límite de errores de las predicciones: las funciones del predictor tiran a propósito ante lo que no conocen (un
+ * clima guardado raro, una condición nueva del juego). Sin esto, una partida así dejaba la pestaña en blanco en cada
+ * visita. Muestra "no se pudo cargar" en lugar de las cajas, deja el error en la consola y el formulario de arriba
+ * sigue andando.
+ */
+export class PredictBoundary extends Component<{ message: string; children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(error?: unknown) {
+    console.error("Predictor: la predicción rompió con esta entrada", error);
+  }
+  render() {
+    return this.state.failed ? (
+      <Box>
+        <p role="alert">{this.props.message}</p>
+      </Box>
+    ) : (
+      this.props.children
+    );
+  }
 }
 
 function ReaderLink({ route, navigate, label }: { route: Route; navigate: Nav; label: string }) {
@@ -455,6 +489,7 @@ function TodayBox({ p, x, fortune }: { p: Prediction; x: Ctx; fortune: PredictDa
               ))}
               {p.luck.keys.length > 1 && <p className="sd-muted">{c.today.luckTwo}</p>}
               <p className="sd-muted">{signedLuck(p.luck.value, x.lang)}</p>
+              <p className="sd-muted">{c.today.luckTomorrow}</p>
             </>
           ) : (
             <p className="sd-muted">{c.today.luckNone}</p>

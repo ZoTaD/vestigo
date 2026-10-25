@@ -199,7 +199,7 @@ describe("parseSave: una partida real", () => {
 });
 
 describe("parseSave: lo que lee el predictor", () => {
-  // Con la forma de Zotafarm_452435081 (1.6.15): id de granjero largo, semilla, suerte y contadores en Values.
+  // Con la forma de una partida 1.6.15 real: id de granjero largo, semilla, suerte y contadores en Values.
   const conPredict = mini
     .replace("<name>Fulana</name>", "<name>Fulana</name><UniqueMultiplayerID>-6368268736843601728</UniqueMultiplayerID><fishingLevel>7</fishingLevel>")
     .replace(

@@ -22,11 +22,12 @@ export type Wet = "rain" | "storm" | "snow" | "greenRain";
 
 /**
  * El clima de un día. `maybe`: puede salir eso en vez de `kind`, según `RANDOM` (lluvia que puede ser
- * tormenta, sol que puede tener viento y, el 2 de verano, sol que puede ser tormenta).
+ * tormenta, sol que puede tener viento y, el 2 de verano, tormenta que puede ser sol: ahí la tormenta es lo probable,
+ * ~85 %, y va primero).
  */
 export interface DayWeather {
   kind: "sun" | "rain" | "storm" | "snow" | "greenRain" | "festival" | "wind" | "wedding";
-  maybe?: "storm" | "wind";
+  maybe?: "storm" | "wind" | "sun";
 }
 
 /** Un día del calendario y su `Game1.stats.DaysPlayed`. `season` 0 primavera ... 3 invierno. */
@@ -175,7 +176,7 @@ function juntar(climas: Set<string>): DayWeather {
   if (climas.size === 1) return { kind: tipo([...climas][0]) };
   const clave = [...climas].sort().join("+");
   if (clave === "Rain+Storm") return { kind: "rain", maybe: "storm" };
-  if (clave === "Storm+Sun") return { kind: "sun", maybe: "storm" };
+  if (clave === "Storm+Sun") return { kind: "storm", maybe: "sun" };
   if (clave === "Sun+Wind") return { kind: "sun", maybe: "wind" };
   throw new Error(`climas posibles sin forma de mostrarse: ${clave}`);
 }

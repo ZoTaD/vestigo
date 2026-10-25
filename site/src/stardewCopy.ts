@@ -485,6 +485,7 @@ export interface PredictCopy {
     luckTv: string;
     luckTwo: string;
     luckNone: string;
+    luckTomorrow: string;
     season: string;
     seasonEnds: string;
     weekdays: [string, string, string, string, string, string, string];
@@ -629,6 +630,7 @@ const PREDICT_EN: PredictCopy = {
     luckTv: "The fortune teller on TV says:",
     luckTwo: "She says one of these two.",
     luckNone: "Today's luck is in your save: open it in the Save reader to see it. Tomorrow's can't be predicted: it depends on everything you do today.",
+    luckTomorrow: "Tomorrow's luck can't be predicted: it depends on everything you do today.",
     season: "The rest of the season",
     seasonEnds: "Tomorrow a new season starts.",
     weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -648,7 +650,7 @@ const PREDICT_EN: PredictCopy = {
   mines: {
     title: "Mines",
     garlic: "I drank Garlic Oil today",
-    garlicNote: "Garlic Oil turns off monster and slime floors, and that changes which floors are quarry floors.",
+    garlicNote: "Garlic Oil turns off monster and slime floors for the day you drink it, and that changes which floors are quarry floors. The other days are shown without it.",
     kinds: { infested: "Monster floors", slime: "Slime floors", quarry: "Quarry floors", mushroom: "Mushroom floors" },
     none: "Nothing special.",
     skull: "The Skull Cavern can't be predicted: the game builds each floor with chance that doesn't come from your save.",
@@ -667,7 +669,7 @@ const PREDICT_EN: PredictCopy = {
     recipe: "Recipe",
     ring: "Only while another farmer is online.",
     ringManual: "In multiplayer it also sells the Wedding Ring recipe while another farmer is online.",
-    y1: "In year 1, on the day the cart brings the guaranteed Red Cabbage seeds, the rest of the list changes: open your save to see it exact.",
+    y1: "In year 1, on the day the cart brings the guaranteed Red Cabbage Seeds, the rest of the list changes: open your save to see it exact.",
     manual: "Without your save it leaves out the portraits (14 hearts) and the Joja and Junimo catalogues.",
   },
   nights: {
@@ -733,6 +735,7 @@ const PREDICT_ES: PredictCopy = {
     luckTv: "La adivina de la tele dice:",
     luckTwo: "Dice una de estas dos.",
     luckNone: "La suerte de hoy está en tu partida: abrila en el Lector para verla. La de mañana no se puede predecir: depende de todo lo que hagas hoy.",
+    luckTomorrow: "La suerte de mañana no se puede predecir: depende de todo lo que hagas hoy.",
     season: "Lo que queda de la estación",
     seasonEnds: "Mañana empieza otra estación.",
     weekdays: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
@@ -752,7 +755,7 @@ const PREDICT_ES: PredictCopy = {
   mines: {
     title: "Minas",
     garlic: "Tomé Aceite de ajo hoy",
-    garlicNote: "El Aceite de ajo apaga los pisos de monstruos y de babas, y con eso cambia qué pisos salen de cantera.",
+    garlicNote: "El Aceite de ajo apaga los pisos de monstruos y de babas el día que lo tomás, y con eso cambia qué pisos salen de cantera. Los otros días se muestran sin él.",
     kinds: { infested: "Pisos de monstruos", slime: "Pisos de babas", quarry: "Pisos de cantera", mushroom: "Pisos de hongos" },
     none: "Nada especial.",
     skull: "La Caverna Calavera no se puede predecir: el juego arma cada piso con un azar que no sale de tu partida.",
@@ -771,7 +774,7 @@ const PREDICT_ES: PredictCopy = {
     recipe: "Receta",
     ring: "Sólo mientras haya otro granjero conectado.",
     ringManual: "En multijugador también vende la receta del anillo de bodas mientras haya otro granjero conectado.",
-    y1: "En el año 1, el día que el carro trae las semillas de repollo rojo garantizadas, el resto de la lista cambia: abrí tu partida para verla exacta.",
+    y1: "En el año 1, el día que el carro trae las Semillas de lombarda garantizadas, el resto de la lista cambia: abrí tu partida para verla exacta.",
     manual: "Sin tu partida quedan afuera los retratos (14 corazones) y los catálogos de Joja y de los Junimos.",
   },
   nights: {

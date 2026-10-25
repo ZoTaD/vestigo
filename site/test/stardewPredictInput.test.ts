@@ -225,6 +225,16 @@ describe("predictAll", () => {
     throw new Error("ninguna semilla con una noche que dependa de la rosa");
   });
 
+  it("el Aceite de ajo cambia sólo los pisos de hoy: los otros días salen como sin ajo", () => {
+    const sin = predictAll(aMano, data);
+    const con = predictAll(aMano, data, { garlicOil: true });
+    expect(con.mines[0].infested).toEqual([]);
+    expect(con.mines[0].slime).toEqual([]);
+    expect(con.mines.slice(1)).toEqual(sin.mines.slice(1));
+    // Alguno de los otros días tiene pisos infestados (si no, el test no diría nada).
+    expect(sin.mines.slice(1).some((d) => d.infested.length + d.slime.length > 0)).toBe(true);
+  });
+
   it("el 28 de invierno: la estación no tiene más días y las fechas pasan al año siguiente", () => {
     const p = predictAll({ ...aMano, season: 3, day: 28, year: 1 }, data);
     expect(p.season).toEqual([]);
