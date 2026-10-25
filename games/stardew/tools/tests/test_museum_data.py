@@ -111,7 +111,7 @@ class TestMuseumData(unittest.TestCase):
 
     def test_un_golem_por_nombre(self):
         for p in self.d["pieces"]:
-            nombres = [tuple(w["who"]) for w in p["where"] if w["k"] == "monster"]
+            nombres = [w["who"][0] for w in p["where"] if w["k"] == "monster"]
             self.assertEqual(len(nombres), len(set(nombres)), p["id"])
 
     def test_libros_perdidos(self):
