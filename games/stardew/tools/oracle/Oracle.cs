@@ -13,6 +13,22 @@
 //
 // Para sumar un comando: escribir un método `static void CmdXxx(Utf8JsonWriter w)`
 // y registrarlo en `Comandos`.
+//
+// Estado del juego que arma `ArmarJuego` para todos: hash, contenido sin
+// texturas, datos, un `Farmer` en `Game1._player`, los tipos de `ItemRegistry`
+// (`RegisterItemTypes`, que la carga cortada no llega a llamar),
+// `Game1.otherFarmers` vacío (lo recorre `FarmerTeam.AverageDailyLuck`) y un
+// `Game1.log` que corta con excepción ante cualquier error: `getTreasureFromGeode`
+// traga sus excepciones y devuelve una piedra, y eso escribiría un fixture
+// equivocado sin avisar.
+//
+// Además, por comando:
+// - `geodes`: un `Farmer` nuevo por caso (stats, correo, `uniqueMultiplayerID`,
+//   `fishingLevel`, `deepestMineLevel` y, cuando hace falta, un `SpecialOrder` en
+//   curso con la regla `DROP_QI_BEANS` en `player.team.specialOrders`),
+//   `Game1.uniqueIDForThisGame`, `Game1.UseLegacyRandom`, `Game1.season`,
+//   `Game1.dayOfMonth` y `Game1.random` con semilla fija (sólo lo usa la cosecha
+//   de baja calidad de las cajas, que el predictor no puede saber).
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -24,6 +40,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Hashing;
+using StardewValley.Constants;
+using StardewValley.Extensions;
+using StardewValley.Logging;
+using StardewValley.SpecialOrders;
 
 // El juego pide texturas al cargar; el oráculo no dibuja nada, así que se las
 // damos sin inicializar y el resto de los datos se lee normal.
@@ -39,6 +59,16 @@ class ContenidoSinTexturas : LocalizedContentManager
     }
 }
 
+// Registro del juego que no tolera errores (ver la cabecera).
+class RegistroEstricto : IGameLogger
+{
+    public void Verbose(string m) { }
+    public void Debug(string m) { }
+    public void Info(string m) { }
+    public void Warn(string m) => Console.Error.WriteLine("aviso del juego: " + m);
+    public void Error(string m, Exception ex = null) => throw new Exception("error del juego: " + m, ex);
+}
+
 static class Oracle
 {
     static string Juego;
@@ -47,6 +77,7 @@ static class Oracle
     static readonly Dictionary<string, Action<Utf8JsonWriter>> Comandos = new()
     {
         ["rng"] = CmdRng,
+        ["geodes"] = CmdGeodes,
     };
 
     static int Main(string[] args)
@@ -116,6 +147,12 @@ static class Oracle
             Environment.Exit(3);
         }
         typeof(Game1).GetField("_player", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new Farmer());
+        typeof(Game1).GetField("log", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new RegistroEstricto());
+        // `FarmerTeam.AverageDailyLuck` recorre a los demás granjeros (la semilla del mapache).
+        Game1.otherFarmers ??= new Netcode.NetRootDictionary<long, Farmer>();
+        // Los tipos de objeto de `ItemRegistry` los registra un paso posterior de la carga.
+        if (ItemRegistry.ItemTypes.Count == 0)
+            typeof(ItemRegistry).GetMethod("RegisterItemTypes", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, null);
     }
 
     // ---------------------------------------------------------------- ayudas
@@ -306,5 +343,180 @@ static class Oracle
             }
         w.WriteEndArray();
         Game1.UseLegacyRandom = false;
+    }
+
+    // Un caso de `geodes`: el estado de entrada y cuántas aperturas seguidas.
+    class CasoGeoda
+    {
+        public string Kind;
+        public uint Geodas, Cajas, Maestria;
+        public bool Artefacto, Sombrero, Libro, Qi, Coco = true;
+        public int Hondo, Pesca, Estacion, Dia = 1, Veces = 20;
+        public CasoGeoda Con(Action<CasoGeoda> f) { var c = (CasoGeoda)MemberwiseClone(); f(c); return c; }
+    }
+
+    static List<CasoGeoda> CasosGeodas(bool largos)
+    {
+        var casos = new List<CasoGeoda>();
+        uint[] geodas = { 0, 15, 16, 200 };
+        uint[] cajas = { 0, 10, 11, 60 };
+        foreach (var kind in new[] { "535", "536", "537", "749" })
+        {
+            foreach (var g in geodas)
+                foreach (var art in new[] { false, true })
+                    foreach (var hondo in new[] { 0, 80 })
+                        casos.Add(new CasoGeoda { Kind = kind, Geodas = g, Artefacto = art, Hondo = hondo });
+            casos.Add(new CasoGeoda { Kind = kind, Geodas = 0, Artefacto = true, Hondo = 80, Qi = true });
+            casos.Add(new CasoGeoda { Kind = kind, Geodas = 16, Artefacto = false, Qi = true });
+        }
+        foreach (var g in geodas)
+            foreach (var art in new[] { false, true })
+                casos.Add(new CasoGeoda { Kind = "275", Geodas = g, Artefacto = art });
+        foreach (var g in geodas)
+            foreach (var art in new[] { false, true })
+                foreach (var hat in new[] { false, true })
+                    casos.Add(new CasoGeoda { Kind = "791", Geodas = g, Artefacto = art, Sombrero = hat });
+        casos.Add(new CasoGeoda { Kind = "791", Geodas = 0, Coco = false });
+        casos.Add(new CasoGeoda { Kind = "791", Geodas = 15, Coco = false, Sombrero = true, Artefacto = true });
+        foreach (var kind in new[] { "MysteryBox", "GoldenMysteryBox" })
+        {
+            foreach (var b in cajas)
+                foreach (var est in new[] { 0, 3 })
+                    foreach (var pesca in new[] { 0, 6 })
+                        foreach (var art in new[] { false, true })
+                            casos.Add(new CasoGeoda { Kind = kind, Geodas = 15, Cajas = b, Estacion = est, Pesca = pesca, Artefacto = art });
+            var b0 = new CasoGeoda { Kind = kind, Geodas = 15, Artefacto = true };
+            casos.Add(b0.Con(c => { c.Cajas = 11; c.Libro = true; }));
+            casos.Add(b0.Con(c => { c.Cajas = 60; c.Libro = true; c.Estacion = 2; }));
+            casos.Add(b0.Con(c => { c.Cajas = 0; c.Maestria = 1; }));
+            casos.Add(b0.Con(c => { c.Cajas = 60; c.Maestria = 3; c.Estacion = 1; }));
+            casos.Add(b0.Con(c => { c.Cajas = 11; c.Dia = 25; }));
+            casos.Add(b0.Con(c => { c.Cajas = 11; c.Dia = 25; c.Estacion = 3; }));
+            casos.Add(b0.Con(c => { c.Cajas = 60; c.Dia = 21; c.Estacion = 1; c.Qi = true; }));
+        }
+        if (largos)
+        {
+            // Tiradas largas para pasar por las ramas raras (prisma 0,008, sombrero 0,05,
+            // galleta de oro 0,005 con maestría, libro, anillos...).
+            casos.Add(new CasoGeoda { Kind = "749", Geodas = 0, Veces = 400 });
+            casos.Add(new CasoGeoda { Kind = "791", Geodas = 0, Veces = 200 });
+            casos.Add(new CasoGeoda { Kind = "275", Geodas = 0, Veces = 100 });
+            casos.Add(new CasoGeoda { Kind = "MysteryBox", Cajas = 0, Pesca = 6, Veces = 400 });
+            casos.Add(new CasoGeoda { Kind = "GoldenMysteryBox", Cajas = 0, Pesca = 6, Maestria = 1, Veces = 600 });
+            casos.Add(new CasoGeoda { Kind = "GoldenMysteryBox", Cajas = 0, Estacion = 3, Dia = 22, Veces = 300 });
+        }
+        return casos;
+    }
+
+    // Geodas y cajas misteriosas en el yunque de Clint. Por cada caso arma un
+    // granjero con el estado de entrada y repite el flujo de `GeodeMenu`:
+    //   1. `GeodeMenu.update`: `GeodesCracked++` (y `MysteryBoxesOpened` en las cajas)
+    //      antes de tirar;
+    //   2. el primer coco dorado de la partida da una nuez (`geodeTreasureOverride`
+    //      de `GeodeMenu.receiveLeftClick`, con `netWorldState.GoldenCoconutCracked`:
+    //      acá es una variable local);
+    //   3. si no, el `Utility.getTreasureFromGeode` real;
+    //   4. el cambio por 5 piedras (`Arch` sin el correo `artifactFound`, salvo el
+    //      cofre de artefactos), copiado de `GeodeMenu.update`;
+    //   5. lo que hace `Farmer.OnItemReceived` al recibirlo y cambia las tiradas
+    //      siguientes: `SetFlagOnPickup` (con el `Game1.addMail` real), minerales con
+    //      el `foundMineral` real y artefactos como `foundArtifact` (sólo su correo
+    //      `artifactFound`: el método real muestra el objeto en pantalla y no anda sin
+    //      gráficos).
+    static void CmdGeodes(Utf8JsonWriter w)
+    {
+        var partidas = new (ulong id, long uid, bool legacy)[]
+        {
+            (452435081, -6368268736843601728, false), // Zotafarm
+            (390176213, 6932267015257027425, false), // TestSave
+            (177904899, 4294967293, true), // legacy; los 32 bits bajos del uid son -3
+        };
+        var campoJugador = typeof(Game1).GetField("_player", BindingFlags.Static | BindingFlags.NonPublic);
+        // `Game1.objectData` en su orden: el predictor asume el mismo que predict.json.
+        w.WriteStartArray("objectOrder");
+        foreach (var k in Game1.objectData.Keys) w.WriteStringValue(k);
+        w.WriteEndArray();
+        w.WriteStartArray("cases");
+        for (int pi = 0; pi < partidas.Length; pi++)
+        {
+            var p = partidas[pi];
+            foreach (var c in CasosGeodas(pi == 0))
+            {
+                var f = new Farmer();
+                campoJugador.SetValue(null, f);
+                Game1.uniqueIDForThisGame = p.id;
+                Game1.UseLegacyRandom = p.legacy;
+                Game1.season = (Season)c.Estacion;
+                Game1.dayOfMonth = c.Dia;
+                Game1.random = new Random(7);
+                f.uniqueMultiplayerID.Value = p.uid;
+                f.stats.GeodesCracked = c.Geodas;
+                f.stats.Set("MysteryBoxesOpened", c.Cajas);
+                if (c.Maestria > 0) f.stats.Set(StatKeys.Mastery(0), c.Maestria);
+                f.deepestMineLevel = c.Hondo;
+                f.fishingLevel.Value = c.Pesca;
+                var correo = new List<string>();
+                if (c.Artefacto) correo.Add("artifactFound");
+                if (c.Sombrero) correo.Add("goldenCoconutHat");
+                if (c.Libro) correo.Add("GotMysteryBook");
+                foreach (var m in correo) f.mailReceived.Add(m);
+                if (c.Qi)
+                {
+                    var encargo = new SpecialOrder();
+                    encargo.questState.Value = SpecialOrderStatus.InProgress;
+                    encargo.specialRule.Value = "QI_BEANS, DROP_QI_BEANS";
+                    f.team.specialOrders.Add(encargo);
+                }
+                bool cocoAbierto = c.Coco;
+
+                w.WriteStartObject();
+                w.WriteString("kind", c.Kind);
+                w.WriteNumber("gameId", p.id);
+                w.WriteBoolean("legacy", p.legacy);
+                w.WriteString("uid", p.uid.ToString(CultureInfo.InvariantCulture));
+                w.WriteNumber("uidHalf", (int)f.uniqueMultiplayerID.Value / 2);
+                w.WriteNumber("geodesCracked", c.Geodas);
+                w.WriteNumber("mysteryBoxesOpened", c.Cajas);
+                w.WriteNumber("deepestMineLevel", c.Hondo);
+                w.WriteNumber("fishingLevel", c.Pesca);
+                w.WriteNumber("season", c.Estacion);
+                w.WriteNumber("day", c.Dia);
+                w.WriteStartArray("mail"); foreach (var m in correo) w.WriteStringValue(m); w.WriteEndArray();
+                w.WriteNumber("mastery0", c.Maestria);
+                w.WriteBoolean("qiBeans", c.Qi);
+                w.WriteBoolean("goldenCoconutCracked", c.Coco);
+                w.WriteNumber("count", c.Veces);
+                w.WriteStartArray("drops");
+                var geoda = ItemRegistry.Create("(O)" + c.Kind);
+                bool caja = geoda.QualifiedItemId == "(O)MysteryBox" || geoda.QualifiedItemId == "(O)GoldenMysteryBox";
+                for (int i = 0; i < c.Veces; i++)
+                {
+                    Game1.stats.GeodesCracked++;
+                    if (caja) Game1.stats.Increment("MysteryBoxesOpened");
+                    Item premio;
+                    if (geoda.QualifiedItemId == "(O)791" && !cocoAbierto)
+                        premio = ItemRegistry.Create("(O)73");
+                    else
+                        premio = Utility.getTreasureFromGeode(geoda);
+                    if (geoda.QualifiedItemId != "(O)275" && !(premio is StardewValley.Object { Type: "Minerals" })
+                        && premio is StardewValley.Object { Type: "Arch" } && !f.hasOrWillReceiveMail("artifactFound"))
+                        premio = ItemRegistry.Create("(O)390", 5);
+                    w.WriteStringValue(premio.QualifiedItemId + " " + premio.Stack.ToString(CultureInfo.InvariantCulture));
+                    // Al recibirlo (Farmer.OnItemReceived).
+                    if (premio.QualifiedItemId == "(O)73") cocoAbierto = true;
+                    if (premio.SetFlagOnPickup != null) Game1.addMail(premio.SetFlagOnPickup, noLetter: true);
+                    if (premio.HasTypeObject() && premio is StardewValley.Object o)
+                    {
+                        if (o.Category == -2 || o.Type == "Minerals") f.foundMineral(o.ItemId);
+                        else if (o.Type == "Arch" && f.archaeologyFound.Length == 0) f.mailReceived.Add("artifactFound");
+                    }
+                }
+                w.WriteEndArray();
+                w.WriteEndObject();
+            }
+        }
+        w.WriteEndArray();
+        Game1.UseLegacyRandom = false;
+        campoJugador.SetValue(null, new Farmer());
     }
 }

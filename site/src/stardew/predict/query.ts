@@ -1,7 +1,10 @@
 // Datos del predictor de Stardew Valley 1.6.15: la forma de `games/stardew/data/predict.json`
-// (lo genera `games/stardew/tools/predict_data.py`). Acá van sólo los tipos; la lógica de las
-// consultas del juego (`RANDOM_ITEMS`, geodas, carro) se suma en la tarea siguiente.
+// (lo genera `games/stardew/tools/predict_data.py`) y, al final, las consultas del juego que
+// usan esos datos (`GameStateQuery`, `ItemQueryResolver`, `Utility.ApplyQuantityModifiers`).
+// Por ahora están las que aparecen en las geodas; el carro suma las suyas (`RANDOM_ITEMS`).
 //
+import type { DotNetRandom } from "./rng";
+
 // Regla de todo el archivo: un campo opcional que falta vale el valor por omisión que dice
 // su comentario (el script no guarda lo que vale lo de siempre).
 
@@ -162,4 +165,174 @@ export interface PredictData {
   };
   /** `WeatherConditions` del contexto `Default` de `Data/LocationContexts`, en orden. */
   weather: CondicionClima[];
+}
+
+// ------------------------------------------------------------------ consultas del juego
+
+/**
+ * Lo que las consultas leen del estado del juego. `stat` y `hasMail` tiran si les piden algo que el
+ * predictor no sabe, así una condición nueva del juego no se evalúa en silencio con un valor inventado.
+ */
+export interface QueryContext {
+  /** `Farmer.stats.Get(nombre)` del jugador actual. */
+  stat(name: string): number;
+  /** `Farmer.hasOrWillReceiveMail` del jugador actual (recibido, en el buzón o para mañana). */
+  hasMail(id: string): boolean;
+  /** Id calificado del objeto `Target` (`ITEM_ID Target ...`), si hay. */
+  target?: string;
+}
+
+const igual = (a: string, b: string): boolean => a.toLowerCase() === b.toLowerCase();
+
+/** El jugador de una consulta: el predictor es de un solo granjero, así que sólo vale `Current`. */
+function jugador(clave: string, q: string): void {
+  if (!igual(clave, "Current")) throw new Error(`consulta con jugador "${clave}" sin soporte: ${q}`);
+}
+
+/** Una consulta suelta, sin el `!` (`GameStateQuery.DefaultResolvers`). */
+function consulta(args: string[], ctx: QueryContext, q: string): boolean {
+  const clave = args[0].toUpperCase();
+  switch (clave) {
+    case "TRUE":
+      return true;
+    case "FALSE":
+      return false;
+    // GameStateQuery.DefaultResolvers.PLAYER_STAT: min <= stat <= max (max opcional).
+    case "PLAYER_STAT": {
+      jugador(args[1], q);
+      const min = Number.parseInt(args[3], 10);
+      const max = args[4] === undefined ? 2147483647 : Number.parseInt(args[4], 10);
+      if (Number.isNaN(min) || Number.isNaN(max)) throw new Error(`PLAYER_STAT mal formada: ${q}`);
+      const v = ctx.stat(args[2]);
+      return v >= min && v <= max;
+    }
+    // GameStateQuery.DefaultResolvers.PLAYER_HAS_MAIL: sólo el tipo "Any" (el que usan las geodas).
+    case "PLAYER_HAS_MAIL": {
+      jugador(args[1], q);
+      if (args[3] !== undefined && !igual(args[3], "Any")) throw new Error(`PLAYER_HAS_MAIL con tipo sin soporte: ${q}`);
+      return ctx.hasMail(args[2]);
+    }
+    // GameStateQuery.DefaultResolvers.ITEM_ID: el id calificado o sin calificar, sin mayúsculas.
+    case "ITEM_ID": {
+      if (!igual(args[1], "Target")) throw new Error(`ITEM_ID sólo con Target: ${q}`);
+      const t = ctx.target;
+      if (t === undefined) return false;
+      const corto = t.replace(/^\([A-Z]+\)/, "");
+      return args.slice(2).some((x) => igual(x, t) || igual(x, corto));
+    }
+    default:
+      throw new Error(`consulta de estado sin soporte en el predictor: ${q}`);
+  }
+}
+
+/**
+ * `GameStateQuery.CheckConditions`: consultas separadas por coma, todas tienen que cumplirse; `!`
+ * adelante niega. Vacía o ausente = verdadera. Ninguna de las soportadas consume el `Random`.
+ */
+export function checkConditions(query: string | undefined, ctx: QueryContext): boolean {
+  if (query === undefined || query === "" || query === "TRUE") return true;
+  if (query === "FALSE") return false;
+  for (const parte of query.split(",")) {
+    let q = parte.trim();
+    if (q === "") continue;
+    let negada = false;
+    if (q.startsWith("!")) {
+      negada = true;
+      q = q.slice(1).trim();
+    }
+    if (q.includes('"')) throw new Error(`consulta con comillas sin soporte: ${query}`);
+    const ok = consulta(q.split(/\s+/), ctx, query);
+    if (ok === negada) return false;
+  }
+  return true;
+}
+
+/** `RandomExtensions.ChooseFrom`: `options[random.Next(options.Count)]`. */
+export function chooseFrom<T>(r: DotNetRandom, xs: readonly T[]): T {
+  return xs[r.next(xs.length)];
+}
+
+/**
+ * `Utility.ApplyQuantityModifiers` con `QuantityModifier.Apply` (en `float`, como el juego).
+ * `mode`: 0 todos encadenados, 1 el menor, 2 el mayor. Ojo: si el modificador tiene `random`,
+ * el valor se elige ANTES de mirar la condición, así que consume `Next` aunque no se aplique.
+ */
+export function applyQuantityModifiers(
+  value: number,
+  mods: readonly Modificador[] | undefined,
+  mode: number,
+  ctx: QueryContext,
+  r: DotNetRandom,
+): number {
+  if (!mods || mods.length === 0) return value;
+  const f = Math.fround;
+  const v = f(value);
+  let res: number | undefined;
+  for (const m of mods) {
+    let amount = f(m.amount);
+    if (m.random && m.random.length > 0) amount = f(chooseFrom(r, m.random));
+    if (!checkConditions(m.condition, ctx)) continue;
+    const base = mode === 1 || mode === 2 ? v : (res ?? v);
+    let x: number;
+    switch (m.mod) {
+      case 0:
+        x = f(base + amount);
+        break;
+      case 1:
+        x = f(base - amount);
+        break;
+      case 2:
+        x = f(base * amount);
+        break;
+      case 3:
+        x = f(base / amount);
+        break;
+      default:
+        x = amount;
+    }
+    if (mode === 1) res = res === undefined || x < res ? x : res;
+    else if (mode === 2) res = res === undefined || x > res ? x : res;
+    else res = x;
+  }
+  return res ?? v;
+}
+
+/** Los campos de `ISpawnItemData` que usa el predictor. */
+export interface SpawnFields {
+  itemId?: string;
+  randomItemId?: string[];
+  minStack?: number;
+  maxStack?: number;
+  stackModifiers?: Modificador[];
+  stackModifierMode?: number;
+}
+
+/**
+ * `ItemQueryResolver.TryResolveRandomItem(ISpawnItemData)` + `ApplyItemFields` para ids fijos
+ * (calificados): elige de `randomItemId` con `ChooseFrom`, después la cantidad (`Next(min, max + 1)`
+ * si `maxStack > 1`) y los `stackModifiers` con el objeto como `Target`. Las consultas de objetos
+ * (`RANDOM_ITEMS`...) no están acá: tiran error. `cantidadBase` es el `Stack` con el que el juego
+ * crea el objeto (1). No recorta al máximo de la pila (`FixStackSize`): las geodas no llegan.
+ */
+export function resolveSpawnItem(
+  data: SpawnFields,
+  r: DotNetRandom,
+  ctx: QueryContext,
+  cantidadBase = 1,
+): { id: string; qty: number } | null {
+  let id = data.itemId;
+  if (data.randomItemId && data.randomItemId.length > 0) id = chooseFrom(r, data.randomItemId);
+  if (id === undefined || id.trim() === "") return null;
+  if (!/^\([A-Z]+\)\S+$/.test(id)) throw new Error(`consulta de objetos sin soporte en el predictor: ${id}`);
+  let min = data.minStack ?? -1;
+  let max = data.maxStack ?? -1;
+  let qty = cantidadBase;
+  if (min === -1 && max === -1) qty = cantidadBase;
+  else if (max > 1) {
+    min = Math.max(min, 1);
+    max = Math.max(max, min);
+    qty = r.next(min, max + 1);
+  } else if (min > 1) qty = min;
+  qty = Math.trunc(applyQuantityModifiers(qty, data.stackModifiers, data.stackModifierMode ?? 0, { ...ctx, target: id }, r));
+  return { id, qty };
 }
