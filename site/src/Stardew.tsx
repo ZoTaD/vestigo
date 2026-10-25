@@ -8,7 +8,7 @@
  * `STARDEW_TAB_FILES` de areaFiles.ts). Las tipografías y la hoja de estilos viajan con este chunk: sólo las baja quien
  * entra a Stardew Valley.
  */
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { lazyWithPreload } from "./lazyWithPreload";
 import RouteLink from "./RouteLink";
 import { parseRoute, routePath, type Route, type StardewSection, type StardewTab } from "./route";
@@ -16,6 +16,7 @@ import { STARDEW_TABS, useStardewCopy } from "./stardewCopy";
 import StardewHome from "./stardew/StardewHome";
 import { loadHome } from "./stardew/homeData";
 import { SdLoading } from "./stardew/ui";
+import { tabScrollLeft, tabsMore } from "./stardew/tabsScroll";
 import "@fontsource/nunito/600.css";
 import "@fontsource/nunito/800.css";
 import "./styles/stardew.css";
@@ -125,6 +126,24 @@ export default function Stardew({ route, navigate }: TabProps) {
   useEffect(() => {
     if (typeof window !== "undefined" && !cameFromHistory(window.location.pathname)) window.scrollTo({ top: 0 });
   }, [section, route.detail]);
+  // En el teléfono la barra es una fila que se desliza (stardew.css): la pestaña abierta se lleva a la vista moviendo
+  // sólo la barra (no `scrollIntoView`, que también movería la página), y `data-more` dice de qué lado queda más por
+  // ver, para el degradé del borde. En escritorio todo entra y no hace nada.
+  const tabsRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const nav = tabsRef.current;
+    if (!nav) return;
+    const mark = () => nav.setAttribute("data-more", tabsMore(nav.scrollLeft, nav.clientWidth, nav.scrollWidth));
+    const on = nav.querySelector<HTMLElement>(".is-on");
+    if (on && nav.scrollWidth > nav.clientWidth) nav.scrollLeft = tabScrollLeft({ left: on.offsetLeft, width: on.offsetWidth }, nav.clientWidth, nav.scrollWidth);
+    mark();
+    nav.addEventListener("scroll", mark, { passive: true });
+    window.addEventListener("resize", mark);
+    return () => {
+      nav.removeEventListener("scroll", mark);
+      window.removeEventListener("resize", mark);
+    };
+  }, [section]);
   return (
     <div className="sd" data-section={section}>
       <header className="sd-hero">
@@ -134,7 +153,7 @@ export default function Stardew({ route, navigate }: TabProps) {
         </RouteLink>
       </header>
       <div className="sd-wrap">
-        <nav className="sd-tabs" aria-label="Stardew Valley">
+        <nav className="sd-tabs" aria-label="Stardew Valley" ref={tabsRef}>
           {STARDEW_TABS.map((tab) =>
             hasPage(tab) ? (
               <RouteLink
