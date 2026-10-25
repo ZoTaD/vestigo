@@ -20,7 +20,7 @@ OBJ="$RAIZ/games/stardew/raw/.bin"
 SALIDA="$RAIZ/site/test/fixtures/stardew-predict"
 
 # Un comando por entrada; sumar acá los que vayan apareciendo.
-COMANDOS=(rng geodes cart)
+COMANDOS=(rng geodes cart weather mines night)
 [ "$#" -gt 0 ] && COMANDOS=("$@")
 
 CSC="$(ls -d "/c/Program Files/Microsoft Visual Studio"/*/*/MSBuild/Current/Bin/Roslyn/csc.exe \

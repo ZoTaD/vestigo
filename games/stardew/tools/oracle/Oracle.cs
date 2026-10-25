@@ -46,6 +46,22 @@
 //   del desierto (`LOCATION_ACCESSIBLE Desert`) se evalúa con
 //   `Game1.isLocationAccessible`, porque la consulta busca la ubicación `Desert`,
 //   que acá no existe.
+// - `weather`, `mines` y `night` (`ArmarUbicaciones`): un `NetWorldState` (la
+//   fecha se pone en `Game1` y se copia con su `UpdateFromGame1`, de donde sale
+//   `Game1.Date`), `Game1.game1.xTileContent`, un `mapDisplayDevice` de xTile que
+//   no dibuja (`DibujoNulo`), `Game1._onlineFarmers` y las ubicaciones Town, Beach,
+//   Forest, Mountain, Desert y Farm armadas con el constructor vacío y su `mapPath`:
+//   el contexto de cada una lo lee el juego de su mapa real (`GetLocationContextId`).
+//   - `weather`: `LocationWeather.UpdateDailyWeather` real con un `Random` guionado
+//     (`AzarGuionado`) que recorre las 256 respuestas posibles de las 8 primeras
+//     tiradas (hacen falta 2 o 3): no hay que adivinar con semillas al azar.
+//   - `mines`: `MineShaft.loadLevel` real (el mapa carga con las texturas vacías);
+//     el Aceite de ajo se pone en `buffs.AppliedBuffIds`, que es lo que lee
+//     `hasBuff` (`applyBuff` pide el HUD).
+//   - `night`: `Utility.pickFarmEvent` real. Replicado a mano: lo que hacen los
+//     eventos al correr (el mapache marca `raccoonTreeFallen`; el avión,
+//     `sawQiPlane`) y el avión mismo, cuyo constructor mide la pantalla y tira sin
+//     gráficos: si la excepción sale de `QiPlaneEvent..ctor`, ya fue elegido.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -84,6 +100,13 @@ class ContenidoSinTexturas : LocalizedContentManager
     }
 }
 
+// Un dispositivo de dibujo de xTile que no hace nada (los mapas lo piden al cargar).
+public class DibujoNulo : DispatchProxy
+{
+    protected override object Invoke(MethodInfo m, object[] args) =>
+        m.ReturnType.IsValueType && m.ReturnType != typeof(void) ? Activator.CreateInstance(m.ReturnType) : null;
+}
+
 // Registro del juego que no tolera errores (ver la cabecera).
 class RegistroEstricto : IGameLogger
 {
@@ -104,6 +127,9 @@ static class Oracle
         ["rng"] = CmdRng,
         ["geodes"] = CmdGeodes,
         ["cart"] = CmdCart,
+        ["weather"] = CmdWeather,
+        ["mines"] = CmdMines,
+        ["night"] = CmdNight,
     };
 
     static int Main(string[] args)
@@ -705,5 +731,282 @@ static class Oracle
         o["items"] = items;
         // Un caso por línea: el valor crudo no lleva la sangría del escritor.
         w.WriteRawValue("\n    " + JsonSerializer.Serialize(o), skipInputValidation: true);
+    }
+
+    // ------------------------------------------------- clima, Minas y noches
+
+    static readonly (ulong id, bool legacy)[] PartidasDia = { (452435081, false), (390176213, false), (177904899, true) };
+
+    // Pone la fecha en `Game1` y en `netWorldState` (de donde sale `Game1.Date`).
+    static void PonerFecha(ulong gameId, bool legacy, int year, Season s, int d)
+    {
+        Game1.uniqueIDForThisGame = gameId;
+        Game1.UseLegacyRandom = legacy;
+        Game1.year = year;
+        Game1.season = s;
+        Game1.dayOfMonth = d;
+        Game1.stats.DaysPlayed = (uint)((year - 1) * 112 + (int)s * 28 + d);
+        Game1.weatherForTomorrow ??= "Sun";
+        Game1.netWorldState.Value.UpdateFromGame1();
+        if (Game1.Date.TotalDays != (int)Game1.stats.DaysPlayed - 1) throw new Exception("Game1.Date no siguió a la fecha");
+    }
+
+    // Las ubicaciones que miran los festivales y el clima, con su mapa real (el
+    // contexto de cada una sale de la propiedad `LocationContext` del mapa).
+    static void ArmarUbicaciones()
+    {
+        Game1.netWorldState ??= new Netcode.NetRoot<StardewValley.Network.NetWorldState>(new StardewValley.Network.NetWorldState());
+        Game1.game1.xTileContent ??= new ContenidoSinTexturas(Game1.content.ServiceProvider, Game1.content.RootDirectory);
+        // Los mapas cargan y descargan sus hojas de tiles en el dispositivo de dibujo: uno que no hace nada.
+        Game1.mapDisplayDevice ??= DispatchProxy.Create<xTile.Display.IDisplayDevice, DibujoNulo>();
+        var campo = typeof(Game1).GetField("_onlineFarmers", BindingFlags.Static | BindingFlags.NonPublic);
+        if (campo.GetValue(null) == null) campo.SetValue(null, new StardewValley.Network.FarmerCollection());
+        // Con el constructor vacío (el de la carga de partidas): el que recibe el mapa
+        // también siembra objetos, y eso pide medio juego. El contexto lo lee
+        // `GetLocationContextId`, que carga el mapa (`reloadMap`) la primera vez.
+        foreach (var n in new[] { "Town", "Beach", "Forest", "Mountain", "Desert", "Farm" })
+            if (Game1.getLocationFromName(n) == null)
+            {
+                GameLocation l = n == "Farm" ? new StardewValley.Farm() : new GameLocation();
+                l.name.Value = n;
+                l.mapPath.Value = "Maps\\" + n;
+                Game1.locations.Add(l);
+            }
+    }
+
+    // Un `Random` que contesta `NextDouble` según una máscara: el bit k en 1 da 0
+    // (el k-ésimo `RANDOM` se cumple) y en 0 da casi 1 (no se cumple). Así se
+    // recorren todas las combinaciones de `Game1.random`, que el predictor no sabe.
+    class AzarGuionado : Random
+    {
+        readonly int mascara;
+        public int Usados;
+        public AzarGuionado(int m) { mascara = m; }
+        public override double NextDouble()
+        {
+            int k = Usados++;
+            if (k >= 8) throw new Exception("más de 8 tiradas de RANDOM");
+            return ((mascara >> k) & 1) != 0 ? 0.0 : 0.99999999;
+        }
+        protected override double Sample() => throw new Exception("tirada inesperada (Sample)");
+        public override int Next() => throw new Exception("tirada inesperada (Next)");
+        public override int Next(int max) => throw new Exception("tirada inesperada (Next)");
+        public override int Next(int min, int max) => throw new Exception("tirada inesperada (Next)");
+    }
+
+    static readonly string[] Guardados = { "Sun", "Rain", "Storm", "Snow", "Wind", "GreenRain", "Festival" };
+
+    // Clima: por partida y fecha D (la mañana en que corre `UpdateWeatherForNewDay`),
+    // `LocationWeather.UpdateDailyWeather("Default", ...)` real con las 256
+    // combinaciones de `AzarGuionado`: `saved` es el conjunto de lo que puede quedar
+    // guardado como clima de mañana (más de uno = depende de `RANDOM`). Después, con
+    // la fecha de mañana, `Game1.getWeatherModificationsForDate` real sobre cada
+    // valor posible de lo guardado (`mods`, en el orden de `Guardados`).
+    // `passiveInValley`: si algún `MapReplacements` del festival pasivo está en el
+    // contexto del valle (`InValleyContext` sobre el mapa real).
+    static void CmdWeather(Utf8JsonWriter w)
+    {
+        ArmarUbicaciones();
+        var datos = Game1.locationContextData["Default"];
+        w.WriteStartObject("passiveInValley");
+        foreach (var kv in DataLoader.PassiveFestivals(Game1.content))
+        {
+            if (kv.Value.MapReplacements == null) continue;
+            bool valle = false;
+            foreach (var n in kv.Value.MapReplacements.Keys)
+            {
+                var l = Game1.getLocationFromName(n) ?? throw new Exception("falta la ubicación " + n);
+                if (l.InValleyContext()) valle = true;
+            }
+            w.WriteBoolean(kv.Key, valle);
+        }
+        w.WriteEndObject();
+        w.WriteStartArray("saved");
+        foreach (var g in Guardados) w.WriteStringValue(g);
+        w.WriteEndArray();
+
+        var fechas = new List<(int year, Season s, int d)>();
+        for (int s = 0; s < 4; s++)
+            for (int d = 1; d <= 28; d++) fechas.Add((1, (Season)s, d));
+        for (int s = 0; s < 4; s++)
+            foreach (int d in new[] { 1, 2, 3, 12, 13, 27, 28 }) fechas.Add((2, (Season)s, d));
+        w.WriteStartArray("cases");
+        foreach (var p in PartidasDia)
+            foreach (var (year, s, d) in fechas)
+            {
+                PonerFecha(p.id, p.legacy, year, s, d);
+                uint dias = Game1.stats.DaysPlayed;
+                var posibles = new SortedSet<string>(StringComparer.Ordinal);
+                for (int m = 0; m < 256; m++)
+                {
+                    var lw = new StardewValley.Network.LocationWeather();
+                    lw.WeatherForTomorrow = "Sun";
+                    lw.UpdateDailyWeather("Default", datos, new AzarGuionado(m));
+                    posibles.Add(lw.WeatherForTomorrow);
+                }
+                // La mañana siguiente: la fecha ya avanzó cuando se aplican las modificaciones.
+                var manana = new WorldDate(Game1.Date);
+                manana.TotalDays++;
+                PonerFecha(p.id, p.legacy, manana.Year, manana.Season, manana.DayOfMonth);
+                var mods = new List<string>();
+                foreach (var g in Guardados) mods.Add(Game1.getWeatherModificationsForDate(Game1.Date, g));
+                var o = new Dictionary<string, object>
+                {
+                    ["gameId"] = p.id, ["legacy"] = p.legacy, ["year"] = year, ["season"] = (int)s, ["day"] = d,
+                    ["daysPlayed"] = dias, ["saved"] = posibles, ["mods"] = string.Join(" ", mods),
+                };
+                w.WriteRawValue("\n    " + JsonSerializer.Serialize(o), skipInputValidation: true);
+            }
+        w.WriteEndArray();
+        Game1.UseLegacyRandom = false;
+    }
+
+    // Minas: `MineShaft.loadLevel` real, piso por piso (1 a 119), con
+    // `netWorldState.LowestMineLevel` (lo que lee `lowestLevelReached`; `loadLevel`
+    // lo sube, así que se repone antes de cada piso), el correo de la cantera
+    // (`ccCraftsRoom` y `VisitedQuarryMine`) y, en algunos casos, el Aceite de ajo
+    // (buff "23") en el granjero. Se leen `isMonsterArea`, `isSlimeArea`,
+    // `isQuarryArea` y `loadedMapNumber` (hongos: mapas 40, 47, 50 y 51).
+    static void CmdMines(Utf8JsonWriter w)
+    {
+        ArmarUbicaciones();
+        var campoJugador = typeof(Game1).GetField("_player", BindingFlags.Static | BindingFlags.NonPublic);
+        var pisos = new Dictionary<int, StardewValley.Locations.MineShaft>();
+        w.WriteStartArray("cases");
+        for (int pi = 0; pi < PartidasDia.Length; pi++)
+        {
+            var p = PartidasDia[pi];
+            int desde = new[] { 5, 100, 250 }[pi];
+            for (int k = 0; k < 30; k++)
+            {
+                int dp = desde + k;
+                var fecha = new WorldDate { TotalDays = dp - 1 };
+                foreach (int hondo in new[] { 0, 120 })
+                    foreach (bool cantera in new[] { false, true })
+                        foreach (bool ajo in new[] { false, true })
+                        {
+                            // El ajo sólo en un día de cada cinco (alcanza para ver que cambia la cantera).
+                            if (ajo && k % 5 != 0) continue;
+                            var f = new Farmer();
+                            campoJugador.SetValue(null, f);
+                            if (cantera) { f.mailReceived.Add("ccCraftsRoom"); f.mailReceived.Add("VisitedQuarryMine"); }
+                            if (ajo) f.buffs.AppliedBuffIds.Add("23"); // lo que lee `hasBuff` (`applyBuff` pide el HUD)
+                            if (f.hasBuff("23") != ajo) throw new Exception("el buff del ajo no quedó");
+                            PonerFecha(p.id, p.legacy, fecha.Year, fecha.Season, fecha.DayOfMonth);
+                            var inf = new List<int>(); var baba = new List<int>(); var cant = new List<int>(); var hongo = new List<int>();
+                            for (int nivel = 1; nivel <= 119; nivel++)
+                            {
+                                if (!pisos.TryGetValue(nivel, out var mina)) pisos[nivel] = mina = new StardewValley.Locations.MineShaft(nivel);
+                                Game1.netWorldState.Value.LowestMineLevel = hondo;
+                                mina.loadLevel(nivel);
+                                if (mina.isMonsterArea) inf.Add(nivel);
+                                if (mina.isSlimeArea) baba.Add(nivel);
+                                if (mina.isQuarryArea) cant.Add(nivel);
+                                if (mina.loadedMapNumber is 40 or 47 or 50 or 51) hongo.Add(nivel);
+                            }
+                            var o = new Dictionary<string, object>
+                            {
+                                ["gameId"] = p.id, ["legacy"] = p.legacy, ["daysPlayed"] = dp, ["lowest"] = hondo,
+                                ["quarry"] = cantera, ["garlic"] = ajo, ["infested"] = inf, ["slime"] = baba,
+                                ["quarryLevels"] = cant, ["mushroom"] = hongo,
+                            };
+                            w.WriteRawValue("\n    " + JsonSerializer.Serialize(o), skipInputValidation: true);
+                        }
+            }
+        }
+        w.WriteEndArray();
+        Game1.netWorldState.Value.LowestMineLevel = 0;
+        Game1.UseLegacyRandom = false;
+        campoJugador.SetValue(null, new Farmer());
+    }
+
+    // Noches: `Utility.pickFarmEvent()` real, noche tras noche desde la que lleva al
+    // día 2 (con la fecha y `DaysPlayed` del día nuevo, como `_newDayAfterFade`), con
+    // `Farm.hasMatureFairyRoseTonight` apagado o prendido. Lo que los eventos hacen
+    // al correr y cambia las noches siguientes se repite acá: el mapache marca
+    // `raccoonTreeFallen` (`SoundInTheNightEvent.setUp`) y el avión de Qi
+    // `sawQiPlane` (`QiPlaneEvent`); la cápsula la marca el propio `pickFarmEvent`.
+    class EstadoNoche
+    {
+        public bool CcPantry, Mapache, Capsula, AvionVisto, Boleto;
+    }
+
+    static readonly EstadoNoche[] EstadosNoche =
+    {
+        new EstadoNoche(),
+        new EstadoNoche { CcPantry = true },
+        new EstadoNoche { CcPantry = true, Mapache = true, Capsula = true, AvionVisto = true },
+        new EstadoNoche { Boleto = true },
+    };
+
+    static void CmdNight(Utf8JsonWriter w)
+    {
+        ArmarUbicaciones();
+        var campoJugador = typeof(Game1).GetField("_player", BindingFlags.Static | BindingFlags.NonPublic);
+        var conducta = typeof(StardewValley.Events.SoundInTheNightEvent).GetField("behavior", BindingFlags.Instance | BindingFlags.NonPublic);
+        var granja = Game1.getFarm();
+        Game1.weddingToday = false;
+        w.WriteStartArray("cases");
+        for (int pi = 0; pi < PartidasDia.Length; pi++)
+        {
+            var p = PartidasDia[pi];
+            foreach (var e in EstadosNoche)
+                foreach (bool rosa in new[] { false, true })
+                {
+                    var f = new Farmer();
+                    campoJugador.SetValue(null, f);
+                    if (e.CcPantry) f.mailReceived.Add("ccPantry");
+                    if (e.Mapache) f.mailReceived.Add("raccoonTreeFallen");
+                    if (e.Capsula) f.mailReceived.Add("Got_Capsule");
+                    if (e.AvionVisto) f.mailReceived.Add("sawQiPlane");
+                    if (e.Boleto) f.mailReceived.Add("gotFirstBillboardPrizeTicket");
+                    var eventos = new List<string>();
+                    for (int dp = 2; dp < 402; dp++)
+                    {
+                        var fecha = new WorldDate { TotalDays = dp - 1 };
+                        PonerFecha(p.id, p.legacy, fecha.Year, fecha.Season, fecha.DayOfMonth);
+                        granja.hasMatureFairyRoseTonight = rosa;
+                        bool capsulaAntes = f.mailReceived.Contains("Got_Capsule");
+                        StardewValley.Events.FarmEvent ev;
+                        bool avion = false;
+                        try { ev = Utility.pickFarmEvent(); }
+                        catch (NullReferenceException ex) when (ex.TargetSite?.DeclaringType == typeof(StardewValley.Events.QiPlaneEvent))
+                        {
+                            // El constructor de `QiPlaneEvent` mide la pantalla y no anda sin
+                            // gráficos: si tira ahí, `pickFarmEvent` ya eligió el avión.
+                            ev = null;
+                            avion = true;
+                        }
+                        string x = avion ? "qiPlane" : ev switch
+                        {
+                            null => "-",
+                            StardewValley.Events.FairyEvent => "fairy",
+                            StardewValley.Events.WitchEvent => "witch",
+                            StardewValley.Events.QiPlaneEvent => "qiPlane",
+                            StardewValley.Events.SoundInTheNightEvent s => ((Netcode.NetInt)conducta.GetValue(s)).Value switch
+                            {
+                                0 => "capsule", 1 => "meteorite", 3 => "owl", 4 => "earthquake", 5 => "raccoon",
+                                var n => throw new Exception("SoundInTheNightEvent " + n),
+                            },
+                            _ => throw new Exception("evento inesperado: " + ev.GetType().Name),
+                        };
+                        if (x == "raccoon") f.mailReceived.Add("raccoonTreeFallen");
+                        if (x == "qiPlane") f.mailReceived.Add("sawQiPlane");
+                        if (x == "capsule" && (capsulaAntes || !f.mailReceived.Contains("Got_Capsule")))
+                            throw new Exception("la cápsula no marcó Got_Capsule");
+                        eventos.Add(x);
+                    }
+                    var o = new Dictionary<string, object>
+                    {
+                        ["gameId"] = p.id, ["legacy"] = p.legacy, ["rose"] = rosa, ["ccPantry"] = e.CcPantry,
+                        ["raccoonTreeFallen"] = e.Mapache, ["gotCapsule"] = e.Capsula, ["sawQiPlane"] = e.AvionVisto, ["billboardTicket"] = e.Boleto,
+                        ["from"] = 2, ["events"] = string.Join(" ", eventos),
+                    };
+                    w.WriteRawValue("\n    " + JsonSerializer.Serialize(o), skipInputValidation: true);
+                }
+        }
+        w.WriteEndArray();
+        Game1.UseLegacyRandom = false;
+        campoJugador.SetValue(null, new Farmer());
     }
 }

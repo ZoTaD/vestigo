@@ -106,6 +106,11 @@ class TestPredictData(unittest.TestCase):
         self.assertEqual(p["DesertFestival"]["condition"], "LOCATION_ACCESSIBLE Desert")
         self.assertEqual(p["TroutDerby"]["startDay"], 20)
         self.assertNotIn("mapReplacements", p["TroutDerby"])
+        # `getWeatherModificationsForDate` pone Sol si alguna ubicación reemplazada es del valle: la playa sí, el
+        # desierto no (el oráculo `weather` lo confirma contra los mapas reales).
+        self.assertIs(p["NightMarket"]["inValley"], True)
+        self.assertNotIn("inValley", p["DesertFestival"])
+        self.assertNotIn("inValley", p["TroutDerby"])
 
     def test_clima(self):
         w = self.d["weather"]

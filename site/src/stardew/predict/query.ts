@@ -1,10 +1,11 @@
 // Datos del predictor de Stardew Valley 1.6.15: la forma de `games/stardew/data/predict.json`
 // (lo genera `games/stardew/tools/predict_data.py`) y, al final, las consultas del juego que
 // usan esos datos (`GameStateQuery`, `ItemQueryResolver`, `Utility.ApplyQuantityModifiers`).
-// Están las que usan las geodas y el carro (`RANDOM_ITEMS`, `PerItemCondition`, las condiciones de
-// `Data/Shops` "Traveler"); cualquier otra tira error en vez de evaluarse mal.
+// Están las que usan las geodas, el carro (`RANDOM_ITEMS`, `PerItemCondition`, las condiciones de
+// `Data/Shops` "Traveler") y el clima (`WeatherConditions` de `Data/LocationContexts`); cualquier otra
+// tira error en vez de evaluarse mal.
 //
-import type { DotNetRandom } from "./rng";
+import { hashString, type DotNetRandom } from "./rng";
 
 // Regla de todo el archivo: un campo opcional que falta vale el valor por omisión que dice
 // su comentario (el script no guarda lo que vale lo de siempre).
@@ -126,6 +127,12 @@ export interface FestivalPasivo {
   name?: Par;
   /** Ubicaciones cuyo mapa cambia durante el festival (`MapReplacements`: p. ej. `Beach`). */
   mapReplacements?: string[];
+  /**
+   * Alguna de `mapReplacements` está en el contexto del valle (`GameLocation.InValleyContext`): ese día
+   * no llueve (`Game1.getWeatherModificationsForDate`, `LocationWeather.UpdateDailyWeather`). La playa
+   * del Mercado nocturno sí; el desierto no.
+   */
+  inValley?: boolean;
 }
 
 /** Una condición de `WeatherConditions`: el clima toma la primera cuya `condition` se cumple. */
@@ -198,6 +205,14 @@ export interface QueryContext {
   season?: 0 | 1 | 2 | 3;
   /** `Game1.year`, para `YEAR`. */
   year?: number;
+  /** `Game1.dayOfMonth`, para `DAY_OF_MONTH`, `SEASON_DAY` y `SYNCED_SUMMER_RAIN_RANDOM`. */
+  dayOfMonth?: number;
+  /** `Game1.stats.DaysPlayed`, para `DAYS_PLAYED`. */
+  daysPlayed?: number;
+  /** `Utility.CreateDaySaveRandom(a)`, para `SYNCED_SUMMER_RAIN_RANDOM`. */
+  daySave?(a: number): DotNetRandom;
+  /** `IS_GREEN_RAIN_DAY`: `Utility.isGreenRainDay` de MAÑANA (`Game1.Date` + 1, con `Game1.year`). */
+  greenRainTomorrow?: boolean;
   /** El `Random` de quien consulta (`RANDOM`): el de la tienda, en el carro. */
   random?: DotNetRandom;
   /** `Utility.TryCreateIntervalRandom(intervalo, clave)`, para `SYNCED_RANDOM`. */
@@ -321,6 +336,43 @@ function consulta(args: string[], ctx: QueryContext, q: string): boolean {
         return i === hoy;
       });
     }
+    // GameStateQuery.DefaultResolvers.SEASON_DAY: pares estación-día, alguno igual a hoy.
+    case "SEASON_DAY": {
+      const hoy = pedir(ctx.season, "la estación", q);
+      const dia = pedir(ctx.dayOfMonth, "el día del mes", q);
+      for (let i = 1; i < args.length; i += 2) {
+        const est = ESTACIONES.indexOf((args[i] ?? "").toLowerCase());
+        if (est < 0) throw new Error(`estación desconocida: ${q}`);
+        if (est === hoy && dia === entero(args[i + 1], q)) return true;
+      }
+      return false;
+    }
+    // GameStateQuery.DefaultResolvers.DAY_OF_MONTH: alguno de los días (o "even"/"odd").
+    case "DAY_OF_MONTH": {
+      const dia = pedir(ctx.dayOfMonth, "el día del mes", q);
+      return args.slice(1).some((x) => {
+        if (ENTERO.test(x)) return dia === Number.parseInt(x, 10);
+        if (igual(x, "even")) return dia % 2 === 0;
+        if (igual(x, "odd")) return dia % 2 === 1;
+        throw new Error(`día del mes inválido: ${q}`);
+      });
+    }
+    // GameStateQuery.DefaultResolvers.DAYS_PLAYED: min <= días jugados <= max (max opcional).
+    case "DAYS_PLAYED": {
+      const d = pedir(ctx.daysPlayed, "los días jugados", q);
+      return d >= entero(args[1], q) && d <= entero(args[2], q, MAX_INT);
+    }
+    // GameStateQuery.DefaultResolvers.SYNCED_SUMMER_RAIN_RANDOM: `CreateDaySaveRandom(hash("summer_rain_chance"))`
+    // con `NextBool(0.12f + día * 0.003f)` (en `float`, como el juego).
+    case "SYNCED_SUMMER_RAIN_RANDOM": {
+      const r = pedir(ctx.daySave, "la semilla", q)(hashString("summer_rain_chance"));
+      const f = Math.fround;
+      const chance = f(f(0.12) + f(pedir(ctx.dayOfMonth, "el día del mes", q) * f(0.003)));
+      return chance >= 1 || r.nextDouble() < chance;
+    }
+    // GameStateQuery.DefaultResolvers.IS_GREEN_RAIN_DAY: si MAÑANA hay lluvia verde.
+    case "IS_GREEN_RAIN_DAY":
+      return pedir(ctx.greenRainTomorrow, "la lluvia verde de mañana", q);
     // GameStateQuery.DefaultResolvers.YEAR: min <= año <= max (max opcional).
     case "YEAR": {
       const y = pedir(ctx.year, "el año", q);

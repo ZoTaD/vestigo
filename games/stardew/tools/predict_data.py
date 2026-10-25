@@ -254,15 +254,25 @@ def raccoon_seeds() -> dict:
 
 # --- Festivales y clima -----------------------------------------------------------------------------------------------
 
+def _ubicaciones_del_valle() -> set[str]:
+    """Las ubicaciones de la región `Valley` de `Data/WorldMap`: las del contexto `Default` (`InValleyContext`). El
+    contexto de verdad sale de la propiedad `LocationContext` de cada mapa, que acá no se lee; el oráculo `weather`
+    compara el resultado con los mapas reales (`passiveInValley` en `weather.json`)."""
+    return {pos["LocationName"] for area in sdv.raw("Data/WorldMap")["Valley"]["MapAreas"] or []
+            for pos in area.get("WorldPositions") or [] if pos.get("LocationName")}
+
+
 def festivals() -> dict:
     """`days` (`Utility.isFestivalDay`: días de festival por estación), `names` (festival -> [en, es]) y `passive`
-    (`Data/PassiveFestivals`: season 0 a 3, startDay, endDay, startTime, condition?, name?, mapReplacements?)."""
+    (`Data/PassiveFestivals`: season 0 a 3, startDay, endDay, startTime, condition?, name?, mapReplacements? e
+    inValley?, si alguna ubicación reemplazada es del valle: `Game1.getWeatherModificationsForDate` pone Sol)."""
     fechas = sdv.raw("Data/Festivals/FestivalDates")
     fechas_es = sdv.raw("Data/Festivals/FestivalDates.es-ES")
     dias = {e: [] for e in _ESTACIONES}
     for clave in fechas:
         est, dia = re.fullmatch(r"([a-z]+)(\d+)", clave).groups()
         dias[est].append(int(dia))
+    valle = _ubicaciones_del_valle()
     pasivos = []
     for id_, p in sdv.raw("Data/PassiveFestivals").items():
         x = {"id": id_, "season": p["Season"], "startDay": p["StartDay"], "endDay": p["EndDay"], "startTime": p["StartTime"]}
@@ -272,6 +282,8 @@ def festivals() -> dict:
             x["name"] = _nombre_token(p["DisplayName"])
         if p["MapReplacements"]:
             x["mapReplacements"] = list(p["MapReplacements"])
+            if any(u in valle for u in p["MapReplacements"]):
+                x["inValley"] = True
         pasivos.append(x)
     return {"days": {e: sorted(d) for e, d in dias.items()},
             "names": {c: _par(n, fechas_es.get(c, n)) for c, n in fechas.items()}, "passive": pasivos}
