@@ -276,7 +276,9 @@
 #     las imágenes que no se sirven desde el sitio.
 #   - api.deadlock-api.com: buscador de jugadores, perfiles y partidas.
 #   - *.steamstatic.com: avatares de Steam.   web.poecdn.com: imágenes de PoE2.
-#   - Google Analytics: googletagmanager.com y los *.google-analytics.com.
+#   - Google Analytics: googletagmanager.com y los *.google-analytics.com. Las
+#     visitas también salen a analytics.google.com y www.google.com, que el
+#     comodín *.analytics.google.com no cubre: sin ellos GA no cuenta a nadie.
 #
 # Permissions-Policy apaga lo que el sitio nunca usa (cámara, micrófono, etc.).
 [[headers]]
@@ -285,7 +287,7 @@
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://assets-bucket.deadlock-api.com https://web.poecdn.com https://*.steamstatic.com https://*.googletagmanager.com https://*.google-analytics.com; font-src 'self' https://assets-bucket.deadlock-api.com; media-src 'self' https://assets-bucket.deadlock-api.com; connect-src 'self' https://api.deadlock-api.com https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://assets-bucket.deadlock-api.com https://web.poecdn.com https://*.steamstatic.com https://*.googletagmanager.com https://*.google-analytics.com; font-src 'self' https://assets-bucket.deadlock-api.com; media-src 'self' https://assets-bucket.deadlock-api.com; connect-src 'self' https://api.deadlock-api.com https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.google.com https://www.google.com; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), interest-cohort=()"
 
 # El JS y el CSS que arma Vite (2026-09-25). Cada nombre lleva el hash de su
