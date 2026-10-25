@@ -208,6 +208,14 @@ export interface Save {
   ccComplete: boolean;
   /** Id → cantidad, sumando el inventario de todos y todos los cofres de todos los lugares. */
   items: Record<string, number>;
+  /** Lo donado al museo: el id de cada pieza de `museumPieces` de `LibraryMuseum` (es del mundo, no de un granjero). */
+  museum: string[];
+  /**
+   * Las nueces doradas de la Isla por clave del juego (las de `island.json`): 1 por clave de `collectedNutTracker`, la
+   * cantidad de `limitedNutDrops` (el loro dorado anota 9999: el tope lo pone la Isla) y `GoldenCoconut` 1 si Clint ya
+   * abrió el primer coco dorado (`goldenCoconutCracked`). Es del equipo, no de un granjero.
+   */
+  nuts: Record<string, number>;
   /** Lo que lee el predictor. Opcional: una partida guardada por la versión anterior no lo trae. */
   predict?: SavePredict;
 }
@@ -531,6 +539,7 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
   for (const p of players) addAll(items, p.inventory);
   const buildings: string[] = [];
   let ccEl: Element | null = null;
+  let museumEl: Element | null = null;
   if (locations) {
     const lists = locations.getElementsByTagName("items");
     for (let i = 0; i < lists.length; i++) {
@@ -549,6 +558,7 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
     }
     for (const loc of kids(locations)) {
       if (text(loc, "name") === "CommunityCenter") ccEl = loc;
+      if (xsiType(loc) === "LibraryMuseum") museumEl = loc;
     }
   }
   // Cofres Junimo: un inventario global por id.
@@ -575,6 +585,14 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
     tt("gameVersion") || (hostVersion && hostVersion !== "-1" ? hostVersion : "") ||
     (tt("hasApplied1_4_UpdateChanges") === "true" ? "1.4" : tt("hasApplied1_3_UpdateChanges") === "true" ? "1.3" : "<1.3");
 
+  // Nueces: `collectedNutTracker` es una lista de `<string>`; `limitedNutDrops`, pares `<key><string>`/`<value><int>`.
+  const nuts: Record<string, number> = {};
+  for (const k of kids(t("collectedNutTracker"))) if (str(k)) nuts[str(k)] = 1;
+  for (const [k, v] of dict(t("limitedNutDrops"))) {
+    const n = int(str(v));
+    if (k && str(k) && n > 0) nuts[str(k)] = Math.max(nuts[str(k)] ?? 0, n);
+  }
+  if (tt("goldenCoconutCracked") === "true") nuts.GoldenCoconut = 1;
   const weatherTomorrow = /^\d+$/.test(tt("weatherForTomorrow"))
     ? OLD_WEATHER[int(tt("weatherForTomorrow"))] ?? "Sun"
     : tt("weatherForTomorrow");
@@ -594,6 +612,11 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
     joja: mailAll.has("JojaMember"),
     ccComplete: mailAll.has("ccIsComplete"),
     items,
+    // Casilla → id (`<string>` en la 1.6, `<int>` antes): sólo importan los ids.
+    museum: dict(kid(museumEl, "museumPieces"))
+      .map(([, v]) => normId(str(v)))
+      .filter(Boolean),
+    nuts,
     predict: {
       gameId: int(tt("uniqueIDForThisGame")),
       legacy: tt("useLegacyRandom") === "true",

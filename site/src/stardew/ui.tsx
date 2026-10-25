@@ -25,6 +25,18 @@ export function Box({ as: Tag = "section", className, children, ...rest }: { as?
 export const spriteFile = (id: string): string => (id.startsWith("(BC)") ? `bc-${id.slice(4)}.png` : `${id}.png`);
 
 /**
+ * El dibujo de un premio que puede no tener ficha (museo, Walnut Room): los muebles, los sombreros y las llaves (la
+ * oxidada y la de la ciudad) están en `rewards/` (`reward_file` de sprites.py); los objetos y los `(BC)`, en `items/`.
+ */
+export function prizeSrc(id: string): string {
+  if (id === "RustyKey") return "/stardew/rewards/rusty-key.png";
+  if (id === "KeyToTheTown") return "/stardew/rewards/key-to-the-town.png";
+  if (id.startsWith("(F)")) return `/stardew/rewards/f-${id.slice(3)}.png`;
+  if (id.startsWith("(H)")) return `/stardew/rewards/h-${id.slice(3)}.png`;
+  return `/stardew/items/${spriteFile(id)}`;
+}
+
+/**
  * El sprite de un objeto, agrandado para que su lado mayor mida `size` px. Los sprites del juego vienen a su tamaño
  * real (16×16, o 16×32 las máquinas) y se agrandan con `image-rendering: pixelated`. Ancho y alto fijos, así no corre
  * la página al llegar; `lazy` salvo la imagen principal de arriba de una ficha.

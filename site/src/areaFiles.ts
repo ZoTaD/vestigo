@@ -106,6 +106,10 @@ export const STARDEW_TAB_FILES: Partial<Record<StardewSection, string>> = {
   calendar: "src/stardew/calendar/StardewCalendar.tsx",
   mines: "src/stardew/mines/StardewMines.tsx",
   save: "src/stardew/save/StardewSave.tsx",
+  farm: "src/stardew/farm/StardewFarm.tsx",
+  museum: "src/stardew/museum/StardewMuseum.tsx",
+  island: "src/stardew/island/StardewIsland.tsx",
+  quests: "src/stardew/quests/StardewQuests.tsx",
   predict: "src/stardew/predict/StardewPredict.tsx",
 };
 

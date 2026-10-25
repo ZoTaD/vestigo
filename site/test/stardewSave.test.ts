@@ -17,7 +17,7 @@ import { loadSaveBundle, type SaveBundle } from "../src/stardew/data";
 import { parseSave, type Save } from "../src/stardew/save/parse";
 import StardewSave, { PartMissing, SaveBoundary, SavePicker, SaveView } from "../src/stardew/save/StardewSave";
 import { perfection, type SaveData } from "../src/stardew/save/progress";
-import { checklistFromSave, forgetSave, isOldVersion, readStoredSave, storeSave, syncChecklist } from "../src/stardew/save/store";
+import { checklistFromSave, forgetSave, isOldVersion, readStoredSave, readStoredSaveInfo, storeSave, syncChecklist } from "../src/stardew/save/store";
 
 const parser = new DOMParser({ onError: () => {} }) as unknown as { parseFromString(s: string, type: string): Document };
 const mini = readFileSync(new URL("./fixtures/stardew-save-mini.xml", import.meta.url), "utf8");
@@ -303,6 +303,34 @@ describe("lo que se guarda en el navegador", () => {
     expect(sin((x) => (x.players[0].skills = [1, 2]))).toBeNull();
     expect(sin((x) => delete x.bundles.done)).toBeNull();
     expect(sin((x) => delete x.buildings)).toBeNull();
+  });
+
+  it("una partida guardada antes del Museo (sin museum) se lee igual, con museum vacío", () => {
+    const store = fakeStorage();
+    const vieja = JSON.parse(JSON.stringify(leer()));
+    delete vieja.museum;
+    store["sdv-save-v1"] = JSON.stringify({ v: 1, save: vieja });
+    expect(readStoredSave()).toEqual({ ...leer(), museum: [] });
+    // Y dice que lo completó: una lista vacía puesta acá no es "nada donado".
+    expect(readStoredSaveInfo()!.filled).toEqual(["museum"]);
+    // Pero si está, tiene que ser una lista.
+    store["sdv-save-v1"] = JSON.stringify({ v: 1, save: { ...leer(), museum: "96" } });
+    expect(readStoredSave()).toBeNull();
+  });
+
+  it("una partida guardada antes de la Isla (sin nuts) se lee igual, con nuts vacío; si está, tiene que ser un objeto", () => {
+    const store = fakeStorage();
+    const vieja = JSON.parse(JSON.stringify(leer()));
+    delete vieja.nuts;
+    delete vieja.museum;
+    store["sdv-save-v1"] = JSON.stringify({ v: 1, save: vieja });
+    expect(readStoredSave()).toEqual({ ...leer(), museum: [], nuts: {} });
+    expect(readStoredSaveInfo()!.filled).toEqual(["museum", "nuts"]);
+    // Una partida guardada con todo no completa nada.
+    store["sdv-save-v1"] = JSON.stringify({ v: 1, save: leer() });
+    expect(readStoredSaveInfo()!.filled).toEqual([]);
+    store["sdv-save-v1"] = JSON.stringify({ v: 1, save: { ...leer(), nuts: ["Darts"] } });
+    expect(readStoredSave()).toBeNull();
   });
 
   it("predict es opcional: sin él la partida vale; con una forma rota no", () => {

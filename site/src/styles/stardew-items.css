@@ -96,11 +96,17 @@ a.sd-row:hover { background: var(--sd-paper-2); }
 a.sd-src-link { font-weight: 800; color: var(--sd-ink); text-decoration: underline; text-decoration-color: #c9772a; text-underline-offset: 3px; }
 a.sd-src-link:hover { text-decoration-color: currentColor; }
 .sd-src-link:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; border-radius: 4px; }
+/* "Lo produce": el animal adulto en una caja de 64 px, a un múltiplo entero de su tamaño (16 o 32 px). */
+.sd-animal-pix { display: block; flex: none; margin: -4px 0; image-rendering: pixelated; }
 .sd-row-end { margin-left: auto; display: flex; align-items: center; gap: 10px; font-weight: 800; }
 .sd-row-end small { color: var(--sd-dim); font-size: 13px; }
 .sd-flow { padding: 4px 10px 4px 4px; }
 .sd-arrow { font: 800 18px/1 var(--sd-text); color: var(--sd-wood); }
 .sd-src-k { min-width: 120px; font: 800 13px/1.2 var(--sd-text); color: var(--sd-dim); }
+/* Un precio que no es en oro (gemas de Qi, nueces doradas): la cifra, el sprite de la moneda a 16 px y su nombre. */
+.sd-cur { display: inline-flex; align-items: center; gap: 4px; }
+.sd-cur .sd-sprite { image-rendering: pixelated; }
+.sd-cur small { margin-left: 2px; }
 
 /* Un objeto nombrado: casillero chico y nombre, con un dato abajo. */
 .sd-ref { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
@@ -120,3 +126,6 @@ a.sd-ref:hover b { text-decoration: underline; }
   .sd-people { gap: 4px; }
   .sd-person { width: 62px; }
 }
+/* El premio del museo sin ficha (un mueble, la Llave oxidada): caja fija de 72 px, el dibujo a escala entera (hasta 64). */
+.sd-prize-box { flex: none; display: grid; place-items: center; width: 72px; height: 72px; border-radius: 4px; background: #efdcb4; }
+.sd-prize-box img { display: block; max-width: none; image-rendering: pixelated; }

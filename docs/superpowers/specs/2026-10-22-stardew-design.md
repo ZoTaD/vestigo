@@ -229,6 +229,51 @@ de recorrer la página entera (las listas largas se dibujan de a tandas con `Laz
 desplegadas a la vez, 202 sobre los 3.000. Ese último caso no es el de abrir en frío (el presupuesto es de la página
 vacía), y quien despliega todo ve una página larga; si se le suman cajas al Lector, volver a medirlo.
 
+## Mediciones del build (etapa 4, 2026-10-25)
+
+Mismo método que en la etapa 3 (`npm run build` entero, sin `NODE_OPTIONS`, pico de RAM sumando los procesos `node` y
+`esbuild` nuevos cada medio segundo desde PowerShell, un lado detrás del otro). El "antes" es la base de la rama (12b285a3,
+`main` con la etapa 3), compilada en un worktree temporal con su propio `npm ci`; el "después" es
+`claude/stardew-etapa-4-403445`. Dos corridas por lado y una tercera del "después" tras cambiar el ícono de la portada.
+
+| | 12b285a3 (etapa 3) | etapa 4 |
+|---|---|---|
+| Páginas prerenderizadas | 39.026 | 39.034 (+8) |
+| Prerender | 84,8 s / 85,7 s | 86,3 s / 83,4 s / 78,6 s |
+| `vite build` | 2 min 6 s / 2 min 16 s | 2 min 8 s / 2 min 13 s / 2 min 3 s |
+| `npm run build` entero | 171,3 s / 180,2 s | 170,9 s / 177,3 s / 163,1 s |
+| Pico de RAM (suma de procesos) | 2,69 GB / 3,18 GB | 3,39 GB / 2,77 GB / 3,90 GB* |
+| Pico de un solo proceso | 2,58 GB / 3,07 GB | 3,28 GB / 2,66 GB / 2,60 GB |
+| `check-links` | 0 sin destino | 0 sin destino |
+
+Las 8 páginas nuevas son las cuatro pestañas (Granja, Museo, Isla Jengibre, Misiones) en los dos idiomas: no tienen
+fichas. El tiempo no se mueve (las corridas de los dos lados se pisan) y la RAM varía entre corridas igual en los dos
+lados, como en la etapa 2. *La suma de 3,90 GB de la tercera corrida no viene del build (su proceso más grande fue
+2,60 GB): lo más probable es que cuente un `node` de otra sesión que arrancó durante la medición (no se comprobó). Lejos del tope de 6 GB.
+
+`npm run perf -- --only stardew --budget` contra `vite preview` (Chromium headless shell), en frío, páginas nuevas de la
+etapa 4 y la portada, que suma sus cuatro tarjetas (las demás quedaron como estaban):
+
+| Página | Pedidos | Imágenes | Nodos |
+|---|---|---|---|
+| `/en/stardew-valley` | 58 | 35 | 335 |
+| `/en/stardew-valley/farm` | 89 | 61 | 1.044 |
+| `/es/stardew-valley/granja` | 89 | 61 | 1.045 |
+| `/es/stardew-valley/granja?v=buildings` | 116 | 88 | 977 |
+| `/en/stardew-valley/museum` | 130 | 100 | 1.087 |
+| `/es/stardew-valley/museo` | 130 | 100 | 1.088 |
+| `/es/stardew-valley/museo?v=rewards` | 160 | 130 | 476 |
+| `/en/stardew-valley/museum?v=books` | 157 | 127 | 477 |
+| `/en/stardew-valley/island` | 36 | 6 | 572 |
+| `/es/stardew-valley/isla-jengibre` | 36 | 6 | 573 |
+| `/en/stardew-valley/island?v=walnut-room` | 61 | 31 | 362 |
+| `/en/stardew-valley/quests` | 119 | 90 | 989 |
+| `/es/stardew-valley/misiones` | 119 | 90 | 990 |
+| `/es/stardew-valley/misiones?v=story` | 123 | 94 | 1.171 |
+
+Todas dentro del presupuesto, sin errores. La más pesada en pedidos es la vista Premios del Museo (160 de 250, por los
+dibujos de los muebles); en nodos, las Misiones de la historia (1.171 de 3.000).
+
 ## Predictor (2026-10-25)
 
 Pestaña `predict` (`/en/stardew-valley/predictor`, `/es/stardew-valley/predictor`), plan en

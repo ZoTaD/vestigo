@@ -14,7 +14,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import crops_data  # noqa: E402
+import farm_data  # noqa: E402
+import island_data  # noqa: E402
 import mines_data  # noqa: E402
+import museum_data  # noqa: E402
+import quests_data  # noqa: E402
 import relations  # noqa: E402
 import sdv  # noqa: E402
 from sprites import plantillas  # noqa: E402
@@ -56,7 +60,10 @@ _TEXTO_TIENDA = {
     "BoxOffice": ("Strings/StringsFromCSFiles", "MovieTheater_Map"),
     "IceCreamStand": ("Strings/Objects", "IceCream_Name"),
     "VolcanoShop": ("Strings/WorldMap", "GingerIsland_North_Volcano"),
+    "QiGemShop": ("Strings/WorldMap", "GingerIsland_West_QiWalnutRoom"),
 }
+# Las monedas que no son oro: gemas de Qi y nueces doradas (lo que cobra el Walnut Room de Qi).
+GEMA_QI, NUEZ = "858", "73"
 # Producto de máquina con sabor -> clave de su plantilla en Strings/Objects (`<clave>_Flavored_Name`).
 _PLANTILLA_SABOR = {
     "348": "Wine", "350": "Juice", "344": "Jelly", "342": "Pickles", "447": "AgedRoe", "340": "Honey",
@@ -236,6 +243,82 @@ def estaciones_de(fuentes: list[dict]) -> list[int] | None:
     return est if 0 < len(est) < 4 else None
 
 
+def _usos_vacios() -> dict:
+    return {"donate": False, "builds": [], "orders": [], "prizes": []}
+
+
+def cruces(tienda_qi: list[str]) -> tuple[dict[str, list[dict]], dict[str, dict]]:
+    """Lo que suman Granja, Museo, Isla y Misiones a cada ficha: fuentes nuevas por objeto y sus `uses`.
+
+    Fuentes: `animal` (lo produce; `deluxe` el de mucha amistad), `museum` (premio por donar; `reward` es el ancla de
+    la fila en Museo), `order` (premio de un pedido o misión; `tab` dice en qué pestaña está) y `shop` con `cur`, la
+    moneda que no es oro (el Walnut Room de Qi). `uses`: si se dona al museo, qué edificios lo piden de material, qué
+    pedidos y misiones lo piden y qué premio del museo da donarlo (`prizes`, aunque el premio no tenga ficha).
+    Las recetas que se venden o se ganan no son el objeto: no cuentan como fuente.
+    """
+    granja, museo, isla, misiones = farm_data.farm(), museum_data.museum(), island_data.island(), quests_data.quests()
+    fuentes: dict[str, list[dict]] = {}
+    usos: dict[str, dict] = {}
+
+    def fuente(i: str, f: dict) -> None:
+        lista = fuentes.setdefault(i, [])
+        if f not in lista:
+            lista.append(f)
+
+    def uso(i: str, campo: str, fila: list) -> None:
+        lista = usos.setdefault(i, _usos_vacios())[campo]
+        if fila not in lista:
+            lista.append(fila)
+
+    def con_n(f: dict, n: int) -> dict:
+        return {**f, "n": n} if n > 1 else f
+
+    for a in granja["animals"]:
+        for p in a["produce"]:
+            f = {"k": "animal", "who": list(a["name"]), "key": a["slug"]}
+            fuente(p["id"], {**f, "deluxe": True} if p["deluxe"] else f)
+    for b in granja["buildings"]:
+        for iid, n in b["materials"]:
+            uso(iid, "builds", [b["slug"], list(b["name"]), n])
+
+    for p in museo["pieces"]:
+        usos.setdefault(p["id"], _usos_vacios())["donate"] = True
+    for r in museo["rewards"]:
+        premio = r["reward"]
+        # El ancla de la fila del premio en el Museo (`rewardAnchor` de museum/state.ts): con "reward-", porque el slug
+        # de algunos premios es también el de una pieza ("ancient-seed").
+        ancla = f"reward-{r['slug']}"
+        if premio["recipe"]:
+            continue
+        fuente(premio["id"], con_n({"k": "museum", "reward": ancla, "text": list(r["text"])}, premio["n"]))
+        for iid in r["need"]["ids"]:
+            # El premio sin ficha (un mueble, la Llave oxidada) lleva el tamaño de su dibujo, para mostrarlo a escala entera.
+            uso(iid, "prizes", [ancla, premio["id"], premio["n"], list(premio["name"]), *([premio["sprite"]] if "sprite" in premio else [])])
+
+    for w in isla["walnutRoom"]:
+        if w["recipe"]:
+            continue
+        cur, precio = (GEMA_QI, w["gems"]) if w.get("gems") else (NUEZ, w["walnuts"])
+        fuente(w["id"], {"k": "shop", "shop": list(tienda_qi), "price": precio, "cur": cur})
+    for q in isla["qiOrders"]:
+        if q["gems"] and q.get("inGame", True):  # los que el juego no ofrece (`inGame: false`) no dan gemas
+            fuente(GEMA_QI, con_n({"k": "order", "key": q["slug"], "name": list(q["name"]), "tab": "island"}, q["gems"]))
+
+    for o in misiones["orders"]:
+        for it in o["items"]:
+            uso(it["id"], "orders", [o["slug"], list(o["name"]), "quests"])
+        for p in o["rewards"]:
+            # Un objeto de premio, o un regalo que llega por carta ("Gift: …"); las cartas con receta no son el objeto.
+            regalo = p["k"] == "mail" and p.get("id") and p["text"][0].startswith("Gift: ")
+            if p["k"] == "item" or regalo:
+                f = {"k": "order", "key": o["slug"], "name": list(o["name"]), "tab": "quests"}
+                fuente(p["id"], con_n(f, p.get("n", 1)))
+    for s in misiones["story"]:
+        if s["item"]:
+            uso(s["item"], "orders", [s["slug"], list(s["title"]), "quests"])
+    return fuentes, usos
+
+
 def build(write: bool = False) -> dict:
     objs = relations.objects()
     grandes = sdv.raw("Data/BigCraftables")
@@ -279,6 +362,7 @@ def build(write: bool = False) -> dict:
     fuentes = relations.sources_by_item()
     # Los monstruos con ficha en Minas y combate (`mines_data`): clave -> (slug, slug español).
     con_ficha = {m["key"]: (m["slug"], m["slugEs"]) for m in mines_data.monsters()}
+    fuentes_extra, usos = cruces(nombres.tienda("QiGemShop"))
     hace: dict[str, list] = {}
     usa: dict[str, list] = {}
     for r in relations.recipes():
@@ -345,6 +429,14 @@ def build(write: bool = False) -> dict:
                 if clave in con_ficha:  # el monstruo tiene ficha en Minas y combate: la fuente enlaza a ella
                     s["slug"], s["slugEs"] = con_ficha[clave]
             fuentes_i.append(s)
+        for s in fuentes_extra.get(i, []):
+            if "cur" in s:
+                sumar_ref(s["cur"])
+            fuentes_i.append(s)
+        usos_i = usos.get(i, _usos_vacios())
+        for _, premio, *_ in usos_i["prizes"]:
+            if premio in slug:  # un premio sin ficha (un mueble, un sombrero) va con su nombre, sin ref
+                sumar_ref(premio)
 
         has = 0
         if tastes:
@@ -356,7 +448,7 @@ def build(write: bool = False) -> dict:
         if make or use:
             has |= RECIPE
         for s in fuentes_i:
-            has |= {"crop": GROWS, "tree": GROWS, "shop": SHOP, "fish": FISH, "forage": FORAGE, "monster": MONSTER}[s["k"]]
+            has |= {"crop": GROWS, "tree": GROWS, "shop": SHOP, "fish": FISH, "forage": FORAGE, "monster": MONSTER}.get(s["k"], 0)
 
         precio = d.get("Price", 0)
         en = None if i.startswith("(BC)") else sdv.energy(d.get("Edibility", -300))
@@ -370,6 +462,8 @@ def build(write: bool = False) -> dict:
             "machines": {"in": entradas, "madeIn": hecho},
             "sources": fuentes_i, "refs": dict(sorted(refs.items())),
         }
+        if usos_i != _usos_vacios():  # sin museo, edificios ni pedidos no va: 3 de cada 4 fichas
+            fichas[slug[i]]["uses"] = usos_i
         filas.append([i, slug[i], cat[i], precio, *tam[i], has])
 
     # --- aldeanos para el sitio ---------------------------------------------------------------------------------

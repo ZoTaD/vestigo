@@ -80,6 +80,19 @@ describe("parseSave: la partida mínima", () => {
     });
   });
 
+  it("lee lo donado al museo (los ids de <museumPieces> de LibraryMuseum)", () => {
+    expect(s.museum).toEqual(["96", "60"]);
+  });
+
+  it("lee las nueces de la Isla: collectedNutTracker vale 1, limitedNutDrops la cantidad, el coco sólo si se abrió", () => {
+    expect(s.nuts).toEqual({ Bush_IslandNorth_13_33: 1, TreeNut: 1, VolcanoBarrel: 2 });
+    const abierto = leer(mini.replace("<goldenCoconutCracked>false<", "<goldenCoconutCracked>true<"));
+    expect(abierto.nuts.GoldenCoconut).toBe(1);
+    // Con el loro dorado el juego anota 9999 en cada clave (`ActivateGoldenParrot`): se guarda tal cual, el tope es de la Isla.
+    const loro = leer(mini.replace(/(VolcanoBarrel<\/string><\/key>\s*<value><int>)2/, "$19999").replace("<string>TreeNut</string>", "<string>VolcanoBarrel</string>"));
+    expect(loro.nuts.VolcanoBarrel).toBe(9999);
+  });
+
   it("los edificios terminados, en todos los lugares", () => {
     expect(s.buildings.sort()).toEqual(["Earth Obelisk", "Farmhouse", "Log Cabin"]);
   });
@@ -265,11 +278,12 @@ describe("parseSave: lo que lee el predictor", () => {
   });
 
   it("goldenCoconutCracked: la etiqueta de la raíz; sin ella, false", () => {
+    // La partida mínima ya trae la etiqueta en false (la usa la Isla para el coco dorado).
+    const etiqueta = "<goldenCoconutCracked>false</goldenCoconutCracked>";
     expect(leer(conPredict).predict!.goldenCoconutCracked).toBe(false);
-    const abierto = conPredict.replace("<year>2</year>", "<year>2</year><goldenCoconutCracked>true</goldenCoconutCracked>");
+    const abierto = conPredict.replace(etiqueta, "<goldenCoconutCracked>true</goldenCoconutCracked>");
     expect(leer(abierto).predict!.goldenCoconutCracked).toBe(true);
-    const cerrado = conPredict.replace("<year>2</year>", "<year>2</year><goldenCoconutCracked>false</goldenCoconutCracked>");
-    expect(leer(cerrado).predict!.goldenCoconutCracked).toBe(false);
+    expect(leer(conPredict.replace(etiqueta, "")).predict!.goldenCoconutCracked).toBe(false);
   });
 
   it("spouse14: aldeanos con 3500 puntos o más", () => {

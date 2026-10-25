@@ -13,13 +13,17 @@ import type { SortKey } from "./stardew/crops/state";
 import type { Kind } from "./stardew/fishing/state";
 import type { View } from "./stardew/recipes/state";
 import type { MinesView, WeaponSort, WeaponType } from "./stardew/mines/state";
+import type { FarmView } from "./stardew/farm/state";
+import type { IslandView } from "./stardew/island/state";
+import type { MuseumFilter, MuseumView, WhereKind } from "./stardew/museum/state";
+import type { QuestView } from "./stardew/quests/state";
 import type { Group, SourceFilter } from "./stardew/data";
 import type { CartKind } from "./stardew/predict/cart";
 import type { NightEvent } from "./stardew/predict/night";
 import type { DayWeather } from "./stardew/predict/weather";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "mines", "recipes", "villagers", "calendar", "bundles", "save", "predict"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "museum", "recipes", "villagers", "quests", "calendar", "bundles", "island", "save", "predict"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -102,11 +106,27 @@ export interface ItemsCopy {
     fish: string;
     forage: string;
     monster: string;
+    /** El premio de un pedido o una misión. */
+    order: string;
     grow: (days: number) => string;
     regrow: (days: number) => string;
     mature: (days: number) => string;
     allYear: string;
   };
+  /** Los cruces con Granja, Museo, Misiones e Isla (etapa 4). */
+  producedBy: string;
+  /** El producto de lujo de un animal: sale con mucha amistad. */
+  deluxe: string;
+  museum: {
+    title: string;
+    donate: string;
+    /** Rótulo de un premio del museo que es este objeto. */
+    reward: string;
+    /** Rótulo de lo que da donar este objeto. */
+    gives: string;
+  };
+  buildsTitle: string;
+  ordersTitle: string;
 }
 
 /** Los textos de la pestaña Aldeanos: la lista y la ficha. */
@@ -373,6 +393,216 @@ export interface MinesCopy {
   };
 }
 
+/** Los textos de la pestaña Granja: animales, edificios, la casa y los cuidados. */
+export interface FarmCopy {
+  h1: string;
+  lede: string;
+  view: string;
+  views: Record<FarmView, string>;
+  animals: {
+    adult: string;
+    baby: string;
+    /** "Pide: Corral grande", el edificio que Marnie pide para venderlo. */
+    needs: (building: string) => string;
+    notSold: string;
+    stats: { grows: string; every: string; harvest: string; sell: string };
+    /** Días para crecer; 0 nace adulto. */
+    grows: (n: number) => string;
+    every: (n: number) => string;
+    dig: string;
+    floor: string;
+    upTo: string;
+    produce: string;
+    deluxe: string;
+    /** La amistad (0 a 1.000) que pide el producto de lujo. */
+    friendship: (n: string) => string;
+    machine: string;
+  };
+  care: {
+    title: string;
+    hint: string;
+    stats: Record<"friendship" | "mood" | "both", string>;
+  };
+  buildings: {
+    robin: string;
+    robinHint: string;
+    wizard: string;
+    wizardHint: string;
+    cost: string;
+    materials: string;
+    onlyGold: string;
+    /** Días de obra; 0 en el acto. */
+    days: (n: number) => string;
+    size: (w: number, h: number) => string;
+    upgradeOf: (name: string) => string;
+    /** Lo que cuesta en oro llegar hasta esta mejora desde cero. */
+    total: string;
+    houses: string;
+    multiplayer: string;
+    multiplayerNote: string;
+  };
+  house: {
+    upgrades: string;
+    upgradesHint: string;
+    level: (n: number) => string;
+    total: string;
+    renovations: string;
+    renovationsHint: string;
+    free: string;
+  };
+}
+
+/** Los textos de la pestaña Museo: la colección para tildar, los premios y los libros. */
+export interface MuseumCopy {
+  h1: string;
+  lede: (n: string) => string;
+  view: string;
+  views: Record<MuseumView, string>;
+  /** Aviso de que la lista queda en este navegador. */
+  saved: string;
+  /** "12 / 95", lo donado de lo que recibe el museo. */
+  progress: (done: string, total: string) => string;
+  donated: string;
+  /** El botón que pasa lo donado en la partida guardada del Lector, y lo que pasó al apretarlo. */
+  fromSave: string;
+  synced: (n: number) => string;
+  /** La partida guardada es de antes de que el Lector leyera el museo: hay que volver a abrirla. */
+  reopen: string;
+  filter: string;
+  filters: Record<MuseumFilter, string>;
+  /** De dónde sale una pieza, en una palabra (la línea de abajo del nombre). */
+  kinds: Record<WhereKind, string>;
+  /** El botón que abre el detalle de dónde sale. */
+  where: string;
+  /** Los rótulos del detalle: dónde se excava, qué geodas, qué monstruos; la pesca va sola. */
+  whereText: { dig: string; geode: string; monster: string; fish: string };
+  /** El enlace a la ficha de la pieza, en el detalle. */
+  itemPage: (name: string) => string;
+  empty: string;
+  rewards: {
+    hint: string;
+    /** "5 de 31 ganados". */
+    count: (won: string, total: string) => string;
+    needs: string;
+    left: (n: number) => string;
+    won: string;
+  };
+  books: {
+    power: string;
+    powerHint: string;
+    skill: string;
+    skillHint: string;
+    /** El rótulo del precio más bajo del Librero. */
+    from: string;
+    /** La condición del Librero que comparten los libros de la caja, dicha una vez. */
+    sold: (note: string) => string;
+    /** El libro que el Librero tiene siempre, sin condición. */
+    always: string;
+    lostTitle: string;
+    lost: (n: string) => string;
+  };
+}
+
+/** Los textos de la pestaña Isla Jengibre: las nueces para tildar, las mejoras del loro, la tienda de Qi y sus pedidos. */
+export interface IslandCopy {
+  h1: string;
+  lede: string;
+  view: string;
+  views: Record<IslandView, string>;
+  nuts: {
+    /** El rótulo de la cifra grande y la cifra: "17 de 130". */
+    found: string;
+    progress: (found: string, total: string) => string;
+    /** Aviso de que la lista queda en este navegador. */
+    saved: string;
+    /** El botón que pasa las nueces de la partida guardada del Lector, y lo que pasó al apretarlo. */
+    fromSave: string;
+    synced: (n: number) => string;
+    /** Lo que dice la partida (`goldenWalnutsFound`), junto al botón. */
+    saveSays: (n: string) => string;
+    filter: string;
+    filters: { all: string; missing: string };
+    /** El rótulo de la lista de zonas, arriba. */
+    areas: string;
+    /** Las nueces de frase genérica, juntas por tipo: título, cómo se consiguen y la casilla de cada una. */
+    generic: { bush: string; buried: string; bushHint: string; buriedHint: string; tile: (x: number, y: number) => string };
+    /** Cuántas da una fila, y cuántas lleva una a medias ("2 de 5 nueces"), para el lector de pantalla. */
+    gives: (n: number) => string;
+    partOf: (got: number, n: number) => string;
+    /** Partida guardada antes de que el Lector leyera las nueces: hay que volver a abrirla. */
+    reopen: string;
+    areaDone: string;
+  };
+  upgrades: {
+    hint: string;
+    /** "116 nueces en total". */
+    total: (n: string) => string;
+    /** El rótulo de lo que pide antes. */
+    first: string;
+    /** Hecha según la partida guardada del Lector. */
+    done: string;
+    doneHint: string;
+  };
+  walnutRoom: {
+    title: string;
+    hint: string;
+    recipe: string;
+    /** Las unidades de los precios, para el lector de pantalla y la gema que se paga con nueces. */
+    gems: string;
+    walnuts: (n: number) => string;
+  };
+  qi: {
+    hint: string;
+    days: (n: number) => string;
+  };
+}
+
+/** Los textos de la pestaña Misiones: los pedidos especiales de los tableros y las misiones de la historia. */
+export interface QuestsCopy {
+  h1: string;
+  lede: string;
+  view: string;
+  views: Record<QuestView, string>;
+  /** El filtro por aldeano: el rótulo y la opción de todos. */
+  who: string;
+  everyone: string;
+  orders: {
+    town: string;
+    townHint: string;
+    desert: string;
+    desertHint: string;
+    days: (n: number) => string;
+    repeat: string;
+    once: string;
+    /** El rótulo de los objetos que pide: todos, o uno elegido al azar. */
+    needsAll: string;
+    needsOne: string;
+    /** Lo mismo cuando todas las opciones piden la misma cantidad: "Pide 100 de uno de estos, elegido al azar". */
+    needsOneOf: (n: string) => string;
+    /** Lo que reemplaza la lista larga de opciones en un objetivo ("Pesca 10 de una de las opciones de abajo."). */
+    instead: string;
+    /** El cartel plegado de los pedidos con muchas opciones. */
+    boardText: string;
+    rewards: string;
+    friendship: (n: string, who: string) => string;
+  };
+  story: {
+    chains: string;
+    chainsHint: string;
+    letters: string;
+    lettersHint: string;
+    /** Quien la da y el objeto que hace falta. */
+    from: string;
+    item: string;
+    pays: string;
+    friendship: (n: string, who: string) => string;
+    /** La misión que se abre en otra cadena (la 132 abre la 8, que va con la 6). */
+    continues: string;
+    /** El paso de una cadena, para el lector de pantalla. */
+    step: (i: number, n: number) => string;
+  };
+}
+
 /** Los textos del Lector de partida: la caja para elegir el archivo y las cajas de la partida leída. */
 export interface SaveCopy {
   h1: string;
@@ -585,6 +815,10 @@ export interface StardewCopy {
   recipes: RecipesCopy;
   calendar: CalendarCopy;
   mines: MinesCopy;
+  farm: FarmCopy;
+  museum: MuseumCopy;
+  island: IslandCopy;
+  quests: QuestsCopy;
   save: SaveCopy;
   predict: PredictCopy;
   qualities: Record<Quality, string>;
@@ -805,7 +1039,7 @@ const PREDICT_ES: PredictCopy = {
 };
 
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat", save: "Save reader", predict: "Predictor" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat", save: "Save reader", predict: "Predictor", farm: "Farm", museum: "Museum", quests: "Quests", island: "Ginger Island" },
   seo: {
     home: {
       title: "Stardew Valley Guide: Crop Calculator, Fish, Gifts and Bundles | Vestigo",
@@ -846,6 +1080,23 @@ const EN: StardewCopy = {
     save: {
       title: "Stardew Valley Save File Reader: Perfection Tracker | Vestigo",
       description: "Open your Stardew Valley 1.6 save to see your perfection, what the Community Center still needs, this week's birthdays and the fish and recipes you're missing.",
+    },
+    // Las pestañas de la etapa 4 (2026-10-25): Granja, Museo, Misiones e Isla Jengibre.
+    farm: {
+      title: "Stardew Valley Animals and Buildings: Cost, Produce and Care | Vestigo",
+      description: "Every Stardew Valley 1.6 farm animal with its cost, produce and care, and every farm building with its cost, materials and upgrades, from the coop to the barn.",
+    },
+    museum: {
+      title: "Stardew Valley Museum Rewards and Checklist, With the 1.6 Books | Vestigo",
+      description: "Every artifact and mineral the Stardew Valley 1.6 museum takes and where to find it, the donation rewards, power books and lost books. Tick them off.",
+    },
+    quests: {
+      title: "Stardew Valley Special Orders and Story Quests | Vestigo",
+      description: "Every Stardew Valley 1.6 story quest and special order from the town board: what each one asks for, how long you have and the reward.",
+    },
+    island: {
+      title: "Golden Walnut Locations in Stardew Valley: All 130 | Vestigo",
+      description: "Every golden walnut on Stardew Valley 1.6's Ginger Island by area, with a checklist. Plus the parrot upgrades, Qi's Walnut Room and his special orders.",
     },
     predict: {
       title: "Stardew Valley Predictor (1.6): Geodes, Weather, Mines & Traveling Cart | Vestigo",
@@ -896,6 +1147,10 @@ const EN: StardewCopy = {
       calendar: "Every birthday and festival of the year, with the gifts each villager loves.",
       mines: "Floors, monsters and their drops, every weapon by damage, boots and rings.",
       save: "Open your save file: perfection, what's left for each bundle and this week's birthdays.",
+      farm: "Every animal with its produce and care, and every building with its materials.",
+      museum: "Every artifact and mineral to donate with where to find it, the rewards and the books.",
+      quests: "Story quests and special orders: what each one asks for and what it pays.",
+      island: "The 130 golden walnuts, the parrot upgrades and Qi's Walnut Room.",
       predict: "Your next geodes, tomorrow's weather, infested floors, the traveling cart and night events.",
     },
     featured: "Most looked up",
@@ -946,11 +1201,17 @@ const EN: StardewCopy = {
       fish: "Caught in",
       forage: "Found in",
       monster: "Dropped by",
+      order: "Reward from",
       grow: (d) => `${d} days to grow`,
       regrow: (d) => `regrows every ${d} days`,
       mature: (d) => `${d} days to mature`,
       allYear: "All year",
     },
+    producedBy: "Produced by",
+    deluxe: "with high friendship",
+    museum: { title: "Museum", donate: "Donate it to the museum", reward: "Museum reward", gives: "Donating it gives" },
+    buildsTitle: "Used to build",
+    ordersTitle: "Requested by",
   },
   villagers: {
     h1: "Stardew Valley villagers",
@@ -1189,6 +1450,177 @@ const EN: StardewCopy = {
       phone: "Marlon's phone number, to use the Item Recovery Service by phone",
     },
   },
+  farm: {
+    h1: "Farm animals and buildings",
+    lede: "Every farm animal with what it gives and how to keep it happy, every building from Robin and the Wizard with its materials, and the farmhouse upgrades.",
+    view: "View",
+    views: { animals: "Animals", buildings: "Buildings", house: "Farmhouse" },
+    animals: {
+      adult: "Adult",
+      baby: "Baby",
+      needs: (b) => `Needs: ${b}`,
+      notSold: "Marnie doesn't sell it",
+      stats: { grows: "Adult in", every: "Produces", harvest: "Harvest", sell: "Sells for" },
+      grows: (n) => (n === 0 ? "Born adult" : n === 1 ? "1 day" : `${n} days`),
+      every: (n) => (n === 1 ? "Every day" : `Every ${n} days`),
+      dig: "Digs it up outside",
+      floor: "Off the floor",
+      upTo: "up to",
+      produce: "What it gives",
+      deluxe: "Deluxe",
+      friendship: (n) => `${n}+ friendship`,
+      machine: "Goes in",
+    },
+    care: {
+      title: "Care",
+      hint: "Friendship goes from 0 to 1,000 (5 hearts) and mood from 0 to 255. The happier and friendlier, the more often deluxe produce.",
+      stats: { friendship: "Friendship", mood: "Mood", both: "Friendship and mood" },
+    },
+    buildings: {
+      robin: "Robin's buildings",
+      robinHint: "Ordered at the carpenter's shop; Robin builds one at a time.",
+      wizard: "Wizard's buildings",
+      wizardHint: "Ordered at his tower and ready on the spot.",
+      cost: "Cost",
+      materials: "Materials",
+      onlyGold: "Gold only",
+      days: (n) => (n === 0 ? "Ready on the spot" : n === 1 ? "1 day of work" : `${n} days of work`),
+      size: (w, h) => `${w}×${h} tiles`,
+      upgradeOf: (name) => `Upgrades the ${name}`,
+      total: "From scratch",
+      houses: "Who lives here",
+      multiplayer: "Multiplayer only",
+      multiplayerNote: "The home of each farmer who joins your farm in a multiplayer game.",
+    },
+    house: {
+      upgrades: "Farmhouse upgrades",
+      upgradesHint: "Robin does them in order, one at a time.",
+      level: (n) => `Upgrade ${n}`,
+      total: "All three",
+      renovations: "Renovations",
+      renovationsHint: "Robin offers them after the second upgrade, and each one can be undone.",
+      free: "Free",
+    },
+  },
+  museum: {
+    h1: "Museum and library",
+    lede: (n) => `The ${n} artifacts and minerals Gunther takes, where each one turns up, what donating them earns you, and every book you can read.`,
+    view: "View",
+    views: { collection: "Collection", rewards: "Rewards", books: "Books" },
+    saved: "Tick what you already donated. Your list stays in this browser.",
+    progress: (done, total) => `${done} / ${total}`,
+    donated: "Donated",
+    fromSave: "Bring in my save",
+    reopen: "Open your save in the Save reader again to bring in what you donated.",
+    synced: (n) => (n === 0 ? "Nothing new: your save had nothing else donated." : n === 1 ? "1 piece ticked from your save." : `${n} pieces ticked from your save.`),
+    filter: "Show",
+    filters: { all: "All", arch: "Artifacts", mineral: "Minerals", missing: "Not donated" },
+    kinds: { dig: "Digging", geode: "Geodes", monster: "Monsters", fish: "Fishing", other: "Rocks" },
+    where: "Where to find it",
+    whereText: { dig: "Artifact spots in", geode: "Inside", monster: "Dropped by", fish: "Fishing treasure chests" },
+    itemPage: (name) => `${name}: item page →`,
+    empty: "Nothing left to donate here.",
+    rewards: {
+      hint: "Gunther hands each reward over once you have donated what it asks for. Pieces asked for by name also count toward the totals.",
+      count: (won, total) => `${won} of ${total} earned`,
+      needs: "Donate",
+      left: (n) => (n === 1 ? "1 left" : `${n} left`),
+      won: "Earned",
+    },
+    books: {
+      power: "Power books",
+      powerHint: "Read one once and its bonus lasts for good.",
+      skill: "Skill books",
+      skillHint: "Each read gives experience.",
+      from: "Bookseller",
+      sold: (note) => `At the Bookseller, ${note}, unless the book says otherwise.`,
+      always: "always in stock",
+      lostTitle: "Lost books",
+      lost: (n) => `The library is missing ${n} books. Each Lost Book you find goes back to the shelves, where you can read it.`,
+    },
+  },
+  island: {
+    h1: "Ginger Island",
+    lede: "Every golden walnut on the island by area, with a box to tick. Then what the parrots build with them, what Qi sells in his Walnut Room and his special orders.",
+    view: "View",
+    views: { nuts: "Golden walnuts", upgrades: "Parrot upgrades", "walnut-room": "Walnut Room", qi: "Qi's orders" },
+    nuts: {
+      found: "Golden walnuts found",
+      progress: (found, total) => `${found} of ${total}`,
+      saved: "Tick what you already found. Your list stays in this browser.",
+      fromSave: "Bring in my save",
+      synced: (n) => (n === 0 ? "Nothing new: your save had no other walnuts." : n === 1 ? "1 walnut ticked from your save." : `${n} walnuts ticked from your save.`),
+      saveSays: (n) => `Your save: ${n} found`,
+      filter: "Show",
+      filters: { all: "All", missing: "Still to find" },
+      areas: "By area",
+      generic: {
+        bush: "Hidden bushes",
+        buried: "Buried",
+        bushHint: "Shake each bush to drop its walnut. The numbers are its tile (x, y) on the map.",
+        buriedHint: "Dig with the hoe where the ground wiggles. The numbers are its tile (x, y) on the map.",
+        tile: (x, y) => `${x}, ${y}`,
+      },
+      gives: (n) => (n === 1 ? "1 walnut" : `${n} walnuts`),
+      partOf: (got, n) => `${got} of ${n} walnuts`,
+      reopen: "Open your save in the Save reader again to bring in its walnuts.",
+      areaDone: "Nothing left to find here.",
+    },
+    upgrades: {
+      hint: "Each parrot asks for walnuts and builds something. Some only show up after another upgrade.",
+      total: (n) => `${n} walnuts in all`,
+      first: "Needs first",
+      done: "Done",
+      doneHint: "Upgrades marked done come from your save.",
+    },
+    walnutRoom: {
+      title: "Qi's Walnut Room",
+      hint: "Its door opens once you have found 100 golden walnuts. Everything is paid in Qi gems, which his special orders give.",
+      recipe: "Recipe",
+      gems: "Qi gems",
+      walnuts: (n) => (n === 1 ? "1 Golden Walnut" : `${n} Golden Walnuts`),
+    },
+    qi: {
+      hint: "Taken from the board in the Walnut Room. Each one pays in Qi gems.",
+      days: (n) => (n === 1 ? "1 day" : `${n} days`),
+    },
+  },
+  quests: {
+    h1: "Quests and special orders",
+    lede: "The special orders from the town board and the Desert Festival, with who asks, what for, how many days you get and the reward. And the story quests, in the order they open up.",
+    view: "View",
+    views: { orders: "Special orders", story: "Story quests" },
+    who: "Villager",
+    everyone: "Everyone",
+    orders: {
+      town: "Town board",
+      townHint: "Next to Pierre's shop. Every Monday it puts up two new orders, and you can take one at a time.",
+      desert: "Desert Festival",
+      desertHint: "Marlon hands these out during the Desert Festival, in spring. Each lasts one day and pays in Calico Eggs.",
+      days: (n) => (n === 1 ? "1 day" : `${n} days`),
+      repeat: "Repeats",
+      once: "Once",
+      needsAll: "Asks for",
+      needsOne: "Asks for one of these, picked at random",
+      needsOneOf: (n) => `Asks for ${n} of one of these, picked at random`,
+      instead: "of one of the options below",
+      boardText: "What the board says",
+      rewards: "Reward",
+      friendship: (n, who) => `+${n} friendship with ${who}`,
+    },
+    story: {
+      chains: "The story",
+      chainsHint: "They come in the mail or as you play. The ones in a chain open one after another.",
+      letters: "Villager requests",
+      lettersHint: "A villager asks you to bring them something or to find what they lost.",
+      from: "From",
+      item: "Needs",
+      pays: "Pays",
+      friendship: (n, who) => `+${n} friendship with ${who}`,
+      continues: "Then",
+      step: (i, n) => `Step ${i} of ${n}`,
+    },
+  },
   predict: PREDICT_EN,
   save: {
     h1: "Save file reader",
@@ -1293,7 +1725,7 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate", save: "Lector de partida", predict: "Predictor" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate", save: "Lector de partida", predict: "Predictor", farm: "Granja", museum: "Museo", quests: "Misiones", island: "Isla Jengibre" },
   seo: {
     home: {
       title: "Guía de Stardew Valley: cultivos, peces, regalos y paquetes | Vestigo",
@@ -1334,6 +1766,23 @@ const ES: StardewCopy = {
     save: {
       title: "Lector de partida de Stardew Valley: perfección y lo que falta | Vestigo",
       description: "Abrí tu partida de Stardew Valley 1.6 y mirá tu perfección, lo que le falta al Centro Comunitario, los cumpleaños de la semana y los peces y recetas.",
+    },
+    // Las pestañas de la etapa 4 (2026-10-25): Granja, Museo, Misiones e Isla Jengibre.
+    farm: {
+      title: "Animales y edificios de Stardew Valley: costo y cuidados | Vestigo",
+      description: "Cada animal de la granja de Stardew Valley 1.6 con su precio, lo que produce y sus cuidados, y cada edificio con su costo, materiales y mejoras.",
+    },
+    museum: {
+      title: "Museo de Stardew Valley: premios, colección y los libros de la 1.6 | Vestigo",
+      description: "Cada artefacto y mineral que recibe el museo de Stardew Valley 1.6 y dónde sale, los premios por donar, los libros de poder y los perdidos. Tildalos.",
+    },
+    quests: {
+      title: "Pedidos especiales y misiones de Stardew Valley | Vestigo",
+      description: "Cada misión de la historia y cada pedido especial del tablón de Stardew Valley 1.6: qué pide, cuánto tiempo hay y el premio.",
+    },
+    island: {
+      title: "Nueces de oro de Stardew Valley: dónde están las 130 | Vestigo",
+      description: "Cada nuez de oro de la Isla Jengibre de Stardew Valley 1.6 por zona, para tildar. Y las mejoras del loro, la Habitación de las Nueces de Qi y sus pedidos.",
     },
     predict: {
       title: "Predictor de Stardew Valley (1.6): geodas, clima, minas y carro ambulante | Vestigo",
@@ -1384,6 +1833,10 @@ const ES: StardewCopy = {
       calendar: "Cada cumpleaños y festival del año, con los regalos que le encantan a cada aldeano.",
       mines: "Pisos, monstruos y lo que sueltan, cada arma por daño, botas y anillos.",
       save: "Abrí tu partida: la perfección, lo que falta de cada paquete y los cumpleaños de la semana.",
+      farm: "Cada animal con lo que produce y sus cuidados, y cada edificio con sus materiales.",
+      museum: "Cada artefacto y mineral para donar con dónde sale, los premios y los libros.",
+      quests: "Misiones de la historia y pedidos especiales: qué pide cada uno y qué paga.",
+      island: "Las 130 nueces de oro, las mejoras del loro y la Habitación de las Nueces de Qi.",
       predict: "Tus próximas geodas, el clima de mañana, los pisos infestados, el carro y las noches con evento.",
     },
     featured: "Los más buscados",
@@ -1434,11 +1887,17 @@ const ES: StardewCopy = {
       fish: "Se pesca en",
       forage: "Se encuentra en",
       monster: "Lo suelta",
+      order: "Premio de",
       grow: (d) => `${d} días hasta la cosecha`,
       regrow: (d) => `vuelve a dar cada ${d} días`,
       mature: (d) => `${d} días hasta dar fruto`,
       allYear: "Todo el año",
     },
+    producedBy: "Lo produce",
+    deluxe: "con mucha amistad",
+    museum: { title: "Museo", donate: "Se dona al museo", reward: "Premio del museo", gives: "Donarlo da" },
+    buildsTitle: "Para construir",
+    ordersTitle: "Lo piden",
   },
   villagers: {
     h1: "Aldeanos de Stardew Valley",
@@ -1677,6 +2136,177 @@ const ES: StardewCopy = {
       phone: "El teléfono de Marlon, para usar el Servicio de Recuperación de Objetos por teléfono",
     },
   },
+  farm: {
+    h1: "Animales y edificios de la granja",
+    lede: "Cada animal de la granja con lo que da y cómo tenerlo contento, cada edificio de Robin y del mago con sus materiales, y las mejoras de la casa.",
+    view: "Vista",
+    views: { animals: "Animales", buildings: "Edificios", house: "Casa" },
+    animals: {
+      adult: "Adulto",
+      baby: "Cría",
+      needs: (b) => `Pide: ${b}`,
+      notSold: "Marnie no lo vende",
+      stats: { grows: "Adulto en", every: "Produce", harvest: "Se cosecha", sell: "Se vende" },
+      grows: (n) => (n === 0 ? "Nace adulto" : n === 1 ? "1 día" : `${n} días`),
+      every: (n) => (n === 1 ? "Todos los días" : `Cada ${n} días`),
+      dig: "Lo desentierra afuera",
+      floor: "Del piso",
+      upTo: "hasta",
+      produce: "Lo que da",
+      deluxe: "De lujo",
+      friendship: (n) => `amistad ${n}+`,
+      machine: "Va en",
+    },
+    care: {
+      title: "Cuidados",
+      hint: "La amistad va de 0 a 1.000 (5 corazones) y el ánimo de 0 a 255. Cuanto más contento y más amigo, más seguido da lo de lujo.",
+      stats: { friendship: "Amistad", mood: "Ánimo", both: "Amistad y ánimo" },
+    },
+    buildings: {
+      robin: "Edificios de Robin",
+      robinHint: "Se encargan en la carpintería; Robin hace uno por vez.",
+      wizard: "Edificios del mago",
+      wizardHint: "Se encargan en su torre y quedan hechos en el acto.",
+      cost: "Costo",
+      materials: "Materiales",
+      onlyGold: "Sólo oro",
+      days: (n) => (n === 0 ? "En el acto" : n === 1 ? "1 día de obra" : `${n} días de obra`),
+      size: (w, h) => `${w}×${h} casillas`,
+      upgradeOf: (name) => `Mejora de: ${name}`,
+      total: "Desde cero",
+      houses: "Quién vive",
+      multiplayer: "Sólo en multijugador",
+      multiplayerNote: "La casa de cada granjero que se suma a tu granja en una partida multijugador. No es la otra Cabaña, el edificio vacío para decorar.",
+    },
+    house: {
+      upgrades: "Mejoras de la casa",
+      upgradesHint: "Las hace Robin en orden, una por vez.",
+      level: (n) => `Mejora ${n}`,
+      total: "Las tres",
+      renovations: "Reformas",
+      renovationsHint: "Robin las ofrece después de la segunda mejora, y cada una se puede deshacer.",
+      free: "Gratis",
+    },
+  },
+  museum: {
+    h1: "Museo y biblioteca",
+    lede: (n) => `Los ${n} artefactos y minerales que recibe Gunther, dónde sale cada uno, qué se gana al donarlos y todos los libros que se pueden leer.`,
+    view: "Vista",
+    views: { collection: "Colección", rewards: "Premios", books: "Libros" },
+    saved: "Tildá lo que ya donaste. Tu lista queda en este navegador.",
+    progress: (done, total) => `${done} / ${total}`,
+    donated: "Donado",
+    fromSave: "Traer de mi partida",
+    reopen: "Volvé a abrir tu partida en el Lector para traer lo donado.",
+    synced: (n) => (n === 0 ? "Nada nuevo: tu partida no tenía otra donación." : n === 1 ? "Se tildó 1 pieza de tu partida." : `Se tildaron ${n} piezas de tu partida.`),
+    filter: "Mostrar",
+    filters: { all: "Todo", arch: "Artefactos", mineral: "Minerales", missing: "Sin donar" },
+    kinds: { dig: "Excavando", geode: "Geodas", monster: "Monstruos", fish: "Pesca", other: "Piedras" },
+    where: "Dónde sale",
+    whereText: { dig: "Lugares de artefacto en", geode: "Dentro de", monster: "Lo sueltan", fish: "Cofres del tesoro de pesca" },
+    itemPage: (name) => `Ficha de ${name} →`,
+    empty: "No queda nada para donar acá.",
+    rewards: {
+      hint: "Gunther da cada premio cuando donaste lo que pide. Las piezas que pide por nombre también suman para las cantidades.",
+      count: (won, total) => `${won} de ${total} ganados`,
+      needs: "Donar",
+      left: (n) => (n === 1 ? "Falta 1" : `Faltan ${n}`),
+      won: "Ganado",
+    },
+    books: {
+      power: "Libros de poder",
+      powerHint: "Se leen una vez y su ventaja queda para siempre.",
+      skill: "Libros de habilidad",
+      skillHint: "Cada lectura da experiencia.",
+      from: "Librero",
+      sold: (note) => `En el Librero, ${note}, salvo que el libro diga otra cosa.`,
+      always: "siempre a la venta",
+      lostTitle: "Libros perdidos",
+      lost: (n) => `A la biblioteca le faltan ${n} libros. Cada Libro perdido que encontrás vuelve a los estantes, y ahí se puede leer.`,
+    },
+  },
+  island: {
+    h1: "Isla Jengibre",
+    lede: "Cada nuez de oro de la isla por zona, con su casilla para tildar. Y lo que construyen los loros con ellas, lo que vende Qi en su habitación y sus pedidos especiales.",
+    view: "Vista",
+    views: { nuts: "Nueces de oro", upgrades: "Mejoras del loro", "walnut-room": "Habitación de Qi", qi: "Pedidos de Qi" },
+    nuts: {
+      found: "Nueces de oro encontradas",
+      progress: (found, total) => `${found} de ${total}`,
+      saved: "Tildá las que ya encontraste. Tu lista queda en este navegador.",
+      fromSave: "Traer de mi partida",
+      synced: (n) => (n === 0 ? "Nada nuevo: tu partida no tenía otras nueces." : n === 1 ? "Se tildó 1 nuez de tu partida." : `Se tildaron ${n} nueces de tu partida.`),
+      saveSays: (n) => `Tu partida: ${n} encontradas`,
+      filter: "Mostrar",
+      filters: { all: "Todas", missing: "Las que faltan" },
+      areas: "Por zona",
+      generic: {
+        bush: "Arbustos escondidos",
+        buried: "Enterradas",
+        bushHint: "Sacudí cada arbusto y suelta su nuez. Los números son su casilla (x, y) en el mapa.",
+        buriedHint: "Cavá con la azada donde se mueve la tierra. Los números son su casilla (x, y) en el mapa.",
+        tile: (x, y) => `${x}, ${y}`,
+      },
+      gives: (n) => (n === 1 ? "1 nuez" : `${n} nueces`),
+      partOf: (got, n) => `${got} de ${n} nueces`,
+      reopen: "Volvé a abrir tu partida en el Lector para traer las nueces.",
+      areaDone: "No queda nada por encontrar acá.",
+    },
+    upgrades: {
+      hint: "Cada loro pide nueces y construye algo. Algunos aparecen recién después de otra mejora.",
+      total: (n) => `${n} nueces en total`,
+      first: "Pide antes",
+      done: "Hecha",
+      doneHint: "Las mejoras marcadas como hechas salen de tu partida.",
+    },
+    walnutRoom: {
+      title: "Habitación de las Nueces de Qi",
+      hint: "Su puerta se abre cuando encontraste 100 nueces de oro. Todo se paga con gemas Qi, que dan sus pedidos especiales.",
+      recipe: "Receta",
+      gems: "gemas Qi",
+      walnuts: (n) => (n === 1 ? "1 nuez de oro" : `${n} nueces de oro`),
+    },
+    qi: {
+      hint: "Se toman del tablón de la Habitación de las Nueces. Cada uno paga con gemas Qi.",
+      days: (n) => (n === 1 ? "1 día" : `${n} días`),
+    },
+  },
+  quests: {
+    h1: "Misiones y pedidos especiales",
+    lede: "Los pedidos especiales del tablón del pueblo y del Festival del Desierto, con quién los pide, qué piden, cuántos días hay y el premio. Y las misiones de la historia, en el orden en que se abren.",
+    view: "Vista",
+    views: { orders: "Pedidos especiales", story: "Misiones de la historia" },
+    who: "Aldeano",
+    everyone: "Todos",
+    orders: {
+      town: "Tablón del pueblo",
+      townHint: "Al lado de la tienda de Pierre. Cada lunes pone dos pedidos nuevos, y se puede tomar uno a la vez.",
+      desert: "Festival del Desierto",
+      desertHint: "Marlon los da durante el Festival del Desierto, en primavera. Cada uno dura un día y paga con huevos calicó.",
+      days: (n) => (n === 1 ? "1 día" : `${n} días`),
+      repeat: "Se repite",
+      once: "Una vez",
+      needsAll: "Pide",
+      needsOne: "Pide uno de estos, elegido al azar",
+      needsOneOf: (n) => `Pide ${n} de uno de estos, elegido al azar`,
+      instead: "de una de las opciones de abajo",
+      boardText: "Lo que dice el tablón",
+      rewards: "Premio",
+      friendship: (n, who) => `+${n} de amistad con ${who}`,
+    },
+    story: {
+      chains: "La historia",
+      chainsHint: "Llegan por correo o a medida que jugás. Las que van en cadena se abren una después de la otra.",
+      letters: "Pedidos de los aldeanos",
+      lettersHint: "Un aldeano te pide que le lleves algo o que encuentres lo que perdió.",
+      from: "Te la da",
+      item: "Hace falta",
+      pays: "Paga",
+      friendship: (n, who) => `+${n} de amistad con ${who}`,
+      continues: "Después",
+      step: (i, n) => `Paso ${i} de ${n}`,
+    },
+  },
   predict: PREDICT_ES,
   save: {
     h1: "Lector de partida",
@@ -1724,7 +2354,7 @@ const ES: StardewCopy = {
       hint: "Abrí una parte para ver lo que falta. La granja cuenta como una: en cada parte, el granjero que más tiene.",
       points: (got, weight) => `${got} de ${weight} puntos`,
       level: (level) => `Nivel de granjero ${level} de 25: la suma de tus seis habilidades, dividida por dos.`,
-      walnuts: "Las nueces doradas se encuentran en la Isla Jengibre.",
+      walnuts: "Las nueces de oro se encuentran en la Isla Jengibre.",
       allDone: "Hecho.",
       hearts: (have, need) => `${have} / ${need} ♥`,
       from: (name) => `Esta parte cuenta lo de ${name}.`,

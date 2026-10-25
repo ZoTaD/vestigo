@@ -77,7 +77,7 @@ a.sd-brand:hover { filter: brightness(1.04); }
  * Las pestañas no entran en una fila: van en renglones parejos (`text-wrap: balance` sobre botones en línea), así
  * ninguna queda sola abajo. Cada botón es un `inline-block`; entre dos se puede cortar el renglón aunque no haya espacio.
  */
-.sd-tabs { margin-bottom: 8px; text-wrap: balance; }
+.sd-tabs { position: relative; margin-bottom: 8px; text-wrap: balance; }
 /* Sin sombra en la letra: con Pixelify chica la sombra tapaba el trazo. El relieve lo da la madera (borde y base). */
 .sd-tab {
   display: inline-block;
@@ -183,6 +183,41 @@ a.sd-bday:hover { background: var(--sd-paper-2); }
   .sd { --sd-hero: 260px; }
   /* Menos relleno y menos espacio en angosto: con 10 pestañas, así la última no queda sola en su renglón. */
   .sd-tab { padding: 8px 8px 9px; margin: 0 4px 4px 0; }
+}
+
+/*
+ * En el teléfono, con 14 pestañas los renglones ocupaban un tercio de la pantalla: van en una sola fila que se desliza
+ * de costado, de borde a borde, sin barra de desplazamiento. La abierta se lleva a la vista al cargar (Stardew.tsx) y
+ * un degradé funde las pestañas con el pasto del lado donde queda más (`data-more`; sin el atributo, el prerender,
+ * a la derecha). Es un degradé del fondo, no un filo de color.
+ */
+@media (max-width: 600px) {
+  .sd-tabs {
+    --sd-fade: 44px;
+    display: flex;
+    gap: 4px;
+    margin: 0 -16px 8px;
+    padding: 3px 16px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    /* Igual al degradé: una pestaña que toma el foco en el borde se desliza hasta quedar fuera de lo fundido. */
+    scroll-padding-inline: var(--sd-fade);
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--sd-fade)), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - var(--sd-fade)), transparent);
+  }
+  .sd-tabs::-webkit-scrollbar { display: none; }
+  .sd-tabs[data-more="none"] { -webkit-mask-image: none; mask-image: none; }
+  .sd-tabs[data-more="left"] {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--sd-fade));
+    mask-image: linear-gradient(to right, transparent, #000 var(--sd-fade));
+  }
+  .sd-tabs[data-more="both"] {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--sd-fade), #000 calc(100% - var(--sd-fade)), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 var(--sd-fade), #000 calc(100% - var(--sd-fade)), transparent);
+  }
+  .sd-tabs > .sd-tab { flex: none; margin: 0; white-space: nowrap; scroll-snap-align: start; }
 }
 
 /* --- La cáscara alrededor de la sección ------------------------------------------------------------------------------

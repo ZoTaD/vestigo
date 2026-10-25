@@ -35,6 +35,7 @@ export default function RouteLink({
   active,
   prefetch = "hover",
   hash,
+  search,
   children,
   ...rest
 }: {
@@ -54,6 +55,11 @@ export default function RouteLink({
   prefetch?: "hover" | "press";
   /** Un ancla de la página de destino (`pantry`, sin el `#`): va en el `href` y, al navegar, queda en la dirección. */
   hash?: string;
+  /**
+   * La vista de la pestaña de destino que viaja en la dirección (`?v=rewards`, con el `?`): va en el `href` y, al
+   * navegar, queda en la dirección antes de que la pestaña se dibuje y la lea.
+   */
+  search?: string;
   children: React.ReactNode;
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className">) {
   // Cada juego (y cada pestaña de Deadlock) es un chunk aparte (`areas.ts`): se
@@ -62,7 +68,7 @@ export default function RouteLink({
   const warm = () => void areas().preloadRoute(to);
   return (
     <a
-      href={hash ? `${routePath(to)}#${hash}` : routePath(to)}
+      href={`${routePath(to)}${search ?? ""}${hash ? `#${hash}` : ""}`}
       className={className}
       data-active={active}
       aria-current={active ? "page" : undefined}
@@ -74,7 +80,8 @@ export default function RouteLink({
         e.preventDefault();
         onNavigate(to);
         // `navigate` ya escribió la dirección nueva: se le suma el ancla, que la pestaña de destino busca al dibujarse.
-        if (hash) window.history.replaceState(window.history.state, "", `${window.location.pathname}${window.location.search}#${hash}`);
+        if (hash || search)
+          window.history.replaceState(window.history.state, "", `${window.location.pathname}${search ?? window.location.search}${hash ? `#${hash}` : ""}`);
       }}
       {...rest}
       onPointerEnter={(e) => {

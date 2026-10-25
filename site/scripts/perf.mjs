@@ -127,6 +127,23 @@ export const PAGES = [
   // El Lector de partida sin partida (lo que se abre en frío): la caja para elegir el archivo.
   "/en/stardew-valley/save",
   "/es/stardew-valley/partida",
+  // La Granja: Animales (lo que se abre en frío) y la vista de Edificios, la de los dibujos grandes.
+  "/en/stardew-valley/farm",
+  "/es/stardew-valley/granja",
+  "/es/stardew-valley/granja?v=buildings",
+  // El Museo: la Colección (95 casilleros, lo que se abre en frío) y los Premios, con los dibujos de los muebles.
+  "/en/stardew-valley/museum",
+  "/es/stardew-valley/museo",
+  "/es/stardew-valley/museo?v=rewards",
+  "/en/stardew-valley/museum?v=books",
+  // La Isla Jengibre: las 130 nueces por zona (lo que se abre en frío) y la Habitación de las Nueces, con sus dibujos.
+  "/en/stardew-valley/island",
+  "/es/stardew-valley/isla-jengibre",
+  "/en/stardew-valley/island?v=walnut-room",
+  // Las Misiones: los Pedidos especiales (lo que se abre en frío) y las Misiones de la historia, la vista más larga.
+  "/en/stardew-valley/quests",
+  "/es/stardew-valley/misiones",
+  "/es/stardew-valley/misiones?v=story",
   // El Predictor: sin entrada (el formulario) y con una semilla en la dirección (todas las cajas calculadas).
   "/en/stardew-valley/predictor",
   "/es/stardew-valley/predictor",

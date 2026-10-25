@@ -94,6 +94,9 @@ function looksLikeSave(x: unknown): x is Save {
     typeof x.ccComplete === "boolean" &&
     Array.isArray(x.buildings) &&
     isObj(x.items) &&
+    Array.isArray(x.museum) &&
+    isObj(x.nuts) &&
+    Object.values(x.nuts).every(isNum) &&
     Array.isArray(x.players) &&
     x.players.length > 0 &&
     x.players.every(looksLikePlayer) &&
@@ -106,16 +109,53 @@ function looksLikeSave(x: unknown): x is Save {
   );
 }
 
-/** La partida guardada, o null si no hay, no se puede leer o no es lo que se escribió. */
-export function readStoredSave(): Save | null {
+/**
+ * Los campos que `Save` sumó después de que el Lector empezara a guardar partidas, con lo que valen en una guardada
+ * antes: así una partida vieja se sigue leyendo sin pedir que se vuelva a abrir. El Museo (`museum`) es el primero; un
+ * campo nuevo (las nueces de la Isla) suma su línea acá en vez de subir `v`.
+ */
+const LATER_FIELDS = {
+  museum: (): Save["museum"] => [],
+  nuts: (): Save["nuts"] => ({}),
+};
+/** Un campo que una partida guardada vieja puede no traer. */
+export type LaterField = keyof typeof LATER_FIELDS;
+
+/**
+ * Completa lo que falta de `LATER_FIELDS` (sólo si falta: si está y está mal, `looksLikeSave` la descarta) y dice qué
+ * completó: ese campo vacío no es un dato de la partida, y quien lo usa (Museo, Isla) pide volver a abrirla.
+ */
+function withLaterFields(x: unknown): { save: unknown; filled: LaterField[] } {
+  if (!isObj(x)) return { save: x, filled: [] };
+  const out: Record<string, unknown> = { ...x };
+  const filled: LaterField[] = [];
+  for (const k of Object.keys(LATER_FIELDS) as LaterField[]) {
+    if (k in out) continue;
+    out[k] = LATER_FIELDS[k]();
+    filled.push(k);
+  }
+  return { save: out, filled };
+}
+
+/**
+ * La partida guardada y los campos que no traía (`filled`, ver `LATER_FIELDS`), o null si no hay, no se puede leer o no
+ * es lo que se escribió.
+ */
+export function readStoredSaveInfo(): { save: Save; filled: LaterField[] } | null {
   try {
     const raw = globalThis.localStorage?.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<Stored>;
-    return parsed?.v === 1 && looksLikeSave(parsed.save) ? parsed.save : null;
+    const { save, filled } = withLaterFields(parsed?.save);
+    return parsed?.v === 1 && looksLikeSave(save) ? { save, filled } : null;
   } catch {
     return null;
   }
+}
+
+/** La partida guardada, o null si no hay, no se puede leer o no es lo que se escribió. */
+export function readStoredSave(): Save | null {
+  return readStoredSaveInfo()?.save ?? null;
 }
 
 /** Guarda la partida leída; si el navegador no deja (lleno, bloqueado), no guarda y sigue. */

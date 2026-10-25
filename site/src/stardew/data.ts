@@ -18,6 +18,10 @@ import { withPrices, type FishData } from "./fishing/state";
 import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
 import type { MinesData, Monster } from "./mines/state";
+import type { FarmData } from "./farm/state";
+import type { IslandData } from "./island/state";
+import type { MuseumData } from "./museum/state";
+import type { QuestsData } from "./quests/state";
 import type { PredictData } from "./predict/query";
 import type { SaveData } from "./save/progress";
 import { pzShardOf } from "../zomboid/shard";
@@ -67,17 +71,30 @@ export interface MachineIn {
   count: number;
 }
 
-/** De dónde sale: cultivo, árbol frutal, tienda, pesca, recolección o botín de un monstruo. */
+/** En qué pestaña está un pedido o una misión: los del pueblo y la historia en Misiones; los de Qi en la Isla. */
+export type OrderTab = "quests" | "island";
+
+/**
+ * De dónde sale: cultivo, árbol frutal, tienda, pesca, recolección, botín de un monstruo, un animal de la granja, un
+ * premio del museo o el premio de un pedido.
+ */
 export type Source =
   | { k: "crop"; seed: string; days: number; seasons: number[]; regrow: number }
   | { k: "tree"; sapling: string; days: number; seasons: number[] }
-  | { k: "shop"; shop: Pair; price: number }
+  /** `cur`: el id de la moneda cuando no es oro (gemas de Qi `858`, nueces doradas `73`); va en `refs`. */
+  | { k: "shop"; shop: Pair; price: number; cur?: string }
   | { k: "fish" | "forage"; where: Pair[]; seasons: number[] }
   /**
    * `rate`: la probabilidad de que caiga al menos uno; `n`: cuántas tiradas hay (hasta cuántos caen), si es más de una.
    * `slug`/`slugEs`: la ficha del monstruo en Minas y combate, si la tiene.
    */
-  | { k: "monster"; who: Pair; rate: number; n?: number; slug?: string; slugEs?: string };
+  | { k: "monster"; who: Pair; rate: number; n?: number; slug?: string; slugEs?: string }
+  /** Lo produce un animal: `key` es el ancla de su fila en Granja; `deluxe`, el producto de mucha amistad. */
+  | { k: "animal"; who: Pair; key: string; deluxe?: true }
+  /** Premio del museo: `reward` es el ancla de su fila en la vista de premios; `text`, lo que hay que donar. */
+  | { k: "museum"; reward: string; text: Pair; n?: number }
+  /** Premio de un pedido o una misión: `key` es el ancla de su fila; `n`, cuántos da si es más de uno. */
+  | { k: "order"; key: string; name: Pair; tab: OrderTab; n?: number };
 
 /** Receta de la que sale: tipo, clave, cuántos salen e ingredientes (id, o categoría en negativo, y cantidad). */
 export type MakeRecipe = [kind: "cook" | "craft", key: string, qty: number, ings: [id: string, n: number][]];
@@ -103,6 +120,19 @@ export interface Ficha {
   /** En qué se transforma, y de qué máquina sale (máquina, minutos, días). */
   machines: { in: MachineIn[]; madeIn: [machine: string, minutes: number, days: number][] };
   sources: Source[];
+  /**
+   * Para qué sirve fuera de las recetas: si se dona al museo, qué edificios lo piden de material (ancla de la fila en
+   * Granja, nombre y cantidad), qué pedidos y misiones lo piden, y qué premio del museo da donarlo (ancla del premio,
+   * id, cantidad y nombre; el premio puede ser un mueble o un sombrero sin ficha, y entonces no está en `refs`).
+   * No viene cuando no hay nada de eso (3 de cada 4 fichas).
+   */
+  uses?: {
+    donate: boolean;
+    builds: [key: string, name: Pair, n: number][];
+    orders: [key: string, name: Pair, tab: OrderTab][];
+    /** `size`: el tamaño del dibujo de un premio sin ficha (un mueble), para mostrarlo a escala entera. */
+    prizes: [reward: string, id: string, n: number, name: Pair, size?: [w: number, h: number]][];
+  };
   refs: Record<string, Ref>;
 }
 
@@ -311,6 +341,87 @@ export const peekMines = (): MinesData | null => {
   return d && noteMines(d);
 };
 export const loadMines = (): Promise<MinesData> => minesRaw.load().then(noteMines);
+
+/**
+ * La Granja (`farm.json`, un solo archivo chico): animales, edificios, la casa y los cuidados. Anota los slugs en
+ * español de los objetos que nombra (productos, materiales, máquinas), que enlazan a Objetos.
+ */
+const farmRaw = once<FarmData>(() => import("@stardew/farm.json"));
+let farmNoted = false;
+function noteFarm(d: FarmData): FarmData {
+  if (!farmNoted) {
+    registerStardewSlugs({ items: Object.fromEntries(Object.values(d.refs).filter((r) => r[1] !== r[0]).map((r) => [r[0], r[1]])) });
+    farmNoted = true;
+  }
+  return d;
+}
+export const peekFarm = (): FarmData | null => {
+  const d = farmRaw.peek();
+  return d && noteFarm(d);
+};
+export const loadFarm = (): Promise<FarmData> => farmRaw.load().then(noteFarm);
+
+/**
+ * El Museo (`museum.json`, un solo archivo chico): las 95 piezas con dónde salen, los premios y los libros. Anota los
+ * slugs en español de los objetos que nombra (piezas, geodas, premios, libros), que enlazan a Objetos, y los de los
+ * monstruos que las sueltan, que enlazan a Minas y combate.
+ */
+const museumRaw = once<MuseumData>(() => import("@stardew/museum.json"));
+let museumNoted = false;
+function noteMuseum(d: MuseumData): MuseumData {
+  if (!museumNoted) {
+    const mines: Record<string, string> = {};
+    for (const p of d.pieces) for (const w of p.where) if (w.k === "monster" && w.slugEs !== w.slug) mines[w.slug] = w.slugEs;
+    registerStardewSlugs({ items: Object.fromEntries(Object.values(d.refs).filter((r) => r[1] !== r[0]).map((r) => [r[0], r[1]])), mines });
+    museumNoted = true;
+  }
+  return d;
+}
+export const peekMuseum = (): MuseumData | null => {
+  const d = museumRaw.peek();
+  return d && noteMuseum(d);
+};
+export const loadMuseum = (): Promise<MuseumData> => museumRaw.load().then(noteMuseum);
+
+/**
+ * La Isla Jengibre (`island.json`, un solo archivo chico): las 130 nueces, las mejoras del loro, la tienda de Qi y sus
+ * pedidos. Anota los slugs en español de los objetos que nombra, que enlazan a Objetos.
+ */
+const islandRaw = once<IslandData>(() => import("@stardew/island.json"));
+let islandNoted = false;
+function noteIsland(d: IslandData): IslandData {
+  if (!islandNoted) {
+    registerStardewSlugs({ items: Object.fromEntries(Object.values(d.refs).filter((r) => r[1] !== r[0]).map((r) => [r[0], r[1]])) });
+    islandNoted = true;
+  }
+  return d;
+}
+export const peekIsland = (): IslandData | null => {
+  const d = islandRaw.peek();
+  return d && noteIsland(d);
+};
+export const loadIsland = (): Promise<IslandData> => islandRaw.load().then(noteIsland);
+
+/**
+ * Las Misiones (`quests.json`, un solo archivo chico): los pedidos especiales del pueblo y del desierto y las misiones de
+ * la historia. Anota los slugs en español de los objetos que nombra (lo que piden y lo que pagan), que enlazan a Objetos,
+ * y los de quienes piden o dan, que enlazan a Aldeanos.
+ */
+const questsRaw = once<QuestsData>(() => import("@stardew/quests.json"));
+let questsNoted = false;
+function noteQuests(d: QuestsData): QuestsData {
+  if (!questsNoted) {
+    const villagers = Object.fromEntries(Object.values(d.people).flatMap((p) => (p.slug && p.slugEs && p.slugEs !== p.slug ? [[p.slug, p.slugEs]] : [])));
+    registerStardewSlugs({ items: Object.fromEntries(Object.values(d.refs).filter((r) => r[1] !== r[0]).map((r) => [r[0], r[1]])), villagers });
+    questsNoted = true;
+  }
+  return d;
+}
+export const peekQuests = (): QuestsData | null => {
+  const d = questsRaw.peek();
+  return d && noteQuests(d);
+};
+export const loadQuests = (): Promise<QuestsData> => questsRaw.load().then(noteQuests);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */

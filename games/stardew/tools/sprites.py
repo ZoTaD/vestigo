@@ -1,4 +1,4 @@
-"""Sprites de Stardew Valley para el sitio: objetos, retratos y el marco de menú.
+"""Sprites de Stardew Valley para el sitio: objetos, retratos, combate, granja y el marco de menú.
 
 Lee el arte ya convertido a PNG en `games/stardew/raw/textures/` (ver `textures.py`)
 y escribe en `site/public/stardew/`. Va aparte de `site_data.py` porque sólo
@@ -16,7 +16,11 @@ from pathlib import Path
 from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import farm_data  # noqa: E402
+import island_data  # noqa: E402
 import mines_data  # noqa: E402
+import museum_data  # noqa: E402
+import quests_data  # noqa: E402
 import relations  # noqa: E402
 import sdv  # noqa: E402
 
@@ -111,6 +115,114 @@ def sprites_combate(salida: Path) -> int:
     for m in datos["monsters"]:
         hechos[sprite_combate("m", m["slug"])] = mines_data.monster_image(m["key"])
         hechos[sprite_combate("i", m["slug"])] = mines_data.monster_icon(m["key"])
+    for viejo in salida.glob("*.png"):
+        if viejo.name not in hechos:
+            viejo.unlink()
+    for nombre, im in hechos.items():
+        im.save(salida / nombre, optimize=True)
+    return len(hechos)
+
+
+def sprites_granja(salida: Path) -> int:
+    """Animales y edificios de `farm_data` en `site/public/stardew/animals/` y `buildings/`. Devuelve cuántos escribió.
+
+    De cada animal, el primer cuadro (`SpriteWidth`×`SpriteHeight`, de frente) del adulto (`<slug>.png`) y del bebé
+    (`<slug>-baby.png`, si tiene: el dinosaurio nace grande); de cada edificio, el dibujo del menú de construcción
+    (`farm_data.building_box`), con las aspas del molino y el agua del estanque (`building_layers`, `building_water`).
+    """
+    datos = farm_data.farm()
+    hechos: dict[str, dict[str, Image.Image]] = {"animals": {}, "buildings": {}}
+    for a in datos["animals"]:
+        w, h = a["sprite"]
+        adulto, bebe = farm_data.animal_textures(a["key"])
+        for nombre, textura in ((a["slug"], adulto), (f"{a['slug']}-baby", bebe)):
+            if textura:
+                hoja = Image.open(TEXTURAS / f"Animals/{textura}.png").convert("RGBA")
+                hechos["animals"][f"{nombre}.png"] = hoja.crop((0, 0, w, h))
+    for b in datos["buildings"]:
+        textura, x, y, w, h = farm_data.building_box(b["key"])
+        hoja = Image.open(TEXTURAS / f"{textura}.png").convert("RGBA")
+        dibujo = hoja.crop((x, y, x + w, y + h))
+        agua = farm_data.building_water(b["key"])
+        if agua:
+            (ax, ay, aw, ah), color = agua
+            fondo = hoja.crop((ax, ay, ax + aw, ay + ah))
+            # Teñido como `SpriteBatch.Draw` con color: cada canal multiplicado por el del color.
+            r, g, bl, alfa = fondo.split()
+            fondo = Image.merge("RGBA", [c.point(lambda v, k=k: v * k // 255) for c, k in zip((r, g, bl), color)] + [alfa])
+            fondo.alpha_composite(dibujo)
+            dibujo = fondo
+        for sx, sy, sw, sh, dx, dy in farm_data.building_layers(b["key"]):
+            dibujo.alpha_composite(hoja.crop((sx, sy, sx + sw, sy + sh)), (dx, dy))
+        hechos["buildings"][f"{b['slug']}.png"] = dibujo
+    for carpeta, ims in hechos.items():
+        destino = salida / carpeta
+        destino.mkdir(parents=True, exist_ok=True)
+        for viejo in destino.glob("*.png"):
+            if viejo.name not in ims:
+                viejo.unlink()
+        for nombre, im in ims.items():
+            im.save(destino / nombre, optimize=True)
+    return sum(len(ims) for ims in hechos.values())
+
+
+# Los poderes (`Data/Powers`) que se ganan como premio, con el nombre de su PNG: la Llave oxidada del museo y la Llave de
+# la ciudad de la tienda de Qi.
+_PODERES = {"RustyKey": "rusty-key.png", "KeyToTheTown": "key-to-the-town.png"}
+
+
+def reward_file(item_id: str) -> str:
+    """Nombre del PNG de un premio sin ficha: muebles `f-<n>.png`, sombreros `h-<n>.png` y las llaves (`_PODERES`)."""
+    if item_id in _PODERES:
+        return _PODERES[item_id]
+    if item_id.startswith("(F)"):
+        return f"f-{item_id[3:]}.png"
+    if item_id.startswith("(H)"):
+        return f"h-{item_id[3:]}.png"
+    raise ValueError(f"premio sin dibujo propio: {item_id}")
+
+
+def reward_box(item_id: str) -> tuple[str, int, int, int, int]:
+    """(hoja, x, y, ancho, alto) del dibujo de un premio sin ficha.
+
+    Un mueble: su `SpriteIndex` (o su número) en `TileSheets/furniture` (o la hoja que nombra), con el tamaño de
+    `museum_data._premio` (`Furniture.getDefaultSourceRect`: índice × 16 % ancho de la hoja, índice × 16 / ancho × 16).
+    Un sombrero: el cuadro de frente de `hats.png` (12 por fila de 20x20, cuatro filas por sombrero). La Llave oxidada:
+    `TexturePath` y `TexturePosition` de `Data/Powers`, 16x16 (`PowersTab`); la Llave de la ciudad, igual.
+    """
+    if item_id in _PODERES:
+        p = sdv.raw("Data/Powers")[item_id]
+        return p["TexturePath"].replace("\\", "/"), p["TexturePosition"]["X"], p["TexturePosition"]["Y"], 16, 16
+    if item_id.startswith("(H)"):
+        n = int(item_id[3:])
+        return "Characters/Farmer/hats", (n % 12) * 20, (n // 12) * 80, 20, 20
+    if item_id.startswith("(F)"):
+        campos = sdv.raw("Data/Furniture")[item_id[3:]].split("/")
+        tam = campos[2].split()
+        w, h = (int(tam[0]), int(tam[1])) if len(tam) == 2 else museum_data._MUEBLE_POR_TIPO[campos[1]]
+        indice = int(campos[8]) if len(campos) > 8 and campos[8] else int(item_id[3:])
+        hoja = (campos[9] if len(campos) > 9 and campos[9] else "TileSheets/furniture").replace("\\", "/")
+        ancho = Image.open(TEXTURAS / f"{hoja}.png").width
+        return hoja, indice * 16 % ancho, indice * 16 // ancho * 16, w * 16, h * 16
+    raise ValueError(f"premio sin dibujo propio: {item_id}")
+
+
+def premios_sin_ficha() -> set[str]:
+    """Los premios sin ficha de Objetos que necesitan dibujo propio: los del museo, lo que vende la tienda de Qi (el
+    Walnut Room) y los muebles que dan los pedidos especiales. Los `(BC)` no hacen falta: ya están en `items/` (`bc-<n>.png`)."""
+    ids = {r["reward"]["id"] for r in museum_data.rewards(len(museum_data.pieces())) if "sprite" in r["reward"]}
+    ids |= {w["id"] for w in island_data.walnut_room() if "sprite" in w}
+    ids |= {r["id"] for o in quests_data.orders() for r in o["rewards"] if "sprite" in r}
+    return {i for i in ids if i in _PODERES or i.startswith(("(F)", "(H)"))}
+
+
+def sprites_premios(salida: Path) -> int:
+    """Los premios sin ficha (`premios_sin_ficha`) en `site/public/stardew/rewards/`. Devuelve cuántos escribió."""
+    salida.mkdir(parents=True, exist_ok=True)
+    hechos = {}
+    for i in sorted(premios_sin_ficha()):
+        hoja, x, y, w, h = reward_box(i)
+        hechos[reward_file(i)] = Image.open(TEXTURAS / f"{hoja}.png").convert("RGBA").crop((x, y, x + w, y + h))
     for viejo in salida.glob("*.png"):
         if viejo.name not in hechos:
             viejo.unlink()
@@ -384,6 +496,16 @@ def fuente_juego(destino: Path) -> int:
     return len(cmap)
 
 
+# Los que piden pedidos especiales sin ser aldeanos del sitio (`Requester` de `Data/SpecialOrders`): sus retratos van
+# en la pestaña Misiones.
+_RETRATOS_PEDIDOS = ["Gunther", "Marlon"]
+
+
+def retratos_pedidos(retratos: Path) -> None:
+    for k in _RETRATOS_PEDIDOS:
+        Image.open(TEXTURAS / f"Portraits/{k}.png").convert("RGBA").crop((0, 0, 64, 64)).save(retratos / f"{k.lower()}.png", optimize=True)
+
+
 def main() -> None:
     items = SALIDA / "items"
     retratos = SALIDA / "portraits"
@@ -405,6 +527,7 @@ def main() -> None:
         textura = sdv.raw("Data/Characters")[v["key"]].get("TextureName") or v["key"]  # Leo usa ParrotBoy
         Image.open(TEXTURAS / f"Portraits/{textura}.png").convert("RGBA").crop((0, 0, 64, 64)).save(
             retratos / f"{v['key'].lower()}.png", optimize=True)
+    retratos_pedidos(retratos)
     marco().save(ui / "frame.png", optimize=True)
     Image.open(TEXTURAS / "Maps/MenuTiles.png").convert("RGBA").crop(_CASILLERO).save(ui / "slot.png", optimize=True)
     shutil.copyfile(TEXTURAS / "LooseSprites/stardewPanorama.png", ui / "panorama.png")
@@ -413,6 +536,8 @@ def main() -> None:
     fuente_juego(ui / "menu-font.woff2")
     print(f"{len(list(items.glob('*.png')))} sprites, {len(list(retratos.glob('*.png')))} retratos")
     print(f"{sprites_combate(SALIDA / 'combat')} sprites de combate")
+    print(f"{sprites_granja(SALIDA)} sprites de la granja")
+    print(f"{sprites_premios(SALIDA / 'rewards')} premios sin ficha")
     print(f"{sprites_predictor(SALIDA / 'predict')} sprites del predictor")
 
 

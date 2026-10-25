@@ -241,7 +241,7 @@ def _texto(archivo: str, clave: str) -> list[str]:
     return [en, sdv.raw(archivo + ".es-ES").get(clave) or en]
 
 
-def _sitio() -> tuple[dict[str, tuple[str, str]], dict[str, list]]:
+def sitio() -> tuple[dict[str, tuple[str, str]], dict[str, list]]:
     """id -> (slug, slug español) y id -> [nombre en, nombre es, ancho, alto] de lo que ya publica el sitio."""
     filas = json.loads((DATA / "site/list.json").read_text(encoding="utf-8"))
     es = json.loads((DATA / "site/names-es.json").read_text(encoding="utf-8"))
@@ -279,7 +279,7 @@ def _tiendas() -> dict[str, dict]:
     return out
 
 
-def _objeto(n: str) -> list[str]:
+def objeto(n: str) -> list[str]:
     o = sdv.raw("Data/Objects")[n]["DisplayName"]
     return [sdv.text(o, "en").strip(), sdv.text(o, "es").strip()]  # "Huevo calicó " trae un espacio al final
 
@@ -305,9 +305,9 @@ def _fuentes_armas() -> dict[str, list[dict]]:
     for n, rara in _VOLCAN.items():
         sumar(n, {"k": "volcano", "rare": rara})
     for n, base in _FORJA.items():
-        sumar(n, {"k": "forge", "from": f"(W){base}", "fromName": _arma(base), "item": _objeto(_ALMA_GALACTICA), "count": 3})
+        sumar(n, {"k": "forge", "from": f"(W){base}", "fromName": _arma(base), "item": objeto(_ALMA_GALACTICA), "count": 3})
     sumar("4", {"k": "desert", "place": _texto("Strings/StringsFromCSFiles", "MapPage.cs.11062"),
-                "item": _objeto(_FRAGMENTO_PRISMATICO)})
+                "item": objeto(_FRAGMENTO_PRISMATICO)})
     # La calavera embrujada sale en la mina de la cantera y también en la Caverna Calavera durante la invasión de
     # estatuas de Calico del Festival del Desierto (`MineShaft.populateLevel`: `Bat(position, 77377)` con
     # `getMineArea() == 121` y el festival en curso).
@@ -355,7 +355,7 @@ def _fuentes_armas() -> dict[str, list[dict]]:
                 npc = tienda.removeprefix("DesertFestival_")
                 nombre = personajes[npc]["DisplayName"] if npc in personajes else npc
                 sumar(iid[3:], {"k": "festival", "name": festival, "npc": [sdv.text(nombre, "en"), sdv.text(nombre, "es")],
-                                "price": it.get("TradeItemAmount", 1), "currency": _objeto(it["TradeItemId"])})
+                                "price": it.get("TradeItemAmount", 1), "currency": objeto(it["TradeItemId"])})
     return out
 
 
@@ -520,7 +520,7 @@ def chests() -> list[dict]:
 
 
 def mines() -> dict:
-    slugs, nombres = _sitio()
+    slugs, nombres = sitio()
     mons = monsters()
     ar, bo, an, ba, ch = weapons(), boots(), rings(slugs), trinkets(), chests()
     zo = zones(mons)
