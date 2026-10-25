@@ -130,6 +130,9 @@ export const PAGES = [
   // La Granja: Animales (lo que se abre en frío) y la vista de Edificios, la de los dibujos grandes.
   "/en/stardew-valley/farm",
   "/es/stardew-valley/granja?v=buildings",
+  // El Museo: la Colección (95 casilleros, lo que se abre en frío) y los Premios, con los dibujos de los muebles.
+  "/en/stardew-valley/museum",
+  "/es/stardew-valley/museo?v=rewards",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

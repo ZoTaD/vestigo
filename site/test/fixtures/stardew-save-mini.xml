@@ -342,6 +342,13 @@
         <item><key><int>2</int></key><value><boolean>false</boolean></value></item>
       </bundleRewards>
     </GameLocation>
+    <GameLocation xsi:type="LibraryMuseum">
+      <name>ArchaeologyHouse</name>
+      <museumPieces>
+        <item><key><Vector2><X>26</X><Y>5</Y></Vector2></key><value><string>96</string></value></item>
+        <item><key><Vector2><X>27</X><Y>5</Y></Vector2></key><value><string>60</string></value></item>
+      </museumPieces>
+    </GameLocation>
   </locations>
   <currentSeason>summer</currentSeason>
   <goldenWalnutsFound>17</goldenWalnutsFound>

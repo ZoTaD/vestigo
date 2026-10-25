@@ -1,46 +1,25 @@
 /**
- * El avance del Centro Comunitario (2026-10-22): qué casilleros tildó el jugador, guardado en el navegador. Sin cuenta
- * ni servidor: `localStorage` con la clave `sdv-cc-v1`. Cada lectura y cada escritura va en `try/catch`: en una
- * ventana privada o con los datos del sitio bloqueados el acceso tira, y la lista tiene que andar igual (sin guardar).
+ * El avance del Centro Comunitario (2026-10-22): qué casilleros tildó el jugador, guardado en el navegador con la clave
+ * `sdv-cc-v1`. Leer, guardar y tildar es lo de `checklist.ts`, que comparten las otras listas (Museo, Isla).
  */
 import type { Bundle, Room } from "../data";
+import * as checklist from "../checklist";
 
 /** Los casilleros tildados: clave `"Sala/índice:posición"` ("Pantry/1:0") → true. Sólo hay claves tildadas. */
-export type Done = Record<string, true>;
+export type Done = checklist.Done;
 
 const STORAGE_KEY = "sdv-cc-v1";
 
 export const doneKey = (room: string, index: number, pos: number): string => `${room}/${index}:${pos}`;
 
 /** Lo guardado, o `{}` si no hay nada, no se puede leer o no es lo que se escribió. */
-export function readDone(): Done {
-  try {
-    const raw = globalThis.localStorage?.getItem(STORAGE_KEY);
-    const parsed: unknown = raw ? JSON.parse(raw) : {};
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
-    return Object.fromEntries(Object.entries(parsed).filter(([, v]) => v === true)) as Done;
-  } catch {
-    return {};
-  }
-}
+export const readDone = (): Done => checklist.readDone(STORAGE_KEY);
 
 /** Guarda lo tildado; si el navegador no deja, no guarda y sigue. */
-export function writeDone(d: Done): void {
-  try {
-    globalThis.localStorage?.setItem(STORAGE_KEY, JSON.stringify(d));
-  } catch {
-    /* sin almacenamiento: el avance dura mientras la página esté abierta */
-  }
-}
+export const writeDone = (d: Done): void => checklist.writeDone(STORAGE_KEY, d);
 
 /** Tilda o destilda una clave, sin tocar el original. */
-export function toggle(d: Done, key: string): Done {
-  if (d[key]) {
-    const { [key]: _quitada, ...resto } = d;
-    return resto;
-  }
-  return { ...d, [key]: true };
-}
+export const toggle = checklist.toggle;
 
 /**
  * Tilda o destilda partiendo del estado que se está mostrando (no de lo guardado: sin almacenamiento eso sería siempre

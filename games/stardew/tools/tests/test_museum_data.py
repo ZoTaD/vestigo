@@ -6,6 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import museum_data  # noqa: E402
+import sprites  # noqa: E402
 
 
 def _textos(x):
@@ -64,6 +65,16 @@ class TestMuseumData(unittest.TestCase):
     def test_monstruos_con_slug(self):
         mons = [w for w in self.piezas["107"]["where"] if w["k"] == "monster"]
         self.assertTrue(any(m.get("slug") == "pepper-rex" for m in mons))
+        # Con el slug en español de su ficha de Minas, para enlazarla desde /es/.
+        sombras = next(w for w in self.piezas["74"]["where"] if w["k"] == "monster" and w["slug"] == "shadow-brute")
+        self.assertTrue(sombras["slugEs"])
+        self.assertNotEqual(sombras["slugEs"], sombras["slug"])
+
+    def test_la_receta_dice_que_es_receta(self):
+        # Las dos semillas milenarias piden lo mismo: la de la receta se nombra con el texto del juego.
+        semillas, receta = self.premios["ancient_seed"]["reward"], self.premios["ancient_seed_recipe"]["reward"]
+        self.assertEqual(semillas["name"], ["Ancient Seeds", "Semillas milenarias"])
+        self.assertEqual(receta["name"], ["Ancient Seeds (Recipe)", "Semillas milenarias (Receta)"])
 
     def test_premios(self):
         self.assertEqual(len(self.d["rewards"]), 31)
@@ -113,6 +124,23 @@ class TestMuseumData(unittest.TestCase):
         for p in self.d["pieces"]:
             nombres = [w["who"][0] for w in p["where"] if w["k"] == "monster"]
             self.assertEqual(len(nombres), len(set(nombres)), p["id"])
+
+    def test_sprites_de_los_premios_sin_ficha(self):
+        # Mueble de 1x2 casillas en `TileSheets/furniture` (32 por fila de 512 px), la Llave oxidada de `Data/Powers`.
+        self.assertEqual(sprites.reward_box("(F)1305"), ("TileSheets/furniture", 1305 * 16 % 512, 1305 * 16 // 512 * 16, 16, 32))
+        self.assertEqual(sprites.reward_box("(F)1671")[3:], (32, 64))
+        self.assertEqual(sprites.reward_box("RustyKey"), ("LooseSprites/Cursors", 144, 320, 16, 16))
+        self.assertEqual(sprites.reward_file("(F)1305"), "f-1305.png")
+        self.assertEqual(sprites.reward_file("RustyKey"), "rusty-key.png")
+        # Cada premio sin ficha tiene un dibujo del tamaño que dice el dato.
+        for r in self.d["rewards"]:
+            premio = r["reward"]
+            if "sprite" in premio and not premio["id"].startswith("(BC)") and not premio["id"][0].isdigit():
+                self.assertEqual(list(sprites.reward_box(premio["id"])[3:]), premio["sprite"], premio["id"])
+
+    def test_refs_con_el_tamano_del_dibujo(self):
+        self.assertEqual(self.d["refs"]["(BC)21"][2:], ["Crystalarium", "Cristalario", 16, 32])
+        self.assertEqual(self.d["refs"]["60"][4:], [16, 16])
 
     def test_libros_perdidos(self):
         self.assertEqual(self.d["lostBooks"], 21)

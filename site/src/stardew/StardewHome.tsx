@@ -34,6 +34,7 @@ const TAB_ICON: Record<StardewTab, { id: string; w: number; h: number }> = {
   save: { id: "(BC)130", w: 16, h: 32 },
   // Las pestañas de la etapa 4 (todavía sin página): el huevo, el rollo enano, la lista de Pierre y la nuez dorada.
   farm: { id: "176", w: 16, h: 16 },
+  // El museo: el rollo enano, la primera pieza que se suele donar.
   museum: { id: "96", w: 16, h: 16 },
   quests: { id: "897", w: 16, h: 16 },
   island: { id: "73", w: 16, h: 16 },

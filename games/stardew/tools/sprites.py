@@ -16,6 +16,7 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import farm_data  # noqa: E402
 import mines_data  # noqa: E402
+import museum_data  # noqa: E402
 import relations  # noqa: E402
 import sdv  # noqa: E402
 
@@ -159,6 +160,62 @@ def sprites_granja(salida: Path) -> int:
         for nombre, im in ims.items():
             im.save(destino / nombre, optimize=True)
     return sum(len(ims) for ims in hechos.values())
+
+
+def reward_file(item_id: str) -> str:
+    """Nombre del PNG de un premio sin ficha: muebles `f-<n>.png`, sombreros `h-<n>.png` y la Llave oxidada."""
+    if item_id == "RustyKey":
+        return "rusty-key.png"
+    if item_id.startswith("(F)"):
+        return f"f-{item_id[3:]}.png"
+    if item_id.startswith("(H)"):
+        return f"h-{item_id[3:]}.png"
+    raise ValueError(f"premio sin dibujo propio: {item_id}")
+
+
+def reward_box(item_id: str) -> tuple[str, int, int, int, int]:
+    """(hoja, x, y, ancho, alto) del dibujo de un premio sin ficha.
+
+    Un mueble: su `SpriteIndex` (o su número) en `TileSheets/furniture` (o la hoja que nombra), con el tamaño de
+    `museum_data._premio` (`Furniture.getDefaultSourceRect`: índice × 16 % ancho de la hoja, índice × 16 / ancho × 16).
+    Un sombrero: el cuadro de frente de `hats.png` (12 por fila de 20x20, cuatro filas por sombrero). La Llave oxidada:
+    `TexturePath` y `TexturePosition` de `Data/Powers`, 16x16 (`PowersTab`).
+    """
+    if item_id == "RustyKey":
+        p = sdv.raw("Data/Powers")["RustyKey"]
+        return p["TexturePath"].replace("\\", "/"), p["TexturePosition"]["X"], p["TexturePosition"]["Y"], 16, 16
+    if item_id.startswith("(H)"):
+        n = int(item_id[3:])
+        return "Characters/Farmer/hats", (n % 12) * 20, (n // 12) * 80, 20, 20
+    if item_id.startswith("(F)"):
+        campos = sdv.raw("Data/Furniture")[item_id[3:]].split("/")
+        tam = campos[2].split()
+        w, h = (int(tam[0]), int(tam[1])) if len(tam) == 2 else museum_data._MUEBLE_POR_TIPO[campos[1]]
+        indice = int(campos[8]) if len(campos) > 8 and campos[8] else int(item_id[3:])
+        hoja = (campos[9] if len(campos) > 9 and campos[9] else "TileSheets/furniture").replace("\\", "/")
+        ancho = Image.open(TEXTURAS / f"{hoja}.png").width
+        return hoja, indice * 16 % ancho, indice * 16 // ancho * 16, w * 16, h * 16
+    raise ValueError(f"premio sin dibujo propio: {item_id}")
+
+
+def sprites_premios(salida: Path) -> int:
+    """Los premios del museo que no tienen ficha (muebles y la Llave oxidada) en `site/public/stardew/rewards/`.
+
+    Los `(BC)` no hacen falta: ya están en `items/` (`bc-<n>.png`). Devuelve cuántos escribió.
+    """
+    salida.mkdir(parents=True, exist_ok=True)
+    ids = {r["reward"]["id"] for r in museum_data.rewards(len(museum_data.pieces())) if "sprite" in r["reward"]}
+    ids = {i for i in ids if i == "RustyKey" or i.startswith(("(F)", "(H)"))}
+    hechos = {}
+    for i in sorted(ids):
+        hoja, x, y, w, h = reward_box(i)
+        hechos[reward_file(i)] = Image.open(TEXTURAS / f"{hoja}.png").convert("RGBA").crop((x, y, x + w, y + h))
+    for viejo in salida.glob("*.png"):
+        if viejo.name not in hechos:
+            viejo.unlink()
+    for nombre, im in hechos.items():
+        im.save(salida / nombre, optimize=True)
+    return len(hechos)
 
 
 def marco() -> Image.Image:
@@ -358,6 +415,7 @@ def main() -> None:
     print(f"{len(list(items.glob('*.png')))} sprites, {len(list(retratos.glob('*.png')))} retratos")
     print(f"{sprites_combate(SALIDA / 'combat')} sprites de combate")
     print(f"{sprites_granja(SALIDA)} sprites de la granja")
+    print(f"{sprites_premios(SALIDA / 'rewards')} premios sin ficha")
 
 
 if __name__ == "__main__":

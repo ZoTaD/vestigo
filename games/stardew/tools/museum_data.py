@@ -202,7 +202,7 @@ def pieces() -> list[dict]:
                 continue
             if any(x == i for x, _ in m["loot"]) or i in _MONSTRUOS_EXTRA.get(m["key"], []):
                 vistos.add(m["name"][0])
-                where.append({"k": "monster", "who": m["name"], "slug": m["slug"]})
+                where.append({"k": "monster", "who": m["name"], "slug": m["slug"], "slugEs": m["slugEs"]})
         if i in _PESCA:
             where.append({"k": "fish"})
         where += [{"k": "other", "text": t} for t in _otras(i)]
@@ -233,6 +233,9 @@ def _premio(r: dict, slugs: dict) -> dict:
     out = {"id": _sin_prefijo(iid), "n": r["RewardItemCount"], "recipe": r["RewardItemIsRecipe"]}
     if iid.startswith("(O)"):
         out["name"] = _obj(iid[3:])
+        # La receta se nombra como en el juego: "Semillas milenarias (Receta)" (`Object.cs.12657`).
+        if out["recipe"]:
+            out["name"] = [f"{n} {suf}" for n, suf in zip(out["name"], _par("Strings/StringsFromCSFiles", "Object.cs.12657"))]
         if iid[3:] not in slugs:
             out["sprite"] = [16, 16]
     elif iid.startswith("(BC)"):
@@ -437,7 +440,14 @@ def museum() -> dict:
     ids = {p["id"] for p in pz} | {g for p in pz for w in p["where"] if w["k"] == "geode" for g in w["geodes"]}
     ids |= {i for r in pr for i in r["need"]["ids"]} | {r["reward"]["id"] for r in pr}
     ids |= {b["id"] for b in li} | {_LIBRO_PERDIDO}
-    refs = {i: [*slugs[i], *nombres[i], 16, 16] for i in sorted(ids) if i in slugs}
+    # Los `(BC)` (el cristalario, la piedra musical) miden 16×32 y su nombre en inglés sale de `Data/BigCraftables`
+    # (`mines_data.sitio` nombra en inglés sólo lo de `Data/Objects`).
+    def nombre(i: str) -> list[str]:
+        if i.startswith("(BC)"):
+            return [_tok(sdv.raw("Data/BigCraftables")[i[4:]]["DisplayName"])[0], nombres[i][1]]
+        return nombres[i]
+
+    refs = {i: [*slugs[i], *nombre(i), 16, 32 if i.startswith("(BC)") else 16] for i in sorted(ids) if i in slugs}
     return {"pieces": pz, "rewards": pr, "books": li, "lostBooks": _LIBROS_PERDIDOS, "lostBook": _LIBRO_PERDIDO,
             "refs": refs}
 

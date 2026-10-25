@@ -21,9 +21,10 @@ describe("rutas de Stardew Valley", () => {
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {
     expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca", recipes: "recetas", calendar: "calendario", mines: "minas", save: "partida", farm: "granja", museum: "museo", quests: "misiones", island: "isla-jengibre" });
     // Las de la etapa 4 ya tienen dirección (las fichas de Objetos enlazan a sus filas), aunque las que no tienen página
-    // todavía caigan en la portada. Granja ya tiene la suya.
+    // todavía caigan en la portada. Granja y Museo ya tienen la suya.
     expect(routePath({ ...base, lang: "es", sdSection: "island" })).toBe("/es/stardew-valley/isla-jengibre");
-    expect(parseRoute("/es/stardew-valley/museo")).toMatchObject({ view: "stardew", sdSection: "home" });
+    expect(parseRoute("/es/stardew-valley/misiones")).toMatchObject({ view: "stardew", sdSection: "home" });
+    expect(parseRoute("/es/stardew-valley/museo")).toMatchObject({ view: "stardew", sdSection: "museum" });
     expect(parseRoute("/es/stardew-valley/granja")).toMatchObject({ view: "stardew", sdSection: "farm" });
     expect(routePath({ ...base, sdSection: "home" })).toBe("/en/stardew-valley");
     expect(routePath({ ...base, lang: "es", sdSection: "home" })).toBe("/es/stardew-valley");
@@ -33,8 +34,10 @@ describe("rutas de Stardew Valley", () => {
   });
 
   it("una pestaña que no existe muestra la portada, y el Centro Comunitario no lleva ficha", () => {
-    expect(parseRoute("/en/stardew-valley/museum")).toMatchObject({ view: "stardew", sdSection: "home" });
-    expect(parseRoute("/en/stardew-valley/museum").detail).toBeUndefined();
+    expect(parseRoute("/en/stardew-valley/quests")).toMatchObject({ view: "stardew", sdSection: "home" });
+    expect(parseRoute("/en/stardew-valley/quests").detail).toBeUndefined();
+    // El Museo ya tiene página, sin fichas.
+    expect(parseRoute("/en/stardew-valley/museum")).toMatchObject({ view: "stardew", sdSection: "museum" });
     // Pesca es una sola página: lo que sigue no es una ficha.
     expect(parseRoute("/en/stardew-valley/fishing/carp").detail).toBeUndefined();
     expect(parseRoute("/en/stardew-valley/bundles/pantry").detail).toBeUndefined();

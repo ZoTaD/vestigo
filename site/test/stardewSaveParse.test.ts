@@ -80,6 +80,10 @@ describe("parseSave: la partida mínima", () => {
     });
   });
 
+  it("lee lo donado al museo (los ids de <museumPieces> de LibraryMuseum)", () => {
+    expect(s.museum).toEqual(["96", "60"]);
+  });
+
   it("los edificios terminados, en todos los lugares", () => {
     expect(s.buildings.sort()).toEqual(["Earth Obelisk", "Farmhouse", "Log Cabin"]);
   });

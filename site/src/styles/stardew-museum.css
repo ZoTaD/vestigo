@@ -1,0 +1,89 @@
+/*
+ * El Museo de Stardew Valley (etapa 4, tarea 7): la colección para tildar, los premios y los libros. Viaja con la
+ * pestaña (StardewMuseum.tsx); los botones, rótulos y casilleros son los de stardew.css y stardew-items.css. Sin bordes
+ * ni barras de color: lo donado se marca con la palomita del juego y un tinte, y lo ganado con texto y tinte. Todo en
+ * Nunito; la letra del juego sólo en los títulos de 32 px (`.sd-h2`) y en la palomita de 32 px. Los sprites van a un
+ * múltiplo entero de su tamaño (`.sd-pix`, de stardew-mines.css: se repite acá porque la pestaña no la carga).
+ */
+.sd-pix { display: block; image-rendering: pixelated; }
+.sd-museum .sd-filters { margin-top: 14px; }
+.sd-museum a:focus-visible,
+.sd-museum button:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; border-radius: 4px; }
+.sd-museum a.sd-mu-link { font-weight: 800; color: var(--sd-ink); text-decoration: underline; text-decoration-color: #c9772a; text-underline-offset: 3px; }
+.sd-museum a.sd-mu-link:hover { text-decoration-color: currentColor; }
+/* La palomita de lo donado (la misma del Centro Comunitario): la letra del juego a 32 px, sobre el casillero. */
+.sd-museum .sd-check { position: absolute; inset: 0; display: grid; place-items: center; font: 400 32px/1 var(--sd-pixel); color: #2f7d1e; text-shadow: 2px 2px 0 #fff3d6; pointer-events: none; }
+
+/* --- La cabecera de la colección: la cifra, el aviso, el filtro y el botón de la partida ---------------------- */
+.sd-mu-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.sd-mu-count { display: flex; align-items: baseline; gap: 8px; }
+.sd-mu-count b { font: 800 26px/1.1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-ink); white-space: nowrap; }
+.sd-mu-sync { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.sd-mu-coll .sd-filters { margin: 10px 0 12px; }
+
+/* --- La grilla de piezas -------------------------------------------------------------------------------------- */
+.sd-mu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 236px), 1fr)); align-items: start; gap: 8px; }
+.sd-mu-piece { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 4px 8px; padding: 4px 8px 4px 4px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-mu-piece.is-open { z-index: 2; }
+/* Donado: el papel más claro y el sprite apagado debajo de la palomita. */
+.sd-mu-piece.is-on { background: #e8efc9; }
+.sd-mu-piece.is-on .sd-sprite { opacity: 0.45; }
+.sd-mu-tick { display: block; padding: 0; background: none; border: 0; border-radius: 6px; cursor: pointer; }
+.sd-mu-tick .sd-slot { position: relative; }
+.sd-mu-tick:hover .sd-slot { filter: brightness(1.1); }
+.sd-mu-pinfo { display: grid; justify-items: start; gap: 2px; min-width: 0; }
+.sd-mu-pname { font: 800 15px/1.2 var(--sd-text); color: var(--sd-ink); hyphens: manual; }
+a.sd-mu-pname:hover { text-decoration: underline; text-underline-offset: 3px; }
+.sd-mu-kinds { display: inline-flex; align-items: baseline; gap: 6px; max-width: 100%; padding: 2px 0; font: 700 13px/1.3 var(--sd-text); color: var(--sd-dim); text-align: left; background: none; border: 0; cursor: pointer; }
+/* Se abre al tocarla: subrayado de puntos, como un enlace que despliega. */
+.sd-mu-kinds span:first-child { text-decoration: underline dotted; text-underline-offset: 3px; }
+.sd-mu-kinds:hover span:first-child { text-decoration-style: solid; }
+.sd-mu-caret { flex: none; font-size: 12px; }
+/*
+ * El detalle, abierto, cuelga debajo de la tarjeta sobre las de abajo (en la grilla, si la tarjeta creciera, crecería
+ * toda su fila y dejaría un hueco al lado). En el teléfono, con una sola columna, va adentro de la tarjeta.
+ */
+.sd-mu-where { position: absolute; top: calc(100% - 2px); left: 0; right: 0; display: grid; gap: 4px; padding: 8px 12px 10px; border-radius: 0 0 6px 6px; background: #f6e4bd; box-shadow: 0 8px 16px rgba(59, 31, 18, 0.3); font: 600 14px/1.35 var(--sd-text); }
+.sd-mu-where small { font: 800 12px/1.2 var(--sd-text); color: var(--sd-dim); }
+
+/* --- Premios ---------------------------------------------------------------------------------------------------- */
+.sd-mu-rewardsbox .sd-mu-count b { font-size: 18px; }
+.sd-mu-rewards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 8px; margin-top: 10px; }
+.sd-mu-reward { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 6px 12px 6px 6px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-mu-reward.is-won { background: #e8efc9; }
+/* El casillero del premio: una caja fija de 72 px con el dibujo a un múltiplo entero (hasta 64 px). */
+.sd-mu-prize { position: relative; flex: none; display: grid; place-items: center; width: 72px; height: 72px; border-radius: 4px; background: #efdcb4; }
+.sd-mu-prize .sd-pix { max-width: none; }
+.sd-mu-rinfo { display: grid; gap: 4px; min-width: 0; }
+.sd-mu-rname, .sd-mu-need { display: grid; gap: 1px; }
+.sd-mu-rname > span:last-child { font: 800 16px/1.25 var(--sd-text); }
+.sd-mu-rname small { font: 800 13px/1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-dim); }
+.sd-mu-need > span:last-child { font: 600 14px/1.35 var(--sd-text); }
+.sd-mu-rinfo .sd-label { font-size: 12px; }
+.sd-mu-state { align-self: start; padding: 3px 8px; border-radius: 4px; background: #f3e2bd; font: 800 14px/1.2 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-dim); white-space: nowrap; }
+.sd-mu-state.is-won { background: #d5e4a6; color: #2f6b1a; }
+
+/* --- Libros ----------------------------------------------------------------------------------------------------- */
+.sd-mu-blist { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); gap: 8px; margin-top: 10px; }
+.sd-mu-book { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: 10px; padding: 6px 12px 8px 6px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-mu-binfo { display: grid; gap: 4px; min-width: 0; padding-top: 4px; }
+.sd-mu-bname { font: 800 17px/1.2 var(--sd-text); }
+.sd-museum .sd-mu-bname a.sd-mu-link, .sd-museum .sd-mu-rname a.sd-mu-link { text-decoration: none; }
+.sd-museum .sd-mu-bname a.sd-mu-link:hover, .sd-museum .sd-mu-rname a.sd-mu-link:hover { text-decoration: underline; }
+.sd-mu-effect { padding: 4px 8px; border-radius: 4px; background: #f3e7b8; font: 600 14px/1.35 var(--sd-text); }
+.sd-mu-bwhere { display: grid; gap: 2px; font: 600 13px/1.35 var(--sd-text); color: var(--sd-dim); }
+.sd-mu-price { display: grid; justify-items: end; gap: 2px; padding-top: 6px; font-size: 17px; }
+.sd-mu-price small { font: 800 12px/1 var(--sd-text); color: var(--sd-dim); }
+.sd-mu-lost { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 6px; }
+.sd-mu-lostref { display: inline-flex; align-items: center; gap: 8px; font: 800 16px/1.2 var(--sd-text); color: var(--sd-ink); }
+.sd-mu-lostref:hover b { text-decoration: underline; text-underline-offset: 3px; }
+.sd-mu-lost p { flex: 1 1 280px; font: 600 15px/1.4 var(--sd-text); }
+
+@media (max-width: 520px) {
+  .sd-mu-where { position: static; grid-column: 1 / -1; margin: 2px 0 4px; border-radius: 4px; box-shadow: none; }
+  /* En el teléfono la cifra de un premio y el precio de un libro bajan debajo del texto. */
+  .sd-mu-reward { grid-template-columns: auto minmax(0, 1fr); }
+  .sd-mu-state { grid-column: 2; justify-self: start; }
+  .sd-mu-book { grid-template-columns: auto minmax(0, 1fr); }
+  .sd-mu-price { grid-column: 2; justify-items: start; grid-auto-flow: column; justify-content: start; align-items: baseline; gap: 8px; padding-top: 0; }
+}

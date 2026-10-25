@@ -208,14 +208,19 @@ describe("la ficha de un objeto", () => {
     expect(es).toContain("Corral");
   });
 
-  it("el museo: se dona, y el premio que da donarlo va sin enlace si no tiene ficha", async () => {
+  it("el museo: se dona (enlaza a su casillero), y el premio sin ficha va con su dibujo a la fila del premio", async () => {
     const en = await page("en", "chicken-statue");
     expect(en).toContain(">Museum<");
     expect(en).toContain("Donate it to the museum");
-    // El premio es un mueble, (F)1305: va con su nombre, sin enlace y sin un sprite que no existe.
-    expect(en).toMatch(/<span class="sd-ref"><span class="sd-slot"><\/span><span><b>Chicken Statue<\/b>/);
+    // "Se dona al museo" lleva a su casillero en la Colección.
+    expect(en).toContain('href="/en/stardew-valley/museum#chicken-statue"');
+    // El premio es un mueble, (F)1305: con su dibujo y su nombre, enlazado a la fila del premio en el Museo.
+    expect(en).toContain('href="/en/stardew-valley/museum?v=rewards#chicken"');
+    expect(en).toMatch(/<img[^>]*src="\/stardew\/rewards\/f-1305.png"[^>]*><\/span><span><b>Chicken Statue<\/b>/);
     expect(en).not.toContain("(F)1305");
     expect(en).not.toContain("F)1305.png");
+    const es = await page("es", "chicken-statue");
+    expect(es).toContain('href="/es/stardew-valley/museo#chicken-statue"');
     // Los rollos enanos dan la guía, que sí tiene ficha.
     const rollo = await page("en", "dwarf-scroll-i");
     expect(rollo).toContain('href="/en/stardew-valley/items/dwarvish-translation-guide"');

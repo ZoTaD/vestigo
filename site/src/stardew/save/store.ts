@@ -64,6 +64,7 @@ function looksLikeSave(x: unknown): x is Save {
     typeof x.ccComplete === "boolean" &&
     Array.isArray(x.buildings) &&
     isObj(x.items) &&
+    Array.isArray(x.museum) &&
     Array.isArray(x.players) &&
     x.players.length > 0 &&
     x.players.every(looksLikePlayer) &&

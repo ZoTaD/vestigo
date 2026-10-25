@@ -19,6 +19,7 @@ import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
 import type { MinesData, Monster } from "./mines/state";
 import type { FarmData } from "./farm/state";
+import type { MuseumData } from "./museum/state";
 import type { SaveData } from "./save/progress";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
@@ -355,6 +356,28 @@ export const peekFarm = (): FarmData | null => {
   return d && noteFarm(d);
 };
 export const loadFarm = (): Promise<FarmData> => farmRaw.load().then(noteFarm);
+
+/**
+ * El Museo (`museum.json`, un solo archivo chico): las 95 piezas con dónde salen, los premios y los libros. Anota los
+ * slugs en español de los objetos que nombra (piezas, geodas, premios, libros), que enlazan a Objetos, y los de los
+ * monstruos que las sueltan, que enlazan a Minas y combate.
+ */
+const museumRaw = once<MuseumData>(() => import("@stardew/museum.json"));
+let museumNoted = false;
+function noteMuseum(d: MuseumData): MuseumData {
+  if (!museumNoted) {
+    const mines: Record<string, string> = {};
+    for (const p of d.pieces) for (const w of p.where) if (w.k === "monster" && w.slugEs !== w.slug) mines[w.slug] = w.slugEs;
+    registerStardewSlugs({ items: Object.fromEntries(Object.values(d.refs).filter((r) => r[1] !== r[0]).map((r) => [r[0], r[1]])), mines });
+    museumNoted = true;
+  }
+  return d;
+}
+export const peekMuseum = (): MuseumData | null => {
+  const d = museumRaw.peek();
+  return d && noteMuseum(d);
+};
+export const loadMuseum = (): Promise<MuseumData> => museumRaw.load().then(noteMuseum);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */

@@ -19,7 +19,7 @@ import { QUALITIES, useStardewCopy, type Profession, type Taste } from "../../st
 import { useLoad } from "../../useLoad";
 import { loadBundles, machineTime, peekBundles, refName, say, type Ficha, type MachineIn, type Pair, type Ref, type Source } from "../data";
 import { roomAnchor } from "../bundles/progress";
-import { Box, Gold, Slot, Sprite, type Nav } from "../ui";
+import { Box, Gold, prizeSrc, Slot, Sprite, type Nav } from "../ui";
 
 const CATEGORIES = meta.categories as unknown as Record<string, Pair>;
 const GIFT_TASTES: Exclude<Taste, "neutral">[] = ["love", "like", "dislike", "hate"];
@@ -403,7 +403,8 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
             <section className="sd-sec">
               <h2 className="sd-h2">{c.museum.title}</h2>
               <ul className="sd-rows">
-                {donate && <li>{tabRow("museum", undefined, <b>{c.museum.donate}</b>)}</li>}
+                {/* A su casillero en la Colección (el ancla es el slug de la ficha). */}
+                {donate && <li>{tabRow("museum", ficha.slug, <b>{c.museum.donate}</b>)}</li>}
                 {rewards.map((r) => (
                   <li key={r.reward}>
                     {tabRow(
@@ -418,13 +419,36 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                     )}
                   </li>
                 ))}
-                {prizes.map(([reward, id, n, prize]) => (
-                  <li className="sd-source" key={reward}>
-                    <span className="sd-src-k">{c.museum.gives}</span>
-                    {/* El premio puede ser un mueble o un sombrero sin ficha: va con su nombre, sin enlace. */}
-                    {item(id, prize, n > 1 && <small>× {n}</small>)}
-                  </li>
-                ))}
+                {prizes.map(([reward, id, n, prize]) =>
+                  ficha.refs[id] ? (
+                    <li className="sd-source" key={reward}>
+                      <span className="sd-src-k">{c.museum.gives}</span>
+                      {item(id, prize, n > 1 && <small>× {n}</small>)}
+                    </li>
+                  ) : (
+                    // Un mueble o un sombrero sin ficha: su dibujo (a 1×, en el casillero de tamaño fijo) y su nombre,
+                    // enlazados a la fila del premio en el Museo.
+                    <li key={reward}>
+                      {tabRow(
+                        "museum",
+                        reward,
+                        <>
+                          <span className="sd-src-k">{c.museum.gives}</span>
+                          <span className="sd-ref">
+                            <Slot>
+                              <img className="sd-prize-pix" src={prizeSrc(id)} alt="" loading="lazy" decoding="async" />
+                            </Slot>
+                            <span>
+                              <b>{say(prize, lang)}</b>
+                              {n > 1 && <small>× {n}</small>}
+                            </span>
+                          </span>
+                        </>,
+                        "?v=rewards",
+                      )}
+                    </li>
+                  ),
+                )}
               </ul>
             </section>
           )}

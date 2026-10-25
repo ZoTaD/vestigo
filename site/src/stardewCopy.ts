@@ -14,10 +14,11 @@ import type { Kind } from "./stardew/fishing/state";
 import type { View } from "./stardew/recipes/state";
 import type { MinesView, WeaponSort, WeaponType } from "./stardew/mines/state";
 import type { FarmView } from "./stardew/farm/state";
+import type { MuseumFilter, MuseumView, WhereKind } from "./stardew/museum/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "recipes", "villagers", "calendar", "bundles", "save"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "museum", "recipes", "villagers", "calendar", "bundles", "save"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -446,6 +447,51 @@ export interface FarmCopy {
   };
 }
 
+/** Los textos de la pestaña Museo: la colección para tildar, los premios y los libros. */
+export interface MuseumCopy {
+  h1: string;
+  lede: (n: string) => string;
+  view: string;
+  views: Record<MuseumView, string>;
+  /** Aviso de que la lista queda en este navegador. */
+  saved: string;
+  /** "12 / 95", lo donado de lo que recibe el museo. */
+  progress: (done: string, total: string) => string;
+  donated: string;
+  /** El botón que pasa lo donado en la partida guardada del Lector, y lo que pasó al apretarlo. */
+  fromSave: string;
+  synced: (n: number) => string;
+  filter: string;
+  filters: Record<MuseumFilter, string>;
+  /** De dónde sale una pieza, en una palabra (la línea de abajo del nombre). */
+  kinds: Record<WhereKind, string>;
+  /** El botón que abre el detalle de dónde sale. */
+  where: string;
+  /** Los rótulos del detalle: dónde se excava, qué geodas, qué monstruos; la pesca va sola. */
+  whereText: { dig: string; geode: string; monster: string; fish: string };
+  /** El nombre del casillero para lectores de pantalla (el botón dice si está apretado). */
+  tick: (name: string) => string;
+  empty: string;
+  rewards: {
+    hint: string;
+    /** "5 de 31 ganados". */
+    count: (won: string, total: string) => string;
+    needs: string;
+    left: (n: number) => string;
+    won: string;
+  };
+  books: {
+    power: string;
+    powerHint: string;
+    skill: string;
+    skillHint: string;
+    /** El rótulo del precio más bajo del Librero. */
+    from: string;
+    lostTitle: string;
+    lost: (n: string) => string;
+  };
+}
+
 /** Los textos del Lector de partida: la caja para elegir el archivo y las cajas de la partida leída. */
 export interface SaveCopy {
   h1: string;
@@ -565,6 +611,7 @@ export interface StardewCopy {
   calendar: CalendarCopy;
   mines: MinesCopy;
   farm: FarmCopy;
+  museum: MuseumCopy;
   save: SaveCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
@@ -622,8 +669,8 @@ const EN: StardewCopy = {
       description: "Every Stardew Valley 1.6 farm animal with its price, produce and care, and every farm building with its cost, materials and upgrades.",
     },
     museum: {
-      title: "Stardew Valley Museum: Artifacts, Minerals and Rewards | Vestigo",
-      description: "Every artifact and mineral the Stardew Valley 1.6 museum takes, where to find each one, the donation rewards and the lost books.",
+      title: "Stardew Valley Museum Checklist: Artifacts, Minerals and Rewards | Vestigo",
+      description: "Every artifact and mineral the Stardew Valley 1.6 museum takes and where to find it, the donation rewards, power books and lost books. Tick them off.",
     },
     quests: {
       title: "Stardew Valley Quests and Special Orders | Vestigo",
@@ -679,7 +726,7 @@ const EN: StardewCopy = {
       mines: "Floors, monsters and their drops, every weapon by damage, boots and rings.",
       save: "Open your save file: perfection, what's left for each bundle and this week's birthdays.",
       farm: "Every animal with its produce and care, and every building with its materials.",
-      museum: "Every artifact and mineral to donate, where to find it and the rewards.",
+      museum: "Every artifact and mineral to donate with where to find it, the rewards and the books.",
       quests: "Story quests and special orders: what each one asks for and what it pays.",
       island: "The 130 golden walnuts, the parrot upgrades and Qi's Walnut Room.",
     },
@@ -1032,6 +1079,40 @@ const EN: StardewCopy = {
       free: "Free",
     },
   },
+  museum: {
+    h1: "Museum and library",
+    lede: (n) => `The ${n} artifacts and minerals Gunther takes, where each one turns up, what donating them earns you, and every book you can read.`,
+    view: "View",
+    views: { collection: "Collection", rewards: "Rewards", books: "Books" },
+    saved: "Tick what you already donated. Your list stays in this browser.",
+    progress: (done, total) => `${done} / ${total}`,
+    donated: "Donated",
+    fromSave: "Bring in my save",
+    synced: (n) => (n === 0 ? "Nothing new: your save had nothing else donated." : n === 1 ? "1 piece ticked from your save." : `${n} pieces ticked from your save.`),
+    filter: "Show",
+    filters: { all: "All", arch: "Artifacts", mineral: "Minerals", missing: "Not donated" },
+    kinds: { dig: "Digging", geode: "Geodes", monster: "Monsters", fish: "Fishing", other: "Rocks" },
+    where: "Where to find it",
+    whereText: { dig: "Artifact spots in", geode: "Inside", monster: "Dropped by", fish: "Fishing treasure chests" },
+    tick: (name) => `${name}: donated`,
+    empty: "Nothing left to donate here.",
+    rewards: {
+      hint: "Gunther hands each reward over once you have donated what it asks for. Pieces asked for by name also count toward the totals.",
+      count: (won, total) => `${won} of ${total} earned`,
+      needs: "Donate",
+      left: (n) => (n === 1 ? "1 left" : `${n} left`),
+      won: "Earned",
+    },
+    books: {
+      power: "Power books",
+      powerHint: "Read one once and its bonus lasts for good.",
+      skill: "Skill books",
+      skillHint: "Each read gives experience.",
+      from: "Bookseller",
+      lostTitle: "Lost books",
+      lost: (n) => `The library is missing ${n} books. Each Lost Book you find goes back to the shelves, where you can read it.`,
+    },
+  },
   save: {
     h1: "Save file reader",
     lede: "Open your save file to see how close you are to perfection, what each Community Center bundle still needs, whose birthday is coming up this week and which fish and recipes you're missing.",
@@ -1182,8 +1263,8 @@ const ES: StardewCopy = {
       description: "Cada animal de la granja de Stardew Valley 1.6 con su precio, lo que produce y sus cuidados, y cada edificio con su costo, materiales y mejoras.",
     },
     museum: {
-      title: "Museo de Stardew Valley: artefactos, minerales y premios | Vestigo",
-      description: "Cada artefacto y mineral que recibe el museo de Stardew Valley 1.6, dónde se encuentra cada uno, los premios por donar y los libros perdidos.",
+      title: "Museo de Stardew Valley: checklist de artefactos, minerales y premios | Vestigo",
+      description: "Cada artefacto y mineral que recibe el museo de Stardew Valley 1.6 y dónde sale, los premios por donar, los libros de poder y los perdidos. Tildalos.",
     },
     quests: {
       title: "Misiones y pedidos especiales de Stardew Valley | Vestigo",
@@ -1239,7 +1320,7 @@ const ES: StardewCopy = {
       mines: "Pisos, monstruos y lo que sueltan, cada arma por daño, botas y anillos.",
       save: "Abrí tu partida: la perfección, lo que falta de cada paquete y los cumpleaños de la semana.",
       farm: "Cada animal con lo que produce y sus cuidados, y cada edificio con sus materiales.",
-      museum: "Cada artefacto y mineral para donar, dónde se encuentra y los premios.",
+      museum: "Cada artefacto y mineral para donar con dónde sale, los premios y los libros.",
       quests: "Misiones de la historia y pedidos especiales: qué pide cada uno y qué paga.",
       island: "Las 130 nueces doradas, las mejoras del loro y la Habitación de las Nueces de Qi.",
     },
@@ -1590,6 +1671,40 @@ const ES: StardewCopy = {
       renovations: "Reformas",
       renovationsHint: "Robin las ofrece después de la segunda mejora, y cada una se puede deshacer.",
       free: "Gratis",
+    },
+  },
+  museum: {
+    h1: "Museo y biblioteca",
+    lede: (n) => `Los ${n} artefactos y minerales que recibe Gunther, dónde sale cada uno, qué se gana al donarlos y todos los libros que se pueden leer.`,
+    view: "Vista",
+    views: { collection: "Colección", rewards: "Premios", books: "Libros" },
+    saved: "Tildá lo que ya donaste. Tu lista queda en este navegador.",
+    progress: (done, total) => `${done} / ${total}`,
+    donated: "Donado",
+    fromSave: "Traer de mi partida",
+    synced: (n) => (n === 0 ? "Nada nuevo: tu partida no tenía otra donación." : n === 1 ? "Se tildó 1 pieza de tu partida." : `Se tildaron ${n} piezas de tu partida.`),
+    filter: "Mostrar",
+    filters: { all: "Todo", arch: "Artefactos", mineral: "Minerales", missing: "Sin donar" },
+    kinds: { dig: "Excavando", geode: "Geodas", monster: "Monstruos", fish: "Pesca", other: "Piedras" },
+    where: "Dónde sale",
+    whereText: { dig: "Lugares de artefacto en", geode: "Dentro de", monster: "Lo sueltan", fish: "Cofres del tesoro de pesca" },
+    tick: (name) => `${name}: donado`,
+    empty: "No queda nada para donar acá.",
+    rewards: {
+      hint: "Gunther da cada premio cuando donaste lo que pide. Las piezas que pide por nombre también suman para las cantidades.",
+      count: (won, total) => `${won} de ${total} ganados`,
+      needs: "Donar",
+      left: (n) => (n === 1 ? "Falta 1" : `Faltan ${n}`),
+      won: "Ganado",
+    },
+    books: {
+      power: "Libros de poder",
+      powerHint: "Se leen una vez y su ventaja queda para siempre.",
+      skill: "Libros de habilidad",
+      skillHint: "Cada lectura da experiencia.",
+      from: "Librero",
+      lostTitle: "Libros perdidos",
+      lost: (n) => `A la biblioteca le faltan ${n} libros. Cada Libro perdido que encontrás vuelve a los estantes, y ahí se puede leer.`,
     },
   },
   save: {

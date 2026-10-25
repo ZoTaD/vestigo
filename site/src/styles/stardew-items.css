@@ -126,3 +126,5 @@ a.sd-ref:hover b { text-decoration: underline; }
   .sd-people { gap: 4px; }
   .sd-person { width: 62px; }
 }
+/* El premio del museo sin ficha (un mueble, la Llave oxidada): a 1×, su tamaño de archivo, dentro del casillero fijo. */
+.sd-prize-pix { display: block; max-width: none; image-rendering: pixelated; }
