@@ -929,6 +929,7 @@ static class Oracle
     class EstadoNoche
     {
         public bool CcPantry, Mapache, Capsula, AvionVisto, Boleto;
+        public int[] Bodas = new int[0];
     }
 
     static readonly EstadoNoche[] EstadosNoche =
@@ -937,6 +938,8 @@ static class Oracle
         new EstadoNoche { CcPantry = true },
         new EstadoNoche { CcPantry = true, Mapache = true, Capsula = true, AvionVisto = true },
         new EstadoNoche { Boleto = true },
+        // Bodas (`Game1.weddingToday`) en la noche del terremoto y en las dos del avión de Qi.
+        new EstadoNoche { Bodas = new[] { 31, 51, 52 } },
     };
 
     static void CmdNight(Utf8JsonWriter w)
@@ -966,6 +969,7 @@ static class Oracle
                         var fecha = new WorldDate { TotalDays = dp - 1 };
                         PonerFecha(p.id, p.legacy, fecha.Year, fecha.Season, fecha.DayOfMonth);
                         granja.hasMatureFairyRoseTonight = rosa;
+                        Game1.weddingToday = Array.IndexOf(e.Bodas, dp) >= 0;
                         bool capsulaAntes = f.mailReceived.Contains("Got_Capsule");
                         StardewValley.Events.FarmEvent ev;
                         bool avion = false;
@@ -999,13 +1003,14 @@ static class Oracle
                     var o = new Dictionary<string, object>
                     {
                         ["gameId"] = p.id, ["legacy"] = p.legacy, ["rose"] = rosa, ["ccPantry"] = e.CcPantry,
-                        ["raccoonTreeFallen"] = e.Mapache, ["gotCapsule"] = e.Capsula, ["sawQiPlane"] = e.AvionVisto, ["billboardTicket"] = e.Boleto,
+                        ["raccoonTreeFallen"] = e.Mapache, ["gotCapsule"] = e.Capsula, ["sawQiPlane"] = e.AvionVisto, ["billboardTicket"] = e.Boleto, ["weddings"] = e.Bodas,
                         ["from"] = 2, ["events"] = string.Join(" ", eventos),
                     };
                     w.WriteRawValue("\n    " + JsonSerializer.Serialize(o), skipInputValidation: true);
                 }
         }
         w.WriteEndArray();
+        Game1.weddingToday = false;
         Game1.UseLegacyRandom = false;
         campoJugador.SetValue(null, new Farmer());
     }

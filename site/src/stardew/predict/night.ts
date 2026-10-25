@@ -6,24 +6,28 @@
 // El juego elige al terminar la noche, ya con la fecha y `DaysPlayed` del día nuevo, con
 // `Utility.CreateDaySaveRandom()` (semilla y día): saltea 10 tiradas y prueba cada evento en orden.
 // Lo que depende de la partida: la despensa del Centro Comunitario y el árbol del mapache, la cápsula
-// ya vista (`Got_Capsule`), el avión de Qi ya visto y la rosa de hadas madura en la granja.
+// ya vista (`Got_Capsule`), el avión de Qi ya visto o el boleto del cartel, las noches de boda y la
+// rosa de hadas madura en la granja.
 //
-// Lo que NO está: las noches de boda (no hay evento), los cambios del pueblo por correo de mañana
-// (cuartos del Centro Comunitario o de Joja, el cine, Leo, el barco de Willy, los loros dorados) y el
-// derrumbe de JojaMart en las noches de lluvia: dependen de lo que el granjero haga hoy y van antes
-// que todos los de acá.
+// Lo que NO está: los cambios del pueblo por correo de mañana (cuartos del Centro Comunitario o de
+// Joja, el cine, Leo, el barco de Willy, los loros dorados) y el derrumbe de JojaMart en las noches de
+// lluvia: dependen de lo que el granjero haga hoy y van antes que todos los de acá.
 import { daySaveRandom, type Seed } from "./rng";
 
-export type NightEvent =
-  | "fairy"
-  | "fairyIfRose"
-  | "witch"
-  | "meteorite"
-  | "owl"
-  | "capsule"
-  | "earthquake"
-  | "raccoon"
-  | "qiPlane";
+export type NightEvent = "fairy" | "witch" | "meteorite" | "owl" | "capsule" | "earthquake" | "raccoon" | "qiPlane";
+
+/**
+ * Una noche que depende de la rosa de hadas (sólo sin `fairyRose`): `ifRose` es lo que pasa con una rosa
+ * madura en la granja todas las noches del rango y `otherwise` sin ninguna. Si la rosa trae al hada,
+ * la noche sin rosa sigue con la bruja, el meteorito, el búho o la cápsula, y la cápsula cambia las
+ * noches siguientes: por eso cada rama es la serie entera con o sin rosa.
+ */
+export interface RoseFork {
+  ifRose: NightEvent | null;
+  otherwise: NightEvent | null;
+}
+
+export type NightPick = NightEvent | null | RoseFork;
 
 export interface NightOpts {
   /** La fecha del día nuevo de la primera noche (la que lleva a `fromDaysPlayed`). */
@@ -36,18 +40,19 @@ export interface NightOpts {
   ccPantry: boolean;
   /** El anfitrión ya tiene `raccoonTreeFallen` (cayó el árbol del mapache). */
   raccoonTreeFallen: boolean;
+  /** El granjero ya vio el avión de Qi (`sawQiPlane`). */
+  sawQiPlane: boolean;
+  /** Algún granjero conectado tiene el boleto del cartel (`gotFirstBillboardPrizeTicket`): el avión sale antes del día 51. */
+  billboardTicket: boolean;
   /**
-   * El granjero ya vio el avión de Qi (`sawQiPlane`). Sin dar: sí si la primera noche es después del
-   * día 51 (la primera en que sale siempre); el boleto del cartel (`gotFirstBillboardPrizeTicket`) lo
-   * adelanta y no está en esa cuenta.
+   * Los `DaysPlayed` de los días nuevos con boda (`Game1.weddingToday` o la fecha de boda de un
+   * cónyuge): esa noche no hay evento. Vacío si no hay ninguna.
    */
-  sawQiPlane?: boolean;
-  /** El granjero tiene el boleto del cartel (`gotFirstBillboardPrizeTicket`). Sin dar: no. */
-  billboardTicket?: boolean;
+  weddingDaysPlayed: readonly number[];
   /**
-   * Hay una rosa de hadas madura en la granja esa noche (`Farm.hasMatureFairyRoseTonight`: sube el
-   * hada de 0,01 a 0,017). Sin dar: las noches en que sólo con la rosa viene el hada salen
-   * `"fairyIfRose"` (y la cuenta sigue como si viniera; sin rosa, esa noche se ve con `false`).
+   * Hay una rosa de hadas madura en la granja (`Farm.hasMatureFairyRoseTonight`: sube el hada de 0,01 a
+   * 0,017), todas las noches del rango. Sin dar: las noches en que la rosa cambia algo salen como
+   * `RoseFork`.
    */
   fairyRose?: boolean;
 }
@@ -57,17 +62,26 @@ export interface NightOpts {
  * `fromDaysPlayed + i`. Lo que un evento cambia para las noches siguientes se arrastra: la cápsula marca
  * `Got_Capsule`, el mapache `raccoonTreeFallen` y el avión `sawQiPlane`. `null` = no pasa nada.
  */
-export function predictNights(seed: Seed, fromDaysPlayed: number, nights: number, opts: NightOpts): (NightEvent | null)[] {
+export function predictNights(seed: Seed, fromDaysPlayed: number, nights: number, opts: NightOpts): NightPick[] {
+  if (opts.fairyRose !== undefined) return serie(seed, fromDaysPlayed, nights, opts, opts.fairyRose);
+  const con = serie(seed, fromDaysPlayed, nights, opts, true);
+  const sin = serie(seed, fromDaysPlayed, nights, opts, false);
+  return con.map((x, k) => (x === sin[k] ? x : { ifRose: x, otherwise: sin[k] }));
+}
+
+function serie(seed: Seed, fromDaysPlayed: number, nights: number, opts: NightOpts, rosa: boolean): (NightEvent | null)[] {
   let { year, season, day } = opts;
   let capsula = opts.gotCapsule;
   let mapache = opts.raccoonTreeFallen;
-  let avion = opts.sawQiPlane ?? fromDaysPlayed > 51;
+  let avion = opts.sawQiPlane;
+  const bodas = new Set(opts.weddingDaysPlayed);
 
   const noche = (dp: number): NightEvent | null => {
     // `_newDayAfterFade` sólo elige evento si `DaysPlayed > 1`.
     if (dp <= 1) return null;
     const r = daySaveRandom(seed, dp);
     for (let k = 0; k < 10; k++) r.nextDouble();
+    if (bodas.has(dp)) return null;
     if (dp === 31) return "earthquake";
     // Con la despensa tira aunque el árbol ya esté caído.
     if (opts.ccPantry && r.nextDouble() < 0.1 && !mapache) {
@@ -80,11 +94,7 @@ export function predictNights(seed: Seed, fromDaysPlayed: number, nights: number
       return "qiPlane";
     }
     // La tirada del hada se hace siempre; el invierno y el día 1 sólo la descartan.
-    const hada = r.nextDouble();
-    if (season !== 3 && day !== 1) {
-      if (hada < 0.01) return "fairy";
-      if (hada < 0.01 + 0.007 && opts.fairyRose !== false) return opts.fairyRose ? "fairy" : "fairyIfRose";
-    }
+    if (r.nextDouble() < 0.01 + (rosa ? 0.007 : 0) && season !== 3 && day !== 1) return "fairy";
     if (r.nextDouble() < 0.01 && dp > 20) return "witch";
     if (r.nextDouble() < 0.01 && dp > 5) return "meteorite";
     if (r.nextDouble() < 0.005) return "owl";
