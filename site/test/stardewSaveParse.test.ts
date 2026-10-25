@@ -84,6 +84,15 @@ describe("parseSave: la partida mínima", () => {
     expect(s.museum).toEqual(["96", "60"]);
   });
 
+  it("lee las nueces de la Isla: collectedNutTracker vale 1, limitedNutDrops la cantidad, el coco sólo si se abrió", () => {
+    expect(s.nuts).toEqual({ Bush_IslandNorth_13_33: 1, TreeNut: 1, VolcanoBarrel: 2 });
+    const abierto = leer(mini.replace("<goldenCoconutCracked>false<", "<goldenCoconutCracked>true<"));
+    expect(abierto.nuts.GoldenCoconut).toBe(1);
+    // Con el loro dorado el juego anota 9999 en cada clave (`ActivateGoldenParrot`): se guarda tal cual, el tope es de la Isla.
+    const loro = leer(mini.replace(/(VolcanoBarrel<\/string><\/key>\s*<value><int>)2/, "$19999").replace("<string>TreeNut</string>", "<string>VolcanoBarrel</string>"));
+    expect(loro.nuts.VolcanoBarrel).toBe(9999);
+  });
+
   it("los edificios terminados, en todos los lugares", () => {
     expect(s.buildings.sort()).toEqual(["Earth Obelisk", "Farmhouse", "Log Cabin"]);
   });

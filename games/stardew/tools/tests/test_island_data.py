@@ -108,6 +108,21 @@ class TestIslandData(unittest.TestCase):
             for c in "[{]}":
                 self.assertNotIn(c, t)
 
+    def test_sprites_del_walnut_room_sin_ficha(self):
+        # Lo que la tienda de Qi vende sin ficha de Objetos (muebles, el sombrero y la Llave de la ciudad) tiene su dibujo
+        # en `rewards/`, del tamaño que dice el dato; los `(BC)` y los objetos ya están en `items/`.
+        import sprites
+        sin_ficha = {w["id"]: w["sprite"] for w in self.d["walnutRoom"] if "sprite" in w}
+        self.assertEqual(set(sin_ficha), {"KeyToTheTown", "(H)82", "(F)2400", "(F)2514"})
+        for i, tam in sin_ficha.items():
+            self.assertEqual(list(sprites.reward_box(i)[3:]), tam, i)
+            self.assertIn(i, sprites.premios_sin_ficha())
+        self.assertEqual(sprites.reward_box("KeyToTheTown"), ("Maps/springobjects", 0, 608, 16, 16))
+        self.assertEqual(sprites.reward_file("KeyToTheTown"), "key-to-the-town.png")
+        self.assertEqual(sprites.reward_file("(H)82"), "h-82.png")
+        # Los del museo siguen ahí.
+        self.assertIn("RustyKey", sprites.premios_sin_ficha())
+
 
 if __name__ == "__main__":
     unittest.main()

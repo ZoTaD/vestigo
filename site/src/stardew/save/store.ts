@@ -65,6 +65,8 @@ function looksLikeSave(x: unknown): x is Save {
     Array.isArray(x.buildings) &&
     isObj(x.items) &&
     Array.isArray(x.museum) &&
+    isObj(x.nuts) &&
+    Object.values(x.nuts).every(isNum) &&
     Array.isArray(x.players) &&
     x.players.length > 0 &&
     x.players.every(looksLikePlayer) &&
@@ -83,6 +85,7 @@ function looksLikeSave(x: unknown): x is Save {
  */
 const LATER_FIELDS: { [K in keyof Save]?: () => Save[K] } = {
   museum: () => [],
+  nuts: () => ({}),
 };
 
 /** Completa lo que falta de `LATER_FIELDS` (sólo si falta: si está y está mal, `looksLikeSave` la descarta). */

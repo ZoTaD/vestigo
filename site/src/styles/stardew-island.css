@@ -1,0 +1,123 @@
+/*
+ * La Isla Jengibre de Stardew Valley (etapa 4, tarea 8): las nueces para tildar, las mejoras del loro, la tienda y los
+ * pedidos de Qi. Viaja con la pestaña (StardewIsland.tsx); las cajas, botones y rótulos son los de stardew.css. Sin
+ * bordes ni barras de color: lo hallado se marca con la palomita y un tinte, lo hecho con texto y tinte. Todo en Nunito;
+ * la letra del juego sólo en los títulos de 32 px (`.sd-h2`). La nuez dorada y la gema Qi de cada precio son un fondo
+ * de CSS (un solo pedido cada una, sin nodos) a 1× o 2×; los dibujos van a un múltiplo entero (`.sd-pix`).
+ */
+.sd-pix { display: block; image-rendering: pixelated; }
+.sd-island .sd-filters { margin-top: 14px; }
+.sd-island a:focus-visible,
+.sd-island button:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; border-radius: 4px; }
+
+/* --- La cabecera: la cifra grande, el aviso, el filtro, la partida y las zonas ------------------------------------ */
+.sd-is-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; }
+.sd-is-count { display: flex; align-items: center; gap: 12px; }
+.sd-is-walnut { flex: none; display: grid; place-items: center; width: 64px; height: 64px; background: url(/stardew/ui/slot.png) center / 64px; }
+.sd-is-cwrap { display: grid; gap: 2px; }
+.sd-is-count b { font: 800 34px/1.05 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-ink); white-space: nowrap; }
+.sd-is-sync { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.sd-is-head .sd-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 12px 0; }
+/* Las zonas: un enlace por zona con su cuenta, para saltar a su caja. La completa, con tinte verde. */
+.sd-is-areas ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 6px; }
+.sd-is-areas a { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 6px 10px; border-radius: 6px; background: var(--sd-paper); font: 700 14px/1.25 var(--sd-text); color: var(--sd-ink); }
+.sd-is-areas a:hover { background: var(--sd-paper-2); }
+.sd-is-areas a:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.sd-is-areas b { font: 800 15px/1 var(--sd-text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sd-is-areas a.is-done { background: #e8efc9; }
+.sd-is-areas a.is-done b { color: #2f6b1a; }
+
+/* --- Una zona: el título con su cuenta y sus nueces ---------------------------------------------------------------- */
+.sd-is-area { scroll-margin-top: 16px; }
+.sd-is-ahead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 16px; margin-bottom: 8px; }
+.sd-is-ahead .sd-h2 { margin: 0; }
+.sd-is-acount { padding: 3px 10px; border-radius: 4px; background: #f3e2bd; font: 800 18px/1.2 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-dim); white-space: nowrap; }
+.sd-is-acount.is-done { background: #d5e4a6; color: #2f6b1a; }
+.sd-is-nuts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 6px; }
+.sd-is-nut, .sd-is-tile { border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-is-nut.is-on, .sd-is-tile.is-on { background: #e8efc9; }
+.sd-is-nut.is-part { background: #f6ebc6; }
+/* La fila entera es un botón que tilda: la casilla, la frase y cuántas da. */
+.sd-is-tick { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 6px 10px; font: inherit; color: inherit; text-align: left; background: none; border: 0; border-radius: 6px; cursor: pointer; }
+.sd-is-tick:hover .sd-is-text, .sd-is-tick:hover .sd-is-xy { text-decoration: underline; text-underline-offset: 3px; }
+/* La casilla: vacía (un tinte más oscuro que el papel) sin hallar, verde con palomita hallada. Sin filo. */
+.sd-is-box { flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 4px; background: #ead2a2; font: 900 15px/1 var(--sd-text); color: #2f6b1a; }
+.is-on > .sd-is-tick .sd-is-box { background: #bcd98d; }
+.sd-is-tick:hover .sd-is-box { background: #e2c58d; }
+.is-on > .sd-is-tick:hover .sd-is-box { background: #b0d07c; }
+.sd-is-text { flex: 1; min-width: 0; font: 600 15px/1.35 var(--sd-text); hyphens: manual; }
+.is-on .sd-is-text { color: var(--sd-dim); }
+/* Cuántas da: la nuez dorada (fondo, 1×) y "×3"; a medias, "2 / 5". */
+.sd-is-n { flex: none; display: inline-flex; align-items: center; gap: 4px; font: 800 15px/1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-gold); white-space: nowrap; }
+.sd-is-n::before, .sd-is-cost.is-nut::before { content: ""; flex: none; width: 16px; height: 16px; background: url(/stardew/items/73.png) 0 0 / 16px no-repeat; image-rendering: pixelated; }
+.is-part .sd-is-n { padding: 3px 6px; border-radius: 4px; background: #efd79b; }
+/* Las de frase genérica: casilleros chicos con la casilla (x, y), varios por renglón. */
+.sd-is-gen { margin-top: 14px; }
+.sd-is-gtitle { font: 800 17px/1.2 var(--sd-text); }
+.sd-is-gen .sd-muted { margin: 2px 0 8px; }
+.sd-is-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 6px; }
+.sd-is-tile .sd-is-tick { gap: 8px; min-height: 40px; padding: 4px 8px; }
+.sd-is-xy { font: 800 15px/1 var(--sd-text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* --- Precios: la nuez o la gema Qi (fondo) y la cifra -------------------------------------------------------------- */
+.sd-is-cost { display: inline-flex; align-items: center; gap: 6px; font: 800 17px/1.1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-gold); white-space: nowrap; }
+.sd-is-cost.is-gem::before { content: ""; flex: none; width: 16px; height: 16px; background: url(/stardew/items/858.png) 0 0 / 16px no-repeat; image-rendering: pixelated; }
+.sd-is-cost.is-gem { color: #6b2f7a; }
+
+/* --- Mejoras del loro ---------------------------------------------------------------------------------------------- */
+.sd-is-sum { margin: 2px 0 4px; }
+.sd-is-sum .sd-is-cost { font-size: 22px; }
+.sd-is-sum .sd-is-cost::before { width: 32px; height: 32px; background-size: 32px; }
+.sd-is-ups { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 8px; margin-top: 10px; }
+.sd-is-up { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 12px; padding: 8px 12px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-is-up.is-done { background: #e8efc9; }
+.sd-is-uinfo { display: grid; gap: 3px; min-width: 0; }
+.sd-is-uname { font: 800 17px/1.2 var(--sd-text); }
+.sd-is-uarea { font: 700 13px/1.3 var(--sd-text); color: var(--sd-dim); }
+.sd-is-uneeds { font: 600 14px/1.35 var(--sd-text); }
+.sd-is-uneeds .sd-label { font-size: 12px; }
+.sd-is-uside { display: grid; justify-items: end; gap: 6px; padding-top: 2px; }
+.sd-is-state { padding: 3px 8px; border-radius: 4px; background: #d5e4a6; font: 800 13px/1.2 var(--sd-text); color: #2f6b1a; white-space: nowrap; }
+
+/* --- La Habitación de las Nueces de Qi ----------------------------------------------------------------------------- */
+.sd-is-shop { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 8px; margin-top: 10px; }
+.sd-is-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 6px 12px 6px 6px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+/* El dibujo, en una caja de 72 px de alto a un múltiplo entero (hasta 64 px); el mueble ancho la ensancha. */
+.sd-is-prize { display: grid; place-items: center; min-width: 72px; height: 72px; padding: 0 4px; border-radius: 4px; background: #efdcb4; }
+.sd-is-prize .sd-pix { max-width: none; }
+.sd-is-iinfo { display: grid; gap: 3px; min-width: 0; }
+.sd-is-iname { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; font: 800 16px/1.25 var(--sd-text); }
+.sd-island a.sd-is-link { color: var(--sd-ink); }
+.sd-island a.sd-is-link:hover { text-decoration: underline; text-decoration-color: #c9772a; text-underline-offset: 3px; }
+.sd-is-recipe { padding: 1px 6px; border-radius: 4px; background: #f3e2bd; font: 800 12px/1.3 var(--sd-text); color: var(--sd-dim); }
+.sd-is-note { font: 700 13px/1.3 var(--sd-text); color: var(--sd-dim); }
+
+/* --- Pedidos de Qi ------------------------------------------------------------------------------------------------- */
+.sd-is-qi { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr)); gap: 8px; margin-top: 10px; }
+.sd-is-order { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 12px; padding: 8px 12px 10px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-is-qinfo { display: grid; gap: 4px; min-width: 0; }
+.sd-is-qname { font: 800 17px/1.2 var(--sd-text); }
+.sd-is-goal { padding: 4px 8px; border-radius: 4px; background: #f3e7b8; font: 700 14px/1.35 var(--sd-text); }
+.sd-is-qtext { font: italic 600 14px/1.4 var(--sd-text); color: var(--sd-dim); }
+.sd-is-qside { display: grid; justify-items: end; gap: 6px; padding-top: 2px; }
+.sd-is-days { padding: 3px 8px; border-radius: 4px; background: #f3e2bd; font: 800 13px/1.2 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-dim); white-space: nowrap; }
+
+@media (max-width: 520px) {
+  .sd-is-count b { font-size: 30px; }
+  .sd-is-areas ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sd-is-areas a { flex-direction: column; gap: 2px; padding: 5px 8px; }
+  .sd-is-tick { gap: 8px; padding: 6px 8px; }
+  .sd-is-text { font-size: 14px; }
+  /* Las casillas, de a tres por renglón. */
+  .sd-is-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+  .sd-is-tile .sd-is-tick { gap: 6px; padding: 4px 6px; }
+  .sd-is-xy { font-size: 14px; }
+  /* En la tienda el precio va debajo del nombre, al lado del dibujo (que ocupa las dos líneas): la fila no crece. */
+  .sd-is-item { grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; row-gap: 4px; }
+  .sd-is-prize { grid-row: 1 / span 2; }
+  .sd-is-iinfo { align-self: end; }
+  .sd-is-item > .sd-is-cost { grid-column: 2; align-self: start; }
+  /* En los pedidos, las gemas y los días bajan debajo del texto, en un renglón. */
+  .sd-is-order { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .sd-is-qside { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 0; }
+}

@@ -14,11 +14,12 @@ import type { Kind } from "./stardew/fishing/state";
 import type { View } from "./stardew/recipes/state";
 import type { MinesView, WeaponSort, WeaponType } from "./stardew/mines/state";
 import type { FarmView } from "./stardew/farm/state";
+import type { IslandView } from "./stardew/island/state";
 import type { MuseumFilter, MuseumView, WhereKind } from "./stardew/museum/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "museum", "recipes", "villagers", "calendar", "bundles", "save"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "museum", "recipes", "villagers", "calendar", "bundles", "island", "save"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -496,6 +497,57 @@ export interface MuseumCopy {
   };
 }
 
+/** Los textos de la pestaña Isla Jengibre: las nueces para tildar, las mejoras del loro, la tienda de Qi y sus pedidos. */
+export interface IslandCopy {
+  h1: string;
+  lede: string;
+  view: string;
+  views: Record<IslandView, string>;
+  nuts: {
+    /** El rótulo de la cifra grande y la cifra: "17 de 130". */
+    found: string;
+    progress: (found: string, total: string) => string;
+    /** Aviso de que la lista queda en este navegador. */
+    saved: string;
+    /** El botón que pasa las nueces de la partida guardada del Lector, y lo que pasó al apretarlo. */
+    fromSave: string;
+    synced: (n: number) => string;
+    /** Lo que dice la partida (`goldenWalnutsFound`), junto al botón. */
+    saveSays: (n: string) => string;
+    filter: string;
+    filters: { all: string; missing: string };
+    /** El rótulo de la lista de zonas, arriba. */
+    areas: string;
+    /** Las nueces de frase genérica, juntas por tipo: título, cómo se consiguen y la casilla de cada una. */
+    generic: { bush: string; buried: string; bushHint: string; buriedHint: string; tile: (x: number, y: number) => string };
+    /** Cuántas da una fila, para el lector de pantalla. */
+    gives: (n: number) => string;
+    areaDone: string;
+  };
+  upgrades: {
+    hint: string;
+    /** "116 nueces en total". */
+    total: (n: string) => string;
+    /** El rótulo de lo que pide antes. */
+    first: string;
+    /** Hecha según la partida guardada del Lector. */
+    done: string;
+    doneHint: string;
+  };
+  walnutRoom: {
+    title: string;
+    hint: string;
+    recipe: string;
+    /** Las unidades de los precios, para el lector de pantalla y la gema que se paga con nueces. */
+    gems: string;
+    walnuts: (n: number) => string;
+  };
+  qi: {
+    hint: string;
+    days: (n: number) => string;
+  };
+}
+
 /** Los textos del Lector de partida: la caja para elegir el archivo y las cajas de la partida leída. */
 export interface SaveCopy {
   h1: string;
@@ -616,6 +668,7 @@ export interface StardewCopy {
   mines: MinesCopy;
   farm: FarmCopy;
   museum: MuseumCopy;
+  island: IslandCopy;
   save: SaveCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
@@ -681,8 +734,8 @@ const EN: StardewCopy = {
       description: "Every Stardew Valley 1.6 story quest and special order from the town board: what each one asks for, how long you have and the reward.",
     },
     island: {
-      title: "Stardew Valley Ginger Island: Golden Walnuts and Qi | Vestigo",
-      description: "All 130 golden walnuts on Stardew Valley 1.6's Ginger Island by area, the parrot upgrades, Qi's Walnut Room and Qi's special orders.",
+      title: "Stardew Valley Golden Walnuts: All 130 on Ginger Island | Vestigo",
+      description: "Every golden walnut on Stardew Valley 1.6's Ginger Island by area, with a checklist. Plus the parrot upgrades, Qi's Walnut Room and his special orders.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -1119,6 +1172,50 @@ const EN: StardewCopy = {
       lost: (n) => `The library is missing ${n} books. Each Lost Book you find goes back to the shelves, where you can read it.`,
     },
   },
+  island: {
+    h1: "Ginger Island",
+    lede: "Every golden walnut on the island by area, with a box to tick. Then what the parrots build with them, what Qi sells in his Walnut Room and his special orders.",
+    view: "View",
+    views: { nuts: "Golden walnuts", upgrades: "Parrot upgrades", "walnut-room": "Walnut Room", qi: "Qi's orders" },
+    nuts: {
+      found: "Golden walnuts found",
+      progress: (found, total) => `${found} of ${total}`,
+      saved: "Tick what you already found. Your list stays in this browser.",
+      fromSave: "Bring in my save",
+      synced: (n) => (n === 0 ? "Nothing new: your save had no other walnuts." : n === 1 ? "1 walnut ticked from your save." : `${n} walnuts ticked from your save.`),
+      saveSays: (n) => `Your save: ${n} found`,
+      filter: "Show",
+      filters: { all: "All", missing: "Still to find" },
+      areas: "By area",
+      generic: {
+        bush: "Hidden bushes",
+        buried: "Buried",
+        bushHint: "Shake each bush to drop its walnut. The numbers are its tile (x, y) on the map.",
+        buriedHint: "Dig with the hoe where the ground wiggles. The numbers are its tile (x, y) on the map.",
+        tile: (x, y) => `${x}, ${y}`,
+      },
+      gives: (n) => (n === 1 ? "1 walnut" : `${n} walnuts`),
+      areaDone: "Nothing left to find here.",
+    },
+    upgrades: {
+      hint: "Each parrot asks for walnuts and builds something. Some only show up after another upgrade.",
+      total: (n) => `${n} walnuts in all`,
+      first: "Needs first",
+      done: "Done",
+      doneHint: "Upgrades marked done come from your save.",
+    },
+    walnutRoom: {
+      title: "Qi's Walnut Room",
+      hint: "Its door opens once you have found 100 golden walnuts. Everything is paid in Qi gems, which his special orders give.",
+      recipe: "Recipe",
+      gems: "Qi gems",
+      walnuts: (n) => (n === 1 ? "1 Golden Walnut" : `${n} Golden Walnuts`),
+    },
+    qi: {
+      hint: "Taken from the board in the Walnut Room. Each one pays in Qi gems.",
+      days: (n) => (n === 1 ? "1 day" : `${n} days`),
+    },
+  },
   save: {
     h1: "Save file reader",
     lede: "Open your save file to see how close you are to perfection, what each Community Center bundle still needs, whose birthday is coming up this week and which fish and recipes you're missing.",
@@ -1277,8 +1374,8 @@ const ES: StardewCopy = {
       description: "Cada misión de la historia y cada pedido especial del tablón de Stardew Valley 1.6: qué pide, cuánto tiempo hay y el premio.",
     },
     island: {
-      title: "Isla Jengibre de Stardew Valley: nueces doradas y Qi | Vestigo",
-      description: "Las 130 nueces doradas de la Isla Jengibre de Stardew Valley 1.6 por zona, las mejoras del loro, la Habitación de las Nueces de Qi y sus pedidos.",
+      title: "Nueces doradas de Stardew Valley: las 130 de la Isla Jengibre | Vestigo",
+      description: "Cada nuez dorada de la Isla Jengibre de Stardew Valley 1.6 por zona, para tildar. Y las mejoras del loro, la Habitación de las Nueces de Qi y sus pedidos.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -1713,6 +1810,50 @@ const ES: StardewCopy = {
       always: "siempre a la venta",
       lostTitle: "Libros perdidos",
       lost: (n) => `A la biblioteca le faltan ${n} libros. Cada Libro perdido que encontrás vuelve a los estantes, y ahí se puede leer.`,
+    },
+  },
+  island: {
+    h1: "Isla Jengibre",
+    lede: "Cada nuez dorada de la isla por zona, con su casilla para tildar. Y lo que construyen los loros con ellas, lo que vende Qi en su habitación y sus pedidos especiales.",
+    view: "Vista",
+    views: { nuts: "Nueces doradas", upgrades: "Mejoras del loro", "walnut-room": "Habitación de Qi", qi: "Pedidos de Qi" },
+    nuts: {
+      found: "Nueces doradas encontradas",
+      progress: (found, total) => `${found} de ${total}`,
+      saved: "Tildá las que ya encontraste. Tu lista queda en este navegador.",
+      fromSave: "Traer de mi partida",
+      synced: (n) => (n === 0 ? "Nada nuevo: tu partida no tenía otras nueces." : n === 1 ? "Se tildó 1 nuez de tu partida." : `Se tildaron ${n} nueces de tu partida.`),
+      saveSays: (n) => `Tu partida: ${n} encontradas`,
+      filter: "Mostrar",
+      filters: { all: "Todas", missing: "Las que faltan" },
+      areas: "Por zona",
+      generic: {
+        bush: "Arbustos escondidos",
+        buried: "Enterradas",
+        bushHint: "Sacudí cada arbusto y suelta su nuez. Los números son su casilla (x, y) en el mapa.",
+        buriedHint: "Cavá con la azada donde se mueve la tierra. Los números son su casilla (x, y) en el mapa.",
+        tile: (x, y) => `${x}, ${y}`,
+      },
+      gives: (n) => (n === 1 ? "1 nuez" : `${n} nueces`),
+      areaDone: "No queda nada por encontrar acá.",
+    },
+    upgrades: {
+      hint: "Cada loro pide nueces y construye algo. Algunos aparecen recién después de otra mejora.",
+      total: (n) => `${n} nueces en total`,
+      first: "Pide antes",
+      done: "Hecha",
+      doneHint: "Las mejoras marcadas como hechas salen de tu partida.",
+    },
+    walnutRoom: {
+      title: "Habitación de las Nueces de Qi",
+      hint: "Su puerta se abre cuando encontraste 100 nueces doradas. Todo se paga con gemas Qi, que dan sus pedidos especiales.",
+      recipe: "Receta",
+      gems: "gemas Qi",
+      walnuts: (n) => (n === 1 ? "1 nuez de oro" : `${n} nueces de oro`),
+    },
+    qi: {
+      hint: "Se toman del tablón de la Habitación de las Nueces. Cada uno paga con gemas Qi.",
+      days: (n) => (n === 1 ? "1 día" : `${n} días`),
     },
   },
   save: {

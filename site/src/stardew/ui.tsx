@@ -25,11 +25,12 @@ export function Box({ as: Tag = "section", className, children, ...rest }: { as?
 export const spriteFile = (id: string): string => (id.startsWith("(BC)") ? `bc-${id.slice(4)}.png` : `${id}.png`);
 
 /**
- * El dibujo de un premio que puede no tener ficha (museo, Walnut Room): los muebles, los sombreros y la Llave oxidada
- * están en `rewards/` (`reward_file` de sprites.py); los objetos y los `(BC)`, en `items/`.
+ * El dibujo de un premio que puede no tener ficha (museo, Walnut Room): los muebles, los sombreros y las llaves (la
+ * oxidada y la de la ciudad) están en `rewards/` (`reward_file` de sprites.py); los objetos y los `(BC)`, en `items/`.
  */
 export function prizeSrc(id: string): string {
   if (id === "RustyKey") return "/stardew/rewards/rusty-key.png";
+  if (id === "KeyToTheTown") return "/stardew/rewards/key-to-the-town.png";
   if (id.startsWith("(F)")) return `/stardew/rewards/f-${id.slice(3)}.png`;
   if (id.startsWith("(H)")) return `/stardew/rewards/h-${id.slice(3)}.png`;
   return `/stardew/items/${spriteFile(id)}`;

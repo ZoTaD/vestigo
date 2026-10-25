@@ -352,6 +352,17 @@
   </locations>
   <currentSeason>summer</currentSeason>
   <goldenWalnutsFound>17</goldenWalnutsFound>
+  <goldenCoconutCracked>false</goldenCoconutCracked>
+  <collectedNutTracker>
+    <string>Bush_IslandNorth_13_33</string>
+    <string>TreeNut</string>
+  </collectedNutTracker>
+  <limitedNutDrops>
+    <SaveablePairOfStringInt32>
+      <key><string>VolcanoBarrel</string></key>
+      <value><int>2</int></value>
+    </SaveablePairOfStringInt32>
+  </limitedNutDrops>
   <dayOfMonth>26</dayOfMonth>
   <year>2</year>
   <isRaining>true</isRaining>

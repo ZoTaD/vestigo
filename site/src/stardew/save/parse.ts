@@ -113,6 +113,12 @@ export interface Save {
   items: Record<string, number>;
   /** Lo donado al museo: el id de cada pieza de `museumPieces` de `LibraryMuseum` (es del mundo, no de un granjero). */
   museum: string[];
+  /**
+   * Las nueces doradas de la Isla por clave del juego (las de `island.json`): 1 por clave de `collectedNutTracker`, la
+   * cantidad de `limitedNutDrops` (el loro dorado anota 9999: el tope lo pone la Isla) y `GoldenCoconut` 1 si Clint ya
+   * abrió el primer coco dorado (`goldenCoconutCracked`). Es del equipo, no de un granjero.
+   */
+  nuts: Record<string, number>;
 }
 
 const SEASONS: Record<string, 0 | 1 | 2 | 3> = { spring: 0, summer: 1, fall: 2, winter: 3 };
@@ -389,6 +395,15 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
     tt("gameVersion") || (hostVersion && hostVersion !== "-1" ? hostVersion : "") ||
     (tt("hasApplied1_4_UpdateChanges") === "true" ? "1.4" : tt("hasApplied1_3_UpdateChanges") === "true" ? "1.3" : "<1.3");
 
+  // Nueces: `collectedNutTracker` es una lista de `<string>`; `limitedNutDrops`, pares `<key><string>`/`<value><int>`.
+  const nuts: Record<string, number> = {};
+  for (const k of kids(t("collectedNutTracker"))) if (str(k)) nuts[str(k)] = 1;
+  for (const [k, v] of dict(t("limitedNutDrops"))) {
+    const n = int(str(v));
+    if (k && str(k) && n > 0) nuts[str(k)] = Math.max(nuts[str(k)] ?? 0, n);
+  }
+  if (tt("goldenCoconutCracked") === "true") nuts.GoldenCoconut = 1;
+
   return {
     version,
     farm: text(hostEl, "farmName"),
@@ -410,5 +425,6 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
     museum: dict(kid(museumEl, "museumPieces"))
       .map(([, v]) => normId(str(v)))
       .filter(Boolean),
+    nuts,
   };
 }

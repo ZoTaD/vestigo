@@ -19,6 +19,7 @@ import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
 import type { MinesData, Monster } from "./mines/state";
 import type { FarmData } from "./farm/state";
+import type { IslandData } from "./island/state";
 import type { MuseumData } from "./museum/state";
 import type { SaveData } from "./save/progress";
 import { pzShardOf } from "../zomboid/shard";
@@ -379,6 +380,25 @@ export const peekMuseum = (): MuseumData | null => {
   return d && noteMuseum(d);
 };
 export const loadMuseum = (): Promise<MuseumData> => museumRaw.load().then(noteMuseum);
+
+/**
+ * La Isla Jengibre (`island.json`, un solo archivo chico): las 130 nueces, las mejoras del loro, la tienda de Qi y sus
+ * pedidos. Anota los slugs en español de los objetos que nombra, que enlazan a Objetos.
+ */
+const islandRaw = once<IslandData>(() => import("@stardew/island.json"));
+let islandNoted = false;
+function noteIsland(d: IslandData): IslandData {
+  if (!islandNoted) {
+    registerStardewSlugs({ items: Object.fromEntries(Object.values(d.refs).filter((r) => r[1] !== r[0]).map((r) => [r[0], r[1]])) });
+    islandNoted = true;
+  }
+  return d;
+}
+export const peekIsland = (): IslandData | null => {
+  const d = islandRaw.peek();
+  return d && noteIsland(d);
+};
+export const loadIsland = (): Promise<IslandData> => islandRaw.load().then(noteIsland);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */

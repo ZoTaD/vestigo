@@ -316,6 +316,17 @@ describe("lo que se guarda en el navegador", () => {
     expect(readStoredSave()).toBeNull();
   });
 
+  it("una partida guardada antes de la Isla (sin nuts) se lee igual, con nuts vacío; si está, tiene que ser un objeto", () => {
+    const store = fakeStorage();
+    const vieja = JSON.parse(JSON.stringify(leer()));
+    delete vieja.nuts;
+    delete vieja.museum;
+    store["sdv-save-v1"] = JSON.stringify({ v: 1, save: vieja });
+    expect(readStoredSave()).toEqual({ ...leer(), museum: [], nuts: {} });
+    store["sdv-save-v1"] = JSON.stringify({ v: 1, save: { ...leer(), nuts: ["Darts"] } });
+    expect(readStoredSave()).toBeNull();
+  });
+
   it("si la partida igual rompe al dibujarse, el límite de errores la olvida y vuelve a la caja vacía", () => {
     const store = fakeStorage();
     storeSave(leer());
