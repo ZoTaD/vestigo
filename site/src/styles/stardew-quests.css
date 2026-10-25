@@ -1,0 +1,87 @@
+/*
+ * Las Misiones de Stardew Valley (etapa 4, tarea 9): los pedidos especiales de cada tablero y las misiones de la
+ * historia en cadena. Viaja con la pestaña (StardewQuests.tsx); las cajas, botones, rótulos y el `<select>` son los de
+ * stardew.css, stardew-items.css y stardew-crops.css. Sin bordes ni barras de color: las tarjetas van en papel, lo que
+ * se repite con un tinte verde y el número de cada paso de una cadena en un círculo de tinte. Todo en Nunito; la letra
+ * del juego sólo en los títulos de 32 px (`.sd-h2`). Los retratos van a 64 px (su tamaño) y los sprites a un múltiplo
+ * entero en una caja de 32 px (`.sd-pix`).
+ */
+.sd-pix { display: block; image-rendering: pixelated; }
+.sd-quests a:focus-visible,
+.sd-quests button:focus-visible,
+.sd-quests summary:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; border-radius: 4px; }
+.sd-qs-filters { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; }
+.sd-qs-filters .sd-select { min-width: 180px; }
+
+/* --- Piezas comunes: el retrato, el oro, las etiquetas, la cita y los objetivos -------------------------------------- */
+.sd-qs-face { flex: none; width: 64px; height: 64px; border-radius: 4px; background: #e9c891; }
+.sd-qs-gold { font-size: 18px; }
+.sd-qs-tag { display: inline-block; padding: 3px 8px; border-radius: 4px; background: #f3e2bd; font: 800 13px/1.2 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-dim); white-space: nowrap; }
+.sd-qs-tag.is-repeat { background: #dfe9bf; color: #2f6b1a; }
+.sd-qs-quote { font: italic 600 14px/1.45 var(--sd-text); color: var(--sd-dim); }
+.sd-qs-goals { display: grid; gap: 4px; }
+.sd-qs-goals li, .sd-qm-goal { padding: 4px 8px; border-radius: 4px; background: #f3e7b8; font: 700 14px/1.35 var(--sd-text); }
+
+/* Un objeto: el sprite en una caja de 32 px, el nombre y "×100". Enlazado a su ficha si la tiene. */
+.sd-qs-thing { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 4px 10px 4px 4px; border-radius: 6px; background: #f6e6c2; font: 700 14px/1.25 var(--sd-text); color: var(--sd-ink); }
+a.sd-qs-thing:hover { background: #f1dcae; }
+a.sd-qs-thing:hover .sd-qs-tname { text-decoration: underline; text-decoration-color: #c9772a; text-underline-offset: 3px; }
+/* La caja mide 32 px; un mueble más grande (la cama de Robin, 48×64) la agranda a su tamaño. */
+.sd-qs-pic { flex: none; display: grid; place-items: center; min-width: 32px; min-height: 32px; }
+.sd-qs-pic .sd-pix { max-width: none; }
+.sd-qs-tname { min-width: 0; }
+.sd-qs-n { flex: none; margin-left: auto; padding-left: 4px; font: 800 14px/1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-gold); white-space: nowrap; }
+
+/* --- Pedidos especiales -------------------------------------------------------------------------------------------- */
+.sd-qo-board > .sd-muted { margin-bottom: 10px; }
+/*
+ * Las tarjetas en columnas que se llenan de arriba abajo (`columns`): son de alturas muy distintas (el de Lewis tiene 18
+ * opciones) y en una grilla dejaban huecos. Dos columnas en escritorio, una en el teléfono.
+ */
+.sd-qo-list, .sd-qm-loose { columns: 2 420px; column-gap: 10px; }
+.sd-qo-list > li, .sd-qm-loose > li { break-inside: avoid; margin-bottom: 10px; }
+.sd-qo { display: grid; gap: 8px; padding: 10px 12px 12px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-qo-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.sd-qo-title { display: grid; gap: 2px; min-width: 0; }
+.sd-qo-name { font: 800 18px/1.2 var(--sd-text); text-wrap: balance; }
+.sd-qo-who { font: 700 14px/1.2 var(--sd-text); color: var(--sd-dim); }
+.sd-qo-tags { display: grid; justify-items: end; gap: 4px; }
+.sd-qo-sec { display: grid; gap: 6px; }
+/* Pocas cosas: cada casillero a su ancho. Muchas opciones (Lewis, Demetrius): en grilla pareja. */
+.sd-qo-opts { display: flex; flex-wrap: wrap; gap: 4px; }
+.sd-qo-opts.is-many { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 136px), 1fr)); }
+.sd-qo-prizes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.sd-qo-prize.is-money, .sd-qo-prize.is-heart { display: flex; align-items: center; min-height: 40px; padding: 4px 10px; border-radius: 6px; background: #f6e6c2; }
+.sd-qo-prize.is-heart { font: 700 14px/1.25 var(--sd-text); color: #8a2f4a; }
+.sd-qo-more summary { width: fit-content; padding: 4px 0; font: 800 14px/1.3 var(--sd-text); color: var(--sd-wood); cursor: pointer; }
+.sd-qo-more summary:hover { text-decoration: underline; text-underline-offset: 3px; }
+.sd-qo-more .sd-qs-quote { margin-top: 4px; }
+
+/* --- Misiones de la historia --------------------------------------------------------------------------------------- */
+.sd-qm-box > .sd-muted { margin-bottom: 10px; }
+/* Las cadenas van primero, cada una a lo ancho: sus pasos con el número a la izquierda. Después, las sueltas. */
+.sd-qm-chains { display: grid; gap: 10px; margin-bottom: 10px; }
+.sd-qm-chain.is-chain { padding: 8px; border-radius: 8px; background: #f6e6c2; }
+.sd-qm-steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr)); gap: 8px; padding: 0; list-style: none; }
+.sd-qm-stepli { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 8px; }
+.sd-qm-num { display: grid; place-items: center; width: 30px; height: 30px; margin-top: 8px; border-radius: 50%; background: #e8c585; font: 800 15px/1 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-ink); }
+.sd-qm { display: grid; align-content: start; gap: 6px; padding: 10px 12px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+/* El título se lleva el ancho; lo que paga va a la derecha y, si no entra, baja a la derecha del renglón de abajo. */
+.sd-qm-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.sd-qm-title { display: grid; flex: 1 1 150px; gap: 2px; min-width: 0; }
+.sd-qm-name { font: 800 17px/1.2 var(--sd-text); text-wrap: balance; }
+.sd-qm-from { font: 700 14px/1.2 var(--sd-text); }
+.sd-qm-from .sd-label { font-size: 12px; }
+.sd-qm-pays { display: grid; justify-items: end; gap: 2px; margin-left: auto; font: 700 14px/1.25 var(--sd-text); color: #8a2f4a; text-align: right; }
+.sd-qm-item { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.sd-qm-next { font: 700 14px/1.35 var(--sd-text); }
+.sd-qm-next a { color: var(--sd-wood); text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 520px) {
+  .sd-qs-filters { display: grid; }
+  /* En el pedido, los días y si se repite bajan debajo del nombre, en un renglón. */
+  .sd-qo-head { grid-template-columns: auto minmax(0, 1fr); }
+  .sd-qo-tags { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-items: start; }
+  .sd-qo-opts.is-many { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sd-qm-stepli { gap: 6px; }
+}

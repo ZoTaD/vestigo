@@ -18,6 +18,7 @@ import farm_data  # noqa: E402
 import island_data  # noqa: E402
 import mines_data  # noqa: E402
 import museum_data  # noqa: E402
+import quests_data  # noqa: E402
 import relations  # noqa: E402
 import sdv  # noqa: E402
 
@@ -205,10 +206,11 @@ def reward_box(item_id: str) -> tuple[str, int, int, int, int]:
 
 
 def premios_sin_ficha() -> set[str]:
-    """Los premios sin ficha de Objetos que necesitan dibujo propio: los del museo y lo que vende la tienda de Qi (el
-    Walnut Room). Los `(BC)` no hacen falta: ya están en `items/` (`bc-<n>.png`)."""
+    """Los premios sin ficha de Objetos que necesitan dibujo propio: los del museo, lo que vende la tienda de Qi (el
+    Walnut Room) y los muebles que dan los pedidos especiales. Los `(BC)` no hacen falta: ya están en `items/` (`bc-<n>.png`)."""
     ids = {r["reward"]["id"] for r in museum_data.rewards(len(museum_data.pieces())) if "sprite" in r["reward"]}
     ids |= {w["id"] for w in island_data.walnut_room() if "sprite" in w}
+    ids |= {r["id"] for o in quests_data.orders() for r in o["rewards"] if "sprite" in r}
     return {i for i in ids if i in _PODERES or i.startswith(("(F)", "(H)"))}
 
 
@@ -394,6 +396,16 @@ def fuente_juego(destino: Path) -> int:
     return len(cmap)
 
 
+# Los que piden pedidos especiales sin ser aldeanos del sitio (`Requester` de `Data/SpecialOrders`): sus retratos van
+# en la pestaña Misiones.
+_RETRATOS_PEDIDOS = ["Gunther", "Marlon"]
+
+
+def retratos_pedidos(retratos: Path) -> None:
+    for k in _RETRATOS_PEDIDOS:
+        Image.open(TEXTURAS / f"Portraits/{k}.png").convert("RGBA").crop((0, 0, 64, 64)).save(retratos / f"{k.lower()}.png", optimize=True)
+
+
 def main() -> None:
     items = SALIDA / "items"
     retratos = SALIDA / "portraits"
@@ -415,6 +427,7 @@ def main() -> None:
         textura = sdv.raw("Data/Characters")[v["key"]].get("TextureName") or v["key"]  # Leo usa ParrotBoy
         Image.open(TEXTURAS / f"Portraits/{textura}.png").convert("RGBA").crop((0, 0, 64, 64)).save(
             retratos / f"{v['key'].lower()}.png", optimize=True)
+    retratos_pedidos(retratos)
     marco().save(ui / "frame.png", optimize=True)
     Image.open(TEXTURAS / "Maps/MenuTiles.png").convert("RGBA").crop(_CASILLERO).save(ui / "slot.png", optimize=True)
     shutil.copyfile(TEXTURAS / "LooseSprites/stardewPanorama.png", ui / "panorama.png")

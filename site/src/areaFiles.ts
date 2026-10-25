@@ -109,6 +109,7 @@ export const STARDEW_TAB_FILES: Partial<Record<StardewSection, string>> = {
   farm: "src/stardew/farm/StardewFarm.tsx",
   museum: "src/stardew/museum/StardewMuseum.tsx",
   island: "src/stardew/island/StardewIsland.tsx",
+  quests: "src/stardew/quests/StardewQuests.tsx",
 };
 
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */

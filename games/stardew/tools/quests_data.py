@@ -293,6 +293,13 @@ def _receta(nombre: str) -> tuple[str, list[str]]:
     return iid, _nombre(iid)
 
 
+def _mueble(premio: dict) -> dict:
+    """Un mueble no tiene ficha: va con el tamaño de su dibujo (`island_data._cosa`), que sale en `rewards/`."""
+    if premio["id"].startswith("(F)"):
+        premio["sprite"] = island_data._cosa(premio["id"], {})["sprite"]
+    return premio
+
+
 def _carta(clave: str) -> dict:
     tipo, valor = _CARTAS.get(clave, (None, None))
     if tipo is None:
@@ -307,10 +314,10 @@ def _carta(clave: str) -> dict:
         return {"k": "mail", "id": _id(iid), "text": [f"Crafting recipe: {n[0]}", f"Receta de fabricación: {n[1].lower()}"]}
     if tipo == "gift":
         n = _nombre(valor)
-        return {"k": "mail", "id": _id(valor), "text": [f"Gift: {n[0]}", f"Regalo: {n[1].lower()}"]}
+        return _mueble({"k": "mail", "id": _id(valor), "text": [f"Gift: {n[0]}", f"Regalo: {n[1].lower()}"]})
     if tipo == "shop":
         n = _nombre(valor)
-        return {"k": "mail", "id": valor, "text": [f"Robin starts selling the {n[0]}", f"Robin empieza a vender: {n[1].lower()}"]}
+        return _mueble({"k": "mail", "id": valor, "text": [f"Robin starts selling the {n[0]}", f"Robin empieza a vender: {n[1].lower()}"]})
     canal = _par(*valor)
     return {"k": "mail", "text": [f"New TV channel: {canal[0]}", f"Canal nuevo en la tele: {canal[1]}"]}
 
@@ -363,7 +370,12 @@ def quests() -> dict:
         alto = 32 if i.startswith("(BC)") else 16
         nombre = _nombre(i) if i.startswith("(") else nombres[i]
         refs[i] = [*slugs[i], *nombre, 16, alto]
-    return {"story": st, "orders": od, "refs": refs}
+    # Quien pide cada pedido o da cada misión, con su nombre (`DisplayName` de `Data/Characters`): Gunther y Marlon no
+    # están entre los aldeanos del sitio.
+    quienes = sorted({o["who"] for o in od} | {q["from"] for q in st if q["from"]})
+    chars = sdv.raw("Data/Characters")
+    people = {k: [sdv.text(chars[k]["DisplayName"], "en").strip(), sdv.text(chars[k]["DisplayName"], "es").strip()] for k in quienes}
+    return {"story": st, "orders": od, "refs": refs, "people": people}
 
 
 def main() -> None:

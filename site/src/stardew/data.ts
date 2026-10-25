@@ -21,6 +21,7 @@ import type { MinesData, Monster } from "./mines/state";
 import type { FarmData } from "./farm/state";
 import type { IslandData } from "./island/state";
 import type { MuseumData } from "./museum/state";
+import type { QuestsData } from "./quests/state";
 import type { SaveData } from "./save/progress";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
@@ -399,6 +400,25 @@ export const peekIsland = (): IslandData | null => {
   return d && noteIsland(d);
 };
 export const loadIsland = (): Promise<IslandData> => islandRaw.load().then(noteIsland);
+
+/**
+ * Las Misiones (`quests.json`, un solo archivo chico): los pedidos especiales del pueblo y del desierto y las misiones de
+ * la historia. Anota los slugs en español de los objetos que nombra (lo que piden y lo que pagan), que enlazan a Objetos.
+ */
+const questsRaw = once<QuestsData>(() => import("@stardew/quests.json"));
+let questsNoted = false;
+function noteQuests(d: QuestsData): QuestsData {
+  if (!questsNoted) {
+    registerStardewSlugs({ items: Object.fromEntries(Object.values(d.refs).filter((r) => r[1] !== r[0]).map((r) => [r[0], r[1]])) });
+    questsNoted = true;
+  }
+  return d;
+}
+export const peekQuests = (): QuestsData | null => {
+  const d = questsRaw.peek();
+  return d && noteQuests(d);
+};
+export const loadQuests = (): Promise<QuestsData> => questsRaw.load().then(noteQuests);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */

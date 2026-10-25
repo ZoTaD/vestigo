@@ -105,6 +105,23 @@ class TestQuestsData(unittest.TestCase):
                 self.assertNotIn(c, t)
             self.assertNotIn("  ", t)
 
+    def test_nombres_de_quien_pide(self):
+        # Cada aldeano que pide un pedido o da una misión, con su nombre en los dos idiomas (Gunther y Marlon no están
+        # en villagers.json).
+        quienes = {o["who"] for o in self.d["orders"]} | {q["from"] for q in self.d["story"] if q["from"]}
+        self.assertEqual(set(self.d["people"]), quienes)
+        self.assertEqual(self.d["people"]["Wizard"], ["Wizard", "Rasmodius"])
+        self.assertEqual(self.d["people"]["Marlon"], ["Marlon", "Marlon"])
+
+    def test_muebles_con_dibujo(self):
+        # Los muebles de premio no tienen ficha: llevan el tamaño de su dibujo (la cama doble de Robin, 3×4 casillas).
+        muebles = [r for o in self.d["orders"] for r in o["rewards"] if r.get("id", "").startswith("(F)")]
+        self.assertEqual(len(muebles), 2)
+        robin = [r for r in self.orders["Robin"]["rewards"] if r["k"] == "mail"][0]
+        self.assertEqual(robin["sprite"], [48, 64])
+        for r in muebles:
+            self.assertNotIn(r["id"], self.d["refs"])
+
     def test_refs(self):
         self.assertIn("684", self.d["refs"])
         self.assertIn("190", self.d["refs"])

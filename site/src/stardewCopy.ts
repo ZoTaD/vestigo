@@ -16,10 +16,11 @@ import type { MinesView, WeaponSort, WeaponType } from "./stardew/mines/state";
 import type { FarmView } from "./stardew/farm/state";
 import type { IslandView } from "./stardew/island/state";
 import type { MuseumFilter, MuseumView, WhereKind } from "./stardew/museum/state";
+import type { QuestView } from "./stardew/quests/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "museum", "recipes", "villagers", "calendar", "bundles", "island", "save"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "museum", "recipes", "villagers", "quests", "calendar", "bundles", "island", "save"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -548,6 +549,52 @@ export interface IslandCopy {
   };
 }
 
+/** Los textos de la pestaña Misiones: los pedidos especiales de los tableros y las misiones de la historia. */
+export interface QuestsCopy {
+  h1: string;
+  lede: string;
+  view: string;
+  views: Record<QuestView, string>;
+  /** El filtro por aldeano: el rótulo y la opción de todos. */
+  who: string;
+  everyone: string;
+  orders: {
+    town: string;
+    townHint: string;
+    desert: string;
+    desertHint: string;
+    days: (n: number) => string;
+    repeat: string;
+    once: string;
+    /** El rótulo de los objetos que pide: todos, o uno elegido al azar. */
+    needsAll: string;
+    needsOne: string;
+    /** Lo mismo cuando todas las opciones piden la misma cantidad: "Pide 100 de uno de estos, elegido al azar". */
+    needsOneOf: (n: string) => string;
+    /** Lo que reemplaza la lista larga de opciones en un objetivo ("Pesca 10 de una de las opciones de abajo."). */
+    instead: string;
+    /** El cartel plegado de los pedidos con muchas opciones. */
+    boardText: string;
+    rewards: string;
+    friendship: (n: string, who: string) => string;
+  };
+  story: {
+    chains: string;
+    chainsHint: string;
+    letters: string;
+    lettersHint: string;
+    /** Quien la da y el objeto que hace falta. */
+    from: string;
+    item: string;
+    pays: string;
+    friendship: (n: string, who: string) => string;
+    /** La misión que se abre en otra cadena (la 132 abre la 8, que va con la 6). */
+    continues: string;
+    /** El paso de una cadena, para el lector de pantalla. */
+    step: (i: number, n: number) => string;
+  };
+}
+
 /** Los textos del Lector de partida: la caja para elegir el archivo y las cajas de la partida leída. */
 export interface SaveCopy {
   h1: string;
@@ -669,6 +716,7 @@ export interface StardewCopy {
   farm: FarmCopy;
   museum: MuseumCopy;
   island: IslandCopy;
+  quests: QuestsCopy;
   save: SaveCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
@@ -720,7 +768,7 @@ const EN: StardewCopy = {
       title: "Stardew Valley Save File Reader: Perfection Tracker | Vestigo",
       description: "Open your Stardew Valley 1.6 save to see your perfection, what the Community Center still needs, this week's birthdays and the fish and recipes you're missing.",
     },
-    // Las pestañas de la etapa 4 (2026-10-25): tienen dirección pero no página todavía; la tarea de cada una ajusta esto.
+    // Las pestañas de la etapa 4 (2026-10-25): Granja, Museo, Misiones e Isla Jengibre.
     farm: {
       title: "Stardew Valley Animals and Farm Buildings | Vestigo",
       description: "Every Stardew Valley 1.6 farm animal with its price, produce and care, and every farm building with its cost, materials and upgrades.",
@@ -1216,6 +1264,42 @@ const EN: StardewCopy = {
       days: (n) => (n === 1 ? "1 day" : `${n} days`),
     },
   },
+  quests: {
+    h1: "Quests and special orders",
+    lede: "The special orders from the town board and the Desert Festival, with who asks, what for, how many days you get and the reward. And the story quests, in the order they open up.",
+    view: "View",
+    views: { orders: "Special orders", story: "Story quests" },
+    who: "Villager",
+    everyone: "Everyone",
+    orders: {
+      town: "Town board",
+      townHint: "Next to Pierre's shop. Every Monday it puts up two new orders, and you can take one at a time.",
+      desert: "Desert Festival",
+      desertHint: "Marlon hands these out during the Desert Festival, in spring. Each lasts one day and pays in Calico Eggs.",
+      days: (n) => (n === 1 ? "1 day" : `${n} days`),
+      repeat: "Repeats",
+      once: "Once",
+      needsAll: "Asks for",
+      needsOne: "Asks for one of these, picked at random",
+      needsOneOf: (n) => `Asks for ${n} of one of these, picked at random`,
+      instead: "of one of the options below",
+      boardText: "What the board says",
+      rewards: "Reward",
+      friendship: (n, who) => `+${n} friendship with ${who}`,
+    },
+    story: {
+      chains: "The story",
+      chainsHint: "They come in the mail or as you play. The ones in a chain open one after another.",
+      letters: "Villager requests",
+      lettersHint: "A letter asks you to bring something to a villager or to find what they lost.",
+      from: "From",
+      item: "Needs",
+      pays: "Pays",
+      friendship: (n, who) => `+${n} friendship with ${who}`,
+      continues: "Then",
+      step: (i, n) => `Step ${i} of ${n}`,
+    },
+  },
   save: {
     h1: "Save file reader",
     lede: "Open your save file to see how close you are to perfection, what each Community Center bundle still needs, whose birthday is coming up this week and which fish and recipes you're missing.",
@@ -1360,7 +1444,7 @@ const ES: StardewCopy = {
       title: "Lector de partida de Stardew Valley: perfección y lo que falta | Vestigo",
       description: "Abrí tu partida de Stardew Valley 1.6 y mirá tu perfección, lo que le falta al Centro Comunitario, los cumpleaños de la semana y los peces y recetas.",
     },
-    // Las pestañas de la etapa 4 (2026-10-25): tienen dirección pero no página todavía; la tarea de cada una ajusta esto.
+    // Las pestañas de la etapa 4 (2026-10-25): Granja, Museo, Misiones e Isla Jengibre.
     farm: {
       title: "Animales y edificios de la granja de Stardew Valley | Vestigo",
       description: "Cada animal de la granja de Stardew Valley 1.6 con su precio, lo que produce y sus cuidados, y cada edificio con su costo, materiales y mejoras.",
@@ -1854,6 +1938,42 @@ const ES: StardewCopy = {
     qi: {
       hint: "Se toman del tablón de la Habitación de las Nueces. Cada uno paga con gemas Qi.",
       days: (n) => (n === 1 ? "1 día" : `${n} días`),
+    },
+  },
+  quests: {
+    h1: "Misiones y pedidos especiales",
+    lede: "Los pedidos especiales del tablón del pueblo y del Festival del Desierto, con quién los pide, qué piden, cuántos días hay y el premio. Y las misiones de la historia, en el orden en que se abren.",
+    view: "Vista",
+    views: { orders: "Pedidos especiales", story: "Misiones de la historia" },
+    who: "Aldeano",
+    everyone: "Todos",
+    orders: {
+      town: "Tablón del pueblo",
+      townHint: "Al lado de la tienda de Pierre. Cada lunes pone dos pedidos nuevos, y se puede tomar uno a la vez.",
+      desert: "Festival del Desierto",
+      desertHint: "Marlon los da durante el Festival del Desierto, en primavera. Cada uno dura un día y paga con huevos calicó.",
+      days: (n) => (n === 1 ? "1 día" : `${n} días`),
+      repeat: "Se repite",
+      once: "Una vez",
+      needsAll: "Pide",
+      needsOne: "Pide uno de estos, elegido al azar",
+      needsOneOf: (n) => `Pide ${n} de uno de estos, elegido al azar`,
+      instead: "de una de las opciones de abajo",
+      boardText: "Lo que dice el tablón",
+      rewards: "Premio",
+      friendship: (n, who) => `+${n} de amistad con ${who}`,
+    },
+    story: {
+      chains: "La historia",
+      chainsHint: "Llegan por correo o a medida que jugás. Las que van en cadena se abren una después de la otra.",
+      letters: "Pedidos de los aldeanos",
+      lettersHint: "Una carta te pide llevarle algo a un aldeano o encontrar lo que perdió.",
+      from: "Te la da",
+      item: "Hace falta",
+      pays: "Paga",
+      friendship: (n, who) => `+${n} de amistad con ${who}`,
+      continues: "Después",
+      step: (i, n) => `Paso ${i} de ${n}`,
     },
   },
   save: {

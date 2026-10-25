@@ -133,6 +133,9 @@ export const PAGES = [
   // El Museo: la Colección (95 casilleros, lo que se abre en frío) y los Premios, con los dibujos de los muebles.
   "/en/stardew-valley/museum",
   "/es/stardew-valley/museo?v=rewards",
+  // Las Misiones: los Pedidos especiales (lo que se abre en frío) y las Misiones de la historia, la vista más larga.
+  "/en/stardew-valley/quests",
+  "/es/stardew-valley/misiones?v=story",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

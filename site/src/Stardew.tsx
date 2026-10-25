@@ -36,6 +36,7 @@ const SdSave = lazyWithPreload(() => import("./stardew/save/StardewSave"));
 const SdFarm = lazyWithPreload(() => import("./stardew/farm/StardewFarm"));
 const SdMuseum = lazyWithPreload(() => import("./stardew/museum/StardewMuseum"));
 const SdIsland = lazyWithPreload(() => import("./stardew/island/StardewIsland"));
+const SdQuests = lazyWithPreload(() => import("./stardew/quests/StardewQuests"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `STARDEW_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `STARDEW_TAB_FILES`.
@@ -52,6 +53,7 @@ const TABS: Partial<Record<StardewSection, LazyTab>> = {
   farm: SdFarm,
   museum: SdMuseum,
   island: SdIsland,
+  quests: SdQuests,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -90,6 +92,8 @@ const TAB_DATA: Partial<Record<StardewSection, (route: Route) => Promise<unknown
   museum: () => Promise.all([SdMuseum.preload(), import("./stardew/data").then((m) => m.loadMuseum())]),
   // La Isla Jengibre: un solo archivo chico (nueces, mejoras, la tienda y los pedidos de Qi) que baja con el chunk.
   island: () => Promise.all([SdIsland.preload(), import("./stardew/data").then((m) => m.loadIsland())]),
+  // Las Misiones: un solo archivo chico (los pedidos especiales y las misiones de la historia) que baja con el chunk.
+  quests: () => Promise.all([SdQuests.preload(), import("./stardew/data").then((m) => m.loadQuests())]),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Stardew Valley, y sus datos. */
