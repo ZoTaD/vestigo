@@ -74,11 +74,12 @@ static class Oracle
         ArmarJuego();
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(salida)));
         using var fs = File.Create(salida);
-        using var w = new Utf8JsonWriter(fs);
+        using var w = new Utf8JsonWriter(fs, new JsonWriterOptions { Indented = true });
         w.WriteStartObject();
         Comandos[comando](w);
         w.WriteEndObject();
         w.Flush();
+        fs.WriteByte(10); // salto de línea final
         Console.WriteLine(comando + " -> " + salida);
         return 0;
     }
@@ -96,7 +97,24 @@ static class Oracle
         var carga = (IEnumerator<int>)typeof(Game1)
             .GetMethod("GetLoadContentEnumerator", BindingFlags.Instance | BindingFlags.NonPublic)
             .Invoke(Game1.game1, null);
-        try { while (carga.MoveNext()) { } } catch (Exception) { }
+        int pasos = 0;
+        try { while (carga.MoveNext()) pasos++; }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine("la carga se cortó en el paso " + pasos + ": " + ex.GetType().Name + ": " + ex.Message);
+        }
+        // Si la carga se cortó antes de tiempo (otra versión, otra carpeta), los
+        // comandos que leen datos escribirían fixtures incompletos: se aborta.
+        var faltan = new List<string>();
+        if (Game1.objectData == null) faltan.Add("objectData");
+        if (Game1.bigCraftableData == null) faltan.Add("bigCraftableData");
+        if (Game1.cropData == null) faltan.Add("cropData");
+        if (Game1.locationContextData == null) faltan.Add("locationContextData");
+        if (faltan.Count > 0)
+        {
+            Console.Error.WriteLine("faltan datos del juego tras " + pasos + " pasos: " + string.Join(", ", faltan));
+            Environment.Exit(3);
+        }
         typeof(Game1).GetField("_player", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new Farmer());
     }
 
