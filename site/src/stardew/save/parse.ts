@@ -23,6 +23,24 @@
  *   heladeras, cofres de edificios como el molino, los que van adentro de un recolector) y los cofres Junimo
  *   (`globalInventories`).
  *
+ * Para el predictor (`Save.predict`, opcional: una partida guardada por la versión anterior no lo trae):
+ * - `gameId`, `legacy`, `dailyLuck`, `visitsUntilY1Guarantee`: `uniqueIDForThisGame`, `useLegacyRandom`, `dailyLuck` y
+ *   `visitsUntilY1Guarantee` de la raíz; `lowestMineLevel`: `mine_lowestLevelReached` de la raíz (el
+ *   `MineShaft.lowestLevelReached`, o sea `NetWorldState.LowestMineLevel`). `weatherTomorrow` es el mismo de `Save`.
+ * - `daysPlayed`: el contador `daysPlayed` de los `stats` del anfitrión (no sale de la fecha: cuenta los días dormidos).
+ * - Por granjero: `UniqueMultiplayerID` (un `long`, se guarda como texto) y `uidHalf` = `(int)uid / 2` como lo hace
+ *   `Utility.getTreasureFromGeode`: los 32 bits bajos con signo (con BigInt, un `long` no entra en un número de JS) y
+ *   la división entera que trunca hacia cero. Contadores de `stats`: `geodesCracked`, `MysteryBoxesOpened`,
+ *   `mastery_0` (`StatKeys.Mastery(0)`) y `Book_Mystery`; más `deepestMineLevel` y `fishingLevel` del granjero
+ *   (`GetUnmodifiedSkillLevel(1)` es pesca). Los `stats` 1.6 van en `<stats><Values><item><key><string>…`, con claves
+ *   que no distinguen mayúsculas (`StatsDictionary`); antes de la 1.6 eran etiquetas sueltas (`<geodesCracked>`) o el
+ *   diccionario `stat_dictionary`, y sólo del anfitrión (en la raíz). Sin el contador: 0, como `Stats.Get`.
+ * - `spouse14`: aldeanos con 3500 puntos o más (14 corazones de 250).
+ * - `qiBeans`: hay un encargo especial en `<specialOrders>` de la raíz con `questState` InProgress y `DROP_QI_BEANS`
+ *   entre las reglas separadas por coma de su `specialRule` (`FarmerTeam.SpecialOrderRuleActive`). Los encargos que
+ *   sólo se ofrecen (`availableSpecialOrders`) no cuentan.
+ * - `multiplayer`: hay más de un granjero con partida.
+ *
  * Partidas viejas (antes de la 1.6): se leen igual con lo que traigan. Sin `<gameVersion>` la versión se deduce por
  * `hasApplied1_4_UpdateChanges` ("1.4") y `hasApplied1_3_UpdateChanges` ("1.3"); sin ninguna es "<1.3". Antes de la
  * 1.6 los objetos no tienen `itemId` (se usa `parentSheetIndex` y compañía), los monstruos están en el `stats` de la
@@ -88,6 +106,49 @@ export interface SaveBundles {
   done: Record<number, boolean[]>;
 }
 
+/** Lo que necesita el predictor de cada granjero (ver la cabecera). */
+export interface PredictFarmer {
+  name: string;
+  host: boolean;
+  /** `UniqueMultiplayerID` como texto (es un `long`); "0" si no lo trae. */
+  uid: string;
+  /** `(int)uid / 2` de C#: 32 bits bajos con signo, división entera truncando hacia cero. */
+  uidHalf: number;
+  geodesCracked: number;
+  mysteryBoxesOpened: number;
+  deepestMineLevel: number;
+  fishingLevel: number;
+  /** Stat `mastery_0` (`StatKeys.Mastery(0)`). */
+  mastery0: number;
+  /** Stat `Book_Mystery`. */
+  bookMystery: number;
+  /** El mismo correo que `Player.mail`. */
+  mail: string[];
+  /** Aldeanos con 14 corazones o más (`Friendship.Points >= 3500`). */
+  spouse14: string[];
+}
+
+/** Lo que el predictor necesita de la partida (ver la cabecera). */
+export interface SavePredict {
+  /** `uniqueIDForThisGame`. */
+  gameId: number;
+  /** `useLegacyRandom`. */
+  legacy: boolean;
+  /** Contador `daysPlayed` de los stats del anfitrión. */
+  daysPlayed: number;
+  /** `dailyLuck` de la raíz (la de hoy). */
+  dailyLuck: number;
+  /** `weatherForTomorrow` tal cual, antes de `Game1.getWeatherModificationsForDate`. */
+  weatherTomorrow: string;
+  /** `mine_lowestLevelReached` (`MineShaft.lowestLevelReached`). */
+  lowestMineLevel: number;
+  multiplayer: boolean;
+  visitsUntilY1Guarantee: number;
+  farmers: PredictFarmer[];
+  /** Hay un encargo de Qi en curso con la regla `DROP_QI_BEANS`. */
+  qiBeans: boolean;
+}
+
 /**
  * La partida leída. El Lector la guarda en el navegador tal cual (`store.ts`, `{ v: 1, save }`): si se cambia su forma
  * (un campo nuevo, otro tipo), subir `v` ahí y en `looksLikeSave`, así no se dibuja una guardada con la forma vieja.
@@ -111,6 +172,8 @@ export interface Save {
   ccComplete: boolean;
   /** Id → cantidad, sumando el inventario de todos y todos los cofres de todos los lugares. */
   items: Record<string, number>;
+  /** Lo que lee el predictor. Opcional: una partida guardada por la versión anterior no lo trae. */
+  predict?: SavePredict;
 }
 
 const SEASONS: Record<string, 0 | 1 | 2 | 3> = { spring: 0, summer: 1, fall: 2, winter: 3 };
@@ -277,6 +340,64 @@ function readPlayer(el: Element, host: boolean, rootStats: Element | null): Play
   };
 }
 
+// --- Predictor ---
+
+/**
+ * `Stats.Get(key)`: busca en `Values` (1.6, sin distinguir mayúsculas) y en `stat_dictionary`, y después en la
+ * etiqueta suelta de antes de la 1.6 (`<geodesCracked>`). Sin el dato, 0.
+ */
+function statGet(stats: Element | null, key: string): number {
+  if (!stats) return 0;
+  const k = key.toLowerCase();
+  for (const holder of ["Values", "stat_dictionary"]) {
+    for (const [name, v] of dict(kid(stats, holder))) {
+      if (name && v && str(name).toLowerCase() === k) return int(str(v));
+    }
+  }
+  for (const c of kids(stats)) if (c.nodeName.toLowerCase() === k && !nil(c)) return int(str(c));
+  return 0;
+}
+
+/** `(int)uid / 2` de C#: los 32 bits bajos con signo y división entera que trunca hacia cero. */
+export function uidHalf(uid: string): number {
+  let big: bigint;
+  try {
+    big = BigInt(uid);
+  } catch {
+    return 0;
+  }
+  const half = Math.trunc(Number(BigInt.asIntN(32, big)) / 2);
+  return half === 0 ? 0 : half; // sin -0
+}
+
+function readPredictFarmer(el: Element, p: Player, stats: Element | null): PredictFarmer {
+  const uid = text(el, "UniqueMultiplayerID") || text(el, "uniqueMultiplayerID") || "0";
+  return {
+    name: p.name,
+    host: p.host,
+    uid,
+    uidHalf: uidHalf(uid),
+    geodesCracked: statGet(stats, "geodesCracked"),
+    mysteryBoxesOpened: statGet(stats, "MysteryBoxesOpened"),
+    deepestMineLevel: num(el, "deepestMineLevel"),
+    fishingLevel: p.skills[1],
+    mastery0: statGet(stats, "mastery_0"),
+    bookMystery: statGet(stats, "Book_Mystery"),
+    mail: p.mail,
+    spouse14: Object.entries(p.friends).filter(([, f]) => f.points >= 3500).map(([n]) => n),
+  };
+}
+
+/** `FarmerTeam.SpecialOrderRuleActive("DROP_QI_BEANS")`: un encargo en curso con esa regla. */
+function qiBeansActive(specialOrders: Element | null): boolean {
+  for (const o of kids(specialOrders)) {
+    const state = text(o, "questState");
+    if (state !== "InProgress" && state !== "0") continue;
+    if (text(o, "specialRule").split(",").some((r) => r.trim() === "DROP_QI_BEANS")) return true;
+  }
+  return false;
+}
+
 // --- Paquetes ---
 
 /** Una entrada de `Data/Bundles`: `nombre/premio/objetos/color/cuántos/…/nombre visible`. */
@@ -330,10 +451,16 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
   let hands = kids(t("farmhands"));
   if (hands.length === 0 && locations) hands = Array.from(locations.getElementsByTagName("farmhand"));
   const players: Player[] = [];
-  players.push(readPlayer(hostEl, true, t("stats")));
+  const predictFarmers: PredictFarmer[] = [];
+  const addPlayer = (el: Element, host: boolean) => {
+    const p = readPlayer(el, host, host ? t("stats") : null);
+    players.push(p);
+    predictFarmers.push(readPredictFarmer(el, p, kid(el, "stats") ?? (host ? t("stats") : null)));
+  };
+  addPlayer(hostEl, true);
   for (const h of hands) {
     if (nil(h) || text(h, "isCustomized") === "false" || !text(h, "name")) continue;
-    players.push(readPlayer(h, false, null));
+    addPlayer(h, false);
   }
 
   // Objetos: inventarios + todo `<items>` cuyo dueño es un cofre (por clase, por etiqueta o la heladera).
@@ -385,15 +512,17 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
     tt("gameVersion") || (hostVersion && hostVersion !== "-1" ? hostVersion : "") ||
     (tt("hasApplied1_4_UpdateChanges") === "true" ? "1.4" : tt("hasApplied1_3_UpdateChanges") === "true" ? "1.3" : "<1.3");
 
+  const weatherTomorrow = /^\d+$/.test(tt("weatherForTomorrow"))
+    ? OLD_WEATHER[int(tt("weatherForTomorrow"))] ?? "Sun"
+    : tt("weatherForTomorrow");
+
   return {
     version,
     farm: text(hostEl, "farmName"),
     season: SEASONS[tt("currentSeason").toLowerCase()] ?? 0,
     day: int(tt("dayOfMonth")),
     year: int(tt("year")),
-    weatherTomorrow: /^\d+$/.test(tt("weatherForTomorrow"))
-      ? OLD_WEATHER[int(tt("weatherForTomorrow"))] ?? "Sun"
-      : tt("weatherForTomorrow"),
+    weatherTomorrow,
     raining: tt("isRaining") === "true",
     players,
     bundles: { defs, done },
@@ -402,5 +531,17 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
     joja: mailAll.has("JojaMember"),
     ccComplete: mailAll.has("ccIsComplete"),
     items,
+    predict: {
+      gameId: int(tt("uniqueIDForThisGame")),
+      legacy: tt("useLegacyRandom") === "true",
+      daysPlayed: statGet(kid(hostEl, "stats") ?? t("stats"), "daysPlayed"),
+      dailyLuck: Number.parseFloat(tt("dailyLuck")) || 0,
+      weatherTomorrow,
+      lowestMineLevel: int(tt("mine_lowestLevelReached")),
+      multiplayer: players.length > 1,
+      visitsUntilY1Guarantee: tt("visitsUntilY1Guarantee") === "" ? -1 : int(tt("visitsUntilY1Guarantee")),
+      farmers: predictFarmers,
+      qiBeans: qiBeansActive(t("specialOrders")),
+    },
   };
 }

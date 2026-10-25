@@ -305,6 +305,22 @@ describe("lo que se guarda en el navegador", () => {
     expect(sin((x) => delete x.buildings)).toBeNull();
   });
 
+  it("predict es opcional: sin él la partida vale; con una forma rota no", () => {
+    const store = fakeStorage();
+    const s = leer();
+    const con = (quitar: (x: any) => void) => {
+      const copia = JSON.parse(JSON.stringify(s));
+      quitar(copia);
+      store["sdv-save-v1"] = JSON.stringify({ v: 1, save: copia });
+      return readStoredSave();
+    };
+    expect(con((x) => delete x.predict)).not.toBeNull();
+    expect(con(() => undefined)?.predict?.farmers.length).toBe(s.players.length);
+    expect(con((x) => (x.predict = "roto"))).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].uid)).toBeNull();
+    expect(con((x) => (x.predict.farmers = null))).toBeNull();
+  });
+
   it("si la partida igual rompe al dibujarse, el límite de errores la olvida y vuelve a la caja vacía", () => {
     const store = fakeStorage();
     storeSave(leer());
