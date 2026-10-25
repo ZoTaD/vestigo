@@ -29,6 +29,38 @@
 //   `Game1.uniqueIDForThisGame`, `Game1.UseLegacyRandom`, `Game1.season`,
 //   `Game1.dayOfMonth` y `Game1.random` con semilla fija (sólo lo usa la cosecha
 //   de baja calidad de las cajas, que el predictor no puede saber).
+// - `cart`: por caso, `Game1.uniqueIDForThisGame`, `UseLegacyRandom`,
+//   `stats.DaysPlayed`, `Game1.season`/`dayOfMonth`/`year`, un `Farmer` nuevo con
+//   el correo de los cuartos del Centro Comunitario o de Joja (y `JojaMember`),
+//   `friendshipData` con 3.500 puntos (14 corazones) para los que se piden,
+//   `Game1.otherFarmers` con un granjero de más para el multijugador y
+//   `netWorldState.VisitsUntilY1Guarantee` (con un `NetWorldState` nuevo si la
+//   carga no lo armó). `ShopBuilder.GetShopStock("Traveler")` no pide una
+//   `GameLocation`: arma su `ItemQueryContext` con `Game1.currentLocation`, que
+//   queda en `null` (ninguna consulta del carro la lee). El contenido sin
+//   texturas da texturas de 4096 x 4096 sin datos, porque el constructor de
+//   `Furniture` divide por el ancho de la suya.
+//   El calendario (`calendar`) usa `Forest.ShouldTravelingMerchantVisitToday`
+//   (sobre un `Forest` sin construir: sólo lee `Game1.dayOfMonth`) y
+//   `Utility.TryGetPassiveFestivalDataForDay` sin condiciones; la del Festival
+//   del desierto (`LOCATION_ACCESSIBLE Desert`) se evalúa con
+//   `Game1.isLocationAccessible`, porque la consulta busca la ubicación `Desert`,
+//   que acá no existe.
+// - `cart`: por caso, `Game1.uniqueIDForThisGame`, `UseLegacyRandom`,
+//   `stats.DaysPlayed`, `Game1.season`/`dayOfMonth`/`year`, un `Farmer` nuevo con
+//   el correo de los cuartos del Centro Comunitario o de Joja (y `JojaMember`),
+//   `friendshipData` con 3.500 puntos (14 corazones) para los que se piden,
+//   `Game1.otherFarmers` con un granjero de más para el multijugador y
+//   `netWorldState.VisitsUntilY1Guarantee`. `ShopBuilder.GetShopStock("Traveler")`
+//   no pide una `GameLocation`: arma su `ItemQueryContext` con
+//   `Game1.currentLocation`, que queda en `null` (ninguna consulta del carro la
+//   lee). El contenido sin texturas da texturas de 4096 x 4096 sin datos, porque
+//   el constructor de `Furniture` divide por el ancho de la suya.
+//   El calendario (`calendar`) usa `Forest.ShouldTravelingMerchantVisitToday`
+//   (sobre un `Forest` sin construir: sólo lee `Game1.dayOfMonth`) y
+//   `Utility.TryGetPassiveFestivalDataForDay` sin condiciones; la del Festival del
+//   desierto (`LOCATION_ACCESSIBLE Desert`) se evalúa con `Game1.isLocationAccessible`,
+//   porque la consulta busca la ubicación `Desert`, que acá no existe.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -54,7 +86,15 @@ class ContenidoSinTexturas : LocalizedContentManager
     public override T LoadImpl<T>(string asset, string lang, LanguageCode code)
     {
         if (typeof(T) == typeof(Texture2D))
-            return (T)RuntimeHelpers.GetUninitializedObject(typeof(T));
+        {
+            // Sin datos, pero con tamaño: `Furniture.InitializeAtTile` divide por el ancho.
+            object t = RuntimeHelpers.GetUninitializedObject(typeof(T));
+            for (var tipo = typeof(T); tipo != null; tipo = tipo.BaseType)
+                foreach (var f in tipo.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly))
+                    if (f.FieldType == typeof(int) && (f.Name.Equals("width", StringComparison.OrdinalIgnoreCase) || f.Name.Equals("height", StringComparison.OrdinalIgnoreCase)))
+                        f.SetValue(t, 4096);
+            return (T)t;
+        }
         return base.LoadImpl<T>(asset, lang, code);
     }
 }
@@ -78,6 +118,7 @@ static class Oracle
     {
         ["rng"] = CmdRng,
         ["geodes"] = CmdGeodes,
+        ["cart"] = CmdCart,
     };
 
     static int Main(string[] args)
@@ -119,6 +160,11 @@ static class Oracle
     // andan sin abrir una ventana: hash, contenido, datos cargados y un granjero.
     static void ArmarJuego()
     {
+        // El juego corre con la cultura invariante (`Game1` la fija en cada hilo): sin
+        // esto, en una máquina en español `float.TryParse(".05")` falla y las
+        // consultas `RANDOM .05` del carro dan error.
+        System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
         Game1.hash = new HashUtility();
         Game1.content = new ContenidoSinTexturas(new GameServiceContainer(), Path.Combine(Juego, "Content"));
         Game1.game1 = (Game1)RuntimeHelpers.GetUninitializedObject(typeof(Game1));
@@ -518,5 +564,160 @@ static class Oracle
         w.WriteEndArray();
         Game1.UseLegacyRandom = false;
         campoJugador.SetValue(null, new Farmer());
+    }
+    // Un estado del carro: lo que leen sus condiciones.
+    class EstadoCarro
+    {
+        public int Y1 = -1;
+        public bool Cc, Joja, Multi;
+        public string[] Corazones = new string[0];
+    }
+
+    // Las variantes que se cruzan con algunas fechas (la base va en todas).
+    static readonly EstadoCarro[] VariantesCarro =
+    {
+        new EstadoCarro { Y1 = 0, Cc = true, Multi = true, Corazones = new[] { "Abigail", "Krobus" } },
+        new EstadoCarro { Y1 = 0, Joja = true, Corazones = new[] { "Sebastian", "Haley" } },
+        new EstadoCarro { Y1 = 3, Cc = true, Corazones = new[] { "Penny", "Shane", "Maru", "Elliott", "Leah" } },
+    };
+
+    static readonly string[] CuartosCc = { "ccBoilerRoom", "ccCraftsRoom", "ccPantry", "ccFishTank", "ccVault", "ccBulletin" };
+    static readonly string[] CuartosJoja = { "JojaMember", "jojaBoilerRoom", "jojaCraftsRoom", "jojaPantry", "jojaFishTank", "jojaVault" };
+
+    // Los días de carro de un año: viernes y domingos en el bosque, el Mercado
+    // nocturno y el Festival del desierto (si el desierto está abierto).
+    static List<(Season s, int d, string kind)> DiasCarro(bool desierto)
+    {
+        var bosque = (StardewValley.Locations.Forest)RuntimeHelpers.GetUninitializedObject(typeof(StardewValley.Locations.Forest));
+        var dias = new List<(Season, int, string)>();
+        int diaGuardado = Game1.dayOfMonth;
+        Season estacionGuardada = Game1.season;
+        for (int s = 0; s < 4; s++)
+            for (int d = 1; d <= 28; d++)
+            {
+                Game1.season = (Season)s;
+                Game1.dayOfMonth = d;
+                string kind = null;
+                if (bosque.ShouldTravelingMerchantVisitToday()) kind = "cart";
+                // Con otro día en `Game1`, mira los datos y no `ActivePassiveFestivals`.
+                Game1.dayOfMonth = 0;
+                if (Utility.TryGetPassiveFestivalDataForDay(d, (Season)s, null, out var id, out _, ignoreConditionsCheck: true))
+                {
+                    string otro = id == "NightMarket" ? "nightMarket" : id == "DesertFestival" && desierto ? "desertFestival" : null;
+                    if (otro != null)
+                    {
+                        if (kind != null) throw new Exception("dos carros el mismo día");
+                        kind = otro;
+                    }
+                }
+                if (kind != null) dias.Add(((Season)s, d, kind));
+            }
+        Game1.dayOfMonth = diaGuardado;
+        Game1.season = estacionGuardada;
+        return dias;
+    }
+
+    // Carro ambulante: `ShopBuilder.GetShopStock("Traveler")` (lo que arma el
+    // `ShopMenu` antes de esconder las recetas que el granjero ya sabe) para
+    // varias partidas, fechas y estados. Cada objeto sale como
+    // `[id calificado, precio, cantidad]` (y un 1 al final si es receta); va
+    // compacto, un caso por línea, para que el fixture no pese de más.
+    static void CmdCart(Utf8JsonWriter w)
+    {
+        var partidas = new (ulong id, bool legacy)[] { (452435081, false), (390176213, false), (177904899, true) };
+        var campoJugador = typeof(Game1).GetField("_player", BindingFlags.Static | BindingFlags.NonPublic);
+        Game1.netWorldState ??= new Netcode.NetRoot<StardewValley.Network.NetWorldState>(new StardewValley.Network.NetWorldState());
+
+        // Calendario: qué días hay carro, con y sin el desierto abierto (el
+        // `LOCATION_ACCESSIBLE Desert` del festival es `Game1.isLocationAccessible`,
+        // que mira el correo `ccVault` del anfitrión).
+        var f0 = new Farmer();
+        campoJugador.SetValue(null, f0);
+        w.WriteStartObject("calendar");
+        foreach (bool vault in new[] { false, true })
+        {
+            if (vault) f0.mailReceived.Add("ccVault");
+            bool desierto = Game1.isLocationAccessible("Desert");
+            if (desierto != vault) throw new Exception("isLocationAccessible no mira ccVault");
+            w.WriteStartArray(vault ? "desertOpen" : "desertClosed");
+            foreach (var (s, d, kind) in DiasCarro(desierto))
+                w.WriteStringValue(((int)s).ToString(CultureInfo.InvariantCulture) + " " + d.ToString(CultureInfo.InvariantCulture) + " " + kind);
+            w.WriteEndArray();
+        }
+        w.WriteEndObject();
+
+        var todos = DiasCarro(true);
+        w.WriteStartArray("cases");
+        for (int pi = 0; pi < partidas.Length; pi++)
+        {
+            var p = partidas[pi];
+            var fechas = new List<(int year, Season s, int d)>();
+            int k = 0;
+            foreach (int year in new[] { 1, 2 })
+                foreach (var (s, d, _) in todos)
+                {
+                    // La primera partida en todos los días; las otras, día por medio.
+                    if (pi == 0 || k % 2 == pi - 1) fechas.Add((year, s, d));
+                    k++;
+                }
+            if (pi == 0)
+                foreach (var (s, d) in new[] { (Season.Spring, 5), (Season.Summer, 14), (Season.Fall, 26), (Season.Winter, 16) })
+                    fechas.Add((25, s, d));
+            for (int fi = 0; fi < fechas.Count; fi++)
+            {
+                var (year, s, d) = fechas[fi];
+                var estados = new List<EstadoCarro> { new EstadoCarro() };
+                if (fi % 4 == 0) estados.Add(VariantesCarro[(fi / 4) % VariantesCarro.Length]);
+                foreach (var e in estados)
+                    UnCasoCarro(w, campoJugador, p.id, p.legacy, year, s, d, e);
+            }
+        }
+        w.WriteEndArray();
+        Game1.UseLegacyRandom = false;
+        Game1.otherFarmers.Clear();
+        Game1.netWorldState.Value.VisitsUntilY1Guarantee = -1;
+        campoJugador.SetValue(null, new Farmer());
+    }
+
+    static void UnCasoCarro(Utf8JsonWriter w, FieldInfo campoJugador, ulong gameId, bool legacy, int year, Season s, int d, EstadoCarro e)
+    {
+        var f = new Farmer();
+        campoJugador.SetValue(null, f);
+        Game1.uniqueIDForThisGame = gameId;
+        Game1.UseLegacyRandom = legacy;
+        Game1.year = year;
+        Game1.season = s;
+        Game1.dayOfMonth = d;
+        uint dias = (uint)((year - 1) * 112 + (int)s * 28 + d);
+        Game1.stats.DaysPlayed = dias;
+        Game1.random = new Random(7);
+        if (e.Cc) foreach (var m in CuartosCc) f.mailReceived.Add(m);
+        if (e.Joja) foreach (var m in CuartosJoja) f.mailReceived.Add(m);
+        foreach (var npc in e.Corazones) f.friendshipData[npc] = new Friendship(3500);
+        Game1.otherFarmers.Clear();
+        if (e.Multi) Game1.otherFarmers.Add(12345, new Farmer());
+        Game1.netWorldState.Value.VisitsUntilY1Guarantee = e.Y1;
+
+        // Lo que miran `IS_COMMUNITY_CENTER_COMPLETE` e `IS_JOJA_MART_COMPLETE`, del juego.
+        bool cc = Game1.MasterPlayer.hasCompletedCommunityCenter() && !Game1.MasterPlayer.mailReceived.Contains("JojaMember");
+        bool joja = Utility.hasFinishedJojaRoute();
+        if (cc != e.Cc || joja != e.Joja) throw new Exception("el correo armado no da el estado pedido");
+
+        var stock = StardewValley.Internal.ShopBuilder.GetShopStock("Traveler");
+        var o = new Dictionary<string, object>
+        {
+            ["gameId"] = gameId, ["legacy"] = legacy, ["year"] = year, ["season"] = (int)s, ["day"] = d,
+            ["daysPlayed"] = dias, ["cc"] = cc, ["joja"] = joja, ["multi"] = Game1.IsMultiplayer,
+            ["hearts"] = e.Corazones, ["y1"] = Game1.netWorldState.Value.VisitsUntilY1Guarantee,
+        };
+        var items = new List<object[]>();
+        foreach (var kv in stock)
+        {
+            var x = new List<object> { kv.Key.QualifiedItemId, kv.Value.Price, kv.Value.Stock };
+            if (kv.Key.IsRecipe) x.Add(1);
+            items.Add(x.ToArray());
+        }
+        o["items"] = items;
+        w.WriteRawValue(JsonSerializer.Serialize(o), skipInputValidation: true);
     }
 }
