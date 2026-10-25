@@ -19,7 +19,7 @@ describe("rutas de Stardew Valley", () => {
   });
 
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {
-    expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca", recipes: "recetas", calendar: "calendario", mines: "minas", save: "partida" });
+    expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca", recipes: "recetas", calendar: "calendario", mines: "minas", save: "partida", predict: "predictor" });
     expect(routePath({ ...base, sdSection: "home" })).toBe("/en/stardew-valley");
     expect(routePath({ ...base, lang: "es", sdSection: "home" })).toBe("/es/stardew-valley");
     expect(routePath({ ...base, sdSection: "bundles" })).toBe("/en/stardew-valley/bundles");
@@ -37,5 +37,13 @@ describe("rutas de Stardew Valley", () => {
     expect(parseRoute("/en/stardew-valley/mines/green-slime")).toMatchObject({ view: "stardew", sdSection: "mines", detail: "green-slime" });
     // `/stardew` es la carpeta de los sprites, no la sección.
     expect(parseRoute("/en/stardew")).toMatchObject({ view: "home" });
+  });
+
+  it("el Predictor es /predictor en los dos idiomas y no lleva ficha", () => {
+    expect(routePath({ ...base, sdSection: "predict" })).toBe("/en/stardew-valley/predictor");
+    expect(routePath({ ...base, lang: "es", sdSection: "predict" })).toBe("/es/stardew-valley/predictor");
+    expect(parseRoute("/en/stardew-valley/predictor")).toMatchObject({ view: "stardew", sdSection: "predict", lang: "en" });
+    expect(parseRoute("/es/stardew-valley/predictor")).toMatchObject({ view: "stardew", sdSection: "predict", lang: "es" });
+    expect(parseRoute("/en/stardew-valley/predictor/geodes").detail).toBeUndefined();
   });
 });

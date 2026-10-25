@@ -127,6 +127,10 @@ export const PAGES = [
   // El Lector de partida sin partida (lo que se abre en frío): la caja para elegir el archivo.
   "/en/stardew-valley/save",
   "/es/stardew-valley/partida",
+  // El Predictor: sin entrada (el formulario) y con una semilla en la dirección (todas las cajas calculadas).
+  "/en/stardew-valley/predictor",
+  "/es/stardew-valley/predictor",
+  "/en/stardew-valley/predictor?seed=452435081&day=p2-10-2",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */
