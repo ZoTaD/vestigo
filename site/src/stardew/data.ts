@@ -119,8 +119,9 @@ export interface Ficha {
    * Para qué sirve fuera de las recetas: si se dona al museo, qué edificios lo piden de material (ancla de la fila en
    * Granja, nombre y cantidad), qué pedidos y misiones lo piden, y qué premio del museo da donarlo (ancla del premio,
    * id, cantidad y nombre; el premio puede ser un mueble o un sombrero sin ficha, y entonces no está en `refs`).
+   * No viene cuando no hay nada de eso (3 de cada 4 fichas).
    */
-  uses: {
+  uses?: {
     donate: boolean;
     builds: [key: string, name: Pair, n: number][];
     orders: [key: string, name: Pair, tab: OrderTab][];

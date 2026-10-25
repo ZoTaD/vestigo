@@ -81,7 +81,7 @@ export default function RouteLink({
         onNavigate(to);
         // `navigate` ya escribió la dirección nueva: se le suma el ancla, que la pestaña de destino busca al dibujarse.
         if (hash || search)
-          window.history.replaceState(window.history.state, "", `${window.location.pathname}${search ?? window.location.search}${hash ? `#${hash}` : window.location.hash}`);
+          window.history.replaceState(window.history.state, "", `${window.location.pathname}${search ?? window.location.search}${hash ? `#${hash}` : ""}`);
       }}
       {...rest}
       onPointerEnter={(e) => {

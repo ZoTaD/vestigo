@@ -52,7 +52,7 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
   const animals = ficha.sources.filter((s): s is Extract<Source, { k: "animal" }> => s.k === "animal");
   const rewards = ficha.sources.filter((s): s is Extract<Source, { k: "museum" }> => s.k === "museum");
   const where = ficha.sources.filter((s) => s.k !== "animal" && s.k !== "museum");
-  const { donate, builds, orders, prizes } = ficha.uses;
+  const { donate = false, builds = [], orders = [], prizes = [] } = ficha.uses ?? {};
   const hasMuseum = donate || rewards.length > 0 || prizes.length > 0;
   // Los cruces van en una sola caja, como en la maqueta A: sin ninguno, la ficha es la cabecera con los precios.
   const hasCross =

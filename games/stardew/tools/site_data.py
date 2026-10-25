@@ -297,7 +297,7 @@ def cruces(tienda_qi: list[str]) -> tuple[dict[str, list[dict]], dict[str, dict]
         cur, precio = (GEMA_QI, w["gems"]) if w.get("gems") else (NUEZ, w["walnuts"])
         fuente(w["id"], {"k": "shop", "shop": list(tienda_qi), "price": precio, "cur": cur})
     for q in isla["qiOrders"]:
-        if q["gems"]:
+        if q["gems"] and q.get("inGame", True):  # los que el juego no ofrece (`inGame: false`) no dan gemas
             fuente(GEMA_QI, con_n({"k": "order", "key": q["slug"], "name": list(q["name"]), "tab": "island"}, q["gems"]))
 
     for o in misiones["orders"]:
@@ -456,8 +456,10 @@ def build(write: bool = False) -> dict:
             "tastes": tastes, "bundles": paquetes.get(i, []),
             "recipes": {"make": make, "use": use},
             "machines": {"in": entradas, "madeIn": hecho},
-            "sources": fuentes_i, "uses": usos_i, "refs": dict(sorted(refs.items())),
+            "sources": fuentes_i, "refs": dict(sorted(refs.items())),
         }
+        if usos_i != _usos_vacios():  # sin museo, edificios ni pedidos no va: 3 de cada 4 fichas
+            fichas[slug[i]]["uses"] = usos_i
         filas.append([i, slug[i], cat[i], precio, *tam[i], has])
 
     # --- aldeanos para el sitio ---------------------------------------------------------------------------------

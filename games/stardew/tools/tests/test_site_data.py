@@ -158,12 +158,15 @@ class TestSiteData(unittest.TestCase):
         madera = self.ficha("388")
         self.assertIn(["coop", ["Coop", "Corral"], 300], madera["uses"]["builds"])
         self.assertIn(["shipping-bin", ["Shipping Bin", "Cubo de entrega"], 150], madera["uses"]["builds"])
-        self.assertEqual(self.ficha("176")["uses"]["builds"], [])
+        # Sin museo, edificios ni pedidos, la ficha no lleva `uses`.
+        self.assertNotIn("uses", self.ficha("176"))
 
     def test_se_dona_al_museo(self):
         self.assertTrue(self.ficha("96")["uses"]["donate"])  # Rollo enano I
         self.assertTrue(self.ficha("60")["uses"]["donate"])  # Esmeralda
         self.assertFalse(self.ficha("388")["uses"]["donate"])
+        self.assertTrue(all(f.get("uses") != {"donate": False, "builds": [], "orders": [], "prizes": []}
+                            for f in self.out["fichas"].values()))
 
     def test_premio_del_museo(self):
         guia = [s for s in self.ficha("326")["sources"] if s["k"] == "museum"]
@@ -206,6 +209,10 @@ class TestSiteData(unittest.TestCase):
         gemas = [s for s in self.ficha("858")["sources"] if s["k"] == "order"]
         self.assertTrue(gemas)
         self.assertTrue(all(s["tab"] == "island" and s["n"] > 0 for s in gemas))
+        # Los pedidos de Qi que el juego no ofrece (`inGame: false`) no cuentan.
+        claves = [s["key"] for s in gemas]
+        self.assertNotIn("qichallenge", claves)
+        self.assertNotIn("qichallenge11", claves)
 
     def test_walnut_room_con_su_moneda(self):
         flauta = [s for s in self.ficha("911")["sources"] if s["k"] == "shop" and s.get("cur")]
