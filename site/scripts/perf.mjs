@@ -144,6 +144,10 @@ export const PAGES = [
   "/en/stardew-valley/quests",
   "/es/stardew-valley/misiones",
   "/es/stardew-valley/misiones?v=story",
+  // El Predictor: sin entrada (el formulario) y con una semilla en la dirección (todas las cajas calculadas).
+  "/en/stardew-valley/predictor",
+  "/es/stardew-valley/predictor",
+  "/en/stardew-valley/predictor?seed=452435081&day=p2-10-2",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

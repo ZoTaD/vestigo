@@ -273,3 +273,31 @@ etapa 4 y la portada, que suma sus cuatro tarjetas (las demás quedaron como est
 
 Todas dentro del presupuesto, sin errores. La más pesada en pedidos es la vista Premios del Museo (160 de 250, por los
 dibujos de los muebles); en nodos, las Misiones de la historia (1.171 de 3.000).
+
+## Predictor (2026-10-25)
+
+Pestaña `predict` (`/en/stardew-valley/predictor`, `/es/stardew-valley/predictor`), plan en
+`docs/superpowers/plans/2026-10-25-stardew-predictor.md`. El generador del juego está reescrito en TypeScript en
+`site/src/stardew/predict/` y cada parte se prueba contra el código real de la 1.6.15 con un oráculo .NET local
+(`games/stardew/tools/oracle/`, que llama a la DLL del juego y escribe los fixtures de `site/test/fixtures/stardew-predict/`;
+nunca va al sitio).
+
+Qué predice: las próximas 20 aperturas de cada geoda y caja en el yunque de Clint, el clima de mañana y el del resto de la
+estación (si llueve o no es exacto; tormenta/lluvia y viento/sol dependen de los pasos y se muestran las dos), la suerte de
+hoy (de la partida), los pisos infestados, de babas, de cantera y de hongos de las Minas 1-119 de la semana, el carro
+ambulante de las próximas cuatro visitas y los eventos de las próximas noches. Qué no: la suerte de mañana (sale de un azar
+sembrado con los pasos del día), la Caverna Calavera (el mapa sale de un `Random` sin semilla) y lo que cambia el correo de
+mañana; la pantalla lo dice.
+
+Mediciones (mismo método que la etapa 3; "antes" = `main` 00e37738 en un worktree temporal con su `npm ci`):
+
+| | main 00e37738 | predictor |
+|---|---|---|
+| Páginas prerenderizadas | 39.026 | 39.028 (+2) |
+| `npm run build` entero | 138,2 s / 138,4 s | 143,5 s / 149,6 s |
+| Pico de RAM (suma de procesos) | 2,91 GB / 2,88 GB | 2,67 GB / 2,67 GB |
+| `check-links` | 0 sin destino | 0 sin destino |
+
+`npm run perf -- --only stardew --budget` contra `vite preview`: todas dentro del presupuesto. Predictor vacío: 32 pedidos,
+4 imágenes, 177 nodos; con semilla (`?seed=452435081&day=p2-10-2`): 80 pedidos, 49 imágenes, 818 nodos. Con una partida
+cargada (Playwright subiendo el archivo al Lector y abriendo la pestaña): unos 910 nodos, sin desborde a 375 px.

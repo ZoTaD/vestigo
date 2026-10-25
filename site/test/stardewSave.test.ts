@@ -333,6 +333,37 @@ describe("lo que se guarda en el navegador", () => {
     expect(readStoredSave()).toBeNull();
   });
 
+  it("predict es opcional: sin él la partida vale; con una forma rota no", () => {
+    const store = fakeStorage();
+    const s = leer();
+    const con = (quitar: (x: any) => void) => {
+      const copia = JSON.parse(JSON.stringify(s));
+      quitar(copia);
+      store["sdv-save-v1"] = JSON.stringify({ v: 1, save: copia });
+      return readStoredSave();
+    };
+    expect(con((x) => delete x.predict)).not.toBeNull();
+    expect(con(() => undefined)?.predict?.farmers.length).toBe(s.players.length);
+    expect(con((x) => (x.predict = "roto"))).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].uid)).toBeNull();
+    expect(con((x) => (x.predict.farmers = null))).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].spouse14)).toBeNull();
+    expect(con((x) => (x.predict.farmers[0].geodesCracked = "3"))).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].mastery0)).toBeNull();
+    expect(con((x) => delete x.predict.multiplayer)).toBeNull();
+    expect(con((x) => delete x.predict.visitsUntilY1Guarantee)).toBeNull();
+    expect(con((x) => (x.predict.goldenCoconutCracked = "no"))).toBeNull();
+    // Lo que suma la pestaña Predictor (tarea 7).
+    expect(con((x) => delete x.predict.weddings)).toBeNull();
+    expect(con((x) => (x.predict.weddings = [{ season: 1, day: "9", year: 2, roommate: false }]))).toBeNull();
+    expect(con((x) => (x.predict.weddings = [{ season: 1, day: 9, year: 2 }]))).toBeNull();
+    expect(con((x) => (x.predict.weddings = [{ season: 1, day: 9, year: 2, roommate: true }]))).not.toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].mailReceived)).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].mailTomorrow)).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].recipes)).toBeNull();
+    expect(con((x) => (x.predict.farmers[0].specialCharm = 1))).toBeNull();
+  });
+
   it("si la partida igual rompe al dibujarse, el límite de errores la olvida y vuelve a la caja vacía", () => {
     const store = fakeStorage();
     storeSave(leer());

@@ -18,9 +18,12 @@ import type { IslandView } from "./stardew/island/state";
 import type { MuseumFilter, MuseumView, WhereKind } from "./stardew/museum/state";
 import type { QuestView } from "./stardew/quests/state";
 import type { Group, SourceFilter } from "./stardew/data";
+import type { CartKind } from "./stardew/predict/cart";
+import type { NightEvent } from "./stardew/predict/night";
+import type { DayWeather } from "./stardew/predict/weather";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "museum", "recipes", "villagers", "quests", "calendar", "bundles", "island", "save"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "museum", "recipes", "villagers", "quests", "calendar", "bundles", "island", "save", "predict"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -620,6 +623,8 @@ export interface SaveCopy {
   host: string;
   other: string;
   forget: string;
+  /** El enlace al Predictor con la misma partida. */
+  toPredict: string;
   today: {
     title: string;
     empty: string;
@@ -678,6 +683,98 @@ export interface SaveCopy {
   };
 }
 
+/** Los textos del Predictor (tarea 7): la entrada (partida o semilla) y una caja por predicción. */
+export interface PredictCopy {
+  h1: string;
+  lede: string;
+  /** Lo que predice, en la pantalla sin entrada (es lo que indexa Google). */
+  what: string[];
+  fromSave: string;
+  otherSeed: string;
+  useSave: string;
+  oldSave: string;
+  openReader: string;
+  formTitle: string;
+  seed: string;
+  seedWhere: string;
+  seedErrors: Record<"empty" | "bad", string>;
+  todayIs: string;
+  season: string;
+  day: string;
+  year: string;
+  /** `AGO_LegacyRandomization` de `Strings/UI`. */
+  legacy: string;
+  legacyHint: string;
+  go: string;
+  manualLimits: string;
+  inYourSave: string;
+  today: {
+    title: string;
+    tomorrow: string;
+    luck: string;
+    luckTv: string;
+    luckTwo: string;
+    luckNone: string;
+    luckTomorrow: string;
+    season: string;
+    seasonEnds: string;
+    weekdays: [string, string, string, string, string, string, string];
+    todayCell: string;
+    weather: Record<DayWeather["kind"], string>;
+    or: (a: string, b: string) => string;
+    note: string;
+  };
+  geodes: {
+    title: string;
+    kind: string;
+    noSave: string;
+    noId: string;
+    note: string;
+    oneOf: string;
+  };
+  mines: {
+    title: string;
+    garlic: string;
+    garlicNote: string;
+    kinds: Record<"infested" | "slime" | "quarry" | "mushroom", string>;
+    none: string;
+    skull: string;
+    lowest: (n: number) => string;
+    quarryOff: string;
+    lowest120: string;
+    quarryOn: string;
+    dangerous: string;
+  };
+  cart: {
+    title: string;
+    where: Record<CartKind, string>;
+    desertMaybe: string;
+    stock: (n: number) => string;
+    unlimited: string;
+    recipe: string;
+    ring: string;
+    ringManual: string;
+    y1: string;
+    manual: string;
+  };
+  nights: {
+    title: string;
+    none: string;
+    night: (date: string) => string;
+    events: Record<NightEvent, string>;
+    rose: string;
+    roseOpts: Record<"yes" | "no" | "unknown", string>;
+    roseNote: string;
+    ifRose: string;
+    otherwise: string;
+    nothing: string;
+    rest: string;
+    outside: string;
+    happened: Record<"sawQiPlane" | "gotCapsule" | "ccPantry" | "raccoonTreeFallen", string>;
+    manual: string;
+  };
+}
+
 export interface StardewCopy {
   tabs: Record<StardewSection, string>;
   /** El `<head>` de la portada y de cada pestaña: lo que se busca primero. */
@@ -723,6 +820,7 @@ export interface StardewCopy {
   island: IslandCopy;
   quests: QuestsCopy;
   save: SaveCopy;
+  predict: PredictCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
   tastes: Record<Taste, string>;
@@ -730,8 +828,218 @@ export interface StardewCopy {
   seasons: [string, string, string, string];
 }
 
+/** El Predictor en inglés. Los nombres del juego (objetos, estaciones) salen de los datos; acá, la interfaz. */
+const PREDICT_EN: PredictCopy = {
+  h1: "Stardew Valley predictor",
+  lede: "What your next geodes will give, tomorrow's weather and today's luck, which Mines floors are infested this week, what the traveling cart sells and which nights bring an event.",
+  what: [
+    "The next 20 geodes, frozen and magma geodes, omni geodes, artifact troves, golden coconuts and mystery boxes",
+    "Tomorrow's weather, today's luck and the rain for the rest of the season",
+    "Monster, slime, quarry and mushroom floors of the Mines for the next 7 days",
+    "The traveling cart's next 4 visits: what it sells, the price and how many",
+    "The nights with the crop fairy, the witch, a meteorite and more, for the next two weeks",
+  ],
+  fromSave: "From your save",
+  otherSeed: "Type a seed instead",
+  useSave: "Use my save",
+  oldSave: "Your save was read by an earlier version of the Save reader. Open it there again to see your geodes, your luck and everything that depends on your farm.",
+  openReader: "Open your save in the Save reader",
+  formTitle: "Predict from a seed",
+  seed: "Seed",
+  seedWhere: "It's the number in your save folder's name: for Farm_123456789 it's 123456789.",
+  seedErrors: { empty: "Type your seed.", bad: "The seed is a number of up to 10 digits." },
+  todayIs: "Today in your game",
+  season: "Season",
+  day: "Day",
+  year: "Year",
+  legacy: "Use Legacy Randomization",
+  legacyHint: "Only if you turned it on in the advanced options when you made the farm.",
+  go: "Predict",
+  manualLimits: "With only the seed there are no geodes or luck (they need your farmer), and the Mines, the cart and the nights use what you pick below. With your save you get everything that can be known.",
+  inYourSave: "In your save",
+  today: {
+    title: "Today and tomorrow",
+    tomorrow: "Tomorrow",
+    luck: "Today's luck",
+    luckTv: "The fortune teller on TV says:",
+    luckTwo: "She says one of these two.",
+    luckNone: "Today's luck is in your save: open it in the Save reader to see it. Tomorrow's can't be predicted: it depends on everything you do today.",
+    luckTomorrow: "Tomorrow's luck can't be predicted: it depends on everything you do today.",
+    season: "The rest of the season",
+    seasonEnds: "Tomorrow a new season starts.",
+    weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    todayCell: "Today",
+    weather: { sun: "Sun", rain: "Rain", storm: "Storm", snow: "Snow", greenRain: "Green rain", festival: "Festival", wind: "Wind", wedding: "Wedding" },
+    or: (a, b) => `${a} or ${b.toLowerCase()}`,
+    note: "Whether it rains is exact. Storm or plain rain, and wind or sun, are decided that same morning by chance that depends on your steps: those days show both. A Rain Totem used today changes tomorrow.",
+  },
+  geodes: {
+    title: "Geodes",
+    kind: "What you open",
+    noSave: "Geodes depend on your farmer, and that's in your save: open it in the Save reader to see them.",
+    noId: "This save is from before version 1.3 and doesn't have your farmer's id: the game makes up a new one when it loads it. Play a day in 1.6 so it saves, and open it again in the Save reader.",
+    note: "At Clint's anvil, not in the Geode Crusher. The list assumes you only open this kind: any other geode or box you open in between shifts it.",
+    oneOf: "One of these (the game picks at random):",
+  },
+  mines: {
+    title: "Mines",
+    garlic: "I drank Garlic Oil today",
+    garlicNote: "Garlic Oil turns off monster and slime floors for the day you drink it, and that changes which floors are quarry floors. The other days are shown without it.",
+    kinds: { infested: "Monster floors", slime: "Slime floors", quarry: "Quarry floors", mushroom: "Mushroom floors" },
+    none: "Nothing special.",
+    skull: "The Skull Cavern can't be predicted: the game builds each floor with chance that doesn't come from your save.",
+    lowest: (n) => `Your deepest floor is ${n}. If you go deeper today the list can change, and mushroom floors only show up once you've reached floor 120.`,
+    quarryOff: "No quarry floors yet: they show up once the Crafts Room is restored and you've been in the Quarry Mine.",
+    lowest120: "I've reached floor 120",
+    quarryOn: "The Quarry Mine is open",
+    dangerous: "Not for the Dangerous Mines of Mr. Qi's special order.",
+  },
+  cart: {
+    title: "Traveling cart",
+    where: { cart: "Cindersap Forest, until 8pm", nightMarket: "Night Market, on the beach, from 5pm", desertFestival: "Desert Festival, from 10am" },
+    desertMaybe: "Only if the bus to the desert is fixed.",
+    stock: (n) => `${n} in stock`,
+    unlimited: "No limit",
+    recipe: "Recipe",
+    ring: "Only while another farmer is online.",
+    ringManual: "In multiplayer it also sells the Wedding Ring recipe while another farmer is online.",
+    y1: "In year 1, on the day the cart brings the guaranteed Red Cabbage Seeds, the rest of the list changes: open your save to see it exact.",
+    manual: "Without your save it leaves out the portraits (14 hearts) and the Joja and Junimo catalogues.",
+  },
+  nights: {
+    title: "Nights",
+    none: "No night with an event in the next two weeks.",
+    night: (date) => `The night before ${date}`,
+    events: {
+      fairy: "Crop fairy",
+      witch: "Witch",
+      meteorite: "Meteorite",
+      owl: "Stone owl",
+      capsule: "Strange capsule",
+      earthquake: "Earthquake",
+      raccoon: "The raccoons' tree falls",
+      qiPlane: "Mr. Qi's plane",
+    },
+    rose: "Fairy rose on the farm",
+    roseOpts: { yes: "Yes", no: "No", unknown: "Don't know" },
+    roseNote: "A ripe Fairy Rose on the farm makes the crop fairy more likely.",
+    ifRose: "With ripe fairy roses every night:",
+    otherwise: "With none:",
+    nothing: "nothing",
+    rest: "The other nights in the next two weeks bring nothing.",
+    outside: "Left out: changes from mail that arrives tomorrow (Community Center or Joja rooms, the movie theater, Willy's boat), JojaMart collapsing on a rainy night and a Rain Totem used today.",
+    happened: { sawQiPlane: "I saw Mr. Qi's plane", gotCapsule: "The capsule already landed", ccPantry: "The Pantry is restored", raccoonTreeFallen: "The raccoons' tree fell" },
+    manual: "Without your save it uses what you tick above; with nothing ticked, it assumes you haven't seen Mr. Qi's plane, the capsule hasn't landed, the Pantry isn't restored and the raccoons' tree is still standing. It also assumes nobody has the billboard prize ticket and there's no wedding these nights.",
+  },
+};
+
+/** El Predictor en español. */
+const PREDICT_ES: PredictCopy = {
+  h1: "Predictor de Stardew Valley",
+  lede: "Qué te van a dar las próximas geodas, el clima de mañana y la suerte de hoy, qué pisos de las Minas están infestados esta semana, qué vende el carro ambulante y qué noches traen un evento.",
+  what: [
+    "Las próximas 20 geodas, geodas heladas, de magma y omni, cofres de artefactos, cocos dorados y cajas misteriosas",
+    "El clima de mañana, la suerte de hoy y la lluvia del resto de la estación",
+    "Los pisos de monstruos, de babas, de cantera y de hongos de las Minas en los próximos 7 días",
+    "Las próximas 4 visitas del carro ambulante: qué vende, a qué precio y cuántos",
+    "Las noches con el hada de las cosechas, la bruja, un meteorito y más, en las próximas dos semanas",
+  ],
+  fromSave: "De tu partida",
+  otherSeed: "Escribir una semilla",
+  useSave: "Usar mi partida",
+  oldSave: "Tu partida la leyó una versión anterior del Lector. Volvé a abrirla ahí para ver las geodas, la suerte y todo lo que depende de tu granja.",
+  openReader: "Abrí tu partida en el Lector",
+  formTitle: "Predecir con una semilla",
+  seed: "Semilla",
+  seedWhere: "Es el número del nombre de la carpeta de tu partida: en Granja_123456789 es 123456789.",
+  seedErrors: { empty: "Escribí tu semilla.", bad: "La semilla es un número de hasta 10 cifras." },
+  todayIs: "Hoy en tu partida",
+  season: "Estación",
+  day: "Día",
+  year: "Año",
+  legacy: "Usar aleatorización antigua",
+  legacyHint: "Sólo si la prendiste en las opciones avanzadas al crear la granja.",
+  go: "Predecir",
+  manualLimits: "Con la semilla sola no hay geodas ni suerte (hacen falta los datos de tu granjero), y las Minas, el carro y las noches usan lo que elijas abajo. Con tu partida sale todo lo que se puede saber.",
+  inYourSave: "En tu partida",
+  today: {
+    title: "Hoy y mañana",
+    tomorrow: "Mañana",
+    luck: "La suerte de hoy",
+    luckTv: "La adivina de la tele dice:",
+    luckTwo: "Dice una de estas dos.",
+    luckNone: "La suerte de hoy está en tu partida: abrila en el Lector para verla. La de mañana no se puede predecir: depende de todo lo que hagas hoy.",
+    luckTomorrow: "La suerte de mañana no se puede predecir: depende de todo lo que hagas hoy.",
+    season: "Lo que queda de la estación",
+    seasonEnds: "Mañana empieza otra estación.",
+    weekdays: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+    todayCell: "Hoy",
+    weather: { sun: "Sol", rain: "Lluvia", storm: "Tormenta", snow: "Nieve", greenRain: "Lluvia verde", festival: "Festival", wind: "Viento", wedding: "Boda" },
+    or: (a, b) => `${a} o ${b.toLowerCase()}`,
+    note: "Si llueve o no es exacto. Tormenta o lluvia, y viento o sol, se deciden esa misma mañana con un azar que depende de tus pasos: esos días muestran las dos. Un tótem de lluvia usado hoy cambia el clima de mañana.",
+  },
+  geodes: {
+    title: "Geodas",
+    kind: "Qué abrís",
+    noSave: "Las geodas dependen de tu granjero, y eso está en tu partida: abrila en el Lector para verlas.",
+    noId: "Esta partida es anterior a la versión 1.3 y no trae el id de tu granjero: el juego le inventa uno nuevo al cargarla. Jugá un día en la 1.6 para que se guarde y volvé a abrirla en el Lector.",
+    note: "En el yunque de Clint, no en la trituradora de geodas. La lista supone que abrís sólo este tipo: cualquier otra geoda o caja que abras en el medio la corre.",
+    oneOf: "Una de estas (el juego elige al azar):",
+  },
+  mines: {
+    title: "Minas",
+    garlic: "Tomé Aceite de ajo hoy",
+    garlicNote: "El Aceite de ajo apaga los pisos de monstruos y de babas el día que lo tomás, y con eso cambia qué pisos salen de cantera. Los otros días se muestran sin él.",
+    kinds: { infested: "Pisos de monstruos", slime: "Pisos de babas", quarry: "Pisos de cantera", mushroom: "Pisos de hongos" },
+    none: "Nada especial.",
+    skull: "La Caverna Calavera no se puede predecir: el juego arma cada piso con un azar que no sale de tu partida.",
+    lowest: (n) => `Tu piso más hondo es el ${n}. Si hoy bajás más, la lista puede cambiar, y los pisos de hongos aparecen recién cuando llegaste al 120.`,
+    quarryOff: "Todavía sin pisos de cantera: aparecen con la Sala de artesanía restaurada y después de entrar a la mina de la cantera.",
+    lowest120: "Llegué al piso 120",
+    quarryOn: "La mina de la cantera está abierta",
+    dangerous: "No vale para las Minas peligrosas del encargo especial de Qi.",
+  },
+  cart: {
+    title: "Carro ambulante",
+    where: { cart: "Bosque Cindersap, hasta las 20:00", nightMarket: "Mercado nocturno, en la playa, desde las 17:00", desertFestival: "Festival del desierto, desde las 10:00" },
+    desertMaybe: "Sólo si ya arreglaste el autobús al desierto.",
+    stock: (n) => `Hay ${n}`,
+    unlimited: "Sin límite",
+    recipe: "Receta",
+    ring: "Sólo mientras haya otro granjero conectado.",
+    ringManual: "En multijugador también vende la receta del anillo de bodas mientras haya otro granjero conectado.",
+    y1: "En el año 1, el día que el carro trae las Semillas de lombarda garantizadas, el resto de la lista cambia: abrí tu partida para verla exacta.",
+    manual: "Sin tu partida quedan afuera los retratos (14 corazones) y los catálogos de Joja y de los Junimos.",
+  },
+  nights: {
+    title: "Noches",
+    none: "Ninguna noche con evento en las próximas dos semanas.",
+    night: (date) => `La noche antes del ${date}`,
+    events: {
+      fairy: "Hada de las cosechas",
+      witch: "Bruja",
+      meteorite: "Meteorito",
+      owl: "Búho de piedra",
+      capsule: "Cápsula extraña",
+      earthquake: "Terremoto",
+      raccoon: "Cae el árbol de los mapaches",
+      qiPlane: "El avión del Sr. Qi",
+    },
+    rose: "Rosa de hadas en la granja",
+    roseOpts: { yes: "Sí", no: "No", unknown: "No sé" },
+    roseNote: "Una rosa de hadas madura en la granja hace más probable al hada de las cosechas.",
+    ifRose: "Con rosas de hadas maduras todas las noches:",
+    otherwise: "Sin ninguna:",
+    nothing: "nada",
+    rest: "Las otras noches de las próximas dos semanas no traen nada.",
+    outside: "Queda afuera: lo que cambia el correo que llega mañana (salas del Centro Comunitario o de Joja, el cine, el barco de Willy), el derrumbe de JojaMart en una noche de lluvia y un tótem de lluvia usado hoy.",
+    happened: { sawQiPlane: "Vi el avión del Sr. Qi", gotCapsule: "Ya cayó la cápsula", ccPantry: "La Despensa está restaurada", raccoonTreeFallen: "Ya cayó el árbol de los mapaches" },
+    manual: "Sin tu partida usa lo que marques arriba; sin nada marcado, supone que no viste el avión del Sr. Qi, que no cayó la cápsula, que la Despensa no está restaurada y que el árbol de los mapaches sigue en pie. También supone que nadie tiene el boleto del premio del cartel y que no hay bodas estas noches.",
+  },
+};
+
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat", save: "Save reader", farm: "Farm", museum: "Museum", quests: "Quests", island: "Ginger Island" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat", save: "Save reader", predict: "Predictor", farm: "Farm", museum: "Museum", quests: "Quests", island: "Ginger Island" },
   seo: {
     home: {
       title: "Stardew Valley Guide: Crop Calculator, Fish, Gifts and Bundles | Vestigo",
@@ -790,6 +1098,10 @@ const EN: StardewCopy = {
       title: "Golden Walnut Locations in Stardew Valley: All 130 | Vestigo",
       description: "Every golden walnut on Stardew Valley 1.6's Ginger Island by area, with a checklist. Plus the parrot upgrades, Qi's Walnut Room and his special orders.",
     },
+    predict: {
+      title: "Stardew Valley Predictor (1.6): Geodes, Weather, Mines & Traveling Cart | Vestigo",
+      description: "What your next Stardew Valley 1.6 geodes and mystery boxes give, tomorrow's weather and luck, infested Mines floors, the traveling cart and night events.",
+    },
   },
   itemSeo: (name, has = 0) => {
     const t = itemTopics(has);
@@ -839,6 +1151,7 @@ const EN: StardewCopy = {
       museum: "Every artifact and mineral to donate with where to find it, the rewards and the books.",
       quests: "Story quests and special orders: what each one asks for and what it pays.",
       island: "The 130 golden walnuts, the parrot upgrades and Qi's Walnut Room.",
+      predict: "Your next geodes, tomorrow's weather, infested floors, the traveling cart and night events.",
     },
     featured: "Most looked up",
     featuredHint: "Open an item to see its prices, who loves it and what it turns into.",
@@ -1308,6 +1621,7 @@ const EN: StardewCopy = {
       step: (i, n) => `Step ${i} of ${n}`,
     },
   },
+  predict: PREDICT_EN,
   save: {
     h1: "Save file reader",
     lede: "Open your save file to see how close you are to perfection, what each Community Center bundle still needs, whose birthday is coming up this week and which fish and recipes you're missing.",
@@ -1336,6 +1650,7 @@ const EN: StardewCopy = {
     host: "host",
     other: "Open another save",
     forget: "Forget this save",
+    toPredict: "See what your save predicts",
     today: {
       title: "Today",
       empty: "Nothing special today.",
@@ -1410,7 +1725,7 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate", save: "Lector de partida", farm: "Granja", museum: "Museo", quests: "Misiones", island: "Isla Jengibre" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate", save: "Lector de partida", predict: "Predictor", farm: "Granja", museum: "Museo", quests: "Misiones", island: "Isla Jengibre" },
   seo: {
     home: {
       title: "Guía de Stardew Valley: cultivos, peces, regalos y paquetes | Vestigo",
@@ -1469,6 +1784,10 @@ const ES: StardewCopy = {
       title: "Nueces de oro de Stardew Valley: dónde están las 130 | Vestigo",
       description: "Cada nuez de oro de la Isla Jengibre de Stardew Valley 1.6 por zona, para tildar. Y las mejoras del loro, la Habitación de las Nueces de Qi y sus pedidos.",
     },
+    predict: {
+      title: "Predictor de Stardew Valley (1.6): geodas, clima, minas y carro ambulante | Vestigo",
+      description: "Qué dan tus próximas geodas y cajas en Stardew Valley 1.6, el clima y la suerte, los pisos infestados de las Minas, el carro ambulante y las noches con evento.",
+    },
   },
   itemSeo: (name, has = 0) => {
     const t = itemTopics(has);
@@ -1518,6 +1837,7 @@ const ES: StardewCopy = {
       museum: "Cada artefacto y mineral para donar con dónde sale, los premios y los libros.",
       quests: "Misiones de la historia y pedidos especiales: qué pide cada uno y qué paga.",
       island: "Las 130 nueces de oro, las mejoras del loro y la Habitación de las Nueces de Qi.",
+      predict: "Tus próximas geodas, el clima de mañana, los pisos infestados, el carro y las noches con evento.",
     },
     featured: "Los más buscados",
     featuredHint: "Abrí un objeto para ver sus precios, a quién le encanta y en qué se transforma.",
@@ -1987,6 +2307,7 @@ const ES: StardewCopy = {
       step: (i, n) => `Paso ${i} de ${n}`,
     },
   },
+  predict: PREDICT_ES,
   save: {
     h1: "Lector de partida",
     lede: "Abrí el archivo de tu partida para ver cuánto te falta para la perfección, qué pide todavía cada paquete del Centro Comunitario, quién cumple años esta semana y qué peces y recetas te faltan.",
@@ -2015,6 +2336,7 @@ const ES: StardewCopy = {
     host: "anfitrión",
     other: "Abrir otra partida",
     forget: "Olvidar esta partida",
+    toPredict: "Ver qué predice tu partida",
     today: {
       title: "Hoy",
       empty: "Hoy no hay nada especial.",

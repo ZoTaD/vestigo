@@ -443,8 +443,8 @@ export function jsonLdFor(
     return out;
   }
   // Stardew Valley (2026-10-22): migas hasta la ficha, y la portada, el Centro Comunitario (la lista para tildar), la
-  // calculadora de Cultivos, el buscador de Pesca y el Lector de partida como aplicación web gratuita; y (2026-10-25) el
-  // Museo y la Isla Jengibre, que también son listas para tildar.
+  // calculadora de Cultivos, el buscador de Pesca, el Lector de partida y el Predictor como aplicación web gratuita; y
+  // (2026-10-25) el Museo y la Isla Jengibre, que también son listas para tildar.
   if (route.view === "stardew") {
     const sec = route.sdSection ?? "home";
     const copy = STARDEW_COPY[lang];
@@ -452,7 +452,7 @@ export function jsonLdFor(
     if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "home" || sec === "bundles" || sec === "crops" || sec === "fishing" || sec === "save" || sec === "museum" || sec === "island") {
+    if (sec === "home" || sec === "bundles" || sec === "crops" || sec === "fishing" || sec === "save" || sec === "predict" || sec === "museum" || sec === "island") {
       out.push({
         "@context": "https://schema.org", "@type": "WebApplication", name: sec === "home" ? copy.home.h1 : copy[sec].h1, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,

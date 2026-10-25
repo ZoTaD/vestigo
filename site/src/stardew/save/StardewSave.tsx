@@ -278,6 +278,11 @@ export function SaveView({
             {c.forget}
           </button>
         </div>
+        <p>
+          <RouteLink className="sd-sv-link" to={{ ...route, view: "stardew", sdSection: "predict", detail: undefined }} onNavigate={navigate}>
+            {c.toPredict}
+          </RouteLink>
+        </p>
         <p className="sd-muted">{c.private}</p>
       </Box>
       <TodayBox save={save} player={player} x={x} />

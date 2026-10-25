@@ -6,7 +6,9 @@ cambia con un parche del juego.
 
 Uso: python games/stardew/tools/sprites.py
 """
+import json
 import random
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -229,6 +231,104 @@ def sprites_premios(salida: Path) -> int:
     return len(hechos)
 
 
+# --- Lo que el predictor muestra sin ficha ----------------------------------------------------------------------------
+# Muebles, sombreros, camisas, papeles y armas que pueden salir del carro o de las cajas (las claves no `(O)` de
+# `names` en predict.json). Las máquinas `(BC)` ya tienen su `bc-<n>.png` en `items/`. Cada uno se recorta como lo
+# dibuja el juego en el inventario.
+
+def archivo_predictor(qid: str) -> str:
+    """Nombre del PNG de algo del predictor: `(F)1226` -> `f-1226.png`, `(WP)MoreWalls:11` -> `wp-MoreWalls-11.png`."""
+    tipo, resto = re.match(r"\((\w+)\)(.*)", qid).groups()
+    return f"{tipo.lower()}-{resto.replace(':', '-')}.png"
+
+
+_hojas: dict[str, Image.Image] = {}
+
+
+def _hoja(ruta: str) -> Image.Image:
+    ruta = ruta.replace("\\", "/")
+    if ruta not in _hojas:
+        _hojas[ruta] = Image.open(TEXTURAS / f"{ruta}.png").convert("RGBA")
+    return _hojas[ruta]
+
+
+# `Furniture.getDefaultSourceRectForType`: el tamaño en baldosas por tipo cuando el dato dice -1.
+_TAM_MUEBLE = {0: (1, 2), 1: (2, 2), 2: (3, 2), 3: (2, 2), 4: (2, 2), 5: (5, 3), 6: (2, 2), 17: (1, 2), 7: (1, 3), 8: (1, 2),
+               10: (2, 3), 11: (2, 3), 12: (3, 2), 13: (1, 2), 14: (2, 5), 16: (1, 2)}
+# `Furniture.getTypeNumberFromName` (las camas, 15, empiezan con "bed").
+_TIPO_MUEBLE = {"chair": 0, "bench": 1, "couch": 2, "armchair": 3, "dresser": 4, "long table": 5, "painting": 6, "lamp": 7,
+                "decor": 8, "bookcase": 10, "table": 11, "rug": 12, "window": 13, "fireplace": 14, "torch": 16, "sconce": 17}
+
+
+def _tinte(im: Image.Image, color: tuple[int, int, int]) -> Image.Image:
+    """`Utility.MultiplyColor`: cada canal por el color."""
+    r, g, b, a = im.split()
+    return Image.merge("RGBA", (r.point(lambda v: v * color[0] // 255), g.point(lambda v: v * color[1] // 255),
+                                b.point(lambda v: v * color[2] // 255), a))
+
+
+def dibujo_predictor(qid: str) -> Image.Image:
+    """El dibujo de inventario de `qid` (mueble, sombrero, camisa, papel o arma)."""
+    tipo, id_ = re.match(r"\((\w+)\)(.*)", qid).groups()
+    if tipo == "F":  # `Furniture.GetDefaultSourceRect`
+        f = sdv.raw("Data/Furniture")[id_].split("/")
+        hoja = _hoja(f[9] if len(f) > 9 and f[9] else "TileSheets/furniture")
+        n = int(f[8]) if len(f) > 8 and f[8] else int(id_)
+        if f[2] == "-1":
+            tipo_n = 15 if f[1].lower().startswith("bed") else _TIPO_MUEBLE.get(f[1].lower(), 9)
+            w, h = _TAM_MUEBLE.get(tipo_n, (1, 2))
+        else:
+            w, h = (int(v) for v in f[2].split())
+        x, y = n * 16 % hoja.width, n * 16 // hoja.width * 16
+        return hoja.crop((x, y, x + w * 16, y + h * 16))
+    if tipo == "H":  # `HatDataDefinition`: 20x20, cuatro filas por sombrero; el primer cuadro es el de frente
+        h = sdv.raw("Data/hats")[id_].split("/")
+        hoja = _hoja(h[7] if len(h) > 7 and h[7] else "Characters/Farmer/hats")
+        n = int(h[6]) if len(h) > 6 and h[6] else int(id_)
+        x, y = n * 20 % hoja.width, n * 20 // hoja.width * 80
+        return hoja.crop((x, y, x + 20, y + 20))
+    if tipo == "S":  # `ShirtDataDefinition` + `Clothing.drawInMenu`: la camisa y su capa teñida (mitad derecha)
+        c = sdv.raw("Data/Shirts")[id_]
+        hoja = _hoja(c.get("Texture") or "Characters/Farmer/shirts")
+        mitad = hoja.width // 2
+        n = c["SpriteIndex"]
+        x, y = n * 8 % mitad, n * 8 // mitad * 32
+        base = hoja.crop((x, y, x + 8, y + 8))
+        color = tuple(int(v) for v in (c.get("DefaultColor") or "255 255 255").split())
+        capa = _tinte(hoja.crop((x + mitad, y, x + mitad + 8, y + 8)), color)
+        return Image.alpha_composite(base, capa)
+    if tipo == "WP":  # `Wallpaper`: el recorte de 16x28 de la hoja del juego de papeles
+        juego, n = id_.split(":")
+        extra = next(x for x in sdv.raw("Data/AdditionalWallpaperFlooring") if x["Id"] == juego)
+        hoja, n = _hoja(extra["Texture"]), int(n)
+        x, y = n % 16 * 16, n // 16 * 48 + 8
+        return hoja.crop((x, y, x + 16, y + 28))
+    if tipo == "W":  # las armas: 16x16, 8 por fila
+        w = sdv.raw("Data/Weapons")[id_]
+        hoja, n = _hoja(w.get("Texture") or "TileSheets/weapons"), w["SpriteIndex"]
+        x, y = n * 16 % hoja.width, n * 16 // hoja.width * 16
+        return hoja.crop((x, y, x + 16, y + 16))
+    raise ValueError(f"No sé dibujar {qid}")
+
+
+def ids_predictor() -> list[str]:
+    """Lo que el predictor nombra sin ficha y se dibuja acá (sin las máquinas, que ya tienen `bc-<n>.png`)."""
+    datos = json.loads((ROOT / "games" / "stardew" / "data" / "predict.json").read_text(encoding="utf-8"))
+    return [k for k in datos["names"] if not k.startswith("(BC)")]
+
+
+def sprites_predictor(salida: Path) -> int:
+    """Escribe en `site/public/stardew/predict/` el dibujo de cada id de `ids_predictor`. Devuelve cuántos."""
+    salida.mkdir(parents=True, exist_ok=True)
+    hechos = {archivo_predictor(q): dibujo_predictor(q) for q in ids_predictor()}
+    for viejo in salida.glob("*.png"):
+        if viejo.name not in hechos:
+            viejo.unlink()
+    for nombre, im in hechos.items():
+        im.save(salida / nombre, optimize=True)
+    return len(hechos)
+
+
 def marco() -> Image.Image:
     """El marco de 9 partes, con el interior ya pintado.
 
@@ -438,6 +538,7 @@ def main() -> None:
     print(f"{sprites_combate(SALIDA / 'combat')} sprites de combate")
     print(f"{sprites_granja(SALIDA)} sprites de la granja")
     print(f"{sprites_premios(SALIDA / 'rewards')} premios sin ficha")
+    print(f"{sprites_predictor(SALIDA / 'predict')} sprites del predictor")
 
 
 if __name__ == "__main__":

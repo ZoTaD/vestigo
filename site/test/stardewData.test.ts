@@ -15,6 +15,7 @@ import {
   loadBundles,
   loadItem,
   loadList,
+  loadPredict,
   loadVillagers,
   machineTime,
   peekItem,
@@ -359,5 +360,15 @@ describe("aldeanos", () => {
     const html = inLang("en", createElement(VillagerPage, { villager: krobus, rows, route: { lang: "en", view: "stardew", sdSection: "villagers", detail: "krobus" } as Route, navigate: nav }));
     expect(html).not.toContain("Romanceable");
     expect(html).not.toContain("Other");
+  });
+
+  it("el predictor baja sus datos de una vez: objetos en orden, geodas y carro", async () => {
+    const d = await loadPredict();
+    expect(await loadPredict()).toBe(d);
+    expect(d.objects[0]).toHaveLength(5);
+    expect(d.furniture.length).toBeGreaterThan(600);
+    expect(d.geodes["749"].drops.find((p) => p.id === "PrismaticShard")?.chance).toBe(0.008);
+    expect(d.traveler[0].id).toBe("RandomObjects");
+    expect(d.names["(F)0"]).toEqual(["Oak Chair", "Silla de roble"]);
   });
 });
