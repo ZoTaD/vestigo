@@ -15,7 +15,9 @@ GUSTOS = ("love", "like", "dislike", "hate", "neutral")  # campos 1, 3, 5, 7 y 9
 ORDEN_GUSTO = ("love", "hate", "like", "dislike", "neutral")
 # Objetos de Data/Objects que no cuentan.
 TIPOS_FUERA = {"Litter", "interactive"}
-IDS_FUERA = {"449", "590", "SeedSpot"}
+# Slime Crate (925), Camping Stove (927) y Hedge (929): su casilla de springobjects está vacía y ninguna parte del
+# juego (código, tiendas, recetas, pedidos) los crea. Restos sin dibujo, no objetos que se consigan.
+IDS_FUERA = {"449", "590", "SeedSpot", "925", "927", "929"}
 
 
 def _sin_prefijo(item_id: str) -> str:

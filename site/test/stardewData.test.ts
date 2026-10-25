@@ -76,10 +76,10 @@ describe("datos de Stardew Valley", () => {
     expect(v.find((x) => x.key === "Penny")).toMatchObject({ slug: "penny" });
   });
 
-  it("la lista trae los 888 objetos con su nombre en el idioma pedido", async () => {
+  it("la lista trae los 885 objetos con su nombre en el idioma pedido", async () => {
     const en = await loadList("en");
     const es = await loadList("es");
-    expect(en).toHaveLength(888);
+    expect(en).toHaveLength(885);
     expect(en.find((r) => r.slug === "melon")).toMatchObject({ id: "254", name: "Melon", cat: -79, price: 250 });
     expect(es.find((r) => r.slug === "melon")!.name).toBe("Melón");
     // Los objetos con id de texto también.
@@ -194,7 +194,7 @@ describe("la lista de objetos", () => {
     const html = inLang("en", createElement(ItemList, { rows, route: { lang: "en", view: "stardew", sdSection: "items" } as Route, navigate: nav, missing: false }));
     expect(html).toContain('href="/en/stardew-valley/items/melon"');
     expect(html).toContain(">Melon<");
-    expect(html).toContain("888 items");
+    expect(html).toContain("885 items");
     // Los casilleros de más allá de la primera tanda van sin imagen en el prerender.
     expect((html.match(/<img/g) ?? []).length).toBeLessThanOrEqual(120);
   });
