@@ -22,28 +22,32 @@
 .sd-mu-coll .sd-filters { margin: 10px 0 12px; }
 
 /* --- La grilla de piezas -------------------------------------------------------------------------------------- */
-.sd-mu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 236px), 1fr)); align-items: start; gap: 8px; }
-.sd-mu-piece { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 4px 8px; padding: 4px 8px 4px 4px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-mu-grid { position: relative; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 236px), 1fr)); align-items: start; gap: 8px; }
+.sd-mu-piece { position: relative; display: grid; gap: 2px; padding: 4px 8px 6px 4px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
 .sd-mu-piece.is-open { z-index: 2; }
-/* Donado: el papel más claro y el sprite apagado debajo de la palomita. */
+/* Donado: un tinte verde claro, el dibujo apagado debajo de la palomita y la casilla de la esquina llena. */
 .sd-mu-piece.is-on { background: #e8efc9; }
 .sd-mu-piece.is-on .sd-sprite { opacity: 0.45; }
-.sd-mu-tick { display: block; padding: 0; background: none; border: 0; border-radius: 6px; cursor: pointer; }
+/* El dibujo y el nombre: un solo botón que tilda (como `.sd-tickable` del Centro Comunitario). */
+.sd-mu-tick { position: relative; display: flex; align-items: center; gap: 8px; width: 100%; padding: 0 26px 0 0; font: inherit; color: inherit; text-align: left; background: none; border: 0; border-radius: 6px; cursor: pointer; }
 .sd-mu-tick .sd-slot { position: relative; }
 .sd-mu-tick:hover .sd-slot { filter: brightness(1.1); }
-.sd-mu-pinfo { display: grid; justify-items: start; gap: 2px; min-width: 0; }
-.sd-mu-pname { font: 800 15px/1.2 var(--sd-text); color: var(--sd-ink); hyphens: manual; }
-a.sd-mu-pname:hover { text-decoration: underline; text-underline-offset: 3px; }
-.sd-mu-kinds { display: inline-flex; align-items: baseline; gap: 6px; max-width: 100%; padding: 2px 0; font: 700 13px/1.3 var(--sd-text); color: var(--sd-dim); text-align: left; background: none; border: 0; cursor: pointer; }
+.sd-mu-tick:hover .sd-mu-pname { text-decoration: underline; text-underline-offset: 3px; }
+.sd-mu-pname { min-width: 0; font: 800 15px/1.2 var(--sd-text); color: var(--sd-ink); hyphens: manual; }
+/* La casilla: vacía (un tinte más oscuro que el papel) sin donar, verde con palomita donada. Sin filo. */
+.sd-mu-box { position: absolute; top: 4px; right: 0; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 4px; background: #ead2a2; font: 900 14px/1 var(--sd-text); color: #2f6b1a; }
+.sd-mu-piece.is-on .sd-mu-box { background: #bcd98d; }
+.sd-mu-kinds { display: flex; align-items: baseline; gap: 6px; max-width: 100%; margin-left: 72px; padding: 0; font: 700 13px/1.3 var(--sd-text); color: var(--sd-dim); text-align: left; background: none; border: 0; cursor: pointer; }
 /* Se abre al tocarla: subrayado de puntos, como un enlace que despliega. */
-.sd-mu-kinds span:first-child { text-decoration: underline dotted; text-underline-offset: 3px; }
-.sd-mu-kinds:hover span:first-child { text-decoration-style: solid; }
+.sd-mu-kfull, .sd-mu-kshort { text-decoration: underline dotted; text-underline-offset: 3px; }
+.sd-mu-kinds:hover .sd-mu-kfull, .sd-mu-kinds:hover .sd-mu-kshort { text-decoration-style: solid; }
+.sd-mu-kshort { display: none; }
 .sd-mu-caret { flex: none; font-size: 12px; }
 /*
  * El detalle, abierto, cuelga debajo de la tarjeta sobre las de abajo (en la grilla, si la tarjeta creciera, crecería
- * toda su fila y dejaría un hueco al lado). En el teléfono, con una sola columna, va adentro de la tarjeta.
+ * toda su fila y dejaría un hueco al lado).
  */
-.sd-mu-where { position: absolute; top: calc(100% - 2px); left: 0; right: 0; display: grid; gap: 4px; padding: 8px 12px 10px; border-radius: 0 0 6px 6px; background: #f6e4bd; box-shadow: 0 8px 16px rgba(59, 31, 18, 0.3); font: 600 14px/1.35 var(--sd-text); }
+.sd-mu-where { position: absolute; top: calc(100% - 2px); left: 0; right: 0; z-index: 3; display: grid; gap: 4px; padding: 8px 12px 10px; border-radius: 0 0 6px 6px; background: #f6e4bd; box-shadow: 0 8px 16px rgba(59, 31, 18, 0.3); font: 600 14px/1.35 var(--sd-text); text-align: left; }
 .sd-mu-where small { font: 800 12px/1.2 var(--sd-text); color: var(--sd-dim); }
 
 /* --- Premios ---------------------------------------------------------------------------------------------------- */
@@ -74,16 +78,31 @@ a.sd-mu-pname:hover { text-decoration: underline; text-underline-offset: 3px; }
 .sd-mu-bwhere { display: grid; gap: 2px; font: 600 13px/1.35 var(--sd-text); color: var(--sd-dim); }
 .sd-mu-price { display: grid; justify-items: end; gap: 2px; padding-top: 6px; font-size: 17px; }
 .sd-mu-price small { font: 800 12px/1 var(--sd-text); color: var(--sd-dim); }
+.sd-mu-price .sd-mu-pnote { max-width: 150px; font: 700 12px/1.3 var(--sd-text); text-align: right; }
 .sd-mu-lost { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 6px; }
 .sd-mu-lostref { display: inline-flex; align-items: center; gap: 8px; font: 800 16px/1.2 var(--sd-text); color: var(--sd-ink); }
 .sd-mu-lostref:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .sd-mu-lost p { flex: 1 1 280px; font: 600 15px/1.4 var(--sd-text); }
 
 @media (max-width: 520px) {
-  .sd-mu-where { position: static; grid-column: 1 / -1; margin: 2px 0 4px; border-radius: 4px; box-shadow: none; }
+  /*
+   * La colección en dos columnas: el dibujo arriba y el nombre abajo, centrados, y "Dónde sale" en vez de la lista de
+   * fuentes. La tarjeta no se posiciona: el detalle abierto se mide contra la grilla y ocupa su ancho entero, justo
+   * debajo de la tarjeta (su lugar en el flujo, `top: auto`).
+   */
+  .sd-mu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .sd-mu-piece { position: static; display: block; padding: 6px 4px; text-align: center; }
+  .sd-mu-tick { position: relative; flex-direction: column; gap: 4px; padding: 0 2px; text-align: center; }
+  .sd-mu-pname { font-size: 14px; }
+  .sd-mu-box { top: 0; right: 0; }
+  .sd-mu-kinds { justify-content: center; margin: 4px auto 0; }
+  .sd-mu-kfull { display: none; }
+  .sd-mu-kshort { display: inline; }
+  .sd-mu-where { top: auto; margin-top: 6px; border-radius: 6px; }
   /* En el teléfono la cifra de un premio y el precio de un libro bajan debajo del texto. */
   .sd-mu-reward { grid-template-columns: auto minmax(0, 1fr); }
   .sd-mu-state { grid-column: 2; justify-self: start; }
   .sd-mu-book { grid-template-columns: auto minmax(0, 1fr); }
-  .sd-mu-price { grid-column: 2; justify-items: start; grid-auto-flow: column; justify-content: start; align-items: baseline; gap: 8px; padding-top: 0; }
+  .sd-mu-price { grid-column: 2; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding-top: 0; }
+  .sd-mu-price .sd-mu-pnote { max-width: none; text-align: left; }
 }

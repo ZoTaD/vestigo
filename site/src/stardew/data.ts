@@ -127,7 +127,8 @@ export interface Ficha {
     donate: boolean;
     builds: [key: string, name: Pair, n: number][];
     orders: [key: string, name: Pair, tab: OrderTab][];
-    prizes: [reward: string, id: string, n: number, name: Pair][];
+    /** `size`: el tamaño del dibujo de un premio sin ficha (un mueble), para mostrarlo a escala entera. */
+    prizes: [reward: string, id: string, n: number, name: Pair, size?: [w: number, h: number]][];
   };
   refs: Record<string, Ref>;
 }

@@ -59,7 +59,9 @@ export interface Book {
   effect: Pair;
   /** El precio más bajo del Librero; null si no lo vende. */
   price: number | null;
-  /** Dónde se consigue: una frase por tienda o fuente. */
+  /** La condición de esa venta del Librero ("uno de sus libros al azar, desde el año 3"); null si no tiene. */
+  priceNote: Pair | null;
+  /** Dónde se consigue fuera del Librero (que va en `price`): una frase por tienda o fuente. */
   where: Pair[];
 }
 

@@ -20,6 +20,8 @@ import { useLoad } from "../../useLoad";
 import { loadBundles, machineTime, peekBundles, refName, say, type Ficha, type MachineIn, type Pair, type Ref, type Source } from "../data";
 import { roomAnchor } from "../bundles/progress";
 import { Box, Gold, prizeSrc, Slot, Sprite, type Nav } from "../ui";
+import { Pix } from "../mines/pix";
+import { pixelScale } from "../mines/state";
 
 const CATEGORIES = meta.categories as unknown as Record<string, Pair>;
 const GIFT_TASTES: Exclude<Taste, "neutral">[] = ["love", "like", "dislike", "hate"];
@@ -419,15 +421,15 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                     )}
                   </li>
                 ))}
-                {prizes.map(([reward, id, n, prize]) =>
+                {prizes.map(([reward, id, n, prize, size = [16, 16]]) =>
                   ficha.refs[id] ? (
                     <li className="sd-source" key={reward}>
                       <span className="sd-src-k">{c.museum.gives}</span>
                       {item(id, prize, n > 1 && <small>× {n}</small>)}
                     </li>
                   ) : (
-                    // Un mueble o un sombrero sin ficha: su dibujo (a 1×, en el casillero de tamaño fijo) y su nombre,
-                    // enlazados a la fila del premio en el Museo.
+                    // Un mueble o un sombrero sin ficha: su dibujo a escala entera (lo más grande que entre en 64 px, en
+                    // una caja fija como en el Museo) y su nombre, enlazados a la fila del premio en el Museo.
                     <li key={reward}>
                       {tabRow(
                         "museum",
@@ -435,9 +437,9 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                         <>
                           <span className="sd-src-k">{c.museum.gives}</span>
                           <span className="sd-ref">
-                            <Slot>
-                              <img className="sd-prize-pix" src={prizeSrc(id)} alt="" loading="lazy" decoding="async" />
-                            </Slot>
+                            <span className="sd-prize-box">
+                              <Pix src={prizeSrc(id)} w={size[0]} h={size[1]} k={pixelScale(size[0], size[1], 64, 64)} />
+                            </span>
                             <span>
                               <b>{say(prize, lang)}</b>
                               {n > 1 && <small>× {n}</small>}

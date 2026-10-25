@@ -390,6 +390,9 @@ def books() -> list[dict]:
         desc = poderes.get(k, {}).get("Description") or o["Description"]
         frases: list[list[str]] = []
         precios = []
+        # La condición de la fila del Librero cuando tiene precio (la pantalla la muestra junto a la cifra, no como una
+        # fuente más): "uno de sus libros al azar, desde el año 3". None si no tiene condición.
+        nota: list[str] | None = None
         # Por tienda, la fila más barata (el Librero ofrece los de habilidad a 5.000, 8.000 y 10.000 según el día).
         vistas = set()
         for t, precio, cond, pide, cuantos, al_azar in sorted(ventas.get(k, []), key=lambda v: (v[0] != "Bookseller", v[1] or 0)):
@@ -397,8 +400,6 @@ def books() -> list[dict]:
                 continue
             vistas.add(t)
             nombre = _nombre_tienda(t)
-            if t == "Bookseller" and precio:
-                precios.append(precio)
             if precio:
                 paga = _plata(precio)
             else:
@@ -412,6 +413,10 @@ def books() -> list[dict]:
             if cond:
                 notas[0].append(cond[0])
                 notas[1].append(cond[1])
+            if t == "Bookseller" and precio:
+                precios.append(precio)
+                nota = [", ".join(notas[0]), ", ".join(notas[1])] if notas[0] else None
+                continue
             if notas[0]:
                 frase = [f"{frase[0]} ({', '.join(notas[0])})", f"{frase[1]} ({', '.join(notas[1])})"]
             frases.append([frase[0] + ".", frase[1] + "."])
@@ -421,11 +426,12 @@ def books() -> list[dict]:
             geoda = _obj(g)
             frases.append([f"Sometimes inside an {geoda[0]}." if geoda[0][0] in "AEIOU" else f"Sometimes inside a {geoda[0]}.",
                            f"A veces dentro de {'una' if geoda[1].lower().startswith('geoda') else 'un'} {geoda[1].lower()}."])
-        if not frases:
+        if not frases and not precios:
             raise ValueError(f"libro sin fuente: {k}")
         out.append({
             "id": k, "slug": slugs[k][0] if k in slugs else None, "name": _obj(k), "effect": _tok(desc),
             "price": min(precios) if precios else None,
+            "priceNote": nota,
             "where": frases,
         })
     return out

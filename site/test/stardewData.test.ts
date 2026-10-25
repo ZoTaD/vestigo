@@ -216,7 +216,8 @@ describe("la ficha de un objeto", () => {
     expect(en).toContain('href="/en/stardew-valley/museum#chicken-statue"');
     // El premio es un mueble, (F)1305: con su dibujo y su nombre, enlazado a la fila del premio en el Museo.
     expect(en).toContain('href="/en/stardew-valley/museum?v=rewards#chicken"');
-    expect(en).toMatch(/<img[^>]*src="\/stardew\/rewards\/f-1305.png"[^>]*><\/span><span><b>Chicken Statue<\/b>/);
+    // A escala entera con tamaño fijo: 16×32 a 2× en la caja de 64 px.
+    expect(en).toMatch(/<img[^>]*src="\/stardew\/rewards\/f-1305.png"[^>]*width="32" height="64"[^>]*><\/span><span><b>Chicken Statue<\/b>/);
     expect(en).not.toContain("(F)1305");
     expect(en).not.toContain("F)1305.png");
     const es = await page("es", "chicken-statue");

@@ -76,13 +76,31 @@ function looksLikeSave(x: unknown): x is Save {
   );
 }
 
+/**
+ * Los campos que `Save` sumó después de que el Lector empezara a guardar partidas, con lo que valen en una guardada
+ * antes: así una partida vieja se sigue leyendo sin pedir que se vuelva a abrir. El Museo (`museum`) es el primero; un
+ * campo nuevo (las nueces de la Isla) suma su línea acá en vez de subir `v`.
+ */
+const LATER_FIELDS: { [K in keyof Save]?: () => Save[K] } = {
+  museum: () => [],
+};
+
+/** Completa lo que falta de `LATER_FIELDS` (sólo si falta: si está y está mal, `looksLikeSave` la descarta). */
+function withLaterFields(x: unknown): unknown {
+  if (!isObj(x)) return x;
+  const out: Record<string, unknown> = { ...x };
+  for (const [k, make] of Object.entries(LATER_FIELDS)) if (!(k in out)) out[k] = make!();
+  return out;
+}
+
 /** La partida guardada, o null si no hay, no se puede leer o no es lo que se escribió. */
 export function readStoredSave(): Save | null {
   try {
     const raw = globalThis.localStorage?.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<Stored>;
-    return parsed?.v === 1 && looksLikeSave(parsed.save) ? parsed.save : null;
+    const save = withLaterFields(parsed?.save);
+    return parsed?.v === 1 && looksLikeSave(save) ? save : null;
   } catch {
     return null;
   }

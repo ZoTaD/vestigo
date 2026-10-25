@@ -186,6 +186,22 @@ describe("las vistas dibujadas", () => {
     expect(html).toContain("0 / 95");
   });
 
+  it("el dibujo y el nombre son un solo botón que tilda: tocar el nombre no se va de la página", () => {
+    const esmeralda = row(book("collection"), "emerald");
+    // El botón que tilda lleva adentro el dibujo y el nombre, y se nombra con el nombre de la pieza.
+    const boton = /<button[^>]*class="sd-mu-tick"[^>]*>([\s\S]*?)<\/button>/.exec(esmeralda);
+    expect(boton).not.toBeNull();
+    expect(boton![0]).toContain('aria-pressed="false"');
+    expect(boton![0]).toContain('aria-label="Emerald"');
+    expect(plain(boton![1])).toContain("Emerald");
+    expect(boton![1]).toContain('src="/stardew/items/60.png"');
+    // Cerrada, la tarjeta no tiene enlaces: el de la ficha está en el detalle.
+    expect(esmeralda).not.toContain("<a ");
+    // Lo no donado también se ve: la casilla vacía, sin palomita.
+    expect(esmeralda).toContain("sd-mu-box");
+    expect(esmeralda).not.toContain("sd-check");
+  });
+
   it("lo tildado se ve con la marca y suma al avance", () => {
     const html = book("collection", "es", ids("60"));
     expect(row(html, "emerald")).toContain('aria-pressed="true"');
@@ -227,6 +243,12 @@ describe("las vistas dibujadas", () => {
     expect(basural).toMatch(/\d/);
     expect(html).toContain('href="/en/stardew-valley/items/the-alleyway-buffet"');
     expect(plain(html)).toContain("21");
+    // El Librero va a la derecha con su precio; "uno de sus libros al azar, desde el año 3" se dice una vez arriba.
+    expect(basural).not.toContain("Bookseller:");
+    expect(basural).not.toContain("random books");
+    expect(plain(html).match(/one of its random books, from Year 3/g)).toHaveLength(1);
+    // La condición que no es la de todos va junto al precio.
+    expect(plain(row(html, "queen-of-sauce-cookbook"))).toContain("100");
     const es = book("books", "es");
     expect(plain(es)).toContain("Librero");
     expect(es).not.toMatch(/\[|\{0\}/);

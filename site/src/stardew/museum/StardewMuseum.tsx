@@ -228,7 +228,7 @@ function Collection({
 }
 
 function PieceCard({ p, on, onTick, open, onOpen, m, ...props }: Props & { p: Piece; on: boolean; onTick: (id: string) => void; open: boolean; onOpen: () => void }) {
-  const { data, route, navigate } = props;
+  const { data } = props;
   const { lang } = useLang();
   const r = data.refs[p.id];
   const name = r ? (lang === "es" && r[3]) || r[2] : p.id;
@@ -236,7 +236,9 @@ function PieceCard({ p, on, onTick, open, onOpen, m, ...props }: Props & { p: Pi
   const whereId = `${p.slug}-where`;
   return (
     <li className={`sd-mu-piece${on ? " is-on" : ""}${open ? " is-open" : ""}`} id={p.slug}>
-      <button type="button" className="sd-mu-tick" aria-pressed={on} aria-label={m.tick(name)} onClick={() => onTick(p.id)}>
+      {/* El dibujo y el nombre son un solo botón que tilda, como en el Centro Comunitario; la casilla de la esquina
+          dice si está donada (tinte y palomita, sin filo). El enlace a la ficha va en el detalle. */}
+      <button type="button" className="sd-mu-tick" aria-pressed={on} aria-label={name} onClick={() => onTick(p.id)}>
         <Slot>
           <Sprite id={p.id} size={48} />
           {on && (
@@ -245,35 +247,42 @@ function PieceCard({ p, on, onTick, open, onOpen, m, ...props }: Props & { p: Pi
             </span>
           )}
         </Slot>
+        <span className="sd-mu-pname">{name}</span>
+        <span className="sd-mu-box" aria-hidden="true">
+          {on ? "✓" : ""}
+        </span>
       </button>
-      <div className="sd-mu-pinfo">
-        {r ? (
-          <RouteLink className="sd-mu-pname" to={{ ...route, view: "stardew", sdSection: "items", detail: r[0] }} onNavigate={navigate} prefetch="press">
-            {name}
-          </RouteLink>
-        ) : (
-          <b className="sd-mu-pname">{name}</b>
-        )}
-        <button type="button" className="sd-mu-kinds" aria-expanded={open} aria-controls={open ? whereId : undefined} title={m.where} onClick={onOpen}>
-          {/* El punto va pegado a la palabra de antes: un renglón nunca empieza con "·". */}
-          <span>{kinds.map((k) => m.kinds[k]).join(" · ")}</span>
-          <span className="sd-mu-caret" aria-hidden="true">
-            {open ? "▴" : "▾"}
-          </span>
-        </button>
-      </div>
+      <button type="button" className="sd-mu-kinds" aria-expanded={open} aria-controls={open ? whereId : undefined} onClick={onOpen}>
+        {/* El punto va pegado a la palabra de antes: un renglón nunca empieza con "·". En el teléfono, sólo "Dónde sale". */}
+        <span className="sd-mu-kfull">{kinds.map((k) => m.kinds[k]).join(NBSP_DOT)}</span>
+        <span className="sd-mu-kshort">{m.where}</span>
+        <span className="sd-mu-caret" aria-hidden="true">
+          {open ? "▴" : "▾"}
+        </span>
+      </button>
       {open && <WhereList {...props} m={m} p={p} id={whereId} />}
     </li>
   );
 }
+
+/** Separador de la línea de fuentes: espacio duro antes del punto, para que el punto no empiece un renglón. */
+const NBSP_DOT = "\u00a0· ";
 
 /** El detalle de dónde sale una pieza: una línea por fuente. */
 function WhereList({ p, id, m, ...props }: Props & { p: Piece; id: string }) {
   const { data, route, navigate } = props;
   const { lang } = useLang();
   const monsters = p.where.filter((w): w is Extract<typeof w, { k: "monster" }> => w.k === "monster");
+  const r = data.refs[p.id];
   return (
     <ul className="sd-mu-where" id={id} aria-label={m.where}>
+      {r && (
+        <li>
+          <RouteLink className="sd-mu-link" to={{ ...route, view: "stardew", sdSection: "items", detail: r[0] }} onNavigate={navigate} prefetch="press">
+            {m.itemPage(say([r[2], r[3]], lang))}
+          </RouteLink>
+        </li>
+      )}
       {p.where.map((w, i) => {
         if (w.k === "dig")
           return (
@@ -383,30 +392,44 @@ function RewardRow({ r, s, m, ...props }: Props & { r: Reward; s: RewardState })
 /** Los libros de habilidad dan experiencia cada vez (`SkillBook_*`, y el Libro de estrellas, que da de todas). */
 const isSkillBook = (b: Book): boolean => b.id.startsWith("SkillBook_") || b.id === "PurpleBook";
 
+/** La condición del Librero que comparten más libros de una lista: se dice una vez arriba y no en cada uno. */
+function commonNote(books: Book[]): Book["priceNote"] {
+  const count = new Map<string, { note: NonNullable<Book["priceNote"]>; n: number }>();
+  for (const b of books) {
+    if (!b.priceNote) continue;
+    const k = b.priceNote[0];
+    count.set(k, { note: b.priceNote, n: (count.get(k)?.n ?? 0) + 1 });
+  }
+  const best = [...count.values()].sort((a, b) => b.n - a.n)[0];
+  return best && best.n > 1 ? best.note : null;
+}
+
 function Books(props: Props) {
   const { data, m } = props;
   const { lang } = useLang();
   const locale = useLocale();
   const power = data.books.filter((b) => !isSkillBook(b));
   const skill = data.books.filter(isSkillBook);
+  const powerNote = commonNote(power);
+  const skillNote = commonNote(skill);
   const lost = data.refs[data.lostBook];
   return (
     <>
       <Box className="sd-mu-books">
         <h2 className="sd-h2">{m.books.power}</h2>
-        <p className="sd-muted">{m.books.powerHint}</p>
+        <BookIntro {...props} hint={m.books.powerHint} note={powerNote} />
         <ul className="sd-mu-blist">
           {power.map((b) => (
-            <BookRow {...props} b={b} key={b.id} />
+            <BookRow {...props} b={b} common={powerNote} key={b.id} />
           ))}
         </ul>
       </Box>
       <Box className="sd-mu-books">
         <h2 className="sd-h2">{m.books.skill}</h2>
-        <p className="sd-muted">{m.books.skillHint}</p>
+        <BookIntro {...props} hint={m.books.skillHint} note={skillNote} />
         <ul className="sd-mu-blist">
           {skill.map((b) => (
-            <BookRow {...props} b={b} key={b.id} />
+            <BookRow {...props} b={b} common={skillNote} key={b.id} />
           ))}
         </ul>
       </Box>
@@ -428,7 +451,18 @@ function Books(props: Props) {
   );
 }
 
-function BookRow({ b, ...props }: Props & { b: Book }) {
+/** Lo que dice la caja arriba: para qué sirven y, una sola vez, la condición del Librero que comparten. */
+function BookIntro({ m, hint, note }: Props & { hint: string; note: Book["priceNote"] }) {
+  const { lang } = useLang();
+  return (
+    <p className="sd-muted">
+      {hint}
+      {note && ` ${m.books.sold(say(note, lang))}`}
+    </p>
+  );
+}
+
+function BookRow({ b, common, ...props }: Props & { b: Book; common: Book["priceNote"] }) {
   const { data, m } = props;
   const { lang } = useLang();
   return (
@@ -449,6 +483,13 @@ function BookRow({ b, ...props }: Props & { b: Book }) {
         <span className="sd-mu-price">
           <small>{m.books.from}</small>
           <Gold n={b.price} />
+          {/* La condición propia de este libro; la que comparten todos ya está arriba. */}
+          {b.priceNote ? (
+            b.priceNote[0] !== common?.[0] && <small className="sd-mu-pnote">{say(b.priceNote, lang)}</small>
+          ) : (
+            // Sin condición lo tiene siempre: se dice, porque arriba se avisa la condición de los demás.
+            common && <small className="sd-mu-pnote">{m.books.always}</small>
+          )}
         </span>
       )}
     </li>

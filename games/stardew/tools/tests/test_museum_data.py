@@ -98,15 +98,22 @@ class TestMuseumData(unittest.TestCase):
         self.assertNotEqual(b["effect"][0], b["effect"][1])
         self.assertIsInstance(b["price"], int)
         self.assertEqual(b["slug"], "the-alleyway-buffet")
-        # `where` es una lista de frases [en, es].
+        # `where` es una lista de frases [en, es], sin la del Librero cuando hay precio: su condición va en `priceNote`.
         frases = self.libros["Book_QueenOfSauce"]["where"]
         self.assertTrue(all(isinstance(f, list) and len(f) == 2 for f in frases))
-        self.assertIn("100", frases[0][0])
-        self.assertIn("100", frases[0][1])
+        self.assertFalse(any(f[1].startswith("Librero") for f in frases))
+        self.assertIn("100", self.libros["Book_QueenOfSauce"]["priceNote"][0])
+        self.assertIn("100", self.libros["Book_QueenOfSauce"]["priceNote"][1])
+        self.assertEqual(b["priceNote"], ["one of its random books, from Year 3", "uno de sus libros al azar, desde el año 3"])
+        self.assertIsNone(self.libros["Book_Speed"]["priceNote"])
+        self.assertEqual(self.libros["Book_Speed"]["price"], 15000)
+        # El enano también lo vende, más barato: esa línea queda.
+        self.assertTrue(any(f[1].startswith("Enano") for f in self.libros["Book_Bombs"]["where"]))
         self.assertIn("SkillBook_0", self.libros)
         self.assertNotIn("102", self.libros)
         for b in self.d["books"]:
-            self.assertTrue(b["where"], b["id"])
+            self.assertTrue(b["where"] or b["price"], b["id"])
+            self.assertFalse(any(f[0].startswith("Bookseller") for f in b["where"]) and b["price"], b["id"])
             self.assertTrue(all(all(t.strip() for t in f) and len(f) == 2 for f in b["where"]), b["id"])
             self.assertFalse(any("dentro de:" in f[1] for f in b["where"]), b["id"])
             self.assertTrue(all(b["effect"]), b["id"])

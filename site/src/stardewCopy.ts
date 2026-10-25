@@ -469,8 +469,8 @@ export interface MuseumCopy {
   where: string;
   /** Los rótulos del detalle: dónde se excava, qué geodas, qué monstruos; la pesca va sola. */
   whereText: { dig: string; geode: string; monster: string; fish: string };
-  /** El nombre del casillero para lectores de pantalla (el botón dice si está apretado). */
-  tick: (name: string) => string;
+  /** El enlace a la ficha de la pieza, en el detalle. */
+  itemPage: (name: string) => string;
   empty: string;
   rewards: {
     hint: string;
@@ -487,6 +487,10 @@ export interface MuseumCopy {
     skillHint: string;
     /** El rótulo del precio más bajo del Librero. */
     from: string;
+    /** La condición del Librero que comparten los libros de la caja, dicha una vez. */
+    sold: (note: string) => string;
+    /** El libro que el Librero tiene siempre, sin condición. */
+    always: string;
     lostTitle: string;
     lost: (n: string) => string;
   };
@@ -1094,7 +1098,7 @@ const EN: StardewCopy = {
     kinds: { dig: "Digging", geode: "Geodes", monster: "Monsters", fish: "Fishing", other: "Rocks" },
     where: "Where to find it",
     whereText: { dig: "Artifact spots in", geode: "Inside", monster: "Dropped by", fish: "Fishing treasure chests" },
-    tick: (name) => `${name}: donated`,
+    itemPage: (name) => `${name}: item page →`,
     empty: "Nothing left to donate here.",
     rewards: {
       hint: "Gunther hands each reward over once you have donated what it asks for. Pieces asked for by name also count toward the totals.",
@@ -1109,6 +1113,8 @@ const EN: StardewCopy = {
       skill: "Skill books",
       skillHint: "Each read gives experience.",
       from: "Bookseller",
+      sold: (note) => `At the Bookseller, ${note}, unless the book says otherwise.`,
+      always: "always in stock",
       lostTitle: "Lost books",
       lost: (n) => `The library is missing ${n} books. Each Lost Book you find goes back to the shelves, where you can read it.`,
     },
@@ -1688,7 +1694,7 @@ const ES: StardewCopy = {
     kinds: { dig: "Excavando", geode: "Geodas", monster: "Monstruos", fish: "Pesca", other: "Piedras" },
     where: "Dónde sale",
     whereText: { dig: "Lugares de artefacto en", geode: "Dentro de", monster: "Lo sueltan", fish: "Cofres del tesoro de pesca" },
-    tick: (name) => `${name}: donado`,
+    itemPage: (name) => `Ficha de ${name} →`,
     empty: "No queda nada para donar acá.",
     rewards: {
       hint: "Gunther da cada premio cuando donaste lo que pide. Las piezas que pide por nombre también suman para las cantidades.",
@@ -1703,6 +1709,8 @@ const ES: StardewCopy = {
       skill: "Libros de habilidad",
       skillHint: "Cada lectura da experiencia.",
       from: "Librero",
+      sold: (note) => `En el Librero, ${note}, salvo que el libro diga otra cosa.`,
+      always: "siempre a la venta",
       lostTitle: "Libros perdidos",
       lost: (n) => `A la biblioteca le faltan ${n} libros. Cada Libro perdido que encontrás vuelve a los estantes, y ahí se puede leer.`,
     },

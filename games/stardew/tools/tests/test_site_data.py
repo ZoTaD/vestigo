@@ -180,9 +180,10 @@ class TestSiteData(unittest.TestCase):
         self.assertEqual(milenarias, ["ancient-seed"])
 
     def test_donarlo_da_un_premio_aunque_no_tenga_ficha(self):
-        # La Estatua de gallina (113) da el mueble (F)1305, que no tiene ficha: va con su nombre y sin ref.
+        # La Estatua de gallina (113) da el mueble (F)1305, que no tiene ficha: va con su nombre, el tamaño de su dibujo y
+        # sin ref.
         estatua = self.ficha("113")
-        self.assertIn(["chicken", "(F)1305", 1, ["Chicken Statue", "Estatua de gallina"]], estatua["uses"]["prizes"])
+        self.assertIn(["chicken", "(F)1305", 1, ["Chicken Statue", "Estatua de gallina"], [16, 32]], estatua["uses"]["prizes"])
         self.assertNotIn("(F)1305", estatua["refs"])
         # Los cuatro rollos dan la guía, que sí tiene ficha: va a refs.
         rollo = self.ficha("96")

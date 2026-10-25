@@ -305,6 +305,17 @@ describe("lo que se guarda en el navegador", () => {
     expect(sin((x) => delete x.buildings)).toBeNull();
   });
 
+  it("una partida guardada antes del Museo (sin museum) se lee igual, con museum vacío", () => {
+    const store = fakeStorage();
+    const vieja = JSON.parse(JSON.stringify(leer()));
+    delete vieja.museum;
+    store["sdv-save-v1"] = JSON.stringify({ v: 1, save: vieja });
+    expect(readStoredSave()).toEqual({ ...leer(), museum: [] });
+    // Pero si está, tiene que ser una lista.
+    store["sdv-save-v1"] = JSON.stringify({ v: 1, save: { ...leer(), museum: "96" } });
+    expect(readStoredSave()).toBeNull();
+  });
+
   it("si la partida igual rompe al dibujarse, el límite de errores la olvida y vuelve a la caja vacía", () => {
     const store = fakeStorage();
     storeSave(leer());

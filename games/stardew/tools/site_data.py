@@ -289,7 +289,8 @@ def cruces(tienda_qi: list[str]) -> tuple[dict[str, list[dict]], dict[str, dict]
             continue
         fuente(premio["id"], con_n({"k": "museum", "reward": r["slug"], "text": list(r["text"])}, premio["n"]))
         for iid in r["need"]["ids"]:
-            uso(iid, "prizes", [r["slug"], premio["id"], premio["n"], list(premio["name"])])
+            # El premio sin ficha (un mueble, la Llave oxidada) lleva el tamaño de su dibujo, para mostrarlo a escala entera.
+            uso(iid, "prizes", [r["slug"], premio["id"], premio["n"], list(premio["name"]), *([premio["sprite"]] if "sprite" in premio else [])])
 
     for w in isla["walnutRoom"]:
         if w["recipe"]:
@@ -430,7 +431,7 @@ def build(write: bool = False) -> dict:
                 sumar_ref(s["cur"])
             fuentes_i.append(s)
         usos_i = usos.get(i, _usos_vacios())
-        for _, premio, _, _ in usos_i["prizes"]:
+        for _, premio, *_ in usos_i["prizes"]:
             if premio in slug:  # un premio sin ficha (un mueble, un sombrero) va con su nombre, sin ref
                 sumar_ref(premio)
 
