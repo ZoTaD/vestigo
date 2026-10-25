@@ -1,4 +1,4 @@
-"""Sprites de Stardew Valley para el sitio: objetos, retratos y el marco de menú.
+"""Sprites de Stardew Valley para el sitio: objetos, retratos, combate, granja y el marco de menú.
 
 Lee el arte ya convertido a PNG en `games/stardew/raw/textures/` (ver `textures.py`)
 y escribe en `site/public/stardew/`. Va aparte de `site_data.py` porque sólo
@@ -14,6 +14,7 @@ from pathlib import Path
 from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import farm_data  # noqa: E402
 import mines_data  # noqa: E402
 import relations  # noqa: E402
 import sdv  # noqa: E402
@@ -115,6 +116,37 @@ def sprites_combate(salida: Path) -> int:
     for nombre, im in hechos.items():
         im.save(salida / nombre, optimize=True)
     return len(hechos)
+
+
+def sprites_granja(salida: Path) -> int:
+    """Animales y edificios de `farm_data` en `site/public/stardew/animals/` y `buildings/`. Devuelve cuántos escribió.
+
+    De cada animal, el primer cuadro (`SpriteWidth`×`SpriteHeight`, de frente) del adulto (`<slug>.png`) y del bebé
+    (`<slug>-baby.png`, si tiene: el dinosaurio nace grande); de cada edificio, el dibujo del menú de construcción
+    (`farm_data.building_box`).
+    """
+    datos = farm_data.farm()
+    hechos: dict[str, dict[str, Image.Image]] = {"animals": {}, "buildings": {}}
+    for a in datos["animals"]:
+        w, h = a["sprite"]
+        adulto, bebe = farm_data.animal_textures(a["key"])
+        for nombre, textura in ((a["slug"], adulto), (f"{a['slug']}-baby", bebe)):
+            if textura:
+                hoja = Image.open(TEXTURAS / f"Animals/{textura}.png").convert("RGBA")
+                hechos["animals"][f"{nombre}.png"] = hoja.crop((0, 0, w, h))
+    for b in datos["buildings"]:
+        textura, x, y, w, h = farm_data.building_box(b["key"])
+        hoja = Image.open(TEXTURAS / f"{textura}.png").convert("RGBA")
+        hechos["buildings"][f"{b['slug']}.png"] = hoja.crop((x, y, x + w, y + h))
+    for carpeta, ims in hechos.items():
+        destino = salida / carpeta
+        destino.mkdir(parents=True, exist_ok=True)
+        for viejo in destino.glob("*.png"):
+            if viejo.name not in ims:
+                viejo.unlink()
+        for nombre, im in ims.items():
+            im.save(destino / nombre, optimize=True)
+    return sum(len(ims) for ims in hechos.values())
 
 
 def marco() -> Image.Image:
@@ -313,6 +345,7 @@ def main() -> None:
     fuente_juego(ui / "menu-font.woff2")
     print(f"{len(list(items.glob('*.png')))} sprites, {len(list(retratos.glob('*.png')))} retratos")
     print(f"{sprites_combate(SALIDA / 'combat')} sprites de combate")
+    print(f"{sprites_granja(SALIDA)} sprites de la granja")
 
 
 if __name__ == "__main__":
