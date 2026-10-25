@@ -46,21 +46,6 @@
 //   del desierto (`LOCATION_ACCESSIBLE Desert`) se evalúa con
 //   `Game1.isLocationAccessible`, porque la consulta busca la ubicación `Desert`,
 //   que acá no existe.
-// - `cart`: por caso, `Game1.uniqueIDForThisGame`, `UseLegacyRandom`,
-//   `stats.DaysPlayed`, `Game1.season`/`dayOfMonth`/`year`, un `Farmer` nuevo con
-//   el correo de los cuartos del Centro Comunitario o de Joja (y `JojaMember`),
-//   `friendshipData` con 3.500 puntos (14 corazones) para los que se piden,
-//   `Game1.otherFarmers` con un granjero de más para el multijugador y
-//   `netWorldState.VisitsUntilY1Guarantee`. `ShopBuilder.GetShopStock("Traveler")`
-//   no pide una `GameLocation`: arma su `ItemQueryContext` con
-//   `Game1.currentLocation`, que queda en `null` (ninguna consulta del carro la
-//   lee). El contenido sin texturas da texturas de 4096 x 4096 sin datos, porque
-//   el constructor de `Furniture` divide por el ancho de la suya.
-//   El calendario (`calendar`) usa `Forest.ShouldTravelingMerchantVisitToday`
-//   (sobre un `Forest` sin construir: sólo lee `Game1.dayOfMonth`) y
-//   `Utility.TryGetPassiveFestivalDataForDay` sin condiciones; la del Festival del
-//   desierto (`LOCATION_ACCESSIBLE Desert`) se evalúa con `Game1.isLocationAccessible`,
-//   porque la consulta busca la ubicación `Desert`, que acá no existe.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -718,6 +703,7 @@ static class Oracle
             items.Add(x.ToArray());
         }
         o["items"] = items;
-        w.WriteRawValue(JsonSerializer.Serialize(o), skipInputValidation: true);
+        // Un caso por línea: el valor crudo no lleva la sangría del escritor.
+        w.WriteRawValue("\n    " + JsonSerializer.Serialize(o), skipInputValidation: true);
     }
 }

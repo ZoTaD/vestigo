@@ -484,16 +484,8 @@ export function resolveSpawnItem(
   if (data.randomItemId && data.randomItemId.length > 0) id = chooseFrom(r, data.randomItemId);
   if (id === undefined || id.trim() === "") return null;
   if (!/^\([A-Z]+\)\S+$/.test(id)) throw new Error(`consulta de objetos sin soporte en el predictor: ${id}`);
-  let min = data.minStack ?? -1;
-  let max = data.maxStack ?? -1;
-  let qty = cantidadBase;
-  if (min === -1 && max === -1) qty = cantidadBase;
-  else if (max > 1) {
-    min = Math.max(min, 1);
-    max = Math.max(max, min);
-    qty = r.next(min, max + 1);
-  } else if (min > 1) qty = min;
-  qty = Math.trunc(applyQuantityModifiers(qty, data.stackModifiers, data.stackModifierMode ?? 0, { ...ctx, target: id }, r));
+  // La misma cuenta que el carro (`ApplyItemFields`), para que no se desincronicen.
+  const qty = cantidad(data, id, r, ctx, cantidadBase);
   return { id, qty };
 }
 
