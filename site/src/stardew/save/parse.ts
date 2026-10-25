@@ -44,6 +44,12 @@
  * - `goldenCoconutCracked`: `goldenCoconutCracked` de la raíz (`SaveGame.goldenCoconutCracked`, copia de
  *   `netWorldState.GoldenCoconutCracked`): si ya se abrió algún coco dorado; mientras no, el primero da una nuez.
  *   Sin la etiqueta (partidas viejas), `false` como el juego al cargarla.
+ * - Para la pestaña Predictor (tarea 7), por granjero: `mailReceived` y `mailTomorrow` por separado (sin la marca
+ *   `%&NL&%`; `pickFarmEvent`, `isLocationAccessible` y la cantera miran `mailReceived`, no `hasOrWillReceiveMail`),
+ *   `recipes` (las claves de `craftingRecipes` y `cookingRecipes`: `ShopMenu` esconde la receta que ya sabe) y
+ *   `specialCharm` (`hasSpecialCharm`: `Farmer.DailyLuck` le suma 0,025). De la partida, `weddings`: la `WeddingDate`
+ *   de cada `Friendship` en `Engaged`, de los aldeanos (`friendshipData` de cada granjero) y entre granjeros
+ *   (`farmerFriendships` de la raíz), con la estación como índice.
  *
  * Partidas viejas (antes de la 1.6): se leen igual con lo que traigan. Sin `<gameVersion>` la versión se deduce por
  * `hasApplied1_4_UpdateChanges` ("1.4") y `hasApplied1_3_UpdateChanges` ("1.3"); sin ninguna es "<1.3". Antes de la
@@ -130,6 +136,21 @@ export interface PredictFarmer {
   mail: string[];
   /** Aldeanos con 14 corazones o más (`Friendship.Points >= 3500`). */
   spouse14: string[];
+  /** Sólo `mailReceived` (sin la marca `%&NL&%`). */
+  mailReceived: string[];
+  /** Sólo `mailForTomorrow` (sin la marca `%&NL&%`). */
+  mailTomorrow: string[];
+  /** Recetas que sabe: las claves de `craftingRecipes` y de `cookingRecipes`, en ese orden. */
+  recipes: string[];
+  /** `hasSpecialCharm`: el amuleto especial suma 0,025 a la suerte del día (`Farmer.DailyLuck`). */
+  specialCharm: boolean;
+}
+
+/** Una fecha del calendario (`WorldDate`): `season` 0 primavera ... 3 invierno. */
+export interface SaveDate {
+  season: 0 | 1 | 2 | 3;
+  day: number;
+  year: number;
 }
 
 /** Lo que el predictor necesita de la partida (ver la cabecera). */
@@ -153,6 +174,8 @@ export interface SavePredict {
   qiBeans: boolean;
   /** Ya se abrió algún coco dorado en la partida (`netWorldState.GoldenCoconutCracked`). */
   goldenCoconutCracked: boolean;
+  /** La fecha de boda (`WeddingDate`) de cada compromiso en curso, con aldeanos o entre granjeros. */
+  weddings: SaveDate[];
 }
 
 /**
@@ -376,6 +399,17 @@ export function uidHalf(uid: string): number {
   return half === 0 ? 0 : half; // sin -0
 }
 
+/** Una lista de correo (`mailReceived`, `mailForTomorrow`) sin la marca `%&NL&%`. */
+const mailList = (el: Element, tag: string): string[] => kids(kid(el, tag)).map((m) => str(m).replace("%&NL&%", ""));
+
+/** La `WeddingDate` de un `Friendship` en `Engaged`, o null. */
+function weddingOf(f: Element | null): SaveDate | null {
+  if (!f || text(f, "Status") !== "Engaged") return null;
+  const w = kid(f, "WeddingDate");
+  if (!w || nil(w)) return null;
+  return { season: SEASONS[text(w, "Season").toLowerCase()] ?? 0, day: num(w, "DayOfMonth"), year: num(w, "Year") };
+}
+
 function readPredictFarmer(el: Element, p: Player, stats: Element | null): PredictFarmer {
   const uid = text(el, "UniqueMultiplayerID") || text(el, "uniqueMultiplayerID") || "0";
   return {
@@ -391,6 +425,10 @@ function readPredictFarmer(el: Element, p: Player, stats: Element | null): Predi
     bookMystery: statGet(stats, "Book_Mystery"),
     mail: p.mail,
     spouse14: Object.entries(p.friends).filter(([, f]) => f.points >= 3500).map(([n]) => n),
+    mailReceived: mailList(el, "mailReceived"),
+    mailTomorrow: mailList(el, "mailForTomorrow"),
+    recipes: [...Object.keys(p.crafting), ...p.cooking],
+    specialCharm: bool(el, "hasSpecialCharm"),
   };
 }
 
@@ -458,10 +496,15 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
   if (hands.length === 0 && locations) hands = Array.from(locations.getElementsByTagName("farmhand"));
   const players: Player[] = [];
   const predictFarmers: PredictFarmer[] = [];
+  const weddings: SaveDate[] = [];
   const addPlayer = (el: Element, host: boolean) => {
     const p = readPlayer(el, host, host ? t("stats") : null);
     players.push(p);
     predictFarmers.push(readPredictFarmer(el, p, kid(el, "stats") ?? (host ? t("stats") : null)));
+    for (const [, v] of dict(kid(el, "friendshipData"))) {
+      const w = weddingOf(v);
+      if (w) weddings.push(w);
+    }
   };
   addPlayer(hostEl, true);
   for (const h of hands) {
@@ -552,6 +595,13 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
       farmers: predictFarmers,
       qiBeans: qiBeansActive(t("specialOrders")),
       goldenCoconutCracked: tt("goldenCoconutCracked") === "true",
+      weddings: [
+        ...weddings,
+        ...dict(t("farmerFriendships")).flatMap(([, v]) => {
+          const w = weddingOf(v);
+          return w ? [w] : [];
+        }),
+      ],
     },
   };
 }

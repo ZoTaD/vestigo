@@ -325,6 +325,13 @@ describe("lo que se guarda en el navegador", () => {
     expect(con((x) => delete x.predict.multiplayer)).toBeNull();
     expect(con((x) => delete x.predict.visitsUntilY1Guarantee)).toBeNull();
     expect(con((x) => (x.predict.goldenCoconutCracked = "no"))).toBeNull();
+    // Lo que suma la pestaña Predictor (tarea 7).
+    expect(con((x) => delete x.predict.weddings)).toBeNull();
+    expect(con((x) => (x.predict.weddings = [{ season: 1, day: "9", year: 2 }]))).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].mailReceived)).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].mailTomorrow)).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].recipes)).toBeNull();
+    expect(con((x) => (x.predict.farmers[0].specialCharm = 1))).toBeNull();
   });
 
   it("si la partida igual rompe al dibujarse, el límite de errores la olvida y vuelve a la caja vacía", () => {

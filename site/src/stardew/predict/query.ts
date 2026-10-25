@@ -173,6 +173,8 @@ export interface PredictData {
   };
   /** `WeatherConditions` del contexto `Default` de `Data/LocationContexts`, en orden. */
   weather: CondicionClima[];
+  /** Las frases del pronóstico de la suerte de la tele (`TV.getFortuneForecast`), por clave (`13191` = `TV.cs.13191`). */
+  fortune: Record<string, Par>;
 }
 
 // ------------------------------------------------------------------ consultas del juego

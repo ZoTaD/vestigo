@@ -14,6 +14,7 @@ Qué conserva cada parte y por qué (los métodos del juego que la leen):
 - `lowGradeCrops`, `raccoonSeeds`: `Crop.getRandomLowGradeCropForThisSeason`, `Utility.getRaccoonSeedForCurrentTimeOfYear`.
 - `festivals`: `Utility.isFestivalDay` (`Data/Festivals/FestivalDates`) y `Data/PassiveFestivals`.
 - `weather`: `WeatherConditions` del contexto `Default` de `Data/LocationContexts`.
+- `fortune`: las frases del pronóstico de la suerte de la tele (`TV.getFortuneForecast`, `TV.cs.13191` a `13201`).
 """
 import json
 import re
@@ -296,11 +297,21 @@ def weather() -> list:
             for w in sdv.raw("Data/LocationContexts")["Default"]["WeatherConditions"]]
 
 
+# Las frases de `TV.getFortuneForecast`, de la peor suerte a la mejor. Entre 13193 y 13195 el juego elige con
+# `Game1.random`: el predictor muestra las dos.
+_FORTUNA = ["13191", "13192", "13193", "13195", "13200", "13201", "13199", "13198", "13197"]
+
+
+def fortune() -> dict:
+    """Las frases del pronóstico de la suerte (`TV.getFortuneForecast`) por clave de `StringsFromCSFiles`."""
+    return {k: _nombre_token(rf"[LocalizedText Strings\StringsFromCSFiles:TV.cs.{k}]") for k in _FORTUNA}
+
+
 def predict() -> dict:
     muebles, geodas, carro = furniture(), geodes(), traveler()
     return {"objects": objects(), "furniture": muebles, "names": names(muebles, geodas, carro), "geodes": geodas,
             "traveler": carro, "lowGradeCrops": low_grade_crops(), "raccoonSeeds": raccoon_seeds(),
-            "festivals": festivals(), "weather": weather()}
+            "festivals": festivals(), "weather": weather(), "fortune": fortune()}
 
 
 def main() -> None:
