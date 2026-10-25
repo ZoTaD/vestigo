@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import crops_data  # noqa: E402
 import island_data  # noqa: E402
 import mines_data  # noqa: E402
+import relations  # noqa: E402
 import sdv  # noqa: E402
 
 DATA = crops_data.DATA
@@ -41,8 +42,9 @@ _COLLAR = {
 }
 
 # "Presentaciones" (`SocializeQuest.loadQuestInfo`) arma el objetivo en el código con "{0}/{1} people greeted": {1}
-# son los aldeanos con `IntroductionsQuest` (o, si no lo dicen, los que viven en el pueblo).
-_SALUDOS = ("Strings/StringsFromCSFiles", "SocializeQuest.cs.13802")
+# son los aldeanos con `IntroductionsQuest` (o, si no lo dicen, los que viven en el pueblo). Ese contador se leería
+# como el avance del jugador ("0/28"): va una frase propia con el total, sin el "0/".
+_SALUDOS = ["Greet the {} people in town.", "Saludá a los {} vecinos del pueblo."]
 
 # Tablero de cada `OrderType` (`SpecialOrder.GetSpecialOrder`): "" es el del pueblo; Qi va a la isla.
 _TABLERO = {"": "town", "DesertFestivalMarlon": "desert"}
@@ -142,7 +144,7 @@ def story() -> list[dict]:
             fila["friendship"] = int(cond[2])
         if k == "9":
             total = _aldeanos_del_pueblo()
-            fila["goal"] = [t.replace("{0}", "0").replace("{1}", str(total)) for t in _par(*_SALUDOS)]
+            fila["goal"] = [t.format(total) for t in _SALUDOS]
         out.append(fila)
     return out
 
@@ -294,9 +296,9 @@ def _receta(nombre: str) -> tuple[str, list[str]]:
 
 
 def _mueble(premio: dict) -> dict:
-    """Un mueble no tiene ficha: va con el tamaño de su dibujo (`island_data._cosa`), que sale en `rewards/`."""
+    """Un mueble no tiene ficha: va con el tamaño de su dibujo (`island_data.cosa`), que sale en `rewards/`."""
     if premio["id"].startswith("(F)"):
-        premio["sprite"] = island_data._cosa(premio["id"], {})["sprite"]
+        premio["sprite"] = island_data.cosa(premio["id"], {})["sprite"]
     return premio
 
 
@@ -372,9 +374,15 @@ def quests() -> dict:
         refs[i] = [*slugs[i], *nombre, 16, alto]
     # Quien pide cada pedido o da cada misión, con su nombre (`DisplayName` de `Data/Characters`): Gunther y Marlon no
     # están entre los aldeanos del sitio.
+    # Con el slug de su ficha de Aldeanos (el mismo que arma `site_data`); null si no tiene ficha.
     quienes = sorted({o["who"] for o in od} | {q["from"] for q in st if q["from"]})
     chars = sdv.raw("Data/Characters")
-    people = {k: [sdv.text(chars[k]["DisplayName"], "en").strip(), sdv.text(chars[k]["DisplayName"], "es").strip()] for k in quienes}
+    aldeanos = {v["key"]: v for v in relations.villagers()}
+    people = {}
+    for k in quienes:
+        v = aldeanos.get(k)
+        people[k] = {"name": [sdv.text(chars[k]["DisplayName"], "en").strip(), sdv.text(chars[k]["DisplayName"], "es").strip()],
+                     "slug": sdv.slugify(v["name"][0]) if v else None, "slugEs": sdv.slugify(v["name"][1]) if v else None}
     return {"story": st, "orders": od, "refs": refs, "people": people}
 
 

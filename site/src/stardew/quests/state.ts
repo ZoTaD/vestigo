@@ -64,12 +64,21 @@ export interface Order {
   board: "town" | "desert";
 }
 
+export interface Person {
+  name: Pair;
+  slug: string | null;
+  slugEs: string | null;
+}
+
 export interface QuestsData {
   story: Quest[];
   orders: Order[];
   refs: Record<string, Ref>;
-  /** Los nombres de quienes piden o dan (Gunther y Marlon no son aldeanos del sitio). */
-  people: Record<string, Pair>;
+  /**
+   * Quienes piden o dan: el nombre y el slug de su ficha de Aldeanos (inglés y español). Gunther y Marlon no tienen
+   * ficha: `slug` null.
+   */
+  people: Record<string, Person>;
 }
 
 // --- La vista y la dirección ------------------------------------------------------------------------------------
@@ -85,6 +94,15 @@ export function readQuestView(search: string): QuestView {
 }
 /** Lo contrario: `?v=…`, vacío en la vista por defecto. */
 export const writeQuestView = (v: QuestView): string => (v === DEFAULT_QUEST_VIEW ? "" : `?v=${v}`);
+
+/**
+ * La vista que se abre al cargar: la de `?v=` si la dirección la trae; si no, la del ancla (`#101` es una misión),
+ * aunque haya otros parámetros (`?utm_source=…`); si tampoco, los Pedidos.
+ */
+export function initialQuestView(data: QuestsData, search: string, anchor: string): QuestView {
+  if (new URLSearchParams(search).has("v")) return readQuestView(search);
+  return viewOfAnchor(data, anchor) ?? DEFAULT_QUEST_VIEW;
+}
 
 /** La vista donde está un ancla, para un enlace que llega sin `?v=` (la ficha de un objeto); null si no es de ninguna. */
 export function viewOfAnchor(data: QuestsData, anchor: string): QuestView | null {
@@ -145,9 +163,11 @@ export function questChains(data: QuestsData): Quest[][] {
   return chains;
 }
 
-/** Las que abre una misión y están en otra cadena (su primer padre es otro): se nombran "sigue en…" con su ancla. */
-export function nextElsewhere(data: QuestsData, q: Quest): Quest[] {
-  const parent = questParents(data);
+/**
+ * Las que abre una misión y están en otra cadena (su primer padre es otro): se nombran "sigue en…" con su ancla. La
+ * vista pasa los padres ya calculados (`questParents`, una vez por dibujo).
+ */
+export function nextElsewhere(data: QuestsData, q: Quest, parent: Map<string, string> = questParents(data)): Quest[] {
   return q.next.filter((n) => parent.get(n) !== q.key).flatMap((n) => data.story.filter((s) => s.key === n));
 }
 
@@ -178,12 +198,6 @@ export function shortGoal(text: string, first: string, last: string, instead: st
   let end = j + last.length;
   while (end < text.length && /\p{L}/u.test(text[end])) end++;
   return text.slice(0, i) + instead + text.slice(end);
-}
-
-/** El oro que paga un pedido, si paga: el mínimo y, si depende de la opción, el máximo. */
-export function orderMoney(o: Order): { n: number; max?: number } | null {
-  const r = o.rewards.find((x) => x.k === "money");
-  return r && r.k === "money" ? { n: r.n, max: r.max } : null;
 }
 
 /**

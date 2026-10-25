@@ -25,17 +25,16 @@ import { pixelScale } from "../mines/state";
 import { Box, Group, Pill, prizeSrc, SdLoading, type Nav } from "../ui";
 import {
   DEFAULT_QUEST_VIEW,
+  initialQuestView,
   isLongPick,
   nextElsewhere,
-  orderMoney,
   orderPick,
   portraitSrc,
   QUEST_VIEWS,
   questChains,
-  readQuestView,
+  questParents,
   requesters,
   shortGoal,
-  viewOfAnchor,
   writeQuestView,
   type Order,
   type OrderReward,
@@ -79,10 +78,10 @@ export function QuestBook({
   const [view, setView] = useState<QuestView>(initial);
   const [who, setWho] = useState(initialWho);
 
-  // La vista de la dirección; sin `?v=`, la del ancla (`#101` es una misión). Después, la fila del ancla.
+  // La vista de la dirección; sin `?v=` (aunque traiga otros parámetros), la del ancla (`#101` es una misión). Después, la fila del ancla.
   useEffect(() => {
     const anchor = window.location.hash.slice(1);
-    setView(window.location.search ? readQuestView(window.location.search) : (viewOfAnchor(data, anchor) ?? DEFAULT_QUEST_VIEW));
+    setView(initialQuestView(data, window.location.search, anchor));
     const timer = anchor ? scrollTo(anchor) : undefined;
     return () => window.clearTimeout(timer);
   }, [data]);
@@ -114,10 +113,10 @@ export function QuestBook({
             <select className="sd-select" value={who} onChange={(e) => setWho(e.target.value)}>
               <option value="">{m.everyone}</option>
               {[...people]
-                .sort((a, b) => say(data.people[a], lang).localeCompare(say(data.people[b], lang), locale))
+                .sort((a, b) => personName(data, a, lang).localeCompare(personName(data, b, lang), locale))
                 .map((k) => (
                   <option value={k} key={k}>
-                    {say(data.people[k], lang)}
+                    {personName(data, k, lang)}
                   </option>
                 ))}
             </select>
@@ -126,6 +125,25 @@ export function QuestBook({
       </Box>
       {view === "orders" ? <Orders {...ctx} who={who} /> : <Story {...ctx} who={who} />}
     </main>
+  );
+}
+
+/** El nombre de quien pide o da, en el idioma pedido (la clave del juego si no estuviera). */
+const personName = (data: QuestsData, who: string, lang: Lang): string => {
+  const p = data.people[who];
+  return p ? say(p.name, lang) : who;
+};
+
+/** El nombre de quien pide o da, enlazado a su ficha de Aldeanos si la tiene (Gunther y Marlon no). */
+function PersonLink({ who, ctx }: { who: string; ctx: Ctx }) {
+  const { data, route, navigate, lang } = ctx;
+  const p = data.people[who];
+  const name = personName(data, who, lang);
+  if (!p?.slug) return <>{name}</>;
+  return (
+    <RouteLink className="sd-qs-plink" to={{ ...route, view: "stardew", sdSection: "villagers", detail: p.slug }} onNavigate={navigate} prefetch="press">
+      {name}
+    </RouteLink>
   );
 }
 
@@ -204,7 +222,7 @@ function OrderCard({ o, ...ctx }: Ctx & { o: Order }) {
   const long = isLongPick(o);
   // Entre muchas opciones de la misma cantidad (100 de un cultivo), la cantidad va una vez en el rótulo.
   const same = long && o.items.every((it) => it.n === o.items[0].n) ? o.items[0].n : null;
-  const person = say(data.people[o.who] ?? [o.who, o.who], lang);
+  const person = personName(data, o.who, lang);
   // Los objetivos de los que eligen entre muchas opciones nombran "una de las opciones de abajo" en vez de la lista.
   const goals = o.goals.map((g) => {
     const text = say(g, lang);
@@ -219,7 +237,9 @@ function OrderCard({ o, ...ctx }: Ctx & { o: Order }) {
         <Face who={o.who} />
         <div className="sd-qo-title">
           <h3 className="sd-qo-name">{say(o.name, lang)}</h3>
-          <p className="sd-qo-who">{person}</p>
+          <p className="sd-qo-who">
+            <PersonLink who={o.who} ctx={ctx} />
+          </p>
         </div>
         <p className="sd-qo-tags">
           <span className="sd-qs-tag">{m.orders.days(o.days)}</span>
@@ -283,6 +303,8 @@ function Prize({ r, ctx, person, g }: { r: OrderReward; ctx: Ctx; person: string
 function Story({ who, ...ctx }: Ctx & { who: string }) {
   const { data, m } = ctx;
   const chains = useMemo(() => questChains(data), [data]);
+  // Los padres de cada misión, una vez: cada paso los usa para nombrar las que siguen en otra cadena.
+  const parents = useMemo(() => questParents(data), [data]);
   // Con el filtro, sólo las misiones de ese aldeano (las cadenas que quedan vacías no salen).
   const shown = chains.map((c) => c.filter((q) => !who || q.from === who)).filter((c) => c.length > 0);
   // En la historia, primero las cadenas (a lo ancho) y después las sueltas; los pedidos por carta son todos sueltos.
@@ -299,14 +321,14 @@ function Story({ who, ...ctx }: Ctx & { who: string }) {
           {chained.length > 0 && (
             <ul className="sd-qm-chains">
               {chained.map((c) => (
-                <Chain {...ctx} chain={c} key={c[0].key} />
+                <Chain {...ctx} chain={c} parents={parents} key={c[0].key} />
               ))}
             </ul>
           )}
           {loose.length > 0 && (
             <ul className="sd-qm-loose">
               {loose.map((c) => (
-                <Chain {...ctx} chain={c} key={c[0].key} />
+                <Chain {...ctx} chain={c} parents={parents} key={c[0].key} />
               ))}
             </ul>
           )}
@@ -318,7 +340,7 @@ function Story({ who, ...ctx }: Ctx & { who: string }) {
           <p className="sd-muted">{m.story.lettersHint}</p>
           <ul className="sd-qm-loose">
             {letters.map((c) => (
-              <Chain {...ctx} chain={c} key={c[0].key} />
+              <Chain {...ctx} chain={c} parents={parents} key={c[0].key} />
             ))}
           </ul>
         </Box>
@@ -328,12 +350,12 @@ function Story({ who, ...ctx }: Ctx & { who: string }) {
 }
 
 /** Una cadena: sus misiones en orden, numeradas si son más de una. Una suelta es una tarjeta sola. */
-function Chain({ chain, ...ctx }: Ctx & { chain: Quest[] }) {
+function Chain({ chain, parents, ...ctx }: Ctx & { chain: Quest[]; parents: Map<string, string> }) {
   const { m } = ctx;
   if (chain.length === 1)
     return (
       <li className="sd-qm-chain">
-        <QuestStep {...ctx} q={chain[0]} />
+        <QuestStep {...ctx} q={chain[0]} parents={parents} />
       </li>
     );
   return (
@@ -341,10 +363,11 @@ function Chain({ chain, ...ctx }: Ctx & { chain: Quest[] }) {
       <ol className="sd-qm-steps">
         {chain.map((q, i) => (
           <li className="sd-qm-stepli" key={q.key}>
-            <span className="sd-qm-num" aria-label={m.story.step(i + 1, chain.length)}>
+            <span className="sd-qm-num" aria-hidden="true">
               {i + 1}
             </span>
-            <QuestStep {...ctx} q={q} />
+            <span className="visually-hidden">{m.story.step(i + 1, chain.length)}</span>
+            <QuestStep {...ctx} q={q} parents={parents} />
           </li>
         ))}
       </ol>
@@ -352,11 +375,11 @@ function Chain({ chain, ...ctx }: Ctx & { chain: Quest[] }) {
   );
 }
 
-function QuestStep({ q, ...ctx }: Ctx & { q: Quest }) {
+function QuestStep({ q, parents, ...ctx }: Ctx & { q: Quest; parents: Map<string, string> }) {
   const { data, m, lang, locale } = ctx;
   const t = useStardewCopy();
-  const person = q.from ? say(data.people[q.from] ?? [q.from, q.from], lang) : null;
-  const elsewhere = nextElsewhere(data, q);
+  const person = q.from ? personName(data, q.from, lang) : null;
+  const elsewhere = nextElsewhere(data, q, parents);
   const pays: ReactNode[] = [];
   if (q.money > 0) pays.push(<Money n={q.money} locale={locale} g={t.gold} key="g" />);
   if (q.friendship && person) pays.push(<span key="f">{m.story.friendship(q.friendship.toLocaleString(locale), person)}</span>);
@@ -368,7 +391,7 @@ function QuestStep({ q, ...ctx }: Ctx & { q: Quest }) {
           <h3 className="sd-qm-name">{say(q.title, lang)}</h3>
           {person && (
             <p className="sd-qm-from">
-              <span className="sd-label">{m.story.from}</span> {person}
+              <span className="sd-label">{m.story.from}</span> <PersonLink who={q.from!} ctx={ctx} />
             </p>
           )}
         </div>

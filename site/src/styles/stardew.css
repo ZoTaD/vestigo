@@ -201,7 +201,8 @@ a.sd-bday:hover { background: var(--sd-paper-2); }
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x proximity;
-    scroll-padding-inline: 16px;
+    /* Igual al degradé: una pestaña que toma el foco en el borde se desliza hasta quedar fuera de lo fundido. */
+    scroll-padding-inline: var(--sd-fade);
     scrollbar-width: none;
     -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--sd-fade)), transparent);
     mask-image: linear-gradient(to right, #000 calc(100% - var(--sd-fade)), transparent);

@@ -322,7 +322,7 @@ def upgrades() -> list[dict]:
     return out
 
 
-def _cosa(iid: str, slugs: dict) -> dict:
+def cosa(iid: str, slugs: dict) -> dict:
     """Nombre y, si no tiene ficha en el sitio, tamaño del dibujo de un objeto de la tienda."""
     if iid == "SHOP_TOWN_KEY":
         return {"id": "KeyToTheTown", "name": _tok(sdv.raw("Data/Powers")["KeyToTheTown"]["DisplayName"]), "sprite": [16, 16]}
@@ -351,7 +351,7 @@ def walnut_room() -> list[dict]:
     slugs, _ = mines_data.sitio()
     out = []
     for it in sdv.raw("Data/Shops")["QiGemShop"]["Items"]:
-        fila = _cosa(it["ItemId"], slugs)
+        fila = cosa(it["ItemId"], slugs)
         fila["slug"] = slug(it["Id"].replace("(", "").replace(")", ""))
         fila["recipe"] = bool(it.get("IsRecipe"))
         pide, cuantos = it["TradeItemId"], it["TradeItemAmount"]

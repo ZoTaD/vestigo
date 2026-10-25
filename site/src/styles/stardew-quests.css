@@ -14,6 +14,8 @@
 .sd-qs-filters .sd-select { min-width: 180px; }
 
 /* --- Piezas comunes: el retrato, el oro, las etiquetas, la cita y los objetivos -------------------------------------- */
+/* El nombre de quien pide, enlazado a su ficha de Aldeanos: subrayado al pasar, sin color nuevo. */
+a.sd-qs-plink:hover { text-decoration: underline; text-decoration-color: #c9772a; text-underline-offset: 3px; }
 .sd-qs-face { flex: none; width: 64px; height: 64px; border-radius: 4px; background: #e9c891; }
 .sd-qs-gold { font-size: 18px; }
 .sd-qs-tag { display: inline-block; padding: 3px 8px; border-radius: 4px; background: #f3e2bd; font: 800 13px/1.2 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-dim); white-space: nowrap; }

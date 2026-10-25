@@ -14,7 +14,9 @@ import { loadQuests } from "../src/stardew/data";
 import { QuestBook } from "../src/stardew/quests/StardewQuests";
 import {
   isLongPick,
+  initialQuestView,
   nextElsewhere,
+  questParents,
   orderPick,
   questChains,
   readQuestView,
@@ -64,6 +66,9 @@ describe("las cadenas de la historia", () => {
     expect(chains.find((c) => c[0].key === "132")!.map((q) => q.key)).toEqual(["132", "133"]);
     expect(nextElsewhere(data, quest("132")).map((q) => q.key)).toEqual(["8"]);
     expect(nextElsewhere(data, quest("6"))).toEqual([]);
+    // Con los padres ya calculados (la vista los calcula una vez), lo mismo.
+    const parents = questParents(data);
+    expect(nextElsewhere(data, quest("132"), parents).map((q) => q.key)).toEqual(["8"]);
     expect(chains.find((c) => c[0].key === "14")!.map((q) => q.key)).toEqual(["14", "17", "18"]);
     // Las sueltas son cadenas de una, y las cadenas van en el orden de la clave con que empiezan.
     expect(chains.find((c) => c[0].key === "101")).toHaveLength(1);
@@ -106,7 +111,7 @@ describe("los pedidos", () => {
     expect(who).toContain("Marlon");
     expect(requesters(data, "story")).toContain("Jodi");
     expect(requesters(data, "story")).not.toContain(null);
-    for (const k of [...requesters(data, "orders"), ...requesters(data, "story")]) expect(data.people[k], k).toBeTruthy();
+    for (const k of [...requesters(data, "orders"), ...requesters(data, "story")]) expect(data.people[k]?.name, k).toBeTruthy();
   });
 });
 
@@ -128,6 +133,11 @@ describe("la dirección", () => {
     expect(viewOfAnchor(data, "willy")).toBe("orders");
     expect(viewOfAnchor(data, "101")).toBe("story");
     expect(viewOfAnchor(data, "nada")).toBeNull();
+    // Lo que abre al cargar: `?v=` manda; otro parámetro (`?utm_source=x`) no anula el ancla.
+    expect(initialQuestView(data, "?v=story", "willy")).toBe("story");
+    expect(initialQuestView(data, "?utm_source=x", "101")).toBe("story");
+    expect(initialQuestView(data, "?utm_source=x", "")).toBe("orders");
+    expect(initialQuestView(data, "", "willy")).toBe("orders");
   });
 });
 
@@ -140,6 +150,8 @@ describe("las vistas dibujadas", () => {
       expect(plain(willy)).toContain(lang === "en" ? "7 days" : "7 días");
       expect(willy).toContain(lang === "en" ? 'href="/en/stardew-valley/items/bug-meat"' : 'href="/es/stardew-valley/objetos/carne-de-insecto"');
       expect(willy).toMatch(/<img[^>]*loading="lazy"[^>]*decoding="async"/);
+      // El nombre de quien lo pide enlaza a su ficha de Aldeanos.
+      expect(willy).toContain(`href="/${lang}/stardew-valley/${lang === "en" ? "villagers" : "aldeanos"}/willy"`);
     }
   });
 
@@ -165,6 +177,8 @@ describe("las vistas dibujadas", () => {
     expect(pam).toContain("New TV channel");
     const marlon = row(book("orders", "en"), "desertfestivalmarlon1");
     expect(marlon).toContain('src="/stardew/portraits/marlon.png"');
+    // Marlon no tiene ficha de Aldeanos: su nombre va sin enlace.
+    expect(marlon).not.toContain("/villagers/");
     expect(plain(marlon)).toMatch(/35/);
   });
 
@@ -177,6 +191,14 @@ describe("las vistas dibujadas", () => {
     expect(row(html, "101")).toContain('href="/es/stardew-valley/objetos/coliflor"');
     expect(plain(row(html, "101"))).toContain("350");
     expect(row(html, "132")).toContain('href="#8"');
+    // El Mago enlaza a su ficha con el slug en español; el contador de Presentaciones no sale como avance.
+    expect(row(html, "111")).toContain('href="/es/stardew-valley/aldeanos/rasmodius"');
+    expect(plain(row(html, "9"))).toContain("Saludá a los 28 vecinos del pueblo.");
+    expect(plain(row(html, "9"))).not.toContain("0 de 28");
+    // El número del paso va como texto para el lector de pantalla, sin `aria-label` en un `<span>`.
+    expect(html).not.toMatch(/<span[^>]*aria-label/);
+    expect(plain(row(html, "6"))).not.toContain("Paso");
+    expect(plain(html)).toContain("Paso 1 de 3");
   });
 
   it("el filtro por aldeano deja sólo los suyos", () => {

@@ -403,13 +403,15 @@ export const loadIsland = (): Promise<IslandData> => islandRaw.load().then(noteI
 
 /**
  * Las Misiones (`quests.json`, un solo archivo chico): los pedidos especiales del pueblo y del desierto y las misiones de
- * la historia. Anota los slugs en español de los objetos que nombra (lo que piden y lo que pagan), que enlazan a Objetos.
+ * la historia. Anota los slugs en español de los objetos que nombra (lo que piden y lo que pagan), que enlazan a Objetos,
+ * y los de quienes piden o dan, que enlazan a Aldeanos.
  */
 const questsRaw = once<QuestsData>(() => import("@stardew/quests.json"));
 let questsNoted = false;
 function noteQuests(d: QuestsData): QuestsData {
   if (!questsNoted) {
-    registerStardewSlugs({ items: Object.fromEntries(Object.values(d.refs).filter((r) => r[1] !== r[0]).map((r) => [r[0], r[1]])) });
+    const villagers = Object.fromEntries(Object.values(d.people).flatMap((p) => (p.slug && p.slugEs && p.slugEs !== p.slug ? [[p.slug, p.slugEs]] : [])));
+    registerStardewSlugs({ items: Object.fromEntries(Object.values(d.refs).filter((r) => r[1] !== r[0]).map((r) => [r[0], r[1]])), villagers });
     questsNoted = true;
   }
   return d;

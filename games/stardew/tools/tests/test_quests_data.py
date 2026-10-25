@@ -54,6 +54,7 @@ class TestQuestsData(unittest.TestCase):
         self.assertEqual(self.story["113"]["n"], 10)
         self.assertIsNone(self.story["1"]["from"])
         self.assertIn("28", self.story["9"]["goal"][0])
+        self.assertNotIn("0/", self.story["9"]["goal"][0])
 
     def test_21_pedidos_sin_qi(self):
         self.assertEqual(len(self.d["orders"]), 21)
@@ -110,8 +111,16 @@ class TestQuestsData(unittest.TestCase):
         # en villagers.json).
         quienes = {o["who"] for o in self.d["orders"]} | {q["from"] for q in self.d["story"] if q["from"]}
         self.assertEqual(set(self.d["people"]), quienes)
-        self.assertEqual(self.d["people"]["Wizard"], ["Wizard", "Rasmodius"])
-        self.assertEqual(self.d["people"]["Marlon"], ["Marlon", "Marlon"])
+        self.assertEqual(self.d["people"]["Wizard"], {"name": ["Wizard", "Rasmodius"], "slug": "wizard", "slugEs": "rasmodius"})
+        # Gunther y Marlon no tienen ficha de Aldeanos.
+        self.assertEqual(self.d["people"]["Marlon"], {"name": ["Marlon", "Marlon"], "slug": None, "slugEs": None})
+        self.assertIsNone(self.d["people"]["Gunther"]["slug"])
+        self.assertEqual(self.d["people"]["Jodi"]["slug"], "jodi")
+
+    def test_presentaciones_sin_contador(self):
+        # El "0/28" del juego se leería como avance: el objetivo dice el total sin el "0/".
+        goal = self.story["9"]["goal"]
+        self.assertEqual(goal, ["Greet the 28 people in town.", "Saludá a los 28 vecinos del pueblo."])
 
     def test_muebles_con_dibujo(self):
         # Los muebles de premio no tienen ficha: llevan el tamaño de su dibujo (la cama doble de Robin, 3×4 casillas).
