@@ -96,6 +96,8 @@ a.sd-row:hover { background: var(--sd-paper-2); }
 a.sd-src-link { font-weight: 800; color: var(--sd-ink); text-decoration: underline; text-decoration-color: #c9772a; text-underline-offset: 3px; }
 a.sd-src-link:hover { text-decoration-color: currentColor; }
 .sd-src-link:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; border-radius: 4px; }
+/* "Lo produce": el animal adulto en una caja de 64 px, a un múltiplo entero de su tamaño (16 o 32 px). */
+.sd-animal-pix { display: block; flex: none; margin: -4px 0; image-rendering: pixelated; }
 .sd-row-end { margin-left: auto; display: flex; align-items: center; gap: 10px; font-weight: 800; }
 .sd-row-end small { color: var(--sd-dim); font-size: 13px; }
 .sd-flow { padding: 4px 10px 4px 4px; }

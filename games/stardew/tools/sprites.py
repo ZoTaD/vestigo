@@ -123,7 +123,7 @@ def sprites_granja(salida: Path) -> int:
 
     De cada animal, el primer cuadro (`SpriteWidth`×`SpriteHeight`, de frente) del adulto (`<slug>.png`) y del bebé
     (`<slug>-baby.png`, si tiene: el dinosaurio nace grande); de cada edificio, el dibujo del menú de construcción
-    (`farm_data.building_box`).
+    (`farm_data.building_box`), con las aspas del molino y el agua del estanque (`building_layers`, `building_water`).
     """
     datos = farm_data.farm()
     hechos: dict[str, dict[str, Image.Image]] = {"animals": {}, "buildings": {}}
@@ -137,7 +137,19 @@ def sprites_granja(salida: Path) -> int:
     for b in datos["buildings"]:
         textura, x, y, w, h = farm_data.building_box(b["key"])
         hoja = Image.open(TEXTURAS / f"{textura}.png").convert("RGBA")
-        hechos["buildings"][f"{b['slug']}.png"] = hoja.crop((x, y, x + w, y + h))
+        dibujo = hoja.crop((x, y, x + w, y + h))
+        agua = farm_data.building_water(b["key"])
+        if agua:
+            (ax, ay, aw, ah), color = agua
+            fondo = hoja.crop((ax, ay, ax + aw, ay + ah))
+            # Teñido como `SpriteBatch.Draw` con color: cada canal multiplicado por el del color.
+            r, g, bl, alfa = fondo.split()
+            fondo = Image.merge("RGBA", [c.point(lambda v, k=k: v * k // 255) for c, k in zip((r, g, bl), color)] + [alfa])
+            fondo.alpha_composite(dibujo)
+            dibujo = fondo
+        for sx, sy, sw, sh, dx, dy in farm_data.building_layers(b["key"]):
+            dibujo.alpha_composite(hoja.crop((sx, sy, sx + sw, sy + sh)), (dx, dy))
+        hechos["buildings"][f"{b['slug']}.png"] = dibujo
     for carpeta, ims in hechos.items():
         destino = salida / carpeta
         destino.mkdir(parents=True, exist_ok=True)

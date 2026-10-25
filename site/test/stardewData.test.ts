@@ -188,6 +188,8 @@ describe("la ficha de un objeto", () => {
     const en = await page("en", "egg");
     expect(en).toContain(">Produced by<");
     expect(en).toContain('href="/en/stardew-valley/farm#white-chicken"');
+    // Con el sprite del animal adulto, a tamaño fijo.
+    expect(en).toContain('src="/stardew/animals/white-chicken.png" alt="" width="64" height="64" loading="lazy"');
     expect(en).toContain("White Chicken");
     const es = await page("es", "large-egg");
     expect(es).toContain('href="/es/stardew-valley/granja#white-chicken"');
@@ -198,7 +200,8 @@ describe("la ficha de un objeto", () => {
   it("la madera dice qué edificios la piden, con cuánta", async () => {
     const en = await page("en", "wood");
     expect(en).toContain(">Used to build<");
-    expect(en).toContain('href="/en/stardew-valley/farm#coop"');
+    // En la vista de Edificios de la Granja, en la fila del corral.
+    expect(en).toContain('href="/en/stardew-valley/farm?v=buildings#coop"');
     expect(en).toMatch(/<b>Coop<\/b>.*?× 300/);
     const es = await page("es", "wood");
     expect(es).toContain(">Para construir<");

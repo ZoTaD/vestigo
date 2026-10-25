@@ -370,6 +370,8 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                       "farm",
                       a.key,
                       <>
+                        {/* El animal adulto: 16×16 las aves y 32×32 el resto, a 4× y 2× en la misma caja de 64 px. */}
+                        <img className="sd-animal-pix" src={`/stardew/animals/${a.key}.png`} alt="" width={64} height={64} loading="lazy" decoding="async" />
                         <b>{say(a.who, lang)}</b>
                         {a.deluxe && (
                           <span className="sd-row-end">
@@ -440,6 +442,7 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                         <b>{say(building, lang)}</b>
                         <span className="sd-row-end">× {n.toLocaleString(locale)}</span>
                       </>,
+                      "?v=buildings",
                     )}
                   </li>
                 ))}

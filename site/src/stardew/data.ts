@@ -18,6 +18,7 @@ import { withPrices, type FishData } from "./fishing/state";
 import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
 import type { MinesData, Monster } from "./mines/state";
+import type { FarmData } from "./farm/state";
 import type { SaveData } from "./save/progress";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
@@ -335,6 +336,25 @@ export const peekMines = (): MinesData | null => {
   return d && noteMines(d);
 };
 export const loadMines = (): Promise<MinesData> => minesRaw.load().then(noteMines);
+
+/**
+ * La Granja (`farm.json`, un solo archivo chico): animales, edificios, la casa y los cuidados. Anota los slugs en
+ * español de los objetos que nombra (productos, materiales, máquinas), que enlazan a Objetos.
+ */
+const farmRaw = once<FarmData>(() => import("@stardew/farm.json"));
+let farmNoted = false;
+function noteFarm(d: FarmData): FarmData {
+  if (!farmNoted) {
+    registerStardewSlugs({ items: Object.fromEntries(Object.values(d.refs).filter((r) => r[1] !== r[0]).map((r) => [r[0], r[1]])) });
+    farmNoted = true;
+  }
+  return d;
+}
+export const peekFarm = (): FarmData | null => {
+  const d = farmRaw.peek();
+  return d && noteFarm(d);
+};
+export const loadFarm = (): Promise<FarmData> => farmRaw.load().then(noteFarm);
 
 export const say = (pair: readonly [string, string], lang: Lang): string => (lang === "es" && pair[1]) || pair[0];
 /** El nombre de una referencia en el idioma pedido. */

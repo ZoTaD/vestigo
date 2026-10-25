@@ -337,7 +337,7 @@ export const STARDEW_DETAIL_SECTIONS: StardewTab[] = ["items", "villagers", "min
  * acá desde el armazón (tarea 4) para que las direcciones queden fijas; la barra las apaga mientras no tengan su
  * línea en `TABS` de `Stardew.tsx`.
  */
-export const STARDEW_PUBLISHED: StardewTab[] = ["items", "villagers", "bundles", "crops", "fishing", "recipes", "calendar", "mines", "save"];
+export const STARDEW_PUBLISHED: StardewTab[] = ["items", "villagers", "bundles", "crops", "fishing", "recipes", "calendar", "mines", "save", "farm"];
 export const STARDEW_SECTION_ES: Record<StardewTab, string> = { items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca", recipes: "recetas", calendar: "calendario", mines: "minas", save: "partida", farm: "granja", museum: "museo", quests: "misiones", island: "isla-jengibre" };
 const STARDEW_SECTION_BY_ES = new Map(Object.entries(STARDEW_SECTION_ES).map(([tab, es]) => [es, tab as StardewTab]));
 

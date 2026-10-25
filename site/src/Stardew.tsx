@@ -33,6 +33,7 @@ const SdRecipes = lazyWithPreload(() => import("./stardew/recipes/StardewRecipes
 const SdCalendar = lazyWithPreload(() => import("./stardew/calendar/StardewCalendar"));
 const SdMines = lazyWithPreload(() => import("./stardew/mines/StardewMines"));
 const SdSave = lazyWithPreload(() => import("./stardew/save/StardewSave"));
+const SdFarm = lazyWithPreload(() => import("./stardew/farm/StardewFarm"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `STARDEW_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `STARDEW_TAB_FILES`.
@@ -46,6 +47,7 @@ const TABS: Partial<Record<StardewSection, LazyTab>> = {
   calendar: SdCalendar,
   mines: SdMines,
   save: SdSave,
+  farm: SdFarm,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -78,6 +80,8 @@ const TAB_DATA: Partial<Record<StardewSection, (route: Route) => Promise<unknown
   // El Lector de partida sin partida es sólo la caja para elegir el archivo: baja el chunk y nada más. Los datos se
   // piden al leer una partida (o al volver con una guardada).
   save: () => SdSave.preload(),
+  // La Granja: un solo archivo chico (animales, edificios, la casa) que baja con el chunk.
+  farm: () => Promise.all([SdFarm.preload(), import("./stardew/data").then((m) => m.loadFarm())]),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Stardew Valley, y sus datos. */

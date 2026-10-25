@@ -16,6 +16,7 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import crops_data  # noqa: E402
 import mines_data  # noqa: E402
+import relations  # noqa: E402
 import sdv  # noqa: E402
 
 DATA = crops_data.DATA
@@ -30,6 +31,19 @@ _HERRAMIENTA = {"Milk Pail": "pail", "Shears": "shears"}
 # agua de alrededor (`FishPond`) y la choza de Junimos en primavera, el primero de sus cuatro cuadros (`JunimoHut`). El
 # resto usa `SourceRect`, o la textura entera si viene vacío (`Building.getSourceRect`).
 _RECORTE_MENU = {"Fish Pond": (0, 0, 80, 80), "Junimo Hut": (0, 0, 48, 64)}
+# Lo que el menú dibuja encima o debajo de ese recorte. Las aspas del molino y la puerta de los animales (cerrada) son
+# capas aparte (`DrawLayers` de `Data/Buildings`, el primer cuadro si es animada): sin ellas el molino sale sin aspas y
+# el gallinero y el establo con un agujero en la pared. Las puertas abiertas y el eje del molino (que gira con algo
+# adentro) no van. El agua del estanque va debajo, el gris de (0, 80, 80, 80) teñido de (60, 126, 150)
+# (`FishPond.drawInMenu`).
+_PUERTA_GALLINERO = {"Default_AnimalDoor"}
+_PUERTA_ESTABLO = {"Default_AnimalDoor_Top", "Default_AnimalDoor_Bottom"}
+_CAPAS_MENU = {
+    "Mill": {"Default_WindSails"},
+    **dict.fromkeys(("Coop", "Big Coop", "Deluxe Coop"), _PUERTA_GALLINERO),
+    **dict.fromkeys(("Barn", "Big Barn", "Deluxe Barn"), _PUERTA_ESTABLO),
+}
+_AGUA_MENU = {"Fish Pond": ((0, 80, 80, 80), (60, 126, 150))}
 
 # Mejoras de la casa (`GameLocation.houseUpgradeAccept`): precio, materiales y días de obra (`daysUntilHouseUpgrade`).
 # Lo que suma cada una sale de lo que ofrece Robin (`houseUpgradeOffer`); el texto es propio, corto.
@@ -189,6 +203,22 @@ def building_box(clave: str) -> tuple[str, int, int, int, int]:
     return textura, 0, 0, w, h
 
 
+def building_layers(clave: str) -> list[tuple[int, int, int, int, int, int]]:
+    """(x, y, ancho, alto, x destino, y destino) de las capas que van encima del dibujo del menú (`_CAPAS_MENU`)."""
+    ids = _CAPAS_MENU.get(clave, set())
+    out = []
+    for c in sdv.raw("Data/Buildings")[clave].get("DrawLayers") or []:
+        if c["Id"] in ids:
+            r, d = c["SourceRect"], c["DrawPosition"]
+            out.append((r["X"], r["Y"], r["Width"], r["Height"], d["X"], d["Y"]))
+    return out
+
+
+def building_water(clave: str) -> tuple[tuple[int, int, int, int], tuple[int, int, int]] | None:
+    """El agua que va debajo del dibujo del menú (sólo el estanque): recorte y color con que se tiñe."""
+    return _AGUA_MENU.get(clave)
+
+
 def buildings(animales: list[dict]) -> list[dict]:
     out = []
     for k, b in sdv.raw("Data/Buildings").items():
@@ -271,16 +301,32 @@ def care(animales: list[dict]) -> list[dict]:
     ]
 
 
+def process(animales: list[dict]) -> dict[str, list[list]]:
+    """producto -> [máquina, producto que sale, minutos, días] de cada máquina que lo recibe (`relations.machines_by_input`,
+    la primera regla de `Data/Machines` que lo acepta, como el juego). Los productos sin máquina (la pluma de pato, la
+    pata de conejo) no están."""
+    por_entrada = relations.machines_by_input()
+    ids = sorted({p["id"] for a in animales for p in a["produce"]})
+    return {i: [[m["machine"], m["out"], m["minutes"], m["days"]] for m in por_entrada[i]] for i in ids if por_entrada.get(i)}
+
+
 def farm() -> dict:
     slugs, nombres = mines_data.sitio()
     an = animals()
     ed = buildings(an)
     casa = house()
-    # Los objetos nombrados (con la forma de `Ref`: slug, slug español, nombre en, es, ancho, alto).
+    proceso = process(an)
+    # Los objetos nombrados (con la forma de `Ref`: slug, slug español, nombre en, es, ancho, alto; las máquinas miden
+    # 16×32).
     ids = {p["id"] for a in an for p in a["produce"]} | {a["egg"] for a in an if a["egg"]}
     ids |= {m for b in ed for m, _ in b["materials"]} | {m for u in casa["upgrades"] for m, _ in u["materials"]}
-    refs = {i: [*slugs[i], *nombres[i], 16, 16] for i in sorted(ids) if i in slugs}
-    return {"animals": an, "buildings": ed, "house": casa, "care": care(an), "refs": refs}
+    ids |= {x for filas in proceso.values() for maq, sal, *_ in filas for x in (maq, sal)}
+    # `mines_data.sitio` nombra en inglés sólo lo de `Data/Objects`: las máquinas salen de `Data/BigCraftables`.
+    nombre = lambda i: [_grande(i[4:])[0], nombres[i][1]] if i.startswith("(BC)") else nombres[i]  # noqa: E731
+    refs = {i: [*slugs[i], *nombre(i), 16, 32 if i.startswith("(BC)") else 16] for i in sorted(ids) if i in slugs}
+    # El nombre de las herramientas con que se cosecha (`tool` de cada animal), de `Data/Tools`.
+    herramientas = {k: _tok(sdv.raw("Data/Tools")[t]["DisplayName"]) for k, t in (("pail", "MilkPail"), ("shears", "Shears"))}
+    return {"animals": an, "buildings": ed, "house": casa, "care": care(an), "process": proceso, "tools": herramientas, "refs": refs}
 
 
 def main() -> None:

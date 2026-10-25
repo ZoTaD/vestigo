@@ -136,6 +136,29 @@ class TestFarmData(unittest.TestCase):
         self.assertNotIn("granero", prof["text"][1].lower())
         self.assertIn("establo", prof["text"][1])
 
+    def test_maquinas_de_cada_producto(self):
+        proc = self.d["process"]
+        self.assertEqual(proc["176"], [["(BC)24", "306", 180, 0]])  # huevo -> mayonesera -> mayonesa
+        self.assertEqual(proc["440"][0][:2], ["(BC)17", "428"])  # lana -> telar -> tela
+        self.assertEqual(proc["430"][0][:2], ["(BC)19", "432"])  # trufa -> aceitera
+        self.assertNotIn("444", proc)  # la pluma de pato no va a ninguna máquina
+        for filas in proc.values():
+            for maq, sal, *_ in filas:
+                self.assertIn(maq, self.d["refs"])
+                self.assertIn(sal, self.d["refs"])
+        self.assertEqual(self.d["refs"]["(BC)24"][2:], ["Mayonnaise Machine", "Mayonesera", 16, 32])
+
+    def test_herramientas(self):
+        self.assertEqual(self.d["tools"], {"pail": ["Milk Pail", "Cubeta lechera"], "shears": ["Shears", "Tijeras de esquilar"]})
+
+    def test_capas_del_menu(self):
+        self.assertEqual(farm_data.building_layers("Mill"), [(64, 0, 32, 32, 8, 1)])
+        self.assertEqual(farm_data.building_layers("Coop"), [(0, 112, 16, 16, 32, 96)])
+        self.assertEqual(len(farm_data.building_layers("Deluxe Barn")), 2)
+        self.assertEqual(farm_data.building_layers("Shed"), [])
+        self.assertIsNotNone(farm_data.building_water("Fish Pond"))
+        self.assertIsNone(farm_data.building_water("Mill"))
+
 
 if __name__ == "__main__":
     unittest.main()

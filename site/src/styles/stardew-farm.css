@@ -1,0 +1,112 @@
+/*
+ * La Granja de Stardew Valley (etapa 4, tarea 6): las tarjetas de los animales, los edificios de Robin y del mago, la
+ * casa y los cuidados. Viaja con la pestaña (StardewFarm.tsx); los botones, rótulos y casilleros son los de stardew.css
+ * y stardew-items.css. Sin bordes ni barras de color: tinte de papel, texto y cifras. Todo en Nunito; la letra del
+ * juego sólo en los títulos de 32 px (`.sd-h2`). Los sprites van a un múltiplo entero de su tamaño (`.sd-pix`, con
+ * `image-rendering: pixelated`, de stardew-mines.css: se repite acá porque la pestaña no la carga).
+ */
+.sd-pix { display: block; image-rendering: pixelated; }
+.sd-farm .sd-filters { margin-top: 14px; }
+.sd-farm a:focus-visible { outline: 3px solid #6ec6ff; outline-offset: 1px; border-radius: 4px; }
+
+/* Un objeto: casillero y nombre (productos, máquinas, materiales). */
+.sd-fm-item { display: inline-flex; align-items: center; gap: 8px; min-width: 0; font: 800 15px/1.2 var(--sd-text); color: var(--sd-ink); }
+.sd-fm-item .sd-slot { flex: none; width: 52px; height: 52px; background-size: 52px; }
+.sd-fm-item > span:last-child { display: grid; }
+.sd-fm-item small { font: 800 13px/1.2 var(--sd-text); font-variant-numeric: tabular-nums; color: var(--sd-dim); }
+.sd-fm-item.is-small { gap: 6px; font-size: 14px; }
+.sd-fm-item.is-small .sd-slot { width: 44px; height: 44px; background-size: 44px; }
+a.sd-fm-item:hover b { text-decoration: underline; text-underline-offset: 3px; }
+
+/* --- Animales: una tarjeta por animal ------------------------------------------------------------------------- */
+.sd-fm-animals { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 10px; }
+.sd-fm-animal { display: flex; flex-direction: column; gap: 10px; padding: 8px 12px 12px 8px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-fm-ahead { display: flex; align-items: flex-end; gap: 8px; }
+.sd-fm-apix { display: grid; justify-items: center; gap: 2px; margin: 0; }
+.sd-fm-apix .sd-pix { box-sizing: content-box; padding: 4px; border-radius: 4px; background: #efdcb4; }
+.sd-fm-apix figcaption { font: 800 12px/1.2 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-aname { display: grid; gap: 4px; align-self: center; min-width: 0; margin-left: 4px; }
+.sd-fm-aname h3 { font: 800 21px/1.15 var(--sd-text); }
+.sd-fm-price { display: grid; gap: 2px; font-size: 18px; }
+.sd-fm-price small { font: 700 13px/1.25 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-price.is-none { font: 800 14px/1.25 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-from { padding: 6px 10px; border-radius: 4px; background: #f3e7b8; font: 600 14px/1.35 var(--sd-text); }
+
+/* Las cuatro cifras: crecer, producir, cosechar y vender, sobre un tinte más oscuro que la tarjeta. */
+.sd-fm-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; margin: 0; }
+.sd-fm-stats div { display: grid; align-content: start; gap: 2px; padding: 5px 8px; border-radius: 4px; background: #f3e2bd; }
+.sd-fm-stats dt { font: 800 12px/1.2 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-stats dd { margin: 0; font: 800 15px/1.25 var(--sd-text); font-variant-numeric: tabular-nums; }
+
+/* Lo que da: el producto y, debajo, la máquina donde se procesa y lo que sale. */
+.sd-fm-produce { display: grid; gap: 8px; margin-top: -4px; }
+.sd-fm-produce > li { display: grid; gap: 4px; }
+.sd-fm-prow { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.sd-fm-deluxe { display: inline-flex; align-items: baseline; gap: 6px; padding: 2px 8px; border-radius: 999px; background: #e8d4f4; font: 800 13px/1.3 var(--sd-text); white-space: nowrap; }
+.sd-fm-deluxe small { font: 700 12px/1.3 var(--sd-text); color: var(--sd-dim); }
+/* Sin partir la fila: si no entra, el nombre de la máquina o del producto pasa a dos renglones (entre palabras). */
+.sd-fm-flow { display: flex; align-items: center; gap: 2px 8px; margin-left: 26px; padding: 2px 8px 2px 4px; border-radius: 6px; background: #f6ead0; }
+.sd-fm-flow .sd-fm-item { flex: 0 1 auto; }
+.sd-fm-in { flex: none; font: 800 12px/1.2 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-arrow { flex: none; font: 800 16px/1 var(--sd-text); color: var(--sd-dim); }
+
+/* Los cuidados: la cifra grande (verde si suma, roja si resta) y el texto. */
+.sd-fm-crows { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 6px; margin-top: 10px; }
+.sd-fm-crows li { display: flex; align-items: center; gap: 12px; padding: 6px 10px 6px 6px; border-radius: 6px; background: var(--sd-paper); font: 600 15px/1.35 var(--sd-text); }
+.sd-fm-crows li > span:last-child { display: grid; gap: 1px; }
+.sd-fm-crows small { font: 800 12px/1.2 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-cval { flex: none; display: grid; place-items: center; min-width: 74px; padding: 6px 6px; border-radius: 4px; background: #efe2c6; font: 800 19px/1 var(--sd-text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sd-fm-cval.is-up { background: #d6ecc4; color: #2f5d1c; }
+.sd-fm-cval.is-down { background: #f6d3d8; color: #8a1f2c; }
+
+/* --- Edificios: el dibujo a la izquierda (al doble) y los datos a la derecha ------------------------------------ */
+.sd-fm-buildings { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 540px), 1fr)); gap: 10px; margin-top: 10px; }
+.sd-fm-building { container-type: inline-size; padding: 8px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-fm-bwrap { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 14px; align-items: start; }
+.sd-fm-bpix { display: flex; align-items: flex-end; justify-content: center; height: 264px; padding-bottom: 4px; border-radius: 4px; background: #efdcb4; }
+.sd-fm-binfo { display: grid; justify-items: start; gap: 6px; min-width: 0; padding-top: 2px; }
+.sd-fm-binfo h3 { font: 800 21px/1.15 var(--sd-text); }
+.sd-fm-desc { font: 600 14px/1.35 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-bnote { padding: 6px 10px; border-radius: 4px; background: #f3e7b8; font: 700 14px/1.35 var(--sd-text); }
+.sd-fm-bstats { display: flex; flex-wrap: wrap; gap: 4px; }
+.sd-fm-bstats > span { padding: 3px 9px; border-radius: 999px; background: #f3e2bd; font: 800 14px/1.3 var(--sd-text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sd-fm-bstats .sd-fm-cost { font-size: 17px; }
+.sd-fm-bstats .sd-fm-cost small { font: 800 12px/1 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-chain { display: flex; flex-wrap: wrap; gap: 2px 12px; font: 700 14px/1.35 var(--sd-text); }
+.sd-fm-chain > span:last-child { color: var(--sd-dim); }
+.sd-fm-binfo .sd-label { margin-top: 2px; }
+.sd-fm-mats { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: -4px; }
+.sd-fm-who { display: flex; flex-wrap: wrap; gap: 4px; margin-top: -2px; }
+.sd-fm-who a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 4px; background: #efdcb4; }
+.sd-fm-who a:hover { background: #e6cf9f; }
+.sd-fm-multi { margin-top: 12px; }
+/* Angosto: el dibujo arriba, a lo ancho, y los datos debajo. */
+@container (max-width: 520px) {
+  .sd-fm-bwrap { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- La casa: las tres mejoras y las reformas -------------------------------------------------------------- */
+.sd-fm-ups, .sd-fm-renos { display: grid; gap: 6px; margin-top: 10px; }
+.sd-fm-up { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; grid-template-areas: "level adds cost" "level days cost"; align-items: center; gap: 2px 14px; padding: 8px 12px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-fm-level { grid-area: level; font: 800 17px/1.2 var(--sd-text); color: var(--sd-wood); }
+.sd-fm-adds { grid-area: adds; font: 700 15px/1.35 var(--sd-text); }
+.sd-fm-udays { grid-area: days; font: 700 13px/1.2 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-ucost { grid-area: cost; display: grid; grid-template-columns: auto 150px; align-items: center; justify-items: end; gap: 4px 12px; font-size: 18px; }
+.sd-fm-umats { justify-self: start; display: flex; flex-wrap: wrap; gap: 4px; }
+.sd-fm-total { margin-top: 10px; font: 800 16px/1.3 var(--sd-text); }
+.sd-fm-total .sd-gold { font-size: 19px; }
+.sd-fm-reno { display: flex; align-items: center; gap: 6px 14px; padding: 8px 12px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
+.sd-fm-reno > span:first-child { display: grid; gap: 2px; min-width: 0; }
+.sd-fm-reno b { font: 800 16px/1.25 var(--sd-text); }
+.sd-fm-reno small { font: 600 14px/1.35 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-rprice { margin-left: auto; font: 800 17px/1.2 var(--sd-text); color: var(--sd-gold); white-space: nowrap; }
+@container (max-width: 520px) {
+  .sd-fm-up { grid-template-columns: minmax(0, 1fr); grid-template-areas: "level" "adds" "days" "cost"; }
+  .sd-fm-ucost { grid-template-columns: auto minmax(0, 1fr); justify-items: start; }
+}
+/* Angosto: la flecha alcanza para leer "máquina → producto"; el rótulo "Va en" queda para el lector de pantalla. */
+@container (max-width: 420px) {
+  /* Y si no entra en un renglón, "máquina →" arriba y el producto abajo (nunca afuera de la tarjeta). */
+  .sd-fm-flow { flex-wrap: wrap; margin-left: 12px; }
+  .sd-fm-in { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}

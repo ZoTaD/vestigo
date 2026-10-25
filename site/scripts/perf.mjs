@@ -127,6 +127,9 @@ export const PAGES = [
   // El Lector de partida sin partida (lo que se abre en frío): la caja para elegir el archivo.
   "/en/stardew-valley/save",
   "/es/stardew-valley/partida",
+  // La Granja: Animales (lo que se abre en frío) y la vista de Edificios, la de los dibujos grandes.
+  "/en/stardew-valley/farm",
+  "/es/stardew-valley/granja?v=buildings",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

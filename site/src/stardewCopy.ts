@@ -13,10 +13,11 @@ import type { SortKey } from "./stardew/crops/state";
 import type { Kind } from "./stardew/fishing/state";
 import type { View } from "./stardew/recipes/state";
 import type { MinesView, WeaponSort, WeaponType } from "./stardew/mines/state";
+import type { FarmView } from "./stardew/farm/state";
 import type { Group, SourceFilter } from "./stardew/data";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "fishing", "mines", "recipes", "villagers", "calendar", "bundles", "save"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "recipes", "villagers", "calendar", "bundles", "save"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -386,6 +387,66 @@ export interface MinesCopy {
   };
 }
 
+/** Los textos de la pestaña Granja: animales, edificios, la casa y los cuidados. */
+export interface FarmCopy {
+  h1: string;
+  lede: string;
+  view: string;
+  views: Record<FarmView, string>;
+  animals: {
+    count: (n: string) => string;
+    adult: string;
+    baby: string;
+    /** "Pide: Corral grande", el edificio que Marnie pide para venderlo. */
+    needs: (building: string) => string;
+    notSold: string;
+    stats: { grows: string; every: string; harvest: string; sell: string };
+    /** Días para crecer; 0 nace adulto. */
+    grows: (n: number) => string;
+    every: (n: number) => string;
+    dig: string;
+    floor: string;
+    upTo: string;
+    produce: string;
+    deluxe: string;
+    /** La amistad (0 a 1.000) que pide el producto de lujo. */
+    friendship: (n: string) => string;
+    machine: string;
+  };
+  care: {
+    title: string;
+    hint: string;
+    stats: Record<"friendship" | "mood" | "both", string>;
+  };
+  buildings: {
+    robin: string;
+    robinHint: string;
+    wizard: string;
+    wizardHint: string;
+    cost: string;
+    materials: string;
+    onlyGold: string;
+    /** Días de obra; 0 en el acto. */
+    days: (n: number) => string;
+    size: (w: number, h: number) => string;
+    upgradeOf: (name: string) => string;
+    /** Lo que cuesta en oro llegar hasta esta mejora desde cero. */
+    total: string;
+    houses: string;
+    multiplayer: string;
+    multiplayerNote: string;
+  };
+  house: {
+    upgrades: string;
+    upgradesHint: string;
+    level: (n: number) => string;
+    total: string;
+    renovations: string;
+    renovationsHint: string;
+    free: string;
+  };
+}
+
 /** Los textos del Lector de partida: la caja para elegir el archivo y las cajas de la partida leída. */
 export interface SaveCopy {
   h1: string;
@@ -504,6 +565,7 @@ export interface StardewCopy {
   recipes: RecipesCopy;
   calendar: CalendarCopy;
   mines: MinesCopy;
+  farm: FarmCopy;
   save: SaveCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
@@ -917,6 +979,59 @@ const EN: StardewCopy = {
       slayerGoal: (n) => `Slay ${n} in total of:`,
       reward: "Reward",
       phone: "Marlon's phone number, to use the Item Recovery Service by phone",
+    },
+  },
+  farm: {
+    h1: "Farm animals and buildings",
+    lede: "Every farm animal with what it gives and how to keep it happy, every building from Robin and the Wizard with its materials, and the farmhouse upgrades.",
+    view: "View",
+    views: { animals: "Animals", buildings: "Buildings", house: "Farmhouse" },
+    animals: {
+      count: (n) => `${n} animals`,
+      adult: "Adult",
+      baby: "Baby",
+      needs: (b) => `Needs: ${b}`,
+      notSold: "Marnie doesn't sell it",
+      stats: { grows: "Adult in", every: "Produces", harvest: "Harvest", sell: "Sells for" },
+      grows: (n) => (n === 0 ? "Born adult" : n === 1 ? "1 day" : `${n} days`),
+      every: (n) => (n === 1 ? "Every day" : `Every ${n} days`),
+      dig: "Digs it up outside",
+      floor: "Off the floor",
+      upTo: "up to",
+      produce: "What it gives",
+      deluxe: "Deluxe",
+      friendship: (n) => `${n}+ friendship`,
+      machine: "Goes in",
+    },
+    care: {
+      title: "Care",
+      hint: "Friendship goes from 0 to 1,000 (5 hearts) and mood from 0 to 255. The happier and friendlier, the more often deluxe produce.",
+      stats: { friendship: "Friendship", mood: "Mood", both: "Friendship and mood" },
+    },
+    buildings: {
+      robin: "Robin's buildings",
+      robinHint: "Ordered at the carpenter's shop; Robin builds one at a time.",
+      wizard: "Wizard's buildings",
+      wizardHint: "Ordered at his tower and ready on the spot.",
+      cost: "Cost",
+      materials: "Materials",
+      onlyGold: "Gold only",
+      days: (n) => (n === 0 ? "Ready on the spot" : n === 1 ? "1 day of work" : `${n} days of work`),
+      size: (w, h) => `${w}×${h} tiles`,
+      upgradeOf: (name) => `Upgrades the ${name}`,
+      total: "From scratch",
+      houses: "Who lives here",
+      multiplayer: "Multiplayer only",
+      multiplayerNote: "The home of each farmer who joins your farm in a multiplayer game.",
+    },
+    house: {
+      upgrades: "Farmhouse upgrades",
+      upgradesHint: "Robin does them in order, one at a time.",
+      level: (n) => `Upgrade ${n}`,
+      total: "All three",
+      renovations: "Renovations",
+      renovationsHint: "Robin offers them after the second upgrade, and each one can be undone.",
+      free: "Free",
     },
   },
   save: {
@@ -1425,6 +1540,59 @@ const ES: StardewCopy = {
       slayerGoal: (n) => `Matá ${n} entre:`,
       reward: "Premio",
       phone: "El teléfono de Marlon, para usar el Servicio de Recuperación de Objetos por teléfono",
+    },
+  },
+  farm: {
+    h1: "Animales y edificios de la granja",
+    lede: "Cada animal de la granja con lo que da y cómo tenerlo contento, cada edificio de Robin y del mago con sus materiales, y las mejoras de la casa.",
+    view: "Vista",
+    views: { animals: "Animales", buildings: "Edificios", house: "Casa" },
+    animals: {
+      count: (n) => `${n} animales`,
+      adult: "Adulto",
+      baby: "Cría",
+      needs: (b) => `Pide: ${b}`,
+      notSold: "Marnie no lo vende",
+      stats: { grows: "Adulto en", every: "Produce", harvest: "Se cosecha", sell: "Se vende" },
+      grows: (n) => (n === 0 ? "Nace adulto" : n === 1 ? "1 día" : `${n} días`),
+      every: (n) => (n === 1 ? "Todos los días" : `Cada ${n} días`),
+      dig: "Lo desentierra afuera",
+      floor: "Del piso",
+      upTo: "hasta",
+      produce: "Lo que da",
+      deluxe: "De lujo",
+      friendship: (n) => `amistad ${n}+`,
+      machine: "Va en",
+    },
+    care: {
+      title: "Cuidados",
+      hint: "La amistad va de 0 a 1.000 (5 corazones) y el ánimo de 0 a 255. Cuanto más contento y más amigo, más seguido da lo de lujo.",
+      stats: { friendship: "Amistad", mood: "Ánimo", both: "Amistad y ánimo" },
+    },
+    buildings: {
+      robin: "Edificios de Robin",
+      robinHint: "Se encargan en la carpintería; Robin hace uno por vez.",
+      wizard: "Edificios del mago",
+      wizardHint: "Se encargan en su torre y quedan hechos en el acto.",
+      cost: "Costo",
+      materials: "Materiales",
+      onlyGold: "Sólo oro",
+      days: (n) => (n === 0 ? "En el acto" : n === 1 ? "1 día de obra" : `${n} días de obra`),
+      size: (w, h) => `${w}×${h} casillas`,
+      upgradeOf: (name) => `Mejora de: ${name}`,
+      total: "Desde cero",
+      houses: "Quién vive",
+      multiplayer: "Sólo en multijugador",
+      multiplayerNote: "La casa de cada granjero que se suma a tu granja en una partida multijugador. No es la otra Cabaña, el edificio vacío para decorar.",
+    },
+    house: {
+      upgrades: "Mejoras de la casa",
+      upgradesHint: "Las hace Robin en orden, una por vez.",
+      level: (n) => `Mejora ${n}`,
+      total: "Las tres",
+      renovations: "Reformas",
+      renovationsHint: "Robin las ofrece después de la segunda mejora, y cada una se puede deshacer.",
+      free: "Gratis",
     },
   },
   save: {
