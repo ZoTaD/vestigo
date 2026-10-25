@@ -13,7 +13,7 @@
  * donde está. Ninguna lista pasa de ~25 filas: no hace falta `LazyRows`; las imágenes van `lazy`, con tamaño fijo y a
  * un múltiplo entero de su tamaño.
  */
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent } from "react";
 import { useLang, useLocale } from "../../i18n";
 import RouteLink from "../../RouteLink";
 import { routePath, type Route } from "../../route";
@@ -22,16 +22,7 @@ import { useLoad } from "../../useLoad";
 import { loadFarm, peekFarm, say } from "../data";
 import { Pix } from "../mines/pix";
 import { pixelScale } from "../mines/state";
-import {
-  Box,
-  Gold,
-  Group,
-  Pill,
-  SdLoading,
-  Slot,
-  Sprite,
-  type Nav,
-} from "../ui";
+import { Box, Gold, Group, Pill, SdLoading, Slot, Sprite, type Nav } from "../ui";
 import {
   animalsByHouse,
   buildingChain,
@@ -40,6 +31,7 @@ import {
   FARM_VIEWS,
   maxSellPrice,
   MULTIPLAYER,
+  residents,
   readFarmView,
   viewOfAnchor,
   writeFarmView,
@@ -51,13 +43,7 @@ import {
 import "../../styles/stardew-items.css";
 import "../../styles/stardew-farm.css";
 
-export default function StardewFarm({
-  route,
-  navigate,
-}: {
-  route: Route;
-  navigate: Nav;
-}) {
+export default function StardewFarm({ route, navigate }: { route: Route; navigate: Nav }) {
   const data = useLoad("farm", () => peekFarm() ?? undefined, loadFarm);
   if (data.failed) return <SdLoading onRetry={data.retry} />;
   if (!data.value) return <SdLoading />;
@@ -67,32 +53,16 @@ export default function StardewFarm({
 /** Abre la vista y lleva a una fila: la dirección queda con la vista y el ancla, y el scroll espera el dibujo nuevo. */
 type Go = (view: FarmView, anchor?: string) => void;
 
-const scrollTo = (id: string) =>
-  window.setTimeout(
-    () => document.getElementById(id)?.scrollIntoView({ block: "start" }),
-    80,
-  );
+const scrollTo = (id: string) => window.setTimeout(() => document.getElementById(id)?.scrollIntoView({ block: "start" }), 80);
 
-export function FarmBook({
-  data,
-  route,
-  navigate,
-  initial = DEFAULT_FARM_VIEW,
-}: {
-  data: FarmData;
-  route: Route;
-  navigate: Nav;
-  initial?: FarmView;
-}) {
+export function FarmBook({ data, route, navigate, initial = DEFAULT_FARM_VIEW }: { data: FarmData; route: Route; navigate: Nav; initial?: FarmView }) {
   const t = useStardewCopy();
   const f = t.farm;
   const [view, setView] = useState<FarmView>(initial);
   // La vista de la dirección; sin `?v=`, la del ancla (`#coop` es un edificio). Después, la fila del ancla.
   useEffect(() => {
     const anchor = window.location.hash.slice(1);
-    const v = window.location.search
-      ? readFarmView(window.location.search)
-      : (viewOfAnchor(data, anchor) ?? DEFAULT_FARM_VIEW);
+    const v = window.location.search ? readFarmView(window.location.search) : (viewOfAnchor(data, anchor) ?? DEFAULT_FARM_VIEW);
     setView(v);
     if (!anchor) return;
     const timer = scrollTo(anchor);
@@ -100,11 +70,7 @@ export function FarmBook({
   }, [data]);
   const go: Go = (v, anchor) => {
     setView(v);
-    window.history.replaceState(
-      window.history.state,
-      "",
-      `${window.location.pathname}${writeFarmView(v)}${anchor ? `#${anchor}` : ""}`,
-    );
+    window.history.replaceState(window.history.state, "", `${window.location.pathname}${writeFarmView(v)}${anchor ? `#${anchor}` : ""}`);
     if (anchor) scrollTo(anchor);
   };
 
@@ -123,21 +89,9 @@ export function FarmBook({
           </Group>
         </div>
       </Box>
-      {view === "animals" && (
-        <Animals data={data} route={route} navigate={navigate} f={f} />
-      )}
-      {view === "buildings" && (
-        <Buildings
-          data={data}
-          route={route}
-          navigate={navigate}
-          f={f}
-          go={go}
-        />
-      )}
-      {view === "house" && (
-        <House data={data} route={route} navigate={navigate} f={f} />
-      )}
+      {view === "animals" && <Animals data={data} route={route} navigate={navigate} f={f} />}
+      {view === "buildings" && <Buildings data={data} route={route} navigate={navigate} f={f} go={go} />}
+      {view === "house" && <House data={data} route={route} navigate={navigate} f={f} />}
     </main>
   );
 }
@@ -145,23 +99,14 @@ export function FarmBook({
 type Props = { data: FarmData; route: Route; navigate: Nav; f: FarmCopy };
 
 /** Un objeto (producto, material, máquina): casillero con su sprite y el nombre, enlazado a su ficha de Objetos. */
-function ItemCell({
-  data,
-  id,
-  route,
-  navigate,
-  n,
-  small,
-}: Omit<Props, "f"> & { id: string; n?: number; small?: boolean }) {
+function ItemCell({ data, id, route, navigate, n, small }: Omit<Props, "f"> & { id: string; n?: number; small?: boolean }) {
   const { lang } = useLang();
   const locale = useLocale();
   const r = data.refs[id];
   const name = r ? (lang === "es" && r[3]) || r[2] : id;
   const body = (
     <>
-      <Slot>
-        {r && <Sprite id={id} w={r[4]} h={r[5]} size={small ? 32 : 40} />}
-      </Slot>
+      <Slot>{r && <Sprite id={id} w={r[4]} h={r[5]} size={small ? 32 : 40} />}</Slot>
       <span>
         <b>{name}</b>
         {n != null && <small>× {n.toLocaleString(locale)}</small>}
@@ -170,12 +115,7 @@ function ItemCell({
   );
   const cls = `sd-fm-item${small ? " is-small" : ""}`;
   return r ? (
-    <RouteLink
-      className={cls}
-      to={{ ...route, view: "stardew", sdSection: "items", detail: r[0] }}
-      onNavigate={navigate}
-      prefetch="press"
-    >
+    <RouteLink className={cls} to={{ ...route, view: "stardew", sdSection: "items", detail: r[0] }} onNavigate={navigate} prefetch="press">
       {body}
     </RouteLink>
   ) : (
@@ -184,36 +124,28 @@ function ItemCell({
 }
 
 /** El sprite de un animal (adulto o cría) lo más grande que entre en una caja de `box` px. */
-function AnimalPix({
-  a,
-  baby,
-  box,
-}: {
-  a: Animal;
-  baby?: boolean;
-  box: number;
-}) {
+function AnimalPix({ a, baby, box }: { a: Animal; baby?: boolean; box: number }) {
   const [w, h] = a.sprite;
-  return (
-    <Pix
-      src={`/stardew/animals/${a.slug}${baby ? "-baby" : ""}.png`}
-      w={w}
-      h={h}
-      k={pixelScale(w, h, box, box)}
-    />
-  );
+  return <Pix src={`/stardew/animals/${a.slug}${baby ? "-baby" : ""}.png`} w={w} h={h} k={pixelScale(w, h, box, box)} />;
 }
 
-/** El dibujo de un edificio, al doble (los más grandes miden 112×128: 224×256 en pantalla). */
-function BuildingPix({ b, k = 2 }: { b: Building; k?: number }) {
+/**
+ * El dibujo de un edificio. Los atributos van a 1× (el tamaño del archivo) y el CSS lo agranda al doble con `--w`/`--h`
+ * (los más grandes miden 112×128: 224×256 en pantalla); en el teléfono queda a 1×. Siempre un múltiplo entero.
+ */
+function BuildingPix({ b }: { b: Building }) {
   const [w, h] = b.sprite;
-  return <Pix src={`/stardew/buildings/${b.slug}.png`} w={w} h={h} k={k} />;
+  return (
+    <span className="sd-fm-bimg" style={{ "--w": `${w}px`, "--h": `${h}px` } as CSSProperties}>
+      <Pix src={`/stardew/buildings/${b.slug}.png`} w={w} h={h} k={1} />
+    </span>
+  );
 }
 
 // --- Animales ---------------------------------------------------------------------------------------------------
 
 function Animals(props: Props) {
-  const { data, f } = props;
+  const { data } = props;
   const { lang } = useLang();
   const groups = useMemo(() => animalsByHouse(data), [data]);
   const houseName = (key: string) => {
@@ -242,15 +174,8 @@ function AnimalCard({ a, ...props }: Props & { a: Animal }) {
   const c = f.animals;
   const { lang } = useLang();
   const locale = useLocale();
-  const needs = a.needs
-    ? data.buildings.find((b) => b.key === a.needs)
-    : undefined;
-  const harvest =
-    a.tool === "pail" || a.tool === "shears"
-      ? say(data.tools[a.tool], lang)
-      : a.tool === "dig"
-        ? c.dig
-        : c.floor;
+  const needs = a.needs ? data.buildings.find((b) => b.key === a.needs) : undefined;
+  const harvest = a.tool === "pail" || a.tool === "shears" ? say(data.tools[a.tool], lang) : a.tool === "dig" ? c.dig : c.floor;
   return (
     <li className="sd-fm-animal" id={a.slug}>
       <div className="sd-fm-ahead">
@@ -272,7 +197,10 @@ function AnimalCard({ a, ...props }: Props & { a: Animal }) {
               {needs && <small>{c.needs(say(needs.name, lang))}</small>}
             </span>
           ) : (
-            <span className="sd-fm-price is-none">{c.notSold}</span>
+            <span className="sd-fm-price is-none">
+              {c.notSold}
+              {needs && <small>{c.needs(say(needs.name, lang))}</small>}
+            </span>
           )}
         </div>
       </div>
@@ -306,22 +234,21 @@ function AnimalCard({ a, ...props }: Props & { a: Animal }) {
               {p.deluxe && (
                 <span className="sd-fm-deluxe">
                   {c.deluxe}
-                  {p.minFriendship > 0 && (
-                    <small>
-                      {c.friendship(p.minFriendship.toLocaleString(locale))}
-                    </small>
-                  )}
+                  {p.minFriendship > 0 && <small>{c.friendship(p.minFriendship.toLocaleString(locale))}</small>}
                 </span>
               )}
             </div>
-            {(data.process[p.id] ?? []).map(([machine, out]) => (
+            {(data.process[p.id] ?? []).map(([machine, out, , , n]) => (
               <div className="sd-fm-flow" key={machine}>
                 <span className="sd-fm-in">{c.machine}</span>
                 <ItemCell {...props} id={machine} small />
-                <span className="sd-fm-arrow" aria-hidden="true">
-                  →
+                {/* La flecha baja junto con lo que sale, nunca sola al final del renglón. */}
+                <span className="sd-fm-out">
+                  <span className="sd-fm-arrow" aria-hidden="true">
+                    →
+                  </span>
+                  <ItemCell {...props} id={out} n={n > 1 ? n : undefined} small />
                 </span>
-                <ItemCell {...props} id={out} small />
               </div>
             ))}
           </li>
@@ -340,11 +267,7 @@ function CareBox({ data, f }: Props) {
       <ul className="sd-fm-crows">
         {data.care.map((c) => (
           <li key={c.key} data-care={c.key}>
-            <span
-              className={`sd-fm-cval${c.value.startsWith("+") ? " is-up" : c.value.startsWith("±") ? "" : " is-down"}`}
-            >
-              {c.value}
-            </span>
+            <span className={`sd-fm-cval${c.value.startsWith("+") ? " is-up" : c.value.startsWith("±") ? "" : " is-down"}`}>{c.value}</span>
             <span>
               <small>{f.care.stats[c.stat]}</small>
               {say(c.text, lang)}
@@ -396,25 +319,15 @@ function Buildings(props: Props & { go: Go }) {
   );
 }
 
-function BuildingCard({
-  b,
-  note,
-  go,
-  ...props
-}: Props & { b: Building; note?: string; go: Go }) {
+function BuildingCard({ b, note, go, ...props }: Props & { b: Building; note?: string; go: Go }) {
   const { data, f } = props;
   const c = f.buildings;
   const { lang } = useLang();
   const chain = useMemo(() => buildingChain(data, b.key), [data, b.key]);
-  const base = b.upgradeOf
-    ? data.buildings.find((x) => x.key === b.upgradeOf)
-    : undefined;
-  const animals = b.animals
-    .map((k) => data.animals.find((a) => a.key === k))
-    .filter((a): a is Animal => !!a);
+  const base = b.upgradeOf ? data.buildings.find((x) => x.key === b.upgradeOf) : undefined;
+  const animals = useMemo(() => residents(data, b.key), [data, b.key]);
   const toAnimal = (a: Animal) => (e: MouseEvent) => {
-    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
-      return;
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
     go("animals", a.slug);
   };
@@ -461,12 +374,7 @@ function BuildingCard({
               <ul className="sd-fm-who">
                 {animals.map((a) => (
                   <li key={a.key}>
-                    <a
-                      href={`${routePath(props.route)}#${a.slug}`}
-                      onClick={toAnimal(a)}
-                      title={say(a.name, lang)}
-                      aria-label={say(a.name, lang)}
-                    >
+                    <a href={`${routePath(props.route)}#${a.slug}`} onClick={toAnimal(a)} title={say(a.name, lang)} aria-label={say(a.name, lang)}>
                       <AnimalPix a={a} box={32} />
                     </a>
                   </li>
@@ -525,9 +433,7 @@ function House(props: Props) {
                 <b>{say(r.name, lang)}</b>
                 <small>{say(r.desc, lang)}</small>
               </span>
-              <span className="sd-fm-rprice">
-                {r.price > 0 ? <Gold n={r.price} /> : h.free}
-              </span>
+              <span className="sd-fm-rprice">{r.price > 0 ? <Gold n={r.price} /> : h.free}</span>
             </li>
           ))}
         </ul>

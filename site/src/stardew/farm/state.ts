@@ -9,14 +9,7 @@
 
 type Pair = [en: string, es: string];
 /** Un objeto nombrado, igual que `Ref` de data.ts: slug, slug en español, nombres y tamaño del sprite. */
-type Ref = [
-  slug: string,
-  slugEs: string,
-  en: string,
-  es: string,
-  w: number,
-  h: number,
-];
+type Ref = [slug: string, slugEs: string, en: string, es: string, w: number, h: number];
 
 /** Lo que da un animal: el id del objeto, si es el de lujo y la amistad (0 a 1000) que pide. */
 export interface Produce {
@@ -36,7 +29,10 @@ export interface Animal {
   house: string;
   /** Lo que cobra Marnie; null si no lo vende (y entonces `from` dice de dónde sale). */
   price: number | null;
-  /** El edificio que Marnie pide para venderlo (la clave), o null. */
+  /**
+   * El edificio que hace falta para tenerlo (la clave), o null: el que Marnie pide para venderlo, o el Gallinero grande
+   * para los que salen de la incubadora común (la gallina del vacío, la dorada, el dinosaurio).
+   */
   needs: string | null;
   /** De dónde sale si Marnie no lo vende (o, la gallina azul, cuándo sale en su lugar). */
   from: Pair | null;
@@ -112,11 +108,8 @@ export interface FarmData {
   buildings: Building[];
   house: { upgrades: HouseUpgrade[]; renovations: Renovation[] };
   care: Care[];
-  /** Producto → cada máquina que lo recibe: máquina (`(BC)24`), lo que sale, minutos y días. */
-  process: Record<
-    string,
-    [machine: string, out: string, minutes: number, days: number][]
-  >;
+  /** Producto → cada máquina que lo recibe: máquina (`(BC)24`), lo que sale, minutos, días y cuántos salen. */
+  process: Record<string, [machine: string, out: string, minutes: number, days: number, n: number][]>;
   /** El nombre de las herramientas de `tool`. */
   tools: Record<"pail" | "shears", Pair>;
   refs: Record<string, Ref>;
@@ -131,13 +124,10 @@ export const DEFAULT_FARM_VIEW: FarmView = "animals";
 /** La vista escrita en la dirección (`?v=buildings`); lo que no se conoce, Animales. */
 export function readFarmView(search: string): FarmView {
   const v = new URLSearchParams(search).get("v");
-  return (FARM_VIEWS as readonly string[]).includes(v ?? "")
-    ? (v as FarmView)
-    : DEFAULT_FARM_VIEW;
+  return (FARM_VIEWS as readonly string[]).includes(v ?? "") ? (v as FarmView) : DEFAULT_FARM_VIEW;
 }
 /** Lo contrario: `?v=…`, vacío en la vista por defecto. */
-export const writeFarmView = (v: FarmView): string =>
-  v === DEFAULT_FARM_VIEW ? "" : `?v=${v}`;
+export const writeFarmView = (v: FarmView): string => (v === DEFAULT_FARM_VIEW ? "" : `?v=${v}`);
 
 /**
  * La vista donde está un ancla (`#coop` es un edificio, `#add-cubby` una reforma de la casa), para un enlace que llega
@@ -147,11 +137,7 @@ export function viewOfAnchor(data: FarmData, anchor: string): FarmView | null {
   if (!anchor) return null;
   if (data.animals.some((a) => a.slug === anchor)) return "animals";
   if (data.buildings.some((b) => b.slug === anchor)) return "buildings";
-  if (
-    anchor.startsWith("upgrade-") ||
-    data.house.renovations.some((r) => r.slug === anchor)
-  )
-    return "house";
+  if (anchor.startsWith("upgrade-") || data.house.renovations.some((r) => r.slug === anchor)) return "house";
   return null;
 }
 
@@ -161,14 +147,10 @@ export function viewOfAnchor(data: FarmData, anchor: string): FarmView | null {
 const HOUSE_ORDER = ["Coop", "Barn"];
 
 /** Los animales agrupados por el edificio donde viven: Gallinero, Establo y otros, cada grupo en el orden del juego. */
-export function animalsByHouse(
-  data: FarmData,
-): [house: string, animals: Animal[]][] {
+export function animalsByHouse(data: FarmData): [house: string, animals: Animal[]][] {
   const groups = new Map<string, Animal[]>();
-  for (const a of data.animals)
-    groups.set(a.house, [...(groups.get(a.house) ?? []), a]);
-  const rank = (h: string) =>
-    HOUSE_ORDER.includes(h) ? HOUSE_ORDER.indexOf(h) : HOUSE_ORDER.length;
+  for (const a of data.animals) groups.set(a.house, [...(groups.get(a.house) ?? []), a]);
+  const rank = (h: string) => (HOUSE_ORDER.includes(h) ? HOUSE_ORDER.indexOf(h) : HOUSE_ORDER.length);
   return [...groups.entries()].sort((a, b) => rank(a[0]) - rank(b[0]));
 }
 
@@ -176,20 +158,24 @@ export function animalsByHouse(
  * La cadena de mejoras que termina en un edificio, del primero al pedido (`Deluxe Coop` → Gallinero, Gallinero grande,
  * Gallinero de lujo), cada uno con `total`: lo que cuesta en oro llegar hasta él desde cero. Vacía si no existe.
  */
-export function buildingChain(
-  data: FarmData,
-  key: string,
-): (Building & { total: number })[] {
+export function buildingChain(data: FarmData, key: string): (Building & { total: number })[] {
   const byKey = new Map(data.buildings.map((b) => [b.key, b]));
   const chain: Building[] = [];
-  for (
-    let b = byKey.get(key);
-    b && !chain.includes(b);
-    b = b.upgradeOf ? byKey.get(b.upgradeOf) : undefined
-  )
-    chain.unshift(b);
+  for (let b = byKey.get(key); b && !chain.includes(b); b = b.upgradeOf ? byKey.get(b.upgradeOf) : undefined) chain.unshift(b);
   let total = 0;
   return chain.map((b) => ({ ...b, total: (total += b.cost) }));
+}
+
+/**
+ * Los animales que se pueden tener en un edificio: los que entran (`animals`) y no piden otro, o cuyo edificio pedido
+ * está en su cadena (el pato pide el Gallinero grande: no está en el Gallinero, sí en el grande y en el de lujo).
+ */
+export function residents(data: FarmData, key: string): Animal[] {
+  const chain = buildingChain(data, key);
+  const b = chain[chain.length - 1];
+  if (!b) return [];
+  const has = new Set(chain.map((x) => x.key));
+  return b.animals.map((k) => data.animals.find((a) => a.key === k)).filter((a): a is Animal => !!a && (!a.needs || has.has(a.needs)));
 }
 
 /** La cabaña de los otros granjeros: sólo en partidas multijugador, y va aparte. */
@@ -199,20 +185,14 @@ export const MULTIPLAYER = "Cabin";
  * Los edificios de un constructor en el orden en que se leen: cada uno seguido de sus mejoras (Gallinero, el grande,
  * el de lujo; Establo…), y la cabaña del multijugador afuera.
  */
-export function buildingsOf(
-  data: FarmData,
-  builder: Building["builder"],
-): Building[] {
-  const mine = data.buildings.filter(
-    (b) => b.builder === builder && b.key !== MULTIPLAYER,
-  );
+export function buildingsOf(data: FarmData, builder: Building["builder"]): Building[] {
+  const mine = data.buildings.filter((b) => b.builder === builder && b.key !== MULTIPLAYER);
   const out: Building[] = [];
   const add = (b: Building) => {
     out.push(b);
     for (const up of mine) if (up.upgradeOf === b.key) add(up);
   };
-  for (const b of mine)
-    if (!b.upgradeOf || !mine.some((x) => x.key === b.upgradeOf)) add(b);
+  for (const b of mine) if (!b.upgradeOf || !mine.some((x) => x.key === b.upgradeOf)) add(b);
   return out;
 }
 

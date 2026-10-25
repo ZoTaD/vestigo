@@ -142,6 +142,12 @@ def _origenes() -> dict[str, list[str]]:
     }
 
 
+# Los que salen de la incubadora común: el `(BC)101` sólo viene adentro del Gallinero grande y el de lujo (`IndoorItems`
+# de `Data/Buildings`) y no se fabrica, así que piden el grande como el pato. La incubadora de avestruz se fabrica y va
+# en cualquier establo: el avestruz no pide nada más.
+_PIDE_INCUBADORA = {"Void Chicken": "Big Coop", "Golden Chicken": "Big Coop", "Dinosaur": "Big Coop"}
+
+
 def _tienda() -> dict[str, tuple[int, str | None]]:
     """clave -> (precio, edificio que pide) de lo que vende Marnie. Las variantes de `AlternatePurchaseTypes` (la
     gallina marrón y la azul al comprar una gallina, la vaca marrón al comprar una vaca) valen lo mismo que la que se
@@ -168,7 +174,7 @@ def animals() -> list[dict]:
     tienda, origen = _tienda(), _origenes()
     out = []
     for k, a in sdv.raw("Data/FarmAnimals").items():
-        precio, pide = tienda.get(k, (None, None))
+        precio, pide = tienda.get(k, (None, _PIDE_INCUBADORA.get(k)))
         tipo, herr = a["HarvestType"], a.get("HarvestTool")
         tool = "dig" if tipo == 2 else _HERRAMIENTA[herr] if tipo == 1 else None
         produce = [{"id": _sin_prefijo(p["ItemId"]), "deluxe": False, "minFriendship": p.get("MinimumFriendship") or 0}
@@ -302,12 +308,14 @@ def care(animales: list[dict]) -> list[dict]:
 
 
 def process(animales: list[dict]) -> dict[str, list[list]]:
-    """producto -> [máquina, producto que sale, minutos, días] de cada máquina que lo recibe (`relations.machines_by_input`,
+    """producto -> [máquina, producto que sale, minutos, días, cantidad] de cada máquina que lo recibe (`relations.machines_by_input`,
     la primera regla de `Data/Machines` que lo acepta, como el juego). Los productos sin máquina (la pluma de pato, la
     pata de conejo) no están."""
     por_entrada = relations.machines_by_input()
     ids = sorted({p["id"] for a in animales for p in a["produce"]})
-    return {i: [[m["machine"], m["out"], m["minutes"], m["days"]] for m in por_entrada[i]] for i in ids if por_entrada.get(i)}
+    # La cantidad es `MinStack` de la salida (-1 es una): el huevo de avestruz da 10 mayonesas, el dorado 3.
+    return {i: [[m["machine"], m["out"], m["minutes"], m["days"], max(1, m["stack"])] for m in por_entrada[i]]
+            for i in ids if por_entrada.get(i)}
 
 
 def farm() -> dict:

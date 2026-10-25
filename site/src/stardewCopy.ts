@@ -394,7 +394,6 @@ export interface FarmCopy {
   view: string;
   views: Record<FarmView, string>;
   animals: {
-    count: (n: string) => string;
     adult: string;
     baby: string;
     /** "Pide: Corral grande", el edificio que Marnie pide para venderlo. */
@@ -987,7 +986,6 @@ const EN: StardewCopy = {
     view: "View",
     views: { animals: "Animals", buildings: "Buildings", house: "Farmhouse" },
     animals: {
-      count: (n) => `${n} animals`,
       adult: "Adult",
       baby: "Baby",
       needs: (b) => `Needs: ${b}`,
@@ -1548,7 +1546,6 @@ const ES: StardewCopy = {
     view: "Vista",
     views: { animals: "Animales", buildings: "Edificios", house: "Casa" },
     animals: {
-      count: (n) => `${n} animales`,
       adult: "Adulto",
       baby: "Cría",
       needs: (b) => `Pide: ${b}`,

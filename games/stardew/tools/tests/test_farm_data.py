@@ -138,7 +138,9 @@ class TestFarmData(unittest.TestCase):
 
     def test_maquinas_de_cada_producto(self):
         proc = self.d["process"]
-        self.assertEqual(proc["176"], [["(BC)24", "306", 180, 0]])  # huevo -> mayonesera -> mayonesa
+        self.assertEqual(proc["176"], [["(BC)24", "306", 180, 0, 1]])  # huevo -> mayonesera -> mayonesa
+        self.assertEqual(proc["289"][0][4], 10)  # el huevo de avestruz da 10 mayonesas
+        self.assertEqual(proc["928"][0][4], 3)  # el dorado, 3
         self.assertEqual(proc["440"][0][:2], ["(BC)17", "428"])  # lana -> telar -> tela
         self.assertEqual(proc["430"][0][:2], ["(BC)19", "432"])  # trufa -> aceitera
         self.assertNotIn("444", proc)  # la pluma de pato no va a ninguna máquina
@@ -147,6 +149,11 @@ class TestFarmData(unittest.TestCase):
                 self.assertIn(maq, self.d["refs"])
                 self.assertIn(sal, self.d["refs"])
         self.assertEqual(self.d["refs"]["(BC)24"][2:], ["Mayonnaise Machine", "Mayonesera", 16, 32])
+
+    def test_los_de_la_incubadora_piden_el_gallinero_grande(self):
+        for k in ("Void Chicken", "Golden Chicken", "Dinosaur"):
+            self.assertEqual(self.animales[k]["needs"], "Big Coop", k)
+        self.assertIsNone(self.animales["Ostrich"]["needs"])
 
     def test_herramientas(self):
         self.assertEqual(self.d["tools"], {"pail": ["Milk Pail", "Cubeta lechera"], "shears": ["Shears", "Tijeras de esquilar"]})

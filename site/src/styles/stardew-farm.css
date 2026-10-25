@@ -22,8 +22,9 @@ a.sd-fm-item:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .sd-fm-animals { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 10px; }
 .sd-fm-animal { display: flex; flex-direction: column; gap: 10px; padding: 8px 12px 12px 8px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
 .sd-fm-ahead { display: flex; align-items: flex-end; gap: 8px; }
-.sd-fm-apix { display: grid; justify-items: center; gap: 2px; margin: 0; }
-.sd-fm-apix .sd-pix { box-sizing: content-box; padding: 4px; border-radius: 4px; background: #efdcb4; }
+/* Sin achicarse (`flex: none`) ni el `max-width: 100%` de base.css: el sprite queda a su múltiplo entero. */
+.sd-fm-apix { flex: none; display: grid; justify-items: center; gap: 2px; margin: 0; }
+.sd-fm-apix .sd-pix { box-sizing: content-box; max-width: none; padding: 4px; border-radius: 4px; background: #efdcb4; }
 .sd-fm-apix figcaption { font: 800 12px/1.2 var(--sd-text); color: var(--sd-dim); }
 .sd-fm-aname { display: grid; gap: 4px; align-self: center; min-width: 0; margin-left: 4px; }
 .sd-fm-aname h3 { font: 800 21px/1.15 var(--sd-text); }
@@ -48,6 +49,7 @@ a.sd-fm-item:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .sd-fm-flow { display: flex; align-items: center; gap: 2px 8px; margin-left: 26px; padding: 2px 8px 2px 4px; border-radius: 6px; background: #f6ead0; }
 .sd-fm-flow .sd-fm-item { flex: 0 1 auto; }
 .sd-fm-in { flex: none; font: 800 12px/1.2 var(--sd-text); color: var(--sd-dim); }
+.sd-fm-out { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
 .sd-fm-arrow { flex: none; font: 800 16px/1 var(--sd-text); color: var(--sd-dim); }
 
 /* Los cuidados: la cifra grande (verde si suma, roja si resta) y el texto. */
@@ -60,10 +62,12 @@ a.sd-fm-item:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .sd-fm-cval.is-down { background: #f6d3d8; color: #8a1f2c; }
 
 /* --- Edificios: el dibujo a la izquierda (al doble) y los datos a la derecha ------------------------------------ */
-.sd-fm-buildings { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 540px), 1fr)); gap: 10px; margin-top: 10px; }
+.sd-fm-buildings { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr)); gap: 10px; margin-top: 10px; }
 .sd-fm-building { container-type: inline-size; padding: 8px; border-radius: 6px; background: var(--sd-paper); scroll-margin-top: 16px; }
-.sd-fm-bwrap { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 14px; align-items: start; }
-.sd-fm-bpix { display: flex; align-items: flex-end; justify-content: center; height: 264px; padding-bottom: 4px; border-radius: 4px; background: #efdcb4; }
+.sd-fm-bwrap { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: stretch; }
+/* El fondo del dibujo mide lo que el dibujo (al doble) o lo que la tarjeta, lo que sea más alto; el edificio, apoyado abajo. */
+.sd-fm-bpix { display: flex; align-items: flex-end; justify-content: center; min-width: 112px; padding: 8px; border-radius: 4px; background: #efdcb4; }
+.sd-fm-bimg .sd-pix { width: calc(var(--w) * 2); height: calc(var(--h) * 2); max-width: none; }
 .sd-fm-binfo { display: grid; justify-items: start; gap: 6px; min-width: 0; padding-top: 2px; }
 .sd-fm-binfo h3 { font: 800 21px/1.15 var(--sd-text); }
 .sd-fm-desc { font: 600 14px/1.35 var(--sd-text); color: var(--sd-dim); }
@@ -81,8 +85,10 @@ a.sd-fm-item:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .sd-fm-who a:hover { background: #e6cf9f; }
 .sd-fm-multi { margin-top: 12px; }
 /* Angosto: el dibujo arriba, a lo ancho, y los datos debajo. */
-@container (max-width: 520px) {
+/* Angosto (el teléfono): el dibujo arriba, a 1×, y los datos debajo. */
+@container (max-width: 400px) {
   .sd-fm-bwrap { grid-template-columns: minmax(0, 1fr); }
+  .sd-fm-bimg .sd-pix { width: var(--w); height: var(--h); }
 }
 
 /* --- La casa: las tres mejoras y las reformas -------------------------------------------------------------- */

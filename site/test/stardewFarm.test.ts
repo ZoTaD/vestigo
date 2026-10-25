@@ -17,6 +17,7 @@ import {
   buildingChain,
   buildingsOf,
   readFarmView,
+  residents,
   viewOfAnchor,
   writeFarmView,
   type FarmData,
@@ -74,6 +75,31 @@ describe("las mejoras de un edificio", () => {
     expect(robin).not.toContain("Cabin");
     expect(buildingsOf(data, "Wizard").every((b) => b.builder === "Wizard")).toBe(true);
     expect(robin.length + buildingsOf(data, "Wizard").length).toBe(data.buildings.length - 1);
+  });
+});
+
+describe("quién vive en cada edificio", () => {
+  const keys = (b: string) => residents(data, b).map((a) => a.key);
+  it("el Gallinero no tiene pato, conejo ni los de la incubadora; el grande suma el pato, el de lujo el conejo", () => {
+    expect(keys("Coop")).toEqual(["White Chicken", "Brown Chicken", "Blue Chicken"]);
+    expect(keys("Big Coop")).toEqual(expect.arrayContaining(["Duck", "Void Chicken", "Golden Chicken", "Dinosaur"]));
+    expect(keys("Big Coop")).not.toContain("Rabbit");
+    expect(keys("Deluxe Coop")).toHaveLength(8);
+  });
+
+  it("el Establo no tiene cabra; el grande sí, y el de lujo los seis", () => {
+    expect(keys("Barn")).not.toContain("Goat");
+    expect(keys("Barn")).toContain("Ostrich");
+    expect(keys("Big Barn")).toContain("Goat");
+    expect(keys("Deluxe Barn")).toHaveLength(6);
+  });
+
+  it("la tarjeta del corral sólo dibuja a los que entran", () => {
+    const html = book("buildings");
+    const coop = html.slice(html.indexOf('id="coop"'), html.indexOf('id="big-coop"'));
+    expect(coop).toContain("#white-chicken");
+    expect(coop).not.toContain("#duck");
+    expect(coop).not.toContain("#dinosaur");
   });
 });
 
@@ -164,9 +190,15 @@ describe("los animales que Marnie no vende", () => {
     }
   });
 
-  it("el pato y el conejo dicen qué edificio pide Marnie", () => {
+  it("el pato y el conejo dicen qué edificio pide Marnie, y los de la incubadora el Gallinero grande", () => {
     const html = book("animals", "es");
     expect(row(html, "duck")).toContain("Pide: Corral grande");
     expect(row(html, "rabbit")).toContain("Pide: Corral de lujo");
+    for (const slug of ["void-chicken", "golden-chicken", "dinosaur"]) expect(row(html, slug)).toContain("Pide: Corral grande");
+    expect(row(html, "ostrich")).not.toContain("Pide:");
+  });
+
+  it("el huevo de avestruz da 10 mayonesas", () => {
+    expect(row(book("animals"), "ostrich")).toMatch(/Mayonnaise\s*×\s*10/);
   });
 });
