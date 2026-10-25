@@ -42,10 +42,20 @@ _MEJORAS_CASA = [
 _REFORMA = ("add_", "open_", "build_")
 
 
+# Claves de `Strings/*` que no están en `.es-ES` porque el nombre es el mismo en los dos idiomas.
+_IGUALES: set[tuple[str, str]] = set()
+
+
 def _par(archivo: str, clave: str) -> list[str]:
-    """[en, es] de una clave de `Strings/*`; en español cae al inglés si falta."""
+    """[en, es] de una clave de `Strings/*`. Si falta en `.es-ES` tira error, salvo en `_IGUALES` (nombres propios que
+    el juego deja igual en los dos idiomas): así un texto sin traducir no pasa al sitio en inglés sin que nadie se entere."""
     en = sdv.raw(archivo)[clave]
-    return [en, sdv.raw(archivo + ".es-ES").get(clave) or en]
+    es = sdv.raw(archivo + ".es-ES").get(clave)
+    if not es:
+        if (archivo, clave) not in _IGUALES:
+            raise KeyError(f"{archivo}.es-ES no tiene {clave}")
+        es = en
+    return [en, es]
 
 
 def _tok(token: str) -> list[str]:
@@ -58,11 +68,16 @@ def _mayuscula(par: list[str]) -> list[str]:
 
 
 def _obj(n: str) -> list[str]:
-    return mines_data._objeto(n)
+    return mines_data.objeto(n)
 
 
 def _grande(n: str) -> list[str]:
     return _tok(sdv.raw("Data/BigCraftables")[n]["DisplayName"])
+
+
+def _edificio(clave: str) -> list[str]:
+    """[en, es] del nombre de un edificio de `Data/Buildings` (el Barn es "Establo")."""
+    return _tok(sdv.raw("Data/Buildings")[clave]["Name"])
 
 
 def _npc(n: str) -> list[str]:
@@ -210,6 +225,7 @@ def care(animales: list[dict]) -> list[dict]:
     `FarmAnimal.Eat` y `FarmAnimal.updatePerTenMinutes`. `value` es la cifra tal cual se muestra; `stat` dice si toca
     la amistad, el ánimo o los dos. Los textos son propios, con los nombres del juego."""
     heno, auto, calefactor = _obj("178"), _grande("272"), _grande("104")
+    corral_ed, establo_ed = _edificio("Coop"), _edificio("Barn")
     corral = _par("Strings/UI", "LevelUp_ProfessionName_Coopmaster")
     pastor = _par("Strings/UI", "LevelUp_ProfessionName_Shepherd")
     drenaje = sorted({a["drain"] for a in animales})
@@ -221,14 +237,14 @@ def care(animales: list[dict]) -> list[dict]:
                   "Acariciarlo una vez por día: +15 de amistad y mejor ánimo."]},
         # `pet`: `ProfessionForHappinessBoost` (2 Corralero, 3 Pastor) repite la suba de amistad y de ánimo.
         {"key": "profession", "stat": "both", "value": "+15",
-         "text": [f"{corral[0]} (coop) or {pastor[0]} (barn): petting gives 15 more friendship.",
-                  f"{corral[1]} (corral) o {pastor[1]} (granero): acariciarlo da 15 más de amistad."]},
+         "text": [f"{corral[0]} ({corral_ed[0].lower()}) or {pastor[0]} ({establo_ed[0].lower()}): petting gives 15 more friendship.",
+                  f"{corral[1]} ({corral_ed[1].lower()}) o {pastor[1]} ({establo_ed[1].lower()}): acariciarlo da 15 más de amistad."]},
         # `pet(is_auto_pet: true)`: 15 − 7 de amistad; la caricia a mano después suma los 7 que faltan.
         {"key": "autoPetter", "stat": "both", "value": "+8",
          "text": [f"{auto[0]} in the building: +8 friendship a day; petting by hand adds 7 more.",
                   f"{auto[1]} en el edificio: +8 de amistad por día; acariciarlo a mano suma 7 más."]},
         # `dayUpdate`: sin caricia, −(10 − amistad / 200) de amistad y −50 de ánimo.
-        {"key": "notPet", "stat": "both", "value": "-10",
+        {"key": "notPet", "stat": "both", "value": "−10",
          "text": ["A day without petting: up to −10 friendship (less the higher it is) and −50 mood.",
                   "Un día sin caricias: hasta −10 de amistad (menos cuanto más alta) y −50 de ánimo."]},
         # `Eat`: pasto afuera y sin lluvia, ánimo al máximo y +8 de amistad (+16 con el pasto azul, `grassType` 7).
@@ -236,7 +252,7 @@ def care(animales: list[dict]) -> list[dict]:
          "text": ["Eating grass outside, without rain: +8 friendship (+16 with blue grass) and full mood.",
                   "Comer pasto afuera, sin lluvia: +8 de amistad (+16 con pasto azul) y el ánimo al máximo."]},
         # `dayUpdate`: con `fullness` < 200 (sin heno en el comedero ni pasto), −20 de amistad y −100 de ánimo.
-        {"key": "hungry", "stat": "both", "value": "-20",
+        {"key": "hungry", "stat": "both", "value": "−20",
          "text": [f"A night without {heno[0].lower()} or grass: −20 friendship and −100 mood.",
                   f"Una noche sin {heno[1].lower()} ni pasto: −20 de amistad y −100 de ánimo."]},
         # `dayUpdate`: si duerme afuera de su edificio, el ánimo se divide por 2.
@@ -244,7 +260,7 @@ def care(animales: list[dict]) -> list[dict]:
          "text": ["Left outside overnight: mood cut in half.",
                   "Dejarlo afuera de noche: el ánimo baja a la mitad."]},
         # `updatePerTenMinutes`: desde las 18, afuera después de las 19, con lluvia o en invierno, −HappinessDrain.
-        {"key": "lateOutdoors", "stat": "mood", "value": f"-{rango}",
+        {"key": "lateOutdoors", "stat": "mood", "value": f"−{rango}",
          "text": ["Outside after 7 PM, in the rain or in winter: mood drops every 10 minutes.",
                   "Afuera después de las 19, con lluvia o en invierno: el ánimo baja cada 10 minutos."]},
         # `updatePerTenMinutes`: en invierno, adentro desde las 18 y con ánimo > 150, ±HappinessDrain según el
@@ -256,7 +272,7 @@ def care(animales: list[dict]) -> list[dict]:
 
 
 def farm() -> dict:
-    slugs, nombres = mines_data._sitio()
+    slugs, nombres = mines_data.sitio()
     an = animals()
     ed = buildings(an)
     casa = house()

@@ -56,18 +56,20 @@ _GEODA_POR_DEFECTO = {"535": ["86"], "536": ["84"], "537": ["82"], "749": ["82",
 _PESCA = {"585", "586", "587", *(str(n) for n in range(103, 120)),
           "60", "62", "64", "66", "68", "70", "72", "82", "84", "86", "126", "127", "74"}
 
-# Lo demás, con texto propio y nombres del juego: las vetas de gemas (`GameLocation.breakStone`, piedras 2 a 14), las
-# piedras de las Minas que sueltan cuarzos y cristales (`MineShaft.checkStoneForItems` / `Object.performToolAction`
-# según el tramo: 86 hasta el 39, 84 del 40 al 79, 82 del 80 en adelante, 80 en cualquiera), el fragmento prismático
-# de la piedra mística y la veta de iridio (`breakStone`, 46 y 765) y los fósiles de las vetas de hueso de la Isla
-# Jengibre (`breakStone`, 816 y 817: 579 a 589).
 # Lo que sueltan los monstruos fuera de su botín de `Data/Monsters` (`getExtraDropItems`): el Rex pimienta da el huevo
 # de dinosaurio (10 %) o uno de tres fósiles (`DinoMonster.getExtraDropItems`). Quedan afuera las babas de color
 # (`GreenSlime.getExtraDropItems`), que dependen del color y no de la clave del monstruo.
 _MONSTRUOS_EXTRA = {"Pepper Rex": ["107", "580", "583", "584"]}
 
+# Lo demás, con texto propio y nombres del juego: las vetas de gemas (`GameLocation.breakStone`, piedras 2 a 14), las
+# piedras de las Minas que sueltan cuarzos y cristales (`MineShaft.checkStoneForItems` / `Object.performToolAction`
+# según el tramo: 86 hasta el 39, 84 del 40 al 79, 82 del 80 en adelante, 80 en cualquiera), el fragmento prismático
+# de la piedra mística y la veta de iridio (`breakStone`, 46 y 765) y los fósiles de las vetas de hueso de la Isla
+# Jengibre (`breakStone`, 816 y 817: 579 a 589).
 _GEMAS = {"60", "62", "64", "66", "68", "70", "72"}
 _PIEDRAS = {"80": None, "86": (1, 39), "84": (40, 79), "82": (80, 120)}
+# Las que dan 84 y 82 lo hacen sólo después de haber llegado al fondo de las Minas (`breakStone`, `timesReachedMineBottom > 0`).
+_PIEDRAS_AL_FONDO = {"84", "82"}
 _FOSILES_ISLA = {str(n) for n in range(579, 590)}
 
 
@@ -82,7 +84,7 @@ def _tok(token: str) -> list[str]:
 
 
 def _obj(n: str) -> list[str]:
-    return mines_data._objeto(n)
+    return mines_data.objeto(n)
 
 
 def _sin_prefijo(i: str) -> str:
@@ -159,15 +161,21 @@ def _otras(i: str) -> list[list[str]]:
         out.append([f"Gem nodes in the {minas[0]}.", f"Vetas de gemas en las {minas[1]}."])
     if i in _PIEDRAS:
         pisos = _PIEDRAS[i]
+        fondo = i in _PIEDRAS_AL_FONDO
         if pisos:
-            out.append([f"Rocks in the {minas[0]}, floors {pisos[0]} to {pisos[1]}.",
-                        f"Piedras de las {minas[1]}, pisos {pisos[0]} a {pisos[1]}."])
+            out.append([f"Rocks in the {minas[0]}, floors {pisos[0]} to {pisos[1]}"
+                        + (f", once you have reached the bottom of the {minas[0]}." if fondo else "."),
+                        f"Piedras de las {minas[1]}, pisos {pisos[0]} a {pisos[1]}"
+                        + (f", después de haber llegado al fondo de las {minas[1]}." if fondo else ".")])
         else:
             out.append([f"Rocks in the {minas[0]}.", f"Piedras de las {minas[1]}."])
     if i == "74":
         mistica, iridio = _par("Strings/Objects", "MysticStone_Name"), _obj("386")
         out.append([f"{mistica[0]} and {iridio[0].lower()} nodes, rarely.",
                     f"{mistica[1]} y vetas de {iridio[1].lower()}, muy de vez en cuando."])
+    if i == "74":
+        caja = _par("Strings/Objects", "MysteryBox_Name")
+        out.append([f"Very rarely inside a {caja[0]}.", f"Muy de vez en cuando dentro de una {caja[1].lower()}."])
     if i in _FOSILES_ISLA:
         isla = _par("Strings/StringsFromCSFiles", "IslandName")
         out.append([f"Fossil nodes on {isla[0]}.", f"Vetas de fósiles en la {isla[1]}."])
@@ -175,7 +183,7 @@ def _otras(i: str) -> list[list[str]]:
 
 
 def pieces() -> list[dict]:
-    slugs, _ = mines_data._sitio()
+    slugs, _ = mines_data.sitio()
     ids = _piezas_ids()
     todas = set(ids)
     excavar, geodas, mons = _excavar(todas), _geodas(todas), _monstruos()
@@ -187,8 +195,13 @@ def pieces() -> list[dict]:
             where.append({"k": "dig", "places": excavar[i]})
         if i in geodas:
             where.append({"k": "geode", "geodes": geodas[i]})
+        vistos = set()
         for m in mons:
+            # El Gólem de iridio se llama igual que el salvaje en el juego (`Wilderness Golem`): una fila por nombre.
+            if tuple(m["name"]) in vistos:
+                continue
             if any(x == i for x, _ in m["loot"]) or i in _MONSTRUOS_EXTRA.get(m["key"], []):
+                vistos.add(tuple(m["name"]))
                 where.append({"k": "monster", "who": m["name"], "slug": m["slug"]})
         if i in _PESCA:
             where.append({"k": "fish"})
@@ -237,7 +250,7 @@ def _premio(r: dict, slugs: dict) -> dict:
 
 
 def rewards(total: int) -> list[dict]:
-    slugs, _ = mines_data._sitio()
+    slugs, _ = mines_data.sitio()
     arts = [t.lower() for t in _par("Strings/UI", "Collections_Artifacts")]
     mins = [t.lower() for t in _par("Strings/UI", "Collections_Minerals")]
     out = []
@@ -326,8 +339,8 @@ def _condicion(cond: str | None) -> list[str] | None:
     raise ValueError(f"condición sin texto: {cond}")
 
 
-def _ventas(libros: set[str]) -> dict[str, list[tuple[str, int | None, list[str] | None, str | None, int]]]:
-    """id de libro -> [(tienda, precio, condición, objeto que pide a cambio, cuántos)] en el orden de `Data/Shops`."""
+def _ventas(libros: set[str]) -> dict[str, list[tuple[str, int | None, list[str] | None, str | None, int, bool]]]:
+    """id de libro -> [(tienda, precio, condición, objeto que pide a cambio, cuántos, si es uno al azar)] en el orden de `Data/Shops`."""
     tiendas = {"Bookseller", "AnimalShop", "Dwarf", "VolcanoShop", "Traveler", "DesertFestival_EggShop"}
     out: dict[str, list] = {}
     for t, s in sdv.raw("Data/Shops").items():
@@ -363,7 +376,7 @@ def _nombre_tienda(t: str) -> list[str]:
 
 
 def books() -> list[dict]:
-    slugs, _ = mines_data._sitio()
+    slugs, _ = mines_data.sitio()
     libros = {k for k, o in sdv.raw("Data/Objects").items() if o["Category"] in (-102, -103)}
     poderes, ventas, extra = sdv.raw("Data/Powers"), _ventas(libros), _fuentes_extra()
     geodas = _geodas(libros)
@@ -404,19 +417,19 @@ def books() -> list[dict]:
         for g in geodas.get(k, []):
             geoda = _obj(g)
             frases.append([f"Sometimes inside an {geoda[0]}." if geoda[0][0] in "AEIOU" else f"Sometimes inside a {geoda[0]}.",
-                           f"A veces dentro de: {geoda[1]}."])
+                           f"A veces dentro de {'una' if geoda[1].lower().startswith('geoda') else 'un'} {geoda[1].lower()}."])
         if not frases:
             raise ValueError(f"libro sin fuente: {k}")
         out.append({
             "id": k, "slug": slugs[k][0] if k in slugs else None, "name": _obj(k), "effect": _tok(desc),
             "price": min(precios) if precios else None,
-            "where": [" ".join(f[0] for f in frases), " ".join(f[1] for f in frases)],
+            "where": frases,
         })
     return out
 
 
 def museum() -> dict:
-    slugs, nombres = mines_data._sitio()
+    slugs, nombres = mines_data.sitio()
     pz = pieces()
     pr = rewards(len(pz))
     li = books()

@@ -87,13 +87,32 @@ class TestMuseumData(unittest.TestCase):
         self.assertNotEqual(b["effect"][0], b["effect"][1])
         self.assertIsInstance(b["price"], int)
         self.assertEqual(b["slug"], "the-alleyway-buffet")
-        self.assertIn("100", self.libros["Book_QueenOfSauce"]["where"][0])
-        self.assertIn("100", self.libros["Book_QueenOfSauce"]["where"][1])
+        # `where` es una lista de frases [en, es].
+        frases = self.libros["Book_QueenOfSauce"]["where"]
+        self.assertTrue(all(isinstance(f, list) and len(f) == 2 for f in frases))
+        self.assertIn("100", frases[0][0])
+        self.assertIn("100", frases[0][1])
         self.assertIn("SkillBook_0", self.libros)
         self.assertNotIn("102", self.libros)
         for b in self.d["books"]:
-            self.assertTrue(all(b["where"]), b["id"])
+            self.assertTrue(b["where"], b["id"])
+            self.assertTrue(all(all(t.strip() for t in f) and len(f) == 2 for f in b["where"]), b["id"])
+            self.assertFalse(any("dentro de:" in f[1] for f in b["where"]), b["id"])
             self.assertTrue(all(b["effect"]), b["id"])
+
+    def test_prismatico_tambien_sale_de_la_caja_misteriosa(self):
+        textos = [w["text"] for w in self.piezas["74"]["where"] if w["k"] == "other"]
+        self.assertTrue(any("caja misteriosa" in t[1] for t in textos), textos)
+
+    def test_piedras_profundas_piden_el_fondo_de_las_minas(self):
+        for i in ("84", "82"):
+            textos = [w["text"] for w in self.piezas[i]["where"] if w["k"] == "other" and "pisos" in w["text"][1]]
+            self.assertTrue(textos and all("fondo" in t[1] and "bottom" in t[0] for t in textos), i)
+
+    def test_un_golem_por_nombre(self):
+        for p in self.d["pieces"]:
+            nombres = [tuple(w["who"]) for w in p["where"] if w["k"] == "monster"]
+            self.assertEqual(len(nombres), len(set(nombres)), p["id"])
 
     def test_libros_perdidos(self):
         self.assertEqual(self.d["lostBooks"], 21)

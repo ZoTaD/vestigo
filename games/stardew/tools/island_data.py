@@ -205,6 +205,11 @@ _MEJORAS = [
     ("VolcanoBridge", "VolcanoDungeon", 5, "Island_VolcanoBridge", ["Turtle"]),
     ("VolcanoShortcutOut", "VolcanoDungeon", 5, "Island_VolcanoShortcutOut", ["Turtle"]),
 ]
+# Lo que una mejora pide además de las otras (`ParrotUpgradePerch.requiredMail`): el puente del volcán, haber llegado a
+# la cima (`reachedCaldera`, `VolcanoDungeon.GenerateContents`). Se lee `volcan` de `Strings/WorldMap`.
+_PIDE_ADEMAS = {"VolcanoBridge": ("GingerIsland_North_Volcano", "Also reach the top of the {0}.",
+                                   "Además, llegar a la cima del {0}.")}
+
 # El loro de la cabaña dice "¿Dar?" (`UpgradePerch_Hut`): el nombre es propio.
 _NOMBRE_MEJORA = {"Hut": ["Feed the first parrot", "Darle una nuez al primer loro"]}
 
@@ -237,7 +242,7 @@ def _tok(token: str) -> list[str]:
 
 
 def _obj(n: str) -> list[str]:
-    return mines_data._objeto(n)
+    return mines_data.objeto(n)
 
 
 def slug(clave: str) -> str:
@@ -302,8 +307,16 @@ def _nombre_mejora(clave: str) -> list[str]:
 
 def upgrades() -> list[dict]:
     zonas = _zonas_por_lugar()
-    return [{"key": k, "slug": slug(k), "name": _nombre_mejora(k), "cost": costo, "area": zonas[lugar], "mail": carta,
-             "needs": pide} for k, lugar, costo, carta, pide in _MEJORAS]
+    out = []
+    for k, lugar, costo, carta, pide in _MEJORAS:
+        texto = None
+        if k in _PIDE_ADEMAS:
+            clave, en, es = _PIDE_ADEMAS[k]
+            lugar_ = _par("Strings/WorldMap", clave)
+            texto = [en.format(lugar_[0]), es.format(lugar_[1])]
+        out.append({"key": k, "slug": slug(k), "name": _nombre_mejora(k), "cost": costo, "area": zonas[lugar],
+                    "mail": carta, "needs": pide, "needsText": texto})
+    return out
 
 
 def _cosa(iid: str, slugs: dict) -> dict:
@@ -332,7 +345,7 @@ def _cosa(iid: str, slugs: dict) -> dict:
 
 
 def walnut_room() -> list[dict]:
-    slugs, _ = mines_data._sitio()
+    slugs, _ = mines_data.sitio()
     out = []
     for it in sdv.raw("Data/Shops")["QiGemShop"]["Items"]:
         fila = _cosa(it["ItemId"], slugs)
@@ -402,7 +415,7 @@ def qi_orders() -> list[dict]:
 
 
 def island() -> dict:
-    slugs, nombres = mines_data._sitio()
+    slugs, nombres = mines_data.sitio()
     nu, wr = nuts(), walnut_room()
     ids = {_NUEZ, _GEMA_QI, "791", "91", "254", "262", "248"} | {w["id"] for w in wr}
     refs = {i: [*slugs[i], *nombres[i], 16, 16] for i in sorted(ids) if i in slugs}

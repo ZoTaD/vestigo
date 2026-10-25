@@ -119,6 +119,23 @@ class TestFarmData(unittest.TestCase):
             self.assertIn(i, refs)
             self.assertEqual(len(refs[i]), 6)
 
+    def test_todo_objeto_nombrado_esta_en_refs(self):
+        refs = self.d["refs"]
+        for a in self.d["animals"]:
+            ids = [p["id"] for p in a["produce"]] + ([a["egg"]] if a["egg"] else [])
+            for i in ids:
+                self.assertIn(i, refs, f"{a['key']}: {i}")
+        for b in self.d["buildings"]:
+            for i, _ in b["materials"]:
+                self.assertIn(i, refs, f"{b['key']}: {i}")
+
+    def test_cuidados_usan_el_menos_tipografico_y_el_establo(self):
+        for c in self.d["care"]:
+            self.assertFalse(c["value"].startswith("-"), c["key"])
+        prof = next(c for c in self.d["care"] if c["key"] == "profession")
+        self.assertNotIn("granero", prof["text"][1].lower())
+        self.assertIn("establo", prof["text"][1])
+
 
 if __name__ == "__main__":
     unittest.main()

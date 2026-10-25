@@ -70,6 +70,10 @@ class TestIslandData(unittest.TestCase):
         self.assertGreaterEqual(len(up), 10)
         self.assertEqual(up["VolcanoBridge"]["cost"], 5)
         self.assertEqual(up["VolcanoBridge"]["area"], "Volcano")
+        # El puente del volcán pide además haber llegado a la cima (`reachedCaldera`); las demás, nada más.
+        self.assertEqual(len(up["VolcanoBridge"]["needsText"]), 2)
+        self.assertTrue(all(up["VolcanoBridge"]["needsText"]))
+        self.assertEqual([k for k, u in up.items() if u["needsText"]], ["VolcanoBridge"])
         self.assertEqual(up["Resort"]["cost"], 20)
         self.assertEqual(up["Hut"]["cost"], 1)
         for u in self.d["upgrades"]:
