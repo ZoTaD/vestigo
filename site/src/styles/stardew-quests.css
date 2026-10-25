@@ -84,4 +84,8 @@ a.sd-qs-thing:hover .sd-qs-tname { text-decoration: underline; text-decoration-c
   .sd-qo-tags { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-items: start; }
   .sd-qo-opts.is-many { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sd-qm-stepli { gap: 6px; }
+  /* Con retrato, lo que paga va debajo de quién la da, al lado del retrato: no baja solo a la derecha. */
+  .sd-qm-head:has(> .sd-qs-face) { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 12px; }
+  .sd-qm-head:has(> .sd-qs-face) > .sd-qs-face { grid-row: span 2; }
+  .sd-qm-head:has(> .sd-qs-face) > .sd-qm-pays { grid-column: 2; justify-items: start; margin: 0; text-align: left; }
 }
