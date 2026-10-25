@@ -32,6 +32,11 @@ const TAB_ICON: Record<StardewTab, { id: string; w: number; h: number }> = {
   mines: { id: "535", w: 16, h: 16 },
   // El cofre: lo que la partida tiene guardado.
   save: { id: "(BC)130", w: 16, h: 32 },
+  // Las pestañas de la etapa 4 (todavía sin página): el huevo, el rollo enano, la lista de Pierre y la nuez dorada.
+  farm: { id: "176", w: 16, h: 16 },
+  museum: { id: "96", w: 16, h: 16 },
+  quests: { id: "897", w: 16, h: 16 },
+  island: { id: "73", w: 16, h: 16 },
 };
 
 /** Los datos de la portada en el idioma que se lee: los ya bajados en el primer render, y si faltan, se piden. */

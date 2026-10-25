@@ -180,6 +180,75 @@ describe("la ficha de un objeto", () => {
     expect(html).toContain("Where to get it");
   });
 
+  // Los cruces de la etapa 4: Granja, Museo, Misiones e Isla. Las anclas son el slug de la fila en cada pestaña.
+  const page = async (lang: "en" | "es", slug: string) =>
+    inLang(lang, createElement(ItemPage, { ficha: (await loadItem(slug))!, route: { lang, view: "stardew", sdSection: "items", detail: slug } as Route, navigate: nav }));
+
+  it("el huevo dice qué animal lo produce, enlazado a su fila en Granja", async () => {
+    const en = await page("en", "egg");
+    expect(en).toContain(">Produced by<");
+    expect(en).toContain('href="/en/stardew-valley/farm#white-chicken"');
+    expect(en).toContain("White Chicken");
+    const es = await page("es", "large-egg");
+    expect(es).toContain('href="/es/stardew-valley/granja#white-chicken"');
+    expect(es).toContain("Gallina blanca");
+    expect(es).toContain("con mucha amistad");
+  });
+
+  it("la madera dice qué edificios la piden, con cuánta", async () => {
+    const en = await page("en", "wood");
+    expect(en).toContain(">Used to build<");
+    expect(en).toContain('href="/en/stardew-valley/farm#coop"');
+    expect(en).toMatch(/<b>Coop<\/b>.*?× 300/);
+    const es = await page("es", "wood");
+    expect(es).toContain(">Para construir<");
+    expect(es).toContain("Corral");
+  });
+
+  it("el museo: se dona, y el premio que da donarlo va sin enlace si no tiene ficha", async () => {
+    const en = await page("en", "chicken-statue");
+    expect(en).toContain(">Museum<");
+    expect(en).toContain("Donate it to the museum");
+    // El premio es un mueble, (F)1305: va con su nombre, sin enlace y sin un sprite que no existe.
+    expect(en).toMatch(/<span class="sd-ref"><span class="sd-slot"><\/span><span><b>Chicken Statue<\/b>/);
+    expect(en).not.toContain("(F)1305");
+    expect(en).not.toContain("F)1305.png");
+    // Los rollos enanos dan la guía, que sí tiene ficha.
+    const rollo = await page("en", "dwarf-scroll-i");
+    expect(rollo).toContain('href="/en/stardew-valley/items/dwarvish-translation-guide"');
+  });
+
+  it("un premio del museo enlaza a su fila en la vista de premios", async () => {
+    const en = await page("en", "dwarvish-translation-guide");
+    expect(en).toContain('href="/en/stardew-valley/museum?v=rewards#dwarf"');
+    expect(en).toContain("Dwarf Scroll I");
+    const es = await page("es", "dwarvish-translation-guide");
+    expect(es).toContain('href="/es/stardew-valley/museo?v=rewards#dwarf"');
+  });
+
+  it("lo piden: los pedidos y misiones, enlazados a Misiones", async () => {
+    const en = await page("en", "bug-meat");
+    expect(en).toContain(">Requested by<");
+    expect(en).toContain('href="/en/stardew-valley/quests#willy"');
+    expect(en).toContain("Juicy Bugs Wanted!");
+    const es = await page("es", "bug-meat");
+    expect(es).toContain(">Lo piden<");
+    expect(es).toContain('href="/es/stardew-valley/misiones#willy"');
+  });
+
+  it("el premio de un pedido y la tienda que no cobra en oro", async () => {
+    const maquina = await page("en", "sewing-machine");
+    expect(maquina).toContain('href="/en/stardew-valley/quests#emily"');
+    const flauta = await page("en", "horse-flute");
+    expect(flauta).toContain("Qi&#x27;s Walnut Room");
+    // 50 gemas de Qi: la cifra con el sprite de la gema y su nombre, nada de "g".
+    expect(flauta).toMatch(/50<img[^>]*src="\/stardew\/items\/858.png"[^>]*><small>Qi Gem<\/small>/);
+    const gema = await page("en", "qi-gem");
+    expect(gema).toContain('href="/en/stardew-valley/island#qichallenge2"');
+    expect(gema).toMatch(/src="\/stardew\/items\/73.png"/);
+    expect(gema).not.toContain("{0}");
+  });
+
   it("una máquina sin fuentes ni usos muestra sólo la cabecera y los precios", async () => {
     const ficha = (await loadItem("wood-chair"))!;
     const html = inLang("en", createElement(ItemPage, { ficha, route: { lang: "en", view: "stardew", sdSection: "items" } as Route, navigate: nav }));

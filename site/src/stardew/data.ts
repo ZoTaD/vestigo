@@ -66,17 +66,30 @@ export interface MachineIn {
   count: number;
 }
 
-/** De dónde sale: cultivo, árbol frutal, tienda, pesca, recolección o botín de un monstruo. */
+/** En qué pestaña está un pedido o una misión: los del pueblo y la historia en Misiones; los de Qi en la Isla. */
+export type OrderTab = "quests" | "island";
+
+/**
+ * De dónde sale: cultivo, árbol frutal, tienda, pesca, recolección, botín de un monstruo, un animal de la granja, un
+ * premio del museo o el premio de un pedido.
+ */
 export type Source =
   | { k: "crop"; seed: string; days: number; seasons: number[]; regrow: number }
   | { k: "tree"; sapling: string; days: number; seasons: number[] }
-  | { k: "shop"; shop: Pair; price: number }
+  /** `cur`: el id de la moneda cuando no es oro (gemas de Qi `858`, nueces doradas `73`); va en `refs`. */
+  | { k: "shop"; shop: Pair; price: number; cur?: string }
   | { k: "fish" | "forage"; where: Pair[]; seasons: number[] }
   /**
    * `rate`: la probabilidad de que caiga al menos uno; `n`: cuántas tiradas hay (hasta cuántos caen), si es más de una.
    * `slug`/`slugEs`: la ficha del monstruo en Minas y combate, si la tiene.
    */
-  | { k: "monster"; who: Pair; rate: number; n?: number; slug?: string; slugEs?: string };
+  | { k: "monster"; who: Pair; rate: number; n?: number; slug?: string; slugEs?: string }
+  /** Lo produce un animal: `key` es el ancla de su fila en Granja; `deluxe`, el producto de mucha amistad. */
+  | { k: "animal"; who: Pair; key: string; deluxe?: true }
+  /** Premio del museo: `reward` es el ancla de su fila en la vista de premios; `text`, lo que hay que donar. */
+  | { k: "museum"; reward: string; text: Pair; n?: number }
+  /** Premio de un pedido o una misión: `key` es el ancla de su fila; `n`, cuántos da si es más de uno. */
+  | { k: "order"; key: string; name: Pair; tab: OrderTab; n?: number };
 
 /** Receta de la que sale: tipo, clave, cuántos salen e ingredientes (id, o categoría en negativo, y cantidad). */
 export type MakeRecipe = [kind: "cook" | "craft", key: string, qty: number, ings: [id: string, n: number][]];
@@ -102,6 +115,17 @@ export interface Ficha {
   /** En qué se transforma, y de qué máquina sale (máquina, minutos, días). */
   machines: { in: MachineIn[]; madeIn: [machine: string, minutes: number, days: number][] };
   sources: Source[];
+  /**
+   * Para qué sirve fuera de las recetas: si se dona al museo, qué edificios lo piden de material (ancla de la fila en
+   * Granja, nombre y cantidad), qué pedidos y misiones lo piden, y qué premio del museo da donarlo (ancla del premio,
+   * id, cantidad y nombre; el premio puede ser un mueble o un sombrero sin ficha, y entonces no está en `refs`).
+   */
+  uses: {
+    donate: boolean;
+    builds: [key: string, name: Pair, n: number][];
+    orders: [key: string, name: Pair, tab: OrderTab][];
+    prizes: [reward: string, id: string, n: number, name: Pair][];
+  };
   refs: Record<string, Ref>;
 }
 

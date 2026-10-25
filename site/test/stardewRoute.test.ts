@@ -19,7 +19,10 @@ describe("rutas de Stardew Valley", () => {
   });
 
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {
-    expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca", recipes: "recetas", calendar: "calendario", mines: "minas", save: "partida" });
+    expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca", recipes: "recetas", calendar: "calendario", mines: "minas", save: "partida", farm: "granja", museum: "museo", quests: "misiones", island: "isla-jengibre" });
+    // Las de la etapa 4 ya tienen dirección (las fichas de Objetos enlazan a sus filas), aunque todavía caigan en la portada.
+    expect(routePath({ ...base, lang: "es", sdSection: "island" })).toBe("/es/stardew-valley/isla-jengibre");
+    expect(parseRoute("/es/stardew-valley/granja")).toMatchObject({ view: "stardew", sdSection: "home" });
     expect(routePath({ ...base, sdSection: "home" })).toBe("/en/stardew-valley");
     expect(routePath({ ...base, lang: "es", sdSection: "home" })).toBe("/es/stardew-valley");
     expect(routePath({ ...base, sdSection: "bundles" })).toBe("/en/stardew-valley/bundles");

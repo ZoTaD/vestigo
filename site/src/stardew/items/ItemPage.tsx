@@ -2,8 +2,10 @@
  * La ficha de un objeto de Stardew Valley (2026-10-22), la de la maqueta A: la cabecera con el sprite grande en su
  * casillero, el nombre, la descripción del juego y las etiquetas (categoría, estaciones, energía y salud); los precios
  * por calidad, con un selector de profesión si alguna lo sube; y después cada cruce sólo si tiene algo: a quién le
- * encanta (retratos enlazados a Aldeanos), en qué paquete va, en qué se transforma, en qué se usa, con qué se fabrica y
- * dónde se consigue.
+ * encanta (retratos enlazados a Aldeanos), en qué paquete va, en qué se transforma, en qué se usa, con qué se fabrica,
+ * qué animal lo produce, dónde se consigue, el museo (se dona, es un premio o donarlo da uno), para qué edificio es
+ * material y qué pedidos o misiones lo piden. Lo de Granja, Museo, Misiones e Isla enlaza a la fila de esa pestaña
+ * (`#ancla`, y la vista en `?v=` cuando hace falta).
  *
  * Recibe la ficha ya cargada: todo lo que nombra viene en sus `refs`. Lo único de afuera son los nombres de las salas
  * del Centro Comunitario (`bundles.json`), que `preloadItemsRoute` deja bajados antes de dibujar.
@@ -12,7 +14,7 @@ import { useState, type CSSProperties, type ReactNode } from "react";
 import meta from "@stardew/meta.json";
 import { useLang, useLocale } from "../../i18n";
 import RouteLink from "../../RouteLink";
-import type { Route } from "../../route";
+import type { Route, StardewTab } from "../../route";
 import { QUALITIES, useStardewCopy, type Profession, type Taste } from "../../stardewCopy";
 import { useLoad } from "../../useLoad";
 import { loadBundles, machineTime, peekBundles, refName, say, type Ficha, type MachineIn, type Pair, type Ref, type Source } from "../data";
@@ -47,6 +49,11 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
   const rooms = useLoad(ficha.bundles.length ? "bundles" : null, () => peekBundles() ?? undefined, loadBundles);
   const tastes = GIFT_TASTES.filter((g) => ficha.tastes[g]?.length);
   const { make, use } = ficha.recipes;
+  const animals = ficha.sources.filter((s): s is Extract<Source, { k: "animal" }> => s.k === "animal");
+  const rewards = ficha.sources.filter((s): s is Extract<Source, { k: "museum" }> => s.k === "museum");
+  const where = ficha.sources.filter((s) => s.k !== "animal" && s.k !== "museum");
+  const { donate, builds, orders, prizes } = ficha.uses;
+  const hasMuseum = donate || rewards.length > 0 || prizes.length > 0;
   // Los cruces van en una sola caja, como en la maqueta A: sin ninguno, la ficha es la cabecera con los precios.
   const hasCross =
     tastes.length > 0 ||
@@ -55,7 +62,10 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
     ficha.machines.madeIn.length > 0 ||
     use.length > 0 ||
     make.length > 0 ||
-    ficha.sources.length > 0;
+    ficha.sources.length > 0 ||
+    hasMuseum ||
+    builds.length > 0 ||
+    orders.length > 0;
 
   const itemRoute = (slug: string): Route => ({
     ...route,
@@ -101,6 +111,20 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
       </span>
     );
   };
+
+  /** Una fila enlazada a otra pestaña de la sección, en el ancla de su fila (y en su vista, si va `search`). */
+  const tabRow = (sdSection: StardewTab, hash: string | undefined, children: ReactNode, search?: string) => (
+    <RouteLink
+      className="sd-row"
+      to={{ ...route, view: "stardew", sdSection, detail: undefined }}
+      onNavigate={navigate}
+      hash={hash}
+      search={search}
+      prefetch="press"
+    >
+      {children}
+    </RouteLink>
+  );
 
   const time = (minutes: number, days: number) => {
     const tm = machineTime(minutes, days);
@@ -336,14 +360,99 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
             </section>
           )}
 
-          {ficha.sources.length > 0 && (
+          {animals.length > 0 && (
+            <section className="sd-sec">
+              <h2 className="sd-h2">{c.producedBy}</h2>
+              <ul className="sd-rows">
+                {animals.map((a) => (
+                  <li key={a.key}>
+                    {tabRow(
+                      "farm",
+                      a.key,
+                      <>
+                        <b>{say(a.who, lang)}</b>
+                        {a.deluxe && (
+                          <span className="sd-row-end">
+                            <small>{c.deluxe}</small>
+                          </span>
+                        )}
+                      </>,
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {where.length > 0 && (
             <section className="sd-sec">
               <h2 className="sd-h2">{c.whereTitle}</h2>
               <ul className="sd-rows">
-                {ficha.sources.map((s, i) => (
+                {where.map((s, i) => (
                   <li className="sd-source" key={i}>
                     {source(s)}
                   </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {hasMuseum && (
+            <section className="sd-sec">
+              <h2 className="sd-h2">{c.museum.title}</h2>
+              <ul className="sd-rows">
+                {donate && <li>{tabRow("museum", undefined, <b>{c.museum.donate}</b>)}</li>}
+                {rewards.map((r) => (
+                  <li key={r.reward}>
+                    {tabRow(
+                      "museum",
+                      r.reward,
+                      <>
+                        <span className="sd-src-k">{c.museum.reward}</span>
+                        <b>{say(r.text, lang)}</b>
+                        {r.n != null && r.n > 1 && <span className="sd-row-end">× {r.n}</span>}
+                      </>,
+                      "?v=rewards",
+                    )}
+                  </li>
+                ))}
+                {prizes.map(([reward, id, n, prize]) => (
+                  <li className="sd-source" key={reward}>
+                    <span className="sd-src-k">{c.museum.gives}</span>
+                    {/* El premio puede ser un mueble o un sombrero sin ficha: va con su nombre, sin enlace. */}
+                    {item(id, prize, n > 1 && <small>× {n}</small>)}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {builds.length > 0 && (
+            <section className="sd-sec">
+              <h2 className="sd-h2">{c.buildsTitle}</h2>
+              <ul className="sd-rows">
+                {builds.map(([key, building, n]) => (
+                  <li key={key}>
+                    {tabRow(
+                      "farm",
+                      key,
+                      <>
+                        <b>{say(building, lang)}</b>
+                        <span className="sd-row-end">× {n.toLocaleString(locale)}</span>
+                      </>,
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {orders.length > 0 && (
+            <section className="sd-sec">
+              <h2 className="sd-h2">{c.ordersTitle}</h2>
+              <ul className="sd-rows">
+                {orders.map(([key, order, tab]) => (
+                  <li key={`${tab}-${key}`}>{tabRow(tab, key, <b>{say(order, lang)}</b>)}</li>
                 ))}
               </ul>
             </section>
@@ -356,6 +465,18 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
   /** El producto de una máquina: su ficha si la tiene, con el nombre armado ("Vino de Melón") si es de sabor. */
   function product(m: MachineIn) {
     return item(m.out, m.outName, m.stack > 1 && <small>× {m.stack}</small>);
+  }
+
+  /** Un precio en otra moneda (gemas de Qi, nueces doradas): la cifra, el sprite de la moneda y su nombre. */
+  function currency(n: number, cur: string) {
+    const r = ficha.refs[cur];
+    return (
+      <span className="sd-cur">
+        {n.toLocaleString(locale)}
+        {r && <Sprite id={cur} w={r[4]} h={r[5]} size={16} />}
+        <small>{r ? refName(r, lang) : cur}</small>
+      </span>
+    );
   }
 
   /** Una forma de conseguirlo: qué es, de quién o dónde, y la cifra o las estaciones a la derecha. */
@@ -382,9 +503,7 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
           <>
             <span className="sd-src-k">{c.src.shop}</span>
             <b>{say(s.shop, lang)}</b>
-            <span className="sd-row-end">
-              <Gold n={s.price} />
-            </span>
+            <span className="sd-row-end">{s.cur ? currency(s.price, s.cur) : <Gold n={s.price} />}</span>
           </>
         );
       case "fish":
@@ -417,6 +536,26 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
             </span>
           </>
         );
+      case "order":
+        return (
+          <>
+            <span className="sd-src-k">{c.src.order}</span>
+            <RouteLink
+              className="sd-src-link"
+              to={{ ...route, view: "stardew", sdSection: s.tab, detail: undefined }}
+              onNavigate={navigate}
+              hash={s.key}
+              prefetch="press"
+            >
+              {say(s.name, lang)}
+            </RouteLink>
+            {s.n != null && s.n > 1 && <span className="sd-row-end">× {s.n}</span>}
+          </>
+        );
+      // El animal y el premio del museo van en sus propias secciones.
+      case "animal":
+      case "museum":
+        return null;
     }
   }
 }

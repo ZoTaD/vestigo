@@ -139,6 +139,88 @@ class TestSiteData(unittest.TestCase):
         self.assertEqual(site_data.estaciones_de([{"k": "shop", "shop": "DesertFestival_Pierre"}]), [0])
         self.assertIsNone(site_data.estaciones_de([{"k": "shop", "shop": "SeedShop"}]))
 
+    # --- cruces con Granja, Museo, Isla y Misiones (etapa 4) -----------------------------------------------------
+    def ficha(self, item_id: str) -> dict:
+        return next(f for f in self.out["fichas"].values() if f["id"] == item_id)
+
+    def test_lo_produce_un_animal(self):
+        huevo = self.ficha("176")
+        animales = [s for s in huevo["sources"] if s["k"] == "animal"]
+        self.assertIn({"k": "animal", "who": ["White Chicken", "Gallina blanca"], "key": "white-chicken"}, animales)
+        # La gallina azul también pone el huevo blanco: una fila por animal, sin repetir.
+        self.assertEqual(len([s for s in animales if s["key"] == "blue-chicken"]), 1)
+        # El huevo XXL es el producto de lujo (con más amistad).
+        grande = [s for s in self.ficha("174")["sources"] if s["k"] == "animal" and s["key"] == "white-chicken"]
+        self.assertEqual(grande, [{"k": "animal", "who": ["White Chicken", "Gallina blanca"], "key": "white-chicken", "deluxe": True}])
+        self.assertTrue(self.ficha("176")["refs"])
+
+    def test_para_construir(self):
+        madera = self.ficha("388")
+        self.assertIn(["coop", ["Coop", "Corral"], 300], madera["uses"]["builds"])
+        self.assertIn(["shipping-bin", ["Shipping Bin", "Cubo de entrega"], 150], madera["uses"]["builds"])
+        self.assertEqual(self.ficha("176")["uses"]["builds"], [])
+
+    def test_se_dona_al_museo(self):
+        self.assertTrue(self.ficha("96")["uses"]["donate"])  # Rollo enano I
+        self.assertTrue(self.ficha("60")["uses"]["donate"])  # Esmeralda
+        self.assertFalse(self.ficha("388")["uses"]["donate"])
+
+    def test_premio_del_museo(self):
+        guia = [s for s in self.ficha("326")["sources"] if s["k"] == "museum"]
+        self.assertEqual(len(guia), 1)
+        self.assertEqual(guia[0]["reward"], "dwarf")
+        self.assertEqual(guia[0]["text"][1][:9], "4 objetos")
+        # Las semillas de coliflor salen de a 9; la receta de las semillas milenarias no es el objeto.
+        coliflor = [s for s in self.ficha("474")["sources"] if s["k"] == "museum"]
+        self.assertEqual((coliflor[0]["reward"], coliflor[0]["n"]), ("museum5", 9))
+        milenarias = [s["reward"] for s in self.ficha("499")["sources"] if s["k"] == "museum"]
+        self.assertEqual(milenarias, ["ancient-seed"])
+
+    def test_donarlo_da_un_premio_aunque_no_tenga_ficha(self):
+        # La Estatua de gallina (113) da el mueble (F)1305, que no tiene ficha: va con su nombre y sin ref.
+        estatua = self.ficha("113")
+        self.assertIn(["chicken", "(F)1305", 1, ["Chicken Statue", "Estatua de gallina"]], estatua["uses"]["prizes"])
+        self.assertNotIn("(F)1305", estatua["refs"])
+        # Los cuatro rollos dan la guía, que sí tiene ficha: va a refs.
+        rollo = self.ficha("96")
+        self.assertIn(["dwarf", "326", 1, ["Dwarvish Translation Guide", "Guía de traducción enana"]], rollo["uses"]["prizes"])
+        self.assertIn("326", rollo["refs"])
+
+    def test_lo_piden(self):
+        carne = self.ficha("684")
+        self.assertEqual(carne["uses"]["orders"][0][0], "willy")
+        self.assertEqual(carne["uses"]["orders"][0][2], "quests")
+        self.assertIn(["willy", ["Juicy Bugs Wanted!", "¡Se buscan insectos jugosos!"], "quests"], carne["uses"]["orders"])
+        # Una misión de la historia que pide el objeto (la 6: chirivía) también cuenta.
+        self.assertIn("6", [o[0] for o in self.ficha("24")["uses"]["orders"]])
+
+    def test_premio_de_un_pedido(self):
+        calico = [s for s in self.ficha("CalicoEgg")["sources"] if s["k"] == "order"]
+        self.assertIn("desertfestivalmarlon1", [s["key"] for s in calico])
+        self.assertTrue(all(s["tab"] == "quests" for s in calico))
+        # Los regalos por carta también (Emily manda la máquina de coser); las recetas no son el objeto.
+        maquina = [s["key"] for s in self.ficha("(BC)247")["sources"] if s["k"] == "order"]
+        self.assertEqual(maquina, ["emily"])
+        self.assertEqual([s for s in self.ficha("877")["sources"] if s["k"] == "order"], [])
+        # Las gemas de Qi salen de los pedidos de Qi, en la pestaña de la isla.
+        gemas = [s for s in self.ficha("858")["sources"] if s["k"] == "order"]
+        self.assertTrue(gemas)
+        self.assertTrue(all(s["tab"] == "island" and s["n"] > 0 for s in gemas))
+
+    def test_walnut_room_con_su_moneda(self):
+        flauta = [s for s in self.ficha("911")["sources"] if s["k"] == "shop" and s.get("cur")]
+        self.assertEqual(flauta, [{"k": "shop", "shop": ["Qi's Walnut Room", flauta[0]["shop"][1]], "price": 50, "cur": "858"}])
+        self.assertIn("858", self.ficha("911")["refs"])
+        gema = [s for s in self.ficha("858")["sources"] if s["k"] == "shop"]
+        self.assertEqual([(s["price"], s["cur"]) for s in gema], [(1, "73")])
+        self.assertIn("73", self.ficha("858")["refs"])
+        # El Fertilizante de lujo sólo se vende como receta: no es una fuente del objeto.
+        self.assertEqual([s for s in self.ficha("919")["sources"] if s.get("cur")], [])
+        # El cofre junimo se vende a 30 la primera vez y a 15 después: dos filas.
+        self.assertEqual(sorted(s["price"] for s in self.ficha("(BC)256")["sources"] if s.get("cur")), [15, 30])
+        fila = next(r for r in self.out["list"] if r[0] == "911")
+        self.assertTrue(fila[6] & site_data.SHOP)
+
 
 
 class TestFuente(unittest.TestCase):

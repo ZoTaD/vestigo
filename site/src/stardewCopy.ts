@@ -99,11 +99,27 @@ export interface ItemsCopy {
     fish: string;
     forage: string;
     monster: string;
+    /** El premio de un pedido o una misión. */
+    order: string;
     grow: (days: number) => string;
     regrow: (days: number) => string;
     mature: (days: number) => string;
     allYear: string;
   };
+  /** Los cruces con Granja, Museo, Misiones e Isla (etapa 4). */
+  producedBy: string;
+  /** El producto de lujo de un animal: sale con mucha amistad. */
+  deluxe: string;
+  museum: {
+    title: string;
+    donate: string;
+    /** Rótulo de un premio del museo que es este objeto. */
+    reward: string;
+    /** Rótulo de lo que da donar este objeto. */
+    gives: string;
+  };
+  buildsTitle: string;
+  ordersTitle: string;
 }
 
 /** Los textos de la pestaña Aldeanos: la lista y la ficha. */
@@ -497,7 +513,7 @@ export interface StardewCopy {
 }
 
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat", save: "Save reader" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat", save: "Save reader", farm: "Farm", museum: "Museum", quests: "Quests", island: "Ginger Island" },
   seo: {
     home: {
       title: "Stardew Valley Guide: Crop Calculator, Fish, Gifts and Bundles | Vestigo",
@@ -538,6 +554,23 @@ const EN: StardewCopy = {
     save: {
       title: "Stardew Valley Save File Reader: Perfection Tracker | Vestigo",
       description: "Open your Stardew Valley 1.6 save to see your perfection, what the Community Center still needs, this week's birthdays and the fish and recipes you're missing.",
+    },
+    // Las pestañas de la etapa 4 (2026-10-25): tienen dirección pero no página todavía; la tarea de cada una ajusta esto.
+    farm: {
+      title: "Stardew Valley Animals and Farm Buildings | Vestigo",
+      description: "Every Stardew Valley 1.6 farm animal with its price, produce and care, and every farm building with its cost, materials and upgrades.",
+    },
+    museum: {
+      title: "Stardew Valley Museum: Artifacts, Minerals and Rewards | Vestigo",
+      description: "Every artifact and mineral the Stardew Valley 1.6 museum takes, where to find each one, the donation rewards and the lost books.",
+    },
+    quests: {
+      title: "Stardew Valley Quests and Special Orders | Vestigo",
+      description: "Every Stardew Valley 1.6 story quest and special order from the town board: what each one asks for, how long you have and the reward.",
+    },
+    island: {
+      title: "Stardew Valley Ginger Island: Golden Walnuts and Qi | Vestigo",
+      description: "All 130 golden walnuts on Stardew Valley 1.6's Ginger Island by area, the parrot upgrades, Qi's Walnut Room and Qi's special orders.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -584,6 +617,10 @@ const EN: StardewCopy = {
       calendar: "Every birthday and festival of the year, with the gifts each villager loves.",
       mines: "Floors, monsters and their drops, every weapon by damage, boots and rings.",
       save: "Open your save file: perfection, what's left for each bundle and this week's birthdays.",
+      farm: "Every animal with its produce and care, and every building with its materials.",
+      museum: "Every artifact and mineral to donate, where to find it and the rewards.",
+      quests: "Story quests and special orders: what each one asks for and what it pays.",
+      island: "The 130 golden walnuts, the parrot upgrades and Qi's Walnut Room.",
     },
     featured: "Most looked up",
     featuredHint: "Open an item to see its prices, who loves it and what it turns into.",
@@ -633,11 +670,17 @@ const EN: StardewCopy = {
       fish: "Caught in",
       forage: "Found in",
       monster: "Dropped by",
+      order: "Reward from",
       grow: (d) => `${d} days to grow`,
       regrow: (d) => `regrows every ${d} days`,
       mature: (d) => `${d} days to mature`,
       allYear: "All year",
     },
+    producedBy: "Produced by",
+    deluxe: "with high friendship",
+    museum: { title: "Museum", donate: "Donate it to the museum", reward: "Museum reward", gives: "Donating it gives" },
+    buildsTitle: "Used to build",
+    ordersTitle: "Requested by",
   },
   villagers: {
     h1: "Stardew Valley villagers",
@@ -978,7 +1021,7 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate", save: "Lector de partida" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate", save: "Lector de partida", farm: "Granja", museum: "Museo", quests: "Misiones", island: "Isla Jengibre" },
   seo: {
     home: {
       title: "Guía de Stardew Valley: cultivos, peces, regalos y paquetes | Vestigo",
@@ -1019,6 +1062,23 @@ const ES: StardewCopy = {
     save: {
       title: "Lector de partida de Stardew Valley: perfección y lo que falta | Vestigo",
       description: "Abrí tu partida de Stardew Valley 1.6 y mirá tu perfección, lo que le falta al Centro Comunitario, los cumpleaños de la semana y los peces y recetas.",
+    },
+    // Las pestañas de la etapa 4 (2026-10-25): tienen dirección pero no página todavía; la tarea de cada una ajusta esto.
+    farm: {
+      title: "Animales y edificios de la granja de Stardew Valley | Vestigo",
+      description: "Cada animal de la granja de Stardew Valley 1.6 con su precio, lo que produce y sus cuidados, y cada edificio con su costo, materiales y mejoras.",
+    },
+    museum: {
+      title: "Museo de Stardew Valley: artefactos, minerales y premios | Vestigo",
+      description: "Cada artefacto y mineral que recibe el museo de Stardew Valley 1.6, dónde se encuentra cada uno, los premios por donar y los libros perdidos.",
+    },
+    quests: {
+      title: "Misiones y pedidos especiales de Stardew Valley | Vestigo",
+      description: "Cada misión de la historia y cada pedido especial del tablón de Stardew Valley 1.6: qué pide, cuánto tiempo hay y el premio.",
+    },
+    island: {
+      title: "Isla Jengibre de Stardew Valley: nueces doradas y Qi | Vestigo",
+      description: "Las 130 nueces doradas de la Isla Jengibre de Stardew Valley 1.6 por zona, las mejoras del loro, la Habitación de las Nueces de Qi y sus pedidos.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -1065,6 +1125,10 @@ const ES: StardewCopy = {
       calendar: "Cada cumpleaños y festival del año, con los regalos que le encantan a cada aldeano.",
       mines: "Pisos, monstruos y lo que sueltan, cada arma por daño, botas y anillos.",
       save: "Abrí tu partida: la perfección, lo que falta de cada paquete y los cumpleaños de la semana.",
+      farm: "Cada animal con lo que produce y sus cuidados, y cada edificio con sus materiales.",
+      museum: "Cada artefacto y mineral para donar, dónde se encuentra y los premios.",
+      quests: "Misiones de la historia y pedidos especiales: qué pide cada uno y qué paga.",
+      island: "Las 130 nueces doradas, las mejoras del loro y la Habitación de las Nueces de Qi.",
     },
     featured: "Los más buscados",
     featuredHint: "Abrí un objeto para ver sus precios, a quién le encanta y en qué se transforma.",
@@ -1114,11 +1178,17 @@ const ES: StardewCopy = {
       fish: "Se pesca en",
       forage: "Se encuentra en",
       monster: "Lo suelta",
+      order: "Premio de",
       grow: (d) => `${d} días hasta la cosecha`,
       regrow: (d) => `vuelve a dar cada ${d} días`,
       mature: (d) => `${d} días hasta dar fruto`,
       allYear: "Todo el año",
     },
+    producedBy: "Lo produce",
+    deluxe: "con mucha amistad",
+    museum: { title: "Museo", donate: "Se dona al museo", reward: "Premio del museo", gives: "Donarlo da" },
+    buildsTitle: "Para construir",
+    ordersTitle: "Lo piden",
   },
   villagers: {
     h1: "Aldeanos de Stardew Valley",

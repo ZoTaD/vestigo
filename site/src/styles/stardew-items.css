@@ -101,6 +101,10 @@ a.sd-src-link:hover { text-decoration-color: currentColor; }
 .sd-flow { padding: 4px 10px 4px 4px; }
 .sd-arrow { font: 800 18px/1 var(--sd-text); color: var(--sd-wood); }
 .sd-src-k { min-width: 120px; font: 800 13px/1.2 var(--sd-text); color: var(--sd-dim); }
+/* Un precio que no es en oro (gemas de Qi, nueces doradas): la cifra, el sprite de la moneda a 16 px y su nombre. */
+.sd-cur { display: inline-flex; align-items: center; gap: 4px; }
+.sd-cur .sd-sprite { image-rendering: pixelated; }
+.sd-cur small { margin-left: 2px; }
 
 /* Un objeto nombrado: casillero chico y nombre, con un dato abajo. */
 .sd-ref { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
