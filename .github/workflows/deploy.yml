@@ -89,6 +89,8 @@ jobs:
         env:
           # El mismo tope que tenía Netlify (ver `netlify.toml`).
           NODE_OPTIONS: --max-old-space-size=6144
+          # Sin esto el sitio sale sin Google Analytics (ver `analytics.ts`).
+          VITE_GA_MEASUREMENT_ID: ${{ vars.VITE_GA_MEASUREMENT_ID }}
         run: |
           npm ci --prefix site
           npm run build --prefix site
