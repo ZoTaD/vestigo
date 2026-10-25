@@ -35,6 +35,16 @@ class TestPredictData(unittest.TestCase):
         self.assertEqual(f["JojaCatalogue"][1], 25000)
         self.assertEqual(f["JojaCatalogue"][2] & 1, 1)  # el campo 10 del mueble: excluido de la venta al azar
 
+    def test_dibujos_de_lo_que_no_tiene_ficha(self):
+        # Todo lo que se nombra sin ficha tiene dibujo con su tamaño, salvo las máquinas (ya tienen `bc-<n>.png`).
+        s = self.d["sprites"]
+        self.assertEqual(set(s), {q for q in self.d["names"] if not q.startswith("(BC)")})
+        self.assertEqual(s["(F)0"], [16, 32])  # silla: 1x2 baldosas por su tipo
+        self.assertEqual(s["(F)JojaCatalogue"], [16, 32])
+        self.assertEqual(s["(H)RedFez"], [20, 20])
+        self.assertEqual(s["(S)MysteryShirt"], [8, 8])
+        self.assertEqual(s["(WP)MoreWalls:11"], [16, 28])
+
     def test_nombres_de_lo_que_no_tiene_ficha(self):
         n = self.d["names"]
         self.assertEqual(n["(F)0"], ["Oak Chair", "Silla de roble"])

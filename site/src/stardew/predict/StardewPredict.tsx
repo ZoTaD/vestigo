@@ -22,7 +22,7 @@ import { useLoad } from "../../useLoad";
 import { loadList, loadPredict, peekList, peekPredict, say, type Lang, type Row } from "../data";
 import { normId, type Save } from "../save/parse";
 import { readStoredSave } from "../save/store";
-import { Box, Gold, Group, Pill, Slot, Sprite, type Nav } from "../ui";
+import { Box, Gold, Group, Pill, Slot, Sprite, spriteFile, type Nav } from "../ui";
 import { STOCK_ILIMITADO, type CartItem, type Fecha } from "./cart";
 import type { Drop, GeodeKind } from "./geodes";
 import {
@@ -313,6 +313,7 @@ interface Ctx {
   lang: Lang;
   byId: Map<string, Row>;
   names: PredictData["names"];
+  sprites: PredictData["sprites"];
   route: Route;
   navigate: Nav;
   long: (f: Fecha) => string;
@@ -334,6 +335,7 @@ function Predictions({ input, data, route, navigate }: { input: PredictInput; da
       lang,
       byId: new Map(data.rows.map((r) => [r.id, r])),
       names: data.predict.names,
+      sprites: data.predict.sprites,
       route,
       navigate,
       long: (f) => t.save.date(f.day, t.seasons[f.season], f.year),
@@ -358,6 +360,33 @@ function Predictions({ input, data, route, navigate }: { input: PredictInput; da
   );
 }
 
+/** El archivo del dibujo de algo sin ficha (`archivo_predictor` de sprites.py): `(WP)MoreWalls:11` → `wp-MoreWalls-11.png`. */
+export const predictSpriteFile = (qid: string): string => {
+  const m = /^\((\w+)\)(.*)$/.exec(qid);
+  return m ? `${m[1].toLowerCase()}-${m[2].replaceAll(":", "-")}.png` : `${qid}.png`;
+};
+
+/**
+ * El dibujo de un objeto, lo más grande que entre en `box` px: el de la lista de Objetos si tiene ficha; si no, una
+ * máquina `(BC)` con su `bc-<n>.png` o el dibujo de `/stardew/predict/` (muebles, sombreros, camisas, papeles, armas).
+ * A un múltiplo entero de su tamaño cuando entra al menos una vez; los muebles más grandes que la caja, achicados.
+ */
+function Pic({ id, x, box }: { id: string; x: Ctx; box: number }) {
+  const r = x.byId.get(normId(id));
+  let src: string;
+  let w: number;
+  let h: number;
+  if (r) [src, w, h] = [`/stardew/items/${spriteFile(r.id)}`, r.w, r.h];
+  else if (id.startsWith("(BC)")) [src, w, h] = [`/stardew/items/${spriteFile(id)}`, 16, 32];
+  else if (x.sprites[id]) [src, w, h] = [`/stardew/predict/${predictSpriteFile(id)}`, ...x.sprites[id]];
+  else return null;
+  const lado = Math.max(w, h);
+  // Las de 16x32 (máquinas) van a la escala de las de 16x16 de al lado, como en el Lector.
+  const caja = h === 2 * w ? Math.round((box * 4) / 3) : box;
+  const k = lado <= caja ? Math.floor(caja / lado) : caja / lado;
+  return <img className="sd-sprite" src={src} alt="" width={Math.round(w * k)} height={Math.round(h * k)} loading="lazy" decoding="async" />;
+}
+
 /** El nombre de un objeto: el de la lista de Objetos, o el de `predict.json` (muebles, sombreros…). */
 const nameOf = (id: string, x: Ctx): string => x.byId.get(normId(id))?.name ?? (x.names[id] ? say(x.names[id], x.lang) : id);
 
@@ -367,7 +396,9 @@ function Thing({ id, x, note, size = 48 }: { id: string; x: Ctx; note?: ReactNod
   const label = nameOf(id, x);
   const body = (
     <>
-      <Slot>{r ? <Sprite id={r.id} w={r.w} h={r.h} size={r.h > r.w ? Math.round((size * 4) / 3) : size} /> : null}</Slot>
+      <Slot>
+        <Pic id={id} x={x} box={size} />
+      </Slot>
       <span>{label}</span>
       {note != null && <small>{note}</small>}
     </>
@@ -446,7 +477,7 @@ function TodayBox({ p, x, fortune }: { p: Prediction; x: Ctx; fortune: PredictDa
               const w = byDay.get(d);
               if (d === hoy.day)
                 return (
-                  <li className="sd-pr-day is-today" key={d}>
+                  <li className="sd-pr-day is-today" key={d} aria-label={`${d}: ${c.today.todayCell}`}>
                     <span className="sd-pr-n">{d}</span>
                     <span className="sd-pr-w">{c.today.todayCell}</span>
                   </li>
@@ -459,7 +490,7 @@ function TodayBox({ p, x, fortune }: { p: Prediction; x: Ctx; fortune: PredictDa
                 );
               const label = weatherText(w, c);
               return (
-                <li className={`sd-pr-day ${weatherClass(w)}`} key={d} title={label}>
+                <li className={`sd-pr-day ${weatherClass(w)}`} key={d} title={label} aria-label={`${d}: ${label}`}>
                   <span className="sd-pr-n">{d}</span>
                   <span className="sd-pr-w">{label}</span>
                 </li>
@@ -546,11 +577,12 @@ function DropRow({ d, n, x }: { d: Drop; n: number; x: Ctx }) {
         {qty}
       </li>
     );
-  const r = x.byId.get(normId(d.id));
   return (
     <li className="sd-pr-drop">
       <span className="sd-pr-num">{n}</span>
-      <span className="sd-pr-pix">{r ? <Sprite id={r.id} w={r.w} h={r.h} size={32} /> : null}</span>
+      <span className="sd-pr-pix">
+        <Pic id={d.id} x={x} box={32} />
+      </span>
       <ThingName id={d.id} x={x} />
       {qty}
     </li>
@@ -649,9 +681,9 @@ function CartBox({ p, x, manual }: { p: Prediction; x: Ctx; manual: boolean }) {
           </ul>
         </section>
       ))}
-      {manual && (
+      {(manual || !p.used.multiplayer) && (
         <ul className="sd-pr-notes sd-muted">
-          <li>{c.cart.manual}</li>
+          {manual && <li>{c.cart.manual}</li>}
           <li>{c.cart.ringManual}</li>
         </ul>
       )}
@@ -702,6 +734,7 @@ function NightsBox({ p, x, rose, setRose, man, toggle }: { p: Prediction; x: Ctx
           ))}
         </ol>
       )}
+      {p.nights.length > 0 && <p className="sd-pr-rest">{c.nights.rest}</p>}
       <ul className="sd-pr-notes sd-muted">
         <li>{c.nights.roseNote}</li>
         {man && <li>{c.nights.manual}</li>}

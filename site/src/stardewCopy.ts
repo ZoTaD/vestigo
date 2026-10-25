@@ -537,6 +537,7 @@ export interface PredictCopy {
     ifRose: string;
     otherwise: string;
     nothing: string;
+    rest: string;
     outside: string;
     happened: Record<"sawQiPlane" | "gotCapsule" | "ccPantry" | "raccoonTreeFallen", string>;
     manual: string;
@@ -619,7 +620,7 @@ const PREDICT_EN: PredictCopy = {
   legacy: "Use Legacy Randomization",
   legacyHint: "Only if you turned it on in the advanced options when you made the farm.",
   go: "Predict",
-  manualLimits: "With only the seed there are no geodes or luck (they need your farmer), and the Mines, the cart and the nights use what you pick below. With your save, everything is exact.",
+  manualLimits: "With only the seed there are no geodes or luck (they need your farmer), and the Mines, the cart and the nights use what you pick below. With your save you get everything that can be known.",
   inYourSave: "In your save",
   today: {
     title: "Today and tomorrow",
@@ -632,7 +633,7 @@ const PREDICT_EN: PredictCopy = {
     seasonEnds: "Tomorrow a new season starts.",
     weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     todayCell: "Today",
-    weather: { sun: "Sunny", rain: "Rain", storm: "Storm", snow: "Snow", greenRain: "Green rain", festival: "Festival", wind: "Windy", wedding: "Wedding" },
+    weather: { sun: "Sun", rain: "Rain", storm: "Storm", snow: "Snow", greenRain: "Green rain", festival: "Festival", wind: "Wind", wedding: "Wedding" },
     or: (a, b) => `${a} or ${b.toLowerCase()}`,
     note: "Whether it rains is exact. Storm or plain rain, and wind or sun, are decided that same morning by chance that depends on your steps: those days show both. A Rain Totem used today changes tomorrow.",
   },
@@ -689,9 +690,10 @@ const PREDICT_EN: PredictCopy = {
     ifRose: "With ripe fairy roses every night:",
     otherwise: "With none:",
     nothing: "nothing",
+    rest: "The other nights in the next two weeks bring nothing.",
     outside: "Left out: changes from mail that arrives tomorrow (Community Center or Joja rooms, the movie theater, Willy's boat), JojaMart collapsing on a rainy night and a Rain Totem used today.",
     happened: { sawQiPlane: "I saw Mr. Qi's plane", gotCapsule: "The capsule already landed", ccPantry: "The Pantry is restored", raccoonTreeFallen: "The raccoons' tree fell" },
-    manual: "Without your save it assumes nobody has the billboard prize ticket and there's no wedding these nights.",
+    manual: "Without your save it uses what you tick above; with nothing ticked, it assumes you haven't seen Mr. Qi's plane, the capsule hasn't landed, the Pantry isn't restored and the raccoons' tree is still standing. It also assumes nobody has the billboard prize ticket and there's no wedding these nights.",
   },
 };
 
@@ -722,7 +724,7 @@ const PREDICT_ES: PredictCopy = {
   legacy: "Usar aleatorización antigua",
   legacyHint: "Sólo si la prendiste en las opciones avanzadas al crear la granja.",
   go: "Predecir",
-  manualLimits: "Con la semilla sola no hay geodas ni suerte (hacen falta los datos de tu granjero), y las Minas, el carro y las noches usan lo que elijas abajo. Con tu partida, todo sale exacto.",
+  manualLimits: "Con la semilla sola no hay geodas ni suerte (hacen falta los datos de tu granjero), y las Minas, el carro y las noches usan lo que elijas abajo. Con tu partida sale todo lo que se puede saber.",
   inYourSave: "En tu partida",
   today: {
     title: "Hoy y mañana",
@@ -792,9 +794,10 @@ const PREDICT_ES: PredictCopy = {
     ifRose: "Con rosas de hadas maduras todas las noches:",
     otherwise: "Sin ninguna:",
     nothing: "nada",
+    rest: "Las otras noches de las próximas dos semanas no traen nada.",
     outside: "Queda afuera: lo que cambia el correo que llega mañana (salas del Centro Comunitario o de Joja, el cine, el barco de Willy), el derrumbe de JojaMart en una noche de lluvia y un tótem de lluvia usado hoy.",
     happened: { sawQiPlane: "Vi el avión del Sr. Qi", gotCapsule: "Ya cayó la cápsula", ccPantry: "La Despensa está restaurada", raccoonTreeFallen: "Ya cayó el árbol de los mapaches" },
-    manual: "Sin tu partida supone que nadie tiene el boleto del premio del cartel y que no hay bodas estas noches.",
+    manual: "Sin tu partida usa lo que marques arriba; sin nada marcado, supone que no viste el avión del Sr. Qi, que no cayó la cápsula, que la Despensa no está restaurada y que el árbol de los mapaches sigue en pie. También supone que nadie tiene el boleto del premio del cartel y que no hay bodas estas noches.",
   },
 };
 

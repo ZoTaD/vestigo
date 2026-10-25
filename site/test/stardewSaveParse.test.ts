@@ -301,8 +301,13 @@ describe("parseSave: lo que suma la pestaña Predictor (tarea 7)", () => {
     expect(leer(mini).predict!.farmers[1].recipes).toEqual(["Fried Egg"]);
   });
 
-  it("specialCharm: el amuleto especial (suma 0,025 a la suerte); sin la etiqueta, false", () => {
+  it("specialCharm: en la 1.6 es el correo HasSpecialCharm; la etiqueta vieja también vale; sin nada, false", () => {
     expect(leer(mini).predict!.farmers[0].specialCharm).toBe(false);
+    const correo = mini.replace("<string>CF_Fair</string>", "<string>CF_Fair</string><string>HasSpecialCharm</string>");
+    expect(leer(correo).predict!.farmers[0].specialCharm).toBe(true);
+    // Sólo para mañana no cuenta (`hasSpecialCharm` mira `mailReceived`).
+    const manana = mini.replace("<string>CF_Fish%&amp;NL&amp;%</string>", "<string>HasSpecialCharm</string>");
+    expect(leer(manana).predict!.farmers[0].specialCharm).toBe(false);
     const con = mini.replace("<farmName>Los Sauces</farmName>", "<farmName>Los Sauces</farmName><hasSpecialCharm>true</hasSpecialCharm>");
     expect(leer(con).predict!.farmers[0].specialCharm).toBe(true);
   });
@@ -313,12 +318,15 @@ describe("parseSave: lo que suma la pestaña Predictor (tarea 7)", () => {
       /<Status>Friendly<\/Status>(\s*<Proposer>)/,
       "<Status>Engaged</Status><WeddingDate><Year>2</Year><DayOfMonth>9</DayOfMonth><Season>summer</Season></WeddingDate>$1",
     );
-    expect(leer(novia).predict!.weddings).toEqual([{ season: 1, day: 9, year: 2 }]);
+    expect(leer(novia).predict!.weddings).toEqual([{ season: 1, day: 9, year: 2, roommate: false }]);
+    // Krobus de compañero de cuarto: la mudanza también es un compromiso, marcado.
+    const krobus = novia.replace("<RoommateMarriage>false</RoommateMarriage>", "<RoommateMarriage>true</RoommateMarriage>");
+    expect(leer(krobus).predict!.weddings).toEqual([{ season: 1, day: 9, year: 2, roommate: true }]);
     const granjeros = mini.replace(
       "<farmhands>",
       `<farmerFriendships><item><key><FarmerPair><Farmer1>1</Farmer1><Farmer2>2</Farmer2></FarmerPair></key><value><Friendship><Points>0</Points><Status>Engaged</Status><WeddingDate><Year>1</Year><DayOfMonth>3</DayOfMonth><Season>fall</Season></WeddingDate></Friendship></value></item></farmerFriendships><farmhands>`,
     );
-    expect(leer(granjeros).predict!.weddings).toEqual([{ season: 2, day: 3, year: 1 }]);
+    expect(leer(granjeros).predict!.weddings).toEqual([{ season: 2, day: 3, year: 1, roommate: false }]);
     // Ya casados: la fecha queda guardada pero no hay boda por venir.
     const casada = novia.replace("<Status>Engaged</Status>", "<Status>Married</Status>");
     expect(leer(casada).predict!.weddings).toEqual([]);

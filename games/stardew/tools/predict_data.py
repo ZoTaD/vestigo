@@ -14,6 +14,8 @@ Qué conserva cada parte y por qué (los métodos del juego que la leen):
 - `lowGradeCrops`, `raccoonSeeds`: `Crop.getRandomLowGradeCropForThisSeason`, `Utility.getRaccoonSeedForCurrentTimeOfYear`.
 - `festivals`: `Utility.isFestivalDay` (`Data/Festivals/FestivalDates`) y `Data/PassiveFestivals`.
 - `weather`: `WeatherConditions` del contexto `Default` de `Data/LocationContexts`.
+- `sprites`: ancho y alto del dibujo de cada id de `names` que no es máquina (`sprites.py` los escribe en
+  `site/public/stardew/predict/`), para dibujarlos con su tamaño fijo.
 - `fortune`: las frases del pronóstico de la suerte de la tele (`TV.getFortuneForecast`, `TV.cs.13191` a `13201`).
 """
 import json
@@ -307,9 +309,16 @@ def fortune() -> dict:
     return {k: _nombre_token(rf"[LocalizedText Strings\StringsFromCSFiles:TV.cs.{k}]") for k in _FORTUNA}
 
 
+def sprite_sizes(nombres: dict) -> dict:
+    """`[ancho, alto]` del dibujo de cada id de `names` salvo las máquinas `(BC)` (ésas tienen su `bc-<n>.png`)."""
+    import sprites  # noqa: PLC0415 (trae Pillow: sólo hace falta acá)
+    return {q: list(sprites.dibujo_predictor(q).size) for q in nombres if not q.startswith("(BC)")}
+
+
 def predict() -> dict:
     muebles, geodas, carro = furniture(), geodes(), traveler()
-    return {"objects": objects(), "furniture": muebles, "names": names(muebles, geodas, carro), "geodes": geodas,
+    nombres = names(muebles, geodas, carro)
+    return {"objects": objects(), "furniture": muebles, "names": nombres, "sprites": sprite_sizes(nombres), "geodes": geodas,
             "traveler": carro, "lowGradeCrops": low_grade_crops(), "raccoonSeeds": raccoon_seeds(),
             "festivals": festivals(), "weather": weather(), "fortune": fortune()}
 

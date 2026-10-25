@@ -173,6 +173,8 @@ export interface PredictData {
   };
   /** `WeatherConditions` del contexto `Default` de `Data/LocationContexts`, en orden. */
   weather: CondicionClima[];
+  /** `[ancho, alto]` del dibujo de cada id de `names` salvo las máquinas (`/stardew/predict/<archivo>`, de sprites.py). */
+  sprites: Record<string, [number, number]>;
   /** Las frases del pronóstico de la suerte de la tele (`TV.getFortuneForecast`), por clave (`13191` = `TV.cs.13191`). */
   fortune: Record<string, Par>;
 }

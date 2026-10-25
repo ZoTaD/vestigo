@@ -47,9 +47,11 @@
  * - Para la pestaña Predictor (tarea 7), por granjero: `mailReceived` y `mailTomorrow` por separado (sin la marca
  *   `%&NL&%`; `pickFarmEvent`, `isLocationAccessible` y la cantera miran `mailReceived`, no `hasOrWillReceiveMail`),
  *   `recipes` (las claves de `craftingRecipes` y `cookingRecipes`: `ShopMenu` esconde la receta que ya sabe) y
- *   `specialCharm` (`hasSpecialCharm`: `Farmer.DailyLuck` le suma 0,025). De la partida, `weddings`: la `WeddingDate`
- *   de cada `Friendship` en `Engaged`, de los aldeanos (`friendshipData` de cada granjero) y entre granjeros
- *   (`farmerFriendships` de la raíz), con la estación como índice.
+ *   `specialCharm` (`Farmer.hasSpecialCharm`: en la 1.6 es el correo `HasSpecialCharm`; antes, la etiqueta
+ *   `<hasSpecialCharm>`, que el juego pasa al correo al cargar; `Farmer.DailyLuck` le suma 0,025). De la partida,
+ *   `weddings`: la `WeddingDate` de cada `Friendship` en `Engaged`, de los aldeanos (`friendshipData` de cada granjero)
+ *   y entre granjeros (`farmerFriendships` de la raíz), con la estación como índice y `roommate` si es la mudanza de
+ *   un compañero de cuarto (`RoommateMarriage`: Krobus).
  *
  * Partidas viejas (antes de la 1.6): se leen igual con lo que traigan. Sin `<gameVersion>` la versión se deduce por
  * `hasApplied1_4_UpdateChanges` ("1.4") y `hasApplied1_3_UpdateChanges` ("1.3"); sin ninguna es "<1.3". Antes de la
@@ -142,7 +144,7 @@ export interface PredictFarmer {
   mailTomorrow: string[];
   /** Recetas que sabe: las claves de `craftingRecipes` y de `cookingRecipes`, en ese orden. */
   recipes: string[];
-  /** `hasSpecialCharm`: el amuleto especial suma 0,025 a la suerte del día (`Farmer.DailyLuck`). */
+  /** `Farmer.hasSpecialCharm` (correo `HasSpecialCharm`): el amuleto especial suma 0,025 a la suerte del día. */
   specialCharm: boolean;
 }
 
@@ -151,6 +153,11 @@ export interface SaveDate {
   season: 0 | 1 | 2 | 3;
   day: number;
   year: number;
+}
+
+/** Un compromiso: la fecha de boda y si es la mudanza de un compañero de cuarto (`Friendship.RoommateMarriage`). */
+export interface SaveWedding extends SaveDate {
+  roommate: boolean;
 }
 
 /** Lo que el predictor necesita de la partida (ver la cabecera). */
@@ -175,7 +182,7 @@ export interface SavePredict {
   /** Ya se abrió algún coco dorado en la partida (`netWorldState.GoldenCoconutCracked`). */
   goldenCoconutCracked: boolean;
   /** La fecha de boda (`WeddingDate`) de cada compromiso en curso, con aldeanos o entre granjeros. */
-  weddings: SaveDate[];
+  weddings: SaveWedding[];
 }
 
 /**
@@ -402,16 +409,22 @@ export function uidHalf(uid: string): number {
 /** Una lista de correo (`mailReceived`, `mailForTomorrow`) sin la marca `%&NL&%`. */
 const mailList = (el: Element, tag: string): string[] => kids(kid(el, tag)).map((m) => str(m).replace("%&NL&%", ""));
 
-/** La `WeddingDate` de un `Friendship` en `Engaged`, o null. */
-function weddingOf(f: Element | null): SaveDate | null {
+/** La `WeddingDate` de un `Friendship` en `Engaged` (con `RoommateMarriage`), o null. */
+function weddingOf(f: Element | null): SaveWedding | null {
   if (!f || text(f, "Status") !== "Engaged") return null;
   const w = kid(f, "WeddingDate");
   if (!w || nil(w)) return null;
-  return { season: SEASONS[text(w, "Season").toLowerCase()] ?? 0, day: num(w, "DayOfMonth"), year: num(w, "Year") };
+  return {
+    season: SEASONS[text(w, "Season").toLowerCase()] ?? 0,
+    day: num(w, "DayOfMonth"),
+    year: num(w, "Year"),
+    roommate: bool(f, "RoommateMarriage"),
+  };
 }
 
 function readPredictFarmer(el: Element, p: Player, stats: Element | null): PredictFarmer {
   const uid = text(el, "UniqueMultiplayerID") || text(el, "uniqueMultiplayerID") || "0";
+  const mailReceived = mailList(el, "mailReceived");
   return {
     name: p.name,
     host: p.host,
@@ -425,10 +438,11 @@ function readPredictFarmer(el: Element, p: Player, stats: Element | null): Predi
     bookMystery: statGet(stats, "Book_Mystery"),
     mail: p.mail,
     spouse14: Object.entries(p.friends).filter(([, f]) => f.points >= 3500).map(([n]) => n),
-    mailReceived: mailList(el, "mailReceived"),
+    mailReceived,
     mailTomorrow: mailList(el, "mailForTomorrow"),
     recipes: [...Object.keys(p.crafting), ...p.cooking],
-    specialCharm: bool(el, "hasSpecialCharm"),
+    // 1.6: el correo; antes, la etiqueta que el juego pasa al correo al cargar (`obsolete_hasSpecialCharm`).
+    specialCharm: mailReceived.includes("HasSpecialCharm") || bool(el, "hasSpecialCharm"),
   };
 }
 
@@ -496,7 +510,7 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
   if (hands.length === 0 && locations) hands = Array.from(locations.getElementsByTagName("farmhand"));
   const players: Player[] = [];
   const predictFarmers: PredictFarmer[] = [];
-  const weddings: SaveDate[] = [];
+  const weddings: SaveWedding[] = [];
   const addPlayer = (el: Element, host: boolean) => {
     const p = readPlayer(el, host, host ? t("stats") : null);
     players.push(p);

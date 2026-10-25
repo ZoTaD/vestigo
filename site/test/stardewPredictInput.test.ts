@@ -123,11 +123,11 @@ describe("la partida", () => {
   it("weddingDaysPlayed: la boda cae el primer día sin festival ni lluvia verde desde su fecha", () => {
     const seed = { gameId: 452435081, legacy: false };
     const hoy = { season: 0 as const, day: 10, year: 1, daysPlayed: daysPlayed(0, 10, 1) };
-    expect(weddingDaysPlayed([{ season: 0, day: 12, year: 1 }], hoy, seed, data)).toEqual([daysPlayed(0, 12, 1)]);
+    expect(weddingDaysPlayed([{ season: 0, day: 12, year: 1, roommate: false }], hoy, seed, data)).toEqual([daysPlayed(0, 12, 1)]);
     // El 13 de primavera es el festival del huevo: pasa al 14.
-    expect(weddingDaysPlayed([{ season: 0, day: 13, year: 1 }], hoy, seed, data)).toEqual([daysPlayed(0, 14, 1)]);
+    expect(weddingDaysPlayed([{ season: 0, day: 13, year: 1, roommate: false }], hoy, seed, data)).toEqual([daysPlayed(0, 14, 1)]);
     // Una fecha ya pasada (comprometidos todavía): mañana.
-    expect(weddingDaysPlayed([{ season: 0, day: 3, year: 1 }], hoy, seed, data)).toEqual([daysPlayed(0, 11, 1)]);
+    expect(weddingDaysPlayed([{ season: 0, day: 3, year: 1, roommate: false }], hoy, seed, data)).toEqual([daysPlayed(0, 11, 1)]);
   });
 
   it("la suerte: el amuleto suma 0,025 (float) y la frase de la tele sigue los umbrales del juego", () => {
@@ -167,9 +167,25 @@ describe("predictAll", () => {
   });
 
   it("el día de una boda: mañana es Wedding y esa noche no hay evento", () => {
-    const p = predictAll(conPartida(partida({ weddings: [{ season: 2, day: 11, year: 2 }] })), data);
+    const p = predictAll(conPartida(partida({ weddings: [{ season: 2, day: 11, year: 2, roommate: false }] })), data);
     expect(p.tomorrow).toEqual({ kind: "wedding" });
     expect(p.used.weddings).toBe(1);
+  });
+
+  it("la mudanza de Krobus: sin evento esa noche, pero el clima no pasa a Wedding", () => {
+    // Una semilla con evento la noche que lleva al 11 de otoño del año 2, para ver que la mudanza lo saca.
+    for (let g = 1; g < 3000; g++) {
+      const s = partida({ gameId: g, farmers: [granjero({ mailReceived: ["sawQiPlane"] })] });
+      const sin = predictAll(conPartida(s), data, { fairyRose: false });
+      if (!sin.nights.some((n) => n.date.day === 11 && n.date.season === 2)) continue;
+      const k = predictAll(conPartida({ ...s, weddings: [{ season: 2, day: 11, year: 2, roommate: true }] }), data, { fairyRose: false });
+      expect(k.nights.some((n) => n.date.day === 11 && n.date.season === 2)).toBe(false);
+      expect(k.tomorrow).toEqual(sin.tomorrow);
+      expect(k.tomorrow?.kind).not.toBe("wedding");
+      expect(k.season[0].weather.kind).not.toBe("wedding");
+      return;
+    }
+    throw new Error("ninguna semilla con evento esa noche");
   });
 
   it("la receta del anillo de bodas: sólo en multijugador y no si el granjero ya la sabe", () => {

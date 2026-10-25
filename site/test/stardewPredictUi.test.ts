@@ -13,7 +13,7 @@ import { LangContext } from "../src/i18n";
 import type { Route } from "../src/route";
 import { STARDEW_COPY } from "../src/stardewCopy";
 import { loadList, loadSaveBundle, type Row } from "../src/stardew/data";
-import StardewPredict, { PredictView, type PredictBundle } from "../src/stardew/predict/StardewPredict";
+import StardewPredict, { PredictView, predictSpriteFile, type PredictBundle } from "../src/stardew/predict/StardewPredict";
 import type { PredictData } from "../src/stardew/predict/query";
 import { parseSave, type Save } from "../src/stardew/save/parse";
 import { SaveView } from "../src/stardew/save/StardewSave";
@@ -99,6 +99,33 @@ describe("Predictor con una partida guardada", () => {
     }
   });
 
+  it("cada casillero tiene su dibujo (muebles, sombreros y máquinas sin ficha también) y la g pegada al precio", () => {
+    const s = leer(conPredict);
+    // Varias semillas, para que salgan muebles en el carro.
+    let muebles = 0;
+    for (const g of [452435081, 177904899, 12345, 999]) {
+      const html = view({ ...s, predict: { ...s.predict!, gameId: g } }, "en");
+      expect(html).not.toContain('<span class="sd-slot"></span>');
+      muebles += (html.match(/src="\/stardew\/predict\/f-/g) ?? []).length;
+      expect(html).toMatch(/<span class="sd-gold">[\d,]+<small>g<\/small><\/span>/);
+    }
+    expect(muebles).toBeGreaterThan(0);
+    expect(predictSpriteFile("(WP)MoreWalls:11")).toBe("wp-MoreWalls-11.png");
+    expect(predictSpriteFile("(H)RedFez")).toBe("h-RedFez.png");
+    // Cada id sin ficha que el predictor puede mostrar tiene su dibujo con tamaño (o es una máquina con bc-<n>.png).
+    const d = raw as unknown as PredictData;
+    for (const q of Object.keys(d.names)) expect(q.startsWith("(BC)") || !!d.sprites[q], q).toBe(true);
+  });
+
+  it("un solo granjero: dice que la receta del anillo de bodas aparece con otro conectado; los días llevan su clima en aria-label", () => {
+    const s = leer(conPredict);
+    const solo = { ...s, predict: { ...s.predict!, farmers: s.predict!.farmers.slice(0, 1), multiplayer: false } };
+    const c = STARDEW_COPY.es.predict;
+    const html = view(solo, "es");
+    expect(html).toContain(c.cart.ringManual);
+    expect(html).toMatch(/aria-label="\d+: (Sol|Lluvia|Tormenta|Nieve|Festival|Viento|Boda|Lluvia verde)/);
+  });
+
   it("una semilla en la dirección manda sobre la partida: sin geodas ni suerte, con los avisos de lo que se supone", () => {
     const c = STARDEW_COPY.en.predict;
     const html = view(leer(conPredict), "en", { seed: { gameId: 452435081, legacy: false }, season: 2, day: 10, year: 2 });
@@ -106,6 +133,7 @@ describe("Predictor con una partida guardada", () => {
     expect(html).toContain(c.today.luckNone);
     expect(html).toContain(c.cart.manual);
     expect(html).toContain(c.nights.manual);
+    if (!html.includes(c.nights.none)) expect(html).toContain(c.nights.rest);
     expect(html).toContain(c.useSave);
     expect(html).toContain('value="452435081"');
     sinNaN(html);

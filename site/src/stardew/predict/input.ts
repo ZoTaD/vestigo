@@ -276,15 +276,19 @@ export function predictAll(input: PredictInput, data: PredictData, opts: Predict
         billboardTicket: false,
       };
   const me = save && input.from === "save" ? (save.farmers[input.farmer] ?? hostOf(save)) : null;
+  // Las noches de boda no traen evento, también la mudanza de un compañero de cuarto (`pickFarmEvent` mira
+  // `IsMarried() && WeddingDate == Date`, que Krobus cumple). El clima "Wedding" no: `_newDayAfterFade` pone
+  // `weddingToday` sólo si el granjero no tiene compañero de cuarto (`hasCurrentOrPendingRoommate`).
   const bodas = save ? weddingDaysPlayed(save.weddings, today, seed, data) : [];
+  const bodasClima = save ? weddingDaysPlayed(save.weddings.filter((w) => !w.roommate), today, seed, data) : [];
   const manana = addDays(today, 1);
 
   // Clima: el de mañana de la partida (exacto) y el resto de la estación de la semilla.
-  const tomorrow = save ? weatherTomorrow(save.weatherTomorrow, seed, today, data, { wedding: bodas.includes(today.daysPlayed + 1) }) : null;
+  const tomorrow = save ? weatherTomorrow(save.weatherTomorrow, seed, today, data, { wedding: bodasClima.includes(today.daysPlayed + 1) }) : null;
   const season = seasonWeather(seed, today, data).map((weather, i) => {
     const date = addDays(today, i + 1);
     if (i === 0 && tomorrow) return { date, weather: tomorrow };
-    return { date, weather: bodas.includes(dpDe(date)) ? ({ kind: "wedding" } as DayWeather) : weather };
+    return { date, weather: bodasClima.includes(dpDe(date)) ? ({ kind: "wedding" } as DayWeather) : weather };
   });
 
   const luck = save && me ? (() => {

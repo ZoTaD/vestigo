@@ -62,7 +62,7 @@ function looksLikePredict(x: unknown): boolean {
     typeof x.multiplayer === "boolean" &&
     isNum(x.visitsUntilY1Guarantee) &&
     Array.isArray(x.weddings) &&
-    x.weddings.every((w) => isObj(w) && isNum(w.season) && isNum(w.day) && isNum(w.year)) &&
+    x.weddings.every((w) => isObj(w) && isNum(w.season) && isNum(w.day) && isNum(w.year) && typeof w.roommate === "boolean") &&
     Array.isArray(x.farmers) &&
     x.farmers.every(
       (f) =>
