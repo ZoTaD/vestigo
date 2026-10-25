@@ -215,7 +215,7 @@ describe("la ficha de un objeto", () => {
     // "Se dona al museo" lleva a su casillero en la Colección.
     expect(en).toContain('href="/en/stardew-valley/museum#chicken-statue"');
     // El premio es un mueble, (F)1305: con su dibujo y su nombre, enlazado a la fila del premio en el Museo.
-    expect(en).toContain('href="/en/stardew-valley/museum?v=rewards#chicken"');
+    expect(en).toContain('href="/en/stardew-valley/museum?v=rewards#reward-chicken"');
     // A escala entera con tamaño fijo: 16×32 a 2× en la caja de 64 px.
     expect(en).toMatch(/<img[^>]*src="\/stardew\/rewards\/f-1305.png"[^>]*width="32" height="64"[^>]*><\/span><span><b>Chicken Statue<\/b>/);
     expect(en).not.toContain("(F)1305");
@@ -229,10 +229,10 @@ describe("la ficha de un objeto", () => {
 
   it("un premio del museo enlaza a su fila en la vista de premios", async () => {
     const en = await page("en", "dwarvish-translation-guide");
-    expect(en).toContain('href="/en/stardew-valley/museum?v=rewards#dwarf"');
+    expect(en).toContain('href="/en/stardew-valley/museum?v=rewards#reward-dwarf"');
     expect(en).toContain("Dwarf Scroll I");
     const es = await page("es", "dwarvish-translation-guide");
-    expect(es).toContain('href="/es/stardew-valley/museo?v=rewards#dwarf"');
+    expect(es).toContain('href="/es/stardew-valley/museo?v=rewards#reward-dwarf"');
   });
 
   it("lo piden: los pedidos y misiones, enlazados a Misiones", async () => {

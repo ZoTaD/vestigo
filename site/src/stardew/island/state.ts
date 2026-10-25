@@ -193,14 +193,22 @@ export function mergeMarks(a: Marks, b: Marks): Marks {
 export const isGenericNut = (n: Nut): boolean => n.generic === true && !!n.tile;
 
 /** Lo que se usa de la partida guardada del Lector: las nueces, lo que dice haber encontrado y el correo de todos. */
-export type SavedIsland = { nuts: Record<string, number>; walnuts: number; mail: string[] };
+export type SavedIsland = {
+  nuts: Record<string, number>;
+  walnuts: number;
+  mail: string[];
+  /** La partida se guardó antes de que el Lector leyera las nueces: `nuts` lo completó `store.ts` (`filled`). */
+  stale?: boolean;
+};
 
 /**
  * ¿Se pueden traer las nueces de la partida guardada? `none` sin partida; `stale` si se guardó antes de que el Lector
- * leyera las nueces (llega con `nuts` vacío pero con nueces encontradas): hay que volver a abrirla; `ok` si no.
+ * leyera las nueces: `store.ts` completó `nuts` (`stale`, el mismo criterio del Museo) o, por las dudas, llega con
+ * `nuts` vacío pero con nueces encontradas. Hay que volver a abrirla. `ok` si no.
  */
 export function saveSync(saved: SavedIsland | null): "none" | "stale" | "ok" {
   if (!saved) return "none";
+  if (saved.stale) return "stale";
   return saved.walnuts > 0 && Object.keys(saved.nuts).length === 0 ? "stale" : "ok";
 }
 

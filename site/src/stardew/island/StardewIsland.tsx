@@ -25,7 +25,7 @@ import { readMarks, writeDone, type Marks } from "../checklist";
 import { loadIsland, peekIsland, say } from "../data";
 import { Pix } from "../mines/pix";
 import { pixelScale } from "../mines/state";
-import { readStoredSave } from "../save/store";
+import { readStoredSaveInfo } from "../save/store";
 import { Box, Group, Pill, prizeSrc, SdLoading, type Nav } from "../ui";
 import {
   areaAnchor,
@@ -97,8 +97,9 @@ export function IslandBook({
     const search = window.location.search;
     setView(new URLSearchParams(search).has("v") ? readIslandView(search) : (viewOfAnchor(data, anchor) ?? DEFAULT_ISLAND_VIEW));
     setMarks(readMarks(ISLAND_KEY));
-    const s = readStoredSave();
-    setSaved(s ? { nuts: s.nuts, walnuts: s.walnuts, mail: s.players.flatMap((p) => p.mail) } : null);
+    const info = readStoredSaveInfo();
+    const s = info?.save;
+    setSaved(s ? { nuts: s.nuts, walnuts: s.walnuts, mail: s.players.flatMap((p) => p.mail), stale: info.filled.includes("nuts") } : null);
     const onStorage = () => setMarks(readMarks(ISLAND_KEY));
     window.addEventListener("storage", onStorage);
     const timer = anchor ? scrollTo(anchor) : undefined;

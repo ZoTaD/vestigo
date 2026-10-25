@@ -24,18 +24,20 @@ import { readDone, toggle, writeDone, type Done } from "../checklist";
 import { loadMuseum, peekMuseum, say } from "../data";
 import { Pix } from "../mines/pix";
 import { pixelScale } from "../mines/state";
-import { readStoredSave } from "../save/store";
+import { readStoredSaveInfo } from "../save/store";
 import { Box, Gold, Group, Pill, prizeSrc, SdLoading, Slot, Sprite, type Nav } from "../ui";
 import {
   bookAnchor,
   DEFAULT_MUSEUM_VIEW,
   doneFromSave,
+  museumSync,
   MUSEUM_FILTERS,
   MUSEUM_KEY,
   MUSEUM_VIEWS,
   pieceKinds,
   progress,
   readMuseumView,
+  rewardAnchor,
   shownPieces,
   viewOfAnchor,
   writeMuseumView,
@@ -46,6 +48,7 @@ import {
   type Piece,
   type Reward,
   type RewardState,
+  type SavedMuseum,
 } from "./state";
 import "../../styles/stardew-items.css";
 import "../../styles/stardew-museum.css";
@@ -65,6 +68,7 @@ export function MuseumBook({
   navigate,
   initial = DEFAULT_MUSEUM_VIEW,
   initialDone = {},
+  initialSaved = null,
 }: {
   data: MuseumData;
   route: Route;
@@ -72,6 +76,8 @@ export function MuseumBook({
   initial?: MuseumView;
   /** Lo tildado del primer dibujo (los tests); en el navegador se lee lo guardado después. */
   initialDone?: Done;
+  /** La partida guardada del primer dibujo (los tests); en el navegador se lee después. */
+  initialSaved?: SavedMuseum | null;
 }) {
   const t = useStardewCopy();
   const m = t.museum;
@@ -79,17 +85,20 @@ export function MuseumBook({
   const [view, setView] = useState<MuseumView>(initial);
   const [done, setDone] = useState<Done>(initialDone);
   // Los ids donados en la partida guardada del Lector, si hay una; se lee después del primer dibujo.
-  const [saved, setSaved] = useState<string[] | null>(null);
+  const [saved, setSaved] = useState<SavedMuseum | null>(initialSaved);
   const [synced, setSynced] = useState<number | null>(null);
 
   // La vista de la dirección; sin `?v=`, la del ancla (`#dwarf` es un premio). Después, la fila del ancla. Lo guardado
   // se lee acá (el HTML prerenderizado va destildado), y se sigue si otra pestaña lo cambia.
   useEffect(() => {
     const anchor = window.location.hash.slice(1);
-    const v = window.location.search ? readMuseumView(window.location.search) : (viewOfAnchor(data, anchor) ?? DEFAULT_MUSEUM_VIEW);
+    // Sólo `?v=` elige la vista: otra cosa en la dirección (`?utm_…`) no le gana al ancla.
+    const search = window.location.search;
+    const v = new URLSearchParams(search).has("v") ? readMuseumView(search) : (viewOfAnchor(data, anchor) ?? DEFAULT_MUSEUM_VIEW);
     setView(v);
     setDone(readDone(MUSEUM_KEY));
-    setSaved(readStoredSave()?.museum ?? null);
+    const info = readStoredSaveInfo();
+    setSaved(info ? { ids: info.save.museum, stale: info.filled.includes("museum") } : null);
     const onStorage = () => setDone(readDone(MUSEUM_KEY));
     window.addEventListener("storage", onStorage);
     const timer = anchor ? scrollTo(anchor) : undefined;
@@ -111,8 +120,8 @@ export function MuseumBook({
       return next;
     });
   const onSync = () => {
-    if (!saved) return;
-    const add = doneFromSave(saved, data);
+    if (museumSync(saved) !== "ok" || !saved) return;
+    const add = doneFromSave(saved.ids, data);
     const fresh = Object.keys(add).filter((k) => !done[k]).length;
     const next = { ...done, ...add };
     writeDone(MUSEUM_KEY, next);
@@ -177,7 +186,7 @@ function Collection({
   done: Done;
   state: { pieces: number; total: number };
   onTick: (id: string) => void;
-  saved: string[] | null;
+  saved: SavedMuseum | null;
   synced: number | null;
   onSync: () => void;
 }) {
@@ -203,7 +212,9 @@ function Collection({
             </Pill>
           ))}
         </Group>
-        {saved && (
+        {/* Guardada antes de que el Lector leyera el museo: no se trae nada (diría "nada nuevo", y no se sabe). */}
+        {museumSync(saved) === "stale" && <p className="sd-muted sd-mu-stale">{m.reopen}</p>}
+        {museumSync(saved) === "ok" && (
           <div className="sd-mu-sync">
             <button type="button" className="sd-btn" onClick={onSync}>
               {m.fromSave}
@@ -360,7 +371,7 @@ function RewardRow({ r, s, m, ...props }: Props & { r: Reward; s: RewardState })
   const locale = useLocale();
   const prize = r.reward;
   return (
-    <li className={`sd-mu-reward${s.ok ? " is-won" : ""}`} id={r.slug}>
+    <li className={`sd-mu-reward${s.ok ? " is-won" : ""}`} id={rewardAnchor(r)}>
       <span className="sd-mu-prize">
         <PrizePix data={data} id={prize.id} />
         {s.ok && (

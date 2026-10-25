@@ -284,11 +284,6 @@ def objeto(n: str) -> list[str]:
     return [sdv.text(o, "en").strip(), sdv.text(o, "es").strip()]  # "Huevo calicó " trae un espacio al final
 
 
-# Nombres viejos, por si algún script de datos todavía los importa.
-_objeto = objeto
-_sitio = sitio
-
-
 def _arma(n: str) -> list[str]:
     w = sdv.raw("Data/Weapons")[n]["DisplayName"]
     return [sdv.text(w, "en"), sdv.text(w, "es")]

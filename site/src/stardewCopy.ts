@@ -463,6 +463,8 @@ export interface MuseumCopy {
   /** El botón que pasa lo donado en la partida guardada del Lector, y lo que pasó al apretarlo. */
   fromSave: string;
   synced: (n: number) => string;
+  /** La partida guardada es de antes de que el Lector leyera el museo: hay que volver a abrirla. */
+  reopen: string;
   filter: string;
   filters: Record<MuseumFilter, string>;
   /** De dónde sale una pieza, en una palabra (la línea de abajo del nombre). */
@@ -785,7 +787,7 @@ const EN: StardewCopy = {
       description: "Every Stardew Valley 1.6 story quest and special order from the town board: what each one asks for, how long you have and the reward.",
     },
     island: {
-      title: "Stardew Valley Golden Walnut Locations: All 130 on Ginger Island | Vestigo",
+      title: "Golden Walnut Locations in Stardew Valley: All 130 | Vestigo",
       description: "Every golden walnut on Stardew Valley 1.6's Ginger Island by area, with a checklist. Plus the parrot upgrades, Qi's Walnut Room and his special orders.",
     },
   },
@@ -1196,6 +1198,7 @@ const EN: StardewCopy = {
     progress: (done, total) => `${done} / ${total}`,
     donated: "Donated",
     fromSave: "Bring in my save",
+    reopen: "Open your save in the Save reader again to bring in what you donated.",
     synced: (n) => (n === 0 ? "Nothing new: your save had nothing else donated." : n === 1 ? "1 piece ticked from your save." : `${n} pieces ticked from your save.`),
     filter: "Show",
     filters: { all: "All", arch: "Artifacts", mineral: "Minerals", missing: "Not donated" },
@@ -1451,7 +1454,7 @@ const ES: StardewCopy = {
     },
     // Las pestañas de la etapa 4 (2026-10-25): Granja, Museo, Misiones e Isla Jengibre.
     farm: {
-      title: "Animales y edificios de Stardew Valley: costo, producción y cuidados | Vestigo",
+      title: "Animales y edificios de Stardew Valley: costo y cuidados | Vestigo",
       description: "Cada animal de la granja de Stardew Valley 1.6 con su precio, lo que produce y sus cuidados, y cada edificio con su costo, materiales y mejoras.",
     },
     museum: {
@@ -1463,7 +1466,7 @@ const ES: StardewCopy = {
       description: "Cada misión de la historia y cada pedido especial del tablón de Stardew Valley 1.6: qué pide, cuánto tiempo hay y el premio.",
     },
     island: {
-      title: "Nueces de oro de Stardew Valley: dónde están las 130 de la Isla Jengibre | Vestigo",
+      title: "Nueces de oro de Stardew Valley: dónde están las 130 | Vestigo",
       description: "Cada nuez de oro de la Isla Jengibre de Stardew Valley 1.6 por zona, para tildar. Y las mejoras del loro, la Habitación de las Nueces de Qi y sus pedidos.",
     },
   },
@@ -1874,6 +1877,7 @@ const ES: StardewCopy = {
     progress: (done, total) => `${done} / ${total}`,
     donated: "Donado",
     fromSave: "Traer de mi partida",
+    reopen: "Volvé a abrir tu partida en el Lector para traer lo donado.",
     synced: (n) => (n === 0 ? "Nada nuevo: tu partida no tenía otra donación." : n === 1 ? "Se tildó 1 pieza de tu partida." : `Se tildaron ${n} piezas de tu partida.`),
     filter: "Mostrar",
     filters: { all: "Todo", arch: "Artefactos", mineral: "Minerales", missing: "Sin donar" },

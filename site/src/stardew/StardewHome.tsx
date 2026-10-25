@@ -32,10 +32,10 @@ const TAB_ICON: Record<StardewTab, { id: string; w: number; h: number }> = {
   mines: { id: "535", w: 16, h: 16 },
   // El cofre: lo que la partida tiene guardado.
   save: { id: "(BC)130", w: 16, h: 32 },
-  // Las pestañas de la etapa 4 (2026-10-25): la leche grande, el rollo enano, la lista de Pierre y la nuez de oro. El
-  // huevo blanco (176) quedaba chico y claro sobre el casillero y se leía como un cero.
+  // Las pestañas de la etapa 4 (2026-10-25): la leche grande (el huevo blanco, 176, quedaba chico y claro sobre el
+  // casillero y se leía como un cero), el rollo enano (la primera pieza que se suele donar), la lista de Pierre y la
+  // nuez de oro.
   farm: { id: "186", w: 16, h: 16 },
-  // El museo: el rollo enano, la primera pieza que se suele donar.
   museum: { id: "96", w: 16, h: 16 },
   quests: { id: "897", w: 16, h: 16 },
   island: { id: "73", w: 16, h: 16 },

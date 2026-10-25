@@ -5,7 +5,7 @@
  *
  * Lo tildado se guarda en el navegador con la clave `sdv-museum-v1` (`checklist.ts`); cada clave es el id de una pieza
  * ("96"). El ancla de cada fila es el slug: el de su ficha de Objetos en las piezas (`museo#emerald`) y en los libros,
- * el de la clave del juego en los premios (`museo?v=rewards#dwarf`).
+ * `reward-` y el de la clave del juego en los premios (`museo?v=rewards#reward-dwarf`).
  */
 import type { Done } from "../checklist";
 
@@ -96,10 +96,17 @@ export const writeMuseumView = (v: MuseumView): string => (v === DEFAULT_MUSEUM_
 export function viewOfAnchor(data: MuseumData, anchor: string): MuseumView | null {
   if (!anchor) return null;
   if (data.pieces.some((p) => p.slug === anchor)) return "collection";
-  if (data.rewards.some((r) => r.slug === anchor)) return "rewards";
+  if (data.rewards.some((r) => rewardAnchor(r) === anchor)) return "rewards";
   if (anchor === "lost-books" || data.books.some((b) => b.slug === anchor || b.id === anchor)) return "books";
   return null;
 }
+
+/**
+ * El ancla de la fila de un premio: `reward-` y su slug (`reward-dwarf`). El prefijo hace falta: el slug de un premio
+ * puede ser el de una pieza ("ancient-seed" es el premio y la semilla milenaria). `site_data.py` arma igual los enlaces
+ * de las fichas de Objetos.
+ */
+export const rewardAnchor = (r: Pick<Reward, "slug">): string => `reward-${r.slug}`;
 
 /** El ancla de la fila de un libro: su slug, o el id si no tiene ficha. */
 export const bookAnchor = (b: Book): string => b.slug ?? b.id;
@@ -145,6 +152,18 @@ export function shownPieces(data: MuseumData, filter: MuseumFilter, done: Done):
 /** De dónde sale una pieza en pocas palabras: los tipos, sin repetir, en el orden del dato. */
 export function pieceKinds(p: Piece): WhereKind[] {
   return [...new Set(p.where.map((w) => w.k))];
+}
+
+/**
+ * Lo que se usa de la partida guardada del Lector: lo donado y si la partida se guardó antes de que el Lector leyera el
+ * museo (`store.ts` completó `museum` con una lista vacía: no dice que no haya donaciones).
+ */
+export type SavedMuseum = { ids: string[]; stale: boolean };
+
+/** ¿Se puede traer lo donado? `none` sin partida, `stale` si hay que volver a abrirla en el Lector, `ok` si no. */
+export function museumSync(saved: SavedMuseum | null): "none" | "stale" | "ok" {
+  if (!saved) return "none";
+  return saved.stale ? "stale" : "ok";
 }
 
 /** Lo donado en una partida (`Save.museum`), como casilleros del checklist: sólo los ids que son piezas. */

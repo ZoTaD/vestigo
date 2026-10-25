@@ -76,7 +76,7 @@ def _par(archivo: str, clave: str) -> list[str]:
 
 
 def _obj(n: str) -> list[str]:
-    return mines_data._objeto(n)
+    return mines_data.objeto(n)
 
 
 def _id(iid: str) -> str:
@@ -360,7 +360,7 @@ def orders() -> list[dict]:
 
 
 def quests() -> dict:
-    slugs, nombres = mines_data._sitio()
+    slugs, nombres = mines_data.sitio()
     st, od = story(), orders()
     ids = {q["item"] for q in st if q["item"]}
     for o in od:

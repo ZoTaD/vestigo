@@ -136,6 +136,8 @@ describe("las cuentas de las nueces", () => {
     expect(saveSync({ nuts: {}, walnuts: 17, mail: [] })).toBe("stale");
     expect(saveSync({ nuts: {}, walnuts: 0, mail: [] })).toBe("ok");
     expect(saveSync({ nuts: { TreeNut: 1 }, walnuts: 17, mail: [] })).toBe("ok");
+    // El mismo criterio que el Museo: si `store.ts` completó `nuts`, hay que volver a abrirla aunque no diga nueces.
+    expect(saveSync({ nuts: {}, walnuts: 0, mail: [], stale: true })).toBe("stale");
     for (const lang of ["en", "es"] as const) {
       const html = book("nuts", lang, {}, { nuts: {}, walnuts: 17, mail: [] });
       expect(html).not.toContain("sd-btn");

@@ -62,7 +62,9 @@ export function FarmBook({ data, route, navigate, initial = DEFAULT_FARM_VIEW }:
   // La vista de la dirección; sin `?v=`, la del ancla (`#coop` es un edificio). Después, la fila del ancla.
   useEffect(() => {
     const anchor = window.location.hash.slice(1);
-    const v = window.location.search ? readFarmView(window.location.search) : (viewOfAnchor(data, anchor) ?? DEFAULT_FARM_VIEW);
+    // Sólo `?v=` elige la vista: otra cosa en la dirección (`?utm_…`) no le gana al ancla.
+    const search = window.location.search;
+    const v = new URLSearchParams(search).has("v") ? readFarmView(search) : (viewOfAnchor(data, anchor) ?? DEFAULT_FARM_VIEW);
     setView(v);
     if (!anchor) return;
     const timer = scrollTo(anchor);

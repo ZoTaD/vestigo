@@ -171,23 +171,24 @@ class TestSiteData(unittest.TestCase):
     def test_premio_del_museo(self):
         guia = [s for s in self.ficha("326")["sources"] if s["k"] == "museum"]
         self.assertEqual(len(guia), 1)
-        self.assertEqual(guia[0]["reward"], "dwarf")
+        self.assertEqual(guia[0]["reward"], "reward-dwarf")
         self.assertEqual(guia[0]["text"][1][:9], "4 objetos")
         # Las semillas de coliflor salen de a 9; la receta de las semillas milenarias no es el objeto.
         coliflor = [s for s in self.ficha("474")["sources"] if s["k"] == "museum"]
-        self.assertEqual((coliflor[0]["reward"], coliflor[0]["n"]), ("museum5", 9))
+        self.assertEqual((coliflor[0]["reward"], coliflor[0]["n"]), ("reward-museum5", 9))
         milenarias = [s["reward"] for s in self.ficha("499")["sources"] if s["k"] == "museum"]
-        self.assertEqual(milenarias, ["ancient-seed"])
+        # El ancla del premio lleva "reward-": "ancient-seed" es también el casillero de la pieza 114.
+        self.assertEqual(milenarias, ["reward-ancient-seed"])
 
     def test_donarlo_da_un_premio_aunque_no_tenga_ficha(self):
         # La Estatua de gallina (113) da el mueble (F)1305, que no tiene ficha: va con su nombre, el tamaño de su dibujo y
         # sin ref.
         estatua = self.ficha("113")
-        self.assertIn(["chicken", "(F)1305", 1, ["Chicken Statue", "Estatua de gallina"], [16, 32]], estatua["uses"]["prizes"])
+        self.assertIn(["reward-chicken", "(F)1305", 1, ["Chicken Statue", "Estatua de gallina"], [16, 32]], estatua["uses"]["prizes"])
         self.assertNotIn("(F)1305", estatua["refs"])
         # Los cuatro rollos dan la guía, que sí tiene ficha: va a refs.
         rollo = self.ficha("96")
-        self.assertIn(["dwarf", "326", 1, ["Dwarvish Translation Guide", "Guía de traducción enana"]], rollo["uses"]["prizes"])
+        self.assertIn(["reward-dwarf", "326", 1, ["Dwarvish Translation Guide", "Guía de traducción enana"]], rollo["uses"]["prizes"])
         self.assertIn("326", rollo["refs"])
 
     def test_lo_piden(self):

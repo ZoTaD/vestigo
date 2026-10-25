@@ -16,6 +16,7 @@ import { MuseumBook } from "../src/stardew/museum/StardewMuseum";
 import {
   doneFromSave,
   MUSEUM_KEY,
+  museumSync,
   pieceKinds,
   progress,
   readMuseumView,
@@ -24,14 +25,15 @@ import {
   writeMuseumView,
   type MuseumData,
   type MuseumView,
+  type SavedMuseum,
 } from "../src/stardew/museum/state";
 
 const data = raw as unknown as MuseumData;
 beforeAll(() => loadMuseum());
 const route = (lang: "en" | "es") => ({ lang, view: "stardew", sdSection: "museum" }) as Route;
 const inLang = (lang: "en" | "es", el: ReactElement) => renderToStaticMarkup(createElement(LangContext.Provider, { value: { lang, setLang: () => undefined } }, el));
-const book = (initial: MuseumView, lang: "en" | "es" = "en", done: Done = {}) =>
-  inLang(lang, createElement(MuseumBook, { data, route: route(lang), navigate: () => undefined, initial, initialDone: done }));
+const book = (initial: MuseumView, lang: "en" | "es" = "en", done: Done = {}, saved: SavedMuseum | null = null) =>
+  inLang(lang, createElement(MuseumBook, { data, route: route(lang), navigate: () => undefined, initial, initialDone: done, initialSaved: saved }));
 /** El texto del `<li>` con ese `id` (con lo que tenga adentro, hasta su cierre), sin etiquetas. */
 const row = (html: string, id: string) => {
   const start = html.lastIndexOf("<li", html.indexOf(`id="${id}"`));
@@ -148,6 +150,20 @@ describe("el avance y los premios", () => {
   });
 });
 
+describe("la partida guardada del Lector", () => {
+  it("guardada antes de que el Lector leyera el museo: pide volver a abrirla, sin botón", () => {
+    expect(museumSync(null)).toBe("none");
+    expect(museumSync({ ids: [], stale: true })).toBe("stale");
+    expect(museumSync({ ids: [], stale: false })).toBe("ok");
+    const viejo = book("collection", "es", {}, { ids: [], stale: true });
+    expect(viejo).toContain("Volvé a abrir tu partida en el Lector para traer lo donado.");
+    expect(viejo).not.toContain("Traer de mi partida");
+    const nuevo = book("collection", "en", {}, { ids: ["96"], stale: false });
+    expect(nuevo).toContain("Bring in my save");
+    expect(nuevo).not.toContain("Open your save in the Save reader again");
+  });
+});
+
 describe("la dirección y la vista", () => {
   it("museum en inglés, museo en español, publicada, en la barra después de Minas", () => {
     expect(routePath(route("en"))).toBe("/en/stardew-valley/museum");
@@ -168,7 +184,10 @@ describe("la dirección y la vista", () => {
 
   it("un ancla sin ?v= abre la vista donde está", () => {
     expect(viewOfAnchor(data, "emerald")).toBe("collection");
-    expect(viewOfAnchor(data, "dwarf")).toBe("rewards");
+    expect(viewOfAnchor(data, "reward-dwarf")).toBe("rewards");
+    // "ancient-seed" es la pieza 114; el premio de las semillas es "reward-ancient-seed".
+    expect(viewOfAnchor(data, "ancient-seed")).toBe("collection");
+    expect(viewOfAnchor(data, "reward-ancient-seed")).toBe("rewards");
     expect(viewOfAnchor(data, "the-alleyway-buffet")).toBe("books");
     expect(viewOfAnchor(data, "nada")).toBeNull();
     expect(viewOfAnchor(data, "")).toBeNull();
@@ -212,28 +231,28 @@ describe("las vistas dibujadas", () => {
 
   it("los Premios: lo que piden, lo que falta y el premio; el mueble con su dibujo", () => {
     const html = book("rewards", "en", ids("96", "97"));
-    const enano = plain(row(html, "dwarf"));
+    const enano = plain(row(html, "reward-dwarf"));
     expect(enano).toContain("Dwarvish Translation Guide");
     expect(enano).toContain("2 left");
-    const gallina = row(html, "chicken");
+    const gallina = row(html, "reward-chicken");
     expect(gallina).toMatch(/<img[^>]*src="\/stardew\/rewards\/f-1305.png"[^>]*width="32" height="64"/);
     expect(plain(gallina)).toContain("Chicken Statue");
     // La llave oxidada, sin ficha, con su dibujo.
-    expect(row(html, "museum60")).toContain('src="/stardew/rewards/rusty-key.png"');
+    expect(row(html, "reward-museum60")).toContain('src="/stardew/rewards/rusty-key.png"');
     // La de la receta se distingue de la de las semillas.
-    expect(plain(row(html, "ancient-seed-recipe"))).toContain("Ancient Seeds (Recipe)");
+    expect(plain(row(html, "reward-ancient-seed-recipe"))).toContain("Ancient Seeds (Recipe)");
     // El premio con ficha enlaza a ella.
-    expect(row(html, "dwarf")).toContain('href="/en/stardew-valley/items/dwarvish-translation-guide"');
+    expect(row(html, "reward-dwarf")).toContain('href="/en/stardew-valley/items/dwarvish-translation-guide"');
     expect(html).not.toMatch(/\(F\)|\(BC\)|\{0\}/);
   });
 
   it("los Premios en español, con el ganado marcado", () => {
     const html = book("rewards", "es", ids("96", "97", "98", "99"));
-    const enano = plain(row(html, "dwarf"));
+    const enano = plain(row(html, "reward-dwarf"));
     expect(enano).toContain("Guía de traducción enana");
     expect(enano).toContain("Ganado");
-    expect(plain(row(html, "ancient-seed-recipe"))).toContain("Semillas milenarias (Receta)");
-    expect(row(html, "dwarf")).toContain('href="/es/stardew-valley/objetos/guia-de-traduccion-enana"');
+    expect(plain(row(html, "reward-ancient-seed-recipe"))).toContain("Semillas milenarias (Receta)");
+    expect(row(html, "reward-dwarf")).toContain('href="/es/stardew-valley/objetos/guia-de-traduccion-enana"');
   });
 
   it("los Libros: efecto, precio y dónde; los 21 libros perdidos aparte", () => {

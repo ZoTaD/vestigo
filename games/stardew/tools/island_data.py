@@ -422,7 +422,7 @@ def island() -> dict:
     nu, wr = nuts(), walnut_room()
     ids = {_NUEZ, _GEMA_QI, "791", "91", "254", "262", "248"} | {w["id"] for w in wr}
     refs = {i: [*slugs[i], *nombres[i], 16, 16] for i in sorted(ids) if i in slugs}
-    # Los objetos grandes: `_sitio` no trae su nombre (sólo el de los `Data/Objects`) y su dibujo mide 16 × 32.
+    # Los objetos grandes: `mines_data.sitio` no trae su nombre (sólo el de los `Data/Objects`) y su dibujo mide 16 × 32.
     for w in wr:
         if w["id"].startswith("(BC)") and w["id"] in refs:
             refs[w["id"]] = [*slugs[w["id"]], *w["name"], 16, 32]

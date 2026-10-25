@@ -285,12 +285,15 @@ def cruces(tienda_qi: list[str]) -> tuple[dict[str, list[dict]], dict[str, dict]
         usos.setdefault(p["id"], _usos_vacios())["donate"] = True
     for r in museo["rewards"]:
         premio = r["reward"]
+        # El ancla de la fila del premio en el Museo (`rewardAnchor` de museum/state.ts): con "reward-", porque el slug
+        # de algunos premios es también el de una pieza ("ancient-seed").
+        ancla = f"reward-{r['slug']}"
         if premio["recipe"]:
             continue
-        fuente(premio["id"], con_n({"k": "museum", "reward": r["slug"], "text": list(r["text"])}, premio["n"]))
+        fuente(premio["id"], con_n({"k": "museum", "reward": ancla, "text": list(r["text"])}, premio["n"]))
         for iid in r["need"]["ids"]:
             # El premio sin ficha (un mueble, la Llave oxidada) lleva el tamaño de su dibujo, para mostrarlo a escala entera.
-            uso(iid, "prizes", [r["slug"], premio["id"], premio["n"], list(premio["name"]), *([premio["sprite"]] if "sprite" in premio else [])])
+            uso(iid, "prizes", [ancla, premio["id"], premio["n"], list(premio["name"]), *([premio["sprite"]] if "sprite" in premio else [])])
 
     for w in isla["walnutRoom"]:
         if w["recipe"]:
