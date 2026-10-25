@@ -46,6 +46,36 @@ function looksLikePlayer(x: unknown): x is Player {
   );
 }
 
+/** ¿El `predict` (opcional) tiene la forma mínima que lee el predictor? Si falta, la partida vale igual. */
+function looksLikePredict(x: unknown): boolean {
+  if (x === undefined) return true;
+  if (!isObj(x)) return false;
+  return (
+    isNum(x.gameId) &&
+    typeof x.legacy === "boolean" &&
+    isNum(x.daysPlayed) &&
+    isNum(x.dailyLuck) &&
+    typeof x.weatherTomorrow === "string" &&
+    isNum(x.lowestMineLevel) &&
+    typeof x.qiBeans === "boolean" &&
+    typeof x.goldenCoconutCracked === "boolean" &&
+    typeof x.multiplayer === "boolean" &&
+    isNum(x.visitsUntilY1Guarantee) &&
+    Array.isArray(x.weddings) &&
+    x.weddings.every((w) => isObj(w) && isNum(w.season) && isNum(w.day) && isNum(w.year) && typeof w.roommate === "boolean") &&
+    Array.isArray(x.farmers) &&
+    x.farmers.every(
+      (f) =>
+        isObj(f) && typeof f.name === "string" && typeof f.uid === "string" && isNum(f.uidHalf) &&
+        Array.isArray(f.mail) && Array.isArray(f.spouse14) &&
+        Array.isArray(f.mailReceived) && Array.isArray(f.mailTomorrow) && Array.isArray(f.recipes) &&
+        typeof f.specialCharm === "boolean" &&
+        isNum(f.geodesCracked) && isNum(f.mysteryBoxesOpened) && isNum(f.deepestMineLevel) &&
+        isNum(f.fishingLevel) && isNum(f.mastery0) && isNum(f.bookMystery),
+    )
+  );
+}
+
 /**
  * ¿Tiene la forma de un `Save`? Lo guardado puede venir de otra versión del sitio o estar roto, y una partida a medias
  * rompe al dibujarse: se mira cada campo que se usa, granjero por granjero. Si `Save` cambia de forma, subir `v`.
@@ -71,7 +101,8 @@ function looksLikeSave(x: unknown): x is Save {
     Array.isArray(b.defs) &&
     b.defs.every((d) => isObj(d) && typeof d.room === "string" && isNum(d.index) && Array.isArray(d.items) && isNum(d.need)) &&
     isObj(b.done) &&
-    Object.values(b.done).every(Array.isArray)
+    Object.values(b.done).every(Array.isArray) &&
+    looksLikePredict(x.predict)
   );
 }
 

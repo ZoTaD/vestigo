@@ -218,6 +218,34 @@ describe("Stardew Valley: Minas y combate y Lector de partida (etapa 3)", () => 
   });
 });
 
+describe("Stardew Valley: Predictor (tarea 7)", () => {
+  const paths = sitemapPaths(data);
+
+  it("/predictor en los dos idiomas, en main con la fecha de los datos y sin fichas", () => {
+    const main = sitemapXml(data, "main");
+    for (const p of ["/en/stardew-valley/predictor", "/es/stardew-valley/predictor"]) {
+      expect(paths).toContain(p);
+      expect(main).toContain(`<loc>https://vestigo.gg${p}</loc>`);
+      expect(sitemapLastmod(p, data)).toBe(sdMeta.generatedAt.slice(0, 10));
+    }
+    expect(paths.some((p) => p.includes("/stardew-valley/predictor/"))).toBe(false);
+    expect(paths).not.toContain("/en/stardew-valley/predict");
+  });
+
+  it("el título dice lo que se busca, la descripción entra en 160 y es una aplicación web gratuita", () => {
+    expect(page("/en/stardew-valley/predictor").title).toBe("Stardew Valley Predictor (1.6): Geodes, Weather, Mines & Traveling Cart | Vestigo");
+    expect(page("/es/stardew-valley/predictor").title).toBe("Predictor de Stardew Valley (1.6): geodas, clima, minas y carro ambulante | Vestigo");
+    for (const p of ["/en/stardew-valley/predictor", "/es/stardew-valley/predictor"]) {
+      expect(page(p).description.length, p).toBeLessThanOrEqual(160);
+      const route = parseRoute(p);
+      const ld = jsonLdFor(route, route.lang, { title: "t", description: "d", canonical: `https://vestigo.gg${p}`, image: "i" }, data, null);
+      expect(ld).toContainEqual(expect.objectContaining({ "@type": "WebApplication", isAccessibleForFree: true }));
+    }
+    expect(page("/es/stardew-valley/predictor").alternates).toContainEqual({ hreflang: "en", href: "https://vestigo.gg/en/stardew-valley/predictor" });
+    expect(crumbNames(page("/es/stardew-valley/predictor"))).toEqual(["Vestigo", "Stardew Valley", "Predictor"]);
+  });
+});
+
 // La guardia del prerender reconoce la clase como palabra entera, como en Rust y Terraria.
 describe("isSdLoadingPage", () => {
   it.each([

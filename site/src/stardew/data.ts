@@ -18,6 +18,7 @@ import { withPrices, type FishData } from "./fishing/state";
 import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
 import type { MinesData, Monster } from "./mines/state";
+import type { PredictData } from "./predict/query";
 import type { SaveData } from "./save/progress";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
@@ -463,6 +464,13 @@ export function writeVillagerFilters(f: VillagerFilters): string {
 }
 export const filterVillagers = (list: readonly Villager[], f: VillagerFilters): Villager[] =>
   list.filter((v) => (!f.romance || v.romance) && (f.season === null || v.birthday[0] === f.season));
+
+// --- Predictor ------------------------------------------------------------------------------------------------------
+
+/** `predict.json` (`predict_data.py`): los datos con los que el predictor repite los sorteos del juego. Se baja al abrir la pestaña. */
+const predictRaw = once<PredictData>(() => import("@stardew/predict.json"));
+export const peekPredict = (): PredictData | null => predictRaw.peek();
+export const loadPredict = (): Promise<PredictData> => predictRaw.load();
 
 // --- Lector de partida ----------------------------------------------------------------------------------------------
 

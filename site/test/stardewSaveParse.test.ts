@@ -197,3 +197,138 @@ describe("parseSave: una partida real", () => {
     expect(ms).toBeLessThan(2000);
   });
 });
+
+describe("parseSave: lo que lee el predictor", () => {
+  // Con la forma de una partida 1.6.15 real: id de granjero largo, semilla, suerte y contadores en Values.
+  const conPredict = mini
+    .replace("<name>Fulana</name>", "<name>Fulana</name><UniqueMultiplayerID>-6368268736843601728</UniqueMultiplayerID><fishingLevel>7</fishingLevel>")
+    .replace(
+      /<stats xmlns:xsi="[^"]*">/,
+      `<stats xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><Values>
+        <item><key><string>daysPlayed</string></key><value><unsignedInt>2</unsignedInt></value></item>
+        <item><key><string>geodesCracked</string></key><value><unsignedInt>31</unsignedInt></value></item>
+        <item><key><string>MysteryBoxesOpened</string></key><value><unsignedInt>12</unsignedInt></value></item>
+        <item><key><string>mastery_0</string></key><value><unsignedInt>1</unsignedInt></value></item>
+        <item><key><string>Book_Mystery</string></key><value><unsignedInt>1</unsignedInt></value></item>
+      </Values>`,
+    )
+    .replace("<year>2</year>", "<year>2</year><dailyLuck>-0.012</dailyLuck><uniqueIDForThisGame>452435081</uniqueIDForThisGame><useLegacyRandom>false</useLegacyRandom><visitsUntilY1Guarantee>-1</visitsUntilY1Guarantee><mine_lowestLevelReached>45</mine_lowestLevelReached><specialOrders><SpecialOrder><specialRule>QI_BEANS, DROP_QI_BEANS</specialRule><questState>InProgress</questState></SpecialOrder></specialOrders>");
+
+  it("lee la semilla, la suerte, el piso más hondo y el clima de mañana", () => {
+    const p = leer(conPredict).predict!;
+    expect(p.gameId).toBe(452435081);
+    expect(p.legacy).toBe(false);
+    expect(p.dailyLuck).toBe(-0.012);
+    expect(p.lowestMineLevel).toBe(45);
+    expect(p.visitsUntilY1Guarantee).toBe(-1);
+    expect(p.weatherTomorrow).toBe("Sun");
+    expect(p.daysPlayed).toBe(2);
+    expect(p.multiplayer).toBe(true);
+  });
+
+  it("lowestMineLevel usa mine_lowestLevelReachedForOrder si es >= 0 y, si es negativo, mine_lowestLevelReached", () => {
+    const forOrder = (n: number) =>
+      conPredict.replace("<mine_lowestLevelReached>45</mine_lowestLevelReached>", `<mine_lowestLevelReached>45</mine_lowestLevelReached><mine_lowestLevelReachedForOrder>${n}</mine_lowestLevelReachedForOrder>`);
+    expect(leer(forOrder(-1)).predict!.lowestMineLevel).toBe(45);
+    expect(leer(forOrder(30)).predict!.lowestMineLevel).toBe(30);
+    expect(leer(forOrder(0)).predict!.lowestMineLevel).toBe(0);
+  });
+
+  it("uidHalf es (int)uid / 2: los 32 bits bajos con signo, truncando hacia cero", () => {
+    const f = leer(conPredict).predict!.farmers[0];
+    expect(f.uid).toBe("-6368268736843601728");
+    expect(f.uidHalf).toBe(85660768);
+    // Un id cuyos 32 bits bajos son negativos e impares: -3 / 2 trunca a -1, no a -2.
+    const impar = conPredict.replace("-6368268736843601728", "4294967293");
+    expect(leer(impar).predict!.farmers[0].uidHalf).toBe(-1);
+  });
+
+  it("lee los contadores del anfitrión (las claves de Values no distinguen mayúsculas)", () => {
+    const f = leer(conPredict).predict!.farmers[0];
+    expect(f).toMatchObject({
+      name: "Fulana", host: true, geodesCracked: 31, mysteryBoxesOpened: 12, mastery0: 1, bookMystery: 1,
+      fishingLevel: 7, deepestMineLevel: 0,
+    });
+    expect(f.mail).toEqual(leer(conPredict).players[0].mail);
+  });
+
+  it("los granjeros sin id ni contadores quedan en cero", () => {
+    const g = leer(conPredict).predict!.farmers[1];
+    expect(g).toMatchObject({ name: "Mengano", host: false, uid: "0", uidHalf: 0, geodesCracked: 0, mastery0: 0 });
+  });
+
+  it("qiBeans: sólo con un encargo en curso cuya regla incluya DROP_QI_BEANS", () => {
+    expect(leer(conPredict).predict!.qiBeans).toBe(true);
+    expect(leer(conPredict.replace("<questState>InProgress", "<questState>Complete")).predict!.qiBeans).toBe(false);
+    expect(leer(conPredict.replace("QI_BEANS, DROP_QI_BEANS", "QI_BEANS")).predict!.qiBeans).toBe(false);
+    expect(leer(mini).predict!.qiBeans).toBe(false);
+  });
+
+  it("goldenCoconutCracked: la etiqueta de la raíz; sin ella, false", () => {
+    expect(leer(conPredict).predict!.goldenCoconutCracked).toBe(false);
+    const abierto = conPredict.replace("<year>2</year>", "<year>2</year><goldenCoconutCracked>true</goldenCoconutCracked>");
+    expect(leer(abierto).predict!.goldenCoconutCracked).toBe(true);
+    const cerrado = conPredict.replace("<year>2</year>", "<year>2</year><goldenCoconutCracked>false</goldenCoconutCracked>");
+    expect(leer(cerrado).predict!.goldenCoconutCracked).toBe(false);
+  });
+
+  it("spouse14: aldeanos con 3500 puntos o más", () => {
+    const rica = conPredict.replace("<Points>520</Points>", "<Points>3500</Points>");
+    expect(leer(rica).predict!.farmers[0].spouse14).toEqual(["Robin"]);
+    expect(leer(conPredict).predict!.farmers[0].spouse14).toEqual([]);
+  });
+
+  it("antes de la 1.6 los contadores salen de las etiquetas sueltas del <stats> de la raíz", () => {
+    // El anfitrión de una partida vieja no trae <stats> propio: usa el de la raíz.
+    const sinPropio = mini.replace(/(<player>[\s\S]*?)<stats[\s\S]*?<\/stats>/, "$1").replace("<year>2</year>", "<year>2</year><stats><geodesCracked>77</geodesCracked><daysPlayed>40</daysPlayed></stats>");
+    const p = leer(sinPropio).predict!;
+    expect(p.farmers[0].geodesCracked).toBe(77);
+    expect(p.daysPlayed).toBe(40);
+  });
+});
+
+describe("parseSave: lo que suma la pestaña Predictor (tarea 7)", () => {
+  it("separa el correo recibido del que llega mañana (sin la marca %&NL&%)", () => {
+    const f = leer(mini).predict!.farmers[0];
+    expect(f.mailReceived).toEqual(["Robin_Introduction", "CF_Fair"]);
+    expect(f.mailTomorrow).toEqual(["CF_Fish"]);
+    // `mail` sigue siendo todo junto (recibido, buzón y mañana).
+    expect(f.mail).toEqual(expect.arrayContaining(["Robin_Introduction", "CF_Fish", "spring_2_1"]));
+  });
+
+  it("recipes: las de fabricación y las de cocina que sabe", () => {
+    expect(leer(mini).predict!.farmers[0].recipes).toEqual(["Chest", "Torch", "Fried Egg", "Omelet"]);
+    expect(leer(mini).predict!.farmers[1].recipes).toEqual(["Fried Egg"]);
+  });
+
+  it("specialCharm: en la 1.6 es el correo HasSpecialCharm; la etiqueta vieja también vale; sin nada, false", () => {
+    expect(leer(mini).predict!.farmers[0].specialCharm).toBe(false);
+    const correo = mini.replace("<string>CF_Fair</string>", "<string>CF_Fair</string><string>HasSpecialCharm</string>");
+    expect(leer(correo).predict!.farmers[0].specialCharm).toBe(true);
+    // Sólo para mañana no cuenta (`hasSpecialCharm` mira `mailReceived`).
+    const manana = mini.replace("<string>CF_Fish%&amp;NL&amp;%</string>", "<string>HasSpecialCharm</string>");
+    expect(leer(manana).predict!.farmers[0].specialCharm).toBe(false);
+    const con = mini.replace("<farmName>Los Sauces</farmName>", "<farmName>Los Sauces</farmName><hasSpecialCharm>true</hasSpecialCharm>");
+    expect(leer(con).predict!.farmers[0].specialCharm).toBe(true);
+  });
+
+  it("weddings: la fecha de cada compromiso, con aldeanos y entre granjeros", () => {
+    expect(leer(mini).predict!.weddings).toEqual([]);
+    const novia = mini.replace(
+      /<Status>Friendly<\/Status>(\s*<Proposer>)/,
+      "<Status>Engaged</Status><WeddingDate><Year>2</Year><DayOfMonth>9</DayOfMonth><Season>summer</Season></WeddingDate>$1",
+    );
+    expect(leer(novia).predict!.weddings).toEqual([{ season: 1, day: 9, year: 2, roommate: false }]);
+    // Krobus de compañero de cuarto: la mudanza también es un compromiso, marcado.
+    const krobus = novia.replace("<RoommateMarriage>false</RoommateMarriage>", "<RoommateMarriage>true</RoommateMarriage>");
+    expect(leer(krobus).predict!.weddings).toEqual([{ season: 1, day: 9, year: 2, roommate: true }]);
+    const granjeros = mini.replace(
+      "<farmhands>",
+      `<farmerFriendships><item><key><FarmerPair><Farmer1>1</Farmer1><Farmer2>2</Farmer2></FarmerPair></key><value><Friendship><Points>0</Points><Status>Engaged</Status><WeddingDate><Year>1</Year><DayOfMonth>3</DayOfMonth><Season>fall</Season></WeddingDate></Friendship></value></item></farmerFriendships><farmhands>`,
+    );
+    expect(leer(granjeros).predict!.weddings).toEqual([{ season: 2, day: 3, year: 1, roommate: false }]);
+    // Ya casados: la fecha queda guardada pero no hay boda por venir.
+    const casada = novia.replace("<Status>Engaged</Status>", "<Status>Married</Status>");
+    expect(leer(casada).predict!.weddings).toEqual([]);
+  });
+});
