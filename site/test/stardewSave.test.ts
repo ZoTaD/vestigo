@@ -319,6 +319,11 @@ describe("lo que se guarda en el navegador", () => {
     expect(con((x) => (x.predict = "roto"))).toBeNull();
     expect(con((x) => delete x.predict.farmers[0].uid)).toBeNull();
     expect(con((x) => (x.predict.farmers = null))).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].spouse14)).toBeNull();
+    expect(con((x) => (x.predict.farmers[0].geodesCracked = "3"))).toBeNull();
+    expect(con((x) => delete x.predict.farmers[0].mastery0)).toBeNull();
+    expect(con((x) => delete x.predict.multiplayer)).toBeNull();
+    expect(con((x) => delete x.predict.visitsUntilY1Guarantee)).toBeNull();
   });
 
   it("si la partida igual rompe al dibujarse, el límite de errores la olvida y vuelve a la caja vacía", () => {

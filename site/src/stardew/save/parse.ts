@@ -25,8 +25,9 @@
  *
  * Para el predictor (`Save.predict`, opcional: una partida guardada por la versión anterior no lo trae):
  * - `gameId`, `legacy`, `dailyLuck`, `visitsUntilY1Guarantee`: `uniqueIDForThisGame`, `useLegacyRandom`, `dailyLuck` y
- *   `visitsUntilY1Guarantee` de la raíz; `lowestMineLevel`: `mine_lowestLevelReached` de la raíz (el
- *   `MineShaft.lowestLevelReached`, o sea `NetWorldState.LowestMineLevel`). `weatherTomorrow` es el mismo de `Save`.
+ *   `visitsUntilY1Guarantee` de la raíz; `lowestMineLevel`: como `MineShaft.lowestLevelReached`, que devuelve
+ *   `LowestMineLevelForOrder` (`mine_lowestLevelReachedForOrder` de la raíz) si es >= 0 y, si es negativo (-1 por
+ *   defecto), `LowestMineLevel` (`mine_lowestLevelReached`). `weatherTomorrow` es el mismo de `Save`.
  * - `daysPlayed`: el contador `daysPlayed` de los `stats` del anfitrión (no sale de la fecha: cuenta los días dormidos).
  * - Por granjero: `UniqueMultiplayerID` (un `long`, se guarda como texto) y `uidHalf` = `(int)uid / 2` como lo hace
  *   `Utility.getTreasureFromGeode`: los 32 bits bajos con signo (con BigInt, un `long` no entra en un número de JS) y
@@ -140,7 +141,7 @@ export interface SavePredict {
   dailyLuck: number;
   /** `weatherForTomorrow` tal cual, antes de `Game1.getWeatherModificationsForDate`. */
   weatherTomorrow: string;
-  /** `mine_lowestLevelReached` (`MineShaft.lowestLevelReached`). */
+  /** `MineShaft.lowestLevelReached`: `mine_lowestLevelReachedForOrder` si es >= 0, si no `mine_lowestLevelReached`. */
   lowestMineLevel: number;
   multiplayer: boolean;
   visitsUntilY1Guarantee: number;
@@ -537,7 +538,10 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
       daysPlayed: statGet(kid(hostEl, "stats") ?? t("stats"), "daysPlayed"),
       dailyLuck: Number.parseFloat(tt("dailyLuck")) || 0,
       weatherTomorrow,
-      lowestMineLevel: int(tt("mine_lowestLevelReached")),
+      // MineShaft.lowestLevelReached: el "para encargos" si es >= 0; si no, el común.
+      lowestMineLevel: tt("mine_lowestLevelReachedForOrder") !== "" && int(tt("mine_lowestLevelReachedForOrder")) >= 0
+        ? int(tt("mine_lowestLevelReachedForOrder"))
+        : int(tt("mine_lowestLevelReached")),
       multiplayer: players.length > 1,
       visitsUntilY1Guarantee: tt("visitsUntilY1Guarantee") === "" ? -1 : int(tt("visitsUntilY1Guarantee")),
       farmers: predictFarmers,

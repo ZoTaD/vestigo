@@ -226,6 +226,14 @@ describe("parseSave: lo que lee el predictor", () => {
     expect(p.multiplayer).toBe(true);
   });
 
+  it("lowestMineLevel usa mine_lowestLevelReachedForOrder si es >= 0 y, si es negativo, mine_lowestLevelReached", () => {
+    const forOrder = (n: number) =>
+      conPredict.replace("<mine_lowestLevelReached>45</mine_lowestLevelReached>", `<mine_lowestLevelReached>45</mine_lowestLevelReached><mine_lowestLevelReachedForOrder>${n}</mine_lowestLevelReachedForOrder>`);
+    expect(leer(forOrder(-1)).predict!.lowestMineLevel).toBe(45);
+    expect(leer(forOrder(30)).predict!.lowestMineLevel).toBe(30);
+    expect(leer(forOrder(0)).predict!.lowestMineLevel).toBe(0);
+  });
+
   it("uidHalf es (int)uid / 2: los 32 bits bajos con signo, truncando hacia cero", () => {
     const f = leer(conPredict).predict!.farmers[0];
     expect(f.uid).toBe("-6368268736843601728");

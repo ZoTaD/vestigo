@@ -58,9 +58,15 @@ function looksLikePredict(x: unknown): boolean {
     typeof x.weatherTomorrow === "string" &&
     isNum(x.lowestMineLevel) &&
     typeof x.qiBeans === "boolean" &&
+    typeof x.multiplayer === "boolean" &&
+    isNum(x.visitsUntilY1Guarantee) &&
     Array.isArray(x.farmers) &&
     x.farmers.every(
-      (f) => isObj(f) && typeof f.name === "string" && typeof f.uid === "string" && isNum(f.uidHalf) && Array.isArray(f.mail),
+      (f) =>
+        isObj(f) && typeof f.name === "string" && typeof f.uid === "string" && isNum(f.uidHalf) &&
+        Array.isArray(f.mail) && Array.isArray(f.spouse14) &&
+        isNum(f.geodesCracked) && isNum(f.mysteryBoxesOpened) && isNum(f.deepestMineLevel) &&
+        isNum(f.fishingLevel) && isNum(f.mastery0) && isNum(f.bookMystery),
     )
   );
 }
