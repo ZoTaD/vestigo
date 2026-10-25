@@ -264,6 +264,14 @@ describe("parseSave: lo que lee el predictor", () => {
     expect(leer(mini).predict!.qiBeans).toBe(false);
   });
 
+  it("goldenCoconutCracked: la etiqueta de la raíz; sin ella, false", () => {
+    expect(leer(conPredict).predict!.goldenCoconutCracked).toBe(false);
+    const abierto = conPredict.replace("<year>2</year>", "<year>2</year><goldenCoconutCracked>true</goldenCoconutCracked>");
+    expect(leer(abierto).predict!.goldenCoconutCracked).toBe(true);
+    const cerrado = conPredict.replace("<year>2</year>", "<year>2</year><goldenCoconutCracked>false</goldenCoconutCracked>");
+    expect(leer(cerrado).predict!.goldenCoconutCracked).toBe(false);
+  });
+
   it("spouse14: aldeanos con 3500 puntos o más", () => {
     const rica = conPredict.replace("<Points>520</Points>", "<Points>3500</Points>");
     expect(leer(rica).predict!.farmers[0].spouse14).toEqual(["Robin"]);

@@ -81,6 +81,7 @@ describe("predictGeodes contra el juego", () => {
           // Cosecha de baja calidad: el juego la elige con Game1.random.
           azar++;
           expect(p.oneOf, donde).toContain(id);
+          expect(p.id, donde).toBe("");
         } else {
           expect(p.id, donde).toBe(id);
         }
@@ -89,6 +90,28 @@ describe("predictGeodes contra el juego", () => {
     // Lo que no se puede saber es poco y sólo de las cajas.
     expect(azar).toBeGreaterThan(0);
     expect(azar).toBeLessThan(800);
+  });
+
+  it("sin el día, la semilla del mapache sale como una de las dos posibles", () => {
+    // Casos con día cambiado: lo que da el juego tiene que estar en oneOf, y nada más cambia.
+    let semillas = 0;
+    for (const c of casos.filter((x) => x.kind === "GoldenMysteryBox")) {
+      const conDia = predictGeodes(c.kind, estado(c), data, c.count);
+      const sinDia = predictGeodes(c.kind, { ...estado(c), day: undefined }, data, c.count);
+      c.drops.forEach((d, i) => {
+        const id = d.slice(0, d.lastIndexOf(" "));
+        if (/Seeds$/.test(id) && sinDia[i].oneOf && !conDia[i].oneOf) {
+          semillas++;
+          expect(sinDia[i].id).toBe("");
+          expect(sinDia[i].qty).toBe(8);
+          expect(sinDia[i].oneOf).toContain(id);
+          expect(sinDia[i].oneOf).toHaveLength(2);
+        } else {
+          expect(sinDia[i]).toEqual(conDia[i]);
+        }
+      });
+    }
+    expect(semillas).toBeGreaterThan(10);
   });
 
   it("con count 0 no abre nada", () => {

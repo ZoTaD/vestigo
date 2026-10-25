@@ -58,6 +58,7 @@ function looksLikePredict(x: unknown): boolean {
     typeof x.weatherTomorrow === "string" &&
     isNum(x.lowestMineLevel) &&
     typeof x.qiBeans === "boolean" &&
+    typeof x.goldenCoconutCracked === "boolean" &&
     typeof x.multiplayer === "boolean" &&
     isNum(x.visitsUntilY1Guarantee) &&
     Array.isArray(x.farmers) &&

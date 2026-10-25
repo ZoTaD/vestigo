@@ -41,6 +41,9 @@
  *   entre las reglas separadas por coma de su `specialRule` (`FarmerTeam.SpecialOrderRuleActive`). Los encargos que
  *   sólo se ofrecen (`availableSpecialOrders`) no cuentan.
  * - `multiplayer`: hay más de un granjero con partida.
+ * - `goldenCoconutCracked`: `goldenCoconutCracked` de la raíz (`SaveGame.goldenCoconutCracked`, copia de
+ *   `netWorldState.GoldenCoconutCracked`): si ya se abrió algún coco dorado; mientras no, el primero da una nuez.
+ *   Sin la etiqueta (partidas viejas), `false` como el juego al cargarla.
  *
  * Partidas viejas (antes de la 1.6): se leen igual con lo que traigan. Sin `<gameVersion>` la versión se deduce por
  * `hasApplied1_4_UpdateChanges` ("1.4") y `hasApplied1_3_UpdateChanges` ("1.3"); sin ninguna es "<1.3". Antes de la
@@ -148,6 +151,8 @@ export interface SavePredict {
   farmers: PredictFarmer[];
   /** Hay un encargo de Qi en curso con la regla `DROP_QI_BEANS`. */
   qiBeans: boolean;
+  /** Ya se abrió algún coco dorado en la partida (`netWorldState.GoldenCoconutCracked`). */
+  goldenCoconutCracked: boolean;
 }
 
 /**
@@ -546,6 +551,7 @@ export function parseSave(xml: string, parser?: XmlParser): Save | SaveError {
       visitsUntilY1Guarantee: tt("visitsUntilY1Guarantee") === "" ? -1 : int(tt("visitsUntilY1Guarantee")),
       farmers: predictFarmers,
       qiBeans: qiBeansActive(t("specialOrders")),
+      goldenCoconutCracked: tt("goldenCoconutCracked") === "true",
     },
   };
 }

@@ -44,15 +44,15 @@ export interface GeodeState {
   /** Encargo especial de Qi en curso con la regla `DROP_QI_BEANS`. */
   qiBeans: boolean;
   /**
-   * `netWorldState.GoldenCoconutCracked`: si ya se abrió algún coco dorado en la partida. Sin
-   * abrir (o sin dar, como en una partida nueva) el primer coco da una nuez dorada.
+   * `netWorldState.GoldenCoconutCracked` (`SavePredict.goldenCoconutCracked`): si ya se abrió algún
+   * coco dorado en la partida. Mientras no, el primer coco da una nuez dorada.
    */
-  goldenCoconutCracked?: boolean;
+  goldenCoconutCracked: boolean;
 }
 
 /** Un premio. */
 export interface Drop {
-  /** Id calificado, p. ej. `"(O)74"`. Si hay `oneOf`, es sólo el primero de la lista. */
+  /** Id calificado, p. ej. `"(O)74"`. Vacío (`""`) cuando hay `oneOf`: no se sabe cuál sale. */
   id: string;
   qty: number;
   /** Si está, el juego elige uno de estos con `Game1.random` y no se puede saber cuál. */
@@ -96,7 +96,7 @@ function cosechaBaja(v: Vivo, qty: number): Drop {
   const c = v.data.lowGradeCrops;
   const ids = v.st.season === 0 ? c.spring : v.st.season === 1 ? c.summer : v.st.season === 2 ? c.fall : [...c.spring, ...c.summer, ...c.fall];
   const oneOf = [...new Set(ids)].map((x) => "(O)" + x);
-  return { id: oneOf[0], qty, oneOf };
+  return { id: "", qty, oneOf };
 }
 
 /** `Utility.getRaccoonSeedForCurrentTimeOfYear(player, random, 8)`: la cantidad es fija y lo que tira después no importa. */
@@ -107,7 +107,7 @@ function semillaMapache(v: Vivo, r: DotNetRandom): Drop {
   const sig = (est + 1) % 4;
   if (v.st.day === undefined) {
     const oneOf = [...new Set([seeds[est], seeds[sig]])].map((x) => "(O)" + x);
-    return { id: oneOf[0], qty: 8, oneOf };
+    return { id: "", qty: 8, oneOf };
   }
   return d("(O)" + seeds[v.st.day > lastDay[est] ? sig : est], 8);
 }
@@ -301,7 +301,14 @@ function tesoro(kind: GeodeKind, v: Vivo): { drop: Drop; flag?: string } {
 
 /**
  * Las próximas `count` aperturas de `kind` en el yunque de Clint, en orden: el `i`-ésimo es la
- * apertura `i + 1` desde ahora. Repite el flujo de `GeodeMenu`:
+ * apertura `i + 1` desde ahora.
+ *
+ * Vale para el yunque, no para la trituradora de geodas: `OutputGeodeCrusher` no suma
+ * `GeodesCracked` ni cambia artefactos por piedras. Supone que se abre sólo este tipo: cualquier
+ * otra geoda o caja que se abra en el medio sube `GeodesCracked` (y las cajas, también
+ * `MysteryBoxesOpened`) y corre toda la lista.
+ *
+ * Repite el flujo de `GeodeMenu`:
  * - `GeodeMenu.update` suma 1 a `GeodesCracked` (y a `MysteryBoxesOpened` en las cajas) ANTES de tirar;
  * - el primer coco dorado de la partida da una nuez (`GeodeMenu.receiveLeftClick`, `geodeTreasureOverride`);
  * - un artefacto (`Arch`) sin el correo `artifactFound` se cambia por 5 piedras, salvo en el cofre de artefactos;
@@ -316,7 +323,7 @@ export function predictGeodes(kind: GeodeKind, st: GeodeState, data: PredictData
     geodas: st.geodesCracked,
     cajas: st.mysteryBoxesOpened,
     correo: new Set(st.mail),
-    coco: st.goldenCoconutCracked ?? false,
+    coco: st.goldenCoconutCracked,
     tipos: new Map(data.objects.map((o) => ["(O)" + o[0], [o[1], o[2]]])),
   };
   const esCaja = kind === "MysteryBox" || kind === "GoldenMysteryBox";
