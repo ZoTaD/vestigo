@@ -773,19 +773,19 @@ const EN: StardewCopy = {
     },
     // Las pestañas de la etapa 4 (2026-10-25): Granja, Museo, Misiones e Isla Jengibre.
     farm: {
-      title: "Stardew Valley Animals and Farm Buildings | Vestigo",
-      description: "Every Stardew Valley 1.6 farm animal with its price, produce and care, and every farm building with its cost, materials and upgrades.",
+      title: "Stardew Valley Animals and Buildings: Cost, Produce and Care | Vestigo",
+      description: "Every Stardew Valley 1.6 farm animal with its cost, produce and care, and every farm building with its cost, materials and upgrades, from the coop to the barn.",
     },
     museum: {
-      title: "Stardew Valley Museum Checklist: Artifacts, Minerals and Rewards | Vestigo",
+      title: "Stardew Valley Museum Rewards and Checklist, With the 1.6 Books | Vestigo",
       description: "Every artifact and mineral the Stardew Valley 1.6 museum takes and where to find it, the donation rewards, power books and lost books. Tick them off.",
     },
     quests: {
-      title: "Stardew Valley Quests and Special Orders | Vestigo",
+      title: "Stardew Valley Special Orders and Story Quests | Vestigo",
       description: "Every Stardew Valley 1.6 story quest and special order from the town board: what each one asks for, how long you have and the reward.",
     },
     island: {
-      title: "Stardew Valley Golden Walnuts: All 130 on Ginger Island | Vestigo",
+      title: "Stardew Valley Golden Walnut Locations: All 130 on Ginger Island | Vestigo",
       description: "Every golden walnut on Stardew Valley 1.6's Ginger Island by area, with a checklist. Plus the parrot upgrades, Qi's Walnut Room and his special orders.",
     },
   },
@@ -1451,19 +1451,19 @@ const ES: StardewCopy = {
     },
     // Las pestañas de la etapa 4 (2026-10-25): Granja, Museo, Misiones e Isla Jengibre.
     farm: {
-      title: "Animales y edificios de la granja de Stardew Valley | Vestigo",
+      title: "Animales y edificios de Stardew Valley: costo, producción y cuidados | Vestigo",
       description: "Cada animal de la granja de Stardew Valley 1.6 con su precio, lo que produce y sus cuidados, y cada edificio con su costo, materiales y mejoras.",
     },
     museum: {
-      title: "Museo de Stardew Valley: checklist de artefactos, minerales y premios | Vestigo",
+      title: "Museo de Stardew Valley: premios, colección y los libros de la 1.6 | Vestigo",
       description: "Cada artefacto y mineral que recibe el museo de Stardew Valley 1.6 y dónde sale, los premios por donar, los libros de poder y los perdidos. Tildalos.",
     },
     quests: {
-      title: "Misiones y pedidos especiales de Stardew Valley | Vestigo",
+      title: "Pedidos especiales y misiones de Stardew Valley | Vestigo",
       description: "Cada misión de la historia y cada pedido especial del tablón de Stardew Valley 1.6: qué pide, cuánto tiempo hay y el premio.",
     },
     island: {
-      title: "Nueces de oro de Stardew Valley: las 130 de la Isla Jengibre | Vestigo",
+      title: "Nueces de oro de Stardew Valley: dónde están las 130 de la Isla Jengibre | Vestigo",
       description: "Cada nuez de oro de la Isla Jengibre de Stardew Valley 1.6 por zona, para tildar. Y las mejoras del loro, la Habitación de las Nueces de Qi y sus pedidos.",
     },
   },
@@ -2028,7 +2028,7 @@ const ES: StardewCopy = {
       hint: "Abrí una parte para ver lo que falta. La granja cuenta como una: en cada parte, el granjero que más tiene.",
       points: (got, weight) => `${got} de ${weight} puntos`,
       level: (level) => `Nivel de granjero ${level} de 25: la suma de tus seis habilidades, dividida por dos.`,
-      walnuts: "Las nueces doradas se encuentran en la Isla Jengibre.",
+      walnuts: "Las nueces de oro se encuentran en la Isla Jengibre.",
       allDone: "Hecho.",
       hearts: (have, need) => `${have} / ${need} ♥`,
       from: (name) => `Esta parte cuenta lo de ${name}.`,
