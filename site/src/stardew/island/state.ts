@@ -31,6 +31,8 @@ export interface Nut {
   text: Pair;
   /** La casilla del mapa, en arbustos y enterradas. */
   tile?: [x: number, y: number];
+  /** Frase genérica ("Arbusto escondido en el norte (casilla 4, 42)"): se dibuja como casillero chico con la casilla. */
+  generic?: true;
 }
 
 export interface Upgrade {
@@ -154,10 +156,16 @@ export function toggleNut(marks: Marks, nut: Nut): Marks {
 /**
  * Las nueces de una partida (`Save.nuts`) como marcas del checklist: una clave de `collectedNutTracker` o el coco
  * completan su fila (el esqueleto grande da 6 con una sola clave); una de caída limitada, si llegó a su `n`, y si no
- * queda a medias con lo que lleva. Sólo las claves que son filas.
+ * queda a medias con lo que lleva. Sólo las claves que son filas. Con las 130 encontradas (`found`, el
+ * `goldenWalnutsFound` de la partida) se marcan todas: el loro dorado (`ActivateGoldenParrot`) completa el total sin
+ * anotar a Birdie ni el coco.
  */
-export function nutsFromSave(saved: Readonly<Record<string, number>>, data: IslandData): Marks {
+export function nutsFromSave(saved: Readonly<Record<string, number>>, data: IslandData, found = 0): Marks {
   const out: Marks = {};
+  if (found >= TOTAL_NUTS) {
+    for (const nut of data.nuts) out[nut.key] = true;
+    return out;
+  }
   for (const nut of data.nuts) {
     const v = saved[nut.key];
     if (!v || v <= 0) continue;
@@ -180,17 +188,55 @@ export function mergeMarks(a: Marks, b: Marks): Marks {
 
 /**
  * ¿Es una de las nueces de frase genérica ("Arbusto escondido en el norte (casilla 4, 42)")? Esas se dibujan juntas,
- * como casilleros chicos con su casilla, debajo de las de frase propia. Se reconocen por la frase en inglés que arma
- * `_arbusto` / `_enterrada` en `island_data.py`.
+ * como casilleros chicos con su casilla, debajo de las de frase propia. Las marca `island_data.py` (`generic`).
  */
-export const isGenericNut = (n: Nut): boolean => !!n.tile && /^(Hidden bush|Buried) in the (north|west) \(tile \d+, \d+\)/.test(n.text[0]);
+export const isGenericNut = (n: Nut): boolean => n.generic === true && !!n.tile;
+
+/** Lo que se usa de la partida guardada del Lector: las nueces, lo que dice haber encontrado y el correo de todos. */
+export type SavedIsland = { nuts: Record<string, number>; walnuts: number; mail: string[] };
+
+/**
+ * ¿Se pueden traer las nueces de la partida guardada? `none` sin partida; `stale` si se guardó antes de que el Lector
+ * leyera las nueces (llega con `nuts` vacío pero con nueces encontradas): hay que volver a abrirla; `ok` si no.
+ */
+export function saveSync(saved: SavedIsland | null): "none" | "stale" | "ok" {
+  if (!saved) return "none";
+  return saved.walnuts > 0 && Object.keys(saved.nuts).length === 0 ? "stale" : "ok";
+}
 
 // --- Mejoras y pedidos ------------------------------------------------------------------------------------------
 
-/** Las mejoras del loro en el orden de las zonas (y, dentro de una zona, en el del dato). */
+/**
+ * Lo que una mejora pide sin decirlo en `needs` (que es `requiredMail`): llegar hasta ella. El primer loro (`Hut`) va
+ * antes que todo, y el oeste queda cerrado hasta despertar a la tortuga (`Turtle`).
+ */
+function implicitNeeds(u: Upgrade): string[] {
+  if (u.key === "Hut" || u.needs.length > 0) return [];
+  return u.area === "West" ? ["Turtle"] : ["Hut"];
+}
+
+/**
+ * Las mejoras del loro en el orden en que se desbloquean: por profundidad en lo que piden (las que no piden nada
+ * primero, después las que piden una de ellas…) y, a igual profundidad, por zona y por el orden del dato.
+ */
 export function upgradesInOrder(data: IslandData): Upgrade[] {
+  const byKey = new Map(data.upgrades.map((u) => [u.key, u]));
+  const depth = new Map<string, number>();
+  const deep = (u: Upgrade, seen: Set<string> = new Set()): number => {
+    const known = depth.get(u.key);
+    if (known != null) return known;
+    if (seen.has(u.key)) return 0; // un ciclo no debería pasar; se corta
+    seen.add(u.key);
+    const needs = [...u.needs, ...implicitNeeds(u)].map((k) => byKey.get(k)).filter((x): x is Upgrade => !!x);
+    const d = needs.length ? 1 + Math.max(...needs.map((n) => deep(n, seen))) : 0;
+    depth.set(u.key, d);
+    return d;
+  };
   const rank = new Map(data.areas.map((a, i) => [a.key, i]));
-  return data.upgrades.map((u, i) => [u, i] as const).sort(([a, i], [b, j]) => (rank.get(a.area) ?? 99) - (rank.get(b.area) ?? 99) || i - j).map(([u]) => u);
+  return data.upgrades
+    .map((u, i) => [u, i] as const)
+    .sort(([a, i], [b, j]) => deep(a) - deep(b) || (rank.get(a.area) ?? 99) - (rank.get(b.area) ?? 99) || i - j)
+    .map(([u]) => u);
 }
 
 /** Las mejoras hechas según el correo de una partida (cada una deja su carta). */

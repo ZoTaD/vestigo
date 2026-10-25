@@ -293,6 +293,9 @@ def nuts() -> list[dict]:
         m = re.fullmatch(r"(?:Bush|Buried)_\w+?_(\d+)_(\d+)", clave)
         if m:
             fila["tile"] = [int(m.group(1)), int(m.group(2))]
+        if f is None:
+            # Frase genérica (`_arbusto` / `_enterrada`): el sitio las junta como casilleros con su casilla.
+            fila["generic"] = True
         out.append(fila)
     return out
 

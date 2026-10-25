@@ -108,6 +108,12 @@ class TestIslandData(unittest.TestCase):
             for c in "[{]}":
                 self.assertNotIn(c, t)
 
+    def test_frase_generica_marcada(self):
+        gen = [n for n in self.d["nuts"] if n.get("generic")]
+        self.assertEqual(len(gen), 26)
+        self.assertTrue(all(n["tile"] and n["kind"] in ("bush", "buried") and n["n"] == 1 for n in gen))
+        self.assertNotIn("generic", self.nueces["Bush_IslandNorth_13_33"])
+
     def test_sprites_del_walnut_room_sin_ficha(self):
         # Lo que la tienda de Qi vende sin ficha de Objetos (muebles, el sombrero y la Llave de la ciudad) tiene su dibujo
         # en `rewards/`, del tamaño que dice el dato; los `(BC)` y los objetos ya están en `items/`.

@@ -23,6 +23,7 @@ import {
   nutGot,
   nutsFromSave,
   readIslandView,
+  saveSync,
   shownOrders,
   toggleNut,
   upgradesDone,
@@ -39,8 +40,9 @@ beforeAll(() => loadIsland());
 const nut = (key: string) => data.nuts.find((n) => n.key === key)!;
 const route = (lang: "en" | "es") => ({ lang, view: "stardew", sdSection: "island" }) as Route;
 const inLang = (lang: "en" | "es", el: ReactElement) => renderToStaticMarkup(createElement(LangContext.Provider, { value: { lang, setLang: () => undefined } }, el));
-const book = (initial: IslandView, lang: "en" | "es" = "en", done: Marks = {}) =>
-  inLang(lang, createElement(IslandBook, { data, route: route(lang), navigate: () => undefined, initial, initialDone: done }));
+type Saved = { nuts: Record<string, number>; walnuts: number; mail: string[] };
+const book = (initial: IslandView, lang: "en" | "es" = "en", done: Marks = {}, saved: Saved | null = null) =>
+  inLang(lang, createElement(IslandBook, { data, route: route(lang), navigate: () => undefined, initial, initialDone: done, initialSaved: saved }));
 /** El texto del elemento con ese `id` (con lo que tenga adentro, hasta su cierre). */
 const row = (html: string, id: string) => {
   const at = html.indexOf(`id="${id}"`);
@@ -122,6 +124,26 @@ describe("las cuentas de las nueces", () => {
     expect(nutCount(data, marks).found).toBe(1 + 6 + 3);
   });
 
+  it("con el loro dorado (130 encontradas) se marcan todas, también Birdie y el coco, que el loro no anota", () => {
+    const marks = nutsFromSave({ Darts: 9999 }, data, 130);
+    expect(nutCount(data, marks).found).toBe(130);
+    expect(marks.Birdie).toBe(true);
+    expect(marks.GoldenCoconut).toBe(true);
+  });
+
+  it("una partida guardada antes de las nueces (nuts vacío y walnuts > 0) no se trae: hay que volver a abrirla", () => {
+    expect(saveSync(null)).toBe("none");
+    expect(saveSync({ nuts: {}, walnuts: 17, mail: [] })).toBe("stale");
+    expect(saveSync({ nuts: {}, walnuts: 0, mail: [] })).toBe("ok");
+    expect(saveSync({ nuts: { TreeNut: 1 }, walnuts: 17, mail: [] })).toBe("ok");
+    for (const lang of ["en", "es"] as const) {
+      const html = book("nuts", lang, {}, { nuts: {}, walnuts: 17, mail: [] });
+      expect(html).not.toContain("sd-btn");
+      expect(plain(html)).toContain(lang === "es" ? "Volvé a abrir tu partida en el Lector" : "Open your save in the Save reader again");
+    }
+    expect(book("nuts", "es", {}, { nuts: { TreeNut: 1 }, walnuts: 17, mail: [] })).toContain("Traer de mi partida");
+  });
+
   it("traer de la partida no baja lo que ya estaba tildado a mano", () => {
     expect(mergeMarks({ VolcanoBarrel: true, Darts: 1 }, { VolcanoBarrel: 2, Darts: 2, TreeNut: true })).toEqual({ VolcanoBarrel: true, Darts: 2, TreeNut: true });
   });
@@ -141,8 +163,9 @@ describe("las cuentas de las nueces", () => {
     expect(readMarks(ISLAND_KEY)).toEqual({});
   });
 
-  it("las ~30 nueces de frase genérica (arbusto o enterrada con casilla) se reconocen", () => {
+  it("las ~30 nueces de frase genérica (arbusto o enterrada con casilla) se reconocen por su marca", () => {
     const gen = data.nuts.filter(isGenericNut);
+    expect(isGenericNut({ ...nut("Bush_IslandNorth_13_33"), generic: true })).toBe(true);
     expect(gen.length).toBe(26);
     expect(gen.every((n) => n.tile && n.n === 1)).toBe(true);
     expect(isGenericNut(nut("Bush_IslandNorth_13_33"))).toBe(false);
@@ -150,11 +173,14 @@ describe("las cuentas de las nueces", () => {
 });
 
 describe("mejoras, pedidos y la dirección", () => {
-  it("las mejoras van en el orden de las zonas; con la partida, las hechas por su carta", () => {
-    const order = upgradesInOrder(data).map((u) => u.area);
-    const rank = data.areas.map((a) => a.key);
-    expect(order.map((a) => rank.indexOf(a))).toEqual([...order.map((a) => rank.indexOf(a))].sort((a, b) => a - b));
-    expect(upgradesInOrder(data)).toHaveLength(11);
+  it("las mejoras van en el orden en que se desbloquean; con la partida, las hechas por su carta", () => {
+    const order = upgradesInOrder(data).map((u) => u.key);
+    expect(order).toHaveLength(11);
+    expect(order.slice(0, 2)).toEqual(["Hut", "Turtle"]);
+    expect(order.at(-1)).toBe("Obelisk");
+    // Ninguna antes de lo que pide.
+    for (const u of data.upgrades) for (const n of u.needs) expect(order.indexOf(n), `${n} antes de ${u.key}`).toBeLessThan(order.indexOf(u.key));
+    expect(order.indexOf("House")).toBeLessThan(order.indexOf("House_Mailbox"));
     expect([...upgradesDone(["Island_FirstParrot", "Island_Turtle", "otra"], data)].sort()).toEqual(["Hut", "Turtle"]);
   });
 
@@ -213,10 +239,16 @@ describe("las vistas dibujadas", () => {
   it("lo tildado se marca y suma; la fila a medias dice cuánto lleva", () => {
     const html = book("nuts", "es", { Darts: true, VolcanoBarrel: 2 });
     expect(plain(html)).toContain("5 de 130");
+    // En español, el nombre del juego: nuez de oro.
+    expect(plain(html)).toContain("Nueces de oro encontradas");
+    expect(plain(html)).not.toMatch(/nuez dorada|nueces doradas/i);
     expect(row(html, "darts")).toContain('aria-pressed="true"');
     const barril = row(html, "volcanobarrel");
-    expect(barril).toContain('aria-pressed="false"');
+    expect(barril).toContain('aria-pressed="mixed"');
+    expect(barril).not.toContain("title=");
     expect(plain(barril)).toMatch(/2\s*\/\s*5/);
+    expect(plain(barril)).toContain("2 de 5 nueces");
+    expect(plain(row(book("nuts", "en", { VolcanoBarrel: 2 }), "volcanobarrel"))).toContain("2 of 5 walnuts");
     expect(plain(barril)).toContain("Rompé barriles");
   });
 

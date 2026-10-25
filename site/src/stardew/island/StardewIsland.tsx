@@ -1,7 +1,7 @@
 /**
  * La pestaña Isla Jengibre de Stardew Valley (etapa 4, tarea 8): una pantalla con cuatro vistas elegidas por botones.
  *
- * - **Nueces doradas** (se abre en esta): arriba la cifra "N de 130" y la cuenta de cada zona; abajo una caja por zona
+ * - **Nueces de oro** (se abre en esta): arriba la cifra "N de 130" y la cuenta de cada zona; abajo una caja por zona
  *   con sus nueces para tildar. Cada fila dice cómo se consigue y cuántas da; las de caída limitada traídas de una
  *   partida pueden quedar a medias ("2 / 5"). Las de frase genérica (un arbusto o una nuez enterrada en una casilla) van
  *   juntas al pie de su zona como casilleros chicos con la casilla, así la lista no se hace kilométrica en el teléfono.
@@ -38,6 +38,7 @@ import {
   nutGot,
   nutsFromSave,
   readIslandView,
+  saveSync,
   shownOrders,
   toggleNut,
   upgradesDone,
@@ -49,6 +50,7 @@ import {
   type IslandData,
   type IslandView,
   type Nut,
+  type SavedIsland,
   type ShopItem,
 } from "./state";
 import "../../styles/stardew-items.css";
@@ -63,15 +65,13 @@ export default function StardewIsland({ route, navigate }: { route: Route; navig
 
 const scrollTo = (id: string) => window.setTimeout(() => document.getElementById(id)?.scrollIntoView({ block: "start" }), 80);
 
-/** Lo que se usa de la partida guardada del Lector: las nueces, lo que dice haber encontrado y el correo de todos. */
-type SavedIsland = { nuts: Record<string, number>; walnuts: number; mail: string[] };
-
 export function IslandBook({
   data,
   route,
   navigate,
   initial = DEFAULT_ISLAND_VIEW,
   initialDone = {},
+  initialSaved = null,
 }: {
   data: IslandData;
   route: Route;
@@ -79,19 +79,23 @@ export function IslandBook({
   initial?: IslandView;
   /** Lo tildado del primer dibujo (los tests); en el navegador se lee lo guardado después. */
   initialDone?: Marks;
+  /** La partida guardada del primer dibujo (los tests); en el navegador se lee después. */
+  initialSaved?: SavedIsland | null;
 }) {
   const t = useStardewCopy();
   const m = t.island;
   const [view, setView] = useState<IslandView>(initial);
   const [marks, setMarks] = useState<Marks>(initialDone);
-  const [saved, setSaved] = useState<SavedIsland | null>(null);
+  const [saved, setSaved] = useState<SavedIsland | null>(initialSaved);
   const [synced, setSynced] = useState<number | null>(null);
 
   // La vista de la dirección; sin `?v=`, la del ancla (`#turtle` es una mejora). Después, la fila del ancla. Lo guardado
   // se lee acá (el HTML prerenderizado va destildado), y se sigue si otra pestaña lo cambia.
   useEffect(() => {
     const anchor = window.location.hash.slice(1);
-    setView(window.location.search ? readIslandView(window.location.search) : (viewOfAnchor(data, anchor) ?? DEFAULT_ISLAND_VIEW));
+    // Sólo `?v=` elige la vista: otra cosa en la dirección (`?utm_source=…`) no le gana al ancla.
+    const search = window.location.search;
+    setView(new URLSearchParams(search).has("v") ? readIslandView(search) : (viewOfAnchor(data, anchor) ?? DEFAULT_ISLAND_VIEW));
     setMarks(readMarks(ISLAND_KEY));
     const s = readStoredSave();
     setSaved(s ? { nuts: s.nuts, walnuts: s.walnuts, mail: s.players.flatMap((p) => p.mail) } : null);
@@ -116,8 +120,8 @@ export function IslandBook({
       return next;
     });
   const onSync = () => {
-    if (!saved) return;
-    const next = mergeMarks(marks, nutsFromSave(saved.nuts, data));
+    if (saveSync(saved) !== "ok" || !saved) return;
+    const next = mergeMarks(marks, nutsFromSave(saved.nuts, data, saved.walnuts));
     writeDone(ISLAND_KEY, next);
     setSynced(nutCount(data, next).found - nutCount(data, marks).found);
     setMarks(next);
@@ -181,7 +185,7 @@ function Nuts({ saved, synced, onSync, ...props }: NutsProps & { saved: SavedIsl
               {m.nuts.filters.missing}
             </Pill>
           </Group>
-          {saved && (
+          {saved && saveSync(saved) === "ok" && (
             <div className="sd-is-sync">
               <button type="button" className="sd-btn" onClick={onSync}>
                 {m.nuts.fromSave}
@@ -191,6 +195,8 @@ function Nuts({ saved, synced, onSync, ...props }: NutsProps & { saved: SavedIsl
               </span>
             </div>
           )}
+          {/* Guardada antes de que el Lector leyera las nueces: no se trae nada (diría "nada nuevo", y no es así). */}
+          {saveSync(saved) === "stale" && <p className="sd-muted sd-is-stale">{m.nuts.reopen}</p>}
         </div>
         <nav className="sd-is-areas" aria-label={m.nuts.areas}>
           <ul>
@@ -273,15 +279,15 @@ function NutRow({ n, m, marks, onTick }: NutsProps & { n: Nut }) {
   const part = got > 0 && !on;
   return (
     <li className={`sd-is-nut${on ? " is-on" : ""}${part ? " is-part" : ""}`} id={n.slug}>
-      <button type="button" className="sd-is-tick" aria-pressed={on} onClick={() => onTick(n)}>
+      <button type="button" className="sd-is-tick" aria-pressed={part ? "mixed" : on} onClick={() => onTick(n)}>
         <span className="sd-is-box" aria-hidden="true">
           {on ? "✓" : ""}
         </span>
         <span className="sd-is-text">{keepTogether(say(n.text, lang))}</span>
         {n.n > 1 ? (
-          <span className="sd-is-n" title={m.nuts.gives(n.n)}>
-            {part ? `${got.toLocaleString(locale)} / ${n.n.toLocaleString(locale)}` : `×${n.n.toLocaleString(locale)}`}
-            <span className="visually-hidden"> {m.nuts.gives(n.n)}</span>
+          <span className="sd-is-n">
+            <span aria-hidden="true">{part ? `${got.toLocaleString(locale)} / ${n.n.toLocaleString(locale)}` : `×${n.n.toLocaleString(locale)}`}</span>
+            <span className="visually-hidden"> {part ? m.nuts.partOf(got, n.n) : m.nuts.gives(n.n)}</span>
           </span>
         ) : (
           <span className="visually-hidden">{m.nuts.gives(1)}</span>

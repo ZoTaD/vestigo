@@ -358,10 +358,10 @@
     <string>TreeNut</string>
   </collectedNutTracker>
   <limitedNutDrops>
-    <SaveablePairOfStringInt32>
+    <item>
       <key><string>VolcanoBarrel</string></key>
       <value><int>2</int></value>
-    </SaveablePairOfStringInt32>
+    </item>
   </limitedNutDrops>
   <dayOfMonth>26</dayOfMonth>
   <year>2</year>

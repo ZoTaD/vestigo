@@ -521,8 +521,11 @@ export interface IslandCopy {
     areas: string;
     /** Las nueces de frase genérica, juntas por tipo: título, cómo se consiguen y la casilla de cada una. */
     generic: { bush: string; buried: string; bushHint: string; buriedHint: string; tile: (x: number, y: number) => string };
-    /** Cuántas da una fila, para el lector de pantalla. */
+    /** Cuántas da una fila, y cuántas lleva una a medias ("2 de 5 nueces"), para el lector de pantalla. */
     gives: (n: number) => string;
+    partOf: (got: number, n: number) => string;
+    /** Partida guardada antes de que el Lector leyera las nueces: hay que volver a abrirla. */
+    reopen: string;
     areaDone: string;
   };
   upgrades: {
@@ -1243,6 +1246,8 @@ const EN: StardewCopy = {
         tile: (x, y) => `${x}, ${y}`,
       },
       gives: (n) => (n === 1 ? "1 walnut" : `${n} walnuts`),
+      partOf: (got, n) => `${got} of ${n} walnuts`,
+      reopen: "Open your save in the Save reader again to bring in its walnuts.",
       areaDone: "Nothing left to find here.",
     },
     upgrades: {
@@ -1458,8 +1463,8 @@ const ES: StardewCopy = {
       description: "Cada misión de la historia y cada pedido especial del tablón de Stardew Valley 1.6: qué pide, cuánto tiempo hay y el premio.",
     },
     island: {
-      title: "Nueces doradas de Stardew Valley: las 130 de la Isla Jengibre | Vestigo",
-      description: "Cada nuez dorada de la Isla Jengibre de Stardew Valley 1.6 por zona, para tildar. Y las mejoras del loro, la Habitación de las Nueces de Qi y sus pedidos.",
+      title: "Nueces de oro de Stardew Valley: las 130 de la Isla Jengibre | Vestigo",
+      description: "Cada nuez de oro de la Isla Jengibre de Stardew Valley 1.6 por zona, para tildar. Y las mejoras del loro, la Habitación de las Nueces de Qi y sus pedidos.",
     },
   },
   itemSeo: (name, has = 0) => {
@@ -1509,7 +1514,7 @@ const ES: StardewCopy = {
       farm: "Cada animal con lo que produce y sus cuidados, y cada edificio con sus materiales.",
       museum: "Cada artefacto y mineral para donar con dónde sale, los premios y los libros.",
       quests: "Misiones de la historia y pedidos especiales: qué pide cada uno y qué paga.",
-      island: "Las 130 nueces doradas, las mejoras del loro y la Habitación de las Nueces de Qi.",
+      island: "Las 130 nueces de oro, las mejoras del loro y la Habitación de las Nueces de Qi.",
     },
     featured: "Los más buscados",
     featuredHint: "Abrí un objeto para ver sus precios, a quién le encanta y en qué se transforma.",
@@ -1898,11 +1903,11 @@ const ES: StardewCopy = {
   },
   island: {
     h1: "Isla Jengibre",
-    lede: "Cada nuez dorada de la isla por zona, con su casilla para tildar. Y lo que construyen los loros con ellas, lo que vende Qi en su habitación y sus pedidos especiales.",
+    lede: "Cada nuez de oro de la isla por zona, con su casilla para tildar. Y lo que construyen los loros con ellas, lo que vende Qi en su habitación y sus pedidos especiales.",
     view: "Vista",
-    views: { nuts: "Nueces doradas", upgrades: "Mejoras del loro", "walnut-room": "Habitación de Qi", qi: "Pedidos de Qi" },
+    views: { nuts: "Nueces de oro", upgrades: "Mejoras del loro", "walnut-room": "Habitación de Qi", qi: "Pedidos de Qi" },
     nuts: {
-      found: "Nueces doradas encontradas",
+      found: "Nueces de oro encontradas",
       progress: (found, total) => `${found} de ${total}`,
       saved: "Tildá las que ya encontraste. Tu lista queda en este navegador.",
       fromSave: "Traer de mi partida",
@@ -1919,6 +1924,8 @@ const ES: StardewCopy = {
         tile: (x, y) => `${x}, ${y}`,
       },
       gives: (n) => (n === 1 ? "1 nuez" : `${n} nueces`),
+      partOf: (got, n) => `${got} de ${n} nueces`,
+      reopen: "Volvé a abrir tu partida en el Lector para traer las nueces.",
       areaDone: "No queda nada por encontrar acá.",
     },
     upgrades: {
@@ -1930,7 +1937,7 @@ const ES: StardewCopy = {
     },
     walnutRoom: {
       title: "Habitación de las Nueces de Qi",
-      hint: "Su puerta se abre cuando encontraste 100 nueces doradas. Todo se paga con gemas Qi, que dan sus pedidos especiales.",
+      hint: "Su puerta se abre cuando encontraste 100 nueces de oro. Todo se paga con gemas Qi, que dan sus pedidos especiales.",
       recipe: "Receta",
       gems: "gemas Qi",
       walnuts: (n) => (n === 1 ? "1 nuez de oro" : `${n} nueces de oro`),
