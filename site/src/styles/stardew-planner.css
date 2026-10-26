@@ -1,0 +1,81 @@
+/*
+ * Planificador de granja de Stardew Valley (2026-10-26), maqueta A "Barra del juego": el mapa adentro del marco, las
+ * categorías y la barra de inventario abajo, y "Lo colocado" flotando en una esquina del mapa. Viaja con la pestaña
+ * (StardewPlanner.tsx); lo común (marco, botones, píldoras) está en stardew.css. Sin bordes de color: lo elegido en la
+ * barra se aclara y se levanta, y los avisos son texto.
+ */
+.sd-pl-box { display: grid; gap: 10px; }
+.sd-pl-map { position: relative; height: clamp(420px, 62vh, 640px); border-radius: 4px; overflow: hidden; background: #1b3b12; }
+.sd-pl-canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+
+/* --- Lo colocado ---------------------------------------------------------------------------------------------------- */
+.sd-pl-panel {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: min(300px, calc(100% - 20px));
+  max-height: calc(100% - 20px);
+  overflow: auto;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: rgba(255, 243, 214, 0.96);
+  box-shadow: 0 2px 0 #5b2b29, 0 0 0 2px #5b2b29;
+}
+.sd-pl-ph { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.sd-pl-hide { font: 800 13px/1 var(--sd-text); color: var(--sd-dim); background: none; border: 0; padding: 4px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.sd-pl-rows { display: grid; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
+.sd-pl-rows li { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; gap: 8px; font: 700 14px/1.25 var(--sd-text); }
+.sd-pl-rows li img { justify-self: center; max-width: 32px; max-height: 32px; width: auto; height: auto; image-rendering: pixelated; }
+.sd-pl-rows li.is-off { opacity: 0.6; }
+.sd-pl-rows li > div > small { display: block; color: var(--sd-dim); font-size: 12.5px; font-weight: 600; }
+.sd-pl-link { font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+.sd-pl-tot { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; margin: 10px 0 0; padding-top: 8px; border-top: 2px dashed rgba(91, 43, 41, 0.35); font: 800 14px/1.3 var(--sd-text); }
+.sd-pl-tot dd { margin: 0; text-align: right; }
+.sd-pl-tot .sd-pl-mats { grid-column: 1 / -1; text-align: left; color: var(--sd-dim); font-weight: 600; font-size: 13px; }
+.sd-pl-warn { display: grid; gap: 2px; margin: 8px 0 0; padding-left: 1.1em; list-style: disc; font: 700 13px/1.3 var(--sd-text); color: #8c1d12; }
+.sd-pl-open { position: absolute; top: 10px; right: 10px; }
+
+/* --- La barra ------------------------------------------------------------------------------------------------------- */
+.sd-pl-cats { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.sd-pl-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; padding: 6px; border-radius: 4px; background: rgba(91, 43, 41, 0.12); }
+.sd-pl-slot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: url(/stardew/ui/slot.png) center / 56px;
+  image-rendering: pixelated;
+  cursor: pointer;
+}
+.sd-pl-slot img { image-rendering: pixelated; pointer-events: none; }
+.sd-pl-slot:hover { filter: brightness(1.08); }
+.sd-pl-slot.is-on { filter: brightness(1.18) saturate(1.1); transform: translateY(-3px); }
+.sd-pl-slot.is-off img { opacity: 0.4; }
+.sd-pl-slot kbd { position: absolute; left: 5px; top: 3px; font: 800 11px/1 var(--sd-text); color: var(--sd-ink); }
+.sd-pl-plus { position: absolute; right: 6px; bottom: 4px; font: 800 15px/1 var(--sd-text); color: var(--sd-wood); }
+
+/* --- Abajo ---------------------------------------------------------------------------------------------------------- */
+.sd-pl-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px; }
+.sd-pl-farm { display: flex; align-items: center; gap: 8px; }
+.sd-pl-farm select { font: 800 15px/1 var(--sd-text); padding: 7px 8px; color: var(--sd-ink); background: var(--sd-paper); border: 3px solid #5b2b29; border-radius: 4px; cursor: pointer; }
+.sd-pl-acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.sd-pl-acts .sd-btn:disabled { opacity: 0.5; cursor: default; }
+.sd-pl-note { text-align: center; font-weight: 800; }
+.sd-pl-help { text-align: center; }
+.sd-pl-touch { display: none; }
+@media (hover: none) {
+  .sd-pl-mouse { display: none; }
+  .sd-pl-touch { display: inline; }
+}
+.sd-pl-about { display: grid; gap: 4px; margin: 0; padding-left: 1.2em; list-style: disc; font-weight: 700; }
+
+@media (max-width: 760px) {
+  .sd-pl-map { height: 62vh; }
+  .sd-pl-cats, .sd-pl-bar { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: thin; }
+  .sd-pl-cats .sd-pill { flex: none; }
+  .sd-pl-slot { flex: none; }
+  .sd-pl-foot { justify-content: flex-start; }
+}

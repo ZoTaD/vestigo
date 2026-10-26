@@ -19,7 +19,7 @@ describe("rutas de Stardew Valley", () => {
   });
 
   it("las pestañas se escriben en su idioma y se leen en los dos", () => {
-    expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca", recipes: "recetas", calendar: "calendario", mines: "minas", save: "partida", predict: "predictor", farm: "granja", museum: "museo", quests: "misiones", island: "isla-jengibre" });
+    expect(STARDEW_SECTION_ES).toEqual({ items: "objetos", villagers: "aldeanos", bundles: "centro-comunitario", crops: "cultivos", fishing: "pesca", recipes: "recetas", calendar: "calendario", mines: "minas", save: "partida", predict: "predictor", farm: "granja", museum: "museo", quests: "misiones", island: "isla-jengibre", planner: "planificador" });
     // Las de la etapa 4 tienen dirección (las fichas de Objetos enlazan a sus filas) y página.
     expect(routePath({ ...base, lang: "es", sdSection: "island" })).toBe("/es/stardew-valley/isla-jengibre");
     expect(parseRoute("/es/stardew-valley/misiones")).toMatchObject({ view: "stardew", sdSection: "quests" });
@@ -47,6 +47,13 @@ describe("rutas de Stardew Valley", () => {
     expect(parseRoute("/en/stardew-valley/mines/green-slime")).toMatchObject({ view: "stardew", sdSection: "mines", detail: "green-slime" });
     // `/stardew` es la carpeta de los sprites, no la sección.
     expect(parseRoute("/en/stardew")).toMatchObject({ view: "home" });
+  });
+
+  it("el Planificador es /planner y /planificador, sin ficha", () => {
+    expect(routePath({ ...base, sdSection: "planner" })).toBe("/en/stardew-valley/planner");
+    expect(routePath({ ...base, lang: "es", sdSection: "planner" })).toBe("/es/stardew-valley/planificador");
+    expect(parseRoute("/es/stardew-valley/planificador")).toMatchObject({ view: "stardew", sdSection: "planner", lang: "es" });
+    expect(parseRoute("/en/stardew-valley/planner/x").detail).toBeUndefined();
   });
 
   it("el Predictor es /predictor en los dos idiomas y no lleva ficha", () => {

@@ -148,6 +148,9 @@ export const PAGES = [
   "/en/stardew-valley/predictor",
   "/es/stardew-valley/predictor",
   "/en/stardew-valley/predictor?seed=452435081&day=p2-10-2",
+  // El Planificador de granja vacío (lo que se abre en frío): el mapa de la granja estándar y la barra de cultivos.
+  "/en/stardew-valley/planner",
+  "/es/stardew-valley/planificador",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

@@ -218,6 +218,30 @@ describe("Stardew Valley: Minas y combate y Lector de partida (etapa 3)", () => 
   });
 });
 
+describe("Stardew Valley: Planificador de granja", () => {
+  const paths = sitemapPaths(data);
+
+  it("/planner y /planificador, en el sitemap y sin fichas", () => {
+    for (const p of ["/en/stardew-valley/planner", "/es/stardew-valley/planificador"]) {
+      expect(paths).toContain(p);
+      expect(sitemapLastmod(p, data)).toBe(sdMeta.generatedAt.slice(0, 10));
+    }
+    expect(paths.some((p) => p.includes("/stardew-valley/planner/") || p.includes("/stardew-valley/planificador/"))).toBe(false);
+  });
+
+  it("el título dice lo que se busca, la descripción entra en 160 y es una aplicación web gratuita", () => {
+    expect(page("/en/stardew-valley/planner").title).toBe("Stardew Valley Farm Planner (1.6): Sprinklers, Scarecrows & Layout | Vestigo");
+    for (const p of ["/en/stardew-valley/planner", "/es/stardew-valley/planificador"]) {
+      expect(page(p).description.length, p).toBeLessThanOrEqual(160);
+      const route = parseRoute(p);
+      const ld = jsonLdFor(route, route.lang, { title: "t", description: "d", canonical: `https://vestigo.gg${p}`, image: "i" }, data, null);
+      expect(ld).toContainEqual(expect.objectContaining({ "@type": "WebApplication", isAccessibleForFree: true }));
+    }
+    expect(page("/es/stardew-valley/planificador").alternates).toContainEqual({ hreflang: "en", href: "https://vestigo.gg/en/stardew-valley/planner" });
+    expect(crumbNames(page("/es/stardew-valley/planificador"))).toEqual(["Vestigo", "Stardew Valley", "Planificador"]);
+  });
+});
+
 describe("Stardew Valley: Predictor (tarea 7)", () => {
   const paths = sitemapPaths(data);
 

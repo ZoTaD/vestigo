@@ -41,6 +41,8 @@ const TAB_ICON: Record<StardewTab, { id: string; w: number; h: number }> = {
   island: { id: "73", w: 16, h: 16 },
   // La geoda omni: lo que más se busca predecir.
   predict: { id: "749", w: 16, h: 16 },
+  // El aspersor de calidad: lo primero que se acomoda en una granja.
+  planner: { id: "621", w: 16, h: 16 },
 };
 
 /** Los datos de la portada en el idioma que se lee: los ya bajados en el primer render, y si faltan, se piden. */

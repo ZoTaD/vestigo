@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import farm_data  # noqa: E402
 import island_data  # noqa: E402
 import mines_data  # noqa: E402
+import planner_sprites  # noqa: E402
 import museum_data  # noqa: E402
 import quests_data  # noqa: E402
 import relations  # noqa: E402
@@ -539,6 +540,7 @@ def main() -> None:
     print(f"{sprites_granja(SALIDA)} sprites de la granja")
     print(f"{sprites_premios(SALIDA / 'rewards')} premios sin ficha")
     print(f"{sprites_predictor(SALIDA / 'predict')} sprites del predictor")
+    print(f"{planner_sprites.main()} dibujos del planificador")
 
 
 if __name__ == "__main__":

@@ -52,6 +52,25 @@ _TEXTO_LUGAR = {
     "IslandNorthCave1": ("Strings/StringsFromCSFiles", "IslandName"),
     "BeachNightMarket": ("Strings/UI", "Billboard_NightMarket"),
 }
+# Los tipos de granja: su `DisplayName` es "[FarmName] Farm"; el nombre del tipo está antes del "_" del texto que
+# los describe al crear la partida ("Beach Farm_Good foraging...").
+_TEXTO_GRANJA = {
+    "Farm_Standard": ("Strings/UI", "Character_FarmStandard"),
+    "Farm_Beach": ("Strings/UI", "Character_FarmBeach"),
+    "Farm_Forest": ("Strings/UI", "Character_FarmForaging"),
+    "Farm_FourCorners": ("Strings/UI", "Character_FarmFourCorners"),
+    "Farm_Hilltop": ("Strings/UI", "Character_FarmMining"),
+    "Farm_Riverland": ("Strings/UI", "Character_FarmFishing"),
+    "Farm_Wilderness": ("Strings/UI", "Character_FarmCombat"),
+    "Farm_MeadowlandsFarm": ("Strings/1_6_Strings", "Farm_Ranching_Description"),
+}
+# Lugares y tiendas que el juego no nombra en ningún texto: el nombre de la wiki en cada idioma.
+_A_MANO = {
+    "BugLand": ["Mutant Bug Lair", "Madriguera de bichos mutantes"],
+    "WitchSwamp": ["Witch's Swamp", "Pantano de la bruja"],
+    "DesertTrade": ["Desert Trader", "Comerciante del desierto"],
+    "Traveler": ["Traveling Cart", "Carro ambulante"],
+}
 # Tiendas cuyo nombre no es el de un dueño de Strings/NPCNames.
 _TEXTO_TIENDA = {
     "Hospital": ("Strings/StringsFromCSFiles", "MapPage.cs.11076"),
@@ -61,6 +80,7 @@ _TEXTO_TIENDA = {
     "IceCreamStand": ("Strings/Objects", "IceCream_Name"),
     "VolcanoShop": ("Strings/WorldMap", "GingerIsland_North_Volcano"),
     "QiGemShop": ("Strings/WorldMap", "GingerIsland_West_QiWalnutRoom"),
+    "IslandTrade": ("Strings/WorldMap", "GingerIsland_North_Trader"),
 }
 # Las monedas que no son oro: gemas de Qi y nueces doradas (lo que cobra el Walnut Room de Qi).
 GEMA_QI, NUEZ = "858", "73"
@@ -126,6 +146,8 @@ class Nombres:
         self._tiendas = sdv.raw("Data/Shops")
 
     def _falta(self, clave: str) -> list[str]:
+        if clave in _A_MANO:
+            return list(_A_MANO[clave])
         self.sin_texto.add(clave)
         palabras = _en_palabras(clave)
         return [palabras, palabras]
@@ -135,6 +157,9 @@ class Nombres:
             agua = clave.split(":", 1)[1]
             base = _t("Strings/Objects", "CrabPot_Name")
             tipo = _t("Strings/StringsFromCSFiles", "TV_Fishing_Channel_Ocean") if agua == "ocean" else None
+            if agua == "freshwater":  # río o lago, como lo nombra la ficha de Pesca
+                rio, lago = (_t("Strings/StringsFromCSFiles", f"TV_Fishing_Channel_{x}") for x in ("River", "Lake"))
+                tipo = [f"{rio[i]} / {lago[i]}" for i in (0, 1)]
             if tipo is None:
                 self.sin_texto.add(clave)
                 tipo = [agua, agua]
@@ -146,6 +171,8 @@ class Nombres:
                 return [en, es]
         if clave in _TEXTO_LUGAR:
             return [_mayuscula(x) for x in _t(*_TEXTO_LUGAR[clave])]
+        if clave in _TEXTO_GRANJA:
+            return [x.split("_", 1)[0] for x in _t(*_TEXTO_GRANJA[clave])]
         return self._falta(clave)
 
     def tienda(self, clave: str) -> list[str]:

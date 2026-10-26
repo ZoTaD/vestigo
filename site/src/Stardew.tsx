@@ -39,6 +39,7 @@ const SdMuseum = lazyWithPreload(() => import("./stardew/museum/StardewMuseum"))
 const SdIsland = lazyWithPreload(() => import("./stardew/island/StardewIsland"));
 const SdQuests = lazyWithPreload(() => import("./stardew/quests/StardewQuests"));
 const SdPredict = lazyWithPreload(() => import("./stardew/predict/StardewPredict"));
+const SdPlanner = lazyWithPreload(() => import("./stardew/planner/StardewPlanner"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `STARDEW_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `STARDEW_TAB_FILES`.
@@ -57,6 +58,7 @@ const TABS: Partial<Record<StardewSection, LazyTab>> = {
   island: SdIsland,
   quests: SdQuests,
   predict: SdPredict,
+  planner: SdPlanner,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -99,6 +101,8 @@ const TAB_DATA: Partial<Record<StardewSection, (route: Route) => Promise<unknown
   quests: () => Promise.all([SdQuests.preload(), import("./stardew/data").then((m) => m.loadQuests())]),
   // El Predictor sin entrada es el formulario: baja el chunk y nada más. Los datos se piden con una partida o una semilla.
   predict: () => SdPredict.preload(),
+  // El Planificador: las granjas y lo que se coloca (un archivo) y los cultivos, para la ganancia de la temporada.
+  planner: () => Promise.all([SdPlanner.preload(), import("./stardew/data").then((m) => Promise.all([m.loadPlanner(), m.loadCrops()]))]),
 };
 
 /** Baja el chunk de la pestaña de una ruta de Stardew Valley, y sus datos. */
