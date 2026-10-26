@@ -26,6 +26,6 @@ export const GAME_LOGOS: Record<Game, [w: number, h: number]> = {
   stardew: [86, 39],
   rust: [119, 29],
   terraria: [121, 28],
-  d2r: [79, 40],
+  d2r: [106, 32],
   poe2: [78, 40],
 };

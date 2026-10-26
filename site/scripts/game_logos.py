@@ -9,7 +9,8 @@ de cada uno, que van a `GAME_LOGOS` en `src/gameGroups.ts`. El PNG sale a 2x.
 De dónde sale cada fuente (se copian a la carpeta de fuentes con el nombre del juego):
   - Deadlock, Valheim, Zomboid, Rust, Terraria y Stardew: el `logo.png` de la caché de Steam,
     `Steam/appcache/librarycache/<appid>/.../logo.png` (1422450, 892970, 108600, 252490, 105600, 413150).
-  - Diablo II: `public/d2r/game/logo-still.webp`, el del sitio.
+  - Diablo II: el de Battle.net, `d2r_LOGO.png` del CDN de Blizzard (blz-contentstack-images.akamaized.net, asset
+    bltd3ef9c318654d0cf). Es el mismo con fuego que `public/d2r/game/logo-still.webp`, pero ahí el fuego tapa las letras.
   - PoE2: el de la barra de pathofexile2.com (`/protected/image/poe2/layout/navbar/logo-2x.webp`); el de Steam es el
     de la expansión, con placa.
 
@@ -34,6 +35,11 @@ def smooth(mask):
     return np.asarray(Image.fromarray(mask.astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.6))).astype(np.float32)
 
 
+def despeckle(mask):
+    """Saca las motas sueltas de una máscara binaria."""
+    return np.asarray(Image.fromarray(mask.astype(np.uint8)).filter(ImageFilter.MedianFilter(5))).astype(np.float32)
+
+
 def crop(m, x0, y0, x1, y1):
     out = np.zeros_like(m)
     out[y0:y1, x0:x1] = m[y0:y1, x0:x1]
@@ -50,8 +56,9 @@ CFG = {
     "rust": lambda a: a[..., 3] * (lum(a) > 70),
     # Terraria: el relleno de las letras, sin el borde verde.
     "terraria": lambda a: smooth(255 * ((a[..., 3] > 200) & (a[..., 1] < a[..., 0] + 10))),
-    # Diablo II: lo opaco y claro (letras y llamas), sin el resplandor.
-    "d2r": lambda a: smooth(255 * ((a[..., 3] > 200) & (lum(a) > 60))),
+    # Diablo II: las letras son piedra oscura con el fuego detrás: lo opaco y oscuro, sin las motas que deja el fuego ni
+    # el "RESURRECTED" de abajo (a 30 px no se lee).
+    "d2r": lambda a: crop(smooth(despeckle(255 * ((a[..., 3] > 200) & (lum(a) < 70)))), 0, 0, a.shape[1], 250),
     # PoE2: lo claro del emblema, recortado a "PATH OF EXILE" (el emblema entero queda diminuto a 40 px).
     "poe2": lambda a: crop(smooth(255 * ((a[..., 3] > 230) & (lum(a) > 90))), 200, 118, 530, 288),
 }
