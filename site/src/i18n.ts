@@ -41,8 +41,21 @@ const EN = {
     rust: "Rust",
     terraria: "Terraria",
     stardew: "Stardew Valley",
-    /** El botón de tres puntos de la barra: los juegos que no entraron. */
-    more: "More games",
+    stardewShort: "Stardew",
+    /** El botón de la barra que abre el menú de juegos, y el que lo cierra en el teléfono. */
+    menu: "Games",
+    close: "Close menu",
+    /** Los accesos directos de cada juego en el menú: sus tres pestañas más buscadas (`Nav.tsx`). */
+    quick: {
+      deadlock: { meta: "Tier list", heroes: "Heroes", player: "Player" },
+      poe2: { economy: "Economy", tree: "Passive tree", regex: "Regex" },
+      valheim: { map: "Map", planner: "Planner", bosses: "Bosses" },
+      d2r: { runewords: "Runewords", planner: "Planner", grail: "Holy Grail" },
+      zomboid: { map: "Map", items: "Items", recipes: "Recipes" },
+      rust: { raid: "Raiding", electricity: "Electricity", items: "Items" },
+      terraria: { items: "Items", bosses: "Bosses", crafting: "Crafting" },
+      stardew: { crops: "Crops", villagers: "Villagers", predict: "Predictor" },
+    },
     /** Las categorías del menú y de la portada (`gameGroups.ts`). */
     groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
@@ -299,7 +312,19 @@ const ES: typeof EN = {
     rust: "Rust",
     terraria: "Terraria",
     stardew: "Stardew Valley",
-    more: "Más juegos",
+    stardewShort: "Stardew",
+    menu: "Juegos",
+    close: "Cerrar el menú",
+    quick: {
+      deadlock: { meta: "Tier list", heroes: "Héroes", player: "Jugador" },
+      poe2: { economy: "Economía", tree: "Árbol de pasivas", regex: "Regex" },
+      valheim: { map: "Mapa", planner: "Planificador", bosses: "Jefes" },
+      d2r: { runewords: "Palabras rúnicas", planner: "Planificador", grail: "Grial" },
+      zomboid: { map: "Mapa", items: "Objetos", recipes: "Recetas" },
+      rust: { raid: "Raideo", electricity: "Electricidad", items: "Objetos" },
+      terraria: { items: "Objetos", bosses: "Jefes", crafting: "Crafteo" },
+      stardew: { crops: "Cultivos", villagers: "Aldeanos", predict: "Predictor" },
+    },
     groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",

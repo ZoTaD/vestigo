@@ -15,7 +15,7 @@
    - Sólo con mouse (`hover: hover` y `pointer: fine`). En teléfonos y tablets
      la barra es del sistema, flota sobre el contenido y no se diseña.
 
-   Las barras que ya estaban ocultas (`.subnav`, `.top-places`) siguen
+   Las barras que ya estaban ocultas (`.subnav`) siguen
    ocultas: su regla lleva clase y le gana a esta, que es global.
 --------------------------------------------------------------------------- */
 

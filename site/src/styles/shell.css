@@ -48,134 +48,167 @@
   flex: 0 0 auto;
 }
 
-/* Los lugares ocupan lo que queda de la barra: de ese ancho sale cuántos juegos entran (`Nav.tsx`). Lo que no
-   entra no se ve ni empuja: mientras React no midió (el HTML prerenderizado), se recorta. */
-.top-places {
-  position: relative;
-  flex: 1 1 0;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-  overflow: hidden;
-}
-
-.top-place {
+/* El botón "Games" y el juego en el que se está (2026-10-26). Los juegos viven en el menú (`Nav.tsx`). */
+.top-menu-btn,
+.top-here {
   display: inline-flex;
   align-items: center;
-  gap: 0.45em;
-  min-height: 36px;
+  gap: 0.5em;
+  min-height: 38px;
   padding: 0 0.75rem;
+  border: 0;
   border-radius: var(--radius);
   font-family: var(--font-text);
   font-weight: 600;
   font-size: 0.78rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-dim);
   text-decoration: none;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  flex: 0 0 auto;
   white-space: nowrap;
-  transition: color 140ms ease, background 140ms ease;
+  flex: 0 0 auto;
 }
 
-.top-place:hover {
+.top-menu-btn {
+  padding-left: 0.6rem;
   color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  transition: background 140ms ease;
 }
 
-.top-place[data-active="true"] {
+.top-menu-btn:hover,
+.top-menu-btn[aria-expanded="true"] {
+  background: rgba(var(--accent-rgb), 0.13);
+}
+
+.top-menu-btn svg,
+.top-menu-close svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.top-here {
   color: var(--accent-lit);
   background: rgba(var(--accent-rgb), 0.13);
 }
 
-/* Un juego que no entró: sigue en la fila para poder medirlo, pero fuera de flujo e invisible. */
-.top-place.is-over {
-  position: absolute;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-/* El botón de tres puntos y el menú de los juegos que no entraron (2026-10-12). El menú cuelga de `.top-in`, no
-   de la fila de lugares, que recorta lo que se sale. */
-.top-in {
-  position: relative;
-}
-
-.top-more {
-  padding: 0 0.6rem;
-}
-
-.top-more svg {
-  width: 1.1rem;
-  height: 0.25rem;
-  fill: currentColor;
-}
-
-.top-more[aria-expanded="true"] {
-  color: var(--text);
-  background: rgba(var(--accent-rgb), 0.13);
-}
-
-.top-games {
+/* El panel cuelga de la barra a todo el ancho. `--surface` es translúcida en los juegos oscuros: va sobre el fondo
+   de la página para que tape lo de abajo. */
+.top-menu {
   position: absolute;
   z-index: 70;
-  top: calc(100% - 4px);
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  gap: 0.4rem 2.2rem;
-  padding: 1rem 1.2rem 1.1rem;
-  /* `--surface` es translúcida en los juegos oscuros: va sobre el fondo de la página para que el menú tape lo de abajo. */
+  top: 100%;
+  left: 0;
+  right: 0;
   background: linear-gradient(var(--surface), var(--surface)), var(--bg);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.3);
 }
 
-.top-games[hidden] {
+.top-menu[hidden] {
   display: none;
 }
 
-.top-games-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  min-width: 10rem;
+.top-menu-head {
+  display: none;
 }
 
-.top-games-title {
-  margin: 0 0 0.35rem;
+/* Supervivencia tiene cinco juegos: ocupa dos columnas, así el panel queda en tres filas. */
+.top-menu-in {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 1.4rem var(--pad) 1.6rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1.2rem 2.4rem;
+}
+
+.top-menu-title {
+  margin: 0 0 0.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
   font-family: var(--font-text);
   font-weight: 600;
-  font-size: 0.6rem;
+  font-size: 0.62rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
 
-.top-games-link {
+.top-menu-count {
+  color: var(--text-faint);
+  letter-spacing: 0.05em;
+}
+
+.top-menu-games {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem 2.4rem;
+}
+
+.is-survival .top-menu-games {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.top-menu-game {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  padding: 0.55rem 0.6rem 0.6rem;
+  margin: 0 -0.6rem;
+  border-radius: var(--radius);
+}
+
+.top-menu-game.is-here {
+  background: rgba(var(--accent-rgb), 0.13);
+}
+
+/* El logo es una máscara: sólo su forma, pintada del color del texto (claro en los juegos, tinta en la portada). */
+.top-menu-logo {
   display: flex;
   align-items: center;
-  min-height: 36px;
-  margin: 0 -0.55rem;
-  padding: 0 0.55rem;
-  border-radius: var(--radius);
+  min-height: 42px;
+  color: var(--text);
+  transition: color 140ms ease;
+}
+
+.top-menu-logo:hover,
+.top-menu-logo[data-active="true"] {
+  color: var(--accent-lit);
+}
+
+.top-logo {
+  display: block;
+  background: currentColor;
+  -webkit-mask: var(--logo) left center / contain no-repeat;
+  mask: var(--logo) left center / contain no-repeat;
+}
+
+.top-menu-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.9rem;
+}
+
+.top-menu-quick a {
   font-family: var(--font-text);
   font-weight: 600;
-  font-size: 0.92rem;
-  color: var(--text);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--text-dim);
   text-decoration: none;
   white-space: nowrap;
 }
 
-.top-games-link:hover {
-  background: rgba(var(--accent-rgb), 0.13);
-}
-
-.top-games-link[data-active="true"] {
+.top-menu-quick a:hover,
+.top-menu-quick a[data-active="true"] {
   color: var(--accent-lit);
 }
 
@@ -193,7 +226,7 @@
   gap: 0.5rem;
   height: 38px;
   padding: 0 0.6rem 0 0.75rem;
-  width: clamp(12rem, 22vw, 20rem);
+  width: clamp(12rem, 30vw, 22rem);
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   background: var(--surface);
@@ -291,13 +324,11 @@
 }
 
 
-/* Móvil: arriba la marca y el idioma, debajo los juegos y al final el buscador.
-   Los juegos van en una sola fila: los que no entran quedan detrás del botón de
-   tres puntos (2026-10-12; antes bajaban a otra fila). */
+/* Móvil: arriba la marca, el menú, el juego y el idioma; debajo el buscador a todo el ancho. */
 @media (max-width: 760px) {
   .top-in {
     flex-wrap: wrap;
-    gap: 0.35rem 0.5rem;
+    gap: 0.35rem 0.4rem;
     padding-top: 0.35rem;
     padding-bottom: 0.45rem;
   }
@@ -306,21 +337,80 @@
     font-size: 1.25rem;
   }
 
-  .top-places {
-    order: 5;
-    flex: 1 1 100%;
+  /* El botón queda en la hamburguesa sola; el nombre lo sigue leyendo el lector de pantalla. */
+  .top-menu-btn {
+    width: var(--tap);
+    min-height: var(--tap);
+    padding: 0;
+    justify-content: center;
   }
 
-  .top-place {
-    padding: 0 0.35rem;
+  .top-menu-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .top-here {
+    padding: 0 0.55rem;
     font-size: 0.68rem;
     letter-spacing: 0.06em;
   }
 
-  /* En el teléfono las categorías del menú van una abajo de la otra. */
-  .top-games {
-    grid-auto-flow: row;
-    gap: 0.9rem;
+  /* En el teléfono el menú tapa la pantalla: una lista con las categorías una abajo de la otra, sin los accesos
+     directos (cada fila es el logo, fácil de tocar). */
+  .top-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-shadow: none;
+  }
+
+  .top-menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: var(--top-h);
+    padding: 0 var(--pad);
+  }
+
+  .top-menu-close {
+    width: var(--tap);
+    height: var(--tap);
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .top-menu-in {
+    grid-template-columns: 1fr;
+    padding-top: 0.4rem;
+  }
+
+  .is-survival .top-menu-games {
+    grid-template-columns: 1fr;
+  }
+
+  .top-menu-game {
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+  }
+
+  .top-menu-logo {
+    min-height: var(--tap);
+    width: 100%;
+  }
+
+  .top-menu-quick {
+    display: none;
   }
 
   .top-lang {
@@ -345,29 +435,19 @@
   }
 }
 
-/* Tablet y ventanas angostas: con Diablo II son cinco lugares y el buscador ya
-   no entra en la misma fila (medido: hacen falta unos 1.000 px). Baja a una
-   segunda fila a todo el ancho, en vez de salirse por la derecha y tapar el
-   idioma (2026-09-29). */
+/* Tablet: el panel en dos columnas, supervivencia a la izquierda y el resto a la derecha. */
 @media (min-width: 761px) and (max-width: 1000px) {
-  .top-in {
-    flex-wrap: wrap;
-    row-gap: 0.4rem;
-    padding-bottom: 0.5rem;
+  .top-menu-in {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
   }
 
-  .top-lang {
-    margin-left: auto;
+  .is-survival {
+    grid-row: span 2;
   }
 
-  .top-search {
-    order: 10;
-    flex: 1 1 100%;
-    margin-left: 0;
-  }
-
-  .top-search-field {
-    width: 100%;
+  .is-survival .top-menu-games {
+    grid-template-columns: 1fr;
   }
 }
 
