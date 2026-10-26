@@ -20,7 +20,8 @@
     "build:popular": "node node_modules/tsx/dist/cli.mjs src/popular.ts",
     "build:comebacks": "node --max-old-space-size=8192 node_modules/tsx/dist/cli.mjs src/comebacks.ts",
     "build:rank-points": "node --max-old-space-size=8192 node_modules/tsx/dist/cli.mjs src/rankPoints.ts",
-    "build:shop-filters": "node src/shopFilters.mjs"
+    "build:shop-filters": "node src/shopFilters.mjs",
+    "lake:local": "node node_modules/tsx/dist/cli.mjs src/lakeLocal.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

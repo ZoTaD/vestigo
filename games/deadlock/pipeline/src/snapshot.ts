@@ -1,3 +1,5 @@
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { DuckDBInstance, type DuckDBConnection } from "@duckdb/node-api";
 
 /**
@@ -181,13 +183,109 @@ export function lakeFrom(manifest: {
  */
 export function extrasSource(extras: ExtraFile[]): string {
   if (extras.length === 0) return `read_parquet('lake://match_player/vacio-${EXTRAS}')`;
-  const files = extras.map((f) => sqlString(f.url)).join(", ");
-  const read = `read_parquet([${files}], union_by_name=true, filename=true)`;
+  const skip = coveredSkip(extras);
+  const where = skip ? ` where not ${skip}` : "";
+  return `(select * exclude (filename) from ${extrasRead(extras)}${where})`;
+}
+
+const extrasRead = (extras: ExtraFile[]): string =>
+  `read_parquet([${extras.map((f) => sqlString(f.url)).join(", ")}], union_by_name=true, filename=true)`;
+
+/** Las filas que su base ya consolidó, como condición sobre `filename`; `null` si no hay. */
+function coveredSkip(extras: ExtraFile[]): string | null {
   const skip = extras
     .filter((f) => f.covered.length > 0)
     .map((f) => `(filename = ${sqlString(f.url)} and match_id // 1000000 in (${f.covered.map(Number).join(", ")}))`);
-  const where = skip.length > 0 ? ` where not (${skip.join(" or ")})` : "";
-  return `(select * exclude (filename) from ${read}${where})`;
+  return skip.length > 0 ? `(${skip.join(" or ")})` : null;
+}
+
+/**
+ * **Los deltas y residuales, bajados una vez por corrida** (2026-10-26).
+ *
+ * Desde el 2026-10-19 deadlock-api guarda también las partidas sin rankear, y
+ * las bases de las particiones nuevas (123 a 125) siguen casi vacías: toda la
+ * semana vive en 58 archivos sueltos, 28,8 GB, que no tienen orden por fecha ni
+ * por partición, así que DuckDB no puede saltear nada. Cada consulta de cada
+ * paso los volvía a bajar enteros, y las corridas pasaron de ~45 minutos a
+ * cortarse a las 2 h 30 sin publicar.
+ *
+ * Así que el paso `lake:local` los lee **una vez**, se queda con lo que estas
+ * consultas usan —ranked, `Normal`, sin lo ya consolidado— y lo escribe en un
+ * Parquet local con el nombre de archivo de cada fila. El resto de los pasos lo
+ * lee de ahí (`DEADLOCK_LAKE_LOCAL`). Las cifras salen iguales: es la misma
+ * fila, leída de otro lado.
+ *
+ * Cada paso sigue pidiendo **su** manifiesto, y eso no se cambió: una base
+ * reconstruida entre la copia y el paso podría consolidar filas que la copia
+ * tiene. Por eso la copia guarda el archivo de cada fila y acá se le vuelve a
+ * aplicar lo consolidado según el manifiesto del paso, y los archivos que
+ * aparecieron después de la copia se leen del lake como siempre. Lo ya
+ * consolidado sólo crece, así que lo que la copia descartó no hace falta.
+ */
+export interface LocalExtras {
+  /** El Parquet local, con la columna `filename` de origen. */
+  path: string;
+  /** Los archivos del lake que la copia trae. */
+  urls: string[];
+}
+
+/** Lo que la copia local guarda: lo que filtran todas las ventanas (ver `selectFrom`). */
+export const LOCAL_FILTER = () => `match_mode = '${PLAYED_MODE}' and game_mode = '${PLAYED_GAME_MODE}'`;
+
+/** La lectura de los deltas y residuales con la copia local (ver `LocalExtras`). */
+export function localExtrasSource(local: LocalExtras, extras: ExtraFile[]): string {
+  const copiados = new Set(local.urls);
+  const mios = extras.filter((f) => copiados.has(f.url));
+  const nuevos = extras.filter((f) => !copiados.has(f.url));
+  if (mios.length === 0) return extrasSource(nuevos);
+  const skip = coveredSkip(mios);
+  const desdeCopia = `(select * exclude (filename) from read_parquet(${sqlString(local.path)})
+    where filename in (${mios.map((f) => sqlString(f.url)).join(", ")})${skip ? ` and not ${skip}` : ""})`;
+  if (nuevos.length === 0) return desdeCopia;
+  return `(select * from ${desdeCopia} union all by name select * from ${extrasSource(nuevos)})`;
+}
+
+let local: LocalExtras | null | undefined;
+
+/** La copia local de esta corrida, si el paso `lake:local` la dejó. */
+function localExtras(): LocalExtras | null {
+  if (local !== undefined) return local;
+  const dir = process.env.DEADLOCK_LAKE_LOCAL;
+  local = null;
+  if (dir) {
+    try {
+      const { urls } = JSON.parse(readFileSync(join(dir, "extras.json"), "utf8")) as { urls: string[] };
+      local = { path: join(dir, "extras.parquet"), urls };
+      console.log(`  deltas y residuales: copia local de ${urls.length} archivos`);
+    } catch {
+      console.log(`  deltas y residuales: sin copia local en ${dir}, se leen del lake`);
+    }
+  }
+  return local;
+}
+
+/**
+ * Escribe la copia local de los deltas y residuales del manifiesto cargado.
+ * El índice va último: si la copia se corta, los pasos no la usan.
+ */
+export async function localizeExtras(
+  con: DuckDBConnection,
+  dir: string,
+  extras: ExtraFile[] | undefined = lake?.extras
+): Promise<LocalExtras> {
+  if (!extras) throw new Error("localizeExtras va después de listPartitions");
+  mkdirSync(dir, { recursive: true });
+  const path = join(dir, "extras.parquet");
+  const urls = extras.map((f) => f.url);
+  if (urls.length > 0) {
+    const skip = coveredSkip(extras);
+    await con.run("set preserve_insertion_order = false;");
+    await con.run(`copy (select * from ${extrasRead(extras)}
+      where ${LOCAL_FILTER()}${skip ? ` and not ${skip}` : ""})
+      to ${sqlString(path)} (format parquet, compression zstd)`);
+  }
+  writeFileSync(join(dir, "extras.json"), JSON.stringify({ urls }));
+  return { path, urls };
 }
 
 /**
@@ -219,9 +317,15 @@ export async function listPartitions(): Promise<number[]> {
  *
  * Sin manifiesto cargado (los tests de forma del SQL) devuelve una lectura
  * simbólica: lo que se prueba ahí son los filtros, no la dirección.
+ *
+ * **Con copia local, `EXTRAS` sólo trae ranked `Normal`** (ver `LocalExtras`).
+ * Una consulta que mire otros modos pide `allModes` y lee del lake.
  */
-export function partitionSource(n: number): string {
-  if (lake && n === EXTRAS) return extrasSource(lake.extras);
+export function partitionSource(n: number, opts: { allModes?: boolean } = {}): string {
+  if (lake && n === EXTRAS) {
+    const copia = opts.allModes ? null : localExtras();
+    return copia ? localExtrasSource(copia, lake.extras) : extrasSource(lake.extras);
+  }
   const files = lake ? (lake.bases.get(n) ?? []) : [`lake://match_player/${n}`];
   if (files.length === 0) return `read_parquet('lake://match_player/vacio-${n}')`;
   return `read_parquet([${files.map(sqlString).join(", ")}], union_by_name=true)`;
