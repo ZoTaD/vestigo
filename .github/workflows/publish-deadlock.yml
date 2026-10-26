@@ -74,14 +74,14 @@ jobs:
     # cortó en el último paso (2026-09-21 03:47Z). La optimización pendiente es
     # leer cada partición una sola vez por proceso (docs/design/2026-09-20-lake).
     #
-    # **210 desde el 2026-10-26**, y ya no es lo que protege la publicación. Del
+    # **240 desde el 2026-10-26**, y ya no es lo que protege la publicación. Del
     # 23 al 26/10 las corridas se cortaron a los 150 sin llegar al commit, y como
     # las builds nunca se guardaban, la puerta de 20 h las corría en todas: ni la
     # tier list de héroes, lista a los 20 minutos, llegaba al sitio. Ahora los
     # pasos pesados tienen su propio tope y perdonan fallar (ver `heavy`, al
-    # final). Sus topes suman 175 minutos y una corrida programada nunca los
+    # final). Sus topes suman 190 minutos y una corrida programada nunca los
     # corre todos (el informe va en una media jornada, la maestría en la otra).
-    timeout-minutes: 210
+    timeout-minutes: 240
     steps:
       # **Sin credenciales guardadas** (2026-09-28, auditoría de seguridad). Por
       # defecto el checkout deja el token con permiso de escritura en
@@ -244,7 +244,7 @@ jobs:
       - name: build builds
         id: builds
         continue-on-error: true
-        timeout-minutes: 55
+        timeout-minutes: 70
         run: |
           edad_h=$(node -e '
             const fs = require("fs");

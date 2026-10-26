@@ -706,6 +706,11 @@ export async function connect(path = ":memory:"): Promise<DuckDBConnection> {
   // TIMESTAMP en UTC: sin esto DuckDB compararía con la zona de la máquina
   // (UTC−3 acá, UTC en CI) y la ventana correría tres horas según dónde corra.
   await con.run("set TimeZone = 'UTC';");
+  // **Leer el lake es esperar la red** (2026-10-26): DuckDB usa un hilo por
+  // núcleo, y el runner tiene 4. Con eso `build:builds` pasaba 36 de sus 38
+  // minutos cargando la ventana y 1,5 calculando. Medido en la copia de los
+  // deltas: 302 s con 16 hilos, 159 con 32, 90 con 64.
+  await con.run("set threads = 32;");
   return con;
 }
 
