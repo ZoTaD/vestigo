@@ -263,6 +263,46 @@ describe("el lake: lo que una base ya consolidó no se lee dos veces", () => {
   });
 });
 
+describe("el lake: la copia local de los deltas", () => {
+  const copia = { path: "/tmp/lake/extras.parquet", urls: ["a", "b"] };
+
+  it("lee de la copia lo que trae, con lo consolidado según el manifiesto de ahora", async () => {
+    const { localExtrasSource } = await import("../src/snapshot");
+    const sql = localExtrasSource(copia, [
+      { url: "a", covered: [] },
+      { url: "b", covered: [107] },
+    ]);
+    expect(sql).toContain("read_parquet('/tmp/lake/extras.parquet')");
+    expect(sql).toContain("filename in ('a', 'b')");
+    expect(sql).toContain("(filename = 'b' and match_id // 1000000 in (107))");
+    expect(sql).not.toContain("union all by name");
+  });
+
+  it("lo que apareció después de la copia se lee del lake, y lo ya consolidado no se lee", async () => {
+    const { localExtrasSource } = await import("../src/snapshot");
+    // "b" quedó consolidado entero: el manifiesto de ahora ya no lo trae.
+    const sql = localExtrasSource(copia, [
+      { url: "a", covered: [] },
+      { url: "c", covered: [] },
+    ]);
+    expect(sql).toContain("filename in ('a')");
+    expect(sql).toContain("union all by name");
+    expect(sql).toContain("read_parquet(['c'], union_by_name=true, filename=true)");
+  });
+
+  it("sin nada de la copia en el manifiesto, todo del lake", async () => {
+    const { localExtrasSource } = await import("../src/snapshot");
+    const sql = localExtrasSource(copia, [{ url: "c", covered: [] }]);
+    expect(sql).not.toContain("extras.parquet");
+  });
+
+  it("la copia guarda lo mismo que filtran las ventanas", async () => {
+    const { LOCAL_FILTER } = await import("../src/snapshot");
+    const ventana = windowSql([96], "2026-10-01T00:00:00Z", "2026-10-15T00:00:00Z");
+    for (const parte of LOCAL_FILTER().split(" and ")) expect(ventana).toContain(parte);
+  });
+});
+
 /**
  * El manifiesto es de un tercero y sus valores terminan dentro del SQL de una
  * corrida que puede publicar el sitio (auditoría de seguridad, 2026-09-28): si
@@ -311,5 +351,33 @@ describe("el lake: un manifiesto adulterado no llega al SQL", () => {
     const { sqlString, extrasSource } = await import("../src/snapshot");
     expect(sqlString("o'hara")).toBe("'o''hara'");
     expect(extrasSource([{ url: "a'b", covered: [1] }])).toContain("filename = 'a''b'");
+  });
+});
+
+/**
+ * La copia local trae sólo `LOCAL_COLUMNS` (ver snapshot.ts). Si una consulta
+ * nueva nombra otra columna del lake, la copia la tiene que traer.
+ */
+describe("el lake: la copia local trae toda columna que el pipeline nombra", () => {
+  it("cada columna del lake que aparece en src/ está en LOCAL_COLUMNS", async () => {
+    const { readFileSync, readdirSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const { LOCAL_COLUMNS } = await import("../src/snapshot");
+    const dir = join(__dirname, "../src");
+    const src = readdirSync(dir)
+      .filter((f) => /\.(ts|mjs)$/.test(f))
+      .map((f) => readFileSync(join(dir, f), "utf8"))
+      .join("\n");
+    const lake: string[] = JSON.parse(readFileSync(join(__dirname, "fixtures/lake-columns.json"), "utf8"));
+    const items = [...src.matchAll(/uncorruptedItems\("(\w+)"\)/g)].map((m) => `items.${m[1]}`);
+    const palabra = (c: string | undefined) => c !== undefined && /[A-Za-z0-9_.]/.test(c);
+    const nombradas = lake.filter((col) => {
+      if (items.includes(col)) return true;
+      for (let i = src.indexOf(col); i >= 0; i = src.indexOf(col, i + 1)) {
+        if (!palabra(src[i - 1]) && !palabra(src[i + col.length])) return true;
+      }
+      return false;
+    });
+    expect(nombradas.filter((c) => !LOCAL_COLUMNS.includes(c))).toEqual([]);
   });
 });

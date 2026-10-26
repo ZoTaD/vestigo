@@ -73,7 +73,15 @@ jobs:
     # min, pero la manual (workflow_dispatch) corre los tres juntos y con 90 se
     # cortó en el último paso (2026-09-21 03:47Z). La optimización pendiente es
     # leer cada partición una sola vez por proceso (docs/design/2026-09-20-lake).
-    timeout-minutes: 150
+    #
+    # **240 desde el 2026-10-26**, y ya no es lo que protege la publicación. Del
+    # 23 al 26/10 las corridas se cortaron a los 150 sin llegar al commit, y como
+    # las builds nunca se guardaban, la puerta de 20 h las corría en todas: ni la
+    # tier list de héroes, lista a los 20 minutos, llegaba al sitio. Ahora los
+    # pasos pesados tienen su propio tope y perdonan fallar (ver `heavy`, al
+    # final). Sus topes suman 190 minutos y una corrida programada nunca los
+    # corre todos (el informe va en una media jornada, la maestría en la otra).
+    timeout-minutes: 240
     steps:
       # **Sin credenciales guardadas** (2026-09-28, auditoría de seguridad). Por
       # defecto el checkout deja el token con permiso de escritura en
@@ -112,6 +120,18 @@ jobs:
       - name: catalog
         continue-on-error: true
         run: npm run catalog --prefix games/deadlock/pipeline
+
+      # Los deltas y residuales del lake, bajados una vez para toda la corrida
+      # (2026-10-26, ver `LocalExtras` en snapshot.ts). Eran 28,8 GB que cada
+      # consulta volvía a bajar entera. **Perdona fallar**: sin la variable, cada
+      # paso los lee del lake como antes, lento pero igual de correcto.
+      - name: lake extras
+        continue-on-error: true
+        timeout-minutes: 30
+        run: |
+          timeout -k 1m 27m npm run lake:local --prefix games/deadlock/pipeline -- "$RUNNER_TEMP/lake"
+          du -sh "$RUNNER_TEMP/lake" || true
+          echo "DEADLOCK_LAKE_LOCAL=$RUNNER_TEMP/lake" >> "$GITHUB_ENV"
 
       # Las tier lists. Si esto falla, falla el run: son los únicos pasos que
       # producen números, y una falla silenciosa acá dejaría la página congelada
@@ -208,10 +228,13 @@ jobs:
       # del mecanismo. Con builds a las 12:30 lo lee del mismo día; moviéndolo
       # después de las 18 usaría el de ayer.
       #
-      # Sin continue-on-error, como los otros dos que producen números: si falla,
-      # la tarjeta de build queda congelada y nada lo diría. Lo que SÍ perdona
-      # fallar es la API de habilidades, y eso se maneja adentro: si no contesta,
-      # el JSON sale sin `abilityOrder` y la tarjeta no dibuja ese panel.
+      # **Perdona fallar desde el 2026-10-26, pero no en silencio.** Antes no
+      # perdonaba para que la tarjeta de build no quedara congelada sin que nada
+      # lo dijera, y el precio fue que cuando se volvió lenta se llevó puesta la
+      # publicación entera. Ahora tiene su tope, lo de arriba se publica igual y
+      # el paso `heavy` del final pone la corrida en rojo. La API de habilidades
+      # se maneja adentro: si no contesta, el JSON sale sin `abilityOrder` y la
+      # tarjeta no dibuja ese panel.
       #
       # **La puerta es la edad del archivo, no la hora del reloj**, por lo mismo
       # que la escalera: el 2026-09-26 GitHub largó la corrida de las 12:30 a las
@@ -219,6 +242,9 @@ jobs:
       # corre una vez por día en la primera corrida que llegue, arranque cuando
       # arranque.
       - name: build builds
+        id: builds
+        continue-on-error: true
+        timeout-minutes: 70
         run: |
           edad_h=$(node -e '
             const fs = require("fs");
@@ -229,7 +255,7 @@ jobs:
           ')
           if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             echo "las builds tienen ${edad_h}h; se regeneran"
-            npm run build:builds --prefix games/deadlock/pipeline
+            timeout -k 1m 67m npm run build:builds --prefix games/deadlock/pipeline
           else
             echo "las builds tienen ${edad_h}h (< 20); esta corrida las saltea"
           fi
@@ -338,6 +364,9 @@ jobs:
       # pasos de ~5,5 minutos y juntos harían una sola corrida de ~14, que es
       # acercarse al timeout sin necesidad.
       - name: build report
+        id: report
+        continue-on-error: true
+        timeout-minutes: 40
         run: |
           edad_h=$(node -e '
             const fs = require("fs");
@@ -349,12 +378,15 @@ jobs:
           hora=$(date -u +%H)
           if { [ "$edad_h" -ge 20 ] && [ "$hora" -ge 12 ]; } || [ "$edad_h" -ge 40 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             echo "la referencia del informe tiene ${edad_h}h; se regenera"
-            npm run build:report --prefix games/deadlock/pipeline
+            timeout -k 1m 37m npm run build:report --prefix games/deadlock/pipeline
           else
             echo "la referencia del informe tiene ${edad_h}h (son las ${hora} UTC); esta corrida la saltea"
           fi
 
       - name: build mastery
+        id: mastery
+        continue-on-error: true
+        timeout-minutes: 25
         run: |
           edad_h=$(node -e '
             const fs = require("fs");
@@ -366,7 +398,7 @@ jobs:
           hora=$(date -u +%H)
           if { [ "$edad_h" -ge 20 ] && [ "$hora" -lt 12 ]; } || [ "$edad_h" -ge 40 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             echo "la maestría tiene ${edad_h}h; se regenera"
-            npm run build:mastery --prefix games/deadlock/pipeline
+            timeout -k 1m 22m npm run build:mastery --prefix games/deadlock/pipeline
           else
             echo "la maestría tiene ${edad_h}h (son las ${hora} UTC); esta corrida la saltea"
           fi
@@ -377,6 +409,7 @@ jobs:
       # las horas. **Perdonan fallar**: queda lo commiteado.
       - name: build comebacks and rank points
         continue-on-error: true
+        timeout-minutes: 25
         run: |
           edad_h=$(node -e '
             const fs = require("fs");
@@ -388,8 +421,8 @@ jobs:
           hora=$(date -u +%H)
           if { [ "$edad_h" -ge 20 ] && [ "$hora" -lt 12 ]; } || [ "$edad_h" -ge 40 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             echo "las remontadas tienen ${edad_h}h; se regeneran con los puntos"
-            npm run build:comebacks --prefix games/deadlock/pipeline
-            npm run build:rank-points --prefix games/deadlock/pipeline
+            timeout -k 1m 15m npm run build:comebacks --prefix games/deadlock/pipeline
+            timeout -k 1m 7m npm run build:rank-points --prefix games/deadlock/pipeline
           else
             echo "las remontadas tienen ${edad_h}h (son las ${hora} UTC); esta corrida las saltea con los puntos"
           fi
@@ -445,3 +478,19 @@ jobs:
             echo "::error::no se pudo publicar después de 3 intentos"
             exit 1
           fi
+
+      # Los pasos pesados perdonan fallar para no llevarse puesta la publicación
+      # (2026-10-26), pero una falla tiene que verse: la corrida termina en rojo
+      # **después** de publicar lo que sí salió. `deploy` publica igual, porque
+      # mira lo que cambió en `main` y no el color de esta corrida.
+      #
+      # **Cada paso pesado corre adentro de `timeout`, y el `timeout-minutes` es
+      # el respaldo.** Medido el 2026-10-26: GitHub corta el paso pero el
+      # proceso de node sigue vivo, y builds e informe terminaron por detrás,
+      # encimados con los pasos siguientes. `timeout` mata el grupo entero, así
+      # que nada puede escribir en `data/` mientras se commitea.
+      - name: heavy
+        if: steps.builds.outcome == 'failure' || steps.report.outcome == 'failure' || steps.mastery.outcome == 'failure'
+        run: |
+          echo "::error::builds=${{ steps.builds.outcome }} report=${{ steps.report.outcome }} mastery=${{ steps.mastery.outcome }}: lo demás se publicó, eso quedó como estaba"
+          exit 1

@@ -163,13 +163,15 @@ const windowWithAccount = (parts: number[], from: string, to: string): string =>
  *
  * Se excluye Street Brawl (`game_mode = 'Normal'`), que dura 14 minutos contra 38
  * y no es el mismo juego.
+ *
+ * Por eso pide `allModes`: la copia local de los deltas sólo trae ranked.
  */
 const historyBefore = (parts: number[], before: string): string =>
   parts
     .map(
       (n) => `
     select account_id, hero_id
-    from ${partitionSource(n)}
+    from ${partitionSource(n, { allModes: true })}
     where game_mode = '${PLAYED_GAME_MODE}' and start_time < TIMESTAMP '${before}'`
     )
     .join(" union all ");
