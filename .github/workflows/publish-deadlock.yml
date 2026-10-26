@@ -129,7 +129,7 @@ jobs:
         continue-on-error: true
         timeout-minutes: 30
         run: |
-          npm run lake:local --prefix games/deadlock/pipeline -- "$RUNNER_TEMP/lake"
+          timeout -k 1m 27m npm run lake:local --prefix games/deadlock/pipeline -- "$RUNNER_TEMP/lake"
           du -sh "$RUNNER_TEMP/lake" || true
           echo "DEADLOCK_LAKE_LOCAL=$RUNNER_TEMP/lake" >> "$GITHUB_ENV"
 
@@ -255,7 +255,7 @@ jobs:
           ')
           if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             echo "las builds tienen ${edad_h}h; se regeneran"
-            npm run build:builds --prefix games/deadlock/pipeline
+            timeout -k 1m 67m npm run build:builds --prefix games/deadlock/pipeline
           else
             echo "las builds tienen ${edad_h}h (< 20); esta corrida las saltea"
           fi
@@ -378,7 +378,7 @@ jobs:
           hora=$(date -u +%H)
           if { [ "$edad_h" -ge 20 ] && [ "$hora" -ge 12 ]; } || [ "$edad_h" -ge 40 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             echo "la referencia del informe tiene ${edad_h}h; se regenera"
-            npm run build:report --prefix games/deadlock/pipeline
+            timeout -k 1m 37m npm run build:report --prefix games/deadlock/pipeline
           else
             echo "la referencia del informe tiene ${edad_h}h (son las ${hora} UTC); esta corrida la saltea"
           fi
@@ -398,7 +398,7 @@ jobs:
           hora=$(date -u +%H)
           if { [ "$edad_h" -ge 20 ] && [ "$hora" -lt 12 ]; } || [ "$edad_h" -ge 40 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             echo "la maestría tiene ${edad_h}h; se regenera"
-            npm run build:mastery --prefix games/deadlock/pipeline
+            timeout -k 1m 22m npm run build:mastery --prefix games/deadlock/pipeline
           else
             echo "la maestría tiene ${edad_h}h (son las ${hora} UTC); esta corrida la saltea"
           fi
@@ -421,8 +421,8 @@ jobs:
           hora=$(date -u +%H)
           if { [ "$edad_h" -ge 20 ] && [ "$hora" -lt 12 ]; } || [ "$edad_h" -ge 40 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             echo "las remontadas tienen ${edad_h}h; se regeneran con los puntos"
-            npm run build:comebacks --prefix games/deadlock/pipeline
-            npm run build:rank-points --prefix games/deadlock/pipeline
+            timeout -k 1m 15m npm run build:comebacks --prefix games/deadlock/pipeline
+            timeout -k 1m 7m npm run build:rank-points --prefix games/deadlock/pipeline
           else
             echo "las remontadas tienen ${edad_h}h (son las ${hora} UTC); esta corrida las saltea con los puntos"
           fi
@@ -483,6 +483,12 @@ jobs:
       # (2026-10-26), pero una falla tiene que verse: la corrida termina en rojo
       # **después** de publicar lo que sí salió. `deploy` publica igual, porque
       # mira lo que cambió en `main` y no el color de esta corrida.
+      #
+      # **Cada paso pesado corre adentro de `timeout`, y el `timeout-minutes` es
+      # el respaldo.** Medido el 2026-10-26: GitHub corta el paso pero el
+      # proceso de node sigue vivo, y builds e informe terminaron por detrás,
+      # encimados con los pasos siguientes. `timeout` mata el grupo entero, así
+      # que nada puede escribir en `data/` mientras se commitea.
       - name: heavy
         if: steps.builds.outcome == 'failure' || steps.report.outcome == 'failure' || steps.mastery.outcome == 'failure'
         run: |
