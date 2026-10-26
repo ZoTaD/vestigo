@@ -19,11 +19,12 @@ import type { MuseumFilter, MuseumView, WhereKind } from "./stardew/museum/state
 import type { QuestView } from "./stardew/quests/state";
 import type { Group, SourceFilter } from "./stardew/data";
 import type { CartKind } from "./stardew/predict/cart";
+import type { Cat as PlannerCat } from "./stardew/planner/model";
 import type { NightEvent } from "./stardew/predict/night";
 import type { DayWeather } from "./stardew/predict/weather";
 
 /** El orden de las pestañas en la barra, como las del menú del juego. */
-export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "fishing", "mines", "museum", "recipes", "villagers", "quests", "calendar", "bundles", "island", "save", "predict"];
+export const STARDEW_TABS: StardewSection[] = ["home", "items", "crops", "farm", "planner", "fishing", "mines", "museum", "recipes", "villagers", "quests", "calendar", "bundles", "island", "save", "predict"];
 
 export type Quality = "normal" | "silver" | "gold" | "iridium";
 export const QUALITIES: Quality[] = ["normal", "silver", "gold", "iridium"];
@@ -828,11 +829,53 @@ export interface StardewCopy {
   quests: QuestsCopy;
   save: SaveCopy;
   predict: PredictCopy;
+  planner: PlannerCopy;
   qualities: Record<Quality, string>;
   professions: Record<Profession, string>;
   tastes: Record<Taste, string>;
   /** Primavera, verano, otoño, invierno: `Utility.cs.5680` a `5683` de `Strings/StringsFromCSFiles`. */
   seasons: [string, string, string, string];
+}
+
+/** Los textos del Planificador de granja. Los nombres de lo que se coloca salen de los datos; acá, la interfaz. */
+export interface PlannerCopy {
+  h1: string;
+  lede: string;
+  farm: string;
+  season: string;
+  /** Los botones de categoría de la barra, y Borrar. */
+  cats: Record<PlannerCat | "erase", string>;
+  ranges: string;
+  share: string;
+  copied: string;
+  /** No se pudo copiar: el enlace ya está en la barra de direcciones. */
+  copyFail: string;
+  undo: string;
+  redo: string;
+  clear: string;
+  clearAsk: string;
+  placed: string;
+  hide: string;
+  /** El botón que abre el panel en el teléfono: "Placed · 82". */
+  showPlaced: (n: number) => string;
+  empty: string;
+  seeds: string;
+  build: string;
+  mats: string;
+  profit: string;
+  profitNote: string;
+  outOfSeason: string;
+  dry: (n: number) => string;
+  exposed: (n: number) => string;
+  blocked: (n: number) => string;
+  /** La granja abierta es la de un enlace: tocar algo la guarda como propia. */
+  shared: string;
+  helpMouse: string;
+  helpTouch: string;
+  /** Lo que se puede hacer, para quien llega buscando (y para el prerender). */
+  about: string[];
+  /** El nombre accesible del mapa. */
+  mapLabel: string;
 }
 
 /** El Predictor en inglés. Los nombres del juego (objetos, estaciones) salen de los datos; acá, la interfaz. */
@@ -1045,8 +1088,84 @@ const PREDICT_ES: PredictCopy = {
   },
 };
 
+const PLANNER_EN: PlannerCopy = {
+  h1: "Stardew Valley farm planner",
+  lede: "Lay out your farm before you play it: crops, sprinklers, scarecrows, machines, paths and buildings on the real map of each farm type. See what's left without water or a scarecrow, what it costs and what the season pays, and share it with a link.",
+  farm: "Farm",
+  season: "Season",
+  cats: { crop: "Crops", water: "Watering", scare: "Scarecrows", machine: "Machines", path: "Paths & fences", tree: "Fruit trees", building: "Buildings", erase: "Erase" },
+  ranges: "Show ranges",
+  share: "Copy link",
+  copied: "Link copied",
+  copyFail: "Couldn't copy it: the link is in the address bar.",
+  undo: "Undo",
+  redo: "Redo",
+  clear: "Start over",
+  clearAsk: "Clear the whole farm?",
+  placed: "Placed",
+  hide: "Hide",
+  showPlaced: (n) => `Placed · ${n}`,
+  empty: "Pick something in the bar and click the map.",
+  seeds: "Seeds and saplings",
+  build: "Construction",
+  mats: "Materials",
+  profit: "Season profit",
+  profitNote: "Raw harvest sold, planted on day 1 and replanted all season, no fertilizer or professions.",
+  outOfSeason: "out of season",
+  dry: (n) => `${n} ${n === 1 ? "crop" : "crops"} without water`,
+  exposed: (n) => `${n} ${n === 1 ? "crop" : "crops"} out of a scarecrow's reach`,
+  blocked: (n) => `${n} fruit ${n === 1 ? "tree" : "trees"} without room to grow`,
+  shared: "This is a shared farm. Change anything and it's saved as yours.",
+  helpMouse: "Click or drag to place · right click erases · the wheel zooms · drag with the middle button or Space held to move · 1–0 pick a slot · Ctrl+Z undoes",
+  helpTouch: "One finger places · two fingers move and zoom",
+  about: [
+    "The eight farm types with their real map, house and greenhouse, and the tiles the game lets you till or build on",
+    "Sprinkler, quality and iridium sprinkler ranges (with the pressure nozzle), scarecrows, bee houses and Junimo huts",
+    "Seed cost, crafting materials, building costs and the season's profit",
+  ],
+  mapLabel: "Farm map",
+};
+
+const PLANNER_ES: PlannerCopy = {
+  h1: "Planificador de granja de Stardew Valley",
+  lede: "Armá tu granja antes de jugarla: cultivos, aspersores, espantapájaros, máquinas, caminos y edificios sobre el mapa real de cada tipo de granja. Mirá qué queda sin riego o sin espantapájaros, cuánto cuesta y cuánto rinde la temporada, y compartila con un enlace.",
+  farm: "Granja",
+  season: "Estación",
+  cats: { crop: "Cultivos", water: "Riego", scare: "Espantapájaros", machine: "Máquinas", path: "Caminos y vallas", tree: "Frutales", building: "Edificios", erase: "Borrar" },
+  ranges: "Ver alcances",
+  share: "Copiar enlace",
+  copied: "Enlace copiado",
+  copyFail: "No se pudo copiar: el enlace está en la barra de direcciones.",
+  undo: "Deshacer",
+  redo: "Rehacer",
+  clear: "Empezar de cero",
+  clearAsk: "¿Borrar toda la granja?",
+  placed: "Lo colocado",
+  hide: "Ocultar",
+  showPlaced: (n) => `Lo colocado · ${n}`,
+  empty: "Elegí algo en la barra y tocá el mapa.",
+  seeds: "Semillas y retoños",
+  build: "Obras",
+  mats: "Materiales",
+  profit: "Ganancia de la temporada",
+  profitNote: "Vendiendo la cosecha cruda, plantada el día 1 y resembrada toda la temporada, sin abono ni profesiones.",
+  outOfSeason: "fuera de temporada",
+  dry: (n) => `${n} ${n === 1 ? "cultivo" : "cultivos"} sin riego`,
+  exposed: (n) => `${n} ${n === 1 ? "cultivo" : "cultivos"} fuera del alcance de un espantapájaros`,
+  blocked: (n) => `${n} ${n === 1 ? "frutal" : "frutales"} sin lugar para crecer`,
+  shared: "Es una granja compartida. Si cambiás algo, se guarda como tuya.",
+  helpMouse: "Clic o arrastre para colocar · clic derecho borra · la rueda acerca · arrastrá con el botón del medio o con Espacio apretado para mover · 1–0 eligen casillero · Ctrl+Z deshace",
+  helpTouch: "Un dedo coloca · dos dedos mueven y acercan",
+  about: [
+    "Los ocho tipos de granja con su mapa real, la casa y el invernadero, y las casillas donde el juego deja arar o construir",
+    "El alcance de los aspersores (también con boquilla de presión), los espantapájaros, las colmenas y las cabañas junimo",
+    "Lo que cuestan las semillas, los materiales de fabricación, las obras y lo que rinde la temporada",
+  ],
+  mapLabel: "Mapa de la granja",
+};
+
 const EN: StardewCopy = {
-  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat", save: "Save reader", predict: "Predictor", farm: "Farm", museum: "Museum", quests: "Quests", island: "Ginger Island" },
+  tabs: { home: "Home", items: "Items", villagers: "Villagers", bundles: "Community Center", crops: "Crops", fishing: "Fishing", recipes: "Recipes", calendar: "Calendar", mines: "Mines & combat", save: "Save reader", predict: "Predictor", farm: "Farm", museum: "Museum", quests: "Quests", island: "Ginger Island", planner: "Planner" },
   seo: {
     home: {
       title: "Stardew Valley Guide: Crop Calculator, Fish, Gifts and Bundles | Vestigo",
@@ -1109,6 +1228,10 @@ const EN: StardewCopy = {
       title: "Stardew Valley Predictor (1.6): Geodes, Weather, Mines & Traveling Cart | Vestigo",
       description: "What your next Stardew Valley 1.6 geodes and mystery boxes give, tomorrow's weather and luck, infested Mines floors, the traveling cart and night events.",
     },
+    planner: {
+      title: "Stardew Valley Farm Planner (1.6): Sprinklers, Scarecrows & Layout | Vestigo",
+      description: "Plan your Stardew Valley 1.6 farm on the real map of every farm type: crops, sprinkler and scarecrow ranges, buildings, costs and a link to share.",
+    },
   },
   itemSeo: (name, has = 0) => {
     const t = itemTopics(has);
@@ -1158,6 +1281,7 @@ const EN: StardewCopy = {
       museum: "Every artifact and mineral to donate with where to find it, the rewards and the books.",
       quests: "Story quests and special orders: what each one asks for and what it pays.",
       island: "The 130 golden walnuts, the parrot upgrades and Qi's Walnut Room.",
+      planner: "Lay out crops, sprinklers, scarecrows and buildings on your farm, with the cost and a link to share.",
       predict: "Your next geodes, tomorrow's weather, infested floors, the traveling cart and night events.",
     },
     featured: "Most looked up",
@@ -1633,6 +1757,7 @@ const EN: StardewCopy = {
     },
   },
   predict: PREDICT_EN,
+  planner: PLANNER_EN,
   save: {
     h1: "Save file reader",
     lede: "Open your save file to see how close you are to perfection, what each Community Center bundle still needs, whose birthday is coming up this week and which fish and recipes you're missing.",
@@ -1736,7 +1861,7 @@ const EN: StardewCopy = {
 };
 
 const ES: StardewCopy = {
-  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate", save: "Lector de partida", predict: "Predictor", farm: "Granja", museum: "Museo", quests: "Misiones", island: "Isla Jengibre" },
+  tabs: { home: "Inicio", items: "Objetos", villagers: "Aldeanos", bundles: "Centro Comunitario", crops: "Cultivos", fishing: "Pesca", recipes: "Recetas", calendar: "Calendario", mines: "Minas y combate", save: "Lector de partida", predict: "Predictor", farm: "Granja", museum: "Museo", quests: "Misiones", island: "Isla Jengibre", planner: "Planificador" },
   seo: {
     home: {
       title: "Guía de Stardew Valley: cultivos, peces, regalos y paquetes | Vestigo",
@@ -1799,6 +1924,10 @@ const ES: StardewCopy = {
       title: "Predictor de Stardew Valley (1.6): geodas, clima, minas y carro ambulante | Vestigo",
       description: "Qué dan tus próximas geodas y cajas en Stardew Valley 1.6, el clima y la suerte, los pisos infestados de las Minas, el carro ambulante y las noches con evento.",
     },
+    planner: {
+      title: "Planificador de granja de Stardew Valley (1.6): aspersores y espantapájaros | Vestigo",
+      description: "Planificá tu granja de Stardew Valley 1.6 sobre el mapa real de cada tipo: cultivos, alcance de aspersores y espantapájaros, edificios, costos y enlace.",
+    },
   },
   itemSeo: (name, has = 0) => {
     const t = itemTopics(has);
@@ -1848,6 +1977,7 @@ const ES: StardewCopy = {
       museum: "Cada artefacto y mineral para donar con dónde sale, los premios y los libros.",
       quests: "Misiones de la historia y pedidos especiales: qué pide cada uno y qué paga.",
       island: "Las 130 nueces de oro, las mejoras del loro y la Habitación de las Nueces de Qi.",
+      planner: "Ubicá cultivos, aspersores, espantapájaros y edificios en tu granja, con el costo y un enlace para compartir.",
       predict: "Tus próximas geodas, el clima de mañana, los pisos infestados, el carro y las noches con evento.",
     },
     featured: "Los más buscados",
@@ -2323,6 +2453,7 @@ const ES: StardewCopy = {
     },
   },
   predict: PREDICT_ES,
+  planner: PLANNER_ES,
   save: {
     h1: "Lector de partida",
     lede: "Abrí el archivo de tu partida para ver cuánto te falta para la perfección, qué pide todavía cada paquete del Centro Comunitario, quién cumple años esta semana y qué peces y recetas te faltan.",

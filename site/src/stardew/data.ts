@@ -19,6 +19,7 @@ import type { CalendarData } from "./calendar/state";
 import type { RecipesData } from "./recipes/state";
 import type { MinesData, Monster } from "./mines/state";
 import type { FarmData } from "./farm/state";
+import type { PlannerData } from "./planner/model";
 import type { IslandData } from "./island/state";
 import type { MuseumData } from "./museum/state";
 import type { QuestsData } from "./quests/state";
@@ -361,6 +362,25 @@ export const peekFarm = (): FarmData | null => {
   return d && noteFarm(d);
 };
 export const loadFarm = (): Promise<FarmData> => farmRaw.load().then(noteFarm);
+
+/**
+ * El Planificador de granja (`planner.json`, de `planner_data.py`): las 8 granjas con lo que admite cada casilla y lo que
+ * se puede colocar. Anota los slugs en español de las fichas que enlaza (cultivos, frutales, máquinas, materiales).
+ */
+const plannerRaw = once<PlannerData>(() => import("@stardew/planner.json"));
+let plannerNoted = false;
+function notePlanner(d: PlannerData): PlannerData {
+  if (!plannerNoted) {
+    registerStardewSlugs({ items: d.slugsEs });
+    plannerNoted = true;
+  }
+  return d;
+}
+export const peekPlanner = (): PlannerData | null => {
+  const d = plannerRaw.peek();
+  return d && notePlanner(d);
+};
+export const loadPlanner = (): Promise<PlannerData> => plannerRaw.load().then(notePlanner);
 
 /**
  * El Museo (`museum.json`, un solo archivo chico): las 95 piezas con dónde salen, los premios y los libros. Anota los

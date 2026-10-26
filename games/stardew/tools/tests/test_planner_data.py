@@ -69,6 +69,12 @@ class PlannerJsonTest(unittest.TestCase):
         self.assertEqual(it["(BC)10"]["range"], ["diamond", 5])
         self.assertEqual(it["B:Junimo Hut"]["range"], ["junimo", 8])
 
+    def test_nombres_son_texto_en_los_dos_idiomas(self):
+        for i in self.datos["items"]:
+            self.assertTrue(all(isinstance(n, str) and n for n in i["name"]), i["id"])
+        for m in self.datos["mats"].values():
+            self.assertTrue(isinstance(m[0], str) and isinstance(m[1], str))
+
     def test_todo_material_tiene_nombre(self):
         for i in self.datos["items"]:
             for m, _ in i.get("mats", []):

@@ -452,7 +452,7 @@ export function jsonLdFor(
     if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
     if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "home" || sec === "bundles" || sec === "crops" || sec === "fishing" || sec === "save" || sec === "predict" || sec === "museum" || sec === "island") {
+    if (sec === "home" || sec === "bundles" || sec === "crops" || sec === "fishing" || sec === "save" || sec === "predict" || sec === "museum" || sec === "island" || sec === "planner") {
       out.push({
         "@context": "https://schema.org", "@type": "WebApplication", name: sec === "home" ? copy.home.h1 : copy[sec].h1, description: page.description,
         url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,

@@ -143,11 +143,11 @@ def granjas() -> list[dict]:
 
 
 def _lista() -> dict[str, list]:
-    """id -> [slug, nombre en, nombre es] de las fichas de objetos."""
+    """id -> [slug, nombre en, nombre es, slug es] de las fichas de objetos (`names-es.json` es [nombre, slug])."""
     filas = json.loads((DATA / "site" / "list.json").read_text(encoding="utf-8"))
     en = json.loads((DATA / "site" / "names-en.json").read_text(encoding="utf-8"))
     es = json.loads((DATA / "site" / "names-es.json").read_text(encoding="utf-8"))
-    return {r[0]: [r[1], en[i], es[i]] for i, r in enumerate(filas)}
+    return {r[0]: [r[1], en[i], es[i][0], es[i][1]] for i, r in enumerate(filas)}
 
 
 def catalogo() -> dict:
@@ -157,9 +157,13 @@ def catalogo() -> dict:
     cultivos = json.loads((DATA / "crops.json").read_text(encoding="utf-8"))
     granja = json.loads((DATA / "farm.json").read_text(encoding="utf-8"))
     usados: set[str] = set()
+    # Los slugs en español de las fichas que se enlazan (sólo los que cambian), para escribir los enlaces en español.
+    slugs_es: dict[str, str] = {}
 
     def ficha(item_id: str) -> dict:
-        slug, en, es = lista[item_id]
+        slug, en, es, slug_es = lista[item_id]
+        if slug_es != slug:
+            slugs_es[slug] = slug_es
         return {"name": [en, es], "slug": slug}
 
     def mats(item_id: str) -> list:
@@ -169,6 +173,8 @@ def catalogo() -> dict:
 
     items: list[dict] = []
     for c in cultivos["crops"]:
+        if c["slugEs"] != c["slug"]:
+            slugs_es[c["slug"]] = c["slugEs"]
         items.append({"id": c["seed"], "cat": "crop", "name": c["name"], "slug": c["slug"], "place": "hoe",
                       "img": f"planner/crop-{c['seed']}.png", "iw": 16, "ih": 32, "seed": c["seed"],
                       "seasons": c["seasons"], "price": c["seedPrice"], "raised": c["raised"]})
@@ -204,6 +210,8 @@ def catalogo() -> dict:
         items.append({**ficha(i), "id": i, "cat": "path", "place": "obj", "img": f"items/{i}.png", "iw": 16, "ih": 16,
                       "mats": mats(i)})
     for t in cultivos["fruitTrees"]:
+        if t["slugEs"] != t["slug"]:
+            slugs_es[t["slug"]] = t["slugEs"]
         items.append({"id": t["sapling"], "cat": "tree", "name": t["treeName"], "slug": t["slug"], "place": "tree",
                       "img": f"planner/tree-{t['sapling']}.png", "iw": 48, "ih": 80, "seasons": t["seasons"],
                       "price": t["saplingPrice"]})
@@ -221,11 +229,13 @@ def catalogo() -> dict:
     for i in sorted(usados):
         if i in lista:
             nombres[i] = [lista[i][1], lista[i][2], lista[i][0]]
+            if lista[i][3] != lista[i][0]:
+                slugs_es[lista[i][0]] = lista[i][3]
         elif i in cats:
             nombres[i] = [*cats[i], None]
         else:
             raise KeyError(f"material sin nombre: {i}")
-    return {"items": items, "mats": nombres}
+    return {"items": items, "mats": nombres, "slugsEs": dict(sorted(slugs_es.items()))}
 
 
 def build() -> dict:
