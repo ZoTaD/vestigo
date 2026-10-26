@@ -353,3 +353,31 @@ describe("el lake: un manifiesto adulterado no llega al SQL", () => {
     expect(extrasSource([{ url: "a'b", covered: [1] }])).toContain("filename = 'a''b'");
   });
 });
+
+/**
+ * La copia local trae sólo `LOCAL_COLUMNS` (ver snapshot.ts). Si una consulta
+ * nueva nombra otra columna del lake, la copia la tiene que traer.
+ */
+describe("el lake: la copia local trae toda columna que el pipeline nombra", () => {
+  it("cada columna del lake que aparece en src/ está en LOCAL_COLUMNS", async () => {
+    const { readFileSync, readdirSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const { LOCAL_COLUMNS } = await import("../src/snapshot");
+    const dir = join(__dirname, "../src");
+    const src = readdirSync(dir)
+      .filter((f) => /\.(ts|mjs)$/.test(f))
+      .map((f) => readFileSync(join(dir, f), "utf8"))
+      .join("\n");
+    const lake: string[] = JSON.parse(readFileSync(join(__dirname, "fixtures/lake-columns.json"), "utf8"));
+    const items = [...src.matchAll(/uncorruptedItems\("(\w+)"\)/g)].map((m) => `items.${m[1]}`);
+    const palabra = (c: string | undefined) => c !== undefined && /[A-Za-z0-9_.]/.test(c);
+    const nombradas = lake.filter((col) => {
+      if (items.includes(col)) return true;
+      for (let i = src.indexOf(col); i >= 0; i = src.indexOf(col, i + 1)) {
+        if (!palabra(src[i - 1]) && !palabra(src[i + col.length])) return true;
+      }
+      return false;
+    });
+    expect(nombradas.filter((c) => !LOCAL_COLUMNS.includes(c))).toEqual([]);
+  });
+});

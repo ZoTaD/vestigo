@@ -232,6 +232,26 @@ export interface LocalExtras {
 /** Lo que la copia local guarda: lo que filtran todas las ventanas (ver `selectFrom`). */
 export const LOCAL_FILTER = () => `match_mode = '${PLAYED_MODE}' and game_mode = '${PLAYED_GAME_MODE}'`;
 
+/**
+ * **Las columnas que la copia trae: las que alguna consulta del pipeline nombra.**
+ *
+ * La primera versión copiaba todas y no terminó en 20 minutos: medido sobre un
+ * residual, éstas son 0,33 de sus 2,74 GB, y sólo la de estadísticas a medida
+ * de cada jugador pesa 0,89. Una consulta que pida otra a la copia falla con "Referenced column
+ * not found", y `partitionsWithColumn` la daría por ausente en silencio, así que
+ * un test recorre `src/` y exige que toda columna del lake que se nombre esté acá.
+ */
+export const LOCAL_COLUMNS = [
+  "ability_points", "ability_stats", "account_id", "assists", "average_badge", "average_badge_team0",
+  "average_badge_team1", "banned_hero_ids", "deaths", "duration_s", "game_mode", "game_mode_version",
+  "hero_id", "items.game_time_s", "items.imbued_ability_id", "items.item_id", "items.sold_time_s",
+  "items.upgrade_info", "kills", "match_id", "match_mode", "net_worth", "player_rank_consumed_demotion_protection",
+  "player_rank_desired_progress_change", "player_rank_final_flat_progress", "player_rank_initial_calibration_games",
+  "player_rank_initial_display_rank", "player_rank_initial_flat_progress", "player_rank_initial_win_streak",
+  "rank_interval", "ranked_type", "start_time", "stats.boss_damage", "stats.deaths", "stats.net_worth",
+  "stats.player_damage", "stats.time_stamp_s", "team", "winning_team", "won",
+];
+
 /** La lectura de los deltas y residuales con la copia local (ver `LocalExtras`). */
 export function localExtrasSource(local: LocalExtras, extras: ExtraFile[]): string {
   const copiados = new Set(local.urls);
@@ -280,7 +300,8 @@ export async function localizeExtras(
   if (urls.length > 0) {
     const skip = coveredSkip(extras);
     await con.run("set preserve_insertion_order = false;");
-    await con.run(`copy (select * from ${extrasRead(extras)}
+    const columnas = ["filename", ...LOCAL_COLUMNS].map((c) => `"${c}"`).join(", ");
+    await con.run(`copy (select ${columnas} from ${extrasRead(extras)}
       where ${LOCAL_FILTER()}${skip ? ` and not ${skip}` : ""})
       to ${sqlString(path)} (format parquet, compression zstd)`);
   }
