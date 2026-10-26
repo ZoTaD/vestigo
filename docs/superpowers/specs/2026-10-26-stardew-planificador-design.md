@@ -76,3 +76,18 @@ y el invernadero, abono por casilla, interiores.
 `LazyRows` no hace falta (la barra no pasa de ~60 casilleros). Datos con `import()`; el mapa sólo baja al abrir la
 pestaña y sólo el de la granja elegida. Sumar la página a `PAGES` de `perf.mjs`, al sitemap, a `areaFiles.ts`, a la
 portada de Stardew y a `netlify.toml` (caché de `/stardew/planner/*`). Medir RAM y tiempo del build.
+
+## Mediciones (2026-10-26)
+
+`npm run build` entero en la rama, una corrida, pico de RAM sumando los procesos `node` y `esbuild` nuevos cada medio
+segundo: 133,2 s, 3,42 GB (un solo proceso 3,31 GB), 39.038 páginas prerenderizadas (+2: `/planner` y `/planificador`),
+prerender 66,9 s, `check-links` 0 sin destino. Referencia de la etapa 4: 163-177 s y 2,7-3,9 GB; lejos del tope de 6 GB.
+
+`perf.mjs --budget` contra `vite preview`, en frío:
+
+| Página | Pedidos | Imágenes | Nodos |
+|---|---|---|---|
+| `/en/stardew-valley/planner` | 85 | 56 | 344 |
+| `/es/stardew-valley/planificador` | 85 | 56 | 345 |
+
+Los mapas pesan 150-310 KB en WebP sin pérdida y baja sólo el de la granja elegida.

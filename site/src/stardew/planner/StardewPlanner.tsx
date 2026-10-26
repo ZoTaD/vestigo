@@ -184,22 +184,19 @@ function Planner({ data, crops, route, navigate }: { data: PlannerData; crops: C
     [farm, items, commit],
   );
 
+  // Sin efectos dentro de los `set` (React los corre dos veces en modo estricto): se lee el historial vigente.
   const undo = useCallback(() => {
-    setPast((h) => {
-      if (!h.length) return h;
-      setFuture((f) => [live.current, ...f]);
-      setPlaced(h[h.length - 1]);
-      return h.slice(0, -1);
-    });
-  }, []);
+    if (!past.length) return;
+    setFuture([live.current, ...future]);
+    setPlaced(past[past.length - 1]);
+    setPast(past.slice(0, -1));
+  }, [past, future]);
   const redo = useCallback(() => {
-    setFuture((f) => {
-      if (!f.length) return f;
-      setPast((h) => [...h, live.current]);
-      setPlaced(f[0]);
-      return f.slice(1);
-    });
-  }, []);
+    if (!future.length) return;
+    setPast([...past, live.current]);
+    setPlaced(future[0]);
+    setFuture(future.slice(1));
+  }, [past, future]);
 
   const bar = useMemo(() => {
     if (cat === "erase") return [];
