@@ -79,7 +79,7 @@ jobs:
     # las builds nunca se guardaban, la puerta de 20 h las corría en todas: ni la
     # tier list de héroes, lista a los 20 minutos, llegaba al sitio. Ahora los
     # pasos pesados tienen su propio tope y perdonan fallar (ver `heavy`, al
-    # final). Sus topes suman 165 minutos y una corrida programada nunca los
+    # final). Sus topes suman 175 minutos y una corrida programada nunca los
     # corre todos (el informe va en una media jornada, la maestría en la otra).
     timeout-minutes: 210
     steps:
@@ -127,7 +127,7 @@ jobs:
       # paso los lee del lake como antes, lento pero igual de correcto.
       - name: lake extras
         continue-on-error: true
-        timeout-minutes: 20
+        timeout-minutes: 30
         run: |
           npm run lake:local --prefix games/deadlock/pipeline -- "$RUNNER_TEMP/lake"
           du -sh "$RUNNER_TEMP/lake" || true

@@ -300,6 +300,11 @@ export async function localizeExtras(
   if (urls.length > 0) {
     const skip = coveredSkip(extras);
     await con.run("set preserve_insertion_order = false;");
+    // **La copia es espera de red, no cálculo**: cada grupo de filas son decenas
+    // de pedidos chicos, y DuckDB usa un hilo por núcleo. Medido sobre un
+    // residual de 2,9 GB: 302 s con 16 hilos, 159 con 32 y 90 con 64 (pico de
+    // 1,6 GB). El runner tiene 4 núcleos, y con 4 hilos no terminaba en 20 min.
+    await con.run("set threads = 64;");
     const columnas = ["filename", ...LOCAL_COLUMNS].map((c) => `"${c}"`).join(", ");
     await con.run(`copy (select ${columnas} from ${extrasRead(extras)}
       where ${LOCAL_FILTER()}${skip ? ` and not ${skip}` : ""})
