@@ -112,7 +112,8 @@ export interface Monster {
   xp: number;
   coins: [number, number];
   /** Id del objeto y probabilidad (0 a 1); el mismo objeto puede venir dos veces (dos tiradas). */
-  loot: [id: string, chance: number][];
+  /** Con `max`, cuántos caen como mucho por tirada (el carbón y las menas, de 1 a 3). */
+  loot: [id: string, chance: number, max?: number][];
   where: MonsterPlace[];
   /** Si tiene versión peligrosa (después del desafío del Sr. Qi). */
   dangerous: boolean;
@@ -237,15 +238,15 @@ export function weaponList(data: MinesData, sort: WeaponSort, type: WeaponType, 
 
 /**
  * El botín sin repetir. Cada par id/probabilidad es una tirada aparte (`Monster.parseMonsterInfo`): por objeto, la
- * probabilidad de que caiga al menos uno, 1 − ∏(1 − p), y cuántas tiradas hay (hasta cuántos caen). Igual que la fuente
+ * probabilidad de que caiga al menos uno, 1 − ∏(1 − p), y hasta cuántos caen (las tiradas, de a 3 en el carbón). Igual que la fuente
  * `{k:"monster"}` de la ficha del objeto (`relations.py`). De la más probable a la menos.
  */
 export function lootRows(m: Monster): [id: string, chance: number, rolls: number][] {
   const none = new Map<string, number>();
   const rolls = new Map<string, number>();
-  for (const [id, p] of m.loot) {
+  for (const [id, p, max = 1] of m.loot) {
     none.set(id, (none.get(id) ?? 1) * (1 - Math.min(1, p)));
-    rolls.set(id, (rolls.get(id) ?? 0) + 1);
+    rolls.set(id, (rolls.get(id) ?? 0) + max);
   }
   return [...none.entries()].map(([id, q]): [string, number, number] => [id, 1 - q, rolls.get(id)!]).sort((a, b) => b[1] - a[1]);
 }

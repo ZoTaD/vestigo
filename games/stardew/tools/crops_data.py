@@ -36,14 +36,16 @@ def _nombre(token: str | None) -> list[str]:
     return [sdv.text(token, "en"), sdv.text(token, "es")]
 
 
-def _tienda_mas_barata(item: str, nombres) -> tuple[int | None, list[str] | None]:
+def _tienda_de_semillas(item: str, nombres) -> tuple[int | None, list[str] | None]:
     ofertas = [
         s for s in relations.sources_by_item().get(item, [])
         if s["k"] == "shop" and s["shop"] in TIENDAS_SEMILLAS
     ]
     if not ofertas:
         return None, None
-    mejor = min(ofertas, key=lambda s: (s["price"], TIENDAS_SEMILLAS.index(s["shop"])))
+    # La primera tienda de la lista que la vende, no la más barata: Joja cierra con el Centro Comunitario, así que el
+    # Girasol (Joja 125, Pierre 200) cuenta con el precio de Pierre, como la Wiki.
+    mejor = min(ofertas, key=lambda s: (TIENDAS_SEMILLAS.index(s["shop"]), s["price"]))
     return mejor["price"], nombres.tienda(mejor["shop"])
 
 
@@ -108,7 +110,7 @@ def crops() -> dict:
         h = c["HarvestItemId"]
         if h not in slugs or h not in objs:
             continue
-        precio, tienda = _tienda_mas_barata(semilla, nombres)
+        precio, tienda = _tienda_de_semillas(semilla, nombres)
         festival = False
         if precio is None:
             precio, tienda = _tienda_de_festival(semilla)
@@ -132,7 +134,7 @@ def crops() -> dict:
         h = h[3:] if h.startswith("(O)") else h
         if h not in slugs or h not in objs:
             continue
-        precio, tienda = _tienda_mas_barata(retono, nombres)
+        precio, tienda = _tienda_de_semillas(retono, nombres)
         arboles.append({
             "sapling": retono, "harvest": h, "slug": slugs[h][0], "slugEs": slugs[h][1], "name": nom[h],
             "treeName": _nombre(t["DisplayName"]),

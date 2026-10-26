@@ -39,6 +39,47 @@ def _nombre(token: str | None, otro: str = "") -> list[str]:
     return [sdv.text(token, "en") or otro, sdv.text(token, "es") or otro]
 
 
+# Categorías que salen con calidad: cosecha, recolección, pesca y productos animales (más la trufa y la Baya gema
+# dulce, -17). La savia (92) es "greens" pero sale del árbol, sin calidad.
+_CATEGORIAS_CON_CALIDAD = {-75, -79, -80, -81, -4, -5, -6, -18, -17}
+# Productos artesanos con calidad: los que copian la del ingrediente (`CreateFlavoredDriedFruit`,
+# `…DriedMushroom`, `…SmokedFish`), más los de la barrica y los de máquina con `Quality`/`CopyQuality` (abajo).
+_ARTESANOS_CON_CALIDAD = {"DriedFruit", "DriedMushrooms", "SmokedFish"}
+
+
+@lru_cache(maxsize=None)
+def _artesanos_con_calidad() -> frozenset[str]:
+    out = set(_ARTESANOS_CON_CALIDAD)
+    for maquina, datos in sdv.raw("Data/Machines").items():
+        for regla in datos.get("OutputRules") or []:
+            for t in regla["Triggers"]:
+                if maquina == "(BC)163" and t.get("RequiredItemId"):  # la barrica añeja lo que entra
+                    out.add(_sin_prefijo(t["RequiredItemId"]))
+            for it in regla["OutputItem"]:
+                if (it.get("Quality", -1) > 0 or it.get("CopyQuality")) and it.get("ItemId"):
+                    out.add(_sin_prefijo(it["ItemId"]))
+    return frozenset(out)
+
+
+def con_calidad(item_id: str) -> bool:
+    """¿Puede tener calidad (plata, oro, iridio)? Los lingotes, gemas, anillos y demás tienen un solo precio."""
+    o = sdv.raw("Data/Objects").get(item_id)
+    if not o or item_id == "92":
+        return False
+    if o.get("Category") in _CATEGORIAS_CON_CALIDAD:
+        return True
+    if o.get("Category") == -23:  # la recolección de la playa sí; la hueva y la tinta de calamar, no
+        return item_id not in ("812", "814")
+    return item_id in _artesanos_con_calidad()
+
+
+def precio_de_venta(item_id: str) -> int:
+    """El precio base de venta: el de `Data/Objects`, salvo los anillos, que se venden a la mitad (no son `Object`:
+    `Item.sellToStorePrice` es `salePrice() / 2`)."""
+    o = sdv.raw("Data/Objects").get(item_id, {})
+    return o.get("Price", 0) // 2 if o.get("Type") == "Ring" else o.get("Price", 0)
+
+
 # ---------------------------------------------------------------- aldeanos
 
 
@@ -78,9 +119,17 @@ def _listas(npc: str) -> dict[str, frozenset[str]]:
     }
 
 
-def _en_listas(listas: dict[str, frozenset[str]], clave: str) -> str | None:
-    for g in ORDEN_GUSTO:
+def _en_listas(listas: dict[str, frozenset[str]], clave: str, neutral: bool = True) -> str | None:
+    for g in ORDEN_GUSTO if neutral else ORDEN_GUSTO[:-1]:
         if clave in listas[g]:
+            return g
+    return None
+
+
+def _por_tag(listas: dict[str, frozenset[str]], tags: set[str], neutral: bool = True) -> str | None:
+    """Como `NPC.CheckTasteContextTags`: entradas que no empiezan con número ni "-"."""
+    for g in ORDEN_GUSTO if neutral else ORDEN_GUSTO[:-1]:
+        if any(t[0] not in "-0123456789" and t in tags for t in listas[g]):
             return g
     return None
 
@@ -88,17 +137,39 @@ def _en_listas(listas: dict[str, frozenset[str]], clave: str) -> str | None:
 def gift_taste(npc: str, item_id: str) -> str:
     """"love" | "like" | "neutral" | "dislike" | "hate" de un aldeano por un objeto.
 
-    Precedencia: personal por id, personal por categoría, universal por id,
-    universal por categoría y, si no hay nada, neutral. Los ids pueden ser de
-    texto (`SkillBook_4`, `Book_Void`).
+    Como `NPC.getGiftTasteForThisItem`: primero lo universal (categoría, después tags, después id); los artefactos
+    ("Arch") quedan en "dislike" salvo para Penny y el Enano; sin nada universal por id, lo que no se come
+    (comestibilidad negativa) es "hate" y lo de menos de 20 g, "dislike". Después lo personal, que gana: por id, por
+    tags y, sólo si ningún universal nombra el id, por categoría. Los anillos no son `Object` en el juego: neutrales.
+    Los ids pueden ser de texto (`SkillBook_4`, `Book_Void`).
     """
+    if item_id == "StardropTea":
+        return "love"
     obj = sdv.raw("Data/Objects").get(item_id, {})
+    if obj.get("Type") == "Ring":
+        return "neutral"
     cat = str(obj.get("Category", ""))
-    for listas in (_listas(npc), _listas("Universal")):
-        for clave in (item_id, cat):
-            if clave and (g := _en_listas(listas, clave)):
-                return g
-    return "neutral"
+    tags = _tags(item_id) if obj else set()
+    uni = _listas("Universal")
+    gusto = _por_tag(uni, tags, neutral=False) or _en_listas(uni, cat, neutral=False) or "neutral"
+    por_id = _en_listas(uni, item_id)
+    if por_id:
+        gusto = por_id
+    if obj.get("Type") == "Arch":
+        gusto = "like" if npc in ("Penny", "Dwarf") else "dislike"
+    if gusto == "neutral" and por_id != "neutral" and obj:
+        comer = obj.get("Edibility", -300)
+        if comer != -300 and comer < 0:
+            gusto = "hate"
+        elif obj.get("Price", 0) < 20:
+            gusto = "dislike"
+    if npc in sdv.raw("Data/NPCGiftTastes"):
+        listas = _listas(npc)
+        if g := _en_listas(listas, item_id) or _por_tag(listas, tags):
+            return g
+        if not por_id and cat != "0" and (g := _en_listas(listas, cat)):
+            return g
+    return gusto
 
 
 @lru_cache(maxsize=None)
@@ -262,6 +333,34 @@ def _tags(item_id: str) -> set[str]:
     return tags
 
 
+def _condicion_del_objeto(condicion: str | None, item_id: str, tags: set[str]) -> bool:
+    """Las consultas de `GameStateQuery` sobre el objeto (`Input` o `Target`), separadas por coma.
+
+    `ITEM_ID`, `ITEM_CONTEXT_TAG` e `ITEM_EDIBILITY <objeto> [mín] [máx]` (por defecto -299 y sin tope: lo que se
+    come); con "!" adelante se niegan. Las que no miran el objeto (estación, azar, profesión) se dan por ciertas.
+    """
+    for parte in (condicion or "").split(","):
+        p = parte.split()
+        if not p:
+            continue
+        negada = p[0].startswith("!")
+        clave = p[0].lstrip("!")
+        if clave == "ITEM_ID":
+            vale = any(_sin_prefijo(i) == item_id for i in p[2:])
+        elif clave == "ITEM_CONTEXT_TAG":
+            vale = all(t in tags for t in p[2:])
+        elif clave == "ITEM_EDIBILITY":
+            comer = sdv.raw("Data/Objects").get(item_id, {}).get("Edibility", -300)
+            minimo = int(p[2]) if len(p) > 2 else -299
+            maximo = int(p[3]) if len(p) > 3 else 2**31
+            vale = minimo <= comer <= maximo
+        else:
+            continue
+        if vale == negada:
+            return False
+    return True
+
+
 def _cumple(trigger: dict, item_id: str, tags: set[str]) -> bool:
     """¿El disparador acepta este objeto? Sólo cuenta `ItemPlacedInMachine` (1)."""
     if trigger.get("Trigger") != 1:
@@ -275,7 +374,7 @@ def _cumple(trigger: dict, item_id: str, tags: set[str]) -> bool:
     for t in exigidos or []:
         if (t[1:] in tags) if t.startswith("!") else (t not in tags):
             return False
-    return True
+    return _condicion_del_objeto(trigger.get("Condition"), item_id, tags)
 
 
 def _salida(item: dict, entrada: str, precio_entrada: int, objs: dict) -> dict | None:
@@ -283,7 +382,7 @@ def _salida(item: dict, entrada: str, precio_entrada: int, objs: dict) -> dict |
     item_id = item.get("ItemId")
     if not item_id:
         return None  # el resultado lo calcula código del juego (barril, incubadora…)
-    base = {"stack": item.get("MinStack", -1)}
+    base = {"stack": item.get("MinStack", -1), "quality": max(item.get("Quality", -1), 0)}
     if item_id.startswith("FLAVORED_ITEM"):
         sal, formula = _SABORES[item_id.split()[1]]
         precio = formula(precio_entrada)
@@ -296,11 +395,17 @@ def _salida(item: dict, entrada: str, precio_entrada: int, objs: dict) -> dict |
     return {"out": sal, "price": objs[sal]["Price"] if sal in objs else 0, **base}
 
 
-def _tiempos(regla: dict) -> dict:
-    return {
-        "minutes": max(regla.get("MinutesUntilReady", 0), 0),
-        "days": max(regla.get("DaysUntilReady", 0), 0),
-    }
+def _tiempos(regla: dict, modificadores: list[dict] | None = None, item_id: str = "") -> dict:
+    """Minutos y días de la regla; con los `ReadyTimeModifiers` de la máquina que miran el objeto (el Cristalario
+    tarda distinto con cada gema). Los que dependen del jugador (la profesión Avicultor) no se aplican."""
+    minutos = max(regla.get("MinutesUntilReady", 0), 0)
+    if minutos and modificadores and item_id:
+        tags = _tags(item_id) if item_id in sdv.raw("Data/Objects") else set()
+        propios = [{**m, "Condition": None} for m in modificadores
+                   if (m.get("Condition") or "").lstrip("!").startswith("ITEM_")
+                   and _condicion_del_objeto(m["Condition"].replace("Target", "Input"), item_id, tags)]
+        minutos = _aplicar_recargos(minutos, propios, 0)
+    return {"minutes": minutos, "days": max(regla.get("DaysUntilReady", 0), 0)}
 
 
 @lru_cache(maxsize=None)
@@ -328,7 +433,8 @@ def machines_by_input() -> dict[str, list[dict]]:
                     s = _salida(item, entrada, objs[entrada]["Price"], objs)
                     if s:
                         out.setdefault(entrada, []).append(
-                            {"machine": maquina, **s, **_tiempos(regla),
+                            {"machine": maquina, **s,
+                             **_tiempos(regla, datos.get("ReadyTimeModifiers"), entrada),
                              "count": disp[0].get("RequiredCount", 1)}
                         )
                 break  # sólo la primera regla que acepta el objeto
@@ -349,8 +455,22 @@ def machines_by_input() -> dict[str, list[dict]]:
 # ------------------------------------------------------------------ fuentes
 
 
-def _estaciones(texto: str) -> list[int]:
-    return [SEASONS.index(s) for s in texto.split() if s in SEASONS]
+# Botín con id negativo en `Data/Monsters`: `GameLocation.monsterDrop` hace `Debris(abs(id), 1–3)` y
+# `Debris.InitializeResource` lo vuelve una mena o recurso (-4 carbón, -6 mena de oro…). Caen de 1 a 3.
+RECURSOS_DE_BOTIN = {"-0": "378", "-2": "380", "-4": "382", "-6": "384", "-10": "386", "-12": "388", "-14": "390"}
+CANTIDAD_DE_RECURSO = 3
+
+
+def botin(texto: str) -> list[tuple[str, float, int]]:
+    """Los pares `id probabilidad` del botín de un monstruo, con los ids negativos ya convertidos: (id, p, hasta)."""
+    out = []
+    for iid, p in _pares(texto):
+        if iid.startswith("-"):
+            if iid in RECURSOS_DE_BOTIN:
+                out.append((RECURSOS_DE_BOTIN[iid], p, CANTIDAD_DE_RECURSO))
+        else:
+            out.append((iid, p, 1))
+    return out
 
 
 def _pares(texto: str) -> list[tuple[str, float]]:
@@ -358,10 +478,36 @@ def _pares(texto: str) -> list[tuple[str, float]]:
     return [(p[i], float(p[i + 1])) for i in range(0, len(p) - 1, 2)]
 
 
+# Lugares de Data/Locations que no son sitios del mapa: la pesca de los festivales (el minijuego de la Feria y el
+# mapa temporal de los festivales).
+LUGARES_FUERA = {"Temp", "fishingGame"}
+
+
+def estaciones_de_entrada(e: dict) -> set[int] | None:
+    """Las estaciones de una entrada de `Data/Locations`: su `Season` o las de `LOCATION_SEASON`/`SEASON` en su
+    `Condition` (negadas con "!"); None si no pide ninguna (todo el año). En 1.6 la estación de `Data/Fish` ya no
+    cuenta (`GameLocation.CheckGenericFishRequirements` sólo mira horas, clima y nivel)."""
+    if e.get("Season") is not None:
+        return {e["Season"]}
+    out = None
+    for parte in (e.get("Condition") or "").split(","):
+        p = parte.split()
+        if not p or p[0].lstrip("!") not in ("LOCATION_SEASON", "SEASON"):
+            continue
+        nombres = p[2:] if p[0].lstrip("!") == "LOCATION_SEASON" else p[1:]
+        estas = {SEASONS.index(x.lower()) for x in nombres if x.lower() in SEASONS}
+        if p[0].startswith("!"):
+            estas = {0, 1, 2, 3} - estas
+        out = estas if out is None else out & estas
+    return out
+
+
 def _por_lugar(campo: str, valido) -> dict[str, dict]:
     """objeto -> {"where": [lugar…], "seasons": {estación…}} de `Locations.<campo>`."""
     res: dict[str, dict] = {}
     for lugar, loc in sdv.raw("Data/Locations").items():
+        if lugar in LUGARES_FUERA:
+            continue
         for e in loc.get(campo) or []:
             iid = _sin_prefijo(e.get("ItemId") or "")
             if not valido(iid):
@@ -369,10 +515,11 @@ def _por_lugar(campo: str, valido) -> dict[str, dict]:
             d = res.setdefault(iid, {"where": [], "seasons": set(), "todo_el_año": False})
             if lugar not in d["where"]:
                 d["where"].append(lugar)
-            if e.get("Season") is None:
+            estaciones = estaciones_de_entrada(e)
+            if estaciones is None:
                 d["todo_el_año"] = True
             else:
-                d["seasons"].add(e["Season"])
+                d["seasons"] |= estaciones
     return res
 
 
@@ -411,12 +558,27 @@ def shop_season(tienda: str) -> int | None:
 _CONDICIONES_SUPUESTAS = {"!PLAYER_HAS_MAIL Current JojaMember"}
 
 
+def _rango_de_recargos(precio: int, recargos: list[dict] | None, modo: int) -> tuple[int, int]:
+    """El precio más bajo y el más alto con recargos al azar (`RandomAmount`, el carro ambulante): cada uno en su
+    extremo bajo y después en el alto (sumar, multiplicar y fijar crecen con el valor). Sin azar, los dos iguales."""
+    if not recargos or not any(r.get("RandomAmount") for r in recargos):
+        p = _aplicar_recargos(precio, recargos, modo)
+        return p, p
+
+    def extremo(f) -> int:
+        fijos = [{**r, "Amount": f(r["RandomAmount"]), "RandomAmount": None} if r.get("RandomAmount") else r
+                 for r in recargos]
+        return _aplicar_recargos(precio, fijos, modo)
+
+    return extremo(min), extremo(max)
+
+
 def _aplicar_recargos(precio: int, recargos: list[dict] | None, modo: int) -> int:
     """`Utility.ApplyQuantityModifiers` del juego sobre un precio, truncado a entero como en `ShopBuilder`.
 
     `Modification`: 0 suma, 1 resta, 2 multiplica, 3 divide, 4 fija. `modo` (`PriceModifierMode`): 0 se encadenan,
-    1 el menor resultado, 2 el mayor. Un recargo al azar (`RandomAmount`, el carro ambulante) deja el precio como está,
-    y uno con otra condición no se aplica.
+    1 el menor resultado, 2 el mayor. Un recargo al azar (`RandomAmount`) deja el precio como está (el rango lo da
+    `_rango_de_recargos`), y uno con otra condición no se aplica.
     """
     if not recargos or any(r.get("RandomAmount") for r in recargos):
         return precio
@@ -436,6 +598,18 @@ def _aplicar_recargos(precio: int, recargos: list[dict] | None, modo: int) -> in
         valores = [uno(float(precio), r) for r in activos]
         valor = min(valores) if modo == 1 else max(valores)
     return int(valor)
+
+
+def _desde_cuando(condicion: str | None) -> dict:
+    """Desde cuándo vende la tienda el ítem: `YEAR 2` -> {"year": 2}; `DAYS_PLAYED 15` -> {"day": 15}."""
+    out = {}
+    for parte in (condicion or "").split(","):
+        p = parte.split()
+        if len(p) == 2 and p[0] == "YEAR" and p[1].isdigit() and int(p[1]) > 1:
+            out["year"] = int(p[1])
+        elif len(p) == 2 and p[0] == "DAYS_PLAYED" and p[1].isdigit():
+            out["day"] = int(p[1])
+    return out
 
 
 @lru_cache(maxsize=None)
@@ -484,13 +658,16 @@ def sources_by_item() -> dict[str, list[dict]]:
                 precio = objs[sid]["Price"] * 2
             if not it.get("IgnoreShopPriceModifiers"):
                 precio = _aplicar_recargos(precio, t.get("PriceModifiers"), t.get("PriceModifierMode", 0))
-            precio = _aplicar_recargos(precio, it.get("PriceModifiers"), it.get("PriceModifierMode", 0))
+            precio, hasta = _rango_de_recargos(precio, it.get("PriceModifiers"), it.get("PriceModifierMode", 0))
             if (sid, precio) not in vistos:
                 vistos.add((sid, precio))
-                sumar(sid, {"k": "shop", "shop": tienda, "price": precio})
+                fuente = {"k": "shop", "shop": tienda, "price": precio}
+                if hasta != precio:
+                    fuente["max"] = hasta  # al azar entre los dos (el carro ambulante)
+                fuente.update(_desde_cuando(it.get("Condition")))
+                sumar(sid, fuente)
 
-    # Pesca: lugares de Locations.Fish; estaciones de la entrada o, si no trae,
-    # las de Data/Fish.
+    # Pesca: lugares y estaciones de Locations.Fish (la estación de Data/Fish no cuenta desde 1.6).
     fish = sdv.raw("Data/Fish")
     lugares = _por_lugar("Fish", lambda i: i in fish)
     for iid, linea in fish.items():
@@ -499,7 +676,7 @@ def sources_by_item() -> dict[str, list[dict]]:
             sumar(iid, {"k": "fish", "where": ["CrabPot:" + campos[4]], "seasons": [0, 1, 2, 3]})
         elif iid in lugares:
             d = lugares[iid]
-            estaciones = _estaciones(campos[6]) if d["todo_el_año"] else sorted(d["seasons"])
+            estaciones = [0, 1, 2, 3] if d["todo_el_año"] else sorted(d["seasons"])
             sumar(iid, {"k": "fish", "where": d["where"], "seasons": estaciones})
 
     # Recolección: una entrada sin estación vale todo el año.
@@ -513,16 +690,16 @@ def sources_by_item() -> dict[str, list[dict]]:
     # tiradas hay (hasta cuántos caen) cuando es más de una.
     es = sdv.raw("Data/Monsters.es-ES")
     for clave, linea in sdv.raw("Data/Monsters").items():
-        botin: dict[str, list[float]] = {}
-        for iid, p in _pares(linea.split("/")[6]):
-            botin.setdefault(iid, []).append(p)
+        por_objeto: dict[str, list[tuple[float, int]]] = {}
+        for iid, p, hasta in botin(linea.split("/")[6]):
+            por_objeto.setdefault(iid, []).append((p, hasta))
         nombre_es = es.get(clave, linea).split("/")[-1]
-        for iid, ps in botin.items():
+        for iid, ps in por_objeto.items():
             nada = 1.0
-            for p in ps:
+            for p, _ in ps:
                 nada *= 1 - min(p, 1.0)
             fuente = {"k": "monster", "who": [clave, nombre_es], "rate": round(1 - nada, 6)}
-            if len(ps) > 1:
-                fuente["n"] = len(ps)
+            if (n := sum(h for _, h in ps)) > 1:
+                fuente["n"] = n
             sumar(iid, fuente)
     return out

@@ -77,7 +77,8 @@
 .sd-quality div { display: grid; gap: 4px; padding: 10px 12px; border-radius: 6px; background: var(--sd-paper); text-align: center; }
 .sd-quality dt { font-size: 14px; font-weight: 800; color: var(--sd-dim); }
 .sd-quality dd { margin: 0; font-size: 22px; }
-@container (max-width: 480px) { .sd-quality { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.sd-quality.sd-price1 { display: block; width: fit-content; padding: 10px 16px; border-radius: 6px; background: var(--sd-paper); font-size: 22px; }
+@container (max-width: 480px) { .sd-quality:not(.sd-price1) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* Gustos de regalo: retratos con el nombre abajo, enlazados a la ficha del aldeano. */
 .sd-taste + .sd-taste { margin-top: 8px; }

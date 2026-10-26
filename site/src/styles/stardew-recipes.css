@@ -37,6 +37,7 @@ a.sd-rhead:focus-visible, a.sd-ing:focus-visible, a.sd-mthing:focus-visible, a.s
 .sd-unlock.is-skill { background: #d6ecc4; }
 .sd-unlock.is-friend { background: #f6d3d8; }
 .sd-unlock.is-tv { background: #cfe6f2; }
+.sd-unlock.is-shop { background: #f2dcc0; }
 .sd-unlock.is-default { background: #f3e7b8; }
 .sd-unlock.is-other { background: #e6ddd0; }
 
@@ -84,6 +85,7 @@ a.sd-mthing:hover span { text-decoration: underline; text-underline-offset: 3px;
 .sd-mcount { margin-left: 6px; font: 800 13px/1.2 var(--sd-text); color: var(--sd-dim); white-space: nowrap; }
 .sd-mout { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .sd-mout + .sd-mout { margin-top: 2px; }
+.sd-mwhat { display: flex; align-items: center; flex-wrap: wrap; min-width: 0; }
 .sd-mout .sd-gold { font-size: 15px; }
 .sd-mmore { margin-top: 6px; }
 

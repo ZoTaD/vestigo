@@ -34,6 +34,15 @@ class TestSdv(unittest.TestCase):
     def test_slug(self):
         self.assertEqual(sdv.slugify("Melón de verano"), "melon-de-verano")
 
+    def test_herrero_solo_lingotes_y_ganadero_por_nombre(self):
+        self.assertIn("blacksmith", sdv.sell_prices(60, -15, "334", "Copper Bar")["pro"])
+        self.assertNotIn("blacksmith", sdv.sell_prices(5, -15, "378", "Copper Ore")["pro"])
+        self.assertNotIn("blacksmith", sdv.sell_prices(15, -15, "382", "Coal")["pro"])
+        self.assertIn("rancher", sdv.sell_prices(190, -26, "306", "Mayonnaise")["pro"])
+
+    def test_sin_calidad_un_solo_precio(self):
+        self.assertEqual(sdv.sell_prices(60, -15, "334", "Copper Bar", calidad=False)["base"], [60])
+
 
 if __name__ == "__main__":
     unittest.main()

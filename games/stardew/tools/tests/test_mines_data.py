@@ -186,7 +186,7 @@ class TestMinesData(unittest.TestCase):
             self.assertEqual(len(r), 6, i)
             self.assertEqual((r[4], r[5]), (16, 16))
         for m in self.d["monsters"]:
-            for i, _ in m["loot"]:
+            for i, *_ in m["loot"]:
                 self.assertIn(i, self.d["refs"])
 
 

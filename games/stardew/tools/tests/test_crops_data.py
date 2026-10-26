@@ -125,6 +125,10 @@ class TestCropsData(unittest.TestCase):
         self.assertIn([15, 17, ["Desert Festival", "Festival del Desierto"]], fest)
         self.assertIn([13, 13, ["Egg Festival", "Festival del huevo"]], fest)
 
+    def test_girasol_con_el_precio_de_pierre(self):
+        # Joja la vende más barata (125), pero cierra con el Centro Comunitario.
+        self.assertEqual(self.crops["431"]["seedPrice"], 200)
+
 
 if __name__ == "__main__":
     unittest.main()

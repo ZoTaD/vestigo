@@ -14,8 +14,9 @@ import { useLang, useLocale } from "../../i18n";
 import { LazyRows, skipSprite } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
-import { useStardewCopy, type RecipesCopy } from "../../stardewCopy";
+import { QUALITIES, useStardewCopy, type RecipesCopy } from "../../stardewCopy";
 import { useLoad } from "../../useLoad";
+import { qualityIndex } from "../bundles/progress";
 import { loadRecipes, machineTime, peekRecipes, say } from "../data";
 import { Box, Gold, Group, Pill, SdLoading, Slot, Sprite, type Nav } from "../ui";
 import {
@@ -41,6 +42,8 @@ import "../../styles/stardew-recipes.css";
 const SD_RCHUNK = 24;
 /** El alto de una tarjeta de receta, medido en el navegador: 205 px en escritorio (la grilla iguala cada fila), de 157 a 253 a 375 px. */
 const SD_RCARD = 205;
+/** Lo que multiplica el precio cada calidad: normal, plata, oro e iridio (`Object.sellToStorePrice`). */
+const QUALITY_PRICE = [1, 1.25, 1.5, 2];
 /** Las filas de una máquina que se ven antes de "ver todas". */
 const SD_MROWS = 8;
 
@@ -56,16 +59,21 @@ export default function StardewRecipes({ route, navigate }: { route: Route; navi
 /** Cómo se aprende una receta: una pastilla con tinte y el texto de la interfaz con los nombres del juego. */
 function UnlockTag({ u, data, r }: { u: Unlock; data: RecipesData; r: RecipesCopy }) {
   const { lang } = useLang();
-  const text =
+  const locale = useLocale();
+  const show = say(data.refs.tv, lang);
+  const way =
     u.type === "skill"
       ? r.unlock.skill(data.refs.skills[u.skill] ? say(data.refs.skills[u.skill], lang) : u.skill, u.level)
       : u.type === "friend"
         ? r.unlock.friend(data.refs.npcs[u.npc] ? say(data.refs.npcs[u.npc], lang) : u.npc, u.hearts)
         : u.type === "tv"
-          ? r.unlock.tv(say(data.refs.tv, lang))
-          : u.type === "default"
-            ? r.unlock.default
-            : r.unlock.other;
+          ? r.unlock.tv(show)
+          : u.type === "shop"
+            ? r.unlock.shop(data.refs.shops[u.shop] ? say(data.refs.shops[u.shop], lang) : u.shop, u.price ? u.price.toLocaleString(locale) : null)
+            : u.type === "default"
+              ? r.unlock.default
+              : r.unlock.other;
+  const text = (u.type === "skill" || u.type === "friend") && u.tv ? r.unlock.orTv(way, show) : way;
   return (
     <span className={`sd-unlock is-${u.type}`} title={r.unlock.label}>
       {text}
@@ -291,8 +299,12 @@ function MachineBox({
               <td className="c-out" data-label={m.cols.output}>
                 {row.outs.map((o) => (
                   <span className="sd-mout" key={o.out}>
-                    {thing(o.out, say(o.outName, lang), data.refs.items[o.out] ? o.out : (o.flavor ?? row.in))}
-                    <Gold n={o.price} />
+                    <span className="sd-mwhat">
+                      {thing(o.out, say(o.outName, lang), data.refs.items[o.out] ? o.out : (o.flavor ?? row.in))}
+                      {o.stack && <small className="sd-mcount">× {o.stack.toLocaleString(locale)}</small>}
+                      {o.quality && <small className="sd-mcount">{t.qualities[QUALITIES[qualityIndex(o.quality)]]}</small>}
+                    </span>
+                    <Gold n={Math.floor(o.price * QUALITY_PRICE[qualityIndex(o.quality ?? 0)])} />
                   </span>
                 ))}
               </td>

@@ -113,31 +113,46 @@ def _categorias() -> dict[int, tuple[str, str]]:
 
 CATEGORIES: dict[int, tuple[str, str]] = _categorias()
 
-# Profesiones: nombre -> (porcentaje, categorías a las que aplica).
+# Profesiones: nombre -> (porcentaje, categorías a las que aplica), de `Object.getPriceAfterMultipliers`.
 _PROFESIONES = {
     "tiller": (110, (-75, -79, -80)),
     "artisan": (140, (-26,)),
     "rancher": (120, (-5, -6, -18)),
     "fisher": (125, (-4,)),
     "angler": (150, (-4,)),
-    "blacksmith": (150, (-15,)),
+    "blacksmith": (150, ()),
     "gemologist": (130, (-2, -12)),
     "tapper": (125, (-27,)),
 }
+# El Herrero sólo cuenta los lingotes (`Object.IsBar`), no las menas ni el carbón de su categoría.
+_LINGOTES = {"334", "335", "336", "337", "910"}
+# El Ganadero también cuenta lo que se llama así aunque sea de otra categoría (mayonesa, queso, tela).
+_GANADERO_POR_NOMBRE = ("mayonnaise", "cheese", "cloth", "wool")
 _CALIDADES = (100, 125, 150, 200)
 
 
-def sell_prices(price: int, category: int) -> dict:
-    """Precios de venta por calidad (normal, plata, oro, iridio) y por profesión.
+def _profesion_aplica(nombre: str, category: int, item_id: str, nombre_en: str) -> bool:
+    _, cats = _PROFESIONES[nombre]
+    if nombre == "blacksmith":
+        return item_id in _LINGOTES
+    if nombre == "rancher" and any(n in nombre_en.lower() for n in _GANADERO_POR_NOMBRE):
+        return True
+    if nombre in ("fisher", "angler") and item_id == "SmokedFish":
+        return True
+    return category in cats
 
-    Todo en enteros y hacia abajo: la profesión se aplica sobre el precio con
-    calidad.
+
+def sell_prices(price: int, category: int, item_id: str = "", nombre_en: str = "", calidad: bool = True) -> dict:
+    """Precios de venta por calidad (normal, plata, oro, iridio) y por profesión (`Object.sellToStorePrice`).
+
+    Todo en enteros y hacia abajo: la profesión se aplica sobre el precio con calidad. Lo que nunca tiene calidad
+    (lingotes, gemas, anillos…) lleva un solo precio.
     """
-    base = [price * c // 100 for c in _CALIDADES]
+    base = [price * c // 100 for c in (_CALIDADES if calidad else _CALIDADES[:1])]
     pro = {
         nombre: [p * pct // 100 for p in base]
-        for nombre, (pct, cats) in _PROFESIONES.items()
-        if category in cats
+        for nombre, (pct, _) in _PROFESIONES.items()
+        if _profesion_aplica(nombre, category, item_id, nombre_en)
     }
     return {"base": base, "pro": pro}
 

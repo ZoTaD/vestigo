@@ -193,16 +193,23 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
                 </div>
               )}
             </div>
-            <dl className="sd-quality">
-              {QUALITIES.map((q, i) => (
-                <div key={q} data-q={q}>
-                  <dt>{t.qualities[q]}</dt>
-                  <dd>
-                    <Gold n={prices[i]} />
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            {prices.length > 1 ? (
+              <dl className="sd-quality">
+                {QUALITIES.map((q, i) => (
+                  <div key={q} data-q={q}>
+                    <dt>{t.qualities[q]}</dt>
+                    <dd>
+                      <Gold n={prices[i]} />
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            ) : (
+              // Lo que nunca tiene calidad (lingotes, gemas, anillos): un solo precio.
+              <p className="sd-quality sd-price1">
+                <Gold n={prices[0]} />
+              </p>
+            )}
           </section>
         )}
       </Box>
@@ -532,7 +539,18 @@ export default function ItemPage({ ficha, route, navigate }: { ficha: Ficha; rou
           <>
             <span className="sd-src-k">{c.src.shop}</span>
             <b>{say(s.shop, lang)}</b>
-            <span className="sd-row-end">{s.cur ? currency(s.price, s.cur) : <Gold n={s.price} />}</span>
+            {(s.year || s.day) && <small>{s.year ? c.src.fromYear(s.year) : c.src.fromDay(s.day!)}</small>}
+            <span className="sd-row-end">
+              {s.cur ? (
+                currency(s.price, s.cur)
+              ) : s.max ? (
+                <>
+                  <Gold n={s.price} /> – <Gold n={s.max} />
+                </>
+              ) : (
+                <Gold n={s.price} />
+              )}
+            </span>
           </>
         );
       case "fish":

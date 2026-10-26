@@ -112,6 +112,9 @@ export interface ItemsCopy {
     regrow: (days: number) => string;
     mature: (days: number) => string;
     allYear: string;
+    /** Desde cuándo la vende la tienda. */
+    fromYear: (year: number) => string;
+    fromDay: (day: number) => string;
   };
   /** Los cruces con Granja, Museo, Misiones e Isla (etapa 4). */
   producedBy: string;
@@ -279,6 +282,10 @@ export interface RecipesCopy {
     skill: (skill: string, level: number) => string;
     friend: (npc: string, hearts: number) => string;
     tv: (show: string) => string;
+    /** Se compra la receta: la tienda y, si es con oro, el precio ya escrito. */
+    shop: (shop: string, price: string | null) => string;
+    /** Se suma a la amistad o a la habilidad cuando también la enseña la TV. */
+    orTv: (way: string, show: string) => string;
     other: string;
   };
   /** Cuántos salen de una receta, en el casillero ("× 10"). */
@@ -1206,6 +1213,8 @@ const EN: StardewCopy = {
       regrow: (d) => `regrows every ${d} days`,
       mature: (d) => `${d} days to mature`,
       allYear: "All year",
+      fromYear: (y) => `from year ${y}`,
+      fromDay: (d) => `from day ${d}`,
     },
     producedBy: "Produced by",
     deluxe: "with high friendship",
@@ -1348,6 +1357,8 @@ const EN: StardewCopy = {
       skill: (skill, level) => `${skill} level ${level}`,
       friend: (npc, hearts) => `${npc} · ${hearts} ${hearts === 1 ? "heart" : "hearts"}`,
       tv: (show) => `TV (${show})`,
+      shop: (shop, price) => (price ? `${shop} · ${price}g` : `${shop} (trade)`),
+      orTv: (way, show) => `${way} or TV (${show})`,
       other: "Other way",
     },
     makes: (n) => `× ${n}`,
@@ -1667,7 +1678,7 @@ const EN: StardewCopy = {
       title: "Perfection",
       hint: "Open a part to see what's left. The farm counts as one: in each part, the farmer who has the most.",
       points: (got, weight) => `${got} of ${weight} points`,
-      level: (level) => `Farmer level ${level} of 25: the sum of your six skills, halved.`,
+      level: (level) => `Farmer level ${level} of 25: the sum of your five skills, halved.`,
       walnuts: "Golden Walnuts are found on Ginger Island.",
       allDone: "Done.",
       hearts: (have, need) => `${have} / ${need} ♥`,
@@ -1892,6 +1903,8 @@ const ES: StardewCopy = {
       regrow: (d) => `vuelve a dar cada ${d} días`,
       mature: (d) => `${d} días hasta dar fruto`,
       allYear: "Todo el año",
+      fromYear: (y) => `desde el año ${y}`,
+      fromDay: (d) => `desde el día ${d}`,
     },
     producedBy: "Lo produce",
     deluxe: "con mucha amistad",
@@ -2034,6 +2047,8 @@ const ES: StardewCopy = {
       skill: (skill, level) => `${skill} nivel ${level}`,
       friend: (npc, hearts) => `${npc} · ${hearts} ${hearts === 1 ? "corazón" : "corazones"}`,
       tv: (show) => `TV (${show})`,
+      shop: (shop, price) => (price ? `${shop} · ${price} g` : `${shop} (trueque)`),
+      orTv: (way, show) => `${way} o TV (${show})`,
       other: "Otra forma",
     },
     makes: (n) => `× ${n}`,
@@ -2353,7 +2368,7 @@ const ES: StardewCopy = {
       title: "Perfección",
       hint: "Abrí una parte para ver lo que falta. La granja cuenta como una: en cada parte, el granjero que más tiene.",
       points: (got, weight) => `${got} de ${weight} puntos`,
-      level: (level) => `Nivel de granjero ${level} de 25: la suma de tus seis habilidades, dividida por dos.`,
+      level: (level) => `Nivel de granjero ${level} de 25: la suma de tus cinco habilidades, dividida por dos.`,
       walnuts: "Las nueces de oro se encuentran en la Isla Jengibre.",
       allDone: "Hecho.",
       hearts: (have, need) => `${have} / ${need} ♥`,

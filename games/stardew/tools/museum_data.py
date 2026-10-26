@@ -200,7 +200,7 @@ def pieces() -> list[dict]:
             # El Gólem de iridio se llama igual que el salvaje en el juego (`Wilderness Golem`): una fila por nombre.
             if m["name"][0] in vistos:
                 continue
-            if any(x == i for x, _ in m["loot"]) or i in _MONSTRUOS_EXTRA.get(m["key"], []):
+            if any(fila[0] == i for fila in m["loot"]) or i in _MONSTRUOS_EXTRA.get(m["key"], []):
                 vistos.add(m["name"][0])
                 where.append({"k": "monster", "who": m["name"], "slug": m["slug"], "slugEs": m["slugEs"]})
         if i in _PESCA:
