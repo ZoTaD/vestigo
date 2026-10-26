@@ -160,6 +160,31 @@ class TestMoreData(unittest.TestCase):
         self.assertEqual(self.rec["refs"]["skills"]["Farming"], ["Farming", "Agricultura"])
         self.assertEqual(self.rec["refs"]["npcs"]["Emily"][0], "Emily")
 
+    # --- auditoría contra la wiki y el código del juego (26/10) ---
+
+    def test_estaciones_de_lugar_y_nivel_de_la_entrada(self):
+        self.assertEqual(self.peces["131"]["seasons"], [0, 2, 3])  # Sardina
+        self.assertEqual(self.peces["699"]["seasons"], [2, 3])  # Trucha tigre
+        self.assertEqual(self.peces["155"]["seasons"], [1, 2, 3])  # Superpepino: playa en verano y otoño, submarino en invierno
+        self.assertEqual(self.peces["775"]["minLevel"], 6)  # Pez glaciar
+
+    def _receta(self, nombre: str) -> dict:
+        return next(r for r in self.rec["recipes"] if r["name"][0] == nombre)
+
+    def test_desbloqueo_tv_tienda_y_amistad(self):
+        self.assertEqual(self._receta("Lucky Lunch")["unlock"], {"type": "tv"})
+        self.assertEqual(self._receta("Ginger Ale")["unlock"], {"type": "shop", "shop": "VolcanoShop", "price": 1000})
+        self.assertEqual(self._receta("Triple Shot Espresso")["unlock"]["shop"], "Saloon")
+        bisque = self._receta("Lobster Bisque")["unlock"]
+        self.assertEqual((bisque["type"], bisque["npc"], bisque.get("tv")), ("friend", "Willy", True))
+
+    def test_maquina_con_cantidad_y_calidad(self):
+        mayo = next(m for m in self.rec["machines"] if m["id"] == "(BC)24")
+        dorado = next(r for r in mayo["rules"] if r["in"] == "928")
+        self.assertEqual((dorado["stack"], dorado["quality"]), (3, 2))
+        cristal = next(m for m in self.rec["machines"] if m["id"] == "(BC)21")
+        self.assertEqual(next(r for r in cristal["rules"] if r["in"] == "72")["minutes"], 7200)
+
 
 if __name__ == "__main__":
     unittest.main()

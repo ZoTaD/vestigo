@@ -150,10 +150,14 @@ describe("la pantalla", () => {
     const es = screen(DEFAULT_RECIPE_STATE, "es").html;
     expect(card(es, "pink-cake")).toContain("TV (La reina de la salsa)");
     expect(card(es, "salad")).toContain("Emily · 3 corazones");
+    expect(card(es, "lobster-bisque")).toContain("Willy · 9 corazones o TV (La reina de la salsa)");
+    expect(card(es, "lucky-lunch")).toContain("TV (La reina de la salsa)");
+    expect(card(es, "triple-shot-espresso")).toContain("Gus · 5.000 g");
     const craft = screen(st({ view: "craft" }), "es").html;
     expect(card(craft, "stone-fence")).toContain("Agricultura nivel 2");
     expect(card(craft, "wood-fence")).toContain("Desde el principio");
-    expect(card(craft, "grass-starter")).toContain("Otra forma");
+    expect(card(craft, "grass-starter")).toContain("Pierre · 1.000 g");
+    expect(card(craft, "cask")).toContain("Otra forma");
     const en = screen(st({ view: "craft" })).html;
     expect(card(en, "stone-fence")).toContain("Farming level 2");
   });
@@ -174,7 +178,13 @@ describe("la pantalla", () => {
     const at = html.indexOf('data-machine="keg"');
     const keg = html.slice(at, html.indexOf("data-machine=", at + 20));
     expect([...keg.matchAll(/data-rule=/g)].length).toBe(8);
-    expect(keg).toContain("Ver las 74");
+    expect(keg).toContain("Ver las 65"); // sin las setas ni lo que no se come
+    // La mayonesa del huevo dorado: 3 de oro, al precio de oro (190 × 1,5).
+    const gold = screen(st({ view: "machines", q: "golden egg" })).html;
+    const dorado = gold.slice(gold.indexOf('data-rule="928"'), gold.indexOf("</tr>", gold.indexOf('data-rule="928"')));
+    expect(dorado).toContain("× 3");
+    expect(dorado).toContain("Gold");
+    expect(dorado).toContain("285");
     // El tiempo legible y el precio: el Zumo de rábano tarda unos 4 días.
     expect(keg).toContain("≈ 4 días");
     expect(keg).toContain("/stardew/items/bc-12.png");

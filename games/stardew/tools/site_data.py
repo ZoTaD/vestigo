@@ -450,12 +450,12 @@ def build(write: bool = False) -> dict:
         for s in fuentes_i:
             has |= {"crop": GROWS, "tree": GROWS, "shop": SHOP, "fish": FISH, "forage": FORAGE, "monster": MONSTER}.get(s["k"], 0)
 
-        precio = d.get("Price", 0)
+        precio = d.get("Price", 0) if i.startswith("(BC)") else relations.precio_de_venta(i)
         en = None if i.startswith("(BC)") else sdv.energy(d.get("Edibility", -300))
         fichas[slug[i]] = {
             "id": i, "slug": slug[i], "slugEs": slug_es[i],
             "name": [name_en[i], name_es[i]], "desc": desc[i], "cat": cat[i],
-            "prices": sdv.sell_prices(precio, cat[i]),
+            "prices": sdv.sell_prices(precio, cat[i], i, d.get("Name", ""), relations.con_calidad(i)),
             "energy": list(en) if en else None,
             "tastes": tastes, "bundles": paquetes.get(i, []),
             "recipes": {"make": make, "use": use},

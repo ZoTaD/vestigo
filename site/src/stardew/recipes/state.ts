@@ -12,9 +12,10 @@ type Pair = [en: string, es: string];
 /** Cómo se aprende una receta: de entrada, por nivel de habilidad, por amistad, por el programa de cocina de la TV u otra forma. */
 export type Unlock =
   | { type: "default" }
-  | { type: "skill"; skill: string; level: number }
-  | { type: "friend"; npc: string; hearts: number }
+  | { type: "skill"; skill: string; level: number; tv?: true }
+  | { type: "friend"; npc: string; hearts: number; tv?: true }
   | { type: "tv" }
+  | { type: "shop"; shop: string; price?: number }
   | { type: "other"; level?: number };
 
 export interface Recipe {
@@ -42,6 +43,10 @@ export interface MachineRule {
   count?: number;
   /** El objeto que le da el sabor al producto (la fruta del vino). */
   flavor?: string;
+  /** Cuántos salen si es más de uno (10 mayonesas del huevo de avestruz). */
+  stack?: number;
+  /** La calidad fija de lo que sale: 1 plata, 2 oro, 4 iridio. */
+  quality?: number;
 }
 
 export interface Machine {
@@ -65,6 +70,8 @@ export interface RecipesData {
     cats: Record<string, Pair>;
     skills: Record<string, Pair>;
     npcs: Record<string, Pair>;
+    /** Las tiendas que venden recetas. */
+    shops: Record<string, Pair>;
     /** El programa de cocina de la TV ("La reina de la salsa"). */
     tv: Pair;
   };
@@ -143,7 +150,7 @@ export interface RuleRow {
   inName: Pair;
   count: number;
   minutes: number;
-  outs: { out: string; outName: Pair; price: number; flavor?: string }[];
+  outs: { out: string; outName: Pair; price: number; flavor?: string; stack?: number; quality?: number }[];
 }
 
 /** Las reglas de una máquina juntas por lo que entra, en el orden del juego. */
@@ -151,7 +158,14 @@ export function ruleRows(m: Machine): RuleRow[] {
   const rows = new Map<string, RuleRow>();
   for (const r of m.rules) {
     const row = rows.get(r.in) ?? { in: r.in, inName: r.inName, count: r.count ?? 1, minutes: r.minutes, outs: [] };
-    row.outs.push({ out: r.out, outName: r.outName, price: r.price, ...(r.flavor ? { flavor: r.flavor } : {}) });
+    row.outs.push({
+      out: r.out,
+      outName: r.outName,
+      price: r.price,
+      ...(r.flavor ? { flavor: r.flavor } : {}),
+      ...(r.stack ? { stack: r.stack } : {}),
+      ...(r.quality ? { quality: r.quality } : {}),
+    });
     rows.set(r.in, row);
   }
   return [...rows.values()];

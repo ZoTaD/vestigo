@@ -86,6 +86,78 @@ class TestRelations(unittest.TestCase):
     def test_otra_tienda_no_cambia(self):
         self.assertEqual(self._tiendas("685")["FishShop"], 5)
 
+    # --- auditoría contra la wiki y el código del juego (26/10) ---
+
+    def test_regalos_universales_le_ganan_a_la_categoria_personal(self):
+        # A Pierre, Leah y Caroline no les gustan las gemas o la cocina, pero el Fragmento prismático y el Caramelo
+        # de roca mágica son universales por id: les encantan. Las excepciones son personales por id.
+        self.assertEqual(relations.gift_taste("Pierre", "74"), "love")
+        self.assertEqual(relations.gift_taste("Leah", "74"), "love")
+        self.assertEqual(relations.gift_taste("Caroline", "279"), "love")
+        self.assertEqual(relations.gift_taste("Haley", "74"), "hate")
+        self.assertEqual(relations.gift_taste("Penny", "446"), "hate")
+
+    def test_artefactos_y_anillos(self):
+        self.assertEqual(relations.gift_taste("Abigail", "103"), "dislike")
+        self.assertEqual(relations.gift_taste("Penny", "103"), "like")
+        self.assertEqual(relations.gift_taste("Abigail", "527"), "neutral")
+
+    def _maquina(self, entrada: str, maquina: str) -> dict | None:
+        return next((m for m in relations.machines_by_input().get(entrada, []) if m["machine"] == maquina), None)
+
+    def test_cristalario_tarda_segun_la_gema(self):
+        self.assertEqual(self._maquina("72", "(BC)21")["minutes"], 7200)  # Diamante
+        self.assertEqual(self._maquina("80", "(BC)21")["minutes"], 420)  # Cuarzo
+        self.assertEqual(self._maquina("60", "(BC)21")["minutes"], 3000)  # Esmeralda
+
+    def test_barril_sin_setas_ni_lo_que_no_se_come(self):
+        self.assertIsNone(self._maquina("404", "(BC)12"))  # Champiñón
+        self.assertIsNone(self._maquina("18", "(BC)12"))  # Narciso
+        self.assertIsNone(self._maquina("18", "(BC)15"))
+        self.assertIsNone(self._maquina("92", "(BC)15"))  # Savia
+        self.assertIsNotNone(self._maquina("24", "(BC)12"))  # Chirivía: zumo
+
+    def test_mayonesa_de_huevos_grandes(self):
+        avestruz = self._maquina("289", "(BC)24")
+        self.assertEqual((avestruz["stack"], avestruz["quality"]), (10, 0))
+        dorado = self._maquina("928", "(BC)24")
+        self.assertEqual((dorado["stack"], dorado["quality"]), (3, 2))
+
+    def test_estacion_de_los_peces_sale_del_lugar(self):
+        pesca = {f["where"][0]: f for f in relations.sources_by_item()["131"] if f["k"] == "fish"}
+        self.assertEqual(pesca["Beach"]["seasons"], [0, 2, 3])  # Sardina: no en verano
+        trucha = next(f for f in relations.sources_by_item()["699"] if f["k"] == "fish")
+        self.assertEqual(trucha["seasons"], [2, 3])
+
+    def test_sin_lugares_de_festival(self):
+        for fuentes in relations.sources_by_item().values():
+            for f in fuentes:
+                if f["k"] == "fish":
+                    self.assertFalse({"Temp", "fishingGame"} & set(f["where"]))
+
+    def test_anillos_y_calidad(self):
+        self.assertEqual(relations.precio_de_venta("527"), 1000)  # Banda de iridio
+        self.assertFalse(relations.con_calidad("527"))
+        self.assertFalse(relations.con_calidad("334"))  # Lingote de cobre
+        self.assertFalse(relations.con_calidad("74"))
+        self.assertTrue(relations.con_calidad("24"))
+        self.assertTrue(relations.con_calidad("424"))  # Queso: la barrica
+        self.assertTrue(relations.con_calidad("SmokedFish"))
+        self.assertFalse(relations.con_calidad("340"))  # Miel
+
+    def test_carbon_y_mena_de_oro_en_el_botin(self):
+        carbon = {f["who"][0]: f for f in relations.sources_by_item()["382"] if f["k"] == "monster"}
+        self.assertEqual(carbon["Sludge"]["n"], 3)
+        oro = {f["who"][0] for f in relations.sources_by_item()["384"] if f["k"] == "monster"}
+        self.assertIn("Ghost", oro)
+
+    def test_tiendas_desde_cuando_y_precio_al_azar(self):
+        tiendas = {f["shop"]: f for f in relations.sources_by_item()["485"] if f["k"] == "shop"}
+        self.assertEqual(tiendas["SeedShop"].get("year"), 2)  # Col lombarda: Pierre desde el año 2
+        self.assertEqual((tiendas["Traveler"]["price"], tiendas["Traveler"]["max"]), (300, 1000))
+        speed = next(f for f in relations.sources_by_item()["465"] if f["k"] == "shop" and f["shop"] == "SeedShop")
+        self.assertEqual(speed.get("day"), 15)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -418,7 +418,7 @@ def rings(slugs: dict) -> list[dict]:
             "id": i, "slug": s[0], "slugEs": s[1],
             "name": [sdv.text(o["DisplayName"], "en"), sdv.text(o["DisplayName"], "es")],
             "desc": [sdv.text(o["Description"], "en"), sdv.text(o["Description"], "es")],
-            "price": o.get("Price", 0),
+            "price": relations.precio_de_venta(i),  # el de venta: la mitad del de Data/Objects
         })
     return out
 
@@ -449,8 +449,8 @@ def monsters() -> list[dict]:
         # El Gólem de iridio se llama igual que el salvaje en los datos del juego: se desempata con la clave.
         slug = _unico(sdv.slugify(nombre[0]), slugs, k)
         slug_es = _unico(sdv.slugify(nombre[1]), slugs_es, k)
-        botin = c[6].split()
-        loot = [[botin[i], float(botin[i + 1])] for i in range(0, len(botin) - 1, 2) if not botin[i].startswith("-")]
+        # Con un tercer valor, cuántos caen como mucho por tirada (el carbón y las menas, de 1 a 3).
+        loot = [[iid, p] + ([hasta] if hasta > 1 else []) for iid, p, hasta in relations.botin(c[6])]
         sp = monster_sprite(k)
         out.append({
             "key": k, "slug": slug, "slugEs": slug_es, "name": nombre,
@@ -525,7 +525,7 @@ def mines() -> dict:
     ar, bo, an, ba, ch = weapons(), boots(), rings(slugs), trinkets(), chests()
     zo = zones(mons)
     # Los objetos nombrados: botín, minerales y premios (con la forma de `Ref`: slug, slug español, nombre en, es, ancho, alto).
-    ids = {i for m in mons for i, _ in m["loot"]} | {i for z in zo for i in z["ores"]}
+    ids = {fila[0] for m in mons for fila in m["loot"]} | {i for z in zo for i in z["ores"]}
     ids |= {c["item"][3:] for c in ch if c["item"].startswith("(O)")}
     ids |= {i[3:] for r in ch for i in r.get("remixed", []) if i.startswith("(O)")}
     ids |= {r["id"] for r in an}

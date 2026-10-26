@@ -82,7 +82,8 @@ export type Source =
   | { k: "crop"; seed: string; days: number; seasons: number[]; regrow: number }
   | { k: "tree"; sapling: string; days: number; seasons: number[] }
   /** `cur`: el id de la moneda cuando no es oro (gemas de Qi `858`, nueces doradas `73`); va en `refs`. */
-  | { k: "shop"; shop: Pair; price: number; cur?: string }
+  /** `max`: el precio es al azar entre `price` y `max` (el carro ambulante). `year`/`day`: lo vende desde ese año o ese día de juego. */
+  | { k: "shop"; shop: Pair; price: number; cur?: string; max?: number; year?: number; day?: number }
   | { k: "fish" | "forage"; where: Pair[]; seasons: number[] }
   /**
    * `rate`: la probabilidad de que caiga al menos uno; `n`: cuántas tiradas hay (hasta cuántos caen), si es más de una.
