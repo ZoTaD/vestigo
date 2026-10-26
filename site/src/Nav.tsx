@@ -1,9 +1,9 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { useCopy, useLang, type Lang } from "./i18n";
 import RouteLink from "./RouteLink";
 import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
-import { GAME_GROUPS, GAME_ORDER } from "./gameGroups";
+import { GAME_GROUPS, GAME_LOGOS } from "./gameGroups";
 import { hasNavSearch, hitIconSize, loadNavSearcher, type NavHit, type NavSearcher } from "./navSearch";
 
 export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew";
@@ -16,9 +16,10 @@ export type View = Place | "privacy" | "terms";
  * La barra superior del rediseño del 2026-09-06: marca · lugares · buscador ·
  * idioma. Igual en la portada y en todos los juegos.
  *
- * **La barra se llena de juegos y los que no entran van a un menú** (2026-10-12): se muestran todos los que
- * caben en el ancho que hay y el resto queda detrás del botón de tres puntos, por categoría. El juego en el
- * que se está nunca se va al menú.
+ * **Los juegos viven en el menú "Games"** (2026-10-26, maqueta B elegida por ZoTaD): con ocho juegos ya no entraban
+ * en la barra. El botón abre un panel con una columna por categoría (`gameGroups.ts`), el logo de cada juego en un
+ * solo color y sus tres pestañas más buscadas; en el teléfono el panel ocupa la pantalla. En la barra queda sólo el
+ * juego en el que se está. Antes (2026-10-12) entraban los que cabían y el resto iba a un menú de tres puntos.
  *
  * **El buscador está en todas las páginas** porque buscarse es el caso de uso
  * número uno de un sitio de stats y la competencia entera lo tiene a un tap
@@ -87,64 +88,49 @@ export default function Nav({
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
   }, []);
-  /* --- Los juegos de la barra y el menú de los que no entran -------------- */
-  const activeGame = (GAME_ORDER as string[]).includes(active) ? (active as Game) : null;
+  /* --- El menú de juegos ------------------------------------------------------ */
+  const activeGame = (Object.keys(GAME_LOGOS) as Game[]).includes(active as Game) ? (active as Game) : null;
   const [menu, setMenu] = useState(false);
-  /** Los juegos que no entraron en la barra. Vacío en el prerender: ahí están todos a la vista. */
-  const [over, setOver] = useState<Game[]>([]);
-  const [menuLeft, setMenuLeft] = useState(0);
-  const bar = useRef<HTMLDivElement>(null);
-  const places = useRef<HTMLSpanElement>(null);
-  const more = useRef<HTMLButtonElement>(null);
-  const games = useRef<HTMLDivElement>(null);
-  /**
-   * Cuántos juegos entran. Los que no entran siguen en la fila, fuera de flujo e invisibles, así se los puede
-   * seguir midiendo cuando la ventana se agranda. Se llena en orden, salvo el juego activo, que entra primero.
-   */
-  useLayoutEffect(() => {
-    const row = places.current;
-    if (!row) return;
-    const measure = () => {
-      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
-      const width = new Map<Game, number>();
-      row.querySelectorAll<HTMLElement>("[data-game]").forEach((el) => width.set(el.dataset.game as Game, el.offsetWidth + gap));
-      const home = row.querySelector<HTMLElement>("[data-home]")?.offsetWidth ?? 0;
-      const all = GAME_ORDER.reduce((n, g) => n + (width.get(g) ?? 0), home);
-      let out: Game[] = [];
-      if (all > row.clientWidth) {
-        let used = home + (more.current?.offsetWidth ?? 0) + gap;
-        const keep = new Set<Game>();
-        let full = false;
-        for (const g of activeGame ? [activeGame, ...GAME_ORDER.filter((x) => x !== activeGame)] : GAME_ORDER) {
-          const w = width.get(g) ?? 0;
-          if (!full && used + w <= row.clientWidth) { used += w; keep.add(g); } else full = true;
-        }
-        out = GAME_ORDER.filter((g) => !keep.has(g));
-      }
-      setOver((prev) => (prev.join() === out.join() ? prev : out));
-    };
-    measure();
-    const watch = new ResizeObserver(measure);
-    watch.observe(row);
-    // Las tipografías llegan después del primer dibujo y cambian el ancho de cada nombre.
-    document.fonts?.ready.then(measure, () => undefined);
-    return () => watch.disconnect();
-  }, [activeGame, lang]);
-  useEffect(() => { if (!over.length) setMenu(false); }, [over]);
-  /** El menú cuelga del botón, alineado a su derecha y sin salirse de la barra por la izquierda. */
-  useLayoutEffect(() => {
-    if (!menu || !more.current || !games.current || !bar.current) return;
-    const pad = parseFloat(getComputedStyle(bar.current).paddingLeft) || 0;
-    setMenuLeft(Math.max(pad, more.current.offsetLeft + more.current.offsetWidth - games.current.offsetWidth));
-  }, [menu, over]);
+  const nav = useRef<HTMLElement>(null);
+  const menuBtn = useRef<HTMLButtonElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
+  /** En el teléfono el menú tapa la pantalla entera: ahí el foco no sale de él y la página de atrás no se mueve. */
+  const isSheet = () => typeof matchMedia === "function" && matchMedia("(max-width: 760px)").matches;
+  const closeMenu = (refocus: boolean) => {
+    setMenu(false);
+    if (refocus) menuBtn.current?.focus();
+  };
   useEffect(() => {
     if (!menu) return;
-    const out = (e: MouseEvent) => { if (bar.current && !bar.current.contains(e.target as Node)) setMenu(false); };
-    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") setMenu(false); };
+    /** Lo que se puede enfocar en el panel y está a la vista (la X sólo se ve en el teléfono). */
+    const focusable = () => [...(panel.current?.querySelectorAll<HTMLElement>("a, button") ?? [])].filter((el) => el.offsetParent);
+    focusable()[0]?.focus();
+    const out = (e: MouseEvent) => { if (nav.current && !nav.current.contains(e.target as Node)) closeMenu(false); };
+    const keys = (e: KeyboardEvent) => {
+      if (e.key === "Escape") return closeMenu(true);
+      if (e.key !== "Tab" || !isSheet()) return;
+      const all = focusable();
+      const first = all[0], last = all[all.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    // En escritorio el menú cuelga de la barra: si el foco se va a la página, se cierra.
+    const leave = (e: FocusEvent) => { if (!isSheet() && nav.current && !nav.current.contains(e.target as Node)) closeMenu(false); };
     document.addEventListener("mousedown", out);
-    document.addEventListener("keydown", esc);
-    return () => { document.removeEventListener("mousedown", out); document.removeEventListener("keydown", esc); };
+    document.addEventListener("keydown", keys);
+    document.addEventListener("focusin", leave);
+    const root = document.documentElement;
+    const overflow = root.style.overflow;
+    if (isSheet()) root.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("mousedown", out);
+      document.removeEventListener("keydown", keys);
+      document.removeEventListener("focusin", leave);
+      root.style.overflow = overflow;
+    };
   }, [menu]);
+  /** Elegir algo del menú es navegar y cerrarlo. */
+  const pick = (r: Route) => { setMenu(false); onNavigate(r); };
   /** La portada de cada juego: a dónde lleva su nombre en el menú. */
   const gameHome: Record<Game, Route> = {
     deadlock: a("deadlock"),
@@ -166,7 +152,15 @@ export default function Nav({
     terraria: copy.games.terraria,
     stardew: copy.games.stardew,
   };
-  const gameShort: Record<Game, string> = { ...gameFull, poe2: copy.games.poe2Short, d2r: copy.games.diablo2Short, zomboid: copy.games.zomboidShort };
+  const gameShort: Record<Game, string> = { ...gameFull, poe2: copy.games.poe2Short, d2r: copy.games.diablo2Short, zomboid: copy.games.zomboidShort, stardew: copy.games.stardewShort };
+  /** La clave de la ruta que elige la pestaña de cada juego: los accesos directos del menú la cambian. */
+  const tabKey = {
+    deadlock: "dlSection", poe2: "p2Section", valheim: "vhSection", d2r: "d2Section",
+    zomboid: "pzSection", rust: "rsSection", terraria: "trSection", stardew: "sdSection",
+  } as const satisfies Record<Game, keyof Route>;
+  const quickRoute = (game: Game, tab: string): Route => ({ ...gameHome[game], [tabKey[game]]: tab });
+  /** La pestaña que se está mirando, para marcar su acceso directo. */
+  const activeTab = activeGame ? route[tabKey[activeGame]] : undefined;
 
   const hitRoute = (h: NavHit): Route => ({ ...route, detail: undefined, ...h.to });
   const goTo = (h: NavHit) => {
@@ -195,71 +189,32 @@ export default function Nav({
   };
 
   return (
-    <nav className="top" aria-label={copy.brand}>
-      <div className="top-in" ref={bar}>
+    <nav className="top" aria-label={copy.brand} ref={nav}>
+      <div className="top-in">
         <RouteLink className="top-brand" to={a("home")} onNavigate={onNavigate}>
           {copy.brand}
         </RouteLink>
 
-        <span className="top-places" ref={places}>
-          <RouteLink
-            className="top-place"
-            to={a("home")}
-            active={active === "home"}
-            onNavigate={onNavigate}
-            data-home=""
-          >
-            {copy.sections.home}
-          </RouteLink>
-          {GAME_ORDER.map((game) => (
-            <RouteLink
-              className={`top-place${over.includes(game) ? " is-over" : ""}`}
-              key={game}
-              to={gameHome[game]}
-              active={active === game}
-              onNavigate={onNavigate}
-              data-game={game}
-            >
-              {gameShort[game]}
-            </RouteLink>
-          ))}
-          <button
-            type="button"
-            className={`top-place top-more${over.length ? "" : " is-over"}`}
-            ref={more}
-            aria-label={copy.games.more}
-            title={copy.games.more}
-            aria-expanded={menu}
-            aria-controls="top-games"
-            onClick={() => setMenu((v) => !v)}
-          >
-            <svg viewBox="0 0 18 4" aria-hidden="true">
-              <circle cx="2" cy="2" r="2" /><circle cx="9" cy="2" r="2" /><circle cx="16" cy="2" r="2" />
-            </svg>
-          </button>
-        </span>
+        <button
+          type="button"
+          className="top-menu-btn"
+          ref={menuBtn}
+          aria-expanded={menu}
+          aria-controls="top-menu"
+          onClick={() => setMenu((v) => !v)}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            {menu ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+          </svg>
+          <span className="top-menu-label">{copy.games.menu}</span>
+        </button>
 
-        {/* Los juegos que no entraron en la barra, por categoría. */}
-        <div className="top-games" id="top-games" ref={games} hidden={!menu} style={{ left: menuLeft }}>
-          {GAME_GROUPS.map((g) => ({ ...g, games: g.games.filter((game) => over.includes(game)) }))
-            .filter((g) => g.games.length)
-            .map((g) => (
-              <div className="top-games-group" key={g.id}>
-                <p className="top-games-title">{copy.games.groups[g.id]}</p>
-                {g.games.map((game) => (
-                  <RouteLink
-                    className="top-games-link"
-                    key={game}
-                    to={gameHome[game]}
-                    active={active === game}
-                    onNavigate={(r) => { setMenu(false); onNavigate(r); }}
-                  >
-                    {gameFull[game]}
-                  </RouteLink>
-                ))}
-              </div>
-            ))}
-        </div>
+        {/* El juego en el que se está: con los juegos dentro del menú, es lo que dice dónde se está. */}
+        {activeGame && (
+          <RouteLink className="top-here" to={gameHome[activeGame]} active onNavigate={onNavigate}>
+            {gameShort[activeGame]}
+          </RouteLink>
+        )}
 
         <form className="top-search" role="search" onSubmit={submit} ref={box}>
           <label className="top-search-field">
@@ -335,6 +290,58 @@ export default function Nav({
             ))}
           </span>
         </span>
+      </div>
+
+      {/* Todos los juegos, por categoría, con el logo de cada uno y sus pestañas más buscadas (2026-10-26). En el
+          prerender está en el HTML (oculto): así cada página enlaza a todos los juegos. */}
+      <div className="top-menu" id="top-menu" ref={panel} hidden={!menu} aria-label={copy.games.menu} role="region">
+        <div className="top-menu-head">
+          <span className="top-brand" aria-hidden="true">{copy.brand}</span>
+          <button type="button" className="top-menu-close" aria-label={copy.games.close} onClick={() => closeMenu(true)}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+          </button>
+        </div>
+        <div className="top-menu-in">
+          {GAME_GROUPS.map((g) => (
+            <div className={`top-menu-group is-${g.id}`} key={g.id}>
+              <p className="top-menu-title">
+                {copy.games.groups[g.id]}
+                <span className="top-menu-count">{g.games.length}</span>
+              </p>
+              <ul className="top-menu-games">
+                {g.games.map((game) => {
+                  const [w, h] = GAME_LOGOS[game];
+                  const quick = copy.games.quick[game] as Record<string, string>;
+                  return (
+                    <li className={`top-menu-game${active === game ? " is-here" : ""}`} key={game}>
+                      <RouteLink className="top-menu-logo" to={gameHome[game]} active={active === game} onNavigate={pick}>
+                        <span
+                          className="top-logo"
+                          aria-hidden="true"
+                          style={{ "--logo": `url(/logos/${game}.png)`, width: w, height: h } as CSSProperties}
+                        />
+                        <span className="visually-hidden">{gameFull[game]}</span>
+                      </RouteLink>
+                      <span className="top-menu-quick">
+                        {Object.entries(quick).map(([tab, label]) => (
+                          <RouteLink
+                            key={tab}
+                            to={quickRoute(game, tab)}
+                            active={active === game && activeTab === tab}
+                            onNavigate={pick}
+                            aria-label={`${gameFull[game]}: ${label}`}
+                          >
+                            {label}
+                          </RouteLink>
+                        ))}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
     </nav>
   );

@@ -348,6 +348,10 @@
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 [[headers]]
+  for = "/logos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
   for = "/valheim/map/icons/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
