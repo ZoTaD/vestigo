@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Compila Dump.cs con el csc de Visual Studio contra el runtime .NET 6 instalado
 # y las DLL del juego, y vuelca los datos a games/stardew/raw/ (ignorada por git).
+# `dump.sh MapDump` compila y corre MapDump.cs (los mapas de las granjas) en vez de Dump.cs.
 #
 # Hace falta: Stardew Valley instalado (1.6), el runtime Microsoft.NETCore.App 6
 # y el csc de Visual Studio (Build Tools o Community). Corre en Git Bash.
@@ -11,6 +12,7 @@ AQUI="$(cd "$(dirname "$0")" && pwd)"
 RAIZ="$(cd "$AQUI/../../.." && pwd)"
 SALIDA="$RAIZ/games/stardew/raw"
 OBJ="$RAIZ/games/stardew/raw/.bin"
+PROG="${1:-Dump}"
 
 CSC="$(ls -d "/c/Program Files/Microsoft Visual Studio"/*/*/MSBuild/Current/Bin/Roslyn/csc.exe \
              "/c/Program Files (x86)/Microsoft Visual Studio"/*/*/MSBuild/Current/Bin/Roslyn/csc.exe 2>/dev/null | head -1)"
@@ -27,10 +29,10 @@ done
 refs+=("-r:$(cygpath -w "$JUEGO/MonoGame.Framework.dll")")
 
 "$CSC" -nologo -noconfig -nostdlib -target:exe -langversion:latest -nowarn:1701,1702 \
-  -out:"$(cygpath -w "$OBJ/Dump.dll")" "${refs[@]}" "$(cygpath -w "$AQUI/Dump.cs")"
+  -out:"$(cygpath -w "$OBJ/$PROG.dll")" "${refs[@]}" "$(cygpath -w "$AQUI/$PROG.cs")"
 
-cat > "$OBJ/Dump.runtimeconfig.json" <<'JSON'
+cat > "$OBJ/$PROG.runtimeconfig.json" <<'JSON'
 { "runtimeOptions": { "tfm": "net6.0", "framework": { "name": "Microsoft.NETCore.App", "version": "6.0.0" } } }
 JSON
 
-dotnet "$(cygpath -w "$OBJ/Dump.dll")" "$JUEGO" "$(cygpath -w "$SALIDA")"
+dotnet "$(cygpath -w "$OBJ/$PROG.dll")" "$JUEGO" "$(cygpath -w "$SALIDA")"
