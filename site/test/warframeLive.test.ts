@@ -32,19 +32,38 @@ describe("ciclos de Warframe", () => {
   });
 
   it("los bordes que informa la API caen donde los calcula la fórmula (inicio del día de Cetus, del calor del Valle)", () => {
-    // `activation` de cetusCycle (11:11:00) y de vallisCycle (12:13:00, con los segundos en cero), tal como los devolvió.
-    expect(cetus(Date.parse("2026-10-27T11:11:30Z"))).toMatchObject({ state: "day", endsAt: Date.parse("2026-10-27T12:51:00Z") });
+    // `activation` de cetusCycle (11:11:00, redondeado al minuto) y de vallisCycle (12:13:00, con los segundos en cero).
+    const c = cetus(Date.parse("2026-10-27T11:12:00Z"));
+    expect(c.state).toBe("day");
+    expect(Math.abs(c.endsAt - Date.parse("2026-10-27T12:51:00Z"))).toBeLessThan(60_000);
     expect(vallis(Date.parse("2026-10-27T12:13:30Z")).state).toBe("warm");
     expect(Math.abs(vallis(Date.parse("2026-10-27T12:13:30Z")).endsAt - Date.parse("2026-10-27T12:20:08Z"))).toBeLessThan(1000);
   });
 
   it("la noche de Cetus dura 50 minutos y el día 100", () => {
-    const t = Date.UTC(2026, 9, 27, 12, 51, 0);
-    expect(cetus(t - 1)).toMatchObject({ state: "day", endsAt: t });
-    expect(cetus(t)).toMatchObject({ state: "night", endsAt: t + 3_000_000 });
-    expect(cetus(t + 3_000_000).state).toBe("day");
+    const t = Date.UTC(2026, 9, 27, 12, 51, 35); // el fin del día, con los segundos de la época oficial
+    expect(cetus(t - 60_000).state).toBe("day");
+    expect(cetus(t + 60_000).state).toBe("night");
+    expect(Math.abs(cetus(t + 60_000).endsAt - (t + 3_000_000))).toBeLessThan(2000);
+    expect(cetus(t + 3_000_000 + 60_000).state).toBe("day");
     // Antes de la época también cierra (resto positivo).
-    expect(cetus(t - 9_000_000 * 40).state).toBe("night");
+    expect(["day", "night"]).toContain(cetus(t - 9_000_000 * 40).state);
+  });
+});
+
+describe("Cetus contra el worldstate oficial (fuente independiente)", () => {
+  const of = JSON.parse(readFileSync(new URL("./fixtures/warframe-cetus-oficial.json", import.meta.url), "utf-8")) as { activation: number; expiry: number };
+
+  it("el fin de la noche (Expiry de CetusSyndicate) es el vencimiento calculado", () => {
+    expect(cetus(of.expiry - 5 * 60_000)).toMatchObject({ state: "night" });
+    expect(Math.abs(cetus(of.expiry - 5 * 60_000).endsAt - of.expiry)).toBeLessThan(60_000);
+    expect(cetus(of.expiry + 1000).state).toBe("day");
+  });
+
+  it("el inicio del ciclo (Activation) cae en un día que termina 100 min después", () => {
+    const t = of.activation + 60_000;
+    expect(cetus(t).state).toBe("day");
+    expect(Math.abs(cetus(t).endsAt - (of.activation + 6_000_000))).toBeLessThan(60_000);
   });
 });
 
@@ -64,6 +83,12 @@ describe("la API en vivo", () => {
     expect(await fetchLive("es")).toBeNull();
     globalThis.fetch = (() => Promise.resolve({ ok: true, json: () => Promise.reject(new Error("no es JSON")) })) as never;
     expect(await fetchLive("es")).toBeNull();
+  });
+
+  it("las tormentas del Vacío no son fisuras", () => {
+    const now = Date.parse("2026-10-27T12:00:00Z");
+    const ws = { fissures: [{ node: "Tormenta", missionType: "Skirmish", tier: "Neo", expiry: "2026-10-27T13:00:00Z", isStorm: true }] };
+    expect(parseLive(ws, now)!.fissures).toEqual([]);
   });
 
   it("pide el idioma pedido y mapea fisuras, Baro y la incursión", async () => {

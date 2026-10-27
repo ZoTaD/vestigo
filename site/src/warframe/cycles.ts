@@ -11,12 +11,15 @@
  *    vencimiento del ciclo de Cetus): Fass es el día de Cetus y Vome su noche.
  *
  * Una diferencia con el parser: el de Cetus no trae época fija, parte del fin de las bounties de los Ostron que lee del
- * worldstate en vivo. Acá la época es un inicio de día observado en la API (`activation` del 2026-10-27 en
- * `cetusCycle`), y de ahí el ciclo sigue exacto de a 150 min. `test/warframeLive.test.ts` lo compara con tres tomas de
- * la API (`test/fixtures/warframe-cycles.json`). La API redondea el vencimiento al minuto: por eso la tolerancia.
+ * worldstate en vivo. Acá la época es ese mismo dato tomado del worldstate OFICIAL (https://api.warframe.com/cdn/worldState.php,
+ * `SyndicateMissions`, entrada `CetusSyndicate`, bajado con curl el 2026-10-27): su `Expiry` (1793108495196, 2026-10-27T13:41:35Z)
+ * es el fin de la noche, o sea el inicio de un día, y de ahí el ciclo sigue exacto de a 150 min. Se validó con una fuente
+ * independiente de warframestat: `Activation` de la misma entrada cae a 1,1 s de `Expiry - 9e6`, y las tres tomas de la API de
+ * warframestat (`test/fixtures/warframe-cycles.json`, que redondea al minuto) coinciden con tolerancia de 60 s. Ver
+ * `test/warframeLive.test.ts`.
  */
 
-const CETUS_EPOCH = Date.UTC(2026, 9, 27, 11, 11, 0);
+const CETUS_EPOCH = 1793108495196 - 9_000_000;
 const CETUS_DAY = 6_000_000;
 const CETUS_LOOP = 9_000_000;
 

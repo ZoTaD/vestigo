@@ -49,7 +49,6 @@ export interface WfCopy {
       state: { day: string; night: string; warm: string; cold: string; fass: string; vome: string };
       left: (time: string) => string;
       baro: string;
-      baroAt: (place: string) => string;
       baroHere: (time: string) => string;
       baroSoon: (time: string) => string;
       fissures: string;
@@ -111,7 +110,6 @@ const EN: WfCopy = {
       state: { day: "Day", night: "Night", warm: "Warm", cold: "Cold", fass: "Fass", vome: "Vome" },
       left: (time) => `${time} left`,
       baro: "Baro Ki'Teer",
-      baroAt: (place) => `At ${place}`,
       baroHere: (time) => `Leaves in ${time}`,
       baroSoon: (time) => `Arrives in ${time}`,
       fissures: "Void fissures",
@@ -174,7 +172,6 @@ const ES: WfCopy = {
       state: { day: "Día", night: "Noche", warm: "Cálido", cold: "Frío", fass: "Fass", vome: "Vome" },
       left: (time) => `faltan ${time}`,
       baro: "Baro Ki'Teer",
-      baroAt: (place) => `En ${place}`,
       baroHere: (time) => `Se va en ${time}`,
       baroSoon: (time) => `Llega en ${time}`,
       fissures: "Fisuras del Vacío",

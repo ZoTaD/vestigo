@@ -51,7 +51,8 @@ export function parseLive(json: unknown, now: number): Live | null {
   for (const f of Array.isArray(ws.fissures) ? ws.fissures : []) {
     const o = obj(f);
     const endsAt = o ? time(o.expiry) : 0;
-    if (!o || endsAt <= now || !str(o.tier)) continue;
+    // Las tormentas del Vacío (`isStorm`) son de Railjack: no son fisuras de reliquia.
+    if (!o || endsAt <= now || !str(o.tier) || o.isStorm === true) continue;
     fissures.push({ node: str(o.node), mission: str(o.missionType), era: str(o.tier), endsAt, hard: o.isHard === true });
   }
   let baro: Live["baro"] = null;

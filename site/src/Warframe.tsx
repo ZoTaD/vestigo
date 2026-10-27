@@ -13,7 +13,6 @@ import type { Route, WfSection, WfTab } from "./route";
 import { useWfCopy, WF_TABS } from "./warframeCopy";
 import WarframeHome from "./warframe/WarframeHome";
 import { WfLoading } from "./warframe/ui";
-import "@fontsource/rajdhani/500.css";
 import "@fontsource/rajdhani/600.css";
 import "@fontsource/rajdhani/700.css";
 import "@fontsource/barlow/400.css";
