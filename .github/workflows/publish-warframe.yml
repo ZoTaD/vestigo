@@ -1,0 +1,86 @@
+name: publish warframe data
+
+# Los datos de Warframe, una vez por semana (lunes 09:30 UTC) y a mano.
+#
+# La fuente es el export oficial del juego: su índice trae un hash por archivo, así
+# que `fetch.py --check` dice con un pedido si algo cambió. Si es "igual", la
+# corrida termina ahí. Si "cambió", baja los exports y la tabla de drops, rehace
+# los datos del sitio y los íconos, y abre un pull request: **no empuja a `main`**.
+# Un cambio de datos pasa por la vista previa antes de publicarse (a diferencia de
+# PoE2 y Deadlock, que publican solos), porque cada parche de Warframe puede mover
+# nombres y slugs.
+on:
+  schedule:
+    # Lejos de `publish-poe2` (08:45), `publish-deadlock` y `tests` (09:15).
+    - cron: "30 9 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: publish-warframe
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Bajar ~30 exports, la tabla de drops y los íconos nuevos son unos minutos.
+    timeout-minutes: 30
+    steps:
+      # Sin credenciales guardadas y con las actions fijadas por commit, igual que
+      # `publish-poe2` (auditoría de seguridad del 2026-09-28).
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: check
+        id: check
+        run: |
+          resultado="$(python3 games/warframe/tools/fetch.py --check)"
+          echo "índice: $resultado"
+          echo "resultado=$resultado" >> "$GITHUB_OUTPUT"
+
+      # Pillow es lo único que piden los scripts (los íconos se pasan a WebP).
+      - name: dependencias
+        if: steps.check.outputs.resultado == 'cambió'
+        run: |
+          python3 -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install pillow
+
+      - name: datos
+        if: steps.check.outputs.resultado == 'cambió'
+        run: |
+          py="$RUNNER_TEMP/venv/bin/python"
+          "$py" games/warframe/tools/fetch.py
+          "$py" games/warframe/tools/site_data.py
+          "$py" games/warframe/tools/images.py
+
+      - name: pull request
+        if: steps.check.outputs.resultado == 'cambió'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain -- games/warframe/data site/public/warframe)" ]; then
+            echo "el índice cambió pero los datos del sitio no: no hay pull request"
+            exit 0
+          fi
+          git status --short -- games/warframe/data site/public/warframe | head -20
+          fecha="$(date -u +%Y-%m-%d)"
+          rama="warframe/datos-$fecha"
+          # El token, sólo acá y sólo para estos comandos (ver el checkout).
+          auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git config user.name "vestigo-bot"
+          git config user.email "67348048+ZoTaD@users.noreply.github.com"
+          git checkout -b "$rama"
+          git add games/warframe/data site/public/warframe
+          git commit -m "chore(warframe): datos del $fecha"
+          git -c "http.https://github.com/.extraheader=$auth" push --force origin "$rama"
+          # Si ya hay un pull request abierto de esa rama (una corrida a mano el mismo día), el push lo actualiza.
+          if [ -z "$(gh pr list --head "$rama" --state open --json number --jq '.[0].number')" ]; then
+            gh pr create --base main --head "$rama" \
+              --title "Warframe: datos del $fecha" \
+              --body "- El export oficial cambió; datos del sitio e íconos regenerados.
+          - Revisar la vista previa antes de fusionar."
+          fi

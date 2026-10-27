@@ -28,6 +28,8 @@ export type WfKind = "warframe" | "primary" | "secondary" | "melee" | "archwing"
 export const WF_KINDS: WfKind[] = ["warframe", "primary", "secondary", "melee", "archwing", "companion", "exalted"];
 
 type Seo = { title: string; description: string };
+/** Una descripción entra en 160 caracteres: lo que sobra se corta en una palabra entera. */
+const clip = (s: string): string => (s.length <= 160 ? s : `${s.slice(0, 157).replace(/[\s,;:]+\S*$/, "")}…`);
 
 export interface WfCopy {
   tabs: Record<WfSection, string>;
@@ -37,6 +39,14 @@ export interface WfCopy {
   loadError: string;
   retry: string;
   seo: Record<WfSection, Seo>;
+  /** El <head> de una ficha: lo que se busca (el nombre y qué trae la página). `mod` sirve para mods y arcanos. */
+  detailSeo: {
+    arsenal: (name: string) => Seo;
+    /** `name` va sin la palabra "Relic"/"Reliquia". */
+    relics: (name: string) => Seo;
+    farming: (name: string) => Seo;
+    mod: (name: string, arcane: boolean) => Seo;
+  };
   home: {
     kicker: string;
     h1: string;
@@ -196,6 +206,24 @@ const EN: WfCopy = {
     farming: { title: "Warframe: where to farm every resource | Vestigo", description: "Every resource with the planets and missions where it drops, and what you need it for." },
     mods: { title: "Warframe mods and arcanes: stats and drops | Vestigo", description: "Every mod and arcane with its polarity, drain, rank-by-rank stats and where it drops." },
   },
+  detailSeo: {
+    arsenal: (name) => ({
+      title: `${name} — Warframe build parts, where to farm and stats | Vestigo`,
+      description: clip(`${name} in Warframe: its stats, the blueprint and parts with where each one drops, and the resources and credits to craft it.`),
+    }),
+    relics: (name) => ({
+      title: `${name} Relic — Warframe drops, rewards and vault status | Vestigo`,
+      description: clip(`${name} Relic in Warframe: its six rewards with the chance at each refinement, the missions where it drops and whether it is in the Vault.`),
+    }),
+    farming: (name) => ({
+      title: `Where to farm ${name} in Warframe | Vestigo`,
+      description: clip(`Where to farm ${name} in Warframe: the planets, missions and enemies that drop it, with the chance of each.`),
+    }),
+    mod: (name, arcane) => ({
+      title: `${name} — Warframe ${arcane ? "arcane" : "mod"} drops and stats | Vestigo`,
+      description: clip(`${name} in Warframe: ${arcane ? "its effect at every rank" : "its polarity, drain and stats at every rank"}, and where it drops.`),
+    }),
+  },
   home: {
     kicker: "Warframe guide",
     h1: "Everything for your Arsenal",
@@ -350,6 +378,24 @@ const ES: WfCopy = {
     relics: { title: "Reliquias de Warframe: recompensas y Vault | Vestigo", description: "Cada reliquia Lith, Meso, Neo y Axi con sus seis recompensas por refinamiento, dónde cae y si está en el Vault." },
     farming: { title: "Warframe: dónde farmear cada recurso | Vestigo", description: "Cada recurso con los planetas y misiones donde cae, y para qué sirve." },
     mods: { title: "Mods y arcanos de Warframe: estadísticas y drops | Vestigo", description: "Cada mod y arcano con su polaridad, costo, estadísticas por rango y dónde cae." },
+  },
+  detailSeo: {
+    arsenal: (name) => ({
+      title: `${name} — Warframe: partes, dónde farmear y estadísticas | Vestigo`,
+      description: clip(`${name} en Warframe: sus estadísticas, el plano y las partes con dónde cae cada una, y los recursos y créditos para fabricarlo.`),
+    }),
+    relics: (name) => ({
+      title: `Reliquia ${name} — Warframe: recompensas, drops y estado del Vault | Vestigo`,
+      description: clip(`Reliquia ${name} de Warframe: sus seis recompensas con la chance de cada refinamiento, las misiones donde cae y si está en el Vault.`),
+    }),
+    farming: (name) => ({
+      title: `Dónde farmear ${name} en Warframe | Vestigo`,
+      description: clip(`Dónde farmear ${name} en Warframe: los planetas, misiones y enemigos que lo sueltan, con la chance de cada uno.`),
+    }),
+    mod: (name, arcane) => ({
+      title: `${name} — Warframe: drops y estadísticas ${arcane ? "del arcano" : "del mod"} | Vestigo`,
+      description: clip(`${name} en Warframe: ${arcane ? "su efecto en cada rango" : "su polaridad, costo y estadísticas en cada rango"}, y dónde cae.`),
+    }),
   },
   home: {
     kicker: "Guía de Warframe",

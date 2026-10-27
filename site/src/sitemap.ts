@@ -1,5 +1,5 @@
 import type { RustPage } from "./rust/sitemapPages";
-import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_SEGMENT, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -101,6 +101,20 @@ export interface StardewSitemapData {
   monsters?: { slug: string; en: string; es: string }[];
 }
 
+/**
+ * Lo que el sitemap necesita de Warframe (2026-10-27): el sello de `meta.json` y la lista de cada pestaña con ficha (slug
+ * inglés y nombres). Lo arma `warframe/sitemapData.ts`, que además anota los slugs en español.
+ */
+export interface WarframeSitemapData {
+  generatedAt?: string;
+  arsenal?: { slug: string; en: string; es: string }[];
+  /** Los nombres van sin la palabra "Relic"/"Reliquia". */
+  relics?: { slug: string; en: string; es: string }[];
+  farming?: { slug: string; en: string; es: string }[];
+  /** `arcane`: es un arcano y no un mod. */
+  mods?: { slug: string; en: string; es: string; arcane?: true }[];
+}
+
 /** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
 export interface RustSitemapData {
   build: number;
@@ -176,8 +190,8 @@ export interface SitemapData {
   tr?: TerrariaSitemapData;
   /** Stardew Valley. Opcional por lo mismo. */
   sd?: StardewSitemapData;
-  /** Warframe: sólo el sello de sus datos. Las pestañas y sus fichas suman acá lo suyo cuando tienen página (2026-10-27). */
-  wf?: { generatedAt?: string };
+  /** Warframe. Opcional por lo mismo. */
+  wf?: WarframeSitemapData;
   /**
    * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
    * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
@@ -193,7 +207,7 @@ export interface SitemapData {
  * con las fichas en el sitemap de su juego, así que Search Console no decía cuántas de las que importan estaban
  * indexadas. El de cada juego se queda con sus fichas y sus ediciones de parches.
  */
-export const SITEMAP_GROUPS = ["main", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria", "stardew"] as const;
+export const SITEMAP_GROUPS = ["main", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe"] as const;
 export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];
 
 function sitemapGroup(path: string): SitemapGroup {
@@ -204,6 +218,7 @@ function sitemapGroup(path: string): SitemapGroup {
   if (game === RUST_SEGMENT) return "rust";
   if (game === TERRARIA_SEGMENT) return "terraria";
   if (game === STARDEW_SEGMENT) return "stardew";
+  if (game === WF_SEGMENT) return "warframe";
   return game === "deadlock" || game === "poe2" || game === "valheim" || game === "d2r" ? game : "main";
 }
 
@@ -435,8 +450,15 @@ export function sitemapPaths(data: SitemapData): string[] {
         for (const f of fichas[s as keyof typeof fichas]) paths.push(routePath({ ...base, lang, view: "stardew", sdSection: s, detail: f.slug }));
       }
     }
-    // Warframe (2026-10-27): por ahora sólo la portada; cada pestaña suma las suyas con su página (el resto muestra la portada).
-    if (data.wf) paths.push(routePath({ ...base, lang, view: "warframe", wfSection: "home" }));
+    // Warframe (2026-10-27): la portada, las pestañas publicadas y una ficha por parte del Arsenal, reliquia, recurso y mod o arcano.
+    if (data.wf) {
+      paths.push(routePath({ ...base, lang, view: "warframe", wfSection: "home" }));
+      for (const s of WF_PUBLISHED) paths.push(routePath({ ...base, lang, view: "warframe", wfSection: s }));
+      for (const s of WF_PUBLISHED) {
+        if (!WF_DETAIL_SECTIONS.includes(s)) continue;
+        for (const f of data.wf[s] ?? []) paths.push(routePath({ ...base, lang, view: "warframe", wfSection: s, detail: f.slug }));
+      }
+    }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).
     if (data.rs) {
       paths.push(routePath({ ...base, lang, view: "rust", rsSection: "home" }));

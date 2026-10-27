@@ -23,6 +23,7 @@ import { preloadCraftingRoute as preloadTrCraftingRoute, preloadItemsRoute as pr
 import { preloadPatchesRoute as preloadTrPatchesRoute } from "./terraria/patches/data";
 import { loadBundles as loadSdBundles, loadCalendar as loadSdCalendar, loadCrops as loadSdCrops, loadFish as loadSdFish, loadMines as loadSdMines, loadRecipes as loadSdRecipes, preloadItemsRoute as preloadSdItemsRoute, preloadVillagersRoute as preloadSdVillagersRoute } from "./stardew/data";
 import { loadHome as loadSdHome } from "./stardew/homeData";
+import { isDataTab as isWfTab, loadFicha as loadWfFicha, loadList as loadWfList } from "./warframe/data";
 import { preloadFarmingRoute } from "./rust/farming/data";
 import { preloadPatchesRoute } from "./rust/patches/data";
 import { preloadMonumentsRoute } from "./rust/monuments/data";
@@ -68,6 +69,15 @@ async function preload(route: Route): Promise<void> {
     if (sec === "recipes") await quiet(loadSdRecipes());
     if (sec === "calendar") await quiet(loadSdCalendar(route.lang));
     if (sec === "mines") await quiet(loadSdMines());
+    return;
+  }
+  // Warframe (2026-10-27): la ficha de la dirección (por su slug inglés, que el sitemap ya anotó en español) o, sin ficha, la
+  // lista de la pestaña. La portada no baja nada aparte. Sin esto la página sale con "cargando…" (`isWfLoadingPage`).
+  if (route.view === "warframe") {
+    const tab = route.wfSection;
+    if (!isWfTab(tab)) return;
+    if (route.detail && (await quiet(loadWfFicha(tab, route.detail)))) return;
+    await quiet(loadWfList(tab));
     return;
   }
   if (route.view !== "deadlock") return;

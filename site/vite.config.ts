@@ -13,6 +13,8 @@ import { isRsLoadingPage } from "./src/rust/loadingGuard";
 import { isTrLoadingPage } from "./src/terraria/loadingGuard";
 import { isSdLoadingPage } from "./src/stardew/loadingGuard";
 import { stardewSitemapData } from "./src/stardew/sitemapData";
+import { isWfLoadingPage } from "./src/warframe/loadingGuard";
+import { warframeSitemapData } from "./src/warframe/sitemapData";
 import { farmingPages, monumentsPages, patchesPages, type RustPage } from "./src/rust/sitemapPages";
 import { CIRCUITS, circuitSlugsEs } from "./src/rust/electric/circuits";
 import { buildEsSlugs } from "./src/esSlugs";
@@ -288,10 +290,12 @@ function readSitemapData(): { data: OgData } {
     console.warn(`[stardew] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     sd = undefined;
   }
-  // Warframe (2026-10-27): el sello de `meta.json`; hoy el sitemap sólo lista la portada.
+  // Warframe (2026-10-27): el sello de `meta.json` y la lista de cada pestaña con ficha. `warframeSitemapData` anota los
+  // slugs en español, igual que arriba Stardew.
   let wf: SitemapData["wf"];
   try {
-    wf = { generatedAt: JSON.parse(readFileSync(`${warframeDir}/meta.json`, "utf-8")).generatedAt };
+    const read = (f: string) => JSON.parse(readFileSync(`${warframeDir}/${f}`, "utf-8"));
+    wf = warframeSitemapData(read("meta.json"), { arsenal: read("arsenal/list.json"), relics: read("relics/list.json"), farming: read("farming/list.json"), mods: read("mods/list.json") });
   } catch (e) {
     console.warn(`[warframe] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     wf = undefined;
@@ -861,6 +865,10 @@ function prerenderRoutes(): Plugin {
             throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
           }
           if (route.view === "stardew" && isSdLoadingPage(cuerpo)) {
+            throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
+          }
+          // Y en Warframe: una ficha cuyo slug en español no se anotó o cuyo archivo no se pidió sale vacía.
+          if (route.view === "warframe" && isWfLoadingPage(cuerpo)) {
             throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
           }
           const conexiones = originsFor(route)
