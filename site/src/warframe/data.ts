@@ -241,6 +241,64 @@ const mastery = once<MasteryRow[]>(() => import("@warframe/mastery/list.json"));
 export const loadMastery = (): Promise<MasteryRow[]> => mastery.load();
 export const peekMastery = (): MasteryRow[] | null => mastery.peek();
 
+/** El estado de un Prime en `prime-vault/list.json` (la regla de Vault de la etapa 1, objeto por objeto). */
+export type VaultStatus = "available" | "vaulted" | "partial" | "norelics";
+export const VAULT_STATUSES: VaultStatus[] = ["available", "vaulted", "partial", "norelics"];
+/** Una fila de `prime-vault/list.json`: un Prime y su estado. `slug`/`slugEs` son los de su ficha del Arsenal. */
+export interface VaultRow {
+  slug: string;
+  slugEs: string;
+  name: Pair;
+  img: string;
+  kind: WfKind;
+  status: VaultStatus;
+}
+/** Un cambio de `prime-vault/history.json` (el más nuevo primero): `from` es `null` si el Prime es nuevo. */
+export interface VaultEvent {
+  date: string;
+  slug: string;
+  from: VaultStatus | null;
+  to: VaultStatus;
+}
+/** Lo que vendió Baro en una visita de `baro/history.json`. `unique` es el `uniqueName` de la API; `ref`, su ficha si tiene. */
+export interface BaroItem {
+  unique: string;
+  name: Pair;
+  ducats: number;
+  credits: number;
+  ref: { tab: WfTab; slug: string; slugEs: string; img: string | null } | null;
+}
+export interface BaroVisit {
+  start: string;
+  end: string;
+  location: Pair;
+  items: BaroItem[];
+}
+/** `baro/history.json`: las visitas anotadas, la más nueva primero. */
+export interface BaroHistory {
+  visits: BaroVisit[];
+}
+const vault = once<{ list: VaultRow[]; history: VaultEvent[] }>(() =>
+  Promise.all([import("@warframe/prime-vault/list.json"), import("@warframe/prime-vault/history.json")]).then(([l, h]) => {
+    const list = l.default as VaultRow[];
+    noteSlugs("arsenal", list);
+    return { default: { list, history: h.default as VaultEvent[] } };
+  }),
+);
+/** El Prime Vault (la lista y sus cambios), en su propio chunk. */
+export const loadVault = () => vault.load();
+export const peekVault = () => vault.peek();
+const baro = once<BaroHistory>(() =>
+  import("@warframe/baro/history.json").then((m) => {
+    const h = m.default as BaroHistory;
+    noteRefs(Object.fromEntries(h.visits.flatMap((v) => v.items.flatMap((it) => (it.ref ? [[it.unique, { ...it.ref, name: it.name }]] : [])))));
+    return { default: h };
+  }),
+);
+/** El historial de Baro Ki'Teer, en su propio chunk. */
+export const loadBaroHistory = (): Promise<BaroHistory> => baro.load();
+export const peekBaroHistory = (): BaroHistory | null => baro.peek();
+
 /** Lo que trae cada pestaña con fichas. */
 export interface ListOf {
   arsenal: ArsenalRow[];
@@ -402,7 +460,7 @@ export function writeArsenalFilters(f: ArsenalFilters): string {
 export const fold = (s: string): string => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 /** El orden del Arsenal: por tipo (el de los chips) y, dentro, por nombre en el idioma. */
-export function sortArsenal(rows: readonly ArsenalRow[], lang: Lang): ArsenalRow[] {
+export function sortArsenal<T extends { kind: WfKind; name: Pair }>(rows: readonly T[], lang: Lang): T[] {
   const rank = (k: WfKind) => WF_KINDS.indexOf(k);
   return [...rows].sort((a, b) => rank(a.kind) - rank(b.kind) || say(a.name, lang).localeCompare(say(b.name, lang), lang));
 }

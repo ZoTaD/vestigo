@@ -340,3 +340,27 @@ a.wf-mastery-name:hover { color: var(--wf-acc); }
   .wf-mastery-row { grid-template-columns: auto 40px minmax(0, 1fr) auto; gap: 10px; padding: 0 8px; }
   .wf-mastery-kind { display: none; }
 }
+
+/* Prime Vault: la grilla de Prime con su estado escrito en color (texto, nunca un filo) y la tabla de cambios. */
+.wf-pill-n { margin-left: 4px; color: var(--wf-dim); font-variant-numeric: tabular-nums; }
+.wf-vault-cell { height: 160px; }
+.wf-vault-cell > .wf-vault-name { font: 600 clamp(11px, 9.5cqw, 15px)/1.15 var(--wf-head); letter-spacing: 0.04em; text-wrap: balance; }
+.wf-vault-status { font: 700 12px/1.1 var(--wf-head); letter-spacing: 0.1em; text-transform: uppercase; }
+.wf-vault-status.is-available { color: #7fe0a8; }
+.wf-vault-status.is-vaulted { color: #f2d36b; }
+.wf-vault-status.is-partial { color: #f0a868; }
+.wf-vault-status.is-norelics { color: var(--wf-dim); }
+.wf-vault-note { margin-top: 14px; font-size: 14px; max-width: 80ch; }
+.wf-vault-changes td { height: 38px; }
+
+/* Baro Ki'Teer: el relé de ahora, el inventario y las visitas anotadas, cada una plegable. */
+.wf-baro-where { font: 700 22px/1.2 var(--wf-head); letter-spacing: 0.04em; margin-bottom: 4px; }
+.wf-baro-page .wf-table-wrap { margin-top: 12px; }
+.wf-baro-item { display: flex; align-items: center; gap: 10px; }
+.wf-baro-item .wf-icon { flex: none; width: 32px; height: 32px; }
+.wf-baro-visits { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.wf-baro-visit { background: var(--wf-glass); border-radius: 3px; padding: 10px 12px; }
+.wf-baro-visit summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; cursor: pointer; }
+.wf-baro-visit summary b { font: 700 16px/1.2 var(--wf-head); letter-spacing: 0.04em; }
+.wf-baro-visit summary span { font-size: 14px; }
+.wf-baro-visit summary:focus-visible { outline: 2px solid var(--wf-acc); outline-offset: 2px; }

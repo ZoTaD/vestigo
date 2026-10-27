@@ -35,7 +35,7 @@ const TAB_ICON: Record<WfTab, string> = {
 const ERA_ORDER: WfEra[] = ["Lith", "Meso", "Neo", "Axi", "Requiem", "Omnia"];
 
 /** La hora de hoy, y la de cada segundo después. Antes de montar es `null`: el prerender y la hidratación coinciden. */
-function useNow(): number | null {
+export function useNow(): number | null {
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
     setNow(Date.now());

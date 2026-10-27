@@ -13,14 +13,15 @@ export interface Live {
   sortie: { boss: string; missions: { node: string; type: string; modifier: string }[] } | null;
 }
 
-const API = "https://api.warframestat.us/pc/";
+export const API = "https://api.warframestat.us/pc/";
 /** Más que esto sin respuesta y la portada sigue sin el bloque. */
-const TIMEOUT_MS = 6000;
+export const TIMEOUT_MS = 6000;
 
 type Raw = Record<string, unknown>;
-const obj = (v: unknown): Raw | null => (v && typeof v === "object" && !Array.isArray(v) ? (v as Raw) : null);
-const str = (v: unknown): string => (typeof v === "string" ? v : "");
-const time = (v: unknown): number => {
+// Las tres se comparten con `baroLive.ts`.
+export const obj = (v: unknown): Raw | null => (v && typeof v === "object" && !Array.isArray(v) ? (v as Raw) : null);
+export const str = (v: unknown): string => (typeof v === "string" ? v : "");
+export const time = (v: unknown): number => {
   const t = typeof v === "string" ? Date.parse(v) : NaN;
   return Number.isFinite(t) ? t : 0;
 };

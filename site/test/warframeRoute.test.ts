@@ -35,13 +35,16 @@ describe("rutas de Warframe", () => {
     expect(routePath({ lang: "es", view: "warframe", wfSection: "star-chart" } as Route)).toBe("/es/warframe/mapa-estelar");
   });
 
-  it("la maestría se lee en los dos idiomas y no tiene fichas; Prime Vault y Baro todavía muestran la portada", () => {
+  it("maestría, Prime Vault y Baro se leen en los dos idiomas y no tienen fichas", () => {
     expect(parseRoute("/en/warframe/mastery")).toMatchObject({ view: "warframe", wfSection: "mastery" });
     expect(parseRoute("/es/warframe/maestria")).toMatchObject({ view: "warframe", wfSection: "mastery" });
     expect(parseRoute("/en/warframe/mastery/ash").detail).toBeUndefined();
-    for (const p of ["/en/warframe/prime-vault", "/en/warframe/baro"]) {
-      expect(parseRoute(p), p).toMatchObject({ view: "warframe", wfSection: "home" });
+    for (const lang of ["en", "es"]) {
+      expect(parseRoute(`/${lang}/warframe/prime-vault`)).toMatchObject({ view: "warframe", wfSection: "prime-vault" });
+      expect(parseRoute(`/${lang}/warframe/baro`)).toMatchObject({ view: "warframe", wfSection: "baro" });
     }
+    expect(parseRoute("/en/warframe/prime-vault/ash-prime").detail).toBeUndefined();
+    expect(parseRoute("/es/warframe/baro/algo").detail).toBeUndefined();
   });
 
   it("una pestaña que no existe muestra la portada", () => {

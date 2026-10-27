@@ -168,6 +168,11 @@ export const PAGES = [
   // La Maestría (etapa 2): unas 780 filas con ícono, dibujadas de a tandas.
   "/en/warframe/mastery",
   "/es/warframe/maestria",
+  // Prime Vault (176 casilleros de a tandas) y Baro (bloque en vivo después de montar y el historial).
+  "/en/warframe/prime-vault",
+  "/es/warframe/prime-vault",
+  "/en/warframe/baro",
+  "/es/warframe/baro",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

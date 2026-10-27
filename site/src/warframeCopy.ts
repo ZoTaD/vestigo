@@ -7,7 +7,7 @@
  * tipos de daño y las eras de reliquia, que la interfaz nombra sin dato al lado.
  */
 import { useLang } from "./i18n";
-import type { MasteryKind } from "./warframe/data";
+import type { MasteryKind, VaultStatus } from "./warframe/data";
 import type { WfSection, WfTab } from "./route";
 
 /** El orden de las pestañas en la barra. */
@@ -235,6 +235,44 @@ export interface WfCopy {
     pts: (n: string) => string;
     rankReq: (n: number) => string;
     note: string;
+  };
+  vaultList: {
+    h1: string;
+    lede: (n: string) => string;
+    status: string;
+    kind: string;
+    all: string;
+    /** El chip de cada estado. */
+    statuses: Record<VaultStatus, string>;
+    /** El estado escrito debajo de cada Prime. */
+    statusLong: Record<VaultStatus, string>;
+    count: (n: string) => string;
+    none: string;
+    changes: string;
+    date: string;
+    item: string;
+    change: string;
+    /** El estado de antes de un Prime nuevo. */
+    added: string;
+    noChanges: string;
+    note: string;
+  };
+  baroPage: {
+    h1: string;
+    lede: string;
+    now: string;
+    here: (relay: string) => string;
+    coming: (relay: string) => string;
+    leaves: (time: string, when: string) => string;
+    arrives: (time: string, when: string) => string;
+    item: string;
+    ducats: string;
+    credits: string;
+    noItems: string;
+    history: string;
+    visit: (from: string, to: string) => string;
+    items: (n: number) => string;
+    noHistory: string;
   };
   /** Los tipos de misión del mapa estelar (`MISSION_TYPES` de `site_data.py`); el que no está acá se muestra tal cual. */
   missionType: Record<string, string>;
@@ -479,6 +517,41 @@ const EN: WfCopy = {
     pts: (n) => `${n} pts`,
     rankReq: (n) => `rank ${n}`,
     note: "Points count each item ranked to its maximum. Amps, Zaws, Kitguns, K-Drives and intrinsics are not listed yet.",
+  },
+  vaultList: {
+    h1: "Warframe Prime Vault",
+    lede: (n) => `Which of the ${n} Prime Warframes, weapons and companions still drop from relics you can get in missions, and which are in the Vault.`,
+    status: "Status",
+    kind: "Type",
+    all: "All",
+    statuses: { available: "Available", vaulted: "Vaulted", partial: "Partial", norelics: "No relics" },
+    statusLong: { available: "Available", vaulted: "In the Vault", partial: "Partly vaulted", norelics: "Not in relics" },
+    count: (n) => `${n} Primes`,
+    none: "Nothing matches.",
+    changes: "Vault changes",
+    date: "Date",
+    item: "Prime",
+    change: "Change",
+    added: "New",
+    noChanges: "No changes yet: they are recorded since 27/10/2026.",
+    note: "Available: every part drops from at least one relic that is not vaulted. In the Vault: no part does. Partial: some parts do and some don't. No relics: its parts are not in any relic (Founder Primes).",
+  },
+  baroPage: {
+    h1: "Baro Ki'Teer",
+    lede: "The Void Trader arrives at a relay every two weeks and stays for 48 hours, selling for ducats and credits. Here is his current visit and every visit we have recorded.",
+    now: "Right now",
+    here: (relay) => `At ${relay}`,
+    coming: (relay) => `Next stop: ${relay}`,
+    leaves: (time, when) => `Leaves in ${time} (${when})`,
+    arrives: (time, when) => `Arrives in ${time} (${when})`,
+    item: "Item",
+    ducats: "Ducats",
+    credits: "Credits",
+    noItems: "His inventory hasn't shown up yet.",
+    history: "Past visits",
+    visit: (from, to) => `${from} – ${to}`,
+    items: (n) => (n === 1 ? "1 item" : `${n} items`),
+    noHistory: "No visits recorded yet: they are recorded since 27/10/2026.",
   },
   missionType: {
     Assassination: "Assassination", Exterminate: "Exterminate", Survival: "Survival", Rescue: "Rescue", Sabotage: "Sabotage", Capture: "Capture",
@@ -733,6 +806,41 @@ const ES: WfCopy = {
     pts: (n) => `${n} pts`,
     rankReq: (n) => `rango ${n}`,
     note: "Los puntos cuentan cada objeto subido al máximo. Los Amps, Zaw, Kitguns, K-Drives y los intrínsecos todavía no están.",
+  },
+  vaultList: {
+    h1: "Prime Vault de Warframe",
+    lede: (n) => `Cuáles de los ${n} Warframes, armas y compañeros Prime todavía caen de reliquias que se consiguen en misiones, y cuáles están en el Vault.`,
+    status: "Estado",
+    kind: "Tipo",
+    all: "Todos",
+    statuses: { available: "Disponible", vaulted: "Vault", partial: "Parcial", norelics: "Sin reliquias" },
+    statusLong: { available: "Disponible", vaulted: "En el Vault", partial: "En parte en el Vault", norelics: "Sin reliquias" },
+    count: (n) => `${n} Prime`,
+    none: "No hay coincidencias.",
+    changes: "Cambios del Vault",
+    date: "Fecha",
+    item: "Prime",
+    change: "Cambio",
+    added: "Nuevo",
+    noChanges: "Todavía no hubo cambios: se anotan desde el 27/10/2026.",
+    note: "Disponible: cada parte cae de al menos una reliquia fuera del Vault. En el Vault: ninguna. Parcial: algunas sí y otras no. Sin reliquias: sus partes no están en ninguna reliquia (los Prime de fundador).",
+  },
+  baroPage: {
+    h1: "Baro Ki'Teer",
+    lede: "El Comerciante del Vacío llega a un relé cada dos semanas y se queda 48 horas, vendiendo por ducados y créditos. Acá está su visita de ahora y cada visita que anotamos.",
+    now: "Ahora",
+    here: (relay) => `En ${relay}`,
+    coming: (relay) => `Próxima parada: ${relay}`,
+    leaves: (time, when) => `Se va en ${time} (${when})`,
+    arrives: (time, when) => `Llega en ${time} (${when})`,
+    item: "Objeto",
+    ducats: "Ducados",
+    credits: "Créditos",
+    noItems: "Su inventario todavía no aparece.",
+    history: "Visitas anteriores",
+    visit: (from, to) => `${from} – ${to}`,
+    items: (n) => (n === 1 ? "1 objeto" : `${n} objetos`),
+    noHistory: "Todavía no hay visitas anotadas: se anotan desde el 27/10/2026.",
   },
   missionType: {
     Assassination: "Asesinato", Exterminate: "Exterminio", Survival: "Supervivencia", Rescue: "Rescate", Sabotage: "Sabotaje", Capture: "Captura",
