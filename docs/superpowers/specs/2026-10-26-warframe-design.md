@@ -284,7 +284,7 @@ navegador sin resolver el captcha), así que los textos se leyeron de la copia d
   menos de 3 pedidos por segundo). La v1 (`/v1/items/<slug>/statistics`) también responde.
 - **Anuncios y atribución**: no dicen nada de anuncios ni piden atribución. Sí piden avisar antes de publicar.
 
-**Decisión:** no se integran en este PR. Mostrar el precio en la ficha de un Prime es un "agregado" que el sitio de
+**Decisión:** no se integran en este PR. ZoTaD (27/10): por ahora no se pide permiso ni se suma el market. Mostrar el precio en la ficha de un Prime es un "agregado" que el sitio de
 ellos no tiene en esa forma (ficha + reliquias + precio), pero la condición de contactar al staff antes de publicar no
 se puede saltear, y eso lo tiene que hacer ZoTaD (Discord de warframe.market). Con su visto bueno, el diseño queda así:
 `tools/market.py` en una Action diaria que pide `/v2/items` y las estadísticas de los ~600 Prime/partes/mods que tenemos
