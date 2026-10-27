@@ -105,6 +105,28 @@ describe("el <head> de Warframe", () => {
     expect(crumbNames(page("/es/warframe/mapa-estelar/hidron"))).toEqual(["Vestigo", "Warframe", "Mapa estelar", "Hidrón"]);
   });
 
+  it("el armador y Rivens tienen título y descripción en los dos idiomas, y el armador va al sitemap sin fichas", () => {
+    for (const lang of ["en", "es"] as const) {
+      for (const tab of ["builder", "rivens"] as const) {
+        const seo = WF_COPY[lang].seo[tab];
+        expect(seo.title, `${lang} ${tab}`).toMatch(/\| Vestigo$/);
+        expect(seo.description.length, `${lang} ${tab}`).toBeGreaterThan(60);
+        expect(seo.description.length, `${lang} ${tab}`).toBeLessThanOrEqual(160);
+        expect(WF_COPY[lang].tabs[tab]).toBeTruthy();
+        expect(WF_COPY[lang].home.cards[tab]).toBeTruthy();
+      }
+    }
+    expect(WF_COPY.en.seo.builder.title).toContain("Warframe");
+    expect(WF_COPY.es.seo.builder.title).toContain("Warframe");
+    expect(page("/en/warframe/builder").title).toBe(WF_COPY.en.seo.builder.title);
+    expect(page("/es/warframe/armador").title).toBe(WF_COPY.es.seo.builder.title);
+    expect(crumbNames(page("/es/warframe/armador"))).toEqual(["Vestigo", "Warframe", WF_COPY.es.tabs.builder]);
+    const paths = sitemapPaths(data);
+    expect(paths).toContain("/en/warframe/builder");
+    expect(paths).toContain("/es/warframe/armador");
+    expect(paths.some((p) => /\/warframe\/(builder|armador)\//.test(p))).toBe(false);
+  });
+
   it("un arcano habla de arcano, no de mod", () => {
     expect(page("/en/warframe/mods/arcane-guardian").title).toBe("Arcane Guardian — Warframe arcane drops and stats | Vestigo");
     expect(page("/es/warframe/mods/guardian-arcano").title).toMatch(/del arcano \| Vestigo$/);

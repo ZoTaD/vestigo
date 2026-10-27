@@ -18,7 +18,7 @@ import { Icon, Panel, type Nav } from "./ui";
 
 /**
  * El ícono de cada pestaña en su tarjeta: uno de sus propios datos (Ash, una reliquia Lith, Aggristone y un mod único) y,
- * en la etapa 2, las coordenadas de navegación, Excalibur, Excalibur Prime y el ducado.
+ * en la etapa 2, las coordenadas de navegación, Excalibur, Excalibur Prime y el ducado; en la 3, Serration y el fragmento de Riven.
  */
 const TAB_ICON: Record<WfTab, string> = {
   arsenal: "storeicons-warframes-ash",
@@ -29,6 +29,8 @@ const TAB_ICON: Record<WfTab, string> = {
   mastery: "storeicons-warframes-excalibur",
   "prime-vault": "storeicons-primes-excaliburprime",
   baro: "storeicons-currency-ducat",
+  builder: "lotus-interface-cards-images-rifle-rifledamageamountmod",
+  rivens: "storeicons-consumables-rivenfragment",
 };
 
 /** El orden de las eras en el bloque de fisuras. */

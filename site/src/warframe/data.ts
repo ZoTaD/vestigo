@@ -700,3 +700,27 @@ export interface BuildMod {
   /** Las líneas del mod al rango máximo, para mostrar. */
   text: Pair[];
 }
+
+const builderItems = once<BuildItem[]>(() => import("@warframe/builder/items.json").then((m) => ({ default: m.default.items as BuildItem[] })));
+/** Los ~690 objetos del armador, en su propio chunk. */
+export const loadBuilderItems = (): Promise<BuildItem[]> => builderItems.load();
+export const peekBuilderItems = (): BuildItem[] | null => builderItems.peek();
+
+/** Un `import()` por archivo de mods: el de un arma no baja los de Warframe. */
+const builderMods: Record<Kind, ReturnType<typeof once<BuildMod[]>>> = {
+  warframe: once<BuildMod[]>(() => import("@warframe/builder/mods-warframe.json").then((m) => ({ default: m.default.mods as BuildMod[] }))),
+  primary: once<BuildMod[]>(() => import("@warframe/builder/mods-primary.json").then((m) => ({ default: m.default.mods as BuildMod[] }))),
+  secondary: once<BuildMod[]>(() => import("@warframe/builder/mods-secondary.json").then((m) => ({ default: m.default.mods as BuildMod[] }))),
+  melee: once<BuildMod[]>(() => import("@warframe/builder/mods-melee.json").then((m) => ({ default: m.default.mods as BuildMod[] }))),
+};
+export const loadBuilderMods = (kind: Kind): Promise<BuildMod[]> => builderMods[kind].load();
+export const peekBuilderMods = (kind: Kind): BuildMod[] | null => builderMods[kind].peek();
+
+/**
+ * Las fichas del Arsenal de esos cuatro tipos que no están en el armador (los Necramechs que el Arsenal cuenta como
+ * Warframe y una pieza de Orion). Así la ficha sabe si ofrecer "Armar build" sin bajar `items.json`; lo cuida
+ * `warframeBuilder.test.ts` contra los datos.
+ */
+export const NOT_IN_BUILDER: ReadonlySet<string> = new Set(["bonewidow", "orion-sirius", "voidrig"]);
+export const inBuilder = (slug: string, kind: WfKind): boolean =>
+  (kind === "warframe" || kind === "primary" || kind === "secondary" || kind === "melee") && !NOT_IN_BUILDER.has(slug);

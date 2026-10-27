@@ -3,9 +3,11 @@ import itemsJson from "../../games/warframe/data/builder/items.json";
 import primaryJson from "../../games/warframe/data/builder/mods-primary.json";
 import warframeJson from "../../games/warframe/data/builder/mods-warframe.json";
 import meleeJson from "../../games/warframe/data/builder/mods-melee.json";
-import type { BuildItem, BuildMod, Kind, Pol, StatKey } from "../src/warframe/data";
+import arsenalList from "../../games/warframe/data/arsenal/list.json";
+import { inBuilder, NOT_IN_BUILDER, type BuildItem, type BuildMod, type Kind, type Pol, type StatKey } from "../src/warframe/data";
 import { abilityCost, bonus, capacity, channelDrain, combatDamage, emptyBuild, formas, frameStats, modDrain, modFits, weaponStats, type Slot, type SlotId } from "../src/warframe/builder/calc";
 import { decodeBuild, encodeBuild } from "../src/warframe/builder/buildUrl";
+import { delta, weaponRows } from "../src/warframe/builder/sheet";
 
 const items = itemsJson.items as BuildItem[];
 const modsPrimary = primaryJson.mods as BuildMod[];
@@ -290,5 +292,60 @@ describe("armador de Warframe: la build en la dirección", () => {
     const b = decodeBuild("i=braton&m=aura.steel-charge.5,stance.x.1&p=aura.madurai", items, todos)!;
     expect(b.slots.map((x) => x.id)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, "exilus"]);
     expect(encodeBuild(b)).toBe("i=braton");
+  });
+});
+
+describe("armador de Warframe: la build de 6 mods del Braton (la que prueba la pestaña)", () => {
+  const url = "i=braton&m=0.serration.10,1.split-chamber.5,2.point-strike.5,3.vital-sense.5,4.hellfire.5,5.infected-clip.5&p=0.madurai,1.madurai&o=1";
+  const b = decodeBuild(url, items, modsPrimary)!;
+
+  it("se lee entera y vuelve a escribirse igual", () => {
+    expect(b.slots.filter((s) => s.mod).length).toBe(6);
+    expect(encodeBuild(b)).toBe(url);
+  });
+  it("daño: 24 → 178,08 por proyectil (Calor + Toxina = Gas 114,48), ×1,9 multidisparo = 338,35 por disparo", () => {
+    const s = weaponStats(b.item, b.slots);
+    cerca(s.base.total, 24);
+    cerca(s.mod.total, 178.08);
+    cerca(s.mod.byType.gas!, 114.48);
+    cerca(s.mod.byType.impact!, 20.988);
+    expect(s.mod.byType.heat).toBeUndefined();
+    cerca(s.mod.ms, 1.9);
+    cerca(s.mod.total * s.mod.ms, 338.352);
+    cerca(s.mod.cc, 0.3, 1e-9);
+    cerca(s.mod.cd, 3.52);
+    cerca(s.mod.sc, 0.06, 1e-9);
+  });
+  it("capacidad 55 de 60 con catalizador y dos Formas", () => {
+    expect(capacity(b)).toEqual({ total: 60, used: 55, free: 5 });
+    expect(formas(b)).toBe(2);
+  });
+});
+
+describe("armador de Warframe: qué fichas del Arsenal enlazan al armador", () => {
+  it("NOT_IN_BUILDER es justo lo del Arsenal de esos cuatro tipos que no está en items.json", () => {
+    const enArmador = new Set(items.map((x) => x.slug));
+    const fuera = (arsenalList as { slug: string; kind: string }[]).filter((r) => ["warframe", "primary", "secondary", "melee"].includes(r.kind) && !enArmador.has(r.slug)).map((r) => r.slug);
+    expect([...NOT_IN_BUILDER].sort()).toEqual(fuera.sort());
+    expect(inBuilder("braton", "primary")).toBe(true);
+    expect(inBuilder("voidrig", "warframe")).toBe(false);
+    expect(inBuilder("itzal", "archwing")).toBe(false);
+  });
+});
+
+describe("armador de Warframe: las filas de la pantalla", () => {
+  it("el daño por disparo es por proyectil × multidisparo, y en cuerpo a cuerpo es por golpe", () => {
+    const hek = real("hek");
+    const s = weaponStats(hek, []);
+    const rows = weaponRows("primary", s.base, s.mod);
+    cerca(rows.find((r) => r.key === "perShot")!.now, s.mod.total * s.mod.ms);
+    expect(rows.find((r) => r.key === "multishot")!.now).toBe(hek.w!.ms);
+    expect(weaponRows("melee", s.base, s.mod)[0]!.key).toBe("perHit");
+    expect(rows.find((r) => r.key === "reload")?.inv).toBe(true);
+  });
+  it("el cambio: nada si no cambió, nuevo si no había, y la recarga más corta es mejor", () => {
+    expect(delta(10, 10)).toBeNull();
+    expect(delta(0, 5)).toEqual({ pct: null, good: true });
+    expect(delta(2, 1.5, true)).toEqual({ pct: -25, good: true });
   });
 });
