@@ -31,6 +31,21 @@ class TestWf(unittest.TestCase):
         raw = (wf.RAW / "index_en.txt.lzma").read_bytes()
         self.assertIn(b"ExportWarframes_en.json!", fetch.unlzma(raw))
 
+    def test_unlzma_basura_levanta_error(self):
+        with self.assertRaises(ValueError):
+            fetch.unlzma(bytes([255]) * 40)
+        with self.assertRaises(ValueError):
+            fetch.unlzma(b"")
+
+    def test_validar(self):
+        with self.assertRaises(ValueError):
+            fetch.validar("X.json", b"")
+        with self.assertRaises(ValueError):
+            fetch.validar("X.json", b"{no")
+        with self.assertRaises(ValueError):
+            fetch.validar("drops.html", b"<html>")
+        fetch.validar("X.json", b'{"a": 1}')
+
 
 if __name__ == "__main__":
     unittest.main()
