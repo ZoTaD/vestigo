@@ -69,6 +69,7 @@ responde arriba, sin scroll, con las tasas oficiales.
   `games/warframe/data/` (lista liviana por pestaña + fichas partidas por hash del slug, como Stardew); `images.py` baja
   los íconos que se usan y escribe WebP de 128 px (listas) y 256 px (fichas de Arsenal) en `site/public/warframe/`.
   Medido: ~5 KB y ~14 KB por ícono; la etapa 1 suma ~3.300 íconos chicos y ~1.000 grandes, unos 30 MB.
+- **Tamaño medido (2026-10-27)**: `games/warframe/data` 9,4 MB (819 fichas de Arsenal, 799 reliquias, 237 recursos, 1.750 mods y arcanos, 32 archivos por pestaña, el más grande de ~140 KB) y `site/public/warframe` 32 MB (2.509 íconos de 128 px y 802 de 256 px).
 - Slugs en inglés; español con su slug propio (como Stardew).
 - **Actualización**: una Action semanal (y a mano) compara el hash del índice del export; si no cambió, termina sin
   compilar. Si cambió, regenera y abre un PR. Los minutos de Actions están contados.
