@@ -121,3 +121,28 @@ warframe.market (etapa 3, revisar sus condiciones).
 - Recursos: sólo los que piden las recetas o aparecen en la tabla de drops (no los ~3.500 del export, que incluyen
   decoraciones y objetos internos).
 - Imágenes propias en WebP en vez de enlazar el CDN de DE (no dependemos de ellos ni de su CORS/caché).
+
+## Mediciones de la etapa 1 (27/10)
+
+`npm run build` (tsc + vite build + check-links), uno detrás del otro, pico de RAM sumando los procesos node/esbuild nuevos:
+
+| | `main` (sin Warframe) | `feat/warframe` |
+|---|---|---|
+| Total | 141,9 s | 164,7 s |
+| `vite build` | 1 min 44 s | 2 min |
+| Prerender | 39.038 rutas en 67,7 s | 46.258 rutas en 82,0 s |
+| Pico de RAM | 2,86 GB | 3,45 GB |
+| `check-links` | 0 sin destino | 0 sin destino |
+
+Perf contra `vite preview` (frío, 1400×900), dentro del presupuesto:
+
+| Página | pedidos | imágenes | nodos |
+|---|---|---|---|
+| `/en/warframe` | 23 | 4 | 250 |
+| `/es/warframe` | 23 | 4 | 251 |
+| `/en/warframe/arsenal` | 74 | 48 | 357 |
+| `/en/warframe/arsenal/excalibur` | 31 | 6 | 323 |
+| `/es/warframe/reliquias/lith-a1` | 32 | 6 | 255 |
+| `/en/warframe/farming/neural-sensors` | 110 | 85 | 520 |
+| `/es/warframe/mods` | 76 | 50 | 832 |
+| `/en/warframe/mods/serration` | 26 | 1 | 586 |
