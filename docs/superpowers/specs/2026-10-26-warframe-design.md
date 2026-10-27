@@ -341,3 +341,39 @@ del Arsenal (Warframes y armas primarias, secundarias y cuerpo a cuerpo) enlaza 
   la wiki coinciden: 40 de 40); a rangos intermedios no está verificado y no se ofrece.
 - **Qué hace**: elegir arma (o tipo) → tabla de cada stat posible con mín–máx en las 4 combinaciones; y "¿qué tan bueno
   salió mi Riven?": escribir el valor de un stat da el % dentro de su rango.
+
+### Decisiones tomadas al implementar
+
+- **Capacidad mínima por maestría** (Update 38.5: 15 + 1 cada 2 rangos de maestría): no se muestra. No está verificado
+  cómo se combina con el rango del objeto y el potenciador; el armador usa capacidad = rango del objeto (×2).
+- **Clase de cada arma** (escopeta, arco, francotirador, tipo de cuerpo a cuerpo): el export no la trae. Sale del módulo
+  de datos de la wiki oficial (`Module:Weapons/data`), guardada en `games/warframe/tools/clases.json` y actualizada a mano
+  con `builder.py --clases`; la Action semanal no depende de la red para esto.
+- El Arsenal del juego muestra el daño **sin** la cuantización a 1/32 (que es del combate): las cifras del armador son
+  las del Arsenal.
+- Mods de la misma familia (Serration y Amalgam Serration) pueden ir juntos: los datos no traen la familia.
+
+## Mediciones de la etapa 3 (27/10)
+
+`npm run build` con nada más compilando (el servidor de desarrollo levantado no cuenta en el pico):
+
+| | etapa 2 | etapa 3 |
+|---|---|---|
+| Total | 173,1 s | 172,8 s |
+| `vite build` | 2 min 10 s | 2 min 8 s |
+| Prerender | 46.804 rutas en 83,7 s | 46.808 rutas en 88,1 s |
+| Pico de RAM | 3,29 GB | 2,89 GB |
+| `check-links` | 0 sin destino | 0 sin destino |
+
+Suma 4 rutas (las dos pestañas × 2 idiomas: el armador y los Rivens no tienen fichas). Perf contra `vite preview`
+(frío, Chrome del sistema con `PW_CHROMIUM`), todas dentro del presupuesto:
+
+| Página | pedidos | imágenes | nodos |
+|---|---|---|---|
+| `/en/warframe/builder` | 38 | 12 | 275 |
+| `/es/warframe/armador?i=excalibur` | 39 | 12 | 886 |
+| `/en/warframe/builder?i=braton&m=…` (6 mods) | 39 | 12 | 499 |
+| `/en/warframe/rivens` | 26 | 0 | 198 |
+| `/es/warframe/rivens?w=braton` | 29 | 1 | 724 |
+
+Las páginas de las etapas 1 y 2 siguen con cifras parecidas (portada 30 pedidos y 329 nodos).
