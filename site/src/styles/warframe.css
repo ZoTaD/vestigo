@@ -253,3 +253,68 @@ a.wf-res:focus-visible { outline: 2px solid var(--wf-acc); outline-offset: 2px; 
 .wf-stat dd.is-text { font-size: 15px; line-height: 1.2; }
 .wf-mod-table td { height: 56px; padding-block: 0; }
 .wf-mod-table .wf-reward { height: 100%; }
+
+/* Los enlaces dentro de una tabla (la reliquia, el nodo de una misión) se marcan con un subrayado tenue. */
+.wf-table td > a:not([class]) { text-decoration: underline; text-decoration-color: rgba(111, 211, 255, 0.35); text-underline-offset: 3px; }
+.wf-table td > a:not([class]):hover { color: var(--wf-acc); }
+
+/* --- Mapa estelar (etapa 2): las órbitas (maqueta A) y la tabla de nodos (maqueta C) ------------------------------------ */
+.wf-star-stage { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 860px) { .wf-star-stage { grid-template-columns: minmax(0, 1fr); } }
+.wf-orbits { display: block; width: 100%; height: auto; max-width: 640px; margin: 0 auto; }
+.wf-ring { fill: none; stroke: rgba(140, 180, 220, 0.12); }
+.wf-planet-link { cursor: pointer; }
+.wf-planet-halo { fill: transparent; }
+.wf-planet-body { fill: #1b2c3c; transition: fill 0.15s; }
+.wf-planet-link:hover .wf-planet-body, .wf-planet.is-on .wf-planet-body { fill: #2a4a66; }
+.wf-planet.is-on .wf-planet-halo { fill: rgba(111, 211, 255, 0.12); }
+.wf-planet-link:focus-visible { outline: none; }
+.wf-planet-link:focus-visible .wf-planet-halo { fill: rgba(111, 211, 255, 0.22); }
+.wf-planet text { fill: var(--wf-ink); font: 700 14px var(--wf-head); letter-spacing: 0.12em; text-transform: uppercase; }
+.wf-planet.is-on text { fill: var(--wf-acc); }
+.wf-planet .wf-planet-n { fill: var(--wf-dim); font-size: 11px; letter-spacing: 0.05em; }
+.wf-orbit-dot { fill: var(--wf-acc); opacity: 0.8; }
+.wf-star-outside { margin: 16px 0 10px; }
+.wf-star-map .wf-pill .wf-dim { font-weight: 600; }
+.wf-star-side { display: grid; gap: 8px; align-content: start; }
+.wf-star-planet { font: 700 40px/1 var(--wf-head); letter-spacing: 0.06em; text-transform: uppercase; text-wrap: balance; }
+@container (max-width: 360px) { .wf-star-planet { font-size: 30px; } }
+.wf-star-types { margin-top: 10px; }
+.wf-star-types .wf-label { flex-basis: 100%; margin-bottom: 2px; }
+a.wf-pill { display: inline-block; }
+.wf-star-clear { justify-self: start; margin-top: 6px; }
+.wf-star .wf-count { margin-bottom: 10px; }
+.wf-star-table td { vertical-align: middle; }
+.wf-star-node { font: 700 16px/1.15 var(--wf-head); letter-spacing: 0.04em; }
+a.wf-star-node:hover { color: var(--wf-acc); }
+.wf-star-dark { display: block; font: 600 11px/1.2 var(--wf-head); letter-spacing: 0.14em; text-transform: uppercase; color: var(--wf-gold); }
+.wf-star-best { font-size: 14px; color: var(--wf-dim); }
+.wf-star-best b { color: var(--wf-gold); font-weight: 600; }
+.wf-star-group th { padding: 16px 10px 6px; font: 700 15px/1 var(--wf-head); letter-spacing: 0.16em; text-transform: uppercase; color: var(--wf-acc); }
+.wf-star-group th span { margin-left: 8px; font-size: 12px; letter-spacing: 0.12em; color: var(--wf-dim); }
+.wf-star-table tbody tr.wf-star-group + tr td { border-top: 0; }
+@container (max-width: 700px) { .wf-star-fac { display: none; } }
+@container (max-width: 480px) { .wf-star-best { display: none; } }
+
+/* La ficha de un nodo: los datos en fila y una tabla por rotación. */
+.wf-node-facts { display: flex; flex-wrap: wrap; gap: 10px 26px; margin: 10px 0 0; }
+.wf-node-facts dt { font: 600 12px/1 var(--wf-head); letter-spacing: 0.2em; text-transform: uppercase; color: var(--wf-dim); }
+.wf-node-facts dd { margin: 5px 0 0; font: 700 20px/1.1 var(--wf-head); letter-spacing: 0.03em; }
+.wf-node-rots { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; align-items: start; }
+.wf-node-rot { min-width: 0; }
+.wf-node-table .wf-reward { font-size: 15px; gap: 8px; }
+.wf-node-table td:first-child { padding: 4px 10px; }
+.wf-planet text.is-moon { font-size: 12px; letter-spacing: 0.1em; }
+/* En el teléfono el dibujo queda a la mitad de su tamaño: la letra crece en el dibujo para seguir leyéndose. */
+@media (max-width: 640px) {
+  .wf-planet text { font-size: 21px; letter-spacing: 0.08em; }
+  .wf-planet text.is-moon { font-size: 16px; }
+  .wf-planet .wf-planet-n { font-size: 16px; }
+  .wf-planet text.is-moon .wf-planet-n { display: none; }
+}
+.wf-star-rail { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 4px; margin-top: 8px; }
+.wf-star-rail-link { display: grid; gap: 2px; padding: 7px 10px; background: var(--wf-glass); border-radius: 3px; }
+.wf-star-rail-link:hover { background: var(--wf-glass-2); }
+.wf-star-rail-link b { font: 700 15px/1.1 var(--wf-head); letter-spacing: 0.08em; text-transform: uppercase; }
+.wf-star-rail-link:hover b { color: var(--wf-acc); }
+.wf-star-rail-link span { font: 600 12px/1.2 var(--wf-head); letter-spacing: 0.04em; color: var(--wf-dim); }

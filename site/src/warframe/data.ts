@@ -7,10 +7,10 @@
  *   sin bajar la lista entera.
  *
  * Cada vez que llega algo que nombra objetos se anotan sus slugs en español en `route.ts`, que es lo que escribe los
- * enlaces. Nunca en el chunk del área: cada JSON es un `import()` aparte (regla 4 de CLAUDE.md). Dónde farmear y Mods
- * suman acá su lista y sus fichas.
+ * enlaces. Nunca en el chunk del área: cada JSON es un `import()` aparte (regla 4 de CLAUDE.md). Dónde farmear, Mods y
+ * el Mapa estelar (etapa 2) suman acá su lista y sus fichas.
  */
-import { registerWfSlugs, type Route, type WfTab } from "../route";
+import { registerWfSlugs, slugify, type Route, type WfTab } from "../route";
 import { WF_KINDS, type WfKind } from "../warframeCopy";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
@@ -46,7 +46,8 @@ export interface RelicRow {
 
 /** De dónde cae algo: una misión, un botín de bounty, "otro" (un jefe, una tienda), un enemigo o una reliquia. */
 export type Source =
-  | { k: "mission"; where: string; rot: string | null; chance: number }
+  /** `node`: la clave en `refs` de su nodo del mapa estelar (`node:<slug>`), si se sabe cuál es. */
+  | { k: "mission"; where: string; rot: string | null; chance: number; node?: string }
   | { k: "bounty"; where: string; tier: string; stage: string; rot: string | null; chance: number }
   | { k: "other"; where: string; chance: number }
   | { k: "enemy"; who: string; eff: number; drop?: number; chance?: number }
@@ -191,21 +192,54 @@ export interface ModFicha {
   refs: Refs;
 }
 
+/** Una fila de `star-chart/list.json`: un nodo del mapa estelar. `pi` es el índice del planeta en el export. */
+export interface StarRow {
+  slug: string;
+  slugEs: string;
+  name: Pair;
+  planet: Pair;
+  pi: number;
+  /** El tipo de misión y la facción en inglés, como en los datos (`missionType`/`faction` de warframeCopy.ts los nombran). */
+  type: string;
+  faction: string;
+  lv: [min: number, max: number];
+  /** El rango de maestría que pide (0: ninguno). */
+  mr: number;
+  /** Es un sector oscuro. */
+  dark: boolean;
+  /** Lo de menor chance de su mejor tabla (la rotación C o la única): "lo que más da". */
+  best: { name: Pair; chance: number } | null;
+}
+/** Una tabla de recompensas de un nodo: una rotación (A/B/C), un rótulo ("Caches") o los dos, o ninguno (una tabla sola). */
+export interface StarRewards {
+  label: string | null;
+  rot: string | null;
+  items: { ref: string; chance: number }[];
+}
+export interface StarFicha extends Omit<StarRow, "best"> {
+  rewards: StarRewards[];
+  /** Las claves en `refs` de los recursos del planeta (las fichas de Dónde farmear). */
+  resources: string[];
+  refs: Refs;
+}
+
 /** Lo que trae cada pestaña con fichas. */
 export interface ListOf {
   arsenal: ArsenalRow[];
   relics: RelicRow[];
   farming: FarmingRow[];
   mods: ModRow[];
+  "star-chart": StarRow[];
 }
 export interface FichaOf {
   arsenal: ArsenalFicha;
   relics: RelicFicha;
   farming: FarmingFicha;
   mods: ModFicha;
+  "star-chart": StarFicha;
 }
 export type DataTab = keyof ListOf;
-export const DATA_TABS: DataTab[] = ["arsenal", "relics", "farming", "mods"];
+export const DATA_TABS: DataTab[] = ["arsenal", "relics", "farming", "mods", "star-chart"];
 export const isDataTab = (t: string | undefined): t is DataTab => !!t && (DATA_TABS as string[]).includes(t);
 
 const lists = {
@@ -213,18 +247,21 @@ const lists = {
   relics: once<RelicRow[]>(() => import("@warframe/relics/list.json")),
   farming: once<FarmingRow[]>(() => import("@warframe/farming/list.json")),
   mods: once<ModRow[]>(() => import("@warframe/mods/list.json")),
+  "star-chart": once<StarRow[]>(() => import("@warframe/star-chart/list.json")),
 };
 const fichas = {
   arsenal: shardedFichas<ArsenalFicha>(import.meta.glob<{ default: Record<string, ArsenalFicha> }>("@warframe/arsenal/f/*.json"), shard),
   relics: shardedFichas<RelicFicha>(import.meta.glob<{ default: Record<string, RelicFicha> }>("@warframe/relics/f/*.json"), shard),
   farming: shardedFichas<FarmingFicha>(import.meta.glob<{ default: Record<string, FarmingFicha> }>("@warframe/farming/f/*.json"), shard),
   mods: shardedFichas<ModFicha>(import.meta.glob<{ default: Record<string, ModFicha> }>("@warframe/mods/f/*.json"), shard),
+  "star-chart": shardedFichas<StarFicha>(import.meta.glob<{ default: Record<string, StarFicha> }>("@warframe/star-chart/f/*.json"), shard),
 };
 const esToEn = {
   arsenal: shardedFichas<string>(import.meta.glob<{ default: Record<string, string> }>("@warframe/arsenal/es/*.json"), shard),
   relics: shardedFichas<string>(import.meta.glob<{ default: Record<string, string> }>("@warframe/relics/es/*.json"), shard),
   farming: shardedFichas<string>(import.meta.glob<{ default: Record<string, string> }>("@warframe/farming/es/*.json"), shard),
   mods: shardedFichas<string>(import.meta.glob<{ default: Record<string, string> }>("@warframe/mods/es/*.json"), shard),
+  "star-chart": shardedFichas<string>(import.meta.glob<{ default: Record<string, string> }>("@warframe/star-chart/es/*.json"), shard),
 };
 
 /** Anota los slugs en español de lo que cambia: la dirección de una ficha en español y los enlaces que la nombran. */
@@ -439,4 +476,88 @@ export function modTypes(rows: readonly ModRow[], kind: ModRow["kind"] | null): 
   const n = new Map<string, number>();
   for (const r of rows) if (!kind || r.kind === kind) n.set(r.type, (n.get(r.type) ?? 0) + 1);
   return [...n].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map((e) => e[0]);
+}
+
+// --- Mapa estelar: el orden de los planetas y los filtros ------------------------------------------------------------
+
+/** Las órbitas, en el orden del juego (del sol hacia afuera). */
+export const STAR_ORBITS = ["Mercury", "Venus", "Earth", "Mars", "Ceres", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto", "Eris", "Sedna"] as const;
+/** Las lunas, dibujadas al lado de su planeta y listadas después de él. */
+export const STAR_MOONS: Record<string, string> = { Lua: "Earth", Phobos: "Mars", Deimos: "Mars", Europa: "Jupiter" };
+
+/** El slug de un planeta en la dirección (`?planet=kuva-fortress`): su nombre en inglés. */
+export const planetSlug = (planet: Pair): string => slugify(planet[0]);
+
+/** Un planeta (o luna, o lugar) con lo que resume la lista: cuántos nodos, el nivel y los tipos de misión que tiene. */
+export interface StarPlanet {
+  slug: string;
+  name: Pair;
+  pi: number;
+  n: number;
+  lo: number;
+  hi: number;
+  /** Los tipos de misión, el más numeroso primero. */
+  types: string[];
+}
+
+/** El lugar de un planeta en la lista: cada órbita seguida de sus lunas, y después lo demás por su índice del export. */
+function planetRank(name: string, pi: number): number {
+  const host = STAR_MOONS[name] ?? name;
+  const orbit = (STAR_ORBITS as readonly string[]).indexOf(host);
+  if (orbit < 0) return 1000 + pi;
+  return orbit * 10 + (host === name ? 0 : 1 + Object.keys(STAR_MOONS).indexOf(name));
+}
+
+/** Los planetas de la lista, en el orden del juego. */
+export function starPlanets(rows: readonly StarRow[]): StarPlanet[] {
+  const by = new Map<string, StarPlanet>();
+  for (const r of rows) {
+    const slug = planetSlug(r.planet);
+    let p = by.get(slug);
+    if (!p) by.set(slug, (p = { slug, name: r.planet, pi: r.pi, n: 0, lo: r.lv[0], hi: r.lv[1], types: [] }));
+    p.n++;
+    p.lo = Math.min(p.lo, r.lv[0]);
+    p.hi = Math.max(p.hi, r.lv[1]);
+  }
+  return [...by.values()]
+    .sort((a, b) => planetRank(a.name[0], a.pi) - planetRank(b.name[0], b.pi))
+    .map((p) => ({ slug: p.slug, name: p.name, pi: p.pi, n: p.n, lo: p.lo, hi: p.hi, types: starTypes(rows.filter((r) => planetSlug(r.planet) === p.slug)) }));
+}
+
+/** Los tipos de misión de unos nodos, el más numeroso primero. */
+export function starTypes(rows: readonly StarRow[]): string[] {
+  const n = new Map<string, number>();
+  for (const r of rows) n.set(r.type, (n.get(r.type) ?? 0) + 1);
+  return [...n].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map((e) => e[0]);
+}
+
+/** Los nodos en el orden de sus planetas (`starPlanets`); dentro de cada uno, el de la lista. */
+export function sortStars(rows: readonly StarRow[]): StarRow[] {
+  return [...rows].sort((a, b) => planetRank(a.planet[0], a.pi) - planetRank(b.planet[0], b.pi));
+}
+
+/** El nivel de un nodo: "30–40", o "85" si es uno solo. */
+export const starLevel = (lv: readonly [number, number]): string => (lv[0] === lv[1] ? String(lv[0]) : `${lv[0]}–${lv[1]}`);
+
+export interface StarFilters {
+  /** El slug del planeta (`planetSlug`). */
+  planet: string | null;
+  /** El tipo de misión, en inglés como en los datos. */
+  type: string | null;
+}
+export const noStarFilters: StarFilters = { planet: null, type: null };
+/** `?planet=sedna&type=Defense` → filtros. */
+export function readStarFilters(search: string): StarFilters {
+  const q = new URLSearchParams(search);
+  return { planet: q.get("planet") || null, type: q.get("type") || null };
+}
+export function writeStarFilters(f: StarFilters): string {
+  const q = new URLSearchParams();
+  if (f.planet) q.set("planet", f.planet);
+  if (f.type) q.set("type", f.type);
+  const s = q.toString();
+  return s ? `?${s}` : "";
+}
+export function filterStars(rows: readonly StarRow[], planet: string | null, type: string | null): StarRow[] {
+  return rows.filter((r) => (!planet || planetSlug(r.planet) === planet) && (!type || r.type === type));
 }

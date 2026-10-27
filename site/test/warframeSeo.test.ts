@@ -6,7 +6,9 @@ import arsenal from "../../games/warframe/data/arsenal/list.json";
 import relics from "../../games/warframe/data/relics/list.json";
 import farming from "../../games/warframe/data/farming/list.json";
 import mods from "../../games/warframe/data/mods/list.json";
+import starChart from "../../games/warframe/data/star-chart/list.json";
 import { parseRoute } from "../src/route";
+import { WF_COPY } from "../src/warframeCopy";
 import { SITEMAP_GROUPS, sitemapLastmod, sitemapPaths, sitemapXml, type SitemapData } from "../src/sitemap";
 import { jsonLdFor, metaFor, ogImageUrl, prerenderPages } from "../src/prerender";
 import { warframeSitemapData } from "../src/warframe/sitemapData";
@@ -14,7 +16,7 @@ import { isWfLoadingPage } from "../src/warframe/loadingGuard";
 import { WfLoading } from "../src/warframe/ui";
 
 // Como en el build: `warframeSitemapData` anota los slugs en español antes de armar ninguna dirección.
-const wf = warframeSitemapData(wfMeta, { arsenal, relics, farming, mods } as never);
+const wf = warframeSitemapData(wfMeta, { arsenal, relics, farming, mods, "star-chart": starChart } as never);
 const data = {
   dlHeroes: {}, dlItems: {}, dlHeroIds: [], dlItemIds: [],
   wf,
@@ -36,6 +38,7 @@ describe("Warframe en el sitemap", () => {
       "/en/warframe/relics", "/es/warframe/reliquias",
       "/en/warframe/farming", "/es/warframe/donde-farmear",
       "/en/warframe/mods", "/es/warframe/mods",
+      "/en/warframe/star-chart", "/es/warframe/mapa-estelar",
     ]) {
       expect(paths).toContain(p);
       expect(main).toContain(`<loc>https://vestigo.gg${p}</loc>`);
@@ -53,6 +56,11 @@ describe("Warframe en el sitemap", () => {
     expect(paths.filter((p) => p.startsWith("/es/warframe/reliquias/")).length).toBe(relics.length);
     expect(paths.filter((p) => p.startsWith("/es/warframe/donde-farmear/")).length).toBe(farming.length);
     expect(paths.filter((p) => p.startsWith("/es/warframe/mods/")).length).toBe(mods.length);
+    expect(paths).toContain("/en/warframe/star-chart/hydron");
+    expect(paths).toContain("/es/warframe/mapa-estelar/hidron");
+    expect(paths.filter((p) => p.startsWith("/es/warframe/mapa-estelar/")).length).toBe(starChart.length);
+    // Maestría, Prime Vault y Baro todavía no tienen página: no van al sitemap.
+    expect(paths.some((p) => /\/warframe\/(mastery|maestria|prime-vault|baro)/.test(p))).toBe(false);
     expect(new Set(paths).size).toBe(paths.length);
   });
 
@@ -78,6 +86,20 @@ describe("el <head> de Warframe", () => {
     expect(page("/es/warframe/mods/sierra").title).toBe("Sierra — Warframe: drops y estadísticas del mod | Vestigo");
     expect(page("/es/warframe/reliquias/lith-a1").title).toBe("Reliquia Lith A1 — Warframe: recompensas, drops y estado del Vault | Vestigo");
     expect(page("/es/warframe/donde-farmear/sensores-neuronales").title).toMatch(/^Dónde farmear .+ en Warframe \| Vestigo$/);
+  });
+
+  it("un nodo nombra su planeta y su misión, en los dos idiomas y en 160 caracteres", () => {
+    for (const lang of ["en", "es"] as const) {
+      const seo = WF_COPY[lang].detailSeo["star-chart"]("Hydron", "Sedna", "Defense");
+      expect(seo.title).toContain("Hydron");
+      expect(seo.title).toContain("Sedna");
+      expect(seo.description).toContain("Sedna");
+      expect(seo.description.length).toBeLessThanOrEqual(160);
+    }
+    expect(WF_COPY.es.detailSeo["star-chart"]("Hidrón", "Sedna", "Defense").description).toContain("Defensa");
+    expect(page("/en/warframe/star-chart/hydron").title).toBe("Hydron, Sedna — Warframe node rewards and drops | Vestigo");
+    expect(page("/es/warframe/mapa-estelar/hidron").title).toMatch(/^Hidr.n, Sedna — Warframe: recompensas y drops del nodo \| Vestigo$/);
+    expect(crumbNames(page("/es/warframe/mapa-estelar/hidron"))).toEqual(["Vestigo", "Warframe", "Mapa estelar", "Hidrón"]);
   });
 
   it("un arcano habla de arcano, no de mod", () => {

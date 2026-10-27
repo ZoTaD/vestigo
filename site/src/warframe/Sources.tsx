@@ -59,6 +59,18 @@ export default function Sources({ list, refs = {}, route, navigate }: { list: re
     }
     return r ? refName(r, lang) : name;
   };
+  /** El lugar de una misión ("Sedna/Hydron (Defense)"), enlazado a la ficha de su nodo del mapa estelar si se sabe cuál es. */
+  const nodeLink = (s: Extract<Source, { k: "mission" }>) => {
+    const r = s.node ? refs[s.node] : undefined;
+    if (route && navigate && r?.tab === "star-chart" && r.slug) {
+      return (
+        <RouteLink to={{ ...route, view: "warframe", wfSection: "star-chart", detail: r.slug }} onNavigate={navigate} prefetch="press">
+          {s.where}
+        </RouteLink>
+      );
+    }
+    return s.where;
+  };
   /** Los grupos, el de mejor chance primero (a igual chance, el orden de siempre). Las reliquias no traen cifra: van después. */
   const best = (g: readonly Source[]): number => (g.length ? score(sortSources(g)[0]) : -1);
   const groups: { key: string; rows: readonly Source[]; node: ReactNode }[] = [
@@ -97,7 +109,7 @@ export default function Sources({ list, refs = {}, route, navigate }: { list: re
           rows={missions}
           render={(s, i) => (
             <tr key={i}>
-              <td>{s.where}</td>
+              <td>{nodeLink(s)}</td>
               <td>{s.rot ?? ""}</td>
               <td className="is-num">{pct(s.chance)}</td>
             </tr>

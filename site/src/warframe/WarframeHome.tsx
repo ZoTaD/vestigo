@@ -16,12 +16,19 @@ import { cambion, cetus, vallis } from "./cycles";
 import { fetchLive, type Live } from "./live";
 import { Icon, Panel, type Nav } from "./ui";
 
-/** El ícono de cada pestaña en su tarjeta: uno de sus propios datos (Ash, una reliquia Lith, Aggristone y un mod único). */
+/**
+ * El ícono de cada pestaña en su tarjeta: uno de sus propios datos (Ash, una reliquia Lith, Aggristone y un mod único) y,
+ * en la etapa 2, las coordenadas de navegación, Excalibur, Excalibur Prime y el ducado.
+ */
 const TAB_ICON: Record<WfTab, string> = {
   arsenal: "storeicons-warframes-ash",
   relics: "relics-reliclithd",
   farming: "storeicons-resources-duviri-duviriaggristone",
   mods: "lotus-interface-cards-images-unique-shrinemaidennaginataaugment",
+  "star-chart": "storeicons-pickups-navcodeicon",
+  mastery: "storeicons-warframes-excalibur",
+  "prime-vault": "storeicons-primes-excaliburprime",
+  baro: "storeicons-currency-ducat",
 };
 
 /** El orden de las eras en el bloque de fisuras. */

@@ -10,7 +10,7 @@ import { useLang } from "./i18n";
 import type { WfSection, WfTab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const WF_TABS: WfSection[] = ["home", "arsenal", "relics", "farming", "mods"];
+export const WF_TABS: WfSection[] = ["home", "arsenal", "relics", "farming", "mods", "star-chart", "mastery", "prime-vault", "baro"];
 
 /** Las rarezas de un mod, como las deja `site_data.py` (`r.title()`). */
 export type WfRarity = "Common" | "Uncommon" | "Rare" | "Legendary";
@@ -46,6 +46,8 @@ export interface WfCopy {
     relics: (name: string) => Seo;
     farming: (name: string) => Seo;
     mod: (name: string, arcane: boolean) => Seo;
+    /** Un nodo del mapa estelar: su planeta (en el idioma) y el tipo de misión como viene en los datos (en inglés). */
+    "star-chart": (name: string, planet: string, type: string) => Seo;
   };
   home: {
     kicker: string;
@@ -179,6 +181,44 @@ export interface WfCopy {
     none: string;
     missing: string;
   };
+  starChart: {
+    h1: string;
+    lede: (n: string) => string;
+    /** El nombre del dibujo, para los lectores de pantalla. */
+    map: string;
+    /** Los lugares fuera de las órbitas (Vacío, Fortaleza Kuva, Zariman…). */
+    outside: string;
+    pick: string;
+    /** El rótulo arriba del planeta elegido. */
+    planet: string;
+    allPlanets: string;
+    all: string;
+    type: string;
+    nodes: (n: string) => string;
+    levels: (lo: number, hi: number) => string;
+    count: (n: string) => string;
+    none: string;
+    missing: string;
+    node: string;
+    mission: string;
+    faction: string;
+    level: string;
+    best: string;
+    mastery: string;
+    dark: string;
+    rotation: (r: string) => string;
+    rewards: string;
+    reward: string;
+    chance: string;
+    resources: string;
+    noRewards: string;
+  };
+  /** Los tipos de misión del mapa estelar (`MISSION_TYPES` de `site_data.py`); el que no está acá se muestra tal cual. */
+  missionType: Record<string, string>;
+  /** Las facciones (`FACTIONS` de `site_data.py`); la que no está acá se muestra tal cual. */
+  faction: Record<string, string>;
+  /** Los rótulos de una tabla de recompensas de nodo ("Caches"); el que no está acá se muestra tal cual. */
+  rewardLabel: Record<string, string>;
   rarity: Record<WfRarity, string>;
   polarity: Record<WfPolarity, string>;
   /** Los nombres de los tipos de daño (`DAMAGE_TYPES`). */
@@ -191,7 +231,7 @@ export interface WfCopy {
 }
 
 const EN: WfCopy = {
-  tabs: { home: "Home", arsenal: "Arsenal", relics: "Relics", farming: "Where to farm", mods: "Mods" },
+  tabs: { home: "Home", arsenal: "Arsenal", relics: "Relics", farming: "Where to farm", mods: "Mods", "star-chart": "Star Chart", mastery: "Mastery", "prime-vault": "Prime Vault", baro: "Baro Ki'Teer" },
   soon: "Soon",
   loading: "Loading…",
   loadError: "This page couldn't load.",
@@ -205,6 +245,13 @@ const EN: WfCopy = {
     relics: { title: "Warframe relics: drops and Vault status | Vestigo", description: "Every Lith, Meso, Neo and Axi relic with its six rewards by refinement, where it drops, and whether it is in the Vault." },
     farming: { title: "Warframe: where to farm every resource | Vestigo", description: "Every resource with the planets and missions where it drops, and what you need it for." },
     mods: { title: "Warframe mods and arcanes: stats and drops | Vestigo", description: "Every mod and arcane with its polarity, drain, rank-by-rank stats and where it drops." },
+    "star-chart": {
+      title: "Warframe Star Chart: every node, mission and reward | Vestigo",
+      description: "Every node of the Origin System by planet, with its mission type, faction, level, rewards by rotation and the resources of each planet.",
+    },
+    mastery: { title: "Warframe mastery checklist: every item that gives mastery | Vestigo", description: "Tick off every Warframe, weapon and companion you have ranked up and see your mastery points and the mastery rank they reach." },
+    "prime-vault": { title: "Warframe Prime Vault: which Primes are vaulted | Vestigo", description: "Every Prime Warframe and weapon, whether its parts still drop from unvaulted relics, and when its Vault status changed." },
+    baro: { title: "Baro Ki'Teer: inventory, arrival and past visits | Vestigo", description: "Where and when Baro Ki'Teer arrives, what he sells for ducats and credits, and every visit we have recorded." },
   },
   detailSeo: {
     arsenal: (name) => ({
@@ -223,6 +270,10 @@ const EN: WfCopy = {
       title: `${name} — Warframe ${arcane ? "arcane" : "mod"} drops and stats | Vestigo`,
       description: clip(`${name} in Warframe: ${arcane ? "its effect at every rank" : "its polarity, drain and stats at every rank"}, and where it drops.`),
     }),
+    "star-chart": (name, planet, type) => ({
+      title: `${name}, ${planet} — Warframe node rewards and drops | Vestigo`,
+      description: clip(`${name} on ${planet} in Warframe: ${EN.missionType[type] ?? type} mission, its level, faction and rewards by rotation with the chance of each, and the planet's resources.`),
+    }),
   },
   home: {
     kicker: "Warframe guide",
@@ -234,6 +285,10 @@ const EN: WfCopy = {
       relics: "The six rewards by refinement, where the relic drops and whether it is in the Vault.",
       farming: "Which planets and missions drop each resource, and what it is for.",
       mods: "Polarity, drain, stats by rank and where each mod and arcane drops.",
+      "star-chart": "Every node by planet with its mission, level and rewards by rotation.",
+      mastery: "Tick off what you have ranked up and count your mastery points.",
+      "prime-vault": "Which Primes still drop from relics and which are in the Vault.",
+      baro: "Baro Ki'Teer's arrival, his inventory and his past visits.",
     },
     live: {
       heading: "Right now",
@@ -351,6 +406,48 @@ const EN: WfCopy = {
     none: "No mod matches.",
     missing: "That mod doesn't exist. Here is the full list.",
   },
+  starChart: {
+    h1: "Warframe Star Chart",
+    lede: (n) => `All ${n} nodes of the Origin System with their mission, faction, level and rewards.`,
+    map: "Map of the Origin System",
+    outside: "Beyond the orbits",
+    pick: "Pick a planet to see its nodes.",
+    planet: "Planet",
+    allPlanets: "All planets",
+    all: "All",
+    type: "Mission",
+    nodes: (n) => `${n} nodes`,
+    levels: (lo, hi) => `level ${lo}–${hi}`,
+    count: (n) => `${n} nodes shown`,
+    none: "No node matches.",
+    missing: "That node doesn't exist. Here is the full chart.",
+    node: "Node",
+    mission: "Mission",
+    faction: "Faction",
+    level: "Level",
+    best: "Best drop",
+    mastery: "Mastery rank",
+    dark: "Dark Sector",
+    rotation: (r) => `Rotation ${r}`,
+    rewards: "Rewards",
+    reward: "Reward",
+    chance: "Chance",
+    resources: "Planet resources",
+    noRewards: "This node has no reward table of its own.",
+  },
+  missionType: {
+    Assassination: "Assassination", Exterminate: "Exterminate", Survival: "Survival", Rescue: "Rescue", Sabotage: "Sabotage", Capture: "Capture",
+    Spy: "Spy", Defense: "Defense", "Mobile Defense": "Mobile Defense", Interception: "Interception", Hijack: "Hijack", Hive: "Hive",
+    Excavation: "Excavation", "Infested Salvage": "Infested Salvage", Arena: "Arena", Pursuit: "Pursuit", Rush: "Rush", Assault: "Assault",
+    Defection: "Defection", "Free Roam": "Free Roam", "The Circuit": "The Circuit", Disruption: "Disruption", "Void Flood": "Void Flood",
+    "Void Cascade": "Void Cascade", "Void Armageddon": "Void Armageddon", Alchemy: "Alchemy", "Legacyte Harvest": "Legacyte Harvest",
+    "Shrine Defense": "Shrine Defense", Faceoff: "Faceoff", Descent: "Descent", "The Perita Rebellion": "The Perita Rebellion", Relay: "Relay",
+  },
+  faction: {
+    Grineer: "Grineer", Corpus: "Corpus", Infested: "Infested", Orokin: "Orokin", Sentient: "Sentient", "The Murmur": "The Murmur",
+    Scaldra: "Scaldra", Techrot: "Techrot", Duviri: "Duviri", Anarchs: "Anarchs",
+  },
+  rewardLabel: { Caches: "Caches", "Survival Extra": "Survival extra", "Assassination Extra": "Assassination extra" },
   rarity: { Common: "Common", Uncommon: "Uncommon", Rare: "Rare", Legendary: "Legendary" },
   polarity: { madurai: "Madurai", vazarin: "Vazarin", naramon: "Naramon", zenurik: "Zenurik", unairu: "Unairu", umbra: "Umbra", penjaga: "Penjaga", universal: "Universal", any: "Any" },
   damage: {
@@ -364,7 +461,7 @@ const EN: WfCopy = {
 };
 
 const ES: WfCopy = {
-  tabs: { home: "Inicio", arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear", mods: "Mods" },
+  tabs: { home: "Inicio", arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear", mods: "Mods", "star-chart": "Mapa estelar", mastery: "Maestría", "prime-vault": "Prime Vault", baro: "Baro Ki'Teer" },
   soon: "Pronto",
   loading: "Cargando…",
   loadError: "Esta página no se pudo cargar.",
@@ -378,6 +475,13 @@ const ES: WfCopy = {
     relics: { title: "Reliquias de Warframe: recompensas y Vault | Vestigo", description: "Cada reliquia Lith, Meso, Neo y Axi con sus seis recompensas por refinamiento, dónde cae y si está en el Vault." },
     farming: { title: "Warframe: dónde farmear cada recurso | Vestigo", description: "Cada recurso con los planetas y misiones donde cae, y para qué sirve." },
     mods: { title: "Mods y arcanos de Warframe: estadísticas y drops | Vestigo", description: "Cada mod y arcano con su polaridad, costo, estadísticas por rango y dónde cae." },
+    "star-chart": {
+      title: "Mapa estelar de Warframe: cada nodo, misión y recompensa | Vestigo",
+      description: "Cada nodo del Sistema Origen por planeta, con su tipo de misión, facción, nivel, recompensas por rotación y los recursos de cada planeta.",
+    },
+    mastery: { title: "Maestría de Warframe: todo lo que da maestría, para tildar | Vestigo", description: "Tildá cada Warframe, arma y compañero que subiste y mirá tus puntos de maestría y el rango que alcanzan." },
+    "prime-vault": { title: "Prime Vault de Warframe: qué Prime está en el Vault | Vestigo", description: "Cada Warframe y arma Prime, si sus partes todavía caen de reliquias abiertas y cuándo cambió su estado en el Vault." },
+    baro: { title: "Baro Ki'Teer: inventario, llegada y visitas anteriores | Vestigo", description: "Dónde y cuándo llega Baro Ki'Teer, qué vende por ducados y créditos, y cada visita que anotamos." },
   },
   detailSeo: {
     arsenal: (name) => ({
@@ -396,6 +500,10 @@ const ES: WfCopy = {
       title: `${name} — Warframe: drops y estadísticas ${arcane ? "del arcano" : "del mod"} | Vestigo`,
       description: clip(`${name} en Warframe: ${arcane ? "su efecto en cada rango" : "su polaridad, costo y estadísticas en cada rango"}, y dónde cae.`),
     }),
+    "star-chart": (name, planet, type) => ({
+      title: `${name}, ${planet} — Warframe: recompensas y drops del nodo | Vestigo`,
+      description: clip(`${name} (${planet}) en Warframe: misión de ${ES.missionType[type] ?? type}, su nivel, facción y recompensas por rotación con la chance de cada una, y los recursos del planeta.`),
+    }),
   },
   home: {
     kicker: "Guía de Warframe",
@@ -407,6 +515,10 @@ const ES: WfCopy = {
       relics: "Las seis recompensas por refinamiento, dónde cae la reliquia y si está en el Vault.",
       farming: "Qué planetas y misiones sueltan cada recurso, y para qué sirve.",
       mods: "Polaridad, costo, estadísticas por rango y dónde cae cada mod y arcano.",
+      "star-chart": "Cada nodo por planeta con su misión, nivel y recompensas por rotación.",
+      mastery: "Tildá lo que ya subiste y contá tus puntos de maestría.",
+      "prime-vault": "Qué Prime todavía cae de reliquias y cuáles están en el Vault.",
+      baro: "La llegada de Baro Ki'Teer, su inventario y sus visitas anteriores.",
     },
     live: {
       heading: "Ahora mismo",
@@ -524,6 +636,51 @@ const ES: WfCopy = {
     none: "Ningún mod coincide.",
     missing: "Ese mod no existe. Acá va la lista entera.",
   },
+  starChart: {
+    h1: "Mapa estelar de Warframe",
+    lede: (n) => `Los ${n} nodos del Sistema Origen con su misión, facción, nivel y recompensas.`,
+    map: "Mapa del Sistema Origen",
+    outside: "Fuera de las órbitas",
+    pick: "Tocá un planeta para ver sus nodos.",
+    planet: "Planeta",
+    allPlanets: "Todos los planetas",
+    all: "Todas",
+    type: "Misión",
+    nodes: (n) => `${n} nodos`,
+    levels: (lo, hi) => `nivel ${lo}–${hi}`,
+    count: (n) => `${n} nodos a la vista`,
+    none: "Ningún nodo coincide.",
+    missing: "Ese nodo no existe. Acá está el mapa entero.",
+    node: "Nodo",
+    mission: "Misión",
+    faction: "Facción",
+    level: "Nivel",
+    best: "Lo que más da",
+    mastery: "Rango de maestría",
+    dark: "Sector oscuro",
+    rotation: (r) => `Rotación ${r}`,
+    rewards: "Recompensas",
+    reward: "Recompensa",
+    chance: "Probabilidad",
+    resources: "Recursos del planeta",
+    noRewards: "Este nodo no tiene tabla de recompensas propia.",
+  },
+  // De warframe-worldstate-data (MIT, `data/es/missionTypes.json`); los que no trae, del nombre de su nodo en el export
+  // en español (Descenso, Confrontación, Repetidor, Cosecha de legacito, El Circuito).
+  missionType: {
+    Assassination: "Asesinato", Exterminate: "Exterminio", Survival: "Supervivencia", Rescue: "Rescate", Sabotage: "Sabotaje", Capture: "Captura",
+    Spy: "Espionaje", Defense: "Defensa", "Mobile Defense": "Defensa móvil", Interception: "Interceptación", Hijack: "Usurpación", Hive: "Colmena",
+    Excavation: "Excavación", "Infested Salvage": "Salvamento Infestado", Arena: "Rathuum", Pursuit: "Persecución", Rush: "Rush", Assault: "Asalto",
+    Defection: "Deserción", "Free Roam": "Recorrido libre", "The Circuit": "El Circuito", Disruption: "Interrupción", "Void Flood": "Inundación del Vacío",
+    "Void Cascade": "Cascada del Vacío", "Void Armageddon": "Void Armageddon", Alchemy: "Alquimia", "Legacyte Harvest": "Cosecha de legacito",
+    "Shrine Defense": "Shrine Defense", Faceoff: "Confrontación", Descent: "Descenso", "The Perita Rebellion": "The Perita Rebellion", Relay: "Repetidor",
+  },
+  // De warframe-worldstate-data (`data/es/factionsData.json`): los Orokin del mapa son los Corruptos del Vacío.
+  faction: {
+    Grineer: "Grineer", Corpus: "Corpus", Infested: "Infestados", Orokin: "Corruptos", Sentient: "Consciente", "The Murmur": "The Murmur",
+    Scaldra: "Scaldra", Techrot: "Techrot", Duviri: "Duviri", Anarchs: "Anarchs",
+  },
+  rewardLabel: { Caches: "Cachés", "Survival Extra": "Supervivencia extra", "Assassination Extra": "Asesinato extra" },
   rarity: { Common: "Común", Uncommon: "Poco común", Rare: "Rara", Legendary: "Legendaria" },
   polarity: { madurai: "Madurai", vazarin: "Vazarin", naramon: "Naramon", zenurik: "Zenurik", unairu: "Unairu", umbra: "Umbra", penjaga: "Penjaga", universal: "Universal", any: "Cualquiera" },
   damage: {

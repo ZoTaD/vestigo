@@ -295,7 +295,13 @@ function readSitemapData(): { data: OgData } {
   let wf: SitemapData["wf"];
   try {
     const read = (f: string) => JSON.parse(readFileSync(`${warframeDir}/${f}`, "utf-8"));
-    wf = warframeSitemapData(read("meta.json"), { arsenal: read("arsenal/list.json"), relics: read("relics/list.json"), farming: read("farming/list.json"), mods: read("mods/list.json") });
+    wf = warframeSitemapData(read("meta.json"), {
+      arsenal: read("arsenal/list.json"),
+      relics: read("relics/list.json"),
+      farming: read("farming/list.json"),
+      mods: read("mods/list.json"),
+      "star-chart": read("star-chart/list.json"),
+    });
   } catch (e) {
     console.warn(`[warframe] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     wf = undefined;

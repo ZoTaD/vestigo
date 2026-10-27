@@ -161,6 +161,10 @@ export const PAGES = [
   "/en/warframe/farming/neural-sensors",
   "/es/warframe/mods",
   "/en/warframe/mods/serration",
+  // El Mapa estelar (etapa 2): el dibujo con los 269 nodos en la tabla, un planeta elegido y una ficha en español en frío.
+  "/en/warframe/star-chart",
+  "/es/warframe/mapa-estelar?planet=sedna",
+  "/es/warframe/mapa-estelar/hidron",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

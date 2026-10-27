@@ -350,16 +350,25 @@ export function registerStardewSlugs(slugs: Partial<Record<StardewTab, Record<st
   stardewSlugsEs.register(slugs);
 }
 
-/** Warframe (2026-10-27). Plan: docs/superpowers/plans/2026-10-27-warframe-etapa-1.md. */
-export type WfTab = "arsenal" | "relics" | "farming" | "mods";
+/** Warframe (2026-10-27). Planes: docs/superpowers/plans/2026-10-27-warframe-etapa-1.md y la etapa 2 (mapa estelar, maestría, Prime Vault y Baro). */
+export type WfTab = "arsenal" | "relics" | "farming" | "mods" | "star-chart" | "mastery" | "prime-vault" | "baro";
 export type WfSection = "home" | WfTab;
 export const WF_SEGMENT = "warframe";
-export const WF_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods"];
-/** Las cuatro pestañas tienen fichas: su tercer segmento es el slug de una. */
-export const WF_DETAIL_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods"];
+export const WF_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart", "mastery", "prime-vault", "baro"];
+/** Las pestañas con fichas: su tercer segmento es el slug de una. Maestría, Prime Vault y Baro no tienen (enlazan al Arsenal). */
+export const WF_DETAIL_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart"];
 /** Las pestañas con dirección fija; la barra apaga las que todavía no tienen su línea en `TABS` de `Warframe.tsx`. */
-export const WF_PUBLISHED: WfTab[] = ["arsenal", "relics", "farming", "mods"];
-export const WF_SECTION_ES: Record<WfTab, string> = { arsenal: "arsenal", relics: "reliquias", farming: "donde-farmear", mods: "mods" };
+export const WF_PUBLISHED: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart"];
+export const WF_SECTION_ES: Record<WfTab, string> = {
+  arsenal: "arsenal",
+  relics: "reliquias",
+  farming: "donde-farmear",
+  mods: "mods",
+  "star-chart": "mapa-estelar",
+  mastery: "maestria",
+  "prime-vault": "prime-vault",
+  baro: "baro",
+};
 const WF_SECTION_BY_ES = new Map(Object.entries(WF_SECTION_ES).map(([tab, es]) => [es, tab as WfTab]));
 
 /** Los slugs en español de las fichas de Warframe (arsenal, reliquias, recursos y mods). */
