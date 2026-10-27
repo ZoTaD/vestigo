@@ -170,7 +170,7 @@ export interface ModRow {
   type: string;
   rarity: string | null;
   polarity: string | null;
-  compat: string | null;
+  compat: Pair | null;
 }
 export interface ModFicha {
   slug: string;
@@ -182,7 +182,7 @@ export interface ModFicha {
   polarity: string | null;
   drain: number | null;
   maxRank: number;
-  compat: string | null;
+  compat: Pair | null;
   /** El efecto de cada rango, del 0 al máximo. */
   ranks: Pair[];
   desc?: Pair;

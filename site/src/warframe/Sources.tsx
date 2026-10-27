@@ -57,7 +57,7 @@ export default function Sources({ list, refs = {}, route, navigate }: { list: re
         </RouteLink>
       );
     }
-    return name;
+    return r ? refName(r, lang) : name;
   };
   /** Los grupos, el de mejor chance primero (a igual chance, el orden de siempre). Las reliquias no traen cifra: van después. */
   const best = (g: readonly Source[]): number => (g.length ? score(sortSources(g)[0]) : -1);

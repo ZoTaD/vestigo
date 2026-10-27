@@ -8,6 +8,7 @@ estadísticas salen siempre del export (`_en` y `_es`); si un dato no está en n
 Por pestaña (`arsenal`, `relics`, `farming`, `mods`): `list.json` liviana, `f/NN.json` con las fichas repartidas por el
 hash del slug y `es/NN.json` con `{slugEs: slug}` repartido por el slug español.
 """
+import hashlib
 import json
 import re
 import sys
@@ -195,6 +196,11 @@ def _habilidades(x: dict, es: dict | None) -> list[dict]:
 
 # ---- reliquias ---------------------------------------------------------------------------------------------
 
+def _vaulted(r: dict) -> bool:
+    """Las de Réquiem (I-IV) no caen en misiones pero no están en el Vault; las de Vanguard siguen la tabla."""
+    return r["era"] != "Requiem" and drops.vaulted(r["key"])
+
+
 def _clave_reliquia(nombre: str):
     era = nombre.split()[0]
     partes = re.findall(r"\d+|[^\d\s]+", nombre[len(era):])
@@ -230,6 +236,12 @@ def _ranks(x: dict, es: dict | None) -> list[list[str]]:
     return out
 
 
+def _compat(x: dict, es: dict | None) -> list[str] | None:
+    """Compatibilidad del mod como [en, es]; el export `_es` la trae traducida (si falta, el inglés)."""
+    en = x.get("compatName")
+    return _par(x, es, "compatName") if en else None
+
+
 def _mods() -> list[dict]:
     """Mods (los del export con `type`; sin Riven sin abrir ni Unfused Artifact) y arcanos, los mods primero.
     Los dos órdenes (mods antes que arcanos, y por nombre) fijan quién se queda con el slug pelado si chocan."""
@@ -245,7 +257,7 @@ def _mods() -> list[dict]:
         out.append({"unique": u, "kind": "mod", "name": _par(x, es, "name", True),
                     "type": "OTHER" if x["type"] == "---" else x["type"], "rarity": _rarity(x.get("rarity")),
                     "polarity": POLARITIES.get(x.get("polarity")), "drain": x.get("baseDrain"),
-                    "maxRank": x.get("fusionLimit"), "compat": x.get("compatName"), "ranks": _ranks(x, es),
+                    "maxRank": x.get("fusionLimit"), "compat": _compat(x, es), "ranks": _ranks(x, es),
                     "desc": desc})
     for x in wf.export("RelicArcane", "en"):
         u = x["uniqueName"]
@@ -406,7 +418,7 @@ def _ficha_reliquia(r: dict, R: _Refs) -> dict:
         rewards.append({"ref": clave, "rarity": rar, "chances": chances})
     fuentes = relations.sources_by_name(r["key"] + " Relic") + drops.enemy_relics().get(r["key"], [])
     return {"slug": r["slug"], "slugEs": r["slugEs"], "name": r["name"], "era": r["era"],
-            "vaulted": drops.vaulted(r["key"]), "img": r["img"], "rewards": rewards, "sources": fuentes, "refs": refs}
+            "vaulted": _vaulted(r), "img": r["img"], "rewards": rewards, "sources": fuentes, "refs": refs}
 
 
 def _ficha_recurso(r: dict, R: _Refs) -> dict:
@@ -492,7 +504,7 @@ def build(write: bool = False) -> dict:
                      "prime": bool(re.search(r"\bPrime\b", i["name"][0])), "mr": i["en"].get("masteryReq", 0)}
                     for i in items],
         "relics": [{"slug": r["slug"], "slugEs": r["slugEs"], "name": r["name"], "img": r["img"], "era": r["era"],
-                    "vaulted": drops.vaulted(r["key"])} for r in reliquias],
+                    "vaulted": _vaulted(r)} for r in reliquias],
         "farming": [{"slug": r["slug"], "slugEs": r["slugEs"], "name": r["name"], "img": r["img"],
                      "planets": relations.resource_planets(r["unique"])} for r in recursos],
         "mods": [{"slug": m["slug"], "slugEs": m["slugEs"], "name": m["name"], "img": m["img"], "kind": m["kind"],
@@ -516,8 +528,10 @@ def build(write: bool = False) -> dict:
         es[tab] = por
 
     idx_path = wf.RAW / "index.json"
+    drops_html = wf.RAW / "drops.html"
     meta = {"generatedAt": date.today().isoformat(),
             "index": json.loads(idx_path.read_text(encoding="utf-8")) if idx_path.exists() else {},
+            "dropsHash": hashlib.sha256(drops_html.read_bytes()).hexdigest() if drops_html.exists() else None,
             "counts": {t: len(lists[t]) for t in TABS}}
     out = {"lists": lists, "fichas": fichas, "es": es, "meta": meta, "icons": iconos.icons, "notas": notas}
     if write:

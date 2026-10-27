@@ -64,7 +64,7 @@ export default function ModPage({ ficha, route, navigate }: { ficha: ModFicha; r
           {ficha.compat && (
             <div className="wf-stat">
               <dt>{c.compat}</dt>
-              <dd className="is-text">{ficha.compat}</dd>
+              <dd className="is-text">{say(ficha.compat, lang)}</dd>
             </div>
           )}
         </dl>

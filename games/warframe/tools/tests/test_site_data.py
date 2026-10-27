@@ -14,6 +14,19 @@ class TestSiteData(unittest.TestCase):
     def setUpClass(cls):
         cls.out = site_data.build(write=False)
 
+    def test_requiem_no_es_vault(self):
+        reqs = [r for r in self.out["lists"]["relics"] if r["era"] == "Requiem"]
+        self.assertTrue(reqs)
+        self.assertFalse(any(r["vaulted"] for r in reqs))
+        for r in reqs:
+            self.assertFalse(self.out["fichas"]["relics"][r["slug"]]["vaulted"])
+
+    def test_compat_de_mods_en_dos_idiomas(self):
+        c = [m["compat"] for m in self.out["lists"]["mods"] if m["compat"]]
+        self.assertTrue(c)
+        self.assertTrue(all(isinstance(x, list) and len(x) == 2 for x in c))
+        self.assertIn(["Whips", "Látigos"], c)
+
     def test_slugs_unicos_por_pestana(self):
         for tab, rows in self.out["lists"].items():
             for k in ("slug", "slugEs"):

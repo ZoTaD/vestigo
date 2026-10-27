@@ -173,9 +173,9 @@ a.wf-card:hover { background: var(--wf-glass-2); }
 .wf-note { margin-top: 10px; color: var(--wf-gold); }
 
 .wf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
-.wf-cell { display: grid; justify-items: center; align-content: start; gap: 6px; height: 188px; padding: 8px 6px; background: var(--wf-glass); border-radius: 3px; text-align: center; }
+.wf-cell { display: grid; justify-items: center; align-content: start; gap: 6px; height: 188px; padding: 8px 6px; background: var(--wf-glass); border-radius: 3px; text-align: center; container-type: inline-size; }
 a.wf-cell:hover { background: var(--wf-glass-2); }
-.wf-cell > span:last-child { font: 600 15px/1.15 var(--wf-head); letter-spacing: 0.04em; overflow-wrap: break-word; text-wrap: balance; }
+.wf-cell > span:last-child { font: 600 clamp(11px, 9.5cqw, 15px)/1.15 var(--wf-head); letter-spacing: 0.04em; text-wrap: balance; }
 
 .wf-relic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
 .wf-relic { display: flex; align-items: center; gap: 10px; height: 64px; padding: 6px 10px; background: var(--wf-glass); border-radius: 3px; }
