@@ -8,8 +8,6 @@ import wf
 # Exports con objetos del Arsenal (los que tienen receta) y recursos.
 _ARSENAL = ("Warframes", "Weapons", "Sentinels")
 _NOMBRADOS = ("Resources",) + _ARSENAL
-# Resto de exports con `name`, sólo para saber si un nombre de la tabla existe en el juego.
-_OTROS = ("Gear", "Customs", "Upgrades", "Keys", "Drones", "Flavour", "FusionBundles", "RelicArcane")
 _RECETAS = "/Lotus/Types/Recipes/"
 _SECCIONES_ENEMIGO = ("blueprintByDrop", "modByDrop", "resourceByDrop")
 
@@ -126,20 +124,34 @@ def _fuentes_de_parte(nombre: str) -> list[dict]:
 
 
 def parts(unique: str) -> list[dict]:
-    """Plano principal y partes de un Warframe, arma o compañero, cada una con sus fuentes."""
+    """Plano principal y partes de un Warframe, arma o compañero, cada una con sus fuentes.
+
+    El plano principal lleva `kind: "blueprint"` y el `name` [en, es] del objeto tal cual (el export no nombra
+    los planos: el sitio arma "X Blueprint" / "Plano de X" con su texto de interfaz). Las partes llevan
+    `kind: "part"`. Una parte con receta propia que pide otras partes (los aspectos Día/Noche de Equinox)
+    también las lista."""
     rec = recipe_for(unique)
     nom = _nombres(unique)
     if rec is None or nom is None:
         return []
-    out = [{"unique": rec["unique"], "name": [nom[0] + " Blueprint", "Plano de " + nom[1]], "n": 1,
+    out = [{"unique": rec["unique"], "kind": "blueprint", "name": nom, "n": 1,
             "sources": sources_by_name(nom[0] + " Blueprint")}]
-    for i in rec["ingredients"]:
-        if not _es_parte(i["unique"]):
-            continue
-        n = _nombres(i["unique"])
-        if n is None:
-            continue
-        out.append({"unique": i["unique"], "name": n, "n": i["n"], "sources": _fuentes_de_parte(n[0])})
+    vistos = {rec["unique"]}
+
+    def sumar(receta):
+        for i in receta["ingredients"]:
+            u = i["unique"]
+            if u in vistos or not _es_parte(u):
+                continue
+            n = _nombres(u)
+            if n is None:
+                continue
+            vistos.add(u)
+            out.append({"unique": u, "kind": "part", "name": n, "n": i["n"], "sources": _fuentes_de_parte(n[0])})
+            if u.startswith(_RECETAS) and recipe_for(u):
+                sumar(recipe_for(u))
+
+    sumar(rec)
     return out
 
 
@@ -217,12 +229,14 @@ def resources() -> list[str]:
 # ---- lo que no cruza --------------------------------------------------------------------------------------
 
 @lru_cache(maxsize=None)
-def _nombres_del_juego() -> frozenset:
+def _nombres_en_el_arsenal() -> frozenset:
+    """Nombres con que `parts()` busca en la tabla de drops, en todo el Arsenal (con y sin " Blueprint")."""
     s = set()
-    for n in _NOMBRADOS + _OTROS:
+    for n in _ARSENAL:
         for x in wf.export(n, "en"):
-            if "name" in x:
-                s.add(_clave(_nombre(x["name"])))
+            for p in parts(x["uniqueName"]):
+                s.add(_clave(p["name"][0]))
+                s.add(_clave(p["name"][0] + " Blueprint"))
     return frozenset(s)
 
 
@@ -239,14 +253,7 @@ def _nombres_tabla() -> set[str]:
 
 
 def unresolved_drop_names() -> list[str]:
-    """Partes Prime y planos de la tabla de drops que no se resuelven a ningún objeto del export."""
-    juego = _nombres_del_juego()
-    sueltos = []
-    for nombre in _nombres_tabla():
-        c = _clave(nombre)
-        if not (c.endswith(" blueprint") or "prime" in c):
-            continue
-        if c in juego or (c.endswith(" blueprint") and c[: -len(" blueprint")] in juego):
-            continue
-        sueltos.append(nombre)
-    return sorted(sueltos)
+    """Partes Prime y planos de la tabla de drops que ninguna parte del Arsenal usa (`parts()` no los busca)."""
+    usados = _nombres_en_el_arsenal()
+    return sorted(n for n in _nombres_tabla()
+                  if (n.endswith(" Blueprint") or "Prime" in n) and _clave(n) not in usados)

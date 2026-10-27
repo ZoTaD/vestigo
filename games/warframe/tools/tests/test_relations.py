@@ -31,6 +31,17 @@ class TestRelations(unittest.TestCase):
         # Una excepción que ya cruza es un motivo viejo: hay que sacarla.
         self.assertEqual(sorted(set(exceptions.UNRESOLVED) - set(relations.unresolved_drop_names())), [])
 
+    def test_partes_de_equinox_con_dia_y_noche(self):
+        ps = {p["name"][0]: p for p in relations.parts("/Lotus/Powersuits/YinYang/YinYang")}
+        for aspecto in ("Day", "Night"):
+            for pieza in ("Chassis", "Neuroptics", "Systems"):
+                self.assertTrue(ps[f"Equinox {aspecto} {pieza}"]["sources"], f"{aspecto} {pieza}")
+
+    def test_plano_principal_sin_texto_armado(self):
+        p = relations.parts("/Lotus/Powersuits/Excalibur/Excalibur")[0]
+        self.assertEqual((p["kind"], p["name"][0]), ("blueprint", "Excalibur"))
+        self.assertEqual({q["kind"] for q in relations.parts("/Lotus/Powersuits/Excalibur/Excalibur")[1:]}, {"part"})
+
     def test_receta(self):
         r = relations.recipe_for("/Lotus/Powersuits/Excalibur/Excalibur")
         self.assertEqual((r["credits"], r["seconds"]), (25000, 86400))
@@ -45,7 +56,8 @@ class TestRelations(unittest.TestCase):
     def test_parte_prime_sin_receta_propia(self):
         ps = {p["name"][0]: p for p in relations.parts("/Lotus/Weapons/Tenno/Melee/Swords/PrimeKatana/PrimeNikana")}
         self.assertIn("Nikana Prime Blade", ps)
-        self.assertIn("Nikana Prime Blueprint", ps)
+        self.assertEqual(ps["Nikana Prime"]["kind"], "blueprint")
+        self.assertTrue(any(s["k"] == "relic" for s in ps["Nikana Prime"]["sources"]))
         self.assertTrue(any(s["k"] == "relic" for s in ps["Nikana Prime Blade"]["sources"]))
         self.assertNotIn("Orokin Cell", ps)
 
