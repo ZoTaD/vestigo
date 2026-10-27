@@ -64,8 +64,12 @@ class TestSiteData(unittest.TestCase):
     def test_cada_fila_tiene_ficha_e_icono(self):
         for tab, rows in self.out["lists"].items():
             for r in rows:
-                self.assertIn(r["slug"], self.out["fichas"][tab])
-                self.assertTrue((images.SMALL / f"{r['img']}.webp").exists(), r["img"])
+                if tab in site_data.TABS:
+                    self.assertIn(r["slug"], self.out["fichas"][tab])
+                else:  # Maestría y Prime Vault enlazan a la ficha del Arsenal
+                    self.assertIn(r["slug"], self.out["fichas"]["arsenal"])
+                if tab != "star-chart":  # los nodos no tienen ícono: el sitio dibuja los planetas
+                    self.assertTrue((images.SMALL / f"{r['img']}.webp").exists(), r["img"])
 
     def test_el_arsenal_tiene_icono_grande(self):
         for r in self.out["lists"]["arsenal"]:
@@ -104,6 +108,56 @@ class TestSiteData(unittest.TestCase):
                 for fu in srcs:
                     if fu["k"] == "relic":
                         self.assertIn(fu["relic"], f["refs"], (tab, slug, fu["relic"]))
+
+    def test_mapa_269_nodos_con_tipo_y_faccion(self):
+        L = self.out["lists"]["star-chart"]
+        self.assertEqual(len(L), 269)
+        self.assertTrue(all(n["type"] in site_data.MISSION_TYPES.values() for n in L))
+        self.assertTrue(all(n["faction"] in site_data.FACTIONS.values() for n in L))
+        self.assertEqual(len({n["slug"] for n in L}), 269)
+        self.assertEqual(len({n["slugEs"] for n in L}), 269)
+
+    def test_nodo_hydron(self):
+        f = self.out["fichas"]["star-chart"]["hydron"]
+        self.assertEqual((f["planet"][0], f["type"], f["faction"]), ("Sedna", "Defense", "Grineer"))
+        self.assertEqual([r["rot"] for r in f["rewards"]], ["A", "B", "C"])
+        self.assertTrue(all(it["ref"] in f["refs"] for r in f["rewards"] for it in r["items"]))
+
+    def test_nodo_sin_tabla(self):  # Mercury/M Prime es Exterminio: sin recompensas propias
+        f = self.out["fichas"]["star-chart"]["m-prime"]
+        self.assertEqual(f["rewards"], [])
+
+    def test_fuentes_de_mision_enlazan_al_nodo(self):
+        fi = next(fi for fi in self.out["fichas"]["relics"].values() if any(s.get("node") for s in fi["sources"]))
+        for s in fi["sources"]:
+            if s.get("node"):
+                self.assertEqual(fi["refs"][s["node"]]["tab"], "star-chart")
+
+    def test_maestria(self):
+        M = {m["slug"]: m for m in self.out["lists"]["mastery"]}
+        self.assertEqual((M["excalibur"]["rank"], M["excalibur"]["xp"]), (30, 6000))
+        self.assertEqual((M["braton"]["rank"], M["braton"]["xp"]), (30, 3000))
+        self.assertEqual((M["kuva-brakk"]["rank"], M["kuva-brakk"]["xp"]), (40, 4000))
+        self.assertEqual((M["voidrig"]["kind"], M["voidrig"]["xp"]), ("necramech", 8000))
+        self.assertFalse(any(m["kind"] == "exalted" for m in M.values()))
+
+    def test_prime_vault(self):
+        V = {v["slug"]: v["status"] for v in self.out["lists"]["prime-vault"]}
+        self.assertEqual(V["excalibur-prime"], "norelics")
+        self.assertTrue(set(V.values()) >= {"available", "vaulted"})
+        self.assertFalse(any(v["kind"] == "exalted" for v in self.out["lists"]["prime-vault"]))
+        self.assertNotIn("exalted-prime-blade", V)
+
+    def test_historial_vault(self):
+        prev = [{"slug": "a", "status": "available"}, {"slug": "b", "status": "vaulted"}]
+        new = [{"slug": "a", "status": "vaulted"}, {"slug": "b", "status": "vaulted"},
+               {"slug": "c", "status": "available"}]
+        h = site_data.vault_history(prev, new, [{"date": "2026-10-01", "slug": "z", "from": None, "to": "vaulted"}],
+                                    "2026-10-27")
+        self.assertEqual(h[:2], [{"date": "2026-10-27", "slug": "a", "from": "available", "to": "vaulted"},
+                                 {"date": "2026-10-27", "slug": "c", "from": None, "to": "available"}])
+        self.assertEqual(h[2]["slug"], "z")
+        self.assertEqual(site_data.vault_history(None, new, [], "2026-10-27"), [])  # primera corrida: sin eventos
 
     def test_desempate_de_slugs_por_tipo(self):
         for a, b, suf in (("mod", "arcane", "arcane"), ("warframe", "exalted", "exalted")):

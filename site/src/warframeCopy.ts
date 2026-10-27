@@ -7,10 +7,11 @@
  * tipos de daño y las eras de reliquia, que la interfaz nombra sin dato al lado.
  */
 import { useLang } from "./i18n";
+import type { MasteryKind, VaultStatus } from "./warframe/data";
 import type { WfSection, WfTab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const WF_TABS: WfSection[] = ["home", "arsenal", "relics", "farming", "mods"];
+export const WF_TABS: WfSection[] = ["home", "arsenal", "relics", "farming", "mods", "star-chart", "mastery", "prime-vault", "baro"];
 
 /** Las rarezas de un mod, como las deja `site_data.py` (`r.title()`). */
 export type WfRarity = "Common" | "Uncommon" | "Rare" | "Legendary";
@@ -46,6 +47,8 @@ export interface WfCopy {
     relics: (name: string) => Seo;
     farming: (name: string) => Seo;
     mod: (name: string, arcane: boolean) => Seo;
+    /** Un nodo del mapa estelar: su planeta (en el idioma) y el tipo de misión como viene en los datos (en inglés). */
+    "star-chart": (name: string, planet: string, type: string) => Seo;
   };
   home: {
     kicker: string;
@@ -179,6 +182,104 @@ export interface WfCopy {
     none: string;
     missing: string;
   };
+  starChart: {
+    h1: string;
+    lede: (n: string) => string;
+    /** El nombre del dibujo, para los lectores de pantalla. */
+    map: string;
+    /** Los lugares fuera de las órbitas (Vacío, Fortaleza Kuva, Zariman…). */
+    outside: string;
+    pick: string;
+    /** El rótulo arriba del planeta elegido. */
+    planet: string;
+    allPlanets: string;
+    all: string;
+    type: string;
+    nodes: (n: string) => string;
+    levels: (lo: number, hi: number) => string;
+    count: (n: string) => string;
+    none: string;
+    missing: string;
+    node: string;
+    mission: string;
+    faction: string;
+    level: string;
+    best: string;
+    mastery: string;
+    dark: string;
+    rotation: (r: string) => string;
+    rewards: string;
+    reward: string;
+    chance: string;
+    resources: string;
+    noRewards: string;
+  };
+  masteryList: {
+    h1: string;
+    lede: (n: string) => string;
+    search: string;
+    searchPlaceholder: string;
+    kind: string;
+    all: string;
+    kinds: Record<MasteryKind, string>;
+    hide: string;
+    count: (shown: string, total: string) => string;
+    none: string;
+    done: string;
+    points: string;
+    rank: string;
+    legendary: (n: number) => string;
+    next: (n: string, rank: string) => string;
+    clear: string;
+    clearAsk: string;
+    pts: (n: string) => string;
+    rankReq: (n: number) => string;
+    note: string;
+  };
+  vaultList: {
+    h1: string;
+    lede: (n: string) => string;
+    status: string;
+    kind: string;
+    all: string;
+    /** El chip de cada estado. */
+    statuses: Record<VaultStatus, string>;
+    /** El estado escrito debajo de cada Prime. */
+    statusLong: Record<VaultStatus, string>;
+    count: (n: string) => string;
+    none: string;
+    changes: string;
+    date: string;
+    item: string;
+    change: string;
+    /** El estado de antes de un Prime nuevo. */
+    added: string;
+    noChanges: string;
+    note: string;
+  };
+  baroPage: {
+    h1: string;
+    lede: string;
+    now: string;
+    here: (relay: string) => string;
+    coming: (relay: string) => string;
+    leaves: (time: string, when: string) => string;
+    arrives: (time: string, when: string) => string;
+    item: string;
+    ducats: string;
+    credits: string;
+    noItems: string;
+    history: string;
+    visit: (from: string, to: string) => string;
+    items: (n: number) => string;
+    noHistory: string;
+  };
+  /** Los tipos de misión del mapa estelar (`MISSION_TYPES` de `site_data.py`); el que no está acá se muestra tal cual. */
+  missionType: Record<string, string>;
+  /** Las facciones (`FACTIONS` de `site_data.py`); la que no está acá se muestra tal cual. */
+  faction: Record<string, string>;
+  /** Los rótulos de una tabla de recompensas de nodo ("Caches"); el que no está acá se muestra tal cual. */
+  rewardLabel: Record<string, string>;
   rarity: Record<WfRarity, string>;
   polarity: Record<WfPolarity, string>;
   /** Los nombres de los tipos de daño (`DAMAGE_TYPES`). */
@@ -191,7 +292,7 @@ export interface WfCopy {
 }
 
 const EN: WfCopy = {
-  tabs: { home: "Home", arsenal: "Arsenal", relics: "Relics", farming: "Where to farm", mods: "Mods" },
+  tabs: { home: "Home", arsenal: "Arsenal", relics: "Relics", farming: "Where to farm", mods: "Mods", "star-chart": "Star Chart", mastery: "Mastery", "prime-vault": "Prime Vault", baro: "Baro Ki'Teer" },
   soon: "Soon",
   loading: "Loading…",
   loadError: "This page couldn't load.",
@@ -199,12 +300,19 @@ const EN: WfCopy = {
   seo: {
     home: {
       title: "Warframe: Arsenal, relics, where to farm and mods | Vestigo",
-      description: "Every Warframe and weapon with its parts, every relic with its drops, where to farm each resource and every mod, with the day's fissures, Baro and cycles.",
+      description: "Arsenal, relics, farming and mods, plus the Star Chart, Mastery checklist, Prime Vault and Baro Ki'Teer, with the day's fissures and cycles.",
     },
     arsenal: { title: "Warframe Arsenal: Warframes, weapons and their parts | Vestigo", description: "Every Warframe, weapon and companion with its stats, abilities, recipe and where each part drops." },
     relics: { title: "Warframe relics: drops and Vault status | Vestigo", description: "Every Lith, Meso, Neo and Axi relic with its six rewards by refinement, where it drops, and whether it is in the Vault." },
     farming: { title: "Warframe: where to farm every resource | Vestigo", description: "Every resource with the planets and missions where it drops, and what you need it for." },
     mods: { title: "Warframe mods and arcanes: stats and drops | Vestigo", description: "Every mod and arcane with its polarity, drain, rank-by-rank stats and where it drops." },
+    "star-chart": {
+      title: "Warframe Star Chart: every node, mission and reward | Vestigo",
+      description: "Every node of the Origin System by planet, with its mission type, faction, level, rewards by rotation and the resources of each planet.",
+    },
+    mastery: { title: "Warframe mastery checklist: every item that gives mastery | Vestigo", description: "Tick off every Warframe, weapon and companion you have ranked up and see your mastery points and the mastery rank they reach." },
+    "prime-vault": { title: "Warframe Prime Vault: which Primes are vaulted | Vestigo", description: "Every Prime Warframe and weapon, whether its parts still drop from unvaulted relics, and when its Vault status changed." },
+    baro: { title: "Baro Ki'Teer: inventory, arrival and past visits | Vestigo", description: "Where and when Baro Ki'Teer arrives, what he sells for ducats and credits, and every visit we have recorded." },
   },
   detailSeo: {
     arsenal: (name) => ({
@@ -223,17 +331,25 @@ const EN: WfCopy = {
       title: `${name} — Warframe ${arcane ? "arcane" : "mod"} drops and stats | Vestigo`,
       description: clip(`${name} in Warframe: ${arcane ? "its effect at every rank" : "its polarity, drain and stats at every rank"}, and where it drops.`),
     }),
+    "star-chart": (name, planet, type) => ({
+      title: `${name}, ${planet} — Warframe node rewards and drops | Vestigo`,
+      description: clip(`${name} on ${planet} in Warframe: ${EN.missionType[type] ?? type} mission, its level, faction and rewards by rotation with the chance of each, and the planet's resources.`),
+    }),
   },
   home: {
     kicker: "Warframe guide",
     h1: "Everything for your Arsenal",
     lede: (arsenal, relics, farming, mods) =>
-      `${arsenal} Warframes and weapons with their parts and recipes, ${relics} relics with every reward, ${farming} resources with where to farm them and ${mods} mods and arcanes.`,
+      `${arsenal} Warframes and weapons with their parts and recipes, ${relics} relics with every reward, ${farming} resources with where to farm them and ${mods} mods and arcanes, plus the Star Chart, a Mastery checklist, the Prime Vault and Baro Ki'Teer.`,
     cards: {
       arsenal: "Stats, abilities, recipe and where each part drops, for every Warframe and weapon.",
       relics: "The six rewards by refinement, where the relic drops and whether it is in the Vault.",
       farming: "Which planets and missions drop each resource, and what it is for.",
       mods: "Polarity, drain, stats by rank and where each mod and arcane drops.",
+      "star-chart": "Every node by planet with its mission, level and rewards by rotation.",
+      mastery: "Tick off what you have ranked up and count your mastery points.",
+      "prime-vault": "Which Primes still drop from relics and which are in the Vault.",
+      baro: "Baro Ki'Teer's arrival, his inventory and his past visits.",
     },
     live: {
       heading: "Right now",
@@ -351,6 +467,105 @@ const EN: WfCopy = {
     none: "No mod matches.",
     missing: "That mod doesn't exist. Here is the full list.",
   },
+  starChart: {
+    h1: "Warframe Star Chart",
+    lede: (n) => `All ${n} nodes of the Origin System with their mission, faction, level and rewards.`,
+    map: "Map of the Origin System",
+    outside: "Beyond the orbits",
+    pick: "Pick a planet to see its nodes.",
+    planet: "Planet",
+    allPlanets: "All planets",
+    all: "All",
+    type: "Mission",
+    nodes: (n) => `${n} nodes`,
+    levels: (lo, hi) => `level ${lo}–${hi}`,
+    count: (n) => `${n} nodes shown`,
+    none: "No node matches.",
+    missing: "That node doesn't exist. Here is the full chart.",
+    node: "Node",
+    mission: "Mission",
+    faction: "Faction",
+    level: "Level",
+    best: "Best drop",
+    mastery: "Mastery rank",
+    dark: "Dark Sector",
+    rotation: (r) => `Rotation ${r}`,
+    rewards: "Rewards",
+    reward: "Reward",
+    chance: "Chance",
+    resources: "Planet resources",
+    noRewards: "This node has no reward table of its own.",
+  },
+  masteryList: {
+    h1: "Warframe mastery checklist",
+    lede: (n) => `Tick off the ${n} Warframes, weapons and companions you have ranked up. Your ticks stay in this browser.`,
+    search: "Search",
+    searchPlaceholder: "Name…",
+    kind: "Type",
+    all: "All",
+    kinds: { warframe: "Warframes", primary: "Primary", secondary: "Secondary", melee: "Melee", archwing: "Archwing", companion: "Companions", necramech: "Necramechs" },
+    hide: "Hide ticked",
+    count: (shown, total) => `${shown} shown of ${total}`,
+    none: "Nothing matches.",
+    done: "Ticked",
+    points: "Mastery points",
+    rank: "Mastery rank reached",
+    legendary: (n) => `Legendary ${n}`,
+    next: (n, rank) => `${n} more points for ${rank}`,
+    clear: "Untick all",
+    clearAsk: "Untick everything you have ticked?",
+    pts: (n) => `${n} pts`,
+    rankReq: (n) => `rank ${n}`,
+    note: "Points count each item ranked to its maximum. Amps, Zaws, Kitguns, K-Drives and intrinsics are not listed yet.",
+  },
+  vaultList: {
+    h1: "Warframe Prime Vault",
+    lede: (n) => `Which of the ${n} Prime Warframes, weapons and companions still drop from relics you can get in missions, and which are in the Vault.`,
+    status: "Status",
+    kind: "Type",
+    all: "All",
+    statuses: { available: "Available", vaulted: "Vaulted", partial: "Partial", norelics: "No relics" },
+    statusLong: { available: "Available", vaulted: "In the Vault", partial: "Partly vaulted", norelics: "Not in relics" },
+    count: (n) => `${n} Primes`,
+    none: "Nothing matches.",
+    changes: "Vault changes",
+    date: "Date",
+    item: "Prime",
+    change: "Change",
+    added: "New",
+    noChanges: "No changes yet: they are recorded since Oct 27, 2026.",
+    note: "Available: every part drops from at least one relic that is not vaulted. In the Vault: no part does. Partial: some parts do and some don't. No relics: its parts are not in any relic (Founder Primes).",
+  },
+  baroPage: {
+    h1: "Baro Ki'Teer",
+    lede: "The Void Trader arrives at a relay every two weeks and stays for 48 hours, selling for ducats and credits. Here is his current visit and every visit we have recorded.",
+    now: "Right now",
+    here: (relay) => `At ${relay}`,
+    coming: (relay) => `Next stop: ${relay}`,
+    leaves: (time, when) => `Leaves in ${time} (${when})`,
+    arrives: (time, when) => `Arrives in ${time} (${when})`,
+    item: "Item",
+    ducats: "Ducats",
+    credits: "Credits",
+    noItems: "His inventory hasn't shown up yet.",
+    history: "Past visits",
+    visit: (from, to) => `${from} – ${to}`,
+    items: (n) => (n === 1 ? "1 item" : `${n} items`),
+    noHistory: "No visits recorded yet: they are recorded since Oct 27, 2026.",
+  },
+  missionType: {
+    Assassination: "Assassination", Exterminate: "Exterminate", Survival: "Survival", Rescue: "Rescue", Sabotage: "Sabotage", Capture: "Capture",
+    Spy: "Spy", Defense: "Defense", "Mobile Defense": "Mobile Defense", Interception: "Interception", Hijack: "Hijack", Hive: "Hive",
+    Excavation: "Excavation", "Infested Salvage": "Infested Salvage", Arena: "Arena", Pursuit: "Pursuit", Rush: "Rush", Assault: "Assault",
+    Defection: "Defection", "Free Roam": "Free Roam", "The Circuit": "The Circuit", Disruption: "Disruption", "Void Flood": "Void Flood",
+    "Void Cascade": "Void Cascade", "Void Armageddon": "Void Armageddon", Alchemy: "Alchemy", "Legacyte Harvest": "Legacyte Harvest",
+    "Shrine Defense": "Shrine Defense", Faceoff: "Faceoff", Descent: "Descent", "The Perita Rebellion": "The Perita Rebellion", Relay: "Relay",
+  },
+  faction: {
+    Grineer: "Grineer", Corpus: "Corpus", Infested: "Infested", Orokin: "Orokin", Sentient: "Sentient", "The Murmur": "The Murmur",
+    Scaldra: "Scaldra", Techrot: "Techrot", Duviri: "Duviri", Anarchs: "Anarchs",
+  },
+  rewardLabel: { Caches: "Caches", "Survival Extra": "Survival extra", "Assassination Extra": "Assassination extra" },
   rarity: { Common: "Common", Uncommon: "Uncommon", Rare: "Rare", Legendary: "Legendary" },
   polarity: { madurai: "Madurai", vazarin: "Vazarin", naramon: "Naramon", zenurik: "Zenurik", unairu: "Unairu", umbra: "Umbra", penjaga: "Penjaga", universal: "Universal", any: "Any" },
   damage: {
@@ -364,7 +579,7 @@ const EN: WfCopy = {
 };
 
 const ES: WfCopy = {
-  tabs: { home: "Inicio", arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear", mods: "Mods" },
+  tabs: { home: "Inicio", arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear", mods: "Mods", "star-chart": "Mapa estelar", mastery: "Maestría", "prime-vault": "Prime Vault", baro: "Baro Ki'Teer" },
   soon: "Pronto",
   loading: "Cargando…",
   loadError: "Esta página no se pudo cargar.",
@@ -372,12 +587,19 @@ const ES: WfCopy = {
   seo: {
     home: {
       title: "Warframe: Arsenal, reliquias, dónde farmear y mods | Vestigo",
-      description: "Cada Warframe y arma con sus partes, cada reliquia con sus recompensas, dónde farmear cada recurso y todos los mods, con las fisuras del día, Baro y los ciclos.",
+      description: "Arsenal, reliquias, dónde farmear y mods, más el Mapa estelar, la Maestría, el Prime Vault y Baro Ki'Teer, con las fisuras y los ciclos del día.",
     },
     arsenal: { title: "Arsenal de Warframe: Warframes, armas y sus partes | Vestigo", description: "Cada Warframe, arma y compañero con sus estadísticas, habilidades, receta y dónde cae cada parte." },
     relics: { title: "Reliquias de Warframe: recompensas y Vault | Vestigo", description: "Cada reliquia Lith, Meso, Neo y Axi con sus seis recompensas por refinamiento, dónde cae y si está en el Vault." },
     farming: { title: "Warframe: dónde farmear cada recurso | Vestigo", description: "Cada recurso con los planetas y misiones donde cae, y para qué sirve." },
     mods: { title: "Mods y arcanos de Warframe: estadísticas y drops | Vestigo", description: "Cada mod y arcano con su polaridad, costo, estadísticas por rango y dónde cae." },
+    "star-chart": {
+      title: "Mapa estelar de Warframe: cada nodo, misión y recompensa | Vestigo",
+      description: "Cada nodo del Sistema Origen por planeta, con su tipo de misión, facción, nivel, recompensas por rotación y los recursos de cada planeta.",
+    },
+    mastery: { title: "Maestría de Warframe: todo lo que da maestría, para tildar | Vestigo", description: "Tildá cada Warframe, arma y compañero que subiste y mirá tus puntos de maestría y el rango que alcanzan." },
+    "prime-vault": { title: "Prime Vault de Warframe: qué Prime está en el Vault | Vestigo", description: "Cada Warframe y arma Prime, si sus partes todavía caen de reliquias abiertas y cuándo cambió su estado en el Vault." },
+    baro: { title: "Baro Ki'Teer: inventario, llegada y visitas anteriores | Vestigo", description: "Dónde y cuándo llega Baro Ki'Teer, qué vende por ducados y créditos, y cada visita que anotamos." },
   },
   detailSeo: {
     arsenal: (name) => ({
@@ -396,17 +618,25 @@ const ES: WfCopy = {
       title: `${name} — Warframe: drops y estadísticas ${arcane ? "del arcano" : "del mod"} | Vestigo`,
       description: clip(`${name} en Warframe: ${arcane ? "su efecto en cada rango" : "su polaridad, costo y estadísticas en cada rango"}, y dónde cae.`),
     }),
+    "star-chart": (name, planet, type) => ({
+      title: `${name}, ${planet} — Warframe: recompensas y drops del nodo | Vestigo`,
+      description: clip(`${name} (${planet}) en Warframe: misión de ${ES.missionType[type] ?? type}, su nivel, facción y recompensas por rotación con la chance de cada una, y los recursos del planeta.`),
+    }),
   },
   home: {
     kicker: "Guía de Warframe",
     h1: "Todo para tu Arsenal",
     lede: (arsenal, relics, farming, mods) =>
-      `${arsenal} Warframes y armas con sus partes y recetas, ${relics} reliquias con cada recompensa, ${farming} recursos con dónde farmearlos y ${mods} mods y arcanos.`,
+      `${arsenal} Warframes y armas con sus partes y recetas, ${relics} reliquias con cada recompensa, ${farming} recursos con dónde farmearlos y ${mods} mods y arcanos, más el Mapa estelar, la Maestría para tildar, el Prime Vault y Baro Ki'Teer.`,
     cards: {
       arsenal: "Estadísticas, habilidades, receta y dónde cae cada parte, de cada Warframe y arma.",
       relics: "Las seis recompensas por refinamiento, dónde cae la reliquia y si está en el Vault.",
       farming: "Qué planetas y misiones sueltan cada recurso, y para qué sirve.",
       mods: "Polaridad, costo, estadísticas por rango y dónde cae cada mod y arcano.",
+      "star-chart": "Cada nodo por planeta con su misión, nivel y recompensas por rotación.",
+      mastery: "Tildá lo que ya subiste y contá tus puntos de maestría.",
+      "prime-vault": "Qué Prime todavía cae de reliquias y cuáles están en el Vault.",
+      baro: "La llegada de Baro Ki'Teer, su inventario y sus visitas anteriores.",
     },
     live: {
       heading: "Ahora mismo",
@@ -524,6 +754,108 @@ const ES: WfCopy = {
     none: "Ningún mod coincide.",
     missing: "Ese mod no existe. Acá va la lista entera.",
   },
+  starChart: {
+    h1: "Mapa estelar de Warframe",
+    lede: (n) => `Los ${n} nodos del Sistema Origen con su misión, facción, nivel y recompensas.`,
+    map: "Mapa del Sistema Origen",
+    outside: "Fuera de las órbitas",
+    pick: "Tocá un planeta para ver sus nodos.",
+    planet: "Planeta",
+    allPlanets: "Todos los planetas",
+    all: "Todas",
+    type: "Misión",
+    nodes: (n) => `${n} nodos`,
+    levels: (lo, hi) => `nivel ${lo}–${hi}`,
+    count: (n) => `${n} nodos a la vista`,
+    none: "Ningún nodo coincide.",
+    missing: "Ese nodo no existe. Acá está el mapa entero.",
+    node: "Nodo",
+    mission: "Misión",
+    faction: "Facción",
+    level: "Nivel",
+    best: "Lo que más da",
+    mastery: "Rango de maestría",
+    dark: "Sector oscuro",
+    rotation: (r) => `Rotación ${r}`,
+    rewards: "Recompensas",
+    reward: "Recompensa",
+    chance: "Probabilidad",
+    resources: "Recursos del planeta",
+    noRewards: "Este nodo no tiene tabla de recompensas propia.",
+  },
+  masteryList: {
+    h1: "Maestría de Warframe para tildar",
+    lede: (n) => `Tildá los ${n} Warframes, armas y compañeros que ya subiste. Lo tildado queda en este navegador.`,
+    search: "Buscar",
+    searchPlaceholder: "Nombre…",
+    kind: "Tipo",
+    all: "Todos",
+    kinds: { warframe: "Warframes", primary: "Primarias", secondary: "Secundarias", melee: "Cuerpo a cuerpo", archwing: "Archwing", companion: "Compañeros", necramech: "Necramechs" },
+    hide: "Ocultar lo tildado",
+    count: (shown, total) => `${shown} de ${total}`,
+    none: "No hay coincidencias.",
+    done: "Tildados",
+    points: "Puntos de maestría",
+    rank: "Rango de maestría alcanzado",
+    legendary: (n) => `Legendario ${n}`,
+    next: (n, rank) => `Faltan ${n} puntos para ${rank}`,
+    clear: "Destildar todo",
+    clearAsk: "¿Destildar todo lo que tildaste?",
+    pts: (n) => `${n} pts`,
+    rankReq: (n) => `rango ${n}`,
+    note: "Los puntos cuentan cada objeto subido al máximo. Los Amps, Zaw, Kitguns, K-Drives y los intrínsecos todavía no están.",
+  },
+  vaultList: {
+    h1: "Prime Vault de Warframe",
+    lede: (n) => `Cuáles de los ${n} Warframes, armas y compañeros Prime todavía caen de reliquias que se consiguen en misiones, y cuáles están en el Vault.`,
+    status: "Estado",
+    kind: "Tipo",
+    all: "Todos",
+    statuses: { available: "Disponible", vaulted: "Vault", partial: "Parcial", norelics: "Sin reliquias" },
+    statusLong: { available: "Disponible", vaulted: "En el Vault", partial: "En parte en el Vault", norelics: "Sin reliquias" },
+    count: (n) => `${n} Prime`,
+    none: "No hay coincidencias.",
+    changes: "Cambios del Vault",
+    date: "Fecha",
+    item: "Prime",
+    change: "Cambio",
+    added: "Nuevo",
+    noChanges: "Todavía no hubo cambios: se anotan desde el 27/10/2026.",
+    note: "Disponible: cada parte cae de al menos una reliquia fuera del Vault. En el Vault: ninguna. Parcial: algunas sí y otras no. Sin reliquias: sus partes no están en ninguna reliquia (los Prime de fundador).",
+  },
+  baroPage: {
+    h1: "Baro Ki'Teer",
+    lede: "El Comerciante del Vacío llega a un relé cada dos semanas y se queda 48 horas, vendiendo por ducados y créditos. Acá está su visita de ahora y cada visita que anotamos.",
+    now: "Ahora",
+    here: (relay) => `En ${relay}`,
+    coming: (relay) => `Próxima parada: ${relay}`,
+    leaves: (time, when) => `Se va en ${time} (${when})`,
+    arrives: (time, when) => `Llega en ${time} (${when})`,
+    item: "Objeto",
+    ducats: "Ducados",
+    credits: "Créditos",
+    noItems: "Su inventario todavía no aparece.",
+    history: "Visitas anteriores",
+    visit: (from, to) => `${from} – ${to}`,
+    items: (n) => (n === 1 ? "1 objeto" : `${n} objetos`),
+    noHistory: "Todavía no hay visitas anotadas: se anotan desde el 27/10/2026.",
+  },
+  // De warframe-worldstate-data (MIT, `data/es/missionTypes.json`); los que no trae, del nombre de su nodo en el export
+  // en español (Descenso, Confrontación, Repetidor, Cosecha de legacito, El Circuito).
+  missionType: {
+    Assassination: "Asesinato", Exterminate: "Exterminio", Survival: "Supervivencia", Rescue: "Rescate", Sabotage: "Sabotaje", Capture: "Captura",
+    Spy: "Espionaje", Defense: "Defensa", "Mobile Defense": "Defensa móvil", Interception: "Interceptación", Hijack: "Usurpación", Hive: "Colmena",
+    Excavation: "Excavación", "Infested Salvage": "Salvamento Infestado", Arena: "Rathuum", Pursuit: "Persecución", Rush: "Rush", Assault: "Asalto",
+    Defection: "Deserción", "Free Roam": "Recorrido libre", "The Circuit": "El Circuito", Disruption: "Interrupción", "Void Flood": "Inundación del Vacío",
+    "Void Cascade": "Cascada del Vacío", "Void Armageddon": "Void Armageddon", Alchemy: "Alquimia", "Legacyte Harvest": "Cosecha de legacito",
+    "Shrine Defense": "Shrine Defense", Faceoff: "Confrontación", Descent: "Descenso", "The Perita Rebellion": "The Perita Rebellion", Relay: "Repetidor",
+  },
+  // De warframe-worldstate-data (`data/es/factionsData.json`): los Orokin del mapa son los Corruptos del Vacío.
+  faction: {
+    Grineer: "Grineer", Corpus: "Corpus", Infested: "Infestados", Orokin: "Corruptos", Sentient: "Consciente", "The Murmur": "The Murmur",
+    Scaldra: "Scaldra", Techrot: "Techrot", Duviri: "Duviri", Anarchs: "Anarchs",
+  },
+  rewardLabel: { Caches: "Cachés", "Survival Extra": "Supervivencia extra", "Assassination Extra": "Asesinato extra" },
   rarity: { Common: "Común", Uncommon: "Poco común", Rare: "Rara", Legendary: "Legendaria" },
   polarity: { madurai: "Madurai", vazarin: "Vazarin", naramon: "Naramon", zenurik: "Zenurik", unairu: "Unairu", umbra: "Umbra", penjaga: "Penjaga", universal: "Universal", any: "Cualquiera" },
   damage: {

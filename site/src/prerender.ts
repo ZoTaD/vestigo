@@ -47,6 +47,12 @@ const say = (loc: Localized | undefined, lang: Lang, fallback: string): string =
   loc?.[lang] || loc?.en || fallback;
 
 /**
+ * Lo que el título de una ficha de Warframe necesita además del nombre: si un mod es arcano, y el planeta y el tipo de
+ * misión (en inglés, como en los datos) de un nodo del mapa estelar.
+ */
+export type WfHead = { arcane?: boolean; planet?: [en: string, es: string]; type?: string };
+
+/**
  * El título y la descripción de una ruta.
  *
  * Exportada y compartida con `PageMeta.tsx` a propósito: es la cadena de
@@ -65,7 +71,7 @@ export function metaFor(
   rsHas?: RustHas | null,
   trHas?: TerrariaHas | null,
   sdHas?: number | null,
-  wfArcane?: boolean | null
+  wf?: WfHead | null
 ): { title: string; description: string } {
   const copy = copyOf(lang);
   const seo = copy.seo;
@@ -187,7 +193,8 @@ export function metaFor(
       if (sec === "arsenal") return c.detailSeo.arsenal(detailName);
       if (sec === "relics") return c.detailSeo.relics(detailName);
       if (sec === "farming") return c.detailSeo.farming(detailName);
-      if (sec === "mods") return c.detailSeo.mod(detailName, !!wfArcane);
+      if (sec === "mods") return c.detailSeo.mod(detailName, !!wf?.arcane);
+      if (sec === "star-chart" && wf?.planet) return c.detailSeo["star-chart"](detailName, (lang === "es" && wf.planet[1]) || wf.planet[0], wf.type ?? "");
     }
     return c.seo[sec];
   }
@@ -248,7 +255,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const e of data.sd?.items ?? []) out[`sd-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.sd?.villagers ?? []) out[`sd-villagers/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.sd?.monsters ?? []) out[`sd-mines/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
-  for (const tab of ["arsenal", "relics", "farming", "mods"] as const) {
+  for (const tab of ["arsenal", "relics", "farming", "mods", "star-chart"] as const) {
     for (const e of data.wf?.[tab] ?? []) out[`wf-${tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   }
   for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
@@ -580,9 +587,10 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
   // Y en Stardew Valley (regalos, paquetes, máquinas, recetas, fuentes): los bits tal cual, `itemSeo` los lee.
   const sdHas = new Map<string, number>();
   for (const e of data.sd?.items ?? []) sdHas.set(`sd-items/${e.slug}`, e.has);
-  // Y en Warframe, qué mods son arcanos (llevan otro título).
-  const wfArcane = new Set<string>();
-  for (const e of data.wf?.mods ?? []) if (e.arcane) wfArcane.add(`wf-mods/${e.slug}`);
+  // Y en Warframe, qué mods son arcanos (llevan otro título) y el planeta y el tipo de misión de cada nodo.
+  const wfHead = new Map<string, WfHead>();
+  for (const e of data.wf?.mods ?? []) if (e.arcane) wfHead.set(`wf-mods/${e.slug}`, { arcane: true });
+  for (const e of data.wf?.["star-chart"] ?? []) wfHead.set(`wf-star-chart/${e.slug}`, { planet: e.planet, type: e.type });
 
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);
@@ -609,7 +617,7 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
                         ? `wf-${route.wfSection ?? "home"}/${route.detail}`
                         : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
-    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""), trHas.get(detailKey ?? ""), sdHas.get(detailKey ?? ""), wfArcane.has(detailKey ?? ""));
+    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""), trHas.get(detailKey ?? ""), sdHas.get(detailKey ?? ""), wfHead.get(detailKey ?? ""));
 
     const alternates = LANGS.map((l) => ({
       hreflang: l as string,

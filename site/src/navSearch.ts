@@ -197,19 +197,27 @@ const LOADERS: Record<NavSearchGame, () => Promise<NavSearcher>> = {
     );
     return (query, lang, max) => searchEntries(entries, query, lang, max);
   },
-  // Warframe (2026-10-27): las cuatro listas (Arsenal, Reliquias, Dónde farmear y Mods), cada resultado a su ficha. Las listas
+  // Warframe (2026-10-27): las cinco listas (Arsenal, Reliquias, Dónde farmear, Mods y los nodos del mapa estelar), cada resultado a su ficha. Las listas
   // traen el slug en español de cada ficha: se anotan acá para que el enlace salga con la dirección en español.
   async warframe() {
-    const [route, copy, ars, rel, far, mods] = await Promise.all([
+    const [route, copy, ars, rel, far, mods, star] = await Promise.all([
       import("./route"),
       import("./warframeCopy"),
       import("@warframe/arsenal/list.json"),
       import("@warframe/relics/list.json"),
       import("@warframe/farming/list.json"),
       import("@warframe/mods/list.json"),
+      import("@warframe/star-chart/list.json"),
     ]);
-    type Row = { slug: string; slugEs: string; name: [string, string]; img: string | null };
-    const lists = { arsenal: ars.default as unknown as Row[], relics: rel.default as unknown as Row[], farming: far.default as unknown as Row[], mods: mods.default as unknown as Row[] };
+    // Un nodo no tiene ícono: lleva su planeta como texto de más, así "sedna" encuentra sus nodos.
+    type Row = { slug: string; slugEs: string; name: [string, string]; img?: string | null; planet?: [string, string] };
+    const lists = {
+      arsenal: ars.default as unknown as Row[],
+      relics: rel.default as unknown as Row[],
+      farming: far.default as unknown as Row[],
+      mods: mods.default as unknown as Row[],
+      "star-chart": star.default as unknown as Row[],
+    };
     route.registerWfSlugs(Object.fromEntries(Object.entries(lists).map(([tab, rows]) => [tab, Object.fromEntries(rows.filter((r) => r.slugEs !== r.slug).map((r) => [r.slug, r.slugEs]))])));
     const entries: Entry[] = (Object.keys(lists) as (keyof typeof lists)[]).flatMap((tab) =>
       lists[tab].map((r) => ({
@@ -217,6 +225,7 @@ const LOADERS: Record<NavSearchGame, () => Promise<NavSearcher>> = {
         en: r.name[0],
         es: r.name[1] || r.name[0],
         tab: { en: copy.WF_COPY.en.tabs[tab], es: copy.WF_COPY.es.tabs[tab] },
+        ...(r.planet ? { extra: `${r.planet[0]} ${r.planet[1]}` } : {}),
         img: r.img ? `/warframe/s/${r.img}.webp` : undefined,
         to: { view: "warframe", wfSection: tab, detail: r.slug } as Partial<Route>,
       })),

@@ -113,6 +113,8 @@ export interface WarframeSitemapData {
   farming?: { slug: string; en: string; es: string }[];
   /** `arcane`: es un arcano y no un mod. */
   mods?: { slug: string; en: string; es: string; arcane?: true }[];
+  /** Los nodos del mapa estelar, con su planeta y su tipo de misión (en inglés), que el título nombra. */
+  "star-chart"?: { slug: string; en: string; es: string; planet: [en: string, es: string]; type: string }[];
 }
 
 /** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
@@ -450,13 +452,14 @@ export function sitemapPaths(data: SitemapData): string[] {
         for (const f of fichas[s as keyof typeof fichas]) paths.push(routePath({ ...base, lang, view: "stardew", sdSection: s, detail: f.slug }));
       }
     }
-    // Warframe (2026-10-27): la portada, las pestañas publicadas y una ficha por parte del Arsenal, reliquia, recurso y mod o arcano.
+    // Warframe (2026-10-27): la portada, las pestañas publicadas y una ficha por parte del Arsenal, reliquia, recurso, mod o
+    // arcano y nodo del mapa estelar.
     if (data.wf) {
       paths.push(routePath({ ...base, lang, view: "warframe", wfSection: "home" }));
       for (const s of WF_PUBLISHED) paths.push(routePath({ ...base, lang, view: "warframe", wfSection: s }));
       for (const s of WF_PUBLISHED) {
         if (!WF_DETAIL_SECTIONS.includes(s)) continue;
-        for (const f of data.wf[s] ?? []) paths.push(routePath({ ...base, lang, view: "warframe", wfSection: s, detail: f.slug }));
+        for (const f of (data.wf as Partial<Record<string, { slug: string }[]>>)[s] ?? []) paths.push(routePath({ ...base, lang, view: "warframe", wfSection: s, detail: f.slug }));
       }
     }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).

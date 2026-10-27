@@ -161,6 +161,18 @@ export const PAGES = [
   "/en/warframe/farming/neural-sensors",
   "/es/warframe/mods",
   "/en/warframe/mods/serration",
+  // El Mapa estelar (etapa 2): el dibujo con los 269 nodos en la tabla, un planeta elegido y una ficha en español en frío.
+  "/en/warframe/star-chart",
+  "/es/warframe/mapa-estelar?planet=sedna",
+  "/es/warframe/mapa-estelar/hidron",
+  // La Maestría (etapa 2): unas 780 filas con ícono, dibujadas de a tandas.
+  "/en/warframe/mastery",
+  "/es/warframe/maestria",
+  // Prime Vault (176 casilleros de a tandas) y Baro (bloque en vivo después de montar y el historial).
+  "/en/warframe/prime-vault",
+  "/es/warframe/prime-vault",
+  "/en/warframe/baro",
+  "/es/warframe/baro",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

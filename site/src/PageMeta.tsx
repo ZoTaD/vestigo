@@ -167,7 +167,7 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const m = d && findSdMonster(d, route.detail);
     return m ? (lang === "es" && m.name[1]) || m.name[0] : null;
   }
-  // Una ficha de Warframe (Arsenal, Reliquias, Dónde farmear o Mods): el nombre sale de su archivo (uno de los 32 de la
+  // Una ficha de Warframe (Arsenal, Reliquias, Dónde farmear, Mods o un nodo del mapa estelar): el nombre sale de su archivo (uno de los 32 de la
   // pestaña), que la pestaña pide igual. Una que no existe (`null`) no tiene nombre y el <head> queda el de la lista.
   if (route.view === "warframe" && isWfTab(route.wfSection) && route.detail) {
     const f = peekWfFicha(route.wfSection, route.detail);
@@ -221,9 +221,11 @@ export default function PageMeta({ route }: { route: Route }) {
         (sdItem.recipes.make.length || sdItem.recipes.use.length ? SD_HAS.recipe : 0) |
         (sdItem.sources.length ? SD_HAS.shop : 0)
       : null;
-    // Un mod o un arcano: la ficha dice cuál (el título cambia).
-    const wfArcane = route.view === "warframe" && route.wfSection === "mods" && route.detail ? peekWfFicha("mods", route.detail)?.kind === "arcane" : null;
-    const { title, description } = metaFor(route, lang, detail, via, rsHas, trHas, sdHas, wfArcane);
+    // Un mod o un arcano: la ficha dice cuál (el título cambia). Un nodo del mapa estelar: su planeta y su tipo de misión.
+    const wfMod = route.view === "warframe" && route.wfSection === "mods" && route.detail ? peekWfFicha("mods", route.detail) : null;
+    const wfNode = route.view === "warframe" && route.wfSection === "star-chart" && route.detail ? peekWfFicha("star-chart", route.detail) : null;
+    const wfHead = wfMod ? { arcane: wfMod.kind === "arcane" } : wfNode ? { planet: wfNode.planet, type: wfNode.type } : null;
+    const { title, description } = metaFor(route, lang, detail, via, rsHas, trHas, sdHas, wfHead);
     const url = routeUrl(route);
 
     document.title = title;

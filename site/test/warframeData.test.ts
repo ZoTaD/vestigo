@@ -9,7 +9,9 @@ import ArsenalList from "../src/warframe/arsenal/ArsenalList";
 import ArsenalPage from "../src/warframe/arsenal/ArsenalPage";
 import RelicPage from "../src/warframe/relics/RelicPage";
 import Sources from "../src/warframe/Sources";
-import { loadFicha, readModFilters, loadList, peekFicha, preloadRoute, say, sortSources, WF_SHARDS } from "../src/warframe/data";
+import { effectiveStarType, filterStars, loadMastery, loadFicha, readModFilters, loadList, peekFicha, preloadRoute, readStarFilters, say, sortSources, sortStars, starPlanets, WF_SHARDS, writeStarFilters } from "../src/warframe/data";
+import NodePage from "../src/warframe/starchart/NodePage";
+import StarChartList from "../src/warframe/starchart/StarChartList";
 import FarmingPage from "../src/warframe/farming/FarmingPage";
 import ModList from "../src/warframe/mods/ModList";
 import ModPage from "../src/warframe/mods/ModPage";
@@ -18,7 +20,7 @@ const dir = new URL("../../games/warframe/data/arsenal/f/", import.meta.url);
 const noop = () => undefined;
 const inLang = (lang: "en" | "es", el: ReturnType<typeof createElement>) =>
   renderToStaticMarkup(createElement(LangContext.Provider, { value: { lang, setLang: noop } }, el));
-const route = (lang: "en" | "es", wfSection: "arsenal" | "relics" | "farming" | "mods", detail?: string) => ({ lang, view: "warframe", wfSection, detail }) as Route;
+const route = (lang: "en" | "es", wfSection: "arsenal" | "relics" | "farming" | "mods" | "star-chart", detail?: string) => ({ lang, view: "warframe", wfSection, detail }) as Route;
 
 describe("datos de Warframe: Arsenal y Reliquias", () => {
   it("WF_SHARDS es el CHUNKS de site_data.py", () => expect(WF_SHARDS).toBe(32));
@@ -31,6 +33,13 @@ describe("datos de Warframe: Arsenal y Reliquias", () => {
     const f = await loadFicha("arsenal", "excalibur");
     const chasis = f!.parts.find((p) => p.name[0] === "Excalibur Chassis")!;
     expect(chasis.sources).toContainEqual(expect.objectContaining({ k: "mission", chance: 38.72 }));
+  });
+
+  it("la lista de Maestría anota los slugs del Arsenal: en frío, el enlace sale con el slug en español", async () => {
+    const rows = await loadMastery();
+    const tenet = rows.find((r) => r.slug === "tenet-agendus")!;
+    expect(tenet.slugEs).toBe("agendus-tenet");
+    expect(routePath(route("es", "arsenal", "tenet-agendus"))).toBe("/es/warframe/arsenal/agendus-tenet");
   });
 
   it("abre en frío una reliquia en español", async () => {
@@ -133,5 +142,81 @@ describe("datos de Warframe: Dónde farmear y Mods", () => {
   it("la tabla de mods encabeza su primera columna con 'Name'", async () => {
     const rows = await loadList("mods");
     expect(inLang("en", createElement(ModList, { rows, route: route("en", "mods"), navigate: noop }))).toContain("<th>Name</th>");
+  });
+});
+
+describe("datos de Warframe: Mapa estelar", () => {
+  it("abre en frío un nodo en español por su pedacito de es/NN.json", async () => {
+    await preloadRoute(route("es", "star-chart", "hidron"));
+    expect(peekFicha("star-chart", "hydron")).toBeTruthy();
+    expect(routePath(route("es", "star-chart", "hydron"))).toBe("/es/warframe/mapa-estelar/hidron");
+  });
+
+  it("filterStars filtra por planeta y por tipo", async () => {
+    const rows = await loadList("star-chart");
+    const sedna = filterStars(rows, "sedna", null);
+    expect(sedna.length).toBeGreaterThan(5);
+    expect(sedna.every((r) => r.planet[0] === "Sedna")).toBe(true);
+    const def = filterStars(rows, "sedna", "Defense");
+    expect(def.map((r) => r.slug)).toContain("hydron");
+    expect(def.every((r) => r.type === "Defense")).toBe(true);
+    expect(filterStars(rows, null, null)).toHaveLength(rows.length);
+    expect(filterStars(rows, "kuva-fortress", null).length).toBeGreaterThan(0);
+  });
+
+  it("los filtros van y vuelven por la dirección", () => {
+    expect(writeStarFilters({ planet: "sedna", type: "Mobile Defense" })).toBe("?planet=sedna&type=Mobile+Defense");
+    expect(readStarFilters("?planet=sedna&type=Mobile+Defense")).toEqual({ planet: "sedna", type: "Mobile Defense" });
+    expect(writeStarFilters({ planet: null, type: null })).toBe("");
+  });
+
+  it("sin planeta elegido el tipo de la dirección se ignora; con planeta, sólo si lo tiene", () => {
+    expect(effectiveStarType(null, "Defense", ["Defense", "Survival"])).toBeNull();
+    expect(effectiveStarType("sedna", "Defense", ["Defense", "Survival"])).toBe("Defense");
+    expect(effectiveStarType("sedna", "Rescue", ["Defense", "Survival"])).toBeNull();
+  });
+
+  it("los planetas salen en el orden del juego, con cada luna después de su planeta", async () => {
+    const rows = await loadList("star-chart");
+    const order = starPlanets(rows).map((p) => p.name[0]);
+    expect(order.slice(0, 9)).toEqual(["Mercury", "Venus", "Earth", "Lua", "Mars", "Phobos", "Deimos", "Ceres", "Jupiter"]);
+    expect(order.indexOf("Europa")).toBe(order.indexOf("Jupiter") + 1);
+    expect(order.indexOf("Sedna")).toBeLessThan(order.indexOf("Void"));
+    expect(sortStars(rows)[0].planet[0]).toBe("Mercury");
+  });
+
+  it("la tabla sin filtro agrupa por planeta y enlaza cada nodo a su ficha", async () => {
+    const rows = await loadList("star-chart");
+    const html = inLang("en", createElement(StarChartList, { rows, route: route("en", "star-chart"), navigate: noop }));
+    expect(html).toContain('href="/en/warframe/star-chart/hydron"');
+    expect(html).toContain('href="/en/warframe/star-chart?planet=sedna"');
+    expect(html).toContain("wf-star-group");
+    expect(html).toContain("Defense");
+  });
+
+  it("la ficha de Hydron: Defensa, tres rotaciones con sus % y los recursos de Sedna enlazados", async () => {
+    const f = (await loadFicha("star-chart", "hydron"))!;
+    const html = inLang("es", createElement(NodePage, { ficha: f, route: route("es", "star-chart", "hydron"), navigate: noop }));
+    expect(html).toContain("Defensa");
+    expect(html).toContain("Rotación A");
+    expect(html).toContain("Rotación C");
+    expect(html).toContain("/es/warframe/donde-farmear/");
+    expect(html).toContain("/es/warframe/mapa-estelar?planet=sedna");
+  });
+
+  it("un nodo sin tabla de recompensas lo dice y no dibuja tablas vacías", async () => {
+    const rows = await loadList("star-chart");
+    const row = rows.find((r) => !r.best)!;
+    const f = (await loadFicha("star-chart", row.slug))!;
+    const html = inLang("en", createElement(NodePage, { ficha: f, route: route("en", "star-chart", row.slug), navigate: noop }));
+    expect(html).toContain(WF_COPY.en.starChart.noRewards);
+    expect(html).not.toContain("wf-node-table");
+  });
+
+  it("una misión de una ficha enlaza a su nodo del mapa estelar", async () => {
+    const f = (await loadFicha("farming", "neural-sensors"))!;
+    const html = inLang("en", createElement(Sources, { list: f.sources, refs: f.refs, route: route("en", "farming", "neural-sensors"), navigate: noop }));
+    expect(f.sources.some((s) => s.k === "mission" && s.node)).toBe(true);
+    expect(html).toMatch(/href="\/en\/warframe\/star-chart\/[a-z0-9-]+"/);
   });
 });
