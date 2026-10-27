@@ -25,12 +25,16 @@ type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
 const WfArsenal = lazyWithPreload(() => import("./warframe/arsenal/WfArsenal"));
 const WfRelics = lazyWithPreload(() => import("./warframe/relics/WfRelics"));
+const WfFarming = lazyWithPreload(() => import("./warframe/farming/WfFarming"));
+const WfMods = lazyWithPreload(() => import("./warframe/mods/WfMods"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `WF_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `WF_TAB_FILES`.
 const TABS: Partial<Record<WfSection, LazyTab>> = {
   arsenal: WfArsenal,
   relics: WfRelics,
+  farming: WfFarming,
+  mods: WfMods,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -40,6 +44,8 @@ const hasPage = (tab: WfSection): boolean => tab === "home" || !!TABS[tab];
 const TAB_DATA: Partial<Record<WfSection, (route: Route) => Promise<unknown>>> = {
   arsenal: (route) => preloadFichas(route),
   relics: (route) => preloadFichas(route),
+  farming: (route) => preloadFichas(route),
+  mods: (route) => preloadFichas(route),
 };
 
 /**

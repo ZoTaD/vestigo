@@ -122,6 +122,8 @@ export const STARDEW_TAB_FILES: Partial<Record<StardewSection, string>> = {
 export const WF_TAB_FILES: Partial<Record<WfSection, string>> = {
   arsenal: "src/warframe/arsenal/WfArsenal.tsx",
   relics: "src/warframe/relics/WfRelics.tsx",
+  farming: "src/warframe/farming/WfFarming.tsx",
+  mods: "src/warframe/mods/WfMods.tsx",
 };
 
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */

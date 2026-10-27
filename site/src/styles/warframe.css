@@ -193,8 +193,8 @@ a.wf-relic:hover { background: var(--wf-glass-2); }
 .wf-back::before { content: "← "; }
 .wf-vault { font: 700 15px/1.2 var(--wf-head); letter-spacing: 0.1em; text-transform: uppercase; color: var(--wf-gold); }
 .wf-sub { margin-top: 18px; }
-@container (max-width: 560px) { .wf-head { flex-direction: column; } }
-@media (max-width: 640px) { .wf-head { flex-direction: column; } }
+@container (max-width: 560px) { .wf-head { flex-direction: column; align-items: stretch; } }
+@media (max-width: 640px) { .wf-head { flex-direction: column; align-items: stretch; } }
 
 .wf-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px 14px; }
 .wf-stat { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-content: start; padding: 8px 10px; background: var(--wf-glass); border-radius: 3px; }
@@ -239,3 +239,17 @@ a.wf-reward:hover > span { color: var(--wf-acc); }
   .wf-table { font-size: 13.5px; }
   .wf-table th, .wf-table td { padding: 6px 7px; }
 }
+
+/* --- Dónde farmear y Mods ---------------------------------------------------------------------------------------------- */
+.wf-find.is-big input { max-width: 640px; padding: 14px 16px; font-size: 20px; }
+.wf-res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 6px; }
+.wf-res { display: flex; align-items: center; gap: 10px; height: 76px; padding: 6px 10px; background: var(--wf-glass); border-radius: 3px; }
+a.wf-res:hover { background: var(--wf-glass-2); }
+a.wf-res:focus-visible { outline: 2px solid var(--wf-acc); outline-offset: 2px; }
+.wf-res > span { display: grid; gap: 3px; min-width: 0; font: 700 16px/1.1 var(--wf-head); letter-spacing: 0.04em; }
+.wf-res small { font: 500 13px/1.2 var(--wf-text); color: var(--wf-dim); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.wf-desc { color: var(--wf-dim); max-width: 70ch; white-space: pre-line; }
+.wf-effect { margin-top: 12px; padding: 12px 14px; background: var(--wf-glass); border-radius: 3px; font: 600 17px/1.35 var(--wf-head); letter-spacing: 0.03em; white-space: pre-line; }
+.wf-stat dd.is-text { font-size: 15px; line-height: 1.2; }
+.wf-mod-table td { height: 56px; padding-block: 0; }
+.wf-mod-table .wf-reward { height: 100%; }

@@ -140,30 +140,91 @@ export interface RelicFicha {
   refs: Refs;
 }
 
-/** Lo que trae cada pestaña con fichas. Dónde farmear y Mods suman las suyas acá. */
+/** Una fila de `farming/list.json`: un recurso y los planetas donde cae (puede no tener ninguno). */
+export interface FarmingRow {
+  slug: string;
+  slugEs: string;
+  name: Pair;
+  img: string;
+  planets: Pair[];
+}
+export interface FarmingFicha {
+  slug: string;
+  slugEs: string;
+  name: Pair;
+  desc: Pair;
+  img: string;
+  planets: Pair[];
+  sources: Source[];
+  /** Las claves en `refs` de lo que lo pide: las recetas del Arsenal. */
+  usedIn: string[];
+  refs: Refs;
+}
+/** Una fila de `mods/list.json`. `rarity`, `polarity` y `compat` son null en los arcanos (y la rareza en 21 viejos). */
+export interface ModRow {
+  slug: string;
+  slugEs: string;
+  name: Pair;
+  img: string;
+  kind: "mod" | "arcane";
+  type: string;
+  rarity: string | null;
+  polarity: string | null;
+  compat: string | null;
+}
+export interface ModFicha {
+  slug: string;
+  slugEs: string;
+  name: Pair;
+  kind: "mod" | "arcane";
+  type: string;
+  rarity: string | null;
+  polarity: string | null;
+  drain: number | null;
+  maxRank: number;
+  compat: string | null;
+  /** El efecto de cada rango, del 0 al máximo. */
+  ranks: Pair[];
+  desc?: Pair;
+  img: string;
+  sources: Source[];
+  refs: Refs;
+}
+
+/** Lo que trae cada pestaña con fichas. */
 export interface ListOf {
   arsenal: ArsenalRow[];
   relics: RelicRow[];
+  farming: FarmingRow[];
+  mods: ModRow[];
 }
 export interface FichaOf {
   arsenal: ArsenalFicha;
   relics: RelicFicha;
+  farming: FarmingFicha;
+  mods: ModFicha;
 }
 export type DataTab = keyof ListOf;
-export const DATA_TABS: DataTab[] = ["arsenal", "relics"];
+export const DATA_TABS: DataTab[] = ["arsenal", "relics", "farming", "mods"];
 export const isDataTab = (t: string | undefined): t is DataTab => !!t && (DATA_TABS as string[]).includes(t);
 
 const lists = {
   arsenal: once<ArsenalRow[]>(() => import("@warframe/arsenal/list.json")),
   relics: once<RelicRow[]>(() => import("@warframe/relics/list.json")),
+  farming: once<FarmingRow[]>(() => import("@warframe/farming/list.json")),
+  mods: once<ModRow[]>(() => import("@warframe/mods/list.json")),
 };
 const fichas = {
   arsenal: shardedFichas<ArsenalFicha>(import.meta.glob<{ default: Record<string, ArsenalFicha> }>("@warframe/arsenal/f/*.json"), shard),
   relics: shardedFichas<RelicFicha>(import.meta.glob<{ default: Record<string, RelicFicha> }>("@warframe/relics/f/*.json"), shard),
+  farming: shardedFichas<FarmingFicha>(import.meta.glob<{ default: Record<string, FarmingFicha> }>("@warframe/farming/f/*.json"), shard),
+  mods: shardedFichas<ModFicha>(import.meta.glob<{ default: Record<string, ModFicha> }>("@warframe/mods/f/*.json"), shard),
 };
 const esToEn = {
   arsenal: shardedFichas<string>(import.meta.glob<{ default: Record<string, string> }>("@warframe/arsenal/es/*.json"), shard),
   relics: shardedFichas<string>(import.meta.glob<{ default: Record<string, string> }>("@warframe/relics/es/*.json"), shard),
+  farming: shardedFichas<string>(import.meta.glob<{ default: Record<string, string> }>("@warframe/farming/es/*.json"), shard),
+  mods: shardedFichas<string>(import.meta.glob<{ default: Record<string, string> }>("@warframe/mods/es/*.json"), shard),
 };
 
 /** Anota los slugs en español de lo que cambia: la dirección de una ficha en español y los enlaces que la nombran. */
@@ -251,7 +312,8 @@ export function duration(seconds: number, u: { d: string; h: string; min: string
 /** Mayor chance primero. Una fuente sin cifra (una reliquia) va después, por rareza y con las del Vault al final. */
 const RARITY_RANK: Record<string, number> = { Common: 0, Uncommon: 1, Rare: 2, Legendary: 3 };
 export function sortSources<T extends Source>(list: readonly T[]): T[] {
-  const score = (s: Source): number => ("chance" in s && s.chance !== undefined ? s.chance : "eff" in s ? s.eff : 0);
+  // Un enemigo se ordena por su probabilidad efectiva (la que muestra la tabla), no por la de su drop.
+  const score = (s: Source): number => (s.k === "enemy" ? s.eff : "chance" in s ? s.chance : 0);
   return [...list].sort((a, b) => {
     if (a.k === "relic" && b.k === "relic") return +a.vaulted - +b.vaulted || (RARITY_RANK[a.rarity] ?? 9) - (RARITY_RANK[b.rarity] ?? 9) || a.relic.localeCompare(b.relic, "en", { numeric: true });
     return score(b) - score(a);
@@ -317,4 +379,61 @@ export function writeRelicFilters(f: RelicFilters): string {
 export function filterRelics(rows: readonly RelicRow[], f: RelicFilters, query: string): RelicRow[] {
   const q = fold(query.trim());
   return rows.filter((r) => (!f.era || r.era === f.era) && (!f.open || !r.vaulted) && (!q || fold(r.name[0]).includes(q)));
+}
+
+// --- Filtros de Dónde farmear y de Mods ------------------------------------------------------------------------------
+
+/** Los recursos que caen en un planeta (por su nombre en inglés) y el buscador. */
+export function filterFarming(rows: readonly FarmingRow[], planet: string | null, query: string): FarmingRow[] {
+  const q = fold(query.trim());
+  return rows.filter((r) => (!planet || r.planets.some((p) => p[0] === planet)) && (!q || fold(r.name[0]).includes(q) || fold(r.name[1]).includes(q)));
+}
+/** Los planetas que aparecen en la lista, del que tiene más recursos al que tiene menos. */
+export function farmingPlanets(rows: readonly FarmingRow[]): Pair[] {
+  const seen = new Map<string, { pair: Pair; n: number }>();
+  for (const r of rows) for (const p of r.planets) (seen.get(p[0]) ?? seen.set(p[0], { pair: p, n: 0 }).get(p[0])!).n++;
+  return [...seen.values()].sort((a, b) => b.n - a.n || a.pair[0].localeCompare(b.pair[0])).map((v) => v.pair);
+}
+export function readPlanet(search: string): string | null {
+  return new URLSearchParams(search).get("planet");
+}
+export function writePlanet(planet: string | null): string {
+  return planet ? `?${new URLSearchParams({ planet })}` : "";
+}
+
+export interface ModFilters {
+  kind: ModRow["kind"] | null;
+  type: string | null;
+  rarity: string | null;
+  polarity: string | null;
+}
+export const noModFilters: ModFilters = { kind: null, type: null, rarity: null, polarity: null };
+export const MOD_RARITIES = ["Common", "Uncommon", "Rare", "Legendary"] as const;
+export function readModFilters(search: string): ModFilters {
+  const q = new URLSearchParams(search);
+  const kind = q.get("kind");
+  return { kind: kind === "mod" || kind === "arcane" ? kind : null, type: q.get("type"), rarity: q.get("rarity"), polarity: q.get("polarity") };
+}
+export function writeModFilters(f: ModFilters): string {
+  const q = new URLSearchParams();
+  for (const k of ["kind", "type", "rarity", "polarity"] as const) if (f[k]) q.set(k, f[k]!);
+  const s = q.toString();
+  return s ? `?${s}` : "";
+}
+export function filterMods(rows: readonly ModRow[], f: ModFilters, query: string): ModRow[] {
+  const q = fold(query.trim());
+  return rows.filter(
+    (r) =>
+      (!f.kind || r.kind === f.kind) &&
+      (!f.type || r.type === f.type) &&
+      (!f.rarity || r.rarity === f.rarity) &&
+      (!f.polarity || r.polarity === f.polarity) &&
+      (!q || fold(r.name[0]).includes(q) || fold(r.name[1]).includes(q)),
+  );
+}
+/** Los tipos que aparecen en la lista (el más numeroso primero), para los chips. */
+export function modTypes(rows: readonly ModRow[], kind: ModRow["kind"] | null): string[] {
+  const n = new Map<string, number>();
+  for (const r of rows) if (!kind || r.kind === kind) n.set(r.type, (n.get(r.type) ?? 0) + 1);
+  return [...n].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map((e) => e[0]);
 }

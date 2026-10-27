@@ -17,7 +17,9 @@ import Sources from "../Sources";
 import { Icon, Panel, type Nav } from "../ui";
 
 /** Hasta dónde llena la barra cada cifra (el máximo real del juego, redondeado): lo que pasa se llena entero. */
-const CAP: Partial<Record<keyof Stats, number>> = { health: 1200, shield: 1200, armor: 600, energy: 300, sprint: 1.5, total: 1000, crit: 50, critMult: 4, status: 60, fireRate: 20 };
+const CAP: Partial<Record<keyof Stats, number>> = { health: 2250, shield: 1400, armor: 1000, energy: 300, sprint: 1.5, total: 12100, crit: 50, critMult: 5, status: 100, fireRate: 25 };
+/** El daño total va de unos 20 a 12.010: en raíz cuadrada las armas comunes no quedan en una rayita ni las fuertes saturan. */
+const SQRT: ReadonlySet<keyof Stats> = new Set(["total"]);
 /** El orden de las cifras de un Warframe y el de un arma. */
 const FRAME_STATS = ["health", "shield", "armor", "energy", "sprint"] as const;
 const GUN_STATS = ["total", "crit", "critMult", "status", "fireRate", "magazine", "reload", "multishot"] as const;
@@ -25,11 +27,12 @@ const GUN_STATS = ["total", "crit", "critMult", "status", "fireRate", "magazine"
 /** Las letras de la palabra más larga del nombre: el título se achica para que entre entera, sin cortarla. */
 const longestWord = (name: string): number => Math.max(...name.split(/\s+/).map((w) => w.length), 1);
 
-function Bar({ value, cap }: { value: number; cap?: number }) {
+function Bar({ value, cap, sqrt = false }: { value: number; cap?: number; sqrt?: boolean }) {
   if (!cap) return null;
+  const ratio = sqrt ? Math.sqrt(value / cap) : value / cap;
   return (
     <span className="wf-bar" aria-hidden="true">
-      <i style={{ width: `${Math.min(100, (value / cap) * 100)}%` }} />
+      <i style={{ width: `${Math.min(100, ratio * 100)}%` }} />
     </span>
   );
 }
@@ -82,7 +85,7 @@ export default function ArsenalPage({ ficha, route, navigate }: { ficha: Arsenal
                 <div className="wf-stat" key={k}>
                   <dt>{c.stat[k]}</dt>
                   <dd>{value(k)}</dd>
-                  <Bar value={s[k]!} cap={CAP[k]} />
+                  <Bar value={s[k]!} cap={CAP[k]} sqrt={SQRT.has(k)} />
                 </div>
               ))}
               {s.trigger && (

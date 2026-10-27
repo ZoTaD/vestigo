@@ -129,8 +129,44 @@ export interface WfCopy {
     enemy: string;
     eff: string;
   };
-  farming: { h1: string; lede: (n: string) => string };
-  mods: { h1: string; lede: (n: string) => string };
+  farming: {
+    h1: string;
+    lede: (n: string) => string;
+    search: string;
+    searchPlaceholder: string;
+    planet: string;
+    all: string;
+    count: (n: string) => string;
+    none: string;
+    missing: string;
+    /** Lo de mayor chance primero. */
+    best: string;
+    usedBy: string;
+    /** El recurso en la lista sin planeta conocido. */
+    noPlanet: string;
+  };
+  mods: {
+    h1: string;
+    lede: (n: string) => string;
+    search: string;
+    searchPlaceholder: string;
+    kind: string;
+    all: string;
+    mods: string;
+    arcanes: string;
+    type: string;
+    /** Nombre de cada tipo; el que no está acá se muestra con su nombre del export. */
+    types: Record<string, string>;
+    rarity: string;
+    polarity: string;
+    compat: string;
+    drain: string;
+    rank: string;
+    effect: string;
+    count: (n: string) => string;
+    none: string;
+    missing: string;
+  };
   rarity: Record<WfRarity, string>;
   polarity: Record<WfPolarity, string>;
   /** Los nombres de los tipos de daño (`DAMAGE_TYPES`). */
@@ -246,8 +282,44 @@ const EN: WfCopy = {
     enemy: "Enemies",
     eff: "Effective chance",
   },
-  farming: { h1: "Where to farm in Warframe", lede: (n) => `All ${n} resources with the missions where they drop.` },
-  mods: { h1: "Warframe mods and arcanes", lede: (n) => `All ${n} mods and arcanes with their stats and drops.` },
+  farming: {
+    h1: "Where to farm in Warframe",
+    lede: (n) => `All ${n} resources with the missions where they drop.`,
+    search: "What do you need?",
+    searchPlaceholder: "Neural Sensors, Orokin Cell, Plastids…",
+    planet: "Planet",
+    all: "All",
+    count: (n) => `${n} resources`,
+    none: "No resource matches.",
+    missing: "That resource doesn't exist. Here is the full list.",
+    best: "Best places",
+    usedBy: "Needed by",
+    noPlanet: "No planet",
+  },
+  mods: {
+    h1: "Warframe mods and arcanes",
+    lede: (n) => `All ${n} mods and arcanes with their stats and drops.`,
+    search: "Search",
+    searchPlaceholder: "Serration, Arcane Grace…",
+    kind: "Kind",
+    all: "All",
+    mods: "Mods",
+    arcanes: "Arcanes",
+    type: "Type",
+    types: {
+      WARFRAME: "Warframe", PRIMARY: "Primary", SECONDARY: "Secondary", MELEE: "Melee", ARCANE: "Arcane", SENTINEL: "Sentinel", STANCE: "Stance", OTHER: "Other",
+      PARAZON: "Parazon", "ARCH-GUN": "Arch-Gun", AURA: "Aura", "ARCH-MELEE": "Arch-Melee", KAVAT: "Kavat", KUBROW: "Kubrow", ARCHWING: "Archwing", "HELMINTH CHARGER": "Helminth Charger",
+    },
+    rarity: "Rarity",
+    polarity: "Polarity",
+    compat: "Fits",
+    drain: "Base drain",
+    rank: "Rank",
+    effect: "Effect",
+    count: (n) => `${n} mods and arcanes`,
+    none: "No mod matches.",
+    missing: "That mod doesn't exist. Here is the full list.",
+  },
   rarity: { Common: "Common", Uncommon: "Uncommon", Rare: "Rare", Legendary: "Legendary" },
   polarity: { madurai: "Madurai", vazarin: "Vazarin", naramon: "Naramon", zenurik: "Zenurik", unairu: "Unairu", umbra: "Umbra", penjaga: "Penjaga", universal: "Universal", any: "Any" },
   damage: {
@@ -364,8 +436,44 @@ const ES: WfCopy = {
     enemy: "Enemigos",
     eff: "Prob. efectiva",
   },
-  farming: { h1: "Dónde farmear en Warframe", lede: (n) => `Los ${n} recursos con las misiones donde caen.` },
-  mods: { h1: "Mods y arcanos de Warframe", lede: (n) => `Los ${n} mods y arcanos con sus estadísticas y drops.` },
+  farming: {
+    h1: "Dónde farmear en Warframe",
+    lede: (n) => `Los ${n} recursos con las misiones donde caen.`,
+    search: "¿Qué necesitás?",
+    searchPlaceholder: "Sensores neurales, Célula Orokin, Plástidos…",
+    planet: "Planeta",
+    all: "Todos",
+    count: (n) => `${n} recursos`,
+    none: "Ningún recurso coincide.",
+    missing: "Ese recurso no existe. Acá va la lista entera.",
+    best: "Dónde conviene",
+    usedBy: "Lo piden",
+    noPlanet: "Sin planeta",
+  },
+  mods: {
+    h1: "Mods y arcanos de Warframe",
+    lede: (n) => `Los ${n} mods y arcanos con sus estadísticas y drops.`,
+    search: "Buscar",
+    searchPlaceholder: "Sierra, Arcano Gracia…",
+    kind: "Clase",
+    all: "Todos",
+    mods: "Mods",
+    arcanes: "Arcanos",
+    type: "Tipo",
+    types: {
+      WARFRAME: "Warframe", PRIMARY: "Primaria", SECONDARY: "Secundaria", MELEE: "Cuerpo a cuerpo", ARCANE: "Arcano", SENTINEL: "Centinela", STANCE: "Postura", OTHER: "Otros",
+      PARAZON: "Parazón", "ARCH-GUN": "Arma de Archwing", AURA: "Aura", "ARCH-MELEE": "Melé de Archwing", KAVAT: "Kavat", KUBROW: "Kubrow", ARCHWING: "Archwing", "HELMINTH CHARGER": "Cargador Helminth",
+    },
+    rarity: "Rareza",
+    polarity: "Polaridad",
+    compat: "Sirve para",
+    drain: "Costo base",
+    rank: "Rango",
+    effect: "Efecto",
+    count: (n) => `${n} mods y arcanos`,
+    none: "Ningún mod coincide.",
+    missing: "Ese mod no existe. Acá va la lista entera.",
+  },
   rarity: { Common: "Común", Uncommon: "Poco común", Rare: "Rara", Legendary: "Legendaria" },
   polarity: { madurai: "Madurai", vazarin: "Vazarin", naramon: "Naramon", zenurik: "Zenurik", unairu: "Unairu", umbra: "Umbra", penjaga: "Penjaga", universal: "Universal", any: "Cualquiera" },
   damage: {
