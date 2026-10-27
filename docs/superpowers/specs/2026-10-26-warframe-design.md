@@ -239,7 +239,8 @@ Perf contra `vite preview` (frío, 1400×900), dentro del presupuesto:
 | Pico de RAM | 3,45 GB | 3,3 GB |
 | `check-links` | 0 sin destino | 0 sin destino |
 
-Suma 546 rutas (269 nodos × 2 idiomas + las 4 pestañas × 2). Perf contra `vite preview` (frío, 1400×900), todas dentro
+Suma 546 rutas (269 nodos × 2 idiomas + las 4 pestañas × 2). Después de los arreglos de la revisión final se repitió:
+173,1 s, 2 min 10 s de `vite build`, prerender en 83,7 s, pico de 3,29 GB, 0 sin destino, y perf con las mismas cifras. Perf contra `vite preview` (frío, 1400×900), todas dentro
 del presupuesto; con el Chrome del sistema (`PW_CHROMIUM`), porque el Chromium de Playwright no arrancó en esta máquina:
 
 | Página | pedidos | imágenes | nodos |
