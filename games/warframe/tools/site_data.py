@@ -18,6 +18,7 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import builder  # noqa: E402
 import drops  # noqa: E402
 import images  # noqa: E402
 import relations  # noqa: E402
@@ -692,6 +693,7 @@ def build(write: bool = False) -> dict:
                            for f in fichas["star-chart"].values()]
     notas["sin_icono"] = iconos.sin_icono
     notas["sin_ref"] = sorted(R.sin_ref)
+    notas["sin_clase"] = builder.sin_clase(items)
 
     es: dict = {}
     for tab in TABS:
@@ -710,7 +712,7 @@ def build(write: bool = False) -> dict:
     historial = vault_history(_leer_dato("prime-vault/list.json"), lists["prime-vault"],
                               _leer_dato("prime-vault/history.json") or [], date.today().isoformat())
     out = {"lists": lists, "fichas": fichas, "es": es, "meta": meta, "icons": iconos.icons, "notas": notas,
-           "vaultHistory": historial}
+           "vaultHistory": historial, "builder": builder.build_data(items, mods)}
     if write:
         escribir(archivos(out))
     return out
@@ -720,7 +722,7 @@ def build(write: bool = False) -> dict:
 
 def archivos(out: dict) -> dict:
     """Ruta (relativa a `data/`) -> contenido de todo lo que se escribe."""
-    files = {"meta.json": out["meta"], "prime-vault/history.json": out["vaultHistory"]}
+    files = {"meta.json": out["meta"], "prime-vault/history.json": out["vaultHistory"], **out["builder"]}
     for tab in SIN_FICHAS:
         files[f"{tab}/list.json"] = out["lists"][tab]
     for tab in TABS:
@@ -757,6 +759,8 @@ def main() -> None:
         print("sin ícono en el manifiesto (genérico):", n["sin_icono"])
     if n["sin_ref"]:
         print("nombrados que no son nada del sitio (sin página):", len(n["sin_ref"]))
+    if n["sin_clase"]:
+        print("armas sin clase en clases.json (correr builder.py --clases):", ", ".join(n["sin_clase"]))
 
 
 if __name__ == "__main__":
