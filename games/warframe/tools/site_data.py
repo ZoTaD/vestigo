@@ -677,7 +677,7 @@ def build(write: bool = False) -> dict:
         "mastery": [m for m in map(_maestria, items) if m],
         "prime-vault": [{"slug": i["slug"], "slugEs": i["slugEs"], "name": i["name"], "img": i["img"],
                          "kind": i["kind"], "status": _estado_vault(R.parts_de[i["unique"]])}
-                        for i in items if _es_prime(i)],
+                        for i in items if _es_prime(i) and i["kind"] != "exalted"],  # las exaltadas, como en Maestría
     }
     fichas = {
         "arsenal": {i["slug"]: _ficha_arsenal(i, R) for i in items},

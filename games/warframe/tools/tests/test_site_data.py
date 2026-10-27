@@ -145,6 +145,8 @@ class TestSiteData(unittest.TestCase):
         V = {v["slug"]: v["status"] for v in self.out["lists"]["prime-vault"]}
         self.assertEqual(V["excalibur-prime"], "norelics")
         self.assertTrue(set(V.values()) >= {"available", "vaulted"})
+        self.assertFalse(any(v["kind"] == "exalted" for v in self.out["lists"]["prime-vault"]))
+        self.assertNotIn("exalted-prime-blade", V)
 
     def test_historial_vault(self):
         prev = [{"slug": "a", "status": "available"}, {"slug": "b", "status": "vaulted"}]
