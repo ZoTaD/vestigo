@@ -155,7 +155,7 @@ Prime Vault y Baro van en **dos pestañas** y no en una: se buscan por separado 
 - **Ficha de nodo**: planeta, tipo, facción, nivel, maestría, sector oscuro; las recompensas por rotación (A/B/C, o una
   sola tabla) con su %, cada objeto enlazado a su ficha si la tiene (reliquias, mods, recursos, partes); y los recursos
   del planeta (los de Dónde farmear cuya línea "Ubicación" nombra el planeta). 209 nodos tienen tabla; los otros 60
-  (Exterminio, Defensa móvil, Sabotaje sin cachés…) dicen "no tiene tabla de recompensas propia" y nada más.
+  (Exterminio, Defensa móvil, Sabotaje sin cachés…) dicen "no tiene tabla de recompensas propia" (sin inventar recompensas) y muestran igual los recursos del planeta.
 - **Cruce**: las fuentes `mission` de las fichas de la etapa 1 ("Sedna/Hydron (Defense)") enlazan a la ficha del nodo.
 - Fuera: los nodos de Railjack (Proxima), los eventos y Duviri sin fin, que no están en `ExportRegions`.
 
@@ -225,3 +225,35 @@ Perf contra `vite preview` (frío, 1400×900), dentro del presupuesto:
 | `/en/warframe/farming/neural-sensors` | 110 | 85 | 520 |
 | `/es/warframe/mods` | 76 | 50 | 832 |
 | `/en/warframe/mods/serration` | 26 | 1 | 586 |
+
+## Mediciones de la etapa 2 (27/10)
+
+`npm run build` en la rama de la etapa 2 (el `main` de hoy ya trae la etapa 1: la referencia es la columna
+`feat/warframe` de arriba):
+
+| | etapa 1 | etapa 2 |
+|---|---|---|
+| Total | 164,7 s | 167,4 s |
+| `vite build` | 2 min | 2 min 4 s |
+| Prerender | 46.258 rutas en 82,0 s | 46.804 rutas en 86,2 s |
+| Pico de RAM | 3,45 GB | 3,3 GB |
+| `check-links` | 0 sin destino | 0 sin destino |
+
+Suma 546 rutas (269 nodos × 2 idiomas + las 4 pestañas × 2). Perf contra `vite preview` (frío, 1400×900), todas dentro
+del presupuesto; con el Chrome del sistema (`PW_CHROMIUM`), porque el Chromium de Playwright no arrancó en esta máquina:
+
+| Página | pedidos | imágenes | nodos |
+|---|---|---|---|
+| `/en/warframe` | 28 | 8 | 314 |
+| `/en/warframe/star-chart` | 25 | 0 | 1.106 |
+| `/es/warframe/mapa-estelar?planet=sedna` | 25 | 0 | 698 |
+| `/es/warframe/mapa-estelar/hidron` | 51 | 24 | 500 |
+| `/en/warframe/mastery` | 86 | 60 | 703 |
+| `/es/warframe/maestria` | 86 | 60 | 705 |
+| `/en/warframe/prime-vault` | 74 | 48 | 404 |
+| `/es/warframe/prime-vault` | 74 | 48 | 405 |
+| `/en/warframe/baro` | 25 | 0 | 187 |
+| `/es/warframe/baro` | 25 | 0 | 188 |
+
+Pendiente de ZoTaD: el nombre oficial en español de Rush, Void Armageddon, Shrine Defense, The Perita Rebellion, The
+Murmur y Anarchs (hoy salen en inglés en la versión ES: no hay fuente a mano y no se inventa).
