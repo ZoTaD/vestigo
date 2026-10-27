@@ -9,7 +9,7 @@ import ArsenalList from "../src/warframe/arsenal/ArsenalList";
 import ArsenalPage from "../src/warframe/arsenal/ArsenalPage";
 import RelicPage from "../src/warframe/relics/RelicPage";
 import Sources from "../src/warframe/Sources";
-import { filterStars, loadFicha, readModFilters, loadList, peekFicha, preloadRoute, readStarFilters, say, sortSources, sortStars, starPlanets, WF_SHARDS, writeStarFilters } from "../src/warframe/data";
+import { effectiveStarType, filterStars, loadMastery, loadFicha, readModFilters, loadList, peekFicha, preloadRoute, readStarFilters, say, sortSources, sortStars, starPlanets, WF_SHARDS, writeStarFilters } from "../src/warframe/data";
 import NodePage from "../src/warframe/starchart/NodePage";
 import StarChartList from "../src/warframe/starchart/StarChartList";
 import FarmingPage from "../src/warframe/farming/FarmingPage";
@@ -33,6 +33,13 @@ describe("datos de Warframe: Arsenal y Reliquias", () => {
     const f = await loadFicha("arsenal", "excalibur");
     const chasis = f!.parts.find((p) => p.name[0] === "Excalibur Chassis")!;
     expect(chasis.sources).toContainEqual(expect.objectContaining({ k: "mission", chance: 38.72 }));
+  });
+
+  it("la lista de Maestría anota los slugs del Arsenal: en frío, el enlace sale con el slug en español", async () => {
+    const rows = await loadMastery();
+    const tenet = rows.find((r) => r.slug === "tenet-agendus")!;
+    expect(tenet.slugEs).toBe("agendus-tenet");
+    expect(routePath(route("es", "arsenal", "tenet-agendus"))).toBe("/es/warframe/arsenal/agendus-tenet");
   });
 
   it("abre en frío una reliquia en español", async () => {
@@ -161,6 +168,12 @@ describe("datos de Warframe: Mapa estelar", () => {
     expect(writeStarFilters({ planet: "sedna", type: "Mobile Defense" })).toBe("?planet=sedna&type=Mobile+Defense");
     expect(readStarFilters("?planet=sedna&type=Mobile+Defense")).toEqual({ planet: "sedna", type: "Mobile Defense" });
     expect(writeStarFilters({ planet: null, type: null })).toBe("");
+  });
+
+  it("sin planeta elegido el tipo de la dirección se ignora; con planeta, sólo si lo tiene", () => {
+    expect(effectiveStarType(null, "Defense", ["Defense", "Survival"])).toBeNull();
+    expect(effectiveStarType("sedna", "Defense", ["Defense", "Survival"])).toBe("Defense");
+    expect(effectiveStarType("sedna", "Rescue", ["Defense", "Survival"])).toBeNull();
   });
 
   it("los planetas salen en el orden del juego, con cada luna después de su planeta", async () => {

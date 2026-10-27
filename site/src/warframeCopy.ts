@@ -300,7 +300,7 @@ const EN: WfCopy = {
   seo: {
     home: {
       title: "Warframe: Arsenal, relics, where to farm and mods | Vestigo",
-      description: "Every Warframe and weapon with its parts, every relic with its drops, where to farm each resource and every mod, with the day's fissures, Baro and cycles.",
+      description: "Arsenal, relics, farming and mods, plus the Star Chart, Mastery checklist, Prime Vault and Baro Ki'Teer, with the day's fissures and cycles.",
     },
     arsenal: { title: "Warframe Arsenal: Warframes, weapons and their parts | Vestigo", description: "Every Warframe, weapon and companion with its stats, abilities, recipe and where each part drops." },
     relics: { title: "Warframe relics: drops and Vault status | Vestigo", description: "Every Lith, Meso, Neo and Axi relic with its six rewards by refinement, where it drops, and whether it is in the Vault." },
@@ -340,7 +340,7 @@ const EN: WfCopy = {
     kicker: "Warframe guide",
     h1: "Everything for your Arsenal",
     lede: (arsenal, relics, farming, mods) =>
-      `${arsenal} Warframes and weapons with their parts and recipes, ${relics} relics with every reward, ${farming} resources with where to farm them and ${mods} mods and arcanes.`,
+      `${arsenal} Warframes and weapons with their parts and recipes, ${relics} relics with every reward, ${farming} resources with where to farm them and ${mods} mods and arcanes, plus the Star Chart, a Mastery checklist, the Prime Vault and Baro Ki'Teer.`,
     cards: {
       arsenal: "Stats, abilities, recipe and where each part drops, for every Warframe and weapon.",
       relics: "The six rewards by refinement, where the relic drops and whether it is in the Vault.",
@@ -533,7 +533,7 @@ const EN: WfCopy = {
     item: "Prime",
     change: "Change",
     added: "New",
-    noChanges: "No changes yet: they are recorded since 27/10/2026.",
+    noChanges: "No changes yet: they are recorded since Oct 27, 2026.",
     note: "Available: every part drops from at least one relic that is not vaulted. In the Vault: no part does. Partial: some parts do and some don't. No relics: its parts are not in any relic (Founder Primes).",
   },
   baroPage: {
@@ -551,7 +551,7 @@ const EN: WfCopy = {
     history: "Past visits",
     visit: (from, to) => `${from} – ${to}`,
     items: (n) => (n === 1 ? "1 item" : `${n} items`),
-    noHistory: "No visits recorded yet: they are recorded since 27/10/2026.",
+    noHistory: "No visits recorded yet: they are recorded since Oct 27, 2026.",
   },
   missionType: {
     Assassination: "Assassination", Exterminate: "Exterminate", Survival: "Survival", Rescue: "Rescue", Sabotage: "Sabotage", Capture: "Capture",
@@ -587,7 +587,7 @@ const ES: WfCopy = {
   seo: {
     home: {
       title: "Warframe: Arsenal, reliquias, dónde farmear y mods | Vestigo",
-      description: "Cada Warframe y arma con sus partes, cada reliquia con sus recompensas, dónde farmear cada recurso y todos los mods, con las fisuras del día, Baro y los ciclos.",
+      description: "Arsenal, reliquias, dónde farmear y mods, más el Mapa estelar, la Maestría, el Prime Vault y Baro Ki'Teer, con las fisuras y los ciclos del día.",
     },
     arsenal: { title: "Arsenal de Warframe: Warframes, armas y sus partes | Vestigo", description: "Cada Warframe, arma y compañero con sus estadísticas, habilidades, receta y dónde cae cada parte." },
     relics: { title: "Reliquias de Warframe: recompensas y Vault | Vestigo", description: "Cada reliquia Lith, Meso, Neo y Axi con sus seis recompensas por refinamiento, dónde cae y si está en el Vault." },
@@ -627,7 +627,7 @@ const ES: WfCopy = {
     kicker: "Guía de Warframe",
     h1: "Todo para tu Arsenal",
     lede: (arsenal, relics, farming, mods) =>
-      `${arsenal} Warframes y armas con sus partes y recetas, ${relics} reliquias con cada recompensa, ${farming} recursos con dónde farmearlos y ${mods} mods y arcanos.`,
+      `${arsenal} Warframes y armas con sus partes y recetas, ${relics} reliquias con cada recompensa, ${farming} recursos con dónde farmearlos y ${mods} mods y arcanos, más el Mapa estelar, la Maestría para tildar, el Prime Vault y Baro Ki'Teer.`,
     cards: {
       arsenal: "Estadísticas, habilidades, receta y dónde cae cada parte, de cada Warframe y arma.",
       relics: "Las seis recompensas por refinamiento, dónde cae la reliquia y si está en el Vault.",
@@ -783,8 +783,6 @@ const ES: WfCopy = {
     resources: "Recursos del planeta",
     noRewards: "Este nodo no tiene tabla de recompensas propia.",
   },
-  // De warframe-worldstate-data (MIT, `data/es/missionTypes.json`); los que no trae, del nombre de su nodo en el export
-  // en español (Descenso, Confrontación, Repetidor, Cosecha de legacito, El Circuito).
   masteryList: {
     h1: "Maestría de Warframe para tildar",
     lede: (n) => `Tildá los ${n} Warframes, armas y compañeros que ya subiste. Lo tildado queda en este navegador.`,
@@ -842,6 +840,8 @@ const ES: WfCopy = {
     items: (n) => (n === 1 ? "1 objeto" : `${n} objetos`),
     noHistory: "Todavía no hay visitas anotadas: se anotan desde el 27/10/2026.",
   },
+  // De warframe-worldstate-data (MIT, `data/es/missionTypes.json`); los que no trae, del nombre de su nodo en el export
+  // en español (Descenso, Confrontación, Repetidor, Cosecha de legacito, El Circuito).
   missionType: {
     Assassination: "Asesinato", Exterminate: "Exterminio", Survival: "Supervivencia", Rescue: "Rescate", Sabotage: "Sabotaje", Capture: "Captura",
     Spy: "Espionaje", Defense: "Defensa", "Mobile Defense": "Defensa móvil", Interception: "Interceptación", Hijack: "Usurpación", Hive: "Colmena",

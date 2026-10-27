@@ -330,7 +330,7 @@ a.wf-star-node:hover { color: var(--wf-acc); }
 .wf-mastery-tick input { width: 20px; height: 20px; margin: 0; accent-color: var(--wf-acc); cursor: pointer; }
 .wf-mastery-tick:has(input:focus-visible) { outline: 2px solid var(--wf-acc); outline-offset: 2px; }
 .wf-mastery-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.wf-mastery-name { font: 700 16px/1.15 var(--wf-head); letter-spacing: 0.04em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wf-mastery-name { font: 700 16px/1.15 var(--wf-head); letter-spacing: 0.04em; }
 a.wf-mastery-name:hover { color: var(--wf-acc); }
 .wf-mastery-kind { font: 600 12px/1 var(--wf-head); letter-spacing: 0.14em; text-transform: uppercase; color: var(--wf-dim); }
 .wf-mastery-xp { display: grid; justify-items: end; min-width: 76px; font: 600 14px/1.1 var(--wf-head); font-variant-numeric: tabular-nums; }

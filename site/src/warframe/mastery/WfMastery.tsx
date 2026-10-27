@@ -8,20 +8,19 @@
  */
 import { useEffect, useMemo, useState } from "react";
 import { useLang, useLocale } from "../../i18n";
-import { LazyRows } from "../../LazyRows";
+import { LazyRows, skipSprite } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useLoad } from "../../useLoad";
 import { useWfCopy } from "../../warframeCopy";
-import { loadMastery, MASTERY_KINDS, peekMastery, say, type MasteryKind, type MasteryRow } from "../data";
+import { fold, loadMastery, MASTERY_KINDS, peekMastery, say, type MasteryKind, type MasteryRow } from "../data";
 import { Icon, Panel, WfLoading, type Nav } from "../ui";
 import { browserStorage, masteryRank, readChecked, writeChecked } from "./mastery";
 
-/** El alto de una fila de la lista, en px, medido en el navegador (2026-10-27): 52 más 4 de separación entre filas. */
-const MASTERY_ROW = 52;
-
-/** Sin acentos ni mayúsculas, para que el buscador no distinga "Cuerpo" de "cuérpo". */
-const fold = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+/** El alto de una fila de la lista con su separación, en px, medido en el navegador (2026-10-27). */
+const MASTERY_ROW = 56;
+/** Cuántas filas dibuja cada tanda; las del primer tramo llevan su ícono, las de abajo lo piden al llegar. */
+const MASTERY_CHUNK = 60;
 
 export default function WfMastery({ route, navigate }: { route: Route; navigate: Nav }) {
   const list = useLoad("list", () => peekMastery() ?? undefined, () => loadMastery());
@@ -126,11 +125,11 @@ function MasteryList({ rows, route, navigate }: { rows: MasteryRow[]; route: Rou
           <LazyRows
             items={shown}
             rowHeight={MASTERY_ROW}
-            chunk={60}
+            chunk={MASTERY_CHUNK}
             tag="li"
             eager
             margin={400}
-            render={(r) => {
+            render={(r, i) => {
               const name = say(r.name, lang);
               const on = checked.has(r.slug);
               return (
@@ -139,7 +138,7 @@ function MasteryList({ rows, route, navigate }: { rows: MasteryRow[]; route: Rou
                     <input type="checkbox" checked={on} onChange={() => toggle(r.slug)} />
                     <span className="wf-mastery-sr">{name}</span>
                   </label>
-                  <Icon img={r.img} size={40} />
+                  {skipSprite(i, MASTERY_CHUNK) ? <Icon img={null} size={40} /> : <Icon img={r.img} size={40} />}
                   <RouteLink className="wf-mastery-name" to={{ ...route, view: "warframe", wfSection: "arsenal", detail: r.slug }} onNavigate={navigate} prefetch="press">
                     {name}
                   </RouteLink>

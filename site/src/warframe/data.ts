@@ -236,7 +236,14 @@ export interface MasteryRow {
   rank: 30 | 40;
   xp: number;
 }
-const mastery = once<MasteryRow[]>(() => import("@warframe/mastery/list.json"));
+// Anota los slugs del Arsenal al cargar (como el Vault): en frío, los enlaces de la lista salen con el slug del idioma.
+const mastery = once<MasteryRow[]>(() =>
+  import("@warframe/mastery/list.json").then((m) => {
+    const list = m.default as MasteryRow[];
+    noteSlugs("arsenal", list);
+    return { default: list };
+  }),
+);
 /** La lista de Maestría, en su propio chunk (regla 4 de CLAUDE.md). */
 export const loadMastery = (): Promise<MasteryRow[]> => mastery.load();
 export const peekMastery = (): MasteryRow[] | null => mastery.peek();
@@ -633,6 +640,10 @@ export function writeStarFilters(f: StarFilters): string {
   if (f.type) q.set("type", f.type);
   const s = q.toString();
   return s ? `?${s}` : "";
+}
+/** El tipo de misión que vale: sin planeta elegido no hay chips para soltarlo, así que se ignora; con planeta, sólo uno que tenga. */
+export function effectiveStarType(planet: string | null, type: string | null, types: readonly string[]): string | null {
+  return planet && type && types.includes(type) ? type : null;
 }
 export function filterStars(rows: readonly StarRow[], planet: string | null, type: string | null): StarRow[] {
   return rows.filter((r) => (!planet || planetSlug(r.planet) === planet) && (!type || r.type === type));

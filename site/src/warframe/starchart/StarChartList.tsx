@@ -14,7 +14,7 @@ import { LazyRows } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useWfCopy } from "../../warframeCopy";
-import { filterStars, noStarFilters, readStarFilters, say, sortStars, starLevel, starPlanets, starTypes, writeStarFilters, type StarFilters, type StarPlanet, type StarRow } from "../data";
+import { effectiveStarType, filterStars, noStarFilters, readStarFilters, say, sortStars, starLevel, starPlanets, starTypes, writeStarFilters, type StarFilters, type StarPlanet, type StarRow } from "../data";
 import { Panel, type Nav } from "../ui";
 import OrbitMap, { inOrbit } from "./OrbitMap";
 
@@ -35,9 +35,9 @@ export default function StarChartList({ rows, route, navigate, missing = false }
   const planets = useMemo(() => starPlanets(rows), [rows]);
   const sel = planets.find((p) => p.slug === f.planet) ?? null;
   const planet = sel?.slug ?? null;
-  // Un tipo que el planeta no tiene no deja la tabla vacía: se ignora.
+  // Un tipo que el planeta no tiene (o sin planeta elegido) no deja la tabla filtrada sin salida: se ignora.
   const types = useMemo(() => (sel ? sel.types : starTypes(rows)), [sel, rows]);
-  const type = f.type && types.includes(f.type) ? f.type : null;
+  const type = effectiveStarType(planet, f.type, types);
   const shown = useMemo(() => filterStars(sortStars(rows), planet, type), [rows, planet, type]);
   // Sin planeta, cada planeta arranca con su fila de título.
   const lines = useMemo<Line[]>(() => {
