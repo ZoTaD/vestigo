@@ -12,6 +12,7 @@ import pzMeta from "@zomboid/meta.json";
 import rsMeta from "@rust/meta.json";
 import trMeta from "@terraria/meta.json";
 import sdMeta from "@stardew/meta.json";
+import wfMeta from "@warframe/meta.json";
 import p2Patches from "@poe2/patches/index.json";
 
 /** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
@@ -403,6 +404,30 @@ export default function Home({
               <p className="game-figure is-second">
                 <b>{num(d2Meta.counts.uniques)}</b>
                 <span>{copy.home.games.d2rUniques}</span>
+              </p>
+            </div>
+          </li>
+
+          {/* Warframe entra el 2026-10-27, con la portada y el azul noche del Arsenal. */}
+          <li className="game-panel" data-panel="warframe">
+            <div className="game-panel-main">
+              <h4 className="game-panel-name">{copy.games.warframe}</h4>
+              <p className="game-panel-note">{copy.home.games.warframeLive}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "warframe", wfSection: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.warframeCta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(wfMeta.counts.arsenal)}</b>
+                <span>{copy.home.games.warframeArsenal}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(wfMeta.counts.mods)}</b>
+                <span>{copy.home.games.warframeMods}</span>
               </p>
             </div>
           </li>

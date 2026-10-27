@@ -41,8 +41,18 @@ describe("searchEntries", () => {
 
 describe("hasNavSearch", () => {
   it("los cuatro juegos con fichas buscan en la barra; Deadlock y PoE2 siguen con lo suyo", () => {
-    for (const g of ["valheim", "d2r", "zomboid", "rust", "terraria", "stardew"]) expect(hasNavSearch(g)).toBe(true);
+    for (const g of ["valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe"]) expect(hasNavSearch(g)).toBe(true);
     for (const g of ["deadlock", "poe2", "home"]) expect(hasNavSearch(g)).toBe(false);
+  });
+});
+
+describe("el buscador de Warframe (2026-10-27)", () => {
+  it("busca en las cuatro listas, en los dos idiomas, y cada resultado lleva a su ficha", async () => {
+    const run = await loadNavSearcher("warframe");
+    expect(run("excalibur", "en", 10)[0]).toMatchObject({ name: "Excalibur", tab: "Arsenal", to: { view: "warframe", wfSection: "arsenal", detail: "excalibur" } });
+    expect(run("lith a1", "es", 10)[0]).toMatchObject({ name: "Lith A1", tab: "Reliquias", to: { view: "warframe", wfSection: "relics", detail: "lith-a1" } });
+    expect(run("sensores neuronales", "es", 10)[0]).toMatchObject({ tab: "Dónde farmear", to: { wfSection: "farming", detail: "neural-sensors" } });
+    expect(run("excalibur", "en", 10)[0].img).toMatch(/^\/warframe\/s\/.+\.webp$/);
   });
 });
 

@@ -1,5 +1,6 @@
 import { TERRARIA_COPY, type TerrariaHas } from "./terrariaCopy";
 import { STARDEW_COPY } from "./stardewCopy";
+import { WF_COPY } from "./warframeCopy";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
 import { SEO_COPY } from "./seoCopy";
@@ -63,7 +64,8 @@ export function metaFor(
   via?: string[] | null,
   rsHas?: RustHas | null,
   trHas?: TerrariaHas | null,
-  sdHas?: number | null
+  sdHas?: number | null,
+  wfArcane?: boolean | null
 ): { title: string; description: string } {
   const copy = copyOf(lang);
   const seo = copy.seo;
@@ -177,6 +179,18 @@ export function metaFor(
     if (sec === "mines" && route.detail && detailName) return c.monsterSeo(detailName);
     return c.seo[sec];
   }
+  // Warframe (2026-10-27): la portada y, cuando tengan página, cada pestaña (una sin página muestra la portada).
+  if (route.view === "warframe") {
+    const c = WF_COPY[lang];
+    const sec = route.wfSection ?? "home";
+    if (route.detail && detailName) {
+      if (sec === "arsenal") return c.detailSeo.arsenal(detailName);
+      if (sec === "relics") return c.detailSeo.relics(detailName);
+      if (sec === "farming") return c.detailSeo.farming(detailName);
+      if (sec === "mods") return c.detailSeo.mod(detailName, !!wfArcane);
+    }
+    return c.seo[sec];
+  }
   // Lo que queda son la portada y las dos páginas legales.
   const page = seo[route.view];
   return { title: page.title(), description: page.description() };
@@ -234,6 +248,9 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const e of data.sd?.items ?? []) out[`sd-items/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.sd?.villagers ?? []) out[`sd-villagers/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const e of data.sd?.monsters ?? []) out[`sd-mines/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  for (const tab of ["arsenal", "relics", "farming", "mods"] as const) {
+    for (const e of data.wf?.[tab] ?? []) out[`wf-${tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  }
   for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const slug of data.rs?.circuits ?? []) {
     const m = circuitMeta(slug);
@@ -278,6 +295,8 @@ export function ogImageUrl(route: Route, latestEdition?: string, available: (pat
   if (route.view === "terraria") return `${SITE_ORIGIN}/terraria/og.jpg`;
   // Y Stardew Valley (el paisaje de la pantalla de título con el nombre en pixel, sin el logo: `games/stardew/tools/og.py`).
   if (route.view === "stardew") return `${SITE_ORIGIN}/stardew/og.jpg`;
+  // Y Warframe (el azul noche con el nombre en letra, sin logos de Digital Extremes: `games/warframe/tools/og.py`).
+  if (route.view === "warframe") return `${SITE_ORIGIN}/warframe/og.jpg`;
   const path = ogImagePath(route, latestEdition);
   return path && available(path) ? `${SITE_ORIGIN}${path}` : DEFAULT_OG;
 }
@@ -461,6 +480,20 @@ export function jsonLdFor(
     }
     return out;
   }
+  // Warframe (2026-10-27): migas hasta la ficha, y la portada es una aplicación web gratuita (los ciclos y lo que hay en vivo).
+  if (route.view === "warframe") {
+    const copy = WF_COPY[lang];
+    const sec = route.wfSection ?? "home";
+    const trail = [{ name: brand, url: home }, { name: "Warframe", url: routeUrl({ ...route, wfSection: "home", detail: undefined }) }];
+    if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    if (sec !== "home") return trail.length > 2 ? [crumbs(trail)] : [];
+    return [{
+      "@context": "https://schema.org", "@type": "WebApplication", name: copy.home.h1, description: page.description,
+      url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Warframe" },
+    }];
+  }
   if (route.view !== "deadlock") return [];
 
   const deadlockUrl = routeUrl({ ...route, dlSection: "meta", detail: undefined });
@@ -547,6 +580,9 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
   // Y en Stardew Valley (regalos, paquetes, máquinas, recetas, fuentes): los bits tal cual, `itemSeo` los lee.
   const sdHas = new Map<string, number>();
   for (const e of data.sd?.items ?? []) sdHas.set(`sd-items/${e.slug}`, e.has);
+  // Y en Warframe, qué mods son arcanos (llevan otro título).
+  const wfArcane = new Set<string>();
+  for (const e of data.wf?.mods ?? []) if (e.arcane) wfArcane.add(`wf-mods/${e.slug}`);
 
   return sitemapPaths(data).map((path) => {
     const route = parseRoute(path);
@@ -569,9 +605,11 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
                     ? `tr-${route.trSection ?? "home"}/${route.detail}`
                     : route.view === "stardew"
                       ? `sd-${route.sdSection ?? "home"}/${route.detail}`
-                      : null;
+                      : route.view === "warframe"
+                        ? `wf-${route.wfSection ?? "home"}/${route.detail}`
+                        : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
-    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""), trHas.get(detailKey ?? ""), sdHas.get(detailKey ?? ""));
+    const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""), trHas.get(detailKey ?? ""), sdHas.get(detailKey ?? ""), wfArcane.has(detailKey ?? ""));
 
     const alternates = LANGS.map((l) => ({
       hreflang: l as string,

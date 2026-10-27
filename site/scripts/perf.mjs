@@ -151,6 +151,16 @@ export const PAGES = [
   // El Planificador de granja vacío (lo que se abre en frío): el mapa de la granja estándar y la barra de cultivos.
   "/en/stardew-valley/planner",
   "/es/stardew-valley/planificador",
+  // Warframe (2026-10-27): la portada en los dos idiomas, cada lista (819 piezas del Arsenal, 1.750 mods), una ficha de
+  // cada pestaña y una en español abierta en frío.
+  "/en/warframe",
+  "/es/warframe",
+  "/en/warframe/arsenal",
+  "/en/warframe/arsenal/excalibur",
+  "/es/warframe/reliquias/lith-a1",
+  "/en/warframe/farming/neural-sensors",
+  "/es/warframe/mods",
+  "/en/warframe/mods/serration",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

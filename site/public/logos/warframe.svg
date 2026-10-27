@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 116 30" width="116" height="30" fill="none" stroke="#000" stroke-width="3" stroke-linejoin="miter" stroke-linecap="butt">
+  <g transform="translate(1.5 0)"><path d="M0 5 L3 25 L6 12 L9 25 L12 5"/></g>
+  <g transform="translate(16.0 0)"><path d="M0 25 L6 5 L12 25"/><path d="M3 18 L9 18"/></g>
+  <g transform="translate(30.5 0)"><path d="M0 25 V5 H8 Q12 5 12 10 Q12 15 8 15 H0"/><path d="M6 15 L12 25"/></g>
+  <g transform="translate(45.0 0)"><path d="M0 25 V5 H12"/><path d="M0 15 H9"/></g>
+  <g transform="translate(59.5 0)"><path d="M0 25 V5 H8 Q12 5 12 10 Q12 15 8 15 H0"/><path d="M6 15 L12 25"/></g>
+  <g transform="translate(74.0 0)"><path d="M0 25 L6 5 L12 25"/><path d="M3 18 L9 18"/></g>
+  <g transform="translate(88.5 0)"><path d="M0 25 V5 L6 16 L12 5 V25"/></g>
+  <g transform="translate(103.0 0)"><path d="M12 5 H0 V25 H12"/><path d="M0 15 H9"/></g>
+</svg>

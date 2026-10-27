@@ -17,6 +17,7 @@ import { loadItem as loadRsItem, peekItem as peekRsItem } from "./rust/items/dat
 import { loadItem as loadTrItem, peekItem as peekTrItem } from "./terraria/data";
 import { loadPatch as loadTrPatch, peekPatch as peekTrPatch } from "./terraria/patches/data";
 import { findMonster as findSdMonster, findVillager as findSdVillager, loadItem as loadSdItem, loadMines as loadSdMines, loadVillagers as loadSdVillagers, HAS as SD_HAS, peekItem as peekSdItem, peekMines as peekSdMines, peekVillagers as peekSdVillagers } from "./stardew/data";
+import { isDataTab as isWfTab, loadFicha as loadWfFicha, peekFicha as peekWfFicha } from "./warframe/data";
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
 import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
@@ -166,6 +167,12 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const m = d && findSdMonster(d, route.detail);
     return m ? (lang === "es" && m.name[1]) || m.name[0] : null;
   }
+  // Una ficha de Warframe (Arsenal, Reliquias, Dónde farmear o Mods): el nombre sale de su archivo (uno de los 32 de la
+  // pestaña), que la pestaña pide igual. Una que no existe (`null`) no tiene nombre y el <head> queda el de la lista.
+  if (route.view === "warframe" && isWfTab(route.wfSection) && route.detail) {
+    const f = peekWfFicha(route.wfSection, route.detail);
+    return f ? (lang === "es" && f.name[1]) || f.name[0] : null;
+  }
   // Una ficha de Objetos de Rust: el nombre sale de su archivo (uno de los 32 repartidos), que la pestaña pide igual.
   if (route.view === "rust" && route.rsSection === "items" && route.detail) {
     const f = peekRsItem(route.detail);
@@ -214,7 +221,9 @@ export default function PageMeta({ route }: { route: Route }) {
         (sdItem.recipes.make.length || sdItem.recipes.use.length ? SD_HAS.recipe : 0) |
         (sdItem.sources.length ? SD_HAS.shop : 0)
       : null;
-    const { title, description } = metaFor(route, lang, detail, via, rsHas, trHas, sdHas);
+    // Un mod o un arcano: la ficha dice cuál (el título cambia).
+    const wfArcane = route.view === "warframe" && route.wfSection === "mods" && route.detail ? peekWfFicha("mods", route.detail)?.kind === "arcane" : null;
+    const { title, description } = metaFor(route, lang, detail, via, rsHas, trHas, sdHas, wfArcane);
     const url = routeUrl(route);
 
     document.title = title;
@@ -310,6 +319,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "stardew" && route.sdSection === "mines" && route.detail && !peekSdMines()) {
       let vivo = true;
       loadSdMines().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una ficha de Warframe: su archivo.
+    if (route.view === "warframe" && isWfTab(route.wfSection) && route.detail && peekWfFicha(route.wfSection, route.detail) === undefined) {
+      let vivo = true;
+      loadWfFicha(route.wfSection, route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una ficha de Rust, con el archivo de la ficha (que la pestaña ya pidió).

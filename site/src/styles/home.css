@@ -467,6 +467,18 @@
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-figure span { color: #3b1f12; }
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-cta { background: #e78b2c; border-color: #5b2b29; color: #fff7e0; }
 
+/* --- Warframe: el azul noche del Arsenal, con el resplandor radial (2026-10-27) --- */
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] {
+  background: radial-gradient(900px 420px at 20% 20%, #1d3346 0%, #0b131c 60%, #070b10 100%);
+  color: #8fa3b5;
+}
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-panel-name { color: #e8eef4; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-figure b { color: #6fd3ff; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-figure.is-second b { color: #e8eef4; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-figure span { color: #8fa3b5; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-cta { background: #6fd3ff; border-color: #6fd3ff; color: #07131c; }
+
 /* --- Path of Exile 2: el oro viejo de su interfaz, sobre negro (2026-10-11) --- */
 
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] {

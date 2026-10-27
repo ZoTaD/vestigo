@@ -1,0 +1,149 @@
+# Warframe en Vestigo — diseño (etapa 1)
+
+2026-10-26. Rama `feat/warframe`, worktree `.claude/worktrees/warframe`. ZoTaD eligió la estética **A "Arsenal"**
+(maquetas en `warframe-maquetas` del launch.json, puerto 5234) y pidió arrancar por la etapa 1.
+
+## Para qué
+
+Warframe tiene ~56 mil jugadores de promedio en Steam (octubre de 2026) y una comunidad que vive en herramientas
+externas. Lo que más se busca es **dónde farmear cada cosa** ("where to farm neural sensors", "cómo conseguir
+telurio") y **reliquias** (qué traen, dónde caen, si están en el Vault). Hoy eso está repartido: la wiki oficial
+(tablas largas), overframe.gg (builds, ~5-6 M visitas/mes), warframe.market (mercado, ~7 M), browse.wf (estado en vivo)
+y Warframe Reliquary. Ninguno junta ficha + dónde se consigue cada parte + reliquias + recursos en una vista, y el
+español es flojo. Público en inglés primero; español a la par.
+
+Éxito: que una búsqueda de "dónde farmear X", "X Prime relics" o "X build parts" caiga en una ficha nuestra que lo
+responde arriba, sin scroll, con las tasas oficiales.
+
+## Fuentes (todas oficiales de Digital Extremes, verificadas el 26/10)
+
+- **Public Export**: índice `https://origin.warframe.com/PublicExport/index_{en,es}.txt.lzma` (LZMA "alone" sin marca de
+  fin: se descomprime en modo RAW con las props de la cabecera) → 15 JSON por idioma en
+  `http://content.warframe.com/PublicExport/Manifest/<archivo!hash>`. Trae 127 suits (119 Warframes, 5 Archwings, 2
+  Necramechs), 841 armas (+143 de Railjack), 34 compañeros, 1.603 mods, 3.201 reliquias (4 refinamientos de ~800),
+  168 arcanos, 1.885 recetas, 3.552 recursos y 269 nodos, con español oficial.
+- **ExportManifest**: el ícono de cada `uniqueName` (PNG 512 px con transparencia) en
+  `https://content.warframe.com/PublicExport<textureLocation>` (con el `!hash`).
+- **Tabla oficial de drops**: `https://www.warframe.com/droptables` (HTML de 4,4 MB): misiones por rotación, reliquias,
+  recompensas de llaves, botines de Cetus/Valle/Cambion/Zariman/Albrecht/Hex, incursiones, y drops por enemigo de
+  mods, planos, recursos y reliquias, con porcentajes.
+- **Estado en vivo**: `api.warframe.com/cdn/worldState.php` no tiene CORS. `api.warframestat.us/pc/` sí (`*`): fisuras,
+  Baro, incursión, arbitraje. Los ciclos de Cetus, el Valle del Orbe y la Deriva Cambion se calculan sin red.
+- **Política** (warframe.com/en/contentpolicy): anuncios pasivos permitidos; prohibido vender o cobrar acceso; los
+  logos de Warframe y DE necesitan permiso escrito (no van). El Public Export no tiene licencia escrita: lo usa todo el
+  ecosistema. Pie de página: aviso de no afiliación y "Warframe es marca de Digital Extremes".
+
+## Etapa 1: pestañas
+
+1. **Portada** (`/en/warframe`): el estado en vivo arriba (ciclos con cuenta regresiva, Baro, fisuras activas por era,
+   incursión del día) y la entrada a cada pestaña con un buscador.
+2. **Arsenal** (`/arsenal`, ES `/arsenal`): grilla de Warframes, armas (primarias, secundarias, cuerpo a cuerpo,
+   Archwing) y compañeros, con filtros por tipo y "Prime / no Prime". **Ficha** como la maqueta A: ícono grande,
+   estadísticas, habilidades (Warframes) o estadísticas de daño (armas), maestría, y **dónde se consigue cada parte**:
+   - partes Prime → las reliquias que las tienen, con rareza y si la reliquia está en el Vault;
+   - partes no Prime y planos → misiones/jefes/botines de la tabla de drops con su %;
+   - la receta: qué partes y recursos lleva, con crédito y tiempo de fabricación.
+3. **Reliquias** (`/relics`, ES `/reliquias`): las ~800 reliquias por era (Lith, Meso, Neo, Axi, Réquiem) con filtro
+   "sin Vault". **Ficha**: las 6 recompensas con su probabilidad en cada refinamiento (Intacta, Excepcional, Impecable,
+   Radiante) y dónde cae la reliquia (misión, rotación, %).
+4. **Dónde farmear** (`/farming`, ES `/donde-farmear`): los recursos que piden las recetas, con buscador. **Ficha**: los
+   planetas donde aparece, los enemigos que lo sueltan (%), las misiones y botines que lo dan, y qué recetas lo usan.
+5. **Mods y arcanos** (`/mods`, ES `/mods`): grilla con filtros (tipo, rareza, polaridad, compatibilidad). **Ficha**:
+   efecto por rango, drenaje, rangos, quién lo suelta (%), y para arcanos sus niveles.
+
+## Reglas para leer los datos
+
+- **Vault**: una reliquia está en el Vault si no aparece en ninguna tabla de recompensas de la tabla de drops
+  (misiones, botines, llaves, incursiones). Es lo único que dice "Vault"; no hay otra fuente.
+- **Partes**: las recetas (`ExportRecipes`) unen el resultado con sus ingredientes; las recompensas de reliquias y la
+  tabla de drops nombran las partes por `uniqueName` (reliquias) o por nombre en inglés (drops). El cruce por nombre se
+  prueba con un test que falla si una parte de la tabla de drops no se resuelve.
+- Si una parte o un plano **no aparece en ninguna fuente**, la ficha no inventa (nada de "se compra en el Mercado"):
+  dice "no cae en misiones" y nada más.
+- Textos del juego con marcas (`|DAMAGE|`, `<DT_SLASH_COLOR>`): se limpian a texto con el nombre del tipo de daño.
+- Tipos de daño de `damagePerShot` (20 posiciones): el orden se fija con un test contra 3 armas conocidas.
+
+## Datos e imágenes
+
+- `games/warframe/tools/`: `fetch.py` baja export + drops a `games/warframe/raw/` (ignorada); `site_data.py` arma
+  `games/warframe/data/` (lista liviana por pestaña + fichas partidas por hash del slug, como Stardew); `images.py` baja
+  los íconos que se usan y escribe WebP de 128 px (listas) y 256 px (fichas de Arsenal) en `site/public/warframe/`.
+  Medido: ~5 KB y ~14 KB por ícono; la etapa 1 suma ~3.300 íconos chicos y ~1.000 grandes, unos 30 MB.
+- **Tamaño medido (2026-10-27)**: `games/warframe/data` 9,4 MB (819 fichas de Arsenal, 799 reliquias, 237 recursos, 1.750 mods y arcanos, 32 archivos por pestaña, el más grande de ~140 KB) y `site/public/warframe` 32 MB (2.509 íconos de 128 px y 802 de 256 px).
+- Las reliquias Requiem Eterna (y la "Requiem" suelta) no tienen ficha: la tabla de drops sólo trae su Intacta. Sus fuentes se nombran sin página.
+- Slugs en inglés; español con su slug propio (como Stardew).
+- **Actualización**: una Action semanal (y a mano) compara el hash del índice del export y el sha256 de la tabla de drops;
+  si ninguno cambió, termina sin compilar. Si cambió alguno, regenera y hace commit a `main` (el repo no deja que
+  Actions abra PRs; mismo patrón que `publish-poe2`) y `deploy.yml` publica. Los minutos de Actions están contados.
+
+## Estética A "Arsenal"
+
+Azul noche con un resplandor radial, paneles de vidrio (fondos translúcidos, **sin bordes de color**), letra
+condensada en mayúsculas para títulos y rótulos (Rajdhani) y Barlow para el texto, ambas en `@fontsource`
+(self-hosted, sin Google Fonts). Acento cian `#6fd3ff`; las rarezas por texto en su color (común bronce, poco común
+plata, rara oro). El ícono del Warframe o arma grande a la izquierda en la ficha. Sin logos de DE.
+
+## Reglas del sitio (CLAUDE.md)
+
+- `LazyRows` en las grillas (Arsenal ~1.000, Mods ~1.600, Reliquias ~800); imágenes `lazy`, `decoding="async"`, tamaño
+  fijo; datos fuera del chunk de entrada, cada pestaña con su `import()`; fichas partidas.
+- `games/warframe/data` en `paths` de `deploy.yml` y en el `ignore` de `netlify.toml`; caché de `/warframe/*`; el origen
+  `api.warframestat.us` a la CSP (`connect-src`).
+- Juego nuevo en `gameGroups.ts` (categoría ARPG), el menú "Games" con su logo monocromo, `areaFiles.ts`, sitemap por
+  juego con `lastmod` real, `navSearch.ts`, OG propia, `perf.mjs` con la portada, una lista y una ficha por pestaña en
+  los dos idiomas. Medir RAM y tiempo del build antes y después (~7.000 páginas nuevas).
+
+## Fuera de la etapa 1
+
+Mapa estelar, maestría para tildar, Prime Vault/Baro con historial (etapa 2); armador de builds, Rivens y precios de
+warframe.market (etapa 3, revisar sus condiciones).
+
+## Detalles resueltos (revisión del 26/10)
+
+- **Direcciones**: pestañas `arsenal`, `relics`/`reliquias`, `farming`/`donde-farmear`, `mods` (mods y arcanos juntos);
+  fichas `/<pestaña>/<slug>`. El slug inglés sale del nombre en inglés y el español del nombre oficial en español; si
+  dos chocan se desambigua con el tipo (como `_slugs_unicos` de Stardew). Una ficha por reliquia (`lith-a1`), con los
+  cuatro refinamientos adentro.
+- **Cruce de partes**: el test falla si una parte de la tabla de drops no se resuelve y no está en una lista de
+  excepciones a mano en `tools/` (cada excepción con su motivo). Lo nuevo de un parche rompe el test, no la página.
+- **Vault**: el rótulo dice lo que se sabe: "Vault · no cae en misiones" cuando la reliquia no aparece en ninguna tabla
+  de recompensas. Las reliquias de la Resurgencia Prime (Varzia) no figuran en la tabla oficial, así que no se nombran.
+- **Imágenes**: los WebP se commitean en `site/public/warframe/` (como los sprites de Stardew); la Action los regenera
+  sólo cuando cambia el manifiesto.
+- **En vivo**: si `api.warframestat.us` no responde, el bloque se oculta (la portada prerenderizada no lo trae). Los
+  ciclos se calculan con las épocas y duraciones del código abierto de warframestat (MIT), comprobadas contra su API el
+  día que se escriben. Nombres en español: nodos de `ExportRegions_es`, el resto con `?language=es` de la API.
+- **Action semanal**: publica sola sin correr `perf`; la medición se hace a mano cuando se suma una pestaña.
+- **Logo del menú**: un ícono monocromo propio (no el de DE ni el del Lotus).
+
+## Decisiones mías (para revisar)
+
+- Una sola pestaña "Mods y arcanos" en vez de dos.
+- Recursos: sólo los que piden las recetas o aparecen en la tabla de drops (no los ~3.500 del export, que incluyen
+  decoraciones y objetos internos).
+- Imágenes propias en WebP en vez de enlazar el CDN de DE (no dependemos de ellos ni de su CORS/caché).
+
+## Mediciones de la etapa 1 (27/10)
+
+`npm run build` (tsc + vite build + check-links), uno detrás del otro, pico de RAM sumando los procesos node/esbuild nuevos:
+
+| | `main` (sin Warframe) | `feat/warframe` |
+|---|---|---|
+| Total | 141,9 s | 164,7 s |
+| `vite build` | 1 min 44 s | 2 min |
+| Prerender | 39.038 rutas en 67,7 s | 46.258 rutas en 82,0 s |
+| Pico de RAM | 2,86 GB | 3,45 GB |
+| `check-links` | 0 sin destino | 0 sin destino |
+
+Perf contra `vite preview` (frío, 1400×900), dentro del presupuesto:
+
+| Página | pedidos | imágenes | nodos |
+|---|---|---|---|
+| `/en/warframe` | 23 | 4 | 250 |
+| `/es/warframe` | 23 | 4 | 251 |
+| `/en/warframe/arsenal` | 74 | 48 | 357 |
+| `/en/warframe/arsenal/excalibur` | 31 | 6 | 323 |
+| `/es/warframe/reliquias/lith-a1` | 32 | 6 | 255 |
+| `/en/warframe/farming/neural-sensors` | 110 | 85 | 520 |
+| `/es/warframe/mods` | 76 | 50 | 832 |
+| `/en/warframe/mods/serration` | 26 | 1 | 586 |

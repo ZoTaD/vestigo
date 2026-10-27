@@ -30,13 +30,14 @@ on:
       - games/rust/data/**
       - games/terraria/data/**
       - games/stardew/data/**
+      - games/warframe/data/**
       - netlify.toml
       - .github/workflows/deploy.yml
   # Los commits de las Actions de publicación los empuja el GITHUB_TOKEN, y
   # GitHub no dispara workflows por pushes de ese token: sin esto, los datos
   # nuevos de Deadlock y PoE2 nunca llegarían al sitio.
   workflow_run:
-    workflows: [publish deadlock tier list, publish poe2 prices and patches]
+    workflows: [publish deadlock tier list, publish poe2 prices and patches, publish warframe data]
     types: [completed]
   workflow_dispatch:
 

@@ -27,7 +27,7 @@
   #
   # Un juego nuevo suma acá su `games/<juego>/data`: si no, la Action que lo
   # actualiza queda en verde con el sitio sirviendo los datos viejos.
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/games/d2r/data :/games/zomboid/data :/games/rust/data :/games/terraria/data :/games/stardew/data :/netlify.toml"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/games/d2r/data :/games/zomboid/data :/games/rust/data :/games/terraria/data :/games/stardew/data :/games/warframe/data :/netlify.toml"
 
 [build.environment]
   # Pinned so a Netlify default upgrade never changes the build under us.
@@ -127,6 +127,13 @@
 [[redirects]]
   from = "/stardew-valley/*"
   to = "/en/stardew-valley/:splat"
+  status = 301
+
+# Warframe (2026-10-27): `/warframe` sin idioma es la carpeta de assets (`/warframe/s/` y `/warframe/l/`, íconos chicos y
+# grandes). Sólo la raíz va a la portada en inglés; los archivos de adentro se sirven tal cual.
+[[redirects]]
+  from = "/warframe"
+  to = "/en/warframe"
   status = 301
 
 # `/rust` sin idioma no es una página (2026-10-05): la carpeta `/rust/...` es de
@@ -287,7 +294,7 @@
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://assets-bucket.deadlock-api.com https://web.poecdn.com https://*.steamstatic.com https://*.googletagmanager.com https://*.google-analytics.com; font-src 'self' https://assets-bucket.deadlock-api.com; media-src 'self' https://assets-bucket.deadlock-api.com; connect-src 'self' https://api.deadlock-api.com https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.google.com https://www.google.com; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://assets-bucket.deadlock-api.com https://web.poecdn.com https://*.steamstatic.com https://*.googletagmanager.com https://*.google-analytics.com; font-src 'self' https://assets-bucket.deadlock-api.com; media-src 'self' https://assets-bucket.deadlock-api.com; connect-src 'self' https://api.deadlock-api.com https://api.warframestat.us https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.google.com https://www.google.com; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), interest-cohort=()"
 
 # El JS y el CSS que arma Vite (2026-09-25). Cada nombre lleva el hash de su
@@ -429,6 +436,14 @@
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 [[headers]]
   for = "/stardew/combat/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/warframe/s/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+[[headers]]
+  for = "/warframe/l/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 [[headers]]
