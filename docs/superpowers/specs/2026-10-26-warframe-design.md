@@ -351,7 +351,19 @@ del Arsenal (Warframes y armas primarias, secundarias y cuerpo a cuerpo) enlaza 
   con `builder.py --clases`; la Action semanal no depende de la red para esto.
 - El Arsenal del juego muestra el daño **sin** la cuantización a 1/32 (que es del combate): las cifras del armador son
   las del Arsenal.
-- Mods de la misma familia (Serration y Amalgam Serration) pueden ir juntos: los datos no traen la familia.
+- **Mods que no van juntos** (27/10, cotejo con la wiki): el campo `Incompatible` de `Module:Mods/data` queda en
+  `games/warframe/tools/incompatibles.json` (también con `builder.py --clases`) y cada mod lleva `inc` con los slugs de
+  su archivo que no van con él (Split Chamber con Galvanized Chamber, Serration con Amalgam Serration, Point Strike con
+  Critical Delay). `modsClash` en `calc.ts` lo usa en el buscador y al leer la dirección; los prefijos Primed, Amalgam,
+  Archon, Umbral y Flawed quedan de respaldo.
+- **Una variante por nombre**: el export trae el mismo mod con rangos 3 (`/Beginner/`, los "Flawed" de la wiki), 5
+  (`/Intermediate/`) y 10 (`/Expert/`), más copias en `/Nemesis/` y `/Tau/`. Queda la que la wiki tiene con ese nombre
+  (por `uniqueName`); un test exige un nombre por archivo. En Rage, Sure Footed, Eagle Eye, Hawk Eye, Stabilizer, Steady
+  Hands, Charged Chamber, Reach, Energy Channel y Finishing Touch la wiki dice rango 5 pero su descripción es la del
+  rango 3 del export: manda el export.
+- **Cadencia de las armas de ráfaga**: el `fireRate` del export no es la del Arsenal (Kuva Hind 9,09 contra 5). Los
+  modos de disparo de `Module:Weapons/data` van en `clases.json`; si el export no coincide con ningún modo y el principal
+  es de ráfaga, vale el de la wiki (28 armas); si no se explica (Vinquibus, Zylok y Zylok Prime), queda el del export.
 
 ## Mediciones de la etapa 3 (27/10)
 
