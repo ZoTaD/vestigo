@@ -268,8 +268,10 @@ a.wf-res:focus-visible { outline: 2px solid var(--wf-acc); outline-offset: 2px; 
 @keyframes wf-twinkle { 50% { opacity: 0.15; } }
 .wf-ring { fill: none; stroke: rgba(160, 200, 240, 0.14); stroke-dasharray: 2 5; }
 .wf-ring.is-on { stroke: rgba(111, 211, 255, 0.55); stroke-dasharray: none; }
-.wf-sun-rays { fill: #ffcf6e; opacity: 0.55; transform-origin: 320px 320px; animation: wf-spin 90s linear infinite; }
-.wf-sun-corona { transform-origin: 320px 320px; animation: wf-pulse 6s ease-in-out infinite; }
+/* El sol: la granulación gira muy despacio, y el resplandor respira. */
+.wf-sun-surface { transform-origin: 320px 320px; animation: wf-spin 240s linear infinite; }
+.wf-sun-glow { transform-origin: 320px 320px; animation: wf-pulse 7s ease-in-out infinite; }
+.wf-sun-rim { fill: none; stroke: #ff9a4a; stroke-width: 1.2; opacity: 0.55; }
 @keyframes wf-spin { to { transform: rotate(360deg); } }
 @keyframes wf-pulse { 50% { transform: scale(1.08); opacity: 0.8; } }
 .wf-planet-link { cursor: pointer; }
@@ -289,7 +291,7 @@ a.wf-res:focus-visible { outline: 2px solid var(--wf-acc); outline-offset: 2px; 
 .wf-planet .wf-planet-n { fill: var(--wf-dim); font-size: 11px; letter-spacing: 0.05em; }
 .wf-orbit-dot { fill: var(--wf-acc); opacity: 0.75; }
 @media (prefers-reduced-motion: reduce) {
-  .wf-star.is-twinkle, .wf-sun-rays, .wf-sun-corona { animation: none; }
+  .wf-star.is-twinkle, .wf-sun-surface, .wf-sun-glow { animation: none; }
   .wf-planet-art { transition: none; }
 }
 .wf-star-outside { margin: 16px 0 10px; }
