@@ -42,6 +42,7 @@ const EN = {
     terraria: "Terraria",
     stardew: "Stardew Valley",
     stardewShort: "Stardew",
+    warframe: "Warframe",
     /** El botón de la barra que abre el menú de juegos, y el que lo cierra en el teléfono. */
     menu: "Games",
     close: "Close menu",
@@ -55,6 +56,7 @@ const EN = {
       rust: { raid: "Raiding", electricity: "Electricity", items: "Items" },
       terraria: { items: "Items", bosses: "Bosses", crafting: "Crafting" },
       stardew: { crops: "Crops", villagers: "Villagers", predict: "Predictor" },
+      warframe: { arsenal: "Arsenal", relics: "Relics", farming: "Where to farm" },
     },
     /** Las categorías del menú y de la portada (`gameGroups.ts`). */
     groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters" },
@@ -174,6 +176,10 @@ const EN = {
       stardewCta: "Open the menu",
       stardewItems: "items",
       stardewVillagers: "villagers",
+      warframeLive: "Open fissures, Baro Ki'Teer and the day's Sortie, then every Warframe and weapon with its parts, every relic with its drops, where to farm each resource and every mod.",
+      warframeCta: "Open the Arsenal",
+      warframeArsenal: "Warframes and weapons",
+      warframeMods: "mods",
       poe2Live: "Currency and unique prices for every league, the passive tree with build export, the item encyclopedia and every patch.",
       poe2Cta: "League prices",
       poe2Patches: "Patch notes",
@@ -265,6 +271,9 @@ const EN = {
     disclaimerReLogic:
       "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Re-Logic. Terraria and its " +
       "content belong to Re-Logic.",
+    disclaimerDigitalExtremes:
+      "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Digital Extremes. Warframe is a " +
+      "trademark of Digital Extremes Ltd., and its content belongs to Digital Extremes.",
     disclaimerConcernedApe:
       "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with ConcernedApe. Stardew Valley and its " +
       "content belong to ConcernedApe LLC.",
@@ -313,6 +322,7 @@ const ES: typeof EN = {
     terraria: "Terraria",
     stardew: "Stardew Valley",
     stardewShort: "Stardew",
+    warframe: "Warframe",
     menu: "Juegos",
     close: "Cerrar el menú",
     quick: {
@@ -324,6 +334,7 @@ const ES: typeof EN = {
       rust: { raid: "Raideo", electricity: "Electricidad", items: "Objetos" },
       terraria: { items: "Objetos", bosses: "Jefes", crafting: "Crafteo" },
       stardew: { crops: "Cultivos", villagers: "Aldeanos", predict: "Predictor" },
+      warframe: { arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear" },
     },
     groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
@@ -424,6 +435,10 @@ const ES: typeof EN = {
       stardewCta: "Abrir el menú",
       stardewItems: "objetos",
       stardewVillagers: "aldeanos",
+      warframeLive: "Las fisuras abiertas, Baro Ki'Teer y la incursión del día, y después cada Warframe y arma con sus partes, cada reliquia con sus recompensas, dónde farmear cada recurso y todos los mods.",
+      warframeCta: "Abrir el Arsenal",
+      warframeArsenal: "Warframes y armas",
+      warframeMods: "mods",
       poe2Live: "Los precios de monedas y únicos de cada liga, el árbol de pasivas con exportación de build, la enciclopedia de objetos y cada parche.",
       poe2Cta: "Precios de la liga",
       poe2Patches: "Parches",
@@ -509,6 +524,9 @@ const ES: typeof EN = {
     disclaimerReLogic:
       "Vestigo es un sitio de fans no oficial: Re-Logic no lo avala ni está afiliado a él. Terraria y su " +
       "contenido pertenecen a Re-Logic.",
+    disclaimerDigitalExtremes:
+      "Vestigo es un sitio de fans no oficial: Digital Extremes no lo avala ni está afiliado a él. Warframe es marca de " +
+      "Digital Extremes Ltd., y su contenido pertenece a Digital Extremes.",
     disclaimerConcernedApe:
       "Vestigo es un sitio de fans no oficial: ConcernedApe no lo avala ni está afiliado a él. Stardew Valley y su " +
       "contenido pertenecen a ConcernedApe LLC.",

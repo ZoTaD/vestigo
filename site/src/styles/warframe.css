@@ -1,0 +1,159 @@
+/*
+ * Warframe (2026-10-27): estética A "Arsenal". Plan: docs/superpowers/plans/2026-10-27-warframe-etapa-1.md.
+ *
+ * Azul noche con un resplandor radial, paneles de vidrio translúcido sin bordes de color (sólo un tinte), Rajdhani para
+ * títulos, rótulos y cifras y Barlow para el texto, con acento celeste. Las rarezas van en el color del texto. Los
+ * estilos salen de la maqueta A; las fuentes vienen de `@fontsource` y no de Google Fonts. Todo cuelga de `.wf` y de
+ * clases `wf-`.
+ */
+.wf {
+  --wf-ink: #e8eef4;
+  --wf-dim: #8fa3b5;
+  --wf-acc: #6fd3ff;
+  --wf-gold: #d8b46a;
+  --wf-glass: rgba(140, 180, 220, 0.07);
+  --wf-glass-2: rgba(140, 180, 220, 0.12);
+  --wf-deep: #0b131c;
+  --wf-head: "Rajdhani", "Barlow", system-ui, sans-serif;
+  --wf-text: "Barlow", system-ui, sans-serif;
+  position: relative;
+  min-height: 80vh;
+  padding-bottom: 56px;
+  color: var(--wf-ink);
+  font: 400 16px/1.45 var(--wf-text);
+  background: radial-gradient(1200px 600px at 25% 0%, #1d3346 0%, var(--wf-deep) 55%, #070b10 100%) no-repeat, #070b10;
+  overflow-x: clip;
+}
+.wf a { color: inherit; text-decoration: none; }
+/* `:where` deja el reinicio sin peso, así las clases `wf-` ponen sus márgenes sin pelear. */
+:where(.wf) :where(h1, h2, h3, p, ul, ol) { margin: 0; }
+:where(.wf) :where(ul, ol) { padding: 0; list-style: none; }
+
+/* --- El nombre, sin el logo del juego -------------------------------------------------------------------------------- */
+.wf-hero { padding: 26px 16px 4px; max-width: 1100px; margin: 0 auto; }
+.wf-brand { display: inline-block; font: 700 20px/1 var(--wf-head); letter-spacing: 0.18em; color: var(--wf-ink); }
+.wf-brand:hover { color: var(--wf-acc); }
+
+.wf-wrap { position: relative; max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+.wf-main { display: grid; gap: 16px; }
+
+/* --- Las pestañas: Rajdhani en mayúsculas, la activa con tinte ------------------------------------------------------- */
+.wf-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0 16px; padding: 4px; background: rgba(0, 0, 0, 0.35); border-radius: 3px; }
+.wf-tab {
+  white-space: nowrap;
+  font: 600 14px/1 var(--wf-head);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 9px 12px;
+  color: var(--wf-dim);
+  border-radius: 3px;
+}
+a.wf-tab:hover { color: var(--wf-ink); background: var(--wf-glass); }
+.wf-tab.is-on { color: var(--wf-ink); background: var(--wf-glass-2); }
+.wf-tab.is-soon { opacity: 0.5; cursor: default; }
+
+/* --- Piezas ----------------------------------------------------------------------------------------------------------- */
+.wf-panel { container-type: inline-size; min-width: 0; padding: 22px 24px 26px; background: var(--wf-glass); border-radius: 3px; }
+.wf-icon { flex: none; display: block; object-fit: contain; }
+.wf-icon.is-empty { background: var(--wf-glass); border-radius: 3px; }
+.wf-btn { font: 700 14px/1 var(--wf-head); letter-spacing: 0.08em; text-transform: uppercase; padding: 9px 12px; background: var(--wf-glass-2); color: var(--wf-ink); border: 0; border-radius: 3px; cursor: pointer; }
+.wf-btn:hover { background: rgba(140, 180, 220, 0.2); }
+.wf-dim { color: var(--wf-dim); }
+
+.wf-rarity { font: 700 1em/1 var(--wf-head); }
+.wf-rarity.is-common { color: #c9a26b; }
+.wf-rarity.is-uncommon { color: #d8dde3; }
+.wf-rarity.is-rare { color: #f2d36b; }
+.wf-rarity.is-legendary { color: #e8eef4; }
+
+.wf-kicker { font: 600 13px/1 var(--wf-head); letter-spacing: 0.28em; color: var(--wf-acc); text-transform: uppercase; }
+/* El título se achica con el ancho de su panel, nunca se corta una palabra (sin `overflow-wrap: anywhere`). */
+.wf-h1 { margin: 8px 0 6px; font: 700 64px/0.95 var(--wf-head); letter-spacing: 0.06em; text-transform: uppercase; text-wrap: balance; }
+@container (max-width: 760px) { .wf-h1 { font-size: 48px; } }
+@container (max-width: 520px) { .wf-h1 { font-size: 34px; } }
+@container (max-width: 340px) { .wf-h1 { font-size: 26px; } }
+.wf-h2 { font: 700 13px/1 var(--wf-head); letter-spacing: 0.28em; text-transform: uppercase; color: var(--wf-dim); margin-bottom: 14px; }
+.wf-h3 { font: 700 13px/1 var(--wf-head); letter-spacing: 0.2em; text-transform: uppercase; color: var(--wf-acc); margin-bottom: 8px; }
+.wf-lede { max-width: 64ch; margin-top: 8px; color: var(--wf-dim); font-size: 17px; }
+
+/* --- Portada: una tarjeta por pestaña --------------------------------------------------------------------------------- */
+.wf-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 20px; }
+.wf-card { display: flex; gap: 14px; align-items: center; height: 100%; padding: 12px 14px; border-radius: 3px; background: var(--wf-glass); }
+a.wf-card:hover { background: var(--wf-glass-2); }
+.wf-card > span:last-child { display: grid; gap: 3px; font-size: 14px; color: var(--wf-dim); }
+.wf-card b { font: 700 20px/1.1 var(--wf-head); letter-spacing: 0.06em; text-transform: uppercase; color: var(--wf-ink); }
+.wf-card em { font: 600 12px/1 var(--wf-head); font-style: normal; letter-spacing: 0.2em; text-transform: uppercase; color: var(--wf-acc); }
+.wf-card.is-soon { opacity: 0.65; }
+@container (max-width: 640px) { .wf-cards { grid-template-columns: minmax(0, 1fr); } }
+
+/* --- Portada: ahora mismo --------------------------------------------------------------------------------------------- */
+.wf-cycles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.wf-cycle { display: grid; gap: 2px; padding: 10px 12px; background: var(--wf-glass); border-radius: 3px; }
+.wf-cycle small { font: 600 11px/1 var(--wf-head); letter-spacing: 0.2em; text-transform: uppercase; color: var(--wf-dim); }
+.wf-cycle b { font: 700 28px/1.1 var(--wf-head); }
+.wf-cycle span { font: 600 13px/1.2 var(--wf-head); letter-spacing: 0.06em; color: var(--wf-dim); font-variant-numeric: tabular-nums; }
+.wf-cycle[data-state="night"] b, .wf-cycle[data-state="cold"] b, .wf-cycle[data-state="vome"] b { color: var(--wf-acc); }
+.wf-cycle[data-state="day"] b, .wf-cycle[data-state="warm"] b, .wf-cycle[data-state="fass"] b { color: var(--wf-gold); }
+@container (max-width: 520px) { .wf-cycles { grid-template-columns: minmax(0, 1fr); } }
+
+.wf-live-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+.wf-live-grid > section { min-width: 0; padding: 12px 14px 14px; background: var(--wf-glass); border-radius: 3px; }
+.wf-fissures { grid-column: 1 / -1; }
+.wf-baro p b { font: 700 18px/1.2 var(--wf-head); }
+.wf-sortie ol { display: grid; gap: 8px; margin-top: 6px; }
+.wf-sortie li { display: grid; gap: 1px; font-size: 14px; }
+.wf-sortie li b { font: 700 15px/1.2 var(--wf-head); letter-spacing: 0.04em; }
+.wf-sortie li small { color: var(--wf-dim); font-size: 13px; }
+.wf-fissures > ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; }
+.wf-fissures li { display: grid; gap: 3px; align-content: start; }
+.wf-fissures li > b { font: 700 16px/1 var(--wf-head); letter-spacing: 0.1em; text-transform: uppercase; }
+.wf-fissures li > b em { font-style: normal; color: var(--wf-acc); }
+.wf-fissures li > span { display: grid; gap: 1px; font-size: 13.5px; color: var(--wf-dim); }
+.wf-fissures .is-hard { color: var(--wf-gold); }
+.wf-about { margin-top: 14px; font-size: 13px; }
+@container (max-width: 640px) {
+  .wf-live-grid, .wf-fissures > ul { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- Teléfono: la barra es una fila que se desliza -------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .wf-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .wf-tabs::-webkit-scrollbar { display: none; }
+  .wf-panel { padding: 16px 14px 20px; }
+}
+
+/* --- La cáscara alrededor de la sección ------------------------------------------------------------------------------
+   La barra y el pie en el azul noche del Arsenal, con el celeste de acento; la sección ocupa todo el ancho y sin el
+   grano del sitio. */
+[data-theme="codex"][data-game="warframe"] {
+  --bg: #070b10;
+  --bg-2: #0b131c;
+  --bg-glow: #1d3346;
+  --surface: rgba(140, 180, 220, 0.07);
+  --surface-2: rgba(140, 180, 220, 0.12);
+  --surface-solid: #0b131c;
+  --text: #e8eef4;
+  --text-dim: #8fa3b5;
+  --text-faint: #6b7f91;
+  --accent: #6fd3ff;
+  --accent-lit: #a6e5ff;
+  --accent-dark: #2c8fbf;
+  --accent-rgb: 111, 211, 255;
+  --accent-2: #d8b46a;
+  --good: #7fd6a0;
+  --bad: #ff8a7a;
+  --line: rgba(140, 180, 220, 0.16);
+  --line-strong: rgba(140, 180, 220, 0.34);
+  --on-accent: #07131c;
+  background: #070b10;
+}
+[data-theme="codex"][data-game="warframe"] .grain { opacity: 0; }
+:root:has(.app[data-game="warframe"]) {
+  --sb-track: #070b10;
+  --sb-hatch: rgba(140, 180, 220, 0.06);
+  --sb-paper: #2c8fbf;
+  --sb-ink: #070b10;
+  --sb-hover: #6fd3ff;
+  background: #070b10;
+}
+.wf { margin-inline: calc(-1 * clamp(1rem, 4vw, 4rem)); }

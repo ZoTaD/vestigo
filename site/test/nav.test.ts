@@ -4,8 +4,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { existsSync } from "node:fs";
 import { LangContext } from "../src/i18n";
 import { parseRoute } from "../src/route";
-import Nav, { type View } from "../src/Nav";
-import { GAME_GROUPS, GAME_LOGOS } from "../src/gameGroups";
+import Nav, { type Game, type View } from "../src/Nav";
+import { GAME_GROUPS, GAME_LOGOS, logoFile } from "../src/gameGroups";
 
 const render = (lang: "en" | "es", path: string, active: View) =>
   renderToStaticMarkup(
@@ -27,9 +27,9 @@ describe("la barra: el menú de juegos", () => {
     const html = render("en", "/en", "home");
     const titles = [...html.matchAll(/<p class="top-menu-title">([^<]+)</g)].map((m) => m[1]);
     expect(titles).toEqual(["Survival &amp; sandbox", "ARPG", "Shooters"]);
-    const logos = [...html.matchAll(/url\(\/logos\/([a-z0-9]+)\.png\)/g)].map((m) => m[1]);
+    const logos = [...html.matchAll(/url\(\/logos\/([a-z0-9]+)\.(?:png|svg)\)/g)].map((m) => m[1]);
     expect(logos).toEqual(GAME_GROUPS.flatMap((g) => g.games));
-    for (const game of Object.keys(GAME_LOGOS)) expect(existsSync(`public/logos/${game}.png`)).toBe(true);
+    for (const game of Object.keys(GAME_LOGOS)) expect(existsSync(`public/logos/${logoFile(game as Game)}`)).toBe(true);
     // El nombre del juego queda escrito para el lector de pantalla y para Google.
     expect(html).toContain('<span class="visually-hidden">Diablo II: Resurrected</span>');
   });

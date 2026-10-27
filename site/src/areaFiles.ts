@@ -1,4 +1,4 @@
-import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, View } from "./route";
+import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, View, WfSection } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -19,6 +19,7 @@ export const AREA_FILES: Partial<Record<View, string>> = {
   rust: "src/Rust.tsx",
   terraria: "src/Terraria.tsx",
   stardew: "src/Stardew.tsx",
+  warframe: "src/Warframe.tsx",
   privacy: "src/Privacy.tsx",
   terms: "src/Terms.tsx",
 };
@@ -114,6 +115,12 @@ export const STARDEW_TAB_FILES: Partial<Record<StardewSection, string>> = {
   planner: "src/stardew/planner/StardewPlanner.tsx",
 };
 
+/**
+ * Las pestañas de Warframe que viajan en su propio chunk, igual que `TABS` en `Warframe.tsx` (2026-10-27; lo cuida
+ * `test/areas.test.ts`). Cada una suma acá su línea el día que tiene página. La portada viene con el área.
+ */
+export const WF_TAB_FILES: Partial<Record<WfSection, string>> = {};
+
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */
 export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
   items: "src/rust/items/RustItems.tsx",
@@ -156,6 +163,8 @@ export function filesFor(route: Route): string[] {
               ? TERRARIA_TAB_FILES[route.trSection ?? "home"]
               : route.view === "stardew"
                 ? STARDEW_TAB_FILES[route.sdSection ?? "home"]
-                : undefined;
+                : route.view === "warframe"
+                  ? WF_TAB_FILES[route.wfSection ?? "home"]
+                  : undefined;
   return tab ? [area, tab] : [area];
 }

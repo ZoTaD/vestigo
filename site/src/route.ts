@@ -32,7 +32,7 @@ export type DeadlockSection =
   | "patches"
   | "player"
   | "match";
-export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "privacy" | "terms";
+export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "warframe" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -350,6 +350,25 @@ export function registerStardewSlugs(slugs: Partial<Record<StardewTab, Record<st
   stardewSlugsEs.register(slugs);
 }
 
+/** Warframe (2026-10-27). Plan: docs/superpowers/plans/2026-10-27-warframe-etapa-1.md. */
+export type WfTab = "arsenal" | "relics" | "farming" | "mods";
+export type WfSection = "home" | WfTab;
+export const WF_SEGMENT = "warframe";
+export const WF_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods"];
+/** Las cuatro pestañas tienen fichas: su tercer segmento es el slug de una. */
+export const WF_DETAIL_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods"];
+/** Las pestañas con dirección fija; la barra apaga las que todavía no tienen su línea en `TABS` de `Warframe.tsx`. */
+export const WF_PUBLISHED: WfTab[] = ["arsenal", "relics", "farming", "mods"];
+export const WF_SECTION_ES: Record<WfTab, string> = { arsenal: "arsenal", relics: "reliquias", farming: "donde-farmear", mods: "mods" };
+const WF_SECTION_BY_ES = new Map(Object.entries(WF_SECTION_ES).map(([tab, es]) => [es, tab as WfTab]));
+
+/** Los slugs en español de las fichas de Warframe (arsenal, reliquias, recursos y mods). */
+const wfSlugsEs = new LocalSlugs<WfTab>();
+
+export function registerWfSlugs(slugs: Partial<Record<WfTab, Record<string, string>>>): void {
+  wfSlugsEs.register(slugs);
+}
+
 export interface Route {
   lang: Lang;
   view: View;
@@ -369,6 +388,8 @@ export interface Route {
   trSection?: TerrariaSection;
   /** Qué pestaña de Stardew Valley. Sin ella es la portada de la sección. */
   sdSection?: StardewSection;
+  /** Qué pestaña de Warframe. Sin ella es la portada de la sección. */
+  wfSection?: WfSection;
   /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
   detail?: string;
 }
@@ -404,6 +425,10 @@ const terrariaTab = (v: string | undefined): TerrariaTab | undefined =>
   isTerrariaTab(v) ? v : v ? TERRARIA_SECTION_BY_ES.get(v) : undefined;
 
 const isStardewTab = (v: string | undefined): v is StardewTab => !!v && (STARDEW_SECTIONS as string[]).includes(v);
+const isWfTab = (v: string | undefined): v is WfTab => !!v && (WF_SECTIONS as string[]).includes(v);
+/** La pestaña de Warframe de un segmento, escrito en cualquiera de los dos idiomas. */
+const wfTab = (v: string | undefined): WfTab | undefined => (isWfTab(v) ? v : v ? WF_SECTION_BY_ES.get(v) : undefined);
+
 /** La pestaña de Stardew Valley de un segmento, escrito en cualquiera de los dos idiomas. */
 const stardewTab = (v: string | undefined): StardewTab | undefined =>
   isStardewTab(v) ? v : v ? STARDEW_SECTION_BY_ES.get(v) : undefined;
@@ -496,6 +521,14 @@ export function parseRoute(pathname: string): Route {
     const slug = STARDEW_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
     const detail = slug ? stardewSlugsEs.toId(tab, slug) : undefined;
     return { ...base, view: "stardew", sdSection: tab, detail };
+  }
+
+  if (head === WF_SEGMENT) {
+    const tab = wfTab(rest[1]);
+    if (!tab || !WF_PUBLISHED.includes(tab)) return { ...base, view: "warframe", wfSection: "home" };
+    const slug = WF_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
+    const detail = slug ? wfSlugsEs.toId(tab, slug) : undefined;
+    return { ...base, view: "warframe", wfSection: tab, detail };
   }
 
   if (!head || !isView(head)) return { ...base, view: "home" };
@@ -595,6 +628,15 @@ export function routePath(route: Route): string {
     if (lang !== "es") return detail ? `${root}/${sec}/${detail}` : `${root}/${sec}`;
     const path = `${root}/${TERRARIA_SECTION_ES[sec]}`;
     return detail ? `${path}/${terrariaSlugsEs.toEs(sec, detail)}` : path;
+  }
+  if (view === "warframe") {
+    const sec = route.wfSection ?? "home";
+    const root = `/${lang}/${WF_SEGMENT}`;
+    if (sec === "home") return root;
+    const ficha = WF_DETAIL_SECTIONS.includes(sec) ? detail : undefined;
+    if (lang !== "es") return ficha ? `${root}/${sec}/${ficha}` : `${root}/${sec}`;
+    const path = `${root}/${WF_SECTION_ES[sec]}`;
+    return ficha ? `${path}/${wfSlugsEs.toEs(sec, ficha)}` : path;
   }
   if (view === "stardew") {
     const sec = route.sdSection ?? "home";

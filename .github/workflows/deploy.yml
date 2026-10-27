@@ -30,6 +30,7 @@ on:
       - games/rust/data/**
       - games/terraria/data/**
       - games/stardew/data/**
+      - games/warframe/data/**
       - netlify.toml
       - .github/workflows/deploy.yml
   # Los commits de las Actions de publicación los empuja el GITHUB_TOKEN, y

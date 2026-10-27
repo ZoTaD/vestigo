@@ -1,5 +1,5 @@
 import type { RustPage } from "./rust/sitemapPages";
-import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_SEGMENT, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -176,11 +176,13 @@ export interface SitemapData {
   tr?: TerrariaSitemapData;
   /** Stardew Valley. Opcional por lo mismo. */
   sd?: StardewSitemapData;
+  /** Warframe: sólo el sello de sus datos. Las pestañas y sus fichas suman acá lo suyo cuando tienen página (2026-10-27). */
+  wf?: { generatedAt?: string };
   /**
    * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
    * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
    */
-  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string };
+  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string };
 }
 
 /**
@@ -277,6 +279,7 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
   }
   if (game === TERRARIA_SEGMENT) return day(data.dates?.terraria);
   if (game === STARDEW_SEGMENT) return day(data.dates?.stardew);
+  if (game === WF_SEGMENT) return day(data.dates?.warframe);
   if (game === RUST_SEGMENT) {
     // Una ficha con fecha propia (un parche) va con la suya, y su pestaña con la más nueva de sus fichas o la de los
     // datos, la que sea más reciente. Lo demás, con la fecha de los datos de Rust.
@@ -432,6 +435,8 @@ export function sitemapPaths(data: SitemapData): string[] {
         for (const f of fichas[s as keyof typeof fichas]) paths.push(routePath({ ...base, lang, view: "stardew", sdSection: s, detail: f.slug }));
       }
     }
+    // Warframe (2026-10-27): por ahora sólo la portada; cada pestaña suma las suyas con su página (el resto muestra la portada).
+    if (data.wf) paths.push(routePath({ ...base, lang, view: "warframe", wfSection: "home" }));
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).
     if (data.rs) {
       paths.push(routePath({ ...base, lang, view: "rust", rsSection: "home" }));

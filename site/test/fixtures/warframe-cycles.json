@@ -1,0 +1,32 @@
+[
+  {
+    "fetchedAt": 1793105532501,
+    "now": 1793103303000,
+    "cetusState": "day",
+    "cetusEnds": 1793105460000,
+    "vallisState": "warm",
+    "vallisEnds": 1793103608000,
+    "cambionState": "fass",
+    "cambionEnds": 1793105460000
+  },
+  {
+    "fetchedAt": 1793105598132,
+    "now": 1793103303000,
+    "cetusState": "day",
+    "cetusEnds": 1793105460000,
+    "vallisState": "warm",
+    "vallisEnds": 1793103608000,
+    "cambionState": "fass",
+    "cambionEnds": 1793105460000
+  },
+  {
+    "fetchedAt": 1793105663237,
+    "now": 1793103303000,
+    "cetusState": "day",
+    "cetusEnds": 1793105460000,
+    "vallisState": "warm",
+    "vallisEnds": 1793103608000,
+    "cambionState": "fass",
+    "cambionEnds": 1793105460000
+  }
+]

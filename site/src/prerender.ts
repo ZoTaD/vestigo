@@ -1,5 +1,6 @@
 import { TERRARIA_COPY, type TerrariaHas } from "./terrariaCopy";
 import { STARDEW_COPY } from "./stardewCopy";
+import { WF_COPY } from "./warframeCopy";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
 import { SEO_COPY } from "./seoCopy";
@@ -177,6 +178,8 @@ export function metaFor(
     if (sec === "mines" && route.detail && detailName) return c.monsterSeo(detailName);
     return c.seo[sec];
   }
+  // Warframe (2026-10-27): la portada y, cuando tengan página, cada pestaña (una sin página muestra la portada).
+  if (route.view === "warframe") return WF_COPY[lang].seo[route.wfSection ?? "home"];
   // Lo que queda son la portada y las dos páginas legales.
   const page = seo[route.view];
   return { title: page.title(), description: page.description() };
@@ -460,6 +463,16 @@ export function jsonLdFor(
       });
     }
     return out;
+  }
+  // Warframe (2026-10-27): la portada es una aplicación web gratuita (los ciclos y lo que hay en vivo).
+  if (route.view === "warframe") {
+    const copy = WF_COPY[lang];
+    if ((route.wfSection ?? "home") !== "home") return [];
+    return [{
+      "@context": "https://schema.org", "@type": "WebApplication", name: copy.home.h1, description: page.description,
+      url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Warframe" },
+    }];
   }
   if (route.view !== "deadlock") return [];
 
