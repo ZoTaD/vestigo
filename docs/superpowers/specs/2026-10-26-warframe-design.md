@@ -123,6 +123,84 @@ warframe.market (etapa 3, revisar sus condiciones).
   decoraciones y objetos internos).
 - Imágenes propias en WebP en vez de enlazar el CDN de DE (no dependemos de ellos ni de su CORS/caché).
 
+## Etapa 2 (27/10): Mapa estelar, Maestría, Prime Vault y Baro
+
+Rama `claude/warframe-etapa-2-e2c579`. ZoTaD dijo "mandale nomás": las decisiones son mías y quedan anotadas acá.
+Maquetas del mapa en `warframe-mapa-maquetas` del launch.json (puerto 5237); servidor de la rama `vestigo-warframe-2`
+(puerto 5236).
+
+### Pestañas y direcciones
+
+| Pestaña | EN | ES | Fichas |
+|---|---|---|---|
+| Mapa estelar | `/star-chart` | `/mapa-estelar` | una por nodo (`/star-chart/hydron`) |
+| Maestría | `/mastery` | `/maestria` | no (cada fila enlaza a su ficha del Arsenal) |
+| Prime Vault | `/prime-vault` | `/prime-vault` | no (cada fila enlaza a su ficha del Arsenal) |
+| Baro Ki'Teer | `/baro` | `/baro` | no |
+
+Prime Vault y Baro van en **dos pestañas** y no en una: se buscan por separado ("prime vault", "baro ki'teer").
+
+### Mapa estelar
+
+- **Maqueta elegida: A "Órbitas"** con la tabla de la C abajo. El dibujo (SVG) pone los 12 planetas en sus órbitas
+  alrededor del sol, las lunas (Lua, Fobos, Deimos, Europa) al lado de su planeta y los lugares fuera de órbita (Vacío,
+  Fortaleza Kuva, Zariman, Duviri, Höllvania, Oscuridad Refractaria) en botones. Tocar un planeta filtra la tabla
+  (`?planet=sedna`); sin filtro la tabla trae los 269 nodos agrupados por planeta, con `LazyRows`.
+- **Datos**: los 269 nodos de `ExportRegions` (en y es) con planeta, tipo de misión, facción, niveles, maestría que
+  pide y si es sector oscuro (`nodeType` 4). El export da el tipo y la facción como índice: la tabla índice → nombre
+  está en `site_data.py` (`MISSION_TYPES`, `FACTIONS`), fijada cruzando con los tipos que escribe la tabla de drops
+  ("Mercury/Apollodorus (Survival)") y con `solNodes.json` de warframe-worldstate-data (MIT); un test falla si un nodo
+  trae un índice que la tabla no conoce. Los nombres en español de tipos y facciones salen de
+  warframe-worldstate-data (`data/es/missionTypes.json`, `factionsData.json`), copiados a `warframeCopy.ts`.
+- **Ficha de nodo**: planeta, tipo, facción, nivel, maestría, sector oscuro; las recompensas por rotación (A/B/C, o una
+  sola tabla) con su %, cada objeto enlazado a su ficha si la tiene (reliquias, mods, recursos, partes); y los recursos
+  del planeta (los de Dónde farmear cuya línea "Ubicación" nombra el planeta). 209 nodos tienen tabla; los otros 60
+  (Exterminio, Defensa móvil, Sabotaje sin cachés…) dicen "no tiene tabla de recompensas propia" y nada más.
+- **Cruce**: las fuentes `mission` de las fichas de la etapa 1 ("Sedna/Hydron (Defense)") enlazan a la ficha del nodo.
+- Fuera: los nodos de Railjack (Proxima), los eventos y Duviri sin fin, que no están en `ExportRegions`.
+
+### Maestría
+
+- Todo lo del Arsenal que da maestría: Warframes, armas primarias, secundarias, cuerpo a cuerpo, de Archwing y de
+  compañero, compañeros, Archwings y Necramechs. Afuera las armas exaltadas (no dan maestría) y lo que el Arsenal no
+  tiene (Amps, Zaw, Kitguns, K-drives, nodos e intrínsecos; quedan para más adelante).
+- Puntos: 200 por rango a Warframes, compañeros, Archwings y Necramechs; 100 por rango a las armas. Rango máximo 30, o
+  `maxLevelCap` del export (40 en Kuva, Tenet, Coda y Paracesis); los Necramechs llegan a 40 aunque el export no lo
+  diga (`MechSuits`). El rango de maestría que alcanza el total: 2.500·n² hasta MR 30 y 147.500 más por cada rango
+  Legendario.
+- Lo tildado se guarda en `localStorage` (`vestigo:wf:mastery`, la lista de slugs) con try/catch: sin almacenamiento
+  la página anda igual, sin recordar. Filtros por tipo, "ocultar lo tildado" y buscador; `LazyRows` (≈1.000 filas).
+
+### Prime Vault
+
+- Un objeto Prime está **disponible** si cada una de sus partes cae de al menos una reliquia que no está en el Vault;
+  **en el Vault** si ninguna parte cae de una reliquia abierta; **parcial** si algunas sí y otras no; y **sin
+  reliquias** si ninguna parte aparece en reliquias (los Prime de fundador). Es la regla de Vault de la etapa 1, nada
+  más: la Resurgencia de Varzia no está en la tabla oficial y no se nombra.
+- **Historial**: `site_data.py` compara con el `prime-vault/list.json` anterior y suma a `prime-vault/history.json` cada objeto
+  que cambió de estado, con la fecha. Arranca vacío el 27/10/2026 y crece con la Action semanal.
+
+### Baro Ki'Teer
+
+- **En vivo** desde `api.warframestat.us/pc/voidTrader?language=…`: si está, su inventario (nombre, ducados,
+  créditos) y cuándo se va; si no, dónde y cuándo llega. Si la API cae, el bloque se oculta.
+- **Historial: sí, en el repo.** `tools/baro.py` lee la API (en y es) y, si Baro está y la visita no está anotada,
+  la suma a `data/baro/history.json` (fecha, relé, objetos con ducados y créditos, y el enlace a su ficha si el nombre
+  inglés coincide con una del Arsenal o de Mods). Lo corre `publish-baro.yml` los sábados a las 14:00 UTC (Baro llega
+  los viernes a las 13:00 UTC y se queda 48 h): ~15 s cuando no hay nada, y commit directo a `main` cuando hay visita
+  nueva. Ese commit **no** dispara `deploy.yml`: lo empuja el `GITHUB_TOKEN` (que no dispara workflows) y
+  `publish-baro` **no** se suma a `workflow_run` (excepción a la regla 5 de CLAUDE.md, a propósito). Sale con la
+  próxima publicación, que en la práctica es al otro día (precios de PoE2). Así una visita cada dos semanas y las
+  corridas vacías de los otros sábados no gastan un build.
+  En la página la visita en curso viene de la API; el historial, del archivo.
+
+### Datos (lo que suma `site_data.py`)
+
+`star-chart/list.json` + `f/NN.json` + `es/NN.json` (como las otras fichas), `mastery/list.json`,
+`prime-vault/list.json`, `prime-vault/history.json`; `baro/history.json` lo escribe `baro.py`. Cada carpeta se llama
+como la pestaña (la clave de la pestaña es su segmento inglés, como en la etapa 1). Sin íconos nuevos: los planetas se dibujan y las filas
+usan los íconos del Arsenal que ya están.
+
 ## Mediciones de la etapa 1 (27/10)
 
 `npm run build` (tsc + vite build + check-links), uno detrás del otro, pico de RAM sumando los procesos node/esbuild nuevos:
