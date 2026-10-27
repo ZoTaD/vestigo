@@ -294,6 +294,65 @@ def _mods() -> list[dict]:
     return out
 
 
+def _una_variante(mods: list[dict], inc: builder.Incompatibles) -> tuple[list[dict], dict[str, str]]:
+    """Los mods sin las variantes que no se equipan, y `uniqueName` sacado -> el que queda con su nombre.
+
+    El export trae el mismo mod varias veces: `/Beginner/` (rango 3), `/Intermediate/` (5), `/Expert/` (10) y copias
+    sueltas (`/Nemesis/`, `/Tau/`). De cada nombre repetido quedan las que la wiki (`Module:Mods/data`) tiene por su
+    `uniqueName`, con el nombre de la wiki: las Beginner son los "Flawed …". Si ninguna está, quedan todas (como en
+    `builder._una_variante`). Los arcanos no están en esa tabla: de uno repetido quedan los que traen rangos (Arcane
+    Steadfast tiene cuatro `…Listener` vacíos)."""
+    def vale(m: dict) -> bool:
+        return m["unique"] in inc.por_unique if m["kind"] == "mod" else bool(m["ranks"])
+
+    def nombre_wiki(m: dict) -> str:
+        return inc.por_unique[m["unique"]][1] if m["kind"] == "mod" else m["name"][0]
+
+    por_nombre: dict = {}
+    for m in mods:
+        por_nombre.setdefault((m["kind"], m["name"][0]), []).append(m)
+    sacados, renombres = {}, {}
+    for (_, nombre), vs in por_nombre.items():
+        wiki = [m for m in vs if vale(m)]
+        if len(vs) < 2 or not wiki:
+            continue
+        base = next((m for m in wiki if nombre_wiki(m) == nombre), wiki[0])
+        for m in vs:
+            if m not in wiki:
+                sacados[m["unique"]] = base["unique"]
+            elif (en := nombre_wiki(m)) != nombre:
+                es = f"{m['name'][1]} (defectuoso)" if en == f"Flawed {nombre}" else m["name"][1]
+                renombres[m["unique"]] = [en, es]
+    out = []
+    for m in mods:
+        if m["unique"] in sacados:
+            continue
+        out.append({**m, "name": renombres[m["unique"]]} if m["unique"] in renombres else m)
+    return out, sacados
+
+
+def _movidos(todos: list[dict], mods: list[dict], sacados: dict[str, str], antes: dict | None) -> dict:
+    """`{"en": {slug viejo: nuevo}, "es": {…}}` de las fichas de mods que cambiaron de dirección: las variantes sacadas
+    (van a la que queda con su nombre) y las que cambiaron de slug al renombrarse o al liberarse el pelado. Los slugs
+    viejos salen de repartir como antes (todas las variantes, con el nombre del export); se suman a los de corridas
+    anteriores (`antes`) mientras su destino exista y el viejo no vuelva a ser una ficha."""
+    viejos = [dict(m) for m in todos]
+    _slugs(viejos)
+    nuevo = {m["unique"]: m for m in mods}
+    out: dict = {"en": {}, "es": {}}
+    for idioma, campo in (("en", "slug"), ("es", "slugEs")):
+        vivos = {m[campo] for m in mods}
+        for viejo, dest in (antes or {}).get(idioma, {}).items():
+            if viejo not in vivos and dest in vivos:
+                out[idioma][viejo] = dest
+        for m in viejos:
+            dest = nuevo[sacados.get(m["unique"], m["unique"])][campo]
+            if m[campo] != dest and m[campo] not in vivos:
+                out[idioma][m[campo]] = dest
+        out[idioma] = dict(sorted(out[idioma].items()))
+    return out
+
+
 # ---- referencias -------------------------------------------------------------------------------------------
 
 class _Refs:
@@ -654,8 +713,10 @@ def build(write: bool = False) -> dict:
         r["planets"] = relations.resource_planets(r["unique"])
 
     # --- Mods y arcanos
-    mods = _mods()
+    todos = _mods()
+    mods, sacados = _una_variante(todos, builder.Incompatibles())
     _slugs(mods)
+    movidos = _movidos(todos, mods, sacados, _leer_dato("mods/moved.json"))
     for m in mods:
         m["img"] = iconos.de(m["unique"], m["kind"])
 
@@ -712,7 +773,10 @@ def build(write: bool = False) -> dict:
     historial = vault_history(_leer_dato("prime-vault/list.json"), lists["prime-vault"],
                               _leer_dato("prime-vault/history.json") or [], date.today().isoformat())
     out = {"lists": lists, "fichas": fichas, "es": es, "meta": meta, "icons": iconos.icons, "notas": notas,
-           "vaultHistory": historial, "builder": builder.build_data(items, mods)}
+           "vaultHistory": historial, "modsMoved": movidos,
+           # El armador sigue sin los "Flawed" (se equipan, pero son el mismo mod con menos rangos). Maglev y Quick
+           # Thinking sólo están en el export como Beginner: ésas no se renombran y quedan.
+           "builder": builder.build_data(items, [m for m in mods if not m["name"][0].startswith("Flawed ")])}
     if write:
         escribir(archivos(out))
     return out
@@ -722,7 +786,8 @@ def build(write: bool = False) -> dict:
 
 def archivos(out: dict) -> dict:
     """Ruta (relativa a `data/`) -> contenido de todo lo que se escribe."""
-    files = {"meta.json": out["meta"], "prime-vault/history.json": out["vaultHistory"], **out["builder"]}
+    files = {"meta.json": out["meta"], "prime-vault/history.json": out["vaultHistory"], "mods/moved.json": out["modsMoved"],
+             **out["builder"]}
     for tab in SIN_FICHAS:
         files[f"{tab}/list.json"] = out["lists"][tab]
     for tab in TABS:

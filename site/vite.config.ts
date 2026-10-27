@@ -301,7 +301,7 @@ function readSitemapData(): { data: OgData } {
       farming: read("farming/list.json"),
       mods: read("mods/list.json"),
       "star-chart": read("star-chart/list.json"),
-    });
+    }, read("mods/moved.json"));
   } catch (e) {
     console.warn(`[warframe] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     wf = undefined;
