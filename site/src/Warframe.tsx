@@ -9,7 +9,7 @@
 import { Suspense, useEffect, useRef } from "react";
 import { lazyWithPreload } from "./lazyWithPreload";
 import RouteLink from "./RouteLink";
-import type { Route, WfSection, WfTab } from "./route";
+import { parseRoute, routePath, type Route, type WfSection, type WfTab } from "./route";
 import { useWfCopy, WF_TABS } from "./warframeCopy";
 import WarframeHome from "./warframe/WarframeHome";
 import { WfLoading } from "./warframe/ui";
@@ -23,16 +23,31 @@ type Nav = (route: Route) => void;
 type TabProps = { route: Route; navigate: Nav };
 type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
+const WfArsenal = lazyWithPreload(() => import("./warframe/arsenal/WfArsenal"));
+const WfRelics = lazyWithPreload(() => import("./warframe/relics/WfRelics"));
+
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `WF_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `WF_TAB_FILES`.
 const TABS: Partial<Record<WfSection, LazyTab>> = {
+  arsenal: WfArsenal,
+  relics: WfRelics,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
 const hasPage = (tab: WfSection): boolean => tab === "home" || !!TABS[tab];
 
 /** Los datos que una pestaña baja aparte de su chunk, pedidos junto con él. La portada no baja ninguno: los conteos viajan con el área. */
-const TAB_DATA: Partial<Record<WfSection, (route: Route) => Promise<unknown>>> = {};
+const TAB_DATA: Partial<Record<WfSection, (route: Route) => Promise<unknown>>> = {
+  arsenal: (route) => preloadFichas(route),
+  relics: (route) => preloadFichas(route),
+};
+
+/**
+ * Las pestañas con fichas bajan la ficha (o la lista) de la dirección. En frío, `main.tsx` lee la dirección antes de que
+ * se conozca el slug en español de la ficha: primero se anota, y la ficha se busca con la dirección leída de nuevo.
+ */
+const preloadFichas = (route: Route): Promise<void> =>
+  import("./warframe/data").then((m) => m.preloadRoute(route).then(() => m.preloadRoute(parseRoute(routePath(route)))));
 
 /** Baja el chunk de la pestaña de una ruta de Warframe, y sus datos. */
 export const preloadTab = (route: Route): Promise<void> => {

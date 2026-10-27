@@ -23,6 +23,10 @@ export type WfDamage =
 /** Las eras de reliquia (`ERAS` en `site_data.py`) y Omnia, que sólo aparece en las fisuras en vivo. */
 export type WfEra = "Lith" | "Meso" | "Neo" | "Axi" | "Requiem" | "Vanguard" | "Omnia";
 
+/** Los tipos del Arsenal (`kind` en `site_data.py`), en el orden de los chips. */
+export type WfKind = "warframe" | "primary" | "secondary" | "melee" | "archwing" | "companion" | "exalted";
+export const WF_KINDS: WfKind[] = ["warframe", "primary", "secondary", "melee", "archwing", "companion", "exalted"];
+
 type Seo = { title: string; description: string };
 
 export interface WfCopy {
@@ -59,8 +63,72 @@ export interface WfCopy {
     };
     about: string;
   };
-  arsenal: { h1: string; lede: (n: string) => string };
-  relics: { h1: string; lede: (n: string) => string };
+  arsenal: {
+    h1: string;
+    lede: (n: string) => string;
+    search: string;
+    searchPlaceholder: string;
+    kind: string;
+    all: string;
+    kinds: Record<WfKind, string>;
+    prime: string;
+    count: (n: string) => string;
+    none: string;
+    missing: string;
+    /** El rango de maestría que pide. */
+    mastery: (n: number) => string;
+    /** El texto del plano principal de un objeto: "X Blueprint" / "Plano de X". */
+    blueprint: (name: string) => string;
+    stats: string;
+    damage: string;
+    abilities: string;
+    passive: string;
+    parts: string;
+    recipe: string;
+    credits: string;
+    time: string;
+    ingredients: string;
+    stat: Record<"health" | "shield" | "armor" | "energy" | "sprint" | "total" | "crit" | "critMult" | "status" | "fireRate" | "magazine" | "reload" | "multishot" | "trigger", string>;
+    /** Cómo se dispara; lo que no está acá se muestra tal cual. */
+    trigger: Record<string, string>;
+    /** Unidades de tiempo: días, horas, minutos y segundos. */
+    units: { d: string; h: string; min: string; s: string };
+  };
+  relics: {
+    h1: string;
+    lede: (n: string) => string;
+    search: string;
+    searchPlaceholder: string;
+    era: string;
+    all: string;
+    /** El chip que deja sólo las que todavía caen en misiones. */
+    noVault: string;
+    count: (n: string) => string;
+    none: string;
+    missing: string;
+    /** El título de una reliquia: "Lith A1 Relic" / "Reliquia Lith A1". */
+    relicOf: (name: string) => string;
+    rewards: string;
+    reward: string;
+    /** Los cuatro refinamientos, en el orden de `chances`. */
+    refinement: [string, string, string, string];
+  };
+  /** Las tablas de "dónde cae" que comparten Arsenal, Reliquias y, después, Dónde farmear y Mods. */
+  sources: {
+    heading: string;
+    relic: string;
+    rarity: string;
+    mission: string;
+    where: string;
+    rot: string;
+    chance: string;
+    bounty: string;
+    tier: string;
+    stage: string;
+    other: string;
+    enemy: string;
+    eff: string;
+  };
   farming: { h1: string; lede: (n: string) => string };
   mods: { h1: string; lede: (n: string) => string };
   rarity: Record<WfRarity, string>;
@@ -120,8 +188,64 @@ const EN: WfCopy = {
     },
     about: "Warframe is a trademark of Digital Extremes. Vestigo is an unofficial fan site.",
   },
-  arsenal: { h1: "Warframe Arsenal", lede: (n) => `All ${n} Warframes and weapons with their stats, recipes and parts.` },
-  relics: { h1: "Warframe relics", lede: (n) => `All ${n} relics with their rewards and where to get them.` },
+  arsenal: {
+    h1: "Warframe Arsenal",
+    lede: (n) => `All ${n} Warframes and weapons with their stats, recipes and parts.`,
+    search: "Search",
+    searchPlaceholder: "Name…",
+    kind: "Type",
+    all: "All",
+    kinds: { warframe: "Warframes", primary: "Primary", secondary: "Secondary", melee: "Melee", archwing: "Archwing", companion: "Companions", exalted: "Exalted" },
+    prime: "Prime",
+    count: (n) => `${n} shown`,
+    none: "Nothing matches.",
+    missing: "That page doesn't exist. Here is the full list.",
+    mastery: (n) => `Mastery rank ${n}`,
+    blueprint: (name) => `${name} Blueprint`,
+    stats: "Stats",
+    damage: "Damage",
+    abilities: "Abilities",
+    passive: "Passive",
+    parts: "Parts",
+    recipe: "Recipe",
+    credits: "Credits",
+    time: "Build time",
+    ingredients: "Ingredients",
+    stat: { health: "Health", shield: "Shield", armor: "Armor", energy: "Energy", sprint: "Sprint speed", total: "Total damage", crit: "Critical chance", critMult: "Critical multiplier", status: "Status chance", fireRate: "Fire rate", magazine: "Magazine", reload: "Reload", multishot: "Multishot", trigger: "Trigger" },
+    trigger: { AUTO: "Auto", SEMI: "Semi-auto", CHARGE: "Charge", HELD: "Held", BURST: "Burst", ACTIVE: "Active", DUPLEX: "Duplex" },
+    units: { d: "d", h: "h", min: "min", s: "s" },
+  },
+  relics: {
+    h1: "Warframe relics",
+    lede: (n) => `All ${n} relics with their rewards and where to get them.`,
+    search: "Search",
+    searchPlaceholder: "Relic, like Lith A1…",
+    era: "Era",
+    all: "All",
+    noVault: "Not in the Vault",
+    count: (n) => `${n} shown`,
+    none: "Nothing matches.",
+    missing: "That page doesn't exist. Here is the full list.",
+    relicOf: (name) => `${name} Relic`,
+    rewards: "Rewards",
+    reward: "Reward",
+    refinement: ["Intact", "Exceptional", "Flawless", "Radiant"],
+  },
+  sources: {
+    heading: "Where it drops",
+    relic: "Relics",
+    rarity: "Rarity",
+    mission: "Missions",
+    where: "Where",
+    rot: "Rotation",
+    chance: "Chance",
+    bounty: "Bounties",
+    tier: "Bounty",
+    stage: "Stage",
+    other: "Other",
+    enemy: "Enemies",
+    eff: "Effective chance",
+  },
   farming: { h1: "Where to farm in Warframe", lede: (n) => `All ${n} resources with the missions where they drop.` },
   mods: { h1: "Warframe mods and arcanes", lede: (n) => `All ${n} mods and arcanes with their stats and drops.` },
   rarity: { Common: "Common", Uncommon: "Uncommon", Rare: "Rare", Legendary: "Legendary" },
@@ -182,8 +306,64 @@ const ES: WfCopy = {
     },
     about: "Warframe es marca de Digital Extremes. Vestigo es un sitio de fans no oficial.",
   },
-  arsenal: { h1: "Arsenal de Warframe", lede: (n) => `Los ${n} Warframes y armas con sus estadísticas, recetas y partes.` },
-  relics: { h1: "Reliquias de Warframe", lede: (n) => `Las ${n} reliquias con sus recompensas y dónde conseguirlas.` },
+  arsenal: {
+    h1: "Arsenal de Warframe",
+    lede: (n) => `Los ${n} Warframes y armas con sus estadísticas, recetas y partes.`,
+    search: "Buscar",
+    searchPlaceholder: "Nombre…",
+    kind: "Tipo",
+    all: "Todos",
+    kinds: { warframe: "Warframes", primary: "Primarias", secondary: "Secundarias", melee: "Cuerpo a cuerpo", archwing: "Archwing", companion: "Compañeros", exalted: "Exaltadas" },
+    prime: "Prime",
+    count: (n) => `${n} a la vista`,
+    none: "No hay nada que coincida.",
+    missing: "Esa página no existe. Acá está la lista completa.",
+    mastery: (n) => `Rango de maestría ${n}`,
+    blueprint: (name) => `Plano de ${name}`,
+    stats: "Estadísticas",
+    damage: "Daño",
+    abilities: "Habilidades",
+    passive: "Pasiva",
+    parts: "Partes",
+    recipe: "Receta",
+    credits: "Créditos",
+    time: "Tiempo de fabricación",
+    ingredients: "Ingredientes",
+    stat: { health: "Salud", shield: "Escudo", armor: "Armadura", energy: "Energía", sprint: "Velocidad de carrera", total: "Daño total", crit: "Prob. de crítico", critMult: "Multiplicador crítico", status: "Prob. de estado", fireRate: "Cadencia", magazine: "Cargador", reload: "Recarga", multishot: "Multidisparo", trigger: "Disparo" },
+    trigger: { AUTO: "Automático", SEMI: "Semiautomático", CHARGE: "Carga", HELD: "Mantenido", BURST: "Ráfaga", ACTIVE: "Activo", DUPLEX: "Dúplex" },
+    units: { d: "d", h: "h", min: "min", s: "s" },
+  },
+  relics: {
+    h1: "Reliquias de Warframe",
+    lede: (n) => `Las ${n} reliquias con sus recompensas y dónde conseguirlas.`,
+    search: "Buscar",
+    searchPlaceholder: "Reliquia, como Lith A1…",
+    era: "Era",
+    all: "Todas",
+    noVault: "Fuera del Vault",
+    count: (n) => `${n} a la vista`,
+    none: "No hay nada que coincida.",
+    missing: "Esa página no existe. Acá está la lista completa.",
+    relicOf: (name) => `Reliquia ${name}`,
+    rewards: "Recompensas",
+    reward: "Recompensa",
+    refinement: ["Intacta", "Excepcional", "Impecable", "Radiante"],
+  },
+  sources: {
+    heading: "Dónde cae",
+    relic: "Reliquias",
+    rarity: "Rareza",
+    mission: "Misiones",
+    where: "Dónde",
+    rot: "Rotación",
+    chance: "Probabilidad",
+    bounty: "Recompensas de bounty",
+    tier: "Bounty",
+    stage: "Etapa",
+    other: "Otros",
+    enemy: "Enemigos",
+    eff: "Prob. efectiva",
+  },
   farming: { h1: "Dónde farmear en Warframe", lede: (n) => `Los ${n} recursos con las misiones donde caen.` },
   mods: { h1: "Mods y arcanos de Warframe", lede: (n) => `Los ${n} mods y arcanos con sus estadísticas y drops.` },
   rarity: { Common: "Común", Uncommon: "Poco común", Rare: "Rara", Legendary: "Legendaria" },
