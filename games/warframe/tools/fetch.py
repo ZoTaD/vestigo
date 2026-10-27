@@ -6,6 +6,7 @@ Baja el export oficial de Warframe (Public Export) y la tabla de drops a `games/
 
 Lo bajado es dato no confiable: se guarda y se lee como JSON/texto, nunca se ejecuta.
 """
+import hashlib
 import json
 import lzma
 import struct
@@ -19,7 +20,7 @@ RAW = JUEGO / "raw"
 META = JUEGO / "data" / "meta.json"
 IDIOMAS = ("en", "es")
 URL_INDICE = "https://origin.warframe.com/PublicExport/index_{lang}.txt.lzma"
-URL_EXPORT = "http://content.warframe.com/PublicExport/Manifest/{linea}"
+URL_EXPORT = "https://content.warframe.com/PublicExport/Manifest/{linea}"
 URL_DROPS = "https://www.warframe.com/droptables"
 
 
@@ -79,14 +80,19 @@ def indices(guardar: bool) -> dict:
     return out
 
 
-def cambio(idx: dict) -> bool:
-    previo = json.loads(META.read_text(encoding="utf-8")).get("index") if META.exists() else None
-    return previo != idx
+def hash_drops(datos: bytes) -> str:
+    return hashlib.sha256(datos).hexdigest()
+
+
+def cambio(idx: dict, drops: bytes) -> bool:
+    """True si cambió el índice del export o la tabla de drops (que no está en el índice)."""
+    meta = json.loads(META.read_text(encoding="utf-8")) if META.exists() else {}
+    return meta.get("index") != idx or meta.get("dropsHash") != hash_drops(drops)
 
 
 def main() -> int:
     if "--check" in sys.argv:
-        print("cambió" if cambio(indices(False)) else "igual")
+        print("cambió" if cambio(indices(False), get(URL_DROPS)) else "igual")
         return 0
     RAW.mkdir(exist_ok=True)
     idx = indices(True)
