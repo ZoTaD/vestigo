@@ -699,6 +699,8 @@ export interface BuildMod {
   fx: [StatKey, number[]][];
   /** Las líneas del mod al rango máximo, para mostrar. */
   text: Pair[];
+  /** Slugs de los mods del mismo archivo que no van con este (campo `Incompatible` de Module:Mods/data). */
+  inc?: string[];
 }
 
 const builderItems = once<BuildItem[]>(() => import("@warframe/builder/items.json").then((m) => ({ default: m.default.items as BuildItem[] })));

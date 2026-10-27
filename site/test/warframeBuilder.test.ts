@@ -7,7 +7,7 @@ import arsenalList from "../../games/warframe/data/arsenal/list.json";
 import { inBuilder, NOT_IN_BUILDER, type BuildItem, type BuildMod, type Kind, type Pol, type StatKey } from "../src/warframe/data";
 import { abilityCost, bonus, capacity, channelDrain, combatDamage, emptyBuild, formas, frameStats, modDrain, modFits, weaponStats, type Slot, type SlotId } from "../src/warframe/builder/calc";
 import { decodeBuild, encodeBuild } from "../src/warframe/builder/buildUrl";
-import { modFamily } from "../src/warframe/builder/calc";
+import { modFamily, modsClash } from "../src/warframe/builder/calc";
 import { delta, deltaDigits, weaponRows } from "../src/warframe/builder/sheet";
 
 const items = itemsJson.items as BuildItem[];
@@ -296,6 +296,28 @@ describe("armador de Warframe: la build en la dirección", () => {
     expect(b.slots.find((x) => x.id === 3)!.mod!.slug).toBe("primed-shred");
     const f = decodeBuild("i=excalibur&m=0.archon-flow.10,1.flow.5,2.umbral-vitality.10,3.vitality.10", items, todos)!;
     expect(f.slots.filter((x) => x.mod).map((x) => x.mod!.slug)).toEqual(["archon-flow", "umbral-vitality"]);
+  });
+
+  it("incompatibles de la wiki: Galvanized Chamber no entra con Split Chamber, ni Amalgam con Serration", () => {
+    const b = decodeBuild("i=braton&m=0.split-chamber.5,1.galvanized-chamber.10,2.serration.10,3.amalgam-serration.10", items, todos)!;
+    expect(b.slots.filter((x) => x.mod).map((x) => x.mod!.slug)).toEqual(["split-chamber", "serration"]);
+    const g = decodeBuild("i=braton&m=0.galvanized-chamber.10,1.split-chamber.5", items, todos)!;
+    expect(g.slots.filter((x) => x.mod).map((x) => x.mod!.slug)).toEqual(["galvanized-chamber"]);
+    const por = (slug: string) => modsPrimary.find((m) => m.slug === slug)!;
+    expect(modsClash(por("split-chamber"), por("galvanized-chamber"))).toBe(true);
+    expect(modsClash(por("galvanized-chamber"), por("split-chamber"))).toBe(true);
+    expect(modsClash(por("serration"), por("amalgam-serration"))).toBe(true);
+    expect(modsClash(por("point-strike"), por("critical-delay"))).toBe(true);
+    expect(modsClash(por("serration"), por("split-chamber"))).toBe(false);
+  });
+
+  it("un solo mod por nombre en cada archivo (sin las variantes de rango 3, 5 y 10 del export)", () => {
+    for (const ms of [modsPrimary, modsWarframe, modsMelee]) {
+      const nombres = ms.map((m) => m.name[0]);
+      expect(nombres.filter((n, i) => nombres.indexOf(n) !== i)).toEqual([]);
+    }
+    expect(modsPrimary.filter((m) => m.name[0] === "Serration").map((m) => [m.max, m.drain])).toEqual([[10, 4]]);
+    expect(modsPrimary.filter((m) => m.name[0] === "Hellfire").map((m) => m.max)).toEqual([5]);
   });
 
   it("la clave de familia saca Primed, Amalgam, Archon, Umbral y Flawed, pero no Galvanized", () => {

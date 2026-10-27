@@ -8,6 +8,48 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import builder  # noqa: E402
 import site_data  # noqa: E402
 
+# Recortes de Module:Weapons/data y Module:Mods/data (tabulaciones como en la wiki).
+HIND_LUA = """return {
+\t["Kuva Hind"] = {
+\t\tAttacks = {
+\t\t\t{
+\t\t\t\tBurstCount = 5,
+\t\t\t\tFireRate = 5,
+\t\t\t},
+\t\t\t{
+\t\t\t\tFireRate = 2.5,
+\t\t\t}
+\t\t},
+\t\tClass = "Rifle",
+\t\tName = "Kuva Hind"
+\t}
+}"""
+MODS_LUA = """local modData = {
+\tDefaultUpgrades = {
+\t\tX = {
+\t\t\tInternalName = "/a",
+\t\t\tName = "X"
+\t\t}
+\t},
+\tMods = {
+\t\t["Split Chamber"] = {
+\t\t\tBaseDrain = 4,
+\t\t\tIncompatible = { "Flawed Split Chamber", "Galvanized Chamber" },
+\t\t\tInternalName = "/Lotus/Upgrades/Mods/Rifle/WeaponFireIterationsMod",
+\t\t\tMaxRank = 5,
+\t\t\tName = "Split Chamber"
+\t\t},
+\t\tSerration = {
+\t\t\tInternalName = "/s",
+\t\t\tMaxRank = 10,
+\t\t\tName = "Serration"
+\t\t},
+\t\tSinObjeto = {
+\t\t\tName = "Y"
+\t\t}
+\t}
+}"""
+
 
 class TestBuilder(unittest.TestCase):
     @classmethod
@@ -204,8 +246,68 @@ class TestBuilder(unittest.TestCase):
                '\t\tInternalName = "/Lotus/Weapons/Tenno/Rifle/Rifle",\n\t\tName = "Braton"\n\t},\n'
                '\t["Dual Toxocyst"] = {\n\t\tClass = "Dual Pistols",\n\t\tName = "Dual Toxocyst"\n\t}\n}')
         self.assertEqual(builder.parse_wiki(lua), [
-            ["/Lotus/Weapons/Tenno/Rifle/Rifle", "Braton", "Rifle", "Braton", ["ASSAULT_AMMO"]],
-            ["", "Dual Toxocyst", "Dual Pistols", "", []]])
+            ["/Lotus/Weapons/Tenno/Rifle/Rifle", "Braton", "Rifle", "Braton", ["ASSAULT_AMMO"], [[None, 0]]],
+            ["", "Dual Toxocyst", "Dual Pistols", "", [], []]])
+
+    def test_parse_wiki_modos(self):
+        lua = HIND_LUA
+        self.assertEqual(builder.parse_wiki(lua)[0][5], [[5, 5], [2.5, 0]])
+
+    def test_cadencia(self):
+        """Ráfaga: vale la de la wiki; si el export coincide con algún modo o no se explica, la del export."""
+        self.assertEqual(builder.cadencia(9.09091, [[5, 5], [2.5, 0], [10, 0]]), (5, "ráfaga"))
+        self.assertEqual(builder.cadencia(4.248366, [[4.33, 2], [4.33, 2]]), (4.33, "ráfaga"))
+        self.assertEqual(builder.cadencia(2.166667, [[9.33, 0], [2.17, 0]]), (2.166667, "igual"))
+        self.assertEqual(builder.cadencia(2.666667, [[2.7, 0]]), (2.666667, "igual"))
+        self.assertEqual(builder.cadencia(1.5, [[1.8, 0], [1, 0]]), (1.5, "sin explicar"))
+        self.assertEqual(builder.cadencia(1, []), (1, "sin wiki"))
+        self.assertEqual(self.items["kuva-hind"]["w"]["rate"], 5)
+        self.assertEqual(self.items["akarius"]["w"]["rate"], 4.33)
+        self.assertEqual(self.items["braton"]["w"]["rate"], 8.75)
+
+    def test_parse_mods_wiki(self):
+        lua = MODS_LUA
+        self.assertEqual(builder.parse_mods_wiki(lua), [
+            ["/Lotus/Upgrades/Mods/Rifle/WeaponFireIterationsMod", "Split Chamber", 5,
+             ["Flawed Split Chamber", "Galvanized Chamber"]],
+            ["/s", "Serration", 10, []]])
+
+    def test_una_variante_por_nombre(self):
+        """El export trae Serration de rango 3 (Flawed), 5 (Intermediate) y 10: queda la de la wiki. Dos con el mismo
+        nombre sólo si la wiki tiene los dos."""
+        inc = builder.Incompatibles()
+        wiki_nombres: dict = {}
+        for u, m in inc.por_unique.items():
+            wiki_nombres.setdefault(m[1], set()).add(u)
+        for kind, ms in self.mods.items():
+            vistos: dict = {}
+            for m in ms:
+                vistos.setdefault(m["name"][0], []).append(m)
+            for nombre, vs in vistos.items():
+                if len(vs) > 1:
+                    self.assertGreaterEqual(len(wiki_nombres.get(nombre, ())), len(vs), (kind, nombre))
+        serr = [m for m in self.mods["primary"] if m["name"][0] == "Serration"]
+        self.assertEqual([(m["slug"], m["max"], m["drain"]) for m in serr],
+                         [(self._slug_mod("/Lotus/Upgrades/Mods/Rifle/WeaponDamageAmountMod"), 10, 4)])
+        for nombre, maximo in (("Hellfire", 5), ("Point Strike", 5), ("Vital Sense", 5), ("Split Chamber", 5),
+                               ("Pressure Point", 5), ("Barrel Diffusion", 5)):
+            vs = [m for ms in self.mods.values() for m in ms if m["name"][0] == nombre]
+            self.assertEqual([m["max"] for m in vs], [maximo], nombre)
+
+    def test_incompatibles(self):
+        p = {m["name"][0]: m for m in self.mods["primary"]}
+        self.assertIn(p["Galvanized Chamber"]["slug"], p["Split Chamber"]["inc"])
+        self.assertIn(p["Split Chamber"]["slug"], p["Galvanized Chamber"]["inc"])
+        self.assertIn(p["Amalgam Serration"]["slug"], p["Serration"]["inc"])
+        self.assertIn(p["Critical Delay"]["slug"], p["Point Strike"]["inc"])
+        slugs = {k: {m["slug"] for m in ms} for k, ms in self.mods.items()}
+        for k, ms in self.mods.items():  # sólo slugs del mismo archivo, nunca el propio, y en los dos sentidos
+            por_slug = {m["slug"]: m for m in ms}
+            for m in ms:
+                for o in m.get("inc", []):
+                    self.assertIn(o, slugs[k])
+                    self.assertNotEqual(o, m["slug"])
+                    self.assertIn(m["slug"], por_slug[o]["inc"])
 
     def test_compat(self):
         for i in self.items.values():

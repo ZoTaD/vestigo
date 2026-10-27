@@ -35,10 +35,17 @@ export function modFits(mod: BuildMod, item: BuildItem, slot: SlotId): boolean {
 }
 
 /**
- * La familia de un mod: el nombre inglés sin `Primed`, `Amalgam`, `Archon`, `Umbral` ni `Flawed`. El juego no deja poner
- * dos de la misma familia (Serration y Amalgam Serration). Galvanized no cuenta: Galvanized Chamber no es Split Chamber.
+ * La familia de un mod: el nombre inglés sin `Primed`, `Amalgam`, `Archon`, `Umbral` ni `Flawed`. Respaldo de `inc` para
+ * los mods que la wiki no tiene: Serration y Amalgam Serration ya vienen marcados en los datos.
  */
 export const modFamily = (name: BuildMod["name"]): string => name[0].replace(/^(Primed|Amalgam|Archon|Umbral|Flawed) /, "");
+
+/**
+ * ¿No van juntos? El juego no deja equipar dos variantes del mismo mod ni los pares que la wiki marca incompatibles
+ * (`inc`: Split Chamber con Galvanized Chamber, Point Strike con Critical Delay). Un mod tampoco va dos veces.
+ */
+export const modsClash = (a: BuildMod, b: BuildMod): boolean =>
+  a.slug === b.slug || !!a.inc?.includes(b.slug) || !!b.inc?.includes(a.slug) || modFamily(a.name) === modFamily(b.name);
 
 /** Redondeo "mitad hacia arriba" del documento: `floor(x + 0,5)`. */
 const redondeo = (x: number): number => Math.floor(x + 0.5);

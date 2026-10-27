@@ -4,8 +4,10 @@
 devuelve {ruta relativa a `data/`: contenido}; `site_data.build()` lo llama y `archivos()` lo escribe.
 
 La clase de cada arma (escopeta, arco, francotirador, tipo de cuerpo a cuerpo) no está en el Public Export: sale del
-módulo de datos de la wiki oficial (Module:Weapons/data) y queda guardada en `clases.json`, que se actualiza a mano
-cuando salen armas nuevas (`site_data.py` avisa cuáles no tienen clase):
+módulo de datos de la wiki oficial (Module:Weapons/data) y queda guardada en `clases.json`, junto con la cadencia de
+cada modo de disparo (el export da otra en las armas de ráfaga). Los mods que no van juntos y el rango máximo de cada
+mod salen de Module:Mods/data y quedan en `incompatibles.json`. Los dos se actualizan a mano cuando salen armas o mods
+nuevos (`site_data.py` avisa qué armas no tienen clase); la Action no baja nada de la wiki:
 
     python games/warframe/tools/builder.py --clases
 """
@@ -20,8 +22,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import wf  # noqa: E402
 
 CLASES = Path(__file__).resolve().parent / "clases.json"
-URL_WIKI = "https://wiki.warframe.com/api.php?action=parse&page=Module:Weapons/data/{slot}&prop=wikitext&format=json"
+INCOMPATIBLES = Path(__file__).resolve().parent / "incompatibles.json"
+URL_WIKI = "https://wiki.warframe.com/index.php?title=Module:{modulo}&action=raw"
 SLOTS_WIKI = ("primary", "secondary", "melee", "archwing")
+# La wiki corta los pedidos sin un User-Agent que diga quién pide.
+UA_WIKI = "Vestigo/1.0 (+https://vestigo.gg)"
 
 KINDS = ("warframe", "primary", "secondary", "melee")
 # Tipo de mod del export -> archivo del armador.
@@ -127,9 +132,29 @@ def _campo(bloque: str, campo: str):
     return m.group(1) if m else None
 
 
+def _numero(txt):
+    try:
+        return _num(txt)
+    except (TypeError, ValueError):
+        return None
+
+
+def _modos(bloque: str) -> list[list]:
+    """[[cadencia, disparos por ráfaga], …] de cada modo de `Attacks`, en orden (el primero es el principal). Los
+    campos de un modo van a cuatro tabulaciones; 0 si el modo no trae `BurstCount`."""
+    m = re.search(r"\n\t\tAttacks = \{(.*?)\n\t\t\},?\n", bloque, re.S)
+    out = []
+    for a in re.split(r"\n\t\t\t\{", m.group(1))[1:] if m else []:
+        cad = re.search(r"\n\t\t\t\tFireRate = ([\d.]+)", a)
+        raf = re.search(r"\n\t\t\t\tBurstCount = (\d+)", a)
+        out.append([_numero(cad.group(1)) if cad else None, int(raf.group(1)) if raf else 0])
+    return out
+
+
 def parse_wiki(lua: str) -> list[list]:
-    """[uniqueName, nombre, clase, familia, etiquetas] de cada arma de una página de Module:Weapons/data. Se lee como
-    texto (no se ejecuta): cada arma es un bloque `\\tNombre = {` con los campos a dos tabulaciones."""
+    """[uniqueName, nombre, clase, familia, etiquetas, modos] de cada arma de una página de Module:Weapons/data (modos:
+    `_modos`). Se lee como texto (no se ejecuta): cada arma es un bloque `\\tNombre = {` con los campos a dos
+    tabulaciones."""
     out = []
     for bloque in _ENTRADA.split(lua)[1:]:
         clase, nombre = _campo(bloque, "Class"), _campo(bloque, "Name")
@@ -137,29 +162,71 @@ def parse_wiki(lua: str) -> list[list]:
             continue
         m = re.search(r"\n\t\tCompatibilityTags = \{([^}]*)\}", bloque)
         tags = re.findall(r'"([^"]+)"', m.group(1)) if m else []
-        out.append([_campo(bloque, "InternalName") or "", nombre, clase, _campo(bloque, "Family") or "", tags])
+        out.append([_campo(bloque, "InternalName") or "", nombre, clase, _campo(bloque, "Family") or "", tags,
+                    _modos(bloque)])
     return out
+
+
+_ENTRADA_MOD = re.compile(r'\n\t\t(?:\["[^"]*"\]|[A-Za-z_]\w*) = \{')
+
+
+def parse_mods_wiki(lua: str) -> list[list]:
+    """[uniqueName, nombre, rango máximo, [nombres incompatibles]] de cada mod de la tabla `Mods` de Module:Mods/data
+    (las otras tablas son mejoras innatas de armas y conjuntos). Cada mod es un bloque `\\t\\tNombre = {` con los campos
+    a tres tabulaciones; los que no traen `InternalName` (mods de la wiki sin objeto en el juego) quedan afuera. El
+    `BaseDrain` de la wiki no se guarda: a veces es otro que el de su propia tabla de rangos."""
+    i = lua.find("\n\tMods = {")
+    if i < 0:
+        raise ValueError("Module:Mods/data sin la tabla Mods")
+    out = []
+    for bloque in _ENTRADA_MOD.split(lua[i:])[1:]:
+        unique = re.search(r'\n\t\t\tInternalName = "([^"]*)"', bloque)
+        nombre = re.search(r'\n\t\t\tName = "([^"]*)"', bloque)
+        if not unique or not nombre:
+            continue
+        maximo = re.search(r"\n\t\t\tMaxRank = (\d+)", bloque)
+        inc = re.search(r"\n\t\t\tIncompatible = \{([^}]*)\}", bloque)
+        out.append([unique.group(1), nombre.group(1), int(maximo.group(1)) if maximo else None,
+                    re.findall(r'"([^"]+)"', inc.group(1)) if inc else []])
+    return out
+
+
+def _bajar(modulo: str) -> str:
+    req = urllib.request.Request(URL_WIKI.format(modulo=modulo), headers={"User-Agent": UA_WIKI})
+    with urllib.request.urlopen(req, timeout=120) as r:
+        return r.read().decode("utf-8")
+
+
+def _escribir(ruta: Path, cabeza: dict, clave: str, filas: list) -> None:
+    texto = ",\n".join(json.dumps(f, ensure_ascii=False) for f in filas)  # una fila por renglón: diffs legibles
+    ruta.write_text(json.dumps(cabeza, ensure_ascii=False)[:-1] + f', "{clave}": [\n' + texto + "\n]}\n",
+                    encoding="utf-8")
 
 
 def bajar_clases() -> None:
     armas = []
     for slot in SLOTS_WIKI:
-        req = urllib.request.Request(URL_WIKI.format(slot=slot), headers={"User-Agent": "vestigo-fetch"})
-        with urllib.request.urlopen(req, timeout=120) as r:
-            lua = json.loads(r.read().decode("utf-8"))["parse"]["wikitext"]["*"]
-        armas += parse_wiki(lua)
+        armas += parse_wiki(_bajar(f"Weapons/data/{slot}"))
     if len(armas) < 500:
         raise ValueError(f"la wiki devolvió sólo {len(armas)} armas")
     armas.sort(key=lambda a: (a[1].casefold(), a[0]))
-    cabeza = {"fuente": "https://wiki.warframe.com/w/Module:Weapons/data", "fecha": date.today().isoformat()}
-    filas = ",\n".join(json.dumps(a, ensure_ascii=False) for a in armas)  # un arma por renglón: diffs legibles
-    CLASES.write_text(json.dumps(cabeza, ensure_ascii=False)[:-1] + ', "armas": [\n' + filas + "\n]}\n",
-                      encoding="utf-8")
+    _escribir(CLASES, {"fuente": "https://wiki.warframe.com/w/Module:Weapons/data", "fecha": date.today().isoformat(),
+                       "columnas": "uniqueName, nombre, clase, familia, etiquetas, modos [[cadencia, ráfaga], …]"},
+              "armas", armas)
     print(len(armas), "armas en", CLASES.name)
+    mods = parse_mods_wiki(_bajar("Mods/data"))
+    if len(mods) < 1000:
+        raise ValueError(f"la wiki devolvió sólo {len(mods)} mods")
+    mods.sort(key=lambda m: (m[1].casefold(), m[0]))
+    _escribir(INCOMPATIBLES, {"fuente": "https://wiki.warframe.com/w/Module:Mods/data",
+                              "fecha": date.today().isoformat(),
+                              "columnas": "uniqueName, nombre, rango máximo, incompatibles (nombres)"}, "mods", mods)
+    print(len(mods), "mods en", INCOMPATIBLES.name)
 
 
 class Clases:
-    """Clase, familia y etiquetas de un arma: por `uniqueName` y, si la wiki lo tiene con otro, por nombre."""
+    """Clase, familia, etiquetas y modos de disparo de un arma: por `uniqueName` y, si la wiki lo tiene con otro, por
+    nombre."""
 
     def __init__(self):
         armas = json.loads(CLASES.read_text(encoding="utf-8"))["armas"] if CLASES.exists() else []
@@ -168,10 +235,57 @@ class Clases:
             self.por_unique.setdefault(a[0], a)
             self.por_nombre.setdefault(a[1], a)
 
+    def _fila(self, unique: str, nombre: str):
+        return self.por_unique.get(unique) or self.por_nombre.get(nombre)
+
     def de(self, unique: str, nombre: str):
         """(clase, familia, etiquetas) o None."""
-        a = self.por_unique.get(unique) or self.por_nombre.get(nombre)
+        a = self._fila(unique, nombre)
         return (a[2], a[3], a[4]) if a else None
+
+    def modos(self, unique: str, nombre: str) -> list[list]:
+        a = self._fila(unique, nombre)
+        return a[5] if a and len(a) > 5 else []
+
+
+# Diferencia relativa por debajo de la cual la cadencia del export y la de la wiki son la misma (la wiki redondea a
+# dos decimales: 2,7 contra 2,6667 del Carmine Penta).
+TOL_CADENCIA = 0.015
+
+
+def cadencia(export: float, modos: list[list]) -> tuple[float, str]:
+    """(cadencia, motivo) de un arma. En las armas de ráfaga el `fireRate` del export no es la cadencia que muestra el
+    Arsenal (Kuva Hind: 9,09 en el export, 5 ráfagas por segundo en la wiki). Regla:
+    - "igual": el export coincide con algún modo de la wiki (puede ser el alternativo: la Fulmin da el semiautomático);
+    - "ráfaga": no coincide y el modo principal de la wiki dispara en ráfaga: vale la cadencia de la wiki;
+    - "sin explicar" / "sin wiki": queda la del export."""
+    cads = [c for c, _ in modos if c]
+    if not cads:
+        return export, "sin wiki"
+    if any(abs(c - export) <= TOL_CADENCIA * max(c, export) for c in cads):
+        return export, "igual"
+    principal, rafaga = modos[0]
+    if principal and rafaga > 1:
+        return principal, "ráfaga"
+    return export, "sin explicar"
+
+
+class Incompatibles:
+    """Lo de Module:Mods/data (`incompatibles.json`): qué mod con un nombre es el que se equipa y con cuáles no va."""
+
+    def __init__(self):
+        mods = json.loads(INCOMPATIBLES.read_text(encoding="utf-8"))["mods"] if INCOMPATIBLES.exists() else []
+        self.por_unique = {m[0]: m for m in mods}
+
+    def es_el_de_la_wiki(self, unique: str, nombre: str) -> bool:
+        """¿La wiki tiene este `uniqueName` con este nombre? Las variantes Beginner del export se llaman igual que el
+        mod pero la wiki las tiene como "Flawed …"; las Intermediate y Expert, de rangos 5 y 10, no las tiene."""
+        m = self.por_unique.get(unique)
+        return bool(m) and m[1] == nombre
+
+    def nombres(self, unique: str) -> list[str]:
+        m = self.por_unique.get(unique)
+        return m[3] if m else []
 
 
 # ---- mods ----------------------------------------------------------------------------------------------------
@@ -269,11 +383,11 @@ def _tipo_riven(i: dict, clase) -> str | None:
     return {"secondary": "pistol", "melee": "melee"}.get(i["kind"])
 
 
-def _arma(x: dict, clase, riven) -> dict:
+def _arma(x: dict, clase, riven, modos: list[list]) -> dict:
     c = clase[0] if clase else None
     w = {"dmg": [_num(v) for v in x["damagePerShot"]], "cc": _num(x.get("criticalChance", 0)),
          "cd": _num(x.get("criticalMultiplier", 0)), "sc": _num(x.get("procChance", 0)),
-         "rate": _num(x.get("fireRate", 0))}
+         "rate": _num(cadencia(_num(x.get("fireRate", 0)), modos)[0])}
     if x.get("magazineSize"):
         w["mag"] = x["magazineSize"]
     if x.get("reloadTime"):
@@ -382,6 +496,40 @@ def _traductor_stats():
     return traducir
 
 
+def _una_variante(mods: list[tuple], inc: Incompatibles) -> list[tuple]:
+    """Una sola variante por nombre. El export trae el mismo mod varias veces con otros rangos: `/Beginner/` (los
+    "Flawed" de la wiki, rango 3), `/Intermediate/` (5) y `/Expert/` (10), más copias sueltas (`/Nemesis/`, `/Tau/`).
+    Se equipa la que la wiki tiene con ese mismo nombre; si ninguna o más de una lo está, quedan todas (un test lo
+    marca)."""
+    por_nombre: dict = {}
+    for u, m in mods:
+        por_nombre.setdefault(m["name"][0], []).append((u, m))
+    out = []
+    for nombre, vs in por_nombre.items():
+        wiki = [v for v in vs if inc.es_el_de_la_wiki(v[0], nombre)]
+        out += wiki if len(vs) > 1 and wiki else vs
+    return out
+
+
+def _incompatibles(mods: list[tuple], inc: Incompatibles) -> list[dict]:
+    """Escribe en cada mod `inc`: los slugs de los mods del mismo archivo que no van con él según la wiki
+    (Split Chamber con Galvanized Chamber, Serration con Amalgam Serration). La relación queda en los dos sentidos."""
+    slug_de = {m["name"][0]: m["slug"] for _, m in mods}
+    pares: dict = {m["slug"]: set() for _, m in mods}
+    for u, m in mods:
+        for nombre in inc.nombres(u):
+            otro = slug_de.get(nombre)
+            if otro and otro != m["slug"]:
+                pares[m["slug"]].add(otro)
+                pares[otro].add(m["slug"])
+    out = []
+    for _, m in mods:
+        if pares[m["slug"]]:
+            m["inc"] = sorted(pares[m["slug"]])
+        out.append(m)
+    return out
+
+
 def build_data(items: list[dict], mods: list[dict]) -> dict[str, object]:
     """Los archivos del armador y de Rivens. `items` y `mods` son los de `site_data` (con `slug` e `img`)."""
     cl = Clases()
@@ -403,7 +551,7 @@ def build_data(items: list[dict], mods: list[dict]) -> dict[str, object]:
             o["f"] = _warframe(x)
         else:
             o["compat"] = _compat_arma(i["kind"], x["name"], clase)
-            o["w"] = _arma(x, clase, riven)
+            o["w"] = _arma(x, clase, riven, cl.modos(i["unique"], i["name"][0]))
         objetos.append(o)
 
     compat_de = {k: {c for o in objetos if o["kind"] == k for c in o["compat"]} for k in KINDS}
@@ -416,17 +564,19 @@ def build_data(items: list[dict], mods: list[dict]) -> dict[str, object]:
         kind = TIPOS_MOD.get(x.get("type"))
         if kind is None or x.get("compatName") not in compat_de[kind]:
             continue  # sin objeto que lo acepte (garras de compañeros, "Unique")
-        por_kind[kind].append(_mod(m, x, es.get(m["unique"])))
+        por_kind[kind].append((m["unique"], _mod(m, x, es.get(m["unique"]))))
+    inc = Incompatibles()
     files: dict = {"builder/items.json": {"items": objetos}}
     for k in KINDS:
-        ms = sorted(por_kind[k], key=lambda m: (m["name"][0].casefold(), m["slug"]))
+        ms = _incompatibles(_una_variante(por_kind[k], inc), inc)
+        ms.sort(key=lambda m: (m["name"][0].casefold(), m["slug"]))
         files[f"builder/mods-{k}.json"] = {"mods": ms}
     files["rivens/list.json"] = _rivens(armas_riven)
     return files
 
 
 if __name__ == "__main__":
-    if "--clases" in sys.argv:
+    if "--clases" in sys.argv:  # clases.json e incompatibles.json
         bajar_clases()
     else:
         print(__doc__)

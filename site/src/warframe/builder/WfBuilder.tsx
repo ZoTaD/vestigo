@@ -22,7 +22,7 @@ import { useWfCopy, type WfCopy, type WfDamage } from "../../warframeCopy";
 import { fold, loadBuilderItems, loadBuilderMods, peekBuilderItems, peekBuilderMods, POLS, say, type BuildItem, type BuildMod, type Kind, type Lang, type Pol } from "../data";
 import { Icon, Panel, WfLoading, type Nav } from "../ui";
 import { decodeBuild, encodeBuild } from "./buildUrl";
-import { capacity, emptyBuild, formas, frameStats, modDrain, modFamily, modFits, weaponStats, type Build, type FStat, type SlotId, type WStat } from "./calc";
+import { capacity, emptyBuild, formas, frameStats, modDrain, modFits, modsClash, weaponStats, type Build, type FStat, type SlotId, type WStat } from "./calc";
 import { PolGlyph } from "./PolGlyph";
 import { delta, deltaDigits, frameRows, TILE_KEYS, weaponRows, type Fmt, type Row } from "./sheet";
 
@@ -533,16 +533,16 @@ function SlotRow({ build, id, label, open, setOpen, patch, lang }: { build: Buil
   );
 }
 
-/** El buscador de mods de un casillero: los que le entran, sin los de una familia que ya está en otro (el juego no deja repetir). */
+/** El buscador de mods de un casillero: los que le entran, sin los que no van con uno ya puesto en otro (`modsClash`). */
 function ModPicker({ build, id, onPick, lang }: { build: Build; id: SlotId; onPick: (m: BuildMod) => void; lang: Lang }) {
   const t = useWfCopy();
   const c = t.builder;
   const [query, setQuery] = useState("");
   const [pol, setPol] = useState<Pol | null>(null);
   const all = peekBuilderMods(build.item.kind) ?? [];
-  const usados = useMemo(() => new Set(build.slots.filter((s) => s.mod && s.id !== id).map((s) => modFamily(s.mod!.name))), [build, id]);
+  const usados = useMemo(() => build.slots.filter((s) => s.mod && s.id !== id).map((s) => s.mod!), [build, id]);
   const fits = useMemo(
-    () => all.filter((m) => modFits(m, build.item, id) && !usados.has(modFamily(m.name))).sort((a, b) => say(a.name, lang).localeCompare(say(b.name, lang), lang)),
+    () => all.filter((m) => modFits(m, build.item, id) && !usados.some((u) => modsClash(u, m))).sort((a, b) => say(a.name, lang).localeCompare(say(b.name, lang), lang)),
     [all, build.item, id, usados, lang],
   );
   const q = fold(query.trim());
