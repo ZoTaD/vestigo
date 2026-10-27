@@ -223,6 +223,24 @@ export interface StarFicha extends Omit<StarRow, "best"> {
   refs: Refs;
 }
 
+/** Los tipos de `mastery/list.json` (el Arsenal sin exaltadas, más los Necramechs). */
+export type MasteryKind = "warframe" | "primary" | "secondary" | "melee" | "archwing" | "companion" | "necramech";
+export const MASTERY_KINDS: MasteryKind[] = ["warframe", "primary", "secondary", "melee", "archwing", "companion", "necramech"];
+/** Una fila de `mastery/list.json`: algo que da maestría. `slug`/`slugEs` son los de su ficha del Arsenal; `xp` lo que suma al llegar a `rank`. */
+export interface MasteryRow {
+  slug: string;
+  slugEs: string;
+  name: Pair;
+  img: string | null;
+  kind: MasteryKind;
+  rank: 30 | 40;
+  xp: number;
+}
+const mastery = once<MasteryRow[]>(() => import("@warframe/mastery/list.json"));
+/** La lista de Maestría, en su propio chunk (regla 4 de CLAUDE.md). */
+export const loadMastery = (): Promise<MasteryRow[]> => mastery.load();
+export const peekMastery = (): MasteryRow[] | null => mastery.peek();
+
 /** Lo que trae cada pestaña con fichas. */
 export interface ListOf {
   arsenal: ArsenalRow[];

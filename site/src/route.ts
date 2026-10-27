@@ -358,7 +358,7 @@ export const WF_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods", "st
 /** Las pestañas con fichas: su tercer segmento es el slug de una. Maestría, Prime Vault y Baro no tienen (enlazan al Arsenal). */
 export const WF_DETAIL_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart"];
 /** Las pestañas con dirección fija; la barra apaga las que todavía no tienen su línea en `TABS` de `Warframe.tsx`. */
-export const WF_PUBLISHED: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart"];
+export const WF_PUBLISHED: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart", "mastery"];
 export const WF_SECTION_ES: Record<WfTab, string> = {
   arsenal: "arsenal",
   relics: "reliquias",

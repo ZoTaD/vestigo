@@ -125,6 +125,7 @@ export const WF_TAB_FILES: Partial<Record<WfSection, string>> = {
   farming: "src/warframe/farming/WfFarming.tsx",
   mods: "src/warframe/mods/WfMods.tsx",
   "star-chart": "src/warframe/starchart/WfStarChart.tsx",
+  mastery: "src/warframe/mastery/WfMastery.tsx",
 };
 
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */

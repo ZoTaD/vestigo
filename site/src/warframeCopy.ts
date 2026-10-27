@@ -7,6 +7,7 @@
  * tipos de daño y las eras de reliquia, que la interfaz nombra sin dato al lado.
  */
 import { useLang } from "./i18n";
+import type { MasteryKind } from "./warframe/data";
 import type { WfSection, WfTab } from "./route";
 
 /** El orden de las pestañas en la barra. */
@@ -212,6 +213,28 @@ export interface WfCopy {
     chance: string;
     resources: string;
     noRewards: string;
+  };
+  masteryList: {
+    h1: string;
+    lede: (n: string) => string;
+    search: string;
+    searchPlaceholder: string;
+    kind: string;
+    all: string;
+    kinds: Record<MasteryKind, string>;
+    hide: string;
+    count: (shown: string, total: string) => string;
+    none: string;
+    done: string;
+    points: string;
+    rank: string;
+    legendary: (n: number) => string;
+    next: (n: string, rank: string) => string;
+    clear: string;
+    clearAsk: string;
+    pts: (n: string) => string;
+    rankReq: (n: number) => string;
+    note: string;
   };
   /** Los tipos de misión del mapa estelar (`MISSION_TYPES` de `site_data.py`); el que no está acá se muestra tal cual. */
   missionType: Record<string, string>;
@@ -434,6 +457,28 @@ const EN: WfCopy = {
     chance: "Chance",
     resources: "Planet resources",
     noRewards: "This node has no reward table of its own.",
+  },
+  masteryList: {
+    h1: "Warframe mastery checklist",
+    lede: (n) => `Tick off the ${n} Warframes, weapons and companions you have ranked up. Your ticks stay in this browser.`,
+    search: "Search",
+    searchPlaceholder: "Name…",
+    kind: "Type",
+    all: "All",
+    kinds: { warframe: "Warframes", primary: "Primary", secondary: "Secondary", melee: "Melee", archwing: "Archwing", companion: "Companions", necramech: "Necramechs" },
+    hide: "Hide ticked",
+    count: (shown, total) => `${shown} shown of ${total}`,
+    none: "Nothing matches.",
+    done: "Ticked",
+    points: "Mastery points",
+    rank: "Mastery rank reached",
+    legendary: (n) => `Legendary ${n}`,
+    next: (n, rank) => `${n} more points for ${rank}`,
+    clear: "Untick all",
+    clearAsk: "Untick everything you have ticked?",
+    pts: (n) => `${n} pts`,
+    rankReq: (n) => `rank ${n}`,
+    note: "Points count each item ranked to its maximum. Amps, Zaws, Kitguns, K-Drives and intrinsics are not listed yet.",
   },
   missionType: {
     Assassination: "Assassination", Exterminate: "Exterminate", Survival: "Survival", Rescue: "Rescue", Sabotage: "Sabotage", Capture: "Capture",
@@ -667,6 +712,28 @@ const ES: WfCopy = {
   },
   // De warframe-worldstate-data (MIT, `data/es/missionTypes.json`); los que no trae, del nombre de su nodo en el export
   // en español (Descenso, Confrontación, Repetidor, Cosecha de legacito, El Circuito).
+  masteryList: {
+    h1: "Maestría de Warframe para tildar",
+    lede: (n) => `Tildá los ${n} Warframes, armas y compañeros que ya subiste. Lo tildado queda en este navegador.`,
+    search: "Buscar",
+    searchPlaceholder: "Nombre…",
+    kind: "Tipo",
+    all: "Todos",
+    kinds: { warframe: "Warframes", primary: "Primarias", secondary: "Secundarias", melee: "Cuerpo a cuerpo", archwing: "Archwing", companion: "Compañeros", necramech: "Necramechs" },
+    hide: "Ocultar lo tildado",
+    count: (shown, total) => `${shown} de ${total}`,
+    none: "No hay coincidencias.",
+    done: "Tildados",
+    points: "Puntos de maestría",
+    rank: "Rango de maestría alcanzado",
+    legendary: (n) => `Legendario ${n}`,
+    next: (n, rank) => `Faltan ${n} puntos para ${rank}`,
+    clear: "Destildar todo",
+    clearAsk: "¿Destildar todo lo que tildaste?",
+    pts: (n) => `${n} pts`,
+    rankReq: (n) => `rango ${n}`,
+    note: "Los puntos cuentan cada objeto subido al máximo. Los Amps, Zaw, Kitguns, K-Drives y los intrínsecos todavía no están.",
+  },
   missionType: {
     Assassination: "Asesinato", Exterminate: "Exterminio", Survival: "Supervivencia", Rescue: "Rescate", Sabotage: "Sabotaje", Capture: "Captura",
     Spy: "Espionaje", Defense: "Defensa", "Mobile Defense": "Defensa móvil", Interception: "Interceptación", Hijack: "Usurpación", Hive: "Colmena",

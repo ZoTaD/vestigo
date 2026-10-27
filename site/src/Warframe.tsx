@@ -28,6 +28,7 @@ const WfRelics = lazyWithPreload(() => import("./warframe/relics/WfRelics"));
 const WfFarming = lazyWithPreload(() => import("./warframe/farming/WfFarming"));
 const WfMods = lazyWithPreload(() => import("./warframe/mods/WfMods"));
 const WfStarChart = lazyWithPreload(() => import("./warframe/starchart/WfStarChart"));
+const WfMastery = lazyWithPreload(() => import("./warframe/mastery/WfMastery"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `WF_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `WF_TAB_FILES`.
@@ -37,6 +38,7 @@ const TABS: Partial<Record<WfSection, LazyTab>> = {
   farming: WfFarming,
   mods: WfMods,
   "star-chart": WfStarChart,
+  mastery: WfMastery,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -49,6 +51,7 @@ const TAB_DATA: Partial<Record<WfSection, (route: Route) => Promise<unknown>>> =
   farming: (route) => preloadFichas(route),
   mods: (route) => preloadFichas(route),
   "star-chart": (route) => preloadFichas(route),
+  mastery: () => import("./warframe/data").then((m) => m.loadMastery()),
 };
 
 /**

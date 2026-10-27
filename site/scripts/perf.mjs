@@ -165,6 +165,9 @@ export const PAGES = [
   "/en/warframe/star-chart",
   "/es/warframe/mapa-estelar?planet=sedna",
   "/es/warframe/mapa-estelar/hidron",
+  // La Maestría (etapa 2): unas 780 filas con ícono, dibujadas de a tandas.
+  "/en/warframe/mastery",
+  "/es/warframe/maestria",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

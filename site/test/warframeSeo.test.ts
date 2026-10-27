@@ -59,8 +59,11 @@ describe("Warframe en el sitemap", () => {
     expect(paths).toContain("/en/warframe/star-chart/hydron");
     expect(paths).toContain("/es/warframe/mapa-estelar/hidron");
     expect(paths.filter((p) => p.startsWith("/es/warframe/mapa-estelar/")).length).toBe(starChart.length);
-    // Maestría, Prime Vault y Baro todavía no tienen página: no van al sitemap.
-    expect(paths.some((p) => /\/warframe\/(mastery|maestria|prime-vault|baro)/.test(p))).toBe(false);
+    // La Maestría va al sitemap sin fichas; Prime Vault y Baro todavía no tienen página.
+    expect(paths).toContain("/en/warframe/mastery");
+    expect(paths).toContain("/es/warframe/maestria");
+    expect(paths.some((p) => /\/warframe\/(mastery|maestria)\//.test(p))).toBe(false);
+    expect(paths.some((p) => /\/warframe\/(prime-vault|baro)/.test(p))).toBe(false);
     expect(new Set(paths).size).toBe(paths.length);
   });
 
