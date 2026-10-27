@@ -58,7 +58,7 @@ class _Tablas(HTMLParser):
 @lru_cache(maxsize=None)
 def _secciones() -> dict[str, list[dict]]:
     p = _Tablas()
-    p.feed((wf.RAW / "drops.html").read_text(encoding="utf-8", errors="replace"))
+    p.feed((wf.RAW / "drops.html").read_text(encoding="utf-8"))
     return p.secciones
 
 
@@ -159,13 +159,36 @@ def by_drop(section: str) -> dict[str, list[dict]]:
 
 
 @lru_cache(maxsize=None)
+def enemy_relics() -> dict[str, list[dict]]:
+    """Reliquias que sueltan los enemigos (`relicByAvatar`): "Lith A13" -> fuentes con `k: "enemy"`."""
+    out: dict = {}
+    quien, drop = None, None
+    for f in _secciones()["relicByAvatar"]:
+        if f["th"]:
+            m = re.search(r"Relic Drop Chance:\s*(\d+(?:\.\d+)?)%", f["th"][-1])
+            if not m:
+                raise ValueError(f"Encabezado de enemigo ilegible: {f['th']!r}")
+            quien, drop = f["th"][0], float(m.group(1))
+        elif len(f["td"]) == 3:
+            _, ch = _chance(f["td"][2])
+            nombre = f["td"][1]
+            if nombre.endswith(" Relic"):
+                nombre = nombre[: -len(" Relic")]
+            out.setdefault(nombre, []).append({"k": "enemy", "who": quien, "drop": drop, "chance": ch,
+                                               "eff": round(drop * ch / 100, 4)})
+    return out
+
+
+@lru_cache(maxsize=None)
 def relic_sources() -> dict[str, list[dict]]:
-    """Dónde cae cada reliquia ("Lith A1"), en misiones, botines, llaves y recompensas dinámicas."""
+    """Dónde cae cada reliquia ("Lith A1"): misiones, botines, llaves, dinámicas y enemigos."""
     out: dict = {}
     for fuente in (missions(), bounties(), keys(), transient()):
         for x in fuente:
             if x["item"].endswith(" Relic"):
                 out.setdefault(x["item"][: -len(" Relic")], []).append(x)
+    for r, fuentes in enemy_relics().items():
+        out.setdefault(r, []).extend(fuentes)
     return out
 
 

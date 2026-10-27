@@ -1,6 +1,7 @@
 """Pruebas de `drops`. Correr: python -m unittest discover -s games/warframe/tools/tests"""
 import sys
 import unittest
+from unittest import mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -25,9 +26,28 @@ class TestDrops(unittest.TestCase):
         self.assertTrue(drops.vaulted("Lith H2"))
 
     def test_botin_solo_no_es_vault(self):
-        solo_botin = {r for r, s in drops.relic_sources().items() if s and all(x.get("tier") for x in s)}
-        for r in solo_botin:
-            self.assertFalse(drops.vaulted(r))
+        botin = [{"where": "Cetus", "tier": "T", "stage": None, "rot": None, "item": "Lith Z99 Relic", "chance": 5.0}]
+        vacio = lambda: []  # noqa: E731
+        drops.relic_sources.cache_clear()
+        try:
+            with mock.patch.object(drops, "missions", vacio), mock.patch.object(drops, "keys", vacio),                     mock.patch.object(drops, "transient", vacio), mock.patch.object(drops, "bounties", lambda: botin),                     mock.patch.object(drops, "enemy_relics", lambda: {}):
+                self.assertFalse(drops.vaulted("Lith Z99"))
+                self.assertTrue(drops.vaulted("Lith Z98"))
+        finally:
+            drops.relic_sources.cache_clear()
+
+    def test_reliquia_de_enemigo_no_es_vault(self):
+        drops.relic_sources.cache_clear()
+        enemigo = {"Lith A13": [{"k": "enemy", "who": "Hemocyte", "drop": 20.0, "chance": 12.91, "eff": 2.582}]}
+        vacio = lambda: []  # noqa: E731
+        try:
+            with mock.patch.object(drops, "missions", vacio), mock.patch.object(drops, "keys", vacio),                     mock.patch.object(drops, "transient", vacio), mock.patch.object(drops, "bounties", vacio),                     mock.patch.object(drops, "enemy_relics", lambda: enemigo):
+                self.assertFalse(drops.vaulted("Lith A13"))
+        finally:
+            drops.relic_sources.cache_clear()
+        e = drops.enemy_relics()["Lith A13"][0]
+        self.assertEqual((e["k"], e["who"], e["drop"], e["chance"]), ("enemy", "Hemocyte", 20.0, 12.91))
+        self.assertIn(e, drops.relic_sources()["Lith A13"])
 
     def test_enemigo_con_efectiva(self):
         raptor = next(x for x in drops.by_drop("resourceByDrop")["Neural Sensors"] if x["who"] == "Raptor")
