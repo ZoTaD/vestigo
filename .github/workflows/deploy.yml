@@ -37,7 +37,7 @@ on:
   # GitHub no dispara workflows por pushes de ese token: sin esto, los datos
   # nuevos de Deadlock y PoE2 nunca llegarían al sitio.
   workflow_run:
-    workflows: [publish deadlock tier list, publish poe2 prices and patches]
+    workflows: [publish deadlock tier list, publish poe2 prices and patches, publish warframe data]
     types: [completed]
   workflow_dispatch:
 

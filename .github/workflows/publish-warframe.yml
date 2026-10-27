@@ -2,13 +2,12 @@ name: publish warframe data
 
 # Los datos de Warframe, una vez por semana (lunes 09:30 UTC) y a mano.
 #
-# La fuente es el export oficial del juego: su índice trae un hash por archivo, así
-# que `fetch.py --check` dice con un pedido si algo cambió. Si es "igual", la
-# corrida termina ahí. Si "cambió", baja los exports y la tabla de drops, rehace
-# los datos del sitio y los íconos, y abre un pull request: **no empuja a `main`**.
-# Un cambio de datos pasa por la vista previa antes de publicarse (a diferencia de
-# PoE2 y Deadlock, que publican solos), porque cada parche de Warframe puede mover
-# nombres y slugs.
+# La fuente es el export oficial del juego: su índice trae un hash por archivo y
+# la tabla de drops se compara por su sha256, así que `fetch.py --check` dice con
+# pocos pedidos si algo cambió. Si es "igual", la corrida termina ahí. Si
+# "cambió", baja los exports y la tabla de drops, rehace los datos del sitio y los
+# íconos, y los publica con un commit a `main` (el repo no deja que Actions abra
+# pull requests), igual que `publish-poe2`.
 on:
   schedule:
     # Lejos de `publish-poe2` (08:45), `publish-deadlock` y `tests` (09:15).
@@ -21,7 +20,6 @@ concurrency:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   publish:
@@ -47,7 +45,7 @@ jobs:
         if: steps.check.outputs.resultado == 'cambió'
         run: |
           python3 -m venv "$RUNNER_TEMP/venv"
-          "$RUNNER_TEMP/venv/bin/pip" install pillow
+          "$RUNNER_TEMP/venv/bin/pip" install pillow==12.3.0
 
       - name: datos
         if: steps.check.outputs.resultado == 'cambió'
@@ -57,30 +55,33 @@ jobs:
           "$py" games/warframe/tools/site_data.py
           "$py" games/warframe/tools/images.py
 
-      - name: pull request
+      - name: commit
         if: steps.check.outputs.resultado == 'cambió'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           if [ -z "$(git status --porcelain -- games/warframe/data site/public/warframe)" ]; then
-            echo "el índice cambió pero los datos del sitio no: no hay pull request"
+            echo "el índice cambió pero los datos del sitio no: no hay commit"
             exit 0
           fi
           git status --short -- games/warframe/data site/public/warframe | head -20
-          fecha="$(date -u +%Y-%m-%d)"
-          rama="warframe/datos-$fecha"
-          # El token, sólo acá y sólo para estos comandos (ver el checkout).
+          # El token, sólo acá y sólo para este comando (ver el checkout).
           auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git_auth() { git -c "http.https://github.com/.extraheader=$auth" "$@"; }
           git config user.name "vestigo-bot"
           git config user.email "67348048+ZoTaD@users.noreply.github.com"
-          git checkout -b "$rama"
           git add games/warframe/data site/public/warframe
-          git commit -m "chore(warframe): datos del $fecha"
-          git -c "http.https://github.com/.extraheader=$auth" push --force origin "$rama"
-          # Si ya hay un pull request abierto de esa rama (una corrida a mano el mismo día), el push lo actualiza.
-          if [ -z "$(gh pr list --head "$rama" --state open --json number --jq '.[0].number')" ]; then
-            gh pr create --base main --head "$rama" \
-              --title "Warframe: datos del $fecha" \
-              --body "- El export oficial cambió; datos del sitio e íconos regenerados.
-          - Revisar la vista previa antes de fusionar."
+          git commit -m "chore(warframe): datos del $(date -u +%Y-%m-%d)"
+          # El push se reintenta rebaseando sobre lo que llegó, igual que en
+          # `publish-poe2`: esta corrida sólo toca los datos de Warframe.
+          empujado=0
+          for intento in 1 2 3; do
+            if git_auth push origin "HEAD:$GITHUB_REF_NAME"; then empujado=1; break; fi
+            echo "push rechazado (intento $intento): traigo lo que llegó y reintento"
+            git_auth fetch origin "$GITHUB_REF_NAME" || break
+            git rebase "origin/$GITHUB_REF_NAME" || break
+          done
+          if [ "$empujado" != 1 ]; then
+            echo "::error::no se pudo publicar después de 3 intentos"
+            exit 1
           fi

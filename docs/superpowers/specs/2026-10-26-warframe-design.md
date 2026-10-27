@@ -72,8 +72,9 @@ responde arriba, sin scroll, con las tasas oficiales.
 - **Tamaño medido (2026-10-27)**: `games/warframe/data` 9,4 MB (819 fichas de Arsenal, 799 reliquias, 237 recursos, 1.750 mods y arcanos, 32 archivos por pestaña, el más grande de ~140 KB) y `site/public/warframe` 32 MB (2.509 íconos de 128 px y 802 de 256 px).
 - Las reliquias Requiem Eterna (y la "Requiem" suelta) no tienen ficha: la tabla de drops sólo trae su Intacta. Sus fuentes se nombran sin página.
 - Slugs en inglés; español con su slug propio (como Stardew).
-- **Actualización**: una Action semanal (y a mano) compara el hash del índice del export; si no cambió, termina sin
-  compilar. Si cambió, regenera y abre un PR. Los minutos de Actions están contados.
+- **Actualización**: una Action semanal (y a mano) compara el hash del índice del export y el sha256 de la tabla de drops;
+  si ninguno cambió, termina sin compilar. Si cambió alguno, regenera y hace commit a `main` (el repo no deja que
+  Actions abra PRs; mismo patrón que `publish-poe2`) y `deploy.yml` publica. Los minutos de Actions están contados.
 
 ## Estética A "Arsenal"
 
@@ -112,7 +113,7 @@ warframe.market (etapa 3, revisar sus condiciones).
 - **En vivo**: si `api.warframestat.us` no responde, el bloque se oculta (la portada prerenderizada no lo trae). Los
   ciclos se calculan con las épocas y duraciones del código abierto de warframestat (MIT), comprobadas contra su API el
   día que se escriben. Nombres en español: nodos de `ExportRegions_es`, el resto con `?language=es` de la API.
-- **Action semanal**: abre un PR sin correr `perf`; la medición se hace a mano antes de fusionar, como ahora.
+- **Action semanal**: publica sola sin correr `perf`; la medición se hace a mano cuando se suma una pestaña.
 - **Logo del menú**: un ícono monocromo propio (no el de DE ni el del Lotus).
 
 ## Decisiones mías (para revisar)
