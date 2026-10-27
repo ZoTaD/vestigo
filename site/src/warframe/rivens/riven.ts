@@ -4,6 +4,7 @@
  * todas), `L` según cuántos positivos hay y si hay negativo, y `W` la tirada, entre 0,9 y 1,1. Se ofrece sólo el rango 8:
  * los intermedios no están verificados contra el juego.
  */
+import type { RivenStat } from "../data";
 
 /** Cantidad de positivos (2 o 3) y, con "-", un negativo. */
 export type Combo = "2" | "2-" | "3" | "3-";
@@ -65,4 +66,14 @@ export function rivenToShown(tag: string, pct: number): number {
 export function rivenFromShown(tag: string, shown: number): number {
   const k = rivenShown(tag);
   return k === "flip" ? -shown : k === "factor" ? (shown - 1) * 100 : shown;
+}
+
+/**
+ * Los stats que se muestran y los que no. Sólo los que el juego escribe en % y el daño a una facción (multiplicador)
+ * están verificados contra el documento de fórmulas; el resto (alcance, duración del combo, combo inicial, ángulo de
+ * bloqueo, perforación) va aparte, para nombrarlos debajo de la tabla.
+ */
+export function rivenSplit(stats: RivenStat[]): { shown: RivenStat[]; hidden: RivenStat[] } {
+  const ok = (s: RivenStat) => s.unit === "%" || rivenShown(s.tag) === "factor";
+  return { shown: stats.filter(ok), hidden: stats.filter((s) => !ok(s)) };
 }

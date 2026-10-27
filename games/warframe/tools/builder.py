@@ -299,7 +299,15 @@ def sin_clase(items: list[dict]) -> list[str]:
 
 # ---- salida --------------------------------------------------------------------------------------------------
 
+# Hoy hay unas 590 armas con Riven. Con menos de esto, el filtro por disposición (`_tipo_riven`) se rompió: DE volvió a
+# poner disposiciones distintas y la lista se vaciaría en silencio, y la Action publica sola.
+MIN_ARMAS_RIVEN = 550
+
+
 def _rivens(armas: list[dict]) -> dict:
+    if len(armas) < MIN_ARMAS_RIVEN:
+        raise ValueError(f"Sólo {len(armas)} armas con Riven (mínimo {MIN_ARMAS_RIVEN}): ¿cambió la disposición en el "
+                         f"export? Revisar `_tipo_riven` antes de publicar.")
     en, es = wf.by_unique("Upgrades", "en"), wf.by_unique("Upgrades", "es")
     traducir = _traductor_stats()
     tipos = []
@@ -311,7 +319,7 @@ def _rivens(armas: list[dict]) -> dict:
         for e in x["upgradeEntries"]:
             loc = e["upgradeValues"][0]["locTag"]
             stats.append({"tag": e["tag"], "name": [_nombre_stat(loc), traducir(loc)],
-                          "value": round(e["upgradeValues"][0]["value"], 9)})
+                          "value": round(e["upgradeValues"][0]["value"], 9), "unit": _unidad_stat(loc)})
         tipos.append({"key": key, "name": [x["name"].removesuffix(" Riven Mod"), nombre_es], "stats": stats})
     return {"types": tipos, "weapons": armas}
 
@@ -324,6 +332,12 @@ def _nombre_stat(loc: str) -> str:
     """"|val|% <DT_FIRE_COLOR>Heat" -> "Heat"; "|val|s Combo Duration" -> "Combo Duration"."""
     t = re.sub(r"<[^<>\n]*>", "", loc or "")
     return re.sub(r"^\|\w+\|\s*(%|s\b)?\s*", "", t).strip()
+
+
+def _unidad_stat(loc: str) -> str:
+    """La unidad del stat según su `locTag`: "%" ("|val|% Heat"), "s" ("|val|s Combo Duration") o "" ("|val| Range")."""
+    m = re.match(r"^\|\w+\|(%|s\b)?", re.sub(r"<[^<>\n]*>", "", loc or ""))
+    return (m.group(1) or "") if m else ""
 
 
 def _mayuscula(s: str) -> str:

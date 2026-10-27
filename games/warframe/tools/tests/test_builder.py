@@ -175,6 +175,23 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue(any(w["type"] == "archgun" for w in armas.values()))
         self.assertGreater(len(armas), 500)
 
+    def test_rivens_unidad(self):
+        """La unidad sale del `locTag`: casi todo en %, la duración del combo en s y el resto sin unidad."""
+        melee = {s["tag"]: s for t in self.rivens["types"] if t["key"] == "melee" for s in t["stats"]}
+        self.assertEqual(melee["WeaponCritChanceMod"]["unit"], "%")
+        self.assertEqual(melee["ComboDurationMod"]["unit"], "s")
+        for tag in ("WeaponMeleeRangeIncMod", "WeaponMeleeComboInitialBonusMod", "WeaponMeleeParryAngleMod",
+                    "WeaponMeleeFactionDamageGrineer"):
+            self.assertEqual(melee[tag]["unit"], "", tag)
+        self.assertEqual(builder._unidad_stat("|STAT1|% Critical Chance for Slide Attack"), "%")
+        self.assertEqual(builder._unidad_stat("|val| Punch Through"), "")
+        self.assertTrue(all(s["unit"] in ("%", "s", "") for t in self.rivens["types"] for s in t["stats"]))
+
+    def test_rivens_piso_de_armas(self):
+        """Si el filtro de disposición deja casi sin armas (DE la volvió a poner), se corta en vez de publicar vacío."""
+        with self.assertRaisesRegex(ValueError, "armas con Riven"):
+            builder._rivens(self.rivens["weapons"][:10])
+
     def test_rivens_en_espanol(self):
         rifle = {s["tag"]: s["name"] for s in self.rivens["types"][0]["stats"]}
         self.assertEqual(rifle["WeaponCritChanceMod"], ["Critical Chance", "Probabilidad crítica"])

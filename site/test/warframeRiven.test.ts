@@ -1,7 +1,7 @@
 /** Las cuentas de la calculadora de Rivens contra los extremos de la wiki (documento de fórmulas, sección 4). */
 import { describe, expect, it } from "vitest";
 import rivensJson from "../../games/warframe/data/rivens/list.json";
-import { rivenFromShown, rivenGrade, rivenRange, rivenToShown, type Combo } from "../src/warframe/rivens/riven";
+import { rivenFromShown, rivenGrade, rivenRange, rivenSplit, rivenToShown, type Combo } from "../src/warframe/rivens/riven";
 
 const D = 1.2;
 const V = { crit: 0.016666001, dmg: 0.018333299, ms: 0.01, ammo: 0.00555 };
@@ -71,6 +71,27 @@ describe("datos de Rivens", () => {
       expect(tipos.has(w.type)).toBe(true);
       expect(w.d).toBe(1.2);
     }
+  });
+});
+
+describe("stats sin verificar", () => {
+  it("un stat sin % no entra en las filas; el daño a una facción (multiplicador) sí", () => {
+    const stats = [
+      { tag: "WeaponCritChanceMod", name: ["Critical Chance", ""] as [string, string], value: 0.01, unit: "%" as const },
+      { tag: "ComboDurationMod", name: ["Combo Duration", ""] as [string, string], value: 0.1, unit: "s" as const },
+      { tag: "WeaponMeleeRangeIncMod", name: ["Range", ""] as [string, string], value: 0.1, unit: "" as const },
+      { tag: "WeaponMeleeFactionDamageGrineer", name: ["Damage to Grineer", ""] as [string, string], value: 0.01, unit: "" as const },
+    ];
+    const { shown, hidden } = rivenSplit(stats);
+    expect(shown.map((s) => s.tag)).toEqual(["WeaponCritChanceMod", "WeaponMeleeFactionDamageGrineer"]);
+    expect(hidden.map((s) => s.tag)).toEqual(["ComboDurationMod", "WeaponMeleeRangeIncMod"]);
+  });
+  it("en los datos: cuerpo a cuerpo esconde la duración del combo, el alcance y el ángulo de bloqueo", () => {
+    const melee = rivensJson.types.find((t) => t.key === "melee")!;
+    const { shown, hidden } = rivenSplit(melee.stats as Parameters<typeof rivenSplit>[0]);
+    const tags = hidden.map((s) => s.tag);
+    for (const t of ["ComboDurationMod", "WeaponMeleeRangeIncMod", "WeaponMeleeParryAngleMod", "WeaponMeleeComboInitialBonusMod"]) expect(tags).toContain(t);
+    expect(shown.every((s) => s.unit === "%" || s.tag.includes("FactionDamage"))).toBe(true);
   });
 });
 

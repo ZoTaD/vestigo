@@ -276,6 +276,8 @@ export interface WfCopy {
     change: string;
     rangeH: string;
     rangeNote: string;
+    /** Los stats que no van en % (alcance, duración del combo…): su cifra no está verificada y no se muestran. */
+    hidden: (names: string) => string;
     stat: string;
     combos: Record<"2" | "2-" | "3" | "3-", string>;
     positive: string;
@@ -290,8 +292,6 @@ export interface WfCopy {
     rollResult: string;
     rollOut: string;
     rollRange: string;
-    rollWorse: string;
-    rollBetter: string;
   };
   /** El armador (etapa 3). */
   builder: {
@@ -666,6 +666,7 @@ const EN: WfCopy = {
     change: "Change",
     rangeH: "Stat ranges at rank 8",
     rangeNote: "Rank 8 is a fully upgraded Riven. Damage to a faction is shown as a multiplier, as in the game.",
+    hidden: (names) => `Not verified, not shown: ${names}.`,
     stat: "Stat",
     combos: { "2": "2 positives", "2-": "2 positives + negative", "3": "3 positives", "3-": "3 positives + negative" },
     positive: "Positive",
@@ -680,8 +681,6 @@ const EN: WfCopy = {
     rollResult: "of the way from the worst roll to the best",
     rollOut: "That value is outside the range for this stat.",
     rollRange: "Range",
-    rollWorse: "lowest",
-    rollBetter: "highest",
   },
   builder: {
     h1: "Build planner",
@@ -1066,6 +1065,7 @@ const ES: WfCopy = {
     change: "Cambiar",
     rangeH: "Rangos de cada stat a rango 8",
     rangeNote: "El rango 8 es un Riven mejorado del todo. El daño a una facción se muestra como multiplicador, igual que en el juego.",
+    hidden: (names) => `Sin verificar, no se muestran: ${names}.`,
     stat: "Stat",
     combos: { "2": "2 positivos", "2-": "2 positivos + negativo", "3": "3 positivos", "3-": "3 positivos + negativo" },
     positive: "Positivo",
@@ -1080,8 +1080,6 @@ const ES: WfCopy = {
     rollResult: "del camino entre la peor tirada y la mejor",
     rollOut: "Ese valor está fuera del rango de este stat.",
     rollRange: "Rango",
-    rollWorse: "mínimo",
-    rollBetter: "máximo",
   },
   builder: {
     h1: "Armador de builds",

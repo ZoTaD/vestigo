@@ -7,7 +7,8 @@ import arsenalList from "../../games/warframe/data/arsenal/list.json";
 import { inBuilder, NOT_IN_BUILDER, type BuildItem, type BuildMod, type Kind, type Pol, type StatKey } from "../src/warframe/data";
 import { abilityCost, bonus, capacity, channelDrain, combatDamage, emptyBuild, formas, frameStats, modDrain, modFits, weaponStats, type Slot, type SlotId } from "../src/warframe/builder/calc";
 import { decodeBuild, encodeBuild } from "../src/warframe/builder/buildUrl";
-import { delta, weaponRows } from "../src/warframe/builder/sheet";
+import { modFamily } from "../src/warframe/builder/calc";
+import { delta, deltaDigits, weaponRows } from "../src/warframe/builder/sheet";
 
 const items = itemsJson.items as BuildItem[];
 const modsPrimary = primaryJson.mods as BuildMod[];
@@ -288,6 +289,25 @@ describe("armador de Warframe: la build en la dirección", () => {
     expect(encodeBuild(decodeBuild(enc, items, todos)!)).toBe(enc);
   });
 
+  it("familias: no entran dos versiones del mismo mod (Serration y Amalgam Serration, Flow y Archon Flow…)", () => {
+    const b = decodeBuild("i=braton&m=0.serration.10,1.amalgam-serration.5,2.split-chamber.5,3.primed-shred.10,4.shred.5", items, todos)!;
+    expect(b.slots.find((x) => x.id === 1)!.mod).toBeNull();
+    expect(b.slots.find((x) => x.id === 4)!.mod).toBeNull();
+    expect(b.slots.find((x) => x.id === 3)!.mod!.slug).toBe("primed-shred");
+    const f = decodeBuild("i=excalibur&m=0.archon-flow.10,1.flow.5,2.umbral-vitality.10,3.vitality.10", items, todos)!;
+    expect(f.slots.filter((x) => x.mod).map((x) => x.mod!.slug)).toEqual(["archon-flow", "umbral-vitality"]);
+  });
+
+  it("la clave de familia saca Primed, Amalgam, Archon, Umbral y Flawed, pero no Galvanized", () => {
+    expect(modFamily(["Amalgam Serration", ""])).toBe("Serration");
+    expect(modFamily(["Primed Shred", ""])).toBe("Shred");
+    expect(modFamily(["Archon Flow", ""])).toBe("Flow");
+    expect(modFamily(["Umbral Vitality", ""])).toBe("Vitality");
+    expect(modFamily(["Flawed Serration", ""])).toBe("Serration");
+    expect(modFamily(["Galvanized Chamber", ""])).toBe("Galvanized Chamber");
+    expect(modFamily(["Split Chamber", ""])).toBe("Split Chamber");
+  });
+
   it("un arma sin casillero de aura ni postura los ignora", () => {
     const b = decodeBuild("i=braton&m=aura.steel-charge.5,stance.x.1&p=aura.madurai", items, todos)!;
     expect(b.slots.map((x) => x.id)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, "exilus"]);
@@ -342,6 +362,20 @@ describe("armador de Warframe: las filas de la pantalla", () => {
     expect(rows.find((r) => r.key === "multishot")!.now).toBe(hek.w!.ms);
     expect(weaponRows("melee", s.base, s.mod)[0]!.key).toBe("perHit");
     expect(rows.find((r) => r.key === "reload")?.inv).toBe(true);
+  });
+  it("cuerpo a cuerpo: sin daño por proyectil ni multidisparo", () => {
+    const s = weaponStats(real("skana"), []);
+    const keys = weaponRows("melee", s.base, s.mod).map((r) => r.key);
+    expect(keys).toContain("perHit");
+    expect(keys).not.toContain("total");
+    expect(keys).not.toContain("multishot");
+  });
+  it("el cambio chico lleva decimales: nunca \"+0 %\"", () => {
+    expect(deltaDigits(25)).toBe(0);
+    expect(deltaDigits(-1)).toBe(0);
+    expect(deltaDigits(0.4)).toBe(1);
+    expect(deltaDigits(-0.6)).toBe(1);
+    expect(deltaDigits(0.04)).toBe(2);
   });
   it("el cambio: nada si no cambió, nuevo si no había, y la recarga más corta es mejor", () => {
     expect(delta(10, 10)).toBeNull();

@@ -11,6 +11,7 @@
   --wf-dim: #8fa3b5;
   --wf-acc: #6fd3ff;
   --wf-gold: #d8b46a;
+  --wf-bad: #ff9b8a;
   --wf-glass: rgba(140, 180, 220, 0.07);
   --wf-glass-2: rgba(140, 180, 220, 0.12);
   --wf-deep: #0b131c;
@@ -388,9 +389,8 @@ a.wf-mastery-name:hover { color: var(--wf-acc); }
 /* --- Armador (etapa 3): maqueta B "Hoja técnica" con las cifras grandes de la C --------------------------------------
    Casilleros en lista (el buscador de mods se abre debajo del que tocaste), tabla densa base / build / cambio y, arriba,
    las cifras grandes base → build. Sin filos de color: tinte, texto o cifra. Las polaridades son glifos propios. */
-.wf-bd { --wf-bad: #ff9b8a; }
 .wf-up { color: var(--wf-acc); }
-.wf-down { color: var(--wf-bad, #ff9b8a); }
+.wf-down { color: var(--wf-bad); }
 .wf-btn.is-acc { background: rgba(111, 211, 255, 0.13); color: var(--wf-acc); }
 .wf-btn.is-acc:hover { background: rgba(111, 211, 255, 0.22); }
 .wf-btn.is-on { background: rgba(140, 180, 220, 0.2); }
@@ -548,7 +548,7 @@ a.wf-mastery-name:hover { color: var(--wf-acc); }
 .wf-rv-name { font: 700 30px/1 var(--wf-head); letter-spacing: 0.05em; text-transform: uppercase; text-wrap: balance; font-size: min(30px, calc(100cqw / 9)); }
 .wf-rv-sub { margin-top: 4px; font-size: 13.5px; color: var(--wf-dim); }
 .wf-rv-notice { grid-column: 1 / -1; margin-top: 8px; padding: 8px 10px; font-size: 14px; background: rgba(216, 180, 106, 0.08); color: var(--wf-gold); border-radius: 3px; }
-.wf-rv-missing { margin-bottom: 12px; padding: 8px 10px; font-size: 14.5px; background: rgba(255, 155, 138, 0.08); color: #ff9b8a; border-radius: 3px; }
+.wf-rv-missing { margin-bottom: 12px; padding: 8px 10px; font-size: 14.5px; background: rgba(255, 155, 138, 0.08); color: var(--wf-bad); border-radius: 3px; }
 .wf-rv-picker { display: grid; gap: 10px; }
 .wf-rv-ranges, .wf-rv-roll { margin-top: 16px; }
 .wf-rv-table td { vertical-align: top; }

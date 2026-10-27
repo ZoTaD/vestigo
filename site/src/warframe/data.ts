@@ -732,6 +732,8 @@ export interface RivenStat {
   tag: string;
   name: Pair;
   value: number;
+  /** La unidad que escribe el juego según el `locTag`: "%", "s" (duración del combo) o nada (alcance, combo inicial…). */
+  unit: "%" | "s" | "";
 }
 /** Un tipo de Riven (rifle, escopeta, pistola, cuerpo a cuerpo, arma de Archwing, Kitgun, Zaw) y sus stats. */
 export interface RivenType {

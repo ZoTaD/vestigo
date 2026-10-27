@@ -24,20 +24,19 @@ export const DMG_ORDER: DmgType[] = ["impact", "puncture", "slash", "heat", "col
 
 /**
  * Las filas de un arma. El daño por disparo es el por proyectil × multidisparo, y se dice así en la tabla; en cuerpo a
- * cuerpo es el daño por golpe.
+ * cuerpo es el daño por golpe, sin "por proyectil" ni multidisparo.
  */
 export function weaponRows(kind: Kind, base: WStat, now: WStat): Row[] {
-  const rows: Row[] = [
-    { key: kind === "melee" ? "perHit" : "perShot", group: "damage", base: base.total * base.ms, now: now.total * now.ms, fmt: "num" },
-    { key: "total", group: "damage", base: base.total, now: now.total, fmt: "num" },
-  ];
+  const melee = kind === "melee";
+  const rows: Row[] = [{ key: melee ? "perHit" : "perShot", group: "damage", base: base.total * base.ms, now: now.total * now.ms, fmt: "num" }];
+  if (!melee) rows.push({ key: "total", group: "damage", base: base.total, now: now.total, fmt: "num" });
   for (const t of DMG_ORDER) {
     const b = base.byType[t] ?? 0;
     const n = now.byType[t] ?? 0;
     if (b || n) rows.push({ key: t, group: "damage", base: b, now: n, fmt: "num", sub: t });
   }
+  if (!melee) rows.push({ key: "multishot", group: "damage", base: base.ms, now: now.ms, fmt: "num" });
   rows.push(
-    { key: "multishot", group: "damage", base: base.ms, now: now.ms, fmt: "num" },
     { key: "cc", group: "crit", base: base.cc, now: now.cc, fmt: "frac" },
     { key: "cd", group: "crit", base: base.cd, now: now.cd, fmt: "mult" },
     { key: "sc", group: "crit", base: base.sc, now: now.sc, fmt: "frac" },
@@ -68,3 +67,6 @@ export function delta(base: number, now: number, inv = false): { pct: number | n
   if (Math.abs(d) < 0.005) return null;
   return { pct: base ? (d / Math.abs(base)) * 100 : null, good: inv ? d < 0 : d > 0 };
 }
+
+/** Decimales del cambio: entero; de menos de 1 %, uno, así no se lee "+0 %" (y dos si no llega a 0,1 %). */
+export const deltaDigits = (pct: number): number => (Math.abs(pct) < 0.1 ? 2 : Math.abs(pct) < 1 ? 1 : 0);

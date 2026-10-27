@@ -6,6 +6,7 @@
  * - La tabla de cada stat con su mínimo y máximo en las cuatro combinaciones (2 o 3 positivos, con o sin negativo); en el
  *   teléfono, una tarjeta por stat.
  * - "¿Qué tan buena salió mi tirada?": stat + combinación + valor → % dentro de su rango.
+ * - Los stats que no van en % (salvo el daño a una facción) no se muestran: se nombran debajo de la tabla (`rivenSplit`).
  *
  * El arma vive en la dirección (`?w=<slug>`) y se lee después del primer dibujo, como en el armador: el prerender sale sin
  * arma y la hidratación coincide. Las cuentas son las de `riven.ts`; acá sólo se muestran.
@@ -18,7 +19,7 @@ import { useLoad } from "../../useLoad";
 import { useWfCopy } from "../../warframeCopy";
 import { fold, loadRivens, peekRivens, say, type Lang, type RivenData, type RivenStat, type RivenType, type RivenWeapon } from "../data";
 import { Icon, Panel, WfLoading, type Nav } from "../ui";
-import { COMBOS, rivenFromShown, rivenGrade, rivenRange, rivenShown, rivenToShown, type Combo } from "./riven";
+import { COMBOS, rivenFromShown, rivenGrade, rivenRange, rivenShown, rivenSplit, rivenToShown, type Combo } from "./riven";
 
 /** El alto de una fila de la lista de armas con su separación, en px, medido en el navegador (2026-10-27). */
 const ROW = 50;
@@ -192,6 +193,7 @@ function Ranges({ type, d }: { type: RivenType; d: number }) {
   const c = useWfCopy().rivens;
   const { lang } = useLang();
   const range = useRange();
+  const { shown, hidden } = useMemo(() => rivenSplit(type.stats), [type]);
   return (
     <Panel className="wf-rv-ranges">
       <h2 className="wf-h2">{c.rangeH}</h2>
@@ -206,7 +208,7 @@ function Ranges({ type, d }: { type: RivenType; d: number }) {
             </tr>
           </thead>
           <tbody>
-            {type.stats.map((s) => (
+            {shown.map((s) => (
               <tr key={s.tag}>
                 <td>{say(s.name, lang)}</td>
                 {COMBOS.map((k) => (
@@ -221,6 +223,7 @@ function Ranges({ type, d }: { type: RivenType; d: number }) {
         </table>
       </div>
       <p className="wf-bd-note wf-dim">{c.rangeNote}</p>
+      {hidden.length > 0 && <p className="wf-bd-note wf-dim">{c.hidden(hidden.map((s) => say(s.name, lang)).join(", "))}</p>}
     </Panel>
   );
 }
@@ -231,11 +234,12 @@ function Roll({ type, d, lang }: { type: RivenType; d: number; lang: Lang }) {
   const c = useWfCopy().rivens;
   const locale = useLocale();
   const range = useRange();
-  const [tag, setTag] = useState(type.stats[0].tag);
+  const stats = useMemo(() => rivenSplit(type.stats).shown, [type]);
+  const [tag, setTag] = useState(stats[0].tag);
   const [combo, setCombo] = useState<Combo>("2");
   const [curse, setCurse] = useState(false);
   const [text, setText] = useState("");
-  const stat = type.stats.find((s) => s.tag === tag) ?? type.stats[0];
+  const stat = stats.find((s) => s.tag === tag) ?? stats[0];
   const neg = combo.endsWith("-") && curse;
   const typed = text.trim() === "" ? null : Number(text.trim().replace(",", ".").replace("−", "-"));
   const grade = typed !== null && Number.isFinite(typed) ? rivenGrade(stat.value, d, combo, neg, rivenFromShown(stat.tag, typed)) : null;
@@ -248,7 +252,7 @@ function Roll({ type, d, lang }: { type: RivenType; d: number; lang: Lang }) {
         <label className="wf-find">
           <span className="wf-label">{c.rollStat}</span>
           <select value={stat.tag} onChange={(e) => setTag(e.target.value)}>
-            {type.stats.map((s) => (
+            {stats.map((s) => (
               <option value={s.tag} key={s.tag}>
                 {say(s.name, lang)}
               </option>

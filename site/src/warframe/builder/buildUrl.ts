@@ -3,11 +3,11 @@
  *
  * `o=1` es el potenciador o catalizador Orokin. Los casilleros se escriben `aura`, `stance`, `exilus` o 0–7. Se lee
  * con tolerancia, porque una dirección compartida puede ser vieja: un mod que ya no existe o no entra en ese casillero,
- * una polaridad desconocida o un casillero repetido se descartan; un rango fuera de 0..máximo se recorta. Sólo devuelve
+ * una polaridad desconocida, un casillero repetido o un mod de una familia que ya está se descartan; un rango fuera de 0..máximo se recorta. Sólo devuelve
  * `null` si el objeto no existe.
  */
 import { POLS, type BuildItem, type BuildMod, type Pol } from "../data";
-import { emptyBuild, modFits, slotIds, type Build, type SlotId } from "./calc";
+import { emptyBuild, modFamily, modFits, slotIds, type Build, type SlotId } from "./calc";
 
 const slotTxt = (id: SlotId): string => String(id);
 function leerSlot(txt: string, valid: readonly SlotId[]): SlotId | null {
@@ -42,12 +42,12 @@ export function decodeBuild(search: string, items: BuildItem[], mods: BuildMod[]
     const mod = porSlug.get(slug ?? "");
     if (id === null || !mod || !modFits(mod, item, id)) continue;
     const s = slot(id);
-    // El juego no deja poner dos veces el mismo mod (ni dos versiones con el mismo nombre).
-    if (s.mod || puestos.has(mod.name[0])) continue;
+    // El juego no deja poner dos veces el mismo mod (ni Serration con Amalgam Serration: misma familia).
+    if (s.mod || puestos.has(modFamily(mod.name))) continue;
     const n = Number.parseInt(rk ?? "", 10);
     s.mod = mod;
     s.rank = Number.isFinite(n) ? Math.max(0, Math.min(n, mod.max)) : mod.max;
-    puestos.add(mod.name[0]);
+    puestos.add(modFamily(mod.name));
   }
   for (const parte of (q.get("p") ?? "").split(",")) {
     const [st, pol] = parte.split(".");

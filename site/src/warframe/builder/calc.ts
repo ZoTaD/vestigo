@@ -34,6 +34,12 @@ export function modFits(mod: BuildMod, item: BuildItem, slot: SlotId): boolean {
   return mod.slot === "normal";
 }
 
+/**
+ * La familia de un mod: el nombre inglés sin `Primed`, `Amalgam`, `Archon`, `Umbral` ni `Flawed`. El juego no deja poner
+ * dos de la misma familia (Serration y Amalgam Serration). Galvanized no cuenta: Galvanized Chamber no es Split Chamber.
+ */
+export const modFamily = (name: BuildMod["name"]): string => name[0].replace(/^(Primed|Amalgam|Archon|Umbral|Flawed) /, "");
+
 /** Redondeo "mitad hacia arriba" del documento: `floor(x + 0,5)`. */
 const redondeo = (x: number): number => Math.floor(x + 0.5);
 
