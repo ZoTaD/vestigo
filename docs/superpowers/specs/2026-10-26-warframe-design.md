@@ -258,3 +258,134 @@ del presupuesto; con el Chrome del sistema (`PW_CHROMIUM`), porque el Chromium d
 
 Pendiente de ZoTaD: el nombre oficial en español de Rush, Void Armageddon, Shrine Defense, The Perita Rebellion, The
 Murmur y Anarchs (hoy salen en inglés en la versión ES: no hay fuente a mano y no se inventa).
+
+## Etapa 3 (27/10): Armador de builds, Rivens y precios
+
+Rama `claude/warframe-etapa-3-f06981`. Servidor de la rama `vestigo-warframe-3` (puerto 5239) y maquetas del armador
+en `warframe-armador-maquetas` (puerto 5238), los dos en el `launch.json` del checkout principal.
+
+### Precios de warframe.market: no entran en esta etapa
+
+Relevado el 27/10/2026. La web y la documentación están detrás de un desafío de Cloudflare (403 a `curl` y al
+navegador sin resolver el captcha), así que los textos se leyeron de la copia de la Wayback Machine:
+
+- **Términos del sitio, sección API** (`https://warframe.market/tos`, copia del 03/10/2026): *"API data, unless for
+  personal use or educational purposes, may only be used to provide additional features not available on the Site."* y
+  *"Site staff should be contacted prior to making applications using the API public."* Límite: *"Requests may not be
+  made at a rate faster than 3 per second for listings or 10 per minute for contracts."* Y *"Applications using the API
+  may be blocked at the discretion of the Site developers"*.
+- **Reglas para desarrolladores** (`https://docs.warframe.market/docs/rules/overview/`, copia del 10/08/2026): pide un
+  `User-Agent` propio con contacto; prohíbe clonar el sitio (*"We may restrict applications that are primarily website
+  clones, data mirrors, or traffic offloading layers."*); pide caché y nada de sondeo seguido; límite general de 3
+  pedidos por segundo; las consultas de desarrollo van a su Discord.
+- **robots.txt** (copia del 04/10/2026): `Disallow: /contacts` y nada más.
+- **API**: `api.warframe.market/v2/items` responde sin token (versión 0.25.0), pero **sin cabeceras CORS**: desde el
+  navegador no se puede pedir; haría falta una Action que guarde los precios en el repo (con `User-Agent` propio, a
+  menos de 3 pedidos por segundo). La v1 (`/v1/items/<slug>/statistics`) también responde.
+- **Anuncios y atribución**: no dicen nada de anuncios ni piden atribución. Sí piden avisar antes de publicar.
+
+**Decisión:** no se integran en este PR. ZoTaD (27/10): por ahora no se pide permiso ni se suma el market. Mostrar el precio en la ficha de un Prime es un "agregado" que el sitio de
+ellos no tiene en esa forma (ficha + reliquias + precio), pero la condición de contactar al staff antes de publicar no
+se puede saltear, y eso lo tiene que hacer ZoTaD (Discord de warframe.market). Con su visto bueno, el diseño queda así:
+`tools/market.py` en una Action diaria que pide `/v2/items` y las estadísticas de los ~600 Prime/partes/mods que tenemos
+con ficha (a 2 pedidos por segundo: ~5 min), guarda `data/market/prices.json` (mediana de 48 h, volumen y fecha) y la
+ficha lo muestra con "Precios: warframe.market" enlazado.
+
+### Pestañas y direcciones
+
+| Pestaña | EN | ES | Fichas |
+|---|---|---|---|
+| Armador | `/builder` | `/armador` | no: la build va en la dirección (`?i=braton&m=…`) |
+| Rivens | `/rivens` | `/rivens` | no: el arma va en `?w=braton` |
+
+Sin una página por objeto: una ficha de armador vacía por cada arma serían ~1.800 páginas finas para Google. La ficha
+del Arsenal (Warframes y armas primarias, secundarias y cuerpo a cuerpo) enlaza "Armar build" → `/builder?i=<slug>`.
+
+### Armador
+
+- **Maqueta elegida (27/10): B "Hoja técnica"** con las cifras grandes "base → build" de la C arriba y su "Fijar como
+  referencia" (compara la build con otra variante). Maquetas en `warframe-armador-maquetas` (puerto 5238). La B gana en
+  el teléfono: los casilleros van en lista y el buscador de mods se abre en el casillero que tocaste; la A (grilla con
+  el arte de cada mod) es la más linda pero en 375 px es la más larga.
+- **Qué se arma**: Warframes (`Suits`) y armas primarias, secundarias y cuerpo a cuerpo (`LongGuns`, `Pistols`,
+  `Melee`). Fuera: Archwing, armas de Archwing, compañeros, Necramechs, Amps, Zaw y Kitguns (quedan para más adelante).
+- **Casilleros**: 8 + aura (Warframe) o postura (cuerpo a cuerpo) + exilio. El export no trae las polaridades de
+  fábrica de cada casillero: arrancan sin polaridad y cada polaridad que pone el usuario cuenta como una Forma (el
+  contador es "Formas que pusiste", no las que tiene el objeto en el juego). Exilio: sólo mods con `isUtility`.
+- **Mods**: por `uniqueName` (hay nombres repetidos: Serration con 3, 5 y 10 rangos), compatibles por `type` y
+  `compatName`. El efecto sale de `levelStats` leyendo el texto con una tabla de patrones (`+165% Damage` → daño base
+  +165 %); lo que no se reconoce o es condicional ("On Kill", "al hacer…") se muestra como texto y no suma.
+- **Fórmulas**: las de `docs/superpowers/specs/2026-10-27-warframe-formulas.md` (relevadas el 27/10 contra la wiki y
+  las notas de parche, 53 de 53 casos coinciden). Se muestra sólo lo verificado: daño base, físicos, elementos y su
+  combinación (orden de los mods, innatos al final, cuantización a 1/32), multidisparo, crítico, multiplicador, estado
+  (por perdigón, como el Arsenal), cadencia (arcos ×2), cargador, recarga; Warframes a rango 30 (regla del Update 34.0:
+  +100 salud, +100 escudo, +50 energía y las excepciones de la wiki), fuerza, duración, eficiencia (tope 175 %) y rango.
+  **No se muestran**: DPS ni "ráfaga" (dependen de supuestos), topes mínimos de duración, rango y fuerza, ni los
+  redondeos exactos del Arsenal (se muestran dos decimales).
+- **Capacidad**: rango 30 (o `maxLevelCap`), ×2 con potenciador/catalizador. Drenaje = `baseDrain` + rango; polaridad
+  igual: mitad hacia arriba; distinta: ×1,25 al más cercano (franjas de la wiki; en drenajes 5, 9, 13 y 17 la wiki se
+  contradice y no está probado contra el juego). Aura y postura suman `|baseDrain|` + rango (Steel Charge rango 5 = 9),
+  ×2 con su polaridad y ×0,8 hacia abajo con otra. Sin Umbra en casilleros comunes (no verificado).
+- **La build en la dirección**: `?i=<slug del Arsenal>&m=<casillero>.<slug del mod>.<rango>,…&p=<polaridades>&o=1`
+  (potenciador). Se lee con tolerancia: un mod que no existe o no entra en ese casillero se descarta sin romper.
+
+### Rivens
+
+- **El Hotfix 44.1.3 (22/10/2026) eliminó la disposición**: *"Removed Riven Dispositions."* y *"All Rivens now use the
+  same multiplier for their possible value ranges"* (https://www.warframe.com/patch-notes/pc/44-1-3). El export bajado
+  ya trae `omegaAttenuation` = 1,2 en las 676 armas que aceptan Riven. La calculadora no muestra puntos de disposición:
+  dice que hoy todas valen lo mismo (1,2) y lo toma del export, así que si DE la vuelve a poner, la página la sigue.
+- **Rangos**: `valor = value × 10 × (rango + 1) × D × L × W` con `value` de `upgradeEntries` del Riven de cada tipo
+  (rifle, escopeta, pistola, cuerpo a cuerpo, arma de Archwing, Kitgun, Zaw), L según positivos/negativo (2: 0,99;
+  2+neg: 1,2375 y −0,495; 3: 0,75; 3+neg: 0,9375 y −0,75) y W entre 0,9 y 1,1. Se muestra a rango 8 (los extremos de
+  la wiki coinciden: 40 de 40); a rangos intermedios no está verificado y no se ofrece.
+- **Qué hace**: elegir arma (o tipo) → tabla de cada stat posible con mín–máx en las 4 combinaciones; y "¿qué tan bueno
+  salió mi Riven?": escribir el valor de un stat da el % dentro de su rango.
+
+### Decisiones tomadas al implementar
+
+- **Capacidad mínima por maestría** (Update 38.5: 15 + 1 cada 2 rangos de maestría): no se muestra. No está verificado
+  cómo se combina con el rango del objeto y el potenciador; el armador usa capacidad = rango del objeto (×2).
+- **Clase de cada arma** (escopeta, arco, francotirador, tipo de cuerpo a cuerpo): el export no la trae. Sale del módulo
+  de datos de la wiki oficial (`Module:Weapons/data`), guardada en `games/warframe/tools/clases.json` y actualizada a mano
+  con `builder.py --clases`; la Action semanal no depende de la red para esto.
+- El Arsenal del juego muestra el daño **sin** la cuantización a 1/32 (que es del combate): las cifras del armador son
+  las del Arsenal.
+- **Mods que no van juntos** (27/10, cotejo con la wiki): el campo `Incompatible` de `Module:Mods/data` queda en
+  `games/warframe/tools/incompatibles.json` (también con `builder.py --clases`) y cada mod lleva `inc` con los slugs de
+  su archivo que no van con él (Split Chamber con Galvanized Chamber, Serration con Amalgam Serration, Point Strike con
+  Critical Delay). `modsClash` en `calc.ts` lo usa en el buscador y al leer la dirección; los prefijos Primed, Amalgam,
+  Archon, Umbral y Flawed quedan de respaldo.
+- **Una variante por nombre**: el export trae el mismo mod con rangos 3 (`/Beginner/`, los "Flawed" de la wiki), 5
+  (`/Intermediate/`) y 10 (`/Expert/`), más copias en `/Nemesis/` y `/Tau/`. Queda la que la wiki tiene con ese nombre
+  (por `uniqueName`); un test exige un nombre por archivo. En Rage, Sure Footed, Eagle Eye, Hawk Eye, Stabilizer, Steady
+  Hands, Charged Chamber, Reach, Energy Channel y Finishing Touch la wiki dice rango 5 pero su descripción es la del
+  rango 3 del export: manda el export.
+- **Cadencia de las armas de ráfaga**: el `fireRate` del export no es la del Arsenal (Kuva Hind 9,09 contra 5). Los
+  modos de disparo de `Module:Weapons/data` van en `clases.json`; si el export no coincide con ningún modo y el principal
+  es de ráfaga, vale el de la wiki (28 armas); si no se explica (Vinquibus, Zylok y Zylok Prime), queda el del export.
+
+## Mediciones de la etapa 3 (27/10)
+
+`npm run build` con nada más compilando (el servidor de desarrollo levantado no cuenta en el pico):
+
+| | etapa 2 | etapa 3 |
+|---|---|---|
+| Total | 173,1 s | 172,8 s |
+| `vite build` | 2 min 10 s | 2 min 8 s |
+| Prerender | 46.804 rutas en 83,7 s | 46.808 rutas en 88,1 s |
+| Pico de RAM | 3,29 GB | 2,89 GB |
+| `check-links` | 0 sin destino | 0 sin destino |
+
+Suma 4 rutas (las dos pestañas × 2 idiomas: el armador y los Rivens no tienen fichas). Perf contra `vite preview`
+(frío, Chrome del sistema con `PW_CHROMIUM`), todas dentro del presupuesto:
+
+| Página | pedidos | imágenes | nodos |
+|---|---|---|---|
+| `/en/warframe/builder` | 38 | 12 | 275 |
+| `/es/warframe/armador?i=excalibur` | 39 | 12 | 886 |
+| `/en/warframe/builder?i=braton&m=…` (6 mods) | 39 | 12 | 499 |
+| `/en/warframe/rivens` | 26 | 0 | 198 |
+| `/es/warframe/rivens?w=braton` | 29 | 1 | 724 |
+
+Las páginas de las etapas 1 y 2 siguen con cifras parecidas (portada 30 pedidos y 329 nodos).

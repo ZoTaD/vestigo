@@ -350,15 +350,18 @@ export function registerStardewSlugs(slugs: Partial<Record<StardewTab, Record<st
   stardewSlugsEs.register(slugs);
 }
 
-/** Warframe (2026-10-27). Planes: docs/superpowers/plans/2026-10-27-warframe-etapa-1.md y la etapa 2 (mapa estelar, maestría, Prime Vault y Baro). */
-export type WfTab = "arsenal" | "relics" | "farming" | "mods" | "star-chart" | "mastery" | "prime-vault" | "baro";
+/**
+ * Warframe (2026-10-27). Planes: docs/superpowers/plans/2026-10-27-warframe-etapa-1.md, la etapa 2 (mapa estelar, maestría,
+ * Prime Vault y Baro) y la 3 (armador y Rivens: sin fichas, lo elegido va en la query).
+ */
+export type WfTab = "arsenal" | "relics" | "farming" | "mods" | "star-chart" | "mastery" | "prime-vault" | "baro" | "builder" | "rivens";
 export type WfSection = "home" | WfTab;
 export const WF_SEGMENT = "warframe";
-export const WF_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart", "mastery", "prime-vault", "baro"];
-/** Las pestañas con fichas: su tercer segmento es el slug de una. Maestría, Prime Vault y Baro no tienen (enlazan al Arsenal). */
+export const WF_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart", "mastery", "prime-vault", "baro", "builder", "rivens"];
+/** Las pestañas con fichas: su tercer segmento es el slug de una. Maestría, Prime Vault, Baro, el armador y Rivens no tienen. */
 export const WF_DETAIL_SECTIONS: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart"];
 /** Las pestañas con dirección fija; la barra apaga las que todavía no tienen su línea en `TABS` de `Warframe.tsx`. */
-export const WF_PUBLISHED: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart", "mastery", "prime-vault", "baro"];
+export const WF_PUBLISHED: WfTab[] = ["arsenal", "relics", "farming", "mods", "star-chart", "mastery", "prime-vault", "baro", "builder", "rivens"];
 export const WF_SECTION_ES: Record<WfTab, string> = {
   arsenal: "arsenal",
   relics: "reliquias",
@@ -368,6 +371,8 @@ export const WF_SECTION_ES: Record<WfTab, string> = {
   mastery: "maestria",
   "prime-vault": "prime-vault",
   baro: "baro",
+  builder: "armador",
+  rivens: "rivens",
 };
 const WF_SECTION_BY_ES = new Map(Object.entries(WF_SECTION_ES).map(([tab, es]) => [es, tab as WfTab]));
 

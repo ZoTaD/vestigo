@@ -173,6 +173,13 @@ export const PAGES = [
   "/es/warframe/prime-vault",
   "/en/warframe/baro",
   "/es/warframe/baro",
+  // El armador (etapa 3): sin objeto, un Warframe en español y el Braton con una build de 6 mods en la dirección.
+  "/en/warframe/builder",
+  "/es/warframe/armador?i=excalibur",
+  "/en/warframe/builder?i=braton&m=0.serration.10,1.split-chamber.5,2.point-strike.5,3.vital-sense.5,4.hellfire.5,5.infected-clip.5&p=0.madurai,1.madurai&o=1",
+  // Rivens (etapa 3): sin arma y el Braton en español (590 armas en el buscador, tabla de 38 stats).
+  "/en/warframe/rivens",
+  "/es/warframe/rivens?w=braton",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

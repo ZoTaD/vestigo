@@ -7,11 +7,11 @@
  * tipos de daño y las eras de reliquia, que la interfaz nombra sin dato al lado.
  */
 import { useLang } from "./i18n";
-import type { MasteryKind, VaultStatus } from "./warframe/data";
+import type { Kind, MasteryKind, StatKey, VaultStatus } from "./warframe/data";
 import type { WfSection, WfTab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const WF_TABS: WfSection[] = ["home", "arsenal", "relics", "farming", "mods", "star-chart", "mastery", "prime-vault", "baro"];
+export const WF_TABS: WfSection[] = ["home", "arsenal", "relics", "farming", "mods", "builder", "rivens", "star-chart", "mastery", "prime-vault", "baro"];
 
 /** Las rarezas de un mod, como las deja `site_data.py` (`r.title()`). */
 export type WfRarity = "Common" | "Uncommon" | "Rare" | "Legendary";
@@ -101,6 +101,8 @@ export interface WfCopy {
     credits: string;
     time: string;
     ingredients: string;
+    /** El enlace de la ficha al armador (Warframes y armas primarias, secundarias y cuerpo a cuerpo). */
+    buildIt: string;
     stat: Record<"health" | "shield" | "armor" | "energy" | "sprint" | "total" | "crit" | "critMult" | "status" | "fireRate" | "magazine" | "reload" | "multishot" | "trigger", string>;
     /** Cómo se dispara; lo que no está acá se muestra tal cual. */
     trigger: Record<string, string>;
@@ -257,6 +259,109 @@ export interface WfCopy {
     noChanges: string;
     note: string;
   };
+  /** La calculadora de Rivens (etapa 3). */
+  rivens: {
+    h1: string;
+    lede: string;
+    /** Sin disposición desde el Hotfix 44.1.3: `d` es el valor que trae el export. */
+    notice: (d: string) => string;
+    pick: string;
+    searchPlaceholder: string;
+    typesLabel: string;
+    count: (n: string) => string;
+    none: string;
+    /** `?w=` con un arma que no está en la lista. */
+    noRiven: (slug: string) => string;
+    typeOf: (type: string) => string;
+    change: string;
+    rangeH: string;
+    rangeNote: string;
+    /** Los stats que no van en % (alcance, duración del combo…): su cifra no está verificada y no se muestran. */
+    hidden: (names: string) => string;
+    stat: string;
+    combos: Record<"2" | "2-" | "3" | "3-", string>;
+    positive: string;
+    negative: string;
+    rollH: string;
+    rollLede: string;
+    rollStat: string;
+    rollCombo: string;
+    rollSide: string;
+    rollValue: string;
+    rollPlaceholder: string;
+    rollResult: string;
+    rollOut: string;
+    rollRange: string;
+  };
+  /** El armador (etapa 3). */
+  builder: {
+    h1: string;
+    lede: string;
+    /** Sin objeto elegido: cómo empezar, y los rótulos de los de ejemplo. */
+    start: string;
+    frames: string;
+    weapons: string;
+    pick: string;
+    searchPlaceholder: string;
+    all: string;
+    kinds: Record<Kind, string>;
+    /** El tipo de un objeto, en singular, debajo de su nombre. */
+    kind1: Record<Kind, string>;
+    count: (n: string) => string;
+    none: string;
+    change: string;
+    close: string;
+    rank: (n: number) => string;
+    toArsenal: string;
+    capacity: string;
+    free: string;
+    formas: string;
+    /** El potenciador de un Warframe y el catalizador de un arma. */
+    reactor: string;
+    catalyst: string;
+    over: (n: string) => string;
+    copy: string;
+    copied: string;
+    copyFail: string;
+    pin: string;
+    unpin: string;
+    compare: string;
+    legendBase: string;
+    legendRef: string;
+    legendBuild: string;
+    aura: string;
+    stance: string;
+    exilus: string;
+    slots: string;
+    empty: string;
+    tap: string;
+    noPol: string;
+    rankLabel: string;
+    rankDown: string;
+    rankUp: string;
+    remove: string;
+    polarity: string;
+    modSearch: (n: string) => string;
+    noMods: string;
+    stats: string;
+    stat: string;
+    base: string;
+    ref: string;
+    build: string;
+    delta: string;
+    isNew: string;
+    groups: { damage: string; crit: string; gun: string; frame: string; abilities: string };
+    /** Las filas de la tabla de un arma: el daño es por proyectil y el "por disparo" lo multiplica a la vista. */
+    w: Record<"perShot" | "perHit" | "perShotNote" | "total" | "multishot" | "cc" | "cd" | "sc" | "rate" | "attackSpeed" | "mag" | "reload", string>;
+    f: Record<"health" | "shield" | "armor" | "energy" | "strength" | "duration" | "efficiency" | "range", string>;
+    /** Las stats que suma un mod, como se leen en la lista de mods de la build (los elementos salen de `damage`). */
+    fx: Record<Exclude<StatKey, WfDamage>, string>;
+    modsIn: string;
+    noModsYet: string;
+    notCounted: string;
+    partly: string;
+    note: string;
+  };
   baroPage: {
     h1: string;
     lede: string;
@@ -292,7 +397,7 @@ export interface WfCopy {
 }
 
 const EN: WfCopy = {
-  tabs: { home: "Home", arsenal: "Arsenal", relics: "Relics", farming: "Where to farm", mods: "Mods", "star-chart": "Star Chart", mastery: "Mastery", "prime-vault": "Prime Vault", baro: "Baro Ki'Teer" },
+  tabs: { home: "Home", arsenal: "Arsenal", relics: "Relics", farming: "Where to farm", mods: "Mods", builder: "Builder", rivens: "Rivens", "star-chart": "Star Chart", mastery: "Mastery", "prime-vault": "Prime Vault", baro: "Baro Ki'Teer" },
   soon: "Soon",
   loading: "Loading…",
   loadError: "This page couldn't load.",
@@ -313,6 +418,14 @@ const EN: WfCopy = {
     mastery: { title: "Warframe mastery checklist: every item that gives mastery | Vestigo", description: "Tick off every Warframe, weapon and companion you have ranked up and see your mastery points and the mastery rank they reach." },
     "prime-vault": { title: "Warframe Prime Vault: which Primes are vaulted | Vestigo", description: "Every Prime Warframe and weapon, whether its parts still drop from unvaulted relics, and when its Vault status changed." },
     baro: { title: "Baro Ki'Teer: inventory, arrival and past visits | Vestigo", description: "Where and when Baro Ki'Teer arrives, what he sells for ducats and credits, and every visit we have recorded." },
+    builder: {
+      title: "Warframe build planner: mods, capacity and stats | Vestigo",
+      description: "Plan a Warframe or weapon build: pick a mod for each slot, set polarities and see capacity, damage, critical and ability stats change. Share it as a link.",
+    },
+    rivens: {
+      title: "Warframe Riven calculator: stat ranges for every weapon | Vestigo",
+      description: "The minimum and maximum of every Riven stat for any weapon, with two or three positives and a negative, and how good your roll is.",
+    },
   },
   detailSeo: {
     arsenal: (name) => ({
@@ -340,12 +453,14 @@ const EN: WfCopy = {
     kicker: "Warframe guide",
     h1: "Everything for your Arsenal",
     lede: (arsenal, relics, farming, mods) =>
-      `${arsenal} Warframes and weapons with their parts and recipes, ${relics} relics with every reward, ${farming} resources with where to farm them and ${mods} mods and arcanes, plus the Star Chart, a Mastery checklist, the Prime Vault and Baro Ki'Teer.`,
+      `${arsenal} Warframes and weapons with their parts and recipes, ${relics} relics with every reward, ${farming} resources with where to farm them and ${mods} mods and arcanes, plus a build planner, the Star Chart, a Mastery checklist, the Prime Vault and Baro Ki'Teer.`,
     cards: {
       arsenal: "Stats, abilities, recipe and where each part drops, for every Warframe and weapon.",
       relics: "The six rewards by refinement, where the relic drops and whether it is in the Vault.",
       farming: "Which planets and missions drop each resource, and what it is for.",
       mods: "Polarity, drain, stats by rank and where each mod and arcane drops.",
+      builder: "Pick a mod for each slot and watch capacity and stats change.",
+      rivens: "The range of every Riven stat for each weapon, and how good your roll is.",
       "star-chart": "Every node by planet with its mission, level and rewards by rotation.",
       mastery: "Tick off what you have ranked up and count your mastery points.",
       "prime-vault": "Which Primes still drop from relics and which are in the Vault.",
@@ -393,6 +508,7 @@ const EN: WfCopy = {
     credits: "Credits",
     time: "Build time",
     ingredients: "Ingredients",
+    buildIt: "Plan a build",
     stat: { health: "Health", shield: "Shield", armor: "Armor", energy: "Energy", sprint: "Sprint speed", total: "Total damage", crit: "Critical chance", critMult: "Critical multiplier", status: "Status chance", fireRate: "Fire rate", magazine: "Magazine", reload: "Reload", multishot: "Multishot", trigger: "Trigger" },
     trigger: { AUTO: "Auto", SEMI: "Semi-auto", CHARGE: "Charge", HELD: "Held", BURST: "Burst", ACTIVE: "Active", DUPLEX: "Duplex" },
     units: { d: "d", h: "h", min: "min", s: "s" },
@@ -536,6 +652,107 @@ const EN: WfCopy = {
     noChanges: "No changes yet: they are recorded since Oct 27, 2026.",
     note: "Available: every part drops from at least one relic that is not vaulted. In the Vault: no part does. Partial: some parts do and some don't. No relics: its parts are not in any relic (Founder Primes).",
   },
+  rivens: {
+    h1: "Riven calculator",
+    lede: "The lowest and highest value of every Riven stat for any weapon, with two or three positives and with or without a negative, and how good your roll came out.",
+    notice: (d) => `Since Hotfix 44.1.3 every Riven uses the same disposition: ${d}.`,
+    pick: "Weapon",
+    searchPlaceholder: "Search a weapon…",
+    typesLabel: "Or pick a Riven type",
+    count: (n) => `${n} shown`,
+    none: "Nothing matches.",
+    noRiven: (slug) => `“${slug}” doesn't take a Riven (or isn't a weapon we know). Pick another weapon below.`,
+    typeOf: (type) => `${type} Riven`,
+    change: "Change",
+    rangeH: "Stat ranges at rank 8",
+    rangeNote: "Rank 8 is a fully upgraded Riven. Damage to a faction is shown as a multiplier, as in the game.",
+    hidden: (names) => `Not verified, not shown: ${names}.`,
+    stat: "Stat",
+    combos: { "2": "2 positives", "2-": "2 positives + negative", "3": "3 positives", "3-": "3 positives + negative" },
+    positive: "Positive",
+    negative: "Negative",
+    rollH: "How good is my roll?",
+    rollLede: "Pick the stat, how many positives your Riven has and the value it shows at rank 8.",
+    rollStat: "Stat",
+    rollCombo: "Riven",
+    rollSide: "The stat is",
+    rollValue: "Value",
+    rollPlaceholder: "e.g. 180",
+    rollResult: "of the way from the worst roll to the best",
+    rollOut: "That value is outside the range for this stat.",
+    rollRange: "Range",
+  },
+  builder: {
+    h1: "Build planner",
+    lede: "Pick a mod for each slot, set polarities and watch capacity and stats change. The build lives in the address: copy it to share it.",
+    start: "Search for a Warframe or weapon, or start with one of these.",
+    frames: "Warframes",
+    weapons: "Weapons",
+    pick: "What to build",
+    searchPlaceholder: "Warframe or weapon…",
+    all: "All",
+    kinds: { warframe: "Warframes", primary: "Primary", secondary: "Secondary", melee: "Melee" },
+    kind1: { warframe: "Warframe", primary: "Primary weapon", secondary: "Secondary weapon", melee: "Melee weapon" },
+    count: (n) => `${n} shown`,
+    none: "Nothing matches.",
+    change: "Change",
+    close: "Close",
+    rank: (n) => `Rank ${n}`,
+    toArsenal: "See in the Arsenal",
+    capacity: "Capacity",
+    free: "Free",
+    formas: "Forma",
+    reactor: "Orokin Reactor",
+    catalyst: "Orokin Catalyst",
+    over: (n) => `${n} over capacity: the game won't let you equip this build.`,
+    copy: "Copy link",
+    copied: "Link copied",
+    copyFail: "Couldn't copy: the link is in the address bar.",
+    pin: "Pin as reference",
+    unpin: "Unpin reference",
+    compare: "Comparison",
+    legendBase: "Gray: no mods",
+    legendRef: "Gray: pinned reference",
+    legendBuild: "White: your build",
+    aura: "Aura",
+    stance: "Stance",
+    exilus: "Exilus",
+    slots: "Slots",
+    empty: "Empty",
+    tap: "tap to pick",
+    noPol: "No polarity",
+    rankLabel: "Rank",
+    rankDown: "Rank down",
+    rankUp: "Rank up",
+    remove: "Remove",
+    polarity: "Polarity",
+    modSearch: (n) => `Search ${n} mods`,
+    noMods: "No mod fits here.",
+    stats: "Stats",
+    stat: "Stat",
+    base: "Base",
+    ref: "Ref.",
+    build: "Build",
+    delta: "Change",
+    isNew: "new",
+    groups: { damage: "Damage", crit: "Critical and status", gun: "Weapon", frame: "Warframe", abilities: "Abilities" },
+    w: {
+      perShot: "Damage per shot", perHit: "Damage per hit", perShotNote: "per projectile × multishot", total: "Damage per projectile", multishot: "Multishot",
+      cc: "Critical chance", cd: "Critical multiplier", sc: "Status chance", rate: "Fire rate", attackSpeed: "Attack speed", mag: "Magazine", reload: "Reload",
+    },
+    f: { health: "Health", shield: "Shield", armor: "Armor", energy: "Energy", strength: "Ability strength", duration: "Ability duration", efficiency: "Ability efficiency", range: "Ability range" },
+    fx: {
+      damage: "Damage", multishot: "Multishot", critChance: "Critical chance", critDamage: "Critical damage", statusChance: "Status chance",
+      fireRate: "Fire rate", magazine: "Magazine", reload: "Reload speed", meleeDamage: "Melee damage", attackSpeed: "Attack speed",
+      strength: "Ability strength", duration: "Ability duration", efficiency: "Ability efficiency", range: "Ability range",
+      health: "Health", shield: "Shield", armor: "Armor", energy: "Energy",
+    },
+    modsIn: "Mods in the build",
+    noModsYet: "No mods yet.",
+    notCounted: "not counted",
+    partly: "counted in part",
+    note: "Arsenal values at rank 30, without arcanes, Riven or conditional effects (on kill, while aiming…): those are shown as text and not counted.",
+  },
   baroPage: {
     h1: "Baro Ki'Teer",
     lede: "The Void Trader arrives at a relay every two weeks and stays for 48 hours, selling for ducats and credits. Here is his current visit and every visit we have recorded.",
@@ -579,7 +796,7 @@ const EN: WfCopy = {
 };
 
 const ES: WfCopy = {
-  tabs: { home: "Inicio", arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear", mods: "Mods", "star-chart": "Mapa estelar", mastery: "Maestría", "prime-vault": "Prime Vault", baro: "Baro Ki'Teer" },
+  tabs: { home: "Inicio", arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear", mods: "Mods", builder: "Armador", rivens: "Rivens", "star-chart": "Mapa estelar", mastery: "Maestría", "prime-vault": "Prime Vault", baro: "Baro Ki'Teer" },
   soon: "Pronto",
   loading: "Cargando…",
   loadError: "Esta página no se pudo cargar.",
@@ -600,6 +817,14 @@ const ES: WfCopy = {
     mastery: { title: "Maestría de Warframe: todo lo que da maestría, para tildar | Vestigo", description: "Tildá cada Warframe, arma y compañero que subiste y mirá tus puntos de maestría y el rango que alcanzan." },
     "prime-vault": { title: "Prime Vault de Warframe: qué Prime está en el Vault | Vestigo", description: "Cada Warframe y arma Prime, si sus partes todavía caen de reliquias abiertas y cuándo cambió su estado en el Vault." },
     baro: { title: "Baro Ki'Teer: inventario, llegada y visitas anteriores | Vestigo", description: "Dónde y cuándo llega Baro Ki'Teer, qué vende por ducados y créditos, y cada visita que anotamos." },
+    builder: {
+      title: "Armador de builds de Warframe: mods, capacidad y stats | Vestigo",
+      description: "Armá la build de un Warframe o un arma: elegí el mod de cada casillero, poné polaridades y mirá cambiar la capacidad, el daño y las habilidades.",
+    },
+    rivens: {
+      title: "Calculadora de Rivens de Warframe: rangos por arma | Vestigo",
+      description: "El mínimo y el máximo de cada stat de Riven para cualquier arma, con dos o tres positivos y un negativo, y qué tan buena es tu tirada.",
+    },
   },
   detailSeo: {
     arsenal: (name) => ({
@@ -627,12 +852,14 @@ const ES: WfCopy = {
     kicker: "Guía de Warframe",
     h1: "Todo para tu Arsenal",
     lede: (arsenal, relics, farming, mods) =>
-      `${arsenal} Warframes y armas con sus partes y recetas, ${relics} reliquias con cada recompensa, ${farming} recursos con dónde farmearlos y ${mods} mods y arcanos, más el Mapa estelar, la Maestría para tildar, el Prime Vault y Baro Ki'Teer.`,
+      `${arsenal} Warframes y armas con sus partes y recetas, ${relics} reliquias con cada recompensa, ${farming} recursos con dónde farmearlos y ${mods} mods y arcanos, más un armador de builds, el Mapa estelar, la Maestría para tildar, el Prime Vault y Baro Ki'Teer.`,
     cards: {
       arsenal: "Estadísticas, habilidades, receta y dónde cae cada parte, de cada Warframe y arma.",
       relics: "Las seis recompensas por refinamiento, dónde cae la reliquia y si está en el Vault.",
       farming: "Qué planetas y misiones sueltan cada recurso, y para qué sirve.",
       mods: "Polaridad, costo, estadísticas por rango y dónde cae cada mod y arcano.",
+      builder: "Elegí el mod de cada casillero y mirá cómo cambian la capacidad y las stats.",
+      rivens: "El rango de cada stat de Riven para cada arma, y qué tan buena es tu tirada.",
       "star-chart": "Cada nodo por planeta con su misión, nivel y recompensas por rotación.",
       mastery: "Tildá lo que ya subiste y contá tus puntos de maestría.",
       "prime-vault": "Qué Prime todavía cae de reliquias y cuáles están en el Vault.",
@@ -680,6 +907,7 @@ const ES: WfCopy = {
     credits: "Créditos",
     time: "Tiempo de fabricación",
     ingredients: "Ingredientes",
+    buildIt: "Armar build",
     stat: { health: "Salud", shield: "Escudo", armor: "Armadura", energy: "Energía", sprint: "Velocidad de carrera", total: "Daño total", crit: "Prob. de crítico", critMult: "Multiplicador crítico", status: "Prob. de estado", fireRate: "Cadencia", magazine: "Cargador", reload: "Recarga", multishot: "Multidisparo", trigger: "Disparo" },
     trigger: { AUTO: "Automático", SEMI: "Semiautomático", CHARGE: "Carga", HELD: "Mantenido", BURST: "Ráfaga", ACTIVE: "Activo", DUPLEX: "Dúplex" },
     units: { d: "d", h: "h", min: "min", s: "s" },
@@ -822,6 +1050,107 @@ const ES: WfCopy = {
     added: "Nuevo",
     noChanges: "Todavía no hubo cambios: se anotan desde el 27/10/2026.",
     note: "Disponible: cada parte cae de al menos una reliquia fuera del Vault. En el Vault: ninguna. Parcial: algunas sí y otras no. Sin reliquias: sus partes no están en ninguna reliquia (los Prime de fundador).",
+  },
+  rivens: {
+    h1: "Calculadora de Rivens",
+    lede: "El valor mínimo y el máximo de cada stat de Riven para cualquier arma, con dos o tres positivos y con o sin negativo, y qué tan buena salió tu tirada.",
+    notice: (d) => `Desde el Hotfix 44.1.3 todos los Riven usan la misma disposición: ${d}.`,
+    pick: "Arma",
+    searchPlaceholder: "Buscá un arma…",
+    typesLabel: "O elegí un tipo de Riven",
+    count: (n) => `${n} a la vista`,
+    none: "Nada coincide.",
+    noRiven: (slug) => `“${slug}” no acepta Riven (o no es un arma que conozcamos). Elegí otra abajo.`,
+    typeOf: (type) => `Riven de ${type}`,
+    change: "Cambiar",
+    rangeH: "Rangos de cada stat a rango 8",
+    rangeNote: "El rango 8 es un Riven mejorado del todo. El daño a una facción se muestra como multiplicador, igual que en el juego.",
+    hidden: (names) => `Sin verificar, no se muestran: ${names}.`,
+    stat: "Stat",
+    combos: { "2": "2 positivos", "2-": "2 positivos + negativo", "3": "3 positivos", "3-": "3 positivos + negativo" },
+    positive: "Positivo",
+    negative: "Negativo",
+    rollH: "¿Qué tan buena salió mi tirada?",
+    rollLede: "Elegí el stat, cuántos positivos tiene tu Riven y el valor que muestra a rango 8.",
+    rollStat: "Stat",
+    rollCombo: "Riven",
+    rollSide: "El stat es",
+    rollValue: "Valor",
+    rollPlaceholder: "p. ej. 180",
+    rollResult: "del camino entre la peor tirada y la mejor",
+    rollOut: "Ese valor está fuera del rango de este stat.",
+    rollRange: "Rango",
+  },
+  builder: {
+    h1: "Armador de builds",
+    lede: "Elegí el mod de cada casillero, poné polaridades y mirá cómo cambian la capacidad y las stats. La build queda en la dirección: copiala para compartirla.",
+    start: "Buscá un Warframe o un arma, o empezá con uno de estos.",
+    frames: "Warframes",
+    weapons: "Armas",
+    pick: "Qué armar",
+    searchPlaceholder: "Warframe o arma…",
+    all: "Todos",
+    kinds: { warframe: "Warframes", primary: "Primarias", secondary: "Secundarias", melee: "Cuerpo a cuerpo" },
+    kind1: { warframe: "Warframe", primary: "Arma primaria", secondary: "Arma secundaria", melee: "Arma cuerpo a cuerpo" },
+    count: (n) => `${n} a la vista`,
+    none: "Nada coincide.",
+    change: "Cambiar",
+    close: "Cerrar",
+    rank: (n) => `Rango ${n}`,
+    toArsenal: "Ver en el Arsenal",
+    capacity: "Capacidad",
+    free: "Libre",
+    formas: "Formas",
+    reactor: "Reactor Orokin",
+    catalyst: "Catalizador Orokin",
+    over: (n) => `Te pasaste por ${n}: el juego no deja equipar esta build.`,
+    copy: "Copiar enlace",
+    copied: "Enlace copiado",
+    copyFail: "No se pudo copiar: el enlace está en la barra de direcciones.",
+    pin: "Fijar como referencia",
+    unpin: "Soltar la referencia",
+    compare: "Comparación",
+    legendBase: "Gris: sin mods",
+    legendRef: "Gris: la referencia fijada",
+    legendBuild: "Blanco: tu build",
+    aura: "Aura",
+    stance: "Postura",
+    exilus: "Exilio",
+    slots: "Casilleros",
+    empty: "Vacío",
+    tap: "tocá para elegir",
+    noPol: "Sin polaridad",
+    rankLabel: "Rango",
+    rankDown: "Bajar rango",
+    rankUp: "Subir rango",
+    remove: "Quitar",
+    polarity: "Polaridad",
+    modSearch: (n) => `Buscar entre ${n} mods`,
+    noMods: "Acá no entra ningún mod.",
+    stats: "Estadísticas",
+    stat: "Stat",
+    base: "Base",
+    ref: "Ref.",
+    build: "Build",
+    delta: "Cambio",
+    isNew: "nuevo",
+    groups: { damage: "Daño", crit: "Crítico y estado", gun: "Arma", frame: "Warframe", abilities: "Habilidades" },
+    w: {
+      perShot: "Daño por disparo", perHit: "Daño por golpe", perShotNote: "por proyectil × multidisparo", total: "Daño por proyectil", multishot: "Multidisparo",
+      cc: "Prob. crítica", cd: "Multiplicador crítico", sc: "Prob. de estado", rate: "Cadencia", attackSpeed: "Velocidad de ataque", mag: "Cargador", reload: "Recarga",
+    },
+    f: { health: "Salud", shield: "Escudo", armor: "Armadura", energy: "Energía", strength: "Fuerza", duration: "Duración", efficiency: "Eficiencia", range: "Rango" },
+    fx: {
+      damage: "Daño", multishot: "Multidisparo", critChance: "Prob. crítica", critDamage: "Daño crítico", statusChance: "Prob. de estado",
+      fireRate: "Cadencia", magazine: "Cargador", reload: "Velocidad de recarga", meleeDamage: "Daño cuerpo a cuerpo", attackSpeed: "Velocidad de ataque",
+      strength: "Fuerza", duration: "Duración", efficiency: "Eficiencia", range: "Rango",
+      health: "Salud", shield: "Escudo", armor: "Armadura", energy: "Energía",
+    },
+    modsIn: "Mods de la build",
+    noModsYet: "Todavía sin mods.",
+    notCounted: "no se cuenta",
+    partly: "se cuenta en parte",
+    note: "Valores del Arsenal a rango 30, sin arcanos, Riven ni efectos condicionales (al matar, al apuntar…): esos se muestran como texto y no se cuentan.",
   },
   baroPage: {
     h1: "Baro Ki'Teer",

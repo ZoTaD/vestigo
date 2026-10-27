@@ -12,7 +12,7 @@ import { useLang, useLocale } from "../../i18n";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useWfCopy, type WfCopy } from "../../warframeCopy";
-import { duration, refName, say, type ArsenalFicha, type Refs, type Stats } from "../data";
+import { duration, inBuilder, refName, say, type ArsenalFicha, type Refs, type Stats } from "../data";
 import Sources from "../Sources";
 import { Icon, Panel, type Nav } from "../ui";
 
@@ -73,6 +73,13 @@ export default function ArsenalPage({ ficha, route, navigate }: { ficha: Arsenal
             {name}
           </h1>
           <p className="wf-lede">{say(ficha.desc, lang)}</p>
+          {inBuilder(ficha.slug, ficha.kind) && (
+            <p>
+              <RouteLink className="wf-btn is-acc wf-tobuild" to={{ ...route, view: "warframe", wfSection: "builder", detail: undefined }} search={`?i=${ficha.slug}`} onNavigate={navigate}>
+                {c.buildIt}
+              </RouteLink>
+            </p>
+          )}
         </div>
       </Panel>
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseRoute, registerWfSlugs, routePath, WF_SECTION_ES, type Route } from "../src/route";
+import { navigationPath, parseRoute, registerWfSlugs, routePath, WF_SECTION_ES, type Route } from "../src/route";
 
 describe("rutas de Warframe", () => {
   it("lee y escribe las direcciones de Warframe en los dos idiomas", () => {
@@ -15,6 +15,7 @@ describe("rutas de Warframe", () => {
     expect(WF_SECTION_ES).toEqual({
       arsenal: "arsenal", relics: "reliquias", farming: "donde-farmear", mods: "mods",
       "star-chart": "mapa-estelar", mastery: "maestria", "prime-vault": "prime-vault", baro: "baro",
+      builder: "armador", rivens: "rivens",
     });
     expect(routePath({ lang: "es", view: "warframe", wfSection: "relics" } as Route)).toBe("/es/warframe/reliquias");
     expect(routePath({ lang: "en", view: "warframe", wfSection: "relics" } as Route)).toBe("/en/warframe/relics");
@@ -45,6 +46,21 @@ describe("rutas de Warframe", () => {
     }
     expect(parseRoute("/en/warframe/prime-vault/ash-prime").detail).toBeUndefined();
     expect(parseRoute("/es/warframe/baro/algo").detail).toBeUndefined();
+  });
+
+  it("el armador y Rivens se leen en los dos idiomas, sin fichas: la build va en la query", () => {
+    for (const p of ["/en/warframe/builder", "/es/warframe/armador", "/es/warframe/builder", "/en/warframe/armador"]) {
+      expect(parseRoute(p), p).toMatchObject({ view: "warframe", wfSection: "builder" });
+    }
+    expect(routePath(parseRoute("/en/warframe/builder"))).toBe("/en/warframe/builder");
+    expect(routePath(parseRoute("/es/warframe/armador"))).toBe("/es/warframe/armador");
+    expect(parseRoute("/en/warframe/builder/braton").detail).toBeUndefined();
+    for (const lang of ["en", "es"]) expect(parseRoute(`/${lang}/warframe/rivens`)).toMatchObject({ view: "warframe", wfSection: "rivens" });
+    // Cambiar de idioma conserva la build de la dirección.
+    const en = parseRoute("/en/warframe/builder");
+    const at = { search: "?i=braton&m=0.serration.10", hash: "" };
+    expect(navigationPath(en, { ...en, lang: "es" }, at)).toBe("/es/warframe/armador?i=braton&m=0.serration.10");
+    expect(navigationPath(parseRoute("/es/warframe/armador"), { ...en }, at)).toBe("/en/warframe/builder?i=braton&m=0.serration.10");
   });
 
   it("una pestaña que no existe muestra la portada", () => {

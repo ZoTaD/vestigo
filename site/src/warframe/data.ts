@@ -648,3 +648,115 @@ export function effectiveStarType(planet: string | null, type: string | null, ty
 export function filterStars(rows: readonly StarRow[], planet: string | null, type: string | null): StarRow[] {
   return rows.filter((r) => (!planet || planetSlug(r.planet) === planet) && (!type || r.type === type));
 }
+
+/* ---------- Armador (etapa 3): lo que escribe `games/warframe/tools/builder.py` en `data/builder/` ---------- */
+
+/** Qué se arma: Warframes y armas primarias, secundarias y cuerpo a cuerpo. */
+export type Kind = "warframe" | "primary" | "secondary" | "melee";
+/** Polaridades del export: AP_ATTACK, AP_DEFENSE, AP_TACTIC, AP_POWER, AP_WARD, AP_PRECEPT, AP_UMBRA. */
+export type Pol = "madurai" | "vazarin" | "naramon" | "zenurik" | "unairu" | "penjaga" | "umbra";
+export const POLS: Pol[] = ["madurai", "vazarin", "naramon", "zenurik", "unairu", "penjaga", "umbra"];
+/** Las stats que la tabla de patrones de `builder.py` reconoce en el texto de un mod. */
+export type StatKey = "damage" | "impact" | "puncture" | "slash" | "heat" | "cold" | "electricity" | "toxin" | "blast"
+  | "corrosive" | "gas" | "magnetic" | "radiation" | "viral" | "multishot" | "critChance" | "critDamage" | "statusChance"
+  | "fireRate" | "magazine" | "reload" | "meleeDamage" | "attackSpeed" | "strength" | "duration" | "efficiency" | "range"
+  | "health" | "shield" | "armor" | "energy";
+
+/** Un objeto de `builder/items.json`. */
+export interface BuildItem {
+  /** El slug y el ícono del Arsenal (para enlazar a su ficha). */
+  slug: string;
+  name: Pair;
+  kind: Kind;
+  icon: string;
+  /** Rango máximo = capacidad sin potenciador: 30, o `maxLevelCap`. */
+  cap: number;
+  /** Los `compatName` de los mods que le entran (clase, nombre propio, `WARFRAME`, `AURA`…). */
+  compat: string[];
+  /** Armas: `dmg` es `damagePerShot` (20 posiciones, por proyectil); `cc` y `sc` en fracción, `cd` multiplicador. */
+  w?: { dmg: number[]; cc: number; cd: number; sc: number; rate: number; mag?: number; reload?: number; ms: number; bow: boolean; shotgun: boolean; riven?: string };
+  /** Warframes, ya a rango 30 (regla del Update 34.0 + excepciones). */
+  f?: { health: number; shield: number; armor: number; energy: number };
+}
+
+/** Un mod de `builder/mods-<kind>.json`. */
+export interface BuildMod {
+  /** El de la pestaña Mods (`/mods/<slug>`), único por `uniqueName`. */
+  slug: string;
+  name: Pair;
+  pol: Pol | null;
+  rarity: string;
+  /** `baseDrain`: negativo en auras y posturas (suman capacidad). */
+  drain: number;
+  /** `fusionLimit`: el rango máximo. */
+  max: number;
+  slot: "normal" | "aura" | "stance";
+  /** `isUtility`: entra en el casillero de exilio. */
+  exilus: boolean;
+  compat: string;
+  icon?: string;
+  /** Por stat, el valor en cada rango 0..max, en puntos (165 = +165 %); sólo lo reconocido e incondicional. */
+  fx: [StatKey, number[]][];
+  /** Las líneas del mod al rango máximo, para mostrar. */
+  text: Pair[];
+  /** Slugs de los mods del mismo archivo que no van con este (campo `Incompatible` de Module:Mods/data). */
+  inc?: string[];
+}
+
+const builderItems = once<BuildItem[]>(() => import("@warframe/builder/items.json").then((m) => ({ default: m.default.items as BuildItem[] })));
+/** Los ~690 objetos del armador, en su propio chunk. */
+export const loadBuilderItems = (): Promise<BuildItem[]> => builderItems.load();
+export const peekBuilderItems = (): BuildItem[] | null => builderItems.peek();
+
+/** Un `import()` por archivo de mods: el de un arma no baja los de Warframe. */
+const builderMods: Record<Kind, ReturnType<typeof once<BuildMod[]>>> = {
+  warframe: once<BuildMod[]>(() => import("@warframe/builder/mods-warframe.json").then((m) => ({ default: m.default.mods as BuildMod[] }))),
+  primary: once<BuildMod[]>(() => import("@warframe/builder/mods-primary.json").then((m) => ({ default: m.default.mods as BuildMod[] }))),
+  secondary: once<BuildMod[]>(() => import("@warframe/builder/mods-secondary.json").then((m) => ({ default: m.default.mods as BuildMod[] }))),
+  melee: once<BuildMod[]>(() => import("@warframe/builder/mods-melee.json").then((m) => ({ default: m.default.mods as BuildMod[] }))),
+};
+export const loadBuilderMods = (kind: Kind): Promise<BuildMod[]> => builderMods[kind].load();
+export const peekBuilderMods = (kind: Kind): BuildMod[] | null => builderMods[kind].peek();
+
+/**
+ * Las fichas del Arsenal de esos cuatro tipos que no están en el armador (los Necramechs que el Arsenal cuenta como
+ * Warframe y una pieza de Orion). Así la ficha sabe si ofrecer "Armar build" sin bajar `items.json`; lo cuida
+ * `warframeBuilder.test.ts` contra los datos.
+ */
+export const NOT_IN_BUILDER: ReadonlySet<string> = new Set(["bonewidow", "orion-sirius", "voidrig"]);
+export const inBuilder = (slug: string, kind: WfKind): boolean =>
+  (kind === "warframe" || kind === "primary" || kind === "secondary" || kind === "melee") && !NOT_IN_BUILDER.has(slug);
+
+/* ---------- Rivens (etapa 3): lo que escribe `games/warframe/tools/builder.py` en `data/rivens/list.json` ---------- */
+
+/** Un stat posible de un tipo de Riven: `value` es el del export (0,0166 = 1,66 % por punto de la cuenta). */
+export interface RivenStat {
+  tag: string;
+  name: Pair;
+  value: number;
+  /** La unidad que escribe el juego según el `locTag`: "%", "s" (duración del combo) o nada (alcance, combo inicial…). */
+  unit: "%" | "s" | "";
+}
+/** Un tipo de Riven (rifle, escopeta, pistola, cuerpo a cuerpo, arma de Archwing, Kitgun, Zaw) y sus stats. */
+export interface RivenType {
+  key: string;
+  name: Pair;
+  stats: RivenStat[];
+}
+/** Un arma que acepta Riven. `d` es la disposición que trae el export (hoy 1,2 para todas). */
+export interface RivenWeapon {
+  slug: string;
+  name: Pair;
+  type: string;
+  d: number;
+  icon: string | null;
+}
+export interface RivenData {
+  types: RivenType[];
+  weapons: RivenWeapon[];
+}
+
+const rivens = once<RivenData>(() => import("@warframe/rivens/list.json"));
+/** Los Rivens (590 armas y 7 tipos), en su propio chunk. */
+export const loadRivens = (): Promise<RivenData> => rivens.load();
+export const peekRivens = (): RivenData | null => rivens.peek();

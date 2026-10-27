@@ -71,6 +71,7 @@ describe("cada vista en su chunk (2026-09-25)", () => {
     expect(filesFor({ ...base, view: "rust", rsSection: "home" })).toEqual(["src/Rust.tsx"]);
     expect(filesFor({ ...base, view: "stardew", sdSection: "home" })).toEqual(["src/Stardew.tsx"]);
     expect(filesFor({ ...base, view: "warframe", wfSection: "home" })).toEqual(["src/Warframe.tsx"]);
+    expect(filesFor({ ...base, view: "warframe", wfSection: "builder" })).toEqual(["src/Warframe.tsx", "src/warframe/builder/WfBuilder.tsx"]);
   });
 });
 
