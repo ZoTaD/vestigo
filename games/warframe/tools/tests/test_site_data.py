@@ -82,6 +82,23 @@ class TestSiteData(unittest.TestCase):
         es = self.out["es"]["arsenal"]
         self.assertEqual(es[site_data.shard("excalibur")]["excalibur"], "excalibur")
 
+    def test_toda_fuente_de_reliquia_resuelve_en_refs(self):
+        for tab, fichas in self.out["fichas"].items():
+            for slug, f in fichas.items():
+                srcs = list(f.get("sources", []))
+                for p in f.get("parts", []):
+                    srcs += p["sources"]
+                for fu in srcs:
+                    if fu["k"] == "relic":
+                        self.assertIn(fu["relic"], f["refs"], (tab, slug, fu["relic"]))
+
+    def test_desempate_de_slugs_por_tipo(self):
+        for a, b, suf in (("mod", "arcane", "arcane"), ("warframe", "exalted", "exalted")):
+            filas = [{"unique": f"/Lotus/A/{k}", "kind": k, "name": ["Same Name", "Mismo Nombre"]} for k in (a, b)]
+            site_data._slugs(filas)
+            self.assertEqual([f["slug"] for f in filas], ["same-name", f"same-name-{suf}"])
+            self.assertEqual([f["slugEs"] for f in filas], ["mismo-nombre", f"mismo-nombre-{suf}"])
+
 
 if __name__ == "__main__":
     unittest.main()

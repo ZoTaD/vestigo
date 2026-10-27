@@ -346,8 +346,14 @@ class _Refs:
 
     def de_fuentes(self, fuentes: list[dict], refs: dict) -> None:
         for f in fuentes:
-            if f["k"] == "relic" and f["relic"] in self.por_reliquia:
-                refs[f["relic"]] = self.de_reliquia(f["relic"])
+            if f["k"] != "relic":
+                continue
+            r = f["relic"]
+            if r in self.por_reliquia:
+                refs[r] = self.de_reliquia(r)
+            else:  # reliquia sin ficha (Requiem, Requiem Eterna): la fuente se nombra, sin página
+                nom = _nombres_reliquias().get(r.casefold(), [r, r])
+                refs[r] = {"tab": None, "slug": None, "slugEs": None, "name": nom, "img": None}
 
 
 # ---- fichas ------------------------------------------------------------------------------------------------
