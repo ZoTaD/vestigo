@@ -1,0 +1,67 @@
+name: publish baro
+
+# El historial de Baro Ki'Teer, los sábados a las 14:00 UTC (Baro llega el viernes a
+# las 13:00 UTC y se queda 48 h) y a mano. `baro.py` lee la API de warframestat y, si
+# la visita no está anotada, la suma a `games/warframe/data/baro/history.json`.
+# Sin visita nueva no hay commit (~15 s).
+#
+# A propósito NO está en `workflow_run` de `deploy.yml` (excepción a la regla 5 de
+# CLAUDE.md): una visita cada dos semanas no justifica compilar el sitio entero. El
+# commit lo empuja el GITHUB_TOKEN, que no dispara workflows, y sale con la próxima
+# publicación (ver la sección de Baro en el spec de Warframe).
+on:
+  schedule:
+    - cron: "0 14 * * 6"
+  workflow_dispatch:
+
+concurrency:
+  group: publish-baro
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Sin credenciales guardadas y con las actions fijadas por commit, igual que
+      # `publish-warframe`.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      # Sólo biblioteca estándar: no hay nada que instalar.
+      - name: baro
+        id: baro
+        run: |
+          resultado="$(python3 games/warframe/tools/baro.py)"
+          echo "resultado: $resultado"
+          echo "resultado=$resultado" >> "$GITHUB_OUTPUT"
+
+      - name: commit
+        if: steps.baro.outputs.resultado == 'nueva'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # El token, sólo acá y sólo para este comando (ver el checkout).
+          auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git_auth() { git -c "http.https://github.com/.extraheader=$auth" "$@"; }
+          git config user.name "vestigo-bot"
+          git config user.email "67348048+ZoTaD@users.noreply.github.com"
+          git add games/warframe/data/baro
+          git commit -m "chore(warframe): Baro del $(date -u +%Y-%m-%d)"
+          # El push se reintenta rebaseando sobre lo que llegó: esta corrida sólo
+          # toca el historial de Baro.
+          empujado=0
+          for intento in 1 2 3; do
+            if git_auth push origin "HEAD:$GITHUB_REF_NAME"; then empujado=1; break; fi
+            echo "push rechazado (intento $intento): traigo lo que llegó y reintento"
+            git_auth fetch origin "$GITHUB_REF_NAME" || break
+            git rebase "origin/$GITHUB_REF_NAME" || break
+          done
+          if [ "$empujado" != 1 ]; then
+            echo "::error::no se pudo publicar después de 3 intentos"
+            exit 1
+          fi
