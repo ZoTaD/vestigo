@@ -265,6 +265,8 @@ export default function MapViewer({ seed, layer, grid, markers, onHover, onProgr
 
   // --- vista general, por bandas, con una previa rápida
   useEffect(() => {
+    // Sin semilla no hay mundo: no se arrancan los workers (los rastreadores llegan así).
+    if (!seed) return;
     if (!pool.current) pool.current = new WorkerPool();
     const p = pool.current;
     p.clear();

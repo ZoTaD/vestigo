@@ -30,6 +30,13 @@ function randomSeed(): string {
   return s;
 }
 
+/**
+ * Google y los demás rastreadores renderizan con poca CPU y un tope de tiempo: generar el mundo
+ * (hasta 9 workers) les agota el presupuesto y la página no se indexa. Para ellos el mapa arranca
+ * sin semilla; el texto y el formulario son los mismos.
+ */
+const CRAWLER = /bot|crawl|spider|slurp|Google-InspectionTool|Chrome-Lighthouse/i;
+
 function readUrl() {
   if (typeof window === "undefined") return { seed: "", view: null };
   const q = new URLSearchParams(window.location.search);
@@ -73,7 +80,7 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
 
   // Sin semilla en la URL, una al azar para que el mapa no arranque vacío.
   useEffect(() => {
-    if (!seed) {
+    if (!seed && !CRAWLER.test(navigator.userAgent)) {
       const s = randomSeed();
       setSeed(s);
       setInput(s);
@@ -159,7 +166,7 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
           <MapViewer seed={seed} layer={layer} grid={grid} markers={allMarkers} fog={saves.fog} lines={saves.lines} onHover={setHover} onProgress={onProgress} onError={() => setFailed(true)} onMarkerHover={setTip}
             onMarker={setSelected} handle={onHandle} initial={first.view} onView={onView} />
           <div className="vm-status">
-            {failed ? t.noEngine : progress.p < 1 ? t.generating(progress.p) : progress.ms ? t.generated(progress.ms / 1000) : null}
+            {failed ? t.noEngine : !seed ? null : progress.p < 1 ? t.generating(progress.p) : progress.ms ? t.generated(progress.ms / 1000) : null}
             {loc.progress != null && loc.progress < 1 ? ` · ${t.placing(loc.progress)}` : loc.items ? ` · ${t.placed(loc.items.length)}` : ""}
           </div>
           {hover && (
