@@ -14,8 +14,8 @@ import Sources from "../Sources";
 import { Icon, Panel, type Nav } from "../ui";
 
 const longestWord = (name: string): number => Math.max(...name.split(/\s+/).map((w) => w.length), 1);
-/** El alto de un casillero de "Lo piden" (ícono de 40 px), en px, medido en el navegador (2026-10-27). */
-const USED_CELL = 58;
+/** El alto de un casillero de "Lo piden" (ícono de 40 px), en px, medido en el navegador a 638 px (2026-10-27). */
+const USED_CELL = 56;
 
 export default function FarmingPage({ ficha, route, navigate }: { ficha: FarmingFicha; route: Route; navigate: Nav }) {
   const t = useWfCopy();

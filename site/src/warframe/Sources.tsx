@@ -4,13 +4,13 @@
  * ninguna fuente no hay tablas vacías: sólo el texto "No cae en misiones". La usan Arsenal, Reliquias y, después, Dónde
  * farmear y Mods.
  */
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { useLang, useLocale } from "../i18n";
 import { LazyRows } from "../LazyRows";
 import RouteLink from "../RouteLink";
 import type { Route } from "../route";
 import { useWfCopy } from "../warframeCopy";
-import { refName, sortSources, type Refs, type Source } from "./data";
+import { refName, scoreOf as score, sortSources, type Refs, type Source } from "./data";
 import { Rarity, type Nav } from "./ui";
 
 /** Una fila de tabla que pasa de a tandas cuando la tabla es larga (un recurso común cae en cientos de misiones). */
@@ -59,9 +59,10 @@ export default function Sources({ list, refs = {}, route, navigate }: { list: re
     }
     return name;
   };
-  return (
-    <div className="wf-sources">
-      {relics.length > 0 && (
+  /** Los grupos, el de mejor chance primero (a igual chance, el orden de siempre). Las reliquias no traen cifra: van después. */
+  const best = (g: readonly Source[]): number => (g.length ? score(sortSources(g)[0]) : -1);
+  const groups: { key: string; rows: readonly Source[]; node: ReactNode }[] = [
+    { key: "relics", rows: relics, node: (
         <Table
           caption={c.relic}
           head={
@@ -82,8 +83,8 @@ export default function Sources({ list, refs = {}, route, navigate }: { list: re
             </tr>
           )}
         />
-      )}
-      {missions.length > 0 && (
+    ) },
+    { key: "missions", rows: missions, node: (
         <Table
           caption={c.mission}
           head={
@@ -102,8 +103,8 @@ export default function Sources({ list, refs = {}, route, navigate }: { list: re
             </tr>
           )}
         />
-      )}
-      {bounties.length > 0 && (
+    ) },
+    { key: "bounties", rows: bounties, node: (
         <Table
           caption={c.bounty}
           head={
@@ -126,8 +127,8 @@ export default function Sources({ list, refs = {}, route, navigate }: { list: re
             </tr>
           )}
         />
-      )}
-      {others.length > 0 && (
+    ) },
+    { key: "others", rows: others, node: (
         <Table
           caption={c.other}
           head={
@@ -144,8 +145,8 @@ export default function Sources({ list, refs = {}, route, navigate }: { list: re
             </tr>
           )}
         />
-      )}
-      {enemies.length > 0 && (
+    ) },
+    { key: "enemies", rows: enemies, node: (
         <Table
           caption={c.enemy}
           head={
@@ -162,7 +163,14 @@ export default function Sources({ list, refs = {}, route, navigate }: { list: re
             </tr>
           )}
         />
-      )}
+    ) },
+  ];
+  groups.sort((a, b) => best(b.rows) - best(a.rows));
+  return (
+    <div className="wf-sources">
+      {groups.filter((g) => g.rows.length > 0).map((g) => (
+        <Fragment key={g.key}>{g.node}</Fragment>
+      ))}
     </div>
   );
 }

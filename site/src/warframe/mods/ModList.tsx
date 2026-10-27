@@ -95,7 +95,7 @@ export default function ModList({ rows, route, navigate, missing = false }: { ro
           <table className="wf-table wf-mod-table">
             <thead>
               <tr>
-                <th>{c.search}</th>
+                <th>{c.name}</th>
                 <th>{c.type}</th>
                 <th>{c.rarity}</th>
                 <th>{c.polarity}</th>

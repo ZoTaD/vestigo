@@ -9,7 +9,7 @@ import ArsenalList from "../src/warframe/arsenal/ArsenalList";
 import ArsenalPage from "../src/warframe/arsenal/ArsenalPage";
 import RelicPage from "../src/warframe/relics/RelicPage";
 import Sources from "../src/warframe/Sources";
-import { loadFicha, loadList, peekFicha, preloadRoute, say, sortSources, WF_SHARDS } from "../src/warframe/data";
+import { loadFicha, readModFilters, loadList, peekFicha, preloadRoute, say, sortSources, WF_SHARDS } from "../src/warframe/data";
 import FarmingPage from "../src/warframe/farming/FarmingPage";
 import ModList from "../src/warframe/mods/ModList";
 import ModPage from "../src/warframe/mods/ModPage";
@@ -119,5 +119,19 @@ describe("datos de Warframe: Dónde farmear y Mods", () => {
     const rows = await loadList("mods");
     const html = inLang("en", createElement(ModList, { rows, route: route("en", "mods"), navigate: noop }));
     expect(html).toContain("Arcanes");
+  });
+  it("en los sensores neurales el grupo de enemigos va primero (50 % efectivo)", async () => {
+    const f = (await loadFicha("farming", "neural-sensors"))!;
+    const html = inLang("en", createElement(Sources, { list: f.sources, refs: f.refs }));
+    expect(html.indexOf(WF_COPY.en.sources.enemy)).toBeGreaterThan(-1);
+    expect(html.indexOf("<h4 class=\"wf-h3\">" + WF_COPY.en.sources.enemy)).toBeLessThan(html.indexOf("<h4 class=\"wf-h3\">" + WF_COPY.en.sources.mission));
+  });
+  it("kind=arcane en la dirección ignora type y polarity", () => {
+    expect(readModFilters("?kind=arcane&type=PRIMARY&polarity=madurai&rarity=Rare")).toEqual({ kind: "arcane", type: null, rarity: "Rare", polarity: null });
+    expect(readModFilters("?kind=mod&type=PRIMARY").type).toBe("PRIMARY");
+  });
+  it("la tabla de mods encabeza su primera columna con 'Name'", async () => {
+    const rows = await loadList("mods");
+    expect(inLang("en", createElement(ModList, { rows, route: route("en", "mods"), navigate: noop }))).toContain("<th>Name</th>");
   });
 });

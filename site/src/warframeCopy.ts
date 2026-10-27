@@ -149,6 +149,8 @@ export interface WfCopy {
     h1: string;
     lede: (n: string) => string;
     search: string;
+    /** El encabezado de la primera columna de la tabla. */
+    name: string;
     searchPlaceholder: string;
     kind: string;
     all: string;
@@ -300,6 +302,7 @@ const EN: WfCopy = {
     h1: "Warframe mods and arcanes",
     lede: (n) => `All ${n} mods and arcanes with their stats and drops.`,
     search: "Search",
+    name: "Name",
     searchPlaceholder: "Serration, Arcane Grace…",
     kind: "Kind",
     all: "All",
@@ -454,6 +457,7 @@ const ES: WfCopy = {
     h1: "Mods y arcanos de Warframe",
     lede: (n) => `Los ${n} mods y arcanos con sus estadísticas y drops.`,
     search: "Buscar",
+    name: "Nombre",
     searchPlaceholder: "Sierra, Arcano Gracia…",
     kind: "Clase",
     all: "Todos",

@@ -311,9 +311,10 @@ export function duration(seconds: number, u: { d: string; h: string; min: string
 
 /** Mayor chance primero. Una fuente sin cifra (una reliquia) va después, por rareza y con las del Vault al final. */
 const RARITY_RANK: Record<string, number> = { Common: 0, Uncommon: 1, Rare: 2, Legendary: 3 };
+/** El puntaje de una fuente: la probabilidad efectiva de un enemigo (la que muestra la tabla), la chance del resto; una reliquia, 0. */
+export const scoreOf = (s: Source): number => (s.k === "enemy" ? s.eff : "chance" in s ? s.chance : 0);
 export function sortSources<T extends Source>(list: readonly T[]): T[] {
-  // Un enemigo se ordena por su probabilidad efectiva (la que muestra la tabla), no por la de su drop.
-  const score = (s: Source): number => (s.k === "enemy" ? s.eff : "chance" in s ? s.chance : 0);
+  const score = scoreOf;
   return [...list].sort((a, b) => {
     if (a.k === "relic" && b.k === "relic") return +a.vaulted - +b.vaulted || (RARITY_RANK[a.rarity] ?? 9) - (RARITY_RANK[b.rarity] ?? 9) || a.relic.localeCompare(b.relic, "en", { numeric: true });
     return score(b) - score(a);
@@ -412,7 +413,9 @@ export const MOD_RARITIES = ["Common", "Uncommon", "Rare", "Legendary"] as const
 export function readModFilters(search: string): ModFilters {
   const q = new URLSearchParams(search);
   const kind = q.get("kind");
-  return { kind: kind === "mod" || kind === "arcane" ? kind : null, type: q.get("type"), rarity: q.get("rarity"), polarity: q.get("polarity") };
+  // Los arcanos no tienen tipo ni polaridad (sus chips no se dibujan): un filtro así dejaría la lista vacía sin salida.
+  const arcane = kind === "arcane";
+  return { kind: kind === "mod" || arcane ? kind : null, type: arcane ? null : q.get("type"), rarity: q.get("rarity"), polarity: arcane ? null : q.get("polarity") };
 }
 export function writeModFilters(f: ModFilters): string {
   const q = new URLSearchParams();
