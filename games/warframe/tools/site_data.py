@@ -5,8 +5,10 @@ Uso: python games/warframe/tools/site_data.py    (los íconos los baja `images.p
 `build()` arma todo en memoria (y con `write=True` lo escribe); es lo que prueban los tests. Nombres, descripciones y
 estadísticas salen siempre del export (`_en` y `_es`); si un dato no está en ninguna fuente, la ficha no lo inventa.
 
-Por pestaña (`arsenal`, `relics`, `farming`, `mods`): `list.json` liviana, `f/NN.json` con las fichas repartidas por el
-hash del slug y `es/NN.json` con `{slugEs: slug}` repartido por el slug español.
+Por pestaña (`arsenal`, `relics`, `farming`, `mods`, `star-chart`): `list.json` liviana, `f/NN.json` con las fichas
+repartidas por el hash del slug y `es/NN.json` con `{slugEs: slug}` repartido por el slug español. `mastery` y
+`prime-vault` no tienen fichas (cada fila enlaza al Arsenal): sólo `list.json`, y `prime-vault/history.json` con los
+cambios de estado de cada corrida.
 """
 import hashlib
 import json
@@ -24,7 +26,22 @@ import wf  # noqa: E402
 DATA = Path(__file__).resolve().parents[1] / "data"
 # En cuántos archivos se reparten las fichas de cada pestaña: `pzShardOf(slug, CHUNKS)` de `site/src/zomboid/shard.ts`.
 CHUNKS = 32
-TABS = ("arsenal", "relics", "farming", "mods")
+TABS = ("arsenal", "relics", "farming", "mods", "star-chart")
+SIN_FICHAS = ("mastery", "prime-vault")
+
+# Tipo de misión y facción de cada nodo de `ExportRegions`, que el export da como índice. Fijado cruzando la tabla de
+# drops y solNodes.json de warframe-worldstate-data.
+MISSION_TYPES = {
+    0: "Assassination", 1: "Exterminate", 2: "Survival", 3: "Rescue", 4: "Sabotage", 5: "Capture", 7: "Spy",
+    8: "Defense", 9: "Mobile Defense", 13: "Interception", 14: "Hijack", 15: "Hive", 17: "Excavation",
+    21: "Infested Salvage", 22: "Arena", 24: "Pursuit", 25: "Rush", 26: "Assault", 27: "Defection", 28: "Free Roam",
+    31: "The Circuit", 33: "Disruption", 34: "Void Flood", 35: "Void Cascade", 36: "Void Armageddon", 38: "Alchemy",
+    40: "Legacyte Harvest", 41: "Shrine Defense", 42: "Faceoff", 43: "Descent", 44: "The Perita Rebellion", 45: "Relay",
+}
+FACTIONS = {0: "Grineer", 1: "Corpus", 2: "Infested", 3: "Orokin", 5: "Sentient", 7: "The Murmur", 8: "Scaldra",
+            9: "Techrot", 10: "Duviri", 11: "Anarchs"}
+# "Planeta/Nodo (Tipo)" o "Planeta/Nodo (Tipo) Extra" de la tabla de drops de misiones.
+_DONDE = re.compile(r"^(.*?)/(.*?) \((.*)\)( Extra)?$")
 
 # Tipos de daño de `damagePerShot` (20 posiciones). Fijado con Braton (0-2), Ignis (3), Glaxion (4) y Mara Detron (8).
 DAMAGE_TYPES = [
@@ -164,6 +181,10 @@ def _arsenal_items() -> list[dict]:
     return items
 
 
+def _es_prime(i: dict) -> bool:
+    return bool(re.search(r"\bPrime\b", i["name"][0]))
+
+
 def _stats(x: dict) -> dict:
     if "damagePerShot" in x:
         dano = [[DAMAGE_TYPES[i], round(v, 2)] for i, v in enumerate(x["damagePerShot"]) if v]
@@ -277,8 +298,9 @@ def _mods() -> list[dict]:
 class _Refs:
     """Resuelve cualquier cosa nombrada a `{tab, slug, slugEs, name, img}` y la ubica por su clave."""
 
-    def __init__(self, items, por_unique, por_reliquia, recursos, por_recurso, mods, iconos):
+    def __init__(self, items, por_unique, por_reliquia, recursos, por_recurso, mods, iconos, nodos):
         self.por_unique, self.por_reliquia, self.por_recurso = por_unique, por_reliquia, por_recurso
+        self.por_lugar = {n["lugar"]: n for n in nodos}  # (planeta, nodo) en casefold -> nodo
         self.iconos = iconos
         self.sin_ref: set = set()
         self.partes: dict[str, dict] = {}  # unique de la parte -> ref (apunta al objeto al que pertenece)
@@ -332,6 +354,22 @@ class _Refs:
         r = self.por_reliquia[key]
         return {"tab": "relics", "slug": r["slug"], "slugEs": r["slugEs"], "name": r["name"], "img": r["img"]}
 
+    @staticmethod
+    def de_nodo(n: dict) -> dict:
+        return {"tab": "star-chart", "slug": n["slug"], "slugEs": n["slugEs"], "name": n["name"], "img": None}
+
+    def nodo_de(self, donde: str):
+        """El nodo de un `where` de la tabla de misiones ("Sedna/Hydron (Defense) Extra"), o None (eventos, Proxima)."""
+        m = _DONDE.match(donde or "")
+        return self.por_lugar.get((m.group(1).casefold(), m.group(2).casefold())) if m else None
+
+    def de_drop(self, item: str):
+        """(clave, ref) de un objeto de la tabla de misiones: las reliquias vienen como "Lith A1 Relic"."""
+        key = item.removesuffix(" Relic")
+        if item.endswith(" Relic") and key in self.por_reliquia:
+            return key, self.de_reliquia(key)
+        return self.de_nombre(item)
+
     def de_unique(self, unique: str):
         """(clave, ref) de un objeto por su `uniqueName`: Arsenal, recurso, parte, o sólo el nombre."""
         clave = unique.removeprefix("/Lotus/")
@@ -357,7 +395,15 @@ class _Refs:
         return clave, ref
 
     def de_fuentes(self, fuentes: list[dict], refs: dict) -> None:
-        for f in fuentes:
+        """Suma a `refs` las reliquias y los nodos que nombran las fuentes; a las de misión les pone `node`."""
+        for n, f in enumerate(fuentes):
+            if f["k"] == "mission":
+                nodo = self.nodo_de(f["where"])
+                if nodo:
+                    clave = "node:" + nodo["slug"]
+                    fuentes[n] = {**f, "node": clave}  # copia: las fuentes de `relations` están en caché
+                    refs[clave] = self.de_nodo(nodo)
+                continue
             if f["k"] != "relic":
                 continue
             r = f["relic"]
@@ -417,6 +463,7 @@ def _ficha_reliquia(r: dict, R: _Refs) -> dict:
         refs[clave] = ref
         rewards.append({"ref": clave, "rarity": rar, "chances": chances})
     fuentes = relations.sources_by_name(r["key"] + " Relic") + drops.enemy_relics().get(r["key"], [])
+    R.de_fuentes(fuentes, refs)
     return {"slug": r["slug"], "slugEs": r["slugEs"], "name": r["name"], "era": r["era"],
             "vaulted": _vaulted(r), "img": r["img"], "rewards": rewards, "sources": fuentes, "refs": refs}
 
@@ -445,6 +492,119 @@ def _ficha_mod(m: dict, R: _Refs) -> dict:
     if m["desc"]:
         f["desc"] = m["desc"]
     return f
+
+
+# ---- mapa estelar ------------------------------------------------------------------------------------------
+
+def _nodos() -> list[dict]:
+    """Los nodos de `ExportRegions` en orden de `systemIndex` (y del export), con slugs y sus filas de la tabla."""
+    es = wf.by_unique("Regions", "es")
+    out = []
+    for x in wf.export("Regions", "en"):
+        y = es.get(x["uniqueName"]) or x
+        if x["missionIndex"] not in MISSION_TYPES or x["factionIndex"] not in FACTIONS:
+            raise ValueError(f"{x['uniqueName']} ({x['name']}): tipo {x['missionIndex']} o facción "
+                             f"{x['factionIndex']} sin nombre en MISSION_TYPES / FACTIONS")
+        out.append({"name": [x["name"], y["name"] or x["name"]],
+                    "planet": [x["systemName"], y["systemName"] or x["systemName"]], "pi": x["systemIndex"],
+                    "type": MISSION_TYPES[x["missionIndex"]], "faction": FACTIONS[x["factionIndex"]],
+                    "lv": [x["minEnemyLevel"], x["maxEnemyLevel"]], "mr": x.get("masteryReq", 0),
+                    "dark": x["nodeType"] == 4, "lugar": (x["systemName"].casefold(), x["name"].casefold()),
+                    "filas": []})
+    out.sort(key=lambda n: n["pi"])  # estable: dentro del planeta, el orden del export
+    for campo, idioma in (("slug", 0), ("slugEs", 1)):
+        usados: set = set()
+        for n in out:
+            s = _unico(wf.slugify(n["name"][idioma]), usados, wf.slugify(f"{n['name'][idioma]}-{n['planet'][idioma]}"))
+            n[campo] = s
+            usados.add(s)
+    por_lugar = {n["lugar"]: n for n in out}
+    for x in drops.missions():
+        m = _DONDE.match(x["where"])
+        n = por_lugar.get((m.group(1).casefold(), m.group(2).casefold())) if m else None
+        if n:  # lo que no es un nodo (eventos, Proxima, Duviri sin fin) queda afuera
+            n["filas"].append({**x, "tabla": m.group(3), "extra": bool(m.group(4))})
+    return out
+
+
+def _recompensas(n: dict, R: _Refs, refs: dict) -> list[dict]:
+    """Tablas del nodo por (etiqueta, rotación) en el orden de la tabla de drops, los objetos de mayor a menor chance.
+    La etiqueta es el paréntesis de la tabla cuando no es el tipo del nodo ("Caches"), con " Extra" si la fila lo trae
+    ("Survival Extra" si el paréntesis es el tipo)."""
+    grupos: dict = {}
+    for x in n["filas"]:
+        label = None if x["tabla"] == n["type"] else x["tabla"]
+        if x["extra"]:
+            label = (label or x["tabla"]) + " Extra"
+        clave, ref = R.de_drop(x["item"])
+        refs[clave] = ref
+        grupos.setdefault((label, x["rot"]), []).append({"ref": clave, "chance": x["chance"]})
+    return [{"label": label, "rot": rot, "items": sorted(items, key=lambda it: -it["chance"])}
+            for (label, rot), items in grupos.items()]
+
+
+def _mejor(rewards: list[dict], refs: dict):
+    """El objeto de menor chance de la última rotación (C si hay, si no la única) de la tabla del tipo del nodo; si
+    el nodo sólo trae otra (las cachés de un Sabotaje), de la primera que trae."""
+    if not rewards:
+        return None
+    label = None if any(r["label"] is None for r in rewards) else rewards[0]["label"]
+    ultima = [r for r in rewards if r["label"] == label][-1]
+    it = min(ultima["items"], key=lambda it: it["chance"])
+    return {"name": refs[it["ref"]]["name"], "chance": it["chance"]}
+
+
+def _ficha_nodo(n: dict, R: _Refs, recursos: list[dict]) -> dict:
+    refs: dict = {}
+    rewards = _recompensas(n, R, refs)
+    res = []
+    for r in recursos:  # ya vienen ordenados por nombre
+        if any(p[0] == n["planet"][0] for p in r["planets"]):
+            clave, ref = R.de_unique(r["unique"])
+            refs[clave] = ref
+            res.append(clave)
+    return {"slug": n["slug"], "slugEs": n["slugEs"], "name": n["name"], "planet": n["planet"], "pi": n["pi"],
+            "type": n["type"], "faction": n["faction"], "lv": n["lv"], "mr": n["mr"], "dark": n["dark"],
+            "rewards": rewards, "resources": res, "refs": refs}
+
+
+# ---- maestría y Prime Vault --------------------------------------------------------------------------------
+
+def _maestria(i: dict):
+    """Rango máximo y puntos de maestría de un objeto del Arsenal; None si no da (armas exaltadas, `SpecialItems`)."""
+    cat = i["en"].get("productCategory")
+    if i["kind"] == "exalted" or cat == "SpecialItems":
+        return None
+    rank = i["en"].get("maxLevelCap") or (40 if cat == "MechSuits" else 30)
+    por_rango = 100 if cat in _KIND_ARMA else 200  # armas 100; Warframes, Archwings, compañeros y Necramechs 200
+    return {"slug": i["slug"], "slugEs": i["slugEs"], "name": i["name"], "img": i["img"],
+            "kind": "necramech" if cat == "MechSuits" else i["kind"], "rank": rank, "xp": rank * por_rango}
+
+
+def _estado_vault(partes: list[dict]) -> str:
+    """Entre las partes que caen de reliquias: todas de alguna abierta, ninguna, o algunas."""
+    con = [p for p in partes if any(s["k"] == "relic" for s in p["sources"])]
+    if not con:
+        return "norelics"  # Prime de fundador y demás que no salen de reliquias
+    abiertas = sum(1 for p in con if any(s["k"] == "relic" and not s["vaulted"] for s in p["sources"]))
+    return "available" if abiertas == len(con) else "vaulted" if abiertas == 0 else "partial"
+
+
+def vault_history(prev: list | None, new: list, history: list, today: str) -> list:
+    """Eventos de esta corrida (cada slug nuevo o con otro estado, en el orden de `new`) delante del historial.
+    Sin lista anterior (la primera corrida) no hay eventos."""
+    if prev is None:
+        return history
+    antes = {v["slug"]: v["status"] for v in prev}
+    nuevos = [{"date": today, "slug": v["slug"], "from": antes.get(v["slug"]), "to": v["status"]}
+              for v in new if antes.get(v["slug"]) != v["status"]]
+    return nuevos + history
+
+
+def _leer_dato(nombre: str):
+    """Un JSON ya escrito en `data/`, o None si no está."""
+    path = DATA / nombre
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
 
 # ---- build -------------------------------------------------------------------------------------------------
@@ -490,6 +650,7 @@ def build(write: bool = False) -> dict:
     por_recurso = {r["unique"]: r for r in recursos}
     for r in recursos:
         r["img"] = iconos.de(r["unique"], "resource")
+        r["planets"] = relations.resource_planets(r["unique"])
 
     # --- Mods y arcanos
     mods = _mods()
@@ -497,26 +658,38 @@ def build(write: bool = False) -> dict:
     for m in mods:
         m["img"] = iconos.de(m["unique"], m["kind"])
 
-    R = _Refs(items, por_unique, por_reliquia, recursos, por_recurso, mods, iconos)
+    # --- Nodos del mapa estelar
+    nodos = _nodos()
+
+    R = _Refs(items, por_unique, por_reliquia, recursos, por_recurso, mods, iconos, nodos)
 
     lists = {
         "arsenal": [{"slug": i["slug"], "slugEs": i["slugEs"], "name": i["name"], "img": i["img"], "kind": i["kind"],
-                     "prime": bool(re.search(r"\bPrime\b", i["name"][0])), "mr": i["en"].get("masteryReq", 0)}
+                     "prime": _es_prime(i), "mr": i["en"].get("masteryReq", 0)}
                     for i in items],
         "relics": [{"slug": r["slug"], "slugEs": r["slugEs"], "name": r["name"], "img": r["img"], "era": r["era"],
                     "vaulted": _vaulted(r)} for r in reliquias],
         "farming": [{"slug": r["slug"], "slugEs": r["slugEs"], "name": r["name"], "img": r["img"],
-                     "planets": relations.resource_planets(r["unique"])} for r in recursos],
+                     "planets": r["planets"]} for r in recursos],
         "mods": [{"slug": m["slug"], "slugEs": m["slugEs"], "name": m["name"], "img": m["img"], "kind": m["kind"],
                   "type": m["type"], "rarity": m["rarity"], "polarity": m["polarity"], "compat": m["compat"]}
                  for m in mods],
+        "mastery": [m for m in map(_maestria, items) if m],
+        "prime-vault": [{"slug": i["slug"], "slugEs": i["slugEs"], "name": i["name"], "img": i["img"],
+                         "kind": i["kind"], "status": _estado_vault(R.parts_de[i["unique"]])}
+                        for i in items if _es_prime(i)],
     }
     fichas = {
         "arsenal": {i["slug"]: _ficha_arsenal(i, R) for i in items},
         "relics": {r["slug"]: _ficha_reliquia(r, R) for r in reliquias},
         "farming": {r["slug"]: _ficha_recurso(r, R) for r in recursos},
         "mods": {m["slug"]: _ficha_mod(m, R) for m in mods},
+        "star-chart": {n["slug"]: _ficha_nodo(n, R, recursos) for n in nodos},
     }
+    lists["star-chart"] = [{"slug": f["slug"], "slugEs": f["slugEs"], "name": f["name"], "planet": f["planet"],
+                            "pi": f["pi"], "type": f["type"], "faction": f["faction"], "lv": f["lv"], "mr": f["mr"],
+                            "dark": f["dark"], "best": _mejor(f["rewards"], f["refs"])}
+                           for f in fichas["star-chart"].values()]
     notas["sin_icono"] = iconos.sin_icono
     notas["sin_ref"] = sorted(R.sin_ref)
 
@@ -532,8 +705,12 @@ def build(write: bool = False) -> dict:
     meta = {"generatedAt": date.today().isoformat(),
             "index": json.loads(idx_path.read_text(encoding="utf-8")) if idx_path.exists() else {},
             "dropsHash": hashlib.sha256(drops_html.read_bytes()).hexdigest() if drops_html.exists() else None,
-            "counts": {t: len(lists[t]) for t in TABS}}
-    out = {"lists": lists, "fichas": fichas, "es": es, "meta": meta, "icons": iconos.icons, "notas": notas}
+            "counts": {t: len(lists[t]) for t in TABS + SIN_FICHAS}}
+    # El historial del Vault compara con lo que quedó escrito en la corrida anterior.
+    historial = vault_history(_leer_dato("prime-vault/list.json"), lists["prime-vault"],
+                              _leer_dato("prime-vault/history.json") or [], date.today().isoformat())
+    out = {"lists": lists, "fichas": fichas, "es": es, "meta": meta, "icons": iconos.icons, "notas": notas,
+           "vaultHistory": historial}
     if write:
         escribir(archivos(out))
     return out
@@ -543,7 +720,9 @@ def build(write: bool = False) -> dict:
 
 def archivos(out: dict) -> dict:
     """Ruta (relativa a `data/`) -> contenido de todo lo que se escribe."""
-    files = {"meta.json": out["meta"]}
+    files = {"meta.json": out["meta"], "prime-vault/history.json": out["vaultHistory"]}
+    for tab in SIN_FICHAS:
+        files[f"{tab}/list.json"] = out["lists"][tab]
     for tab in TABS:
         files[f"{tab}/list.json"] = out["lists"][tab]
         por: dict = {}
