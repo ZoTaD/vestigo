@@ -98,14 +98,8 @@ const STARS = (() => {
   }
   return out;
 })();
-/** Los rayos de la corona: doce agujas finas alrededor del sol. */
-const RAYS = Array.from({ length: 12 }, (_, i) => {
-  const a = (i * 30 * Math.PI) / 180;
-  const long = i % 2 ? 58 : 72;
-  const w = 0.09;
-  const p = (r: number, da: number) => `${fix(C + r * Math.cos(a + da))},${fix(C + r * Math.sin(a + da))}`;
-  return `${p(26, -w)} ${p(long, 0)} ${p(26, w)}`;
-});
+/** El radio del disco del sol. */
+const SUN = 26;
 
 /** Los degradados de un cuerpo: el brillo cae del lado que mira al sol. */
 function Body({ id, x, y, r, look }: { id: string; x: number; y: number; r: number; look: Look }) {
@@ -194,19 +188,32 @@ export default function OrbitMap({
         <filter id="wf-soft" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="18" />
         </filter>
-        <filter id="wf-glow" x="-100%" y="-100%" width="300%" height="300%">
-          <feGaussianBlur stdDeviation="6" />
-        </filter>
-        <radialGradient id="wf-sun-core" cx="0.45" cy="0.45" r="0.6">
-          <stop offset="0" stopColor="#fffbe8" />
-          <stop offset="0.35" stopColor="#ffe08a" />
-          <stop offset="0.75" stopColor="#ffab3d" />
-          <stop offset="1" stopColor="#e2661f" />
+        {/* La fotosfera: blanca en el centro y más oscura y roja hacia el borde (el oscurecimiento del limbo). */}
+        <radialGradient id="wf-sun-disk">
+          <stop offset="0" stopColor="#fffdf2" />
+          <stop offset="0.45" stopColor="#ffeaa8" />
+          <stop offset="0.78" stopColor="#ffbf55" />
+          <stop offset="0.93" stopColor="#f2862c" />
+          <stop offset="1" stopColor="#c4501a" />
         </radialGradient>
-        <radialGradient id="wf-sun-corona">
-          <stop offset="0" stopColor="#ffd27a" stopOpacity="0.75" />
-          <stop offset="0.45" stopColor="#ff9a3c" stopOpacity="0.25" />
-          <stop offset="1" stopColor="#ff9a3c" stopOpacity="0" />
+        {/* La granulación: ruido fractal recortado al disco, teñido de naranja y con transparencia. */}
+        <filter id="wf-sun-grain" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.22" numOctaves="3" seed="7" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 0.55  0 0 0 0 0.12  0 0 0 -2.2 1.35" />
+          <feComposite in2="SourceGraphic" operator="in" />
+        </filter>
+        <clipPath id="wf-sun-clip">
+          <circle cx={C} cy={C} r={SUN} />
+        </clipPath>
+        <radialGradient id="wf-sun-glow">
+          <stop offset="0" stopColor="#fff3c4" stopOpacity="0.95" />
+          <stop offset="0.3" stopColor="#ffc861" stopOpacity="0.55" />
+          <stop offset="0.6" stopColor="#ff8a2a" stopOpacity="0.18" />
+          <stop offset="1" stopColor="#ff8a2a" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="wf-sun-halo">
+          <stop offset="0" stopColor="#ffe7a8" stopOpacity="0.22" />
+          <stop offset="1" stopColor="#ffe7a8" stopOpacity="0" />
         </radialGradient>
       </defs>
 
@@ -225,16 +232,20 @@ export default function OrbitMap({
         <circle className={i === selRing ? "wf-ring is-on" : "wf-ring"} cx={C} cy={C} r={ring(i)} key={name} />
       ))}
 
-      {/* El sol: la corona difusa, los rayos que giran y el núcleo. */}
+      {/* El sol, de afuera hacia adentro: el halo ancho, el resplandor y el disco con su
+          granulación, que gira despacio. */}
       <g className="wf-sun" aria-hidden="true">
-        <circle cx={C} cy={C} r="78" fill="url(#wf-sun-corona)" className="wf-sun-corona" />
-        <g className="wf-sun-rays">
-          {RAYS.map((pts, i) => (
-            <polygon points={pts} key={i} />
-          ))}
+        <circle cx={C} cy={C} r="120" fill="url(#wf-sun-halo)" />
+        <circle className="wf-sun-glow" cx={C} cy={C} r="62" fill="url(#wf-sun-glow)" />
+        <circle cx={C} cy={C} r={SUN} fill="url(#wf-sun-disk)" />
+        <g clipPath="url(#wf-sun-clip)">
+          <g className="wf-sun-surface">
+            <rect x={C - SUN} y={C - SUN} width={SUN * 2} height={SUN * 2} filter="url(#wf-sun-grain)" />
+          </g>
+          {/* El limbo otra vez encima del grano, así el borde queda oscuro y nítido. */}
+          <circle cx={C} cy={C} r={SUN} fill="url(#wf-sun-disk)" opacity="0.35" />
         </g>
-        <circle cx={C} cy={C} r="30" fill="#ffb347" filter="url(#wf-glow)" opacity="0.8" />
-        <circle cx={C} cy={C} r="26" fill="url(#wf-sun-core)" />
+        <circle className="wf-sun-rim" cx={C} cy={C} r={SUN + 0.6} />
       </g>
 
       {shown.map((p) => {
