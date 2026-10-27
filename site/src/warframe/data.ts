@@ -648,3 +648,55 @@ export function effectiveStarType(planet: string | null, type: string | null, ty
 export function filterStars(rows: readonly StarRow[], planet: string | null, type: string | null): StarRow[] {
   return rows.filter((r) => (!planet || planetSlug(r.planet) === planet) && (!type || r.type === type));
 }
+
+/* ---------- Armador (etapa 3): lo que escribe `games/warframe/tools/builder.py` en `data/builder/` ---------- */
+
+/** Qué se arma: Warframes y armas primarias, secundarias y cuerpo a cuerpo. */
+export type Kind = "warframe" | "primary" | "secondary" | "melee";
+/** Polaridades del export: AP_ATTACK, AP_DEFENSE, AP_TACTIC, AP_POWER, AP_WARD, AP_PRECEPT, AP_UMBRA. */
+export type Pol = "madurai" | "vazarin" | "naramon" | "zenurik" | "unairu" | "penjaga" | "umbra";
+export const POLS: Pol[] = ["madurai", "vazarin", "naramon", "zenurik", "unairu", "penjaga", "umbra"];
+/** Las stats que la tabla de patrones de `builder.py` reconoce en el texto de un mod. */
+export type StatKey = "damage" | "impact" | "puncture" | "slash" | "heat" | "cold" | "electricity" | "toxin" | "blast"
+  | "corrosive" | "gas" | "magnetic" | "radiation" | "viral" | "multishot" | "critChance" | "critDamage" | "statusChance"
+  | "fireRate" | "magazine" | "reload" | "meleeDamage" | "attackSpeed" | "strength" | "duration" | "efficiency" | "range"
+  | "health" | "shield" | "armor" | "energy";
+
+/** Un objeto de `builder/items.json`. */
+export interface BuildItem {
+  /** El slug y el ícono del Arsenal (para enlazar a su ficha). */
+  slug: string;
+  name: Pair;
+  kind: Kind;
+  icon: string;
+  /** Rango máximo = capacidad sin potenciador: 30, o `maxLevelCap`. */
+  cap: number;
+  /** Los `compatName` de los mods que le entran (clase, nombre propio, `WARFRAME`, `AURA`…). */
+  compat: string[];
+  /** Armas: `dmg` es `damagePerShot` (20 posiciones, por proyectil); `cc` y `sc` en fracción, `cd` multiplicador. */
+  w?: { dmg: number[]; cc: number; cd: number; sc: number; rate: number; mag?: number; reload?: number; ms: number; bow: boolean; shotgun: boolean; riven?: string };
+  /** Warframes, ya a rango 30 (regla del Update 34.0 + excepciones). */
+  f?: { health: number; shield: number; armor: number; energy: number };
+}
+
+/** Un mod de `builder/mods-<kind>.json`. */
+export interface BuildMod {
+  /** El de la pestaña Mods (`/mods/<slug>`), único por `uniqueName`. */
+  slug: string;
+  name: Pair;
+  pol: Pol | null;
+  rarity: string;
+  /** `baseDrain`: negativo en auras y posturas (suman capacidad). */
+  drain: number;
+  /** `fusionLimit`: el rango máximo. */
+  max: number;
+  slot: "normal" | "aura" | "stance";
+  /** `isUtility`: entra en el casillero de exilio. */
+  exilus: boolean;
+  compat: string;
+  icon?: string;
+  /** Por stat, el valor en cada rango 0..max, en puntos (165 = +165 %); sólo lo reconocido e incondicional. */
+  fx: [StatKey, number[]][];
+  /** Las líneas del mod al rango máximo, para mostrar. */
+  text: Pair[];
+}
