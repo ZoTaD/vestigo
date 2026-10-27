@@ -259,6 +259,40 @@ export interface WfCopy {
     noChanges: string;
     note: string;
   };
+  /** La calculadora de Rivens (etapa 3). */
+  rivens: {
+    h1: string;
+    lede: string;
+    /** Sin disposición desde el Hotfix 44.1.3: `d` es el valor que trae el export. */
+    notice: (d: string) => string;
+    pick: string;
+    searchPlaceholder: string;
+    typesLabel: string;
+    count: (n: string) => string;
+    none: string;
+    /** `?w=` con un arma que no está en la lista. */
+    noRiven: (slug: string) => string;
+    typeOf: (type: string) => string;
+    change: string;
+    rangeH: string;
+    rangeNote: string;
+    stat: string;
+    combos: Record<"2" | "2-" | "3" | "3-", string>;
+    positive: string;
+    negative: string;
+    rollH: string;
+    rollLede: string;
+    rollStat: string;
+    rollCombo: string;
+    rollSide: string;
+    rollValue: string;
+    rollPlaceholder: string;
+    rollResult: string;
+    rollOut: string;
+    rollRange: string;
+    rollWorse: string;
+    rollBetter: string;
+  };
   /** El armador (etapa 3). */
   builder: {
     h1: string;
@@ -617,6 +651,37 @@ const EN: WfCopy = {
     added: "New",
     noChanges: "No changes yet: they are recorded since Oct 27, 2026.",
     note: "Available: every part drops from at least one relic that is not vaulted. In the Vault: no part does. Partial: some parts do and some don't. No relics: its parts are not in any relic (Founder Primes).",
+  },
+  rivens: {
+    h1: "Riven calculator",
+    lede: "The lowest and highest value of every Riven stat for any weapon, with two or three positives and with or without a negative, and how good your roll came out.",
+    notice: (d) => `Since Hotfix 44.1.3 every Riven uses the same disposition: ${d}.`,
+    pick: "Weapon",
+    searchPlaceholder: "Search a weapon…",
+    typesLabel: "Or pick a Riven type",
+    count: (n) => `${n} shown`,
+    none: "Nothing matches.",
+    noRiven: (slug) => `“${slug}” doesn't take a Riven (or isn't a weapon we know). Pick another weapon below.`,
+    typeOf: (type) => `${type} Riven`,
+    change: "Change",
+    rangeH: "Stat ranges at rank 8",
+    rangeNote: "Rank 8 is a fully upgraded Riven. Damage to a faction is shown as a multiplier, as in the game.",
+    stat: "Stat",
+    combos: { "2": "2 positives", "2-": "2 positives + negative", "3": "3 positives", "3-": "3 positives + negative" },
+    positive: "Positive",
+    negative: "Negative",
+    rollH: "How good is my roll?",
+    rollLede: "Pick the stat, how many positives your Riven has and the value it shows at rank 8.",
+    rollStat: "Stat",
+    rollCombo: "Riven",
+    rollSide: "The stat is",
+    rollValue: "Value",
+    rollPlaceholder: "e.g. 180",
+    rollResult: "of the way from the worst roll to the best",
+    rollOut: "That value is outside the range for this stat.",
+    rollRange: "Range",
+    rollWorse: "lowest",
+    rollBetter: "highest",
   },
   builder: {
     h1: "Build planner",
@@ -986,6 +1051,37 @@ const ES: WfCopy = {
     added: "Nuevo",
     noChanges: "Todavía no hubo cambios: se anotan desde el 27/10/2026.",
     note: "Disponible: cada parte cae de al menos una reliquia fuera del Vault. En el Vault: ninguna. Parcial: algunas sí y otras no. Sin reliquias: sus partes no están en ninguna reliquia (los Prime de fundador).",
+  },
+  rivens: {
+    h1: "Calculadora de Rivens",
+    lede: "El valor mínimo y el máximo de cada stat de Riven para cualquier arma, con dos o tres positivos y con o sin negativo, y qué tan buena salió tu tirada.",
+    notice: (d) => `Desde el Hotfix 44.1.3 todos los Riven usan la misma disposición: ${d}.`,
+    pick: "Arma",
+    searchPlaceholder: "Buscá un arma…",
+    typesLabel: "O elegí un tipo de Riven",
+    count: (n) => `${n} a la vista`,
+    none: "Nada coincide.",
+    noRiven: (slug) => `“${slug}” no acepta Riven (o no es un arma que conozcamos). Elegí otra abajo.`,
+    typeOf: (type) => `Riven de ${type}`,
+    change: "Cambiar",
+    rangeH: "Rangos de cada stat a rango 8",
+    rangeNote: "El rango 8 es un Riven mejorado del todo. El daño a una facción se muestra como multiplicador, igual que en el juego.",
+    stat: "Stat",
+    combos: { "2": "2 positivos", "2-": "2 positivos + negativo", "3": "3 positivos", "3-": "3 positivos + negativo" },
+    positive: "Positivo",
+    negative: "Negativo",
+    rollH: "¿Qué tan buena salió mi tirada?",
+    rollLede: "Elegí el stat, cuántos positivos tiene tu Riven y el valor que muestra a rango 8.",
+    rollStat: "Stat",
+    rollCombo: "Riven",
+    rollSide: "El stat es",
+    rollValue: "Valor",
+    rollPlaceholder: "p. ej. 180",
+    rollResult: "del camino entre la peor tirada y la mejor",
+    rollOut: "Ese valor está fuera del rango de este stat.",
+    rollRange: "Rango",
+    rollWorse: "mínimo",
+    rollBetter: "máximo",
   },
   builder: {
     h1: "Armador de builds",

@@ -724,3 +724,35 @@ export const peekBuilderMods = (kind: Kind): BuildMod[] | null => builderMods[ki
 export const NOT_IN_BUILDER: ReadonlySet<string> = new Set(["bonewidow", "orion-sirius", "voidrig"]);
 export const inBuilder = (slug: string, kind: WfKind): boolean =>
   (kind === "warframe" || kind === "primary" || kind === "secondary" || kind === "melee") && !NOT_IN_BUILDER.has(slug);
+
+/* ---------- Rivens (etapa 3): lo que escribe `games/warframe/tools/builder.py` en `data/rivens/list.json` ---------- */
+
+/** Un stat posible de un tipo de Riven: `value` es el del export (0,0166 = 1,66 % por punto de la cuenta). */
+export interface RivenStat {
+  tag: string;
+  name: Pair;
+  value: number;
+}
+/** Un tipo de Riven (rifle, escopeta, pistola, cuerpo a cuerpo, arma de Archwing, Kitgun, Zaw) y sus stats. */
+export interface RivenType {
+  key: string;
+  name: Pair;
+  stats: RivenStat[];
+}
+/** Un arma que acepta Riven. `d` es la disposición que trae el export (hoy 1,2 para todas). */
+export interface RivenWeapon {
+  slug: string;
+  name: Pair;
+  type: string;
+  d: number;
+  icon: string | null;
+}
+export interface RivenData {
+  types: RivenType[];
+  weapons: RivenWeapon[];
+}
+
+const rivens = once<RivenData>(() => import("@warframe/rivens/list.json"));
+/** Los Rivens (590 armas y 7 tipos), en su propio chunk. */
+export const loadRivens = (): Promise<RivenData> => rivens.load();
+export const peekRivens = (): RivenData | null => rivens.peek();

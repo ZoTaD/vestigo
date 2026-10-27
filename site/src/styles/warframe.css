@@ -539,3 +539,43 @@ a.wf-mastery-name:hover { color: var(--wf-acc); }
   .wf-bd-in li { grid-template-columns: minmax(0, 1fr); }
   .wf-bd-fx { text-align: left; }
 }
+
+/* --- Rivens (etapa 3): la tabla de rangos a rango 8 y "¿qué tan buena salió?". Reusa la hoja del armador. ------------ */
+.wf-rv-head { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; margin-bottom: 12px; }
+.wf-rv-head .wf-icon { background: rgba(0, 0, 0, 0.25); border-radius: 3px; }
+.wf-rv-head > div { container-type: inline-size; min-width: 0; }
+/* El nombre se achica con el ancho; nunca se corta una palabra. */
+.wf-rv-name { font: 700 30px/1 var(--wf-head); letter-spacing: 0.05em; text-transform: uppercase; text-wrap: balance; font-size: min(30px, calc(100cqw / 9)); }
+.wf-rv-sub { margin-top: 4px; font-size: 13.5px; color: var(--wf-dim); }
+.wf-rv-notice { grid-column: 1 / -1; margin-top: 8px; padding: 8px 10px; font-size: 14px; background: rgba(216, 180, 106, 0.08); color: var(--wf-gold); border-radius: 3px; }
+.wf-rv-missing { margin-bottom: 12px; padding: 8px 10px; font-size: 14.5px; background: rgba(255, 155, 138, 0.08); color: #ff9b8a; border-radius: 3px; }
+.wf-rv-picker { display: grid; gap: 10px; }
+.wf-rv-ranges, .wf-rv-roll { margin-top: 16px; }
+.wf-rv-table td { vertical-align: top; }
+.wf-rv-table td > span { display: block; }
+.wf-rv-table td > .is-neg { margin-top: 2px; font-size: 13.5px; }
+.wf-rv-rolllede { max-width: 64ch; margin-bottom: 12px; color: var(--wf-dim); font-size: 15px; }
+.wf-rv-form { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.wf-rv-form .wf-find input, .wf-rv-form .wf-find select { width: 100%; max-width: none; padding: 10px 12px; font: 500 16px/1.2 var(--wf-text); color: var(--wf-ink); background: rgba(0, 0, 0, 0.35); border: 0; border-radius: 3px; }
+.wf-rv-form select:focus-visible, .wf-rv-form input:focus-visible { outline: 2px solid var(--wf-acc); outline-offset: 2px; }
+.wf-rv-form .wf-pill:disabled { opacity: 0.4; cursor: default; }
+.wf-rv-result { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-top: 16px; min-height: 56px; font-size: 15px; }
+.wf-rv-grade { font: 700 50px/1 var(--wf-head); font-variant-numeric: tabular-nums; }
+.wf-rv-result small { flex-basis: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+@media (max-width: 980px) { .wf-rv-form { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .wf-rv-head { grid-template-columns: 48px minmax(0, 1fr); }
+  .wf-rv-head .wf-btn { grid-column: 1 / -1; justify-self: start; }
+  .wf-rv-form { grid-template-columns: minmax(0, 1fr); }
+  /* Una tarjeta por stat con sus cuatro combinaciones. */
+  .wf-rv-table, .wf-rv-table tbody, .wf-rv-table tr, .wf-rv-table td { display: block; }
+  .wf-rv-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .wf-rv-table tbody tr { margin-bottom: 8px; padding: 8px 10px; background: rgba(0, 0, 0, 0.28); border-radius: 3px; }
+  .wf-rv-table tbody tr:nth-child(even) { background: rgba(0, 0, 0, 0.28); }
+  .wf-rv-table td { padding: 3px 0; text-align: left; white-space: normal; }
+  .wf-rv-table td:first-child { padding-bottom: 6px; font: 700 16px/1.2 var(--wf-head); letter-spacing: 0.04em; }
+  .wf-rv-table td[data-label] { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; }
+  .wf-rv-table td[data-label]::before { content: attr(data-label); grid-row: 1 / span 2; color: var(--wf-dim); font: 500 13px/1.3 var(--wf-text); }
+  .wf-rv-table td[data-label] > span { text-align: right; grid-column: 2; }
+  .wf-rv-grade { font-size: 40px; }
+}
