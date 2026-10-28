@@ -7,16 +7,17 @@ import relics from "../../games/warframe/data/relics/list.json";
 import farming from "../../games/warframe/data/farming/list.json";
 import mods from "../../games/warframe/data/mods/list.json";
 import starChart from "../../games/warframe/data/star-chart/list.json";
+import modsMoved from "../../games/warframe/data/mods/moved.json";
 import { parseRoute } from "../src/route";
 import { WF_COPY } from "../src/warframeCopy";
-import { SITEMAP_GROUPS, sitemapLastmod, sitemapPaths, sitemapXml, type SitemapData } from "../src/sitemap";
+import { redirectsFile, SITEMAP_GROUPS, sitemapLastmod, sitemapPaths, sitemapXml, type SitemapData } from "../src/sitemap";
 import { jsonLdFor, metaFor, ogImageUrl, prerenderPages } from "../src/prerender";
 import { warframeSitemapData } from "../src/warframe/sitemapData";
 import { isWfLoadingPage } from "../src/warframe/loadingGuard";
 import { WfLoading } from "../src/warframe/ui";
 
 // Como en el build: `warframeSitemapData` anota los slugs en español antes de armar ninguna dirección.
-const wf = warframeSitemapData(wfMeta, { arsenal, relics, farming, mods, "star-chart": starChart } as never);
+const wf = warframeSitemapData(wfMeta, { arsenal, relics, farming, mods, "star-chart": starChart } as never, modsMoved);
 const data = {
   dlHeroes: {}, dlItems: {}, dlHeroIds: [], dlItemIds: [],
   wf,
@@ -175,5 +176,22 @@ describe("isWfLoadingPage", () => {
 
   it("reconoce el marcado real de WfLoading", () => {
     expect(isWfLoadingPage(renderToStaticMarkup(createElement(WfLoading, {})))).toBe(true);
+  });
+});
+
+describe("Warframe: mods que cambiaron de dirección", () => {
+  const lines = redirectsFile(data).trim().split("\n");
+  it("las variantes que salieron mandan con 301 a la que quedó", () => {
+    expect(lines).toContain("/en/warframe/mods/ammo-drum-weaponammomaxmodexpert  /en/warframe/mods/ammo-drum  301");
+    expect(lines).toContain("/en/warframe/mods/ammo-drum-mod  /en/warframe/mods/flawed-ammo-drum  301");
+    expect(lines).toContain("/es/warframe/mods/tambor-de-municion-mod  /es/warframe/mods/tambor-de-municion-defectuoso  301");
+  });
+  it("ningún destino es otra redirección ni una dirección viva redirige", () => {
+    const paths = new Set(sitemapPaths(data));
+    for (const l of lines.filter((l) => l.includes("/warframe/mods/"))) {
+      const [from, to] = l.split(/\s+/);
+      expect(paths.has(to)).toBe(true);
+      expect(paths.has(from)).toBe(false);
+    }
   });
 });

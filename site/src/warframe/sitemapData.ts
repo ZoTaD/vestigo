@@ -15,7 +15,7 @@ type Row = { slug: string; slugEs: string; name: Pair; kind?: string; planet?: P
 /** Las pestañas con fichas (las de `WF_DETAIL_SECTIONS`). */
 type FichaTab = "arsenal" | "relics" | "farming" | "mods" | "star-chart";
 
-export function warframeSitemapData(meta: Meta, lists: Record<FichaTab, Row[]>): WarframeSitemapData {
+export function warframeSitemapData(meta: Meta, lists: Record<FichaTab, Row[]>, modsMoved?: WarframeSitemapData["modsMoved"]): WarframeSitemapData {
   registerWfSlugs(
     Object.fromEntries(
       (Object.keys(lists) as FichaTab[]).map((tab) => [tab, Object.fromEntries(lists[tab].filter((r) => r.slugEs !== r.slug).map((r) => [r.slug, r.slugEs]))]),
@@ -31,5 +31,6 @@ export function warframeSitemapData(meta: Meta, lists: Record<FichaTab, Row[]>):
     mods: lists.mods.map((r) => ({ slug: r.slug, en: r.name[0], es: r.name[1] || r.name[0], ...(r.kind === "arcane" ? { arcane: true as const } : {}) })),
     // Un nodo nombra su planeta y su tipo de misión en el título (`detailSeo["star-chart"]`).
     "star-chart": lists["star-chart"].map((r) => ({ slug: r.slug, en: r.name[0], es: r.name[1] || r.name[0], planet: r.planet ?? ["", ""], type: r.type ?? "" })),
+    modsMoved,
   };
 }

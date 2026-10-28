@@ -115,6 +115,8 @@ export interface WarframeSitemapData {
   mods?: { slug: string; en: string; es: string; arcane?: true }[];
   /** Los nodos del mapa estelar, con su planeta y su tipo de misión (en inglés), que el título nombra. */
   "star-chart"?: { slug: string; en: string; es: string; planet: [en: string, es: string]; type: string }[];
+  /** Fichas de mods que cambiaron de dirección (`mods/moved.json`): slug viejo -> nuevo, por idioma. */
+  modsMoved?: { en: Record<string, string>; es: Record<string, string> };
 }
 
 /** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
@@ -502,6 +504,11 @@ export function redirectsFile(data: SitemapData): string {
     if (!path.startsWith("/es/d2r/")) continue;
     const old = "/es" + routePath({ ...parseRoute(path), lang: "en" }).slice("/en".length);
     if (old !== path) lines.push(`${old}  ${path}  301`);
+  }
+  // Warframe (2026-10-27): las variantes de mods que salieron de la pestaña, a la que quedó con su nombre.
+  for (const lang of LANGS) {
+    const root = routePath({ lang, view: "warframe", dlSection: "meta", wfSection: "mods" });
+    for (const [from, to] of Object.entries(data.wf?.modsMoved?.[lang] ?? {})) lines.push(`${root}/${from}  ${root}/${to}  301`);
   }
   return lines.length ? lines.join("\n") + "\n" : "";
 }

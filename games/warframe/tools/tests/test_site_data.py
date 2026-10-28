@@ -33,6 +33,32 @@ class TestSiteData(unittest.TestCase):
                 vals = [r[k] for r in rows]
                 self.assertEqual(len(vals), len(set(vals)), (tab, k))
 
+    def test_mods_sin_nombres_repetidos(self):
+        """Las variantes Beginner/Intermediate/Expert/Nemesis/Tau no se equipan: queda la de la wiki."""
+        nombres = [m["name"][0] for m in self.out["lists"]["mods"]]
+        self.assertEqual(len(nombres), len(set(nombres)))
+        por_slug = {m["slug"]: m for m in self.out["lists"]["mods"]}
+        self.assertEqual(por_slug["flawed-ammo-drum"]["name"], ["Flawed Ammo Drum", "Tambor de munición (defectuoso)"])
+        self.assertEqual(por_slug["ammo-drum"]["name"][0], "Ammo Drum")
+        self.assertEqual(por_slug["maglev"]["name"][0], "Maglev")  # en el export sólo está la Beginner
+
+    def test_mods_movidos_van_a_una_ficha(self):
+        mv = self.out["modsMoved"]
+        self.assertEqual(mv["en"]["ammo-drum-weaponammomaxmodexpert"], "ammo-drum")
+        self.assertEqual(mv["en"]["ammo-drum-mod"], "flawed-ammo-drum")
+        self.assertEqual(mv["es"]["tambor-de-municion-mod"], "tambor-de-municion-defectuoso")
+        self.assertEqual(mv["en"]["arcane-steadfast-nocostcastchanceability3listener"], "arcane-steadfast")
+        for idioma, campo in (("en", "slug"), ("es", "slugEs")):
+            vivos = {m[campo] for m in self.out["lists"]["mods"]}
+            self.assertTrue(set(mv[idioma].values()) <= vivos, idioma)
+            self.assertFalse(set(mv[idioma]) & vivos, idioma)
+
+    def test_el_armador_sigue_sin_flawed(self):
+        nombres = {m["name"][0] for f, c in self.out["builder"].items() if f.startswith("builder/mods-") for m in c["mods"]}
+        self.assertIn("Ammo Drum", nombres)
+        self.assertIn("Maglev", nombres)
+        self.assertFalse([n for n in nombres if n.startswith("Flawed ")])
+
     def test_mismo_hash_que_el_sitio(self):
         self.assertEqual(site_data.shard("melon"), 28 % 32)
 
