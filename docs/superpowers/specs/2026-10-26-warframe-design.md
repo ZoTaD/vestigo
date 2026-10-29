@@ -256,8 +256,8 @@ del presupuesto; con el Chrome del sistema (`PW_CHROMIUM`), porque el Chromium d
 | `/en/warframe/baro` | 25 | 0 | 187 |
 | `/es/warframe/baro` | 25 | 0 | 188 |
 
-Pendiente de ZoTaD: el nombre oficial en español de Rush, Void Armageddon, Shrine Defense, The Perita Rebellion, The
-Murmur y Anarchs (hoy salen en inglés en la versión ES: no hay fuente a mano y no se inventa).
+Nombres en español de Rush, Void Armageddon, Shrine Defense, The Perita Rebellion y The Murmur: del diccionario del juego
+(`dict.es.json` de warframe-public-export-plus, 29/10). Anarchs no es una facción en el export: "Anarcas", como en sus textos.
 
 ## Etapa 3 (27/10): Armador de builds, Rivens y precios
 
