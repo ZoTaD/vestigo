@@ -88,7 +88,7 @@ Topes: semiautomáticas 10 disparos/s; cadencia mínima 0,05/s; carga ≤ 10× l
 
 Daño mostrado = `Base × [1 + Σ%elem + dist_Imp×%Imp + dist_Perf×%Perf + dist_Corte×%Corte] × (1 + Σ%daño) × [msBase × (1 + Σ%ms)]` — "average non-crit damage per shot, without Faction Damage Bonus" (Damage/Calculation).
 En combate el juego **cuantiza** cada tipo a 1/32 del daño base modificado (ver Nagantaka). El Arsenal no la usa según esa fórmula.
-**NO VERIFICADA**: cantidad de decimales que muestra el Arsenal en cada stat (no hay fuente firme). Sugerencia: mostrar 1 decimal en % y 2 en multiplicadores, sin prometer que coincide con el juego.
+**NO VERIFICADA** (búsqueda del 29/10 sin resultado): cantidad de decimales que muestra el Arsenal en cada stat; lo único publicado es 76,85 → 76,9. Sugerencia: mostrar 1 decimal en % y 2 en multiplicadores, sin prometer que coincide con el juego.
 
 ### Casos de prueba — armas
 
@@ -150,7 +150,7 @@ Con mods: `stat = (base0 + ganancia30) × (1 + Σ%) + planos`.
 - Fuerza, duración, rango y eficiencia: `100 % + Σ%` (aditivos). https://wiki.warframe.com/w/Ability_Duration — "Modifiers combine additively".
 - Coste: `coste = base × max(2 − eficiencia, 0,25)`; el Arsenal muestra la eficiencia entre 25 % y **175 %** (https://wiki.warframe.com/w/Ability_Efficiency).
 - Canalizadas: `drenaje/s = base × (2 − E) / D`, con E **sin tope**, limitado a [0,25 ; 1,75] × base.
-- **NO VERIFICADA**: duración mínima (se habla de 12,5 %), rango mínimo (34 %) y fuerza mínima. Ni la wiki ni las notas lo dicen; no mostrarlas como topes.
+- **Sin mínimo propio (29/10)**: ni Ability_Duration, Ability_Range ni Ability_Strength fijan un piso; el único es el de dos cascos Arcane viejos ("Can not be reduced below 11%"). Los 12,5 % y 34 % que circulan son la suma de mods negativos (100 − 60 Fleeting Expertise − 27,5 Transient Fortitude; 100 − 66 Narrow Minded). Regla: `100 % + Σ%`, sin tope.
 
 ### Casos de prueba — Warframes
 
@@ -173,13 +173,13 @@ Con mods: `stat = (base0 + ganancia30) × (1 + Σ%) + planos`.
 ## 3. Capacidad y drenaje
 
 - **Capacidad** = rango del ítem (30; 40 en algunos), ×2 con potenciador/catalizador Orokin ("doubles the available Mod capacity", https://wiki.warframe.com/w/Mod_Capacity; guía oficial: "permanently double an item's Mod Capacity").
-- **Capacidad mínima** (Update 38.5): 15 + 1 cada 2 rangos de maestría (+1 por rango legendario). MR6 → 18, MR4 → 17. **NO VERIFICADA**: cómo se combina con el rango del ítem (¿max?) y si el potenciador la duplica.
+- **Capacidad mínima** (Update 38.5): 15 + 1 cada 2 rangos de maestría (+1 por rango legendario). MR6 → 18, MR4 → 17. Nota 38.5 (https://www.warframe.com/patch-notes/pc/38-5-0): "Increased base Capacity on Unranked items from 0 to 15"; la wiki dice que "adds mod points onto items that are a lower rank than a player's current Mastery Rank", o sea `max(rango, mínimo)`. **NO VERIFICADO** (29/10): si el potenciador la duplica; la regla vieja (Hotfix 18.13.2) sí la duplicaba.
 - **Drenaje de un mod** = `baseDrain + rango`. Verificado con las tablas de la wiki: Serration 4 → 14 en r10; Split Chamber 10 → 15 en r5; Magazine Warp 4 → 9; Speed Trigger 4 → 9 (todas coinciden con el `baseDrain` del export).
 - **Polaridad igual**: `ceil(drenaje / 2)` — "reduces drain by half, rounded up … Serration costs 14 … Madurai … 7" (Mod Capacity); guía oficial: "50 percent (rounded up)".
-- **Polaridad distinta**: `drenaje × 1,25` **redondeado al más cercano** — la wiki da las bandas "drain of 0-1 will increase by 0, drain of 2-5 by 1, 6-9 by 2, 10-13 by 3, 14-16 by 4". Eso es `floor(d×1,25+0,5)`, **no** `ceil`. Conflicto: la página Polarity dice "rounded up" y la guía oficial no dice. Sólo cambia en drenajes 5, 9, 13, 17 (13 → 16 con redondeo, 17 con ceil). Recomiendo redondeo; el caso 13 queda **NO VERIFICADO** contra el juego.
-- **Aura / stance (suman capacidad)**: igual polaridad = **×2**; sin polaridad = ×1; distinta = **`floor(0,8 × valor)`**. Guía oficial: "mismatching it will only provide an 80 percent bonus (rounded down)"; https://wiki.warframe.com/w/Aura_Mod: "a drain of 5 generates a capacity of 4, a drain of 9 generates a capacity of 7". (La página Mod Capacity dice "−25 %, redondeado"; la descarto frente a la guía oficial.) El export trae el aura con `baseDrain` negativo: valor del aura = `−baseDrain + rango` (Steel Charge −4 + 5 = 9; Corrosive Projection −2 + 5 = 7) — esto último **NO VERIFICADO** con una fuente que publique el 9 y el 7.
+- **Polaridad distinta**: `drenaje × 1,25` **redondeado al más cercano** — la wiki da las bandas "drain of 0-1 will increase by 0, drain of 2-5 by 1, 6-9 by 2, 10-13 by 3, 14-16 by 4". Eso es `floor(d×1,25+0,5)`, **no** `ceil`. Conflicto: la página Polarity dice "rounded up" y la guía oficial no dice. Sólo cambia en drenajes 5, 9, 13, 17 (13 → 16 con redondeo, 17 con ceil). Recomiendo redondeo; el caso 13 queda **NO VERIFICADO** contra el juego (búsqueda del 29/10: ningún ejemplo publicado con drenaje 5, 9, 13 o 17).
+- **Aura / stance (suman capacidad)**: igual polaridad = **×2**; sin polaridad = ×1; distinta = **`floor(0,8 × valor)`**. Guía oficial: "mismatching it will only provide an 80 percent bonus (rounded down)"; https://wiki.warframe.com/w/Aura_Mod: "a drain of 5 generates a capacity of 4, a drain of 9 generates a capacity of 7". (La página Mod Capacity dice "−25 %, redondeado"; la descarto frente a la guía oficial.) El export trae el aura con `baseDrain` negativo: valor del aura = `−baseDrain + rango` (Steel Charge −4 + 5 = 9; Corrosive Projection −2 + 5 = 7) — **verificado el 29/10**: wiki/Steel_Charge da −4 a rango 0 y −9 a rango 5; wiki/Corrosive_Projection, −2 y −7.
 - **Omni Forma (Update 38.5)**: la casilla universal "will halve the capacity of any Mod equipped in it (excluding Umbra Polarities)".
-- **Umbra**: sólo se aplica con Umbra Forma. **NO VERIFICADA** la interacción de casilla Umbra con mods Madurai/Vazarin/Naramon y de mods Umbra en otras casillas (ninguna página lo dice). No mostrar descuento ahí.
+- **Umbra**: sólo se aplica con Umbra Forma. **NO VERIFICADA** (búsqueda del 29/10 sin resultado) la interacción de casilla Umbra con mods Madurai/Vazarin/Naramon y de mods Umbra en otras casillas (ninguna página lo dice). No mostrar descuento ahí.
 - **Exilus**: una casilla más (adaptador Exilus); drena capacidad como cualquier otra. Sin regla especial de drenaje encontrada.
 
 ### Casos de prueba — drenaje
@@ -249,7 +249,7 @@ Todos coinciden (40/40) con las tablas de la wiki:
 | Munición máx. 0,00555 | 3+1 | 50,57 % – 61,81 % | −40,46 % – −49,45 % |
 
 Fuente: https://wiki.warframe.com/w/Riven_Mods (tablas "Normal Attributes"). Los extremos de la wiki salen de la misma fórmula, así que confirman la fórmula y los `value`, no una tirada real. No busqué Rivens individuales en semlar porque son anteriores al 22/10.
-**NO VERIFICADO**: el valor a rangos intermedios (0–7) contra el juego; la fórmula de la wiki lo da con (r+1) pero no encontré un ejemplo publicado (Rifle crítico 2+0 a rango 0, W 1,1 → 21,78 %).
+**Rango 0 verificado (29/10)**: un Riven publicado da 99,3 % / 139,4 % al máximo y 11 % / 15,5 % a rango 0, o sea 1/9 (https://steamcommunity.com/app/230410/discussions/1/2906376154313687377). Rangos 1–7 sin ejemplo, coherentes con (r+1).
 
 ---
 
@@ -257,4 +257,6 @@ Fuente: https://wiki.warframe.com/w/Riven_Mods (tablas "Normal Attributes"). Los
 
 Verificado y listo para tests: daño base, físicos, elementos y su combinación, cuantización de Nagantaka, multidisparo, crítico, estado (por perdigón), cadencia (+ ×2 arco), cargador (redondeo al más cercano), recarga, stats de Warframe a rango 30 (regla 34.0 + excepciones), eficiencia y su tope, drenaje base + rango, polaridad igual (ceil /2), aura (×2 / ×1 / floor ×0,8), capacidad ×2, Rivens con D = 1,2.
 
-NO VERIFICADO (no mostrar como regla firme): redondeos del Arsenal, duración/rango/fuerza mínimos, capacidad mínima combinada con rango/potenciador, Umbra en casillas Madurai/Vazarin/Naramon, polaridad distinta en drenajes 5/9/13/17 (ceil o redondeo), auras desde el `baseDrain` negativo del export, Rivens a rangos intermedios.
+Verificado el 29/10: auras desde el `baseDrain` negativo del export, Rivens a rango 0, sin mínimos de duración/rango/fuerza, capacidad mínima como `max(rango, mínimo)`.
+
+NO VERIFICADO tras buscar en internet el 29/10 (no mostrar como regla firme; sólo se cierra probándolo en el juego): redondeos del Arsenal, si el potenciador duplica la capacidad mínima, Umbra en casillas Madurai/Vazarin/Naramon, polaridad distinta en drenajes 5/9/13/17 (ceil o redondeo), Rivens a rangos 1–7.

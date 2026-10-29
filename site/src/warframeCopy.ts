@@ -1170,19 +1170,21 @@ const ES: WfCopy = {
     noHistory: "Todavía no hay visitas anotadas: se anotan desde el 27/10/2026.",
   },
   // De warframe-worldstate-data (MIT, `data/es/missionTypes.json`); los que no trae, del nombre de su nodo en el export
-  // en español (Descenso, Confrontación, Repetidor, Cosecha de legacito, El Circuito).
+  // en español (Descenso, Confrontación, Repetidor, Cosecha de legacito, El Circuito) o del diccionario del juego
+  // (`dict.es.json` de warframe-public-export-plus: Estampida, Armagedón del Vacío, Defensa del altar, La Rebelión de Perita).
   missionType: {
     Assassination: "Asesinato", Exterminate: "Exterminio", Survival: "Supervivencia", Rescue: "Rescate", Sabotage: "Sabotaje", Capture: "Captura",
     Spy: "Espionaje", Defense: "Defensa", "Mobile Defense": "Defensa móvil", Interception: "Interceptación", Hijack: "Usurpación", Hive: "Colmena",
-    Excavation: "Excavación", "Infested Salvage": "Salvamento Infestado", Arena: "Rathuum", Pursuit: "Persecución", Rush: "Rush", Assault: "Asalto",
+    Excavation: "Excavación", "Infested Salvage": "Salvamento Infestado", Arena: "Rathuum", Pursuit: "Persecución", Rush: "Estampida", Assault: "Asalto",
     Defection: "Deserción", "Free Roam": "Recorrido libre", "The Circuit": "El Circuito", Disruption: "Interrupción", "Void Flood": "Inundación del Vacío",
-    "Void Cascade": "Cascada del Vacío", "Void Armageddon": "Void Armageddon", Alchemy: "Alquimia", "Legacyte Harvest": "Cosecha de legacito",
-    "Shrine Defense": "Shrine Defense", Faceoff: "Confrontación", Descent: "Descenso", "The Perita Rebellion": "The Perita Rebellion", Relay: "Repetidor",
+    "Void Cascade": "Cascada del Vacío", "Void Armageddon": "Armagedón del Vacío", Alchemy: "Alquimia", "Legacyte Harvest": "Cosecha de legacito",
+    "Shrine Defense": "Defensa del altar", Faceoff: "Confrontación", Descent: "Descenso", "The Perita Rebellion": "La Rebelión de Perita", Relay: "Repetidor",
   },
-  // De warframe-worldstate-data (`data/es/factionsData.json`): los Orokin del mapa son los Corruptos del Vacío.
+  // De warframe-worldstate-data (`data/es/factionsData.json`): los Orokin del mapa son los Corruptos del Vacío. El murmullo
+  // sale del diccionario del juego; los Anarcas no tienen nombre de facción, el juego los llama "anarcas" en sus textos.
   faction: {
-    Grineer: "Grineer", Corpus: "Corpus", Infested: "Infestados", Orokin: "Corruptos", Sentient: "Consciente", "The Murmur": "The Murmur",
-    Scaldra: "Scaldra", Techrot: "Techrot", Duviri: "Duviri", Anarchs: "Anarchs",
+    Grineer: "Grineer", Corpus: "Corpus", Infested: "Infestados", Orokin: "Corruptos", Sentient: "Consciente", "The Murmur": "El murmullo",
+    Scaldra: "Scaldra", Techrot: "Techrot", Duviri: "Duviri", Anarchs: "Anarcas",
   },
   rewardLabel: { Caches: "Cachés", "Survival Extra": "Supervivencia extra", "Assassination Extra": "Asesinato extra" },
   rarity: { Common: "Común", Uncommon: "Poco común", Rare: "Rara", Legendary: "Legendaria" },
