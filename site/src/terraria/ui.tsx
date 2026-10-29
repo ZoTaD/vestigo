@@ -4,6 +4,7 @@
  */
 import { useState, type CSSProperties, type ReactNode } from "react";
 import { useLang } from "../i18n";
+import { SettledImg } from "../SettledImg";
 import RouteLink from "../RouteLink";
 import type { Route } from "../route";
 import { useTerrariaCopy } from "../terrariaCopy";
@@ -19,17 +20,8 @@ export type Nav = (r: Route) => void;
 export function Sprite({ id, w, h, max = 40, eager = false }: { id: number; w: number; h: number; max?: number; eager?: boolean }) {
   if (!w) return <span className="tr-sprite is-empty" style={{ width: max, height: max }} />;
   const k = Math.min(1, max / Math.max(w, h));
-  return (
-    <img
-      className="tr-sprite"
-      src={`/terraria/items/${id}.png`}
-      alt=""
-      width={Math.round(w * k)}
-      height={Math.round(h * k)}
-      loading={eager ? undefined : "lazy"}
-      decoding="async"
-    />
-  );
+  const props = { className: "tr-sprite", src: `/terraria/items/${id}.png`, alt: "", width: Math.round(w * k), height: Math.round(h * k) };
+  return eager ? <img {...props} decoding="async" /> : <SettledImg {...props} />;
 }
 
 /** El casillero donde va un sprite: un hueco oscuro de tamaño fijo. */

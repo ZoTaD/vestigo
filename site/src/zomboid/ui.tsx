@@ -7,6 +7,7 @@
  */
 import { Fragment, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { stamp } from "./ZomboidHome";
+import { SettledImg } from "../SettledImg";
 
 /**
  * `useLayoutEffect` en el navegador; en el servidor (prerender) avisa que no hace nada, y ahí va `useEffect`, que tampoco
@@ -53,17 +54,8 @@ export function ItemIcon({
     return <span className={cls} style={{ width: size, height: size }} aria-hidden="true" />;
   }
   const smooth = (dir === "build" && size < 48) || (dir === "professions" && size < 64);
-  return (
-    <img
-      className={smooth ? "pzi-icon is-smooth" : "pzi-icon"}
-      src={src}
-      alt=""
-      width={size}
-      height={size}
-      loading={lazy ? "lazy" : undefined}
-      decoding="async"
-    />
-  );
+  const props = { className: smooth ? "pzi-icon is-smooth" : "pzi-icon", src, alt: "", width: size, height: size };
+  return lazy ? <SettledImg {...props} /> : <img {...props} decoding="async" />;
 }
 
 /** Un sello del juego como viñeta, teñido con `mask` (ver `.pz-stamp` en zomboid.css). */

@@ -4,6 +4,7 @@
  */
 import type { ElementType, ReactNode } from "react";
 import type { Route } from "../route";
+import { SettledImg } from "../SettledImg";
 import { useWfCopy, type WfRarity } from "../warframeCopy";
 
 export type Nav = (r: Route) => void;
@@ -23,17 +24,8 @@ export function Panel({ as: Tag = "section", className, children, ...rest }: { a
  */
 export function Icon({ img, size = 64, big = false, lazy = true }: { img: string | null | undefined; size?: number; big?: boolean; lazy?: boolean }) {
   if (!img) return <span className="wf-icon is-empty" style={{ width: size, height: size }} aria-hidden="true" />;
-  return (
-    <img
-      className="wf-icon"
-      src={`/warframe/${big ? "l" : "s"}/${img}.webp`}
-      alt=""
-      width={size}
-      height={size}
-      loading={lazy ? "lazy" : undefined}
-      decoding="async"
-    />
-  );
+  const props = { className: "wf-icon", src: `/warframe/${big ? "l" : "s"}/${img}.webp`, alt: "", width: size, height: size };
+  return lazy ? <SettledImg {...props} /> : <img {...props} decoding="async" />;
 }
 
 /** La rareza de un mod, escrita en el color de su rareza (texto, nunca un filo). Una rareza que no se conoce va en neutro. */

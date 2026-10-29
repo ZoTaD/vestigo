@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { useLang } from "../i18n";
 import RouteLink from "../RouteLink";
+import { SettledImg } from "../SettledImg";
 import type { Route } from "../route";
 import { useRustCopy } from "../rustCopy";
 import { loadList, peekList, type ListRow } from "./items/data";
@@ -40,7 +41,7 @@ export default function RustSearch({ route, navigate }: { route: Route; navigate
           {hits.map((r) => (
             <li key={r.id}>
               <RouteLink className="rs-ref" to={to(r)} onNavigate={navigate}>
-                <img src={`/rust/items/${r.id}.webp`} alt="" width={28} height={28} loading="lazy" decoding="async" />
+                <SettledImg src={`/rust/items/${r.id}.webp`} alt="" width={28} height={28} />
                 <span>{(lang === "es" && r.es) || r.en}</span>
               </RouteLink>
             </li>

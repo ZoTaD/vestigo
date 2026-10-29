@@ -3,6 +3,7 @@
  */
 import { useEffect, useReducer } from "react";
 import RouteLink from "./RouteLink";
+import { SettledImg } from "./SettledImg";
 import type { Route, ValheimSection, ValheimTab } from "./route";
 import { useLang } from "./i18n";
 import { useValheimCopy } from "./valheimCopy";
@@ -29,7 +30,7 @@ export function Slot({ icon, qty, size, alt = "" }: { icon: string | null | unde
   const px = size === "lg" ? 84 : size === "sm" ? 30 : size === "xs" ? 20 : 42;
   return (
     <span className={`vh-slot${size ? ` is-${size}` : ""}`}>
-      {icon && <img src={iconUrl(icon)} alt={alt} loading="lazy" decoding="async" width={px} height={px} />}
+      {icon && <SettledImg src={iconUrl(icon)} alt={alt} width={px} height={px} />}
       {qty != null && qty !== "" && <span className="vh-qty">{qty}</span>}
     </span>
   );

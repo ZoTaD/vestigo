@@ -4,6 +4,7 @@
  */
 import type { ElementType, ReactNode } from "react";
 import { useLocale } from "../i18n";
+import { SettledImg } from "../SettledImg";
 import type { Route } from "../route";
 import { useStardewCopy } from "../stardewCopy";
 
@@ -43,17 +44,8 @@ export function prizeSrc(id: string): string {
  */
 export function Sprite({ id, w = 16, h = 16, size = 48, lazy = true }: { id: string; w?: number; h?: number; size?: number; lazy?: boolean }) {
   const k = size / Math.max(w, h, 1);
-  return (
-    <img
-      className="sd-sprite"
-      src={`/stardew/items/${spriteFile(id)}`}
-      alt=""
-      width={Math.round(w * k)}
-      height={Math.round(h * k)}
-      loading={lazy ? "lazy" : undefined}
-      decoding="async"
-    />
-  );
+  const props = { className: "sd-sprite", src: `/stardew/items/${spriteFile(id)}`, alt: "", width: Math.round(w * k), height: Math.round(h * k) };
+  return lazy ? <SettledImg {...props} /> : <img {...props} decoding="async" />;
 }
 
 /** El casillero del inventario (64 px, el arte de `/stardew/ui/slot.png`) con lo que lleve adentro, centrado. */

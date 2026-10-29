@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { useLang, useLocale } from "../../i18n";
 import { LazyRows, skipSprite } from "../../LazyRows";
 import RouteLink from "../../RouteLink";
+import { SettledImg } from "../../SettledImg";
 import type { Route } from "../../route";
 import { useRustCopy } from "../../rustCopy";
 import type { ItemsList } from "./data";
@@ -57,7 +58,7 @@ export default function ItemList({ list, route, navigate, missing }: { list: Ite
                 <RouteLink className="rs-cell" to={{ ...route, view: "rust", rsSection: "items", detail: r.slug }} onNavigate={navigate} prefetch="press">
                   <span className="rs-slot">
                     {/* En el prerender, pasada la primera tanda, el casillero va sin ícono (`skipSprite`). */}
-                    {!skipSprite(i, 60) && <img src={`/rust/items/${r.id}.webp`} alt="" width={64} height={64} loading="lazy" decoding="async" />}
+                    {!skipSprite(i, 60) && <SettledImg src={`/rust/items/${r.id}.webp`} alt="" width={64} height={64} />}
                   </span>
                   <span className="rs-cell-name">{name}</span>
                 </RouteLink>
