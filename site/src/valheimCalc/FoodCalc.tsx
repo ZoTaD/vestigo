@@ -164,7 +164,7 @@ function Chart({ foods, lang, t }: { foods: ItemRow[]; lang: string; t: ReturnTy
             <text x={L - 6} y={y(maxV * f) + 4} textAnchor="end" className="vc-axis">{Math.round(maxV * f)}</text>
           </g>
         ))}
-        {ticks.map((m) => <text key={m} x={x(m)} y={H - 10} textAnchor="middle" className="vc-axis">{t.food.min(m)}</text>)}
+        {ticks.map((m) => <text key={m} x={x(m)} y={H - 10} textAnchor={x(m) > W - R - 20 ? "end" : "middle"} className="vc-axis">{t.food.min(m)}</text>)}
         {foods.map((f, i) => {
           const m = canEatAgainAt(f.food!);
           return (
