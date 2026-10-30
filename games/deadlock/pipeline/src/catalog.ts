@@ -788,7 +788,10 @@ export function buildDetail(item: RawItem, icons?: Map<string, string>): ItemDet
          * el ítem no tiene — con el encabezado vacío al lado. Lo agarró ZoTaD
          * abriendo el ítem.
          */
-        if (p.css_class === "cooldown" && sec.section_type !== "innate") cooldown = stat;
+        if (p.css_class === "cooldown" && sec.section_type !== "innate") {
+          // Una activa sin recarga (Kinetic Dash, Arcane Surge) trae "0": no va pastilla (auditoría, 2026-10-30).
+          if (Number(stat.value) !== 0) cooldown = stat;
+        }
         else if (enCaja.has(key)) boxed.push(stat);
         else stats.push(stat);
       }

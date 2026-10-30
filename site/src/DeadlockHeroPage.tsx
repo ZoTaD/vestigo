@@ -74,11 +74,14 @@ function Stat({ stat, lang }: { stat: KitStat; lang: Lang }) {
   const copy = useCopy();
   const t = copy.deadlock.hero.kit;
   const { n, u } = splitValue(stat.value, stat.unit);
+  // Una lentitud viene en positivo ("Move Speed 24%") con el ícono de lentitud; el juego la lee como −24 % (auditoría, 2026-10-30).
+  const slow = !!stat.icon?.includes("condition_slow") && /^\d/.test(n);
   const escala = stat.spirit !== undefined ? localNumber(String(stat.spirit), lang) : null;
   return (
     <div className="dl-hp-stat" title={escala ? t.spiritTip(escala) : undefined}>
       <span className="dl-hp-stat-value">
         {stat.icon && <GameImg src={stat.icon} alt="" width={16} height={16} loading="lazy" decoding="async" />}
+        {slow && "−"}
         {localNumber(n, lang)}
         {u && <small>{u}</small>}
       </span>

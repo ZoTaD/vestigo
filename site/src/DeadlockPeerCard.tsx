@@ -77,7 +77,7 @@ export default function DeadlockPeers({
                     tomarse en serio un 2-0. Y deja el récord contra el borde
                     derecho, alineado entre filas, que es donde se lo busca. */}
                 <span className="dl-peer-matches">
-                  {c.matches(p.matches.toLocaleString(locale))}
+                  {(kind === "mates" ? c.matches : c.against)(p.matches.toLocaleString(locale))}
                 </span>
                 {/* El récord y no el porcentaje: "1-1" dice a la vez cómo salió y
                     sobre cuántas partidas, y a estas muestras el porcentaje solo
