@@ -43,6 +43,14 @@ interface NewsCopy {
   base: string;
   baseSub: string;
   unparsed: string;
+  /** "Quién se movió" (2026-10-30): winrate antes y después del parche. */
+  movers: {
+    title: string;
+    sub: (days: number) => string;
+    open: (days: number) => string;
+    heroes: { up: string; down: string };
+    items: { up: string; down: string };
+  };
   pending: string;
   source: string;
   readNotes: string;
@@ -85,6 +93,13 @@ const EN: NewsCopy = {
   base: "Hero base",
   baseSub: "Health, gun and movement",
   unparsed: "Also in the notes",
+  movers: {
+    title: "Who moved",
+    sub: (d) => `Phantom+ win rate, ${d} days before against ${d} days after`,
+    open: (d) => `Phantom+ win rate, ${d} days before against the days since · still counting`,
+    heroes: { up: "Heroes up", down: "Heroes down" },
+    items: { up: "Items up", down: "Items down" },
+  },
   pending: "The Spanish edition of these notes is on its way; meanwhile the changes are in English.",
   source: "Source: official notes on Steam · Numbers: Vestigo on deadlock-api",
   readNotes: "Read the official notes",
@@ -127,6 +142,13 @@ const ES: NewsCopy = {
   base: "Base del héroe",
   baseSub: "Vida, arma y movimiento",
   unparsed: "También en las notas",
+  movers: {
+    title: "Quién se movió",
+    sub: (d) => `Winrate en Fantasma+, ${d} días antes contra ${d} días después`,
+    open: (d) => `Winrate en Fantasma+, ${d} días antes contra los días que van · se sigue contando`,
+    heroes: { up: "Héroes que subieron", down: "Héroes que bajaron" },
+    items: { up: "Objetos que subieron", down: "Objetos que bajaron" },
+  },
   pending: "La edición en español de estas notas está en camino; mientras tanto, los cambios están en inglés.",
   source: "Fuente: notas oficiales en Steam · Números: Vestigo sobre deadlock-api",
   readNotes: "Ver las notas oficiales",

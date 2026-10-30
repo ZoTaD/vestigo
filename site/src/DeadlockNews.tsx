@@ -19,6 +19,7 @@ import {
 import { NEWS_COPY, headlineBank, headlineLines, pickFrom, stableVariant } from "./newsCopy";
 import { ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
+import DeadlockPatchMovers from "./DeadlockPatchMovers";
 import { safeHref } from "./safeHref";
 import { SpecialBody, SpecialFront, specialSource } from "./DeadlockNewsSpecial";
 
@@ -327,6 +328,8 @@ export default function DeadlockNews({
             )}
           </section>
         )}
+
+        <DeadlockPatchMovers slug={e.slug} />
 
         {e.general.length > 0 && (
           <>
