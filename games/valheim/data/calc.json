@@ -1,0 +1,1320 @@
+{
+ "comfortGroups": {
+  "ArmorStand": "Display",
+  "ArmorStand (1)": "Display",
+  "ArmorStand_Female": null,
+  "ArmorStand_Male": null,
+  "BogWitch_Fire_Pit": "Fire",
+  "MeadBugRepellent": "Chair",
+  "MeadBzerker": "Chair",
+  "MeadEitrLingering": "Chair",
+  "MeadEitrMinor": "Chair",
+  "MeadFrostResist": "Chair",
+  "MeadHasty": "Chair",
+  "MeadHealthLingering": "Chair",
+  "MeadHealthMajor": "Chair",
+  "MeadHealthMedium": "Chair",
+  "MeadHealthMinor": "Chair",
+  "MeadLightfoot": "Chair",
+  "MeadPoisonResist": "Chair",
+  "MeadStaminaLingering": "Chair",
+  "MeadStaminaMedium": "Chair",
+  "MeadStaminaMinor": "Chair",
+  "MeadStrength": "Chair",
+  "MeadSwimmer": "Chair",
+  "MeadTamer": "Chair",
+  "MeadTasty": "Chair",
+  "MeadTrollPheromones": "Chair",
+  "ashwood_bed": "Bed",
+  "ashwood_bed (10)": "Bed",
+  "ashwood_bed (11)": "Bed",
+  "ashwood_bed (12)": "Bed",
+  "ashwood_bed (13)": "Bed",
+  "ashwood_bed (14)": "Bed",
+  "ashwood_bed (15)": "Bed",
+  "ashwood_bed (16)": "Bed",
+  "ashwood_bed (3)": "Bed",
+  "ashwood_bed (4)": "Bed",
+  "ashwood_bed (5)": "Bed",
+  "ashwood_bed (6)": "Bed",
+  "ashwood_bed (7)": "Bed",
+  "ashwood_bed (8)": "Bed",
+  "ashwood_bed (9)": "Bed",
+  "bed": "Bed",
+  "bonfire": "Fire",
+  "fire_pit": "Fire",
+  "fire_pit (1)": "Fire",
+  "fire_pit_haldor": "Fire",
+  "fire_pit_hildir": "Fire",
+  "fire_pit_iron": "Fire",
+  "hearth": "Fire",
+  "hearth (1)": "Fire",
+  "itemstand": "Display",
+  "itemstand (1)": "Display",
+  "itemstand (2)": "Display",
+  "itemstand (3)": "Display",
+  "itemstand (4)": "Display",
+  "itemstand (5)": "Display",
+  "itemstandh": "Display",
+  "itemstandh (1)": "Display",
+  "itemstandh (2)": "Display",
+  "jute_carpet": "Carpet",
+  "jute_carpet (1)": "Carpet",
+  "jute_carpet (3)": "Carpet",
+  "jute_carpet_blue": "Carpet",
+  "jute_carpet_blue (1)": "Carpet",
+  "piece_CelebrationGarland": "Garland",
+  "piece_FairylightGarland": "Garland",
+  "piece_Lavalantern": "Lantern",
+  "piece_Lavalantern (1)": "Lantern",
+  "piece_Lavalantern (2)": "Lantern",
+  "piece_Lavalantern (3)": "Lantern",
+  "piece_asksvinskeleton": "Decor",
+  "piece_banner01": "Banner",
+  "piece_banner02": "Banner",
+  "piece_banner02 (1)": "Banner",
+  "piece_banner02 (2)": "Banner",
+  "piece_banner03": "Banner",
+  "piece_banner04": "Banner",
+  "piece_banner04 (1)": "Banner",
+  "piece_banner04 (2)": "Banner",
+  "piece_banner04 (3)": "Banner",
+  "piece_banner04 (4)": "Banner",
+  "piece_banner04 (5)": "Banner",
+  "piece_banner04 (6)": "Banner",
+  "piece_banner04 (7)": "Banner",
+  "piece_banner05": "Banner",
+  "piece_banner06": "Banner",
+  "piece_banner06 (1)": "Banner",
+  "piece_banner07": "Banner",
+  "piece_banner08": "Banner",
+  "piece_banner09": "Banner",
+  "piece_banner09 (1)": "Banner",
+  "piece_banner09 (2)": "Banner",
+  "piece_banner09 (3)": "Banner",
+  "piece_banner09 (4)": "Banner",
+  "piece_banner09 (5)": "Banner",
+  "piece_banner09 (6)": "Banner",
+  "piece_banner09 (7)": "Banner",
+  "piece_banner09 (8)": "Banner",
+  "piece_banner10": "Banner",
+  "piece_banner11": "Banner",
+  "piece_barber": "Leisure",
+  "piece_bathtub": "Leisure",
+  "piece_bed02": "Bed",
+  "piece_bench01": "Chair",
+  "piece_bench01 (1)": "Chair",
+  "piece_bench01 (10)": "Chair",
+  "piece_bench01 (11)": "Chair",
+  "piece_bench01 (2)": "Chair",
+  "piece_bench01 (3)": "Chair",
+  "piece_bench01 (4)": "Chair",
+  "piece_bench01 (5)": "Chair",
+  "piece_bench01 (6)": "Chair",
+  "piece_bench01 (7)": "Chair",
+  "piece_bench01 (8)": "Chair",
+  "piece_bench01 (9)": "Chair",
+  "piece_bench_runed": "Chair",
+  "piece_blackmarble_bench": "Chair",
+  "piece_blackmarble_bench (2)": "Chair",
+  "piece_blackmarble_table": "Table",
+  "piece_blackmarble_throne": "Chair",
+  "piece_blackwood_bench": "Chair",
+  "piece_blackwood_bench (1)": "Chair",
+  "piece_blackwood_bench (10)": "Chair",
+  "piece_blackwood_bench (11)": "Chair",
+  "piece_blackwood_bench (12)": "Chair",
+  "piece_blackwood_bench (13)": "Chair",
+  "piece_blackwood_bench (14)": "Chair",
+  "piece_blackwood_bench (15)": "Chair",
+  "piece_blackwood_bench (16)": "Chair",
+  "piece_blackwood_bench (17)": "Chair",
+  "piece_blackwood_bench (18)": "Chair",
+  "piece_blackwood_bench (19)": "Chair",
+  "piece_blackwood_bench (2)": "Chair",
+  "piece_blackwood_bench (20)": "Chair",
+  "piece_blackwood_bench (21)": "Chair",
+  "piece_blackwood_bench (22)": "Chair",
+  "piece_blackwood_bench (23)": "Chair",
+  "piece_blackwood_bench (24)": "Chair",
+  "piece_blackwood_bench (25)": "Chair",
+  "piece_blackwood_bench (26)": "Chair",
+  "piece_blackwood_bench (27)": "Chair",
+  "piece_blackwood_bench (28)": "Chair",
+  "piece_blackwood_bench (29)": "Chair",
+  "piece_blackwood_bench (3)": "Chair",
+  "piece_blackwood_bench (30)": "Chair",
+  "piece_blackwood_bench (31)": "Chair",
+  "piece_blackwood_bench (4)": "Chair",
+  "piece_blackwood_bench (5)": "Chair",
+  "piece_blackwood_bench (6)": "Chair",
+  "piece_blackwood_bench (7)": "Chair",
+  "piece_blackwood_bench (8)": "Chair",
+  "piece_blackwood_bench (9)": "Chair",
+  "piece_blackwood_bench01": "Chair",
+  "piece_blackwood_bench01 (1)": "Chair",
+  "piece_blackwood_bench01 (2)": "Chair",
+  "piece_blackwood_bench01 (3)": "Chair",
+  "piece_blackwood_bench01 (4)": "Chair",
+  "piece_blackwood_bench01 (5)": "Chair",
+  "piece_blackwood_bench01 (6)": "Chair",
+  "piece_bone_throne": "Chair",
+  "piece_brazierceiling01": "Fire",
+  "piece_brazierceiling01 (1)": "Fire",
+  "piece_brazierceiling01 (4)": "Fire",
+  "piece_brazierceiling01 (5)": "Fire",
+  "piece_brazierceiling01 (6)": "Fire",
+  "piece_brazierceiling01 (7)": "Fire",
+  "piece_brazierceiling01 (8)": "Fire",
+  "piece_brazierfloor01": "Fire",
+  "piece_brazierfloor01 (1)": "Fire",
+  "piece_brazierfloor01 (2)": "Fire",
+  "piece_brazierfloor01 (3)": "Fire",
+  "piece_brazierfloor01 (4)": "Fire",
+  "piece_brazierfloor01 (5)": "Fire",
+  "piece_brazierfloor01 (6)": "Fire",
+  "piece_brazierfloor01 (7)": "Fire",
+  "piece_brazierfloor02": "Fire",
+  "piece_brazierfloor02 (1)": "Fire",
+  "piece_chair": "Chair",
+  "piece_chair (1)": "Chair",
+  "piece_chair (2)": "Chair",
+  "piece_chair02": "Chair",
+  "piece_chair02 (1)": "Chair",
+  "piece_chair02 (2)": "Chair",
+  "piece_chair02 (3)": "Chair",
+  "piece_chair02 (4)": "Chair",
+  "piece_chair02 (5)": "Chair",
+  "piece_chair03": "Chair",
+  "piece_chair03 (1)": "Chair",
+  "piece_chair03 (2)": "Chair",
+  "piece_chair03 (3)": "Chair",
+  "piece_chair03 (4)": "Chair",
+  "piece_chair03 (5)": "Chair",
+  "piece_chair03 (6)": "Chair",
+  "piece_chair03 (7)": "Chair",
+  "piece_chair_runed": "Chair",
+  "piece_cloth_hanging_door": "Banner",
+  "piece_cloth_hanging_door_blue": "Banner",
+  "piece_cloth_hanging_door_blue2": "Banner",
+  "piece_dvergr_lantern": "Lantern",
+  "piece_dvergr_lantern (1)": "Lantern",
+  "piece_dvergr_lantern (10)": "Lantern",
+  "piece_dvergr_lantern (11)": "Lantern",
+  "piece_dvergr_lantern (12)": "Lantern",
+  "piece_dvergr_lantern (13)": "Lantern",
+  "piece_dvergr_lantern (14)": "Lantern",
+  "piece_dvergr_lantern (15)": "Lantern",
+  "piece_dvergr_lantern (16)": "Lantern",
+  "piece_dvergr_lantern (17)": "Lantern",
+  "piece_dvergr_lantern (18)": "Lantern",
+  "piece_dvergr_lantern (19)": "Lantern",
+  "piece_dvergr_lantern (2)": "Lantern",
+  "piece_dvergr_lantern (20)": "Lantern",
+  "piece_dvergr_lantern (21)": "Lantern",
+  "piece_dvergr_lantern (22)": "Lantern",
+  "piece_dvergr_lantern (23)": "Lantern",
+  "piece_dvergr_lantern (24)": "Lantern",
+  "piece_dvergr_lantern (25)": "Lantern",
+  "piece_dvergr_lantern (26)": "Lantern",
+  "piece_dvergr_lantern (27)": "Lantern",
+  "piece_dvergr_lantern (28)": "Lantern",
+  "piece_dvergr_lantern (29)": "Lantern",
+  "piece_dvergr_lantern (3)": "Lantern",
+  "piece_dvergr_lantern (30)": "Lantern",
+  "piece_dvergr_lantern (31)": "Lantern",
+  "piece_dvergr_lantern (4)": "Lantern",
+  "piece_dvergr_lantern (5)": "Lantern",
+  "piece_dvergr_lantern (6)": "Lantern",
+  "piece_dvergr_lantern (7)": "Lantern",
+  "piece_dvergr_lantern (8)": "Lantern",
+  "piece_dvergr_lantern (9)": "Lantern",
+  "piece_dvergr_lantern_pole": "Lantern",
+  "piece_dvergr_lantern_pole (1)": "Lantern",
+  "piece_dvergr_lantern_pole (2)": "Lantern",
+  "piece_jackoturnip": "Lantern",
+  "piece_logbench01": "Chair",
+  "piece_logbench01 (1)": "Chair",
+  "piece_logbench01 (2)": "Chair",
+  "piece_logbench01 (3)": "Chair",
+  "piece_logbench01 (4)": "Chair",
+  "piece_logbench01 (5)": "Chair",
+  "piece_maypole": null,
+  "piece_maypole (1)": null,
+  "piece_maypole (2)": null,
+  "piece_mistletoe": "Garland",
+  "piece_moose_throne": "Chair",
+  "piece_pot1": "Decor",
+  "piece_pot2": "Decor",
+  "piece_pot3": "Decor",
+  "piece_snowlantern": "Lantern",
+  "piece_table": "Table",
+  "piece_table_oak": "Table",
+  "piece_table_oak (1)": "Table",
+  "piece_table_round": "Table",
+  "piece_table_round (1)": "Table",
+  "piece_table_runed": "Table",
+  "piece_table_runed_small": "Table",
+  "piece_throne01": "Chair",
+  "piece_throne01 (1)": "Chair",
+  "piece_throne02": "Chair",
+  "piece_xmascrown": "Garland",
+  "piece_xmasgarland": "Garland",
+  "piece_xmastree": null,
+  "piece_xmastree (1)": null,
+  "rug_Bjorn": "Carpet",
+  "rug_asksvin": "Carpet",
+  "rug_deer": "Carpet",
+  "rug_fur": "Carpet",
+  "rug_fur (1)": "Carpet",
+  "rug_fur (2)": "Carpet",
+  "rug_fur (3)": "Carpet",
+  "rug_fur (4)": "Carpet",
+  "rug_fur (5)": "Carpet",
+  "rug_hare": "Carpet",
+  "rug_moose": "Carpet",
+  "rug_seal": "Carpet",
+  "rug_straw": "Carpet",
+  "rug_straw (1)": "Carpet",
+  "rug_straw (2)": "Carpet",
+  "rug_straw (3)": "Carpet",
+  "rug_straw (4)": "Carpet",
+  "rug_straw (5)": "Carpet",
+  "rug_straw (6)": "Carpet",
+  "rug_straw (7)": "Carpet",
+  "rug_straw (8)": "Carpet",
+  "rug_straw (9)": "Carpet",
+  "rug_wolf": "Carpet"
+ },
+ "creatureMods": {
+  "Abomination": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "immune",
+   "pierce": "veryResistant",
+   "poison": "immune",
+   "spirit": "immune"
+  },
+  "Asksvin": {
+   "fire": "resistant",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Asksvin_hatchling": {
+   "fire": "resistant",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Aspect_Bonemass": {
+   "blunt": "weak",
+   "fire": "veryResistant",
+   "frost": "weak",
+   "pierce": "veryResistant",
+   "poison": "immune",
+   "slash": "resistant"
+  },
+  "Aspect_Eikthyr": {},
+  "Aspect_Elder": {
+   "fire": "veryWeak",
+   "poison": "immune",
+   "spirit": "immune"
+  },
+  "Aspect_Fader": {
+   "fire": "immune",
+   "pierce": "resistant",
+   "spirit": "immune"
+  },
+  "Aspect_Moder": {
+   "fire": "weak",
+   "frost": "immune",
+   "spirit": "immune"
+  },
+  "Aspect_SeekerQueen": {
+   "pierce": "resistant",
+   "spirit": "immune"
+  },
+  "Aspect_TentaRoot": {
+   "fire": "weak",
+   "frost": "resistant",
+   "poison": "immune"
+  },
+  "Aspect_Yagluth": {
+   "fire": "resistant",
+   "pierce": "veryResistant",
+   "poison": "immune"
+  },
+  "Barka": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "resistant",
+   "lightning": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "Bat": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "immune",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "Bat_Swamp": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "immune",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "Bjorn": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "spirit": "immune"
+  },
+  "Bjorn_sleeping": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "spirit": "immune"
+  },
+  "Bjorn_spiritcaller": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "spirit": "immune"
+  },
+  "Blob": {
+   "blunt": "weak",
+   "fire": "resistant",
+   "frost": "weak",
+   "lightning": "weak",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant"
+  },
+  "BlobAspect": {
+   "blunt": "weak",
+   "fire": "resistant",
+   "frost": "weak",
+   "lightning": "weak",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant"
+  },
+  "BlobElite": {
+   "blunt": "weak",
+   "fire": "resistant",
+   "frost": "weak",
+   "lightning": "weak",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant"
+  },
+  "BlobFrost": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "veryResistant",
+   "lightning": "weak",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant"
+  },
+  "BlobLava": {
+   "blunt": "weak",
+   "fire": "immune",
+   "frost": "weak",
+   "lightning": "weak",
+   "pierce": "resistant",
+   "poison": "resistant"
+  },
+  "BlobMork": {
+   "blunt": "weak",
+   "fire": "resistant",
+   "frost": "weak",
+   "lightning": "weak",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant"
+  },
+  "BlobMorkMini": {
+   "blunt": "weak",
+   "fire": "resistant",
+   "frost": "weak",
+   "lightning": "weak",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant"
+  },
+  "BlobTar": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant"
+  },
+  "Boar": {
+   "spirit": "immune"
+  },
+  "Boar_piggy": {
+   "spirit": "immune"
+  },
+  "Boar_spiritcaller": {
+   "spirit": "immune"
+  },
+  "BogWitchKvastur": {
+   "fire": "veryWeak",
+   "poison": "immune",
+   "spirit": "immune"
+  },
+  "Bonemass": {
+   "blunt": "weak",
+   "fire": "veryResistant",
+   "frost": "weak",
+   "pierce": "veryResistant",
+   "poison": "immune",
+   "slash": "resistant"
+  },
+  "BonemawSerpent": {
+   "fire": "immune",
+   "frost": "weak",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Charred_Archer": {
+   "fire": "veryResistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "spirit": "weak"
+  },
+  "Charred_Archer_Fader": {
+   "fire": "immune",
+   "pierce": "resistant",
+   "poison": "immune",
+   "spirit": "weak"
+  },
+  "Charred_Mage": {
+   "fire": "veryResistant",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "spirit": "weak"
+  },
+  "Charred_Melee": {
+   "fire": "veryResistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "spirit": "weak"
+  },
+  "Charred_Melee_Dyrnwyn": {
+   "fire": "resistant",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "spirit": "weak"
+  },
+  "Charred_Melee_Fader": {
+   "fire": "immune",
+   "pierce": "resistant",
+   "poison": "immune",
+   "spirit": "weak"
+  },
+  "Charred_Twitcher": {
+   "fire": "veryResistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "spirit": "weak"
+  },
+  "Charred_Twitcher_Summoned": {
+   "fire": "veryResistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "spirit": "weak"
+  },
+  "Chicken": {
+   "spirit": "immune"
+  },
+  "Deathsquito": {
+   "spirit": "immune"
+  },
+  "Deer": {
+   "spirit": "immune"
+  },
+  "Deer_White": {
+   "spirit": "immune"
+  },
+  "Dragon": {
+   "fire": "weak",
+   "frost": "immune",
+   "spirit": "immune"
+  },
+  "Draugr": {
+   "fire": "resistant",
+   "poison": "immune"
+  },
+  "Draugr_Elite": {
+   "fire": "resistant",
+   "poison": "immune"
+  },
+  "Draugr_Elite_sleeping": {
+   "fire": "resistant",
+   "poison": "immune"
+  },
+  "Draugr_Ranged": {
+   "fire": "resistant",
+   "poison": "immune"
+  },
+  "Draugr_Ranged_sleeping": {
+   "fire": "resistant",
+   "poison": "immune"
+  },
+  "Draugr_sleeping": {
+   "fire": "resistant",
+   "poison": "immune"
+  },
+  "Dverger": {
+   "spirit": "immune"
+  },
+  "DvergerAshlands": {
+   "spirit": "immune"
+  },
+  "DvergerDeepNorth": {
+   "spirit": "immune"
+  },
+  "DvergerMage": {
+   "fire": "resistant",
+   "frost": "resistant",
+   "spirit": "immune"
+  },
+  "DvergerMageFire": {
+   "fire": "resistant",
+   "frost": "resistant",
+   "spirit": "immune"
+  },
+  "DvergerMageIce": {
+   "fire": "resistant",
+   "frost": "resistant",
+   "spirit": "immune"
+  },
+  "DvergerMageSupport": {
+   "fire": "resistant",
+   "frost": "resistant",
+   "spirit": "immune"
+  },
+  "DvergerTest": {
+   "spirit": "immune"
+  },
+  "Eikthyr": {},
+  "Elaking": {
+   "fire": "weak",
+   "frost": "resistant",
+   "spirit": "immune"
+  },
+  "ElakingLantern": {
+   "fire": "weak",
+   "frost": "resistant",
+   "spirit": "immune"
+  },
+  "ElakingMole": {
+   "frost": "resistant",
+   "spirit": "immune"
+  },
+  "Fader": {
+   "fire": "immune",
+   "pierce": "resistant",
+   "spirit": "immune"
+  },
+  "FallenValkyrie": {
+   "fire": "resistant",
+   "poison": "immune",
+   "spirit": "weak"
+  },
+  "FallenWarrior": {
+   "blunt": "resistant",
+   "fire": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "FallenWarrior (1)": {
+   "blunt": "resistant",
+   "fire": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "FallenWarrior (2)": {
+   "blunt": "resistant",
+   "fire": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "Fenring": {
+   "fire": "weak",
+   "poison": "resistant"
+  },
+  "Fenring_Cultist": {
+   "fire": "immune",
+   "poison": "weak"
+  },
+  "Fenring_Cultist_Hildir": {
+   "fire": "weak",
+   "frost": "immune"
+  },
+  "Fenring_Cultist_Hildir_nochest": {
+   "fire": "weak",
+   "frost": "immune"
+  },
+  "FrostWisp": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "immune",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "FrozenKing": {
+   "fire": "resistant",
+   "frost": "resistant",
+   "lightning": "resistant",
+   "pierce": "resistant",
+   "spirit": "immune"
+  },
+  "FrozenKing_p2": {
+   "blunt": "immune",
+   "fire": "immune",
+   "frost": "immune",
+   "lightning": "immune",
+   "pierce": "immune",
+   "poison": "immune",
+   "slash": "immune",
+   "spirit": "immune"
+  },
+  "FrozenKing_p3": {
+   "fire": "resistant",
+   "frost": "resistant",
+   "lightning": "resistant",
+   "pierce": "resistant",
+   "spirit": "immune"
+  },
+  "Frysling": {
+   "fire": "immune",
+   "frost": "weak",
+   "poison": "immune",
+   "spirit": "immune"
+  },
+  "Ghost": {
+   "blunt": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "Ghost_Void": {
+   "blunt": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "Ghost_old": {
+   "blunt": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "Ghost_sleeping": {
+   "blunt": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "Gjall": {
+   "fire": "resistant",
+   "spirit": "immune"
+  },
+  "Goblin": {
+   "spirit": "immune"
+  },
+  "GoblinArcher": {
+   "spirit": "immune"
+  },
+  "GoblinBrute": {
+   "spirit": "immune"
+  },
+  "GoblinBruteBros": {
+   "spirit": "immune"
+  },
+  "GoblinBruteBros_nochest": {
+   "spirit": "immune"
+  },
+  "GoblinBrute_Hildir": {
+   "spirit": "immune"
+  },
+  "GoblinDeepNorth": {
+   "spirit": "immune"
+  },
+  "GoblinKing": {
+   "fire": "resistant",
+   "pierce": "veryResistant",
+   "poison": "immune"
+  },
+  "GoblinShaman": {
+   "spirit": "immune"
+  },
+  "GoblinShaman_Hildir": {
+   "spirit": "immune"
+  },
+  "GoblinShaman_Hildir_nochest": {
+   "spirit": "immune"
+  },
+  "Goblin_Gem": {
+   "spirit": "immune"
+  },
+  "Greydwarf": {
+   "fire": "veryWeak",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Greydwarf_Elite": {
+   "fire": "veryWeak",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Greydwarf_Frozen": {
+   "fire": "veryWeak",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Greydwarf_Shaman": {
+   "fire": "veryWeak",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Greydwarf_Shaman_Frozen": {
+   "fire": "veryWeak",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Greyling": {
+   "fire": "veryWeak",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Hare": {
+   "spirit": "immune"
+  },
+  "Hatchling": {
+   "fire": "weak",
+   "frost": "immune",
+   "spirit": "immune"
+  },
+  "Hen": {
+   "spirit": "immune"
+  },
+  "Hive": {
+   "blunt": "weak",
+   "fire": "veryResistant",
+   "frost": "weak",
+   "pierce": "veryResistant",
+   "poison": "immune",
+   "slash": "resistant"
+  },
+  "JotunWarrior": {
+   "frost": "veryResistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "spirit": "ignore"
+  },
+  "JotunWarriorDualWield": {
+   "frost": "veryResistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "spirit": "ignore"
+  },
+  "JotunWitch": {
+   "fire": "weak",
+   "frost": "veryResistant",
+   "poison": "immune",
+   "spirit": "immune"
+  },
+  "Leech": {
+   "fire": "immune",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Leech_cave": {
+   "fire": "immune",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Lox": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "resistant",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "Lox_Calf": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "resistant",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "Mistile": {
+   "spirit": "immune"
+  },
+  "Moose": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "resistant",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "Moose_calf": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "resistant",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "Moose_spiritcaller": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "resistant",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "Morgen": {
+   "blunt": "resistant",
+   "fire": "resistant",
+   "lightning": "weak",
+   "pierce": "resistant",
+   "slash": "resistant"
+  },
+  "Morgen_NonSleeping": {
+   "blunt": "resistant",
+   "fire": "resistant",
+   "lightning": "weak",
+   "pierce": "resistant",
+   "slash": "resistant"
+  },
+  "Neck": {
+   "fire": "weak",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "Seal": {
+   "fire": "weak",
+   "spirit": "immune"
+  },
+  "Seal_Pup": {
+   "spirit": "immune"
+  },
+  "Seeker": {
+   "blunt": "resistant",
+   "pierce": "resistant",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "SeekerBrood": {
+   "blunt": "resistant",
+   "pierce": "resistant",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "SeekerBrute": {
+   "blunt": "resistant",
+   "pierce": "resistant",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "SeekerQueen": {
+   "pierce": "resistant",
+   "spirit": "immune"
+  },
+  "Serpent": {
+   "fire": "immune",
+   "frost": "weak",
+   "poison": "resistant",
+   "spirit": "immune"
+  },
+  "ShadowPerson": {
+   "blunt": "ignore",
+   "fire": "ignore",
+   "frost": "ignore",
+   "lightning": "ignore",
+   "pierce": "ignore",
+   "poison": "ignore",
+   "slash": "ignore",
+   "spirit": "ignore"
+  },
+  "Skeleton": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_DeepNorth": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_Friendly": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_Hildir": {
+   "blunt": "weak",
+   "fire": "immune",
+   "frost": "weak",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_Hildir_nochest": {
+   "blunt": "weak",
+   "fire": "immune",
+   "frost": "weak",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_Meadows": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_Meadows_noarcher": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_Mountains": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_Mountains_noarcher": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_NoArcher": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_Poison": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_Swamps": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_Swamps_noarcher": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "Skeleton_aspect": {
+   "blunt": "weak",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune"
+  },
+  "StoneGolem": {
+   "fire": "immune",
+   "frost": "immune",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "Surtling": {
+   "fire": "immune",
+   "frost": "weak",
+   "poison": "immune",
+   "spirit": "immune"
+  },
+  "Tendril": {
+   "fire": "weak",
+   "frost": "resistant",
+   "poison": "immune"
+  },
+  "Tendril_back": {
+   "blunt": "immune",
+   "fire": "immune",
+   "frost": "immune",
+   "lightning": "immune",
+   "pierce": "immune",
+   "poison": "immune",
+   "slash": "immune",
+   "spirit": "immune"
+  },
+  "TentaRoot": {
+   "fire": "weak",
+   "frost": "resistant",
+   "poison": "immune"
+  },
+  "TentaRoot_wild": {
+   "fire": "weak",
+   "frost": "resistant",
+   "poison": "immune"
+  },
+  "TheHive": {
+   "blunt": "immune",
+   "fire": "immune",
+   "frost": "immune",
+   "lightning": "immune",
+   "pierce": "immune",
+   "poison": "immune",
+   "slash": "immune",
+   "spirit": "immune"
+  },
+  "Tick": {
+   "pierce": "weak",
+   "spirit": "immune"
+  },
+  "TrainingDummy": {},
+  "Troll": {
+   "blunt": "resistant",
+   "pierce": "weak",
+   "spirit": "immune"
+  },
+  "TrollFrost": {
+   "blunt": "resistant",
+   "fire": "immune",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "slash": "resistant",
+   "spirit": "immune"
+  },
+  "Troll_Summoned": {
+   "blunt": "resistant",
+   "fire": "immune",
+   "frost": "weak",
+   "spirit": "immune"
+  },
+  "Troll_sleeping": {
+   "blunt": "resistant",
+   "pierce": "weak",
+   "spirit": "immune"
+  },
+  "Ulv": {
+   "fire": "veryResistant",
+   "poison": "weak"
+  },
+  "Unbjorn": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "resistant",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "Volture": {
+   "frost": "weak",
+   "poison": "immune"
+  },
+  "Wolf": {
+   "spirit": "immune"
+  },
+  "Wolf_cub": {
+   "spirit": "immune"
+  },
+  "Wolf_spiritcaller": {
+   "spirit": "immune"
+  },
+  "Wraith": {
+   "blunt": "resistant",
+   "fire": "weak",
+   "frost": "immune",
+   "pierce": "resistant",
+   "poison": "immune",
+   "slash": "resistant",
+   "spirit": "weak"
+  },
+  "Writhan": {
+   "blunt": "resistant",
+   "fire": "resistant",
+   "poison": "immune",
+   "slash": "weak"
+  },
+  "gd_king": {
+   "fire": "veryWeak",
+   "poison": "immune",
+   "spirit": "immune"
+  },
+  "piece_TrainingDummy": {},
+  "staff_greenroots_tentaroot": {
+   "fire": "resistant",
+   "poison": "immune"
+  }
+ },
+ "deathLowerFactor": 0.05000000074505806,
+ "skills": [
+  {
+   "icon": "swordiron",
+   "id": 1,
+   "step": 1.0
+  },
+  {
+   "icon": "bow",
+   "id": 8,
+   "step": 1.5
+  },
+  {
+   "icon": "axe_iron",
+   "id": 7,
+   "step": 1.0
+  },
+  {
+   "icon": "skill_woodcutting",
+   "id": 13,
+   "step": 1.0
+  },
+  {
+   "icon": "hands",
+   "id": 11,
+   "step": 1.0
+  },
+  {
+   "icon": "knife_flint",
+   "id": 2,
+   "step": 1.0
+  },
+  {
+   "icon": "club",
+   "id": 3,
+   "step": 1.0
+  },
+  {
+   "icon": "atgeirbronze",
+   "id": 4,
+   "step": 1.0
+  },
+  {
+   "icon": "spearflint",
+   "id": 5,
+   "step": 1.5
+  },
+  {
+   "icon": "skill_block",
+   "id": 6,
+   "step": 0.5
+  },
+  {
+   "icon": "pickaxe_stone",
+   "id": 12,
+   "step": 1.0
+  },
+  {
+   "icon": "skill_jump",
+   "id": 100,
+   "step": 0.5
+  },
+  {
+   "icon": "skill_sneak",
+   "id": 101,
+   "step": 0.5
+  },
+  {
+   "icon": "skill_run",
+   "id": 102,
+   "step": 0.20000000298023224
+  },
+  {
+   "icon": "skill_swim",
+   "id": 103,
+   "step": 0.30000001192092896
+  },
+  {
+   "icon": "sadlelox",
+   "id": 110,
+   "step": 0.20000000298023224
+  },
+  {
+   "icon": "elemental_magic",
+   "id": 9,
+   "step": 1.0
+  },
+  {
+   "icon": "blood_magic",
+   "id": 10,
+   "step": 1.0
+  },
+  {
+   "icon": "crossbow_arbalest",
+   "id": 14,
+   "step": 1.0
+  },
+  {
+   "icon": "fish1",
+   "id": 104,
+   "step": 0.25
+  },
+  {
+   "icon": "meat_cooked",
+   "id": 105,
+   "step": 0.25
+  },
+  {
+   "icon": "cultivator_bronze",
+   "id": 106,
+   "step": 0.25
+  },
+  {
+   "icon": "hammer",
+   "id": 107,
+   "step": 0.25
+  },
+  {
+   "icon": "skill_dodge",
+   "id": 108,
+   "step": 0.25
+  }
+ ]
+}
