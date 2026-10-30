@@ -170,7 +170,7 @@ describe("mapas", () => {
 });
 
 /** Un .fch v46 mínimo: 10 categorías de estadísticas vacías, dos mundos (uno con mapa). */
-function character(name: string, worlds: { uid: bigint; map?: Uint8Array }[]) {
+function character(name: string, worlds: { uid: bigint; map?: Uint8Array }[], playerData: Uint8Array | null = playerBlock()) {
   const p = new W().int(46).int(2).int(10);
   for (let c = 0; c < 10; c++) {
     p.float(1).float(2).int(0).int(0).int(0).int(5);
@@ -182,11 +182,74 @@ function character(name: string, worlds: { uid: bigint; map?: Uint8Array }[]) {
     p.long(w.uid).bool(false).vec3(0, 0, 0).bool(true).vec3(1, 2, 3).bool(false).vec3(0, 0, 0).vec3(4, 5, 6);
     if (w.map) p.bool(true).arr(w.map); else p.bool(false);
   }
-  p.str(name).long(123n).str("").bool(false).long(1700000000n).bool(false);
+  p.str(name).long(123n).str("").bool(false).long(1700000000n);
+  if (playerData) p.bool(true).arr(playerData); else p.bool(false);
   return new W().arr(p.u8).int(64).raw(new Uint8Array(64)).u8;
 }
 
+/** `Player.Save` v34 (Norte profundo) con un inventario v110; o v20 con el inventario viejo (v106). */
+function playerBlock(old = false) {
+  const p = new W();
+  if (old) {
+    p.int(20).float(25).float(20).float(50).bool(true).float(3); // salud máx, salud, aguante, primer spawn, desde la muerte
+    p.int(106).int(1).str("Club").int(1).float(50).int(0).int(0).bool(true).int(1).int(0).long(5n).str("Bjorn").int(1).str("k").str("v").int(0).bool(true);
+  } else {
+    p.int(34).float(25).float(20).float(50).float(3).str("GP_Eikthyr").float(0);
+    p.int(110).short(2);
+    p.int(5000).byte(0).byte(0).byte(0).byte(4 | 8 | 32 | 128).short(3).short(1).long(5n).str("Bjorn").numItems(1).str("k").str("v").byte(0);
+    p.int(100).byte(1).byte(0).byte(0).byte(0).byte(0);
+  }
+  p.int(2).str("$item_club").str("$piece_workbench");
+  if (old) p.int(1).str("$piece_workbench").int(0); // estaciones: no hay hasta la 15; la 20 sí
+  else p.int(1).str("$piece_workbench").int(3);
+  p.int(1).str("$item_wood");
+  if (!old) p.int(1).str("tutorial"); // tutoriales (la 19 y la 20 no los guardan)
+  p.int(0); // únicos
+  p.int(2).str("TrophyBoar").str("TrophyEikthyr");
+  if (old) p.int(1).int(1); else p.int(1).str("$biome_meadows");
+  if (!old) p.int(1).str("a").str("b"); // textos (desde la 22)
+  p.str("Beard1").str("Hair2").vec3(1, 1, 1).vec3(0, 0, 0).int(0);
+  p.int(1).str("CookedMeat");
+  if (old) p.float(10).float(20); else p.float(600);
+  p.int(2).int(2).int(1).float(15.5).float(0.3).int(102).float(42).float(0);
+  p.int(0).float(50).float(0).float(0); // claves propias, aguante, eitr: no se leen
+  return p.u8;
+}
+
 describe("personaje", () => {
+  it("lee recetas, estaciones, materiales, trofeos y habilidades", () => {
+    const c = readCharacter(file("bjorn.fch", character("Bjorn", [{ uid: 1n }])));
+    expect(c.warnings).toEqual([]);
+    expect(c.progress).toEqual({
+      knownRecipes: ["$item_club", "$piece_workbench"],
+      knownStations: { $piece_workbench: 3 },
+      knownMaterials: ["$item_wood"],
+      trophies: ["TrophyBoar", "TrophyEikthyr"],
+      skills: { 1: 15.5, 102: 42 },
+    });
+  });
+
+  it("también con el formato viejo del jugador y del inventario", () => {
+    const c = readCharacter(file("bjorn.fch", character("Bjorn", [{ uid: 1n }], playerBlock(true))));
+    expect(c.warnings).toEqual([]);
+    expect(c.progress!.knownStations).toEqual({ $piece_workbench: 0 });
+    expect(c.progress!.trophies).toEqual(["TrophyBoar", "TrophyEikthyr"]);
+    expect(c.progress!.skills).toEqual({ 1: 15.5, 102: 42 });
+  });
+
+  it("sin datos del jugador o con el bloque roto: avisa y los mapas salen igual", () => {
+    const inner = new W().int(1).raw([1]).raw([0]).int(0).bool(false);
+    const map = new W().int(8).arr(gz(inner.u8)).u8;
+    const none = readCharacter(file("a.fch", character("A", [{ uid: 1n, map }], null)));
+    expect(none.progress).toBeNull();
+    expect(none.warnings).toHaveLength(1);
+    expect(none.worlds[0].explored).not.toBeNull();
+    const broken = readCharacter(file("b.fch", character("B", [{ uid: 1n, map }], playerBlock().subarray(0, 60))));
+    expect(broken.progress).toBeNull();
+    expect(broken.warnings[0]).toMatch(/datos del jugador/);
+    expect(broken.worlds[0].explored).not.toBeNull();
+  });
+
   it("lee nombre, mundos por uid, lo explorado y los pines", () => {
     const inner = new W().int(2).raw([1, 0, 0, 1]).raw([0, 0, 1, 0]).int(1).str("mina").vec3(10, 0, 20).int(0).bool(false).long(0n).str("").bool(true);
     const fch = character("Bjorn", [{ uid: 1234567n, map: new W().int(8).arr(gz(inner.u8)).u8 }, { uid: -9n }]);

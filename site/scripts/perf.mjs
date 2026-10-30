@@ -44,6 +44,7 @@ export const PAGES = [
   "/en/valheim/calculators/combat",
   "/en/valheim/calculators/comfort",
   "/en/valheim/calculators/skills",
+  "/en/valheim/progress",
   "/en/d2r",
   "/en/d2r/runewords",
   "/en/d2r/uniques",

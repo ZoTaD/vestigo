@@ -144,7 +144,7 @@ function Combat({ weapons, armor, creatures, bosses, foods, to, navigate }: { we
                 </>
               )}
             </div>
-            {target && <RouteLink className="vc-link" to={to(target.tab, target.slug)} onNavigate={navigate}>{tx(target.name, lang)} ↗</RouteLink>}
+            {target && <RouteLink className="vc-link" to={to(target.tab, target.slug)} onNavigate={navigate}>{tx(target.name, lang)} ↗︎</RouteLink>}
           </div>
         )}
       </section>

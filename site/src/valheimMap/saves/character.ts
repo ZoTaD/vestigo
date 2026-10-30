@@ -6,14 +6,18 @@
  *   categorías desde la 46 o la 44; una lista plana desde la 38; 4 ints desde
  *   la 28), [v≥40] bool primer spawn, int32 mundos y por cada uno: int64 uid,
  *   bool+Vector3 spawn, bool+Vector3 salida, [v≥30] bool+Vector3 muerte,
- *   Vector3 casa, [v≥29] bool + byte array del mapa; después nombre, id…
- *   int32 64 + SHA-512 del paquete (el juego lo lee y lo descarta).
+ *   Vector3 casa, [v≥29] bool + byte array del mapa; después string nombre,
+ *   int64 id, string semilla inicial; [v≥38] bool trampas, int64 fecha de
+ *   creación y, salvo en la 44 y desde la 46, las estadísticas viejas (3
+ *   listas; [v≥42] 3 más); bool + byte array `m_playerData` (ver
+ *   `playerData.ts`). Afuera: int32 64 + SHA-512 del paquete (se descarta).
  *
  * Las estadísticas no se usan, pero hay que recorrerlas: todo tiene largo.
  */
 import type { CharacterData, InputFile, MapPin } from "./contract";
 import { parsePlayerMap } from "./mapData";
 import { PackageReader } from "./package";
+import { parsePlayerData } from "./playerData";
 
 /** `Version.Player.DeepNorth`. */
 const PLAYER_VERSION = 46;
@@ -69,6 +73,23 @@ export function readCharacter(file: InputFile): CharacterData {
   }
   const name = p.readString();
 
+  // Lo que sigue al nombre; si algo falla, los mapas igual salen.
+  let progress: CharacterData["progress"] = null;
+  try {
+    p.take(8); // id del jugador
+    p.skipString(); // semilla inicial
+    if (version >= 38) {
+      p.take(1 + 8); // trampas, fecha de creación
+      if (version < 46 && version !== 44) {
+        for (let k = 0; k < (version >= 42 ? 6 : 3); k++) skipStringFloatList(p);
+      }
+    }
+    if (p.readBool()) progress = parsePlayerData(p.readByteArray());
+    else warnings.push(`${what}: el personaje no trae datos del jugador (recetas, habilidades…)`);
+  } catch (e) {
+    warnings.push(`${what}: no se pudieron leer los datos del jugador (${(e as Error).message})`);
+  }
+
   const worlds: CharacterData["worlds"] = raw.map(({ uid, blob }) => {
     if (!blob) return { uid, explored: null, pins: [] };
     try {
@@ -83,5 +104,5 @@ export function readCharacter(file: InputFile): CharacterData {
       return { uid, explored: null, pins: [] };
     }
   });
-  return { name, worlds, warnings };
+  return { name, worlds, progress, warnings };
 }

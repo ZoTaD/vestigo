@@ -56,7 +56,7 @@ export default function FoodCalc({ to, navigate }: { to: To; navigate: Nav }) {
               noneText={t.food.empty}
             />
             {f && (
-              <RouteLink className="vc-link" to={to("foods", f.slug)} onNavigate={navigate} aria-label={tx(f.name, lang)}>↗</RouteLink>
+              <RouteLink className="vc-link" to={to("foods", f.slug)} onNavigate={navigate} aria-label={tx(f.name, lang)}>↗︎</RouteLink>
             )}
           </div>
         ))}

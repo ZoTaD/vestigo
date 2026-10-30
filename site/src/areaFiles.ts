@@ -85,6 +85,7 @@ export const PZ_TAB_FILES: Partial<Record<PzSection, string>> = {
 /** Las secciones de Valheim que viajan en su propio chunk, igual que `TABS` en `Valheim.tsx` (2026-10-30). */
 export const VH_TAB_FILES: Partial<Record<ValheimSection, string>> = {
   calculators: "src/valheimCalc/Calculators.tsx",
+  progress: "src/valheimProgress/Progress.tsx",
 };
 
 /** Las pestañas de Terraria que viajan en su propio chunk, igual que `TABS` en `Terraria.tsx` (2026-10-12). */

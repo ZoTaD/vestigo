@@ -48,10 +48,10 @@ export type Poe2Section = "economy" | "encyclopedia" | "patches" | "tree" | "reg
  * el mapa interactivo por semilla (`/valheim/map?seed=…`). "planner" es el
  * Planificador (`/valheim/planner?l=…`) y su hoja de ruta
  * (`/valheim/planner/route`), 2026-09-25. "calculators" son las calculadoras
- * (`/valheim/calculators/combat`, 2026-10-30).
+ * (`/valheim/calculators/combat`) y "progress" es Mi partida (2026-10-30).
  */
 export type ValheimTab = "foods" | "meads" | "weapons" | "armor" | "tools" | "building" | "materials" | "creatures" | "biomes" | "places" | "bosses";
-export type ValheimSection = "home" | ValheimTab | "patches" | "map" | "planner" | "calculators";
+export type ValheimSection = "home" | ValheimTab | "patches" | "map" | "planner" | "calculators" | "progress";
 export const CALC_TOOLS = ["food", "combat", "comfort", "skills"] as const;
 export type CalcTool = (typeof CALC_TOOLS)[number];
 export const VALHEIM_TABS: ValheimTab[] = ["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "places", "bosses"];
@@ -588,6 +588,7 @@ export function parseRoute(pathname: string): Route {
       const tool = (CALC_TOOLS as readonly string[]).includes(rest[2] ?? "") && rest[2] !== "food" ? rest[2] : undefined;
       return { ...base, view: "valheim", vhSection: "calculators", detail: tool };
     }
+    if (rest[1] === "progress") return { ...base, view: "valheim", vhSection: "progress" };
     if (!isVhTab(rest[1])) return { ...base, view: "valheim", vhSection: "home" };
     return { ...base, view: "valheim", vhSection: rest[1], detail: rest[2] || undefined };
   }

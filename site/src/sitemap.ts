@@ -404,6 +404,7 @@ export function sitemapPaths(data: SitemapData): string[] {
       paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "patches" }));
       paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "map" }));
       paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "planner" }));
+      paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "progress" }));
       for (const tool of CALC_TOOLS) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "calculators", detail: tool === "food" ? undefined : tool }));
       for (const e of data.vh.editions) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "patches", detail: e.slug }));
     }

@@ -52,10 +52,26 @@ export interface WorldSaveData {
   warnings: string[];
 }
 
+/** Lo que el personaje sabe y tiene (`m_playerData` del `.fch`, el bloque de `Player.Save`). */
+export interface PlayerProgress {
+  /** Recetas conocidas (`m_knownRecipes`: nombres de ítems traducibles tipo "$item_..."). */
+  knownRecipes: string[];
+  /** Estaciones conocidas (`m_knownStations`: nombre → nivel). */
+  knownStations: Record<string, number>;
+  /** Materiales vistos (`m_knownMaterial`). */
+  knownMaterials: string[];
+  /** Trofeos (`m_trophies`: prefabs de trofeo). */
+  trophies: string[];
+  /** Habilidades: id numérico del enum Skills.SkillType → nivel (float). */
+  skills: Record<number, number>;
+}
+
 export interface CharacterData {
   name: string;
   /** Un registro por mundo que visitó ese personaje. */
   worlds: { uid: string; explored: Explored | null; pins: MapPin[] }[];
+  /** Recetas, trofeos, habilidades…; null si el archivo no trae el bloque o no se pudo leer (con un aviso). */
+  progress: PlayerProgress | null;
   warnings: string[];
 }
 

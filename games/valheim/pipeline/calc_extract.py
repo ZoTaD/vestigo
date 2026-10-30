@@ -4,7 +4,9 @@ Lo que necesitan las calculadoras y no saca `extract.py` (2026-10-30), en `data/
 - el grupo de confort de cada pieza (`Piece.m_comfortGroup`): de cada grupo cuenta sólo la mejor;
 - el modificador exacto de daño de cada criatura (`m_damageModifiers`: débil, muy débil, levemente débil…), que
   `extract.py` agrupa en débil/resistente/inmune;
-- las habilidades del jugador (`Skills.m_skills`): cuánto suben por acción (`m_increseStep`) y su ícono.
+- las habilidades del jugador (`Skills.m_skills`): cuánto suben por acción (`m_increseStep`) y su ícono;
+- el nombre traducible (`$item_…`, `$piece_…`) de cada objeto y pieza, que es lo que guarda el personaje en sus
+  recetas, estaciones y materiales conocidos (Mi partida los usa para tildar lo hecho).
 
 Aparte de `extract.py` para no regenerar todo: `.venv/Scripts/python -m pipeline.calc_extract` (~3 min) y después
 `pipeline.site`, que lo suma a `building.json`, `creatures.json`, `bosses.json` y `skills.json`.
@@ -24,7 +26,7 @@ def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")
     t0 = time.time()
     g = Game()
-    g.index({"Piece", "Humanoid", "Character", "Skills"})
+    g.index({"Piece", "Humanoid", "Character", "Skills", "ItemDrop"})
     icons = Icons(g, os.path.join(PUBLIC, "icons"))
 
     comfort = {}
@@ -44,12 +46,22 @@ def main() -> None:
                  if v in MODS and k[2:] not in ("chop", "pickaxe", "nonPlayer")}
             mods[prefab] = m
 
+    tokens = {}
+    for c in g.components("ItemDrop"):
+        prefab, tok = g.prefab(c.go), c.tree["m_itemData"]["m_shared"].get("m_name")
+        if prefab and tok:
+            tokens.setdefault(tok, prefab)
+    for pc in g.components("Piece"):
+        prefab, tok = g.prefab(pc.go), pc.tree.get("m_name")
+        if prefab and tok:
+            tokens.setdefault(tok, prefab)
+
     skills_comp = max(g.components("Skills"), key=lambda c: len(c.tree.get("m_skills") or []))
     skills = [{"id": s["m_skill"], "step": s["m_increseStep"], "icon": icons.save(skills_comp.file, s.get("m_icon"))}
               for s in skills_comp.tree["m_skills"]]
     deathFactor = skills_comp.tree.get("m_DeathLowerFactor")
 
-    dump("calc.json", {"comfortGroups": comfort, "creatureMods": mods, "skills": skills, "deathLowerFactor": deathFactor})
+    dump("calc.json", {"comfortGroups": comfort, "creatureMods": mods, "skills": skills, "deathLowerFactor": deathFactor, "tokens": tokens})
     print(f"{len(comfort)} piezas con confort, {len(mods)} criaturas, {len(skills)} habilidades, {time.time() - t0:.0f}s")
 
 
