@@ -113,6 +113,12 @@ const EN = {
           "Build a Deadlock item build in a copy of the game's shop: souls, investment bonus, upgrades, " +
           "and how close it is to the builds that win. Share it with a link.",
       },
+      draft: {
+        title: () => "Deadlock Draft Predictor — Team Builder and Win Chance | Vestigo",
+        description: () =>
+          "Pick both Deadlock teams and see the win chance of the draft: hero strength at your rank, " +
+          "counters and synergies, and the best next pick for each side.",
+      },
       ranks: {
         title: () => "Deadlock Ranks — Distribution and Rank Points per Game | Vestigo",
         description: () =>
@@ -298,6 +304,12 @@ const ES: typeof EN = {
         description: () =>
           "Armá una build de Deadlock en una copia de la tienda del juego: almas, bonificación de inversión, " +
           "mejoras y cuánto se parece a las builds que ganan. Compartila con un link.",
+      },
+      draft: {
+        title: () => "Predictor de draft de Deadlock — Armador de equipo y chance de ganar | Vestigo",
+        description: () =>
+          "Elegí los dos equipos de Deadlock y mirá la chance de ganar del draft: la fuerza de cada héroe " +
+          "en tu rango, counters, sinergias y el mejor próximo héroe para cada lado.",
       },
       ranks: {
         title: () => "Rangos de Deadlock — distribución y puntos por partida | Vestigo",

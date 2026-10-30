@@ -1,0 +1,39 @@
+{
+ "generatedAt": "2026-10-30T15:41:55.299Z",
+ "cv": 1,
+ "ca": 0.5,
+ "bands": {
+  "phantom-above": {
+   "scale": 0.1044,
+   "matches": 2993,
+   "accuracy": 0.58,
+   "brier": 0.2405,
+   "from": "2026-10-16",
+   "to": "2026-10-30"
+  },
+  "archon-oracle": {
+   "scale": 0.0841,
+   "matches": 3000,
+   "accuracy": 0.5757,
+   "brier": 0.2422,
+   "from": "2026-10-15",
+   "to": "2026-10-30"
+  },
+  "ritualist-emissary": {
+   "scale": 0.1121,
+   "matches": 2999,
+   "accuracy": 0.5939,
+   "brier": 0.2365,
+   "from": "2026-10-15",
+   "to": "2026-10-30"
+  },
+  "arcanist-below": {
+   "scale": 0.1055,
+   "matches": 2998,
+   "accuracy": 0.5824,
+   "brier": 0.2386,
+   "from": "2026-10-15",
+   "to": "2026-10-30"
+  }
+ }
+}
