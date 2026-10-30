@@ -135,6 +135,24 @@ def main() -> None:
     # cultivador y las acciones sin costo (reparar, borrar) tampoco son
     # estructuras. `pieces` sigue entero para los biomas (los cultivos).
     built = {pid: p for pid, p in pieces.items() if p["tool"] == "Hammer" and p["requirements"]}
+    # La calidad que de verdad se alcanza (2026-10-30, auditoría): mejorar a
+    # calidad q pide la estación en el nivel de la receta + q − 1, y cada estación
+    # llega hasta 1 + sus mejoras (forja negra 6, mesa de galdr 5). El juego deja
+    # `m_maxQuality` 4 en lo Nord y otros 70 objetos que hoy no pasan de 3.
+    station_top = defaultdict(lambda: 1)
+    for p in built.values():
+        if p.get("extends"):
+            station_top[p["extends"]] += 1
+    for it in items.values():
+        craft = next((x for x in it["sources"] if x["kind"] == "craft" and x.get("station")), None)
+        if craft and (it.get("maxQuality") or 1) > 1:
+            it["maxQuality"] = max(1, min(it["maxQuality"], station_top[craft["station"]] - (craft.get("level") or 1) + 1))
+    for k in fixes.NOT_MEADS:
+        if k in items:
+            items[k]["kind"] = "material"
+    for c in conversions:
+        if c["station"] in fixes.CONVERSION_FUEL and not c.get("fuel"):
+            c["fuel"] = fixes.CONVERSION_FUEL[c["station"]]
     # Los eventos, uno por id (el juego tiene dos listas con los mismos).
     events = list({e["id"]: e for e in (load("events.json") if os.path.exists(os.path.join(DATA, "events.json")) else [])}.values())
     # Ataques y consejos de cada criatura y jefe (`tips_build.py`), por nombre en inglés.
@@ -346,6 +364,13 @@ def main() -> None:
         elif tab == "meads":
             base = next((c for c in conversions if c["to"] == pid), None)
             row.update(effect=mead_effect(pid))
+            consume = (row.get("effects") or {}).get("consume")
+            if consume:
+                st = consume["stats"] = dict(consume["stats"])
+                # Lo que dura de verdad y el enfriamiento, en vez de un `ttl` que era el enfriamiento (`fixes.py`).
+                if pid in fixes.MEAD_OVER_TIME and "ttl" in st:
+                    st["overTime"], st["cooldown"] = fixes.MEAD_OVER_TIME[pid], st.pop("ttl")
+                st.update(fixes.MEAD_EXTRA_STATS.get(pid, {}))
             if base and base["from"] in items:
                 br = recipe_by_item.get(base["from"])
                 row["chain"] = {"base": ref[base["from"]], "ferment": station_ref(base["station"]), "time": base["time"], "yield": base["yield"],
@@ -356,6 +381,17 @@ def main() -> None:
         elif tab == "armor":
             row.update(slot=armor_slot(it["itemType"]), armor=it["armor"], armorPerLevel=it["armorPerLevel"],
                        blockPower=it["blockPower"], setName=it["setName"], maxQuality=it["maxQuality"])
+            # Sólo lo que el juego aplica (2026-10-30, `fixes.py`): un escudo bloquea (con su mejora por nivel y su
+            # parry) y no suma armadura; lo demás no bloquea, y una baratija tampoco da armadura (10 y 10 eran los
+            # valores por defecto del prefab).
+            if row["slot"] == "shield":
+                kind = "tower" if pid in fixes.TOWER_SHIELDS else "buckler" if "Buckler" in pid else "round"
+                row.update(armor=None, armorPerLevel=None, blockPerLevel=fixes.SHIELD_BLOCK_PER_LEVEL,
+                           parry=fixes.SHIELD_PARRY.get(kind), shieldKind=kind)
+            else:
+                row["blockPower"] = None
+                if row["slot"] == "trinket":
+                    row.update(armor=None, armorPerLevel=None)
             if it["setName"]:
                 row["setPieces"] = [ref[o] for o in sorted(set_members.get(it["setName"], [])) if o != pid and o in ref]
         elif tab == "tools":
@@ -378,7 +414,9 @@ def main() -> None:
     for c in conversions:
         st = station_ref(c["station"])
         if st and st["slug"] and c["from"] in ref and c["to"] in ref:
-            processes[st["slug"]].append({"from": ref[c["from"]], "to": ref[c["to"]], "time": c.get("time"), "yield": c.get("yield")})
+            fuel = c.get("fuel")
+            processes[st["slug"]].append({"from": ref[c["from"]], "to": ref[c["to"]], "time": c.get("time"), "yield": c.get("yield"),
+                                          **({"fuel": {**ref[fuel["item"]], "amount": fuel["perProduct"]}} if fuel and fuel["item"] in ref else {})})
     for iid, r in recipe_by_item.items():
         st = station_ref(r["station"])
         if st and st["slug"] and iid in ref:
@@ -481,6 +519,7 @@ def main() -> None:
     for cid, c in creatures.items():
         tabs["creatures"].append({
             "id": cid, **ref[f"creature:{cid}"], "health": c["health"], "biomes": c["biomes"], "boss": cid in boss_ids,
+            **({"phases": fixes.BOSS_PHASES[cid]} if cid in fixes.BOSS_PHASES else {}),
             "weak": c["weak"], "resist": c["resist"], "immune": c["immune"],
             "drops": [{**ref[d["item"]], "min": d["min"], "max": d["max"], "chance": d["chance"]} for d in c["drops"] if d["item"] in ref],
             "bossRef": ref.get(f"boss:{cid}"),
@@ -544,6 +583,7 @@ def main() -> None:
         s_item = b["summon"]["item"]
         boss_rows.append({
             "id": b["id"], **ref[f"boss:{b['id']}"], "health": b["health"], "biome": b["biome"], "order": b["order"],
+            **({"phases": fixes.BOSS_PHASES[b["id"]]} if b["id"] in fixes.BOSS_PHASES else {}),
             "art": b["art"], "photo": photo_by_name.get(b["name"]["en"]), "power": b["power"], "weak": b["weak"], "resist": b["resist"], "immune": b["immune"],
             "summon": {"item": ref.get(s_item) if s_item else None, "amount": b["summon"]["amount"], "altar": b["summon"]["altar"],
                        "sources": [src(s) for s in items[s_item]["sources"]] if s_item in items else []},

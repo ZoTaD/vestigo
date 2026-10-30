@@ -150,3 +150,45 @@ HIDE_CREATURES: set[str] = {"Ghost_old", "Ghost_Void", "Frysling", "Goblin_Gem",
 # nunca aparece; el Voidcaller sólo lo soltaba El Vacío, que no aparece; la
 # seta azul no está implementada (Weird Gloop "Blue mushroom").
 HIDE_ITEMS: set[str] = {'Flametal', 'FlametalOre', 'BonemawSerpentScale', 'PickaxeStone', 'ShieldIronSquare', 'ShieldKnight', 'DvergerArbalest', 'Lantern_hooded', 'HildirKey_forestcrypt', 'HildirKey_mountaincave', 'HildirKey_plainsfortress', 'KnifeVoid', 'MushroomBlue'}
+
+
+# --- 2026-10-30, auditoría contra la competencia (pedido de ZoTaD): lo que el
+# extractor leyó mal o no lee. Valheim no está instalado, así que va acá con su
+# fuente en vez de salir del juego.
+
+# Weird Gloop "Mead": las hidromieles de efecto inmediato curan en 10 s (las de
+# aguante en 2 s). Los 2 min del juego (`m_ttl`) son el enfriamiento: el sitio
+# los mostraba como si fuera lo que dura.
+MEAD_OVER_TIME: dict[str, int] = {
+    "MeadHealthMinor": 10, "MeadHealthMedium": 10, "MeadHealthMajor": 10,
+    "MeadStaminaMinor": 2, "MeadStaminaMedium": 2, "MeadEitrMinor": 10,
+}
+
+# Weird Gloop "Mead": efectos que el extractor no lee (`SE_Stats` no los trae
+# en los campos de `records.SE_FIELDS`).
+MEAD_EXTRA_STATS: dict[str, dict] = {
+    "MeadLightfoot": {"jumpModifier": 0.2},
+    "MeadHasty": {"swimSpeedModifier": 0.075},
+}
+
+# No son hidromieles: consumibles sin comida que el juego marca igual. Van a
+# Materiales (son ingredientes); el efecto al tomarlos se sigue mostrando.
+NOT_MEADS = {"Pukeberries", "RottenMeat", "MushroomBzerker"}
+
+# Weird Gloop "Shields": el bloqueo sube 6 por nivel en todos (mínimo y máximo
+# de la tabla, de calidad 1 a 3). Parry ×1,5 los redondos, ×2,5 las rodelas y
+# sin parry los de torre. La armadura del prefab (200, 10) no se aplica.
+SHIELD_BLOCK_PER_LEVEL = 6
+SHIELD_PARRY = {"round": 1.5, "buckler": 2.5}
+TOWER_SHIELDS = {"ShieldWoodTower", "ShieldBoneTower", "ShieldIronTower", "ShieldIronSquare", "ShieldSerpentscale",
+                 "ShieldBlackmetalTower", "FW_ShieldBlackmetalTower", "SP_ShieldBlackmetalTower", "ShieldFlametalTower",
+                 "ShieldGoldTower"}
+
+# Weird Gloop "Liquid Frost" y "Frost Foundry" (y los archivos del juego, ver
+# `purposes.py`): cada pieza fundida gasta 5 de Escarcha líquida. El extractor
+# no lee el combustible de la forja de escarcha.
+CONVERSION_FUEL: dict[str, dict] = {"piece_frostfoundry": {"item": "FrozenFuel", "perProduct": 5}}
+
+# Weird Gloop "Kall Fimbulbringer": tres fases con salud propia; el prefab sólo
+# trae la primera.
+BOSS_PHASES: dict[str, list[int]] = {"FrozenKing": [10000, 7000, 30000]}
