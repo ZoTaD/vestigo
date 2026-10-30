@@ -532,6 +532,7 @@ const EN = {
         matesLead: "Who you've played with at least twice, and how it went.",
         enemiesLead: "Who you've run into at least twice, and how it went.",
         matches: (n: string) => `${n} together`,
+        against: (n: string) => `${n} against`,
         rowTitle: (name: string, matches: number, wins: number, losses: number) =>
           `${name} · ${matches} matches · ${wins}W ${losses}L`,
       },
@@ -544,7 +545,7 @@ const EN = {
       career: {
         title: "Your heroes",
         lead: "Your whole career with each hero, not just the matches listed.",
-        cols: { matches: "Games", winRate: "Win", accuracy: "Acc." },
+        cols: { matches: "Games", winRate: "Win", accuracy: "Accuracy" },
         record: (wins: number, losses: number) => `${wins}W ${losses}L`,
         crit: (rate: string) => `${rate} crit shots`,
       },
@@ -619,7 +620,7 @@ const EN = {
           bouncesBack: ["Bounces back", (v: string) => `${v} win rate right after a loss`],
           fadesInSessions: ["Runs out of steam", (v: string) => `${v} win rate from the fourth match of a session on`],
           warmsUp: ["Warms up", (v: string) => `${v} win rate from the fourth match of a session on`],
-          duo: ["Better together", (v: string) => `${v} win rate with your best regular teammate`],
+          duo: ["Better together", (v: string) => `${v} win rate with your best regular teammate (5+ games together)`],
           soloQueue: ["Solo player", (v: string) => `No regular teammate across ${v} matches`],
           grinder: ["Grinder", (v: string) => `${v} matches in the last two weeks`],
           mostSouls: ["Richest in the lobby", (v: string) => `${v} souls, the most in the match`],
@@ -653,7 +654,7 @@ const EN = {
         streakWin: (n: number) => `${n} wins in a row`,
         streakLoss: (n: number) => `${n} losses in a row`,
         window: (n: number) => (n === 1 ? "Last match" : `Last ${n}`),
-        ranked: (n: number) => `Measuring your ranked matches this season — ${n} so far.`,
+        ranked: (n: number) => `Based on your ranked matches this season — ${n} so far.`,
         fallback: (n: number, min: number) => {
           const cuantas = n === 0 ? "no ranked matches yet" : n === 1 ? "only 1 ranked match" : `only ${n} ranked matches`;
           return `Ranked just opened this season, and you have ${cuantas} — this measures every match until you reach ${min}.`;
@@ -667,13 +668,13 @@ const EN = {
          */
         scoped: {
           ranked: (n: number) =>
-            n === 1 ? "Measuring 1 ranked match." : `Measuring your ${n} ranked matches.`,
+            n === 1 ? "Based on 1 ranked match." : `Based on your ${n} ranked matches.`,
           normal: (n: number) =>
-            n === 1 ? "Measuring 1 normal match." : `Measuring your ${n} normal matches.`,
+            n === 1 ? "Based on 1 normal match." : `Based on your ${n} normal matches.`,
           brawl: (n: number) =>
             n === 1
-              ? "Measuring 1 Street Brawl match."
-              : `Measuring your ${n} Street Brawl matches.`,
+              ? "Based on 1 Street Brawl match."
+              : `Based on your ${n} Street Brawl matches.`,
         },
       },
       /**
@@ -1967,6 +1968,7 @@ const ES: typeof EN = {
         matesLead: "Con quiénes jugaste al menos dos veces, y cómo salió.",
         enemiesLead: "Con quiénes te cruzaste al menos dos veces, y cómo salió.",
         matches: (n: string) => `${n} juntas`,
+        against: (n: string) => `${n} en contra`,
         rowTitle: (name: string, matches: number, wins: number, losses: number) =>
           `${name} · ${matches} partidas · ${wins}V ${losses}D`,
       },
@@ -2029,7 +2031,7 @@ const ES: typeof EN = {
           bouncesBack: ["Se repone", (v: string) => `${v} de victorias justo después de perder`],
           fadesInSessions: ["Se queda sin nafta", (v: string) => `${v} de victorias desde la cuarta partida de una sesión`],
           warmsUp: ["Entra en calor", (v: string) => `${v} de victorias desde la cuarta partida de una sesión`],
-          duo: ["Mejor acompañado", (v: string) => `${v} de victorias con su mejor compañero habitual`],
+          duo: ["Mejor acompañado", (v: string) => `${v} de victorias con su mejor compañero habitual (5 o más partidas juntos)`],
           soloQueue: ["Juega solo", (v: string) => `Sin compañero habitual en ${v} partidas`],
           grinder: ["Incansable", (v: string) => `${v} partidas en las últimas dos semanas`],
           mostSouls: ["El más rico", (v: string) => `${v} almas, el que más en la partida`],
@@ -2063,7 +2065,7 @@ const ES: typeof EN = {
         streakWin: (n: number) => `${n} victorias seguidas`,
         streakLoss: (n: number) => `${n} derrotas seguidas`,
         window: (n: number) => (n === 1 ? "Última partida" : `Últimas ${n}`),
-        ranked: (n: number) => `Midiendo tus partidas clasificatorias de esta temporada — llevas ${n}.`,
+        ranked: (n: number) => `Sobre tus partidas clasificatorias de esta temporada — llevas ${n}.`,
         fallback: (n: number, min: number) => {
           const cuantas =
             n === 0 ? "ninguna partida clasificatoria todavía" : n === 1 ? "sólo 1 partida clasificatoria" : `sólo ${n} partidas clasificatorias`;
@@ -2072,14 +2074,14 @@ const ES: typeof EN = {
         scoped: {
           ranked: (n: number) =>
             n === 1
-              ? "Midiendo 1 partida clasificatoria."
-              : `Midiendo tus ${n} partidas clasificatorias.`,
+              ? "Sobre 1 partida clasificatoria."
+              : `Sobre tus ${n} partidas clasificatorias.`,
           normal: (n: number) =>
-            n === 1 ? "Midiendo 1 partida normal." : `Midiendo tus ${n} partidas normales.`,
+            n === 1 ? "Sobre 1 partida normal." : `Sobre tus ${n} partidas normales.`,
           brawl: (n: number) =>
             n === 1
-              ? "Midiendo 1 partida de pelea callejera."
-              : `Midiendo tus ${n} partidas de pelea callejera.`,
+              ? "Sobre 1 partida de pelea callejera."
+              : `Sobre tus ${n} partidas de pelea callejera.`,
         },
       },
       cols: {

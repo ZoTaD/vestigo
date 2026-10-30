@@ -138,6 +138,37 @@ async function fetchMetrics(params: Record<string, string>): Promise<MetricsFile
   return (await res.json()) as MetricsFile;
 }
 
+/**
+ * Los promedios de una banda, guardados 12 h en el navegador (auditoría, 2026-10-30): son los mismos para todos los
+ * jugadores de esa banda y la consulta tarda ~14 s, así que "Tú contra tu banda" quedaba cargando en cada perfil.
+ * Sin `localStorage` (navegación privada) se pide cada vez, como antes.
+ */
+const BAND_TTL = 12 * 3600 * 1000;
+const bandMemo = new Map<string, Promise<MetricsFile>>();
+
+function bandMetrics(min: number, max: number): Promise<MetricsFile> {
+  const key = `vestigo:dl:band:${RANKED_SINCE}:${min}-${max}`;
+  const memo = bandMemo.get(key);
+  if (memo) return memo;
+  try {
+    const saved = JSON.parse(localStorage.getItem(key) ?? "null") as { at: number; data: MetricsFile } | null;
+    if (saved && Date.now() - saved.at < BAND_TTL) return Promise.resolve(saved.data);
+  } catch {
+    /* sin almacenamiento: se pide */
+  }
+  const p = fetchMetrics({ min_average_badge: String(min), max_average_badge: String(max) }).then((data) => {
+    try {
+      localStorage.setItem(key, JSON.stringify({ at: Date.now(), data }));
+    } catch {
+      /* lleno o bloqueado: sólo queda en memoria */
+    }
+    return data;
+  });
+  p.catch(() => bandMemo.delete(key));
+  bandMemo.set(key, p);
+  return p;
+}
+
 export type VsState =
   | { status: "idle" }
   | { status: "loading" }
@@ -158,7 +189,7 @@ export function useVsBand(accountId: number | null, badge: number): VsState {
     setState({ status: "loading" });
     Promise.all([
       fetchMetrics({ account_ids: String(accountId) }),
-      fetchMetrics({ min_average_badge: String(range.min), max_average_badge: String(range.max) }),
+      bandMetrics(range.min, range.max),
     ]).then(
       ([mine, band]) => {
         if (!vivo) return;

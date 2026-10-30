@@ -86,7 +86,7 @@ export function ItemDetailPanel({
               <div className="dl-detail-block" key={j}>
                 {/* El encabezado de la sección y, a su derecha, la pastilla del
                     tiempo de recarga: así lo reparte la tarjeta del juego. */}
-                {(c.detail.kinds[sec.kind as keyof typeof c.detail.kinds] || sec.kind === "" || b.cooldown) && (
+                {(c.detail.kinds[sec.kind as keyof typeof c.detail.kinds] || sec.kind === "" || hasCooldown(b)) && (
                   <div className="dl-card-secline">
                     <h5 className="dl-detail-kind">
                       {/* Una sección sin tipo que no es la innata el juego la
@@ -94,7 +94,7 @@ export function ItemDetailPanel({
                       {c.detail.kinds[sec.kind as keyof typeof c.detail.kinds] ??
                         (sec.kind === "" ? c.detail.kinds.passive : "")}
                     </h5>
-                    {b.cooldown && (
+                    {hasCooldown(b) && b.cooldown && (
                       <span className="dl-card-pill">
                         {b.cooldown.icon && iconUrl(b.cooldown.icon) && (
                           <GameImg src={iconUrl(b.cooldown.icon)} alt="" width={14} height={14} />
@@ -165,7 +165,7 @@ export function ItemDetailPanel({
                     {b.stats.map((st, k) => (
                       <li key={k} data-big={st.big === true}>
                         <span className="dl-card-stat-value">
-                          {st.value}
+                          {signed(st)}
                           {st.unit}
                         </span>
                         <span className="dl-card-stat-label">{st.label}</span>
@@ -182,7 +182,7 @@ export function ItemDetailPanel({
                           <GameImg className="dl-stat-icon" src={iconUrl(st.icon)} alt="" width={16} height={16} loading="lazy" decoding="async" />
                         )}
                         <span className="dl-card-stat-value">
-                          {st.value}
+                          {signed(st)}
                           {st.unit}
                         </span>
                         <span className="dl-card-stat-label">{st.label}</span>
@@ -246,6 +246,16 @@ export function ItemDetailPanel({
  * lo que cura, violeta para lo espiritual, naranja para el arma. Sale de la
  * clave del ícono de la stat, que es lo único que dice de qué familia es.
  */
+/** ¿El bloque tiene un tiempo de recarga de verdad? Una activa sin recarga (Kinetic Dash) trae "0" y no lleva pastilla. */
+function hasCooldown(b: { cooldown?: { value: string } }): boolean {
+  return !!b.cooldown && Number(b.cooldown.value) !== 0;
+}
+
+/** Una lentitud viene en positivo ("Move Speed 24%") con el ícono de lentitud; se lee como −24 % (auditoría, 2026-10-30). */
+function signed(st: { value: string; icon?: string }): string {
+  return st.icon === "slow" && /^\d/.test(st.value) ? `−${st.value}` : st.value;
+}
+
 function toneOf(icon: string | undefined): string | undefined {
   if (!icon) return undefined;
   if (/heal|regen|life|health/i.test(icon)) return "heal";
