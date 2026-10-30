@@ -30,6 +30,8 @@ export async function encodePins(pins: SharedPin[]): Promise<string> {
 
 /** Los pines de un `#p=…`; lo que no se puede leer (enlace cortado, otro formato) da una lista vacía. */
 export async function decodePins(code: string): Promise<SharedPin[]> {
+  // Un código más largo que lo que arma el sitio no se descomprime (un enlace hecho a mano podría colgar la pestaña).
+  if (code.length > MAX_HASH) return [];
   try {
     const raw = JSON.parse(new TextDecoder().decode(await pipe(fromB64url(code), new DecompressionStream("deflate-raw"))));
     if (!Array.isArray(raw)) return [];

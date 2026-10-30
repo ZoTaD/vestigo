@@ -179,12 +179,15 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
 
       <div className="vm-layout">
         <div className={`vm-stage${pinMode ? " is-pinning" : ""}`} ref={stage} onClickCapture={(e) => {
-          // Agregar un pin: el punto del mapa bajo el cursor (lo da `onHover`).
-          if (!pinMode || !hover) return;
+          // Agregar un pin: el punto del mapa donde se tocó (en el celular no hay cursor antes del toque).
+          if (!pinMode) return;
+          const at = viewer.current?.toWorld(e.clientX, e.clientY);
+          if (!at) return;
           e.stopPropagation();
-          const name = window.prompt(share.ask) ?? "";
-          setShared((s) => [...s, { x: hover.x, z: hover.z, type: 3, name: name.trim() }]);
+          const name = window.prompt(share.ask);
           setPinMode(false);
+          if (name === null) return;
+          setShared((s) => [...s, { x: at.x, z: at.z, type: 3, name: name.trim() }]);
         }}>
           <MapViewer seed={seed} layer={layer} grid={grid} markers={allMarkers} fog={saves.fog} lines={saves.lines} onHover={setHover} onProgress={onProgress} onError={() => setFailed(true)} onMarkerHover={setTip}
             onMarker={setSelected} handle={onHandle} initial={first.view} onView={onView} />
