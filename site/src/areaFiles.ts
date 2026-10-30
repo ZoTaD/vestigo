@@ -1,4 +1,4 @@
-import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, View, WfSection } from "./route";
+import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, ValheimSection, View, WfSection } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -80,6 +80,11 @@ export const PZ_TAB_FILES: Partial<Record<PzSection, string>> = {
   skills: "src/zomboid/skills/ZomboidSkills.tsx",
   server: "src/zomboid/server/ZomboidServer.tsx",
   patches: "src/zomboid/patches/ZomboidPatches.tsx",
+};
+
+/** Las secciones de Valheim que viajan en su propio chunk, igual que `TABS` en `Valheim.tsx` (2026-10-30). */
+export const VH_TAB_FILES: Partial<Record<ValheimSection, string>> = {
+  calculators: "src/valheimCalc/Calculators.tsx",
 };
 
 /** Las pestañas de Terraria que viajan en su propio chunk, igual que `TABS` en `Terraria.tsx` (2026-10-12). */
@@ -170,6 +175,8 @@ export function filesFor(route: Route): string[] {
           ? PZ_TAB_FILES[route.pzSection ?? "home"]
           : route.view === "rust"
             ? RUST_TAB_FILES[route.rsSection ?? "home"]
+            : route.view === "valheim"
+              ? VH_TAB_FILES[route.vhSection ?? "home"]
             : route.view === "terraria"
               ? TERRARIA_TAB_FILES[route.trSection ?? "home"]
               : route.view === "stardew"

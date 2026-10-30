@@ -4,10 +4,11 @@ import { WF_COPY } from "./warframeCopy";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
 import { SEO_COPY } from "./seoCopy";
-import { LANGS, parseRoute, routeUrl, SITE_ORIGIN, type Route } from "./route";
+import { CALC_TOOLS, LANGS, parseRoute, routeUrl, SITE_ORIGIN, type CalcTool, type Route } from "./route";
 import { deadlockDetailSlugs, sitemapPaths, type SitemapData } from "./sitemap";
 import { POE2_COPY, type Poe2Copy } from "./poe2Copy";
 import { VALHEIM_COPY } from "./valheimCopy";
+import { CALC_COPY } from "./valheimCalc/copy";
 import { D2R_COPY } from "./d2rCopy";
 import { tidyTitleName, ZOMBOID_COPY } from "./zomboidCopy";
 import { RUST_COPY, type RustHas } from "./rustCopy";
@@ -63,6 +64,9 @@ export type WfHead = { arcane?: boolean; planet?: [en: string, es: string]; type
  * rasgos de profesión de Project Zomboid que tienen un gemelo que se elige: las
  * profesiones que lo traen (ver `seo.detail` en `zomboidCopy.ts`).
  */
+/** La calculadora de una dirección de Valheim (sin herramienta, Comidas). */
+const calcTool = (detail: string | undefined): CalcTool => ((CALC_TOOLS as readonly string[]).includes(detail ?? "") ? (detail as CalcTool) : "food");
+
 export function metaFor(
   route: Route,
   lang: Lang,
@@ -114,6 +118,7 @@ export function metaFor(
     if (sec === "home") return v.seo.home;
     if (sec === "map") return { title: v.map.seoTitle, description: v.map.seoDesc };
     if (sec === "planner") return { title: v.plan.seoTitle, description: v.plan.seoDesc };
+    if (sec === "calculators") return CALC_COPY[lang].seo[calcTool(route.detail)];
     if (sec === "patches") {
       if (!route.detail) return { title: v.pat.seoTab, description: v.pat.lede };
       const version = route.detail.replace(/-/g, ".");
@@ -353,12 +358,14 @@ export function jsonLdFor(
     const sec = route.vhSection ?? "home";
     const v = VALHEIM_COPY[lang];
     const trail = [{ name: brand, url: home }, { name: "Valheim", url: routeUrl({ ...route, vhSection: "home", detail: undefined }) }];
-    if (sec !== "home") trail.push({ name: sec === "patches" ? v.pat.tab : sec === "map" ? v.map.tab : sec === "planner" ? v.plan.tab : v.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
-    if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    const calc = CALC_COPY[lang];
+    if (sec !== "home") trail.push({ name: sec === "patches" ? v.pat.tab : sec === "map" ? v.map.tab : sec === "planner" ? v.plan.tab : sec === "calculators" ? calc.tab : v.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (sec === "calculators" && route.detail) trail.push({ name: calc.tools[calcTool(route.detail)].name, url: page.canonical });
+    else if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
     const out: object[] = trail.length > 2 ? [crumbs(trail)] : [];
-    if (sec === "map" || sec === "planner") {
-      // El mapa y el Planificador son herramientas: se presentan como aplicación web gratuita.
-      const app = sec === "map" ? v.map : v.plan;
+    if (sec === "map" || sec === "planner" || sec === "calculators") {
+      // El mapa, el Planificador y las calculadoras son herramientas: se presentan como aplicación web gratuita.
+      const app = sec === "map" ? v.map : sec === "planner" ? v.plan : { seoTitle: calc.seo[calcTool(route.detail)].title, seoDesc: calc.seo[calcTool(route.detail)].description };
       out.push({
         "@context": "https://schema.org", "@type": "WebApplication", name: app.seoTitle.replace(/\s*\|.*$/, ""),
         description: app.seoDesc, url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any",

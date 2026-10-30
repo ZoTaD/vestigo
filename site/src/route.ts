@@ -47,10 +47,13 @@ export type Poe2Section = "economy" | "encyclopedia" | "patches" | "tree" | "reg
  * (`/valheim/patches/1-0-15`): no es una pestaña de datos del juego. "map" es
  * el mapa interactivo por semilla (`/valheim/map?seed=…`). "planner" es el
  * Planificador (`/valheim/planner?l=…`) y su hoja de ruta
- * (`/valheim/planner/route`), 2026-09-25.
+ * (`/valheim/planner/route`), 2026-09-25. "calculators" son las calculadoras
+ * (`/valheim/calculators/combat`, 2026-10-30).
  */
 export type ValheimTab = "foods" | "meads" | "weapons" | "armor" | "tools" | "building" | "materials" | "creatures" | "biomes" | "places" | "bosses";
-export type ValheimSection = "home" | ValheimTab | "patches" | "map" | "planner";
+export type ValheimSection = "home" | ValheimTab | "patches" | "map" | "planner" | "calculators";
+export const CALC_TOOLS = ["food", "combat", "comfort", "skills"] as const;
+export type CalcTool = (typeof CALC_TOOLS)[number];
 export const VALHEIM_TABS: ValheimTab[] = ["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "places", "bosses"];
 /**
  * Diablo II: Resurrected (2026-09-29). "home" es la portada (`/d2r`); cada
@@ -581,6 +584,10 @@ export function parseRoute(pathname: string): Route {
     if (rest[1] === "patches") return { ...base, view: "valheim", vhSection: "patches", detail: rest[2] || undefined };
     if (rest[1] === "map") return { ...base, view: "valheim", vhSection: "map" };
     if (rest[1] === "planner") return { ...base, view: "valheim", vhSection: "planner", detail: rest[2] === "route" ? "route" : undefined };
+    if (rest[1] === "calculators") {
+      const tool = (CALC_TOOLS as readonly string[]).includes(rest[2] ?? "") && rest[2] !== "food" ? rest[2] : undefined;
+      return { ...base, view: "valheim", vhSection: "calculators", detail: tool };
+    }
     if (!isVhTab(rest[1])) return { ...base, view: "valheim", vhSection: "home" };
     return { ...base, view: "valheim", vhSection: rest[1], detail: rest[2] || undefined };
   }

@@ -23,7 +23,8 @@ const loadDeadlock = () => import("./DeadlockArea");
 export const HomeArea = lazyWithPreload(() => import("./Home"));
 export const DeadlockArea = lazyWithPreload(loadDeadlock);
 export const Poe2Area = lazyWithPreload(() => import("./Poe2Area"));
-export const ValheimArea = lazyWithPreload(() => import("./Valheim"));
+const loadValheim = () => import("./Valheim");
+export const ValheimArea = lazyWithPreload(loadValheim);
 const loadD2r = () => import("./D2r");
 export const D2rArea = lazyWithPreload(loadD2r);
 const loadZomboid = () => import("./Zomboid");
@@ -82,6 +83,7 @@ export const preloadRoute = async (route: Route): Promise<void> => {
   if (route.view === "d2r") await loadD2r().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "zomboid") await loadZomboid().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "rust") await loadRust().then((m) => m.preloadTab(route)).catch(() => undefined);
+  if (route.view === "valheim") await loadValheim().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "terraria") await loadTerraria().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "stardew") await loadStardew().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "warframe") await loadWarframe().then((m) => m.preloadTab(route)).catch(() => undefined);

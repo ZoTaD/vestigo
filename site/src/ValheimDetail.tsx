@@ -4,6 +4,7 @@
  */
 import { useLang, type Lang } from "./i18n";
 import ValheimPlanButton from "./ValheimPlanButton";
+import ValheimConsole from "./ValheimConsole";
 import RouteLink from "./RouteLink";
 import { useValheimCopy, type ValheimCopy } from "./valheimCopy";
 import type { ListTab } from "./valheimTabs";
@@ -442,6 +443,7 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
           {(item?.chain?.req ?? req).length > 0 && (
             <IngredientSources req={item?.chain?.req ?? req} to={to} navigate={navigate} />
           )}
+          <ValheimConsole id={row.id} kind={piece ? "piece" : "item"} />
         </div>
       </article>
       <nav className="vh-pager">
