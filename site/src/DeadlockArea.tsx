@@ -42,6 +42,7 @@ import "./styles/news.css";
 const DeadlockItems = lazyWithPreload(() => import("./DeadlockItems"));
 const DeadlockHeroes = lazyWithPreload(() => import("./DeadlockHeroes"));
 const DeadlockBuilder = lazyWithPreload(() => import("./DeadlockBuilderPage"));
+const DeadlockTeamBuilder = lazyWithPreload(() => import("./DeadlockTeamBuilder"));
 const DeadlockNews = lazyWithPreload(() => import("./DeadlockNews"));
 const DeadlockRanks = lazyWithPreload(() => import("./DeadlockRanks"));
 const DeadlockPlayerLadder = lazyWithPreload(() => import("./DeadlockPlayerLadder"));
@@ -57,6 +58,7 @@ const TABS: Partial<Record<DeadlockSection, { preload: () => Promise<void> }>> =
   items: DeadlockItems,
   heroes: DeadlockHeroes,
   builder: DeadlockBuilder,
+  draft: DeadlockTeamBuilder,
   patches: DeadlockNews,
   ranks: DeadlockRanks,
   ladder: DeadlockPlayerLadder,
@@ -159,6 +161,8 @@ export default function DeadlockArea({
         <DeadlockHeroes route={route} navigate={navigate} band={band} all={allRanks} picker={picker} tablePicker={heroesPicker} open={route.detail} />
       ) : route.dlSection === "builder" ? (
         <DeadlockBuilder />
+      ) : route.dlSection === "draft" ? (
+        <DeadlockTeamBuilder band={band} picker={picker} />
       ) : route.dlSection === "ranks" ? (
         /* Sin `picker`: la escalera es el eje sobre el que se definen las
            bandas, así que filtrarla por una no significaría nada. */

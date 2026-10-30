@@ -164,6 +164,26 @@ jobs:
         continue-on-error: true
         run: npm run build:hero-insights --prefix games/deadlock/pipeline
 
+      # El modelo del Armador de equipo (2026-10-30): 12 pedidos a la API en vivo
+      # para ajustar una escala por banda. No cambia de una corrida a la otra, así
+      # que va una vez por día con la misma puerta por edad que la escalera.
+      # **Perdona fallar**: queda el modelo commiteado.
+      - name: build draft model
+        continue-on-error: true
+        run: |
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/draft-model.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            npm run build:draft --prefix games/deadlock/pipeline
+          else
+            echo "el modelo del draft tiene ${edad_h}h (< 20); esta corrida lo saltea"
+          fi
+
       # Los objetos populares de cada héroe y los filtros de la tienda (City
       # Never Sleeps, 2026-09-29). Salen de la API de assets, son segundos, y
       # cambian con los parches. **Perdonan fallar**: queda lo commiteado.
