@@ -1227,6 +1227,18 @@
   padding: 1.25rem;
 }
 
+/* La línea (2026-10-30): dos listas, ganar y perder la línea. */
+[data-theme="codex"] .dl-hp-pairs-grid[data-cols="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+[data-theme="codex"] .dl-hp-lane-title {
+  margin: 2rem 0 0.3rem;
+  font: 700 clamp(1.5rem, 3vw, 2rem)/1.1 var(--font-display);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
 [data-theme="codex"] .dl-hp-pairs-title {
   margin: 0 0 0.6rem;
   font: 600 0.75rem/1.2 var(--font-text);
@@ -1459,6 +1471,7 @@
   }
 
   [data-theme="codex"] .dl-hp-pairs-grid,
+  [data-theme="codex"] .dl-hp-pairs-grid[data-cols="2"],
   [data-theme="codex"] .dl-hp-standouts {
     grid-template-columns: minmax(0, 1fr);
   }

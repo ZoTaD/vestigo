@@ -24,6 +24,7 @@ import {
   type Metric,
   type MetricRead,
   type PairPoint,
+  type LanePoint,
   type TextSpan,
 } from "./deadlockHeroKitData";
 import { ItemIcon } from "./DeadlockItemTip";
@@ -371,6 +372,59 @@ function BandRows({ heroId, current }: { heroId: number; current: BandId }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/**
+ * Los rivales de línea (2026-10-30): con quién la línea va mejor y peor, por la
+ * ventaja de almas del dúo a los 10 minutos. La cifra grande son las almas, no
+ * el winrate: la pregunta es "¿gano la línea?", y la partida se decide después.
+ */
+function LaneList({
+  title,
+  rows,
+  kind,
+  heroes,
+  route,
+  navigate,
+}: {
+  title: string;
+  rows: LanePoint[];
+  kind: "hard" | "easy";
+  heroes: Map<number, Hero>;
+  route: Route;
+  navigate: (r: Route) => void;
+}) {
+  const copy = useCopy();
+  const t = copy.deadlock.hero.matchups;
+  const locale = useLocale();
+  return (
+    <section className="box dl-hp-pairs" data-kind={kind}>
+      <h3 className="dl-hp-pairs-title">{title}</h3>
+      {rows.length === 0 ? (
+        <p className="box-empty">{t.none}</p>
+      ) : (
+        <ol>
+          {rows.map((p) => {
+            const h = heroes.get(p[0]);
+            if (!h) return null;
+            const wr = ((p[2] / p[1]) * 100).toLocaleString(locale, { maximumFractionDigits: 0 });
+            return (
+              <li key={p[0]}>
+                <RouteLink className="dl-hp-pair" to={toHero(route, h.heroId)} onNavigate={navigate}>
+                  {h.img && <GameImg src={h.img} alt="" width={40} height={40} loading="lazy" decoding="async" />}
+                  <span className="dl-hp-pair-name">{h.name}</span>
+                  <span className="dl-hp-pair-n" title={t.laneWinTitle}>{t.laneWin(wr)}</span>
+                  <span className="dl-hp-pair-wr" data-sign={p[3] >= 0 ? "up" : "down"}>
+                    {`${p[3] >= 0 ? "+" : "−"}${Math.abs(p[3]).toLocaleString(locale)}`}
+                  </span>
+                </RouteLink>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+    </section>
   );
 }
 
@@ -748,6 +802,23 @@ export default function DeadlockHeroPage({
           </div>
         ) : (
           insights !== undefined && <p className="detail-note">{t.matchups.none}</p>
+        )}
+        {ins?.lane && ins.lane.length > 0 && (
+          <>
+            <h3 className="dl-hp-lane-title">{t.matchups.lane}</h3>
+            <p className="detail-note">{t.matchups.laneLead}</p>
+            <div className="dl-hp-pairs-grid" data-cols="2">
+              <LaneList title={t.matchups.laneEasy} rows={ins.lane.filter((p) => p[3] > 0).slice(0, 5)} kind="easy" heroes={porId} route={route} navigate={navigate} />
+              <LaneList
+                title={t.matchups.laneHard}
+                rows={ins.lane.filter((p) => p[3] < 0).reverse().slice(0, 5)}
+                kind="hard"
+                heroes={porId}
+                route={route}
+                navigate={navigate}
+              />
+            </div>
+          </>
         )}
       </section>
 

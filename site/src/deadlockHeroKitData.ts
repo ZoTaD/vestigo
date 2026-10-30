@@ -130,12 +130,15 @@ export type Metric = (typeof METRICS)[number];
 
 export type DayPoint = [string, number, number];
 export type PairPoint = [number, number, number];
+/** [rival de línea, partidas, victorias, ventaja de almas del dúo a los 10 min], de la que más gana a la que más pierde. */
+export type LanePoint = [number, number, number, number];
 
 export interface HeroInsight {
   daily: DayPoint[];
   perMatch: Partial<Record<Metric, number>>;
   vs: PairPoint[];
   with: PairPoint[];
+  lane?: LanePoint[];
 }
 
 export interface HeroInsightsFile {
