@@ -86,6 +86,9 @@ export interface ItemRow {
   cls?: string;
   maxQuality?: number;
   blockPower?: number | null;
+  /** Lo que sube el bloqueo de un escudo por nivel de calidad, y su multiplicador de parry (los de torre no tienen). */
+  blockPerLevel?: number | null;
+  parry?: number | null;
   slot?: string;
   armor?: number | null;
   armorPerLevel?: number | null;
@@ -123,7 +126,7 @@ export interface PieceRow {
   req: Req[];
   tier: BiomeId | null;
   /** Lo que procesa esta estación (el molino: cebada → harina de cebada). */
-  processes?: { from: Ref; to: Ref; time: number | null; yield: number | null }[] | null;
+  processes?: { from: Ref; to: Ref; time: number | null; yield: number | null; fuel?: Ref & { amount: number } }[] | null;
   /** Lo que se fabrica o se construye con esta estación, por nivel. */
   crafts?: (Ref & { level: number })[] | null;
   /** Las piezas que la suben de nivel puestas cerca, en orden: la i-ésima deja la estación en `level`. */
@@ -213,6 +216,8 @@ export interface CreatureRow {
   dropsNothing?: boolean;
   icon: string | null;
   health: number | null;
+  /** La salud de cada fase, si pelea en varias (Kall: 10.000, 7.000 y 30.000). */
+  phases?: number[];
   biomes: BiomeId[];
   boss: boolean;
   weak: string[];
@@ -241,6 +246,7 @@ export interface BossRow {
   name: Txt;
   icon: string | null;
   health: number | null;
+  phases?: number[];
   biome: BiomeId | null;
   order: number;
   art: string | null;

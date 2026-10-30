@@ -157,7 +157,7 @@ function statLines(se: StatusEffect, c: ValheimCopy): string[] {
   for (const [k, v] of Object.entries(se.stats)) {
     if (k === "skills" || k === "resist" || k === "damagePct") continue;
     const f = t.stat[k];
-    if (f && typeof v === "number") out.push(f(Math.round(v * 100) / 100));
+    if (f && typeof v === "number") out.push(f(Math.round(v * 1000) / 1000));
   }
   for (const s of se.stats.skills ?? []) out.push(t.skill(t.skills[s.skill] ?? `#${s.skill}`, s.value));
   for (const [k, v] of Object.entries(se.stats.damagePct ?? {})) out.push(t.damagePct(c.damage[k] ?? k, v));

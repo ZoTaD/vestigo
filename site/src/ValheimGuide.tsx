@@ -61,7 +61,7 @@ export function CreaturePage({ row, to, navigate }: { row: CreatureRow; to: To; 
           <div className="vh-cols">
             <div style={{ display: "grid", gap: 16, alignContent: "start" }}>
               {row.photo && <WikiFigure photo={row.photo} alt={tx(row.name, lang)} className="is-creature" />}
-              <div className="vh-kv"><div><span>{t.guide.health}</span><b>{row.health ?? "—"}</b></div></div>
+              <div className="vh-kv"><div><span>{t.guide.health}</span><b>{hp(row)}</b></div></div>
               <Mods weak={row.weak} resist={row.resist} immune={row.immune} />
               <FoundIn places={row.places} to={to} navigate={navigate} />
               {row.bossRef && (
@@ -225,7 +225,7 @@ export function BiomePage({ row, bosses, to, navigate }: { row: BiomeRow; bosses
           {boss && (
             <RouteLink className="vh-box vh-hubcard" to={to("bosses", boss.slug)} onNavigate={navigate} style={{ alignItems: "center" }}>
               {boss.art && <img src={artUrl(boss.art)} alt="" width={96} height={96} style={{ width: 96, height: 96 }} />}
-              <span>{tx(boss.name, lang)}<small>{t.guide.boss} · {t.guide.health} {boss.health}</small></span>
+              <span>{tx(boss.name, lang)}<small>{t.guide.boss} · {t.guide.health} {hp(boss)}</small></span>
             </RouteLink>
           )}
           {row.foods.length > 0 && (
@@ -386,7 +386,7 @@ export function BossPage({ row, to, navigate }: { row: BossRow; to: To; navigate
                   </div>
                 )}
               </header>
-              <div className="vh-kv"><div><span>{t.guide.health}</span><b>{row.health}</b></div></div>
+              <div className="vh-kv"><div><span>{t.guide.health}</span><b>{hp(row)}</b></div></div>
               <Mods weak={row.weak} resist={row.resist} immune={row.immune} />
               <FoundIn places={row.places} to={to} navigate={navigate} />
               {item && (
@@ -471,3 +471,5 @@ export function BossList({ bosses, to, navigate }: { bosses: BossRow[]; to: To; 
   );
 }
 
+/** La salud de una criatura o jefe; si pelea en fases, cada una ("10000 + 7000 + 30000"). */
+const hp = (r: { health: number | null; phases?: number[] }): string | number => (r.phases ? r.phases.join(" + ") : r.health ?? "—");

@@ -358,7 +358,8 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
               {(item?.armor || item?.blockPower || item?.maxQuality) && (
                 <div className="vh-kv">
                   {item?.armor ? <div><span>{t.detail.armor}</span><b>{item.armor}{item.armorPerLevel ? <span className="vh-dim"> +{item.armorPerLevel}</span> : null}</b></div> : null}
-                  {item?.blockPower ? <div><span>{t.detail.block}</span><b>{item.blockPower}</b></div> : null}
+                  {item?.blockPower ? <div><span>{t.detail.block}</span><b>{item.blockPower}{item.blockPerLevel ? <span className="vh-dim"> +{item.blockPerLevel}</span> : null}</b></div> : null}
+                  {item?.parry ? <div><span>{t.detail.parry}</span><b>×{item.parry}</b></div> : null}
                   {item?.maxQuality && item.maxQuality > 1 ? <div><span>{t.cols.quality}</span><b>{item.maxQuality}</b></div> : null}
                   {item ? <div><span>{t.detail.weight}</span><b>{item.weight}</b></div> : null}
                   {item && item.stack > 1 ? <div><span>{t.detail.stack}</span><b>{item.stack}</b></div> : null}
@@ -413,6 +414,7 @@ export default function ValheimDetail({ tab, row, rows, to, navigate }: { tab: L
                 {piece.processes.map((p, i) => (
                   <div key={i} className="vh-flow vh-proc">
                     <Ing r={p.from} to={to} navigate={navigate} />
+                    {p.fuel && <><span className="vh-arrow">+</span><Ing r={p.fuel} qty={`×${p.fuel.amount}`} to={to} navigate={navigate} /></>}
                     <span className="vh-arrow">→</span>
                     <Ing r={p.to} qty={p.yield && p.yield > 1 ? `×${p.yield}` : null} to={to} navigate={navigate} />
                     {p.time ? <span className="vh-dim">{p.time < 60 ? `${Math.round(p.time)} s` : t.minutes(Math.round(p.time / 60))}</span> : null}

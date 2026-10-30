@@ -72,6 +72,8 @@ const EN = {
       addArmor: (v: number) => `+${v} armor`, staggerModifier: (v: number) => `${pct(v)} stagger`, timedBlockBonus: (v: number) => `${pct(v)} parry bonus`,
       adrenalineModifier: (v: number) => `${pct(v)} adrenaline`, windRunStaminaModifier: (v: number) => `${pct(v)} stamina running with the wind`,
       damageModifier: (v: number) => `Damage ×${v}`, ttl: (v: number) => `Lasts ${Math.round(v / 60) >= 1 ? `${Math.round(v / 60)} min` : `${v} s`}`,
+      overTime: (v: number) => `Over ${v} s`, cooldown: (v: number) => `${Math.round(v / 60) >= 1 ? `${Math.round(v / 60)} min` : `${v} s`} cooldown`,
+      jumpModifier: (v: number) => `${pct(v)} jump height`,
     } as Record<string, (v: number) => string>,
     skill: (name: string, v: number) => `${v > 0 ? "+" : ""}${v} ${name}`,
     damagePct: (type: string, v: number) => `${pct(v)} ${type} damage`,
@@ -179,6 +181,7 @@ const EN = {
     perLevel: "Per quality level",
     armor: "Armor",
     block: "Block",
+    parry: "Parry",
     weight: "Weight",
     stack: "Stack",
     comfort: "Comfort",
@@ -394,6 +397,8 @@ const ES: typeof EN = {
       addArmor: (v) => `+${v} de armadura`, staggerModifier: (v) => `${pct(v)} de aturdimiento`, timedBlockBonus: (v) => `${pct(v)} de bonificación al parar`,
       adrenalineModifier: (v) => `${pct(v)} de adrenalina`, windRunStaminaModifier: (v) => `${pct(v)} de aguante corriendo con el viento`,
       damageModifier: (v) => `Daño ×${v}`, ttl: (v) => `Dura ${Math.round(v / 60) >= 1 ? `${Math.round(v / 60)} min` : `${v} s`}`,
+      overTime: (v) => `En ${v} s`, cooldown: (v) => `Enfriamiento de ${Math.round(v / 60) >= 1 ? `${Math.round(v / 60)} min` : `${v} s`}`,
+      jumpModifier: (v) => `${pct(v)} de altura de salto`,
     },
     skill: (name, v) => `${v > 0 ? "+" : ""}${v} en ${name}`,
     damagePct: (type, v) => `${pct(v)} de daño ${type.toLowerCase()}`,
@@ -501,6 +506,7 @@ const ES: typeof EN = {
     perLevel: "Por nivel de calidad",
     armor: "Armadura",
     block: "Bloqueo",
+    parry: "Parry",
     weight: "Peso",
     stack: "Pila",
     comfort: "Confort",
@@ -653,8 +659,8 @@ const ES: typeof EN = {
 };
 
 export type ValheimCopy = typeof EN;
-/** Un modificador del juego como porcentaje con signo: 0.15 → "+15%". */
-const pct = (v: number) => `${v > 0 ? "+" : ""}${Math.round(v * 100)}%`;
+/** Un modificador del juego como porcentaje con signo, con un decimal si hace falta: 0.15 → "+15%", 0.075 → "+7.5%". */
+const pct = (v: number) => `${v > 0 ? "+" : ""}${Math.round(v * 1000) / 10}%`;
 
 export const VALHEIM_COPY: Record<"en" | "es", ValheimCopy> = { en: EN, es: ES };
 export const useValheimCopy = () => VALHEIM_COPY[useLang().lang];
