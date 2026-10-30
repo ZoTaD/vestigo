@@ -74,14 +74,15 @@ jobs:
     # cortó en el último paso (2026-09-21 03:47Z). La optimización pendiente es
     # leer cada partición una sola vez por proceso (docs/design/2026-09-20-lake).
     #
-    # **240 desde el 2026-10-26**, y ya no es lo que protege la publicación. Del
-    # 23 al 26/10 las corridas se cortaron a los 150 sin llegar al commit, y como
-    # las builds nunca se guardaban, la puerta de 20 h las corría en todas: ni la
-    # tier list de héroes, lista a los 20 minutos, llegaba al sitio. Ahora los
+    # **300 desde el 2026-10-30 (240 desde el 26/10)**, y ya no es lo que
+    # protege la publicación. Del 23 al 26/10 las corridas se cortaron a los 150
+    # sin llegar al commit, y como las builds nunca se guardaban, la puerta de
+    # 20 h las corría en todas: ni la tier list de héroes, lista a los 20
+    # minutos, llegaba al sitio. Ahora los
     # pasos pesados tienen su propio tope y perdonan fallar (ver `heavy`, al
-    # final). Sus topes suman 190 minutos y una corrida programada nunca los
-    # corre todos (el informe va en una media jornada, la maestría en la otra).
-    timeout-minutes: 240
+    # final). Sus topes suman 230 minutos desde el 2026-10-30 (el informe pasó
+    # de 40 a 80), y una corrida a mano los corre todos: de ahí los 300.
+    timeout-minutes: 300
     steps:
       # **Sin credenciales guardadas** (2026-09-28, auditoría de seguridad). Por
       # defecto el checkout deja el token con permiso de escritura en
@@ -406,13 +407,16 @@ jobs:
       # saca los pesos del mecanismo con los que arma la nota. Si corriera antes,
       # usaría los de la corrida anterior.
       #
-      # A las 18:30 y no a las 06:30 para no encimarlo con la maestría: son dos
-      # pasos de ~5,5 minutos y juntos harían una sola corrida de ~14, que es
-      # acercarse al timeout sin necesidad.
+      # A las 18:30 y no a las 06:30 para no encimarlo con la maestría.
+      #
+      # **Tope de 77 minutos desde el 2026-10-30.** El de 37 que se le puso el
+      # 26/10 nunca alcanzó: del 18 al 24/10 el informe tardó de 26 a 74 minutos
+      # cuando salió, y desde el 26 lo cortaba siempre a mitad de la carga de la
+      # ventana, sin publicar.
       - name: build report
         id: report
         continue-on-error: true
-        timeout-minutes: 40
+        timeout-minutes: 80
         run: |
           edad_h=$(node -e '
             const fs = require("fs");
@@ -424,7 +428,7 @@ jobs:
           hora=$(date -u +%H)
           if { [ "$edad_h" -ge 20 ] && [ "$hora" -ge 12 ]; } || [ "$edad_h" -ge 40 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             echo "la referencia del informe tiene ${edad_h}h; se regenera"
-            timeout -k 1m 37m npm run build:report --prefix games/deadlock/pipeline
+            timeout -k 1m 77m npm run build:report --prefix games/deadlock/pipeline
           else
             echo "la referencia del informe tiene ${edad_h}h (son las ${hora} UTC); esta corrida la saltea"
           fi
