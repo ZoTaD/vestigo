@@ -417,3 +417,14 @@ html:lang(es) .vn-x-tag { font-family: "Barlow Condensed", sans-serif; }
   .vn-x-pic, .vn-x-todo .vn-x-pic { --pic-h: 150px; }
   .vn-x-more { columns: 1; }
 }
+
+/* Quién se movió (2026-10-30): winrate antes → después, en cuatro columnas. -- */
+.vn-mv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.vn-mv-col { padding: 14px 16px; background: var(--vn-panel); border-radius: var(--radius, 4px); }
+.vn-mv-col h3 { margin: 0 0 10px; }
+.vn-mv-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.vn-mv-list li { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; grid-template-areas: "img name pp" "img wr pp"; column-gap: 10px; align-items: center; }
+.vn-mv-list img { grid-area: img; width: 36px; height: 36px; object-fit: cover; }
+.vn-mv-name { grid-area: name; font-weight: 700; font-size: 15px; line-height: 1.15; color: var(--vn-ink); }
+.vn-mv-wr { grid-area: wr; font: 600 12px/1.2 var(--vn-label); color: var(--vn-ink-mute); font-variant-numeric: tabular-nums; }
+.vn-mv-list b { grid-area: pp; font: 700 20px/1 var(--vn-display); font-variant-numeric: tabular-nums; }

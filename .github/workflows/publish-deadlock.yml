@@ -211,6 +211,12 @@ jobs:
         continue-on-error: true
         run: npm run build:news --prefix games/deadlock/pipeline
 
+      # Quién se movió con cada parche (2026-10-30): cuatro pedidos por edición
+      # todavía abierta (las de más de 7 días quedan fijas en el archivo).
+      - name: build patch movers
+        continue-on-error: true
+        run: npm run build:patch-movers --prefix games/deadlock/pipeline
+
       # Los ítems van después de los héroes y no en paralelo: los dos consultan
       # el mismo snapshot por HTTP, y encimarlos sólo se pelearía por el ancho de
       # banda para ahorrar los ~10 segundos que tarda éste.
