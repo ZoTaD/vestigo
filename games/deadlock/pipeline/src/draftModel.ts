@@ -169,7 +169,7 @@ export function fitBand(t: Tables, games: { A: number[]; B: number[]; win: numbe
 
 async function traer<T>(path: string): Promise<T> {
   // Sin User-Agent la API contesta 403 a algunos clientes.
-  const res = await fetch(`${API}/${path}`, { headers: { "User-Agent": "vestigo.gg pipeline" } });
+  const res = await fetch(`${API}/${path}`, { headers: { "User-Agent": "vestigo.gg pipeline" }, signal: AbortSignal.timeout(90_000) });
   if (!res.ok) throw new Error(`${path.split("?")[0]} contestó ${res.status}`);
   return (await res.json()) as T;
 }
