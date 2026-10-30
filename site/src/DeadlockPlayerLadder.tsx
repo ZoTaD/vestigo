@@ -16,6 +16,7 @@ import { catalog } from "./deadlockData";
 import { heroImg, rankLabel, rankOf } from "./deadlockReportData";
 import RankBadge from "./DeadlockRankBadge";
 import GameImg from "./GameImg";
+import DeadlockOneTricks from "./DeadlockOneTricks";
 import { flagUrl } from "./flags";
 
 /**
@@ -390,6 +391,9 @@ export default function DeadlockPlayerLadder({
             />
           )}
         </aside>
+      </div>
+      <div className="page">
+        <DeadlockOneTricks route={route} navigate={navigate} />
       </div>
     </main>
   );

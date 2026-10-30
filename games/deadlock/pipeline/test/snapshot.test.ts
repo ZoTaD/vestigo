@@ -364,8 +364,11 @@ describe("el lake: la copia local trae toda columna que el pipeline nombra", () 
     const { join } = await import("node:path");
     const { LOCAL_COLUMNS } = await import("../src/snapshot");
     const dir = join(__dirname, "../src");
+    // Los que sólo hablan con la API en vivo nombran campos de sus respuestas
+    // que se llaman igual que columnas del lake (`hero_build_id`).
+    const soloApi = ["topPlayers.ts"];
     const src = readdirSync(dir)
-      .filter((f) => /\.(ts|mjs)$/.test(f))
+      .filter((f) => /\.(ts|mjs)$/.test(f) && !soloApi.includes(f))
       .map((f) => readFileSync(join(dir, f), "utf8"))
       .join("\n");
     const lake: string[] = JSON.parse(readFileSync(join(__dirname, "fixtures/lake-columns.json"), "utf8"));

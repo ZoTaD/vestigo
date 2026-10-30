@@ -186,6 +186,14 @@ const EN = {
         masteryAria: (name: string) => `${name}'s win rate by matches played with the hero`,
         empty: "Not enough matches in this band to compare yet.",
       },
+      topBuilds: {
+        title: "Builds the best players use",
+        lead: (n: number) => `The builds this hero's top ${n} on the ladder had picked when their matches started, last 30 days.`,
+        untitled: "Untitled build",
+        by: (name: string) => `by ${name}`,
+        stats: (players: number, of: number, n: string, wr: string) => `${players} of the top ${of} · ${n} matches · ${wr} won`,
+        open: "Open in Build maker",
+      },
       matchups: {
         kicker: "Matchups",
         title: "Who to fear",
@@ -1491,6 +1499,11 @@ const EN = {
       /** Los títulos de las dos columnas. */
       worldTitle: "In the world",
       byHero: "By hero",
+      oneTricks: {
+        title: "The best with every hero",
+        lead: "The highest-ranked player on each hero's ladder with 20+ matches on it in the last 30 days.",
+        stats: (n: string, wr: string) => `${n} matches · ${wr}`,
+      },
       /**
        * Qué se está contando. **Va siempre visible, no en un tooltip**: la
        * ventana de clasificatorias es de dos semanas y eso cambia cómo se leen
@@ -1744,6 +1757,14 @@ const ES: typeof EN = {
         masteryAxis: "partidas con el héroe",
         masteryAria: (name: string) => `Victorias de ${name} según las partidas jugadas con el héroe`,
         empty: "Todavía no hay partidas suficientes en esta banda para comparar.",
+      },
+      topBuilds: {
+        title: "Las builds de los mejores",
+        lead: (n: number) => `Las builds que tenían elegidas los ${n} mejores de este héroe en la escalera al empezar sus partidas, últimos 30 días.`,
+        untitled: "Build sin nombre",
+        by: (name: string) => `de ${name}`,
+        stats: (players: number, of: number, n: string, wr: string) => `${players} de los ${of} mejores · ${n} partidas · ${wr} ganadas`,
+        open: "Abrir en el Armador",
       },
       matchups: {
         kicker: "Enfrentamientos",
@@ -2745,6 +2766,11 @@ const ES: typeof EN = {
       failed: "deadlock-api no responde, así que no hay nada que ordenar ahora.",
       worldTitle: "En el mundo",
       byHero: "Por héroe",
+      oneTricks: {
+        title: "El mejor con cada héroe",
+        lead: "El mejor puesto de la escalera de cada héroe con 20+ partidas de ese héroe en los últimos 30 días.",
+        stats: (n: string, wr: string) => `${n} partidas · ${wr}`,
+      },
       rankedOnly: "Sólo partidas clasificatorias, desde que el modo abrió el 30 de julio de 2026.",
       noPodium: "Todavía nadie tiene suficientes partidas clasificatorias con este héroe.",
       wins: (n: string) => `${n} ganadas`,

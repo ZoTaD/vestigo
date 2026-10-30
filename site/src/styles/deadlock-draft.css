@@ -352,3 +352,111 @@
 @media (prefers-reduced-motion: reduce) {
   [data-theme="codex"][data-game="deadlock"] .dl-dr-bar-a { transition: none; }
 }
+
+/* ---------------------------------------------------------------------------
+   One-tricks (escalera) y builds de los mejores (ficha), 2026-10-30.
+   --------------------------------------------------------------------------- */
+[data-theme="codex"][data-game="deadlock"] .dl-ot { margin-top: 1.6rem; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-ot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-ot-card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-areas: "img hero" "img player" "img stats";
+  column-gap: 0.6rem;
+  align-items: center;
+  padding: 0.35rem 0.6rem 0.35rem 0.35rem;
+  background: rgba(30, 26, 20, 0.07);
+  color: var(--text);
+  text-decoration: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-ot-card:hover { background: rgba(194, 81, 42, 0.18); }
+[data-theme="codex"][data-game="deadlock"] .dl-ot-card img { grid-area: img; width: 44px; height: 44px; object-fit: cover; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-ot-hero {
+  grid-area: hero;
+  font: 700 0.72rem/1.1 var(--font-display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-ot-player {
+  grid-area: player;
+  overflow: hidden;
+  font: 700 0.98rem/1.2 var(--font-body);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-ot-stats {
+  grid-area: stats;
+  font: 600 0.8rem/1.2 var(--font-body);
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb { margin-top: 1.2rem; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb-card {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  padding: 0.8rem;
+  background: rgba(30, 26, 20, 0.07);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb-head { display: grid; gap: 0.1rem; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb-name {
+  font: 700 1.05rem/1.2 var(--font-display);
+  letter-spacing: 0.02em;
+  overflow-wrap: break-word;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb-by,
+[data-theme="codex"][data-game="deadlock"] .dl-tb-stats {
+  margin: 0;
+  font: 600 0.82rem/1.3 var(--font-body);
+  color: var(--text-dim);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb-cat { display: grid; gap: 0.25rem; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb-cat-name {
+  font: 700 0.72rem/1.1 var(--font-display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb-items { display: flex; flex-wrap: wrap; gap: 3px; }
+[data-theme="codex"][data-game="deadlock"] .dl-tb-items img { width: 30px; height: 30px; object-fit: contain; background: rgba(30, 26, 20, 0.12); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb-open {
+  justify-self: start;
+  padding: 0.35rem 0.7rem;
+  background: #c2512a;
+  color: #f1e4cc;
+  font: 700 0.85rem/1 var(--font-body);
+  text-decoration: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-tb-open:hover { background: #8f3316; }

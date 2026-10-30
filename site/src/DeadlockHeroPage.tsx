@@ -29,6 +29,7 @@ import {
 } from "./deadlockHeroKitData";
 import { ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
+import DeadlockTopBuilds from "./DeadlockTopBuilds";
 
 /**
  * La página de un héroe, dirección "C · Cartel" (elegida por ZoTaD el
@@ -828,6 +829,7 @@ export default function DeadlockHeroPage({
         <div className="dl-band-panel dl-hero-body">
           <DeadlockBuildCard heroId={hero.heroId} heroWinRate={hero.winRate} />
         </div>
+        <DeadlockTopBuilds heroId={hero.heroId} band={band} route={route} />
       </section>
 
       {/* ── Historia y atributos ────────────────────────────────── */}

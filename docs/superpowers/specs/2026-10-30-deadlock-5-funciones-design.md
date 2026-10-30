@@ -58,20 +58,21 @@ banda se saltea y queda el archivo anterior (como `heroInsights.ts`).
 
 ## 3. Patch movers
 
-**Dónde.** Una tarjeta "Who moved" en la edición de Vestigo News de cada parche grande,
-y un enlace desde la lista de Parches (mío).
+**Dónde.** Una sección "Who moved" en cada edición de Vestigo News (la lista de Parches
+ya enlaza a cada edición).
 
-**Datos (mío).** `/v1/patches/big-days` da las fechas. Para cada uno de los últimos 6
-parches grandes: WR de héroes y objetos 7 días antes contra 7 días después (o hasta hoy),
-en Phantom+ con `hero-stats` / `item-stats`. Se publican los 5 que más subieron y los 5
+**Datos (mío).** Las fechas son las de las ediciones de `news.json` (no `big-days`: así
+cada edición tiene su sección). Para las últimas 8: WR de héroes y objetos 7 días antes
+contra 7 días después (o hasta hoy), en Phantom+ con `hero-stats` / `item-stats`. Se publican los 5 que más subieron y los 5
 que más bajaron de cada lista, con piso de partidas. Archivo `patch-movers.json`. Los
 parches viejos no cambian: se calculan una vez y se guardan.
 
 ## 4. One-tricks (el mejor de cada héroe)
 
-**Dónde.** Ladder → "By hero": hoy muestra el podio del héroe elegido. Se suma una
-grilla con **todos** los héroes y su jugador #1 (nombre, partidas, WR), y al tocar un
-héroe se abre su top 10 (mío).
+**Dónde.** Ladder: debajo de la tabla, una grilla "The best with every hero" con
+**todos** los héroes. Cada tarjeta es el mejor puesto del top 10 del héroe con 20+
+partidas de ese héroe en los últimos 30 días (el #1 histórico puede tener 2 en el mes), y
+lleva a su perfil (mío).
 
 **Datos.** `heroLadder.json` ya tiene el top 100 por héroe (orden Wilson, mín. 20
 partidas); los nombres se piden en vivo a `players/steam` en una sola tanda, como hoy el
@@ -86,6 +87,12 @@ enlace para abrirla en el Armador de builds si el armador acepta importarla (mí
 **Datos.** Pipeline: top 20 de `heroLadder.json` por héroe → `matches/metadata` con
 `account_ids` y `hero_ids` de la ventana → `hero_build_id` (la build con que arrancaron)
 → `/v1/builds/{hero}/{build}` para el nombre y los objetos. Archivo `top-builds.json`.
+
+## Estado (30/10)
+
+Las cuatro etapas salieron como PRs 40 (draft), 41 (línea), 42 (patch movers) y 43
+(one-tricks + builds top). Medido con el panel Browser contra `vite preview` (Playwright
+no arranca en el sandbox): todas las páginas dentro del presupuesto.
 
 ## Etapas (un PR cada una)
 
