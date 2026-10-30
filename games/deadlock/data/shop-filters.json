@@ -1,6 +1,6 @@
 {
  "source": "https://api.deadlock-api.com/v1/assets/items",
- "generatedAt": "2026-10-30T17:40:02.318Z",
+ "generatedAt": "2026-10-30T22:40:51.823Z",
  "categories": [
   {
    "key": "Physical",
@@ -1202,8 +1202,7 @@
    "EShopFilterActive"
   ],
   "1798666702": [
-   "EShopFilterWeaponFireRate",
-   "EShopFilterMelee",
+   "EShopFilterWeaponDamage",
    "EShopFilterSpiritDamage",
    "EShopFilterOutOfCombatRegen",
    "EShopFilterMoveSpeed",
@@ -1413,7 +1412,6 @@
    "EShopFilterActive"
   ],
   "2566692615": [
-   "EShopFilterRegen",
    "EShopFilterOutOfCombatRegen",
    "EShopFilterHealing"
   ],
@@ -1557,6 +1555,7 @@
    "EShopFilterActive"
   ],
   "3361075077": [
+   "EShopFilterPhysicalResist",
    "EShopFilterActive"
   ],
   "3361811174": [
