@@ -51,6 +51,8 @@ interface Tile { canvas: HTMLCanvasElement; biomes: Uint16Array; heights: Float3
 export interface ViewerHandle {
   exportPng: () => Promise<Blob | null>;
   goTo: (x: number, z: number, mpp?: number) => void;
+  /** El punto del mundo bajo un punto de la pantalla (para agregar un pin donde se tocó). */
+  toWorld: (clientX: number, clientY: number) => { x: number; z: number } | null;
 }
 
 interface Props {
@@ -453,6 +455,13 @@ export default function MapViewer({ seed, layer, grid, markers, onHover, onProgr
       goTo: (x, z, mpp) => {
         cam.current = { x, z, mpp: mpp ?? Math.min(cam.current.mpp, 4) };
         afterMove();
+      },
+      toWorld: (clientX, clientY) => {
+        const el = wrap.current;
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        const { x, z, mpp } = cam.current;
+        return { x: x + (clientX - r.left - el.clientWidth / 2) * mpp, z: z - (clientY - r.top - el.clientHeight / 2) * mpp };
       },
     });
   }, [handle, afterMove]);

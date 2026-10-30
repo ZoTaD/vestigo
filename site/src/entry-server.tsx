@@ -13,7 +13,7 @@ import { heroes as heroSlugs } from "./deadlockSlugs";
 import { leagueBySlug, loadEconomy } from "./poe2EconomyData";
 import { isCat, loadCat, loadIndex } from "./poe2EncyclopediaData";
 import { EDITIONS, loadAllEditions, loadEdition as loadP2Edition } from "./poe2PatchesData";
-import { loadIndex as loadVhIndex, loadTab as loadVhTab } from "./valheimData";
+import { loadIndex as loadVhIndex, loadSkills as loadVhSkills, loadTab as loadVhTab } from "./valheimData";
 import { loadEdition as loadVhEdition, loadEditions as loadVhEditions } from "./valheimPatchesData";
 import { preloadItemsRoute } from "./zomboid/items/data";
 import { preloadRecipesRoute } from "./zomboid/recipes/data";
@@ -139,6 +139,7 @@ async function preloadPoe2(route: Route, quiet: (p: Promise<unknown>) => Promise
  */
 async function preloadValheim(route: Route, quiet: (p: Promise<unknown>) => Promise<unknown>): Promise<void> {
   const tasks = [quiet(loadVhIndex()), quiet(loadVhEditions()), ...VALHEIM_TABS.map((t) => quiet(loadVhTab(t)))];
+  if (route.vhSection === "calculators") tasks.push(quiet(loadVhSkills()));
   if (route.vhSection === "patches" || route.vhSection === "home") {
     const eds = await loadVhEditions().catch(() => []);
     const slug = route.detail ?? eds[0]?.slug;

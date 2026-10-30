@@ -6,7 +6,8 @@
  *
  *   VALHEIM_TEST_WORLD_DIR  carpeta del mundo (la de `worlds_local/<mundo>/`)
  *   VALHEIM_TEST_WORLD_ZIP  esa carpeta en zip (opcional)
- *   VALHEIM_TEST_FCH        un personaje que haya estado en ese mundo
+ *   VALHEIM_TEST_FCH        un personaje que haya estado en ese mundo (sólo con
+ *                           él, sin mundo, se prueban sus datos de jugador)
  *   VALHEIM_TEST_SEED       la semilla esperada (opcional)
  */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
@@ -177,6 +178,28 @@ describe.skipIf(!has(CHAR))("personaje real", () => {
     for (let i = 0; i < e.cells.length; i++) if (e.cells[i]) { his++; if (table.cells[i]) both++; }
     console.log(`de lo que ve el personaje, ${(both / his * 100).toFixed(0)} % también está en la mesa`);
     expect(both / his).toBeGreaterThan(0.5);
+  });
+
+  it("recetas, trofeos y habilidades", () => {
+    const c = readCharacter({ name: "p.fch", path: "p.fch", data: new Uint8Array(readFileSync(CHAR)) });
+    const g = c.progress;
+    expect(c.warnings.filter((w) => w.includes("datos del jugador"))).toEqual([]);
+    expect(g).not.toBeNull();
+    const skills = Object.entries(g!.skills);
+    console.log(`progreso: ${g!.knownRecipes.length} recetas, ${Object.keys(g!.knownStations).length} estaciones, ${g!.knownMaterials.length} materiales, ${g!.trophies.length} trofeos; habilidades ${skills.map(([k, n]) => `${k}=${n.toFixed(1)}`).join(" ")}`);
+    // Un personaje recién creado (nunca jugado) no sabe nada todavía.
+    if (!c.worlds.length) return;
+    expect(g!.knownRecipes.length).toBeGreaterThan(0);
+    // Casi todo es "$item_…"/"$piece_…"; el juego viejo guardaba algunos con basura ("\x16$item_shield_wood", "Cart").
+    const tokens = [...g!.knownRecipes, ...g!.knownMaterials, ...Object.keys(g!.knownStations)];
+    expect(tokens.filter((r) => /^\$\w+$/.test(r)).length / tokens.length).toBeGreaterThan(0.9);
+    expect(g!.trophies.every((t) => /^Trophy\w+$/.test(t))).toBe(true);
+    expect(skills.length).toBeGreaterThan(0);
+    for (const [id, level] of skills) {
+      expect(Number(id)).toBeGreaterThan(0);
+      expect(level).toBeGreaterThanOrEqual(0);
+      expect(level).toBeLessThanOrEqual(100);
+    }
   });
 
   it("los backups automáticos también se leen", () => {

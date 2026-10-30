@@ -1,5 +1,5 @@
 import type { RustPage } from "./rust/sitemapPages";
-import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -404,6 +404,8 @@ export function sitemapPaths(data: SitemapData): string[] {
       paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "patches" }));
       paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "map" }));
       paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "planner" }));
+      paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "progress" }));
+      for (const tool of CALC_TOOLS) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "calculators", detail: tool === "food" ? undefined : tool }));
       for (const e of data.vh.editions) paths.push(routePath({ ...base, lang, view: "valheim", vhSection: "patches", detail: e.slug }));
     }
 

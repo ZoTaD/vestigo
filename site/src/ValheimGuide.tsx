@@ -12,6 +12,7 @@ import { artUrl, BIOME_IDS, clean, tx, type BiomeId, type BiomeRow, type BossRow
 import { BiomeTags, Ing, pctChance, range, RefLink, Slot, WikiFigure, type Nav, type To } from "./ValheimParts";
 import { FightBlock, SpawnBlock, TameBlock } from "./ValheimMore";
 import ValheimPlanButton from "./ValheimPlanButton";
+import ValheimConsole from "./ValheimConsole";
 
 function Tips({ tips }: { tips: Tip[] }) {
   const t = useValheimCopy();
@@ -100,6 +101,7 @@ export function CreaturePage({ row, to, navigate }: { row: CreatureRow; to: To; 
             </div>
           ))}
         </div>
+        <ValheimConsole id={row.id} kind="creature" />
       </article>
     </>
   );
@@ -423,6 +425,7 @@ export function BossPage({ row, to, navigate }: { row: BossRow; to: To; navigate
             </div>
           </div>
         </div>
+        <ValheimConsole id={row.id} kind="creature" />
       </article>
     </>
   );

@@ -19,6 +19,8 @@ import MapTip from "./MapTip";
 import SaveLoader from "./SaveLoader";
 import { useSaveCopy } from "./saveCopy";
 import { useSaves } from "./useSaves";
+import SharePanel, { useShareCopy } from "./SharePanel";
+import { decodePins, pinsInHash, type SharedPin } from "./sharePins";
 
 const SEED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -55,7 +57,8 @@ function writeUrl(seed: string, view: { x: number; z: number; mpp: number } | nu
     q.set("z", String(Math.round(view.z)));
     q.set("m", String(Math.round(view.mpp * 100) / 100));
   }
-  const url = `${window.location.pathname}${q.toString() ? `?${q}` : ""}`;
+  // El `#` lleva los pines compartidos: se conserva.
+  const url = `${window.location.pathname}${q.toString() ? `?${q}` : ""}${window.location.hash}`;
   window.history.replaceState(window.history.state, "", url);
 }
 
@@ -92,6 +95,19 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
   const saves = useSaves();
   const sc = useSaveCopy();
   const [hidden, setHidden] = useState<Set<string>>(defaultHidden);
+  const share = useShareCopy();
+  // Los pines que llegaron en el enlace (`#p=…`) y los agregados a mano.
+  const [shared, setShared] = useState<SharedPin[]>([]);
+  const [pinMode, setPinMode] = useState(false);
+  useEffect(() => {
+    const code = pinsInHash(window.location.hash);
+    if (code) decodePins(code).then(setShared);
+  }, []);
+  const sharedMarkers: Marker[] = useMemo(() => shared.map((p, i) => ({ key: `sh:${i}`, x: p.x, z: p.z, color: "#f2c46f", size: 5, label: p.name || undefined })), [shared]);
+  const pinsToShare = (): SharedPin[] => [
+    ...[...saves.info.values()].filter((s) => s.kind === "pin").map((s) => ({ x: s.x, z: s.z, type: Number(s.extra) || 3, name: s.label })),
+    ...shared,
+  ];
 
   // El inicio va aparte, siempre visible y con su nombre; los jefes, con el suyo.
   const markers: Marker[] = useMemo(() => (loc.items ?? [])
@@ -103,7 +119,7 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
     })),
   [loc.items, hidden, lang, t.spawn]);
 
-  const allMarkers = useMemo(() => [...markers, ...saves.markers], [markers, saves.markers]);
+  const allMarkers = useMemo(() => [...markers, ...saves.markers, ...sharedMarkers], [markers, saves.markers, sharedMarkers]);
   const byKey = useMemo(() => new Map((loc.items ?? []).map((l) => [l.key, l])), [loc.items]);
   const sel: MapLocation | undefined = selected ? byKey.get(selected) : undefined;
 
@@ -162,7 +178,17 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
       </form>
 
       <div className="vm-layout">
-        <div className="vm-stage" ref={stage}>
+        <div className={`vm-stage${pinMode ? " is-pinning" : ""}`} ref={stage} onClickCapture={(e) => {
+          // Agregar un pin: el punto del mapa donde se tocó (en el celular no hay cursor antes del toque).
+          if (!pinMode) return;
+          const at = viewer.current?.toWorld(e.clientX, e.clientY);
+          if (!at) return;
+          e.stopPropagation();
+          const name = window.prompt(share.ask);
+          setPinMode(false);
+          if (name === null) return;
+          setShared((s) => [...s, { x: at.x, z: at.z, type: 3, name: name.trim() }]);
+        }}>
           <MapViewer seed={seed} layer={layer} grid={grid} markers={allMarkers} fog={saves.fog} lines={saves.lines} onHover={setHover} onProgress={onProgress} onError={() => setFailed(true)} onMarkerHover={setTip}
             onMarker={setSelected} handle={onHandle} initial={first.view} onView={onView} />
           <div className="vm-status">
@@ -180,6 +206,18 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
               <span className="vh-dim">x {Math.round(hover.x)} · z {Math.round(hover.z)}</span>
             </div>
           )}
+          {tip && tip.key.startsWith("sh:") && shared[Number(tip.key.slice(3))] && (() => {
+            const s = shared[Number(tip.key.slice(3))];
+            return (
+              <div className="vm-tip" style={{ left: tip.sx + 16, top: tip.sy + 14, width: 220 }} role="tooltip">
+                <div className="vm-tip-body">
+                  <h4>{s.name || sc.unnamed}</h4>
+                  <p className="vm-tip-kind">{share.title}</p>
+                  <p className="vm-tip-pos">x {Math.round(s.x)} · z {Math.round(s.z)}</p>
+                </div>
+              </div>
+            );
+          })()}
           {tip && saves.info.get(tip.key) && (() => {
             const s = saves.info.get(tip.key)!;
             const box = { w: stage.current?.clientWidth ?? 800 };
@@ -220,6 +258,8 @@ export default function ValheimMap({ openPage }: { openPage: (tab: string, slug:
             // El mundo trae su semilla: el mapa pasa a ser el de ese mundo.
             if (w.seedName && w.seedName !== seed) { setInput(w.seedName); setSeed(w.seedName); setSelected(null); writeUrl(w.seedName, view.current); }
           }} />
+          <SharePanel pins={pinsToShare} shared={shared.length} pinMode={pinMode} setPinMode={setPinMode}
+            clearShared={() => { setShared([]); window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search); }} />
           <section className="vh-box vm-panel">
             <h3>{t.layers}</h3>
             <div className="vh-opts">

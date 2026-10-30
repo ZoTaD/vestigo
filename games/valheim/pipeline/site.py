@@ -16,7 +16,7 @@ import re
 import unicodedata
 from collections import defaultdict
 
-from . import fixes, places, planner, wiki
+from . import fixes, places, planner, progress, wiki
 from .purposes import PURPOSES
 from . import texts
 from .biomes import BIOMES, BIOME_ORDER
@@ -124,6 +124,8 @@ def main() -> None:
     gatherables, farms, traders = load("gatherables.json"), load("farms.json"), load("traders.json")
     bosses, environments, hugin = load("bosses.json"), load("environments.json"), load("hugin.json")
     piece_categories = load("piece_categories.json")
+    # Lo de las calculadoras (`pipeline.calc_extract`, 2026-10-30): grupos de confort, modificadores exactos de daño y habilidades.
+    calc = load("calc.json") if os.path.exists(os.path.join(DATA, "calc.json")) else {"comfortGroups": {}, "creatureMods": {}, "skills": [], "tokens": {}}
     biomes_meta = load("biomes.json")
     # Lo que no se consigue en una partida normal no se publica (ver `fixes.HIDE_ITEMS`).
     items = {k: v for k, v in items.items() if k not in fixes.HIDE_ITEMS}
@@ -450,7 +452,8 @@ def main() -> None:
                 if not (x["slug"] in seen or seen.add(x["slug"]))]
         tabs["building"].append({
             "id": pid, **ref[key], "desc": p["desc"], "tool": p["tool"], "category": p["category"], "categoryName": cat,
-            "comfort": p["comfort"], "station": station_ref(p["station"]), "req": req_list(p["requirements"]),
+            "comfort": p["comfort"], **({"comfortGroup": calc["comfortGroups"].get(pid)} if p["comfort"] else {}),
+            "station": station_ref(p["station"]), "req": req_list(p["requirements"]),
             "tier": tiers.piece(pid),
             "processes": processes.get(slug) or None,
             "crafts": made or None,
@@ -520,7 +523,7 @@ def main() -> None:
         tabs["creatures"].append({
             "id": cid, **ref[f"creature:{cid}"], "health": c["health"], "biomes": c["biomes"], "boss": cid in boss_ids,
             **({"phases": fixes.BOSS_PHASES[cid]} if cid in fixes.BOSS_PHASES else {}),
-            "weak": c["weak"], "resist": c["resist"], "immune": c["immune"],
+            "weak": c["weak"], "resist": c["resist"], "immune": c["immune"], "mods": calc["creatureMods"].get(cid, {}),
             "drops": [{**ref[d["item"]], "min": d["min"], "max": d["max"], "chance": d["chance"]} for d in c["drops"] if d["item"] in ref],
             "bossRef": ref.get(f"boss:{cid}"),
             "photo": photo_by_name.get(c["name"]["en"]),
@@ -585,6 +588,7 @@ def main() -> None:
             "id": b["id"], **ref[f"boss:{b['id']}"], "health": b["health"], "biome": b["biome"], "order": b["order"],
             **({"phases": fixes.BOSS_PHASES[b["id"]]} if b["id"] in fixes.BOSS_PHASES else {}),
             "art": b["art"], "photo": photo_by_name.get(b["name"]["en"]), "power": b["power"], "weak": b["weak"], "resist": b["resist"], "immune": b["immune"],
+            "mods": calc["creatureMods"].get(b["id"], {}),
             "summon": {"item": ref.get(s_item) if s_item else None, "amount": b["summon"]["amount"], "altar": b["summon"]["altar"],
                        "sources": [src(s) for s in items[s_item]["sources"]] if s_item in items else []},
             "drops": [{**ref[d["item"]], "min": d["min"], "max": d["max"], "chance": d["chance"]} for d in b["drops"] if d["item"] in ref],
@@ -836,6 +840,9 @@ def main() -> None:
     sizes["planner"] = dump("planner.json", plan)
     sizes["biomes"] = dump("biomes.json", biome_rows)
     sizes["bosses"] = dump("bosses.json", boss_rows)
+    sizes["skills"] = dump("skills.json", calc["skills"])
+    # Mi partida (2026-10-30): las tareas de cada bioma, de lo publicado.
+    sizes["progress"] = dump("progress.json", progress.build(tabs, boss_rows, calc.get("tokens", {})))
     # El índice sale de las filas publicadas, una entrada por ficha. Antes salía
     # de `ref`, y `remap` deja las variantes fusionadas (los nueve "Skeleton")
     # con el slug de la que quedó: el índice las repetía y el build de Netlify

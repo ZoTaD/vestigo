@@ -51,3 +51,13 @@ describe("las direcciones de Valheim", () => {
     expect(VALHEIM_TABS).toEqual(["foods", "meads", "weapons", "armor", "tools", "building", "materials", "creatures", "biomes", "places", "bosses"]);
   });
 });
+
+describe("calculadoras (2026-10-30)", () => {
+  it("cada herramienta tiene su dirección y Comidas es la de por defecto", () => {
+    expect(parseRoute("/en/valheim/calculators/combat")).toMatchObject({ view: "valheim", vhSection: "calculators", detail: "combat" });
+    expect(parseRoute("/en/valheim/calculators")).toMatchObject({ vhSection: "calculators", detail: undefined });
+    expect(parseRoute("/en/valheim/calculators/food").detail).toBeUndefined();
+    expect(parseRoute("/es/valheim/calculators/nada").detail).toBeUndefined();
+    expect(routePath(parseRoute("/es/valheim/calculators/skills"))).toBe("/es/valheim/calculators/skills");
+  });
+});

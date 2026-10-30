@@ -122,6 +122,8 @@ export interface PieceRow {
   category: number;
   categoryName: Txt | null;
   comfort: number | null;
+  /** El grupo de confort (`Piece.ComfortGroup`): de cada grupo cuenta sólo la mejor; null = suma siempre. */
+  comfortGroup?: string | null;
   station: Ref | null;
   req: Req[];
   tier: BiomeId | null;
@@ -223,6 +225,8 @@ export interface CreatureRow {
   weak: string[];
   resist: string[];
   immune: string[];
+  /** El modificador exacto de cada tipo de daño (`veryWeak`, `slightlyResistant`…); lo que no está es normal. */
+  mods?: Record<string, string>;
   drops: Drop[];
   bossRef: Ref | null;
   photo?: WikiPhoto | null;
@@ -258,6 +262,7 @@ export interface BossRow {
   weak: string[];
   resist: string[];
   immune: string[];
+  mods?: Record<string, string>;
   summon: { item: Ref | null; amount: number; altar: Txt | null; sources: Source[] };
   drops: Drop[];
   creature: Ref | null;
@@ -330,6 +335,10 @@ export const loadTab = <T extends ValheimTab>(tab: T): Promise<TabRows[T]> => lo
 export const peekTab = <T extends ValheimTab>(tab: T): TabRows[T] | null => (listos.get(tab) as TabRows[T] | undefined) ?? null;
 export const loadIndex = () => load<IndexEntry[]>("index");
 export const peekIndex = (): IndexEntry[] | null => (listos.get("index") as IndexEntry[] | undefined) ?? null;
+/** Las habilidades del jugador: id del juego, cuánto suben por acción e ícono (`pipeline/calc_extract.py`). */
+export interface SkillRow { id: number; step: number; icon: string | null }
+export const loadSkills = () => load<SkillRow[]>("skills");
+export const peekSkills = (): SkillRow[] | null => (listos.get("skills") as SkillRow[] | undefined) ?? null;
 /** El grafo del Planificador (`pipeline/planner.py`): sólo lo pide esa pestaña. */
 export const loadPlanner = () => load<PlannerData>("planner");
 export const peekPlanner = (): PlannerData | null => (listos.get("planner") as PlannerData | undefined) ?? null;

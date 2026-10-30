@@ -20,10 +20,24 @@ import { BiomeList, BiomePage, BossList, BossPage, CreaturePage, PlaceList, Plac
 import ValheimPatches from "./ValheimPatches";
 import ValheimPlanner from "./ValheimPlannerPage";
 import { useMapCopy } from "./valheimMap/copy";
+import { lazyWithPreload } from "./lazyWithPreload";
+import { useCalcCopy } from "./valheimCalc/copy";
+import { useProgressCopy } from "./valheimProgress/copy";
 // La madera, el latón y la letra del juego, todo bajo `.vh`. Desde el
 // 2026-09-25 este módulo se carga aparte (`areas.ts`) y sus hojas viajan con él.
 import "./styles/valheim.css";
 import "./styles/valheim-planner.css";
+
+// Las calculadoras viajan en su chunk (`VH_TAB_FILES` en areaFiles.ts) y el prerender las espera.
+const VhCalculators = lazyWithPreload(() => import("./valheimCalc/Calculators"));
+const VhProgress = lazyWithPreload(() => import("./valheimProgress/Progress"));
+const TABS: Partial<Record<ValheimSection, { preload: () => Promise<void> }>> = {
+  calculators: VhCalculators,
+  progress: VhProgress,
+};
+
+/** Baja el chunk de la sección de una ruta de Valheim (las de datos vienen con el área). */
+export const preloadTab = (route: Route): Promise<void> => TABS[route.vhSection ?? "home"]?.preload() ?? Promise.resolve();
 
 // El mapa trae el generador del mundo: se baja sólo al abrirlo.
 const ValheimMap = lazy(() => import("./valheimMap/ValheimMap"));
@@ -123,6 +137,8 @@ function GlobalSearch({ index, to, navigate }: { index: IndexEntry[]; to: To; na
 
 function Home({ to, navigate }: { to: To; navigate: Nav }) {
   const t = useValheimCopy();
+  const calc = useCalcCopy();
+  const prog = useProgressCopy();
   const { lang } = useLang();
   const index = useIndex();
   const biomes = useTab("biomes");
@@ -175,6 +191,14 @@ function Home({ to, navigate }: { to: To; navigate: Nav }) {
           <span className="vh-slot"><img src={iconUrl("forge")} alt="" loading="lazy" decoding="async" width={42} height={42} /></span>
           <span>{t.plan.tab}<small>{t.plan.hub}</small></span>
         </RouteLink>
+        <RouteLink className="vh-box vh-hubcard" to={to("calculators")} onNavigate={navigate}>
+          <span className="vh-slot"><img src={iconUrl("serpentstew")} alt="" loading="lazy" decoding="async" width={42} height={42} /></span>
+          <span>{calc.tab}<small>{calc.hub}</small></span>
+        </RouteLink>
+        <RouteLink className="vh-box vh-hubcard" to={to("progress")} onNavigate={navigate}>
+          <span className="vh-slot"><img src={iconUrl("trophyeikthyr")} alt="" loading="lazy" decoding="async" width={42} height={42} /></span>
+          <span>{prog.tab}<small>{prog.hub}</small></span>
+        </RouteLink>
         <RouteLink className="vh-box vh-hubcard" to={to("patches")} onNavigate={navigate}>
           <span className="vh-slot"><img src={iconUrl("sign")} alt="" loading="lazy" decoding="async" width={42} height={42} /></span>
           <span>{t.pat.tab}<small>{latest ? `${t.pat.latest}: ${latest.version}` : ""}</small></span>
@@ -219,6 +243,8 @@ function TabView({ tab, detail, to, navigate }: { tab: ValheimTab; detail?: stri
 
 export default function Valheim({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = useValheimCopy();
+  const calc = useCalcCopy();
+  const prog = useProgressCopy();
   const sec: ValheimSection = route.vhSection ?? "home";
   const to: To = (vhSection, detail) => ({ ...route, view: "valheim", vhSection, detail });
   // Cambiar de ficha arranca arriba, como cambiar de página.
@@ -235,6 +261,8 @@ export default function Valheim({ route, navigate }: { route: Route; navigate: N
           ))}
           <RouteLink className="vh-tab is-home is-news" to={to("map")} active={sec === "map"} onNavigate={navigate}>{t.map.tab}</RouteLink>
           <RouteLink className="vh-tab is-home" to={to("planner")} active={sec === "planner"} onNavigate={navigate}>{t.plan.tab}</RouteLink>
+          <RouteLink className="vh-tab is-home" to={to("calculators")} active={sec === "calculators"} onNavigate={navigate}>{calc.tab}</RouteLink>
+          <RouteLink className="vh-tab is-home" to={to("progress")} active={sec === "progress"} onNavigate={navigate}>{prog.tab}</RouteLink>
           <RouteLink className="vh-tab is-home" to={to("patches")} active={sec === "patches"} onNavigate={navigate}>{t.pat.tab}</RouteLink>
         </nav>
       </div>
@@ -242,6 +270,16 @@ export default function Valheim({ route, navigate }: { route: Route; navigate: N
         {sec === "home" ? <Home to={to} navigate={navigate} />
           : sec === "patches" ? <ValheimPatches detail={route.detail} to={to} navigate={navigate} />
           : sec === "planner" ? <ValheimPlanner detail={route.detail} to={to} navigate={navigate} />
+          : sec === "progress" ? (
+            <Suspense fallback={<p className="vh-loading">{prog.loading}</p>}>
+              <VhProgress to={to} navigate={navigate} />
+            </Suspense>
+          )
+          : sec === "calculators" ? (
+            <Suspense fallback={<p className="vh-loading">{calc.loading}</p>}>
+              <VhCalculators detail={route.detail} to={to} navigate={navigate} />
+            </Suspense>
+          )
           : sec === "map" ? (
             <Suspense fallback={<MapFallback />}>
               <ValheimMap openPage={(tab, slug) => navigate(to(tab as ValheimSection, slug))} />
