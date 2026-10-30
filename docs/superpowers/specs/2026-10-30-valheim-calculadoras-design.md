@@ -136,53 +136,50 @@ cómo activar los comandos (`devcommands`). Piezas de construcción: sólo el no
 
 ## Fórmulas
 
-Leídas el 30/10 en valheim.weirdgloop.org (al día con el Norte profundo). Con el juego reinstalado, **todas** se
-confirman contra el código del juego (`assembly_valheim.dll` descompilado: `Player.GetTotalFoodValue`,
-`Player.CanEat`, `Skills.GetRandomSkillFactor`, `HitData.ApplyArmor`, `Character.SetLevel`/`m_damageMultiplier`,
-`Skills.Skill.GetNextLevelRequirement`, `SE_Rested`, `Player.GetComfort`…) y se anota acá el método. Las marcadas
-**[verificar]** son las que la wiki dejó en duda. La fuente va acá, nunca en la UI.
+Leídas en valheim.weirdgloop.org y **confirmadas el 30/10 en el código del juego instalado** (IL de
+`assembly_valheim.dll` leído por reflexión, y valores de los prefabs con `pipeline.peek`). La fuente va acá, nunca en
+la UI.
 
-**Comida** (/Food, /Health, /Stamina)
-- Aporte de cada comida: `base · (restante / duración)^0,3`, para salud, aguante y eitr. Casos de la wiki (base 45):
-  75 % restante → 41; 50 % → 37; 25 % → 30; 10 % → 23.
-- Base sin comida: salud 25, aguante 50, eitr 0 [verificar eitr]. Máximo 3 comidas distintas.
-- Curación por comida: su `regen` cada 10 s, sumada entre las tres.
-- Volver a comer la misma: cuando le queda menos de la mitad del tiempo [verificar: la wiki sólo dice "parcialmente
-  digerida"; si no se confirma, la línea punteada dice "aprox."]. Recomer la deja como nueva.
+**Comida**
+- `Player.UpdateFood`: aporte de cada comida = `base · Clamp01(restante / m_foodBurnTime)^0,3` (salud, aguante y
+  eitr). Base (`GetTotalFoodValue`): `m_baseHP` 25, `m_baseStamina` 50, eitr 0.
+- Curación: cada 10 s, la suma de `m_foodRegen` de las comidas (× modificadores de estado; Descansado ×1,5).
+- `Food.CanEatAgain`: se puede volver a comer cuando `restante < m_foodBurnTime / 2`.
 
-**Daño** (/Damage_and_Blocking_Mechanics, /Damage)
-- Calidad: `daño + damagePerLevel · (calidad − 1)` por tipo (igual armadura con `armorPerLevel` y bloqueo con su
-  campo por nivel) [verificar contra las cifras por calidad que ya muestran las fichas].
-- Habilidad (jugador): factor aleatorio uniforme entre `0,25 + 0,006·n` y `min(0,55 + 0,006·n, 1)` (nivel 0: 25–55 %;
-  100: 85–100 %) [verificar la lectura del mínimo].
-- Tipo: muy débil ×2, débil ×1,5, levemente débil ×1,25, levemente resistente ×0,75, resistente ×0,5, muy
-  resistente ×0,25, inmune ×0. Golpe furtivo (×2–×6, el del arma) y aturdido ×2 como opciones, apagadas por defecto.
+**Daño**
+- `ItemData.GetDamage(q)`: `m_damages + m_damagesPerLevel · (q − 1)` (más el bonus de nivel de mundo, fuera de v1).
+  Armadura: `m_armor + max(0, q − 1) · m_armorPerLevel`; bloqueo: `m_blockPower + max(0, q − 1) · m_blockPowerPerLevel`.
+- `Skills.GetRandomSkillFactor`: `f = nivel/100`; `c = lerp(0,4; 1; f)`; factor uniforme entre
+  `clamp01(c − 0,15)` y `clamp01(c + 0,15)` (nivel 0: 25–55 %; 100: 85–100 %).
+- Tipo (`DamageModifier`): muy débil ×2, débil ×1,5, levemente débil ×1,25, levemente resistente ×0,75, resistente
+  ×0,5, muy resistente ×0,25, inmune ×0. Golpe furtivo (el `m_backstabBonus` del arma) y aturdido ×2: opciones.
+- Estrellas (`Attack.GetLevelDamageFactor`): daño ×`1 + 0,5·(nivel − 1)` (1★ ×1,5; 2★ ×2); salud
+  (`SetupMaxHealth`) × nivel (1★ ×2; 2★ ×3). Nivel 1 = sin estrellas.
 
-**Armadura y bloqueo** (/Blocking, /World_Modifiers)
-- Golpe recibido por tipo, después de resistencias: si `armadura < daño/2` → `daño − armadura`; si no →
-  `daño² / (4·armadura)`.
-- Estrellas de las criaturas: 1★ daño ×1,5, 2★ ×2 (salud ×2 y ×3) [verificar: weirdgloop no tiene la página; fuente
-  Fandom].
-- Dificultad del mundo (daño enemigo): muy fácil 50 %, fácil 75 %, normal 100 %, difícil 150 %, muy difícil 200 %.
-  Un selector, por defecto normal. +4 % por cada jugador extra cerca: fuera de v1.
-- Bloqueo: misma fórmula con el bloqueo del escudo (más 0,5 % por punto de la habilidad Bloqueo [verificar]); luego la
-  armadura. Parry: bloqueo × multiplicador del escudo/arma (redondo 1,5, buckler 2,5, torre no tiene).
+**Armadura y bloqueo**
+- `DamageTypes.ApplyArmor(ac)`: se toma el **total** del golpe (todos los tipos, después de resistencias);
+  `total' = total < 2·ac ? total · clamp01(total / (4·ac)) : total − ac`, y cada tipo se escala en la misma proporción.
+  (No es por tipo: corregido respecto de la wiki.)
+- Bloqueo (`GetBlockPower(q, skill)`): `bloqueo(q) · (1 + 0,5 · nivelBloqueo/100)`; el golpe bloqueado pasa por la misma
+  fórmula de armadura con ese valor; luego la armadura del cuerpo. Parry: × `m_timedBlockBonus` del escudo/arma.
+- Dificultad del mundo (daño enemigo, wiki /World_Modifiers): muy fácil 50 %, fácil 75 %, normal 100 %, difícil
+  150 %, muy difícil 200 %. Selector, por defecto normal. Jugadores extra: fuera de v1.
 
-**Confort y descanso** (/Comfort, /Rested)
-- De cada grupo cuenta la pieza de más confort; las piezas sin grupo suman entre sí. Radio 10 m.
-- Fuego sin refugio: confort 1 y nada más cuenta. Refugio + fuego: suma normal.
-- Descanso: `7 + confort` minutos (confort 1 → 8 min; 22 → 29 min). Máximo 22 (24 con Mayo y Yule).
-- Las piezas de cada grupo: de los datos (`m_comfortGroup`), cargadas a mano (ver Confort).
+**Confort y descanso** (`SE_Rested`)
+- `CalculateComfortLevel`: empieza en 1. **Sólo bajo techo** suma 1 y las piezas en 10 m: se ordenan por grupo
+  (`Piece.ComfortGroup`: None, Fire, Bed, Banner, Chair, Table, Carpet, Display, Decor, Garland, Lantern, Leisure) y
+  confort descendente; de cada grupo cuenta la primera; las de grupo None suman todas salvo repetidas por nombre.
+- Duración: `m_baseTTL + (confort − 1) · m_TTLPerComfortLevel` = `480 + 60·(confort − 1)` s (8 min con 1).
+- Descansado: XP ×1,5 (`m_raiseSkillModifier` 0,5), regeneración de salud ×1,5, aguante y eitr ×2.
 
-**Habilidades** (/Skills, /World_Modifiers, /No_skill_drain)
-- XP de N a N+1: `0,5·(N+1)^1,5 + 0,5` [verificar contra la tabla de la página: la wiki muestra 500,5 para el último
-  paso y la fórmula da ~493; se usa lo que diga la tabla del juego].
-- XP por acción (para "cuántos golpes te faltan"): arma 1,5 por golpe, arco 1,5, ballesta 1, bloqueo 0,5, correr
-  0,2/s, nadar 0,3/s, saltar 0,5, pico 1,5, tala 1, fabricar/cocinar/cultivar 0,25. Descansado: +50 %.
-- Muerte: pierde un % del nivel (con decimales) y todo el avance al siguiente: casual y muy fácil 1 %, fácil 2,5 %,
-  normal 5 %, difícil 7,5 %, hardcore 100 %. "Sin pérdida de habilidades" dura 10 min tras morir.
+**Habilidades** (`Skills`)
+- `GetNextLevelRequirement`: `0,5 · floor(N + 1)^1,5 + 0,5` (de 99 a 100: 500,5, igual que la tabla de la wiki).
+- Cada habilidad sube `m_increseStep` por acción × el factor de la acción (espadas 1, arcos 1,5…; se extraen).
+- `OnDeath`: cada nivel pierde `nivel · m_DeathLowerFactor (0,05) · m_skillReductionRate` y el avance al siguiente
+  vuelve a 0. Modificadores (wiki): casual y muy fácil 1 %, fácil 2,5 %, normal 5 %, difícil 7,5 %, hardcore 100 %.
+  "Sin pérdida de habilidades" 10 min tras morir.
 
-**Consola** (/Console_commands): `-console` en Steam, F5, `devcommands`; `spawn <prefab> [cantidad] [nivel]`
+**Consola** (wiki /Console_commands): `-console` en Steam, F5, `devcommands`; `spawn <prefab> [cantidad] [nivel]`
 (nivel 1 = sin estrellas); sólo un jugador o servidor propio, no dedicado.
 
 ## Rendimiento y datos
