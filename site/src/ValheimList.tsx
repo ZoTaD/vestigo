@@ -14,6 +14,7 @@ import { useValheimCopy, type ValheimCopy } from "./valheimCopy";
 import { applyFilters, collectNames, FILTERS, filterOptions, type FilterState, type ListTab } from "./valheimTabs";
 import { stationOf, tx, type AnyRow, type CreatureRow, type ItemRow, type PieceRow } from "./valheimData";
 import { BiomeTags, Slot, type Nav, type To } from "./ValheimParts";
+import { addToPlan, usePlan } from "./valheimPlannerStore";
 
 type Dir = "asc" | "desc";
 interface Col {
@@ -301,6 +302,7 @@ export default function ValheimList({ tab, rows, to, navigate }: { tab: ListTab;
                     <th aria-hidden="true" />
                     {th(t.cols.name, "name")}
                     {cols.map((c) => th(c.label, c, c.right, c.hideMobile, c.hideMd))}
+                    {tab === "building" && <th aria-hidden="true" />}
                   </tr>
                 </thead>
                 <tbody>
@@ -320,6 +322,7 @@ export default function ValheimList({ tab, rows, to, navigate }: { tab: ListTab;
                       {cols.map((c) => (
                         <td key={c.key} className={`${c.right ? "is-r" : ""}${c.hideMobile ? " vh-hide-m" : ""}${c.hideMd ? " vh-hide-md" : ""}`}>{c.cell(r)}</td>
                       ))}
+                      {tab === "building" && <td className="is-r"><CartButton id={`piece:${(r as PieceRow).id}`} name={tx(r.name, lang)} /></td>}
                     </tr>
                   )} />
                 </tbody>
@@ -328,7 +331,35 @@ export default function ValheimList({ tab, rows, to, navigate }: { tab: ListTab;
           )}
         </section>
       </div>
+      {tab === "building" && <CartBar to={to} navigate={navigate} />}
     </>
+  );
+}
+
+/**
+ * El carrito de construcción (2026-10-30): cada pieza se suma al Planificador desde su fila, y abajo queda cuántas
+ * hay y el enlace a los materiales. No hay una lista aparte: el Planificador ya suma materiales y estaciones.
+ */
+function CartButton({ id, name }: { id: string; name: string }) {
+  const t = useValheimCopy();
+  const n = usePlan().picks.find((p) => p.id === id)?.qty ?? 0;
+  return (
+    <button type="button" className={`vh-chip vh-cart${n ? " is-on" : ""}`} aria-label={`${t.plan.addBtn}: ${name}`} onClick={() => addToPlan(id)}>
+      {n ? `+ ${n}` : "+"}
+    </button>
+  );
+}
+
+function CartBar({ to, navigate }: { to: To; navigate: Nav }) {
+  const t = useValheimCopy();
+  const pieces = usePlan().picks.filter((p) => p.id.startsWith("piece:"));
+  const n = pieces.reduce((s, p) => s + p.qty, 0);
+  if (!n) return null;
+  return (
+    <div className="vh-cartbar vh-box">
+      <span>{t.plan.cart(n, pieces.length)}</span>
+      <RouteLink className="vh-chip is-on" to={to("planner", "route")} onNavigate={navigate}>{t.plan.cartSee}</RouteLink>
+    </div>
   );
 }
 

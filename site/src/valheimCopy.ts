@@ -305,6 +305,8 @@ const EN = {
     addBtn: "+ Add to the Planner",
     inPlanner: (n: number) => `✓ In the Planner · ${n}`,
     see: "See the list",
+    cart: (n: number, kinds: number) => `${n} building piece${n === 1 ? "" : "s"} in the Planner${kinds > 1 ? ` (${kinds} kinds)` : ""}`,
+    cartSee: "See materials →",
   },
   pat: {
     tab: "Patches",
@@ -628,6 +630,8 @@ const ES: typeof EN = {
     addBtn: "+ Agregar al Planificador",
     inPlanner: (n) => `✓ En el Planificador · ${n}`,
     see: "Ver la lista",
+    cart: (n: number, kinds: number) => `${n} pieza${n === 1 ? "" : "s"} de construcción en el Planificador${kinds > 1 ? ` (${kinds} tipos)` : ""}`,
+    cartSee: "Ver materiales →",
   },
   pat: {
     tab: "Parches",
