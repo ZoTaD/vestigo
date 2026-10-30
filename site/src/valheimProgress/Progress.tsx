@@ -62,30 +62,30 @@ export default function Progress({ to, navigate }: { to: To; navigate: Nav }) {
   }, [shown]);
 
   return (
-    <div className="vp">
+    <div className="vg">
       <header className="vh-head">
         <h1>{t.title}</h1>
         <p>{here ? t.youAre(v.biomes[here]) : t.allDone} · {t.lede}</p>
-        <div className="vp-actions">
-          <button type="button" className="vh-plate vp-btn" onClick={() => file.current?.click()}>{t.read}</button>
+        <div className="vg-actions">
+          <button type="button" className="vh-plate vg-btn" onClick={() => file.current?.click()}>{t.read}</button>
           <input ref={file} type="file" accept=".fch,.old" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) void read(f); e.target.value = ""; }} />
           <button type="button" className="vh-chip" onClick={() => { if (window.confirm(t.resetAsk)) update(new Set()); }}>{t.reset}</button>
         </div>
       </header>
       {msg ? (
-        <p className="vp-msg">{msg} {msg.includes(t.readSkills) && <RouteLink to={to("calculators", "skills")} onNavigate={navigate}>{t.open} ↗︎</RouteLink>}</p>
+        <p className="vg-msg">{msg} {msg.includes(t.readSkills) && <RouteLink to={to("calculators", "skills")} onNavigate={navigate}>{t.open} →</RouteLink>}</p>
       ) : (
-        <p className="vp-msg vh-dim">{t.readHelp}</p>
+        <p className="vg-msg vh-dim">{t.readHelp[0]} <code className="vg-path">{t.path}</code> {t.readHelp[1]}</p>
       )}
       <section className="vh-frame">
-        <div className="vh-inset vp-route">
-          <ol className="vp-stops">
+        <div className="vh-inset vg-route">
+          <ol className="vg-stops">
             {BIOMES.map((b) => {
               const n = b.tasks.filter((x) => done.has(x.id)).length;
               const all = n === b.tasks.length;
               return (
                 <li key={b.biome}>
-                  <button type="button" className={`vp-stop${all ? " is-done" : ""}`} data-biome={b.biome} aria-pressed={b.biome === shown.biome} onClick={() => setPicked(b.biome)}>
+                  <button type="button" className={`vg-stop${all ? " is-done" : ""}`} data-biome={b.biome} aria-pressed={b.biome === shown.biome} onClick={() => setPicked(b.biome)}>
                     <Slot icon={b.boss?.icon} size="sm" />
                     <span><b>{v.biomes[b.biome]}</b><small>{n}/{b.tasks.length}{b.boss ? ` · ${tx(b.boss.name, lang)}` : ""}</small></span>
                   </button>
@@ -93,21 +93,21 @@ export default function Progress({ to, navigate }: { to: To; navigate: Nav }) {
               );
             })}
           </ol>
-          <div className="vp-detail">
-            <h2 className="vh-plate vp-plate">{v.biomes[shown.biome]}</h2>
-            <div className="vp-cols">
+          <div className="vg-detail">
+            <h2 className="vh-plate vg-plate">{v.biomes[shown.biome]}</h2>
+            <div className="vg-cols">
               {(["gear", "materials", "boss"] as const).map((c) => (
                 <div key={c}>
                   <h3>{t.cols[c]}</h3>
                   {cols[c].map((task) => (
-                    <div key={task.id} className={`vp-task${done.has(task.id) ? " is-done" : ""}`}>
+                    <div key={task.id} className={`vg-task${done.has(task.id) ? " is-done" : ""}`}>
                       <label>
                         <input type="checkbox" checked={done.has(task.id)} onChange={() => toggle(task.id)} />
                         <Slot icon={task.ref.icon} size="sm" />
                         <span><small>{t.kind[task.kind]}</small>{tx(task.ref.name, lang)}</span>
                       </label>
                       {task.ref.slug && task.ref.tab && (
-                        <RouteLink className="vp-go" to={to(task.ref.tab, task.ref.slug)} onNavigate={navigate} aria-label={tx(task.ref.name, lang)}>↗︎</RouteLink>
+                        <RouteLink className="vg-go" to={to(task.ref.tab, task.ref.slug)} onNavigate={navigate} aria-label={tx(task.ref.name, lang)}>→</RouteLink>
                       )}
                     </div>
                   ))}
