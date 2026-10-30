@@ -196,6 +196,14 @@ const EN = {
           `Win rate in the matches where each hero was on the other team (or the same one), ${from} to ${to}. Only pairs with ${min}+ matches.`,
         matches: (n: string) => `${n} m.`,
         none: "Not enough matches in this band yet.",
+        lane: "In lane",
+        laneLead:
+          "Souls ahead or behind at 10:00 against each enemy in your lane. It is the lead of your lane pair over theirs, " +
+          "so your lane partner counts too.",
+        laneEasy: "Wins the lane against",
+        laneHard: "Loses the lane against",
+        laneWin: (wr: string) => `${wr}% won`,
+        laneWinTitle: "Win rate of those matches, start to end",
       },
       build: {
         kicker: (wr: string, n: string) => `Build · ${wr} in ${n} matches`,
@@ -1747,6 +1755,14 @@ const ES: typeof EN = {
           `Victorias en las partidas con cada héroe en el equipo rival (o en el propio), del ${from} al ${to}. Sólo cruces con ${min} partidas o más.`,
         matches: (n: string) => `${n} p.`,
         none: "Todavía no hay partidas suficientes en esta banda.",
+        lane: "En la línea",
+        laneLead:
+          "Almas de ventaja o de atraso a los 10:00 contra cada rival de tu línea. Es la ventaja de tu dúo sobre el suyo, " +
+          "así que tu compañero de línea también cuenta.",
+        laneEasy: "Gana la línea contra",
+        laneHard: "Pierde la línea contra",
+        laneWin: (wr: string) => `${wr} % ganadas`,
+        laneWinTitle: "Winrate de esas partidas, de principio a fin",
       },
       build: {
         kicker: (wr: string, n: string) => `Build · ${wr} en ${n} partidas`,

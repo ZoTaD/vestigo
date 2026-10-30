@@ -13,6 +13,8 @@ import { BANDS, type BandId } from "./bands";
  * - **Los promedios por partida** (bajas, daño, almas…) de cada héroe, para
  *   ubicarlo contra los otros 37.
  * - **Los enfrentamientos**: su winrate contra cada rival y junto a cada aliado.
+ * - **La línea** (2026-10-30): contra cada rival de línea, la ventaja de almas
+ *   del dúo a los 10 minutos y el winrate de esas partidas (`lane`).
  *
  * Todo sale de tres endpoints (`hero-stats`, `hero-counter-stats`,
  * `hero-synergy-stats`) filtrados por la misma insignia que la banda, igual que
@@ -61,6 +63,8 @@ export type Metric = (typeof METRICS)[number];
 export type DayPoint = [string, number, number];
 /** [id del otro héroe, partidas, victorias] */
 export type PairPoint = [number, number, number];
+/** [id del rival de línea, partidas, victorias, ventaja de almas del dúo a los 10 min] */
+export type LanePoint = [number, number, number, number];
 
 export interface HeroInsight {
   daily: DayPoint[];
@@ -69,6 +73,8 @@ export interface HeroInsight {
   vs: PairPoint[];
   /** Junto a cada aliado con muestra suficiente, de mejor a peor. */
   with: PairPoint[];
+  /** Contra cada rival de línea con muestra suficiente, de la línea que más gana a la que más pierde. */
+  lane?: LanePoint[];
 }
 
 export interface HeroInsightsFile {
@@ -105,6 +111,57 @@ export interface CounterRow {
   enemy_hero_id: number;
   wins: number;
   matches_played: number;
+}
+
+/** Una fila de `lane-matchup-stats`: un dúo contra otro, con las líneas juntas. */
+export interface LaneRow {
+  hero_ids: number[];
+  enemy_hero_ids: number[];
+  wins: number;
+  matches_played: number;
+  /** La ventaja de almas del dúo en `sample_time_s`; `null` si ninguna partida llegó. */
+  net_worth_diff: number | null;
+  sample_matches: number;
+}
+
+/** El minuto en que se lee la línea: 10, cuando casi todas siguen en su carril. */
+export const LANE_TIME_S = 600;
+
+/**
+ * De dúo contra dúo a héroe contra héroe: cada fila cuenta para los dos héroes
+ * del dúo contra los dos del otro. La ventaja de almas es **la del dúo**
+ * (promedio ponderado por las partidas que llegaron al minuto 10): la API no la
+ * da por jugador, y en una línea de dos lo que se gana se gana de a dos.
+ */
+export function laneOf(rows: LaneRow[], heroIds: number[]): Map<number, LanePoint[]> {
+  const publicados = new Set(heroIds);
+  const acc = new Map<string, { n: number; w: number; souls: number; sn: number }>();
+  for (const r of rows) {
+    for (const a of r.hero_ids) {
+      for (const b of r.enemy_hero_ids) {
+        if (a === b || !publicados.has(a) || !publicados.has(b)) continue;
+        const k = `${a}:${b}`;
+        const x = acc.get(k) ?? { n: 0, w: 0, souls: 0, sn: 0 };
+        x.n += r.matches_played;
+        x.w += r.wins;
+        if (r.net_worth_diff !== null && r.sample_matches > 0) {
+          x.souls += r.net_worth_diff * r.sample_matches;
+          x.sn += r.sample_matches;
+        }
+        acc.set(k, x);
+      }
+    }
+  }
+  const out = new Map<number, LanePoint[]>();
+  for (const [k, x] of acc) {
+    if (x.n < MIN_PAIR || x.sn === 0) continue;
+    const [a, b] = k.split(":").map(Number);
+    const lista = out.get(a) ?? [];
+    lista.push([b, x.n, x.w, Math.round(x.souls / x.sn)]);
+    out.set(a, lista);
+  }
+  for (const l of out.values()) l.sort((p, q) => q[3] - p[3]);
+  return out;
 }
 
 export interface SynergyRow {
@@ -152,7 +209,8 @@ export function buildInsights(
   daily: StatsRow[],
   counters: CounterRow[],
   synergies: SynergyRow[],
-  generatedAt: string
+  generatedAt: string,
+  lane?: Map<number, LanePoint[]>
 ): HeroInsightsFile {
   const publicados = new Set(heroIds);
   const heroes: Record<string, HeroInsight> = {};
@@ -182,6 +240,7 @@ export function buildInsights(
     h.vs.sort((a, b) => wr(a) - wr(b));
     h.with.sort((a, b) => wr(b) - wr(a));
   }
+  if (lane) for (const [id, l] of lane) if (heroes[String(id)]) heroes[String(id)].lane = l;
 
   return {
     generatedAt,
@@ -244,6 +303,25 @@ async function main() {
 
     const rutas = pairPaths(q, unix(from), hasta);
 
+    // La línea aparte: el endpoint es nuevo ("subject to change") y si falla o
+    // cambia de forma, los cruces se publican igual y queda la línea anterior.
+    let lane: Map<number, LanePoint[]> | undefined;
+    try {
+      const filas = await traer<LaneRow[]>(
+        `lane-matchup-stats?${q}&min_unix_timestamp=${unix(from)}&max_unix_timestamp=${hasta}` +
+          `&group_by=hero_ids,enemy_hero_ids&sample_time_s=${LANE_TIME_S}&min_matches=1`
+      );
+      if (!Array.isArray(filas)) throw new Error("no es una lista");
+      lane = laneOf(filas, heroIds);
+    } catch (e) {
+      console.log(`  ${band.id}: la línea no contestó (${e instanceof Error ? e.message : e})`);
+      const previo = `${OUT_DIR}/hero-insights.${band.id}.json`;
+      if (existsSync(previo)) {
+        const viejo = JSON.parse(readFileSync(previo, "utf8")) as HeroInsightsFile;
+        lane = new Map(Object.entries(viejo.heroes).flatMap(([id, h]) => (h.lane ? [[Number(id), h.lane] as const] : [])));
+      }
+    }
+
     try {
       const [totals, daily, counters, synergies] = await Promise.all([
         traer<StatsRow[]>(`hero-stats?${q}&min_unix_timestamp=${unix(from)}&max_unix_timestamp=${hasta}`),
@@ -259,7 +337,8 @@ async function main() {
         daily,
         counters,
         synergies,
-        now.toISOString()
+        now.toISOString(),
+        lane
       );
       writeFileSync(`${OUT_DIR}/hero-insights.${band.id}.json`, JSON.stringify(file));
       const cruces = Object.values(file.heroes).reduce((n, h) => n + h.vs.length, 0);
