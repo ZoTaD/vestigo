@@ -196,7 +196,7 @@ function Combat({ weapons, armor, creatures, bosses, foods, to, navigate }: { we
               </tr>
             </thead>
             <tbody>
-              <LazyRows items={rows} rowHeight={44} tag="tr" render={(r, i) => (
+              <LazyRows items={rows} rowHeight={44} tag="tr" eager render={(r, i) => (
                 <tr key={`${r.foe.id}-${i}`}>
                   <td>
                     <RouteLink className="vc-foe" to={to(r.foe.tab, r.foe.slug)} onNavigate={navigate}>
