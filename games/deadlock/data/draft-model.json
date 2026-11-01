@@ -1,39 +1,39 @@
 {
- "generatedAt": "2026-10-30T17:39:26.790Z",
+ "generatedAt": "2026-10-31T21:57:20.898Z",
  "cv": 1,
  "ca": 0.5,
  "bands": {
   "phantom-above": {
-   "scale": 0.1098,
-   "matches": 2993,
-   "accuracy": 0.5837,
-   "brier": 0.2396,
+   "scale": 0.0978,
+   "matches": 3000,
+   "accuracy": 0.5634,
+   "brier": 0.2426,
    "from": "2026-10-16",
-   "to": "2026-10-30"
+   "to": "2026-10-31"
   },
   "archon-oracle": {
-   "scale": 0.082,
+   "scale": 0.0961,
    "matches": 2999,
-   "accuracy": 0.5736,
-   "brier": 0.2425,
-   "from": "2026-10-15",
-   "to": "2026-10-30"
+   "accuracy": 0.5789,
+   "brier": 0.24,
+   "from": "2026-10-16",
+   "to": "2026-10-31"
   },
   "ritualist-emissary": {
-   "scale": 0.1026,
+   "scale": 0.0826,
    "matches": 3000,
-   "accuracy": 0.5863,
-   "brier": 0.2378,
-   "from": "2026-10-15",
-   "to": "2026-10-30"
+   "accuracy": 0.5757,
+   "brier": 0.242,
+   "from": "2026-10-16",
+   "to": "2026-10-31"
   },
   "arcanist-below": {
-   "scale": 0.1021,
-   "matches": 2999,
-   "accuracy": 0.5821,
-   "brier": 0.2396,
-   "from": "2026-10-15",
-   "to": "2026-10-30"
+   "scale": 0.0854,
+   "matches": 3000,
+   "accuracy": 0.5727,
+   "brier": 0.2409,
+   "from": "2026-10-16",
+   "to": "2026-10-31"
   }
  }
 }
