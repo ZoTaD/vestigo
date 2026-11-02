@@ -62,6 +62,12 @@ describe("qué noticia es un parche", () => {
     expect(isPatchPost({ ...POST, title: "Deadlock Fall Sale" })).toBe(false);
   });
 
+  it("toma los parches de evento, que vienen sin fecha", () => {
+    expect(isPatchPost({ ...POST, title: "Halloween 2026 + Gameplay Update" })).toBe(true);
+    expect(isPatchPost({ ...POST, title: "Shh... This Won't Hurt a Bit." })).toBe(false);
+    expect(patchTitle("Halloween 2026 + Gameplay Update")).toBe("Halloween 2026 + Gameplay Update");
+  });
+
   it("nombra el parche como el foro", () => {
     expect(patchTitle(POST.title)).toBe("09-16-2026 Update");
   });
@@ -84,6 +90,14 @@ describe("parseNotes", () => {
 
   it("decodifica las entidades HTML", () => {
     expect(parseNotes("[p]- Guardians +75%-&gt;-50%[/p]").general[0]).toBe("Guardians +75%->-50%");
+  });
+
+  it("descarta la presentación de un parche de evento y lee \"Heroes:\" como sección", () => {
+    const s = parseNotes(
+      "[p][img]{STEAM_CLAN_LOC_IMAGE}/x.png[/img]\nAs Halloween draws near...\n\n-------------------------------\n\n" +
+        "[/p][h3][b]Gameplay Update[/b][/h3][p]\n[b]General:[/b]\n- Mid-Boss: Health increased by 20%\n\n[b]Heroes:[/b]\n- Celeste: Stamina cooldown increased from 5 to 5.3[/p]"
+    );
+    expect(s).toEqual({ general: ["Mid-Boss: Health increased by 20%"], heroes: ["Celeste: Stamina cooldown increased from 5 to 5.3"] });
   });
 });
 
@@ -203,5 +217,16 @@ describe("buildEdition", () => {
     expect(flat.heroes[0].groups[0]).toMatchObject({ abilityId: 1, lines: [{ dir: "down" }] });
     expect(flat.heroes[0].groups[0].lines[0].text).not.toMatch(/^-/);
     expect(flat.items.map((i) => i.itemId)).toEqual([11]);
+  });
+
+  it("acepta los nombres cortos de Valve", () => {
+    const short = buildEdition({
+      post: { ...POST, contents: "[p]- Lady Geist: Life Drain - Cooldown increased from 30s to 32s[/p][p]- Lady: Life Drain - Range reduced from 10m to 9m[/p]" },
+      heroNames: { "20": "Lady Geist", "99": "The Doorman" },
+      assetsEn: ASSETS,
+      assetsEs: ASSETS_ES,
+    });
+    expect(short.heroes.map((h) => h.heroId)).toEqual([20]);
+    expect(short.unparsed).toEqual([]);
   });
 });
