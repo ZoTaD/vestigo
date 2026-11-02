@@ -1,3 +1,4 @@
+import DeadlockKillMap from "./DeadlockKillMap";
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
@@ -821,6 +822,9 @@ export default function DeadlockHeroPage({
             </div>
           </>
         )}
+        {/* Dónde pelea: después de contra quién, que es la misma pregunta
+            hecha sobre el mapa. Se carga sola (~6 KB) y sin archivo no dibuja. */}
+        <DeadlockKillMap heroId={hero.heroId} />
       </section>
 
       {/* ── Build ───────────────────────────────────────────────── */}

@@ -353,6 +353,26 @@ jobs:
             echo "la escalera por heroe tiene ${edad_h}h (< 20); esta corrida la saltea"
           fi
 
+      # El mapa de calor de cada héroe (2026-11-02): un pedido por héroe, ~4 min
+      # en total, una vez por día con la misma puerta por edad (mira el archivo
+      # de Abrams, que siempre tiene muestra). **Perdona fallar**: queda lo
+      # commiteado.
+      - name: build kill map
+        continue-on-error: true
+        run: |
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/kill-map/6.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            npm run build:kill-map --prefix games/deadlock/pipeline
+          else
+            echo "el mapa de calor tiene ${edad_h}h (< 20); esta corrida lo saltea"
+          fi
+
       # Los one-tricks y las builds de los mejores (2026-10-30): parte del top de
       # la escalera, así que va después. ~180 pedidos (el historial tarda ~8 s por
       # héroe, ~6 min en total), una vez por día con la misma puerta por edad.

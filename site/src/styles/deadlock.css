@@ -2058,3 +2058,63 @@
 [data-theme="codex"] .dl-placing-num {
   border-radius: var(--radius);
 }
+
+/* Mapa de calor de la ficha del héroe (2/11). El relieve va apagado como en la
+   pestaña Mapa y la mancha encima, agrandada con suavizado. */
+.dl-killmap {
+  margin-top: 1.6rem;
+}
+
+.dl-killmap-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+}
+
+.dl-killmap-head .dl-hp-lane-title {
+  margin: 0;
+}
+
+.dl-killmap-frame {
+  position: relative;
+  width: min(100%, 34rem);
+  aspect-ratio: 1;
+  margin: 0.8rem auto 0;
+  background: #14110d;
+  overflow: hidden;
+}
+
+.dl-killmap-frame img,
+.dl-killmap-frame canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.dl-killmap-frame img {
+  opacity: 0.75;
+  filter: grayscale(1) brightness(0.45) contrast(1.2);
+}
+
+/* 64 celdas estiradas a ~540 px: el desenfoque borra la grilla y deja la mancha. */
+.dl-killmap-frame canvas {
+  image-rendering: auto;
+  filter: blur(5px);
+}
+
+.dl-killmap-frame figcaption {
+  position: absolute;
+  inset: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(247, 233, 213, 0.75);
+}
