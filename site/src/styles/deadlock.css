@@ -382,6 +382,91 @@
 
 [data-theme="codex"] .dl-irow-fold {
   padding: 0.3rem 0.95rem 1rem;
+  display: grid;
+  /* La tarjeta del juego mide 450 px; con \`auto\` la columna tomaba el ancho
+     de su texto sin cortar y dejaba el gráfico en cero. */
+  grid-template-columns: minmax(0, 450px) minmax(0, 1fr);
+  gap: 1.2rem 1.6rem;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  [data-theme="codex"] .dl-irow-fold {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Winrate según el minuto de compra (2/11), al lado de la tarjeta del juego. */
+.dl-timing {
+  min-width: 0;
+}
+
+.dl-timing-title {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.dl-timing-lead,
+.dl-timing-note {
+  margin: 0 0 0.7rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.dl-timing-note {
+  margin: 0.6rem 0 0;
+}
+
+.dl-timing-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.dl-timing-rows li {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr) 3.4rem 2.8rem;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-timing-when {
+  color: var(--text-dim);
+}
+
+.dl-timing-track {
+  height: 0.7rem;
+  background: color-mix(in srgb, var(--text-dim) 18%, transparent);
+}
+
+.dl-timing-bar {
+  display: block;
+  height: 100%;
+}
+
+.dl-timing-wr {
+  text-align: right;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.dl-timing-delta {
+  text-align: right;
+  color: var(--text-dim);
+}
+
+.dl-timing-delta[data-sign="up"] {
+  color: var(--good, #2f7a1f);
+}
+
+.dl-timing-delta[data-sign="down"] {
+  color: var(--bad, #b2261c);
 }
 
 @media (max-width: 640px) {

@@ -16,6 +16,7 @@ import {
 } from "./deadlockItemsData";
 import { UsageVsEdge, ShopHeatmap, Callouts } from "./DeadlockItemCharts";
 import { ItemDetailPanel } from "./DeadlockItemCard";
+import DeadlockItemTiming from "./DeadlockItemTiming";
 import { type BandId } from "./deadlockData";
 import { items as itemSlugs } from "./deadlockSlugs";
 import { ItemIcon } from "./DeadlockItemTip";
@@ -68,12 +69,14 @@ function ItemRow({
   cost,
   open,
   onToggle,
+  band,
 }: {
   item: Item;
   base: number;
   cost: string;
   open: boolean;
   onToggle: () => void;
+  band: BandId;
 }) {
   const copy = useCopy();
   const c = copy.deadlock.itemsPage;
@@ -152,6 +155,8 @@ function ItemRow({
       {open && (
         <div className="dl-irow-fold">
           <ItemDetailPanel item={item} cost={cost} as="h1" />
+          {/* Al lado de la tarjeta del juego: lo que el juego no dice. */}
+          <DeadlockItemTiming itemId={item.itemId} band={band} />
         </div>
       )}
     </li>
@@ -175,6 +180,7 @@ function CostGroup({
   onToggle,
   openSlug,
   onOpenItem,
+  band,
 }: {
   cost: number;
   items: Item[];
@@ -184,6 +190,7 @@ function CostGroup({
   /** El slug del ítem con la ficha abierta, si hay uno. Vive en la URL. */
   openSlug?: string;
   onOpenItem: (slug?: string) => void;
+  band: BandId;
 }) {
   const copy = useCopy();
   const locale = useLocale();
@@ -229,6 +236,7 @@ function CostGroup({
                   cost={precio}
                   open={!!slug && slug === openSlug}
                   onToggle={() => onOpenItem(slug === openSlug ? undefined : slug)}
+                  band={band}
                 />
               );
             })}
@@ -345,6 +353,7 @@ export default function DeadlockItems({
             cost={it.cost.toLocaleString(locale)}
             open
             onToggle={() => onOpen(undefined)}
+            band={band}
           />
         </ol>
       </section>
@@ -453,6 +462,7 @@ export default function DeadlockItems({
                   onToggle={() => alternar(cost)}
                   openSlug={open}
                   onOpenItem={onOpen}
+                  band={band}
                 />
               );
             })}

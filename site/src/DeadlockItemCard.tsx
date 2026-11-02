@@ -40,6 +40,8 @@ export function ItemDetailPanel({
   const c = copy.deadlock.itemsPage;
   const ficha = useItemDetail(item.itemId);
   const locale = useLocale();
+  // El escalado espiritual se dice con las mismas palabras que en las habilidades.
+  const kit = copy.deadlock.hero.kit;
   // "Adquirido durante la fase media en el 30 % de las partidas": el dato de la
   // tienda del juego para el héroe de la página, si la página tiene uno.
   const heroId = useContext(PopularHeroContext);
@@ -169,6 +171,14 @@ export function ItemDetailPanel({
                           {st.unit}
                         </span>
                         <span className="dl-card-stat-label">{st.label}</span>
+                        {st.spirit !== undefined && (
+                          <span
+                            className="dl-card-stat-spirit"
+                            title={kit.spiritTip(st.spirit.toLocaleString(locale))}
+                          >
+                            {kit.spirit(st.spirit.toLocaleString(locale))}
+                          </span>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -186,6 +196,14 @@ export function ItemDetailPanel({
                           {st.unit}
                         </span>
                         <span className="dl-card-stat-label">{st.label}</span>
+                        {st.spirit !== undefined && (
+                          <span
+                            className="dl-card-stat-spirit"
+                            title={kit.spiritTip(st.spirit.toLocaleString(locale))}
+                          >
+                            {kit.spirit(st.spirit.toLocaleString(locale))}
+                          </span>
+                        )}
                       </li>
                     ))}
                   </ul>

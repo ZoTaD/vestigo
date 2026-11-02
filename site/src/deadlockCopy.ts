@@ -1371,6 +1371,14 @@ const EN = {
      * partidas que ya iban ganando.
      */
     itemsPage: {
+      timing: {
+        title: "Win rate by buy time",
+        lead: "Win rate when bought in each window. The color and the last number compare it with other items of the same price bought in that same window.",
+        range: (a: number, b: number) => `${a}–${b} min`,
+        after: (a: number) => `${a}+ min`,
+        buys: (n: string) => `${n} purchases`,
+        note: "Buying anything early wins more, because early buyers are already ahead. That is why each window is read against its own price.",
+      },
       title: "Item",
       titleBreak: " tier list",
       lead:
@@ -2737,6 +2745,14 @@ const ES: typeof EN = {
         `${band}, del ${from} al ${to}. Cada objeto medido contra jugadores que llegaron al mismo minuto con las mismas almas y las gastaron en otra cosa.`,
     },
     itemsPage: {
+      timing: {
+        title: "Winrate según el minuto de compra",
+        lead: "El winrate cuando se compra en cada tramo. El color y la última cifra lo comparan con los otros objetos del mismo precio comprados en ese mismo tramo.",
+        range: (a: number, b: number) => `${a}–${b} min`,
+        after: (a: number) => `${a}+ min`,
+        buys: (n: string) => `${n} compras`,
+        note: "Comprar cualquier cosa temprano gana más, porque el que compra temprano ya va adelante. Por eso cada tramo se lee contra su propio precio.",
+      },
       title: "Tier list",
       titleBreak: " de objetos",
       lead:

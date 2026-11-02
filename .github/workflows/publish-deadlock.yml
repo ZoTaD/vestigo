@@ -229,6 +229,13 @@ jobs:
       - name: build items
         run: npm run build:items --prefix games/deadlock/pipeline
 
+      # El winrate de cada objeto según el minuto de compra, en la misma ventana
+      # que la tier list de objetos (lee su `from`/`to`). Un pedido por banda,
+      # ~2 s cada uno. Si la API no contesta queda el archivo anterior.
+      - name: build item timing
+        continue-on-error: true
+        run: npm run build:item-timing --prefix games/deadlock/pipeline
+
       # Las builds por héroe, que es lo que se despliega al apretar un héroe en
       # la tier list. Es el paso más caro con diferencia —~10 minutos contra los
       # ~10 segundos de ítems— y el motivo no es el volumen de partidas: para
