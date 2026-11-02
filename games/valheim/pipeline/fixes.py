@@ -101,6 +101,33 @@ FROM_BIOMES: dict[str, list[str]] = {
 FROM_TIER: dict[str, str] = {"Chicken": "plains", "Hen": "plains", "BlobFrost": "mountain"}
 
 
+# Cambios de recetas de parches que el extractor todavía no vio (el juego no
+# está instalado para volver a extraer). Notas del Patch 1.0.21 (2026-10-28):
+# - "Made Baked Poteitr, Kale Chips, and Oven Pancake craftable at Food
+#   Preparation table instead of Cauldron": la versión cruda pasa a la mesa de
+#   preparación (las demás de esa mesa piden nivel 1).
+# - "Removed requirement of moose trophies for upgrading DN mage helmet".
+RECIPE_STATION: dict[str, tuple[str, int]] = {
+    "KaleChipsUncooked": ("piece_preptable", 1),
+    "OvenPancakeUncooked": ("piece_preptable", 1),
+    "BakedPoteitrUncooked": ("piece_preptable", 1),
+}
+RECIPE_PER_LEVEL: dict[tuple[str, str], int] = {("HelmetDNMage", "TrophyMoose"): 0}
+
+
+def apply_recipes(items: dict, recipes: list) -> None:
+    for r in recipes:
+        if r["item"] in RECIPE_STATION:
+            r["station"], r["level"] = RECIPE_STATION[r["item"]]
+        for q in r["requirements"]:
+            if (r["item"], q["item"]) in RECIPE_PER_LEVEL:
+                q["perLevel"] = RECIPE_PER_LEVEL[(r["item"], q["item"])]
+    for pid, (station, level) in RECIPE_STATION.items():
+        for src in items.get(pid, {}).get("sources", []):
+            if src["kind"] == "craft":
+                src["station"], src["level"] = station, level
+
+
 def apply(items: dict) -> None:
     for pid, it in items.items():
         it["sources"] = [s for s in it["sources"] if (pid, s["kind"], s.get("from")) not in DROP_SOURCES

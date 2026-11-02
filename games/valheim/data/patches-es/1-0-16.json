@@ -1,0 +1,22 @@
+{
+ "Further tweaks for you today, vikings! This one includes fixes for both terrain modification and for some achievements, so we hope this makes playing smoother for you all!": "¡Más ajustes para ustedes hoy, vikingos! Este incluye arreglos para la modificación del terreno y para algunos logros; esperamos que haga el juego más fluido para todos.",
+ "Fixed a bug that caused terrain modifications to revert in Deep North after unloading the area in some cases. Our apologies that this one went back and forth for a while! You may need to manually fix terrain seams by pickaxing, using the hoe, or walking over snow however.": "Se arregló un error que, en algunos casos, deshacía las modificaciones del terreno en el Norte Profundo al descargar la zona. ¡Perdón por las idas y vueltas con este! Igual puede que tengas que arreglar a mano las costuras del terreno con el pico, la azada o caminando sobre la nieve.",
+ "Fixed a bug that could cause way too many enemies to spawn, especially during raids": "Se arregló un error que podía hacer aparecer demasiados enemigos, sobre todo durante las incursiones",
+ "Fixed Child of Odin achievement not unlocking correctly": "Se arregló que el logro Hijo de Odín no se desbloqueara bien",
+ "Fixed a case where Comfort is King achievement was not unlocking correctly": "Se arregló un caso en que el logro El confort es rey no se desbloqueaba bien",
+ "Excluded unobtainable Blue Mushroom from The Gourmet achievement": "Se quitó del logro El gourmet el Hongo azul, que no se puede conseguir",
+ "Fixed a bug where smoke from fires could push some enemies in unintended ways": "Se arregló un error por el que el humo de las fogatas podía empujar a algunos enemigos de formas no previstas",
+ "Fixed a bug where snow deposits from trees could cause the terrain to be raised around it": "Se arregló un error por el que la nieve que cae de los árboles podía levantar el terreno a su alrededor",
+ "Fixed a bug where certain spawns during the Deep North boss fight could spawn outside the boss area": "Se arregló un error por el que ciertas apariciones durante la pelea contra el jefe del Norte Profundo podían salir fuera de la zona del jefe",
+ "Fixed a bug where item variants were not applied visually to items on item/armour stands (e.g. shields)": "Se arregló un error por el que las variantes de los objetos no se veían en los objetos puestos en soportes de objetos o de armaduras (por ejemplo, los escudos)",
+ "Updated localization": "Se actualizaron las traducciones",
+ "Placeable rocks and boulders no longer take rain damage": "Las rocas y peñascos colocables ya no reciben daño de la lluvia",
+ "Tessellation is now disabled in the “low” graphics preset": "La teselación ahora está desactivada en el preajuste gráfico \"bajo\"",
+ "Tree logs in Deep North now move more consistently when rolling over snow": "Los troncos del Norte Profundo ahora se mueven de forma más pareja al rodar sobre la nieve",
+ "Fixed a bug where certain spawns during the Deep North boss fight could render incorrectly when standing in certain places": "Se arregló un error por el que ciertas apariciones durante la pelea contra el jefe del Norte Profundo podían verse mal desde algunos lugares",
+ "Fixed an error / potential crash in the online session Player List": "Se arregló un error que podía cerrar el juego en la lista de jugadores de la sesión en línea",
+ "Fixed a bug where rolling snowballs far away from the player could result in terrain seams and in some cases, crashes": "Se arregló un error por el que las bolas de nieve que ruedan lejos del jugador podían dejar costuras en el terreno y, en algunos casos, cerrar el juego",
+ "Switch 2 / PlayStation®5: Fixed a bug where motion controls activation was inconsistent": "Switch 2 / PlayStation®5: se arregló que la activación de los controles por movimiento fuera inconsistente",
+ "Switch 2: Fixed a bug where banding artifacts could appear on textures of objects very close to the camera": "Switch 2: se arregló un error por el que podían aparecer bandas en las texturas de objetos muy cerca de la cámara",
+ "Mac App Store: Fixed a bug where backups could not be restored via Manage Saves menu": "Mac App Store: se arregló un error por el que no se podían restaurar copias de seguridad desde el menú Administrar partidas guardadas"
+}
