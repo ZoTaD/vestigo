@@ -34,10 +34,16 @@ describe("la barra: el menú de juegos", () => {
     expect(html).toContain('<span class="visually-hidden">Diablo II: Resurrected</span>');
   });
 
+  it("Rust, congelado, no se ofrece en el menú, pero sus páginas siguen andando", () => {
+    const home = render("en", "/en", "home");
+    expect(home).not.toContain("/logos/rust.png");
+    expect(home).not.toMatch(/href="\/en\/rust/);
+    expect(render("en", "/en/rust", "rust")).toMatch(/class="top-here"[^>]*>Rust</);
+  });
+
   it("los accesos directos llevan a la pestaña del juego, en el idioma de la página", () => {
     const html = render("es", "/es/d2r", "d2r");
     expect(html).toContain('href="/es/d2r/palabras-runicas"');
-    expect(html).toContain('href="/es/rust/raideo"');
     expect(html).toContain('href="/es/stardew-valley/predictor"');
     expect(html).toContain('aria-label="Valheim: Mapa"');
   });
