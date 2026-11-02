@@ -203,6 +203,12 @@ const resolverIds = (ids: number[] | undefined, lang: Lang) =>
  * fichas que se abren con sólo el id (al pasar el mouse): el juego pone las dos
  * listas al pie de la ficha, "Mejora de" y "Mejora para".
  */
+/** El nombre y el precio de un objeto, del catálogo. Para quien sólo tiene el id. */
+export function catalogItem(itemId: number): { name: Localized; cost: number } | undefined {
+  const e = itemCatalog.items[String(itemId)];
+  return e ? { name: e.name, cost: e.cost } : undefined;
+}
+
 export function catalogUpgrades(itemId: number, lang: Lang) {
   const e = itemCatalog.items[String(itemId)];
   return { from: resolverIds(e?.upgradesFrom, lang), to: resolverIds(e?.upgradesTo, lang) };
