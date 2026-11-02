@@ -1,0 +1,37 @@
+name: aviso de parches
+
+# Una vez por semana: si alguno de los juegos sacó un parche, lo anota en un
+# issue "Parches nuevos: <juego>" para revisar los datos del sitio. Ver
+# `.github/scripts/patch-watch.mjs`. Deadlock y Rust quedan afuera.
+#
+# Semanal y no diario: estos juegos no se actualizan todos los días, y así
+# gasta casi nada de los minutos de Actions (la corrida dura segundos).
+on:
+  schedule:
+    # Los lunes, lejos de `publish-deadlock` (xx:30) y de `publish-poe2` (08:45).
+    - cron: "10 14 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Sin credenciales guardadas y con las actions fijadas por commit, igual
+      # que `publish-poe2`.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+
+      - name: watch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node .github/scripts/patch-watch.mjs
