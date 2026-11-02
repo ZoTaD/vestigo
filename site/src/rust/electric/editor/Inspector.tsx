@@ -64,7 +64,8 @@ function PartPanel({ id, route, navigate }: { id: string; route: Route; navigate
         ) : (
           <div>
             <dt>{t.uses}</dt>
-            <dd>{def.use === 0 ? t.noUse : def.use}</dd>
+            {/* Sin entrada eléctrica (colector, barril) el 1 de `use` es el del motor del juego para el caudal, no energía. */}
+            <dd>{def.use === 0 || !def.in.some((s) => s.t === 0) ? t.noUse : def.use}</dd>
           </div>
         )}
         {e.readouts().map((r) => (
