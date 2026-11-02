@@ -8,8 +8,8 @@
  * abierto, el parche nuevo se suma como comentario: un issue por juego, no uno
  * por hotfix.
  *
- * Deadlock queda afuera (tiene su propio periódico, `publish-deadlock`) y Rust
- * también (congelado desde el 2026-11-02).
+ * Deadlock queda afuera (tiene su propio periódico, `publish-deadlock`), y Rust
+ * y Terraria también (congelados desde el 2026-11-02).
  *
  * Qué parche ya se avisó sale de los issues mismos: cada línea lleva una marca
  * `<!-- parche:<juego>:<id> -->`. No hay archivo de estado que commitear.
@@ -81,7 +81,6 @@ async function poe2() {
 const GAMES = [
   { key: "valheim", name: "Valheim", fetch: steam(892970) },
   { key: "zomboid", name: "Project Zomboid", fetch: steam(108600) },
-  { key: "terraria", name: "Terraria", fetch: steam(105600) },
   { key: "stardew", name: "Stardew Valley", fetch: steam(413150) },
   { key: "warframe", name: "Warframe", fetch: warframe },
   { key: "poe2", name: "Path of Exile 2", fetch: poe2 },

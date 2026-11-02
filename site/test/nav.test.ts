@@ -34,9 +34,10 @@ describe("la barra: el menú de juegos", () => {
     expect(html).toContain('<span class="visually-hidden">Diablo II: Resurrected</span>');
   });
 
-  it("Rust, congelado, no se ofrece en el menú, pero sus páginas siguen andando", () => {
+  it("Rust y Terraria, congelados, no se ofrecen en el menú, pero sus páginas siguen andando", () => {
     const home = render("en", "/en", "home");
     expect(home).not.toContain("/logos/rust.png");
+    expect(home).not.toContain("/logos/terraria.png");
     expect(home).not.toMatch(/href="\/en\/rust/);
     expect(render("en", "/en/rust", "rust")).toMatch(/class="top-here"[^>]*>Rust</);
   });
