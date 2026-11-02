@@ -6,6 +6,7 @@ import { text } from "./localized";
 import { catalog } from "./deadlockData";
 import GameImg from "./GameImg";
 import DeadlockRankPoints from "./DeadlockRankPoints";
+import DeadlockRankCalc from "./DeadlockRankCalcCard";
 import {
   dayRows,
   chalkBadge,
@@ -139,6 +140,15 @@ export default function DeadlockRanks() {
             })()
           )}
         </div>
+        {/* Con el rango elegido, la otra pregunta del que lo elige: cuánto falta
+            para el próximo. Va en la misma tarjeta y no en otra: es el mismo
+            rango, leído hacia adelante. */}
+        {mine !== null && (
+          <>
+            <h3 className="dl-calc-title">{t.calc.title}</h3>
+            <DeadlockRankCalc badge={mine} />
+          </>
+        )}
       </section>
 
       {/* El cartel sólo aplica a la vista por jugador: las partidas traen el

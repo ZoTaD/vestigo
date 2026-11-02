@@ -15,6 +15,7 @@ import {
   rankedCorpus,
   scopeCounts,
   scopeRows,
+  inScope,
   streakOf,
   formOf,
   CALIBRATION_MATCHES,
@@ -31,6 +32,11 @@ import RankBadge from "./DeadlockRankBadge";
 import DeadlockStreakForm from "./DeadlockStreakForm";
 import DeadlockActivity from "./DeadlockActivity";
 import DeadlockScopePicker from "./DeadlockScopePicker";
+import DeadlockSeasonPicker from "./DeadlockSeasonPicker";
+import DeadlockRankCalc from "./DeadlockRankCalcCard";
+import DeadlockRankLuckCard from "./DeadlockRankLuckCard";
+import { LUCK_MATCHES, useRankLuck } from "./deadlockRankLuck";
+import { defaultSeason, inSeason, seasonCounts, type SeasonPick } from "./deadlockSeasons";
 import DeadlockPeerCard from "./DeadlockPeerCard";
 import { peersInScope, usePeers } from "./deadlockPeers";
 import DeadlockCareerHeroes from "./DeadlockCareerHeroes";
@@ -136,6 +142,7 @@ function Profile({
   rank,
   rankReady,
   world,
+  peak,
 }: {
   account: SteamAccount | null;
   resumen: PlayerSummary;
@@ -144,6 +151,8 @@ function Profile({
   rankReady: boolean;
   /** El puesto mundial, si llegó al piso de clasificatorias. */
   world: WorldStanding | null;
+  /** El rango más alto de la temporada elegida, si es distinto del actual. */
+  peak: number | null;
 }) {
   const copy = useCopy();
   const { lang } = useLang();
@@ -248,6 +257,17 @@ function Profile({
             )}
           </span>
         </div>
+      )}
+
+      {/* El pico de la temporada: Valve lo guarda como premio y es lo que la
+          gente compara. Sólo cuando difiere del rango de hoy: repetir la misma
+          insignia no dice nada. */}
+      {peak != null && peak !== rank?.badge && rankOf(peak) && (
+        <p className="dl-peak">
+          <span>{c.seasons.peak}</span>
+          <RankBadge badge={peak} height={26} />
+          <strong>{rankLabel(rankOf(peak)!, lang)}</strong>
+        </p>
       )}
 
       <dl className="dl-rep-stats">
@@ -429,6 +449,8 @@ export default function DeadlockPlayer({
   const [heroFiltro, setHeroFiltro] = useState<number | null>(null);
   /** En qué modo se está mirando el perfil entero. */
   const [modo, setModo] = useState<MatchScope>("all");
+  /** Qué temporada mira el perfil. Va antes que el modo: es la primera lupa. */
+  const [temporada, setTemporada] = useState<SeasonPick>("all");
   /** Cuántas filas del historial se están dibujando. Crece con el botón del pie. */
   const [verFilas, setVerFilas] = useState(HISTORY_PAGE);
   const id = accountId ? Number(accountId) : null;
@@ -464,6 +486,7 @@ export default function DeadlockPlayer({
       // antes de que llegue su historial: sin esto, la lista aparecería un
       // instante filtrada al modo del jugador anterior.
       setModo("all");
+      setTemporada("all");
       return;
     }
     let vivo = true;
@@ -495,7 +518,12 @@ export default function DeadlockPlayer({
          * Se decide por cuenta y no una sola vez: entrar a otro perfil vuelve a
          * elegir, en vez de arrastrar el modo del jugador anterior.
          */
-        setModo(scopeCounts(h).ranked > 0 ? "ranked" : "all");
+        // Primero la temporada (la más nueva con partidas, ver
+        // `defaultSeason`) y el modo adentro de ella.
+        const t = defaultSeason(h.map((r) => r.startTime));
+        setTemporada(t);
+        const enT = h.filter((r) => inSeason(r.startTime, t));
+        setModo(scopeCounts(enT).ranked > 0 ? "ranked" : "all");
       },
       (e) =>
         vivo && setError(e instanceof MatchError && e.code === "NOT_FOUND" ? c.noAccounts : c.apiDown)
@@ -571,7 +599,19 @@ export default function DeadlockPlayer({
 
   // El filtro elige sobre el historial entero (hasta 475 filas medidas); el
   // tope de dibujado se aplica después, sobre lo ya elegido.
-  const historialCompleto: HistoryRow[] = historial ?? [];
+  const historialTodo: HistoryRow[] = historial ?? [];
+  const porTemporada = seasonCounts(historialTodo.map((r) => r.startTime));
+  /**
+   * **La temporada se aplica antes que todo**, y de ahí para abajo el perfil
+   * entero habla de ella: el modo, la lista, el resumen, la racha y la tarjeta
+   * contra tu banda. El 5/11 terminó la temporada 1 y mezclarlas daría un
+   * winrate de dos escaleras distintas.
+   */
+  const historialCompleto: HistoryRow[] =
+    temporada === "all" ? historialTodo : historialTodo.filter((r) => inSeason(r.startTime, temporada));
+  const serieTemp = useMemo(() => serie.filter((p) => inSeason(p.startTime, temporada)), [serie, temporada]);
+  const pico =
+    temporada !== "all" && serieTemp.length > 0 ? Math.max(...serieTemp.map((p) => p.badge)) : null;
   /**
    * **El modo se aplica ANTES que el héroe, y de ahí sale todo lo demás.**
    *
@@ -612,7 +652,13 @@ export default function DeadlockPlayer({
 
   // Tus promedios contra tu banda se piden acá y no en su tarjeta: los leen la
   // tarjeta y los rasgos, y así es un solo pedido.
-  const vs = useVsBand(id, rango?.badge ?? 0);
+  const vs = useVsBand(id, rango?.badge ?? 0, temporada);
+  /** Las últimas clasificatorias de la temporada elegida, para la suerte de rango. */
+  const rankedIds = historialCompleto
+    .filter((r) => inScope(r, "ranked"))
+    .slice(0, LUCK_MATCHES)
+    .map((r) => r.matchId);
+  const suerte = useRankLuck(id, rankedIds);
   const rasgos = useMemo(
     () =>
       corpus
@@ -621,14 +667,14 @@ export default function DeadlockPlayer({
             vs: vs.status === "ready" ? vs.rows : [],
             streak,
             forma,
-            rankNet: trailOf(serie)?.net ?? null,
+            rankNet: trailOf(serieTemp)?.net ?? null,
             mates: peersInScope(mates, corpus.rows),
             now: Date.now() / 1000,
           })
         : [],
     // `streak` y `forma` salen de `corpus`: con él alcanza.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [corpus?.rows, vs, serie, mates]
+    [corpus?.rows, vs, serieTemp, mates]
   );
 
   /**
@@ -654,6 +700,15 @@ export default function DeadlockPlayer({
    * ve como la causa. Y las filas abiertas del modo anterior no significan nada
    * en el nuevo. Es el mismo criterio que ya se aplica al cambiar de cuenta.
    */
+  /** Cambiar de temporada suelta el héroe y, si el modo queda vacío, vuelve a "todas". */
+  function cambiarTemporada(t: SeasonPick) {
+    setTemporada(t);
+    setHeroFiltro(null);
+    setVerFilas(HISTORY_PAGE);
+    const enT = historialTodo.filter((r) => inSeason(r.startTime, t));
+    if (modo !== "all" && scopeCounts(enT)[modo] === 0) setModo("all");
+  }
+
   function cambiarModo(s: MatchScope) {
     setModo(s);
     setHeroFiltro(null);
@@ -724,22 +779,48 @@ export default function DeadlockPlayer({
       */}
       {historial && (
         <>
+          {/* Tres columnas que se apilan solas, no una grilla de filas: con filas,
+              la ficha (la tarjeta más alta) estiraba la fila entera y dejaba un
+              hueco debajo de las dos de al lado (ZoTaD, 2/11: "evitar espacios
+              en blanco"). Una columna sin tarjetas no ocupa lugar. */}
           <div className="dl-profile-aside dl-profile-top">
+            <div className="dl-profile-col">
             {resumen && (
               <div className="box dl-pcard dl-pcard-id">
                 <h2 className="box-title dl-pcard-title">{c.cards.profile}</h2>
-                <Profile account={cuenta} resumen={resumen} rank={rango} rankReady={rangoListo} world={world} />
+                <Profile
+                  account={cuenta}
+                  resumen={resumen}
+                  rank={rango}
+                  rankReady={rangoListo}
+                  world={world}
+                  peak={pico}
+                />
               </div>
             )}
-
-            {/* Pegado a la ficha porque es su continuación: arriba dice dónde
-                estás, esto dice de dónde venís. Sólo con dos clasificatorias o
-                más; con una no hay línea. */}
-            <DeadlockRankTrail points={serie} />
 
             {/* "Sos el #56 del mundo con Abrams" es más fuerte que "ganaste 2
                 seguidas": va en la ficha. */}
             <HeroPlacings placings={placings} />
+            </div>
+
+            <div className="dl-profile-col">
+            {/* Pegado a la ficha porque es su continuación: arriba dice dónde
+                estás, esto dice de dónde venís. Sólo con dos clasificatorias o
+                más; con una no hay línea. */}
+            <DeadlockRankTrail points={serieTemp} />
+
+            {/* Cuánto falta para el próximo: con el progreso exacto que da el
+                rango, sin controles. Sólo con insignia y progreso. */}
+            {rango && rango.badge > 0 && rango.progress != null && (
+              <div className="box dl-pcard dl-pcard-climb">
+                <h2 className="box-title dl-pcard-title">{c.cards.climb}</h2>
+                <DeadlockRankCalc badge={rango.badge} progress={rango.progress} streak={rango.streak} />
+              </div>
+            )}
+            </div>
+
+            <div className="dl-profile-col">
 
             {rasgos.length > 0 && (
               <div className="box dl-pcard">
@@ -748,6 +829,17 @@ export default function DeadlockPlayer({
                 <DeadlockTraits traits={rasgos} />
               </div>
             )}
+
+            {/* Cuesta CERO pedidos: agrupa por día el historial que ya está en
+                memoria. Ver `DeadlockActivity`. Sigue al modo como el resto de
+                la ficha. Vive arriba y no al costado de las partidas desde el
+                2/11: el costado sumó la suerte de rango y quedaba más largo que
+                la lista. */}
+            <div className="box dl-pcard">
+              <h2 className="box-title dl-pcard-title">{c.cards.activity}</h2>
+              <DeadlockActivity rows={enModo} />
+            </div>
+            </div>
           </div>
 
           <div className="page has-rail dl-profile-grid">
@@ -760,7 +852,15 @@ export default function DeadlockPlayer({
               {/* El filtro va ARRIBA de la lista y no en la ficha lateral: manda
                   sobre las dos columnas, y el lugar donde se ve el efecto más
                   grande es acá. */}
-              <DeadlockScopePicker scope={modo} counts={conteos} onChange={cambiarModo} />
+              <div className="dl-pickers">
+                <DeadlockSeasonPicker
+                  pick={temporada}
+                  counts={porTemporada}
+                  total={historialTodo.length}
+                  onChange={cambiarTemporada}
+                />
+                <DeadlockScopePicker scope={modo} counts={conteos} onChange={cambiarModo} />
+              </div>
 
               {/**
                * **Encabezado de columnas, que la lista no tenía.**
@@ -918,20 +1018,15 @@ export default function DeadlockPlayer({
                   rango?" al lado de las partidas que lo miden. Sólo con rango. */}
               <DeadlockVsBand state={vs} />
 
+              {/* Al lado de las partidas que mide: ¿me tocaron equipos peores? */}
+              <DeadlockRankLuckCard state={suerte} />
+
               {corpus && (
                 <div className="box dl-pcard">
                   <DeadlockStreakForm corpus={corpus} streak={streak} forma={forma} />
                 </div>
               )}
 
-              {/* Cuesta CERO pedidos: agrupa por día el historial que ya está en
-                  memoria. Ver `DeadlockActivity`. Sigue al modo como el resto de
-                  la ficha: si el perfil habla de clasificatorias, el calendario
-                  que dice "jugaste" tiene que hablar de las mismas. */}
-              <div className="box dl-pcard">
-                <h2 className="box-title dl-pcard-title">{c.cards.activity}</h2>
-                <DeadlockActivity rows={enModo} />
-              </div>
             </aside>
           </div>
 

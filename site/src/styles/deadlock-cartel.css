@@ -345,6 +345,17 @@
   margin-top: 1.4rem;
 }
 
+[data-theme="codex"][data-game="deadlock"] .dl-profile-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  min-width: 0;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-profile-col:empty {
+  display: none;
+}
+
 [data-theme="codex"][data-game="deadlock"] .dl-profile-more {
   display: grid;
   grid-auto-flow: column;
@@ -372,10 +383,19 @@
   [data-theme="codex"][data-game="deadlock"] .dl-profile-top {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  /* La tercera columna baja a lo ancho y reparte sus tarjetas en dos. */
+  [data-theme="codex"][data-game="deadlock"] .dl-profile-top > .dl-profile-col:nth-child(3) {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
 }
 
 @media (max-width: 700px) {
-  [data-theme="codex"][data-game="deadlock"] .dl-profile-top {
+  [data-theme="codex"][data-game="deadlock"] .dl-profile-top,
+  [data-theme="codex"][data-game="deadlock"] .dl-profile-top > .dl-profile-col:nth-child(3) {
     grid-template-columns: minmax(0, 1fr);
   }
 }

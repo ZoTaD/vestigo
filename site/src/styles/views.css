@@ -615,6 +615,87 @@
   vertical-align: -0.08em;
 }
 
+/* Calculadora de victorias (2/11): en Rangos, debajo de "¿dónde estás?", y en
+   el perfil, ya rellena. Tres cifras en fila que bajan a columna en angosto. */
+.dl-calc-title {
+  margin: 1.1rem 0 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.dl-calc-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.8rem 1.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.dl-calc-range {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+.dl-calc-range input {
+  width: 100%;
+  accent-color: var(--accent-lit);
+}
+
+.dl-calc-range b {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-calc-streak {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.dl-calc-out {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.6rem 1.2rem;
+  margin: 0;
+}
+
+.dl-calc-out > div {
+  display: grid;
+  gap: 0.1rem;
+  align-content: start;
+}
+
+.dl-calc-out dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.dl-calc-out dd {
+  margin: 0;
+  display: grid;
+}
+
+.dl-calc-out b {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--accent-lit);
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-calc-out dd span {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.dl-calc-note {
+  margin: 0.7rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
 /* Deadlock · alineación ------------------------------------------------------------ */
 
 /* Las pestañas viejas (`.deadlock`) son una columna de 1400 px sin aire

@@ -18,6 +18,7 @@ import RankBadge from "./DeadlockRankBadge";
 import GameImg from "./GameImg";
 import DeadlockOneTricks from "./DeadlockOneTricks";
 import { flagUrl } from "./flags";
+import { ladderSeason } from "./deadlockSeasons";
 
 /**
  * La ladder de jugadores de Deadlock: los mejores del mundo en clasificatorias.
@@ -301,7 +302,14 @@ export default function DeadlockPlayerLadder({
         title={c.title}
         accent={c.titleBreak}
         lead={[c.lead, c.rankedOnly, c.howRanked]}
-        meta={ladder && <span>{c.floor(ladder.floor.toLocaleString(locale))}</span>}
+        meta={
+          ladder && (
+            <span>
+              {c.season(ladderSeason().season.id, ladderSeason().final)} ·{" "}
+              {c.floor(ladder.floor.toLocaleString(locale))}
+            </span>
+          )
+        }
       />
 
       <div className="page has-rail dl-lb-page">

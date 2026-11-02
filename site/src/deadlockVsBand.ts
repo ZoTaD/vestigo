@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BANDS, type BandId } from "./deadlockData";
-import { RANKED_SINCE } from "./deadlockMatch";
+import { SEASONS, seasonParams, type SeasonPick } from "./deadlockSeasons";
 
 /**
  * "¿Cómo estás vos respecto a los demás?": tus promedios contra los de los
@@ -127,10 +127,18 @@ export function compare(mine: MetricsFile, band: MetricsFile): VsRow[] {
   return out;
 }
 
+/**
+ * Los filtros de fecha de una temporada. "Todas" arranca en el reset de ranked:
+ * antes, `match_mode` 4 era otro modo (ver `RANKED_SINCE` en `deadlockMatch.ts`).
+ */
+export function pickParams(pick: SeasonPick): Record<string, string> {
+  const s = pick === "all" ? null : SEASONS.find((x) => x.id === pick);
+  return s ? seasonParams(s) : { min_unix_timestamp: String(SEASONS[0].start) };
+}
+
 async function fetchMetrics(params: Record<string, string>): Promise<MetricsFile> {
   const q = new URLSearchParams({
     match_mode: "Ranked",
-    min_unix_timestamp: String(RANKED_SINCE),
     ...params,
   });
   const res = await fetch(`${API}/analytics/player-stats/metrics?${q}`);
@@ -146,8 +154,9 @@ async function fetchMetrics(params: Record<string, string>): Promise<MetricsFile
 const BAND_TTL = 12 * 3600 * 1000;
 const bandMemo = new Map<string, Promise<MetricsFile>>();
 
-function bandMetrics(min: number, max: number): Promise<MetricsFile> {
-  const key = `vestigo:dl:band:${RANKED_SINCE}:${min}-${max}`;
+function bandMetrics(min: number, max: number, pick: SeasonPick): Promise<MetricsFile> {
+  const dates = pickParams(pick);
+  const key = `vestigo:dl:band:${dates.min_unix_timestamp}:${dates.max_unix_timestamp ?? ""}:${min}-${max}`;
   const memo = bandMemo.get(key);
   if (memo) return memo;
   try {
@@ -156,7 +165,7 @@ function bandMetrics(min: number, max: number): Promise<MetricsFile> {
   } catch {
     /* sin almacenamiento: se pide */
   }
-  const p = fetchMetrics({ min_average_badge: String(min), max_average_badge: String(max) }).then((data) => {
+  const p = fetchMetrics({ ...dates, min_average_badge: String(min), max_average_badge: String(max) }).then((data) => {
     try {
       localStorage.setItem(key, JSON.stringify({ at: Date.now(), data }));
     } catch {
@@ -176,7 +185,7 @@ export type VsState =
   | { status: "ready"; band: BandId; rows: VsRow[] };
 
 /** Tus promedios contra los de tu banda; `idle` mientras no haya rango. */
-export function useVsBand(accountId: number | null, badge: number): VsState {
+export function useVsBand(accountId: number | null, badge: number, pick: SeasonPick): VsState {
   const [state, setState] = useState<VsState>({ status: "idle" });
 
   useEffect(() => {
@@ -188,8 +197,8 @@ export function useVsBand(accountId: number | null, badge: number): VsState {
     let vivo = true;
     setState({ status: "loading" });
     Promise.all([
-      fetchMetrics({ account_ids: String(accountId) }),
-      bandMetrics(range.min, range.max),
+      fetchMetrics({ ...pickParams(pick), account_ids: String(accountId) }),
+      bandMetrics(range.min, range.max, pick),
     ]).then(
       ([mine, band]) => {
         if (!vivo) return;
@@ -201,7 +210,7 @@ export function useVsBand(accountId: number | null, badge: number): VsState {
     return () => {
       vivo = false;
     };
-  }, [accountId, badge]);
+  }, [accountId, badge, pick]);
 
   return state;
 }

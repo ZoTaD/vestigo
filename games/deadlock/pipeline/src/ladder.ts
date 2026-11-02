@@ -1,4 +1,5 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { ladderSeason, seasonParams } from "./seasons";
 
 /**
  * El top 100 de cada héroe, publicado como archivo.
@@ -66,8 +67,12 @@ const MIN_MATCHES = 20;
 /** El modo, por nombre: el scoreboard rechaza el entero. Ver `deadlockLadder.ts`. */
 const RANKED = "Ranked";
 
-/** 2026-07-30 16:19 UTC, cuando ranked volvió. El modo existió hace dos años. */
-const RANKED_SINCE = Date.UTC(2026, 6, 30, 16, 19, 0) / 1000;
+/**
+ * La temporada que mide la escalera: la vigente tras una semana, si no la que
+ * terminó (ver `ladderSeason`). Se fija una vez por corrida.
+ */
+const LADDER = ladderSeason();
+const SEASON_Q = seasonParams(LADDER.season);
 
 const Z = 1.96;
 
@@ -92,6 +97,9 @@ export interface HeroLadderFile {
   generatedAt: string;
   /** Desde cuándo cuentan las partidas, en segundos. */
   since: number;
+  /** La temporada medida, y si es la tabla final de una que ya terminó. */
+  season?: number;
+  seasonFinal?: boolean;
   minMatches: number;
   /** El piso de partidas para entrar al ranking del mundo. */
   worldMinMatches: number;
@@ -153,7 +161,7 @@ async function topOf(heroId: number): Promise<number[]> {
     limit: "400",
     hero_id: String(heroId),
     match_mode: RANKED,
-    min_unix_timestamp: String(RANKED_SINCE),
+    ...SEASON_Q,
   });
   const res = await fetch(`${API}/analytics/scoreboards/players?${q}`);
   if (!res.ok) throw new Error(`HTTP ${res.status} en el héroe ${heroId}`);
@@ -271,7 +279,7 @@ async function poolOf(minMatches: number): Promise<{ id: number; score: number }
       limit: "10000",
       start: String(start),
       match_mode: RANKED,
-      min_unix_timestamp: String(RANKED_SINCE),
+      ...SEASON_Q,
     });
     const res = await fetch(`${API}/analytics/scoreboards/players?${q}`);
     if (!res.ok) throw new Error(`HTTP ${res.status} en el pool del mundo`);
@@ -373,7 +381,9 @@ async function main() {
 
   const file: HeroLadderFile = {
     generatedAt: new Date().toISOString(),
-    since: RANKED_SINCE,
+    since: LADDER.season.start,
+    season: LADDER.season.id,
+    seasonFinal: LADDER.final,
     minMatches: MIN_MATCHES,
     worldMinMatches: WORLD_MIN_MATCHES,
     world,

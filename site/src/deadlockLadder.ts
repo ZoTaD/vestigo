@@ -1,3 +1,5 @@
+import { ladderSeason, seasonParams } from "./deadlockSeasons";
+
 /**
  * La ladder de jugadores: quiénes son los mejores del mundo en clasificatorias.
  *
@@ -291,7 +293,9 @@ export async function fetchLadder(opts: {
       min_matches: String(f),
       limit: String(POOL),
       match_mode: RANKED,
-      min_unix_timestamp: String(RANKED_SINCE),
+      // La temporada de la escalera: la vigente tras una semana, si no la
+      // que terminó (ver `ladderSeason`).
+      ...seasonParams(ladderSeason().season),
     });
     if (opts.hero) q.set("hero_id", String(opts.hero));
     raw = await get<RawRow[]>(`${API}/analytics/scoreboards/players?${q}`);
