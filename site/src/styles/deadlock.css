@@ -2233,3 +2233,46 @@
   font-size: 0.78rem;
   font-variant-numeric: tabular-nums;
 }
+
+/* Tarjeta para compartir (2/11): dos botones al pie de la ficha y, ya
+   dibujada, la miniatura con el enlace de descarga. */
+.dl-share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.8rem;
+  margin-top: 0.9rem;
+}
+
+.dl-share-preview {
+  flex-basis: 100%;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+}
+
+.dl-share-btn {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.75rem;
+  border: 0;
+  background: var(--accent, #b2401c);
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.dl-share-btn.is-quiet {
+  background: transparent;
+  color: inherit;
+  text-decoration: underline;
+  padding-inline: 0.2rem;
+}
+
+.dl-share-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

@@ -424,6 +424,23 @@ const EN = {
         placings: "World ranking",
         climb: "Next rank",
       },
+      /** La imagen para compartir el perfil. */
+      share: {
+        button: "Share card",
+        making: "Drawing…",
+        download: "Download image",
+        copyLink: "Copy link",
+        copied: "Link copied",
+        alt: (name: string) => `${name}'s Deadlock card`,
+        labels: {
+          rank: "Current rank",
+          peak: "Season peak",
+          matches: "Matches",
+          winRate: "Win rate",
+          kda: "K/D/A",
+          heroes: "Most played",
+        },
+      },
       /** Tu build contra la de tu banda con el mismo héroe. */
       buildVs: {
         title: "Your build vs your band",
@@ -2054,6 +2071,22 @@ const ES: typeof EN = {
         activity: "Actividad",
         placings: "Ranking mundial",
         climb: "Próximo rango",
+      },
+      share: {
+        button: "Tarjeta para compartir",
+        making: "Dibujando…",
+        download: "Descargar imagen",
+        copyLink: "Copiar enlace",
+        copied: "Enlace copiado",
+        alt: (name: string) => `Tarjeta de Deadlock de ${name}`,
+        labels: {
+          rank: "Rango actual",
+          peak: "Pico de la temporada",
+          matches: "Partidas",
+          winRate: "Winrate",
+          kda: "K/D/A",
+          heroes: "Más jugados",
+        },
       },
       buildVs: {
         title: "Tu build contra la de tu banda",
