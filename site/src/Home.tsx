@@ -9,7 +9,6 @@ import type { Route } from "./route";
 import vhMeta from "@valheim/meta.json";
 import d2Meta from "@d2r/meta.json";
 import pzMeta from "@zomboid/meta.json";
-import rsMeta from "@rust/meta.json";
 import trMeta from "@terraria/meta.json";
 import sdMeta from "@stardew/meta.json";
 import wfMeta from "@warframe/meta.json";
@@ -202,7 +201,6 @@ export default function Home({
               ["valheim", copy.games.valheim, copy.home.tools.vhMap, { view: "valheim", vhSection: "map" }],
               ["valheim", copy.games.valheim, copy.home.tools.vhPlanner, { view: "valheim", vhSection: "planner" }],
               ["d2r", copy.games.diablo2, copy.home.tools.d2Drops, { view: "d2r", d2Section: "drops" }],
-              ["rust", copy.games.rust, copy.home.tools.rsRaid, { view: "rust", rsSection: "raid" }],
               ["terraria", copy.games.terraria, copy.home.tools.trTree, { view: "terraria", trSection: "crafting" }],
               ["poe2", copy.games.poe2, copy.home.tools.p2Tree, { view: "poe2", p2Section: "tree" }],
               ["poe2", copy.games.poe2, copy.home.tools.p2Regex, { view: "poe2", p2Section: "regex" }],
@@ -281,29 +279,7 @@ export default function Home({
             </div>
           </li>
 
-          {/* Rust entra el 2026-10-05, con la portada del inventario. */}
-          <li className="game-panel" data-panel="rust">
-            <div className="game-panel-main">
-              <h4 className="game-panel-name">{copy.games.rust}</h4>
-              <p className="game-panel-note">{copy.home.games.rustLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "rust", rsSection: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.rustCta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(rsMeta.counts.items)}</b>
-                <span>{copy.home.games.rustItems}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(rsMeta.counts.recipes)}</b>
-                <span>{copy.home.games.rustRecipes}</span>
-              </p>
-            </div>
-          </li>
+          {/* Rust estuvo acá del 2026-10-05 al 2026-11-02: quedó congelado y escondido (ver `gameGroups.ts`). */}
 
           {/* Terraria entra el 2026-10-12, con la portada del corte del mundo. */}
           <li className="game-panel" data-panel="terraria">
