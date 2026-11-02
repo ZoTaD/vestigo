@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useMasonry } from "./useMasonry";
 import SectionHead from "./SectionHead";
 import { takePendingSearch } from "./pendingSearch";
 import { lastProfile, rememberProfile } from "./lastProfile";
@@ -36,6 +37,10 @@ import DeadlockSeasonPicker from "./DeadlockSeasonPicker";
 import DeadlockRankCalc from "./DeadlockRankCalcCard";
 import DeadlockRankLuckCard from "./DeadlockRankLuckCard";
 import { LUCK_MATCHES, useRankLuck } from "./deadlockRankLuck";
+import DeadlockHeroVsBandCard from "./DeadlockHeroVsBandCard";
+import DeadlockBuildVsBandCard from "./DeadlockBuildVsBandCard";
+import { useHeroVsBand } from "./deadlockHeroVsBand";
+import { bandRangeOf } from "./deadlockVsBand";
 import { defaultSeason, inSeason, seasonCounts, type SeasonPick } from "./deadlockSeasons";
 import DeadlockPeerCard from "./DeadlockPeerCard";
 import { peersInScope, usePeers } from "./deadlockPeers";
@@ -659,6 +664,16 @@ export default function DeadlockPlayer({
     .slice(0, LUCK_MATCHES)
     .map((r) => r.matchId);
   const suerte = useRankLuck(id, rankedIds);
+  /** Tus clasificatorias por héroe en la temporada: el piso de "tus héroes contra tu banda". */
+  const porHeroe = useMemo(() => {
+    const m = new Map<number, number>();
+    for (const r of historialCompleto) if (inScope(r, "ranked")) m.set(r.heroId, (m.get(r.heroId) ?? 0) + 1);
+    return m;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [historial, temporada]);
+  const heroVs = useHeroVsBand(id, rango?.badge ?? 0, temporada, porHeroe);
+  const banda = bandRangeOf(rango?.badge ?? 0);
+  const bandaNombre = banda ? copy.deadlock.bands[banda.band] : "";
   const rasgos = useMemo(
     () =>
       corpus
@@ -716,6 +731,10 @@ export default function DeadlockPlayer({
   }
 
   const reciente = lastProfile();
+  const pisoArriba = useRef<HTMLDivElement>(null);
+  const pisoAbajo = useRef<HTMLDivElement>(null);
+  useMasonry(pisoArriba);
+  useMasonry(pisoAbajo);
 
   return (
     <section className="tool">
@@ -779,12 +798,11 @@ export default function DeadlockPlayer({
       */}
       {historial && (
         <>
-          {/* Tres columnas que se apilan solas, no una grilla de filas: con filas,
-              la ficha (la tarjeta más alta) estiraba la fila entera y dejaba un
-              hueco debajo de las dos de al lado (ZoTaD, 2/11: "evitar espacios
-              en blanco"). Una columna sin tarjetas no ocupa lugar. */}
-          <div className="dl-profile-aside dl-profile-top">
-            <div className="dl-profile-col">
+          {/* Las tarjetas en el orden en que importan, y `useMasonry` las reparte
+              en la columna más corta (ZoTaD, 2/11: "evitar espacios en
+              blanco"). Con filas, la ficha estiraba la fila entera; con
+              columnas fijas, cada cuenta dejaba un hueco distinto. */}
+          <div className="dl-profile-aside dl-profile-top dl-masonry" ref={pisoArriba}>
             {resumen && (
               <div className="box dl-pcard dl-pcard-id">
                 <h2 className="box-title dl-pcard-title">{c.cards.profile}</h2>
@@ -802,9 +820,7 @@ export default function DeadlockPlayer({
             {/* "Sos el #56 del mundo con Abrams" es más fuerte que "ganaste 2
                 seguidas": va en la ficha. */}
             <HeroPlacings placings={placings} />
-            </div>
 
-            <div className="dl-profile-col">
             {/* Pegado a la ficha porque es su continuación: arriba dice dónde
                 estás, esto dice de dónde venís. Sólo con dos clasificatorias o
                 más; con una no hay línea. */}
@@ -818,9 +834,6 @@ export default function DeadlockPlayer({
                 <DeadlockRankCalc badge={rango.badge} progress={rango.progress} streak={rango.streak} />
               </div>
             )}
-            </div>
-
-            <div className="dl-profile-col">
 
             {rasgos.length > 0 && (
               <div className="box dl-pcard">
@@ -838,7 +851,6 @@ export default function DeadlockPlayer({
             <div className="box dl-pcard">
               <h2 className="box-title dl-pcard-title">{c.cards.activity}</h2>
               <DeadlockActivity rows={enModo} />
-            </div>
             </div>
           </div>
 
@@ -1030,11 +1042,9 @@ export default function DeadlockPlayer({
             </aside>
           </div>
 
-          {/* Tres columnas fijas y no `columns` de CSS: al repartir las tarjetas,
-              el navegador partía su canto rasgado y dejaba tiras sueltas al pie
-              de las columnas. Una columna sin tarjetas no ocupa lugar. */}
-          <div className="dl-profile-more">
-            <div className="dl-profile-aside">
+          {/* Igual que el piso de arriba: en orden, y `useMasonry` las reparte.
+              No `columns` de CSS: partía el canto rasgado de las tarjetas. */}
+          <div className="dl-profile-aside dl-profile-more dl-masonry" ref={pisoAbajo}>
               {heroesTop.length > 0 && (
                 <div className="box dl-pcard">
                   <h2 className="box-title dl-pcard-title">{c.cards.heroes}</h2>
@@ -1050,20 +1060,28 @@ export default function DeadlockPlayer({
                   botones de "Más jugados" filtran la lista; esta tabla mide la
                   carrera. */}
               <DeadlockCareerHeroes stats={carrera} />
-            </div>
 
-            {/* La misma carrera, leída contra tu rango: de "cómo te va con cada
-                héroe" a "con cuál te conviene jugar más". */}
-            <div className="dl-profile-aside">
+              {/* La misma carrera, leída contra tu rango: de "cómo te va con cada
+                  héroe" a "con cuál te conviene jugar más". Va en esta columna y
+                  no sola en la del medio desde el 2/11: sola medía 195 px al lado
+                  de 650 y dejaba el piso con un hueco. */}
               <DeadlockHeroFitCard stats={carrera} badge={rango?.badge ?? 0} />
-            </div>
+
+            {/* Tus héroes y tu build contra la gente de tu banda con el mismo
+                héroe, en la temporada elegida. */}
+              <DeadlockHeroVsBandCard state={heroVs} band={bandaNombre} />
+              <DeadlockBuildVsBandCard
+                accountId={id}
+                badge={rango?.badge ?? 0}
+                band={bandaNombre}
+                pick={temporada}
+              />
 
             {/* Las dos reciben `enModo` y no `filtrado`: son preguntas sobre
                 personas, no sobre un héroe. Filtrar "con quién jugás" por el
                 héroe que se está mirando en la lista contestaría "con quién
                 jugás cuando jugás a Lash", que es otra cosa — el mismo criterio
                 que ya rige la racha y la forma. */}
-            <div className="dl-profile-aside">
               <DeadlockPeerCard
                 kind="mates"
                 peers={mates}
@@ -1076,7 +1094,6 @@ export default function DeadlockPlayer({
                 rows={enModo}
                 onOpenAccount={onOpenAccount}
               />
-            </div>
           </div>
         </>
       )}

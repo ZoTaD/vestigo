@@ -337,66 +337,42 @@
 /* ---------- Jugador: tres pisos (DeadlockPlayer) ----------
    La ficha a lo ancho en tres columnas, después partidas + su costado, y abajo
    héroes y gente en columnas de diario que se llenan parejo. */
-[data-theme="codex"][data-game="deadlock"] .dl-profile-top {
+[data-theme="codex"][data-game="deadlock"] .dl-profile-top,
+[data-theme="codex"][data-game="deadlock"] .dl-profile-more {
+  --cols: 3;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.4rem;
-  align-items: start;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
   margin-top: 1.4rem;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-profile-col {
-  display: flex;
-  flex-direction: column;
-  gap: 1.4rem;
-  min-width: 0;
-}
-
-[data-theme="codex"][data-game="deadlock"] .dl-profile-col:empty {
-  display: none;
-}
-
 [data-theme="codex"][data-game="deadlock"] .dl-profile-more {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
-  gap: 1.4rem;
-  align-items: start;
   margin-top: 1.8rem;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-profile-more > * {
-  gap: 1.4rem;
+/* Los dos pisos de tarjetas: grilla de filas de 4 px que `useMasonry` llena
+   poniendo cada tarjeta en la columna más corta. La separación vertical la
+   suma el hook a partir de `column-gap`, así que `row-gap` va en cero. */
+[data-theme="codex"][data-game="deadlock"] .dl-masonry {
+  grid-auto-rows: 4px;
+  grid-auto-flow: row dense;
+  row-gap: 0;
+  column-gap: 1.4rem;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-profile-more > :empty {
-  display: none;
-}
-
-@media (max-width: 900px) {
-  [data-theme="codex"][data-game="deadlock"] .dl-profile-more {
-    grid-auto-flow: row;
-  }
+[data-theme="codex"][data-game="deadlock"] .dl-masonry > * {
+  align-self: start;
+  margin: 0;
 }
 
 @media (max-width: 1100px) {
-  [data-theme="codex"][data-game="deadlock"] .dl-profile-top {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  /* La tercera columna baja a lo ancho y reparte sus tarjetas en dos. */
-  [data-theme="codex"][data-game="deadlock"] .dl-profile-top > .dl-profile-col:nth-child(3) {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
+  [data-theme="codex"][data-game="deadlock"] :is(.dl-profile-top, .dl-profile-more) {
+    --cols: 2;
   }
 }
 
 @media (max-width: 700px) {
-  [data-theme="codex"][data-game="deadlock"] .dl-profile-top,
-  [data-theme="codex"][data-game="deadlock"] .dl-profile-top > .dl-profile-col:nth-child(3) {
-    grid-template-columns: minmax(0, 1fr);
+  [data-theme="codex"][data-game="deadlock"] :is(.dl-profile-top, .dl-profile-more) {
+    --cols: 1;
   }
 }
 

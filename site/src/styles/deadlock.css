@@ -2118,3 +2118,118 @@
   text-transform: uppercase;
   color: rgba(247, 233, 213, 0.75);
 }
+
+/* Tus héroes contra tu banda (2/11): héroe, general grande y cuatro chicas. */
+.dl-herovs-head,
+.dl-herovs-rows li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.6rem repeat(4, 2.3rem);
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.dl-herovs-head {
+  margin-top: 0.6rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.dl-herovs-rows {
+  margin: 0.3rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.dl-herovs-hero {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.dl-herovs-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.dl-herovs-overall,
+.dl-herovs-p {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-herovs-overall {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.dl-herovs-p {
+  font-size: 0.85rem;
+}
+
+:is(.dl-herovs-overall, .dl-herovs-p)[data-tone="up"] {
+  color: var(--good, #2f7a1f);
+}
+
+:is(.dl-herovs-overall, .dl-herovs-p)[data-tone="down"] {
+  color: var(--bad, #b2261c);
+}
+
+/* Tu build contra la de tu banda: héroes para elegir y listas cortas. */
+.dl-buildvs-heroes {
+  margin: 0.5rem 0 0.4rem;
+}
+
+.dl-buildvs-heroes > button {
+  padding: 0.2rem 0.35rem;
+}
+
+.dl-buildvs-groups {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.dl-buildvs-group h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.dl-buildvs-group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.dl-buildvs-group li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.dl-buildvs-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.dl-buildvs-num {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
