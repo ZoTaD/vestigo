@@ -1366,6 +1366,14 @@
   font-size: 1.05rem;
 }
 
+/* "+0,19 por poder espiritual": debajo de la cifra, en el violeta del espíritu. */
+[data-theme="codex"] .dl-card-stat-spirit {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #b98cf0;
+}
+
 [data-theme="codex"] .dl-card-boxes .dl-card-stat-label {
   grid-area: label;
   font-size: 0.76rem;

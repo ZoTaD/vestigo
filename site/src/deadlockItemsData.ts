@@ -272,6 +272,8 @@ export interface DetailStat {
   icon?: string;
   /** True cuando el juego la marca como la línea grande del bloque. */
   big?: true;
+  /** Cuánto suma por cada punto de poder espiritual, si escala con él. */
+  spirit?: number;
 }
 
 export interface DetailBlock {

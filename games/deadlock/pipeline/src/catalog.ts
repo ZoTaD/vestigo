@@ -154,6 +154,8 @@ interface RawProperty {
   usage_flags?: string[];
   /** El texto de la condición ("within Range"), cuando la hay. */
   conditional?: string;
+  /** Con qué escala la cifra: `ETechPower` es poder espiritual. */
+  scale_function?: { specific_stat_scale_type?: string; stat_scale?: number };
 }
 
 /**
@@ -447,6 +449,11 @@ export interface DetailStat {
   icon?: string;
   /** True cuando el juego la marca como la línea grande del bloque. */
   big?: true;
+  /**
+   * Cuánto crece por cada punto de poder espiritual, cuando el juego dice que
+   * escala con él (Tesla Bullets: 33 de daño, ×0,19). Faltaba (auditoría 30/10).
+   */
+  spirit?: number;
 }
 
 /**
@@ -777,6 +784,9 @@ export function buildDetail(item: RawItem, icons?: Map<string, string>): ItemDet
           ...unidad(String(p.value), p.postfix),
           ...(icon ? { icon } : {}),
           ...(destacadas.has(key) ? { big: true as const } : {}),
+          ...(p.scale_function?.specific_stat_scale_type === "ETechPower" && p.scale_function.stat_scale
+            ? { spirit: Math.round(p.scale_function.stat_scale * 1000) / 1000 }
+            : {}),
         };
         /**
          * El tiempo de recarga va en una pastilla a la derecha del encabezado,
