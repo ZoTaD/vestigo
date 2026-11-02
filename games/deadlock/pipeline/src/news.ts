@@ -125,10 +125,15 @@ const DATE_TOKEN = /\b(\d{2})-(\d{2})-(\d{4})\b/;
 
 /**
  * "Minor Update - 09-16-2026" y "Gameplay Update - 05-22-2026" son parches;
- * las notas de PC Gamer que Steam mezcla en el mismo feed no.
+ * las notas de PC Gamer que Steam mezcla en el mismo feed no. Los de evento
+ * vienen sin fecha ("Halloween 2026 + Gameplay Update", 2026-10-30) y se
+ * reconocen por "Gameplay Update".
  */
 export function isPatchPost(n: SteamNewsItem): boolean {
-  return n.feedname === "steam_community_announcements" && /update/i.test(n.title) && DATE_TOKEN.test(n.title);
+  return (
+    n.feedname === "steam_community_announcements" &&
+    ((/update/i.test(n.title) && DATE_TOKEN.test(n.title)) || /gameplay update/i.test(n.title))
+  );
 }
 
 /** El nombre del parche como lo escribe el foro: "09-16-2026 Update". */
@@ -149,9 +154,15 @@ const ENTITIES: Record<string, string> = { "&amp;": "&", "&gt;": ">", "&lt;": "<
  * Las secciones son `[b]\[ Heroes ][/b]`; lo que viene antes de la primera es
  * "general". Una línea sin guion es la continuación de la anterior: Valve parte
  * algunas (el convar de las ralentizaciones) y pegarla evita una línea huérfana.
+ *
+ * Los parches de evento traen antes una presentación con imágenes, separada de
+ * las notas por una raya de guiones (Halloween, 2026-10-30): se descarta.
  */
 export function parseNotes(bbcode: string): Record<string, string[]> {
   const text = bbcode
+    .split(/^-{10,}\s*$/m)
+    .at(-1)!
+    .replace(/\[(h\d)\][\s\S]*?\[\/\1\]/g, "\n")
     .replace(/\[\/?p\]|\[br\]/g, "\n")
     .replace(/\[\/?(?:b|i|u|list|\*)\]/g, "")
     .replace(/&(?:amp|gt|lt|quot|#039);/g, (e) => ENTITIES[e]);
@@ -160,7 +171,8 @@ export function parseNotes(bbcode: string): Record<string, string[]> {
   for (const raw of text.split("\n")) {
     const l = raw.trim();
     if (!l) continue;
-    const sec = l.match(/^\\?\[\s*([^\]]+?)\s*\\?\]$/);
+    // "[ Heroes ]", o "Heroes:" solo en su renglón (Halloween, 2026-10-30).
+    const sec = l.match(/^\\?\[\s*([^\]]+?)\s*\\?\]$/) ?? l.match(/^([A-Z][\w &']*):$/);
     if (sec) {
       current = sec[1].toLowerCase();
       continue;
@@ -287,6 +299,15 @@ export function buildEdition(input: EditionInput): Edition {
   const dirOf = (src: string, fallback: string) => overrides.dirs?.[src] ?? classify(fallback);
   const sections = parseNotes(post.contents);
   const heroByName = new Map(Object.entries(heroNames).map(([id, name]) => [name.toLowerCase(), Number(id)]));
+  // Valve a veces acorta: "Doorman" por The Doorman, "Nurse" por Nurse Harrow
+  // (2026-10-30). Sin "The" y la primera palabra, si es de un solo héroe.
+  const firstWords = [...heroByName.keys()].map((n) => n.replace(/^the /, "").split(" ")[0]);
+  for (const [name, id] of [...heroByName]) {
+    const short = name.replace(/^the /, "");
+    const first = short.split(" ")[0];
+    if (!heroByName.has(short)) heroByName.set(short, id);
+    if (!heroByName.has(first) && firstWords.filter((w) => w === first).length === 1) heroByName.set(first, id);
+  }
   const abilities: Record<string, Named> = {};
   const itemInfo: Record<string, Named & { slot: string }> = {};
   const unparsed: NewsLine[] = [];

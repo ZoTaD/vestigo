@@ -1,0 +1,32 @@
+{
+ "headline": "Actualización del 14/10",
+ "lines": {
+  "Street Brawl: Baba Threadsap duration lasts 35% less": "Street Brawl: la duración de Hilo Drenante de Baba dura 35% menos",
+  "Baba: Spirit Resistance scaling reduced from 0.12 to 0.1": "Escalado de resistencia espiritual: 0,12 → 0,1",
+  "Baba: Now has -7% Base Bullet Resistance": "Ahora tiene −7% de resistencia base a balas",
+  "Baba: Threadsap - Spirit reduction on enemies now ends when Baba dies": "Hilo Drenante · la reducción de espíritu en los enemigos ahora termina cuando Baba muere",
+  "Baba: Threadsap - Cooldown increased from 26s to 28s": "Hilo Drenante · recarga: 26s → 28s",
+  "Baba: Granny Long Legs - Cooldown increased from 30s to 32s": "Abuelita Patas Largas · recarga: 30s → 32s",
+  "Baba: Granny Long Legs - Repeat light melees while airborne now have diminishing forward momentum": "Abuelita Patas Largas · los golpes ligeros repetidos en el aire ahora tienen impulso hacia adelante decreciente",
+  "Baba: Granny Long Legs - Light melee upward launch reduced (looking up no longer lifts her as high)": "Abuelita Patas Largas · menos lanzamiento hacia arriba con el golpe ligero (mirar hacia arriba ya no la eleva tanto)",
+  "Baba: Granny Long Legs - Heavy melee ground pound no longer gains horizontal speed when landing on slopes": "Abuelita Patas Largas · el golpe pesado contra el suelo ya no gana velocidad horizontal al caer en pendientes",
+  "Baba: Baba's Brew - Barrier scaling reduced from 1.2 to 0.7": "Brebaje de Yagá · escalado de la barrera: 1,2 → 0,7",
+  "Baba: Baba's Brew - Barrier reduced from 100 to 90": "Brebaje de Yagá · barrera: 100 → 90",
+  "Baba: Baba's Brew - Cooldown increased from 25s to 27s (moved to T2)": "Brebaje de Yagá · recarga: 25s → 27s (pasa a la mejora 2)",
+  "Deadman Danny: Health regen increased from 2.5 to 3.25": "Regeneración de vida: 2,5 → 3,25",
+  "Deadman Danny: Base health increased from 680 to 730": "Vida base: 680 → 730",
+  "Deadman Danny: Gun - Base bullet damage for uncharged shots from 12 to 15 and charged shots from 44 to 48": "Arma · daño base de bala sin cargar: 12 → 15 y con carga: 44 → 48",
+  "Deadman Danny: Rocket Jumping - Self damage from 6.5% max HP to 5% and is now spirit damage": "Salto con cohete · daño propio: 6,5% de vida máx. → 5% y ahora es daño espiritual",
+  "Deadman Danny: Chimera Mk1 - Cooldown boon scaling increased from -0.25 to -0.45": "Quimera Mk1 · escalado de recarga por bendición: −0,25 → −0,45",
+  "Deadman Danny: Chimera Mk1 - Heal on hit spirit scaling increased from 1 to 2": "Quimera Mk1 · escalado espiritual de la curación al golpear: 1 → 2",
+  "Deadman Danny: Chimera Mk1 weapon scaling increased from 1.15 to 1.4": "Quimera Mk1 · escalado de arma: 1,15 → 1,4",
+  "Deadman Danny: Chimera Mk1 - Slow effectiveness in air reduced by 15%": "Quimera Mk1 · efectividad de las ralentizaciones en el aire: −15%",
+  "Deadman Danny: Strix Salvo - Cooldown from 30s to 25s": "Strix Salvo · recarga: 30s → 25s",
+  "Deadman Danny: Strix Salvo - Damage spirit scaling from 0.9 to 1.1": "Strix Salvo · escalado espiritual del daño: 0,9 → 1,1",
+  "Deadman Danny: Strix Salvo - T2 increased from \"+20 damage / +35 mark damage\" to \"+30 damage / +45 mark damage\"": "Strix Salvo · mejora 2: de \"+20 de daño / +35 de daño a marcados\" a \"+30 de daño / +45 de daño a marcados\"",
+  "Deadman Danny: Strix Salvo - T3 increased from +0.2 spirit scaling to +0.35": "Strix Salvo · mejora 3: de +0,2 de escalado espiritual a +0,35",
+  "Deadman Danny: Close the Deal - 1AP increased from +50 to +90": "Cerrar el Trato · 1 de poder espiritual: +50 → +90",
+  "Deadman Danny: Close The Deal - Bonus damage to under half health targets increased from +50% to +75%": "Cerrar el Trato · daño extra a objetivos con menos de la mitad de vida: +50% → +75%",
+  "Radiant Regeneration: Spirit scaling reduced from 0.04 to 0.035": "Escalado espiritual: 0,04 → 0,035"
+ }
+}
