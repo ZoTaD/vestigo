@@ -195,6 +195,16 @@ const EN = {
         open: "Open in Build maker",
       },
       matchups: {
+        killMap: {
+          title: "Where it gets kills and dies",
+          lead: (kills: string, deaths: string) =>
+            `${kills} kills and ${deaths} deaths over the last two weeks, every rank. Your base is always at the bottom.`,
+          kills: "Kills",
+          deaths: "Deaths",
+          alt: (layer: string) => `Heat map of ${layer.toLowerCase()} on the Deadlock map`,
+          yours: "Your base",
+          theirs: "Enemy base",
+        },
         kicker: "Matchups",
         title: "Who to fear",
         hard: "Struggles against",
@@ -413,6 +423,40 @@ const EN = {
         activity: "Activity",
         placings: "World ranking",
         climb: "Next rank",
+      },
+      /** Tu build contra la de tu banda con el mismo héroe. */
+      buildVs: {
+        title: "Your build vs your band",
+        lead: (band: string) => `What you buy differently from ${band} players on the same hero, this season. Items of 1,600 souls and up.`,
+        pick: "Hero",
+        more: "You buy more often",
+        skip: "You skip",
+        later: "You buy later",
+        earlier: "You buy earlier",
+        rate: (mine: string, band: string) => `${mine} of your games · band ${band}`,
+        minute: (mine: string, band: string) => `min ${mine} · band ${band}`,
+        same: "Your buys match your band's on this hero.",
+        none: "No item data for your matches this season yet.",
+        loading: "Comparing your buys…",
+        failed: "Could not compare your build right now.",
+      },
+      /** Tus héroes contra tu banda, cada uno contra el mismo héroe. */
+      heroVs: {
+        title: "Your heroes vs your band",
+        lead: (band: string) =>
+          `Ranked this season. Each hero against ${band} players on that same hero: 50 is their median, higher is better.`,
+        cols: { souls: "Souls", damage: "Dmg", kda: "KDA", deaths: "Deaths" },
+        colsFull: {
+          souls: "Souls per minute",
+          damage: "Damage per minute",
+          kda: "KDA",
+          deaths: "Deaths per match (fewer is better)",
+        },
+        overall: "Overall",
+        matches: (n: number) => (n === 1 ? "1 match" : `${n} matches`),
+        loading: "Measuring each hero…",
+        failed: "Could not measure your heroes right now.",
+        none: "Play 5 ranked matches with a hero this season to measure it.",
       },
       /** Suerte de rango: el rango de tus compañeros contra el de tus rivales. */
       luck: {
@@ -1818,6 +1862,16 @@ const ES: typeof EN = {
         open: "Abrir en el Armador",
       },
       matchups: {
+        killMap: {
+          title: "Dónde mata y dónde muere",
+          lead: (kills: string, deaths: string) =>
+            `${kills} kills y ${deaths} muertes en las últimas dos semanas, en todos los rangos. Tu base va siempre abajo.`,
+          kills: "Kills",
+          deaths: "Muertes",
+          alt: (layer: string) => `Mapa de calor de ${layer.toLowerCase()} sobre el mapa de Deadlock`,
+          yours: "Tu base",
+          theirs: "Base rival",
+        },
         kicker: "Enfrentamientos",
         title: "A quién temerle",
         hard: "Le cuesta contra",
@@ -2000,6 +2054,38 @@ const ES: typeof EN = {
         activity: "Actividad",
         placings: "Ranking mundial",
         climb: "Próximo rango",
+      },
+      buildVs: {
+        title: "Tu build contra la de tu banda",
+        lead: (band: string) => `Lo que comprás distinto que los jugadores de ${band} con el mismo héroe, esta temporada. Objetos de 1.600 almas o más.`,
+        pick: "Héroe",
+        more: "Comprás más seguido",
+        skip: "Te salteás",
+        later: "Comprás más tarde",
+        earlier: "Comprás antes",
+        rate: (mine: string, band: string) => `${mine} de tus partidas · banda ${band}`,
+        minute: (mine: string, band: string) => `min ${mine} · banda ${band}`,
+        same: "Con este héroe comprás lo mismo que tu banda.",
+        none: "Todavía no hay compras cargadas de tus partidas de esta temporada.",
+        loading: "Comparando tus compras…",
+        failed: "No se pudo comparar tu build ahora.",
+      },
+      heroVs: {
+        title: "Tus héroes contra tu banda",
+        lead: (band: string) =>
+          `Clasificatorias de esta temporada. Cada héroe contra los jugadores de ${band} con ese mismo héroe: 50 es su mediana, más es mejor.`,
+        cols: { souls: "Almas", damage: "Daño", kda: "KDA", deaths: "Muertes" },
+        colsFull: {
+          souls: "Almas por minuto",
+          damage: "Daño por minuto",
+          kda: "KDA",
+          deaths: "Muertes por partida (menos es mejor)",
+        },
+        overall: "General",
+        matches: (n: number) => (n === 1 ? "1 partida" : `${n} partidas`),
+        loading: "Midiendo cada héroe…",
+        failed: "No se pudieron medir tus héroes ahora.",
+        none: "Jugá 5 clasificatorias con un héroe esta temporada para medirlo.",
       },
       luck: {
         title: "Suerte de rango",
