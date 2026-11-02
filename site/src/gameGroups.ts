@@ -7,12 +7,12 @@ export type GameGroup = "survival" | "arpg" | "shooters";
  * Qué juego va en qué categoría y en qué orden (2026-10-12). Un juego nuevo se suma acá y a `GAME_LOGOS`, y aparece
  * solo en el menú "Games" de la barra; en la portada además hay que escribirle el panel.
  *
- * Rust no está desde el 2026-11-02: quedó congelado (sin actualizar). Sus páginas siguen publicadas y en el sitemap,
+ * Rust y Terraria no están desde el 2026-11-02: quedaron congelados (sin actualizar), para dejar tres survival. Sus páginas siguen publicadas y en el sitemap,
  * así lo que Google ya conoce no da 404, pero no se ofrece en el menú ni en la portada. Para volver a mostrarlo, va
  * de nuevo acá y en `Home.tsx` (ver el historial de git).
  */
 export const GAME_GROUPS: { id: GameGroup; games: Game[] }[] = [
-  { id: "survival", games: ["valheim", "zomboid", "terraria", "stardew"] },
+  { id: "survival", games: ["valheim", "zomboid", "stardew"] },
   { id: "arpg", games: ["poe2", "d2r", "warframe"] },
   { id: "shooters", games: ["deadlock"] },
 ];
