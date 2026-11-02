@@ -34,6 +34,7 @@ import DeadlockStreakForm from "./DeadlockStreakForm";
 import DeadlockActivity from "./DeadlockActivity";
 import DeadlockScopePicker from "./DeadlockScopePicker";
 import DeadlockSeasonPicker from "./DeadlockSeasonPicker";
+import DeadlockShareCard from "./DeadlockShareCard";
 import DeadlockRankCalc from "./DeadlockRankCalcCard";
 import DeadlockRankLuckCard from "./DeadlockRankLuckCard";
 import { LUCK_MATCHES, useRankLuck } from "./deadlockRankLuck";
@@ -265,9 +266,9 @@ function Profile({
       )}
 
       {/* El pico de la temporada: Valve lo guarda como premio y es lo que la
-          gente compara. Sólo cuando difiere del rango de hoy: repetir la misma
-          insignia no dice nada. */}
-      {peak != null && peak !== rank?.badge && rankOf(peak) && (
+          gente compara. Sólo cuando se lee distinto del rango de hoy: arriba de
+          Eternus II los badges siguen subiendo con el mismo nombre. */}
+      {peak != null && rankOf(peak) && (!rango || rankLabel(rankOf(peak)!, lang) !== rankLabel(rango, lang)) && (
         <p className="dl-peak">
           <span>{c.seasons.peak}</span>
           <RankBadge badge={peak} height={26} />
@@ -814,6 +815,23 @@ export default function DeadlockPlayer({
                   world={world}
                   peak={pico}
                 />
+                {/* La tarjeta para compartir sale de lo mismo que dice la ficha. */}
+                {id != null && (
+                  <DeadlockShareCard
+                    data={{
+                      accountId: id,
+                      name: cuenta?.name ?? String(id),
+                      avatar: cuenta?.avatar ?? undefined,
+                      badge: rango?.badge ?? 0,
+                      peak: pico,
+                      matches: resumen.matches,
+                      winRate: resumen.winRate,
+                      kda: `${resumen.kills.toFixed(1)}/${resumen.deaths.toFixed(1)}/${resumen.assists.toFixed(1)}`,
+                      heroes: heroesTop.map((h) => h.heroId),
+                      scope: temporada === "all" ? c.seasons.all : c.seasons.name(temporada),
+                    }}
+                  />
+                )}
               </div>
             )}
 
