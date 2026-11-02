@@ -36,7 +36,8 @@ export default function ElecBlock({ itemId, route }: { itemId: string; route: Ro
         ) : (
           <div>
             <dt>{t.uses}</dt>
-            <dd>{row.use === 0 ? t.noUse : row.use}</dd>
+            {/* Sin entrada eléctrica (colector, barril) el 1 de `use` es el del motor del juego para el caudal, no energía. */}
+            <dd>{row.use === 0 || !row.in.some(([, ty]) => ty === 0) ? t.noUse : row.use}</dd>
           </div>
         )}
         {row.in.length ? (
