@@ -412,6 +412,22 @@ const EN = {
         heroes: "Most played",
         activity: "Activity",
         placings: "World ranking",
+        climb: "Next rank",
+      },
+      /** Suerte de rango: el rango de tus compañeros contra el de tus rivales. */
+      luck: {
+        title: "Rank luck",
+        lead: (n: number) => `Your last ${n} ranked matches, by every player's current rank.`,
+        mates: "Your teammates",
+        enemies: "Your opponents",
+        gap: (n: string, one: boolean, above: boolean) =>
+          `Your side averaged ${n} ${one ? "sub-rank" : "sub-ranks"} ${above ? "above" : "below"} theirs`,
+        even: "Even: both sides averaged the same rank.",
+        lower: (k: number, n: number, w: number) => `Lower-ranked side in ${k} of ${n} · won ${w}`,
+        higher: (k: number, n: number, w: number) => `Higher-ranked side in ${k} of ${n} · won ${w}`,
+        loading: "Checking every player's rank…",
+        failed: "Could not check the ranks right now.",
+        thin: "Not enough ranked matches with known ranks yet.",
       },
       /** "Vos contra tu banda": tus promedios contra los de tu banda. */
       vsBand: {
@@ -511,6 +527,15 @@ const EN = {
         },
         /** Cuando el modo elegido no tiene ni una partida. */
         empty: "No matches in this mode.",
+      },
+      seasons: {
+        label: "Season",
+        name: (id: number) => `Season ${id}`,
+        all: "All time",
+        title: (id: number, current: boolean) =>
+          current ? `Season ${id}, the current one` : `Season ${id}, already over`,
+        allTitle: "Every match, every season",
+        peak: "Season peak",
       },
       /**
        * Cuántos héroes lo tienen en el top 100 del mundo.
@@ -1015,9 +1040,26 @@ const EN = {
       mine: {
         title: "Where are you?",
         pick: "Your rank",
-        none: "Pick your rank to see how many players sit below it.",
+        none: "Pick your rank to see how many players sit below it and how many wins you need to climb.",
         above: (n: string) => `of the ${n} ranked players measured today sit below you`,
         sub: (tier: string, sub: number) => `${tier} ${sub}`,
+      },
+      calc: {
+        title: "How many wins to rank up?",
+        progress: "Points into this sub-rank",
+        streak: "Wins in a row",
+        streakN: (n: number, last: boolean) => (last ? `${n}+` : String(n)),
+        nextSub: "Next sub-rank",
+        nextTier: "Next rank",
+        drop: "Losses to drop a sub-rank",
+        wins: (n: number) => (n === 1 ? "1 win" : `${n} wins`),
+        losses: (n: number) => (n === 1 ? "1 loss" : `${n} losses`),
+        far: "200+ wins",
+        to: (name: string) => `to ${name}`,
+        eternus:
+          "Eternus sub-ranks are percentile cuts redrawn every day, so there is no fixed number of wins to count.",
+        note: (win: string, loss: string) =>
+          `Counts straight wins at today's points: ${win} a win, more from the third in a row on; ${loss} a loss. Demotion shields are left out.`,
       },
       viewNote: {
         matches: "Where the games are being played, from each lobby's average rank.",
@@ -1493,6 +1535,7 @@ const EN = {
         "Ordered by in-game rank. Players on the same rank are split by how well their win rate " +
         "holds up over the games behind it, so a hot streak does not outrank a season.",
       floor: (n: string) => `Players with ${n}+ ranked matches`,
+      season: (id: number, final: boolean) => (final ? `Season ${id} final standings` : `Season ${id}`),
       thin: "Not enough ranked matches to rank anyone yet. Ranked only opened this season.",
       loading: "Loading the ladder…",
       failed: "deadlock-api is not answering, so there is nothing to rank right now.",
@@ -1948,6 +1991,21 @@ const ES: typeof EN = {
         heroes: "Más jugados",
         activity: "Actividad",
         placings: "Ranking mundial",
+        climb: "Próximo rango",
+      },
+      luck: {
+        title: "Suerte de rango",
+        lead: (n: number) => `Tus últimas ${n} clasificatorias, con el rango actual de cada jugador.`,
+        mates: "Tus compañeros",
+        enemies: "Tus rivales",
+        gap: (n: string, one: boolean, above: boolean) =>
+          `Tu equipo promedió ${n} ${one ? "subnivel" : "subniveles"} ${above ? "por encima" : "por debajo"} del rival`,
+        even: "Parejo: los dos equipos promediaron el mismo rango.",
+        lower: (k: number, n: number, w: number) => `Equipo de menor rango en ${k} de ${n} · ganaste ${w}`,
+        higher: (k: number, n: number, w: number) => `Equipo de mayor rango en ${k} de ${n} · ganaste ${w}`,
+        loading: "Mirando el rango de cada jugador…",
+        failed: "No se pudieron mirar los rangos ahora.",
+        thin: "Todavía no hay suficientes clasificatorias con rangos conocidos.",
       },
       vsBand: {
         title: "Vos contra tu banda",
@@ -2018,6 +2076,15 @@ const ES: typeof EN = {
           brawl: "Partidas de pelea callejera",
         },
         empty: "No hay partidas en este modo.",
+      },
+      seasons: {
+        label: "Temporada",
+        name: (id: number) => `Temporada ${id}`,
+        all: "Todas",
+        title: (id: number, current: boolean) =>
+          current ? `Temporada ${id}, la vigente` : `Temporada ${id}, ya terminada`,
+        allTitle: "Todas las partidas, de todas las temporadas",
+        peak: "Pico de la temporada",
       },
       placingsLead: (n: number) =>
         n === 1 ? "Top 100 del mundo con 1 héroe." : `Top 100 del mundo con ${n} héroes.`,
@@ -2429,9 +2496,26 @@ const ES: typeof EN = {
       mine: {
         title: "¿Dónde estás vos?",
         pick: "Tu rango",
-        none: "Elegí tu rango para ver cuánta gente tenés abajo.",
+        none: "Elegí tu rango para ver cuánta gente tenés abajo y cuántas victorias te faltan para subir.",
         above: (n: string) => `de los ${n} jugadores clasificados medidos hoy están por debajo tuyo`,
         sub: (tier: string, sub: number) => `${tier} ${sub}`,
+      },
+      calc: {
+        title: "¿Cuántas victorias para subir?",
+        progress: "Puntos dentro del subnivel",
+        streak: "Victorias seguidas",
+        streakN: (n: number, last: boolean) => (last ? `${n}+` : String(n)),
+        nextSub: "Próximo subnivel",
+        nextTier: "Próximo rango",
+        drop: "Derrotas para bajar un subnivel",
+        wins: (n: number) => (n === 1 ? "1 victoria" : `${n} victorias`),
+        losses: (n: number) => (n === 1 ? "1 derrota" : `${n} derrotas`),
+        far: "200+ victorias",
+        to: (name: string) => `a ${name}`,
+        eternus:
+          "Los subniveles de Eternus son cortes de percentil que se recalculan cada día: no hay un número fijo de victorias para contar.",
+        note: (win: string, loss: string) =>
+          `Cuenta victorias seguidas con los puntos de hoy: ${win} por victoria, más desde la tercera seguida; ${loss} por derrota. Sin escudos de descenso.`,
       },
       viewNote: {
         matches: "A qué nivel se están jugando las partidas, según el promedio de cada sala.",
@@ -2761,6 +2845,7 @@ const ES: typeof EN = {
         "su porcentaje sobre las partidas que lo respaldan, para que una racha buena no le gane a " +
         "una temporada entera.",
       floor: (n: string) => `Jugadores con ${n}+ partidas clasificatorias`,
+      season: (id: number, final: boolean) => (final ? `Temporada ${id}, tabla final` : `Temporada ${id}`),
       thin: "Todavía no hay suficientes partidas clasificatorias para ordenar a nadie. El modo recién abrió esta temporada.",
       loading: "Cargando la escalera…",
       failed: "deadlock-api no responde, así que no hay nada que ordenar ahora.",

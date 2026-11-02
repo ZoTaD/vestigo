@@ -150,6 +150,16 @@ export interface PlayerRank {
   calibrating: boolean;
   /** Lo que se movió el progreso en la última partida. Es el "LP" de Deadlock. */
   lastChange: number;
+  /**
+   * Los puntos acumulados después de la última clasificatoria
+   * (`player_rank_final_flat_progress`). Cada subnivel son 1.000 y el sexto
+   * 2.000: 44.370 es Arconte III con 370 adentro. `null` si no llegó.
+   */
+  progress: number | null;
+  /** Victorias seguidas con que quedó: la de antes más uno si ganó la última, si no 0. */
+  streak: number;
+  /** Cuándo fue esa última clasificatoria, en segundos. 0 si no hay. */
+  lastRankedAt: number;
 }
 
 /**
@@ -165,8 +175,11 @@ export async function fetchRank(accountId: number): Promise<PlayerRank> {
   const r = await get<{
     badge?: number;
     last_match?: {
+      start_time?: number;
       player_rank_initial_calibration_games?: number;
       player_rank_desired_progress_change?: number;
+      player_rank_final_flat_progress?: number;
+      player_rank_initial_win_streak?: number;
     };
   }>(`players/${accountId}/rank`);
   /**
@@ -184,6 +197,13 @@ export async function fetchRank(accountId: number): Promise<PlayerRank> {
     // rango", no "calibrando en cero".
     calibrating: antes > 0,
     lastChange: r.last_match?.player_rank_desired_progress_change ?? 0,
+    progress: r.last_match?.player_rank_final_flat_progress ?? null,
+    // La racha de la API es la de ANTES de la partida, como el resto del bloque.
+    streak:
+      (r.last_match?.player_rank_desired_progress_change ?? 0) > 0
+        ? (r.last_match?.player_rank_initial_win_streak ?? 0) + 1
+        : 0,
+    lastRankedAt: r.last_match?.start_time ?? 0,
   };
 }
 
