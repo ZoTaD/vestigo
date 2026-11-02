@@ -1,0 +1,7 @@
+{
+ "A small bug fixing patch for today, vikings!": "¡Un pequeño parche de arreglos para hoy, vikingos!",
+ "Fixed a rare bug that could erase all objects in parts of the world when one large world save chunk file was split into smaller ones.": "Se arregló un error poco común que podía borrar todos los objetos de partes del mundo cuando un archivo grande de la partida guardada se dividía en otros más chicos.",
+ "Fixed invalid item types (most importantly invalid shield of root variant that was available in 1.0.15 on PlayStation®5) causing buggy behaviour. Now invalid styles just reset to the default style and continue functioning normally.": "Se arreglaron los tipos de objeto inválidos (sobre todo la variante inválida del escudo de raíz que estuvo disponible en la 1.0.15 en PlayStation®5) que causaban comportamientos raros. Ahora los estilos inválidos vuelven al estilo por defecto y el objeto sigue funcionando normalmente.",
+ "Updated some placeholder text.": "Se actualizaron algunos textos provisorios.",
+ "Fixed credits being hidden in 1.0.16.": "Se arregló que los créditos estuvieran ocultos en la 1.0.16."
+}
