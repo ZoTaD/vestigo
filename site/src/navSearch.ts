@@ -37,7 +37,7 @@ export function hitIconSize([w, h]: [number, number]): [number, number] {
 export type NavSearcher = (query: string, lang: Lang, max: number) => NavHit[];
 
 /** Los juegos donde la barra busca fichas mientras se escribe. */
-export const NAV_SEARCH_GAMES = ["valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe"] as const;
+export const NAV_SEARCH_GAMES = ["valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe", "cs2"] as const;
 export type NavSearchGame = (typeof NAV_SEARCH_GAMES)[number];
 export const hasNavSearch = (game: string): game is NavSearchGame => (NAV_SEARCH_GAMES as readonly string[]).includes(game);
 
@@ -229,6 +229,32 @@ const LOADERS: Record<NavSearchGame, () => Promise<NavSearcher>> = {
         img: r.img ? `/warframe/s/${r.img}.webp` : undefined,
         to: { view: "warframe", wfSection: tab, detail: r.slug } as Partial<Route>,
       })),
+    );
+    return (query, lang, max) => searchEntries(entries, query, lang, max);
+  },
+  // CS2 (2026-11-03): skins, cajas y colecciones, con el nombre en inglés en los dos idiomas. La fase va de texto de más,
+  // así "doppler ruby" encuentra la suya.
+  async cs2() {
+    const [copy, sk, cs, co] = await Promise.all([
+      import("./cs2Copy"),
+      import("@cs2/skins/list.json"),
+      import("@cs2/cases/list.json"),
+      import("@cs2/collections/list.json"),
+    ]);
+    type Row = { slug: string; name: string; img: string; phase?: string };
+    const lists = { skins: sk.default as unknown as Row[], cases: cs.default as unknown as Row[], collections: co.default as unknown as Row[] };
+    const entries: Entry[] = (Object.keys(lists) as (keyof typeof lists)[]).flatMap((tab) =>
+      lists[tab].map((r) => {
+        const name = r.phase ? `${r.name} · ${r.phase}` : r.name;
+        return {
+          key: `${tab}/${r.slug}`,
+          en: name,
+          es: name,
+          tab: { en: copy.CS2_COPY.en.tabs[tab], es: copy.CS2_COPY.es.tabs[tab] },
+          img: `/cs2/s/${r.img}.webp`,
+          to: { view: "cs2", c2Section: tab, detail: r.slug } as Partial<Route>,
+        };
+      }),
     );
     return (query, lang, max) => searchEntries(entries, query, lang, max);
   },
