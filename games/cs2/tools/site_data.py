@@ -112,6 +112,10 @@ def build() -> dict:
         }
         if s.get("phase"):
             row["phase"] = s["phase"]
+        # Su colección (cada skin tiene una a lo sumo): la usa el trade-up para saber qué puede salir.
+        cols = [coll_slug[c["id"]] for c in s.get("collections") or [] if c["id"] in coll_slug]
+        if cols:
+            row["col"] = cols[0]
         sk_list.append(row)
         sk_fichas.append({
             **row,
@@ -155,6 +159,16 @@ def build() -> dict:
         if la_mas_rara in images:
             respaldo.append(images[la_mas_rara])
 
+    # El trade-up (etapa 2): de cada colección, sus skins por rareza y el objeto especial de sus cajas (lo que sale de
+    # un contrato de 5 Encubiertos). Vacío si la colección no sale de ninguna caja.
+    rare_de = {f["slug"]: f["rare"] for f in cs_fichas}
+    tradeup = {}
+    for f in co_fichas:
+        rare = []
+        for caja in f["cases"]:
+            rare += [s for s in rare_de.get(caja, []) if s not in rare]
+        tradeup[f["slug"]] = {"name": f["name"], "tiers": {g["rarity"]: g["skins"] for g in f["groups"]}, "rare": rare}
+
     # Cajas y colecciones de la más nueva a la más vieja; skins por arma y nombre.
     nueva = lambda r: r["date"] or ""
     cs_list.sort(key=nueva, reverse=True)
@@ -166,6 +180,7 @@ def build() -> dict:
         "collections": {"list": co_list, "fichas": co_fichas},
         "images": images,
         "fallbacks": fallbacks,
+        "tradeup": tradeup,
     }
 
 
@@ -189,6 +204,7 @@ def main() -> None:
         for i, p in enumerate(partes):
             write_json(carpeta / f"{i:02d}.json", p)
         print(f"{tab}: {len(d[tab]['list'])}")
+    write_json(DATA / "tradeup.json", d["tradeup"])
     crudo = _hash_crudo()
     meta_f = DATA / "meta.json"
     viejo = __import__("json").loads(meta_f.read_text(encoding="utf-8")) if meta_f.exists() else {}
