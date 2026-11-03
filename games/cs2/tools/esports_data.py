@@ -13,6 +13,7 @@ Escribe en `games/cs2/data/esports/`:
 Cachea en `games/cs2/raw/esports/` (fuera de git) para pedirle a Liquipedia lo menos posible: la ficha de un torneo en
 curso se relee una vez por día, la de uno próximo cada 7 días y la de uno terminado nunca; un logo se baja una vez.
 """
+import argparse
 import datetime
 import io
 import json
@@ -25,6 +26,7 @@ from pathlib import Path
 from PIL import Image
 
 from cs2 import DATA, JUEGO, slugify, write_json
+import esports_teams
 from esports import infobox, streams, teams_in, tournaments
 from liquipedia import Liquipedia
 from vrs import detail, latest_dates, moves, standings
@@ -154,7 +156,9 @@ def fetch_logos(lp, teams: dict, logos: Path, want: list[str]) -> None:
                 print(f"::warning::sin el logo de {k}: {e}")
 
 
-def run(lp, gh, root: Path, today: str, year: int, out: Path | None = None, raw: Path | None = None, logos: Path | None = None) -> None:
+def run(lp, gh, root: Path, today: str, year: int, out: Path | None = None, raw: Path | None = None, logos: Path | None = None, budget: int = 0) -> None:
+    """La portada de Torneos (6a) y, con `budget` lecturas más de Liquipedia, las fichas de equipos, jugadores y torneos
+    (6b, `esports_teams.build`)."""
     out = out or root / "data" / "esports"
     raw = raw or root / "raw" / "esports"
     logos = logos or root / "public" / "cs2" / "t"
@@ -173,12 +177,17 @@ def run(lp, gh, root: Path, today: str, year: int, out: Path | None = None, raw:
     team_rows = {k: {"name": v["name"], "logo": slugify(k) if (logos / f"{slugify(k)}.webp").exists() else None} for k, v in sorted(teams.items())}
     write_json(out / "vrs.json", vrs)
     write_json(out / "teams.json", team_rows)
+    esports_teams.build(lp, gh, out, raw, today, vrs, team_rows, tours, budget=budget)
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser()
+    # Lecturas de Liquipedia para las fichas por corrida (30 s cada una). La primera vez, a mano y alto: lleva horas.
+    ap.add_argument("--budget", type=int, default=16)
+    a = ap.parse_args()
     today = datetime.datetime.now(datetime.UTC).date()
     run(Liquipedia(), GitHub(), JUEGO, today.isoformat(), today.year,
-        out=DATA / "esports", raw=JUEGO / "raw" / "esports", logos=JUEGO.parents[1] / "site" / "public" / "cs2" / "t")
+        out=DATA / "esports", raw=JUEGO / "raw" / "esports", logos=JUEGO.parents[1] / "site" / "public" / "cs2" / "t", budget=a.budget)
     print(f"listo: {sum(1 for _ in (JUEGO.parents[1] / 'site' / 'public' / 'cs2' / 't').glob('*.webp'))} logos")
 
 
