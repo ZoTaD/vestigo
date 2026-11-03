@@ -72,6 +72,20 @@ jobs:
       - name: patches
         run: python games/cs2/tools/patches.py || echo "::warning::sin parches de Steam hoy"
 
+      # Torneos (etapa 6): Liquipedia (con sus 30 s entre lecturas: unos minutos), el ranking de Valve y los logos
+      # nuevos. Las fichas de torneos ya leídas viajan de un día al otro en la caché de Actions (`raw/esports`), así
+      # cada mañana se releen sólo las que vencieron. Si falla, lo demás se publica igual.
+      - name: esports cache
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: games/cs2/raw/esports
+          key: cs2-esports-${{ github.run_id }}
+          restore-keys: cs2-esports-
+
+      - name: esports
+        timeout-minutes: 20
+        run: python games/cs2/tools/esports_data.py || echo "::warning::sin datos de torneos hoy"
+
       - name: guard
         id: guard
         run: |
