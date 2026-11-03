@@ -59,7 +59,7 @@ const EN = {
       terraria: { items: "Items", bosses: "Bosses", crafting: "Crafting" },
       stardew: { crops: "Crops", villagers: "Villagers", predict: "Predictor" },
       warframe: { arsenal: "Arsenal", relics: "Relics", farming: "Where to farm" },
-      cs2: { skins: "Skins", cases: "Cases", collections: "Collections" },
+      cs2: { cases: "Cases", skins: "Skins", "trade-up": "Trade-up" },
     },
     /** Las categorías del menú y de la portada (`gameGroups.ts`). */
     groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters" },
@@ -348,7 +348,7 @@ const ES: typeof EN = {
       terraria: { items: "Objetos", bosses: "Jefes", crafting: "Crafteo" },
       stardew: { crops: "Cultivos", villagers: "Aldeanos", predict: "Predictor" },
       warframe: { arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear" },
-      cs2: { skins: "Skins", cases: "Cajas", collections: "Colecciones" },
+      cs2: { cases: "Cajas", skins: "Skins", "trade-up": "Trade-up" },
     },
     groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */

@@ -479,11 +479,12 @@ export function sitemapPaths(data: SitemapData): string[] {
         for (const f of (data.wf as Partial<Record<string, { slug: string }[]>>)[s] ?? []) paths.push(routePath({ ...base, lang, view: "warframe", wfSection: s, detail: f.slug }));
       }
     }
-    // CS2 (2026-11-03): la portada, las tres pestañas y una ficha por skin, caja y colección.
+    // CS2 (2026-11-03): la portada, las pestañas (Trade-up, de la etapa 2, sin fichas) y una ficha por skin, caja y colección.
     if (data.c2) {
       paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "home" }));
       for (const s of CS2_SECTIONS) {
         paths.push(routePath({ ...base, lang, view: "cs2", c2Section: s }));
+        if (s === "trade-up") continue;
         for (const f of data.c2[s]) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: s, detail: f.slug }));
       }
     }

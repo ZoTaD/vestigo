@@ -46,6 +46,17 @@ class TestSiteData(unittest.TestCase):
     def test_coleccion_sin_cajas(self):
         self.assertEqual(self.ficha("collections", "the-arabesque-collection")["cases"], [])
 
+    def test_coleccion_de_cada_skin(self):
+        fila = next(r for r in self.d["skins"]["list"] if r["slug"] == "ak-47-inheritance")
+        self.assertEqual(fila["col"], "the-kilowatt-collection")
+
+    def test_tradeup(self):
+        tu = self.d["tradeup"]
+        k = tu["the-kilowatt-collection"]
+        self.assertEqual(len(k["tiers"]["covert"]), 2)
+        self.assertTrue(k["rare"])
+        self.assertEqual(tu["the-arabesque-collection"]["rare"], [])
+
     def test_slugs_unicos(self):
         todos = []
         for tab in ("skins", "cases", "collections"):
