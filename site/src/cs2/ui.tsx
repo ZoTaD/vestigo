@@ -112,11 +112,15 @@ export function skinPart(s: { name: string; phase?: string }): string {
 export const reaches = (s: { min: number | null; max: number | null }, i: number): boolean =>
   s.min != null && s.max != null && s.min < WEARS[i].to && s.max > WEARS[i].from;
 
-/** La tabla de precios por desgaste: normal y, si la skin los tiene, StatTrak y Souvenir. Sólo los desgastes que alcanza. */
-export function WearPrices({ skin, price }: { skin: { min: number | null; max: number | null; st: boolean; sv: boolean }; price: SkinPrice | undefined }) {
+/**
+ * La tabla de precios por desgaste: normal y, si la skin los tiene con algún precio, StatTrak y Souvenir. Sólo los
+ * desgastes que alcanza. `short`: el desgaste abreviado (FN, MW…), para el costado angosto.
+ */
+export function WearPrices({ skin, price, short = false }: { skin: { min: number | null; max: number | null; st: boolean; sv: boolean }; price: SkinPrice | undefined; short?: boolean }) {
   const t = useCs2Copy();
-  const st = skin.st && !!price?.st;
-  const sv = skin.sv && !!price?.sv;
+  const any = (a: (number | null)[] | undefined) => !!a?.some((v) => v != null);
+  const st = skin.st && any(price?.st);
+  const sv = skin.sv && any(price?.sv);
   const rows = skin.min == null ? [-1] : WEARS.map((_, i) => i).filter((i) => reaches(skin, i));
   return (
     <table className="c2-wp">
@@ -133,7 +137,7 @@ export function WearPrices({ skin, price }: { skin: { min: number | null; max: n
           const k = Math.max(i, 0);
           return (
             <tr key={i}>
-              <td>{i < 0 ? "—" : t.wear[i]}</td>
+              <td>{i < 0 ? "—" : short ? <abbr title={t.wear[i]}>{WEARS[i].ab}</abbr> : t.wear[i]}</td>
               <td>
                 <Price v={price?.n?.[k]} bare sug={!!((price?.sug ?? 0) & (1 << k))} />
               </td>
@@ -171,7 +175,7 @@ export function SkinSide({ skin, price, children }: { skin: SkinRow; price: Skin
         </p>
       )}
       <WearBar min={skin.min} max={skin.max} />
-      <WearPrices skin={skin} price={price} />
+      <WearPrices skin={skin} price={price} short />
       {children}
     </aside>
   );

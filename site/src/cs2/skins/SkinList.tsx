@@ -36,8 +36,8 @@ export default function SkinList({ rows, prices, route, navigate }: { rows: Skin
       </header>
       <div className="c2-filters">
         <input type="search" placeholder={t.t.search} value={f.q} onChange={(e) => pick({ q: e.target.value })} aria-label={t.t.search} />
-        <select value={f.cat ?? ""} onChange={(e) => pick({ cat: (e.target.value || null) as SkinFilters["cat"], weapon: null })} aria-label={t.t.type}>
-          <option value="">{t.t.all}</option>
+        <select value={f.cat ?? ""} onChange={(e) => pick({ cat: (e.target.value || null) as SkinFilters["cat"], weapon: null })} aria-label={t.t.catCol}>
+          <option value="">{t.t.catCol}</option>
           {CS2_CATS.map((c) => (
             <option key={c} value={c}>
               {t.cat[c]}
@@ -50,8 +50,8 @@ export default function SkinList({ rows, prices, route, navigate }: { rows: Skin
             <option key={w}>{w}</option>
           ))}
         </select>
-        <select value={f.rarity ?? ""} onChange={(e) => pick({ rarity: (e.target.value || null) as SkinFilters["rarity"] })} aria-label={t.rarity.covert}>
-          <option value="">{t.t.all}</option>
+        <select value={f.rarity ?? ""} onChange={(e) => pick({ rarity: (e.target.value || null) as SkinFilters["rarity"] })} aria-label={t.t.rarityCol}>
+          <option value="">{t.t.rarityCol}</option>
           {CS2_RARITIES.map((r) => (
             <option key={r} value={r}>
               {t.rarity[r]}

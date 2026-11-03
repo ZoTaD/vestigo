@@ -60,6 +60,8 @@ export interface Cs2Copy {
   t: {
     skin: string;
     weapon: string;
+    rarityCol: string;
+    catCol: string;
     float: string;
     price: string;
     normal: string;
@@ -142,6 +144,8 @@ const EN: Cs2Copy = {
   t: {
     skin: "Skin",
     weapon: "Weapon",
+    rarityCol: "Rarity",
+    catCol: "Type",
     float: "Float",
     price: "Price",
     normal: "Normal",
@@ -224,6 +228,8 @@ const ES: Cs2Copy = {
   t: {
     skin: "Skin",
     weapon: "Arma",
+    rarityCol: "Rareza",
+    catCol: "Tipo",
     float: "Float",
     price: "Precio",
     normal: "Normal",
