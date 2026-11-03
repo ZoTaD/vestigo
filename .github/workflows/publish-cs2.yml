@@ -82,8 +82,11 @@ jobs:
           key: cs2-esports-${{ github.run_id }}
           restore-keys: cs2-esports-
 
+      # `continue-on-error`: si se cumple el plazo, GitHub corta el paso sin pasar por el `|| echo`; así igual se
+      # publican los precios y los parches del día.
       - name: esports
         timeout-minutes: 20
+        continue-on-error: true
         run: python games/cs2/tools/esports_data.py || echo "::warning::sin datos de torneos hoy"
 
       - name: guard

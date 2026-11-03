@@ -4,6 +4,7 @@ import json
 import sys
 import tempfile
 import unittest
+import urllib.error
 from pathlib import Path
 
 from PIL import Image
@@ -114,6 +115,46 @@ class TestEsportsData(unittest.TestCase):
             self.assertEqual(img.height, 64)
         sin = [k for k, v in d["teams"].items() if v["logo"] is None]
         self.assertEqual(sorted(p.stem for p in (self.root / "public" / "cs2" / "t").glob("*.webp")), sorted(v["logo"] for v in d["teams"].values() if v["logo"]))
+
+    def test_un_logo_roto_no_frena_la_corrida(self):
+        orig = self.lp.file
+        self.lp.file = lambda url: b"no es una imagen" if "Team_Liquid" in url else orig(url)
+        d = self.run_once()
+        self.assertIsNone(d["teams"]["Team_Liquid"]["logo"])
+        self.assertTrue(any(v["logo"] for v in d["teams"].values()))
+
+    def test_una_ficha_que_falla_no_pierde_las_otras(self):
+        orig = self.lp.parse
+
+        def parse(page):
+            if page == "PGL/2026/Singapore":
+                raise OSError("502 de Liquipedia")
+            return orig(page)
+
+        self.lp.parse = parse
+        d = self.run_once()
+        names = [t["name"] for t in d["tournaments"]]
+        self.assertIn("IEM Beijing 2026", names)
+        self.assertNotIn("PGL Major Singapore 2026", names)
+        cache = json.loads((self.root / "raw" / "esports" / "tournaments.json").read_text(encoding="utf-8"))
+        self.assertIn("Intel_Extreme_Masters/2026/Beijing", cache)
+
+    def test_si_falla_el_ranking_igual_escribe_los_torneos(self):
+        def names(year):
+            raise urllib.error.HTTPError("https://api.github.com", 403, "rate limit", {}, None)
+
+        self.gh.names = names
+        with self.assertRaises(urllib.error.HTTPError):
+            self.run_once()
+        self.assertTrue((self.root / "data" / "esports" / "tournaments.json").exists())
+
+    def test_github_404_es_un_anio_sin_carpeta(self):
+        gh = esports_data.GitHub()
+        gh._get = lambda url: (_ for _ in ()).throw(urllib.error.HTTPError(url, 404, "no", {}, None))
+        self.assertEqual(gh.names(2027), [])
+        gh._get = lambda url: (_ for _ in ()).throw(urllib.error.HTTPError(url, 403, "rate", {}, None))
+        with self.assertRaises(urllib.error.HTTPError):
+            gh.names(2026)
 
     def test_cruza_el_vrs_con_liquipedia(self):
         self.assertEqual(esports_data.norm("Team Vitality"), esports_data.norm("Vitality"))

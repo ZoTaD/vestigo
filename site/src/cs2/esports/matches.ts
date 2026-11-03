@@ -6,7 +6,20 @@
 
 /** Un rival. A definir: `slug: null` y nombres vacíos. */
 export type Side = { slug: string | null; name: string; short: string };
-export type Match = { t: number; a: Side; b: Side; score: [number, number] | null; bo: number | null; tour: { slug: string; name: string } };
+/**
+ * `finished`: Liquipedia lo marca terminado (un partido en vivo ya tiene marcador parcial y no lo está). `winner`: el
+ * rival que Liquipedia marca ganador; sin ganador (en vivo, o un empate en un Bo2), `null`.
+ */
+export type Match = {
+  t: number;
+  a: Side;
+  b: Side;
+  score: [number, number] | null;
+  bo: number | null;
+  tour: { slug: string; name: string };
+  finished: boolean;
+  winner: "a" | "b" | null;
+};
 
 const ENT: Record<string, string> = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'" };
 const unescape = (s: string) => s.replace(/&(amp|lt|gt|quot|#39);/g, (m) => ENT[m]);
@@ -28,8 +41,11 @@ export function parseMatches(html: string): Match[] {
       const scores = [...p.matchAll(/class="match-info-header-scoreholder-score[^"]*">(\d+)</g)].map((m) => Number(m[1]));
       const bo = p.match(/\(Bo(\d+)\)/);
       const tour = p.match(/match-info-tournament-name"><a href="\/counterstrike\/([^"#]+)[^"]*" title="[^"]*"><span>([^<]*)<\/span>/);
+      const won = (b: string | undefined) => !!b && /^[^"]*match-info-header-winner/.test(b);
       return {
         t,
+        finished: /data-finished="finished"/.test(p),
+        winner: won(blocks[0]) ? "a" : won(blocks[1]) ? "b" : null,
         a: side(blocks[0] ?? ""),
         b: side(blocks[1] ?? ""),
         score: scores.length === 2 ? [scores[0], scores[1]] : null,

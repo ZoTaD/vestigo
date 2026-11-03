@@ -40,6 +40,7 @@ export function Twitch({ channel, title }: { channel: string; title: string }) {
         className="c2-tw"
         src={`https://player.twitch.tv/?channel=${encodeURIComponent(channel)}&parent=${window.location.hostname}&muted=false`}
         title={title}
+        allow="autoplay; fullscreen"
         allowFullScreen
       />
     );

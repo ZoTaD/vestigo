@@ -18,9 +18,10 @@ import { loadEsports, loadMatches, peekEsports, peekMatches, type Esports, type 
 import type { Match } from "./matches";
 import { byLocalDay, localTime, TeamLogo, Twitch } from "./parts";
 
-/** El torneo de arriba: el S en curso, si no cualquiera en curso, si no el próximo. */
+/** El torneo de arriba: el S en curso, si no cualquiera en curso, si no el próximo S, si no el próximo. */
 export function featured(ts: TourRow[]): TourRow | undefined {
-  return ts.find((t) => t.state === "ongoing" && t.tier === "S") ?? ts.find((t) => t.state === "ongoing") ?? ts.find((t) => t.state === "upcoming");
+  const pick = (state: TourRow["state"]) => ts.find((t) => t.state === state && t.tier === "S") ?? ts.find((t) => t.state === state);
+  return pick("ongoing") ?? pick("upcoming");
 }
 
 export default function Cs2Esports({ route }: { route: Route; navigate: Nav }) {
@@ -37,7 +38,7 @@ export default function Cs2Esports({ route }: { route: Route; navigate: Nav }) {
         <p className="c2-lede">{t.es.lede}</p>
       </header>
       <section className="c2-es-live">
-        {top && <Featured tour={top} />}
+        {top && <FeaturedBox tour={top} />}
         <MatchesPanel d={d} />
       </section>
       <section className="c2-es-row">
@@ -50,7 +51,7 @@ export default function Cs2Esports({ route }: { route: Route; navigate: Nav }) {
   );
 }
 
-function Featured({ tour }: { tour: TourRow }) {
+export function FeaturedBox({ tour }: { tour: TourRow }) {
   const t = useCs2Copy();
   const { lang } = useLang();
   const num = useNum();
@@ -67,7 +68,7 @@ function Featured({ tour }: { tour: TourRow }) {
       ) : (
         <div className="c2-tw is-soon">
           <b>{tour.name}</b>
-          <span>{t.es.startsOn(day(tour.start))}</span>
+          <span>{live ? t.es.noStream : t.es.startsOn(day(tour.start))}</span>
         </div>
       )}
       <p className="c2-es-facts">
@@ -90,14 +91,18 @@ function Featured({ tour }: { tour: TourRow }) {
   );
 }
 
-/** Lo que todavía no se jugó (con 3 horas de margen para el que está en curso), del más cercano al más lejano. */
-export const pending = (ms: Match[], nowS: number) => ms.filter((m) => !m.score && m.t > nowS - 3 * 3600).sort((a, b) => a.t - b.t);
+/**
+ * Lo que no terminó, del más cercano al más lejano: el que se está jugando (con marcador parcial) y los próximos; uno
+ * sin marcador que debía empezar hace más de 3 horas ya no.
+ */
+export const pending = (ms: Match[], nowS: number) =>
+  ms.filter((m) => !m.finished && (m.score != null || m.t > nowS - 3 * 3600)).sort((a, b) => a.t - b.t);
 
 function MatchRow({ m, teams }: { m: Match; teams: Esports["teams"] }) {
   const t = useCs2Copy();
   const { lang } = useLang();
   const name = (s: Match["a"]) => s.short || s.name || t.es.tbd;
-  const won = m.score ? (m.score[0] > m.score[1] ? "a" : "b") : null;
+  const won = m.winner;
   return (
     <li className="c2-es-m">
       <span className="c2-es-m-t">{localTime(m.t, lang)}</span>
@@ -154,7 +159,7 @@ function Results({ d }: { d: Esports }) {
   const t = useCs2Copy();
   const { lang } = useLang();
   const ms = useMatches();
-  const list = ms.value ? ms.value.matches.filter((m) => m.score).sort((a, b) => b.t - a.t).slice(0, 10) : [];
+  const list = ms.value ? ms.value.matches.filter((m) => m.finished).sort((a, b) => b.t - a.t).slice(0, 10) : [];
   return (
     <section className="c2-panel">
       <h2 className="c2-h2">{t.es.results}</h2>
@@ -245,7 +250,7 @@ function VrsBlock({ d }: { d: Esports }) {
           <tr>
             <th>{t.es.rank}</th>
             <th>{t.es.team}</th>
-            {region === "global" && d.vrs.before && <th>{t.es.since(day(d.vrs.before))}</th>}
+            {region === "global" && d.vrs.before && <th className="c2-es-mv">{t.es.since(day(d.vrs.before))}</th>}
             <th className="c2-num">{t.es.points}</th>
           </tr>
         </thead>

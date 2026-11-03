@@ -1049,7 +1049,7 @@ function cs2InventoryApi(): Plugin {
  */
 function cs2MatchesApi(): Plugin {
   let saved: { until: number; status: number; headers: [string, string][]; body: string } | null = null;
-  const handle = (load: () => Promise<{ handleMatches: () => Promise<Response> }>) =>
+  const handle = (load: () => Promise<{ handleMatches: (f: typeof fetch, u: URL) => Promise<Response> }>) =>
     (req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse, next: () => void) => {
       if (!req.url?.startsWith("/api/cs2/matches")) return next();
       const send = (s: NonNullable<typeof saved>) => {
@@ -1059,7 +1059,7 @@ function cs2MatchesApi(): Plugin {
       };
       if (saved && saved.until > Date.now()) return send(saved);
       load()
-        .then((m) => m.handleMatches())
+        .then((m) => m.handleMatches(fetch, new URL(req.url!, "http://localhost")))
         .then(async (r) => {
           const s = { until: Date.now() + (r.ok ? 600_000 : 0), status: r.status, headers: [...r.headers.entries()], body: await r.text() };
           if (r.ok) saved = s;

@@ -11,13 +11,15 @@ const tour = (name: string, state: TourRow["state"], tier: TourRow["tier"], star
   slug: name, name, state, tier, start, end: start, series: null, organizer: null, type: null, location: null, venue: null, prize: null, teams: null, streams: [],
 });
 const side = (slug: string | null) => ({ slug, name: slug ?? "", short: slug ?? "" });
-const match = (t: number, score: [number, number] | null = null): Match => ({ t, a: side("A"), b: side(null), score, bo: 3, tour: { slug: "x", name: "X" } });
+const match = (t: number, score: [number, number] | null = null): Match => ({ t, a: side("A"), b: side(null), score, bo: 3, tour: { slug: "x", name: "X" }, finished: false, winner: null });
 
 describe("la pestaña Torneos", () => {
   it("arriba va el S en curso; si no hay en curso, el próximo", () => {
     expect(featured([tour("a", "ongoing", "A"), tour("s", "ongoing", "S")])?.name).toBe("s");
     expect(featured([tour("p", "upcoming", "S"), tour("c", "concluded", "S")])?.name).toBe("p");
     expect(featured([])).toBeUndefined();
+    // Sin nada en curso, el próximo S aunque un A empiece antes.
+    expect(featured([tour("a", "upcoming", "A", "2026-11-17"), tour("major", "upcoming", "S", "2026-11-24")])?.name).toBe("major");
   });
 
   it("el movimiento en el ranking", () => {
@@ -29,8 +31,10 @@ describe("la pestaña Torneos", () => {
 
   it("próximos: sin los jugados ni los de hace más de 3 horas, del más cercano al más lejano", () => {
     const now = 1_800_000_000;
-    const ms = [match(now + 7200), match(now - 4 * 3600), match(now + 60), match(now + 100, [2, 1])];
-    expect(pending(ms, now).map((m) => m.t)).toEqual([now + 60, now + 7200]);
+    const live = { ...match(now - 600, [1, 0]), finished: false };
+    const ms = [match(now + 7200), match(now - 4 * 3600), match(now + 60), { ...match(now + 100, [2, 1]), finished: true }, live];
+    // El que se está jugando (marcador parcial, sin terminar) sigue en próximos.
+    expect(pending(ms, now).map((m) => m.t)).toEqual([now - 600, now + 60, now + 7200]);
   });
 
   it("los días en la hora local: Hoy, Mañana y después la fecha", () => {
@@ -49,6 +53,13 @@ describe("la pestaña Torneos", () => {
     expect(html).toContain("c2-logo is-text");
     expect(html).toContain(">NV<");
     expect(wrap(<TeamLogo lp="MOUZ" name="MOUZ" teams={{ MOUZ: { name: "MOUZ", logo: "mouz" } }} />)).toContain('src="/cs2/t/mouz.webp"');
+  });
+
+  it("el torneo en curso sin canal no dice que empieza", async () => {
+    const { FeaturedBox } = await import("../src/cs2/esports/Cs2Esports");
+    const html = wrap(<FeaturedBox tour={tour("x", "ongoing", "A")} />);
+    expect(html).not.toContain("Empieza el");
+    expect(html).toContain("sin transmisión en Twitch");
   });
 
   it("Twitch no carga hasta que se toca", () => {

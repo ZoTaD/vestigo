@@ -543,7 +543,7 @@ a.c2-inv-card:hover { border-color: var(--c2-ink); }
   .c2-es-rail { max-height: none; }
 }
 @media (max-width: 600px) {
-  .c2-es-table th:nth-child(3), .c2-es-table td.c2-es-mv { display: none; }
+  .c2-es-table .c2-es-mv { display: none; }
   .c2-es-team small { display: none; }
   .c2-es-factors li { grid-template-columns: minmax(0, 1fr) 48px; }
   .c2-es-factors .c2-es-bar { grid-column: 1 / -1; grid-row: 2; }

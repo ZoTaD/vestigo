@@ -123,6 +123,7 @@ export interface Cs2Copy {
     organizer: string;
     watch: string;
     watchHint: string;
+    noStream: string;
     next: string;
     results: string;
     loadingMatches: string;
@@ -376,6 +377,7 @@ const EN: Cs2Copy = {
     organizer: "hosted by",
     watch: "Watch live on Twitch",
     watchHint: "The stream loads when you press play.",
+    noStream: "Live, with no Twitch stream",
     next: "Upcoming matches",
     results: "Results",
     loadingMatches: "Loading matches…",
@@ -406,7 +408,7 @@ const EN: Cs2Copy = {
     whyMatches: "Last matches that count",
     won: (o) => `Beat ${o}`,
     lost: (o) => `Lost to ${o}`,
-    credit: "Matches, tournaments and logos: Liquipedia (CC BY-SA). Ranking: Valve Regional Standings.",
+    credit: "Matches and tournaments: Liquipedia (CC BY-SA). Team logos are trademarks of each team, via Liquipedia. Ranking: Valve Regional Standings.",
   },
   pt: {
     lede: "Every CS2 update, change by change: each line says whether it's new, a change or a fix, and which maps, weapons and cases it names.",
@@ -640,6 +642,7 @@ const ES: Cs2Copy = {
     organizer: "organiza",
     watch: "Ver en vivo en Twitch",
     watchHint: "La transmisión carga cuando tocás para verla.",
+    noStream: "En vivo, sin transmisión en Twitch",
     next: "Próximos partidos",
     results: "Resultados",
     loadingMatches: "Cargando partidos…",
@@ -670,7 +673,7 @@ const ES: Cs2Copy = {
     whyMatches: "Últimos partidos que cuentan",
     won: (o) => `Le ganó a ${o}`,
     lost: (o) => `Perdió con ${o}`,
-    credit: "Partidos, torneos y logos: Liquipedia (CC BY-SA). Ranking: Valve Regional Standings.",
+    credit: "Partidos y torneos: Liquipedia (CC BY-SA). Los logos son marcas de cada equipo, vía Liquipedia. Ranking: Valve Regional Standings.",
   },
   pt: {
     lede: "Cada actualización de CS2, cambio por cambio: cada línea dice si es algo nuevo, un cambio o un arreglo, y qué mapas, armas y cajas nombra.",

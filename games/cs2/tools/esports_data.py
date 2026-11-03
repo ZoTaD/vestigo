@@ -18,6 +18,7 @@ import io
 import json
 import re
 import sys
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -62,17 +63,23 @@ def build_tournaments(lp, raw: Path, today: str) -> tuple[list[dict], dict]:
     cache = json.loads(cache_f.read_text(encoding="utf-8")) if cache_f.exists() else {}
     listed = tournaments(lp.parse("Liquipedia:Tournaments"))
     teams: dict = {}
+    raw.mkdir(parents=True, exist_ok=True)
     for t in listed:
         entry = cache.get(t["slug"])
         if _stale(entry, t["state"], today):
-            html = lp.parse(t["slug"])
-            entry = {"at": today, "info": infobox(html), "streams": streams(html), "teams": teams_in(html)}
-            cache[t["slug"]] = entry
-        for k, v in entry["teams"].items():
+            # Una ficha que falla no frena las otras: queda la vieja (si había) y se reintenta mañana.
+            try:
+                html = lp.parse(t["slug"])
+            except Exception as e:  # noqa: BLE001 - red o Liquipedia: se sigue con el resto
+                print(f"::warning::sin la ficha de {t['slug']}: {e}")
+            else:
+                entry = {"at": today, "info": infobox(html), "streams": streams(html), "teams": teams_in(html)}
+                cache[t["slug"]] = entry
+                # Cada ficha nueva queda guardada al momento: si la corrida se corta, mañana no se vuelve a pedir.
+                cache_f.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
+        for k, v in (entry or {}).get("teams", {}).items():
             teams.setdefault(k, v)
-    raw.mkdir(parents=True, exist_ok=True)
-    cache_f.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
-    rows = [{**t, **cache[t["slug"]]["info"], "streams": cache[t["slug"]]["streams"]} for t in listed]
+    rows = [{**t, **cache[t["slug"]]["info"], "streams": cache[t["slug"]]["streams"]} for t in listed if t["slug"] in cache]
     rows = [r for r in rows if r["tier"] in TIERS]
     ongoing = sorted((r for r in rows if r["state"] == "ongoing"), key=lambda r: r["start"] or "")
     upcoming = sorted((r for r in rows if r["state"] == "upcoming"), key=lambda r: r["start"] or "9999")
@@ -89,10 +96,14 @@ class GitHub:
             return r.read()
 
     def names(self, year: int) -> list[str]:
+        """Los archivos de un año; un año que todavía no tiene carpeta (404) es una lista vacía. Cualquier otra falla
+        (un 403 por el límite de la API) sale como error, no como "no hay ranking"."""
         try:
             return [x["name"] for x in json.loads(self._get(f"{VRS_API}/{year}"))]
-        except Exception:  # un año que todavía no tiene carpeta
-            return []
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                return []
+            raise
 
     def text(self, path: str) -> str:
         return self._get(f"{VRS_RAW}/{path}").decode("utf-8")
@@ -134,9 +145,13 @@ def fetch_logos(lp, teams: dict, logos: Path, want: list[str]) -> None:
             url = urls.get(teams[k]["logo"].replace(" ", "_"))
             if not url:
                 continue
-            img = Image.open(io.BytesIO(lp.file(url))).convert("RGBA")
-            img = img.resize((max(1, round(img.width * LOGO_H / img.height)), LOGO_H), Image.LANCZOS)
-            img.save(logos / f"{slugify(k)}.webp", "WEBP", quality=90, method=4)
+            # Un logo que no se puede abrir (un SVG, un archivo cortado) no frena los demás: queda sin logo.
+            try:
+                img = Image.open(io.BytesIO(lp.file(url))).convert("RGBA")
+                img = img.resize((max(1, round(img.width * LOGO_H / img.height)), LOGO_H), Image.LANCZOS)
+                img.save(logos / f"{slugify(k)}.webp", "WEBP", quality=90, method=4)
+            except Exception as e:  # noqa: BLE001 - archivo no confiable
+                print(f"::warning::sin el logo de {k}: {e}")
 
 
 def run(lp, gh, root: Path, today: str, year: int, out: Path | None = None, raw: Path | None = None, logos: Path | None = None) -> None:
@@ -144,6 +159,8 @@ def run(lp, gh, root: Path, today: str, year: int, out: Path | None = None, raw:
     raw = raw or root / "raw" / "esports"
     logos = logos or root / "public" / "cs2" / "t"
     tours, teams = build_tournaments(lp, raw, today)
+    # Los torneos se publican apenas están: si después falla el ranking o un logo, igual salen.
+    write_json(out / "tournaments.json", tours)
     playing = teams_in(lp.parse("Liquipedia:Matches"))
     teams = {**teams, **playing}
     index = {}
@@ -154,7 +171,6 @@ def run(lp, gh, root: Path, today: str, year: int, out: Path | None = None, raw:
     ranked = [r["lp"] for reg in REGIONS for r in vrs[reg] if r["lp"]]
     fetch_logos(lp, teams, logos, list(dict.fromkeys(ranked + list(playing) + list(teams))))
     team_rows = {k: {"name": v["name"], "logo": slugify(k) if (logos / f"{slugify(k)}.webp").exists() else None} for k, v in sorted(teams.items())}
-    write_json(out / "tournaments.json", tours)
     write_json(out / "vrs.json", vrs)
     write_json(out / "teams.json", team_rows)
 

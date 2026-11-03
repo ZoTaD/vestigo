@@ -5,6 +5,6 @@
  */
 import { handleMatches } from "../../src/cs2/esports/handler";
 
-export default (): Promise<Response> => handleMatches();
+export default (req: Request): Promise<Response> => handleMatches(fetch, new URL(req.url));
 
 export const config = { path: "/api/cs2/matches" };
