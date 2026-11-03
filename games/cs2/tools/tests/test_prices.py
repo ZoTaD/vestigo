@@ -97,6 +97,27 @@ class TestReal(unittest.TestCase):
         self.assertTrue(any(k.startswith("Sticker | ") for k in todo))
         self.assertTrue(all(isinstance(v, (int, float)) for v in todo.values()))
 
+    def test_ventas_por_variante(self):
+        market, sales = prices.build_market()
+        ak = sales["ak-47-inheritance"]
+        self.assertIn("FT", ak)
+        self.assertIn("ST FN", ak)
+        self.assertEqual(len(ak["FT"]), 5)
+        self.assertGreater(ak["FT"][4], 0)
+
+    def test_mercado_con_umbrales(self):
+        market, _ = prices.build_market()
+        self.assertTrue(market)
+        self.assertTrue(all(r[8] >= 30 and r[5] >= 0.5 for r in market))  # [.., m24, m7, m30, m90, v7, v30]
+        self.assertTrue(any(r[1] == "kilowatt-case" for r in market))
+
+    def test_serie_sin_repetir_el_dia(self):
+        h = {}
+        prices.add_day(h, {"x": 1.5}, "2026-11-03")
+        prices.add_day(h, {"x": 1.7}, "2026-11-03")
+        prices.add_day(h, {"x": 1.9}, "2026-11-04")
+        self.assertEqual(h["x"], [["2026-11-03", 1.7], ["2026-11-04", 1.9]])
+
     def test_inheritance(self):
         p = self.skins["ak-47-inheritance"]
         self.assertEqual(len(p["n"]), 5)

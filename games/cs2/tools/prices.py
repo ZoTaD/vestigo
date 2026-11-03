@@ -175,11 +175,102 @@ def all_prices() -> dict:
     return dict(sorted(out.items()))
 
 
+WEAR_AB = ["FN", "MW", "FT", "WW", "BS"]
+# Para entrar a la pestaña Mercado: ventas en 30 días y mediana mínima (que no la muevan dos ventas de centavos).
+MIN_SALES = 30
+MIN_MEDIAN = 0.5
+
+
+def _med(x: dict, k: str):
+    w = x.get(k) or {}
+    return w.get("median")
+
+
+def build_market() -> tuple[list, dict]:
+    """
+    Las ventas reales de Skinport (`raw/sales.json`, etapa 4): por cada skin y caja, una fila por variante que se vende
+    (desgaste × normal "", StatTrak "ST ", Souvenir "SV "; "-" en cajas y cuchillos sin pintura) con
+    `[mediana 24 h, 7 d, 30 d, 90 d, ventas 30 d]`; y la lista de la pestaña con lo que pasa los umbrales:
+    `[nombre, slug, rareza, m24, m7, m30, m90, v7, v30]`.
+    """
+    sales = {(x["market_hash_name"], x.get("version")): x for x in load("sales")}
+    skins = {s["id"]: s for s in load("skins") if s["category"]["id"] in CATS}
+    rarity = {s["slug"]: s["rarity"] for s in json.loads((DATA / "skins" / "list.json").read_text(encoding="utf-8"))}
+    out: dict = {}
+    market: list = []
+
+    def add(slug: str, variant: str, name: str, rar: str, x: dict | None) -> None:
+        v30 = ((x or {}).get("last_30_days") or {}).get("volume") or 0
+        if not x or not v30:
+            return
+        m24, m7, m30, m90 = (_med(x, k) for k in ("last_24_hours", "last_7_days", "last_30_days", "last_90_days"))
+        out.setdefault(slug, {})[variant] = [m24, m7, m30, m90, v30]
+        if v30 >= MIN_SALES and (m30 or 0) >= MIN_MEDIAN:
+            v7 = (x.get("last_7_days") or {}).get("volume") or 0
+            market.append([name, slug, rar, m24, m7, m30, m90, v7, v30])
+
+    for e in load("skins_not_grouped"):
+        s = skins.get(e["skin_id"])
+        if not s:
+            continue
+        slug = _slug_skin(s)
+        pre = "ST " if e.get("stattrak") else "SV " if e.get("souvenir") else ""
+        wear = (e.get("wear") or {}).get("name")
+        variant = pre + (WEAR_AB[[w[0] for w in WEARS].index(wear)] if wear else "-")
+        name = e["market_hash_name"] + (f" · {s['phase']}" if s.get("phase") else "")
+        add(slug, variant.strip() or "-", name, rarity.get(slug, ""), sales.get((e["market_hash_name"], s.get("phase"))))
+    for c in json.loads((DATA / "cases" / "list.json").read_text(encoding="utf-8")):
+        add(c["slug"], "-", c["name"], "case", sales.get((c["name"], None)))
+    market.sort(key=lambda r: -r[8])
+    return market, out
+
+
+def add_day(history: dict, values: dict, day: str) -> None:
+    """Suma el precio del día a la serie de cada ficha; si la fecha ya está (la Action corrió dos veces), la pisa."""
+    for slug, v in values.items():
+        if v is None:
+            continue
+        serie = history.setdefault(slug, [])
+        if serie and serie[-1][0] == day:
+            serie[-1][1] = v
+        else:
+            serie.append([day, v])
+
+
+def _sharded(folder, data: dict) -> bool:
+    """Escribe `data` repartido en `CHUNKS` archivos por el hash del slug (`NN.json`, como las fichas)."""
+    from cs2 import CHUNKS
+    partes = [{} for _ in range(CHUNKS)]
+    for slug, v in data.items():
+        partes[shard(slug)][slug] = v
+    cambio = False
+    for i, p in enumerate(partes):
+        cambio = write_json(folder / f"{i:02d}.json", p) or cambio
+    return cambio
+
+
+def _read_sharded(folder) -> dict:
+    out = {}
+    for f in sorted(folder.glob("*.json")) if folder.exists() else []:
+        out.update(json.loads(f.read_text(encoding="utf-8")))
+    return out
+
+
 def main() -> None:
     skins, cases = build()
     a = write_json(PRICES / "skins.json", skins)
     b = write_json(PRICES / "cases.json", cases)
     a = write_json(PRICES / "all.json", all_prices()) or a
+    # Etapa 4: las ventas reales y la serie diaria de cada ficha (el precio más bajo de la skin, o el de la caja).
+    market, sales = build_market()
+    a = write_json(PRICES / "market.json", market) or a
+    a = _sharded(PRICES / "sales", sales) or a
+    hoy = date.today().isoformat()
+    history = _read_sharded(PRICES / "history")
+    valores = {slug: min((v for v in p["n"] if v is not None), default=None) for slug, p in skins.items()}
+    valores.update({slug: c.get("price") for slug, c in cases.items()})
+    add_day(history, valores, hoy)
+    a = _sharded(PRICES / "history", history) or a
     if a or b:
         write_json(PRICES / "meta.json", {"date": date.today().isoformat()})
     print(f"precios: {len(skins)} skins, {len(cases)} cajas{'' if a or b else ' (sin cambios)'}")
