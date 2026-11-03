@@ -126,7 +126,7 @@ export function WearPrices({ skin, price, short = false }: { skin: { min: number
     <table className="c2-wp">
       <thead>
         <tr>
-          <th>{t.t.wearCol} · US$</th>
+          <th>{short ? "US$" : `${t.t.wearCol} · US$`}</th>
           <th>{t.t.normal}</th>
           {st && <th>{t.t.stattrak}</th>}
           {sv && <th>{t.t.souvenir}</th>}

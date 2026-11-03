@@ -8,37 +8,44 @@ import type { Route } from "../../route";
 import { useLoad } from "../../useLoad";
 import { useCs2Copy } from "../../cs2Copy";
 import { loadFicha, loadList, loadPriceDate, loadSkinPrices, peekFicha, peekList, peekPriceDate, peekSkinPrices, type CollRow } from "../data";
+import { sortRows, useSort } from "../sort";
 import { Cs2Loading, Img, type Nav } from "../ui";
 import CollPage from "./CollPage";
 
+type Key = "name" | "date" | "n";
+const COLS: Record<Key, (r: CollRow) => string | number | null> = { name: (r) => r.name, date: (r) => r.date, n: (r) => r.n };
+
 function CollList({ rows, route, navigate }: { rows: CollRow[]; route: Route; navigate: Nav }) {
   const t = useCs2Copy();
+  const { sort, th } = useSort<Key>({ key: "date", dir: -1 }, ["name"]);
+  const shown = useMemo(() => sortRows(rows, COLS, sort), [rows, sort]);
   return (
     <main className="c2-main">
       <header className="c2-head">
-        <h1 className="c2-h1">{t.seo.collections.title}</h1>
+        <h1 className="c2-h1">{t.tabs.collections}</h1>
         <p className="c2-lede">{t.seo.collections.description}</p>
       </header>
       <div className="c2-tablewrap">
         <table className="c2-table">
           <thead>
             <tr>
-              <th>{t.tabs.collections}</th>
-              <th>{t.t.date}</th>
+              {th("name", t.tabs.collections)}
+              {th("n", t.t.skin)}
+              {th("date", t.t.date)}
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
+            {shown.map((r) => (
               <tr key={r.slug}>
                 <td>
                   <RouteLink className="c2-nm" to={{ ...route, view: "cs2", c2Section: "collections", detail: r.slug }} onNavigate={navigate} prefetch="press">
-                    <Img img={r.img} w={64} h={48} />
+                    <Img img={r.img} w={112} h={76} />
                     <span className="c2-nm-t">
-                      <span>{r.name}</span>
-                      <span className="c2-nm-s">{t.t.skinsN(r.n)}</span>
+                      <strong>{r.name}</strong>
                     </span>
                   </RouteLink>
                 </td>
+                <td className="c2-num">{r.n}</td>
                 <td className="c2-num c2-dim">{r.date ? r.date.replaceAll("-", "/") : "—"}</td>
               </tr>
             ))}

@@ -1,6 +1,6 @@
 /**
- * La ficha de una skin (2026-11-03): el costado de la maqueta A a página entera. Arma y rareza, el nombre, la imagen
- * grande, el rango de float sobre la barra de desgastes, la tabla de precios (normal, StatTrak y Souvenir) y de qué
+ * La ficha de una skin (2026-11-03), estética Dust II: la imagen grande sobre el tinte de su rareza, el nombre en
+ * esténcil, el rango de float sobre la barra de desgastes, la tabla de precios (normal, StatTrak y Souvenir) y de qué
  * cajas y colecciones sale. Las fases de Doppler y Gamma Doppler enlazan entre sí con su precio.
  */
 import RouteLink from "../../RouteLink";
@@ -40,18 +40,18 @@ export default function SkinPage({
   ].filter((w) => w.row);
   return (
     <main className="c2-main c2-ficha">
-      <section className="c2-panel c2-skin">
+      <section className={`c2-skin is-${ficha.rarity}`}>
         <div className="c2-skin-pic">
           <Img img={ficha.img} w={360} h={270} big lazy={false} />
         </div>
         <div className="c2-skin-data">
-          <p className="c2-dim">
+          <p className="c2-crumb">
             <RouteLink to={to("skins")} onNavigate={navigate}>
               {t.tabs.skins}
             </RouteLink>{" "}
             · {ficha.weapon} · {t.cat[ficha.cat]} · <Rarity r={ficha.rarity} />
           </p>
-          <h1 className="c2-h1">{title}</h1>
+          <h1>{title}</h1>
           {ficha.min != null && (
             <p className="c2-dim">
               {t.t.float} <FloatRange min={ficha.min} max={ficha.max} />
@@ -65,7 +65,7 @@ export default function SkinPage({
             <div className="c2-links">
               {where.map(({ tab, row }) => (
                 <RouteLink key={`${tab}-${row!.slug}`} className="c2-chip" to={to(tab, row!.slug)} onNavigate={navigate}>
-                  <Img img={row!.img} w={40} h={30} />
+                  <Img img={row!.img} w={56} h={42} />
                   {row!.name}
                 </RouteLink>
               ))}
