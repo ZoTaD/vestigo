@@ -24,12 +24,14 @@ type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
 const Cs2Skins = lazyWithPreload(() => import("./cs2/skins/Cs2Skins"));
 const Cs2Cases = lazyWithPreload(() => import("./cs2/cases/Cs2Cases"));
+const Cs2Collections = lazyWithPreload(() => import("./cs2/collections/Cs2Collections"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `CS2_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `CS2_TAB_FILES`.
 const TABS: Partial<Record<Cs2Section, LazyTab>> = {
   skins: Cs2Skins,
   cases: Cs2Cases,
+  collections: Cs2Collections,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -40,6 +42,7 @@ const TAB_DATA: Partial<Record<Cs2Section, (route: Route) => Promise<unknown>>> 
   home: () => import("./cs2/data").then((m) => m.loadCasePrices()),
   skins: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
   cases: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
+  collections: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
 };
 
 /** Baja el chunk de la pestaña de una ruta de CS2, y sus datos. */

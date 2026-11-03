@@ -11,6 +11,7 @@ import d2Meta from "@d2r/meta.json";
 import pzMeta from "@zomboid/meta.json";
 import sdMeta from "@stardew/meta.json";
 import wfMeta from "@warframe/meta.json";
+import c2Meta from "@cs2/meta.json";
 import p2Patches from "@poe2/patches/index.json";
 
 /** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
@@ -420,6 +421,30 @@ export default function Home({
               <p className="game-figure is-second">
                 <b>{num(heroesJson.matches)}</b>
                 <span>{copy.home.figures.matchesBand(copy.home.figures.topBand)}</span>
+              </p>
+            </div>
+          </li>
+
+          {/* CS2 entra el 2026-11-03: skins, cajas y colecciones con precio, en la estética "Mesa de mercado". */}
+          <li className="game-panel" data-panel="cs2">
+            <div className="game-panel-main">
+              <h4 className="game-panel-name">{copy.games.cs2}</h4>
+              <p className="game-panel-note">{copy.home.games.cs2Live}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "cs2", c2Section: "cases", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.cs2Cta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(c2Meta.counts.skins)}</b>
+                <span>{copy.home.games.cs2Skins}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(c2Meta.counts.cases)}</b>
+                <span>{copy.home.games.cs2Cases}</span>
               </p>
             </div>
           </li>

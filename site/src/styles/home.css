@@ -479,6 +479,15 @@
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-figure span { color: #8fa3b5; }
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-cta { background: #6fd3ff; border-color: #6fd3ff; color: #07131c; }
 
+/* --- CS2: el grafito de la "Mesa de mercado" con el ámbar de la marca (2026-11-03) --- */
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] { background: #0d1117; color: #7d8a9c; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-panel-name { color: #d7dee8; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-figure b { color: #f5b941; font-family: "IBM Plex Mono", ui-monospace, monospace; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-figure.is-second b { color: #d7dee8; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-figure span { color: #7d8a9c; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-cta { background: #f5b941; border-color: #f5b941; color: #0d1117; }
+
 /* --- Path of Exile 2: el oro viejo de su interfaz, sobre negro (2026-10-11) --- */
 
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] {

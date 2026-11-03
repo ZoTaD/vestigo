@@ -69,7 +69,7 @@ a.c2-tab:hover { color: var(--c2-ink); }
 .c2-img.is-empty { background: var(--c2-deep); border-radius: 4px; }
 
 /* --- Portada --------------------------------------------------------------------------------------------------------- */
-.c2-ribbon { display: flex; gap: 26px; overflow-x: auto; scrollbar-width: thin; white-space: nowrap; padding: 8px 0; border-bottom: 1px solid var(--c2-line); font-size: 12px; color: var(--c2-dim); }
+.c2-ribbon { display: flex; gap: 26px; overflow-x: auto; scrollbar-width: none; white-space: nowrap; padding: 8px 0; border-bottom: 1px solid var(--c2-line); font-size: 12px; color: var(--c2-dim); }
 .c2-ribbon-h { color: var(--c2-acc); }
 .c2-ribbon-i:hover { color: var(--c2-ink); }
 .c2-ribbon-i .c2-num:first-of-type { color: var(--c2-ink); }
@@ -81,7 +81,8 @@ a.c2-tab:hover { color: var(--c2-ink); }
 .c2-card { display: flex; align-items: center; gap: 14px; padding: 14px; background: var(--c2-panel); border-radius: 8px; }
 a.c2-card:hover { background: var(--c2-hover); }
 .c2-card.is-soon { opacity: 0.5; }
-.c2-card > span { display: grid; gap: 4px; }
+.c2-card > span { display: grid; gap: 4px; min-width: 0; }
+.c2-card .c2-img { width: 96px; height: 72px; }
 .c2-card-h { font-size: 16px; }
 
 /* --- Cabecera de una ficha (caja, skin, colección) ------------------------------------------------------------------ */
