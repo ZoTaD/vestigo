@@ -9,7 +9,7 @@ const skin = (slug: string, rarity: SkinRow["rarity"]): SkinRow => ({
   slug, name: `AK-47 | ${slug}`, weapon: "AK-47", cat: "rifles", rarity, min: 0, max: 1, st: true, sv: false, img: slug,
 });
 const SKINS = new Map([skin("a", "covert"), skin("b", "milspec")].map((s) => [s.slug, s]));
-const PRICES: Record<string, SkinPrice> = { a: { n: [10, 8, 6, 5, 4] }, b: { n: [1, 1, 1, 1, 1] } };
+const PRICES: Record<string, SkinPrice> = { a: { n: [10, 8, 6, 5, 4], sv: [70, 60, 50, 40, 30] }, b: { n: [1, 1, 1, 1, 1] } };
 const ficha = (kind: CaseFicha["kind"]): CaseFicha => ({
   slug: "x-case", name: "X Case", kind, date: "2024-01-16", img: "x-case", n: 2,
   groups: [{ rarity: "covert", skins: ["a"] }, { rarity: "milspec", skins: ["b"] }], rare: [],
@@ -32,6 +32,13 @@ describe("ficha de una caja", () => {
   });
   it("sin valor esperado dice que faltan precios", () => {
     expect(render("es", ficha("case"), { price: 0.5 })).toContain("faltan precios");
+  });
+  it("un paquete de souvenir muestra el precio Souvenir, que es lo que trae", () => {
+    const html = render("en", ficha("souvenir"), { price: 3 });
+    // La tabla (antes del costado, que muestra todas las columnas de la skin elegida).
+    const table = html.slice(0, html.indexOf("c2-side"));
+    expect(table).toContain("70.00");
+    expect(table).not.toContain("10.00");
   });
   it("una terminal no muestra probabilidades ni devuelve", () => {
     const html = render("en", ficha("terminal"), { price: 0.06 });

@@ -31,6 +31,8 @@ export default function CasePage({
 }) {
   const t = useCs2Copy();
   const isCase = ficha.kind === "case";
+  // Un paquete de souvenir sólo da versiones Souvenir: ese es el precio que importa (el normal vale la mitad o menos).
+  const souvenir = ficha.kind === "souvenir";
   const first = ficha.groups[0]?.skins[0] ?? null;
   const [sel, setSel] = useState<string | null>(first);
   const selSkin = sel ? skins.get(sel) : undefined;
@@ -127,7 +129,15 @@ export default function CasePage({
                           </div>
                         </td>
                         {WEARS.map((w, i) => (
-                          <td key={w.ab}>{reaches(s, i) ? <Price v={p?.n?.[i]} bare sug={!!((p?.sug ?? 0) & (1 << i))} /> : <span className="c2-num is-none">—</span>}</td>
+                          <td key={w.ab}>
+                            {!reaches(s, i) ? (
+                              <span className="c2-num is-none">—</span>
+                            ) : souvenir ? (
+                              <Price v={p?.sv?.[i]} bare />
+                            ) : (
+                              <Price v={p?.n?.[i]} bare sug={!!((p?.sug ?? 0) & (1 << i))} />
+                            )}
+                          </td>
                         ))}
                         {odds != null && (
                           <td className={`is-${g.rarity}`}>
@@ -164,6 +174,7 @@ export default function CasePage({
                   </RouteLink>
                 ) : null;
               })}
+              {ficha.rare.length > 24 && <span className="c2-dim c2-more">+{ficha.rare.length - 24}</span>}
             </div>
           )}
         </div>

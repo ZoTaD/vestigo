@@ -9,6 +9,9 @@ import { useCs2Copy, WEARS } from "../../cs2Copy";
 import type { CaseRow, CollFicha, SkinPrice, SkinRow } from "../data";
 import { FloatRange, Img, Price, Rarity, reaches, skinPart, type Nav } from "../ui";
 
+/** Una skin que sólo existe como Souvenir (las de colecciones de mapa): se muestra ese precio en vez de una fila vacía. */
+const soloSouvenir = (p: SkinPrice | undefined): boolean => !!p?.sv && !p.n?.some((v) => v != null);
+
 export default function CollPage({
   ficha,
   skins,
@@ -99,7 +102,15 @@ export default function CollPage({
                       </RouteLink>
                     </td>
                     {WEARS.map((w, i) => (
-                      <td key={w.ab}>{reaches(s, i) ? <Price v={p?.n?.[i]} bare sug={!!((p?.sug ?? 0) & (1 << i))} /> : <span className="c2-num is-none">—</span>}</td>
+                      <td key={w.ab}>
+                        {!reaches(s, i) ? (
+                          <span className="c2-num is-none">—</span>
+                        ) : soloSouvenir(p) ? (
+                          <Price v={p?.sv?.[i]} bare />
+                        ) : (
+                          <Price v={p?.n?.[i]} bare sug={!!((p?.sug ?? 0) & (1 << i))} />
+                        )}
+                      </td>
                     ))}
                   </tr>
                 );

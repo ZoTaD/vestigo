@@ -132,6 +132,11 @@ export async function preloadRoute(route: Route): Promise<void> {
     await Promise.all([loadCasePrices(), loadList("cases"), loadPriceDate()]);
     return;
   }
+  // La lista de Cajas no nombra skins: le alcanzan sus precios (sin los ~220 KB de las skins).
+  if (tab === "cases" && !route.detail) {
+    await Promise.all([loadCasePrices(), loadPriceDate(), loadList("cases")]);
+    return;
+  }
   const base = [loadSkinPrices(), loadCasePrices(), loadPriceDate(), loadList("skins")];
   if (!route.detail) {
     await Promise.all([...base, loadList(tab)]);

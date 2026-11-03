@@ -131,6 +131,7 @@ a.c2-card:hover { background: var(--c2-hover); }
 a.c2-chip:hover { background: var(--c2-hover); }
 .c2-knives { display: flex; flex-wrap: wrap; gap: 8px; }
 .c2-knives .c2-img { background: var(--c2-deep); border-radius: 4px; }
+.c2-more { align-self: center; font-family: var(--c2-mono); }
 
 /* --- Filtros --------------------------------------------------------------------------------------------------------- */
 .c2-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }

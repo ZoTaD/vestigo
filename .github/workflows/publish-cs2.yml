@@ -44,21 +44,25 @@ jobs:
       - name: deps
         run: pip install brotli==1.1.0 pillow==11.3.0
 
-      # Los lunes (o a mano, con `catalog`) se renueva el catálogo: fichas e imágenes nuevas en el mismo commit.
+      # Los lunes (o a mano, con `catalog`) se renueva el catálogo: fichas e imágenes nuevas en el mismo commit. Lo
+      # crudo (`games/cs2/raw`, fuera de git) se baja en el paso de precios, que lo necesita todos los días.
       - name: catalog
         env:
           A_MANO: ${{ inputs.catalog }}
         run: |
+          python games/cs2/tools/fetch.py --catalog
           if [ "$A_MANO" = "true" ] || [ "$(date -u +%u)" = "1" ]; then
-            python games/cs2/tools/fetch.py --catalog
             python games/cs2/tools/site_data.py
             python games/cs2/tools/images.py
           else
             echo "no es lunes: sólo precios"
           fi
 
+      # `prices.py` cruza Skinport con lo crudo del catálogo (`skins.json`, `skins_not_grouped.json`), que bajó el paso
+      # anterior: sin él corta con "falta raw/skins.json". Ver test_action_baja_el_catalogo_crudo_todos_los_dias.
       - name: prices
         run: |
+          test -f games/cs2/raw/skins_not_grouped.json || python games/cs2/tools/fetch.py --catalog
           python games/cs2/tools/fetch.py --prices
           python games/cs2/tools/prices.py
 

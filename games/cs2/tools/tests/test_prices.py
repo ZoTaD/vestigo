@@ -38,6 +38,13 @@ class TestCalculo(unittest.TestCase):
         self.assertAlmostEqual(r["ev"], 0.7992 + 0.3196 + 0.128 + 0.0512 + 0.26)
         self.assertAlmostEqual(r["groups"]["covert"], 0.0512)
 
+    def test_fases_de_doppler_pesan_como_un_acabado(self):
+        # Tres fases del mismo cuchillo y otro cuchillo: cada acabado pesa igual, las fases se promedian adentro.
+        c = caja(("covert", ["a"]), rare=["d1", "d2", "d3", "k"])
+        nombres = {"d1": "Doppler", "d2": "Doppler", "d3": "Doppler", "k": "Fade"}
+        r = prices.case_ev(c, {"a": 0, "d1": 300, "d2": 300, "d3": 300, "k": 100}, nombres)
+        self.assertAlmostEqual(r["groups"]["special"], 0.0026 * (300 + 100) / 2)
+
     def test_grupo_sin_precios(self):
         c = caja(("covert", ["a"]), ("milspec", ["d"]))
         self.assertIsNone(prices.case_ev(c, {"d": 1}))
@@ -62,6 +69,12 @@ class TestReal(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.skins, cls.cases = prices.build()
+
+    def test_action_baja_el_catalogo_crudo_todos_los_dias(self):
+        # prices.py lee raw/skins*.json, que no está en git: la Action tiene que bajarlo en cada corrida, no sólo los lunes.
+        wf = (Path(__file__).resolve().parents[4] / ".github" / "workflows" / "publish-cs2.yml").read_text(encoding="utf-8")
+        precios = wf[wf.index("- name: prices"):]
+        self.assertIn("fetch.py --catalog", precios.split("- name: guard")[0])
 
     def test_kilowatt(self):
         k = self.cases["kilowatt-case"]

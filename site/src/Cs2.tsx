@@ -37,9 +37,11 @@ const TABS: Partial<Record<Cs2Section, LazyTab>> = {
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
 const hasPage = (tab: Cs2Section): boolean => tab === "home" || !!TABS[tab];
 
-/** Los datos que una pestaña baja aparte de su chunk, pedidos junto con él. La portada baja sólo los precios de las cajas. */
+/** Los datos que una pestaña baja aparte de su chunk, pedidos junto con él. */
 const TAB_DATA: Partial<Record<Cs2Section, (route: Route) => Promise<unknown>>> = {
-  home: () => import("./cs2/data").then((m) => m.loadCasePrices()),
+  // Lo mismo que pide el prerender (`preloadRoute`): la lista de cajas, sus precios y la fecha. Con menos, la cinta de la
+  // portada no estaba al hidratar y React redibujaba la página entera.
+  home: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
   skins: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
   cases: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
   collections: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),

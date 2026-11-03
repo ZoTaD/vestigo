@@ -70,8 +70,14 @@ def _mean(xs: list) -> float | None:
     return sum(xs) / len(xs) if xs else None
 
 
-def case_ev(case: dict, values: dict) -> dict | None:
-    """Valor esperado de abrir una caja: {ev, groups: {rareza: aporte}}; None si no es caja o falta un grupo entero."""
+def case_ev(case: dict, values: dict, names: dict | None = None) -> dict | None:
+    """
+    Valor esperado de abrir una caja: {ev, groups: {rareza: aporte}}; None si no es caja o falta un grupo entero.
+
+    En el objeto especial cada acabado pesa igual: las fases de un Doppler o Gamma Doppler (`names`: slug → nombre sin
+    fase) se promedian primero entre ellas. Si no, un Doppler con 7 fases pesaba como 7 cuchillos y Chroma 2 daba 86 %
+    en vez de ~62 % (revisión del 3/11).
+    """
     if case["kind"] != "case":
         return None
     groups = {}
@@ -83,7 +89,10 @@ def case_ev(case: dict, values: dict) -> dict | None:
             return None
         groups[g["rarity"]] = ODDS[g["rarity"]] * m
     if case["rare"]:
-        m = _mean([values.get(s) for s in case["rare"]])
+        por_acabado: dict[str, list] = {}
+        for s in case["rare"]:
+            por_acabado.setdefault((names or {}).get(s, s), []).append(values.get(s))
+        m = _mean([_mean(v) for v in por_acabado.values()])
         if m is None:
             return None
         groups["special"] = SPECIAL * m
@@ -141,7 +150,7 @@ def build() -> tuple[dict, dict]:
         r = {}
         if price is not None:
             r["price"] = price
-        e = case_ev(ficha, values)
+        e = case_ev(ficha, values, {s: r["name"] for s, r in lista.items()})
         if e:
             r["ev"] = _r(e["ev"])
             r["groups"] = {k: round(v, 3) for k, v in e["groups"].items()}
