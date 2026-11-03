@@ -3,11 +3,15 @@
  * precio en cada desgaste, y de qué cajas o paquetes sale ("no sale de cajas" si de ninguna: caen en partidas o del
  * Armory).
  */
+import { useMemo } from "react";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useCs2Copy, WEARS } from "../../cs2Copy";
 import type { CaseRow, CollFicha, SkinPrice, SkinRow } from "../data";
-import { FloatRange, Img, Price, Rarity, reaches, skinPart, type Nav } from "../ui";
+import { sortRows, useSort } from "../sort";
+import { FloatRange, Img, Price, Rarity, reaches, type Nav } from "../ui";
+
+type Key = "name" | "FN" | "MW" | "FT" | "WW" | "BS";
 
 /** Una skin que sólo existe como Souvenir (las de colecciones de mapa): se muestra ese precio en vez de una fila vacía. */
 const soloSouvenir = (p: SkinPrice | undefined): boolean => !!p?.sv && !p.n?.some((v) => v != null);
@@ -30,13 +34,25 @@ export default function CollPage({
   navigate: Nav;
 }) {
   const t = useCs2Copy();
+  const { sort, th } = useSort<Key>({ key: "FN", dir: -1 }, ["name"]);
+  // El precio que muestra cada columna (el Souvenir en las skins que sólo existen así), y con él se ordena.
+  const cell = (slug: string, i: number): number | null => {
+    const s = skins.get(slug);
+    const p = skinPrices[slug];
+    return s && reaches(s, i) ? ((soloSouvenir(p) ? p?.sv : p?.n)?.[i] ?? null) : null;
+  };
+  const cols = useMemo(
+    () => ({ name: (slug: string) => skins.get(slug)?.name ?? slug, ...Object.fromEntries(WEARS.map((w, i) => [w.ab, (slug: string) => cell(slug, i)])) }) as Record<Key, (slug: string) => string | number | null>,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [skins, skinPrices],
+  );
   const to = (c2Section: "skins" | "cases" | "collections", detail?: string): Route => ({ ...route, view: "cs2", c2Section, detail });
   return (
     <main className="c2-main c2-ficha">
-      <section className="c2-panel c2-hero">
-        <Img img={ficha.img} w={120} h={90} big lazy={false} />
+      <header className="c2-hero">
+        <Img img={ficha.img} w={240} h={180} big lazy={false} />
         <div>
-          <p className="c2-dim">
+          <p className="c2-crumb">
             <RouteLink to={to("collections")} onNavigate={navigate}>
               {t.tabs.collections}
             </RouteLink>
@@ -53,7 +69,7 @@ export default function CollPage({
                   const c = cases.get(s);
                   return c ? (
                     <RouteLink key={s} className="c2-chip" to={to("cases", s)} onNavigate={navigate}>
-                      <Img img={c.img} w={40} h={30} />
+                      <Img img={c.img} w={56} h={42} />
                       {c.name}
                     </RouteLink>
                   ) : null;
@@ -62,16 +78,14 @@ export default function CollPage({
             )}
           </div>
         </div>
-      </section>
+      </header>
 
       <div className="c2-tablewrap">
         <table className="c2-table">
           <thead>
             <tr>
-              <th>{t.t.skin}</th>
-              {WEARS.map((w) => (
-                <th key={w.ab}>{w.ab}</th>
-              ))}
+              {th("name", t.t.skin)}
+              {WEARS.map((w, i) => th(w.ab as Key, w.ab, { title: t.wear[i] }))}
             </tr>
           </thead>
           <tbody>
@@ -84,33 +98,25 @@ export default function CollPage({
                   · {t.t.skinsN(g.skins.length)}
                 </td>
               </tr>,
-              ...g.skins.map((slug) => {
+              ...sortRows(g.skins, cols, sort).map((slug) => {
                 const s = skins.get(slug);
                 if (!s) return null;
                 const p = skinPrices[slug];
                 return (
-                  <tr key={slug}>
+                  <tr key={slug} className={`is-${s.rarity}`}>
                     <td>
                       <RouteLink className="c2-nm" to={to("skins", slug)} onNavigate={navigate}>
-                        <Img img={s.img} w={64} h={48} />
+                        <Img img={s.img} w={112} h={76} />
                         <span className="c2-nm-t">
-                          <span>{skinPart(s)}</span>
+                          <strong>{s.phase ? `${s.name} · ${s.phase}` : s.name}</strong>
                           <span className="c2-nm-s">
-                            {s.weapon} · <FloatRange min={s.min} max={s.max} />
+                            {t.t.float} <FloatRange min={s.min} max={s.max} />
                           </span>
                         </span>
                       </RouteLink>
                     </td>
                     {WEARS.map((w, i) => (
-                      <td key={w.ab}>
-                        {!reaches(s, i) ? (
-                          <span className="c2-num is-none">—</span>
-                        ) : soloSouvenir(p) ? (
-                          <Price v={p?.sv?.[i]} bare />
-                        ) : (
-                          <Price v={p?.n?.[i]} bare sug={!!((p?.sug ?? 0) & (1 << i))} />
-                        )}
-                      </td>
+                      <td key={w.ab}>{reaches(s, i) ? <Price v={cell(slug, i)} bare sug={!soloSouvenir(p) && !!((p?.sug ?? 0) & (1 << i))} /> : <span className="c2-num is-none">—</span>}</td>
                     ))}
                   </tr>
                 );

@@ -1,6 +1,6 @@
 /**
- * La portada de CS2 (2026-11-03), estética A: la cinta con las cajas que más devuelven hoy (como la de la maqueta), el
- * título, la fecha de la foto de precios y una tarjeta por pestaña.
+ * La portada de CS2 (2026-11-03), estética Dust II: la cinta con las cajas que más devuelven hoy, el título en esténcil
+ * con una skin grande al lado, la fecha de la foto de precios y una tarjeta por pestaña.
  */
 import { useEffect, useState } from "react";
 import meta from "@cs2/meta.json";
@@ -11,8 +11,8 @@ import { loadCasePrices, loadList, loadPriceDate, peekCasePrices, peekList, peek
 import { Img, Pct, Price, useNum, type Nav } from "./ui";
 
 const TABS: Cs2Tab[] = ["cases", "skins", "collections"];
-/** La imagen de cada tarjeta: la Kilowatt, la AK-47 | Inheritance y su colección. */
-const TAB_IMG: Record<Cs2Tab, string> = { cases: "kilowatt-case", skins: "ak-47-inheritance", collections: "the-kilowatt-collection" };
+/** La imagen de cada tarjeta: la Kilowatt, la AWP | Chrome Cannon y su colección (la AK-47 | Inheritance va en la cabecera). */
+const TAB_IMG: Record<Cs2Tab, string> = { cases: "kilowatt-case", skins: "awp-chrome-cannon", collections: "the-kilowatt-collection" };
 
 /** Las cajas con "devuelve" (precio de caja y valor esperado), de la que más devuelve a la que menos. */
 export function bestReturns(cases: CaseRow[], prices: Record<string, CasePrice>, n = 14): (CaseRow & { p: CasePrice })[] {
@@ -52,11 +52,13 @@ export default function Cs2Home({ route, navigate, live }: { route: Route; navig
           ))}
         </div>
       )}
-      <header className="c2-head">
-        <p className="c2-kicker">{t.home.kicker}</p>
-        <h1 className="c2-h1">{t.home.h1}</h1>
-        <p className="c2-lede">{t.home.lede}</p>
-        {data?.date && <p className="c2-dim">{t.home.pricesOf(data.date)}</p>}
+      <header className="c2-home-hero">
+        <div className="c2-head">
+          <h1 className="c2-h1">{t.home.h1}</h1>
+          <p className="c2-lede">{t.home.lede}</p>
+          {data?.date && <p className="c2-dim">{t.home.pricesOf(data.date)}</p>}
+        </div>
+        <Img img="ak-47-inheritance" w={320} h={240} big lazy={false} />
       </header>
       <ul className="c2-cards">
         {TABS.map((tab) => (

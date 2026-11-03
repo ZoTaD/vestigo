@@ -1,9 +1,10 @@
 /**
- * La sección Counter-Strike 2 (2026-11-03): estética A "Mesa de mercado". Plan: docs/superpowers/plans/2026-11-03-cs2-etapa-1.md.
+ * La sección Counter-Strike 2 (2026-11-03): estética "Dust II" (la piedra arenisca del mapa con tinta azul marino),
+ * elegida por ZoTaD. Plan: docs/superpowers/plans/2026-11-03-cs2-etapa-1.md.
  *
- * Grafito casi negro, paneles un tono más claro sin bordes de color, IBM Plex Sans para el texto e IBM Plex Mono con
- * cifras tabulares para precios, floats y porcentajes; acento ámbar. Cada pestaña con página viaja en su chunk (`TABS`,
- * y su archivo en `CS2_TAB_FILES` de areaFiles.ts). Las tipografías y la hoja de estilos viajan con este chunk.
+ * Títulos en Saira Stencil One (la letra pintada de las cajas de armas) y el resto en Barlow Semi Condensed. Cada pestaña
+ * con página viaja en su chunk (`TABS`, y su archivo en `CS2_TAB_FILES` de areaFiles.ts). Las tipografías y la hoja de
+ * estilos viajan con este chunk.
  */
 import { Suspense, useEffect, useRef } from "react";
 import { lazyWithPreload } from "./lazyWithPreload";
@@ -12,10 +13,11 @@ import type { Cs2Section, Route } from "./route";
 import { CS2_TABS, useCs2Copy } from "./cs2Copy";
 import Cs2Home from "./cs2/Cs2Home";
 import { Cs2Loading } from "./cs2/ui";
-import "@fontsource/ibm-plex-sans/400.css";
-import "@fontsource/ibm-plex-sans/600.css";
-import "@fontsource/ibm-plex-mono/400.css";
-import "@fontsource/ibm-plex-mono/600.css";
+import "@fontsource/saira-stencil-one/400.css";
+import "@fontsource/barlow-semi-condensed/400.css";
+import "@fontsource/barlow-semi-condensed/500.css";
+import "@fontsource/barlow-semi-condensed/600.css";
+import "@fontsource/barlow-semi-condensed/700.css";
 import "./styles/cs2.css";
 
 type Nav = (route: Route) => void;
@@ -81,11 +83,15 @@ export default function Cs2({ route, navigate }: TabProps) {
   }, [section]);
   return (
     <div className="c2" data-section={section}>
+      {/* La arena que se desliza sobre la foto de Dust II (`.c2-drift` en cs2.css). */}
+      <div className="c2-drift-clip" aria-hidden="true">
+        <div className="c2-drift" />
+      </div>
       <div className="c2-top">
         <div className="c2-top-in">
-          {/* El nombre en letra, sin el logo del juego. */}
+          {/* El nombre en esténcil, sin el logo del juego. */}
           <RouteLink className="c2-brand" to={{ ...route, view: "cs2", c2Section: "home", detail: undefined }} onNavigate={navigate}>
-            COUNTER-STRIKE <b>2</b>
+            CS2
           </RouteLink>
           <nav className="c2-tabs" aria-label="Counter-Strike 2" ref={tabsRef}>
             {CS2_TABS.map((tab) =>
