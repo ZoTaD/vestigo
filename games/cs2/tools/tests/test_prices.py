@@ -109,7 +109,7 @@ class TestReal(unittest.TestCase):
         market, _ = prices.build_market()
         self.assertTrue(market)
         self.assertTrue(all(r[8] >= 30 and r[5] >= 0.5 for r in market))  # [.., m24, m7, m30, m90, v7, v30]
-        self.assertTrue(any(r[1] == "kilowatt-case" for r in market))
+        self.assertTrue(any(r[2] == "case" for r in market))  # la Kilowatt (0,17) no pasa el umbral; las cajas caras sí
 
     def test_serie_sin_repetir_el_dia(self):
         h = {}
