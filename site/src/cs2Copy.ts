@@ -9,7 +9,7 @@ import { useLang } from "./i18n";
 import type { Cs2DataTab, Cs2Section, Cs2Tab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "collections", "trade-up", "inventory"];
+export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "market", "collections", "trade-up", "inventory"];
 
 /** Las rarezas como las deja `site_data.py` (`RARITY` de `cs2.py`), de la más alta a la más baja. */
 export type Cs2Rarity = "contraband" | "extraordinary" | "covert" | "classified" | "restricted" | "milspec" | "industrial" | "consumer";
@@ -104,6 +104,32 @@ export interface Cs2Copy {
     none: string;
     open: string;
   };
+  /** La pestaña Mercado y el bloque de mercado de las fichas (etapa 4). */
+  mk: {
+    period: { "7v30": string; "1v7": string; "30v90": string };
+    periodBefore: { "7v30": string; "1v7": string; "30v90": string };
+    periodNow: { "7v30": string; "1v7": string; "30v90": string };
+    minSales: string;
+    kinds: { all: string; skins: string; cases: string };
+    up: string;
+    down: string;
+    top: string;
+    item: string;
+    change: string;
+    sales30: string;
+    sales7: string;
+    none: string;
+    note: string;
+    block: string;
+    variant: string;
+    m90: string;
+    m30: string;
+    m7: string;
+    m24: string;
+    trend: string;
+    blockNote: string;
+    history: (days: number) => string;
+  };
   /** La pestaña Inventario (etapa 3). */
   inv: {
     placeholder: string;
@@ -169,7 +195,7 @@ export interface Cs2Copy {
 }
 
 const EN: Cs2Copy = {
-  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory" },
+  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory", market: "Market" },
   loading: "Loading…",
   loadError: "Couldn't load this page.",
   retry: "Retry",
@@ -178,6 +204,7 @@ const EN: Cs2Copy = {
     skins: { title: "CS2 skins: prices, float ranges & cases", description: "All CS2 weapon, knife and glove skins with their price in each wear, StatTrak and Souvenir, float range and the case they drop from." },
     cases: { title: "CS2 cases: odds, expected value & prices", description: "Every CS2 case, souvenir package and terminal with its price, the odds of each rarity and what opening it returns on average." },
     collections: { title: "CS2 collections: every skin & price", description: "Every CS2 weapon collection with its skins by rarity, their float ranges and prices, and the case or package it comes from." },
+    market: { title: "CS2 skin prices going up and down", description: "Which CS2 skins and cases are rising and falling this week, and which sell the most, from real sales: the median of the last 7 days against the last 30." },
     inventory: { title: "CS2 inventory value checker", description: "How much is your CS2 inventory worth? Paste your Steam profile and see every item with today's price, grouped by type. Free, no login." },
     "trade-up": { title: "CS2 trade-up calculator: odds, floats & profit", description: "Free CS2 trade-up calculator: the odds, exact float and price of every outcome, expected profit after fees, knife trade-ups and a reverse calculator." },
   },
@@ -204,6 +231,7 @@ const EN: Cs2Copy = {
       collections: (n) => `${n} collections with every skin by rarity.`,
       "trade-up": () => "Odds, floats and profit of any contract, knife trade-ups and the reverse: what to put in to get the skin you want.",
       inventory: () => "Paste your Steam profile and see what your CS2 inventory is worth today, item by item.",
+      market: () => "What's rising and falling this week, and what sells the most, from real sales.",
     },
     pricesOf: (d) => `Prices of ${d}`,
   },
@@ -253,6 +281,31 @@ const EN: Cs2Copy = {
     count: (n) => `${n} results`,
     none: "Nothing matches.",
     open: "Open",
+  },
+  mk: {
+    period: { "7v30": "7 days vs 30", "1v7": "24 h vs 7 days", "30v90": "30 days vs 90" },
+    periodBefore: { "7v30": "30 days", "1v7": "7 days", "30v90": "90 days" },
+    periodNow: { "7v30": "7 days", "1v7": "24 h", "30v90": "30 days" },
+    minSales: "Min. sales a month",
+    kinds: { all: "All", skins: "Skins", cases: "Cases" },
+    up: "Rising",
+    down: "Falling",
+    top: "Best sellers",
+    item: "Item",
+    change: "Change",
+    sales30: "Sales (30 d)",
+    sales7: "Sales (7 d)",
+    none: "Nothing moves with these filters.",
+    note: "Median of real Skinport sales, so one odd sale doesn't move it. Only variants with 30 or more sales a month and a median of US$ 0.50 or more.",
+    block: "Market",
+    variant: "Variant",
+    m90: "90 d",
+    m30: "30 d",
+    m7: "7 d",
+    m24: "24 h",
+    trend: "Trend",
+    blockNote: "Median of real Skinport sales in each period.",
+    history: (d) => `Lowest price, last ${d} days`,
   },
   inv: {
     placeholder: "Steam profile URL, SteamID64 or custom name",
@@ -333,7 +386,7 @@ const EN: Cs2Copy = {
 };
 
 const ES: Cs2Copy = {
-  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario" },
+  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario", market: "Mercado" },
   loading: "Cargando…",
   loadError: "No se pudo cargar esta página.",
   retry: "Reintentar",
@@ -342,6 +395,7 @@ const ES: Cs2Copy = {
     skins: { title: "Skins de CS2: precios, float y cajas", description: "Todas las skins de armas, cuchillos y guantes de CS2 con su precio en cada desgaste, StatTrak y Souvenir, rango de float y la caja de donde salen." },
     cases: { title: "Cajas de CS2: probabilidades, valor esperado y precios", description: "Cada caja, paquete de souvenir y terminal de CS2 con su precio, la probabilidad de cada rareza y cuánto devuelve abrirla en promedio." },
     collections: { title: "Colecciones de CS2: cada skin y su precio", description: "Cada colección de armas de CS2 con sus skins por rareza, su rango de float y precio, y la caja o el paquete de donde sale." },
+    market: { title: "Skins de CS2 que suben y bajan de precio", description: "Qué skins y cajas de CS2 suben y bajan esta semana, y cuáles se venden más, con ventas reales: la mediana de los últimos 7 días contra la de 30." },
     inventory: { title: "Cuánto vale tu inventario de CS2", description: "¿Cuánto vale tu inventario de CS2? Pegá tu perfil de Steam y mirá cada objeto con el precio de hoy, agrupado por tipo. Gratis y sin iniciar sesión." },
     "trade-up": { title: "Calculadora de trade-up de CS2: probabilidades, float y ganancia", description: "Calculadora de trade-up de CS2 gratis: probabilidad, float exacto y precio de cada resultado, ganancia esperada después de comisiones, cuchillos y calculadora inversa." },
   },
@@ -368,6 +422,7 @@ const ES: Cs2Copy = {
       collections: (n) => `${n} colecciones con cada skin por rareza.`,
       "trade-up": () => "Probabilidades, float y ganancia de cualquier contrato, cuchillos incluidos, y al revés: qué poner para sacar la skin que querés.",
       inventory: () => "Pegá tu perfil de Steam y mirá cuánto vale hoy tu inventario de CS2, objeto por objeto.",
+      market: () => "Qué sube y qué baja esta semana, y qué se vende más, con ventas reales.",
     },
     pricesOf: (d) => `Precios del ${d}`,
   },
@@ -417,6 +472,31 @@ const ES: Cs2Copy = {
     count: (n) => `${n} resultados`,
     none: "No hay nada con eso.",
     open: "Abrir",
+  },
+  mk: {
+    period: { "7v30": "7 días vs 30", "1v7": "24 h vs 7 días", "30v90": "30 días vs 90" },
+    periodBefore: { "7v30": "30 días", "1v7": "7 días", "30v90": "90 días" },
+    periodNow: { "7v30": "7 días", "1v7": "24 h", "30v90": "30 días" },
+    minSales: "Ventas mínimas por mes",
+    kinds: { all: "Todo", skins: "Skins", cases: "Cajas" },
+    up: "Suben",
+    down: "Bajan",
+    top: "Más vendidas",
+    item: "Objeto",
+    change: "Cambio",
+    sales30: "Ventas (30 d)",
+    sales7: "Ventas (7 d)",
+    none: "Nada se mueve con estos filtros.",
+    note: "Mediana de ventas reales en Skinport, así una venta rara no la mueve. Sólo variantes con 30 ventas o más por mes y mediana de 0,50 US$ o más.",
+    block: "Mercado",
+    variant: "Variante",
+    m90: "90 d",
+    m30: "30 d",
+    m7: "7 d",
+    m24: "24 h",
+    trend: "Tendencia",
+    blockNote: "Mediana de ventas reales en Skinport en cada período.",
+    history: (d) => `Precio más bajo, últimos ${d} días`,
   },
   inv: {
     placeholder: "URL de tu perfil de Steam, SteamID64 o nombre",

@@ -203,6 +203,9 @@ export const PAGES = [
   // Inventario (etapa 3): sin perfil (sólo el formulario). Con perfil pide a Steam: eso se prueba a mano, no en perf.
   "/en/cs2/inventory",
   "/es/cs2/inventario",
+  // Mercado (etapa 4): las tres tablas de 20 filas.
+  "/en/cs2/market",
+  "/es/cs2/mercado",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

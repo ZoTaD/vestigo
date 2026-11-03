@@ -150,6 +150,7 @@ export const CS2_TAB_FILES: Partial<Record<Cs2Section, string>> = {
   collections: "src/cs2/collections/Cs2Collections.tsx",
   "trade-up": "src/cs2/tradeup/Cs2Tradeup.tsx",
   inventory: "src/cs2/inventory/Cs2Inventory.tsx",
+  market: "src/cs2/market/Cs2Market.tsx",
 };
 
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */

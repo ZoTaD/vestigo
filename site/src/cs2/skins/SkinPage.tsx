@@ -8,6 +8,7 @@ import type { Route } from "../../route";
 import { useCs2Copy } from "../../cs2Copy";
 import type { CaseRow, CollRow, SkinFicha, SkinPrice, SkinRow } from "../data";
 import { lowest } from "./filters";
+import { MarketBlockFor } from "../market/MarketBlock";
 import { FloatRange, Img, Price, Rarity, WearBar, WearPrices, type Nav } from "../ui";
 
 export default function SkinPage({
@@ -90,6 +91,8 @@ export default function SkinPage({
           </div>
         </section>
       )}
+
+      <MarketBlockFor slug={ficha.slug} />
 
       {ficha.desc && <p className="c2-desc">{ficha.desc}</p>}
       {date && <p className="c2-note">{t.t.pricesNote(date)}</p>}

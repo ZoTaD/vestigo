@@ -14,6 +14,7 @@ import type { Cs2Cat, Cs2Kind, Cs2Rarity } from "../cs2Copy";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 import type { Coll } from "./tradeup/engine";
+import type { MarketRow } from "./market/movers";
 
 /** `CHUNKS` de cs2.py: si se cambia uno se cambia el otro (lo prueba cs2Data.test.ts). */
 export const CS2_SHARDS = 32;
@@ -127,6 +128,19 @@ export const peekCasePrices = () => casePrices.peek();
 /** El precio de todo Skinport por `market_hash_name` (~260 KB comprimido): sólo lo baja el Inventario (etapa 3). */
 const allPrices = once<Record<string, number>>(() => import("@cs2prices/all.json") as Promise<Mod<unknown>>);
 export const loadAllPrices = () => allPrices.load();
+
+/** Etapa 4: la lista de la pestaña Mercado, las ventas de cada ficha (32 archivos) y su serie diaria (32 archivos). */
+const market = once<MarketRow[]>(() => import("@cs2prices/market.json") as Promise<Mod<unknown>>);
+export const loadMarket = () => market.load();
+export const peekMarket = () => market.peek();
+/** Las ventas de una variante: `[mediana 24 h, 7 d, 30 d, 90 d, ventas 30 d]`. */
+export type SaleRow = [m24: number | null, m7: number | null, m30: number | null, m90: number | null, v30: number];
+const sales = shardedFichas<Record<string, SaleRow>>(import.meta.glob<{ default: Record<string, Record<string, SaleRow>> }>("@cs2prices/sales/*.json"), shard);
+const history = shardedFichas<[string, number][]>(import.meta.glob<{ default: Record<string, [string, number][]> }>("@cs2prices/history/*.json"), shard);
+export const loadSales = (slug: string) => sales.load(slug);
+export const peekSales = (slug: string) => sales.peek(slug);
+export const loadHistory = (slug: string) => history.load(slug);
+export const peekHistory = (slug: string) => history.peek(slug);
 export const loadTradeup = () => tradeup.load();
 export const peekTradeup = () => tradeup.peek();
 export const loadPriceDate = () => priceMeta.load().then((m) => m.date);
@@ -138,6 +152,11 @@ export const peekPriceDate = () => priceMeta.peek()?.date ?? null;
  */
 export async function preloadRoute(route: Route): Promise<void> {
   const tab = route.c2Section;
+  // Mercado: la lista de la pestaña.
+  if (tab === "market") {
+    await Promise.all([loadMarket(), loadPriceDate()]);
+    return;
+  }
   // Trade-up: todas las skins con sus precios y las colecciones.
   if (tab === "trade-up") {
     await Promise.all([loadList("skins"), loadSkinPrices(), loadTradeup(), loadPriceDate()]);
@@ -157,7 +176,8 @@ export async function preloadRoute(route: Route): Promise<void> {
     await Promise.all([...base, loadList(tab)]);
     return;
   }
-  const [f] = await Promise.all([loadFicha(tab, route.detail), ...base]);
+  // Las ventas y la serie de la ficha, para que el prerender traiga el bloque de mercado.
+  const [f] = await Promise.all([loadFicha(tab, route.detail), ...base, loadSales(route.detail), loadHistory(route.detail)]);
   if (!f) return;
   // Lo que la ficha nombra con nombre e imagen: las cajas y colecciones (de sus listas, livianas).
   await Promise.all([loadList("cases"), loadList("collections")]);

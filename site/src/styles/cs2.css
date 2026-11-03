@@ -343,3 +343,21 @@ a.c2-inv-card:hover { border-color: var(--c2-ink); }
   .c2-inv-tag { text-align: left; }
   .c2-inv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 }
+
+/* --- Mercado (etapa 4): maqueta A "Pizarra" y el bloque de las fichas ---------------------------------------------- */
+.c2-mk-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
+.c2-mk-board { display: grid; gap: 8px; min-width: 0; }
+.c2-h2.is-up { color: var(--c2-up); }
+.c2-h2.is-down { color: var(--c2-down); }
+.c2-mk-ch { font: 20px/1 var(--c2-stencil); }
+.c2-mk-block { display: grid; gap: 8px; }
+.c2-trend { display: block; margin-left: auto; }
+.c2-trend polyline { stroke: var(--c2-dim); }
+.c2-trend.is-up polyline { stroke: var(--c2-up); }
+.c2-trend.is-down polyline { stroke: var(--c2-down); }
+.c2-mk-hist { margin: 0; padding: 12px 14px; background: var(--c2-stone); display: grid; gap: 6px; }
+.c2-mk-hist svg { width: 100%; height: 120px; }
+.c2-mk-hist polyline { stroke: var(--c2-ink); }
+@media (max-width: 1280px) {
+  .c2-mk-cols { grid-template-columns: minmax(0, 1fr); }
+}

@@ -11,6 +11,7 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { CASE_ODDS, KEY_PRICE, SPECIAL_ODDS, useCs2Copy, WEARS } from "../../cs2Copy";
 import type { CaseFicha, CasePrice, SkinPrice, SkinRow } from "../data";
+import { MarketBlockFor } from "../market/MarketBlock";
 import { sortRows, useSort } from "../sort";
 import { FloatRange, Img, Pct, Price, Rarity, reaches, SkinSide, type Nav } from "../ui";
 
@@ -196,6 +197,7 @@ export default function CasePage({
           </SkinSide>
         )}
       </div>
+      <MarketBlockFor slug={ficha.slug} />
       {date && <p className="c2-note">{t.t.pricesNote(date)}</p>}
     </main>
   );
