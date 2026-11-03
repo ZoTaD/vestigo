@@ -160,10 +160,26 @@ def build() -> tuple[dict, dict]:
     return out_skins, out_cases
 
 
+def all_prices() -> dict:
+    """
+    El precio de todo lo que vende Skinport por `market_hash_name` (etapa 3: el Inventario valúa stickers, llaveros,
+    agentes, llaves…). La versión sin fase: el inventario de Steam no dice la fase de una Doppler.
+    """
+    out = {}
+    for x in load("skinport"):
+        if x.get("version"):
+            continue
+        v, _ = cell(x)
+        if v is not None:
+            out[x["market_hash_name"]] = v
+    return dict(sorted(out.items()))
+
+
 def main() -> None:
     skins, cases = build()
     a = write_json(PRICES / "skins.json", skins)
     b = write_json(PRICES / "cases.json", cases)
+    a = write_json(PRICES / "all.json", all_prices()) or a
     if a or b:
         write_json(PRICES / "meta.json", {"date": date.today().isoformat()})
     print(f"precios: {len(skins)} skins, {len(cases)} cajas{'' if a or b else ' (sin cambios)'}")

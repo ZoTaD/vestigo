@@ -91,6 +91,12 @@ class TestReal(unittest.TestCase):
         self.assertEqual(p["n"], [None] * 5)
         self.assertIn("sv", p)
 
+    def test_todos_los_precios(self):
+        todo = prices.all_prices()
+        self.assertGreater(todo["Operation Breakout Case Key"], 0)
+        self.assertTrue(any(k.startswith("Sticker | ") for k in todo))
+        self.assertTrue(all(isinstance(v, (int, float)) for v in todo.values()))
+
     def test_inheritance(self):
         p = self.skins["ak-47-inheritance"]
         self.assertEqual(len(p["n"]), 5)
