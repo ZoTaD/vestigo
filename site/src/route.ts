@@ -394,12 +394,12 @@ export function registerWfSlugs(slugs: Partial<Record<WfTab, Record<string, stri
  */
 /** Las pestañas con fichas (su tercer segmento es el slug de una) y las herramientas sin fichas (etapa 2: Trade-up). */
 export type Cs2DataTab = "skins" | "cases" | "collections";
-export type Cs2Tab = Cs2DataTab | "trade-up" | "inventory" | "market" | "patches";
+export type Cs2Tab = Cs2DataTab | "trade-up" | "inventory" | "market" | "patches" | "esports";
 export type Cs2Section = "home" | Cs2Tab;
 export const CS2_SEGMENT = "cs2";
-export const CS2_SECTIONS: Cs2Tab[] = ["skins", "cases", "collections", "trade-up", "inventory", "market", "patches"];
+export const CS2_SECTIONS: Cs2Tab[] = ["skins", "cases", "collections", "trade-up", "inventory", "market", "patches", "esports"];
 export const CS2_DETAIL_SECTIONS: Cs2DataTab[] = ["skins", "cases", "collections"];
-export const CS2_SECTION_ES: Record<Cs2Tab, string> = { skins: "skins", cases: "cajas", collections: "colecciones", "trade-up": "trade-up", inventory: "inventario", market: "mercado", patches: "parches" };
+export const CS2_SECTION_ES: Record<Cs2Tab, string> = { skins: "skins", cases: "cajas", collections: "colecciones", "trade-up": "trade-up", inventory: "inventario", market: "mercado", patches: "parches", esports: "torneos" };
 const CS2_SECTION_BY_ES = new Map(Object.entries(CS2_SECTION_ES).map(([tab, es]) => [es, tab as Cs2Tab]));
 const isCs2Tab = (v: string | undefined): v is Cs2Tab => !!v && (CS2_SECTIONS as string[]).includes(v);
 /** La pestaña de CS2 de un segmento, escrito en cualquiera de los dos idiomas. */

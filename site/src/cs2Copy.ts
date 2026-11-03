@@ -9,7 +9,7 @@ import { useLang } from "./i18n";
 import type { Cs2DataTab, Cs2Section, Cs2Tab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "market", "collections", "trade-up", "inventory", "patches"];
+export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "market", "collections", "trade-up", "inventory", "esports", "patches"];
 
 /** Las rarezas como las deja `site_data.py` (`RARITY` de `cs2.py`), de la más alta a la más baja. */
 export type Cs2Rarity = "contraband" | "extraordinary" | "covert" | "classified" | "restricted" | "milspec" | "industrial" | "consumer";
@@ -111,6 +111,49 @@ export interface Cs2Copy {
     count: (n: string) => string;
     none: string;
     open: string;
+  };
+  /** La pestaña Torneos (etapa 6a). */
+  es: {
+    lede: string;
+    live: string;
+    startsOn: (date: string) => string;
+    dates: (from: string, to: string) => string;
+    prize: string;
+    teams: (n: number) => string;
+    organizer: string;
+    watch: string;
+    watchHint: string;
+    next: string;
+    results: string;
+    loadingMatches: string;
+    matchesError: string;
+    noMatches: string;
+    tbd: string;
+    bo: (n: number) => string;
+    today: string;
+    tomorrow: string;
+    yesterday: string;
+    tournaments: string;
+    ongoing: string;
+    upcoming: string;
+    concluded: string;
+    vrs: string;
+    vrsOf: (date: string) => string;
+    vrsLede: string;
+    regions: { global: string; europe: string; americas: string; asia: string };
+    rank: string;
+    team: string;
+    since: (date: string) => string;
+    points: string;
+    isNew: string;
+    whyTitle: (team: string, pts: string) => string;
+    whyStart: (start: string) => string;
+    factors: { bounty_offered: string; bounty_collected: string; network: string; lan: string };
+    whyH2h: (h2h: string) => string;
+    whyMatches: string;
+    won: (opp: string) => string;
+    lost: (opp: string) => string;
+    credit: string;
   };
   /** La pestaña Parches (etapa 5). */
   pt: {
@@ -222,7 +265,7 @@ export interface Cs2Copy {
 }
 
 const EN: Cs2Copy = {
-  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory", market: "Market", patches: "Patches" },
+  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory", market: "Market", patches: "Patches", esports: "Tournaments" },
   loading: "Loading…",
   loadError: "Couldn't load this page.",
   retry: "Retry",
@@ -231,6 +274,7 @@ const EN: Cs2Copy = {
     skins: { title: "CS2 skins: prices, float ranges & cases", description: "All CS2 weapon, knife and glove skins with their price in each wear, StatTrak and Souvenir, float range and the case they drop from." },
     cases: { title: "CS2 cases: odds, expected value & prices", description: "Every CS2 case, souvenir package and terminal with its price, the odds of each rarity and what opening it returns on average." },
     collections: { title: "CS2 collections: every skin & price", description: "Every CS2 weapon collection with its skins by rarity, their float ranges and prices, and the case or package it comes from." },
+    esports: { title: "CS2 tournaments, matches & Valve rankings", description: "CS2 tournaments live: today's and upcoming matches in your time zone, results, the stream, and Valve's official regional standings explained team by team." },
     patches: { title: "CS2 patch notes: every update", description: "Every CS2 update since the Limited Test, change by change: what's new, what changed and what got fixed, with the maps, weapons and cases it names." },
     market: { title: "CS2 skin prices going up and down", description: "Which CS2 skins and cases are going up and down in price this week, and which sell the most, from real Skinport sales." },
     inventory: { title: "CS2 inventory value checker", description: "How much is your CS2 inventory worth? Paste your Steam profile and see every item with today's price, grouped by type. Free, no login." },
@@ -265,6 +309,7 @@ const EN: Cs2Copy = {
       inventory: () => "Paste your Steam profile and see what your CS2 inventory is worth today, item by item.",
       market: () => "What's rising and falling this week, and what sells the most, from real sales.",
       patches: () => "Every update, change by change: what's new, what changed and what got fixed.",
+      esports: () => "Live tournament with the stream, matches in your time zone and Valve's ranking explained.",
     },
     pricesOf: (d) => `Prices of ${d}`,
   },
@@ -320,6 +365,48 @@ const EN: Cs2Copy = {
     count: (n) => `${n} results`,
     none: "Nothing matches.",
     open: "Open",
+  },
+  es: {
+    lede: "The tournament being played right now with its stream, upcoming matches in your time zone, results, and Valve's official ranking explained team by team.",
+    live: "Live now",
+    startsOn: (d) => `Starts ${d}`,
+    dates: (a, b) => `${a} to ${b}`,
+    prize: "prize pool",
+    teams: (n) => `${n} teams`,
+    organizer: "hosted by",
+    watch: "Watch live on Twitch",
+    watchHint: "The stream loads when you press play.",
+    next: "Upcoming matches",
+    results: "Results",
+    loadingMatches: "Loading matches…",
+    matchesError: "Couldn't load the matches right now. The rest of the page is up to date.",
+    noMatches: "No matches scheduled right now.",
+    tbd: "TBD",
+    bo: (n) => `best of ${n}`,
+    today: "Today",
+    tomorrow: "Tomorrow",
+    yesterday: "Yesterday",
+    tournaments: "Tournaments",
+    ongoing: "Live",
+    upcoming: "Upcoming",
+    concluded: "Finished",
+    vrs: "Valve ranking",
+    vrsOf: (d) => `Valve ranking · ${d}`,
+    vrsLede: "The official ranking Valve uses to invite teams to the Majors. Updated on the first Monday of each month. Tap a team to see why it has those points.",
+    regions: { global: "World", europe: "Europe", americas: "Americas", asia: "Asia" },
+    rank: "Rank",
+    team: "Team and players",
+    since: (d) => `Since ${d}`,
+    points: "Points",
+    isNew: "new",
+    whyTitle: (t, p) => `Why ${t} has ${p} points`,
+    whyStart: (s) => `It starts with ${s} out of 2,000: the average of four things over the last 6 months, compared with every other team.`,
+    factors: { bounty_offered: "What beating them paid out", bounty_collected: "Prize money it won", network: "Quality of the teams it beat", lan: "LAN wins" },
+    whyH2h: (h) => `Head to head: ${h} points. Beating stronger teams adds, losing to weaker ones takes away.`,
+    whyMatches: "Last matches that count",
+    won: (o) => `Beat ${o}`,
+    lost: (o) => `Lost to ${o}`,
+    credit: "Matches, tournaments and logos: Liquipedia (CC BY-SA). Ranking: Valve Regional Standings.",
   },
   pt: {
     lede: "Every CS2 update, change by change: each line says whether it's new, a change or a fix, and which maps, weapons and cases it names.",
@@ -442,7 +529,7 @@ const EN: Cs2Copy = {
 };
 
 const ES: Cs2Copy = {
-  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario", market: "Mercado", patches: "Parches" },
+  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario", market: "Mercado", patches: "Parches", esports: "Torneos" },
   loading: "Cargando…",
   loadError: "No se pudo cargar esta página.",
   retry: "Reintentar",
@@ -451,6 +538,7 @@ const ES: Cs2Copy = {
     skins: { title: "Skins de CS2: precios, float y cajas", description: "Todas las skins de armas, cuchillos y guantes de CS2 con su precio en cada desgaste, StatTrak y Souvenir, rango de float y la caja de donde salen." },
     cases: { title: "Cajas de CS2: probabilidades, valor esperado y precios", description: "Cada caja, paquete de souvenir y terminal de CS2 con su precio, la probabilidad de cada rareza y cuánto devuelve abrirla en promedio." },
     collections: { title: "Colecciones de CS2: cada skin y su precio", description: "Cada colección de armas de CS2 con sus skins por rareza, su rango de float y precio, y la caja o el paquete de donde sale." },
+    esports: { title: "Torneos de CS2, partidos y ranking de Valve", description: "Los torneos de CS2 en vivo: partidos de hoy y próximos en tu hora, resultados, la transmisión y el ranking oficial de Valve explicado equipo por equipo." },
     patches: { title: "Parches de CS2: todas las actualizaciones", description: "Cada actualización de CS2 desde el Limited Test, cambio por cambio: qué es nuevo, qué cambió y qué se arregló, con los mapas, armas y cajas que nombra." },
     market: { title: "Skins de CS2 que suben y bajan de precio", description: "Qué skins y cajas de CS2 suben y bajan de precio esta semana, y cuáles se venden más, con ventas reales en Skinport." },
     inventory: { title: "Cuánto vale tu inventario de CS2", description: "¿Cuánto vale tu inventario de CS2? Pegá tu perfil de Steam y mirá cada objeto con el precio de hoy, agrupado por tipo. Gratis y sin iniciar sesión." },
@@ -485,6 +573,7 @@ const ES: Cs2Copy = {
       inventory: () => "Pegá tu perfil de Steam y mirá cuánto vale hoy tu inventario de CS2, objeto por objeto.",
       market: () => "Qué sube y qué baja esta semana, y qué se vende más, con ventas reales.",
       patches: () => "Cada actualización, cambio por cambio: qué es nuevo, qué cambió y qué se arregló.",
+      esports: () => "El torneo en vivo con su transmisión, los partidos en tu hora y el ranking de Valve explicado.",
     },
     pricesOf: (d) => `Precios del ${d}`,
   },
@@ -540,6 +629,48 @@ const ES: Cs2Copy = {
     count: (n) => `${n} resultados`,
     none: "No hay nada con eso.",
     open: "Abrir",
+  },
+  es: {
+    lede: "El torneo que se está jugando con su transmisión, los próximos partidos en tu hora, los resultados y el ranking oficial de Valve explicado equipo por equipo.",
+    live: "En vivo",
+    startsOn: (d) => `Empieza el ${d}`,
+    dates: (a, b) => `Del ${a} al ${b}`,
+    prize: "en premios",
+    teams: (n) => `${n} equipos`,
+    organizer: "organiza",
+    watch: "Ver en vivo en Twitch",
+    watchHint: "La transmisión carga cuando tocás para verla.",
+    next: "Próximos partidos",
+    results: "Resultados",
+    loadingMatches: "Cargando partidos…",
+    matchesError: "Ahora no se pudieron cargar los partidos. El resto de la página está al día.",
+    noMatches: "No hay partidos programados por ahora.",
+    tbd: "A definir",
+    bo: (n) => `al mejor de ${n}`,
+    today: "Hoy",
+    tomorrow: "Mañana",
+    yesterday: "Ayer",
+    tournaments: "Torneos",
+    ongoing: "En vivo",
+    upcoming: "Próximos",
+    concluded: "Terminados",
+    vrs: "Ranking de Valve",
+    vrsOf: (d) => `Ranking de Valve · ${d}`,
+    vrsLede: "El ranking oficial con el que Valve invita a los equipos a los Majors. Se actualiza el primer lunes de cada mes. Tocá un equipo para ver por qué tiene esos puntos.",
+    regions: { global: "Mundial", europe: "Europa", americas: "América", asia: "Asia" },
+    rank: "Puesto",
+    team: "Equipo y jugadores",
+    since: (d) => `Desde el ${d}`,
+    points: "Puntos",
+    isNew: "nuevo",
+    whyTitle: (t, p) => `Por qué ${t} tiene ${p} puntos`,
+    whyStart: (s) => `Arranca con ${s} de 2.000 posibles: el promedio de cuatro cosas de los últimos 6 meses, comparado con el resto de los equipos.`,
+    factors: { bounty_offered: "Lo que pagaba ganarle", bounty_collected: "Premios que ganó", network: "Nivel de los equipos que venció", lan: "Victorias en LAN" },
+    whyH2h: (h) => `Cara a cara: ${h} puntos. Ganarle a uno mejor suma; perder con uno peor resta.`,
+    whyMatches: "Últimos partidos que cuentan",
+    won: (o) => `Le ganó a ${o}`,
+    lost: (o) => `Perdió con ${o}`,
+    credit: "Partidos, torneos y logos: Liquipedia (CC BY-SA). Ranking: Valve Regional Standings.",
   },
   pt: {
     lede: "Cada actualización de CS2, cambio por cambio: cada línea dice si es algo nuevo, un cambio o un arreglo, y qué mapas, armas y cajas nombra.",

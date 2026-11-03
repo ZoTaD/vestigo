@@ -31,6 +31,7 @@ const Cs2Tradeup = lazyWithPreload(() => import("./cs2/tradeup/Cs2Tradeup"));
 const Cs2Inventory = lazyWithPreload(() => import("./cs2/inventory/Cs2Inventory"));
 const Cs2Market = lazyWithPreload(() => import("./cs2/market/Cs2Market"));
 const Cs2Patches = lazyWithPreload(() => import("./cs2/patches/Cs2Patches"));
+const Cs2Esports = lazyWithPreload(() => import("./cs2/esports/Cs2Esports"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `CS2_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `CS2_TAB_FILES`.
@@ -42,6 +43,7 @@ const TABS: Partial<Record<Cs2Section, LazyTab>> = {
   inventory: Cs2Inventory,
   market: Cs2Market,
   patches: Cs2Patches,
+  esports: Cs2Esports,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -58,6 +60,7 @@ const TAB_DATA: Partial<Record<Cs2Section, (route: Route) => Promise<unknown>>> 
   "trade-up": (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
   market: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
   patches: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
+  esports: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
 };
 
 /** Baja el chunk de la pestaña de una ruta de CS2, y sus datos. */

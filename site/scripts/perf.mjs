@@ -210,6 +210,9 @@ export const PAGES = [
   "/en/cs2/patches",
   "/es/cs2/parches/2023-11-17",
   "/en/cs2/patches/rush-hour",
+  // Torneos (etapa 6a): la portada con Twitch sin cargar, los partidos y el ranking.
+  "/en/cs2/esports",
+  "/es/cs2/torneos",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

@@ -160,6 +160,12 @@ export async function preloadRoute(route: Route): Promise<void> {
     if (slug) await loadPatch(slug);
     return;
   }
+  // Torneos: los torneos, el ranking y los equipos. Los partidos no: cambian cada hora y los pide la página.
+  if (tab === "esports") {
+    const { loadEsports } = await import("./esports/data");
+    await loadEsports();
+    return;
+  }
   // Mercado: la lista de la pestaña.
   if (tab === "market") {
     await Promise.all([loadMarket(), loadPriceDate()]);

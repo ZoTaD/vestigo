@@ -10,9 +10,9 @@ import { useCs2Copy } from "../cs2Copy";
 import { loadCasePrices, loadList, loadPriceDate, peekCasePrices, peekList, peekPriceDate, type CasePrice, type CaseRow } from "./data";
 import { Img, Pct, Price, useNum, type Nav } from "./ui";
 
-const TABS: Cs2Tab[] = ["cases", "skins", "market", "trade-up", "inventory", "collections", "patches"];
+const TABS: Cs2Tab[] = ["esports", "cases", "skins", "market", "trade-up", "inventory", "collections", "patches"];
 /** La imagen de cada tarjeta: la Kilowatt, la AWP | Chrome Cannon y su colección (la AK-47 | Inheritance va en la cabecera). */
-const TAB_IMG: Record<Cs2Tab, string> = { cases: "kilowatt-case", skins: "awp-chrome-cannon", collections: "the-kilowatt-collection", "trade-up": "kukri-knife-fade", inventory: "operation-breakout-weapon-case", market: "ak-47-wild-lotus", patches: "the-dust-2-collection" };
+const TAB_IMG: Record<Cs2Tab, string> = { cases: "kilowatt-case", skins: "awp-chrome-cannon", collections: "the-kilowatt-collection", "trade-up": "kukri-knife-fade", inventory: "operation-breakout-weapon-case", market: "ak-47-wild-lotus", patches: "the-dust-2-collection", esports: "austin-2025-dust-ii-souvenir-package" };
 
 /** Las cajas con "devuelve" (precio de caja y valor esperado), de la que más devuelve a la que menos. */
 export function bestReturns(cases: CaseRow[], prices: Record<string, CasePrice>, n = 14): (CaseRow & { p: CasePrice })[] {
@@ -68,7 +68,7 @@ export default function Cs2Home({ route, navigate, live }: { route: Route; navig
                 <Img img={TAB_IMG[tab]} w={128} h={96} />
                 <span>
                   <b className="c2-card-h">{t.tabs[tab]}</b>
-                  <span className="c2-dim">{t.home.cards[tab](tab === "trade-up" || tab === "inventory" || tab === "market" || tab === "patches" ? "" : num(meta.counts[tab], 0))}</span>
+                  <span className="c2-dim">{t.home.cards[tab](tab === "trade-up" || tab === "inventory" || tab === "market" || tab === "patches" || tab === "esports" ? "" : num(meta.counts[tab], 0))}</span>
                 </span>
               </RouteLink>
             ) : (
@@ -76,7 +76,7 @@ export default function Cs2Home({ route, navigate, live }: { route: Route; navig
                 <Img img={TAB_IMG[tab]} w={128} h={96} />
                 <span>
                   <b className="c2-card-h">{t.tabs[tab]}</b>
-                  <span className="c2-dim">{t.home.cards[tab](tab === "trade-up" || tab === "inventory" || tab === "market" || tab === "patches" ? "" : num(meta.counts[tab], 0))}</span>
+                  <span className="c2-dim">{t.home.cards[tab](tab === "trade-up" || tab === "inventory" || tab === "market" || tab === "patches" || tab === "esports" ? "" : num(meta.counts[tab], 0))}</span>
                 </span>
               </span>
             )}
