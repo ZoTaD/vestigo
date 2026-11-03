@@ -104,6 +104,7 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        # `--functions`: el intermediario del inventario de CS2 (`site/netlify/functions`, etapa 3 del 2026-11-03).
         run: |
-          npx --yes netlify-cli@27.11.2 deploy --prod --no-build --dir site/dist \
+          npx --yes netlify-cli@27.11.2 deploy --prod --no-build --dir site/dist --functions site/netlify/functions \
             --message "${{ github.event_name }} $(git rev-parse --short HEAD)"
