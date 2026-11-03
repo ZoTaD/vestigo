@@ -24,6 +24,8 @@ export default function TourView({ route, navigate }: { route: Route; navigate: 
   return <TourPage tour={tour.value} idx={idx.value} route={route} navigate={navigate} />;
 }
 
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 /** Las rondas de cada mitad en texto: "8 defendiendo · 4 atacando · 3 + 1 en el alargue". */
 function halves(h: [string, number][], words: { ct: string; t: string }): string {
   return h.map(([side, n]) => `${n} ${side === "ct" ? words.ct : words.t}`).join(" · ");
@@ -150,7 +152,7 @@ export function TourPage({ tour, idx, route, navigate }: { tour: Tour; idx: EsIn
         ) : (
           [...byDay].map(([k, ms]) => (
             <Fragment key={k}>
-              <h3 className="c2-es-day">{fmtDate(k, lang, { weekday: "long", day: "numeric", month: "long" })}</h3>
+              <h3 className="c2-es-day">{cap(fmtDate(k, lang, { weekday: "long", day: "numeric", month: "long" }))}</h3>
               <ul className="c2-tr-ms">
                 {ms.map((m, i) => (
                   <MatchCard key={i} m={m} idx={idx} route={route} navigate={navigate} />

@@ -21,6 +21,7 @@ import { isDataTab as isWfTab, loadFicha as loadWfFicha, peekFicha as peekWfFich
 import { isDataTab as isCs2Tab, loadFicha as loadCs2Ficha, peekFicha as peekCs2Ficha } from "./cs2/data";
 import { loadPatchIndex, peekPatchIndex } from "./cs2/patches/data";
 import { patchName } from "./cs2/patches/names";
+import { loadIndex as loadEsIndex, peekIndex as peekEsIndex } from "./cs2/esports/teams/data";
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
 import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
@@ -175,6 +176,14 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
   if (route.view === "warframe" && isWfTab(route.wfSection) && route.detail) {
     const f = peekWfFicha(route.wfSection, route.detail);
     return f ? (lang === "es" && f.name[1]) || f.name[0] : null;
+  }
+  // Una ficha de la etapa 6b de CS2 (equipo, jugador o torneo): su nombre sale del índice de fichas.
+  if (route.view === "cs2" && (route.c2Section === "teams" || route.c2Section === "players" || route.c2Section === "esports") && route.detail) {
+    const ix = peekEsIndex();
+    if (!ix) return null;
+    if (route.c2Section === "teams") return ix.teams.find((x) => x.slug === route.detail)?.name ?? null;
+    if (route.c2Section === "players") return ix.players.find((x) => x.slug === route.detail)?.id ?? null;
+    return ix.tours.find((x) => x.slug === route.detail)?.name ?? null;
   }
   // Una edición de Parches de CS2: su nombre sale del índice ("Parche del 28 de octubre de 2026" o el título).
   if (route.view === "cs2" && route.c2Section === "patches" && route.detail) {
@@ -340,6 +349,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "warframe" && isWfTab(route.wfSection) && route.detail && peekWfFicha(route.wfSection, route.detail) === undefined) {
       let vivo = true;
       loadWfFicha(route.wfSection, route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una ficha de la etapa 6b de CS2: el índice de fichas.
+    if (route.view === "cs2" && (route.c2Section === "teams" || route.c2Section === "players" || route.c2Section === "esports") && route.detail && !peekEsIndex()) {
+      let vivo = true;
+      loadEsIndex().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una edición de Parches de CS2: el índice.

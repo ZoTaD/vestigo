@@ -47,6 +47,8 @@ export interface Cs2Copy {
   detailSeo: Record<Cs2DataTab, (name: string) => Seo>;
   /** Una edición de Parches: `name` es "Parche del 28 de octubre de 2026" o el título del lanzamiento. */
   patchSeo: (name: string, launch: boolean) => Seo;
+  /** Las fichas de la etapa 6b: un equipo, un jugador y un torneo, por su nombre. */
+  esSeo: { teams: (name: string) => Seo; players: (name: string) => Seo; esports: (name: string) => Seo };
   rarity: Record<Cs2Rarity, string>;
   wear: [string, string, string, string, string];
   cat: Record<Cs2Cat, string>;
@@ -328,6 +330,11 @@ const EN: Cs2Copy = {
     skins: (n) => ({ title: `${n} price, float & cases`, description: clip(`${n}: price in every wear (normal, StatTrak and Souvenir), float range, rarity and the cases and collections it drops from.`) }),
     cases: (n) => ({ title: `${n} odds & expected value`, description: clip(`${n}: every skin inside with its price in each wear, the odds of each rarity, the knives and what opening it returns on average.`) }),
     collections: (n) => ({ title: `${n} skins & prices`, description: clip(`${n}: every skin by rarity with its float range and price, and where the collection drops from.`) }),
+  },
+  esSeo: {
+    teams: (n) => ({ title: `${n}: CS2 roster, maps & ranking`, description: clip(`${n} in CS2: current roster, Valve ranking over time, recent results, which maps it wins and whether it is stronger defending or attacking, and its latest matches map by map.`) }),
+    players: (n) => ({ title: `${n}: CS2 player, team & role`, description: clip(`${n}, CS2 pro player: nationality, age, roles, current team and prize money.`) }),
+    esports: (n) => ({ title: `${n}: CS2 matches & results`, description: clip(`${n} in CS2: dates, prize pool, teams and every match with its maps and the rounds won defending and attacking.`) }),
   },
   patchSeo: (n, launch) =>
     launch
@@ -637,6 +644,11 @@ const ES: Cs2Copy = {
     skins: (n) => ({ title: `${n}: precio, float y cajas`, description: clip(`${n}: precio en cada desgaste (normal, StatTrak y Souvenir), rango de float, rareza y las cajas y colecciones de donde sale.`) }),
     cases: (n) => ({ title: `${n}: probabilidades y valor esperado`, description: clip(`${n}: cada skin que trae con su precio en cada desgaste, la probabilidad de cada rareza, los cuchillos y cuánto devuelve abrirla en promedio.`) }),
     collections: (n) => ({ title: `${n}: skins y precios`, description: clip(`${n}: cada skin por rareza con su rango de float y precio, y de dónde sale la colección.`) }),
+  },
+  esSeo: {
+    teams: (n) => ({ title: `${n}: plantel, mapas y ranking en CS2`, description: clip(`${n} en CS2: plantel actual, cómo se movió en el ranking de Valve, últimos resultados, en qué mapas gana y si es más fuerte defendiendo o atacando, y sus partidos mapa por mapa.`) }),
+    players: (n) => ({ title: `${n}: jugador de CS2, equipo y rol`, description: clip(`${n}, jugador profesional de CS2: nacionalidad, edad, roles, equipo actual y premios.`) }),
+    esports: (n) => ({ title: `${n}: partidos y resultados de CS2`, description: clip(`${n} en CS2: fechas, premios, equipos y cada partido con sus mapas y las rondas ganadas defendiendo y atacando.`) }),
   },
   patchSeo: (n, launch) =>
     launch

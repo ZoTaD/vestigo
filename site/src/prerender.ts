@@ -213,6 +213,7 @@ export function metaFor(
     const sec = route.c2Section ?? "home";
     if (sec === "skins" || sec === "cases" || sec === "collections") if (route.detail && detailName) return c.detailSeo[sec](detailName);
     if (sec === "patches" && route.detail && detailName) return c.patchSeo(detailName, !isPatchName(detailName));
+    if ((sec === "teams" || sec === "players" || sec === "esports") && route.detail && detailName) return c.esSeo[sec](detailName);
     return c.seo[sec];
   }
   // Lo que queda son la portada y las dos páginas legales.
@@ -279,6 +280,9 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     for (const e of data.c2?.[tab] ?? []) out[`c2-${tab}/${e.slug}`] = e.name;
   }
   for (const e of data.c2?.patches ?? []) out[`c2-patches/${e.slug}`] = patchName(e, lang);
+  for (const e of data.c2?.esports?.teams ?? []) out[`c2-teams/${e.slug}`] = e.name;
+  for (const e of data.c2?.esports?.players ?? []) out[`c2-players/${e.slug}`] = e.id;
+  for (const e of data.c2?.esports?.tours ?? []) out[`c2-esports/${e.slug}`] = e.name;
   for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const slug of data.rs?.circuits ?? []) {
     const m = circuitMeta(slug);
