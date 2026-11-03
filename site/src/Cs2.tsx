@@ -28,6 +28,7 @@ const Cs2Skins = lazyWithPreload(() => import("./cs2/skins/Cs2Skins"));
 const Cs2Cases = lazyWithPreload(() => import("./cs2/cases/Cs2Cases"));
 const Cs2Collections = lazyWithPreload(() => import("./cs2/collections/Cs2Collections"));
 const Cs2Tradeup = lazyWithPreload(() => import("./cs2/tradeup/Cs2Tradeup"));
+const Cs2Inventory = lazyWithPreload(() => import("./cs2/inventory/Cs2Inventory"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `CS2_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `CS2_TAB_FILES`.
@@ -36,6 +37,7 @@ const TABS: Partial<Record<Cs2Section, LazyTab>> = {
   cases: Cs2Cases,
   collections: Cs2Collections,
   "trade-up": Cs2Tradeup,
+  inventory: Cs2Inventory,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */

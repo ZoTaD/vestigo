@@ -29,7 +29,8 @@ describe("el intermediario del inventario", () => {
   });
   it("inventario privado → 403 private; perfil inexistente → 404 notfound; Steam con 429 → 503 busy", async () => {
     const priv = await call(`?id=${ID}`, () => json(null, 403));
-    expect([priv.status, (await priv.json()).error]).toEqual([403, "private"]);
+    expect(await priv.json()).toEqual({ error: "private", steamid: ID });
+    expect(priv.status).toBe(403);
     const nf = await call("?id=nadie", () => new Response("<response><error>The specified profile could not be found.</error></response>"));
     expect([nf.status, (await nf.json()).error]).toEqual([404, "notfound"]);
     const busy = await call(`?id=${ID}`, () => new Response("", { status: 429 }));

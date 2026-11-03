@@ -124,6 +124,9 @@ export const loadSkinPrices = () => skinPrices.load();
 export const peekSkinPrices = () => skinPrices.peek();
 export const loadCasePrices = () => casePrices.load();
 export const peekCasePrices = () => casePrices.peek();
+/** El precio de todo Skinport por `market_hash_name` (~260 KB comprimido): sólo lo baja el Inventario (etapa 3). */
+const allPrices = once<Record<string, number>>(() => import("@cs2prices/all.json") as Promise<Mod<unknown>>);
+export const loadAllPrices = () => allPrices.load();
 export const loadTradeup = () => tradeup.load();
 export const peekTradeup = () => tradeup.peek();
 export const loadPriceDate = () => priceMeta.load().then((m) => m.date);
