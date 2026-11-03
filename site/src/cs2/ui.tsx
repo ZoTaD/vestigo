@@ -3,10 +3,12 @@
  * dólares, la rareza por color de texto, la barra de desgastes con el rango de float, la imagen y la hoja de
  * "cargando…".
  */
+import type { ReactNode } from "react";
 import { useLang } from "../i18n";
 import type { Route } from "../route";
 import { SettledImg } from "../SettledImg";
 import { useCs2Copy, WEARS, type Cs2Rarity } from "../cs2Copy";
+import type { SkinPrice, SkinRow } from "./data";
 
 export type Nav = (r: Route) => void;
 
@@ -97,5 +99,80 @@ export function Cs2Loading({ onRetry }: { onRetry?: () => void }) {
         )}
       </section>
     </main>
+  );
+}
+
+/** "AK-47 | Inheritance" → "Inheritance"; la fase va al lado ("Doppler · Ruby"). Un cuchillo sin pintura queda con su nombre. */
+export function skinPart(s: { name: string; phase?: string }): string {
+  const part = s.name.includes(" | ") ? s.name.split(" | ")[1] : s.name.replace(/^★ /, "");
+  return s.phase ? `${part} · ${s.phase}` : part;
+}
+
+/** ¿El rango de float de la skin llega al desgaste `i`? */
+export const reaches = (s: { min: number | null; max: number | null }, i: number): boolean =>
+  s.min != null && s.max != null && s.min < WEARS[i].to && s.max > WEARS[i].from;
+
+/** La tabla de precios por desgaste: normal y, si la skin los tiene, StatTrak y Souvenir. Sólo los desgastes que alcanza. */
+export function WearPrices({ skin, price }: { skin: { min: number | null; max: number | null; st: boolean; sv: boolean }; price: SkinPrice | undefined }) {
+  const t = useCs2Copy();
+  const st = skin.st && !!price?.st;
+  const sv = skin.sv && !!price?.sv;
+  const rows = skin.min == null ? [-1] : WEARS.map((_, i) => i).filter((i) => reaches(skin, i));
+  return (
+    <table className="c2-wp">
+      <thead>
+        <tr>
+          <th>{t.t.wearCol} · US$</th>
+          <th>{t.t.normal}</th>
+          {st && <th>{t.t.stattrak}</th>}
+          {sv && <th>{t.t.souvenir}</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((i) => {
+          const k = Math.max(i, 0);
+          return (
+            <tr key={i}>
+              <td>{i < 0 ? "—" : t.wear[i]}</td>
+              <td>
+                <Price v={price?.n[k]} bare sug={!!((price?.sug ?? 0) & (1 << k))} />
+              </td>
+              {st && (
+                <td>
+                  <Price v={price?.st?.[k]} bare />
+                </td>
+              )}
+              {sv && (
+                <td>
+                  <Price v={price?.sv?.[k]} bare />
+                </td>
+              )}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
+
+/** El costado de la maqueta A: arma y rareza, nombre, imagen grande, barra de desgastes y precios. `children` va al pie. */
+export function SkinSide({ skin, price, children }: { skin: SkinRow; price: SkinPrice | undefined; children?: ReactNode }) {
+  const t = useCs2Copy();
+  return (
+    <aside className="c2-panel c2-side">
+      <p className="c2-dim">
+        {skin.weapon} · <Rarity r={skin.rarity} />
+      </p>
+      <h2>{skinPart(skin)}</h2>
+      <Img img={skin.img} w={300} h={190} big />
+      {skin.min != null && (
+        <p className="c2-dim">
+          {t.t.float} <FloatRange min={skin.min} max={skin.max} />
+        </p>
+      )}
+      <WearBar min={skin.min} max={skin.max} />
+      <WearPrices skin={skin} price={price} />
+      {children}
+    </aside>
   );
 }

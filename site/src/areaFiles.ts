@@ -145,6 +145,7 @@ export const WF_TAB_FILES: Partial<Record<WfSection, string>> = {
  * `test/areas.test.ts`). Cada una suma acá su línea el día que tiene página. La portada viene con el área.
  */
 export const CS2_TAB_FILES: Partial<Record<Cs2Section, string>> = {
+  cases: "src/cs2/cases/Cs2Cases.tsx",
 };
 
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */

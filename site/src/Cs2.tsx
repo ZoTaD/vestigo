@@ -22,9 +22,12 @@ type Nav = (route: Route) => void;
 type TabProps = { route: Route; navigate: Nav };
 type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
+const Cs2Cases = lazyWithPreload(() => import("./cs2/cases/Cs2Cases"));
+
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `CS2_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `CS2_TAB_FILES`.
 const TABS: Partial<Record<Cs2Section, LazyTab>> = {
+  cases: Cs2Cases,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -33,6 +36,7 @@ const hasPage = (tab: Cs2Section): boolean => tab === "home" || !!TABS[tab];
 /** Los datos que una pestaña baja aparte de su chunk, pedidos junto con él. La portada baja sólo los precios de las cajas. */
 const TAB_DATA: Partial<Record<Cs2Section, (route: Route) => Promise<unknown>>> = {
   home: () => import("./cs2/data").then((m) => m.loadCasePrices()),
+  cases: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
 };
 
 /** Baja el chunk de la pestaña de una ruta de CS2, y sus datos. */
