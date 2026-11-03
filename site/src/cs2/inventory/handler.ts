@@ -22,8 +22,12 @@ function reply(body: unknown, status: number, cdnSeconds: number): Response {
     },
   });
 }
-/** Un error, con el SteamID si ya se sabe: la página arma con él el enlace para pegar el inventario a mano. */
-const fail = (error: InvError, steamid?: string) => reply({ error, ...(steamid ? { steamid } : {}) }, { bad: 400, private: 403, notfound: 404, busy: 503 }[error], 60);
+/**
+ * Un error, con el SteamID si ya se sabe (la página arma con él el enlace para pegar el inventario a mano) y, si fue
+ * Steam el que no respondió, su código (`upstream`): así se distingue un bloqueo (429) de una caída.
+ */
+const fail = (error: InvError, steamid?: string, upstream?: number) =>
+  reply({ error, ...(steamid ? { steamid } : {}), ...(upstream ? { upstream } : {}) }, { bad: 400, private: 403, notfound: 404, busy: 503 }[error], 60);
 
 export async function handleInventory(url: URL, fetcher: typeof fetch = fetch): Promise<Response> {
   const prof = parseProfile(url.searchParams.get("id") ?? "");
@@ -33,7 +37,7 @@ export async function handleInventory(url: URL, fetcher: typeof fetch = fetch): 
     let id = prof.value;
     if (prof.kind === "vanity") {
       const r = await get(vanityUrl(prof.value));
-      if (r.status === 429 || r.status >= 500) return fail("busy");
+      if (r.status === 429 || r.status >= 500) return fail("busy", undefined, r.status);
       const found = parseVanityXml(await r.text());
       if (!found) return fail("notfound");
       id = found;
@@ -44,7 +48,7 @@ export async function handleInventory(url: URL, fetcher: typeof fetch = fetch): 
     for (let i = 0; i < PAGES; i++) {
       const r = await get(inventoryUrl(id, start));
       if (r.status === 403 || r.status === 401) return fail("private", id);
-      if (r.status === 429 || r.status >= 500) return fail("busy", id);
+      if (r.status === 429 || r.status >= 500) return fail("busy", id, r.status);
       if (!r.ok) return fail("notfound");
       const page = compact(await r.json().catch(() => null));
       if ("error" in page) return fail(page.error, id);
