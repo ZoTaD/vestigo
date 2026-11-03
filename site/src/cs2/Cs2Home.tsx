@@ -10,9 +10,9 @@ import { useCs2Copy } from "../cs2Copy";
 import { loadCasePrices, loadList, loadPriceDate, peekCasePrices, peekList, peekPriceDate, type CasePrice, type CaseRow } from "./data";
 import { Img, Pct, Price, useNum, type Nav } from "./ui";
 
-const TABS: Cs2Tab[] = ["cases", "skins", "trade-up", "collections"];
+const TABS: Cs2Tab[] = ["cases", "skins", "trade-up", "inventory", "collections"];
 /** La imagen de cada tarjeta: la Kilowatt, la AWP | Chrome Cannon y su colección (la AK-47 | Inheritance va en la cabecera). */
-const TAB_IMG: Record<Cs2Tab, string> = { cases: "kilowatt-case", skins: "awp-chrome-cannon", collections: "the-kilowatt-collection", "trade-up": "kukri-knife-fade" };
+const TAB_IMG: Record<Cs2Tab, string> = { cases: "kilowatt-case", skins: "awp-chrome-cannon", collections: "the-kilowatt-collection", "trade-up": "kukri-knife-fade", inventory: "operation-breakout-weapon-case" };
 
 /** Las cajas con "devuelve" (precio de caja y valor esperado), de la que más devuelve a la que menos. */
 export function bestReturns(cases: CaseRow[], prices: Record<string, CasePrice>, n = 14): (CaseRow & { p: CasePrice })[] {
@@ -68,7 +68,7 @@ export default function Cs2Home({ route, navigate, live }: { route: Route; navig
                 <Img img={TAB_IMG[tab]} w={128} h={96} />
                 <span>
                   <b className="c2-card-h">{t.tabs[tab]}</b>
-                  <span className="c2-dim">{t.home.cards[tab](tab === "trade-up" ? "" : num(meta.counts[tab], 0))}</span>
+                  <span className="c2-dim">{t.home.cards[tab](tab === "trade-up" || tab === "inventory" ? "" : num(meta.counts[tab], 0))}</span>
                 </span>
               </RouteLink>
             ) : (
@@ -76,7 +76,7 @@ export default function Cs2Home({ route, navigate, live }: { route: Route; navig
                 <Img img={TAB_IMG[tab]} w={128} h={96} />
                 <span>
                   <b className="c2-card-h">{t.tabs[tab]}</b>
-                  <span className="c2-dim">{t.home.cards[tab](tab === "trade-up" ? "" : num(meta.counts[tab], 0))}</span>
+                  <span className="c2-dim">{t.home.cards[tab](tab === "trade-up" || tab === "inventory" ? "" : num(meta.counts[tab], 0))}</span>
                 </span>
               </span>
             )}

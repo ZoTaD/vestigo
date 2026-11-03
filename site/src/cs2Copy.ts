@@ -9,7 +9,7 @@ import { useLang } from "./i18n";
 import type { Cs2DataTab, Cs2Section, Cs2Tab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "collections", "trade-up"];
+export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "collections", "trade-up", "inventory"];
 
 /** Las rarezas como las deja `site_data.py` (`RARITY` de `cs2.py`), de la más alta a la más baja. */
 export type Cs2Rarity = "contraband" | "extraordinary" | "covert" | "classified" | "restricted" | "milspec" | "industrial" | "consumer";
@@ -104,6 +104,30 @@ export interface Cs2Copy {
     none: string;
     open: string;
   };
+  /** La pestaña Inventario (etapa 3). */
+  inv: {
+    placeholder: string;
+    go: string;
+    loading: string;
+    worth: (n: string) => string;
+    noPrice: (n: number) => string;
+    partial: string;
+    all: string;
+    sortBy: string;
+    byTotal: string;
+    byPrice: string;
+    byName: string;
+    each: string;
+    error: { bad: string; private: string; notfound: string; busy: string; paste: string };
+    paste: string;
+    pasteHow: (hasLink: boolean) => string;
+    pasteLink: string;
+    pasteBox: string;
+    pasteGo: string;
+    empty: string;
+    untradable: string;
+    types: Record<string, string>;
+  };
   /** La pestaña Trade-up (etapa 2). */
   tu: {
     build: string;
@@ -145,7 +169,7 @@ export interface Cs2Copy {
 }
 
 const EN: Cs2Copy = {
-  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up" },
+  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory" },
   loading: "Loading…",
   loadError: "Couldn't load this page.",
   retry: "Retry",
@@ -154,6 +178,7 @@ const EN: Cs2Copy = {
     skins: { title: "CS2 skins: prices, float ranges & cases", description: "All CS2 weapon, knife and glove skins with their price in each wear, StatTrak and Souvenir, float range and the case they drop from." },
     cases: { title: "CS2 cases: odds, expected value & prices", description: "Every CS2 case, souvenir package and terminal with its price, the odds of each rarity and what opening it returns on average." },
     collections: { title: "CS2 collections: every skin & price", description: "Every CS2 weapon collection with its skins by rarity, their float ranges and prices, and the case or package it comes from." },
+    inventory: { title: "CS2 inventory value checker", description: "How much is your CS2 inventory worth? Paste your Steam profile and see every item with today's price, grouped by type. Free, no login." },
     "trade-up": { title: "CS2 trade-up calculator: odds, floats & profit", description: "Free CS2 trade-up calculator: the odds, exact float and price of every outcome, expected profit after fees, knife trade-ups and a reverse calculator." },
   },
   detailSeo: {
@@ -178,6 +203,7 @@ const EN: Cs2Copy = {
       cases: (n) => `${n} cases, terminals and souvenir packages with odds and expected value.`,
       collections: (n) => `${n} collections with every skin by rarity.`,
       "trade-up": () => "Odds, floats and profit of any contract, knife trade-ups and the reverse: what to put in to get the skin you want.",
+      inventory: () => "Paste your Steam profile and see what your CS2 inventory is worth today, item by item.",
     },
     pricesOf: (d) => `Prices of ${d}`,
   },
@@ -227,6 +253,35 @@ const EN: Cs2Copy = {
     count: (n) => `${n} results`,
     none: "Nothing matches.",
     open: "Open",
+  },
+  inv: {
+    placeholder: "Steam profile URL, SteamID64 or custom name",
+    go: "Check value",
+    loading: "Reading the inventory from Steam…",
+    worth: (n) => `${n} items · worth today`,
+    noPrice: (n) => `${n} item${n === 1 ? "" : "s"} without a market price don't count.`,
+    partial: "Only the first 6,000 items were read.",
+    all: "All",
+    sortBy: "Sort",
+    byTotal: "Total value",
+    byPrice: "Unit price",
+    byName: "Name",
+    each: "each",
+    error: {
+      bad: "That doesn't look like a Steam profile. Paste the profile URL, the SteamID64 (17 digits) or the custom name.",
+      private: "That inventory is private. If it's yours, you can paste it by hand below.",
+      notfound: "Steam doesn't know that profile.",
+      busy: "Steam isn't answering right now. Try again in a few minutes or paste the inventory by hand.",
+      paste: "That isn't a Steam inventory. Copy the whole page Steam shows and paste it again.",
+    },
+    paste: "Paste it by hand",
+    pasteHow: (link) => (link ? "Open this link signed in to Steam, select all (Ctrl+A), copy and paste it here. Nothing leaves your computer." : "Open your inventory link on Steam signed in (steamcommunity.com/inventory/<your SteamID64>/730/2), copy it all and paste it here. Nothing leaves your computer."),
+    pasteLink: "Open my inventory on Steam",
+    pasteBox: "Paste the inventory here",
+    pasteGo: "Read",
+    empty: "This inventory has no CS2 items.",
+    untradable: "not tradable",
+    types: { Container: "Cases", Key: "Keys", Sticker: "Stickers", Agent: "Agents", Knife: "Knives", Gloves: "Gloves", Rifle: "Rifles", "Sniper Rifle": "Snipers", Pistol: "Pistols", SMG: "SMGs", Shotgun: "Shotguns", Machinegun: "Machine guns", Charm: "Charms", Graffiti: "Graffiti", "Music Kit": "Music kits", Patch: "Patches", Collectible: "Collectibles", Pass: "Passes", Tool: "Tools", Gift: "Gifts" },
   },
   tu: {
     build: "Build a contract",
@@ -278,7 +333,7 @@ const EN: Cs2Copy = {
 };
 
 const ES: Cs2Copy = {
-  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up" },
+  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario" },
   loading: "Cargando…",
   loadError: "No se pudo cargar esta página.",
   retry: "Reintentar",
@@ -287,6 +342,7 @@ const ES: Cs2Copy = {
     skins: { title: "Skins de CS2: precios, float y cajas", description: "Todas las skins de armas, cuchillos y guantes de CS2 con su precio en cada desgaste, StatTrak y Souvenir, rango de float y la caja de donde salen." },
     cases: { title: "Cajas de CS2: probabilidades, valor esperado y precios", description: "Cada caja, paquete de souvenir y terminal de CS2 con su precio, la probabilidad de cada rareza y cuánto devuelve abrirla en promedio." },
     collections: { title: "Colecciones de CS2: cada skin y su precio", description: "Cada colección de armas de CS2 con sus skins por rareza, su rango de float y precio, y la caja o el paquete de donde sale." },
+    inventory: { title: "Cuánto vale tu inventario de CS2", description: "¿Cuánto vale tu inventario de CS2? Pegá tu perfil de Steam y mirá cada objeto con el precio de hoy, agrupado por tipo. Gratis y sin iniciar sesión." },
     "trade-up": { title: "Calculadora de trade-up de CS2: probabilidades, float y ganancia", description: "Calculadora de trade-up de CS2 gratis: probabilidad, float exacto y precio de cada resultado, ganancia esperada después de comisiones, cuchillos y calculadora inversa." },
   },
   detailSeo: {
@@ -311,6 +367,7 @@ const ES: Cs2Copy = {
       cases: (n) => `${n} cajas, terminales y paquetes de souvenir con probabilidades y valor esperado.`,
       collections: (n) => `${n} colecciones con cada skin por rareza.`,
       "trade-up": () => "Probabilidades, float y ganancia de cualquier contrato, cuchillos incluidos, y al revés: qué poner para sacar la skin que querés.",
+      inventory: () => "Pegá tu perfil de Steam y mirá cuánto vale hoy tu inventario de CS2, objeto por objeto.",
     },
     pricesOf: (d) => `Precios del ${d}`,
   },
@@ -360,6 +417,35 @@ const ES: Cs2Copy = {
     count: (n) => `${n} resultados`,
     none: "No hay nada con eso.",
     open: "Abrir",
+  },
+  inv: {
+    placeholder: "URL de tu perfil de Steam, SteamID64 o nombre",
+    go: "Valuar",
+    loading: "Leyendo el inventario en Steam…",
+    worth: (n) => `${n} objetos · vale hoy`,
+    noPrice: (n) => `${n} objeto${n === 1 ? "" : "s"} sin precio de mercado no ${n === 1 ? "suma" : "suman"}.`,
+    partial: "Sólo se leyeron los primeros 6.000 objetos.",
+    all: "Todo",
+    sortBy: "Orden",
+    byTotal: "Valor total",
+    byPrice: "Precio unitario",
+    byName: "Nombre",
+    each: "c/u",
+    error: {
+      bad: "Eso no parece un perfil de Steam. Pegá la URL del perfil, el SteamID64 (17 dígitos) o el nombre personalizado.",
+      private: "Ese inventario es privado. Si es el tuyo, podés pegarlo a mano acá abajo.",
+      notfound: "Steam no conoce ese perfil.",
+      busy: "Steam no está respondiendo. Probá en unos minutos o pegá el inventario a mano.",
+      paste: "Eso no es un inventario de Steam. Copiá la página entera que muestra Steam y pegala de nuevo.",
+    },
+    paste: "Pegalo a mano",
+    pasteHow: (link) => (link ? "Abrí este enlace con tu sesión de Steam, seleccioná todo (Ctrl+A), copialo y pegalo acá. Nada sale de tu computadora." : "Abrí el enlace de tu inventario en Steam con tu sesión (steamcommunity.com/inventory/<tu SteamID64>/730/2), copialo entero y pegalo acá. Nada sale de tu computadora."),
+    pasteLink: "Abrir mi inventario en Steam",
+    pasteBox: "Pegá el inventario acá",
+    pasteGo: "Leer",
+    empty: "Este inventario no tiene objetos de CS2.",
+    untradable: "no intercambiable",
+    types: { Container: "Cajas", Key: "Llaves", Sticker: "Stickers", Agent: "Agentes", Knife: "Cuchillos", Gloves: "Guantes", Rifle: "Rifles", "Sniper Rifle": "Francotiradores", Pistol: "Pistolas", SMG: "Subfusiles", Shotgun: "Escopetas", Machinegun: "Ametralladoras", Charm: "Llaveros", Graffiti: "Grafitis", "Music Kit": "Kits de música", Patch: "Parches", Collectible: "Coleccionables", Pass: "Pases", Tool: "Herramientas", Gift: "Regalos" },
   },
   tu: {
     build: "Armar contrato",

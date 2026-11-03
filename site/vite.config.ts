@@ -1014,8 +1014,37 @@ function manualChunks() {
   };
 }
 
+/**
+ * El intermediario del inventario de CS2 en `npm run dev` y `vite preview` (2026-11-03): en producción lo atiende la
+ * Netlify Function (`netlify/functions/cs2-inventory.mts`); acá, la misma lógica (`src/cs2/inventory/handler.ts`).
+ */
+function cs2InventoryApi(): Plugin {
+  const handle = (load: () => Promise<{ handleInventory: (u: URL) => Promise<Response> }>) =>
+    (req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse, next: () => void) => {
+      if (!req.url?.startsWith("/api/cs2/inventory")) return next();
+      load()
+        .then((m) => m.handleInventory(new URL(req.url!, "http://localhost")))
+        .then(async (r) => {
+          res.statusCode = r.status;
+          r.headers.forEach((v, k) => res.setHeader(k, v));
+          res.end(await r.text());
+        })
+        .catch(() => ((res.statusCode = 500), res.end()));
+    };
+  return {
+    name: "cs2-inventory-api",
+    configureServer(server) {
+      server.middlewares.use(handle(() => server.ssrLoadModule("/src/cs2/inventory/handler.ts") as never));
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(handle(() => import("./src/cs2/inventory/handler")));
+    },
+  };
+}
+
 export default defineConfig({
   plugins: [
+    cs2InventoryApi(),
     localDeadlockAssets(),
     esSlugsModule("virtual:d2r-slugs-es", [`${d2rDir}/wiki/index.json`, `${d2rDir}/drops/index.json`], () => buildD2rEsSlugs(readD2Index())),
     // Antes que el de las secciones: su `load` atiende todo lo que empiece con `virtual:pz-slugs-es/`.
