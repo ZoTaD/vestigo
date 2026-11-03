@@ -69,14 +69,18 @@ export interface Cs2Copy {
     souvenir: string;
     suggested: string;
     suggestedHint: string;
+    sugNote: string;
     wearCol: string;
     odds: string;
+    priceFrom: string;
+    priceTo: string;
     oddsEach: string;
     caseCol: string;
     key: string;
     ev: string;
     returns: string;
     returnsHint: string;
+    evLine: (cost: string, ev: string, pct: string) => string;
     openCost: string;
     missing: string;
     special: (n: number) => string;
@@ -86,6 +90,8 @@ export interface Cs2Copy {
     fromCases: string;
     fromCollections: string;
     noCases: string;
+    collNoCases: string;
+    listedNow: string;
     variants: string;
     terminalNote: string;
     noOdds: string;
@@ -118,6 +124,9 @@ export interface Cs2Copy {
     change: string;
     sales30: string;
     sales7: string;
+    /** El encabezado corto de ventas del mes en la Pizarra, y el título de la columna de precio. */
+    sales: string;
+    price: string;
     none: string;
     note: string;
     block: string;
@@ -204,7 +213,7 @@ const EN: Cs2Copy = {
     skins: { title: "CS2 skins: prices, float ranges & cases", description: "All CS2 weapon, knife and glove skins with their price in each wear, StatTrak and Souvenir, float range and the case they drop from." },
     cases: { title: "CS2 cases: odds, expected value & prices", description: "Every CS2 case, souvenir package and terminal with its price, the odds of each rarity and what opening it returns on average." },
     collections: { title: "CS2 collections: every skin & price", description: "Every CS2 weapon collection with its skins by rarity, their float ranges and prices, and the case or package it comes from." },
-    market: { title: "CS2 skin prices going up and down", description: "Which CS2 skins and cases are rising and falling this week, and which sell the most, from real sales: the median of the last 7 days against the last 30." },
+    market: { title: "CS2 skin prices going up and down", description: "Which CS2 skins and cases are going up and down in price this week, and which sell the most, from real Skinport sales." },
     inventory: { title: "CS2 inventory value checker", description: "How much is your CS2 inventory worth? Paste your Steam profile and see every item with today's price, grouped by type. Free, no login." },
     "trade-up": { title: "CS2 trade-up calculator: odds, floats & profit", description: "Free CS2 trade-up calculator: the odds, exact float and price of every outcome, expected profit after fees, knife trade-ups and a reverse calculator." },
   },
@@ -224,7 +233,7 @@ const EN: Cs2Copy = {
     kicker: "Counter-Strike 2",
     h1: "Skins, cases and prices",
     lede: "Every skin with its price in each wear, every case with its odds and what it returns on average, every collection. No gambling, no case opening, nothing to sell.",
-    ribbon: "Cases that return the most today",
+    ribbon: "What you get back on average per case opened",
     cards: {
       skins: (n) => `${n} weapon, knife and glove skins with float ranges and prices.`,
       cases: (n) => `${n} cases, terminals and souvenir packages with odds and expected value.`,
@@ -245,29 +254,35 @@ const EN: Cs2Copy = {
     normal: "Normal",
     stattrak: "StatTrak™",
     souvenir: "Souvenir",
-    suggested: "sugg.",
+    suggested: "*",
     suggestedHint: "No listings: suggested price",
+    sugNote: "Prices are the cheapest Skinport listing today. A price with * is Skinport's suggested price: nobody is selling that one right now.",
     wearCol: "Wear",
-    odds: "Odds",
+    odds: "Chance",
+    priceFrom: "Price from",
+    priceTo: "Price up to",
     oddsEach: "Each",
     caseCol: "Case",
     key: "Key",
     ev: "Expected value",
-    returns: "Returns",
+    returns: "You get back",
     returnsHint: "Expected value ÷ (case + key)",
+    evLine: (cost, ev, pct) => `Opening it costs ${cost} for the case and key; on average you get something worth ${ev}, so you get back ${pct} of what you spent.`,
     openCost: "Case + key",
     missing: "missing prices",
     special: (n) => `Rare special item · ${n}`,
     skinsN: (n) => `${n} skins`,
     date: "Released",
     type: "Type",
-    fromCases: "Drops from",
+    fromCases: "Cases it drops from",
     fromCollections: "Collection",
-    noCases: "Doesn't drop from cases",
+    noCases: "It isn't in any case. It comes from its collection (weekly drops, souvenir packages or operations), from a trade-up, or you buy it.",
+    collNoCases: "No case has this collection: its skins come from weekly drops, souvenir packages or operations, or from a trade-up.",
+    listedNow: "Cheapest listing on Skinport today",
     variants: "Other phases",
     terminalNote: "Terminals don't open with a key: they offer skins one at a time at a fixed price, so they have no odds or expected value.",
     noOdds: "Valve doesn't publish odds for this container.",
-    pricesNote: (d) => `Before fees, with the lowest Skinport listing of ${d}. StatTrak drops 10% of the time.`,
+    pricesNote: (d) => `Before fees, with the lowest Skinport listing of ${d}. A price with * is Skinport's suggested price: nobody is selling it right now. StatTrak drops 10% of the time.`,
     search: "Search",
     all: "All",
     sort: "Sort",
@@ -283,9 +298,9 @@ const EN: Cs2Copy = {
     open: "Open",
   },
   mk: {
-    period: { "7v30": "7 days vs 30", "1v7": "24 h vs 7 days", "30v90": "30 days vs 90" },
-    periodBefore: { "7v30": "30 days", "1v7": "7 days", "30v90": "90 days" },
-    periodNow: { "7v30": "7 days", "1v7": "24 h", "30v90": "30 days" },
+    period: { "7v30": "This week", "1v7": "Today", "30v90": "This month" },
+    periodBefore: { "7v30": "Last 30 days", "1v7": "Last 7 days", "30v90": "Last 90 days" },
+    periodNow: { "7v30": "last 7 days", "1v7": "today", "30v90": "last 30 days" },
     minSales: "Min. sales a month",
     kinds: { all: "All", skins: "Skins", cases: "Cases" },
     up: "Rising",
@@ -293,18 +308,20 @@ const EN: Cs2Copy = {
     top: "Best sellers",
     item: "Item",
     change: "Change",
-    sales30: "Sales (30 d)",
-    sales7: "Sales (7 d)",
+    sales30: "Sold this month",
+    sales7: "Sold this week",
+    sales: "Sold this month",
+    price: "Typical sale price, before → now",
     none: "Nothing moves with these filters.",
-    note: "Median of real Skinport sales, so one odd sale doesn't move it. Only variants with 30 or more sales a month and a median of US$ 0.50 or more.",
+    note: "Typical sale price: the middle of the real Skinport sales, so one odd sale doesn't move it. Only what sold 30 times or more this month for US$ 0.50 or more.",
     block: "Market",
-    variant: "Variant",
-    m90: "90 d",
-    m30: "30 d",
-    m7: "7 d",
-    m24: "24 h",
+    variant: "Version",
+    m90: "Last 90 days",
+    m30: "Last 30 days",
+    m7: "Last 7 days",
+    m24: "Today",
     trend: "Trend",
-    blockNote: "Median of real Skinport sales in each period.",
+    blockNote: "What it actually sold for on Skinport: the typical sale price in each period (half of the sales went for more, half for less).",
     history: (d) => `Lowest price, last ${d} days`,
   },
   inv: {
@@ -349,11 +366,11 @@ const EN: Cs2Copy = {
     inputs: (n, need) => `Inputs (${n}/${need})`,
     results: "Outcomes",
     collection: "Collection",
-    chance: "Odds",
-    ifWins: "Net if it drops",
+    chance: "Chance",
+    ifWins: "Profit if it drops",
     cost: "Cost",
     ev: "Expected value",
-    win: "Profit chance",
+    win: "Chance of making money",
     profit: "Expected profit",
     netOf: (fee) => `after a ${fee} fee`,
     empty: "Pick the input rarity and add skins with the search box.",
@@ -395,7 +412,7 @@ const ES: Cs2Copy = {
     skins: { title: "Skins de CS2: precios, float y cajas", description: "Todas las skins de armas, cuchillos y guantes de CS2 con su precio en cada desgaste, StatTrak y Souvenir, rango de float y la caja de donde salen." },
     cases: { title: "Cajas de CS2: probabilidades, valor esperado y precios", description: "Cada caja, paquete de souvenir y terminal de CS2 con su precio, la probabilidad de cada rareza y cuánto devuelve abrirla en promedio." },
     collections: { title: "Colecciones de CS2: cada skin y su precio", description: "Cada colección de armas de CS2 con sus skins por rareza, su rango de float y precio, y la caja o el paquete de donde sale." },
-    market: { title: "Skins de CS2 que suben y bajan de precio", description: "Qué skins y cajas de CS2 suben y bajan esta semana, y cuáles se venden más, con ventas reales: la mediana de los últimos 7 días contra la de 30." },
+    market: { title: "Skins de CS2 que suben y bajan de precio", description: "Qué skins y cajas de CS2 suben y bajan de precio esta semana, y cuáles se venden más, con ventas reales en Skinport." },
     inventory: { title: "Cuánto vale tu inventario de CS2", description: "¿Cuánto vale tu inventario de CS2? Pegá tu perfil de Steam y mirá cada objeto con el precio de hoy, agrupado por tipo. Gratis y sin iniciar sesión." },
     "trade-up": { title: "Calculadora de trade-up de CS2: probabilidades, float y ganancia", description: "Calculadora de trade-up de CS2 gratis: probabilidad, float exacto y precio de cada resultado, ganancia esperada después de comisiones, cuchillos y calculadora inversa." },
   },
@@ -415,7 +432,7 @@ const ES: Cs2Copy = {
     kicker: "Counter-Strike 2",
     h1: "Skins, cajas y precios",
     lede: "Cada skin con su precio en cada desgaste, cada caja con sus probabilidades y cuánto devuelve en promedio, cada colección. Sin apuestas, sin abrir cajas, nada para vender.",
-    ribbon: "Las cajas que más devuelven hoy",
+    ribbon: "Cuánto recuperás en promedio por caja abierta",
     cards: {
       skins: (n) => `${n} skins de armas, cuchillos y guantes con su float y precio.`,
       cases: (n) => `${n} cajas, terminales y paquetes de souvenir con probabilidades y valor esperado.`,
@@ -436,29 +453,35 @@ const ES: Cs2Copy = {
     normal: "Normal",
     stattrak: "StatTrak™",
     souvenir: "Souvenir",
-    suggested: "sug.",
+    suggested: "*",
     suggestedHint: "Sin publicaciones: precio sugerido",
+    sugNote: "Los precios son la publicación más barata de hoy en Skinport. Un precio con * es el sugerido por Skinport: ahora nadie lo está vendiendo.",
     wearCol: "Desgaste",
-    odds: "Prob.",
+    odds: "Probabilidad",
+    priceFrom: "Precio desde",
+    priceTo: "Precio hasta",
     oddsEach: "Cada una",
     caseCol: "Caja",
     key: "Llave",
     ev: "Valor esperado",
-    returns: "Devuelve",
+    returns: "Recuperás",
     returnsHint: "Valor esperado ÷ (caja + llave)",
+    evLine: (cost, ev, pct) => `Abrirla cuesta ${cost} entre caja y llave; en promedio sale algo que vale ${ev}, así que recuperás el ${pct} de lo que gastaste.`,
     openCost: "Caja + llave",
     missing: "faltan precios",
     special: (n) => `Objeto especial · ${n}`,
     skinsN: (n) => `${n} skins`,
     date: "Salió",
     type: "Tipo",
-    fromCases: "Sale de",
+    fromCases: "Cajas de las que sale",
     fromCollections: "Colección",
-    noCases: "No sale de cajas",
+    noCases: "No viene en ninguna caja. Sale de su colección (drops semanales, paquetes souvenir u operaciones), de un trade-up o se compra.",
+    collNoCases: "Ninguna caja trae esta colección: sus skins salen de drops semanales, paquetes souvenir u operaciones, o de un trade-up.",
+    listedNow: "Publicación más barata hoy en Skinport",
     variants: "Otras fases",
     terminalNote: "Las terminales no se abren con llave: ofrecen skins de a una a un precio fijo, así que no tienen probabilidades ni valor esperado.",
     noOdds: "Valve no publica probabilidades para este contenedor.",
-    pricesNote: (d) => `Antes de comisiones, con la publicación más barata de Skinport del ${d}. StatTrak sale el 10 % de las veces.`,
+    pricesNote: (d) => `Antes de comisiones, con la publicación más barata de Skinport del ${d}. Un precio con * es el sugerido por Skinport: ahora nadie lo está vendiendo. StatTrak sale el 10 % de las veces.`,
     search: "Buscar",
     all: "Todas",
     sort: "Orden",
@@ -474,9 +497,9 @@ const ES: Cs2Copy = {
     open: "Abrir",
   },
   mk: {
-    period: { "7v30": "7 días vs 30", "1v7": "24 h vs 7 días", "30v90": "30 días vs 90" },
-    periodBefore: { "7v30": "30 días", "1v7": "7 días", "30v90": "90 días" },
-    periodNow: { "7v30": "7 días", "1v7": "24 h", "30v90": "30 días" },
+    period: { "7v30": "Esta semana", "1v7": "Hoy", "30v90": "Este mes" },
+    periodBefore: { "7v30": "Últimos 30 días", "1v7": "Últimos 7 días", "30v90": "Últimos 90 días" },
+    periodNow: { "7v30": "últimos 7 días", "1v7": "hoy", "30v90": "últimos 30 días" },
     minSales: "Ventas mínimas por mes",
     kinds: { all: "Todo", skins: "Skins", cases: "Cajas" },
     up: "Suben",
@@ -484,18 +507,20 @@ const ES: Cs2Copy = {
     top: "Más vendidas",
     item: "Objeto",
     change: "Cambio",
-    sales30: "Ventas (30 d)",
-    sales7: "Ventas (7 d)",
+    sales30: "Vendidas en el mes",
+    sales7: "Vendidas en la semana",
+    sales: "Vendidas en el mes",
+    price: "Precio típico de venta, antes → ahora",
     none: "Nada se mueve con estos filtros.",
-    note: "Mediana de ventas reales en Skinport, así una venta rara no la mueve. Sólo variantes con 30 ventas o más por mes y mediana de 0,50 US$ o más.",
+    note: "Precio típico de venta: el del medio de las ventas reales en Skinport, así una venta rara no lo mueve. Sólo lo que se vendió 30 veces o más en el mes por US$ 0,50 o más.",
     block: "Mercado",
-    variant: "Variante",
-    m90: "90 d",
-    m30: "30 d",
-    m7: "7 d",
-    m24: "24 h",
+    variant: "Versión",
+    m90: "Últimos 90 días",
+    m30: "Últimos 30 días",
+    m7: "Últimos 7 días",
+    m24: "Hoy",
     trend: "Tendencia",
-    blockNote: "Mediana de ventas reales en Skinport en cada período.",
+    blockNote: "A cuánto se vendió de verdad en Skinport: el precio típico de venta de cada período (la mitad de las ventas fue más cara y la otra mitad más barata).",
     history: (d) => `Precio más bajo, últimos ${d} días`,
   },
   inv: {
@@ -540,11 +565,11 @@ const ES: Cs2Copy = {
     inputs: (n, need) => `Entradas (${n}/${need})`,
     results: "Resultados",
     collection: "Colección",
-    chance: "Prob.",
-    ifWins: "Neto si sale",
+    chance: "Probabilidad",
+    ifWins: "Ganancia si sale",
     cost: "Costo",
     ev: "Valor esperado",
-    win: "Gana en",
+    win: "Chance de ganar plata",
     profit: "Ganancia esperada",
     netOf: (fee) => `después de ${fee} de comisión`,
     empty: "Elegí la rareza de entrada y sumá skins con el buscador.",

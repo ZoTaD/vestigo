@@ -47,7 +47,7 @@ export default function Cs2Home({ route, navigate, live }: { route: Route; navig
           <span className="c2-ribbon-h">{t.home.ribbon}</span>
           {ribbon.map((c) => (
             <RouteLink key={c.slug} className="c2-ribbon-i" to={to("cases", c.slug)} onNavigate={navigate}>
-              {c.name.replace(/ Case$/, "")} <Price v={c.p.price} /> <Pct v={c.p.ret ?? 0} d={0} className={(c.p.ret ?? 0) >= 1 ? "is-up" : "is-down"} />
+              {c.name.replace(/ Case$/, "")} <Pct v={c.p.ret ?? 0} d={0} className={(c.p.ret ?? 0) >= 1 ? "is-up" : "is-down"} />
             </RouteLink>
           ))}
         </div>

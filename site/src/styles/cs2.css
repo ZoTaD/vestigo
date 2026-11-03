@@ -138,7 +138,7 @@
 .c2-num.is-none { color: var(--c2-faint); font-weight: 400; }
 .c2-num.is-up { color: var(--c2-up); }
 .c2-num.is-down { color: var(--c2-down); }
-.c2-sug { color: var(--c2-dim); font-size: 0.8em; font-weight: 400; }
+.c2-sug { color: var(--c2-dim); font-weight: 700; }
 .c2-dim { color: var(--c2-dim); }
 
 /* --- La barra: tinta azul con la marca en esténcil ------------------------------------------------------------------ */
@@ -195,6 +195,9 @@ a.c2-tab:hover { color: var(--c2-stone); }
 .c2-table th > span { display: block; padding: 10px 14px; }
 .c2-sort { display: flex; width: 100%; justify-content: flex-end; gap: 6px; align-items: baseline; padding: 10px 14px; font: 700 16px/1 var(--c2-text); color: inherit; background: transparent; border: 0; cursor: pointer; }
 .c2-table th:first-child .c2-sort { justify-content: flex-start; }
+/* Los desgastes van con su nombre ("Bastante desgastado"), en dos renglones si hace falta. */
+.c2-table th.is-wear { white-space: normal; }
+.c2-table th.is-wear .c2-sort { line-height: 1.15; align-items: flex-end; }
 .c2-sort-i { color: var(--c2-faint); font-weight: 400; }
 .c2-sort:hover { background: var(--c2-stone-hi); }
 .c2-table th[aria-sort="ascending"], .c2-table th[aria-sort="descending"] { background: var(--c2-ink); color: var(--c2-stone); }
@@ -285,6 +288,10 @@ a.c2-card:hover { border-color: var(--c2-ink); }
 /* --- Trade-up (etapa 2): maqueta B "Planilla" ---------------------------------------------------------------------- */
 .c2-tu-cols { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 22px; align-items: start; }
 .c2-tu-cols > section { display: grid; gap: 10px; min-width: 0; }
+/* Las dos tablas lado a lado: encabezados en dos renglones y menos relleno, así entran sin scroll a 1.440 px. */
+.c2-tu-cols .c2-table th { white-space: normal; }
+.c2-tu-cols .c2-sort { line-height: 1.15; align-items: flex-end; }
+.c2-tu-cols .c2-table td, .c2-tu-cols .c2-sort { padding-inline: 8px; }
 .c2-tu-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
 .c2-tu-head .c2-h2 { margin: 0; }
 .c2-tu-actions { display: flex; gap: 8px; }
@@ -299,7 +306,7 @@ a.c2-card:hover { border-color: var(--c2-ink); }
 .c2-tu-hits button:hover, .c2-tu-hits button:focus-visible { background: var(--c2-stone-hi); }
 .c2-tu-hits strong { display: block; color: var(--r, var(--c2-ink)); }
 .c2-tu-hits small { color: var(--c2-dim); }
-.c2-tu-float { width: 88px; text-align: right; font: 600 15px/1 var(--c2-text); color: var(--c2-ink); background: var(--c2-stone-hi); border: 2px solid var(--c2-ink); padding: 4px 6px; font-variant-numeric: tabular-nums; }
+.c2-tu-float { width: 76px; text-align: right; font: 600 15px/1 var(--c2-text); color: var(--c2-ink); background: var(--c2-stone-hi); border: 2px solid var(--c2-ink); padding: 4px 6px; font-variant-numeric: tabular-nums; }
 .c2-tu-x { font: 700 20px/1 var(--c2-text); color: var(--c2-dim); background: transparent; border: 0; cursor: pointer; padding: 2px 6px; }
 .c2-tu-x:hover { color: var(--c2-down); }
 .c2-tu-target { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; padding: 16px; background: radial-gradient(60% 70% at 15% 100%, color-mix(in srgb, var(--r) 22%, transparent), transparent 70%), var(--c2-stone); container-type: inline-size; }
@@ -350,6 +357,22 @@ a.c2-inv-card:hover { border-color: var(--c2-ink); }
 .c2-h2.is-up { color: var(--c2-up); }
 .c2-h2.is-down { color: var(--c2-down); }
 .c2-mk-ch { font: 20px/1 var(--c2-stencil); }
+/* La Pizarra entra en media pantalla: el nombre se parte, imagen y relleno más chicos, sin ancho mínimo. */
+.c2-mk-table .c2-nm { min-width: 0; gap: 10px; }
+.c2-mk-table .c2-nm-t strong { font-size: 15px; overflow-wrap: normal; }
+.c2-mk-table td, .c2-mk-table .c2-sort { padding-inline: 8px; }
+.c2-mk-table td:first-child, .c2-mk-table th:first-child .c2-sort { padding-left: 10px; }
+.c2-mk-pr { white-space: nowrap; }
+.c2-mk-table th { white-space: normal; }
+.c2-mk-table .c2-sort { flex-wrap: wrap; line-height: 1.15; }
+@media (max-width: 600px) {
+  .c2-mk-table .c2-nm .c2-img { display: none; }
+  .c2-mk-table td, .c2-mk-table .c2-sort { padding-inline: 6px; }
+  .c2-mk-table .c2-nm-t strong { font-size: 14px; }
+  .c2-mk-pr { white-space: normal; }
+  .c2-mk-pr > .c2-dim { display: block; }
+  .c2-mk-ch { font-size: 17px; }
+}
 .c2-mk-block { display: grid; gap: 8px; }
 .c2-trend { display: block; margin-left: auto; }
 .c2-trend polyline { stroke: var(--c2-dim); }
@@ -358,6 +381,28 @@ a.c2-inv-card:hover { border-color: var(--c2-ink); }
 .c2-mk-hist { margin: 0; padding: 12px 14px; background: var(--c2-stone); display: grid; gap: 6px; }
 .c2-mk-hist svg { width: 100%; height: 120px; }
 .c2-mk-hist polyline { stroke: var(--c2-ink); }
-@media (max-width: 1280px) {
+@media (max-width: 1000px) {
   .c2-mk-cols { grid-template-columns: minmax(0, 1fr); }
+}
+
+/*
+ * Celular: las tablas anchas se apilan (ZoTaD, 3/11: nada de scroll de costado). Cada fila es un bloque con el nombre
+ * arriba y los datos en dos columnas, cada uno con su etiqueta (`data-l`); los encabezados quedan como botones para
+ * ordenar. La Pizarra del Mercado tiene su propio arreglo.
+ */
+@media (max-width: 700px) {
+  .c2-tablewrap { overflow-x: visible; }
+  .c2-table:not(.c2-mk-table), .c2-table:not(.c2-mk-table) tbody { display: block; }
+  .c2-table:not(.c2-mk-table) thead tr { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; border-bottom: 2px solid var(--c2-ink); }
+  .c2-table:not(.c2-mk-table) thead th { border: 0; white-space: nowrap; }
+  .c2-table:not(.c2-mk-table) thead th:not([aria-sort]) { display: none; }
+  .c2-table:not(.c2-mk-table) .c2-sort { padding: 6px 10px; justify-content: flex-start; }
+  .c2-table:not(.c2-mk-table) tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; padding: 10px; }
+  .c2-table:not(.c2-mk-table) tbody td { display: block; padding: 0; border: 0; text-align: left; }
+  .c2-table:not(.c2-mk-table) tbody td:first-child, .c2-table:not(.c2-mk-table) tbody td[colspan] { grid-column: 1 / -1; }
+  .c2-table:not(.c2-mk-table) tbody tr > td:last-child:not([data-l]):not(:first-child) { grid-column: 1 / -1; }
+  .c2-table:not(.c2-mk-table) tbody tr:not(.c2-grp) { border-bottom: 1px solid var(--c2-sand-2); }
+  .c2-table tr.c2-row.is-sel { background: var(--c2-stone-hi); box-shadow: inset 0 -2px 0 var(--c2-ink); }
+  .c2-table tr.c2-row.is-sel td { box-shadow: none; }
+  .c2-table td[data-l]::before { content: attr(data-l); display: block; font-size: 13px; font-weight: 500; color: var(--c2-dim); }
 }

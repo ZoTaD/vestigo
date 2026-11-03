@@ -18,10 +18,13 @@ const rank = (v: string) => {
 };
 type Key = "variant" | "m90" | "m30" | "m7" | "m24" | "sales";
 
-/** La línea de cuatro puntos (90 → 30 → 7 días → 24 h), verde si termina arriba y roja si abajo. */
+/**
+ * La línea de cuatro puntos (90 → 30 → 7 días → 24 h), verde si termina arriba y roja si abajo. Con menos de tres
+ * períodos con ventas no se dibuja: una rayita suelta no dice nada.
+ */
 export function Trend({ pts }: { pts: (number | null)[] }) {
   const v = pts.filter((p): p is number => p != null);
-  if (v.length < 2) return null;
+  if (v.length < 3) return <span className="c2-num is-none">—</span>;
   const min = Math.min(...v), max = Math.max(...v);
   const xy = pts
     .map((p, i) => (p == null ? null : `${(i / (pts.length - 1)) * 92 + 4},${26 - ((p - min) / (max - min || 1)) * 20}`))
@@ -63,10 +66,17 @@ export default function MarketBlock({ sales, history }: { sales: Record<string, 
   const { sort, th } = useSort<Key>({ key: "variant", dir: 1 }, []);
   if (!rows.length) return null;
   const shown = sortRows(rows, { variant: (x) => rank(x.variant), m90: (x) => x.r[3], m30: (x) => x.r[2], m7: (x) => x.r[1], m24: (x) => x.r[0], sales: (x) => x.r[4] }, sort);
-  const label = (v: string) => (v === "-" ? "—" : v.replace("ST ", "StatTrak™ ").replace("SV ", "Souvenir "));
+  // "ST FN" → "StatTrak™ Recién fabricado": el desgaste con su nombre, no la sigla.
+  const label = (v: string) => {
+    if (v === "-") return t.t.normal;
+    const [pre, ab] = v.includes(" ") ? v.split(" ") : ["", v];
+    const wear = t.wear[ORDER.indexOf(ab) - 1] ?? ab;
+    return pre === "ST" ? `StatTrak™ ${wear}` : pre === "SV" ? `Souvenir ${wear}` : wear;
+  };
   return (
     <section className="c2-mk-block">
       <h2 className="c2-h2">{m.block}</h2>
+      <p className="c2-lede">{m.blockNote}</p>
       {history && history.length >= 14 && <History serie={history} />}
       <div className="c2-tablewrap">
         <table className="c2-table">
@@ -87,20 +97,20 @@ export default function MarketBlock({ sales, history }: { sales: Record<string, 
             {shown.map(({ variant, r }) => (
               <tr key={variant}>
                 <td>{label(variant)}</td>
-                <td>
-                  <Price v={r[3]} bare />
+                <td data-l={m.m90}>
+                  <Price v={r[3]} />
                 </td>
-                <td>
-                  <Price v={r[2]} bare />
+                <td data-l={m.m30}>
+                  <Price v={r[2]} />
                 </td>
-                <td>
-                  <Price v={r[1]} bare />
+                <td data-l={m.m7}>
+                  <Price v={r[1]} />
                 </td>
-                <td>
-                  <Price v={r[0]} bare />
+                <td data-l={m.m24}>
+                  <Price v={r[0]} />
                 </td>
-                <td className="c2-num">{num(r[4], 0)}</td>
-                <td>
+                <td data-l={m.sales30} className="c2-num">{num(r[4], 0)}</td>
+                <td data-l={m.trend}>
                   <Trend pts={[r[3], r[2], r[1], r[0]]} />
                 </td>
               </tr>
@@ -108,7 +118,6 @@ export default function MarketBlock({ sales, history }: { sales: Record<string, 
           </tbody>
         </table>
       </div>
-      <p className="c2-note">{m.blockNote}</p>
     </section>
   );
 }

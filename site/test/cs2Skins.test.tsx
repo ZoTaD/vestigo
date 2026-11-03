@@ -50,6 +50,6 @@ describe("ficha de una skin", () => {
     expect(html).not.toContain("Deplorable");
   });
   it("dice que no sale de cajas si no tiene ninguna", () => {
-    expect(html).toContain("No sale de cajas");
+    expect(html).toContain("No viene en ninguna caja");
   });
 });

@@ -13,7 +13,9 @@ describe("el bloque de mercado de una ficha", () => {
   it("una fila por variante, normal antes que StatTrak, y un día sin ventas en 24 h no rompe", () => {
     const html = wrap(<MarketBlock sales={{ "ST FN": [null, 200, 190, 180, 15], FT: [30, 31, 33, 35, 552] }} history={null} />);
     expect((html.match(/<tr>/g) ?? []).length).toBe(3);
-    expect(html.indexOf(">FT<")).toBeLessThan(html.indexOf("StatTrak™ FN"));
+    expect(html.indexOf(">Algo desgastado<")).toBeGreaterThan(-1);
+    expect(html.indexOf(">Algo desgastado<")).toBeLessThan(html.indexOf("StatTrak™ Recién fabricado"));
+    expect(html.replace(/<!-- -->/g, "")).toContain("US$ 35,00");
     expect(html).toContain("552");
   });
   it("con 14 días de serie suma el gráfico", () => {

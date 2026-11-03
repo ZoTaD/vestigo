@@ -183,7 +183,7 @@ export default function Builder({
                         </span>
                       </div>
                     </td>
-                    <td>
+                    <td data-l={t.t.float}>
                       <input
                         className="c2-tu-float"
                         type="number"
@@ -200,7 +200,7 @@ export default function Builder({
                         onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()}
                       />
                     </td>
-                    <td>
+                    <td data-l={t.t.price}>
                       <Price v={x.price} />
                     </td>
                     <td>
@@ -247,19 +247,19 @@ export default function Builder({
                             </RouteLink>
                             <span className="c2-nm-s">
                               <span className="c2-r">{t.rarity[s.rarity]}</span>
-                              {o.wear != null && <> · {WEARS[o.wear].ab}</>}
+                              {o.wear != null && <> · {t.wear[o.wear]}</>}
                             </span>
                           </span>
                         </div>
                       </td>
-                      <td className="c2-num">{o.float == null ? "—" : num(o.float, 4)}</td>
-                      <td>
+                      <td data-l={t.t.float} className="c2-num">{o.float == null ? "—" : num(o.float, 4)}</td>
+                      <td data-l={u.chance}>
                         <Pct v={o.chance} d={1} />
                       </td>
-                      <td>
+                      <td data-l={t.t.price}>
                         <Price v={o.price} sug={o.sug} />
                       </td>
-                      <td>{neto == null ? <span className="c2-num is-none">—</span> : <span className={`c2-num ${neto >= 0 ? "is-up" : "is-down"}`}>{neto >= 0 ? "+" : "−"}{num(Math.abs(neto))}</span>}</td>
+                      <td data-l={u.ifWins}>{neto == null ? <span className="c2-num is-none">—</span> : <span className={`c2-num ${neto >= 0 ? "is-up" : "is-down"}`}>{neto >= 0 ? "+" : "−"}US$ {num(Math.abs(neto))}</span>}</td>
                     </tr>
                   );
                 })}

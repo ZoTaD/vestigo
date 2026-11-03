@@ -16,7 +16,7 @@ import { change, movers, PERIOD_MEDIANS, type MarketKind, type MarketRow, type P
 const PERIODS: Period[] = ["7v30", "1v7", "30v90"];
 const MIN_SALES = [30, 100, 500];
 const KINDS: MarketKind[] = ["all", "skins", "cases"];
-type Key = "name" | "before" | "now" | "change" | "sales";
+type Key = "name" | "now" | "change" | "sales";
 
 function Board({ rows, period, title, tone, initial, route, navigate }: { rows: MarketRow[]; period: Period; title: string; tone?: "up" | "down"; initial: { key: Key; dir: 1 | -1 }; route: Route; navigate: Nav }) {
   const t = useCs2Copy();
@@ -24,25 +24,25 @@ function Board({ rows, period, title, tone, initial, route, navigate }: { rows: 
   const num = useNum();
   const [bi, ni] = PERIOD_MEDIANS[period];
   const { sort, th } = useSort<Key>(initial, ["name"]);
-  const shown = sortRows(rows, { name: (r) => r[0], before: (r) => r[bi], now: (r) => r[ni], change: (r) => change(r, period), sales: (r) => r[8] }, sort);
+  const shown = sortRows(rows, { name: (r) => r[0], now: (r) => r[ni], change: (r) => change(r, period), sales: (r) => r[8] }, sort);
   return (
     <section className="c2-mk-board">
       <h2 className={`c2-h2${tone ? ` is-${tone}` : ""}`}>{title}</h2>
+      {/* Cuatro columnas y el nombre que puede partirse: dos tablas lado a lado entran sin scroll horizontal. */}
       <div className="c2-tablewrap">
-        <table className="c2-table">
+        <table className="c2-table c2-mk-table">
           <thead>
             <tr>
               {th("name", m.item)}
-              {th("before", m.periodBefore[period])}
-              {th("now", m.periodNow[period])}
+              {th("now", `${m.periodBefore[period]} → ${m.periodNow[period]}`, { title: m.price })}
               {th("change", m.change)}
-              {th("sales", m.sales30)}
+              {th("sales", m.sales)}
             </tr>
           </thead>
           <tbody>
             {shown.length === 0 && (
               <tr>
-                <td colSpan={5} className="c2-dim">
+                <td colSpan={4} className="c2-dim">
                   {m.none}
                 </td>
               </tr>
@@ -54,17 +54,17 @@ function Board({ rows, period, title, tone, initial, route, navigate }: { rows: 
                 <tr key={r[0]} className={isCase ? "" : `is-${r[2]}`}>
                   <td>
                     <RouteLink className="c2-nm" to={{ ...route, view: "cs2", c2Section: isCase ? "cases" : "skins", detail: r[1] }} onNavigate={navigate}>
-                      <Img img={r[1]} w={72} h={49} />
+                      <Img img={r[1]} w={56} h={38} />
                       <span className="c2-nm-t">
                         <strong>{r[0]}</strong>
                       </span>
                     </RouteLink>
                   </td>
-                  <td>
-                    <Price v={r[bi]} bare />
-                  </td>
-                  <td>
-                    <Price v={r[ni]} bare />
+                  <td className="c2-mk-pr">
+                    <span className="c2-dim">
+                      <Price v={r[bi]} />
+                    </span>{" "}
+                    → <Price v={r[ni]} />
                   </td>
                   <td>{c == null ? <span className="c2-num is-none">—</span> : <span className={`c2-num c2-mk-ch ${c >= 0 ? "is-up" : "is-down"}`}>{c >= 0 ? "+" : "−"}{num(Math.abs(c) * 100, 0)}&#8201;%</span>}</td>
                   <td className="c2-num">{num(r[8], 0)}</td>

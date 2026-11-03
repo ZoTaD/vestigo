@@ -1,8 +1,9 @@
 /**
  * La ficha de una caja (2026-11-03), estética Dust II: la caja grande, el nombre en esténcil y el recuadro con caja,
  * llave, valor esperado y "devuelve"; el contenido agrupado por rareza con la probabilidad del grupo y de cada skin, el
- * precio por desgaste en columnas (cada encabezado ordena dentro de cada rareza) y el objeto especial. Tocar una fila
- * muestra la skin al costado (en escritorio); el nombre lleva a su ficha.
+ * precio de su desgaste más barato y del más caro (cada encabezado ordena dentro de cada rareza) y el objeto especial.
+ * Tocar una fila muestra la skin al costado con el precio de cada desgaste; el nombre lleva a su ficha. Cinco columnas
+ * de desgaste más el costado no entraban ni a 1.440 px.
  *
  * Una terminal o un paquete de souvenir no tienen probabilidades publicadas: se listan sus skins con precio y nada más.
  */
@@ -13,9 +14,9 @@ import { CASE_ODDS, KEY_PRICE, SPECIAL_ODDS, useCs2Copy, WEARS } from "../../cs2
 import type { CaseFicha, CasePrice, SkinPrice, SkinRow } from "../data";
 import { MarketBlockFor } from "../market/MarketBlock";
 import { sortRows, useSort } from "../sort";
-import { FloatRange, Img, Pct, Price, Rarity, reaches, SkinSide, type Nav } from "../ui";
+import { FloatRange, Img, Pct, Price, Rarity, reaches, SkinSide, useNum, type Nav } from "../ui";
 
-type Key = "name" | "FN" | "MW" | "FT" | "WW" | "BS";
+type Key = "name" | "lo" | "hi";
 
 export default function CasePage({
   ficha,
@@ -35,6 +36,7 @@ export default function CasePage({
   navigate: Nav;
 }) {
   const t = useCs2Copy();
+  const num = useNum();
   const isCase = ficha.kind === "case";
   // Un paquete de souvenir sólo da versiones Souvenir: ese es el precio que importa (el normal vale la mitad o menos).
   const souvenir = ficha.kind === "souvenir";
@@ -43,15 +45,19 @@ export default function CasePage({
   const selSkin = sel ? skins.get(sel) : undefined;
   const skinTo = (slug: string): Route => ({ ...route, view: "cs2", c2Section: "skins", detail: slug });
   const ret = price?.ret;
-  const { sort, th } = useSort<Key>({ key: "FN", dir: -1 }, ["name"]);
+  const { sort, th } = useSort<Key>({ key: "hi", dir: -1 }, ["name"]);
   // El precio que muestra cada columna (el Souvenir en un paquete de souvenir), y con él se ordena.
   const cell = (slug: string, i: number): number | null => {
     const s = skins.get(slug);
     const p = skinPrices[slug];
     return s && reaches(s, i) ? ((souvenir ? p?.sv : p?.n)?.[i] ?? null) : null;
   };
+  // El desgaste más barato y el más caro que tienen precio.
+  const range = (slug: string): number[] => WEARS.map((_, i) => cell(slug, i)).filter((v): v is number => v != null);
+  const lo = (slug: string) => (range(slug).length ? Math.min(...range(slug)) : null);
+  const hi = (slug: string) => (range(slug).length ? Math.max(...range(slug)) : null);
   const cols = useMemo(
-    () => ({ name: (slug: string) => skins.get(slug)?.name ?? slug, ...Object.fromEntries(WEARS.map((w, i) => [w.ab, (slug: string) => cell(slug, i)])) }) as Record<Key, (slug: string) => string | number | null>,
+    () => ({ name: (slug: string) => skins.get(slug)?.name ?? slug, lo, hi }) as Record<Key, (slug: string) => string | number | null>,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [skins, skinPrices, souvenir],
   );
@@ -94,6 +100,9 @@ export default function CasePage({
         </div>
       </header>
 
+      {isCase && price?.price != null && price.ev != null && ret != null && (
+        <p className="c2-lede">{t.t.evLine(`US$ ${num(price.price + KEY_PRICE)}`, `US$ ${num(price.ev)}`, `${num(ret * 100, 0)} %`)}</p>
+      )}
       {ficha.kind === "terminal" ? <p className="c2-note">{t.t.terminalNote}</p> : !isCase && <p className="c2-note">{t.t.noOdds}</p>}
 
       <div className="c2-split">
@@ -102,7 +111,8 @@ export default function CasePage({
             <thead>
               <tr>
                 {th("name", t.t.skin)}
-                {WEARS.map((w, i) => th(w.ab as Key, w.ab, { title: t.wear[i] }))}
+                {th("lo", t.t.priceFrom)}
+                {th("hi", t.t.priceTo)}
                 {isCase && (
                   <th>
                     <span>{t.t.odds}</span>
@@ -115,7 +125,7 @@ export default function CasePage({
                 const odds = isCase ? CASE_ODDS[g.rarity] : undefined;
                 return [
                   <tr className="c2-grp" key={`g-${g.rarity}`}>
-                    <td colSpan={isCase ? 7 : 6}>
+                    <td colSpan={isCase ? 4 : 3}>
                       <b>
                         <Rarity r={g.rarity} />
                       </b>{" "}
@@ -131,7 +141,6 @@ export default function CasePage({
                   ...sortRows(g.skins, cols, sort).map((slug) => {
                     const s = skins.get(slug);
                     if (!s) return null;
-                    const p = skinPrices[slug];
                     return (
                       <tr className={`c2-row is-${s.rarity}${slug === sel ? " is-sel" : ""}`} key={slug} onClick={() => setSel(slug)}>
                         <td>
@@ -147,11 +156,14 @@ export default function CasePage({
                             </div>
                           </div>
                         </td>
-                        {WEARS.map((w, i) => (
-                          <td key={w.ab}>{reaches(s, i) ? <Price v={cell(slug, i)} bare sug={!souvenir && !!((p?.sug ?? 0) & (1 << i))} /> : <span className="c2-num is-none">—</span>}</td>
-                        ))}
+                        <td data-l={t.t.priceFrom}>
+                          <Price v={lo(slug)} />
+                        </td>
+                        <td data-l={t.t.priceTo}>
+                          <Price v={hi(slug)} />
+                        </td>
                         {odds != null && (
-                          <td className={`is-${g.rarity}`}>
+                          <td data-l={t.t.odds} className={`is-${g.rarity}`}>
                             <Pct v={odds / g.skins.length} d={3} className="c2-r" />
                           </td>
                         )}
@@ -162,7 +174,7 @@ export default function CasePage({
               })}
               {ficha.rare.length > 0 && (
                 <tr className="c2-grp">
-                  <td colSpan={isCase ? 7 : 6}>
+                  <td colSpan={isCase ? 4 : 3}>
                     <b className="c2-r is-special">{t.t.special(ficha.rare.length)}</b>
                     {isCase && (
                       <>

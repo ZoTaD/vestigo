@@ -24,7 +24,7 @@ describe("ficha de una colección", () => {
     </LangContext.Provider>,
   );
   it("dice que no sale de cajas y lista sus skins por rareza", () => {
-    expect(html).toContain("No sale de cajas");
+    expect(html).toContain("Ninguna caja trae esta colección");
     expect(html).toContain("Encubierto");
     expect(html).toContain('href="/es/cs2/skins/s"');
   });
