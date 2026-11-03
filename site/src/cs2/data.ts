@@ -31,6 +31,8 @@ export interface SkinRow {
   sv: boolean;
   img: string;
   phase?: string;
+  /** Su colección (`tradeup.json`), si tiene. */
+  col?: string;
 }
 export interface SkinFicha extends SkinRow {
   desc: string;
