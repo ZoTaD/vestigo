@@ -145,6 +145,7 @@ export const WF_TAB_FILES: Partial<Record<WfSection, string>> = {
  * `test/areas.test.ts`). Cada una suma acá su línea el día que tiene página. La portada viene con el área.
  */
 export const CS2_TAB_FILES: Partial<Record<Cs2Section, string>> = {
+  skins: "src/cs2/skins/Cs2Skins.tsx",
   cases: "src/cs2/cases/Cs2Cases.tsx",
 };
 

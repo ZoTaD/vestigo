@@ -135,7 +135,7 @@ export function WearPrices({ skin, price }: { skin: { min: number | null; max: n
             <tr key={i}>
               <td>{i < 0 ? "—" : t.wear[i]}</td>
               <td>
-                <Price v={price?.n[k]} bare sug={!!((price?.sug ?? 0) & (1 << k))} />
+                <Price v={price?.n?.[k]} bare sug={!!((price?.sug ?? 0) & (1 << k))} />
               </td>
               {st && (
                 <td>

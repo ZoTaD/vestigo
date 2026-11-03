@@ -73,6 +73,11 @@ class TestReal(unittest.TestCase):
     def test_terminal_sin_ev(self):
         self.assertNotIn("ev", self.cases["sealed-dead-hand-terminal"])
 
+    def test_solo_souvenir_tiene_normal_vacio(self):
+        p = self.skins["mp5-sd-lab-rats"]
+        self.assertEqual(p["n"], [None] * 5)
+        self.assertIn("sv", p)
+
     def test_inheritance(self):
         p = self.skins["ak-47-inheritance"]
         self.assertEqual(len(p["n"]), 5)

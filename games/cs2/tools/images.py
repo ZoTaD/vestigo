@@ -41,7 +41,7 @@ def _guardar(im: Image.Image, destino: Path, ancho: int) -> None:
     im = im.copy()
     im.thumbnail((ancho, ancho), Image.LANCZOS)
     destino.parent.mkdir(parents=True, exist_ok=True)
-    im.save(destino, "WEBP", quality=CALIDAD, method=6)
+    im.save(destino, "WEBP", quality=CALIDAD, method=4)
 
 
 def main() -> None:
@@ -56,7 +56,7 @@ def main() -> None:
             _guardar(im, SMALL / f"{slug}.webp", PX_SMALL)
         except Exception as e:  # noqa: BLE001 (una mala no corta las demás)
             malas.append(f"{slug}: {e}")
-        time.sleep(0.15)
+        time.sleep(0.1)
         if n % 200 == 0:
             print(f"  {n}/{len(faltan)}")
     for m in malas:

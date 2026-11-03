@@ -149,3 +149,16 @@ a.c2-chip:hover { background: var(--c2-hover); }
   .c2-hero .c2-img { width: 80px; height: 60px; }
   .c2-top-in { gap: 10px; }
 }
+
+/* --- Ficha de una skin ----------------------------------------------------------------------------------------------- */
+.c2-h2 { font-size: 15px; margin-bottom: 10px; }
+.c2-skin { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 24px; align-items: start; }
+.c2-skin-pic { display: grid; place-items: center; background: var(--c2-deep); border-radius: 6px; }
+.c2-skin-pic .c2-img { width: 100%; max-width: 360px; height: auto; aspect-ratio: 4 / 3; }
+.c2-skin-data { display: grid; gap: 10px; min-width: 0; container-type: inline-size; }
+.c2-skin-data .c2-h1 { font-size: clamp(20px, 6cqi, 30px); }
+.c2-where { display: grid; gap: 6px; margin-top: 6px; }
+.c2-desc { max-width: 80ch; white-space: pre-line; color: var(--c2-dim); }
+@media (max-width: 720px) {
+  .c2-skin { grid-template-columns: minmax(0, 1fr); }
+}

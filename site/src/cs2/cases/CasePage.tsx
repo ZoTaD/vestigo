@@ -127,7 +127,7 @@ export default function CasePage({
                           </div>
                         </td>
                         {WEARS.map((w, i) => (
-                          <td key={w.ab}>{reaches(s, i) ? <Price v={p?.n[i]} bare sug={!!((p?.sug ?? 0) & (1 << i))} /> : <span className="c2-num is-none">—</span>}</td>
+                          <td key={w.ab}>{reaches(s, i) ? <Price v={p?.n?.[i]} bare sug={!!((p?.sug ?? 0) & (1 << i))} /> : <span className="c2-num is-none">—</span>}</td>
                         ))}
                         {odds != null && (
                           <td className={`is-${g.rarity}`}>

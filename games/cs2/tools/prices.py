@@ -129,7 +129,10 @@ def build() -> tuple[dict, dict]:
     out_skins = {}
     for slug, f in filas.items():
         values[slug] = skin_value(lista[slug], {"n": f.get("_ev_n"), "st": f.get("_ev_st")}) if slug in lista else None
-        out_skins[slug] = {k: v for k, v in f.items() if not k.startswith("_")}
+        out = {k: v for k, v in f.items() if not k.startswith("_")}
+        # Una skin que sólo existe como Souvenir (MP5-SD | Lab Rats) lleva igual su fila normal, vacía.
+        out.setdefault("n", [None] * len(next(iter(out.values()))))
+        out_skins[slug] = {"n": out.pop("n"), **out}
 
     out_cases = {}
     for c in json.loads((DATA / "cases" / "list.json").read_text(encoding="utf-8")):
