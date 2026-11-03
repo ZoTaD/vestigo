@@ -200,6 +200,9 @@ export const PAGES = [
   // Trade-up (etapa 2): el ejemplo al abrir y un contrato de cuchillo en la dirección.
   "/en/cs2/trade-up",
   "/es/cs2/trade-up?i=ak-47-inheritance~0.15,ak-47-inheritance~0.15,ak-47-inheritance~0.15,ak-47-inheritance~0.15,ak-47-inheritance~0.15",
+  // Inventario (etapa 3): sin perfil (sólo el formulario). Con perfil pide a Steam: eso se prueba a mano, no en perf.
+  "/en/cs2/inventory",
+  "/es/cs2/inventario",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */
