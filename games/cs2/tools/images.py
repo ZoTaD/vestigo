@@ -45,17 +45,24 @@ def _guardar(im: Image.Image, destino: Path, ancho: int) -> None:
 
 
 def main() -> None:
-    imgs = build()["images"]
+    d = build()
+    imgs, respaldos = d["images"], d["fallbacks"]
     faltan = [(s, u) for s, u in imgs.items() if not (SMALL / f"{s}.webp").exists() or not (LARGE / f"{s}.webp").exists()]
     print(f"{len(imgs)} imágenes, faltan {len(faltan)}")
     malas = []
     for n, (slug, url) in enumerate(faltan, 1):
-        try:
-            im = Image.open(io.BytesIO(_bajar(url))).convert("RGBA")
-            _guardar(im, LARGE / f"{slug}.webp", PX_LARGE)
-            _guardar(im, SMALL / f"{slug}.webp", PX_SMALL)
-        except Exception as e:  # noqa: BLE001 (una mala no corta las demás)
-            malas.append(f"{slug}: {e}")
+        error = None
+        for u in [url, *respaldos.get(slug, [])]:
+            try:
+                im = Image.open(io.BytesIO(_bajar(u))).convert("RGBA")
+                _guardar(im, LARGE / f"{slug}.webp", PX_LARGE)
+                _guardar(im, SMALL / f"{slug}.webp", PX_SMALL)
+                error = None
+                break
+            except Exception as e:  # noqa: BLE001 (una mala no corta las demás: se prueba el respaldo)
+                error = e
+        if error:
+            malas.append(f"{slug}: {error}")
         time.sleep(0.1)
         if n % 200 == 0:
             print(f"  {n}/{len(faltan)}")

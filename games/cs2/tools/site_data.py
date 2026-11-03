@@ -95,6 +95,8 @@ def build() -> dict:
     colls = load("collections")
     coll_slug = {c["id"]: slugify(c["name"]) for c in colls}
     images = {}
+    # Otras imágenes que probar si la principal no baja (una fase de cuchillo con 404, un ícono SVG).
+    fallbacks: dict[str, list[str]] = {}
 
     # Las fases de una misma skin (Doppler, Gamma Doppler) se enlazan entre sí.
     por_nombre = {}
@@ -121,6 +123,10 @@ def build() -> dict:
         })
         images[slug] = s["image"]
 
+    # Una fase sin imagen usa la de otra fase del mismo cuchillo.
+    for f in sk_fichas:
+        fallbacks.setdefault(f["slug"], []).extend(images[v] for v in f["variants"])
+
     cs_list, cs_fichas = [], []
     for c, k in crates:
         slug = crate_slug[c["id"]]
@@ -139,8 +145,15 @@ def build() -> dict:
         row = {"slug": slug, "name": c["name"], "date": _fecha(c.get("release_date")), "img": slug, "n": len(ids)}
         co_list.append(row)
         co_fichas.append({**row, "groups": _grupos(ids, slug_de, rar_de), "cases": [crate_slug[x["id"]] for x in c.get("crates") or [] if x["id"] in crate_slug]})
+        # Los íconos de colección nuevos vienen en SVG (Pillow no los lee): respaldo, su PNG y si no la skin más rara.
         if c.get("image"):
             images[slug] = c["image"]
+        respaldo = fallbacks.setdefault(slug, [])
+        if (c.get("image") or "").endswith(".svg"):
+            respaldo.append(c["image"].replace(".svg", "_png.png"))
+        la_mas_rara = co_fichas[-1]["groups"][0]["skins"][0]
+        if la_mas_rara in images:
+            respaldo.append(images[la_mas_rara])
 
     # Cajas y colecciones de la más nueva a la más vieja; skins por arma y nombre.
     nueva = lambda r: r["date"] or ""
@@ -152,6 +165,7 @@ def build() -> dict:
         "cases": {"list": cs_list, "fichas": cs_fichas},
         "collections": {"list": co_list, "fichas": co_fichas},
         "images": images,
+        "fallbacks": fallbacks,
     }
 
 
