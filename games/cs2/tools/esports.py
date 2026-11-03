@@ -80,3 +80,116 @@ def teams_in(html: str) -> dict[str, dict]:
         if "/" not in slug:
             out.setdefault(slug, {"name": htmllib.unescape(name), "logo": None})
     return out
+
+
+# --- Etapa 6b: fichas de equipo y jugador, resultados y llaves -------------------------------------------------------
+
+MONTHS = {m: i for i, m in enumerate(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], 1)}
+
+
+def _cells(html: str) -> dict[str, str]:
+    """Las celdas de la ficha (infobox), por su etiqueta, con el HTML adentro."""
+    return {k.strip(): v for k, v in re.findall(r'infobox-cell-2 infobox-description">([^<]+?):</div>\s*<div[^>]*>(.*?)</div>', html, flags=re.S)}
+
+
+def _money(s: str | None) -> int | None:
+    n = re.sub(r"[^\d]", "", (s or "").split(".")[0])
+    return int(n) if n else None
+
+
+def _flag(s: str) -> str | None:
+    """El código del país de una bandera de Liquipedia: el archivo se llama `Hu_hd.png`."""
+    m = re.search(r'class="flag">(?:<a[^>]*>)?<img[^>]*src="[^"]*/([A-Za-z]{2})_hd\.png', s)
+    return m.group(1).lower() if m else None
+
+
+def team_page(html: str) -> dict:
+    """La ficha de un equipo: sede, región, líder, entrenadores, premios, fundación y el plantel activo."""
+    c = _cells(html)
+    created = re.search(r"\d{4}", _text(c.get("Created", "")))
+    roster = []
+    seg = html[html.find('id="Active"') :]
+    seg = seg[: seg.find("</table>")]
+    for row in seg.split("table2&#95;&#95;row--body")[1:]:
+        pid = re.search(r'<a href="/counterstrike/([^"#]+)" title="[^"]+">([^<]+)</a>', row)
+        tds = re.findall(r"<td[^>]*>(.*?)</td>", row, flags=re.S)
+        if not pid:
+            continue
+        pos = _text(tds[2]) if len(tds) > 2 else ""
+        roster.append({
+            "lp": pid.group(1), "id": htmllib.unescape(pid.group(2)), "name": _text(tds[1]) if len(tds) > 1 else "",
+            "flag": _flag(row), "since": (re.search(r"\d{4}-\d{2}-\d{2}", row) or [None])[0],
+            "captain": "fa-crown" in row, "role": "coach" if "coach" in pos.lower() else "player",
+        })
+    return {
+        "location": _text(c.get("Location", "")) or None, "region": _text(c.get("Region", "")) or None,
+        "coaches": [_text(x) for x in re.findall(r"<a [^>]*>([^<]+)</a>", c.get("Coaches", ""))],
+        "igl": _text(c.get("In-Game Leader", "")) or None, "winnings": _money(_text(c.get("Approx. Total Winnings", ""))),
+        "created": created.group() if created else None, "roster": roster,
+    }
+
+
+def team_results(html: str) -> list[dict]:
+    """Los torneos S y A que jugó un equipo (su página `/Results`): fecha, puesto, torneo y premio."""
+    out = []
+    for row in html.split('<tr class="table2&#95;&#95;row--body">')[1:]:
+        row = row.split("</tr>")[0]
+        date = re.search(r"<td[^>]*>(\d{4}-\d{2}-\d{2})</td>", row)
+        place = re.search(r'placement-text">([^<]+)<', row)
+        tier = re.search(r'title="([SA])-Tier Tournaments"', row)
+        tour = re.search(r'data-sort-value="([^"]+)"><span class="league-icon-small-image[^"]*"><a href="/counterstrike/([^"#]+)"', row)
+        if not (date and place and tier and tour):
+            continue
+        tds = re.findall(r"<td[^>]*>(.*?)</td>", row, flags=re.S)
+        out.append({"date": date.group(1), "place": place.group(1), "tier": tier.group(1), "tour": htmllib.unescape(tour.group(1)),
+                    "tour_lp": tour.group(2), "prize": _money(_text(tds[-1]))})
+    return out
+
+
+def player_page(html: str) -> dict:
+    """La ficha de un jugador: nombre (el romanizado si hay), bandera, nacimiento, roles, equipo y premios."""
+    c = _cells(html)
+    born = re.search(r"(\w+) (\d{1,2}), (\d{4})", _text(c.get("Born", "")))
+    team = re.search(r'<a href="/counterstrike/([^"#]+)"', c.get("Team", ""))
+    return {
+        "name": _text(c.get("Romanized Name") or c.get("Name", "")) or None, "flag": _flag(c.get("Nationality", "")),
+        "born": f"{born.group(3)}-{MONTHS.get(born.group(1), 1):02d}-{int(born.group(2)):02d}" if born else None,
+        "roles": [_text(x) for x in re.findall(r"<a [^>]*>([^<]+)</a>", c.get("Roles", ""))],
+        "team_lp": team.group(1) if team else None, "winnings": _money(_text(c.get("Approx. Total Winnings", ""))),
+    }
+
+
+def _halves(block: str) -> list[list]:
+    return [[side, int(n)] for side, n in re.findall(r'brkts-cs-score-color-(ct|t)">(\d+)<', block)]
+
+
+def bracket_matches(html: str) -> list[dict]:
+    """Los partidos terminados de las llaves de un torneo, cada mapa con su resultado y las rondas de cada mitad (CT o
+    T). Un mapa sin jugar no cuenta; uno ganado por abandono va sin números, con `ff` del lado que ganó."""
+    out = []
+    for p in html.split("brkts-popup brkts-popup-container")[1:]:
+        if 'data-finished="finished"' not in p:
+            continue
+        sides = re.findall(r'<a href="/counterstrike/([^"#]+)" title="[^"]+"><div class="team-shortname">', p)[:2]
+        names = re.findall(r'<div class="team-name">([^<]+)</div>', p)[:2]
+        ts = re.search(r'data-timestamp="(\d+)"', p)
+        bo = re.search(r"\(Bo(\d+)\)", p)
+        maps = []
+        body = p.split('class="brkts-popup-body"')[1] if 'class="brkts-popup-body"' in p else ""
+        for row in body.split('brkts-popup-body-grid-row"')[1:]:
+            parts = row.split('class="brkts-popup-spaced"')
+            mp = re.search(r'title="([^"]+)">[^<]+</a></div>', row)
+            if len(parts) < 4 or not mp:
+                continue
+            sa = re.search(r'main-score">([^<]*)<', parts[1])
+            sb = re.search(r'main-score">([^<]*)<', parts[3])
+            va, vb = (sa.group(1) if sa else ""), (sb.group(1) if sb else "")
+            if va.isdigit() and vb.isdigit():
+                maps.append({"map": mp.group(1), "a": int(va), "b": int(vb), "ha": _halves(parts[1]), "hb": _halves(parts[3])})
+            elif "W" in (va, vb):
+                maps.append({"map": mp.group(1), "a": None, "b": None, "ha": [], "hb": [], "ff": "a" if va == "W" else "b"})
+        if len(names) == 2 and maps:
+            out.append({"t": int(ts.group(1)) if ts else 0, "a": htmllib.unescape(names[0]), "b": htmllib.unescape(names[1]),
+                        "a_lp": sides[0] if len(sides) > 0 else None, "b_lp": sides[1] if len(sides) > 1 else None,
+                        "bo": int(bo.group(1)) if bo else None, "maps": maps})
+    return out
