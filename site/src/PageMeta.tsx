@@ -19,6 +19,8 @@ import { loadPatch as loadTrPatch, peekPatch as peekTrPatch } from "./terraria/p
 import { findMonster as findSdMonster, findVillager as findSdVillager, loadItem as loadSdItem, loadMines as loadSdMines, loadVillagers as loadSdVillagers, HAS as SD_HAS, peekItem as peekSdItem, peekMines as peekSdMines, peekVillagers as peekSdVillagers } from "./stardew/data";
 import { isDataTab as isWfTab, loadFicha as loadWfFicha, peekFicha as peekWfFicha } from "./warframe/data";
 import { isDataTab as isCs2Tab, loadFicha as loadCs2Ficha, peekFicha as peekCs2Ficha } from "./cs2/data";
+import { loadPatchIndex, peekPatchIndex } from "./cs2/patches/data";
+import { patchName } from "./cs2/patches/names";
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
 import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
@@ -173,6 +175,11 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
   if (route.view === "warframe" && isWfTab(route.wfSection) && route.detail) {
     const f = peekWfFicha(route.wfSection, route.detail);
     return f ? (lang === "es" && f.name[1]) || f.name[0] : null;
+  }
+  // Una edición de Parches de CS2: su nombre sale del índice ("Parche del 28 de octubre de 2026" o el título).
+  if (route.view === "cs2" && route.c2Section === "patches" && route.detail) {
+    const e = peekPatchIndex()?.find((x) => x.slug === route.detail);
+    return e ? patchName(e, lang) : null;
   }
   // Una ficha de CS2: el nombre (en inglés en los dos idiomas) y la fase, de su archivo.
   if (route.view === "cs2" && isCs2Tab(route.c2Section) && route.detail) {
@@ -333,6 +340,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "warframe" && isWfTab(route.wfSection) && route.detail && peekWfFicha(route.wfSection, route.detail) === undefined) {
       let vivo = true;
       loadWfFicha(route.wfSection, route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una edición de Parches de CS2: el índice.
+    if (route.view === "cs2" && route.c2Section === "patches" && route.detail && !peekPatchIndex()) {
+      let vivo = true;
+      loadPatchIndex().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una ficha de CS2: su archivo.

@@ -152,6 +152,14 @@ export const peekPriceDate = () => priceMeta.peek()?.date ?? null;
  */
 export async function preloadRoute(route: Route): Promise<void> {
   const tab = route.c2Section;
+  // Parches: el índice y la edición abierta (sin slug, la más nueva). Lo que nombra trae su imagen en la edición.
+  if (tab === "patches") {
+    const { loadPatchIndex, loadPatch } = await import("./patches/data");
+    const index = await loadPatchIndex();
+    const slug = route.detail ?? index[0]?.slug;
+    if (slug) await loadPatch(slug);
+    return;
+  }
   // Mercado: la lista de la pestaña.
   if (tab === "market") {
     await Promise.all([loadMarket(), loadPriceDate()]);

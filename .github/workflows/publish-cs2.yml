@@ -1,6 +1,7 @@
 name: publish cs2 prices
 
-# Los precios de CS2 (Skinport) una vez por día, y el catálogo (ByMykel/CSGO-API) los lunes. Diseño:
+# Los precios de CS2 (Skinport) y los parches (anuncios de Steam) una vez por día, y el catálogo (ByMykel/CSGO-API)
+# los lunes. Diseño:
 # docs/superpowers/specs/2026-11-03-cs2-design.md.
 #
 # **No dispara un build propio**, a propósito: el commit lo empuja el GITHUB_TOKEN (que no dispara workflows) y esta
@@ -65,6 +66,11 @@ jobs:
           test -f games/cs2/raw/skins_not_grouped.json || python games/cs2/tools/fetch.py --catalog
           python games/cs2/tools/fetch.py --prices
           python games/cs2/tools/prices.py
+
+      # Los anuncios de Steam (etapa 5, Parches): dos pedidos a la API pública de noticias. Si Steam no responde, los
+      # precios se publican igual y los parches esperan a mañana.
+      - name: patches
+        run: python games/cs2/tools/patches.py || echo "::warning::sin parches de Steam hoy"
 
       - name: guard
         id: guard

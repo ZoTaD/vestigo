@@ -414,3 +414,59 @@ a.c2-inv-card:hover { border-color: var(--c2-ink); }
 @media (min-width: 701px) and (max-width: 960px) {
   .c2-table:not(.c2-mk-table) tbody tr { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+/* --- Parches (etapa 5, maqueta A "Bitácora") ------------------------------------------------------------------------ */
+.c2-pt { --c2-fix: #2f5f8f; display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 22px; align-items: start; }
+.c2-pt-arch { position: sticky; top: 12px; display: grid; max-height: calc(100vh - 24px); overflow-y: auto; background: var(--c2-stone); }
+.c2-pt-arch ul { list-style: none; margin: 0; padding: 0; }
+.c2-pt-year { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 14px 7px; font: 20px/1 var(--c2-stencil); color: var(--c2-ink); background: var(--c2-sand-2); border: 0; border-bottom: 1px solid var(--c2-sand); cursor: pointer; text-align: left; }
+.c2-pt-year span { font: 600 14px var(--c2-text); color: var(--c2-dim); }
+.c2-pt-year.is-on { background: var(--c2-ink); color: var(--c2-stone); }
+.c2-pt-year.is-on span { color: var(--c2-faint); }
+.c2-pt-item { display: grid; padding: 8px 14px; border-bottom: 1px solid var(--c2-sand-2); line-height: 1.25; }
+.c2-pt-item b { font-weight: 700; }
+.c2-pt-item small { color: var(--c2-dim); font-size: 13px; }
+.c2-pt-item:hover { background: var(--c2-stone-hi); }
+.c2-pt-item.is-on { background: var(--c2-stone-hi); box-shadow: inset 0 -2px 0 var(--c2-ink); }
+.c2-pt-ed { display: grid; gap: 16px; min-width: 0; }
+.c2-pt-edh { display: grid; gap: 6px; container-type: inline-size; }
+.c2-pt-title { font: clamp(28px, 6cqi, 44px)/1 var(--c2-stencil); }
+.c2-pt-tally { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 700; }
+.c2-pt-tally .is-new, .c2-pt-ln.is-new .c2-pt-dir { color: var(--c2-up); }
+.c2-pt-tally .is-fix, .c2-pt-ln.is-fix .c2-pt-dir { color: var(--c2-fix); }
+.c2-pt-tally .is-mid, .c2-pt-ln.is-mid .c2-pt-dir { color: var(--c2-dim); }
+.c2-pt-sec { display: grid; gap: 4px; padding: 14px 18px; background: var(--c2-stone); }
+.c2-pt-sec h3 { font: 22px/1.1 var(--c2-stencil); padding-bottom: 6px; border-bottom: 2px solid var(--c2-ink); }
+.c2-pt-sec ul { list-style: none; margin: 0; padding: 0; }
+.c2-pt-ln { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--c2-sand-2); }
+.c2-pt-ln:last-child { border-bottom: 0; }
+.c2-pt-ln.is-sub { padding-left: 28px; }
+.c2-pt-dir { align-self: start; padding: 2px 0; font-size: 13px; font-weight: 700; text-align: center; background: var(--c2-stone-hi); }
+.c2-pt-tx { overflow-wrap: break-word; }
+.c2-pt-mh { padding: 12px 0 2px; }
+.c2-pt-tag { display: inline-block; margin: 2px 4px 2px 0; padding: 0 8px; font-size: 13px; font-weight: 700; white-space: nowrap; vertical-align: 1px; }
+.c2-pt-tag.is-weapon { box-shadow: inset 0 0 0 2px var(--c2-ink); }
+.c2-pt-tag.is-map { background: var(--c2-gold); color: var(--c2-ink); }
+.c2-pt-tag.is-head { padding: 2px 10px; font: 16px/1.3 var(--c2-stencil); }
+.c2-pt-ref { display: inline-flex; align-items: center; gap: 6px; margin: 2px 4px 2px 0; padding: 1px 8px 1px 1px; font-size: 13px; font-weight: 700; box-shadow: inset 0 0 0 2px var(--c2-ink); vertical-align: middle; }
+.c2-pt-ref:hover { background: var(--c2-stone-hi); }
+.c2-pt-body { display: grid; gap: 12px; padding: 18px; background: var(--c2-stone); max-width: 860px; }
+.c2-pt-body h3 { font: 22px/1.1 var(--c2-stencil); margin-top: 8px; }
+.c2-pt-body p { max-width: 75ch; }
+.c2-pt-body ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; max-width: 75ch; }
+.c2-pt-img { display: block; aspect-ratio: 16 / 9; background: var(--c2-ink); }
+.c2-pt-img img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.c2-pt-ed .c2-note a { text-decoration: underline; color: var(--c2-ink); font-weight: 600; }
+.c2-pt-pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+.c2-pt-pager .c2-btn { line-height: 1.25; }
+/* En una columna, el parche primero y el archivo debajo (moverse entre parches lo hacen los botones del pie). */
+@media (max-width: 900px) {
+  .c2-pt { grid-template-columns: minmax(0, 1fr); }
+  .c2-pt-arch { position: relative; max-height: 360px; order: 2; }
+}
+@media (max-width: 600px) {
+  .c2-pt-ln { display: block; }
+  .c2-pt-dir { display: inline-block; margin-right: 8px; padding: 0 8px; }
+  .c2-pt-ln.is-sub { padding-left: 16px; }
+  .c2-pt-sec, .c2-pt-body { padding: 12px; }
+}

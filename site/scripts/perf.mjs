@@ -206,6 +206,10 @@ export const PAGES = [
   // Mercado (etapa 4): las tres tablas de 20 filas.
   "/en/cs2/market",
   "/es/cs2/mercado",
+  // Parches (etapa 5): el más nuevo, el parche más largo y un lanzamiento con imágenes.
+  "/en/cs2/patches",
+  "/es/cs2/parches/2023-11-17",
+  "/en/cs2/patches/rush-hour",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

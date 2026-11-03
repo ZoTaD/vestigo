@@ -315,7 +315,7 @@ function readSitemapData(): { data: OgData } {
   let c2: SitemapData["c2"];
   try {
     const read = (f: string) => JSON.parse(readFileSync(`${cs2Dir}/${f}`, "utf-8"));
-    c2 = cs2SitemapData(read("meta.json"), { skins: read("skins/list.json"), cases: read("cases/list.json"), collections: read("collections/list.json") });
+    c2 = cs2SitemapData(read("meta.json"), { skins: read("skins/list.json"), cases: read("cases/list.json"), collections: read("collections/list.json") }, read("patches/index.json"));
   } catch (e) {
     console.warn(`[cs2] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     c2 = undefined;

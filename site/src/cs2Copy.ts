@@ -9,7 +9,7 @@ import { useLang } from "./i18n";
 import type { Cs2DataTab, Cs2Section, Cs2Tab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "market", "collections", "trade-up", "inventory"];
+export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "market", "collections", "trade-up", "inventory", "patches"];
 
 /** Las rarezas como las deja `site_data.py` (`RARITY` de `cs2.py`), de la más alta a la más baja. */
 export type Cs2Rarity = "contraband" | "extraordinary" | "covert" | "classified" | "restricted" | "milspec" | "industrial" | "consumer";
@@ -45,6 +45,8 @@ export interface Cs2Copy {
   retry: string;
   seo: Record<Cs2Section, Seo>;
   detailSeo: Record<Cs2DataTab, (name: string) => Seo>;
+  /** Una edición de Parches: `name` es "Parche del 28 de octubre de 2026" o el título del lanzamiento. */
+  patchSeo: (name: string, launch: boolean) => Seo;
   rarity: Record<Cs2Rarity, string>;
   wear: [string, string, string, string, string];
   cat: Record<Cs2Cat, string>;
@@ -109,6 +111,22 @@ export interface Cs2Copy {
     count: (n: string) => string;
     none: string;
     open: string;
+  };
+  /** La pestaña Parches (etapa 5). */
+  pt: {
+    lede: string;
+    patch: string;
+    launch: string;
+    dir: { new: string; mid: string; fix: string };
+    tally: { new: (n: number) => string; mid: (n: number) => string; fix: (n: number) => string };
+    lines: (n: number) => string;
+    official: string;
+    steam: string;
+    newer: string;
+    older: string;
+    archive: string;
+    named: string;
+    none: string;
   };
   /** La pestaña Mercado y el bloque de mercado de las fichas (etapa 4). */
   mk: {
@@ -204,7 +222,7 @@ export interface Cs2Copy {
 }
 
 const EN: Cs2Copy = {
-  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory", market: "Market" },
+  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory", market: "Market", patches: "Patches" },
   loading: "Loading…",
   loadError: "Couldn't load this page.",
   retry: "Retry",
@@ -213,6 +231,7 @@ const EN: Cs2Copy = {
     skins: { title: "CS2 skins: prices, float ranges & cases", description: "All CS2 weapon, knife and glove skins with their price in each wear, StatTrak and Souvenir, float range and the case they drop from." },
     cases: { title: "CS2 cases: odds, expected value & prices", description: "Every CS2 case, souvenir package and terminal with its price, the odds of each rarity and what opening it returns on average." },
     collections: { title: "CS2 collections: every skin & price", description: "Every CS2 weapon collection with its skins by rarity, their float ranges and prices, and the case or package it comes from." },
+    patches: { title: "CS2 patch notes: every update", description: "Every CS2 update since the Limited Test, change by change: what's new, what changed and what got fixed, with the maps, weapons and cases it names." },
     market: { title: "CS2 skin prices going up and down", description: "Which CS2 skins and cases are going up and down in price this week, and which sell the most, from real Skinport sales." },
     inventory: { title: "CS2 inventory value checker", description: "How much is your CS2 inventory worth? Paste your Steam profile and see every item with today's price, grouped by type. Free, no login." },
     "trade-up": { title: "CS2 trade-up calculator: odds, floats & profit", description: "Free CS2 trade-up calculator: the odds, exact float and price of every outcome, expected profit after fees, knife trade-ups and a reverse calculator." },
@@ -222,6 +241,10 @@ const EN: Cs2Copy = {
     cases: (n) => ({ title: `${n} odds & expected value`, description: clip(`${n}: every skin inside with its price in each wear, the odds of each rarity, the knives and what opening it returns on average.`) }),
     collections: (n) => ({ title: `${n} skins & prices`, description: clip(`${n}: every skin by rarity with its float range and price, and where the collection drops from.`) }),
   },
+  patchSeo: (n, launch) =>
+    launch
+      ? { title: `${n}: CS2 update`, description: clip(`${n}: Valve's CS2 announcement, with what it adds and the cases and collections it names.`) }
+      : { title: `CS2 patch notes: ${n}`, description: clip(`CS2 patch notes for the ${n}: every change by section, marked as new, changed or fixed, with the maps and weapons it touches.`) },
   rarity: {
     contraband: "Contraband", extraordinary: "Extraordinary", covert: "Covert", classified: "Classified",
     restricted: "Restricted", milspec: "Mil-Spec", industrial: "Industrial Grade", consumer: "Consumer Grade",
@@ -241,6 +264,7 @@ const EN: Cs2Copy = {
       "trade-up": () => "Odds, floats and profit of any contract, knife trade-ups and the reverse: what to put in to get the skin you want.",
       inventory: () => "Paste your Steam profile and see what your CS2 inventory is worth today, item by item.",
       market: () => "What's rising and falling this week, and what sells the most, from real sales.",
+      patches: () => "Every update, change by change: what's new, what changed and what got fixed.",
     },
     pricesOf: (d) => `Prices of ${d}`,
   },
@@ -296,6 +320,21 @@ const EN: Cs2Copy = {
     count: (n) => `${n} results`,
     none: "Nothing matches.",
     open: "Open",
+  },
+  pt: {
+    lede: "Every CS2 update, change by change: each line says whether it's new, a change or a fix, and which maps, weapons and cases it names.",
+    patch: "Patch",
+    launch: "Release",
+    dir: { new: "New", mid: "Change", fix: "Fix" },
+    tally: { new: (n) => `${n} new`, mid: (n) => `${n} change${n === 1 ? "" : "s"}`, fix: (n) => `${n} fix${n === 1 ? "" : "es"}` },
+    lines: (n) => `${n} change${n === 1 ? "" : "s"}`,
+    official: "Valve's official notes.",
+    steam: "Read the announcement on Steam",
+    newer: "Newer",
+    older: "Older",
+    archive: "Every patch",
+    named: "Mentioned in this announcement",
+    none: "This patch doesn't exist. Pick one from the list.",
   },
   mk: {
     period: { "7v30": "This week", "1v7": "Today", "30v90": "This month" },
@@ -403,7 +442,7 @@ const EN: Cs2Copy = {
 };
 
 const ES: Cs2Copy = {
-  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario", market: "Mercado" },
+  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario", market: "Mercado", patches: "Parches" },
   loading: "Cargando…",
   loadError: "No se pudo cargar esta página.",
   retry: "Reintentar",
@@ -412,6 +451,7 @@ const ES: Cs2Copy = {
     skins: { title: "Skins de CS2: precios, float y cajas", description: "Todas las skins de armas, cuchillos y guantes de CS2 con su precio en cada desgaste, StatTrak y Souvenir, rango de float y la caja de donde salen." },
     cases: { title: "Cajas de CS2: probabilidades, valor esperado y precios", description: "Cada caja, paquete de souvenir y terminal de CS2 con su precio, la probabilidad de cada rareza y cuánto devuelve abrirla en promedio." },
     collections: { title: "Colecciones de CS2: cada skin y su precio", description: "Cada colección de armas de CS2 con sus skins por rareza, su rango de float y precio, y la caja o el paquete de donde sale." },
+    patches: { title: "Parches de CS2: todas las actualizaciones", description: "Cada actualización de CS2 desde el Limited Test, cambio por cambio: qué es nuevo, qué cambió y qué se arregló, con los mapas, armas y cajas que nombra." },
     market: { title: "Skins de CS2 que suben y bajan de precio", description: "Qué skins y cajas de CS2 suben y bajan de precio esta semana, y cuáles se venden más, con ventas reales en Skinport." },
     inventory: { title: "Cuánto vale tu inventario de CS2", description: "¿Cuánto vale tu inventario de CS2? Pegá tu perfil de Steam y mirá cada objeto con el precio de hoy, agrupado por tipo. Gratis y sin iniciar sesión." },
     "trade-up": { title: "Calculadora de trade-up de CS2: probabilidades, float y ganancia", description: "Calculadora de trade-up de CS2 gratis: probabilidad, float exacto y precio de cada resultado, ganancia esperada después de comisiones, cuchillos y calculadora inversa." },
@@ -421,6 +461,10 @@ const ES: Cs2Copy = {
     cases: (n) => ({ title: `${n}: probabilidades y valor esperado`, description: clip(`${n}: cada skin que trae con su precio en cada desgaste, la probabilidad de cada rareza, los cuchillos y cuánto devuelve abrirla en promedio.`) }),
     collections: (n) => ({ title: `${n}: skins y precios`, description: clip(`${n}: cada skin por rareza con su rango de float y precio, y de dónde sale la colección.`) }),
   },
+  patchSeo: (n, launch) =>
+    launch
+      ? { title: `${n}: actualización de CS2`, description: clip(`${n}: el anuncio de Valve para CS2, con lo que trae y las cajas y colecciones que nombra.`) }
+      : { title: n.replace(/^Parche del /, "Parche de CS2 del "), description: clip(`Las notas del ${n.replace(/^Parche del /, "parche de CS2 del ")}: cada cambio por sección, marcado como nuevo, cambio o arreglo, con los mapas y armas que toca.`) },
   rarity: {
     contraband: "Contrabando", extraordinary: "Extraordinario", covert: "Encubierto", classified: "Clasificado",
     restricted: "Restringido", milspec: "Grado militar", industrial: "Grado industrial", consumer: "Grado de consumo",
@@ -440,6 +484,7 @@ const ES: Cs2Copy = {
       "trade-up": () => "Probabilidades, float y ganancia de cualquier contrato, cuchillos incluidos, y al revés: qué poner para sacar la skin que querés.",
       inventory: () => "Pegá tu perfil de Steam y mirá cuánto vale hoy tu inventario de CS2, objeto por objeto.",
       market: () => "Qué sube y qué baja esta semana, y qué se vende más, con ventas reales.",
+      patches: () => "Cada actualización, cambio por cambio: qué es nuevo, qué cambió y qué se arregló.",
     },
     pricesOf: (d) => `Precios del ${d}`,
   },
@@ -495,6 +540,21 @@ const ES: Cs2Copy = {
     count: (n) => `${n} resultados`,
     none: "No hay nada con eso.",
     open: "Abrir",
+  },
+  pt: {
+    lede: "Cada actualización de CS2, cambio por cambio: cada línea dice si es algo nuevo, un cambio o un arreglo, y qué mapas, armas y cajas nombra.",
+    patch: "Parche",
+    launch: "Lanzamiento",
+    dir: { new: "Nuevo", mid: "Cambio", fix: "Arreglo" },
+    tally: { new: (n) => `${n} nuevo${n === 1 ? "" : "s"}`, mid: (n) => `${n} cambio${n === 1 ? "" : "s"}`, fix: (n) => `${n} arreglo${n === 1 ? "" : "s"}` },
+    lines: (n) => `${n} cambio${n === 1 ? "" : "s"}`,
+    official: "Notas oficiales de Valve, en inglés.",
+    steam: "Ver el anuncio en Steam",
+    newer: "Más nuevo",
+    older: "Más viejo",
+    archive: "Todos los parches",
+    named: "Aparece en este anuncio",
+    none: "Este parche no existe. Elegí uno de la lista.",
   },
   mk: {
     period: { "7v30": "Esta semana", "1v7": "Hoy", "30v90": "Este mes" },

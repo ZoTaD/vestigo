@@ -125,6 +125,8 @@ export interface Cs2SitemapData {
   skins: { slug: string; name: string }[];
   cases: { slug: string; name: string }[];
   collections: { slug: string; name: string }[];
+  /** Las ediciones de Parches (etapa 5): `patches/index.json`. */
+  patches?: { slug: string; date: string; kind: "patch" | "content"; title: string }[];
 }
 
 /** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
@@ -488,6 +490,8 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const s of CS2_DETAIL_SECTIONS) {
         for (const f of data.c2[s]) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: s, detail: f.slug }));
       }
+      // Etapa 5: una página por edición de Parches.
+      for (const p of data.c2.patches ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "patches", detail: p.slug }));
     }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).
     if (data.rs) {

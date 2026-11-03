@@ -2,6 +2,7 @@ import { TERRARIA_COPY, type TerrariaHas } from "./terrariaCopy";
 import { STARDEW_COPY } from "./stardewCopy";
 import { WF_COPY } from "./warframeCopy";
 import { CS2_COPY } from "./cs2Copy";
+import { isPatchName, patchName } from "./cs2/patches/names";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
 import { SEO_COPY } from "./seoCopy";
@@ -211,6 +212,7 @@ export function metaFor(
     const c = CS2_COPY[lang];
     const sec = route.c2Section ?? "home";
     if (sec === "skins" || sec === "cases" || sec === "collections") if (route.detail && detailName) return c.detailSeo[sec](detailName);
+    if (sec === "patches" && route.detail && detailName) return c.patchSeo(detailName, !isPatchName(detailName));
     return c.seo[sec];
   }
   // Lo que queda son la portada y las dos páginas legales.
@@ -276,6 +278,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const tab of ["skins", "cases", "collections"] as const) {
     for (const e of data.c2?.[tab] ?? []) out[`c2-${tab}/${e.slug}`] = e.name;
   }
+  for (const e of data.c2?.patches ?? []) out[`c2-patches/${e.slug}`] = patchName(e, lang);
   for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const slug of data.rs?.circuits ?? []) {
     const m = circuitMeta(slug);
