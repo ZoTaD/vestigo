@@ -83,6 +83,10 @@ export default function Cs2({ route, navigate }: TabProps) {
   }, [section]);
   return (
     <div className="c2" data-section={section}>
+      {/* La arena que se desliza sobre la foto de Dust II (`.c2-drift` en cs2.css). */}
+      <div className="c2-drift-clip" aria-hidden="true">
+        <div className="c2-drift" />
+      </div>
       <div className="c2-top">
         <div className="c2-top-in">
           {/* El nombre en esténcil, sin el logo del juego. */}
