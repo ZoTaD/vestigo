@@ -43,6 +43,9 @@ const terrariaDir = fileURLToPath(new URL("../games/terraria/data", import.meta.
 const stardewDir = fileURLToPath(new URL("../games/stardew/data", import.meta.url));
 // Warframe (2026-10-27): lo que escribe `games/warframe/tools/site_data.py`.
 const warframeDir = fileURLToPath(new URL("../games/warframe/data", import.meta.url));
+// CS2 (2026-11-03): el catálogo de `games/cs2/tools/site_data.py` y los precios del día de `prices.py`.
+const cs2Dir = fileURLToPath(new URL("../games/cs2/data", import.meta.url));
+const cs2PricesDir = fileURLToPath(new URL("../games/cs2/prices", import.meta.url));
 
 /**
  * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.
@@ -1033,7 +1036,7 @@ export default defineConfig({
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
     // juego y no uno genérico, para que un import diga de qué juego habla.
-    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir },
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

@@ -178,8 +178,10 @@ def main() -> None:
     crudo = _hash_crudo()
     meta_f = DATA / "meta.json"
     viejo = __import__("json").loads(meta_f.read_text(encoding="utf-8")) if meta_f.exists() else {}
-    if viejo.get("catalog") != crudo:
-        write_json(meta_f, {"generatedAt": date.today().isoformat(), "catalog": crudo})
+    # La portada del sitio muestra los conteos sin bajar las listas.
+    counts = {tab: len(d[tab]["list"]) for tab in TABS}
+    fecha = viejo.get("generatedAt") if viejo.get("catalog") == crudo else date.today().isoformat()
+    write_json(meta_f, {"generatedAt": fecha, "catalog": crudo, "counts": counts})
 
 
 if __name__ == "__main__":

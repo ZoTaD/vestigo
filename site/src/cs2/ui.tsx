@@ -1,0 +1,101 @@
+/**
+ * Las piezas que comparten las pantallas de CS2 (2026-11-03), con la estética A "Mesa de mercado": el precio en
+ * dólares, la rareza por color de texto, la barra de desgastes con el rango de float, la imagen y la hoja de
+ * "cargando…".
+ */
+import { useLang } from "../i18n";
+import type { Route } from "../route";
+import { SettledImg } from "../SettledImg";
+import { useCs2Copy, WEARS, type Cs2Rarity } from "../cs2Copy";
+
+export type Nav = (r: Route) => void;
+
+/** Un número con la coma o el punto del idioma y `d` decimales. */
+export function useNum() {
+  const { lang } = useLang();
+  const loc = lang === "es" ? "es-AR" : "en-US";
+  return (v: number, d = 2) => v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+
+/** Un precio en dólares, o "—" si no hay. `sug`: es el sugerido (no hay publicaciones), con su marca tenue. */
+export function Price({ v, sug = false, bare = false }: { v: number | null | undefined; sug?: boolean; bare?: boolean }) {
+  const t = useCs2Copy();
+  const num = useNum();
+  if (v == null) return <span className="c2-num is-none">—</span>;
+  return (
+    <span className="c2-num" title={sug ? t.t.suggestedHint : undefined}>
+      {bare ? "" : "US$ "}
+      {num(v)}
+      {sug && <small className="c2-sug"> {t.t.suggested}</small>}
+    </span>
+  );
+}
+
+/** Un porcentaje (0,0064 → "0,64 %"). */
+export function Pct({ v, d = 2, className }: { v: number; d?: number; className?: string }) {
+  const num = useNum();
+  return <span className={className ? `c2-num ${className}` : "c2-num"}>{num(v * 100, d)}&#8201;%</span>;
+}
+
+/** Un float con dos decimales ("0,00–0,80"). */
+export function FloatRange({ min, max }: { min: number | null; max: number | null }) {
+  const num = useNum();
+  if (min == null || max == null) return <span className="c2-num is-none">—</span>;
+  return (
+    <span className="c2-num">
+      {num(min)}–{num(max)}
+    </span>
+  );
+}
+
+/** El nombre de una rareza, escrito en su color (texto, nunca un filo). */
+export function Rarity({ r }: { r: Cs2Rarity }) {
+  const t = useCs2Copy();
+  return <span className={`c2-r is-${r}`}>{t.rarity[r]}</span>;
+}
+
+/** Los cinco tramos de desgaste en colores apagados, con el rango de float de la skin marcado encima. */
+export function WearBar({ min, max }: { min: number | null; max: number | null }) {
+  if (min == null || max == null) return null;
+  return (
+    <div className="c2-wearbar" role="img" aria-label={`${min}–${max}`}>
+      {WEARS.map((w) => (
+        <span key={w.ab} className={`c2-wb is-${w.ab.toLowerCase()}`} style={{ width: `${(w.to - w.from) * 100}%` }}>
+          {w.ab}
+        </span>
+      ))}
+      <i className="c2-wb-range" style={{ left: `${min * 100}%`, width: `${(max - min) * 100}%` }} />
+    </div>
+  );
+}
+
+/**
+ * La imagen de una skin, caja o colección: `public/cs2/s/<img>.webp` (128 px) o, de la ficha, `l/` (360 px). Caja de
+ * tamaño fijo, así no corre la página al llegar; `SettledImg` en las listas (baja al frenar el scroll).
+ */
+export function Img({ img, w, h, big = false, lazy = true }: { img: string | null | undefined; w: number; h: number; big?: boolean; lazy?: boolean }) {
+  if (!img) return <span className="c2-img is-empty" style={{ width: w, height: h }} aria-hidden="true" />;
+  const props = { className: "c2-img", src: `/cs2/${big ? "l" : "s"}/${img}.webp`, alt: "", width: w, height: h };
+  return lazy ? <SettledImg {...props} /> : <img {...props} decoding="async" />;
+}
+
+/** La hoja de "cargando…" (o del error, con el botón para reintentar). Clase `c2-loading`: la busca el prerender. */
+export function Cs2Loading({ onRetry }: { onRetry?: () => void }) {
+  const t = useCs2Copy();
+  return (
+    <main className="c2-main c2-loading" aria-busy={!onRetry}>
+      <section className="c2-panel">
+        {onRetry ? (
+          <p role="alert">
+            {t.loadError}{" "}
+            <button type="button" className="c2-btn" onClick={onRetry}>
+              {t.retry}
+            </button>
+          </p>
+        ) : (
+          <p>{t.loading}</p>
+        )}
+      </section>
+    </main>
+  );
+}

@@ -23,7 +23,9 @@
       "@rust/*": ["../games/rust/data/*"],
       "@terraria/*": ["../games/terraria/data/*"],
       "@stardew/*": ["../games/stardew/data/*"],
-      "@warframe/*": ["../games/warframe/data/*"]
+      "@warframe/*": ["../games/warframe/data/*"],
+      "@cs2/*": ["../games/cs2/data/*"],
+      "@cs2prices/*": ["../games/cs2/prices/*"]
     }
   },
   "include": ["src", "vite.config.ts"]

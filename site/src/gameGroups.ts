@@ -14,7 +14,7 @@ export type GameGroup = "survival" | "arpg" | "shooters";
 export const GAME_GROUPS: { id: GameGroup; games: Game[] }[] = [
   { id: "survival", games: ["valheim", "zomboid", "stardew"] },
   { id: "arpg", games: ["poe2", "d2r", "warframe"] },
-  { id: "shooters", games: ["deadlock"] },
+  { id: "shooters", games: ["deadlock", "cs2"] },
 ];
 
 /**
@@ -33,6 +33,7 @@ export const GAME_LOGOS: Record<Game, [w: number, h: number]> = {
   d2r: [106, 32],
   poe2: [78, 40],
   warframe: [116, 30],
+  cs2: [88, 34],
 };
 
 /** El archivo del logo de un juego en `public/logos/`: casi todos son PNG sacados de la caché de Steam; el de Warframe es un SVG propio. */

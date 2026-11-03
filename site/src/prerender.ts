@@ -1,6 +1,7 @@
 import { TERRARIA_COPY, type TerrariaHas } from "./terrariaCopy";
 import { STARDEW_COPY } from "./stardewCopy";
 import { WF_COPY } from "./warframeCopy";
+import { CS2_COPY } from "./cs2Copy";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
 import { SEO_COPY } from "./seoCopy";
@@ -203,6 +204,13 @@ export function metaFor(
       if (sec === "mods") return c.detailSeo.mod(detailName, !!wf?.arcane);
       if (sec === "star-chart" && wf?.planet) return c.detailSeo["star-chart"](detailName, (lang === "es" && wf.planet[1]) || wf.planet[0], wf.type ?? "");
     }
+    return c.seo[sec];
+  }
+  // CS2 (2026-11-03): la portada, cada pestaña y, con nombre, la ficha (skin, caja o colección).
+  if (route.view === "cs2") {
+    const c = CS2_COPY[lang];
+    const sec = route.c2Section ?? "home";
+    if (sec !== "home" && route.detail && detailName) return c.detailSeo[sec](detailName);
     return c.seo[sec];
   }
   // Lo que queda son la portada y las dos páginas legales.
