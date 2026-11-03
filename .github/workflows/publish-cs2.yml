@@ -1,0 +1,99 @@
+name: publish cs2 prices
+
+# Los precios de CS2 (Skinport) una vez por día, y el catálogo (ByMykel/CSGO-API) los lunes. Diseño:
+# docs/superpowers/specs/2026-11-03-cs2-design.md.
+#
+# **No dispara un build propio**, a propósito: el commit lo empuja el GITHUB_TOKEN (que no dispara workflows) y esta
+# Action no está en el `workflow_run` de `deploy.yml`. Sale con el siguiente build de `publish-deadlock`, que publica
+# de 2 a 5 veces por día; así CS2 no suma un build diario. Los precios van en `games/cs2/prices`, fuera de los `paths`
+# de `deploy.yml`.
+#
+# **Un solo pedido a Skinport por corrida** (deja 8 cada 5 minutos y trae todo de una).
+on:
+  schedule:
+    # Antes del build de Deadlock de las 06:30, y lejos de `publish-poe2` (08:45) y de `tests` (09:15).
+    - cron: "20 6 * * *"
+  workflow_dispatch:
+    inputs:
+      catalog:
+        description: "Actualizar también el catálogo y las imágenes"
+        type: boolean
+        default: false
+
+concurrency:
+  group: publish-cs2
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Los precios son segundos; el catálogo con imágenes nuevas, unos minutos.
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.13"
+
+      - name: deps
+        run: pip install brotli==1.1.0 pillow==11.3.0
+
+      # Los lunes (o a mano, con `catalog`) se renueva el catálogo: fichas e imágenes nuevas en el mismo commit.
+      - name: catalog
+        env:
+          A_MANO: ${{ inputs.catalog }}
+        run: |
+          if [ "$A_MANO" = "true" ] || [ "$(date -u +%u)" = "1" ]; then
+            python games/cs2/tools/fetch.py --catalog
+            python games/cs2/tools/site_data.py
+            python games/cs2/tools/images.py
+          else
+            echo "no es lunes: sólo precios"
+          fi
+
+      - name: prices
+        run: |
+          python games/cs2/tools/fetch.py --prices
+          python games/cs2/tools/prices.py
+
+      - name: guard
+        id: guard
+        run: |
+          if [ -z "$(git status --porcelain -- games/cs2 site/public/cs2)" ]; then
+            echo "nada cambió; no hay commit"
+            echo "publish=no" >> "$GITHUB_OUTPUT"
+          else
+            git status --short -- games/cs2 site/public/cs2 | head -20
+            echo "publish=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: commit
+        if: steps.guard.outputs.publish == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # El token, sólo acá y sólo para este comando (ver el checkout).
+          auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git_auth() { git -c "http.https://github.com/.extraheader=$auth" "$@"; }
+          git config user.name "vestigo-bot"
+          git config user.email "67348048+ZoTaD@users.noreply.github.com"
+          git add games/cs2 site/public/cs2
+          git commit -m "chore: publish today's CS2 prices"
+          # El push se reintenta rebaseando sobre lo que llegó, igual que en `publish-poe2`.
+          empujado=0
+          for intento in 1 2 3; do
+            if git_auth push origin "HEAD:$GITHUB_REF_NAME"; then empujado=1; break; fi
+            echo "push rechazado (intento $intento): traigo lo que llegó y reintento"
+            git_auth fetch origin "$GITHUB_REF_NAME" || break
+            git rebase "origin/$GITHUB_REF_NAME" || break
+          done
+          if [ "$empujado" != 1 ]; then
+            echo "::error::no se pudo publicar después de 3 intentos"
+            exit 1
+          fi

@@ -31,6 +31,8 @@ on:
       - games/terraria/data/**
       - games/stardew/data/**
       - games/warframe/data/**
+      # CS2: sólo el catálogo. Los precios (`games/cs2/prices`) viajan en los builds de Deadlock (ver `publish-cs2.yml`).
+      - games/cs2/data/**
       - netlify.toml
       - .github/workflows/deploy.yml
   # Los commits de las Actions de publicación los empuja el GITHUB_TOKEN, y
