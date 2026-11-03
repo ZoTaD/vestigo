@@ -8,6 +8,7 @@ AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI.parent))
 
 from esports import bracket_matches, player_page, team_page, team_results  # noqa: E402
+from esports_teams import map_stats, team_matches  # noqa: E402
 
 leer = lambda f: (AQUI / "fixtures" / f).read_text(encoding="utf-8")  # noqa: E731
 
@@ -62,6 +63,38 @@ class TestLlaves(unittest.TestCase):
         ff = self.ms[2]["maps"][0]
         self.assertEqual(ff, {"map": "Mirage", "a": None, "b": None, "ha": [], "hb": [], "ff": "a"})
         self.assertEqual(self.ms[2]["maps"][1]["a"], 13)
+
+
+
+class TestMapas(unittest.TestCase):
+    def setUp(self):
+        self.ms = bracket_matches(leer("lp_bracket.html"))
+
+    def test_mapas_de_mouz(self):
+        s = {x["map"]: x for x in map_stats(self.ms, "MOUZ", "2000-01-01")}
+        self.assertEqual(list(s)[0], "Nuke")  # el más jugado primero
+        self.assertEqual(s["Nuke"], {"map": "Nuke", "played": 2, "won": 1, "ct_w": 6, "ct_p": 11, "t_w": 9, "t_p": 24})
+        self.assertEqual(s["Mirage"], {"map": "Mirage", "played": 1, "won": 1, "ct_w": 8, "ct_p": 15, "t_w": 8, "t_p": 15})
+        self.assertEqual(s["Cache"]["ct_w"], 10)
+        self.assertEqual(sum(x["played"] for x in s.values()), 6)  # el abandono no cuenta
+
+    def test_desde(self):
+        self.assertEqual(map_stats(self.ms, "MOUZ", "2099-01-01"), [])
+
+    def test_sin_partidos(self):
+        self.assertEqual(map_stats(self.ms, "Nadie", "2000-01-01"), [])
+        self.assertEqual(team_matches(self.ms, "Nadie"), [])
+
+    def test_partidos_desde_el_equipo(self):
+        tm = team_matches(self.ms, "MOUZ")
+        spirit = next(m for m in tm if m["opp_lp"] == "Team_Spirit")
+        self.assertEqual(spirit["opp"], "Team Spirit")
+        self.assertTrue(spirit["won"])
+        self.assertEqual([(x["map"], x["us"], x["them"]) for x in spirit["maps"]], [("Nuke", 2, 13), ("Dust II", 13, 8), ("Mirage", 16, 14)])
+        aurora = next(m for m in tm if m["opp_lp"] == "Aurora_Gaming")
+        self.assertTrue(aurora["won"])
+        self.assertEqual(aurora["maps"][0], {"map": "Mirage", "us": None, "them": None, "ff": True})
+        self.assertEqual([m["t"] for m in tm], sorted((m["t"] for m in tm), reverse=True))
 
 
 if __name__ == "__main__":
