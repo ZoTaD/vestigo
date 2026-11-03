@@ -38,9 +38,11 @@ export interface Outcome {
   price: number | null;
   sug: boolean;
 }
+/** Por qué un contrato no se puede firmar (la interfaz lo traduce); `n`: cuántas faltan o sobran. */
+export type Problem = { code: "empty" | "mixed" | "rarity" | "st" | "sv" | "nocase" | "top" } | { code: "missing" | "extra"; n: number };
 export interface Contract {
   /** null si el contrato se puede firmar; si no, por qué no (igual se calcula con lo que hay). */
-  valid: string | null;
+  valid: Problem | null;
   avgN: number;
   cost: number;
   outcomes: Outcome[];
@@ -89,14 +91,14 @@ export function contract(inputs: Input[], kind: Kind, ctx: TradeupCtx): Contract
     const s = ctx.skins.get(i.slug);
     return s ? [{ s, f: clamp(i.float, s) }] : [];
   });
-  const empty: Contract = { valid: "Sumá skins al contrato.", avgN: 0, cost: 0, outcomes: [], ev: 0, net: 0, win: 0, profit: 0 };
+  const empty: Contract = { valid: { code: "empty" }, avgN: 0, cost: 0, outcomes: [], ev: 0, net: 0, win: 0, profit: 0 };
   if (!rows.length) return empty;
   const rarity = rows[0].s.rarity;
-  let valid: string | null = null;
-  if (rows.some((r) => r.s.rarity !== rarity)) valid = "Todas las skins tienen que ser de la misma rareza.";
-  else if (!nextRarity(rarity)) valid = "Esa rareza no se puede usar en un contrato.";
-  else if (kind === "st" && rows.some((r) => !r.s.st)) valid = "Hay skins que no existen en StatTrak.";
-  else if (kind === "sv" && rows.some((r) => !r.s.sv)) valid = "Hay skins que no existen en Souvenir.";
+  let valid: Problem | null = null;
+  if (rows.some((r) => r.s.rarity !== rarity)) valid = { code: "mixed" };
+  else if (!nextRarity(rarity)) valid = { code: "rarity" };
+  else if (kind === "st" && rows.some((r) => !r.s.st)) valid = { code: "st" };
+  else if (kind === "sv" && rows.some((r) => !r.s.sv)) valid = { code: "sv" };
 
   const avgN = rows.reduce((sum, r) => sum + norm(r.f, r.s), 0) / rows.length;
   const cost = rows.reduce((sum, r) => sum + (priceAt(ctx.prices[r.s.slug], r.s, r.f, kind).price ?? 0), 0);
@@ -108,7 +110,7 @@ export function contract(inputs: Input[], kind: Kind, ctx: TradeupCtx): Contract
   for (const [col, n] of porCol) {
     const outs = outputsOf(ctx.tradeup[col], rarity);
     if (!outs.length) {
-      valid ??= rarity === "covert" ? "Hay Encubiertos de una colección que no sale de ninguna caja: no dan cuchillo ni guantes." : "Hay skins que ya son lo más alto de su colección.";
+      valid ??= { code: rarity === "covert" ? "nocase" : "top" };
       continue;
     }
     for (const slug of outs) {
@@ -120,8 +122,8 @@ export function contract(inputs: Input[], kind: Kind, ctx: TradeupCtx): Contract
     }
   }
   const falta = needed(rarity) - rows.length;
-  if (!valid && falta > 0) valid = `Faltan ${falta} skins para completar el contrato.`;
-  if (!valid && falta < 0) valid = `Sobran ${-falta} skins: este contrato lleva ${needed(rarity)}.`;
+  if (!valid && falta > 0) valid = { code: "missing", n: falta };
+  if (!valid && falta < 0) valid = { code: "extra", n: -falta };
   const ev = outcomes.reduce((s, o) => s + o.chance * (o.price ?? 0), 0);
   const net = ev * (1 - ctx.fee);
   const win = outcomes.filter((o) => o.price != null && !o.sug && o.price * (1 - ctx.fee) > cost).reduce((s, o) => s + o.chance, 0);

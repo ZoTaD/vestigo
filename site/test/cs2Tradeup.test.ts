@@ -56,15 +56,15 @@ describe("contrato de trade-up", () => {
     expect(r.outcomes[0].float).toBeNull();
   });
   it("un Encubierto de una colección sin caja no da nada, y lo dice", () => {
-    expect(contract(rep("cov2", 5), "n", ctx()).valid).toMatch(/caja/);
+    expect(contract(rep("cov2", 5), "n", ctx()).valid).toEqual({ code: "nocase" });
   });
   it("faltan entradas: lo dice, pero calcula igual", () => {
     const r = contract(rep("a1", 4), "n", ctx());
-    expect(r.valid).toMatch(/6/);
+    expect(r.valid).toEqual({ code: "missing", n: 6 });
     expect(r.outcomes.length).toBe(3);
   });
   it("no se mezclan rarezas", () => {
-    expect(contract([...rep("a1", 5), ...rep("ca1", 5)], "n", ctx()).valid).toMatch(/rareza/);
+    expect(contract([...rep("a1", 5), ...rep("ca1", 5)], "n", ctx()).valid).toEqual({ code: "mixed" });
   });
   it("StatTrak sin precio StatTrak en una salida: va sin precio y no cuenta para ganar", () => {
     const r = contract(rep("a1", 10), "st", ctx());

@@ -6,10 +6,10 @@
  * Acá va la interfaz y lo que se traduce: rarezas, desgastes y categorías, con sus nombres oficiales del juego.
  */
 import { useLang } from "./i18n";
-import type { Cs2Section, Cs2Tab } from "./route";
+import type { Cs2DataTab, Cs2Section } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "collections"];
+export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "collections", "trade-up"];
 
 /** Las rarezas como las deja `site_data.py` (`RARITY` de `cs2.py`), de la más alta a la más baja. */
 export type Cs2Rarity = "contraband" | "extraordinary" | "covert" | "classified" | "restricted" | "milspec" | "industrial" | "consumer";
@@ -44,7 +44,7 @@ export interface Cs2Copy {
   loadError: string;
   retry: string;
   seo: Record<Cs2Section, Seo>;
-  detailSeo: Record<Cs2Tab, (name: string) => Seo>;
+  detailSeo: Record<Cs2DataTab, (name: string) => Seo>;
   rarity: Record<Cs2Rarity, string>;
   wear: [string, string, string, string, string];
   cat: Record<Cs2Cat, string>;
@@ -54,7 +54,7 @@ export interface Cs2Copy {
     h1: string;
     lede: string;
     ribbon: string;
-    cards: Record<Cs2Tab, (n: string) => string>;
+    cards: Record<Cs2DataTab, (n: string) => string>;
     pricesOf: (date: string) => string;
   };
   t: {
@@ -104,10 +104,48 @@ export interface Cs2Copy {
     none: string;
     open: string;
   };
+  /** La pestaña Trade-up (etapa 2). */
+  tu: {
+    build: string;
+    find: string;
+    kind: { n: string; st: string; sv: string };
+    rarityIn: string;
+    fee: string;
+    searchAdd: string;
+    fill: (n: number) => string;
+    clear: string;
+    example: string;
+    inputs: (n: number, need: number) => string;
+    results: string;
+    collection: string;
+    chance: string;
+    ifWins: string;
+    cost: string;
+    ev: string;
+    win: string;
+    profit: string;
+    netOf: (fee: string) => string;
+    empty: string;
+    remove: string;
+    problem: { empty: string; mixed: string; rarity: string; st: string; sv: string; nocase: string; top: string; missing: (n: number) => string; extra: (n: number) => string };
+    rules: string;
+    target: string;
+    searchTarget: string;
+    inWear: string;
+    needBelow: (n: string) => string;
+    needBetween: (lo: string, hi: string) => string;
+    noWear: (range: string) => string;
+    chanceAll: (p: string) => string;
+    noSource: string;
+    candidates: string;
+    fMax: string;
+    tenOf: string;
+    useThis: string;
+  };
 }
 
 const EN: Cs2Copy = {
-  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections" },
+  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up" },
   loading: "Loading…",
   loadError: "Couldn't load this page.",
   retry: "Retry",
@@ -116,6 +154,7 @@ const EN: Cs2Copy = {
     skins: { title: "CS2 skins: prices, float ranges & cases", description: "All CS2 weapon, knife and glove skins with their price in each wear, StatTrak and Souvenir, float range and the case they drop from." },
     cases: { title: "CS2 cases: odds, expected value & prices", description: "Every CS2 case, souvenir package and terminal with its price, the odds of each rarity and what opening it returns on average." },
     collections: { title: "CS2 collections: every skin & price", description: "Every CS2 weapon collection with its skins by rarity, their float ranges and prices, and the case or package it comes from." },
+    "trade-up": { title: "CS2 trade-up calculator: odds, floats & profit", description: "Free CS2 trade-up calculator: the odds, exact float and price of every outcome, expected profit after fees, knife trade-ups and a reverse calculator." },
   },
   detailSeo: {
     skins: (n) => ({ title: `${n} price, float & cases`, description: clip(`${n}: price in every wear (normal, StatTrak and Souvenir), float range, rarity and the cases and collections it drops from.`) }),
@@ -188,10 +227,57 @@ const EN: Cs2Copy = {
     none: "Nothing matches.",
     open: "Open",
   },
+  tu: {
+    build: "Build a contract",
+    find: "Find a skin",
+    kind: { n: "Normal", st: "StatTrak™", sv: "Souvenir" },
+    rarityIn: "Input rarity",
+    fee: "Fee",
+    searchAdd: "Add a skin of this rarity…",
+    fill: (n) => `Fill with ${n}`,
+    clear: "Clear",
+    example: "Load an example",
+    inputs: (n, need) => `Inputs (${n}/${need})`,
+    results: "Outcomes",
+    collection: "Collection",
+    chance: "Odds",
+    ifWins: "Net if it drops",
+    cost: "Cost",
+    ev: "Expected value",
+    win: "Profit chance",
+    profit: "Expected profit",
+    netOf: (fee) => `after a ${fee} fee`,
+    empty: "Pick the input rarity and add skins with the search box.",
+    remove: "Remove",
+    problem: {
+      empty: "Add skins to the contract.",
+      mixed: "Every skin must have the same rarity.",
+      rarity: "That rarity can't go into a contract.",
+      st: "Some skins don't exist in StatTrak™.",
+      sv: "Some skins don't exist as Souvenirs.",
+      nocase: "Some Coverts come from a collection with no case: they can't give a knife or gloves.",
+      top: "Some skins are already the top rarity of their collection.",
+      missing: (n) => `${n} more skin${n === 1 ? "" : "s"} to complete the contract.`,
+      extra: (n) => `${n} skin${n === 1 ? "" : "s"} too many for this contract.`,
+    },
+    rules: "Odds: each collection weighs by how many inputs it has, split among its outcomes. Output float uses each input's normalized float (the formula the community measured; Valve hasn't published it). 5 Coverts give a knife or gloves from one of their collections' cases. Souvenirs lose the attribute.",
+    target: "I want",
+    searchTarget: "Search the skin you want…",
+    inWear: "in",
+    needBelow: (n) => `The inputs' average normalized float must stay below ${n}.`,
+    needBetween: (lo, hi) => `The inputs' average normalized float must stay between ${lo} and ${hi}.`,
+    noWear: (range) => `This skin doesn't come in that wear: its float goes from ${range}.`,
+    chanceAll: (p) => `With a full contract from its collection it drops ${p} of the time.`,
+    noSource: "This skin can't come out of a contract.",
+    candidates: "Inputs that work, cheapest first",
+    fMax: "Max float",
+    tenOf: "×10",
+    useThis: "Use",
+  },
 };
 
 const ES: Cs2Copy = {
-  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones" },
+  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up" },
   loading: "Cargando…",
   loadError: "No se pudo cargar esta página.",
   retry: "Reintentar",
@@ -200,6 +286,7 @@ const ES: Cs2Copy = {
     skins: { title: "Skins de CS2: precios, float y cajas", description: "Todas las skins de armas, cuchillos y guantes de CS2 con su precio en cada desgaste, StatTrak y Souvenir, rango de float y la caja de donde salen." },
     cases: { title: "Cajas de CS2: probabilidades, valor esperado y precios", description: "Cada caja, paquete de souvenir y terminal de CS2 con su precio, la probabilidad de cada rareza y cuánto devuelve abrirla en promedio." },
     collections: { title: "Colecciones de CS2: cada skin y su precio", description: "Cada colección de armas de CS2 con sus skins por rareza, su rango de float y precio, y la caja o el paquete de donde sale." },
+    "trade-up": { title: "Calculadora de trade-up de CS2: probabilidades, float y ganancia", description: "Calculadora de trade-up de CS2 gratis: probabilidad, float exacto y precio de cada resultado, ganancia esperada después de comisiones, cuchillos y calculadora inversa." },
   },
   detailSeo: {
     skins: (n) => ({ title: `${n}: precio, float y cajas`, description: clip(`${n}: precio en cada desgaste (normal, StatTrak y Souvenir), rango de float, rareza y las cajas y colecciones de donde sale.`) }),
@@ -271,6 +358,53 @@ const ES: Cs2Copy = {
     count: (n) => `${n} resultados`,
     none: "No hay nada con eso.",
     open: "Abrir",
+  },
+  tu: {
+    build: "Armar contrato",
+    find: "Busco esta skin",
+    kind: { n: "Normal", st: "StatTrak™", sv: "Souvenir" },
+    rarityIn: "Rareza de entrada",
+    fee: "Comisión",
+    searchAdd: "Sumar una skin de esta rareza…",
+    fill: (n) => `Llenar con ${n}`,
+    clear: "Vaciar",
+    example: "Cargar un ejemplo",
+    inputs: (n, need) => `Entradas (${n}/${need})`,
+    results: "Resultados",
+    collection: "Colección",
+    chance: "Prob.",
+    ifWins: "Neto si sale",
+    cost: "Costo",
+    ev: "Valor esperado",
+    win: "Gana en",
+    profit: "Ganancia esperada",
+    netOf: (fee) => `después de ${fee} de comisión`,
+    empty: "Elegí la rareza de entrada y sumá skins con el buscador.",
+    remove: "Quitar",
+    problem: {
+      empty: "Sumá skins al contrato.",
+      mixed: "Todas las skins tienen que ser de la misma rareza.",
+      rarity: "Esa rareza no se puede usar en un contrato.",
+      st: "Hay skins que no existen en StatTrak™.",
+      sv: "Hay skins que no existen en Souvenir.",
+      nocase: "Hay Encubiertos de una colección que no sale de ninguna caja: no dan cuchillo ni guantes.",
+      top: "Hay skins que ya son lo más alto de su colección.",
+      missing: (n) => `${n === 1 ? "Falta" : "Faltan"} ${n} skin${n === 1 ? "" : "s"} para completar el contrato.`,
+      extra: (n) => `${n === 1 ? "Sobra" : "Sobran"} ${n} skin${n === 1 ? "" : "s"} para este contrato.`,
+    },
+    rules: "Probabilidad: cada colección pesa según cuántas entradas aporta, repartido entre sus resultados. El float de salida usa el float normalizado de cada entrada (la fórmula que midió la comunidad; Valve no la publicó). 5 Encubiertos dan un cuchillo o guantes de la caja de alguna de sus colecciones. Los Souvenir pierden el atributo.",
+    target: "Quiero",
+    searchTarget: "Buscá la skin que querés…",
+    inWear: "en",
+    needBelow: (n) => `El float normalizado promedio de las entradas tiene que quedar por debajo de ${n}.`,
+    needBetween: (lo, hi) => `El float normalizado promedio de las entradas tiene que quedar entre ${lo} y ${hi}.`,
+    noWear: (range) => `Esta skin no viene en ese desgaste: su float va de ${range}.`,
+    chanceAll: (p) => `Con un contrato entero de su colección sale el ${p} de las veces.`,
+    noSource: "Esta skin no sale de ningún contrato.",
+    candidates: "Entradas que sirven, de la más barata a la más cara",
+    fMax: "Float máximo",
+    tenOf: "×10",
+    useThis: "Usar",
   },
 };
 

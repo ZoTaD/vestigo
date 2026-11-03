@@ -5,14 +5,14 @@
 import { useEffect, useState } from "react";
 import meta from "@cs2/meta.json";
 import RouteLink from "../RouteLink";
-import type { Cs2Section, Cs2Tab, Route } from "../route";
+import type { Cs2DataTab, Cs2Section, Route } from "../route";
 import { useCs2Copy } from "../cs2Copy";
 import { loadCasePrices, loadList, loadPriceDate, peekCasePrices, peekList, peekPriceDate, type CasePrice, type CaseRow } from "./data";
 import { Img, Pct, Price, useNum, type Nav } from "./ui";
 
-const TABS: Cs2Tab[] = ["cases", "skins", "collections"];
+const TABS: Cs2DataTab[] = ["cases", "skins", "collections"];
 /** La imagen de cada tarjeta: la Kilowatt, la AWP | Chrome Cannon y su colección (la AK-47 | Inheritance va en la cabecera). */
-const TAB_IMG: Record<Cs2Tab, string> = { cases: "kilowatt-case", skins: "awp-chrome-cannon", collections: "the-kilowatt-collection" };
+const TAB_IMG: Record<Cs2DataTab, string> = { cases: "kilowatt-case", skins: "awp-chrome-cannon", collections: "the-kilowatt-collection" };
 
 /** Las cajas con "devuelve" (precio de caja y valor esperado), de la que más devuelve a la que menos. */
 export function bestReturns(cases: CaseRow[], prices: Record<string, CasePrice>, n = 14): (CaseRow & { p: CasePrice })[] {

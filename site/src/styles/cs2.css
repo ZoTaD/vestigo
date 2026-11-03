@@ -281,3 +281,36 @@ a.c2-card:hover { border-color: var(--c2-ink); }
   .c2-nm-t strong { font-size: 16px; }
   .c2-table td, .c2-sort { padding-inline: 10px; }
 }
+
+/* --- Trade-up (etapa 2): maqueta B "Planilla" ---------------------------------------------------------------------- */
+.c2-tu-cols { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 22px; align-items: start; }
+.c2-tu-cols > section { display: grid; gap: 10px; min-width: 0; }
+.c2-tu-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.c2-tu-head .c2-h2 { margin: 0; }
+.c2-tu-actions { display: flex; gap: 8px; }
+.c2 .c2-btn.is-ghost { background: transparent; color: var(--c2-ink); border: 2px solid var(--c2-ink); padding: 7px 12px; }
+.c2-tu-mode button { font-size: 17px; padding: 8px 16px; }
+.c2-tu-fee { width: 64px; text-align: right; }
+.c2-tu-problem { font-weight: 600; color: var(--c2-down); }
+.c2-tu-search { position: relative; }
+.c2-tu-search input { width: 100%; font: 500 16px/1 var(--c2-text); color: var(--c2-ink); background: var(--c2-stone); border: 2px solid var(--c2-ink); padding: 9px 12px; }
+.c2-tu-hits { position: absolute; z-index: 5; left: 0; right: 0; top: 100%; background: var(--c2-stone); border: 2px solid var(--c2-ink); border-top: 0; max-height: 420px; overflow-y: auto; }
+.c2-tu-hits button { display: flex; gap: 10px; align-items: center; width: 100%; padding: 6px 10px; background: transparent; border: 0; border-bottom: 1px solid var(--c2-sand-2); text-align: left; font: 500 15px/1.2 var(--c2-text); color: var(--c2-ink); cursor: pointer; }
+.c2-tu-hits button:hover, .c2-tu-hits button:focus-visible { background: var(--c2-stone-hi); }
+.c2-tu-hits strong { display: block; color: var(--r, var(--c2-ink)); }
+.c2-tu-hits small { color: var(--c2-dim); }
+.c2-tu-float { width: 88px; text-align: right; font: 600 15px/1 var(--c2-text); color: var(--c2-ink); background: var(--c2-stone-hi); border: 2px solid var(--c2-ink); padding: 4px 6px; font-variant-numeric: tabular-nums; }
+.c2-tu-x { font: 700 20px/1 var(--c2-text); color: var(--c2-dim); background: transparent; border: 0; cursor: pointer; padding: 2px 6px; }
+.c2-tu-x:hover { color: var(--c2-down); }
+.c2-tu-target { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; padding: 16px; background: radial-gradient(60% 70% at 15% 100%, color-mix(in srgb, var(--r) 22%, transparent), transparent 70%), var(--c2-stone); container-type: inline-size; }
+.c2-tu-target .c2-img { width: 240px; height: 170px; }
+.c2-tu-target > div { display: grid; gap: 10px; }
+.c2-tu-name { font: clamp(26px, 6cqi, 44px)/1 var(--c2-stencil); }
+.c2-tu-say { font-weight: 500; max-width: 70ch; }
+@media (max-width: 1280px) {
+  .c2-tu-cols { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .c2-tu-target { grid-template-columns: minmax(0, 1fr); }
+  .c2-tu-target .c2-img { width: 180px; height: 128px; }
+}

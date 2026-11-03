@@ -9,10 +9,11 @@
  *
  * Nunca en el chunk del área (regla 4 de CLAUDE.md).
  */
-import type { Cs2Tab, Route } from "../route";
+import type { Cs2DataTab, Route } from "../route";
 import type { Cs2Cat, Cs2Kind, Cs2Rarity } from "../cs2Copy";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
+import type { Coll } from "./tradeup/engine";
 
 /** `CHUNKS` de cs2.py: si se cambia uno se cambia el otro (lo prueba cs2Data.test.ts). */
 export const CS2_SHARDS = 32;
@@ -107,20 +108,24 @@ const fichas = {
 };
 const skinPrices = once<Record<string, SkinPrice>>(() => import("@cs2prices/skins.json") as Promise<Mod<unknown>>);
 const casePrices = once<Record<string, CasePrice>>(() => import("@cs2prices/cases.json") as Promise<Mod<unknown>>);
+/** De cada colección, sus skins por rareza y el especial de sus cajas (`tradeup.json`, etapa 2). */
+const tradeup = once<Record<string, Coll>>(() => import("@cs2/tradeup.json") as Promise<Mod<unknown>>);
 const priceMeta = once<{ date: string }>(() => import("@cs2prices/meta.json") as Promise<Mod<unknown>>);
 
-export const isDataTab = (t: string | undefined): t is Cs2Tab => t === "skins" || t === "cases" || t === "collections";
+export const isDataTab = (t: string | undefined): t is Cs2DataTab => t === "skins" || t === "cases" || t === "collections";
 
-export const loadList = <T extends Cs2Tab>(tab: T): Promise<ListOf[T]> => (lists[tab] as ReturnType<typeof once<ListOf[T]>>).load();
-export const peekList = <T extends Cs2Tab>(tab: T): ListOf[T] | null => (lists[tab] as ReturnType<typeof once<ListOf[T]>>).peek();
-export const loadFicha = <T extends Cs2Tab>(tab: T, slug: string): Promise<FichaOf[T] | null> =>
+export const loadList = <T extends Cs2DataTab>(tab: T): Promise<ListOf[T]> => (lists[tab] as ReturnType<typeof once<ListOf[T]>>).load();
+export const peekList = <T extends Cs2DataTab>(tab: T): ListOf[T] | null => (lists[tab] as ReturnType<typeof once<ListOf[T]>>).peek();
+export const loadFicha = <T extends Cs2DataTab>(tab: T, slug: string): Promise<FichaOf[T] | null> =>
   (fichas[tab] as ReturnType<typeof shardedFichas<FichaOf[T]>>).load(slug);
-export const peekFicha = <T extends Cs2Tab>(tab: T, slug: string): FichaOf[T] | null | undefined =>
+export const peekFicha = <T extends Cs2DataTab>(tab: T, slug: string): FichaOf[T] | null | undefined =>
   (fichas[tab] as ReturnType<typeof shardedFichas<FichaOf[T]>>).peek(slug);
 export const loadSkinPrices = () => skinPrices.load();
 export const peekSkinPrices = () => skinPrices.peek();
 export const loadCasePrices = () => casePrices.load();
 export const peekCasePrices = () => casePrices.peek();
+export const loadTradeup = () => tradeup.load();
+export const peekTradeup = () => tradeup.peek();
 export const loadPriceDate = () => priceMeta.load().then((m) => m.date);
 export const peekPriceDate = () => priceMeta.peek()?.date ?? null;
 
@@ -130,6 +135,11 @@ export const peekPriceDate = () => priceMeta.peek()?.date ?? null;
  */
 export async function preloadRoute(route: Route): Promise<void> {
   const tab = route.c2Section;
+  // Trade-up: todas las skins con sus precios y las colecciones.
+  if (tab === "trade-up") {
+    await Promise.all([loadList("skins"), loadSkinPrices(), loadTradeup(), loadPriceDate()]);
+    return;
+  }
   if (!isDataTab(tab)) {
     await Promise.all([loadCasePrices(), loadList("cases"), loadPriceDate()]);
     return;

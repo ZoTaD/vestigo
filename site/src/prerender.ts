@@ -210,7 +210,7 @@ export function metaFor(
   if (route.view === "cs2") {
     const c = CS2_COPY[lang];
     const sec = route.c2Section ?? "home";
-    if (sec !== "home" && route.detail && detailName) return c.detailSeo[sec](detailName);
+    if (sec !== "home" && sec !== "trade-up" && route.detail && detailName) return c.detailSeo[sec](detailName);
     return c.seo[sec];
   }
   // Lo que queda son la portada y las dos páginas legales.
