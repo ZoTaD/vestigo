@@ -24,6 +24,7 @@ import { preloadPatchesRoute as preloadTrPatchesRoute } from "./terraria/patches
 import { loadBundles as loadSdBundles, loadCalendar as loadSdCalendar, loadCrops as loadSdCrops, loadFish as loadSdFish, loadMines as loadSdMines, loadRecipes as loadSdRecipes, preloadItemsRoute as preloadSdItemsRoute, preloadVillagersRoute as preloadSdVillagersRoute } from "./stardew/data";
 import { loadHome as loadSdHome } from "./stardew/homeData";
 import { isDataTab as isWfTab, loadFicha as loadWfFicha, loadList as loadWfList } from "./warframe/data";
+import { preloadRoute as preloadCs2Route } from "./cs2/data";
 import { preloadFarmingRoute } from "./rust/farming/data";
 import { preloadPatchesRoute } from "./rust/patches/data";
 import { preloadMonumentsRoute } from "./rust/monuments/data";
@@ -78,6 +79,12 @@ async function preload(route: Route): Promise<void> {
     if (!isWfTab(tab)) return;
     if (route.detail && (await quiet(loadWfFicha(tab, route.detail)))) return;
     await quiet(loadWfList(tab));
+    return;
+  }
+  // CS2 (2026-11-03): la ficha (o la lista) y los precios del día, así el HTML sale con el precio (lo lee Google). Sin
+  // esto la página sale con "cargando…" (`isCs2LoadingPage`).
+  if (route.view === "cs2") {
+    await quiet(preloadCs2Route(route));
     return;
   }
   if (route.view !== "deadlock") return;

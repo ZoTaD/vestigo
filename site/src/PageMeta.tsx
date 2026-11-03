@@ -18,6 +18,7 @@ import { loadItem as loadTrItem, peekItem as peekTrItem } from "./terraria/data"
 import { loadPatch as loadTrPatch, peekPatch as peekTrPatch } from "./terraria/patches/data";
 import { findMonster as findSdMonster, findVillager as findSdVillager, loadItem as loadSdItem, loadMines as loadSdMines, loadVillagers as loadSdVillagers, HAS as SD_HAS, peekItem as peekSdItem, peekMines as peekSdMines, peekVillagers as peekSdVillagers } from "./stardew/data";
 import { isDataTab as isWfTab, loadFicha as loadWfFicha, peekFicha as peekWfFicha } from "./warframe/data";
+import { isDataTab as isCs2Tab, loadFicha as loadCs2Ficha, peekFicha as peekCs2Ficha } from "./cs2/data";
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
 import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
@@ -173,6 +174,11 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     const f = peekWfFicha(route.wfSection, route.detail);
     return f ? (lang === "es" && f.name[1]) || f.name[0] : null;
   }
+  // Una ficha de CS2: el nombre (en inglés en los dos idiomas) y la fase, de su archivo.
+  if (route.view === "cs2" && isCs2Tab(route.c2Section) && route.detail) {
+    const f = peekCs2Ficha(route.c2Section, route.detail);
+    return f ? ("phase" in f && f.phase ? `${f.name} · ${f.phase}` : f.name) : null;
+  }
   // Una ficha de Objetos de Rust: el nombre sale de su archivo (uno de los 32 repartidos), que la pestaña pide igual.
   if (route.view === "rust" && route.rsSection === "items" && route.detail) {
     const f = peekRsItem(route.detail);
@@ -327,6 +333,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "warframe" && isWfTab(route.wfSection) && route.detail && peekWfFicha(route.wfSection, route.detail) === undefined) {
       let vivo = true;
       loadWfFicha(route.wfSection, route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una ficha de CS2: su archivo.
+    if (route.view === "cs2" && isCs2Tab(route.c2Section) && route.detail && peekCs2Ficha(route.c2Section, route.detail) === undefined) {
+      let vivo = true;
+      loadCs2Ficha(route.c2Section, route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una ficha de Rust, con el archivo de la ficha (que la pestaña ya pidió).

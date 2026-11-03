@@ -1,4 +1,4 @@
-import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, ValheimSection, View, WfSection } from "./route";
+import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, ValheimSection, View, WfSection, Cs2Section } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -20,6 +20,7 @@ export const AREA_FILES: Partial<Record<View, string>> = {
   terraria: "src/Terraria.tsx",
   stardew: "src/Stardew.tsx",
   warframe: "src/Warframe.tsx",
+  cs2: "src/Cs2.tsx",
   privacy: "src/Privacy.tsx",
   terms: "src/Terms.tsx",
 };
@@ -139,6 +140,16 @@ export const WF_TAB_FILES: Partial<Record<WfSection, string>> = {
   rivens: "src/warframe/rivens/WfRivens.tsx",
 };
 
+/**
+ * Las pestañas de CS2 que viajan en su propio chunk, igual que `TABS` en `Cs2.tsx` (2026-11-03; lo cuida
+ * `test/areas.test.ts`). Cada una suma acá su línea el día que tiene página. La portada viene con el área.
+ */
+export const CS2_TAB_FILES: Partial<Record<Cs2Section, string>> = {
+  skins: "src/cs2/skins/Cs2Skins.tsx",
+  cases: "src/cs2/cases/Cs2Cases.tsx",
+  collections: "src/cs2/collections/Cs2Collections.tsx",
+};
+
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */
 export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
   items: "src/rust/items/RustItems.tsx",
@@ -185,6 +196,8 @@ export function filesFor(route: Route): string[] {
                 ? STARDEW_TAB_FILES[route.sdSection ?? "home"]
                 : route.view === "warframe"
                   ? WF_TAB_FILES[route.wfSection ?? "home"]
-                  : undefined;
+                  : route.view === "cs2"
+                    ? CS2_TAB_FILES[route.c2Section ?? "home"]
+                    : undefined;
   return tab ? [area, tab] : [area];
 }

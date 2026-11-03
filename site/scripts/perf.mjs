@@ -188,6 +188,15 @@ export const PAGES = [
   // Rivens (etapa 3): sin arma y el Braton en español (590 armas en el buscador, tabla de 38 stats).
   "/en/warframe/rivens",
   "/es/warframe/rivens?w=braton",
+  // CS2 (2026-11-03): la portada, la lista de Skins (~2.100 filas de a tandas), una skin, las cajas en español con una
+  // ficha en frío y una colección.
+  "/en/cs2",
+  "/es/cs2",
+  "/en/cs2/skins",
+  "/en/cs2/skins/ak-47-inheritance",
+  "/es/cs2/cajas",
+  "/es/cs2/cajas/kilowatt-case",
+  "/en/cs2/collections/the-kilowatt-collection",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

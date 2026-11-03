@@ -1,5 +1,5 @@
 import type { RustPage } from "./rust/sitemapPages";
-import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, CS2_SEGMENT, CS2_SECTIONS, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -119,6 +119,14 @@ export interface WarframeSitemapData {
   modsMoved?: { en: Record<string, string>; es: Record<string, string> };
 }
 
+/** Lo que el sitemap necesita de CS2 (2026-11-03): el sello del catálogo y cada ficha (nombre en inglés en los dos idiomas). */
+export interface Cs2SitemapData {
+  generatedAt?: string;
+  skins: { slug: string; name: string }[];
+  cases: { slug: string; name: string }[];
+  collections: { slug: string; name: string }[];
+}
+
 /** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
 export interface RustSitemapData {
   build: number;
@@ -196,11 +204,13 @@ export interface SitemapData {
   sd?: StardewSitemapData;
   /** Warframe. Opcional por lo mismo. */
   wf?: WarframeSitemapData;
+  /** CS2. Opcional por lo mismo. */
+  c2?: Cs2SitemapData;
   /**
    * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
    * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
    */
-  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string };
+  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string; cs2?: string };
 }
 
 /**
@@ -211,7 +221,7 @@ export interface SitemapData {
  * con las fichas en el sitemap de su juego, así que Search Console no decía cuántas de las que importan estaban
  * indexadas. El de cada juego se queda con sus fichas y sus ediciones de parches.
  */
-export const SITEMAP_GROUPS = ["main", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe"] as const;
+export const SITEMAP_GROUPS = ["main", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe", "cs2"] as const;
 export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];
 
 function sitemapGroup(path: string): SitemapGroup {
@@ -223,6 +233,7 @@ function sitemapGroup(path: string): SitemapGroup {
   if (game === TERRARIA_SEGMENT) return "terraria";
   if (game === STARDEW_SEGMENT) return "stardew";
   if (game === WF_SEGMENT) return "warframe";
+  if (game === CS2_SEGMENT) return "cs2";
   return game === "deadlock" || game === "poe2" || game === "valheim" || game === "d2r" ? game : "main";
 }
 
@@ -299,6 +310,8 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
   if (game === TERRARIA_SEGMENT) return day(data.dates?.terraria);
   if (game === STARDEW_SEGMENT) return day(data.dates?.stardew);
   if (game === WF_SEGMENT) return day(data.dates?.warframe);
+  // CS2: la fecha del catálogo. Los precios cambian todos los días y no mueven el `lastmod` (si no, cambiaría en todas).
+  if (game === CS2_SEGMENT) return day(data.dates?.cs2);
   if (game === RUST_SEGMENT) {
     // Una ficha con fecha propia (un parche) va con la suya, y su pestaña con la más nueva de sus fichas o la de los
     // datos, la que sea más reciente. Lo demás, con la fecha de los datos de Rust.
@@ -464,6 +477,14 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const s of WF_PUBLISHED) {
         if (!WF_DETAIL_SECTIONS.includes(s)) continue;
         for (const f of (data.wf as Partial<Record<string, { slug: string }[]>>)[s] ?? []) paths.push(routePath({ ...base, lang, view: "warframe", wfSection: s, detail: f.slug }));
+      }
+    }
+    // CS2 (2026-11-03): la portada, las tres pestañas y una ficha por skin, caja y colección.
+    if (data.c2) {
+      paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "home" }));
+      for (const s of CS2_SECTIONS) {
+        paths.push(routePath({ ...base, lang, view: "cs2", c2Section: s }));
+        for (const f of data.c2[s]) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: s, detail: f.slug }));
       }
     }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).

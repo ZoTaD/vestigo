@@ -41,7 +41,7 @@ describe("searchEntries", () => {
 
 describe("hasNavSearch", () => {
   it("los cuatro juegos con fichas buscan en la barra; Deadlock y PoE2 siguen con lo suyo", () => {
-    for (const g of ["valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe"]) expect(hasNavSearch(g)).toBe(true);
+    for (const g of ["valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe", "cs2"]) expect(hasNavSearch(g)).toBe(true);
     for (const g of ["deadlock", "poe2", "home"]) expect(hasNavSearch(g)).toBe(false);
   });
 });
@@ -53,6 +53,14 @@ describe("el buscador de Warframe (2026-10-27)", () => {
     expect(run("lith a1", "es", 10)[0]).toMatchObject({ name: "Lith A1", tab: "Reliquias", to: { view: "warframe", wfSection: "relics", detail: "lith-a1" } });
     expect(run("sensores neuronales", "es", 10)[0]).toMatchObject({ tab: "Dónde farmear", to: { wfSection: "farming", detail: "neural-sensors" } });
     expect(run("excalibur", "en", 10)[0].img).toMatch(/^\/warframe\/s\/.+\.webp$/);
+  });
+});
+
+describe("el buscador de CS2 (2026-11-03)", () => {
+  it("busca skins (con su fase) y cajas, y cada resultado lleva a su ficha", async () => {
+    const run = await loadNavSearcher("cs2");
+    expect(run("kilowatt case", "es", 10)[0]).toMatchObject({ name: "Kilowatt Case", tab: "Cajas", to: { view: "cs2", c2Section: "cases", detail: "kilowatt-case" } });
+    expect(run("bayonet doppler ruby", "en", 10)[0]).toMatchObject({ to: { c2Section: "skins", detail: "bayonet-doppler-ruby" } });
   });
 });
 

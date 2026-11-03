@@ -37,6 +37,8 @@ const loadStardew = () => import("./Stardew");
 export const StardewArea = lazyWithPreload(loadStardew);
 const loadWarframe = () => import("./Warframe");
 export const WarframeArea = lazyWithPreload(loadWarframe);
+const loadCs2 = () => import("./Cs2");
+export const Cs2Area = lazyWithPreload(loadCs2);
 export const PrivacyPage = lazyWithPreload(() => import("./Privacy"));
 export const TermsPage = lazyWithPreload(() => import("./Terms"));
 
@@ -58,6 +60,7 @@ const BY_VIEW: Partial<Record<View, { preload: () => Promise<void> }>> = {
   terraria: TerrariaArea,
   stardew: StardewArea,
   warframe: WarframeArea,
+  cs2: Cs2Area,
   privacy: PrivacyPage,
   terms: TermsPage,
 };
@@ -87,4 +90,5 @@ export const preloadRoute = async (route: Route): Promise<void> => {
   if (route.view === "terraria") await loadTerraria().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "stardew") await loadStardew().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "warframe") await loadWarframe().then((m) => m.preloadTab(route)).catch(() => undefined);
+  if (route.view === "cs2") await loadCs2().then((m) => m.preloadTab(route)).catch(() => undefined);
 };

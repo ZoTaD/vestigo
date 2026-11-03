@@ -43,6 +43,8 @@ const EN = {
     stardew: "Stardew Valley",
     stardewShort: "Stardew",
     warframe: "Warframe",
+    cs2: "Counter-Strike 2",
+    cs2Short: "CS2",
     /** El botón de la barra que abre el menú de juegos, y el que lo cierra en el teléfono. */
     menu: "Games",
     close: "Close menu",
@@ -57,6 +59,7 @@ const EN = {
       terraria: { items: "Items", bosses: "Bosses", crafting: "Crafting" },
       stardew: { crops: "Crops", villagers: "Villagers", predict: "Predictor" },
       warframe: { arsenal: "Arsenal", relics: "Relics", farming: "Where to farm" },
+      cs2: { skins: "Skins", cases: "Cases", collections: "Collections" },
     },
     /** Las categorías del menú y de la portada (`gameGroups.ts`). */
     groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters" },
@@ -180,6 +183,10 @@ const EN = {
       warframeCta: "Open the Arsenal",
       warframeArsenal: "Warframes and weapons",
       warframeMods: "mods",
+      cs2Live: "Every skin, case and collection with today's price in each wear, the odds of each case and what opening it gives back on average.",
+      cs2Cta: "Open the cases",
+      cs2Skins: "skins",
+      cs2Cases: "cases",
       poe2Live: "Currency and unique prices for every league, the passive tree with build export, the item encyclopedia and every patch.",
       poe2Cta: "League prices",
       poe2Patches: "Patch notes",
@@ -262,6 +269,10 @@ const EN = {
     disclaimerValve:
       "Vestigo isn't endorsed by Valve Corporation. Deadlock, Dota 2 and all associated " +
       "properties are trademarks or registered trademarks of Valve Corporation.",
+    disclaimerValveCs2:
+      "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Valve Corporation. Counter-Strike " +
+      "and all associated properties are trademarks or registered trademarks of Valve Corporation. Prices are " +
+      "informative; Vestigo doesn't sell, trade or open anything.",
     disclaimerBlizzard:
       "Vestigo is a fan site and isn't endorsed by or affiliated with Blizzard Entertainment. Diablo and " +
       "Diablo II: Resurrected are trademarks or registered trademarks of Blizzard Entertainment, Inc.",
@@ -323,6 +334,8 @@ const ES: typeof EN = {
     stardew: "Stardew Valley",
     stardewShort: "Stardew",
     warframe: "Warframe",
+    cs2: "Counter-Strike 2",
+    cs2Short: "CS2",
     menu: "Juegos",
     close: "Cerrar el menú",
     quick: {
@@ -335,6 +348,7 @@ const ES: typeof EN = {
       terraria: { items: "Objetos", bosses: "Jefes", crafting: "Crafteo" },
       stardew: { crops: "Cultivos", villagers: "Aldeanos", predict: "Predictor" },
       warframe: { arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear" },
+      cs2: { skins: "Skins", cases: "Cajas", collections: "Colecciones" },
     },
     groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
@@ -439,6 +453,10 @@ const ES: typeof EN = {
       warframeCta: "Abrir el Arsenal",
       warframeArsenal: "Warframes y armas",
       warframeMods: "mods",
+      cs2Live: "Cada skin, caja y colección con el precio de hoy en cada desgaste, las probabilidades de cada caja y cuánto devuelve abrirla en promedio.",
+      cs2Cta: "Ver las cajas",
+      cs2Skins: "skins",
+      cs2Cases: "cajas",
       poe2Live: "Los precios de monedas y únicos de cada liga, el árbol de pasivas con exportación de build, la enciclopedia de objetos y cada parche.",
       poe2Cta: "Precios de la liga",
       poe2Patches: "Parches",
@@ -515,6 +533,10 @@ const ES: typeof EN = {
     disclaimerValve:
       "Vestigo tampoco está avalado por Valve Corporation. Deadlock, Dota 2 y todas sus " +
       "propiedades asociadas son marcas comerciales o marcas registradas de Valve Corporation.",
+    disclaimerValveCs2:
+      "Vestigo es un sitio de fans no oficial y no está avalado por Valve Corporation ni afiliado a ella. Counter-Strike " +
+      "y todas sus propiedades asociadas son marcas comerciales o marcas registradas de Valve Corporation. Los precios " +
+      "son informativos; Vestigo no vende, intercambia ni abre nada.",
     disclaimerBlizzard:
       "Vestigo es un sitio de fans y no está avalado por Blizzard Entertainment ni afiliado a ella. Diablo y " +
       "Diablo II: Resurrected son marcas comerciales o marcas registradas de Blizzard Entertainment, Inc.",

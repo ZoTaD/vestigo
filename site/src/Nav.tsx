@@ -6,7 +6,7 @@ import { routeInLang, type Route } from "./route";
 import { GAME_GROUPS, GAME_LOGOS, logoFile } from "./gameGroups";
 import { hasNavSearch, hitIconSize, loadNavSearcher, type NavHit, type NavSearcher } from "./navSearch";
 
-export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "warframe";
+export type Game = "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "warframe" | "cs2";
 /** Home is not a game's tab — it is the site's front door, one level above them. */
 export type Place = "home" | Game;
 /** The legal pages are reachable from the footer and highlight no tab. */
@@ -69,6 +69,7 @@ export default function Nav({
     terraria: [copy.games.terraria, copy.games.terraria],
     stardew: [copy.games.stardew, copy.games.stardew],
     warframe: [copy.games.warframe, copy.games.warframe],
+    cs2: [copy.games.cs2Short, copy.games.cs2],
   };
   const [searchGame, searchGameFull] = (itemSearch && gameName[active]) || [copy.games.deadlock, copy.games.deadlock];
   const searchLabel = itemSearch ? copy.shell.searchItemFor(searchGameFull) : copy.shell.searchFor(searchGameFull);
@@ -143,6 +144,7 @@ export default function Nav({
     terraria: { ...a("terraria"), trSection: "home" },
     stardew: { ...a("stardew"), sdSection: "home" },
     warframe: { ...a("warframe"), wfSection: "home" },
+    cs2: { ...a("cs2"), c2Section: "home" },
   };
   const gameFull: Record<Game, string> = {
     deadlock: copy.games.deadlock,
@@ -154,12 +156,13 @@ export default function Nav({
     terraria: copy.games.terraria,
     stardew: copy.games.stardew,
     warframe: copy.games.warframe,
+    cs2: copy.games.cs2,
   };
-  const gameShort: Record<Game, string> = { ...gameFull, poe2: copy.games.poe2Short, d2r: copy.games.diablo2Short, zomboid: copy.games.zomboidShort, stardew: copy.games.stardewShort };
+  const gameShort: Record<Game, string> = { ...gameFull, poe2: copy.games.poe2Short, d2r: copy.games.diablo2Short, zomboid: copy.games.zomboidShort, stardew: copy.games.stardewShort, cs2: copy.games.cs2Short };
   /** La clave de la ruta que elige la pestaña de cada juego: los accesos directos del menú la cambian. */
   const tabKey = {
     deadlock: "dlSection", poe2: "p2Section", valheim: "vhSection", d2r: "d2Section",
-    zomboid: "pzSection", rust: "rsSection", terraria: "trSection", stardew: "sdSection", warframe: "wfSection",
+    zomboid: "pzSection", rust: "rsSection", terraria: "trSection", stardew: "sdSection", warframe: "wfSection", cs2: "c2Section",
   } as const satisfies Record<Game, keyof Route>;
   const quickRoute = (game: Game, tab: string): Route => ({ ...gameHome[game], [tabKey[game]]: tab });
   /** La pestaña que se está mirando, para marcar su acceso directo. */

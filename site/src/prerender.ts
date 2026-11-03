@@ -1,6 +1,7 @@
 import { TERRARIA_COPY, type TerrariaHas } from "./terrariaCopy";
 import { STARDEW_COPY } from "./stardewCopy";
 import { WF_COPY } from "./warframeCopy";
+import { CS2_COPY } from "./cs2Copy";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
 import { SEO_COPY } from "./seoCopy";
@@ -205,6 +206,13 @@ export function metaFor(
     }
     return c.seo[sec];
   }
+  // CS2 (2026-11-03): la portada, cada pestaña y, con nombre, la ficha (skin, caja o colección).
+  if (route.view === "cs2") {
+    const c = CS2_COPY[lang];
+    const sec = route.c2Section ?? "home";
+    if (sec !== "home" && route.detail && detailName) return c.detailSeo[sec](detailName);
+    return c.seo[sec];
+  }
   // Lo que queda son la portada y las dos páginas legales.
   const page = seo[route.view];
   return { title: page.title(), description: page.description() };
@@ -264,6 +272,9 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const e of data.sd?.monsters ?? []) out[`sd-mines/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const tab of ["arsenal", "relics", "farming", "mods", "star-chart"] as const) {
     for (const e of data.wf?.[tab] ?? []) out[`wf-${tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
+  }
+  for (const tab of ["skins", "cases", "collections"] as const) {
+    for (const e of data.c2?.[tab] ?? []) out[`c2-${tab}/${e.slug}`] = e.name;
   }
   for (const e of data.rs?.pages ?? []) out[`rs-${e.tab}/${e.slug}`] = lang === "es" ? e.es || e.en : e.en;
   for (const slug of data.rs?.circuits ?? []) {
@@ -496,6 +507,20 @@ export function jsonLdFor(
     }
     return out;
   }
+  // CS2 (2026-11-03): migas hasta la ficha, y la portada es una aplicación web gratuita (precios y valor esperado).
+  if (route.view === "cs2") {
+    const copy = CS2_COPY[lang];
+    const sec = route.c2Section ?? "home";
+    const trail = [{ name: brand, url: home }, { name: "Counter-Strike 2", url: routeUrl({ ...route, c2Section: "home", detail: undefined }) }];
+    if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    if (sec !== "home") return trail.length > 2 ? [crumbs(trail)] : [];
+    return [{
+      "@context": "https://schema.org", "@type": "WebApplication", name: copy.home.h1, description: page.description,
+      url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Counter-Strike 2" },
+    }];
+  }
   // Warframe (2026-10-27): migas hasta la ficha, y la portada es una aplicación web gratuita (los ciclos y lo que hay en vivo).
   if (route.view === "warframe") {
     const copy = WF_COPY[lang];
@@ -624,7 +649,9 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
                       ? `sd-${route.sdSection ?? "home"}/${route.detail}`
                       : route.view === "warframe"
                         ? `wf-${route.wfSection ?? "home"}/${route.detail}`
-                        : null;
+                        : route.view === "cs2"
+                          ? `c2-${route.c2Section ?? "home"}/${route.detail}`
+                          : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
     const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""), trHas.get(detailKey ?? ""), sdHas.get(detailKey ?? ""), wfHead.get(detailKey ?? ""));
 

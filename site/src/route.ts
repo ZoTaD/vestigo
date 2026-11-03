@@ -33,7 +33,7 @@ export type DeadlockSection =
   | "patches"
   | "player"
   | "match";
-export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "warframe" | "privacy" | "terms";
+export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "warframe" | "cs2" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -388,6 +388,20 @@ export function registerWfSlugs(slugs: Partial<Record<WfTab, Record<string, stri
   wfSlugsEs.register(slugs);
 }
 
+/**
+ * Counter-Strike 2 (2026-11-03). Plan: docs/superpowers/plans/2026-11-03-cs2-etapa-1.md. Los nombres de skins, cajas y
+ * colecciones van en inglés en los dos idiomas, así que el slug es el mismo: sólo se traduce el segmento de la pestaña.
+ */
+export type Cs2Tab = "skins" | "cases" | "collections";
+export type Cs2Section = "home" | Cs2Tab;
+export const CS2_SEGMENT = "cs2";
+export const CS2_SECTIONS: Cs2Tab[] = ["skins", "cases", "collections"];
+export const CS2_SECTION_ES: Record<Cs2Tab, string> = { skins: "skins", cases: "cajas", collections: "colecciones" };
+const CS2_SECTION_BY_ES = new Map(Object.entries(CS2_SECTION_ES).map(([tab, es]) => [es, tab as Cs2Tab]));
+const isCs2Tab = (v: string | undefined): v is Cs2Tab => !!v && (CS2_SECTIONS as string[]).includes(v);
+/** La pestaña de CS2 de un segmento, escrito en cualquiera de los dos idiomas. */
+const cs2Tab = (v: string | undefined): Cs2Tab | undefined => (isCs2Tab(v) ? v : v ? CS2_SECTION_BY_ES.get(v) : undefined);
+
 export interface Route {
   lang: Lang;
   view: View;
@@ -409,6 +423,8 @@ export interface Route {
   sdSection?: StardewSection;
   /** Qué pestaña de Warframe. Sin ella es la portada de la sección. */
   wfSection?: WfSection;
+  /** Qué pestaña de CS2. Sin ella es la portada de la sección. */
+  c2Section?: Cs2Section;
   /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
   detail?: string;
 }
@@ -550,6 +566,12 @@ export function parseRoute(pathname: string): Route {
     return { ...base, view: "warframe", wfSection: tab, detail };
   }
 
+  if (head === CS2_SEGMENT) {
+    const tab = cs2Tab(rest[1]);
+    if (!tab) return { ...base, view: "cs2", c2Section: "home" };
+    return { ...base, view: "cs2", c2Section: tab, detail: rest[2] || undefined };
+  }
+
   if (!head || !isView(head)) return { ...base, view: "home" };
 
   // Deadlock lleva sus propias pestañas, y una que no se reconoce cae en el
@@ -661,6 +683,13 @@ export function routePath(route: Route): string {
     if (lang !== "es") return ficha ? `${root}/${sec}/${ficha}` : `${root}/${sec}`;
     const path = `${root}/${WF_SECTION_ES[sec]}`;
     return ficha ? `${path}/${wfSlugsEs.toEs(sec, ficha)}` : path;
+  }
+  if (view === "cs2") {
+    const sec = route.c2Section ?? "home";
+    const root = `/${lang}/${CS2_SEGMENT}`;
+    if (sec === "home") return root;
+    const path = `${root}/${lang === "es" ? CS2_SECTION_ES[sec] : sec}`;
+    return detail ? `${path}/${detail}` : path;
   }
   if (view === "stardew") {
     const sec = route.sdSection ?? "home";

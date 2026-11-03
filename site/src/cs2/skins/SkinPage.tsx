@@ -1,0 +1,98 @@
+/**
+ * La ficha de una skin (2026-11-03): el costado de la maqueta A a página entera. Arma y rareza, el nombre, la imagen
+ * grande, el rango de float sobre la barra de desgastes, la tabla de precios (normal, StatTrak y Souvenir) y de qué
+ * cajas y colecciones sale. Las fases de Doppler y Gamma Doppler enlazan entre sí con su precio.
+ */
+import RouteLink from "../../RouteLink";
+import type { Route } from "../../route";
+import { useCs2Copy } from "../../cs2Copy";
+import type { CaseRow, CollRow, SkinFicha, SkinPrice, SkinRow } from "../data";
+import { lowest } from "./filters";
+import { FloatRange, Img, Price, Rarity, WearBar, WearPrices, type Nav } from "../ui";
+
+export default function SkinPage({
+  ficha,
+  price,
+  skins,
+  skinPrices,
+  cases,
+  collections,
+  date,
+  route,
+  navigate,
+}: {
+  ficha: SkinFicha;
+  price: SkinPrice | undefined;
+  skins: Map<string, SkinRow>;
+  skinPrices: Record<string, SkinPrice>;
+  cases: Map<string, CaseRow>;
+  collections: Map<string, CollRow>;
+  date: string | null;
+  route: Route;
+  navigate: Nav;
+}) {
+  const t = useCs2Copy();
+  const to = (c2Section: "skins" | "cases" | "collections", detail?: string): Route => ({ ...route, view: "cs2", c2Section, detail });
+  const title = ficha.phase ? `${ficha.name} · ${ficha.phase}` : ficha.name;
+  const where = [
+    ...ficha.cases.map((s) => ({ tab: "cases" as const, row: cases.get(s) })),
+    ...ficha.collections.map((s) => ({ tab: "collections" as const, row: collections.get(s) })),
+  ].filter((w) => w.row);
+  return (
+    <main className="c2-main c2-ficha">
+      <section className="c2-panel c2-skin">
+        <div className="c2-skin-pic">
+          <Img img={ficha.img} w={360} h={270} big lazy={false} />
+        </div>
+        <div className="c2-skin-data">
+          <p className="c2-dim">
+            <RouteLink to={to("skins")} onNavigate={navigate}>
+              {t.tabs.skins}
+            </RouteLink>{" "}
+            · {ficha.weapon} · {t.cat[ficha.cat]} · <Rarity r={ficha.rarity} />
+          </p>
+          <h1 className="c2-h1">{title}</h1>
+          {ficha.min != null && (
+            <p className="c2-dim">
+              {t.t.float} <FloatRange min={ficha.min} max={ficha.max} />
+            </p>
+          )}
+          <WearBar min={ficha.min} max={ficha.max} />
+          <WearPrices skin={ficha} price={price} />
+          <div className="c2-where">
+            <p className="c2-dim">{t.t.fromCases}</p>
+            {ficha.cases.length === 0 && <p>{t.t.noCases}</p>}
+            <div className="c2-links">
+              {where.map(({ tab, row }) => (
+                <RouteLink key={`${tab}-${row!.slug}`} className="c2-chip" to={to(tab, row!.slug)} onNavigate={navigate}>
+                  <Img img={row!.img} w={40} h={30} />
+                  {row!.name}
+                </RouteLink>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {ficha.variants.length > 0 && (
+        <section className="c2-panel">
+          <h2 className="c2-h2">{t.t.variants}</h2>
+          <div className="c2-links">
+            {ficha.variants.map((v) => {
+              const s = skins.get(v);
+              return s ? (
+                <RouteLink key={v} className="c2-chip" to={to("skins", v)} onNavigate={navigate}>
+                  <Img img={s.img} w={64} h={48} />
+                  <span>{s.phase ?? s.name}</span> <Price v={lowest(skinPrices[v])} />
+                </RouteLink>
+              ) : null;
+            })}
+          </div>
+        </section>
+      )}
+
+      {ficha.desc && <p className="c2-desc">{ficha.desc}</p>}
+      {date && <p className="c2-note">{t.t.pricesNote(date)}</p>}
+    </main>
+  );
+}

@@ -45,7 +45,7 @@ function Shell({
 }) {
   const copy = useCopy();
   const { view: place } = route;
-  const { D2rArea, DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, RustArea, StardewArea, TermsPage, TerrariaArea, ValheimArea, WarframeArea, ZomboidArea } = areas();
+  const { D2rArea, DeadlockArea, HomeArea, PageMeta, Poe2Area, PrivacyPage, RustArea, StardewArea, TermsPage, TerrariaArea, ValheimArea, WarframeArea, ZomboidArea, Cs2Area } = areas();
   const [consent, setConsent] = useState<Consent | null>(storedConsent);
   // Reopening the notice from the footer is how a decision gets withdrawn,
   // which the GDPR requires to be as easy as giving it.
@@ -112,7 +112,7 @@ function Shell({
     <div
       className="app"
       data-theme="codex"
-      data-game={place === "deadlock" || place === "poe2" || place === "valheim" || place === "d2r" || place === "zomboid" || place === "rust" || place === "terraria" || place === "stardew" || place === "warframe" ? place : undefined}
+      data-game={place === "deadlock" || place === "poe2" || place === "valheim" || place === "d2r" || place === "zomboid" || place === "rust" || place === "terraria" || place === "stardew" || place === "warframe" || place === "cs2" ? place : undefined}
       /**
        * La home es el único lugar que no es el códex.
        *
@@ -151,6 +151,7 @@ function Shell({
         {place === "terraria" && <TerrariaArea route={route} navigate={navigate} />}
         {place === "stardew" && <StardewArea route={route} navigate={navigate} />}
         {place === "warframe" && <WarframeArea route={route} navigate={navigate} />}
+        {place === "cs2" && <Cs2Area route={route} navigate={navigate} />}
         {place === "privacy" && <PrivacyPage />}
         {place === "terms" && <TermsPage />}
       </Suspense>
@@ -188,7 +189,7 @@ function Shell({
             peor que no nombrar ninguna. En PoE2 no se nombra a Valve (no es su juego) ni a los proveedores
             de datos, a pedido de ZoTaD; sí el crédito que pide la licencia de
             la tipografía Fontin. */}
-        {place !== "d2r" && place !== "zomboid" && place !== "rust" && place !== "terraria" && place !== "stardew" && place !== "warframe" && (
+        {place !== "d2r" && place !== "zomboid" && place !== "rust" && place !== "terraria" && place !== "stardew" && place !== "warframe" && place !== "cs2" && (
           <p className="foot-sources">
             {place === "poe2" ? copy.footer.sourcesPoe2 : place === "valheim" ? copy.footer.sourcesValheim : copy.footer.sourcesDeadlock}
           </p>
@@ -223,6 +224,8 @@ function Shell({
                   ? copy.footer.disclaimerReLogic
                   : place === "warframe"
                   ? copy.footer.disclaimerDigitalExtremes
+                  : place === "cs2"
+                  ? copy.footer.disclaimerValveCs2
                   : place === "stardew"
                   ? copy.footer.disclaimerConcernedApe
                   : place === "poe2"
