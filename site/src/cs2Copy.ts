@@ -6,7 +6,7 @@
  * Acá va la interfaz y lo que se traduce: rarezas, desgastes y categorías, con sus nombres oficiales del juego.
  */
 import { useLang } from "./i18n";
-import type { Cs2DataTab, Cs2Section } from "./route";
+import type { Cs2DataTab, Cs2Section, Cs2Tab } from "./route";
 
 /** El orden de las pestañas en la barra. */
 export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "collections", "trade-up"];
@@ -54,7 +54,7 @@ export interface Cs2Copy {
     h1: string;
     lede: string;
     ribbon: string;
-    cards: Record<Cs2DataTab, (n: string) => string>;
+    cards: Record<Cs2Tab, (n: string) => string>;
     pricesOf: (date: string) => string;
   };
   t: {
@@ -177,6 +177,7 @@ const EN: Cs2Copy = {
       skins: (n) => `${n} weapon, knife and glove skins with float ranges and prices.`,
       cases: (n) => `${n} cases, terminals and souvenir packages with odds and expected value.`,
       collections: (n) => `${n} collections with every skin by rarity.`,
+      "trade-up": () => "Odds, floats and profit of any contract, knife trade-ups and the reverse: what to put in to get the skin you want.",
     },
     pricesOf: (d) => `Prices of ${d}`,
   },
@@ -309,6 +310,7 @@ const ES: Cs2Copy = {
       skins: (n) => `${n} skins de armas, cuchillos y guantes con su float y precio.`,
       cases: (n) => `${n} cajas, terminales y paquetes de souvenir con probabilidades y valor esperado.`,
       collections: (n) => `${n} colecciones con cada skin por rareza.`,
+      "trade-up": () => "Probabilidades, float y ganancia de cualquier contrato, cuchillos incluidos, y al revés: qué poner para sacar la skin que querés.",
     },
     pricesOf: (d) => `Precios del ${d}`,
   },

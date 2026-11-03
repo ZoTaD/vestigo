@@ -197,6 +197,9 @@ export const PAGES = [
   "/es/cs2/cajas",
   "/es/cs2/cajas/kilowatt-case",
   "/en/cs2/collections/the-kilowatt-collection",
+  // Trade-up (etapa 2): el ejemplo al abrir y un contrato de cuchillo en la dirección.
+  "/en/cs2/trade-up",
+  "/es/cs2/trade-up?i=ak-47-inheritance~0.15,ak-47-inheritance~0.15,ak-47-inheritance~0.15,ak-47-inheritance~0.15,ak-47-inheritance~0.15",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */
