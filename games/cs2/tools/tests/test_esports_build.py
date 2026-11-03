@@ -75,6 +75,8 @@ class TestBuild(unittest.TestCase):
         self.assertEqual(t["vrs"]["rank"], 1)
         self.assertEqual([p["id"] for p in t["roster"] if p["role"] == "player"][0], "torzsi")
         self.assertEqual(t["results"][0]["tour"], "PGL Masters Bucharest 2026")
+        self.assertTrue(all("&#" not in r["place"] for r in t["results"]))
+        self.assertEqual((t["location"], t["region"]), ("Germany", "Europe"))
         self.assertEqual(t["vrs"]["history"], [{"date": "2026-10-05", "rank": 4, "pts": 1863}, {"date": "2026-11-02", "rank": 1, "pts": 1960}])
         self.assertTrue(any(m["map"] == "Nuke" for m in t["maps"]))
         self.assertEqual(t["matches"][0]["tour"], "PGL Masters Bucharest 2026")

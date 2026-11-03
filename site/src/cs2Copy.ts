@@ -9,7 +9,7 @@ import { useLang } from "./i18n";
 import type { Cs2DataTab, Cs2Section, Cs2Tab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "market", "collections", "trade-up", "inventory", "esports", "patches"];
+export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "market", "collections", "trade-up", "inventory", "esports", "teams", "patches"];
 
 /** Las rarezas como las deja `site_data.py` (`RARITY` de `cs2.py`), de la más alta a la más baja. */
 export type Cs2Rarity = "contraband" | "extraordinary" | "covert" | "classified" | "restricted" | "milspec" | "industrial" | "consumer";
@@ -111,6 +111,47 @@ export interface Cs2Copy {
     count: (n: string) => string;
     none: string;
     open: string;
+  };
+  /** La pestaña Equipos y las fichas de equipo, torneo y jugador (etapa 6b). */
+  tm: {
+    lede: string;
+    world: string;
+    regions: { europe: string; americas: string; asia: string };
+    rank: (n: number) => string;
+    regional: (region: string) => string;
+    move: (n: number) => string;
+    leader: string;
+    coach: string;
+    winnings: string;
+    since: (y: string) => string;
+    captain: string;
+    inTeamSince: (y: string) => string;
+    progress: string;
+    progressLede: (rank: string) => string;
+    achievements: string;
+    place: (p: string) => string;
+    maps: string;
+    mapsLede: string;
+    wonOf: (w: number, p: number) => string;
+    onePlayed: string;
+    defending: string;
+    attacking: string;
+    stronger: (side: "ct" | "t") => string;
+    matches: string;
+    won: string;
+    lost: string;
+    draw: string;
+    forfeit: string;
+    vs: (opp: string) => string;
+    noData: string;
+    statsSoon: string;
+    age: (n: number) => string;
+    roles: string;
+    team: string;
+    noTeam: string;
+    participants: string;
+    stage: string;
+    credit: string;
   };
   /** La pestaña Torneos (etapa 6a). */
   es: {
@@ -266,7 +307,7 @@ export interface Cs2Copy {
 }
 
 const EN: Cs2Copy = {
-  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory", market: "Market", patches: "Patches", esports: "Tournaments" },
+  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory", market: "Market", patches: "Patches", esports: "Tournaments", teams: "Teams", players: "Players" },
   loading: "Loading…",
   loadError: "Couldn't load this page.",
   retry: "Retry",
@@ -275,6 +316,8 @@ const EN: Cs2Copy = {
     skins: { title: "CS2 skins: prices, float ranges & cases", description: "All CS2 weapon, knife and glove skins with their price in each wear, StatTrak and Souvenir, float range and the case they drop from." },
     cases: { title: "CS2 cases: odds, expected value & prices", description: "Every CS2 case, souvenir package and terminal with its price, the odds of each rarity and what opening it returns on average." },
     collections: { title: "CS2 collections: every skin & price", description: "Every CS2 weapon collection with its skins by rarity, their float ranges and prices, and the case or package it comes from." },
+    teams: { title: "CS2 pro teams: rosters, maps & ranking", description: "Every team in Valve's CS2 ranking: roster, how it has moved in the ranking, its titles, which maps it wins and whether it is stronger defending or attacking." },
+    players: { title: "CS2 pro players", description: "The players of the top 30 CS2 teams: nationality, age, roles, team and prize money." },
     esports: { title: "CS2 tournaments, matches & Valve rankings", description: "CS2 tournaments live: today's and upcoming matches in your time zone, results, the stream, and Valve's official regional standings explained team by team." },
     patches: { title: "CS2 patch notes: every update", description: "Every CS2 update since the Limited Test, change by change: what's new, what changed and what got fixed, with the maps, weapons and cases it names." },
     market: { title: "CS2 skin prices going up and down", description: "Which CS2 skins and cases are going up and down in price this week, and which sell the most, from real Skinport sales." },
@@ -311,6 +354,8 @@ const EN: Cs2Copy = {
       market: () => "What's rising and falling this week, and what sells the most, from real sales.",
       patches: () => "Every update, change by change: what's new, what changed and what got fixed.",
       esports: () => "Live tournament with the stream, matches in your time zone and Valve's ranking explained.",
+      teams: () => "Every ranked team: roster, ranking history, titles and which maps it wins, side by side.",
+      players: () => "The players of the top 30 teams.",
     },
     pricesOf: (d) => `Prices of ${d}`,
   },
@@ -366,6 +411,46 @@ const EN: Cs2Copy = {
     count: (n) => `${n} results`,
     none: "Nothing matches.",
     open: "Open",
+  },
+  tm: {
+    lede: "Every team in Valve's ranking. Open one to see its roster, how it has moved, its titles and which maps it wins, defending or attacking.",
+    world: "World ranking",
+    regions: { europe: "Europe", americas: "Americas", asia: "Asia" },
+    rank: (n) => `#${n} in the world`,
+    regional: (r) => `Ranked in ${r}`,
+    move: (n) => (n > 0 ? `▲ ${n} since last month` : n < 0 ? `▼ ${-n} since last month` : "Same as last month"),
+    leader: "In-game leader",
+    coach: "Coach",
+    winnings: "Prize money",
+    since: (y) => `Founded ${y}`,
+    captain: "Captain",
+    inTeamSince: (y) => `on the team since ${y}`,
+    progress: "Valve ranking over time",
+    progressLede: (r) => `Its world rank month by month. Today: ${r}.`,
+    achievements: "Recent results",
+    place: (p) => p.replace(" - ", "–"),
+    maps: "Maps",
+    mapsLede: "S and A-tier tournaments of the last 6 months. The rounds won on each side say whether the team is better defending (CT) or attacking (T) on that map.",
+    wonOf: (w, p) => `won ${w} of ${p}`,
+    onePlayed: "1 played",
+    defending: "Defending (CT)",
+    attacking: "Attacking (T)",
+    stronger: (s) => (s === "ct" ? "Stronger defending" : "Stronger attacking"),
+    matches: "Latest matches",
+    won: "won",
+    lost: "lost",
+    draw: "draw",
+    forfeit: "forfeit",
+    vs: (o) => `vs ${o}`,
+    noData: "No S or A-tier matches in the last 6 months.",
+    statsSoon: "Per-player stats (rating, damage per round): coming soon.",
+    age: (n) => `${n} years old`,
+    roles: "Roles",
+    team: "Team",
+    noTeam: "No team",
+    participants: "Teams",
+    stage: "Matches",
+    credit: "Teams, rosters, matches and logos via Liquipedia (CC BY-SA; logos are trademarks of each team). Ranking: Valve Regional Standings. Flags: flag-icons (MIT).",
   },
   es: {
     lede: "The tournament being played right now with its stream, upcoming matches in your time zone, results, and Valve's official ranking explained team by team.",
@@ -531,7 +616,7 @@ const EN: Cs2Copy = {
 };
 
 const ES: Cs2Copy = {
-  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario", market: "Mercado", patches: "Parches", esports: "Torneos" },
+  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario", market: "Mercado", patches: "Parches", esports: "Torneos", teams: "Equipos", players: "Jugadores" },
   loading: "Cargando…",
   loadError: "No se pudo cargar esta página.",
   retry: "Reintentar",
@@ -540,6 +625,8 @@ const ES: Cs2Copy = {
     skins: { title: "Skins de CS2: precios, float y cajas", description: "Todas las skins de armas, cuchillos y guantes de CS2 con su precio en cada desgaste, StatTrak y Souvenir, rango de float y la caja de donde salen." },
     cases: { title: "Cajas de CS2: probabilidades, valor esperado y precios", description: "Cada caja, paquete de souvenir y terminal de CS2 con su precio, la probabilidad de cada rareza y cuánto devuelve abrirla en promedio." },
     collections: { title: "Colecciones de CS2: cada skin y su precio", description: "Cada colección de armas de CS2 con sus skins por rareza, su rango de float y precio, y la caja o el paquete de donde sale." },
+    teams: { title: "Equipos profesionales de CS2: plantel, mapas y ranking", description: "Cada equipo del ranking de Valve de CS2: plantel, cómo se movió en el ranking, sus títulos, en qué mapas gana y si es más fuerte defendiendo o atacando." },
+    players: { title: "Jugadores profesionales de CS2", description: "Los jugadores de los 30 mejores equipos de CS2: nacionalidad, edad, roles, equipo y premios." },
     esports: { title: "Torneos de CS2, partidos y ranking de Valve", description: "Los torneos de CS2 en vivo: partidos de hoy y próximos en tu hora, resultados, la transmisión y el ranking oficial de Valve explicado equipo por equipo." },
     patches: { title: "Parches de CS2: todas las actualizaciones", description: "Cada actualización de CS2 desde el Limited Test, cambio por cambio: qué es nuevo, qué cambió y qué se arregló, con los mapas, armas y cajas que nombra." },
     market: { title: "Skins de CS2 que suben y bajan de precio", description: "Qué skins y cajas de CS2 suben y bajan de precio esta semana, y cuáles se venden más, con ventas reales en Skinport." },
@@ -576,6 +663,8 @@ const ES: Cs2Copy = {
       market: () => "Qué sube y qué baja esta semana, y qué se vende más, con ventas reales.",
       patches: () => "Cada actualización, cambio por cambio: qué es nuevo, qué cambió y qué se arregló.",
       esports: () => "El torneo en vivo con su transmisión, los partidos en tu hora y el ranking de Valve explicado.",
+      teams: () => "Cada equipo del ranking: plantel, cómo se movió, títulos y en qué mapas gana, de qué lado.",
+      players: () => "Los jugadores de los 30 mejores equipos.",
     },
     pricesOf: (d) => `Precios del ${d}`,
   },
@@ -631,6 +720,46 @@ const ES: Cs2Copy = {
     count: (n) => `${n} resultados`,
     none: "No hay nada con eso.",
     open: "Abrir",
+  },
+  tm: {
+    lede: "Cada equipo del ranking de Valve. Abrí uno para ver su plantel, cómo se movió, sus títulos y en qué mapas gana, defendiendo o atacando.",
+    world: "Ranking mundial",
+    regions: { europe: "Europa", americas: "América", asia: "Asia" },
+    rank: (n) => `#${n} del mundo`,
+    regional: (r) => `En el ranking de ${r}`,
+    move: (n) => (n > 0 ? `▲ ${n} desde el mes pasado` : n < 0 ? `▼ ${-n} desde el mes pasado` : "Igual que el mes pasado"),
+    leader: "Líder",
+    coach: "Entrenador",
+    winnings: "Premios",
+    since: (y) => `Desde ${y}`,
+    captain: "Capitán",
+    inTeamSince: (y) => `en el equipo desde ${y}`,
+    progress: "Progresión en el ranking de Valve",
+    progressLede: (r) => `Su puesto en el mundial mes a mes. Hoy, ${r}.`,
+    achievements: "Últimos resultados",
+    place: (p) => p.replace(/(\d+)(st|nd|rd|th)/g, "$1.º").replace(" - ", "–"),
+    maps: "Mapas",
+    mapsLede: "Torneos S y A de los últimos 6 meses. Las rondas ganadas de cada lado dicen si el equipo es mejor defendiendo (CT) o atacando (T) en ese mapa.",
+    wonOf: (w, p) => `ganó ${w} de ${p}`,
+    onePlayed: "1 jugado",
+    defending: "Defendiendo (CT)",
+    attacking: "Atacando (T)",
+    stronger: (s) => (s === "ct" ? "Más fuerte defendiendo" : "Más fuerte atacando"),
+    matches: "Últimos partidos",
+    won: "ganó",
+    lost: "perdió",
+    draw: "empate",
+    forfeit: "abandono",
+    vs: (o) => `contra ${o}`,
+    noData: "Sin partidos de torneos S o A en los últimos 6 meses.",
+    statsSoon: "Estadísticas por jugador (rating, daño por ronda): próximamente.",
+    age: (n) => `${n} años`,
+    roles: "Roles",
+    team: "Equipo",
+    noTeam: "Sin equipo",
+    participants: "Equipos",
+    stage: "Partidos",
+    credit: "Equipos, planteles, partidos y logos vía Liquipedia (CC BY-SA; los logos son marcas de cada equipo). Ranking: Valve Regional Standings. Banderas: flag-icons (MIT).",
   },
   es: {
     lede: "El torneo que se está jugando con su transmisión, los próximos partidos en tu hora, los resultados y el ranking oficial de Valve explicado equipo por equipo.",

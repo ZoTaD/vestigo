@@ -17,6 +17,7 @@ class TestFichas(unittest.TestCase):
     def test_equipo(self):
         t = team_page(leer("lp_team_mouz.html"))
         self.assertEqual(t["region"], "Europe")
+        self.assertEqual(t["location"], "Germany")  # sin la región pegada
         self.assertEqual(t["igl"], "xertioN")
         self.assertEqual(t["winnings"], 8887874)
         self.assertEqual(t["created"], "2002")
@@ -33,6 +34,7 @@ class TestFichas(unittest.TestCase):
         self.assertEqual(rs[0], {"date": "2026-10-31", "place": "3rd", "tier": "S", "tour": "PGL Masters Bucharest 2026", "tour_lp": "PGL/2026/Masters", "prize": 137500})
         self.assertTrue(all(r["tier"] in ("S", "A") for r in rs))
         self.assertTrue(any(r["place"] == "1st" for r in rs))
+        self.assertIn("5th - 6th", [r["place"] for r in rs])  # el espacio de Liquipedia (&#160;) como espacio común
 
     def test_jugador(self):
         p = player_page(leer("lp_player.html"))

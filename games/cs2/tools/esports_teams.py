@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 from cs2 import slugify, write_json
-from esports import bracket_matches, infobox, player_page, streams, team_page, team_results
+from esports import bracket_matches, clean_location, clean_place, infobox, player_page, streams, team_page, team_results
 from vrs import standings
 
 # Días hasta releer cada cosa; `None`: un torneo terminado no se relee.
@@ -208,8 +208,10 @@ def build(lp, gh, out: Path, raw: Path, today: str, vrs: dict, teams: dict, tour
             "slug": tslug(r), "lp": r["lp"], "name": known.get("name", r["team"]), "logo": known.get("logo"),
             "vrs": {"rank": r["rank"] if r["region"] is None else None, "pts": r["pts"], "region": r["region"], "prev": r.get("prev"),
                     "history": hist.get(r["team"], [])},
-            **{k: d.get(k) for k in ("location", "igl", "coaches", "winnings", "created")},
-            "roster": roster, "results": d.get("results", [])[:15],
+            # Lo leído antes de que los lectores limpiaran sede y puestos también sale limpio.
+            "location": clean_location(d.get("location"), d.get("region")), "region": d.get("region"),
+            **{k: d.get(k) for k in ("igl", "coaches", "winnings", "created")},
+            "roster": roster, "results": [{**x, "place": clean_place(x["place"])} for x in d.get("results", [])[:15]],
             "maps": map_stats(every, r["lp"], since) if r["lp"] else [],
             "matches": team_matches(every, r["lp"])[:20] if r["lp"] else [],
             "at": d.get("at"), "results_at": d.get("results_at"),

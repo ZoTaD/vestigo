@@ -97,6 +97,18 @@ def _money(s: str | None) -> int | None:
     return int(n) if n else None
 
 
+def clean_place(p: str) -> str:
+    """Un puesto como texto común: "5th&#160;-&#160;6th" → "5th - 6th"."""
+    return htmllib.unescape(p).replace("\xa0", " ").strip()
+
+
+def clean_location(loc: str | None, region: str | None) -> str | None:
+    """La sede sin la región que Liquipedia le pega al final ("Germany Europe" → "Germany")."""
+    if loc and region and loc.endswith(" " + region):
+        loc = loc[: -len(region) - 1]
+    return loc or None
+
+
 def _flag(s: str) -> str | None:
     """El código del país de una bandera de Liquipedia: el archivo se llama `Hu_hd.png`."""
     m = re.search(r'class="flag">(?:<a[^>]*>)?<img[^>]*src="[^"]*/([A-Za-z]{2})_hd\.png', s)
@@ -121,8 +133,9 @@ def team_page(html: str) -> dict:
             "flag": _flag(row), "since": (re.search(r"\d{4}-\d{2}-\d{2}", row) or [None])[0],
             "captain": "fa-crown" in row, "role": "coach" if "coach" in pos.lower() else "player",
         })
+    region = _text(c.get("Region", "")) or None
     return {
-        "location": _text(c.get("Location", "")) or None, "region": _text(c.get("Region", "")) or None,
+        "location": clean_location(_text(c.get("Location", "")), region), "region": region,
         "coaches": [_text(x) for x in re.findall(r"<a [^>]*>([^<]+)</a>", c.get("Coaches", ""))],
         "igl": _text(c.get("In-Game Leader", "")) or None, "winnings": _money(_text(c.get("Approx. Total Winnings", ""))),
         "created": created.group() if created else None, "roster": roster,
@@ -141,7 +154,7 @@ def team_results(html: str) -> list[dict]:
         if not (date and place and tier and tour):
             continue
         tds = re.findall(r"<td[^>]*>(.*?)</td>", row, flags=re.S)
-        out.append({"date": date.group(1), "place": place.group(1), "tier": tier.group(1), "tour": htmllib.unescape(tour.group(1)),
+        out.append({"date": date.group(1), "place": clean_place(place.group(1)), "tier": tier.group(1), "tour": htmllib.unescape(tour.group(1)),
                     "tour_lp": tour.group(2), "prize": _money(_text(tds[-1]))})
     return out
 

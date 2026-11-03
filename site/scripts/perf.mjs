@@ -213,6 +213,12 @@ export const PAGES = [
   // Torneos (etapa 6a): la portada con Twitch sin cargar, los partidos y el ranking.
   "/en/cs2/esports",
   "/es/cs2/torneos",
+  // Equipos y fichas (etapa 6b): la lista, la ficha más completa, una en inglés, un jugador y un torneo.
+  "/es/cs2/equipos",
+  "/es/cs2/equipos/mouz",
+  "/en/cs2/teams/team-vitality",
+  "/en/cs2/players/xertion",
+  "/es/cs2/torneos/pgl-2026-masters",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

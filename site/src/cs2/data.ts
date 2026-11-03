@@ -160,10 +160,19 @@ export async function preloadRoute(route: Route): Promise<void> {
     if (slug) await loadPatch(slug);
     return;
   }
-  // Torneos: los torneos, el ranking y los equipos. Los partidos no: cambian cada hora y los pide la página.
+  // Torneos: los torneos, el ranking y los equipos (y, con detalle, la ficha del torneo). Los partidos no: cambian
+  // cada hora y los pide la página.
   if (tab === "esports") {
     const { loadEsports } = await import("./esports/data");
-    await loadEsports();
+    const { loadTour, loadIndex } = await import("./esports/teams/data");
+    await Promise.all([loadEsports(), ...(route.detail ? [loadTour(route.detail), loadIndex()] : [])]);
+    return;
+  }
+  // Equipos y Jugadores (etapa 6b): el índice y, con detalle, la ficha.
+  if (tab === "teams" || tab === "players") {
+    const { loadIndex, loadTeam, loadPlayer } = await import("./esports/teams/data");
+    const { loadEsports } = await import("./esports/data");
+    await Promise.all([loadIndex(), loadEsports(), ...(route.detail ? [tab === "teams" ? loadTeam(route.detail) : loadPlayer(route.detail)] : [])]);
     return;
   }
   // Mercado: la lista de la pestaña.

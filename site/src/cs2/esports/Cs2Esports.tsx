@@ -17,6 +17,9 @@ import { Cs2Loading, useNum, type Nav } from "../ui";
 import { loadEsports, loadMatches, peekEsports, peekMatches, type Esports, type Region, type TourRow, type VrsRow } from "./data";
 import type { Match } from "./matches";
 import { byLocalDay, localTime, TeamLogo, Twitch } from "./parts";
+import RouteLink from "../../RouteLink";
+import TourView from "./TourPage";
+import { lpSlug } from "./teams/data";
 
 /** El torneo de arriba: el S en curso, si no cualquiera en curso, si no el próximo S, si no el próximo. */
 export function featured(ts: TourRow[]): TourRow | undefined {
@@ -24,7 +27,12 @@ export function featured(ts: TourRow[]): TourRow | undefined {
   return pick("ongoing") ?? pick("upcoming");
 }
 
-export default function Cs2Esports({ route }: { route: Route; navigate: Nav }) {
+/** Con un torneo en la dirección, su ficha (etapa 6b); si no, la portada de Torneos. */
+export default function Cs2Esports({ route, navigate }: { route: Route; navigate: Nav }) {
+  return route.detail ? <TourView route={route} navigate={navigate} /> : <EsportsHome route={route} navigate={navigate} />;
+}
+
+function EsportsHome({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = useCs2Copy();
   const data = useLoad("esports", peekEsports, loadEsports);
   if (data.failed) return <Cs2Loading onRetry={data.retry} />;
@@ -43,9 +51,9 @@ export default function Cs2Esports({ route }: { route: Route; navigate: Nav }) {
       </section>
       <section className="c2-es-row">
         <Results d={d} />
-        <Tours tours={d.tournaments} />
+        <Tours tours={d.tournaments} route={route} navigate={navigate} />
       </section>
-      <VrsBlock d={d} />
+      <VrsBlock d={d} route={route} navigate={navigate} />
       <p className="c2-note">{t.es.credit}</p>
     </main>
   );
@@ -183,7 +191,7 @@ function Results({ d }: { d: Esports }) {
   );
 }
 
-function Tours({ tours }: { tours: TourRow[] }) {
+function Tours({ tours, route, navigate }: { tours: TourRow[]; route: Route; navigate: Nav }) {
   const t = useCs2Copy();
   const { lang } = useLang();
   const num = useNum();
@@ -199,7 +207,15 @@ function Tours({ tours }: { tours: TourRow[] }) {
             <ul className="c2-es-tours">
               {rows.map((x) => (
                 <li key={x.slug}>
-                  <b>{x.name}</b>
+                  <b>
+                    {x.state === "upcoming" ? (
+                      x.name
+                    ) : (
+                      <RouteLink to={{ ...route, view: "cs2", c2Section: "esports", detail: lpSlug(x.slug) }} onNavigate={navigate}>
+                        {x.name}
+                      </RouteLink>
+                    )}
+                  </b>
                   <span className="c2-dim">
                     {day(x.start)} – {day(x.end)}
                     {x.location ? ` · ${x.location}` : ""}
@@ -222,7 +238,7 @@ export function moveLabel(r: Pick<VrsRow, "rank" | "prev">, isNew: string): { te
   return d > 0 ? { text: `▲ ${d}`, dir: "up" } : d < 0 ? { text: `▼ ${-d}`, dir: "down" } : { text: "=", dir: "eq" };
 }
 
-function VrsBlock({ d }: { d: Esports }) {
+function VrsBlock({ d, route, navigate }: { d: Esports; route: Route; navigate: Nav }) {
   const t = useCs2Copy();
   const { lang } = useLang();
   const num = useNum();
@@ -260,13 +276,17 @@ function VrsBlock({ d }: { d: Esports }) {
             const isOpen = open === r.team;
             return (
               <Fragment key={r.team}>
-                <tr className={`c2-es-vr${isOpen ? " is-open" : ""}`} onClick={() => setOpen(isOpen ? null : r.team)}>
+                <tr className={`c2-es-vr${isOpen ? " is-open" : ""}`} onClick={(e) => !(e.target as HTMLElement).closest("a") && setOpen(isOpen ? null : r.team)}>
                   <td className="c2-es-rank">{r.rank}</td>
                   <td>
                     <button type="button" className="c2-es-team" aria-expanded={isOpen}>
                       <TeamLogo lp={r.lp} name={r.team} teams={d.teams} size={32} />
                       <span>
-                        <b>{r.team}</b>
+                        <b>
+                          <RouteLink to={{ ...route, view: "cs2", c2Section: "teams", detail: lpSlug(r.lp ?? r.team) }} onNavigate={navigate}>
+                            {r.team}
+                          </RouteLink>
+                        </b>
                         <small>{r.roster.join(", ")}</small>
                       </span>
                     </button>

@@ -394,12 +394,12 @@ export function registerWfSlugs(slugs: Partial<Record<WfTab, Record<string, stri
  */
 /** Las pestañas con fichas (su tercer segmento es el slug de una) y las herramientas sin fichas (etapa 2: Trade-up). */
 export type Cs2DataTab = "skins" | "cases" | "collections";
-export type Cs2Tab = Cs2DataTab | "trade-up" | "inventory" | "market" | "patches" | "esports";
+export type Cs2Tab = Cs2DataTab | "trade-up" | "inventory" | "market" | "patches" | "esports" | "teams" | "players";
 export type Cs2Section = "home" | Cs2Tab;
 export const CS2_SEGMENT = "cs2";
-export const CS2_SECTIONS: Cs2Tab[] = ["skins", "cases", "collections", "trade-up", "inventory", "market", "patches", "esports"];
+export const CS2_SECTIONS: Cs2Tab[] = ["skins", "cases", "collections", "trade-up", "inventory", "market", "patches", "esports", "teams", "players"];
 export const CS2_DETAIL_SECTIONS: Cs2DataTab[] = ["skins", "cases", "collections"];
-export const CS2_SECTION_ES: Record<Cs2Tab, string> = { skins: "skins", cases: "cajas", collections: "colecciones", "trade-up": "trade-up", inventory: "inventario", market: "mercado", patches: "parches", esports: "torneos" };
+export const CS2_SECTION_ES: Record<Cs2Tab, string> = { skins: "skins", cases: "cajas", collections: "colecciones", "trade-up": "trade-up", inventory: "inventario", market: "mercado", patches: "parches", esports: "torneos", teams: "equipos", players: "jugadores" };
 const CS2_SECTION_BY_ES = new Map(Object.entries(CS2_SECTION_ES).map(([tab, es]) => [es, tab as Cs2Tab]));
 const isCs2Tab = (v: string | undefined): v is Cs2Tab => !!v && (CS2_SECTIONS as string[]).includes(v);
 /** La pestaña de CS2 de un segmento, escrito en cualquiera de los dos idiomas. */
@@ -573,7 +573,8 @@ export function parseRoute(pathname: string): Route {
     const tab = cs2Tab(rest[1]);
     if (!tab) return { ...base, view: "cs2", c2Section: "home" };
     // Las fichas y, en Parches (etapa 5), cada edición por su slug.
-    const ficha = ((CS2_DETAIL_SECTIONS as string[]).includes(tab) || tab === "patches") && rest[2] ? rest[2] : undefined;
+    // Las fichas y, con detalle propio: cada edición de Parches (etapa 5) y cada torneo, equipo y jugador (etapa 6b).
+    const ficha = ((CS2_DETAIL_SECTIONS as string[]).includes(tab) || tab === "patches" || tab === "esports" || tab === "teams" || tab === "players") && rest[2] ? rest[2] : undefined;
     return { ...base, view: "cs2", c2Section: tab, detail: ficha };
   }
 
