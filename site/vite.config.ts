@@ -1042,9 +1042,46 @@ function cs2InventoryApi(): Plugin {
   };
 }
 
+/**
+ * Los partidos de CS2 en `npm run dev` y `vite preview` (2026-11-03, etapa 6a): en producción los atiende la Netlify
+ * Function (`netlify/functions/cs2-matches.mts`) con la CDN guardando 10 minutos. Acá no hay CDN: la respuesta se
+ * guarda 10 minutos en memoria, así recargar la página no le pide a Liquipedia cada vez.
+ */
+function cs2MatchesApi(): Plugin {
+  let saved: { until: number; status: number; headers: [string, string][]; body: string } | null = null;
+  const handle = (load: () => Promise<{ handleMatches: () => Promise<Response> }>) =>
+    (req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse, next: () => void) => {
+      if (!req.url?.startsWith("/api/cs2/matches")) return next();
+      const send = (s: NonNullable<typeof saved>) => {
+        res.statusCode = s.status;
+        s.headers.forEach(([k, v]) => res.setHeader(k, v));
+        res.end(s.body);
+      };
+      if (saved && saved.until > Date.now()) return send(saved);
+      load()
+        .then((m) => m.handleMatches())
+        .then(async (r) => {
+          const s = { until: Date.now() + (r.ok ? 600_000 : 0), status: r.status, headers: [...r.headers.entries()], body: await r.text() };
+          if (r.ok) saved = s;
+          send(s);
+        })
+        .catch(() => ((res.statusCode = 500), res.end()));
+    };
+  return {
+    name: "cs2-matches-api",
+    configureServer(server) {
+      server.middlewares.use(handle(() => server.ssrLoadModule("/src/cs2/esports/handler.ts") as never));
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(handle(() => import("./src/cs2/esports/handler")));
+    },
+  };
+}
+
 export default defineConfig({
   plugins: [
     cs2InventoryApi(),
+    cs2MatchesApi(),
     localDeadlockAssets(),
     esSlugsModule("virtual:d2r-slugs-es", [`${d2rDir}/wiki/index.json`, `${d2rDir}/drops/index.json`], () => buildD2rEsSlugs(readD2Index())),
     // Antes que el de las secciones: su `load` atiende todo lo que empiece con `virtual:pz-slugs-es/`.
