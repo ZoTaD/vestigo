@@ -15,6 +15,8 @@ import { isSdLoadingPage } from "./src/stardew/loadingGuard";
 import { stardewSitemapData } from "./src/stardew/sitemapData";
 import { isWfLoadingPage } from "./src/warframe/loadingGuard";
 import { warframeSitemapData } from "./src/warframe/sitemapData";
+import { isCs2LoadingPage } from "./src/cs2/loadingGuard";
+import { cs2SitemapData } from "./src/cs2/sitemapData";
 import { farmingPages, monumentsPages, patchesPages, type RustPage } from "./src/rust/sitemapPages";
 import { CIRCUITS, circuitSlugsEs } from "./src/rust/electric/circuits";
 import { buildEsSlugs } from "./src/esSlugs";
@@ -309,6 +311,15 @@ function readSitemapData(): { data: OgData } {
     console.warn(`[warframe] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     wf = undefined;
   }
+  // CS2 (2026-11-03): el sello del catálogo y la lista de cada pestaña.
+  let c2: SitemapData["c2"];
+  try {
+    const read = (f: string) => JSON.parse(readFileSync(`${cs2Dir}/${f}`, "utf-8"));
+    c2 = cs2SitemapData(read("meta.json"), { skins: read("skins/list.json"), cases: read("cases/list.json"), collections: read("collections/list.json") });
+  } catch (e) {
+    console.warn(`[cs2] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
+    c2 = undefined;
+  }
   return {
     data: {
       p2,
@@ -319,6 +330,7 @@ function readSitemapData(): { data: OgData } {
       tr,
       sd,
       wf,
+      c2,
       // Los sellos de cada pipeline, para el `lastmod` del sitemap. La
       // enciclopedia de PoE2 no tiene sello y va sin fecha.
       dates: {
@@ -331,6 +343,7 @@ function readSitemapData(): { data: OgData } {
         terraria: tr?.generatedAt,
         stardew: sd?.generatedAt,
         warframe: wf?.generatedAt,
+        cs2: c2?.generatedAt,
       },
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
@@ -878,6 +891,9 @@ function prerenderRoutes(): Plugin {
           }
           // Y en Warframe: una ficha cuyo slug en español no se anotó o cuyo archivo no se pidió sale vacía.
           if (route.view === "warframe" && isWfLoadingPage(cuerpo)) {
+            throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
+          }
+          if (route.view === "cs2" && isCs2LoadingPage(cuerpo)) {
             throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
           }
           const conexiones = originsFor(route)
