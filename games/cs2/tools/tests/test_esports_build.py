@@ -104,5 +104,27 @@ class TestBuild(unittest.TestCase):
         self.assertEqual((t["roster"], t["maps"], t["matches"]), ([], [], []))
 
 
+class TestBanderas(unittest.TestCase):
+    def test_baja_solo_las_que_faltan(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            (out / "hu.svg").write_text("<svg/>", encoding="utf-8")
+            pedidas = []
+
+            def get(url):
+                pedidas.append(url)
+                return b"<svg>il</svg>"
+
+            esports_teams.fetch_flags(["hu", "il"], out, get)
+            self.assertEqual(pedidas, ["https://cdn.jsdelivr.net/npm/flag-icons@7.6.0/flags/4x3/il.svg"])
+            self.assertEqual((out / "il.svg").read_text(encoding="utf-8"), "<svg>il</svg>")
+
+    def test_codigo_raro_no_se_pide(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            pedidas = []
+            esports_teams.fetch_flags(["../x", "zzz"], Path(tmp), lambda u: pedidas.append(u) or b"")
+            self.assertEqual(pedidas, [])
+
+
 if __name__ == "__main__":
     unittest.main()

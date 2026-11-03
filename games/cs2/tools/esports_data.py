@@ -178,6 +178,8 @@ def run(lp, gh, root: Path, today: str, year: int, out: Path | None = None, raw:
     write_json(out / "vrs.json", vrs)
     write_json(out / "teams.json", team_rows)
     esports_teams.build(lp, gh, out, raw, today, vrs, team_rows, tours, budget=budget)
+    # Las banderas que usan los planteles (las nuevas; las demás ya están).
+    esports_teams.fetch_flags(json.loads((out / "index.json").read_text(encoding="utf-8"))["flags"], logos.parent / "flags")
 
 
 def main() -> None:

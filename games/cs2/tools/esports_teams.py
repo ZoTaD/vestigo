@@ -223,3 +223,29 @@ def build(lp, gh, out: Path, raw: Path, today: str, vrs: dict, teams: dict, tour
                         key=lambda t: t["start"] or "", reverse=True),
         "flags": sorted(flags),
     })
+
+
+# --- Banderas ------------------------------------------------------------------------------------------------------
+
+# `flag-icons` (MIT), la versión fijada: un SVG por país, por su código de dos letras.
+FLAGS_URL = "https://cdn.jsdelivr.net/npm/flag-icons@7.6.0/flags/4x3/{}.svg"
+
+
+def _get(url: str) -> bytes:
+    import urllib.request
+
+    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "VestigoBot/1.0 (https://vestigo.gg)"}), timeout=60) as r:
+        return r.read()
+
+
+def fetch_flags(codes, out: Path, get=_get) -> None:
+    """Baja a `out/<código>.svg` las banderas que faltan. Sólo códigos de dos letras (lo que sale de Liquipedia es dato
+    no confiable: nada de rutas)."""
+    out.mkdir(parents=True, exist_ok=True)
+    for c in sorted(set(codes)):
+        if not (len(c) == 2 and c.isalpha() and c.islower()) or (out / f"{c}.svg").exists():
+            continue
+        try:
+            (out / f"{c}.svg").write_bytes(get(FLAGS_URL.format(c)))
+        except Exception as e:  # noqa: BLE001 - sin bandera queda el código en texto
+            print(f"::warning::sin la bandera {c}: {e}")
