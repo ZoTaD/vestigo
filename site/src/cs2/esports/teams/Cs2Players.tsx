@@ -66,7 +66,8 @@ export function PlayerPage({ p, idx, route, navigate }: { p: Player; idx: EsInde
           <h1 className="c2-tm-name">{p.id}</h1>
           <p className="c2-tm-sub">
             {p.name && <span>{p.name}</span>}
-            {p.born && <span>{t.tm.age(age(p.born))}</span>}
+            {/* La edad del prerender puede quedar vieja un día: el cliente la corrige sin avisar. */}
+            {p.born && <span suppressHydrationWarning>{t.tm.age(age(p.born))}</span>}
             {p.roles.length > 0 && (
               <span>
                 {t.tm.roles}: <b>{p.roles.join(", ")}</b>

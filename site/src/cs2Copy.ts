@@ -173,6 +173,7 @@ export interface Cs2Copy {
     loadingMatches: string;
     matchesError: string;
     noMatches: string;
+    noResults: string;
     tbd: string;
     bo: (n: number) => string;
     today: string;
@@ -477,6 +478,7 @@ const EN: Cs2Copy = {
     loadingMatches: "Loading matches…",
     matchesError: "Couldn't load the matches right now. The rest of the page is up to date.",
     noMatches: "No matches scheduled right now.",
+    noResults: "No finished matches in the last few days.",
     tbd: "TBD",
     bo: (n) => `best of ${n}`,
     today: "Today",
@@ -792,6 +794,7 @@ const ES: Cs2Copy = {
     loadingMatches: "Cargando partidos…",
     matchesError: "Ahora no se pudieron cargar los partidos. El resto de la página está al día.",
     noMatches: "No hay partidos programados por ahora.",
+    noResults: "No hay partidos terminados en los últimos días.",
     tbd: "A definir",
     bo: (n) => `al mejor de ${n}`,
     today: "Hoy",
