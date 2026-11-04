@@ -11,7 +11,9 @@ const named = (rows: Row[] | undefined): Coh3Named[] =>
     const n = r.name ?? r.title ?? r.slug;
     const en = typeof n === "string" ? n : n.en;
     const es = typeof n === "string" ? n : n.es || n.en;
-    return { slug: r.slug, name: { en, es } };
+    // Los mapas traen la cantidad de jugadores adelante ("(2) Langres"): en el título y las migas sobra.
+    const clean = (x: string) => x.replace(/^\(\d\)\s*/, "");
+    return { slug: r.slug, name: { en: clean(en), es: clean(es) } };
   });
 
 export function coh3SitemapData(

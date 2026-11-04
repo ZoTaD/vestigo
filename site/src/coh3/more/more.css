@@ -49,6 +49,7 @@
   .c3-fs-tiers, .c3-fs-techs { grid-template-columns: minmax(0, 1fr); }
   .c3-fs-techs li { grid-template-columns: 40px minmax(0, 1fr); }
   .c3-fs-techs li > .c3-cp { grid-column: 2; }
+  .c3-fs-tiers .c3-fs-levels { grid-column: 2; justify-content: flex-start; }
   .c3-mapwrap .c3-mini { width: 100%; }
 }
 /* El sentido del cambio, sin decir si es bueno: subir en bronce, bajar en azul. */

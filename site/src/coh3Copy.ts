@@ -96,7 +96,7 @@ const EN = {
     const d: Partial<Record<Coh3Tab, Seo>> = {
       units: { title: `${name} – CoH3 Unit Stats`, description: clip(`${name} in Company of Heroes 3: health, armor, cost, weapons, upgrades, veterancy and what it penetrates.`) },
       weapons: { title: `${name} – CoH3 Weapon Stats`, description: clip(`${name} in Company of Heroes 3: damage, accuracy, penetration and range at near, mid and far distance, and which units use it.`) },
-      battlegroups: { title: `${name} Battlegroup – CoH3`, description: clip(`${name} battlegroup in Company of Heroes 3: branches, abilities, units and command point costs.`) },
+      battlegroups: { title: `${/battlegroup$/i.test(name) ? name : `${name} Battlegroup`} – CoH3`, description: clip(`${name} battlegroup in Company of Heroes 3: branches, abilities, units and command point costs.`) },
       maps: { title: `${name} – CoH3 Map`, description: clip(`${name} in Company of Heroes 3: players, size, points and faction win rates.`) },
       patches: { title: `CoH3 ${name} Changes`, description: clip(`What changed in Company of Heroes 3 ${name}, unit by unit: health, armor, cost, damage and penetration.`) },
       players: { title: `${name} – CoH3 Player Stats`, description: clip(`${name} in Company of Heroes 3: standings, recent matches and win rate by faction.`) },
