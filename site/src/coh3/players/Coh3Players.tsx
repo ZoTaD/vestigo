@@ -4,7 +4,7 @@
  * y facción, resumen de las últimas partidas, némesis, gráfico de ELO y la lista de partidas con filtros.
  *
  * Todo se pide en el navegador a `/api/coh3/player` y `/api/coh3/search`: la ficha no se prerenderiza (son infinitas),
- * lleva `noindex` y está fuera del sitemap. El título del documento lleva el alias.
+ * lleva `noindex` y está fuera del sitemap (el buscador sí se indexa). El título del documento lleva el alias.
  */
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import RouteLink from "../../RouteLink";
@@ -37,7 +37,6 @@ type PlayerResp = { profile: Profile; standings: Standing[]; matches: MatchSumma
 type SearchResp = { q: string; results: SearchResult[] };
 
 export default function Coh3Players({ route, navigate }: { route: Route; navigate: Nav }) {
-  useNoindex();
   const id = route.detail && /^\d{1,10}$/.test(route.detail) ? Number(route.detail) : null;
   return id ? <Profile key={id} id={id} route={route} navigate={navigate} /> : <Search route={route} navigate={navigate} />;
 }
@@ -179,6 +178,8 @@ function Search({ route, navigate }: { route: Route; navigate: Nav }) {
 type MF = "all" | Mode | "custom" | "ai" | "other";
 
 function Profile({ id, route, navigate }: { id: number; route: Route; navigate: Nav }) {
+  // Sólo la ficha: el buscador (`/coh3/players`) sí se indexa y está en el sitemap.
+  useNoindex();
   const c = useCoh3Copy();
   const t = usePlCopy();
   const num = useNum();

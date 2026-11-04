@@ -526,11 +526,11 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const x of data.c2.esports?.players ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "players", detail: x.slug }));
       for (const x of data.c2.esports?.tours ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "esports", detail: x.slug }));
     }
-    // Company of Heroes 3 (2026-11-04): la portada, las pestañas (sin Jugadores ni Partidas, que son por número) y una
-    // ficha por unidad, arma, battlegroup, mapa y parche.
+    // Company of Heroes 3 (2026-11-04): la portada, las pestañas (Jugadores es el buscador; Partidas no tiene página sin
+    // número) y una ficha por unidad, arma, battlegroup, mapa y parche. Las fichas de jugador y partida no van.
     if (data.c3) {
       paths.push(routePath({ ...base, lang, view: "coh3", c3Section: "home" }));
-      for (const s of COH3_SECTIONS) if (s !== "players" && s !== "matches") paths.push(routePath({ ...base, lang, view: "coh3", c3Section: s }));
+      for (const s of COH3_SECTIONS) if (s !== "matches") paths.push(routePath({ ...base, lang, view: "coh3", c3Section: s }));
       for (const s of ["units", "weapons", "battlegroups", "maps", "patches"] as const) {
         for (const f of data.c3[s]) paths.push(routePath({ ...base, lang, view: "coh3", c3Section: s, detail: f.slug }));
       }
