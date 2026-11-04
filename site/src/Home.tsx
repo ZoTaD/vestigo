@@ -12,6 +12,7 @@ import pzMeta from "@zomboid/meta.json";
 import sdMeta from "@stardew/meta.json";
 import wfMeta from "@warframe/meta.json";
 import c2Meta from "@cs2/meta.json";
+import c3Meta from "@coh3/meta.json";
 import p2Patches from "@poe2/patches/index.json";
 
 /** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
@@ -445,6 +446,33 @@ export default function Home({
               <p className="game-figure is-second">
                 <b>{num(c2Meta.counts.cases)}</b>
                 <span>{copy.home.games.cs2Cases}</span>
+              </p>
+            </div>
+          </li>
+        </ul>
+
+        {/* RTS (2026-11-04): el género nuevo arranca con Company of Heroes 3, estética "Puesto de mando". */}
+        <h3 className="home-group">{copy.games.groups.rts}</h3>
+        <ul className="game-list">
+          <li className="game-panel" data-panel="coh3">
+            <div className="game-panel-main">
+              <h4 className="game-panel-name">{copy.games.coh3}</h4>
+              <p className="game-panel-note">{copy.home.games.coh3Live}</p>
+              <div className="game-panel-ctas">
+                <RouteLink className="game-cta" to={{ ...route, view: "coh3", c3Section: "home", detail: undefined }} onNavigate={navigate}>
+                  {copy.home.games.coh3Cta}
+                  <Arrow />
+                </RouteLink>
+              </div>
+            </div>
+            <div className="game-panel-figures">
+              <p className="game-figure">
+                <b>{num(c3Meta.counts.units)}</b>
+                <span>{copy.home.games.coh3Units}</span>
+              </p>
+              <p className="game-figure is-second">
+                <b>{num(c3Meta.counts.weapons)}</b>
+                <span>{copy.home.games.coh3Weapons}</span>
               </p>
             </div>
           </li>

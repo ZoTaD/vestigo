@@ -1,4 +1,4 @@
-import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, ValheimSection, View, WfSection, Cs2Section } from "./route";
+import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, ValheimSection, View, WfSection, Cs2Section, Coh3Section } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -21,6 +21,7 @@ export const AREA_FILES: Partial<Record<View, string>> = {
   stardew: "src/Stardew.tsx",
   warframe: "src/Warframe.tsx",
   cs2: "src/Cs2.tsx",
+  coh3: "src/Coh3.tsx",
   privacy: "src/Privacy.tsx",
   terms: "src/Terms.tsx",
 };
@@ -158,6 +159,13 @@ export const CS2_TAB_FILES: Partial<Record<Cs2Section, string>> = {
   players: "src/cs2/esports/teams/Cs2Players.tsx",
 };
 
+/**
+ * Las pestañas de Company of Heroes 3 que viajan en su propio chunk, igual que `TABS` en `Coh3.tsx` (2026-11-04; lo
+ * cuida `test/areas.test.ts`). La portada viene con el área.
+ */
+export const COH3_TAB_FILES: Partial<Record<Coh3Section, string>> = {
+};
+
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */
 export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
   items: "src/rust/items/RustItems.tsx",
@@ -206,6 +214,8 @@ export function filesFor(route: Route): string[] {
                   ? WF_TAB_FILES[route.wfSection ?? "home"]
                   : route.view === "cs2"
                     ? CS2_TAB_FILES[route.c2Section ?? "home"]
+                    : route.view === "coh3"
+                    ? COH3_TAB_FILES[route.c3Section ?? "home"]
                     : undefined;
   return tab ? [area, tab] : [area];
 }

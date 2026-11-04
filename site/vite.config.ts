@@ -16,7 +16,9 @@ import { stardewSitemapData } from "./src/stardew/sitemapData";
 import { isWfLoadingPage } from "./src/warframe/loadingGuard";
 import { warframeSitemapData } from "./src/warframe/sitemapData";
 import { isCs2LoadingPage } from "./src/cs2/loadingGuard";
+import { isCoh3LoadingPage } from "./src/coh3/loadingGuard";
 import { cs2SitemapData } from "./src/cs2/sitemapData";
+import { coh3SitemapData } from "./src/coh3/sitemapData";
 import { farmingPages, monumentsPages, patchesPages, type RustPage } from "./src/rust/sitemapPages";
 import { CIRCUITS, circuitSlugsEs } from "./src/rust/electric/circuits";
 import { buildEsSlugs } from "./src/esSlugs";
@@ -48,6 +50,9 @@ const warframeDir = fileURLToPath(new URL("../games/warframe/data", import.meta.
 // CS2 (2026-11-03): el catálogo de `games/cs2/tools/site_data.py` y los precios del día de `prices.py`.
 const cs2Dir = fileURLToPath(new URL("../games/cs2/data", import.meta.url));
 const cs2PricesDir = fileURLToPath(new URL("../games/cs2/prices", import.meta.url));
+// Company of Heroes 3 (2026-11-04): lo que escribe `games/coh3/tools/site_data.py`, y las stats de `stats.py`.
+const coh3Dir = fileURLToPath(new URL("../games/coh3/data", import.meta.url));
+const coh3StatsDir = fileURLToPath(new URL("../games/coh3/stats", import.meta.url));
 
 /**
  * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.
@@ -320,6 +325,18 @@ function readSitemapData(): { data: OgData } {
     console.warn(`[cs2] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     c2 = undefined;
   }
+  // Company of Heroes 3 (2026-11-04): el sello y la lista de cada pestaña del explorador.
+  let c3: SitemapData["c3"];
+  try {
+    const read = (f: string) => JSON.parse(readFileSync(`${coh3Dir}/${f}`, "utf-8"));
+    c3 = coh3SitemapData(read("meta.json"), {
+      units: read("units/list.json"), weapons: read("weapons/list.json"), battlegroups: read("battlegroups/list.json"),
+      maps: read("maps.json"), patches: read("patches/index.json"),
+    });
+  } catch (e) {
+    console.warn(`[coh3] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
+    c3 = undefined;
+  }
   return {
     data: {
       p2,
@@ -331,6 +348,7 @@ function readSitemapData(): { data: OgData } {
       sd,
       wf,
       c2,
+      c3,
       // Los sellos de cada pipeline, para el `lastmod` del sitemap. La
       // enciclopedia de PoE2 no tiene sello y va sin fecha.
       dates: {
@@ -344,6 +362,7 @@ function readSitemapData(): { data: OgData } {
         stardew: sd?.generatedAt,
         warframe: wf?.generatedAt,
         cs2: c2?.generatedAt,
+        coh3: c3?.generatedAt,
       },
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
@@ -896,6 +915,9 @@ function prerenderRoutes(): Plugin {
           if (route.view === "cs2" && isCs2LoadingPage(cuerpo)) {
             throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
           }
+          if (route.view === "coh3" && isCoh3LoadingPage(cuerpo)) {
+            throw new Error(`prerender: ${page.path} salió con la hoja de "cargando…" en vez de sus datos.`);
+          }
           const conexiones = originsFor(route)
             .map((o) => `<link rel="preconnect" href="${o.href}"${o.cors ? " crossorigin" : ""}>`)
             .join("\n    ");
@@ -1018,6 +1040,35 @@ function manualChunks() {
  * El intermediario del inventario de CS2 en `npm run dev` y `vite preview` (2026-11-03): en producción lo atiende la
  * Netlify Function (`netlify/functions/cs2-inventory.mts`); acá, la misma lógica (`src/cs2/inventory/handler.ts`).
  */
+/**
+ * `/api/coh3/*` en `npm run dev` y `vite preview` (2026-11-04): en Netlify lo atiende la función `netlify/functions/coh3.mts`
+ * con la CDN guardando cada respuesta; acá, la misma lógica (`src/coh3/api/handler.ts`) sin caché, porque cambia según
+ * la query.
+ */
+function coh3Api(): Plugin {
+  const handle = (load: () => Promise<{ handleCoh3: (u: URL, f: typeof fetch, m: string) => Promise<Response> }>) =>
+    (req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse, next: () => void) => {
+      if (!req.url?.startsWith("/api/coh3/")) return next();
+      load()
+        .then((m) => m.handleCoh3(new URL(req.url!, "http://localhost"), fetch, req.method ?? "GET"))
+        .then(async (r) => {
+          res.statusCode = r.status;
+          r.headers.forEach((v, k) => res.setHeader(k, v));
+          res.end(await r.text());
+        })
+        .catch(() => ((res.statusCode = 500), res.end()));
+    };
+  return {
+    name: "coh3-api",
+    configureServer(server) {
+      server.middlewares.use(handle(() => server.ssrLoadModule("/src/coh3/api/handler.ts") as never));
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(handle(() => import("./src/coh3/api/handler")));
+    },
+  };
+}
+
 function cs2InventoryApi(): Plugin {
   const handle = (load: () => Promise<{ handleInventory: (u: URL) => Promise<Response> }>) =>
     (req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse, next: () => void) => {
@@ -1085,6 +1136,7 @@ export default defineConfig({
   plugins: [
     cs2InventoryApi(),
     cs2MatchesApi(),
+    coh3Api(),
     localDeadlockAssets(),
     esSlugsModule("virtual:d2r-slugs-es", [`${d2rDir}/wiki/index.json`, `${d2rDir}/drops/index.json`], () => buildD2rEsSlugs(readD2Index())),
     // Antes que el de las secciones: su `load` atiende todo lo que empiece con `virtual:pz-slugs-es/`.
@@ -1121,7 +1173,7 @@ export default defineConfig({
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
     // juego y no uno genérico, para que un import diga de qué juego habla.
-    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir },
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir, "@coh3stats": coh3StatsDir, "@coh3": coh3Dir },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

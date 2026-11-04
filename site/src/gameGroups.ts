@@ -1,7 +1,7 @@
 import type { Game } from "./Nav";
 
 /** Las categorías en las que se reparten los juegos, en el menú de la barra y en la portada. */
-export type GameGroup = "survival" | "arpg" | "shooters";
+export type GameGroup = "survival" | "arpg" | "shooters" | "rts";
 
 /**
  * Qué juego va en qué categoría y en qué orden (2026-10-12). Un juego nuevo se suma acá y a `GAME_LOGOS`, y aparece
@@ -15,6 +15,8 @@ export const GAME_GROUPS: { id: GameGroup; games: Game[] }[] = [
   { id: "survival", games: ["valheim", "zomboid", "stardew"] },
   { id: "arpg", games: ["poe2", "d2r", "warframe"] },
   { id: "shooters", games: ["deadlock", "cs2"] },
+  // RTS (2026-11-04): el género nuevo arranca con Company of Heroes 3.
+  { id: "rts", games: ["coh3"] },
 ];
 
 /**
@@ -34,6 +36,7 @@ export const GAME_LOGOS: Record<Game, [w: number, h: number]> = {
   poe2: [78, 40],
   warframe: [116, 30],
   cs2: [88, 34],
+  coh3: [66, 40],
 };
 
 /** El archivo del logo de un juego en `public/logos/`: casi todos son PNG sacados de la caché de Steam; el de Warframe es un SVG propio. */
