@@ -155,6 +155,16 @@
 # bajo el nombre de un `.js` no le sirve a nadie. La carga falla igual que antes
 # y `staleChunks.ts` recarga la pestaña. Sin `force`: el archivo que existe se
 # sirve antes de mirar esta regla.
+# La API (2026-11-04): el login con Steam vive en un Worker de Cloudflare (`api/`).
+# Netlify lo reenvía con 200, así que para el navegador es vestigo.gg/api: la
+# cookie de la sesión es nuestra y no hace falta CORS. `force` porque no hay
+# archivos en /api, pero si alguna vez los hubiera, manda el Worker.
+[[redirects]]
+  from = "/api/*"
+  to = "https://vestigo-api.vestigo-gg.workers.dev/api/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/assets/*"
   to = "/404.html"

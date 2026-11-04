@@ -1078,6 +1078,9 @@ function cs2MatchesApi(): Plugin {
   };
 }
 
+/** Dónde contesta la API en local: `wrangler dev` (ver `api/package.json`). */
+const apiTarget = process.env.VESTIGO_API || "http://localhost:8787";
+
 export default defineConfig({
   plugins: [
     cs2InventoryApi(),
@@ -1129,10 +1132,12 @@ export default defineConfig({
     // resolves the name. Listening on both removes that coin flip.
     host: true,
     fs: { allow: [fileURLToPath(new URL("..", import.meta.url))] },
+    // La API (login con Steam, `api/`): en producción la reenvía Netlify; acá, `npm run dev` de `api/` en el 8787.
+    proxy: { "/api": apiTarget },
   },
   // `vite preview` sirve el build con la misma CSP que Netlify en producción, para
   // que un origen que falte se vea acá (bloqueado, en la consola) y no en vivo.
-  preview: { headers: { "Content-Security-Policy": netlifyCsp() } },
+  preview: { headers: { "Content-Security-Policy": netlifyCsp() }, proxy: { "/api": apiTarget } },
 });
 
 /** La Content-Security-Policy tal como está en netlify.toml: una sola fuente. */
