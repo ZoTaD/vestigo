@@ -96,6 +96,16 @@
   background: rgba(var(--accent-rgb), 0.13);
 }
 
+/* El botón del Deadlockdle, al lado de "Deadlock": sin fondo hasta que se está en el juego. */
+.top-dle {
+  color: var(--text-dim);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+.top-dle:hover { color: var(--accent-lit); }
+.top-dle[data-active="true"] { color: var(--accent-lit); background: rgba(var(--accent-rgb), 0.13); box-shadow: none; }
+.top-dle-short { display: none; }
+
 /* El panel cuelga de la barra a todo el ancho. `--surface` es translúcida en los juegos oscuros: va sobre el fondo
    de la página para que tape lo de abajo. */
 .top-menu {
@@ -518,6 +528,11 @@
   /* La cuenta va en la fila del buscador, a su derecha: arriba ya no entra junto al idioma (2026-11-04). */
   .top-steam, .top-account { order: 11; }
   .top-search { flex-basis: calc(100% - 3rem); }
+  /* En Deadlock el botón del Deadlockdle baja a esa misma fila, a la izquierda del buscador, y dice sólo "DLE". */
+  .top-dle { order: 9; padding: 0 0.55rem; font-size: 0.68rem; }
+  .top-dle-long { display: none; }
+  .top-dle-short { display: inline; }
+  .top-in:has(.top-dle) .top-search { flex-basis: calc(100% - 3rem - 3.6rem); }
 
   .top-search-field {
     width: 100%;

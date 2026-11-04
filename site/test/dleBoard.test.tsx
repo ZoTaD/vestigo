@@ -108,3 +108,14 @@ describe("el ranking en construcción", () => {
     expect(standingText({ pos: 2, players: 8 })).toEqual({ kind: "place", value: "2", of: "8" });
   });
 });
+
+describe("el botón del juego en la barra de arriba", () => {
+  it("aparece al lado de Deadlock y lleva a /deadlock/dle; en otro juego no", async () => {
+    const { default: Nav } = await import("../src/Nav");
+    const html = (path: string, active: "deadlock" | "valheim") => wrap(<Nav active={active} route={parseRoute(path)} onNavigate={() => undefined} />);
+    const dl = html("/en/deadlock/tier-list", "deadlock");
+    expect(dl).toContain('class="top-here top-dle"');
+    expect(dl).toContain('href="/en/deadlock/dle"');
+    expect(html("/en/valheim", "valheim")).not.toContain("top-dle");
+  });
+});

@@ -258,7 +258,6 @@ export const DEADLOCK_SECTIONS: DeadlockSection[] = [
   "comebacks",
   "map",
   "patches",
-  "dle",
   "player",
 ];
 /**
@@ -269,7 +268,7 @@ export const DEADLOCK_SECTIONS: DeadlockSection[] = [
  * una pestaña que no se puede apretar sin haber buscado antes no es una pestaña.
  * Por eso la lista de parseo y la de dibujo son dos.
  */
-export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match", "street-brawl"];
+export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match", "street-brawl", "dle"];
 /**
  * La tier list de Street Brawl (2026-09-24) tiene dirección propia
  * (`/deadlock/street-brawl`) pero no pestaña: es la misma pestaña Tier list en
@@ -277,7 +276,11 @@ export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match"
  * dirección aparte es para que "deadlock street brawl tier list" encuentre una
  * página que hable de eso y no la lista rankeada.
  */
-export const DEADLOCK_PAGES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "street-brawl"];
+/**
+ * El Deadlockdle (2026-11-04) tiene páginas pero no pestaña: es un juego aparte, y su botón va en la barra de arriba,
+ * al lado de "Deadlock" (`Nav.tsx`), pedido de ZoTaD para liberar la barra de pestañas.
+ */
+export const DEADLOCK_PAGES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "street-brawl", "dle"];
 /** En el orden en que se dibujan las pestañas de PoE2. */
 export const POE2_SECTIONS: Poe2Section[] = ["economy", "encyclopedia", "patches", "tree", "regex"];
 /**
