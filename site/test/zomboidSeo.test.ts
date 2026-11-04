@@ -130,7 +130,8 @@ describe("las fichas de Project Zomboid en el sitemap y el <head>", () => {
     expect(at).toBeGreaterThanOrEqual(0);
     PZ_PUBLISHED.splice(at, 1);
     try {
-      const details = sitemapPaths(withIndex).filter((p) => p.split("/").length > 4);
+      // Sólo las de Zomboid: otros juegos también tienen direcciones largas (el Deadlockdle, 2026-11-04).
+      const details = sitemapPaths(withIndex).filter((p) => p.split("/").length > 4 && parseRoute(p).view === "zomboid");
       // Sin las fichas que todavía no tienen página propia (las del Servidor hasta las Tasks 4 y 5).
       const pending = (e: (typeof INDEX)[number]) => !!PZ_DETAILS_PENDING[e.sec]?.includes(e.id);
       expect(details.length).toBe(2 * INDEX.filter((e) => PZ_PUBLISHED.includes(e.sec) && !pending(e)).length);

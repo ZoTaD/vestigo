@@ -31,6 +31,7 @@ export type DeadlockSection =
   | "comebacks"
   | "map"
   | "patches"
+  | "dle"
   | "player"
   | "match";
 export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "warframe" | "cs2" | "privacy" | "terms";
@@ -257,6 +258,7 @@ export const DEADLOCK_SECTIONS: DeadlockSection[] = [
   "comebacks",
   "map",
   "patches",
+  "dle",
   "player",
 ];
 /**
@@ -295,7 +297,7 @@ export const DL_DETAIL_SECTIONS: DeadlockSection[] = ["meta", "heroes", "items"]
  * (`/deadlock/patches/2026-09-16`). No está en `DL_DETAIL_SECTIONS` porque las
  * ediciones salen del índice de noticias, no de los slugs de héroes e ítems.
  */
-const DL_WITH_DETAIL: DeadlockSection[] = [...DL_DETAIL_SECTIONS, "patches", "player", "match"];
+const DL_WITH_DETAIL: DeadlockSection[] = [...DL_DETAIL_SECTIONS, "patches", "dle", "player", "match"];
 
 export const DEFAULT_LANG: Lang = "en";
 const DEFAULT_DL_SECTION: DeadlockSection = "meta";

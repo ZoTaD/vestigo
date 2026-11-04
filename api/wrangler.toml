@@ -1,4 +1,4 @@
-# La API de vestigo.gg (2026-11-04): por ahora, el login con Steam.
+# La API de vestigo.gg (2026-11-04): el login con Steam y el Deadlockdle.
 # Netlify reenvía vestigo.gg/api/* acá (netlify.toml). La clave de Steam es un
 # secreto: `wrangler secret put STEAM_API_KEY`; en local va en .dev.vars.
 name = "vestigo-api"
@@ -8,6 +8,19 @@ workers_dev = true
 
 [vars]
 SITE_ORIGIN = "https://vestigo.gg"
+# El pozo del Deadlockdle lo publica el sitio todos los días (site/scripts/dle-pool.mjs).
+POOL_URL = "https://vestigo.gg/deadlock/dle-pool.json"
+# DLE_SECRET es un secreto: `wrangler secret put DLE_SECRET`.
+
+# 00:00 UTC: las respuestas del día del Deadlockdle.
+[triggers]
+crons = ["0 0 * * *"]
+
+# Hasta 30 intentos por minuto por cuenta o IP: frena bots, no a la gente.
+[[ratelimits]]
+name = "DLE_LIMIT"
+namespace_id = "1001"
+simple = { limit = 30, period = 60 }
 
 [[d1_databases]]
 binding = "DB"

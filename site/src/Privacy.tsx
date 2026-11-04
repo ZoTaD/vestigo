@@ -83,6 +83,21 @@ export default function Privacy() {
           shows, until you choose to forget it.
         </p>
 
+        <h3 className="legal-subheading">Signing in with Steam</h3>
+        <p>
+          Signing in is optional. When you choose &ldquo;Sign in&rdquo;, Steam asks you to confirm
+          on its own site and sends us back only your public Steam account number; we never see
+          your Steam password or email. We then ask Steam for your public name and profile picture
+          and keep those three things, plus two cookies that keep you signed in for 30 days. We
+          store only a fingerprint of the session code, not the code itself. Signing out deletes
+          the session.
+        </p>
+        <p>
+          If you play Deadlockdle while signed in, we keep each guess with the time it was made, so
+          the daily ranking can show who solved it in the fewest guesses and fastest, and can spot
+          unfair play. Your name and picture appear in that ranking.
+        </p>
+
         <h3 className="legal-subheading">Information stored in your browser</h3>
         <p>
           Items of local storage, each one there for something you use: your language choice, so
@@ -92,7 +107,9 @@ export default function Privacy() {
           or as a list; the list you build in the Valheim Planner, with the items you marked as
           already owned; on Stardew Valley, the Community Center bundles you tick and, if you open
           a save file in the save reader, what the page shows of it (never the file itself), until
-          you choose to forget it; and the progress you keep in the other game tools, such as
+          you choose to forget it; after you sign in, your Steam name and picture, so the top bar
+          shows them right away; your Deadlockdle games when you play without signing in; and the
+          progress you keep in the other game tools, such as
           checklists and planners. None of them is sent to us, and clearing your browser data
           removes all of them.
         </p>
