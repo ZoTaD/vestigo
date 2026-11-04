@@ -115,9 +115,8 @@ function LadderRowView({
       {/**
        * **El rango del juego va acá porque es lo que ORDENA la tabla.**
        *
-       * Sale de `/v1/players/mmr`, que devuelve el rango real del jugador —se
-       * cruzó contra `players/{id}/rank` y da idéntico—, no el promedio de su
-       * equipo que se usaba antes.
+       * Sale de `/v1/players/rank`, el rango real del jugador al cerrar su
+       * última clasificatoria, no el promedio de su equipo que se usaba antes.
        */}
       <span className="dl-lb-rank">
         {rango ? (

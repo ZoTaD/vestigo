@@ -139,8 +139,10 @@ export interface HeroLadderFile {
  *
  * **Es lo que hacía el propio Deadlock.** Sus leaderboards por héroe se
  * ordenaban por el MMR de ese héroe, con un piso de 20 partidas con él en los
- * últimos 30 días. Ese MMR sigue disponible en `/v1/players/mmr/{hero_id}`
- * aunque el juego dejó de mostrarlo en la interfaz el 2026-07-30.
+ * últimos 30 días. **Ese MMR por héroe ya no existe**: deadlock-api sacó
+ * `/v1/players/mmr/{hero_id}` (404 el 2026-11-04), así que hoy se ordena por el
+ * rango GENERAL de quienes lo juegan (`/v1/players/rank`), con Wilson
+ * —calculado con ese héroe— de desempate. Sigue sabiendo contra quién se juega.
  *
  * **No se usa el leaderboard oficial (`/v1/leaderboard/{region}/{hero_id}`)
  * y ese descarte está medido**: pide 500 partidas totales, así que para Abrams
@@ -172,7 +174,7 @@ async function topOf(heroId: number): Promise<number[]> {
   });
   if (pool.length === 0) return [];
 
-  const mmr = await mmrDe(pool.map((p) => p.id), heroId);
+  const mmr = await mmrDe(pool.map((p) => p.id));
   return pool
     .map((p) => ({ ...p, heroRank: mmr.get(p.id)?.rank ?? 0, heroScore: mmr.get(p.id)?.score ?? 0 }))
     /**
@@ -195,29 +197,37 @@ async function topOf(heroId: number): Promise<number[]> {
 }
 
 /**
- * El MMR del juego para un montón de cuentas, de a mil por pedido.
+ * El rango del juego para un montón de cuentas, de a mil por pedido.
  *
- * Con `heroId` pregunta por `/players/mmr/{hero}` —el rango de esa persona **con
- * ese héroe**— y sin él por el global. Es la misma llamada, el mismo problema de
- * 429 y el mismo reintento, así que vive en un solo lugar: cuando se agregó el
- * orden por héroe, copiar este bucle habría dejado dos manejos de límite de tasa
- * que se desincronizan.
+ * Sale de `/v1/players/rank` desde el 2026-11-04, cuando deadlock-api sacó
+ * `/v1/players/mmr` (daba 404 y el archivo salía ordenado sólo por Wilson).
+ * `score` es el progreso plano con que cerró la última clasificatoria: crece
+ * con el rango —mil puntos por subnivel— y distingue a dos Eternus 2, igual que
+ * el `parseRanks` de la pestaña.
+ *
+ * **El límite de este endpoint es 20 pedidos por minuto por IP**, y la corrida
+ * hace unos cincuenta (doce tandas del mundo y uno por héroe). Por eso cada
+ * pedido espera a que pasen `RANK_GAP_MS` desde el anterior, sea del mundo o de
+ * un héroe.
  *
  * **Ocho tandas seguidas dan 429**, medido: la primera corrida perdió tres de
  * ocho y dejó al 33% del mundo sin puntaje, hundido al final de la tabla. Un
  * ranking al que le falta un tercio de la gente no es un ranking. Se reintenta
  * con espera creciente y se respeta `Retry-After` cuando viene.
  */
-async function mmrDe(
-  ids: number[],
-  heroId?: number
-): Promise<Map<number, { rank: number; score: number }>> {
+const RANK_GAP_MS = 3100;
+let ultimoRango = 0;
+
+async function mmrDe(ids: number[]): Promise<Map<number, { rank: number; score: number }>> {
   const out = new Map<number, { rank: number; score: number }>();
-  const ruta = heroId === undefined ? "players/mmr" : `players/mmr/${heroId}`;
+  const ruta = "players/rank";
   for (let i = 0; i < ids.length; i += 1000) {
     const q = ids.slice(i, i + 1000).map((id) => `account_ids=${id}`).join("&");
     for (let intento = 0; intento < 6; intento++) {
       try {
+        const falta = ultimoRango + RANK_GAP_MS - Date.now();
+        if (falta > 0) await new Promise((r) => setTimeout(r, falta));
+        ultimoRango = Date.now();
         const res = await fetch(`${API}/${ruta}?${q}`);
         if (res.status === 429) {
           const espera = Number(res.headers.get("retry-after") ?? 0) * 1000 || 2000 * 2 ** intento;
@@ -226,15 +236,18 @@ async function mmrDe(
           continue;
         }
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        for (const m of (await res.json()) as RawMmr[]) {
-          out.set(m.account_id, { rank: m.rank ?? 0, score: m.player_score ?? 0 });
+        for (const m of (await res.json()) as RawRank[]) {
+          out.set(m.account_id, {
+            rank: m.badge ?? 0,
+            score: m.last_match?.player_rank_final_flat_progress ?? 0,
+          });
         }
         break;
       } catch (e) {
         // Una tanda que falla del todo deja a esos jugadores sin entrada: caen al
         // final en vez de tirar el archivo. Se avisa para que no pase inadvertido
         // en el log de CI.
-        if (intento === 5) console.warn(`  tanda de MMR ${i} en ${ruta}: ${(e as Error).message}`);
+        if (intento === 5) console.warn(`  tanda de rangos ${i} en ${ruta}: ${(e as Error).message}`);
       }
     }
     /**
@@ -261,11 +274,11 @@ async function mmrDe(
   return out;
 }
 
-interface RawMmr {
+interface RawRank {
   account_id: number;
-  player_score?: number;
-  /** `rango*10 + subnivel`. Con `/players/mmr/{hero}` es el de ese héroe. */
-  rank?: number;
+  /** `rango*10 + subnivel`; 0 = sin rango. */
+  badge?: number;
+  last_match?: { player_rank_final_flat_progress?: number } | null;
 }
 
 /** Trae todas las páginas del scoreboard hasta que se agoten. */
@@ -302,7 +315,7 @@ async function poolOf(minMatches: number): Promise<{ id: number; score: number }
  * máximo**, así que ordenar sólo por él dejaría cincuenta y un empatados en el
  * primer puesto. Ahí entra el piso de Wilson.
  *
- * `/v1/players/mmr` toma **1.000 cuentas por pedido**, así que el pool se manda
+ * `/v1/players/rank` toma **1.000 cuentas por pedido**, así que el pool se manda
  * en tandas. Con ~7.500 elegibles son ocho pedidos, en CI, una vez cada dos
  * horas.
  */
