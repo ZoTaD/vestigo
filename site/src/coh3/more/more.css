@@ -51,3 +51,6 @@
   .c3-fs-techs li > .c3-cp { grid-column: 2; }
   .c3-mapwrap .c3-mini { width: 100%; }
 }
+/* El sentido del cambio, sin decir si es bueno: subir en bronce, bajar en azul. */
+.c3-diff td.is-upv { color: var(--c3-brass); }
+.c3-diff td.is-downv { color: #8fb4d0; }
