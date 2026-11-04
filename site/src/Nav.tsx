@@ -222,6 +222,18 @@ export default function Nav({
             {gameShort[activeGame]}
           </RouteLink>
         )}
+        {/* El Deadlockdle va al lado del juego y no entre las pestañas (2026-11-04): es un juego aparte. */}
+        {activeGame === "deadlock" && (
+          <RouteLink
+            className="top-here top-dle"
+            to={{ ...route, view: "deadlock", dlSection: "dle", detail: undefined }}
+            active={route.view === "deadlock" && route.dlSection === "dle"}
+            onNavigate={onNavigate}
+          >
+            <span className="top-dle-long">Deadlockdle</span>
+            <span className="top-dle-short" aria-hidden="true">DLE</span>
+          </RouteLink>
+        )}
 
         <form className="top-search" role="search" onSubmit={submit} ref={box}>
           <label className="top-search-field">

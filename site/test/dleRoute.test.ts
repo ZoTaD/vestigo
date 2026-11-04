@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { DEADLOCK_SECTIONS, parseRoute, routePath } from "../src/route";
+import { DEADLOCK_PAGES, DEADLOCK_SECTIONS, parseRoute, routePath } from "../src/route";
 import { dleMode } from "../src/dle/modes";
 
 describe("las direcciones del Deadlockdle", () => {
-  it("son una pestaña de Deadlock, después de Parches", () => {
-    expect(DEADLOCK_SECTIONS.indexOf("dle")).toBe(DEADLOCK_SECTIONS.indexOf("patches") + 1);
+  it("no es una pestaña de la barra de Deadlock: va arriba, al lado del juego, pero tiene página", () => {
+    expect(DEADLOCK_SECTIONS).not.toContain("dle");
+    expect(DEADLOCK_PAGES).toContain("dle");
+    expect(parseRoute("/en/deadlock/dle")).toMatchObject({ dlSection: "dle" });
   });
 
   it("leen el modo del detalle y vuelven a la misma dirección", () => {
