@@ -75,9 +75,11 @@ function DleGame({ mode, signedIn, you }: { mode: DleMode; signedIn: boolean; yo
     setError(null);
     try {
       const res = await postGuess(mode, name, signedIn ? {} : { date: game.date ?? undefined, n: game.rows.length });
-      const next: Game = { ...game, date: res.date, rows: [res.row, ...game.rows], hints: res.hints, solved: res.solved, answer: res.answer };
-      setGame(next);
-      if (!signedIn && next.date) saveLocal(mode, { date: next.date, rows: next.rows, hints: next.hints, solved: next.solved, answer: next.answer });
+      setGame((g) => {
+        const next: Game = { ...g, date: res.date, rows: [res.row, ...g.rows], hints: res.hints, solved: g.solved || res.solved, answer: g.answer ?? res.answer };
+        if (!signedIn && next.date) saveLocal(mode, { date: next.date, rows: next.rows, hints: next.hints, solved: next.solved, answer: next.answer });
+        return next;
+      });
       if (res.solved) {
         getRanking().then(setRanking, () => {});
         if (signedIn) getMe().then(setMe, () => {});

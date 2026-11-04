@@ -14,14 +14,12 @@ export default function DleSearch({
   tried,
   placeholder,
   button,
-  busy,
   onPick,
 }: {
   entries: PoolEntry[];
   tried: Set<string>;
   placeholder: string;
   button: string;
-  busy: boolean;
   onPick: (name: string) => void;
 }) {
   const [q, setQ] = useState("");
@@ -36,8 +34,8 @@ export default function DleSearch({
     return [...starts, ...has].slice(0, MAX);
   }, [q, entries, tried]);
 
+  // Aunque haya un intento en viaje, el siguiente sale igual: el tablero los suma en orden de llegada.
   const pick = (name: string) => {
-    if (busy) return;
     onPick(name);
     setQ("");
     setSel(0);
@@ -70,7 +68,7 @@ export default function DleSearch({
         }}
         onKeyDown={onKey}
       />
-      <button type="button" disabled={busy || !hits.length} onClick={() => hits[sel] && pick(hits[sel].name)}>
+      <button type="button" disabled={!hits.length} onClick={() => hits[sel] && pick(hits[sel].name)}>
         {button}
       </button>
       {hits.length > 0 && (

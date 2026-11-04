@@ -398,6 +398,10 @@ export function sitemapPaths(data: SitemapData): string[] {
     for (const e of data.dlNews ?? []) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "patches", detail: e.slug }));
     }
+    // Los otros modos del Deadlockdle y su ranking (2026-11-04); `/deadlock/dle` es Heroes.
+    for (const detail of ["items", "abilities", "ranking"]) {
+      paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "dle", detail }));
+    }
 
     // Path of Exile 2 entero (2026-09-23): cada pestaña, cada liga de la
     // economía salvo la de por defecto (que ya es /poe2), cada categoría y cada

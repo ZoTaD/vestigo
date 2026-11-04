@@ -91,17 +91,21 @@
 .dle-result a { color: #a5401c; font-weight: 700; }
 .dle-result-actions { margin-left: auto; justify-items: end; }
 
-/* Las filas: se desplazan de costado dentro de su caja, nunca la página. */
-.dle-scroll { overflow-x: auto; margin-top: 1.4rem; padding: 0 8px 10px 0; }
-.dle-grid { display: grid; gap: 8px; min-width: 40rem; }
+/* Las filas: entran enteras en el ancho, sin barras de desplazamiento (pedido de ZoTaD). En el teléfono cada
+   intento es una tarjeta (abajo). */
+.dle-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(var(--cols), minmax(0, 1fr)); gap: 8px; margin-top: 1.4rem; }
+.dle-row { display: contents; }
 .dle-th { font-family: var(--font-display); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; text-align: center; color: #cbbd9f; align-self: end; }
 .dle-th:first-child { text-align: left; }
-.dle-who { position: relative; height: 82px; overflow: hidden; border: 4px solid #e8d8bb; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5); background: #2a241c; display: flex; align-items: flex-end; }
+.dle-who { position: relative; min-height: 82px; overflow: hidden; border: 4px solid #e8d8bb; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5); background: #2a241c; display: flex; align-items: flex-end; }
 .dle-who img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
-.dle-who img.is-icon { inset: 6px auto auto 50%; width: 52px; height: 52px; transform: translateX(-50%); object-fit: contain; }
+.dle-who img.is-icon { inset: 6px auto auto 50%; width: 46px; height: 46px; transform: translateX(-50%); object-fit: contain; }
+/* Con ícono, el nombre va debajo y la caja crece lo que necesite. */
+.dle-who:has(img.is-icon) span { padding-top: 54px; }
 .dle-who::after { content: ""; position: absolute; inset: 40% 0 0; background: linear-gradient(transparent, rgba(0, 0, 0, 0.8)); }
-.dle-who span { position: relative; z-index: 1; font-family: var(--font-display); font-size: 0.95rem; letter-spacing: 0.04em; padding: 0 0.5rem 0.3rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.dle-c { min-height: 82px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: #fff; font-weight: 700; font-size: 1.2rem; line-height: 1.15; text-align: center; padding: 0.3rem; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5); }
+/* Los nombres largos ("Spirit Shredder Bullets") bajan a dos líneas: nunca se cortan con puntos suspensivos. */
+.dle-who span { position: relative; z-index: 1; font-family: var(--font-display); font-size: 0.9rem; line-height: 1.1; letter-spacing: 0.03em; padding: 0 0.45rem 0.3rem; color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9); }
+.dle-c { min-width: 0; min-height: 82px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: #fff; font-weight: 700; font-size: 1.2rem; line-height: 1.15; text-align: center; padding: 0.3rem; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5); }
 .dle-c small { font-size: 1.1rem; line-height: 1; }
 .dle-c.is-ok { background: var(--dle-ok); }
 .dle-c.is-near { background: var(--dle-near); }
@@ -141,6 +145,20 @@
 @media (max-width: 1100px) {
   .dle-layout { grid-template-columns: minmax(0, 1fr); }
   .dle-ranking { grid-template-columns: minmax(0, 1fr); }
+}
+/* El teléfono: cada intento es una tarjeta, el arte arriba y las casillas de a tres, cada una con su nombre. */
+@media (max-width: 720px) {
+  .dle-grid { display: flex; flex-direction: column; gap: 14px; }
+  .dle-th { display: none; }
+  .dle-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .dle-who { grid-column: 1 / -1; min-height: 64px; align-items: center; }
+  .dle-who:has(img.is-icon) span { padding-top: 0; }
+  .dle-who img, .dle-who img.is-icon { inset: 0 auto 0 0; width: 64px; height: 100%; transform: none; object-fit: cover; object-position: 50% 15%; }
+  .dle-who img.is-icon { object-fit: contain; padding: 6px; }
+  .dle-who::after { display: none; }
+  .dle-who span { padding: 0 0.8rem 0 76px; font-size: 1.1rem; }
+  .dle-c { min-height: 64px; font-size: 1.05rem; }
+  .dle-c::before { content: attr(data-label); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85; }
 }
 @media (max-width: 640px) {
   .dle-hints { grid-template-columns: minmax(0, 1fr); }

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Hint, PoolEntry, Revealed, Row, Value } from "./api";
 import { useCopy } from "../deadlockCopy";
 import { useLocale } from "../i18n";
@@ -74,7 +75,7 @@ export default function DleBoard(p: BoardProps) {
       {p.solved && p.answer ? (
         <DleResult mode={p.mode} number={p.number} rows={p.rows} answer={p.answer} signedIn={p.signedIn} />
       ) : (
-        <DleSearch entries={p.pool} tried={tried} placeholder={c.placeholder[p.mode]} button={c.guess} busy={p.busy} onPick={p.onGuess} />
+        <DleSearch entries={p.pool} tried={tried} placeholder={c.placeholder[p.mode]} button={c.guess} onPick={p.onGuess} />
       )}
       {p.error && (
         <p className="dle-error" role="alert">
@@ -82,8 +83,7 @@ export default function DleBoard(p: BoardProps) {
         </p>
       )}
 
-      <div className="dle-scroll">
-        <div className="dle-grid" style={{ gridTemplateColumns: `minmax(9.5rem, 1.3fr) repeat(${cols.length}, minmax(5.5rem, 1fr))` }}>
+      <div className="dle-grid" style={{ "--cols": cols.length } as CSSProperties}>
           <div className="dle-th">{c.first[p.mode]}</div>
           {cols.map((k) => (
             <div className="dle-th" key={k}>
@@ -91,20 +91,19 @@ export default function DleBoard(p: BoardProps) {
             </div>
           ))}
           {p.rows.map((r) => (
-            <div className="dle-row" key={r.guess.id} style={{ display: "contents" }}>
+            <div className="dle-row" key={r.guess.id}>
               <div className="dle-who">
                 <img src={r.guess.img} alt="" width={140} height={82} loading="lazy" decoding="async" className={p.mode === "heroes" ? undefined : "is-icon"} />
                 <span>{r.guess.name}</span>
               </div>
               {r.cells.map((cell) => (
-                <div className={`dle-c is-${cell.mark}${Array.isArray(cell.value) ? " is-list" : ""}`} key={cell.key}>
+                <div className={`dle-c is-${cell.mark}${Array.isArray(cell.value) ? " is-list" : ""}`} key={cell.key} data-label={label(cell.key)}>
                   <span>{formatValue(cell.key, cell.value, locale)}</span>
                   {cell.dir && <small aria-label={cell.dir === "up" ? "higher" : "lower"}>{cell.dir === "up" ? "▲" : "▼"}</small>}
                 </div>
               ))}
             </div>
           ))}
-        </div>
       </div>
       <p className="dle-legend">{c.legend}</p>
     </section>
