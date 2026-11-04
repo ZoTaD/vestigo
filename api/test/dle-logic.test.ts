@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compare, dayNumber, findByName, hintsUnlocked, LAUNCH_DATE, pickAnswer, rankPlays, utcDate, weightFor } from "../src/dle/logic";
+import { compare, dayNumber, findByName, HINT_AT, hintsUnlocked, LAUNCH_DATE, MAX_GUESSES, pickAnswer, rankPlays, utcDate, weightFor } from "../src/dle/logic";
 import type { Entry } from "../src/dle/types";
 
 const hero = (id: number, name: string, cols: Entry["cols"]): Entry => ({
@@ -106,15 +106,15 @@ describe("pesos", () => {
 });
 
 describe("pistas", () => {
-  it("se desbloquean a los 4, 6 y 8 intentos", () => {
-    const src = "/api/dle/heroes/hint?d=2026-11-05";
-    expect(hintsUnlocked(vindicta, 3, src)).toEqual([]);
-    expect(hintsUnlocked(vindicta, 4, src)).toEqual([{ kind: "img", src, blur: true }]);
-    expect(hintsUnlocked(vindicta, 6, src)).toHaveLength(2);
-    expect(hintsUnlocked(vindicta, 8, src)).toEqual([{ kind: "img", src, blur: true }, ...vindicta.hints]);
-    expect(hintsUnlocked(vindicta, 50, src)).toHaveLength(3);
-    // La imagen borrosa nunca lleva la ruta del pozo: con ella alcanza para saber la respuesta.
-    expect(JSON.stringify(hintsUnlocked(vindicta, 50, src))).not.toContain(vindicta.img);
+  it("son dos, sin retrato borroso, y se abren antes del último intento", () => {
+    expect(hintsUnlocked(vindicta, 2, "heroes")).toEqual([]);
+    expect(hintsUnlocked(vindicta, 3, "heroes")).toEqual([vindicta.hints[0]]);
+    expect(hintsUnlocked(vindicta, 5, "heroes")).toEqual(vindicta.hints);
+    expect(hintsUnlocked(vindicta, 3, "items")).toEqual([]);
+    expect(hintsUnlocked(vindicta, 7, "abilities")).toEqual(vindicta.hints);
+    expect(JSON.stringify(hintsUnlocked(vindicta, 99, "heroes"))).not.toContain(vindicta.img);
+    for (const m of ["heroes", "items", "abilities"] as const) expect(HINT_AT[m][1]).toBeLessThan(MAX_GUESSES[m]);
+    expect(MAX_GUESSES).toEqual({ heroes: 6, items: 9, abilities: 9 });
   });
 });
 

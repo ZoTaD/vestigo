@@ -47,8 +47,6 @@ export default {
           steamId: await sessionSteamId(req, env),
           ip: req.headers.get("cf-connecting-ip") ?? undefined,
           limit: env.DLE_LIMIT ? async (key) => (await env.DLE_LIMIT!.limit({ key })).success : undefined,
-          // El arte de la pista: del mismo sitio que publica el pozo.
-          asset: (path) => fetch(new URL(path, env.POOL_URL)),
         });
         if (dle) return dle;
       }

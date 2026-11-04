@@ -8,7 +8,7 @@ import { DleOffline, DleRejected, DleSignedOut, getMe, getPool, getRanking, getT
 import DleBoard from "./dle/DleBoard";
 import DleRanking, { RankList } from "./dle/DleRanking";
 import { loadLocal, saveLocal } from "./dle/local";
-import { DLE_RANKING_OPEN, DLE_VIEWS, dleDetail, dleMode, hasSession, type DleMode } from "./dle/modes";
+import { DLE_MAX, DLE_RANKING_OPEN, DLE_VIEWS, dleDetail, dleMode, hasSession, type DleMode } from "./dle/modes";
 import { standingText } from "./dle/standing";
 import "./styles/deadlock-dle.css";
 
@@ -66,9 +66,10 @@ interface Game {
   rows: Row[];
   hints: Hint[];
   solved: boolean;
+  lost: boolean;
   answer?: Revealed;
 }
-const EMPTY: Game = { number: null, date: null, rows: [], hints: [], solved: false };
+const EMPTY: Game = { number: null, date: null, rows: [], hints: [], solved: false, lost: false };
 
 function DleGame({ mode, ready, signedIn, you }: { mode: DleMode; ready: boolean; signedIn: boolean; you: string | null }) {
   const c = useCopy().deadlock.dle;
@@ -87,7 +88,11 @@ function DleGame({ mode, ready, signedIn, you }: { mode: DleMode; ready: boolean
       (t) => {
         if (!alive) return;
         const local = signedIn ? null : loadLocal(mode, t.date);
-        setGame(local ? { number: t.number, ...local } : { number: t.number, date: t.date, rows: t.rows, hints: t.hints, solved: t.solved, answer: t.answer });
+        setGame(
+          local
+            ? { number: t.number, ...local, lost: local.lost ?? false }
+            : { number: t.number, date: t.date, rows: t.rows, hints: t.hints, solved: t.solved, lost: t.lost, answer: t.answer },
+        );
       },
       () => alive && setError(c.offline),
     );
@@ -105,11 +110,19 @@ function DleGame({ mode, ready, signedIn, you }: { mode: DleMode; ready: boolean
     try {
       const res = await postGuess(mode, name, signedIn ? {} : { date: game.date ?? undefined, n: game.rows.length });
       setGame((g) => {
-        const next: Game = { ...g, date: res.date, rows: [res.row, ...g.rows], hints: res.hints, solved: g.solved || res.solved, answer: g.answer ?? res.answer };
-        if (!signedIn && next.date) saveLocal(mode, { date: next.date, rows: next.rows, hints: next.hints, solved: next.solved, answer: next.answer });
+        const next: Game = {
+          ...g,
+          date: res.date,
+          rows: [res.row, ...g.rows],
+          hints: res.hints,
+          solved: g.solved || res.solved,
+          lost: g.lost || res.lost,
+          answer: g.answer ?? res.answer,
+        };
+        if (!signedIn && next.date) saveLocal(mode, { date: next.date, rows: next.rows, hints: next.hints, solved: next.solved, lost: next.lost, answer: next.answer });
         return next;
       });
-      if (res.solved) {
+      if (res.solved || res.lost) {
         getRanking().then(setRanking, () => {});
         if (signedIn) getMe().then(setMe, () => {});
       }
@@ -124,7 +137,7 @@ function DleGame({ mode, ready, signedIn, you }: { mode: DleMode; ready: boolean
   const won = mine && mine.played ? Math.round((mine.won / mine.played) * 100) : null;
   return (
     <div className="dle-layout">
-      <DleBoard mode={mode} number={game.number} rows={game.rows} hints={game.hints} solved={game.solved} answer={game.answer} error={error} busy={busy} pool={pool} signedIn={signedIn} onGuess={onGuess} />
+      <DleBoard mode={mode} number={game.number} rows={game.rows} hints={game.hints} solved={game.solved} lost={game.lost} max={DLE_MAX[mode]} answer={game.answer} error={error} busy={busy} pool={pool} signedIn={signedIn} onGuess={onGuess} />
       <aside className="dle-side">
         <h2>{DLE_RANKING_OPEN ? c.todayRanking : c.standingTitle}</h2>
         <p className="dle-side-sub">

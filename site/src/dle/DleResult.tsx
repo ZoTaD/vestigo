@@ -11,12 +11,16 @@ export default function DleResult({
   number,
   rows,
   answer,
+  solved,
+  max,
   signedIn,
 }: {
   mode: DleMode;
   number: number | null;
   rows: Row[];
   answer: Revealed;
+  solved: boolean;
+  max: number;
   signedIn: boolean;
 }) {
   const c = useCopy().deadlock.dle;
@@ -24,7 +28,7 @@ export default function DleResult({
   const [copied, setCopied] = useState(false);
   const share = async () => {
     try {
-      await navigator.clipboard.writeText(shareText({ number: number ?? 0, mode, rows }));
+      await navigator.clipboard.writeText(shareText({ number: number ?? 0, mode, rows, max, solved }));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -38,7 +42,7 @@ export default function DleResult({
       <img src={answer.img} alt="" width={120} height={120} className={mode === "heroes" ? undefined : "is-icon"} />
       <div>
         <b>{answer.name}</b>
-        <span>{c.solved(rows.length)}</span>
+        <span>{solved ? c.solved(rows.length) : c.lost(answer.name)}</span>
         <a href={`/${lang}/${answer.link}`}>{c.see}</a>
       </div>
       <div className="dle-result-actions">

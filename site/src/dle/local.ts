@@ -12,6 +12,8 @@ export interface LocalGame {
   rows: Row[];
   hints: Hint[];
   solved: boolean;
+  /** Sin intentos y sin acertar (desde el 4/11 hay tope). Las partidas viejas no lo traen. */
+  lost?: boolean;
   answer?: Revealed;
 }
 

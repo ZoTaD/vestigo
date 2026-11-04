@@ -17,6 +17,8 @@ export interface BoardProps {
   rows: Row[];
   hints: Hint[];
   solved: boolean;
+  lost: boolean;
+  max: number;
   answer?: Revealed;
   /** Mensaje de error ya traducido, o null. */
   error: string | null;
@@ -48,7 +50,7 @@ export default function DleBoard(p: BoardProps) {
     <section className="dle-board" aria-live="polite">
       <div className="dle-ask">
         <h2>{c.ask[p.mode]}</h2>
-        <span>{c.guesses(p.rows.length)}</span>
+        <span>{c.guesses(p.rows.length, p.max)}</span>
       </div>
 
       <ol className="dle-hints">
@@ -57,21 +59,10 @@ export default function DleBoard(p: BoardProps) {
           return (
             <li key={name} className={hint ? "is-open box" : undefined}>
               <span className="dle-hint-ic" aria-hidden="true">
-                {hint?.kind === "img" ? (
-                  <img
-                    // Sin cuenta, el Worker no sabe cuántos intentos lleva la partida: se los dice la página.
-                    src={p.signedIn ? hint.src : `${hint.src}&n=${p.rows.length}`}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className={hint.blur ? "is-blur" : undefined}
-                  />
-                ) : (
-                  DLE_HINT_AT[i]
-                )}
+                {hint?.kind === "img" ? <img src={hint.src} alt="" width={40} height={40} className={hint.blur ? "is-blur" : undefined} /> : DLE_HINT_AT[p.mode][i]}
               </span>
               <span>
-                <b>{hint ? c.hintOpen : c.hintIn(Math.max(1, DLE_HINT_AT[i] - p.rows.length))}</b>
+                <b>{hint ? c.hintOpen : c.hintIn(Math.max(1, DLE_HINT_AT[p.mode][i] - p.rows.length))}</b>
                 {hint?.kind === "text" ? hint.text : name}
               </span>
             </li>
@@ -79,8 +70,8 @@ export default function DleBoard(p: BoardProps) {
         })}
       </ol>
 
-      {p.solved && p.answer ? (
-        <DleResult mode={p.mode} number={p.number} rows={p.rows} answer={p.answer} signedIn={p.signedIn} />
+      {(p.solved || p.lost) && p.answer ? (
+        <DleResult mode={p.mode} number={p.number} rows={p.rows} answer={p.answer} solved={p.solved} max={p.max} signedIn={p.signedIn} />
       ) : (
         <DleSearch entries={p.pool} tried={tried} placeholder={c.placeholder[p.mode]} button={c.guess} onPick={p.onGuess} />
       )}

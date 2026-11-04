@@ -11,11 +11,13 @@ const row = (marks: ("ok" | "near" | "no")[]): Row => ({
 describe("shareText", () => {
   it("una línea por intento, del primero al último, sin nombres", () => {
     const rows = [row(["ok", "ok", "ok"]), row(["near", "no", "ok"]), row(["no", "no", "near"])];
-    expect(shareText({ number: 12, mode: "heroes", rows })).toBe(
-      "Deadlockdle #12 · Heroes · 3 guesses\n🟥🟥🟨\n🟨🟥🟩\n🟩🟩🟩\nvestigo.gg/deadlock/dle",
+    expect(shareText({ number: 12, mode: "heroes", rows, max: 6, solved: true })).toBe(
+      "Deadlockdle #12 · Heroes · 3/6\n🟥🟥🟨\n🟨🟥🟩\n🟩🟩🟩\nvestigo.gg/deadlock/dle",
     );
-    expect(shareText({ number: 1, mode: "items", rows: [row(["ok"])] })).toBe("Deadlockdle #1 · Items · 1 guess\n🟩\nvestigo.gg/deadlock/dle");
-    expect(shareText({ number: 1, mode: "items", rows })).not.toContain("Haze");
+    expect(shareText({ number: 1, mode: "items", rows: [row(["ok"])], max: 9, solved: true })).toBe("Deadlockdle #1 · Items · 1/9\n🟩\nvestigo.gg/deadlock/dle");
+    // Si se acabaron los intentos, como Wordle: X.
+    expect(shareText({ number: 2, mode: "heroes", rows, max: 6, solved: false }).split("\n")[0]).toBe("Deadlockdle #2 · Heroes · X/6");
+    expect(shareText({ number: 1, mode: "items", rows, max: 9, solved: true })).not.toContain("Haze");
   });
 });
 
