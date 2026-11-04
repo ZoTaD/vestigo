@@ -227,6 +227,10 @@
   height: 38px;
   padding: 0 0.6rem 0 0.75rem;
   width: clamp(12rem, 30vw, 22rem);
+  /* Que se achique con la caja del buscador: con la cuenta de Steam al lado (2026-11-04), entre ~760 y ~1.000 px no
+     entraba y la etiqueta del juego se salía encima del idioma. */
+  min-width: 0;
+  max-width: 100%;
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   background: var(--surface);
@@ -343,6 +347,12 @@
 }
 .top-steam:hover { background: rgba(var(--accent-rgb), 0.14); }
 .top-steam-ic { width: 18px; height: 18px; flex: 0 0 auto; }
+/* Hasta 1.100 px, "Entrar" va sólo con el logo: el texto le saca al buscador el lugar que necesita. El texto sigue
+   ahí para los lectores de pantalla. */
+@media (max-width: 1100px) {
+  .top-steam { padding: 0 0.5rem; }
+  .top-steam-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
 .top-account { position: relative; flex: 0 0 auto; }
 .top-avatar {
   display: grid;
@@ -490,15 +500,15 @@
     margin-left: auto;
   }
 
-  /* En el teléfono "Entrar" queda en el logo de Steam solo: el texto no entra junto al idioma. */
-  .top-steam { padding: 0 0.5rem; }
-  .top-steam-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-
   .top-search {
     order: 10;
     flex: 1 1 100%;
     margin-left: 0;
   }
+
+  /* La cuenta va en la fila del buscador, a su derecha: arriba ya no entra junto al idioma (2026-11-04). */
+  .top-steam, .top-account { order: 11; }
+  .top-search { flex-basis: calc(100% - 3rem); }
 
   .top-search-field {
     width: 100%;
