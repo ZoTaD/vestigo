@@ -8,7 +8,7 @@ describe("las direcciones del Deadlockdle", () => {
   });
 
   it("leen el modo del detalle y vuelven a la misma dirección", () => {
-    for (const path of ["/en/deadlock/dle", "/en/deadlock/dle/items", "/en/deadlock/dle/abilities", "/en/deadlock/dle/ranking", "/es/deadlock/dle"]) {
+    for (const path of ["/en/deadlock/dle", "/en/deadlock/dle/items", "/en/deadlock/dle/abilities", "/es/deadlock/dle"]) {
       const route = parseRoute(path);
       expect(route).toMatchObject({ view: "deadlock", dlSection: "dle" });
       expect(routePath(route)).toBe(path);
@@ -19,7 +19,8 @@ describe("las direcciones del Deadlockdle", () => {
   it("sin modo o con uno que no existe es Heroes", () => {
     expect(dleMode(undefined)).toBe("heroes");
     expect(dleMode("items")).toBe("items");
-    expect(dleMode("ranking")).toBe("ranking");
+    // El ranking está en construcción (ZoTaD, 4/11): hasta que haya jugadores de verdad, su dirección abre Heroes.
+    expect(dleMode("ranking")).toBe("heroes");
     expect(dleMode("cualquiera")).toBe("heroes");
   });
 });

@@ -70,6 +70,8 @@ export type Pool = Record<DleMode, PoolEntry[]>;
 
 /** No hubo respuesta del juego: red caída o el Worker contestó 5xx. */
 export class DleOffline extends Error {}
+/** La cookie dice que hay sesión pero el Worker no la reconoce (venció o se cerró). */
+export class DleSignedOut extends Error {}
 /** El Worker rechazó el intento: nombre de otro modo, repetido o demasiados. */
 export class DleRejected extends Error {
   constructor(readonly reason: "unknown" | "duplicate" | "busy") {
@@ -84,6 +86,7 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   } catch {
     throw new DleOffline();
   }
+  if (res.status === 401) throw new DleSignedOut();
   if (res.status === 400) throw new DleRejected("unknown");
   if (res.status === 409) throw new DleRejected("duplicate");
   if (res.status === 429) throw new DleRejected("busy");

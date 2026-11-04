@@ -58,7 +58,14 @@ export default function DleBoard(p: BoardProps) {
             <li key={name} className={hint ? "is-open box" : undefined}>
               <span className="dle-hint-ic" aria-hidden="true">
                 {hint?.kind === "img" ? (
-                  <img src={hint.src} alt="" width={40} height={40} className={hint.blur ? "is-blur" : undefined} />
+                  <img
+                    // Sin cuenta, el Worker no sabe cuántos intentos lleva la partida: se los dice la página.
+                    src={p.signedIn ? hint.src : `${hint.src}&n=${p.rows.length}`}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className={hint.blur ? "is-blur" : undefined}
+                  />
                 ) : (
                   DLE_HINT_AT[i]
                 )}

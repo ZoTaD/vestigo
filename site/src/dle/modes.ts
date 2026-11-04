@@ -8,7 +8,15 @@ export type DleView = DleMode | "ranking";
 export const DLE_MODES: DleMode[] = ["heroes", "items", "abilities"];
 export const DLE_VIEWS: DleView[] = [...DLE_MODES, "ranking"];
 
+/**
+ * El ranking queda en construcción hasta que haya jugadores de verdad (ZoTaD,
+ * 4/11): la pestaña se ve gris y no se puede abrir, y su dirección abre Heroes.
+ * Las partidas y los puestos se guardan igual; abrirlo es cambiar esto a `true`.
+ */
+export const DLE_RANKING_OPEN = false;
+
 export function dleMode(detail: string | undefined): DleView {
+  if (detail === "ranking" && !DLE_RANKING_OPEN) return "heroes";
   return (DLE_VIEWS as string[]).includes(detail ?? "") ? (detail as DleView) : "heroes";
 }
 

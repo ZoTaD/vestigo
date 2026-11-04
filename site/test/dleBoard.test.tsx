@@ -91,3 +91,20 @@ describe("el ranking", () => {
     expect(wrap(<RankList mode="items" data={{ players: 0, top: [], me: null }} limit={10} you={null} />)).toContain("Nobody solved it yet");
   });
 });
+
+describe("el ranking en construcción", () => {
+  it("la pestaña está gris, no es un enlace y dice En construcción", () => {
+    const html = wrap(<DeadlockDle route={parseRoute("/en/deadlock/dle")} navigate={() => undefined} />);
+    expect(html).toContain("Under construction");
+    expect(html).not.toContain('href="/en/deadlock/dle/ranking"');
+    expect(wrap(<DeadlockDle route={parseRoute("/es/deadlock/dle")} navigate={() => undefined} />, "es")).toContain("En construcción");
+  });
+
+  it("tu puesto sale como porcentaje cuando hay jugadores suficientes", async () => {
+    const { standingText } = await import("../src/dle/standing");
+    expect(standingText({ pos: 3, players: 600 })).toEqual({ kind: "top", value: "0.5" });
+    expect(standingText({ pos: 1, players: 2000 })).toEqual({ kind: "top", value: "0.1" });
+    expect(standingText({ pos: 120, players: 400 })).toEqual({ kind: "top", value: "30" });
+    expect(standingText({ pos: 2, players: 8 })).toEqual({ kind: "place", value: "2", of: "8" });
+  });
+});

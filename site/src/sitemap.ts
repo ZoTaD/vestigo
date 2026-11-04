@@ -1,4 +1,5 @@
 import type { RustPage } from "./rust/sitemapPages";
+import { DLE_RANKING_OPEN } from "./dle/modes";
 import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, CS2_SEGMENT, CS2_SECTIONS, CS2_DETAIL_SECTIONS, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
@@ -399,7 +400,7 @@ export function sitemapPaths(data: SitemapData): string[] {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "patches", detail: e.slug }));
     }
     // Los otros modos del Deadlockdle y su ranking (2026-11-04); `/deadlock/dle` es Heroes.
-    for (const detail of ["items", "abilities", "ranking"]) {
+    for (const detail of DLE_RANKING_OPEN ? ["items", "abilities", "ranking"] : ["items", "abilities"]) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "dle", detail }));
     }
 

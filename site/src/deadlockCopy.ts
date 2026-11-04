@@ -410,6 +410,13 @@ const EN = {
       colTries: "Tries",
       colTime: "Time",
       colPlayer: "Player",
+      underConstruction: "Under construction",
+      standingTitle: "Where you stand today",
+      standingTop: (v: string) => `Top ${v}%`,
+      standingPlace: (p: string, of: string) => `#${p} of ${of}`,
+      standingSub: "of today's players",
+      standingSolve: "Solve today's puzzle to see where you stand.",
+      standingSignIn: "Sign in with Steam to see where you stand",
     },
 
     /**
@@ -2144,6 +2151,13 @@ const ES: typeof EN = {
       colTries: "Intentos",
       colTime: "Tiempo",
       colPlayer: "Jugador",
+      underConstruction: "En construcción",
+      standingTitle: "Dónde quedaste hoy",
+      standingTop: (v: string) => `Top ${v.replace(".", ",")} %`,
+      standingPlace: (p: string, of: string) => `#${p} de ${of}`,
+      standingSub: "de los que jugaron hoy",
+      standingSolve: "Resolvé el de hoy para ver dónde quedaste.",
+      standingSignIn: "Entrá con Steam para ver dónde quedaste",
     },
 
     report: {

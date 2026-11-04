@@ -4,11 +4,12 @@ import { useLocale } from "./i18n";
 import RouteLink from "./RouteLink";
 import SectionHead from "./SectionHead";
 import type { Route } from "./route";
-import { DleOffline, DleRejected, getMe, getPool, getRanking, getToday, postGuess, type Hint, type Me, type PoolEntry, type Ranking, type Revealed, type Row } from "./dle/api";
+import { DleOffline, DleRejected, DleSignedOut, getMe, getPool, getRanking, getToday, postGuess, type Hint, type Me, type PoolEntry, type Ranking, type Revealed, type Row } from "./dle/api";
 import DleBoard from "./dle/DleBoard";
 import DleRanking, { RankList } from "./dle/DleRanking";
 import { loadLocal, saveLocal } from "./dle/local";
-import { DLE_VIEWS, dleDetail, dleMode, hasSession, type DleMode } from "./dle/modes";
+import { DLE_RANKING_OPEN, DLE_VIEWS, dleDetail, dleMode, hasSession, type DleMode } from "./dle/modes";
+import { standingText } from "./dle/standing";
 import "./styles/deadlock-dle.css";
 
 /**
@@ -32,6 +33,33 @@ function useCountdown(): string {
   return [Math.floor(s / 3600), Math.floor(s / 60) % 60, s % 60].map((n) => String(n).padStart(2, "0")).join(":");
 }
 
+/**
+ * Mientras el ranking está en construcción, el costado dice dónde quedaste
+ * (porcentaje o puesto) en vez de la lista de nombres.
+ */
+function Standing({ mode, ranking, signedIn }: { mode: DleMode; ranking: Ranking | null; signedIn: boolean }) {
+  const c = useCopy().deadlock.dle;
+  const me = ranking?.modes[mode].me;
+  if (!signedIn) {
+    const here = typeof location === "undefined" ? "/" : location.pathname;
+    return (
+      <div className="box dle-standing">
+        <a className="dle-signin" href={`/api/auth/steam?return=${encodeURIComponent(here)}`} rel="nofollow">
+          {c.standingSignIn}
+        </a>
+      </div>
+    );
+  }
+  if (!me || !ranking) return <div className="box dle-standing"><p>{c.standingSolve}</p></div>;
+  const s = standingText({ pos: me.pos, players: ranking.modes[mode].players });
+  return (
+    <div className="box dle-standing">
+      <b>{s.kind === "top" ? c.standingTop(s.value) : c.standingPlace(s.value, s.of)}</b>
+      {s.kind === "top" && <span>{c.standingSub}</span>}
+    </div>
+  );
+}
+
 interface Game {
   number: number | null;
   date: string | null;
@@ -42,7 +70,7 @@ interface Game {
 }
 const EMPTY: Game = { number: null, date: null, rows: [], hints: [], solved: false };
 
-function DleGame({ mode, signedIn, you }: { mode: DleMode; signedIn: boolean; you: string | null }) {
+function DleGame({ mode, ready, signedIn, you }: { mode: DleMode; ready: boolean; signedIn: boolean; you: string | null }) {
   const c = useCopy().deadlock.dle;
   const locale = useLocale();
   const [game, setGame] = useState<Game>(EMPTY);
@@ -53,6 +81,7 @@ function DleGame({ mode, signedIn, you }: { mode: DleMode; signedIn: boolean; yo
   const [me, setMe] = useState<Me | null>(null);
 
   useEffect(() => {
+    if (!ready) return;
     let alive = true;
     getToday(mode).then(
       (t) => {
@@ -68,7 +97,7 @@ function DleGame({ mode, signedIn, you }: { mode: DleMode; signedIn: boolean; yo
     return () => {
       alive = false;
     };
-  }, [mode, signedIn, c.offline]);
+  }, [mode, ready, signedIn, c.offline]);
 
   const onGuess = async (name: string) => {
     setBusy(true);
@@ -97,19 +126,19 @@ function DleGame({ mode, signedIn, you }: { mode: DleMode; signedIn: boolean; yo
     <div className="dle-layout">
       <DleBoard mode={mode} number={game.number} rows={game.rows} hints={game.hints} solved={game.solved} answer={game.answer} error={error} busy={busy} pool={pool} signedIn={signedIn} onGuess={onGuess} />
       <aside className="dle-side">
-        <h2>{c.todayRanking}</h2>
+        <h2>{DLE_RANKING_OPEN ? c.todayRanking : c.standingTitle}</h2>
         <p className="dle-side-sub">
           {c.modes[mode]} · {c.players((ranking?.modes[mode].players ?? 0).toLocaleString(locale), ranking?.modes[mode].players ?? 0)} · {c.resets}
         </p>
-        <div className="box">
-          <RankList mode={mode} data={ranking?.modes[mode]} limit={7} you={you} />
-        </div>
+        {DLE_RANKING_OPEN ? (
+          <div className="box">
+            <RankList mode={mode} data={ranking?.modes[mode]} limit={7} you={you} />
+          </div>
+        ) : (
+          <Standing mode={mode} ranking={ranking} signedIn={signedIn} />
+        )}
         {signedIn && (
           <div className="dle-you box">
-            <div>
-              <b>{ranking?.modes[mode].me ? `#${ranking.modes[mode].me!.pos}` : "—"}</b>
-              <span>{c.yourRank}</span>
-            </div>
             <div>
               <b>{mine?.streak ?? 0}</b>
               <span>{c.streak}</span>
@@ -131,17 +160,28 @@ export default function DeadlockDle({ route, navigate }: { route: Route; navigat
   const view = dleMode(route.detail);
   const countdown = useCountdown();
   const [signedIn, setSignedIn] = useState(false);
+  /** Hasta saber si la sesión vale, el tablero no pide nada: si no, jugaría con la cuenta equivocada. */
+  const [ready, setReady] = useState(false);
   const [you, setYou] = useState<string | null>(null);
   useEffect(() => {
-    const s = hasSession();
-    setSignedIn(s);
-    if (!s) return;
+    if (!hasSession()) {
+      setReady(true);
+      return;
+    }
     try {
       const a = JSON.parse(localStorage.getItem("vg_account") ?? "null") as { name?: string } | null;
       setYou(a?.name ?? null);
     } catch {
       /* sin la cuenta guardada se muestra sin nombre */
     }
+    // La cookie puede quedar después de que la sesión venció: se confirma con el Worker.
+    getMe().then(
+      () => setSignedIn(true),
+      (err) => {
+        if (err instanceof DleSignedOut) document.cookie = "vg_in=; Path=/; Max-Age=0";
+        else setSignedIn(true);
+      },
+    ).finally(() => setReady(true));
   }, []);
 
   return (
@@ -159,7 +199,13 @@ export default function DeadlockDle({ route, navigate }: { route: Route; navigat
       />
       <div className="page">
         <nav className="dle-modes" aria-label={c.title}>
-          {DLE_VIEWS.map((v) => (
+          {DLE_VIEWS.map((v) =>
+            v === "ranking" && !DLE_RANKING_OPEN ? (
+              <span key={v} className="dle-mode is-rank is-off" aria-disabled="true">
+                {c.modes[v]}
+                <em>{c.underConstruction}</em>
+              </span>
+            ) : (
             <RouteLink
               key={v}
               className={`dle-mode${v === "ranking" ? " is-rank" : ""}`}
@@ -169,9 +215,14 @@ export default function DeadlockDle({ route, navigate }: { route: Route; navigat
             >
               {c.modes[v]}
             </RouteLink>
-          ))}
+            ),
+          )}
         </nav>
-        {view === "ranking" ? <DleRanking you={signedIn ? you ?? "" : null} /> : <DleGame key={view} mode={view} signedIn={signedIn} you={signedIn ? you ?? "" : null} />}
+        {view === "ranking" ? (
+          <DleRanking you={signedIn ? you ?? "" : null} />
+        ) : (
+          <DleGame key={`${view}-${ready}-${signedIn}`} mode={view} ready={ready} signedIn={signedIn} you={signedIn ? you ?? "" : null} />
+        )}
       </div>
     </main>
   );

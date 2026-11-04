@@ -42,6 +42,24 @@
 .dle-mode[data-active="true"] { background: var(--dle-cream); color: var(--dle-ink); transform: rotate(-1deg); box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5); }
 .dle-mode.is-rank { margin-left: 0.8rem; background: #c2512a; color: var(--dle-cream); }
 .dle-mode.is-rank[data-active="true"] { background: var(--dle-cream); color: var(--dle-ink); }
+/* El ranking en construcción (4/11): gris, sin cursor de enlace, con la etiqueta pegada en la esquina. */
+.dle-mode.is-off { position: relative; background: #3a352d; color: #8a8273; cursor: not-allowed; }
+.dle-mode.is-off em {
+  position: absolute;
+  top: -0.7rem;
+  right: -0.6rem;
+  font-family: var(--font-text);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  padding: 0.15rem 0.4rem;
+  background: var(--dle-cream);
+  color: var(--dle-ink);
+  transform: rotate(4deg);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
 
 .dle-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 21rem); gap: 1.8rem; align-items: start; }
 .dle-board { min-width: 0; }
@@ -132,6 +150,11 @@
 .dle-rn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dle-rg, .dle-rt { text-align: right; font-variant-numeric: tabular-nums; }
 .dle-rank-me .dle-rt { font-size: 0.8rem; }
+/* Dónde quedaste: el porcentaje grande, como las cifras del juego. */
+.dle-standing { padding: 1.1rem 1rem; text-align: center; }
+.dle-standing b { display: block; font-family: var(--font-display); font-size: 2.6rem; line-height: 1; color: #a5401c; }
+.dle-standing span, .dle-standing p { display: block; margin: 0.35rem 0 0; color: var(--text-dim); font-size: 0.85rem; }
+.dle-standing .dle-signin { font-weight: 700; color: #a5401c; }
 .dle-you { display: flex; margin-top: 1rem; padding: 0.9rem 0.6rem; }
 .dle-you div { flex: 1; text-align: center; }
 .dle-you b { display: block; font-size: 1.7rem; color: #a5401c; line-height: 1.1; }
