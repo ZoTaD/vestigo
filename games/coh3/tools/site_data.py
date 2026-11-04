@@ -21,8 +21,9 @@ Salida (contrato de docs/superpowers/specs/2026-11-04-coh3-design.md, con estos 
   minuto). **No va `received`**: los modificadores de precisión/daño recibido viven en árboles de estado que coh3-data
   no exporta.
 - `weapons/list.json` y `weapons/f/NN.json`: `{slug, name, faction, kind, cls, pen, dist, acc, dmg, aoe, reload,
-  burst, cooldown, aim, range, usedBy}`. `name` es el de la interfaz si el arma lo tiene; si no, `null` y el sitio usa
-  el slug (casi ninguna arma tiene nombre propio en el juego). `dist` = [cerca, medio, lejos] en metros; `pen` y `acc`
+  burst, cooldown, aim, range, usedBy}`. `name` es el de la interfaz si el arma lo tiene; si no, se arma con el
+  nombre de la primera unidad que la usa + el tipo ("Panzer IV Medium Tank · Cannon") y va `nameFromUnit: true`.
+  `reloadEvery` = [min, max] disparos entre recargas (`reload.frequency` crudo; 0 = recarga en cada disparo). `dist` = [cerca, medio, lejos] en metros; `pen` y `acc`
   van en ese orden. `aoe` = `{radius, dmg:[n,m,f], dist:[n,m,f]}` o null. `burst` = `{dur:[min,max], rof:[min,max]}` o
   null. `aim` = `{fire:[min,max], ready:[min,max]}`. La lista lleva sólo lo de la tabla; la ficha, todo.
   Las armas son las de los puntos de anclaje de las unidades jugables (las de mejoras vienen de `slot_item`, que
@@ -74,6 +75,20 @@ NOMBRE_FACCION = {
 }
 ICONO_FACCION = {"american": "common/races/american", "british": "common/races/british",
                  "german": "common/races/german", "dak": "common/races/afrika_korps"}
+# La etiqueta del tipo de arma (`weapon_class`, o la carpeta) para las que no tienen nombre propio.
+TIPO_ARMA = {
+    "grenade": {"en": "Grenade", "es": "Granada"}, "hmg": {"en": "Machine Gun", "es": "Ametralladora"},
+    "lmg": {"en": "Light Machine Gun", "es": "Ametralladora ligera"}, "smg": {"en": "Submachine Gun", "es": "Subfusil"},
+    "rifle": {"en": "Rifle", "es": "Fusil"}, "cannon": {"en": "Cannon", "es": "Cañón"},
+    "cannon_small": {"en": "Cannon", "es": "Cañón"}, "cannon_burst": {"en": "Autocannon", "es": "Cañón automático"},
+    "at_gun": {"en": "Anti-tank Gun", "es": "Cañón antitanque"}, "bazooka": {"en": "Launcher", "es": "Lanzacohetes"},
+    "mortar": {"en": "Mortar", "es": "Mortero"}, "rifle_grenade": {"en": "Rifle Grenade", "es": "Granada de fusil"},
+    "flame": {"en": "Flamethrower", "es": "Lanzallamas"}, "nebelwerfer": {"en": "Rocket Launcher", "es": "Lanzacohetes"},
+    "artillery_small": {"en": "Artillery", "es": "Artillería"}, "artillery_medium": {"en": "Artillery", "es": "Artillería"},
+    "artillery_mobile": {"en": "Artillery", "es": "Artillería"}, "smoke": {"en": "Smoke", "es": "Humo"},
+    "small_arms": {"en": "Small Arms", "es": "Arma ligera"}, "explosive_weapon": {"en": "Explosive", "es": "Explosivo"},
+    "weapon": {"en": "Weapon", "es": "Arma"},
+}
 # Las claves de raza de fs-perks / fs-technologies / battlegroup.json → la del sitio.
 RAZA_SITIO = {"american": "american", "british": "british", "german": "german", "afrika_korps": "dak"}
 
@@ -318,6 +333,7 @@ def _weapons(tag: str, loc: Loc | None) -> dict:
                 "aoe": {"radius": radio, "dmg": _nmf(ae.get("damage")), "dist": _nmf(ae.get("distance")),
                         "pen": _nmf(ae.get("aoe_penetration"))} if radio else None,
                 "reload": _mm((b.get("reload") or {}).get("duration")),
+                "reloadEvery": _mm((b.get("reload") or {}).get("frequency")),
                 "burst": {"dur": _mm(burst.get("duration")), "rof": _mm(burst.get("rate_of_fire"))}
                 if burst.get("can_burst") == "True" else None,
                 "cooldown": _mm((b.get("cooldown") or {}).get("duration")),
@@ -703,8 +719,17 @@ def build_explorer(tag: str) -> dict:
         raza = _raza(wref)
         armas.append({"slug": slug, "name": w["name"], "faction": FACTION.get(raza, "common"), **{
             k: v for k, v in w.items() if k != "name"}, "usedBy": sorted(set(usado_por[wref]))})
+    # Casi ninguna arma tiene nombre propio: se arma con la primera unidad que la usa y el tipo de arma.
+    nombre_u = {u["slug"]: u["name"] for u in unidades}
+    for w in armas:
+        if not w["name"] and w["usedBy"]:
+            dueño = nombre_u[w["usedBy"][0]]
+            tipo = TIPO_ARMA.get(w["cls"]) or TIPO_ARMA.get(w["kind"]) or TIPO_ARMA["weapon"]
+            w["name"] = {i: f"{dueño[i]} · {tipo[i]}" for i in ("en", "es")}
+            w["nameFromUnit"] = True
+    nombre_w = {w["slug"]: w["name"] for w in armas}
     for u in unidades:
-        u["weapons"] = [{"slug": wslug[w], "name": weapons[w]["name"], "count": _num(n)}
+        u["weapons"] = [{"slug": wslug[w], "name": nombre_w[wslug[w]], "count": _num(n)}
                         for w, n in u.pop("_weapons") if w in wslug]
 
     # battlegroups
@@ -836,7 +861,7 @@ def build_finalstand(tag: str, loc: Loc) -> dict:
 
 CAMPOS_UNIDAD = ("cost.mp", "cost.mu", "cost.fu", "cost.pop", "cost.t", "hp", "armor", "models", "speed", "sight",
                  "targetSize")
-CAMPOS_ARMA = ("pen", "dist", "acc", "dmg", "aoe.radius", "aoe.dmg", "aoe.dist", "reload", "burst.dur", "burst.rof",
+CAMPOS_ARMA = ("pen", "dist", "acc", "dmg", "aoe.radius", "aoe.dmg", "aoe.dist", "reload", "reloadEvery", "burst.dur", "burst.rof",
                "cooldown", "aim.fire", "aim.ready", "range", "windup", "winddown", "moving", "suppression")
 
 
@@ -885,8 +910,12 @@ def _fila_unidad(u: dict) -> dict:
 
 
 def _fila_arma(w: dict) -> dict:
-    return {k: w[k] for k in ("slug", "name", "faction", "kind", "cls", "pen", "dist", "acc", "dmg", "reload", "range")} | {
-        "aoe": w["aoe"]["radius"] if w["aoe"] else None, "users": len(w["usedBy"])}
+    fila = {k: w[k] for k in ("slug", "name", "faction", "kind", "cls", "pen", "dist", "acc", "dmg", "reload",
+                              "reloadEvery", "range")} | {"aoe": w["aoe"]["radius"] if w["aoe"] else None,
+                                                          "users": len(w["usedBy"])}
+    if w.get("nameFromUnit"):
+        fila["nameFromUnit"] = True
+    return fila
 
 
 def _fila_bg(b: dict) -> dict:
