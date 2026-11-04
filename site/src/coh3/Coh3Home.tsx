@@ -38,7 +38,7 @@ function Hero({ route }: { route: Route; navigate: Nav }) {
     <header className="c3-hero">
       <picture>
         <source media="(max-width: 700px)" srcSet="/coh3/bg/hero-800.webp" />
-        <img className="c3-hero-art" src="/coh3/bg/hero-1600.webp" alt="" width={1600} height={517} fetchPriority="high" />
+        <img className="c3-hero-art" src="/coh3/bg/hero-1600.webp" alt="" width={1600} height={517} {...{ fetchpriority: "high" }} />
       </picture>
       <div className="c3-hero-in">
         <h1 className="c3-hero-h1">

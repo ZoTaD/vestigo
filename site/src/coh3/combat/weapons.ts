@@ -34,8 +34,11 @@ export interface WeaponData {
 const pair = (v: number[] | null | undefined, d = 0): [number, number] => (v && v.length >= 2 ? [v[0], v[1]] : [d, d]);
 const trio = (v: number[] | null | undefined, d = 0): Trio => (v && v.length >= 3 ? [v[0], v[1], v[2]] : [d, d, d]);
 
-/** ¿Sirve contra blindados? Lo que penetra 30 o más a alguna distancia (cañones, antitanques, bazucas…). */
-export const isAntiTank = (w: Pick<WeaponData, "pen">): boolean => !!w.pen && Math.max(...w.pen) >= 30;
+/** Las clases de arma de tiro directo contra blindados (sin granadas, morteros, artillería ni lanzallamas). */
+const AT_CLS = new Set(["at_gun", "cannon", "cannon_burst", "cannon_small", "bazooka", "panzerbuchse"]);
+/** ¿Sirve contra blindados? Por su clase si la trae; si no, lo que penetra 30 o más a alguna distancia. */
+export const isAntiTank = (w: Pick<WeaponData, "pen"> & { cls?: string }): boolean =>
+  !!w.pen && (w.cls ? AT_CLS.has(w.cls) : Math.max(...w.pen) >= 30);
 
 /** El arma lista para el motor, con la veteranía del que dispara. */
 export function weaponStats(w: WeaponData, vet?: VetMods): WeaponStats {

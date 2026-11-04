@@ -8,7 +8,7 @@ import RouteLink from "../../RouteLink";
 import { LazyRows } from "../../LazyRows";
 import { routePath, type Route } from "../../route";
 import { useLang } from "../../i18n";
-import { FACTIONS, useCoh3Copy, type Faction } from "../../coh3Copy";
+import { FACTIONS, SIDE, useCoh3Copy, type Faction } from "../../coh3Copy";
 import { loadFicha, loadList, peekFicha, peekList, tr, type L10n, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, Cost, FactionTag, Icon, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
 import { hit } from "../combat/engine";
@@ -35,6 +35,16 @@ export interface UnitFicha extends UnitRow {
 }
 
 const KINDS = ["infantry", "team_weapons", "vehicles", "emplacements"];
+/** El nombre de una clase de arma, para las que no tienen nombre propio ("Cañón", "Ametralladora"…). */
+const CLS: Record<string, [string, string]> = {
+  cannon: ["Main gun", "Cañón principal"], cannon_burst: ["Autocannon", "Cañón automático"], cannon_small: ["Light gun", "Cañón ligero"], at_gun: ["Anti-tank gun", "Cañón antitanque"],
+  hmg: ["Heavy machine gun", "Ametralladora pesada"], lmg: ["Machine gun", "Ametralladora"], smg: ["Submachine gun", "Subfusil"], rifle: ["Rifle", "Fusil"],
+  pistol: ["Pistol", "Pistola"], sniper: ["Sniper rifle", "Fusil de francotirador"], flame: ["Flamethrower", "Lanzallamas"], mortar: ["Mortar", "Mortero"],
+  grenade: ["Grenade", "Granada"], rifle_grenade: ["Rifle grenade", "Granada de fusil"], bazooka: ["Rocket launcher", "Lanzacohetes"], smoke: ["Smoke", "Humo"],
+  panzerbuchse: ["Anti-tank rifle", "Fusil antitanque"], nebelwerfer: ["Rocket artillery", "Artillería de cohetes"],
+};
+let clsLang: "en" | "es" = "en";
+const clsName = (cls: string | undefined, slug: string) => (cls && CLS[cls] ? CLS[cls][clsLang === "es" ? 1 : 0] : slug.replace(/_/g, " "));
 const DIST = 30;
 
 export default function Coh3Units({ route, navigate }: { route: Route; navigate: Nav }) {
@@ -197,6 +207,7 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
   const t = useExplorerCopy();
   const c = useCoh3Copy();
   const { lang } = useLang();
+  clsLang = lang;
   const num = useNum();
   const [u, setU] = useState<UnitFicha | null | undefined>(() => peekFicha<UnitFicha>("units", slug));
   const weapons = useList<WeaponRow>("weapons");
@@ -223,24 +234,28 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
   const armored = isArmored(u);
   const byW = new Map((weapons ?? []).map((w) => [w.slug, w]));
   const main = (u.weapons ?? []).map((w) => byW.get(w.slug)).find((w) => w && isAntiTank(w as WeaponData));
-  const vehicles = (units ?? []).filter((x) => isArmored(x));
+  // Sólo el bando contrario: lo que le dispara y lo que tiene enfrente.
+  const vehicles = (units ?? []).filter((x) => isArmored(x) && SIDE[x.faction] !== SIDE[u.faction]);
   const prey = main
     ? vehicles
         .map((v) => {
           const ws = weaponStats(main as WeaponData), ts = targetStats(v), d = Math.min(DIST, ws.range);
           return { v, f: hit(ws, ts, 0, d).chance, r: hit(ws, ts, 2, d).chance };
         })
-        .sort((a, b) => b.f - a.f || b.r - a.r)
+        // Con muchos empates en 100 %, primero los de más blindaje (lo más duro que igual atraviesa).
+        .sort((a, b) => b.f - a.f || (b.v.armor?.[0] ?? 0) - (a.v.armor?.[0] ?? 0))
         .slice(0, 10)
     : [];
   const killers = armored
     ? (weapons ?? [])
-        .filter((w) => w.faction && isAntiTank(w as WeaponData))
+        .filter((w) => w.faction && SIDE[w.faction] !== SIDE[u.faction] && isAntiTank(w as WeaponData))
         .map((w) => {
           const ws = weaponStats(w as WeaponData);
-          return { w, f: hit(ws, targetStats(u), 0, Math.min(DIST, ws.range)).chance };
+          const h = hit(ws, targetStats(u), 0, Math.min(DIST, ws.range));
+          return { w, f: h.chance, pen: h.pen };
         })
-        .sort((a, b) => b.f - a.f)
+        // Con empates en 100 %, primero los que menos penetran (el arma más modesta que igual le entra).
+        .sort((a, b) => b.f - a.f || a.pen - b.pen)
         .slice(0, 10)
     : [];
   const calc = (q: string) => `${routePath({ ...route, view: "coh3", c3Section: "penetration", detail: undefined })}?${q}`;
@@ -341,7 +356,8 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
                   return (
                     <li key={w.slug}>
                       <RouteLink to={{ ...route, view: "coh3", c3Section: "weapons", detail: w.slug }} onNavigate={navigate}>
-                        {t.units.count(w.count)} {row ? wName(row as WeaponData) : w.name ? tr(w.name, lang) : w.slug.replace(/_/g, " ")}
+                        {t.units.count(w.count)}{" "}
+                        {row && !(row as { nameFromUnit?: boolean }).nameFromUnit ? wName(row as WeaponData) : clsName(row?.cls as string | undefined, w.slug)}
                       </RouteLink>
                       {row?.dmg && (
                         <small className="c3-dim">

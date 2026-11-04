@@ -9,6 +9,7 @@ import { useMemo } from "react";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useLang } from "../../i18n";
+import { SIDE } from "../../coh3Copy";
 import { tr, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
 import { curve, hit, type Side } from "./engine";
@@ -62,13 +63,14 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
 
   // Counters: qué armas le entran a este objetivo de frente, y contra qué vehículos sirve esta arma.
   const counters = weapons
-    .filter((w) => isAntiTank(w as WeaponData))
+    .filter((w) => isAntiTank(w as WeaponData) && (!tRow || !w.faction || SIDE[w.faction] !== SIDE[tRow.faction]))
     .map((w) => ({ w, c: hit(weaponStats(w as WeaponData), ts, 0, Math.min(d, (w.range as number[] | undefined)?.[1] || 60)).chance }))
     .sort((a, b) => b.c - a.c)
     .slice(0, 12);
   const prey = targets
+    .filter((u) => !wData.faction || SIDE[u.faction] !== SIDE[wData.faction])
     .map((u) => ({ u, c: hit(ws, targetStats(u), 0, d).chance, r: hit(ws, targetStats(u), 2, d).chance }))
-    .sort((a, b) => b.c - a.c || b.r - a.r)
+    .sort((a, b) => b.c - a.c || (b.u.armor?.[0] ?? 0) - (a.u.armor?.[0] ?? 0))
     .slice(0, 12);
   const toUnit = (slug: string): Route => ({ ...route, view: "coh3", c3Section: "units", detail: slug });
 
