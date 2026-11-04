@@ -27,11 +27,18 @@ describe("memStore", () => {
 
   it("el primer intento abre la partida y uno repetido no cuenta", async () => {
     const s = memStore();
-    expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:7", 1000, false)).toBe("ok");
-    expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:7", 2000, false)).toBe("duplicate");
-    expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:3", 9000, true)).toBe("ok");
+    expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:7", 1000, false, 9)).toBe("ok");
+    expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:7", 2000, false, 9)).toBe("duplicate");
+    expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:3", 9000, true, 9)).toBe("ok");
     expect(await s.play("u1", "heroes", "2026-11-05")).toEqual({ startedAt: 1000, finishedAt: 9000, guesses: ["hero:7", "hero:3"] });
-    expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:4", 9500, false)).toBe("duplicate");
+    expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:4", 9500, false, 9)).toBe("duplicate");
+  });
+
+  it("no acepta más intentos que el tope", async () => {
+    const s = memStore();
+    for (let i = 1; i <= 6; i++) expect(await s.addGuess("u1", "heroes", "2026-11-05", `hero:${i}`, i, false, 6)).toBe("ok");
+    expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:7", 7, false, 6)).toBe("over");
+    expect((await s.play("u1", "heroes", "2026-11-05"))?.guesses).toHaveLength(6);
   });
 
   it("ordena el ranking y sólo cuenta las resueltas", async () => {
@@ -40,10 +47,10 @@ describe("memStore", () => {
     await s.saveUser("b", "Beto", "");
     await s.saveUser("c", "Caro", "");
     // a: 2 intentos en 8 s; b: 1 intento; c: sin resolver
-    await s.addGuess("a", "items", "2026-11-05", "item:1", 0, false);
-    await s.addGuess("a", "items", "2026-11-05", "item:2", 8000, true);
-    await s.addGuess("b", "items", "2026-11-05", "item:2", 5000, true);
-    await s.addGuess("c", "items", "2026-11-05", "item:1", 0, false);
+    await s.addGuess("a", "items", "2026-11-05", "item:1", 0, false, 9);
+    await s.addGuess("a", "items", "2026-11-05", "item:2", 8000, true, 9);
+    await s.addGuess("b", "items", "2026-11-05", "item:2", 5000, true, 9);
+    await s.addGuess("c", "items", "2026-11-05", "item:1", 0, false, 9);
     const top = await s.ranking("2026-11-05", "items", 10);
     expect(top.map((r) => [r.steamId, r.name, r.guesses, r.ms])).toEqual([
       ["b", "Beto", 1, 0],
@@ -56,8 +63,8 @@ describe("memStore", () => {
 
   it("cuenta la racha de días seguidos resueltos", async () => {
     const s = memStore();
-    for (const d of ["2026-11-02", "2026-11-03", "2026-11-04"]) await s.addGuess("u", "heroes", d, "hero:1", 0, true);
-    await s.addGuess("u", "heroes", "2026-11-01", "hero:1", 0, false);
+    for (const d of ["2026-11-02", "2026-11-03", "2026-11-04"]) await s.addGuess("u", "heroes", d, "hero:1", 0, true, 9);
+    await s.addGuess("u", "heroes", "2026-11-01", "hero:1", 0, false, 9);
     expect(await s.myStats("u", "heroes", "2026-11-04")).toEqual({ streak: 3, played: 4, won: 3 });
     // Si hoy todavía no jugó, la racha sigue viva desde ayer.
     expect((await s.myStats("u", "heroes", "2026-11-05")).streak).toBe(3);

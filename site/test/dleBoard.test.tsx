@@ -15,6 +15,8 @@ const props = (over: Partial<BoardProps> = {}): BoardProps => ({
   rows: [],
   hints: [],
   solved: false,
+  lost: false,
+  max: 6,
   error: null,
   busy: false,
   pool: [],
@@ -117,5 +119,16 @@ describe("el botón del juego en la barra de arriba", () => {
     expect(dl).toContain('class="top-here top-dle"');
     expect(dl).toContain('href="/en/deadlock/dle"');
     expect(html("/en/valheim", "valheim")).not.toContain("top-dle");
+  });
+});
+
+describe("el tope de intentos", () => {
+  it("el contador dice cuántos van de cuántos y al perder muestra la respuesta", () => {
+    const rows = Array.from({ length: 6 }, (_, i) => ({ guess: { id: `hero:${i}`, name: `H${i}`, img: "/x.webp" }, cells: [{ key: "complexity", value: 1, mark: "no" as const }] }));
+    const html = wrap(<DleBoard {...props({ rows, lost: true, answer: { id: "hero:3", name: "Vindicta", img: "/v.webp", link: "deadlock/heroes/vindicta" } })} />);
+    expect(html).toContain("6/6 guesses");
+    expect(html).toContain("Out of guesses · it was Vindicta");
+    expect(html).not.toContain("Type a hero name");
+    expect(wrap(<DleBoard {...props({ mode: "items", max: 9 })} />)).toContain("0/9 guesses");
   });
 });

@@ -104,7 +104,7 @@ describe("guess", () => {
     const body = await (await post("/api/dle/heroes/guess", { name: wrong.name, n: 3 }, deps()))!.json();
     expect(body.solved).toBe(false);
     expect(body.answer).toBeUndefined();
-    expect(body.hints).toEqual([{ kind: "img", src: "/api/dle/heroes/hint?d=2026-11-05", blur: true }]);
+    expect(body.hints).toEqual([answer.hints[0]]);
     expect(await store.playerCount("2026-11-05", "heroes")).toBe(0);
   });
 
@@ -163,22 +163,22 @@ describe("el pozo y el día", () => {
 describe("arreglos de la revisión", () => {
   const wrongs = (answer: Entry) => POOL.heroes.filter((h) => h.id !== answer.id);
 
-  it("la pista de imagen no lleva la ruta del arte y sólo se sirve con los intentos que corresponden", async () => {
-    const big: Pool = { ...POOL, heroes: [...POOL.heroes, e("hero:4", "Delta", {}), e("hero:5", "Echo", {}), e("hero:6", "Foxtrot", {})] };
-    const d = (over: Partial<DleDeps> = {}) => deps({ pool: async () => big, steamId: "u1", asset: async (path) => new Response(`bytes de ${path}`), ...over });
-    const answer = (await ensureDay(store, big, "heroes", "2026-11-05", SECRET)).answer;
-    const others = big.heroes.filter((h) => h.id !== answer.id);
-    for (const w of others.slice(0, 3)) await post("/api/dle/heroes/guess", { name: w.name }, d());
-    expect((await get("/api/dle/heroes/hint?d=2026-11-05", d()))!.status).toBe(403);
-    const body = await (await post("/api/dle/heroes/guess", { name: others[3].name }, d()))!.text();
-    expect(body).not.toContain(answer.img);
-    expect(JSON.parse(body).hints[0]).toEqual({ kind: "img", src: "/api/dle/heroes/hint?d=2026-11-05", blur: true });
-    const img = (await get("/api/dle/heroes/hint?d=2026-11-05", d()))!;
-    expect(img.status).toBe(200);
-    expect(await img.text()).toBe(`bytes de ${answer.img}`);
-    // Sin cuenta, igual que las pistas de texto: con los intentos que dice la página.
-    expect((await get("/api/dle/heroes/hint?d=2026-11-05&n=2", d({ steamId: null })))!.status).toBe(403);
-    expect((await get("/api/dle/heroes/hint?d=2026-11-05&n=4", d({ steamId: null })))!.status).toBe(200);
+  it("con 6 intentos fallados en Heroes se pierde y se ve la respuesta", async () => {
+    const many: Pool = { ...POOL, heroes: [...POOL.heroes, ...["Delta", "Echo", "Foxtrot", "Golf", "Hotel"].map((n, i) => e(`hero:${i + 4}`, n, {}))] };
+    const d = (over: Partial<DleDeps> = {}) => deps({ pool: async () => many, steamId: "u1", ...over });
+    const answer = (await ensureDay(store, many, "heroes", "2026-11-05", SECRET)).answer;
+    const others = many.heroes.filter((h) => h.id !== answer.id);
+    let last;
+    for (const w of others.slice(0, 6)) last = await (await post("/api/dle/heroes/guess", { name: w.name }, d()))!.json();
+    expect(last).toMatchObject({ solved: false, lost: true, max: 6, answer: { id: answer.id } });
+    expect((await post("/api/dle/heroes/guess", { name: answer.name }, d()))!.status).toBe(409);
+    const t = await (await get("/api/dle/heroes/today", d()))!.json();
+    expect(t).toMatchObject({ lost: true, solved: false, answer: { id: answer.id } });
+    expect((await (await get("/api/dle/me", d()))!.json()).heroes.today).toBe("lost");
+    // Sin cuenta, igual: la página dice cuántos lleva.
+    const anon = await (await post("/api/dle/heroes/guess", { name: others[0].name, n: 5 }, d({ steamId: null })))!.json();
+    expect(anon).toMatchObject({ lost: true, answer: { id: answer.id } });
+    expect((await post("/api/dle/heroes/guess", { name: others[1].name, n: 6 }, d({ steamId: null })))!.status).toBe(409);
   });
 
   it("una partida sin terminar de ayer no se come el día de hoy", async () => {

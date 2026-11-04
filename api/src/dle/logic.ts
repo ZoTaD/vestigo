@@ -94,16 +94,18 @@ export async function pickAnswer(entries: Entry[], lastSeen: Map<string, string>
   return entries[weights.findLastIndex((w) => w > 0)];
 }
 
-/** Umbrales de intentos para cada pista. */
-export const HINT_AT = [4, 6, 8];
-
 /**
- * `imgSrc` es la ruta opaca del Worker que sirve el arte de la respuesta
- * (`/api/dle/<modo>/hint?d=<fecha>`): la ruta del pozo la delataría.
+ * Intentos por partida (ZoTaD, 4/11): 6 en Heroes, 9 en Items y Abilities, que
+ * tienen cuatro veces más opciones. Al llegar al tope sin acertar, se pierde.
  */
-export function hintsUnlocked(answer: Entry, guesses: number, imgSrc: string): Hint[] {
-  const all: Hint[] = [{ kind: "img", src: imgSrc, blur: true }, ...answer.hints];
-  return all.filter((_, i) => guesses >= HINT_AT[i]);
+export const MAX_GUESSES: Record<Mode, number> = { heroes: 6, items: 9, abilities: 9 };
+
+/** Con cuántos intentos se abre cada una de las dos pistas: siempre quedan intentos después de la última. */
+export const HINT_AT: Record<Mode, [number, number]> = { heroes: [3, 5], items: [4, 7], abilities: [4, 7] };
+
+/** Las pistas de texto y arte de la respuesta. El retrato borroso se sacó el 4/11 (pedido de ZoTaD). */
+export function hintsUnlocked(answer: Entry, guesses: number, mode: Mode): Hint[] {
+  return answer.hints.filter((_, i) => guesses >= HINT_AT[mode][i]);
 }
 
 export interface PlayRow {

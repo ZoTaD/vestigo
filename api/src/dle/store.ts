@@ -34,8 +34,11 @@ export interface Store {
   /** Id → última fecha en que fue respuesta, antes de `before`. */
   lastSeen(mode: Mode, before: string): Promise<Map<string, string>>;
   play(steamId: string, mode: Mode, date: string): Promise<Play | null>;
-  /** "duplicate" si ese intento ya estaba o la partida ya terminó. */
-  addGuess(steamId: string, mode: Mode, date: string, entryId: string, at: number, solved: boolean): Promise<"ok" | "duplicate">;
+  /**
+   * "duplicate" si ese intento ya estaba o la partida ya se ganó; "over" si ya
+   * se usaron los `max` intentos.
+   */
+  addGuess(steamId: string, mode: Mode, date: string, entryId: string, at: number, solved: boolean, max: number): Promise<"ok" | "duplicate" | "over">;
   ranking(date: string, mode: Mode, limit: number): Promise<RankRow[]>;
   playerCount(date: string, mode: Mode): Promise<number>;
   myRank(steamId: string, date: string, mode: Mode): Promise<number | null>;
@@ -93,9 +96,10 @@ export function memStore(): Store {
       const p = find(steamId, mode, date);
       return p ? { startedAt: p.startedAt, finishedAt: p.finishedAt, guesses: [...p.guesses] } : null;
     },
-    async addGuess(steamId, mode, date, entryId, at, isSolved) {
+    async addGuess(steamId, mode, date, entryId, at, isSolved, max) {
       let p = find(steamId, mode, date);
       if (p && (p.finishedAt !== null || p.guesses.includes(entryId))) return "duplicate";
+      if (p && p.guesses.length >= max) return "over";
       if (!p) {
         p = { steamId, mode, date, startedAt: at, finishedAt: null, guesses: [] };
         plays.push(p);
@@ -159,7 +163,7 @@ export function d1Store(db: D1Database): Store {
         .all<{ answer_id: string }>();
       return { startedAt: p.started_at, finishedAt: p.finished_at, guesses: results.map((r) => r.answer_id) };
     },
-    async addGuess(steamId, mode, date, entryId, at, isSolved) {
+    async addGuess(steamId, mode, date, entryId, at, isSolved, max) {
       // Todo en un lote, que D1 corre como una transacción: el número del intento sale de la tabla en el mismo
       // insert (dos intentos a la vez no se pisan), una partida terminada no acepta más, y la fila de la partida
       // se recalcula entera desde los intentos, así nunca queda desfasada.
@@ -171,9 +175,10 @@ export function d1Store(db: D1Database): Store {
                coalesce((select max(n) from dle_guesses where steam_id = ?1 and date = ?2 and mode = ?3), 0) + 1,
                ?4, ?5, ?6
              where not exists (select 1 from dle_plays where steam_id = ?1 and date = ?2 and mode = ?3 and finished_at is not null)
+               and (select count(*) from dle_guesses where steam_id = ?1 and date = ?2 and mode = ?3) < ?7
              on conflict do nothing`,
           )
-          .bind(steamId, date, mode, entryId, at, isSolved ? 1 : 0),
+          .bind(steamId, date, mode, entryId, at, isSolved ? 1 : 0, max),
         db
           .prepare(
             `insert into dle_plays (steam_id, date, mode, started_at, finished_at, guesses, solved)
@@ -186,7 +191,9 @@ export function d1Store(db: D1Database): Store {
           )
           .bind(steamId, date, mode),
       ]);
-      return ins.meta.changes ? "ok" : "duplicate";
+      if (ins.meta.changes) return "ok";
+      const p = await this.play(steamId, mode, date);
+      return p && !p.finishedAt && p.guesses.length >= max && !p.guesses.includes(entryId) ? "over" : "duplicate";
     },
     async ranking(date, mode, limit) {
       const { results } = await db

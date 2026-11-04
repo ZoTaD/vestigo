@@ -1,4 +1,4 @@
-import { compare, dayNumber, findByName, HINT_AT, hintsUnlocked, pickAnswer, utcDate } from "./logic";
+import { compare, dayNumber, findByName, hintsUnlocked, MAX_GUESSES, pickAnswer, utcDate } from "./logic";
 import { PoolUnavailable } from "./pool";
 import type { DayRow, Store } from "./store";
 import { COLUMNS, MODES, type Entry, type Mode, type Pool } from "./types";
@@ -18,8 +18,6 @@ export interface DleDeps {
   limit?: (key: string) => Promise<boolean>;
   /** Para el límite cuando no hay cuenta. */
   ip?: string;
-  /** Trae un archivo del sitio (el arte de la pista borrosa). */
-  asset?: (path: string) => Promise<Response>;
 }
 
 /** Un secreto corto o vacío dejaría adivinar la respuesta de mañana. */
@@ -58,7 +56,6 @@ export async function handleDle(req: Request, url: URL, deps: DleDeps): Promise<
     if (req.method === "GET" && parts.length === 1 && parts[0] === "me") return await me(deps);
     if (parts.length === 2 && isMode(parts[0])) {
       if (req.method === "GET" && parts[1] === "today") return await today(parts[0], url, deps);
-      if (req.method === "GET" && parts[1] === "hint") return await hintImage(parts[0], url, deps);
       if (req.method === "POST" && parts[1] === "guess") return await guess(parts[0], req, deps);
     }
     return json({ error: "not_found" }, 404);
@@ -82,8 +79,6 @@ async function playDate(mode: Mode, deps: DleDeps, requested: unknown): Promise<
   return play && !play.finishedAt ? yesterday : today;
 }
 
-const hintSrc = (mode: Mode, date: string) => `/api/dle/${mode}/hint?d=${date}`;
-
 /** Intentos hechos: de D1 con cuenta; sin cuenta, los que dice la página. */
 function anonCount(raw: unknown): number {
   const n = typeof raw === "string" ? Number(raw) : raw;
@@ -101,16 +96,21 @@ async function today(mode: Mode, url: URL, deps: DleDeps): Promise<Response> {
     .filter((e): e is Entry => Boolean(e))
     .map((e) => ({ guess: brief(e), cells: compare(e, day.answer, mode) }))
     .reverse();
+  const used = play?.guesses.length ?? 0;
   const solved = Boolean(play?.finishedAt);
+  const lost = !solved && used >= MAX_GUESSES[mode];
   return json({
     number: dayNumber(date),
     date,
     mode,
+    max: MAX_GUESSES[mode],
     columns: COLUMNS[mode],
     rows,
-    hints: hintsUnlocked(day.answer, play?.guesses.length ?? 0, hintSrc(mode, date)),
+    hints: hintsUnlocked(day.answer, used, mode),
     solved,
-    ...(solved ? { answer: reveal(day.answer) } : {}),
+    lost,
+    // Ganada o perdida, la respuesta ya se puede mostrar.
+    ...(solved || lost ? { answer: reveal(day.answer) } : {}),
   });
 }
 
@@ -126,37 +126,27 @@ async function guess(mode: Mode, req: Request, deps: DleDeps): Promise<Response>
 
   const day = await ensureDay(deps.store, pool, mode, date, deps.secret);
   const solved = entry.id === day.answer.id;
+  const max = MAX_GUESSES[mode];
   let count: number;
   if (deps.steamId) {
-    if ((await deps.store.addGuess(deps.steamId, mode, date, entry.id, deps.now, solved)) === "duplicate") return json({ error: "duplicate" }, 409);
+    const added = await deps.store.addGuess(deps.steamId, mode, date, entry.id, deps.now, solved, max);
+    if (added !== "ok") return json({ error: added }, 409);
     count = (await deps.store.play(deps.steamId, mode, date))?.guesses.length ?? 1;
   } else {
-    count = anonCount(body.n) + 1;
+    const before = anonCount(body.n);
+    if (before >= max) return json({ error: "over" }, 409);
+    count = before + 1;
   }
+  const lost = !solved && count >= max;
   return json({
     date,
+    max,
     row: { guess: brief(entry), cells: compare(entry, day.answer, mode) },
-    hints: hintsUnlocked(day.answer, count, hintSrc(mode, date)),
+    hints: hintsUnlocked(day.answer, count, mode),
     solved,
-    ...(solved ? { answer: reveal(day.answer) } : {}),
+    lost,
+    ...(solved || lost ? { answer: reveal(day.answer) } : {}),
   });
-}
-
-/**
- * El arte de la respuesta para la pista borrosa, por una ruta que no dice cuál
- * es. Sólo con los intentos que abren esa pista; el borroso lo pone la página.
- */
-async function hintImage(mode: Mode, url: URL, deps: DleDeps): Promise<Response> {
-  const date = url.searchParams.get("d") ?? "";
-  const today = utcDate(deps.now);
-  if (date !== today && date !== prevDay(today)) return json({ error: "not_found" }, 404);
-  const day = await deps.store.day(date, mode);
-  if (!day || !deps.asset) return json({ error: "not_found" }, 404);
-  const count = deps.steamId ? ((await deps.store.play(deps.steamId, mode, date))?.guesses.length ?? 0) : anonCount(url.searchParams.get("n"));
-  if (count < HINT_AT[0]) return json({ error: "locked" }, 403);
-  const res = await deps.asset(day.answer.img);
-  if (!res.ok) return json({ error: "not_found" }, 404);
-  return new Response(res.body, { headers: { "content-type": "image/webp", "cache-control": "private, no-store" } });
 }
 
 async function ranking(deps: DleDeps): Promise<Response> {
@@ -186,7 +176,8 @@ async function me(deps: DleDeps): Promise<Response> {
   for (const mode of MODES) {
     const stats = await deps.store.myStats(deps.steamId, mode, date);
     const play = await deps.store.play(deps.steamId, mode, date);
-    out[mode] = { ...stats, today: play ? (play.finishedAt ? "solved" : "playing") : "none" };
+    const lost = play && !play.finishedAt && play.guesses.length >= MAX_GUESSES[mode];
+    out[mode] = { ...stats, today: play ? (play.finishedAt ? "solved" : lost ? "lost" : "playing") : "none" };
   }
   return json(out);
 }

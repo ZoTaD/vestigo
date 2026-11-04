@@ -33,8 +33,9 @@ export const DLE_COLUMNS: Record<DleMode, string[]> = {
   abilities: ["hero", "slot", "ultimate", "cooldown", "effects"],
 };
 
-/** Con cuántos intentos se abre cada pista (igual que `HINT_AT` del Worker). */
-export const DLE_HINT_AT = [4, 6, 8];
+/** Intentos por partida y cuándo se abre cada pista: igual que `MAX_GUESSES` y `HINT_AT` del Worker. */
+export const DLE_MAX: Record<DleMode, number> = { heroes: 6, items: 9, abilities: 9 };
+export const DLE_HINT_AT: Record<DleMode, [number, number]> = { heroes: [3, 5], items: [4, 7], abilities: [4, 7] };
 
 /** La cookie que deja el login: dice que hay sesión sin preguntarle al Worker. */
 export const hasSession = (): boolean => typeof document !== "undefined" && /(?:^|;\s*)vg_in=1/.test(document.cookie);

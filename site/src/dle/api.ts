@@ -35,17 +35,21 @@ export interface Today {
   number: number;
   date: string;
   mode: DleMode;
+  max: number;
   columns: Column[];
   rows: Row[];
   hints: Hint[];
   solved: boolean;
+  lost: boolean;
   answer?: Revealed;
 }
 export interface GuessResult {
   date: string;
+  max: number;
   row: Row;
   hints: Hint[];
   solved: boolean;
+  lost: boolean;
   answer?: Revealed;
 }
 export interface RankEntry {
@@ -74,7 +78,7 @@ export class DleOffline extends Error {}
 export class DleSignedOut extends Error {}
 /** El Worker rechazó el intento: nombre de otro modo, repetido o demasiados. */
 export class DleRejected extends Error {
-  constructor(readonly reason: "unknown" | "duplicate" | "busy") {
+  constructor(readonly reason: "unknown" | "duplicate" | "busy" | "over") {
     super(reason);
   }
 }
@@ -88,7 +92,10 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   }
   if (res.status === 401) throw new DleSignedOut();
   if (res.status === 400) throw new DleRejected("unknown");
-  if (res.status === 409) throw new DleRejected("duplicate");
+  if (res.status === 409) {
+    const body = (await res.json().catch(() => null)) as { error?: string } | null;
+    throw new DleRejected(body?.error === "over" ? "over" : "duplicate");
+  }
   if (res.status === 429) throw new DleRejected("busy");
   if (!res.ok) throw new DleOffline();
   return (await res.json()) as T;
