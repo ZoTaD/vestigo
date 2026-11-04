@@ -95,6 +95,18 @@ export const tr = (l: L10n | string | null | undefined, lang: "en" | "es"): stri
  * con datos propios suma acá su línea (un `import()` de su módulo de datos), así el prerender sale con datos.
  */
 const EXTRA: Partial<Record<Coh3Section, (route: Route) => Promise<unknown>>> = {
+  // Las fichas de unidades nombran armas (y sus counters las recorren todas); las de armas, a sus unidades.
+  units: () => loadList("weapons"),
+  weapons: () => loadList("units"),
+  battlegroups: () => loadList("units"),
+  penetration: () => Promise.all([loadList("units"), loadList("weapons")]),
+  dps: () => Promise.all([loadList("units"), loadList("weapons")]),
+  stats: () => Promise.all([import("./stats/data").then((m) => m.loadSummary()), import("./stats/parts").then((m) => m.loadMapNames())]),
+  "tier-list": () => Promise.all([import("./stats/data").then((m) => m.loadSummary()), import("./stats/parts").then((m) => m.loadMapNames())]),
+  maps: () => Promise.all([import("./more/Coh3Maps").then((m) => m.loadMaps()), import("./stats/data").then((m) => m.loadSummary())]),
+  challenges: () => import("./more/Coh3Challenges").then((m) => m.loadChallenges()),
+  "final-stand": () => import("./more/Coh3FinalStand").then((m) => m.loadFinalStand()),
+  patches: (route) => import("./more/Coh3Patches").then((m) => m.preloadPatches(route)),
 };
 
 /** Lo que una dirección necesita antes de dibujarse (el prerender lo espera, así el HTML sale con datos). */

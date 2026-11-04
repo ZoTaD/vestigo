@@ -87,23 +87,24 @@ export function WindowLine({ s }: { s: Summary }) {
 }
 
 let mapNames: Record<string, { en: string; es?: string | null }> | null = null;
+/** Los nombres de los mapas por su id de partida (`maps.json`), una vez. */
+export function loadMapNames() {
+  if (mapNames) return Promise.resolve(mapNames);
+  return import("@coh3/maps.json").then((m) => {
+    const rows = (m.default as unknown as { slug: string; name: { en: string; es?: string | null } }[]) ?? [];
+    return (mapNames = Object.fromEntries(rows.map((r) => [r.slug, r.name])));
+  });
+}
 /** El nombre de un mapa por su id de partida (`pachino_2p`): de `maps.json` si lo tiene, si no, el id prolijo. */
 export function useMapName() {
   const { lang } = useLang();
   const [names, setNames] = useState(mapNames);
   useEffect(() => {
     if (names) return;
-    import("@coh3/maps.json").then(
-      (m) => {
-        const rows = (m.default as unknown as { id?: string; slug: string; name: { en: string; es?: string | null } }[]) ?? [];
-        mapNames = Object.fromEntries(rows.flatMap((r) => [[r.slug, r.name], ...(r.id ? [[r.id, r.name] as const] : [])]));
-        setNames(mapNames);
-      },
-      () => undefined,
-    );
+    loadMapNames().then(setNames, () => undefined);
   }, [names]);
   return (id: string) => {
     const n = names?.[id] ?? names?.[id.toLowerCase()];
-    return n ? (lang === "es" && n.es) || n.en : prettyMap(id);
+    return n ? ((lang === "es" && n.es) || n.en).replace(/^\(\d\)\s*/, "") : prettyMap(id);
   };
 }
