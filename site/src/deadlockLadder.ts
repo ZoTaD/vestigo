@@ -36,8 +36,8 @@ export interface LadderRow {
   /** El piso de Wilson. **Rompe empates**; ya no es lo primero que ordena. */
   score: number;
   /**
-   * El puntaje del propio juego: el progreso plano de `/v1/players/rank`
-   * (ver `parseRanks`). Antes era `player_score` de `/v1/players/mmr`, que
+   * El puntaje del propio juego: el progreso plano del rango (ver
+   * `RawRankRow`). Antes era `player_score` de `/v1/players/mmr`, que
    * deadlock-api sacó el 2026-11-04.
    *
    * **Es lo que ordena la tabla**, y es lo correcto: es la respuesta del juego a
@@ -49,7 +49,7 @@ export interface LadderRow {
   name?: string;
   country?: string;
   /**
-   * El rango real del jugador, de `/v1/players/rank`. **No** el
+   * El rango real del jugador, del scoreboard con `sort_by=rank`. **No** el
    * `last_team_avg_badge` de `/v1/players/steam`, que es el promedio de su
    * equipo. Se lee con `rankOf` de `deadlockReportData.ts`, la misma que usa el
    * perfil. Ausente o 0 significa sin rango, no rango cero.
@@ -151,7 +151,7 @@ async function get<T>(url: string): Promise<T> {
   return (await res.json()) as T;
 }
 
-interface RawRow {
+export interface RawRow {
   rank: number;
   account_id: number;
   value: number;
@@ -165,38 +165,39 @@ interface RawSteam {
 }
 
 /**
- * Lo que devuelve `/v1/players/rank`, el rango de cada cuenta al cerrar su
- * última clasificatoria.
+ * Una fila del scoreboard con `sort_by=rank`: `value` es el **progreso plano**
+ * del rango (crece mil puntos por subnivel y distingue a dos Eternus 2) y
+ * `badge` el rango, `rango*10 + subnivel`.
  *
- * **Reemplaza a `/v1/players/mmr`, que deadlock-api sacó** (404 el 2026-11-04):
- * con él se iban el puntaje y el rango, y la tabla quedó con "—" en todas las
- * filas y ordenada sólo por Wilson. `badge` es el mismo `rango*10 + subnivel`
- * de siempre y `0` es "sin rango".
+ * Reemplaza a `/v1/players/mmr`, que deadlock-api sacó el 2026-11-04.
  */
-export interface RawRank {
+export interface RawRankRow {
   account_id: number;
+  value: number;
+  matches: number;
   badge?: number;
-  last_match?: { player_rank_final_flat_progress?: number } | null;
 }
 
 /**
- * El rango y el puntaje que ordena, por cuenta.
- *
- * El puntaje es el **progreso plano** con que cerró la última partida
- * (`player_rank_final_flat_progress`): crece con el rango —cada subnivel son
- * mil puntos— y, a diferencia del badge, distingue a dos Eternus 2. Es lo más
- * parecido al `player_score` que se perdió. Sin progreso el puntaje es 0 y la
- * cuenta cae al fondo, como antes cuando faltaba el MMR.
+ * Junta el pool por rango con las victorias (`sort_by=wins`, `value` = ganadas).
+ * Sin fila de victorias, la cuenta queda con 0 ganadas: se ve, y el orden lo
+ * pone el rango igual.
  */
-export function parseRanks(raw: RawRank[]): Map<number, { badge: number; score: number }> {
-  const out = new Map<number, { badge: number; score: number }>();
-  for (const r of raw) {
-    out.set(r.account_id, {
-      badge: r.badge ?? 0,
-      score: r.last_match?.player_rank_final_flat_progress ?? 0,
-    });
-  }
-  return out;
+export function joinRankWins(rank: RawRankRow[], wins: RawRow[]): LadderRow[] {
+  const ganadas = new Map(wins.map((w) => [w.account_id, w.value]));
+  return rank.map((r) => {
+    const w = Math.round(ganadas.get(r.account_id) ?? 0);
+    return {
+      rank: 0,
+      accountId: r.account_id,
+      wins: w,
+      winRate: r.matches > 0 ? w / r.matches : 0,
+      score: wilsonScore(w, r.matches),
+      gameScore: r.value,
+      matches: r.matches,
+      ...(r.badge ? { badge: r.badge } : {}),
+    };
+  });
 }
 
 /**
@@ -284,106 +285,72 @@ export async function fetchLadder(opts: {
 }): Promise<Ladder> {
   /**
    * Cien, no cincuenta (pedido de ZoTaD, 2026-08-13).
-   *
-   * El pool que se pide arriba es de 400, así que mostrar cien no cuesta ni un
-   * pedido más: ya estaban bajados y se descartaban.
    */
   const limit = opts.limit ?? 100;
   const floors = opts.floors ?? FLOORS;
   const minRows = opts.minRows ?? MIN_ROWS;
   /**
-   * **Se pide un pool grande y se reordena acá.** La API no sabe ordenar por
-   * Wilson, así que hay que traer candidatos y calcularlo del lado del
-   * navegador. Se pide ordenado por `winrate` y no por `wins` porque el pool
-   * tiene que CONTENER a los ganadores del ranking final: como el piso de
-   * Wilson nunca supera al winrate, nadie con winrate bajo puede colarse
-   * arriba, y ordenar por winrate garantiza que los candidatos posibles estén
-   * en el pool. Ordenarlo por ganadas traería a los que más jugaron, que es
-   * justo el sesgo que se está corrigiendo.
+   * **El pool se pide ya ordenado por rango** (`sort_by=rank`, desde el
+   * 2026-11-04). Antes se pedían los 400 de mejor winrate y se reordenaban acá
+   * por rango, y ese pool dejaba afuera a los mejores: el #1 del mundo por rango
+   * tenía 69,6% y no entraba entre los 400 de más winrate. Unas filas de más
+   * dejan que Wilson desempate en el borde.
    */
-  const POOL = 400;
+  const POOL = limit + 20;
 
-  let raw: RawRow[] = [];
+  let raw: RawRankRow[] = [];
   let floor = floors[floors.length - 1];
-  for (const f of floors) {
+  const filtros = (f: number) => {
     const q = new URLSearchParams({
-      sort_by: "winrate",
       sort_direction: "desc",
       min_matches: String(f),
-      limit: String(POOL),
       match_mode: RANKED,
       // La temporada de la escalera: la vigente tras una semana, si no la
       // que terminó (ver `ladderSeason`).
       ...seasonParams(ladderSeason().season),
     });
     if (opts.hero) q.set("hero_id", String(opts.hero));
-    raw = await get<RawRow[]>(`${API}/analytics/scoreboards/players?${q}`);
+    return q;
+  };
+  for (const f of floors) {
+    const q = filtros(f);
+    q.set("sort_by", "rank");
+    q.set("limit", String(POOL));
+    raw = await get<RawRankRow[]>(`${API}/analytics/scoreboards/players?${q}`);
     floor = f;
     if (raw.length >= minRows) break;
   }
 
   /**
-   * Con `sort_by=winrate`, `value` **es la tasa** (0 a 1), no las ganadas. Las
-   * victorias se recuperan multiplicando por las partidas: es un cociente de
-   * enteros, así que el redondeo devuelve el entero exacto.
+   * Las victorias, en un pedido aparte: con `sort_by=rank` el `value` es el
+   * progreso del rango, no las ganadas. El mismo scoreboard con `sort_by=wins`
+   * y las cuentas del pool las trae, con los mismos filtros (y el mismo héroe).
+   * Si falla, la tabla sale igual, sin victorias.
    */
-  const base: LadderRow[] = raw.map((r) => {
-    const wins = Math.round(r.value * r.matches);
-    return {
-      rank: 0,
-      accountId: r.account_id,
-      wins,
-      winRate: r.value,
-      score: wilsonScore(wins, r.matches),
-      gameScore: 0,
-      matches: r.matches,
-    };
-  });
-
-  /**
-   * El rango del juego, en UN pedido para todo el pool.
-   *
-   * `/v1/players/rank` acepta las 400 cuentas juntas (probado con 1.000 el
-   * 2026-11-04). **Ya no hay rango por héroe**: `/players/mmr/{héroe}` se fue
-   * con el resto, así que el podio de un héroe ordena por el rango general de
-   * quienes lo juegan, con Wilson —calculado con ESE héroe— de desempate.
-   *
-   * Si este pedido falla, la tabla queda ordenada sólo por Wilson: se degrada
-   * en vez de quedarse sin tabla.
-   */
-  const porCuenta = new Map(base.map((r) => [r.accountId, r]));
-  try {
-    const ids = base.map((r) => `account_ids=${r.accountId}`).join("&");
-    const rangos = parseRanks(await get<RawRank[]>(`${API}/players/rank?${ids}`));
-    for (const [id, m] of rangos) {
-      const row = porCuenta.get(id);
-      if (!row) continue;
-      row.gameScore = m.score;
-      if (m.badge) row.badge = m.badge;
+  let wins: RawRow[] = [];
+  if (raw.length > 0) {
+    try {
+      const q = filtros(floor);
+      q.set("sort_by", "wins");
+      q.set("limit", String(raw.length));
+      const ids = raw.map((r) => `account_ids=${r.account_id}`).join("&");
+      wins = await get<RawRow[]>(`${API}/analytics/scoreboards/players?${q}&${ids}`);
+    } catch {
+      /* sin victorias, pero con tabla */
     }
-  } catch {
-    /* sin rango del juego, ordena Wilson solo */
   }
 
   /**
-   * **Ordena el rango del juego; Wilson rompe los empates.** La única diferencia
-   * entre el mundo y un héroe es *qué* rango: el global en la tabla del mundo, y
-   * el de ESE héroe en la lista de un héroe. La regla es una sola, así que el
-   * podio de la pestaña y el "#34 con Doorman" del perfil no pueden discrepar.
+   * **Ordena el rango del juego; Wilson rompe los empates.** El rango es el
+   * general del jugador también en la lista de un héroe: el rango por héroe se
+   * fue con `/players/mmr/{héroe}` (2026-11-04).
    *
    * **Ordenar por winrate está mal y costó dos rondas entenderlo.** El winrate
    * es relativo al rival: ganar el 78% contra Mystic no es mejor que ganar el
-   * 55% contra Eternus. El 2026-08-13 la lista por héroe se pasó a Wilson solo
-   * —para que dejara de contradecir al perfil— y al día siguiente ZoTaD
-   * apretó al "mejor Abrams del mundo" que eso publicaba: un Mystic que juega
-   * dos partidas por día. Medido sobre ese mismo top 5, el primero era **el peor
-   * de los cinco** según el juego. El arreglo no era elegir cuál de las dos
-   * vistas mandaba, sino que **ninguna de las dos ordenara por winrate**.
-   *
-   * El rango del juego es GRUESO —59 valores distintos entre 1.000 jugadores, 51
-   * comparten el máximo— y por eso necesita el desempate de Wilson.
+   * 55% contra Eternus. El 2026-08-14 ZoTaD apretó al "mejor Abrams del mundo"
+   * que publicábamos por winrate: un Mystic que juega dos partidas por día.
    */
-  const rows: LadderRow[] = base
+  const rows: LadderRow[] = joinRankWins(raw, wins)
     .sort(byMerit)
     .slice(0, limit)
     .map((r, i) => ({ ...r, rank: i + 1 }));

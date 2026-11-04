@@ -1,4 +1,5 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { ladderSeason, seasonParams } from "./seasons";
 
 /**
@@ -74,19 +75,6 @@ const RANKED = "Ranked";
 const LADDER = ladderSeason();
 const SEASON_Q = seasonParams(LADDER.season);
 
-const Z = 1.96;
-
-/** El mismo puntaje que usa la pestaña. Ver `wilsonScore` en `deadlockLadder.ts`. */
-function wilson(wins: number, matches: number): number {
-  if (matches <= 0) return 0;
-  const p = wins / matches;
-  const z2 = Z * Z;
-  return (
-    (p + z2 / (2 * matches) - Z * Math.sqrt((p * (1 - p) + z2 / (4 * matches)) / matches)) /
-    (1 + z2 / matches)
-  );
-}
-
 interface RawRow {
   account_id: number;
   value: number;
@@ -154,139 +142,45 @@ export interface HeroLadderFile {
  */
 async function topOf(heroId: number): Promise<number[]> {
   const q = new URLSearchParams({
-    sort_by: "winrate",
+    // Ya ordenado por rango (`sort_by=rank`, 2026-11-04): `value` es el
+    // progreso plano del rango, el mismo número que ordena la pestaña.
+    sort_by: "rank",
     sort_direction: "desc",
     min_matches: String(MIN_MATCHES),
-    // Se piden 400 y se reordena acá: la API no sabe ordenar por MMR de héroe,
-    // así que el pool tiene que CONTENER a los mejores. Pedirlo por winrate es
-    // lo más ancho que hay con el piso de partidas puesto.
-    limit: "400",
+    limit: String(TOP),
     hero_id: String(heroId),
     match_mode: RANKED,
     ...SEASON_Q,
   });
   const res = await fetch(`${API}/analytics/scoreboards/players?${q}`);
   if (!res.ok) throw new Error(`HTTP ${res.status} en el héroe ${heroId}`);
-  const raw = (await res.json()) as RawRow[];
-  const pool = raw.map((r) => {
-    const wins = Math.round(r.value * r.matches);
-    return { id: r.account_id, score: wilson(wins, r.matches), matches: r.matches };
-  });
-  if (pool.length === 0) return [];
-
-  const mmr = await mmrDe(pool.map((p) => p.id));
-  return pool
-    .map((p) => ({ ...p, heroRank: mmr.get(p.id)?.rank ?? 0, heroScore: mmr.get(p.id)?.score ?? 0 }))
-    /**
-     * Sin MMR de héroe la cuenta queda en 0 y cae al final, **no arriba**: es la
-     * misma regla que el resto del sitio usa para los huecos. Un jugador del que
-     * no sabemos el rango no puede encabezar un ranking de rango.
-     */
-    /**
-     * **El mismo orden que `byMerit` en `deadlockLadder.ts`**: puntaje del
-     * juego, luego el piso de Wilson, luego partidas. Antes ordenaba primero
-     * por el rango (`heroRank`), que la pestaña no mira: con el rango como
-     * primer criterio, dos jugadores con la misma insignia se ordenaban distinto
-     * acá y en el podio en vivo. Si este orden y el de la pestaña divergen, un
-     * jugador se ve #1 en un lado y #3 en el otro, que es lo que pasó el
-     * 2026-09-07 (agravado porque el archivo llevaba 17 días sin regenerarse).
-     */
-    .sort((a, b) => b.heroScore - a.heroScore || b.score - a.score || b.matches - a.matches)
-    .slice(0, TOP)
-    .map((r) => r.id);
+  return byProgress((await res.json()) as RawRow[]);
 }
 
 /**
- * El rango del juego para un montón de cuentas, de a mil por pedido.
+ * Los `account_id` en orden de progreso del rango. La API ya los manda así; se
+ * reordena por las dudas, y sin cuentas repetidas (entre páginas el scoreboard
+ * repite alguna: 72 de 135.891 el 2026-11-04).
  *
- * Sale de `/v1/players/rank` desde el 2026-11-04, cuando deadlock-api sacó
- * `/v1/players/mmr` (daba 404 y el archivo salía ordenado sólo por Wilson).
- * `score` es el progreso plano con que cerró la última clasificatoria: crece
- * con el rango —mil puntos por subnivel— y distingue a dos Eternus 2, igual que
- * el `parseRanks` de la pestaña.
- *
- * **El límite de este endpoint es 20 pedidos por minuto por IP**, y la corrida
- * hace unos cincuenta (doce tandas del mundo y uno por héroe). Por eso cada
- * pedido espera a que pasen `RANK_GAP_MS` desde el anterior, sea del mundo o de
- * un héroe.
- *
- * **Ocho tandas seguidas dan 429**, medido: la primera corrida perdió tres de
- * ocho y dejó al 33% del mundo sin puntaje, hundido al final de la tabla. Un
- * ranking al que le falta un tercio de la gente no es un ranking. Se reintenta
- * con espera creciente y se respeta `Retry-After` cuando viene.
+ * **Antes el pool se pedía por winrate y se reordenaba con `/players/mmr`**, y
+ * ese pool dejaba afuera a los mejores: el #1 del mundo por rango tenía 69,6% y
+ * no entraba entre los 20.000 de más winrate. `/players/mmr` además dejó de
+ * existir el 2026-11-04.
  */
-const RANK_GAP_MS = 3100;
-let ultimoRango = 0;
-
-async function mmrDe(ids: number[]): Promise<Map<number, { rank: number; score: number }>> {
-  const out = new Map<number, { rank: number; score: number }>();
-  const ruta = "players/rank";
-  for (let i = 0; i < ids.length; i += 1000) {
-    const q = ids.slice(i, i + 1000).map((id) => `account_ids=${id}`).join("&");
-    for (let intento = 0; intento < 6; intento++) {
-      try {
-        const falta = ultimoRango + RANK_GAP_MS - Date.now();
-        if (falta > 0) await new Promise((r) => setTimeout(r, falta));
-        ultimoRango = Date.now();
-        const res = await fetch(`${API}/${ruta}?${q}`);
-        if (res.status === 429) {
-          const espera = Number(res.headers.get("retry-after") ?? 0) * 1000 || 2000 * 2 ** intento;
-          console.log(`  429 en ${ruta} (tanda ${i}), esperando ${Math.round(espera / 1000)}s`);
-          await new Promise((r) => setTimeout(r, espera));
-          continue;
-        }
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        for (const m of (await res.json()) as RawRank[]) {
-          out.set(m.account_id, {
-            rank: m.badge ?? 0,
-            score: m.last_match?.player_rank_final_flat_progress ?? 0,
-          });
-        }
-        break;
-      } catch (e) {
-        // Una tanda que falla del todo deja a esos jugadores sin entrada: caen al
-        // final en vez de tirar el archivo. Se avisa para que no pase inadvertido
-        // en el log de CI.
-        if (intento === 5) console.warn(`  tanda de rangos ${i} en ${ruta}: ${(e as Error).message}`);
-      }
-    }
-    /**
-     * Un respiro entre tandas: **3 s, y bajarlo a 1,2 fue un error medido**.
-     *
-     * El 2026-08-13 se bajó a 1,2 s "porque los pedidos por héroe son de ≤400
-     * cuentas y no son ocho seguidos". **Las dos mitades de ese razonamiento
-     * estaban mal, y la guarda de acá abajo lo demuestra**: la espera sólo corre
-     * cuando quedan tandas por delante, así que con un héroe —una sola tanda—
-     * **no se ejecuta nunca**. Bajarla no ahorró ni un segundo ahí, y sí la bajó
-     * en el único lugar donde importa: el pool del mundo, que hoy son 11.593
-     * cuentas, o sea doce tandas seguidas.
-     *
-     * Lo que costó, medido el 2026-08-16: la cobertura de puntaje cayó de
-     * **99,9% a 91,3%** — ~1.000 jugadores sin `gameScore`, hundidos al fondo del
-     * ranking mundial. Es el mismo 86,6% que la nota original ya avisaba para 1,2 s.
-     *
-     * Y lo que de verdad cuesta volver a 3 s son **once esperas de 1,8 s extra,
-     * ~20 segundos por corrida**, no los dos minutos que estimé mal contando 38
-     * esperas que nunca existieron.
-     */
-    if (i + 1000 < ids.length) await new Promise((r) => setTimeout(r, 3000));
-  }
-  return out;
+export function byProgress(rows: RawRow[]): number[] {
+  const vistos = new Set<number>();
+  return [...rows]
+    .sort((a, b) => b.value - a.value || b.matches - a.matches)
+    .filter((r) => !vistos.has(r.account_id) && vistos.add(r.account_id))
+    .map((r) => r.account_id);
 }
 
-interface RawRank {
-  account_id: number;
-  /** `rango*10 + subnivel`; 0 = sin rango. */
-  badge?: number;
-  last_match?: { player_rank_final_flat_progress?: number } | null;
-}
-
-/** Trae todas las páginas del scoreboard hasta que se agoten. */
-async function poolOf(minMatches: number): Promise<{ id: number; score: number }[]> {
-  const out: { id: number; score: number }[] = [];
+/** Trae las páginas del scoreboard, ya ordenadas por rango, hasta el tope. */
+async function poolOf(minMatches: number): Promise<RawRow[]> {
+  const out: RawRow[] = [];
   for (let start = 0; start < WORLD_CAP; start += 10_000) {
     const q = new URLSearchParams({
-      sort_by: "winrate",
+      sort_by: "rank",
       sort_direction: "desc",
       min_matches: String(minMatches),
       limit: "10000",
@@ -297,50 +191,21 @@ async function poolOf(minMatches: number): Promise<{ id: number; score: number }
     const res = await fetch(`${API}/analytics/scoreboards/players?${q}`);
     if (!res.ok) throw new Error(`HTTP ${res.status} en el pool del mundo`);
     const page = (await res.json()) as RawRow[];
-    for (const r of page) {
-      const wins = Math.round(r.value * r.matches);
-      out.push({ id: r.account_id, score: wilson(wins, r.matches) });
-    }
+    out.push(...page);
     if (page.length < 10_000) break;
   }
   return out;
 }
 
 /**
- * El ranking del mundo: **ordena el puntaje del juego, Wilson rompe empates.**
- *
- * El rango del juego es su propia respuesta a quién es mejor, y tiene en cuenta
- * contra quién jugaste — cosa que un winrate no puede. Pero es grueso: medido el
- * 2026-08-13 sobre 1.000 jugadores hay **59 valores distintos y 51 comparten el
- * máximo**, así que ordenar sólo por él dejaría cincuenta y un empatados en el
- * primer puesto. Ahí entra el piso de Wilson.
- *
- * `/v1/players/rank` toma **1.000 cuentas por pedido**, así que el pool se manda
- * en tandas. Con ~7.500 elegibles son ocho pedidos, en CI, una vez cada dos
- * horas.
+ * El ranking del mundo: los `WORLD_CAP` de más progreso en el rango del juego,
+ * que es su propia respuesta a quién es mejor y tiene en cuenta contra quién se
+ * jugó — cosa que un winrate no puede.
  */
 async function worldRanking(): Promise<number[]> {
   const pool = await poolOf(WORLD_MIN_MATCHES);
-  console.log(`  mundo: ${pool.length} jugadores con ${WORLD_MIN_MATCHES}+ clasificatorias`);
-  if (pool.length >= WORLD_CAP) {
-    console.warn(
-      `  ¡tope alcanzado! ${WORLD_CAP} es el máximo que se publica. ` +
-        `Hay que pasar a percentiles antes de que el archivo se vuelva una descarga sorpresa.`
-    );
-  }
-
-  const mmr = await mmrDe(pool.map((p) => p.id));
-  const porCuenta = new Map(
-    pool.map((p) => [p.id, { ...p, gameScore: mmr.get(p.id)?.score ?? 0 }])
-  );
-
-  const conPuntaje = [...porCuenta.values()].filter((p) => p.gameScore > 0).length;
-  console.log(`  ${conPuntaje} con puntaje del juego (${((100 * conPuntaje) / pool.length).toFixed(1)}%)`);
-
-  return [...porCuenta.values()]
-    .sort((a, b) => b.gameScore - a.gameScore || b.score - a.score)
-    .slice(0, WORLD_CAP)
-    .map((p) => p.id);
+  console.log(`  mundo: los ${pool.length} de más rango con ${WORLD_MIN_MATCHES}+ clasificatorias`);
+  return byProgress(pool).slice(0, WORLD_CAP);
 }
 
 async function main() {
@@ -351,18 +216,9 @@ async function main() {
   console.log(`escalera por héroe: ${ids.length} héroes, top ${TOP} cada uno`);
 
   /**
-   * **El mundo va PRIMERO, y ese orden es el arreglo.**
-   *
-   * Los 38 héroes hacen dos pedidos cada uno —el scoreboard y el MMR de ese
-   * héroe— o sea 76 seguidos, y el pool del mundo son doce tandas más. Con los
-   * héroes adelante, el mundo llegaba a una API ya estrangulada: medido el
-   * 2026-08-16, la cobertura de puntaje cayó a **82,7%**, con esperas de 32 y 64
-   * segundos, y eso son ~2.000 jugadores del ranking mundial sin `gameScore`,
-   * hundidos al fondo.
-   *
-   * Si el límite de tasa tiene que castigar a alguien, que sea la cola de una
-   * lista de héroe y no la tabla del mundo, que además alimenta el "Mundo #N" de
-   * todos los perfiles.
+   * El mundo va primero: si el límite de tasa tiene que castigar a alguien, que
+   * sea la cola de una lista de héroe y no la tabla del mundo, que alimenta el
+   * "Mundo #N" de todos los perfiles.
    */
   const world = await worldRanking();
 
@@ -382,13 +238,7 @@ async function main() {
       console.warn(`  héroe ${id}: ${(e as Error).message}`);
       vacíos++;
     }
-    /**
-     * Un respiro entre héroes. **Acá es donde hacía falta y no entre tandas**:
-     * cada héroe son dos pedidos y el bucle los dispara sin pausa, así que 38
-     * héroes son 76 pedidos casi simultáneos. La espera de `mmrDe` no los toca
-     * —vive dentro del bucle de tandas, y un héroe entra en una sola—, que fue
-     * exactamente el error de razonamiento del 2026-08-13.
-     */
+    // Un respiro entre héroes: sin él son 44 pedidos casi simultáneos.
     await new Promise((r) => setTimeout(r, 1500));
   }
 
@@ -412,7 +262,10 @@ async function main() {
   console.log(`  ${filas} puestos publicados · ${kb} KB`);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+// Sólo al correrlo, no al importarlo desde un test.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}
