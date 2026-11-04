@@ -12,6 +12,7 @@ export function cs2SitemapData(
   lists: Record<"skins" | "cases" | "collections", Row[]>,
   patches?: NonNullable<Cs2SitemapData["patches"]>,
   esports?: NonNullable<Cs2SitemapData["esports"]>,
+  lineups?: { maps: { map: string; name: string }[] },
 ): Cs2SitemapData {
   const rows = (rs: Row[]) => rs.map((r) => ({ slug: r.slug, name: r.phase ? `${r.name} · ${r.phase}` : r.name }));
   return {
@@ -27,5 +28,7 @@ export function cs2SitemapData(
       players: esports.players.map((x) => ({ slug: x.slug, id: x.id })),
       tours: esports.tours.map((x) => ({ slug: x.slug, name: x.name })),
     },
+    // Granadas: el mapa y su nombre.
+    grenades: lineups?.maps.map((m) => ({ map: m.map, name: m.name })),
   };
 }
