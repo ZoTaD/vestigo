@@ -168,3 +168,18 @@ class TestBanderas(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestHistory(unittest.TestCase):
+    def test_un_puesto_por_fecha(self):
+        """Valve rankea planteles: si dos llevan el mismo nombre, el equipo queda con el mejor puesto de esa fecha."""
+        fila = "| {r}        |   {p} | 9z                   | {ro}  | [details](details/x.md) |"
+        md = "\n".join([fila.format(r=19, p=1508, ro="a, b, c, d, e"), fila.format(r=253, p=641, ro="f, g, h, i, j")])
+
+        class Gh:
+            names = staticmethod(lambda y: ["standings_global_2026_05_04.md"] if y == 2026 else [])
+            text = staticmethod(lambda path: md)
+
+        with tempfile.TemporaryDirectory() as d:
+            h = esports_teams.vrs_history(Gh(), Path(d), 2026)
+        self.assertEqual(h["9z"], [{"date": "2026-05-04", "rank": 19, "pts": 1508}])
