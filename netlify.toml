@@ -173,6 +173,13 @@
   status = 200
   force = true
 
+# El Deadlockdle (2026-11-04), del mismo Worker.
+[[redirects]]
+  from = "/api/dle/*"
+  to = "https://vestigo-api.vestigo-gg.workers.dev/api/dle/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/assets/*"
   to = "/404.html"
