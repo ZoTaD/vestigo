@@ -156,6 +156,32 @@ class TestEsportsData(unittest.TestCase):
         with self.assertRaises(urllib.error.HTTPError):
             gh.names(2026)
 
+    def test_resuelve_nombres_por_redireccion(self):
+        """Un nombre del ranking que no aparece en los torneos se busca en Liquipedia: vale la redirección ("1win" →
+        "1w Team") sólo si la página es de un equipo. Lo resuelto queda guardado y no se vuelve a preguntar."""
+        calls = []
+
+        class Lp:
+            def query(self, **params):
+                calls.append(params["titles"])
+                return {"query": {
+                    "redirects": [{"from": "1win", "to": "1w Team"}],
+                    "pages": {
+                        "1": {"title": "1w Team", "categories": [{"title": "Category:Teams"}]},
+                        "2": {"title": "Rooster", "categories": []},
+                        "-1": {"title": "Sashi", "missing": ""},
+                    },
+                }}
+
+        with tempfile.TemporaryDirectory() as d:
+            cache = Path(d) / "names.json"
+            got = esports_data.resolve_names(Lp(), ["1win", "Rooster", "Sashi"], cache, "2026-11-04")
+            self.assertEqual(got, {"1win": "1w_Team"})
+            esports_data.resolve_names(Lp(), ["1win", "Rooster", "Sashi"], cache, "2026-11-05")
+            self.assertEqual(len(calls), 1)  # todo cacheado: lo que no es equipo se vuelve a mirar en una semana
+            esports_data.resolve_names(Lp(), ["1win", "Rooster", "Sashi"], cache, "2026-11-12")
+            self.assertEqual(calls[-1], "Rooster|Sashi")
+
     def test_cruza_el_vrs_con_liquipedia(self):
         self.assertEqual(esports_data.norm("Team Vitality"), esports_data.norm("Vitality"))
         self.assertEqual(esports_data.norm("BetBoom Team"), esports_data.norm("BETBOOM"))

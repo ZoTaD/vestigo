@@ -126,9 +126,14 @@ describe("el eje del ranking", () => {
     const t = rankTicks(253, y(253));
     expect(t[0]).toBe(1);
     expect(t[t.length - 1]).toBe(253);
-    for (let i = 1; i < t.length; i++) expect(y(253)(t[i]) - y(253)(t[i - 1])).toBeGreaterThanOrEqual(16);
+    for (let i = 1; i < t.length; i++) expect(y(253)(t[i]) - y(253)(t[i - 1])).toBeGreaterThanOrEqual(26);
   });
   it("con un equipo siempre arriba muestra los puestos cercanos", () => {
     expect(rankTicks(12, y(12))).toEqual([1, 5, 10, 12]);
+  });
+  it("con el peor puesto en 97 no amontona 1, 10, 20 y 30", () => {
+    const t = rankTicks(97, y(97));
+    for (let i = 1; i < t.length; i++) expect(y(97)(t[i]) - y(97)(t[i - 1])).toBeGreaterThanOrEqual(26);
+    expect(t[t.length - 1]).toBe(97);
   });
 });

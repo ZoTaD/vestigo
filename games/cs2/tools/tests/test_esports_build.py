@@ -65,6 +65,29 @@ class TestBuild(unittest.TestCase):
     def read(self, f):
         return json.loads((self.out / f).read_text(encoding="utf-8"))
 
+    def test_sin_plantel_en_liquipedia_usa_el_del_ranking(self):
+        """Sin plantel activo en Liquipedia (o sin página), el de Valve: los cinco del ranking, sin enlace."""
+        self.build(budget=0)
+        r = self.read("teams/1win.json")["roster"]
+        self.assertEqual([(p["id"], p["lp"], p["role"]) for p in r], [(x, None, "player") for x in "abcde"])
+
+    def test_plantel_a_medias_se_completa_con_el_del_ranking(self):
+        """Con tres en Liquipedia, los dos que faltan salen del ranking (sin enlace) y nadie se repite."""
+        real = esports_teams.team_page
+
+        def tres(html):
+            t = real(html)
+            t["roster"] = [p for p in t["roster"] if p["id"] in ("torzsi", "xertioN", "Spinx", "sycrone")]
+            return t
+
+        esports_teams.team_page = tres
+        try:
+            self.build(budget=2)
+        finally:
+            esports_teams.team_page = real
+        r = [(p["id"], p["lp"]) for p in self.read("teams/mouz.json")["roster"] if p["role"] == "player"]
+        self.assertEqual(r, [("torzsi", "Torzsi"), ("xertioN", "XertioN"), ("Spinx", "Spinx"), ("PR", None), ("xelex", None)])
+
     def test_respeta_el_tope(self):
         self.build(budget=2)
         self.assertEqual(self.lp.parses, ["MOUZ", "MOUZ/Results"])
@@ -141,7 +164,7 @@ class TestBuild(unittest.TestCase):
         t = self.read("teams/1win.json")
         self.assertIsNone(t["lp"])
         self.assertEqual((t["name"], t["vrs"]["rank"]), ("1win", 12))
-        self.assertEqual((t["roster"], t["maps"], t["matches"]), ([], [], []))
+        self.assertEqual((len(t["roster"]), t["maps"], t["matches"]), (5, [], []))  # el plantel, del ranking
 
 
 class TestBanderas(unittest.TestCase):

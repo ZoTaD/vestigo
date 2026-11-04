@@ -204,7 +204,7 @@ def build(lp, gh, out: Path, raw: Path, today: str, vrs: dict, teams: dict, tour
     players = {}
     for r in vrs.get("global", []):
         for pl in data.get(r["team"], {}).get("roster", []):
-            if pl["role"] != "player":
+            if pl["role"] != "player" or not pl.get("lp"):
                 continue
             f = out / "players" / f"{slugify(pl['lp'])}.json"
             pd = _load(f)
@@ -225,6 +225,14 @@ def build(lp, gh, out: Path, raw: Path, today: str, vrs: dict, teams: dict, tour
     for r in ranked:
         d = data[r["team"]]
         roster = d.get("roster", [])
+        # Con menos de cinco en Liquipedia (sin página, plantel a medio cargar), se completa con el del ranking de
+        # Valve, que es el oficial: los que faltan, sin enlace.
+        have = [p for p in roster if p["role"] == "player"]
+        if len(have) < 5 and r.get("roster"):
+            seen = {p["id"].lower() for p in have}
+            have += [{"lp": None, "id": x, "name": "", "flag": None, "since": None, "captain": False, "role": "player"}
+                     for x in r["roster"] if x.lower() not in seen][: 5 - len(have)]
+            roster = have + [p for p in roster if p["role"] == "coach"]
         flags |= {p["flag"] for p in roster if p.get("flag")}
         known = teams.get(r["lp"], {}) if r["lp"] else {}
         team = {
@@ -234,7 +242,7 @@ def build(lp, gh, out: Path, raw: Path, today: str, vrs: dict, teams: dict, tour
                     "history": hist.get(r["team"], [])},
             # Lo leído antes de que los lectores limpiaran sede y puestos también sale limpio.
             "location": clean_location(d.get("location"), d.get("region")), "region": d.get("region"),
-            **{k: d.get(k) for k in ("igl", "coaches", "winnings", "created")},
+            **{k: d.get(k) for k in ("igl", "coaches", "winnings", "created", "logo_file")},
             "roster": roster, "results": [{**x, "place": clean_place(x["place"])} for x in d.get("results", [])[:15]],
             "maps": map_stats(every, r["lp"], since) if r["lp"] else [],
             "matches": team_matches(every, r["lp"])[:20] if r["lp"] else [],

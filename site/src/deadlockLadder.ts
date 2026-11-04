@@ -36,23 +36,23 @@ export interface LadderRow {
   /** El piso de Wilson. **Rompe empates**; ya no es lo primero que ordena. */
   score: number;
   /**
-   * El puntaje del propio juego (`player_score` de `/v1/players/mmr`).
+   * El puntaje del propio juego: el progreso plano de `/v1/players/rank`
+   * (ver `parseRanks`). Antes era `player_score` de `/v1/players/mmr`, que
+   * deadlock-api sacó el 2026-11-04.
    *
    * **Es lo que ordena la tabla**, y es lo correcto: es la respuesta del juego a
    * "quién es mejor", tiene en cuenta contra quién jugaste —cosa que un winrate
-   * no puede— y no es una fórmula nuestra. Medido el 2026-08-13 sobre 1.000
-   * jugadores: va de 5 a 64, con mediana 45.
+   * no puede— y no es una fórmula nuestra.
    */
   gameScore: number;
   matches: number;
   name?: string;
   country?: string;
   /**
-   * `last_team_avg_badge` de `/v1/players/steam`, no documentado en el diseño
-   * original: medido sobre 50 cuentas reales el 2026-08-12, el endpoint lo trae
-   * siempre. Es el rango real del jugador —lo que el diseño había dado por
-   * perdido— y se lee con `rankOf` de `deadlockReportData.ts`, la misma que usa
-   * el perfil. Ausente o 0 significa sin rango, no rango cero.
+   * El rango real del jugador, de `/v1/players/rank`. **No** el
+   * `last_team_avg_badge` de `/v1/players/steam`, que es el promedio de su
+   * equipo. Se lee con `rankOf` de `deadlockReportData.ts`, la misma que usa el
+   * perfil. Ausente o 0 significa sin rango, no rango cero.
    */
   badge?: number;
 }
@@ -162,22 +162,41 @@ interface RawSteam {
   account_id: number;
   personaname?: string;
   countrycode?: string;
-  last_team_avg_badge?: number;
 }
 
 /**
- * Lo que devuelve `/v1/players/mmr`, el puntaje interno del juego.
+ * Lo que devuelve `/v1/players/rank`, el rango de cada cuenta al cerrar su
+ * última clasificatoria.
  *
- * `rank` es el badge de siempre (`division * 10 + division_tier`, verificado), y
- * **es el rango real del jugador**: se cruzó contra `players/{id}/rank` en dos
- * cuentas y dio idéntico (114 y 61).
+ * **Reemplaza a `/v1/players/mmr`, que deadlock-api sacó** (404 el 2026-11-04):
+ * con él se iban el puntaje y el rango, y la tabla quedó con "—" en todas las
+ * filas y ordenada sólo por Wilson. `badge` es el mismo `rango*10 + subnivel`
+ * de siempre y `0` es "sin rango".
  */
-interface RawMmr {
+export interface RawRank {
   account_id: number;
-  player_score?: number;
-  rank?: number;
-  division?: number;
-  division_tier?: number;
+  badge?: number;
+  last_match?: { player_rank_final_flat_progress?: number } | null;
+}
+
+/**
+ * El rango y el puntaje que ordena, por cuenta.
+ *
+ * El puntaje es el **progreso plano** con que cerró la última partida
+ * (`player_rank_final_flat_progress`): crece con el rango —cada subnivel son
+ * mil puntos— y, a diferencia del badge, distingue a dos Eternus 2. Es lo más
+ * parecido al `player_score` que se perdió. Sin progreso el puntaje es 0 y la
+ * cuenta cae al fondo, como antes cuando faltaba el MMR.
+ */
+export function parseRanks(raw: RawRank[]): Map<number, { badge: number; score: number }> {
+  const out = new Map<number, { badge: number; score: number }>();
+  for (const r of raw) {
+    out.set(r.account_id, {
+      badge: r.badge ?? 0,
+      score: r.last_match?.player_rank_final_flat_progress ?? 0,
+    });
+  }
+  return out;
 }
 
 /**
@@ -322,34 +341,28 @@ export async function fetchLadder(opts: {
   });
 
   /**
-   * El puntaje del juego, en UN pedido para todo el pool.
+   * El rango del juego, en UN pedido para todo el pool.
    *
-   * `/v1/players/mmr` acepta hasta 1.000 cuentas, y el pool son 400: entra
-   * entero. Verificado el 2026-08-13 — devolvió los 1.000 de 1.000 pedidos, y su
-   * campo `rank` es **idéntico** al `badge` de `players/{id}/rank`, así que de
-   * acá sale también el rango REAL del jugador. Antes se usaba
-   * `last_team_avg_badge`, que es el promedio de su equipo y no su rango.
+   * `/v1/players/rank` acepta las 400 cuentas juntas (probado con 1.000 el
+   * 2026-11-04). **Ya no hay rango por héroe**: `/players/mmr/{héroe}` se fue
+   * con el resto, así que el podio de un héroe ordena por el rango general de
+   * quienes lo juegan, con Wilson —calculado con ESE héroe— de desempate.
    *
-   * **Con un héroe elegido se pide el MMR DE ESE HÉROE** (`/players/mmr/{id}`) y
-   * no el global: es la diferencia entre "el mejor Abrams" y "el mejor jugador
-   * de los que juegan Abrams". Ver el comentario del `sort`.
-   *
-   * Si este pedido falla, la tabla queda ordenada sólo por Wilson: se degrada a
-   * lo que hacía ayer en vez de quedarse sin tabla.
+   * Si este pedido falla, la tabla queda ordenada sólo por Wilson: se degrada
+   * en vez de quedarse sin tabla.
    */
   const porCuenta = new Map(base.map((r) => [r.accountId, r]));
   try {
     const ids = base.map((r) => `account_ids=${r.accountId}`).join("&");
-    const ruta = opts.hero ? `players/mmr/${opts.hero}` : "players/mmr";
-    const mmr = await get<RawMmr[]>(`${API}/${ruta}?${ids}`);
-    for (const m of mmr) {
-      const row = porCuenta.get(m.account_id);
+    const rangos = parseRanks(await get<RawRank[]>(`${API}/players/rank?${ids}`));
+    for (const [id, m] of rangos) {
+      const row = porCuenta.get(id);
       if (!row) continue;
-      row.gameScore = m.player_score ?? 0;
-      if (m.rank) row.badge = m.rank;
+      row.gameScore = m.score;
+      if (m.badge) row.badge = m.badge;
     }
   } catch {
-    /* sin puntaje del juego, ordena Wilson solo */
+    /* sin rango del juego, ordena Wilson solo */
   }
 
   /**
@@ -384,10 +397,6 @@ export async function fetchLadder(opts: {
         const s = byId.get(r.accountId);
         if (s?.personaname) r.name = s.personaname;
         if (s?.countrycode) r.country = s.countrycode;
-        // Truthy y no `!== undefined`: un badge en 0 es "sin rango", igual que
-        // ausente, y `rankOf` ya trata los dos casos igual. Guardar el 0 acá
-        // sólo movería esa decisión a cada lugar que lea `row.badge`.
-        if (s?.last_team_avg_badge) r.badge = s.last_team_avg_badge;
       }
     } catch {
       /* sin nombres, pero con tabla */
