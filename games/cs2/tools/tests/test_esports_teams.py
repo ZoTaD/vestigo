@@ -69,6 +69,12 @@ class TestLlaves(unittest.TestCase):
         s = {x["map"]: x for x in map_stats([m], "MOUZ", "2000-01-01")}
         self.assertEqual(s["Mirage"]["won"], 1)  # MOUZ ganó Mirage 16–14 desde la derecha
 
+    def test_con_el_estilo_del_html_real(self):
+        # El HTML de Liquipedia trae `style` en el nombre de cada equipo (el fixture lo tiene recortado).
+        h = leer("lp_bracket.html").replace('<span class="name team-name-dynamic">', '<span class="name team-name-dynamic" style="white-space:pre">')
+        m = bracket_matches(h)[0]
+        self.assertEqual((m["a_lp"], m["b_lp"]), ("Team_Spirit", "MOUZ"))
+
     def test_mapa_sin_jugar_no_cuenta(self):
         self.assertEqual([x["map"] for x in self.ms[1]["maps"]], ["Nuke", "Inferno"])
 

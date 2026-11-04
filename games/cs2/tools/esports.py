@@ -189,7 +189,7 @@ def bracket_matches(html: str) -> list[dict]:
         blocks = head.split('class="match-info-header-opponent')[1:3]
         sides, names = [], []
         for blk in blocks:
-            lnk = re.search(r'<span class="name[^"]*"><a href="/counterstrike/([^"#]+)"', blk)
+            lnk = re.search(r'<span class="name[^"]*"[^>]*><a href="/counterstrike/([^"#]+)"', blk)
             nm = re.search(r'<div class="team-name">([^<]+)</div>', blk)
             sides.append(lnk.group(1) if lnk else None)
             if nm:
