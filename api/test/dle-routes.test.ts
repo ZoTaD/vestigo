@@ -51,7 +51,7 @@ describe("today", () => {
       expect(text).not.toContain(answer.name);
       expect(text).not.toContain(answer.id);
       const body = JSON.parse(text);
-      expect(body).toMatchObject({ number: 1, date: "2026-11-05", mode: "heroes", solved: false, rows: [] });
+      expect(body).toMatchObject({ number: 2, date: "2026-11-05", mode: "heroes", solved: false, rows: [] });
       expect(body.columns.map((c: { key: string }) => c.key)).toEqual(["complexity", "health", "moveSpeed", "clip", "gunDps", "winRate"]);
     }
   });

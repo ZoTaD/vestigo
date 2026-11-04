@@ -15,7 +15,7 @@ export interface Cell {
 }
 
 /** El día #1. Se cuenta en UTC, igual que el cambio de respuesta. */
-export const LAUNCH_DATE = "2026-11-05";
+export const LAUNCH_DATE = "2026-11-04";
 const DAY_MS = 86_400_000;
 
 const norm = (s: string) => s.trim().replace(/\s+/g, " ").toLowerCase();
