@@ -22,19 +22,28 @@ type UnitFicha = UnitRow & {
   weapons?: { slug: string; name: unknown; count: number }[];
   vet?: { xp: number; desc: { en: string } | null }[] | null;
 };
-/** Lo que no es tiro directo y no suma al DPS sostenido. */
-const SKIP = /grenade|smoke|satchel|sticky|mine|flare|dummy|demolition|explosive_charge/i;
+/** Lo que no es tiro directo y no suma al DPS sostenido (por nombre o por clase). */
+const SKIP = /grenade|smoke|satchel|sticky|mine|flare|dummy|demolition|explosive_charge|panzerfaust|_veteran/i;
+const SKIP_CLS = new Set(["grenade", "rifle_grenade", "smoke", "dummy"]);
+/**
+ * ¿Es un lanzamiento de habilidad? Esos traen una precisión fuera de escala (11, 15: el juego los guía por guion) o en 0,
+ * y no disparan solos: no suman al DPS.
+ */
+const isThrown = (w: WeaponData) => !w.acc || w.acc.some((a) => a > 1) || w.acc.every((a) => a === 0);
 
 /** Las armas de una unidad que cuentan, con sus fichas ya cargadas. */
 function useUnitWeapons(u: UnitFicha | null | undefined) {
-  const slugs = (u?.weapons ?? []).filter((w) => !SKIP.test(w.slug)).slice(0, 4);
+  // Las de más cantidad primero (el arma de cada soldado), hasta 4.
+  const slugs = (u?.weapons ?? []).filter((w) => !SKIP.test(w.slug)).sort((x, y) => y.count - x.count).slice(0, 4);
   // Hasta 4 armas por unidad: un hook por posición, siempre los mismos (las reglas de los hooks).
   const f0 = useFicha<WeaponData>("weapons", slugs[0]?.slug);
   const f1 = useFicha<WeaponData>("weapons", slugs[1]?.slug);
   const f2 = useFicha<WeaponData>("weapons", slugs[2]?.slug);
   const f3 = useFicha<WeaponData>("weapons", slugs[3]?.slug);
   const fs = [f0, f1, f2, f3];
-  return slugs.map((s, i) => ({ slug: s.slug, n: s.count, data: fs[i] })).filter((x) => x.data && x.data.dmg && !SKIP.test(x.data.cls ?? "")) as { slug: string; n: number; data: WeaponData }[];
+  return slugs
+    .map((s, i) => ({ slug: s.slug, n: s.count, data: fs[i] }))
+    .filter((x) => x.data && x.data.dmg && !SKIP_CLS.has(x.data.cls ?? "") && !isThrown(x.data)) as { slug: string; n: number; data: WeaponData }[];
 }
 
 export default function Coh3Dps({ route, navigate }: { route: Route; navigate: Nav }) {

@@ -24,7 +24,7 @@ export interface WeaponData {
   range?: number[] | null;
   cooldown?: number[] | null;
   aim?: { fire?: number[]; ready?: number[] } | null;
-  burst?: { duration?: number[]; rate?: number[]; dur?: number[] } | null;
+  burst?: { duration?: number[]; rate?: number[]; dur?: number[]; rof?: number[] } | null;
   moving?: number | null;
   usedBy?: string[];
   users?: number;
@@ -54,7 +54,7 @@ export function weaponStats(w: WeaponData, vet?: VetMods): WeaponStats {
   const v = vet ?? { accuracy: 1, penetration: 1, rateOfFire: 1, damage: 1 };
   const rof = Math.max(0.1, v.rateOfFire);
   const scale = (p: [number, number], k: number): [number, number] => [p[0] / k, p[1] / k];
-  const burst = w.burst && (w.burst.duration || w.burst.dur) ? { dur: pair(w.burst.duration ?? w.burst.dur), rate: pair(w.burst.rate, 1) } : null;
+  const burst = w.burst && (w.burst.duration || w.burst.dur) ? { dur: pair(w.burst.duration ?? w.burst.dur), rate: pair(w.burst.rate ?? w.burst.rof, 1) } : null;
   const every = w.reloadEvery ? (w.reloadEvery[0] + w.reloadEvery[1]) / 2 : 0;
   return {
     pen: trio(w.pen, 1).map((x) => x * v.penetration) as Trio,

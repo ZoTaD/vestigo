@@ -130,7 +130,8 @@ export function hit(w: WeaponStats, t: TargetStats, side: Side, d: number): Hit 
   const expectedShots = pHit > 0 ? shotsToKill / pHit : Infinity;
   const sps = shotsPerSecond(w);
   const dps = expected * sps;
-  return { d, inRange, pen, chance, acc, dmg, expected, shotsToKill, expectedShots, seconds: dps > 0 ? t.hp / dps : Infinity, dps };
+  // Los segundos salen de los mismos disparos esperados (con los impactos enteros que hacen falta), así las dos cifras cierran.
+  return { d, inRange, pen, chance, acc, dmg, expected, shotsToKill, expectedShots, seconds: Number.isFinite(expectedShots) && sps > 0 ? expectedShots / sps : Infinity, dps };
 }
 
 /** La curva de una magnitud de 0 al alcance, metro a metro (para los gráficos). */
