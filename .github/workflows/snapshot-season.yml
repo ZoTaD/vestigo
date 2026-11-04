@@ -1,0 +1,70 @@
+name: snapshot deadlock season
+
+# La foto del top 100 de la Season 1 de Deadlock, que cierra el 5/11/2026 a las 22:00 UTC.
+#
+# **Corre varias veces porque GitHub atrasa las programadas** (hasta horas, ver `publish-deadlock.yml`), y el rango
+# final sólo se puede leer mientras el jugador no haya jugado la temporada siguiente. Cada corrida combina con la
+# anterior y descarta los rangos que ya salen de la S2 (`seasonSnapshot.ts`), así que una tardía no pisa nada. La del 6/11
+# recalcula victorias y partidas con la temporada cerrada. El cron no lleva año: pasados 3 días del cierre el script no
+# hace nada.
+#
+# No dispara un build: nada del sitio lee estos archivos todavía.
+on:
+  schedule:
+    - cron: "0 12,16,19,21 5 11 *"
+    - cron: "30 6 6 11 *"
+  workflow_dispatch:
+
+concurrency:
+  group: snapshot-season
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: games/deadlock/pipeline/package-lock.json
+
+      - name: install
+        run: npm ci --prefix games/deadlock/pipeline
+
+      - name: snapshot
+        run: npm run snapshot:season --prefix games/deadlock/pipeline
+
+      - name: commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- games/deadlock/data && [ -z "$(git status --porcelain -- games/deadlock/data)" ]; then
+            echo "nada cambió; no hay commit"
+            exit 0
+          fi
+          auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git_auth() { git -c "http.https://github.com/.extraheader=$auth" "$@"; }
+          git config user.name "vestigo-bot"
+          git config user.email "67348048+ZoTaD@users.noreply.github.com"
+          git add games/deadlock/data/season*Top100.json games/deadlock/data/season*Ranks.json
+          git commit -m "chore: foto del top 100 de la temporada de Deadlock"
+          empujado=0
+          for intento in 1 2 3; do
+            if git_auth push origin "HEAD:$GITHUB_REF_NAME"; then empujado=1; break; fi
+            echo "push rechazado (intento $intento): traigo lo que llegó y reintento"
+            git_auth fetch origin "$GITHUB_REF_NAME" || break
+            git rebase "origin/$GITHUB_REF_NAME" || break
+          done
+          if [ "$empujado" != 1 ]; then
+            echo "::error::no se pudo publicar después de 3 intentos"
+            exit 1
+          fi
