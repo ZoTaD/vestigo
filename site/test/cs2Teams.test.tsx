@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { age, PlayerPage } from "../src/cs2/esports/teams/Cs2Players";
 import { TeamPage } from "../src/cs2/esports/teams/Cs2Teams";
 import { lpSlug, type EsIndex, type Player, type Team } from "../src/cs2/esports/teams/data";
-import { MapTiles } from "../src/cs2/esports/teams/parts";
+import { MapTiles, rankTicks } from "../src/cs2/esports/teams/parts";
 import { LangContext } from "../src/i18n";
 import type { Route } from "../src/route";
 
@@ -117,5 +117,18 @@ describe("arreglos de la revisión final", () => {
     const p: Player = { slug: "y", lp: "Y", id: "y", name: null, flag: null, born: null, roles: [], team_lp: "Team_Spirit_Academy", team_slug: "team-spirit-academy", winnings: null };
     const html = wrap(<PlayerPage p={p} idx={idx} route={route} navigate={nav} />);
     expect(html).toContain("Team Spirit Academy");
+  });
+});
+
+describe("el eje del ranking", () => {
+  const y = (max: number) => (r: number) => 14 + ((r - 1) / (max - 1)) * 176;
+  it("no amontona los números aunque el equipo haya caído al puesto 253", () => {
+    const t = rankTicks(253, y(253));
+    expect(t[0]).toBe(1);
+    expect(t[t.length - 1]).toBe(253);
+    for (let i = 1; i < t.length; i++) expect(y(253)(t[i]) - y(253)(t[i - 1])).toBeGreaterThanOrEqual(16);
+  });
+  it("con un equipo siempre arriba muestra los puestos cercanos", () => {
+    expect(rankTicks(12, y(12))).toEqual([1, 5, 10, 12]);
   });
 });

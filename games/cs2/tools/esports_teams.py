@@ -99,8 +99,13 @@ def vrs_history(gh, raw: Path, year: int) -> dict[str, list[dict]]:
         if not f.exists():
             f.write_text(gh.text(f"{n[17:21]}/{n}"), encoding="utf-8")
         date = n[17:27].replace("_", "-")
+        # Valve rankea planteles: dos con el mismo nombre (un equipo B, un plantel viejo) quedan en el mejor puesto.
+        best: dict[str, dict] = {}
         for r in standings(f.read_text(encoding="utf-8")):
-            out.setdefault(r["team"], []).append({"date": date, "rank": r["rank"], "pts": r["pts"]})
+            if r["team"] not in best or r["rank"] < best[r["team"]]["rank"]:
+                best[r["team"]] = r
+        for team, r in best.items():
+            out.setdefault(team, []).append({"date": date, "rank": r["rank"], "pts": r["pts"]})
     return out
 
 

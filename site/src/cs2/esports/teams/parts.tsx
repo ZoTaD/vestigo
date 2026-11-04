@@ -13,6 +13,21 @@ export function Flag({ code, size = 18 }: { code: string | null | undefined; siz
   return <img className="c2-flag" src={`/cs2/flags/${code}.svg`} alt={code.toUpperCase()} width={Math.round(size * 4 / 3)} height={size} loading="lazy" decoding="async" />;
 }
 
+const STEPS = [1, 5, 10, 20, 30, 50, 100, 150, 200, 300, 400, 500];
+
+/**
+ * Los puestos que lleva el eje: redondos, del 1 al peor puesto (que va siempre), salteando los que quedarían a menos de
+ * 16 px del anterior. Con una escala hasta el 253, el 5, el 10 y el 20 se pisaban.
+ */
+export function rankTicks(max: number, y: (r: number) => number): number[] {
+  const out: number[] = [];
+  for (const v of STEPS.filter((s) => s < max).concat(max)) {
+    if (!out.length || y(v) - y(out[out.length - 1]) >= 16) out.push(v);
+    else if (v === max) out[out.length - 1] = max;
+  }
+  return out;
+}
+
 /** El puesto en el mundial mes a mes (el 1 arriba). Con menos de dos meses, nada. */
 export function RankChart({ history, label }: { history: { date: string; rank: number }[]; label: string }) {
   if (history.length < 2) return null;
@@ -20,7 +35,7 @@ export function RankChart({ history, label }: { history: { date: string; rank: n
   const max = Math.max(10, ...history.map((p) => p.rank));
   const x = (i: number) => L + (i / (history.length - 1)) * (W - L - R);
   const y = (r: number) => 14 + ((r - 1) / (max - 1)) * (H - 44);
-  const ticks = [...new Set([1, 5, 10, 20, 30].filter((v) => v <= max).concat(max <= 30 ? [] : [max]))];
+  const ticks = rankTicks(max, y);
   const years = history.map((p, i) => [p.date.slice(0, 4), i] as const).filter(([yr, i]) => i === 0 || history[i - 1].date.slice(0, 4) !== yr);
   const last = history[history.length - 1];
   return (
