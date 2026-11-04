@@ -7,11 +7,11 @@ import RouteLink from "../../RouteLink";
 import { LazyRows } from "../../LazyRows";
 import { routePath, type Route } from "../../route";
 import { useLang } from "../../i18n";
-import { useCoh3Copy, type Faction } from "../../coh3Copy";
+import { SIDE, useCoh3Copy, type Faction } from "../../coh3Copy";
 import { loadFicha, loadList, peekFicha, peekList, tr, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, FactionTag, Icon, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
 import { hit } from "../combat/engine";
-import { isAntiTank, isArmored, targetStats, weaponStats, type WeaponData } from "../combat/weapons";
+import { isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "../combat/weapons";
 import { useWeaponName } from "../combat/parts";
 import { useExplorerCopy } from "./copy";
 import { FactionFilter } from "./Coh3Units";
@@ -192,7 +192,7 @@ function WeaponPage({ slug, route, navigate }: { slug: string; route: Route; nav
   const pair = (v: number[] | null | undefined) => (v ? (v[0] === v[1] ? fmt(v[0]) : `${fmt(v[0])}–${fmt(v[1])}`) : "—");
   const aoe = typeof w.aoe === "number" ? w.aoe : w.aoe?.radius;
   const at = isAntiTank(w);
-  const vehicles = (lists?.units ?? []).filter((u) => isArmored(u));
+  const vehicles = (lists?.units ?? []).filter((u) => isVehicle(u) && (!w.faction || SIDE[u.faction] !== SIDE[w.faction]));
   const d = Math.min(30, ws.range);
   const prey = at
     ? vehicles

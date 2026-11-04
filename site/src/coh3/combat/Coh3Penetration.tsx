@@ -14,7 +14,7 @@ import { tr, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
 import { curve, hit, type Side } from "./engine";
 import { vetAt, parseVetLines } from "./vet";
-import { isAbilityShot, isAntiTank, isArmored, targetStats, weaponStats, type WeaponData } from "./weapons";
+import { isAbilityShot, isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "./weapons";
 import { useCombatCopy } from "./copy";
 import { FactionOptions, LineChart, useFicha, useLists, useQueryState, useWeaponName, VetPicker } from "./parts";
 import "./combat.css";
@@ -43,7 +43,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
   const wName = useWeaponName(lists.units);
   const units = useMemo(() => new Map(lists.units.map((u) => [u.slug, u])), [lists.units]);
   const weapons = useMemo(() => lists.weapons.filter((w) => w.faction && w.pen && w.dmg && (q.all === "1" || isAntiTank(w as WeaponData))), [lists.weapons, q.all]);
-  const targets = useMemo(() => lists.units.filter((u) => isArmored(u)), [lists.units]);
+  const targets = useMemo(() => lists.units.filter((u) => isVehicle(u)), [lists.units]);
   const wRow = lists.weapons.find((w) => w.slug === q.w) ?? weapons[0];
   const tRow = units.get(q.t) ?? targets[0];
   const wData: WeaponData = (wFicha ?? wRow) as WeaponData;

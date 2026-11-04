@@ -12,7 +12,7 @@ import { FACTIONS, SIDE, useCoh3Copy, type Faction } from "../../coh3Copy";
 import { loadFicha, loadList, peekFicha, peekList, tr, type L10n, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, Cost, FactionTag, Icon, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
 import { hit } from "../combat/engine";
-import { isAbilityShot, isAntiTank, isArmored, targetStats, weaponStats, type WeaponData } from "../combat/weapons";
+import { isAbilityShot, isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "../combat/weapons";
 import { useWeaponName } from "../combat/parts";
 import { useExplorerCopy } from "./copy";
 import "./explorer.css";
@@ -235,7 +235,7 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
   const byW = new Map((weapons ?? []).map((w) => [w.slug, w]));
   const main = (u.weapons ?? []).map((w) => byW.get(w.slug)).find((w) => w && isAntiTank(w as WeaponData));
   // Sólo el bando contrario: lo que le dispara y lo que tiene enfrente.
-  const vehicles = (units ?? []).filter((x) => isArmored(x) && SIDE[x.faction] !== SIDE[u.faction]);
+  const vehicles = (units ?? []).filter((x) => isVehicle(x) && SIDE[x.faction] !== SIDE[u.faction]);
   const prey = main
     ? vehicles
         .map((v) => {

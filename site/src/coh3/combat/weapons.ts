@@ -94,5 +94,8 @@ export function targetStats(u: UnitTarget, vet?: VetMods): TargetStats {
   };
 }
 
+/** ¿Es un vehículo blindado? Los emplazamientos y las armas de dotación también traen blindaje, pero no son blancos de tanque. */
+export const isVehicle = (u: UnitTarget & { kind?: string }): boolean => u.kind === "vehicles" && isArmored(u);
+
 /** ¿Es un blindado? Algún lado con blindaje de más de 5. */
 export const isArmored = (u: UnitTarget): boolean => !!u.armor && Math.max(...u.armor) > 5;
