@@ -48,3 +48,4 @@ games/stardew/raw/
 
 # El pozo del Deadlockdle: lo genera scripts/dle-pool.mjs en cada build.
 site/public/deadlock/dle-pool.json
+games/coh3/raw/
