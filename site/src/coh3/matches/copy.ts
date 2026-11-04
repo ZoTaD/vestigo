@@ -7,9 +7,9 @@ type StatKey = keyof CounterSummary;
 const EN = {
   k: "Match report",
   title: (map: string, mode: string) => `${map} · ${mode} – CoH3 Match`,
-  noPlayer: "Open a match from a player's profile: the game servers only keep it in each player's recent history.",
+  noPlayer: "Open a match from a player's profile: matches are only kept in each player's recent history.",
   findPlayer: "Find a player",
-  notFound: "This match is no longer in the player's recent history (the game servers keep the last 50 or so).",
+  notFound: "This match is no longer in the player's recent history (only the last 50 or so are kept).",
   backToPlayer: "Back to the player",
   custom: "Custom",
   ai: "vs AI",
@@ -46,15 +46,15 @@ const EN = {
     bgAbilities: "Battlegroup abilities",
     apm: "Actions per minute",
   } satisfies Record<StatKey, string>,
-  noStats: "The game servers didn't send stats for this match.",
+  noStats: "There are no stats for this match.",
 };
 
 const ES: typeof EN = {
   k: "Parte de la partida",
   title: (map: string, mode: string) => `${map} · ${mode}: partida de CoH3`,
-  noPlayer: "Abrí la partida desde la ficha de un jugador: los servidores del juego sólo la guardan en el historial reciente de cada jugador.",
+  noPlayer: "Abrí la partida desde la ficha de un jugador: las partidas sólo quedan en el historial reciente de cada jugador.",
   findPlayer: "Buscar jugador",
-  notFound: "Esta partida ya no está en el historial reciente del jugador (los servidores del juego guardan unas 50).",
+  notFound: "Esta partida ya no está en el historial reciente del jugador (quedan unas 50).",
   backToPlayer: "Volver al jugador",
   custom: "Personalizada",
   ai: "Contra la IA",
@@ -91,7 +91,7 @@ const ES: typeof EN = {
     bgAbilities: "Habilidades del battlegroup",
     apm: "Acciones por minuto",
   },
-  noStats: "Los servidores del juego no mandaron estadísticas de esta partida.",
+  noStats: "No hay estadísticas de esta partida.",
 };
 
 export function useMtCopy() {

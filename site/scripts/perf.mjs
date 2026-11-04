@@ -221,6 +221,26 @@ export const PAGES = [
   "/en/cs2/teams/team-vitality",
   "/en/cs2/players/xertion",
   "/es/cs2/torneos/pgl-2026-masters",
+  // Company of Heroes 3 (2026-11-04): la portada, cada pestaña y una ficha de cada tipo.
+  "/en/coh3",
+  "/es/coh3",
+  "/en/coh3/units",
+  "/es/coh3/unidades/panzer_iv_ger",
+  "/en/coh3/weapons",
+  "/en/coh3/weapons/57mm_at_gun_us",
+  "/es/coh3/battlegroups",
+  "/en/coh3/battlegroups/airborne",
+  "/es/coh3/penetracion",
+  "/en/coh3/dps",
+  "/es/coh3/estadisticas",
+  "/en/coh3/tier-list",
+  "/es/coh3/parches",
+  "/en/coh3/maps",
+  "/es/coh3/mapas/langres_2p",
+  "/en/coh3/challenges",
+  "/es/coh3/final-stand",
+  "/en/coh3/leaderboards",
+  "/es/coh3/jugadores",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

@@ -14,7 +14,7 @@ const EN = {
   games: (n: string) => `${n} ranked games`,
   bestAt: (elo: string, mode: string, fac: string) => `best ${elo} ELO in ${mode} ${fac}`,
   recent: "Recently viewed",
-  error: "The game servers didn't answer. Try again in a minute.",
+  error: "The profile didn't load. Try again in a minute.",
   retry: "Retry",
   notFound: "There's no player with that profile number.",
   backToSearch: "Search another player",
@@ -37,7 +37,7 @@ const EN = {
   ofTotal: (total: string, pct: string) => `of ${total} · top ${pct} %`,
   noStandings: "No automatch games yet.",
   recentH: "Last games",
-  recentLede: (n: number) => `The ${n} most recent games the game servers keep, all modes together.`,
+  recentLede: (n: number) => `The ${n} most recent games, all modes together.`,
   rGames: "Wins – losses",
   historyH: "Match history",
   rWr: "Win rate",
@@ -62,7 +62,7 @@ const EN = {
   rivals: "Enemies",
   details: "Details",
   noGames: "No games with these filters.",
-  noMatches: "The game servers don't have recent games for this player.",
+  noMatches: "No recent games for this player.",
   duration: "Length",
 };
 
@@ -79,7 +79,7 @@ const ES: typeof EN = {
   games: (n: string) => `${n} partidas de ranking`,
   bestAt: (elo: string, mode: string, fac: string) => `mejor ELO ${elo} en ${mode} ${fac}`,
   recent: "Vistos hace poco",
-  error: "Los servidores del juego no contestaron. Probá de nuevo en un minuto.",
+  error: "La ficha no cargó. Probá de nuevo en un minuto.",
   retry: "Reintentar",
   notFound: "No hay ningún jugador con ese número de perfil.",
   backToSearch: "Buscar otro jugador",
@@ -101,7 +101,7 @@ const ES: typeof EN = {
   ofTotal: (total: string, pct: string) => `de ${total} · top ${pct} %`,
   noStandings: "Todavía no tiene partidas de automatch.",
   recentH: "Últimas partidas",
-  recentLede: (n: number) => `Las ${n} partidas más recientes que guardan los servidores del juego, de todos los modos.`,
+  recentLede: (n: number) => `Las ${n} partidas más recientes, de todos los modos.`,
   rGames: "Victorias – derrotas",
   historyH: "Historial de partidas",
   rWr: "% victorias",
@@ -126,7 +126,7 @@ const ES: typeof EN = {
   rivals: "Rivales",
   details: "Detalle",
   noGames: "No hay partidas con estos filtros.",
-  noMatches: "Los servidores del juego no tienen partidas recientes de este jugador.",
+  noMatches: "No hay partidas recientes de este jugador.",
   duration: "Duración",
 };
 
