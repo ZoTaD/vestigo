@@ -110,6 +110,10 @@ export const getPersonalStat = (f: typeof fetch, profileId: number) =>
 export const findByAlias = (f: typeof fetch, alias: string) =>
   pedir<RawPersonalStat>(f, "getpersonalstat", { aliases: JSON.stringify([alias]) });
 
+/** Búsqueda por SteamID64: `getpersonalstat?profile_names=["/steam/7656…"]` (probado el 4/11 con el de Rei). */
+export const findBySteamId = (f: typeof fetch, steamId: string) =>
+  pedir<RawPersonalStat>(f, "getpersonalstat", { profile_names: JSON.stringify([`/steam/${steamId}`]) });
+
 export const getRecentMatches = (f: typeof fetch, profileId: number) =>
   pedir<RawHistory>(f, "getRecentMatchHistoryByProfileId", { profile_id: profileId });
 

@@ -152,6 +152,12 @@ describe("handleCoh3", () => {
     expect([nada.r.status, (await nada.r.json()).results]).toEqual([200, []]);
     expect((await call("search?q=", relic)).r.status).toBe(400);
   });
+  it("search: un SteamID64 se busca como perfil de Steam", async () => {
+    const { r, pedidos } = await call("search?q=76561198404414770", relic);
+    expect(pedidos[0].searchParams.get("profile_names")).toBe('["/steam/76561198404414770"]');
+    expect(pedidos[0].searchParams.has("aliases")).toBe(false);
+    expect(r.status).toBe(200);
+  });
   it("Relic falla → 502 con upstream; ruta desconocida → 404; POST → 405", async () => {
     const http = await call("leaderboard?id=2130255", () => new Response("", { status: 503 }));
     expect([http.r.status, await http.r.json()]).toEqual([502, { error: "upstream", upstream: 503 }]);

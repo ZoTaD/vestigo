@@ -5,7 +5,8 @@
  * - `leaderboard?id=<leaderboard>&start=1&count=50[&region=<id>]` → `{total, rows}`.
  * - `player?id=<profile>` → `{profile, standings, matches}` (historial reciente recortado: de ~1,8 MB a decenas de KB).
  * - `match?id=<partida>&player=<profile>` → la partida del historial de ese jugador, con todos los counters.
- * - `search?q=<alias>` → `{results}`: Relic busca por alias exacto (con mayúsculas), no por prefijo.
+ * - `search?q=<alias>` → `{results}`: Relic busca por alias exacto (con mayúsculas), no por prefijo. Un SteamID64
+ *   (`7656…`, 17 cifras) se busca como perfil de Steam.
  *
  * Errores: 400 parámetros, 404 no existe, 502 si Relic falla (`upstream` = estado HTTP o `result.code` de Relic).
  * La CDN guarda las respuestas; no se registra nada (ni alias ni ids).
@@ -13,6 +14,7 @@
 import { leaderboardById, REGIONS } from "./leaderboards";
 import {
   findByAlias,
+  findBySteamId,
   getLeaderboard,
   getPersonalStat,
   getRecentMatches,
@@ -87,7 +89,8 @@ async function search(p: URLSearchParams, f: typeof fetch) {
   const q = (p.get("q") ?? "").trim();
   if (!q || q.length > 64 || /[\u0000-\u001f]/.test(q)) return bad("q");
   try {
-    return json({ q, results: normalizeSearch(await findByAlias(f, q)) }, 200, cache(300, 300));
+    const raw = /^7656\d{13}$/.test(q) ? await findBySteamId(f, q) : await findByAlias(f, q);
+    return json({ q, results: normalizeSearch(raw) }, 200, cache(300, 300));
   } catch (e) {
     if (e instanceof RelicError && e.upstream === RELIC_UNKNOWN_ALIASES) return json({ q, results: [] }, 200, cache(300, 300));
     throw e;

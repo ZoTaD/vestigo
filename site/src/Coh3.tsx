@@ -13,8 +13,8 @@ import type { Coh3Section, Route } from "./route";
 import { COH3_TABS, useCoh3Copy } from "./coh3Copy";
 import Coh3Home from "./coh3/Coh3Home";
 import { Coh3Loading } from "./coh3/ui";
-import "@fontsource/big-shoulders-stencil-display/800.css";
-import "@fontsource/big-shoulders-stencil-display/900.css";
+import "@fontsource/big-shoulders-stencil-display/800"; // sin ".css": su `exports` ("./*" → "./*.css") lo duplicaría
+import "@fontsource/big-shoulders-stencil-display/900";
 import "@fontsource-variable/archivo/wdth.css";
 import "./styles/coh3.css";
 
@@ -22,9 +22,38 @@ type Nav = (route: Route) => void;
 type TabProps = { route: Route; navigate: Nav };
 type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
+const Coh3Leaderboards = lazyWithPreload(() => import("./coh3/leaderboards/Coh3Leaderboards"));
+const Coh3Players = lazyWithPreload(() => import("./coh3/players/Coh3Players"));
+const Coh3Matches = lazyWithPreload(() => import("./coh3/matches/Coh3Matches"));
+const Coh3Units = lazyWithPreload(() => import("./coh3/explorer/Coh3Units"));
+const Coh3Weapons = lazyWithPreload(() => import("./coh3/explorer/Coh3Weapons"));
+const Coh3Battlegroups = lazyWithPreload(() => import("./coh3/explorer/Coh3Battlegroups"));
+const Coh3Penetration = lazyWithPreload(() => import("./coh3/combat/Coh3Penetration"));
+const Coh3Dps = lazyWithPreload(() => import("./coh3/combat/Coh3Dps"));
+const Coh3Stats = lazyWithPreload(() => import("./coh3/stats/Coh3Stats"));
+const Coh3TierList = lazyWithPreload(() => import("./coh3/stats/Coh3TierList"));
+const Coh3Patches = lazyWithPreload(() => import("./coh3/more/Coh3Patches"));
+const Coh3Maps = lazyWithPreload(() => import("./coh3/more/Coh3Maps"));
+const Coh3Challenges = lazyWithPreload(() => import("./coh3/more/Coh3Challenges"));
+const Coh3FinalStand = lazyWithPreload(() => import("./coh3/more/Coh3FinalStand"));
+
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `COH3_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `COH3_TAB_FILES`.
 const TABS: Partial<Record<Coh3Section, LazyTab>> = {
+  leaderboards: Coh3Leaderboards,
+  players: Coh3Players,
+  matches: Coh3Matches,
+  units: Coh3Units,
+  weapons: Coh3Weapons,
+  battlegroups: Coh3Battlegroups,
+  penetration: Coh3Penetration,
+  dps: Coh3Dps,
+  stats: Coh3Stats,
+  "tier-list": Coh3TierList,
+  patches: Coh3Patches,
+  maps: Coh3Maps,
+  challenges: Coh3Challenges,
+  "final-stand": Coh3FinalStand,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */

@@ -164,6 +164,20 @@ export const CS2_TAB_FILES: Partial<Record<Cs2Section, string>> = {
  * cuida `test/areas.test.ts`). La portada viene con el área.
  */
 export const COH3_TAB_FILES: Partial<Record<Coh3Section, string>> = {
+  leaderboards: "src/coh3/leaderboards/Coh3Leaderboards.tsx",
+  players: "src/coh3/players/Coh3Players.tsx",
+  matches: "src/coh3/matches/Coh3Matches.tsx",
+  units: "src/coh3/explorer/Coh3Units.tsx",
+  weapons: "src/coh3/explorer/Coh3Weapons.tsx",
+  battlegroups: "src/coh3/explorer/Coh3Battlegroups.tsx",
+  penetration: "src/coh3/combat/Coh3Penetration.tsx",
+  dps: "src/coh3/combat/Coh3Dps.tsx",
+  stats: "src/coh3/stats/Coh3Stats.tsx",
+  "tier-list": "src/coh3/stats/Coh3TierList.tsx",
+  patches: "src/coh3/more/Coh3Patches.tsx",
+  maps: "src/coh3/more/Coh3Maps.tsx",
+  challenges: "src/coh3/more/Coh3Challenges.tsx",
+  "final-stand": "src/coh3/more/Coh3FinalStand.tsx",
 };
 
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */

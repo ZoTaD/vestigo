@@ -1,0 +1,124 @@
+/*
+ * Ranking, Jugador y Partida de CoH3 (2026-11-04): lo que se suma a `styles/coh3.css`. Sin bordes de color en filas ni
+ * tarjetas (regla de la casa): victoria y derrota van en el color del texto o de la barra.
+ */
+.c3-flag { display: inline-block; flex: none; width: 20px; height: 15px; object-fit: cover; vertical-align: -2px; }
+.c3-pl { display: inline-flex; align-items: center; gap: 7px; min-width: 0; font-weight: 600; }
+.c3-pl > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+a.c3-pl:hover { color: var(--c3-brass); }
+.c3-win { color: var(--c3-up); }
+.c3-loss { color: var(--c3-down); }
+.c3-row-note { padding: 18px 10px !important; text-align: left !important; color: var(--c3-dim); }
+
+/* --- Barra de filtros del ranking -------------------------------------------------------------------------------- */
+.c3-lb-bar { display: grid; gap: 10px; margin-bottom: 14px; }
+/* "1v1" en la letra esténcil se lee "IVI": los modos van en Archivo. */
+.c3-seg.c3-seg-plain button { font: 700 14.5px/1 var(--c3-font); letter-spacing: 0.02em; text-transform: none; }
+.c3-lb-bar .c3-seg button img { width: 20px; height: 20px; }
+.c3-lb-pager { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-top: 12px; }
+.c3-lb-pager .c3-btn[disabled] { opacity: 0.4; cursor: default; }
+.c3-lb-rank { font: 900 20px/1 var(--c3-stencil); letter-spacing: 0.02em; }
+.c3-lb-rank small { display: block; font: 500 11.5px/1.2 var(--c3-font); color: var(--c3-dim); letter-spacing: 0; }
+.c3-lb-elo { color: var(--c3-brass); font-weight: 700; }
+.c3-lb .c3-pl { max-width: 260px; }
+.c3-lb-pl-m { display: none !important; }
+/* Las tablas `c3-cq` se apilan según el ancho del panel (no de la ventana): con ocho columnas a 768 px ya no entraba. */
+@container (max-width: 780px) {
+  .c3-table.c3-cq.is-stack thead { display: none; }
+  .c3-table.c3-cq.is-stack, .c3-table.c3-cq.is-stack tbody { display: block; width: 100%; }
+  /* Cada fila, una ficha chica: el nombre arriba y las cifras en columnas de ~100 px con su rótulo encima. */
+  .c3-table.c3-cq.is-stack tr { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px 10px; padding: 10px 0; border-bottom: 1px solid var(--c3-line); }
+  .c3-table.c3-cq.is-stack td { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 0 2px; border: 0; text-align: left; min-width: 0; }
+  .c3-table.c3-cq.is-stack td::before { content: attr(data-l); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--c3-dim); font: 500 11px/1.2 var(--c3-font); letter-spacing: 0.03em; text-transform: uppercase; }
+  .c3-table.c3-cq.is-stack td:first-child, .c3-table.c3-cq.is-stack td.c3-row-note { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 6px 12px; }
+  .c3-table.c3-cq.is-stack td:first-child::before, .c3-table.c3-cq.is-stack td.c3-row-note::before { content: none; }
+  .c3-table.c3-cq.is-stack td.c3-lb-pl-d { display: none; }
+  .c3-table.c3-cq.is-stack td.c3-w2 { grid-column: span 2; }
+  .c3-lb-pl-m { display: inline-flex !important; }
+  .c3-table.c3-cq.is-stack .c3-pl { max-width: none; font-size: 16px; }
+  .c3-table.c3-cq.is-stack tbody tr:hover td { background: none; }
+  .c3-sortbar.c3-cq-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .c3-sortbar.c3-cq-bar .c3-sort { width: auto; padding: 6px 8px; background: var(--c3-well); border: 1px solid var(--c3-line2); }
+}
+
+/* --- Buscador ------------------------------------------------------------------------------------------------------ */
+.c3-search { display: flex; flex-wrap: wrap; gap: 8px; }
+.c3-search input { flex: 1 1 240px; font: 500 16px/1.2 var(--c3-font); color: var(--c3-text); background: var(--c3-well); border: 1px solid var(--c3-line2); border-radius: 0; padding: 10px 12px; min-width: 0; }
+.c3-search input:focus { outline: 2px solid var(--c3-brass2); outline-offset: 0; }
+.c3-results { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 6px; }
+.c3-result { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; padding: 10px 12px; background: var(--c3-well); border: 1px solid var(--c3-line); }
+a.c3-result:hover { border-color: var(--c3-brass2); }
+.c3-result small { color: var(--c3-dim); }
+
+/* --- Ficha de jugador ---------------------------------------------------------------------------------------------- */
+.c3-ph { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+.c3-ph .c3-h1 { overflow-wrap: normal; word-break: normal; min-width: 0; }
+.c3-ph-flag { width: 40px; height: 30px; }
+.c3-ph-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--c3-dim); font-size: 14px; margin-top: 8px; }
+.c3-ph-meta a { text-decoration: underline; text-decoration-color: var(--c3-line2); text-underline-offset: 3px; }
+.c3-ph-meta a:hover { color: var(--c3-brass); }
+.c3-fact b.c3-win, .c3-fact b.c3-loss { color: inherit; }
+.c3-fact .c3-fac { font: 900 20px/1.25 var(--c3-stencil); }
+
+/* Gráfico de ELO */
+.c3-chart { display: block; width: 100%; height: auto; margin-top: 10px; }
+.c3-chart .ax { stroke: var(--c3-line); stroke-width: 1; }
+.c3-chart .tk { fill: var(--c3-dim); font: 500 12px var(--c3-font); }
+.c3-chart .ln { fill: none; stroke: var(--c3-brass); stroke-width: 2; }
+.c3-chart .ar { fill: rgba(208, 167, 90, 0.1); }
+.c3-chart .pt-w { fill: var(--c3-up); }
+.c3-chart .pt-l { fill: var(--c3-down); }
+.c3-chart .pt-o { fill: var(--c3-dim); }
+
+/* Partidas recientes */
+.c3-games { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.c3-game { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; gap: 8px 16px; align-items: start; padding: 12px 14px; background: var(--c3-well); border: 1px solid var(--c3-line); }
+.c3-game-res { display: grid; gap: 2px; }
+.c3-game-res b { font: 900 20px/1 var(--c3-stencil); letter-spacing: 0.04em; text-transform: uppercase; }
+.c3-game-res small { color: var(--c3-dim); font-size: 12.5px; }
+.c3-game-mid { display: grid; gap: 6px; min-width: 0; }
+.c3-game-h { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.c3-game-h strong { font-size: 15.5px; }
+.c3-game-h span { color: var(--c3-dim); font-size: 13px; }
+.c3-teams { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 14px; font-size: 13.5px; }
+.c3-team { display: grid; gap: 3px; min-width: 0; align-content: start; }
+.c3-team-k { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c3-dim); }
+.c3-team-p { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.c3-team-p .c3-fac img { width: 16px; height: 16px; }
+.c3-team-p.is-me .c3-pl { color: var(--c3-brass); }
+.c3-game-r { display: grid; gap: 6px; justify-items: end; text-align: right; }
+.c3-game-r .c3-btn { padding: 7px 12px; font-size: 13.5px; }
+.c3-delta { font-weight: 700; }
+@media (max-width: 700px) {
+  .c3-game { grid-template-columns: minmax(0, 1fr) auto; }
+  .c3-game-mid { grid-column: 1 / -1; grid-row: 2; }
+  .c3-game-r { grid-row: 1; grid-column: 2; }
+  .c3-teams { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- Ficha de partida ---------------------------------------------------------------------------------------------- */
+.c3-mt-teams { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
+.c3-mt-team .c3-h3 { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.c3-mt-team .c3-note { margin: 2px 0 8px; text-align: right; }
+.c3-fact b.c3-plain { font: 800 24px/1.15 var(--c3-font); letter-spacing: 0; }
+.c3-mt-team ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.c3-mt-p { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; padding: 8px 10px; background: var(--c3-well); border: 1px solid var(--c3-line); }
+.c3-mt-p.is-me { background: #262a1c; }
+.c3-mt-p small { color: var(--c3-dim); font-size: 12.5px; }
+.c3-mt-elo { text-align: right; font-size: 13.5px; }
+.c3-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; }
+.c3-stat { padding: 12px 14px; background: var(--c3-well); border: 1px solid var(--c3-line); min-width: 0; }
+.c3-stat h3 { font: 800 16px/1.2 var(--c3-stencil); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+.c3-stat ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.c3-bar { display: grid; grid-template-columns: minmax(0, 7.5em) minmax(0, 1fr) 4.2em; gap: 8px; align-items: center; font-size: 13px; }
+.c3-bar-n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--c3-dim); }
+.c3-bar.is-me .c3-bar-n { color: var(--c3-text); font-weight: 700; }
+.c3-bar-t { height: 10px; background: #1a1d13; }
+.c3-bar-f { height: 100%; background: var(--c3-brass2); }
+.c3-bar.is-w .c3-bar-f { background: var(--c3-brass); }
+.c3-bar-v { text-align: right; font-weight: 600; }
+.c3-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--c3-dim); }
+.c3-legend i { display: inline-block; width: 12px; height: 10px; margin-right: 6px; vertical-align: 0; }
+@media (max-width: 700px) {
+  .c3-mt-teams { grid-template-columns: minmax(0, 1fr); }
+}
