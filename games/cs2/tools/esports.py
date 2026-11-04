@@ -123,18 +123,26 @@ def team_page(html: str) -> dict:
     seg = html[html.find('id="Active"') :]
     seg = seg[: seg.find("</table>")]
     for row in seg.split("table2&#95;&#95;row--body")[1:]:
-        pid = re.search(r'<a href="/counterstrike/([^"#]+)" title="[^"]+">([^<]+)</a>', row)
         tds = re.findall(r"<td[^>]*>(.*?)</td>", row, flags=re.S)
-        if not pid:
+        if not tds:
+            continue
+        # Un recién llegado puede no tener página todavía: queda con su apodo y sin enlace.
+        pid = re.search(r'<a href="/counterstrike/([^"#?]+)" title="[^"]+">([^<]+)</a>', tds[0])
+        nick = htmllib.unescape(pid.group(2)) if pid else _text(tds[0]).replace(" ", " ").strip()
+        if not nick:
             continue
         pos = _text(tds[2]) if len(tds) > 2 else ""
         roster.append({
-            "lp": pid.group(1), "id": htmllib.unescape(pid.group(2)), "name": _text(tds[1]) if len(tds) > 1 else "",
+            "lp": pid.group(1) if pid else None, "id": nick, "name": _text(tds[1]) if len(tds) > 1 else "",
             "flag": _flag(row), "since": (re.search(r"\d{4}-\d{2}-\d{2}", row) or [None])[0],
             "captain": "fa-crown" in row, "role": "coach" if "coach" in pos.lower() else "player",
         })
     region = _text(c.get("Region", "")) or None
+    # El logo de la ficha: el de modo claro si hay dos (el sitio es claro), si no el único.
+    logo = re.search(r'class="infobox-image lightmode">.*?<img[^>]*?src="([^"]+)"', html, flags=re.S) or re.search(
+        r'class="infobox-image(?: allmode)?\s*">.*?<img[^>]*?src="([^"]+)"', html, flags=re.S)
     return {
+        "logo_file": _logo_file(logo.group(1)) if logo else None,
         "location": clean_location(_text(c.get("Location", "")), region), "region": region,
         "coaches": [_text(x) for x in re.findall(r"<a [^>]*>([^<]+)</a>", c.get("Coaches", ""))],
         "igl": _text(c.get("In-Game Leader", "")) or None, "winnings": _money(_text(c.get("Approx. Total Winnings", ""))),

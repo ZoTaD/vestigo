@@ -17,12 +17,13 @@ const STEPS = [1, 5, 10, 20, 30, 50, 100, 150, 200, 300, 400, 500];
 
 /**
  * Los puestos que lleva el eje: redondos, del 1 al peor puesto (que va siempre), salteando los que quedarían a menos de
- * 16 px del anterior. Con una escala hasta el 253, el 5, el 10 y el 20 se pisaban.
+ * 26 unidades del anterior (el gráfico se dibuja a ~60 %: unos 16 px). Con una escala hasta el 253, el 5, el 10 y el
+ * 20 se pisaban.
  */
 export function rankTicks(max: number, y: (r: number) => number): number[] {
   const out: number[] = [];
   for (const v of STEPS.filter((s) => s < max).concat(max)) {
-    if (!out.length || y(v) - y(out[out.length - 1]) >= 16) out.push(v);
+    if (!out.length || y(v) - y(out[out.length - 1]) >= 26) out.push(v);
     else if (v === max) out[out.length - 1] = max;
   }
   return out;

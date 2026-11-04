@@ -110,7 +110,7 @@ export function TeamPage({ team, idx, route, navigate }: { team: Team; idx: EsIn
       {players.length > 0 && (
         <ul className="c2-tm-roster">
           {players.map((p) => {
-            const slug = lpSlug(p.lp);
+            const slug = p.lp ? lpSlug(p.lp) : null;
             const body = (
               <>
                 {p.captain && <span className="c2-tm-cap">{t.tm.captain}</span>}
@@ -121,8 +121,8 @@ export function TeamPage({ team, idx, route, navigate }: { team: Team; idx: EsIn
               </>
             );
             return (
-              <li key={p.lp}>
-                {known.has(slug) ? (
+              <li key={p.lp ?? p.id}>
+                {slug && known.has(slug) ? (
                   <RouteLink className="c2-tm-pl" to={to("players", slug)} onNavigate={navigate}>
                     {body}
                   </RouteLink>
@@ -139,7 +139,7 @@ export function TeamPage({ team, idx, route, navigate }: { team: Team; idx: EsIn
         {v.history.length > 1 && (
           <div className="c2-panel">
             <h2 className="c2-h2">{t.tm.progress}</h2>
-            <p className="c2-dim">{t.tm.progressLede(v.rank != null ? `#${v.rank}` : "—")}</p>
+            <p className="c2-dim">{t.tm.progressLede(`#${v.rank ?? v.history[v.history.length - 1].rank}`)}</p>
             <RankChart history={v.history} label={t.tm.progress} />
           </div>
         )}

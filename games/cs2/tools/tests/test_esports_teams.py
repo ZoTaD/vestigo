@@ -29,6 +29,24 @@ class TestFichas(unittest.TestCase):
         self.assertEqual(x, {"lp": "XertioN", "id": "xertioN", "name": "Dorian Berman", "flag": "il", "since": "2022-08-26", "captain": True, "role": "player"})
         self.assertEqual([p["flag"] for p in players], ["hu", "il", "il", "hu", "cz"])
 
+    def test_jugador_sin_pagina(self):
+        """Un jugador recién llegado todavía no tiene página en Liquipedia: queda en el plantel, sin enlace."""
+        fila = lambda id_, link, name, pos="": (  # noqa: E731
+            '<tr class="table2&#95;&#95;row--body"><td data-nowrap="">&#160;' + (f'<a href="/counterstrike/{id_}" title="{id_}">{id_}</a>' if link else id_)
+            + f'&#160;</td><td data-nowrap="">{name}</td><td data-nowrap="">{pos}</td><td data-nowrap="">2026-09-14</td></tr>')
+        html = '<span id="Active">Active</span><table>' + fila("biguzera", True, "Rodrigo") + fila("Tatu", False, "Lucas Santana") + fila("rikz", True, "Henrique", "Coach") + "</table>"
+        r = team_page(html)["roster"]
+        self.assertEqual([(p["id"], p["lp"], p["role"]) for p in r], [("biguzera", "biguzera", "player"), ("Tatu", None, "player"), ("rikz", "rikz", "coach")])
+        self.assertEqual(r[1]["name"], "Lucas Santana")
+
+    def test_logo_del_equipo(self):
+        """El logo de la ficha: el de modo claro si hay dos; si no hay infobox con imagen, nada."""
+        img = lambda mode, f: f'<div class="infobox-image {mode}"><div class="center"><div class="floatnone"><a href="/counterstrike/File:{f}" class="image"><img alt="" src="/commons/images/thumb/e/e3/{f}/600px-{f}" width="600" height="600"></a></div></div></div>'  # noqa: E731
+        html = '<div class="infobox-image-wrapper">' + img("lightmode", "Fluxo_lightmode.png") + img("darkmode", "Fluxo_darkmode.png") + "</div>"
+        self.assertEqual(team_page(html)["logo_file"], "Fluxo_lightmode.png")
+        self.assertEqual(team_page('<div class="infobox-image-wrapper">' + img("", "Rooster_allmode.png") + "</div>")["logo_file"], "Rooster_allmode.png")
+        self.assertIsNone(team_page("<div></div>")["logo_file"])
+
     def test_resultados(self):
         rs = team_results(leer("lp_team_results.html"))
         self.assertEqual(rs[0], {"date": "2026-10-31", "place": "3rd", "tier": "S", "tour": "PGL Masters Bucharest 2026", "tour_lp": "PGL/2026/Masters", "prize": 137500})
