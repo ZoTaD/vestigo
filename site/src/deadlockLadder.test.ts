@@ -1,35 +1,32 @@
 import { describe, expect, it } from "vitest";
-import { byMerit, parseRanks, type LadderRow, type RawRank } from "./deadlockLadder";
+import { byMerit, joinRankWins, type LadderRow, type RawRankRow, type RawRow } from "./deadlockLadder";
 
-// Forma real de `/v1/players/rank`, recortada de una respuesta del 2026-11-04.
-const RAW: RawRank[] = [
-  {
-    account_id: 1016503423,
-    badge: 46,
-    last_match: { player_rank_final_flat_progress: 27740 },
-  },
-  {
-    account_id: 76776315,
-    badge: 92,
-    last_match: { player_rank_final_flat_progress: 57350 },
-  },
-  // Sin clasificatorias con rango: la API manda badge 0 y last_match null.
-  { account_id: 5, badge: 0, last_match: null },
+// Forma real del scoreboard, recortada de respuestas del 2026-11-04.
+const RANK: RawRankRow[] = [
+  { account_id: 1871021649, value: 144560, matches: 585, badge: 116 },
+  { account_id: 400239835, value: 129520, matches: 674, badge: 116 },
+  { account_id: 7, value: 50000, matches: 60 },
+];
+const WINS: RawRow[] = [
+  { rank: 1, account_id: 400239835, value: 426, matches: 674 },
+  { rank: 2, account_id: 1871021649, value: 407, matches: 585 },
 ];
 
-describe("parseRanks", () => {
-  it("saca el badge y el progreso plano de cada cuenta", () => {
-    const m = parseRanks(RAW);
-    expect(m.get(1016503423)).toEqual({ badge: 46, score: 27740 });
-    expect(m.get(76776315)).toEqual({ badge: 92, score: 57350 });
+describe("joinRankWins", () => {
+  it("toma el progreso como puntaje, el badge como rango y las ganadas del otro pedido", () => {
+    const [a] = joinRankWins(RANK, WINS);
+    expect(a).toMatchObject({ accountId: 1871021649, gameScore: 144560, badge: 116, wins: 407, matches: 585 });
+    expect(a.winRate).toBeCloseTo(407 / 585);
   });
 
-  it("una cuenta sin rango queda en cero, no rompe", () => {
-    expect(parseRanks(RAW).get(5)).toEqual({ badge: 0, score: 0 });
+  it("sin victorias ni badge, la fila sale igual", () => {
+    const c = joinRankWins(RANK, WINS)[2];
+    expect(c).toMatchObject({ accountId: 7, wins: 0, gameScore: 50000 });
+    expect(c.badge).toBeUndefined();
   });
 });
 
-describe("byMerit con el rango de /players/rank", () => {
+describe("byMerit", () => {
   const fila = (accountId: number, gameScore: number, score: number): LadderRow => ({
     rank: 0,
     accountId,
@@ -40,7 +37,7 @@ describe("byMerit con el rango de /players/rank", () => {
     matches: 50,
   });
 
-  it("el progreso del juego manda sobre Wilson, y Wilson desempata", () => {
+  it("el progreso del rango manda sobre Wilson, y Wilson desempata", () => {
     const filas = [fila(1, 27740, 0.9), fila(2, 57350, 0.6), fila(3, 57350, 0.7), fila(4, 0, 0.95)];
     expect(filas.sort(byMerit).map((r) => r.accountId)).toEqual([3, 2, 1, 4]);
   });
