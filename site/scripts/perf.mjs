@@ -208,6 +208,12 @@ export const PAGES = [
   // Mercado (etapa 4): las tres tablas de 20 filas.
   "/en/cs2/market",
   "/es/cs2/mercado",
+  // Granadas y Miras (2026-11-04): la lista de mapas, el mapa con más lineups (Anubis) y el editor de mira.
+  "/en/cs2/grenades",
+  "/en/cs2/grenades/anubis",
+  "/es/cs2/granadas/mirage",
+  "/en/cs2/crosshairs",
+  "/es/cs2/miras",
   // Parches (etapa 5): el más nuevo, el parche más largo y un lanzamiento con imágenes.
   "/en/cs2/patches",
   "/es/cs2/parches/2023-11-17",

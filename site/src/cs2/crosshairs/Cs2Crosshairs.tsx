@@ -21,8 +21,10 @@ interface Xh {
   color: [number, number, number];
   dot: boolean;
   tStyle: boolean;
+  /** La altura de pantalla a la que están las medidas (las conserva el código, así un código se lee y se vuelve a armar igual). */
+  sh: number;
 }
-const START: Xh = { length: 4, gap: -3, thickness: 1, outline: 1, alpha: 255, color: [0, 255, 0], dot: false, tStyle: false };
+const START: Xh = { length: 4, gap: -3, thickness: 1, outline: 1, alpha: 255, color: [0, 255, 0], dot: false, tStyle: false, sh: 1080 };
 const COLORS: { name: [string, string]; c: [number, number, number] }[] = [
   { name: ["Green", "Verde"], c: [0, 255, 0] },
   { name: ["Yellow", "Amarillo"], c: [255, 255, 0] },
@@ -61,32 +63,39 @@ export const toV1 = (x: Xh): CrosshairV1 => ({
   innerSplitAlpha: 1,
   outerSplitAlpha: 0.5,
   splitSizeRatio: 1,
-  screenHeight: 1080,
+  screenHeight: x.sh,
   scopeDotScale: 1,
   scopeDotUseCrosshairColor: false,
 });
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, Math.round(v)));
 /**
- * Un código a mira. Los de CS2 traen las medidas en píxeles a `screenHeight`; los viejos de CS:GO, en unidades de una
- * pantalla de 480 de alto, así que se multiplican por 1080 / 480. `old` avisa que hay que copiar el nuevo.
+ * Un código a mira, con las medidas pasadas a píxeles de una pantalla de 1080. `old`: venía en el contenedor `CSGO-`,
+ * que CS2 dejó de importar con el cliente 1.41.8.8 (30/9/2026), así que hay que copiar el código nuevo.
  */
-export function fromCode(code: string): { xh: Xh; old: boolean } | null {
+export function fromCode(code: string): { xh: Xh; old: boolean; approx: boolean } | null {
   let d;
   try {
     d = decodeCrosshairShareCode(code.trim());
   } catch {
     return null;
   }
+  // Los `CSGO-` de la era CS:GO (`legacy-v1`) miden en unidades de una pantalla de 480 de alto; los de CS2 (los
+  // `CSGO-` de septiembre de 2026 y los `CS…`), en píxeles a su `screenHeight`.
   const old = d.format !== "cs2-v1";
-  const k = old ? 1080 / 480 : 1080 / ((d as CrosshairV1).screenHeight || 1080);
+  // Sólo los de CS:GO se escalan (y quedan aproximados: no hay una conversión oficial); los de CS2 pasan tal cual.
+  const approx = d.format === "legacy-v1";
+  const sh = !approx && "screenHeight" in d && d.screenHeight ? d.screenHeight : 1080;
+  const k = approx ? 1080 / 480 : 1;
   const outline = "outlineMode" in d ? d.outlineMode : (d as { outlineEnabled?: boolean }).outlineEnabled ? 1 : 0;
   return {
     old,
+    approx,
     xh: {
-      length: clamp(d.length * k, 0, 30),
-      gap: clamp(d.gap * k, -10, 20),
-      thickness: clamp(d.thickness * k, 0, 10),
+      sh,
+      length: clamp(d.length * k, 0, 100),
+      gap: clamp(d.gap * k, -50, 100),
+      thickness: clamp(d.thickness * k, 0, 50),
       outline: clamp(Number(outline), 0, 2),
       alpha: clamp(d.alpha, 0, 255),
       color: [d.red, d.green, d.blue],
@@ -115,11 +124,12 @@ const T = {
     copyCode: "Copy code",
     copyCmds: "Copy console commands",
     copied: "Copied",
-    hint: "It also reads old codes that start with CSGO-.",
+    hint: "It also reads CSGO- codes, which CS2 stopped importing in September 2026, and gives you the new one.",
     loaded: "Crosshair loaded.",
-    converted: "Old CS:GO code converted to the CS2 format: copy the new one.",
+    converted: "CS2 no longer imports CSGO- codes: this is the same crosshair in the new format, copy it.",
+    approx: "CS:GO-era code: sizes converted to CS2 pixels approximately. Check it in game before copying.",
     bad: "That isn't a crosshair code. Copy it from the game: Settings → Game → Crosshair → Share.",
-    scale: "Size as on a 1080p screen",
+    scale: "Approximate preview at 1080p",
     sens: "Sensitivity converter",
     sensLede: "Your sensitivity in other games so a full turn takes the same mouse travel. What counts is how many centimeters you move the mouse to spin 360°.",
     from: "Game",
@@ -149,11 +159,12 @@ const T = {
     copyCode: "Copiar código",
     copyCmds: "Copiar comandos de consola",
     copied: "Copiado",
-    hint: "También lee los códigos viejos que empiezan con CSGO-.",
+    hint: "También lee los códigos CSGO-, que CS2 dejó de importar en septiembre de 2026, y te da el nuevo.",
     loaded: "Mira cargada.",
-    converted: "Código viejo de CS:GO pasado al formato de CS2: copiá el nuevo.",
+    converted: "CS2 ya no importa los códigos CSGO-: esta es la misma mira en el formato nuevo, copiala.",
+    approx: "Código de la época de CS:GO: las medidas se pasaron a píxeles de CS2 de forma aproximada. Revisala en el juego antes de copiarla.",
     bad: "Ese código no es de una mira. Copialo desde el juego: Configuración → Juego → Mira → Compartir.",
-    scale: "Tamaño como en una pantalla de 1080p",
+    scale: "Vista aproximada a 1080p",
     sens: "Conversor de sensibilidad",
     sensLede: "Tu sensibilidad en otros juegos para que una vuelta entera lleve el mismo recorrido del mouse. Lo que cuenta son los centímetros que movés el mouse para girar 360°.",
     from: "Juego",
@@ -171,7 +182,7 @@ const T = {
 function draw(cv: HTMLCanvasElement, x: Xh) {
   const ctx = cv.getContext("2d");
   if (!ctx) return;
-  const S = 2, c = cv.width / 2;
+  const S = 2 * (1080 / (x.sh || 1080)), c = cv.width / 2;
   ctx.clearRect(0, 0, cv.width, cv.height);
   const th = Math.max(1, x.thickness) * S, len = x.length * S, gap = (x.gap + 4) * S, ol = x.outline * S * 0.5;
   const bars: [number, number, number, number][] = [];
@@ -221,7 +232,7 @@ export default function Cs2Crosshairs({ route }: { route: Route; navigate: (r: R
     if (!r) return setMsg(t.bad);
     setXh(r.xh);
     setDraft(null);
-    setMsg(r.old ? t.converted : t.loaded);
+    setMsg(r.approx ? t.approx : r.old ? t.converted : t.loaded);
   };
 
   // Conversor.
@@ -255,7 +266,7 @@ export default function Cs2Crosshairs({ route }: { route: Route; navigate: (r: R
         <p className="c2-dim c2-xh-lede">{t.editorLede}</p>
         <div className="c2-xh-box">
           <div className={`c2-xh-stage is-${bg}`}>
-            {back.src && <img src={back.src} alt="" width={1600} height={900} decoding="async" />}
+            {back.src && <img key={back.id} src={back.src} srcSet={back.id === "dust2" ? "/cs2/bg/dust2-800.webp 800w, /cs2/bg/dust2-1600.webp 1600w" : undefined} sizes="(max-width: 900px) 100vw, 60vw" alt="" width={1600} height={900} decoding="async" />}
             <canvas ref={cv} width={160} height={160} aria-hidden="true" />
             <div className="c2-xh-bgs">
               {BGS.map((b) => (

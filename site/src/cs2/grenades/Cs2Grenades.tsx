@@ -12,31 +12,81 @@ import { useLang } from "../../i18n";
 import type { Route } from "../../route";
 import { useLoad } from "../../useLoad";
 import { Cs2Loading, type Nav } from "../ui";
-import { GRENADE_TYPES, loadLineupIndex, loadMap, peekLineupIndex, peekMap, tx, type GrenadeType, type Lineup, type MapLineups, type Side } from "./data";
+import {
+  GRENADE_TYPES,
+  loadLineupIndex,
+  loadMap,
+  peekLineupIndex,
+  peekMap,
+  tx,
+  type GrenadeType,
+  type Lineup,
+  type MapLineups,
+  type Side,
+} from "./data";
 import { PRACTICE, useGrCopy } from "./copy";
 
 /** La foto de cada mapa (`site/public/cs2/maps`), por su clave en los datos. */
 const PHOTO: Record<string, string> = { dust2: "dust-ii" };
 const photo = (map: string) => `/cs2/maps/${PHOTO[map] ?? map}.webp`;
 
-export default function Cs2Grenades({ route, navigate }: { route: Route; navigate: Nav }) {
+export default function Cs2Grenades({
+  route,
+  navigate,
+}: {
+  route: Route;
+  navigate: Nav;
+}) {
   const idx = useLoad("lineups", peekLineupIndex, loadLineupIndex);
   const map = route.detail ?? null;
-  const data = useLoad(map ? `lineups:${map}` : null, () => (map ? peekMap(map) : undefined), () => loadMap(map!));
-  if (idx.failed || data.failed) return <Cs2Loading onRetry={idx.failed ? idx.retry : data.retry} />;
+  const data = useLoad(
+    map ? `lineups:${map}` : null,
+    () => (map ? peekMap(map) : undefined),
+    () => loadMap(map!),
+  );
+  if (idx.failed || data.failed)
+    return <Cs2Loading onRetry={idx.failed ? idx.retry : data.retry} />;
   if (!idx.value || (map && data.value === undefined)) return <Cs2Loading />;
   if (!map) return <Hub route={route} navigate={navigate} />;
-  return <MapView key={map} m={data.value ?? null} route={route} navigate={navigate} />;
+  return (
+    <MapView
+      key={map}
+      m={data.value ?? null}
+      route={route}
+      navigate={navigate}
+    />
+  );
 }
 
-function MapStrip({ route, navigate, on }: { route: Route; navigate: Nav; on?: string }) {
+function MapStrip({
+  route,
+  navigate,
+  on,
+}: {
+  route: Route;
+  navigate: Nav;
+  on?: string;
+}) {
   const maps = peekLineupIndex()?.maps ?? [];
   const t = useGrCopy();
   return (
     <nav className="c2-gr-maps" aria-label={t.allMaps}>
       {maps.map((m) => (
-        <RouteLink key={m.map} className={`c2-gr-map${m.map === on ? " is-on" : ""}`} to={{ ...route, view: "cs2", c2Section: "grenades", detail: m.map }} onNavigate={navigate} active={m.map === on}>
-          <img src={photo(m.map)} alt="" width={112} height={63} loading="lazy" decoding="async" />
+        <RouteLink
+          key={m.map}
+          className={`c2-gr-map${m.map === on ? " is-on" : ""}`}
+          to={{ ...route, view: "cs2", c2Section: "grenades", detail: m.map }}
+          onNavigate={navigate}
+          active={m.map === on}
+        >
+          <img
+            src={photo(m.map)}
+            alt=""
+            width={112}
+            height={63}
+            loading="lazy"
+            decoding="async"
+          />
           <span>{m.name}</span>
         </RouteLink>
       ))}
@@ -56,8 +106,24 @@ function Hub({ route, navigate }: { route: Route; navigate: Nav }) {
       <ul className="c2-gr-hub">
         {maps.map((m) => (
           <li key={m.map}>
-            <RouteLink className="c2-gr-card" to={{ ...route, view: "cs2", c2Section: "grenades", detail: m.map }} onNavigate={navigate}>
-              <img src={photo(m.map)} alt="" width={640} height={360} loading="lazy" decoding="async" />
+            <RouteLink
+              className="c2-gr-card"
+              to={{
+                ...route,
+                view: "cs2",
+                c2Section: "grenades",
+                detail: m.map,
+              }}
+              onNavigate={navigate}
+            >
+              <img
+                src={photo(m.map)}
+                alt=""
+                width={640}
+                height={360}
+                loading="lazy"
+                decoding="async"
+              />
               <span className="c2-gr-card-t">
                 <b>{m.name}</b>
                 <span>{t.count(m.count)}</span>
@@ -65,7 +131,11 @@ function Hub({ route, navigate }: { route: Route; navigate: Nav }) {
                   {GRENADE_TYPES.filter((k) => m.counts[k]).map((k) => (
                     <span key={k}>
                       <i className={`c2-gr-dot is-${k}`} aria-hidden="true" />
-                      {m.counts[k]} {t.typePlural[k].toLowerCase()}
+                      {m.counts[k]}{" "}
+                      {(m.counts[k] === 1
+                        ? t.type[k]
+                        : t.typePlural[k]
+                      ).toLowerCase()}
                     </span>
                   ))}
                 </span>
@@ -81,10 +151,14 @@ function Hub({ route, navigate }: { route: Route; navigate: Nav }) {
 
 /** La curva de una flecha de donde se tira a donde cae: se arquea hacia un costado, como el vuelo de la granada. */
 export function arrowPath(l: Pick<Lineup, "from" | "to">): string {
-  const [x1, y1] = l.from, [x2, y2] = l.to;
-  const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1;
+  const [x1, y1] = l.from,
+    [x2, y2] = l.to;
+  const dx = x2 - x1,
+    dy = y2 - y1,
+    len = Math.hypot(dx, dy) || 1;
   const bend = Math.min(80, len * 0.2);
-  const cx = (x1 + x2) / 2 - (dy / len) * bend, cy = (y1 + y2) / 2 + (dx / len) * bend;
+  const cx = (x1 + x2) / 2 - (dy / len) * bend,
+    cy = (y1 + y2) / 2 + (dx / len) * bend;
   return `M${x1},${y1} Q${cx.toFixed(1)},${cy.toFixed(1)} ${x2},${y2}`;
 }
 
@@ -106,30 +180,55 @@ function writeQuery(m: MapLineups, s: Sel) {
   set("d", s.dest != null ? m.dests[s.dest].id : null);
   set("l", s.pick);
   const qs = q.toString();
-  window.history.replaceState(window.history.state, "", `${window.location.pathname}${qs ? `?${qs}` : ""}`);
+  window.history.replaceState(
+    window.history.state,
+    "",
+    `${window.location.pathname}${qs ? `?${qs}` : ""}`,
+  );
 }
 
-function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; navigate: Nav }) {
+function MapView({
+  m,
+  route,
+  navigate,
+}: {
+  m: MapLineups | null;
+  route: Route;
+  navigate: Nav;
+}) {
   const t = useGrCopy();
   const { lang } = useLang();
   const [sel, setSel] = useState<Sel>({ side: "t", dest: null, pick: null });
-  const [types, setTypes] = useState<Set<GrenadeType>>(() => new Set(GRENADE_TYPES));
+  const [types, setTypes] = useState<Set<GrenadeType>>(
+    () => new Set(GRENADE_TYPES),
+  );
   const [noJump, setNoJump] = useState(false);
   const [names, setNames] = useState(true);
   const [floor, setFloor] = useState(0);
   const [copied, setCopied] = useState<string | null>(null);
+  // La dirección se lee una vez al montar; recién después se escribe (si no, el primer render la borraba).
+  const [read, setRead] = useState(false);
   useEffect(() => {
     if (!m) return;
     const s = readQuery(m);
     setSel(s);
     if (s.dest != null) setFloor(m.dests[s.dest].floor);
+    setRead(true);
   }, [m]);
   useEffect(() => {
-    if (m) writeQuery(m, sel);
-  }, [m, sel]);
+    if (m && read) writeQuery(m, sel);
+  }, [m, sel, read]);
 
   const vis = useMemo(
-    () => (m ? m.lineups.filter((l) => l.side === sel.side && types.has(l.type) && !(noJump && l.tech.includes("jump"))) : []),
+    () =>
+      m
+        ? m.lineups.filter(
+            (l) =>
+              l.side === sel.side &&
+              types.has(l.type) &&
+              !(noJump && l.tech.includes("jump")),
+          )
+        : [],
     [m, sel.side, types, noJump],
   );
   const byDest = useMemo(() => {
@@ -165,8 +264,13 @@ function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; n
       else n.add(k);
       return n;
     });
-  const sideCount = (k: GrenadeType) => m.lineups.filter((l) => l.side === sel.side && l.type === k).length;
-  const destsShown = [...byDest.keys()].sort((a, b) => byDest.get(b)!.length - byDest.get(a)!.length || tx(m.dests[a].name, lang).localeCompare(tx(m.dests[b].name, lang)));
+  const sideCount = (k: GrenadeType) =>
+    m.lineups.filter((l) => l.side === sel.side && l.type === k).length;
+  const destsShown = [...byDest.keys()].sort(
+    (a, b) =>
+      byDest.get(b)!.length - byDest.get(a)!.length ||
+      tx(m.dests[a].name, lang).localeCompare(tx(m.dests[b].name, lang)),
+  );
 
   return (
     <main className="c2-main c2-gr" data-lang={route.lang}>
@@ -179,36 +283,73 @@ function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; n
       </header>
 
       <div className="c2-filters c2-gr-bar">
-        <span className="c2-gr-lbl">{t.sideLbl}</span>
-        <div className="c2-seg">
-          {(["t", "ct"] as const).map((s) => (
-            <button type="button" key={s} className={sel.side === s ? "is-on" : ""} aria-pressed={sel.side === s} onClick={() => setSel({ side: s, dest: null, pick: null })}>
-              <b className={`c2-gr-side is-${s}`}>{t.side[s]}</b> {t.sideLong[s]}
-            </button>
-          ))}
+        <div className="c2-gr-grp">
+          <span className="c2-gr-lbl">{t.sideLbl}</span>
+          <div className="c2-seg">
+            {(["t", "ct"] as const).map((s) => (
+              <button
+                type="button"
+                key={s}
+                className={sel.side === s ? "is-on" : ""}
+                aria-pressed={sel.side === s}
+                onClick={() => setSel({ side: s, dest: null, pick: null })}
+              >
+                <b className={`c2-gr-side is-${s}`}>{t.side[s]}</b>{" "}
+                {t.sideLong[s]}
+              </button>
+            ))}
+          </div>
         </div>
-        <span className="c2-gr-lbl">{t.typeLbl}</span>
-        <div className="c2-seg">
-          {GRENADE_TYPES.filter((k) => m.lineups.some((l) => l.type === k)).map((k) => (
-            <button type="button" key={k} className={types.has(k) ? "is-on" : ""} aria-pressed={types.has(k)} onClick={() => toggleType(k)}>
-              <i className={`c2-gr-dot is-${k}`} aria-hidden="true" />
-              {t.type[k]} <span className="c2-gr-n">{sideCount(k)}</span>
-            </button>
-          ))}
+        <div className="c2-gr-grp">
+          <span className="c2-gr-lbl">{t.typeLbl}</span>
+          <div className="c2-seg">
+            {GRENADE_TYPES.filter((k) =>
+              m.lineups.some((l) => l.type === k),
+            ).map((k) => (
+              <button
+                type="button"
+                key={k}
+                className={types.has(k) ? "is-on" : ""}
+                aria-pressed={types.has(k)}
+                onClick={() => toggleType(k)}
+              >
+                <i className={`c2-gr-dot is-${k}`} aria-hidden="true" />
+                {t.type[k]} <span className="c2-gr-n">{sideCount(k)}</span>
+              </button>
+            ))}
+          </div>
         </div>
-        <span className="c2-gr-lbl">{t.throwLbl}</span>
-        <div className="c2-seg">
-          <button type="button" className={noJump ? "is-on" : ""} aria-pressed={noJump} onClick={() => setNoJump((v) => !v)}>
-            {t.noJump}
-          </button>
-          <button type="button" className={names ? "is-on" : ""} aria-pressed={names} onClick={() => setNames((v) => !v)}>
-            {t.names}
-          </button>
+        <div className="c2-gr-grp">
+          <span className="c2-gr-lbl">{t.throwLbl}</span>
+          <div className="c2-seg">
+            <button
+              type="button"
+              className={noJump ? "is-on" : ""}
+              aria-pressed={noJump}
+              onClick={() => setNoJump((v) => !v)}
+            >
+              {t.noJump}
+            </button>
+            <button
+              type="button"
+              className={names ? "is-on" : ""}
+              aria-pressed={names}
+              onClick={() => setNames((v) => !v)}
+            >
+              {t.names}
+            </button>
+          </div>
         </div>
         {m.floors === 2 && (
           <div className="c2-seg">
             {t.floor.map((f, i) => (
-              <button type="button" key={f} className={floor === i ? "is-on" : ""} aria-pressed={floor === i} onClick={() => setFloor(i)}>
+              <button
+                type="button"
+                key={f}
+                className={floor === i ? "is-on" : ""}
+                aria-pressed={floor === i}
+                onClick={() => setFloor(i)}
+              >
                 {f}
               </button>
             ))}
@@ -219,13 +360,29 @@ function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; n
       <div className="c2-gr-grid">
         <div className="c2-gr-radar">
           <div className="c2-gr-radar-in">
-            <img src={`/cs2/radar/${m.map}${floor ? "-lower" : ""}.webp`} alt="" width={1024} height={1024} decoding="async" />
-            <svg viewBox="0 0 1024 1024" role="img" aria-label={t.radarLabel(m.name)}>
+            <img
+              src={`/cs2/radar/${m.map}${floor ? "-lower" : ""}.webp`}
+              alt=""
+              width={1024}
+              height={1024}
+              decoding="async"
+            />
+            <svg
+              viewBox="0 0 1024 1024"
+              role="img"
+              aria-label={t.radarLabel(m.name)}
+            >
               {dest != null &&
                 list
-                  .filter((l) => l.from[2] === floor || m.dests[dest].floor === floor)
+                  .filter(
+                    (l) => l.from[2] === floor || m.dests[dest].floor === floor,
+                  )
                   .map((l) => (
-                    <g key={l.id} className={`c2-gr-way${pick?.id === l.id ? " is-on" : ""}`} onClick={() => setSel((s) => ({ ...s, pick: l.id }))}>
+                    <g
+                      key={l.id}
+                      className={`c2-gr-way${pick?.id === l.id ? " is-on" : ""}`}
+                      onClick={() => setSel((s) => ({ ...s, pick: l.id }))}
+                    >
                       <path d={arrowPath(l)} />
                       <circle cx={l.from[0]} cy={l.from[1]} r={11} />
                     </g>
@@ -235,7 +392,9 @@ function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; n
                 .map((di) => {
                   const d = m.dests[di];
                   const ls = byDest.get(di)!;
-                  const tps = GRENADE_TYPES.filter((k) => ls.some((l) => l.type === k));
+                  const tps = GRENADE_TYPES.filter((k) =>
+                    ls.some((l) => l.type === k),
+                  );
                   const on = dest === di;
                   return (
                     <g
@@ -258,7 +417,13 @@ function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; n
                         {ls.length}
                       </text>
                       {tps.map((k, i) => (
-                        <circle key={k} className={`c2-gr-tdot is-${k}`} cx={d.x - (tps.length - 1) * 5.5 + i * 11} cy={d.y + 27} r={5.5} />
+                        <circle
+                          key={k}
+                          className={`c2-gr-tdot is-${k}`}
+                          cx={d.x - (tps.length - 1) * 5.5 + i * 11}
+                          cy={d.y + 27}
+                          r={5.5}
+                        />
                       ))}
                       {names && (
                         <text className="c2-gr-name" x={d.x} y={d.y - 28}>
@@ -297,8 +462,14 @@ function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; n
                         <li key={m.dests[di].id}>
                           <button type="button" onClick={() => choose(di)}>
                             <span className="c2-gr-dots">
-                              {GRENADE_TYPES.filter((k) => ls.some((l) => l.type === k)).map((k) => (
-                                <i key={k} className={`c2-gr-dot is-${k}`} aria-hidden="true" />
+                              {GRENADE_TYPES.filter((k) =>
+                                ls.some((l) => l.type === k),
+                              ).map((k) => (
+                                <i
+                                  key={k}
+                                  className={`c2-gr-dot is-${k}`}
+                                  aria-hidden="true"
+                                />
                               ))}
                             </span>
                             <b>{tx(m.dests[di].name, lang)}</b>
@@ -314,7 +485,11 @@ function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; n
               <>
                 <div className="c2-gr-ph">
                   <h2 className="c2-h2">{tx(m.dests[dest].name, lang)}</h2>
-                  <button type="button" className="c2-gr-x" onClick={() => choose(null)}>
+                  <button
+                    type="button"
+                    className="c2-gr-x"
+                    onClick={() => choose(null)}
+                  >
                     {t.dests}
                   </button>
                 </div>
@@ -322,11 +497,26 @@ function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; n
                 <ul className="c2-gr-ways">
                   {list.map((l) => (
                     <li key={l.id}>
-                      <button type="button" className={pick?.id === l.id ? "is-on" : ""} aria-pressed={pick?.id === l.id} onClick={() => setSel((s) => ({ ...s, pick: l.id }))}>
-                        <i className={`c2-gr-dot is-${l.type}`} aria-hidden="true" />
+                      <button
+                        type="button"
+                        className={pick?.id === l.id ? "is-on" : ""}
+                        aria-pressed={pick?.id === l.id}
+                        onClick={() => setSel((s) => ({ ...s, pick: l.id }))}
+                      >
+                        <i
+                          className={`c2-gr-dot is-${l.type}`}
+                          aria-hidden="true"
+                        />
                         <b>{tx(l.title, lang)}</b>
                         {/* Lo que distingue a dos lineups con el mismo título: desde qué spawn, o cómo se tira. */}
-                        <small>{l.variant ? t.from(l.variant) : l.tech.filter((k) => k !== "stand" && k !== "left").map((k) => t.tech[k]).join(" · ")}</small>
+                        <small>
+                          {l.variant
+                            ? t.from(l.variant)
+                            : l.tech
+                                .filter((k) => k !== "stand" && k !== "left")
+                                .map((k) => t.tech[k])
+                                .join(" · ")}
+                        </small>
                       </button>
                     </li>
                   ))}
@@ -345,7 +535,11 @@ function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; n
                     )}
                     <div className="c2-gr-cmd">
                       <code>{pick.setpos}</code>
-                      <button type="button" className="c2-btn" onClick={() => copy(pick.id, pick.setpos)}>
+                      <button
+                        type="button"
+                        className="c2-btn"
+                        onClick={() => copy(pick.id, pick.setpos)}
+                      >
                         {copied === pick.id ? t.copied : t.copySetpos}
                       </button>
                     </div>
@@ -358,7 +552,11 @@ function MapView({ m, route, navigate }: { m: MapLineups | null; route: Route; n
           <section className="c2-panel c2-gr-practice">
             <h2 className="c2-h2">{t.practice}</h2>
             <p className="c2-dim">{t.practiceLede}</p>
-            <button type="button" className="c2-btn is-ghost" onClick={() => copy("practice", PRACTICE)}>
+            <button
+              type="button"
+              className="c2-btn is-ghost"
+              onClick={() => copy("practice", PRACTICE)}
+            >
               {copied === "practice" ? t.copied : t.copyPractice}
             </button>
           </section>
