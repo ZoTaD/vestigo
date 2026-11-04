@@ -48,6 +48,7 @@ const DeadlockRanks = lazyWithPreload(() => import("./DeadlockRanks"));
 const DeadlockPlayerLadder = lazyWithPreload(() => import("./DeadlockPlayerLadder"));
 const DeadlockComebacks = lazyWithPreload(() => import("./DeadlockComebacks"));
 const DeadlockMap = lazyWithPreload(() => import("./DeadlockMap"));
+const DeadlockDle = lazyWithPreload(() => import("./DeadlockDle"));
 const DeadlockPlayer = lazyWithPreload(() => import("./DeadlockPlayer"));
 // `DeadlockReport` y no `DeadlockMatch`: el módulo de datos ya se llama
 // `deadlockMatch.ts`, y en Windows dos archivos que sólo difieren en mayúsculas
@@ -64,6 +65,7 @@ const TABS: Partial<Record<DeadlockSection, { preload: () => Promise<void> }>> =
   ladder: DeadlockPlayerLadder,
   comebacks: DeadlockComebacks,
   map: DeadlockMap,
+  dle: DeadlockDle,
   player: DeadlockPlayer,
   match: DeadlockReport,
 };
@@ -175,6 +177,8 @@ export default function DeadlockArea({
         <DeadlockPlayerLadder route={route} navigate={navigate} />
       ) : route.dlSection === "comebacks" ? (
         <DeadlockComebacks band={band} picker={picker} />
+      ) : route.dlSection === "dle" ? (
+        <DeadlockDle route={route} navigate={navigate} />
       ) : route.dlSection === "map" ? (
         <DeadlockMap />
       ) : route.dlSection === "patches" ? (

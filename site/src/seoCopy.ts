@@ -131,6 +131,12 @@ const EN = {
           "Interactive Deadlock map: every jungle camp, Sinner's Sacrifice, crate and golden statue with " +
           "health, souls and spawn timers. Build a farming route and time it with any hero.",
       },
+      dle: {
+        title: () => "Deadlockdle — Daily Deadlock Guessing Game | Vestigo",
+        description: () =>
+          "Guess today's Deadlock hero, item and ability from their stats, with a daily ranking for each. " +
+          "New puzzles every day at 00:00 UTC.",
+      },
       comebacks: {
         title: () => "Deadlock Comebacks — What a Soul Lead Is Worth | Vestigo",
         description: () =>
@@ -322,6 +328,12 @@ const ES: typeof EN = {
         description: () =>
           "Mapa interactivo de Deadlock: cada campamento de la jungla, Sacrificio del Pecador, caja y " +
           "estatua dorada con su vida, sus almas y sus tiempos. Armá una ruta de farmeo y medila con cualquier héroe.",
+      },
+      dle: {
+        title: () => "Deadlockdle — el juego diario de Deadlock | Vestigo",
+        description: () =>
+          "Adiviná el héroe, el objeto y la habilidad de Deadlock del día por sus stats, con un ranking diario " +
+          "para cada uno. Nuevos todos los días a las 00:00 UTC.",
       },
       comebacks: {
         title: () => "Remontadas en Deadlock — cuánto vale una ventaja de almas | Vestigo",

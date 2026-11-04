@@ -48,6 +48,8 @@ describe("the privacy policy's account of local storage", () => {
       "vestigo.lastProfile",
       "vestigo:valheim:planner",
       "vestigo:valheim:planner:have",
+      // La cuenta de Steam que guarda la barra tras el login (2026-11-04); el Deadlockdle la lee.
+      "vg_account",
     ]);
   });
 

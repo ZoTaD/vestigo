@@ -1,0 +1,148 @@
+/* ---------------------------------------------------------------------------
+   Deadlockdle (2026-11-04): el juego diario por pistas, en el estilo "Cartel"
+   de Deadlock. Maquetas: docs/plans/2026-11-04-deadlockdle/.
+   Casillas: verde igual, amarillo cerca, rojo no. Sin bordes de color: el
+   color es el fondo de la casilla.
+   --------------------------------------------------------------------------- */
+
+.deadlock-dle {
+  --dle-ok: #3c8a3a;
+  --dle-near: #b98f1f;
+  --dle-no: #9b3328;
+  --dle-ink: #1e1a14;
+  --dle-cream: #f3e6cf;
+  --dle-shadow: 7px 7px 0 rgba(0, 0, 0, 0.55);
+}
+
+.dle-meta { display: inline-flex; align-items: center; gap: 0.45rem; }
+.dle-meta b { font-variant-numeric: tabular-nums; color: var(--text); }
+.dle-beta {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+  background: #c2512a;
+  color: var(--dle-cream);
+}
+
+/* Los modos: tiras de papel; la del modo abierto, crema y torcida. */
+.dle-modes { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.5rem 0 1.6rem; }
+.dle-mode {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.6rem 1.1rem 0.5rem;
+  background: #2a241c;
+  color: #cbbd9f;
+}
+.dle-mode[data-active="true"] { background: var(--dle-cream); color: var(--dle-ink); transform: rotate(-1deg); box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5); }
+.dle-mode.is-rank { margin-left: 0.8rem; background: #c2512a; color: var(--dle-cream); }
+.dle-mode.is-rank[data-active="true"] { background: var(--dle-cream); color: var(--dle-ink); }
+
+.dle-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 21rem); gap: 1.8rem; align-items: start; }
+.dle-board { min-width: 0; }
+
+.dle-ask { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 0.8rem; }
+.dle-ask h2 { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 0.06em; text-transform: uppercase; margin: 0; }
+.dle-ask span { color: var(--text-dim); font-size: 0.85rem; }
+
+/* Las pistas: cerradas son cartón oscuro; abiertas, papel. */
+.dle-hints { list-style: none; margin: 0 0 0.9rem; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7rem; }
+.dle-hints li { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0.8rem; background: #2a241c; color: #a89c84; font-size: 0.85rem; line-height: 1.25; min-height: 3.6rem; }
+.dle-hints li.is-open { color: var(--text); box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5); }
+.dle-hints b { display: block; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.dle-hint-ic { flex: 0 0 40px; width: 40px; height: 40px; display: grid; place-items: center; background: #1e1a14; color: #6b6150; font-family: var(--font-display); font-size: 1.1rem; overflow: hidden; }
+.dle-hint-ic img { width: 40px; height: 40px; object-fit: cover; }
+.dle-hint-ic img.is-blur { filter: blur(3px) grayscale(0.3); transform: scale(1.4); }
+
+/* El buscador: una tira de papel con el botón naranja; la lista cae encima de las filas. */
+.dle-search { position: relative; display: flex; align-items: center; gap: 0.8rem; padding: 0.55rem 0.6rem 0.55rem 1.1rem; box-shadow: var(--dle-shadow); }
+.dle-search input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--text); font: inherit; font-size: 1.1rem; outline: none; }
+.dle-search input::placeholder { color: var(--text-faint); }
+.dle-search button, .dle-result button {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem 0.4rem;
+  border: 0;
+  background: #c2512a;
+  color: var(--dle-cream);
+  cursor: pointer;
+}
+.dle-search button:disabled { opacity: 0.55; cursor: default; }
+.dle-drop { position: absolute; z-index: 20; left: 0; top: calc(100% + 6px); width: min(100%, 24rem); list-style: none; margin: 0; padding: 0.35rem 0; box-shadow: var(--dle-shadow); }
+.dle-drop li { display: flex; align-items: center; gap: 0.7rem; min-height: 44px; padding: 0 0.9rem; cursor: pointer; color: var(--text); }
+.dle-drop li.is-on { background: var(--dle-ink); color: var(--dle-cream); }
+.dle-drop img { width: 34px; height: 34px; object-fit: contain; border-radius: 50%; background: #1e1a14; }
+
+.dle-error { margin: 0.8rem 0 0; color: #f2a07e; font-weight: 700; }
+
+/* El final. */
+.dle-result { display: flex; align-items: center; gap: 1.2rem; padding: 0.9rem 1.1rem; box-shadow: var(--dle-shadow); flex-wrap: wrap; }
+.dle-result img { width: 96px; height: 96px; object-fit: cover; object-position: 50% 15%; }
+.dle-result img.is-icon { object-fit: contain; background: #1e1a14; padding: 8px; }
+.dle-result div { display: grid; gap: 0.2rem; }
+.dle-result b { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 0.05em; }
+.dle-result a { color: #a5401c; font-weight: 700; }
+.dle-result-actions { margin-left: auto; justify-items: end; }
+
+/* Las filas: se desplazan de costado dentro de su caja, nunca la página. */
+.dle-scroll { overflow-x: auto; margin-top: 1.4rem; padding: 0 8px 10px 0; }
+.dle-grid { display: grid; gap: 8px; min-width: 40rem; }
+.dle-th { font-family: var(--font-display); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; text-align: center; color: #cbbd9f; align-self: end; }
+.dle-th:first-child { text-align: left; }
+.dle-who { position: relative; height: 82px; overflow: hidden; border: 4px solid #e8d8bb; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5); background: #2a241c; display: flex; align-items: flex-end; }
+.dle-who img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
+.dle-who img.is-icon { inset: 6px auto auto 50%; width: 52px; height: 52px; transform: translateX(-50%); object-fit: contain; }
+.dle-who::after { content: ""; position: absolute; inset: 40% 0 0; background: linear-gradient(transparent, rgba(0, 0, 0, 0.8)); }
+.dle-who span { position: relative; z-index: 1; font-family: var(--font-display); font-size: 0.95rem; letter-spacing: 0.04em; padding: 0 0.5rem 0.3rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dle-c { min-height: 82px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: #fff; font-weight: 700; font-size: 1.2rem; line-height: 1.15; text-align: center; padding: 0.3rem; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5); }
+.dle-c small { font-size: 1.1rem; line-height: 1; }
+.dle-c.is-ok { background: var(--dle-ok); }
+.dle-c.is-near { background: var(--dle-near); }
+.dle-c.is-no { background: var(--dle-no); }
+/* Las listas (Gives, Effects) van más chicas para que entren enteras: las palabras no se cortan. */
+.dle-c.is-list { font-size: 0.78rem; font-weight: 600; }
+.dle-row:first-of-type .dle-c { animation: dle-flip 0.35s ease-out both; }
+@keyframes dle-flip { from { transform: rotateX(80deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .dle-row:first-of-type .dle-c { animation: none; } }
+
+.dle-legend { margin-top: 1rem; color: var(--text-faint); font-size: 0.8rem; }
+
+/* El costado y la pestaña Ranking. */
+.dle-side h2, .dle-rank-col h2 { font-family: var(--font-display); font-size: 1.35rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 0; }
+.dle-side-sub { color: var(--text-dim); font-size: 0.8rem; margin: 0.3rem 0 0.8rem; }
+.dle-side .box, .dle-rank-col { box-shadow: var(--dle-shadow); }
+.dle-rank { list-style: none; margin: 0; padding: 0.4rem 0; }
+.dle-rank li, .dle-rank-me { display: grid; grid-template-columns: 1.8rem 30px minmax(0, 1fr) 2.2rem 3.2rem; align-items: center; gap: 0.6rem; min-height: 46px; padding: 0 0.9rem; font-size: 0.95rem; }
+.dle-rank li:nth-child(odd) { background: var(--surface); }
+.dle-rank-empty { display: block !important; color: var(--text-dim); padding: 0.8rem 0.9rem !important; }
+.dle-rank-me { background: var(--dle-ink); color: var(--dle-cream); margin-top: 0.4rem; }
+.dle-pos { font-family: var(--font-display); color: #c2512a; text-align: center; font-size: 1.05rem; }
+.dle-av { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #8a5a3c; color: #fff; font-weight: 700; font-size: 0.8rem; object-fit: cover; }
+.dle-rn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dle-rg, .dle-rt { text-align: right; font-variant-numeric: tabular-nums; }
+.dle-rank-me .dle-rt { font-size: 0.8rem; }
+.dle-you { display: flex; margin-top: 1rem; padding: 0.9rem 0.6rem; }
+.dle-you div { flex: 1; text-align: center; }
+.dle-you b { display: block; font-size: 1.7rem; color: #a5401c; line-height: 1.1; }
+.dle-you span { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; }
+
+.dle-ranking { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.4rem; }
+.dle-rank-col { padding: 1rem 0 0.6rem; }
+.dle-rank-col h2 { padding: 0 0.9rem 0.5rem; }
+.dle-rank-col h2 small { display: block; font-family: var(--font-text); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: none; color: var(--text-dim); }
+
+@media (max-width: 1100px) {
+  .dle-layout { grid-template-columns: minmax(0, 1fr); }
+  .dle-ranking { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .dle-hints { grid-template-columns: minmax(0, 1fr); }
+  .dle-mode.is-rank { margin-left: 0; }
+}
