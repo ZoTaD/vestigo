@@ -84,6 +84,24 @@ class TestExplorador(unittest.TestCase):
         self.assertNotIn("tommy_uk", self.u)
         self.assertTrue(all("hoff" not in s for s in self.u))
 
+    def test_extra_units(self):
+        # Los que nada enlaza en coh3-data, sumados desde extra_units.json.
+        p = self.u["panzer_iv_ak"]
+        self.assertEqual((p["faction"], p["hp"], p["armor"]), ("dak", 720, [170, 105, 70]))
+        self.assertEqual((p["cost"]["mp"], p["cost"]["fu"]), (380, 90))
+        g = self.u["goliath_ak"]
+        self.assertEqual((g["faction"], g["name"]["en"]), ("dak", "Goliath Demolition Vehicle"))
+        a = self.u["at_gun_17pdr_mobile_africa_uk"]
+        self.assertEqual((a["faction"], a["name"]["en"], a["hp"]), ("british", "17-pounder Anti-tank Gun Team", 600))
+        self.assertTrue(a["weapons"])
+        self.assertEqual(self.u["hmg_50cal_us"]["faction"], "american")
+        self.assertEqual(self.u["panzer_iii_75mm_ak"]["name"]["en"], "Panzer III N Medium Tank")
+        # El battlegroup sale de la mejora con el mismo nombre o ícono.
+        self.assertEqual(self.u["truck_2_5_cargo_ger"]["bg"], "breakthrough")
+        self.assertEqual(self.u["partisan_tunnel_main_us"]["bg"], "partisans")
+        self.assertTrue(any("truck_2_5_cargo_ger" in u.get("unlocks", [])
+                            for br in self.b["breakthrough"]["branches"] for u in br["upgrades"]))
+
     def test_textos_en_dos_idiomas(self):
         for u in self.d["units"]:
             self.assertTrue(u["name"]["en"] and u["name"]["es"], u["slug"])

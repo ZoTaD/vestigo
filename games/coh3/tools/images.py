@@ -5,8 +5,8 @@ que guardan los JSON de `games/coh3/data/` (ej. `races/american/infantry/rifleme
     python games/coh3/tools/images.py
 
 Los baja del CDN de coh3stats (coh3-image-extractor, MIT; el arte es de Relic, con crédito al pie del sitio). Sólo
-los que nombran los datos (unidades, armas, battlegroups con sus mejoras y habilidades, edificios, facciones, Final
-Stand), de a uno, con pausa y omitiendo los que ya están. Un ícono que no existe se anota y se sigue.
+los que nombran los datos (unidades, armas, battlegroups con sus mejoras y habilidades y su arte ancho, edificios,
+facciones, Final Stand), de a uno, con pausa y omitiendo los que ya están. Un ícono que no existe se anota y se sigue.
 """
 import json
 import re
@@ -21,42 +21,44 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))  # `python -I` no suma 
 from coh3 import DATA, UA  # noqa: E402
 
 URL = "https://cdn.coh3stats.com/export/icons/{ruta}.webp"
+# El arte ancho de los battlegroups (`image`) no está en `icons/`: vive en `images/` del mismo CDN.
+URL_ARTE = "https://cdn.coh3stats.com/export/images/{ruta}.webp"
 DESTINO = Path(__file__).resolve().parents[3] / "site" / "public" / "coh3" / "i"
 PAUSA = 0.15
 # Una ruta del juego: letras, números, guiones y barras; nada de "..", ni absolutas.
 RUTA_OK = re.compile(r"^[a-z0-9_\-]+(/[a-z0-9_\-]+)*$", re.I)
 
 
-def _rutas(x, out: set) -> None:
-    """Junta los valores de `icon` (y `image`, el arte ancho del battlegroup no está en el CDN de íconos: se omite)."""
+def _rutas(x, out: set, campo: str = "icon") -> None:
+    """Junta los valores de `campo` (`icon`, o `image`: el arte ancho del battlegroup)."""
     if isinstance(x, dict):
         for k, v in x.items():
-            if k == "icon" and isinstance(v, str) and v:
+            if k == campo and isinstance(v, str) and v:
                 out.add(v)
             else:
-                _rutas(v, out)
+                _rutas(v, out, campo)
     elif isinstance(x, list):
         for v in x:
-            _rutas(v, out)
+            _rutas(v, out, campo)
 
 
-def rutas() -> list[str]:
+def rutas(campo: str = "icon") -> list[str]:
     out = set()
     for f in sorted(DATA.rglob("*.json")):
         if f.parent.name == "patches" or f.name in ("maps.json", "challenges.json", "meta.json"):
             continue
-        _rutas(json.loads(f.read_text(encoding="utf-8")), out)
+        _rutas(json.loads(f.read_text(encoding="utf-8")), out, campo)
     return sorted(r.replace("\\", "/") for r in out if RUTA_OK.match(r.replace("\\", "/")))
 
 
 def main() -> None:
-    todas = rutas()
-    faltan = [r for r in todas if not (DESTINO / f"{r}.webp").exists()]
-    print(f"{len(todas)} íconos, faltan {len(faltan)}")
+    todas = [(URL, r) for r in rutas()] + [(URL_ARTE, r) for r in rutas("image")]
+    faltan = [(u, r) for u, r in todas if not (DESTINO / f"{r}.webp").exists()]
+    print(f"{len(todas)} íconos y artes, faltan {len(faltan)}")
     malos = []
-    for n, r in enumerate(faltan, 1):
+    for n, (url, r) in enumerate(faltan, 1):
         try:
-            req = urllib.request.Request(URL.format(ruta=r), headers={"User-Agent": UA})
+            req = urllib.request.Request(url.format(ruta=r), headers={"User-Agent": UA})
             with urllib.request.urlopen(req, timeout=30) as resp:
                 datos = resp.read()
             if datos[:4] != b"RIFF" or datos[8:12] != b"WEBP":

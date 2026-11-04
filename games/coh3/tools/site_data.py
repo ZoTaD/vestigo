@@ -18,7 +18,7 @@ Salida (contrato de docs/superpowers/specs/2026-11-04-coh3-design.md, con estos 
   `targetSize`, `loadout:[{slug, num, hp, armor, targetSize}]`, `weapons:[{slug, name, count}]`,
   `upgrades:[{slug, name, icon, desc, cost}]`, `abilities:[{slug, name, icon, desc, cost, recharge}]`,
   `vet:[{xp, desc}]`, `bg` (battlegroup que la habilita, o null), `builtIn:[edificios]`, `upkeep` (mano de obra por
-  minuto). **No va `received`**: los modificadores de precisión/daño recibido viven en árboles de estado que coh3-data
+  minuto). Las unidades que nada enlaza en coh3-data se suman desde `extra_units.json` (ver `_extras`). **No va `received`**: los modificadores de precisión/daño recibido viven en árboles de estado que coh3-data
   no exporta.
 - `weapons/list.json` y `weapons/f/NN.json`: `{slug, name, faction, kind, cls, pen, dist, acc, dmg, aoe, reload,
   burst, cooldown, aim, range, usedBy}`. `name` es el de la interfaz si el arma lo tiene; si no, se arma con el
@@ -588,6 +588,44 @@ def _jugables(ents: dict, squads: dict, upgrades: dict, abilities: dict, bgs: di
     return faccion, hecho_en, edificios, bg_de, desbloquea
 
 
+EXTRA = Path(__file__).resolve().parent / "extra_units.json"
+
+
+def _norm(s: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+def _extras(squads: dict, upgrades: dict, abilities: dict, bgs: dict) -> tuple[dict, dict]:
+    """
+    Los pelotones de `extra_units.json` (los que nada enlaza: ver su `_nota`) → (pelotón → facción, pelotón →
+    (battlegroup, mejora)). El battlegroup sale de una mejora o habilidad de los battlegroups de su facción con el
+    mismo ícono o el mismo nombre (o el plural: "Hardpoints" trae el "Hardpoint"); si no hay, va sin battlegroup.
+    """
+    lista = json.loads(EXTRA.read_text(encoding="utf-8"))
+    faccion, bg = {}, {}
+    for f, slugs in lista.items():
+        if f.startswith("_"):
+            continue
+        razas = RAZAS_DE[f]
+        for slug in slugs:
+            refs = sorted((razas.index(_raza(r)), r) for r, s in squads.items()
+                          if _slug(r) == slug and _raza(r) in razas and s.get("name") and s.get("icon"))
+            if not refs:
+                print(f"  extra_units.json: {slug} no está en el tag (o sin nombre/ícono)")
+                continue
+            ref = refs[0][1]
+            faccion[ref] = f
+            s = squads[ref]
+            nombre = _norm(s["name"]["en"])
+            for key, b in sorted(bgs.get(f, {}).items()):
+                for u in b["all_upgrades"]:
+                    cand = [upgrades.get(u, {})] + [abilities[a] for a in b["abil_por_upgrade"][u]]
+                    if any(c.get("icon") == s["icon"] or c.get("name") and _norm(c["name"]["en"]) in (nombre, nombre + "s")
+                           for c in cand):
+                        bg.setdefault(ref, (key, u))
+    return faccion, bg
+
+
 def _battlegroups(tag: str, loc: Loc, upgrades: dict, abilities: dict) -> dict:
     """{faccion: {slug: bg}} con las mejoras de cada rama y las habilidades que cada mejora habilita."""
     datos = load(tag, "battlegroup.json")
@@ -657,6 +695,16 @@ def build_explorer(tag: str) -> dict:
     nombres_mp = {(f, squads[r]["name"]["en"]) for r, f in faccion.items() if _raza(r) != "british"}
     for r in [r for r, f in faccion.items() if _raza(r) == "british" and (f, squads[r]["name"]["en"]) in nombres_mp]:
         del faccion[r]
+
+    # Los que nada enlaza (extra_units.json), con el battlegroup que se pueda deducir.
+    extra_f, extra_bg = _extras(squads, upgrades, abilities, bgs)
+    for ref, f in extra_f.items():
+        if ref not in faccion:
+            faccion[ref] = f
+            if ref in extra_bg:
+                key, u = extra_bg[ref]
+                bg_via.setdefault(ref, key)
+                desbloquea.setdefault(u, set()).add(ref)
 
     # battlegroup de cada pelotón: si no sale de ningún edificio, el que lo trae; si sale de uno, el que pide su
     # requisito directo (como la producción de Panther del Mechanized).
