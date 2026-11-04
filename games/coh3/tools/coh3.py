@@ -14,6 +14,7 @@ DATA = JUEGO / "data"
 # coh3-data (MIT) por tag. `fetch.py` baja el actual y el anterior con cambios de datos a `raw/<tag>/`.
 URL = "https://data.coh3stats.com/cohstats/coh3-data/{tag}/data/{path}"
 API_TAGS = "https://api.github.com/repos/cohstats/coh3-data/tags?per_page=100"
+API_COMMIT = "https://api.github.com/repos/cohstats/coh3-data/commits/{tag}"
 API_DIR = "https://api.github.com/repos/cohstats/coh3-data/contents/data/{path}?ref={tag}"
 UA = "Mozilla/5.0 (compatible; vestigo-data)"
 
@@ -28,12 +29,16 @@ FACTIONS = ("american", "british", "german", "dak")
 CHUNKS = 32
 
 
-def tags_raw() -> list[str]:
-    """Los tags bajados, del más nuevo al más viejo (orden de `raw/tags.json`, que escribe fetch.py)."""
+def tags_info() -> list[dict]:
+    """Los tags bajados con cambios de stats, del más nuevo al más viejo: [{tag, date}] (`raw/tags.json`, de fetch.py)."""
     f = RAW / "tags.json"
     if not f.exists():
         raise SystemExit(f"falta {f}: corré games/coh3/tools/fetch.py")
-    return json.loads(f.read_text(encoding="utf-8"))
+    return [t if isinstance(t, dict) else {"tag": t, "date": None} for t in json.loads(f.read_text(encoding="utf-8"))]
+
+
+def tags_raw() -> list[str]:
+    return [t["tag"] for t in tags_info()]
 
 
 def load(tag: str, path: str):

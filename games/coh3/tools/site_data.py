@@ -37,12 +37,16 @@ Salida (contrato de docs/superpowers/specs/2026-11-04-coh3-design.md, con estos 
 - `challenges.json` `{daily:[...], weekly:[...]}`: `{slug, name, desc, count, merits}`.
 - `finalstand.json` `{faccion: {name, perks:[{tier, slug, name, desc, icon, levels:[{cost, desc}]}],
   technologies:[{slug, name, desc, icon, category, cp}]}}`.
-- `patches/index.json` `[{tag, prev, date?, units, weapons}]` + `patches/<tag>.json` `{tag, prev, units:[{slug, name,
-  status, changes:[{field, before, after}]}], weapons:[...]}`; `status` = "changed" | "new".
+- `patches/index.json` `[{slug, tag, prev, patch, name, date, units, weapons}]` (los últimos 8 parches con cambios de
+  stats, del más nuevo al más viejo; `slug` = `tag` = el tag nuevo del par y nombre del archivo; `date` = fecha del
+  commit del tag en coh3-data; `units`/`weapons` = cuántas cambiaron) + `patches/<tag>.json` = la misma fila con
+  `units:[{slug, name, faction, icon, status, changes:[{field, before, after}]}]` y `weapons:[...]`; `status` =
+  "changed" | "new". Sólo se comparan las unidades y armas jugables hoy.
 
 Los textos visibles van `{en, es}`. Los íconos, como ruta del juego (`races/american/infantry/riflemen_us`); los baja
 `images.py` a `site/public/coh3/i/<ruta>.webp`.
 """
+import json
 import re
 import shutil
 import sys
@@ -52,7 +56,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))  # `python -I` no suma la carpeta del script
 
-from coh3 import CHUNKS, DATA, FACTION, FACTIONS, RACES, free, load, peak_mb, shard, tags_raw, write_json  # noqa: E402
+from coh3 import (CHUNKS, DATA, FACTION, FACTIONS, RACES, free, load, peak_mb, shard, tags_info, tags_raw,  # noqa: E402
+                  write_json)
 
 PARTIDOS = {"sbps": "chunked/sbps/races", "ebps": "chunked/ebps/races", "weapon": "chunked/weapon",
             "upgrade": "chunked/upgrade", "abilities": "chunked/abilities/races"}
@@ -159,7 +164,10 @@ def _blueprints(x, clave: str, p=()):
 def _num(v):
     if v is None:
         return None
-    v = float(v)
+    try:
+        v = float(v)
+    except (TypeError, ValueError):  # algún tag viejo trae el nombre del campo en vez del número
+        return None
     return int(v) if v == int(v) else round(v, 4)
 
 
@@ -270,7 +278,7 @@ def _ents(tag: str, loc: Loc | None) -> dict:
                 e["cost"] = {**_cost(tc.get("cost")), "t": _num(tc.get("time_seconds", 0))}
             pop = _ext(o, "population_ext")
             if pop:
-                e["pop"] = _num(sum(pop.get(k, 0) or 0 for k in ("personnel_pop", "vehicle_pop", "medic_pop")))
+                e["pop"] = _num(sum(_num(pop.get(k)) or 0 for k in ("personnel_pop", "vehicle_pop", "medic_pop")))
                 e["upkeep"] = _num((pop.get("upkeep_per_pop_per_minute_override") or {}).get("manpower", 0))
             s = _ext(o, "sight_ext")
             if s:
@@ -900,6 +908,63 @@ def diff(antes: dict, despues: dict, campos: tuple) -> list:
     return out
 
 
+def _cambios(antes: dict, despues: dict, campos: tuple, fichas: dict) -> list:
+    """Lo que cambió de cada unidad o arma de hoy entre dos tags (las que no existían en ninguno no van)."""
+    out = []
+    for slug, d in despues.items():
+        f = fichas[slug]
+        base = {"slug": slug, "name": f["name"], "faction": f["faction"], "icon": f.get("icon")}
+        if slug not in antes:
+            out.append({**base, "status": "new", "changes": []})
+            continue
+        if "hp" in campos and (antes[slug].get("hp") is None or d.get("hp") is None):
+            continue  # export roto en ese tag (v2.4.2-2 trae el Weasel con los nombres de campo en vez de números)
+        ch = diff(antes[slug], d, campos)
+        if ch:
+            out.append({**base, "status": "changed", "changes": ch})
+    return out
+
+
+def build_patches(ex: dict, tags: list[dict]) -> list:
+    """
+    Un archivo por par de tags seguidos con cambios de stats (`patches/<tag nuevo>.json`) y el índice. Se compara lo
+    de hoy (unidades y armas jugables del tag actual, buscadas por su ref) y se calcula cada tag una sola vez, de a
+    uno, soltando lo crudo. Un par sin cambios en lo jugable (tocó sólo campaña o Final Stand) no se escribe.
+    """
+    if (DATA / "patches").exists():
+        shutil.rmtree(DATA / "patches")
+    unidades = {u["slug"]: u for u in ex["units"]}
+    armas = {w["slug"]: w for w in ex["weapons"]}
+    indice = []
+    nuevo = None
+    for t in tags:
+        stats = stats_tag(t["tag"], ex["unit_refs"], ex["weapon_refs"])
+        if nuevo:
+            (tn, (nu, nw)), (u_viejo, w_viejo) = nuevo, stats
+            cu = _cambios(u_viejo, nu, CAMPOS_UNIDAD + ("weapons",), unidades)
+            cw = _cambios(w_viejo, nw, CAMPOS_ARMA, armas)
+            if cu or cw:
+                numero = re.sub(r"^v|-\d+$", "", tn["tag"])
+                fila = {"slug": tn["tag"], "tag": tn["tag"], "prev": t["tag"], "patch": numero,
+                        "name": {"en": f"Patch {numero}", "es": f"Parche {numero}"}, "date": tn.get("date"),
+                        "units": len(cu), "weapons": len(cw)}
+                write_json(DATA / "patches" / f"{tn['tag']}.json", {**fila, "units": cu, "weapons": cw})
+                indice.append(fila)
+        nuevo = (t, stats)
+        free()
+    # Varios tags del mismo parche (re-exportaciones de un hotfix): el nombre lleva la revisión ("2.4.2 · rev. 3").
+    numeros = [f["patch"] for f in indice]
+    for f in indice:
+        if numeros.count(f["patch"]) > 1:
+            rev = f["tag"].rsplit("-", 1)[-1]
+            f["name"] = {"en": f"Patch {f['patch']} · rev. {rev}", "es": f"Parche {f['patch']} · rev. {rev}"}
+            d = json.loads((DATA / "patches" / f"{f['tag']}.json").read_text(encoding="utf-8"))
+            d["name"] = f["name"]
+            write_json(DATA / "patches" / f"{f['tag']}.json", d)
+    write_json(DATA / "patches" / "index.json", indice)
+    return indice
+
+
 # ---------------------------------------------------------------- escritura
 
 def _fila_unidad(u: dict) -> dict:
@@ -957,34 +1022,7 @@ def main() -> None:
     write_json(DATA / "challenges.json", desafios)
     write_json(DATA / "finalstand.json", fs)
 
-    indice = []
-    if prev:
-        # refs de lo de hoy, para buscar lo mismo en el tag anterior
-        unit_refs, weapon_refs = ex["unit_refs"], ex["weapon_refs"]
-        hoy_u, hoy_w = stats_tag(tag, unit_refs, weapon_refs)
-        ayer_u, ayer_w = stats_tag(prev, unit_refs, weapon_refs)
-        nombres_u = {u["slug"]: u["name"] for u in ex["units"]}
-        nombres_w = {w["slug"]: w["name"] for w in ex["weapons"]}
-        cu = []
-        for slug, d in hoy_u.items():
-            if slug not in ayer_u:
-                cu.append({"slug": slug, "name": nombres_u[slug], "status": "new", "changes": []})
-                continue
-            ch = diff(ayer_u[slug], d, CAMPOS_UNIDAD + ("weapons",))
-            if ch:
-                cu.append({"slug": slug, "name": nombres_u[slug], "status": "changed", "changes": ch})
-        cw = []
-        for slug, d in hoy_w.items():
-            if slug not in ayer_w:
-                cw.append({"slug": slug, "name": nombres_w[slug], "status": "new", "changes": []})
-                continue
-            ch = diff(ayer_w[slug], d, CAMPOS_ARMA)
-            if ch:
-                cw.append({"slug": slug, "name": nombres_w[slug], "status": "changed", "changes": ch})
-        if (DATA / "patches").exists():
-            shutil.rmtree(DATA / "patches")
-        write_json(DATA / "patches" / f"{tag}.json", {"tag": tag, "prev": prev, "units": cu, "weapons": cw})
-        indice.append({"tag": tag, "prev": prev, "units": len(cu), "weapons": len(cw)})
+    indice = build_patches(ex, tags_info())
     write_json(DATA / "patches" / "index.json", indice)
 
     meta = {"generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "tag": tag,
@@ -993,7 +1031,6 @@ def main() -> None:
                        "battlegroups": len(ex["battlegroups"]), "maps": len(mapas)}}
     viejo = DATA / "meta.json"
     if viejo.exists():
-        import json
         anterior = json.loads(viejo.read_text(encoding="utf-8"))
         if {k: v for k, v in anterior.items() if k != "generatedAt"} == {k: v for k, v in meta.items() if k != "generatedAt"}:
             meta["generatedAt"] = anterior["generatedAt"]
