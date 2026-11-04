@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { at, cycle, hit, penChance, shotsPerSecond, type WeaponStats } from "../src/coh3/combat/engine";
+import { at, cycle, resolveDist, hit, penChance, shotsPerSecond, type WeaponStats } from "../src/coh3/combat/engine";
 
 // El cañón AT de 57 mm de EE. UU. (coh3-data v2.5.3): penetración 300/150/120 a 15/35/60 m.
 const at57: WeaponStats = {
@@ -17,6 +17,11 @@ describe("penetración (2026-11-04)", () => {
     expect(at(at57.pen, at57.dist, 35)).toBe(150);
     expect(at(at57.pen, at57.dist, 47.5)).toBe(135);
     expect(at(at57.pen, at57.dist, 80)).toBe(120);
+  });
+
+  it("los -1 de distancia se resuelven con el alcance", () => {
+    expect(resolveDist([-1, -1, -1], [0, 40])).toEqual([0, 20, 40]);
+    expect(resolveDist([10, -1, 40], [0, 40])).toEqual([10, 20, 40]);
   });
 
   it("probabilidad = pen / blindaje, con tope en 1", () => {

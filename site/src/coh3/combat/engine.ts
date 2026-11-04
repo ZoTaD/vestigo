@@ -63,6 +63,15 @@ export function at(v: Trio, dist: Trio, d: number): number {
   return f;
 }
 
+/**
+ * Las distancias de un arma con los -1 resueltos como los resuelve el juego: cerca = alcance mínimo, medio = la mitad
+ * del alcance, lejos = alcance máximo (las armas de vehículo suelen traerlas así).
+ */
+export function resolveDist(dist: readonly number[], range: readonly [number, number]): Trio {
+  const [lo, hi] = range;
+  return [dist[0] < 0 ? lo : dist[0], dist[1] < 0 ? (hi - lo) / 2 : dist[1], dist[2] < 0 ? hi : dist[2]];
+}
+
 export const penChance = (pen: number, armor: number): number => (armor <= 0 ? 1 : Math.min(1, pen / armor));
 
 /** Segundos por ciclo de disparo (sin la recarga) y disparos que salen en ese ciclo. */
