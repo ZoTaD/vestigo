@@ -159,9 +159,17 @@
 # Netlify lo reenvía con 200, así que para el navegador es vestigo.gg/api: la
 # cookie de la sesión es nuestra y no hace falta CORS. `force` porque no hay
 # archivos en /api, pero si alguna vez los hubiera, manda el Worker.
+# Sólo las rutas del Worker: `/api/cs2/*` son Netlify Functions (partidos e
+# inventario de CS2) y un `/api/*` con `force` les tapaba el camino.
 [[redirects]]
-  from = "/api/*"
-  to = "https://vestigo-api.vestigo-gg.workers.dev/api/:splat"
+  from = "/api/auth/*"
+  to = "https://vestigo-api.vestigo-gg.workers.dev/api/auth/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/me"
+  to = "https://vestigo-api.vestigo-gg.workers.dev/api/me"
   status = 200
   force = true
 
