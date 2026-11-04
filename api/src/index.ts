@@ -1,7 +1,10 @@
+import { loadPool } from "./dle/pool";
+import { handleDle, runDaily } from "./dle/routes";
+import { d1Store } from "./dle/store";
 import { accountIdOf, checkAuthBody, claimedSteamId, isValidResponse, loginUrl, safeReturn, STEAM_OPENID } from "./steam";
 
 /**
- * La API de vestigo.gg: por ahora, sólo el login con Steam.
+ * La API de vestigo.gg: el login con Steam y el Deadlockdle (`dle/`).
  *
  * Netlify le reenvía `vestigo.gg/api/*` (ver `netlify.toml`), así que para el
  * navegador todo pasa en nuestro dominio: la cookie es nuestra y no hay CORS.
@@ -13,6 +16,11 @@ export interface Env {
   DB: D1Database;
   SITE_ORIGIN: string;
   STEAM_API_KEY: string;
+  /** El azar de la respuesta del día del Deadlockdle. */
+  DLE_SECRET: string;
+  /** El pozo del Deadlockdle, publicado con el sitio. */
+  POOL_URL: string;
+  DLE_LIMIT?: RateLimit;
 }
 
 const SESSION_COOKIE = "vg_session";
@@ -30,11 +38,26 @@ export default {
       if (req.method === "GET" && url.pathname === "/api/auth/steam/callback") return await callback(url, env);
       if (req.method === "GET" && url.pathname === "/api/me") return await me(req, env);
       if (req.method === "POST" && url.pathname === "/api/auth/logout") return await logout(req, env);
+      const dle = await handleDle(req, url, {
+        store: d1Store(env.DB),
+        pool: () => loadPool(env.POOL_URL),
+        secret: env.DLE_SECRET,
+        now: Date.now(),
+        steamId: await sessionSteamId(req, env),
+        ip: req.headers.get("cf-connecting-ip") ?? undefined,
+        limit: env.DLE_LIMIT ? async (key) => (await env.DLE_LIMIT!.limit({ key })).success : undefined,
+      });
+      if (dle) return dle;
       return json({ error: "not_found" }, 404);
     } catch (err) {
       console.error(err);
       return json({ error: "server" }, 500);
     }
+  },
+
+  /** 00:00 UTC: deja elegidas las respuestas del día del Deadlockdle. */
+  async scheduled(_event: ScheduledController, env: Env): Promise<void> {
+    await runDaily(d1Store(env.DB), await loadPool(env.POOL_URL), env.DLE_SECRET, Date.now());
   },
 };
 
@@ -78,6 +101,16 @@ async function callback(url: URL, env: Env): Promise<Response> {
     cookie(SESSION_COOKIE, token, { maxAge, httpOnly: true, path: "/api" }),
     cookie(HINT_COOKIE, "1", { maxAge, httpOnly: false, path: "/" }),
   ]);
+}
+
+/** El ID de Steam de la sesión del pedido, o null. */
+async function sessionSteamId(req: Request, env: Env): Promise<string | null> {
+  const token = readCookie(req, SESSION_COOKIE);
+  if (!token) return null;
+  const row = await env.DB.prepare("select steam_id from sessions where token_hash = ?1 and expires_at > ?2")
+    .bind(await sha256(token), Date.now())
+    .first<{ steam_id: string }>();
+  return row?.steam_id ?? null;
 }
 
 async function me(req: Request, env: Env): Promise<Response> {
