@@ -34,7 +34,8 @@ describe("el intermediario del inventario", () => {
     const nf = await call("?id=nadie", () => new Response("<response><error>The specified profile could not be found.</error></response>"));
     expect([nf.status, (await nf.json()).error]).toEqual([404, "notfound"]);
     const busy = await call(`?id=${ID}`, () => new Response("", { status: 429 }));
-    expect([busy.status, (await busy.json()).error]).toEqual([503, "busy"]);
+    expect(busy.status).toBe(503);
+    expect(await busy.json()).toEqual({ error: "busy", steamid: ID, upstream: 429 });
   });
   it("una entrada que no es un perfil → 400 bad, sin pedirle nada a Steam", async () => {
     let pidio = false;

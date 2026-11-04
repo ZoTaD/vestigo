@@ -62,7 +62,7 @@ export default function CollPage({
           <div className="c2-where">
             <p className="c2-dim">{t.t.fromCases}</p>
             {ficha.cases.length === 0 ? (
-              <p>{t.t.noCases}</p>
+              <p>{t.t.collNoCases}</p>
             ) : (
               <div className="c2-links">
                 {ficha.cases.map((s) => {
@@ -85,7 +85,7 @@ export default function CollPage({
           <thead>
             <tr>
               {th("name", t.t.skin)}
-              {WEARS.map((w, i) => th(w.ab as Key, w.ab, { title: t.wear[i] }))}
+              {WEARS.map((w, i) => th(w.ab as Key, t.wear[i], { className: "is-wear" }))}
             </tr>
           </thead>
           <tbody>
@@ -116,7 +116,7 @@ export default function CollPage({
                       </RouteLink>
                     </td>
                     {WEARS.map((w, i) => (
-                      <td key={w.ab}>{reaches(s, i) ? <Price v={cell(slug, i)} bare sug={!soloSouvenir(p) && !!((p?.sug ?? 0) & (1 << i))} /> : <span className="c2-num is-none">—</span>}</td>
+                      <td data-l={t.wear[i]} key={w.ab}>{reaches(s, i) ? <Price v={cell(slug, i)} sug={!soloSouvenir(p) && !!((p?.sug ?? 0) & (1 << i))} /> : <span className="c2-num is-none">—</span>}</td>
                     ))}
                   </tr>
                 );

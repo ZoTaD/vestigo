@@ -112,11 +112,11 @@ export default function Finder({
                           </span>
                         </div>
                       </td>
-                      <td className="c2-num">{x.fMax == null ? "—" : n4(x.fMax)}</td>
-                      <td>
+                      <td data-l={u.fMax} className="c2-num">{x.fMax == null ? "—" : n4(x.fMax)}</td>
+                      <td data-l={t.t.price}>
                         <Price v={x.price} />
                       </td>
-                      <td>
+                      <td data-l={u.tenOf}>
                         <Price v={x.price == null ? null : x.price * n} />
                       </td>
                       <td>

@@ -45,8 +45,8 @@ function CollList({ rows, route, navigate }: { rows: CollRow[]; route: Route; na
                     </span>
                   </RouteLink>
                 </td>
-                <td className="c2-num">{r.n}</td>
-                <td className="c2-num c2-dim">{r.date ? r.date.replaceAll("-", "/") : "—"}</td>
+                <td data-l={t.t.skin} className="c2-num">{r.n}</td>
+                <td data-l={t.t.date} className="c2-num c2-dim">{r.date ? r.date.replaceAll("-", "/") : "—"}</td>
               </tr>
             ))}
           </tbody>

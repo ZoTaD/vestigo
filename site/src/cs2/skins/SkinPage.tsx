@@ -8,6 +8,7 @@ import type { Route } from "../../route";
 import { useCs2Copy } from "../../cs2Copy";
 import type { CaseRow, CollRow, SkinFicha, SkinPrice, SkinRow } from "../data";
 import { lowest } from "./filters";
+import { MarketBlockFor } from "../market/MarketBlock";
 import { FloatRange, Img, Price, Rarity, WearBar, WearPrices, type Nav } from "../ui";
 
 export default function SkinPage({
@@ -34,10 +35,18 @@ export default function SkinPage({
   const t = useCs2Copy();
   const to = (c2Section: "skins" | "cases" | "collections", detail?: string): Route => ({ ...route, view: "cs2", c2Section, detail });
   const title = ficha.phase ? `${ficha.name} · ${ficha.phase}` : ficha.name;
-  const where = [
-    ...ficha.cases.map((s) => ({ tab: "cases" as const, row: cases.get(s) })),
-    ...ficha.collections.map((s) => ({ tab: "collections" as const, row: collections.get(s) })),
-  ].filter((w) => w.row);
+  const caseRows = ficha.cases.map((s) => cases.get(s)).filter((r): r is CaseRow => !!r);
+  const collRows = ficha.collections.map((s) => collections.get(s)).filter((r): r is CollRow => !!r);
+  const chips = (tab: "cases" | "collections", rows: (CaseRow | CollRow)[]) => (
+    <div className="c2-links">
+      {rows.map((row) => (
+        <RouteLink key={row.slug} className="c2-chip" to={to(tab, row.slug)} onNavigate={navigate}>
+          <Img img={row.img} w={56} h={42} />
+          {row.name}
+        </RouteLink>
+      ))}
+    </div>
+  );
   return (
     <main className="c2-main c2-ficha">
       <section className={`c2-skin is-${ficha.rarity}`}>
@@ -58,18 +67,17 @@ export default function SkinPage({
             </p>
           )}
           <WearBar min={ficha.min} max={ficha.max} />
+          <p className="c2-dim">{t.t.listedNow}</p>
           <WearPrices skin={ficha} price={price} />
           <div className="c2-where">
             <p className="c2-dim">{t.t.fromCases}</p>
-            {ficha.cases.length === 0 && <p>{t.t.noCases}</p>}
-            <div className="c2-links">
-              {where.map(({ tab, row }) => (
-                <RouteLink key={`${tab}-${row!.slug}`} className="c2-chip" to={to(tab, row!.slug)} onNavigate={navigate}>
-                  <Img img={row!.img} w={56} h={42} />
-                  {row!.name}
-                </RouteLink>
-              ))}
-            </div>
+            {caseRows.length ? chips("cases", caseRows) : <p>{t.t.noCases}</p>}
+            {collRows.length > 0 && (
+              <>
+                <p className="c2-dim">{t.t.fromCollections}</p>
+                {chips("collections", collRows)}
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -90,6 +98,8 @@ export default function SkinPage({
           </div>
         </section>
       )}
+
+      <MarketBlockFor slug={ficha.slug} />
 
       {ficha.desc && <p className="c2-desc">{ficha.desc}</p>}
       {date && <p className="c2-note">{t.t.pricesNote(date)}</p>}

@@ -94,7 +94,7 @@ export default function SkinList({ rows, prices, route, navigate }: { rows: Skin
           <thead>
             <tr>
               {th("name", t.t.skin)}
-              {WEARS.map((w, i) => th(w.ab as Key, w.ab, { title: t.wear[i] }))}
+              {WEARS.map((w, i) => th(w.ab as Key, t.wear[i], { className: "is-wear" }))}
             </tr>
           </thead>
           <tbody>
@@ -134,12 +134,12 @@ export default function SkinList({ rows, prices, route, navigate }: { rows: Skin
                       </RouteLink>
                     </td>
                     {s.min == null ? (
-                      <td colSpan={5}>
-                        <Price v={p?.n?.[0]} bare />
+                      <td data-l={t.t.price} colSpan={5}>
+                        <Price v={p?.n?.[0]} />
                       </td>
                     ) : (
                       WEARS.map((w, k) => (
-                        <td key={w.ab}>{reaches(s, k) ? <Price v={p?.n?.[k]} bare sug={!!((p?.sug ?? 0) & (1 << k))} /> : <span className="c2-num is-none">—</span>}</td>
+                        <td data-l={t.wear[k]} key={w.ab}>{reaches(s, k) ? <Price v={p?.n?.[k]} sug={!!((p?.sug ?? 0) & (1 << k))} /> : <span className="c2-num is-none">—</span>}</td>
                       ))
                     )}
                   </tr>
@@ -149,6 +149,7 @@ export default function SkinList({ rows, prices, route, navigate }: { rows: Skin
           </tbody>
         </table>
       </div>
+      <p className="c2-note">{t.t.sugNote}</p>
     </main>
   );
 }

@@ -19,15 +19,17 @@ export function useNum() {
   return (v: number, d = 2) => v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d });
 }
 
-/** Un precio en dólares, o "—" si no hay. `sug`: es el sugerido (no hay publicaciones), con su marca tenue. */
-export function Price({ v, sug = false, bare = false }: { v: number | null | undefined; sug?: boolean; bare?: boolean }) {
+/**
+ * Un precio en dólares, siempre con "US$" (ZoTaD, 3/11: un "0,73" suelto no se entiende), o "—" si no hay. `sug`: es
+ * el sugerido (no hay publicaciones), con su marca tenue.
+ */
+export function Price({ v, sug = false }: { v: number | null | undefined; sug?: boolean }) {
   const t = useCs2Copy();
   const num = useNum();
   if (v == null) return <span className="c2-num is-none">—</span>;
   return (
     <span className="c2-num" title={sug ? t.t.suggestedHint : undefined}>
-      {bare ? "" : "US$ "}
-      {num(v)}
+      US$ {num(v)}
       {sug && <small className="c2-sug"> {t.t.suggested}</small>}
     </span>
   );
@@ -126,7 +128,7 @@ export function WearPrices({ skin, price, short = false }: { skin: { min: number
     <table className="c2-wp">
       <thead>
         <tr>
-          <th>{short ? "US$" : `${t.t.wearCol} · US$`}</th>
+          <th>{t.t.wearCol}</th>
           <th>{t.t.normal}</th>
           {st && <th>{t.t.stattrak}</th>}
           {sv && <th>{t.t.souvenir}</th>}
@@ -139,16 +141,16 @@ export function WearPrices({ skin, price, short = false }: { skin: { min: number
             <tr key={i}>
               <td>{i < 0 ? "—" : short ? <abbr title={t.wear[i]}>{WEARS[i].ab}</abbr> : t.wear[i]}</td>
               <td>
-                <Price v={price?.n?.[k]} bare sug={!!((price?.sug ?? 0) & (1 << k))} />
+                <Price v={price?.n?.[k]} sug={!!((price?.sug ?? 0) & (1 << k))} />
               </td>
               {st && (
                 <td>
-                  <Price v={price?.st?.[k]} bare />
+                  <Price v={price?.st?.[k]} />
                 </td>
               )}
               {sv && (
                 <td>
-                  <Price v={price?.sv?.[k]} bare />
+                  <Price v={price?.sv?.[k]} />
                 </td>
               )}
             </tr>
@@ -175,7 +177,7 @@ export function SkinSide({ skin, price, children }: { skin: SkinRow; price: Skin
         </p>
       )}
       <WearBar min={skin.min} max={skin.max} />
-      <WearPrices skin={skin} price={price} short />
+      <WearPrices skin={skin} price={price} />
       {children}
     </aside>
   );

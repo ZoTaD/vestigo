@@ -1,0 +1,1 @@
+{"date":"2024-03-08","title":"Release Note for 3/8/2024","url":"https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/5679673637656640515","kind":"content","body":[{"li":"Fixed a threading bug that could lead to a frame rate hitch, especially if all CPUs were busy."}],"refs":[],"slug":"release-note-for-3-8-2024"}

@@ -94,14 +94,14 @@ export default function CaseList({ rows, prices, route, navigate }: { rows: Case
                         </span>
                       </RouteLink>
                     </td>
-                    <td className="c2-num c2-dim">{r.date ? r.date.replaceAll("-", "/") : "—"}</td>
-                    <td>
+                    <td data-l={t.t.date} className="c2-num c2-dim">{r.date ? r.date.replaceAll("-", "/") : "—"}</td>
+                    <td data-l={t.t.price}>
                       <Price v={p?.price} />
                     </td>
-                    <td>
+                    <td data-l={t.t.ev}>
                       <Price v={p?.ev} />
                     </td>
-                    <td>{p?.ret != null ? <Pct v={p.ret} d={0} className={p.ret >= 1 ? "is-up" : "is-down"} /> : <span className="c2-num is-none">—</span>}</td>
+                    <td data-l={t.t.returns}>{p?.ret != null ? <Pct v={p.ret} d={0} className={p.ret >= 1 ? "is-up" : "is-down"} /> : <span className="c2-num is-none">—</span>}</td>
                   </tr>
                 );
               }}

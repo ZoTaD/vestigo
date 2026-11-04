@@ -14,6 +14,7 @@ import type { Cs2Cat, Cs2Kind, Cs2Rarity } from "../cs2Copy";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 import type { Coll } from "./tradeup/engine";
+import type { MarketRow } from "./market/movers";
 
 /** `CHUNKS` de cs2.py: si se cambia uno se cambia el otro (lo prueba cs2Data.test.ts). */
 export const CS2_SHARDS = 32;
@@ -127,6 +128,19 @@ export const peekCasePrices = () => casePrices.peek();
 /** El precio de todo Skinport por `market_hash_name` (~260 KB comprimido): sólo lo baja el Inventario (etapa 3). */
 const allPrices = once<Record<string, number>>(() => import("@cs2prices/all.json") as Promise<Mod<unknown>>);
 export const loadAllPrices = () => allPrices.load();
+
+/** Etapa 4: la lista de la pestaña Mercado, las ventas de cada ficha (32 archivos) y su serie diaria (32 archivos). */
+const market = once<MarketRow[]>(() => import("@cs2prices/market.json") as Promise<Mod<unknown>>);
+export const loadMarket = () => market.load();
+export const peekMarket = () => market.peek();
+/** Las ventas de una variante: `[mediana 24 h, 7 d, 30 d, 90 d, ventas 30 d]`. */
+export type SaleRow = [m24: number | null, m7: number | null, m30: number | null, m90: number | null, v30: number];
+const sales = shardedFichas<Record<string, SaleRow>>(import.meta.glob<{ default: Record<string, Record<string, SaleRow>> }>("@cs2prices/sales/*.json"), shard);
+const history = shardedFichas<[string, number][]>(import.meta.glob<{ default: Record<string, [string, number][]> }>("@cs2prices/history/*.json"), shard);
+export const loadSales = (slug: string) => sales.load(slug);
+export const peekSales = (slug: string) => sales.peek(slug);
+export const loadHistory = (slug: string) => history.load(slug);
+export const peekHistory = (slug: string) => history.peek(slug);
 export const loadTradeup = () => tradeup.load();
 export const peekTradeup = () => tradeup.peek();
 export const loadPriceDate = () => priceMeta.load().then((m) => m.date);
@@ -138,6 +152,34 @@ export const peekPriceDate = () => priceMeta.peek()?.date ?? null;
  */
 export async function preloadRoute(route: Route): Promise<void> {
   const tab = route.c2Section;
+  // Parches: el índice y la edición abierta (sin slug, la más nueva). Lo que nombra trae su imagen en la edición.
+  if (tab === "patches") {
+    const { loadPatchIndex, loadPatch } = await import("./patches/data");
+    const index = await loadPatchIndex();
+    const slug = route.detail ?? index[0]?.slug;
+    if (slug) await loadPatch(slug);
+    return;
+  }
+  // Torneos: los torneos, el ranking y los equipos (y, con detalle, la ficha del torneo). Los partidos no: cambian
+  // cada hora y los pide la página.
+  if (tab === "esports") {
+    const { loadEsports } = await import("./esports/data");
+    const { loadTour, loadIndex } = await import("./esports/teams/data");
+    await Promise.all([loadEsports(), loadIndex(), ...(route.detail ? [loadTour(route.detail)] : [])]);
+    return;
+  }
+  // Equipos y Jugadores (etapa 6b): el índice y, con detalle, la ficha.
+  if (tab === "teams" || tab === "players") {
+    const { loadIndex, loadTeam, loadPlayer } = await import("./esports/teams/data");
+    const { loadEsports } = await import("./esports/data");
+    await Promise.all([loadIndex(), loadEsports(), ...(route.detail ? [tab === "teams" ? loadTeam(route.detail) : loadPlayer(route.detail)] : [])]);
+    return;
+  }
+  // Mercado: la lista de la pestaña.
+  if (tab === "market") {
+    await Promise.all([loadMarket(), loadPriceDate()]);
+    return;
+  }
   // Trade-up: todas las skins con sus precios y las colecciones.
   if (tab === "trade-up") {
     await Promise.all([loadList("skins"), loadSkinPrices(), loadTradeup(), loadPriceDate()]);
@@ -157,7 +199,8 @@ export async function preloadRoute(route: Route): Promise<void> {
     await Promise.all([...base, loadList(tab)]);
     return;
   }
-  const [f] = await Promise.all([loadFicha(tab, route.detail), ...base]);
+  // Las ventas y la serie de la ficha, para que el prerender traiga el bloque de mercado.
+  const [f] = await Promise.all([loadFicha(tab, route.detail), ...base, loadSales(route.detail), loadHistory(route.detail)]);
   if (!f) return;
   // Lo que la ficha nombra con nombre e imagen: las cajas y colecciones (de sus listas, livianas).
   await Promise.all([loadList("cases"), loadList("collections")]);

@@ -29,6 +29,11 @@ const Cs2Cases = lazyWithPreload(() => import("./cs2/cases/Cs2Cases"));
 const Cs2Collections = lazyWithPreload(() => import("./cs2/collections/Cs2Collections"));
 const Cs2Tradeup = lazyWithPreload(() => import("./cs2/tradeup/Cs2Tradeup"));
 const Cs2Inventory = lazyWithPreload(() => import("./cs2/inventory/Cs2Inventory"));
+const Cs2Market = lazyWithPreload(() => import("./cs2/market/Cs2Market"));
+const Cs2Patches = lazyWithPreload(() => import("./cs2/patches/Cs2Patches"));
+const Cs2Esports = lazyWithPreload(() => import("./cs2/esports/Cs2Esports"));
+const Cs2Teams = lazyWithPreload(() => import("./cs2/esports/teams/Cs2Teams"));
+const Cs2Players = lazyWithPreload(() => import("./cs2/esports/teams/Cs2Players"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `CS2_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `CS2_TAB_FILES`.
@@ -38,6 +43,11 @@ const TABS: Partial<Record<Cs2Section, LazyTab>> = {
   collections: Cs2Collections,
   "trade-up": Cs2Tradeup,
   inventory: Cs2Inventory,
+  market: Cs2Market,
+  patches: Cs2Patches,
+  esports: Cs2Esports,
+  teams: Cs2Teams,
+  players: Cs2Players,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -52,6 +62,11 @@ const TAB_DATA: Partial<Record<Cs2Section, (route: Route) => Promise<unknown>>> 
   cases: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
   collections: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
   "trade-up": (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
+  market: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
+  patches: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
+  esports: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
+  teams: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
+  players: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
 };
 
 /** Baja el chunk de la pestaña de una ruta de CS2, y sus datos. */

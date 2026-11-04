@@ -203,6 +203,22 @@ export const PAGES = [
   // Inventario (etapa 3): sin perfil (sólo el formulario). Con perfil pide a Steam: eso se prueba a mano, no en perf.
   "/en/cs2/inventory",
   "/es/cs2/inventario",
+  // Mercado (etapa 4): las tres tablas de 20 filas.
+  "/en/cs2/market",
+  "/es/cs2/mercado",
+  // Parches (etapa 5): el más nuevo, el parche más largo y un lanzamiento con imágenes.
+  "/en/cs2/patches",
+  "/es/cs2/parches/2023-11-17",
+  "/en/cs2/patches/rush-hour",
+  // Torneos (etapa 6a): la portada con Twitch sin cargar, los partidos y el ranking.
+  "/en/cs2/esports",
+  "/es/cs2/torneos",
+  // Equipos y fichas (etapa 6b): la lista, la ficha más completa, una en inglés, un jugador y un torneo.
+  "/es/cs2/equipos",
+  "/es/cs2/equipos/mouz",
+  "/en/cs2/teams/team-vitality",
+  "/en/cs2/players/xertion",
+  "/es/cs2/torneos/pgl-2026-masters",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

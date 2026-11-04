@@ -3,9 +3,10 @@ Baja lo crudo de CS2 a `games/cs2/raw/` (2026-11-03).
 
     python games/cs2/tools/fetch.py              # catálogo y precios
     python games/cs2/tools/fetch.py --catalog    # sólo el catálogo de ByMykel/CSGO-API (MIT)
-    python games/cs2/tools/fetch.py --prices     # sólo los precios de Skinport
+    python games/cs2/tools/fetch.py --prices     # sólo los precios y las ventas de Skinport
 
-Skinport pide `Accept-Encoding: br` y deja 8 pedidos cada 5 minutos: acá se hace **uno** por corrida (trae todo).
+Skinport pide `Accept-Encoding: br` y deja 8 pedidos cada 5 minutos: acá se hacen **dos** por corrida (los precios y
+las ventas; cada uno trae todo).
 Lo bajado es dato no confiable: se guarda y se lee como JSON, nunca se ejecuta.
 """
 import json
@@ -19,6 +20,8 @@ from cs2 import RAW
 URL_CATALOGO = "https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/api/en/{name}.json"
 CATALOGO = ("skins", "skins_not_grouped", "crates", "collections")
 URL_SKINPORT = "https://api.skinport.com/v1/items?app_id=730&currency=USD&tradable=0"
+# Las ventas reales de 24 h, 7, 30 y 90 días de cada objeto (etapa 4, Mercado). Un pedido más: 2 de los 8 cada 5 min.
+URL_SALES = "https://api.skinport.com/v1/sales/history?app_id=730&currency=USD"
 
 
 def get(url: str, headers: dict | None = None) -> bytes:
@@ -47,6 +50,7 @@ def main(args: list[str]) -> None:
             guardar(nombre, get(URL_CATALOGO.format(name=nombre)), 100)
     if todo or "--prices" in args:
         guardar("skinport", get(URL_SKINPORT, {"Accept-Encoding": "br"}), 10000)
+        guardar("sales", get(URL_SALES, {"Accept-Encoding": "br"}), 10000)
 
 
 if __name__ == "__main__":
