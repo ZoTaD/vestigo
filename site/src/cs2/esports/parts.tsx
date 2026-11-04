@@ -2,7 +2,17 @@
  * Piezas de la pestaña Torneos (2026-11-03, etapa 6a): el logo de un equipo (con sus iniciales si no hay), el
  * reproductor de Twitch que se carga al tocarlo y el agrupado de partidos por día en la hora de quien mira.
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+/**
+ * `false` en el prerender y en la primera pasada del navegador, `true` después: lo que depende de la zona horaria de
+ * quien mira (la hora de un partido) se dibuja recién ahí, así el HTML y la hidratación coinciden.
+ */
+export function useMounted(): boolean {
+  const [on, setOn] = useState(false);
+  useEffect(() => setOn(true), []);
+  return on;
+}
 import type { Lang } from "../../i18n";
 import { useCs2Copy } from "../../cs2Copy";
 import type { Teams } from "./data";

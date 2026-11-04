@@ -58,6 +58,17 @@ class TestLlaves(unittest.TestCase):
         self.assertEqual(m["maps"][2]["hb"], [["t", 7], ["ct", 5], ["ct", 3], ["t", 1]])
         self.assertGreater(m["t"], 1_700_000_000)
 
+    def test_lado_izquierdo_sin_pagina(self):
+        # "PRIVATE" (sin página en Liquipedia) contra MOUZ: el enlace de MOUZ no puede quedar del lado izquierdo.
+        h = leer("lp_bracket.html")
+        first = h.split("brkts-popup brkts-popup-container")[1]
+        cut = first.find("match-info-header-scoreholder")
+        left = first[:cut].replace('<a href="/counterstrike/Team_Spirit" title="Team Spirit">', "").replace("</a>", "").replace("Team Spirit", "PRIVATE").replace(">Spirit<", ">PRIVATE<")
+        m = bracket_matches('<div class="brkts-popup brkts-popup-container' + left + first[cut:])[0]
+        self.assertEqual((m["a"], m["a_lp"], m["b"], m["b_lp"]), ("PRIVATE", None, "MOUZ", "MOUZ"))
+        s = {x["map"]: x for x in map_stats([m], "MOUZ", "2000-01-01")}
+        self.assertEqual(s["Mirage"]["won"], 1)  # MOUZ ganó Mirage 16–14 desde la derecha
+
     def test_mapa_sin_jugar_no_cuenta(self):
         self.assertEqual([x["map"] for x in self.ms[1]["maps"]], ["Nuke", "Inferno"])
 

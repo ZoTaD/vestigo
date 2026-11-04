@@ -45,7 +45,8 @@ export interface Team {
   lp: string | null;
   name: string;
   logo: string | null;
-  vrs: { rank: number | null; pts: number; region: string | null; prev?: number | null; history: { date: string; rank: number; pts: number }[] };
+  /** `rank`: el puesto en el mundial; `region_rank`: el de su región, si no está en el mundial. */
+  vrs: { rank: number | null; region_rank?: number | null; pts: number; region: string | null; prev?: number | null; history: { date: string; rank: number; pts: number }[] };
   location: string | null;
   igl: string | null;
   coaches: string[] | null;
@@ -103,7 +104,7 @@ export interface Tour {
   matches: BracketMatch[];
 }
 export interface EsIndex {
-  teams: { slug: string; name: string; logo: string | null; rank: number | null; region: string | null; pts: number }[];
+  teams: { slug: string; name: string; logo: string | null; rank: number | null; region_rank?: number | null; region: string | null; pts: number }[];
   players: { slug: string; id: string; team_slug: string | null }[];
   tours: { slug: string; name: string; state: string; start: string | null }[];
   flags: string[];

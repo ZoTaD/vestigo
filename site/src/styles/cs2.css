@@ -526,7 +526,7 @@ a.c2-inv-card:hover { border-color: var(--c2-ink); }
 .c2-es-team small { display: block; color: var(--c2-dim); font-size: 13px; }
 .c2-es-mv { font-weight: 700; white-space: nowrap; }
 .c2-es-mv.is-up { color: var(--c2-up); } .c2-es-mv.is-down { color: var(--c2-down); } .c2-es-mv.is-eq { color: var(--c2-dim); }
-.c2-es-pts { font: 20px/1 var(--c2-stencil); }
+.c2-es-pts { font: 20px/1 var(--c2-stencil); color: var(--c2-ink); background: transparent; border: 0; padding: 0; cursor: pointer; }
 .c2-es-why td { background: var(--c2-stone-hi); padding: 4px 16px 16px; }
 .c2-es-whybox { display: grid; gap: 8px; max-width: 760px; }
 .c2-es-why-t { font: 18px/1.2 var(--c2-stencil); }

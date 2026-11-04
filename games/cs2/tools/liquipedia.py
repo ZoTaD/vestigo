@@ -38,7 +38,7 @@ class Liquipedia:
 
     def parse(self, page: str) -> str:
         """El HTML de una página (`action=parse`)."""
-        url = API + "?" + urllib.parse.urlencode({"action": "parse", "page": page, "prop": "text", "format": "json"})
+        url = API + "?" + urllib.parse.urlencode({"action": "parse", "page": page, "prop": "text", "redirects": 1, "format": "json"})
         return json.loads(self._get(url, "parse"))["parse"]["text"]["*"]
 
     def query(self, **params) -> dict:

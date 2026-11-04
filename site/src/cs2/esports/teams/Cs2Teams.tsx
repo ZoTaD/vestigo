@@ -44,7 +44,7 @@ function TeamList({ idx, route, navigate }: { idx: EsIndex; route: Route; naviga
               {rows.map((x, i) => (
                 <li key={x.slug}>
                   <RouteLink className="c2-tm-li" to={{ ...route, view: "cs2", c2Section: "teams", detail: x.slug }} onNavigate={navigate}>
-                    <span className="c2-tm-li-r">{x.rank ?? i + 1}</span>
+                    <span className="c2-tm-li-r">{x.rank ?? x.region_rank ?? i + 1}</span>
                     {x.logo ? <img className="c2-logo" src={`/cs2/t/${x.logo}.webp`} alt="" width={36} height={36} loading="lazy" decoding="async" /> : <span className="c2-logo is-text" style={{ width: 36, height: 36 }} aria-hidden="true">{x.name.slice(0, 2).toUpperCase()}</span>}
                     <b>{x.name}</b>
                     <span className="c2-num">{num(x.pts, 0)}</span>
@@ -99,7 +99,7 @@ export function TeamPage({ team, idx, route, navigate }: { team: Team; idx: EsIn
         </div>
         <div className="c2-tm-rank">
           <small>{t.es.vrs}</small>
-          <b>{v.rank != null ? `#${v.rank}` : num(v.pts, 0)}</b>
+          <b>{v.rank != null ? `#${v.rank}` : v.region_rank != null ? `#${v.region_rank}` : num(v.pts, 0)}</b>
           <small>
             {rankText}
             {move != null && <span className={move > 0 ? " is-up" : move < 0 ? " is-down" : ""}> · {t.tm.move(move)}</span>}

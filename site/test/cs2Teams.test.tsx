@@ -99,3 +99,23 @@ describe("la ficha de torneo", () => {
     expect(html).toContain("2–0");
   });
 });
+
+describe("arreglos de la revisión final", () => {
+  it("la ficha de torneo sale en hora UTC en el HTML (la local recién en el navegador): sin error al hidratar", async () => {
+    const { TourPage } = await import("../src/cs2/esports/TourPage");
+    const tour = { slug: "x", lp: "X", name: "X", state: "concluded" as const, organizer: null, location: null, venue: null, prize: null, start: null, end: null, tier: "S", streams: [], teams: [], matches: [{ t: Date.UTC(2026, 9, 31, 23, 30) / 1000, a: "A", b: "B", a_lp: null, b_lp: null, bo: 3, maps: [{ map: "Nuke", a: 13, b: 5, ha: [], hb: [] }] }] };
+    const html = wrap(<TourPage tour={tour} idx={idx} route={route} navigate={nav} />);
+    expect(html).toContain("23:30 UTC");
+    expect(html).toContain("Sábado, 31 de octubre");
+  });
+  it("un equipo regional muestra su puesto en la región", () => {
+    const html = wrap(<TeamPage team={team({ vrs: { rank: null, region_rank: 14, pts: 1500, region: "europe", history: [] } })} idx={idx} route={route} navigate={nav} />);
+    expect(html).toContain("#14");
+    expect(html).toContain("de Europa");
+  });
+  it("el equipo de un jugador fuera del ranking, sin guiones bajos", () => {
+    const p: Player = { slug: "y", lp: "Y", id: "y", name: null, flag: null, born: null, roles: [], team_lp: "Team_Spirit_Academy", team_slug: "team-spirit-academy", winnings: null };
+    const html = wrap(<PlayerPage p={p} idx={idx} route={route} navigate={nav} />);
+    expect(html).toContain("Team Spirit Academy");
+  });
+});

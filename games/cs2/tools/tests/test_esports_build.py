@@ -98,6 +98,44 @@ class TestBuild(unittest.TestCase):
         self.assertEqual(self.lp.parses[:2], ["MOUZ", "MOUZ/Results"])
         self.assertNotIn("PGL/2026/Masters", self.lp.parses)
 
+    def test_torneo_en_vivo_que_termina_se_relee(self):
+        live = [{"slug": "PGL/2026/Masters", "name": "PGL Masters Bucharest 2026", "state": "ongoing"}]
+        esports_teams.build(self.lp, self.gh, self.out, self.raw, "2026-11-03", VRS, TEAMS, live, budget=999)
+        self.assertEqual(self.read("tours/pgl-2026-masters.json")["state"], "ongoing")
+        self.lp.parses.clear()
+        done = [{**live[0], "state": "concluded"}]
+        esports_teams.build(self.lp, self.gh, self.out, self.raw, "2026-11-03", VRS, TEAMS, done, budget=999)
+        self.assertIn("PGL/2026/Masters", self.lp.parses)
+        self.assertEqual(self.read("tours/pgl-2026-masters.json")["state"], "concluded")
+
+    def test_torneos_en_vivo_antes_que_los_equipos(self):
+        live = [{"slug": "PGL/2026/Masters", "name": "PGL Masters Bucharest 2026", "state": "ongoing"}]
+        esports_teams.build(self.lp, self.gh, self.out, self.raw, "2026-11-03", VRS, TEAMS, live, budget=1)
+        self.assertEqual(self.lp.parses, ["PGL/2026/Masters"])
+
+    def test_una_lectura_que_falla_no_se_repite_al_otro_dia(self):
+        orig = self.lp.parse
+
+        def parse(page):
+            if page == "MOUZ":
+                self.lp.parses.append(page)
+                raise KeyError("parse")
+            return orig(page)
+
+        self.lp.parse = parse
+        self.build(budget=999)
+        self.lp.parses.clear()
+        self.build(budget=999, today="2026-11-04")
+        self.assertNotIn("MOUZ", self.lp.parses)
+
+    def test_puesto_regional(self):
+        vrs = {**VRS, "europe": [{"rank": 14, "pts": 1500, "team": "Regional", "roster": [], "lp": None, "why": {}}]}
+        esports_teams.build(self.lp, self.gh, self.out, self.raw, "2026-11-03", vrs, TEAMS, [], budget=0)
+        t = self.read("teams/regional.json")
+        self.assertEqual((t["vrs"]["rank"], t["vrs"]["region_rank"], t["vrs"]["region"]), (None, 14, "europe"))
+        idx = self.read("index.json")
+        self.assertEqual(next(x for x in idx["teams"] if x["slug"] == "regional")["region_rank"], 14)
+
     def test_equipo_sin_liquipedia(self):
         self.build(budget=999)
         t = self.read("teams/1win.json")

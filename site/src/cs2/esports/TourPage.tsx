@@ -11,7 +11,7 @@ import { useCs2Copy } from "../../cs2Copy";
 import { useLoad } from "../../useLoad";
 import { fmtDate } from "../patches/names";
 import { Cs2Loading, useNum, type Nav } from "../ui";
-import { localTime, Twitch } from "./parts";
+import { localTime, Twitch, useMounted } from "./parts";
 import { loadIndex, loadTour, lpSlug, peekIndex, peekTour, type BracketMatch, type EsIndex, type Tour } from "./teams/data";
 
 export default function TourView({ route, navigate }: { route: Route; navigate: Nav }) {
@@ -20,18 +20,41 @@ export default function TourView({ route, navigate }: { route: Route; navigate: 
   const tour = useLoad(slug, () => peekTour(slug), () => loadTour(slug));
   if (idx.failed || tour.failed) return <Cs2Loading onRetry={idx.failed ? idx.retry : tour.retry} />;
   if (!idx.value || tour.value === undefined) return <Cs2Loading />;
-  if (!tour.value) return <Cs2Loading onRetry={tour.retry} />;
+  if (!tour.value) return <TourMissing route={route} navigate={navigate} />;
   return <TourPage tour={tour.value} idx={idx.value} route={route} navigate={navigate} />;
 }
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** Un torneo que todavía no tiene ficha (no se leyó): lo dice y lleva a la portada de Torneos. */
+function TourMissing({ route, navigate }: { route: Route; navigate: Nav }) {
+  const t = useCs2Copy();
+  return (
+    <main className="c2-main">
+      <p className="c2-panel">
+        {t.es.tourMissing}{" "}
+        <RouteLink to={{ ...route, view: "cs2", c2Section: "esports", detail: undefined }} onNavigate={navigate}>
+          {t.tabs.esports}
+        </RouteLink>
+      </p>
+    </main>
+  );
+}
 
 /** Las rondas de cada mitad en texto: "8 defendiendo · 4 atacando · 3 + 1 en el alargue". */
 function halves(h: [string, number][], words: { ct: string; t: string }): string {
   return h.map(([side, n]) => `${n} ${side === "ct" ? words.ct : words.t}`).join(" · ");
 }
 
-function MatchCard({ m, idx, route, navigate }: { m: BracketMatch; idx: EsIndex; route: Route; navigate: Nav }) {
+/** La hora en UTC, con la sigla: lo que sale en el HTML antes de saber la zona de quien mira. */
+const utcTime = (t: number) => `${new Date(t * 1000).toISOString().slice(11, 16)} UTC`;
+/** El día de un partido: el local si ya se sabe la zona de quien mira, si no el de UTC. */
+const dayOf = (t: number, local: boolean) => {
+  const d = new Date(t * 1000);
+  return local ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}` : d.toISOString().slice(0, 10);
+};
+
+function MatchCard({ m, idx, route, navigate, local }: { m: BracketMatch; idx: EsIndex; route: Route; navigate: Nav; local: boolean }) {
   const t = useCs2Copy();
   const { lang } = useLang();
   const [open, setOpen] = useState(false);
@@ -54,7 +77,7 @@ function MatchCard({ m, idx, route, navigate }: { m: BracketMatch; idx: EsIndex;
   };
   return (
     <li className="c2-tr-m">
-      <span className="c2-tr-time">{localTime(m.t, lang)}</span>
+      <span className="c2-tr-time">{local ? localTime(m.t, lang) : utcTime(m.t)}</span>
       {side(m.a, m.a_lp, wa > wb)}
       <span className="c2-tr-score">
         {wa}–{wb}
@@ -87,9 +110,10 @@ export function TourPage({ tour, idx, route, navigate }: { tour: Tour; idx: EsIn
   const { lang } = useLang();
   const num = useNum();
   const day = (s: string | null) => (s ? fmtDate(s, lang, { day: "numeric", month: "long" }) : "");
+  const local = useMounted();
   const byDay = new Map<string, BracketMatch[]>();
   for (const m of [...tour.matches].sort((a, b) => b.t - a.t)) {
-    const k = new Date(m.t * 1000).toISOString().slice(0, 10);
+    const k = dayOf(m.t, local);
     if (!byDay.has(k)) byDay.set(k, []);
     byDay.get(k)!.push(m);
   }
@@ -155,7 +179,7 @@ export function TourPage({ tour, idx, route, navigate }: { tour: Tour; idx: EsIn
               <h3 className="c2-es-day">{cap(fmtDate(k, lang, { weekday: "long", day: "numeric", month: "long" }))}</h3>
               <ul className="c2-tr-ms">
                 {ms.map((m, i) => (
-                  <MatchCard key={i} m={m} idx={idx} route={route} navigate={navigate} />
+                  <MatchCard key={i} m={m} idx={idx} route={route} navigate={navigate} local={local} />
                 ))}
               </ul>
             </Fragment>

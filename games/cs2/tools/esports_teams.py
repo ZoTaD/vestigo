@@ -121,20 +121,52 @@ def build(lp, gh, out: Path, raw: Path, today: str, vrs: dict, teams: dict, tour
     ranked = _ranked(vrs)
     tslug = lambda r: slugify(r["lp"] or r["team"])  # noqa: E731
     left = [budget]
+    # Lo que falló (una página que no existe, un 502) no se vuelve a pedir hasta dentro de 7 días: si no, iría primero
+    # todos los días y se comería el tope.
+    fail_f = raw / "failed.json"
+    failed: dict[str, str] = json.loads(fail_f.read_text(encoding="utf-8")) if fail_f.exists() else {}
 
     def fetch(page: str) -> str | None:
-        if left[0] <= 0:
+        if left[0] <= 0 or (page in failed and _days(failed[page], today) < 7):
             return None
         left[0] -= 1
         try:
             return lp.parse(page)
-        except Exception as e:  # noqa: BLE001 - una lectura que falla se reintenta mañana
+        except Exception as e:  # noqa: BLE001 - una lectura que falla se reintenta en una semana
             print(f"::warning::sin {page}: {e}")
+            failed[page] = today
+            raw.mkdir(parents=True, exist_ok=True)
+            fail_f.write_text(json.dumps(failed, ensure_ascii=False), encoding="utf-8")
             return None
 
-    # 1. Equipos y sus resultados: lo nunca leído primero, después lo más viejo.
     files = {r["team"]: out / "teams" / f"{tslug(r)}.json" for r in ranked}
     data = {r["team"]: _load(files[r["team"]]) or {} for r in ranked}
+
+    # Torneos: los que se juegan ahora (los da la portada) y los de los últimos 6 meses que nombran los resultados de
+    # los equipos. Se leen los nunca leídos, los vencidos y los que cambiaron de estado (uno que termina se relee una
+    # vez más, con la final).
+    live = {t["slug"]: t for t in tours_now}
+    tours: dict[str, dict] = {}
+
+    def read_tours(names: dict[str, str]) -> None:
+        for tlp, name in names.items():
+            f = out / "tours" / f"{slugify(tlp)}.json"
+            t = tours.get(tlp) or _load(f)
+            state = live.get(tlp, {}).get("state", "concluded")
+            if t is None or t.get("state") != state or _due(t.get("at"), "tour_live" if state == "ongoing" else "tour", today):
+                html = fetch(tlp)
+                if html is not None:
+                    ms = [{**m, "tour": name, "tour_lp": tlp} for m in bracket_matches(html)]
+                    t = {"slug": slugify(tlp), "lp": tlp, "name": name, **infobox(html), "streams": streams(html),
+                         "teams": sorted({x for m in ms for x in (m["a_lp"], m["b_lp"]) if x}), "matches": ms, "at": today, "state": state}
+                    write_json(f, t)
+            if t:
+                tours[tlp] = t
+
+    # 1. Los torneos en curso, antes que nada: son los que cambian todos los días.
+    read_tours({t["slug"]: t["name"] for t in tours_now if t["state"] == "ongoing"})
+
+    # 2. Equipos y sus resultados: lo nunca leído primero, después lo más viejo.
     jobs = []
     for r in ranked:
         if not r["lp"]:
@@ -154,42 +186,28 @@ def build(lp, gh, out: Path, raw: Path, today: str, vrs: dict, teams: dict, tour
         else:
             d.update(results=team_results(html), results_at=today)
 
-    # 2. Torneos de los últimos 6 meses (de los resultados de los equipos) y los que se juegan ahora.
-    live = {t["slug"]: t for t in tours_now}
-    names: dict[str, str] = {t["slug"]: t["name"] for t in tours_now if t["state"] != "upcoming"}
+    # 2b. Los demás torneos de los últimos 6 meses (los terminados no vencen: sólo se lee lo que falta).
+    names: dict[str, str] = {t["slug"]: t["name"] for t in tours_now if t["state"] == "concluded"}
     for d in data.values():
         for res in d.get("results", []):
             if res["date"] >= since:
                 names.setdefault(res["tour_lp"], res["tour"])
-    tours = {}
-    for tlp, name in names.items():
-        f = out / "tours" / f"{slugify(tlp)}.json"
-        t = _load(f)
-        state = live.get(tlp, {}).get("state", "concluded")
-        if t is None or _due(t.get("at"), "tour_live" if state == "ongoing" else "tour", today):
-            html = fetch(tlp)
-            if html is not None:
-                ms = [{**m, "tour": name, "tour_lp": tlp} for m in bracket_matches(html)]
-                t = {"slug": slugify(tlp), "lp": tlp, "name": name, **infobox(html), "streams": streams(html),
-                     "teams": sorted({x for m in ms for x in (m["a_lp"], m["b_lp"]) if x}), "matches": ms, "at": today, "state": state}
-                write_json(f, t)
-        if t:
-            tours[tlp] = t
+    read_tours(names)
     every = [m for t in tours.values() for m in t["matches"]]
 
-    # 3. Jugadores de los planteles de los 30 del mundial.
+    # 3. Jugadores de los planteles de los 30 del mundial (lo que sobre del tope).
     players = {}
     for r in vrs.get("global", []):
-        for p in data.get(r["team"], {}).get("roster", []):
-            if p["role"] != "player":
+        for pl in data.get(r["team"], {}).get("roster", []):
+            if pl["role"] != "player":
                 continue
-            f = out / "players" / f"{slugify(p['lp'])}.json"
+            f = out / "players" / f"{slugify(pl['lp'])}.json"
             pd = _load(f)
             if pd is None or _due(pd.get("at"), "player", today):
-                html = fetch(p["lp"])
+                html = fetch(pl["lp"])
                 if html is not None:
                     info = player_page(html)
-                    pd = {"slug": slugify(p["lp"]), "lp": p["lp"], "id": p["id"], **info,
+                    pd = {"slug": slugify(pl["lp"]), "lp": pl["lp"], "id": pl["id"], **info,
                           "team_slug": slugify(info["team_lp"]) if info["team_lp"] else None, "at": today}
                     write_json(f, pd)
             if pd:
@@ -206,7 +224,8 @@ def build(lp, gh, out: Path, raw: Path, today: str, vrs: dict, teams: dict, tour
         known = teams.get(r["lp"], {}) if r["lp"] else {}
         team = {
             "slug": tslug(r), "lp": r["lp"], "name": known.get("name", r["team"]), "logo": known.get("logo"),
-            "vrs": {"rank": r["rank"] if r["region"] is None else None, "pts": r["pts"], "region": r["region"], "prev": r.get("prev"),
+            "vrs": {"rank": r["rank"] if r["region"] is None else None, "region_rank": r["rank"] if r["region"] else None,
+                    "pts": r["pts"], "region": r["region"], "prev": r.get("prev"),
                     "history": hist.get(r["team"], [])},
             # Lo leído antes de que los lectores limpiaran sede y puestos también sale limpio.
             "location": clean_location(d.get("location"), d.get("region")), "region": d.get("region"),
@@ -217,7 +236,8 @@ def build(lp, gh, out: Path, raw: Path, today: str, vrs: dict, teams: dict, tour
             "at": d.get("at"), "results_at": d.get("results_at"),
         }
         write_json(files[r["team"]], team)
-        index_teams.append({"slug": team["slug"], "name": team["name"], "logo": team["logo"], "rank": team["vrs"]["rank"], "region": r["region"], "pts": r["pts"]})
+        index_teams.append({"slug": team["slug"], "name": team["name"], "logo": team["logo"], "rank": team["vrs"]["rank"],
+                            "region_rank": team["vrs"]["region_rank"], "region": r["region"], "pts": r["pts"]})
     write_json(out / "index.json", {
         "teams": index_teams,
         "players": sorted(({"slug": p["slug"], "id": p["id"], "team_slug": p.get("team_slug")} for p in players.values()), key=lambda p: p["slug"]),

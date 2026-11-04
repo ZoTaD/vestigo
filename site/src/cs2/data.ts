@@ -165,7 +165,7 @@ export async function preloadRoute(route: Route): Promise<void> {
   if (tab === "esports") {
     const { loadEsports } = await import("./esports/data");
     const { loadTour, loadIndex } = await import("./esports/teams/data");
-    await Promise.all([loadEsports(), ...(route.detail ? [loadTour(route.detail), loadIndex()] : [])]);
+    await Promise.all([loadEsports(), loadIndex(), ...(route.detail ? [loadTour(route.detail)] : [])]);
     return;
   }
   // Equipos y Jugadores (etapa 6b): el índice y, con detalle, la ficha.

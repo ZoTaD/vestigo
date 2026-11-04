@@ -183,8 +183,17 @@ def bracket_matches(html: str) -> list[dict]:
     for p in html.split("brkts-popup brkts-popup-container")[1:]:
         if 'data-finished="finished"' not in p:
             continue
-        sides = re.findall(r'<a href="/counterstrike/([^"#]+)" title="[^"]+"><div class="team-shortname">', p)[:2]
-        names = re.findall(r'<div class="team-name">([^<]+)</div>', p)[:2]
+        # Cada lado por separado: un equipo sin página en Liquipedia no tiene enlace, y una lista de enlaces de los dos
+        # lados juntos le daría al de la izquierda el enlace del de la derecha.
+        head = p.split('class="brkts-popup-body"')[0]
+        blocks = head.split('class="match-info-header-opponent')[1:3]
+        sides, names = [], []
+        for blk in blocks:
+            lnk = re.search(r'<span class="name[^"]*"><a href="/counterstrike/([^"#]+)"', blk)
+            nm = re.search(r'<div class="team-name">([^<]+)</div>', blk)
+            sides.append(lnk.group(1) if lnk else None)
+            if nm:
+                names.append(nm.group(1))
         ts = re.search(r'data-timestamp="(\d+)"', p)
         bo = re.search(r"\(Bo(\d+)\)", p)
         maps = []

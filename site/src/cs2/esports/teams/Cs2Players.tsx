@@ -87,7 +87,7 @@ export function PlayerPage({ p, idx, route, navigate }: { p: Player; idx: EsInde
               <b>{team.name}</b>
             </RouteLink>
           ) : (
-            <b className="c2-tm-pteam">{p.team_lp ?? t.tm.noTeam}</b>
+            <b className="c2-tm-pteam">{p.team_lp ? p.team_lp.replace(/_/g, " ") : t.tm.noTeam}</b>
           )}
         </div>
       </header>

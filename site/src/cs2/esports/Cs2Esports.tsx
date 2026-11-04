@@ -19,7 +19,7 @@ import type { Match } from "./matches";
 import { byLocalDay, localTime, TeamLogo, Twitch } from "./parts";
 import RouteLink from "../../RouteLink";
 import TourView from "./TourPage";
-import { lpSlug } from "./teams/data";
+import { loadIndex, lpSlug, peekIndex } from "./teams/data";
 
 /** El torneo de arriba: el S en curso, si no cualquiera en curso, si no el próximo S, si no el próximo. */
 export function featured(ts: TourRow[]): TourRow | undefined {
@@ -192,6 +192,9 @@ function Results({ d }: { d: Esports }) {
 }
 
 function Tours({ tours, route, navigate }: { tours: TourRow[]; route: Route; navigate: Nav }) {
+  // Sólo se enlaza un torneo que ya tiene su ficha (la Action los lee de a poco).
+  const idx = useLoad("index", peekIndex, loadIndex);
+  const hasPage = new Set(idx.value?.tours.map((x) => x.slug));
   const t = useCs2Copy();
   const { lang } = useLang();
   const num = useNum();
@@ -208,7 +211,7 @@ function Tours({ tours, route, navigate }: { tours: TourRow[]; route: Route; nav
               {rows.map((x) => (
                 <li key={x.slug}>
                   <b>
-                    {x.state === "upcoming" ? (
+                    {!hasPage.has(lpSlug(x.slug)) ? (
                       x.name
                     ) : (
                       <RouteLink to={{ ...route, view: "cs2", c2Section: "esports", detail: lpSlug(x.slug) }} onNavigate={navigate}>
@@ -279,7 +282,7 @@ function VrsBlock({ d, route, navigate }: { d: Esports; route: Route; navigate: 
                 <tr className={`c2-es-vr${isOpen ? " is-open" : ""}`} onClick={(e) => !(e.target as HTMLElement).closest("a") && setOpen(isOpen ? null : r.team)}>
                   <td className="c2-es-rank">{r.rank}</td>
                   <td>
-                    <button type="button" className="c2-es-team" aria-expanded={isOpen}>
+                    <div className="c2-es-team">
                       <TeamLogo lp={r.lp} name={r.team} teams={d.teams} size={32} />
                       <span>
                         <b>
@@ -289,10 +292,14 @@ function VrsBlock({ d, route, navigate }: { d: Esports; route: Route; navigate: 
                         </b>
                         <small>{r.roster.join(", ")}</small>
                       </span>
-                    </button>
+                    </div>
                   </td>
                   {region === "global" && d.vrs.before && <td className={`c2-es-mv is-${mv.dir}`}>{mv.text}</td>}
-                  <td className="c2-num c2-es-pts">{num(r.pts, 0)}</td>
+                  <td className="c2-num">
+                    <button type="button" className="c2-es-pts" aria-expanded={isOpen} aria-label={t.es.whyTitle(r.team, num(r.pts, 0))}>
+                      {num(r.pts, 0)}
+                    </button>
+                  </td>
                 </tr>
                 {isOpen && (
                   <tr className="c2-es-why">

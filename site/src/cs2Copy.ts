@@ -167,6 +167,7 @@ export interface Cs2Copy {
     watch: string;
     watchHint: string;
     noStream: string;
+    tourMissing: string;
     next: string;
     results: string;
     loadingMatches: string;
@@ -424,7 +425,7 @@ const EN: Cs2Copy = {
     world: "World ranking",
     regions: { europe: "Europe", americas: "Americas", asia: "Asia" },
     rank: (n) => `#${n} in the world`,
-    regional: (r) => `Ranked in ${r}`,
+    regional: (r) => `in ${r}`,
     move: (n) => (n > 0 ? `▲ ${n} since last month` : n < 0 ? `▼ ${-n} since last month` : "Same as last month"),
     leader: "In-game leader",
     coach: "Coach",
@@ -470,6 +471,7 @@ const EN: Cs2Copy = {
     watch: "Watch live on Twitch",
     watchHint: "The stream loads when you press play.",
     noStream: "Live, with no Twitch stream",
+    tourMissing: "This tournament doesn't have its page yet. See every tournament in",
     next: "Upcoming matches",
     results: "Results",
     loadingMatches: "Loading matches…",
@@ -738,7 +740,7 @@ const ES: Cs2Copy = {
     world: "Ranking mundial",
     regions: { europe: "Europa", americas: "América", asia: "Asia" },
     rank: (n) => `#${n} del mundo`,
-    regional: (r) => `En el ranking de ${r}`,
+    regional: (r) => `de ${r}`,
     move: (n) => (n > 0 ? `▲ ${n} desde el mes pasado` : n < 0 ? `▼ ${-n} desde el mes pasado` : "Igual que el mes pasado"),
     leader: "Líder",
     coach: "Entrenador",
@@ -784,6 +786,7 @@ const ES: Cs2Copy = {
     watch: "Ver en vivo en Twitch",
     watchHint: "La transmisión carga cuando tocás para verla.",
     noStream: "En vivo, sin transmisión en Twitch",
+    tourMissing: "Este torneo todavía no tiene su ficha. Mirá todos los torneos en",
     next: "Próximos partidos",
     results: "Resultados",
     loadingMatches: "Cargando partidos…",
