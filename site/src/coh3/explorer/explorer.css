@@ -50,3 +50,9 @@
   .c3-upgs li { grid-template-columns: 40px minmax(0, 1fr); }
   .c3-upgs li > .c3-cost { grid-column: 2; }
 }
+
+/* El arte ancho de cada battlegroup: de fondo en la tarjeta (oscurecido para leer el nombre) y de cartel en la ficha. */
+.c3-bgcard.has-art { position: relative; overflow: hidden; min-height: 110px; isolation: isolate; }
+.c3-bgart { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.45; }
+.c3-bgcard.has-art::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(21, 23, 15, 0.92) 30%, rgba(21, 23, 15, 0.35)); }
+.c3-bgbanner { display: block; width: 100%; height: auto; max-height: 260px; object-fit: cover; border: 1px solid var(--c3-line2); }

@@ -14,7 +14,7 @@ import { tr, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
 import { curve, hit, type Side } from "./engine";
 import { vetAt, parseVetLines } from "./vet";
-import { isAntiTank, isArmored, targetStats, weaponStats, type WeaponData } from "./weapons";
+import { isAbilityShot, isAntiTank, isArmored, targetStats, weaponStats, type WeaponData } from "./weapons";
 import { useCombatCopy } from "./copy";
 import { FactionOptions, LineChart, useFicha, useLists, useQueryState, useWeaponName, VetPicker } from "./parts";
 import "./combat.css";
@@ -63,7 +63,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
 
   // Counters: qué armas le entran a este objetivo de frente, y contra qué vehículos sirve esta arma.
   const counters = weapons
-    .filter((w) => isAntiTank(w as WeaponData) && (!tRow || !w.faction || SIDE[w.faction] !== SIDE[tRow.faction]))
+    .filter((w) => isAntiTank(w as WeaponData) && !isAbilityShot(w) && (!tRow || !w.faction || SIDE[w.faction] !== SIDE[tRow.faction]))
     .map((w) => ({ w, c: hit(weaponStats(w as WeaponData), ts, 0, Math.min(d, (w.range as number[] | undefined)?.[1] || 60)).chance }))
     .sort((a, b) => b.c - a.c)
     .slice(0, 12);

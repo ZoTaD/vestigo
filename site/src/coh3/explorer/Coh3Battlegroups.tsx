@@ -11,6 +11,7 @@ import { useCoh3Copy, type Faction } from "../../coh3Copy";
 import { loadFicha, loadList, peekFicha, peekList, tr, type BattlegroupRow, type L10n, type UnitRow } from "../data";
 import { Coh3Loading, Cost, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
 import { useExplorerCopy } from "./copy";
+import { SettledImg } from "../../SettledImg";
 import { FactionFilter } from "./Coh3Units";
 import "./explorer.css";
 
@@ -59,7 +60,8 @@ function BgList({ route, navigate }: { route: Route; navigate: Nav }) {
       <ul className="c3-bggrid">
         {shown.map((b) => (
           <li key={b.slug}>
-            <RouteLink className="c3-bgcard" to={{ ...route, view: "coh3", c3Section: "battlegroups", detail: b.slug }} onNavigate={navigate}>
+            <RouteLink className={`c3-bgcard${b.image ? " has-art" : ""}`} to={{ ...route, view: "coh3", c3Section: "battlegroups", detail: b.slug }} onNavigate={navigate}>
+              {b.image && <SettledImg className="c3-bgart" src={`/coh3/i/${b.image}.webp`} alt="" width={480} height={160} />}
               <Icon path={b.icon} size={64} />
               <span>
                 <b>{tr(b.name, lang)}</b>
@@ -109,6 +111,7 @@ function BgPage({ slug, route, navigate }: { slug: string; route: Route; navigat
         </RouteLink>{" "}
         › {c.factionShort[b.faction]}
       </p>
+      {b.image && <img className="c3-bgbanner" src={`/coh3/i/${b.image}.webp`} alt="" width={1200} height={400} decoding="async" />}
       <header className="c3-ficha-head">
         <Icon path={b.icon} size={140} lazy={false} className="c3-ficha-img" />
         <div className="c3-head">

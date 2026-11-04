@@ -40,6 +40,13 @@ const AT_CLS = new Set(["at_gun", "cannon", "cannon_burst", "cannon_small", "baz
 export const isAntiTank = (w: Pick<WeaponData, "pen"> & { cls?: string }): boolean =>
   !!w.pen && (w.cls ? AT_CLS.has(w.cls) : Math.max(...w.pen) >= 30);
 
+/**
+ * ¿Es el disparo de una habilidad (munición perforante, rompebúnkeres, tungsteno…) y no el arma de todos los días? Esos
+ * traen penetraciones de 1000 o nombres de munición: no van en los counters, que comparan el arma de base.
+ */
+export const isAbilityShot = (w: { slug: string; pen: number[] | null }): boolean =>
+  (!!w.pen && Math.max(...w.pen) >= 900) || /armor_piercing|bunker_buster|tungsten|hvap|apcr|_ap_|incendiary|barrage|_he_|he_rounds|ability/i.test(w.slug);
+
 /** El arma lista para el motor, con la veteranía del que dispara. */
 export function weaponStats(w: WeaponData, vet?: VetMods): WeaponStats {
   const range = pair(w.range, 0);
@@ -70,6 +77,7 @@ export interface UnitTarget {
   hp: number | null;
   armor: number[] | null;
   models?: number | null;
+  targetSize?: number | null;
 }
 
 /** La unidad como blanco, con su veteranía. */
@@ -81,6 +89,8 @@ export function targetStats(u: UnitTarget, vet?: VetMods): TargetStats {
     receivedAccuracy: vet?.receivedAccuracy ?? 1,
     receivedDamage: vet?.receivedDamage ?? 1,
     models: u.models ?? 1,
+    // Sin el dato, el de un vehículo típico (20) o el de un soldado (1).
+    targetSize: u.targetSize ?? (isArmored(u) ? 20 : 1),
   };
 }
 

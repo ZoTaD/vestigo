@@ -47,6 +47,11 @@ export interface TargetStats {
   receivedDamage?: number;
   /** Modelos del escuadrón (la vida es por modelo). */
   models?: number;
+  /**
+   * Tamaño de blanco: la precisión del arma se multiplica por él (con tope en 1). La infantería anda en 1; un vehículo,
+   * alrededor de 20, por eso un cañón casi nunca le erra a un tanque.
+   */
+  targetSize?: number;
 }
 
 export type Side = 0 | 1 | 2;
@@ -117,7 +122,7 @@ export function hit(w: WeaponStats, t: TargetStats, side: Side, d: number): Hit 
   const inRange = d <= w.range;
   const pen = at(w.pen, w.dist, d);
   const chance = penChance(pen, t.armor[side]);
-  const acc = Math.min(1, at(w.acc, w.dist, d) * (t.receivedAccuracy ?? 1));
+  const acc = Math.min(1, at(w.acc, w.dist, d) * (t.targetSize ?? 1) * (t.receivedAccuracy ?? 1));
   const dmg = mean(w.dmg) * (t.receivedDamage ?? 1);
   const expected = inRange ? acc * chance * dmg : 0;
   const shotsToKill = dmg > 0 ? Math.ceil(t.hp / dmg) : Infinity;

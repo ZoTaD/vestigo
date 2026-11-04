@@ -12,7 +12,7 @@ import { FACTIONS, SIDE, useCoh3Copy, type Faction } from "../../coh3Copy";
 import { loadFicha, loadList, peekFicha, peekList, tr, type L10n, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, Cost, FactionTag, Icon, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
 import { hit } from "../combat/engine";
-import { isAntiTank, isArmored, targetStats, weaponStats, type WeaponData } from "../combat/weapons";
+import { isAbilityShot, isAntiTank, isArmored, targetStats, weaponStats, type WeaponData } from "../combat/weapons";
 import { useWeaponName } from "../combat/parts";
 import { useExplorerCopy } from "./copy";
 import "./explorer.css";
@@ -248,7 +248,7 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
     : [];
   const killers = armored
     ? (weapons ?? [])
-        .filter((w) => w.faction && SIDE[w.faction] !== SIDE[u.faction] && isAntiTank(w as WeaponData))
+        .filter((w) => w.faction && SIDE[w.faction] !== SIDE[u.faction] && isAntiTank(w as WeaponData) && !isAbilityShot(w))
         .map((w) => {
           const ws = weaponStats(w as WeaponData);
           const h = hit(ws, targetStats(u), 0, Math.min(DIST, ws.range));
