@@ -616,7 +616,7 @@ a.c2-tm-pl:hover { background: var(--c2-stone-hi); }
 .c2-tm-plist b { font: 18px/1.1 var(--c2-stencil); }
 .c2-tm-plist small { color: var(--c2-dim); }
 .c2-tm-soon { font-weight: 600; color: #3d4756; }
-.c2-tr-hero { grid-template-columns: minmax(0, 1fr); }
+.c2-tm-hero.c2-tr-hero { grid-template-columns: minmax(0, 1fr); }
 .c2-tr-hero a { color: #cfc4a8; text-decoration: underline; }
 .c2-tr-teams { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .c2-tr-teams a, .c2-tr-teams span { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; background: var(--c2-stone-hi); font-weight: 700; }
