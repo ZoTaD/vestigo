@@ -22,6 +22,7 @@ import { isDataTab as isCs2Tab, loadFicha as loadCs2Ficha, peekFicha as peekCs2F
 import { loadPatchIndex, peekPatchIndex } from "./cs2/patches/data";
 import { patchName } from "./cs2/patches/names";
 import { loadIndex as loadEsIndex, peekIndex as peekEsIndex } from "./cs2/esports/teams/data";
+import { loadLineupIndex, peekLineupIndex } from "./cs2/grenades/data";
 import { loadFarming as loadRsFarming, peekFarming as peekRsFarming } from "./rust/farming/data";
 import { loadEdition as loadRsEdition, peekEdition as peekRsEdition } from "./rust/patches/data";
 import { loadMonuments as loadRsMonuments, peekMonuments as peekRsMonuments } from "./rust/monuments/data";
@@ -184,6 +185,10 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
     if (route.c2Section === "teams") return ix.teams.find((x) => x.slug === route.detail)?.name ?? null;
     if (route.c2Section === "players") return ix.players.find((x) => x.slug === route.detail)?.id ?? null;
     return ix.tours.find((x) => x.slug === route.detail)?.name ?? null;
+  }
+  // Las granadas de un mapa de CS2: el nombre del mapa sale del índice de lineups ("Dust II").
+  if (route.view === "cs2" && route.c2Section === "grenades" && route.detail) {
+    return peekLineupIndex()?.maps.find((m) => m.map === route.detail)?.name ?? null;
   }
   // Una edición de Parches de CS2: su nombre sale del índice ("Parche del 28 de octubre de 2026" o el título).
   if (route.view === "cs2" && route.c2Section === "patches" && route.detail) {
@@ -355,6 +360,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "cs2" && (route.c2Section === "teams" || route.c2Section === "players" || route.c2Section === "esports") && route.detail && !peekEsIndex()) {
       let vivo = true;
       loadEsIndex().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para las granadas de un mapa de CS2: el índice de lineups.
+    if (route.view === "cs2" && route.c2Section === "grenades" && route.detail && !peekLineupIndex()) {
+      let vivo = true;
+      loadLineupIndex().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una edición de Parches de CS2: el índice.

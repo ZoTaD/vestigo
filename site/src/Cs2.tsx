@@ -34,6 +34,8 @@ const Cs2Patches = lazyWithPreload(() => import("./cs2/patches/Cs2Patches"));
 const Cs2Esports = lazyWithPreload(() => import("./cs2/esports/Cs2Esports"));
 const Cs2Teams = lazyWithPreload(() => import("./cs2/esports/teams/Cs2Teams"));
 const Cs2Players = lazyWithPreload(() => import("./cs2/esports/teams/Cs2Players"));
+const Cs2Grenades = lazyWithPreload(() => import("./cs2/grenades/Cs2Grenades"));
+const Cs2Crosshairs = lazyWithPreload(() => import("./cs2/crosshairs/Cs2Crosshairs"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `CS2_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `CS2_TAB_FILES`.
@@ -48,6 +50,8 @@ const TABS: Partial<Record<Cs2Section, LazyTab>> = {
   esports: Cs2Esports,
   teams: Cs2Teams,
   players: Cs2Players,
+  grenades: Cs2Grenades,
+  crosshairs: Cs2Crosshairs,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
@@ -67,6 +71,8 @@ const TAB_DATA: Partial<Record<Cs2Section, (route: Route) => Promise<unknown>>> 
   esports: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
   teams: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
   players: (route) => import("./cs2/data").then((m) => m.preloadRoute(route)),
+  // Granadas: el índice de mapas y, con un mapa en la dirección, ese mapa.
+  grenades: (route) => import("./cs2/grenades/data").then((m) => m.preloadGrenades(route.detail)),
 };
 
 /** Baja el chunk de la pestaña de una ruta de CS2, y sus datos. */

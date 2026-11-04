@@ -56,8 +56,10 @@ def infobox(html: str) -> dict:
 def streams(html: str) -> list[str]:
     """Los canales de Twitch que nombra la ficha, en minúsculas, sin repetir, en orden."""
     out = []
+    # Rutas de Twitch que no son canales (`twitch.tv/videos/123`, `/directory/...`): no se pueden embeber.
+    reserved = {"videos", "directory", "collections", "p", "settings", "downloads", "jobs", "subscriptions", "search"}
     for ch in re.findall(r"twitch\.tv/([A-Za-z0-9_]+)", html):
-        if ch.lower() not in out:
+        if ch.lower() not in out and ch.lower() not in reserved:
             out.append(ch.lower())
     return out
 

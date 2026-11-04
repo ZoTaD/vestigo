@@ -175,6 +175,8 @@ function Results({ d }: { d: Esports }) {
         <p className="c2-dim">{t.es.matchesError}</p>
       ) : !ms.value ? (
         <p className="c2-dim">{t.es.loadingMatches}</p>
+      ) : !list.length ? (
+        <p className="c2-dim">{t.es.noResults}</p>
       ) : (
         byLocalDay(list, lang, new Date(), t.es).map((g) => (
           <Fragment key={g.key}>

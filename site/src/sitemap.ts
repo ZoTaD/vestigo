@@ -130,6 +130,8 @@ export interface Cs2SitemapData {
   patches?: { slug: string; date: string; kind: "patch" | "content"; title: string }[];
   /** Las fichas de la etapa 6b (`esports/index.json`): equipos, jugadores y torneos. */
   esports?: { teams: { slug: string; name: string }[]; players: { slug: string; id: string }[]; tours: { slug: string; name: string }[] };
+  /** Granadas (2026-11-04): un mapa por página (`lineups/index.json`). */
+  grenades?: { map: string; name: string }[];
 }
 
 /** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
@@ -503,6 +505,8 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const x of data.c2.esports?.teams ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "teams", detail: x.slug }));
       for (const x of data.c2.esports?.players ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "players", detail: x.slug }));
       for (const x of data.c2.esports?.tours ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "esports", detail: x.slug }));
+      // Granadas: una página por mapa.
+      for (const x of data.c2.grenades ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "grenades", detail: x.map }));
     }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).
     if (data.rs) {
