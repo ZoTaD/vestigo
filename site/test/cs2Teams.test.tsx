@@ -29,6 +29,7 @@ describe("la ficha de equipo", () => {
     expect(html).toContain('href="/es/cs2/jugadores/xertion"');
     expect(html).toContain("Capitán");
     expect(html).toContain('src="/cs2/flags/il.svg"');
+    expect(html).not.toContain("Germany Europe"); // la sede de Liquipedia (países pegados) no se muestra
   });
 
   it("sin partidos no hay mosaicos de mapas: lo dice", () => {

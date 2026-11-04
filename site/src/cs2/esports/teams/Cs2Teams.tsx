@@ -79,7 +79,6 @@ export function TeamPage({ team, idx, route, navigate }: { team: Team; idx: EsIn
         <div className="c2-tm-hero-t">
           <h1 className="c2-tm-name">{team.name}</h1>
           <p className="c2-tm-sub">
-            {team.location && <span>{team.location}</span>}
             {team.igl && (
               <span>
                 {t.tm.leader}: <b>{team.igl}</b>
