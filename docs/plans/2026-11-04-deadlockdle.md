@@ -13,14 +13,18 @@ Lo definió ZoTaD:
   si esa característica coincide con la respuesta. Se probó primero un Wordle de
   letras y se descartó: los nombres tienen largos muy distintos (de 3 a 21
   letras) y el largo delataba la respuesta.
-- **Cuatro modos**: **All** (el principal: la respuesta sale de héroes, objetos
-  y habilidades juntos), **Heroes**, **Items** y **Abilities**. En los cuatro la
-  respuesta del día sale **al azar**.
+- **Tres modos**: **Heroes**, **Items** y **Abilities**. Hubo un cuarto,
+  **All**, que mezclaba los tres: se sacó porque con columnas distintas por tipo
+  no tiene sentido (ZoTaD, 4/11).
+- La respuesta de cada modo sale **al azar cada día**, con **probabilidades que
+  suben y bajan**: lo que salió hace poco casi no puede volver a salir, y la
+  chance crece con los días (ver "La respuesta del día").
+- **Todo automático, día a día**: nadie publica nada a mano. Ni la respuesta
+  del día, ni los datos del juego, ni el Worker.
 - **Los nombres van siempre en inglés**, también en `/es`. La interfaz sí se
   traduce.
-- Una quinta pestaña, **Ranking**, al lado de Abilities: **un ranking por modo**,
-  los cuatro por separado (juntarlos "sería un despelote"). Se reinician cada
-  día.
+- Una pestaña **Ranking** al lado de Abilities: **un ranking por modo**, los
+  tres por separado (juntarlos "sería un despelote"). Se reinician cada día.
 - Para entrar al ranking hay que estar logueado con Steam (el login ya está
   publicado: PR 67, `docs/plans/2026-11-04-login-steam.md`).
 - Estética **A "cartel"**, la de Deadlock en el sitio. Maquetas aprobadas en
@@ -60,7 +64,6 @@ Lo definió ZoTaD:
   - Items: el ícono borroso → la primera línea de su texto → de qué se arma.
   - Abilities: el ícono borroso → de qué héroe es → la primera línea de su
     texto.
-  - All: primero **si es héroe, objeto o habilidad**, después las del tipo.
 - Al acertar: la respuesta con su arte, un enlace a su ficha en el sitio y un
   botón **Share** que copia el resultado en cuadraditos de colores, sin
   nombres: `Deadlockdle #12 · Heroes · 4 guesses` + una línea de colores por
@@ -103,28 +106,31 @@ maqueta):
 | Cooldown | `cooldown.value` | ±10 % |
 | Effects | los `attr` del texto (Slow, Stun, SpiritDamage…) | comparte alguno |
 
-**All** (las 376): una columna **Type** (Hero / Item / Ability) y después las
-del tipo del intento. Si el tipo no coincide con la respuesta, Type sale en
-rojo y el resto en gris (no se compara). *Mi decisión*: así All es "encontrá el
-tipo y después jugá ese modo", que es simple y se entiende.
-
-Un script (`api/scripts/dle-pool.mjs`) arma `api/src/dle-pool.json` desde
-`games/deadlock/data`; el Worker lo lleva adentro. El winrate cambia cada día:
-el pozo guarda el del día en que se publicó el Worker, y la respuesta de cada
-día queda congelada con sus columnas (ver abajo). Se vuelve a correr y a
-publicar cuando hay héroes u objetos nuevos o cambian stats.
+**El pozo se arma solo.** El build del sitio genera
+`/deadlock/dle-pool.json` (los tres pozos con sus columnas) desde
+`games/deadlock/data`, igual que el resto de los datos. Como el sitio se
+publica todos los días con la tier list, el pozo queda al día solo: héroes y
+objetos nuevos, stats de un parche y el winrate del día. El Worker lo lee de
+`https://vestigo.gg/deadlock/dle-pool.json` (con caché de una hora). Los datos
+del pozo son públicos —son los del juego—; lo secreto es cuál es la respuesta.
 
 ## La respuesta del día
 
 - La elige el **Worker**, nunca la página: si estuviera en el JS, cualquiera la
   vería con F12.
-- Al azar pero fija para el día: índice = HMAC-SHA256(`DLE_SECRET`,
-  `fecha|modo`) mod tamaño del pozo. `DLE_SECRET` es otro secreto del Worker.
-- No se repite en un modo durante los últimos 30 días (si cae en una
-  repetida, prueba el índice siguiente).
-- La primera vez que alguien pide el día, se guarda en D1 **la respuesta con
-  todas sus columnas**. Desde ahí no cambia, aunque se publique un pozo nuevo
-  ese mismo día.
+- **Sola, a las 00:00 UTC**: un Cron Trigger del Worker elige las tres
+  respuestas del día y las guarda en D1, con todas sus columnas congeladas. Si
+  el cron fallara, la primera visita del día la elige igual.
+- **Al azar con memoria.** Cada candidato tiene un peso según los días desde
+  la última vez que salió en ese modo:
+  `peso = min(1, días / ventana)²`, con `ventana` = la mitad del pozo del modo
+  (22 días en Heroes, 78 en Items, 88 en Abilities). Lo que nunca salió pesa 1.
+  Algo que salió ayer pesa ~0,002 en Heroes (casi imposible), a la semana
+  ~0,1 y a la ventana vuelve a pesar lo mismo que todos. Así nada sale dos o
+  tres días seguidos, y todo termina saliendo.
+- El azar sale de HMAC-SHA256(`DLE_SECRET`, `fecha|modo`): nadie puede
+  calcular la respuesta de mañana.
+- El número del día (`#1`, `#2`…) cuenta los días desde el lanzamiento.
 
 ## El ranking
 
@@ -134,7 +140,7 @@ publicar cuando hay héroes u objetos nuevos o cambian stats.
   cuenta se juega igual; al final aparece "Sign in with Steam to enter the
   ranking". *Mi decisión*: una partida empezada sin cuenta no se suma después,
   porque su tiempo no lo midió el servidor.
-- La pestaña **Ranking** muestra los cuatro modos lado a lado (en el teléfono,
+- La pestaña **Ranking** muestra los tres modos lado a lado (en el teléfono,
   uno abajo del otro): top 10, cuántos jugaron hoy y tu fila ("not played" si
   no jugaste ese modo).
 - Al lado del tablero de cada modo: top 7 de ese modo y tus números (puesto de
@@ -144,16 +150,13 @@ publicar cuando hay héroes u objetos nuevos o cambian stats.
 ## Cómo está hecho
 
 - **Backend**: el Worker `vestigo-api` y la D1 del login. Endpoints nuevos:
-  - `GET /api/dle/pool/:mode` → nombres y arte para el autocompletar (sin
-    columnas: con las columnas se podría deducir la respuesta). Se puede
-    cachear.
   - `GET /api/dle/:mode/today` → número del día, intentos ya hechos con sus
     colores, pistas desbloqueadas y si terminó. Con sesión, el primer intento
     crea la partida y **ahí arranca el reloj**.
   - `POST /api/dle/:mode/guess` `{ name }` → la fila de colores. Controla que
     el nombre esté en el pozo y no esté repetido. Al acertar devuelve la
     respuesta y su arte.
-  - `GET /api/dle/ranking` → los cuatro top 10 de hoy y, con sesión, tu fila
+  - `GET /api/dle/ranking` → los tres top 10 de hoy y, con sesión, tu fila
     en cada uno.
   - `GET /api/dle/me` → racha y porcentaje por modo.
 - **Sin cuenta**: la partida vive en el navegador (`localStorage`) con las
@@ -166,8 +169,7 @@ publicar cuando hay héroes u objetos nuevos o cambian stats.
   - `dle_guesses(steam_id, date, mode, n, answer_id, at)`: cada intento con su
     hora.
 - **Frontend**: una pestaña nueva de Deadlock, `dle`, en `/en/deadlock/dle`
-  (modos en `/dle/heroes`, `/dle/items`, `/dle/abilities`, `/dle/ranking`;
-  `/dle` es All). Se suma a `route.ts` y a `areaFiles.ts`; nada en el chunk de
+  (`/dle` abre Heroes; `/dle/items`, `/dle/abilities`, `/dle/ranking`). Se suma a `route.ts` y a `areaFiles.ts`; nada en el chunk de
   entrada. El arte ya está en `public/deadlock/game`.
 - **Rendimiento**: la página entra en `perf.mjs` (`PAGES`). Las filas son
   pocas; no hace falta `LazyRows`. Imágenes con tamaño fijo.
@@ -182,25 +184,24 @@ publicar cuando hay héroes u objetos nuevos o cambian stats.
   pausa. Así nadie pierde puestos por abrir la pestaña y volver más tarde, y
   el primer intento es a ciegas igual. La partida logueada se retoma en
   cualquier dispositivo (vive en D1).
-- **Ids compuestos** `hero:<id>`, `item:<id>`, `ability:<id>`. Hoy no hay
-  nombres repetidos entre tipos (medido el 4/11), pero el id no depende de
-  eso.
+- **Ids** `hero:<id>`, `item:<id>`, `ability:<id>`.
 - **Listas** (Gives, Effects): verde si son iguales, amarilla si comparten al
   menos uno, roja si no comparten nada. **Valores que faltan** (10 habilidades
   sin cooldown, 28 objetos sin `types`, un héroe sin winrate) se muestran
   como "—" y cuentan como un valor más: "—" contra "—" es verde.
-- **Winrate**: el de la última publicación del Worker. La respuesta del día
-  queda congelada al primer pedido; los intentos usan el pozo publicado. Si se
-  publica un pozo nuevo a mitad del día, el winrate de un intento puede
-  diferir un poco del congelado: se acepta en la beta.
+- **Winrate**: la respuesta del día queda congelada a las 00:00 UTC; los
+  intentos usan el pozo publicado. Si el sitio se publica a mitad del día, el
+  winrate de un intento puede diferir un poco del congelado: se acepta en la
+  beta.
 - **Loguearse a mitad de una partida sin cuenta**: la partida sigue en el
   navegador y no entra al ranking ese día; desde el día siguiente juega con la
   cuenta.
 - **Fuerza bruta**: con intentos sin límite, probar todos los nombres hunde el
   puesto, así que no da ventaja. El límite de 30 por minuto sólo frena bots.
-- **Publicar el Worker**: a mano en la beta (`wrangler deploy` tras correr
-  `dle-pool.mjs`). Una Action con token de Cloudflare, cuando haga falta
-  actualizar el pozo seguido.
+- **Publicar el Worker**: una Action (`deploy-api.yml`) lo publica sola
+  cuando cambia `api/**` en `main`, con un token de Cloudflare guardado como
+  secreto del repo. Los datos no necesitan publicar el Worker: van con el
+  sitio.
 
 ## Lo que queda listo para las trampas
 
@@ -211,9 +212,10 @@ publicar cuando hay héroes u objetos nuevos o cambian stats.
 
 ## Pasos
 
-1. `dle-pool.mjs`, las tablas nuevas y la lógica pura (comparar columnas,
-   elegir el día, ordenar el ranking) con tests.
-2. Endpoints en el Worker; `DLE_SECRET` lo carga ZoTaD.
+1. El pozo en el build del sitio, las tablas nuevas y la lógica pura
+   (comparar columnas, elegir el día con pesos, ordenar el ranking) con tests.
+2. Endpoints y cron en el Worker; la Action que lo publica. `DLE_SECRET` y el
+   token de Cloudflare los carga ZoTaD.
 3. La pestaña en el sitio: buscador, filas, pistas, final y Share.
 4. La pestaña Ranking.
 5. Probar en local con la cuenta de ZoTaD, `npm run perf`, PR.
