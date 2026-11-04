@@ -1,0 +1,93 @@
+name: publish coh3 stats
+
+# Company of Heroes 3: las estadísticas de partidas todos los días (datos abiertos de coh3stats.com, que publica el día
+# anterior a las 06:00 UTC) y los datos del juego (cohstats/coh3-data, MIT) los lunes. Diseño:
+# docs/superpowers/specs/2026-11-04-coh3-design.md.
+#
+# **No dispara un build propio**, igual que `publish-cs2`: el commit lo empuja el GITHUB_TOKEN y las estadísticas van
+# en `games/coh3/stats`, fuera de los `paths` de `deploy.yml`; salen con el siguiente build de `publish-deadlock`. Los
+# datos del juego (`games/coh3/data`, los lunes) sí están en los `paths`, pero el GITHUB_TOKEN no dispara: también
+# esperan al build siguiente.
+#
+# **Un archivo por día** (~90 MB): `stats.py` guarda el resumen de cada día en `games/coh3/stats/days/` y sólo baja los
+# que faltan.
+on:
+  schedule:
+    # Una hora después de que coh3stats publica el día (06:00 UTC); sale con el build de Deadlock siguiente.
+    - cron: "5 7 * * *"
+  workflow_dispatch:
+    inputs:
+      game:
+        description: "Actualizar también los datos del juego y los íconos"
+        type: boolean
+        default: false
+
+concurrency:
+  group: publish-coh3
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.13"
+
+      # Los lunes (o a mano) se renuevan los datos del juego: el tag más nuevo de coh3-data, las fichas y los íconos.
+      - name: game data
+        env:
+          A_MANO: ${{ inputs.game }}
+        run: |
+          if [ "$A_MANO" = "true" ] || [ "$(date -u +%u)" = "1" ]; then
+            python games/coh3/tools/fetch.py
+            python games/coh3/tools/site_data.py
+            python games/coh3/tools/images.py
+          else
+            echo "no es lunes: sólo estadísticas"
+          fi
+
+      - name: stats
+        run: python games/coh3/tools/stats.py --days 28
+
+      - name: guard
+        id: guard
+        run: |
+          if [ -z "$(git status --porcelain -- games/coh3/data games/coh3/stats site/public/coh3)" ]; then
+            echo "nada cambió; no hay commit"
+            echo "publish=no" >> "$GITHUB_OUTPUT"
+          else
+            git status --short -- games/coh3/data games/coh3/stats site/public/coh3 | head -20
+            echo "publish=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: commit
+        if: steps.guard.outputs.publish == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git_auth() { git -c "http.https://github.com/.extraheader=$auth" "$@"; }
+          git config user.name "vestigo-bot"
+          git config user.email "67348048+ZoTaD@users.noreply.github.com"
+          git add games/coh3/data games/coh3/stats site/public/coh3
+          git commit -m "chore: publish today's CoH3 stats"
+          empujado=0
+          for intento in 1 2 3; do
+            if git_auth push origin "HEAD:$GITHUB_REF_NAME"; then empujado=1; break; fi
+            echo "push rechazado (intento $intento): traigo lo que llegó y reintento"
+            git_auth fetch origin "$GITHUB_REF_NAME" || break
+            git rebase "origin/$GITHUB_REF_NAME" || break
+          done
+          if [ "$empujado" != 1 ]; then
+            echo "::error::no se pudo publicar después de 3 intentos"
+            exit 1
+          fi

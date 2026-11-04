@@ -27,7 +27,7 @@
   #
   # Un juego nuevo suma acá su `games/<juego>/data`: si no, la Action que lo
   # actualiza queda en verde con el sitio sirviendo los datos viejos.
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/games/d2r/data :/games/zomboid/data :/games/rust/data :/games/terraria/data :/games/stardew/data :/games/warframe/data :/games/cs2/data :/netlify.toml"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- :/site :/games/deadlock/data :/games/poe2/data :/games/valheim/data :/games/d2r/data :/games/zomboid/data :/games/rust/data :/games/terraria/data :/games/stardew/data :/games/warframe/data :/games/cs2/data :/games/coh3/data :/games/coh3/stats :/netlify.toml"
 
 [build.environment]
   # Pinned so a Netlify default upgrade never changes the build under us.

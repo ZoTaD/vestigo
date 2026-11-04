@@ -9,6 +9,7 @@ import { Coh3Loading, FactionTag, Panel, sortRows, useNum, useSort, type Nav } f
 import { wr, type BandStats, type ModeStats } from "./data";
 import { useStatsCopy } from "./copy";
 import { ModeBandPicker, useMapName, useModeBand, useSummary, WindowLine } from "./parts";
+import "./stats.css";
 
 const pct = (num: (v: number, d?: number) => string, p: number | null, d = 1) => (p == null ? "—" : `${num(p * 100, d)} %`);
 

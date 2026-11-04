@@ -33,6 +33,8 @@ on:
       - games/warframe/data/**
       # CS2: sólo el catálogo. Los precios (`games/cs2/prices`) viajan en los builds de Deadlock (ver `publish-cs2.yml`).
       - games/cs2/data/**
+      # CoH3: los datos del juego. Las estadísticas (`games/coh3/stats`) viajan en los builds de Deadlock, como los precios de CS2.
+      - games/coh3/data/**
       - netlify.toml
       - .github/workflows/deploy.yml
   # Los commits de las Actions de publicación los empuja el GITHUB_TOKEN, y
