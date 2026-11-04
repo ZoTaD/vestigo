@@ -95,10 +95,14 @@ export async function pickAnswer(entries: Entry[], lastSeen: Map<string, string>
 }
 
 /** Umbrales de intentos para cada pista. */
-const HINT_AT = [4, 6, 8];
+export const HINT_AT = [4, 6, 8];
 
-export function hintsUnlocked(answer: Entry, guesses: number): Hint[] {
-  const all: Hint[] = [{ kind: "img", src: answer.img, blur: true }, ...answer.hints];
+/**
+ * `imgSrc` es la ruta opaca del Worker que sirve el arte de la respuesta
+ * (`/api/dle/<modo>/hint?d=<fecha>`): la ruta del pozo la delataría.
+ */
+export function hintsUnlocked(answer: Entry, guesses: number, imgSrc: string): Hint[] {
+  const all: Hint[] = [{ kind: "img", src: imgSrc, blur: true }, ...answer.hints];
   return all.filter((_, i) => guesses >= HINT_AT[i]);
 }
 

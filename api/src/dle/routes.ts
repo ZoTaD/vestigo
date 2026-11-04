@@ -1,4 +1,4 @@
-import { compare, dayNumber, findByName, hintsUnlocked, pickAnswer, utcDate } from "./logic";
+import { compare, dayNumber, findByName, HINT_AT, hintsUnlocked, pickAnswer, utcDate } from "./logic";
 import { PoolUnavailable } from "./pool";
 import type { DayRow, Store } from "./store";
 import { COLUMNS, MODES, type Entry, type Mode, type Pool } from "./types";
@@ -18,7 +18,12 @@ export interface DleDeps {
   limit?: (key: string) => Promise<boolean>;
   /** Para el límite cuando no hay cuenta. */
   ip?: string;
+  /** Trae un archivo del sitio (el arte de la pista borrosa). */
+  asset?: (path: string) => Promise<Response>;
 }
+
+/** Un secreto corto o vacío dejaría adivinar la respuesta de mañana. */
+const MIN_SECRET = 16;
 
 const RANKING_TOP = 10;
 const isMode = (m: string): m is Mode => (MODES as string[]).includes(m);
@@ -47,11 +52,13 @@ function json(body: unknown, status = 200): Response {
 export async function handleDle(req: Request, url: URL, deps: DleDeps): Promise<Response | null> {
   if (!url.pathname.startsWith("/api/dle/")) return null;
   const parts = url.pathname.slice("/api/dle/".length).split("/");
+  if (deps.secret.length < MIN_SECRET) return json({ error: "not_configured" }, 503);
   try {
     if (req.method === "GET" && parts.length === 1 && parts[0] === "ranking") return await ranking(deps);
     if (req.method === "GET" && parts.length === 1 && parts[0] === "me") return await me(deps);
     if (parts.length === 2 && isMode(parts[0])) {
-      if (req.method === "GET" && parts[1] === "today") return await today(parts[0], deps);
+      if (req.method === "GET" && parts[1] === "today") return await today(parts[0], url, deps);
+      if (req.method === "GET" && parts[1] === "hint") return await hintImage(parts[0], url, deps);
       if (req.method === "POST" && parts[1] === "guess") return await guess(parts[0], req, deps);
     }
     return json({ error: "not_found" }, 404);
@@ -61,18 +68,31 @@ export async function handleDle(req: Request, url: URL, deps: DleDeps): Promise<
   }
 }
 
-/** El día de la partida: la empezada sin terminar manda sobre el calendario. */
-async function playDate(mode: Mode, deps: DleDeps): Promise<string> {
+/**
+ * El día de la partida. Hoy, salvo que la página siga mostrando la de ayer
+ * (`requested`) y esa partida exista sin terminar: así quien empezó a las 23:59
+ * UTC la termina, y una abandonada no le tapa el día de hoy a nadie.
+ */
+async function playDate(mode: Mode, deps: DleDeps, requested: unknown): Promise<string> {
   const today = utcDate(deps.now);
-  if (!deps.steamId) return today;
-  const open = await deps.store.openPlay(deps.steamId, mode);
-  // Una partida de antes de ayer ya no se retoma: sólo la de ayer.
-  return open && open >= prevDay(today) ? open : today;
+  const yesterday = prevDay(today);
+  if (requested !== yesterday) return today;
+  if (!deps.steamId) return yesterday;
+  const play = await deps.store.play(deps.steamId, mode, yesterday);
+  return play && !play.finishedAt ? yesterday : today;
 }
 
-async function today(mode: Mode, deps: DleDeps): Promise<Response> {
+const hintSrc = (mode: Mode, date: string) => `/api/dle/${mode}/hint?d=${date}`;
+
+/** Intentos hechos: de D1 con cuenta; sin cuenta, los que dice la página. */
+function anonCount(raw: unknown): number {
+  const n = typeof raw === "string" ? Number(raw) : raw;
+  return typeof n === "number" && Number.isFinite(n) ? Math.min(Math.max(0, Math.floor(n)), 1000) : 0;
+}
+
+async function today(mode: Mode, url: URL, deps: DleDeps): Promise<Response> {
   const pool = await deps.pool();
-  const date = await playDate(mode, deps);
+  const date = await playDate(mode, deps, url.searchParams.get("date"));
   const day = await ensureDay(deps.store, pool, mode, date, deps.secret);
   const play = deps.steamId ? await deps.store.play(deps.steamId, mode, date) : null;
   const byId = new Map(pool[mode].map((e) => [e.id, e]));
@@ -88,7 +108,7 @@ async function today(mode: Mode, deps: DleDeps): Promise<Response> {
     mode,
     columns: COLUMNS[mode],
     rows,
-    hints: hintsUnlocked(day.answer, play?.guesses.length ?? 0),
+    hints: hintsUnlocked(day.answer, play?.guesses.length ?? 0, hintSrc(mode, date)),
     solved,
     ...(solved ? { answer: reveal(day.answer) } : {}),
   });
@@ -102,11 +122,7 @@ async function guess(mode: Mode, req: Request, deps: DleDeps): Promise<Response>
   const entry = findByName(pool[mode], body.name);
   if (!entry) return json({ error: "unknown_name" }, 400);
 
-  const today = utcDate(deps.now);
-  let date: string;
-  if (deps.steamId) date = await playDate(mode, deps);
-  // Sin cuenta, la página dice de qué día es su partida: hoy o, si empezó antes de medianoche, ayer.
-  else date = body.date === prevDay(today) ? prevDay(today) : today;
+  const date = await playDate(mode, deps, body.date);
 
   const day = await ensureDay(deps.store, pool, mode, date, deps.secret);
   const solved = entry.id === day.answer.id;
@@ -115,16 +131,32 @@ async function guess(mode: Mode, req: Request, deps: DleDeps): Promise<Response>
     if ((await deps.store.addGuess(deps.steamId, mode, date, entry.id, deps.now, solved)) === "duplicate") return json({ error: "duplicate" }, 409);
     count = (await deps.store.play(deps.steamId, mode, date))?.guesses.length ?? 1;
   } else {
-    const before = typeof body.n === "number" && Number.isFinite(body.n) ? Math.min(Math.max(0, Math.floor(body.n)), 1000) : 0;
-    count = before + 1;
+    count = anonCount(body.n) + 1;
   }
   return json({
     date,
     row: { guess: brief(entry), cells: compare(entry, day.answer, mode) },
-    hints: hintsUnlocked(day.answer, count),
+    hints: hintsUnlocked(day.answer, count, hintSrc(mode, date)),
     solved,
     ...(solved ? { answer: reveal(day.answer) } : {}),
   });
+}
+
+/**
+ * El arte de la respuesta para la pista borrosa, por una ruta que no dice cuál
+ * es. Sólo con los intentos que abren esa pista; el borroso lo pone la página.
+ */
+async function hintImage(mode: Mode, url: URL, deps: DleDeps): Promise<Response> {
+  const date = url.searchParams.get("d") ?? "";
+  const today = utcDate(deps.now);
+  if (date !== today && date !== prevDay(today)) return json({ error: "not_found" }, 404);
+  const day = await deps.store.day(date, mode);
+  if (!day || !deps.asset) return json({ error: "not_found" }, 404);
+  const count = deps.steamId ? ((await deps.store.play(deps.steamId, mode, date))?.guesses.length ?? 0) : anonCount(url.searchParams.get("n"));
+  if (count < HINT_AT[0]) return json({ error: "locked" }, 403);
+  const res = await deps.asset(day.answer.img);
+  if (!res.ok) return json({ error: "not_found" }, 404);
+  return new Response(res.body, { headers: { "content-type": "image/webp", "cache-control": "private, no-store" } });
 }
 
 async function ranking(deps: DleDeps): Promise<Response> {

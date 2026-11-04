@@ -34,8 +34,6 @@ export interface Store {
   /** Id → última fecha en que fue respuesta, antes de `before`. */
   lastSeen(mode: Mode, before: string): Promise<Map<string, string>>;
   play(steamId: string, mode: Mode, date: string): Promise<Play | null>;
-  /** La fecha de una partida empezada y sin terminar, si hay. */
-  openPlay(steamId: string, mode: Mode): Promise<string | null>;
   /** "duplicate" si ese intento ya estaba o la partida ya terminó. */
   addGuess(steamId: string, mode: Mode, date: string, entryId: string, at: number, solved: boolean): Promise<"ok" | "duplicate">;
   ranking(date: string, mode: Mode, limit: number): Promise<RankRow[]>;
@@ -94,9 +92,6 @@ export function memStore(): Store {
     async play(steamId, mode, date) {
       const p = find(steamId, mode, date);
       return p ? { startedAt: p.startedAt, finishedAt: p.finishedAt, guesses: [...p.guesses] } : null;
-    },
-    async openPlay(steamId, mode) {
-      return plays.find((p) => p.steamId === steamId && p.mode === mode && p.finishedAt === null)?.date ?? null;
     },
     async addGuess(steamId, mode, date, entryId, at, isSolved) {
       let p = find(steamId, mode, date);
@@ -164,35 +159,34 @@ export function d1Store(db: D1Database): Store {
         .all<{ answer_id: string }>();
       return { startedAt: p.started_at, finishedAt: p.finished_at, guesses: results.map((r) => r.answer_id) };
     },
-    async openPlay(steamId, mode) {
-      const r = await db
-        .prepare("select date from dle_plays where steam_id = ?1 and mode = ?2 and finished_at is null order by date desc limit 1")
-        .bind(steamId, mode)
-        .first<{ date: string }>();
-      return r?.date ?? null;
-    },
     async addGuess(steamId, mode, date, entryId, at, isSolved) {
-      const p = await this.play(steamId, mode, date);
-      if (p && (p.finishedAt !== null || p.guesses.includes(entryId))) return "duplicate";
-      const n = (p?.guesses.length ?? 0) + 1;
-      // La clave única de (partida, intento) es la que frena un doble clic que llegue a la vez.
-      const ins = await db
-        .prepare("insert into dle_guesses (steam_id, date, mode, n, answer_id, at) values (?1, ?2, ?3, ?4, ?5, ?6) on conflict do nothing")
-        .bind(steamId, date, mode, n, entryId, at)
-        .run();
-      if (!ins.meta.changes) return "duplicate";
-      await db
-        .prepare(
-          `insert into dle_plays (steam_id, date, mode, started_at, finished_at, guesses, solved)
-           values (?1, ?2, ?3, ?4, ?5, 1, ?6)
-           on conflict (steam_id, date, mode) do update set
-             guesses = guesses + 1,
-             finished_at = coalesce(finished_at, excluded.finished_at),
-             solved = max(solved, excluded.solved)`,
-        )
-        .bind(steamId, date, mode, at, isSolved ? at : null, isSolved ? 1 : 0)
-        .run();
-      return "ok";
+      // Todo en un lote, que D1 corre como una transacción: el número del intento sale de la tabla en el mismo
+      // insert (dos intentos a la vez no se pisan), una partida terminada no acepta más, y la fila de la partida
+      // se recalcula entera desde los intentos, así nunca queda desfasada.
+      const [ins] = await db.batch([
+        db
+          .prepare(
+            `insert into dle_guesses (steam_id, date, mode, n, answer_id, at, hit)
+             select ?1, ?2, ?3,
+               coalesce((select max(n) from dle_guesses where steam_id = ?1 and date = ?2 and mode = ?3), 0) + 1,
+               ?4, ?5, ?6
+             where not exists (select 1 from dle_plays where steam_id = ?1 and date = ?2 and mode = ?3 and finished_at is not null)
+             on conflict do nothing`,
+          )
+          .bind(steamId, date, mode, entryId, at, isSolved ? 1 : 0),
+        db
+          .prepare(
+            `insert into dle_plays (steam_id, date, mode, started_at, finished_at, guesses, solved)
+             select ?1, ?2, ?3, min(at), max(case when hit = 1 then at end), count(*), max(hit)
+             from dle_guesses where steam_id = ?1 and date = ?2 and mode = ?3
+             having count(*) > 0
+             on conflict (steam_id, date, mode) do update set
+               started_at = excluded.started_at, finished_at = excluded.finished_at,
+               guesses = excluded.guesses, solved = excluded.solved`,
+          )
+          .bind(steamId, date, mode),
+      ]);
+      return ins.meta.changes ? "ok" : "duplicate";
     },
     async ranking(date, mode, limit) {
       const { results } = await db

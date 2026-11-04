@@ -30,6 +30,15 @@ create table dle_guesses (
   n integer not null,
   answer_id text not null,
   at integer not null,
+  -- 1 si ese intento fue la respuesta: de acá sale el estado de la partida.
+  hit integer not null default 0,
   primary key (steam_id, date, mode, n),
   unique (steam_id, date, mode, answer_id)
+);
+
+-- La última copia buena del pozo (lo publica el sitio): si vestigo.gg no contesta, el juego sigue con esta.
+create table dle_pool (
+  id integer primary key check (id = 1),
+  json text not null,
+  at integer not null
 );

@@ -1,4 +1,4 @@
-import { loadPool } from "./dle/pool";
+import { d1PoolBackup, loadPool } from "./dle/pool";
 import { handleDle, runDaily } from "./dle/routes";
 import { d1Store } from "./dle/store";
 import { accountIdOf, checkAuthBody, claimedSteamId, isValidResponse, loginUrl, safeReturn, STEAM_OPENID } from "./steam";
@@ -38,16 +38,20 @@ export default {
       if (req.method === "GET" && url.pathname === "/api/auth/steam/callback") return await callback(url, env);
       if (req.method === "GET" && url.pathname === "/api/me") return await me(req, env);
       if (req.method === "POST" && url.pathname === "/api/auth/logout") return await logout(req, env);
-      const dle = await handleDle(req, url, {
-        store: d1Store(env.DB),
-        pool: () => loadPool(env.POOL_URL),
-        secret: env.DLE_SECRET,
-        now: Date.now(),
-        steamId: await sessionSteamId(req, env),
-        ip: req.headers.get("cf-connecting-ip") ?? undefined,
-        limit: env.DLE_LIMIT ? async (key) => (await env.DLE_LIMIT!.limit({ key })).success : undefined,
-      });
-      if (dle) return dle;
+      if (url.pathname.startsWith("/api/dle/")) {
+        const dle = await handleDle(req, url, {
+          store: d1Store(env.DB),
+          pool: () => loadPool(env.POOL_URL, fetch, Date.now(), d1PoolBackup(env.DB)),
+          secret: env.DLE_SECRET ?? "",
+          now: Date.now(),
+          steamId: await sessionSteamId(req, env),
+          ip: req.headers.get("cf-connecting-ip") ?? undefined,
+          limit: env.DLE_LIMIT ? async (key) => (await env.DLE_LIMIT!.limit({ key })).success : undefined,
+          // El arte de la pista: del mismo sitio que publica el pozo.
+          asset: (path) => fetch(new URL(path, env.POOL_URL)),
+        });
+        if (dle) return dle;
+      }
       return json({ error: "not_found" }, 404);
     } catch (err) {
       console.error(err);
@@ -57,7 +61,7 @@ export default {
 
   /** 00:00 UTC: deja elegidas las respuestas del día del Deadlockdle. */
   async scheduled(_event: ScheduledController, env: Env): Promise<void> {
-    await runDaily(d1Store(env.DB), await loadPool(env.POOL_URL), env.DLE_SECRET, Date.now());
+    await runDaily(d1Store(env.DB), await loadPool(env.POOL_URL, fetch, Date.now(), d1PoolBackup(env.DB)), env.DLE_SECRET, Date.now());
   },
 };
 

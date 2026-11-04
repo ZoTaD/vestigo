@@ -26,14 +26,15 @@ const POOL: Pool = {
   abilities: [e("ability:1", "Omega", { hero: "Alpha", slot: 1, ultimate: "No", cooldown: 10, effects: null })],
 };
 const DAY1 = Date.UTC(2026, 10, 5, 12, 0, 0);
+const SECRET = "secreto-de-prueba-largo";
 
 let store: Store;
-const deps = (over: Partial<DleDeps> = {}): DleDeps => ({ store, pool: async () => POOL, secret: "s", now: DAY1, steamId: null, ...over });
+const deps = (over: Partial<DleDeps> = {}): DleDeps => ({ store, pool: async () => POOL, secret: SECRET, now: DAY1, steamId: null, ...over });
 const get = (path: string, d: DleDeps) => handleDle(new Request(`https://x${path}`), new URL(`https://x${path}`), d);
 const post = (path: string, body: unknown, d: DleDeps) =>
   handleDle(new Request(`https://x${path}`, { method: "POST", body: JSON.stringify(body), headers: { "content-type": "application/json" } }), new URL(`https://x${path}`), d);
 const answerFor = async (mode: "heroes" | "items" | "abilities", now = DAY1) =>
-  (await ensureDay(store, POOL, mode, new Date(now).toISOString().slice(0, 10), "s")).answer;
+  (await ensureDay(store, POOL, mode, new Date(now).toISOString().slice(0, 10), SECRET)).answer;
 
 beforeEach(() => {
   store = memStore();
@@ -92,7 +93,7 @@ describe("guess", () => {
     const yesterday = await answerFor("heroes", before);
     const wrong = POOL.heroes.find((h) => h.id !== yesterday.id)!;
     await post("/api/dle/heroes/guess", { name: wrong.name }, deps({ steamId: "u1", now: before }));
-    const body = await (await post("/api/dle/heroes/guess", { name: yesterday.name }, deps({ steamId: "u1", now: after })))!.json();
+    const body = await (await post("/api/dle/heroes/guess", { name: yesterday.name, date: "2026-11-05" }, deps({ steamId: "u1", now: after })))!.json();
     expect(body.solved).toBe(true);
     expect(body.date).toBe("2026-11-05");
   });
@@ -103,7 +104,7 @@ describe("guess", () => {
     const body = await (await post("/api/dle/heroes/guess", { name: wrong.name, n: 3 }, deps()))!.json();
     expect(body.solved).toBe(false);
     expect(body.answer).toBeUndefined();
-    expect(body.hints).toEqual([{ kind: "img", src: answer.img, blur: true }]);
+    expect(body.hints).toEqual([{ kind: "img", src: "/api/dle/heroes/hint?d=2026-11-05", blur: true }]);
     expect(await store.playerCount("2026-11-05", "heroes")).toBe(0);
   });
 
@@ -146,15 +147,69 @@ describe("el pozo y el día", () => {
   });
 
   it("el cron arma los tres días y correrlo de nuevo no cambia nada", async () => {
-    await runDaily(store, POOL, "s", DAY1);
+    await runDaily(store, POOL, SECRET, DAY1);
     const first = await Promise.all((["heroes", "items", "abilities"] as const).map((m) => store.day("2026-11-05", m)));
     expect(first.every(Boolean)).toBe(true);
-    await runDaily(store, POOL, "otro secreto", DAY1);
+    await runDaily(store, POOL, "otro-secreto-de-prueba", DAY1);
     const again = await Promise.all((["heroes", "items", "abilities"] as const).map((m) => store.day("2026-11-05", m)));
     expect(again.map((d) => d!.answer.id)).toEqual(first.map((d) => d!.answer.id));
   });
 
   it("devuelve null si la ruta no es del juego", async () => {
     expect(await get("/api/me", deps())).toBeNull();
+  });
+});
+
+describe("arreglos de la revisión", () => {
+  const wrongs = (answer: Entry) => POOL.heroes.filter((h) => h.id !== answer.id);
+
+  it("la pista de imagen no lleva la ruta del arte y sólo se sirve con los intentos que corresponden", async () => {
+    const big: Pool = { ...POOL, heroes: [...POOL.heroes, e("hero:4", "Delta", {}), e("hero:5", "Echo", {}), e("hero:6", "Foxtrot", {})] };
+    const d = (over: Partial<DleDeps> = {}) => deps({ pool: async () => big, steamId: "u1", asset: async (path) => new Response(`bytes de ${path}`), ...over });
+    const answer = (await ensureDay(store, big, "heroes", "2026-11-05", SECRET)).answer;
+    const others = big.heroes.filter((h) => h.id !== answer.id);
+    for (const w of others.slice(0, 3)) await post("/api/dle/heroes/guess", { name: w.name }, d());
+    expect((await get("/api/dle/heroes/hint?d=2026-11-05", d()))!.status).toBe(403);
+    const body = await (await post("/api/dle/heroes/guess", { name: others[3].name }, d()))!.text();
+    expect(body).not.toContain(answer.img);
+    expect(JSON.parse(body).hints[0]).toEqual({ kind: "img", src: "/api/dle/heroes/hint?d=2026-11-05", blur: true });
+    const img = (await get("/api/dle/heroes/hint?d=2026-11-05", d()))!;
+    expect(img.status).toBe(200);
+    expect(await img.text()).toBe(`bytes de ${answer.img}`);
+    // Sin cuenta, igual que las pistas de texto: con los intentos que dice la página.
+    expect((await get("/api/dle/heroes/hint?d=2026-11-05&n=2", d({ steamId: null })))!.status).toBe(403);
+    expect((await get("/api/dle/heroes/hint?d=2026-11-05&n=4", d({ steamId: null })))!.status).toBe(200);
+  });
+
+  it("una partida sin terminar de ayer no se come el día de hoy", async () => {
+    const tuesday = Date.UTC(2026, 10, 5, 15, 0, 0);
+    const wednesday = Date.UTC(2026, 10, 6, 15, 0, 0);
+    const old = await answerFor("heroes", tuesday);
+    await post("/api/dle/heroes/guess", { name: wrongs(old)[0].name }, deps({ steamId: "u1", now: tuesday }));
+    const today = await (await get("/api/dle/heroes/today", deps({ steamId: "u1", now: wednesday })))!.json();
+    expect(today.date).toBe("2026-11-06");
+    expect(today.rows).toHaveLength(0);
+    // Si la página todavía muestra la de ayer, puede terminarla.
+    const back = await (await get("/api/dle/heroes/today?date=2026-11-05", deps({ steamId: "u1", now: wednesday })))!.json();
+    expect(back.date).toBe("2026-11-05");
+    expect(back.rows).toHaveLength(1);
+    const g = await (await post("/api/dle/heroes/guess", { name: wrongs(old)[1].name }, deps({ steamId: "u1", now: wednesday })))!.json();
+    expect(g.date).toBe("2026-11-06");
+  });
+
+  it("sin DLE_SECRET el juego no arranca", async () => {
+    expect((await get("/api/dle/heroes/today", deps({ secret: "" })))!.status).toBe(503);
+  });
+});
+
+describe("respaldo del pozo", () => {
+  it("un isolate nuevo con vestigo.gg caído usa la copia guardada en la base", async () => {
+    let saved: Pool | null = null;
+    const backup = { get: async () => saved, put: async (p: Pool) => void (saved = p) };
+    await loadPool("https://p", async () => new Response(JSON.stringify(POOL)), 0, backup);
+    expect(saved).not.toBeNull();
+    resetPoolCache();
+    const pool = await loadPool("https://p", async () => { throw new Error("caído"); }, 0, backup);
+    expect(pool.heroes).toHaveLength(3);
   });
 });

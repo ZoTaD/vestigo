@@ -29,10 +29,8 @@ describe("memStore", () => {
     const s = memStore();
     expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:7", 1000, false)).toBe("ok");
     expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:7", 2000, false)).toBe("duplicate");
-    expect(await s.openPlay("u1", "heroes")).toBe("2026-11-05");
     expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:3", 9000, true)).toBe("ok");
     expect(await s.play("u1", "heroes", "2026-11-05")).toEqual({ startedAt: 1000, finishedAt: 9000, guesses: ["hero:7", "hero:3"] });
-    expect(await s.openPlay("u1", "heroes")).toBeNull();
     expect(await s.addGuess("u1", "heroes", "2026-11-05", "hero:4", 9500, false)).toBe("duplicate");
   });
 

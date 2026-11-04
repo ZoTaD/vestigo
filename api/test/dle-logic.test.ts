@@ -107,11 +107,14 @@ describe("pesos", () => {
 
 describe("pistas", () => {
   it("se desbloquean a los 4, 6 y 8 intentos", () => {
-    expect(hintsUnlocked(vindicta, 3)).toEqual([]);
-    expect(hintsUnlocked(vindicta, 4)).toEqual([{ kind: "img", src: vindicta.img, blur: true }]);
-    expect(hintsUnlocked(vindicta, 6)).toHaveLength(2);
-    expect(hintsUnlocked(vindicta, 8)).toEqual([{ kind: "img", src: vindicta.img, blur: true }, ...vindicta.hints]);
-    expect(hintsUnlocked(vindicta, 50)).toHaveLength(3);
+    const src = "/api/dle/heroes/hint?d=2026-11-05";
+    expect(hintsUnlocked(vindicta, 3, src)).toEqual([]);
+    expect(hintsUnlocked(vindicta, 4, src)).toEqual([{ kind: "img", src, blur: true }]);
+    expect(hintsUnlocked(vindicta, 6, src)).toHaveLength(2);
+    expect(hintsUnlocked(vindicta, 8, src)).toEqual([{ kind: "img", src, blur: true }, ...vindicta.hints]);
+    expect(hintsUnlocked(vindicta, 50, src)).toHaveLength(3);
+    // La imagen borrosa nunca lleva la ruta del pozo: con ella alcanza para saber la respuesta.
+    expect(JSON.stringify(hintsUnlocked(vindicta, 50, src))).not.toContain(vindicta.img);
   });
 });
 
