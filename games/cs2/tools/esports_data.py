@@ -134,6 +134,26 @@ def build_vrs(gh, year: int, index: dict[str, str]) -> dict:
     return out
 
 
+def resolve_names(lp, names: list[str], cache: Path, today: str) -> dict[str, str]:
+    """Los nombres del ranking que no salen en los torneos leídos, buscados en Liquipedia por título (con sus
+    redirecciones: "1win" es "1w Team"). Vale sólo una página de equipo. Lo resuelto queda en `cache` para siempre; lo
+    que no, se vuelve a buscar a la semana."""
+    known: dict[str, dict] = json.loads(cache.read_text(encoding="utf-8")) if cache.exists() else {}
+    ask = [n for n in names if n not in known or (known[n]["lp"] is None and _days(known[n]["at"], today) >= 7)]
+    for i in range(0, len(ask), 50):
+        q = lp.query(action="query", titles="|".join(ask[i : i + 50]), redirects=1, prop="categories", cllimit="max",
+                     clcategories="Category:Teams")["query"]
+        to = {r["from"]: r["to"] for r in q.get("redirects", []) + q.get("normalized", [])}
+        teams = {p["title"] for p in q["pages"].values() if "missing" not in p and p.get("categories")}
+        for n in ask[i : i + 50]:
+            title = to.get(to.get(n, n), to.get(n, n))
+            known[n] = {"lp": title.replace(" ", "_") if title in teams else None, "at": today}
+    if ask:
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_text(json.dumps(known, ensure_ascii=False, indent=1), encoding="utf-8")
+    return {n: known[n]["lp"] for n in names if known.get(n, {}).get("lp")}
+
+
 def fetch_logos(lp, teams: dict, logos: Path, want: list[str]) -> None:
     """Baja los logos que faltan (los de `want` primero), a WebP de 64 px de alto."""
     logos.mkdir(parents=True, exist_ok=True)
@@ -172,6 +192,23 @@ def run(lp, gh, root: Path, today: str, year: int, out: Path | None = None, raw:
         index.setdefault(norm(v["name"]), k)
         index.setdefault(norm(k.replace("_", " ")), k)
     vrs = build_vrs(gh, year, index)
+    # Los del ranking que no salieron en ningún torneo leído: por su título en Liquipedia.
+    loose = sorted({r["team"] for reg in REGIONS for r in vrs[reg] if not r["lp"]})
+    try:
+        found = resolve_names(lp, loose, raw / "names.json", today) if loose else {}
+    except Exception as e:  # noqa: BLE001 - sin la búsqueda, esos equipos quedan como estaban
+        print(f"::warning::sin buscar nombres: {e}")
+        found = {}
+    for reg in REGIONS:
+        for r in vrs[reg]:
+            if not r["lp"] and r["team"] in found:
+                r["lp"] = found[r["team"]]
+                teams.setdefault(r["lp"], {"name": r["team"], "logo": None})
+    # El logo de un equipo que sólo se conoce por su ficha (no sale en los torneos): el de su página, ya leída.
+    for f in (out / "teams").glob("*.json"):
+        t = json.loads(f.read_text(encoding="utf-8"))
+        if t.get("lp") in teams and not teams[t["lp"]].get("logo") and t.get("logo_file"):
+            teams[t["lp"]]["logo"] = t["logo_file"]
     ranked = [r["lp"] for reg in REGIONS for r in vrs[reg] if r["lp"]]
     fetch_logos(lp, teams, logos, list(dict.fromkeys(ranked + list(playing) + list(teams))))
     team_rows = {k: {"name": v["name"], "logo": slugify(k) if (logos / f"{slugify(k)}.webp").exists() else None} for k, v in sorted(teams.items())}

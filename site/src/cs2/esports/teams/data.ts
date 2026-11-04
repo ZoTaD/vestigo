@@ -7,7 +7,8 @@ import { once } from "../../../zomboid/store";
 
 type Mod<T> = { default: T };
 export interface RosterRow {
-  lp: string;
+  /** `null`: todavía no tiene página en Liquipedia (sale sin enlace). */
+  lp: string | null;
   id: string;
   name: string;
   flag: string | null;
