@@ -130,6 +130,12 @@ class TestSalida(unittest.TestCase):
         self.assertEqual(m["tag"], TAG)
         lista = json.loads((coh3.DATA / "units" / "list.json").read_text(encoding="utf-8"))
         self.assertEqual(m["counts"]["units"], len(lista))
+        # La fila lleva el tamaño de blanco de la ficha (precisión × tamaño en la calculadora).
+        for fila in lista:
+            self.assertIn("targetSize", fila)
+            ficha = json.loads((coh3.DATA / "units" / "f" / f"{coh3.shard(fila['slug']):02d}.json").read_text(
+                encoding="utf-8"))[fila["slug"]]
+            self.assertEqual(fila["targetSize"], ficha["targetSize"], fila["slug"])
         self.assertGreater(m["counts"]["maps"], 30)
 
     def test_parches(self):

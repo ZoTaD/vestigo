@@ -11,7 +11,8 @@ más grande (abilities/american, 13 MB) parseado.
 Salida (contrato de docs/superpowers/specs/2026-11-04-coh3-design.md, con estos ajustes):
 - `meta.json` `{generatedAt, tag, patch, prev, counts:{units, weapons, battlegroups, maps}}`: `patch` es el número del
   tag ("2.5.3"); `prev`, el tag contra el que se comparan los parches; `counts`, las fichas de cada lista (portada).
-- `units/list.json` `[{slug, name, faction, kind, icon, cost:{mp,mu,fu,pop}, hp, armor, models}]`. `hp` es la vida
+- `units/list.json` `[{slug, name, faction, kind, icon, cost:{mp,mu,fu,pop}, hp, armor, targetSize, models}]`
+  (`targetSize`, como `hp`, de la entidad más dura; la calculadora multiplica la precisión por él). `hp` es la vida
   de la entidad más dura del pelotón (por soldado en infantería; el cañón en las armas de equipo). `armor` = [frente,
   lado, atrás]; en blindaje uniforme los tres iguales (la infantería tiene 1). `cost.t` = segundos de producción.
 - `units/f/NN.json` `{slug: ficha}`: fila + `role` (la línea de tipo, "Medium Tank"), `desc`, `speed`, `sight`,
@@ -1016,7 +1017,8 @@ def build_patches(ex: dict, tags: list[dict]) -> list:
 # ---------------------------------------------------------------- escritura
 
 def _fila_unidad(u: dict) -> dict:
-    fila = {k: u[k] for k in ("slug", "name", "faction", "kind", "icon", "cost", "hp", "armor", "models", "bg")}
+    fila = {k: u[k] for k in ("slug", "name", "faction", "kind", "icon", "cost", "hp", "armor", "targetSize", "models",
+                              "bg")}
     if u.get("variantOf"):
         fila["variantOf"] = u["variantOf"]
     return fila
