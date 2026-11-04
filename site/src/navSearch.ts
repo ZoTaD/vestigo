@@ -37,7 +37,7 @@ export function hitIconSize([w, h]: [number, number]): [number, number] {
 export type NavSearcher = (query: string, lang: Lang, max: number) => NavHit[];
 
 /** Los juegos donde la barra busca fichas mientras se escribe. */
-export const NAV_SEARCH_GAMES = ["valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe", "cs2"] as const;
+export const NAV_SEARCH_GAMES = ["valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe", "cs2", "coh3"] as const;
 export type NavSearchGame = (typeof NAV_SEARCH_GAMES)[number];
 export const hasNavSearch = (game: string): game is NavSearchGame => (NAV_SEARCH_GAMES as readonly string[]).includes(game);
 
@@ -255,6 +255,32 @@ const LOADERS: Record<NavSearchGame, () => Promise<NavSearcher>> = {
           to: { view: "cs2", c2Section: tab, detail: r.slug } as Partial<Route>,
         };
       }),
+    );
+    return (query, lang, max) => searchEntries(entries, query, lang, max);
+  },
+  // Company of Heroes 3 (2026-11-04): unidades, armas y battlegroups, con el nombre en los dos idiomas y el inglés de
+  // texto de más (en español también se busca "Panzer IV" o "Riflemen").
+  async coh3() {
+    const [copy, un, wp, bg] = await Promise.all([
+      import("./coh3Copy"),
+      import("@coh3/units/list.json"),
+      import("@coh3/weapons/list.json"),
+      import("@coh3/battlegroups/list.json"),
+    ]);
+    type Row = { slug: string; name: { en: string; es?: string | null } | null; icon?: string | null; usedByIcon?: string | null };
+    const lists = { units: un.default as unknown as Row[], weapons: wp.default as unknown as Row[], battlegroups: bg.default as unknown as Row[] };
+    const entries: Entry[] = (Object.keys(lists) as (keyof typeof lists)[]).flatMap((tab) =>
+      lists[tab]
+        .filter((r) => r.name)
+        .map((r) => ({
+          key: `${tab}/${r.slug}`,
+          en: r.name!.en,
+          es: r.name!.es || r.name!.en,
+          extra: r.name!.en,
+          tab: { en: copy.COH3_COPY.en.tabs[tab], es: copy.COH3_COPY.es.tabs[tab] },
+          img: r.icon ? `/coh3/i/${r.icon}.webp` : undefined,
+          to: { view: "coh3", c3Section: tab, detail: r.slug } as Partial<Route>,
+        })),
     );
     return (query, lang, max) => searchEntries(entries, query, lang, max);
   },
