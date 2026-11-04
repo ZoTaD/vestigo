@@ -11,6 +11,7 @@ import { tr, type L10n } from "../data";
 import { Coh3Loading, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
 import { useMoreCopy } from "./copy";
 import "./more.css";
+import "../explorer/explorer.css";
 
 type Perk = { tier: number; unlock: number; slug: string; name: L10n; desc: L10n | null; icon: string | null; levels: { cost: number }[] };
 type Tech = { slug: string; name: L10n; desc: L10n | null; icon: string | null; category: string | null; cp: number };

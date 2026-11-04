@@ -78,3 +78,4 @@
 }
 /* "1v1" en la letra esténcil se lee "IVI": los modos van en Archivo. */
 .c3-mb .c3-seg button { font: 700 14.5px/1 var(--c3-font); letter-spacing: 0.02em; text-transform: none; }
+.c3-mup b { white-space: nowrap; }
