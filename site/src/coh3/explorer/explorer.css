@@ -1,0 +1,52 @@
+/* El explorador de CoH3 (2026-11-04): tablas de Unidades y Armas, fichas y Battlegroups. */
+.c3-tablepanel { padding: 6px 8px; }
+.c3-unit-table .c3-nm, .c3-table .c3-nm { color: var(--c3-text); }
+.c3-table .c3-nm:hover strong { color: var(--c3-brass); }
+
+.c3-ficha-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: start; }
+.c3-ficha-img { border: 1px solid var(--c3-line2); }
+.c3-role { color: var(--c3-brass); font-weight: 600; }
+.c3-desc { color: #cfc8ae; max-width: 75ch; white-space: pre-line; }
+.c3-pre { white-space: pre-line; }
+.c3-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
+.c3-fact.is-wide { min-width: 220px; }
+.c3-fact .c3-cost { margin-top: 4px; font-size: 15px; }
+.c3-fact b small { font: 400 12px var(--c3-font); color: var(--c3-dim); }
+.c3-mt { margin-top: 16px; margin-bottom: 8px; }
+.c3-wlist a:hover { color: var(--c3-brass); }
+.c3-wlist li { flex-wrap: wrap; }
+
+.c3-upgs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.c3-upgs li { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #2a2e20; }
+.c3-upgs li > span { display: grid; gap: 2px; min-width: 0; }
+.c3-vetlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.c3-vetlist li { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 10px; }
+.c3-vetlist b { color: var(--c3-brass); letter-spacing: 0.1em; }
+.c3-vetlist li > span { display: grid; gap: 2px; }
+
+.c3-trio td:first-child { color: var(--c3-dim); }
+.c3-trio td { font-variant-numeric: tabular-nums; }
+
+.c3-bggrid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.c3-bgcard { display: flex; gap: 12px; align-items: center; height: 100%; padding: 12px; background: linear-gradient(180deg, var(--c3-panel), var(--c3-bg2)); border: 1px solid var(--c3-line); }
+.c3-bgcard:hover { border-color: var(--c3-brass2); }
+.c3-bgcard:hover b { color: var(--c3-brass); }
+.c3-bgcard > span { display: grid; gap: 4px; min-width: 0; }
+.c3-bgcard b { font: 800 19px/1.1 var(--c3-stencil); letter-spacing: 0.03em; text-transform: uppercase; }
+
+.c3-tiers { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; }
+.c3-tierlvl { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; }
+.c3-tiernum { display: grid; place-items: center; height: 30px; font: 900 18px/1 var(--c3-stencil); color: var(--c3-bg); background: var(--c3-brass2); }
+.c3-tierups { display: grid; gap: 8px; }
+.c3-bgup { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 10px; padding: 10px; background: var(--c3-well); border: 1px solid var(--c3-line); }
+.c3-bgup > div { display: grid; gap: 4px; min-width: 0; }
+.c3-bgup + .c3-bgup { position: relative; }
+.c3-cp { color: var(--c3-brass); font-size: 13px; white-space: nowrap; }
+.c3-bgab { font-size: 13px; }
+
+@media (max-width: 700px) {
+  .c3-ficha-head { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .c3-ficha-img { width: 110px; height: 110px; }
+  .c3-upgs li { grid-template-columns: 40px minmax(0, 1fr); }
+  .c3-upgs li > .c3-cost { grid-column: 2; }
+}
