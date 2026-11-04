@@ -405,6 +405,15 @@
 }
 .top-account-item:hover, .top-account-item:focus-visible { background: rgba(var(--accent-rgb), 0.14); }
 [data-game="valheim"] .top-account-menu { background: #1a120b; }
+/* Las dos cajas oscuras de la barra (resultados del buscador y menú de la cuenta) llevan su propia tinta clara: la
+   portada usa el tema claro y su --text es casi negro, así que el nombre de la cuenta quedaba negro sobre negro
+   (2026-11-04, lo vio un usuario en la portada). */
+.top-hits, .top-account-menu {
+  --text: #efe6d4;
+  --text-dim: #b4a993;
+  --line: rgba(239, 230, 212, 0.14);
+  color: var(--text);
+}
 
 
 /* Móvil: arriba la marca, el menú, el juego y el idioma; debajo el buscador a todo el ancho. */
