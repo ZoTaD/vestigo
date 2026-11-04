@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { useCopy, useLang, type Lang } from "./i18n";
 import RouteLink from "./RouteLink";
+import NavAccount from "./NavAccount";
 import { setPendingSearch } from "./pendingSearch";
 import { routeInLang, type Route } from "./route";
 import { GAME_GROUPS, GAME_LOGOS, logoFile } from "./gameGroups";
@@ -14,7 +15,7 @@ export type View = Place | "privacy" | "terms";
 
 /**
  * La barra superior del rediseño del 2026-09-06: marca · lugares · buscador ·
- * idioma. Igual en la portada y en todos los juegos.
+ * idioma · cuenta de Steam (2026-11-04, `NavAccount.tsx`). Igual en la portada y en todos los juegos.
  *
  * **Los juegos viven en el menú "Games"** (2026-10-26, maqueta B elegida por ZoTaD): con ocho juegos ya no entraban
  * en la barra. El botón abre un panel con una columna por categoría (`gameGroups.ts`), el logo de cada juego en un
@@ -296,6 +297,8 @@ export default function Nav({
             ))}
           </span>
         </span>
+
+        <NavAccount route={route} onNavigate={onNavigate} />
       </div>
 
       {/* Todos los juegos, por categoría, con el logo de cada uno y sus pestañas más buscadas (2026-10-26). En el

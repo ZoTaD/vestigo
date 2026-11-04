@@ -323,6 +323,79 @@
   border-color: var(--line-strong);
 }
 
+/* La cuenta de Steam (2026-11-04, `NavAccount.tsx`): "Entrar" o la foto, que abre el menú. El menú usa la misma caja
+   oscura que los resultados del buscador. */
+.top-steam {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+  padding: 0 0.7rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.top-steam:hover { background: rgba(var(--accent-rgb), 0.14); }
+.top-steam-ic { width: 18px; height: 18px; flex: 0 0 auto; }
+.top-account { position: relative; flex: 0 0 auto; }
+.top-avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+.top-avatar img, .top-account-head img, .top-avatar-initial { border-radius: 50%; display: block; }
+.top-avatar:hover img, .top-avatar[aria-expanded="true"] img { box-shadow: 0 0 0 2px var(--accent-lit); }
+.top-avatar-initial {
+  display: grid;
+  place-items: center;
+  background: rgba(var(--accent-rgb), 0.25);
+  color: var(--text);
+  font-weight: 700;
+}
+.top-account-menu {
+  position: absolute; z-index: 60; top: calc(100% + 6px); right: 0; width: 16rem;
+  background: #16120e; border: 1px solid var(--line-strong); border-radius: 10px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55); padding: 4px;
+}
+.top-account-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 10px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+}
+.top-account-name { color: var(--text); font-weight: 700; font-size: 0.92rem; line-height: 1.2; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top-account-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.top-account-item:hover, .top-account-item:focus-visible { background: rgba(var(--accent-rgb), 0.14); }
+[data-game="valheim"] .top-account-menu { background: #1a120b; }
+
 
 /* Móvil: arriba la marca, el menú, el juego y el idioma; debajo el buscador a todo el ancho. */
 @media (max-width: 760px) {
@@ -416,6 +489,10 @@
   .top-lang {
     margin-left: auto;
   }
+
+  /* En el teléfono "Entrar" queda en el logo de Steam solo: el texto no entra junto al idioma. */
+  .top-steam { padding: 0 0.5rem; }
+  .top-steam-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
   .top-search {
     order: 10;

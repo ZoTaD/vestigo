@@ -79,6 +79,13 @@ const EN = {
     en: "EN",
     es: "ES",
   },
+  /** La cuenta de Steam de la barra (2026-11-04). */
+  account: {
+    signIn: "Sign in",
+    menu: (name: string) => `Account: ${name}`,
+    deadlockProfile: "My Deadlock profile",
+    signOut: "Sign out",
+  },
 
   /** La cáscara del rediseño del 2026-09-06: buscador, "cómo se mide", pie. */
   shell: {
@@ -366,6 +373,12 @@ const ES: typeof EN = {
     label: "Idioma",
     en: "EN",
     es: "ES",
+  },
+  account: {
+    signIn: "Entrar",
+    menu: (name: string) => `Cuenta: ${name}`,
+    deadlockProfile: "Mi perfil de Deadlock",
+    signOut: "Salir",
   },
 
   shell: {

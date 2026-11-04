@@ -1,0 +1,16 @@
+# La API de vestigo.gg (2026-11-04): por ahora, el login con Steam.
+# Netlify reenvía vestigo.gg/api/* acá (netlify.toml). La clave de Steam es un
+# secreto: `wrangler secret put STEAM_API_KEY`; en local va en .dev.vars.
+name = "vestigo-api"
+main = "src/index.ts"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[vars]
+SITE_ORIGIN = "https://vestigo.gg"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "vestigo-api"
+database_id = "7f4a2e89-f7f3-4875-a60d-181a634e670c"
+migrations_dir = "migrations"
