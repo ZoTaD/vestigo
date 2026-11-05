@@ -34,7 +34,7 @@ export type DeadlockSection =
   | "dle"
   | "player"
   | "match";
-export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "warframe" | "cs2" | "privacy" | "terms";
+export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "warframe" | "cs2" | "coh3" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -410,6 +410,28 @@ const isCs2Tab = (v: string | undefined): v is Cs2Tab => !!v && (CS2_SECTIONS as
 /** La pestaña de CS2 de un segmento, escrito en cualquiera de los dos idiomas. */
 const cs2Tab = (v: string | undefined): Cs2Tab | undefined => (isCs2Tab(v) ? v : v ? CS2_SECTION_BY_ES.get(v) : undefined);
 
+/**
+ * Company of Heroes 3 (2026-11-04). Diseño: docs/superpowers/specs/2026-11-04-coh3-design.md. Las fichas usan el id
+ * interno del juego (`riflemen_us`), igual en los dos idiomas: sólo se traduce el segmento de la pestaña. Jugador y
+ * partida llevan el número de Relic y no se prerenderizan.
+ */
+export type Coh3DataTab = "units" | "weapons" | "battlegroups" | "maps";
+export type Coh3Tab = Coh3DataTab | "penetration" | "dps" | "patches" | "leaderboards" | "players" | "matches" | "stats" | "tier-list" | "challenges" | "final-stand";
+export type Coh3Section = "home" | Coh3Tab;
+export const COH3_SEGMENT = "coh3";
+export const COH3_SECTIONS: Coh3Tab[] = ["units", "weapons", "battlegroups", "penetration", "dps", "leaderboards", "stats", "tier-list", "patches", "maps", "challenges", "final-stand", "players", "matches"];
+/** Las pestañas cuya dirección puede llevar una ficha (`/coh3/units/riflemen_us`). */
+export const COH3_DETAIL_SECTIONS: Coh3Tab[] = ["units", "weapons", "battlegroups", "maps", "patches", "players", "matches"];
+export const COH3_SECTION_ES: Record<Coh3Tab, string> = {
+  units: "unidades", weapons: "armas", battlegroups: "battlegroups", maps: "mapas", penetration: "penetracion", dps: "dps",
+  patches: "parches", leaderboards: "ranking", players: "jugadores", matches: "partidas", stats: "estadisticas",
+  "tier-list": "tier-list", challenges: "desafios", "final-stand": "final-stand",
+};
+const COH3_SECTION_BY_ES = new Map(Object.entries(COH3_SECTION_ES).map(([tab, es]) => [es, tab as Coh3Tab]));
+const isCoh3Tab = (v: string | undefined): v is Coh3Tab => !!v && (COH3_SECTIONS as string[]).includes(v);
+/** La pestaña de CoH3 de un segmento, escrito en cualquiera de los dos idiomas. */
+const coh3Tab = (v: string | undefined): Coh3Tab | undefined => (isCoh3Tab(v) ? v : v ? COH3_SECTION_BY_ES.get(v) : undefined);
+
 export interface Route {
   lang: Lang;
   view: View;
@@ -433,6 +455,8 @@ export interface Route {
   wfSection?: WfSection;
   /** Qué pestaña de CS2. Sin ella es la portada de la sección. */
   c2Section?: Cs2Section;
+  /** Qué pestaña de Company of Heroes 3. Sin ella es la portada de la sección. */
+  c3Section?: Coh3Section;
   /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
   detail?: string;
 }
@@ -574,6 +598,13 @@ export function parseRoute(pathname: string): Route {
     return { ...base, view: "warframe", wfSection: tab, detail };
   }
 
+  if (head === COH3_SEGMENT) {
+    const tab = coh3Tab(rest[1]);
+    if (!tab) return { ...base, view: "coh3", c3Section: "home" };
+    const ficha = COH3_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
+    return { ...base, view: "coh3", c3Section: tab, detail: ficha };
+  }
+
   if (head === CS2_SEGMENT) {
     const tab = cs2Tab(rest[1]);
     if (!tab) return { ...base, view: "cs2", c2Section: "home" };
@@ -694,6 +725,13 @@ export function routePath(route: Route): string {
     if (lang !== "es") return ficha ? `${root}/${sec}/${ficha}` : `${root}/${sec}`;
     const path = `${root}/${WF_SECTION_ES[sec]}`;
     return ficha ? `${path}/${wfSlugsEs.toEs(sec, ficha)}` : path;
+  }
+  if (view === "coh3") {
+    const sec = route.c3Section ?? "home";
+    const root = `/${lang}/${COH3_SEGMENT}`;
+    if (sec === "home") return root;
+    const path = `${root}/${lang === "es" ? COH3_SECTION_ES[sec] : sec}`;
+    return detail ? `${path}/${detail}` : path;
   }
   if (view === "cs2") {
     const sec = route.c2Section ?? "home";

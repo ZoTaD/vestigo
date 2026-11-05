@@ -488,6 +488,21 @@
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-figure span { color: #5b6573; }
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-cta { background: #1d2a3a; border-color: #1d2a3a; color: #e6d8b8; }
 
+/* --- Company of Heroes 3: el puesto de mando, oliva casi negro con el arte del juego y bronce (2026-11-04) --- */
+
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] {
+  background:
+    linear-gradient(90deg, #15170f 30%, rgba(21, 23, 15, 0.82) 60%, rgba(21, 23, 15, 0.45)),
+    url("/coh3/bg/hero-800.webp") 80% 25% / cover no-repeat,
+    #15170f;
+  color: #a29c84;
+}
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] .game-panel-name { color: #e6dfc8; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] .game-figure b { color: #d0a75a; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] .game-figure.is-second b { color: #e6dfc8; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] .game-figure span { color: #a29c84; }
+[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] .game-cta { background: #d0a75a; border-color: #d0a75a; color: #15170f; }
+
 /* --- Path of Exile 2: el oro viejo de su interfaz, sobre negro (2026-10-11) --- */
 
 [data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] {

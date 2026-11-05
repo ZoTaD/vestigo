@@ -1,0 +1,81 @@
+/* Estadísticas y Tier list de CoH3 (2026-11-04): barras de victorias, popularidad, Eje contra Aliados, el cuadro de
+   cruces, el histograma de duración y las letras de la tier list. Viaja con las dos pestañas. */
+.c3-stack { display: grid; gap: 22px; align-content: start; }
+.c3-mb { margin-top: 8px; }
+
+.c3-bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.c3-bar { display: grid; grid-template-columns: 150px minmax(0, 1fr) 76px; gap: 6px 12px; align-items: center; }
+.c3-bar small { grid-column: 2 / 4; margin-top: -6px; font-size: 12.5px; }
+.c3-bar > b { text-align: right; font: 900 26px/1 var(--c3-stencil); letter-spacing: 0.02em; }
+.c3-bar-track { position: relative; height: 14px; background: var(--c3-well); border: 1px solid var(--c3-line); }
+.c3-bar-track.is-mid::after { content: ""; position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; background: var(--c3-brass2); }
+.c3-bar-fill { position: absolute; inset: 0 auto 0 0; }
+.c3-bar-fill.is-up { background: linear-gradient(90deg, #4c5c2e, var(--c3-up)); }
+.c3-bar-fill.is-down { background: linear-gradient(90deg, #5c2e24, var(--c3-down)); }
+
+.c3-share { display: flex; height: 18px; gap: 2px; }
+.c3-share-i { min-width: 2px; }
+.c3-share-i.is-american { background: #7d8f4e; }
+.c3-share-i.is-british { background: #b9a26a; }
+.c3-share-i.is-german { background: #6f7680; }
+.c3-share-i.is-dak { background: #c08a4e; }
+.c3-share-l { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+.c3-share-l li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+.c3-sides { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+.c3-sides > span:not(.c3-sides-bar) { display: grid; }
+.c3-sides small { color: var(--c3-dim); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+.c3-sides b { font: 900 30px/1 var(--c3-stencil); }
+.c3-sides > span:last-child { text-align: right; }
+.c3-sides-bar { height: 14px; background: #4a5a6b; }
+.c3-sides-bar > span { display: block; height: 100%; background: #8a6f3f; }
+
+.c3-mu { width: 100%; border-collapse: separate; border-spacing: 4px; }
+.c3-mu th { font-weight: 600; font-size: 12.5px; color: var(--c3-dim); }
+.c3-mu thead .c3-fac { flex-direction: column; gap: 2px; }
+.c3-mu-corner { font-size: 11px; text-align: left; }
+.c3-mu th[scope="row"] { text-align: left; }
+.c3-mu td { text-align: center; padding: 10px 4px; background: var(--c3-well); border: 1px solid var(--c3-line); }
+.c3-mu td b { display: block; font: 900 24px/1 var(--c3-stencil); }
+.c3-mu td small { color: var(--c3-dim); font-size: 11.5px; }
+.c3-mu td.is-up { color: var(--c3-up); background: color-mix(in srgb, var(--c3-up) calc(var(--v) * 18%), var(--c3-well)); }
+.c3-mu td.is-down { color: var(--c3-down); background: color-mix(in srgb, var(--c3-down) calc(var(--v) * 18%), var(--c3-well)); }
+.c3-mu-na { background: repeating-linear-gradient(45deg, transparent 0 6px, rgba(255, 255, 255, 0.03) 6px 7px) !important; }
+
+.c3-hist { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; height: 170px; align-items: end; }
+.c3-hist li { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; align-items: end; }
+.c3-hist-bar { display: block; background: linear-gradient(180deg, var(--c3-brass), var(--c3-brass2)); min-height: 1px; }
+.c3-hist small { font-size: 11px; color: var(--c3-dim); text-align: center; padding-top: 4px; white-space: nowrap; }
+
+.c3-tier { display: inline-flex; align-items: baseline; gap: 6px; }
+.c3-tier b { display: inline-grid; place-items: center; width: 34px; height: 34px; font: 900 22px/1 var(--c3-stencil); background: var(--c3-well); border: 1px solid var(--c3-line); }
+.c3-tier small { color: var(--c3-dim); font-size: 12px; white-space: nowrap; }
+.c3-tier.is-S b { color: #15170f; background: var(--c3-brass); border-color: var(--c3-brass); }
+.c3-tier.is-A b { color: var(--c3-up); }
+.c3-tier.is-B b { color: var(--c3-text); }
+.c3-tier.is-C b { color: #e2a35f; }
+.c3-tier.is-D b { color: var(--c3-down); }
+.c3-tier.is-none { color: var(--c3-line2); }
+.c3-tiertable td { vertical-align: middle; }
+.c3-tiertable .c3-tier small { display: none; }
+.c3-tierrow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.c3-tierrow li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; background: var(--c3-well); border: 1px solid var(--c3-line); }
+.c3-tierrow .c3-tier { flex-direction: column; align-items: flex-end; gap: 4px; }
+.c3-tierrow .c3-tier b { width: 52px; height: 52px; font-size: 34px; }
+.c3-mups { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.c3-mup { display: grid; gap: 8px; padding: 12px 14px; background: var(--c3-well); border: 1px solid var(--c3-line); }
+.c3-mup > span { display: flex; align-items: center; gap: 8px; }
+.c3-mup small { color: var(--c3-dim); min-width: 96px; }
+
+@media (max-width: 700px) {
+  .c3-bar { grid-template-columns: 110px minmax(0, 1fr) 64px; }
+  .c3-bar > b { font-size: 21px; }
+  .c3-mu td b { font-size: 16px; }
+  .c3-mu th .c3-fac span { display: none; }
+  .c3-mu-corner { font-size: 0 !important; }
+  .c3-hist small { font-size: 9px; writing-mode: vertical-rl; transform: rotate(180deg); }
+  .c3-hist { height: 200px; }
+}
+/* "1v1" en la letra esténcil se lee "IVI": los modos van en Archivo. */
+.c3-mb .c3-seg button { font: 700 14.5px/1 var(--c3-font); letter-spacing: 0.02em; text-transform: none; }
+.c3-mup b { white-space: nowrap; }

@@ -45,6 +45,8 @@ const EN = {
     warframe: "Warframe",
     cs2: "Counter-Strike 2",
     cs2Short: "CS2",
+    coh3: "Company of Heroes 3",
+    coh3Short: "CoH3",
     /** El botón de la barra que abre el menú de juegos, y el que lo cierra en el teléfono. */
     menu: "Games",
     close: "Close menu",
@@ -60,9 +62,10 @@ const EN = {
       stardew: { crops: "Crops", villagers: "Villagers", predict: "Predictor" },
       warframe: { arsenal: "Arsenal", relics: "Relics", farming: "Where to farm" },
       cs2: { cases: "Cases", skins: "Skins", "trade-up": "Trade-up" },
+      coh3: { units: "Units", penetration: "Penetration", leaderboards: "Leaderboards" },
     },
     /** Las categorías del menú y de la portada (`gameGroups.ts`). */
-    groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters" },
+    groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters", rts: "RTS" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
   },
@@ -194,6 +197,10 @@ const EN = {
       cs2Cta: "Open the cases",
       cs2Skins: "skins",
       cs2Cases: "cases",
+      coh3Live: "Every unit, weapon and battlegroup, what each gun penetrates at every range, who wins each matchup and the live 1v1 to 4v4 leaderboards.",
+      coh3Cta: "Open the leaderboards",
+      coh3Units: "units",
+      coh3Weapons: "weapons",
       poe2Live: "Currency and unique prices for every league, the passive tree with build export, the item encyclopedia and every patch.",
       poe2Cta: "League prices",
       poe2Patches: "Patch notes",
@@ -280,6 +287,10 @@ const EN = {
       "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Valve Corporation. Counter-Strike " +
       "and all associated properties are trademarks or registered trademarks of Valve Corporation. Prices are " +
       "informative; Vestigo doesn't sell, trade or open anything.",
+    disclaimerRelic:
+      "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Relic Entertainment or SEGA. " +
+      "Company of Heroes is a trademark or registered trademark of SEGA Corporation. Icons and game data are " +
+      "property of Relic Entertainment. Match statistics: coh3stats.com open data. Game data: cohstats/coh3-data (MIT).",
     disclaimerBlizzard:
       "Vestigo is a fan site and isn't endorsed by or affiliated with Blizzard Entertainment. Diablo and " +
       "Diablo II: Resurrected are trademarks or registered trademarks of Blizzard Entertainment, Inc.",
@@ -343,6 +354,8 @@ const ES: typeof EN = {
     warframe: "Warframe",
     cs2: "Counter-Strike 2",
     cs2Short: "CS2",
+    coh3: "Company of Heroes 3",
+    coh3Short: "CoH3",
     menu: "Juegos",
     close: "Cerrar el menú",
     quick: {
@@ -356,8 +369,9 @@ const ES: typeof EN = {
       stardew: { crops: "Cultivos", villagers: "Aldeanos", predict: "Predictor" },
       warframe: { arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear" },
       cs2: { cases: "Cajas", skins: "Skins", "trade-up": "Trade-up" },
+      coh3: { units: "Unidades", penetration: "Penetración", leaderboards: "Ranking" },
     },
-    groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters" },
+    groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters", rts: "Estrategia (RTS)" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
   },
@@ -470,6 +484,10 @@ const ES: typeof EN = {
       cs2Cta: "Ver las cajas",
       cs2Skins: "skins",
       cs2Cases: "cajas",
+      coh3Live: "Cada unidad, arma y battlegroup, cuánto penetra cada cañón a cada distancia, quién gana cada cruce y el ranking en vivo de 1v1 a 4v4.",
+      coh3Cta: "Ver el ranking",
+      coh3Units: "unidades",
+      coh3Weapons: "armas",
       poe2Live: "Los precios de monedas y únicos de cada liga, el árbol de pasivas con exportación de build, la enciclopedia de objetos y cada parche.",
       poe2Cta: "Precios de la liga",
       poe2Patches: "Parches",
@@ -550,6 +568,10 @@ const ES: typeof EN = {
       "Vestigo es un sitio de fans no oficial y no está avalado por Valve Corporation ni afiliado a ella. Counter-Strike " +
       "y todas sus propiedades asociadas son marcas comerciales o marcas registradas de Valve Corporation. Los precios " +
       "son informativos; Vestigo no vende, intercambia ni abre nada.",
+    disclaimerRelic:
+      "Vestigo es un sitio de fans no oficial y no está avalado por Relic Entertainment ni SEGA ni afiliado a ellas. " +
+      "Company of Heroes es una marca comercial o registrada de SEGA Corporation. Los íconos y datos del juego son " +
+      "propiedad de Relic Entertainment. Estadísticas de partidas: datos abiertos de coh3stats.com. Datos del juego: cohstats/coh3-data (MIT).",
     disclaimerBlizzard:
       "Vestigo es un sitio de fans y no está avalado por Blizzard Entertainment ni afiliado a ella. Diablo y " +
       "Diablo II: Resurrected son marcas comerciales o marcas registradas de Blizzard Entertainment, Inc.",

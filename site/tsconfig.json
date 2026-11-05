@@ -25,6 +25,8 @@
       "@stardew/*": ["../games/stardew/data/*"],
       "@warframe/*": ["../games/warframe/data/*"],
       "@cs2/*": ["../games/cs2/data/*"],
+      "@coh3/*": ["../games/coh3/data/*"],
+      "@coh3stats/*": ["../games/coh3/stats/*"],
       "@cs2prices/*": ["../games/cs2/prices/*"]
     }
   },

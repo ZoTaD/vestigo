@@ -1,0 +1,22 @@
+{
+  "_nota": "Pelotones de multijugador que nada enlaza en coh3-data (salen por árboles de estado o llamadas que no se exportan, o se arman al construir un emplazamiento) y que site_data.py no alcanza recorriendo desde el cuartel. Criterio de coh3stats (explorador por facción, 2026-11-04): todo sbps de infantry/team_weapons/vehicles/emplacements de la raza de multijugador (british_africa para los británicos), con nombre, menos los recuperables, los de misión (_sp) y una lista de no usados (Nashorn, Bison, Pak 43, SAS, Bofors remolcado, médicos, Panzer III L/G/37 mm... quedan afuera). Acá van sólo los slugs que faltaban; facción = la de la raza del pelotón.",
+  "american": [
+    "at_gun_57mm_paradrop_us", "halftrack_medical_us", "hmg_50cal_us", "hmg_fighting_position_us",
+    "howitzer_105mm_us", "pack_howitzer_75mm_us", "partisan_tunnel_constructed_us", "partisan_tunnel_main_us",
+    "tourelle_emplacement_us"
+  ],
+  "british": [
+    "at_gun_17pdr_mobile_africa_uk", "at_gun_17pdr_pheasant_emplacement_uk", "australian_supplytruck_africa_uk",
+    "bofors_emplacement_afrika_uk", "crusader_57mm_africa_uk", "cwt_15_quad_mount_africa_uk",
+    "cwt_15_truck_medical_africa_uk", "cwt_lrdg_truck_2pdr_africa_uk", "hmg_nest_africa_uk", "sherman_africa_uk"
+  ],
+  "german": [
+    "anti_tank_bunker_ger", "assault_grenadier_ger", "guastatori_ger", "halftrack_medical_ger", "halftrack_stummel_ger",
+    "hmg_mg42_bunker_ger", "howitzer_obice_210_ger", "jagdpanzer_iv_sdkfz_162_ger", "pantherturm_emplacement_ger",
+    "stug_iii_d_ger", "truck_2_5_cargo_ger"
+  ],
+  "dak": [
+    "at_gun_88mm_mobile_ak", "goliath_ak", "halftrack_250_20mm_ak", "halftrack_250_mortar_ak", "l6_40_flame_ak",
+    "panzer_iii_75mm_ak", "panzer_iv_ak", "point_fortification_20mm_aa_ak", "stug_iii_ak"
+  ]
+}

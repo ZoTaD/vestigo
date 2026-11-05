@@ -19,6 +19,7 @@ import { loadPatch as loadTrPatch, peekPatch as peekTrPatch } from "./terraria/p
 import { findMonster as findSdMonster, findVillager as findSdVillager, loadItem as loadSdItem, loadMines as loadSdMines, loadVillagers as loadSdVillagers, HAS as SD_HAS, peekItem as peekSdItem, peekMines as peekSdMines, peekVillagers as peekSdVillagers } from "./stardew/data";
 import { isDataTab as isWfTab, loadFicha as loadWfFicha, peekFicha as peekWfFicha } from "./warframe/data";
 import { isDataTab as isCs2Tab, loadFicha as loadCs2Ficha, peekFicha as peekCs2Ficha } from "./cs2/data";
+import { isDataTab as isCoh3Tab, loadFicha as loadCoh3Ficha, peekFicha as peekCoh3Ficha } from "./coh3/data";
 import { loadPatchIndex, peekPatchIndex } from "./cs2/patches/data";
 import { patchName } from "./cs2/patches/names";
 import { loadIndex as loadEsIndex, peekIndex as peekEsIndex } from "./cs2/esports/teams/data";
@@ -194,6 +195,11 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
   if (route.view === "cs2" && route.c2Section === "patches" && route.detail) {
     const e = peekPatchIndex()?.find((x) => x.slug === route.detail);
     return e ? patchName(e, lang) : null;
+  }
+  // Una ficha del explorador de CoH3 (unidad, arma o battlegroup): el nombre en el idioma, de su archivo.
+  if (route.view === "coh3" && isCoh3Tab(route.c3Section) && route.detail) {
+    const f = peekCoh3Ficha<{ name: { en: string; es?: string | null } | null }>(route.c3Section, route.detail);
+    return f?.name ? (lang === "es" && f.name.es) || f.name.en : null;
   }
   // Una ficha de CS2: el nombre (en inglés en los dos idiomas) y la fase, de su archivo.
   if (route.view === "cs2" && isCs2Tab(route.c2Section) && route.detail) {
@@ -372,6 +378,12 @@ export default function PageMeta({ route }: { route: Route }) {
     if (route.view === "cs2" && route.c2Section === "patches" && route.detail && !peekPatchIndex()) {
       let vivo = true;
       loadPatchIndex().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      return () => { vivo = false; };
+    }
+    // Y para una ficha del explorador de CoH3: su archivo.
+    if (route.view === "coh3" && isCoh3Tab(route.c3Section) && route.detail && peekCoh3Ficha(route.c3Section, route.detail) === undefined) {
+      let vivo = true;
+      loadCoh3Ficha(route.c3Section, route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una ficha de CS2: su archivo.

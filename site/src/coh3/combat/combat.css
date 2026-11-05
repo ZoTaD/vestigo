@@ -1,0 +1,76 @@
+/* Penetración y DPS de CoH3 (2026-11-04): los selectores, el duelo, los tres lados, el gráfico y los counters. */
+.c3-picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; margin-bottom: 16px; }
+.c3-pick { display: grid; gap: 4px; min-width: 0; }
+.c3-pick > span { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c3-dim); }
+.c3-pick.is-wide { grid-column: 1 / -1; }
+.c3-pick select { width: 100%; }
+.c3-dval { color: var(--c3-brass); font: 800 18px/1 var(--c3-stencil); letter-spacing: 0.04em; margin-left: 6px; text-transform: none; }
+.c3-check { display: flex; gap: 8px; align-items: center; font-size: 13.5px; color: var(--c3-dim); }
+.c3-check input { accent-color: var(--c3-brass); }
+.c3-vet button { padding: 5px 10px; font-size: 14px; }
+
+.c3-duel { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; align-items: center; margin: 6px 0 14px; }
+.c3-duel figure { margin: 0; display: flex; align-items: center; gap: 12px; min-width: 0; }
+.c3-duel figure:last-child { flex-direction: row-reverse; text-align: right; }
+.c3-duel .c3-icon { border: 1px solid var(--c3-line2); }
+.c3-duel figcaption { font: 800 20px/1.05 var(--c3-stencil); letter-spacing: 0.03em; text-transform: uppercase; min-width: 0; }
+.c3-duel small { display: block; font: 400 13px/1.3 var(--c3-font); text-transform: none; letter-spacing: 0; color: var(--c3-dim); margin-top: 4px; }
+.c3-vs { font: 900 22px/1 var(--c3-stencil); color: var(--c3-brass2); text-transform: uppercase; }
+
+.c3-sides3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.c3-side { display: grid; gap: 2px; align-content: start; padding: 10px 12px; background: var(--c3-well); border: 1px solid var(--c3-line); min-width: 0; }
+.c3-side-h { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c3-dim); }
+.c3-side-n { font: 900 44px/1 var(--c3-stencil); margin: 2px 0; }
+.c3-side.is-full .c3-side-n { color: var(--c3-up); }
+.c3-side.is-low .c3-side-n { color: var(--c3-down); }
+.c3-side.is-out { opacity: 0.6; }
+.c3-side-l { font-size: 13px; }
+
+.c3-chart { display: block; width: 100%; height: auto; margin-top: 14px; background: #101109; border: 1px solid var(--c3-line); }
+.c3-chart-grid { stroke: #2b2f20; }
+.c3-chart-ax { font: 11px var(--c3-font); fill: var(--c3-dim); }
+.c3-chart-line { fill: none; stroke-width: 2.6; stroke-linejoin: round; }
+.c3-chart-line.is-s0 { stroke: var(--c3-text); }
+.c3-chart-line.is-s1 { stroke: var(--c3-brass); }
+.c3-chart-line.is-s2 { stroke: var(--c3-down); }
+.c3-chart-line.is-a { stroke: var(--c3-brass); }
+.c3-chart-line.is-b { stroke: #8fb4d0; }
+.c3-chart-cursor { stroke: var(--c3-brass); stroke-dasharray: 3 3; }
+.c3-legend { font-size: 12.5px; color: var(--c3-dim); margin: 8px 0 6px; }
+.c3-legend i { display: inline-block; width: 16px; height: 3px; vertical-align: middle; margin: 0 5px 0 10px; }
+.c3-legend i:first-child { margin-left: 0; }
+.c3-legend i.is-s0 { background: var(--c3-text); }
+.c3-legend i.is-s1 { background: var(--c3-brass); }
+.c3-legend i.is-s2 { background: var(--c3-down); }
+.c3-legend i.is-a { background: var(--c3-brass); }
+.c3-legend i.is-b { background: #8fb4d0; }
+
+.c3-rank { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.c3-rank li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px; }
+.c3-rank-i { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 10px; align-items: center; width: 100%; padding: 7px 10px; font: inherit; color: var(--c3-text); text-align: left; background: var(--c3-well); border: 1px solid var(--c3-line); cursor: pointer; }
+.c3-rank-i:hover { border-color: var(--c3-brass2); }
+.c3-rank-i > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c3-rank-i b { font: 900 20px/1 var(--c3-stencil); }
+.c3-rank-u { display: grid; place-items: center; width: 34px; background: var(--c3-well); border: 1px solid var(--c3-line); color: var(--c3-dim); }
+.c3-rank-u:hover { color: var(--c3-brass); }
+
+.c3-grid2.is-even { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.c3-dpscard { display: grid; gap: 12px; align-content: start; }
+.c3-dpshead { display: flex; gap: 12px; align-items: center; }
+.c3-dpshead > div { display: grid; gap: 4px; }
+.c3-dpsname { font: 800 22px/1.05 var(--c3-stencil); letter-spacing: 0.03em; text-transform: uppercase; }
+.c3-dpsname:hover { color: var(--c3-brass); }
+.c3-wlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.c3-wlist li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-bottom: 1px solid #2a2e20; }
+
+@media (max-width: 900px) {
+  .c3-grid2.is-even { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .c3-picks { grid-template-columns: minmax(0, 1fr); }
+  .c3-duel figcaption { font-size: 15px; }
+  .c3-duel .c3-icon { width: 60px; height: 60px; }
+  .c3-side { padding: 8px; }
+  .c3-side-n { font-size: 30px; }
+  .c3-side-l { font-size: 12px; }
+}

@@ -25,6 +25,7 @@ import { loadBundles as loadSdBundles, loadCalendar as loadSdCalendar, loadCrops
 import { loadHome as loadSdHome } from "./stardew/homeData";
 import { isDataTab as isWfTab, loadFicha as loadWfFicha, loadList as loadWfList } from "./warframe/data";
 import { preloadRoute as preloadCs2Route } from "./cs2/data";
+import { preloadRoute as preloadCoh3Route } from "./coh3/data";
 import { preloadFarmingRoute } from "./rust/farming/data";
 import { preloadPatchesRoute } from "./rust/patches/data";
 import { preloadMonumentsRoute } from "./rust/monuments/data";
@@ -85,6 +86,11 @@ async function preload(route: Route): Promise<void> {
   // esto la página sale con "cargando…" (`isCs2LoadingPage`).
   if (route.view === "cs2") {
     await quiet(preloadCs2Route(route));
+    return;
+  }
+  // Company of Heroes 3 (2026-11-04): la lista o la ficha y lo que pida la pestaña (`coh3/data.ts`).
+  if (route.view === "coh3") {
+    await quiet(preloadCoh3Route(route));
     return;
   }
   if (route.view !== "deadlock") return;

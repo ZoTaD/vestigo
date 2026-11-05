@@ -1,6 +1,6 @@
 import type { RustPage } from "./rust/sitemapPages";
 import { DLE_RANKING_OPEN } from "./dle/modes";
-import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, CS2_SEGMENT, CS2_SECTIONS, CS2_DETAIL_SECTIONS, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, CS2_SEGMENT, CS2_SECTIONS, CS2_DETAIL_SECTIONS, COH3_SEGMENT, COH3_SECTIONS, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -134,6 +134,24 @@ export interface Cs2SitemapData {
   grenades?: { map: string; name: string }[];
 }
 
+/** Una ficha de CoH3 con su nombre en los dos idiomas. */
+export interface Coh3Named {
+  slug: string;
+  name: { en: string; es: string };
+}
+/**
+ * Lo que el sitemap necesita de Company of Heroes 3 (2026-11-04): el sello de `meta.json` y las fichas de cada pestaña
+ * del explorador. Jugadores y partidas no van: son infinitas y no se prerenderizan.
+ */
+export interface Coh3SitemapData {
+  generatedAt?: string;
+  units: Coh3Named[];
+  weapons: Coh3Named[];
+  battlegroups: Coh3Named[];
+  maps: Coh3Named[];
+  patches: Coh3Named[];
+}
+
 /** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
 export interface RustSitemapData {
   build: number;
@@ -213,11 +231,13 @@ export interface SitemapData {
   wf?: WarframeSitemapData;
   /** CS2. Opcional por lo mismo. */
   c2?: Cs2SitemapData;
+  /** Company of Heroes 3. Opcional por lo mismo. */
+  c3?: Coh3SitemapData;
   /**
    * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
    * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
    */
-  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string; cs2?: string };
+  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string; cs2?: string; coh3?: string };
 }
 
 /**
@@ -228,7 +248,7 @@ export interface SitemapData {
  * con las fichas en el sitemap de su juego, así que Search Console no decía cuántas de las que importan estaban
  * indexadas. El de cada juego se queda con sus fichas y sus ediciones de parches.
  */
-export const SITEMAP_GROUPS = ["main", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe", "cs2"] as const;
+export const SITEMAP_GROUPS = ["main", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe", "cs2", "coh3"] as const;
 export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];
 
 function sitemapGroup(path: string): SitemapGroup {
@@ -241,6 +261,7 @@ function sitemapGroup(path: string): SitemapGroup {
   if (game === STARDEW_SEGMENT) return "stardew";
   if (game === WF_SEGMENT) return "warframe";
   if (game === CS2_SEGMENT) return "cs2";
+  if (game === COH3_SEGMENT) return "coh3";
   return game === "deadlock" || game === "poe2" || game === "valheim" || game === "d2r" ? game : "main";
 }
 
@@ -319,6 +340,7 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
   if (game === WF_SEGMENT) return day(data.dates?.warframe);
   // CS2: la fecha del catálogo. Los precios cambian todos los días y no mueven el `lastmod` (si no, cambiaría en todas).
   if (game === CS2_SEGMENT) return day(data.dates?.cs2);
+  if (game === COH3_SEGMENT) return day(data.dates?.coh3);
   if (game === RUST_SEGMENT) {
     // Una ficha con fecha propia (un parche) va con la suya, y su pestaña con la más nueva de sus fichas o la de los
     // datos, la que sea más reciente. Lo demás, con la fecha de los datos de Rust.
@@ -507,6 +529,15 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const x of data.c2.esports?.tours ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "esports", detail: x.slug }));
       // Granadas: una página por mapa.
       for (const x of data.c2.grenades ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "grenades", detail: x.map }));
+    }
+    // Company of Heroes 3 (2026-11-04): la portada, las pestañas (Jugadores es el buscador; Partidas no tiene página sin
+    // número) y una ficha por unidad, arma, battlegroup, mapa y parche. Las fichas de jugador y partida no van.
+    if (data.c3) {
+      paths.push(routePath({ ...base, lang, view: "coh3", c3Section: "home" }));
+      for (const s of COH3_SECTIONS) if (s !== "matches") paths.push(routePath({ ...base, lang, view: "coh3", c3Section: s }));
+      for (const s of ["units", "weapons", "battlegroups", "maps", "patches"] as const) {
+        for (const f of data.c3[s]) paths.push(routePath({ ...base, lang, view: "coh3", c3Section: s, detail: f.slug }));
+      }
     }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).
     if (data.rs) {

@@ -2,6 +2,7 @@ import { TERRARIA_COPY, type TerrariaHas } from "./terrariaCopy";
 import { STARDEW_COPY } from "./stardewCopy";
 import { WF_COPY } from "./warframeCopy";
 import { CS2_COPY } from "./cs2Copy";
+import { COH3_COPY } from "./coh3Copy";
 import { isPatchName, patchName } from "./cs2/patches/names";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
@@ -207,6 +208,13 @@ export function metaFor(
     }
     return c.seo[sec];
   }
+  // Company of Heroes 3 (2026-11-04): la portada, cada pestaña y, con nombre, la ficha.
+  if (route.view === "coh3") {
+    const c = COH3_COPY[lang];
+    const sec = route.c3Section ?? "home";
+    if (sec !== "home" && route.detail && detailName) return c.detailSeo(sec, detailName);
+    return c.seo[sec];
+  }
   // CS2 (2026-11-03): la portada, cada pestaña y, con nombre, la ficha (skin, caja o colección).
   if (route.view === "cs2") {
     const c = CS2_COPY[lang];
@@ -281,6 +289,9 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     for (const e of data.c2?.[tab] ?? []) out[`c2-${tab}/${e.slug}`] = e.name;
   }
   for (const e of data.c2?.patches ?? []) out[`c2-patches/${e.slug}`] = patchName(e, lang);
+  for (const tab of ["units", "weapons", "battlegroups", "maps", "patches"] as const) {
+    for (const e of data.c3?.[tab] ?? []) out[`c3-${tab}/${e.slug}`] = e.name[lang] || e.name.en;
+  }
   for (const e of data.c2?.esports?.teams ?? []) out[`c2-teams/${e.slug}`] = e.name;
   for (const e of data.c2?.esports?.players ?? []) out[`c2-players/${e.slug}`] = e.id;
   for (const e of data.c2?.esports?.tours ?? []) out[`c2-esports/${e.slug}`] = e.name;
@@ -516,6 +527,20 @@ export function jsonLdFor(
     }
     return out;
   }
+  // Company of Heroes 3 (2026-11-04): migas hasta la ficha, y la portada es una aplicación web gratuita.
+  if (route.view === "coh3") {
+    const copy = COH3_COPY[lang];
+    const sec = route.c3Section ?? "home";
+    const trail = [{ name: brand, url: home }, { name: "Company of Heroes 3", url: routeUrl({ ...route, c3Section: "home", detail: undefined }) }];
+    if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    if (sec !== "home") return trail.length > 2 ? [crumbs(trail)] : [];
+    return [{
+      "@context": "https://schema.org", "@type": "WebApplication", name: copy.home.h1, description: page.description,
+      url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Company of Heroes 3" },
+    }];
+  }
   // CS2 (2026-11-03): migas hasta la ficha, y la portada es una aplicación web gratuita (precios y valor esperado).
   if (route.view === "cs2") {
     const copy = CS2_COPY[lang];
@@ -660,7 +685,9 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
                         ? `wf-${route.wfSection ?? "home"}/${route.detail}`
                         : route.view === "cs2"
                           ? `c2-${route.c2Section ?? "home"}/${route.detail}`
-                          : null;
+                          : route.view === "coh3"
+                            ? `c3-${route.c3Section ?? "home"}/${route.detail}`
+                            : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
     const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""), trHas.get(detailKey ?? ""), sdHas.get(detailKey ?? ""), wfHead.get(detailKey ?? ""));
 

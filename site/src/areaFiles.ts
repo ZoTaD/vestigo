@@ -1,4 +1,4 @@
-import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, ValheimSection, View, WfSection, Cs2Section } from "./route";
+import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, ValheimSection, View, WfSection, Cs2Section, Coh3Section } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -21,6 +21,7 @@ export const AREA_FILES: Partial<Record<View, string>> = {
   stardew: "src/Stardew.tsx",
   warframe: "src/Warframe.tsx",
   cs2: "src/Cs2.tsx",
+  coh3: "src/Coh3.tsx",
   privacy: "src/Privacy.tsx",
   terms: "src/Terms.tsx",
 };
@@ -160,6 +161,27 @@ export const CS2_TAB_FILES: Partial<Record<Cs2Section, string>> = {
   crosshairs: "src/cs2/crosshairs/Cs2Crosshairs.tsx",
 };
 
+/**
+ * Las pestañas de Company of Heroes 3 que viajan en su propio chunk, igual que `TABS` en `Coh3.tsx` (2026-11-04; lo
+ * cuida `test/areas.test.ts`). La portada viene con el área.
+ */
+export const COH3_TAB_FILES: Partial<Record<Coh3Section, string>> = {
+  leaderboards: "src/coh3/leaderboards/Coh3Leaderboards.tsx",
+  players: "src/coh3/players/Coh3Players.tsx",
+  matches: "src/coh3/matches/Coh3Matches.tsx",
+  units: "src/coh3/explorer/Coh3Units.tsx",
+  weapons: "src/coh3/explorer/Coh3Weapons.tsx",
+  battlegroups: "src/coh3/explorer/Coh3Battlegroups.tsx",
+  penetration: "src/coh3/combat/Coh3Penetration.tsx",
+  dps: "src/coh3/combat/Coh3Dps.tsx",
+  stats: "src/coh3/stats/Coh3Stats.tsx",
+  "tier-list": "src/coh3/stats/Coh3TierList.tsx",
+  patches: "src/coh3/more/Coh3Patches.tsx",
+  maps: "src/coh3/more/Coh3Maps.tsx",
+  challenges: "src/coh3/more/Coh3Challenges.tsx",
+  "final-stand": "src/coh3/more/Coh3FinalStand.tsx",
+};
+
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */
 export const RUST_TAB_FILES: Partial<Record<RustSection, string>> = {
   items: "src/rust/items/RustItems.tsx",
@@ -208,6 +230,8 @@ export function filesFor(route: Route): string[] {
                   ? WF_TAB_FILES[route.wfSection ?? "home"]
                   : route.view === "cs2"
                     ? CS2_TAB_FILES[route.c2Section ?? "home"]
+                    : route.view === "coh3"
+                    ? COH3_TAB_FILES[route.c3Section ?? "home"]
                     : undefined;
   return tab ? [area, tab] : [area];
 }

@@ -14,6 +14,8 @@ De dónde sale cada fuente (se copian a la carpeta de fuentes con el nombre del 
   - PoE2: el de la barra de pathofexile2.com (`/protected/image/poe2/layout/navbar/logo-2x.webp`); el de Steam es el
     de la expansión, con placa.
 
+  - Company of Heroes 3: el `logo.png` de la caché de Steam (1677280).
+
 Un juego nuevo: su fuente, una línea en `CFG` y sus números en `GAME_LOGOS`.
 """
 import glob, json, math, os, sys
@@ -61,6 +63,8 @@ CFG = {
     "d2r": lambda a: crop(smooth(despeckle(255 * ((a[..., 3] > 200) & (lum(a) < 70)))), 0, 0, a.shape[1], 250),
     # PoE2: lo claro del emblema, recortado a "PATH OF EXILE" (el emblema entero queda diminuto a 40 px).
     "poe2": lambda a: crop(smooth(255 * ((a[..., 3] > 230) & (lum(a) > 90))), 200, 118, 530, 288),
+    # Company of Heroes 3 (2026-11-04): el logo blanco de Steam (1677280), con las motas de desgaste rellenas.
+    "coh3": lambda a: smooth(despeckle(255 * (a[..., 3] > 90))),
 }
 
 
@@ -77,6 +81,9 @@ if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     sizes = {}
     for name in CFG:
+        # Sólo los que tienen fuente en la carpeta: así se puede regenerar uno solo.
+        if not glob.glob(os.path.join(SRC, name + ".*")):
+            continue
         m = mask(name)
         r = m.width / m.height
         h = min(MAX_H, math.sqrt(AREA / r))
