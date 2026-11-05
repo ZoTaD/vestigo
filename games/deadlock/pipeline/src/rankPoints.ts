@@ -1,5 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { writeFileSync, mkdirSync } from "node:fs";
+import { currentSeason } from "./seasons";
 import {
   connect,
   listPartitions,
@@ -127,12 +128,22 @@ const OUT_DIR = "../data";
 const OUT = `${OUT_DIR}/rank-points.json`;
 /** Una semana alcanza de sobra: son un millón de partidas-jugador. */
 const WINDOW_DAYS = 7;
+/**
+ * Con menos que esto no se reescribe el archivo. Pasa los primeros días de una
+ * temporada: la ventana arranca en su inicio (las reglas cambian, la Temporada
+ * 2 paga 350 y no 300) y todavía no hay partidas. El sitio toma la base de las
+ * reglas de cada temporada y de acá sólo el extra por racha, así que el archivo
+ * anterior sigue sirviendo hasta que haya muestra.
+ */
+const MIN_MATCHES = 20_000;
 
 async function main() {
   const t0 = Date.now();
   const ahora = new Date();
   const hasta = ahora.toISOString().slice(0, 19);
-  const desde = new Date(ahora.getTime() - WINDOW_DAYS * 86_400_000).toISOString().slice(0, 19);
+  const semana = ahora.getTime() - WINDOW_DAYS * 86_400_000;
+  const inicio = currentSeason(ahora.getTime() / 1000).start * 1000;
+  const desde = new Date(Math.max(semana, inicio)).toISOString().slice(0, 19);
   const parts = await listPartitions();
   const con = await connect(":memory:");
   const ranges = await partitionRanges(con, parts, 4);
@@ -151,6 +162,10 @@ async function main() {
     })),
     { from: desde.slice(0, 10), to: hasta.slice(0, 10), generatedAt: ahora.toISOString() }
   );
+  if (file.matches < MIN_MATCHES) {
+    console.log(`puntos de rango: sólo ${file.matches} partidas-jugador desde ${file.from}; queda el archivo anterior`);
+    return;
+  }
   mkdirSync(OUT_DIR, { recursive: true });
   writeFileSync(OUT, JSON.stringify(file));
   console.log(

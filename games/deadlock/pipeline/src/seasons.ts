@@ -23,10 +23,12 @@ export interface Season {
 /** El reset de ranked del 30/7, 16:19 UTC: antes, `match_mode` 4 era otro modo. */
 const S1_START = Date.UTC(2026, 6, 30, 16, 19, 0) / 1000;
 const S2_START = Date.UTC(2026, 10, 5, 22, 0, 0) / 1000;
+/** Valve dijo "jueves 11 de marzo de 2027", sin hora: se asume la misma que el cierre de la 1. */
+const S2_END = Date.UTC(2027, 2, 11, 22, 0, 0) / 1000;
 
 export const SEASONS: Season[] = [
   { id: 1, start: S1_START, end: S2_START },
-  { id: 2, start: S2_START, end: null },
+  { id: 2, start: S2_START, end: S2_END },
 ];
 
 /**

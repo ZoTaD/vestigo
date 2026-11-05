@@ -849,7 +849,12 @@ export default function DeadlockPlayer({
             {rango && rango.badge > 0 && rango.progress != null && (
               <div className="box dl-pcard dl-pcard-climb">
                 <h2 className="box-title dl-pcard-title">{c.cards.climb}</h2>
-                <DeadlockRankCalc badge={rango.badge} progress={rango.progress} streak={rango.streak} />
+                <DeadlockRankCalc
+                  badge={rango.badge}
+                  progress={rango.progress}
+                  streak={rango.streak}
+                  at={rango.lastRankedAt}
+                />
               </div>
             )}
 
