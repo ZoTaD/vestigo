@@ -10,10 +10,12 @@ export type GameGroup = "survival" | "arpg" | "shooters" | "rts";
  * Rust y Terraria no están desde el 2026-11-02: quedaron congelados (sin actualizar), para dejar tres survival. Sus páginas siguen publicadas y en el sitemap,
  * así lo que Google ya conoce no da 404, pero no se ofrece en el menú ni en la portada. Para volver a mostrarlo, va
  * de nuevo acá y en `Home.tsx` (ver el historial de git).
+ *
+ * PoE2, Diablo II y Warframe (la categoría ARPG entera) tampoco desde el 2026-11-05: además salen del sitemap
+ * (`SITEMAP_HIDDEN` en `sitemap.ts`) y se borran el 2026-12-05 con 301 al Home.
  */
 export const GAME_GROUPS: { id: GameGroup; games: Game[] }[] = [
   { id: "survival", games: ["valheim", "zomboid", "stardew"] },
-  { id: "arpg", games: ["poe2", "d2r", "warframe"] },
   { id: "shooters", games: ["deadlock", "cs2"] },
   // RTS (2026-11-04): el género nuevo arranca con Company of Heroes 3.
   { id: "rts", games: ["coh3"] },

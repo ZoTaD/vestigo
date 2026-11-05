@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
-import { redirectsFile, ROBOTS_TXT, SITEMAP_GROUPS, sitemapFile, sitemapIndexXml, sitemapXml, type RustSitemapData, type SitemapData, type ZomboidSitemapData } from "./src/sitemap";
+import { redirectsFile, ROBOTS_TXT, SITEMAP_GROUPS, SITEMAP_HIDDEN, sitemapFile, sitemapIndexXml, sitemapXml, type RustSitemapData, type SitemapData, type ZomboidSitemapData } from "./src/sitemap";
 import { prerenderPages, renderHtml, ogImagePath, stripComments } from "./src/prerender";
 import { renderOg } from "./og/og";
 import { ogSpecs, type OgData } from "./og/pages";
@@ -683,7 +683,7 @@ function seoFiles(): Plugin {
       // `/sitemap.xml` es el índice y cada juego tiene su sitemap; las fechas
       // salen de cada página (`sitemapLastmod`), no del deploy.
       this.emitFile({ type: "asset", fileName: "sitemap.xml", source: sitemapIndexXml(data) });
-      for (const group of SITEMAP_GROUPS) {
+      for (const group of SITEMAP_GROUPS.filter((g) => !SITEMAP_HIDDEN.includes(g))) {
         this.emitFile({ type: "asset", fileName: sitemapFile(group), source: sitemapXml(data, group) });
       }
       this.emitFile({ type: "asset", fileName: "robots.txt", source: ROBOTS_TXT });

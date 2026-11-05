@@ -26,12 +26,12 @@ describe("la barra: el menú de juegos", () => {
   it("todos los juegos están en el HTML, por categoría y en orden, con su logo", () => {
     const html = render("en", "/en", "home");
     const titles = [...html.matchAll(/<p class="top-menu-title">([^<]+)</g)].map((m) => m[1]);
-    expect(titles).toEqual(["Survival &amp; sandbox", "ARPG", "Shooters", "RTS"]);
+    expect(titles).toEqual(["Survival &amp; sandbox", "Shooters", "RTS"]);
     const logos = [...html.matchAll(/url\(\/logos\/([a-z0-9]+)\.(?:png|svg)\)/g)].map((m) => m[1]);
     expect(logos).toEqual(GAME_GROUPS.flatMap((g) => g.games));
     for (const game of Object.keys(GAME_LOGOS)) expect(existsSync(`public/logos/${logoFile(game as Game)}`)).toBe(true);
     // El nombre del juego queda escrito para el lector de pantalla y para Google.
-    expect(html).toContain('<span class="visually-hidden">Diablo II: Resurrected</span>');
+    expect(html).toContain('<span class="visually-hidden">Counter-Strike 2</span>');
   });
 
   it("Rust y Terraria, congelados, no se ofrecen en el menú, pero sus páginas siguen andando", () => {
@@ -42,9 +42,14 @@ describe("la barra: el menú de juegos", () => {
     expect(render("en", "/en/rust", "rust")).toMatch(/class="top-here"[^>]*>Rust</);
   });
 
+  it("PoE2, Diablo II y Warframe, escondidos desde el 2026-11-05, tampoco", () => {
+    const home = render("en", "/en", "home");
+    for (const logo of ["poe2.png", "d2r.png", "warframe.svg"]) expect(home).not.toContain(`/logos/${logo}`);
+    expect(home).not.toMatch(/href="\/en\/(poe2|d2r|warframe)/);
+  });
+
   it("los accesos directos llevan a la pestaña del juego, en el idioma de la página", () => {
-    const html = render("es", "/es/d2r", "d2r");
-    expect(html).toContain('href="/es/d2r/palabras-runicas"');
+    const html = render("es", "/es/valheim", "valheim");
     expect(html).toContain('href="/es/stardew-valley/predictor"');
     expect(html).toContain('aria-label="Valheim: Mapa"');
   });

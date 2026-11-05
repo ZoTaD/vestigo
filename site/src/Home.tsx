@@ -7,13 +7,10 @@ import { useCopy, useLang, useLocale } from "./i18n";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import vhMeta from "@valheim/meta.json";
-import d2Meta from "@d2r/meta.json";
 import pzMeta from "@zomboid/meta.json";
 import sdMeta from "@stardew/meta.json";
-import wfMeta from "@warframe/meta.json";
 import c2Meta from "@cs2/meta.json";
 import c3Meta from "@coh3/meta.json";
-import p2Patches from "@poe2/patches/index.json";
 
 /** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
 const VH_ENTRIES = Object.entries(vhMeta.counts).reduce((n, [k, v]) => (k === "biomes" || k === "bosses" ? n : n + v), 0);
@@ -201,9 +198,6 @@ export default function Home({
             [
               ["valheim", copy.games.valheim, copy.home.tools.vhMap, { view: "valheim", vhSection: "map" }],
               ["valheim", copy.games.valheim, copy.home.tools.vhPlanner, { view: "valheim", vhSection: "planner" }],
-              ["d2r", copy.games.diablo2, copy.home.tools.d2Drops, { view: "d2r", d2Section: "drops" }],
-              ["poe2", copy.games.poe2, copy.home.tools.p2Tree, { view: "poe2", p2Section: "tree" }],
-              ["poe2", copy.games.poe2, copy.home.tools.p2Regex, { view: "poe2", p2Section: "regex" }],
               ["deadlock", copy.games.deadlock, copy.home.tools.dlBuilder, { view: "deadlock", dlSection: "builder" }],
               ["zomboid", copy.games.zomboid, copy.home.tools.pzMap, { view: "zomboid", pzSection: "map" }],
             ] as const
@@ -308,84 +302,7 @@ export default function Home({
           </li>
         </ul>
 
-        <h3 className="home-group">{copy.games.groups.arpg}</h3>
-        <ul className="game-list">
-          {/* Path of Exile 2 salió de "Pronto" el 2026-10-11: la sección existía desde el 23/9 y la portada la seguía
-              anunciando sin enlazarla. */}
-          <li className="game-panel" data-panel="poe2">
-            <div className="game-panel-main">
-              <h4 className="game-panel-name">{copy.games.poe2}</h4>
-              <p className="game-panel-note">{copy.home.games.poe2Live}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "poe2", p2Section: "economy", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.poe2Cta}
-                  <Arrow />
-                </RouteLink>
-                <RouteLink className="game-cta is-ghost" to={{ ...route, view: "poe2", p2Section: "patches", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.poe2Patches}
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{p2Patches.editions[0]?.version ?? "—"}</b>
-                <span>{copy.home.games.poe2Latest}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(p2Patches.editions.length)}</b>
-                <span>{copy.home.games.poe2Editions}</span>
-              </p>
-            </div>
-          </li>
-
-          {/* Diablo II salió de "Pronto" el 2026-09-29, con la portada de la sección. */}
-          <li className="game-panel" data-panel="d2r">
-            <div className="game-panel-main">
-              <h4 className="game-panel-name">{copy.games.diablo2}</h4>
-              <p className="game-panel-note">{copy.home.games.d2rLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "d2r", d2Section: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.d2rCta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(d2Meta.counts.runewords)}</b>
-                <span>{copy.home.games.d2rRunewords}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(d2Meta.counts.uniques)}</b>
-                <span>{copy.home.games.d2rUniques}</span>
-              </p>
-            </div>
-          </li>
-
-          {/* Warframe entra el 2026-10-27, con la portada y el azul noche del Arsenal. */}
-          <li className="game-panel" data-panel="warframe">
-            <div className="game-panel-main">
-              <h4 className="game-panel-name">{copy.games.warframe}</h4>
-              <p className="game-panel-note">{copy.home.games.warframeLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "warframe", wfSection: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.warframeCta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(wfMeta.counts.arsenal)}</b>
-                <span>{copy.home.games.warframeArsenal}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(wfMeta.counts.mods)}</b>
-                <span>{copy.home.games.warframeMods}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
+        {/* ARPG (PoE2, Diablo II y Warframe) estuvo acá hasta el 2026-11-05: quedó escondido (ver `gameGroups.ts`). */}
 
         <h3 className="home-group">{copy.games.groups.shooters}</h3>
         <ul className="game-list">

@@ -2,7 +2,7 @@ name: aviso de parches
 
 # Una vez por semana: si alguno de los juegos sacó un parche, lo anota en un
 # issue "Parches nuevos: <juego>" para revisar los datos del sitio. Ver
-# `.github/scripts/patch-watch.mjs`. Deadlock, Rust y Terraria quedan afuera.
+# `.github/scripts/patch-watch.mjs`. Deadlock, Rust, Terraria, PoE2, Diablo II y Warframe quedan afuera.
 #
 # Semanal y no diario: estos juegos no se actualizan todos los días, y así
 # gasta casi nada de los minutos de Actions (la corrida dura segundos).
