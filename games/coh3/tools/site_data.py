@@ -21,7 +21,7 @@ Salida (contrato de docs/superpowers/specs/2026-11-04-coh3-design.md, con estos 
   `vet:[{xp, desc}]`, `bg` (battlegroup que la habilita, o null), `builtIn:[edificios]`, `upkeep` (mano de obra por
   minuto). Las unidades que nada enlaza en coh3-data se suman desde `extra_units.json` (ver `_extras`). **No va `received`**: los modificadores de precisión/daño recibido viven en árboles de estado que coh3-data
   no exporta.
-- `weapons/list.json` y `weapons/f/NN.json`: `{slug, name, faction, kind, cls, pen, dist, acc, dmg, aoe, reload,
+- `weapons/list.json` y `weapons/f/NN.json`: `{slug, name, faction, kind, icon (propio o el de su primera unidad, con `iconFromUnit`), cls, pen, dist, acc, dmg, aoe, reload,
   burst, cooldown, aim, range, usedBy}`. `name` es el de la interfaz si el arma lo tiene; si no, se arma con el
   nombre de la primera unidad que la usa + el tipo ("Panzer IV Medium Tank · Cannon") y va `nameFromUnit: true`.
   `reloadEvery` = [min, max] disparos entre recargas (`reload.frequency` crudo; 0 = recarga en cada disparo). `dist` = [cerca, medio, lejos] en metros; `pen` y `acc`
@@ -33,8 +33,8 @@ Salida (contrato de docs/superpowers/specs/2026-11-04-coh3-design.md, con estos 
   icon, desc, cp, unlocks?, abilities?}]}]}`; la lista sin `branches` ni `desc`.
 - `factions.json`: `{faccion: {name, icon, buildings:[{slug, name, icon, desc, cost, units}], battlegroups:[slugs]}}`.
 - `maps.json`: mapas de multijugador visibles en la sala: `{slug, name, desc, players, layout, size:[w,h], points:
-  [{kind, tier, x, y}], income, community}`. Minimapa: coh3-data sólo nombra los `.rrtex` del juego, no hay imagen
-  web; va `minimap: null`.
+  [{kind, tier, x, y}], income, community}`. `minimap` = `m/<slug>`: la imagen
+  la baja `images.py` a `site/public/coh3/m/` (cubre `size` entero, centrada en 0,0).
 - `challenges.json` `{daily:[...], weekly:[...]}`: `{slug, name, desc, count, merits}`.
 - `finalstand.json` `{faccion: {name, perks:[{tier, slug, name, desc, icon, levels:[{cost, desc}]}],
   technologies:[{slug, name, desc, icon, category, cp}]}}`.
@@ -784,6 +784,12 @@ def build_explorer(tag: str) -> dict:
             tipo = TIPO_ARMA.get(w["cls"]) or TIPO_ARMA.get(w["kind"]) or TIPO_ARMA["weapon"]
             w["name"] = {i: f"{dueño[i]} · {tipo[i]}" for i in ("en", "es")}
             w["nameFromUnit"] = True
+    # Pocas armas traen ícono propio (las de mejoras: MG42, bazooka…); las demás llevan el de su primera unidad.
+    icono_u = {u["slug"]: u["icon"] for u in unidades}
+    for w in armas:
+        if not w.get("icon") and w["usedBy"] and icono_u.get(w["usedBy"][0]):
+            w["icon"] = icono_u[w["usedBy"][0]]
+            w["iconFromUnit"] = True
     nombre_w = {w["slug"]: w["name"] for w in armas}
     for u in unidades:
         u["weapons"] = [{"slug": wslug[w], "name": nombre_w[wslug[w]], "count": _num(n)}
@@ -847,7 +853,7 @@ def build_maps(tag: str, loc: Loc) -> list:
             "points": [{"kind": p.get("kind"), "tier": p.get("tier"), "x": round(p["x"], 1), "y": round(p["y"], 1)}
                        for p in m.get("points", [])],
             "counts": res.get("counts"), "income": res.get("incomePerMinute"),
-            "community": bool(m.get("isCommunity")), "minimap": None,
+            "community": bool(m.get("isCommunity")), "minimap": f"m/{key}",
         })
     del datos
     free()
@@ -1025,9 +1031,10 @@ def _fila_unidad(u: dict) -> dict:
 
 
 def _fila_arma(w: dict) -> dict:
-    fila = {k: w[k] for k in ("slug", "name", "faction", "kind", "cls", "pen", "dist", "acc", "dmg", "reload",
+    fila = {k: w[k] for k in ("slug", "name", "faction", "kind", "icon", "cls", "pen", "dist", "acc", "dmg", "reload",
                               "reloadEvery", "range")} | {"aoe": w["aoe"]["radius"] if w["aoe"] else None,
-                                                          "users": len(w["usedBy"])}
+                                                          "users": len(w["usedBy"]),
+                                                          "by": w["usedBy"][0] if w["usedBy"] else None}
     if w.get("nameFromUnit"):
         fila["nameFromUnit"] = True
     return fila

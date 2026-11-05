@@ -9,6 +9,7 @@ import type { Route } from "../../route";
 import { useLang } from "../../i18n";
 import { FACTIONS, useCoh3Copy } from "../../coh3Copy";
 import { tr, type L10n } from "../data";
+import { SettledImg } from "../../SettledImg";
 import { Coh3Loading, FactionTag, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
 import { loadSummary, peekSummary, wr, type Summary } from "../stats/data";
 import { useMoreCopy } from "./copy";
@@ -26,6 +27,8 @@ export interface MapRow {
   counts: Record<string, number>;
   income: { fuel?: number; manpower?: number; munition?: number } | null;
   community?: boolean;
+  /** La imagen del mapa visto desde arriba (`/coh3/<minimap>.webp`), que cubre `size` entero centrada en 0,0. */
+  minimap?: string | null;
 }
 
 type Mod<T> = { default: T };
@@ -152,19 +155,12 @@ function MapList({ maps, route, navigate }: { maps: MapRow[]; route: Route; navi
 
 const KIND_ORDER = ["victory", "strategic", "fuel", "munitions", "starting_position"];
 
-/** El plano de puntos de un mapa, en SVG: arriba es el norte del área jugable. */
-export function MiniMap({ m, size = 360, labels = false }: { m: MapRow; size?: number; labels?: boolean }) {
-  const t = useMoreCopy();
-  const a = m.area;
-  if (!a || !a.width || !a.height) return <span className="c3-mini is-empty" style={{ width: size, height: size }} aria-hidden="true" />;
-  const W = size, H = Math.round((size * a.height) / a.width);
-  const x = (v: number) => ((v - a.minX) / a.width) * W;
-  const y = (v: number) => H - ((v - a.minY) / a.height) * H;
+/** Los puntos de un mapa (victoria, recursos, salidas) en SVG sobre `W`×`H`; `x`/`y` pasan de metros a píxeles. */
+function Points({ m, W, H, x, y, size }: { m: MapRow; W: number; H: number; x: (v: number) => number; y: (v: number) => number; size: number }) {
   const r = Math.max(2.5, size / 60);
   const pts = [...m.points].sort((p, q) => KIND_ORDER.indexOf(q.kind) - KIND_ORDER.indexOf(p.kind));
   return (
-    <svg className="c3-mini" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role={labels ? "img" : undefined} aria-hidden={labels ? undefined : true} aria-label={labels ? t.maps.planLabel : undefined}>
-      <rect width={W} height={H} className="c3-mini-bg" />
+    <>
       {pts.map((p, i) =>
         p.kind === "starting_position" ? (
           <rect key={i} x={x(p.x) - r} y={y(p.y) - r} width={r * 2} height={r * 2} className={`c3-pt is-${p.kind}`} />
@@ -174,6 +170,43 @@ export function MiniMap({ m, size = 360, labels = false }: { m: MapRow; size?: n
           <circle key={i} cx={x(p.x)} cy={y(p.y)} r={p.tier === "high" ? r * 1.4 : r} className={`c3-pt is-${p.kind}`} />
         ),
       )}
+    </>
+  );
+}
+
+/**
+ * El mapa visto desde arriba con sus puntos encima (arriba es el norte). La imagen cubre `size` entero, centrada en
+ * 0,0, como las coordenadas de los puntos. En las miniaturas de la lista (`size` < 120) va la imagen sola, que los
+ * puntos no se distinguen. Sin imagen queda el plano de puntos sobre el área jugable.
+ */
+export function MiniMap({ m, size = 360, labels = false, lazy = true }: { m: MapRow; size?: number; labels?: boolean; lazy?: boolean }) {
+  const t = useMoreCopy();
+  const [mw, mh] = m.size ?? [0, 0];
+  if (m.minimap && mw && mh) {
+    const W = size, H = Math.round((size * mh) / mw);
+    const x = (v: number) => ((v + mw / 2) / mw) * W;
+    const y = (v: number) => H - ((v + mh / 2) / mh) * H;
+    const img = { src: `/coh3/${m.minimap}.webp`, alt: labels ? t.maps.planLabel : "", width: W, height: H, className: "c3-mini-img" };
+    return (
+      <span className="c3-mini has-img" style={{ width: W, aspectRatio: `${W} / ${H}` }}>
+        {lazy ? <SettledImg {...img} /> : <img {...img} decoding="async" />}
+        {size >= 120 && (
+          <svg className="c3-mini-pts" viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
+            <Points m={m} W={W} H={H} x={x} y={y} size={size} />
+          </svg>
+        )}
+      </span>
+    );
+  }
+  const a = m.area;
+  if (!a || !a.width || !a.height) return <span className="c3-mini is-empty" style={{ width: size, height: size }} aria-hidden="true" />;
+  const W = size, H = Math.round((size * a.height) / a.width);
+  const x = (v: number) => ((v - a.minX) / a.width) * W;
+  const y = (v: number) => H - ((v - a.minY) / a.height) * H;
+  return (
+    <svg className="c3-mini" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role={labels ? "img" : undefined} aria-hidden={labels ? undefined : true} aria-label={labels ? t.maps.planLabel : undefined}>
+      <rect width={W} height={H} className="c3-mini-bg" />
+      <Points m={m} W={W} H={H} x={x} y={y} size={size} />
     </svg>
   );
 }
@@ -210,7 +243,7 @@ function MapPage({ m, route, navigate }: { m: MapRow; route: Route; navigate: Na
       <div className="c3-grid2">
         <Panel k={t.maps.plan}>
           <div className="c3-mapwrap">
-            <MiniMap m={m} size={520} labels />
+            <MiniMap m={m} size={520} labels lazy={false} />
           </div>
           <ul className="c3-maplegend">
             {legend.map((k) => (

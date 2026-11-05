@@ -180,7 +180,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
           <Panel k={t.pen.counters} lede={t.pen.countersLede(tr(tRow?.name, lang), num(d))}>
             <ol className="c3-rank">
               {counters.map(({ w, c }) => {
-                const u = units.get(((w as unknown as WeaponData).usedBy ?? [])[0] ?? "");
+                const u = units.get((w.by as string | undefined) ?? "");
                 return (
                   <li key={w.slug}>
                     <button type="button" className="c3-rank-i" onClick={() => setQ({ w: w.slug, va: "0" })}>

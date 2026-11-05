@@ -122,14 +122,14 @@ function WeaponList({ route, navigate }: { route: Route; navigate: Nav }) {
               rowHeight={58}
               items={sorted}
               render={(w) => {
-                const u = units.get(((w as unknown as WeaponData).usedBy ?? [])[0] ?? "");
+                const u = units.get((w.by as string | undefined) ?? "");
                 const to: Route = { ...route, view: "coh3", c3Section: "weapons", detail: w.slug };
                 const r = w.reload as number[] | undefined;
                 return (
                   <tr key={w.slug} className="is-link" onClick={() => navigate(to)}>
                     <td>
                       <RouteLink className="c3-nm" to={to} onNavigate={navigate}>
-                        <Icon path={u?.icon} size={40} />
+                        <Icon path={(w.icon as string | undefined) ?? u?.icon} size={40} />
                         <span className="c3-nm-t">
                           <strong>{wName(w as WeaponData)}</strong>
                           {u && <small>{tr(u.name, lang)}</small>}
@@ -209,7 +209,7 @@ function WeaponPage({ slug, route, navigate }: { slug: string; route: Route; nav
         › {w.faction ? c.factionShort[w.faction] : ""}
       </p>
       <header className="c3-ficha-head">
-        <Icon path={users[0]?.icon} size={140} lazy={false} className="c3-ficha-img" />
+        <Icon path={((w as { icon?: string | null }).icon || undefined) ?? users[0]?.icon} size={140} lazy={false} className="c3-ficha-img" />
         <div className="c3-head">
           {w.faction && <FactionTag f={w.faction} size={26} short={false} />}
           <h1 className="c3-h1">{wName(w)}</h1>
