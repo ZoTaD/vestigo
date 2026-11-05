@@ -12,9 +12,9 @@ import type { Nav } from "./ui";
 
 /** Las tarjetas de la portada, en tres grupos. */
 const GROUPS: { k: "live" | "tools" | "explorer"; tabs: Coh3Section[] }[] = [
-  { k: "live", tabs: ["leaderboards", "stats", "tier-list"] },
+  { k: "live", tabs: ["leaderboards", "ranks", "stats", "tier-list"] },
   { k: "tools", tabs: ["penetration", "dps", "patches"] },
-  { k: "explorer", tabs: ["units", "weapons", "battlegroups", "maps", "challenges", "final-stand"] },
+  { k: "explorer", tabs: ["units", "weapons", "battlegroups", "maps", "challenges", "achievements", "final-stand"] },
 ];
 
 function useMeta(): Meta | null {

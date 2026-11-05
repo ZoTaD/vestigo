@@ -9,7 +9,7 @@ import { useLang, type Lang } from "./i18n";
 import type { Coh3Section, Coh3Tab } from "./route";
 
 /** El orden de las pestañas en la barra. Jugadores y Partidas no van: se llega desde el ranking o el buscador. */
-export const COH3_TABS: Coh3Section[] = ["home", "leaderboards", "stats", "tier-list", "units", "weapons", "battlegroups", "penetration", "dps", "patches", "maps", "challenges", "final-stand"];
+export const COH3_TABS: Coh3Section[] = ["home", "leaderboards", "ranks", "stats", "tier-list", "units", "weapons", "battlegroups", "penetration", "dps", "patches", "maps", "challenges", "achievements", "final-stand"];
 
 /** Las cuatro facciones, con su clave en los datos y su emblema en `public/coh3/i/`. */
 export type Faction = "american" | "british" | "german" | "dak";
@@ -31,7 +31,7 @@ const EN = {
   tabs: {
     home: "Home", units: "Units", weapons: "Weapons", battlegroups: "Battlegroups", maps: "Maps", penetration: "Penetration",
     dps: "DPS", patches: "Patches", leaderboards: "Leaderboards", players: "Players", matches: "Matches", stats: "Stats",
-    "tier-list": "Tier list", challenges: "Challenges", "final-stand": "Final Stand",
+    "tier-list": "Tier list", challenges: "Challenges", "final-stand": "Final Stand", ranks: "Ranks", achievements: "Achievements",
   } satisfies Record<Coh3Section, string>,
   faction: { american: "US Forces", british: "British Forces", german: "Wehrmacht", dak: "Afrika Korps" } satisfies Record<Faction, string>,
   factionShort: { american: "USF", british: "British", german: "Wehrmacht", dak: "DAK" } satisfies Record<Faction, string>,
@@ -71,6 +71,8 @@ const EN = {
       patches: "What changed unit by unit between patches.",
       maps: "Every multiplayer map with its points and size.",
       challenges: "Daily and weekly challenges and their rewards.",
+      ranks: "Every league and how many players are in each, by faction and mode, with Elo and countries.",
+      achievements: "Every achievement and the share of players who have it.",
       "final-stand": "Final Stand perks, technologies and units.",
       players: "", matches: "", home: "",
     } satisfies Record<Coh3Section, string>,
@@ -90,6 +92,8 @@ const EN = {
     stats: { title: "CoH3 Stats: Faction Win Rates and Matchups", description: "Company of Heroes 3 win rate by faction, matchup, map and Elo band, from every automatch game." },
     "tier-list": { title: "CoH3 Tier List: Best Faction by Map and Elo", description: "Company of Heroes 3 faction tier list for every map and matchup, by Elo band, from every automatch game. Updated daily." },
     challenges: { title: "CoH3 Daily and Weekly Challenges", description: "Company of Heroes 3 daily and weekly challenges with their rewards." },
+    ranks: { title: "CoH3 Ranks: Leagues, Elo and Player Distribution", description: "Company of Heroes 3 ranking tiers from Brass to Challenger, the Elo for each league and how many players are in each, by faction and mode." },
+    achievements: { title: "CoH3 Achievements: Global Unlock Rates", description: "Every Company of Heroes 3 achievement with what it asks and the share of players who have unlocked it, from most common to rarest." },
     "final-stand": { title: "CoH3 Final Stand: Perks, Technologies and Units", description: "Company of Heroes 3 Final Stand perks, technologies and units by faction." },
   } satisfies Record<Coh3Section, Seo>,
   detailSeo: (sec: Coh3Tab, name: string): Seo => {
@@ -110,7 +114,7 @@ const ES: typeof EN = {
   tabs: {
     home: "Portada", units: "Unidades", weapons: "Armas", battlegroups: "Battlegroups", maps: "Mapas", penetration: "Penetración",
     dps: "DPS", patches: "Parches", leaderboards: "Ranking", players: "Jugadores", matches: "Partidas", stats: "Estadísticas",
-    "tier-list": "Tier list", challenges: "Desafíos", "final-stand": "Final Stand",
+    "tier-list": "Tier list", challenges: "Desafíos", "final-stand": "Final Stand", ranks: "Rangos", achievements: "Logros",
   },
   faction: { american: "Fuerzas de EE. UU.", british: "Fuerzas británicas", german: "Wehrmacht", dak: "Afrika Korps" },
   factionShort: { american: "EE. UU.", british: "Británicos", german: "Wehrmacht", dak: "DAK" },
@@ -150,6 +154,8 @@ const ES: typeof EN = {
       patches: "Qué cambió, unidad por unidad, entre parches.",
       maps: "Cada mapa multijugador con sus puntos y su tamaño.",
       challenges: "Los desafíos diarios y semanales y sus premios.",
+      ranks: "Cada liga y cuántos jugadores hay en cada una, por facción y modo, con ELO y países.",
+      achievements: "Todos los logros y qué parte de los jugadores tiene cada uno.",
       "final-stand": "Las mejoras, tecnologías y unidades de Final Stand.",
       players: "", matches: "", home: "",
     },
@@ -169,6 +175,8 @@ const ES: typeof EN = {
     stats: { title: "Estadísticas de CoH3: victorias por facción y cruces", description: "Porcentaje de victorias de Company of Heroes 3 por facción, cruce, mapa y banda de ELO, de cada partida de automatch." },
     "tier-list": { title: "Tier list de CoH3: la mejor facción por mapa y ELO", description: "La tier list de facciones de Company of Heroes 3 en cada mapa y cruce, por banda de ELO, de cada partida de automatch. Se actualiza a diario." },
     challenges: { title: "Desafíos diarios y semanales de CoH3", description: "Los desafíos diarios y semanales de Company of Heroes 3 con sus premios." },
+    ranks: { title: "Rangos de CoH3: ligas, ELO y jugadores por liga", description: "Las ligas de Company of Heroes 3 de Latón a Retador, el ELO de cada una y cuántos jugadores hay en cada liga, por facción y modo." },
+    achievements: { title: "Logros de CoH3: qué porcentaje los tiene", description: "Todos los logros de Company of Heroes 3 con lo que piden y qué porcentaje de los jugadores los desbloqueó, del más común al más raro." },
     "final-stand": { title: "Final Stand de CoH3: mejoras, tecnologías y unidades", description: "Las mejoras, tecnologías y unidades de Final Stand de Company of Heroes 3 por facción." },
   },
   detailSeo: (sec: Coh3Tab, name: string): Seo => {

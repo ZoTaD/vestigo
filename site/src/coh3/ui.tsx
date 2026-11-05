@@ -8,6 +8,7 @@
  */
 import { useState, type ReactNode } from "react";
 import { useLang } from "../i18n";
+import { leagueOf } from "./leagues";
 import type { Route } from "../route";
 import { SettledImg } from "../SettledImg";
 import { FACTION_ICON, useCoh3Copy, type Faction } from "../coh3Copy";
@@ -128,4 +129,12 @@ export function useSort<K extends string>(init: Sort<K>, text: readonly K[] = []
     );
   };
   return { sort, th, setSort };
+}
+
+/** La liga de un jugador (el `ranklevel` de Relic) con el tinte de su metal. Sin rango no dibuja nada. */
+export function LeagueTag({ level, small = false }: { level: number | null | undefined; small?: boolean }) {
+  const { lang } = useLang();
+  if (!level) return null;
+  const l = leagueOf(level);
+  return <span className={`c3-league is-${l.metal}${small ? " is-sm" : ""}`}>{l.name[lang]}</span>;
 }

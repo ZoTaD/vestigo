@@ -1,6 +1,6 @@
 name: publish coh3 stats
 
-# Company of Heroes 3: las estadísticas de partidas todos los días (datos abiertos de coh3stats.com, que publica el día
+# Company of Heroes 3: las estadísticas de partidas y la foto del ranking todos los días (datos abiertos de coh3stats.com, que publica el día
 # anterior a las 06:00 UTC) y los datos del juego (cohstats/coh3-data, MIT) los lunes. Diseño:
 # docs/superpowers/specs/2026-11-04-coh3-design.md.
 #
@@ -51,12 +51,17 @@ jobs:
             python games/coh3/tools/fetch.py
             python games/coh3/tools/site_data.py
             python games/coh3/tools/images.py
+            python games/coh3/tools/achievements.py
           else
             echo "no es lunes: sólo estadísticas"
           fi
 
       - name: stats
         run: python games/coh3/tools/stats.py --days 28
+
+      # La foto del ranking del día anterior (16 archivos, ~40 MB): ligas, ELO, facciones y países de la pestaña Rangos.
+      - name: ladder
+        run: python games/coh3/tools/ladder.py
 
       - name: guard
         id: guard

@@ -106,6 +106,8 @@ const EXTRA: Partial<Record<Coh3Section, (route: Route) => Promise<unknown>>> = 
   maps: () => Promise.all([import("./more/Coh3Maps").then((m) => m.loadMaps()), import("./stats/data").then((m) => m.loadSummary())]),
   challenges: () => import("./more/Coh3Challenges").then((m) => m.loadChallenges()),
   "final-stand": () => import("./more/Coh3FinalStand").then((m) => m.loadFinalStand()),
+  ranks: () => import("./stats/Coh3Ranks").then((m) => m.loadLadder()),
+  achievements: () => import("./more/Coh3Achievements").then((m) => m.loadAchievements()),
   patches: (route) => import("./more/Coh3Patches").then((m) => m.preloadPatches(route)),
 };
 

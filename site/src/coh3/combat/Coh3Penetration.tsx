@@ -25,7 +25,7 @@ type UnitFicha = UnitRow & VetData;
 export default function Coh3Penetration({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = useCombatCopy();
   const lists = useLists();
-  const [q, setQ] = useQueryState({ w: "57mm_at_gun_us", t: "tiger_ger", d: "30", va: "0", vt: "0", all: "0", mv: "0" });
+  const [q, setQ] = useQueryState({ w: "57mm_at_gun_us", t: "tiger_ger", d: "30", va: "0", vt: "0", all: "0", mv: "0", ab: "0" });
   const wFicha = useFicha<WeaponData>("weapons", q.w);
   const user = wFicha?.usedBy?.[0];
   const uFicha = useFicha<UnitFicha>("units", user);
@@ -63,7 +63,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
 
   // Counters: qué armas le entran a este objetivo de frente, y contra qué vehículos sirve esta arma.
   const counters = weapons
-    .filter((w) => isAntiTank(w as WeaponData) && !isAbilityShot(w) && (!tRow || !w.faction || SIDE[w.faction] !== SIDE[tRow.faction]))
+    .filter((w) => isAntiTank(w as WeaponData) && (q.ab === "1" || !isAbilityShot(w)) && (!tRow || !w.faction || SIDE[w.faction] !== SIDE[tRow.faction]))
     .map((w) => ({ w, c: hit(weaponStats(w as WeaponData), ts, 0, Math.min(d, (w.range as number[] | undefined)?.[1] || 60)).chance }))
     .sort((a, b) => b.c - a.c)
     .slice(0, 12);
@@ -115,6 +115,9 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
             </label>
             <label className="c3-check">
               <input type="checkbox" checked={q.all === "1"} onChange={(e) => setQ({ all: e.target.checked ? "1" : "0" })} /> {t.allWeapons}
+            </label>
+            <label className="c3-check">
+              <input type="checkbox" checked={q.ab === "1"} onChange={(e) => setQ({ ab: e.target.checked ? "1" : "0" })} /> {t.abilities}
             </label>
           </div>
           <div className="c3-duel">
@@ -185,7 +188,10 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
                   <li key={w.slug}>
                     <button type="button" className="c3-rank-i" onClick={() => setQ({ w: w.slug, va: "0" })}>
                       {w.faction && <FactionTag f={w.faction} name={false} size={20} />}
-                      <span>{wName(w as WeaponData)}</span>
+                      <span>
+                        {wName(w as WeaponData)}
+                        {isAbilityShot(w) && <em className="c3-chip c3-abil">{t.abilityTag}</em>}
+                      </span>
                       <b className={c >= 1 ? "c3-up" : c < 0.5 ? "c3-down" : ""}>{pct(c)}</b>
                     </button>
                     {u && (

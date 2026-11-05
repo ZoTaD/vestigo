@@ -13,7 +13,7 @@ import type { Route } from "../../route";
 import { useCoh3Copy, type Faction } from "../../coh3Copy";
 import type { Mode } from "../api/leaderboards";
 import type { MatchSummary, Profile, SearchResult, Standing } from "../api/relic";
-import { Coh3Loading, FactionTag, Panel, nextSort, sortRows, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, LeagueTag, Panel, nextSort, sortRows, useNum, useSort, type Nav } from "../ui";
 import {
   FACTIONS,
   MODES,
@@ -340,6 +340,7 @@ function Standings({ standings }: { standings: Standing[] }) {
                     </td>
                     <td data-l={L.elo} className="c3-lb-elo">
                       {num(s.elo)}
+                      <LeagueTag level={s.tier} small />
                     </td>
                     <td data-l={L.best}>{num(s.best)}</td>
                     <td data-l={L.wins}>{num(s.wins)}</td>

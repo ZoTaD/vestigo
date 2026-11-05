@@ -180,6 +180,8 @@ export const COH3_TAB_FILES: Partial<Record<Coh3Section, string>> = {
   maps: "src/coh3/more/Coh3Maps.tsx",
   challenges: "src/coh3/more/Coh3Challenges.tsx",
   "final-stand": "src/coh3/more/Coh3FinalStand.tsx",
+  ranks: "src/coh3/stats/Coh3Ranks.tsx",
+  achievements: "src/coh3/more/Coh3Achievements.tsx",
 };
 
 /** Las pestañas de Rust que viajan en su propio chunk, igual que `TABS` en `Rust.tsx` (2026-10-05). */
