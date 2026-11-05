@@ -130,8 +130,6 @@ export interface Cs2SitemapData {
   patches?: { slug: string; date: string; kind: "patch" | "content"; title: string }[];
   /** Las fichas de la etapa 6b (`esports/index.json`): equipos, jugadores y torneos. */
   esports?: { teams: { slug: string; name: string }[]; players: { slug: string; id: string }[]; tours: { slug: string; name: string }[] };
-  /** Granadas (2026-11-04): un mapa por página (`lineups/index.json`). */
-  grenades?: { map: string; name: string }[];
 }
 
 /** Una ficha de CoH3 con su nombre en los dos idiomas. */
@@ -527,8 +525,6 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const x of data.c2.esports?.teams ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "teams", detail: x.slug }));
       for (const x of data.c2.esports?.players ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "players", detail: x.slug }));
       for (const x of data.c2.esports?.tours ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "esports", detail: x.slug }));
-      // Granadas: una página por mapa.
-      for (const x of data.c2.grenades ?? []) paths.push(routePath({ ...base, lang, view: "cs2", c2Section: "grenades", detail: x.map }));
     }
     // Company of Heroes 3 (2026-11-04): la portada, las pestañas (Jugadores es el buscador; Partidas no tiene página sin
     // número) y una ficha por unidad, arma, battlegroup, mapa y parche. Las fichas de jugador y partida no van.

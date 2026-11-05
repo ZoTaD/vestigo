@@ -9,7 +9,7 @@ import { useLang } from "./i18n";
 import type { Cs2DataTab, Cs2Section, Cs2Tab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "market", "collections", "trade-up", "inventory", "grenades", "crosshairs", "esports", "teams", "patches"];
+export const CS2_TABS: Cs2Section[] = ["home", "skins", "cases", "market", "collections", "trade-up", "inventory", "crosshairs", "esports", "teams", "patches"];
 
 /** Las rarezas como las deja `site_data.py` (`RARITY` de `cs2.py`), de la más alta a la más baja. */
 export type Cs2Rarity = "contraband" | "extraordinary" | "covert" | "classified" | "restricted" | "milspec" | "industrial" | "consumer";
@@ -49,8 +49,6 @@ export interface Cs2Copy {
   patchSeo: (name: string, launch: boolean) => Seo;
   /** Las fichas de la etapa 6b: un equipo, un jugador y un torneo, por su nombre. */
   esSeo: { teams: (name: string) => Seo; players: (name: string) => Seo; esports: (name: string) => Seo };
-  /** Las granadas de un mapa ("Mirage"). */
-  grSeo: (map: string) => Seo;
   rarity: Record<Cs2Rarity, string>;
   wear: [string, string, string, string, string];
   cat: Record<Cs2Cat, string>;
@@ -313,7 +311,7 @@ export interface Cs2Copy {
 }
 
 const EN: Cs2Copy = {
-  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory", market: "Market", patches: "Patches", esports: "Tournaments", teams: "Teams", players: "Players", grenades: "Grenades", crosshairs: "Crosshairs" },
+  tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory", market: "Market", patches: "Patches", esports: "Tournaments", teams: "Teams", players: "Players", crosshairs: "Crosshairs" },
   loading: "Loading…",
   loadError: "Couldn't load this page.",
   retry: "Retry",
@@ -328,11 +326,9 @@ const EN: Cs2Copy = {
     patches: { title: "CS2 patch notes: every update", description: "Every CS2 update since the Limited Test, change by change: what's new, what changed and what got fixed, with the maps, weapons and cases it names." },
     market: { title: "CS2 skin prices going up and down", description: "Which CS2 skins and cases are going up and down in price this week, and which sell the most, from real Skinport sales." },
     inventory: { title: "CS2 inventory value checker", description: "How much is your CS2 inventory worth? Paste your Steam profile and see every item with today's price, grouped by type. Free, no login." },
-    grenades: { title: "CS2 grenade lineups: smokes, molotovs & flashes", description: "Every CS2 smoke, molotov and flash lineup for each Active Duty map on the real radar: where to stand, where to aim, how to throw and the setpos to practice." },
     crosshairs: { title: "CS2 crosshair generator & sensitivity converter", description: "Make your CS2 crosshair and copy its share code or console commands, convert old CSGO codes, and convert your sensitivity to Valorant, Deadlock, Apex and more." },
     "trade-up": { title: "CS2 trade-up calculator: odds, floats & profit", description: "Free CS2 trade-up calculator: the odds, exact float and price of every outcome, expected profit after fees, knife trade-ups and a reverse calculator." },
   },
-  grSeo: (m) => ({ title: `${m} grenade lineups: smokes, molotovs & flashes`, description: clip(`Every ${m} smoke, molotov and flash lineup in CS2 on the real radar: where to stand, where to aim, how to throw and the setpos to practice it.`) }),
   detailSeo: {
     skins: (n) => ({ title: `${n} price, float & cases`, description: clip(`${n}: price in every wear (normal, StatTrak and Souvenir), float range, rarity and the cases and collections it drops from.`) }),
     cases: (n) => ({ title: `${n} odds & expected value`, description: clip(`${n}: every skin inside with its price in each wear, the odds of each rarity, the knives and what opening it returns on average.`) }),
@@ -370,7 +366,6 @@ const EN: Cs2Copy = {
       esports: () => "Live tournament with the stream, matches in your time zone and Valve's ranking explained.",
       teams: () => "Every ranked team: roster, ranking history, titles and which maps it wins, side by side.",
       players: () => "The players of the top 30 teams.",
-      grenades: () => "Smokes, molotovs and flashes for every map on the real radar: where to stand, where to aim and how to throw.",
       crosshairs: () => "Make your crosshair and copy its code, and convert your sensitivity to other games.",
     },
     pricesOf: (d) => `Prices of ${d}`,
@@ -634,7 +629,7 @@ const EN: Cs2Copy = {
 };
 
 const ES: Cs2Copy = {
-  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario", market: "Mercado", patches: "Parches", esports: "Torneos", teams: "Equipos", players: "Jugadores", grenades: "Granadas", crosshairs: "Miras" },
+  tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario", market: "Mercado", patches: "Parches", esports: "Torneos", teams: "Equipos", players: "Jugadores", crosshairs: "Miras" },
   loading: "Cargando…",
   loadError: "No se pudo cargar esta página.",
   retry: "Reintentar",
@@ -649,7 +644,6 @@ const ES: Cs2Copy = {
     patches: { title: "Parches de CS2: todas las actualizaciones", description: "Cada actualización de CS2 desde el Limited Test, cambio por cambio: qué es nuevo, qué cambió y qué se arregló, con los mapas, armas y cajas que nombra." },
     market: { title: "Skins de CS2 que suben y bajan de precio", description: "Qué skins y cajas de CS2 suben y bajan de precio esta semana, y cuáles se venden más, con ventas reales en Skinport." },
     inventory: { title: "Cuánto vale tu inventario de CS2", description: "¿Cuánto vale tu inventario de CS2? Pegá tu perfil de Steam y mirá cada objeto con el precio de hoy, agrupado por tipo. Gratis y sin iniciar sesión." },
-    grenades: { title: "Granadas de CS2: humos, molotovs y flashes", description: "Todos los lineups de humos, molotovs y flashes de CS2 en cada mapa del Active Duty, sobre el radar real: dónde pararte, adónde apuntar, cómo tirar y el setpos." },
     crosshairs: { title: "Generador de mira y conversor de sensibilidad de CS2", description: "Armá tu mira de CS2 y copiá su código o los comandos de consola, pasá códigos viejos de CSGO y convertí tu sensibilidad a Valorant, Deadlock, Apex y más." },
     "trade-up": { title: "Calculadora de trade-up de CS2: probabilidades, float y ganancia", description: "Calculadora de trade-up de CS2 gratis: probabilidad, float exacto y precio de cada resultado, ganancia esperada después de comisiones, cuchillos y calculadora inversa." },
   },
@@ -663,7 +657,6 @@ const ES: Cs2Copy = {
     players: (n) => ({ title: `${n}: jugador de CS2, equipo y rol`, description: clip(`${n}, jugador profesional de CS2: nacionalidad, edad, roles, equipo actual y premios.`) }),
     esports: (n) => ({ title: `${n}: partidos y resultados de CS2`, description: clip(`${n} en CS2: fechas, premios, equipos y cada partido con sus mapas y las rondas ganadas defendiendo y atacando.`) }),
   },
-  grSeo: (m) => ({ title: `Granadas de ${m} en CS2: humos, molotovs y flashes`, description: clip(`Todos los humos, molotovs y flashes de ${m} en CS2 sobre el radar real: dónde pararte, adónde apuntar, cómo tirar y el setpos para practicar.`) }),
   patchSeo: (n, launch) =>
     launch
       ? { title: `${n}: actualización de CS2`, description: clip(`${n}: el anuncio de Valve para CS2, con lo que trae y las cajas y colecciones que nombra.`) }
@@ -691,7 +684,6 @@ const ES: Cs2Copy = {
       esports: () => "El torneo en vivo con su transmisión, los partidos en tu hora y el ranking de Valve explicado.",
       teams: () => "Cada equipo del ranking: plantel, cómo se movió, títulos y en qué mapas gana, de qué lado.",
       players: () => "Los jugadores de los 30 mejores equipos.",
-      grenades: () => "Humos, molotovs y flashes de cada mapa sobre el radar real: dónde pararte, adónde apuntar y cómo tirar.",
       crosshairs: () => "Armá tu mira y copiá su código, y pasá tu sensibilidad a otros juegos.",
     },
     pricesOf: (d) => `Precios del ${d}`,

@@ -10,9 +10,9 @@ import { useCs2Copy } from "../cs2Copy";
 import { loadCasePrices, loadList, loadPriceDate, peekCasePrices, peekList, peekPriceDate, type CasePrice, type CaseRow } from "./data";
 import { Img, Pct, Price, useNum, type Nav } from "./ui";
 
-const TABS: Cs2Tab[] = ["esports", "teams", "cases", "skins", "market", "trade-up", "grenades", "crosshairs", "inventory", "collections", "patches"];
+const TABS: Cs2Tab[] = ["esports", "teams", "cases", "skins", "market", "trade-up", "crosshairs", "inventory", "collections", "patches"];
 /** La imagen de cada tarjeta: la Kilowatt, la AWP | Chrome Cannon y su colección (la AK-47 | Inheritance va en la cabecera). */
-const TAB_IMG: Record<Cs2Tab, string> = { cases: "kilowatt-case", skins: "awp-chrome-cannon", collections: "the-kilowatt-collection", "trade-up": "kukri-knife-fade", inventory: "operation-breakout-weapon-case", market: "ak-47-wild-lotus", patches: "the-dust-2-collection", esports: "austin-2025-dust-ii-souvenir-package", teams: "antwerp-2022-mirage-souvenir-package", players: "antwerp-2022-inferno-souvenir-package", grenades: "austin-2025-mirage-souvenir-package", crosshairs: "awp-asiimov" };
+const TAB_IMG: Record<Cs2Tab, string> = { cases: "kilowatt-case", skins: "awp-chrome-cannon", collections: "the-kilowatt-collection", "trade-up": "kukri-knife-fade", inventory: "operation-breakout-weapon-case", market: "ak-47-wild-lotus", patches: "the-dust-2-collection", esports: "austin-2025-dust-ii-souvenir-package", teams: "antwerp-2022-mirage-souvenir-package", players: "antwerp-2022-inferno-souvenir-package", crosshairs: "awp-asiimov" };
 
 /** Las cajas con "devuelve" (precio de caja y valor esperado), de la que más devuelve a la que menos. */
 export function bestReturns(cases: CaseRow[], prices: Record<string, CasePrice>, n = 14): (CaseRow & { p: CasePrice })[] {
