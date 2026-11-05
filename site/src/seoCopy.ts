@@ -79,8 +79,8 @@ const EN = {
     home: {
       title: () => "Vestigo — Tier lists, builds and data for the games you play",
       description: () =>
-        "Tier lists, builds, guides, maps and planners for Deadlock, Path of Exile 2, Valheim, " +
-        "Diablo II: Resurrected and Project Zomboid, in English and Spanish.",
+        "Tier lists, builds, guides, maps and planners for Deadlock, Counter-Strike 2, Company of Heroes 3, " +
+        "Valheim, Stardew Valley and Project Zomboid, in English and Spanish.",
     },
     deadlock: {
       heroes: {
@@ -277,8 +277,8 @@ const ES: typeof EN = {
     home: {
       title: () => "Vestigo — Tier lists, builds y datos de tus juegos",
       description: () =>
-        "Tier lists, builds, guías, mapas y planificadores de Deadlock, Path of Exile 2, Valheim, " +
-        "Diablo II: Resurrected y Project Zomboid, en español y en inglés.",
+        "Tier lists, builds, guías, mapas y planificadores de Deadlock, Counter-Strike 2, Company of Heroes 3, " +
+        "Valheim, Stardew Valley y Project Zomboid, en español y en inglés.",
     },
     deadlock: {
       heroes: {
