@@ -1,55 +1,10 @@
 /**
- * Granadas y Miras de CS2 (2026-11-04): los datos de lineups (que cada lineup apunte a un destino de su mapa, que el
- * setpos sea un comando válido y que todo esté traducido), el conversor de sensibilidad y la lectura de códigos de mira.
+ * Miras de CS2 (2026-11-04): el conversor de sensibilidad y la lectura de códigos de mira.
  */
-import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { encodeCrosshair } from "csgo-sharecode";
-import { arrowPath } from "../src/cs2/grenades/Cs2Grenades";
-import type { LineupIndex, MapLineups } from "../src/cs2/grenades/data";
 import { fromCode, toV1 } from "../src/cs2/crosshairs/Cs2Crosshairs";
 import { cm360, convert, edpiCs2, GAMES } from "../src/cs2/crosshairs/sens";
-
-const DIR = new URL("../../games/cs2/data/lineups/", import.meta.url);
-const read = <T>(f: string): T => JSON.parse(readFileSync(new URL(f, DIR), "utf-8"));
-
-describe("los datos de Granadas", () => {
-  const index = read<LineupIndex>("index.json");
-  const maps = readdirSync(DIR).filter((f) => f !== "index.json" && f.endsWith(".json"));
-
-  it("el índice nombra cada mapa y cuenta bien sus lineups", () => {
-    expect(index.maps.map((m) => `${m.map}.json`).sort()).toEqual(maps.sort());
-    for (const row of index.maps) {
-      const m = read<MapLineups>(`${row.map}.json`);
-      expect(m.lineups.length).toBe(row.count);
-      expect(Object.values(row.counts).reduce((a, b) => a + b, 0)).toBe(row.count);
-    }
-  });
-
-  it("cada lineup cae en un destino de su mapa, dentro del radar, con setpos y en los dos idiomas", () => {
-    for (const f of maps) {
-      const m = read<MapLineups>(f);
-      const ids = new Set<string>();
-      for (const d of m.dests) {
-        expect(ids.has(d.id), `${f}: destino repetido ${d.id}`).toBe(false);
-        ids.add(d.id);
-        expect(d.name[1], `${f}: ${d.name[0]} sin español`).toBeTruthy();
-      }
-      for (const l of m.lineups) {
-        expect(m.dests[l.dest], `${f}: ${l.id}`).toBeDefined();
-        for (const v of [...l.from.slice(0, 2), ...l.to.slice(0, 2)]) expect(v).toBeGreaterThanOrEqual(0), expect(v).toBeLessThanOrEqual(1024);
-        expect(l.setpos).toMatch(/^setpos -?\d+\.\d{2} -?\d+\.\d{2} -?\d+\.\d{2};setang -?\d+\.\d{2} -?\d+\.\d{2} 0$/);
-        expect(l.title[1], `${f}: ${l.title[0]} sin español`).toBeTruthy();
-        if (l.desc) expect(l.desc[1], `${f}: ${l.desc[0]} sin español`).toBeTruthy();
-        expect(["t", "ct"]).toContain(l.side);
-      }
-    }
-  });
-
-  it("la flecha sale de donde se tira y termina donde cae", () => {
-    expect(arrowPath({ from: [100, 200, 0], to: [400, 200, 0] })).toMatch(/^M100,200 Q[\d.-]+,[\d.-]+ 400,200$/);
-  });
-});
 
 describe("el conversor de sensibilidad", () => {
   const [cs2, valorant, deadlock] = GAMES;

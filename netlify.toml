@@ -142,6 +142,28 @@
   to = "/en/cs2"
   status = 301
 
+# Granadas de CS2 (publicada el 2026-11-04, sacada el 2026-11-05): cada dirección va a la portada de CS2 de su idioma.
+[[redirects]]
+  from = "/en/cs2/grenades"
+  to = "/en/cs2"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/en/cs2/grenades/*"
+  to = "/en/cs2"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/es/cs2/granadas"
+  to = "/es/cs2"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/es/cs2/granadas/*"
+  to = "/es/cs2"
+  status = 301
+  force = true
+
 # `/rust` sin idioma no es una página (2026-10-05): la carpeta `/rust/...` es de
 # assets (íconos, fondo). Manda con 301 a la portada en inglés, como `/zomboid`.
 [[redirects]]
