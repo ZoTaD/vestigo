@@ -401,6 +401,27 @@ html:lang(es) .vn-x-tag { font-family: "Barlow Condensed", sans-serif; }
 .vn .vn-x-group h3 { margin: 0 0 10px; font: 700 22px/1 var(--vn-display); text-transform: uppercase; }
 .vn-x-group .vn-x-points li { font-size: 14px; }
 
+/* Cambios de reglas (Season 2 de ranked, 5/11): una tarjeta por regla, el
+   antes tachado y el ahora grande. Sin filos de color: el tono va en la cifra. */
+.vn-x-rules { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.vn-x-rule { margin: 0; padding: 16px 18px; border-radius: var(--radius, 4px); background: var(--vn-panel); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: start; }
+.vn-x-rule img { width: 56px; height: auto; }
+.vn-x-rule:not(:has(img)) { grid-template-columns: minmax(0, 1fr); }
+.vn-x-rule figcaption { container-type: inline-size; min-width: 0; }
+.vn-x-rule figcaption .vn-lbl { display: block; }
+.vn-x-change { margin: 6px 0 0; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.vn-x-change s { font: 700 20px/1 var(--vn-display); color: var(--vn-ink-mute); }
+.vn .vn-x-change b { font: 700 clamp(22px, 17cqi, 38px)/1 var(--vn-display); color: var(--vn-ink); white-space: nowrap; }
+.vn-x-rule[data-dir="up"] .vn-x-change b { color: #8fd17a; }
+.vn-x-rule[data-dir="down"] .vn-x-change b { color: #f08a6c; }
+.vn-x-rule p:last-child { margin: 8px 0 0; font-size: 14px; line-height: 1.4; color: var(--vn-ink-soft); }
+.vn-x-notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 28px; }
+.vn-x-notes p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--vn-ink-soft); }
+
+@media (max-width: 700px) {
+  .vn-x-notes { grid-template-columns: minmax(0, 1fr); }
+}
+
 @media (max-width: 1040px) {
   .vn-x-posters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .vn-x-broker { grid-template-columns: minmax(0, 1fr); }
