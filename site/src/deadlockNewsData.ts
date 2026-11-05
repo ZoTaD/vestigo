@@ -74,7 +74,8 @@ export interface Special {
   art?: string;
   vote?: { title: Bilingual; text: Bilingual; dates: string[] };
   stats: { n: string; label: Bilingual }[];
-  candidates: {
+  /** Sólo en la de City Never Sleeps: candidatos, ciudad, neutrales. Las otras especiales no los traen. */
+  candidates?: {
     code: string;
     color: string;
     name: Bilingual;
@@ -82,12 +83,25 @@ export interface Special {
     tags: { en: string[]; es: string[] };
   }[];
   broker?: { title: Bilingual; sub: Bilingual; img: string; logo: string; cards: string[]; points: Bilingual[] };
-  places: { img: string; name: string; where: Bilingual }[];
-  cityText: Bilingual;
-  haunts: SpecialCard[];
-  todo: SpecialCard[];
+  places?: { img: string; name: string; where: Bilingual }[];
+  cityText?: Bilingual;
+  haunts?: SpecialCard[];
+  todo?: SpecialCard[];
   pings?: SpecialCard[];
-  more: { title: Bilingual; points: Bilingual[] }[];
+  more?: { title: Bilingual; points: Bilingual[] }[];
+  /**
+   * Cambios de reglas, como tarjetas "antes → ahora" (la Season 2 de ranked,
+   * 5/11/2026). `img` es opcional: una insignia o un ícono local.
+   */
+  rules?: {
+    title: Bilingual;
+    sub: Bilingual;
+    cards: { label: Bilingual; before: Bilingual; after: Bilingual; text: Bilingual; img?: string; dir?: "up" | "down" }[];
+  };
+  /** Texto suelto con su título, para lo que no entra en tarjetas. */
+  notes?: { title: Bilingual; sub: Bilingual; paragraphs: Bilingual[] };
+  /** Dónde leer el anuncio original. Si falta, playdeadlock.com (City Never Sleeps). */
+  source?: Bilingual;
 }
 
 export interface Translation {

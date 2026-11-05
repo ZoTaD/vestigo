@@ -482,7 +482,7 @@ export default function DeadlockNews({
         )}
 
         <footer className="vn-foot vn-lbl">
-          <span>{sp ? specialSource(lang) : copy.source}</span>
+          <span>{sp ? (sp.source?.[lang] ?? specialSource(lang)) : copy.source}</span>
           <span>vestigo.gg</span>
         </footer>
       </article>

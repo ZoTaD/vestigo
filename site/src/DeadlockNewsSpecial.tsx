@@ -104,8 +104,8 @@ export function SpecialFront({ s, lang, locale }: { s: Special; lang: "en" | "es
         <p className="vn-deck">{s.deck[lang]}</p>
       </div>
       <div className="vn-score">
-        {s.art && <img className="vn-x-art" src={s.art} alt="City Never Sleeps" width={900} height={512} />}
-        {s.vote && (
+        {s.art && <img className="vn-x-art" src={s.art} alt="" width={900} height={512} />}
+        {s.vote && s.candidates && (
           <div className="vn-x-vote">
             <div className="vn-lbl vn-x-vote-title">{s.vote.title[lang]}</div>
             <div className="vn-x-stickers">
@@ -157,14 +157,62 @@ function Cards({ cards, lang, kind }: { cards: SpecialCard[]; lang: "en" | "es";
   );
 }
 
-/** El cuerpo: candidatos, el Broker, la ciudad, los neutrales y el resto. */
+/**
+ * Cambios de reglas: una tarjeta por regla con el antes tachado y el ahora
+ * grande (la Season 2 de ranked). Sin flecha de color: el sentido lo dice la
+ * cifra, como en las líneas de balance.
+ */
+function Rules({ r, lang }: { r: NonNullable<Special["rules"]>; lang: "en" | "es" }) {
+  return (
+    <>
+      <Sec title={r.title[lang]} sub={r.sub[lang]} />
+      <div className="vn-x-rules">
+        {r.cards.map((c) => (
+          <figure key={c.label.en} className="vn-x-rule" data-dir={c.dir}>
+            {c.img && <img src={c.img} alt="" width={64} height={64} loading="lazy" decoding="async" />}
+            <figcaption>
+              <span className="vn-lbl">{c.label[lang]}</span>
+              <p className="vn-x-change">
+                <s>{c.before[lang]}</s>
+                <b>{c.after[lang]}</b>
+              </p>
+              <p>{c.text[lang]}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/** El cuerpo: lo que traiga la edición, en este orden. */
 export function SpecialBody({ s, lang }: { s: Special; lang: "en" | "es" }) {
   const t = COPY[lang];
   return (
     <>
+      {s.rules && <Rules r={s.rules} lang={lang} />}
+      {s.notes && (
+        <>
+          <Sec title={s.notes.title[lang]} sub={s.notes.sub[lang]} />
+          <div className="vn-x-notes">
+            {s.notes.paragraphs.map((p) => (
+              <p key={p.en}>{p[lang]}</p>
+            ))}
+          </div>
+        </>
+      )}
+      {s.candidates && <CityNeverSleeps s={s} lang={lang} t={t} />}
+    </>
+  );
+}
+
+/** Lo propio de City Never Sleeps (29/9): candidatos, el Broker, la ciudad, los neutrales y el resto. */
+function CityNeverSleeps({ s, lang, t }: { s: Special; lang: "en" | "es"; t: (typeof COPY)["en"] }) {
+  return (
+    <>
       <Sec title={t.candidates} sub={t.candidatesSub} />
       <div className="vn-x-posters">
-        {s.candidates.map((c) => (
+        {s.candidates!.map((c) => (
           <figure
             key={c.code}
             id={`vn-c-${c.code}`}
@@ -222,9 +270,9 @@ export function SpecialBody({ s, lang }: { s: Special; lang: "en" | "es" }) {
       )}
 
       <Sec title={t.city} sub={t.citySub} />
-      <p className="vn-x-lede">{s.cityText[lang]}</p>
+      <p className="vn-x-lede">{s.cityText?.[lang]}</p>
       <div className="vn-x-places">
-        {s.places.map((p) => (
+        {(s.places ?? []).map((p) => (
           <figure key={p.name} className="vn-x-place">
             <img src={p.img} alt="" loading="lazy" decoding="async" />
             <figcaption>
@@ -236,10 +284,10 @@ export function SpecialBody({ s, lang }: { s: Special; lang: "en" | "es" }) {
       </div>
 
       <Sec title={t.wanted} sub={t.wantedSub} />
-      <Cards cards={s.haunts} lang={lang} kind="haunt" />
+      <Cards cards={s.haunts ?? []} lang={lang} kind="haunt" />
 
       <Sec title={t.todo} sub={t.todoSub} />
-      <Cards cards={s.todo} lang={lang} kind="todo" />
+      <Cards cards={s.todo ?? []} lang={lang} kind="todo" />
 
       {s.pings && (
         <>
@@ -250,7 +298,7 @@ export function SpecialBody({ s, lang }: { s: Special; lang: "en" | "es" }) {
 
       <Sec title={t.more} sub={t.moreSub} />
       <div className="vn-x-more">
-        {s.more.map((g) => (
+        {(s.more ?? []).map((g) => (
           <div key={g.title.en} className="vn-x-group">
             <h3>{g.title[lang]}</h3>
             <ul className="vn-x-points">
