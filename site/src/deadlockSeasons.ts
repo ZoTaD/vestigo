@@ -12,8 +12,19 @@
  * Todo en segundos, como `start_time` de la API.
  */
 
+/**
+ * Las reglas de puntos de una temporada (anuncio de Valve del 5/11/2026 para
+ * la 2): cuánto mueve una partida y cuánto cuesta el último subnivel de cada
+ * rango. Los demás subniveles cuestan 1.000 en las dos.
+ */
+export interface RankRules {
+  winPoints: number;
+  lastSubPoints: number;
+}
+
 export interface Season {
   id: number;
+  rules: RankRules;
   /** Inicio, inclusive. */
   start: number;
   /** Fin, exclusivo. `null` = la vigente sin fecha de cierre. */
@@ -23,10 +34,12 @@ export interface Season {
 /** El reset de ranked del 30/7, 16:19 UTC: antes, `match_mode` 4 era otro modo. */
 const S1_START = Date.UTC(2026, 6, 30, 16, 19, 0) / 1000;
 const S2_START = Date.UTC(2026, 10, 5, 22, 0, 0) / 1000;
+/** Valve dijo "jueves 11 de marzo de 2027", sin hora: se asume la misma que el cierre de la 1. */
+const S2_END = Date.UTC(2027, 2, 11, 22, 0, 0) / 1000;
 
 export const SEASONS: Season[] = [
-  { id: 1, start: S1_START, end: S2_START },
-  { id: 2, start: S2_START, end: null },
+  { id: 1, start: S1_START, end: S2_START, rules: { winPoints: 300, lastSubPoints: 2000 } },
+  { id: 2, start: S2_START, end: S2_END, rules: { winPoints: 350, lastSubPoints: 1500 } },
 ];
 
 /**
@@ -45,9 +58,14 @@ export function seasonAt(t: number): Season | null {
   return null;
 }
 
-/** La vigente. Si el reloj está antes de todas (no debería), la primera. */
+/** La vigente. Antes de todas, la primera; después de la última, la última. */
 export function currentSeason(now = Date.now() / 1000): Season {
-  return seasonAt(now) ?? SEASONS[0];
+  return seasonAt(now) ?? (now < SEASONS[0].start ? SEASONS[0] : SEASONS[SEASONS.length - 1]);
+}
+
+/** Las reglas de puntos de la temporada de un instante (0 = la vigente). */
+export function rulesAt(t: number): RankRules {
+  return (t > 0 ? seasonAt(t) : null)?.rules ?? currentSeason().rules;
 }
 
 /** La que mide la escalera: la vigente después de la gracia, si no la anterior. */

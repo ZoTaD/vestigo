@@ -17,9 +17,9 @@ describe("temporadas", () => {
     expect(ladderSeason(S2 - DAY)).toEqual({ season: SEASONS[0], final: false });
   });
 
-  it("una temporada cerrada pide su fin; la vigente no", () => {
+  it("cada temporada pide su fin; la 2 cierra el 11/3/2027", () => {
     expect(seasonParams(SEASONS[0]).max_unix_timestamp).toBe(String(S2));
-    expect(seasonParams(SEASONS[1]).max_unix_timestamp).toBeUndefined();
+    expect(seasonParams(SEASONS[1]).max_unix_timestamp).toBe(String(Date.UTC(2027, 2, 11, 22) / 1000));
   });
 
   it("el perfil abre en la más nueva con 5 partidas", () => {

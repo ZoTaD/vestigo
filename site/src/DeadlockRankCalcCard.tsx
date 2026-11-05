@@ -14,7 +14,9 @@ import {
   nextTier,
   subSpan,
   winsTo,
+  streakPoints,
 } from "./deadlockRankCalc";
+import { rulesAt } from "./deadlockSeasons";
 
 /**
  * "¿Cuántas victorias para subir?" (2/11).
@@ -33,20 +35,23 @@ interface RankPointsFile {
 }
 
 const DATA = rankPoints as unknown as RankPointsFile;
-const POINTS = DATA.wins.filter((w) => w.n > 0).map((w) => w.typical);
-const LOSS = DATA.loss.typical;
+/** Lo medido: la escalera de racha. La base sale de las reglas de cada temporada (ver `streakPoints`). */
+const MEASURED = DATA.wins.filter((w) => w.n > 0).map((w) => w.typical);
 /** Racha más alta que distingue la escalera; de ahí para arriba suma igual. */
-const STREAK_MAX = Math.max(0, POINTS.length - 1);
+const STREAK_MAX = Math.max(0, MEASURED.length - 1);
 
 export default function DeadlockRankCalc({
   badge,
   progress,
   streak,
+  at = 0,
 }: {
   badge: number;
   /** Progreso absoluto, si se sabe (perfil). Sin él aparecen los controles. */
   progress?: number | null;
   streak?: number;
+  /** Cuándo se jugó la partida de ese progreso, en segundos: decide con qué reglas se lee. 0 = las vigentes. */
+  at?: number;
 }) {
   const copy = useCopy();
   const { lang } = useLang();
@@ -56,10 +61,13 @@ export default function DeadlockRankCalc({
   const [dentro, setDentro] = useState(0);
   const [racha, setRacha] = useState(0);
 
-  const actual = fijo ? badgeAt(progress) : badge;
-  const p = fijo ? progress : badgeStart(badge) + dentro;
+  const reglas = rulesAt(fijo ? at : 0);
+  const POINTS = streakPoints(MEASURED, reglas);
+  const LOSS = -reglas.winPoints;
+  const actual = fijo ? badgeAt(progress, reglas) : badge;
+  const p = fijo ? progress : badgeStart(badge, reglas) + dentro;
   const s = fijo ? (streak ?? 0) : racha;
-  const tope = subSpan(actual);
+  const tope = subSpan(actual, reglas);
   const sigSub = nextBadge(actual);
   const sigRango = nextTier(actual);
   const nombre = (b: number) => {
@@ -68,7 +76,7 @@ export default function DeadlockRankCalc({
   };
   const victorias = (target: number | null) => {
     if (target == null) return null;
-    const n = winsTo(p, s, target, POINTS);
+    const n = winsTo(p, s, target, POINTS, reglas);
     return n == null ? t.far : t.wins(n);
   };
   const signo = (v: number) => (v > 0 ? "+" : "−") + Math.abs(v).toLocaleString(locale);
@@ -129,7 +137,7 @@ export default function DeadlockRankCalc({
           <div>
             <dt>{t.drop}</dt>
             <dd>
-              <b>{t.losses(lossesToDrop(p, LOSS))}</b>
+              <b>{t.losses(lossesToDrop(p, LOSS, reglas))}</b>
             </dd>
           </div>
         </dl>
