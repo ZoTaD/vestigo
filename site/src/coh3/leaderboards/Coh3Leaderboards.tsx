@@ -12,7 +12,7 @@ import type { Route } from "../../route";
 import { FACTION_ICON, useCoh3Copy } from "../../coh3Copy";
 import { automatchId, REGIONS } from "../api/leaderboards";
 import type { LeaderboardRow } from "../api/relic";
-import { Panel, nextSort, sortRows, useNum, useSort, type Nav } from "../ui";
+import { LeagueTag, Panel, nextSort, sortRows, useNum, useSort, type Nav } from "../ui";
 import { FACTIONS, MODES, ladderQuery, pageCount, pageStart, parseLadderQuery, winRate, PAGE_SIZE, type LadderState } from "../live/logic";
 import { PlayerLink, currentSearch, useAgo, useApi } from "../live/ui";
 import { useLbCopy } from "./copy";
@@ -180,6 +180,7 @@ export default function Coh3Leaderboards({ route, navigate }: { route: Route; na
                             </td>
                             <td data-l={labels.elo} className="c3-lb-elo">
                               {num(r.elo)}
+                              <LeagueTag level={r.tier} small />
                             </td>
                             <td data-l={labels.wins}>{num(r.wins)}</td>
                             <td data-l={labels.losses}>{num(r.losses)}</td>

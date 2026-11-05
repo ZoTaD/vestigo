@@ -20,6 +20,7 @@ a.c3-pl:hover { color: var(--c3-brass); }
 .c3-lb-rank { font: 900 20px/1 var(--c3-stencil); letter-spacing: 0.02em; }
 .c3-lb-rank small { display: block; font: 500 11.5px/1.2 var(--c3-font); color: var(--c3-dim); letter-spacing: 0; }
 .c3-lb-elo { color: var(--c3-brass); font-weight: 700; }
+.c3-lb-elo .c3-league { display: block; width: max-content; margin-left: auto; }
 .c3-lb .c3-pl { max-width: 260px; }
 .c3-lb-pl-m { display: none !important; }
 /* Las tablas `c3-cq` se apilan según el ancho del panel (no de la ventana): con ocho columnas a 768 px ya no entraba. */

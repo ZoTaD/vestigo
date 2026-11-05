@@ -242,6 +242,8 @@ export const PAGES = [
   "/es/coh3/mapas/langres_2p",
   "/en/coh3/challenges",
   "/es/coh3/final-stand",
+  "/es/coh3/rangos",
+  "/en/coh3/achievements",
   "/en/coh3/leaderboards",
   "/es/coh3/jugadores",
 ];

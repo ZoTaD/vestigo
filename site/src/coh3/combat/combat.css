@@ -74,3 +74,5 @@
   .c3-side-n { font-size: 30px; }
   .c3-side-l { font-size: 12px; }
 }
+
+.c3-abil { margin-left: 6px; font-style: normal; font-size: 11px; padding: 1px 6px; vertical-align: middle; }

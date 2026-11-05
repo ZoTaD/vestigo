@@ -36,6 +36,8 @@ const Coh3Patches = lazyWithPreload(() => import("./coh3/more/Coh3Patches"));
 const Coh3Maps = lazyWithPreload(() => import("./coh3/more/Coh3Maps"));
 const Coh3Challenges = lazyWithPreload(() => import("./coh3/more/Coh3Challenges"));
 const Coh3FinalStand = lazyWithPreload(() => import("./coh3/more/Coh3FinalStand"));
+const Coh3Ranks = lazyWithPreload(() => import("./coh3/stats/Coh3Ranks"));
+const Coh3Achievements = lazyWithPreload(() => import("./coh3/more/Coh3Achievements"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `COH3_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `COH3_TAB_FILES`.
@@ -54,6 +56,8 @@ const TABS: Partial<Record<Coh3Section, LazyTab>> = {
   maps: Coh3Maps,
   challenges: Coh3Challenges,
   "final-stand": Coh3FinalStand,
+  ranks: Coh3Ranks,
+  achievements: Coh3Achievements,
 };
 
 /** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */

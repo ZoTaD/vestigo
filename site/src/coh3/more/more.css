@@ -59,3 +59,9 @@
 /* El sentido del cambio, sin decir si es bueno: subir en bronce, bajar en azul. */
 .c3-diff td.is-upv { color: var(--c3-brass); }
 .c3-diff td.is-downv { color: #8fb4d0; }
+
+/* Logros. */
+.c3-ach-img { display: block; flex: none; width: 48px; height: 48px; background: var(--c3-well); }
+.c3-ach-hidden { margin-left: 8px; font-style: normal; vertical-align: middle; }
+.c3-share { position: relative; display: inline-block; min-width: 92px; padding-bottom: 5px; }
+.c3-share-bar { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--c3-brass2); }

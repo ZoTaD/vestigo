@@ -79,3 +79,11 @@
 /* "1v1" en la letra esténcil se lee "IVI": los modos van en Archivo. */
 .c3-mb .c3-seg button { font: 700 14.5px/1 var(--c3-font); letter-spacing: 0.02em; text-transform: none; }
 .c3-mup b { white-space: nowrap; }
+
+/* Rangos: la parte del ranking con una barra baja (la liga está en styles/coh3.css). */
+.c3-share { position: relative; display: inline-block; min-width: 92px; padding-bottom: 5px; }
+.c3-share-bar { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--c3-brass2); }
+.c3-elohist { height: 190px; }
+.c3-ranks .c3-mb { flex-wrap: wrap; gap: 10px 16px; }
+.c3-ranks .c3-table th { white-space: normal; }
+.c3-ranks .c3-table td, .c3-ranks .c3-table th { padding-left: 8px; padding-right: 8px; }
