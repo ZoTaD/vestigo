@@ -48,9 +48,8 @@ describe("Diablo II en el sitemap y el prerender", () => {
     expect(paths).toContain("/es/d2r");
     expect(paths).toContain("/en/d2r");
     expect(sitemapLastmod("/es/d2r", data)).toBe(d2meta.extractedAt.slice(0, 10));
-    // La portada es una página principal: va en `main`, no con las fichas (2026-10-11).
-    expect(sitemapXml(data, "main")).toContain("<loc>https://vestigo.gg/es/d2r</loc>");
-    expect(sitemapXml(data, "d2r")).not.toContain("<loc>https://vestigo.gg/es/d2r</loc>");
+    // Diablo II está escondido desde el 2026-11-05: se prerenderiza, pero no va a ningún sitemap.
+    expect(sitemapXml(data)).not.toContain("/d2r");
   });
 
   it("sin el extractor corrido, Diablo II queda afuera en vez de romper el build", () => {
@@ -170,12 +169,9 @@ describe("la calculadora de drops en el sitemap y el prerender", () => {
   const page = (path: string) => pages.find((p) => p.path === path)!;
   const types = (p: { jsonLd: object[] }) => p.jsonLd.map((j) => (j as { "@type": string })["@type"]);
 
-  it("la pestaña y una ficha por jefe y por idioma, en el sitemap de Diablo II y con la fecha de sus datos", () => {
-    const xml = sitemapXml(data, "d2r");
-    // La pestaña va en `main` (2026-10-11) y las fichas de cada jefe, en el de Diablo II.
-    expect(sitemapXml(data, "main")).toContain("<loc>https://vestigo.gg/es/d2r/drops</loc>");
-    expect(xml).toContain("<loc>https://vestigo.gg/en/d2r/drops/mephisto</loc>");
-    expect(sitemapXml(data, "main")).not.toContain("/drops/");
+  it("la pestaña y una ficha por jefe y por idioma, prerenderizadas y con la fecha de sus datos", () => {
+    expect(sitemapPaths(data)).toContain("/es/d2r/drops");
+    expect(sitemapPaths(data)).toContain("/en/d2r/drops/mephisto");
     expect(sitemapPaths(data).filter((p) => p.includes("/d2r/drops/"))).toHaveLength(dropsIndex.length * 2);
     expect(sitemapLastmod("/es/d2r/drops", data)).toBe(d2meta.extractedAt.slice(0, 10));
     expect(sitemapLastmod("/es/d2r/drops/mephisto", data)).toBe(d2meta.extractedAt.slice(0, 10));

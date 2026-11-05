@@ -10,7 +10,7 @@ import starChart from "../../games/warframe/data/star-chart/list.json";
 import modsMoved from "../../games/warframe/data/mods/moved.json";
 import { parseRoute } from "../src/route";
 import { WF_COPY } from "../src/warframeCopy";
-import { redirectsFile, SITEMAP_GROUPS, sitemapLastmod, sitemapPaths, sitemapXml, type SitemapData } from "../src/sitemap";
+import { redirectsFile, SITEMAP_HIDDEN, sitemapLastmod, sitemapPaths, sitemapXml, type SitemapData } from "../src/sitemap";
 import { jsonLdFor, metaFor, ogImageUrl, prerenderPages } from "../src/prerender";
 import { warframeSitemapData } from "../src/warframe/sitemapData";
 import { isWfLoadingPage } from "../src/warframe/loadingGuard";
@@ -42,7 +42,8 @@ describe("Warframe en el sitemap", () => {
       "/en/warframe/star-chart", "/es/warframe/mapa-estelar",
     ]) {
       expect(paths).toContain(p);
-      expect(main).toContain(`<loc>https://vestigo.gg${p}</loc>`);
+      // Escondido desde el 2026-11-05: se prerenderiza, pero no va a ningún sitemap.
+      expect(main).not.toContain(`<loc>https://vestigo.gg${p}</loc>`);
       expect(sitemapLastmod(p, data)).toBe(wfMeta.generatedAt.slice(0, 10));
     }
   });
@@ -68,11 +69,10 @@ describe("Warframe en el sitemap", () => {
     expect(new Set(paths).size).toBe(paths.length);
   });
 
-  it("las fichas van en el grupo warframe y las páginas principales en main, con la fecha de los datos", () => {
-    expect(SITEMAP_GROUPS).toContain("warframe");
-    expect(sitemapXml(data, "warframe")).toContain("<loc>https://vestigo.gg/en/warframe/arsenal/excalibur</loc>");
-    expect(sitemapXml(data, "warframe")).not.toContain("<loc>https://vestigo.gg/en/warframe</loc>");
-    expect(sitemapXml(data, "main")).not.toContain("/warframe/arsenal/excalibur");
+  it("escondido desde el 2026-11-05: las fichas no van a ningún sitemap, pero conservan la fecha de los datos", () => {
+    expect(SITEMAP_HIDDEN).toContain("warframe");
+    expect(sitemapXml(data, "warframe")).not.toContain("/warframe");
+    expect(sitemapXml(data, "main")).not.toContain("/warframe");
     expect(sitemapLastmod("/en/warframe/mods/serration", data)).toBe(wfMeta.generatedAt.slice(0, 10));
   });
 

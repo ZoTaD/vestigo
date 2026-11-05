@@ -107,16 +107,8 @@ describe("el sitemap, el <head> y las redirecciones", () => {
     expect(paths.filter((p) => p.startsWith("/es/d2r")).length).toBe(paths.filter((p) => p.startsWith("/en/d2r")).length);
   });
 
-  it("en el sitemap, cada página en español lista a su par en inglés aunque las palabras sean otras", () => {
-    // Las fichas van en el sitemap de Diablo II y las pestañas en `main` (2026-10-11): se miran los dos.
-    const xml = sitemapXml(data, "d2r") + sitemapXml(data, "main");
-    const entry = (loc: string) => {
-      const start = xml.indexOf(`<loc>https://vestigo.gg${loc}</loc>`);
-      return xml.slice(start, xml.indexOf("</url>", start));
-    };
-    expect(entry("/es/d2r/unicos/la-rechinante")).toContain('hreflang="en" href="https://vestigo.gg/en/d2r/uniques/the-gnasher"');
-    expect(entry("/en/d2r/uniques/the-gnasher")).toContain('hreflang="es" href="https://vestigo.gg/es/d2r/unicos/la-rechinante"');
-    expect(entry("/es/d2r/palabras-runicas")).toContain('hreflang="en" href="https://vestigo.gg/en/d2r/runewords"');
+  it("Diablo II, escondido desde el 2026-11-05, no va a ningún sitemap", () => {
+    expect(sitemapXml(data, "d2r") + sitemapXml(data, "main")).not.toContain("/d2r/");
   });
 
   it("la fecha de un parche sale de su ficha, con la pestaña en español", () => {

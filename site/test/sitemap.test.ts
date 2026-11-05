@@ -4,6 +4,7 @@ import dlHeroesJson from "@deadlock/heroes.json";
 import dlItemsJson from "@deadlock/items.json";
 import {
   SITEMAP_GROUPS,
+  isHiddenPath,
   deadlockDetailSlugs,
   sitemapIndexXml,
   sitemapLastmod,
@@ -172,13 +173,15 @@ describe("sitemapLastmod", () => {
   it("parte el sitio en un sitemap por juego, con un índice en /sitemap.xml", () => {
     const index = sitemapIndexXml(conFechas);
     expect(index).toContain("<sitemapindex");
-    for (const g of ["main", "deadlock", "poe2", "valheim"]) {
+    for (const g of ["main", "deadlock", "valheim"]) {
       expect(index).toContain(`<loc>https://vestigo.gg/sitemaps/${g}.xml</loc>`);
     }
+    // PoE2 está escondido desde el 2026-11-05: sin sitemap propio y fuera de `main`.
+    expect(index).not.toContain("sitemaps/poe2.xml");
     expect(index).toContain("<lastmod>2026-09-26</lastmod>");
     // Entre los cuatro están todas las páginas, y ninguna en dos.
     const locs = SITEMAP_GROUPS.flatMap((g) => sitemapXml(conFechas, g).match(/<loc>[^<]+/g) ?? []);
-    expect(locs.length).toBe(sitemapPaths(conFechas).length);
+    expect(locs.length).toBe(sitemapPaths(conFechas).filter((p) => !isHiddenPath(p)).length);
     expect(sitemapXml(conFechas, "valheim")).not.toContain("/deadlock");
     // `main` son las páginas principales de todos los juegos (2026-10-11); el de cada juego, sus fichas y ediciones.
     const main = sitemapXml(conFechas, "main");

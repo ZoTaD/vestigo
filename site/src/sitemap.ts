@@ -246,6 +246,19 @@ export interface SitemapData {
  * con las fichas en el sitemap de su juego, así que Search Console no decía cuántas de las que importan estaban
  * indexadas. El de cada juego se queda con sus fichas y sus ediciones de parches.
  */
+/**
+ * Los juegos escondidos (2026-11-05): PoE2, Diablo II y Warframe salen del sitemap, del menú y de la portada, pero sus
+ * páginas siguen publicadas y prerenderizadas, así lo que Google ya conoce no da 404. Se borran el 2026-12-05 con 301 al
+ * Home. `sitemapPaths` los sigue listando porque de ahí sale también el prerender.
+ */
+export const SITEMAP_HIDDEN: SitemapGroup[] = ["poe2", "d2r", "warframe"];
+const HIDDEN_SEGMENTS = new Set(["poe2", "d2r", WF_SEGMENT]);
+
+/** Si una dirección es de un juego escondido (no va a ningún sitemap). */
+export function isHiddenPath(path: string): boolean {
+  return HIDDEN_SEGMENTS.has(path.split("/")[2]);
+}
+
 export const SITEMAP_GROUPS = ["main", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe", "cs2", "coh3"] as const;
 export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];
 
@@ -592,7 +605,7 @@ export function redirectsFile(data: SitemapData): string {
  * competing with each other.
  */
 export function sitemapXml(data: SitemapData, group?: SitemapGroup): string {
-  const paths = sitemapPaths(data).filter((p) => !group || sitemapGroup(p) === group);
+  const paths = sitemapPaths(data).filter((p) => !isHiddenPath(p) && (!group || sitemapGroup(p) === group));
   // Group by the page, so both languages of one page list each other. La página
   // es la dirección en inglés de su ruta, no la dirección sin el idioma: desde el
   // 2026-09-30 Diablo II en español lleva otras palabras (`/es/d2r/unicos/…` es
@@ -645,7 +658,7 @@ export function sitemapFile(group: SitemapGroup): string {
  * sirviendo.
  */
 export function sitemapIndexXml(data: SitemapData): string {
-  const paths = sitemapPaths(data);
+  const paths = sitemapPaths(data).filter((p) => !isHiddenPath(p));
   const entries = SITEMAP_GROUPS.filter((g) => paths.some((p) => sitemapGroup(p) === g))
     .map((g) => {
       const lastmod = newest(paths.filter((p) => sitemapGroup(p) === g).map((p) => sitemapLastmod(p, data)));

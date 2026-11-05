@@ -9,14 +9,14 @@
  * por hotfix.
  *
  * Deadlock queda afuera (tiene su propio periódico, `publish-deadlock`), y Rust
- * y Terraria también (congelados desde el 2026-11-02).
+ * y Terraria también (congelados desde el 2026-11-02), igual que PoE2, Diablo II
+ * y Warframe (escondidos desde el 2026-11-05).
  *
  * Qué parche ya se avisó sale de los issues mismos: cada línea lleva una marca
  * `<!-- parche:<juego>:<id> -->`. No hay archivo de estado que commitear.
  *
  * `--dry` sólo imprime lo que avisaría, sin tocar GitHub.
  */
-import { readFile } from "node:fs/promises";
 
 const UA = "vestigo.gg patch-watch/1.0 (contact: grundynicolas021@gmail.com)";
 /** Lo de antes no se avisa: los datos del sitio se revisaron hasta acá. */
@@ -44,47 +44,10 @@ const steam = (appid) => async () => {
     .map((n) => ({ id: n.gid, title: n.title, url: n.url, date: n.date * 1000 }));
 };
 
-/** D2R no está en Steam: Blizzard publica parches, PTR y temporadas en su foro. */
-async function d2r() {
-  const d = await get("https://us.forums.blizzard.com/en/d2r/topics/created-by/BlizzardEntertainment.json");
-  return d.topic_list.topics
-    .filter((t) => /patch|ptr|season|update/i.test(t.title))
-    .map((t) => ({ id: String(t.id), title: t.title, url: `https://us.forums.blizzard.com/en/d2r/t/${t.slug}/${t.id}`, date: Date.parse(t.created_at) }));
-}
-
-/**
- * Warframe: sólo las actualizaciones grandes del foro ("Update 44: …"). Los
- * hotfixes salen casi todas las semanas y los números ya se actualizan solos
- * con `publish-warframe`.
- */
-async function warframe() {
-  const xml = await get("https://forums.warframe.com/forum/3-pc-update-notes.xml/", "text");
-  return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)]
-    .map(([, it]) => ({
-      title: it.match(/<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/)?.[1].trim() ?? "",
-      url: it.match(/<link>([\s\S]*?)<\/link>/)?.[1].trim() ?? "",
-      date: Date.parse(it.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1] ?? ""),
-    }))
-    .filter((p) => !/hotfix/i.test(p.title) && /\bupdate\b/i.test(p.title))
-    .map((p) => ({ ...p, id: p.url }));
-}
-
-/**
- * PoE2: el índice de la pestaña Parches, que `publish-poe2` baja del foro todos
- * los días. El listado del foro no trae fechas; el índice sí.
- */
-async function poe2() {
-  const { editions } = JSON.parse(await readFile(new URL("../../games/poe2/data/patches/index.json", import.meta.url), "utf8"));
-  return editions.map((e) => ({ id: e.slug, title: e.title.en, url: `https://vestigo.gg/en/poe2/patches/${e.slug}`, date: Date.parse(e.date) }));
-}
-
 const GAMES = [
   { key: "valheim", name: "Valheim", fetch: steam(892970) },
   { key: "zomboid", name: "Project Zomboid", fetch: steam(108600) },
   { key: "stardew", name: "Stardew Valley", fetch: steam(413150) },
-  { key: "warframe", name: "Warframe", fetch: warframe },
-  { key: "poe2", name: "Path of Exile 2", fetch: poe2 },
-  { key: "d2r", name: "Diablo II: Resurrected", fetch: d2r },
 ];
 
 // ——— GitHub ———
