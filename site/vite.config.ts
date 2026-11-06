@@ -335,6 +335,17 @@ function readSitemapData(): { data: OgData } {
       units: read("units/list.json"), weapons: read("weapons/list.json"), battlegroups: read("battlegroups/list.json"),
       maps: read("maps.json"), patches: read("patches/index.json"),
     });
+    // CoH2 (2026-11-06): las fichas de la enciclopedia, si ya está extraída.
+    try {
+      const r2 = (f: string) => JSON.parse(readFileSync(fileURLToPath(new URL(`../games/coh2/data/${f}`, import.meta.url)), "utf-8"));
+      const slugs = (rows: { slug: string }[]) => rows.map((x) => x.slug);
+      c3.coh2 = {
+        units: slugs(r2("units/list.json")), weapons: slugs(r2("weapons/list.json")), commanders: slugs(r2("commanders/list.json")),
+        maps: (r2("maps.json").list as { id: string; players: number }[]).filter((m) => !/test/.test(m.id) && m.players > 0).map((m) => m.id),
+      };
+    } catch {
+      /* sin enciclopedia de CoH2 */
+    }
   } catch (e) {
     console.warn(`[coh3] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     c3 = undefined;
@@ -374,6 +385,13 @@ function readSitemapData(): { data: OgData } {
         cs2: c2?.generatedAt,
         coh3: c3?.generatedAt,
         coh2: cohStatsDate("coh2"),
+        coh2Data: (() => {
+          try {
+            return JSON.parse(readFileSync(fileURLToPath(new URL("../games/coh2/data/meta.json", import.meta.url)), "utf-8")).generatedAt;
+          } catch {
+            return undefined;
+          }
+        })(),
         coh1: cohStatsDate("coh1"),
       },
       dlHeroes: dlCatalog.heroes,

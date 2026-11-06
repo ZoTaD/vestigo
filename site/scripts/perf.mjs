@@ -255,6 +255,14 @@ export const PAGES = [
   "/es/coh1/ranking",
   "/en/coh1/stats",
   "/es/coh1/rangos",
+  "/es/coh2/unidades",
+  "/es/coh2/unidades/conscript_squad_mp",
+  "/en/coh2/weapons",
+  "/es/coh2/comandantes",
+  "/en/coh2/commanders/advanced_warfare_tactics",
+  "/en/coh2/bulletins",
+  "/es/coh2/penetracion",
+  "/en/coh2/maps/crossroads",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

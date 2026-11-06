@@ -148,6 +148,8 @@ export interface Coh3SitemapData {
   battlegroups: Coh3Named[];
   maps: Coh3Named[];
   patches: Coh3Named[];
+  /** CoH2 (2026-11-06): las fichas de su enciclopedia (sólo slugs: el título sale del prerender). */
+  coh2?: { units: string[]; weapons: string[]; commanders: string[]; maps: string[] };
 }
 
 /** Lo que el sitemap necesita de Rust (2026-10-05): el `meta.json` de `games/rust/tools/extract.py`. */
@@ -235,7 +237,7 @@ export interface SitemapData {
    * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
    * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
    */
-  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string; cs2?: string; coh3?: string; coh2?: string; coh1?: string };
+  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string; cs2?: string; coh3?: string; coh2?: string; coh1?: string; coh2Data?: string };
 }
 
 /**
@@ -272,7 +274,7 @@ function sitemapGroup(path: string): SitemapGroup {
   if (game === STARDEW_SEGMENT) return "stardew";
   if (game === WF_SEGMENT) return "warframe";
   if (game === CS2_SEGMENT) return "cs2";
-  if (game === COH3_SEGMENT) return "coh3";
+  if (game === COH3_SEGMENT || game === "coh2") return "coh3";
   return game === "deadlock" || game === "poe2" || game === "valheim" || game === "d2r" ? game : "main";
 }
 
@@ -353,7 +355,10 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
   if (game === CS2_SEGMENT) return day(data.dates?.cs2);
   if (game === COH3_SEGMENT) return day(data.dates?.coh3);
   // CoH2 y CoH1: el día de sus estadísticas (las pestañas cambian con cada recolección diaria).
-  if (game === "coh2" || game === "coh1") return day(data.dates?.[game]);
+  if (game === "coh2" || game === "coh1") {
+    // Las fichas de la enciclopedia van con la fecha de sus datos; las pestañas en vivo, con la de las estadísticas.
+    return parseRoute(path).detail ? day(data.dates?.coh2Data ?? data.dates?.[game]) : day(data.dates?.[game]);
+  }
   if (game === RUST_SEGMENT) {
     // Una ficha con fecha propia (un parche) va con la suya, y su pestaña con la más nueva de sus fichas o la de los
     // datos, la que sea más reciente. Lo demás, con la fecha de los datos de Rust.
@@ -553,6 +558,9 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const g of ["coh2", "coh1"] as const) {
         paths.push(routePath({ ...base, lang, view: "coh3", cohGame: g, c3Section: "home" }));
         for (const s of cohTabs(g)) if (s !== "matches") paths.push(routePath({ ...base, lang, view: "coh3", cohGame: g, c3Section: s }));
+      }
+      for (const s of ["units", "weapons", "commanders", "maps"] as const) {
+        for (const slug of data.c3.coh2?.[s] ?? []) paths.push(routePath({ ...base, lang, view: "coh3", cohGame: "coh2", c3Section: s, detail: slug }));
       }
     }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).

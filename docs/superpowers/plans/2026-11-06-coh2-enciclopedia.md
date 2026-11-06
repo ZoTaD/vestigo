@@ -164,3 +164,10 @@
 ### Task 7 (opcional, si los datos lo permiten): comandantes en las estadísticas
 
 Las partidas traen los 3 comandantes del mazo de cada jugador (ítems con `itemlocation_id` 3), no el que usó. Si hay tiempo: el porcentaje de victorias de quien lleva cada comandante en el mazo, rotulado así, en la ficha del comandante. Sin tier list de "comandante jugado".
+
+## Medidas (6/11/2026)
+
+- `npm run build`: 217 s, 55.048 páginas prerenderizadas (+1.268 de CoH2), 0 enlaces rotos. Pico de RAM 5,0 GB
+  sumando todos los procesos de Node de la PC (antes 4,3 GB); el tope de Netlify es 6 GB (hoy se compila en Actions).
+- `npm run perf --only coh2`: 13 páginas dentro del presupuesto; la más pesada, Comandantes (106 pedidos, 77 imágenes).
+- Extracción: 170 unidades, 237 armas, 71 comandantes, 335 boletines, 1.008 íconos (4,9 MB).
