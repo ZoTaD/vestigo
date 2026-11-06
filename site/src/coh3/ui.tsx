@@ -43,7 +43,9 @@ export function Panel({ k, h, lede, children, className, id }: { k?: ReactNode; 
 export function Icon({ path, size = 64, lazy = true, className }: { path: string | null | undefined; size?: number; lazy?: boolean; className?: string }) {
   const cls = className ? `c3-icon ${className}` : "c3-icon";
   if (!path) return <span className={`${cls} is-empty`} style={{ width: size, height: size }} aria-hidden="true" />;
-  const props = { className: cls, src: `/coh3/i/${path}.webp`, alt: "", width: size, height: size };
+  // Cada juego tiene sus íconos (`/coh3/i/…`, `/coh2/i/…`); CoH1 todavía no tiene enciclopedia.
+  const game = useCohGame();
+  const props = { className: cls, src: `/${game === "coh2" ? "coh2" : "coh3"}/i/${path}.webp`, alt: "", width: size, height: size };
   return lazy ? <SettledImg {...props} /> : <img {...props} decoding="async" />;
 }
 

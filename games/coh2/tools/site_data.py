@@ -304,8 +304,10 @@ def main(argv: list[str]) -> None:
                     sq = ref_name((y or {}).get("squad")) if isinstance(y, dict) else ""
                     if sq:
                         candidatas.setdefault(sq, None)
+    # Lo que produce un edificio base no es del comandante aunque alguna habilidad también lo convoque (los
+    # Conscripts que trae una habilidad soviética siguen siendo la infantería del cuartel general).
     for s, cm in conv_comandante.items():
-        if at.ruta("sbps", s):
+        if at.ruta("sbps", s) and s not in candidatas:
             candidatas[s] = cm
 
     ents_cache: dict[str, dict] = {}

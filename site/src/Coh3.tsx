@@ -39,6 +39,8 @@ const Coh3Challenges = lazyWithPreload(() => import("./coh3/more/Coh3Challenges"
 const Coh3FinalStand = lazyWithPreload(() => import("./coh3/more/Coh3FinalStand"));
 const Coh3Ranks = lazyWithPreload(() => import("./coh3/stats/Coh3Ranks"));
 const Coh3Achievements = lazyWithPreload(() => import("./coh3/more/Coh3Achievements"));
+const CohCommanders = lazyWithPreload(() => import("./coh3/explorer/CohCommanders"));
+const CohBulletins = lazyWithPreload(() => import("./coh3/explorer/CohBulletins"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `COH3_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `COH3_TAB_FILES`.
@@ -59,6 +61,8 @@ const TABS: Partial<Record<Coh3Section, LazyTab>> = {
   "final-stand": Coh3FinalStand,
   ranks: Coh3Ranks,
   achievements: Coh3Achievements,
+  commanders: CohCommanders,
+  bulletins: CohBulletins,
 };
 
 /** ¿La pestaña ya tiene página en ese juego? Las de CoH3 que no, se anuncian apagadas; CoH1 y CoH2 sólo muestran las suyas. */
@@ -99,8 +103,8 @@ export default function Coh3({ route, navigate }: TabProps) {
   const asked = route.c3Section ?? "home";
   const section = hasPage(asked, game) ? asked : "home";
   const live = (tab: Coh3Section) => hasPage(tab, game);
-  // CoH3 anuncia sus pestañas por venir; CoH1 y CoH2 muestran sólo las que tienen.
-  const barra = game === "coh3" ? COH3_TABS : COH3_TABS.filter((tab) => live(tab));
+  // Cada juego muestra sólo las pestañas que tiene.
+  const barra = COH3_TABS.filter((tab) => live(tab));
   const Tab = TABS[section];
   useEffect(() => {
     if (typeof window !== "undefined" && !cameFromHistory(window.location.pathname)) window.scrollTo({ top: 0 });

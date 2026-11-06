@@ -16,7 +16,7 @@ import type { Nav } from "./ui";
 const GROUPS: { k: "live" | "tools" | "explorer"; tabs: Coh3Section[] }[] = [
   { k: "live", tabs: ["leaderboards", "ranks", "stats", "tier-list"] },
   { k: "tools", tabs: ["penetration", "dps", "patches"] },
-  { k: "explorer", tabs: ["units", "weapons", "battlegroups", "maps", "challenges", "achievements", "final-stand"] },
+  { k: "explorer", tabs: ["units", "weapons", "battlegroups", "commanders", "bulletins", "maps", "challenges", "achievements", "final-stand"] },
 ];
 
 function useMeta(): Meta | null {
@@ -107,7 +107,7 @@ function Coh3Home({ route, navigate, live }: { route: Route; navigate: Nav; live
   const to = (tab: Coh3Section): Route => ({ ...route, view: "coh3", c3Section: tab, detail: undefined });
   return (
     <main className="c3-main c3-home">
-      {GROUPS.map((g) => ({ ...g, tabs: g.tabs.filter((tab) => !route.cohGame || route.cohGame === "coh3" || live(tab)) }))
+      {GROUPS.map((g) => ({ ...g, tabs: g.tabs.filter((tab) => live(tab)) }))
         .filter((g) => g.tabs.length)
         .map((g) => (
         <section key={g.k} className="c3-group">

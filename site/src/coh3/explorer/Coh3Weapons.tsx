@@ -7,9 +7,10 @@ import RouteLink from "../../RouteLink";
 import { LazyRows } from "../../LazyRows";
 import { routePath, type Route } from "../../route";
 import { useLang } from "../../i18n";
-import { SIDE, useCoh3Copy, type Faction } from "../../coh3Copy";
+import { useCoh3Copy, type Faction } from "../../coh3Copy";
 import { loadFicha, loadList, peekFicha, peekList, tr, type UnitRow, type WeaponRow } from "../data";
-import { Coh3Loading, FactionTag, Icon, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, Icon, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { factionLabel, sideOf } from "../games";
 import { hit } from "../combat/engine";
 import { isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "../combat/weapons";
 import { useWeaponName } from "../combat/parts";
@@ -29,14 +30,15 @@ export default function Coh3Weapons({ route, navigate }: { route: Route; navigat
 }
 
 function useLists() {
+  const game = useCohGame();
   const [v, setV] = useState(() => {
-    const u = peekList("units"), w = peekList("weapons");
+    const u = peekList("units", game), w = peekList("weapons", game);
     return u && w ? { units: u, weapons: w } : null;
   });
   useEffect(() => {
     if (v) return;
     let vivo = true;
-    Promise.all([loadList("units"), loadList("weapons")]).then(([units, weapons]) => vivo && setV({ units, weapons }), () => undefined);
+    Promise.all([loadList("units", game), loadList("weapons", game)]).then(([units, weapons]) => vivo && setV({ units, weapons }), () => undefined);
     return () => {
       vivo = false;
     };
@@ -47,6 +49,7 @@ function useLists() {
 type Key = "name" | "faction" | "cls" | "dmg" | "penN" | "penF" | "range" | "reload";
 
 function WeaponList({ route, navigate }: { route: Route; navigate: Nav }) {
+  const game = useCohGame();
   const t = useExplorerCopy();
   const c = useCoh3Copy();
   const { lang } = useLang();
@@ -66,7 +69,7 @@ function WeaponList({ route, navigate }: { route: Route; navigate: Nav }) {
   );
   const cols: Record<Key, (w: WeaponRow) => string | number | null> = {
     name: (w) => wName(w as WeaponData),
-    faction: (w) => (w.faction ? c.factionShort[w.faction] : null),
+    faction: (w) => (w.faction ? factionLabel(game, lang, w.faction, true) : null),
     cls: (w) => (w.cls as string) ?? null,
     dmg: (w) => (w.dmg ? (w.dmg[0] + w.dmg[1]) / 2 : null),
     penN: (w) => w.pen?.[0] ?? null,
@@ -160,17 +163,18 @@ function WeaponList({ route, navigate }: { route: Route; navigate: Nav }) {
 }
 
 function WeaponPage({ slug, route, navigate }: { slug: string; route: Route; navigate: Nav }) {
+  const game = useCohGame();
   const t = useExplorerCopy();
   const c = useCoh3Copy();
   const { lang } = useLang();
   const num = useNum();
   const lists = useLists();
   const wName = useWeaponName(lists?.units);
-  const [w, setW] = useState<WeaponFicha | null | undefined>(() => peekFicha<WeaponFicha>("weapons", slug));
+  const [w, setW] = useState<WeaponFicha | null | undefined>(() => peekFicha<WeaponFicha>("weapons", slug, game));
   useEffect(() => {
     if (w !== undefined) return;
     let vivo = true;
-    loadFicha<WeaponFicha>("weapons", slug).then((x) => vivo && setW(x), () => vivo && setW(null));
+    loadFicha<WeaponFicha>("weapons", slug, game).then((x) => vivo && setW(x), () => vivo && setW(null));
     return () => {
       vivo = false;
     };
@@ -192,7 +196,7 @@ function WeaponPage({ slug, route, navigate }: { slug: string; route: Route; nav
   const pair = (v: number[] | null | undefined) => (v ? (v[0] === v[1] ? fmt(v[0]) : `${fmt(v[0])}–${fmt(v[1])}`) : "—");
   const aoe = typeof w.aoe === "number" ? w.aoe : w.aoe?.radius;
   const at = isAntiTank(w);
-  const vehicles = (lists?.units ?? []).filter((u) => isVehicle(u) && (!w.faction || SIDE[u.faction] !== SIDE[w.faction]));
+  const vehicles = (lists?.units ?? []).filter((u) => isVehicle(u) && (!w.faction || sideOf(game, u.faction) !== sideOf(game, w.faction)));
   const d = Math.min(30, ws.range);
   const prey = at
     ? vehicles
@@ -206,7 +210,7 @@ function WeaponPage({ slug, route, navigate }: { slug: string; route: Route; nav
         <RouteLink to={{ ...route, view: "coh3", c3Section: "weapons", detail: undefined }} onNavigate={navigate}>
           {t.weapons.h1}
         </RouteLink>{" "}
-        › {w.faction ? c.factionShort[w.faction] : ""}
+        › {w.faction ? factionLabel(game, lang, w.faction, true) : ""}
       </p>
       <header className="c3-ficha-head">
         <Icon path={((w as { icon?: string | null }).icon || undefined) ?? users[0]?.icon} size={140} lazy={false} className="c3-ficha-img" />

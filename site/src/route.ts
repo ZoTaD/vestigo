@@ -416,19 +416,22 @@ const cs2Tab = (v: string | undefined): Cs2Tab | undefined => (isCs2Tab(v) ? v :
  * partida llevan el número de Relic y no se prerenderizan.
  */
 export type Coh3DataTab = "units" | "weapons" | "battlegroups" | "maps";
-export type Coh3Tab = Coh3DataTab | "penetration" | "dps" | "patches" | "leaderboards" | "players" | "matches" | "stats" | "tier-list" | "challenges" | "final-stand" | "ranks" | "achievements";
+export type Coh3Tab = Coh3DataTab | "penetration" | "dps" | "patches" | "leaderboards" | "players" | "matches" | "stats" | "tier-list" | "challenges" | "final-stand" | "ranks" | "achievements" | "commanders" | "bulletins";
 export type Coh3Section = "home" | Coh3Tab;
 export const COH3_SEGMENT = "coh3";
 export const COH3_SECTIONS: Coh3Tab[] = ["units", "weapons", "battlegroups", "penetration", "dps", "leaderboards", "stats", "tier-list", "patches", "maps", "challenges", "final-stand", "ranks", "achievements", "players", "matches"];
 /** Las pestañas cuya dirección puede llevar una ficha (`/coh3/units/riflemen_us`). */
-export const COH3_DETAIL_SECTIONS: Coh3Tab[] = ["units", "weapons", "battlegroups", "maps", "patches", "players", "matches"];
+export const COH3_DETAIL_SECTIONS: Coh3Tab[] = ["units", "weapons", "battlegroups", "maps", "patches", "players", "matches", "commanders"];
 export const COH3_SECTION_ES: Record<Coh3Tab, string> = {
   units: "unidades", weapons: "armas", battlegroups: "battlegroups", maps: "mapas", penetration: "penetracion", dps: "dps",
   patches: "parches", leaderboards: "ranking", players: "jugadores", matches: "partidas", stats: "estadisticas",
   "tier-list": "tier-list", challenges: "desafios", "final-stand": "final-stand", ranks: "rangos", achievements: "logros",
+  commanders: "comandantes", bulletins: "boletines",
 };
 const COH3_SECTION_BY_ES = new Map(Object.entries(COH3_SECTION_ES).map(([tab, es]) => [es, tab as Coh3Tab]));
-const isCoh3Tab = (v: string | undefined): v is Coh3Tab => !!v && (COH3_SECTIONS as string[]).includes(v);
+/** Todas las pestañas que existen en algún juego (CoH2 suma comandantes y boletines). */
+const ALL_COH_TABS: Coh3Tab[] = [...COH3_SECTIONS, "commanders", "bulletins"];
+const isCoh3Tab = (v: string | undefined): v is Coh3Tab => !!v && (ALL_COH_TABS as string[]).includes(v);
 /** La pestaña de CoH3 de un segmento, escrito en cualquiera de los dos idiomas. */
 const coh3Tab = (v: string | undefined): Coh3Tab | undefined => (isCoh3Tab(v) ? v : v ? COH3_SECTION_BY_ES.get(v) : undefined);
 
@@ -439,18 +442,22 @@ const coh3Tab = (v: string | undefined): Coh3Tab | undefined => (isCoh3Tab(v) ? 
  */
 export type CohGame = "coh3" | "coh2" | "coh1";
 const COH_SEGMENTS: CohGame[] = ["coh3", "coh2", "coh1"];
-/** Las pestañas con página de CoH1 y CoH2 (la enciclopedia llega en las etapas 2 y 3). CoH1 no tiene logros de Steam. */
+/** Las pestañas con página de CoH1 y CoH2. CoH1 no tiene logros de Steam; su enciclopedia llega en la etapa 3. */
 const COH_LIVE_TABS: Coh3Tab[] = ["leaderboards", "ranks", "stats", "achievements", "players", "matches"];
+const COH2_TABS: Coh3Tab[] = [...COH_LIVE_TABS, "units", "weapons", "commanders", "bulletins", "penetration", "dps", "maps"];
 export const cohTabs = (g: CohGame | undefined): Coh3Tab[] =>
-  !g || g === "coh3" ? COH3_SECTIONS : g === "coh1" ? COH_LIVE_TABS.filter((t) => t !== "achievements") : COH_LIVE_TABS;
+  !g || g === "coh3" ? COH3_SECTIONS : g === "coh1" ? COH_LIVE_TABS.filter((t) => t !== "achievements") : COH2_TABS;
+/** La pestaña que hace de lo mismo en otro juego (battlegroups ↔ comandantes). */
+const EQUIVALENTE: Partial<Record<Coh3Tab, Coh3Tab>> = { battlegroups: "commanders", commanders: "battlegroups" };
 /**
  * Cambiar de juego: la misma pestaña si el otro juego la tiene; si no, su portada. Nunca la ficha (un jugador o una
  * unidad de un juego no existe en el otro).
  */
 export function switchGame(route: Route, to: CohGame): Route {
   const sec = route.c3Section ?? "home";
-  const keep = sec !== "home" && cohTabs(to).includes(sec);
-  return { ...route, view: "coh3", cohGame: to === "coh3" ? undefined : to, c3Section: keep ? sec : "home", detail: undefined };
+  const tabs = cohTabs(to);
+  const destino = sec === "home" ? "home" : tabs.includes(sec) ? sec : EQUIVALENTE[sec] && tabs.includes(EQUIVALENTE[sec]!) ? EQUIVALENTE[sec]! : "home";
+  return { ...route, view: "coh3", cohGame: to === "coh3" ? undefined : to, c3Section: destino, detail: undefined };
 }
 
 export interface Route {

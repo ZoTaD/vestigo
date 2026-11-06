@@ -9,7 +9,7 @@ import { useLang, type Lang } from "./i18n";
 import type { Coh3Section, Coh3Tab } from "./route";
 
 /** El orden de las pestañas en la barra. Jugadores y Partidas no van: se llega desde el ranking o el buscador. */
-export const COH3_TABS: Coh3Section[] = ["home", "leaderboards", "ranks", "stats", "tier-list", "units", "weapons", "battlegroups", "penetration", "dps", "patches", "maps", "challenges", "achievements", "final-stand"];
+export const COH3_TABS: Coh3Section[] = ["home", "leaderboards", "ranks", "stats", "tier-list", "units", "weapons", "battlegroups", "commanders", "bulletins", "penetration", "dps", "patches", "maps", "challenges", "achievements", "final-stand"];
 
 /** Las cuatro facciones, con su clave en los datos y su emblema en `public/coh3/i/`. */
 export type Faction = "american" | "british" | "german" | "dak";
@@ -32,6 +32,7 @@ const EN = {
     home: "Home", units: "Units", weapons: "Weapons", battlegroups: "Battlegroups", maps: "Maps", penetration: "Penetration",
     dps: "DPS", patches: "Patches", leaderboards: "Leaderboards", players: "Players", matches: "Matches", stats: "Stats",
     "tier-list": "Tier list", challenges: "Challenges", "final-stand": "Final Stand", ranks: "Ranks", achievements: "Achievements",
+    commanders: "Commanders", bulletins: "Intel bulletins",
   } satisfies Record<Coh3Section, string>,
   // Indexables con cualquier clave: las pestañas en vivo reciben facciones de CoH1 y CoH2 como `string`.
   faction: { american: "US Forces", british: "British Forces", german: "Wehrmacht", dak: "Afrika Korps" } as Record<Faction, string> & Record<string, string | undefined>,
@@ -74,6 +75,8 @@ const EN = {
       challenges: "Daily and weekly challenges and their rewards.",
       ranks: "Every league and how many players are in each, by faction and mode, with Elo and countries.",
       achievements: "Every achievement and the share of players who have it.",
+      commanders: "Every commander with its abilities and the units it unlocks.",
+      bulletins: "Every intel bulletin and what it boosts.",
       "final-stand": "Final Stand perks, technologies and units.",
       players: "", matches: "", home: "",
     } satisfies Record<Coh3Section, string>,
@@ -95,6 +98,8 @@ const EN = {
     challenges: { title: "CoH3 Daily and Weekly Challenges", description: "Company of Heroes 3 daily and weekly challenges with their rewards." },
     ranks: { title: "CoH3 Ranks: Leagues, Elo and Player Distribution", description: "Company of Heroes 3 ranking tiers from Brass to Challenger, the Elo for each league and how many players are in each, by faction and mode." },
     achievements: { title: "CoH3 Achievements: Global Unlock Rates", description: "Every Company of Heroes 3 achievement with what it asks and the share of players who have unlocked it, from most common to rarest." },
+    commanders: { title: "Commanders", description: "Commanders and their abilities." },
+    bulletins: { title: "Intel bulletins", description: "Intel bulletins and what they boost." },
     "final-stand": { title: "CoH3 Final Stand: Perks, Technologies and Units", description: "Company of Heroes 3 Final Stand perks, technologies and units by faction." },
   } satisfies Record<Coh3Section, Seo>,
   detailSeo: (sec: Coh3Tab, name: string): Seo => {
@@ -116,6 +121,7 @@ const ES: typeof EN = {
     home: "Portada", units: "Unidades", weapons: "Armas", battlegroups: "Battlegroups", maps: "Mapas", penetration: "Penetración",
     dps: "DPS", patches: "Parches", leaderboards: "Ranking", players: "Jugadores", matches: "Partidas", stats: "Estadísticas",
     "tier-list": "Tier list", challenges: "Desafíos", "final-stand": "Final Stand", ranks: "Rangos", achievements: "Logros",
+    commanders: "Comandantes", bulletins: "Boletines de inteligencia",
   },
   faction: { american: "Fuerzas de EE. UU.", british: "Fuerzas británicas", german: "Wehrmacht", dak: "Afrika Korps" },
   factionShort: { american: "EE. UU.", british: "Británicos", german: "Wehrmacht", dak: "DAK" },
@@ -157,6 +163,8 @@ const ES: typeof EN = {
       challenges: "Los desafíos diarios y semanales y sus premios.",
       ranks: "Cada liga y cuántos jugadores hay en cada una, por facción y modo, con ELO y países.",
       achievements: "Todos los logros y qué parte de los jugadores tiene cada uno.",
+      commanders: "Cada comandante con sus habilidades y las unidades que habilita.",
+      bulletins: "Cada boletín de inteligencia y qué mejora.",
       "final-stand": "Las mejoras, tecnologías y unidades de Final Stand.",
       players: "", matches: "", home: "",
     },
@@ -178,6 +186,8 @@ const ES: typeof EN = {
     challenges: { title: "Desafíos diarios y semanales de CoH3", description: "Los desafíos diarios y semanales de Company of Heroes 3 con sus premios." },
     ranks: { title: "Rangos de CoH3: ligas, ELO y jugadores por liga", description: "Las ligas de Company of Heroes 3 de Latón a Retador, el ELO de cada una y cuántos jugadores hay en cada liga, por facción y modo." },
     achievements: { title: "Logros de CoH3: qué porcentaje los tiene", description: "Todos los logros de Company of Heroes 3 con lo que piden y qué porcentaje de los jugadores los desbloqueó, del más común al más raro." },
+    commanders: { title: "Comandantes", description: "Los comandantes y sus habilidades." },
+    bulletins: { title: "Boletines de inteligencia", description: "Los boletines de inteligencia y qué mejoran." },
     "final-stand": { title: "Final Stand de CoH3: mejoras, tecnologías y unidades", description: "Las mejoras, tecnologías y unidades de Final Stand de Company of Heroes 3 por facción." },
   },
   detailSeo: (sec: Coh3Tab, name: string): Seo => {
@@ -206,7 +216,7 @@ export function useCoh3Copy(): Coh3Copy {
  * Los textos propios de CoH2 y CoH1 (2026-11-06): portada y SEO. Las pestañas y lo compartido salen de `COH3_COPY`;
  * acá va sólo lo que nombra al juego.
  */
-type LiveSec = "home" | "leaderboards" | "ranks" | "stats" | "achievements" | "players" | "matches";
+type LiveSec = "home" | "leaderboards" | "ranks" | "stats" | "achievements" | "players" | "matches" | "units" | "weapons" | "commanders" | "bulletins" | "penetration" | "dps" | "maps";
 type GameText = { name: string; h1: string; lede: string; seo: Record<LiveSec, Seo>; credit: string; ranksCard: string };
 const credito = {
   en: "Icons and game data © Relic Entertainment / SEGA. Not affiliated with Relic or SEGA.",
@@ -228,6 +238,13 @@ function textos(lang: Lang, nombre: string, corto: string, facciones: string): G
         achievements: { title: `Logros de ${corto}: qué porcentaje los tiene`, description: clip(`Todos los logros de ${nombre}, lo que piden y qué parte de los jugadores los desbloqueó.`) },
         players: { title: `Jugadores de ${corto}`, description: clip(`Posiciones, partidas recientes y ELO de un jugador de ${nombre}.`) },
         matches: { title: `Partida de ${corto}`, description: clip(`Una partida de ${nombre}: jugadores, facciones y cambio de ELO.`) },
+        units: { title: `Unidades de ${corto}: vida, blindaje, costo y armas`, description: clip(`Cada unidad de ${nombre} por facción con vida, blindaje, costo, armas, mejoras, habilidades y veteranía.`) },
+        weapons: { title: `Armas de ${corto}: daño, penetración y alcance`, description: clip(`Cada arma de ${nombre} con daño, precisión, penetración y alcance a corta, media y larga distancia.`) },
+        commanders: { title: `Comandantes de ${corto}: habilidades y unidades`, description: clip(`Cada comandante de ${nombre} con sus cinco habilidades y las unidades que habilitan.`) },
+        bulletins: { title: `Boletines de inteligencia de ${corto}`, description: clip(`Todos los boletines de inteligencia de ${nombre}, qué mejoran y para qué facciones sirven.`) },
+        penetration: { title: `Calculadora de penetración de ${corto}`, description: clip(`¿Penetra? La probabilidad de penetrar el blindaje frontal y trasero en ${nombre} a cada distancia, con disparos y segundos para matar.`) },
+        dps: { title: `Calculadora de DPS de ${corto}: comparar unidades`, description: clip(`El daño por segundo de las unidades de ${nombre} contra infantería y vehículos a cada distancia.`) },
+        maps: { title: `Mapas de ${corto}`, description: clip(`Cada mapa de multijugador de ${nombre} con sus jugadores, tamaño y puntos.`) },
       },
     };
   return {
@@ -244,6 +261,13 @@ function textos(lang: Lang, nombre: string, corto: string, facciones: string): G
       achievements: { title: `${corto} Achievements: Global Unlock Rates`, description: clip(`Every ${nombre} achievement with what it asks and the share of players who have unlocked it.`) },
       players: { title: `${corto} Player Stats`, description: clip(`${nombre} player standings, recent matches and Elo.`) },
       matches: { title: `${corto} Match Details`, description: clip(`${nombre} match details: players, factions and Elo change.`) },
+      units: { title: `${corto} Units: Health, Armor, Cost and Weapons`, description: clip(`Every ${nombre} unit by faction with health, armor, cost, weapons, upgrades, abilities and veterancy.`) },
+      weapons: { title: `${corto} Weapons: Damage, Penetration and Range`, description: clip(`Every ${nombre} weapon with damage, accuracy, penetration and range at near, mid and far distance.`) },
+      commanders: { title: `${corto} Commanders: Abilities and Units`, description: clip(`Every ${nombre} commander with its five abilities and the units they unlock.`) },
+      bulletins: { title: `${corto} Intel Bulletins`, description: clip(`Every ${nombre} intel bulletin, what it boosts and which factions can use it.`) },
+      penetration: { title: `${corto} Penetration Calculator`, description: clip(`Will it penetrate? Chance to penetrate front and rear armor in ${nombre} at every range, with shots and seconds to kill.`) },
+      dps: { title: `${corto} DPS Calculator: Compare Units`, description: clip(`Compare the damage per second of ${nombre} units against infantry and vehicles at every range.`) },
+      maps: { title: `${corto} Maps`, description: clip(`Every ${nombre} multiplayer map with its players, size and points.`) },
     },
   };
 }
@@ -261,5 +285,10 @@ export const COH_GAME_COPY: Record<"coh2" | "coh1", Record<Lang, GameText>> = {
 export function cohGameSeo(game: "coh2" | "coh1", lang: Lang, sec: string, detailName?: string | null): Seo {
   const g = COH_GAME_COPY[game][lang];
   if (sec === "players" && detailName) return { title: `${detailName} – ${g.seo.players.title}`, description: g.seo.players.description };
+  // Una ficha de la enciclopedia: el nombre adelante, y el resto del título de su pestaña.
+  if ((sec === "units" || sec === "weapons" || sec === "commanders" || sec === "maps") && detailName) {
+    const base = g.seo[sec];
+    return { title: `${detailName} – ${base.title.split(":")[0]}`, description: clip(`${detailName}. ${base.description}`) };
+  }
   return g.seo[sec as LiveSec] ?? g.seo.home;
 }

@@ -17,7 +17,7 @@ STEAM = "https://cdn.cloudflare.steamstatic.com/steam/apps/{app}/{f}"
 JUEGOS = {"coh2": 231430, "coh1": 228200}
 # La sigla de cada facción y si es del Eje (cambia el color de la insignia).
 FACCIONES = {
-    "coh2": {"wehrmacht": ("OST", True), "soviet": ("SOV", False), "okw": ("OKW", True), "usf": ("USF", False), "british": ("UKF", False)},
+    # CoH2 usa los emblemas del juego (games/coh2/tools/site_data.py).
     "coh1": {"american": ("US", False), "wehrmacht": ("WEH", True), "british": ("UK", False), "panzer_elite": ("PE", True)},
 }
 
@@ -66,7 +66,7 @@ def main() -> None:
         logo.putalpha(alfa)
         logo.save(dest / "logo.webp", quality=90)
         print(juego, "logo", logo.size)
-        for f, (sigla, eje) in FACCIONES[juego].items():
+        for f, (sigla, eje) in FACCIONES.get(juego, {}).items():
             (dest / "f" / f"{f}.svg").write_text(insignia(sigla, eje), encoding="utf-8")
 
 

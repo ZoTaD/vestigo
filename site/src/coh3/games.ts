@@ -41,8 +41,8 @@ export interface GameConf {
 
 const MODES: Mode[] = ["1v1", "2v2", "3v3", "4v4"];
 const api = (t: string) => `https://${t}-api.reliclink.com/community/leaderboard`;
-/** CoH3 trae los emblemas del juego (webp); CoH1 y CoH2, por ahora, una insignia con la sigla (svg, `games/coh/tools/art.py`). */
-const icons = (g: string, fs: string[]) => Object.fromEntries(fs.map((f) => [f, `/${g}/f/${f}.${g === "coh3" ? "webp" : "svg"}`]));
+/** CoH3 y CoH2 traen los emblemas del juego (webp; los de CoH2 los recorta `games/coh2/tools/site_data.py`); CoH1, por ahora, una insignia con la sigla (svg, `games/coh/tools/art.py`). */
+const icons = (g: string, fs: string[]) => Object.fromEntries(fs.map((f) => [f, `/${g}/f/${f}.${g === "coh1" ? "svg" : "webp"}`]));
 
 /** Los rankings de CoH1/CoH2: 4–19 = 1v1…4v4 con cuatro facciones por modo, en el orden de `orden`. */
 function tabla(orden: string[], extra: GameLeaderboard[] = []): GameLeaderboard[] {
@@ -165,3 +165,6 @@ export const leaderboardIn = (c: GameConf, id: number): GameLeaderboard | undefi
 /** El nombre de una facción en su juego (corto o largo); una clave que no se conoce queda como vino. */
 export const factionLabel = (game: CohGame, lang: Lang, f: string, short: boolean): string =>
   (short ? GAMES[game].factionShort : GAMES[game].factionName)[lang][f] ?? f;
+
+/** El bando de una facción en su juego: sólo se cruzan Aliados contra Eje. */
+export const sideOf = (game: CohGame, f: string): "axis" | "allies" => (GAMES[game].axis.includes(f) ? "axis" : "allies");

@@ -24,6 +24,7 @@ const EN = {
   perMin: "manpower/min",
   targetSize: "Target size",
   fromBg: "Battlegroup",
+  fromCommander: "Commander",
   builtIn: "Built at",
   core: "Core army",
   units: {
@@ -100,6 +101,7 @@ const ES: typeof EN = {
   perMin: "mano de obra/min",
   targetSize: "Tamaño de blanco",
   fromBg: "Battlegroup",
+  fromCommander: "Comandante",
   builtIn: "Se produce en",
   core: "Ejército base",
   units: {
