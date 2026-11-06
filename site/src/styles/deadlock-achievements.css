@@ -300,3 +300,260 @@
     font-size: 16px;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Season 2: figurita holográfica (estilo C, elegido por ZoTaD el 5/11).
+   Borde blanco troquelado, esquina despegada y un brillo que crece con la
+   rareza: mate en bronce, suave en plata, foil en oro, holo entero en eterna.
+   --------------------------------------------------------------------------- */
+.dl-sticker {
+  --fo: 0;
+  margin: 0;
+  text-align: center;
+  min-width: 0;
+}
+.dl-sticker[data-tier="silver"] { --fo: 0.35; }
+.dl-sticker[data-tier="gold"] { --fo: 0.6; }
+.dl-sticker[data-tier="eternal"] { --fo: 0.9; }
+.dl-sticker-card {
+  position: relative;
+  width: 132px;
+  height: 182px;
+  margin: 0 auto;
+  padding: 6px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 0 #d8d2c4, 0 6px 14px rgba(0, 0, 0, 0.25);
+  transform: rotate(-1.5deg);
+}
+.dl-sticker:nth-child(even) .dl-sticker-card {
+  transform: rotate(1.5deg);
+}
+.dl-sticker-face {
+  position: relative;
+  height: 100%;
+  border-radius: 9px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #4a3f30, #1e1a14 75%);
+}
+.dl-sticker-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 12%;
+}
+.dl-sticker-rank {
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  width: 92px;
+  height: 92px;
+  transform: translateX(-50%);
+  object-fit: contain;
+}
+.dl-sticker-icon {
+  position: absolute;
+  left: 50%;
+  top: 34px;
+  width: 64px;
+  height: 64px;
+  transform: translateX(-50%);
+  background: linear-gradient(#ffe9a6, #d4a22c);
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+.dl-sticker-foil {
+  position: absolute;
+  inset: 0;
+  opacity: var(--fo);
+  /* `overlay` y no `color-dodge`: el dodge quemaba los oscuros (el pelo de
+     Haze se volvía manchas de color). Overlay deja el negro negro. */
+  mix-blend-mode: overlay;
+  background:
+    linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.7) 40%, transparent 55%),
+    conic-gradient(from 200deg at 30% 30%, #ff7ad9, #7af0ff, #b6ff7a, #ffe27a, #ff7a9c, #ff7ad9);
+  background-size: 300% 100%, 100% 100%;
+  animation: dl-sticker-shine 3.5s linear infinite;
+}
+@keyframes dl-sticker-shine {
+  from { background-position: 120% 0, 0 0; }
+  to { background-position: -120% 0, 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dl-sticker-foil { animation: none; }
+}
+.dl-sticker-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 48%, rgba(10, 8, 6, 0.92));
+}
+.dl-sticker-num {
+  position: absolute;
+  left: 8px;
+  top: 2px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 38px;
+  line-height: 1.1;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
+}
+.dl-sticker-season {
+  position: absolute;
+  right: 6px;
+  top: 7px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: #fff;
+  color: #1e1a14;
+  font-family: var(--font-display);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.dl-sticker-label {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1;
+  text-align: left;
+  text-transform: uppercase;
+}
+.dl-sticker-peel {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 0 0 14px 0;
+  background: linear-gradient(135deg, transparent 50%, #fff 50%, #e8e2d4);
+  box-shadow: -2px -2px 3px rgba(0, 0, 0, 0.15);
+}
+.dl-sticker figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.25;
+  color: var(--text-dim);
+}
+.dl-sticker[data-locked] .dl-sticker-card {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+@media (max-width: 520px) {
+  .dl-sticker-card { zoom: 0.85; }
+}
+.dl-medal-grid-mini .dl-sticker-card { zoom: 0.8; }
+
+/* ---------------------------------------------------------------------------
+   La ficha del jugador como credencial (ZoTaD, 5/11): pizarrón, la foto de
+   Steam con marco blanco torcido y, de fondo a la derecha, la carta del héroe
+   que más juega, fundida con la pizarra.
+   --------------------------------------------------------------------------- */
+[data-game="deadlock"] .box.dl-cred {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.dl-cred-hero {
+  position: absolute;
+  right: -30px;
+  top: -10px;
+  z-index: -1;
+  width: 62%;
+  max-width: 300px;
+  height: auto;
+  opacity: 0.32;
+  -webkit-mask: linear-gradient(90deg, transparent 0%, #000 60%);
+  mask: linear-gradient(90deg, transparent 0%, #000 60%);
+}
+/* La tira de arriba ya dice qué es: el título de cinta queda para lectores de pantalla. */
+.dl-cred > .box-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.dl-cred-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 10px;
+  color: #f0c66b;
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred :is(.dl-rep-profile, .dl-rep-form) {
+  display: block;
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-profile-id-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-avatar {
+  width: 104px;
+  height: 104px;
+  flex: 0 0 auto;
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px #f3ead8, 0 0 0 5px rgba(0, 0, 0, 0.35), 0 6px 12px rgba(0, 0, 0, 0.45);
+  transform: rotate(-2.5deg);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-profile-name {
+  margin: 0 0 4px;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #f3ead8;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rank-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rank-name {
+  font-size: 22px;
+  color: #ffb48c;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 16px;
+  margin: 14px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-stats div {
+  margin: 0;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-stats dd {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: #f3ead8;
+}
+@media (max-width: 520px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-avatar {
+    width: 76px;
+    height: 76px;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

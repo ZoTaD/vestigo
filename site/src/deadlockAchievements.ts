@@ -376,6 +376,11 @@ function pushSteps(
   }
 }
 
+/** La temporada de un logro, si es de una. */
+export function seasonOf(a: Achievement): number | null {
+  return "season" in a.kind ? a.kind.season : null;
+}
+
 /** "65k" en vez de "65000": la chapa es chica. */
 export function tagOf(n: number): string {
   return n >= 10_000 ? `${Math.round(n / 1000)}k` : String(n);

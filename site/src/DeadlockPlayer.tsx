@@ -33,7 +33,7 @@ import {
   type PlayerRank,
 } from "./deadlockMatch";
 import { useGrades } from "./deadlockGrades";
-import { heroImg, heroName, rankLabel, rankOf } from "./deadlockReportData";
+import { heroCard, heroImg, heroName, rankLabel, rankOf } from "./deadlockReportData";
 import RankBadge from "./DeadlockRankBadge";
 import DeadlockStreakForm from "./DeadlockStreakForm";
 import DeadlockActivity from "./DeadlockActivity";
@@ -188,7 +188,7 @@ function Profile({
     <div className="dl-rep-profile">
       <div className="dl-profile-id-row">
         {account?.avatar && (
-          <img className="dl-rep-avatar" src={account.avatar} alt="" width={56} height={56} />
+          <img className="dl-rep-avatar" src={account.avatar} alt="" width={104} height={104} />
         )}
         <div className="dl-rep-profile-id">
           <h2 className="dl-rep-profile-name">
@@ -865,7 +865,24 @@ export default function DeadlockPlayer({
         <>
           <div className="dl-phead">
             {resumen && (
-              <div className="box dl-pcard dl-pcard-id">
+              <div className="box dl-pcard dl-pcard-id dl-chalkboard dl-cred">
+                {/* La credencial (ZoTaD, 5/11): pizarrón, la foto de Steam con
+                    marco, y de fondo la carta del héroe que más juega. */}
+                {heroesTop[0] && heroCard(heroesTop[0].heroId) && (
+                  <GameImg
+                    className="dl-cred-hero"
+                    src={heroCard(heroesTop[0].heroId)!}
+                    alt=""
+                    width={280}
+                    height={380}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+                <p className="dl-cred-strip" aria-hidden="true">
+                  <span>Vestigo · Deadlock</span>
+                  <span>{temporada === "all" ? c.seasons.all : c.seasons.name(temporada)}</span>
+                </p>
                 <h2 className="box-title dl-pcard-title">{c.cards.profile}</h2>
                 <Profile
                   account={cuenta}

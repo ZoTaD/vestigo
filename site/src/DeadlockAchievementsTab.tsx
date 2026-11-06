@@ -3,8 +3,8 @@ import "./styles/deadlock-achievements.css";
 import { useLang } from "./i18n";
 import { text } from "./localized";
 import GameImg from "./GameImg";
-import { heroImg, heroName, rankLabel, rankOf } from "./deadlockReportData";
-import { GROUPS, type Achievement, type Group } from "./deadlockAchievements";
+import { heroCard, heroImg, heroName, rankLabel, rankOf } from "./deadlockReportData";
+import { GROUPS, seasonOf, type Achievement, type Group } from "./deadlockAchievements";
 import { ACH_COPY, achievementText } from "./deadlockAchievementsCopy";
 
 /**
@@ -29,10 +29,51 @@ function useNames() {
   };
 }
 
+/**
+ * Cada temporada tiene su estilo (ZoTaD, 5/11): la Season 1 y lo que no es de
+ * una temporada van en medalla; la Season 2 en figurita holográfica (estilo
+ * C): sticker troquelado con borde blanco y un brillo tornasolado que crece
+ * con la rareza, mate en bronce y holo entero en la eterna.
+ */
+function Sticker({ a, title, detail }: { a: Achievement; title: string; detail: string }) {
+  const { lang } = useLang();
+  const f = a.face;
+  const card = f.kind === "hero" ? heroCard(f.heroId) ?? heroImg(f.heroId) : null;
+  const rango = f.kind === "rank" ? rankOf(f.badge) : null;
+  return (
+    <figure className="dl-sticker" data-tier={a.tier} data-locked={a.progress ? "" : undefined}>
+      <div className="dl-sticker-card" aria-hidden="true">
+        <div className="dl-sticker-face">
+          {card && <GameImg className="dl-sticker-art" src={card} alt="" width={128} height={174} loading="lazy" decoding="async" />}
+          {rango && <GameImg className="dl-sticker-rank" src={rango.img} alt="" width={96} height={96} loading="lazy" decoding="async" />}
+          {f.kind === "icon" && <span className="dl-sticker-icon" style={{ ["--icon" as string]: `url(/deadlock/game/icons/${f.icon}.svg)` }} />}
+          <span className="dl-sticker-foil" />
+          <span className="dl-sticker-shade" />
+          <b className="dl-sticker-num">{a.tag}</b>
+          <span className="dl-sticker-season">S{seasonOf(a)}</span>
+          <span className="dl-sticker-label">{title}</span>
+        </div>
+        <span className="dl-sticker-peel" />
+      </div>
+      <figcaption>
+        <span>{detail}</span>
+        {a.progress ? (
+          <span className="dl-medal-bar" role="progressbar" aria-valuenow={a.progress.have} aria-valuemax={a.progress.need}>
+            <i style={{ width: `${Math.min(100, (a.progress.have / a.progress.need) * 100)}%` }} />
+          </span>
+        ) : (
+          <em className="dl-medal-tier">{ACH_COPY[lang].tiers[a.tier]}</em>
+        )}
+      </figcaption>
+    </figure>
+  );
+}
+
 export function Medal({ a, size = "lg" }: { a: Achievement; size?: "lg" | "sm" }) {
   const { lang } = useLang();
   const names = useNames();
   const { title, detail } = achievementText(a, lang, names.hero, names.rank);
+  if (size === "lg" && (seasonOf(a) ?? 0) >= 2) return <Sticker a={a} title={title} detail={detail} />;
   const px = size === "lg" ? 84 : 26;
   const f = a.face;
   return (
