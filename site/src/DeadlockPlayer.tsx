@@ -3,7 +3,7 @@ import { useMasonry } from "./useMasonry";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import DeadlockAchievements, { BestAchievements } from "./DeadlockAchievementsTab";
-import { achievementsOf, useRecords } from "./deadlockAchievements";
+import { seasonAchievements, seasonsWithMatches, useRecords, type Achievement } from "./deadlockAchievements";
 import { ACH_COPY, PROFILE_TABS, type ProfileTab } from "./deadlockAchievementsCopy";
 import SectionHead from "./SectionHead";
 import { takePendingSearch } from "./pendingSearch";
@@ -47,7 +47,7 @@ import DeadlockHeroVsBandCard from "./DeadlockHeroVsBandCard";
 import DeadlockBuildVsBandCard from "./DeadlockBuildVsBandCard";
 import { useHeroVsBand } from "./deadlockHeroVsBand";
 import { bandRangeOf } from "./deadlockVsBand";
-import { defaultSeason, inSeason, ladderSeason, seasonCounts, SEASONS, type SeasonPick } from "./deadlockSeasons";
+import { currentSeason, defaultSeason, inSeason, ladderSeason, seasonCounts, SEASONS, type SeasonPick } from "./deadlockSeasons";
 import DeadlockPeerCard from "./DeadlockPeerCard";
 import { peersInScope, usePeers } from "./deadlockPeers";
 import DeadlockCareerHeroes from "./DeadlockCareerHeroes";
@@ -514,7 +514,6 @@ export default function DeadlockPlayer({
    * La carrera por héroe. **No sigue al modo** —es la carrera entera, y la
    * tarjeta lo dice— así que se pide una vez por cuenta y no por click.
    */
-  const carreraTotal = useHeroStats(id);
   /** La carrera por héroe de la temporada elegida (con "todas", la entera). */
   const carrera = useHeroStats(id, temporada);
   /** El rango partida por partida, para marcar en cuál ascendió. */
@@ -793,20 +792,27 @@ export default function DeadlockPlayer({
    * (uno solo, cacheado): ver `deadlockAchievements.ts`.
    */
   const records = useRecords();
-  const logros = useMemo(
-    () =>
-      id != null && historial
-        ? achievementsOf({
-            accountId: id,
-            history: historialTodo,
-            career: carreraTotal,
-            rankSeries: serie,
-            records,
-          })
-        : { earned: [], next: [] },
+  /**
+   * Los logros, temporada por temporada (ZoTaD, 6/11): la que terminó queda
+   * congelada y la vigente arranca de cero. `todos` junta las de todas para
+   * la cabecera, ordenados por rareza.
+   */
+  const logros = useMemo(() => {
+    const vacio = { seasons: [] as number[], bySeason: new Map<number, { earned: Achievement[]; next: Achievement[] }>(), todos: [] as Achievement[] };
+    if (id == null || !historial) return vacio;
+    const vigente = currentSeason().id;
+    const seasons = seasonsWithMatches(historialTodo);
+    const bySeason = new Map(
+      seasons.map((s) => [
+        s,
+        seasonAchievements({ accountId: id, season: s, history: historialTodo, rankSeries: serie, records, current: s === vigente }),
+      ])
+    );
+    const valor = (a: Achievement) => a.rarity ?? 1;
+    const todos = [...bySeason.values()].flatMap((x) => x.earned).sort((a, b) => valor(a) - valor(b));
+    return { seasons, bySeason, todos };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [id, historial, carreraTotal, serie, records]
-  );
+  }, [id, historial, serie, records]);
 
   return (
     <section className="tool">
@@ -912,7 +918,7 @@ export default function DeadlockPlayer({
                 )}
               </div>
             )}
-            <BestAchievements earned={logros.earned} onOpen={() => irA("achievements")} />
+            <BestAchievements earned={logros.todos} onOpen={() => irA("achievements")} />
           </div>
 
           <nav className="dl-ptabs" aria-label={c.cards.profile}>
@@ -925,7 +931,7 @@ export default function DeadlockPlayer({
                 active={pestana === t}
               >
                 {ACH_COPY[lang].tabs[t]}
-                {t === "achievements" && logros.earned.length > 0 && <sup>{logros.earned.length}</sup>}
+                {t === "achievements" && logros.todos.length > 0 && <sup>{logros.todos.length}</sup>}
               </RouteLink>
             ))}
           </nav>
@@ -1189,7 +1195,7 @@ export default function DeadlockPlayer({
             </Piso>
           )}
 
-          {pestana === "achievements" && <DeadlockAchievements earned={logros.earned} next={logros.next} />}
+          {pestana === "achievements" && <DeadlockAchievements seasons={logros.seasons} bySeason={logros.bySeason} />}
         </>
       )}
     </section>

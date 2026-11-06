@@ -5,6 +5,7 @@ import { text } from "./localized";
 import GameImg from "./GameImg";
 import { heroCard, heroImg, heroName, rankLabel, rankOf } from "./deadlockReportData";
 import { GROUPS, seasonOf, type Achievement, type Group } from "./deadlockAchievements";
+import { currentSeason } from "./deadlockSeasons";
 import { ACH_COPY, achievementText } from "./deadlockAchievementsCopy";
 
 /**
@@ -57,6 +58,7 @@ function Sticker({ a, title, detail }: { a: Achievement; title: string; detail: 
       </div>
       <figcaption>
         <span>{detail}</span>
+        {a.rarity != null && !a.progress && <span className="dl-medal-rarity">{ACH_COPY[lang].rarity(a.rarity, lang)}</span>}
         {a.progress ? (
           <span className="dl-medal-bar" role="progressbar" aria-valuenow={a.progress.have} aria-valuemax={a.progress.need}>
             <i style={{ width: `${Math.min(100, (a.progress.have / a.progress.need) * 100)}%` }} />
@@ -97,6 +99,7 @@ export function Medal({ a, size = "lg" }: { a: Achievement; size?: "lg" | "sm" }
         <figcaption>
           <strong>{title}</strong>
           <span>{detail}</span>
+          {a.rarity != null && !a.progress && <span className="dl-medal-rarity">{ACH_COPY[lang].rarity(a.rarity, lang)}</span>}
           {a.progress ? (
             <span className="dl-medal-bar" role="progressbar" aria-valuenow={a.progress.have} aria-valuemax={a.progress.need}>
               <i style={{ width: `${Math.min(100, (a.progress.have / a.progress.need) * 100)}%` }} />
@@ -125,10 +128,20 @@ export function MedalStrip({ earned, onOpen }: { earned: Achievement[]; onOpen: 
 }
 
 /** La pestaña Logros entera. */
-export default function DeadlockAchievements({ earned, next }: { earned: Achievement[]; next: Achievement[] }) {
+export default function DeadlockAchievements({
+  seasons,
+  bySeason,
+}: {
+  /** Las temporadas con partidas, de la más nueva a la más vieja. */
+  seasons: number[];
+  bySeason: Map<number, { earned: Achievement[]; next: Achievement[] }>;
+}) {
   const { lang } = useLang();
   const c = ACH_COPY[lang];
   const [grupo, setGrupo] = useState<Group | "all">("all");
+  const [elegida, setElegida] = useState<number | null>(null);
+  const temporada = elegida != null && seasons.includes(elegida) ? elegida : seasons[0];
+  const { earned, next } = bySeason.get(temporada) ?? { earned: [], next: [] };
   const conteo = useMemo(() => {
     const m = new Map<Group, number>();
     for (const a of earned) m.set(a.group, (m.get(a.group) ?? 0) + 1);
@@ -143,6 +156,25 @@ export default function DeadlockAchievements({ earned, next }: { earned: Achieve
           <h2 className="box-title">{c.tabs.achievements}</h2>
           <span className="box-aside">{c.earned(earned.length)}</span>
         </div>
+        {/* Cada temporada tiene sus logros: la que terminó queda congelada. */}
+        {seasons.length > 0 && (
+          <label className="dl-ach-season">
+            <span>{c.season}</span>
+            <select
+              value={temporada}
+              onChange={(e) => {
+                setElegida(Number(e.target.value));
+                setGrupo("all");
+              }}
+            >
+              {seasons.map((s, i) => (
+                <option key={s} value={s}>
+                  {c.seasonName(s, i === 0 && s === currentSeason().id)}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <p className="detail-note">{c.lead}</p>
         {earned.length === 0 ? (
           <p className="dl-notice">{c.none}</p>

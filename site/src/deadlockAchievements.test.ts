@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  achievementsOf,
+  seasonAchievements,
+  rarityOf,
   longestWinStreak,
   nextStep,
   peakTier,
@@ -34,15 +35,15 @@ function fila(p: Partial<HistoryRow>): HistoryRow {
   };
 }
 
-const base = { accountId: 7, career: [], rankSeries: [], records: null };
+const base = { accountId: 7, season: 1, rankSeries: [], records: null, current: true };
 
 describe("umbrales", () => {
   it("stepTier y nextStep", () => {
-    expect(stepTier(49, MASTERY)).toBeNull();
-    expect(stepTier(50, MASTERY)).toBe("bronze");
-    expect(stepTier(1000, MASTERY)).toBe("eternal");
-    expect(nextStep(160, MASTERY)).toBe(400);
-    expect(nextStep(5000, MASTERY)).toBeNull();
+    expect(stepTier(24, MASTERY)).toBeNull();
+    expect(stepTier(25, MASTERY)).toBe("bronze");
+    expect(stepTier(400, MASTERY)).toBe("eternal");
+    expect(nextStep(80, MASTERY)).toBe(200);
+    expect(nextStep(500, MASTERY)).toBeNull();
   });
 
   it("peakTier por división", () => {
@@ -59,10 +60,15 @@ it("la racha más larga va en orden cronológico", () => {
   expect(longestWinStreak([...rows].reverse())).toBe(3);
 });
 
-it("las hazañas ignoran lobbies privados y la pelea callejera", () => {
-  const { earned } = achievementsOf({
+it("las hazañas cuentan sólo clasificatorias de la temporada", () => {
+  const { earned } = seasonAchievements({
     ...base,
-    history: [fila({ netWorth: 1_207_450, mode: 2 }), fila({ kills: 40, gameMode: 4 }), fila({ kills: 21 })],
+    history: [
+      fila({ netWorth: 1_207_450, mode: 2 }),
+      fila({ kills: 40, gameMode: 4 }),
+      fila({ kills: 33, startTime: Date.UTC(2026, 10, 10) / 1000 }),
+      fila({ kills: 21 }),
+    ],
   });
   expect(earned.find((a) => a.kind.type === "bestSouls")).toBeUndefined();
   const k = earned.find((a) => a.kind.type === "bestKills");
@@ -71,7 +77,7 @@ it("las hazañas ignoran lobbies privados y la pelea callejera", () => {
 });
 
 it("veterano de la Season 1 con una clasificatoria", () => {
-  const { earned } = achievementsOf({ ...base, history: [fila({})] });
+  const { earned } = seasonAchievements({ ...base, history: [fila({})] });
   expect(earned.some((a) => a.kind.type === "veteran")).toBe(true);
 });
 
@@ -91,4 +97,17 @@ it("recordsOf encuentra la cuenta en héroe y mundo", () => {
 it("la URL del perfil lleva la pestaña", () => {
   expect(parseRoute("/es/deadlock/player/123/achievements").detail).toBe("123/achievements");
   expect(parseRoute("/es/deadlock/player/123").detail).toBe("123");
+});
+
+it("la rareza sale de los conteos de la temporada", () => {
+  const rar = { players: 1000, feats: { max_kills_per_match: { "20": 5 } }, peak: {}, heroes: {} };
+  const { earned } = seasonAchievements({ ...base, history: [fila({ kills: 21 })] });
+  const k = earned.find((a) => a.kind.type === "bestKills")!;
+  expect(rarityOf(k, rar)).toBe(0.005);
+  expect(rarityOf(earned.find((a) => a.kind.type === "veteran")!, rar)).toBeUndefined();
+});
+
+it("la temporada nueva arranca de cero", () => {
+  const { earned } = seasonAchievements({ ...base, season: 2, current: true, history: [fila({ kills: 21 })] });
+  expect(earned).toEqual([]);
 });
