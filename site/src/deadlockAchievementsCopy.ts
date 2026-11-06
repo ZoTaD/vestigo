@@ -34,6 +34,15 @@ const METRIC: Record<Lang, Record<string, string>> = {
   },
 };
 
+/** "0,5 %", "12 %", "menos del 0,01 %": sin decimales de más. */
+export function pctText(x: number, l: Lang): string {
+  const v = x * 100;
+  if (v > 0 && v < 0.01) return l === "es" ? "menos del 0,01 %" : "under 0.01%";
+  const d = v < 1 ? 2 : v < 10 ? 1 : 0;
+  const n = v.toLocaleString(l, { maximumFractionDigits: d });
+  return l === "es" ? `${n} %` : `${n}%`;
+}
+
 export const ACH_COPY = {
   en: {
     tabs: { overview: "Overview", matches: "Matches", heroes: "Heroes", rank: "Rank", achievements: "Achievements" },
@@ -50,10 +59,14 @@ export const ACH_COPY = {
     next: "Up next",
     nextLead: "The closest ones to unlock.",
     none: "No achievements yet. Play a few ranked matches and come back.",
-    lead: "Medals earned by playing. World records are the top 10 of each hero (top 100 for all heroes) in ranked, per season.",
+    lead: "Medals earned in ranked, season by season: when a season ends its medals stay frozen and the new one starts from zero. Sorted from rarest to most common.",
     best: "Best achievements",
     seeAll: (n: number) => `See all ${n}`,
-    howTiers: "Bronze, silver, gold and eternal: the higher the metal, the harder it is.",
+    howTiers: "Bronze, silver, gold and eternal: the higher the metal, the harder it is. The percentage is how many ranked players of that season have it.",
+    season: "Season",
+    seasonName: (s: number, current: boolean) => (current ? `Season ${s} (current)` : `Season ${s}`),
+    rarity: (x: number, l: Lang) => `${pctText(x, l)} of players`,
+    rarityHero: (x: number, l: Lang, hero: string) => `${pctText(x, l)} of ${hero} players`,
   },
   es: {
     tabs: { overview: "Resumen", matches: "Partidas", heroes: "Héroes", rank: "Rango", achievements: "Logros" },
@@ -70,10 +83,14 @@ export const ACH_COPY = {
     next: "Lo próximo",
     nextLead: "Los que tenés más cerca.",
     none: "Todavía no hay logros. Jugá unas clasificatorias y volvé.",
-    lead: "Medallas que se ganan jugando. Los récords del mundo son el top 10 de cada héroe (top 100 con todos los héroes) en clasificatorias, por temporada.",
+    lead: "Medallas que se ganan en clasificatorias, temporada por temporada: cuando una termina sus medallas quedan congeladas y la nueva arranca de cero. Van de la más rara a la más común.",
     best: "Mejores logros",
     seeAll: (n: number) => `Ver los ${n}`,
-    howTiers: "Bronce, plata, oro y eterna: cuanto más alto el metal, más difícil.",
+    howTiers: "Bronce, plata, oro y eterna: cuanto más alto el metal, más difícil. El porcentaje es cuántos jugadores de clasificatorias de esa temporada la tienen.",
+    season: "Temporada",
+    seasonName: (s: number, current: boolean) => (current ? `Season ${s} (en curso)` : `Season ${s}`),
+    rarity: (x: number, l: Lang) => `La tiene el ${pctText(x, l)} de los jugadores`,
+    rarityHero: (x: number, l: Lang, hero: string) => `La tiene el ${pctText(x, l)} de los que juegan ${hero}`,
   },
 };
 
