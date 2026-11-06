@@ -66,12 +66,18 @@ def limpio(nombre: str | None) -> str:
     return re.sub(r"^\(\d(?:\s*-\s*\d)?\)\s*|\s*\(\d(?:\s*-\s*\d)?\)$", "", (nombre or "").strip())
 
 
-def textos(base: Path, rutas: list[str]) -> dict[int, str]:
+def textos(base: Path, rutas: list[str], cache: Path | None = None) -> dict[int, str]:
+    """Steam instala un solo idioma a la vez: con `cache`, cada `.ucs` que está se copia ahí (fuera de git) y el que
+    falta sale de la copia."""
     out: dict[int, str] = {}
     for r in rutas:
         f = base / r
-        if f.exists():
-            out.update(load_ucs(f))
+        c = cache / f.name if cache else None
+        if f.exists() and c:
+            cache.mkdir(parents=True, exist_ok=True)
+            c.write_bytes(f.read_bytes())
+        if f.exists() or (c and c.exists()):
+            out.update(load_ucs(f if f.exists() else c))
     return out
 
 
@@ -82,7 +88,7 @@ def main(argv: list[str]) -> None:
     a = ap.parse_args(argv)
     conf = JUEGOS[a.game]
     base = Path(a.root) / conf["dir"]
-    ucs = {lang: textos(base, rutas) for lang, rutas in conf["textos"].items()}
+    ucs = {lang: textos(base, rutas, RAIZ / "games" / a.game / "raw") for lang, rutas in conf["textos"].items()}
     if not ucs["en"]:
         print("  sin textos en inglés: el nombre en inglés queda vacío (el sitio lo embellece)")
     salida_img = RAIZ / "site" / "public" / a.game / "m"

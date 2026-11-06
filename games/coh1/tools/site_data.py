@@ -195,16 +195,34 @@ def _entidad(d: dict) -> dict:
     }
 
 
+RAW = RAIZ / "games" / "coh1" / "raw"
+
+
+def textos(base: Path, cache: Path = RAW) -> tuple[dict, dict, bool]:
+    """Los textos en inglés y en español. Steam instala un solo idioma a la vez: cada `.ucs` que está se copia a
+    `cache` (fuera de git) y el que falta sale de esa copia. Devuelve (inglés, español, hay inglés)."""
+    out = {}
+    for idioma in ("English", "Spanish"):
+        f = base / f"CoH/Engine/Locale/{idioma}/RelicCOH.{idioma}.ucs"
+        c = cache / f.name
+        if f.exists():
+            cache.mkdir(parents=True, exist_ok=True)
+            c.write_bytes(f.read_bytes())
+        out[idioma] = load_ucs(c) if c.exists() else None
+    en, es = out["English"], out["Spanish"]
+    if es is None and en is None:
+        raise SystemExit("no hay textos de CoH1 ni en la instalación ni en la copia")
+    return en or es, es or en, en is not None
+
+
 def main(argv: list[str]) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=STEAM)
     a = ap.parse_args(argv)
     base = Path(a.root) / JUEGO
     at = Atributos(Sga(base / "WW2/Archives/AttribArchive.sga"))
-    es = load_ucs(base / "CoH/Engine/Locale/Spanish/RelicCOH.Spanish.ucs")
-    en_f = base / "CoH/Engine/Locale/English/RelicCOH.English.ucs"
-    en = load_ucs(en_f) if en_f.exists() else es
-    if not en_f.exists():
+    en, es, hay_en = textos(base)
+    if not hay_en:
         print("  sin textos en inglés: el inglés va igual al español hasta que estén instalados")
     t = lambda ref: c2.texto(ref, en, es)  # noqa: E731
     artes = [Sga(base / x) for x in ARCHIVOS_ARTE if (base / x).exists()]
@@ -411,7 +429,7 @@ def main(argv: list[str]) -> None:
     # --- Escritura (como CoH2).
     c2.DATA = DATA
     ahora = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    write_json(DATA / "meta.json", {"generatedAt": ahora, "tag": "coh1", "patch": None, "english": en_f.exists(),
+    write_json(DATA / "meta.json", {"generatedAt": ahora, "tag": "coh1", "patch": None, "english": hay_en,
                                     "counts": {"units": len(unidades), "weapons": len(fichas_armas), "doctrines": len(doctrinas)}})
     c2._tab("units", unidades, lambda u: {k: u[k] for k in ("slug", "name", "faction", "kind", "icon", "cost", "hp", "armor",
                                                              "targetSize", "models", "bg", "target")})

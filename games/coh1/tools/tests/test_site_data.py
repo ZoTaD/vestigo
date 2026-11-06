@@ -65,3 +65,20 @@ def test_solo_lo_que_genera():
 
 def test_voss_afuera():
     assert not sd.es_multijugador("sbps/races/axis/vehicles/tiger_voss_squad")
+
+
+def _ucs(p, txt):
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_bytes(("﻿" + txt).encode("utf-16-le"))
+
+
+def test_textos_guarda_y_recupera(tmp_path):
+    base, cache = tmp_path / "juego", tmp_path / "raw"
+    _ucs(base / "CoH/Engine/Locale/Spanish/RelicCOH.Spanish.ucs", "1\tHola\n")
+    en, es, ok = sd.textos(base, cache)
+    assert es == {1: "Hola"} and en == es and not ok
+    # Steam cambia de idioma: el español desaparece de la instalación y queda la copia.
+    (base / "CoH/Engine/Locale/Spanish/RelicCOH.Spanish.ucs").unlink()
+    _ucs(base / "CoH/Engine/Locale/English/RelicCOH.English.ucs", "1\tHello\n")
+    en, es, ok = sd.textos(base, cache)
+    assert en == {1: "Hello"} and es == {1: "Hola"} and ok
