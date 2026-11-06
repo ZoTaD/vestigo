@@ -432,6 +432,26 @@ const isCoh3Tab = (v: string | undefined): v is Coh3Tab => !!v && (COH3_SECTIONS
 /** La pestaña de CoH3 de un segmento, escrito en cualquiera de los dos idiomas. */
 const coh3Tab = (v: string | undefined): Coh3Tab | undefined => (isCoh3Tab(v) ? v : v ? COH3_SECTION_BY_ES.get(v) : undefined);
 
+/**
+ * Los tres Company of Heroes (2026-11-06): la sección es una sola (`view: "coh3"`) y `cohGame` dice cuál. CoH3 queda en
+ * `/coh3` sin cambiar ninguna dirección; CoH2 y CoH1 van en `/coh2` y `/coh1` con los mismos segmentos. Diseño:
+ * docs/superpowers/specs/2026-11-06-coh-unificado-design.md.
+ */
+export type CohGame = "coh3" | "coh2" | "coh1";
+const COH_SEGMENTS: CohGame[] = ["coh3", "coh2", "coh1"];
+/** Las pestañas con página de CoH1 y CoH2 (la enciclopedia llega en las etapas 2 y 3). */
+const COH_LIVE_TABS: Coh3Tab[] = ["leaderboards", "ranks", "stats", "achievements", "players", "matches"];
+export const cohTabs = (g: CohGame | undefined): Coh3Tab[] => (!g || g === "coh3" ? COH3_SECTIONS : COH_LIVE_TABS);
+/**
+ * Cambiar de juego: la misma pestaña si el otro juego la tiene; si no, su portada. Nunca la ficha (un jugador o una
+ * unidad de un juego no existe en el otro).
+ */
+export function switchGame(route: Route, to: CohGame): Route {
+  const sec = route.c3Section ?? "home";
+  const keep = sec !== "home" && cohTabs(to).includes(sec);
+  return { ...route, view: "coh3", cohGame: to === "coh3" ? undefined : to, c3Section: keep ? sec : "home", detail: undefined };
+}
+
 export interface Route {
   lang: Lang;
   view: View;
@@ -457,6 +477,8 @@ export interface Route {
   c2Section?: Cs2Section;
   /** Qué pestaña de Company of Heroes 3. Sin ella es la portada de la sección. */
   c3Section?: Coh3Section;
+  /** Cuál Company of Heroes (sin valor, CoH3). */
+  cohGame?: CohGame;
   /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
   detail?: string;
 }
@@ -598,11 +620,13 @@ export function parseRoute(pathname: string): Route {
     return { ...base, view: "warframe", wfSection: tab, detail };
   }
 
-  if (head === COH3_SEGMENT) {
+  if (head && (COH_SEGMENTS as string[]).includes(head)) {
+    const g = head as CohGame;
+    const juego = g === "coh3" ? {} : { cohGame: g };
     const tab = coh3Tab(rest[1]);
-    if (!tab) return { ...base, view: "coh3", c3Section: "home" };
+    if (!tab || !cohTabs(g).includes(tab)) return { ...base, view: "coh3", ...juego, c3Section: "home" };
     const ficha = COH3_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
-    return { ...base, view: "coh3", c3Section: tab, detail: ficha };
+    return { ...base, view: "coh3", ...juego, c3Section: tab, detail: ficha };
   }
 
   if (head === CS2_SEGMENT) {
@@ -734,7 +758,7 @@ export function routePath(route: Route): string {
   }
   if (view === "coh3") {
     const sec = route.c3Section ?? "home";
-    const root = `/${lang}/${COH3_SEGMENT}`;
+    const root = `/${lang}/${route.cohGame ?? COH3_SEGMENT}`;
     if (sec === "home") return root;
     const path = `${root}/${lang === "es" ? COH3_SECTION_ES[sec] : sec}`;
     return detail ? `${path}/${detail}` : path;

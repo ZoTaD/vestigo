@@ -337,6 +337,14 @@ function readSitemapData(): { data: OgData } {
     console.warn(`[coh3] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     c3 = undefined;
   }
+  // CoH2 y CoH1 (2026-11-06): la fecha de sus estadísticas, para el `lastmod` de sus pestañas.
+  const cohStatsDate = (g: string): string | undefined => {
+    try {
+      return JSON.parse(readFileSync(fileURLToPath(new URL(`../games/${g}/stats/summary.json`, import.meta.url)), "utf-8")).generatedAt;
+    } catch {
+      return undefined;
+    }
+  };
   return {
     data: {
       p2,
@@ -363,6 +371,8 @@ function readSitemapData(): { data: OgData } {
         warframe: wf?.generatedAt,
         cs2: c2?.generatedAt,
         coh3: c3?.generatedAt,
+        coh2: cohStatsDate("coh2"),
+        coh1: cohStatsDate("coh1"),
       },
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,

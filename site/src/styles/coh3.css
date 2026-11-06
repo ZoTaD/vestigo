@@ -118,6 +118,19 @@
 .c3-brand { position: absolute; left: max(24px, calc(50% - 596px)); top: 10px; }
 .c3-brand img { width: 136px; height: auto; display: block; }
 
+/* --- Selector de juego (2026-11-06): CoH3 · CoH2 · CoH1, arriba de las pestañas del juego. El activo en bronce. ------- */
+.c3-games { display: flex; gap: 4px; max-width: 1240px; margin: 0 auto; padding: 8px 16px 0; background: #0e0f0a; box-shadow: 0 0 0 100vmax #0e0f0a; clip-path: inset(0 -100vmax); }
+.c3-game { padding: 5px 12px 4px; font: 800 14px/1.2 var(--c3-stencil); letter-spacing: 0.12em; color: var(--c3-dim); background: var(--c3-well); }
+a.c3-game:hover { color: var(--c3-brass); }
+.c3-game.is-on { color: #1a1408; background: var(--c3-brass); }
+.c3[data-game="coh2"] .c3-strip, .c3[data-game="coh1"] .c3-strip {
+  background:
+    linear-gradient(90deg, var(--c3-bg) 10%, rgba(21, 23, 15, 0.55) 55%, rgba(21, 23, 15, 0.25)),
+    var(--c3-strip-art) 70% 30% / cover no-repeat;
+}
+.c3[data-game="coh2"] { --c3-strip-art: url("/coh2/bg/hero-1600.webp"); }
+.c3[data-game="coh1"] { --c3-strip-art: url("/coh1/bg/hero-1600.webp"); }
+
 /* --- Barra de pestañas -------------------------------------------------------------------------------------------- */
 .c3-tabbar { background: #0e0f0a; border-bottom: 1px solid var(--c3-line2); }
 .c3-tabs { display: flex; gap: 2px; max-width: 1240px; margin: 0 auto; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }

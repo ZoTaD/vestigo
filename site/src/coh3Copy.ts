@@ -201,3 +201,63 @@ export function useCoh3Copy(): Coh3Copy {
   const { lang } = useLang();
   return COH3_COPY[lang];
 }
+
+/**
+ * Los textos propios de CoH2 y CoH1 (2026-11-06): portada y SEO. Las pestañas y lo compartido salen de `COH3_COPY`;
+ * acá va sólo lo que nombra al juego.
+ */
+type LiveSec = "home" | "leaderboards" | "ranks" | "stats" | "achievements" | "players" | "matches";
+type GameText = { name: string; h1: string; lede: string; seo: Record<LiveSec, Seo>; credit: string };
+const credito = {
+  en: "Icons and game data © Relic Entertainment / SEGA. Not affiliated with Relic or SEGA.",
+  es: "Íconos y datos del juego © Relic Entertainment / SEGA. Sin afiliación con Relic ni SEGA.",
+};
+function textos(lang: Lang, nombre: string, corto: string, facciones: string): GameText {
+  if (lang === "es")
+    return {
+      name: nombre,
+      h1: `${nombre}: ranking, ELO y estadísticas`,
+      lede: `El ranking de ${facciones} con el ELO de cada jugador, quién gana en cada mapa y la cantidad de jugadores por nivel. Se actualiza todos los días.`,
+      credit: credito.es,
+      seo: {
+        home: { title: `${nombre}: ranking con ELO y estadísticas`, description: clip(`Ranking de ${corto} con el ELO real de cada jugador, victorias por facción, mapa y ELO, niveles y logros. Gratis y al día.`) },
+        leaderboards: { title: `Ranking de ${corto} con ELO: 1v1 a 4v4 por facción`, description: clip(`El ranking de ${nombre} de cada facción y modo, con el ELO de cada jugador, victorias, derrotas y racha.`) },
+        ranks: { title: `Niveles de ${corto}: cuántos jugadores hay en cada uno`, description: clip(`Cuántos jugadores de ${nombre} hay en cada nivel del ranking, por facción y modo, con su ELO y sus países.`) },
+        stats: { title: `Estadísticas de ${corto}: victorias por facción, mapa y ELO`, description: clip(`Qué facción gana más en ${nombre}, en cada cruce, cada mapa y cada tramo de ELO, con las partidas de las últimas semanas.`) },
+        achievements: { title: `Logros de ${corto}: qué porcentaje los tiene`, description: clip(`Todos los logros de ${nombre}, lo que piden y qué parte de los jugadores los desbloqueó.`) },
+        players: { title: `Jugadores de ${corto}`, description: clip(`Posiciones, partidas recientes y ELO de un jugador de ${nombre}.`) },
+        matches: { title: `Partida de ${corto}`, description: clip(`Una partida de ${nombre}: jugadores, facciones y cambio de ELO.`) },
+      },
+    };
+  return {
+    name: nombre,
+    h1: `${nombre} leaderboards, Elo and stats`,
+    lede: `The ${facciones} leaderboards with every player's Elo, who wins on each map and how many players sit at each level. Updated daily.`,
+    credit: credito.en,
+    seo: {
+      home: { title: `${nombre} Leaderboards with Elo and Stats`, description: clip(`${corto} leaderboards with every player's real Elo, faction win rates by map and Elo, rank levels and achievements. Free, updated daily.`) },
+      leaderboards: { title: `${corto} Leaderboards with Elo: 1v1 to 4v4 by Faction`, description: clip(`${nombre} leaderboards for every faction and mode, with each player's Elo, wins, losses and streak.`) },
+      ranks: { title: `${corto} Ranks: Players per Level by Faction`, description: clip(`How many ${nombre} players sit at each ranking level, by faction and mode, with Elo and countries.`) },
+      stats: { title: `${corto} Stats: Faction Win Rates by Map and Elo`, description: clip(`Which ${nombre} faction wins most in each matchup, on each map and in each Elo band, from recent automatch games.`) },
+      achievements: { title: `${corto} Achievements: Global Unlock Rates`, description: clip(`Every ${nombre} achievement with what it asks and the share of players who have unlocked it.`) },
+      players: { title: `${corto} Player Stats`, description: clip(`${nombre} player standings, recent matches and Elo.`) },
+      matches: { title: `${corto} Match Details`, description: clip(`${nombre} match details: players, factions and Elo change.`) },
+    },
+  };
+}
+export const COH_GAME_COPY: Record<"coh2" | "coh1", Record<Lang, GameText>> = {
+  coh2: {
+    en: textos("en", "Company of Heroes 2", "CoH2", "Ostheer, Soviets, OKW, US Forces and British"),
+    es: textos("es", "Company of Heroes 2", "CoH2", "Ostheer, soviéticos, OKW, EE. UU. y británicos"),
+  },
+  coh1: {
+    en: textos("en", "Company of Heroes", "CoH1", "Americans, Wehrmacht, British and Panzer Elite"),
+    es: textos("es", "Company of Heroes", "CoH1", "estadounidenses, Wehrmacht, británicos y Panzer Elite"),
+  },
+};
+/** El SEO de una pestaña de CoH2 o CoH1; una que no tiene texto propio cae en la portada. */
+export function cohGameSeo(game: "coh2" | "coh1", lang: Lang, sec: string, detailName?: string | null): Seo {
+  const g = COH_GAME_COPY[game][lang];
+  if (sec === "players" && detailName) return { title: `${detailName} – ${g.seo.players.title}`, description: g.seo.players.description };
+  return g.seo[sec as LiveSec] ?? g.seo.home;
+}

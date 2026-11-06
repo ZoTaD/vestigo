@@ -6,7 +6,9 @@
 import { useEffect, useState } from "react";
 import RouteLink from "../RouteLink";
 import { routePath, type Coh3Section, type Route } from "../route";
-import { FACTIONS, FACTION_ICON, useCoh3Copy } from "../coh3Copy";
+import { COH_GAME_COPY, FACTIONS, FACTION_ICON, useCoh3Copy } from "../coh3Copy";
+import { useLang } from "../i18n";
+import { GAMES } from "./games";
 import { loadMeta, peekMeta, type Meta } from "./data";
 import type { Nav } from "./ui";
 
@@ -30,8 +32,44 @@ function useMeta(): Meta | null {
   return meta;
 }
 
+/** La cabecera de CoH2 y CoH1: su arte, su logo y una tarjeta por facción que abre su ranking. */
+function GameHero({ route, game }: { route: Route; game: "coh2" | "coh1" }) {
+  const { lang } = useLang();
+  const g = COH_GAME_COPY[game][lang];
+  const conf = GAMES[game];
+  return (
+    <header className="c3-hero">
+      <picture>
+        <source media="(max-width: 700px)" srcSet={`/${game}/bg/hero-800.webp`} />
+        <img className="c3-hero-art" src={`/${game}/bg/hero-1600.webp`} alt="" width={1600} height={517} {...{ fetchpriority: "high" }} />
+      </picture>
+      <div className="c3-hero-in">
+        <h1 className="c3-hero-h1">
+          <img className="c3-logo" src={`/${game}/logo.webp`} alt={g.name} width={480} height={270} />
+          <span className="c3-sr">{g.h1}</span>
+        </h1>
+        <p className="c3-hero-lede">{g.lede}</p>
+        <nav className="c3-facs" aria-label={g.name}>
+          {conf.factions.map((f) => (
+            <a key={f} className="c3-fac-card" href={`${routePath({ ...route, view: "coh3", c3Section: "leaderboards", detail: undefined })}?f=${f}`}>
+              <img src={conf.factionIcon[f]} alt="" width={44} height={44} />
+              <b>{conf.factionShort[lang][f]}</b>
+              <small>{conf.factionName[lang][f]}</small>
+            </a>
+          ))}
+        </nav>
+      </div>
+    </header>
+  );
+}
+
 /** La cabecera de la portada: la dibuja `Coh3.tsx` arriba de la barra de pestañas. */
-function Hero({ route }: { route: Route; navigate: Nav }) {
+function Hero({ route, navigate }: { route: Route; navigate: Nav }) {
+  if (route.cohGame && route.cohGame !== "coh3") return <GameHero route={route} game={route.cohGame} />;
+  return <Coh3Hero route={route} navigate={navigate} />;
+}
+
+function Coh3Hero({ route }: { route: Route; navigate: Nav }) {
   const t = useCoh3Copy();
   const meta = useMeta();
   return (
@@ -67,7 +105,9 @@ function Coh3Home({ route, navigate, live }: { route: Route; navigate: Nav; live
   const to = (tab: Coh3Section): Route => ({ ...route, view: "coh3", c3Section: tab, detail: undefined });
   return (
     <main className="c3-main c3-home">
-      {GROUPS.map((g) => (
+      {GROUPS.map((g) => ({ ...g, tabs: g.tabs.filter((tab) => !route.cohGame || route.cohGame === "coh3" || live(tab)) }))
+        .filter((g) => g.tabs.length)
+        .map((g) => (
         <section key={g.k} className="c3-group">
           <h2 className="c3-group-h">{t.home[g.k]}</h2>
           <ul className="c3-cards">

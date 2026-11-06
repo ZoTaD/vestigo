@@ -8,7 +8,8 @@
 import type { Lang } from "../i18n";
 import { automatchId, factionOfRace, LEADERBOARDS, modeOfMatchType, type Mode } from "./api/leaderboards";
 
-export type CohGame = "coh3" | "coh2" | "coh1";
+import type { CohGame } from "../route";
+export type { CohGame };
 export const COH_GAMES: CohGame[] = ["coh3", "coh2", "coh1"];
 export type GameLeaderboard = { id: number; mode: Mode; faction: string; ranked: boolean };
 export type MatchMode = { mode: Mode | "ai" | "custom" | "other"; ranked: boolean };
@@ -40,7 +41,9 @@ export interface GameConf {
 
 const MODES: Mode[] = ["1v1", "2v2", "3v3", "4v4"];
 const api = (t: string) => `https://${t}-api.reliclink.com/community/leaderboard`;
-const icons = (g: string, fs: string[]) => Object.fromEntries(fs.map((f) => [f, `/${g}/f/${f}.webp`]));
+/** CoH3 trae los emblemas del juego (webp); CoH1 y CoH2, por ahora, una insignia con la sigla (svg, `games/coh/tools/art.py`). */
+/** CoH3 trae los emblemas del juego (webp); CoH1 y CoH2, por ahora, una insignia con la sigla (svg, `games/coh/tools/art.py`). */
+const icons = (g: string, fs: string[]) => Object.fromEntries(fs.map((f) => [f, `/${g}/f/${f}.${g === "coh3" ? "webp" : "svg"}`]));
 
 /** Los rankings de CoH1/CoH2: 4–19 = 1v1…4v4 con cuatro facciones por modo, en el orden de `orden`. */
 function tabla(orden: string[], extra: GameLeaderboard[] = []): GameLeaderboard[] {

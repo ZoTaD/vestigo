@@ -1,6 +1,6 @@
 import type { RustPage } from "./rust/sitemapPages";
 import { DLE_RANKING_OPEN } from "./dle/modes";
-import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, CS2_SEGMENT, CS2_SECTIONS, CS2_DETAIL_SECTIONS, COH3_SEGMENT, COH3_SECTIONS, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, CS2_SEGMENT, CS2_SECTIONS, CS2_DETAIL_SECTIONS, COH3_SEGMENT, COH3_SECTIONS, cohTabs, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -235,7 +235,7 @@ export interface SitemapData {
    * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
    * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
    */
-  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string; cs2?: string; coh3?: string };
+  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string; cs2?: string; coh3?: string; coh2?: string; coh1?: string };
 }
 
 /**
@@ -352,6 +352,8 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
   // CS2: la fecha del catálogo. Los precios cambian todos los días y no mueven el `lastmod` (si no, cambiaría en todas).
   if (game === CS2_SEGMENT) return day(data.dates?.cs2);
   if (game === COH3_SEGMENT) return day(data.dates?.coh3);
+  // CoH2 y CoH1: el día de sus estadísticas (las pestañas cambian con cada recolección diaria).
+  if (game === "coh2" || game === "coh1") return day(data.dates?.[game]);
   if (game === RUST_SEGMENT) {
     // Una ficha con fecha propia (un parche) va con la suya, y su pestaña con la más nueva de sus fichas o la de los
     // datos, la que sea más reciente. Lo demás, con la fecha de los datos de Rust.
@@ -546,6 +548,11 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const s of COH3_SECTIONS) if (s !== "matches") paths.push(routePath({ ...base, lang, view: "coh3", c3Section: s }));
       for (const s of ["units", "weapons", "battlegroups", "maps", "patches"] as const) {
         for (const f of data.c3[s]) paths.push(routePath({ ...base, lang, view: "coh3", c3Section: s, detail: f.slug }));
+      }
+      // CoH2 y CoH1 (2026-11-06): la portada y sus pestañas (sin Partidas, que no tiene página sin número).
+      for (const g of ["coh2", "coh1"] as const) {
+        paths.push(routePath({ ...base, lang, view: "coh3", cohGame: g, c3Section: "home" }));
+        for (const s of cohTabs(g)) if (s !== "matches") paths.push(routePath({ ...base, lang, view: "coh3", cohGame: g, c3Section: s }));
       }
     }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).

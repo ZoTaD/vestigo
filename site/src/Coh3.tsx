@@ -9,8 +9,9 @@
 import { Suspense, useEffect, useRef } from "react";
 import { lazyWithPreload } from "./lazyWithPreload";
 import RouteLink from "./RouteLink";
-import type { Coh3Section, Route } from "./route";
-import { COH3_TABS, useCoh3Copy } from "./coh3Copy";
+import { cohTabs, switchGame, type CohGame, type Coh3Section, type Route } from "./route";
+import { COH3_TABS, COH_GAME_COPY, useCoh3Copy } from "./coh3Copy";
+import { useLang } from "./i18n";
 import Coh3Home from "./coh3/Coh3Home";
 import { Coh3Loading } from "./coh3/ui";
 import "@fontsource/big-shoulders-stencil-display/800"; // sin ".css": su `exports` ("./*" → "./*.css") lo duplicaría
@@ -60,8 +61,13 @@ const TABS: Partial<Record<Coh3Section, LazyTab>> = {
   achievements: Coh3Achievements,
 };
 
-/** ¿La pestaña ya tiene página? Las que no, se anuncian apagadas y su dirección muestra la portada. */
-const hasPage = (tab: Coh3Section): boolean => tab === "home" || !!TABS[tab];
+/** ¿La pestaña ya tiene página en ese juego? Las de CoH3 que no, se anuncian apagadas; CoH1 y CoH2 sólo muestran las suyas. */
+const hasPage = (tab: Coh3Section, game?: CohGame): boolean => tab === "home" || (!!TABS[tab] && cohTabs(game).includes(tab));
+const GAME_LIST: { g: CohGame; label: string; logo: string }[] = [
+  { g: "coh3", label: "CoH3", logo: "/coh3/logo.webp" },
+  { g: "coh2", label: "CoH2", logo: "/coh2/logo.webp" },
+  { g: "coh1", label: "CoH1", logo: "/coh1/logo.webp" },
+];
 
 /** Los datos que una pestaña baja aparte de su chunk, pedidos junto con él (y esperados por el prerender). */
 const TAB_DATA: Partial<Record<Coh3Section, (route: Route) => Promise<unknown>>> = {
@@ -71,7 +77,7 @@ const TAB_DATA: Partial<Record<Coh3Section, (route: Route) => Promise<unknown>>>
 /** Baja el chunk de la pestaña de una ruta de CoH3, y sus datos. */
 export const preloadTab = (route: Route): Promise<void> => {
   const sec = route.c3Section ?? "home";
-  const shown = hasPage(sec) ? sec : "home";
+  const shown = hasPage(sec, route.cohGame) ? sec : "home";
   const data = TAB_DATA[shown] ?? ((r: Route) => import("./coh3/data").then((m) => m.preloadRoute(r)));
   return Promise.all([TABS[shown]?.preload(), data(route)]).then(() => undefined);
 };
@@ -87,35 +93,48 @@ if (typeof window !== "undefined") window.addEventListener("popstate", () => (po
 
 export default function Coh3({ route, navigate }: TabProps) {
   const t = useCoh3Copy();
+  const { lang } = useLang();
+  const game: CohGame = route.cohGame ?? "coh3";
+  const otro = game === "coh3" ? null : COH_GAME_COPY[game][lang];
   const asked = route.c3Section ?? "home";
-  const section = hasPage(asked) ? asked : "home";
+  const section = hasPage(asked, game) ? asked : "home";
+  const live = (tab: Coh3Section) => hasPage(tab, game);
+  // CoH3 anuncia sus pestañas por venir; CoH1 y CoH2 muestran sólo las que tienen.
+  const barra = game === "coh3" ? COH3_TABS : COH3_TABS.filter((tab) => live(tab));
   const Tab = TABS[section];
   useEffect(() => {
     if (typeof window !== "undefined" && !cameFromHistory(window.location.pathname)) window.scrollTo({ top: 0 });
-  }, [section, route.detail]);
+  }, [section, route.detail, game]);
   // En el teléfono la barra es una fila que se desliza: la pestaña abierta se lleva a la vista moviendo sólo la barra.
   const tabsRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const nav = tabsRef.current;
     const on = nav?.querySelector<HTMLElement>(".is-on");
     if (nav && on && nav.scrollWidth > nav.clientWidth) nav.scrollLeft = on.offsetLeft - (nav.clientWidth - on.offsetWidth) / 2;
-  }, [section]);
+  }, [section, game]);
   const isHome = section === "home";
   return (
-    <div className="c3" data-section={section}>
+    <div className="c3" data-section={section} data-game={game}>
       {isHome ? (
         <Coh3Home.Hero route={route} navigate={navigate} />
       ) : (
         <div className="c3-strip">
           <RouteLink className="c3-brand" to={{ ...route, view: "coh3", c3Section: "home", detail: undefined }} onNavigate={navigate}>
-            <img src="/coh3/logo.webp" alt="Company of Heroes 3" width={140} height={79} decoding="async" />
+            <img src={`/${game}/logo.webp`} alt={otro?.name ?? "Company of Heroes 3"} width={140} height={79} decoding="async" />
           </RouteLink>
         </div>
       )}
+      <nav className="c3-games" aria-label="Company of Heroes">
+        {GAME_LIST.map(({ g, label }) => (
+          <RouteLink key={g} className={`c3-game${g === game ? " is-on" : ""}`} to={switchGame(route, g)} onNavigate={navigate} active={g === game}>
+            {label}
+          </RouteLink>
+        ))}
+      </nav>
       <div className="c3-tabbar">
-        <nav className="c3-tabs" aria-label="Company of Heroes 3" ref={tabsRef}>
-          {COH3_TABS.map((tab) =>
-            hasPage(tab) ? (
+        <nav className="c3-tabs" aria-label={otro?.name ?? "Company of Heroes 3"} ref={tabsRef}>
+          {barra.map((tab) =>
+            live(tab) ? (
               <RouteLink
                 className={`c3-tab${tab === section ? " is-on" : ""}`}
                 to={{ ...route, view: "coh3", c3Section: tab, detail: undefined }}
@@ -139,10 +158,10 @@ export default function Coh3({ route, navigate }: TabProps) {
             <Tab route={route} navigate={navigate} />
           </Suspense>
         ) : (
-          <Coh3Home route={route} navigate={navigate} live={hasPage} />
+          <Coh3Home route={route} navigate={navigate} live={live} />
         )}
       </div>
-      <p className="c3-credit">{t.credit}</p>
+      <p className="c3-credit">{otro?.credit ?? t.credit}</p>
     </div>
   );
 }
