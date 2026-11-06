@@ -133,12 +133,8 @@ export default function DeadlockArea({
               onNavigate={navigate}
             >
               {copy.deadlock.tabs[id]}
-              {/* El perfil se publicó el 2026-08-11 y sigue creciendo. La
-                  insignia dice que se puede usar y que se va a mover, que es
-                  distinto del "Pronto" de Dota 2: eso anuncia lo que no
-                  existe, esto califica lo que sí. Se saca cuando la pestaña
-                  deje de cambiar. */}
-              {id === "player" && <em className="subnav-beta">{copy.games.beta}</em>}
+              {/* La etiqueta "Beta" del perfil salió el 2026-11-05, con las
+                  pestañas y los logros: la pestaña dejó de ser un borrador. */}
             </RouteLink>
           ))}
         </nav>
