@@ -366,7 +366,7 @@ describe("el lake: la copia local trae toda columna que el pipeline nombra", () 
     const dir = join(__dirname, "../src");
     // Los que sólo hablan con la API en vivo nombran campos de sus respuestas
     // que se llaman igual que columnas del lake (`hero_build_id`).
-    const soloApi = ["topPlayers.ts"];
+    const soloApi = ["topPlayers.ts", "heroRecords.ts", "heroRecords.test.ts"];
     const src = readdirSync(dir)
       .filter((f) => /\.(ts|mjs)$/.test(f) && !soloApi.includes(f))
       .map((f) => readFileSync(join(dir, f), "utf8"))

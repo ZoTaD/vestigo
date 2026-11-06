@@ -1,0 +1,559 @@
+/* ---------------------------------------------------------------------------
+   Logros del perfil de Deadlock: medalla con cinta (estilo A, 5/11).
+   Moneda de metal con la cara del héroe, cinta a rayas arriba y una chapa
+   negra con la cifra. El metal dice la rareza: sin bordes de color en la
+   tarjeta, el color vive en la moneda.
+   --------------------------------------------------------------------------- */
+
+.dl-medal {
+  --m1: #ffd2a8;
+  --m2: #b06a35;
+  --m3: #5a3014;
+  --r1: #2f6a33;
+  --r2: #e8e3d6;
+  margin: 0;
+  text-align: center;
+  min-width: 0;
+}
+.dl-medal[data-tier="silver"] { --m1: #ffffff; --m2: #b7b9bd; --m3: #5f636a; --r1: #2d4a6b; --r2: #e8e3d6; }
+.dl-medal[data-tier="gold"] { --m1: #ffe9a6; --m2: #d4a22c; --m3: #7d5a0c; --r1: #c2512a; --r2: #e8d6a8; }
+/* Eterna: obsidiana violeta con cinta negra y oro, que no se confunda con el bronce. */
+.dl-medal[data-tier="eternal"] { --m1: #efe0ff; --m2: #7a4bb5; --m3: #1d0b33; --r1: #1e1a14; --r2: #d4a22c; }
+
+.dl-medal-disc {
+  position: relative;
+  width: 124px;
+  height: 140px;
+  margin: 0 auto;
+}
+.dl-medal-ribbon {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 58px;
+  height: 54px;
+  transform: translateX(-50%);
+  background: repeating-linear-gradient(90deg, var(--r1) 0 10px, var(--r2) 10px 19px);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+}
+.dl-medal-coin {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 106px;
+  height: 106px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--m1), var(--m2) 60%, var(--m3));
+  box-shadow:
+    inset 0 0 0 5px rgba(0, 0, 0, 0.18),
+    inset 0 0 0 8px rgba(255, 255, 255, 0.25),
+    0 3px 0 rgba(0, 0, 0, 0.25);
+}
+/* El pozo oscuro donde va la cara: la moneda queda como marco. */
+.dl-medal-coin::before {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #4a3f30, #1e1a14 75%);
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.4), inset 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+.dl-medal-face,
+.dl-medal-rank,
+.dl-medal-icon {
+  position: absolute;
+  inset: 13px;
+  width: calc(100% - 26px);
+  height: calc(100% - 26px);
+  border-radius: 50%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6));
+}
+.dl-medal-rank {
+  inset: 18px;
+  width: calc(100% - 36px);
+  height: calc(100% - 36px);
+}
+.dl-medal-icon {
+  inset: 28px;
+  width: calc(100% - 56px);
+  height: calc(100% - 56px);
+  border-radius: 0;
+  background: linear-gradient(var(--m1), var(--m2));
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+.dl-medal-tag {
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  transform: translateX(-50%);
+  z-index: 1;
+  padding: 0 9px;
+  border-radius: 4px;
+  background: #1e1a14;
+  color: #f3ead8;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.dl-medal figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 14px;
+}
+.dl-medal figcaption strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.dl-medal figcaption span {
+  font-size: 14px;
+  line-height: 1.25;
+  color: var(--text-dim);
+}
+.dl-medal-tier {
+  margin-top: 4px;
+  padding: 1px 8px;
+  border-radius: 3px;
+  background: rgba(30, 26, 20, 0.08);
+  color: var(--text);
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.dl-medal[data-tier="eternal"] .dl-medal-tier,
+.dl-medal[data-tier="gold"] .dl-medal-tier {
+  background: #1e1a14;
+  color: #f0c66b;
+}
+.dl-medal-bar {
+  display: block;
+  width: 100%;
+  max-width: 130px;
+  height: 6px;
+  margin-top: 6px;
+  border-radius: 3px;
+  background: rgba(30, 26, 20, 0.15);
+  overflow: hidden;
+}
+.dl-medal-bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.dl-medal[data-locked] .dl-medal-disc {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+
+/* La grilla de la pestaña. */
+.dl-medal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 22px 12px;
+  margin-top: 14px;
+}
+.dl-medal-grid-mini {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 6px;
+}
+.dl-medal-grid-mini .dl-medal-disc {
+  zoom: 0.85;
+}
+.dl-medal-grid-mini .dl-medal figcaption strong {
+  font-size: 17px;
+}
+.dl-ach {
+  display: grid;
+  gap: 16px;
+}
+.dl-ach-filter {
+  margin-top: 10px;
+}
+.dl-ach-foot {
+  margin-top: 18px;
+}
+
+/* Chica: la fila de la cabecera, sin cinta ni chapa. */
+.dl-medal[data-size="sm"] .dl-medal-disc {
+  width: 30px;
+  height: 30px;
+}
+.dl-medal[data-size="sm"] .dl-medal-ribbon {
+  display: none;
+}
+.dl-medal[data-size="sm"] .dl-medal-coin {
+  width: 30px;
+  height: 30px;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.dl-medal[data-size="sm"] .dl-medal-coin::before {
+  inset: 3px;
+}
+.dl-medal[data-size="sm"] :is(.dl-medal-face, .dl-medal-rank) {
+  inset: 4px;
+  width: 22px;
+  height: 22px;
+}
+.dl-medal[data-size="sm"] .dl-medal-icon {
+  inset: 8px;
+  width: 14px;
+  height: 14px;
+}
+.dl-medal-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.dl-medal-strip > span {
+  margin-left: 4px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- las pestañas del perfil ---------- */
+.dl-ptabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 18px 0 16px;
+  border-bottom: 2px solid var(--text);
+}
+.dl-ptab {
+  padding: 8px 16px 6px;
+  border-radius: 6px 6px 0 0;
+  color: var(--text-dim);
+  font-family: var(--font-display);
+  font-size: 20px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.dl-ptab:hover {
+  color: var(--text);
+}
+.dl-ptab[aria-current="page"] {
+  background: var(--text);
+  color: var(--surface-solid, #f3ead8);
+}
+.dl-ptab sup {
+  margin-left: 3px;
+  color: var(--accent);
+  font-family: var(--font-data-narrow);
+  font-size: 13px;
+}
+@media (max-width: 560px) {
+  .dl-ptab {
+    padding: 6px 10px 4px;
+    font-size: 16px;
+  }
+}
+
+/* ---------- la cabecera: la ficha y las mejores medallas, lado a lado ---------- */
+.dl-phead {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .dl-phead {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+.dl-phead > .box {
+  margin: 0;
+}
+
+/* En el teléfono, dos medallas por fila y un poco más chicas. */
+@media (max-width: 520px) {
+  .dl-medal-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 8px;
+  }
+  .dl-medal-disc {
+    zoom: 0.85;
+  }
+  .dl-medal-grid-mini {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .dl-medal-grid-mini .dl-medal-disc {
+    zoom: 0.7;
+  }
+  .dl-medal figcaption strong {
+    font-size: 16px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Season 2: figurita holográfica (estilo C, elegido por ZoTaD el 5/11).
+   Borde blanco troquelado, esquina despegada y un brillo que crece con la
+   rareza: mate en bronce, suave en plata, foil en oro, holo entero en eterna.
+   --------------------------------------------------------------------------- */
+.dl-sticker {
+  --fo: 0;
+  margin: 0;
+  text-align: center;
+  min-width: 0;
+}
+.dl-sticker[data-tier="silver"] { --fo: 0.35; }
+.dl-sticker[data-tier="gold"] { --fo: 0.6; }
+.dl-sticker[data-tier="eternal"] { --fo: 0.9; }
+.dl-sticker-card {
+  position: relative;
+  width: 132px;
+  height: 182px;
+  margin: 0 auto;
+  padding: 6px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 0 #d8d2c4, 0 6px 14px rgba(0, 0, 0, 0.25);
+  transform: rotate(-1.5deg);
+}
+.dl-sticker:nth-child(even) .dl-sticker-card {
+  transform: rotate(1.5deg);
+}
+.dl-sticker-face {
+  position: relative;
+  height: 100%;
+  border-radius: 9px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #4a3f30, #1e1a14 75%);
+}
+.dl-sticker-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 12%;
+}
+.dl-sticker-rank {
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  width: 92px;
+  height: 92px;
+  transform: translateX(-50%);
+  object-fit: contain;
+}
+.dl-sticker-icon {
+  position: absolute;
+  left: 50%;
+  top: 34px;
+  width: 64px;
+  height: 64px;
+  transform: translateX(-50%);
+  background: linear-gradient(#ffe9a6, #d4a22c);
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+.dl-sticker-foil {
+  position: absolute;
+  inset: 0;
+  opacity: var(--fo);
+  /* `overlay` y no `color-dodge`: el dodge quemaba los oscuros (el pelo de
+     Haze se volvía manchas de color). Overlay deja el negro negro. */
+  mix-blend-mode: overlay;
+  background:
+    linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.7) 40%, transparent 55%),
+    conic-gradient(from 200deg at 30% 30%, #ff7ad9, #7af0ff, #b6ff7a, #ffe27a, #ff7a9c, #ff7ad9);
+  background-size: 300% 100%, 100% 100%;
+  animation: dl-sticker-shine 3.5s linear infinite;
+}
+@keyframes dl-sticker-shine {
+  from { background-position: 120% 0, 0 0; }
+  to { background-position: -120% 0, 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dl-sticker-foil { animation: none; }
+}
+.dl-sticker-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 48%, rgba(10, 8, 6, 0.92));
+}
+.dl-sticker-num {
+  position: absolute;
+  left: 8px;
+  top: 2px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 38px;
+  line-height: 1.1;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
+}
+.dl-sticker-season {
+  position: absolute;
+  right: 6px;
+  top: 7px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: #fff;
+  color: #1e1a14;
+  font-family: var(--font-display);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.dl-sticker-label {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1;
+  text-align: left;
+  text-transform: uppercase;
+}
+.dl-sticker-peel {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 0 0 14px 0;
+  background: linear-gradient(135deg, transparent 50%, #fff 50%, #e8e2d4);
+  box-shadow: -2px -2px 3px rgba(0, 0, 0, 0.15);
+}
+.dl-sticker figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.25;
+  color: var(--text-dim);
+}
+.dl-sticker[data-locked] .dl-sticker-card {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+@media (max-width: 520px) {
+  .dl-sticker-card { zoom: 0.85; }
+}
+.dl-medal-grid-mini .dl-sticker-card { zoom: 0.8; }
+
+/* ---------------------------------------------------------------------------
+   La ficha del jugador como credencial (ZoTaD, 5/11): pizarrón, la foto de
+   Steam con marco blanco torcido y, de fondo a la derecha, la carta del héroe
+   que más juega, fundida con la pizarra.
+   --------------------------------------------------------------------------- */
+[data-game="deadlock"] .box.dl-cred {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.dl-cred-hero {
+  position: absolute;
+  right: -30px;
+  top: -10px;
+  z-index: -1;
+  width: 62%;
+  max-width: 300px;
+  height: auto;
+  opacity: 0.32;
+  -webkit-mask: linear-gradient(90deg, transparent 0%, #000 60%);
+  mask: linear-gradient(90deg, transparent 0%, #000 60%);
+}
+/* La tira de arriba ya dice qué es: el título de cinta queda para lectores de pantalla. */
+.dl-cred > .box-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.dl-cred-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 10px;
+  color: #f0c66b;
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred :is(.dl-rep-profile, .dl-rep-form) {
+  display: block;
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-profile-id-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-avatar {
+  width: 104px;
+  height: 104px;
+  flex: 0 0 auto;
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px #f3ead8, 0 0 0 5px rgba(0, 0, 0, 0.35), 0 6px 12px rgba(0, 0, 0, 0.45);
+  transform: rotate(-2.5deg);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-profile-name {
+  margin: 0 0 4px;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #f3ead8;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rank-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rank-name {
+  font-size: 22px;
+  color: #ffb48c;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 16px;
+  margin: 14px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-stats div {
+  margin: 0;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-stats dd {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: #f3ead8;
+}
+@media (max-width: 520px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-avatar {
+    width: 76px;
+    height: 76px;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-cred .dl-rep-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -554,38 +554,24 @@ export function summarize(rows: HistoryRow[]): PlayerSummary | null {
 }
 
 /**
- * El rango después de cada clasificatoria de la temporada.
+ * El rango partida por partida, sacado del historial.
  *
- * **No sale del historial**: `ranked_display_badge` da 0 en las 475 filas
- * medidas. Sale de `players/{id}/mmr-history`, que devuelve una entrada por
- * partida clasificatoria con su `rank` — verificado el 2026-08-13 sobre una
- * cuenta real: 75 entradas en 9,8 KB, y se ven los saltos (111→112→113→114).
- * Vuelto a medir el 2026-09-07: viene en orden cronológico, y las cuentas de
- * la cima de la escalera traen 164 y 241 entradas en 22 y 32 KB.
+ * **`mmr-history` murió el 2026-11-05** (404, sin aviso, como `/players/mmr` el
+ * 4/11). Hoy cada fila de `match-history` trae `ranked_display_badge`, el rango
+ * con que se jugó esa clasificatoria: medido sobre una cuenta del top, 587
+ * clasificatorias con rango de 3.128 partidas. Sale del mismo pedido que el
+ * historial, así que es uno menos por perfil. Alimenta las marcas de ascenso
+ * del historial (`rankSteps`), el gráfico de rango (`trailOf`) y los picos.
  *
- * Un pedido por perfil que alimenta dos cosas: las marcas de ascenso del
- * historial (`rankSteps`) y el gráfico de rango en el tiempo (`trailOf`). Y
- * **puede fallar sin llevarse la página**: sin esto el historial se dibuja
- * igual, sin las marcas, y el gráfico no aparece.
+ * Hasta el 4/11 este campo venía en 0 (medido en 475 filas el 2026-08-13).
  */
-interface RawMmrHistory {
-  match_id: number;
-  start_time?: number;
-  rank?: number;
-}
-
-export async function fetchMmrHistory(accountId: number): Promise<RankPoint[]> {
-  const raw = await get<RawMmrHistory[]>(`players/${accountId}/mmr-history`);
-  return raw
-    .filter((r) => (r.rank ?? 0) > 0)
-    .map((r) => ({
-      matchId: r.match_id,
-      startTime: r.start_time ?? 0,
-      badge: r.rank ?? 0,
-      score: scoreOf(r.rank ?? 0),
-    }))
+export function rankSeriesOf(rows: HistoryRow[]): RankPoint[] {
+  return rows
+    .filter((r) => r.badge > 0 && r.mode === RANKED_MODE)
+    .map((r) => ({ matchId: r.matchId, startTime: r.startTime, badge: r.badge, score: scoreOf(r.badge) }))
     .sort((a, b) => a.startTime - b.startTime);
 }
+
 
 /** Una compra: qué, cuándo, y si dejó de estar. */
 export interface Purchase {

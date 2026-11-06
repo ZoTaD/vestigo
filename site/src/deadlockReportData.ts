@@ -17,7 +17,7 @@ import { type Items, type ReportFile } from "./deadlockAdvice";
 
 interface FullCatalog {
   items: Record<string, { name: Localized; img: string; cost: number; slot: string; upgradesTo?: number[] }>;
-  heroes: Record<string, { name: Localized; img: string }>;
+  heroes: Record<string, { name: Localized; img: string; card?: string }>;
   ranks: { tier: number; name: Localized; img: string; subranks: string[]; color: string }[];
 }
 
@@ -32,6 +32,8 @@ export const items: Items = new Map(
 );
 
 export const heroImg = (heroId: number): string | null => full.heroes[String(heroId)]?.img ?? null;
+/** La carta vertical del héroe (280×380), la de la pantalla de selección. */
+export const heroCard = (heroId: number): string | null => full.heroes[String(heroId)]?.card ?? null;
 export const heroName = (heroId: number): Localized | null => full.heroes[String(heroId)]?.name ?? null;
 export const itemOf = (itemId: number) => full.items[String(itemId)] ?? null;
 

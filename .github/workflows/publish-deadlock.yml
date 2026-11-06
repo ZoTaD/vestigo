@@ -373,6 +373,26 @@ jobs:
             echo "el mapa de calor tiene ${edad_h}h (< 20); esta corrida lo saltea"
           fi
 
+      # Los récords del mundo para los logros del perfil (2026-11-05): top 10 por
+      # héroe y por métrica, ~450 pedidos (~5 min), una vez por día. Una
+      # temporada cerrada queda congelada en el archivo y no se vuelve a pedir.
+      # **Perdona fallar**: queda lo commiteado.
+      - name: build hero records
+        continue-on-error: true
+        run: |
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/hero-records.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            npm run build:hero-records --prefix games/deadlock/pipeline
+          else
+            echo "los récords tienen ${edad_h}h (< 20); esta corrida los saltea"
+          fi
+
       # Los one-tricks y las builds de los mejores (2026-10-30): parte del top de
       # la escalera, así que va después. ~180 pedidos (el historial tarda ~8 s por
       # héroe, ~6 min en total), una vez por día con la misma puerta por edad.

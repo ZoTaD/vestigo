@@ -23,7 +23,7 @@ import GameImg from "./GameImg";
 /** Cuántas filas se dibujan. */
 const TOP = 5;
 
-export default function DeadlockCareerHeroes({ stats }: { stats: HeroStat[] }) {
+export default function DeadlockCareerHeroes({ stats, season = null }: { stats: HeroStat[]; season?: number | null }) {
   const copy = useCopy();
   const { lang } = useLang();
   const c = copy.deadlock.report.career;
@@ -39,7 +39,7 @@ export default function DeadlockCareerHeroes({ stats }: { stats: HeroStat[] }) {
       {/* La ventana, dicha antes de los números y no después: quien lee "48%"
           debajo de un perfil filtrado a clasificatorias tiene que saber ya que
           ese 48 no es de las clasificatorias. */}
-      <p className="detail-note dl-career-note">{c.lead}</p>
+      <p className="detail-note dl-career-note">{c.lead(season)}</p>
 
       <div className="dl-career-head" aria-hidden="true">
         <span />
