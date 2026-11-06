@@ -16,7 +16,7 @@ import {
   fetchHistory,
   fetchAccount,
   fetchRank,
-  fetchMmrHistory,
+  rankSeriesOf,
   summarize,
   rankedCorpus,
   scopeCounts,
@@ -47,7 +47,7 @@ import DeadlockHeroVsBandCard from "./DeadlockHeroVsBandCard";
 import DeadlockBuildVsBandCard from "./DeadlockBuildVsBandCard";
 import { useHeroVsBand } from "./deadlockHeroVsBand";
 import { bandRangeOf } from "./deadlockVsBand";
-import { defaultSeason, inSeason, ladderSeason, seasonCounts, type SeasonPick } from "./deadlockSeasons";
+import { defaultSeason, inSeason, ladderSeason, seasonCounts, SEASONS, type SeasonPick } from "./deadlockSeasons";
 import DeadlockPeerCard from "./DeadlockPeerCard";
 import { peersInScope, usePeers } from "./deadlockPeers";
 import DeadlockCareerHeroes from "./DeadlockCareerHeroes";
@@ -154,6 +154,7 @@ function Profile({
   rankReady,
   world,
   peak,
+  final,
 }: {
   account: SteamAccount | null;
   resumen: PlayerSummary;
@@ -164,6 +165,8 @@ function Profile({
   world: WorldStanding | null;
   /** El rango más alto de la temporada elegida, si es distinto del actual. */
   peak: number | null;
+  /** Con una temporada ya cerrada: cómo la terminó (la foto de esa temporada). */
+  final?: { season: number; badge: number } | null;
 }) {
   const copy = useCopy();
   const { lang } = useLang();
@@ -278,6 +281,14 @@ function Profile({
           <span>{c.seasons.peak}</span>
           <RankBadge badge={peak} height={26} />
           <strong>{rankLabel(rankOf(peak)!, lang)}</strong>
+        </p>
+      )}
+
+      {final && rankOf(final.badge) && (
+        <p className="dl-peak">
+          <span>{c.seasons.final(final.season)}</span>
+          <RankBadge badge={final.badge} height={26} />
+          <strong>{rankLabel(rankOf(final.badge)!, lang)}</strong>
         </p>
       )}
 
@@ -503,14 +514,16 @@ export default function DeadlockPlayer({
    * La carrera por héroe. **No sigue al modo** —es la carrera entera, y la
    * tarjeta lo dice— así que se pide una vez por cuenta y no por click.
    */
-  const carrera = useHeroStats(id);
+  const carreraTotal = useHeroStats(id);
+  /** La carrera por héroe de la temporada elegida (con "todas", la entera). */
+  const carrera = useHeroStats(id, temporada);
   /** El rango partida por partida, para marcar en cuál ascendió. */
   /**
    * El rango después de cada clasificatoria, un pedido por perfil. De acá salen
    * las marcas de ascenso del historial Y el gráfico de rango en el tiempo:
    * los pasos se derivan en memoria, no se piden dos veces.
    */
-  const [serie, setSerie] = useState<RankPoint[]>([]);
+  const serie = useMemo<RankPoint[]>(() => rankSeriesOf(historial ?? []), [historial]);
   const pasos = useMemo(() => rankSteps(serie), [serie]);
 
   useEffect(() => {
@@ -588,13 +601,6 @@ export default function DeadlockPlayer({
       // rango. Callar es correcto; inventar "no tiene rango" no lo es.
       () => undefined
     );
-    // El rango partida por partida. Falla en silencio: sin esto el historial se
-    // dibuja igual, sólo sin las marcas de ascenso, y el gráfico no aparece.
-    setSerie([]);
-    fetchMmrHistory(id).then(
-      (s) => vivo && setSerie(s),
-      () => undefined
-    );
     return () => {
       vivo = false;
     };
@@ -649,6 +655,14 @@ export default function DeadlockPlayer({
   const serieTemp = useMemo(() => serie.filter((p) => inSeason(p.startTime, temporada)), [serie, temporada]);
   const pico =
     temporada !== "all" && serieTemp.length > 0 ? Math.max(...serieTemp.map((p) => p.badge)) : null;
+  /**
+   * El rango con que terminó una temporada ya cerrada: la última clasificatoria
+   * de esa temporada. Con la Season 1 elegida la ficha es una foto de cómo
+   * terminó, no el rango de hoy.
+   */
+  const temporadaCerrada = temporada !== "all" && SEASONS.some((s) => s.id === temporada && s.end != null && s.end <= Date.now() / 1000);
+  const ultimaTemp = serieTemp.length > 0 ? serieTemp.reduce((a, b) => (b.startTime > a.startTime ? b : a)) : null;
+  const finalTemp = temporadaCerrada && ultimaTemp ? { season: temporada as number, badge: ultimaTemp.badge } : null;
   /**
    * **El modo se aplica ANTES que el héroe, y de ahí sale todo lo demás.**
    *
@@ -785,13 +799,13 @@ export default function DeadlockPlayer({
         ? achievementsOf({
             accountId: id,
             history: historialTodo,
-            career: carrera,
+            career: carreraTotal,
             rankSeries: serie,
             records,
           })
         : { earned: [], next: [] },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [id, historial, carrera, serie, records]
+    [id, historial, carreraTotal, serie, records]
   );
 
   return (
@@ -860,6 +874,7 @@ export default function DeadlockPlayer({
                   rankReady={rangoListo}
                   world={world}
                   peak={pico}
+                  final={finalTemp}
                 />
                 {/* La tarjeta para compartir sale de lo mismo que dice la ficha. */}
                 {id != null && (
@@ -1125,7 +1140,7 @@ export default function DeadlockPlayer({
           {pestana === "heroes" && (
             <Piso>
               <HeroPlacings placings={placings} />
-              <DeadlockCareerHeroes stats={carrera} />
+              <DeadlockCareerHeroes stats={carrera} season={temporada === "all" ? null : temporada} />
               <DeadlockHeroFitCard stats={carrera} badge={rango?.badge ?? 0} />
               <DeadlockHeroVsBandCard state={heroVs} band={bandaNombre} />
               <DeadlockBuildVsBandCard
@@ -1140,7 +1155,8 @@ export default function DeadlockPlayer({
           {pestana === "rank" && (
             <Piso>
               <DeadlockRankTrail points={serieTemp} />
-            {rango && rango.badge > 0 && rango.progress != null && (
+            {/* En una temporada cerrada no hay próximo rango: es una foto. */}
+            {!temporadaCerrada && rango && rango.badge > 0 && rango.progress != null && (
               <div className="box dl-pcard dl-pcard-climb">
                 <h2 className="box-title dl-pcard-title">{c.cards.climb}</h2>
                 <DeadlockRankCalc

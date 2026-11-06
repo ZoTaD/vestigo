@@ -676,6 +676,7 @@ const EN = {
           current ? `Season ${id}, the current one` : `Season ${id}, already over`,
         allTitle: "Every match, every season",
         peak: "Season peak",
+        final: (season: number) => `Season ${season} final`,
       },
       /**
        * Cuántos héroes lo tienen en el top 100 del mundo.
@@ -727,7 +728,8 @@ const EN = {
        */
       career: {
         title: "Your heroes",
-        lead: "Your whole career with each hero, not just the matches listed.",
+        lead: (season: number | null) =>
+          season ? `Each hero in Season ${season}, all modes, not just the matches listed.` : "Your whole career with each hero, not just the matches listed.",
         cols: { matches: "Games", winRate: "Win", accuracy: "Accuracy" },
         record: (wins: number, losses: number) => `${wins}W ${losses}L`,
         crit: (rate: string) => `${rate} crit shots`,
@@ -2367,6 +2369,7 @@ const ES: typeof EN = {
           current ? `Temporada ${id}, la vigente` : `Temporada ${id}, ya terminada`,
         allTitle: "Todas las partidas, de todas las temporadas",
         peak: "Pico de la temporada",
+        final: (season: number) => `Final de la Season ${season}`,
       },
       placingsLead: (n: number, season: number, final: boolean) =>
         (n === 1 ? "Top 100 del mundo con 1 héroe" : `Top 100 del mundo con ${n} héroes`) +
@@ -2393,7 +2396,8 @@ const ES: typeof EN = {
       },
       career: {
         title: "Tus héroes",
-        lead: "Tu carrera entera con cada héroe, no sólo las partidas de la lista.",
+        lead: (season: number | null) =>
+          season ? `Cada héroe en la Season ${season}, todos los modos, no sólo las partidas de la lista.` : "Tu carrera entera con cada héroe, no sólo las partidas de la lista.",
         cols: { matches: "Partidas", winRate: "Victorias", accuracy: "Precisión" },
         record: (wins: number, losses: number) => `${wins}V ${losses}D`,
         crit: (rate: string) => `${rate} de tiros críticos`,

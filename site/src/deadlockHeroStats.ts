@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SEASONS, seasonParams, type SeasonPick } from "./deadlockSeasons";
 
 /**
  * Tu carrera con cada héroe, del endpoint que la sabe.
@@ -92,27 +93,45 @@ export function heroStatsOf(raw: RawHeroStat[], min = HERO_STATS_MIN): HeroStat[
  * Falla en silencio, como el rango y las notas: quedarse sin la tarjeta tiene
  * que costar la tarjeta, no el perfil.
  */
-export async function fetchHeroStats(accountId: number): Promise<RawHeroStat[]> {
-  const res = await fetch(`${API}/players/hero-stats?account_ids=${accountId}`);
+/** Un pedido por cuenta y temporada: el perfil pide la carrera entera y la de la temporada, que a veces son la misma. */
+const cache = new Map<string, Promise<RawHeroStat[]>>();
+
+export function fetchHeroStats(accountId: number, pick: SeasonPick = "all"): Promise<RawHeroStat[]> {
+  const key = `${accountId}|${pick}`;
+  let p = cache.get(key);
+  if (!p) {
+    p = pedir(accountId, pick);
+    p.catch(() => cache.delete(key));
+    cache.set(key, p);
+  }
+  return p;
+}
+
+async function pedir(accountId: number, pick: SeasonPick): Promise<RawHeroStat[]> {
+  // Con una temporada elegida, sólo sus partidas: la Season 1 queda como foto
+  // y la 2 arranca de cero (ZoTaD, 5/11).
+  const s = pick === "all" ? null : SEASONS.find((x) => x.id === pick);
+  const q = new URLSearchParams({ account_ids: String(accountId), ...(s ? seasonParams(s) : {}) });
+  const res = await fetch(`${API}/players/hero-stats?${q}`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return (await res.json()) as RawHeroStat[];
 }
 
-export function useHeroStats(accountId: number | null): HeroStat[] {
+export function useHeroStats(accountId: number | null, pick: SeasonPick = "all"): HeroStat[] {
   const [stats, setStats] = useState<HeroStat[]>([]);
 
   useEffect(() => {
     setStats([]);
     if (accountId === null || !Number.isFinite(accountId)) return;
     let vivo = true;
-    fetchHeroStats(accountId).then(
+    fetchHeroStats(accountId, pick).then(
       (raw) => vivo && setStats(heroStatsOf(raw)),
       () => undefined
     );
     return () => {
       vivo = false;
     };
-  }, [accountId]);
+  }, [accountId, pick]);
 
   return stats;
 }

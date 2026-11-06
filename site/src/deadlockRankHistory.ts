@@ -61,7 +61,7 @@ export interface RankStep {
 /**
  * Los pasos de la serie, por partida: lo que el historial usa para dibujar la
  * flecha del ascenso. La serie tiene que venir en orden cronológico, que es
- * como la manda la API y como la deja `fetchMmrHistory`.
+ * como la manda la API y como la deja `rankSeriesOf`.
  */
 export function rankSteps(points: RankPoint[]): Map<number, RankStep> {
   const out = new Map<number, RankStep>();
