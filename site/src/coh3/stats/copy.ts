@@ -6,7 +6,8 @@ const EN = {
   band: { all: "All Elo", lt1000: "Under 1000", "1000": "1000–1199", "1200": "1200–1399", "1400": "1400–1599", "1600": "1600+" } satisfies Record<Band, string>,
   mode: "Mode",
   elo: "Elo band",
-  window: (from: string, to: string, days: number, n: string) => `${n} automatch games, ${from} to ${to} (${days} days).`,
+  window: (from: string, to: string, days: number, n: string) => `${n} automatch games, ${from} to ${to} (${days} ${days === 1 ? "day" : "days"}).`,
+  windowPatch: (patch: string, from: string, to: string, n: string) => `${n} automatch games since patch ${patch} (${from}), up to ${to}.`,
   credit: "Match data: coh3stats.com open data.",
   stats: {
     k: "Statistics",
@@ -54,7 +55,8 @@ const ES: typeof EN = {
   band: { all: "Todo ELO", lt1000: "Menos de 1000", "1000": "1000–1199", "1200": "1200–1399", "1400": "1400–1599", "1600": "1600 o más" },
   mode: "Modo",
   elo: "Banda de ELO",
-  window: (from, to, days, n) => `${n} partidas de automatch, del ${from} al ${to} (${days} días).`,
+  window: (from, to, days, n) => `${n} partidas de automatch, del ${from} al ${to} (${days} ${days === 1 ? "día" : "días"}).`,
+  windowPatch: (patch, from, to, n) => `${n} partidas de automatch desde el parche ${patch} (${from}), hasta el ${to}.`,
   credit: "Datos de partidas: datos abiertos de coh3stats.com.",
   stats: {
     k: "Estadísticas",
