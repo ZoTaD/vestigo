@@ -84,7 +84,8 @@ export function WindowLine({ s }: { s: Summary }) {
   const fmt = (d: string | null) => (d ? new Date(`${d}T12:00:00Z`).toLocaleDateString(lang === "es" ? "es-AR" : "en-US", { day: "numeric", month: "short" }) : "—");
   return (
     <p className="c3-note">
-      {t.window(fmt(s.from), fmt(s.to), s.days, num(s.matches))} {game === "coh3" && t.credit}
+      {s.sincePatch ? t.windowPatch(s.sincePatch, fmt(s.from), fmt(s.to), num(s.matches)) : t.window(fmt(s.from), fmt(s.to), s.days, num(s.matches))}{" "}
+      {game === "coh3" && t.credit}
     </p>
   );
 }

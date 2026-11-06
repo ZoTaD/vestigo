@@ -48,3 +48,26 @@ def test_2v2_y_merge():
     assert md["g"] == 2 and md["axisW"] == 0
     assert md["bands"]["lt1000"]["f"]["british"] == {"g": 2, "w": 2}
     assert "fvf" in md and md["fvf"] == {}
+
+
+def test_inicio_del_parche():
+    from datetime import datetime, timezone
+    # La 3.0 salió el 5/11 a las 17:00 UTC: ahí aparecen de golpe sus mapas nuevos.
+    assert stats.inicio_parche("3.0.0") == datetime(2026, 11, 5, 17, tzinfo=timezone.utc)
+    assert stats.inicio_parche("9.9.9") is None
+    assert stats.inicio_parche(None) is None
+
+
+def test_ventana_desde_el_parche():
+    from datetime import date
+    v = stats.ventana(date(2026, 11, 7), 28, date(2026, 11, 5))
+    assert v == [date(2026, 11, 5), date(2026, 11, 6)]
+    assert len(stats.ventana(date(2026, 11, 7), 28, None)) == 28
+
+
+def test_partidas_desde_la_hora_del_parche():
+    from datetime import datetime, timezone
+    desde = datetime(2026, 11, 5, 17, tzinfo=timezone.utc)
+    ms = [{"startgametime": int(desde.timestamp()) - 60}, {"startgametime": int(desde.timestamp())}, {"startgametime": int(desde.timestamp()) + 3600}]
+    assert len(stats.desde_hora(ms, desde)) == 2
+    assert len(stats.desde_hora(ms, None)) == 3

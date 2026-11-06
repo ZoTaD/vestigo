@@ -37,6 +37,9 @@ export interface Summary {
   days: number;
   durStep: number;
   generatedAt: string;
+  /** El parche desde el que cuenta la ventana, cuando arranca en él (CoH3, desde la 3.0). */
+  sincePatch?: string | null;
+  since?: string;
 }
 
 type Mod<T> = { default: T };

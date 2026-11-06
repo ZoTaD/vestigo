@@ -157,15 +157,20 @@ def fetch_day(d: date) -> list[dict] | None:
         f.unlink(missing_ok=True)
 
 
-def build_day(d: date) -> bool:
+def build_day(d: date, desde: datetime | None = None) -> bool:
+    """El resumen de un día. El día del parche (`desde`) cuenta sólo las partidas de después, y queda marcado con
+    `since` para no rehacerlo cada vez (uno ya armado sin el corte se rehace)."""
     out = DAYS / f"{d.isoformat()}.json"
-    if out.exists():
+    corte = desde if desde is not None and desde.date() == d else None
+    if out.exists() and (corte is None or json.loads(out.read_text(encoding="utf-8")).get("since") == corte.isoformat()):
         return True
     matches = fetch_day(d)
     if matches is None:
         print(f"{d}: todavía no está publicado")
         return False
-    day = summarize_day(matches)
+    day = summarize_day(desde_hora(matches, corte))
+    if corte is not None:
+        day["since"] = corte.isoformat()
     del matches
     gc.collect()
     day["date"] = d.isoformat()
@@ -195,22 +200,51 @@ def build_summary(days: list[date], days_dir: Path = DAYS) -> dict:
     return acc
 
 
+# Cuándo salió cada parche (UTC): las estadísticas arrancan ahí, para no mezclar partidas de antes del cambio
+# (pedido de ZoTaD el 6/11 con la 3.0). La hora sale de los datos: la primera hora en que se juegan de golpe los
+# mapas nuevos del parche (la 3.0, el 5/11 a las 17; a las 16 hay un bajón por los servidores apagados).
+# **Un parche nuevo suma acá su momento**; si falta, la ventana no se corta.
+PARCHES = {"3.0.0": "2026-11-05T17:00:00+00:00"}
+META = Path(__file__).resolve().parents[1] / "data" / "meta.json"
+
+
+def inicio_parche(patch: str | None) -> datetime | None:
+    return datetime.fromisoformat(PARCHES[patch]) if patch in PARCHES else None
+
+
+def desde_hora(matches: list[dict], desde: datetime | None) -> list[dict]:
+    """Las partidas que empezaron desde `desde` (todas si no hay corte)."""
+    if desde is None:
+        return matches
+    t = desde.timestamp()
+    return [m for m in matches if (m.get("startgametime") or 0) >= t]
+
+
+def ventana(today: date, days: int, since: date | None) -> list[date]:
+    """Los últimos `days` días hasta ayer (el archivo de un día sale a las 06:00 UTC del siguiente), sin pasar de `since`."""
+    last = today - timedelta(days=1)
+    w = [last - timedelta(days=i) for i in range(days)][::-1]
+    return [d for d in w if d >= since] if since else w
+
+
 def main(argv: list[str]) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=28)
-    ap.add_argument("--since", type=str, default=None, help="el día del último parche: la ventana no lo pasa")
+    ap.add_argument("--since", type=str, default=None, help="el día del último parche: la ventana no lo pasa (por defecto, el del parche vigente)")
     a = ap.parse_args(argv)
     today = datetime.now(timezone.utc).date()
-    # El archivo de un día sale a las 06:00 UTC del siguiente: el último seguro es anteayer o ayer.
-    last = today - timedelta(days=1)
-    window = [last - timedelta(days=i) for i in range(a.days)][::-1]
-    if a.since:
-        since = date.fromisoformat(a.since)
-        window = [d for d in window if d >= since]
+    # Sin `--since`, el día del parche vigente (`PARCHES`, según `games/coh3/data/meta.json`).
+    patch = json.loads(META.read_text(encoding="utf-8")).get("patch") if META.exists() else None
+    since = datetime.fromisoformat(a.since).replace(tzinfo=timezone.utc) if a.since else inicio_parche(patch)
+    window = ventana(today, a.days, since.date() if since else None)
     for d in window:
-        build_day(d)
+        build_day(d, since)
         time.sleep(1)
     summary = build_summary(window)
+    if since is not None and window and window[0] == since.date():
+        # La ventana arranca en el parche: la página lo dice.
+        summary["sincePatch"] = patch if not a.since else None
+        summary["since"] = since.isoformat()
     STATS.mkdir(parents=True, exist_ok=True)
     (STATS / "summary.json").write_text(json.dumps(summary, separators=(",", ":")), encoding="utf-8")
     # Los días que quedaron fuera de la ventana no hacen falta más.
