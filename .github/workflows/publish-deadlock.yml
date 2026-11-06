@@ -379,6 +379,7 @@ jobs:
       # **Perdona fallar**: queda lo commiteado.
       - name: build hero records
         continue-on-error: true
+        timeout-minutes: 45
         run: |
           edad_h=$(node -e '
             const fs = require("fs");
