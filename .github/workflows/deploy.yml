@@ -60,7 +60,9 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Un cambio en la barra o el pie toca el HTML de todas las páginas (~58 mil archivos
+    # a subir el 6/11, más de 27 minutos): 90 deja margen para esas publicaciones.
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
