@@ -27,6 +27,10 @@
       "@cs2/*": ["../games/cs2/data/*"],
       "@coh3/*": ["../games/coh3/data/*"],
       "@coh3stats/*": ["../games/coh3/stats/*"],
+      "@coh2stats/*": ["../games/coh2/stats/*"],
+      "@coh2/*": ["../games/coh2/data/*"],
+      "@coh1stats/*": ["../games/coh1/stats/*"],
+      "@coh1/*": ["../games/coh1/data/*"],
       "@cs2prices/*": ["../games/cs2/prices/*"]
     }
   },

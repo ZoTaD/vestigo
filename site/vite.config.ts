@@ -53,6 +53,8 @@ const cs2PricesDir = fileURLToPath(new URL("../games/cs2/prices", import.meta.ur
 // Company of Heroes 3 (2026-11-04): lo que escribe `games/coh3/tools/site_data.py`, y las stats de `stats.py`.
 const coh3Dir = fileURLToPath(new URL("../games/coh3/data", import.meta.url));
 const coh3StatsDir = fileURLToPath(new URL("../games/coh3/stats", import.meta.url));
+// CoH2 y CoH1 (2026-11-06): `relic_daily.py` (stats) y `maps.py` (data).
+const cohDir = (g: string, sub: string) => fileURLToPath(new URL(`../games/${g}/${sub}`, import.meta.url));
 
 /**
  * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.
@@ -1183,7 +1185,7 @@ export default defineConfig({
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
     // juego y no uno genérico, para que un import diga de qué juego habla.
-    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir, "@coh3stats": coh3StatsDir, "@coh3": coh3Dir },
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir, "@coh3stats": coh3StatsDir, "@coh3": coh3Dir, "@coh2stats": cohDir("coh2", "stats"), "@coh2": cohDir("coh2", "data"), "@coh1stats": cohDir("coh1", "stats"), "@coh1": cohDir("coh1", "data") },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

@@ -4,14 +4,29 @@
  * (tabla ordenable) y la duración de las partidas. Todo de `summary.json` (`stats/data.ts`).
  */
 import type { Route } from "../../route";
-import { FACTIONS, SIDE, useCoh3Copy, type Faction } from "../../coh3Copy";
-import { Coh3Loading, FactionTag, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
+import { useCoh3Copy } from "../../coh3Copy";
+import { useLang } from "../../i18n";
+import { GAMES } from "../games";
+import { Coh3Loading, FactionTag, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
 import { wr, type BandStats, type ModeStats } from "./data";
 import { useStatsCopy } from "./copy";
 import { ModeBandPicker, useMapName, useModeBand, useSummary, WindowLine } from "./parts";
 import "./stats.css";
 
 const pct = (num: (v: number, d?: number) => string, p: number | null, d = 1) => (p == null ? "—" : `${num(p * 100, d)} %`);
+
+/** La clave de una facción de cualquiera de los tres juegos. */
+type Faction = string;
+/** Las facciones del juego de la pantalla, su bando y su nombre corto (CoH3, CoH2 o CoH1). */
+function useFactions() {
+  const game = useCohGame();
+  const { lang } = useLang();
+  const c = useCoh3Copy();
+  const conf = GAMES[game];
+  const SIDE: Record<string, "axis" | "allies"> = Object.fromEntries(conf.factions.map((f) => [f, conf.axis.includes(f) ? "axis" : "allies"]));
+  const short = (f: string) => (game === "coh3" ? c.factionShort[f] ?? f : conf.factionShort[lang][f] ?? f);
+  return { FACTIONS: conf.factions, SIDE, short };
+}
 
 export default function Coh3Stats(_: { route: Route; navigate: Nav }) {
   const t = useStatsCopy();
@@ -53,6 +68,7 @@ export default function Coh3Stats(_: { route: Route; navigate: Nav }) {
 }
 
 function WinRates({ bd }: { bd: BandStats }) {
+  const { FACTIONS, SIDE, short } = useFactions();
   const t = useStatsCopy();
   const num = useNum();
   const rows = FACTIONS.filter((f) => bd.f[f]).sort((a, b) => (wr(bd.f[b]) ?? 0) - (wr(bd.f[a]) ?? 0));
@@ -80,6 +96,7 @@ function WinRates({ bd }: { bd: BandStats }) {
 }
 
 function Popularity({ bd }: { bd: BandStats }) {
+  const { FACTIONS, SIDE, short } = useFactions();
   const t = useStatsCopy();
   const num = useNum();
   const total = FACTIONS.reduce((a, f) => a + (bd.f[f]?.g ?? 0), 0);
@@ -126,6 +143,7 @@ function Sides({ bd }: { bd: BandStats }) {
 }
 
 function Fvf({ fvf }: { fvf: Record<string, { g: number; w: number }> }) {
+  const { FACTIONS, SIDE, short } = useFactions();
   const t = useStatsCopy();
   const c = useCoh3Copy();
   const num = useNum();
@@ -171,6 +189,7 @@ function Fvf({ fvf }: { fvf: Record<string, { g: number; w: number }> }) {
 type MapKey = "map" | "g" | "axis" | Faction;
 
 function Maps({ md }: { md: ModeStats }) {
+  const { FACTIONS, SIDE, short } = useFactions();
   const t = useStatsCopy();
   const c = useCoh3Copy();
   const num = useNum();
@@ -197,7 +216,7 @@ function Maps({ md }: { md: ModeStats }) {
             {th("map", t.stats.map)}
             {th("g", t.stats.games)}
             {th("axis", t.stats.axisWin)}
-            {FACTIONS.map((f) => th(f, c.factionShort[f]))}
+            {FACTIONS.map((f) => th(f, short(f)))}
           </tr>
         </thead>
         <tbody>
@@ -211,7 +230,7 @@ function Maps({ md }: { md: ModeStats }) {
               {FACTIONS.map((f) => {
                 const p = wr(r.m.f[f]);
                 return (
-                  <td key={f} data-l={c.factionShort[f]} className={p == null ? "" : p >= 0.5 ? "c3-up" : "c3-down"}>
+                  <td key={f} data-l={short(f)} className={p == null ? "" : p >= 0.5 ? "c3-up" : "c3-down"}>
                     {pct(num, p)}
                   </td>
                 );

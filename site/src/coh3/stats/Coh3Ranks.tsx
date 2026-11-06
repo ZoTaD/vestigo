@@ -6,9 +6,13 @@
 import { useEffect, useState } from "react";
 import type { Route } from "../../route";
 import { useLang, type Lang } from "../../i18n";
-import { FACTIONS, type Faction } from "../../coh3Copy";
-import { Coh3Loading, FactionTag, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
+import type { CohGame } from "../../route";
+import { Coh3Loading, FactionTag, LeagueTag, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
 import { LEAGUES, type League } from "../leagues";
+import { GAMES } from "../games";
+
+/** La clave de una facción de cualquiera de los tres juegos. */
+type Faction = string;
 import { MODES, type Mode } from "./data";
 import "./stats.css";
 
@@ -17,8 +21,18 @@ interface ModeLadder { factions: Record<Faction, FacLadder>; unique: number; cou
 export interface Ladder { day: string; eloStart: number; eloStep: number; modes: Record<Mode, ModeLadder> }
 
 type Mod<T> = { default: T };
-let cache: Ladder | null = null;
-export const loadLadder = (): Promise<Ladder> => (cache ? Promise.resolve(cache) : (import("@coh3stats/ladder.json") as Promise<Mod<unknown>>).then((m) => (cache = m.default as Ladder)));
+const cache: Partial<Record<CohGame, Ladder>> = {};
+const FILES: Record<CohGame, () => Promise<Mod<unknown>>> = {
+  coh3: () => import("@coh3stats/ladder.json") as Promise<Mod<unknown>>,
+  coh2: () => import("@coh2stats/ladder.json") as Promise<Mod<unknown>>,
+  coh1: () => import("@coh1stats/ladder.json") as Promise<Mod<unknown>>,
+};
+/** La foto del ranking de un juego (CoH1 y CoH2 la arma `games/coh/tools/relic_daily.py`, con el mismo formato). */
+export const loadLadder = (game: CohGame = "coh3"): Promise<Ladder> => {
+  const hit = cache[game];
+  return hit ? Promise.resolve(hit) : FILES[game]().then((m) => (cache[game] = m.default as Ladder));
+};
+export const peekLadder = (game: CohGame = "coh3"): Ladder | null => cache[game] ?? null;
 
 const EN = {
   k: "Ranks",
@@ -47,6 +61,14 @@ const EN = {
   unknown: "Unknown",
   totals: (u: string) => `${u} different players`,
   none: "No players in this league.",
+  // CoH1 y CoH2: niveles sin nombre ni ELO fijo, y datos propios (sin crédito a coh3stats).
+  levelH1: "Levels and players",
+  levelLede: "Every ranking level and how many players are in each one. Only players who played in the last weeks are on the ladder.",
+  levelSnapshot: (day: string) => `Ladder of ${day}.`,
+  levels: "Levels",
+  levelsLede: "Level 20 is the top of each faction's ladder.",
+  level: "Level",
+  eloKnown: "Only players with a recent game, whose Elo we know.",
 };
 const ES: typeof EN = {
   k: "Rangos",
@@ -75,13 +97,20 @@ const ES: typeof EN = {
   unknown: "Sin dato",
   totals: (u: string) => `${u} jugadores distintos`,
   none: "Nadie en esta liga.",
+  levelH1: "Niveles y jugadores",
+  levelLede: "Cada nivel del ranking y cuántos jugadores hay en cada uno. En el ranking están los que jugaron en las últimas semanas.",
+  levelSnapshot: (day: string) => `Ranking del ${day}.`,
+  levels: "Niveles",
+  levelsLede: "El nivel 20 es lo más alto del ranking de cada facción.",
+  level: "Nivel",
+  eloKnown: "Sólo los jugadores con una partida reciente, de los que se conoce el ELO.",
 };
 const COPY: Record<Lang, typeof EN> = { en: EN, es: ES };
 
 type Scope = Faction | "all";
 const sumArr = (xs: number[][]): number[] => xs[0].map((_, i) => xs.reduce((a, x) => a + (x[i] ?? 0), 0));
 
-function useQuery() {
+function useQuery(FACTIONS: readonly Faction[]) {
   const [mode, setMode] = useState<Mode>("1v1");
   const [scope, setScope] = useState<Scope>("all");
   useEffect(() => {
@@ -104,19 +133,22 @@ export default function Coh3Ranks(_: { route: Route; navigate: Nav }) {
   const { lang } = useLang();
   const t = COPY[lang];
   const num = useNum();
-  const [d, setD] = useState<Ladder | null>(cache);
-  const q = useQuery();
+  const game = useCohGame();
+  const FACTIONS = GAMES[game].factions;
+  const niveles = GAMES[game].league === "level";
+  const [d, setD] = useState<Ladder | null>(() => peekLadder(game));
+  const q = useQuery(FACTIONS);
   useEffect(() => {
     if (d) return;
     let vivo = true;
-    loadLadder().then((x) => vivo && setD(x), () => undefined);
+    loadLadder(game).then((x) => vivo && setD(x), () => undefined);
     return () => {
       vivo = false;
     };
-  }, [d]);
+  }, [d, game]);
   if (!d) return <Coh3Loading />;
   const md = d.modes[q.mode];
-  const facs = q.scope === "all" ? FACTIONS.map((f) => md.factions[f]) : [md.factions[q.scope]];
+  const facs = (q.scope === "all" ? FACTIONS.map((f) => md.factions[f]) : [md.factions[q.scope]]).filter(Boolean);
   const lv = sumArr(facs.map((f) => f.lv));
   const elo = sumArr(facs.map((f) => f.elo));
   const day = new Date(`${d.day}T12:00:00Z`).toLocaleDateString(lang === "es" ? "es-AR" : "en-US", { day: "numeric", month: "long", year: "numeric" });
@@ -124,9 +156,9 @@ export default function Coh3Ranks(_: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-ranks">
       <header className="c3-head">
         <div className="c3-k">{t.k}</div>
-        <h1 className="c3-h1">{t.h1}</h1>
-        <p className="c3-lede">{t.lede}</p>
-        <p className="c3-note">{t.snapshot(day)}</p>
+        <h1 className="c3-h1">{niveles ? t.levelH1 : t.h1}</h1>
+        <p className="c3-lede">{niveles ? t.levelLede : t.lede}</p>
+        <p className="c3-note">{niveles ? t.levelSnapshot(day) : t.snapshot(day)}</p>
         <div className="c3-filters c3-mb">
           <div className="c3-seg" role="group" aria-label="Mode">
             {MODES.map((m) => (
@@ -147,15 +179,15 @@ export default function Coh3Ranks(_: { route: Route; navigate: Nav }) {
           </div>
         </div>
       </header>
-      <Leagues lv={lv} t={t} lang={lang} num={num} />
-      <Factions md={md} t={t} num={num} />
-      <EloDist elo={elo} start={d.eloStart} step={d.eloStep} t={t} num={num} />
+      {niveles ? <Levels lv={lv} t={t} num={num} /> : <Leagues lv={lv} t={t} lang={lang} num={num} />}
+      <Factions md={md} t={t} num={num} factions={FACTIONS} />
+      <EloDist elo={elo} start={d.eloStart} step={d.eloStep} t={t} num={num} note={niveles ? t.eloKnown : undefined} />
       <Countries md={md} t={t} lang={lang} num={num} />
     </main>
   );
 }
 
-type Num = (v: number, d?: number) => string;
+type Num = (v: number | null | undefined, d?: number) => string;
 type T = typeof EN;
 type LKey = "league" | "elo" | "players" | "share" | "above";
 
@@ -207,7 +239,51 @@ function Leagues({ lv, t, lang, num }: { lv: number[]; t: T; lang: Lang; num: Nu
   );
 }
 
-function EloDist({ elo, start, step, t, num }: { elo: number[]; start: number; step: number; t: T; num: Num }) {
+/** Los niveles 1–20 de CoH1 y CoH2: sin nombre ni ELO fijo, el 20 arriba. */
+function Levels({ lv, t, num }: { lv: number[]; t: T; num: Num }) {
+  const { sort, th } = useSort<"level" | "players" | "share" | "above">({ key: "level", dir: -1 }, []);
+  const ranked = lv.slice(1).reduce((a, b) => a + b, 0) || 1;
+  const below = (level: number) => lv.slice(1, level).reduce((a, b) => a + b, 0);
+  const rows = Array.from({ length: 20 }, (_, i) => i + 1);
+  const cols = { level: (l: number) => l, players: (l: number) => lv[l] ?? 0, share: (l: number) => lv[l] ?? 0, above: (l: number) => l };
+  const max = Math.max(1, ...lv.slice(1));
+  return (
+    <Panel k={t.levels} lede={t.levelsLede} className="c3-tablepanel">
+      <table className="c3-table is-stack c3-leagues">
+        <thead>
+          <tr>
+            {th("level", t.level)}
+            {th("players", t.players)}
+            {th("share", t.share)}
+            {th("above", t.above)}
+          </tr>
+        </thead>
+        <tbody>
+          {sortRows(rows, cols, sort).map((l) => {
+            const n = lv[l] ?? 0;
+            return (
+              <tr key={l}>
+                <td>
+                  <LeagueTag level={l} />
+                </td>
+                <td data-l={t.players}>{num(n)}</td>
+                <td data-l={t.share}>
+                  <span className="c3-share">
+                    <span className="c3-share-bar" style={{ width: `${Math.min(100, (n / max) * 100)}%` }} />
+                    {num((n / ranked) * 100, 1)} %
+                  </span>
+                </td>
+                <td data-l={t.above}>{num((below(l) / ranked) * 100, 1)} %</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </Panel>
+  );
+}
+
+function EloDist({ elo, start, step, t, num, note }: { elo: number[]; start: number; step: number; t: T; num: Num; note?: string }) {
   // Se recortan los tramos vacíos de las puntas.
   let a = elo.findIndex((n) => n > 0);
   let b = elo.length - 1 - [...elo].reverse().findIndex((n) => n > 0);
@@ -216,7 +292,7 @@ function EloDist({ elo, start, step, t, num }: { elo: number[]; start: number; s
   const max = Math.max(1, ...xs);
   const total = xs.reduce((s, n) => s + n, 0) || 1;
   return (
-    <Panel k={t.eloDist} lede={t.eloLede}>
+    <Panel k={t.eloDist} lede={note ? `${t.eloLede} ${note}` : t.eloLede}>
       <ol className="c3-hist c3-elohist">
         {xs.map((n, i) => {
           const lo = start + (a + i) * step;
@@ -235,7 +311,7 @@ function EloDist({ elo, start, step, t, num }: { elo: number[]; start: number; s
 }
 
 type FKey = "faction" | "n" | "active7" | "games";
-function Factions({ md, t, num }: { md: ModeLadder; t: T; num: Num }) {
+function Factions({ md, t, num, factions: FACTIONS }: { md: ModeLadder; t: T; num: Num; factions: readonly Faction[] }) {
   const { sort, th } = useSort<FKey>({ key: "n", dir: -1 }, ["faction"]);
   const cols: Record<FKey, (f: Faction) => string | number> = {
     faction: (f) => f,
@@ -255,7 +331,7 @@ function Factions({ md, t, num }: { md: ModeLadder; t: T; num: Num }) {
           </tr>
         </thead>
         <tbody>
-          {sortRows(FACTIONS, cols, sort).map((f) => (
+          {sortRows(FACTIONS.filter((f) => md.factions[f]), cols, sort).map((f) => (
             <tr key={f}>
               <td>
                 <FactionTag f={f} size={22} />
