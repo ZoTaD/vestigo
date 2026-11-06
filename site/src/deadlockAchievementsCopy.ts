@@ -7,6 +7,7 @@ const nf = (lang: Lang) => (n: number) => n.toLocaleString(lang);
 
 const METRIC: Record<Lang, Record<string, string>> = {
   en: {
+    rank: "Rank",
     kills: "Kills",
     assists: "Assists",
     player_damage: "Damage",
@@ -19,6 +20,7 @@ const METRIC: Record<Lang, Record<string, string>> = {
     hero_bullets_hit_crit: "Headshots",
   },
   es: {
+    rank: "Rango",
     kills: "Kills",
     assists: "Asistencias",
     player_damage: "Daño",
@@ -92,21 +94,16 @@ export function achievementText(
     case "record": {
       const m = METRIC[lang][k.metric] ?? k.metric;
       const lugar = es ? `#${k.place} del mundo` : `World #${k.place}`;
+      if (k.metric === "rank") {
+        return k.heroId == null
+          ? { title: es ? "Ranking mundial" : "World ranking", detail: `${lugar} · Season ${k.season}` }
+          : { title: es ? `Rango con ${hero(k.heroId)}` : `${hero(k.heroId)} rank`, detail: `${lugar} · Season ${k.season}` };
+      }
       if (k.heroId == null) {
         return { title: m, detail: `${lugar} · ${es ? "todos los héroes" : "all heroes"} · Season ${k.season}` };
       }
       return { title: `${hero(k.heroId)} · ${m}`, detail: `${lugar} · Season ${k.season}` };
     }
-    case "ladder":
-      return {
-        title: es ? `Rango con ${hero(k.heroId)}` : `${hero(k.heroId)} rank`,
-        detail: es ? `#${k.place} del mundo con ${hero(k.heroId)}` : `World #${k.place} on ${hero(k.heroId)}`,
-      };
-    case "world":
-      return {
-        title: es ? "Top del mundo" : "World top",
-        detail: es ? `#${n(k.place)} de ${n(k.of)} jugadores` : `#${n(k.place)} of ${n(k.of)} players`,
-      };
     case "mastery":
       return a.progress
         ? {

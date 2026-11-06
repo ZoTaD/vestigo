@@ -683,8 +683,9 @@ const EN = {
        * Dice **cuántos**, no "estás rankeado": el número es el logro. Con uno
        * solo la frase cambia, porque "1 héroes" delata una plantilla.
        */
-      placingsLead: (n: number) =>
-        n === 1 ? "Top 100 in the world with 1 hero." : `Top 100 in the world with ${n} heroes.`,
+      placingsLead: (n: number, season: number, final: boolean) =>
+        (n === 1 ? "Top 100 in the world with 1 hero" : `Top 100 in the world with ${n} heroes`) +
+        ` · Season ${season}${final ? " final standings" : ""}.`,
       placingTitle: (hero: string, place: number) => `#${place} in the world with ${hero}`,
       /** El botón que alarga la lista de partidas. Copiado de op.gg, que corta en 20. */
       showMore: "Show more matches",
@@ -2367,8 +2368,9 @@ const ES: typeof EN = {
         allTitle: "Todas las partidas, de todas las temporadas",
         peak: "Pico de la temporada",
       },
-      placingsLead: (n: number) =>
-        n === 1 ? "Top 100 del mundo con 1 héroe." : `Top 100 del mundo con ${n} héroes.`,
+      placingsLead: (n: number, season: number, final: boolean) =>
+        (n === 1 ? "Top 100 del mundo con 1 héroe" : `Top 100 del mundo con ${n} héroes`) +
+        ` · Season ${season}${final ? ", posiciones finales" : ""}.`,
       placingTitle: (hero: string, place: number) => `#${place} del mundo con ${hero}`,
       showMore: "Mostrar más partidas",
       activity: {

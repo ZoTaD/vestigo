@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import type { HistoryRow } from "./deadlockMatch";
 import { inScope, RANKED_MODE } from "./deadlockMatch";
 import type { HeroStat } from "./deadlockHeroStats";
-import type { HeroPlacing, WorldStanding } from "./deadlockHeroLadder";
 import type { RankPoint } from "./deadlockRankHistory";
 import { seasonAt } from "./deadlockSeasons";
 
@@ -29,8 +28,6 @@ export const GROUPS: Group[] = ["world", "mastery", "feats", "rank", "season"];
 /** Qué dice el logro. El texto se arma en el componente, en el idioma de la página. */
 export type AchievementKind =
   | { type: "record"; metric: string; place: number; heroId: number | null; season: number }
-  | { type: "ladder"; place: number; heroId: number }
-  | { type: "world"; place: number; of: number }
   | { type: "mastery"; heroId: number; matches: number; need: number }
   | { type: "career"; matches: number; need: number }
   | { type: "streak"; n: number; need: number }
@@ -98,11 +95,6 @@ export function topHundredTier(place: number): Tier {
   return place === 1 ? "eternal" : place <= 10 ? "gold" : place <= 50 ? "silver" : "bronze";
 }
 
-/** Puesto en el mundo entero (miles de jugadores). */
-export function worldTier(place: number): Tier | null {
-  return place <= 10 ? "eternal" : place <= 100 ? "gold" : place <= 1000 ? "silver" : place <= 5000 ? "bronze" : null;
-}
-
 /** El rango más alto de una temporada, por división: Emissary bronce … Eternus eterna. */
 export function peakTier(badge: number): Tier | null {
   const div = Math.floor(badge / 10);
@@ -160,6 +152,7 @@ export function recordsOf(file: RecordsFile | null, accountId: number): Achievem
 
 /** El ícono de cada métrica, para los récords del mundo entero (sin héroe). */
 export const METRIC_ICON: Record<string, string> = {
+  rank: "spirit",
   kills: "damage_crit",
   assists: "heal",
   player_damage: "damage_bullet_color",
@@ -201,8 +194,6 @@ export interface AchievementInput {
   history: HistoryRow[];
   career: HeroStat[];
   rankSeries: RankPoint[];
-  placings: HeroPlacing[];
-  world: WorldStanding | null;
   records: RecordsFile | null;
 }
 
@@ -235,28 +226,9 @@ export function achievementsOf(inp: AchievementInput): { earned: Achievement[]; 
   const earned: Achievement[] = [...recordsOf(inp.records, inp.accountId)];
   const next: Achievement[] = [];
 
-  // La escalera por héroe (por rango) y el puesto en el mundo.
-  for (const p of inp.placings) {
-    earned.push({
-      id: `ladder-${p.heroId}`,
-      group: "world",
-      tier: topHundredTier(p.place),
-      face: { kind: "hero", heroId: p.heroId },
-      tag: `#${p.place}`,
-      kind: { type: "ladder", place: p.place, heroId: p.heroId },
-    });
-  }
-  const wt = inp.world ? worldTier(inp.world.place) : null;
-  if (inp.world && wt) {
-    earned.push({
-      id: "world",
-      group: "world",
-      tier: wt,
-      face: { kind: "icon", icon: "spirit" },
-      tag: `#${inp.world.place}`,
-      kind: { type: "world", place: inp.world.place, of: inp.world.of },
-    });
-  }
+  // La escalera por héroe y el ranking del mundo NO se leen de la escalera en
+  // vivo: esa cambia de temporada a la semana del reset y las medallas se
+  // perderían. Salen de los récords (métrica "rank"), sellados por temporada.
 
   // Maestría por héroe, con la carrera entera.
   const carrera = [...inp.career].sort((a, b) => b.matches - a.matches);

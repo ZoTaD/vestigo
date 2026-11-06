@@ -22,6 +22,8 @@ const CATALOG = "../data/catalog.json";
 
 /** Las métricas, en el orden en que se muestran. Son nombres de `sort_by`. */
 export const METRICS = [
+  // El rango: la escalera por héroe y la del mundo, congeladas por temporada.
+  "rank",
   "kills",
   "assists",
   "player_damage",

@@ -47,7 +47,7 @@ import DeadlockHeroVsBandCard from "./DeadlockHeroVsBandCard";
 import DeadlockBuildVsBandCard from "./DeadlockBuildVsBandCard";
 import { useHeroVsBand } from "./deadlockHeroVsBand";
 import { bandRangeOf } from "./deadlockVsBand";
-import { defaultSeason, inSeason, seasonCounts, type SeasonPick } from "./deadlockSeasons";
+import { defaultSeason, inSeason, ladderSeason, seasonCounts, type SeasonPick } from "./deadlockSeasons";
 import DeadlockPeerCard from "./DeadlockPeerCard";
 import { peersInScope, usePeers } from "./deadlockPeers";
 import DeadlockCareerHeroes from "./DeadlockCareerHeroes";
@@ -359,7 +359,11 @@ function HeroPlacings({ placings }: { placings: HeroPlacing[] }) {
   return (
     <div className="box dl-pcard">
       <h2 className="box-title dl-pcard-title">{c.cards.placings}</h2>
-      <p className="detail-note dl-placings-note">{c.placingsLead(placings.length)}</p>
+      {/* La temporada en la frase: la primera semana de una temporada nueva la
+          lista sigue siendo la de la anterior (ver `ladderSeason`). */}
+      <p className="detail-note dl-placings-note">
+        {c.placingsLead(placings.length, ladderSeason().season.id, ladderSeason().final)}
+      </p>
       {/* Filas y no una grilla de retratos con el número encima: "sos el #1 del
           mundo con Abrams" es una frase, y se lee como tal — héroe, puesto, y
           de cuántos. Los tres primeros llevan su metal en el número. */}
@@ -783,13 +787,11 @@ export default function DeadlockPlayer({
             history: historialTodo,
             career: carrera,
             rankSeries: serie,
-            placings,
-            world,
             records,
           })
         : { earned: [], next: [] },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [id, historial, carrera, serie, placings, world, records]
+    [id, historial, carrera, serie, records]
   );
 
   return (

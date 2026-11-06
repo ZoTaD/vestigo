@@ -34,7 +34,7 @@ function fila(p: Partial<HistoryRow>): HistoryRow {
   };
 }
 
-const base = { accountId: 7, career: [], rankSeries: [], placings: [], world: null, records: null };
+const base = { accountId: 7, career: [], rankSeries: [], records: null };
 
 describe("umbrales", () => {
   it("stepTier y nextStep", () => {
