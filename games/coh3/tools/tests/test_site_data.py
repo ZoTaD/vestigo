@@ -36,7 +36,7 @@ class TestExplorador(unittest.TestCase):
 
     def test_panzer_iv(self):
         p = self.u["panzer_iv_ger"]
-        self.assertEqual((p["hp"], p["armor"]), (720, [170, 105, 70]))
+        self.assertEqual((p["hp"], p["armor"]), (720, [170, 95, 70]))
         self.assertEqual(p["faction"], "german")
         self.assertEqual(p["name"]["en"], "Panzer IV Medium Tank")
         self.assertEqual(p["name"]["es"], "Tanque medio Panzer IV")
@@ -48,7 +48,7 @@ class TestExplorador(unittest.TestCase):
 
     def test_stug(self):
         s = self.u["stug_iii_ger"]
-        self.assertEqual((s["hp"], s["armor"]), (600, [250, 150, 90]))
+        self.assertEqual((s["hp"], s["armor"]), (600, [225, 135, 80]))
 
     def test_cañon_at_57(self):
         w = self.w["57mm_at_gun_us"]
@@ -87,7 +87,7 @@ class TestExplorador(unittest.TestCase):
     def test_extra_units(self):
         # Los que nada enlaza en coh3-data, sumados desde extra_units.json.
         p = self.u["panzer_iv_ak"]
-        self.assertEqual((p["faction"], p["hp"], p["armor"]), ("dak", 720, [170, 105, 70]))
+        self.assertEqual((p["faction"], p["hp"], p["armor"]), ("dak", 720, [170, 95, 70]))
         self.assertEqual((p["cost"]["mp"], p["cost"]["fu"]), (380, 90))
         g = self.u["goliath_ak"]
         self.assertEqual((g["faction"], g["name"]["en"]), ("dak", "Goliath Demolition Vehicle"))
@@ -165,3 +165,9 @@ class TestFormato(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_nombre_provisorio_sin_signo():
+    # La 3.0 trae nombres sin terminar con "!" adelante ("!Goon Gun Pit"): en el sitio va el nombre a secas.
+    assert site_data.Loc._limpiar("!Goon Gun Pit") == "Goon Gun Pit"
+    assert site_data.Loc._limpiar("¡Hurra!") == "¡Hurra!"
