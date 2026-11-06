@@ -17,9 +17,30 @@ STEAM = "https://cdn.cloudflare.steamstatic.com/steam/apps/{app}/{f}"
 JUEGOS = {"coh2": 231430, "coh1": 228200}
 # La sigla de cada facción y si es del Eje (cambia el color de la insignia).
 FACCIONES = {
-    # CoH2 usa los emblemas del juego (games/coh2/tools/site_data.py).
-    "coh1": {"american": ("US", False), "wehrmacht": ("WEH", True), "british": ("UK", False), "panzer_elite": ("PE", True)},
+    # CoH2 usa los emblemas del juego (games/coh2/tools/site_data.py). CoH1 no trae emblemas sueltos (los `symbol_*`
+    # vienen vacíos): se dibujan las insignias de época de cada ejército (`emblema`).
+    "coh1": ["american", "wehrmacht", "british", "panzer_elite"],
 }
+
+_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">{}</svg>'
+EMBLEMAS = {
+    # Estrella blanca en círculo azul (la de los vehículos estadounidenses).
+    "american": '<circle cx="24" cy="24" r="21" fill="#23395f" stroke="#e8e4d4" stroke-width="2.5"/>'
+                '<polygon points="24.00,10.60 27.29,20.07 37.31,20.27 29.33,26.33 32.23,35.93 24.00,30.20 15.77,35.93 18.67,26.33 10.69,20.27 20.71,20.07" fill="#e8e4d4"/>',
+    # Escarapela británica.
+    "british": '<circle cx="24" cy="24" r="21" fill="#2a3f74" stroke="#e8e4d4" stroke-width="1.5"/>'
+               '<circle cx="24" cy="24" r="13.5" fill="#e8e4d4"/><circle cx="24" cy="24" r="7" fill="#b3282d"/>',
+    # Cruz de balcón negra con borde blanco, sobre gris campaña.
+    "wehrmacht": '<rect x="3" y="3" width="42" height="42" rx="4" fill="#6b6f5c" stroke="#e8e4d4" stroke-width="1.5"/>'
+                 '<path d="M19 6h10v13h13v10H29v13H19V29H6V19h13z" fill="#e8e4d4"/><path d="M21 8h6v13h13v6H27v13h-6V27H8v-6h13z" fill="#1b1b1b"/>',
+    # Panzer Elite: la misma cruz, blanca y hueca, sobre el bordó de su bandera.
+    "panzer_elite": '<rect x="3" y="3" width="42" height="42" rx="4" fill="#5a1418" stroke="#e8e4d4" stroke-width="1.5"/>'
+                    '<path d="M21 8h6v13h13v6H27v13h-6V27H8v-6h13z" fill="none" stroke="#e8e4d4" stroke-width="2.4"/>',
+}
+
+
+def emblema(faccion: str) -> str:
+    return _SVG.format(EMBLEMAS[faccion])
 
 
 def bajar(url: str) -> Image.Image:
@@ -36,17 +57,6 @@ def cabecera(img: Image.Image, ancho: int, alto: int) -> Image.Image:
         top = (h - nuevo_h) // 2
         img = img.crop((0, top, w, top + nuevo_h))
     return img.resize((ancho, alto), Image.LANCZOS).convert("RGB")
-
-
-def insignia(sigla: str, eje: bool) -> str:
-    fondo, letra = ("#3a2a22", "#e0b07a") if eje else ("#2c3322", "#cfd9a0")
-    tam = 22 if len(sigla) <= 2 else 17
-    return (
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">'
-        f'<path d="M24 3 43 10v13c0 11-8 19-19 22C13 42 5 34 5 23V10z" fill="{fondo}" stroke="{letra}" stroke-width="2"/>'
-        f'<text x="24" y="{30 if len(sigla) <= 2 else 29}" text-anchor="middle" font-family="\'Big Shoulders Stencil Display\',Impact,sans-serif" '
-        f'font-weight="900" font-size="{tam}" fill="{letra}">{sigla}</text></svg>'
-    )
 
 
 def main() -> None:
@@ -66,8 +76,8 @@ def main() -> None:
         logo.putalpha(alfa)
         logo.save(dest / "logo.webp", quality=90)
         print(juego, "logo", logo.size)
-        for f, (sigla, eje) in FACCIONES.get(juego, {}).items():
-            (dest / "f" / f"{f}.svg").write_text(insignia(sigla, eje), encoding="utf-8")
+        for f in FACCIONES.get(juego, []):
+            (dest / "f" / f"{f}.svg").write_text(emblema(f), encoding="utf-8")
 
 
 if __name__ == "__main__":

@@ -48,3 +48,13 @@ def test_dxt1_sin_zlib():
 
 def test_basura_no_corta():
     assert decode(b"nada") is None
+
+
+def test_imag_bgra_sin_comprimir():
+    # Las texturas de interfaz viejas: FOLD IMAG > DATA ATTR (formato 0, ancho, alto) + DATA DATA (BGRA crudo).
+    w, h = 2, 2
+    pix = bytes([255, 0, 0, 255]) * (w * h)  # azul en BGRA
+    imag = _chunk(b"DATA", b"ATTR", struct.pack("<III", 0, w, h)) + _chunk(b"DATA", b"DATA", pix)
+    b = b"Relic Chunky\r\n\x1a\0" + struct.pack("<III", 3, 1, 0x24) + struct.pack("<II", 0x1C, 1) + _chunk(b"FOLD", b"IMAG", imag)
+    im = decode(b)
+    assert im.size == (2, 2) and im.getpixel((0, 0))[:3] == (0, 0, 255)

@@ -46,7 +46,7 @@ TIPO = {"soldiers": "infantry", "vehicles": "vehicles", "buildings": "emplacemen
 # Fuera: campaña, pruebas y las copias "_reinforcement" que traen las doctrinas (las mismas unidades base).
 FUERA = re.compile(r"(_sp($|_)|/sp_|_m\d\d|test|battle_sim|tutorial|la_fiere|trun|villers|_rpg|deadforever|campaign|reinforcement|eselschreck|voss)")
 ARCHIVOS_ARTE = ["WW2/Archives/WW2Art.sga", "WW2/Archives/WW2Data.sga", "DLC1/Archives/DLC1Data.sga", "DLC2/Archives/DLC2Data.sga",
-                 "DLC3/Archives/DLC3Data.sga", "DLC1/Archives/DLC1ArtHigh.sga", "DLC2/Archives/DLC2ArtHigh.sga", "DLC3/Archives/DLC3ArtHigh.sga"]
+                 "DLC3/Archives/DLC3Data.sga", "CoH/OPS/Archives/OPSData.sga", "DLC1/Archives/DLC1ArtHigh.sga", "DLC2/Archives/DLC2ArtHigh.sga", "DLC3/Archives/DLC3ArtHigh.sga"]
 # Los árboles de doctrina de multijugador (los otros son de misiones).
 DOCTRINAS = re.compile(r"^(allied|axis|pe|royal)_")
 
@@ -353,7 +353,8 @@ def main(argv: list[str]) -> None:
             slug = f"{slug}_{FACCION[raza]}"
         unidades.append({
             "slug": slug, "name": nombre, "faction": FACCION[raza], "kind": kind,
-            "icon": ui.get("icon_name") or None, "symbol": None, **st, "target": principal.get("target"),
+            # Algunos vehículos no tienen retrato en el juego: queda la silueta del panel de daños.
+            "icon": ui.get("icon_name") or None, "_icono2": f"{ui['critical_icon_prefix']}" if ui.get("critical_icon_prefix") else None, "symbol": None, **st, "target": principal.get("target"),
             "role": t(ui.get("help_text")), "desc": t(ui.get("extra_text")), "upkeep": None,
             "upgrades": mejoras, "abilities": habilidades, "vet": [], "bg": doc, "builtIn": [], "weapons": armas, "_ruta": sq,
         })
@@ -415,7 +416,8 @@ def main(argv: list[str]) -> None:
         return None
 
     for u in unidades:
-        u["icon"] = icono(u["icon"], 64)
+        u["icon"] = icono(u["icon"], 64) or icono(u.pop("_icono2", None), 64)
+        u.pop("_icono2", None)
         for x in u["upgrades"] + u["abilities"]:
             x["icon"] = icono(x["icon"], 64)
     for w in fichas_armas:

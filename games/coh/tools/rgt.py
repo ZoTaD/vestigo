@@ -3,6 +3,9 @@ Las texturas `.rgt` de Company of Heroes (2026-11-06): un Relic Chunky con `FOLD
 (ancho y alto) y `DATA TDAT` (el primer nivel de la textura, comprimido con zlib o no, con 16 bytes de encabezado
 antes de los bloques DXT). DXT5 si hay un byte por píxel, DXT1 si hay medio. El juego guarda la imagen de abajo para
 arriba: se da vuelta.
+
+Las texturas de interfaz más viejas traen `FOLD IMAG` > `DATA ATTR` (formato, ancho, alto) y `DATA DATA` con los
+píxeles en BGRA sin comprimir.
 """
 import struct
 import zlib
@@ -10,8 +13,21 @@ import zlib
 from PIL import Image
 
 
+def _imag(b: bytes) -> Image.Image | None:
+    i = b.index(b"DATAATTR")
+    fmt, w, h = struct.unpack_from("<III", b, i + 28)
+    j = b.index(b"DATADATA", i)
+    tam = struct.unpack_from("<I", b, j + 12)[0]
+    if fmt != 0 or tam < w * h * 4:
+        return None
+    im = Image.frombytes("RGBA", (w, h), b[j + 28:j + 28 + w * h * 4], "raw", "BGRA")
+    return im.transpose(Image.FLIP_TOP_BOTTOM)
+
+
 def decode(b: bytes) -> Image.Image | None:
     try:
+        if b"DATATFMT" not in b:
+            return _imag(b)
         i = b.index(b"DATATFMT")
         w, h = struct.unpack_from("<II", b, i + 28)
         j = b.index(b"DATATDAT")
