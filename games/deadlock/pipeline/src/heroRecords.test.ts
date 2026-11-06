@@ -32,3 +32,15 @@ describe("seasonsToBuild", () => {
 it("uniqueIds conserva el orden y saca repetidos", () => {
   expect(uniqueIds([{ account_id: 3 }, { account_id: 1 }, { account_id: 3 }])).toEqual([3, 1]);
 });
+
+describe("countAtLeast", () => {
+  const lista = [90, 70, 70, 50, 30, 10, 10, 5];
+  const at = async (i: number) => (i < lista.length ? { rank: i + 1, value: lista[i], matches: 1 } : null);
+  it("cuenta los que llegan al umbral", async () => {
+    const { countAtLeast } = await import("./heroRecords");
+    expect(await countAtLeast(at, 50)).toBe(4);
+    expect(await countAtLeast(at, 1)).toBe(8);
+    expect(await countAtLeast(at, 100)).toBe(0);
+    expect(await countAtLeast(at, 90)).toBe(1);
+  });
+});
