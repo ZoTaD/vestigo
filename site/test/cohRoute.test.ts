@@ -23,7 +23,10 @@ describe("rutas de Company of Heroes con tres juegos", () => {
   it("una pestaña que CoH2 no tiene es su portada", () => {
     expect(parseRoute("/es/coh2/unidades")).toMatchObject({ cohGame: "coh2", c3Section: "home" });
     expect(cohTabs("coh2")).not.toContain("units");
-    expect(cohTabs("coh1")).toContain("achievements");
+    expect(cohTabs("coh2")).toContain("achievements");
+    // El CoH1 relanzado no tiene logros de Steam.
+    expect(cohTabs("coh1")).not.toContain("achievements");
+    expect(parseRoute("/es/coh1/logros")).toMatchObject({ cohGame: "coh1", c3Section: "home" });
   });
   it("jugador y partida de CoH2 llevan el número", () => {
     const r = parseRoute("/en/coh2/players/4623580");

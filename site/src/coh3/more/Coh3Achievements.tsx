@@ -7,21 +7,33 @@ import { useEffect, useState } from "react";
 import type { Route } from "../../route";
 import { useLang, type Lang } from "../../i18n";
 import { SettledImg } from "../../SettledImg";
+import { LazyRows } from "../../LazyRows";
 import { tr, type L10n } from "../data";
-import { Coh3Loading, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { GAMES, type CohGame } from "../games";
 import "./more.css";
 
 type Ach = { slug: string; name: L10n; desc: L10n; icon: string | null; hidden: boolean; pct: number | null };
 type Data = { generatedAt: string; list: Ach[] };
 type Mod<T> = { default: T };
-let cache: Data | null = null;
-export const loadAchievements = (): Promise<Data> =>
-  cache ? Promise.resolve(cache) : (import("@coh3/achievements.json") as Promise<Mod<unknown>>).then((m) => (cache = m.default as Data));
+// Uno por juego (2026-11-06): CoH2 también los tiene; el CoH1 relanzado no tiene logros de Steam.
+const cache: Partial<Record<CohGame, Data>> = {};
+const FILES: Partial<Record<CohGame, () => Promise<Mod<unknown>>>> = {
+  coh3: () => import("@coh3/achievements.json") as Promise<Mod<unknown>>,
+  coh2: () => import("@coh2/achievements.json") as Promise<Mod<unknown>>,
+};
+export const loadAchievements = (game: CohGame = "coh3"): Promise<Data> => {
+  const hit = cache[game];
+  const file = FILES[game];
+  if (hit) return Promise.resolve(hit);
+  if (!file) return Promise.resolve({ generatedAt: "", list: [] });
+  return file().then((m) => (cache[game] = m.default as Data));
+};
 
 const EN = {
   k: "Achievements",
   h1: "Achievements",
-  lede: "Every Company of Heroes 3 achievement, what it asks and the share of all players who have unlocked it.",
+  lede: (game: string) => `Every ${game} achievement, what it asks and the share of all players who have unlocked it.`,
   search: "Search achievements",
   name: "Achievement",
   pct: "Players who have it",
@@ -34,7 +46,7 @@ const EN = {
 const ES: typeof EN = {
   k: "Logros",
   h1: "Logros",
-  lede: "Todos los logros de Company of Heroes 3, lo que piden y qué parte de los jugadores los desbloqueó.",
+  lede: (game: string) => `Todos los logros de ${game}, lo que piden y qué parte de los jugadores los desbloqueó.`,
   search: "Buscar logros",
   name: "Logro",
   pct: "Jugadores que lo tienen",
@@ -51,17 +63,18 @@ export default function Coh3Achievements(_: { route: Route; navigate: Nav }) {
   const { lang } = useLang();
   const t = COPY[lang];
   const num = useNum();
-  const [d, setD] = useState<Data | null>(cache);
+  const game = useCohGame();
+  const [d, setD] = useState<Data | null>(() => cache[game] ?? null);
   const [q, setQ] = useState("");
   const { sort, th } = useSort<Key>({ key: "pct", dir: -1 }, ["name"]);
   useEffect(() => {
     if (d) return;
     let vivo = true;
-    loadAchievements().then((x) => vivo && setD(x), () => undefined);
+    loadAchievements(game).then((x) => vivo && setD(x), () => undefined);
     return () => {
       vivo = false;
     };
-  }, [d]);
+  }, [d, game]);
   if (!d) return <Coh3Loading />;
   const needle = q.trim().toLowerCase();
   const rows = d.list.filter((a) => !needle || `${tr(a.name, lang)} ${tr(a.desc, lang)} ${a.name.en}`.toLowerCase().includes(needle));
@@ -72,7 +85,7 @@ export default function Coh3Achievements(_: { route: Route; navigate: Nav }) {
       <header className="c3-head">
         <div className="c3-k">{t.k}</div>
         <h1 className="c3-h1">{t.h1}</h1>
-        <p className="c3-lede">{t.lede}</p>
+        <p className="c3-lede">{t.lede(GAMES[game].name)}</p>
         <p className="c3-note">{t.credit}</p>
       </header>
       <div className="c3-filters">
@@ -88,12 +101,13 @@ export default function Coh3Achievements(_: { route: Route; navigate: Nav }) {
             </tr>
           </thead>
           <tbody>
-            {sorted.map((a) => (
+            {/* CoH2 tiene 452 logros: de a tandas (regla de rendimiento de CLAUDE.md). */}
+            <LazyRows items={sorted} tag="tr" rowHeight={65} eager render={(a) => (
                 <tr key={a.slug}>
                   <td>
                     <span className="c3-nm">
                       {a.icon ? (
-                        <SettledImg className="c3-ach-img" src={`/coh3/a/${a.icon}.jpg`} alt="" width={48} height={48} />
+                        <SettledImg className="c3-ach-img" src={`/${game}/a/${a.icon}.jpg`} alt="" width={48} height={48} />
                       ) : (
                         <span className="c3-ach-img is-empty" aria-hidden="true" />
                       )}
@@ -117,7 +131,7 @@ export default function Coh3Achievements(_: { route: Route; navigate: Nav }) {
                     )}
                   </td>
                 </tr>
-            ))}
+            )} />
           </tbody>
         </table>
       </Panel>

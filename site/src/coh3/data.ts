@@ -101,13 +101,13 @@ const EXTRA: Partial<Record<Coh3Section, (route: Route) => Promise<unknown>>> = 
   battlegroups: () => loadList("units"),
   penetration: () => Promise.all([loadList("units"), loadList("weapons")]),
   dps: () => Promise.all([loadList("units"), loadList("weapons")]),
-  stats: () => Promise.all([import("./stats/data").then((m) => m.loadSummary()), import("./stats/parts").then((m) => m.loadMapNames())]),
+  stats: (route) => Promise.all([import("./stats/data").then((m) => m.loadSummary(route.cohGame)), import("./stats/parts").then((m) => m.loadMapNames(route.cohGame))]),
   "tier-list": () => Promise.all([import("./stats/data").then((m) => m.loadSummary()), import("./stats/parts").then((m) => m.loadMapNames())]),
   maps: () => Promise.all([import("./more/Coh3Maps").then((m) => m.loadMaps()), import("./stats/data").then((m) => m.loadSummary())]),
   challenges: () => import("./more/Coh3Challenges").then((m) => m.loadChallenges()),
   "final-stand": () => import("./more/Coh3FinalStand").then((m) => m.loadFinalStand()),
-  ranks: () => import("./stats/Coh3Ranks").then((m) => m.loadLadder()),
-  achievements: () => import("./more/Coh3Achievements").then((m) => m.loadAchievements()),
+  ranks: (route) => import("./stats/Coh3Ranks").then((m) => m.loadLadder(route.cohGame)),
+  achievements: (route) => import("./more/Coh3Achievements").then((m) => m.loadAchievements(route.cohGame)),
   patches: (route) => import("./more/Coh3Patches").then((m) => m.preloadPatches(route)),
 };
 

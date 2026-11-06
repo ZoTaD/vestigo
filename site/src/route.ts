@@ -439,9 +439,10 @@ const coh3Tab = (v: string | undefined): Coh3Tab | undefined => (isCoh3Tab(v) ? 
  */
 export type CohGame = "coh3" | "coh2" | "coh1";
 const COH_SEGMENTS: CohGame[] = ["coh3", "coh2", "coh1"];
-/** Las pestañas con página de CoH1 y CoH2 (la enciclopedia llega en las etapas 2 y 3). */
+/** Las pestañas con página de CoH1 y CoH2 (la enciclopedia llega en las etapas 2 y 3). CoH1 no tiene logros de Steam. */
 const COH_LIVE_TABS: Coh3Tab[] = ["leaderboards", "ranks", "stats", "achievements", "players", "matches"];
-export const cohTabs = (g: CohGame | undefined): Coh3Tab[] => (!g || g === "coh3" ? COH3_SECTIONS : COH_LIVE_TABS);
+export const cohTabs = (g: CohGame | undefined): Coh3Tab[] =>
+  !g || g === "coh3" ? COH3_SECTIONS : g === "coh1" ? COH_LIVE_TABS.filter((t) => t !== "achievements") : COH_LIVE_TABS;
 /**
  * Cambiar de juego: la misma pestaña si el otro juego la tiene; si no, su portada. Nunca la ficha (un jugador o una
  * unidad de un juego no existe en el otro).
