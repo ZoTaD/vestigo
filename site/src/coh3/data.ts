@@ -127,11 +127,13 @@ export const tr = (l: L10n | string | null | undefined, lang: "en" | "es"): stri
  */
 const EXTRA: Partial<Record<Coh3Section, (route: Route) => Promise<unknown>>> = {
   // Las fichas de unidades nombran armas (y sus counters las recorren todas); las de armas, a sus unidades.
-  units: () => loadList("weapons"),
-  weapons: () => loadList("units"),
-  battlegroups: () => loadList("units"),
-  penetration: () => Promise.all([loadList("units"), loadList("weapons")]),
-  dps: () => Promise.all([loadList("units"), loadList("weapons")]),
+  // La ficha de unidad nombra además a su battlegroup o comandante. Todo con el juego de la dirección.
+  units: (r) => Promise.all([loadList("weapons", r.cohGame), loadList(r.cohGame === "coh2" ? "commanders" : "battlegroups", r.cohGame)]),
+  weapons: (r) => loadList("units", r.cohGame),
+  battlegroups: (r) => loadList("units", r.cohGame),
+  commanders: (r) => loadList("units", r.cohGame),
+  penetration: (r) => Promise.all([loadList("units", r.cohGame), loadList("weapons", r.cohGame)]),
+  dps: (r) => Promise.all([loadList("units", r.cohGame), loadList("weapons", r.cohGame)]),
   stats: (route) => Promise.all([import("./stats/data").then((m) => m.loadSummary(route.cohGame)), import("./stats/parts").then((m) => m.loadMapNames(route.cohGame))]),
   "tier-list": () => Promise.all([import("./stats/data").then((m) => m.loadSummary()), import("./stats/parts").then((m) => m.loadMapNames())]),
   maps: (route) => Promise.all([import("./more/Coh3Maps").then((m) => m.loadMaps(route.cohGame)), import("./stats/data").then((m) => m.loadSummary(route.cohGame))]),

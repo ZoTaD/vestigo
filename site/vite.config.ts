@@ -341,7 +341,7 @@ function readSitemapData(): { data: OgData } {
       const slugs = (rows: { slug: string }[]) => rows.map((x) => x.slug);
       c3.coh2 = {
         units: slugs(r2("units/list.json")), weapons: slugs(r2("weapons/list.json")), commanders: slugs(r2("commanders/list.json")),
-        maps: (r2("maps.json").list as { id: string; players: number }[]).filter((m) => !/test/.test(m.id) && m.players > 0).map((m) => m.id),
+        maps: (r2("maps.json").list as { id: string; players: number; name: { en: string; es: string } }[]).filter((m) => !/test/.test(m.id) && m.players > 0 && (m.name.en || m.name.es)).map((m) => m.id),
       };
     } catch {
       /* sin enciclopedia de CoH2 */

@@ -63,6 +63,25 @@ def texto(ref, en: dict[int, str], es: dict[int, str]) -> dict | None:
     return {"en": en[i], "es": es.get(i) or en[i]}
 
 
+# Las acciones que de verdad traen escuadras al campo; el resto de las menciones (requisitos, modificadores, aviones de
+# un ataque aéreo) sólo las nombran.
+CONVOCA = {("squad_table", "squad"), ("paradrop_action", "squad_to_spawn"), ("replacement_squad_action", "replacement_squad_type")}
+
+
+def convocadas(o, camino: tuple = ()) -> set:
+    """Las escuadras que una habilidad convoca (refuerzos, paracaidistas, reemplazos), por nombre."""
+    out: set = set()
+    if isinstance(o, dict):
+        for k, v in o.items():
+            out |= convocadas(v, camino + (k,))
+    elif isinstance(o, list):
+        for v in o:
+            out |= convocadas(v, camino)
+    elif isinstance(o, str) and o and len(camino) >= 2 and (camino[-2], camino[-1]) in CONVOCA:
+        out.add(ref_name(o))
+    return out
+
+
 def es_avion(tipos: set) -> bool:
     """Una entidad de avión (los de los ataques aéreos): su `unit_type_list` dice `aircraft`."""
     return "aircraft" in tipos
@@ -262,7 +281,7 @@ def main(argv: list[str]) -> None:
     comandantes, upg_comandante, conv_comandante = [], {}, {}
     for nombre, ruta in sorted(at.idx.get("commander", {}).items()):
         raza = ruta.split("/")[1] if "/" in ruta else None
-        if raza not in FACCION or not es_multijugador(ruta + "_mp") and "tow" in ruta:
+        if raza not in FACCION or not es_multijugador(ruta + "_mp"):
             continue
         b = (at.get("commander", nombre) or {}).get("commander_bag") or {}
         n = t(b.get("name"))
@@ -273,7 +292,7 @@ def main(argv: list[str]) -> None:
             cb = (at.get("commander_ability", ca) or {}).get("commander_ability_bag") or {}
             ab = at.get("abilities", cb.get("ability") or "") or {}
             habs.append({"slug": ref_name(ca), "name": t(cb.get("name")) or {"en": ca, "es": ca}, "icon": cb.get("icon") or None,
-                         "desc": t(cb.get("description")), "upgrade": ref_name(cb.get("upgrade")), "_conv": _strings(ab, set())})
+                         "desc": t(cb.get("description")), "upgrade": ref_name(cb.get("upgrade")), "_conv": convocadas(ab)})
         comandantes.append({"slug": nombre, "name": n, "faction": FACCION[raza], "icon": b.get("icon_secondary") or b.get("icon") or None,
                             "desc": t(b.get("description")), "short": t(b.get("description_short")), "abilities": habs})
         for h in habs:
@@ -290,8 +309,9 @@ def main(argv: list[str]) -> None:
         cm = next((upg_comandante[r] for r in reqs if r in upg_comandante), None)
         if not cm:
             continue
-        for s in _strings(d.get("ability_bag", {}).get("action_list"), set()):
-            if at.ruta("sbps", s):
+        for s in convocadas(d.get("ability_bag", {}).get("action_list")):
+            # Sólo escuadras de la raza del comandante (una habilidad alemana nunca da una unidad del OKW).
+            if at.ruta("sbps", s) and _raza(at.ruta("sbps", s)) == _raza_comandante(at, cm[0]):
                 conv_comandante.setdefault(s, cm)
                 for c in comandantes:
                     if c["slug"] == cm[0]:
@@ -313,7 +333,7 @@ def main(argv: list[str]) -> None:
     # Lo que produce un edificio base no es del comandante aunque alguna habilidad también lo convoque (los
     # Conscripts que trae una habilidad soviética siguen siendo la infantería del cuartel general).
     for s, cm in conv_comandante.items():
-        if at.ruta("sbps", s) and s not in candidatas:
+        if at.ruta("sbps", s) and s not in candidatas and _raza(at.ruta("sbps", s)) == _raza_comandante(at, cm[0]):
             candidatas[s] = cm
 
     ents_cache: dict[str, dict] = {}
@@ -336,7 +356,7 @@ def main(argv: list[str]) -> None:
             continue
         reqs = _strings((d.get("squad_requirement_ext") or {}), set())
         if cm is None:
-            cm = next((upg_comandante[r] for r in reqs if r in upg_comandante), None)
+            cm = next((upg_comandante[r] for r in sorted(reqs) if r in upg_comandante and _raza_comandante(at, upg_comandante[r][0]) == raza), None)
         loadout = []
         for u in (((d.get("squad_loadout_ext") or {}).get("unit_list")) or {}).values():
             for x in _lista(u):
@@ -482,6 +502,11 @@ def main(argv: list[str]) -> None:
         por[u["faction"]] = por.get(u["faction"], 0) + 1
     print(f"coh2: {len(unidades)} unidades {por}, {len(fichas_armas)} armas, {len(comandantes)} comandantes, "
           f"{len(boletines)} boletines, {len(guardados)} íconos")
+
+
+def _raza_comandante(at: "Atributos", nombre: str) -> str | None:
+    r = at.ruta("commander", nombre) or ""
+    return r.split("/")[1] if r.count("/") >= 1 else None
 
 
 def _ordenadas(xs: set) -> list:

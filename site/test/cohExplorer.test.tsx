@@ -33,3 +33,15 @@ describe("enciclopedia por juego", () => {
     expect(html).toContain("/es/coh2/unidades/t_34_85_squad_mp");
   });
 });
+
+describe("precarga por juego", () => {
+  it("Penetración y la ficha de comandante de CoH2 cargan las listas de CoH2", async () => {
+    const { preloadRoute, peekList: peek } = await import("../src/coh3/data");
+    await preloadRoute(parseRoute("/es/coh2/penetracion"));
+    expect(peek("weapons", "coh2")).not.toBeNull();
+    await preloadRoute(parseRoute("/es/coh2/comandantes/advanced_warfare_tactics"));
+    expect(peek("units", "coh2")).not.toBeNull();
+    await preloadRoute(parseRoute("/es/coh2/unidades/conscript_squad_mp"));
+    expect(peek("commanders", "coh2")).not.toBeNull();
+  });
+});

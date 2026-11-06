@@ -147,7 +147,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
                 <small className="c3-side-h">{t.side[h.s]}</small>
                 <b className="c3-side-n">{h.inRange ? pct(h.chance) : "—"}</b>
                 <small className="c3-dim">
-                  {t.chance} · {num(ts.armor[i])}
+                  {t.chance} · {num(ts.armor[h.s])}
                 </small>
                 {h.inRange ? (
                   <>
@@ -172,9 +172,11 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
           />
           <p className="c3-legend">
             <i className="is-s0" />
-            {t.side[0]} <i className="is-s1" />
-            {t.side[1]} <i className="is-s2" />
-            {t.side[2]} · {t.legend}
+            {lados.map((s, k) => (
+              <span key={s}>
+                {t.side[s]} {k < lados.length - 1 ? <i className={`is-s${s + 1}`} /> : `· ${t.legend}`}
+              </span>
+            ))}
           </p>
           {unknownVet.length > 0 && (
             <p className="c3-note">

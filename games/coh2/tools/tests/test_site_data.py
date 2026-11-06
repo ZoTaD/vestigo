@@ -72,3 +72,16 @@ def test_nombre_de_codigo_prolijo():
     assert sd.nombre_codigo("M1937_45mm_AT") == "M1937 45mm AT"
     assert sd.nombre_codigo("psk 40") == "Psk 40"
     assert sd.nombre_codigo("") == ""
+
+
+def test_solo_lo_que_convoca():
+    hab = {"ability_bag": {
+        "requirements": {"required_squad": {"squad_name": "conscript_squad_mp"}},
+        "modifiers": {"squad_build_time_modifier": {"target_type_name": "shock_troops_mp"}},
+        "action_list": {"start_target_actions": {
+            "reinforcements_action": {"squad_table": {"squad": ["guards_troops_mp", "sbps/races/soviet/x/is-2_mp.lua"]}},
+            "paradrop_action": {"squad_to_spawn": "partisan_squad_mp"},
+            "air_strike_action": {"aircraft_squad_name": "il-2_sturmovik_squad_mp"},
+        }},
+    }}
+    assert sd.convocadas(hab) == {"guards_troops_mp", "is-2_mp", "partisan_squad_mp"}

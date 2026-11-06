@@ -70,7 +70,9 @@ function View({ route, navigate, units, q, setQ, a, b, tf, wa, wb }: {
   const wName = useWeaponName(units);
   const fighters = useMemo(() => units.filter((u) => u.kind !== "buildings"), [units]);
   const armored = useMemo(() => units.filter((u) => isArmored(u)), [units]);
-  const side = (Number(q.s) || 0) as Side;
+  // CoH2 no tiene lado: un `?s=1` viejo cae en el frente.
+  const pedido = Number(q.s) || 0;
+  const side = (game === "coh2" && pedido === 1 ? 0 : pedido) as Side;
   const target: TargetStats = q.t === "inf" || !tf ? INFANTRY() : targetStats(tf);
   const stats = (ws: { n: number; data: WeaponData }[], vet: number, u: UnitFicha | null | undefined) =>
     ws.map((w) => ({ n: w.n, w: weaponStats(w.data, vetAt(u?.vet ?? null, vet)), data: w.data }));
