@@ -19,6 +19,7 @@
     "build:hero-insights": "node node_modules/tsx/dist/cli.mjs src/heroInsights.ts",
     "build:item-timing": "node node_modules/tsx/dist/cli.mjs src/itemTiming.ts",
     "build:kill-map": "node node_modules/tsx/dist/cli.mjs src/killMap.ts",
+    "build:hero-records": "node node_modules/tsx/dist/cli.mjs src/heroRecords.ts",
     "build:draft": "node node_modules/tsx/dist/cli.mjs src/draftModel.ts",
     "build:top-players": "node node_modules/tsx/dist/cli.mjs src/topPlayers.ts",
     "build:patch-movers": "node node_modules/tsx/dist/cli.mjs src/patchMovers.ts",

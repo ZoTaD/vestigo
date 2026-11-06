@@ -1,5 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useMasonry } from "./useMasonry";
+import RouteLink from "./RouteLink";
+import type { Route } from "./route";
+import DeadlockAchievements, { BestAchievements } from "./DeadlockAchievementsTab";
+import { achievementsOf, useRecords } from "./deadlockAchievements";
+import { ACH_COPY, PROFILE_TABS, type ProfileTab } from "./deadlockAchievementsCopy";
 import SectionHead from "./SectionHead";
 import { takePendingSearch } from "./pendingSearch";
 import { lastProfile, rememberProfile } from "./lastProfile";
@@ -420,12 +425,34 @@ function TopHeroes({
   );
 }
 
+/**
+ * Un piso de tarjetas en columnas de diario: `useMasonry` las reparte en la
+ * columna más corta (ZoTaD, 2/11: "evitar espacios en blanco"). Es un
+ * componente para que cada pestaña tenga su propia grilla al montarse.
+ */
+function Piso({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useMasonry(ref);
+  return (
+    <div className="dl-profile-aside dl-profile-top dl-masonry" ref={ref}>
+      {children}
+    </div>
+  );
+}
+
 export default function DeadlockPlayer({
   accountId,
+  tab,
+  route,
+  navigate,
   onOpenAccount,
   onOpenMatch,
 }: {
   accountId?: string;
+  /** La pestaña del perfil, el segmento después de la cuenta en la URL. */
+  tab?: string;
+  route: Route;
+  navigate: (r: Route) => void;
   onOpenAccount: (id: number) => void;
   onOpenMatch: (id: number) => void;
 }) {
@@ -732,10 +759,38 @@ export default function DeadlockPlayer({
   }
 
   const reciente = lastProfile();
-  const pisoArriba = useRef<HTMLDivElement>(null);
-  const pisoAbajo = useRef<HTMLDivElement>(null);
-  useMasonry(pisoArriba);
-  useMasonry(pisoAbajo);
+
+  /** La pestaña del perfil, de la URL. Sin pestaña (o una que no existe), el resumen. */
+  const pestana: ProfileTab = PROFILE_TABS.includes(tab as ProfileTab) ? (tab as ProfileTab) : "overview";
+  const tabRoute = (t: ProfileTab): Route => ({
+    ...route,
+    view: "deadlock",
+    dlSection: "player",
+    detail: t === "overview" ? String(id) : `${id}/${t}`,
+  });
+  const irA = (t: ProfileTab) => navigate(tabRoute(t));
+
+  /**
+   * Los logros. Salen de lo que el perfil ya bajó, más el archivo de récords
+   * (uno solo, cacheado): ver `deadlockAchievements.ts`.
+   */
+  const records = useRecords();
+  const logros = useMemo(
+    () =>
+      id != null && historial
+        ? achievementsOf({
+            accountId: id,
+            history: historialTodo,
+            career: carrera,
+            rankSeries: serie,
+            placings,
+            world,
+            records,
+          })
+        : { earned: [], next: [] },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [id, historial, carrera, serie, placings, world, records]
+  );
 
   return (
     <section className="tool">
@@ -783,27 +838,16 @@ export default function DeadlockPlayer({
       )}
 
       {/*
-        Tres pisos (ZoTaD, 2026-09-30: "la pestaña de player está mal
-        distribuida"). Antes eran dos columnas —partidas y un costado con diez
-        tarjetas— y el costado medía el triple que las partidas, con media
-        pantalla vacía a la izquierda.
-
-        1. La ficha: quién es, su rango en el tiempo y dónde está en el mundo, a
-           lo ancho, que es lo primero que se busca al abrir un perfil.
-        2. Las partidas (el contenido principal) con, al costado, las dos
-           tarjetas que las leen: contra tu banda y la forma reciente.
-        3. Héroes y gente, en columnas de diario que se llenan parejo.
-
-        Las tarjetas de los pisos 1 y 3 llevan `dl-profile-aside` porque sus
-        reglas de tarjeta angosta cuelgan de esa clase (codex.css §4).
+        El perfil en pestañas (ZoTaD, 5/11: "el perfil quedó muy cargado").
+        Arriba, siempre: la ficha y las mejores medallas. Abajo, una pestaña
+        por pregunta: resumen, partidas, héroes, rango y logros. Cada una con
+        su dirección, así se comparte directo (…/player/123/achievements).
+        Los pedidos son los mismos que antes: se hacen al abrir el perfil y
+        cambiar de pestaña no pide nada.
       */}
       {historial && (
         <>
-          {/* Las tarjetas en el orden en que importan, y `useMasonry` las reparte
-              en la columna más corta (ZoTaD, 2/11: "evitar espacios en
-              blanco"). Con filas, la ficha estiraba la fila entera; con
-              columnas fijas, cada cuenta dejaba un hueco distinto. */}
-          <div className="dl-profile-aside dl-profile-top dl-masonry" ref={pisoArriba}>
+          <div className="dl-phead">
             {resumen && (
               <div className="box dl-pcard dl-pcard-id">
                 <h2 className="box-title dl-pcard-title">{c.cards.profile}</h2>
@@ -834,59 +878,27 @@ export default function DeadlockPlayer({
                 )}
               </div>
             )}
-
-            {/* "Sos el #56 del mundo con Abrams" es más fuerte que "ganaste 2
-                seguidas": va en la ficha. */}
-            <HeroPlacings placings={placings} />
-
-            {/* Pegado a la ficha porque es su continuación: arriba dice dónde
-                estás, esto dice de dónde venís. Sólo con dos clasificatorias o
-                más; con una no hay línea. */}
-            <DeadlockRankTrail points={serieTemp} />
-
-            {/* Cuánto falta para el próximo: con el progreso exacto que da el
-                rango, sin controles. Sólo con insignia y progreso. */}
-            {rango && rango.badge > 0 && rango.progress != null && (
-              <div className="box dl-pcard dl-pcard-climb">
-                <h2 className="box-title dl-pcard-title">{c.cards.climb}</h2>
-                <DeadlockRankCalc
-                  badge={rango.badge}
-                  progress={rango.progress}
-                  streak={rango.streak}
-                  at={rango.lastRankedAt}
-                />
-              </div>
-            )}
-
-            {rasgos.length > 0 && (
-              <div className="box dl-pcard">
-                <h2 className="box-title dl-pcard-title">{copy.deadlock.report.traits.title}</h2>
-                <p className="detail-note dl-traits-lead">{copy.deadlock.report.traits.lead}</p>
-                <DeadlockTraits traits={rasgos} />
-              </div>
-            )}
-
-            {/* Cuesta CERO pedidos: agrupa por día el historial que ya está en
-                memoria. Ver `DeadlockActivity`. Sigue al modo como el resto de
-                la ficha. Vive arriba y no al costado de las partidas desde el
-                2/11: el costado sumó la suerte de rango y quedaba más largo que
-                la lista. */}
-            <div className="box dl-pcard">
-              <h2 className="box-title dl-pcard-title">{c.cards.activity}</h2>
-              <DeadlockActivity rows={enModo} />
-            </div>
+            <BestAchievements earned={logros.earned} onOpen={() => irA("achievements")} />
           </div>
 
-          <div className="page has-rail dl-profile-grid">
-            <div className="page-main dl-profile-main">
-              <section className="box dl-matches">
-              <div className="box-head">
-                <h2 className="box-title">{c.history}</h2>
-                <span className="box-aside">{c.shown(visibles.length, filtrado.length)}</span>
-              </div>
-              {/* El filtro va ARRIBA de la lista y no en la ficha lateral: manda
-                  sobre las dos columnas, y el lugar donde se ve el efecto más
-                  grande es acá. */}
+          <nav className="dl-ptabs" aria-label={c.cards.profile}>
+            {PROFILE_TABS.map((t) => (
+              <RouteLink
+                key={t}
+                className="dl-ptab"
+                to={tabRoute(t)}
+                onNavigate={navigate}
+                active={pestana === t}
+              >
+                {ACH_COPY[lang].tabs[t]}
+                {t === "achievements" && logros.earned.length > 0 && <sup>{logros.earned.length}</sup>}
+              </RouteLink>
+            ))}
+          </nav>
+
+          {/* La temporada y el modo mandan sobre todo el perfil menos los
+              logros, que son de la carrera entera. */}
+          {pestana !== "achievements" && (
               <div className="dl-pickers">
                 <DeadlockSeasonPicker
                   pick={temporada}
@@ -896,6 +908,52 @@ export default function DeadlockPlayer({
                 />
                 <DeadlockScopePicker scope={modo} counts={conteos} onChange={cambiarModo} />
               </div>
+          )}
+
+          {pestana === "overview" && (
+            <Piso>
+            {rasgos.length > 0 && (
+              <div className="box dl-pcard">
+                <h2 className="box-title dl-pcard-title">{copy.deadlock.report.traits.title}</h2>
+                <p className="detail-note dl-traits-lead">{copy.deadlock.report.traits.lead}</p>
+                <DeadlockTraits traits={rasgos} />
+              </div>
+            )}
+            <div className="box dl-pcard">
+              <h2 className="box-title dl-pcard-title">{c.cards.activity}</h2>
+              <DeadlockActivity rows={enModo} />
+            </div>
+            {corpus && (
+                <div className="box dl-pcard">
+                  <DeadlockStreakForm corpus={corpus} streak={streak} forma={forma} />
+                </div>
+              )}
+              <DeadlockPeerCard
+                kind="mates"
+                peers={mates}
+                rows={enModo}
+                onOpenAccount={onOpenAccount}
+              />
+              <DeadlockPeerCard
+                kind="enemies"
+                peers={enemies}
+                rows={enModo}
+                onOpenAccount={onOpenAccount}
+              />
+            </Piso>
+          )}
+
+          {pestana === "matches" && (
+            <div className="page has-rail dl-profile-grid">
+              <div className="page-main dl-profile-main">
+              <section className="box dl-matches">
+              <div className="box-head">
+                <h2 className="box-title">{c.history}</h2>
+                <span className="box-aside">{c.shown(visibles.length, filtrado.length)}</span>
+              </div>
+              {/* El filtro va ARRIBA de la lista y no en la ficha lateral: manda
+                  sobre las dos columnas, y el lugar donde se ve el efecto más
+                  grande es acá. */}
 
               {/**
                * **Encabezado de columnas, que la lista no tenía.**
@@ -1046,28 +1104,8 @@ export default function DeadlockPlayer({
                 </button>
               )}
               </section>
-            </div>
-
-            <aside className="page-rail is-first dl-profile-aside">
-              {/* Tus promedios contra tu banda: contesta "¿soy bueno para mi
-                  rango?" al lado de las partidas que lo miden. Sólo con rango. */}
-              <DeadlockVsBand state={vs} />
-
-              {/* Al lado de las partidas que mide: ¿me tocaron equipos peores? */}
-              <DeadlockRankLuckCard state={suerte} />
-
-              {corpus && (
-                <div className="box dl-pcard">
-                  <DeadlockStreakForm corpus={corpus} streak={streak} forma={forma} />
-                </div>
-              )}
-
-            </aside>
-          </div>
-
-          {/* Igual que el piso de arriba: en orden, y `useMasonry` las reparte.
-              No `columns` de CSS: partía el canto rasgado de las tarjetas. */}
-          <div className="dl-profile-aside dl-profile-more dl-masonry" ref={pisoAbajo}>
+              </div>
+              <aside className="page-rail is-first dl-profile-aside">
               {heroesTop.length > 0 && (
                 <div className="box dl-pcard">
                   <h2 className="box-title dl-pcard-title">{c.cards.heroes}</h2>
@@ -1078,20 +1116,15 @@ export default function DeadlockPlayer({
                   />
                 </div>
               )}
+              </aside>
+            </div>
+          )}
 
-              {/* Cuáles son tus héroes y qué tan bien te va con cada uno: los
-                  botones de "Más jugados" filtran la lista; esta tabla mide la
-                  carrera. */}
+          {pestana === "heroes" && (
+            <Piso>
+              <HeroPlacings placings={placings} />
               <DeadlockCareerHeroes stats={carrera} />
-
-              {/* La misma carrera, leída contra tu rango: de "cómo te va con cada
-                  héroe" a "con cuál te conviene jugar más". Va en esta columna y
-                  no sola en la del medio desde el 2/11: sola medía 195 px al lado
-                  de 650 y dejaba el piso con un hueco. */}
               <DeadlockHeroFitCard stats={carrera} badge={rango?.badge ?? 0} />
-
-            {/* Tus héroes y tu build contra la gente de tu banda con el mismo
-                héroe, en la temporada elegida. */}
               <DeadlockHeroVsBandCard state={heroVs} band={bandaNombre} />
               <DeadlockBuildVsBandCard
                 accountId={id}
@@ -1099,25 +1132,29 @@ export default function DeadlockPlayer({
                 band={bandaNombre}
                 pick={temporada}
               />
+            </Piso>
+          )}
 
-            {/* Las dos reciben `enModo` y no `filtrado`: son preguntas sobre
-                personas, no sobre un héroe. Filtrar "con quién jugás" por el
-                héroe que se está mirando en la lista contestaría "con quién
-                jugás cuando jugás a Lash", que es otra cosa — el mismo criterio
-                que ya rige la racha y la forma. */}
-              <DeadlockPeerCard
-                kind="mates"
-                peers={mates}
-                rows={enModo}
-                onOpenAccount={onOpenAccount}
-              />
-              <DeadlockPeerCard
-                kind="enemies"
-                peers={enemies}
-                rows={enModo}
-                onOpenAccount={onOpenAccount}
-              />
-          </div>
+          {pestana === "rank" && (
+            <Piso>
+              <DeadlockRankTrail points={serieTemp} />
+            {rango && rango.badge > 0 && rango.progress != null && (
+              <div className="box dl-pcard dl-pcard-climb">
+                <h2 className="box-title dl-pcard-title">{c.cards.climb}</h2>
+                <DeadlockRankCalc
+                  badge={rango.badge}
+                  progress={rango.progress}
+                  streak={rango.streak}
+                  at={rango.lastRankedAt}
+                />
+              </div>
+            )}
+              <DeadlockVsBand state={vs} />
+              <DeadlockRankLuckCard state={suerte} />
+            </Piso>
+          )}
+
+          {pestana === "achievements" && <DeadlockAchievements earned={logros.earned} next={logros.next} />}
         </>
       )}
     </section>

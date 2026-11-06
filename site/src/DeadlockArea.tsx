@@ -148,7 +148,10 @@ export default function DeadlockArea({
       <Suspense fallback={<div className="area-loading" aria-busy="true" />}>
       {route.dlSection === "player" ? (
         <DeadlockPlayer
-          accountId={route.detail}
+          accountId={route.detail?.split("/")[0]}
+          tab={route.detail?.split("/")[1]}
+          route={route}
+          navigate={navigate}
           onOpenAccount={(id) => goDetail("player", String(id))}
           onOpenMatch={(id) => goDetail("match", String(id))}
         />

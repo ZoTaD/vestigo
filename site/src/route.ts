@@ -627,7 +627,13 @@ export function parseRoute(pathname: string): Route {
     // pestaña conocida, es un héroe.
     if (maybeSection && isDlSection(maybeSection)) {
       const dlSection = maybeSection;
-      const detail = DL_WITH_DETAIL.includes(dlSection) && rest[2] ? rest[2] : undefined;
+      // El perfil lleva además su pestaña: /player/123/achievements.
+      const detail =
+        dlSection === "player" && rest[2] && rest[3]
+          ? `${rest[2]}/${rest[3]}`
+          : DL_WITH_DETAIL.includes(dlSection) && rest[2]
+            ? rest[2]
+            : undefined;
       return { ...base, view: "deadlock", dlSection, detail };
     }
     return { ...base, view: "deadlock", dlSection: DEFAULT_DL_SECTION, detail: maybeSection || undefined };
