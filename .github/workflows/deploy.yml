@@ -35,6 +35,9 @@ on:
       - games/cs2/data/**
       # CoH3: los datos del juego. Las estadísticas (`games/coh3/stats`) viajan en los builds de Deadlock, como los precios de CS2.
       - games/coh3/data/**
+      # CoH2 y CoH1: mapas y logros (las estadísticas viajan como las de CoH3).
+      - games/coh2/data/**
+      - games/coh1/data/**
       - netlify.toml
       - .github/workflows/deploy.yml
   # Los commits de las Actions de publicación los empuja el GITHUB_TOKEN, y

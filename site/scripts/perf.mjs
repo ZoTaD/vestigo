@@ -246,6 +246,15 @@ export const PAGES = [
   "/en/coh3/achievements",
   "/en/coh3/leaderboards",
   "/es/coh3/jugadores",
+  "/es/coh2",
+  "/en/coh2/leaderboards",
+  "/es/coh2/estadisticas",
+  "/en/coh2/ranks",
+  "/es/coh2/logros",
+  "/en/coh1",
+  "/es/coh1/ranking",
+  "/en/coh1/stats",
+  "/es/coh1/rangos",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

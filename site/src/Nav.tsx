@@ -147,7 +147,8 @@ export default function Nav({
     stardew: { ...a("stardew"), sdSection: "home" },
     warframe: { ...a("warframe"), wfSection: "home" },
     cs2: { ...a("cs2"), c2Section: "home" },
-    coh3: { ...a("coh3"), c3Section: "home" },
+    // La entrada del menú y sus accesos van siempre a CoH3 (desde CoH2 o CoH1 no se hereda el juego).
+    coh3: { ...a("coh3"), cohGame: undefined, c3Section: "home" },
   };
   const gameFull: Record<Game, string> = {
     deadlock: copy.games.deadlock,

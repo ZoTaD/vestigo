@@ -365,3 +365,13 @@
   - título `coh: CoH2 y CoH1 en la sección Company of Heroes`;
   - 2–4 viñetas;
   - no se fusiona sin el OK de ZoTaD.
+
+## Medidas (6/11/2026)
+
+- `npm run build` (tsc + vite + check-links): 221 s, 53.780 páginas prerenderizadas, 0 enlaces rotos. Pico de RAM 4,3 GB
+  sumando todos los procesos de Node de la PC (tope en Netlify: 6 GB). El último build de CoH3 solo tardó 185 s.
+- `npm run perf --only coh`: las 30 páginas de CoH dentro del presupuesto; la más pesada, el ranking (≈59 pedidos,
+  ≈1.100 nodos).
+- Recolector (primera corrida, sin memoria): CoH1 988 pedidos en 461 s (cobertura de ELO 99,2 %); CoH2 1.500 pedidos
+  (el tope) en 1.192 s (85,6 %). Las corridas siguientes piden menos: sólo a quienes jugaron desde la última.
+- CoH1 no tiene logros en Steam: la pestaña Logros queda sólo para CoH3 y CoH2.
