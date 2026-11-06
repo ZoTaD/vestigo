@@ -254,7 +254,7 @@ def main(argv: list[str]) -> None:
                 upg_doctrina[u] = nombre
             ramas.append({"name": {"en": f"Branch {fila + 1}", "es": f"Rama {fila + 1}"}, "upgrades": mejoras})
         lado = "allies" if nombre.startswith("allied") else "allies_commonwealth" if nombre.startswith("royal") else "axis_panzer_elite" if nombre.startswith("pe_") else "axis"
-        doctrinas.append({"slug": nombre, "name": n, "faction": FACCION[lado], "icon": b.get("portrait_texture") or None,
+        doctrinas.append({"slug": nombre, "name": n, "faction": FACCION[lado], "icon": b.get("medal") or b.get("portrait_texture") or None,
                           "image": None, "desc": t(b.get("help_text_1")), "branches": ramas})
 
     # --- Escuadras: las que producen los edificios de multijugador, y las de doctrina.
