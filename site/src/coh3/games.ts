@@ -42,7 +42,6 @@ export interface GameConf {
 const MODES: Mode[] = ["1v1", "2v2", "3v3", "4v4"];
 const api = (t: string) => `https://${t}-api.reliclink.com/community/leaderboard`;
 /** CoH3 trae los emblemas del juego (webp); CoH1 y CoH2, por ahora, una insignia con la sigla (svg, `games/coh/tools/art.py`). */
-/** CoH3 trae los emblemas del juego (webp); CoH1 y CoH2, por ahora, una insignia con la sigla (svg, `games/coh/tools/art.py`). */
 const icons = (g: string, fs: string[]) => Object.fromEntries(fs.map((f) => [f, `/${g}/f/${f}.${g === "coh3" ? "webp" : "svg"}`]));
 
 /** Los rankings de CoH1/CoH2: 4–19 = 1v1…4v4 con cuatro facciones por modo, en el orden de `orden`. */
@@ -162,3 +161,7 @@ const POR_ID: Record<CohGame, Map<number, GameLeaderboard>> = {
   coh1: new Map(COH1.leaderboards.map((l) => [l.id, l])),
 };
 export const leaderboardIn = (c: GameConf, id: number): GameLeaderboard | undefined => POR_ID[c.game].get(id);
+
+/** El nombre de una facción en su juego (corto o largo); una clave que no se conoce queda como vino. */
+export const factionLabel = (game: CohGame, lang: Lang, f: string, short: boolean): string =>
+  (short ? GAMES[game].factionShort : GAMES[game].factionName)[lang][f] ?? f;

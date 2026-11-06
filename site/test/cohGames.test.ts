@@ -36,3 +36,13 @@ describe("configuración por juego", () => {
     expect(gameOf("coh1").title).toBe("coh1");
   });
 });
+
+describe("nombre de una facción por juego", () => {
+  it("cada juego con sus textos, nunca la clave cruda", async () => {
+    const { factionLabel } = await import("../src/coh3/games");
+    expect(factionLabel("coh2", "es", "okw", true)).toBe("OKW");
+    expect(factionLabel("coh2", "en", "soviet", false)).toBe("Soviet Union");
+    expect(factionLabel("coh1", "en", "american", true)).toBe("Americans");
+    expect(factionLabel("coh3", "en", "american", true)).toBe("USF");
+  });
+});

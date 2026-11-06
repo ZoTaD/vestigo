@@ -68,11 +68,16 @@ jobs:
         run: python games/coh3/tools/ladder.py
 
       # CoH1 y CoH2: rankings, memoria de ELO y partidas del día (uno por vez: cada uno junta decenas de miles de partidas).
+      # Una falla de CoH1 o CoH2 no tumba la publicación de CoH3 (`continue-on-error`), y cada uno tiene un tope de
+      # tiempo para pedir historiales (`--deadline`): pasado, escribe lo que juntó.
       - name: coh1
-        run: python games/coh/tools/relic_daily.py --game coh1
+        continue-on-error: true
+        run: python games/coh/tools/relic_daily.py --game coh1 --deadline 900
 
       - name: coh2
-        run: python games/coh/tools/relic_daily.py --game coh2
+        continue-on-error: true
+        # CoH2 tiene ~10 mil activos por semana: más pedidos (la memoria hace que cada día falten menos).
+        run: python games/coh/tools/relic_daily.py --game coh2 --budget 2000 --deadline 1500
 
       - name: guard
         id: guard

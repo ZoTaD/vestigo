@@ -131,3 +131,49 @@ def test_coh1_panzer_elite(tmp_path):
     s = json.loads((tmp_path / "summary.json").read_text())
     assert s["modes"]["1v1"]["fvf"]["all"]["panzer_elite>american"] == {"g": 1, "w": 1}
     assert "4p_rails and metal" in s["modes"]["1v1"]["maps"]
+
+
+def test_primero_los_de_arriba_del_ranking(tmp_path):
+    # Con un solo pedido: va al 1.º del ranking aunque el 2.º jugó más recién (las filas de arriba son las que se ven).
+    relic = Relic({4: [(10, 100, 20, AYER - 5 * DIA), (11, 101, 19, AYER)]}, {})
+    rd.run("coh2", relic, tmp_path, days=7, budget=1, workers=1, now=NOW, sleep=lambda s: None)
+    assert relic.pedidos == [100]
+
+
+class RelicFallaRanking(Relic):
+    """Como Relic, pero el leaderboard `lb` falla siempre."""
+
+    def __init__(self, lb: int, *a, **kw):
+        super().__init__(*a, **kw)
+        self.lb_roto = lb
+
+    def __call__(self, url: str) -> dict:
+        if "getLeaderBoard2" in url and f"leaderboard_id={self.lb_roto}&" in url:
+            raise OSError("relic caído")
+        return super().__call__(url)
+
+
+def test_ranking_que_falla_conserva_la_memoria(tmp_path):
+    (tmp_path / "elo").mkdir(parents=True)
+    (tmp_path / "elo" / "4.json").write_text(json.dumps({"10": [1500, AYER - 3 * DIA]}))
+    relic = RelicFallaRanking(4, {5: [(12, 102, 5, AYER - 9 * DIA)]}, {})
+    _correr(tmp_path, relic)
+    assert json.loads((tmp_path / "elo" / "4.json").read_text()) == {"10": [1500, AYER - 3 * DIA]}
+
+
+def test_lo_jugado_hoy_no_cubre(tmp_path):
+    # El ELO que se conoció hoy (día sin resumen todavía) no alcanza: mañana se vuelve a pedir, así sus partidas de hoy
+    # entran en el resumen del día.
+    hoy_temprano = NOW - 3 * 3600
+    (tmp_path / "elo").mkdir(parents=True)
+    (tmp_path / "elo" / "4.json").write_text(json.dumps({"10": [1500, hoy_temprano]}))
+    relic = Relic({4: [(10, 100, 12, hoy_temprano)]}, {})
+    _correr(tmp_path, relic)
+    assert relic.pedidos == [100]
+
+
+def test_tope_de_tiempo(tmp_path):
+    relic = Relic({4: [(10, 100, 12, AYER)]}, {})
+    res = rd.run("coh2", relic, tmp_path, days=7, budget=100, workers=1, now=NOW, sleep=lambda s: None, deadline=0)
+    assert relic.pedidos == [] and res["requests"] == 0
+    assert (tmp_path / "summary.json").exists() and (tmp_path / "ladder.json").exists()

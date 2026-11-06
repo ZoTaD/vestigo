@@ -11,9 +11,10 @@
 import { useMemo } from "react";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
-import { useCoh3Copy } from "../../coh3Copy";
+import { useCoh3Copy, cohGameSeo } from "../../coh3Copy";
+import { useLang } from "../../i18n";
 import type { CounterSummary, MatchDetail } from "../api/relic";
-import { Coh3Loading, FactionTag, Panel, useNum, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, Panel, useCohGame, useNum, type Nav } from "../ui";
 import { clock } from "../live/logic";
 import { PlayerLink, currentSearch, lastPlayer, useAgo, useApi, useDate, useDocTitle, useMapName, useNoindex } from "../live/ui";
 import { useMtCopy } from "./copy";
@@ -49,7 +50,9 @@ export default function Coh3Matches({ route, navigate }: { route: Route; navigat
     return p && /^\d{1,10}$/.test(p) ? Number(p) : lastPlayer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.detail]);
-  useDocTitle(id ? null : c.seo.matches.title);
+  const game = useCohGame();
+  const { lang } = useLang();
+  useDocTitle(id ? null : game === "coh3" ? c.seo.matches.title : cohGameSeo(game, lang, "matches").title);
 
   if (!id || !player)
     return (

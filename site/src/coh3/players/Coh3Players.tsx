@@ -10,11 +10,11 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import RouteLink from "../../RouteLink";
 import { useLang } from "../../i18n";
 import type { Route } from "../../route";
-import { useCoh3Copy, type Faction } from "../../coh3Copy";
+import { useCoh3Copy, type Faction, cohGameSeo } from "../../coh3Copy";
 import type { Mode } from "../api/leaderboards";
 import type { MatchSummary, Profile, SearchResult, Standing } from "../api/relic";
 import { Coh3Loading, FactionTag, LeagueTag, Panel, nextSort, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
-import { GAMES, type CohGame } from "../games";
+import { GAMES, factionLabel, type CohGame } from "../games";
 import {
   FACTIONS,
   MODES,
@@ -70,12 +70,12 @@ function Search({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = usePlCopy();
   const num = useNum();
   const { lang } = useLang();
-  useDocTitle(c.seo.players.title);
+  const game = useCohGame();
+  useDocTitle(game === "coh3" ? c.seo.players.title : cohGameSeo(game, lang, "players").title);
   const initial = new URLSearchParams(currentSearch()).get("q") ?? "";
   const [text, setText] = useState(initial);
   const [query, setQuery] = useState<PlayerQuery>(() => normalizeQuery(initial));
   const [seen, setSeen] = useState<Seen[]>([]);
-  const game = useCohGame();
   useEffect(() => setSeen(readSeen(game)), [game]);
 
   const toProfile = (pid: number) => navigate({ ...route, view: "coh3", c3Section: "players", detail: String(pid) });
@@ -151,7 +151,7 @@ function Search({ route, navigate }: { route: Route; navigate: Nav }) {
                       </span>
                       <small>
                         {t.games(num(r.games))}
-                        {r.best && ` · ${t.bestAt(num(r.best.elo), c.modes[r.best.mode], c.factionShort[r.best.faction] ?? r.best.faction)}`}
+                        {r.best && ` · ${t.bestAt(num(r.best.elo), c.modes[r.best.mode], factionLabel(game, lang, r.best.faction, true))}`}
                         {r.country && ` · ${countryName(r.country, lang)}`}
                       </small>
                     </RouteLink>
@@ -191,7 +191,7 @@ function Profile({ id, route, navigate }: { id: number; route: Route; navigate: 
   const { lang } = useLang();
   const { data, error, retry } = useApi<PlayerResp>(`/api/coh3/player?id=${id}`);
   const alias = data?.profile.alias ?? null;
-  useDocTitle(alias ? c.detailSeo("players", alias).title : null);
+  useDocTitle(alias ? (game === "coh3" ? c.detailSeo("players", alias).title : cohGameSeo(game, lang, "players", alias).title) : null);
   useEffect(() => {
     rememberPlayer(id);
     if (data) addSeen(game, { id, alias: data.profile.alias, country: data.profile.country });
@@ -419,6 +419,8 @@ function Recent({ matches, id, route, navigate }: { matches: MatchSummary[]; id:
 }
 
 function EloChart({ matches, id }: { matches: MatchSummary[]; id: number }) {
+  const game = useCohGame();
+  const { lang } = useLang();
   const c = useCoh3Copy();
   const t = usePlCopy();
   const keys = useMemo(() => eloSeriesKeys(matches, id).filter((k) => k.n >= 2), [matches, id]);
@@ -438,7 +440,7 @@ function EloChart({ matches, id }: { matches: MatchSummary[]; id: number }) {
               </button>
             ))}
           </div>
-          <Chart pts={pts} label={t.chartAria(c.modes[cur.mode], c.faction[cur.faction] ?? cur.faction, String(pts[0]?.elo ?? ""), String(pts.at(-1)?.elo ?? ""))} />
+          <Chart pts={pts} label={t.chartAria(c.modes[cur.mode], factionLabel(game, lang, cur.faction, false), String(pts[0]?.elo ?? ""), String(pts.at(-1)?.elo ?? ""))} />
         </>
       )}
     </Panel>

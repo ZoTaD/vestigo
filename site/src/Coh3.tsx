@@ -156,7 +156,8 @@ export default function Coh3({ route, navigate }: TabProps) {
       <div className="c3-wrap">
         {Tab ? (
           <Suspense fallback={<Coh3Loading />}>
-            <Tab route={route} navigate={navigate} />
+            {/* `key`: al cambiar de juego la pestaña se monta de nuevo (su estado y sus datos son de un juego). */}
+            <Tab key={game} route={route} navigate={navigate} />
           </Suspense>
         ) : (
           <Coh3Home route={route} navigate={navigate} live={live} />

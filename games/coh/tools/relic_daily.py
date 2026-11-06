@@ -9,7 +9,7 @@ Qué hace:
   2. Lee la memoria de ELO (`games/<juego>/stats/elo/<leaderboard>.json` = {statgroup: [rating, sello]}). El ranking de
      CoH1/CoH2 no trae el ELO, pero cada partida del historial trae el `newrating` de todos sus jugadores.
   3. Pide el historial (`getRecentMatchHistoryByProfileId`, ~40 partidas) de los jugadores con partida en los últimos 7
-     días cuyo ELO todavía no se conoce al día, los más recientes primero, hasta `--budget` pedidos. Como una partida da
+     días cuyo ELO todavía no se conoce al día, los de mejor puesto primero, hasta `--budget` pedidos. Como una partida da
      el ELO de todos sus jugadores, con pocos pedidos se cubre a casi todos.
   4. Las partidas 1v1–4v4 por facción de días completos (UTC) que todavía no tienen resumen van a
      `stats/days/<fecha>.json` con el mismo resumen que CoH3 (`games/coh3/tools/stats.py`), y se rehace `summary.json`
@@ -91,15 +91,16 @@ def con_reintentos(get: Callable[[str], dict], url: str, sleep: Callable[[float]
     return None
 
 
-def bajar_rankings(game: str, get, sleep) -> list[dict]:
-    """Todas las filas de todos los rankings del juego."""
-    filas = []
+def bajar_rankings(game: str, get, sleep) -> tuple[list[dict], set[int]]:
+    """Todas las filas de todos los rankings del juego, y los leaderboards que fallaron (quedan incompletos)."""
+    filas, rotos = [], set()
     for lb, (modo, faccion) in JUEGOS[game]["leaderboards"].items():
         start = 1
         while True:
             d = con_reintentos(get, api(game, "getLeaderBoard2", leaderboard_id=lb, start=start, count=200, sortBy=1), sleep)
             if d is None:
-                print(f"  {game} leaderboard {lb}: falló en {start}; sigue con lo que hay")
+                print(f"  {game} leaderboard {lb}: falló en {start}; se conserva lo de ayer")
+                rotos.add(lb)
                 break
             grupos = {g["id"]: g for g in d.get("statGroups") or []}
             stats = d.get("leaderboardStats") or []
@@ -116,7 +117,7 @@ def bajar_rankings(game: str, get, sleep) -> list[dict]:
             if len(stats) < 200:
                 break
             start += 200
-    return filas
+    return filas, rotos
 
 
 def leer_memoria(out: Path) -> dict[int, dict[int, list]]:
@@ -158,14 +159,16 @@ def a_formato_stats(m: dict) -> dict:
 
 
 def run(game: str, get=http_get, out: Path | None = None, days: int = 28, budget: int = 1500, workers: int = 4,
-        now: int | None = None, sleep: Callable[[float], None] = time.sleep) -> dict:
+        now: int | None = None, sleep: Callable[[float], None] = time.sleep, deadline: float | None = None) -> dict:
+    """`deadline`: segundos de reloj para pedir historiales; al pasarlos se deja de pedir y se escribe lo juntado."""
     out = Path(out) if out else RAIZ / "games" / game / "stats"
     now = now or int(time.time())
     hoy = datetime.fromtimestamp(now, timezone.utc).date()
     t0 = time.time()
     conf = JUEGOS[game]
 
-    filas = bajar_rankings(game, get, sleep)
+    filas, rotos = bajar_rankings(game, get, sleep)
+    inicio_hoy = int(datetime(hoy.year, hoy.month, hoy.day, tzinfo=timezone.utc).timestamp())
     mem = leer_memoria(out)
     dias_dir = out / "days"
     ventana = [hoy - timedelta(days=i) for i in range(days, 0, -1)]
@@ -173,15 +176,22 @@ def run(game: str, get=http_get, out: Path | None = None, days: int = 28, budget
 
     # Candidatos: perfiles activos en 7 días con alguna fila cuyo ELO no está al día.
     def cubierta(f: dict) -> bool:
+        # Un ELO conocido hoy no alcanza: el día todavía no tiene resumen, y mañana hay que volver a pedir el historial
+        # para que sus partidas de hoy entren (si no, las de la madrugada UTC quedarían afuera de las estadísticas).
         r = mem.get(f["lb"], {}).get(f["sg"])
-        return bool(r) and r[1] >= f["lastmatchdate"] - 60
+        return bool(r) and r[1] >= f["lastmatchdate"] - 60 and r[1] < inicio_hoy
 
+    # Primero los de mejor puesto (las filas de arriba de cada ranking son las que más se ven); a igual puesto, el que
+    # jugó más recién.
+    puesto: dict[int, int] = {}
     ultima: dict[int, int] = {}
     for f in filas:
         if f["lastmatchdate"] >= now - ACTIVOS and not cubierta(f):
             for m in f["members"]:
-                ultima[m["profile_id"]] = max(ultima.get(m["profile_id"], 0), f["lastmatchdate"])
-    pendientes = sorted(ultima, key=lambda p: -ultima[p])
+                pid = m["profile_id"]
+                puesto[pid] = min(puesto.get(pid, 10**9), f["rank"] if f["rank"] and f["rank"] > 0 else 10**8)
+                ultima[pid] = max(ultima.get(pid, 0), f["lastmatchdate"])
+    pendientes = sorted(ultima, key=lambda p: (puesto[p], -ultima[p]))
     por_perfil: dict[int, list[dict]] = {}
     for f in filas:
         for m in f["members"]:
@@ -209,7 +219,7 @@ def run(game: str, get=http_get, out: Path | None = None, days: int = 28, budget
 
     with ThreadPoolExecutor(max(1, workers)) as ex:
         i = 0
-        while i < len(pendientes) and pedidos < budget:
+        while i < len(pendientes) and pedidos < budget and (deadline is None or time.time() - t0 < deadline):
             tanda = []
             while i < len(pendientes) and len(tanda) < workers and pedidos + len(tanda) < budget:
                 pid = pendientes[i]
@@ -249,13 +259,17 @@ def run(game: str, get=http_get, out: Path | None = None, days: int = 28, budget
     for f in filas:
         vivos.setdefault(f["lb"], set()).add(f["sg"])
     for lb in conf["leaderboards"]:
-        datos = {str(sg): v for sg, v in sorted(mem.get(lb, {}).items()) if sg in vivos.get(lb, set())}
+        # Un ranking que falló no poda: se guarda todo lo conocido, así un mal día de Relic no borra el ELO.
+        datos = {str(sg): v for sg, v in sorted(mem.get(lb, {}).items()) if lb in rotos or sg in vivos.get(lb, set())}
         (out / "elo" / f"{lb}.json").write_text(json.dumps(datos, separators=(",", ":")), encoding="utf-8")
 
     # Rangos (mismo formato que CoH3).
     lad = {"day": (hoy - timedelta(days=1)).isoformat(), "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "eloStart": _ladder.ELO_START, "eloStep": _ladder.ELO_STEP, "modes": {}}
     con_elo = total = 0
+    previo_f = out / "ladder.json"
+    previo = json.loads(previo_f.read_text(encoding="utf-8")) if previo_f.exists() else {}
+    lb_de = {(m, f): lb for lb, (m, f) in conf["leaderboards"].items()}
     for modo in MODOS:
         facs, perfiles, paises = {}, set(), Counter()
         for fac in conf["factions"]:
@@ -276,11 +290,14 @@ def run(game: str, get=http_get, out: Path | None = None, days: int = 28, budget
             # El histograma de ELO sólo con los que tienen ELO conocido; el resto, con todos.
             todos["elo"] = s["elo"]
             facs[fac] = todos
+            # Si su ranking falló hoy, queda la foto anterior de esa facción.
+            if lb_de.get((modo, fac)) in rotos:
+                facs[fac] = ((previo.get("modes") or {}).get(modo) or {}).get("factions", {}).get(fac, todos)
         lad["modes"][modo] = {"factions": facs, "unique": len(perfiles),
                               "countries": sorted(paises.items(), key=lambda x: (-x[1], x[0]))[:_ladder.TOP_COUNTRIES]}
     (out / "ladder.json").write_text(json.dumps(lad, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
-    res = {"rows": len(filas), "requests": pedidos, "failed": fallados, "matches": len(partidas),
+    res = {"rows": len(filas), "requests": pedidos, "failed": fallados, "brokenLeaderboards": sorted(rotos), "matches": len(partidas),
            "days": {d.isoformat(): len(v) for d, v in sorted(por_dia.items())},
            "eloCoverage": round(con_elo / total, 3) if total else None, "seconds": round(time.time() - t0)}
     print(f"{game}: {json.dumps(res)}")
@@ -293,8 +310,9 @@ def main(argv: list[str]) -> None:
     ap.add_argument("--days", type=int, default=28)
     ap.add_argument("--budget", type=int, default=1500)
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--deadline", type=float, default=None, help="segundos para pedir historiales (después escribe lo juntado)")
     a = ap.parse_args(argv)
-    run(a.game, days=a.days, budget=a.budget, workers=a.workers)
+    run(a.game, days=a.days, budget=a.budget, workers=a.workers, deadline=a.deadline)
 
 
 if __name__ == "__main__":

@@ -102,6 +102,8 @@ function Coh3Hero({ route }: { route: Route; navigate: Nav }) {
 
 function Coh3Home({ route, navigate, live }: { route: Route; navigate: Nav; live: (tab: Coh3Section) => boolean }) {
   const t = useCoh3Copy();
+  const { lang } = useLang();
+  const otro = route.cohGame && route.cohGame !== "coh3" ? COH_GAME_COPY[route.cohGame][lang] : null;
   const to = (tab: Coh3Section): Route => ({ ...route, view: "coh3", c3Section: tab, detail: undefined });
   return (
     <main className="c3-main c3-home">
@@ -116,12 +118,12 @@ function Coh3Home({ route, navigate, live }: { route: Route; navigate: Nav; live
                 {live(tab) ? (
                   <RouteLink className="c3-card" to={to(tab)} onNavigate={navigate}>
                     <b className="c3-card-h">{t.tabs[tab]}</b>
-                    <span className="c3-dim">{t.home.cards[tab]}</span>
+                    <span className="c3-dim">{tab === "ranks" && otro ? otro.ranksCard : t.home.cards[tab]}</span>
                   </RouteLink>
                 ) : (
                   <span className="c3-card is-soon">
                     <b className="c3-card-h">{t.tabs[tab]}</b>
-                    <span className="c3-dim">{t.home.cards[tab]}</span>
+                    <span className="c3-dim">{tab === "ranks" && otro ? otro.ranksCard : t.home.cards[tab]}</span>
                     <span className="c3-soon">{t.t.soon}</span>
                   </span>
                 )}

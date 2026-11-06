@@ -207,7 +207,7 @@ export function useCoh3Copy(): Coh3Copy {
  * acá va sólo lo que nombra al juego.
  */
 type LiveSec = "home" | "leaderboards" | "ranks" | "stats" | "achievements" | "players" | "matches";
-type GameText = { name: string; h1: string; lede: string; seo: Record<LiveSec, Seo>; credit: string };
+type GameText = { name: string; h1: string; lede: string; seo: Record<LiveSec, Seo>; credit: string; ranksCard: string };
 const credito = {
   en: "Icons and game data © Relic Entertainment / SEGA. Not affiliated with Relic or SEGA.",
   es: "Íconos y datos del juego © Relic Entertainment / SEGA. Sin afiliación con Relic ni SEGA.",
@@ -219,6 +219,7 @@ function textos(lang: Lang, nombre: string, corto: string, facciones: string): G
       h1: `${nombre}: ranking, ELO y estadísticas`,
       lede: `El ranking de ${facciones} con el ELO de cada jugador, quién gana en cada mapa y la cantidad de jugadores por nivel. Se actualiza todos los días.`,
       credit: credito.es,
+      ranksCard: "Cada nivel del ranking y cuántos jugadores hay en cada uno, por facción y modo, con ELO y países.",
       seo: {
         home: { title: `${nombre}: ranking con ELO y estadísticas`, description: clip(`Ranking de ${corto} con el ELO real de cada jugador, victorias por facción, mapa y ELO, niveles y logros. Gratis y al día.`) },
         leaderboards: { title: `Ranking de ${corto} con ELO: 1v1 a 4v4 por facción`, description: clip(`El ranking de ${nombre} de cada facción y modo, con el ELO de cada jugador, victorias, derrotas y racha.`) },
@@ -234,6 +235,7 @@ function textos(lang: Lang, nombre: string, corto: string, facciones: string): G
     h1: `${nombre} leaderboards, Elo and stats`,
     lede: `The ${facciones} leaderboards with every player's Elo, who wins on each map and how many players sit at each level. Updated daily.`,
     credit: credito.en,
+    ranksCard: "Every ranking level and how many players are in each, by faction and mode, with Elo and countries.",
     seo: {
       home: { title: `${nombre} Leaderboards with Elo and Stats`, description: clip(`${corto} leaderboards with every player's real Elo, faction win rates by map and Elo, rank levels and achievements. Free, updated daily.`) },
       leaderboards: { title: `${corto} Leaderboards with Elo: 1v1 to 4v4 by Faction`, description: clip(`${nombre} leaderboards for every faction and mode, with each player's Elo, wins, losses and streak.`) },
