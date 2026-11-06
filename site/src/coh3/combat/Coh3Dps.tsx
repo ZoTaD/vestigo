@@ -10,7 +10,7 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useLang } from "../../i18n";
 import { tr, type UnitRow } from "../data";
-import { Coh3Loading, Cost, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
+import { Coh3Loading, Cost, FactionTag, Icon, Panel, useCohGame, useNum, type Nav } from "../ui";
 import { INFANTRY, hit, type Side, type TargetStats, type WeaponStats } from "./engine";
 import { vetAt } from "./vet";
 import { isArmored, targetStats, weaponStats, type WeaponData } from "./weapons";
@@ -63,6 +63,7 @@ function View({ route, navigate, units, q, setQ, a, b, tf, wa, wb }: {
   a: UnitFicha | null | undefined; b: UnitFicha | null | undefined; tf: UnitFicha | null | undefined;
   wa: { slug: string; n: number; data: WeaponData }[]; wb: { slug: string; n: number; data: WeaponData }[];
 }) {
+  const game = useCohGame();
   const t = useCombatCopy();
   const { lang } = useLang();
   const num = useNum();
@@ -160,7 +161,7 @@ function View({ route, navigate, units, q, setQ, a, b, tf, wa, wb }: {
             <div className="c3-pick">
               <span>{t.dps.side}</span>
               <div className="c3-seg">
-                {[0, 1, 2].map((s) => (
+                {(game === "coh2" ? [0, 2] : [0, 1, 2]).map((s) => (
                   <button key={s} type="button" aria-pressed={s === side} onClick={() => setQ({ s: String(s) })}>
                     {t.side[s]}
                   </button>

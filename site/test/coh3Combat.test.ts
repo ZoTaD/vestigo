@@ -58,3 +58,17 @@ describe("penetración (2026-11-04)", () => {
     expect(cycle(mg)).toEqual({ secs: 3, shots: 20 });
   });
 });
+
+describe("CoH2 con el mismo motor", () => {
+  it("el Mosin de Conscripts siempre penetra a la infantería y su DPS sale de sus campos", async () => {
+    const { loadFicha } = await import("../src/coh3/data");
+    const { weaponStats, targetStats } = await import("../src/coh3/combat/weapons");
+    const w = await loadFicha<Parameters<typeof weaponStats>[0]>("weapons", "mosin_nagant_rifle_conscript_mp", "coh2");
+    const u = await loadFicha<Parameters<typeof targetStats>[0]>("units", "conscript_squad_mp", "coh2");
+    expect(w && u).toBeTruthy();
+    const h = hit(weaponStats(w!), targetStats(u!), 0, 10);
+    expect(h.chance).toBe(1);
+    expect(h.dps).toBeGreaterThan(0);
+    expect(penChance(1, 1)).toBe(1);
+  });
+});

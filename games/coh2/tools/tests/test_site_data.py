@@ -66,3 +66,9 @@ def test_blindaje():
 
 def test_avion_no_es_unidad():
     assert sd.es_avion({"aircraft", "vehicle"}) and not sd.es_avion({"infantry", "soldier"})
+
+
+def test_nombre_de_codigo_prolijo():
+    assert sd.nombre_codigo("M1937_45mm_AT") == "M1937 45mm AT"
+    assert sd.nombre_codigo("psk 40") == "Psk 40"
+    assert sd.nombre_codigo("") == ""

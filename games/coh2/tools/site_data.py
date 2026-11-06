@@ -68,6 +68,12 @@ def es_avion(tipos: set) -> bool:
     return "aircraft" in tipos
 
 
+def nombre_codigo(s: str | None) -> str:
+    """El nombre interno de un arma (`"M1937_45mm_AT"`), prolijo: sin guiones bajos y con mayúscula inicial."""
+    s = re.sub(r"[_\s]+", " ", s or "").strip()
+    return s[:1].upper() + s[1:]
+
+
 def _n(v):
     """Un número prolijo: entero si no tiene decimales, con hasta 3 decimales si no."""
     if v is None:
@@ -136,7 +142,7 @@ def arma(slug: str, d: dict, en: dict, es: dict) -> dict:
     nombre = texto(b.get("ui_name"), en, es)
     return {
         "slug": slug,
-        "name": nombre or {"en": b.get("name") or slug, "es": b.get("name") or slug},
+        "name": nombre or {"en": nombre_codigo(b.get("name") or slug), "es": nombre_codigo(b.get("name") or slug)},
         "nameFromCode": nombre is None,
         "icon": b.get("icon_name") or None,
         "kind": None,

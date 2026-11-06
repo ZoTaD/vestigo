@@ -9,7 +9,8 @@ import { useMemo } from "react";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useLang } from "../../i18n";
-import { SIDE } from "../../coh3Copy";
+import { useCohGame } from "../ui";
+import { sideOf } from "../games";
 import { tr, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
 import { curve, hit, type Side } from "./engine";
@@ -38,6 +39,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
   route: Route; navigate: Nav; lists: { units: UnitRow[]; weapons: WeaponRow[] }; q: Record<string, string>; setQ: (p: Record<string, string>) => void;
   wFicha: WeaponData | null | undefined; uFicha: UnitFicha | null | undefined; tFicha: UnitFicha | null | undefined; t: ReturnType<typeof useCombatCopy>;
 }) {
+  const game = useCohGame();
   const { lang } = useLang();
   const num = useNum();
   const wName = useWeaponName(lists.units);
@@ -54,7 +56,9 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
   const ts = targetStats(tRow, vT);
   if (q.mv === "1" && ws.moving) ts.receivedAccuracy = (ts.receivedAccuracy ?? 1) * ws.moving;
   const d = Math.min(Number(q.d) || 0, ws.range);
-  const sides = ([0, 1, 2] as Side[]).map((s) => hit(ws, ts, s, d));
+  // CoH2 no tiene blindaje lateral: frente y atrás.
+  const lados = (game === "coh2" ? [0, 2] : [0, 1, 2]) as Side[];
+  const sides = lados.map((s) => ({ s, ...hit(ws, ts, s, d) }));
   const userRow = wData.usedBy?.[0] ? units.get(wData.usedBy[0]) : undefined;
   const pct = (x: number) => `${num(x * 100)} %`;
   const unknownVet = [...(uFicha?.vet ?? []).slice(0, va), ...(tFicha?.vet ?? []).slice(0, vt)]
@@ -63,12 +67,12 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
 
   // Counters: qué armas le entran a este objetivo de frente, y contra qué vehículos sirve esta arma.
   const counters = weapons
-    .filter((w) => isAntiTank(w as WeaponData) && (q.ab === "1" || !isAbilityShot(w)) && (!tRow || !w.faction || SIDE[w.faction] !== SIDE[tRow.faction]))
+    .filter((w) => isAntiTank(w as WeaponData) && (q.ab === "1" || !isAbilityShot(w)) && (!tRow || !w.faction || sideOf(game, w.faction) !== sideOf(game, tRow.faction)))
     .map((w) => ({ w, c: hit(weaponStats(w as WeaponData), ts, 0, Math.min(d, (w.range as number[] | undefined)?.[1] || 60)).chance }))
     .sort((a, b) => b.c - a.c)
     .slice(0, 12);
   const prey = targets
-    .filter((u) => !wData.faction || SIDE[u.faction] !== SIDE[wData.faction])
+    .filter((u) => !wData.faction || sideOf(game, u.faction) !== sideOf(game, wData.faction))
     .map((u) => ({ u, c: hit(ws, targetStats(u), 0, d).chance, r: hit(ws, targetStats(u), 2, d).chance }))
     .sort((a, b) => b.c - a.c || (b.u.armor?.[0] ?? 0) - (a.u.armor?.[0] ?? 0))
     .slice(0, 12);
@@ -140,7 +144,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
           <div className="c3-sides3">
             {sides.map((h, i) => (
               <div key={i} className={`c3-side ${!h.inRange ? "is-out" : h.chance >= 1 ? "is-full" : h.chance < 0.5 ? "is-low" : ""}`}>
-                <small className="c3-side-h">{t.side[i]}</small>
+                <small className="c3-side-h">{t.side[h.s]}</small>
                 <b className="c3-side-n">{h.inRange ? pct(h.chance) : "—"}</b>
                 <small className="c3-dim">
                   {t.chance} · {num(ts.armor[i])}
@@ -164,7 +168,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
             yTicks={[0, 0.25, 0.5, 0.75, 1]}
             yFmt={(v) => `${v * 100}%`}
             cursor={d}
-            series={([0, 1, 2] as Side[]).map((s) => ({ pts: curve(ws, ts, s, (h) => h.chance), cls: `is-s${s}`, label: t.side[s] }))}
+            series={lados.map((s) => ({ pts: curve(ws, ts, s, (h) => h.chance), cls: `is-s${s}`, label: t.side[s] }))}
           />
           <p className="c3-legend">
             <i className="is-s0" />

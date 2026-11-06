@@ -129,9 +129,9 @@ export default function Coh3({ route, navigate }: TabProps) {
           </RouteLink>
         </div>
       )}
-      <nav className="c3-picks" aria-label="Company of Heroes">
+      <nav className="c3-gsel" aria-label="Company of Heroes">
         {GAME_LIST.map(({ g, label }) => (
-          <RouteLink key={g} className={`c3-pick${g === game ? " is-on" : ""}`} to={switchGame(route, g)} onNavigate={navigate} active={g === game}>
+          <RouteLink key={g} className={`c3-gsel-i${g === game ? " is-on" : ""}`} to={switchGame(route, g)} onNavigate={navigate} active={g === game}>
             {label}
           </RouteLink>
         ))}

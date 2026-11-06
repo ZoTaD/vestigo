@@ -118,11 +118,11 @@
 .c3-brand { position: absolute; left: max(24px, calc(50% - 596px)); top: 10px; }
 .c3-brand img { width: 136px; height: auto; display: block; }
 
-/* --- Selector de juego (2026-11-06, `.c3-pick`: `.c3-game` ya es una fila de Partidas): CoH3 · CoH2 · CoH1, arriba de las pestañas del juego. El activo en bronce. ------- */
-.c3-picks { display: flex; gap: 4px; max-width: 1240px; margin: 0 auto; padding: 8px 16px 0; background: #0e0f0a; box-shadow: 0 0 0 100vmax #0e0f0a; clip-path: inset(0 -100vmax); }
-.c3-pick { padding: 5px 12px 4px; font: 800 14px/1.2 var(--c3-stencil); letter-spacing: 0.12em; color: var(--c3-dim); background: var(--c3-well); }
-a.c3-pick:hover { color: var(--c3-brass); }
-.c3-pick.is-on { color: #1a1408; background: var(--c3-brass); }
+/* --- Selector de juego (2026-11-06, `.c3-gsel`: `.c3-game` y `.c3-pick` ya existen en Partidas y en las calculadoras): CoH3 · CoH2 · CoH1, arriba de las pestañas del juego. El activo en bronce. ------- */
+.c3-gsel { display: flex; gap: 4px; max-width: 1240px; margin: 0 auto; padding: 8px 16px 0; background: #0e0f0a; box-shadow: 0 0 0 100vmax #0e0f0a; clip-path: inset(0 -100vmax); }
+.c3-gsel-i { padding: 5px 12px 4px; font: 800 14px/1.2 var(--c3-stencil); letter-spacing: 0.12em; color: var(--c3-dim); background: var(--c3-well); }
+a.c3-gsel-i:hover { color: var(--c3-brass); }
+.c3-gsel-i.is-on { color: #1a1408; background: var(--c3-brass); }
 .c3[data-game="coh2"] .c3-strip, .c3[data-game="coh1"] .c3-strip {
   background:
     linear-gradient(90deg, var(--c3-bg) 10%, rgba(21, 23, 15, 0.55) 55%, rgba(21, 23, 15, 0.25)),
