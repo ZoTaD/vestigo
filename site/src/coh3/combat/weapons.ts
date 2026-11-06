@@ -95,7 +95,24 @@ export function targetStats(u: UnitTarget, vet?: VetMods): TargetStats {
 }
 
 /** ¿Es un vehículo blindado? Los emplazamientos y las armas de dotación también traen blindaje, pero no son blancos de tanque. */
-export const isVehicle = (u: UnitTarget & { kind?: string }): boolean => u.kind === "vehicles" && isArmored(u);
+// CoH1 no tiene blindaje numérico (`armor` nulo): ahí un vehículo es todo lo que esté en `vehicles`.
+export const isVehicle = (u: UnitTarget & { kind?: string }): boolean => u.kind === "vehicles" && (isArmored(u) || !u.armor);
 
 /** ¿Es un blindado? Algún lado con blindaje de más de 5. */
 export const isArmored = (u: UnitTarget): boolean => !!u.armor && Math.max(...u.armor) > 5;
+
+/**
+ * CoH1 (2026-11-06): no hay blindaje; cada arma trae multiplicadores por tipo de blanco (`targets[tp]` = [precisión,
+ * daño, penetración, penetración trasera]) y la penetración es una probabilidad. El arma se convierte contra el tipo del
+ * blanco y el motor de CoH3 sirve igual: blindaje 1 adelante (penetra con `pen × mult`) y 1/(mult. trasero) atrás.
+ */
+type ConBlancos = WeaponData & { targets?: Record<string, number[]> };
+export function contraBlanco(w: ConBlancos, tp: string | null | undefined): WeaponData {
+  const m = (tp && w.targets?.[tp]) || [1, 1, 1, 1];
+  const por = (xs: number[] | null | undefined, k: number) => (xs ? xs.map((x) => Math.round(x * k * 1e6) / 1e6) : xs ?? null);
+  return { ...w, acc: por(w.acc, m[0]), dmg: por(w.dmg, m[1]), pen: por(w.pen, m[2]) };
+}
+export function blancoCoh1(u: UnitTarget, w: ConBlancos, tp: string | null | undefined, vet?: VetMods): TargetStats {
+  const trasera = (tp && w.targets?.[tp]?.[3]) || 1;
+  return { ...targetStats({ ...u, armor: [1, 1, 1], targetSize: 1 }, vet), armor: [1, 1 / trasera, 1 / trasera] };
+}

@@ -45,3 +45,19 @@ describe("precarga por juego", () => {
     expect(peek("commanders", "coh2")).not.toBeNull();
   });
 });
+
+describe("enciclopedia de CoH1", () => {
+  it("Unidades y una doctrina con sus ramas y puntos de mando", async () => {
+    const { default: Coh3Battlegroups } = await import("../src/coh3/explorer/Coh3Battlegroups");
+    const { preloadRoute } = await import("../src/coh3/data");
+    await preloadRoute(parseRoute("/es/coh1/unidades"));
+    const lista = render("/es/coh1/unidades", (r) => <Coh3Units route={r} navigate={() => undefined} />);
+    expect(lista).toContain("Fusileros");
+    expect(lista).not.toContain("Conscript");
+    await preloadRoute(parseRoute("/es/coh1/doctrinas/allied_infantry_tree"));
+    const doc = render("/es/coh1/doctrinas/allied_infantry_tree", (r) => <Coh3Battlegroups route={r} navigate={() => undefined} />);
+    expect(doc).toContain("Compañía de infantería");
+    expect(doc).toContain("Doctrinas");
+    expect(doc).toContain("/es/coh1/unidades/ranger_team");
+  });
+});

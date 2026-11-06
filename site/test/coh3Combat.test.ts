@@ -72,3 +72,23 @@ describe("CoH2 con el mismo motor", () => {
     expect(penChance(1, 1)).toBe(1);
   });
 });
+
+describe("CoH1: daño por tipo de blanco", () => {
+  it("el arma se convierte con los multiplicadores del tipo de blanco, y la trasera con su multiplicador", async () => {
+    const { contraBlanco, blancoCoh1 } = await import("../src/coh3/combat/weapons");
+    const garand = {
+      slug: "g", name: { en: "g" }, faction: "american", kind: "small_arms",
+      pen: [1, 1, 1], dist: [10, 20, 30], acc: [0.5, 0.4, 0.3], dmg: [10, 10], range: [0, 35],
+      targets: { tp_infantry: [1, 1, 1, 1], tp_armour_allies_sherman: [0.8, 0.5, 0.05, 2] },
+    };
+    const w = contraBlanco(garand as never, "tp_armour_allies_sherman");
+    expect(w.pen).toEqual([0.05, 0.05, 0.05]);
+    expect(w.acc).toEqual([0.4, 0.32, 0.24]);
+    expect(w.dmg).toEqual([5, 5]);
+    // Sin entrada para ese tipo: igual que antes.
+    expect(contraBlanco(garand as never, "tp_nada").pen).toEqual([1, 1, 1]);
+    const t = blancoCoh1({ hp: 636, models: 1 } as never, garand as never, "tp_armour_allies_sherman");
+    expect(t.armor[0]).toBe(1);
+    expect(t.armor[2]).toBeCloseTo(0.5);
+  });
+});

@@ -16,7 +16,7 @@ import type { Nav } from "./ui";
 const GROUPS: { k: "live" | "tools" | "explorer"; tabs: Coh3Section[] }[] = [
   { k: "live", tabs: ["leaderboards", "ranks", "stats", "tier-list"] },
   { k: "tools", tabs: ["penetration", "dps", "patches"] },
-  { k: "explorer", tabs: ["units", "weapons", "battlegroups", "commanders", "bulletins", "maps", "challenges", "achievements", "final-stand"] },
+  { k: "explorer", tabs: ["units", "weapons", "battlegroups", "commanders", "doctrines", "bulletins", "maps", "challenges", "achievements", "final-stand"] },
 ];
 
 function useMeta(): Meta | null {

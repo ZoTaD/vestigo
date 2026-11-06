@@ -346,6 +346,16 @@ function readSitemapData(): { data: OgData } {
     } catch {
       /* sin enciclopedia de CoH2 */
     }
+    try {
+      const r1 = (f: string) => JSON.parse(readFileSync(fileURLToPath(new URL(`../games/coh1/data/${f}`, import.meta.url)), "utf-8"));
+      const slugs1 = (rows: { slug: string }[]) => rows.map((x) => x.slug);
+      c3.coh1 = {
+        units: slugs1(r1("units/list.json")), weapons: slugs1(r1("weapons/list.json")), doctrines: slugs1(r1("doctrines/list.json")),
+        maps: (r1("maps.json").list as { id: string; players: number; name: { en: string; es: string } }[]).filter((m) => !/test/.test(m.id) && m.players > 0 && (m.name.en || m.name.es)).map((m) => m.id),
+      };
+    } catch {
+      /* sin enciclopedia de CoH1 */
+    }
   } catch (e) {
     console.warn(`[coh3] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     c3 = undefined;
@@ -385,6 +395,13 @@ function readSitemapData(): { data: OgData } {
         cs2: c2?.generatedAt,
         coh3: c3?.generatedAt,
         coh2: cohStatsDate("coh2"),
+        coh1Data: (() => {
+          try {
+            return JSON.parse(readFileSync(fileURLToPath(new URL("../games/coh1/data/meta.json", import.meta.url)), "utf-8")).generatedAt;
+          } catch {
+            return undefined;
+          }
+        })(),
         coh2Data: (() => {
           try {
             return JSON.parse(readFileSync(fileURLToPath(new URL("../games/coh2/data/meta.json", import.meta.url)), "utf-8")).generatedAt;

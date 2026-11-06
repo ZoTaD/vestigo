@@ -25,6 +25,7 @@ const EN = {
   targetSize: "Target size",
   fromBg: "Battlegroup",
   fromCommander: "Commander",
+  fromDoctrine: "Doctrine",
   builtIn: "Built at",
   core: "Core army",
   units: {
@@ -67,6 +68,11 @@ const EN = {
     dmgType: "Damage type",
     perShot: "per shot",
   },
+  docs: {
+    k: "Explorer",
+    h1: "Doctrines",
+    lede: "Every doctrine with its two branches, what each upgrade unlocks and its command point cost.",
+  },
   bgs: {
     k: "Explorer",
     h1: "Battlegroups",
@@ -102,6 +108,7 @@ const ES: typeof EN = {
   targetSize: "Tamaño de blanco",
   fromBg: "Battlegroup",
   fromCommander: "Comandante",
+  fromDoctrine: "Doctrina",
   builtIn: "Se produce en",
   core: "Ejército base",
   units: {
@@ -143,6 +150,11 @@ const ES: typeof EN = {
     usedBy: "La usan",
     dmgType: "Tipo de daño",
     perShot: "por disparo",
+  },
+  docs: {
+    k: "Explorador",
+    h1: "Doctrinas",
+    lede: "Cada doctrina con sus dos ramas, qué habilita cada mejora y cuántos puntos de mando cuesta.",
   },
   bgs: {
     k: "Explorador",

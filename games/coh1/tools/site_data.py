@@ -165,7 +165,8 @@ def _entidad(d: dict) -> dict:
     tp = ((d.get("type_ext") or {}).get("type_target_weapon") or {}).get("$REF") or ""
     pop = d.get("population_ext") or {}
     return {
-        "hp": h.get("hitpoints"), "armor": [1, 1, 1], "ts": 1,
+        # CoH1 no tiene blindaje numérico (lo reemplaza el tipo de blanco): sin `armor`.
+        "hp": h.get("hitpoints"), "armor": None, "ts": 1,
         "cost": {"mp": cc.get("manpower", 0), "mu": cc.get("munition", 0), "fu": cc.get("fuel", 0), "t": c.get("time_seconds", 0)},
         "pop": sum(pop.get(k) or 0 for k in ("personnel_pop", "vehicle_pop")),
         "speed": (d.get("moving_ext") or {}).get("speed_max"),

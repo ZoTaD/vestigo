@@ -52,7 +52,7 @@ export default function Coh3Units({ route, navigate }: { route: Route; navigate:
   return route.detail ? <UnitPage key={route.detail} slug={route.detail} route={route} navigate={navigate} /> : <UnitList route={route} navigate={navigate} />;
 }
 
-function useList<T>(tab: "units" | "weapons" | "commanders" | "battlegroups"): T[] | null {
+function useList<T>(tab: "units" | "weapons" | "commanders" | "battlegroups" | "doctrines"): T[] | null {
   const game = useCohGame();
   const [v, setV] = useState<T[] | null>(() => peekList(tab, game) as T[] | null);
   useEffect(() => {
@@ -211,7 +211,7 @@ function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
 
 function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navigate: Nav }) {
   const game = useCohGame();
-  const bgs = useList<BattlegroupRow>(game === "coh2" ? "commanders" : "battlegroups");
+  const bgs = useList<BattlegroupRow>(game === "coh2" ? "commanders" : game === "coh1" ? "doctrines" : "battlegroups");
   const t = useExplorerCopy();
   const c = useCoh3Copy();
   const { lang } = useLang();
@@ -288,8 +288,8 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
           <div className="c3-chips">
             <span className="c3-chip">{t.kinds[u.kind] ?? u.kind}</span>
             {u.bg ? (
-              <RouteLink className="c3-chip" to={{ ...route, view: "coh3", c3Section: game === "coh2" ? "commanders" : "battlegroups", detail: u.bg }} onNavigate={navigate}>
-                {game === "coh2" ? t.fromCommander : t.fromBg}: {bgName ?? u.bg.replace(/_/g, " ")}
+              <RouteLink className="c3-chip" to={{ ...route, view: "coh3", c3Section: game === "coh2" ? "commanders" : game === "coh1" ? "doctrines" : "battlegroups", detail: u.bg }} onNavigate={navigate}>
+                {game === "coh2" ? t.fromCommander : game === "coh1" ? t.fromDoctrine : t.fromBg}: {bgName ?? u.bg.replace(/_/g, " ")}
               </RouteLink>
             ) : (
               <span className="c3-chip">{t.core}</span>
@@ -415,7 +415,7 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
               </ol>
             </Panel>
           )}
-          {prey.length > 0 && main && (
+          {game !== "coh1" && prey.length > 0 && main && (
             <Panel k={t.units.penVs} lede={t.units.penVsLede(num(DIST))}>
               <ol className="c3-rank">
                 {prey.map(({ v, f, r }) => (

@@ -9,7 +9,7 @@ import type { Route } from "../../route";
 import { useLang } from "../../i18n";
 import { useCoh3Copy, type Faction } from "../../coh3Copy";
 import { loadFicha, loadList, peekFicha, peekList, tr, type BattlegroupRow, type L10n, type UnitRow } from "../data";
-import { Coh3Loading, Cost, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
+import { Coh3Loading, Cost, FactionTag, Icon, Panel, useCohGame, useNum, type Nav } from "../ui";
 import { useExplorerCopy } from "./copy";
 import { SettledImg } from "../../SettledImg";
 import { FactionFilter } from "./Coh3Units";
@@ -27,12 +27,13 @@ export default function Coh3Battlegroups({ route, navigate }: { route: Route; na
   return route.detail ? <BgPage key={route.detail} slug={route.detail} route={route} navigate={navigate} /> : <BgList route={route} navigate={navigate} />;
 }
 
-function useRows<T>(tab: "battlegroups" | "units"): T[] | null {
-  const [v, setV] = useState<T[] | null>(() => peekList(tab) as T[] | null);
+function useRows<T>(tab: "battlegroups" | "doctrines" | "units"): T[] | null {
+  const game = useCohGame();
+  const [v, setV] = useState<T[] | null>(() => peekList(tab, game) as T[] | null);
   useEffect(() => {
     if (v) return;
     let vivo = true;
-    loadList(tab).then((x) => vivo && setV(x as T[]), () => undefined);
+    loadList(tab, game).then((x) => vivo && setV(x as T[]), () => undefined);
     return () => {
       vivo = false;
     };
@@ -41,18 +42,21 @@ function useRows<T>(tab: "battlegroups" | "units"): T[] | null {
 }
 
 function BgList({ route, navigate }: { route: Route; navigate: Nav }) {
+  const game = useCohGame();
+  // CoH1: las doctrinas tienen la misma forma (dos ramas de mejoras con costo en puntos de mando).
+  const tab = game === "coh1" ? "doctrines" : "battlegroups";
   const t = useExplorerCopy();
   const { lang } = useLang();
-  const rows = useRows<BattlegroupRow & { image?: string | null }>("battlegroups");
+  const rows = useRows<BattlegroupRow & { image?: string | null }>(tab);
   const [fac, setFac] = useState<Faction | "">("");
   if (!rows) return <Coh3Loading />;
   const shown = rows.filter((b) => !fac || b.faction === fac).sort((a, b) => a.faction.localeCompare(b.faction) || tr(a.name, lang).localeCompare(tr(b.name, lang)));
   return (
     <main className="c3-main c3-bgs">
       <header className="c3-head">
-        <div className="c3-k">{t.bgs.k}</div>
-        <h1 className="c3-h1">{t.bgs.h1}</h1>
-        <p className="c3-lede">{t.bgs.lede}</p>
+        <div className="c3-k">{game === "coh1" ? t.docs.k : t.bgs.k}</div>
+        <h1 className="c3-h1">{game === "coh1" ? t.docs.h1 : t.bgs.h1}</h1>
+        <p className="c3-lede">{game === "coh1" ? t.docs.lede : t.bgs.lede}</p>
       </header>
       <div className="c3-filters">
         <FactionFilter value={fac} onChange={setFac} />
@@ -60,7 +64,7 @@ function BgList({ route, navigate }: { route: Route; navigate: Nav }) {
       <ul className="c3-bggrid">
         {shown.map((b) => (
           <li key={b.slug}>
-            <RouteLink className={`c3-bgcard${b.image ? " has-art" : ""}`} to={{ ...route, view: "coh3", c3Section: "battlegroups", detail: b.slug }} onNavigate={navigate}>
+            <RouteLink className={`c3-bgcard${b.image ? " has-art" : ""}`} to={{ ...route, view: "coh3", c3Section: tab, detail: b.slug }} onNavigate={navigate}>
               {b.image && <SettledImg className="c3-bgart" src={`/coh3/i/${b.image}.webp`} alt="" width={480} height={160} />}
               <Icon path={b.icon} size={64} />
               <span>
@@ -79,17 +83,19 @@ function BgList({ route, navigate }: { route: Route; navigate: Nav }) {
 const tierOf = (slug: string): number => Number(slug.match(/_(?:left|right|center|middle)_(\d)/)?.[1] ?? slug.match(/_(\d)[ab]?_/)?.[1] ?? 0);
 
 function BgPage({ slug, route, navigate }: { slug: string; route: Route; navigate: Nav }) {
+  const game = useCohGame();
+  const tab = game === "coh1" ? "doctrines" : "battlegroups";
   const t = useExplorerCopy();
   const c = useCoh3Copy();
   const { lang } = useLang();
   const num = useNum();
   const units = useRows<UnitRow>("units");
   const byUnit = useMemo(() => new Map((units ?? []).map((u) => [u.slug, u])), [units]);
-  const [b, setB] = useState<BgFicha | null | undefined>(() => peekFicha<BgFicha>("battlegroups", slug));
+  const [b, setB] = useState<BgFicha | null | undefined>(() => peekFicha<BgFicha>(tab, slug, game));
   useEffect(() => {
     if (b !== undefined) return;
     let vivo = true;
-    loadFicha<BgFicha>("battlegroups", slug).then((x) => vivo && setB(x), () => vivo && setB(null));
+    loadFicha<BgFicha>(tab, slug, game).then((x) => vivo && setB(x), () => vivo && setB(null));
     return () => {
       vivo = false;
     };
@@ -106,8 +112,8 @@ function BgPage({ slug, route, navigate }: { slug: string; route: Route; navigat
   return (
     <main className="c3-main c3-bg">
       <p className="c3-crumb">
-        <RouteLink to={{ ...route, view: "coh3", c3Section: "battlegroups", detail: undefined }} onNavigate={navigate}>
-          {t.bgs.h1}
+        <RouteLink to={{ ...route, view: "coh3", c3Section: tab, detail: undefined }} onNavigate={navigate}>
+          {game === "coh1" ? t.docs.h1 : t.bgs.h1}
         </RouteLink>{" "}
         › {c.factionShort[b.faction]}
       </p>

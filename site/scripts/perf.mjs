@@ -263,6 +263,13 @@ export const PAGES = [
   "/en/coh2/bulletins",
   "/es/coh2/penetracion",
   "/en/coh2/maps/crossroads",
+  "/es/coh1/unidades",
+  "/es/coh1/unidades/rifleman_squad",
+  "/en/coh1/weapons",
+  "/es/coh1/doctrinas",
+  "/en/coh1/doctrines/allied_infantry_tree",
+  "/es/coh1/penetracion",
+  "/en/coh1/maps",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

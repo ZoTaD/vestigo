@@ -15,7 +15,7 @@ import { tr, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
 import { curve, hit, type Side } from "./engine";
 import { vetAt, parseVetLines } from "./vet";
-import { isAbilityShot, isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "./weapons";
+import { blancoCoh1, contraBlanco, isAbilityShot, isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "./weapons";
 import { useCombatCopy } from "./copy";
 import { FactionOptions, LineChart, useFicha, useLists, useQueryState, useWeaponName, VetPicker } from "./parts";
 import "./combat.css";
@@ -44,7 +44,9 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
   const num = useNum();
   const wName = useWeaponName(lists.units);
   const units = useMemo(() => new Map(lists.units.map((u) => [u.slug, u])), [lists.units]);
-  const weapons = useMemo(() => lists.weapons.filter((w) => w.faction && w.pen && w.dmg && (q.all === "1" || isAntiTank(w as WeaponData))), [lists.weapons, q.all]);
+  // CoH1: la penetración es una probabilidad (no hay "≥ 30"); los antitanque son los cañones (`ballistic_weapon`).
+  const esAT = (w: { kind?: string }) => (game === "coh1" ? w.kind === "ballistic_weapon" : isAntiTank(w as WeaponData));
+  const weapons = useMemo(() => lists.weapons.filter((w) => w.faction && w.pen && w.dmg && (q.all === "1" || esAT(w))), [lists.weapons, q.all, game]);
   const targets = useMemo(() => lists.units.filter((u) => isVehicle(u)), [lists.units]);
   const wRow = lists.weapons.find((w) => w.slug === q.w) ?? weapons[0];
   const tRow = units.get(q.t) ?? targets[0];
@@ -52,12 +54,15 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
   const va = Number(q.va) || 0, vt = Number(q.vt) || 0;
   const vA = vetAt(uFicha?.vet ?? null, va);
   const vT = vetAt(tFicha?.vet ?? null, vt);
-  const ws = weaponStats(wData, vA);
-  const ts = targetStats(tRow, vT);
+  // CoH1: el arma se convierte contra el tipo de blanco del objetivo (no hay blindaje numérico).
+  const tipo = (u: { target?: string | null } | undefined) => u?.target ?? null;
+  const tp = game === "coh1" ? tipo((tFicha ?? tRow) as { target?: string | null }) : null;
+  const ws = weaponStats(game === "coh1" ? contraBlanco(wData, tp) : wData, vA);
+  const ts = game === "coh1" ? blancoCoh1(tRow, wData, tp, vT) : targetStats(tRow, vT);
   if (q.mv === "1" && ws.moving) ts.receivedAccuracy = (ts.receivedAccuracy ?? 1) * ws.moving;
   const d = Math.min(Number(q.d) || 0, ws.range);
   // CoH2 no tiene blindaje lateral: frente y atrás.
-  const lados = (game === "coh2" ? [0, 2] : [0, 1, 2]) as Side[];
+  const lados = (game === "coh3" ? [0, 1, 2] : [0, 2]) as Side[];
   const sides = lados.map((s) => ({ s, ...hit(ws, ts, s, d) }));
   const userRow = wData.usedBy?.[0] ? units.get(wData.usedBy[0]) : undefined;
   const pct = (x: number) => `${num(x * 100)} %`;
@@ -66,14 +71,19 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
     .filter((x) => !/^veteran ability/i.test(x));
 
   // Counters: qué armas le entran a este objetivo de frente, y contra qué vehículos sirve esta arma.
-  const counters = weapons
+  // En CoH1 la lista liviana de armas no trae sus tablas por tipo de blanco: esa lista no se muestra.
+  const counters = (game === "coh1" ? [] : weapons)
     .filter((w) => isAntiTank(w as WeaponData) && (q.ab === "1" || !isAbilityShot(w)) && (!tRow || !w.faction || sideOf(game, w.faction) !== sideOf(game, tRow.faction)))
     .map((w) => ({ w, c: hit(weaponStats(w as WeaponData), ts, 0, Math.min(d, (w.range as number[] | undefined)?.[1] || 60)).chance }))
     .sort((a, b) => b.c - a.c)
     .slice(0, 12);
   const prey = targets
     .filter((u) => !wData.faction || sideOf(game, u.faction) !== sideOf(game, wData.faction))
-    .map((u) => ({ u, c: hit(ws, targetStats(u), 0, d).chance, r: hit(ws, targetStats(u), 2, d).chance }))
+    .map((u) => {
+      if (game !== "coh1") return { u, c: hit(ws, targetStats(u), 0, d).chance, r: hit(ws, targetStats(u), 2, d).chance };
+      const t = tipo(u as { target?: string | null }), w1 = weaponStats(contraBlanco(wData, t), vA), b1 = blancoCoh1(u, wData, t);
+      return { u, c: hit(w1, b1, 0, d).chance, r: hit(w1, b1, 2, d).chance };
+    })
     .sort((a, b) => b.c - a.c || (b.u.armor?.[0] ?? 0) - (a.u.armor?.[0] ?? 0))
     .slice(0, 12);
   const toUnit = (slug: string): Route => ({ ...route, view: "coh3", c3Section: "units", detail: slug });

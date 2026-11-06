@@ -63,6 +63,7 @@ const TABS: Partial<Record<Coh3Section, LazyTab>> = {
   achievements: Coh3Achievements,
   commanders: CohCommanders,
   bulletins: CohBulletins,
+  doctrines: Coh3Battlegroups,
 };
 
 /** ¿La pestaña ya tiene página en ese juego? Las de CoH3 que no, se anuncian apagadas; CoH1 y CoH2 sólo muestran las suyas. */

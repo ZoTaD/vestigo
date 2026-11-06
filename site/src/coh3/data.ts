@@ -62,11 +62,11 @@ export interface BattlegroupRow {
   [k: string]: unknown;
 }
 
-export type DataTab = "units" | "weapons" | "battlegroups" | "commanders";
-export const isDataTab = (t: string | undefined): t is DataTab => t === "units" || t === "weapons" || t === "battlegroups" || t === "commanders";
+export type DataTab = "units" | "weapons" | "battlegroups" | "commanders" | "doctrines";
+export const isDataTab = (t: string | undefined): t is DataTab => t === "units" || t === "weapons" || t === "battlegroups" || t === "commanders" || t === "doctrines";
 
 /** Los comandantes de CoH2 tienen la forma de los battlegroups de CoH3 (lista liviana + fichas). */
-type ListOf = { units: UnitRow[]; weapons: WeaponRow[]; battlegroups: BattlegroupRow[]; commanders: BattlegroupRow[] };
+type ListOf = { units: UnitRow[]; weapons: WeaponRow[]; battlegroups: BattlegroupRow[]; commanders: BattlegroupRow[]; doctrines: BattlegroupRow[] };
 type Glob = Record<string, () => Promise<{ default: Record<string, unknown> }>>;
 
 /**
@@ -103,9 +103,24 @@ const JUEGOS = {
     } as Partial<Record<DataTab, ReturnType<typeof shardedFichas<unknown>>>>,
   },
 };
-type ConDatos = keyof typeof JUEGOS;
-/** CoH1 todavía no tiene enciclopedia: cae en CoH3 sólo para no romper; sus pestañas no la piden. */
-const juego = (g: CohGame | undefined) => JUEGOS[(g && g in JUEGOS ? g : "coh3") as ConDatos];
+// CoH1 (etapa 3): las doctrinas tienen la forma de los battlegroups.
+Object.assign(JUEGOS, {
+  coh1: {
+    meta: once<Meta>(() => import("@coh1/meta.json") as Promise<Mod<unknown>>),
+    lists: {
+      units: once<UnitRow[]>(() => import("@coh1/units/list.json") as Promise<Mod<unknown>>),
+      weapons: once<WeaponRow[]>(() => import("@coh1/weapons/list.json") as Promise<Mod<unknown>>),
+      doctrines: once<BattlegroupRow[]>(() => import("@coh1/doctrines/list.json") as Promise<Mod<unknown>>),
+    } as Partial<Record<DataTab, ReturnType<typeof once<unknown>>>>,
+    fichas: {
+      units: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh1/units/f/*.json") as Glob, shard),
+      weapons: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh1/weapons/f/*.json") as Glob, shard),
+      doctrines: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh1/doctrines/f/*.json") as Glob, shard),
+    } as Partial<Record<DataTab, ReturnType<typeof shardedFichas<unknown>>>>,
+  },
+});
+type ConDatos = keyof typeof JUEGOS | "coh1";
+const juego = (g: CohGame | undefined) => (JUEGOS as Record<ConDatos, (typeof JUEGOS)["coh3"]>)[(g && g in JUEGOS ? g : "coh3") as ConDatos];
 const vacio = once<unknown>(() => Promise.resolve({ default: [] }));
 const listaDe = (tab: DataTab, g?: CohGame) => juego(g).lists[tab] ?? vacio;
 
@@ -128,10 +143,11 @@ export const tr = (l: L10n | string | null | undefined, lang: "en" | "es"): stri
 const EXTRA: Partial<Record<Coh3Section, (route: Route) => Promise<unknown>>> = {
   // Las fichas de unidades nombran armas (y sus counters las recorren todas); las de armas, a sus unidades.
   // La ficha de unidad nombra además a su battlegroup o comandante. Todo con el juego de la dirección.
-  units: (r) => Promise.all([loadList("weapons", r.cohGame), loadList(r.cohGame === "coh2" ? "commanders" : "battlegroups", r.cohGame)]),
+  units: (r) => Promise.all([loadList("weapons", r.cohGame), loadList(r.cohGame === "coh2" ? "commanders" : r.cohGame === "coh1" ? "doctrines" : "battlegroups", r.cohGame)]),
   weapons: (r) => loadList("units", r.cohGame),
   battlegroups: (r) => loadList("units", r.cohGame),
   commanders: (r) => loadList("units", r.cohGame),
+  doctrines: (r) => loadList("units", r.cohGame),
   penetration: (r) => Promise.all([loadList("units", r.cohGame), loadList("weapons", r.cohGame)]),
   dps: (r) => Promise.all([loadList("units", r.cohGame), loadList("weapons", r.cohGame)]),
   stats: (route) => Promise.all([import("./stats/data").then((m) => m.loadSummary(route.cohGame)), import("./stats/parts").then((m) => m.loadMapNames(route.cohGame))]),
@@ -149,7 +165,7 @@ const EXTRA: Partial<Record<Coh3Section, (route: Route) => Promise<unknown>>> = 
 export async function preloadRoute(route: Route): Promise<void> {
   const tab = route.c3Section ?? "home";
   const g = route.cohGame;
-  const jobs: Promise<unknown>[] = [loadMeta(g === "coh1" ? "coh3" : g)];
+  const jobs: Promise<unknown>[] = [loadMeta(g)];
   if (isDataTab(tab)) {
     jobs.push(loadList(tab, g));
     if (route.detail) jobs.push(loadFicha(tab, route.detail, g));

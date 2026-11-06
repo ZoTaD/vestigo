@@ -51,12 +51,26 @@ describe("enciclopedia de CoH2", () => {
     expect(parseRoute("/en/coh2/bulletins")).toMatchObject({ cohGame: "coh2", c3Section: "bulletins" });
     expect(routePath(parseRoute("/es/coh2/boletines"))).toBe("/es/coh2/boletines");
     expect(cohTabs("coh2")).toEqual(expect.arrayContaining(["units", "weapons", "commanders", "bulletins", "penetration", "dps", "maps"]));
-    // CoH3 no tiene comandantes ni boletines; CoH1 todavía no tiene enciclopedia.
+    // CoH3 no tiene comandantes ni boletines; CoH1 tampoco tiene boletines.
     expect(parseRoute("/es/coh3/comandantes")).toMatchObject({ c3Section: "home" });
-    expect(cohTabs("coh1")).not.toContain("units");
+    expect(cohTabs("coh1")).not.toContain("bulletins");
   });
   it("battlegroups de CoH3 ↔ comandantes de CoH2", () => {
     expect(switchGame(parseRoute("/en/coh3/battlegroups"), "coh2")).toMatchObject({ cohGame: "coh2", c3Section: "commanders" });
     expect(switchGame(parseRoute("/en/coh2/commanders"), "coh3")).toMatchObject({ c3Section: "battlegroups" });
+  });
+});
+
+describe("enciclopedia de CoH1", () => {
+  it("unidades, armas y doctrinas con sus direcciones", () => {
+    expect(parseRoute("/es/coh1/doctrinas/allied_infantry_tree")).toMatchObject({ cohGame: "coh1", c3Section: "doctrines", detail: "allied_infantry_tree" });
+    expect(routePath({ ...parseRoute("/es/coh1/doctrinas"), lang: "en" })).toBe("/en/coh1/doctrines");
+    expect(cohTabs("coh1")).toEqual(expect.arrayContaining(["units", "weapons", "doctrines", "penetration", "maps"]));
+    expect(cohTabs("coh1")).not.toContain("achievements");
+  });
+  it("battlegroups ↔ comandantes ↔ doctrinas", () => {
+    expect(switchGame(parseRoute("/en/coh3/battlegroups"), "coh1")).toMatchObject({ cohGame: "coh1", c3Section: "doctrines" });
+    expect(switchGame(parseRoute("/en/coh1/doctrines"), "coh2")).toMatchObject({ c3Section: "commanders" });
+    expect(switchGame(parseRoute("/en/coh2/commanders"), "coh1")).toMatchObject({ c3Section: "doctrines" });
   });
 });

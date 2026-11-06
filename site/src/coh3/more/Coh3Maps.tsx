@@ -76,9 +76,10 @@ const cache: Partial<Record<CohGame, MapRow[]>> = {};
 export const loadMaps = (game: CohGame = "coh3"): Promise<MapRow[]> => {
   const hit = cache[game];
   if (hit) return Promise.resolve(hit);
-  if (game === "coh2")
-    return (import("@coh2/maps.json") as Promise<Mod<unknown>>).then(
-      (m) => (cache.coh2 = (m.default as { list: Coh2Map[] }).list.filter((x) => !/test/.test(x.id) && x.players > 0 && (x.name.en || x.name.es)).map(fromCoh2)),
+  // CoH1 y CoH2 tienen el mismo formato (`games/coh/tools/maps.py`).
+  if (game === "coh2" || game === "coh1")
+    return ((game === "coh2" ? import("@coh2/maps.json") : import("@coh1/maps.json")) as Promise<Mod<unknown>>).then(
+      (m) => (cache[game] = (m.default as { list: Coh2Map[] }).list.filter((x) => !/test/.test(x.id) && x.players > 0 && (x.name.en || x.name.es)).map(fromCoh2)),
     );
   return (import("@coh3/maps.json") as Promise<Mod<unknown>>).then((m) => (cache.coh3 = m.default as MapRow[]));
 };
