@@ -118,11 +118,11 @@
 .c3-brand { position: absolute; left: max(24px, calc(50% - 596px)); top: 10px; }
 .c3-brand img { width: 136px; height: auto; display: block; }
 
-/* --- Selector de juego (2026-11-06): CoH3 · CoH2 · CoH1, arriba de las pestañas del juego. El activo en bronce. ------- */
-.c3-games { display: flex; gap: 4px; max-width: 1240px; margin: 0 auto; padding: 8px 16px 0; background: #0e0f0a; box-shadow: 0 0 0 100vmax #0e0f0a; clip-path: inset(0 -100vmax); }
-.c3-game { padding: 5px 12px 4px; font: 800 14px/1.2 var(--c3-stencil); letter-spacing: 0.12em; color: var(--c3-dim); background: var(--c3-well); }
-a.c3-game:hover { color: var(--c3-brass); }
-.c3-game.is-on { color: #1a1408; background: var(--c3-brass); }
+/* --- Selector de juego (2026-11-06, `.c3-pick`: `.c3-game` ya es una fila de Partidas): CoH3 · CoH2 · CoH1, arriba de las pestañas del juego. El activo en bronce. ------- */
+.c3-picks { display: flex; gap: 4px; max-width: 1240px; margin: 0 auto; padding: 8px 16px 0; background: #0e0f0a; box-shadow: 0 0 0 100vmax #0e0f0a; clip-path: inset(0 -100vmax); }
+.c3-pick { padding: 5px 12px 4px; font: 800 14px/1.2 var(--c3-stencil); letter-spacing: 0.12em; color: var(--c3-dim); background: var(--c3-well); }
+a.c3-pick:hover { color: var(--c3-brass); }
+.c3-pick.is-on { color: #1a1408; background: var(--c3-brass); }
 .c3[data-game="coh2"] .c3-strip, .c3[data-game="coh1"] .c3-strip {
   background:
     linear-gradient(90deg, var(--c3-bg) 10%, rgba(21, 23, 15, 0.55) 55%, rgba(21, 23, 15, 0.25)),
@@ -267,6 +267,7 @@ a.c3-card:hover .c3-card-h { color: var(--c3-brass); }
 .c3-league.is-brass { background: #3b3220; color: #d7bf8a; }
 .c3-league.is-bronze { background: #3d2a1c; color: #e0a575; }
 .c3-league.is-iron { background: #2b2e31; color: #b9c0c6; }
+.c3-league.is-level { background: #2a2c22; color: #d8d1b6; }
 .c3-league.is-silver { background: #33373c; color: #e3e7ea; }
 .c3-league.is-gold { background: #463915; color: #f0cf6a; }
 .c3-league.is-rival { background: #3a2026; color: #f19a9a; }

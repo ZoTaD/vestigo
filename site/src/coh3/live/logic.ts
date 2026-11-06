@@ -13,7 +13,6 @@ export const MODES: readonly Mode[] = ["1v1", "2v2", "3v3", "4v4"];
 /** El orden de las facciones de CoH3 (las de otro juego van después, en el orden en que aparecen). */
 export const FACTIONS: readonly Faction[] = ["american", "british", "german", "dak"];
 const isMode = (v: string | null): v is Mode => !!v && (MODES as readonly string[]).includes(v);
-const isFaction = (v: string | null): v is Faction => !!v && (FACTIONS as readonly string[]).includes(v);
 
 // ——— Buscador de jugadores ———
 
@@ -33,7 +32,7 @@ export type PlayerQuery =
 export function normalizeQuery(raw: string): PlayerQuery {
   const q = raw.trim().replace(/\s+/g, " ");
   if (!q) return { kind: "empty" };
-  const perfil = /(?:coh3stats\.com\/players|\/coh3\/(?:players|jugadores))\/(\d{1,10})(?:\D|$)/i.exec(q);
+  const perfil = /(?:coh[123]stats\.com\/players|\/coh[123]\/(?:players|jugadores))\/(\d{1,10})(?:\D|$)/i.exec(q);
   if (perfil) return { kind: "profile", id: Number(perfil[1]), alias: null };
   const steamUrl = /steamcommunity\.com\/profiles\/(7656\d{13})(?:\D|$)/i.exec(q);
   if (steamUrl) return { kind: "steam", steamId: steamUrl[1] };
@@ -48,23 +47,32 @@ export type LadderState = { mode: Mode; faction: Faction; page: number; region: 
 export const LADDER_DEFAULT: LadderState = { mode: "1v1", faction: "american", page: 1, region: null };
 export const PAGE_SIZE = 50;
 
-export function parseLadderQuery(search: string, regions: readonly number[]): LadderState {
+/** `factions`: las del juego; la de siempre es la primera (en CoH3, EE. UU.). */
+export function parseLadderQuery(search: string, regions: readonly number[], factions: readonly Faction[] = FACTIONS): LadderState {
   const p = new URLSearchParams(search);
   const m = p.get("m"), f = p.get("f"), pg = p.get("p"), r = p.get("r");
   const page = pg && /^\d{1,5}$/.test(pg) ? Math.max(1, Number(pg)) : 1;
   const region = r && /^\d{1,12}$/.test(r) && regions.includes(Number(r)) ? Number(r) : null;
-  return { mode: isMode(m) ? m : LADDER_DEFAULT.mode, faction: isFaction(f) ? f : LADDER_DEFAULT.faction, page, region };
+  return { mode: isMode(m) ? m : LADDER_DEFAULT.mode, faction: f && factions.includes(f) ? f : factions[0], page, region };
 }
 
 /** La query del estado, sin lo que está en su valor de siempre (la dirección queda corta y se comparte igual). */
-export function ladderQuery(s: LadderState): string {
+export function ladderQuery(s: LadderState, factions: readonly Faction[] = FACTIONS): string {
   const p = new URLSearchParams();
   if (s.mode !== LADDER_DEFAULT.mode) p.set("m", s.mode);
-  if (s.faction !== LADDER_DEFAULT.faction) p.set("f", s.faction);
+  if (s.faction !== factions[0]) p.set("f", s.faction);
   if (s.page > 1) p.set("p", String(s.page));
   if (s.region != null) p.set("r", String(s.region));
   const q = p.toString();
   return q ? `?${q}` : "";
+}
+
+/**
+ * CoH1 y CoH2: su ranking no trae el ELO; se completa con el de la memoria diaria (`games/<juego>/stats/elo/<lb>.json`,
+ * `{statgroup: [ELO, sello]}`), que sale del `newrating` de la última partida de cada uno. Sin dato, queda null.
+ */
+export function withKnownElo<T extends { statGroup: number; elo: number | null }>(rows: readonly T[], elo: Record<string, [number, number]> | null): T[] {
+  return rows.map((r) => (r.elo != null || !elo ? r : { ...r, elo: elo[String(r.statGroup)]?.[0] ?? null }));
 }
 
 /** El primer puesto de una página (la API cuenta desde 1). */
@@ -90,8 +98,9 @@ export function mine<T extends MatchSummary>(matches: readonly T[], profileId: n
 }
 
 /** Totales del ranking: partidas, victorias, la facción más jugada y el mejor puesto (de las tablas de automatch). */
-export function standingsTotals(st: readonly Standing[]) {
-  const auto = st.filter((s) => !s.ranked);
+export function standingsTotals(st: readonly Standing[], allRanked = false) {
+  // En CoH3 cuentan las tablas de automatch; en CoH1 y CoH2 todo su ranking es "ranked" (`allRanked`).
+  const auto = st.filter((s) => allRanked || !s.ranked);
   const wins = auto.reduce((n, s) => n + s.wins, 0);
   const losses = auto.reduce((n, s) => n + s.losses, 0);
   const porFaccion = new Map<Faction, number>();

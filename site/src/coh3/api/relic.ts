@@ -132,6 +132,8 @@ export const steamIdOf = (name: string | undefined): string | null => /^\/steam\
 
 export type LeaderboardRow = {
   rank: number;
+  /** El grupo de Relic de la fila: con él se busca el ELO de CoH1/CoH2 en la memoria diaria. */
+  statGroup: number;
   profileId: number;
   alias: string;
   country: string | null;
@@ -154,6 +156,7 @@ export function normalizeLeaderboard(raw: RawLeaderboard, byRegion = false): { t
     if (!m) continue;
     rows.push({
       rank: s.rank,
+      statGroup: s.statgroup_id,
       profileId: m.profile_id,
       alias: m.alias,
       country: m.country || null,

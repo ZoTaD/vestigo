@@ -1,6 +1,7 @@
 /**
- * Ranking de CoH3 (2026-11-04): las posiciones de automatch de cada modo y facción, de a 50, pedidas en el navegador a
- * `/api/coh3/leaderboard` (no hay prerender de datos en vivo). El prerender dibuja el armazón (título, selectores y la
+ * Ranking de CoH3 (2026-11-04; CoH2 y CoH1 desde el 6/11): las posiciones de cada modo y facción, de a 50, pedidas en
+ * el navegador a `/api/coh3/leaderboard` (con `g=coh2|coh1` para los otros juegos; no hay prerender de datos en vivo).
+ * CoH1 y CoH2 no traen el ELO en el ranking: sale de la memoria diaria (`stats/elo.ts`), y sin dato se ve "—". El prerender dibuja el armazón (título, selectores y la
  * tabla con el aviso de "cargando"), nunca la hoja `Coh3Loading`: el build falla si una página sale con `c3-loading`.
  *
  * El estado viaja en la query (`?m=2v2&f=german&p=2&r=2074389`, sin lo que está en su valor de siempre) para que se pueda
@@ -9,11 +10,14 @@
 import { useEffect, useMemo, useState } from "react";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
-import { FACTION_ICON, useCoh3Copy, type Faction } from "../../coh3Copy";
-import { automatchId, REGIONS } from "../api/leaderboards";
+import { useCoh3Copy } from "../../coh3Copy";
+import { useLang } from "../../i18n";
+import { REGIONS } from "../api/leaderboards";
+import { GAMES } from "../games";
+import { loadElo } from "../stats/elo";
 import type { LeaderboardRow } from "../api/relic";
-import { LeagueTag, Panel, nextSort, sortRows, useNum, useSort, type Nav } from "../ui";
-import { FACTIONS, MODES, ladderQuery, pageCount, pageStart, parseLadderQuery, winRate, PAGE_SIZE, type LadderState } from "../live/logic";
+import { LeagueTag, Panel, nextSort, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { MODES, ladderQuery, pageCount, pageStart, parseLadderQuery, winRate, withKnownElo, PAGE_SIZE, type LadderState } from "../live/logic";
 import { PlayerLink, currentSearch, useAgo, useApi } from "../live/ui";
 import { useLbCopy } from "./copy";
 
@@ -34,27 +38,50 @@ const COLS: Record<Key, (r: LeaderboardRow) => string | number | null> = {
   last: (r) => r.lastMatch,
 };
 
+/** El ELO de una fila: la cifra, o una raya con la aclaración si CoH1/CoH2 todavía no lo conoce. */
+export function EloCell({ elo }: { elo: number | null }) {
+  const t = useLbCopy();
+  const num = useNum();
+  return elo == null ? <span title={t.noRecent}>—</span> : <>{num(elo)}</>;
+}
+
 export default function Coh3Leaderboards({ route, navigate }: { route: Route; navigate: Nav }) {
   const c = useCoh3Copy();
   const t = useLbCopy();
+  const { lang } = useLang();
   const num = useNum();
   const ago = useAgo();
-  const [st, setSt] = useState<LadderState>(() => parseLadderQuery(currentSearch(), REGION_IDS));
+  const game = useCohGame();
+  const conf = GAMES[game];
+  const otro = game !== "coh3";
+  const [st, setSt] = useState<LadderState>(() => parseLadderQuery(currentSearch(), otro ? [] : REGION_IDS, conf.factions));
 
   // La dirección acompaña al estado (sin entrada nueva en el historial).
   useEffect(() => {
-    const q = ladderQuery(st);
+    const q = ladderQuery(st, conf.factions);
     if (window.location.search !== q) window.history.replaceState(window.history.state, "", `${window.location.pathname}${q}`);
-  }, [st]);
+  }, [st, conf]);
 
   const set = (patch: Partial<LadderState>) => setSt((s) => ({ ...s, page: 1, ...patch }));
-  const id = automatchId(st.mode, st.faction as Faction);
+  const id = conf.leaderboardOf(st.mode, st.faction);
   const path = `/api/coh3/leaderboard?id=${id}&start=${pageStart(st.page)}&count=${PAGE_SIZE}${st.region != null ? `&region=${st.region}` : ""}`;
   const isClient = typeof window !== "undefined";
   const { data, error, loading, retry } = useApi<Resp>(isClient ? path : null);
+  const [elo, setElo] = useState<{ id: number; v: Record<string, [number, number]> } | null>(null);
+  useEffect(() => {
+    if (!otro) return;
+    let vivo = true;
+    loadElo(game, id).then((v) => vivo && setElo({ id, v }), () => undefined);
+    return () => {
+      vivo = false;
+    };
+  }, [game, id, otro]);
 
   const { sort, th, setSort } = useSort<Key>({ key: "rank", dir: 1 }, ["rank", "player"]);
-  const rows = useMemo(() => (data ? sortRows(data.rows, COLS, sort) : []), [data, sort]);
+  const rows = useMemo(
+    () => (data ? sortRows(otro ? withKnownElo(data.rows, elo?.id === id ? elo.v : null) : data.rows, COLS, sort) : []),
+    [data, sort, otro, elo, id],
+  );
   const pages = data ? pageCount(data.total) : null;
   // Una página que ya no existe (el ranking se achicó, o un link viejo): a la última.
   useEffect(() => {
@@ -103,28 +130,31 @@ export default function Coh3Leaderboards({ route, navigate }: { route: Route; na
             ))}
           </div>
           <div className="c3-seg" role="group" aria-label={t.faction}>
-            {FACTIONS.map((f) => (
-              <button type="button" key={f} aria-pressed={st.faction === f} onClick={() => set({ faction: f })} title={c.faction[f]}>
-                <img src={FACTION_ICON[f]} alt="" width={20} height={20} decoding="async" />
-                {c.factionShort[f]}
+            {conf.factions.map((f) => (
+              <button type="button" key={f} aria-pressed={st.faction === f} onClick={() => set({ faction: f })} title={conf.factionName[lang][f]}>
+                <img src={conf.factionIcon[f]} alt="" width={20} height={20} decoding="async" />
+                {otro ? conf.factionShort[lang][f] : c.factionShort[f]}
               </button>
             ))}
           </div>
           <div className="c3-filters">
-            <label>
-              {t.region}
-              <select value={st.region ?? ""} onChange={(e) => set({ region: e.target.value ? Number(e.target.value) : null })}>
-                <option value="">{t.world}</option>
-                {REGION_ORDER.map((name) => {
-                  const rid = REGION_IDS.find((r) => REGIONS[r] === name);
-                  return rid ? (
-                    <option key={rid} value={rid}>
-                      {t.regions[name] ?? name}
-                    </option>
-                  ) : null;
-                })}
-              </select>
-            </label>
+            {/* Relic sólo da regiones en el ranking de CoH3. */}
+            {!otro && (
+              <label>
+                {t.region}
+                <select value={st.region ?? ""} onChange={(e) => set({ region: e.target.value ? Number(e.target.value) : null })}>
+                  <option value="">{t.world}</option>
+                  {REGION_ORDER.map((name) => {
+                    const rid = REGION_IDS.find((r) => REGIONS[r] === name);
+                    return rid ? (
+                      <option key={rid} value={rid}>
+                        {t.regions[name] ?? name}
+                      </option>
+                    ) : null;
+                  })}
+                </select>
+              </label>
+            )}
             {data && <span className="c3-note">{t.players(num(data.total))}</span>}
           </div>
         </div>
@@ -143,13 +173,13 @@ export default function Coh3Leaderboards({ route, navigate }: { route: Route; na
         <div className="c3-tablewrap">
           <table className="c3-table c3-cq c3-lb is-stack">
             <caption className="c3-sr">
-              {t.h1} {c.modes[st.mode]} · {c.faction[st.faction]}
+              {t.h1} {c.modes[st.mode]} · {conf.factionName[lang][st.faction]}
             </caption>
             <thead>
               <tr>
                 {th("rank", labels.rank)}
                 {th("player", labels.player, { className: "is-l" })}
-                {th("elo", labels.elo)}
+                {th("elo", labels.elo, otro ? { title: t.eloLast } : undefined)}
                 {th("wins", labels.wins)}
                 {th("losses", labels.losses)}
                 {th("wr", labels.wr)}
@@ -179,7 +209,7 @@ export default function Coh3Leaderboards({ route, navigate }: { route: Route; na
                               <PlayerLink route={route} navigate={navigate} id={r.profileId} alias={r.alias} country={r.country} />
                             </td>
                             <td data-l={labels.elo} className="c3-lb-elo">
-                              {num(r.elo)}
+                              <EloCell elo={r.elo} />
                               <LeagueTag level={r.tier} small />
                             </td>
                             <td data-l={labels.wins}>{num(r.wins)}</td>

@@ -11,6 +11,7 @@ import {
   pageCount,
   pageStart,
   parseLadderQuery,
+  withKnownElo,
   prettyMap,
   recentSummary,
   standingsTotals,
@@ -74,6 +75,23 @@ describe("estado del ranking en la query", () => {
     const s = parseLadderQuery("?m=9v9&f=soviet&p=-1&r=123", regions);
     expect(s).toEqual({ mode: "1v1", faction: "american", page: 1, region: null });
     expect(ladderQuery(s)).toBe("");
+  });
+  it("CoH2: facciones propias; la de siempre es la primera del juego", () => {
+    const f2 = ["wehrmacht", "soviet", "okw", "usf", "british"];
+    const s = parseLadderQuery("?m=3v3&f=okw", [], f2);
+    expect(s).toEqual({ mode: "3v3", faction: "okw", page: 1, region: null });
+    expect(ladderQuery(s, f2)).toBe("?m=3v3&f=okw");
+    expect(parseLadderQuery("?f=american", [], f2).faction).toBe("wehrmacht");
+    expect(ladderQuery(parseLadderQuery("", [], f2), f2)).toBe("");
+  });
+  it("ELO de la memoria diaria para las filas sin ELO", () => {
+    const rows = [
+      { statGroup: 10, elo: null },
+      { statGroup: 11, elo: null },
+      { statGroup: 12, elo: 1400 },
+    ];
+    const out = withKnownElo(rows, { "10": [1816, 1] });
+    expect(out.map((r) => r.elo)).toEqual([1816, null, 1400]);
   });
   it("páginas de 50", () => {
     expect(pageStart(1)).toBe(1);

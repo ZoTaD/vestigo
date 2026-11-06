@@ -6,9 +6,9 @@
  * Pensado para reutilizarse en los otros RTS que vengan (pedido de ZoTaD, 4/11): nada de acá depende de los datos de
  * CoH3 salvo las rutas de las imágenes.
  */
-import { useState, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import { useLang } from "../i18n";
-import { leagueOf } from "./leagues";
+import { leagueOf, levelName } from "./leagues";
 import { GAMES, type CohGame } from "./games";
 import type { Route } from "../route";
 import { SettledImg } from "../SettledImg";
@@ -48,8 +48,17 @@ export function Icon({ path, size = 64, lazy = true, className }: { path: string
 }
 
 /** El emblema de una facción, con o sin su nombre. */
-export function FactionTag({ f, game = "coh3", name = true, size = 22, short = true }: { f: string; game?: CohGame; name?: boolean; size?: number; short?: boolean }) {
+/**
+ * El juego de la pantalla (2026-11-06): lo pone `Coh3.tsx` según la dirección. Facciones, ligas y pedidos a la API lo
+ * leen de acá, así cada pantalla compartida no tiene que pasarlo a mano.
+ */
+export const CohGameContext = createContext<CohGame>("coh3");
+export const useCohGame = (): CohGame => useContext(CohGameContext);
+
+export function FactionTag({ f, game: elegido, name = true, size = 22, short = true }: { f: string; game?: CohGame; name?: boolean; size?: number; short?: boolean }) {
   const t = useCoh3Copy();
+  const delContexto = useCohGame();
+  const game = elegido ?? delContexto;
   const { lang } = useLang();
   const conf = GAMES[game];
   // CoH3 usa sus textos de siempre; CoH1 y CoH2, los de su configuración.
@@ -140,9 +149,13 @@ export function useSort<K extends string>(init: Sort<K>, text: readonly K[] = []
 }
 
 /** La liga de un jugador (el `ranklevel` de Relic) con el tinte de su metal. Sin rango no dibuja nada. */
-export function LeagueTag({ level, small = false }: { level: number | null | undefined; small?: boolean }) {
+export function LeagueTag({ level, small = false, game: elegido }: { level: number | null | undefined; small?: boolean; game?: CohGame }) {
   const { lang } = useLang();
+  const delContexto = useCohGame();
+  const game = elegido ?? delContexto;
   if (!level) return null;
+  // CoH1 y CoH2: el nivel a secas, con el tinte neutro.
+  if (GAMES[game].league === "level") return <span className={`c3-league is-level${small ? " is-sm" : ""}`}>{levelName(level, lang)}</span>;
   const l = leagueOf(level);
   return <span className={`c3-league is-${l.metal}${small ? " is-sm" : ""}`}>{l.name[lang]}</span>;
 }

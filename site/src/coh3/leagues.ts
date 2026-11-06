@@ -60,3 +60,6 @@ export const LEAGUES: League[] = [
 
 export const leagueOf = (level: number | null | undefined): League => LEAGUES[Math.max(0, Math.min(20, level ?? 0))];
 export const leagueName = (level: number | null | undefined, lang: Lang): string => leagueOf(level).name[lang];
+
+/** CoH1 y CoH2 no nombran sus niveles (2026-11-06): "Nivel 17" / "Level 17". */
+export const levelName = (level: number, lang: Lang): string => (lang === "es" ? `Nivel ${level}` : `Level ${level}`);

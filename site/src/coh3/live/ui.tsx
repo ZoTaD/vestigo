@@ -11,6 +11,7 @@ import { flagUrl } from "../../flags";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { agoParts, prettyMap, stripPlayers } from "./logic";
+import { useCohGame } from "../ui";
 import "./live.css";
 
 // ——— Pedidos ———
@@ -40,7 +41,10 @@ export function getJson<T>(path: string): Promise<T> {
 export type Remote<T> = { data: T | null; error: number | null; loading: boolean; retry: () => void };
 
 /** Pide `path` (o nada, con null) y devuelve lo que llegó, la falla (estado HTTP; 0 sin red) y si está esperando. */
-export function useApi<T>(path: string | null): Remote<T> {
+export function useApi<T>(pedido: string | null): Remote<T> {
+  // CoH2 y CoH1: el mismo intermediario con `g=` (lo agrega acá, así ninguna pantalla se lo olvida).
+  const game = useCohGame();
+  const path = pedido && game !== "coh3" && !/[?&]g=/.test(pedido) ? `${pedido}${pedido.includes("?") ? "&" : "?"}g=${game}` : pedido;
   const [st, setSt] = useState<{ path: string | null; data: T | null; error: number | null }>({ path: null, data: null, error: null });
   const [n, setN] = useState(0);
   useEffect(() => {

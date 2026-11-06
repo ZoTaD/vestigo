@@ -13,7 +13,7 @@ import { cohTabs, switchGame, type CohGame, type Coh3Section, type Route } from 
 import { COH3_TABS, COH_GAME_COPY, useCoh3Copy } from "./coh3Copy";
 import { useLang } from "./i18n";
 import Coh3Home from "./coh3/Coh3Home";
-import { Coh3Loading } from "./coh3/ui";
+import { Coh3Loading, CohGameContext } from "./coh3/ui";
 import "@fontsource/big-shoulders-stencil-display/800"; // sin ".css": su `exports` ("./*" → "./*.css") lo duplicaría
 import "@fontsource/big-shoulders-stencil-display/900";
 import "@fontsource-variable/archivo/wdth.css";
@@ -114,6 +114,7 @@ export default function Coh3({ route, navigate }: TabProps) {
   }, [section, game]);
   const isHome = section === "home";
   return (
+    <CohGameContext.Provider value={game}>
     <div className="c3" data-section={section} data-game={game}>
       {isHome ? (
         <Coh3Home.Hero route={route} navigate={navigate} />
@@ -124,9 +125,9 @@ export default function Coh3({ route, navigate }: TabProps) {
           </RouteLink>
         </div>
       )}
-      <nav className="c3-games" aria-label="Company of Heroes">
+      <nav className="c3-picks" aria-label="Company of Heroes">
         {GAME_LIST.map(({ g, label }) => (
-          <RouteLink key={g} className={`c3-game${g === game ? " is-on" : ""}`} to={switchGame(route, g)} onNavigate={navigate} active={g === game}>
+          <RouteLink key={g} className={`c3-pick${g === game ? " is-on" : ""}`} to={switchGame(route, g)} onNavigate={navigate} active={g === game}>
             {label}
           </RouteLink>
         ))}
@@ -163,5 +164,6 @@ export default function Coh3({ route, navigate }: TabProps) {
       </div>
       <p className="c3-credit">{otro?.credit ?? t.credit}</p>
     </div>
+    </CohGameContext.Provider>
   );
 }
