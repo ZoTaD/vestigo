@@ -158,6 +158,35 @@ describe("handleCoh3", () => {
     expect(pedidos[0].searchParams.has("aliases")).toBe(false);
     expect(r.status).toBe(200);
   });
+  it("CoH2 y CoH1: `g` cambia de API y valida contra sus leaderboards", async () => {
+    const lb2 = JSON.parse(readFileSync(new URL("./fixtures/coh2/leaderboard.json", import.meta.url), "utf-8"));
+    const { r, pedidos } = await call("leaderboard?g=coh2&id=6&count=5", () => res(lb2));
+    expect(r.status).toBe(200);
+    expect(pedidos[0].host).toBe("coh2-api.reliclink.com");
+    expect(pedidos[0].searchParams.get("title")).toBe("coh2");
+    const body = await r.json();
+    expect(body.rows).toHaveLength(5);
+    // CoH2 no manda ELO en el ranking.
+    expect(body.rows[0].elo).toBeNull();
+    expect(body.rows[0].tier).toBeGreaterThan(0);
+    for (const q of ["g=coh4&id=6", "g=coh2&id=2130255", "g=coh1&id=51"]) {
+      const x = await call(`leaderboard?${q}`, relic);
+      expect([q, x.r.status, x.pedidos.length]).toEqual([q, 400, 0]);
+    }
+    const sinG = await call("leaderboard?id=2130255", relic);
+    expect(sinG.pedidos[0].host).toBe("coh3-api.reliclink.com");
+  });
+  it("CoH1: partida sin counters, facciones por raza y ELO de antes y después", async () => {
+    const h1 = JSON.parse(readFileSync(new URL("./fixtures/coh1/history.json", import.meta.url), "utf-8"));
+    const m0 = h1.matchHistoryStats[0];
+    const { r, pedidos } = await call(`match?g=coh1&id=${m0.id}&player=${m0.matchhistorymember[0].profile_id}`, () => res(h1));
+    expect(pedidos[0].host).toBe("coh1-api.reliclink.com");
+    const m = await r.json();
+    expect(m.mode).toBe("1v1");
+    expect(m.players.map((p: { faction: string }) => p.faction).sort()).toEqual(["american", "panzer_elite"]);
+    expect(m.players.every((p: { eloAfter: number | null }) => typeof p.eloAfter === "number")).toBe(true);
+    expect(m.players[0].summary.kills).toBe(0);
+  });
   it("Relic falla → 502 con upstream; ruta desconocida → 404; POST → 405", async () => {
     const http = await call("leaderboard?id=2130255", () => new Response("", { status: 503 }));
     expect([http.r.status, await http.r.json()]).toEqual([502, { error: "upstream", upstream: 503 }]);

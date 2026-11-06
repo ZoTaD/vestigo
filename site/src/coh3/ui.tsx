@@ -9,6 +9,7 @@
 import { useState, type ReactNode } from "react";
 import { useLang } from "../i18n";
 import { leagueOf } from "./leagues";
+import { GAMES, type CohGame } from "./games";
 import type { Route } from "../route";
 import { SettledImg } from "../SettledImg";
 import { FACTION_ICON, useCoh3Copy, type Faction } from "../coh3Copy";
@@ -19,7 +20,8 @@ export type Nav = (r: Route) => void;
 export function useNum() {
   const { lang } = useLang();
   const loc = lang === "es" ? "es-AR" : "en-US";
-  return (v: number, d = 0) => v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d });
+  // Sin valor (el ELO de CoH1/CoH2 que todavía no se conoce): una raya.
+  return (v: number | null | undefined, d = 0) => (v == null ? "—" : v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d }));
 }
 
 /** Un panel del puesto de mando: rótulo chico en bronce, título en esténcil y el contenido. */
@@ -46,12 +48,18 @@ export function Icon({ path, size = 64, lazy = true, className }: { path: string
 }
 
 /** El emblema de una facción, con o sin su nombre. */
-export function FactionTag({ f, name = true, size = 22, short = true }: { f: Faction; name?: boolean; size?: number; short?: boolean }) {
+export function FactionTag({ f, game = "coh3", name = true, size = 22, short = true }: { f: string; game?: CohGame; name?: boolean; size?: number; short?: boolean }) {
   const t = useCoh3Copy();
+  const { lang } = useLang();
+  const conf = GAMES[game];
+  // CoH3 usa sus textos de siempre; CoH1 y CoH2, los de su configuración.
+  const largo = game === "coh3" ? t.faction[f as Faction] : conf.factionName[lang][f];
+  const corto = game === "coh3" ? t.factionShort[f as Faction] : conf.factionShort[lang][f];
+  const icono = game === "coh3" ? FACTION_ICON[f as Faction] : conf.factionIcon[f];
   return (
     <span className="c3-fac">
-      <img src={FACTION_ICON[f]} alt={name ? "" : t.faction[f]} width={size} height={size} decoding="async" />
-      {name && <span>{short ? t.factionShort[f] : t.faction[f]}</span>}
+      <img src={icono} alt={name ? "" : largo} width={size} height={size} decoding="async" />
+      {name && <span>{short ? corto : largo}</span>}
     </span>
   );
 }

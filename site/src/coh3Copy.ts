@@ -14,7 +14,7 @@ export const COH3_TABS: Coh3Section[] = ["home", "leaderboards", "ranks", "stats
 /** Las cuatro facciones, con su clave en los datos y su emblema en `public/coh3/i/`. */
 export type Faction = "american" | "british" | "german" | "dak";
 export const FACTIONS: Faction[] = ["american", "british", "german", "dak"];
-export const FACTION_ICON: Record<Faction, string> = {
+export const FACTION_ICON: Record<Faction, string> & Record<string, string | undefined> = {
   american: "/coh3/f/american.webp",
   british: "/coh3/f/british.webp",
   german: "/coh3/f/german.webp",
@@ -33,8 +33,9 @@ const EN = {
     dps: "DPS", patches: "Patches", leaderboards: "Leaderboards", players: "Players", matches: "Matches", stats: "Stats",
     "tier-list": "Tier list", challenges: "Challenges", "final-stand": "Final Stand", ranks: "Ranks", achievements: "Achievements",
   } satisfies Record<Coh3Section, string>,
-  faction: { american: "US Forces", british: "British Forces", german: "Wehrmacht", dak: "Afrika Korps" } satisfies Record<Faction, string>,
-  factionShort: { american: "USF", british: "British", german: "Wehrmacht", dak: "DAK" } satisfies Record<Faction, string>,
+  // Indexables con cualquier clave: las pestañas en vivo reciben facciones de CoH1 y CoH2 como `string`.
+  faction: { american: "US Forces", british: "British Forces", german: "Wehrmacht", dak: "Afrika Korps" } as Record<Faction, string> & Record<string, string | undefined>,
+  factionShort: { american: "USF", british: "British", german: "Wehrmacht", dak: "DAK" } as Record<Faction, string> & Record<string, string | undefined>,
   modes: { "1v1": "1v1", "2v2": "2v2", "3v3": "3v3", "4v4": "4v4" },
   t: {
     loading: "Loading…",

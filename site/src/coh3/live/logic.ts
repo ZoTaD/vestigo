@@ -3,10 +3,14 @@
  * buscador, el estado del ranking en la dirección, el resumen de las partidas cargadas, el némesis y la serie de ELO.
  * Sin React ni pedidos: la prueban `test/coh3Live.test.ts`.
  */
-import type { Faction, Mode } from "../api/leaderboards";
+import type { Mode } from "../api/leaderboards";
+
+/** La clave de una facción de cualquiera de los tres juegos (`american`, `okw`, `panzer_elite`…). */
+type Faction = string;
 import type { MatchSummary, Standing } from "../api/relic";
 
 export const MODES: readonly Mode[] = ["1v1", "2v2", "3v3", "4v4"];
+/** El orden de las facciones de CoH3 (las de otro juego van después, en el orden en que aparecen). */
 export const FACTIONS: readonly Faction[] = ["american", "british", "german", "dak"];
 const isMode = (v: string | null): v is Mode => !!v && (MODES as readonly string[]).includes(v);
 const isFaction = (v: string | null): v is Faction => !!v && (FACTIONS as readonly string[]).includes(v);
@@ -95,7 +99,7 @@ export function standingsTotals(st: readonly Standing[]) {
   let topFaction: { faction: Faction; games: number } | null = null;
   for (const [faction, games] of porFaccion) if (games > 0 && (!topFaction || games > topFaction.games)) topFaction = { faction, games };
   const ranked = auto.filter((s) => s.rank > 0);
-  const best = ranked.reduce<Standing | null>((a, s) => (!a || s.rank < a.rank || (s.rank === a.rank && s.elo > a.elo) ? s : a), null);
+  const best = ranked.reduce<Standing | null>((a, s) => (!a || s.rank < a.rank || (s.rank === a.rank && (s.elo ?? 0) > (a.elo ?? 0)) ? s : a), null);
   return { games: wins + losses, wins, losses, winRate: winRate(wins, losses), topFaction, best };
 }
 

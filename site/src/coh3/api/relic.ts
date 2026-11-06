@@ -1,14 +1,16 @@
 /**
- * Cliente de la API de Relic para CoH3 (2026-11-04): `https://coh3-api.reliclink.com/community/leaderboard/*` con
- * `title=coh3` (Steam). No manda CORS, así que se lee desde la función de Netlify (`handler.ts`).
+ * Cliente de la API de Relic (2026-11-04; CoH1 y CoH2 desde el 6/11): `https://<juego>-api.reliclink.com/community/
+ * leaderboard/*` con `title=<juego>` (Steam). Sin `conf`, CoH3. No manda CORS, así que se lee desde la función de Netlify (`handler.ts`).
  *
  * Arriba, los pedidos (con tiempo límite); abajo, funciones puras que pasan la respuesta cruda a la forma chica que usa
  * el sitio (con tests en `test/coh3Api.test.ts`). Relic contesta 200 también cuando falla: el error viene en
  * `result.code` (0 = SUCCESS; 5 NOT_FOUND, 6 UNKNOWN_PROFILE_IDS, 9 UNKNOWN_ALIASES…).
  */
-import { factionOfRace, leaderboardById, modeOfMatchType, type Faction, type Mode } from "./leaderboards";
+import type { Mode } from "./leaderboards";
+import { GAMES, leaderboardIn, type GameConf } from "../games";
 
-const BASE = "https://coh3-api.reliclink.com/community/leaderboard";
+/** Sin juego, CoH3 (lo que había antes de sumar CoH1 y CoH2). */
+const COH3 = GAMES.coh3;
 const UA = "Mozilla/5.0 (compatible; VestigoBot/1.0; +https://vestigo.gg)";
 const TIEMPO = 7000;
 
@@ -23,11 +25,11 @@ export const RELIC_NOT_FOUND = 5;
 export const RELIC_UNKNOWN_PROFILE_IDS = 6;
 export const RELIC_UNKNOWN_ALIASES = 9;
 
-async function pedir<T>(fetcher: typeof fetch, path: string, params: Record<string, string | number>): Promise<T> {
-  const q = new URLSearchParams({ ...Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)])), title: "coh3" });
+async function pedir<T>(fetcher: typeof fetch, path: string, params: Record<string, string | number>, conf: GameConf = COH3): Promise<T> {
+  const q = new URLSearchParams({ ...Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)])), title: conf.title });
   let r: Response;
   try {
-    r = await fetcher(`${BASE}/${path}?${q}`, {
+    r = await fetcher(`${conf.apiBase}/${path}?${q}`, {
       headers: { "User-Agent": UA, Accept: "application/json" },
       signal: AbortSignal.timeout(TIEMPO),
     });
@@ -68,7 +70,8 @@ export type RawStat = {
   rank: number;
   ranktotal?: number;
   ranklevel?: number;
-  rating: number;
+  /** CoH1 y CoH2 no lo mandan en el ranking. */
+  rating?: number;
   regionrank?: number;
   lastmatchdate: number;
   highestrating?: number;
@@ -91,31 +94,36 @@ export type RawHistory = { matchHistoryStats: RawMatch[]; profiles: RawMember[] 
 
 // ---------- Pedidos ----------
 
-export const getLeaderboard = (f: typeof fetch, id: number, start: number, count: number, region?: number) =>
-  pedir<RawLeaderboard>(f, "getleaderboard2", {
-    leaderboard_id: id,
-    start,
-    count,
-    sortBy: 1,
-    ...(region ? { leaderboardRegion_id: region } : {}),
-  });
+export const getLeaderboard = (f: typeof fetch, id: number, start: number, count: number, region?: number, conf: GameConf = COH3) =>
+  pedir<RawLeaderboard>(
+    f,
+    "getleaderboard2",
+    {
+      leaderboard_id: id,
+      start,
+      count,
+      sortBy: 1,
+      ...(region ? { leaderboardRegion_id: region } : {}),
+    },
+    conf,
+  );
 
-export const getPersonalStat = (f: typeof fetch, profileId: number) =>
-  pedir<RawPersonalStat>(f, "getpersonalstat", { profile_ids: JSON.stringify([profileId]) });
+export const getPersonalStat = (f: typeof fetch, profileId: number, conf: GameConf = COH3) =>
+  pedir<RawPersonalStat>(f, "getpersonalstat", { profile_ids: JSON.stringify([profileId]) }, conf);
 
 /**
  * Búsqueda por alias: `getpersonalstat?aliases=["…"]`. Es exacta y distingue mayúsculas ("rei" no trae a "Rei"); con
  * más de un alias en la lista Relic contesta 503, así que va de a uno. No hay búsqueda por prefijo.
  */
-export const findByAlias = (f: typeof fetch, alias: string) =>
-  pedir<RawPersonalStat>(f, "getpersonalstat", { aliases: JSON.stringify([alias]) });
+export const findByAlias = (f: typeof fetch, alias: string, conf: GameConf = COH3) =>
+  pedir<RawPersonalStat>(f, "getpersonalstat", { aliases: JSON.stringify([alias]) }, conf);
 
 /** Búsqueda por SteamID64: `getpersonalstat?profile_names=["/steam/7656…"]` (probado el 4/11 con el de Rei). */
-export const findBySteamId = (f: typeof fetch, steamId: string) =>
-  pedir<RawPersonalStat>(f, "getpersonalstat", { profile_names: JSON.stringify([`/steam/${steamId}`]) });
+export const findBySteamId = (f: typeof fetch, steamId: string, conf: GameConf = COH3) =>
+  pedir<RawPersonalStat>(f, "getpersonalstat", { profile_names: JSON.stringify([`/steam/${steamId}`]) }, conf);
 
-export const getRecentMatches = (f: typeof fetch, profileId: number) =>
-  pedir<RawHistory>(f, "getRecentMatchHistoryByProfileId", { profile_id: profileId });
+export const getRecentMatches = (f: typeof fetch, profileId: number, conf: GameConf = COH3) =>
+  pedir<RawHistory>(f, "getRecentMatchHistoryByProfileId", { profile_id: profileId }, conf);
 
 // ---------- Normalización ----------
 
@@ -128,7 +136,8 @@ export type LeaderboardRow = {
   alias: string;
   country: string | null;
   steamId: string | null;
-  elo: number;
+  /** null en CoH1 y CoH2: su ranking no trae el ELO (la pestaña lo completa con el de la última partida). */
+  elo: number | null;
   tier: number;
   wins: number;
   losses: number;
@@ -149,7 +158,7 @@ export function normalizeLeaderboard(raw: RawLeaderboard, byRegion = false): { t
       alias: m.alias,
       country: m.country || null,
       steamId: steamIdOf(m.name),
-      elo: s.rating,
+      elo: s.rating ?? null,
       tier: s.ranklevel ?? 0,
       wins: s.wins,
       losses: s.losses,
@@ -166,13 +175,13 @@ export type Profile = { id: number; alias: string; country: string | null; steam
 export type Standing = {
   leaderboardId: number;
   mode: Mode;
-  faction: Faction;
+  faction: string;
   ranked: boolean;
   /** -1 si no está rankeado (pocas partidas o inactivo). */
   rank: number;
   total: number;
-  elo: number;
-  best: number;
+  elo: number | null;
+  best: number | null;
   tier: number;
   wins: number;
   losses: number;
@@ -189,11 +198,11 @@ const perfil = (m: RawMember): Profile => ({
 });
 
 /** Las posiciones de un grupo personal en los leaderboards que conocemos (sin IA ni personalizadas). */
-function standingsOf(raw: RawPersonalStat, statGroupId: number): Standing[] {
+function standingsOf(raw: RawPersonalStat, statGroupId: number, conf: GameConf): Standing[] {
   const out: Standing[] = [];
   for (const s of raw.leaderboardStats) {
     if (s.statgroup_id !== statGroupId) continue;
-    const lb = leaderboardById(s.leaderboard_id);
+    const lb = leaderboardIn(conf, s.leaderboard_id);
     if (!lb) continue;
     out.push({
       leaderboardId: lb.id,
@@ -202,8 +211,8 @@ function standingsOf(raw: RawPersonalStat, statGroupId: number): Standing[] {
       ranked: lb.ranked,
       rank: s.rank,
       total: s.ranktotal ?? 0,
-      elo: s.rating,
-      best: s.highestrating ?? s.rating,
+      elo: s.rating ?? null,
+      best: s.highestrating ?? s.rating ?? null,
       tier: s.ranklevel ?? 0,
       wins: s.wins,
       losses: s.losses,
@@ -212,28 +221,31 @@ function standingsOf(raw: RawPersonalStat, statGroupId: number): Standing[] {
     });
   }
   const orden = ["1v1", "2v2", "3v3", "4v4"];
-  return out.sort((a, b) => Number(a.ranked) - Number(b.ranked) || orden.indexOf(a.mode) - orden.indexOf(b.mode) || b.elo - a.elo);
+  return out.sort((a, b) => Number(a.ranked) - Number(b.ranked) || orden.indexOf(a.mode) - orden.indexOf(b.mode) || (b.elo ?? 0) - (a.elo ?? 0) || a.rank - b.rank);
 }
 
 /** El grupo personal (un solo miembro) de un perfil; los de equipos fijos se ignoran. */
 const grupoPersonal = (raw: RawPersonalStat, profileId: number) =>
   raw.statGroups.find((g) => g.members.length === 1 && g.members[0].profile_id === profileId);
 
-export function normalizePersonal(raw: RawPersonalStat, profileId: number): { profile: Profile; standings: Standing[] } | null {
+export function normalizePersonal(raw: RawPersonalStat, profileId: number, conf: GameConf = COH3): { profile: Profile; standings: Standing[] } | null {
   const g = grupoPersonal(raw, profileId);
   if (!g) return null;
-  return { profile: perfil(g.members[0]), standings: standingsOf(raw, g.id) };
+  return { profile: perfil(g.members[0]), standings: standingsOf(raw, g.id, conf) };
 }
 
 export type SearchResult = Profile & { best: Pick<Standing, "mode" | "faction" | "elo" | "rank"> | null; games: number };
 
 /** Resultados de buscar un alias: con su mejor ELO de automatch, los más jugados primero. */
-export function normalizeSearch(raw: RawPersonalStat): SearchResult[] {
+export function normalizeSearch(raw: RawPersonalStat, conf: GameConf = COH3): SearchResult[] {
   return raw.statGroups
     .filter((g) => g.members.length === 1)
     .map((g) => {
-      const st = standingsOf(raw, g.id).filter((s) => !s.ranked);
-      const top = st.reduce<Standing | null>((a, s) => (!a || s.elo > a.elo ? s : a), null);
+      // En CoH3 cuenta el automatch; en CoH1 y CoH2 todo su ranking es "ranked". Sin ELO, el mejor puesto.
+      const st = standingsOf(raw, g.id, conf).filter((s) => conf.game !== "coh3" || !s.ranked);
+      const mejor = (s: Standing, a: Standing) =>
+        s.elo != null || a.elo != null ? (s.elo ?? 0) > (a.elo ?? 0) : s.rank > 0 && (a.rank <= 0 || s.rank < a.rank);
+      const top = st.reduce<Standing | null>((a, s) => (!a || mejor(s, a) ? s : a), null);
       return {
         ...perfil(g.members[0]),
         best: top && { mode: top.mode, faction: top.faction, elo: top.elo, rank: top.rank },
@@ -301,7 +313,7 @@ export type MatchPlayer = {
   profileId: number;
   alias: string;
   country: string | null;
-  faction: Faction | null;
+  faction: string | null;
   team: number;
   result: Result;
   eloBefore: number | null;
@@ -339,7 +351,7 @@ export type MatchDetail = Omit<MatchSummary, "players"> & {
 const resultado = (o: number | undefined): Result => (o === 1 ? "win" : o === 0 ? "loss" : "other");
 const elo = (v: number | undefined) => (typeof v === "number" && v > 0 ? v : null);
 
-function jugadores(m: RawMatch, perfiles: Map<number, RawMember>) {
+function jugadores(m: RawMatch, perfiles: Map<number, RawMember>, conf: GameConf) {
   const reportes = new Map(m.matchhistoryreportresults.map((r) => [r.profile_id, r]));
   const miembros = m.matchhistorymember.length
     ? m.matchhistorymember
@@ -353,7 +365,7 @@ function jugadores(m: RawMatch, perfiles: Map<number, RawMember>) {
         profileId: mm.profile_id,
         alias: p?.alias ?? "",
         country: p?.country || null,
-        faction: factionOfRace(mm.race_id),
+        faction: conf.raceToFaction[mm.race_id] ?? null,
         team: mm.teamid,
         result: resultado(mm.outcome ?? r?.resulttype),
         eloBefore: elo(mm.oldrating),
@@ -364,8 +376,8 @@ function jugadores(m: RawMatch, perfiles: Map<number, RawMember>) {
     .sort((a, b) => a.base.team - b.base.team || (b.base.eloBefore ?? 0) - (a.base.eloBefore ?? 0));
 }
 
-function cabecera(m: RawMatch) {
-  const { mode, ranked } = modeOfMatchType(m.matchtype_id);
+function cabecera(m: RawMatch, conf: GameConf) {
+  const { mode, ranked } = conf.matchMode(m.matchtype_id);
   return {
     id: m.id,
     map: m.mapname,
@@ -378,12 +390,12 @@ function cabecera(m: RawMatch) {
 }
 
 /** El historial reciente, chico: cabecera, jugadores y el resumen de counters de cada uno. Más nuevas primero. */
-export function normalizeHistory(raw: RawHistory): MatchSummary[] {
+export function normalizeHistory(raw: RawHistory, conf: GameConf = COH3): MatchSummary[] {
   const perfiles = new Map(raw.profiles.map((p) => [p.profile_id, p]));
   return raw.matchHistoryStats
     .map((m) => ({
-      ...cabecera(m),
-      players: jugadores(m, perfiles).map(({ base, counters }) =>
+      ...cabecera(m, conf),
+      players: jugadores(m, perfiles, conf).map(({ base, counters }) =>
         Object.keys(counters).length ? { ...base, counters: historyCounters(summarizeCounters(counters)) } : base,
       ),
     }))
@@ -391,15 +403,15 @@ export function normalizeHistory(raw: RawHistory): MatchSummary[] {
 }
 
 /** Una partida del historial con todo: los counters completos de cada jugador y las grabaciones. */
-export function normalizeMatch(raw: RawHistory, matchId: number): MatchDetail | null {
+export function normalizeMatch(raw: RawHistory, matchId: number, conf: GameConf = COH3): MatchDetail | null {
   const m = raw.matchHistoryStats.find((x) => x.id === matchId);
   if (!m) return null;
   const perfiles = new Map(raw.profiles.map((p) => [p.profile_id, p]));
   return {
-    ...cabecera(m),
+    ...cabecera(m, conf),
     end: m.completiontime,
     automatch: m.description === "AUTOMATCH",
-    players: jugadores(m, perfiles).map(({ base, counters }) => ({ ...base, summary: summarizeCounters(counters), counters })),
+    players: jugadores(m, perfiles, conf).map(({ base, counters }) => ({ ...base, summary: summarizeCounters(counters), counters })),
     replays: (m.matchurls ?? []).map((u) => ({ profileId: u.profile_id, key: u.key, size: u.size })),
   };
 }

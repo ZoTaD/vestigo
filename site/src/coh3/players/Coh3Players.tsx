@@ -148,7 +148,7 @@ function Search({ route, navigate }: { route: Route; navigate: Nav }) {
                       </span>
                       <small>
                         {t.games(num(r.games))}
-                        {r.best && ` · ${t.bestAt(num(r.best.elo), c.modes[r.best.mode], c.factionShort[r.best.faction])}`}
+                        {r.best && ` · ${t.bestAt(num(r.best.elo), c.modes[r.best.mode], c.factionShort[r.best.faction] ?? r.best.faction)}`}
                         {r.country && ` · ${countryName(r.country, lang)}`}
                       </small>
                     </RouteLink>
@@ -433,7 +433,7 @@ function EloChart({ matches, id }: { matches: MatchSummary[]; id: number }) {
               </button>
             ))}
           </div>
-          <Chart pts={pts} label={t.chartAria(c.modes[cur.mode], c.faction[cur.faction], String(pts[0]?.elo ?? ""), String(pts.at(-1)?.elo ?? ""))} />
+          <Chart pts={pts} label={t.chartAria(c.modes[cur.mode], c.faction[cur.faction] ?? cur.faction, String(pts[0]?.elo ?? ""), String(pts.at(-1)?.elo ?? ""))} />
         </>
       )}
     </Panel>

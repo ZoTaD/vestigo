@@ -9,7 +9,7 @@
 import { useEffect, useMemo, useState } from "react";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
-import { FACTION_ICON, useCoh3Copy } from "../../coh3Copy";
+import { FACTION_ICON, useCoh3Copy, type Faction } from "../../coh3Copy";
 import { automatchId, REGIONS } from "../api/leaderboards";
 import type { LeaderboardRow } from "../api/relic";
 import { LeagueTag, Panel, nextSort, sortRows, useNum, useSort, type Nav } from "../ui";
@@ -48,7 +48,7 @@ export default function Coh3Leaderboards({ route, navigate }: { route: Route; na
   }, [st]);
 
   const set = (patch: Partial<LadderState>) => setSt((s) => ({ ...s, page: 1, ...patch }));
-  const id = automatchId(st.mode, st.faction);
+  const id = automatchId(st.mode, st.faction as Faction);
   const path = `/api/coh3/leaderboard?id=${id}&start=${pageStart(st.page)}&count=${PAGE_SIZE}${st.region != null ? `&region=${st.region}` : ""}`;
   const isClient = typeof window !== "undefined";
   const { data, error, loading, retry } = useApi<Resp>(isClient ? path : null);
