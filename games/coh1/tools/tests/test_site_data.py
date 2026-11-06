@@ -52,3 +52,16 @@ def test_arma_coh1():
 def test_variantes_de_refuerzo_afuera():
     assert not sd.es_multijugador("sbps/races/allies/soldiers/heavy_machine_gun_section_reinforcement")
     assert sd.es_multijugador("sbps/races/allies/soldiers/heavy_machine_gun_section")
+
+
+def test_solo_lo_que_genera():
+    hab = {"ability_bag": {"action_list": {
+        "a1": {"$REF": r"action\ability_action\reinforcements_action.lua", "squad_table": {"squad_01": r"sbps\races\allies\vehicles\m4_sherman_squad.lua"}},
+        "a2": {"$REF": r"action\ability_action\filter_action.lua", "squad_table": {"squad_01": r"sbps\races\allies\soldiers\rifleman_squad.lua"}},
+        "a3": {"$REF": r"action\ability_action\paradrop_action.lua", "squad_to_spawn": r"sbps\races\allies\soldiers\airborne_infantry.lua"},
+    }}}
+    assert sd.generadas(hab) == {"sbps/races/allies/vehicles/m4_sherman_squad", "sbps/races/allies/soldiers/airborne_infantry"}
+
+
+def test_voss_afuera():
+    assert not sd.es_multijugador("sbps/races/axis/vehicles/tiger_voss_squad")

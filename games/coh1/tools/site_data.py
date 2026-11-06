@@ -44,7 +44,7 @@ PUBLIC = RAIZ / "site" / "public" / "coh1"
 FACCION = {"allies": "american", "allies_commonwealth": "british", "axis": "wehrmacht", "axis_panzer_elite": "panzer_elite"}
 TIPO = {"soldiers": "infantry", "vehicles": "vehicles", "buildings": "emplacements"}
 # Fuera: campaña, pruebas y las copias "_reinforcement" que traen las doctrinas (las mismas unidades base).
-FUERA = re.compile(r"(_sp($|_)|/sp_|_m\d\d|test|battle_sim|tutorial|la_fiere|trun|villers|_rpg|deadforever|campaign|reinforcement|eselschreck)")
+FUERA = re.compile(r"(_sp($|_)|/sp_|_m\d\d|test|battle_sim|tutorial|la_fiere|trun|villers|_rpg|deadforever|campaign|reinforcement|eselschreck|voss)")
 ARCHIVOS_ARTE = ["WW2/Archives/WW2Art.sga", "WW2/Archives/WW2Data.sga", "DLC1/Archives/DLC1Data.sga", "DLC2/Archives/DLC2Data.sga",
                  "DLC3/Archives/DLC3Data.sga", "DLC1/Archives/DLC1ArtHigh.sga", "DLC2/Archives/DLC2ArtHigh.sga", "DLC3/Archives/DLC3ArtHigh.sga"]
 # Los árboles de doctrina de multijugador (los otros son de misiones).
@@ -130,6 +130,25 @@ def _rutas(o, out: set, prefijo: str, clave: str | None = None) -> set:
             _rutas(v, out, prefijo, clave)
     elif isinstance(o, str) and o.lower().replace("\\", "/").startswith(prefijo):
         out.add(ruta_ref(o))
+    return out
+
+
+GENERAN = ("reinforcements_action.lua", "paradrop_action.lua", "replacement_squad_action.lua")
+
+
+def generadas(o, out: set | None = None) -> set:
+    """Las escuadras que una habilidad pone en el campo: sólo dentro de acciones que generan tropas
+    (las tablas de la IA y los filtros también nombran escuadras, pero no las traen)."""
+    out = set() if out is None else out
+    if isinstance(o, dict):
+        if str(o.get("$REF") or "").lower().endswith(GENERAN):
+            _rutas(o, out, "sbps/")
+        else:
+            for v in o.values():
+                generadas(v, out)
+    elif isinstance(o, list):
+        for v in o:
+            generadas(v, out)
     return out
 
 
@@ -237,7 +256,7 @@ def main(argv: list[str]) -> None:
         if not doc:
             continue
         raza_doc = next(r for r, f in FACCION.items() if f == next(x["faction"] for x in doctrinas if x["slug"] == doc))
-        for s in _rutas(d, set(), "sbps/", "squad_t") | _rutas(d, set(), "sbps/", "squad_to_spawn"):
+        for s in generadas(d):
             # Sólo escuadras de la raza de la doctrina.
             if raza_de(s) != raza_doc:
                 continue
@@ -397,7 +416,7 @@ def main(argv: list[str]) -> None:
     c2._tab("units", unidades, lambda u: {k: u[k] for k in ("slug", "name", "faction", "kind", "icon", "cost", "hp", "armor",
                                                              "targetSize", "models", "bg", "target")})
     c2._tab("weapons", fichas_armas, lambda w: {k: w[k] for k in ("slug", "name", "faction", "kind", "icon", "cls", "pen", "dist",
-                                                                   "acc", "dmg", "reload", "reloadEvery", "range")}
+                                                                   "acc", "dmg", "reload", "reloadEvery", "range", "targets")}
             | {"aoe": None, "users": len(w["usedBy"]), "by": w["usedBy"][0]})
     c2._tab("doctrines", doctrinas, lambda d: {k: d[k] for k in ("slug", "name", "faction", "icon", "image")})
     por = {}

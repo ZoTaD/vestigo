@@ -71,10 +71,15 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
     .filter((x) => !/^veteran ability/i.test(x));
 
   // Counters: qué armas le entran a este objetivo de frente, y contra qué vehículos sirve esta arma.
-  // En CoH1 la lista liviana de armas no trae sus tablas por tipo de blanco: esa lista no se muestra.
-  const counters = (game === "coh1" ? [] : weapons)
-    .filter((w) => isAntiTank(w as WeaponData) && (q.ab === "1" || !isAbilityShot(w)) && (!tRow || !w.faction || sideOf(game, w.faction) !== sideOf(game, tRow.faction)))
-    .map((w) => ({ w, c: hit(weaponStats(w as WeaponData), ts, 0, Math.min(d, (w.range as number[] | undefined)?.[1] || 60)).chance }))
+  // En CoH1 cada arma se convierte contra el tipo de blanco del objetivo, y el blanco depende del arma.
+  const contra = (w: WeaponData) =>
+    game === "coh1" ? { ws: weaponStats(contraBlanco(w, tp)), ts: blancoCoh1(tRow, w, tp, vT) } : { ws: weaponStats(w), ts };
+  const counters = weapons
+    .filter((w) => esAT(w) && (q.ab === "1" || !isAbilityShot(w)) && (!tRow || !w.faction || sideOf(game, w.faction) !== sideOf(game, tRow.faction)))
+    .map((w) => {
+      const x = contra(w as WeaponData);
+      return { w, c: hit(x.ws, x.ts, 0, Math.min(d, (w.range as number[] | undefined)?.[1] || 60)).chance };
+    })
     .sort((a, b) => b.c - a.c)
     .slice(0, 12);
   const prey = targets
