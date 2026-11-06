@@ -5,20 +5,22 @@
 import { useEffect, useMemo, useState } from "react";
 import { loadFicha, loadList, peekFicha, peekList, tr, type UnitRow, type WeaponRow } from "../data";
 import { useLang } from "../../i18n";
-import { FACTIONS, useCoh3Copy } from "../../coh3Copy";
+import { useCohGame } from "../ui";
+import { GAMES, factionLabel } from "../games";
 import { useCombatCopy } from "./copy";
 import type { WeaponData } from "./weapons";
 
 /** Las listas de unidades y armas (o null mientras llegan). */
 export function useLists(): { units: UnitRow[]; weapons: WeaponRow[] } | null {
+  const game = useCohGame();
   const [v, setV] = useState(() => {
-    const u = peekList("units"), w = peekList("weapons");
+    const u = peekList("units", game), w = peekList("weapons", game);
     return u && w ? { units: u, weapons: w } : null;
   });
   useEffect(() => {
     if (v) return;
     let vivo = true;
-    Promise.all([loadList("units"), loadList("weapons")]).then(([units, weapons]) => vivo && setV({ units, weapons }), () => undefined);
+    Promise.all([loadList("units", game), loadList("weapons", game)]).then(([units, weapons]) => vivo && setV({ units, weapons }), () => undefined);
     return () => {
       vivo = false;
     };
@@ -28,14 +30,15 @@ export function useLists(): { units: UnitRow[]; weapons: WeaponRow[] } | null {
 
 /** Una ficha (unidad o arma) que se pide cuando cambia el slug. `undefined` mientras llega. */
 export function useFicha<F>(tab: "units" | "weapons", slug: string | null | undefined): F | null | undefined {
-  const [f, setF] = useState<F | null | undefined>(() => (slug ? peekFicha<F>(tab, slug) : null));
+  const game = useCohGame();
+  const [f, setF] = useState<F | null | undefined>(() => (slug ? peekFicha<F>(tab, slug, game) : null));
   useEffect(() => {
     if (!slug) return setF(null);
-    const now = peekFicha<F>(tab, slug);
+    const now = peekFicha<F>(tab, slug, game);
     if (now !== undefined) return setF(now);
     setF(undefined);
     let vivo = true;
-    loadFicha<F>(tab, slug).then((x) => vivo && setF(x), () => vivo && setF(null));
+    loadFicha<F>(tab, slug, game).then((x) => vivo && setF(x), () => vivo && setF(null));
     return () => {
       vivo = false;
     };
@@ -81,14 +84,15 @@ export function useWeaponName(units: UnitRow[] | undefined) {
 
 /** Las opciones de un `<select>` agrupadas por facción. */
 export function FactionOptions<T extends { slug: string; faction: string | null }>({ rows, label }: { rows: T[]; label: (r: T) => string }) {
-  const c = useCoh3Copy();
+  const game = useCohGame();
+  const { lang } = useLang();
   return (
     <>
-      {FACTIONS.map((f) => {
+      {GAMES[game].factions.map((f) => {
         const mine = rows.filter((r) => r.faction === f).sort((a, b) => label(a).localeCompare(label(b)));
         if (!mine.length) return null;
         return (
-          <optgroup key={f} label={c.faction[f]}>
+          <optgroup key={f} label={factionLabel(game, lang, f, false)}>
             {mine.map((r) => (
               <option key={r.slug} value={r.slug}>
                 {label(r)}

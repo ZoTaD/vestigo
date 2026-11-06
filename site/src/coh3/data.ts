@@ -9,7 +9,7 @@
  * Nunca en el chunk del área (regla 4 de CLAUDE.md). `load*` pide; `peek*` devuelve lo que ya llegó, para el primer
  * render y el prerender (que espera a `preloadRoute`).
  */
-import type { Coh3Section, Route } from "../route";
+import type { CohGame, Coh3Section, Route } from "../route";
 import { pzShardOf } from "../zomboid/shard";
 import { once, shardedFichas } from "../zomboid/store";
 import type { Faction } from "../coh3Copy";
@@ -62,30 +62,76 @@ export interface BattlegroupRow {
   [k: string]: unknown;
 }
 
-export type DataTab = "units" | "weapons" | "battlegroups";
-export const isDataTab = (t: string | undefined): t is DataTab => t === "units" || t === "weapons" || t === "battlegroups";
+export type DataTab = "units" | "weapons" | "battlegroups" | "commanders" | "doctrines";
+export const isDataTab = (t: string | undefined): t is DataTab => t === "units" || t === "weapons" || t === "battlegroups" || t === "commanders" || t === "doctrines";
 
-type ListOf = { units: UnitRow[]; weapons: WeaponRow[]; battlegroups: BattlegroupRow[] };
+/** Los comandantes de CoH2 tienen la forma de los battlegroups de CoH3 (lista liviana + fichas). */
+type ListOf = { units: UnitRow[]; weapons: WeaponRow[]; battlegroups: BattlegroupRow[]; commanders: BattlegroupRow[]; doctrines: BattlegroupRow[] };
+type Glob = Record<string, () => Promise<{ default: Record<string, unknown> }>>;
 
-const meta = once<Meta>(() => import("@coh3/meta.json") as Promise<Mod<unknown>>);
-const lists = {
-  units: once<UnitRow[]>(() => import("@coh3/units/list.json") as Promise<Mod<unknown>>),
-  weapons: once<WeaponRow[]>(() => import("@coh3/weapons/list.json") as Promise<Mod<unknown>>),
-  battlegroups: once<BattlegroupRow[]>(() => import("@coh3/battlegroups/list.json") as Promise<Mod<unknown>>),
+/**
+ * Los datos del explorador por juego (2026-11-06): CoH3 de `@coh3` (coh3-data) y CoH2 de `@coh2` (los archivos del
+ * juego, `games/coh2/tools/site_data.py`), con los mismos formatos. CoH1 llega en la etapa 3. Cada juego tiene sus
+ * cachés: cambiar de juego nunca mezcla listas.
+ */
+const JUEGOS = {
+  coh3: {
+    meta: once<Meta>(() => import("@coh3/meta.json") as Promise<Mod<unknown>>),
+    lists: {
+      units: once<UnitRow[]>(() => import("@coh3/units/list.json") as Promise<Mod<unknown>>),
+      weapons: once<WeaponRow[]>(() => import("@coh3/weapons/list.json") as Promise<Mod<unknown>>),
+      battlegroups: once<BattlegroupRow[]>(() => import("@coh3/battlegroups/list.json") as Promise<Mod<unknown>>),
+    } as Partial<Record<DataTab, ReturnType<typeof once<unknown>>>>,
+    // Las fichas son `unknown` acá: cada pestaña declara su forma (`units/types.ts`…) y la castea.
+    fichas: {
+      units: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh3/units/f/*.json") as Glob, shard),
+      weapons: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh3/weapons/f/*.json") as Glob, shard),
+      battlegroups: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh3/battlegroups/f/*.json") as Glob, shard),
+    } as Partial<Record<DataTab, ReturnType<typeof shardedFichas<unknown>>>>,
+  },
+  coh2: {
+    meta: once<Meta>(() => import("@coh2/meta.json") as Promise<Mod<unknown>>),
+    lists: {
+      units: once<UnitRow[]>(() => import("@coh2/units/list.json") as Promise<Mod<unknown>>),
+      weapons: once<WeaponRow[]>(() => import("@coh2/weapons/list.json") as Promise<Mod<unknown>>),
+      commanders: once<BattlegroupRow[]>(() => import("@coh2/commanders/list.json") as Promise<Mod<unknown>>),
+    } as Partial<Record<DataTab, ReturnType<typeof once<unknown>>>>,
+    fichas: {
+      units: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh2/units/f/*.json") as Glob, shard),
+      weapons: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh2/weapons/f/*.json") as Glob, shard),
+      commanders: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh2/commanders/f/*.json") as Glob, shard),
+    } as Partial<Record<DataTab, ReturnType<typeof shardedFichas<unknown>>>>,
+  },
 };
-// Las fichas son `unknown` acá: cada pestaña declara su forma (`units/types.ts`…) y la castea.
-const fichas = {
-  units: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh3/units/f/*.json"), shard),
-  weapons: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh3/weapons/f/*.json"), shard),
-  battlegroups: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh3/battlegroups/f/*.json"), shard),
-};
+// CoH1 (etapa 3): las doctrinas tienen la forma de los battlegroups.
+Object.assign(JUEGOS, {
+  coh1: {
+    meta: once<Meta>(() => import("@coh1/meta.json") as Promise<Mod<unknown>>),
+    lists: {
+      units: once<UnitRow[]>(() => import("@coh1/units/list.json") as Promise<Mod<unknown>>),
+      weapons: once<WeaponRow[]>(() => import("@coh1/weapons/list.json") as Promise<Mod<unknown>>),
+      doctrines: once<BattlegroupRow[]>(() => import("@coh1/doctrines/list.json") as Promise<Mod<unknown>>),
+    } as Partial<Record<DataTab, ReturnType<typeof once<unknown>>>>,
+    fichas: {
+      units: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh1/units/f/*.json") as Glob, shard),
+      weapons: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh1/weapons/f/*.json") as Glob, shard),
+      doctrines: shardedFichas<unknown>(import.meta.glob<{ default: Record<string, unknown> }>("@coh1/doctrines/f/*.json") as Glob, shard),
+    } as Partial<Record<DataTab, ReturnType<typeof shardedFichas<unknown>>>>,
+  },
+});
+type ConDatos = keyof typeof JUEGOS | "coh1";
+const juego = (g: CohGame | undefined) => (JUEGOS as Record<ConDatos, (typeof JUEGOS)["coh3"]>)[(g && g in JUEGOS ? g : "coh3") as ConDatos];
+const vacio = once<unknown>(() => Promise.resolve({ default: [] }));
+const listaDe = (tab: DataTab, g?: CohGame) => juego(g).lists[tab] ?? vacio;
 
-export const loadMeta = () => meta.load();
-export const peekMeta = () => meta.peek();
-export const loadList = <T extends DataTab>(tab: T): Promise<ListOf[T]> => (lists[tab] as ReturnType<typeof once<ListOf[T]>>).load();
-export const peekList = <T extends DataTab>(tab: T): ListOf[T] | null => (lists[tab] as ReturnType<typeof once<ListOf[T]>>).peek();
-export const loadFicha = <F>(tab: DataTab, slug: string): Promise<F | null> => fichas[tab].load(slug) as Promise<F | null>;
-export const peekFicha = <F>(tab: DataTab, slug: string): F | null | undefined => fichas[tab].peek(slug) as F | null | undefined;
+export const loadMeta = (g?: CohGame) => juego(g).meta.load();
+export const peekMeta = (g?: CohGame) => juego(g).meta.peek();
+export const loadList = <T extends DataTab>(tab: T, g?: CohGame): Promise<ListOf[T]> => listaDe(tab, g).load() as Promise<ListOf[T]>;
+export const peekList = <T extends DataTab>(tab: T, g?: CohGame): ListOf[T] | null => listaDe(tab, g).peek() as ListOf[T] | null;
+export const loadFicha = <F>(tab: DataTab, slug: string, g?: CohGame): Promise<F | null> =>
+  (juego(g).fichas[tab]?.load(slug) ?? Promise.resolve(null)) as Promise<F | null>;
+export const peekFicha = <F>(tab: DataTab, slug: string, g?: CohGame): F | null | undefined =>
+  (juego(g).fichas[tab] ? juego(g).fichas[tab]!.peek(slug) : null) as F | null | undefined;
 
 /** El texto en el idioma pedido, o el inglés si falta. */
 export const tr = (l: L10n | string | null | undefined, lang: "en" | "es"): string => (!l ? "" : typeof l === "string" ? l : (lang === "es" && l.es) || l.en);
@@ -96,28 +142,33 @@ export const tr = (l: L10n | string | null | undefined, lang: "en" | "es"): stri
  */
 const EXTRA: Partial<Record<Coh3Section, (route: Route) => Promise<unknown>>> = {
   // Las fichas de unidades nombran armas (y sus counters las recorren todas); las de armas, a sus unidades.
-  units: () => loadList("weapons"),
-  weapons: () => loadList("units"),
-  battlegroups: () => loadList("units"),
-  penetration: () => Promise.all([loadList("units"), loadList("weapons")]),
-  dps: () => Promise.all([loadList("units"), loadList("weapons")]),
-  stats: () => Promise.all([import("./stats/data").then((m) => m.loadSummary()), import("./stats/parts").then((m) => m.loadMapNames())]),
-  "tier-list": () => Promise.all([import("./stats/data").then((m) => m.loadSummary()), import("./stats/parts").then((m) => m.loadMapNames())]),
-  maps: () => Promise.all([import("./more/Coh3Maps").then((m) => m.loadMaps()), import("./stats/data").then((m) => m.loadSummary())]),
+  // La ficha de unidad nombra además a su battlegroup o comandante. Todo con el juego de la dirección.
+  units: (r) => Promise.all([loadList("weapons", r.cohGame), loadList(r.cohGame === "coh2" ? "commanders" : r.cohGame === "coh1" ? "doctrines" : "battlegroups", r.cohGame)]),
+  weapons: (r) => loadList("units", r.cohGame),
+  battlegroups: (r) => loadList("units", r.cohGame),
+  commanders: (r) => loadList("units", r.cohGame),
+  doctrines: (r) => loadList("units", r.cohGame),
+  penetration: (r) => Promise.all([loadList("units", r.cohGame), loadList("weapons", r.cohGame)]),
+  dps: (r) => Promise.all([loadList("units", r.cohGame), loadList("weapons", r.cohGame)]),
+  stats: (route) => Promise.all([import("./stats/data").then((m) => m.loadSummary(route.cohGame)), import("./stats/parts").then((m) => m.loadMapNames(route.cohGame))]),
+  "tier-list": (route) => Promise.all([import("./stats/data").then((m) => m.loadSummary(route.cohGame)), import("./stats/parts").then((m) => m.loadMapNames(route.cohGame))]),
+  maps: (route) => Promise.all([import("./more/Coh3Maps").then((m) => m.loadMaps(route.cohGame)), import("./stats/data").then((m) => m.loadSummary(route.cohGame))]),
   challenges: () => import("./more/Coh3Challenges").then((m) => m.loadChallenges()),
   "final-stand": () => import("./more/Coh3FinalStand").then((m) => m.loadFinalStand()),
-  ranks: () => import("./stats/Coh3Ranks").then((m) => m.loadLadder()),
-  achievements: () => import("./more/Coh3Achievements").then((m) => m.loadAchievements()),
+  ranks: (route) => import("./stats/Coh3Ranks").then((m) => m.loadLadder(route.cohGame)),
+  achievements: (route) => import("./more/Coh3Achievements").then((m) => m.loadAchievements(route.cohGame)),
+  bulletins: () => import("./explorer/CohBulletins").then((m) => m.loadBulletins()),
   patches: (route) => import("./more/Coh3Patches").then((m) => m.preloadPatches(route)),
 };
 
 /** Lo que una dirección necesita antes de dibujarse (el prerender lo espera, así el HTML sale con datos). */
 export async function preloadRoute(route: Route): Promise<void> {
   const tab = route.c3Section ?? "home";
-  const jobs: Promise<unknown>[] = [loadMeta()];
+  const g = route.cohGame;
+  const jobs: Promise<unknown>[] = [loadMeta(g)];
   if (isDataTab(tab)) {
-    jobs.push(loadList(tab));
-    if (route.detail) jobs.push(loadFicha(tab, route.detail));
+    jobs.push(loadList(tab, g));
+    if (route.detail) jobs.push(loadFicha(tab, route.detail, g));
   }
   const extra = EXTRA[tab];
   if (extra) jobs.push(extra(route));

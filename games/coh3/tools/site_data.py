@@ -210,7 +210,8 @@ class Loc:
 
     @staticmethod
     def _limpiar(s: str) -> str:
-        return s.replace("\\n", "\n").replace("\\r", "").replace(" ", " ").strip()
+        # Los nombres sin terminar vienen con "!" adelante (3.0: "!Goon Gun Pit"): se saca.
+        return re.sub(r"^!+\s*", "", s.replace("\\n", "\n").replace("\\r", "").replace(" ", " ").strip())
 
     def t(self, lid) -> dict | None:
         if isinstance(lid, dict):

@@ -3,7 +3,10 @@
  * todos los días con los datos abiertos de coh3stats.com. Las usan Estadísticas y la Tier list.
  */
 import { once } from "../../zomboid/store";
-import type { Faction } from "../../coh3Copy";
+import type { CohGame } from "../../route";
+
+/** La clave de una facción de cualquiera de los tres juegos. */
+type Faction = string;
 
 export type Mode = "1v1" | "2v2" | "3v3" | "4v4";
 export const MODES: Mode[] = ["1v1", "2v2", "3v3", "4v4"];
@@ -37,9 +40,14 @@ export interface Summary {
 }
 
 type Mod<T> = { default: T };
-const summary = once<Summary>(() => import("@coh3stats/summary.json") as Promise<Mod<unknown>>);
-export const loadSummary = () => summary.load();
-export const peekSummary = () => summary.peek();
+// Uno por juego (2026-11-06): CoH1 y CoH2 los arma `games/coh/tools/relic_daily.py`, con el mismo formato.
+const SUMMARIES = {
+  coh3: once<Summary>(() => import("@coh3stats/summary.json") as Promise<Mod<unknown>>),
+  coh2: once<Summary>(() => import("@coh2stats/summary.json") as Promise<Mod<unknown>>),
+  coh1: once<Summary>(() => import("@coh1stats/summary.json") as Promise<Mod<unknown>>),
+};
+export const loadSummary = (game: CohGame = "coh3") => SUMMARIES[game].load();
+export const peekSummary = (game: CohGame = "coh3") => SUMMARIES[game].peek();
 
 /** Porcentaje de victorias (0–1) o null sin partidas. */
 export const wr = (x: GW | undefined | null): number | null => (x && x.g > 0 ? x.w / x.g : null);
@@ -68,9 +76,10 @@ export function tierOf(p: number): Tier {
   return "D";
 }
 
-/** "pachino_2p" → "Pachino" cuando el mapa no tiene nombre en los datos del juego. */
+/** "pachino_2p" → "Pachino", "4p_rails and metal" → "Rails And Metal", cuando el mapa no tiene nombre en los datos. */
 export function prettyMap(id: string): string {
   return id
+    .replace(/^\(?\d(?:-\d)?p?\)?_/i, "")
     .replace(/_(\d)p(_.*)?$/i, "")
     .replace(/_/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());

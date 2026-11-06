@@ -10,10 +10,11 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import RouteLink from "../../RouteLink";
 import { useLang } from "../../i18n";
 import type { Route } from "../../route";
-import { useCoh3Copy, type Faction } from "../../coh3Copy";
+import { useCoh3Copy, type Faction, cohGameSeo } from "../../coh3Copy";
 import type { Mode } from "../api/leaderboards";
 import type { MatchSummary, Profile, SearchResult, Standing } from "../api/relic";
-import { Coh3Loading, FactionTag, LeagueTag, Panel, nextSort, sortRows, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, LeagueTag, Panel, nextSort, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { GAMES, factionLabel, type CohGame } from "../games";
 import {
   FACTIONS,
   MODES,
@@ -44,18 +45,19 @@ export default function Coh3Players({ route, navigate }: { route: Route; navigat
 // ——— Vistos hace poco (sólo en este navegador) ———
 
 type Seen = { id: number; alias: string; country: string | null };
-const SEEN = "c3:seenPlayers";
-function readSeen(): Seen[] {
+/** Una lista por juego: un perfil de CoH2 no existe en CoH3. */
+const seenKey = (game: CohGame) => (game === "coh3" ? "c3:seenPlayers" : `c3:seenPlayers:${game}`);
+function readSeen(game: CohGame): Seen[] {
   try {
-    const v = JSON.parse(localStorage.getItem(SEEN) ?? "[]") as Seen[];
+    const v = JSON.parse(localStorage.getItem(seenKey(game)) ?? "[]") as Seen[];
     return Array.isArray(v) ? v.filter((x) => typeof x?.id === "number" && typeof x.alias === "string").slice(0, 8) : [];
   } catch {
     return [];
   }
 }
-function addSeen(s: Seen) {
+function addSeen(game: CohGame, s: Seen) {
   try {
-    localStorage.setItem(SEEN, JSON.stringify([s, ...readSeen().filter((x) => x.id !== s.id)].slice(0, 8)));
+    localStorage.setItem(seenKey(game), JSON.stringify([s, ...readSeen(game).filter((x) => x.id !== s.id)].slice(0, 8)));
   } catch {
     /* sin almacenamiento */
   }
@@ -68,12 +70,13 @@ function Search({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = usePlCopy();
   const num = useNum();
   const { lang } = useLang();
-  useDocTitle(c.seo.players.title);
+  const game = useCohGame();
+  useDocTitle(game === "coh3" ? c.seo.players.title : cohGameSeo(game, lang, "players").title);
   const initial = new URLSearchParams(currentSearch()).get("q") ?? "";
   const [text, setText] = useState(initial);
   const [query, setQuery] = useState<PlayerQuery>(() => normalizeQuery(initial));
   const [seen, setSeen] = useState<Seen[]>([]);
-  useEffect(() => setSeen(readSeen()), []);
+  useEffect(() => setSeen(readSeen(game)), [game]);
 
   const toProfile = (pid: number) => navigate({ ...route, view: "coh3", c3Section: "players", detail: String(pid) });
   const submit = (e: FormEvent) => {
@@ -148,7 +151,7 @@ function Search({ route, navigate }: { route: Route; navigate: Nav }) {
                       </span>
                       <small>
                         {t.games(num(r.games))}
-                        {r.best && ` · ${t.bestAt(num(r.best.elo), c.modes[r.best.mode], c.factionShort[r.best.faction])}`}
+                        {r.best && ` · ${t.bestAt(num(r.best.elo), c.modes[r.best.mode], factionLabel(game, lang, r.best.faction, true))}`}
                         {r.country && ` · ${countryName(r.country, lang)}`}
                       </small>
                     </RouteLink>
@@ -180,6 +183,7 @@ type MF = "all" | Mode | "custom" | "ai" | "other";
 function Profile({ id, route, navigate }: { id: number; route: Route; navigate: Nav }) {
   // Sólo la ficha: el buscador (`/coh3/players`) sí se indexa y está en el sitemap.
   useNoindex();
+  const game = useCohGame();
   const c = useCoh3Copy();
   const t = usePlCopy();
   const num = useNum();
@@ -187,10 +191,10 @@ function Profile({ id, route, navigate }: { id: number; route: Route; navigate: 
   const { lang } = useLang();
   const { data, error, retry } = useApi<PlayerResp>(`/api/coh3/player?id=${id}`);
   const alias = data?.profile.alias ?? null;
-  useDocTitle(alias ? c.detailSeo("players", alias).title : null);
+  useDocTitle(alias ? (game === "coh3" ? c.detailSeo("players", alias).title : cohGameSeo(game, lang, "players", alias).title) : null);
   useEffect(() => {
     rememberPlayer(id);
-    if (data) addSeen({ id, alias: data.profile.alias, country: data.profile.country });
+    if (data) addSeen(game, { id, alias: data.profile.alias, country: data.profile.country });
   }, [id, data]);
 
   if (error === 404 || error === 400)
@@ -210,7 +214,7 @@ function Profile({ id, route, navigate }: { id: number; route: Route; navigate: 
   if (!data) return <Coh3Loading />;
 
   const { profile, standings, matches } = data;
-  const tot = standingsTotals(standings);
+  const tot = standingsTotals(standings, game !== "coh3");
   const country = countryName(profile.country, lang);
   return (
     <main className="c3-main">
@@ -279,7 +283,8 @@ function Profile({ id, route, navigate }: { id: number; route: Route; navigate: 
 
 type SKey = "mode" | "rank" | "elo" | "best" | "wins" | "losses" | "wr" | "streak" | "last";
 const S_COLS: Record<SKey, (s: Standing) => string | number | null> = {
-  mode: (s) => `${MODES.indexOf(s.mode)}${FACTIONS.indexOf(s.faction)}`,
+  // El orden de las facciones de CoH3; las de CoH1/CoH2 (que no están) quedan por nombre.
+  mode: (s) => `${MODES.indexOf(s.mode)}${FACTIONS.indexOf(s.faction) < 0 ? s.faction : FACTIONS.indexOf(s.faction)}`,
   rank: (s) => (s.rank > 0 ? s.rank : null),
   elo: (s) => s.elo,
   best: (s) => s.best,
@@ -340,7 +345,7 @@ function Standings({ standings }: { standings: Standing[] }) {
                     </td>
                     <td data-l={L.elo} className="c3-lb-elo">
                       {num(s.elo)}
-                      <LeagueTag level={s.tier} small />
+                      <LeagueTag level={s.tier} small faction={s.faction} />
                     </td>
                     <td data-l={L.best}>{num(s.best)}</td>
                     <td data-l={L.wins}>{num(s.wins)}</td>
@@ -414,6 +419,8 @@ function Recent({ matches, id, route, navigate }: { matches: MatchSummary[]; id:
 }
 
 function EloChart({ matches, id }: { matches: MatchSummary[]; id: number }) {
+  const game = useCohGame();
+  const { lang } = useLang();
   const c = useCoh3Copy();
   const t = usePlCopy();
   const keys = useMemo(() => eloSeriesKeys(matches, id).filter((k) => k.n >= 2), [matches, id]);
@@ -433,7 +440,7 @@ function EloChart({ matches, id }: { matches: MatchSummary[]; id: number }) {
               </button>
             ))}
           </div>
-          <Chart pts={pts} label={t.chartAria(c.modes[cur.mode], c.faction[cur.faction], String(pts[0]?.elo ?? ""), String(pts.at(-1)?.elo ?? ""))} />
+          <Chart pts={pts} label={t.chartAria(c.modes[cur.mode], factionLabel(game, lang, cur.faction, false), String(pts[0]?.elo ?? ""), String(pts.at(-1)?.elo ?? ""))} />
         </>
       )}
     </Panel>
@@ -493,6 +500,7 @@ function Chart({ pts, label }: { pts: EloPoint[]; label: string }) {
 
 function Games({ matches, id, route, navigate, ago }: { matches: MatchSummary[]; id: number; route: Route; navigate: Nav; ago: (s: number) => string }) {
   const c = useCoh3Copy();
+  const game = useCohGame();
   const t = usePlCopy();
   const num = useNum();
   const date = useDate();
@@ -502,7 +510,7 @@ function Games({ matches, id, route, navigate, ago }: { matches: MatchSummary[];
   const mine = matches.map((m) => ({ m, me: m.players.find((p) => p.profileId === id) })).filter((x): x is { m: MatchSummary; me: NonNullable<typeof x.me> } => !!x.me);
   const modeKey = (m: MatchSummary): MF => m.mode;
   const modes = (["all", ...MODES, "custom", "ai", "other"] as MF[]).filter((k) => k === "all" || mine.some((x) => modeKey(x.m) === k));
-  const facs = (["all", ...FACTIONS] as ("all" | Faction)[]).filter((f) => f === "all" || mine.some((x) => x.me.faction === f));
+  const facs = (["all", ...GAMES[game].factions] as ("all" | Faction)[]).filter((f) => f === "all" || mine.some((x) => x.me.faction === f));
   const shown = mine.filter((x) => (mf === "all" || modeKey(x.m) === mf) && (ff === "all" || x.me.faction === ff));
   const modeLabel = (k: MF) => (k === "all" ? t.all : k === "custom" ? t.custom : k === "ai" ? t.ai : k === "other" ? t.other : c.modes[k]);
 

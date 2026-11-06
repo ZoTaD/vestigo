@@ -8,9 +8,10 @@ import RouteLink from "../../RouteLink";
 import { LazyRows } from "../../LazyRows";
 import { routePath, type Route } from "../../route";
 import { useLang } from "../../i18n";
-import { FACTIONS, SIDE, useCoh3Copy, type Faction } from "../../coh3Copy";
-import { loadFicha, loadList, peekFicha, peekList, tr, type L10n, type UnitRow, type WeaponRow } from "../data";
-import { Coh3Loading, Cost, FactionTag, Icon, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
+import { useCoh3Copy, type Faction } from "../../coh3Copy";
+import { GAMES, factionLabel, sideOf } from "../games";
+import { loadFicha, loadList, peekFicha, peekList, tr, type BattlegroupRow, type L10n, type UnitRow, type WeaponRow } from "../data";
+import { Coh3Loading, Cost, FactionTag, Icon, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
 import { hit } from "../combat/engine";
 import { isAbilityShot, isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "../combat/weapons";
 import { useWeaponName } from "../combat/parts";
@@ -51,12 +52,13 @@ export default function Coh3Units({ route, navigate }: { route: Route; navigate:
   return route.detail ? <UnitPage key={route.detail} slug={route.detail} route={route} navigate={navigate} /> : <UnitList route={route} navigate={navigate} />;
 }
 
-function useList<T>(tab: "units" | "weapons"): T[] | null {
-  const [v, setV] = useState<T[] | null>(() => peekList(tab) as T[] | null);
+function useList<T>(tab: "units" | "weapons" | "commanders" | "battlegroups" | "doctrines"): T[] | null {
+  const game = useCohGame();
+  const [v, setV] = useState<T[] | null>(() => peekList(tab, game) as T[] | null);
   useEffect(() => {
     if (v) return;
     let vivo = true;
-    loadList(tab).then((x) => vivo && setV(x as T[]), () => undefined);
+    loadList(tab, game).then((x) => vivo && setV(x as T[]), () => undefined);
     return () => {
       vivo = false;
     };
@@ -66,11 +68,12 @@ function useList<T>(tab: "units" | "weapons"): T[] | null {
 
 /** Filtros leídos de la dirección (`?f=german&k=vehicles&q=tiger`) al montar; se escriben con `replaceState`. */
 function useFilters() {
+  const game = useCohGame();
   const [f, setF] = useState<{ f: Faction | ""; k: string; q: string }>({ f: "", k: "", q: "" });
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
     const fac = p.get("f") as Faction | null;
-    setF({ f: fac && FACTIONS.includes(fac) ? fac : "", k: p.get("k") ?? "", q: p.get("q") ?? "" });
+    setF({ f: fac && GAMES[game].factions.includes(fac) ? fac : "", k: p.get("k") ?? "", q: p.get("q") ?? "" });
   }, []);
   const set = (patch: Partial<typeof f>) =>
     setF((s) => {
@@ -87,6 +90,8 @@ function useFilters() {
 }
 
 export function FactionFilter({ value, onChange }: { value: Faction | ""; onChange: (f: Faction | "") => void }) {
+  const game = useCohGame();
+  const { lang } = useLang();
   const t = useExplorerCopy();
   const c = useCoh3Copy();
   return (
@@ -94,8 +99,8 @@ export function FactionFilter({ value, onChange }: { value: Faction | ""; onChan
       <button type="button" aria-pressed={value === ""} onClick={() => onChange("")}>
         {t.all}
       </button>
-      {FACTIONS.map((f) => (
-        <button key={f} type="button" aria-pressed={value === f} onClick={() => onChange(f)} title={c.faction[f]}>
+      {GAMES[game].factions.map((f) => (
+        <button key={f} type="button" aria-pressed={value === f} onClick={() => onChange(f as Faction)} title={factionLabel(game, lang, f, false)}>
           <FactionTag f={f} size={20} />
         </button>
       ))}
@@ -106,6 +111,7 @@ export function FactionFilter({ value, onChange }: { value: Faction | ""; onChan
 type Key = "name" | "faction" | "hp" | "armor" | "mp" | "mu" | "fu" | "pop";
 
 function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
+  const game = useCohGame();
   const t = useExplorerCopy();
   const c = useCoh3Copy();
   const { lang } = useLang();
@@ -121,7 +127,7 @@ function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
   if (!units) return <Coh3Loading />;
   const cols: Record<Key, (u: UnitRow) => string | number | null> = {
     name: (u) => tr(u.name, lang),
-    faction: (u) => c.factionShort[u.faction],
+    faction: (u) => factionLabel(game, lang, u.faction, true),
     hp: (u) => u.hp,
     armor: (u) => (u.armor ? u.armor[0] : null),
     mp: (u) => u.cost?.mp ?? null,
@@ -135,7 +141,7 @@ function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
       <header className="c3-head">
         <div className="c3-k">{t.units.k}</div>
         <h1 className="c3-h1">{t.units.h1}</h1>
-        <p className="c3-lede">{t.units.lede}</p>
+        <p className="c3-lede">{game === "coh1" ? t.units.ledeCoh1 : t.units.lede}</p>
       </header>
       <div className="c3-filters">
         <FactionFilter value={f.f} onChange={(x) => setF({ f: x })} />
@@ -159,7 +165,8 @@ function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
               {th("name", t.name)}
               {th("faction", t.faction, { className: "is-l" })}
               {th("hp", t.hp)}
-              {th("armor", t.armor, { title: t.armorFSR })}
+              {/* CoH1 no tiene blindaje numérico: la columna no va. */}
+              {game !== "coh1" && th("armor", t.armor, { title: t.armorFSR })}
               {th("mp", c.t.mp)}
               {th("mu", c.t.mu)}
               {th("fu", c.t.fu)}
@@ -187,7 +194,7 @@ function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
                     <FactionTag f={u.faction} size={20} />
                   </td>
                   <td data-l={t.hp}>{u.hp != null ? num(u.hp) : "—"}</td>
-                  <td data-l={t.armorFSR}>{u.armor && isArmored(u) ? u.armor.map((a) => num(a)).join(" / ") : "—"}</td>
+                  {game !== "coh1" && <td data-l={t.armorFSR}>{u.armor && isArmored(u) ? u.armor.map((a) => num(a)).join(" / ") : "—"}</td>}
                   <td data-l={c.t.mp}>{u.cost?.mp ? num(u.cost.mp) : "—"}</td>
                   <td data-l={c.t.mu}>{u.cost?.mu ? num(u.cost.mu) : "—"}</td>
                   <td data-l={c.t.fu}>{u.cost?.fu ? num(u.cost.fu) : "—"}</td>
@@ -204,19 +211,21 @@ function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
 }
 
 function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navigate: Nav }) {
+  const game = useCohGame();
+  const bgs = useList<BattlegroupRow>(game === "coh2" ? "commanders" : game === "coh1" ? "doctrines" : "battlegroups");
   const t = useExplorerCopy();
   const c = useCoh3Copy();
   const { lang } = useLang();
   clsLang = lang;
   const num = useNum();
-  const [u, setU] = useState<UnitFicha | null | undefined>(() => peekFicha<UnitFicha>("units", slug));
+  const [u, setU] = useState<UnitFicha | null | undefined>(() => peekFicha<UnitFicha>("units", slug, game));
   const weapons = useList<WeaponRow>("weapons");
   const units = useList<UnitRow>("units");
   const wName = useWeaponName(units ?? undefined);
   useEffect(() => {
     if (u !== undefined) return;
     let vivo = true;
-    loadFicha<UnitFicha>("units", slug).then((x) => vivo && setU(x), () => vivo && setU(null));
+    loadFicha<UnitFicha>("units", slug, game).then((x) => vivo && setU(x), () => vivo && setU(null));
     return () => {
       vivo = false;
     };
@@ -231,11 +240,13 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
       </main>
     );
   const toList = { ...route, view: "coh3" as const, c3Section: "units" as const, detail: undefined };
+  const bgFila = u.bg ? bgs?.find((b) => b.slug === u.bg) : undefined;
+  const bgName = bgFila ? tr(bgFila.name, lang) : null;
   const armored = isArmored(u);
   const byW = new Map((weapons ?? []).map((w) => [w.slug, w]));
   const main = (u.weapons ?? []).map((w) => byW.get(w.slug)).find((w) => w && isAntiTank(w as WeaponData));
   // Sólo el bando contrario: lo que le dispara y lo que tiene enfrente.
-  const vehicles = (units ?? []).filter((x) => isVehicle(x) && SIDE[x.faction] !== SIDE[u.faction]);
+  const vehicles = (units ?? []).filter((x) => isVehicle(x) && sideOf(game, x.faction) !== sideOf(game, u.faction));
   const prey = main
     ? vehicles
         .map((v) => {
@@ -248,7 +259,7 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
     : [];
   const killers = armored
     ? (weapons ?? [])
-        .filter((w) => w.faction && SIDE[w.faction] !== SIDE[u.faction] && isAntiTank(w as WeaponData) && !isAbilityShot(w))
+        .filter((w) => w.faction && sideOf(game, w.faction) !== sideOf(game, u.faction) && isAntiTank(w as WeaponData) && !isAbilityShot(w))
         .map((w) => {
           const ws = weaponStats(w as WeaponData);
           const h = hit(ws, targetStats(u), 0, Math.min(DIST, ws.range));
@@ -266,7 +277,7 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
         <RouteLink to={toList} onNavigate={navigate}>
           {t.units.h1}
         </RouteLink>{" "}
-        › {c.factionShort[u.faction]}
+        › {factionLabel(game, lang, u.faction, true)}
       </p>
       <header className="c3-ficha-head">
         <Icon path={u.icon} size={160} lazy={false} className="c3-ficha-img" />
@@ -278,8 +289,8 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
           <div className="c3-chips">
             <span className="c3-chip">{t.kinds[u.kind] ?? u.kind}</span>
             {u.bg ? (
-              <RouteLink className="c3-chip" to={{ ...route, view: "coh3", c3Section: "battlegroups", detail: u.bg }} onNavigate={navigate}>
-                {t.fromBg}: {u.bg.replace(/_/g, " ")}
+              <RouteLink className="c3-chip" to={{ ...route, view: "coh3", c3Section: game === "coh2" ? "commanders" : game === "coh1" ? "doctrines" : "battlegroups", detail: u.bg }} onNavigate={navigate}>
+                {game === "coh2" ? t.fromCommander : game === "coh1" ? t.fromDoctrine : t.fromBg}: {bgName ?? u.bg.replace(/_/g, " ")}
               </RouteLink>
             ) : (
               <span className="c3-chip">{t.core}</span>
@@ -405,7 +416,7 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
               </ol>
             </Panel>
           )}
-          {prey.length > 0 && main && (
+          {game !== "coh1" && prey.length > 0 && main && (
             <Panel k={t.units.penVs} lede={t.units.penVsLede(num(DIST))}>
               <ol className="c3-rank">
                 {prey.map(({ v, f, r }) => (

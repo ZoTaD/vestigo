@@ -6,9 +6,10 @@
  * Pensado para reutilizarse en los otros RTS que vengan (pedido de ZoTaD, 4/11): nada de acá depende de los datos de
  * CoH3 salvo las rutas de las imágenes.
  */
-import { useState, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import { useLang } from "../i18n";
-import { leagueOf } from "./leagues";
+import { leagueOf, levelName } from "./leagues";
+import { GAMES, type CohGame } from "./games";
 import type { Route } from "../route";
 import { SettledImg } from "../SettledImg";
 import { FACTION_ICON, useCoh3Copy, type Faction } from "../coh3Copy";
@@ -19,7 +20,8 @@ export type Nav = (r: Route) => void;
 export function useNum() {
   const { lang } = useLang();
   const loc = lang === "es" ? "es-AR" : "en-US";
-  return (v: number, d = 0) => v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d });
+  // Sin valor (el ELO de CoH1/CoH2 que todavía no se conoce): una raya.
+  return (v: number | null | undefined, d = 0) => (v == null ? "—" : v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d }));
 }
 
 /** Un panel del puesto de mando: rótulo chico en bronce, título en esténcil y el contenido. */
@@ -39,19 +41,37 @@ export function Panel({ k, h, lede, children, className, id }: { k?: ReactNode; 
  * fila queda quieta (`SettledImg`, para listas); la imagen principal de una ficha va sin `lazy`.
  */
 export function Icon({ path, size = 64, lazy = true, className }: { path: string | null | undefined; size?: number; lazy?: boolean; className?: string }) {
+  // Cada juego tiene sus íconos (`/coh3/i/…`, `/coh2/i/…`); CoH1 todavía no tiene enciclopedia. El hook va antes de
+  // cualquier `return` (reglas de los hooks).
+  const game = useCohGame();
   const cls = className ? `c3-icon ${className}` : "c3-icon";
   if (!path) return <span className={`${cls} is-empty`} style={{ width: size, height: size }} aria-hidden="true" />;
-  const props = { className: cls, src: `/coh3/i/${path}.webp`, alt: "", width: size, height: size };
+  const props = { className: cls, src: `/${game}/i/${path}.webp`, alt: "", width: size, height: size };
   return lazy ? <SettledImg {...props} /> : <img {...props} decoding="async" />;
 }
 
 /** El emblema de una facción, con o sin su nombre. */
-export function FactionTag({ f, name = true, size = 22, short = true }: { f: Faction; name?: boolean; size?: number; short?: boolean }) {
+/**
+ * El juego de la pantalla (2026-11-06): lo pone `Coh3.tsx` según la dirección. Facciones, ligas y pedidos a la API lo
+ * leen de acá, así cada pantalla compartida no tiene que pasarlo a mano.
+ */
+export const CohGameContext = createContext<CohGame>("coh3");
+export const useCohGame = (): CohGame => useContext(CohGameContext);
+
+export function FactionTag({ f, game: elegido, name = true, size = 22, short = true }: { f: string; game?: CohGame; name?: boolean; size?: number; short?: boolean }) {
   const t = useCoh3Copy();
+  const delContexto = useCohGame();
+  const game = elegido ?? delContexto;
+  const { lang } = useLang();
+  const conf = GAMES[game];
+  // CoH3 usa sus textos de siempre; CoH1 y CoH2, los de su configuración.
+  const largo = game === "coh3" ? t.faction[f as Faction] : conf.factionName[lang][f];
+  const corto = game === "coh3" ? t.factionShort[f as Faction] : conf.factionShort[lang][f];
+  const icono = game === "coh3" ? FACTION_ICON[f as Faction] : conf.factionIcon[f];
   return (
     <span className="c3-fac">
-      <img src={FACTION_ICON[f]} alt={name ? "" : t.faction[f]} width={size} height={size} decoding="async" />
-      {name && <span>{short ? t.factionShort[f] : t.faction[f]}</span>}
+      <img src={icono} alt={name ? "" : largo} width={size} height={size} decoding="async" />
+      {name && <span>{short ? corto : largo}</span>}
     </span>
   );
 }
@@ -132,9 +152,35 @@ export function useSort<K extends string>(init: Sort<K>, text: readonly K[] = []
 }
 
 /** La liga de un jugador (el `ranklevel` de Relic) con el tinte de su metal. Sin rango no dibuja nada. */
-export function LeagueTag({ level, small = false }: { level: number | null | undefined; small?: boolean }) {
+export function LeagueTag({
+  level,
+  small = false,
+  game: elegido,
+  faction,
+}: {
+  level: number | null | undefined;
+  small?: boolean;
+  game?: CohGame;
+  /** CoH1: con la facción (o varias) se suma la insignia del juego para ese nivel. */
+  faction?: string | string[];
+}) {
   const { lang } = useLang();
+  const delContexto = useCohGame();
+  const game = elegido ?? delContexto;
   if (!level) return null;
+  // CoH1 y CoH2: el nivel a secas, con el tinte neutro.
+  if (GAMES[game].league === "level") {
+    const insignias = (Array.isArray(faction) ? faction : faction ? [faction] : []).flatMap((f) => GAMES[game].rankIcon?.(f, level) ?? []);
+    const lado = small ? 20 : 26;
+    return (
+      <span className={`c3-league is-level${small ? " is-sm" : ""}${insignias.length ? " has-ico" : ""}`}>
+        {insignias.map((src) => (
+          <img key={src} src={src} alt="" width={lado} height={lado} loading="lazy" decoding="async" />
+        ))}
+        {levelName(level, lang)}
+      </span>
+    );
+  }
   const l = leagueOf(level);
   return <span className={`c3-league is-${l.metal}${small ? " is-sm" : ""}`}>{l.name[lang]}</span>;
 }

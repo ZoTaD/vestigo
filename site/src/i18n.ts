@@ -45,8 +45,8 @@ const EN = {
     warframe: "Warframe",
     cs2: "Counter-Strike 2",
     cs2Short: "CS2",
-    coh3: "Company of Heroes 3",
-    coh3Short: "CoH3",
+    coh3: "Company of Heroes",
+    coh3Short: "CoH",
     /** El botón de la barra que abre el menú de juegos, y el que lo cierra en el teléfono. */
     menu: "Games",
     close: "Close menu",
@@ -354,8 +354,8 @@ const ES: typeof EN = {
     warframe: "Warframe",
     cs2: "Counter-Strike 2",
     cs2Short: "CS2",
-    coh3: "Company of Heroes 3",
-    coh3Short: "CoH3",
+    coh3: "Company of Heroes",
+    coh3Short: "CoH",
     menu: "Juegos",
     close: "Cerrar el menú",
     quick: {

@@ -53,6 +53,8 @@ const cs2PricesDir = fileURLToPath(new URL("../games/cs2/prices", import.meta.ur
 // Company of Heroes 3 (2026-11-04): lo que escribe `games/coh3/tools/site_data.py`, y las stats de `stats.py`.
 const coh3Dir = fileURLToPath(new URL("../games/coh3/data", import.meta.url));
 const coh3StatsDir = fileURLToPath(new URL("../games/coh3/stats", import.meta.url));
+// CoH2 y CoH1 (2026-11-06): `relic_daily.py` (stats) y `maps.py` (data).
+const cohDir = (g: string, sub: string) => fileURLToPath(new URL(`../games/${g}/${sub}`, import.meta.url));
 
 /**
  * Las imágenes de Deadlock, servidas desde el sitio y no desde deadlock-api.
@@ -333,10 +335,39 @@ function readSitemapData(): { data: OgData } {
       units: read("units/list.json"), weapons: read("weapons/list.json"), battlegroups: read("battlegroups/list.json"),
       maps: read("maps.json"), patches: read("patches/index.json"),
     });
+    // CoH2 (2026-11-06): las fichas de la enciclopedia, si ya está extraída.
+    try {
+      const r2 = (f: string) => JSON.parse(readFileSync(fileURLToPath(new URL(`../games/coh2/data/${f}`, import.meta.url)), "utf-8"));
+      const slugs = (rows: { slug: string }[]) => rows.map((x) => x.slug);
+      c3.coh2 = {
+        units: slugs(r2("units/list.json")), weapons: slugs(r2("weapons/list.json")), commanders: slugs(r2("commanders/list.json")),
+        maps: (r2("maps.json").list as { id: string; players: number; name: { en: string; es: string } }[]).filter((m) => !/test/.test(m.id) && m.players > 0 && (m.name.en || m.name.es)).map((m) => m.id),
+      };
+    } catch {
+      /* sin enciclopedia de CoH2 */
+    }
+    try {
+      const r1 = (f: string) => JSON.parse(readFileSync(fileURLToPath(new URL(`../games/coh1/data/${f}`, import.meta.url)), "utf-8"));
+      const slugs1 = (rows: { slug: string }[]) => rows.map((x) => x.slug);
+      c3.coh1 = {
+        units: slugs1(r1("units/list.json")), weapons: slugs1(r1("weapons/list.json")), doctrines: slugs1(r1("doctrines/list.json")),
+        maps: (r1("maps.json").list as { id: string; players: number; name: { en: string; es: string } }[]).filter((m) => !/test/.test(m.id) && m.players > 0 && (m.name.en || m.name.es)).map((m) => m.id),
+      };
+    } catch {
+      /* sin enciclopedia de CoH1 */
+    }
   } catch (e) {
     console.warn(`[coh3] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
     c3 = undefined;
   }
+  // CoH2 y CoH1 (2026-11-06): la fecha de sus estadísticas, para el `lastmod` de sus pestañas.
+  const cohStatsDate = (g: string): string | undefined => {
+    try {
+      return JSON.parse(readFileSync(fileURLToPath(new URL(`../games/${g}/stats/summary.json`, import.meta.url)), "utf-8")).generatedAt;
+    } catch {
+      return undefined;
+    }
+  };
   return {
     data: {
       p2,
@@ -363,6 +394,22 @@ function readSitemapData(): { data: OgData } {
         warframe: wf?.generatedAt,
         cs2: c2?.generatedAt,
         coh3: c3?.generatedAt,
+        coh2: cohStatsDate("coh2"),
+        coh1Data: (() => {
+          try {
+            return JSON.parse(readFileSync(fileURLToPath(new URL("../games/coh1/data/meta.json", import.meta.url)), "utf-8")).generatedAt;
+          } catch {
+            return undefined;
+          }
+        })(),
+        coh2Data: (() => {
+          try {
+            return JSON.parse(readFileSync(fileURLToPath(new URL("../games/coh2/data/meta.json", import.meta.url)), "utf-8")).generatedAt;
+          } catch {
+            return undefined;
+          }
+        })(),
+        coh1: cohStatsDate("coh1"),
       },
       dlHeroes: dlCatalog.heroes,
       dlItems: dlCatalog.items,
@@ -1173,7 +1220,7 @@ export default defineConfig({
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
     // juego y no uno genérico, para que un import diga de qué juego habla.
-    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir, "@coh3stats": coh3StatsDir, "@coh3": coh3Dir },
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir, "@coh3stats": coh3StatsDir, "@coh3": coh3Dir, "@coh2stats": cohDir("coh2", "stats"), "@coh2": cohDir("coh2", "data"), "@coh1stats": cohDir("coh1", "stats"), "@coh1": cohDir("coh1", "data") },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

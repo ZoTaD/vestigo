@@ -118,6 +118,19 @@
 .c3-brand { position: absolute; left: max(24px, calc(50% - 596px)); top: 10px; }
 .c3-brand img { width: 136px; height: auto; display: block; }
 
+/* --- Selector de juego (2026-11-06, `.c3-gsel`: `.c3-game` y `.c3-pick` ya existen en Partidas y en las calculadoras): CoH3 · CoH2 · CoH1, arriba de las pestañas del juego. El activo en bronce. ------- */
+.c3-gsel { display: flex; gap: 4px; max-width: 1240px; margin: 0 auto; padding: 8px 16px 0; background: #0e0f0a; box-shadow: 0 0 0 100vmax #0e0f0a; clip-path: inset(0 -100vmax); }
+.c3-gsel-i { padding: 5px 12px 4px; font: 800 14px/1.2 var(--c3-stencil); letter-spacing: 0.12em; color: var(--c3-dim); background: var(--c3-well); }
+a.c3-gsel-i:hover { color: var(--c3-brass); }
+.c3-gsel-i.is-on { color: #1a1408; background: var(--c3-brass); }
+.c3[data-game="coh2"] .c3-strip, .c3[data-game="coh1"] .c3-strip {
+  background:
+    linear-gradient(90deg, var(--c3-bg) 10%, rgba(21, 23, 15, 0.55) 55%, rgba(21, 23, 15, 0.25)),
+    var(--c3-strip-art) 70% 30% / cover no-repeat;
+}
+.c3[data-game="coh2"] { --c3-strip-art: url("/coh2/bg/hero-1600.webp"); }
+.c3[data-game="coh1"] { --c3-strip-art: url("/coh1/bg/hero-1600.webp"); }
+
 /* --- Barra de pestañas -------------------------------------------------------------------------------------------- */
 .c3-tabbar { background: #0e0f0a; border-bottom: 1px solid var(--c3-line2); }
 .c3-tabs { display: flex; gap: 2px; max-width: 1240px; margin: 0 auto; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
@@ -254,7 +267,10 @@ a.c3-card:hover .c3-card-h { color: var(--c3-brass); }
 .c3-league.is-brass { background: #3b3220; color: #d7bf8a; }
 .c3-league.is-bronze { background: #3d2a1c; color: #e0a575; }
 .c3-league.is-iron { background: #2b2e31; color: #b9c0c6; }
+.c3-league.is-level { background: #2a2c22; color: #d8d1b6; }
 .c3-league.is-silver { background: #33373c; color: #e3e7ea; }
 .c3-league.is-gold { background: #463915; color: #f0cf6a; }
 .c3-league.is-rival { background: #3a2026; color: #f19a9a; }
 .c3-league.is-sm { padding: 2px 6px; font-size: 12px; margin-top: 3px; }
+.c3-league.has-ico { display: inline-flex; align-items: center; gap: 6px; padding-left: 4px; }
+.c3-league.has-ico img { object-fit: contain; flex: none; }

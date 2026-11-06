@@ -2,7 +2,7 @@ import { TERRARIA_COPY, type TerrariaHas } from "./terrariaCopy";
 import { STARDEW_COPY } from "./stardewCopy";
 import { WF_COPY } from "./warframeCopy";
 import { CS2_COPY } from "./cs2Copy";
-import { COH3_COPY } from "./coh3Copy";
+import { COH3_COPY, cohGameSeo } from "./coh3Copy";
 import { isPatchName, patchName } from "./cs2/patches/names";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
@@ -210,6 +210,8 @@ export function metaFor(
   }
   // Company of Heroes 3 (2026-11-04): la portada, cada pestaña y, con nombre, la ficha.
   if (route.view === "coh3") {
+    // CoH2 y CoH1 (2026-11-06): sus textos propios.
+    if (route.cohGame && route.cohGame !== "coh3") return cohGameSeo(route.cohGame, lang, route.c3Section ?? "home", route.detail ? detailName : null);
     const c = COH3_COPY[lang];
     const sec = route.c3Section ?? "home";
     if (sec !== "home" && route.detail && detailName) return c.detailSeo(sec, detailName);

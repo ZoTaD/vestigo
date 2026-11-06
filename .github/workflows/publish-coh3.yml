@@ -9,6 +9,9 @@ name: publish coh3 stats
 # datos del juego (`games/coh3/data`, los lunes) sí están en los `paths`, pero el GITHUB_TOKEN no dispara: también
 # esperan al build siguiente.
 #
+# **CoH2 y CoH1** (2026-11-06): ranking, ELO y partidas directo de la API de Relic (`games/coh/tools/relic_daily.py`), de a
+# un juego por vez. Van en `games/coh2/stats` y `games/coh1/stats`, que también salen con el build siguiente.
+#
 # **Un archivo por día** (~90 MB): `stats.py` guarda el resumen de cada día en `games/coh3/stats/days/` y sólo baja los
 # que faltan.
 on:
@@ -32,7 +35,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
@@ -52,6 +55,7 @@ jobs:
             python games/coh3/tools/site_data.py
             python games/coh3/tools/images.py
             python games/coh3/tools/achievements.py
+            python games/coh3/tools/achievements.py --game coh2
           else
             echo "no es lunes: sólo estadísticas"
           fi
@@ -63,14 +67,26 @@ jobs:
       - name: ladder
         run: python games/coh3/tools/ladder.py
 
+      # CoH1 y CoH2: rankings, memoria de ELO y partidas del día (uno por vez: cada uno junta decenas de miles de partidas).
+      # Una falla de CoH1 o CoH2 no tumba la publicación de CoH3 (`continue-on-error`), y cada uno tiene un tope de
+      # tiempo para pedir historiales (`--deadline`): pasado, escribe lo que juntó.
+      - name: coh1
+        continue-on-error: true
+        run: python games/coh/tools/relic_daily.py --game coh1 --deadline 900
+
+      - name: coh2
+        continue-on-error: true
+        # CoH2 tiene ~10 mil activos por semana: más pedidos (la memoria hace que cada día falten menos).
+        run: python games/coh/tools/relic_daily.py --game coh2 --budget 2000 --deadline 1500
+
       - name: guard
         id: guard
         run: |
-          if [ -z "$(git status --porcelain -- games/coh3/data games/coh3/stats site/public/coh3)" ]; then
+          if [ -z "$(git status --porcelain -- games/coh3/data games/coh3/stats site/public/coh3 games/coh2 games/coh1 site/public/coh2)" ]; then
             echo "nada cambió; no hay commit"
             echo "publish=no" >> "$GITHUB_OUTPUT"
           else
-            git status --short -- games/coh3/data games/coh3/stats site/public/coh3 | head -20
+            git status --short -- games/coh3/data games/coh3/stats site/public/coh3 games/coh2 games/coh1 site/public/coh2 | head -20
             echo "publish=yes" >> "$GITHUB_OUTPUT"
           fi
 
@@ -83,8 +99,8 @@ jobs:
           git_auth() { git -c "http.https://github.com/.extraheader=$auth" "$@"; }
           git config user.name "vestigo-bot"
           git config user.email "67348048+ZoTaD@users.noreply.github.com"
-          git add games/coh3/data games/coh3/stats site/public/coh3
-          git commit -m "chore: publish today's CoH3 stats"
+          git add games/coh3/data games/coh3/stats site/public/coh3 games/coh2 games/coh1 site/public/coh2
+          git commit -m "chore: publish today's CoH stats"
           empujado=0
           for intento in 1 2 3; do
             if git_auth push origin "HEAD:$GITHUB_REF_NAME"; then empujado=1; break; fi

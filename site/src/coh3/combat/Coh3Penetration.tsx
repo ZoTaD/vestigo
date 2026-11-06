@@ -9,12 +9,13 @@ import { useMemo } from "react";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useLang } from "../../i18n";
-import { SIDE } from "../../coh3Copy";
+import { useCohGame } from "../ui";
+import { sideOf } from "../games";
 import { tr, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
 import { curve, hit, type Side } from "./engine";
 import { vetAt, parseVetLines } from "./vet";
-import { isAbilityShot, isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "./weapons";
+import { blancoCoh1, contraBlanco, isAbilityShot, isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "./weapons";
 import { useCombatCopy } from "./copy";
 import { FactionOptions, LineChart, useFicha, useLists, useQueryState, useWeaponName, VetPicker } from "./parts";
 import "./combat.css";
@@ -38,11 +39,14 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
   route: Route; navigate: Nav; lists: { units: UnitRow[]; weapons: WeaponRow[] }; q: Record<string, string>; setQ: (p: Record<string, string>) => void;
   wFicha: WeaponData | null | undefined; uFicha: UnitFicha | null | undefined; tFicha: UnitFicha | null | undefined; t: ReturnType<typeof useCombatCopy>;
 }) {
+  const game = useCohGame();
   const { lang } = useLang();
   const num = useNum();
   const wName = useWeaponName(lists.units);
   const units = useMemo(() => new Map(lists.units.map((u) => [u.slug, u])), [lists.units]);
-  const weapons = useMemo(() => lists.weapons.filter((w) => w.faction && w.pen && w.dmg && (q.all === "1" || isAntiTank(w as WeaponData))), [lists.weapons, q.all]);
+  // CoH1: la penetración es una probabilidad (no hay "≥ 30"); los antitanque son los cañones (`ballistic_weapon`).
+  const esAT = (w: { kind?: string }) => (game === "coh1" ? w.kind === "ballistic_weapon" : isAntiTank(w as WeaponData));
+  const weapons = useMemo(() => lists.weapons.filter((w) => w.faction && w.pen && w.dmg && (q.all === "1" || esAT(w))), [lists.weapons, q.all, game]);
   const targets = useMemo(() => lists.units.filter((u) => isVehicle(u)), [lists.units]);
   const wRow = lists.weapons.find((w) => w.slug === q.w) ?? weapons[0];
   const tRow = units.get(q.t) ?? targets[0];
@@ -50,11 +54,16 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
   const va = Number(q.va) || 0, vt = Number(q.vt) || 0;
   const vA = vetAt(uFicha?.vet ?? null, va);
   const vT = vetAt(tFicha?.vet ?? null, vt);
-  const ws = weaponStats(wData, vA);
-  const ts = targetStats(tRow, vT);
+  // CoH1: el arma se convierte contra el tipo de blanco del objetivo (no hay blindaje numérico).
+  const tipo = (u: { target?: string | null } | undefined) => u?.target ?? null;
+  const tp = game === "coh1" ? tipo((tFicha ?? tRow) as { target?: string | null }) : null;
+  const ws = weaponStats(game === "coh1" ? contraBlanco(wData, tp) : wData, vA);
+  const ts = game === "coh1" ? blancoCoh1(tRow, wData, tp, vT) : targetStats(tRow, vT);
   if (q.mv === "1" && ws.moving) ts.receivedAccuracy = (ts.receivedAccuracy ?? 1) * ws.moving;
   const d = Math.min(Number(q.d) || 0, ws.range);
-  const sides = ([0, 1, 2] as Side[]).map((s) => hit(ws, ts, s, d));
+  // CoH2 no tiene blindaje lateral: frente y atrás.
+  const lados = (game === "coh3" ? [0, 1, 2] : [0, 2]) as Side[];
+  const sides = lados.map((s) => ({ s, ...hit(ws, ts, s, d) }));
   const userRow = wData.usedBy?.[0] ? units.get(wData.usedBy[0]) : undefined;
   const pct = (x: number) => `${num(x * 100)} %`;
   const unknownVet = [...(uFicha?.vet ?? []).slice(0, va), ...(tFicha?.vet ?? []).slice(0, vt)]
@@ -62,14 +71,24 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
     .filter((x) => !/^veteran ability/i.test(x));
 
   // Counters: qué armas le entran a este objetivo de frente, y contra qué vehículos sirve esta arma.
+  // En CoH1 cada arma se convierte contra el tipo de blanco del objetivo, y el blanco depende del arma.
+  const contra = (w: WeaponData) =>
+    game === "coh1" ? { ws: weaponStats(contraBlanco(w, tp)), ts: blancoCoh1(tRow, w, tp, vT) } : { ws: weaponStats(w), ts };
   const counters = weapons
-    .filter((w) => isAntiTank(w as WeaponData) && (q.ab === "1" || !isAbilityShot(w)) && (!tRow || !w.faction || SIDE[w.faction] !== SIDE[tRow.faction]))
-    .map((w) => ({ w, c: hit(weaponStats(w as WeaponData), ts, 0, Math.min(d, (w.range as number[] | undefined)?.[1] || 60)).chance }))
+    .filter((w) => esAT(w) && (q.ab === "1" || !isAbilityShot(w)) && (!tRow || !w.faction || sideOf(game, w.faction) !== sideOf(game, tRow.faction)))
+    .map((w) => {
+      const x = contra(w as WeaponData);
+      return { w, c: hit(x.ws, x.ts, 0, Math.min(d, (w.range as number[] | undefined)?.[1] || 60)).chance };
+    })
     .sort((a, b) => b.c - a.c)
     .slice(0, 12);
   const prey = targets
-    .filter((u) => !wData.faction || SIDE[u.faction] !== SIDE[wData.faction])
-    .map((u) => ({ u, c: hit(ws, targetStats(u), 0, d).chance, r: hit(ws, targetStats(u), 2, d).chance }))
+    .filter((u) => !wData.faction || sideOf(game, u.faction) !== sideOf(game, wData.faction))
+    .map((u) => {
+      if (game !== "coh1") return { u, c: hit(ws, targetStats(u), 0, d).chance, r: hit(ws, targetStats(u), 2, d).chance };
+      const t = tipo(u as { target?: string | null }), w1 = weaponStats(contraBlanco(wData, t), vA), b1 = blancoCoh1(u, wData, t);
+      return { u, c: hit(w1, b1, 0, d).chance, r: hit(w1, b1, 2, d).chance };
+    })
     .sort((a, b) => b.c - a.c || (b.u.armor?.[0] ?? 0) - (a.u.armor?.[0] ?? 0))
     .slice(0, 12);
   const toUnit = (slug: string): Route => ({ ...route, view: "coh3", c3Section: "units", detail: slug });
@@ -79,7 +98,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
       <header className="c3-head">
         <div className="c3-k">{t.pen.k}</div>
         <h1 className="c3-h1">{t.pen.h1}</h1>
-        <p className="c3-lede">{t.pen.lede}</p>
+        <p className="c3-lede">{game === "coh1" ? t.pen.ledeCoh1 : t.pen.lede}</p>
       </header>
       <div className="c3-grid2">
         <Panel>
@@ -140,10 +159,10 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
           <div className="c3-sides3">
             {sides.map((h, i) => (
               <div key={i} className={`c3-side ${!h.inRange ? "is-out" : h.chance >= 1 ? "is-full" : h.chance < 0.5 ? "is-low" : ""}`}>
-                <small className="c3-side-h">{t.side[i]}</small>
+                <small className="c3-side-h">{t.side[h.s]}</small>
                 <b className="c3-side-n">{h.inRange ? pct(h.chance) : "—"}</b>
                 <small className="c3-dim">
-                  {t.chance} · {num(ts.armor[i])}
+                  {t.chance} · {num(ts.armor[h.s])}
                 </small>
                 {h.inRange ? (
                   <>
@@ -164,20 +183,22 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
             yTicks={[0, 0.25, 0.5, 0.75, 1]}
             yFmt={(v) => `${v * 100}%`}
             cursor={d}
-            series={([0, 1, 2] as Side[]).map((s) => ({ pts: curve(ws, ts, s, (h) => h.chance), cls: `is-s${s}`, label: t.side[s] }))}
+            series={lados.map((s) => ({ pts: curve(ws, ts, s, (h) => h.chance), cls: `is-s${s}`, label: t.side[s] }))}
           />
           <p className="c3-legend">
             <i className="is-s0" />
-            {t.side[0]} <i className="is-s1" />
-            {t.side[1]} <i className="is-s2" />
-            {t.side[2]} · {t.legend}
+            {lados.map((s, k) => (
+              <span key={s}>
+                {t.side[s]} {k < lados.length - 1 ? <i className={`is-s${s + 1}`} /> : `· ${t.legend}`}
+              </span>
+            ))}
           </p>
           {unknownVet.length > 0 && (
             <p className="c3-note">
               {t.vetUnknown} {unknownVet.join(" · ")}
             </p>
           )}
-          <p className="c3-note">{t.pen.model}</p>
+          <p className="c3-note">{game === "coh1" ? t.pen.modelCoh1 : t.pen.model}</p>
         </Panel>
         <div className="c3-stack">
           <Panel k={t.pen.counters} lede={t.pen.countersLede(tr(tRow?.name, lang), num(d))}>

@@ -193,7 +193,7 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
   }
   // Una ficha del explorador de CoH3 (unidad, arma o battlegroup): el nombre en el idioma, de su archivo.
   if (route.view === "coh3" && isCoh3Tab(route.c3Section) && route.detail) {
-    const f = peekCoh3Ficha<{ name: { en: string; es?: string | null } | null }>(route.c3Section, route.detail);
+    const f = peekCoh3Ficha<{ name: { en: string; es?: string | null } | null }>(route.c3Section, route.detail, route.cohGame);
     return f?.name ? (lang === "es" && f.name.es) || f.name.en : null;
   }
   // Una ficha de CS2: el nombre (en inglés en los dos idiomas) y la fase, de su archivo.
@@ -370,9 +370,9 @@ export default function PageMeta({ route }: { route: Route }) {
       return () => { vivo = false; };
     }
     // Y para una ficha del explorador de CoH3: su archivo.
-    if (route.view === "coh3" && isCoh3Tab(route.c3Section) && route.detail && peekCoh3Ficha(route.c3Section, route.detail) === undefined) {
+    if (route.view === "coh3" && isCoh3Tab(route.c3Section) && route.detail && peekCoh3Ficha(route.c3Section, route.detail, route.cohGame) === undefined) {
       let vivo = true;
-      loadCoh3Ficha(route.c3Section, route.detail).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+      loadCoh3Ficha(route.c3Section, route.detail, route.cohGame).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
     }
     // Y para una ficha de CS2: su archivo.

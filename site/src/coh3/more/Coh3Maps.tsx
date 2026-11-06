@@ -7,10 +7,12 @@ import { useEffect, useMemo, useState } from "react";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useLang } from "../../i18n";
-import { FACTIONS, useCoh3Copy } from "../../coh3Copy";
+import { useCoh3Copy } from "../../coh3Copy";
 import { tr, type L10n } from "../data";
 import { SettledImg } from "../../SettledImg";
-import { Coh3Loading, FactionTag, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import type { CohGame } from "../../route";
+import { GAMES } from "../games";
 import { loadSummary, peekSummary, wr, type Summary } from "../stats/data";
 import { useMoreCopy } from "./copy";
 import "./more.css";
@@ -32,21 +34,68 @@ export interface MapRow {
 }
 
 type Mod<T> = { default: T };
-let cache: MapRow[] | null = null;
-/** `maps.json` entero (59 mapas, ~160 KB): lo piden la lista y la ficha. */
-export const loadMaps = (): Promise<MapRow[]> => (cache ? Promise.resolve(cache) : (import("@coh3/maps.json") as Promise<Mod<unknown>>).then((m) => (cache = m.default as MapRow[])));
-export const peekMaps = () => cache;
+type Coh2Map = { id: string; name: L10n; players: number; size: [number, number] | null; points: { x: number; y: number; kind: string }[]; minimap: string | null };
+
+/** El tipo de punto de CoH2 (`ebp_name`) con la clave de CoH3; lo que no es un punto del mapa queda afuera. */
+function tipoCoh2(k: string): string | null {
+  if (k.includes("victory")) return "victory";
+  if (k.startsWith("starting_position")) return "starting_position";
+  if (k.includes("fuel")) return "fuel";
+  if (k.includes("munition")) return "munitions";
+  if (k.startsWith("territory_point") || k.includes("radio_tower")) return "strategic";
+  return null;
+}
+
+/** Un mapa de CoH2 (`games/coh2/tools/maps.py`) con la forma de los de CoH3. */
+export function fromCoh2(m: Coh2Map): MapRow {
+  const points: MapRow["points"] = [];
+  for (const p of m.points) {
+    const kind = tipoCoh2(p.kind);
+    if (kind) points.push({ kind, tier: null, x: p.x, y: p.y });
+  }
+  const counts: Record<string, number> = {};
+  for (const p of points) counts[p.kind] = (counts[p.kind] ?? 0) + 1;
+  const half = Math.max(1, Math.round(m.players / 2));
+  return {
+    slug: m.id,
+    name: { en: m.name.en || m.name.es || m.id, es: m.name.es || m.name.en || null },
+    players: m.players,
+    layout: `${half}v${half}`,
+    size: m.size ?? [0, 0],
+    area: null,
+    points,
+    counts,
+    income: null,
+    minimap: m.minimap,
+  };
+}
+
+// Uno por juego (2026-11-06). CoH2 deja afuera los escenarios de prueba.
+const cache: Partial<Record<CohGame, MapRow[]>> = {};
+/** `maps.json` entero de un juego: lo piden la lista y la ficha. */
+export const loadMaps = (game: CohGame = "coh3"): Promise<MapRow[]> => {
+  const hit = cache[game];
+  if (hit) return Promise.resolve(hit);
+  // CoH1 y CoH2 tienen el mismo formato (`games/coh/tools/maps.py`).
+  if (game === "coh2" || game === "coh1")
+    return ((game === "coh2" ? import("@coh2/maps.json") : import("@coh1/maps.json")) as Promise<Mod<unknown>>).then(
+      (m) => (cache[game] = (m.default as { list: Coh2Map[] }).list.filter((x) => !/test/.test(x.id) && x.players > 0 && (x.name.en || x.name.es)).map(fromCoh2)),
+    );
+  return (import("@coh3/maps.json") as Promise<Mod<unknown>>).then((m) => (cache.coh3 = m.default as MapRow[]));
+};
+export const peekMaps = (game: CohGame = "coh3") => cache[game] ?? null;
 
 function useMaps() {
-  const [v, setV] = useState(peekMaps);
+  const game = useCohGame();
+  const [v, setV] = useState(() => peekMaps(game));
   useEffect(() => {
     if (v) return;
     let vivo = true;
-    loadMaps().then((x) => vivo && setV(x), () => undefined);
+    loadMaps(game).then((x) => vivo && setV(x), () => undefined);
     return () => {
       vivo = false;
     };
-  }, [v]);
+  }, [v, game]);
   return v;
 }
 
@@ -180,13 +229,14 @@ function Points({ m, W, H, x, y, size }: { m: MapRow; W: number; H: number; x: (
  * puntos no se distinguen. Sin imagen queda el plano de puntos sobre el área jugable.
  */
 export function MiniMap({ m, size = 360, labels = false, lazy = true }: { m: MapRow; size?: number; labels?: boolean; lazy?: boolean }) {
+  const game = useCohGame();
   const t = useMoreCopy();
   const [mw, mh] = m.size ?? [0, 0];
   if (m.minimap && mw && mh) {
     const W = size, H = Math.round((size * mh) / mw);
     const x = (v: number) => ((v + mw / 2) / mw) * W;
     const y = (v: number) => H - ((v + mh / 2) / mh) * H;
-    const img = { src: `/coh3/${m.minimap}.webp`, alt: labels ? t.maps.planLabel : "", width: W, height: H, className: "c3-mini-img" };
+    const img = { src: `/${game}/${m.minimap}.webp`, alt: labels ? t.maps.planLabel : "", width: W, height: H, className: "c3-mini-img" };
     return (
       <span className="c3-mini has-img" style={{ width: W, aspectRatio: `${W} / ${H}` }}>
         {lazy ? <SettledImg {...img} /> : <img {...img} decoding="async" />}
@@ -216,11 +266,12 @@ function MapPage({ m, route, navigate }: { m: MapRow; route: Route; navigate: Na
   const c = useCoh3Copy();
   const { lang } = useLang();
   const num = useNum();
-  const [s, setS] = useState<Summary | null>(peekSummary);
+  const game = useCohGame();
+  const [s, setS] = useState<Summary | null>(() => peekSummary(game));
   useEffect(() => {
     if (s) return;
     let vivo = true;
-    loadSummary().then((x) => vivo && setS(x), () => undefined);
+    loadSummary(game).then((x) => vivo && setS(x), () => undefined);
     return () => {
       vivo = false;
     };
@@ -296,7 +347,7 @@ function MapPage({ m, route, navigate }: { m: MapRow; route: Route; navigate: Na
                   <span>{t.maps.axis}</span>
                   <b className={stats.axisW / stats.g >= 0.5 ? "c3-up" : "c3-down"}>{num((stats.axisW / stats.g) * 100, 1)} %</b>
                 </li>
-                {FACTIONS.map((f) => {
+                {GAMES[game].factions.map((f) => {
                   const p = wr(stats.f[f]);
                   return (
                     <li key={f}>

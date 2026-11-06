@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { at, cycle, resolveDist, hit, penChance, shotsPerSecond, type WeaponStats } from "../src/coh3/combat/engine";
+import { armaContra, weaponStats, type WeaponData } from "../src/coh3/combat/weapons";
+import { DPS_DEFAULTS } from "../src/coh3/combat/dpsDefaults";
 
 // El cañón AT de 57 mm de EE. UU. (coh3-data v2.5.3): penetración 300/150/120 a 15/35/60 m.
 const at57: WeaponStats = {
@@ -56,5 +58,66 @@ describe("penetración (2026-11-04)", () => {
   it("una ráfaga dispara varias balas por ciclo", () => {
     const mg: WeaponStats = { ...at57, burst: { dur: [2, 2], rate: [10, 10] }, cooldown: [1, 1], aim: [0, 0], reload: [0, 0], clip: 100 };
     expect(cycle(mg)).toEqual({ secs: 3, shots: 20 });
+  });
+});
+
+describe("CoH2 con el mismo motor", () => {
+  it("el Mosin de Conscripts siempre penetra a la infantería y su DPS sale de sus campos", async () => {
+    const { loadFicha } = await import("../src/coh3/data");
+    const { weaponStats, targetStats } = await import("../src/coh3/combat/weapons");
+    const w = await loadFicha<Parameters<typeof weaponStats>[0]>("weapons", "mosin_nagant_rifle_conscript_mp", "coh2");
+    const u = await loadFicha<Parameters<typeof targetStats>[0]>("units", "conscript_squad_mp", "coh2");
+    expect(w && u).toBeTruthy();
+    const h = hit(weaponStats(w!), targetStats(u!), 0, 10);
+    expect(h.chance).toBe(1);
+    expect(h.dps).toBeGreaterThan(0);
+    expect(penChance(1, 1)).toBe(1);
+  });
+});
+
+describe("CoH1: daño por tipo de blanco", () => {
+  it("el arma se convierte con los multiplicadores del tipo de blanco, y la trasera con su multiplicador", async () => {
+    const { contraBlanco, blancoCoh1 } = await import("../src/coh3/combat/weapons");
+    const garand = {
+      slug: "g", name: { en: "g" }, faction: "american", kind: "small_arms",
+      pen: [1, 1, 1], dist: [10, 20, 30], acc: [0.5, 0.4, 0.3], dmg: [10, 10], range: [0, 35],
+      targets: { tp_infantry: [1, 1, 1, 1], tp_armour_allies_sherman: [0.8, 0.5, 0.05, 2] },
+    };
+    const w = contraBlanco(garand as never, "tp_armour_allies_sherman");
+    expect(w.pen).toEqual([0.05, 0.05, 0.05]);
+    expect(w.acc).toEqual([0.4, 0.32, 0.24]);
+    expect(w.dmg).toEqual([5, 5]);
+    // Sin entrada para ese tipo: igual que antes.
+    expect(contraBlanco(garand as never, "tp_nada").pen).toEqual([1, 1, 1]);
+    const t = blancoCoh1({ hp: 636, models: 1 } as never, garand as never, "tp_armour_allies_sherman");
+    expect(t.armor[0]).toBe(1);
+    expect(t.armor[2]).toBeCloseTo(0.5);
+  });
+});
+
+describe("DPS contra un objetivo, por juego", () => {
+  const arma = {
+    slug: "mg", acc: [0.5, 0.5, 0.5], dmg: [10, 10], pen: [1, 1, 1], dist: [10, 20, 30], range: [0, 30],
+    cooldown: [1, 1], reload: [0, 0], reloadEvery: [100, 100], aim: [0, 0], targets: { tp_infantry_heroic: [1, 0.5, 1, 1] },
+  } as unknown as WeaponData;
+  const heroica = { slug: "rangers", hp: 70, models: 6, armor: null, targetSize: 1, target: "tp_infantry_heroic", kind: "infantry" } as never;
+  const comun = { ...(heroica as object), target: "tp_infantry_soldier" } as never;
+
+  it("en CoH1 el daño se multiplica por el tipo del objetivo", () => {
+    const a = armaContra("coh1", arma, heroica);
+    const b = armaContra("coh1", arma, comun);
+    expect(hit(weaponStats(a.w), a.t, 0, 10).dps).toBeCloseTo(hit(weaponStats(b.w), b.t, 0, 10).dps / 2, 5);
+  });
+
+  it("sin objetivo es la infantería genérica, y en CoH3 no hay multiplicadores", () => {
+    expect(armaContra("coh3", arma, null).t.hp).toBe(80);
+    expect(armaContra("coh3", arma, heroica).w.dmg).toEqual([10, 10]);
+  });
+});
+
+describe("unidades por defecto del comparador DPS", () => {
+  it("existen en cada juego", () => {
+    expect(DPS_DEFAULTS.coh2).toMatchObject({ a: "riflemen_squad_mp", b: "grenadier_squad_mp" });
+    expect(DPS_DEFAULTS.coh1).toMatchObject({ a: "rifleman_squad", b: "volksgrenadier_squad" });
   });
 });

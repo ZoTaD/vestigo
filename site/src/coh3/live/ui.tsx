@@ -11,6 +11,8 @@ import { flagUrl } from "../../flags";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { agoParts, prettyMap, stripPlayers } from "./logic";
+import { useCohGame } from "../ui";
+import type { CohGame } from "../../route";
 import "./live.css";
 
 // ——— Pedidos ———
@@ -40,7 +42,10 @@ export function getJson<T>(path: string): Promise<T> {
 export type Remote<T> = { data: T | null; error: number | null; loading: boolean; retry: () => void };
 
 /** Pide `path` (o nada, con null) y devuelve lo que llegó, la falla (estado HTTP; 0 sin red) y si está esperando. */
-export function useApi<T>(path: string | null): Remote<T> {
+export function useApi<T>(pedido: string | null): Remote<T> {
+  // CoH2 y CoH1: el mismo intermediario con `g=` (lo agrega acá, así ninguna pantalla se lo olvida).
+  const game = useCohGame();
+  const path = pedido && game !== "coh3" && !/[?&]g=/.test(pedido) ? `${pedido}${pedido.includes("?") ? "&" : "?"}g=${game}` : pedido;
   const [st, setSt] = useState<{ path: string | null; data: T | null; error: number | null }>({ path: null, data: null, error: null });
   const [n, setN] = useState(0);
   useEffect(() => {
@@ -174,31 +179,37 @@ export function useDate() {
 
 // ——— Mapas: el nombre del juego sale de `maps.json` (se pide recién cuando hace falta) ———
 
-type MapRow = { slug: string; name: { en: string; es?: string | null } };
-let mapNames: Map<string, MapRow["name"]> | null = null;
-let mapPending: Promise<void> | null = null;
+type MapName = { en: string; es?: string | null };
+// Uno por juego (2026-11-06): CoH3 trae una lista con `slug`; CoH1 y CoH2, `{list: [{id, name}]}`.
+const mapNames: Partial<Record<CohGame, Map<string, MapName>>> = {};
+const mapPending: Partial<Record<CohGame, Promise<void>>> = {};
 
 export function useMapName() {
   const { lang } = useLang();
+  const game = useCohGame();
   const [, setTick] = useState(0);
   useEffect(() => {
-    if (mapNames) return;
-    mapPending ??= import("@coh3/maps.json")
+    if (mapNames[game]) return;
+    const file = game === "coh2" ? import("@coh2/maps.json") : game === "coh1" ? import("@coh1/maps.json") : import("@coh3/maps.json");
+    mapPending[game] ??= file
       .then((m) => {
-        mapNames = new Map((m.default as unknown as MapRow[]).map((r) => [r.slug, r.name]));
+        const raw = m.default as unknown;
+        const rows = (Array.isArray(raw) ? raw : (raw as { list: unknown[] }).list) as { slug?: string; id?: string; name: MapName }[];
+        mapNames[game] = new Map(rows.map((r) => [r.slug ?? r.id ?? "", r.name]));
       })
       .catch(() => {
-        mapNames = new Map();
+        mapNames[game] = new Map();
       });
     let vivo = true;
-    void mapPending.then(() => vivo && setTick((x) => x + 1));
+    void mapPending[game]!.then(() => vivo && setTick((x) => x + 1));
     return () => {
       vivo = false;
     };
-  }, []);
+  }, [game]);
   return (raw: string) => {
-    const n = mapNames?.get(raw);
-    return n ? stripPlayers((lang === "es" && n.es) || n.en) : prettyMap(raw);
+    const n = mapNames[game]?.get(raw) ?? mapNames[game]?.get(raw.toLowerCase());
+    const nombre = n ? (lang === "es" ? n.es || n.en : n.en || n.es) : null;
+    return nombre ? stripPlayers(nombre) : prettyMap(raw);
   };
 }
 
