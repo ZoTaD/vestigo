@@ -7,8 +7,8 @@
  * partidas para decir algo.
  */
 import type { Route } from "../../route";
-import { FACTIONS, SIDE, useCoh3Copy, type Faction } from "../../coh3Copy";
-import { Coh3Loading, FactionTag, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { useFactions } from "./Coh3Stats";
 import { tierOf, wilson, wr, type GW } from "./data";
 import { useStatsCopy } from "./copy";
 import { ModeBandPicker, useMapName, useModeBand, useSummary, WindowLine } from "./parts";
@@ -33,11 +33,13 @@ function TierCell({ x }: { x: GW | undefined }) {
   );
 }
 
-type Key = "map" | "g" | Faction;
+// CoH2 y CoH1 (2026-11-06): la misma tier list con sus facciones.
+type Key = string;
 
 export default function Coh3TierList(_: { route: Route; navigate: Nav }) {
   const t = useStatsCopy();
-  const c = useCoh3Copy();
+  const game = useCohGame();
+  const { FACTIONS, SIDE, short } = useFactions();
   const num = useNum();
   const name = useMapName();
   const s = useSummary();
@@ -52,10 +54,7 @@ export default function Coh3TierList(_: { route: Route; navigate: Nav }) {
   const cols: Record<Key, (r: (typeof rows)[number]) => string | number | null> = {
     map: (r) => name(r.id),
     g: (r) => r.m.g,
-    american: (r) => wr(r.m.f.american),
-    british: (r) => wr(r.m.f.british),
-    german: (r) => wr(r.m.f.german),
-    dak: (r) => wr(r.m.f.dak),
+    ...Object.fromEntries(FACTIONS.map((f) => [f, (r: (typeof rows)[number]) => wr(r.m.f[f])])),
   };
   const overall = bd ? FACTIONS.filter((f) => bd.f[f]).sort((a, b) => (wr(bd.f[b]) ?? 0) - (wr(bd.f[a]) ?? 0)) : [];
   const fvf = mb.mode === "1v1" ? md?.fvf[mb.band] : undefined;
@@ -115,7 +114,7 @@ export default function Coh3TierList(_: { route: Route; navigate: Nav }) {
                 <tr>
                   {th("map", t.stats.map)}
                   {th("g", t.stats.games)}
-                  {FACTIONS.map((f) => th(f, c.factionShort[f]))}
+                  {FACTIONS.map((f) => th(f, short(f)))}
                 </tr>
               </thead>
               <tbody>
@@ -126,7 +125,7 @@ export default function Coh3TierList(_: { route: Route; navigate: Nav }) {
                     </td>
                     <td data-l={t.stats.games}>{num(r.m.g)}</td>
                     {FACTIONS.map((f) => (
-                      <td key={f} data-l={c.factionShort[f]}>
+                      <td key={f} data-l={short(f)}>
                         <TierCell x={r.m.f[f]} />
                       </td>
                     ))}
@@ -135,7 +134,7 @@ export default function Coh3TierList(_: { route: Route; navigate: Nav }) {
               </tbody>
             </table>
           </Panel>
-          <p className="c3-note">{t.tier.bgNote}</p>
+          {game === "coh3" && <p className="c3-note">{t.tier.bgNote}</p>}
         </>
       )}
     </main>

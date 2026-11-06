@@ -11,9 +11,10 @@ import type { Route } from "../../route";
 import { useLang } from "../../i18n";
 import { tr, type UnitRow } from "../data";
 import { Coh3Loading, Cost, FactionTag, Icon, Panel, useCohGame, useNum, type Nav } from "../ui";
-import { INFANTRY, hit, type Side, type TargetStats, type WeaponStats } from "./engine";
+import { hit, type Side, type TargetStats, type WeaponStats } from "./engine";
 import { vetAt } from "./vet";
-import { isArmored, targetStats, weaponStats, type WeaponData } from "./weapons";
+import { armaContra, isArmored, weaponStats, type WeaponData } from "./weapons";
+import { DPS_DEFAULTS } from "./dpsDefaults";
 import { useCombatCopy } from "./copy";
 import { FactionOptions, LineChart, useFicha, useLists, useQueryState, useWeaponName, VetPicker } from "./parts";
 import "./combat.css";
@@ -48,7 +49,8 @@ function useUnitWeapons(u: UnitFicha | null | undefined) {
 
 export default function Coh3Dps({ route, navigate }: { route: Route; navigate: Nav }) {
   const lists = useLists();
-  const [q, setQ] = useQueryState({ a: "riflemen_us", b: "grenadier_ger", t: "inf", s: "0", d: "20", va: "0", vb: "0" });
+  const juego = useCohGame();
+  const [q, setQ] = useQueryState({ ...DPS_DEFAULTS[juego], t: "inf", s: "0", d: "20", va: "0", vb: "0" });
   const a = useFicha<UnitFicha>("units", q.a);
   const b = useFicha<UnitFicha>("units", q.b);
   const tf = useFicha<UnitFicha>("units", q.t === "inf" ? null : q.t);
@@ -69,19 +71,23 @@ function View({ route, navigate, units, q, setQ, a, b, tf, wa, wb }: {
   const num = useNum();
   const wName = useWeaponName(units);
   const fighters = useMemo(() => units.filter((u) => u.kind !== "buildings"), [units]);
-  const armored = useMemo(() => units.filter((u) => isArmored(u)), [units]);
-  // CoH2 no tiene lado: un `?s=1` viejo cae en el frente.
+  // CoH1 no tiene blindaje: cualquier unidad puede ser el objetivo, porque cada arma rinde distinto según su tipo.
+  const armored = useMemo(() => units.filter((u) => (game === "coh1" ? u.kind !== "buildings" : isArmored(u))), [units, game]);
+  // CoH2 y CoH1 no tienen lado: un `?s=1` viejo cae en el frente.
   const pedido = Number(q.s) || 0;
-  const side = (game === "coh2" && pedido === 1 ? 0 : pedido) as Side;
-  const target: TargetStats = q.t === "inf" || !tf ? INFANTRY() : targetStats(tf);
+  const side = (game !== "coh3" && pedido === 1 ? 0 : pedido) as Side;
+  const objetivo = q.t === "inf" || !tf ? null : tf;
   const stats = (ws: { n: number; data: WeaponData }[], vet: number, u: UnitFicha | null | undefined) =>
-    ws.map((w) => ({ n: w.n, w: weaponStats(w.data, vetAt(u?.vet ?? null, vet)), data: w.data }));
+    ws.map((w) => {
+      const x = armaContra(game, w.data, objetivo);
+      return { n: w.n, w: weaponStats(x.w, vetAt(u?.vet ?? null, vet)), t: x.t, data: w.data };
+    });
   const sa = stats(wa, Number(q.va) || 0, a);
   const sb = stats(wb, Number(q.vb) || 0, b);
   const maxRange = Math.max(10, ...sa.map((x) => x.w.range), ...sb.map((x) => x.w.range));
   const d = Math.min(Number(q.d) || 0, maxRange);
-  const dpsAt = (s: { n: number; w: WeaponStats }[], x: number) => s.reduce((acc, { n, w }) => acc + n * hit(w, target, side, x).dps, 0);
-  const series = (s: { n: number; w: WeaponStats }[]) => {
+  const dpsAt = (s: { n: number; w: WeaponStats; t: TargetStats }[], x: number) => s.reduce((acc, { n, w, t: o }) => acc + n * hit(w, o, side, x).dps, 0);
+  const series = (s: { n: number; w: WeaponStats; t: TargetStats }[]) => {
     const pts: [number, number][] = [];
     for (let x = 0; x <= maxRange; x += 1) pts.push([x, dpsAt(s, x)]);
     return pts;
@@ -133,7 +139,7 @@ function View({ route, navigate, units, q, setQ, a, b, tf, wa, wb }: {
                 <span>
                   {x.n}× {wName(x.data)}
                 </span>
-                <b>{num(x.n * hit(x.w, target, side, d).dps, 1)}</b>
+                <b>{num(x.n * hit(x.w, x.t, side, d).dps, 1)}</b>
               </li>
             ))}
           </ul>
@@ -155,7 +161,7 @@ function View({ route, navigate, units, q, setQ, a, b, tf, wa, wb }: {
           <label className="c3-pick">
             <span>{t.target}</span>
             <select className="c3-input" value={q.t} onChange={(e) => setQ({ t: e.target.value })}>
-              <option value="inf">{t.dps.infantry}</option>
+              <option value="inf">{game === "coh1" ? t.dps.infantryCoh1 : t.dps.infantry}</option>
               <FactionOptions rows={armored} label={(r) => tr(r.name, lang)} />
             </select>
           </label>
@@ -163,7 +169,7 @@ function View({ route, navigate, units, q, setQ, a, b, tf, wa, wb }: {
             <div className="c3-pick">
               <span>{t.dps.side}</span>
               <div className="c3-seg">
-                {(game === "coh2" ? [0, 2] : [0, 1, 2]).map((s) => (
+                {(game === "coh3" ? [0, 1, 2] : [0, 2]).map((s) => (
                   <button key={s} type="button" aria-pressed={s === side} onClick={() => setQ({ s: String(s) })}>
                     {t.side[s]}
                   </button>

@@ -443,9 +443,9 @@ const coh3Tab = (v: string | undefined): Coh3Tab | undefined => (isCoh3Tab(v) ? 
 export type CohGame = "coh3" | "coh2" | "coh1";
 const COH_SEGMENTS: CohGame[] = ["coh3", "coh2", "coh1"];
 /** Las pestañas con página de CoH1 y CoH2. CoH1 no tiene logros de Steam; su enciclopedia llega en la etapa 3. */
-const COH_LIVE_TABS: Coh3Tab[] = ["leaderboards", "ranks", "stats", "achievements", "players", "matches"];
+const COH_LIVE_TABS: Coh3Tab[] = ["leaderboards", "ranks", "stats", "tier-list", "achievements", "players", "matches"];
 const COH2_TABS: Coh3Tab[] = [...COH_LIVE_TABS, "units", "weapons", "commanders", "bulletins", "penetration", "dps", "maps"];
-const COH1_TABS: Coh3Tab[] = [...COH_LIVE_TABS.filter((t) => t !== "achievements"), "units", "weapons", "doctrines", "penetration", "maps"];
+const COH1_TABS: Coh3Tab[] = [...COH_LIVE_TABS.filter((t) => t !== "achievements"), "units", "weapons", "doctrines", "penetration", "dps", "maps"];
 export const cohTabs = (g: CohGame | undefined): Coh3Tab[] => (!g || g === "coh3" ? COH3_SECTIONS : g === "coh1" ? COH1_TABS : COH2_TABS);
 /** Las pestañas que hacen de lo mismo en cada juego: battlegroups (CoH3), comandantes (CoH2), doctrinas (CoH1). */
 const EQUIVALENTES: Coh3Tab[] = ["battlegroups", "commanders", "doctrines"];

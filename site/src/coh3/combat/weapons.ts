@@ -2,7 +2,7 @@
  * De los datos de un arma y una unidad (`games/coh3/data`) a lo que pide el motor (`engine.ts`), con la veteranía
  * aplicada (2026-11-04).
  */
-import { resolveDist, type TargetStats, type Trio, type WeaponStats } from "./engine";
+import { INFANTRY, resolveDist, type TargetStats, type Trio, type WeaponStats } from "./engine";
 import type { VetMods } from "./vet";
 import type { L10n } from "../data";
 import type { Faction } from "../../coh3Copy";
@@ -115,4 +115,19 @@ export function contraBlanco(w: ConBlancos, tp: string | null | undefined): Weap
 export function blancoCoh1(u: UnitTarget, w: ConBlancos, tp: string | null | undefined, vet?: VetMods): TargetStats {
   const trasera = (tp && w.targets?.[tp]?.[3]) || 1;
   return { ...targetStats({ ...u, armor: [1, 1, 1], targetSize: 1 }, vet), armor: [1, 1 / trasera, 1 / trasera] };
+}
+
+/**
+ * Un arma contra un objetivo (una unidad, o la infantería genérica si es null), lista para el motor. En CoH1 el arma se
+ * convierte contra el tipo de blanco del objetivo; la infantería genérica de CoH1 es `tp_infantry`.
+ */
+export function armaContra(
+  game: string,
+  w: WeaponData,
+  u: (UnitTarget & { target?: string | null }) | null | undefined,
+  vet?: VetMods,
+): { w: WeaponData; t: TargetStats } {
+  if (game !== "coh1") return { w, t: u ? targetStats(u, vet) : INFANTRY() };
+  const tp = u ? u.target ?? null : "tp_infantry";
+  return { w: contraBlanco(w, tp), t: u ? blancoCoh1(u, w, tp, vet) : INFANTRY() };
 }

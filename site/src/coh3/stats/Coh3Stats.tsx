@@ -18,7 +18,7 @@ const pct = (num: (v: number, d?: number) => string, p: number | null, d = 1) =>
 /** La clave de una facción de cualquiera de los tres juegos. */
 type Faction = string;
 /** Las facciones del juego de la pantalla, su bando y su nombre corto (CoH3, CoH2 o CoH1). */
-function useFactions() {
+export function useFactions() {
   const game = useCohGame();
   const { lang } = useLang();
   const c = useCoh3Copy();

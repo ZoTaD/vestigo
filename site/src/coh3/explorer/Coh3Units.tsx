@@ -141,7 +141,7 @@ function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
       <header className="c3-head">
         <div className="c3-k">{t.units.k}</div>
         <h1 className="c3-h1">{t.units.h1}</h1>
-        <p className="c3-lede">{t.units.lede}</p>
+        <p className="c3-lede">{game === "coh1" ? t.units.ledeCoh1 : t.units.lede}</p>
       </header>
       <div className="c3-filters">
         <FactionFilter value={f.f} onChange={(x) => setF({ f: x })} />
@@ -165,7 +165,8 @@ function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
               {th("name", t.name)}
               {th("faction", t.faction, { className: "is-l" })}
               {th("hp", t.hp)}
-              {th("armor", t.armor, { title: t.armorFSR })}
+              {/* CoH1 no tiene blindaje numérico: la columna no va. */}
+              {game !== "coh1" && th("armor", t.armor, { title: t.armorFSR })}
               {th("mp", c.t.mp)}
               {th("mu", c.t.mu)}
               {th("fu", c.t.fu)}
@@ -193,7 +194,7 @@ function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
                     <FactionTag f={u.faction} size={20} />
                   </td>
                   <td data-l={t.hp}>{u.hp != null ? num(u.hp) : "—"}</td>
-                  <td data-l={t.armorFSR}>{u.armor && isArmored(u) ? u.armor.map((a) => num(a)).join(" / ") : "—"}</td>
+                  {game !== "coh1" && <td data-l={t.armorFSR}>{u.armor && isArmored(u) ? u.armor.map((a) => num(a)).join(" / ") : "—"}</td>}
                   <td data-l={c.t.mp}>{u.cost?.mp ? num(u.cost.mp) : "—"}</td>
                   <td data-l={c.t.mu}>{u.cost?.mu ? num(u.cost.mu) : "—"}</td>
                   <td data-l={c.t.fu}>{u.cost?.fu ? num(u.cost.fu) : "—"}</td>

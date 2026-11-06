@@ -269,6 +269,9 @@ export const PAGES = [
   "/es/coh1/doctrinas",
   "/en/coh1/doctrines/allied_infantry_tree",
   "/es/coh1/penetracion",
+  "/en/coh1/dps",
+  "/es/coh1/tier-list",
+  "/en/coh2/tier-list",
   "/en/coh1/maps",
 ];
 

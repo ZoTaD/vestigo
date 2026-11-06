@@ -151,7 +151,7 @@ const EXTRA: Partial<Record<Coh3Section, (route: Route) => Promise<unknown>>> = 
   penetration: (r) => Promise.all([loadList("units", r.cohGame), loadList("weapons", r.cohGame)]),
   dps: (r) => Promise.all([loadList("units", r.cohGame), loadList("weapons", r.cohGame)]),
   stats: (route) => Promise.all([import("./stats/data").then((m) => m.loadSummary(route.cohGame)), import("./stats/parts").then((m) => m.loadMapNames(route.cohGame))]),
-  "tier-list": () => Promise.all([import("./stats/data").then((m) => m.loadSummary()), import("./stats/parts").then((m) => m.loadMapNames())]),
+  "tier-list": (route) => Promise.all([import("./stats/data").then((m) => m.loadSummary(route.cohGame)), import("./stats/parts").then((m) => m.loadMapNames(route.cohGame))]),
   maps: (route) => Promise.all([import("./more/Coh3Maps").then((m) => m.loadMaps(route.cohGame)), import("./stats/data").then((m) => m.loadSummary(route.cohGame))]),
   challenges: () => import("./more/Coh3Challenges").then((m) => m.loadChallenges()),
   "final-stand": () => import("./more/Coh3FinalStand").then((m) => m.loadFinalStand()),

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { at, cycle, resolveDist, hit, penChance, shotsPerSecond, type WeaponStats } from "../src/coh3/combat/engine";
+import { armaContra, weaponStats, type WeaponData } from "../src/coh3/combat/weapons";
+import { DPS_DEFAULTS } from "../src/coh3/combat/dpsDefaults";
 
 // El cañón AT de 57 mm de EE. UU. (coh3-data v2.5.3): penetración 300/150/120 a 15/35/60 m.
 const at57: WeaponStats = {
@@ -90,5 +92,32 @@ describe("CoH1: daño por tipo de blanco", () => {
     const t = blancoCoh1({ hp: 636, models: 1 } as never, garand as never, "tp_armour_allies_sherman");
     expect(t.armor[0]).toBe(1);
     expect(t.armor[2]).toBeCloseTo(0.5);
+  });
+});
+
+describe("DPS contra un objetivo, por juego", () => {
+  const arma = {
+    slug: "mg", acc: [0.5, 0.5, 0.5], dmg: [10, 10], pen: [1, 1, 1], dist: [10, 20, 30], range: [0, 30],
+    cooldown: [1, 1], reload: [0, 0], reloadEvery: [100, 100], aim: [0, 0], targets: { tp_infantry_heroic: [1, 0.5, 1, 1] },
+  } as unknown as WeaponData;
+  const heroica = { slug: "rangers", hp: 70, models: 6, armor: null, targetSize: 1, target: "tp_infantry_heroic", kind: "infantry" } as never;
+  const comun = { ...(heroica as object), target: "tp_infantry_soldier" } as never;
+
+  it("en CoH1 el daño se multiplica por el tipo del objetivo", () => {
+    const a = armaContra("coh1", arma, heroica);
+    const b = armaContra("coh1", arma, comun);
+    expect(hit(weaponStats(a.w), a.t, 0, 10).dps).toBeCloseTo(hit(weaponStats(b.w), b.t, 0, 10).dps / 2, 5);
+  });
+
+  it("sin objetivo es la infantería genérica, y en CoH3 no hay multiplicadores", () => {
+    expect(armaContra("coh3", arma, null).t.hp).toBe(80);
+    expect(armaContra("coh3", arma, heroica).w.dmg).toEqual([10, 10]);
+  });
+});
+
+describe("unidades por defecto del comparador DPS", () => {
+  it("existen en cada juego", () => {
+    expect(DPS_DEFAULTS.coh2).toMatchObject({ a: "riflemen_squad_mp", b: "grenadier_squad_mp" });
+    expect(DPS_DEFAULTS.coh1).toMatchObject({ a: "rifleman_squad", b: "volksgrenadier_squad" });
   });
 });

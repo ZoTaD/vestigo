@@ -98,7 +98,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
       <header className="c3-head">
         <div className="c3-k">{t.pen.k}</div>
         <h1 className="c3-h1">{t.pen.h1}</h1>
-        <p className="c3-lede">{t.pen.lede}</p>
+        <p className="c3-lede">{game === "coh1" ? t.pen.ledeCoh1 : t.pen.lede}</p>
       </header>
       <div className="c3-grid2">
         <Panel>
@@ -198,7 +198,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
               {t.vetUnknown} {unknownVet.join(" · ")}
             </p>
           )}
-          <p className="c3-note">{t.pen.model}</p>
+          <p className="c3-note">{game === "coh1" ? t.pen.modelCoh1 : t.pen.model}</p>
         </Panel>
         <div className="c3-stack">
           <Panel k={t.pen.counters} lede={t.pen.countersLede(tr(tRow?.name, lang), num(d))}>
