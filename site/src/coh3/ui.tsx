@@ -152,13 +152,35 @@ export function useSort<K extends string>(init: Sort<K>, text: readonly K[] = []
 }
 
 /** La liga de un jugador (el `ranklevel` de Relic) con el tinte de su metal. Sin rango no dibuja nada. */
-export function LeagueTag({ level, small = false, game: elegido }: { level: number | null | undefined; small?: boolean; game?: CohGame }) {
+export function LeagueTag({
+  level,
+  small = false,
+  game: elegido,
+  faction,
+}: {
+  level: number | null | undefined;
+  small?: boolean;
+  game?: CohGame;
+  /** CoH1: con la facción (o varias) se suma la insignia del juego para ese nivel. */
+  faction?: string | string[];
+}) {
   const { lang } = useLang();
   const delContexto = useCohGame();
   const game = elegido ?? delContexto;
   if (!level) return null;
   // CoH1 y CoH2: el nivel a secas, con el tinte neutro.
-  if (GAMES[game].league === "level") return <span className={`c3-league is-level${small ? " is-sm" : ""}`}>{levelName(level, lang)}</span>;
+  if (GAMES[game].league === "level") {
+    const insignias = (Array.isArray(faction) ? faction : faction ? [faction] : []).flatMap((f) => GAMES[game].rankIcon?.(f, level) ?? []);
+    const lado = small ? 20 : 26;
+    return (
+      <span className={`c3-league is-level${small ? " is-sm" : ""}${insignias.length ? " has-ico" : ""}`}>
+        {insignias.map((src) => (
+          <img key={src} src={src} alt="" width={lado} height={lado} loading="lazy" decoding="async" />
+        ))}
+        {levelName(level, lang)}
+      </span>
+    );
+  }
   const l = leagueOf(level);
   return <span className={`c3-league is-${l.metal}${small ? " is-sm" : ""}`}>{l.name[lang]}</span>;
 }

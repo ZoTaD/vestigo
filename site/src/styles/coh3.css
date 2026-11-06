@@ -272,3 +272,5 @@ a.c3-card:hover .c3-card-h { color: var(--c3-brass); }
 .c3-league.is-gold { background: #463915; color: #f0cf6a; }
 .c3-league.is-rival { background: #3a2026; color: #f19a9a; }
 .c3-league.is-sm { padding: 2px 6px; font-size: 12px; margin-top: 3px; }
+.c3-league.has-ico { display: inline-flex; align-items: center; gap: 6px; padding-left: 4px; }
+.c3-league.has-ico img { object-fit: contain; flex: none; }

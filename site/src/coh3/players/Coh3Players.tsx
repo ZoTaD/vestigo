@@ -345,7 +345,7 @@ function Standings({ standings }: { standings: Standing[] }) {
                     </td>
                     <td data-l={L.elo} className="c3-lb-elo">
                       {num(s.elo)}
-                      <LeagueTag level={s.tier} small />
+                      <LeagueTag level={s.tier} small faction={s.faction} />
                     </td>
                     <td data-l={L.best}>{num(s.best)}</td>
                     <td data-l={L.wins}>{num(s.wins)}</td>

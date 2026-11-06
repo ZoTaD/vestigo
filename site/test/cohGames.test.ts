@@ -9,6 +9,14 @@ describe("configuración por juego", () => {
     expect(GAMES.coh3.leaderboardOf("1v1", "american")).toBe(2130255);
   });
 
+  it("insignias de rango de CoH1 por facción y nivel", () => {
+    expect(GAMES.coh1.rankIcon?.("british", 20)).toBe("/coh1/r/british-20.webp");
+    expect(GAMES.coh1.rankIcon?.("panzer_elite", 1)).toBe("/coh1/r/panzer_elite-1.webp");
+    expect(GAMES.coh1.rankIcon?.("british", 0)).toBeNull();
+    expect(GAMES.coh1.rankIcon?.("british", 21)).toBeNull();
+    expect(GAMES.coh2.rankIcon).toBeUndefined();
+  });
+
   it("razas y tipos de partida", () => {
     expect(GAMES.coh1.raceToFaction[3]).toBe("panzer_elite");
     expect(GAMES.coh2.raceToFaction[2]).toBe("okw");

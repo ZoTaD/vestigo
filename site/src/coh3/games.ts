@@ -26,6 +26,8 @@ export interface GameConf {
   factionName: Record<Lang, Record<string, string>>;
   factionShort: Record<Lang, Record<string, string>>;
   factionIcon: Record<string, string>;
+  /** CoH1: la insignia del juego para cada nivel (1–20) de cada facción; los otros juegos no la tienen. */
+  rankIcon?: (faction: string, level: number) => string | null;
   leaderboards: GameLeaderboard[];
   raceToFaction: Record<number, string>;
   /** `matchtype_id` → modo (con "ai", "custom", "other" para lo que no es ranking por facción). */
@@ -144,6 +146,7 @@ const COH1 = conLeaderboards({
     es: { american: "EE. UU.", wehrmacht: "Wehrmacht", british: "Británicos", panzer_elite: "Panzer Elite" },
   },
   factionIcon: icons("coh1", COH1_FACTIONS),
+  rankIcon: (f, l) => (COH1_FACTIONS.includes(f) && l >= 1 && l <= 20 ? `/coh1/r/${f}-${l}.webp` : null),
   leaderboards: tabla(COH1_FACTIONS),
   raceToFaction: { 0: "american", 1: "wehrmacht", 2: "british", 3: "panzer_elite" },
   matchMode: modoClasico((t) => t === 14),

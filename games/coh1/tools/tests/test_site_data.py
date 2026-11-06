@@ -82,3 +82,10 @@ def test_textos_guarda_y_recupera(tmp_path):
     _ucs(base / "CoH/Engine/Locale/English/RelicCOH.English.ucs", "1\tHello\n")
     en, es, ok = sd.textos(base, cache)
     assert en == {1: "Hello"} and es == {1: "Hola"} and ok
+
+
+def test_ruta_rango():
+    assert sd.ruta_rango("american", 1) == "art/ui/textures/ranks_allies/us_01.rgt"
+    assert sd.ruta_rango("british", 20) == "art/ui/textures/ranks_allies/brit_20.rgt"
+    assert sd.ruta_rango("wehrmacht", 7) == "art/ui/textures/ranks_axis/heer_07.rgt"
+    assert sd.ruta_rango("panzer_elite", 12) == "art/ui/textures/ranks_axis/panzer_12.rgt"

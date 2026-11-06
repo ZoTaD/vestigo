@@ -179,7 +179,7 @@ export default function Coh3Ranks(_: { route: Route; navigate: Nav }) {
           </div>
         </div>
       </header>
-      {niveles ? <Levels lv={lv} t={t} num={num} /> : <Leagues lv={lv} t={t} lang={lang} num={num} />}
+      {niveles ? <Levels lv={lv} t={t} num={num} factions={q.scope === "all" ? FACTIONS : [q.scope]} /> : <Leagues lv={lv} t={t} lang={lang} num={num} />}
       <Factions md={md} t={t} num={num} factions={FACTIONS} />
       <EloDist elo={elo} start={d.eloStart} step={d.eloStep} t={t} num={num} note={niveles ? t.eloKnown : undefined} />
       <Countries md={md} t={t} lang={lang} num={num} />
@@ -240,7 +240,7 @@ function Leagues({ lv, t, lang, num }: { lv: number[]; t: T; lang: Lang; num: Nu
 }
 
 /** Los niveles 1–20 de CoH1 y CoH2: sin nombre ni ELO fijo, el 20 arriba. */
-function Levels({ lv, t, num }: { lv: number[]; t: T; num: Num }) {
+function Levels({ lv, t, num, factions }: { lv: number[]; t: T; num: Num; factions: string[] }) {
   const { sort, th } = useSort<"level" | "players" | "share" | "above">({ key: "level", dir: -1 }, []);
   const ranked = lv.slice(1).reduce((a, b) => a + b, 0) || 1;
   const below = (level: number) => lv.slice(1, level).reduce((a, b) => a + b, 0);
@@ -264,7 +264,7 @@ function Levels({ lv, t, num }: { lv: number[]; t: T; num: Num }) {
             return (
               <tr key={l}>
                 <td>
-                  <LeagueTag level={l} />
+                  <LeagueTag level={l} faction={factions} />
                 </td>
                 <td data-l={t.players}>{num(n)}</td>
                 <td data-l={t.share}>

@@ -210,7 +210,7 @@ export default function Coh3Leaderboards({ route, navigate }: { route: Route; na
                             </td>
                             <td data-l={labels.elo} className="c3-lb-elo">
                               <EloCell elo={r.elo} />
-                              <LeagueTag level={r.tier} small />
+                              <LeagueTag level={r.tier} small faction={st.faction} />
                             </td>
                             <td data-l={labels.wins}>{num(r.wins)}</td>
                             <td data-l={labels.losses}>{num(r.losses)}</td>

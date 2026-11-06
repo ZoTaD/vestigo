@@ -215,6 +215,28 @@ def textos(base: Path, cache: Path = RAW) -> tuple[dict, dict, bool]:
     return en or es, es or en, en is not None
 
 
+# Las insignias de los 20 niveles del ranking, por facción (`Engine.sga`).
+RANGOS = {"american": ("allies", "us"), "british": ("allies", "brit"), "wehrmacht": ("axis", "heer"), "panzer_elite": ("axis", "panzer")}
+
+
+def ruta_rango(faccion: str, nivel: int) -> str:
+    carpeta, prefijo = RANGOS[faccion]
+    return f"art/ui/textures/ranks_{carpeta}/{prefijo}_{nivel:02d}.rgt"
+
+
+def guardar_rangos(engine: Sga) -> int:
+    """`site/public/coh1/r/<facción>-<nivel>.webp` (1 a 20)."""
+    (PUBLIC / "r").mkdir(parents=True, exist_ok=True)
+    n = 0
+    for f in RANGOS:
+        for nivel in range(1, 21):
+            im = decode(engine.read(ruta_rango(f, nivel)))
+            if im is not None:
+                im.save(PUBLIC / "r" / f"{f}-{nivel}.webp", quality=90)
+                n += 1
+    return n
+
+
 def main(argv: list[str]) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=STEAM)
@@ -431,6 +453,7 @@ def main(argv: list[str]) -> None:
     # --- Escritura (como CoH2).
     c2.DATA = DATA
     ahora = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    print(f"  {guardar_rangos(Sga(base / 'Engine/Archives/Engine.sga'))} insignias de rango")
     write_json(DATA / "meta.json", {"generatedAt": ahora, "tag": "coh1", "patch": None, "english": hay_en,
                                     "counts": {"units": len(unidades), "weapons": len(fichas_armas), "doctrines": len(doctrinas)}})
     c2._tab("units", unidades, lambda u: {k: u[k] for k in ("slug", "name", "faction", "kind", "icon", "cost", "hp", "armor",
