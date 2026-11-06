@@ -55,18 +55,20 @@ def _inc(d: dict, k: str, g: int = 1, w: int = 0) -> None:
     c["w"] += w
 
 
-def summarize_day(matches: list[dict]) -> dict:
-    """Resume las partidas de automatch de un día. Las que no tienen ganador claro (empates, abandonos sin resultado) no cuentan."""
+def summarize_day(matches: list[dict], race: dict = RACE, modes: dict = MODES, axis: set = AXIS) -> dict:
+    """Resume las partidas de automatch de un día. Las que no tienen ganador claro (empates, abandonos sin resultado) no cuentan.
+
+    `race`, `modes` y `axis` son los de CoH3; CoH1 y CoH2 pasan los suyos (`games/coh/tools/relic_daily.py`)."""
     out: dict = {"matches": 0, "modes": {}}
     for m in matches:
-        mode = MODES.get(m.get("matchtype_id"))
+        mode = modes.get(m.get("matchtype_id"))
         if not mode:
             continue
         players = m.get("matchhistoryreportresults") or []
         teams: dict[int, list] = {}
         ok = True
         for p in players:
-            f = RACE.get(p.get("race_id"))
+            f = race.get(p.get("race_id"))
             if f is None or p.get("resulttype") not in (0, 1):
                 ok = False
                 break
@@ -76,8 +78,8 @@ def summarize_day(matches: list[dict]) -> dict:
             continue
         sides = list(teams.values())
         # Un equipo es todo Eje o todo Aliados; si no, la partida está rota.
-        side_axis = [all(f in AXIS for f, _, _ in t) for t in sides]
-        if side_axis[0] == side_axis[1] or any(any(f in AXIS for f, _, _ in t) != a for t, a in zip(sides, side_axis)):
+        side_axis = [all(f in axis for f, _, _ in t) for t in sides]
+        if side_axis[0] == side_axis[1] or any(any(f in axis for f, _, _ in t) != a for t, a in zip(sides, side_axis)):
             continue
         won = [t[0][1] for t in sides]
         if won[0] == won[1]:
@@ -173,11 +175,11 @@ def build_day(d: date) -> bool:
     return True
 
 
-def build_summary(days: list[date]) -> dict:
+def build_summary(days: list[date], days_dir: Path = DAYS) -> dict:
     acc: dict = {"matches": 0, "modes": {}}
     used = []
     for d in days:
-        f = DAYS / f"{d.isoformat()}.json"
+        f = days_dir / f"{d.isoformat()}.json"
         if not f.exists():
             continue
         day = json.loads(f.read_text(encoding="utf-8"))
