@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import "./styles/deadlock-achievements.css";
-import { useLang } from "./i18n";
+import { useLang, type Lang } from "./i18n";
 import { text } from "./localized";
 import GameImg from "./GameImg";
 import { heroCard, heroImg, heroName, rankLabel, rankOf } from "./deadlockReportData";
@@ -58,7 +58,7 @@ function Sticker({ a, title, detail }: { a: Achievement; title: string; detail: 
       </div>
       <figcaption>
         <span>{detail}</span>
-        {a.rarity != null && !a.progress && <span className="dl-medal-rarity">{ACH_COPY[lang].rarity(a.rarity, lang)}</span>}
+        {a.rarity != null && !a.progress && <span className="dl-medal-rarity">{rarityText(a, lang)}</span>}
         {a.progress ? (
           <span className="dl-medal-bar" role="progressbar" aria-valuenow={a.progress.have} aria-valuemax={a.progress.need}>
             <i style={{ width: `${Math.min(100, (a.progress.have / a.progress.need) * 100)}%` }} />
@@ -69,6 +69,16 @@ function Sticker({ a, title, detail }: { a: Achievement; title: string; detail: 
       </figcaption>
     </figure>
   );
+}
+
+/** "0,5 % de los jugadores", o "de los que juegan Mina" en la maestría. */
+function rarityText(a: Achievement, lang: Lang): string {
+  const c = ACH_COPY[lang];
+  if (a.kind.type === "mastery") {
+    const n = heroName(a.kind.heroId);
+    return c.rarityHero(a.rarity!, lang, n ? text(n, lang, "") : "");
+  }
+  return c.rarity(a.rarity!, lang);
 }
 
 export function Medal({ a, size = "lg" }: { a: Achievement; size?: "lg" | "sm" }) {
@@ -99,7 +109,7 @@ export function Medal({ a, size = "lg" }: { a: Achievement; size?: "lg" | "sm" }
         <figcaption>
           <strong>{title}</strong>
           <span>{detail}</span>
-          {a.rarity != null && !a.progress && <span className="dl-medal-rarity">{ACH_COPY[lang].rarity(a.rarity, lang)}</span>}
+          {a.rarity != null && !a.progress && <span className="dl-medal-rarity">{rarityText(a, lang)}</span>}
           {a.progress ? (
             <span className="dl-medal-bar" role="progressbar" aria-valuenow={a.progress.have} aria-valuemax={a.progress.need}>
               <i style={{ width: `${Math.min(100, (a.progress.have / a.progress.need) * 100)}%` }} />

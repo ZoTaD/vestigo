@@ -66,6 +66,7 @@ export const ACH_COPY = {
     season: "Season",
     seasonName: (s: number, current: boolean) => (current ? `Season ${s} (current)` : `Season ${s}`),
     rarity: (x: number, l: Lang) => `${pctText(x, l)} of players`,
+    rarityHero: (x: number, l: Lang, hero: string) => `${pctText(x, l)} of ${hero} players`,
   },
   es: {
     tabs: { overview: "Resumen", matches: "Partidas", heroes: "Héroes", rank: "Rango", achievements: "Logros" },
@@ -89,6 +90,7 @@ export const ACH_COPY = {
     season: "Temporada",
     seasonName: (s: number, current: boolean) => (current ? `Season ${s} (en curso)` : `Season ${s}`),
     rarity: (x: number, l: Lang) => `La tiene el ${pctText(x, l)} de los jugadores`,
+    rarityHero: (x: number, l: Lang, hero: string) => `La tiene el ${pctText(x, l)} de los que juegan ${hero}`,
   },
 };
 

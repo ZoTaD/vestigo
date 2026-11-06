@@ -301,7 +301,8 @@ export function seasonAchievements(inp: SeasonInput): { earned: Achievement[]; n
       group: "mastery",
       tier: t,
       face: { kind: "hero", heroId },
-      tag: String(r),
+      // La chapa dice tus partidas (36), no el umbral (25), como las hazañas.
+      tag: String(n),
       kind: { type: "mastery", heroId, matches: n, need: r },
     });
   }
