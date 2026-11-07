@@ -1,3 +1,4 @@
+import DeadlockHeroFaq from "./DeadlockHeroFaq";
 import { useState, type CSSProperties } from "react";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
@@ -318,6 +319,7 @@ function HeroPage({
   navigate,
   picker,
   metaLine,
+  bandName,
 }: {
   hero: Hero;
   heroes: Hero[];
@@ -325,6 +327,7 @@ function HeroPage({
   navigate: (route: Route) => void;
   picker: React.ReactNode;
   metaLine: React.ReactNode;
+  bandName: string;
 }) {
   const copy = useCopy();
   const hp = copy.deadlock.heroPage;
@@ -408,6 +411,13 @@ function HeroPage({
         <div className="dl-band-panel dl-hero-body">
           <DeadlockBuildShop heroId={hero.heroId} heroName={hero.name} heroWinRate={hero.winRate} />
           <DeadlockMastery heroId={hero.heroId} />
+          {bandName && <DeadlockHeroFaq
+            hero={hero}
+            rank={idx + 1}
+            of={heroes.length}
+            bandName={bandName}
+            buildName={(d, t) => copy.deadlock.buildCard.name(copy.deadlock.buildCard.damage[d as "weapon"], copy.deadlock.buildCard.trait[t as "dps"])}
+          />}
         </div>
 
         <nav className="next-steps" aria-label={copy.deadlock.next.label}>
@@ -599,6 +609,7 @@ export default function Deadlock({
         navigate={navigate}
         picker={picker}
         metaLine={metaLine}
+        bandName={brawl ? "" : copy.deadlock.bands[band]}
       />
     );
   }
