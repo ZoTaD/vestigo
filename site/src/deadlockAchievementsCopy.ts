@@ -45,7 +45,7 @@ export function pctText(x: number, l: Lang): string {
 
 export const ACH_COPY = {
   en: {
-    tabs: { overview: "Overview", matches: "Matches", heroes: "Heroes", rank: "Rank", achievements: "Achievements" },
+    tabs: { overview: "Overview", matches: "Matches", heroes: "Heroes", performance: "Performance", rank: "Rank", achievements: "Achievements" },
     tiers: { eternal: "Eternal", gold: "Gold", silver: "Silver", bronze: "Bronze" } as Record<Tier, string>,
     groups: {
       world: "World records",
@@ -69,7 +69,7 @@ export const ACH_COPY = {
     rarityHero: (x: number, l: Lang, hero: string) => `${pctText(x, l)} of ${hero} players`,
   },
   es: {
-    tabs: { overview: "Resumen", matches: "Partidas", heroes: "Héroes", rank: "Rango", achievements: "Logros" },
+    tabs: { overview: "Resumen", matches: "Partidas", heroes: "Héroes", performance: "Rendimiento", rank: "Rango", achievements: "Logros" },
     tiers: { eternal: "Eterna", gold: "Oro", silver: "Plata", bronze: "Bronce" } as Record<Tier, string>,
     groups: {
       world: "Récords del mundo",
@@ -95,7 +95,7 @@ export const ACH_COPY = {
 };
 
 export type ProfileTab = keyof (typeof ACH_COPY)["en"]["tabs"];
-export const PROFILE_TABS: ProfileTab[] = ["overview", "matches", "heroes", "rank", "achievements"];
+export const PROFILE_TABS: ProfileTab[] = ["overview", "matches", "heroes", "performance", "rank", "achievements"];
 
 /** El título y la línea de abajo de un logro. `hero` resuelve el nombre del héroe. */
 export function achievementText(

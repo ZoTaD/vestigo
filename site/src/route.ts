@@ -660,9 +660,10 @@ export function parseRoute(pathname: string): Route {
     // pestaña conocida, es un héroe.
     if (maybeSection && isDlSection(maybeSection)) {
       const dlSection = maybeSection;
-      // El perfil lleva además su pestaña: /player/123/achievements.
+      // El perfil y la partida llevan además su pestaña: /player/123/achievements,
+      // /match/456/lanes.
       const detail =
-        dlSection === "player" && rest[2] && rest[3]
+        (dlSection === "player" || dlSection === "match") && rest[2] && rest[3]
           ? `${rest[2]}/${rest[3]}`
           : DL_WITH_DETAIL.includes(dlSection) && rest[2]
             ? rest[2]

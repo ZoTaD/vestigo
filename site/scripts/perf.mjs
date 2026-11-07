@@ -39,6 +39,7 @@ export const PAGES = [
   "/en/deadlock/dle",
   "/en/deadlock/dle/ranking",
   "/en/deadlock/heroes/infernus",
+  "/en/deadlock/graves",
   "/en/poe2/economy",
   "/en/poe2/encyclopedia",
   "/en/valheim",

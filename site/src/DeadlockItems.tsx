@@ -23,9 +23,11 @@ import { ItemIcon } from "./DeadlockItemTip";
 import DeadlockItemsShop from "./DeadlockItemsShop";
 import DeadlockItemsTiers from "./DeadlockItemsTiers";
 import GameImg from "./GameImg";
+import { ItemsEarlyLate, ItemsPatchChanges } from "./DeadlockItemsTrends";
 
 /** Tienda (como el juego), tier list por letra o lista con gráficos. */
-type Vista = "shop" | "tiers" | "list";
+type Vista = "shop" | "tiers" | "list" | "patch" | "timing";
+const VISTAS: Vista[] = ["shop", "tiers", "list", "patch", "timing"];
 
 /**
  * La tier list de ítems de Deadlock.
@@ -286,7 +288,7 @@ export default function DeadlockItems({
   const [elegida, setVista] = useState<Vista | null>(() => {
     try {
       const v = localStorage.getItem("vestigo.dlItemsView");
-      return v === "list" || v === "shop" || v === "tiers" ? v : null;
+      return VISTAS.includes(v as Vista) ? (v as Vista) : null;
     } catch {
       return null;
     }
@@ -302,7 +304,7 @@ export default function DeadlockItems({
   };
   const selector = (
     <div className="seg dl-items-views" role="group" aria-label={c.views.label}>
-      {(["shop", "tiers", "list"] as const).map((v) => (
+      {VISTAS.map((v) => (
         <button key={v} type="button" aria-pressed={vista === v} data-active={vista === v} onClick={() => cambiarVista(v)}>
           {c.views[v]}
         </button>
@@ -391,6 +393,18 @@ export default function DeadlockItems({
 
       {!meta ? (
         <p className="dl-loading-note">{c.loading}</p>
+      ) : vista === "patch" ? (
+        <div className="dl-items-shopview">
+          {selector}
+          {detalleAbierto()}
+          <ItemsPatchChanges items={meta.items} patchTitle={meta.file.patch.title} onOpenItem={onOpen} />
+        </div>
+      ) : vista === "timing" ? (
+        <div className="dl-items-shopview">
+          {selector}
+          {detalleAbierto()}
+          <ItemsEarlyLate items={meta.items} band={band} onOpenItem={onOpen} />
+        </div>
       ) : vista === "tiers" ? (
         <div className="dl-items-shopview">
           {selector}

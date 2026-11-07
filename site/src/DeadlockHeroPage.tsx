@@ -1,3 +1,4 @@
+import DeadlockHeroPlaystyle from "./DeadlockHeroPlaystyle";
 import DeadlockKillMap from "./DeadlockKillMap";
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import RouteLink from "./RouteLink";
@@ -698,6 +699,7 @@ export default function DeadlockHeroPage({
         <div className="dl-hp-anchor-links">
           <a href="#dl-hp-kit">{t.anchors.kit}</a>
           <a href="#dl-hp-numbers">{t.anchors.numbers}</a>
+          <a href="#dl-hp-playstyle">{t.anchors.playstyle}</a>
           <a href="#dl-hp-matchups">{t.anchors.matchups}</a>
           <a href="#dl-hp-build">{t.anchors.build}</a>
           <a href="#dl-hp-lore">{t.anchors.lore}</a>
@@ -780,6 +782,9 @@ export default function DeadlockHeroPage({
           </section>
         )}
       </section>
+
+      {/* ── Cómo juega (2026-11-07) ──────────────────────────────── */}
+      <DeadlockHeroPlaystyle heroId={hero.heroId} heroName={hero.name} band={band} bandName={bandName} />
 
       {/* ── Enfrentamientos ─────────────────────────────────────── */}
       <section className="dl-hp-block" aria-labelledby="dl-hp-matchups">

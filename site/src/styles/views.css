@@ -917,6 +917,81 @@
   color: var(--text-dim);
 }
 
+/* Deadlock · Jugador · lo que te distingue (Rendimiento) --------------------------- */
+
+.dl-perf-sub {
+  margin: 0.7rem 0 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.dl-perf-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nombre y cifra en una línea, la frase abajo: la cifra es lo que se busca y
+   la frase dice cómo leerla. */
+.dl-perf-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 0.6rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.dl-perf-list > li:first-child {
+  border-top: 0;
+}
+
+.dl-perf-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.dl-perf-value {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-perf-line {
+  grid-column: 1 / -1;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.dl-perf-item[data-tier="high"] .dl-perf-line {
+  color: var(--good);
+}
+
+.dl-perf-item[data-tier="low"] .dl-perf-line {
+  color: var(--bad);
+}
+
+.dl-perf-more {
+  margin-top: 0.6rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* Deadlock · Jugador · rango en el tiempo ------------------------------------------ */
 
 .dl-trail-lead {

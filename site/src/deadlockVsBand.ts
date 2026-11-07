@@ -109,9 +109,13 @@ export interface VsRow {
   digits: number;
 }
 
-export function compare(mine: MetricsFile, band: MetricsFile): VsRow[] {
+export function compare(
+  mine: MetricsFile,
+  band: MetricsFile,
+  metrics: { key: string; lowerIsBetter?: boolean; digits: number }[] = VS_METRICS
+): VsRow[] {
   const out: VsRow[] = [];
-  for (const m of VS_METRICS) {
+  for (const m of metrics) {
     const a = mine[m.key];
     const b = band[m.key];
     if (!a || !b || !Number.isFinite(a.avg) || !Number.isFinite(b.percentile50)) continue;
@@ -182,7 +186,56 @@ export type VsState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "failed" }
-  | { status: "ready"; band: BandId; rows: VsRow[] };
+  | { status: "ready"; band: BandId; rows: VsRow[]; mine: MetricsFile; bandFile: MetricsFile };
+
+/**
+ * La pestaña Rendimiento: las mismas dos respuestas de la API, leídas en más
+ * métricas y agrupadas por lo que mide cada una. Quedan afuera las que tienen
+ * mediana 0 en la banda (curar compañeros, barreras, curación evitada): la
+ * mayoría de los héroes no las hace, y "mejor que el 99 %" ahí sólo diría que
+ * jugaste un héroe de apoyo.
+ */
+export const PERF_GROUPS: { id: "fight" | "aim" | "souls" | "objectives" | "survive"; metrics: { key: string; lowerIsBetter?: boolean; digits: number }[] }[] = [
+  {
+    id: "fight",
+    metrics: [
+      { key: "player_damage_per_min", digits: 0 },
+      { key: "kills", digits: 1 },
+      { key: "assists", digits: 1 },
+      { key: "kda", digits: 2 },
+    ],
+  },
+  {
+    id: "aim",
+    metrics: [
+      { key: "accuracy", digits: 1 },
+      { key: "crit_shot_rate", digits: 1 },
+    ],
+  },
+  {
+    id: "souls",
+    metrics: [
+      { key: "net_worth_per_min", digits: 0 },
+      { key: "last_hits", digits: 0 },
+      { key: "denies", digits: 1 },
+      { key: "neutral_damage_per_min", digits: 0 },
+    ],
+  },
+  {
+    id: "objectives",
+    metrics: [{ key: "boss_damage_per_min", digits: 0 }],
+  },
+  {
+    id: "survive",
+    metrics: [
+      { key: "deaths", lowerIsBetter: true, digits: 1 },
+      { key: "self_healing_per_min", digits: 0 },
+    ],
+  },
+];
+
+/** Las métricas que se muestran como porcentaje (la API las da de 0 a 1). */
+export const SHARE_METRICS = new Set(["accuracy", "crit_shot_rate"]);
 
 /** Tus promedios contra los de tu banda; `idle` mientras no haya rango. */
 export function useVsBand(accountId: number | null, badge: number, pick: SeasonPick): VsState {
@@ -203,7 +256,9 @@ export function useVsBand(accountId: number | null, badge: number, pick: SeasonP
       ([mine, band]) => {
         if (!vivo) return;
         const rows = compare(mine, band);
-        setState(rows.length === 0 ? { status: "failed" } : { status: "ready", band: range.band, rows });
+        setState(
+          rows.length === 0 ? { status: "failed" } : { status: "ready", band: range.band, rows, mine, bandFile: band }
+        );
       },
       () => vivo && setState({ status: "failed" })
     );
