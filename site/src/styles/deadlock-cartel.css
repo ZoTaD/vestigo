@@ -1998,8 +1998,9 @@
 }
 
 /* ---------- la partida: pestañas (Chance de ganar, Líneas, Todas las cifras) ---------- */
+/* Las pestañas de la partida: el mismo aire bajo la cabecera que en el perfil. */
 [data-theme="codex"][data-game="deadlock"] .dl-match-tabs {
-  margin-top: 4px;
+  margin-top: 22px;
 }
 
 /* El gráfico de chance hereda el de almas (.dl-lead), más alto, con los
@@ -2831,4 +2832,9 @@
   max-width: 62ch;
   font-size: 0.88rem;
   line-height: 1.45;
+}
+
+/* El selector de vistas de Objetos quedaba pegado a la cabecera. */
+[data-theme="codex"][data-game="deadlock"] .dl-items-shopview > .dl-items-views {
+  margin-top: 18px;
 }
