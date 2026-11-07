@@ -165,6 +165,13 @@ jobs:
         continue-on-error: true
         run: npm run build:hero-insights --prefix games/deadlock/pipeline
 
+      # "Cómo juega" cada héroe y su tendencia de 8 semanas (ficha de Héroes):
+      # 2 pedidos de metadata en lote con columnas elegidas (~15 MB cada uno) y
+      # 4 de hero-stats por semana. ~10 s. Si falla queda el archivo anterior.
+      - name: build hero playstyle
+        continue-on-error: true
+        run: npm run build:hero-playstyle --prefix games/deadlock/pipeline
+
       # El modelo del Armador de equipo (2026-10-30): 12 pedidos a la API en vivo
       # para ajustar una escala por banda. No cambia de una corrida a la otra, así
       # que va una vez por día con la misma puerta por edad que la escalera.

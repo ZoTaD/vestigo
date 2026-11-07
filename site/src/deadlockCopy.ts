@@ -114,7 +114,7 @@ const EN = {
         masteryTip: "Win-rate points between the players with the most matches on the hero and those with the fewest, in this band.",
         trend: "Since the patch",
       },
-      anchors: { kit: "Kit", numbers: "Numbers", matchups: "Matchups", build: "Build", lore: "Lore" },
+      anchors: { kit: "Kit", numbers: "Numbers", playstyle: "Playstyle", matchups: "Matchups", build: "Build", lore: "Lore" },
       kit: {
         kicker: "The kit",
         title: "Abilities",
@@ -1929,7 +1929,7 @@ const ES: typeof EN = {
         masteryTip: "Puntos de victorias entre quienes más partidas tienen con el héroe y quienes menos, en esta banda.",
         trend: "Desde el parche",
       },
-      anchors: { kit: "Kit", numbers: "En números", matchups: "Enfrentamientos", build: "Build", lore: "Historia" },
+      anchors: { kit: "Kit", numbers: "En números", playstyle: "Cómo juega", matchups: "Enfrentamientos", build: "Build", lore: "Historia" },
       kit: {
         kicker: "El kit",
         title: "Habilidades",

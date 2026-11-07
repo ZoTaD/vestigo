@@ -2505,3 +2505,294 @@
   font-family: var(--font-data-narrow);
   font-size: 0.7rem;
 }
+
+/* ---------- Héroes: Cómo juega (2026-11-07) ---------- */
+[data-game="deadlock"] .dl-ps-grid {
+  --ps-gun: #c2701a;
+  --ps-ability: #7b4fb0;
+  --ps-melee: #6e6658;
+  --ps-lane: #c9a23a;
+  --ps-heroes: #b2261c;
+  --ps-jungle: #4d8a3a;
+  --ps-objectives: #2b6aa6;
+  --ps-other: #9c957f;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 820px) {
+  [data-game="deadlock"] .dl-ps-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+[data-game="deadlock"] .dl-ps-box {
+  margin: 0;
+}
+
+[data-game="deadlock"] .dl-ps-say {
+  margin: 0.3rem 0 0.7rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+[data-game="deadlock"] .dl-ps-stack-row {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.3rem 0;
+}
+
+[data-game="deadlock"] .dl-ps-stack-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+[data-game="deadlock"] .dl-ps-stack-row + .dl-ps-stack-row .dl-ps-stack-label {
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+[data-game="deadlock"] .dl-ps-stack {
+  display: flex;
+  height: 1.5rem;
+  overflow: hidden;
+}
+
+[data-game="deadlock"] .dl-ps-stack-row + .dl-ps-stack-row .dl-ps-stack {
+  height: 0.9rem;
+  opacity: 0.7;
+}
+
+[data-game="deadlock"] .dl-ps-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-data-narrow);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+[data-game="deadlock"] .dl-ps-stack-row + .dl-ps-stack-row .dl-ps-seg {
+  font-size: 0;
+}
+
+[data-game="deadlock"] :is(.dl-ps-seg, .dl-ps-swatch)[data-part="gun"] { background: var(--ps-gun); }
+[data-game="deadlock"] :is(.dl-ps-seg, .dl-ps-swatch)[data-part="ability"] { background: var(--ps-ability); }
+[data-game="deadlock"] :is(.dl-ps-seg, .dl-ps-swatch)[data-part="melee"] { background: var(--ps-melee); }
+[data-game="deadlock"] :is(.dl-ps-seg, .dl-ps-swatch)[data-part="lane"] { background: var(--ps-lane); }
+[data-game="deadlock"] :is(.dl-ps-seg, .dl-ps-swatch)[data-part="heroes"] { background: var(--ps-heroes); }
+[data-game="deadlock"] :is(.dl-ps-seg, .dl-ps-swatch)[data-part="jungle"] { background: var(--ps-jungle); }
+[data-game="deadlock"] :is(.dl-ps-seg, .dl-ps-swatch)[data-part="objectives"] { background: var(--ps-objectives); }
+[data-game="deadlock"] :is(.dl-ps-seg, .dl-ps-swatch)[data-part="other"] { background: var(--ps-other); }
+
+[data-game="deadlock"] .dl-ps-legend {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.9rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+[data-game="deadlock"] .dl-ps-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+[data-game="deadlock"] .dl-ps-legend b {
+  color: var(--text);
+}
+
+[data-game="deadlock"] .dl-ps-swatch {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+[data-game="deadlock"] .dl-ps-swatch.is-line {
+  height: 3px;
+  background: var(--text);
+}
+
+[data-game="deadlock"] .dl-ps-swatch.is-pick {
+  background: rgba(30, 26, 20, 0.2);
+}
+
+[data-game="deadlock"] .dl-ps-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 0.7rem 0 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.85rem;
+}
+
+[data-game="deadlock"] .dl-ps-bar-row {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) 2.6rem 3.6rem;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.45rem 0;
+  font-size: 0.82rem;
+}
+
+[data-game="deadlock"] .dl-ps-bar {
+  position: relative;
+  height: 0.8rem;
+  background: rgba(30, 26, 20, 0.08);
+}
+
+[data-game="deadlock"] .dl-ps-bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+[data-game="deadlock"] .dl-ps-bar-avg {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: calc(100% + 6px);
+  margin-left: -1px;
+  background: var(--text);
+}
+
+[data-game="deadlock"] .dl-ps-bar-num {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-game="deadlock"] :is(.dl-ps-bar-rank, .dl-ps-row-rank) {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-align: right;
+  white-space: nowrap;
+}
+
+[data-game="deadlock"] .dl-ps-row-rank[data-top] {
+  color: var(--good);
+  font-weight: 700;
+}
+
+[data-game="deadlock"] .dl-ps-note {
+  margin: 0.2rem 0 0;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+[data-game="deadlock"] .dl-ps-rows {
+  list-style: none;
+  margin: 0.3rem 0 0;
+  padding: 0;
+}
+
+[data-game="deadlock"] .dl-ps-rows li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 3.6rem;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.85rem;
+}
+
+[data-game="deadlock"] .dl-ps-rows li:first-child {
+  border-top: 0;
+}
+
+[data-game="deadlock"] .dl-ps-row-num {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-game="deadlock"] .dl-ps-trend {
+  margin-top: 1rem;
+}
+
+[data-game="deadlock"] .dl-ps-trend-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 14rem;
+}
+
+[data-game="deadlock"] .dl-ps-trend-50 {
+  stroke: var(--text-dim);
+  stroke-dasharray: 3 3;
+}
+
+[data-game="deadlock"] .dl-ps-trend-pick {
+  fill: rgba(30, 26, 20, 0.14);
+}
+
+[data-game="deadlock"] .dl-ps-trend-line {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 2;
+}
+
+[data-game="deadlock"] .dl-ps-trend-dot {
+  fill: var(--bad);
+  stroke: var(--surface-solid, #f3ead8);
+  stroke-width: 2;
+}
+
+[data-game="deadlock"] .dl-ps-trend-dot[data-up] {
+  fill: var(--good);
+}
+
+[data-game="deadlock"] .dl-ps-trend-axis {
+  font-family: var(--font-data-narrow);
+  font-size: 11px;
+  fill: var(--text-dim);
+}
+
+@media (max-width: 560px) {
+  [data-game="deadlock"] .dl-ps-stack-row {
+    grid-template-columns: 5rem minmax(0, 1fr);
+  }
+  [data-game="deadlock"] .dl-ps-bar-row {
+    grid-template-columns: 6rem minmax(0, 1fr) 2.4rem;
+  }
+  [data-game="deadlock"] .dl-ps-bar-rank {
+    grid-column: 1 / -1;
+    text-align: left;
+    margin-top: -0.3rem;
+  }
+}
+
+[data-game="deadlock"] .dl-ps-trend-dates {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.2rem 0 0;
+  padding: 0 0.2rem;
+  font-family: var(--font-data-narrow);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+[data-game="deadlock"] .dl-ps-swatch.is-half {
+  height: 0;
+  border-top: 2px dashed var(--text-dim);
+  background: none;
+}
