@@ -946,7 +946,8 @@ export default function DeadlockPlayer({
                   total={historialTodo.length}
                   onChange={cambiarTemporada}
                 />
-                <DeadlockScopePicker scope={modo} counts={conteos} onChange={cambiarModo} />
+                {/* Rendimiento se mide siempre en clasificatorias: el modo no le cambia nada. */}
+                {pestana !== "performance" && <DeadlockScopePicker scope={modo} counts={conteos} onChange={cambiarModo} />}
               </div>
           )}
 
