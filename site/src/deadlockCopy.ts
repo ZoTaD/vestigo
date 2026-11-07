@@ -1565,7 +1565,29 @@ const EN = {
       slots: { weapon: "Weapon", vitality: "Vitality", spirit: "Spirit" },
       /** El chip que apaga el filtro por estante. */
       allSlots: "All",
-      views: { shop: "Shop", tiers: "Tier list", list: "List", label: "View" },
+      views: { shop: "Shop", tiers: "Tier list", list: "List", patch: "Patch changes", timing: "Early or late", label: "View" },
+      patchView: {
+        lead: (patch: string, days: number) =>
+          `Win rate of each item the ${days} days before and after ${patch}, in Phantom+ lobbies. The patch notes say what changed; this says what happened in matches.`,
+        open: (days: number) => `Still measuring: the ${days} days after the patch are not over.`,
+        up: "Winners",
+        down: "Losers",
+        games: (n: string) => `${n} matches after`,
+        pts: "pts",
+        none: "No patch measured yet.",
+      },
+      timingView: {
+        lead:
+          "When each item pays off. Every item is compared with the others of its price bought in the same minute: early is before minute 20, late is minute 25 on. The numbers read early → late, in win points against its price.",
+        groups: {
+          early: { title: "Strong early, fades late", lead: "Better than its price before minute 20, worse after 25. Buy it on time or skip it." },
+          late: { title: "Gets better late", lead: "Worse than its price early, better after minute 25. A late-game pick." },
+          always: { title: "Good any time", lead: "Better than its price early and late." },
+          never: { title: "Weak any time", lead: "Worse than its price at every point of the match. Counter items land here too: they get bought when the enemy is already winning." },
+        },
+        tip: (name: string, early: string, late: string) => `${name}: ${early} early, ${late} late (win points against its price)`,
+        none: "Not enough purchases in this band yet.",
+      },
       tiers: {
         count: (n: number) => `${n} ${n === 1 ? "item" : "items"}`,
         lead: "Every item by its tier and family, best first. Hover for the item card; click for its numbers.",
@@ -3096,7 +3118,29 @@ const ES: typeof EN = {
       baseline: (pct) => `cualquiera de este precio gana ${pct}`,
       slots: { weapon: "Arma", vitality: "Vitalidad", spirit: "Espíritu" },
       allSlots: "Todos",
-      views: { shop: "Tienda", tiers: "Por letra", list: "Lista", label: "Vista" },
+      views: { shop: "Tienda", tiers: "Por letra", list: "Lista", patch: "Cambios del parche", timing: "Temprano o tarde", label: "Vista" },
+      patchView: {
+        lead: (patch: string, days: number) =>
+          `El winrate de cada objeto los ${days} días antes y después de ${patch}, en salas Fantasma+. Las notas dicen qué cambió; esto dice qué pasó en las partidas.`,
+        open: (days: number) => `Todavía midiendo: no pasaron los ${days} días después del parche.`,
+        up: "Ganadores",
+        down: "Perdedores",
+        games: (n: string) => `${n} partidas después`,
+        pts: "pts",
+        none: "Todavía no hay un parche medido.",
+      },
+      timingView: {
+        lead:
+          "Cuándo rinde cada objeto. Cada uno se compara con los de su precio comprados en el mismo minuto: temprano es antes del minuto 20, tarde es del 25 en adelante. Las cifras se leen temprano → tarde, en puntos de victoria contra su precio.",
+        groups: {
+          early: { title: "Fuerte temprano, se apaga tarde", lead: "Mejor que su precio antes del minuto 20, peor después del 25. Compralo a tiempo o salteálo." },
+          late: { title: "Mejora con la partida", lead: "Peor que su precio temprano, mejor después del minuto 25. Para partidas largas." },
+          always: { title: "Bueno siempre", lead: "Mejor que su precio temprano y tarde." },
+          never: { title: "Flojo siempre", lead: "Peor que su precio en todo momento de la partida. Los objetos de respuesta también caen acá: se compran cuando el rival ya va ganando." },
+        },
+        tip: (name: string, early: string, late: string) => `${name}: ${early} temprano, ${late} tarde (puntos de victoria contra su precio)`,
+        none: "Todavía no hay suficientes compras en esta banda.",
+      },
       tiers: {
         count: (n: number) => `${n} ${n === 1 ? "objeto" : "objetos"}`,
         lead: "Todos los objetos por letra y familia, el mejor primero. Pasá el mouse para ver la ficha; tocalo para ver sus números.",

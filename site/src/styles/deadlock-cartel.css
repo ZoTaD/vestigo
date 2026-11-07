@@ -2339,3 +2339,169 @@
     gap: 0.15rem;
   }
 }
+
+/* ---------- Objetos: Cambios del parche y Temprano o tarde ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-imoves-grid,
+[data-theme="codex"][data-game="deadlock"] .dl-itiming-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 820px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-imoves-grid,
+  [data-theme="codex"][data-game="deadlock"] .dl-itiming-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove[data-dir="up"] > .box-title { color: var(--good); }
+[data-theme="codex"][data-game="deadlock"] .dl-imove[data-dir="down"] > .box-title { color: var(--bad); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove-list {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove-row {
+  display: grid;
+  grid-template-columns: 1.4rem auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.45rem 0.3rem;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove-list > li:first-child .dl-imove-row {
+  border-top: 0;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove-row:hover {
+  background: rgba(30, 26, 20, 0.07);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove-rank {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .is-first .dl-imove-name {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove-wr {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-data-narrow);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove-wr small {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove-delta {
+  min-width: 3rem;
+  text-align: right;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove[data-dir="up"] .dl-imove-delta { color: var(--good); }
+[data-theme="codex"][data-game="deadlock"] .dl-imove[data-dir="down"] .dl-imove-delta { color: var(--bad); }
+
+@media (max-width: 480px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-imove-row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.45rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-imove-rank {
+    display: none;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-imove-wr {
+    grid-column: 2;
+    align-items: flex-start;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-imove-delta {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itiming-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.25rem 0.8rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itiming-item {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.25rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itiming-item:hover {
+  background: rgba(30, 26, 20, 0.07);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itiming-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itiming-nums {
+  display: inline-flex;
+  gap: 0.2rem;
+  font-family: var(--font-data-narrow);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-itiming-nums [data-dir="up"] { color: var(--good); }
+[data-theme="codex"][data-game="deadlock"] .dl-itiming-nums [data-dir="down"] { color: var(--bad); }
+[data-theme="codex"][data-game="deadlock"] .dl-itiming-nums [aria-hidden] { color: var(--text-dim); font-weight: 400; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-imove-delta small {
+  font-family: var(--font-data-narrow);
+  font-size: 0.7rem;
+}
