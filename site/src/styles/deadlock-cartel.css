@@ -494,6 +494,14 @@
 [data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-rep-streak.is-win { color: var(--good); }
 [data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-rep-streak.is-loss { color: var(--bad); }
 
+/* El récord de compañeros y rivales: los verde y rojo claros de la pizarra no se
+   leían sobre el papel. Los mismos tonos impresos que la racha, y en negrita
+   porque es la cifra que se busca en la fila. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-peer-record { font-weight: 700; }
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-peer-record .is-win { color: var(--good); }
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-peer-record .is-loss { color: var(--bad); }
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-peer-record span { color: var(--text-faint); }
+
 /* ---------- la pizarra sigue siendo pizarra ----------
    Las cajas `.dl-chalkboard` (rangos) no pasan a papel: van sobre la pizarra
    del escondite, con tiza. Se vuelven a poner los tokens claros. */

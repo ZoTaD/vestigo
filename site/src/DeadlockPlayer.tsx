@@ -52,7 +52,7 @@ import DeadlockPeerCard from "./DeadlockPeerCard";
 import { peersInScope, usePeers } from "./deadlockPeers";
 import DeadlockCareerHeroes from "./DeadlockCareerHeroes";
 import DeadlockHeroFitCard from "./DeadlockHeroFitCard";
-import DeadlockVsBand from "./DeadlockVsBandCard";
+import DeadlockPerformance, { DeadlockStandoutCard } from "./DeadlockPerformance";
 import DeadlockRankTrail from "./DeadlockRankTrail";
 import { rankSteps, trailOf, type RankPoint } from "./deadlockRankHistory";
 import { useHeroStats } from "./deadlockHeroStats";
@@ -980,6 +980,7 @@ export default function DeadlockPlayer({
                 rows={enModo}
                 onOpenAccount={onOpenAccount}
               />
+              <DeadlockStandoutCard state={vs} compact onMore={() => irA("performance")} />
             </Piso>
           )}
 
@@ -1175,6 +1176,12 @@ export default function DeadlockPlayer({
             </Piso>
           )}
 
+          {pestana === "performance" && (
+            <Piso>
+              <DeadlockPerformance state={vs} />
+            </Piso>
+          )}
+
           {pestana === "rank" && (
             <Piso>
               <DeadlockRankTrail points={serieTemp} />
@@ -1190,7 +1197,6 @@ export default function DeadlockPlayer({
                 />
               </div>
             )}
-              <DeadlockVsBand state={vs} />
               <DeadlockRankLuckCard state={suerte} />
             </Piso>
           )}
