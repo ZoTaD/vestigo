@@ -62,6 +62,10 @@ function toMatch(raw: RawMatch): ParsedMatch {
     purchases: [],
     souls: [],
     damageFrom: new Map(),
+    deathsAt: [],
+    samples: [],
+    lastHits: 0,
+    denies: 0,
   }));
   return {
     matchId: raw.match_id,
@@ -70,6 +74,7 @@ function toMatch(raw: RawMatch): ParsedMatch {
     winningTeam: raw.winning_team,
     badge: 0,
     players,
+    midBoss: [],
   };
 }
 

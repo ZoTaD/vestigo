@@ -637,6 +637,15 @@ export interface MatchPlayer {
   souls: SoulPoint[];
   /** Cuánto daño le hizo cada rival, por `slot`. */
   damageFrom: Map<number, number>;
+  /** Cada muerte: el segundo y quién lo mató (`slot`, 0 si nadie). Para las peleas. */
+  deathsAt: { t: number; killer: number }[];
+  /**
+   * Las muestras crudas de `stats` (cada 3 minutos hasta el 15, después cada 5),
+   * acumuladas. La línea lee la de ~9 minutos; "Todas las cifras", la última.
+   */
+  samples: Record<string, number>[];
+  lastHits: number;
+  denies: number;
 }
 
 export interface ParsedMatch {
@@ -647,6 +656,8 @@ export interface ParsedMatch {
   /** El promedio de rango de la sala, `rango*10 + subnivel`. 0 si no lo trae. */
   badge: number;
   players: MatchPlayer[];
+  /** Los jefes del medio: cuándo cayó y qué equipo se llevó el premio. */
+  midBoss: { t: number; team: number }[];
 }
 
 interface RawPlayer {
@@ -661,6 +672,9 @@ interface RawPlayer {
   level: number;
   ability_points?: number;
   assigned_lane?: number;
+  last_hits?: number;
+  denies?: number;
+  death_details?: { game_time_s: number; killer_player_slot?: number }[];
   items?: { item_id: number; game_time_s: number; sold_time_s?: number; imbued_ability_id?: number }[];
   stats?: Record<string, number>[];
 }
@@ -674,6 +688,7 @@ interface RawMatch {
     average_badge_team0?: number;
     average_badge_team1?: number;
     players: RawPlayer[];
+    mid_boss?: { team_claimed?: number; destroyed_time_s?: number }[];
     damage_matrix?: {
       damage_dealers?: {
         dealer_player_slot: number;
@@ -743,6 +758,12 @@ export function parseMatch(raw: RawMatch): ParsedMatch {
       .map((s) => ({ t: Number(s.time_stamp_s ?? 0), netWorth: Number(s.net_worth ?? 0) }))
       .filter((s) => s.t > 0),
     damageFrom: desde.get(p.player_slot) ?? new Map<number, number>(),
+    deathsAt: (p.death_details ?? [])
+      .map((d) => ({ t: d.game_time_s, killer: d.killer_player_slot ?? 0 }))
+      .filter((d) => d.t >= 0 && d.t <= 21_600),
+    samples: (p.stats ?? []).filter((s) => Number(s.time_stamp_s ?? 0) > 0),
+    lastHits: p.last_hits ?? 0,
+    denies: p.denies ?? 0,
   }));
 
   return {
@@ -757,6 +778,9 @@ export function parseMatch(raw: RawMatch): ParsedMatch {
       return b.length === 0 ? 0 : Math.round(b.reduce((a, x) => a + x, 0) / b.length);
     })(),
     players,
+    midBoss: (mi.mid_boss ?? [])
+      .filter((b) => (b.destroyed_time_s ?? 0) > 0)
+      .map((b) => ({ t: b.destroyed_time_s ?? 0, team: b.team_claimed ?? -1 })),
   };
 }
 

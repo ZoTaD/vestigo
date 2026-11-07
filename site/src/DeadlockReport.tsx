@@ -1,4 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import RouteLink from "./RouteLink";
+import type { Route } from "./route";
+import { MATCH_TABS, MATCH_TABS_COPY, type MatchTab } from "./deadlockMatchTabsCopy";
 import SectionHead from "./SectionHead";
 import { useLang, type Lang } from "./i18n";
 import { useCopy } from "./deadlockCopy";
@@ -28,6 +31,8 @@ import { ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
 import DeadlockTraits from "./DeadlockTraitList";
 import { matchTraits } from "./deadlockTraits";
+
+const DeadlockMatchTabs = lazy(() => import("./DeadlockMatchTabs"));
 
 /**
  * El informe de una partida.
@@ -387,9 +392,16 @@ function Findings({ list, lang }: { list: Finding[]; lang: Lang }) {
 
 export default function DeadlockReport({
   matchId,
+  tab,
+  route,
+  navigate,
   onBack,
 }: {
   matchId?: string;
+  /** La pestaña, el segmento después del id en la URL. Sin él, el informe. */
+  tab?: string;
+  route: Route;
+  navigate: (r: Route) => void;
   /** Vuelve al historial de la cuenta que se estaba mirando, o al buscador. */
   onBack: (accountId: number | null) => void;
 }) {
@@ -404,6 +416,13 @@ export default function DeadlockReport({
   const [elegido, setElegido] = useState<number | null>(null);
 
   const id = matchId ? Number(matchId) : null;
+  const pestana: MatchTab = MATCH_TABS.includes(tab as MatchTab) ? (tab as MatchTab) : "report";
+  const tabRoute = (t: MatchTab): Route => ({
+    ...route,
+    view: "deadlock",
+    dlSection: "match",
+    detail: t === "report" ? String(id) : `${id}/${t}`,
+  });
 
   useEffect(() => {
     if (!id || !Number.isFinite(id)) return;
@@ -501,6 +520,20 @@ export default function DeadlockReport({
         }
       />
 
+      <nav className="dl-ptabs dl-match-tabs" aria-label={c.reportTitle}>
+        {MATCH_TABS.map((t) => (
+          <RouteLink key={t} className="dl-ptab" to={tabRoute(t)} onNavigate={navigate} active={pestana === t}>
+            {MATCH_TABS_COPY[lang].tabs[t]}
+          </RouteLink>
+        ))}
+      </nav>
+
+      {pestana !== "report" ? (
+        <Suspense fallback={<div className="area-loading" aria-busy="true" />}>
+          <DeadlockMatchTabs tab={pestana} match={match} names={names} lang={lang} />
+        </Suspense>
+      ) : (
+      <>
       <div className="dl-rep-board">
         {equipos.map((equipo, t) => (
           <div className="box dl-rep-side" key={t}>
@@ -645,6 +678,8 @@ export default function DeadlockReport({
             )}
           </p>
         </section>
+      )}
+      </>
       )}
     </section>
   );

@@ -153,7 +153,10 @@ export default function DeadlockArea({
         />
       ) : route.dlSection === "match" ? (
         <DeadlockReport
-          matchId={route.detail}
+          matchId={route.detail?.split("/")[0]}
+          tab={route.detail?.split("/")[1]}
+          route={route}
+          navigate={navigate}
           onBack={(accountId) => goDetail("player", accountId === null ? undefined : String(accountId))}
         />
       ) : route.dlSection === "items" ? (

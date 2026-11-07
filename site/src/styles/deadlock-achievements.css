@@ -267,10 +267,12 @@
 }
 
 /* ---------- la cabecera: la ficha y las mejores medallas, lado a lado ---------- */
+/* Separada del buscador: la credencial quedaba pegada a la barra y al botón. */
 .dl-phead {
   display: grid;
   gap: 16px;
   align-items: start;
+  margin-top: 22px;
 }
 @media (min-width: 900px) {
   .dl-phead {
