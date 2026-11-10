@@ -68,7 +68,7 @@ export default function Cs2Tradeup({ route, navigate }: { route: Route; navigate
   return (
     <main className="c2-main c2-tu">
       <header className="c2-head">
-        <h1 className="c2-h1">{t.tabs["trade-up"]}</h1>
+        <h1 className="c2-h1">{t.tabH1["trade-up"]}</h1>
         <p className="c2-lede">{t.seo["trade-up"].description}</p>
       </header>
       <div className="c2-seg c2-tu-mode" role="tablist">

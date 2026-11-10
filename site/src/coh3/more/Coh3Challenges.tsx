@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import type { Route } from "../../route";
 import { useLang } from "../../i18n";
 import { tr, type L10n } from "../data";
-import { Coh3Loading, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, CohTitle, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
 import { useMoreCopy } from "./copy";
 import "./more.css";
 
@@ -42,7 +42,7 @@ export default function Coh3Challenges(_: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-challenges">
       <header className="c3-head">
         <div className="c3-k">{t.ch.k}</div>
-        <h1 className="c3-h1">{t.ch.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.ch.h1} /></h1>
         <p className="c3-lede">{t.ch.lede}</p>
       </header>
       <div className="c3-filters">

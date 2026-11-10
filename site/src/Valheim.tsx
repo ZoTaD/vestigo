@@ -158,7 +158,7 @@ function Home({ to, navigate }: { to: To; navigate: Nav }) {
   return (
     <>
       <header className="vh-head">
-        <h1>{t.title}</h1>
+        <h1>{t.homeH1}</h1>
         <p>{t.lede}</p>
         {index && <GlobalSearch index={index} to={to} navigate={navigate} />}
       </header>

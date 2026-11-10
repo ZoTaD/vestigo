@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import type { Route } from "../../route";
 import { useLang, type Lang } from "../../i18n";
 import type { CohGame } from "../../route";
-import { Coh3Loading, FactionTag, LeagueTag, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, LeagueTag, Panel, sortRows, useCohGame, useNum, useSort, CohTitle, type Nav } from "../ui";
 import { LEAGUES, type League } from "../leagues";
 import { GAMES } from "../games";
 
@@ -36,7 +36,7 @@ export const peekLadder = (game: CohGame = "coh3"): Ladder | null => cache[game]
 
 const EN = {
   k: "Ranks",
-  h1: "Leagues and players",
+  h1: (g: string) => `${g} ranks: leagues and players`,
   lede: "Every ranked league, the Elo it takes and how many players are in each one. Only players who finished their placement matches and played in the last weeks are on the ladder.",
   snapshot: (day: string) => `Ladder snapshot of ${day}. Ladder data: coh3stats.com open data.`,
   all: "All factions",
@@ -62,7 +62,7 @@ const EN = {
   totals: (u: string) => `${u} different players`,
   none: "No players in this league.",
   // CoH1 y CoH2: niveles sin nombre ni ELO fijo, y datos propios (sin crédito a coh3stats).
-  levelH1: "Levels and players",
+  levelH1: (g: string) => `${g} ranks: levels and players`,
   levelLede: "Every ranking level and how many players are in each one. Only players who played in the last weeks are on the ladder.",
   levelSnapshot: (day: string) => `Ladder of ${day}.`,
   levels: "Levels",
@@ -72,7 +72,7 @@ const EN = {
 };
 const ES: typeof EN = {
   k: "Rangos",
-  h1: "Ligas y jugadores",
+  h1: (g: string) => `Rangos de ${g}: ligas y jugadores`,
   lede: "Cada liga del ranking, el ELO que pide y cuántos jugadores hay en cada una. En el ranking están los que terminaron las partidas de ubicación y jugaron en las últimas semanas.",
   snapshot: (day: string) => `Foto del ranking del ${day}. Datos del ranking: datos abiertos de coh3stats.com.`,
   all: "Todas las facciones",
@@ -97,7 +97,7 @@ const ES: typeof EN = {
   unknown: "Sin dato",
   totals: (u: string) => `${u} jugadores distintos`,
   none: "Nadie en esta liga.",
-  levelH1: "Niveles y jugadores",
+  levelH1: (g: string) => `Rangos de ${g}: niveles y jugadores`,
   levelLede: "Cada nivel del ranking y cuántos jugadores hay en cada uno. En el ranking están los que jugaron en las últimas semanas.",
   levelSnapshot: (day: string) => `Ranking del ${day}.`,
   levels: "Niveles",
@@ -156,7 +156,7 @@ export default function Coh3Ranks(_: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-ranks">
       <header className="c3-head">
         <div className="c3-k">{t.k}</div>
-        <h1 className="c3-h1">{niveles ? t.levelH1 : t.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={niveles ? t.levelH1 : t.h1} /></h1>
         <p className="c3-lede">{niveles ? t.levelLede : t.lede}</p>
         <p className="c3-note">{niveles ? t.levelSnapshot(day) : t.snapshot(day)}</p>
         <div className="c3-filters c3-mb">

@@ -7,7 +7,7 @@
  * partidas para decir algo.
  */
 import type { Route } from "../../route";
-import { Coh3Loading, FactionTag, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, Panel, sortRows, useCohGame, useNum, useSort, CohTitle, type Nav } from "../ui";
 import { useFactions } from "./Coh3Stats";
 import { tierOf, wilson, wr, type GW } from "./data";
 import { useStatsCopy } from "./copy";
@@ -62,7 +62,7 @@ export default function Coh3TierList(_: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-tierlist">
       <header className="c3-head">
         <div className="c3-k">{t.tier.k}</div>
-        <h1 className="c3-h1">{t.tier.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.tier.h1} /></h1>
         <p className="c3-lede">{t.tier.lede}</p>
         <WindowLine s={s} />
         <ModeBandPicker {...mb} />

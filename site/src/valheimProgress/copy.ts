@@ -4,7 +4,7 @@ import { useLang } from "../i18n";
 const EN = {
   tab: "Progress",
   hub: "Your checklist, biome by biome",
-  title: "Progress",
+  title: "Valheim progress checklist",
   lede: "Tick what you've done in each biome, or read it from your character. It stays in this browser.",
   seoTitle: "Valheim Progress Checklist: bosses, gear and materials by biome | Vestigo",
   seoDesc: "A Valheim progression checklist from Meadows to the Deep North: stations, armor, meads, key materials and boss offerings for each biome. Load your character file to tick off what you've already done.",
@@ -28,7 +28,7 @@ const EN = {
 const ES: typeof EN = {
   tab: "Mi partida",
   hub: "Tu lista, bioma por bioma",
-  title: "Mi partida",
+  title: "Checklist de progreso de Valheim",
   lede: "Tilda lo que ya hiciste en cada bioma, o léelo de tu personaje. Queda guardado en este navegador.",
   seoTitle: "Checklist de progreso de Valheim: jefes, equipo y materiales por bioma | Vestigo",
   seoDesc: "Una lista de progreso de Valheim desde la Pradera hasta el Norte profundo: estaciones, armaduras, hidromieles, materiales clave y ofrendas de cada bioma. Carga el archivo de tu personaje para tildar lo que ya hiciste.",

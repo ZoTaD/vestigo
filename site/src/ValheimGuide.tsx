@@ -320,7 +320,7 @@ export function PlaceList({ places, to, navigate }: { places: PlaceRow[]; to: To
   const present = BIOME_IDS.filter((b) => places.some((p) => p.biomes.includes(b)));
   return (
     <>
-      <header className="vh-head"><h1>{t.tabs.places}</h1><p>{t.tabLede.places}</p></header>
+      <header className="vh-head"><h1>{t.tabH1.places}</h1><p>{t.tabLede.places}</p></header>
       <div className="vh-opts" style={{ margin: "0 0 16px" }}>
         <button type="button" className="vh-chip" aria-pressed={biome === null} onClick={() => setBiome(null)}>{t.allBiomes}</button>
         {present.map((b) => (
@@ -436,7 +436,7 @@ export function BiomeList({ biomes, bosses, to, navigate }: { biomes: BiomeRow[]
   const { lang } = useLang();
   return (
     <>
-      <header className="vh-head"><h1>{t.tabs.biomes}</h1><p>{t.tabLede.biomes}</p></header>
+      <header className="vh-head"><h1>{t.tabH1.biomes}</h1><p>{t.tabLede.biomes}</p></header>
       <div className="vh-biomes">
         {biomes.map((b, i) => {
           const boss = bosses.find((x) => x.biome === b.id);
@@ -458,7 +458,7 @@ export function BossList({ bosses, to, navigate }: { bosses: BossRow[]; to: To; 
   const { lang } = useLang();
   return (
     <>
-      <header className="vh-head"><h1>{t.tabs.bosses}</h1><p>{t.tabLede.bosses}</p></header>
+      <header className="vh-head"><h1>{t.tabH1.bosses}</h1><p>{t.tabLede.bosses}</p></header>
       <div className="vh-hub" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
         {bosses.map((b, i) => (
           <RouteLink key={b.slug} className="vh-box vh-hubcard" to={to("bosses", b.slug)} onNavigate={navigate}>

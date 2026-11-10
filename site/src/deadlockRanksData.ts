@@ -237,15 +237,28 @@ export function leansTo(row: SideRow): "team0" | "team1" | null {
   return brecha > 0 ? "team0" : "team1";
 }
 
+/**
+ * El archivo, guardado al bajarlo: el prerender lo precarga (`loadRanks`, en
+ * `entry-server.tsx`) y el primer render ya lo encuentra. Sin esto la página de
+ * Rangos salía vacía en el HTML (2026-11-10): `renderToString` no espera el
+ * `import()` y Google recibía un `<main>` sin título ni texto.
+ */
+let cargado: RanksFile | null = null;
+
+export function loadRanks(): Promise<RanksFile> {
+  return import("@deadlock/ranks.json").then((m) => (cargado = m.default as unknown as RanksFile));
+}
+
 /** El archivo, o null mientras se está bajando. */
 export function useRanks(): RanksFile | null {
-  const [file, setFile] = useState<RanksFile | null>(null);
+  const [file, setFile] = useState<RanksFile | null>(cargado);
 
   useEffect(() => {
+    if (cargado) return;
     let alive = true;
-    import("@deadlock/ranks.json")
-      .then((m) => {
-        if (alive) setFile(m.default as unknown as RanksFile);
+    loadRanks()
+      .then((f) => {
+        if (alive) setFile(f);
       })
       .catch(() => undefined);
     return () => {

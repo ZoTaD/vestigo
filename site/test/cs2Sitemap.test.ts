@@ -24,8 +24,8 @@ describe("CS2 en el sitemap", () => {
   });
   it("el título de una ficha nombra lo que se busca", () => {
     const pages = prerenderPages(data);
-    expect(pages.find((p) => p.path === "/en/cs2/cases/kilowatt-case")!.title).toContain("Kilowatt Case odds & expected value");
-    expect(pages.find((p) => p.path === "/es/cs2/skins/bayonet-doppler-ruby")!.title).toContain("★ Bayonet | Doppler · Ruby: precio, float y cajas");
+    expect(pages.find((p) => p.path === "/en/cs2/cases/kilowatt-case")!.title).toContain("Kilowatt Case: CS2 Odds & Expected Value");
+    expect(pages.find((p) => p.path === "/es/cs2/skins/bayonet-doppler-ruby")!.title).toContain("★ Bayonet | Doppler · Ruby: precio, float y cajas en CS2");
   });
   it("la guarda reconoce la hoja de cargando", () => {
     expect(isCs2LoadingPage('<main class="c2-main c2-loading">')).toBe(true);

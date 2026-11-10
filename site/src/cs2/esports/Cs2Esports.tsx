@@ -42,7 +42,7 @@ function EsportsHome({ route, navigate }: { route: Route; navigate: Nav }) {
   return (
     <main className="c2-main c2-es" data-lang={route.lang}>
       <header className="c2-head">
-        <h1 className="c2-h1">{t.tabs.esports}</h1>
+        <h1 className="c2-h1">{t.tabH1.esports}</h1>
         <p className="c2-lede">{t.es.lede}</p>
       </header>
       <section className="c2-es-live">

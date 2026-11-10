@@ -9,7 +9,7 @@ import { useLang, type Lang } from "../../i18n";
 import { SettledImg } from "../../SettledImg";
 import { LazyRows } from "../../LazyRows";
 import { tr, type L10n } from "../data";
-import { Coh3Loading, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, Panel, sortRows, useCohGame, useNum, useSort, CohTitle, type Nav } from "../ui";
 import { GAMES, type CohGame } from "../games";
 import "./more.css";
 
@@ -32,7 +32,7 @@ export const loadAchievements = (game: CohGame = "coh3"): Promise<Data> => {
 
 const EN = {
   k: "Achievements",
-  h1: "Achievements",
+  h1: (g: string) => `${g} achievements`,
   lede: (game: string) => `Every ${game} achievement, what it asks and the share of all players who have unlocked it.`,
   search: "Search achievements",
   name: "Achievement",
@@ -45,7 +45,7 @@ const EN = {
 };
 const ES: typeof EN = {
   k: "Logros",
-  h1: "Logros",
+  h1: (g: string) => `Logros de ${g}`,
   lede: (game: string) => `Todos los logros de ${game}, lo que piden y qué parte de los jugadores los desbloqueó.`,
   search: "Buscar logros",
   name: "Logro",
@@ -84,7 +84,7 @@ export default function Coh3Achievements(_: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-achievements">
       <header className="c3-head">
         <div className="c3-k">{t.k}</div>
-        <h1 className="c3-h1">{t.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.h1} /></h1>
         <p className="c3-lede">{t.lede(GAMES[game].name)}</p>
         <p className="c3-note">{t.credit}</p>
       </header>

@@ -7,7 +7,7 @@ import type { Route } from "../../route";
 import { useCoh3Copy } from "../../coh3Copy";
 import { useLang } from "../../i18n";
 import { GAMES } from "../games";
-import { Coh3Loading, FactionTag, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, Panel, sortRows, useCohGame, useNum, useSort, CohTitle, type Nav } from "../ui";
 import { wr, type BandStats, type ModeStats } from "./data";
 import { useStatsCopy } from "./copy";
 import { ModeBandPicker, useMapName, useModeBand, useSummary, WindowLine } from "./parts";
@@ -40,7 +40,7 @@ export default function Coh3Stats(_: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-stats">
       <header className="c3-head">
         <div className="c3-k">{t.stats.k}</div>
-        <h1 className="c3-h1">{t.stats.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.stats.h1} /></h1>
         <p className="c3-lede">{t.stats.lede}</p>
         <WindowLine s={s} />
         <ModeBandPicker {...mb} />

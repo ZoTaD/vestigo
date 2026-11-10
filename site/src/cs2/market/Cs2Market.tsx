@@ -93,7 +93,7 @@ export default function Cs2Market({ route, navigate }: { route: Route; navigate:
   return (
     <main className="c2-main c2-mk">
       <header className="c2-head">
-        <h1 className="c2-h1">{t.tabs.market}</h1>
+        <h1 className="c2-h1">{t.tabH1.market}</h1>
         <p className="c2-lede">{t.seo.market.description}</p>
       </header>
       <div className="c2-filters">

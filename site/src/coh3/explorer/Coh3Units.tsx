@@ -11,7 +11,7 @@ import { useLang } from "../../i18n";
 import { useCoh3Copy, type Faction } from "../../coh3Copy";
 import { GAMES, factionLabel, sideOf } from "../games";
 import { loadFicha, loadList, peekFicha, peekList, tr, type BattlegroupRow, type L10n, type UnitRow, type WeaponRow } from "../data";
-import { Coh3Loading, Cost, FactionTag, Icon, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, Cost, FactionTag, Icon, Panel, sortRows, useCohGame, useNum, useSort, CohTitle, type Nav } from "../ui";
 import { hit } from "../combat/engine";
 import { isAbilityShot, isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "../combat/weapons";
 import { useWeaponName } from "../combat/parts";
@@ -140,7 +140,7 @@ function UnitList({ route, navigate }: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-units">
       <header className="c3-head">
         <div className="c3-k">{t.units.k}</div>
-        <h1 className="c3-h1">{t.units.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.units.h1} /></h1>
         <p className="c3-lede">{game === "coh1" ? t.units.ledeCoh1 : t.units.lede}</p>
       </header>
       <div className="c3-filters">
@@ -275,7 +275,7 @@ function UnitPage({ slug, route, navigate }: { slug: string; route: Route; navig
     <main className="c3-main c3-unit">
       <p className="c3-crumb">
         <RouteLink to={toList} onNavigate={navigate}>
-          {t.units.h1}
+          <CohTitle text={t.units.h1} />
         </RouteLink>{" "}
         › {factionLabel(game, lang, u.faction, true)}
       </p>

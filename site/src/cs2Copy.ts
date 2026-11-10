@@ -40,6 +40,8 @@ const clip = (s: string): string => (s.length <= 160 ? s : `${s.slice(0, 157).re
 
 export interface Cs2Copy {
   tabs: Record<Cs2Section, string>;
+  /** El título visible de cada pestaña, con el nombre del juego (la portada usa `home.h1`). */
+  tabH1: Record<Exclude<Cs2Section, "home" | "crosshairs">, string>;
   loading: string;
   loadError: string;
   retry: string;
@@ -312,37 +314,42 @@ export interface Cs2Copy {
 
 const EN: Cs2Copy = {
   tabs: { home: "Home", skins: "Skins", cases: "Cases", collections: "Collections", "trade-up": "Trade-up", inventory: "Inventory", market: "Market", patches: "Patches", esports: "Tournaments", teams: "Teams", players: "Players", crosshairs: "Crosshairs" },
+  tabH1: {
+    skins: "CS2 skins", cases: "CS2 cases", collections: "CS2 collections", "trade-up": "CS2 trade-up calculator",
+    inventory: "CS2 inventory value", market: "CS2 skin market", patches: "CS2 patch notes", esports: "CS2 tournaments",
+    teams: "CS2 pro teams", players: "CS2 pro players",
+  },
   loading: "Loading…",
   loadError: "Couldn't load this page.",
   retry: "Retry",
   seo: {
-    home: { title: "CS2 skins, cases & prices", description: "Every CS2 skin, case and collection with today's price in each wear, case odds and expected value. Free, no gambling." },
-    skins: { title: "CS2 skins: prices, float ranges & cases", description: "All CS2 weapon, knife and glove skins with their price in each wear, StatTrak and Souvenir, float range and the case they drop from." },
-    cases: { title: "CS2 cases: odds, expected value & prices", description: "Every CS2 case, souvenir package and terminal with its price, the odds of each rarity and what opening it returns on average." },
-    collections: { title: "CS2 collections: every skin & price", description: "Every CS2 weapon collection with its skins by rarity, their float ranges and prices, and the case or package it comes from." },
-    teams: { title: "CS2 pro teams: rosters, maps & ranking", description: "Every team in Valve's CS2 ranking: roster, how it has moved in the ranking, its titles, which maps it wins and whether it is stronger defending or attacking." },
-    players: { title: "CS2 pro players", description: "The players of the top 30 CS2 teams: nationality, age, roles, team and prize money." },
-    esports: { title: "CS2 tournaments, matches & Valve rankings", description: "CS2 tournaments live: today's and upcoming matches in your time zone, results, the stream, and Valve's official regional standings explained team by team." },
-    patches: { title: "CS2 patch notes: every update", description: "Every CS2 update since the Limited Test, change by change: what's new, what changed and what got fixed, with the maps, weapons and cases it names." },
-    market: { title: "CS2 skin prices going up and down", description: "Which CS2 skins and cases are going up and down in price this week, and which sell the most, from real Skinport sales." },
-    inventory: { title: "CS2 inventory value checker", description: "How much is your CS2 inventory worth? Paste your Steam profile and see every item with today's price, grouped by type. Free, no login." },
-    crosshairs: { title: "CS2 crosshair generator & sensitivity converter", description: "Make your CS2 crosshair and copy its share code or console commands, convert old CSGO codes, and convert your sensitivity to Valorant, Deadlock, Apex and more." },
-    "trade-up": { title: "CS2 trade-up calculator: odds, floats & profit", description: "Free CS2 trade-up calculator: the odds, exact float and price of every outcome, expected profit after fees, knife trade-ups and a reverse calculator." },
+    home: { title: "CS2 Skins, Cases & Prices | Vestigo", description: "Every CS2 skin, case and collection with today's price in each wear, case odds and expected value. Free, no gambling." },
+    skins: { title: "CS2 Skins: Prices, Float Ranges & Cases | Vestigo", description: "All CS2 weapon, knife and glove skins with their price in each wear, StatTrak and Souvenir, float range and the case they drop from." },
+    cases: { title: "CS2 Cases: Odds, Expected Value & Prices | Vestigo", description: "Every CS2 case, souvenir package and terminal with its price, the odds of each rarity and what opening it returns on average." },
+    collections: { title: "CS2 Collections: Every Skin & Price | Vestigo", description: "Every CS2 weapon collection with its skins by rarity, their float ranges and prices, and the case or package it comes from." },
+    teams: { title: "CS2 Pro Teams: Rosters, Maps & Ranking | Vestigo", description: "Every team in Valve's CS2 ranking: roster, how it has moved in the ranking, its titles, which maps it wins and whether it is stronger defending or attacking." },
+    players: { title: "CS2 Pro Players: Teams, Roles & Prize Money | Vestigo", description: "CS2 pro players from the top 30 teams: nationality, age, roles, team and prize money." },
+    esports: { title: "CS2 Tournaments, Matches & Valve Rankings | Vestigo", description: "CS2 tournaments live: today's and upcoming matches in your time zone, results, the stream, and Valve's official regional standings explained team by team." },
+    patches: { title: "CS2 Patch Notes: Every Update | Vestigo", description: "Every CS2 update since the Limited Test, change by change: what's new, what changed and what got fixed, with the maps, weapons and cases it names." },
+    market: { title: "CS2 Skin Market: Prices Going Up and Down | Vestigo", description: "Which CS2 skins and cases are going up and down in price this week, and which sell the most, from real Skinport sales." },
+    inventory: { title: "CS2 Inventory Value Checker | Vestigo", description: "How much is your CS2 inventory worth? Paste your Steam profile and see every item with today's price, grouped by type. Free, no login." },
+    crosshairs: { title: "CS2 Crosshair Generator & Sensitivity Converter | Vestigo", description: "Make your CS2 crosshair and copy its share code or console commands, convert old CSGO codes, and convert your sensitivity to Valorant, Deadlock, Apex and more." },
+    "trade-up": { title: "CS2 Trade-Up Calculator: Odds, Floats & Profit | Vestigo", description: "Free CS2 trade-up calculator: the odds, exact float and price of every outcome, expected profit after fees, knife trade-ups and a reverse calculator." },
   },
   detailSeo: {
-    skins: (n) => ({ title: `${n} price, float & cases`, description: clip(`${n}: price in every wear (normal, StatTrak and Souvenir), float range, rarity and the cases and collections it drops from.`) }),
-    cases: (n) => ({ title: `${n} odds & expected value`, description: clip(`${n}: every skin inside with its price in each wear, the odds of each rarity, the knives and what opening it returns on average.`) }),
-    collections: (n) => ({ title: `${n} skins & prices`, description: clip(`${n}: every skin by rarity with its float range and price, and where the collection drops from.`) }),
+    skins: (n) => ({ title: `${n}: CS2 Price, Float & Cases | Vestigo`, description: clip(`${n}: price in every wear (normal, StatTrak and Souvenir), float range, rarity and the cases and collections it drops from.`) }),
+    cases: (n) => ({ title: `${n}: CS2 Odds & Expected Value | Vestigo`, description: clip(`${n}: every skin inside with its price in each wear, the odds of each rarity, the knives and what opening it returns on average.`) }),
+    collections: (n) => ({ title: `${n}: CS2 Skins & Prices | Vestigo`, description: clip(`${n}: every skin by rarity with its float range and price, and where the collection drops from.`) }),
   },
   esSeo: {
-    teams: (n) => ({ title: `${n}: CS2 roster, maps & ranking`, description: clip(`${n} in CS2: current roster, Valve ranking over time, recent results, which maps it wins and whether it is stronger defending or attacking, and its latest matches map by map.`) }),
-    players: (n) => ({ title: `${n}: CS2 player, team & role`, description: clip(`${n}, CS2 pro player: nationality, age, roles, current team and prize money.`) }),
-    esports: (n) => ({ title: `${n}: CS2 matches & results`, description: clip(`${n} in CS2: dates, prize pool, teams and every match with its maps and the rounds won defending and attacking.`) }),
+    teams: (n) => ({ title: `${n}: CS2 Roster, Maps & Ranking | Vestigo`, description: clip(`${n} in CS2: current roster, Valve ranking over time, recent results, which maps it wins and whether it is stronger defending or attacking, and its latest matches map by map.`) }),
+    players: (n) => ({ title: `${n}: CS2 Player, Team & Role | Vestigo`, description: clip(`${n}, CS2 pro player: nationality, age, roles, current team and prize money.`) }),
+    esports: (n) => ({ title: `${n}: CS2 Matches & Results | Vestigo`, description: clip(`${n} in CS2: dates, prize pool, teams and every match with its maps and the rounds won defending and attacking.`) }),
   },
   patchSeo: (n, launch) =>
     launch
-      ? { title: `${n}: CS2 update`, description: clip(`${n}: Valve's CS2 announcement, with what it adds and the cases and collections it names.`) }
-      : { title: `CS2 patch notes: ${n}`, description: clip(`CS2 patch notes for the ${n}: every change by section, marked as new, changed or fixed, with the maps and weapons it touches.`) },
+      ? { title: `${n}: CS2 Update | Vestigo`, description: clip(`${n}: Valve's CS2 announcement, with what it adds and the cases and collections it names.`) }
+      : { title: `CS2 Patch Notes: ${n} | Vestigo`, description: clip(`CS2 patch notes for the ${n}: every change by section, marked as new, changed or fixed, with the maps and weapons it touches.`) },
   rarity: {
     contraband: "Contraband", extraordinary: "Extraordinary", covert: "Covert", classified: "Classified",
     restricted: "Restricted", milspec: "Mil-Spec", industrial: "Industrial Grade", consumer: "Consumer Grade",
@@ -352,7 +359,7 @@ const EN: Cs2Copy = {
   kind: { case: "Case", terminal: "Terminal", souvenir: "Souvenir package", package: "Collection package" },
   home: {
     kicker: "Counter-Strike 2",
-    h1: "Skins, cases and prices",
+    h1: "CS2 skins, cases and prices",
     lede: "Every skin with its price in each wear, every case with its odds and what it returns on average, every collection. No gambling, no case opening, nothing to sell.",
     ribbon: "What you get back on average per case opened",
     cards: {
@@ -630,37 +637,42 @@ const EN: Cs2Copy = {
 
 const ES: Cs2Copy = {
   tabs: { home: "Inicio", skins: "Skins", cases: "Cajas", collections: "Colecciones", "trade-up": "Trade-up", inventory: "Inventario", market: "Mercado", patches: "Parches", esports: "Torneos", teams: "Equipos", players: "Jugadores", crosshairs: "Miras" },
+  tabH1: {
+    skins: "Skins de CS2", cases: "Cajas de CS2", collections: "Colecciones de CS2", "trade-up": "Calculadora de trade-up de CS2",
+    inventory: "Valor del inventario de CS2", market: "Mercado de skins de CS2", patches: "Parches de CS2", esports: "Torneos de CS2",
+    teams: "Equipos profesionales de CS2", players: "Jugadores profesionales de CS2",
+  },
   loading: "Cargando…",
   loadError: "No se pudo cargar esta página.",
   retry: "Reintentar",
   seo: {
-    home: { title: "CS2: skins, cajas y precios", description: "Cada skin, caja y colección de CS2 con el precio de hoy en cada desgaste, las probabilidades y el valor esperado de cada caja. Gratis, sin apuestas." },
-    skins: { title: "Skins de CS2: precios, float y cajas", description: "Todas las skins de armas, cuchillos y guantes de CS2 con su precio en cada desgaste, StatTrak y Souvenir, rango de float y la caja de donde salen." },
-    cases: { title: "Cajas de CS2: probabilidades, valor esperado y precios", description: "Cada caja, paquete de souvenir y terminal de CS2 con su precio, la probabilidad de cada rareza y cuánto devuelve abrirla en promedio." },
-    collections: { title: "Colecciones de CS2: cada skin y su precio", description: "Cada colección de armas de CS2 con sus skins por rareza, su rango de float y precio, y la caja o el paquete de donde sale." },
-    teams: { title: "Equipos profesionales de CS2: plantel, mapas y ranking", description: "Cada equipo del ranking de Valve de CS2: plantel, cómo se movió en el ranking, sus títulos, en qué mapas gana y si es más fuerte defendiendo o atacando." },
-    players: { title: "Jugadores profesionales de CS2", description: "Los jugadores de los 30 mejores equipos de CS2: nacionalidad, edad, roles, equipo y premios." },
-    esports: { title: "Torneos de CS2, partidos y ranking de Valve", description: "Los torneos de CS2 en vivo: partidos de hoy y próximos en tu hora, resultados, la transmisión y el ranking oficial de Valve explicado equipo por equipo." },
-    patches: { title: "Parches de CS2: todas las actualizaciones", description: "Cada actualización de CS2 desde el Limited Test, cambio por cambio: qué es nuevo, qué cambió y qué se arregló, con los mapas, armas y cajas que nombra." },
-    market: { title: "Skins de CS2 que suben y bajan de precio", description: "Qué skins y cajas de CS2 suben y bajan de precio esta semana, y cuáles se venden más, con ventas reales en Skinport." },
-    inventory: { title: "Cuánto vale tu inventario de CS2", description: "¿Cuánto vale tu inventario de CS2? Pegá tu perfil de Steam y mirá cada objeto con el precio de hoy, agrupado por tipo. Gratis y sin iniciar sesión." },
-    crosshairs: { title: "Generador de mira y conversor de sensibilidad de CS2", description: "Armá tu mira de CS2 y copiá su código o los comandos de consola, pasá códigos viejos de CSGO y convertí tu sensibilidad a Valorant, Deadlock, Apex y más." },
-    "trade-up": { title: "Calculadora de trade-up de CS2: probabilidades, float y ganancia", description: "Calculadora de trade-up de CS2 gratis: probabilidad, float exacto y precio de cada resultado, ganancia esperada después de comisiones, cuchillos y calculadora inversa." },
+    home: { title: "Skins, cajas y precios de CS2 | Vestigo", description: "Cada skin, caja y colección de CS2 con el precio de hoy en cada desgaste, las probabilidades y el valor esperado de cada caja. Gratis, sin apuestas." },
+    skins: { title: "Skins de CS2: precios, float y cajas | Vestigo", description: "Todas las skins de armas, cuchillos y guantes de CS2 con su precio en cada desgaste, StatTrak y Souvenir, rango de float y la caja de donde salen." },
+    cases: { title: "Cajas de CS2: probabilidades, valor esperado y precios | Vestigo", description: "Cada caja, paquete de souvenir y terminal de CS2 con su precio, la probabilidad de cada rareza y cuánto devuelve abrirla en promedio." },
+    collections: { title: "Colecciones de CS2: cada skin y su precio | Vestigo", description: "Cada colección de armas de CS2 con sus skins por rareza, su rango de float y precio, y la caja o el paquete de donde sale." },
+    teams: { title: "Equipos profesionales de CS2: plantel, mapas y ranking | Vestigo", description: "Cada equipo del ranking de Valve de CS2: plantel, cómo se movió en el ranking, sus títulos, en qué mapas gana y si es más fuerte defendiendo o atacando." },
+    players: { title: "Jugadores profesionales de CS2: equipos, roles y premios | Vestigo", description: "Jugadores profesionales de CS2 de los 30 mejores equipos: nacionalidad, edad, roles, equipo y premios." },
+    esports: { title: "Torneos de CS2, partidos y ranking de Valve | Vestigo", description: "Los torneos de CS2 en vivo: partidos de hoy y próximos en tu hora, resultados, la transmisión y el ranking oficial de Valve explicado equipo por equipo." },
+    patches: { title: "Parches de CS2: todas las actualizaciones | Vestigo", description: "Cada actualización de CS2 desde el Limited Test, cambio por cambio: qué es nuevo, qué cambió y qué se arregló, con los mapas, armas y cajas que nombra." },
+    market: { title: "Mercado de skins de CS2: qué sube y qué baja de precio | Vestigo", description: "Qué skins y cajas de CS2 suben y bajan de precio esta semana, y cuáles se venden más, con ventas reales en Skinport." },
+    inventory: { title: "Cuánto vale tu inventario de CS2 | Vestigo", description: "¿Cuánto vale tu inventario de CS2? Pegá tu perfil de Steam y mirá cada objeto con el precio de hoy, agrupado por tipo. Gratis y sin iniciar sesión." },
+    crosshairs: { title: "Generador de mira y conversor de sensibilidad de CS2 | Vestigo", description: "Armá tu mira de CS2 y copiá su código o los comandos de consola, pasá códigos viejos de CSGO y convertí tu sensibilidad a Valorant, Deadlock, Apex y más." },
+    "trade-up": { title: "Calculadora de trade-up de CS2: probabilidades, float y ganancia | Vestigo", description: "Calculadora de trade-up de CS2 gratis: probabilidad, float exacto y precio de cada resultado, ganancia esperada después de comisiones, cuchillos y calculadora inversa." },
   },
   detailSeo: {
-    skins: (n) => ({ title: `${n}: precio, float y cajas`, description: clip(`${n}: precio en cada desgaste (normal, StatTrak y Souvenir), rango de float, rareza y las cajas y colecciones de donde sale.`) }),
-    cases: (n) => ({ title: `${n}: probabilidades y valor esperado`, description: clip(`${n}: cada skin que trae con su precio en cada desgaste, la probabilidad de cada rareza, los cuchillos y cuánto devuelve abrirla en promedio.`) }),
-    collections: (n) => ({ title: `${n}: skins y precios`, description: clip(`${n}: cada skin por rareza con su rango de float y precio, y de dónde sale la colección.`) }),
+    skins: (n) => ({ title: `${n}: precio, float y cajas en CS2 | Vestigo`, description: clip(`${n}: precio en cada desgaste (normal, StatTrak y Souvenir), rango de float, rareza y las cajas y colecciones de donde sale.`) }),
+    cases: (n) => ({ title: `${n}: probabilidades y valor esperado en CS2 | Vestigo`, description: clip(`${n}: cada skin que trae con su precio en cada desgaste, la probabilidad de cada rareza, los cuchillos y cuánto devuelve abrirla en promedio.`) }),
+    collections: (n) => ({ title: `${n}: skins y precios en CS2 | Vestigo`, description: clip(`${n}: cada skin por rareza con su rango de float y precio, y de dónde sale la colección.`) }),
   },
   esSeo: {
-    teams: (n) => ({ title: `${n}: plantel, mapas y ranking en CS2`, description: clip(`${n} en CS2: plantel actual, cómo se movió en el ranking de Valve, últimos resultados, en qué mapas gana y si es más fuerte defendiendo o atacando, y sus partidos mapa por mapa.`) }),
-    players: (n) => ({ title: `${n}: jugador de CS2, equipo y rol`, description: clip(`${n}, jugador profesional de CS2: nacionalidad, edad, roles, equipo actual y premios.`) }),
-    esports: (n) => ({ title: `${n}: partidos y resultados de CS2`, description: clip(`${n} en CS2: fechas, premios, equipos y cada partido con sus mapas y las rondas ganadas defendiendo y atacando.`) }),
+    teams: (n) => ({ title: `${n}: plantel, mapas y ranking en CS2 | Vestigo`, description: clip(`${n} en CS2: plantel actual, cómo se movió en el ranking de Valve, últimos resultados, en qué mapas gana y si es más fuerte defendiendo o atacando, y sus partidos mapa por mapa.`) }),
+    players: (n) => ({ title: `${n}: jugador de CS2, equipo y rol | Vestigo`, description: clip(`${n}, jugador profesional de CS2: nacionalidad, edad, roles, equipo actual y premios.`) }),
+    esports: (n) => ({ title: `${n}: partidos y resultados de CS2 | Vestigo`, description: clip(`${n} en CS2: fechas, premios, equipos y cada partido con sus mapas y las rondas ganadas defendiendo y atacando.`) }),
   },
   patchSeo: (n, launch) =>
     launch
-      ? { title: `${n}: actualización de CS2`, description: clip(`${n}: el anuncio de Valve para CS2, con lo que trae y las cajas y colecciones que nombra.`) }
-      : { title: n.replace(/^Parche del /, "Parche de CS2 del "), description: clip(`Las notas del ${n.replace(/^Parche del /, "parche de CS2 del ")}: cada cambio por sección, marcado como nuevo, cambio o arreglo, con los mapas y armas que toca.`) },
+      ? { title: `${n}: actualización de CS2 | Vestigo`, description: clip(`${n}: el anuncio de Valve para CS2, con lo que trae y las cajas y colecciones que nombra.`) }
+      : { title: `${n.replace(/^Parche del /, "Parche de CS2 del ")} | Vestigo`, description: clip(`Las notas del ${n.replace(/^Parche del /, "parche de CS2 del ")}: cada cambio por sección, marcado como nuevo, cambio o arreglo, con los mapas y armas que toca.`) },
   rarity: {
     contraband: "Contrabando", extraordinary: "Extraordinario", covert: "Encubierto", classified: "Clasificado",
     restricted: "Restringido", milspec: "Grado militar", industrial: "Grado industrial", consumer: "Grado de consumo",
@@ -670,7 +682,7 @@ const ES: Cs2Copy = {
   kind: { case: "Caja", terminal: "Terminal", souvenir: "Paquete de souvenir", package: "Paquete de colección" },
   home: {
     kicker: "Counter-Strike 2",
-    h1: "Skins, cajas y precios",
+    h1: "Skins, cajas y precios de CS2",
     lede: "Cada skin con su precio en cada desgaste, cada caja con sus probabilidades y cuánto devuelve en promedio, cada colección. Sin apuestas, sin abrir cajas, nada para vender.",
     ribbon: "Cuánto recuperás en promedio por caja abierta",
     cards: {

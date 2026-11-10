@@ -23,7 +23,7 @@ describe("Rangos y Estadísticas de CoH1 y CoH2", () => {
   it("Rangos de CoH1: niveles en vez de ligas, sus cuatro facciones y sin crédito a coh3stats", async () => {
     const es = await render("/es/coh1/rangos");
     expect(es).toContain("Nivel 20");
-    expect(es).toContain("Niveles y jugadores");
+    expect(es).toContain("Rangos de CoH1: niveles y jugadores");
     expect(es).not.toContain("Latón");
     expect(es).not.toContain("coh3stats");
     expect(es).toContain("Panzer Elite");

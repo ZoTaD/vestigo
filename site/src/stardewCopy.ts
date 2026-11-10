@@ -1264,7 +1264,7 @@ const EN: StardewCopy = {
   gold: "g",
   home: {
     kicker: "Stardew Valley 1.6 guide",
-    h1: "Everything in the valley, in one menu",
+    h1: "Stardew Valley guide, all in one menu",
     lede: (items, villagers, bundles) =>
       `${items} items with their price by quality and where to get them, ${villagers} villagers with every gift they love or hate, and the ${bundles} Community Center bundles.`,
     cards: {
@@ -1366,7 +1366,7 @@ const EN: StardewCopy = {
     tasteCount: (n) => `${n} items`,
   },
   bundles: {
-    h1: "Community Center bundles",
+    h1: "Stardew Valley Community Center bundles",
     lede: (n) => `The ${n} bundles of the Community Center, room by room.`,
     saved: "Tick what you already handed in. Your list stays in this browser.",
     progress: (done, total) => `${done} of ${total} bundles`,
@@ -1466,7 +1466,7 @@ const EN: StardewCopy = {
     },
   },
   recipes: {
-    h1: "Recipes and machines",
+    h1: "Stardew Valley recipes and machines",
     lede: "Every dish and every crafted item with its ingredients and how you learn it, and what each machine turns things into.",
     view: "Show",
     views: { cook: "Cooking", craft: "Crafting", machines: "Machines" },
@@ -1497,7 +1497,7 @@ const EN: StardewCopy = {
     },
   },
   calendar: {
-    h1: "Calendar",
+    h1: "Stardew Valley calendar",
     lede: "Every birthday and festival of the year, laid out like the town board. Tap a day to see what the birthday villager loves and how long a festival lasts.",
     season: "Season",
     weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -1514,7 +1514,7 @@ const EN: StardewCopy = {
     close: "Close",
   },
   mines: {
-    h1: "Mines and combat",
+    h1: "Stardew Valley mines and combat",
     lede: "The Mines and the Skull Cavern floor by floor, every monster with what it drops, and the weapons, boots and rings to get through them.",
     view: "Show",
     views: { floors: "Floors", monsters: "Monsters", weapons: "Weapons", gear: "Rings and trinkets", boots: "Boots" },
@@ -1586,7 +1586,7 @@ const EN: StardewCopy = {
     },
   },
   farm: {
-    h1: "Farm animals and buildings",
+    h1: "Stardew Valley farm animals and buildings",
     lede: "Every farm animal with what it gives and how to keep it happy, every building from Robin and the Wizard with its materials, and the farmhouse upgrades.",
     view: "View",
     views: { animals: "Animals", buildings: "Buildings", house: "Farmhouse" },
@@ -1638,7 +1638,7 @@ const EN: StardewCopy = {
     },
   },
   museum: {
-    h1: "Museum and library",
+    h1: "Stardew Valley museum and library",
     lede: (n) => `The ${n} artifacts and minerals Gunther takes, where each one turns up, what donating them earns you, and every book you can read.`,
     view: "View",
     views: { collection: "Collection", rewards: "Rewards", books: "Books" },
@@ -1675,7 +1675,7 @@ const EN: StardewCopy = {
     },
   },
   island: {
-    h1: "Ginger Island",
+    h1: "Stardew Valley Ginger Island guide",
     lede: "Every golden walnut on the island by area, with a box to tick. Then what the parrots build with them, what Qi sells in his Walnut Room and his special orders.",
     view: "View",
     views: { nuts: "Golden walnuts", upgrades: "Parrot upgrades", "walnut-room": "Walnut Room", qi: "Qi's orders" },
@@ -1721,7 +1721,7 @@ const EN: StardewCopy = {
     },
   },
   quests: {
-    h1: "Quests and special orders",
+    h1: "Stardew Valley quests and special orders",
     lede: "The special orders from the town board and the Desert Festival, with who asks, what for, how many days you get and the reward. And the story quests, in the order they open up.",
     view: "View",
     views: { orders: "Special orders", story: "Story quests" },
@@ -1759,7 +1759,7 @@ const EN: StardewCopy = {
   predict: PREDICT_EN,
   planner: PLANNER_EN,
   save: {
-    h1: "Save file reader",
+    h1: "Stardew Valley save file reader",
     lede: "Open your save file to see how close you are to perfection, what each Community Center bundle still needs, whose birthday is coming up this week and which fish and recipes you're missing.",
     drop: "Drop your save file here",
     pick: "or choose it",
@@ -1960,7 +1960,7 @@ const ES: StardewCopy = {
   gold: "g",
   home: {
     kicker: "Guía de Stardew Valley 1.6",
-    h1: "Todo el valle, en un solo menú",
+    h1: "Guía de Stardew Valley, todo en un solo menú",
     lede: (items, villagers, bundles) =>
       `${items} objetos con su precio por calidad y dónde se consiguen, ${villagers} aldeanos con cada regalo que les encanta o que odian, y los ${bundles} paquetes del Centro Comunitario.`,
     cards: {
@@ -2062,7 +2062,7 @@ const ES: StardewCopy = {
     tasteCount: (n) => `${n} objetos`,
   },
   bundles: {
-    h1: "Paquetes del Centro Comunitario",
+    h1: "Paquetes del Centro Comunitario de Stardew Valley",
     lede: (n) => `Los ${n} paquetes del Centro Comunitario, sala por sala.`,
     saved: "Tildá lo que ya entregaste. Tu lista queda en este navegador.",
     progress: (done, total) => `${done} de ${total} paquetes`,
@@ -2078,7 +2078,7 @@ const ES: StardewCopy = {
     gold: "Oro",
   },
   crops: {
-    h1: "Ganancias de los cultivos",
+    h1: "Ganancias de los cultivos de Stardew Valley",
     lede: "Qué cultivo da más oro por día, desde el día en que lo plantás hasta el fin de su estación.",
     season: "Estación",
     day: "Día de siembra",
@@ -2162,7 +2162,7 @@ const ES: StardewCopy = {
     },
   },
   recipes: {
-    h1: "Recetas y máquinas",
+    h1: "Recetas y máquinas de Stardew Valley",
     lede: "Cada plato y cada objeto que se fabrica con sus ingredientes y cómo se aprende, y en qué transforma las cosas cada máquina.",
     view: "Ver",
     views: { cook: "Cocina", craft: "Fabricación", machines: "Máquinas" },
@@ -2193,7 +2193,7 @@ const ES: StardewCopy = {
     },
   },
   calendar: {
-    h1: "Calendario",
+    h1: "Calendario de Stardew Valley",
     lede: "Cada cumpleaños y festival del año, como en el tablón del pueblo. Tocá un día para ver qué le encanta al cumpleañero y cuánto dura un festival.",
     season: "Estación",
     weekdays: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
@@ -2210,7 +2210,7 @@ const ES: StardewCopy = {
     close: "Cerrar",
   },
   mines: {
-    h1: "Minas y combate",
+    h1: "Minas y combate de Stardew Valley",
     lede: "Las Minas y la Caverna Calavera piso por piso, cada monstruo con lo que suelta, y las armas, botas y anillos para atravesarlas.",
     view: "Mostrar",
     views: { floors: "Pisos", monsters: "Monstruos", weapons: "Armas", gear: "Anillos y baratijas", boots: "Botas" },
@@ -2282,7 +2282,7 @@ const ES: StardewCopy = {
     },
   },
   farm: {
-    h1: "Animales y edificios de la granja",
+    h1: "Animales y edificios de la granja en Stardew Valley",
     lede: "Cada animal de la granja con lo que da y cómo tenerlo contento, cada edificio de Robin y del mago con sus materiales, y las mejoras de la casa.",
     view: "Vista",
     views: { animals: "Animales", buildings: "Edificios", house: "Casa" },
@@ -2334,7 +2334,7 @@ const ES: StardewCopy = {
     },
   },
   museum: {
-    h1: "Museo y biblioteca",
+    h1: "Museo y biblioteca de Stardew Valley",
     lede: (n) => `Los ${n} artefactos y minerales que recibe Gunther, dónde sale cada uno, qué se gana al donarlos y todos los libros que se pueden leer.`,
     view: "Vista",
     views: { collection: "Colección", rewards: "Premios", books: "Libros" },
@@ -2371,7 +2371,7 @@ const ES: StardewCopy = {
     },
   },
   island: {
-    h1: "Isla Jengibre",
+    h1: "Guía de la Isla Jengibre de Stardew Valley",
     lede: "Cada nuez de oro de la isla por zona, con su casilla para tildar. Y lo que construyen los loros con ellas, lo que vende Qi en su habitación y sus pedidos especiales.",
     view: "Vista",
     views: { nuts: "Nueces de oro", upgrades: "Mejoras del loro", "walnut-room": "Habitación de Qi", qi: "Pedidos de Qi" },
@@ -2417,7 +2417,7 @@ const ES: StardewCopy = {
     },
   },
   quests: {
-    h1: "Misiones y pedidos especiales",
+    h1: "Misiones y pedidos especiales de Stardew Valley",
     lede: "Los pedidos especiales del tablón del pueblo y del Festival del Desierto, con quién los pide, qué piden, cuántos días hay y el premio. Y las misiones de la historia, en el orden en que se abren.",
     view: "Vista",
     views: { orders: "Pedidos especiales", story: "Misiones de la historia" },
@@ -2455,7 +2455,7 @@ const ES: StardewCopy = {
   predict: PREDICT_ES,
   planner: PLANNER_ES,
   save: {
-    h1: "Lector de partida",
+    h1: "Lector de partidas de Stardew Valley",
     lede: "Abrí el archivo de tu partida para ver cuánto te falta para la perfección, qué pide todavía cada paquete del Centro Comunitario, quién cumple años esta semana y qué peces y recetas te faltan.",
     drop: "Soltá acá el archivo de tu partida",
     pick: "o elegilo",

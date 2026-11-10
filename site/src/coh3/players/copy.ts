@@ -3,7 +3,7 @@ import { useLang } from "../../i18n";
 
 const EN = {
   k: "Players",
-  h1: "Find a player",
+  h1: (g: string) => `Find a ${g} player`,
   lede: "Type the exact in-game name: it's case sensitive (\"rei\" won't find \"Rei\"). You can also paste a coh3stats or Steam profile link, a profile number or a SteamID64.",
   placeholder: "In-game name, profile link or SteamID",
   go: "Search",
@@ -68,7 +68,7 @@ const EN = {
 
 const ES: typeof EN = {
   k: "Jugadores",
-  h1: "Buscar jugador",
+  h1: (g: string) => `Buscar jugador de ${g}`,
   lede: "Escribí el nombre exacto del juego: distingue mayúsculas (\"rei\" no encuentra a \"Rei\"). También podés pegar un link de perfil de coh3stats o de Steam, un número de perfil o un SteamID64.",
   placeholder: "Nombre en el juego, link de perfil o SteamID",
   go: "Buscar",

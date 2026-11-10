@@ -155,7 +155,7 @@ export default function Coh3Patches({ route, navigate }: { route: Route; navigat
     <main className="c3-main c3-patches">
       <header className="c3-head">
         <div className="c3-k">{t.patches.k}</div>
-        <h1 className="c3-h1">{tr(p.name, lang)}</h1>
+        <h1 className="c3-h1">{t.patches.title(tr(p.name, lang))}</h1>
         <p className="c3-lede">{t.patches.lede}</p>
         <p className="c3-note">
           {t.patches.vs(p.prev, p.tag)}

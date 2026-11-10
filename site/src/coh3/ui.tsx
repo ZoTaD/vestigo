@@ -58,6 +58,14 @@ export function Icon({ path, size = 64, lazy = true, className }: { path: string
 export const CohGameContext = createContext<CohGame>("coh3");
 export const useCohGame = (): CohGame => useContext(CohGameContext);
 
+/**
+ * El título de una pantalla con el nombre corto del juego que se está viendo ("CoH3 units", "Unidades de CoH2"): cada
+ * pestaña es la misma para los tres juegos y el H1 tiene que decir de cuál es, que es como se la busca.
+ */
+export function CohTitle({ text }: { text: (game: string) => string }) {
+  return <>{text(GAMES[useCohGame()].short)}</>;
+}
+
 export function FactionTag({ f, game: elegido, name = true, size = 22, short = true }: { f: string; game?: CohGame; name?: boolean; size?: number; short?: boolean }) {
   const t = useCoh3Copy();
   const delContexto = useCohGame();

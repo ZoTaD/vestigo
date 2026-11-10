@@ -13,7 +13,7 @@ import type { Route } from "../../route";
 import { useCoh3Copy, type Faction, cohGameSeo } from "../../coh3Copy";
 import type { Mode } from "../api/leaderboards";
 import type { MatchSummary, Profile, SearchResult, Standing } from "../api/relic";
-import { Coh3Loading, FactionTag, LeagueTag, Panel, nextSort, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, LeagueTag, Panel, nextSort, sortRows, useCohGame, useNum, useSort, CohTitle, type Nav } from "../ui";
 import { GAMES, factionLabel, type CohGame } from "../games";
 import {
   FACTIONS,
@@ -110,7 +110,7 @@ function Search({ route, navigate }: { route: Route; navigate: Nav }) {
       <Panel>
         <div className="c3-head">
           <div className="c3-k">{t.k}</div>
-          <h1 className="c3-h1">{t.h1}</h1>
+          <h1 className="c3-h1"><CohTitle text={t.h1} /></h1>
           <p className="c3-lede">{t.lede}</p>
         </div>
         <form className="c3-search" role="search" onSubmit={submit}>

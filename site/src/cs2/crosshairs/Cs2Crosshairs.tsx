@@ -107,7 +107,7 @@ export function fromCode(code: string): { xh: Xh; old: boolean; approx: boolean 
 
 const T = {
   en: {
-    h1: "Crosshair & sensitivity",
+    h1: "CS2 crosshair & sensitivity",
     lede: "Make your crosshair and take it to the game with a code, and convert your sensitivity to other games so your mouse travels the same.",
     editor: "Crosshair editor",
     editorLede: "Paste a crosshair code to see it, or move the controls and copy the new code. In game: Settings → Game → Crosshair → Share or import.",
@@ -142,7 +142,7 @@ const T = {
     zoom: "Scoped (AWP, SSG 08, AUG, SG 553): CS2 multiplies your sensitivity by zoom_sensitivity_ratio, 1 by default.",
   },
   es: {
-    h1: "Miras y sensibilidad",
+    h1: "Miras y sensibilidad de CS2",
     lede: "Armá tu mira y llevala al juego con un código, y pasá tu sensibilidad a otros juegos para que el mouse recorra lo mismo.",
     editor: "Editor de mira",
     editorLede: "Pegá un código de mira para verla, o mové los controles y copiá el código nuevo. En el juego: Configuración → Juego → Mira → Compartir o importar.",
